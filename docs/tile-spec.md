@@ -173,6 +173,16 @@ the v0 target. `edits` is an append-only log of viewer edits (mask polygons draw
 hand, species flags) so local knowledge survives a pipeline re-run. `sources` is described
 under Sources and attribution.
 
+**`steps`** (2026-11-04, `pipeline/steps.py`; docs/pipeline.md) is the build's record, one entry per step of the
+graph: `version`, `code` (a hash of the step's modules), `params`, `fingerprint` and its `parts` (the upstream steps'
+`out_hash`, the library folders read), `layers` and `outputs` (tile-relative file -> sha256 prefix), `out_hash`,
+`sources` (key -> the date retrieved), `fallbacks` (`[{what, source?, ...}]`, each second choice the step took),
+`notes`, `fetched` (`{network, cache}` read counts), `coverage` (sources that do not reach the tile, with the global
+stand-in or the next one named), `status` (`ok`, `not_applicable` with `reason`, `failed` with `error`, `blocked`,
+`adopted`, `stale` with `stale` reasons), `owner` (the lane that owns the step's code), `ran_at`, `seconds`. A step is
+skipped when its fingerprint and its outputs are unchanged. `log` is kept and appended as before.
+`licence_audit` holds the audit step's problems and warnings.
+
 A layer with `for_clients: false` (and a `for_clients_note` saying why) must not be fetched
 by a game client or copied into anything distributed: today `species.occurrences` and
 `species.seasonal`, whose records and counts include CC BY-NC ones. The viewer, a local
@@ -918,6 +928,18 @@ with no usable record is not in the file and gets 1 (neutral). The file also car
 `datasets` (GBIF dataset key, licence, records); the manifest layer repeats the counts
 per licence and per species.
 
+**Plant needs, groves and the registry** (2026-11-04; `pipeline/needs.py`, `pipeline/registry.py`; docs/pipeline.md).
+`species/inventory.json` rows gain `family`, `genus`, `order` and a `plant` group (the tile's 120 most-recorded vascular
+plants). `species/plant_needs.json` (layer `species.plant_needs`, step `plants`): the tile's `communities` (source,
+code, name, cells, the rule that matched, the species the name names), `unread` (communities nothing could read),
+`needs` (`{id, kind, why, record, card, drawn_as, generated_now?, queued?}`), `gbif_plants`, `generated` (records grown
+for this tile) and a `summary`. `species/localized.json`: per species placed by its records (giant sequoia), the CC0 and
+CC BY GBIF records inside the tile as `[x, north]` metres, the licences seen, the GBIF key. `species/registry.json`
+(layer `species.registry`, step `registry`): every species the tile needs or draws at its fidelity level (`levels` gives
+the ladder), `drawn_as` and `stand_in` for those without their own record, the animals present, and `queue`: trait cards
+wanted and Meshy jobs (`scientific`, `records` on the tile, `estimate_credits`; never run by the build). The library-wide
+registry is `library/registry.json`.
+
 ## Species mix
 
 `client/species_mix*` (pipeline `species_mix.py`, client `tilepackage.js` `SpeciesMix`) say which species grow
@@ -1011,6 +1033,18 @@ Format 1 (tiles built before 2026-10-25) had RGBA weight PNGs `species_mix_a/_b/
 with a `bytes_layout` naming each column by short alias; the client still reads it (and the original eight
 columns without `bytes_layout`), but the pipeline writes only format 2 and removes the old PNGs. The three
 tiles were regenerated in format 2: every row's bytes and every plant's placement are identical.
+
+**2026-11-04: elevation zones, the coast, groves and stand-ins.** The terrain classes gain four bands (`600-1100 m`,
+`1100-1800`, `1800-2400`, `2400-3000`, `>=3000`; a factor list of four is read with its last value repeated) and a
+`grove` bit, so `mixes[].terrain` labels may read `1800-2400 m mid-slope north grove`. Above 1,100 m a species that
+does not grow at that height is replaced by the one that takes its place (`ZONE_SUBST`: gray pine by ponderosa, then
+Jeffrey; blue oak by black oak, then nothing; whiteleaf by greenleaf manzanita; all conifers by lodgepole, whitebark,
+hemlock and western white pine above 2,400 m), on every rule, for the species a rule does not hold `fixed`. A tile whose
+communities are coastal (`context.coast`, coast words in 15% of its community cells) replaces the interior oaks and
+gray pine with coast live oak below 1,100 m (`COAST_SUBST`). A rule may name a species without a library record: its
+stand-in is drawn and listed in `substitutions` (`{species: drawn}`). `context` records the coast flag and share, the
+band edges and the number of grove cells. The columns of `species` now follow the species drawn (still TREES / SHRUBS
+first), so a tile's column list grows only with what it uses.
 
 ## Species library
 

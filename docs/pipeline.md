@@ -218,8 +218,76 @@ budget is Aaron's call.
 
 ## Proof
 
-Filled in by the 2026-11-04 entry in docs/decisions.md: the rebuild of an existing tile into a scratch folder and its
-diff against the committed tile, and the first tile built by `--all` alone (Calaveras Big Trees, `utm10n_731_4235`).
+**An existing tile rebuilt from nothing** (2026-11-04): `utm11n_270_4180` (the first Yosemite cell) built by
+`build_tile --tile utm11n_270_4180 --all --out <scratch>` into an empty folder holding only a copy of the tile's raw
+fetch cache (`_cache/`: the 3DEP chips, LANDFIRE exports, Overpass answers, lidar index, Macrostrat and SDA answers;
+the shared Sentinel looks in `pipeline/_cache/`); every product was made again, the 1 m DEM products downloaded again,
+NAIP read again from the Planetary Computer, GBIF asked again. All 22 steps ran (the lidar step DEM-only, recorded as a
+fallback; crowns and inpaint not applicable), and a second `--all` skipped all 22. Against the tile on disk (the
+committed JSON, the rasters as built on 2026-10-28, its species mix rebuilt today), 117 of 156 files are the same, 116
+byte for byte: the DEM, NAIP, every LANDFIRE raster and the habitat, the footprint, the hydrology and channels, the 1 m
+DEM and roughness, geology, soils and outcrop, the erased imagery, the species mix and the games. What differs, and why:
+
+| files | why |
+|---|---|
+| terrain/dem_banked.tif, client/water.png, water_width.png, hydro/water_reaches.json (new); client/heights.png, terrain_detail.png, terrain/hillshade.png, terrain_rgb.png, rewilded.png, client/texture.png (0.2-2 % of pixels), substrate.png / .json | the water step, which never ran on this tile: the banks are carved into the DEM that derive and substrate read. The tile on disk was stale, not the rebuild |
+| seasons/s2_10.tif (85 % of pixels, mean 0.0006 reflectance), s2_11.tif (12 %), the other months under 1.2 %; client/season_rgb.png, season_ndvi.png; months.json | Sentinel-2 scenes from October 2026 that did not exist when the tile was built (the composites span 2019-2026) |
+| species/occurrences.geojson (8,332 records against 8,281), seasonal.json, client/species_prior.json, plant_needs.json, registry.json | GBIF records added since 2026-10-28; from now on the answers are cached, so a rebuild reads the same ones |
+| client/weather.json | last year's weather is relative to the build date, by design |
+| hydro/channels_present.geojson, human_water.geojson | the present-day channel snapshot is taken once (rewild_hydro); the tile's was taken before the 2026-10-28 channel fixes |
+| manifest.json, lidar_dem_only.json | the steps table, the water layers and status, and the products' timing |
+
+**A new tile from nothing**: `utm10n_731_4235`, Calaveras Big Trees, centred on the North Grove (the tile id at any
+whole kilometre: 731 E 4235 N), built by `build_tile --tile utm10n_731_4235 --all` and nothing else. Every step ran;
+the build stopped loudly twice and resumed with the same command, each time skipping what was done:
+
+1. at `lidar`: the first off-grid tile with a point cloud. The first EPT project that overlapped by its box
+   (CA_SierraNevada_3_2022) held 54 k points and none in the tile, and the products' statistics failed on the empty
+   grid. Fixed in lidar.py: the candidate whose hierarchy has the most points in the tile's nodes is taken
+   (CA_SierraNevada_5_2022, 3.76 G points, 78,754 nodes, 53 min), recorded as a fallback; an empty grid now fails at the
+   grid with its reason.
+2. at `seasons`: a layer whose `files` is a list (fixed in the runner while the build ran; the build held the old code).
+
+Then a code change (the sequoia grove radius) re-ran exactly derive and its dependents. Times: dem 20 s, naip 36,
+osm 89, hydro 30, channels 18, rewild_hydro 136, veg 6, lidar 3,169 (DTM check: median offset -0.001 m, std 0.066;
+531,657 crown maxima), water 16, ground 45, species 167, plants 6, derive 28, crowns 111, erase 22, substrate 5,
+inpaint 76, seasons 74 (860 Sentinel-2 dates read on the first try, 21 min), weather 6, unreal 1, registry, audit;
+the licence audit passes. The tile's trees: ponderosa 31 %, white fir 16, incense cedar 11, sugar pine 11, black oak
+9, canyon live oak 6, Douglas-fir 5, giant sequoia 1.4 % (4,256 grove cells from 134 CC0 / CC BY records; 469 CC BY-NC
+records left out); shrubs whiteleaf manzanita, deerbrush, mountain misery, greenleaf manzanita, snowberry. 60 plant
+species needed, all with records, none unread; 48 animals GBIF records there queued for Meshy (1,440 credits est.).
+It loads in the viewer with no console error.
+
+Nothing differs that the inputs do not explain: the build is repeatable up to its time-relative sources, which are now
+cached (GBIF) or dated (Sentinel years, the weather period).
+
+## The registry today (2026-11-04)
+
+126 species: 76 at level 4, 21 at 3, 29 at 2 (the 29 generated from cards, held until reviewed), none at 1 or 0
+(bishop pine is needed on the San Francisco cells and has no card: drawn as Monterey pine).
+
+| kind | 0 | 1 | 2 | 3 | 4 |
+|---|---|---|---|---|---|
+| tree | 0 | 0 | 16 | 10 | 11 |
+| shrub | 0 | 0 | 13 | 0 | 23 |
+| grass / forb / emergent | 0 | 0 | 0 | 5 | 28 |
+| mammal | 0 | 0 | 0 | 4 | 6 |
+| bird | 0 | 0 | 0 | 1 | 8 |
+| reptile | 0 | 0 | 0 | 1 | 0 |
+
+Per tile, plants (levels 0-4) and animals present (levels 0-4), animals queued for Meshy:
+
+| tile | plants | animals | Meshy queue |
+|---|---|---|---|
+| utm11n_267_4175 | 0 / 0 / 19 / 11 / 59 | 0 / 0 / 0 / 3 / 14 | 69 (2,070 credits est.) |
+| utm11n_270_4180 | 0 / 0 / 19 / 12 / 59 | 0 / 0 / 0 / 3 / 14 | 68 (2,040) |
+| utm10n_540_4170 | 1 / 0 / 15 / 11 / 59 | 0 / 0 / 0 / 5 / 13 | 66 (1,980) |
+| utm10n_540_4180 | 1 / 0 / 16 / 11 / 59 | 0 / 0 / 0 / 5 / 13 | 63 (1,890) |
+| utm10n_731_4235 | 0 / 0 / 14 / 11 / 59 | 0 / 0 / 0 / 4 / 14 | 48 (1,440) |
+
+Meshy: 420 of the 1,000 credits spent, 580 left; 139 species queued across the tiles (4,170 credits est.), the first 19
+by records within what is left (Anna's hummingbird, song sparrow, white-crowned sparrow, dark-eyed junco, black phoebe,
+American robin, western gull, house finch, ...). Nothing was generated: that is Aaron's call.
 
 ## Next
 
@@ -229,4 +297,5 @@ diff against the committed tile, and the first tile built by `--all` alone (Cala
   streams draw alder and cottonwood (the elevation zones do not reach the zone rows), its meadows foothill annuals.
 - Elevation zones are set for the central Sierra (37-38 N); a latitude shift (about 100 m per degree) belongs in them.
 - Cache keys for Overpass (the query) and the lidar index (`--force` should clear it).
+- games.json carries its build time, so a derive re-run changes its hash and re-runs erase and substrate behind it.
 - NHD caching in fetch_hydro (water lane's file).

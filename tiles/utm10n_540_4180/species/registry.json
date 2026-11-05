@@ -1,6 +1,6 @@
 {
  "tile": "utm10n_540_4180",
- "at": "2026-11-05T04:20:03Z",
+ "at": "2026-11-05T05:46:47Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -24,20 +24,20 @@
    },
    "3": {
     "plants": 11,
-    "animals": 0
+    "animals": 5
    },
    "4": {
     "plants": 59,
-    "animals": 0
+    "animals": 13
    }
   },
   "plants": 87,
-  "animals_present": 0,
+  "animals_present": 18,
   "animals_queued": 63,
   "meshy_credits_queued": 1890,
   "cards_queued": 1,
   "stand_ins": {
-   "pinus_muricata": "pinus_ponderosa"
+   "pinus_muricata": "pinus_radiata"
   }
  },
  "plants": [
@@ -991,12 +991,12 @@
    "kind": "tree",
    "fidelity": 0,
    "common": null,
-   "drawn_as": "pinus_ponderosa",
+   "drawn_as": "pinus_radiata",
    "share": 0,
    "why_needed": [
     "named by EVT 7177 California Coastal Closed-Cone Conifer Forest and Woodland (792 cells)"
    ],
-   "stand_in": "pinus_ponderosa"
+   "stand_in": "pinus_radiata"
   },
   {
    "id": "pinus_ponderosa",
@@ -1100,13 +1100,176 @@
    ]
   }
  ],
- "animals": [],
+ "animals": [
+  {
+   "id": "corvus_corax",
+   "scientific": "Corvus corax",
+   "common": "common raven",
+   "kind": "bird",
+   "fidelity": 4,
+   "present": null,
+   "evidence": null
+  },
+  {
+   "id": "buteo_jamaicensis",
+   "scientific": "Buteo jamaicensis",
+   "common": "red-tailed hawk",
+   "kind": "bird",
+   "fidelity": 4,
+   "present": null,
+   "evidence": null
+  },
+  {
+   "id": "odocoileus_hemionus",
+   "scientific": "Odocoileus hemionus",
+   "common": "black-tailed deer",
+   "kind": "mammal",
+   "fidelity": 4,
+   "present": null,
+   "evidence": null
+  },
+  {
+   "id": "urocyon_cinereoargenteus",
+   "scientific": "Urocyon cinereoargenteus",
+   "common": "gray fox",
+   "kind": "mammal",
+   "fidelity": 4,
+   "present": null,
+   "evidence": null
+  },
+  {
+   "id": "sciurus_griseus",
+   "scientific": "Sciurus griseus",
+   "common": "western gray squirrel",
+   "kind": "mammal",
+   "fidelity": 4,
+   "present": null,
+   "evidence": null
+  },
+  {
+   "id": "melanerpes_formicivorus",
+   "scientific": "Melanerpes formicivorus",
+   "common": "acorn woodpecker",
+   "kind": "bird",
+   "fidelity": 4,
+   "present": null,
+   "evidence": null
+  },
+  {
+   "id": "callipepla_californica",
+   "scientific": "Callipepla californica",
+   "common": "California quail",
+   "kind": "bird",
+   "fidelity": 4,
+   "present": null,
+   "evidence": null
+  },
+  {
+   "id": "aphelocoma_californica",
+   "scientific": "Aphelocoma californica",
+   "common": "California scrub-jay",
+   "kind": "bird",
+   "fidelity": 4,
+   "present": null,
+   "evidence": null
+  },
+  {
+   "id": "cyanocitta_stelleri",
+   "scientific": "Cyanocitta stelleri",
+   "common": "Steller's jay",
+   "kind": "bird",
+   "fidelity": 4,
+   "present": null,
+   "evidence": null
+  },
+  {
+   "id": "cathartes_aura",
+   "scientific": "Cathartes aura",
+   "common": "turkey vulture",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": null,
+   "evidence": null
+  },
+  {
+   "id": "sylvilagus_bachmani",
+   "scientific": "Sylvilagus bachmani",
+   "common": "brush rabbit",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": null,
+   "evidence": null
+  },
+  {
+   "id": "lepus_californicus",
+   "scientific": "Lepus californicus",
+   "common": "black-tailed jackrabbit",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": null,
+   "evidence": null
+  },
+  {
+   "id": "microtus_californicus",
+   "scientific": "Microtus californicus",
+   "common": "California vole",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": null,
+   "evidence": null
+  },
+  {
+   "id": "canis_latrans",
+   "scientific": "Canis latrans",
+   "common": "coyote",
+   "kind": "mammal",
+   "fidelity": 4,
+   "present": null,
+   "evidence": null
+  },
+  {
+   "id": "puma_concolor",
+   "scientific": "Puma concolor",
+   "common": "mountain lion",
+   "kind": "mammal",
+   "fidelity": 4,
+   "present": null,
+   "evidence": null
+  },
+  {
+   "id": "meleagris_gallopavo",
+   "scientific": "Meleagris gallopavo",
+   "common": "wild turkey",
+   "kind": "bird",
+   "fidelity": 4,
+   "present": null,
+   "evidence": null
+  },
+  {
+   "id": "otospermophilus_beecheyi",
+   "scientific": "Otospermophilus beecheyi",
+   "common": "California ground squirrel",
+   "kind": "mammal",
+   "fidelity": 4,
+   "present": null,
+   "evidence": null
+  },
+  {
+   "id": "sceloporus_occidentalis",
+   "scientific": "Sceloporus occidentalis",
+   "common": "western fence lizard",
+   "kind": "reptile",
+   "fidelity": 3,
+   "present": null,
+   "evidence": null
+  }
+ ],
  "queue": {
   "cards": [
    {
     "id": "pinus_muricata",
     "kind": "tree",
-    "stand_in": "pinus_ponderosa",
+    "stand_in": "pinus_radiata",
     "why": [
      "named by EVT 7177 California Coastal Closed-Cone Conifer Forest and Woodland (792 cells)"
     ]

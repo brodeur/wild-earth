@@ -1,6 +1,6 @@
 {
  "tile": "utm11n_270_4180",
- "at": "2026-11-05T04:19:55Z",
+ "at": "2026-11-05T05:46:28Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -23,7 +23,7 @@
     "animals": 0
    },
    "3": {
-    "plants": 11,
+    "plants": 12,
     "animals": 3
    },
    "4": {
@@ -31,10 +31,10 @@
     "animals": 14
    }
   },
-  "plants": 89,
+  "plants": 90,
   "animals_present": 17,
-  "animals_queued": 69,
-  "meshy_credits_queued": 2070,
+  "animals_queued": 68,
+  "meshy_credits_queued": 2040,
   "cards_queued": 0,
   "stand_ins": {}
  },
@@ -80,13 +80,13 @@
   },
   {
    "id": "achillea_millefolium",
-   "kind": "forb",
+   "kind": "ground",
    "fidelity": 4,
    "common": "yarrow",
    "drawn_as": "achillea_millefolium",
    "share": 0.1828,
    "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+    "GBIF: 51 records on the tile"
    ]
   },
   {
@@ -154,13 +154,13 @@
   },
   {
    "id": "claytonia_perfoliata",
-   "kind": "forb",
+   "kind": "ground",
    "fidelity": 4,
    "common": "miner's lettuce",
    "drawn_as": "claytonia_perfoliata",
    "share": 0.1124,
    "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+    "GBIF: 16 records on the tile"
    ]
   },
   {
@@ -478,13 +478,13 @@
   },
   {
    "id": "artemisia_douglasiana",
-   "kind": "forb",
+   "kind": "ground",
    "fidelity": 4,
    "common": "California mugwort",
    "drawn_as": "artemisia_douglasiana",
    "share": 0.0162,
    "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+    "GBIF: 14 records on the tile"
    ]
   },
   {
@@ -889,7 +889,8 @@
    "share": 0.0025,
    "why_needed": [
     "rule riparian",
-    "rule montane_riparian"
+    "rule montane_riparian",
+    "GBIF: 167 records on the tile"
    ]
   },
   {
@@ -1014,7 +1015,8 @@
    "share": 0.0009,
    "why_needed": [
     "rule riparian",
-    "rule montane_riparian"
+    "rule montane_riparian",
+    "GBIF: 120 records on the tile"
    ]
   },
   {
@@ -1063,6 +1065,17 @@
    "why_needed": [
     "rule riparian",
     "rule grassland_savanna"
+   ]
+  },
+  {
+   "id": "equisetum_hyemale",
+   "kind": "ground",
+   "fidelity": 3,
+   "common": "scouring rush",
+   "drawn_as": "equisetum_hyemale",
+   "share": 0,
+   "why_needed": [
+    "GBIF: 16 records on the tile"
    ]
   },
   {
@@ -1123,6 +1136,7 @@
    "drawn_as": "sequoiadendron_giganteum",
    "share": 0,
    "why_needed": [
+    "GBIF: 38 records on the tile",
     "GBIF: 7 CC0 / CC BY records on the tile (placed by them: sequoiadendron_giganteum grows in groves)"
    ]
   }
@@ -1290,8 +1304,8 @@
     "id": "turdus_migratorius",
     "common": "american robin",
     "group": "bird",
-    "family": null,
-    "records": 3861,
+    "family": "Turdidae",
+    "records": 3885,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
@@ -1300,8 +1314,8 @@
     "id": "junco_hyemalis",
     "common": "dark-eyed junco",
     "group": "bird",
-    "family": null,
-    "records": 2844,
+    "family": "Passerellidae",
+    "records": 2907,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
@@ -1310,8 +1324,8 @@
     "id": "euphagus_cyanocephalus",
     "common": "brewer's blackbird",
     "group": "bird",
-    "family": null,
-    "records": 2621,
+    "family": "Icteridae",
+    "records": 2648,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
@@ -1320,18 +1334,8 @@
     "id": "poecile_gambeli",
     "common": "mountain chickadee",
     "group": "bird",
-    "family": null,
-    "records": 1898,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
-   },
-   {
-    "scientific": "Setophaga coronata",
-    "id": "setophaga_coronata",
-    "common": "yellow-rumped warbler",
-    "group": "bird",
-    "family": null,
-    "records": 1884,
+    "family": "Paridae",
+    "records": 1930,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
@@ -1340,8 +1344,18 @@
     "id": "pheucticus_melanocephalus",
     "common": "black-headed grosbeak",
     "group": "bird",
-    "family": null,
-    "records": 1873,
+    "family": "Cardinalidae",
+    "records": 1835,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Setophaga coronata",
+    "id": "setophaga_coronata",
+    "common": "yellow-rumped warbler",
+    "group": "bird",
+    "family": "Parulidae",
+    "records": 1804,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
@@ -1350,18 +1364,8 @@
     "id": "colaptes_auratus",
     "common": "northern flicker",
     "group": "bird",
-    "family": null,
-    "records": 1734,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
-   },
-   {
-    "scientific": "Leuconotopicus albolarvatus",
-    "id": "leuconotopicus_albolarvatus",
-    "common": "white-headed woodpecker",
-    "group": "bird",
-    "family": null,
-    "records": 1715,
+    "family": "Picidae",
+    "records": 1780,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
@@ -1370,8 +1374,18 @@
     "id": "agelaius_phoeniceus",
     "common": "red-winged blackbird",
     "group": "bird",
-    "family": null,
-    "records": 1706,
+    "family": "Icteridae",
+    "records": 1729,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Leuconotopicus albolarvatus",
+    "id": "leuconotopicus_albolarvatus",
+    "common": "white-headed woodpecker",
+    "group": "bird",
+    "family": "Picidae",
+    "records": 1674,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
@@ -1380,18 +1394,8 @@
     "id": "certhia_americana",
     "common": "brown creeper",
     "group": "bird",
-    "family": null,
-    "records": 1652,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
-   },
-   {
-    "scientific": "Sitta canadensis",
-    "id": "sitta_canadensis",
-    "common": "red-breasted nuthatch",
-    "group": "bird",
-    "family": null,
-    "records": 1533,
+    "family": "Certhiidae",
+    "records": 1620,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
@@ -1400,8 +1404,8 @@
     "id": "melospiza_melodia",
     "common": "song sparrow",
     "group": "bird",
-    "family": null,
-    "records": 1525,
+    "family": "Passerellidae",
+    "records": 1606,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
@@ -1410,8 +1414,18 @@
     "id": "piranga_ludoviciana",
     "common": "western tanager",
     "group": "bird",
-    "family": null,
-    "records": 1463,
+    "family": "Cardinalidae",
+    "records": 1452,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Sitta canadensis",
+    "id": "sitta_canadensis",
+    "common": "red-breasted nuthatch",
+    "group": "bird",
+    "family": "Sittidae",
+    "records": 1436,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
@@ -1420,18 +1434,8 @@
     "id": "anas_platyrhynchos",
     "common": "mallard",
     "group": "bird",
-    "family": null,
-    "records": 1237,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
-   },
-   {
-    "scientific": "Aeronautes saxatalis",
-    "id": "aeronautes_saxatalis",
-    "common": "white-throated swift",
-    "group": "bird",
-    "family": null,
-    "records": 1230,
+    "family": "Anatidae",
+    "records": 1261,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
@@ -1440,8 +1444,18 @@
     "id": "leuconotopicus_villosus",
     "common": "hairy woodpecker",
     "group": "bird",
-    "family": null,
-    "records": 1217,
+    "family": "Picidae",
+    "records": 1189,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Aeronautes saxatalis",
+    "id": "aeronautes_saxatalis",
+    "common": "white-throated swift",
+    "group": "bird",
+    "family": "Apodidae",
+    "records": 1185,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
@@ -1450,18 +1464,8 @@
     "id": "dryocopus_pileatus",
     "common": "pileated woodpecker",
     "group": "bird",
-    "family": null,
-    "records": 1085,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
-   },
-   {
-    "scientific": "Contopus sordidulus",
-    "id": "contopus_sordidulus",
-    "common": "western wood-pewee",
-    "group": "bird",
-    "family": null,
-    "records": 987,
+    "family": "Picidae",
+    "records": 1068,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
@@ -1470,18 +1474,18 @@
     "id": "sayornis_nigricans",
     "common": "black phoebe",
     "group": "bird",
-    "family": null,
-    "records": 957,
+    "family": "Tyrannidae",
+    "records": 976,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
    {
-    "scientific": "Vireo cassinii",
-    "id": "vireo_cassinii",
-    "common": "cassin's vireo",
+    "scientific": "Contopus sordidulus",
+    "id": "contopus_sordidulus",
+    "common": "western wood-pewee",
     "group": "bird",
-    "family": null,
-    "records": 874,
+    "family": "Tyrannidae",
+    "records": 972,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
@@ -1490,18 +1494,18 @@
     "id": "regulus_satrapa",
     "common": "golden-crowned kinglet",
     "group": "bird",
-    "family": null,
-    "records": 825,
+    "family": "Regulidae",
+    "records": 797,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
    {
-    "scientific": "Vireo gilvus",
-    "id": "vireo_gilvus",
-    "common": "warbling vireo",
+    "scientific": "Vireo cassinii",
+    "id": "vireo_cassinii",
+    "common": "cassin's vireo",
     "group": "bird",
-    "family": null,
-    "records": 751,
+    "family": "Vireonidae",
+    "records": 774,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
@@ -1510,28 +1514,8 @@
     "id": "regulus_calendula",
     "common": "ruby-crowned kinglet",
     "group": "bird",
-    "family": null,
-    "records": 736,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
-   },
-   {
-    "scientific": "Cinclus mexicanus",
-    "id": "cinclus_mexicanus",
-    "common": "american dipper",
-    "group": "bird",
-    "family": null,
-    "records": 721,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
-   },
-   {
-    "scientific": "Molothrus ater",
-    "id": "molothrus_ater",
-    "common": "brown-headed cowbird",
-    "group": "bird",
-    "family": null,
-    "records": 662,
+    "family": "Regulidae",
+    "records": 770,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
@@ -1540,8 +1524,38 @@
     "id": "buteo_lineatus",
     "common": "red-shouldered/broad-winged hawk",
     "group": "bird",
-    "family": null,
-    "records": 652,
+    "family": "Accipitridae",
+    "records": 738,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Vireo gilvus",
+    "id": "vireo_gilvus",
+    "common": "warbling vireo",
+    "group": "bird",
+    "family": "Vireonidae",
+    "records": 733,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Cinclus mexicanus",
+    "id": "cinclus_mexicanus",
+    "common": "american dipper",
+    "group": "bird",
+    "family": "Cinclidae",
+    "records": 717,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Molothrus ater",
+    "id": "molothrus_ater",
+    "common": "brown-headed cowbird",
+    "group": "bird",
+    "family": "Icteridae",
+    "records": 668,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
@@ -1550,8 +1564,8 @@
     "id": "setophaga_nigrescens",
     "common": "black-throated gray warbler",
     "group": "bird",
-    "family": null,
-    "records": 627,
+    "family": "Parulidae",
+    "records": 593,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
@@ -1560,8 +1574,8 @@
     "id": "mergus_merganser",
     "common": "common merganser",
     "group": "bird",
-    "family": null,
-    "records": 560,
+    "family": "Anatidae",
+    "records": 562,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
@@ -1570,38 +1584,8 @@
     "id": "dryobates_pubescens",
     "common": "downy woodpecker",
     "group": "bird",
-    "family": null,
-    "records": 553,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
-   },
-   {
-    "scientific": "Patagioenas fasciata",
-    "id": "patagioenas_fasciata",
-    "common": "band-tailed pigeon",
-    "group": "bird",
-    "family": null,
-    "records": 497,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
-   },
-   {
-    "scientific": "Icterus bullockii",
-    "id": "icterus_bullockii",
-    "common": "bullock's oriole",
-    "group": "bird",
-    "family": null,
-    "records": 465,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
-   },
-   {
-    "scientific": "Setophaga petechia",
-    "id": "setophaga_petechia",
-    "common": "yellow warbler",
-    "group": "bird",
-    "family": null,
-    "records": 462,
+    "family": "Picidae",
+    "records": 549,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
@@ -1610,8 +1594,38 @@
     "id": "pipilo_maculatus",
     "common": "spotted towhee",
     "group": "bird",
-    "family": null,
-    "records": 460,
+    "family": "Passerellidae",
+    "records": 536,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Patagioenas fasciata",
+    "id": "patagioenas_fasciata",
+    "common": "band-tailed pigeon",
+    "group": "bird",
+    "family": "Columbidae",
+    "records": 528,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Icterus bullockii",
+    "id": "icterus_bullockii",
+    "common": "bullock's oriole",
+    "group": "bird",
+    "family": "Icteridae",
+    "records": 426,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Calypte anna",
+    "id": "calypte_anna",
+    "common": "anna's hummingbird",
+    "group": "bird",
+    "family": "Trochilidae",
+    "records": 387,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
@@ -1620,18 +1634,8 @@
     "id": "setophaga_occidentalis",
     "common": "hermit warbler",
     "group": "bird",
-    "family": null,
-    "records": 406,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
-   },
-   {
-    "scientific": "Leiothlypis ruficapilla",
-    "id": "leiothlypis_ruficapilla",
-    "common": "nashville warbler",
-    "group": "bird",
-    "family": null,
-    "records": 398,
+    "family": "Parulidae",
+    "records": 364,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
@@ -1640,7 +1644,7 @@
     "id": "peromyscus_maniculatus",
     "common": "deer mouse",
     "group": "mammal",
-    "family": null,
+    "family": "Cricetidae",
     "records": 105,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1650,7 +1654,7 @@
     "id": "peromyscus_boylii",
     "common": "brush mouse",
     "group": "mammal",
-    "family": null,
+    "family": "Cricetidae",
     "records": 102,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1660,7 +1664,7 @@
     "id": "sorex_monticolus",
     "common": "montane shrew",
     "group": "mammal",
-    "family": null,
+    "family": "Soricidae",
     "records": 98,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1670,8 +1674,8 @@
     "id": "lynx_rufus",
     "common": "bobcat",
     "group": "mammal",
-    "family": null,
-    "records": 68,
+    "family": "Felidae",
+    "records": 71,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
    },
@@ -1680,7 +1684,7 @@
     "id": "microtus_longicaudus",
     "common": "long-tailed vole",
     "group": "mammal",
-    "family": null,
+    "family": "Cricetidae",
     "records": 60,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1690,7 +1694,7 @@
     "id": "microtus_montanus",
     "common": "montane vole",
     "group": "mammal",
-    "family": null,
+    "family": "Cricetidae",
     "records": 56,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1700,7 +1704,7 @@
     "id": "tamiasciurus_douglasii",
     "common": "douglas squirrel",
     "group": "mammal",
-    "family": null,
+    "family": "Sciuridae",
     "records": 54,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1710,7 +1714,7 @@
     "id": "tamias_speciosus",
     "common": "lodgepole chipmunk",
     "group": "mammal",
-    "family": null,
+    "family": "Sciuridae",
     "records": 47,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1720,7 +1724,7 @@
     "id": "callospermophilus_lateralis",
     "common": "golden-mantled ground squirrel",
     "group": "mammal",
-    "family": null,
+    "family": "Sciuridae",
     "records": 47,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1730,7 +1734,7 @@
     "id": "marmota_flaviventris",
     "common": "yellow-bellied marmot",
     "group": "mammal",
-    "family": null,
+    "family": "Sciuridae",
     "records": 42,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1740,7 +1744,7 @@
     "id": "zapus_princeps",
     "common": "western jumping mouse",
     "group": "mammal",
-    "family": null,
+    "family": "Dipodidae",
     "records": 41,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1750,7 +1754,7 @@
     "id": "tamias_senex",
     "common": "allen's chipmunk",
     "group": "mammal",
-    "family": null,
+    "family": "Sciuridae",
     "records": 22,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1760,7 +1764,7 @@
     "id": "thomomys_monticola",
     "common": "mountain pocket gopher",
     "group": "mammal",
-    "family": null,
+    "family": "Geomyidae",
     "records": 19,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1770,7 +1774,7 @@
     "id": "glaucomys_sabrinus",
     "common": "northern flying squirrel",
     "group": "mammal",
-    "family": null,
+    "family": "Sciuridae",
     "records": 11,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1780,7 +1784,7 @@
     "id": "scapanus_latimanus",
     "common": "broad-footed mole",
     "group": "mammal",
-    "family": null,
+    "family": "Talpidae",
     "records": 10,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1790,7 +1794,7 @@
     "id": "thomomys_bottae",
     "common": "botta's pocket gopher",
     "group": "mammal",
-    "family": null,
+    "family": "Geomyidae",
     "records": 9,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1800,7 +1804,7 @@
     "id": "castor_canadensis",
     "common": "american beaver",
     "group": "mammal",
-    "family": null,
+    "family": "Castoridae",
     "records": 8,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1810,7 +1814,7 @@
     "id": "procyon_lotor",
     "common": "raccoon",
     "group": "mammal",
-    "family": null,
+    "family": "Procyonidae",
     "records": 8,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1820,7 +1824,7 @@
     "id": "sorex_palustris",
     "common": "american water shrew",
     "group": "mammal",
-    "family": null,
+    "family": "Soricidae",
     "records": 6,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1830,7 +1834,7 @@
     "id": "urocitellus_beldingi",
     "common": "belding's ground squirrel",
     "group": "mammal",
-    "family": null,
+    "family": "Sciuridae",
     "records": 6,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1840,7 +1844,7 @@
     "id": "sorex_trowbridgii",
     "common": "trowbridge's shrew",
     "group": "mammal",
-    "family": null,
+    "family": "Soricidae",
     "records": 5,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1850,7 +1854,7 @@
     "id": "tamias_quadrimaculatus",
     "common": "long-eared chipmunk",
     "group": "mammal",
-    "family": null,
+    "family": "Sciuridae",
     "records": 5,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1860,7 +1864,7 @@
     "id": "bassariscus_astutus",
     "common": "ringtail",
     "group": "mammal",
-    "family": null,
+    "family": "Procyonidae",
     "records": 4,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1870,7 +1874,7 @@
     "id": "eptesicus_fuscus",
     "common": "big brown bat",
     "group": "mammal",
-    "family": null,
+    "family": "Vespertilionidae",
     "records": 3,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1880,7 +1884,7 @@
     "id": "euderma_maculatum",
     "common": "pinto bat",
     "group": "mammal",
-    "family": null,
+    "family": "Vespertilionidae",
     "records": 3,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1890,7 +1894,7 @@
     "id": "spilogale_gracilis",
     "common": "western spotted skunk",
     "group": "mammal",
-    "family": null,
+    "family": "Mephitidae",
     "records": 3,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1900,7 +1904,7 @@
     "id": "tamias_merriami",
     "common": "merriam's chipmunk",
     "group": "mammal",
-    "family": null,
+    "family": "Sciuridae",
     "records": 3,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1910,7 +1914,7 @@
     "id": "aplodontia_rufa",
     "common": "mountain beaver",
     "group": "mammal",
-    "family": null,
+    "family": "Aplodontiidae",
     "records": 3,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1920,7 +1924,7 @@
     "id": "neotoma_macrotis",
     "common": "big-eared woodrat",
     "group": "mammal",
-    "family": null,
+    "family": "Cricetidae",
     "records": 3,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1930,7 +1934,7 @@
     "id": "myotis_californicus",
     "common": "california myotis",
     "group": "mammal",
-    "family": null,
+    "family": "Vespertilionidae",
     "records": 2,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1940,7 +1944,7 @@
     "id": "ochotona_princeps",
     "common": "american pika",
     "group": "mammal",
-    "family": null,
+    "family": "Ochotonidae",
     "records": 2,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1950,7 +1954,7 @@
     "id": "phenacomys_intermedius",
     "common": "western heather vole",
     "group": "mammal",
-    "family": null,
+    "family": "Cricetidae",
     "records": 2,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1960,7 +1964,7 @@
     "id": "sciurus_carolinensis",
     "common": "eastern gray squirrel",
     "group": "mammal",
-    "family": null,
+    "family": "Sciuridae",
     "records": 2,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
@@ -1970,7 +1974,7 @@
     "id": "antrozous_pallidus",
     "common": "pallid bat",
     "group": "mammal",
-    "family": null,
+    "family": "Vespertilionidae",
     "records": 1,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"

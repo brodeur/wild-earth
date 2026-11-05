@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-05T05:02:44Z",
+ "generated_at": "2026-11-05T05:46:47Z",
  "about": "The species registry: every species the game knows or needs, the assets it has, and how far along each is.",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
@@ -88,12 +88,14 @@
     "common": "anna's hummingbird",
     "group": "bird",
     "family": null,
-    "records": 101481,
+    "records": 102138,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
      "utm10n_540_4170",
-     "utm10n_540_4180"
+     "utm10n_540_4180",
+     "utm10n_731_4235",
+     "utm11n_270_4180"
     ],
     "within_budget": true
    },
@@ -103,12 +105,13 @@
     "common": "song sparrow",
     "group": "bird",
     "family": null,
-    "records": 97294,
+    "records": 97777,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
      "utm10n_540_4170",
      "utm10n_540_4180",
+     "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
@@ -135,12 +138,13 @@
     "common": "dark-eyed junco",
     "group": "bird",
     "family": null,
-    "records": 79363,
+    "records": 81013,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
      "utm10n_540_4170",
      "utm10n_540_4180",
+     "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
@@ -152,12 +156,13 @@
     "common": "black phoebe",
     "group": "bird",
     "family": null,
-    "records": 79318,
+    "records": 79863,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
      "utm10n_540_4170",
      "utm10n_540_4180",
+     "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
@@ -169,12 +174,13 @@
     "common": "american robin",
     "group": "bird",
     "family": null,
-    "records": 78220,
+    "records": 79637,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
      "utm10n_540_4170",
      "utm10n_540_4180",
+     "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
@@ -216,12 +222,13 @@
     "common": "chestnut-backed chickadee",
     "group": "bird",
     "family": null,
-    "records": 68243,
+    "records": 68589,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
      "utm10n_540_4170",
-     "utm10n_540_4180"
+     "utm10n_540_4180",
+     "utm10n_731_4235"
     ],
     "within_budget": true
    },
@@ -231,12 +238,13 @@
     "common": "mallard",
     "group": "bird",
     "family": null,
-    "records": 62254,
+    "records": 62682,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
      "utm10n_540_4170",
      "utm10n_540_4180",
+     "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
@@ -293,12 +301,13 @@
     "common": "yellow-rumped warbler",
     "group": "bird",
     "family": null,
-    "records": 53704,
+    "records": 54501,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
      "utm10n_540_4170",
      "utm10n_540_4180",
+     "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
@@ -320,6 +329,23 @@
     "within_budget": true
    },
    {
+    "scientific": "Buteo lineatus",
+    "id": "buteo_lineatus",
+    "common": "red-shouldered/broad-winged hawk",
+    "group": "bird",
+    "family": null,
+    "records": 43251,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
+    "tiles": [
+     "utm10n_540_4170",
+     "utm10n_540_4180",
+     "utm11n_267_4175",
+     "utm11n_270_4180"
+    ],
+    "within_budget": true
+   },
+   {
     "scientific": "Setophaga townsendi",
     "id": "setophaga_townsendi",
     "common": "townsend's warbler",
@@ -331,23 +357,6 @@
     "tiles": [
      "utm10n_540_4170",
      "utm10n_540_4180"
-    ],
-    "within_budget": true
-   },
-   {
-    "scientific": "Buteo lineatus",
-    "id": "buteo_lineatus",
-    "common": "red-shouldered/broad-winged hawk",
-    "group": "bird",
-    "family": null,
-    "records": 43165,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
-    "tiles": [
-     "utm10n_540_4170",
-     "utm10n_540_4180",
-     "utm11n_267_4175",
-     "utm11n_270_4180"
     ],
     "within_budget": true
    },
@@ -402,12 +411,13 @@
     "common": "ruby-crowned kinglet",
     "group": "bird",
     "family": null,
-    "records": 38722,
+    "records": 39205,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
      "utm10n_540_4170",
      "utm10n_540_4180",
+     "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
@@ -419,12 +429,13 @@
     "common": "brewer's blackbird",
     "group": "bird",
     "family": null,
-    "records": 37952,
+    "records": 38459,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
      "utm10n_540_4170",
      "utm10n_540_4180",
+     "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
@@ -492,6 +503,24 @@
     "within_budget": false
    },
    {
+    "scientific": "Colaptes auratus",
+    "id": "colaptes_auratus",
+    "common": "northern flicker",
+    "group": "bird",
+    "family": null,
+    "records": 31451,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
+    "tiles": [
+     "utm10n_540_4170",
+     "utm10n_540_4180",
+     "utm10n_731_4235",
+     "utm11n_267_4175",
+     "utm11n_270_4180"
+    ],
+    "within_budget": false
+   },
+   {
     "scientific": "Pelecanus occidentalis",
     "id": "pelecanus_occidentalis",
     "common": "brown pelican",
@@ -502,23 +531,6 @@
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
      "utm10n_540_4180"
-    ],
-    "within_budget": false
-   },
-   {
-    "scientific": "Colaptes auratus",
-    "id": "colaptes_auratus",
-    "common": "northern flicker",
-    "group": "bird",
-    "family": null,
-    "records": 30498,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
-    "tiles": [
-     "utm10n_540_4170",
-     "utm10n_540_4180",
-     "utm11n_267_4175",
-     "utm11n_270_4180"
     ],
     "within_budget": false
    },
@@ -557,11 +569,12 @@
     "common": "canada goose (canadensis group)",
     "group": "bird",
     "family": null,
-    "records": 25247,
+    "records": 25658,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
-     "utm10n_540_4180"
+     "utm10n_540_4180",
+     "utm10n_731_4235"
     ],
     "within_budget": false
    },
@@ -599,11 +612,12 @@
     "common": "purple finch",
     "group": "bird",
     "family": null,
-    "records": 17936,
+    "records": 18149,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
-     "utm10n_540_4180"
+     "utm10n_540_4180",
+     "utm10n_731_4235"
     ],
     "within_budget": false
    },
@@ -683,11 +697,12 @@
     "common": "hermit thrush",
     "group": "bird",
     "family": null,
-    "records": 6950,
+    "records": 7172,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
-     "utm10n_540_4170"
+     "utm10n_540_4170",
+     "utm10n_731_4235"
     ],
     "within_budget": false
    },
@@ -711,70 +726,11 @@
     "common": "mountain chickadee",
     "group": "bird",
     "family": "Paridae",
-    "records": 5531,
+    "records": 6800,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
-     "utm11n_267_4175",
-     "utm11n_270_4180"
-    ],
-    "within_budget": false
-   },
-   {
-    "scientific": "Pheucticus melanocephalus",
-    "id": "pheucticus_melanocephalus",
-    "common": "black-headed grosbeak",
-    "group": "bird",
-    "family": "Cardinalidae",
-    "records": 4953,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
-    "tiles": [
-     "utm11n_267_4175",
-     "utm11n_270_4180"
-    ],
-    "within_budget": false
-   },
-   {
-    "scientific": "Leuconotopicus albolarvatus",
-    "id": "leuconotopicus_albolarvatus",
-    "common": "white-headed woodpecker",
-    "group": "bird",
-    "family": "Picidae",
-    "records": 4613,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
-    "tiles": [
-     "utm11n_267_4175",
-     "utm11n_270_4180"
-    ],
-    "within_budget": false
-   },
-   {
-    "scientific": "Certhia americana",
-    "id": "certhia_americana",
-    "common": "brown creeper",
-    "group": "bird",
-    "family": "Certhiidae",
-    "records": 4506,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
-    "tiles": [
-     "utm11n_267_4175",
-     "utm11n_270_4180"
-    ],
-    "within_budget": false
-   },
-   {
-    "scientific": "Agelaius phoeniceus",
-    "id": "agelaius_phoeniceus",
-    "common": "red-winged blackbird",
-    "group": "bird",
-    "family": "Icteridae",
-    "records": 4326,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
-    "tiles": [
+     "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
@@ -786,10 +742,75 @@
     "common": "red-breasted nuthatch",
     "group": "bird",
     "family": "Sittidae",
-    "records": 4316,
+    "records": 5871,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
+     "utm10n_731_4235",
+     "utm11n_267_4175",
+     "utm11n_270_4180"
+    ],
+    "within_budget": false
+   },
+   {
+    "scientific": "Certhia americana",
+    "id": "certhia_americana",
+    "common": "brown creeper",
+    "group": "bird",
+    "family": "Certhiidae",
+    "records": 5720,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
+    "tiles": [
+     "utm10n_731_4235",
+     "utm11n_267_4175",
+     "utm11n_270_4180"
+    ],
+    "within_budget": false
+   },
+   {
+    "scientific": "Pheucticus melanocephalus",
+    "id": "pheucticus_melanocephalus",
+    "common": "black-headed grosbeak",
+    "group": "bird",
+    "family": "Cardinalidae",
+    "records": 5686,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
+    "tiles": [
+     "utm10n_731_4235",
+     "utm11n_267_4175",
+     "utm11n_270_4180"
+    ],
+    "within_budget": false
+   },
+   {
+    "scientific": "Leuconotopicus albolarvatus",
+    "id": "leuconotopicus_albolarvatus",
+    "common": "white-headed woodpecker",
+    "group": "bird",
+    "family": "Picidae",
+    "records": 5666,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
+    "tiles": [
+     "utm10n_731_4235",
+     "utm11n_267_4175",
+     "utm11n_270_4180"
+    ],
+    "within_budget": false
+   },
+   {
+    "scientific": "Agelaius phoeniceus",
+    "id": "agelaius_phoeniceus",
+    "common": "red-winged blackbird",
+    "group": "bird",
+    "family": "Icteridae",
+    "records": 4628,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
+    "tiles": [
+     "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
@@ -801,25 +822,11 @@
     "common": "western tanager",
     "group": "bird",
     "family": "Cardinalidae",
-    "records": 3833,
+    "records": 4443,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
-     "utm11n_267_4175",
-     "utm11n_270_4180"
-    ],
-    "within_budget": false
-   },
-   {
-    "scientific": "Aeronautes saxatalis",
-    "id": "aeronautes_saxatalis",
-    "common": "white-throated swift",
-    "group": "bird",
-    "family": "Apodidae",
-    "records": 3603,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
-    "tiles": [
+     "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
@@ -831,7 +838,23 @@
     "common": "hairy woodpecker",
     "group": "bird",
     "family": "Picidae",
-    "records": 3264,
+    "records": 4115,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
+    "tiles": [
+     "utm10n_731_4235",
+     "utm11n_267_4175",
+     "utm11n_270_4180"
+    ],
+    "within_budget": false
+   },
+   {
+    "scientific": "Aeronautes saxatalis",
+    "id": "aeronautes_saxatalis",
+    "common": "white-throated swift",
+    "group": "bird",
+    "family": "Apodidae",
+    "records": 3558,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
@@ -846,25 +869,11 @@
     "common": "pileated woodpecker",
     "group": "bird",
     "family": "Picidae",
-    "records": 2776,
+    "records": 3448,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
-     "utm11n_267_4175",
-     "utm11n_270_4180"
-    ],
-    "within_budget": false
-   },
-   {
-    "scientific": "Contopus sordidulus",
-    "id": "contopus_sordidulus",
-    "common": "western wood-pewee",
-    "group": "bird",
-    "family": "Tyrannidae",
-    "records": 2662,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
-    "tiles": [
+     "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
@@ -876,10 +885,27 @@
     "common": "golden-crowned kinglet",
     "group": "bird",
     "family": "Regulidae",
-    "records": 2348,
+    "records": 3101,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
+     "utm10n_731_4235",
+     "utm11n_267_4175",
+     "utm11n_270_4180"
+    ],
+    "within_budget": false
+   },
+   {
+    "scientific": "Contopus sordidulus",
+    "id": "contopus_sordidulus",
+    "common": "western wood-pewee",
+    "group": "bird",
+    "family": "Tyrannidae",
+    "records": 3042,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
+    "tiles": [
+     "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
@@ -891,25 +917,27 @@
     "common": "cassin's vireo",
     "group": "bird",
     "family": "Vireonidae",
-    "records": 2277,
+    "records": 2443,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
+     "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
     "within_budget": false
    },
    {
-    "scientific": "Cinclus mexicanus",
-    "id": "cinclus_mexicanus",
-    "common": "american dipper",
+    "scientific": "Pipilo maculatus",
+    "id": "pipilo_maculatus",
+    "common": "spotted towhee",
     "group": "bird",
-    "family": "Cinclidae",
-    "records": 2135,
+    "family": "Passerellidae",
+    "records": 2276,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
+     "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
@@ -921,7 +949,23 @@
     "common": "warbling vireo",
     "group": "bird",
     "family": "Vireonidae",
-    "records": 1977,
+    "records": 2160,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
+    "tiles": [
+     "utm10n_731_4235",
+     "utm11n_267_4175",
+     "utm11n_270_4180"
+    ],
+    "within_budget": false
+   },
+   {
+    "scientific": "Cinclus mexicanus",
+    "id": "cinclus_mexicanus",
+    "common": "american dipper",
+    "group": "bird",
+    "family": "Cinclidae",
+    "records": 2131,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
@@ -936,7 +980,7 @@
     "common": "black-throated gray warbler",
     "group": "bird",
     "family": "Parulidae",
-    "records": 1855,
+    "records": 1821,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
@@ -951,37 +995,7 @@
     "common": "brown-headed cowbird",
     "group": "bird",
     "family": "Icteridae",
-    "records": 1739,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
-    "tiles": [
-     "utm11n_267_4175",
-     "utm11n_270_4180"
-    ],
-    "within_budget": false
-   },
-   {
-    "scientific": "Mergus merganser",
-    "id": "mergus_merganser",
-    "common": "common merganser",
-    "group": "bird",
-    "family": "Anatidae",
-    "records": 1630,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
-    "tiles": [
-     "utm11n_267_4175",
-     "utm11n_270_4180"
-    ],
-    "within_budget": false
-   },
-   {
-    "scientific": "Pipilo maculatus",
-    "id": "pipilo_maculatus",
-    "common": "spotted towhee",
-    "group": "bird",
-    "family": "Passerellidae",
-    "records": 1477,
+    "records": 1745,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
@@ -996,10 +1010,11 @@
     "common": "downy woodpecker",
     "group": "bird",
     "family": "Picidae",
-    "records": 1472,
+    "records": 1684,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
+     "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
@@ -1011,7 +1026,23 @@
     "common": "band-tailed pigeon",
     "group": "bird",
     "family": "Columbidae",
-    "records": 1319,
+    "records": 1666,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
+    "tiles": [
+     "utm10n_731_4235",
+     "utm11n_267_4175",
+     "utm11n_270_4180"
+    ],
+    "within_budget": false
+   },
+   {
+    "scientific": "Mergus merganser",
+    "id": "mergus_merganser",
+    "common": "common merganser",
+    "group": "bird",
+    "family": "Anatidae",
+    "records": 1632,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
@@ -1037,17 +1068,32 @@
     "within_budget": false
    },
    {
+    "scientific": "Sphyrapicus ruber",
+    "id": "sphyrapicus_ruber",
+    "common": "red-breasted sapsucker",
+    "group": "bird",
+    "family": "Picidae",
+    "records": 1062,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
+    "tiles": [
+     "utm10n_731_4235",
+     "utm11n_267_4175"
+    ],
+    "within_budget": false
+   },
+   {
     "scientific": "Leiothlypis ruficapilla",
     "id": "leiothlypis_ruficapilla",
     "common": "nashville warbler",
     "group": "bird",
     "family": "Parulidae",
-    "records": 1217,
+    "records": 1041,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
-     "utm11n_267_4175",
-     "utm11n_270_4180"
+     "utm10n_731_4235",
+     "utm11n_267_4175"
     ],
     "within_budget": false
    },
@@ -1071,28 +1117,44 @@
     "common": "raccoon",
     "group": "mammal",
     "family": null,
-    "records": 925,
+    "records": 926,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
      "utm10n_540_4170",
      "utm10n_540_4180",
+     "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
     "within_budget": false
    },
    {
-    "scientific": "Sphyrapicus ruber",
-    "id": "sphyrapicus_ruber",
-    "common": "red-breasted sapsucker",
+    "scientific": "Troglodytes pacificus",
+    "id": "troglodytes_pacificus",
+    "common": "pacific wren",
     "group": "bird",
-    "family": "Picidae",
-    "records": 740,
+    "family": "Troglodytidae",
+    "records": 866,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
-     "utm11n_267_4175"
+     "utm10n_731_4235"
+    ],
+    "within_budget": false
+   },
+   {
+    "scientific": "Setophaga occidentalis",
+    "id": "setophaga_occidentalis",
+    "common": "hermit warbler",
+    "group": "bird",
+    "family": "Parulidae",
+    "records": 670,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
+    "tiles": [
+     "utm10n_731_4235",
+     "utm11n_270_4180"
     ],
     "within_budget": false
    },
@@ -1131,8 +1193,8 @@
     "id": "icterus_bullockii",
     "common": "bullock's oriole",
     "group": "bird",
-    "family": null,
-    "records": 465,
+    "family": "Icteridae",
+    "records": 426,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
@@ -1141,30 +1203,16 @@
     "within_budget": false
    },
    {
-    "scientific": "Setophaga petechia",
-    "id": "setophaga_petechia",
-    "common": "yellow warbler",
+    "scientific": "Geothlypis tolmiei",
+    "id": "geothlypis_tolmiei",
+    "common": "macgillivray's warbler",
     "group": "bird",
-    "family": null,
-    "records": 462,
+    "family": "Parulidae",
+    "records": 402,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
-     "utm11n_270_4180"
-    ],
-    "within_budget": false
-   },
-   {
-    "scientific": "Setophaga occidentalis",
-    "id": "setophaga_occidentalis",
-    "common": "hermit warbler",
-    "group": "bird",
-    "family": null,
-    "records": 406,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
-    "tiles": [
-     "utm11n_270_4180"
+     "utm10n_731_4235"
     ],
     "within_budget": false
    },
@@ -1184,17 +1232,48 @@
     "within_budget": false
    },
    {
+    "scientific": "Tamiasciurus douglasii",
+    "id": "tamiasciurus_douglasii",
+    "common": "douglas squirrel",
+    "group": "mammal",
+    "family": "Sciuridae",
+    "records": 328,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
+    "tiles": [
+     "utm10n_731_4235",
+     "utm11n_267_4175",
+     "utm11n_270_4180"
+    ],
+    "within_budget": false
+   },
+   {
+    "scientific": "Empidonax difficilis",
+    "id": "empidonax_difficilis",
+    "common": "pacific-slope flycatcher",
+    "group": "bird",
+    "family": "Tyrannidae",
+    "records": 322,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
+    "tiles": [
+     "utm10n_731_4235"
+    ],
+    "within_budget": false
+   },
+   {
     "scientific": "Peromyscus maniculatus",
     "id": "peromyscus_maniculatus",
     "common": "deer mouse",
     "group": "mammal",
     "family": null,
-    "records": 291,
+    "records": 311,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
      "utm10n_540_4170",
      "utm10n_540_4180",
+     "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
@@ -1206,11 +1285,12 @@
     "common": "bobcat",
     "group": "mammal",
     "family": null,
-    "records": 288,
+    "records": 292,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
      "utm10n_540_4180",
+     "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
@@ -1252,14 +1332,29 @@
     "common": "botta's pocket gopher",
     "group": "mammal",
     "family": null,
-    "records": 227,
+    "records": 233,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
      "utm10n_540_4170",
      "utm10n_540_4180",
+     "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
+    ],
+    "within_budget": false
+   },
+   {
+    "scientific": "Aix sponsa",
+    "id": "aix_sponsa",
+    "common": "wood duck",
+    "group": "bird",
+    "family": "Anatidae",
+    "records": 192,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
+    "tiles": [
+     "utm10n_731_4235"
     ],
     "within_budget": false
    },
@@ -1326,30 +1421,16 @@
     "within_budget": false
    },
    {
-    "scientific": "Tamiasciurus douglasii",
-    "id": "tamiasciurus_douglasii",
-    "common": "douglas squirrel",
-    "group": "mammal",
-    "family": "Sciuridae",
-    "records": 156,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
-    "tiles": [
-     "utm11n_267_4175",
-     "utm11n_270_4180"
-    ],
-    "within_budget": false
-   },
-   {
     "scientific": "Callospermophilus lateralis",
     "id": "callospermophilus_lateralis",
     "common": "golden-mantled ground squirrel",
     "group": "mammal",
     "family": "Sciuridae",
-    "records": 134,
+    "records": 135,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
+     "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
@@ -1464,6 +1545,21 @@
     "within_budget": false
    },
    {
+    "scientific": "Lontra canadensis",
+    "id": "lontra_canadensis",
+    "common": "north american river otter",
+    "group": "mammal",
+    "family": null,
+    "records": 86,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
+    "tiles": [
+     "utm10n_540_4180",
+     "utm10n_731_4235"
+    ],
+    "within_budget": false
+   },
+   {
     "scientific": "Tadarida brasiliensis",
     "id": "tadarida_brasiliensis",
     "common": "mexican free-tailed bat",
@@ -1474,20 +1570,6 @@
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
      "utm10n_540_4170",
-     "utm10n_540_4180"
-    ],
-    "within_budget": false
-   },
-   {
-    "scientific": "Lontra canadensis",
-    "id": "lontra_canadensis",
-    "common": "north american river otter",
-    "group": "mammal",
-    "family": null,
-    "records": 83,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
-    "tiles": [
      "utm10n_540_4180"
     ],
     "within_budget": false
@@ -1553,6 +1635,22 @@
     "within_budget": false
    },
    {
+    "scientific": "Tamias quadrimaculatus",
+    "id": "tamias_quadrimaculatus",
+    "common": "long-eared chipmunk",
+    "group": "mammal",
+    "family": "Sciuridae",
+    "records": 46,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
+    "tiles": [
+     "utm10n_731_4235",
+     "utm11n_267_4175",
+     "utm11n_270_4180"
+    ],
+    "within_budget": false
+   },
+   {
     "scientific": "Mirounga angustirostris",
     "id": "mirounga_angustirostris",
     "common": "northern elephant seal",
@@ -1612,6 +1710,22 @@
     "within_budget": false
    },
    {
+    "scientific": "Thomomys monticola",
+    "id": "thomomys_monticola",
+    "common": "mountain pocket gopher",
+    "group": "mammal",
+    "family": "Geomyidae",
+    "records": 31,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
+    "tiles": [
+     "utm10n_731_4235",
+     "utm11n_267_4175",
+     "utm11n_270_4180"
+    ],
+    "within_budget": false
+   },
+   {
     "scientific": "Mustela frenata",
     "id": "mustela_frenata",
     "common": "long-tailed weasel",
@@ -1623,21 +1737,6 @@
     "tiles": [
      "utm10n_540_4170",
      "utm10n_540_4180"
-    ],
-    "within_budget": false
-   },
-   {
-    "scientific": "Thomomys monticola",
-    "id": "thomomys_monticola",
-    "common": "mountain pocket gopher",
-    "group": "mammal",
-    "family": "Geomyidae",
-    "records": 26,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
-    "tiles": [
-     "utm11n_267_4175",
-     "utm11n_270_4180"
     ],
     "within_budget": false
    },
@@ -1711,21 +1810,6 @@
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
     "tiles": [
      "utm10n_540_4170"
-    ],
-    "within_budget": false
-   },
-   {
-    "scientific": "Tamias quadrimaculatus",
-    "id": "tamias_quadrimaculatus",
-    "common": "long-eared chipmunk",
-    "group": "mammal",
-    "family": "Sciuridae",
-    "records": 18,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
-    "tiles": [
-     "utm11n_267_4175",
-     "utm11n_270_4180"
     ],
     "within_budget": false
    },
@@ -1874,6 +1958,22 @@
     "within_budget": false
    },
    {
+    "scientific": "Neotoma macrotis",
+    "id": "neotoma_macrotis",
+    "common": "big-eared woodrat",
+    "group": "mammal",
+    "family": "Cricetidae",
+    "records": 9,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
+    "tiles": [
+     "utm10n_731_4235",
+     "utm11n_267_4175",
+     "utm11n_270_4180"
+    ],
+    "within_budget": false
+   },
+   {
     "scientific": "Nasua narica",
     "id": "nasua_narica",
     "common": "white-nosed coati",
@@ -1960,21 +2060,6 @@
     "within_budget": false
    },
    {
-    "scientific": "Neotoma macrotis",
-    "id": "neotoma_macrotis",
-    "common": "big-eared woodrat",
-    "group": "mammal",
-    "family": "Cricetidae",
-    "records": 8,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
-    "tiles": [
-     "utm11n_267_4175",
-     "utm11n_270_4180"
-    ],
-    "within_budget": false
-   },
-   {
     "scientific": "Myotis yumanensis",
     "id": "myotis_yumanensis",
     "common": "yuma myotis",
@@ -2048,6 +2133,21 @@
     "within_budget": false
    },
    {
+    "scientific": "Myotis evotis",
+    "id": "myotis_evotis",
+    "common": "long-eared myotis",
+    "group": "mammal",
+    "family": "Vespertilionidae",
+    "records": 3,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
+    "tiles": [
+     "utm10n_731_4235",
+     "utm11n_267_4175"
+    ],
+    "within_budget": false
+   },
+   {
     "scientific": "Pekania pennanti",
     "id": "pekania_pennanti",
     "common": "fisher",
@@ -2062,25 +2162,11 @@
     "within_budget": false
    },
    {
-    "scientific": "Myotis evotis",
-    "id": "myotis_evotis",
-    "common": "long-eared myotis",
-    "group": "mammal",
-    "family": "Vespertilionidae",
-    "records": 2,
-    "estimate_credits": 30,
-    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
-    "tiles": [
-     "utm11n_267_4175"
-    ],
-    "within_budget": false
-   },
-   {
     "scientific": "Ochotona princeps",
     "id": "ochotona_princeps",
     "common": "american pika",
     "group": "mammal",
-    "family": null,
+    "family": "Ochotonidae",
     "records": 2,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
@@ -2094,7 +2180,7 @@
     "id": "phenacomys_intermedius",
     "common": "western heather vole",
     "group": "mammal",
-    "family": null,
+    "family": "Cricetidae",
     "records": 2,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
@@ -2108,7 +2194,7 @@
     "id": "antrozous_pallidus",
     "common": "pallid bat",
     "group": "mammal",
-    "family": null,
+    "family": "Vespertilionidae",
     "records": 1,
     "estimate_credits": 30,
     "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget",
@@ -2118,14 +2204,14 @@
     "within_budget": false
    }
   ],
-  "queued_credits": 4080,
+  "queued_credits": 4170,
   "rule": "queued, never run: generation past the 1,000-credit budget needs Aaron's go-ahead"
  },
  "cards_queued": [
   {
    "id": "pinus_muricata",
    "kind": "tree",
-   "stand_in": "pinus_ponderosa",
+   "stand_in": "pinus_radiata",
    "why": [
     "named by EVT 7177 California Coastal Closed-Cone Conifer Forest and Woodland (128 cells)"
    ],
@@ -2184,6 +2270,11 @@
    },
    "license": "CC BY-SA 4.0",
    "tiles": [
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.163,
+     "as": "tree"
+    },
     {
      "tile": "utm11n_267_4175",
      "share": 0.1326,
@@ -2323,6 +2414,11 @@
      "as": "tree"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0016,
+     "as": "tree"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0042,
      "as": "tree"
@@ -2374,6 +2470,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.0698,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.2719,
      "as": "ground"
     },
     {
@@ -2455,6 +2556,11 @@
      "as": "shrub"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0122,
+     "as": "shrub"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0124,
      "as": "shrub"
@@ -2530,6 +2636,11 @@
      "tile": "utm10n_690_4280",
      "share": 0.0113,
      "as": "tree"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0001,
+     "as": "tree"
     }
    ]
   },
@@ -2600,6 +2711,11 @@
      "as": "tree"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0067,
+     "as": "tree"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0179,
      "as": "tree"
@@ -2651,6 +2767,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.0341,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0027,
      "as": "ground"
     },
     {
@@ -2720,6 +2841,14 @@
    },
    "tiles": [
     {
+     "tile": "utm10n_540_4170",
+     "present": null
+    },
+    {
+     "tile": "utm10n_540_4180",
+     "present": null
+    },
+    {
      "tile": "utm10n_680_4270",
      "present": "records"
     },
@@ -2729,6 +2858,10 @@
     },
     {
      "tile": "utm10n_690_4280",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_731_4235",
      "present": "records"
     },
     {
@@ -2807,6 +2940,11 @@
      "as": "tree"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0193,
+     "as": "tree"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0036,
      "as": "tree"
@@ -2875,6 +3013,11 @@
      "as": "shrub"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0158,
+     "as": "shrub"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0038,
      "as": "shrub"
@@ -2934,6 +3077,11 @@
    },
    "license": "CC BY-SA 4.0",
    "tiles": [
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0705,
+     "as": "shrub"
+    },
     {
      "tile": "utm11n_267_4175",
      "share": 0.2751,
@@ -3000,6 +3148,11 @@
     {
      "tile": "utm10n_690_4280",
      "share": 0.472,
+     "as": "shrub"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.3072,
      "as": "shrub"
     },
     {
@@ -3117,6 +3270,11 @@
      "as": "ground"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0173,
+     "as": "ground"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0165,
      "as": "ground"
@@ -3177,6 +3335,11 @@
    "license": "CC BY-SA 4.0",
    "tiles": [
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0009,
+     "as": "shrub"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0048,
      "as": "shrub"
@@ -3228,6 +3391,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.038,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0033,
      "as": "ground"
     },
     {
@@ -3307,6 +3475,11 @@
      "tile": "utm10n_690_4280",
      "share": 0.0213,
      "as": "shrub"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0001,
+     "as": "shrub"
     }
    ]
   },
@@ -3350,6 +3523,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.0653,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0358,
      "as": "ground"
     },
     {
@@ -3404,6 +3582,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.0426,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0164,
      "as": "ground"
     },
     {
@@ -3473,6 +3656,14 @@
    },
    "tiles": [
     {
+     "tile": "utm10n_540_4170",
+     "present": null
+    },
+    {
+     "tile": "utm10n_540_4180",
+     "present": null
+    },
+    {
      "tile": "utm10n_680_4270",
      "present": "records"
     },
@@ -3482,6 +3673,10 @@
     },
     {
      "tile": "utm10n_690_4280",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_731_4235",
      "present": "records"
     },
     {
@@ -3549,6 +3744,14 @@
    },
    "tiles": [
     {
+     "tile": "utm10n_540_4170",
+     "present": null
+    },
+    {
+     "tile": "utm10n_540_4180",
+     "present": null
+    },
+    {
      "tile": "utm10n_680_4270",
      "present": "records"
     },
@@ -3558,6 +3761,10 @@
     },
     {
      "tile": "utm10n_690_4280",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_731_4235",
      "present": "records"
     },
     {
@@ -3623,6 +3830,11 @@
     {
      "tile": "utm10n_690_4280",
      "share": 0.0361,
+     "as": "tree"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.1122,
      "as": "tree"
     },
     {
@@ -3694,6 +3906,11 @@
      "as": "shrub"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0003,
+     "as": "shrub"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0008,
      "as": "shrub"
@@ -3760,6 +3977,14 @@
    },
    "tiles": [
     {
+     "tile": "utm10n_540_4170",
+     "present": null
+    },
+    {
+     "tile": "utm10n_540_4180",
+     "present": null
+    },
+    {
      "tile": "utm10n_680_4270",
      "present": "records"
     },
@@ -3770,6 +3995,10 @@
     {
      "tile": "utm10n_690_4280",
      "present": "records"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "present": "range"
     },
     {
      "tile": "utm11n_267_4175",
@@ -3892,6 +4121,14 @@
    },
    "tiles": [
     {
+     "tile": "utm10n_540_4170",
+     "present": null
+    },
+    {
+     "tile": "utm10n_540_4180",
+     "present": null
+    },
+    {
      "tile": "utm10n_680_4270",
      "present": "records"
     },
@@ -3901,6 +4138,10 @@
     },
     {
      "tile": "utm10n_690_4280",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_731_4235",
      "present": "records"
     },
     {
@@ -3961,6 +4202,11 @@
    },
    "license": "CC BY-SA 4.0",
    "tiles": [
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0388,
+     "as": "shrub"
+    },
     {
      "tile": "utm11n_267_4175",
      "share": 0.135,
@@ -4027,6 +4273,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.1123,
+     "as": "shrub"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0277,
      "as": "shrub"
     },
     {
@@ -4098,6 +4349,11 @@
      "as": "shrub"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.1307,
+     "as": "shrub"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0402,
      "as": "shrub"
@@ -4158,6 +4414,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.0004,
+     "as": "shrub"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0001,
      "as": "shrub"
     },
     {
@@ -4239,6 +4500,11 @@
      "as": "shrub"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0038,
+     "as": "shrub"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.007,
      "as": "shrub"
@@ -4304,6 +4570,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.04,
+     "as": "shrub"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0426,
      "as": "shrub"
     },
     {
@@ -4437,6 +4708,11 @@
    "license": "CC BY-SA 4.0",
    "tiles": [
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0991,
+     "as": "shrub"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0114,
      "as": "shrub"
@@ -4488,6 +4764,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.038,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0264,
      "as": "ground"
     },
     {
@@ -4551,6 +4832,11 @@
    "license": "CC BY-SA 4.0",
    "tiles": [
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0185,
+     "as": "shrub"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0637,
      "as": "shrub"
@@ -4602,6 +4888,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.0659,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.1623,
      "as": "ground"
     },
     {
@@ -4673,6 +4964,11 @@
      "as": "shrub"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.001,
+     "as": "shrub"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0025,
      "as": "shrub"
@@ -4735,6 +5031,14 @@
    },
    "tiles": [
     {
+     "tile": "utm10n_540_4170",
+     "present": null
+    },
+    {
+     "tile": "utm10n_540_4180",
+     "present": null
+    },
+    {
      "tile": "utm10n_680_4270",
      "present": "records"
     },
@@ -4744,6 +5048,10 @@
     },
     {
      "tile": "utm10n_690_4280",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_731_4235",
      "present": "records"
     },
     {
@@ -4811,6 +5119,14 @@
    },
    "tiles": [
     {
+     "tile": "utm10n_540_4170",
+     "present": null
+    },
+    {
+     "tile": "utm10n_540_4180",
+     "present": null
+    },
+    {
      "tile": "utm10n_680_4270",
      "present": "records"
     },
@@ -4820,6 +5136,10 @@
     },
     {
      "tile": "utm10n_690_4280",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_731_4235",
      "present": "records"
     },
     {
@@ -4872,6 +5192,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.0344,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0294,
      "as": "ground"
     },
     {
@@ -4943,6 +5268,11 @@
      "as": "shrub"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0064,
+     "as": "shrub"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0096,
      "as": "shrub"
@@ -4997,6 +5327,11 @@
      "as": "ground"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0417,
+     "as": "ground"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0556,
      "as": "ground"
@@ -5048,6 +5383,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.0906,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.2208,
      "as": "ground"
     },
     {
@@ -5192,6 +5532,11 @@
      "as": "ground"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0046,
+     "as": "ground"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0221,
      "as": "ground"
@@ -5246,6 +5591,11 @@
      "as": "ground"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.037,
+     "as": "ground"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0303,
      "as": "ground"
@@ -5297,6 +5647,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.0381,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.006,
      "as": "ground"
     },
     {
@@ -5378,6 +5733,11 @@
      "as": "shrub"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0308,
+     "as": "shrub"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0079,
      "as": "shrub"
@@ -5453,6 +5813,11 @@
     {
      "tile": "utm10n_690_4280",
      "share": 0.0026,
+     "as": "tree"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0016,
      "as": "tree"
     },
     {
@@ -5654,6 +6019,11 @@
      "as": "shrub"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0078,
+     "as": "shrub"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0081,
      "as": "shrub"
@@ -5705,6 +6075,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.0473,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0017,
      "as": "ground"
     },
     {
@@ -5783,6 +6158,11 @@
     {
      "tile": "utm10n_690_4280",
      "share": 0.0021,
+     "as": "tree"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0011,
      "as": "tree"
     },
     {
@@ -5874,6 +6254,11 @@
    "license": "CC BY-SA 4.0",
    "tiles": [
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0003,
+     "as": "tree"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.018,
      "as": "tree"
@@ -5924,6 +6309,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.0037,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0019,
      "as": "ground"
     },
     {
@@ -5993,6 +6383,14 @@
    },
    "tiles": [
     {
+     "tile": "utm10n_540_4170",
+     "present": null
+    },
+    {
+     "tile": "utm10n_540_4180",
+     "present": null
+    },
+    {
      "tile": "utm10n_680_4270",
      "present": "records"
     },
@@ -6002,6 +6400,10 @@
     },
     {
      "tile": "utm10n_690_4280",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_731_4235",
      "present": "records"
     }
    ]
@@ -6046,6 +6448,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.037,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0339,
      "as": "ground"
     },
     {
@@ -6163,6 +6570,11 @@
      "as": "ground"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0061,
+     "as": "ground"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0302,
      "as": "ground"
@@ -6214,6 +6626,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.038,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0178,
      "as": "ground"
     },
     {
@@ -6279,6 +6696,14 @@
    },
    "tiles": [
     {
+     "tile": "utm10n_540_4170",
+     "present": null
+    },
+    {
+     "tile": "utm10n_540_4180",
+     "present": null
+    },
+    {
      "tile": "utm10n_680_4270",
      "present": "records"
     },
@@ -6288,6 +6713,10 @@
     },
     {
      "tile": "utm10n_690_4280",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_731_4235",
      "present": "records"
     },
     {
@@ -6355,6 +6784,14 @@
    },
    "tiles": [
     {
+     "tile": "utm10n_540_4170",
+     "present": null
+    },
+    {
+     "tile": "utm10n_540_4180",
+     "present": null
+    },
+    {
      "tile": "utm10n_680_4270",
      "present": "records"
     },
@@ -6364,6 +6801,10 @@
     },
     {
      "tile": "utm10n_690_4280",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_731_4235",
      "present": "records"
     },
     {
@@ -6431,6 +6872,14 @@
    },
    "tiles": [
     {
+     "tile": "utm10n_540_4170",
+     "present": null
+    },
+    {
+     "tile": "utm10n_540_4180",
+     "present": null
+    },
+    {
      "tile": "utm10n_680_4270",
      "present": "range"
     },
@@ -6484,6 +6933,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.0031,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0016,
      "as": "ground"
     },
     {
@@ -6613,6 +7067,14 @@
    },
    "tiles": [
     {
+     "tile": "utm10n_540_4170",
+     "present": null
+    },
+    {
+     "tile": "utm10n_540_4180",
+     "present": null
+    },
+    {
      "tile": "utm10n_680_4270",
      "present": "records"
     },
@@ -6622,6 +7084,10 @@
     },
     {
      "tile": "utm10n_690_4280",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_731_4235",
      "present": "records"
     },
     {
@@ -6701,6 +7167,10 @@
      "present": "records"
     },
     {
+     "tile": "utm10n_731_4235",
+     "present": "records"
+    },
+    {
      "tile": "utm11n_267_4175",
      "present": "records"
     },
@@ -6765,6 +7235,14 @@
    },
    "tiles": [
     {
+     "tile": "utm10n_540_4170",
+     "present": null
+    },
+    {
+     "tile": "utm10n_540_4180",
+     "present": null
+    },
+    {
      "tile": "utm10n_680_4270",
      "present": "records"
     },
@@ -6774,6 +7252,10 @@
     },
     {
      "tile": "utm10n_690_4280",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_731_4235",
      "present": "records"
     },
     {
@@ -6954,6 +7436,11 @@
    "license": "CC BY-SA 4.0",
    "tiles": [
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0001,
+     "as": "tree"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0592,
      "as": "tree"
@@ -7014,6 +7501,11 @@
    "license": "CC BY-SA 4.0",
    "tiles": [
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0087,
+     "as": "tree"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.2118,
      "as": "tree"
@@ -7073,6 +7565,11 @@
    },
    "license": "CC BY-SA 4.0",
    "tiles": [
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.1077,
+     "as": "tree"
+    },
     {
      "tile": "utm11n_267_4175",
      "share": 0.0105,
@@ -7201,6 +7698,11 @@
      "as": "tree"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.3141,
+     "as": "tree"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0945,
      "as": "tree"
@@ -7326,6 +7828,11 @@
      "tile": "utm10n_690_4280",
      "share": 0.1271,
      "as": "tree"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0007,
+     "as": "tree"
     }
    ]
   },
@@ -7369,6 +7876,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.0355,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0027,
      "as": "ground"
     },
     {
@@ -7508,6 +8020,11 @@
      "as": "tree"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0024,
+     "as": "tree"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.007,
      "as": "tree"
@@ -7635,6 +8152,11 @@
      "as": "tree"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0517,
+     "as": "tree"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0074,
      "as": "tree"
@@ -7701,6 +8223,14 @@
    },
    "tiles": [
     {
+     "tile": "utm10n_540_4170",
+     "present": null
+    },
+    {
+     "tile": "utm10n_540_4180",
+     "present": null
+    },
+    {
      "tile": "utm10n_680_4270",
      "present": "records"
     },
@@ -7711,6 +8241,10 @@
     {
      "tile": "utm10n_690_4280",
      "present": "records"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "present": "range"
     },
     {
      "tile": "utm11n_267_4175",
@@ -7848,6 +8382,11 @@
      "as": "tree"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0553,
+     "as": "tree"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0816,
      "as": "tree"
@@ -7914,6 +8453,11 @@
      "tile": "utm10n_690_4280",
      "share": 0.2082,
      "as": "tree"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0009,
+     "as": "tree"
     }
    ]
   },
@@ -7976,6 +8520,11 @@
     {
      "tile": "utm10n_690_4280",
      "share": 0.0985,
+     "as": "tree"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0876,
      "as": "tree"
     },
     {
@@ -8056,6 +8605,11 @@
      "tile": "utm10n_690_4280",
      "share": 0.0073,
      "as": "tree"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0003,
+     "as": "tree"
     }
    ]
   },
@@ -8107,6 +8661,11 @@
    },
    "license": "CC BY-SA 4.0",
    "tiles": [
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0194,
+     "as": "shrub"
+    },
     {
      "tile": "utm11n_267_4175",
      "share": 0.0992,
@@ -8172,6 +8731,11 @@
     {
      "tile": "utm10n_690_4280",
      "share": 0.1232,
+     "as": "tree"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0265,
      "as": "tree"
     },
     {
@@ -8243,6 +8807,11 @@
      "as": "shrub"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0025,
+     "as": "shrub"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0016,
      "as": "shrub"
@@ -8308,6 +8877,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.0247,
+     "as": "shrub"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0514,
      "as": "shrub"
     },
     {
@@ -8379,6 +8953,11 @@
      "as": "shrub"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0028,
+     "as": "shrub"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0076,
      "as": "shrub"
@@ -8444,6 +9023,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.0025,
+     "as": "shrub"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0016,
      "as": "shrub"
     },
     {
@@ -8515,6 +9099,11 @@
      "as": "shrub"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0003,
+     "as": "shrub"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0013,
      "as": "shrub"
@@ -8583,6 +9172,11 @@
      "as": "tree"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0016,
+     "as": "tree"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0082,
      "as": "tree"
@@ -8648,6 +9242,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.0013,
+     "as": "tree"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0004,
      "as": "tree"
     },
     {
@@ -8729,6 +9328,11 @@
      "as": "tree"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0076,
+     "as": "tree"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0371,
      "as": "tree"
@@ -8807,6 +9411,11 @@
      "as": "shrub"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0017,
+     "as": "shrub"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0036,
      "as": "shrub"
@@ -8873,6 +9482,14 @@
    },
    "tiles": [
     {
+     "tile": "utm10n_540_4170",
+     "present": null
+    },
+    {
+     "tile": "utm10n_540_4180",
+     "present": null
+    },
+    {
      "tile": "utm10n_680_4270",
      "present": "records"
     },
@@ -8882,6 +9499,10 @@
     },
     {
      "tile": "utm10n_690_4280",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_731_4235",
      "present": "records"
     },
     {
@@ -9003,6 +9624,14 @@
    },
    "tiles": [
     {
+     "tile": "utm10n_540_4170",
+     "present": null
+    },
+    {
+     "tile": "utm10n_540_4180",
+     "present": null
+    },
+    {
      "tile": "utm10n_680_4270",
      "present": "records"
     },
@@ -9012,6 +9641,10 @@
     },
     {
      "tile": "utm10n_690_4280",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_731_4235",
      "present": "records"
     },
     {
@@ -9131,7 +9764,18 @@
     "sources": 1
    },
    "license": "CC BY-SA 4.0",
-   "tiles": []
+   "tiles": [
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0143,
+     "as": "tree"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0115,
+     "as": "shrub"
+    }
+   ]
   },
   "Stipa pulchra": {
    "id": "stipa_pulchra",
@@ -9173,6 +9817,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.0515,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0423,
      "as": "ground"
     },
     {
@@ -9242,6 +9891,14 @@
    },
    "tiles": [
     {
+     "tile": "utm10n_540_4170",
+     "present": null
+    },
+    {
+     "tile": "utm10n_540_4180",
+     "present": null
+    },
+    {
      "tile": "utm10n_680_4270",
      "present": "range"
     },
@@ -9309,6 +9966,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.0423,
+     "as": "shrub"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0645,
      "as": "shrub"
     },
     {
@@ -9390,6 +10052,11 @@
      "as": "shrub"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0297,
+     "as": "shrub"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0141,
      "as": "shrub"
@@ -9441,6 +10108,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.0252,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0023,
      "as": "ground"
     },
     {
@@ -9609,6 +10281,11 @@
      "as": "tree"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0142,
+     "as": "tree"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0028,
      "as": "tree"
@@ -9675,6 +10352,14 @@
    },
    "tiles": [
     {
+     "tile": "utm10n_540_4170",
+     "present": null
+    },
+    {
+     "tile": "utm10n_540_4180",
+     "present": null
+    },
+    {
      "tile": "utm10n_680_4270",
      "present": "records"
     },
@@ -9684,6 +10369,10 @@
     },
     {
      "tile": "utm10n_690_4280",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_731_4235",
      "present": "records"
     },
     {
@@ -9763,6 +10452,10 @@
      "present": "records"
     },
     {
+     "tile": "utm10n_731_4235",
+     "present": "records"
+    },
+    {
      "tile": "utm11n_267_4175",
      "present": "records"
     },
@@ -9812,6 +10505,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.0061,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0093,
      "as": "ground"
     },
     {
@@ -9929,6 +10627,11 @@
      "as": "ground"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0023,
+     "as": "ground"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0093,
      "as": "ground"
@@ -9997,6 +10700,11 @@
      "as": "shrub"
     },
     {
+     "tile": "utm10n_731_4235",
+     "share": 0.0005,
+     "as": "shrub"
+    },
+    {
      "tile": "utm11n_267_4175",
      "share": 0.0018,
      "as": "shrub"
@@ -10048,6 +10756,11 @@
     {
      "tile": "utm10n_680_4280",
      "share": 0.0245,
+     "as": "ground"
+    },
+    {
+     "tile": "utm10n_731_4235",
+     "share": 0.0025,
      "as": "ground"
     },
     {

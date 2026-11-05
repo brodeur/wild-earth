@@ -308,7 +308,7 @@ def scan() -> dict:
         sp_p = t / "species" / "species.json"
         if sp_p.exists():
             for s in read_json(sp_p):
-                if s.get("present") and s["code"] in by_id:
+                if s.get("present", True) and s["code"] in by_id:   # no `present`: built before 2026-10-27, every species is
                     species[by_id[s["code"]]]["tiles"].append({"tile": t.name, "present": s.get("rule")})
     # needs and queues from the tile reports
     queue_cards, queue_meshy = {}, {}
@@ -389,7 +389,7 @@ def tile_report(tile: Tile) -> dict:
     sp_p = tile.path("species/species.json")
     present = {s["code"]: s for s in read_json(sp_p)} if sp_p.exists() else {}
     for code, s in present.items():
-        if not s.get("present"):
+        if not s.get("present", True):   # no `present` (built before 2026-10-27): every species is
             continue
         e = by_id.get(code)
         animals.append({"id": code, "scientific": s.get("scientific"), "common": s.get("common"), "kind": (e or {}).get("kind"),

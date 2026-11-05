@@ -15,7 +15,7 @@
   37.785168321421274
  ],
  "size_m": 10000,
- "generated_at": "2026-11-05T04:39:05Z",
+ "generated_at": "2026-11-05T05:42:55Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -1655,7 +1655,7 @@
    "predation_pairs": 22,
    "alarm_links": 50,
    "plant_relations": 277,
-   "sha256": "2635a48eb77b64c71b64d2b8e669ccfb391e3492a7b2b9fd087c9b46a692560f",
+   "sha256": "7d998b5f2d5a457bf916a57218c0ef57a26f650cabbb2897d422bd4cd4692b45",
    "bytes": 393245
   },
   "client.texture_imagery": {
@@ -4936,7 +4936,7 @@
    "animals_present": 17,
    "animals_queued": 69,
    "cards_queued": 0,
-   "sha256": "91abfcbf1bf1f6dc90822c0cf532dbd009fd29c7fbf669a015254a0d6416ed02",
+   "sha256": "cbac5c6162f485e5828f53d312ea2ecec90ba4cecba1f482b62cfe30a9b58ef5",
    "bytes": 53804
   }
  },
@@ -5359,6 +5359,62 @@
    "at": "2026-11-05T04:39:05Z",
    "seconds": 0.0,
    "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-11-05T05:38:03Z",
+   "seconds": 24.7,
+   "ok": true
+  },
+  {
+   "step": "crowns",
+   "at": "2026-11-05T05:38:03Z",
+   "seconds": 0.0,
+   "ok": true,
+   "not_applicable": "no point cloud on this tile (DEM-only lidar or none): no canopy height model, so no crowns to find or inpaint"
+  },
+  {
+   "step": "erase",
+   "at": "2026-11-05T05:38:13Z",
+   "seconds": 10.3,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-05T05:38:20Z",
+   "seconds": 6.5,
+   "ok": true
+  },
+  {
+   "step": "inpaint",
+   "at": "2026-11-05T05:38:20Z",
+   "seconds": 0.0,
+   "ok": true,
+   "not_applicable": "no point cloud on this tile (DEM-only lidar or none): no canopy height model, so no crowns to find or inpaint"
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-05T05:38:20Z",
+   "seconds": 0.2,
+   "ok": true
+  },
+  {
+   "step": "audit",
+   "at": "2026-11-05T05:38:20Z",
+   "seconds": 0.0,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-05T05:42:54Z",
+   "seconds": 0.3,
+   "ok": true
+  },
+  {
+   "step": "audit",
+   "at": "2026-11-05T05:42:55Z",
+   "seconds": 0.0,
+   "ok": true
   }
  ],
  "steps": {
@@ -5404,16 +5460,16 @@
   },
   "derive": {
    "version": "1",
-   "code": "cdfd17b7acebc57c",
+   "code": "4644811dad51227e",
    "params": {
     "tile": "utm11n_267_4175",
     "dem_res_m": 5.0,
     "imagery_res_m": 2.5
    },
-   "fingerprint": "fe947949bd46aa6f",
+   "fingerprint": "06ba54475525fc8b",
    "parts": {
     "version": "1",
-    "code": "cdfd17b7acebc57c",
+    "code": "4644811dad51227e",
     "params": {
      "tile": "utm11n_267_4175",
      "dem_res_m": 5.0,
@@ -5435,7 +5491,7 @@
      "library/species": "7def261f22f692f1"
     }
    },
-   "ran_at": "2026-11-05T04:38:23Z",
+   "ran_at": "2026-11-05T05:37:38Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -5477,7 +5533,7 @@
     "client/texture_present.jpg": "bbe4901db8e0d844",
     "footprint/mask.png": "8e35960a3ae63eec",
     "footprint/urban.tif": "a2a6326e6d8a926d",
-    "games.json": "2635a48eb77b64c7",
+    "games.json": "7d998b5f2d5a457b",
     "imagery/naip.png": "c8391cce72cae63e",
     "resources/resources.json": "348fd9c5432fc505",
     "terrain/hillshade.png": "5838368b35a9c60b",
@@ -5486,7 +5542,7 @@
     "vegetation/habitat.png": "0a6f4ec14146f24c",
     "vegetation/habitat_present.png": "a805cee06e9b3a6c"
    },
-   "out_hash": "ec6b29e1035e1171",
+   "out_hash": "fac8ef334773e2ed",
    "sources": {
     "pc_naip": "2026-11-05",
     "osm": "2026-11-05",
@@ -5498,25 +5554,25 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 24.4
+   "seconds": 24.7
   },
   "registry": {
    "version": "1",
-   "code": "fe640904289d4e03",
+   "code": "5d11fb62482430f5",
    "params": {
     "tile": "utm11n_267_4175"
    },
-   "fingerprint": "8da8a27bf32bb2a4",
+   "fingerprint": "45258a48dd0ddeb1",
    "parts": {
     "version": "1",
-    "code": "fe640904289d4e03",
+    "code": "5d11fb62482430f5",
     "params": {
      "tile": "utm11n_267_4175"
     },
     "deps": {
      "species": "b266aa8fa2349969",
      "plants": "c1a2d5b44e9cf1e3",
-     "derive": "ec6b29e1035e1171"
+     "derive": "fac8ef334773e2ed"
     },
     "library": {
      "library/species": "7def261f22f692f1",
@@ -5524,16 +5580,16 @@
      "library/plant_cards": "9643c69d05e4b4a5"
     }
    },
-   "ran_at": "2026-11-05T04:39:04Z",
+   "ran_at": "2026-11-05T05:42:54Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "species.registry"
    ],
    "outputs": {
-    "species/registry.json": "91abfcbf1bf1f6dc"
+    "species/registry.json": "cbac5c6162f485e5"
    },
-   "out_hash": "af53e287b3614376",
+   "out_hash": "32603c4a37101c1c",
    "sources": {},
    "fallbacks": [],
    "notes": [],
@@ -5541,7 +5597,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 0.1
+   "seconds": 0.3
   },
   "dem": {
    "version": "1",
@@ -5957,7 +6013,7 @@
    "params": {
     "tile": "utm11n_267_4175"
    },
-   "fingerprint": "82444a6c2a0c268a",
+   "fingerprint": "a39b116ebd54573a",
    "parts": {
     "version": "1",
     "code": "36d9533941445407",
@@ -5968,11 +6024,11 @@
      "lidar": "1effda610488a235",
      "osm": "6e42f2e273e8ca18",
      "veg": "69430d8affdca646",
-     "derive": "ec6b29e1035e1171"
+     "derive": "fac8ef334773e2ed"
     },
     "library": {}
    },
-   "ran_at": "2026-11-05T04:38:48Z",
+   "ran_at": "2026-11-05T05:38:03Z",
    "owner": null,
    "status": "not_applicable",
    "reason": "no point cloud on this tile (DEM-only lidar or none): no canopy height model, so no crowns to find or inpaint",
@@ -5987,7 +6043,7 @@
     "tile": "utm11n_267_4175",
     "imagery_res_m": 2.5
    },
-   "fingerprint": "78325ac8cec6e353",
+   "fingerprint": "1a8648979e797226",
    "parts": {
     "version": "1",
     "code": "4f9db0b41fd4af23",
@@ -5999,12 +6055,12 @@
      "naip": "9f4b127050e3ad5c",
      "osm": "6e42f2e273e8ca18",
      "veg": "69430d8affdca646",
-     "derive": "ec6b29e1035e1171",
+     "derive": "fac8ef334773e2ed",
      "rewild_hydro": "89e1de986f3c5f9c"
     },
     "library": {}
    },
-   "ran_at": "2026-11-05T04:38:48Z",
+   "ran_at": "2026-11-05T05:38:03Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -6023,7 +6079,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 10.1
+   "seconds": 10.3
   },
   "substrate": {
    "version": "1",
@@ -6031,7 +6087,7 @@
    "params": {
     "tile": "utm11n_267_4175"
    },
-   "fingerprint": "7588697f9ba51041",
+   "fingerprint": "b7b16b2904909068",
    "parts": {
     "version": "1",
     "code": "2e65b327a37a5d98",
@@ -6046,11 +6102,11 @@
      "naip": "9f4b127050e3ad5c",
      "veg": "69430d8affdca646",
      "erase": "d63b96f558c57834",
-     "derive": "ec6b29e1035e1171"
+     "derive": "fac8ef334773e2ed"
     },
     "library": {}
    },
-   "ran_at": "2026-11-05T04:38:58Z",
+   "ran_at": "2026-11-05T05:38:13Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -6077,7 +6133,7 @@
    "params": {
     "tile": "utm11n_267_4175"
    },
-   "fingerprint": "6f19e51a01f02d1b",
+   "fingerprint": "95f28a96e1258207",
    "parts": {
     "version": "1",
     "code": "71a527f17b093481",
@@ -6088,11 +6144,11 @@
      "erase": "d63b96f558c57834",
      "lidar": "1effda610488a235",
      "crowns": "70a48eaae80334ef",
-     "derive": "ec6b29e1035e1171"
+     "derive": "fac8ef334773e2ed"
     },
     "library": {}
    },
-   "ran_at": "2026-11-05T04:39:04Z",
+   "ran_at": "2026-11-05T05:38:20Z",
    "owner": null,
    "status": "not_applicable",
    "reason": "no point cloud on this tile (DEM-only lidar or none): no canopy height model, so no crowns to find or inpaint",
@@ -6213,7 +6269,7 @@
    "params": {
     "tile": "utm11n_267_4175"
    },
-   "fingerprint": "64ef7575579241a5",
+   "fingerprint": "91b092ee5ac823ce",
    "parts": {
     "version": "1",
     "code": "9aa92230efabd729",
@@ -6233,7 +6289,7 @@
      "ground": "603fb2d70b03db6f",
      "species": "b266aa8fa2349969",
      "plants": "c1a2d5b44e9cf1e3",
-     "derive": "ec6b29e1035e1171",
+     "derive": "fac8ef334773e2ed",
      "crowns": "70a48eaae80334ef",
      "erase": "d63b96f558c57834",
      "substrate": "592c5e96242e5137",
@@ -6241,11 +6297,11 @@
      "seasons": "7e69c204ae948f91",
      "weather": "2c12339a19eb8e28",
      "unreal": "49e7b3187b76b755",
-     "registry": "af53e287b3614376"
+     "registry": "32603c4a37101c1c"
     },
     "library": {}
    },
-   "ran_at": "2026-11-05T04:39:05Z",
+   "ran_at": "2026-11-05T05:42:54Z",
    "owner": null,
    "status": "ok",
    "layers": [],
@@ -6262,7 +6318,7 @@
   }
  },
  "licence_audit": {
-  "at": "2026-11-05T04:39:05Z",
+  "at": "2026-11-05T05:42:55Z",
   "problems": [],
   "warnings": [],
   "occurrence_records": 11257,

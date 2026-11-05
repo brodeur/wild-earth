@@ -15,7 +15,7 @@
   37.85658112570665
  ],
  "size_m": 10000,
- "generated_at": "2026-11-05T04:28:08Z",
+ "generated_at": "2026-11-05T05:46:47Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -5274,8 +5274,8 @@
    "generated_now": 0,
    "queued": 1,
    "unread_communities": 1,
-   "sha256": "93aff07ebf6dbb03eb546403bc24828475cab79135ea3285cb6f541041f26743",
-   "bytes": 35278
+   "sha256": "9b88c6bf573c3005b5cf3b2001f80e3dab39fe4fea1ebb7e1861031dddd16518",
+   "bytes": 35276
   },
   "games": {
    "path": "games.json",
@@ -5291,18 +5291,18 @@
    "predation_pairs": 29,
    "alarm_links": 51,
    "plant_relations": 301,
-   "sha256": "1acbda3c287119231447cec3bd423777ff9d57cc6a76270e92b5420e46ac7a20",
+   "sha256": "b5b2ddea969e0ec59bac3b22305e5959196482917a89d97985907e75ca3ec533",
    "bytes": 389564
   },
   "species.registry": {
    "path": "species/registry.json",
    "kind": "table",
    "plants": 87,
-   "animals_present": 0,
+   "animals_present": 18,
    "animals_queued": 63,
    "cards_queued": 1,
-   "sha256": "43499d9c25438027b01d65b93b44f3416ad337f773dc998abab991b0d39e910a",
-   "bytes": 46810
+   "sha256": "b5c138a94f167a4a53cf53d4bedbe5c9c73fc930fad514e5bffe89bcba8b7f59",
+   "bytes": 50244
   }
  },
  "sources": {
@@ -5666,83 +5666,113 @@
    "at": "2026-11-05T04:20:03Z",
    "seconds": 0.1,
    "ok": true
+  },
+  {
+   "step": "derive",
+   "at": "2026-11-05T05:40:25Z",
+   "seconds": 44.1,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-05T05:40:26Z",
+   "seconds": 0.2,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-05T05:42:54Z",
+   "seconds": 0.3,
+   "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-05T05:46:47Z",
+   "seconds": 0.3,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-05T05:46:47Z",
+   "seconds": 0.2,
+   "ok": true
   }
  ],
  "steps": {
   "plants": {
    "version": "1",
-   "code": "a2506a57de175b1d",
+   "code": "9401c582585e4a6a",
    "params": {
     "tile": "utm10n_540_4180"
    },
-   "fingerprint": "b76369ca052a9de7",
+   "fingerprint": "d4e9845d68c9c189",
    "parts": {
     "version": "1",
-    "code": "a2506a57de175b1d",
+    "code": "9401c582585e4a6a",
     "params": {
      "tile": "utm10n_540_4180"
     },
     "deps": {
-     "veg": null,
-     "species": null
+     "veg": "b4ff936ca6edb773",
+     "species": "ed4147cb2c858e4b"
     },
     "library": {
      "library/plant_cards": "9643c69d05e4b4a5"
     }
    },
-   "ran_at": "2026-11-05T04:19:18Z",
+   "ran_at": "2026-11-05T05:46:46Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "species.plant_needs"
    ],
    "outputs": {
-    "species/plant_needs.json": "93aff07ebf6dbb03"
+    "species/plant_needs.json": "9b88c6bf573c3005"
    },
-   "out_hash": "376e2db5e49612a5",
+   "out_hash": "766fd55a0a81da91",
    "sources": {},
    "fallbacks": [],
    "notes": [],
    "fetched": {
-    "network": 1,
-    "cache": 1
+    "network": 0,
+    "cache": 2
    },
-   "seconds": 1.8
+   "seconds": 0.3
   },
   "derive": {
    "version": "1",
-   "code": "cdfd17b7acebc57c",
+   "code": "4644811dad51227e",
    "params": {
     "tile": "utm10n_540_4180",
     "dem_res_m": 5.0,
     "imagery_res_m": 2.5
    },
-   "fingerprint": "c07c198bd5bdba16",
+   "fingerprint": "89c048429d108b32",
    "parts": {
     "version": "1",
-    "code": "cdfd17b7acebc57c",
+    "code": "4644811dad51227e",
     "params": {
      "tile": "utm10n_540_4180",
      "dem_res_m": 5.0,
      "imagery_res_m": 2.5
     },
     "deps": {
-     "dem": null,
-     "naip": null,
-     "osm": null,
-     "hydro": null,
-     "channels": null,
-     "rewild_hydro": null,
-     "water": null,
-     "veg": null,
-     "species": null,
+     "dem": "038091c3574f7e23",
+     "naip": "36aabf33612d308f",
+     "osm": "cd0cfd5275f91e75",
+     "hydro": "5c88f01e866030ec",
+     "channels": "896e7e029b4b2298",
+     "rewild_hydro": "ace3d4581912d858",
+     "water": "8d4690894c931619",
+     "veg": "b4ff936ca6edb773",
+     "species": "ed4147cb2c858e4b",
      "plants": "376e2db5e49612a5"
     },
     "library": {
      "library/species": "7def261f22f692f1"
     }
    },
-   "ran_at": "2026-11-05T04:19:20Z",
+   "ran_at": "2026-11-05T05:39:41Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -5784,7 +5814,7 @@
     "client/texture_present.jpg": "c35bb52edd1b009e",
     "footprint/mask.png": "54c0ecf800d407a5",
     "footprint/urban.tif": "4b9ae6d3eb5e5749",
-    "games.json": "1acbda3c28711923",
+    "games.json": "b5b2ddea969e0ec5",
     "imagery/naip.png": "498b04ccc56020ce",
     "resources/resources.json": "fa9800ac755527b7",
     "terrain/hillshade.png": "e66a86afc0743dfd",
@@ -5793,7 +5823,7 @@
     "vegetation/habitat.png": "7c5008ac908e931a",
     "vegetation/habitat_present.png": "32e282b882bbdf13"
    },
-   "out_hash": "08a4dd35dad8c9d2",
+   "out_hash": "671a7ed06f6ca4bc",
    "sources": {
     "pc_naip": "2026-11-05",
     "osm": "2026-11-05",
@@ -5805,25 +5835,25 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 42.9
+   "seconds": 44.1
   },
   "registry": {
    "version": "1",
-   "code": "9e6c2846eb73df21",
+   "code": "5d11fb62482430f5",
    "params": {
     "tile": "utm10n_540_4180"
    },
-   "fingerprint": "baa9842649f77ebd",
+   "fingerprint": "5a6236d9d9014c6b",
    "parts": {
     "version": "1",
-    "code": "9e6c2846eb73df21",
+    "code": "5d11fb62482430f5",
     "params": {
      "tile": "utm10n_540_4180"
     },
     "deps": {
-     "species": null,
-     "plants": "376e2db5e49612a5",
-     "derive": "08a4dd35dad8c9d2"
+     "species": "ed4147cb2c858e4b",
+     "plants": "766fd55a0a81da91",
+     "derive": "671a7ed06f6ca4bc"
     },
     "library": {
      "library/species": "7def261f22f692f1",
@@ -5831,16 +5861,16 @@
      "library/plant_cards": "9643c69d05e4b4a5"
     }
    },
-   "ran_at": "2026-11-05T04:20:02Z",
+   "ran_at": "2026-11-05T05:46:47Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "species.registry"
    ],
    "outputs": {
-    "species/registry.json": "43499d9c25438027"
+    "species/registry.json": "b5c138a94f167a4a"
    },
-   "out_hash": "7f7ff1bf34d4de02",
+   "out_hash": "1e978c492ed72ff1",
    "sources": {},
    "fallbacks": [],
    "notes": [],
@@ -5848,7 +5878,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 0.1
+   "seconds": 0.2
   },
   "dem": {
    "version": "1",

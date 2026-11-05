@@ -168,6 +168,33 @@ sequenced; Parked is in the brief but deliberately not started.
   the slabs read as small rectangles, El Capitan's face is still one smooth surface at a kilometre in the afternoon
   haze; no talus placed at the walls' feet; the slabs are not stood on.
 
+- The tile pipeline as one repeatable command, and the species registry, 2026-11-04 (Aaron: "When we create a new
+  tile, we need to be going through all the steps... repeatable... anywhere on earth... generate all of the species for
+  that tile if they don't already exist... a registry of species"; docs/pipeline.md): `build_tile --all` runs a graph
+  of 22 steps with fingerprints (skips what is current, reruns what a code or input change reaches), records per step
+  its version, code hash, outputs, sources, fallbacks and coverage, stops at a failure, and ends with the licence
+  audit; NASADEM as the global DEM; every GBIF read cached. `pipeline/registry.py` scans every plant and animal asset
+  into `library/registry.json` with a fidelity level 0-4; the plants step grows each species a tile needs from its
+  trait card (29 cards: the high Sierra set and the coast), the registry step writes each tile's species at their level
+  and queues Meshy jobs with estimates (never run). Yosemite now draws red and white fir, Jeffrey, lodgepole,
+  whitebark, western white pine, hemlock, juniper and aspen over greenleaf manzanita, whitethorn and huckleberry oak;
+  San Francisco coast live oak, redwood, tanoak, Monterey pine and cypress over coyote brush, sagebrush, monkeyflower
+  and lupine (gray pine 47-63 % -> 0). A new tile, Calaveras Big Trees (`utm10n_731_4235`), built by `--all` alone.
+  Weak: generated records are not yet reviewed in the lineup (held at level 2); the riparian zone rows and the ground
+  layer are still foothill-only at Yosemite's elevations; a tile outside CONUS stops at naip and veg.
+
+## Next: the pipeline outside the US and the species queue (2026-11-04)
+
+1. A global vegetation step: ESA WorldCover 2021 (CC BY 4.0) for the classes and cover, RESOLVE Ecoregions 2017
+   (CC BY 4.0) for the community, the species-mix rules keyed on them; and a Sentinel-2 true-colour imagery step for
+   tiles outside NAIP (docs/pipeline.md, Anywhere on Earth).
+2. Review the 29 generated plant records in the lineup and add each card's `review`; tune the weakest (sugar pine's
+   few huge limbs, whitebark krummholz, red mountain heather).
+3. Elevation-aware riparian zone rows and ground layer (with the water lane): the high Sierra's willows, mountain alder,
+   meadow sedges and perennial grasses.
+4. The Meshy queue (`library/registry.json` meshy.queued): pick the first animals for Aaron's go-ahead; the
+   remaining budget is 580 credits.
+
 ## Next: the visual pass, in order of effect per hour
 
 1. ~~Horizon~~ done 2026-10-23: two crossed-quad impostors with a canopy cap per

@@ -394,7 +394,7 @@ COAST_SUBST = {BO: {QA: 1.0}, GP: {QA: 1.0}, LO: {QA: 1.0}, KO: {QA: 1.0}, PP: {
 # hundred hectares each, inside the mixed conifer; LANDFIRE has no sequoia community. pipeline/needs.py writes the
 # CC0 / CC BY records of these species on the tile to species/localized.json; a cell within `radius_m` of one, in one
 # of `rules`, gets `weight` of it (TERRAIN still applies).
-LOCALIZED = {GS: {"radius_m": 450.0, "weight": 0.6,
+LOCALIZED = {GS: {"radius_m": 300.0, "weight": 0.6,
                   "rules": ("mesic_mixed_conifer", "dry_mesic_mixed_conifer", "lower_montane_conifer", "black_oak_conifer",
                             "habitat_default_conifer_forest", "habitat_default_mixed_forest", "montane_riparian")}}
 

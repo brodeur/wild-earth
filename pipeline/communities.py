@@ -110,7 +110,7 @@ STAND_IN = {
     "pinus_contorta": "pinus_ponderosa", "pinus_jeffreyi": "pinus_ponderosa", "pinus_lambertiana": "pinus_ponderosa",
     "pinus_flexilis": "pinus_ponderosa", "pinus_albicaulis": "pinus_ponderosa", "pinus_monticola": "pinus_ponderosa",
     "pinus_longaeva": "pinus_ponderosa", "pinus_monophylla": "pinus_sabiniana", "pinus_attenuata": "pinus_sabiniana",
-    "pinus_radiata": "pinus_ponderosa", "pinus_muricata": "pinus_ponderosa",
+    "pinus_radiata": "pinus_ponderosa", "pinus_muricata": "pinus_radiata",
     "hesperocyparis_macrocarpa": "calocedrus_decurrens", "sequoia_sempervirens": "pseudotsuga_menziesii",
     "sequoiadendron_giganteum": "calocedrus_decurrens", "juniperus_grandis": "calocedrus_decurrens",
     "populus_tremuloides": "populus_fremontii", "quercus_agrifolia": "quercus_wislizeni", "quercus_garryana": "quercus_douglasii",
