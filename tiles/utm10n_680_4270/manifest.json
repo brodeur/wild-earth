@@ -15,7 +15,7 @@
   38.65029129231017
  ],
  "size_m": 10000,
- "generated_at": "2026-11-05T04:20:38Z",
+ "generated_at": "2026-11-05T04:39:13Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -6246,6 +6246,18 @@
    "step": "water",
    "at": "2026-11-05T04:20:38Z",
    "seconds": 19.2,
+   "ok": true
+  },
+  {
+   "step": "reroute",
+   "at": "2026-11-05T04:38:54Z",
+   "seconds": 14.8,
+   "ok": true
+  },
+  {
+   "step": "water",
+   "at": "2026-11-05T04:39:13Z",
+   "seconds": 18.7,
    "ok": true
   }
  ]

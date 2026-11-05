@@ -15,7 +15,7 @@
   38.74035063713964
  ],
  "size_m": 10000,
- "generated_at": "2026-11-05T04:19:07Z",
+ "generated_at": "2026-11-05T04:38:05Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -1500,7 +1500,7 @@
      "bed_cells": 17278,
      "corridor_cells": 4285
     },
-    "seconds": 14.8
+    "seconds": 15.9
    }
   },
   "client.channel_depth": {
@@ -7954,6 +7954,18 @@
    "step": "water",
    "at": "2026-11-05T04:19:07Z",
    "seconds": 20.0,
+   "ok": true
+  },
+  {
+   "step": "reroute",
+   "at": "2026-11-05T04:37:46Z",
+   "seconds": 16.7,
+   "ok": true
+  },
+  {
+   "step": "water",
+   "at": "2026-11-05T04:38:05Z",
+   "seconds": 19.4,
    "ok": true
   }
  ]
