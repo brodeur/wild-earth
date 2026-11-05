@@ -1,0 +1,205 @@
+{
+ "id": "tsuga_mertensiana",
+ "scientific": "Tsuga mertensiana",
+ "common": "mountain hemlock",
+ "aliases": [
+  "mountain_hemlock"
+ ],
+ "family": "Pinaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "pseudotsuga_menziesii",
+ "height_m": [
+  10,
+  30
+ ],
+ "stature": {
+  "typical_m": 20,
+  "tall_m": 35,
+  "record_m": 59.1,
+  "source": "typical and tall: the drafter's estimate for the Sierra (the Gymnosperm Database gives the species to 55 m, often dwarfed in snowy subalpine sites); record: 59.1 m, Olympic National Park, 1998 (Gymnosperm Database, which warns the method may overestimate); read 2026-11-04"
+ },
+ "variants_height_m": {
+  "young": [
+   2,
+   8
+  ],
+  "old-growth": [
+   25,
+   38
+  ]
+ },
+ "crown": {
+  "shape": "conical",
+  "profile": [
+   [
+    0.08,
+    0.2
+   ],
+   [
+    0.25,
+    0.21
+   ],
+   [
+    0.45,
+    0.18
+   ],
+   [
+    0.65,
+    0.13
+   ],
+   [
+    0.82,
+    0.08
+   ],
+   [
+    0.94,
+    0.04
+   ],
+   [
+    1.0,
+    0.01
+   ]
+  ],
+  "lobes": 5,
+  "lobe_depth": 0.1,
+  "asymmetry": 0.1,
+  "fill": 0.35,
+  "edge": 1.08
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    70,
+    80,
+    76
+   ],
+   "spring": [
+    92,
+    106,
+    94
+   ],
+   "summer": [
+    74,
+    86,
+    82
+   ],
+   "fall": [
+    72,
+    84,
+    80
+   ]
+  },
+  "leaf_size_m": 0.02
+ },
+ "trunk": {
+  "bark_rgb": [
+   100,
+   76,
+   70
+  ],
+  "bark_pattern": "furrowed",
+  "base_size": 0.08,
+  "bole_ratio": 0.06
+ },
+ "targets": {
+  "crown_width_ratio": 0.38,
+  "crown_base_ratio": 0.08,
+  "porosity": 0.2,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a dense, narrow cone with drooping branch tips and a nodding leader, live branches to the ground; dark blue-green"
+ },
+ "variant_patches": {
+  "old-growth": {
+   "set": {
+    "trunk": {
+     "base_size": 0.2,
+     "bole_ratio": 0.18
+    },
+    "crown": {
+     "shape": "conical",
+     "envelope": {
+      "profile": [
+       [
+        0.2,
+        0.18
+       ],
+       [
+        0.35,
+        0.2
+       ],
+       [
+        0.55,
+        0.18
+       ],
+       [
+        0.72,
+        0.14
+       ],
+       [
+        0.86,
+        0.09
+       ],
+       [
+        1.0,
+        0.03
+       ]
+      ],
+      "lobes": 4,
+      "lobe_depth": 0.16,
+      "asymmetry": 0.15
+     }
+    }
+   },
+   "note": "an old tree of a snowy north slope: a dark furrowed trunk, branches drooping like skirts, the tip still nodding; often bent at the base by snow creep"
+  }
+ },
+ "description": "A graceful hemlock of the snowiest high slopes, 10-30 m here, with a narrow cone of drooping branches, a limp leader that nods over at the very top, and short blue-green needles that stand out all around the twigs like little stars. It grows on cool, north-facing slopes and in cirque basins near timberline, about 2400-3200 m, where snow lies into July, and at its highest goes down to a low, bent shrub.",
+ "season_notes": {
+  "winter": "Evergreen and deep in snow; the drooping limbs shed it and young trees lie pressed flat under it.",
+  "spring": "Purple pollen cones and small purple seed cones in June-July as the snow melts off the slope.",
+  "summer": "Small cones, 3-7 cm, hang at the branch tips and turn from purple to brown.",
+  "fall": "Cones open and release tiny winged seeds onto the early snow."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "barren": 0.3,
+   "riparian": 0.1
+  },
+  "floor": 0.8,
+  "mid": 1.0,
+  "steep": 1.1,
+  "north": 1.8,
+  "shade": 0.6,
+  "disturbed": 0.3
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   2400,
+   3200
+  ],
+  "where": "the snowiest north slopes and cirque basins near timberline: Gaylor Lakes, Tioga Pass, Mount Hoffmann, Cathedral Lakes"
+ },
+ "stand_in": "pseudotsuga_menziesii",
+ "notes": "The nodding leader is the field mark (John Muir's favourite tree), and the generator has no way to bend the top few metres of the stem over; a reviewer may try a variant 'set' on the leader. Its needles radiate all round the twig rather than in two ranks, cones are small and hanging (Douglas-fir's are too, but longer and bracted). Bark dark grey to reddish-brown, deeply furrowed on larger stems (Gymnosperm Database). The deer browse line is a guess (little forage value); nothing in the animal library depends on it, though chickadees, crossbills and sooty grouse do. Sierra elevations: the Gymnosperm Database gives 2750-3050 m for the southern Sierra; the central Sierra belt is lower and is the drafter's knowledge.",
+ "sources": [
+  "https://www.conifers.org/pi/Tsuga_mertensiana.php"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

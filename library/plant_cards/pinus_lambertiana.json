@@ -1,0 +1,235 @@
+{
+ "id": "pinus_lambertiana",
+ "scientific": "Pinus lambertiana",
+ "common": "sugar pine",
+ "aliases": [
+  "sugar_pine"
+ ],
+ "family": "Pinaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "pinus_ponderosa",
+ "height_m": [
+  30,
+  55
+ ],
+ "stature": {
+  "typical_m": 45,
+  "tall_m": 65,
+  "record_m": 78.9,
+  "source": "typical: the Gymnosperm Database 30-50 m, up to about 75; record: 78.94 m near the Rogue River, Oregon (2022); the largest living, the Mossy Creek Giant in Yosemite, is 71.6 m (Gymnosperm Database); read 2026-11-04"
+ },
+ "variants_height_m": {
+  "pole": [
+   10,
+   18
+  ],
+  "old-growth": [
+   50,
+   70
+  ]
+ },
+ "crown": {
+  "shape": "cylindrical",
+  "profile": [
+   [
+    0.4,
+    0.17
+   ],
+   [
+    0.55,
+    0.23
+   ],
+   [
+    0.68,
+    0.28
+   ],
+   [
+    0.8,
+    0.3
+   ],
+   [
+    0.9,
+    0.27
+   ],
+   [
+    0.97,
+    0.18
+   ],
+   [
+    1.0,
+    0.08
+   ]
+  ],
+  "lobes": 3,
+  "lobe_depth": 0.3,
+  "asymmetry": 0.35,
+  "fill": 0.1,
+  "edge": 1.15
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    72,
+    84,
+    78
+   ],
+   "spring": [
+    90,
+    104,
+    90
+   ],
+   "summer": [
+    76,
+    90,
+    82
+   ],
+   "fall": [
+    78,
+    88,
+    78
+   ]
+  },
+  "leaf_size_m": 0.08
+ },
+ "trunk": {
+  "bark_rgb": [
+   134,
+   96,
+   84
+  ],
+  "bark_pattern": "furrowed",
+  "radius_ratio": 0.024
+ },
+ "targets": {
+  "crown_width_ratio": 0.5,
+  "crown_base_ratio": 0.5,
+  "porosity": 0.45,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a tall clear trunk with a few enormous horizontal limbs in the upper half, gaps between them, a flat or broken top; blue-green, darker than ponderosa"
+ },
+ "variant_patches": {
+  "pole": {
+   "set": {
+    "trunk": {
+     "bark_rgb": [
+      108,
+      100,
+      96
+     ]
+    }
+   },
+   "note": "a young tree: a narrow, regular cone of upswept branches on a smooth grey-brown trunk"
+  },
+  "old-growth": {
+   "set": {
+    "crown": {
+     "shape": "cylindrical",
+     "envelope": {
+      "profile": [
+       [
+        0.6,
+        0.2
+       ],
+       [
+        0.7,
+        0.3
+       ],
+       [
+        0.8,
+        0.36
+       ],
+       [
+        0.9,
+        0.36
+       ],
+       [
+        0.97,
+        0.26
+       ],
+       [
+        1.0,
+        0.12
+       ]
+      ],
+      "lobes": 3,
+      "lobe_depth": 0.38,
+      "asymmetry": 0.45
+     }
+    }
+   },
+   "note": "the giant: a long clear column of a trunk and, at the top, a few huge level arms reaching far out, heavy cones hanging from their ends, the top flat and ragged"
+  }
+ },
+ "description": "The tallest and largest pine in the world, 30-60 m here, with a long straight column of a trunk, a crown of a few enormous horizontal limbs that reach far out and droop at the ends, and the longest cones of any conifer, 25-50 cm, hanging from their tips. It grows on the deeper soils of the mixed conifer forest of the west slope, about 1200-2400 m, scattered among white fir, incense cedar and ponderosa, its flat, lopsided top rising above them all.",
+ "season_notes": {
+  "winter": "Evergreen; the long cones hang from the limb ends like ornaments.",
+  "spring": "Pollen in May-June; new cones begin as small purple knobs.",
+  "summer": "The second-year cones grow long and green, pulling the limb tips down.",
+  "fall": "The great cones open in August-September and drop large winged seeds; the fallen cones litter the forest floor all year."
+ },
+ "habitat": {
+  "classes": {
+   "mixed_forest": 1.0,
+   "conifer_forest": 0.6,
+   "riparian": 0.05
+  },
+  "floor": 1.1,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 1.1,
+  "shade": 0.4,
+  "disturbed": 0.5
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "sciurus_griseus",
+    "part": "seeds",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "ursus_americanus",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "otospermophilus_beecheyi",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "sciurus_griseus",
+   "cyanocitta_stelleri"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1200,
+   2400
+  ],
+  "where": "the mixed conifer forest of the west slope on deep soils: Crane Flat, Wawona, Hodgdon Meadow, the Hetch Hetchy road"
+ },
+ "stand_in": "pinus_ponderosa",
+ "notes": "The silhouette is everything: young trees are narrow cones like other pines, but mature ones carry a handful of very long, nearly level limbs high on the trunk, so the crown is gappy, asymmetric and flat-topped, and the limb ends bend under the cones. The generator's ponderosa branching gives evenly spaced limbs; the crown profile, lobes and asymmetry here push it toward the open, one-sided form, but the few-huge-limbs architecture really needs a lower branch count and longer level-1 limbs (levels cannot be patched per index by the card). Cones 25-50 cm (Gymnosperm Database) are not drawn. Needles are short (5-10 cm), in fives, blue-green. White pine blister rust kills many. The sweet resin that gives the name is a field-guide line. Seeds are large and favoured by squirrels, chipmunks, jays and bears (the bear note is the drafter's knowledge). Central Sierra elevations are the drafter's knowledge.",
+ "sources": [
+  "https://www.conifers.org/pi/Pinus_lambertiana.php"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

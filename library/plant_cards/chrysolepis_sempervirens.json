@@ -1,0 +1,201 @@
+{
+ "id": "chrysolepis_sempervirens",
+ "scientific": "Chrysolepis sempervirens",
+ "common": "bush chinquapin",
+ "aliases": [
+  "bush_chinquapin",
+  "sierra_chinquapin",
+  "castanopsis_sempervirens"
+ ],
+ "family": "Fagaceae",
+ "form": "shrub",
+ "deciduous": false,
+ "template": "frangula_californica",
+ "height_m": [
+  0.5,
+  1.5
+ ],
+ "stature": {
+  "typical_m": 1,
+  "tall_m": 2.5,
+  "record_m": null,
+  "source": "typical: FEIS 0.3-1.5 m; tall: FEIS, occasionally 2.5 m; read 2026-11-04"
+ },
+ "variants_height_m": {
+  "young": [
+   0.2,
+   0.5
+  ],
+  "old": [
+   1.5,
+   2.5
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.6
+   ],
+   [
+    0.2,
+    0.85
+   ],
+   [
+    0.45,
+    0.95
+   ],
+   [
+    0.7,
+    0.85
+   ],
+   [
+    0.88,
+    0.6
+   ],
+   [
+    1.0,
+    0.2
+   ]
+  ],
+  "lobes": 5,
+  "lobe_depth": 0.1,
+  "asymmetry": 0.12,
+  "fill": 0.6,
+  "edge": 1.06
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    108,
+    106,
+    72
+   ],
+   "spring": [
+    120,
+    124,
+    80
+   ],
+   "summer": [
+    114,
+    112,
+    74
+   ],
+   "fall": [
+    116,
+    110,
+    72
+   ]
+  },
+  "leaf_size_m": 0.05,
+  "leaf_shape": "lanceolate",
+  "berries": {
+   "season": [
+    "summer",
+    "fall"
+   ],
+   "months": [
+    8,
+    10
+   ],
+   "form": "cluster",
+   "rgb": [
+    158,
+    128,
+    74
+   ],
+   "size_m": 0.03,
+   "density": 0.3
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   118,
+   104,
+   92
+  ],
+  "bark_pattern": "smooth_grey",
+  "stems": [
+   5,
+   10
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 1.6,
+  "crown_base_ratio": 0.05,
+  "porosity": 0.15,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a dense rounded mound wider than tall, olive-green with a golden cast from the scurfy leaf undersides; spiny burs among the leaves in late summer"
+ },
+ "description": "A dense, rounded evergreen shrub usually knee- to waist-high, with oblong olive-green leaves that are dusted golden-rusty underneath and folded up along the midrib, and clusters of spiny burs like small chestnut husks. It grows on steep, sunny rocky slopes and in montane chaparral of the conifer belt, about 1500-3300 m, often with greenleaf manzanita and huckleberry oak, and low forms reach above timberline.",
+ "season_notes": {
+  "winter": "Evergreen; the golden undersides flash when snow-laden branches spring free.",
+  "spring": "Fresh leaves in late spring; cream catkins of strong-smelling flowers follow in summer.",
+  "summer": "Flowering, July-August, in upright creamy spikes; last year's burs grow spiny and golden-brown.",
+  "fall": "The burs split and drop sweet little nuts, a staple for chipmunks, squirrels and jays."
+ },
+ "habitat": {
+  "classes": {
+   "chaparral": 1.0,
+   "conifer_forest": 0.6,
+   "barren": 0.4,
+   "mixed_forest": 0.3
+  },
+  "floor": 0.5,
+  "mid": 1.0,
+  "steep": 1.3,
+  "north": 0.8,
+  "shade": 0.3,
+  "disturbed": 1.0
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "otospermophilus_beecheyi",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "oreortyx_pictus",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "sciurus_griseus",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "oreortyx_pictus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1500,
+   3300
+  ],
+  "where": "steep rocky slopes and montane chaparral of the conifer belt: the Tioga Road, the Glacier Point Road, Yosemite Valley's rims"
+ },
+ "stand_in": "frangula_californica",
+ "notes": "Like coffeeberry (the template) a rounded evergreen shrub with simple leaves, but the colour is the giveaway: olive above, golden-scurfy beneath, so the mound reads yellowish; the berries here are its spiny burs, golden-brown. Flowers are cream catkins (not drawn). The nut takes two seasons and drops in mid-fall (FEIS). FEIS says rodents and birds rely on the seed but deer barely browse it; the named seed-eaters are the drafter's choices from the library (chipmunks, the main users, are not in it). Low, matted forms occur above timberline at Tioga, Sonora and Carson passes (FEIS). FEIS gives 460-1830 m as most common and to 3650 m; that common band is range-wide, and the Yosemite belt here is the drafter's knowledge.",
+ "sources": [
+  "https://www.fs.usda.gov/database/feis/plants/shrub/chrsem/all.html"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

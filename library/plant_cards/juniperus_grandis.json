@@ -1,0 +1,250 @@
+{
+ "id": "juniperus_grandis",
+ "scientific": "Juniperus grandis",
+ "common": "Sierra juniper",
+ "aliases": [
+  "sierra_juniper",
+  "western_juniper",
+  "juniperus_occidentalis_australis"
+ ],
+ "family": "Cupressaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "calocedrus_decurrens",
+ "height_m": [
+  6,
+  15
+ ],
+ "stature": {
+  "typical_m": 10,
+  "tall_m": 20,
+  "record_m": 26,
+  "source": "typical: the Gymnosperm Database 10-15 m (to 30); record: the Bennett Juniper, Stanislaus National Forest, 26 m tall, 388 cm dbh, 18 m crown, the largest known juniper (Gymnosperm Database); read 2026-11-04"
+ },
+ "variants_height_m": {
+  "young": [
+   1.5,
+   5
+  ],
+  "old-growth": [
+   10,
+   20
+  ]
+ },
+ "crown": {
+  "shape": "spherical",
+  "profile": [
+   [
+    0.25,
+    0.3
+   ],
+   [
+    0.4,
+    0.38
+   ],
+   [
+    0.55,
+    0.4
+   ],
+   [
+    0.7,
+    0.36
+   ],
+   [
+    0.85,
+    0.26
+   ],
+   [
+    1.0,
+    0.1
+   ]
+  ],
+  "lobes": 4,
+  "lobe_depth": 0.3,
+  "asymmetry": 0.3,
+  "fill": 0.25,
+  "edge": 1.15
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    76,
+    88,
+    72
+   ],
+   "spring": [
+    88,
+    102,
+    78
+   ],
+   "summer": [
+    80,
+    94,
+    76
+   ],
+   "fall": [
+    80,
+    92,
+    74
+   ]
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   158,
+   90,
+   64
+  ],
+  "bark_pattern": "shreddy",
+  "radius_ratio": 0.07,
+  "flare": 1.8,
+  "lean_deg": 6,
+  "taper": 1.3
+ },
+ "targets": {
+  "crown_width_ratio": 0.75,
+  "crown_base_ratio": 0.15,
+  "porosity": 0.3,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a squat tree nearly as wide as tall above a massive short trunk, crown rounded and broken, often a dead silver top"
+ },
+ "variant_patches": {
+  "young": {
+   "set": {
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.05,
+        0.26
+       ],
+       [
+        0.25,
+        0.28
+       ],
+       [
+        0.45,
+        0.25
+       ],
+       [
+        0.65,
+        0.19
+       ],
+       [
+        0.85,
+        0.1
+       ],
+       [
+        1.0,
+        0.03
+       ]
+      ],
+      "lobe_depth": 0.1
+     }
+    }
+   },
+   "note": "a young tree in a granite crack: a dense, dark, pointed bush"
+  },
+  "old-growth": {
+   "set": {
+    "trunk": {
+     "base_size": 0.18,
+     "bole_ratio": 0.16,
+     "flare": 2.2
+    },
+    "crown": {
+     "shape": "spherical",
+     "envelope": {
+      "profile": [
+       [
+        0.3,
+        0.38
+       ],
+       [
+        0.45,
+        0.46
+       ],
+       [
+        0.6,
+        0.48
+       ],
+       [
+        0.75,
+        0.42
+       ],
+       [
+        0.88,
+        0.3
+       ],
+       [
+        1.0,
+        0.12
+       ]
+      ],
+      "lobes": 4,
+      "lobe_depth": 0.38,
+      "asymmetry": 0.4
+     }
+    }
+   },
+   "note": "an ancient on bare granite: a trunk as thick as it is short, cinnamon bark in twisted strips, a few huge contorted limbs and a broken crown with a dead silver top"
+  }
+ },
+ "description": "A squat, massive tree of bare granite, usually 6-15 m tall with a huge short trunk of cinnamon-red bark peeling in long twisted strips, thick contorted limbs, and a rounded, broken crown of dark grey-green scale leaves with blue berry-like cones. It grows alone in cracks of domes, ridges and rock benches of the high country, about 1800-3000 m, and the oldest trees, more than a thousand years old, are among the most ancient living things in the Sierra.",
+ "season_notes": {
+  "winter": "Evergreen and dark against the snow; the rock around it bare and wind-swept.",
+  "spring": "Tiny pollen cones on male trees shed yellow dust in May-June.",
+  "summer": "Last year's seed cones ripen from purple-red to dusky blue with a pale bloom.",
+  "fall": "Blue 'berries' hang on female trees into winter, eaten by birds and coyotes."
+ },
+ "habitat": {
+  "classes": {
+   "barren": 1.0,
+   "conifer_forest": 0.4,
+   "chaparral": 0.2
+  },
+  "floor": 0.3,
+  "mid": 0.9,
+  "steep": 1.4,
+  "north": 0.6,
+  "shade": 0.05,
+  "disturbed": 0.2
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "canis_latrans",
+    "part": "berries",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   },
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "berries",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   }
+  ],
+  "cover_for": [
+   "sceloporus_occidentalis"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1800,
+   3000
+  ],
+  "where": "granite domes, ridges and benches: Olmsted Point, Tenaya Lake, Tuolumne Meadows' domes, the high Tuolumne canyon"
+ },
+ "stand_in": "calocedrus_decurrens",
+ "notes": "Against the incense cedar template it needs to be short and fat: a trunk radius ratio three times the cedar's, a strong flare and taper, a rounded crown nearly as wide as tall, and redder, shreddier bark (set here). The contorted, sculptural limbs, the silver dead tops and stripped wood on the weather side, and the tree growing out of bare rock are what make it, and the generator can only hint at them through gnarl and deadwood in the old-growth class. Formerly treated as Juniperus occidentalis var. australis. Seed cones are fleshy and blue, eaten by robins, Townsend's solitaires and other birds (not in the library) and by coyotes; the Steller's jay entry is a stand-in. Range 1000-3000 m in California per the Gymnosperm Database; the Yosemite belt is the drafter's knowledge.",
+ "sources": [
+  "https://www.conifers.org/cu/Juniperus_grandis.php"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

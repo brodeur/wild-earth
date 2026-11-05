@@ -1,0 +1,1331 @@
+{
+ "tile": "utm11n_270_4180",
+ "communities": [
+  {
+   "source": "evt",
+   "code": 7098,
+   "name": "California Montane Woodland and Chaparral",
+   "cells": 26118,
+   "rule": "montane_woodland_chaparral",
+   "named": [
+    "quercus_chrysolepis",
+    "quercus_vacciniifolia",
+    "arctostaphylos_patula",
+    "ceanothus_cordulatus",
+    "chrysolepis_sempervirens"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 9213,
+   "name": "Sierra Nevada Cliff and Canyon",
+   "cells": 13586,
+   "rule": "sparse_rock",
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7028,
+   "name": "Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+   "cells": 13270,
+   "rule": "mesic_mixed_conifer",
+   "named": [
+    "pinus_ponderosa",
+    "pinus_lambertiana",
+    "abies_concolor",
+    "calocedrus_decurrens",
+    "pseudotsuga_menziesii",
+    "quercus_kelloggii"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7058,
+   "name": "Sierra Nevada Subalpine Lodgepole Pine Forest and Woodland",
+   "cells": 11295,
+   "rule": "subalpine_lodgepole",
+   "named": [
+    "pinus_contorta"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7032,
+   "name": "Mediterranean California Red Fir Forest",
+   "cells": 11050,
+   "rule": "red_fir",
+   "named": [
+    "abies_magnifica"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7044,
+   "name": "Northern California Mesic Subalpine Woodland",
+   "cells": 4826,
+   "rule": "mesic_subalpine",
+   "named": [
+    "pinus_albicaulis",
+    "tsuga_mertensiana",
+    "pinus_contorta",
+    "pinus_monticola",
+    "juniperus_grandis"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 9129,
+   "name": "Mediterranean California Foothill and Lower Montane Riparian Woodland",
+   "cells": 4719,
+   "rule": "riparian",
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7031,
+   "name": "California Montane Jeffrey Pine-(Ponderosa Pine) Woodland",
+   "cells": 4497,
+   "rule": "jeffrey_pine",
+   "named": [
+    "pinus_ponderosa",
+    "pinus_jeffreyi"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7033,
+   "name": "Mediterranean California Subalpine Woodland",
+   "cells": 3917,
+   "rule": "subalpine_woodland",
+   "named": [
+    "pinus_albicaulis",
+    "tsuga_mertensiana",
+    "pinus_contorta",
+    "pinus_monticola",
+    "juniperus_grandis"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 9125,
+   "name": "Mediterranean California Alpine Bedrock and Scree",
+   "cells": 3355,
+   "rule": "alpine",
+   "named": [
+    "phyllodoce_breweri"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7029,
+   "name": "Mediterranean California Mixed Oak Woodland",
+   "cells": 3113,
+   "rule": "mixed_oak",
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7027,
+   "name": "Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+   "cells": 2392,
+   "rule": "dry_mesic_mixed_conifer",
+   "named": [
+    "pinus_ponderosa",
+    "pinus_lambertiana",
+    "abies_concolor",
+    "calocedrus_decurrens",
+    "pseudotsuga_menziesii",
+    "quercus_kelloggii"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7137,
+   "name": "Mediterranean California Subalpine Meadow",
+   "cells": 1890,
+   "rule": "subalpine_meadow",
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 9301,
+   "name": "California Ruderal Grassland and Meadow",
+   "cells": 1446,
+   "rule": "grassland_savanna",
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7292,
+   "name": "Open Water",
+   "cells": 806,
+   "rule": "open_water",
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7105,
+   "name": "Northern and Central California Dry-Mesic Chaparral",
+   "cells": 712,
+   "rule": "dry_mesic_chaparral",
+   "named": [
+    "adenostoma_fasciculatum",
+    "arctostaphylos_viscida",
+    "ceanothus_cuneatus"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7071,
+   "name": "Sierra Nevada Alpine Dwarf-Shrubland",
+   "cells": 598,
+   "rule": "alpine_dwarf_shrub",
+   "named": [
+    "phyllodoce_breweri"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7030,
+   "name": "Mediterranean California Lower Montane Conifer Forest and Woodland",
+   "cells": 469,
+   "rule": "lower_montane_conifer",
+   "named": []
+  },
+  {
+   "source": "bps",
+   "code": 619,
+   "name": "Inter-Mountain Basins Montane Riparian Systems",
+   "cells": 457,
+   "rule": "montane_riparian",
+   "named": []
+  },
+  {
+   "source": "bps",
+   "code": 590,
+   "name": "Mediterranean California Red Fir Forest-Southern Sierra",
+   "cells": 452,
+   "rule": "red_fir",
+   "named": [
+    "abies_magnifica"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7097,
+   "name": "California Mesic Chaparral",
+   "cells": 384,
+   "rule": "mesic_chaparral",
+   "named": [
+    "adenostoma_fasciculatum",
+    "arctostaphylos_viscida",
+    "ceanothus_cuneatus"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 9629,
+   "name": "Mediterranean California Foothill and Lower Montane Riparian Shrubland",
+   "cells": 334,
+   "rule": "riparian_shrubland",
+   "named": []
+  },
+  {
+   "source": "bps",
+   "code": 584,
+   "name": "Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+   "cells": 296,
+   "rule": "dry_mesic_mixed_conifer",
+   "named": [
+    "pinus_ponderosa",
+    "pinus_lambertiana",
+    "abies_concolor",
+    "calocedrus_decurrens",
+    "pseudotsuga_menziesii",
+    "quercus_kelloggii"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 9272,
+   "name": "Temperate Pacific Subalpine-Montane Wet Meadow",
+   "cells": 290,
+   "rule": "subalpine_meadow",
+   "named": []
+  },
+  {
+   "source": "bps",
+   "code": 586,
+   "name": "Mediterranean California Mixed Oak Woodland",
+   "cells": 109,
+   "rule": "mixed_oak",
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7011,
+   "name": "Rocky Mountain Aspen Forest and Woodland",
+   "cells": 100,
+   "rule": "aspen",
+   "named": [
+    "populus_tremuloides"
+   ]
+  },
+  {
+   "source": "bps",
+   "code": 617,
+   "name": "California Montane Riparian Systems",
+   "cells": 80,
+   "rule": "montane_riparian",
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7062,
+   "name": "Inter-Mountain Basins Curl-leaf Mountain Mahogany Woodland",
+   "cells": 70,
+   "rule": "curl_leaf_mahogany",
+   "named": [
+    "cercocarpus_ledifolius"
+   ]
+  },
+  {
+   "source": "bps",
+   "code": 587,
+   "name": "Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland",
+   "cells": 57,
+   "rule": "black_oak_conifer",
+   "named": [
+    "quercus_kelloggii"
+   ]
+  },
+  {
+   "source": "bps",
+   "code": 589,
+   "name": "Mediterranean California Red Fir Forest-Cascades",
+   "cells": 43,
+   "rule": "red_fir",
+   "named": [
+    "abies_magnifica"
+   ]
+  },
+  {
+   "source": "bps",
+   "code": 610,
+   "name": "Northern and Central California Dry-Mesic Chaparral",
+   "cells": 37,
+   "rule": "dry_mesic_chaparral",
+   "named": [
+    "adenostoma_fasciculatum",
+    "arctostaphylos_viscida",
+    "ceanothus_cuneatus"
+   ]
+  },
+  {
+   "source": "bps",
+   "code": 579,
+   "name": "Rocky Mountain Aspen Forest and Woodland",
+   "cells": 37,
+   "rule": "aspen",
+   "named": [
+    "populus_tremuloides"
+   ]
+  },
+  {
+   "source": "bps",
+   "code": 585,
+   "name": "Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+   "cells": 28,
+   "rule": "mesic_mixed_conifer",
+   "named": [
+    "pinus_ponderosa",
+    "pinus_lambertiana",
+    "abies_concolor",
+    "calocedrus_decurrens",
+    "pseudotsuga_menziesii",
+    "quercus_kelloggii"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7136,
+   "name": "Mediterranean California Alpine Dry Tundra",
+   "cells": 11,
+   "rule": "alpine",
+   "named": [
+    "phyllodoce_breweri"
+   ]
+  }
+ ],
+ "unread": [],
+ "needs": [
+  {
+   "id": "adenostoma_fasciculatum",
+   "kind": "shrub",
+   "why": [
+    "rule montane_woodland_chaparral",
+    "rule sparse_rock",
+    "rule mixed_oak",
+    "rule grassland_savanna",
+    "named by EVT 7105 Northern and Central California Dry-Mesic Chaparral (712 cells)",
+    "rule dry_mesic_chaparral",
+    "rule lower_montane_conifer",
+    "named by EVT 7097 California Mesic Chaparral (384 cells)",
+    "rule mesic_chaparral",
+    "rule riparian_shrubland",
+    "rule black_oak_conifer",
+    "named by BPS 610 Northern and Central California Dry-Mesic Chaparral (37 cells)"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "adenostoma_fasciculatum"
+  },
+  {
+   "id": "arctostaphylos_manzanita",
+   "kind": "shrub",
+   "why": [
+    "rule montane_woodland_chaparral",
+    "rule sparse_rock",
+    "rule mesic_mixed_conifer",
+    "rule mixed_oak",
+    "rule dry_mesic_mixed_conifer",
+    "rule dry_mesic_chaparral",
+    "rule lower_montane_conifer",
+    "rule mesic_chaparral",
+    "rule black_oak_conifer"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "arctostaphylos_manzanita"
+  },
+  {
+   "id": "arctostaphylos_patula",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 7098 California Montane Woodland and Chaparral (26118 cells)",
+    "rule montane_woodland_chaparral",
+    "rule mesic_mixed_conifer",
+    "rule subalpine_lodgepole",
+    "rule red_fir",
+    "rule mesic_subalpine",
+    "rule jeffrey_pine",
+    "rule subalpine_woodland",
+    "rule dry_mesic_mixed_conifer",
+    "rule lower_montane_conifer",
+    "rule curl_leaf_mahogany",
+    "rule black_oak_conifer"
+   ],
+   "record": true,
+   "card": true,
+   "drawn_as": "arctostaphylos_patula"
+  },
+  {
+   "id": "arctostaphylos_viscida",
+   "kind": "shrub",
+   "why": [
+    "rule montane_woodland_chaparral",
+    "rule sparse_rock",
+    "rule mesic_mixed_conifer",
+    "rule riparian",
+    "rule mixed_oak",
+    "rule dry_mesic_mixed_conifer",
+    "named by EVT 7105 Northern and Central California Dry-Mesic Chaparral (712 cells)",
+    "rule dry_mesic_chaparral",
+    "rule lower_montane_conifer",
+    "rule montane_riparian",
+    "named by EVT 7097 California Mesic Chaparral (384 cells)",
+    "rule mesic_chaparral",
+    "rule riparian_shrubland",
+    "rule black_oak_conifer",
+    "named by BPS 610 Northern and Central California Dry-Mesic Chaparral (37 cells)"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "arctostaphylos_viscida"
+  },
+  {
+   "id": "artemisia_tridentata",
+   "kind": "shrub",
+   "why": [
+    "rule subalpine_lodgepole",
+    "rule jeffrey_pine",
+    "rule subalpine_woodland",
+    "rule alpine_dwarf_shrub",
+    "rule curl_leaf_mahogany"
+   ],
+   "record": true,
+   "card": true,
+   "drawn_as": "artemisia_tridentata"
+  },
+  {
+   "id": "baccharis_pilularis",
+   "kind": "shrub",
+   "why": [
+    "rule riparian",
+    "rule grassland_savanna"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "baccharis_pilularis"
+  },
+  {
+   "id": "calycanthus_occidentalis",
+   "kind": "shrub",
+   "why": [
+    "rule riparian",
+    "rule montane_riparian"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "calycanthus_occidentalis"
+  },
+  {
+   "id": "ceanothus_cordulatus",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 7098 California Montane Woodland and Chaparral (26118 cells)",
+    "rule montane_woodland_chaparral",
+    "rule mesic_mixed_conifer",
+    "rule subalpine_lodgepole",
+    "rule red_fir",
+    "rule jeffrey_pine",
+    "rule dry_mesic_mixed_conifer",
+    "rule lower_montane_conifer",
+    "rule aspen",
+    "rule black_oak_conifer"
+   ],
+   "record": true,
+   "card": true,
+   "drawn_as": "ceanothus_cordulatus"
+  },
+  {
+   "id": "ceanothus_cuneatus",
+   "kind": "shrub",
+   "why": [
+    "rule montane_woodland_chaparral",
+    "rule sparse_rock",
+    "rule mesic_mixed_conifer",
+    "rule jeffrey_pine",
+    "rule mixed_oak",
+    "rule dry_mesic_mixed_conifer",
+    "rule grassland_savanna",
+    "named by EVT 7105 Northern and Central California Dry-Mesic Chaparral (712 cells)",
+    "rule dry_mesic_chaparral",
+    "rule lower_montane_conifer",
+    "named by EVT 7097 California Mesic Chaparral (384 cells)",
+    "rule mesic_chaparral",
+    "rule black_oak_conifer",
+    "named by BPS 610 Northern and Central California Dry-Mesic Chaparral (37 cells)"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "ceanothus_cuneatus"
+  },
+  {
+   "id": "ceanothus_integerrimus",
+   "kind": "shrub",
+   "why": [
+    "rule montane_woodland_chaparral",
+    "rule mesic_mixed_conifer",
+    "rule dry_mesic_mixed_conifer",
+    "rule dry_mesic_chaparral",
+    "rule lower_montane_conifer",
+    "rule mesic_chaparral",
+    "rule black_oak_conifer"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "ceanothus_integerrimus"
+  },
+  {
+   "id": "cephalanthus_occidentalis",
+   "kind": "shrub",
+   "why": [
+    "rule riparian",
+    "rule riparian_shrubland"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "cephalanthus_occidentalis"
+  },
+  {
+   "id": "cercis_occidentalis",
+   "kind": "shrub",
+   "why": [
+    "rule montane_woodland_chaparral",
+    "rule sparse_rock",
+    "rule mixed_oak",
+    "rule dry_mesic_chaparral",
+    "rule lower_montane_conifer",
+    "rule mesic_chaparral",
+    "rule black_oak_conifer"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "cercis_occidentalis"
+  },
+  {
+   "id": "cercocarpus_betuloides",
+   "kind": "shrub",
+   "why": [
+    "rule montane_woodland_chaparral",
+    "rule sparse_rock",
+    "rule mesic_mixed_conifer",
+    "rule mixed_oak",
+    "rule dry_mesic_mixed_conifer",
+    "rule dry_mesic_chaparral",
+    "rule lower_montane_conifer",
+    "rule mesic_chaparral",
+    "rule black_oak_conifer"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "cercocarpus_betuloides"
+  },
+  {
+   "id": "chamaebatia_foliolosa",
+   "kind": "shrub",
+   "why": [
+    "rule mesic_mixed_conifer",
+    "rule dry_mesic_mixed_conifer",
+    "rule lower_montane_conifer",
+    "rule black_oak_conifer"
+   ],
+   "record": true,
+   "card": true,
+   "drawn_as": "chamaebatia_foliolosa"
+  },
+  {
+   "id": "chrysolepis_sempervirens",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 7098 California Montane Woodland and Chaparral (26118 cells)",
+    "rule montane_woodland_chaparral",
+    "rule mesic_mixed_conifer",
+    "rule red_fir",
+    "rule dry_mesic_mixed_conifer",
+    "rule lower_montane_conifer",
+    "rule black_oak_conifer"
+   ],
+   "record": true,
+   "card": true,
+   "drawn_as": "chrysolepis_sempervirens"
+  },
+  {
+   "id": "cornus_sericea",
+   "kind": "shrub",
+   "why": [
+    "rule riparian",
+    "rule montane_riparian"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "cornus_sericea"
+  },
+  {
+   "id": "diplacus_aurantiacus",
+   "kind": "shrub",
+   "why": [
+    "rule montane_woodland_chaparral",
+    "rule sparse_rock",
+    "rule mixed_oak",
+    "rule grassland_savanna",
+    "rule dry_mesic_chaparral",
+    "rule mesic_chaparral"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "diplacus_aurantiacus"
+  },
+  {
+   "id": "frangula_californica",
+   "kind": "shrub",
+   "why": [
+    "rule montane_woodland_chaparral",
+    "rule mesic_mixed_conifer",
+    "rule riparian",
+    "rule mixed_oak",
+    "rule dry_mesic_mixed_conifer",
+    "rule dry_mesic_chaparral",
+    "rule lower_montane_conifer",
+    "rule mesic_chaparral",
+    "rule riparian_shrubland",
+    "rule black_oak_conifer"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "frangula_californica"
+  },
+  {
+   "id": "heteromeles_arbutifolia",
+   "kind": "shrub",
+   "why": [
+    "rule montane_woodland_chaparral",
+    "rule sparse_rock",
+    "rule mixed_oak",
+    "rule dry_mesic_mixed_conifer",
+    "rule dry_mesic_chaparral",
+    "rule lower_montane_conifer",
+    "rule mesic_chaparral",
+    "rule black_oak_conifer"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "heteromeles_arbutifolia"
+  },
+  {
+   "id": "phyllodoce_breweri",
+   "kind": "shrub",
+   "why": [
+    "rule subalpine_lodgepole",
+    "rule mesic_subalpine",
+    "rule subalpine_woodland",
+    "named by EVT 9125 Mediterranean California Alpine Bedrock and Scree (3355 cells)",
+    "rule alpine",
+    "rule subalpine_meadow",
+    "named by EVT 7071 Sierra Nevada Alpine Dwarf-Shrubland (598 cells)",
+    "rule alpine_dwarf_shrub",
+    "named by EVT 7136 Mediterranean California Alpine Dry Tundra (11 cells)"
+   ],
+   "record": true,
+   "card": true,
+   "drawn_as": "phyllodoce_breweri"
+  },
+  {
+   "id": "quercus_vacciniifolia",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 7098 California Montane Woodland and Chaparral (26118 cells)",
+    "rule montane_woodland_chaparral",
+    "rule red_fir",
+    "rule mesic_subalpine",
+    "rule jeffrey_pine",
+    "rule subalpine_woodland"
+   ],
+   "record": true,
+   "card": true,
+   "drawn_as": "quercus_vacciniifolia"
+  },
+  {
+   "id": "ribes_malvaceum",
+   "kind": "shrub",
+   "why": [
+    "rule montane_woodland_chaparral",
+    "rule mixed_oak",
+    "rule dry_mesic_chaparral",
+    "rule mesic_chaparral"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "ribes_malvaceum"
+  },
+  {
+   "id": "ribes_roezlii",
+   "kind": "shrub",
+   "why": [
+    "rule montane_woodland_chaparral",
+    "rule mesic_mixed_conifer",
+    "rule red_fir",
+    "rule riparian",
+    "rule mixed_oak",
+    "rule dry_mesic_mixed_conifer",
+    "rule dry_mesic_chaparral",
+    "rule lower_montane_conifer",
+    "rule montane_riparian",
+    "rule mesic_chaparral",
+    "rule riparian_shrubland",
+    "rule black_oak_conifer"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "ribes_roezlii"
+  },
+  {
+   "id": "rosa_californica",
+   "kind": "shrub",
+   "why": [
+    "rule riparian",
+    "rule mixed_oak",
+    "rule grassland_savanna",
+    "rule montane_riparian",
+    "rule riparian_shrubland",
+    "rule aspen"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "rosa_californica"
+  },
+  {
+   "id": "rubus_ursinus",
+   "kind": "shrub",
+   "why": [
+    "rule riparian",
+    "rule montane_riparian",
+    "rule riparian_shrubland"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "rubus_ursinus"
+  },
+  {
+   "id": "salix_exigua",
+   "kind": "shrub",
+   "why": [
+    "rule riparian",
+    "rule riparian_shrubland"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "salix_exigua"
+  },
+  {
+   "id": "sambucus_nigra_caerulea",
+   "kind": "shrub",
+   "why": [
+    "rule riparian",
+    "rule montane_riparian",
+    "rule riparian_shrubland"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "sambucus_nigra_caerulea"
+  },
+  {
+   "id": "symphoricarpos_albus",
+   "kind": "shrub",
+   "why": [
+    "rule mesic_mixed_conifer",
+    "rule riparian",
+    "rule mixed_oak",
+    "rule dry_mesic_mixed_conifer",
+    "rule subalpine_meadow",
+    "rule grassland_savanna",
+    "rule lower_montane_conifer",
+    "rule montane_riparian",
+    "rule riparian_shrubland",
+    "rule aspen",
+    "rule black_oak_conifer"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "symphoricarpos_albus"
+  },
+  {
+   "id": "toxicodendron_diversilobum",
+   "kind": "shrub",
+   "why": [
+    "rule mesic_mixed_conifer",
+    "rule riparian",
+    "rule mixed_oak",
+    "rule dry_mesic_mixed_conifer",
+    "rule grassland_savanna",
+    "rule dry_mesic_chaparral",
+    "rule lower_montane_conifer",
+    "rule montane_riparian",
+    "rule mesic_chaparral",
+    "rule riparian_shrubland",
+    "rule black_oak_conifer"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "toxicodendron_diversilobum"
+  },
+  {
+   "id": "vitis_californica",
+   "kind": "shrub",
+   "why": [
+    "rule riparian"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "vitis_californica"
+  },
+  {
+   "id": "abies_concolor",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7028 Mediterranean California Mesic Mixed Conifer Forest and Woodland (13270 cells)",
+    "rule mesic_mixed_conifer",
+    "rule red_fir",
+    "rule jeffrey_pine",
+    "named by EVT 7027 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (2392 cells)",
+    "rule dry_mesic_mixed_conifer",
+    "rule lower_montane_conifer",
+    "named by BPS 584 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (296 cells)",
+    "rule aspen",
+    "rule black_oak_conifer",
+    "named by BPS 585 Mediterranean California Mesic Mixed Conifer Forest and Woodland (28 cells)"
+   ],
+   "record": true,
+   "card": true,
+   "drawn_as": "abies_concolor"
+  },
+  {
+   "id": "abies_magnifica",
+   "kind": "tree",
+   "why": [
+    "rule subalpine_lodgepole",
+    "named by EVT 7032 Mediterranean California Red Fir Forest (11050 cells)",
+    "rule red_fir",
+    "rule mesic_subalpine",
+    "named by BPS 590 Mediterranean California Red Fir Forest-Southern Sierra (452 cells)",
+    "named by BPS 589 Mediterranean California Red Fir Forest-Cascades (43 cells)"
+   ],
+   "record": true,
+   "card": true,
+   "drawn_as": "abies_magnifica"
+  },
+  {
+   "id": "acer_macrophyllum",
+   "kind": "tree",
+   "why": [
+    "rule riparian",
+    "rule montane_riparian"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "acer_macrophyllum"
+  },
+  {
+   "id": "aesculus_californica",
+   "kind": "tree",
+   "why": [
+    "rule riparian",
+    "rule mixed_oak",
+    "rule grassland_savanna",
+    "rule dry_mesic_chaparral"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "aesculus_californica"
+  },
+  {
+   "id": "alnus_rhombifolia",
+   "kind": "tree",
+   "why": [
+    "rule riparian",
+    "rule montane_riparian",
+    "rule riparian_shrubland"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "alnus_rhombifolia"
+  },
+  {
+   "id": "arbutus_menziesii",
+   "kind": "tree",
+   "why": [
+    "rule mesic_mixed_conifer",
+    "rule mixed_oak",
+    "rule dry_mesic_mixed_conifer",
+    "rule lower_montane_conifer",
+    "rule mesic_chaparral",
+    "rule black_oak_conifer"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "arbutus_menziesii"
+  },
+  {
+   "id": "calocedrus_decurrens",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7028 Mediterranean California Mesic Mixed Conifer Forest and Woodland (13270 cells)",
+    "rule mesic_mixed_conifer",
+    "rule jeffrey_pine",
+    "named by EVT 7027 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (2392 cells)",
+    "rule dry_mesic_mixed_conifer",
+    "rule lower_montane_conifer",
+    "rule montane_riparian",
+    "named by BPS 584 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (296 cells)",
+    "rule black_oak_conifer",
+    "named by BPS 585 Mediterranean California Mesic Mixed Conifer Forest and Woodland (28 cells)"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "calocedrus_decurrens"
+  },
+  {
+   "id": "cercocarpus_ledifolius",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7062 Inter-Mountain Basins Curl-leaf Mountain Mahogany Woodland (70 cells)",
+    "rule curl_leaf_mahogany"
+   ],
+   "record": true,
+   "card": true,
+   "drawn_as": "cercocarpus_ledifolius"
+  },
+  {
+   "id": "fraxinus_latifolia",
+   "kind": "tree",
+   "why": [
+    "rule riparian",
+    "rule montane_riparian",
+    "rule riparian_shrubland"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "fraxinus_latifolia"
+  },
+  {
+   "id": "juglans_hindsii",
+   "kind": "tree",
+   "why": [
+    "rule riparian",
+    "rule montane_riparian"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "juglans_hindsii"
+  },
+  {
+   "id": "juniperus_grandis",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7044 Northern California Mesic Subalpine Woodland (4826 cells)",
+    "rule jeffrey_pine",
+    "named by EVT 7033 Mediterranean California Subalpine Woodland (3917 cells)",
+    "rule subalpine_woodland",
+    "rule curl_leaf_mahogany"
+   ],
+   "record": true,
+   "card": true,
+   "drawn_as": "juniperus_grandis"
+  },
+  {
+   "id": "pinus_albicaulis",
+   "kind": "tree",
+   "why": [
+    "rule subalpine_lodgepole",
+    "named by EVT 7044 Northern California Mesic Subalpine Woodland (4826 cells)",
+    "rule mesic_subalpine",
+    "named by EVT 7033 Mediterranean California Subalpine Woodland (3917 cells)",
+    "rule subalpine_woodland",
+    "rule alpine",
+    "rule alpine_dwarf_shrub"
+   ],
+   "record": true,
+   "card": true,
+   "drawn_as": "pinus_albicaulis"
+  },
+  {
+   "id": "pinus_contorta",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7058 Sierra Nevada Subalpine Lodgepole Pine Forest and Woodland (11295 cells)",
+    "rule subalpine_lodgepole",
+    "rule red_fir",
+    "named by EVT 7044 Northern California Mesic Subalpine Woodland (4826 cells)",
+    "rule mesic_subalpine",
+    "named by EVT 7033 Mediterranean California Subalpine Woodland (3917 cells)",
+    "rule subalpine_woodland",
+    "rule subalpine_meadow",
+    "rule aspen"
+   ],
+   "record": true,
+   "card": true,
+   "drawn_as": "pinus_contorta"
+  },
+  {
+   "id": "pinus_jeffreyi",
+   "kind": "tree",
+   "why": [
+    "rule red_fir",
+    "named by EVT 7031 California Montane Jeffrey Pine-(Ponderosa Pine) Woodland (4497 cells)",
+    "rule jeffrey_pine",
+    "rule aspen",
+    "rule curl_leaf_mahogany"
+   ],
+   "record": true,
+   "card": true,
+   "drawn_as": "pinus_jeffreyi"
+  },
+  {
+   "id": "pinus_lambertiana",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7028 Mediterranean California Mesic Mixed Conifer Forest and Woodland (13270 cells)",
+    "rule mesic_mixed_conifer",
+    "named by EVT 7027 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (2392 cells)",
+    "rule dry_mesic_mixed_conifer",
+    "rule lower_montane_conifer",
+    "named by BPS 584 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (296 cells)",
+    "rule black_oak_conifer",
+    "named by BPS 585 Mediterranean California Mesic Mixed Conifer Forest and Woodland (28 cells)"
+   ],
+   "record": true,
+   "card": true,
+   "drawn_as": "pinus_lambertiana"
+  },
+  {
+   "id": "pinus_monticola",
+   "kind": "tree",
+   "why": [
+    "rule subalpine_lodgepole",
+    "rule red_fir",
+    "named by EVT 7044 Northern California Mesic Subalpine Woodland (4826 cells)",
+    "rule mesic_subalpine",
+    "named by EVT 7033 Mediterranean California Subalpine Woodland (3917 cells)",
+    "rule subalpine_woodland"
+   ],
+   "record": true,
+   "card": true,
+   "drawn_as": "pinus_monticola"
+  },
+  {
+   "id": "pinus_ponderosa",
+   "kind": "tree",
+   "why": [
+    "rule montane_woodland_chaparral",
+    "named by EVT 7028 Mediterranean California Mesic Mixed Conifer Forest and Woodland (13270 cells)",
+    "rule mesic_mixed_conifer",
+    "named by EVT 7031 California Montane Jeffrey Pine-(Ponderosa Pine) Woodland (4497 cells)",
+    "rule jeffrey_pine",
+    "named by EVT 7027 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (2392 cells)",
+    "rule dry_mesic_mixed_conifer",
+    "rule lower_montane_conifer",
+    "rule montane_riparian",
+    "named by BPS 584 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (296 cells)",
+    "rule black_oak_conifer",
+    "named by BPS 585 Mediterranean California Mesic Mixed Conifer Forest and Woodland (28 cells)"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "pinus_ponderosa"
+  },
+  {
+   "id": "pinus_sabiniana",
+   "kind": "tree",
+   "why": [
+    "rule montane_woodland_chaparral",
+    "rule sparse_rock",
+    "rule mixed_oak",
+    "rule grassland_savanna",
+    "rule dry_mesic_chaparral",
+    "rule lower_montane_conifer",
+    "rule mesic_chaparral",
+    "rule black_oak_conifer"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "pinus_sabiniana"
+  },
+  {
+   "id": "platanus_racemosa",
+   "kind": "tree",
+   "why": [
+    "rule riparian"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "platanus_racemosa"
+  },
+  {
+   "id": "populus_fremontii",
+   "kind": "tree",
+   "why": [
+    "rule riparian",
+    "rule montane_riparian"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "populus_fremontii"
+  },
+  {
+   "id": "populus_tremuloides",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7011 Rocky Mountain Aspen Forest and Woodland (100 cells)",
+    "rule aspen",
+    "named by BPS 579 Rocky Mountain Aspen Forest and Woodland (37 cells)"
+   ],
+   "record": true,
+   "card": true,
+   "drawn_as": "populus_tremuloides"
+  },
+  {
+   "id": "pseudotsuga_menziesii",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7028 Mediterranean California Mesic Mixed Conifer Forest and Woodland (13270 cells)",
+    "rule mesic_mixed_conifer",
+    "named by EVT 7027 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (2392 cells)",
+    "rule dry_mesic_mixed_conifer",
+    "rule lower_montane_conifer",
+    "rule montane_riparian",
+    "named by BPS 584 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (296 cells)",
+    "rule black_oak_conifer",
+    "named by BPS 585 Mediterranean California Mesic Mixed Conifer Forest and Woodland (28 cells)"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "pseudotsuga_menziesii"
+  },
+  {
+   "id": "quercus_chrysolepis",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7098 California Montane Woodland and Chaparral (26118 cells)",
+    "rule montane_woodland_chaparral",
+    "rule sparse_rock",
+    "rule mixed_oak",
+    "rule dry_mesic_mixed_conifer",
+    "rule dry_mesic_chaparral",
+    "rule lower_montane_conifer",
+    "rule mesic_chaparral",
+    "rule black_oak_conifer"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "quercus_chrysolepis"
+  },
+  {
+   "id": "quercus_douglasii",
+   "kind": "tree",
+   "why": [
+    "rule riparian",
+    "rule mixed_oak",
+    "rule grassland_savanna"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "quercus_douglasii"
+  },
+  {
+   "id": "quercus_kelloggii",
+   "kind": "tree",
+   "why": [
+    "rule montane_woodland_chaparral",
+    "named by EVT 7028 Mediterranean California Mesic Mixed Conifer Forest and Woodland (13270 cells)",
+    "rule mesic_mixed_conifer",
+    "rule jeffrey_pine",
+    "rule mixed_oak",
+    "named by EVT 7027 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (2392 cells)",
+    "rule dry_mesic_mixed_conifer",
+    "rule lower_montane_conifer",
+    "named by BPS 584 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (296 cells)",
+    "named by BPS 587 Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland (57 cells)",
+    "rule black_oak_conifer",
+    "named by BPS 585 Mediterranean California Mesic Mixed Conifer Forest and Woodland (28 cells)"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "quercus_kelloggii"
+  },
+  {
+   "id": "quercus_lobata",
+   "kind": "tree",
+   "why": [
+    "rule riparian",
+    "rule mixed_oak",
+    "rule grassland_savanna"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "quercus_lobata"
+  },
+  {
+   "id": "quercus_wislizeni",
+   "kind": "tree",
+   "why": [
+    "rule montane_woodland_chaparral",
+    "rule sparse_rock",
+    "rule mesic_mixed_conifer",
+    "rule riparian",
+    "rule mixed_oak",
+    "rule dry_mesic_mixed_conifer",
+    "rule dry_mesic_chaparral",
+    "rule lower_montane_conifer",
+    "rule montane_riparian",
+    "rule mesic_chaparral",
+    "rule riparian_shrubland",
+    "rule black_oak_conifer"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "quercus_wislizeni"
+  },
+  {
+   "id": "salix_laevigata",
+   "kind": "tree",
+   "why": [
+    "rule riparian",
+    "rule riparian_shrubland"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "salix_laevigata"
+  },
+  {
+   "id": "salix_lasiandra",
+   "kind": "tree",
+   "why": [
+    "rule montane_riparian"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "salix_lasiandra"
+  },
+  {
+   "id": "salix_lasiolepis",
+   "kind": "tree",
+   "why": [
+    "rule riparian",
+    "rule montane_riparian",
+    "rule riparian_shrubland"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "salix_lasiolepis"
+  },
+  {
+   "id": "sequoiadendron_giganteum",
+   "kind": "tree",
+   "why": [
+    "GBIF: 7 CC0 / CC BY records on the tile (placed by them: sequoiadendron_giganteum grows in groves)"
+   ],
+   "record": true,
+   "card": true,
+   "drawn_as": "sequoiadendron_giganteum"
+  },
+  {
+   "id": "tsuga_mertensiana",
+   "kind": "tree",
+   "why": [
+    "rule subalpine_lodgepole",
+    "named by EVT 7044 Northern California Mesic Subalpine Woodland (4826 cells)",
+    "rule mesic_subalpine",
+    "named by EVT 7033 Mediterranean California Subalpine Woodland (3917 cells)",
+    "rule subalpine_woodland"
+   ],
+   "record": true,
+   "card": true,
+   "drawn_as": "tsuga_mertensiana"
+  },
+  {
+   "id": "umbellularia_californica",
+   "kind": "tree",
+   "why": [
+    "rule mesic_mixed_conifer",
+    "rule riparian",
+    "rule mixed_oak",
+    "rule lower_montane_conifer",
+    "rule montane_riparian",
+    "rule mesic_chaparral"
+   ],
+   "record": true,
+   "card": false,
+   "drawn_as": "umbellularia_californica"
+  }
+ ],
+ "gbif_plants": [],
+ "generated": [],
+ "summary": {
+  "needed": 63,
+  "with_record": 63,
+  "generated_now": 0,
+  "queued": 0,
+  "unread_communities": 0
+ }
+}

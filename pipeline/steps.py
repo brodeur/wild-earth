@@ -485,7 +485,10 @@ def outputs_of(tile: Tile, m: dict, layer_names: list[str], hashes: Hashes) -> d
     out = {}
     for name in sorted(set(layer_names)):
         info = m["layers"].get(name) or {}
-        rels = [info.get("path")] + list((info.get("files") or {}).keys())
+        files = info.get("files") or {}
+        # `files` is {path: {sha256, bytes}} on most layers and a list of paths (or of {path}) on a few (seasons, unreal)
+        rels = [info.get("path")] + (list(files.keys()) if isinstance(files, dict) else
+                                     [f.get("path") if isinstance(f, dict) else f for f in files])
         for rel in rels:
             if rel:
                 h = hashes.of(tile.dir / rel)
@@ -636,6 +639,13 @@ def build(tile: Tile, *, steps: list[str] | None = None, force: set[str] = froze
 # ---------------------------------------------------------------------------------------------------------------
 # Status of a tile built before the graph, and adoption
 
+# Commits known not to change any step's outputs (they changed how a step records, or caches): adoption does not count
+# them as code changed since a step ran. Add one only after checking it.
+NO_OUTPUT_CHANGE = {
+    "646bf2e": "the step graph: runlog.fallback calls, GBIF caching and retries in the fetch modules; the outputs are the same",
+}
+
+
 def _git_changed_after(paths: list[str], when: str, margin_h=12) -> list[str]:
     """Commits touching `paths` more than margin_h after `when` (a run is usually committed within hours of it)."""
     from datetime import datetime, timedelta
@@ -643,7 +653,7 @@ def _git_changed_after(paths: list[str], when: str, margin_h=12) -> list[str]:
         t = datetime.fromisoformat(when.replace("Z", "+00:00")) + timedelta(hours=margin_h)
         out = subprocess.run(["git", "-C", str(REPO_ROOT), "log", f"--after={t.isoformat()}", "--format=%h %cs %s", "--", *paths],
                              capture_output=True, text=True, timeout=30).stdout.strip()
-        return [l[:110] for l in out.splitlines()]
+        return [l[:110] for l in out.splitlines() if l.split(" ", 1)[0] not in NO_OUTPUT_CHANGE]
     except Exception:  # noqa: BLE001
         return []
 

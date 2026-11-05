@@ -1,0 +1,384 @@
+{
+ "id": "quercus_vacciniifolia",
+ "aliases": [
+  "huckleberry_oak"
+ ],
+ "scientific": "Quercus vacciniifolia",
+ "common": "huckleberry oak",
+ "form": "shrub",
+ "architectural_model": "Rauh (provisional)",
+ "deciduous": false,
+ "height_m": [
+  0.6,
+  1.2
+ ],
+ "stature": {
+  "typical_m": 0.9,
+  "tall_m": 1.5,
+  "record_m": null,
+  "source": "typical: FEIS 0.6-1.2 m; tall: the drafter's estimate; read 2026-11-04"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    0.2,
+    0.5
+   ],
+   "deadwood": 0.03,
+   "set": {
+    "trunk": {
+     "stems": [
+      2,
+      5
+     ]
+    }
+   },
+   "note": "(from the buckbrush template) a small, dense, rounded young shrub, a few years after fire"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 2,
+   "note": "(from the buckbrush template) the file as written: a stiff, intricately branched shrub with a dense rounded to flat top"
+  },
+  {
+   "name": "decadent",
+   "weight": 0.25,
+   "height_m": [
+    1.0,
+    1.6
+   ],
+   "crown_scale": 1.05,
+   "gnarl": 1.2,
+   "leaf_density": 0.75,
+   "deadwood": {
+    "fraction": 0.4,
+    "levels": [
+     0,
+     1,
+     2
+    ],
+    "shorten": 0.75
+   },
+   "set": {
+    "trunk": {
+     "stems": [
+      4,
+      9
+     ]
+    }
+   },
+   "note": "(from the buckbrush template) an old stand: grey, twiggy, many dead branches inside a thinning crown"
+  }
+ ],
+ "description": "A low, sprawling evergreen oak, knee- to waist-high, that spreads in dense, springy tangles across granite slopes, with small dull grey-green leaves like a huckleberry's and small acorns in shallow cups. It covers broad fields of the high-country rock between the pines, about 1200-2900 m, especially on dry, windy ridges and slabs, where hikers who leave the trail have to wade through it.",
+ "season_notes": {
+  "winter": "Evergreen, often pressed flat under the snow and springing back as it melts.",
+  "spring": "Fresh pale, bronze-tinged leaves and yellow-green catkins, May-June.",
+  "summer": "Small acorns swell in shallow cups; the old leaves are stiff and dull.",
+  "fall": "The acorns ripen in their first year (August-October) and drop among the stems, gathered by bears, deer, quail and squirrels."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "chaparral": 1.0,
+   "barren": 0.7,
+   "conifer_forest": 0.4,
+   "mixed_forest": 0.2
+  },
+  "floor": 0.4,
+  "mid": 1.0,
+  "steep": 1.4,
+  "north": 0.8,
+  "shade": 0.15,
+  "disturbed": 0.9
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "ursus_americanus",
+    "part": "acorns",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "acorns",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   },
+   {
+    "animal": "oreortyx_pictus",
+    "part": "acorns",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "otospermophilus_beecheyi",
+    "part": "acorns",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "acorns",
+    "seasons": [
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "oreortyx_pictus"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 0.85,
+  "radius_ratio": 0.025,
+  "taper": 0.85,
+  "flare": 1.4,
+  "bole_ratio": 0.06,
+  "base_size": 0.05,
+  "curve_deg": 6,
+  "curve_var_deg": 10,
+  "segments": 3,
+  "lean_deg": 0,
+  "stems": [
+   6,
+   12
+  ],
+  "stem_spread_deg": 45,
+  "split_prob": 0.0,
+  "split_count": 2,
+  "split_angle_deg": 20,
+  "sinuous_deg": 4,
+  "bark_rgb": [
+   118,
+   112,
+   104
+  ],
+  "bark_pattern": "smooth_grey",
+  "twig_rgb": [
+   120,
+   112,
+   100
+  ],
+  "bark": {
+   "tile_m": [
+    0.1,
+    0.3
+   ],
+   "contrast": 0.5,
+   "lichen": 0.25,
+   "relief": 0.3
+  }
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "envelope": {
+   "profile": [
+    [
+     0.0,
+     0.7
+    ],
+    [
+     0.2,
+     0.9
+    ],
+    [
+     0.45,
+     1.0
+    ],
+    [
+     0.7,
+     0.9
+    ],
+    [
+     0.88,
+     0.65
+    ],
+    [
+     1.0,
+     0.3
+    ]
+   ],
+   "lobes": 6,
+   "lobe_depth": 0.12,
+   "asymmetry": 0.15,
+   "fill": 0.55,
+   "edge": 1.06
+  }
+ },
+ "levels": [
+  {
+   "count": 5,
+   "start": 0.05,
+   "down_angle_deg": 55,
+   "down_angle_var_deg": 10,
+   "rotation_deg": 90,
+   "rotation_var_deg": 15,
+   "length_ratio": 0.5,
+   "length_var": 0.25,
+   "curve_deg": 6,
+   "curve_var_deg": 8,
+   "tropism": 0.06,
+   "taper": 0.9,
+   "radius_ratio": 0.6,
+   "segments": 2,
+   "zigzag_deg": 12
+  },
+  {
+   "count": 6,
+   "start": 0.15,
+   "down_angle_deg": 80,
+   "down_angle_var_deg": 10,
+   "rotation_deg": 90,
+   "rotation_var_deg": 15,
+   "length_ratio": 0.35,
+   "length_var": 0.3,
+   "curve_deg": 4,
+   "curve_var_deg": 8,
+   "tropism": 0.04,
+   "taper": 1.0,
+   "radius_ratio": 0.5,
+   "segments": 1,
+   "zigzag_deg": 10
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.02,
+  "leaf_shape": "oval",
+  "cluster_m": 0.3,
+  "density": 26,
+  "start": 0.02,
+  "parent_start": 0.05,
+  "orientation": "outward",
+  "roll_deg": 50,
+  "colors": {
+   "winter": [
+    86,
+    98,
+    82
+   ],
+   "spring": [
+    104,
+    120,
+    90
+   ],
+   "summer": [
+    90,
+    104,
+    86
+   ],
+   "fall": [
+    90,
+    102,
+    84
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "clumps": {
+   "radius_m": 0.2,
+   "cards_per_clump": 6,
+   "shell": 0.05,
+   "flatten": 0.8,
+   "tip_bias": 0.7
+  },
+  "ao_min": 0.72,
+  "color_var": [
+   0.08,
+   0.04
+  ],
+  "flowers": null,
+  "cards_per_m2": 14
+ },
+ "deadwood": {
+  "fraction": 0.12,
+  "where": "inner",
+  "levels": [
+   1,
+   2
+  ],
+  "shorten": 0.7,
+  "rgb": [
+   138,
+   134,
+   128
+  ]
+ },
+ "twigs": {
+  "count": [
+   2,
+   3
+  ],
+  "length": 0.6,
+  "down_deg": 70,
+  "down_var_deg": 12,
+  "zigzag_deg": 15,
+  "curve_var_deg": 12,
+  "segments": 1,
+  "radius_m": 0.004,
+  "taper": 0.6,
+  "fan_deg": 50,
+  "jitter": 0.2
+ },
+ "lod": {
+  "near_tris_budget": 1300,
+  "near_sides": [
+   3,
+   3,
+   0
+  ],
+  "mid_blobs": 3,
+  "mid_branches": 0,
+  "mid_sides": [
+   0,
+   0
+  ],
+  "mid_cards": 28
+ },
+ "targets": {
+  "crown_width_ratio": 2.0,
+  "crown_base_ratio": 0.05,
+  "porosity": 0.15,
+  "foliage_rg": 0.74,
+  "foliage_bg": 0.67,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a low, dense, interlaced mat twice as wide as tall, dull grey-green, spreading over granite slabs in continuous fields"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "1",
+  "card": "library/plant_cards/quercus_vacciniifolia.json",
+  "card_sha256": "7a22b8165a110df1",
+  "template": "ceanothus_cuneatus",
+  "template_common": "buckbrush",
+  "height_scale": 0.45
+ },
+ "notes": "An oak, though it looks nothing like one from a distance: the buckbrush template gives a stiff low shrub, and the card makes it lower, much wider and denser, with small entire elliptic leaves (1-3 cm, grey-green above and paler below) and no showy flowers (the template's white flowers are switched off). It grows as continuous mats rather than separate bushes, which the species mix should express by density; its slender flexible branches (FEIS) are springy, not rigid. Acorns 1-1.5 cm, maturing in one year (FEIS); FEIS lists black bear, mule deer, rodents, blue (sooty) grouse, mountain quail and small birds for the acorns, and heavy deer browsing. The ground squirrel and Steller's jay entries are the drafter's stand-ins for the rodents and birds.",
+ "sources": [
+  "https://www.fs.usda.gov/database/feis/plants/shrub/quevac/all.html"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

@@ -1,0 +1,273 @@
+{
+ "id": "pinus_albicaulis",
+ "scientific": "Pinus albicaulis",
+ "common": "whitebark pine",
+ "aliases": [
+  "whitebark_pine"
+ ],
+ "family": "Pinaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "pinus_ponderosa",
+ "height_m": [
+  4,
+  12
+ ],
+ "stature": {
+  "typical_m": 8,
+  "tall_m": 15,
+  "record_m": 27.5,
+  "source": "typical and tall: the drafter's estimate for Sierra timberline trees (the Gymnosperm Database gives the species to 21 m and no typical height); record: 27.52 m, Eagle Cap Wilderness, Oregon (Gymnosperm Database); read 2026-11-04"
+ },
+ "variants_height_m": {
+  "pole": [
+   1,
+   4
+  ],
+  "old-growth": [
+   9,
+   15
+  ]
+ },
+ "crown": {
+  "shape": "spherical",
+  "profile": [
+   [
+    0.12,
+    0.3
+   ],
+   [
+    0.3,
+    0.36
+   ],
+   [
+    0.5,
+    0.38
+   ],
+   [
+    0.68,
+    0.34
+   ],
+   [
+    0.83,
+    0.26
+   ],
+   [
+    0.94,
+    0.16
+   ],
+   [
+    1.0,
+    0.07
+   ]
+  ],
+  "lobes": 4,
+  "lobe_depth": 0.25,
+  "asymmetry": 0.35,
+  "fill": 0.2,
+  "edge": 1.15
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    78,
+    84,
+    56
+   ],
+   "spring": [
+    92,
+    100,
+    62
+   ],
+   "summer": [
+    84,
+    92,
+    58
+   ],
+   "fall": [
+    84,
+    90,
+    56
+   ]
+  },
+  "leaf_size_m": 0.05
+ },
+ "trunk": {
+  "bark_rgb": [
+   150,
+   146,
+   138
+  ],
+  "bark_pattern": "smooth_grey",
+  "stems": [
+   1,
+   5
+  ],
+  "stem_spread_deg": 18,
+  "lean_deg": 10,
+  "radius_ratio": 0.03
+ },
+ "targets": {
+  "crown_width_ratio": 0.8,
+  "crown_base_ratio": 0.08,
+  "porosity": 0.3,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a short, often several-stemmed tree with a rounded, wind-shaped crown nearly to the ground; at the highest sites a mat (krummholz, the pole age class)"
+ },
+ "variant_patches": {
+  "pole": {
+   "set": {
+    "trunk": {
+     "bark_rgb": [
+      140,
+      138,
+      132
+     ],
+     "stems": [
+      3,
+      8
+     ],
+     "stem_spread_deg": 40,
+     "lean_deg": 25,
+     "base_size": 0.0,
+     "bole_ratio": 0.0,
+     "radius_ratio": 0.05
+    },
+    "crown": {
+     "shape": "hemispherical",
+     "envelope": {
+      "profile": [
+       [
+        0.0,
+        0.7
+       ],
+       [
+        0.25,
+        0.85
+       ],
+       [
+        0.5,
+        0.8
+       ],
+       [
+        0.75,
+        0.6
+       ],
+       [
+        0.9,
+        0.38
+       ],
+       [
+        1.0,
+        0.15
+       ]
+      ],
+      "asymmetry": 0.45,
+      "lobe_depth": 0.2
+     }
+    }
+   },
+   "note": "krummholz at treeline: a low, dense, wind-trimmed mat of many stems, 1-4 m, its top clipped level with the winter snow"
+  },
+  "old-growth": {
+   "set": {
+    "trunk": {
+     "stems": [
+      1,
+      4
+     ],
+     "base_size": 0.15,
+     "bole_ratio": 0.15,
+     "radius_ratio": 0.04
+    },
+    "crown": {
+     "shape": "spherical",
+     "envelope": {
+      "profile": [
+       [
+        0.2,
+        0.3
+       ],
+       [
+        0.4,
+        0.4
+       ],
+       [
+        0.6,
+        0.42
+       ],
+       [
+        0.78,
+        0.36
+       ],
+       [
+        0.92,
+        0.22
+       ],
+       [
+        1.0,
+        0.1
+       ]
+      ],
+      "asymmetry": 0.4,
+      "lobe_depth": 0.3
+     }
+    }
+   },
+   "note": "an old timberline tree: thick, twisted, pale trunks, often several from one base, a broad, broken, flagged crown with dead silver limbs"
+  }
+ },
+ "description": "A small, tough pine of timberline, usually 4-12 m, often with several pale grey trunks from one base and a rounded, wind-shaped crown of short, stiff, yellow-green needles in fives bunched at the branch tips. It grows on the highest ridges and slopes, about 2700-3600 m, and at the very top of its range lies down as a low, dense mat; its purple cones never open, and the seeds are spread only by Clark's nutcrackers that bury them.",
+ "season_notes": {
+  "winter": "Evergreen; the krummholz mats are buried, while exposed shoots above the snow are sandblasted by ice.",
+  "spring": "Scarlet pollen cones in July as the snow goes.",
+  "summer": "Purple cones ripen in the top branches and nutcrackers start tearing them open in August.",
+  "fall": "Nutcrackers carry the seeds off by the throatful and bury them in caches across the slopes, where the forgotten ones sprout in clumps."
+ },
+ "habitat": {
+  "classes": {
+   "barren": 1.0,
+   "conifer_forest": 0.6
+  },
+  "floor": 0.5,
+  "mid": 1.0,
+  "steep": 1.2,
+  "north": 0.9,
+  "shade": 0.1,
+  "disturbed": 0.3
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "seeds",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "ursus_americanus",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": []
+ },
+ "range": {
+  "elev_m": [
+   2700,
+   3600
+  ],
+  "where": "timberline ridges, cirques and summits: Tioga Pass, Mount Dana, Gaylor Lakes, Mount Hoffmann, Cathedral Peak"
+ },
+ "stand_in": "pinus_ponderosa",
+ "notes": "The ponderosa template's single straight bole is wrong for most whitebarks: the many-stemmed clump (several seedlings from one nutcracker cache, of which often only one survives in the long run, per the Gymnosperm Database) and the krummholz mat at the top of its range are set here through stems, lean and the pole class's crown, but the snow-clipped flat top and flagging (limbs only on the lee side) are only approximated by asymmetry. Needles 3-7 cm in fives, cones 4-8 cm, purple, indehiscent: none drawn. Clark's nutcracker, the tree's only real disperser, and the Douglas squirrel and chipmunks are not in the animal library; Steller's jay stands in for the corvids. Black bear seed use is documented in the northern Rockies (raiding squirrel middens) and is a guess for the Sierra. Elevations in the central Sierra are the drafter's knowledge.",
+ "sources": [
+  "https://www.conifers.org/pi/Pinus_albicaulis.php"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

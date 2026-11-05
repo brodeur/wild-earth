@@ -1,0 +1,387 @@
+{
+ "id": "cercocarpus_ledifolius",
+ "aliases": [
+  "curl_leaf_mountain_mahogany",
+  "curlleaf_mountain_mahogany",
+  "desert_mahogany"
+ ],
+ "scientific": "Cercocarpus ledifolius",
+ "common": "curl-leaf mountain mahogany",
+ "form": "shrub",
+ "architectural_model": "Rauh (provisional)",
+ "deciduous": false,
+ "height_m": [
+  2,
+  6
+ ],
+ "stature": {
+  "typical_m": 4,
+  "tall_m": 8,
+  "record_m": 11,
+  "source": "typical and tall: the drafter's estimate for plants on Sierra rock; record: FEIS gives mature plants 0.9-11 m, reached only after a century or more; read 2026-11-04"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    0.8,
+    2
+   ],
+   "trunk_radius": 0.8,
+   "deadwood": 0.03,
+   "set": {
+    "trunk": {
+     "stems": [
+      2,
+      4
+     ]
+    }
+   },
+   "note": "(from the birch-leaf mountain mahogany template) a narrow, upright young shrub"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 2,
+   "note": "(from the birch-leaf mountain mahogany template) the file as written: an erect, open shrub of grey stems with dark leaves on short spurs"
+  },
+  {
+   "name": "old",
+   "weight": 0.25,
+   "height_m": [
+    5,
+    9
+   ],
+   "trunk_radius": 1.25,
+   "crown_scale": 1.1,
+   "gnarl": 1.2,
+   "deadwood": {
+    "fraction": 0.2,
+    "levels": [
+     0,
+     1
+    ],
+    "shorten": 0.8
+   },
+   "set": {
+    "trunk": {
+     "stems": [
+      2,
+      4
+     ],
+     "base_size": 0.25
+    }
+   },
+   "note": "(from the birch-leaf mountain mahogany template) a small tree: two to four grey trunks, an open, irregular crown, a few dead limbs"
+  }
+ ],
+ "description": "A small, gnarled evergreen tree or tall shrub, 2-6 m here, with one or a few crooked, red-brown to grey trunks and a dense rounded crown of narrow, thick, resinous dark green leaves whose edges roll under. It clings to rock outcrops, cliffs and dry rocky ridges of the high country and the east side, about 1500-3000 m, and in late summer is silvered with feathery, corkscrew-tailed seeds.",
+ "season_notes": {
+  "winter": "Evergreen and dark among the snow-covered rocks; a winter browse for deer where they can reach it.",
+  "spring": "Small, petal-less yellowish flowers in the leaf clusters, April-June.",
+  "summer": "Seeds with long, twisted, silky tails catch the light all over the crown.",
+  "fall": "The plumed seeds blow off and screw themselves into cracks in the soil as they dry and wet."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "barren": 0.9,
+   "chaparral": 0.5,
+   "conifer_forest": 0.3
+  },
+  "floor": 0.3,
+  "mid": 0.9,
+  "steep": 1.5,
+  "north": 0.6,
+  "shade": 0.1,
+  "disturbed": 0.3
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring",
+     "summer",
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "oreortyx_pictus",
+   "odocoileus_hemionus"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 0.9,
+  "radius_ratio": 0.022,
+  "taper": 0.85,
+  "flare": 1.4,
+  "bole_ratio": 0.1,
+  "base_size": 0.15,
+  "curve_deg": 10,
+  "curve_var_deg": 12,
+  "segments": 3,
+  "lean_deg": 8,
+  "stems": [
+   1,
+   4
+  ],
+  "stem_spread_deg": 22,
+  "split_prob": 0.15,
+  "split_count": 2,
+  "split_angle_deg": 20,
+  "sinuous_deg": 6,
+  "bark_rgb": [
+   118,
+   96,
+   86
+  ],
+  "bark_pattern": "furrowed",
+  "twig_rgb": [
+   112,
+   96,
+   84
+  ],
+  "bark": {
+   "tile_m": [
+    0.15,
+    0.35
+   ],
+   "contrast": 0.5,
+   "lichen": 0.35,
+   "relief": 0.3
+  }
+ },
+ "crown": {
+  "shape": "spherical",
+  "envelope": {
+   "profile": [
+    [
+     0.15,
+     0.3
+    ],
+    [
+     0.3,
+     0.42
+    ],
+    [
+     0.5,
+     0.48
+    ],
+    [
+     0.7,
+     0.45
+    ],
+    [
+     0.85,
+     0.35
+    ],
+    [
+     1.0,
+     0.12
+    ]
+   ],
+   "lobes": 4,
+   "lobe_depth": 0.22,
+   "asymmetry": 0.25,
+   "fill": 0.45,
+   "edge": 1.1
+  }
+ },
+ "levels": [
+  {
+   "count": 4,
+   "start": 0.12,
+   "down_angle_deg": 32,
+   "down_angle_var_deg": 12,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.55,
+   "length_var": 0.3,
+   "curve_deg": 14,
+   "curve_var_deg": 14,
+   "tropism": 0.08,
+   "taper": 0.9,
+   "radius_ratio": 0.55,
+   "segments": 2
+  },
+  {
+   "count": 5,
+   "start": 0.2,
+   "down_angle_deg": 50,
+   "down_angle_var_deg": 15,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.3,
+   "length_var": 0.3,
+   "curve_deg": 8,
+   "curve_var_deg": 12,
+   "tropism": 0.06,
+   "taper": 1.0,
+   "radius_ratio": 0.45,
+   "segments": 1
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.02,
+  "leaf_shape": "lanceolate",
+  "cluster_m": 0.32,
+  "density": 18,
+  "start": 0.05,
+  "parent_start": 0.15,
+  "orientation": "outward",
+  "roll_deg": 50,
+  "colors": {
+   "winter": [
+    74,
+    84,
+    64
+   ],
+   "spring": [
+    84,
+    98,
+    70
+   ],
+   "summer": [
+    78,
+    90,
+    66
+   ],
+   "fall": [
+    78,
+    88,
+    66
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "winter_twigs": 0.3,
+  "clumps": {
+   "radius_m": 0.22,
+   "cards_per_clump": 5,
+   "shell": 0.1,
+   "flatten": 0.75,
+   "tip_bias": 0.8
+  },
+  "palette": [
+   [
+    0.8,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.2,
+    [
+     1.15,
+     1.15,
+     1.12
+    ]
+   ]
+  ],
+  "ao_min": 0.72,
+  "color_var": [
+   0.08,
+   0.04
+  ],
+  "berries": {
+   "season": [
+    "summer",
+    "fall"
+   ],
+   "months": [
+    7,
+    10
+   ],
+   "form": "cluster",
+   "rgb": [
+    214,
+    208,
+    196
+   ],
+   "size_m": 0.06,
+   "density": 0.4
+  },
+  "cards_per_m2": 9
+ },
+ "deadwood": {
+  "fraction": 0.1,
+  "where": "inner",
+  "levels": [
+   1,
+   2
+  ],
+  "shorten": 0.7,
+  "rgb": [
+   140,
+   136,
+   130
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "length": 0.5,
+  "down_deg": 50,
+  "down_var_deg": 15,
+  "curve_var_deg": 20,
+  "segments": 1,
+  "radius_m": 0.004,
+  "taper": 0.6,
+  "fan_deg": 50,
+  "jitter": 0.2
+ },
+ "lod": {
+  "near_tris_budget": 1300,
+  "near_sides": [
+   3,
+   3,
+   0
+  ],
+  "mid_blobs": 3,
+  "mid_branches": 0,
+  "mid_sides": [
+   0,
+   0
+  ],
+  "mid_cards": 24
+ },
+ "targets": {
+  "crown_width_ratio": 0.9,
+  "crown_base_ratio": 0.2,
+  "porosity": 0.3,
+  "foliage_rg": 0.75,
+  "foliage_bg": 0.53,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a small gnarled tree or big shrub with one to a few crooked trunks and a dense, dark, rounded crown; darker and denser than birch-leaf mountain mahogany"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "1",
+  "card": "library/plant_cards/cercocarpus_ledifolius.json",
+  "card_sha256": "b2a6b7161837af01",
+  "template": "cercocarpus_betuloides",
+  "template_common": "birch-leaf mountain mahogany",
+  "height_scale": 1.143
+ },
+ "notes": "A sister of the foothill birch-leaf mountain mahogany (the template), but evergreen with narrow, leathery, inrolled leaves (1-4 cm, FEIS) instead of toothed oval ones, darker and more tree-like, often a single gnarled trunk with thick furrowing bark. Plants may need a hundred years to reach full height. FEIS calls it highly preferred by deer, which strip all foliage within reach; a browse line on big plants would be true to life. FEIS gives California elevations of about 1200-3000 m and notes it often grows between the lower conifers and the sagebrush steppe; the Yosemite places are the drafter's knowledge.",
+ "sources": [
+  "https://www.fs.usda.gov/database/feis/plants/tree/cerled/all.html"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

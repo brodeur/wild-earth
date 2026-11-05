@@ -1,0 +1,224 @@
+{
+ "id": "lupinus_arboreus",
+ "scientific": "Lupinus arboreus",
+ "common": "yellow bush lupine",
+ "aliases": [
+  "yellow_bush_lupine",
+  "bush_lupine"
+ ],
+ "family": "Fabaceae",
+ "form": "shrub",
+ "deciduous": false,
+ "template": "baccharis_pilularis",
+ "height_m": [
+  0.9,
+  1.8
+ ],
+ "variants_height_m": {
+  "young": [
+   0.4,
+   0.9
+  ],
+  "decadent": [
+   1.4,
+   2.2
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.45
+   ],
+   [
+    0.15,
+    0.62
+   ],
+   [
+    0.35,
+    0.7
+   ],
+   [
+    0.55,
+    0.7
+   ],
+   [
+    0.75,
+    0.6
+   ],
+   [
+    0.9,
+    0.42
+   ],
+   [
+    1.0,
+    0.15
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.12,
+  "asymmetry": 0.15,
+  "fill": 0.6,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    108,
+    128,
+    90
+   ],
+   "spring": [
+    116,
+    142,
+    96
+   ],
+   "summer": [
+    112,
+    132,
+    96
+   ],
+   "fall": [
+    114,
+    128,
+    94
+   ]
+  },
+  "leaf_size_m": 0.05,
+  "leaf_shape": "palmate_compound",
+  "flowers": {
+   "season": "spring",
+   "months": [
+    3,
+    6
+   ],
+   "form": "candle",
+   "rgb": [
+    238,
+    214,
+    92
+   ],
+   "size_m": 0.18,
+   "density": 0.55,
+   "before_leaves": false
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   116,
+   106,
+   92
+  ],
+  "bark_pattern": "smooth",
+  "stems": [
+   3,
+   6
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 1.3,
+  "crown_base_ratio": 0.05,
+  "porosity": 0.18,
+  "from": "judgement values, no photographs measured: a dense rounded bush about as wide as tall or wider, leafy to the sand"
+ },
+ "patch": {
+  "trunk": {
+   "stem_spread_deg": 48
+  }
+ },
+ "variant_patches": {
+  "young": {
+   "note": "a first- or second-year plant, a small soft mound"
+  },
+  "decadent": {
+   "deadwood": {
+    "fraction": 0.55,
+    "levels": [
+     0,
+     1
+    ],
+    "shorten": 0.8
+   },
+   "note": "a dying old bush (they live about seven years): grey dead stems with a few leafy shoots, often eaten from within by ghost moth larvae"
+  }
+ },
+ "description": "A fast, short-lived evergreen lupine of the dunes and headlands, a rounded bush of soft grey-green, finger-like leaves. In spring it is covered with upright spikes of fragrant yellow pea flowers.",
+ "season_notes": {
+  "winter": "Green and growing with the rains while the dune grasses are low.",
+  "spring": "Covered in tall spikes of sweet-scented yellow flowers, loud with bees.",
+  "summer": "Hairy pods ripen and burst with a snap, throwing their seeds over the sand.",
+  "fall": "Dry pods and grey dead bushes mark the older stands among the green ones."
+ },
+ "habitat": {
+  "classes": {
+   "chaparral": 0.9,
+   "grassland": 0.6,
+   "barren": 0.5,
+   "oak_woodland": 0.05,
+   "mixed_forest": 0.0,
+   "conifer_forest": 0.0,
+   "riparian": 0.05
+  },
+  "floor": 0.9,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 0.9,
+  "shade": 0.05,
+  "disturbed": 1.6
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "callipepla_californica",
+    "part": "seeds",
+    "seasons": [
+     "summer"
+    ]
+   },
+   {
+    "animal": "otospermophilus_beecheyi",
+    "part": "seeds",
+    "seasons": [
+     "summer"
+    ]
+   },
+   {
+    "animal": "sylvilagus_bachmani",
+    "part": "leaves",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "spring"
+    ]
+   }
+  ],
+  "cover_for": [
+   "sylvilagus_bachmani",
+   "callipepla_californica",
+   "microtus_californicus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   0,
+   100
+  ],
+  "where": "coastal dunes, bluffs and coastal scrub; thought native from Point Reyes south to San Luis Obispo County, invasive beyond",
+  "coastal": true
+ },
+ "stand_in": "baccharis_pilularis",
+ "notes": "Grown from coyote brush for its rounded, low-branching shrub form, with palmate leaves (5-12 silky leaflets 2-6 cm long, Wikipedia after Jepson) in a brighter, greener grey than coyote brush and fewer, stouter stems. Flower colour is supported: foliage.flowers draws yellow candles (the racemes reach about 30 cm) from March to June; lilac-flowered plants also occur and are not drawn. The library's silver bush lupine (lupinus_albifrons) is a forb record drawn as a flat card by forbs.js, not a grown shrub, so neither template nor stand-in; coyote brush stands in. The species lives only about seven years, so stands are mixed young, mature and dead, the decadent class here carrying more grey dead stems than coyote brush's. Doubts: the native range is uncertain because it has been planted so widely; around San Francisco it is generally treated as native, while north of Point Reyes (Humboldt dunes) and in many countries it is an invasive nitrogen-fixer. Wildlife from sources read is thin: the animal list is a judgement (lupine seeds are taken by quail and ground squirrels as in the library's other lupines; voles and brush rabbits shelter under the bushes). Deer mice and the ghost moth whose larvae bore its roots are not in the animal library.",
+ "sources": [
+  "Wikipedia, Lupinus arboreus (cites Jepson eFlora tid 31731; the eFlora page itself would not load), https://en.wikipedia.org/wiki/Lupinus_arboreus, read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

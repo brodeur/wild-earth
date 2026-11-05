@@ -95,7 +95,17 @@ CM, BB, DB, MM, MF, WR, SN, GB, CR = ("arctostaphylos_manzanita", "ceanothus_cun
                                       "cercocarpus_betuloides", "diplacus_aurantiacus", "rosa_californica",
                                       "symphoricarpos_albus", "ribes_roezlii", "ribes_malvaceum")
 
-CONIFER = "sugar pine and white fir are not in the library: pinus_ponderosa stands in"
+# The high Sierra set (2026-11-04, the species registry; library/plant_cards/, grown by pipeline/plantgen.py)
+RF, WF, LP, JP, SG = "abies_magnifica", "abies_concolor", "pinus_contorta", "pinus_jeffreyi", "pinus_lambertiana"
+WB, WWP, MH, SJ, QAS = "pinus_albicaulis", "pinus_monticola", "tsuga_mertensiana", "juniperus_grandis", "populus_tremuloides"
+GS, CLM = "sequoiadendron_giganteum", "cercocarpus_ledifolius"
+GM, HO, MW, BC, MMI, RMH, BS = ("arctostaphylos_patula", "quercus_vacciniifolia", "ceanothus_cordulatus", "chrysolepis_sempervirens",
+                                "chamaebatia_foliolosa", "phyllodoce_breweri", "artemisia_tridentata")
+# The coastal set (2026-11-04)
+RDW, QA, TO, MTP, MC = "sequoia_sempervirens", "quercus_agrifolia", "notholithocarpus_densiflorus", "pinus_radiata", "hesperocyparis_macrocarpa"
+CS, YBL, HB, SAL, MKH = "artemisia_californica", "lupinus_arboreus", "vaccinium_ovatum", "gaultheria_shallon", "ericameria_ericoides"
+
+CONIFER = "sugar pine and white fir in the mixed conifer from 2026-11-04 (before: pinus_ponderosa stood in for both)"
 UNDERSTORY = ("the riparian understory: elderberry, poison oak, blackberry, wild grape, dogwood and spicebush (the riparian "
               "set of 2026-10-29), with a little manzanita; the zone mixes (riparian_rows) place the bank and margin species")
 
@@ -116,6 +126,48 @@ def _r(rid, kws, trees, shrubs, td, sd, note=None, any_of=False, fixed=()):
 # for canyon live oak, madrone and Douglas-fir) the stand-in gives up that share.
 RULES = [
     _r("open_water", ["open water"], {}, {}, 0.0, 0.0),
+    # --- the high Sierra (2026-11-04): the communities LANDFIRE names on the Yosemite tiles, which matched no rule and
+    # fell to the habitat defaults (foothill oaks and gray pine at 2,500 m). The named species are `fixed` (LANDFIRE has
+    # put them there); the others follow the elevation zones (ZONE_SUBST) and TERRAIN.
+    _r("red_fir", ["red fir"], {RF: 0.75, WF: 0.1, JP: 0.06, LP: 0.08, WWP: 0.04},
+       {GM: 0.5, MW: 0.4, BC: 0.3, HO: 0.15, GB: 0.1}, 1.2, 0.3, "dense red fir with white fir below and lodgepole and "
+       "western white pine above; greenleaf manzanita, mountain whitethorn and bush chinquapin in the gaps", fixed=[RF]),
+    _r("subalpine_lodgepole", ["lodgepole"], {LP: 0.85, RF: 0.05, WWP: 0.04, MH: 0.04, WB: 0.02},
+       {GM: 0.2, RMH: 0.3, MW: 0.2, BS: 0.08}, 1.0, 0.25, "lodgepole forest round the meadows and on the granite benches", fixed=[LP]),
+    _r("mesic_subalpine", ["mesic subalpine"], {MH: 0.45, WB: 0.15, LP: 0.2, WWP: 0.15, RF: 0.05},
+       {RMH: 0.5, GM: 0.2, HO: 0.2}, 0.8, 0.3, "mountain hemlock on the cool, snowy north slopes, whitebark on the ridges", fixed=[MH]),
+    _r("subalpine_woodland", ["subalpine woodland"], {WB: 0.4, MH: 0.2, LP: 0.25, WWP: 0.1, SJ: 0.05},
+       {RMH: 0.5, GM: 0.2, HO: 0.2, BS: 0.1}, 0.6, 0.3, "open whitebark and lodgepole near treeline, krummholz above"),
+    _r("subalpine_meadow", ["subalpine meadow", "subalpine-montane wet meadow"], {LP: 1.0}, {RMH: 0.3, SN: 0.1}, 0.05, 0.1,
+       "a sedge and grass meadow; lodgepole only at its edges", any_of=True),
+    _r("alpine_dwarf_shrub", ["alpine dwarf-shrubland"], {WB: 1.0}, {RMH: 1.0, BS: 0.1}, 0.02, 0.6,
+       "red mountain heather mats among the rocks; a whitebark krummholz here and there"),
+    _r("alpine", ["alpine"], {WB: 1.0}, {RMH: 1.0}, 0.02, 0.08, "bedrock, scree and dry tundra above treeline"),
+    _r("aspen", ["aspen"], {QAS: 0.85, LP: 0.08, WF: 0.04, JP: 0.03}, {SN: 0.3, WR: 0.2, MW: 0.2}, 1.2, 0.4,
+       "a quaking aspen clone on a moist bench or by a meadow", fixed=[QAS]),
+    _r("curl_leaf_mahogany", ["curl-leaf mountain mahogany"], {CLM: 0.8, SJ: 0.2, JP: 0.1}, {BS: 0.6, GM: 0.2}, 0.5, 0.6,
+       "curl-leaf mountain mahogany on dry rock with Sierra juniper", fixed=[CLM]),
+    _r("jeffrey_pine", ["jeffrey pine"], {JP: 0.7, PP: 0.15, WF: 0.06, SJ: 0.05, IC: 0.04, KO: 0.04},
+       {GM: 0.6, MW: 0.3, HO: 0.3, BS: 0.1, BB: 0.1}, 0.7, 0.7, "open Jeffrey pine on granite and the east side; ponderosa "
+       "below about 1,800 m", fixed=[JP]),
+    # --- the coast (2026-11-04): the San Francisco cells' communities, which fell to the foothill rules (gray pine 47-63 %)
+    _r("redwood", ["redwood"], {RDW: 0.7, DF: 0.12, TO: 0.08, BA: 0.06, MA: 0.02, QA: 0.02, MP: 0.02, AL: 0.02},
+       {HB: 0.5, SAL: 0.4, CF: 0.2, PO: 0.2, BK: 0.2, TY: 0.05}, 1.4, 0.5, "coast redwood in the fog-belt ravines with "
+       "Douglas-fir, tanoak and bay; huckleberry and salal under them", fixed=[RDW]),
+    _r("closed_cone", ["closed-cone"], {MTP: 0.5, MC: 0.4, QA: 0.1}, {CB: 0.5, CS: 0.2, HB: 0.3, SAL: 0.2, PO: 0.1}, 0.9, 0.6,
+       "Monterey pine and Monterey cypress on the sandy headlands (planted near San Francisco; native at Ano Nuevo and Carmel)"),
+    _r("coastal_dune", ["coastal dune"], {MC: 0.5, MTP: 0.5}, {MKH: 0.6, YBL: 0.6, CS: 0.3, CB: 0.3}, 0.02, 0.5,
+       "the dunes: mock heather, yellow bush lupine and sagebrush; almost no trees"),
+    _r("coast_live_oak", ["coast", "live oak"], {QA: 0.85, BA: 0.08, BU: 0.05, VO: 0.04, MA: 0.02},
+       {TY: 0.4, PO: 0.6, CB: 0.4, CF: 0.3, HB: 0.1, EL: 0.1, SN: 0.2}, 1.0, 0.5,
+       "coast live oak woodland and savanna, bay in the draws", fixed=[QA]),
+    _r("coastal_scrub", ["coastal scrub"], {QA: 0.75, BA: 0.15, BU: 0.1},
+       {CB: 1.0, CS: 0.6, MF: 0.5, PO: 0.4, CF: 0.25, YBL: 0.25, TY: 0.1, EL: 0.05}, 0.08, 1.0,
+       "soft coastal scrub: coyote brush, California sagebrush and sticky monkeyflower; a coast live oak in a ravine"),
+    _r("coastal_grassland", ["coastal grassland"], {QA: 1.0}, {CB: 0.8, YBL: 0.3, CS: 0.2}, 0.05, 0.15,
+       "coastal prairie: perennial bunchgrass with a few coyote brush and lupine"),
+    _r("maritime_chaparral", ["maritime chaparral"], {QA: 0.7, MTP: 0.3}, {CM: 0.5, CH: 0.4, BB: 0.3, TY: 0.2, CB: 0.2, HB: 0.1},
+       0.15, 1.0, "maritime chaparral of manzanita and ceanothus on the sandstone ridges"),
     _r("wet_meadow_marsh", ["marsh", "wet meadow"], {WI: 0.8, LO: 0.2, VO: 0.1}, {MZ: 0.5, EL: 0.25, CB: 0.25},
        0.05, 0.05, "herbaceous wetland: almost no woody plants, a few willows and a valley oak at the edge", any_of=True),
     # Riparian: arroyo willow thickets at the water, white alder rooted in the bank, Fremont cottonwood on the
@@ -137,7 +189,7 @@ RULES = [
     _r("foothill_pine", ["foothill pine"], {GP: 0.6, BO: 0.25, LO: 0.15, BU: 0.04, CO: 0.03},
        {MZ: 0.4, CH: 0.6, TY: 0.12, CF: 0.1, RB: 0.06, PO: 0.15}, 0.9, 1.0),
     _r("black_oak_conifer", ["black oak", "conifer"],
-       {KO: 0.45, PP: 0.4, LO: 0.12, GP: 0.02, IC: 0.12, DF: 0.08, MA: 0.04, CO: 0.03},
+       {KO: 0.45, PP: 0.4, LO: 0.12, GP: 0.02, IC: 0.12, DF: 0.08, MA: 0.04, CO: 0.03, SG: 0.05, WF: 0.04},
        {MZ: 0.8, CH: 0.2, TY: 0.1, PO: 0.25, CF: 0.15, RB: 0.03}, 1.1, 0.6,
        "black oak with ponderosa, incense cedar and Douglas-fir (on north slopes); " + CONIFER, fixed=[KO]),
     _r("black_oak", ["black oak"], {KO: 0.6, LO: 0.15, PP: 0.15, MA: 0.04, BA: 0.02, CO: 0.03, IC: 0.03},
@@ -150,16 +202,20 @@ RULES = [
        {MZ: 1, TY: 0.3, PO: 0.3, CF: 0.3}, 1.2, 0.5, "interior mixed evergreen forest: canyon live oak, madrone, bay and Douglas-fir"),
     _r("ponderosa_jeffrey", ["ponderosa", "jeffrey pine"], {PP: 0.9, LO: 0.1, KO: 0.1, IC: 0.06},
        {MZ: 0.9, CH: 0.1, CF: 0.05}, 0.8, 0.8, "Jeffrey pine is not in the library: pinus_ponderosa stands in", any_of=True),
-    _r("dry_mesic_mixed_conifer", ["dry-mesic mixed conifer"], {PP: 0.5, LO: 0.1, KO: 0.2, IC: 0.15, DF: 0.08, CO: 0.03, MA: 0.02},
+    _r("dry_mesic_mixed_conifer", ["dry-mesic mixed conifer"], {PP: 0.5, LO: 0.1, KO: 0.2, IC: 0.15, DF: 0.08, CO: 0.03, MA: 0.02,
+                                                                WF: 0.1, SG: 0.12},
        {MZ: 1, TY: 0.05, PO: 0.1, CF: 0.1}, 1.0, 0.6, CONIFER),
-    _r("mesic_mixed_conifer", ["mixed conifer"], {PP: 0.4, IC: 0.2, DF: 0.2, KO: 0.12, LO: 0.06, MA: 0.03, BA: 0.02},
+    _r("mesic_mixed_conifer", ["mixed conifer"], {PP: 0.32, IC: 0.18, DF: 0.15, KO: 0.1, LO: 0.05, MA: 0.03, BA: 0.02,
+                                                     WF: 0.25, SG: 0.15},
        {MZ: 1, PO: 0.1, CF: 0.1}, 1.2, 0.4, CONIFER),
     _r("lower_montane_conifer", ["lower montane conifer"],
-       {PP: 0.58, LO: 0.1, GP: 0.1, KO: 0.14, IC: 0.08, DF: 0.05, CO: 0.03, MA: 0.02, BA: 0.02},
+       {PP: 0.58, LO: 0.1, GP: 0.1, KO: 0.14, IC: 0.08, DF: 0.05, CO: 0.03, MA: 0.02, BA: 0.02, SG: 0.06, WF: 0.04},
        {MZ: 0.85, CH: 0.15, TY: 0.08, CF: 0.1, PO: 0.12, RB: 0.03}, 1.0, 0.6, CONIFER),
     _r("montane_woodland_chaparral", ["montane woodland and chaparral"],
        {LO: 0.3, PP: 0.25, GP: 0.15, CO: 0.15, KO: 0.1},
-       {MZ: 0.8, CH: 0.2, TY: 0.1, CF: 0.1, RB: 0.05}, 0.6, 1.0),
+       {MZ: 0.8, CH: 0.2, TY: 0.1, CF: 0.1, RB: 0.05, HO: 0.5, GM: 0.4, MW: 0.3, BC: 0.2}, 0.6, 1.0,
+       "canyon live oak and chaparral on the canyon walls; at Yosemite's elevations huckleberry oak, greenleaf manzanita, "
+       "mountain whitethorn and bush chinquapin (TERRAIN keeps them off the foothill tiles)"),
     _r("serpentine_woodland", ["serpentine", "woodland"], {GP: 0.6, LO: 0.4, BU: 0.03},
        {MZ: 0.6, CH: 0.4, CF: 0.1, RB: 0.05, TY: 0.05}, 0.6, 1.0, "leather oak and McNab cypress are not in the library"),
     _r("xeric_chaparral", ["xeric", "chaparral"], {GP: 0.7, LO: 0.3},
@@ -190,7 +246,7 @@ RULES = [
 # keep their weights, so their shares shrink in proportion where these are added.
 _CHAP = {BB: 0.5, CM: 0.25, MM: 0.2, MF: 0.15, CR: 0.1, GB: 0.08, DB: 0.1}
 _OAK = {BB: 0.3, CM: 0.1, MM: 0.1, MF: 0.12, SN: 0.15, WR: 0.08, GB: 0.08, CR: 0.05}
-_PINE = {DB: 0.5, SN: 0.2, GB: 0.15, MM: 0.08, BB: 0.1, CM: 0.1}
+_PINE = {DB: 0.5, SN: 0.2, GB: 0.15, MM: 0.08, BB: 0.1, CM: 0.1, MMI: 0.4, GM: 0.2, MW: 0.15, BC: 0.1}
 _RIP = {WR: 0.6, SN: 0.3, GB: 0.05}
 UNDERSTORY_SHRUBS = {
     "xeric_chaparral": {**_CHAP, BB: 0.6}, "dry_mesic_chaparral": _CHAP, "mesic_chaparral": {**_CHAP, DB: 0.3},
@@ -242,7 +298,12 @@ HABITAT_DEFAULT = {
 # TERRAIN[id] = (band factors x4, pos factors [floor, mid, steep], north factors [other, north]); a species
 # not listed (and every species listed in a rule's `fixed`) is not changed. Cells of one source and code
 # whose factors give the same bytes share a row, so a tile has a few rows per community, not one per class.
-ELEV_BANDS = (450.0, 525.0, 600.0)
+# 2026-11-04: four more bands for the mountains (lower montane 1,100-1,800 m, upper montane 1,800-2,400, subalpine
+# 2,400-3,000, alpine above): a factor list of four is read with its last value repeated, so the foothill species and
+# the foothill tiles (all below 1,100 m) are as before.
+ELEV_BANDS = (450.0, 525.0, 600.0, 1100.0, 1800.0, 2400.0, 3000.0)
+NB = len(ELEV_BANDS) + 1
+NTC = NB * 6            # terrain classes; a grove cell (LOCALIZED) adds NTC
 NORTH_LIFT, SOUTH_DROP, NORTH_MIN = 100.0, 50.0, 0.35
 FLOOR_SLOPE, FLOOR_TPI, STEEP_SLOPE = 6.0, -2.0, 16.0
 TERRAIN = {
@@ -277,7 +338,96 @@ TERRAIN = {
     BK: ([1.0, 1.0, 1.0, 1.0], [2.0, 1.0, 0.2], [1.0, 1.1]), GR: ([1.0, 1.0, 0.8, 0.6], [2.5, 1.0, 0.1], [1.0, 1.0]),
     SP: ([1.0, 1.0, 1.0, 0.8], [2.5, 1.0, 0.1], [0.7, 1.6]),
 }
-POS_NAMES, BAND_NAMES = ("floor", "mid-slope", "steep"), ("<450 m", "450-525 m", "525-600 m", ">=600 m")
+POS_NAMES = ("floor", "mid-slope", "steep")
+BAND_NAMES = ("<450 m", "450-525 m", "525-600 m", "600-1100 m", "1100-1800 m", "1800-2400 m", "2400-3000 m", ">=3000 m")
+
+# the new species' terrain (8 bands)
+TERRAIN.update({
+    WF: ([0, 0, 0, 0.25, 0.9, 1.0, 0.3, 0], [1.0, 1.0, 0.9], [0.8, 1.4]), SG: ([0, 0, 0.1, 0.5, 1.0, 0.7, 0.1, 0], [1.1, 1.0, 0.7], [0.9, 1.2]),
+    RF: ([0, 0, 0, 0, 0.2, 1.0, 0.8, 0], [1.0, 1.0, 0.8], [0.8, 1.3]), JP: ([0, 0, 0, 0.05, 0.5, 1.0, 0.6, 0.1], [0.8, 1.0, 1.3], [1.2, 0.7]),
+    LP: ([0, 0, 0, 0, 0.2, 0.8, 1.0, 0.3], [2.0, 1.0, 0.5], [1.0, 1.0]), WB: ([0, 0, 0, 0, 0, 0.1, 0.8, 1.0], [0.6, 1.0, 1.4], [1.0, 1.0]),
+    MH: ([0, 0, 0, 0, 0, 0.4, 1.0, 0.5], [1.0, 1.0, 0.8], [0.6, 1.8]), WWP: ([0, 0, 0, 0, 0.2, 0.8, 1.0, 0.2], [1.0, 1.0, 1.0], [1.0, 1.0]),
+    SJ: ([0, 0, 0, 0, 0.4, 1.0, 1.0, 0.2], [0.3, 1.0, 2.5], [1.2, 0.8]), QAS: ([0, 0, 0, 0.05, 0.6, 1.0, 0.8, 0], [2.0, 1.0, 0.3], [1.0, 1.1]),
+    GS: ([0, 0, 0, 0.6, 1.0, 0.4, 0, 0], [1.4, 1.0, 0.6], [0.9, 1.2]), CLM: ([0, 0, 0, 0, 0.5, 1.0, 0.8, 0.1], [0.3, 1.0, 2.5], [1.2, 0.8]),
+    GM: ([0, 0, 0, 0.2, 0.8, 1.0, 0.6, 0], [0.8, 1.0, 1.2], [1.1, 0.9]), HO: ([0, 0, 0, 0.2, 0.9, 1.0, 0.5, 0], [0.5, 1.0, 1.8], [1.1, 0.9]),
+    MW: ([0, 0, 0, 0.1, 0.7, 1.0, 0.6, 0], [0.8, 1.0, 1.1], [1.0, 1.0]), BC: ([0, 0, 0, 0.1, 0.6, 1.0, 0.8, 0], [0.8, 1.0, 1.3], [0.8, 1.3]),
+    RMH: ([0, 0, 0, 0, 0, 0.3, 1.0, 1.0], [1.2, 1.0, 0.8], [0.9, 1.2]), BS: ([0, 0, 0, 0, 0.3, 0.8, 1.0, 0.5], [1.2, 1.0, 0.7], [1.2, 0.8]),
+    MMI: ([0, 0, 0.1, 0.6, 1.0, 0.3, 0, 0], [1.0, 1.0, 0.7], [1.1, 0.9]),
+    QA: ([1, 1, 1, 0.6, 0.1, 0, 0, 0], [1.3, 1.0, 0.8], [0.9, 1.2]), RDW: ([1, 1, 1, 0.5, 0, 0, 0, 0], [1.6, 1.0, 0.6], [0.7, 1.6]),
+    TO: ([1, 1, 1, 0.8, 0.3, 0, 0, 0], [1.1, 1.0, 0.9], [0.8, 1.4]), MTP: ([1, 1, 0.8, 0.3, 0, 0, 0, 0], [1.0, 1.0, 0.9], [1.0, 1.0]),
+    MC: ([1, 0.8, 0.5, 0.1, 0, 0, 0, 0], [1.0, 1.0, 1.0], [1.1, 0.9]), CS: ([1, 1, 0.8, 0.4, 0, 0, 0, 0], [0.8, 1.0, 1.2], [1.2, 0.8]),
+    YBL: ([1, 1, 0.8, 0.3, 0, 0, 0, 0], [1.1, 1.0, 0.8], [1.0, 1.0]), MKH: ([1, 0.8, 0.5, 0.2, 0, 0, 0, 0], [1.2, 1.0, 0.7], [1.0, 1.0]),
+    HB: ([1, 1, 1, 0.6, 0.2, 0, 0, 0], [1.1, 1.0, 0.9], [0.8, 1.5]), SAL: ([1, 1, 1, 0.6, 0.2, 0, 0, 0], [1.1, 1.0, 0.9], [0.8, 1.5]),
+})
+
+# Elevation zones (2026-11-04). The foothill rules hold blue oak, gray pine and chamise wherever their community's
+# name lands them, and LANDFIRE names the same "Cliff and Canyon", "Montane Riparian" or "Mixed Conifer" from 300 m to
+# 3,000 m. Above 1,100 m a species that does not grow there is replaced by the one that takes its place, by band
+# (a replacement of {} removes it): on every rule, for every species the rule does not hold `fixed`. Values are shares
+# of the replaced weight.
+_SUBALP = {LP: 0.5, WB: 0.2, MH: 0.15, WWP: 0.15}
+_BROAD = ("quercus_douglasii", "quercus_lobata", "aesculus_californica", "arbutus_menziesii", "umbellularia_californica",
+          "juglans_hindsii", "acer_macrophyllum", "fraxinus_latifolia", "platanus_racemosa")
+ZONE_SUBST = {
+    4: {GP: {PP: 1.0}, BO: {KO: 1.0}, VO: {KO: 0.5}, BU: {}, LO: {CO: 0.6, LO: 0.4}, CB: {}, CH: {MZ: 0.5, CH: 0.5}, SY: {}},
+    5: {PP: {JP: 0.7, PP: 0.3}, GP: {JP: 1.0}, CO: {CO: 0.5, JP: 0.25, SJ: 0.25}, KO: {WF: 0.5, JP: 0.5}, LO: {},
+        IC: {IC: 0.3, WF: 0.4, RF: 0.3}, DF: {WF: 0.5, RF: 0.5}, CW: {QAS: 1.0}, AL: {QAS: 0.5}, SG: {WWP: 1.0},
+        **{b: {} for b in _BROAD},
+        MZ: {GM: 1.0}, CM: {GM: 1.0}, CH: {GM: 0.5, HO: 0.5}, BB: {MW: 1.0}, DB: {DB: 0.5, MW: 0.5}, TY: {BC: 1.0}, CF: {BC: 1.0},
+        MM: {CLM: 1.0}, PO: {}, CB: {}, RB: {}, EL: {}, MF: {}, CR: {}, MMI: {}},
+    6: {**{c: dict(_SUBALP) for c in (PP, JP, GP, IC, DF, KO, CO, WF, SG, CLM)}, RF: {RF: 0.5, LP: 0.3, WWP: 0.2},
+        **{b: {} for b in _BROAD + (LO, CW, AL)},
+        MZ: {GM: 0.5, RMH: 0.5}, CM: {GM: 0.5, RMH: 0.5}, GM: {GM: 0.5, RMH: 0.5}, CH: {RMH: 1.0}, BB: {MW: 0.5, RMH: 0.5},
+        DB: {MW: 0.5, RMH: 0.5}, MW: {MW: 0.5, RMH: 0.5}, TY: {BC: 1.0}, CF: {BC: 1.0}, MM: {CLM: 1.0},
+        **{x: {} for x in (PO, CB, RB, EL, MF, CR, MMI, SN, WR)}},
+    7: {**{c: {WB: 1.0} for c in (PP, JP, GP, IC, DF, KO, CO, WF, SG, CLM, RF, LP, MH, WWP, SJ, QAS)},
+        **{b: {} for b in _BROAD + (LO, CW, AL)},
+        **{x: {RMH: 1.0} for x in (MZ, CM, GM, CH, BB, DB, MW, HO, BC, TY, CF, MM, GB)},
+        **{x: {} for x in (PO, CB, RB, EL, MF, CR, MMI, SN, WR, BS)}},
+}
+# The coast (2026-11-04): a tile whose communities are coastal (COAST_WORDS in COAST_MIN of its named cells) has no blue
+# oak, gray pine, interior live oak or ponderosa below 1,100 m: they become coast live oak, and Douglas-fir and tanoak.
+COAST_WORDS, COAST_MIN = ("coast", "coastal", "maritime", "dune", "tidal"), 0.15
+COAST_SUBST = {BO: {QA: 1.0}, GP: {QA: 1.0}, LO: {QA: 1.0}, KO: {QA: 1.0}, PP: {DF: 0.6, TO: 0.4}, IC: {DF: 1.0},
+               MZ: {CM: 0.6, CB: 0.4}, CH: {CH: 0.4, CS: 0.3, CB: 0.3}}
+# Species placed by where GBIF has seen them, not by their community (2026-11-04): giant sequoia grows in groves, a few
+# hundred hectares each, inside the mixed conifer; LANDFIRE has no sequoia community. pipeline/needs.py writes the
+# CC0 / CC BY records of these species on the tile to species/localized.json; a cell within `radius_m` of one, in one
+# of `rules`, gets `weight` of it (TERRAIN still applies).
+LOCALIZED = {GS: {"radius_m": 450.0, "weight": 0.6,
+                  "rules": ("mesic_mixed_conifer", "dry_mesic_mixed_conifer", "lower_montane_conifer", "black_oak_conifer",
+                            "habitat_default_conifer_forest", "habitat_default_mixed_forest", "montane_riparian")}}
+
+
+def _pad(f: list) -> list:
+    return list(f) + [f[-1]] * (NB - len(f))
+
+
+def _subst(weights: dict, table: dict, fixed=()) -> dict:
+    out: dict = {}
+    for k, w in weights.items():
+        if k in table and k not in fixed:
+            for k2, share in table[k].items():
+                out[k2] = out.get(k2, 0.0) + w * share
+        else:
+            out[k] = out.get(k, 0.0) + w
+    return out
+
+
+SUBSTITUTIONS: dict = {}   # species -> the record drawn for it (no record yet: communities.stand_in), this run
+
+
+def resolve(weights: dict) -> dict:
+    """Every species without a library record replaced by its stand-in (communities.stand_in); dropped if none."""
+    from .communities import stand_in
+    out: dict = {}
+    for k, w in weights.items():
+        r = k if (LIBRARY / f"{k}.json").exists() else stand_in(k)
+        if r != k:
+            SUBSTITUTIONS[k] = r
+        if r and w > 0:
+            out[r] = out.get(r, 0.0) + w
+    return out
 
 
 def terrain_classes(tile: Tile, shape: tuple[int, int]) -> np.ndarray:
@@ -296,22 +446,36 @@ def terrain_classes(tile: Tile, shape: tuple[int, int]) -> np.ndarray:
     E, S, N = cells(z), cells(slope), cells(north)
     tpi = E - ndimage.uniform_filter(E, 11, mode="nearest")
     eff = E + NORTH_LIFT * np.clip(N, 0, 1) - SOUTH_DROP * np.clip(-N, 0, 1)
-    band = np.digitize(eff, ELEV_BANDS)
+    band = np.digitize(eff, ELEV_BANDS)    # 0 .. NB-1
     pos = np.where((S < FLOOR_SLOPE) & (tpi <= FLOOR_TPI), 0, np.where(S >= STEEP_SLOPE, 2, 1))
     return (band * 6 + pos * 2 + (N >= NORTH_MIN)).astype("int64")
 
 
 def terrain_label(t: int) -> str:
-    return f"{BAND_NAMES[t // 6]} {POS_NAMES[(t // 2) % 3]}{' north' if t % 2 else ''}"
+    g, t = divmod(t, NTC)
+    return f"{BAND_NAMES[t // 6]} {POS_NAMES[(t // 2) % 3]}{' north' if t % 2 else ''}{' grove' if g else ''}"
 
 
-def terrain_weights(weights: dict, t: int, fixed=()) -> dict:
+CONTEXT: dict = {"coast": False}   # set per tile by species_mix()
+
+
+def terrain_weights(weights: dict, t: int, fixed=(), rule: str | None = None) -> dict:
+    grove, t = divmod(t, NTC)
     band, pos, nf = t // 6, (t // 2) % 3, t % 2
+    w0 = dict(weights)
+    if grove:
+        for sid, loc in LOCALIZED.items():
+            if rule in loc["rules"]:
+                w0[sid] = w0.get(sid, 0.0) + loc["weight"] * max(sum(w0.values()), 1e-9)
+    if CONTEXT.get("coast") and band <= 3:
+        w0 = _subst(w0, COAST_SUBST, fixed)
+    if band in ZONE_SUBST:
+        w0 = _subst(w0, ZONE_SUBST[band], fixed)
     out = {}
-    for k, w in weights.items():
+    for k, w in w0.items():
         f = TERRAIN.get(k)
-        out[k] = w if (f is None or k in fixed) else w * f[0][band] * f[1][pos] * f[2][nf]
-    return out
+        out[k] = w if (f is None or k in fixed) else w * _pad(f[0])[band] * f[1][pos] * f[2][nf]
+    return resolve(out)
 
 
 # The ground layer (2026-10-29): the grasses and forbs (library/species records with form "grass" or "forb",
@@ -471,20 +635,46 @@ def _bytes(weights: dict, slots: list[str]) -> list[int]:
     return [int(v) for v in b]
 
 
-def columns(rules: list[dict]) -> tuple[list[str], list[str]]:
-    """Tree and shrub columns: TREES / SHRUBS, then any other species the rules name, in order."""
+def columns(rules: list[dict], tree_rows=(), shrub_rows=()) -> tuple[list[str], list[str]]:
+    """Tree and shrub columns: TREES / SHRUBS, then any other species the rows draw (after the zones, the coast and the
+    stand-ins; in the order the rows first name them). A rule's species without a record is not a column: its stand-in
+    is (resolve)."""
     trees, shrubs = list(TREES), list(SHRUBS)
-    for r in rules:
-        for k in r["trees"]:
-            if k not in trees:
-                trees.append(k)
-        for k in r["shrubs"]:
-            if k not in shrubs:
-                shrubs.append(k)
+    for rows_, cols in ((list(tree_rows) or [r["trees"] for r in rules], trees), (list(shrub_rows) or [r["shrubs"] for r in rules], shrubs)):
+        for w in rows_:
+            for k, v in w.items():
+                if v > 0 and k not in cols:
+                    cols.append(k)
     for sid in trees + shrubs:
         if not (LIBRARY / f"{sid}.json").exists():
             warnings.warn(f"species mix names {sid}, which has no library/species/{sid}.json; the client skips it")
     return trees, shrubs
+
+
+def grove_mask(tile: Tile, shape: tuple[int, int]) -> np.ndarray:
+    """1 where a cell lies within its radius of a GBIF record of a LOCALIZED species (species/localized.json, written by
+    pipeline/needs.py from CC0 / CC BY records only), else 0."""
+    p = tile.path("species/localized.json")
+    out = np.zeros(shape, "int64")
+    if not p.exists():
+        return out
+    loc = json.loads(p.read_text())
+    x0, y0, x1, y1 = tile.bounds
+    res = (x1 - x0) / shape[1]
+    cx = (np.arange(shape[1]) + 0.5) * res
+    cy = (y1 - y0) - (np.arange(shape[0]) + 0.5) * res     # row 0 = north
+    for sid, spec in LOCALIZED.items():
+        pts = sorted({(float(x), float(n)) for x, n in (loc.get(sid) or {}).get("points") or []})
+        # a grove, not a planted tree: a record counts with MIN_CLUSTER distinct records within CLUSTER_M (itself included);
+        # Yosemite Valley's few records are planted sequoias by the old village (2026-11-04)
+        pts = [(x, n) for x, n in pts if sum((x - a) ** 2 + (n - b) ** 2 <= spec.get("cluster_m", 700.0) ** 2 for a, b in pts)
+               >= spec.get("min_cluster", 3)]
+        r2 = spec["radius_m"] ** 2
+        for x, n in pts:
+            dx2 = (cx - x) ** 2
+            dy2 = (cy - n) ** 2
+            out |= ((dy2[:, None] + dx2[None, :]) <= r2).astype("int64")
+    return out
 
 
 def _is_human(e: dict) -> bool:
@@ -552,23 +742,34 @@ def species_mix(tile: Tile) -> dict:
     # Terrain (TERRAIN): each community row splits by the cells' terrain classes into the rows whose
     # weights differ; cells of one community and terrain response share a row.
     base_rows = sorted(rows.values(), key=lambda r: r["index"])
-    trees_cols, shrub_cols = columns(base_rows)
+    # The tile's context (2026-11-04): coastal when COAST_WORDS name COAST_MIN of its community cells (COAST_SUBST)
+    cells_by = {b["index"]: int((index == b["index"]).sum()) for b in base_rows}
+    tot = sum(v for b in base_rows for k, v in cells_by.items() if k == b["index"] and b["rule"] != "open_water") or 1
+    coast_cells = sum(cells_by[b["index"]] for b in base_rows
+                      if b["source"] != "rewild" and any(w in (b["name"] or "").lower() for w in COAST_WORDS))
+    CONTEXT["coast"] = coast_cells / tot >= COAST_MIN
+    SUBSTITUTIONS.clear()
     gspecies = ground_species()
     ground_cols = [sp["id"] for sp in gspecies]
     for b in base_rows:
         b["ground"] = ground_weights(b["habitat"], b["rule"], gspecies)
-    nt, ns, ng = len(trees_cols), len(shrub_cols), len(ground_cols)
-    tcls = terrain_classes(tile, index.shape)
-    pair = index * 24 + tcls
-    final: dict[tuple, dict] = {}
-    out_index = np.zeros(index.shape, "int64")
+    tcls = terrain_classes(tile, index.shape) + NTC * grove_mask(tile, index.shape)
+    pair = index * (2 * NTC) + tcls
+    # weights first (after the zones, the coast, the groves and the stand-ins), so the columns hold every species drawn
+    weights = {}
     for code in np.unique(pair).tolist():
-        b = base_rows[code // 24 - 1] if code >= 24 else None
+        b = base_rows[code // (2 * NTC) - 1] if code >= 2 * NTC else None
         if b is None:
             continue
-        t = code % 24
-        tb = _bytes(terrain_weights(b["trees"], t, b["fixed"]), trees_cols)
-        sb = _bytes(terrain_weights(b["shrubs"], t, b["fixed"]), shrub_cols)
+        t = code % (2 * NTC)
+        weights[code] = (b, t, terrain_weights(b["trees"], t, b["fixed"], b["rule"]), terrain_weights(b["shrubs"], t, b["fixed"], b["rule"]))
+    trees_cols, shrub_cols = columns(base_rows, [w[2] for w in weights.values()], [w[3] for w in weights.values()])
+    nt, ns, ng = len(trees_cols), len(shrub_cols), len(ground_cols)
+    final: dict[tuple, dict] = {}
+    out_index = np.zeros(index.shape, "int64")
+    for code, (b, t, tw, sw) in weights.items():
+        tb = _bytes(tw, trees_cols)
+        sb = _bytes(sw, shrub_cols)
         gb = _bytes(ground_terrain(b["ground"], t, gspecies), ground_cols)
         key = (b["source"], b["code"], tuple(tb), tuple(sb), tuple(gb))
         r = final.get(key)
@@ -674,6 +875,10 @@ def species_mix(tile: Tile) -> dict:
         "unmatched": unmatched,
         "fractions": fractions,
         "riparian": riparian_rows(),   # the zone mixes (pipeline/water.py reads the zones; the water step rewrites this key too)
+        # 2026-11-04: the species a rule names that have no record yet and the record drawn for each; the tile's context
+        "substitutions": dict(sorted(SUBSTITUTIONS.items())),
+        "context": {"coast": CONTEXT["coast"], "coast_share": round(coast_cells / tot, 4), "bands_m": list(ELEV_BANDS),
+                    "groves": int((tcls >= NTC).sum())},
     }
     # One row (and one community) per line: several hundred rows indented one value per line ran to 600 KB.
     text = json.dumps({**doc, "mixes": "@MIXES@", "communities": "@COMMUNITIES@", "riparian": "@RIP@"}, indent=1)

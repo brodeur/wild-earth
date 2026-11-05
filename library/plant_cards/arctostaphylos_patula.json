@@ -1,0 +1,229 @@
+{
+ "id": "arctostaphylos_patula",
+ "scientific": "Arctostaphylos patula",
+ "common": "greenleaf manzanita",
+ "aliases": [
+  "greenleaf_manzanita"
+ ],
+ "family": "Ericaceae",
+ "form": "shrub",
+ "deciduous": false,
+ "template": "arctostaphylos_manzanita",
+ "height_m": [
+  1,
+  2
+ ],
+ "stature": {
+  "typical_m": 1.5,
+  "tall_m": 2.5,
+  "record_m": null,
+  "source": "typical: FEIS 1-2 m tall, plants spreading to about 3 m; tall: the drafter's estimate; no record read; read 2026-11-04"
+ },
+ "variants_height_m": {
+  "young": [
+   0.3,
+   0.8
+  ],
+  "old": [
+   1.8,
+   2.5
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.55
+   ],
+   [
+    0.2,
+    0.72
+   ],
+   [
+    0.4,
+    0.8
+   ],
+   [
+    0.6,
+    0.78
+   ],
+   [
+    0.8,
+    0.62
+   ],
+   [
+    0.92,
+    0.4
+   ],
+   [
+    1.0,
+    0.12
+   ]
+  ],
+  "lobes": 5,
+  "lobe_depth": 0.12,
+  "asymmetry": 0.15,
+  "fill": 0.6,
+  "edge": 1.07
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    108,
+    124,
+    76
+   ],
+   "spring": [
+    122,
+    140,
+    80
+   ],
+   "summer": [
+    118,
+    136,
+    76
+   ],
+   "fall": [
+    114,
+    130,
+    76
+   ]
+  },
+  "leaf_size_m": 0.04,
+  "leaf_shape": "round_vertical",
+  "flowers": {
+   "season": "spring",
+   "months": [
+    5,
+    6
+   ],
+   "form": "cluster",
+   "rgb": [
+    238,
+    196,
+    204
+   ],
+   "size_m": 0.035,
+   "density": 0.5,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": [
+    "summer",
+    "fall"
+   ],
+   "months": [
+    7,
+    10
+   ],
+   "form": "cluster",
+   "rgb": [
+    118,
+    64,
+    42
+   ],
+   "size_m": 0.03,
+   "density": 0.4
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   122,
+   48,
+   40
+  ],
+  "bark_pattern": "smooth",
+  "stems": [
+   5,
+   10
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 1.6,
+  "crown_base_ratio": 0.05,
+  "porosity": 0.15,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a dense rounded mound much wider than tall, bright yellow-green, leafy to the ground, on smooth dark red stems"
+ },
+ "description": "A rounded, spreading shrub 1-2 m tall and wider than high, with smooth, polished dark red-brown crooked stems and bright, yellow-green, nearly round leaves held upright on edge. It is the common manzanita of the mountains, forming bright patches of montane chaparral on dry, sunny south slopes, in open pine forest and on old burns, about 1500-3000 m, and resprouts from a big woody burl after fire.",
+ "season_notes": {
+  "winter": "Evergreen, the bright leaves showing above the snow on sunny slopes.",
+  "spring": "Clusters of small pink urn-shaped flowers, May-June, busy with bees and hummingbirds.",
+  "summer": "Green berries ripen to chestnut-brown; the red bark peels in thin curls.",
+  "fall": "Ripe mealy berries feed bears, which can strip a slope of them in a week."
+ },
+ "habitat": {
+  "classes": {
+   "chaparral": 1.0,
+   "conifer_forest": 0.6,
+   "mixed_forest": 0.4,
+   "barren": 0.3
+  },
+  "floor": 0.7,
+  "mid": 1.0,
+  "steep": 1.1,
+  "north": 0.7,
+  "shade": 0.2,
+  "disturbed": 1.3
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "ursus_americanus",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "meleagris_gallopavo",
+    "part": "berries",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "oreortyx_pictus",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "canis_latrans",
+    "part": "berries",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   }
+  ],
+  "cover_for": [
+   "oreortyx_pictus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1500,
+   3000
+  ],
+  "where": "montane chaparral on dry south slopes, open Jeffrey and ponderosa pine forest and burns: Tioga Road, Glacier Point Road, the Big Oak Flat Road"
+ },
+ "stand_in": "arctostaphylos_manzanita",
+ "notes": "Lower, broader and brighter green than common manzanita (the template), about 1-2 m with a lignotuber (burl) in the Sierra, so it resprouts after fire, unlike many foothill manzanitas. Leaves 2-6 cm, round to broadly oval, held on edge (FEIS: spreading or drooping rather than erect). Flowers April-June in California and fruit July-October (FEIS). FEIS lists black bear, grouse, turkey, songbirds and deer mice for the fruit, and mule deer as the browser most fond of it, mostly in winter; grouse and deer mice are not in the library, mountain quail and coyote are the drafter's additions. FEIS: most common in montane chaparral at about 1500-2100 m in the Sierra, on dry south and southwest slopes; California range about 600-3350 m.",
+ "sources": [
+  "https://www.fs.usda.gov/database/feis/plants/shrub/arcpat/all.html"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

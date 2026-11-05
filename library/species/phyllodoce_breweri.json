@@ -1,0 +1,391 @@
+{
+ "id": "phyllodoce_breweri",
+ "aliases": [
+  "red_mountain_heather",
+  "brewers_mountain_heather",
+  "purple_mountain_heath"
+ ],
+ "scientific": "Phyllodoce breweri",
+ "common": "red mountain heather",
+ "form": "shrub",
+ "architectural_model": "Rauh (provisional: a few stiff stems from the base with spreading, rhythmically branched side shoots)",
+ "deciduous": false,
+ "height_m": [
+  0.1,
+  0.3
+ ],
+ "stature": {
+  "typical_m": 0.2,
+  "tall_m": 0.3,
+  "record_m": null,
+  "source": "Calscape: about 0.3 m (1 ft), a low matting shrub; the 10-30 cm range is the drafter's; read 2026-11-04"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    0.05,
+    0.12
+   ],
+   "crown_scale": 0.9,
+   "branches": 0.7,
+   "set": {
+    "trunk": {
+     "stems": [
+      2,
+      4
+     ]
+    }
+   },
+   "note": "(from the Sierra gooseberry template) a small plant of two to four stiff stems"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 1,
+   "note": "(from the Sierra gooseberry template) the file as written: a low, stiff, spreading shrub, open between its spiny stems"
+  },
+  {
+   "name": "old",
+   "weight": 0.25,
+   "height_m": [
+    0.25,
+    0.4
+   ],
+   "crown_scale": 1.1,
+   "gnarl": 1.25,
+   "deadwood": {
+    "fraction": 0.2,
+    "levels": [
+     0,
+     1
+    ],
+    "shorten": 0.7
+   },
+   "set": {
+    "trunk": {
+     "stems": [
+      6,
+      10
+     ]
+    }
+   },
+   "note": "(from the Sierra gooseberry template) an old, broader shrub with grey dead stems among the living"
+  }
+ ],
+ "description": "A dwarf evergreen shrub 10-30 cm tall that forms dense mats of upright stems crowded with short, needle-like, dark green leaves, topped in midsummer by clusters of rose-purple, saucer-shaped flowers. It grows in the alpine and subalpine high country, about 2400-3600 m, on rocky slopes, lake shores, meadow edges and in the shelter of boulders and krummholz where snow lies late.",
+ "season_notes": {
+  "winter": "Evergreen under the snow, which it needs for protection from the winter wind.",
+  "spring": "Still under snow until June or July; the mats emerge dark green and flattened.",
+  "summer": "Rose-purple flowers crowd the stem tips, July-August, worked by bumblebees.",
+  "fall": "Small dry capsules split; the mats bronze slightly in the first frosts."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "barren": 0.8,
+   "riparian": 0.6,
+   "conifer_forest": 0.3,
+   "grassland": 0.2
+  },
+  "floor": 1.2,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 1.4,
+  "shade": 0.1,
+  "disturbed": 0.2
+ },
+ "relations": {
+  "eaten_by": [],
+  "cover_for": []
+ },
+ "trunk": {
+  "length_ratio": 0.8,
+  "radius_ratio": 0.012,
+  "taper": 0.8,
+  "flare": 1.15,
+  "bole_ratio": 0.06,
+  "base_size": 0.05,
+  "curve_deg": 10,
+  "curve_var_deg": 14,
+  "segments": 3,
+  "lean_deg": 6,
+  "stems": [
+   8,
+   16
+  ],
+  "stem_spread_deg": 54,
+  "split_prob": 0.0,
+  "split_count": 2,
+  "split_angle_deg": 20,
+  "sinuous_deg": 4,
+  "bark_rgb": [
+   110,
+   82,
+   70
+  ],
+  "bark_pattern": "shreddy",
+  "twig_rgb": [
+   150,
+   130,
+   108
+  ],
+  "bark": {
+   "tile_m": [
+    0.06,
+    0.2
+   ],
+   "contrast": 0.45,
+   "lichen": 0.1,
+   "relief": 0.3
+  }
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "envelope": {
+   "profile": [
+    [
+     0.0,
+     0.9
+    ],
+    [
+     0.25,
+     1.1
+    ],
+    [
+     0.5,
+     1.15
+    ],
+    [
+     0.75,
+     1.0
+    ],
+    [
+     0.9,
+     0.7
+    ],
+    [
+     1.0,
+     0.3
+    ]
+   ],
+   "lobes": 6,
+   "lobe_depth": 0.12,
+   "asymmetry": 0.15,
+   "fill": 0.65,
+   "edge": 1.05
+  }
+ },
+ "levels": [
+  {
+   "count": 5,
+   "start": 0.08,
+   "down_angle_deg": 58,
+   "down_angle_tip_deg": 45,
+   "down_angle_var_deg": 14,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.55,
+   "length_var": 0.3,
+   "curve_deg": 4,
+   "curve_var_deg": 10,
+   "zigzag_deg": 10,
+   "tropism": 0.02,
+   "taper": 0.9,
+   "radius_ratio": 0.6,
+   "segments": 2,
+   "droop_deg": 4
+  },
+  {
+   "count": 4,
+   "start": 0.2,
+   "down_angle_deg": 55,
+   "down_angle_var_deg": 14,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.4,
+   "length_var": 0.3,
+   "curve_deg": 0,
+   "curve_var_deg": 10,
+   "zigzag_deg": 14,
+   "tropism": 0.0,
+   "taper": 1.0,
+   "radius_ratio": 0.5,
+   "segments": 1
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.01,
+  "leaf_shape": "lanceolate",
+  "cluster_m": 0.26,
+  "density": 16,
+  "cards_per_m2": 5,
+  "start": 0.05,
+  "parent_start": 0.15,
+  "orientation": "outward",
+  "roll_deg": 50,
+  "colors": {
+   "winter": [
+    70,
+    86,
+    58
+   ],
+   "spring": [
+    82,
+    102,
+    64
+   ],
+   "summer": [
+    74,
+    94,
+    60
+   ],
+   "fall": [
+    76,
+    90,
+    58
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "leaf_on_by_month": [
+   0.0,
+   0.05,
+   0.5,
+   0.95,
+   1.0,
+   1.0,
+   0.9,
+   0.6,
+   0.45,
+   0.35,
+   0.15,
+   0.0
+  ],
+  "clumps": {
+   "radius_m": 0.18,
+   "cards_per_clump": 4,
+   "shell": 0.1,
+   "flatten": 0.8,
+   "tip_bias": 0.8
+  },
+  "palette": [
+   [
+    0.85,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.15,
+    [
+     1.15,
+     1.08,
+     0.85
+    ]
+   ]
+  ],
+  "winter_twigs": 0.5,
+  "ao_min": 0.72,
+  "color_var": [
+   0.1,
+   0.06
+  ],
+  "leaf_on_var": 0.6,
+  "flowers": {
+   "season": "summer",
+   "months": [
+    7,
+    8
+   ],
+   "form": "bud",
+   "rgb": [
+    204,
+    72,
+    140
+   ],
+   "size_m": 0.012,
+   "density": 0.6,
+   "before_leaves": false
+  },
+  "berries": null
+ },
+ "deadwood": {
+  "fraction": 0.08,
+  "where": "inner",
+  "levels": [
+   0,
+   1
+  ],
+  "shorten": 0.7,
+  "rgb": [
+   142,
+   134,
+   124
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "length": 0.6,
+  "down_deg": 50,
+  "down_var_deg": 16,
+  "curve_var_deg": 14,
+  "segments": 1,
+  "radius_m": 0.004,
+  "taper": 0.6,
+  "zigzag_deg": 18,
+  "fan_deg": 55,
+  "jitter": 0.2
+ },
+ "lod": {
+  "near_tris_budget": 950,
+  "near_sides": [
+   3,
+   3,
+   0
+  ],
+  "mid_blobs": 3,
+  "mid_branches": 0,
+  "mid_sides": [
+   0,
+   0
+  ],
+  "mid_cards": 20
+ },
+ "targets": {
+  "crown_width_ratio": 2.2,
+  "crown_base_ratio": 0.02,
+  "porosity": 0.15,
+  "foliage_rg": 0.61,
+  "foliage_bg": 0.4,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a dense, dark green, low mat much wider than tall, rose-purple with flowers at the stem tips in midsummer"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "1",
+  "card": "library/plant_cards/phyllodoce_breweri.json",
+  "card_sha256": "ba250a5c702ecec5",
+  "template": "ribes_roezlii",
+  "template_common": "Sierra gooseberry",
+  "height_scale": 0.2
+ },
+ "notes": "Called purple mountain heath by Calscape and Brewer's mountain heather by others; 'red mountain heather' is the common Sierra guidebook name. The gooseberry template is only a stand-in for a low, many-stemmed woody shrub; the card makes it a much lower, denser, evergreen mat of tiny linear leaves (6-12 mm) and turns the template's berries off. 'lanceolate' at 1 cm is the nearest leaf shape; the true look is a bottle-brush of needle-like leaves on each stem, which needs a needle card the broadleaf path does not use. It grows in snow-protected spots and wet ground: the species mix should favour lake shores, boulder lees and late-snow hollows. No wildlife forage use was read; it is little eaten. The Jepson eFlora page could not be read (it asked for a human check); elevations are the drafter's knowledge.",
+ "sources": [
+  "https://calscape.org/Phyllodoce-breweri-()"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

@@ -79,8 +79,9 @@ def get_json_cached(url: str, params, cache: Path, *, force=False, source: str |
         return json.loads(cache.read_text())
     data = get(url, params, timeout=timeout).json()
     cache.parent.mkdir(parents=True, exist_ok=True)
-    tmp = cache.with_suffix(cache.suffix + ".part")
+    import os
+    tmp = cache.with_suffix(cache.suffix + f".{os.getpid()}.part")   # per process: two builds may ask the same shared query
     tmp.write_text(json.dumps(data))
-    tmp.rename(cache)
+    os.replace(tmp, cache)
     runlog.fetched(source or url, str(cache), cached=False)
     return data

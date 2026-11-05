@@ -1,0 +1,198 @@
+{
+ "id": "pinus_jeffreyi",
+ "scientific": "Pinus jeffreyi",
+ "common": "Jeffrey pine",
+ "aliases": [
+  "jeffrey_pine"
+ ],
+ "family": "Pinaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "pinus_ponderosa",
+ "height_m": [
+  24,
+  40
+ ],
+ "stature": {
+  "typical_m": 30,
+  "tall_m": 50,
+  "record_m": 63.1,
+  "source": "typical and tall: the Gymnosperm Database 24-61 m, narrowed by the drafter for granite sites; record: 63.09 m, a now-dead tree at Morris Meadows, Trinity Alps; the current champion 56.08 m; Yosemite's 'Smoky Jack' on the Tioga Road was 56.7 m (Gymnosperm Database); read 2026-11-04"
+ },
+ "variants_height_m": {
+  "pole": [
+   8,
+   13
+  ],
+  "old-growth": [
+   34,
+   48
+  ]
+ },
+ "crown": {
+  "shape": "tapered_cylindrical",
+  "profile": [
+   [
+    0.1,
+    0.2
+   ],
+   [
+    0.25,
+    0.2
+   ],
+   [
+    0.4,
+    0.21
+   ],
+   [
+    0.55,
+    0.22
+   ],
+   [
+    0.68,
+    0.21
+   ],
+   [
+    0.8,
+    0.19
+   ],
+   [
+    0.92,
+    0.15
+   ],
+   [
+    1.0,
+    0.06
+   ]
+  ],
+  "lobes": 3,
+  "lobe_depth": 0.14,
+  "asymmetry": 0.15,
+  "fill": 0.15,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    80,
+    86,
+    74
+   ],
+   "spring": [
+    96,
+    104,
+    82
+   ],
+   "summer": [
+    86,
+    92,
+    78
+   ],
+   "fall": [
+    88,
+    90,
+    74
+   ]
+  },
+  "leaf_size_m": 0.22
+ },
+ "trunk": {
+  "bark_rgb": [
+   174,
+   114,
+   100
+  ],
+  "bark_pattern": "plates"
+ },
+ "targets": {
+  "crown_width_ratio": 0.45,
+  "crown_base_ratio": 0.4,
+  "porosity": 0.35,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: like ponderosa but a little broader and more irregular on granite; crown grey-blue-green, bark pinker"
+ },
+ "variant_patches": {
+  "pole": {
+   "set": {
+    "trunk": {
+     "bark_rgb": [
+      100,
+      80,
+      72
+     ]
+    }
+   }
+  }
+ },
+ "description": "A big three-needled pine, 24-45 m here, much like ponderosa but with greyer blue-green needles, large heavy cones whose prickles turn inward, and pinkish-cinnamon bark plates that smell of vanilla or lemon in the sun. It replaces ponderosa above about 1500 m on the dry, rocky granite of the upper west slope and east of the crest, standing alone on domes and ridges where its crowns grow broad and twisted.",
+ "season_notes": {
+  "winter": "Evergreen; on exposed domes old trees are bent and broken by the wind and snow.",
+  "spring": "Pollen in June; the new candles are pale and silvery.",
+  "summer": "Second-year cones swell, purple-green, 15-30 cm long.",
+  "fall": "The cones open and drop large seeds in September; the fallen cones, prickles turned in, are gentle to pick up."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "mixed_forest": 0.4,
+   "barren": 0.35,
+   "chaparral": 0.3
+  },
+  "floor": 0.9,
+  "mid": 1.0,
+  "steep": 1.0,
+  "north": 0.75,
+  "shade": 0.15,
+  "disturbed": 0.7
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "sciurus_griseus",
+    "part": "seeds",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "otospermophilus_beecheyi",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "ursus_americanus",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "cyanocitta_stelleri"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1500,
+   3000
+  ],
+  "where": "dry granite slopes, domes and ridges of the upper montane: Olmsted Point, the Tioga Road, Sentinel Dome; whole forests east of the crest"
+ },
+ "stand_in": "pinus_ponderosa",
+ "notes": "Hard to tell from ponderosa at a distance; what the game can show is the bluer, greyer crown, the pinker bark, and the open, wind-shaped trees on bare granite (the wind-bent Jeffrey on Sentinel Dome, photographed by Ansel Adams and long dead, is the archetype). Its cones are larger than ponderosa's and heavy, which the generator does not draw. The bark's vanilla smell could be a field-guide line. Bears eating the large seeds is the drafter's knowledge; squirrels, chipmunks, nutcrackers and jays all harvest the seed. Elevations in the central Sierra are the drafter's knowledge; the Gymnosperm Database gives up to 3100 m typically and a 3858 m record for California.",
+ "sources": [
+  "https://www.conifers.org/pi/Pinus_jeffreyi.php"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

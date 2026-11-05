@@ -1,0 +1,212 @@
+{
+ "id": "sequoiadendron_giganteum",
+ "scientific": "Sequoiadendron giganteum",
+ "common": "giant sequoia",
+ "aliases": [
+  "giant_sequoia",
+  "big_tree",
+  "sierra_redwood"
+ ],
+ "family": "Cupressaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "calocedrus_decurrens",
+ "height_m": [
+  50,
+  80
+ ],
+ "stature": {
+  "typical_m": 70,
+  "tall_m": 90,
+  "record_m": 94.9,
+  "source": "typical: the drafter's estimate for grove trees (the Gymnosperm Database: trees to about 90 m); record: 94.9 m, Redwood Mountain Grove, measured 1998 by Michael Taylor (Gymnosperm Database); read 2026-11-04"
+ },
+ "variants_height_m": {
+  "young": [
+   5,
+   25
+  ],
+  "old-growth": [
+   70,
+   90
+  ]
+ },
+ "crown": {
+  "shape": "conical",
+  "profile": [
+   [
+    0.3,
+    0.13
+   ],
+   [
+    0.45,
+    0.15
+   ],
+   [
+    0.6,
+    0.15
+   ],
+   [
+    0.75,
+    0.13
+   ],
+   [
+    0.88,
+    0.09
+   ],
+   [
+    0.96,
+    0.05
+   ],
+   [
+    1.0,
+    0.02
+   ]
+  ],
+  "lobes": 5,
+  "lobe_depth": 0.15,
+  "asymmetry": 0.12,
+  "fill": 0.3,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    88,
+    98,
+    78
+   ],
+   "spring": [
+    102,
+    114,
+    86
+   ],
+   "summer": [
+    94,
+    106,
+    82
+   ],
+   "fall": [
+    92,
+    102,
+    80
+   ]
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   178,
+   92,
+   64
+  ],
+  "bark_pattern": "fibrous",
+  "radius_ratio": 0.04,
+  "flare": 2.0,
+  "base_size": 0.3,
+  "bole_ratio": 0.28
+ },
+ "targets": {
+  "crown_width_ratio": 0.3,
+  "crown_base_ratio": 0.35,
+  "porosity": 0.25,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a mature tree is a narrow, dense cone high on an immense, flared, cinnamon-red column; old trees rounded and irregular on top, with a few huge limbs"
+ },
+ "variant_patches": {
+  "old-growth": {
+   "trunk_radius": 1.6,
+   "set": {
+    "trunk": {
+     "base_size": 0.45,
+     "bole_ratio": 0.45,
+     "flare": 2.4
+    },
+    "crown": {
+     "shape": "cylindrical",
+     "envelope": {
+      "profile": [
+       [
+        0.5,
+        0.11
+       ],
+       [
+        0.62,
+        0.16
+       ],
+       [
+        0.74,
+        0.18
+       ],
+       [
+        0.85,
+        0.17
+       ],
+       [
+        0.94,
+        0.13
+       ],
+       [
+        1.0,
+        0.06
+       ]
+      ],
+      "lobes": 5,
+      "lobe_depth": 0.32,
+      "asymmetry": 0.25
+     }
+    }
+   },
+   "note": "a monarch of two to three thousand years: a fire-scarred, buttressed trunk of soft cinnamon bark rising bare for half its height, then a few huge, crooked limbs and a rounded, knobbly crown, often with a dead spike from lightning"
+  }
+ },
+ "description": "The largest tree on earth by volume: a column of soft, fibrous, cinnamon-red bark up to 60 cm thick, flaring at the base, rising bare to a narrow crown of blue-green, scaly, cord-like sprays, 50-90 m tall. It grows only in a few groves on moist ground of the west slope, here about 1400-2000 m in the Tuolumne, Merced and Mariposa groves, and young trees are neat spires, while the oldest, thousands of years old, carry rounded, battered crowns above fire-blackened trunks.",
+ "season_notes": {
+  "winter": "Evergreen; snow sits on the huge limbs and the red trunks glow against the white.",
+  "spring": "Tiny pollen cones shed in late winter and spring; small green egg-shaped cones on the twigs.",
+  "summer": "Green cones hang on the tree for years, each holding seed; Douglas squirrels cut them for their fleshy scales.",
+  "fall": "Fire or the heat of a dry fall opens some cones and showers seed on bare ground, the only place it sprouts."
+ },
+ "habitat": {
+  "classes": {
+   "mixed_forest": 1.0,
+   "conifer_forest": 0.5,
+   "riparian": 0.1
+  },
+  "floor": 1.6,
+  "mid": 0.8,
+  "steep": 0.4,
+  "north": 1.2,
+  "shade": 0.35,
+  "disturbed": 0.5
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": [
+   "ursus_americanus",
+   "cyanocitta_stelleri"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1400,
+   2000
+  ],
+  "where": "only in groves: the Tuolumne and Merced groves near Crane Flat and the Mariposa Grove above Wawona"
+ },
+ "stand_in": "calocedrus_decurrens",
+ "notes": "Like incense cedar (the template) in its family, scale-like foliage and fibrous red bark, but on a vastly larger scale: the trunk must be far thicker and more flared (radius ratio and flare raised here), the bark brighter cinnamon-red, the crown higher and narrower on mature trees and rounded on old ones (the old-growth class's own crown and trunk). Its foliage is awl-like scales on cord-like sprays, greyer than the cedar's flat sprays. It must be placed only in the named groves: the habitat weights alone would spread it through the mixed conifer forest, which is wrong; the tile pipeline needs a grove mask. Cones 4-9 cm, green for years (Gymnosperm Database). Seedlings are browsed by deer (the drafter's knowledge); Douglas squirrel and the long-horned beetle that open the cones are not in the library. Black bears den in burned-out hollows of the trunks (the drafter's knowledge). The Gymnosperm Database gives 900-2700 m for the groves range-wide.",
+ "sources": [
+  "https://www.conifers.org/cu/Sequoiadendron.php"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ]
+}

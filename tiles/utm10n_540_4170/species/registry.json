@@ -1,0 +1,1762 @@
+{
+ "tile": "utm10n_540_4170",
+ "at": "2026-11-05T04:19:18Z",
+ "levels": {
+  "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
+  "1": "stand-in look: another species' model with its own size and colour",
+  "2": "its own model: own crown, branching and foliage (plants) or own mesh (animals), not animated",
+  "3": "rigged and animated (animals); grown: three or more age classes and four seasons' colours (plants)",
+  "4": "full: behaviour, sound and seasonal states (animals); the ecology, habitat and relations (plants)"
+ },
+ "summary": {
+  "by_level": {
+   "0": {
+    "plants": 1,
+    "animals": 0
+   },
+   "1": {
+    "plants": 0,
+    "animals": 0
+   },
+   "2": {
+    "plants": 15,
+    "animals": 0
+   },
+   "3": {
+    "plants": 11,
+    "animals": 0
+   },
+   "4": {
+    "plants": 59,
+    "animals": 0
+   }
+  },
+  "plants": 86,
+  "animals_present": 0,
+  "animals_queued": 66,
+  "meshy_credits_queued": 1980,
+  "cards_queued": 1,
+  "stand_ins": {
+   "pinus_muricata": "pinus_ponderosa"
+  }
+ },
+ "plants": [
+  {
+   "id": "quercus_agrifolia",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "coast live oak",
+   "drawn_as": "quercus_agrifolia",
+   "share": 0.7453,
+   "why_needed": [
+    "named by BPS 951 California Coastal Live Oak Woodland and Savanna (19416 cells)",
+    "rule coast_live_oak",
+    "rule coastal_scrub"
+   ]
+  },
+  {
+   "id": "baccharis_pilularis",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "coyote brush",
+   "drawn_as": "baccharis_pilularis",
+   "share": 0.2215,
+   "why_needed": [
+    "rule coast_live_oak",
+    "named by BPS 954 Northern California Coastal Scrub (17360 cells)",
+    "rule coastal_scrub"
+   ]
+  },
+  {
+   "id": "toxicodendron_diversilobum",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "Pacific poison oak",
+   "drawn_as": "toxicodendron_diversilobum",
+   "share": 0.1225,
+   "why_needed": [
+    "rule coast_live_oak",
+    "named by BPS 954 Northern California Coastal Scrub (17360 cells)",
+    "rule coastal_scrub"
+   ]
+  },
+  {
+   "id": "artemisia_californica",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "California sagebrush",
+   "drawn_as": "artemisia_californica",
+   "share": 0.1144,
+   "why_needed": [
+    "named by BPS 954 Northern California Coastal Scrub (17360 cells)",
+    "rule coastal_scrub",
+    "named by EVT 7128 Northern California Coastal Scrub (2322 cells)"
+   ]
+  },
+  {
+   "id": "diplacus_aurantiacus",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "sticky monkeyflower",
+   "drawn_as": "diplacus_aurantiacus",
+   "share": 0.09,
+   "why_needed": [
+    "named by BPS 954 Northern California Coastal Scrub (17360 cells)",
+    "rule coastal_scrub",
+    "rule dry_mesic_chaparral"
+   ]
+  },
+  {
+   "id": "frangula_californica",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "California coffeeberry",
+   "drawn_as": "frangula_californica",
+   "share": 0.0753,
+   "why_needed": [
+    "rule coast_live_oak",
+    "named by BPS 954 Northern California Coastal Scrub (17360 cells)",
+    "rule coastal_scrub"
+   ]
+  },
+  {
+   "id": "heteromeles_arbutifolia",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "toyon",
+   "drawn_as": "heteromeles_arbutifolia",
+   "share": 0.075,
+   "why_needed": [
+    "rule coast_live_oak",
+    "rule coastal_scrub",
+    "rule dry_mesic_chaparral"
+   ]
+  },
+  {
+   "id": "dipterostemon_capitatus",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "blue dicks",
+   "drawn_as": "dipterostemon_capitatus",
+   "share": 0.0721,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "arctostaphylos_manzanita",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "common manzanita",
+   "drawn_as": "arctostaphylos_manzanita",
+   "share": 0.0682,
+   "why_needed": [
+    "rule dry_mesic_chaparral",
+    "rule mesic_chaparral",
+    "rule mixed_oak_savanna"
+   ]
+  },
+  {
+   "id": "erodium_cicutarium",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "redstem filaree",
+   "drawn_as": "erodium_cicutarium",
+   "share": 0.0674,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "lupinus_bicolor",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "miniature lupine",
+   "drawn_as": "lupinus_bicolor",
+   "share": 0.0671,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "eschscholzia_californica",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "California poppy",
+   "drawn_as": "eschscholzia_californica",
+   "share": 0.0652,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "ceanothus_cuneatus",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "buckbrush",
+   "drawn_as": "ceanothus_cuneatus",
+   "share": 0.0585,
+   "why_needed": [
+    "named by BPS 946 Northern and Central California Dry-Mesic Chaparral (8150 cells)",
+    "rule dry_mesic_chaparral",
+    "named by BPS 943 California Mesic Chaparral (5691 cells)"
+   ]
+  },
+  {
+   "id": "stipa_pulchra",
+   "kind": "grass",
+   "fidelity": 4,
+   "common": "purple needlegrass",
+   "drawn_as": "stipa_pulchra",
+   "share": 0.0566,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "madia_elegans",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "common madia",
+   "drawn_as": "madia_elegans",
+   "share": 0.0557,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "lupinus_albifrons",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "silver bush lupine",
+   "drawn_as": "lupinus_albifrons",
+   "share": 0.0512,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "quercus_lobata",
+   "kind": "tree",
+   "fidelity": 4,
+   "common": "valley oak",
+   "drawn_as": "quercus_lobata",
+   "share": 0.0495,
+   "why_needed": [
+    "rule coast_live_oak",
+    "rule mixed_oak_savanna",
+    "rule riparian"
+   ]
+  },
+  {
+   "id": "bromus_hordeaceus",
+   "kind": "grass",
+   "fidelity": 4,
+   "common": "soft chess",
+   "drawn_as": "bromus_hordeaceus",
+   "share": 0.0493,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "plagiobothrys_nothofulvus",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "rusty popcorn flower",
+   "drawn_as": "plagiobothrys_nothofulvus",
+   "share": 0.0489,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "chlorogalum_pomeridianum",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "soap plant",
+   "drawn_as": "chlorogalum_pomeridianum",
+   "share": 0.048,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "elymus_glaucus",
+   "kind": "grass",
+   "fidelity": 4,
+   "common": "blue wildrye",
+   "drawn_as": "elymus_glaucus",
+   "share": 0.0474,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "avena_fatua",
+   "kind": "grass",
+   "fidelity": 4,
+   "common": "wild oat",
+   "drawn_as": "avena_fatua",
+   "share": 0.047,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "amsinckia_menziesii",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "common fiddleneck",
+   "drawn_as": "amsinckia_menziesii",
+   "share": 0.0448,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "bromus_diandrus",
+   "kind": "grass",
+   "fidelity": 4,
+   "common": "ripgut brome",
+   "drawn_as": "bromus_diandrus",
+   "share": 0.0443,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "aesculus_californica",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "California buckeye",
+   "drawn_as": "aesculus_californica",
+   "share": 0.0396,
+   "why_needed": [
+    "rule coast_live_oak",
+    "rule coastal_scrub",
+    "rule dry_mesic_chaparral"
+   ]
+  },
+  {
+   "id": "quercus_chrysolepis",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "canyon live oak",
+   "drawn_as": "quercus_chrysolepis",
+   "share": 0.0385,
+   "why_needed": [
+    "rule dry_mesic_chaparral",
+    "rule mesic_chaparral",
+    "named by BPS 928 Central and Southern California Mixed Evergreen Woodland (2276 cells)"
+   ]
+  },
+  {
+   "id": "achillea_millefolium",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "yarrow",
+   "drawn_as": "achillea_millefolium",
+   "share": 0.0378,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "umbellularia_californica",
+   "kind": "tree",
+   "fidelity": 4,
+   "common": "California bay laurel",
+   "drawn_as": "umbellularia_californica",
+   "share": 0.0347,
+   "why_needed": [
+    "rule coast_live_oak",
+    "rule coastal_scrub",
+    "rule mesic_chaparral"
+   ]
+  },
+  {
+   "id": "lupinus_arboreus",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "yellow bush lupine",
+   "drawn_as": "lupinus_arboreus",
+   "share": 0.0344,
+   "why_needed": [
+    "named by BPS 954 Northern California Coastal Scrub (17360 cells)",
+    "rule coastal_scrub",
+    "named by EVT 7128 Northern California Coastal Scrub (2322 cells)"
+   ]
+  },
+  {
+   "id": "danthonia_californica",
+   "kind": "grass",
+   "fidelity": 4,
+   "common": "California oatgrass",
+   "drawn_as": "danthonia_californica",
+   "share": 0.0331,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "trifolium_willdenovii",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "tomcat clover",
+   "drawn_as": "trifolium_willdenovii",
+   "share": 0.0325,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "vicia_villosa",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "hairy vetch",
+   "drawn_as": "vicia_villosa",
+   "share": 0.0316,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "hordeum_murinum",
+   "kind": "grass",
+   "fidelity": 4,
+   "common": "hare barley",
+   "drawn_as": "hordeum_murinum",
+   "share": 0.0299,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "claytonia_perfoliata",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "miner's lettuce",
+   "drawn_as": "claytonia_perfoliata",
+   "share": 0.0284,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "adenostoma_fasciculatum",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "chamise",
+   "drawn_as": "adenostoma_fasciculatum",
+   "share": 0.0279,
+   "why_needed": [
+    "named by BPS 946 Northern and Central California Dry-Mesic Chaparral (8150 cells)",
+    "rule dry_mesic_chaparral",
+    "named by BPS 943 California Mesic Chaparral (5691 cells)"
+   ]
+  },
+  {
+   "id": "cercocarpus_betuloides",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "birch-leaf mountain mahogany",
+   "drawn_as": "cercocarpus_betuloides",
+   "share": 0.0276,
+   "why_needed": [
+    "rule dry_mesic_chaparral",
+    "rule mesic_chaparral",
+    "rule mixed_oak_savanna"
+   ]
+  },
+  {
+   "id": "wyethia_helenioides",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "gray mule's ears",
+   "drawn_as": "wyethia_helenioides",
+   "share": 0.027,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "sequoia_sempervirens",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "coast redwood",
+   "drawn_as": "sequoia_sempervirens",
+   "share": 0.024,
+   "why_needed": [
+    "named by EVT 7015 California Coastal Redwood Forest (843 cells)",
+    "rule redwood"
+   ]
+  },
+  {
+   "id": "symphoricarpos_albus",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "common snowberry",
+   "drawn_as": "symphoricarpos_albus",
+   "share": 0.0191,
+   "why_needed": [
+    "rule coast_live_oak",
+    "rule mixed_oak_savanna",
+    "rule mixed_evergreen"
+   ]
+  },
+  {
+   "id": "sambucus_nigra_caerulea",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "blue elderberry",
+   "drawn_as": "sambucus_nigra_caerulea",
+   "share": 0.0178,
+   "why_needed": [
+    "rule coast_live_oak",
+    "rule coastal_scrub",
+    "rule montane_riparian"
+   ]
+  },
+  {
+   "id": "alnus_rhombifolia",
+   "kind": "tree",
+   "fidelity": 4,
+   "common": "white alder",
+   "drawn_as": "alnus_rhombifolia",
+   "share": 0.0164,
+   "why_needed": [
+    "rule montane_riparian",
+    "rule redwood",
+    "rule riparian"
+   ]
+  },
+  {
+   "id": "notholithocarpus_densiflorus",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "tanoak",
+   "drawn_as": "notholithocarpus_densiflorus",
+   "share": 0.0135,
+   "why_needed": [
+    "named by BPS 928 Central and Southern California Mixed Evergreen Woodland (2276 cells)",
+    "rule redwood",
+    "named by EVT 7043 Mediterranean California Mixed Evergreen Forest (330 cells)"
+   ]
+  },
+  {
+   "id": "vaccinium_ovatum",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "evergreen huckleberry",
+   "drawn_as": "vaccinium_ovatum",
+   "share": 0.0122,
+   "why_needed": [
+    "rule coast_live_oak",
+    "rule redwood",
+    "rule closed_cone"
+   ]
+  },
+  {
+   "id": "ribes_malvaceum",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "chaparral currant",
+   "drawn_as": "ribes_malvaceum",
+   "share": 0.0114,
+   "why_needed": [
+    "rule dry_mesic_chaparral",
+    "rule mesic_chaparral",
+    "rule mixed_oak_savanna"
+   ]
+  },
+  {
+   "id": "salix_lasiolepis",
+   "kind": "tree",
+   "fidelity": 4,
+   "common": "arroyo willow",
+   "drawn_as": "salix_lasiolepis",
+   "share": 0.0109,
+   "why_needed": [
+    "rule montane_riparian",
+    "rule riparian",
+    "rule wet_meadow_marsh"
+   ]
+  },
+  {
+   "id": "arbutus_menziesii",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "Pacific madrone",
+   "drawn_as": "arbutus_menziesii",
+   "share": 0.0082,
+   "why_needed": [
+    "rule coast_live_oak",
+    "rule mesic_chaparral",
+    "named by BPS 928 Central and Southern California Mixed Evergreen Woodland (2276 cells)"
+   ]
+  },
+  {
+   "id": "ribes_roezlii",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "Sierra gooseberry",
+   "drawn_as": "ribes_roezlii",
+   "share": 0.0074,
+   "why_needed": [
+    "rule dry_mesic_chaparral",
+    "rule mesic_chaparral",
+    "rule mixed_oak_savanna"
+   ]
+  },
+  {
+   "id": "artemisia_douglasiana",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "California mugwort",
+   "drawn_as": "artemisia_douglasiana",
+   "share": 0.007,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "cercis_occidentalis",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "western redbud",
+   "drawn_as": "cercis_occidentalis",
+   "share": 0.0063,
+   "why_needed": [
+    "rule dry_mesic_chaparral",
+    "rule mesic_chaparral",
+    "rule montane_woodland_chaparral"
+   ]
+  },
+  {
+   "id": "erythranthe_guttata",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "seep monkeyflower",
+   "drawn_as": "erythranthe_guttata",
+   "share": 0.0062,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "acer_macrophyllum",
+   "kind": "tree",
+   "fidelity": 4,
+   "common": "big-leaf maple",
+   "drawn_as": "acer_macrophyllum",
+   "share": 0.0052,
+   "why_needed": [
+    "rule montane_riparian",
+    "rule redwood",
+    "rule riparian"
+   ]
+  },
+  {
+   "id": "populus_fremontii",
+   "kind": "tree",
+   "fidelity": 4,
+   "common": "Fremont cottonwood",
+   "drawn_as": "populus_fremontii",
+   "share": 0.0037,
+   "why_needed": [
+    "rule montane_riparian",
+    "rule riparian"
+   ]
+  },
+  {
+   "id": "rosa_californica",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "California wild rose",
+   "drawn_as": "rosa_californica",
+   "share": 0.0028,
+   "why_needed": [
+    "rule mixed_oak_savanna",
+    "rule montane_riparian",
+    "rule riparian"
+   ]
+  },
+  {
+   "id": "fraxinus_latifolia",
+   "kind": "tree",
+   "fidelity": 4,
+   "common": "Oregon ash",
+   "drawn_as": "fraxinus_latifolia",
+   "share": 0.0027,
+   "why_needed": [
+    "rule montane_riparian",
+    "rule riparian"
+   ]
+  },
+  {
+   "id": "gaultheria_shallon",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "salal",
+   "drawn_as": "gaultheria_shallon",
+   "share": 0.0025,
+   "why_needed": [
+    "rule redwood",
+    "rule closed_cone"
+   ]
+  },
+  {
+   "id": "salix_lasiandra",
+   "kind": "tree",
+   "fidelity": 4,
+   "common": "Pacific willow",
+   "drawn_as": "salix_lasiandra",
+   "share": 0.0019,
+   "why_needed": [
+    "rule montane_riparian"
+   ]
+  },
+  {
+   "id": "ericameria_ericoides",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "mock heather",
+   "drawn_as": "ericameria_ericoides",
+   "share": 0.0018,
+   "why_needed": [
+    "named by EVT 9130 Mediterranean California Northern Coastal Dune (543 cells)",
+    "rule coastal_dune"
+   ]
+  },
+  {
+   "id": "pinus_radiata",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "Monterey pine",
+   "drawn_as": "pinus_radiata",
+   "share": 0.0016,
+   "why_needed": [
+    "rule coastal_dune",
+    "named by EVT 7177 California Coastal Closed-Cone Conifer Forest and Woodland (128 cells)",
+    "rule closed_cone"
+   ]
+  },
+  {
+   "id": "hesperocyparis_macrocarpa",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "Monterey cypress",
+   "drawn_as": "hesperocyparis_macrocarpa",
+   "share": 0.0015,
+   "why_needed": [
+    "rule coastal_dune",
+    "named by EVT 7177 California Coastal Closed-Cone Conifer Forest and Woodland (128 cells)",
+    "rule closed_cone"
+   ]
+  },
+  {
+   "id": "rubus_ursinus",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "California blackberry",
+   "drawn_as": "rubus_ursinus",
+   "share": 0.0014,
+   "why_needed": [
+    "rule montane_riparian",
+    "rule redwood",
+    "rule riparian"
+   ]
+  },
+  {
+   "id": "juglans_hindsii",
+   "kind": "tree",
+   "fidelity": 4,
+   "common": "northern California black walnut",
+   "drawn_as": "juglans_hindsii",
+   "share": 0.0012,
+   "why_needed": [
+    "rule montane_riparian",
+    "rule riparian",
+    "rule ruderal_forest"
+   ]
+  },
+  {
+   "id": "urtica_dioica",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "hoary nettle",
+   "drawn_as": "urtica_dioica",
+   "share": 0.0011,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "ceanothus_integerrimus",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "deerbrush",
+   "drawn_as": "ceanothus_integerrimus",
+   "share": 0.001,
+   "why_needed": [
+    "rule dry_mesic_chaparral",
+    "rule mesic_chaparral",
+    "rule mixed_evergreen"
+   ]
+  },
+  {
+   "id": "salix_laevigata",
+   "kind": "tree",
+   "fidelity": 4,
+   "common": "red willow",
+   "drawn_as": "salix_laevigata",
+   "share": 0.001,
+   "why_needed": [
+    "rule riparian"
+   ]
+  },
+  {
+   "id": "cornus_sericea",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "creek dogwood",
+   "drawn_as": "cornus_sericea",
+   "share": 0.0006,
+   "why_needed": [
+    "rule montane_riparian",
+    "rule riparian"
+   ]
+  },
+  {
+   "id": "platanus_racemosa",
+   "kind": "tree",
+   "fidelity": 4,
+   "common": "California sycamore",
+   "drawn_as": "platanus_racemosa",
+   "share": 0.0006,
+   "why_needed": [
+    "rule riparian"
+   ]
+  },
+  {
+   "id": "calycanthus_occidentalis",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "western spicebush",
+   "drawn_as": "calycanthus_occidentalis",
+   "share": 0.0003,
+   "why_needed": [
+    "rule montane_riparian",
+    "rule riparian"
+   ]
+  },
+  {
+   "id": "lemna_minor",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "common duckweed",
+   "drawn_as": "lemna_minor",
+   "share": 0.0002,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "nasturtium_officinale",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "watercress",
+   "drawn_as": "nasturtium_officinale",
+   "share": 0.0002,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "quercus_kelloggii",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "California black oak",
+   "drawn_as": "quercus_kelloggii",
+   "share": 0.0001,
+   "why_needed": [
+    "rule mixed_evergreen",
+    "rule montane_woodland_chaparral",
+    "rule ruderal_forest"
+   ]
+  },
+  {
+   "id": "salix_exigua",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "sandbar willow",
+   "drawn_as": "salix_exigua",
+   "share": 0.0001,
+   "why_needed": [
+    "rule riparian"
+   ]
+  },
+  {
+   "id": "vitis_californica",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "California wild grape",
+   "drawn_as": "vitis_californica",
+   "share": 0.0001,
+   "why_needed": [
+    "rule riparian"
+   ]
+  },
+  {
+   "id": "arctostaphylos_patula",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "greenleaf manzanita",
+   "drawn_as": "arctostaphylos_patula",
+   "share": 0,
+   "why_needed": [
+    "rule mixed_evergreen",
+    "named by BPS 944 California Montane Woodland and Chaparral (587 cells)",
+    "rule montane_woodland_chaparral"
+   ]
+  },
+  {
+   "id": "arctostaphylos_viscida",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "whiteleaf manzanita",
+   "drawn_as": "arctostaphylos_viscida",
+   "share": 0,
+   "why_needed": [
+    "named by BPS 946 Northern and Central California Dry-Mesic Chaparral (8150 cells)",
+    "rule dry_mesic_chaparral",
+    "named by BPS 943 California Mesic Chaparral (5691 cells)"
+   ]
+  },
+  {
+   "id": "calocedrus_decurrens",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "incense cedar",
+   "drawn_as": "calocedrus_decurrens",
+   "share": 0,
+   "why_needed": [
+    "rule mixed_evergreen",
+    "rule montane_riparian"
+   ]
+  },
+  {
+   "id": "ceanothus_cordulatus",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "mountain whitethorn",
+   "drawn_as": "ceanothus_cordulatus",
+   "share": 0,
+   "why_needed": [
+    "rule mixed_evergreen",
+    "named by BPS 944 California Montane Woodland and Chaparral (587 cells)",
+    "rule montane_woodland_chaparral"
+   ]
+  },
+  {
+   "id": "cephalanthus_occidentalis",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "buttonbush",
+   "drawn_as": "cephalanthus_occidentalis",
+   "share": 0,
+   "why_needed": [
+    "rule riparian"
+   ]
+  },
+  {
+   "id": "chamaebatia_foliolosa",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "mountain misery",
+   "drawn_as": "chamaebatia_foliolosa",
+   "share": 0,
+   "why_needed": [
+    "rule mixed_evergreen"
+   ]
+  },
+  {
+   "id": "chrysolepis_sempervirens",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "bush chinquapin",
+   "drawn_as": "chrysolepis_sempervirens",
+   "share": 0,
+   "why_needed": [
+    "rule mixed_evergreen",
+    "named by BPS 944 California Montane Woodland and Chaparral (587 cells)",
+    "rule montane_woodland_chaparral"
+   ]
+  },
+  {
+   "id": "pinus_muricata",
+   "kind": "tree",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": "pinus_ponderosa",
+   "share": 0,
+   "why_needed": [
+    "named by EVT 7177 California Coastal Closed-Cone Conifer Forest and Woodland (128 cells)"
+   ],
+   "stand_in": "pinus_ponderosa"
+  },
+  {
+   "id": "pinus_ponderosa",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "ponderosa pine",
+   "drawn_as": "pinus_ponderosa",
+   "share": 0,
+   "why_needed": [
+    "rule mixed_evergreen",
+    "rule montane_riparian",
+    "rule montane_woodland_chaparral"
+   ]
+  },
+  {
+   "id": "pinus_sabiniana",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "gray pine",
+   "drawn_as": "pinus_sabiniana",
+   "share": 0,
+   "why_needed": [
+    "rule dry_mesic_chaparral",
+    "rule mesic_chaparral",
+    "rule mixed_oak_savanna"
+   ]
+  },
+  {
+   "id": "pseudotsuga_menziesii",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "Douglas-fir",
+   "drawn_as": "pseudotsuga_menziesii",
+   "share": 0,
+   "why_needed": [
+    "named by BPS 928 Central and Southern California Mixed Evergreen Woodland (2276 cells)",
+    "rule mixed_evergreen",
+    "rule montane_riparian"
+   ]
+  },
+  {
+   "id": "quercus_douglasii",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "blue oak",
+   "drawn_as": "quercus_douglasii",
+   "share": 0,
+   "why_needed": [
+    "rule mixed_oak_savanna",
+    "rule riparian",
+    "rule grassland_savanna"
+   ]
+  },
+  {
+   "id": "quercus_vacciniifolia",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "huckleberry oak",
+   "drawn_as": "quercus_vacciniifolia",
+   "share": 0,
+   "why_needed": [
+    "named by BPS 944 California Montane Woodland and Chaparral (587 cells)",
+    "rule montane_woodland_chaparral"
+   ]
+  },
+  {
+   "id": "quercus_wislizeni",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "interior live oak",
+   "drawn_as": "quercus_wislizeni",
+   "share": 0,
+   "why_needed": [
+    "rule dry_mesic_chaparral",
+    "rule mesic_chaparral",
+    "rule mixed_oak_savanna"
+   ]
+  }
+ ],
+ "animals": [],
+ "queue": {
+  "cards": [
+   {
+    "id": "pinus_muricata",
+    "kind": "tree",
+    "stand_in": "pinus_ponderosa",
+    "why": [
+     "named by EVT 7177 California Coastal Closed-Cone Conifer Forest and Woodland (128 cells)"
+    ]
+   }
+  ],
+  "meshy": [
+   {
+    "scientific": "Calypte anna",
+    "id": "calypte_anna",
+    "common": "anna's hummingbird",
+    "group": "bird",
+    "family": null,
+    "records": 31984,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Zonotrichia leucophrys",
+    "id": "zonotrichia_leucophrys",
+    "common": "white-crowned sparrow",
+    "group": "bird",
+    "family": null,
+    "records": 29314,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Melospiza melodia",
+    "id": "melospiza_melodia",
+    "common": "song sparrow",
+    "group": "bird",
+    "family": null,
+    "records": 25186,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Haemorhous mexicanus",
+    "id": "haemorhous_mexicanus",
+    "common": "house finch",
+    "group": "bird",
+    "family": null,
+    "records": 25037,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Poecile rufescens",
+    "id": "poecile_rufescens",
+    "common": "chestnut-backed chickadee",
+    "group": "bird",
+    "family": null,
+    "records": 23425,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Junco hyemalis",
+    "id": "junco_hyemalis",
+    "common": "dark-eyed junco",
+    "group": "bird",
+    "family": null,
+    "records": 20827,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Larus occidentalis",
+    "id": "larus_occidentalis",
+    "common": "western gull",
+    "group": "bird",
+    "family": null,
+    "records": 19955,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Sayornis nigricans",
+    "id": "sayornis_nigricans",
+    "common": "black phoebe",
+    "group": "bird",
+    "family": null,
+    "records": 19805,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Melozone crissalis",
+    "id": "melozone_crissalis",
+    "common": "california towhee",
+    "group": "bird",
+    "family": null,
+    "records": 18202,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Corvus brachyrhynchos",
+    "id": "corvus_brachyrhynchos",
+    "common": "american crow",
+    "group": "bird",
+    "family": null,
+    "records": 18028,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Turdus migratorius",
+    "id": "turdus_migratorius",
+    "common": "american robin",
+    "group": "bird",
+    "family": null,
+    "records": 17938,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Sitta pygmaea",
+    "id": "sitta_pygmaea",
+    "common": "pygmy nuthatch",
+    "group": "bird",
+    "family": null,
+    "records": 17427,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Setophaga coronata",
+    "id": "setophaga_coronata",
+    "common": "yellow-rumped warbler",
+    "group": "bird",
+    "family": null,
+    "records": 14288,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Anas platyrhynchos",
+    "id": "anas_platyrhynchos",
+    "common": "mallard",
+    "group": "bird",
+    "family": null,
+    "records": 13010,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Zonotrichia atricapilla",
+    "id": "zonotrichia_atricapilla",
+    "common": "golden-crowned sparrow",
+    "group": "bird",
+    "family": null,
+    "records": 12751,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Setophaga townsendi",
+    "id": "setophaga_townsendi",
+    "common": "townsend's warbler",
+    "group": "bird",
+    "family": null,
+    "records": 12651,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Phalacrocorax auritus",
+    "id": "phalacrocorax_auritus",
+    "common": "double-crested cormorant",
+    "group": "bird",
+    "family": null,
+    "records": 12628,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Zenaida macroura",
+    "id": "zenaida_macroura",
+    "common": "mourning dove",
+    "group": "bird",
+    "family": null,
+    "records": 12504,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Psaltriparus minimus",
+    "id": "psaltriparus_minimus",
+    "common": "bushtit",
+    "group": "bird",
+    "family": null,
+    "records": 12147,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Fulica americana",
+    "id": "fulica_americana",
+    "common": "american coot",
+    "group": "bird",
+    "family": null,
+    "records": 10706,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Buteo lineatus",
+    "id": "buteo_lineatus",
+    "common": "red-shouldered/broad-winged hawk",
+    "group": "bird",
+    "family": null,
+    "records": 10623,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Regulus calendula",
+    "id": "regulus_calendula",
+    "common": "ruby-crowned kinglet",
+    "group": "bird",
+    "family": null,
+    "records": 10411,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Larus californicus",
+    "id": "larus_californicus",
+    "common": "california gull",
+    "group": "bird",
+    "family": null,
+    "records": 9696,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Passerella iliaca",
+    "id": "passerella_iliaca",
+    "common": "fox sparrow",
+    "group": "bird",
+    "family": null,
+    "records": 9520,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Podilymbus podiceps",
+    "id": "podilymbus_podiceps",
+    "common": "pied-billed grebe",
+    "group": "bird",
+    "family": null,
+    "records": 9210,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Dryobates nuttallii",
+    "id": "dryobates_nuttallii",
+    "common": "nuttall's woodpecker",
+    "group": "bird",
+    "family": null,
+    "records": 8444,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Cardellina pusilla",
+    "id": "cardellina_pusilla",
+    "common": "wilson's warbler",
+    "group": "bird",
+    "family": null,
+    "records": 8309,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Euphagus cyanocephalus",
+    "id": "euphagus_cyanocephalus",
+    "common": "brewer's blackbird",
+    "group": "bird",
+    "family": null,
+    "records": 7724,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Selasphorus sasin",
+    "id": "selasphorus_sasin",
+    "common": "allen's hummingbird",
+    "group": "bird",
+    "family": null,
+    "records": 7388,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Spinus psaltria",
+    "id": "spinus_psaltria",
+    "common": "lesser goldfinch",
+    "group": "bird",
+    "family": null,
+    "records": 7381,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Oxyura jamaicensis",
+    "id": "oxyura_jamaicensis",
+    "common": "ruddy duck",
+    "group": "bird",
+    "family": null,
+    "records": 7294,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Colaptes auratus",
+    "id": "colaptes_auratus",
+    "common": "northern flicker",
+    "group": "bird",
+    "family": null,
+    "records": 7033,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Catharus guttatus",
+    "id": "catharus_guttatus",
+    "common": "hermit thrush",
+    "group": "bird",
+    "family": null,
+    "records": 6950,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Sturnus vulgaris",
+    "id": "sturnus_vulgaris",
+    "common": "european starling",
+    "group": "bird",
+    "family": null,
+    "records": 6946,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Cistothorus palustris",
+    "id": "cistothorus_palustris",
+    "common": "marsh wren",
+    "group": "bird",
+    "family": null,
+    "records": 6810,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Procyon lotor",
+    "id": "procyon_lotor",
+    "common": "raccoon",
+    "group": "mammal",
+    "family": null,
+    "records": 294,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Zalophus californianus",
+    "id": "zalophus_californianus",
+    "common": "california sea lion",
+    "group": "mammal",
+    "family": null,
+    "records": 250,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Sciurus carolinensis",
+    "id": "sciurus_carolinensis",
+    "common": "eastern gray squirrel",
+    "group": "mammal",
+    "family": null,
+    "records": 196,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Phocoena phocoena",
+    "id": "phocoena_phocoena",
+    "common": "harbor porpoise",
+    "group": "mammal",
+    "family": null,
+    "records": 164,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Megaptera novaeangliae",
+    "id": "megaptera_novaeangliae",
+    "common": "humpback whale",
+    "group": "mammal",
+    "family": null,
+    "records": 62,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Phoca vitulina",
+    "id": "phoca_vitulina",
+    "common": "harbor seal",
+    "group": "mammal",
+    "family": null,
+    "records": 57,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Mephitis mephitis",
+    "id": "mephitis_mephitis",
+    "common": "striped skunk",
+    "group": "mammal",
+    "family": null,
+    "records": 55,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Sorex vagrans",
+    "id": "sorex_vagrans",
+    "common": "vagrant shrew",
+    "group": "mammal",
+    "family": null,
+    "records": 48,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Thomomys bottae",
+    "id": "thomomys_bottae",
+    "common": "botta's pocket gopher",
+    "group": "mammal",
+    "family": null,
+    "records": 34,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Peromyscus maniculatus",
+    "id": "peromyscus_maniculatus",
+    "common": "deer mouse",
+    "group": "mammal",
+    "family": null,
+    "records": 33,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Didelphis virginiana",
+    "id": "didelphis_virginiana",
+    "common": "virginia opossum",
+    "group": "mammal",
+    "family": null,
+    "records": 33,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Mirounga angustirostris",
+    "id": "mirounga_angustirostris",
+    "common": "northern elephant seal",
+    "group": "mammal",
+    "family": null,
+    "records": 29,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Arctocephalus philippii",
+    "id": "arctocephalus_philippii",
+    "common": "juan fernandez fur seal",
+    "group": "mammal",
+    "family": null,
+    "records": 28,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Sciurus niger",
+    "id": "sciurus_niger",
+    "common": "fox squirrel",
+    "group": "mammal",
+    "family": null,
+    "records": 25,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Tursiops truncatus",
+    "id": "tursiops_truncatus",
+    "common": "common bottlenose dolphin",
+    "group": "mammal",
+    "family": null,
+    "records": 24,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Reithrodontomys megalotis",
+    "id": "reithrodontomys_megalotis",
+    "common": "western harvest mouse",
+    "group": "mammal",
+    "family": null,
+    "records": 22,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Muntiacus reevesi",
+    "id": "muntiacus_reevesi",
+    "common": "chinese muntjac",
+    "group": "mammal",
+    "family": null,
+    "records": 20,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Callorhinus ursinus",
+    "id": "callorhinus_ursinus",
+    "common": "northern fur seal",
+    "group": "mammal",
+    "family": null,
+    "records": 18,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Scapanus latimanus",
+    "id": "scapanus_latimanus",
+    "common": "broad-footed mole",
+    "group": "mammal",
+    "family": null,
+    "records": 18,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Eschrichtius robustus",
+    "id": "eschrichtius_robustus",
+    "common": "gray whale",
+    "group": "mammal",
+    "family": null,
+    "records": 16,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Mustela frenata",
+    "id": "mustela_frenata",
+    "common": "long-tailed weasel",
+    "group": "mammal",
+    "family": null,
+    "records": 16,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Eumetopias jubatus",
+    "id": "eumetopias_jubatus",
+    "common": "steller sea lion",
+    "group": "mammal",
+    "family": null,
+    "records": 13,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Lama glama",
+    "id": "lama_glama",
+    "common": "llama",
+    "group": "mammal",
+    "family": null,
+    "records": 13,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Tadarida brasiliensis",
+    "id": "tadarida_brasiliensis",
+    "common": "mexican free-tailed bat",
+    "group": "mammal",
+    "family": null,
+    "records": 12,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Pecari tajacu",
+    "id": "pecari_tajacu",
+    "common": "collared peccary",
+    "group": "mammal",
+    "family": null,
+    "records": 11,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Antilope cervicapra",
+    "id": "antilope_cervicapra",
+    "common": "blackbuck",
+    "group": "mammal",
+    "family": null,
+    "records": 11,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Sorex trowbridgii",
+    "id": "sorex_trowbridgii",
+    "common": "trowbridge's shrew",
+    "group": "mammal",
+    "family": null,
+    "records": 10,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Equus zebra",
+    "id": "equus_zebra",
+    "common": "mountain zebra",
+    "group": "mammal",
+    "family": null,
+    "records": 9,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Nasua narica",
+    "id": "nasua_narica",
+    "common": "white-nosed coati",
+    "group": "mammal",
+    "family": null,
+    "records": 8,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Enhydra lutris",
+    "id": "enhydra_lutris",
+    "common": "sea otter",
+    "group": "mammal",
+    "family": null,
+    "records": 8,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   },
+   {
+    "scientific": "Axis axis",
+    "id": "axis_axis",
+    "common": "chital",
+    "group": "mammal",
+    "family": null,
+    "records": 8,
+    "estimate_credits": 30,
+    "status": "queued (not run): needs a brief in library/animals/drafts/ and Aaron's go-ahead past the budget"
+   }
+  ]
+ }
+}

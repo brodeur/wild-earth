@@ -1,0 +1,442 @@
+{
+ "id": "quercus_agrifolia",
+ "aliases": [
+  "coast_live_oak"
+ ],
+ "scientific": "Quercus agrifolia",
+ "common": "coast live oak",
+ "form": "tree",
+ "architectural_model": "Rauh",
+ "deciduous": false,
+ "height_m": [
+  8,
+  20
+ ],
+ "stature": {
+  "typical_m": 13,
+  "tall_m": 22,
+  "record_m": 30,
+  "source": "typical and tall: FEIS 6-25 m, Wikipedia 10-25 m, lowered for the wind-exposed San Francisco hills; record: Wikipedia, the oldest trees perhaps 30 m (no measured champion read); read 2026-11-04"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    3,
+    8
+   ],
+   "trunk_radius": 0.7,
+   "crown_scale": 0.9,
+   "branches": 0.85,
+   "set": {
+    "trunk": {
+     "stems": [
+      1,
+      2
+     ]
+    }
+   },
+   "note": "a dense rounded young tree, leafy to the ground, smooth grey bark"
+  },
+  {
+   "name": "mature",
+   "weight": 0.55,
+   "seeds": 2,
+   "note": "(from the interior live oak template) the file as written"
+  },
+  {
+   "name": "veteran",
+   "weight": 0.2,
+   "height_m": [
+    14,
+    22
+   ],
+   "trunk_radius": 1.25,
+   "crown_scale": 1.08,
+   "gnarl": 1.15,
+   "deadwood": {
+    "fraction": 0.12,
+    "levels": [
+     1,
+     2
+    ],
+    "where": "inner",
+    "rgb": [
+     118,
+     112,
+     104
+    ]
+   },
+   "set": {
+    "trunk": {
+     "stems": [
+      2,
+      4
+     ]
+    },
+    "lod": {
+     "near_tris_budget": 2800
+    }
+   },
+   "note": "a huge old dome on a short massive trunk or two to four heavy stems, limbs sweeping out and down, bark deeply furrowed and nearly black"
+  }
+ ],
+ "description": "The broad evergreen oak of the coastal hills, often wider than it is tall, its limbs sweeping out low from a short trunk. Its small, stiff, cupped leaves are dark and shiny above and prickle at the edges.",
+ "season_notes": {
+  "winter": "Dark and glossy through the rains, the one green crown on many open slopes.",
+  "spring": "A flush of bright yellow-green new leaves and hanging catkins covers the old dark foliage in March and April.",
+  "summer": "The dense dome throws the deepest shade on the hills; old leaves yellow and drop.",
+  "fall": "Slender pointed acorns ripen in a single year and fall, drawing jays, squirrels and deer."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "oak_woodland": 1.0,
+   "mixed_forest": 0.6,
+   "riparian": 0.5,
+   "chaparral": 0.3,
+   "grassland": 0.15,
+   "conifer_forest": 0.1,
+   "barren": 0.0
+  },
+  "floor": 1.2,
+  "mid": 1.0,
+  "steep": 0.9,
+  "north": 1.25,
+  "shade": 0.25,
+  "disturbed": 0.6
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "aphelocoma_californica",
+    "part": "acorns",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   },
+   {
+    "animal": "melanerpes_formicivorus",
+    "part": "acorns",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   },
+   {
+    "animal": "sciurus_griseus",
+    "part": "acorns",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   },
+   {
+    "animal": "otospermophilus_beecheyi",
+    "part": "acorns",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "acorns",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   },
+   {
+    "animal": "ursus_americanus",
+    "part": "acorns",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "meleagris_gallopavo",
+    "part": "acorns",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   }
+  ],
+  "cover_for": [
+   "aphelocoma_californica",
+   "sciurus_griseus",
+   "urocyon_cinereoargenteus",
+   "callipepla_californica"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 0.38,
+  "radius_ratio": 0.05,
+  "taper": 0.6,
+  "flare": 1.35,
+  "bole_ratio": 0.3,
+  "base_size": 0.2,
+  "curve_deg": 18,
+  "curve_var_deg": 15,
+  "segments": 5,
+  "lean_deg": 8,
+  "stems": [
+   1,
+   3
+  ],
+  "stem_spread_deg": 22,
+  "split_prob": 0.5,
+  "split_count": 2,
+  "split_angle_deg": 30,
+  "bark_rgb": [
+   88,
+   84,
+   80
+  ],
+  "bark_pattern": "furrowed",
+  "twig_rgb": [
+   85,
+   80,
+   72
+  ],
+  "bark": {
+   "tile_m": [
+    0.3,
+    0.6
+   ],
+   "ridge_m": 0.03,
+   "block_m": 0.06,
+   "fissure": 0.45,
+   "contrast": 0.8,
+   "lichen": 0.5,
+   "relief": 0.8
+  }
+ },
+ "crown": {
+  "shape": "cylindrical",
+  "envelope": {
+   "profile": [
+    [
+     0.03,
+     0.55
+    ],
+    [
+     0.12,
+     0.72
+    ],
+    [
+     0.28,
+     0.82
+    ],
+    [
+     0.45,
+     0.8
+    ],
+    [
+     0.62,
+     0.7
+    ],
+    [
+     0.78,
+     0.52
+    ],
+    [
+     0.9,
+     0.32
+    ],
+    [
+     1.0,
+     0.08
+    ]
+   ],
+   "lobes": 6,
+   "lobe_depth": 0.1,
+   "asymmetry": 0.2,
+   "fill": 0.55,
+   "edge": 1.06
+  }
+ },
+ "levels": [
+  {
+   "count": 11,
+   "down_angle_deg": 70,
+   "down_angle_var_deg": 15,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 2.3,
+   "length_var": 0.2,
+   "curve_deg": 15,
+   "curve_var_deg": 15,
+   "tropism": 0.04,
+   "taper": 0.9,
+   "radius_ratio": 0.45,
+   "segments": 4,
+   "down_angle_tip_deg": 36,
+   "droop_deg": 14,
+   "zigzag_deg": 6
+  },
+  {
+   "count": 7,
+   "start": 0.15,
+   "down_angle_deg": 50,
+   "down_angle_var_deg": 15,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.5,
+   "length_var": 0.25,
+   "curve_deg": 20,
+   "curve_var_deg": 15,
+   "tropism": 0.04,
+   "taper": 1.0,
+   "radius_ratio": 0.45,
+   "segments": 2,
+   "zigzag_deg": 10
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.045,
+  "leaf_shape": "elliptic_glossy",
+  "cluster_m": 1.4,
+  "density": 20,
+  "start": 0.0,
+  "parent_start": 0.4,
+  "orientation": "outward",
+  "colors": {
+   "winter": [
+    66,
+    78,
+    54
+   ],
+   "spring": [
+    110,
+    126,
+    70
+   ],
+   "summer": [
+    70,
+    82,
+    56
+   ],
+   "fall": [
+    72,
+    82,
+    56
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "clumps": {
+   "radius_m": 1.1,
+   "cards_per_clump": 12,
+   "shell": 0.2,
+   "flatten": 0.8,
+   "tip_bias": 1.3
+  },
+  "palette": [
+   [
+    0.85,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.1,
+    [
+     1.35,
+     1.25,
+     0.7
+    ]
+   ],
+   [
+    0.05,
+    [
+     1.3,
+     1.0,
+     0.6
+    ]
+   ]
+  ],
+  "ao_min": 0.72,
+  "color_var": [
+   0.08,
+   0.03
+  ]
+ },
+ "twigs": {
+  "count": [
+   3,
+   4
+  ],
+  "length": 0.5,
+  "down_deg": 55,
+  "down_var_deg": 20,
+  "curve_var_deg": 20,
+  "segments": 1,
+  "radius_m": 0.005,
+  "fan_deg": 60,
+  "jitter": 0.28
+ },
+ "lod": {
+  "near_tris_budget": 2000,
+  "near_sides": [
+   6,
+   4,
+   0
+  ],
+  "mid_blobs": 5,
+  "mid_branches": 2,
+  "mid_sides": [
+   3,
+   3
+  ],
+  "mid_segments": [
+   2,
+   1
+  ],
+  "mid_blob_scale": 0.95,
+  "close_factor": 2
+ },
+ "targets": {
+  "crown_width_ratio": 1.6,
+  "crown_base_ratio": 0.06,
+  "porosity": 0.1,
+  "foliage_rg": 0.73,
+  "foliage_bg": 0.47,
+  "from": "judgement values, no photographs measured: FEIS, open-grown trees carry broad dense crowns often to the ground above a short trunk of 1.2-2.8 m; wider than the interior live oak template's 1.2"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "1",
+  "card": "library/plant_cards/quercus_agrifolia.json",
+  "card_sha256": "202581cd7fe82763",
+  "template": "quercus_wislizeni",
+  "template_common": "interior live oak",
+  "height_scale": 1.217
+ },
+ "notes": "Grown from interior live oak, its close relative and look-alike, with a broader, lower dome (FEIS: open-grown crowns broad and dense, often reaching the ground) and darker leaves. The leaves are convex, cupped like a shallow spoon, with hair tufts in the vein axils beneath (Jepson key, via SDSU), which separates it from interior live oak's flat leaves; at a distance the crown reads darker and glossier. The generator cannot draw the cupping or the gloss beyond the elliptic_glossy card. Bark: FEIS gives the thickest bark of the California oaks, smooth and grey when young, deeply furrowed with age; old coastal trees are also wind-pruned, which the higher asymmetry only hints at. Acorn eaters from FEIS (scrub jays and acorn woodpeckers take over half their fall and winter diet in acorns; ground squirrels and jays cache them); deer browse sprouts and foliage. Dusky-footed woodrats and yellow-billed magpies use it too but are not in the animal library. Wild turkeys are listed because the library has them, though they are introduced here.",
+ "sources": [
+  "FEIS, Quercus agrifolia, https://www.fs.usda.gov/database/feis/plants/tree/queagr/all.html, read 2026-11-04",
+  "Wikipedia, Quercus agrifolia (leaf 2-7 x 1-4 cm, convex, spiny; 10-25 m), https://en.wikipedia.org/wiki/Quercus_agrifolia, read 2026-11-04",
+  "San Diego State plant list mirror of the Jepson key, Quercus agrifolia varieties (vein-axil hair tufts), https://plants.sdsu.edu/sdpls/plants/Quercus_agrifolia, seen in search results read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

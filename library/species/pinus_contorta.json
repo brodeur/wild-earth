@@ -1,0 +1,523 @@
+{
+ "id": "pinus_contorta",
+ "aliases": [
+  "lodgepole_pine",
+  "sierra_lodgepole",
+  "tamarack_pine"
+ ],
+ "scientific": "Pinus contorta subsp. murrayana",
+ "common": "lodgepole pine",
+ "form": "tree",
+ "architectural_model": "Rauh",
+ "deciduous": false,
+ "height_m": [
+  15,
+  30
+ ],
+ "stature": {
+  "typical_m": 22,
+  "tall_m": 34,
+  "record_m": 41.4,
+  "source": "typical and tall: the drafter's estimate (the Gymnosperm Database gives the subspecies to 41 m and no typical height); record: 41.4 m, 204 cm dbh, San Bernardino Mountains, measured 2019 (Gymnosperm Database); read 2026-11-04"
+ },
+ "variants": [
+  {
+   "name": "pole",
+   "weight": 0.25,
+   "height_m": [
+    5,
+    12
+   ],
+   "branches": 0.7,
+   "set": {
+    "trunk": {
+     "base_size": 0.16,
+     "bole_ratio": 0.16,
+     "bark_rgb": [
+      122,
+      102,
+      88
+     ],
+     "stubs": {
+      "count": [
+       0,
+       3
+      ]
+     },
+     "length_ratio": 1,
+     "radius_ratio": 0.017
+    },
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.05,
+        0.17
+       ],
+       [
+        0.2,
+        0.17
+       ],
+       [
+        0.35,
+        0.15
+       ],
+       [
+        0.5,
+        0.13
+       ],
+       [
+        0.65,
+        0.1
+       ],
+       [
+        0.8,
+        0.07
+       ],
+       [
+        0.93,
+        0.03
+       ],
+       [
+        1,
+        0.02
+       ]
+      ]
+     }
+    },
+    "levels": [
+     {
+      "droop_deg": 7,
+      "upturn_deg": 14,
+      "down_angle_deg": 104,
+      "down_angle_tip_deg": 101,
+      "curve_deg": 12,
+      "length_ratio": 0.2,
+      "radius_ratio": 0.25
+     },
+     {
+      "down_angle_deg": 49,
+      "droop_deg": 6,
+      "upturn_deg": 18,
+      "length_ratio": 0.53,
+      "radius_ratio": 0.6
+     }
+    ]
+   },
+   "note": "a dense young stand tree: a slim cone of yellow-green to near the ground, thin scaly bark"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 2,
+   "note": "(from the ponderosa pine template) the file as written"
+  },
+  {
+   "name": "old-growth",
+   "weight": 0.2,
+   "height_m": [
+    26,
+    36
+   ],
+   "branches": 0.8,
+   "deadwood": {
+    "fraction": 0.12,
+    "levels": [
+     1
+    ],
+    "where": "lower",
+    "shorten": 0.5,
+    "rgb": [
+     130,
+     118,
+     104
+    ]
+   },
+   "set": {
+    "trunk": {
+     "base_size": 0.45,
+     "bole_ratio": 0.45,
+     "bark_rgb": [
+      160,
+      128,
+      102
+     ],
+     "stubs": {
+      "count": [
+       10,
+       20
+      ]
+     },
+     "length_ratio": 1,
+     "radius_ratio": 0.02
+    },
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.45,
+        0.13
+       ],
+       [
+        0.6,
+        0.15
+       ],
+       [
+        0.72,
+        0.15
+       ],
+       [
+        0.84,
+        0.13
+       ],
+       [
+        0.94,
+        0.09
+       ],
+       [
+        1.0,
+        0.04
+       ]
+      ]
+     },
+     "shape": "tapered_cylindrical"
+    },
+    "levels": [
+     {
+      "droop_deg": 0,
+      "upturn_deg": 8,
+      "down_angle_deg": 87,
+      "down_angle_tip_deg": 97,
+      "curve_deg": 6,
+      "length_ratio": 0.2,
+      "radius_ratio": 0.27
+     },
+     {
+      "down_angle_deg": 57,
+      "droop_deg": -9,
+      "upturn_deg": 3,
+      "length_ratio": 0.24,
+      "radius_ratio": 0.81
+     }
+    ]
+   },
+   "note": "an old tree of the subalpine flats: a straight, thick-for-its-kind trunk with thin scaly bark and a narrow, open, round-topped crown"
+  }
+ ],
+ "snag": {
+  "fraction": 0.04,
+  "from": "mature",
+  "limbs": 0.3,
+  "twigs": 0,
+  "levels": 1,
+  "broken_top": [
+   0.55,
+   0.85
+  ],
+  "shorten": [
+   0.3,
+   0.8
+  ],
+  "rgb": [
+   140,
+   124,
+   108
+  ]
+ },
+ "description": "A straight, slender pine 15-30 m tall with short yellow-green needles in pairs, a narrow crown, and thin bark of small orange-grey to purplish scales rather than plates. It is the tree of the subalpine flats and meadow edges, about 1800-3400 m, forming pure, even stands around Tuolumne Meadows and the high lake basins, where it creeps into the meadows between fires and dies back when the water table rises.",
+ "season_notes": {
+  "winter": "Evergreen, its narrow crowns shedding the snow; trunks stand dark against the white flats.",
+  "spring": "Yellow pollen dusts the snowmelt pools and meadow edges in June-July.",
+  "summer": "Small, prickly, egg-shaped cones ripen; needleminer moths brown whole stands in some years.",
+  "fall": "The cones open and drop seed in the fall and fall themselves soon after (the Sierra form does not keep closed cones)."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "riparian": 0.5,
+   "barren": 0.15,
+   "grassland": 0.15,
+   "mixed_forest": 0.1
+  },
+  "floor": 1.6,
+  "mid": 0.9,
+  "steep": 0.6,
+  "north": 1.0,
+  "shade": 0.3,
+  "disturbed": 1.2
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "summer"
+    ]
+   },
+   {
+    "animal": "ursus_americanus",
+    "part": "bark",
+    "seasons": [
+     "spring"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 1,
+  "radius_ratio": 0.016,
+  "taper": 1,
+  "flare": 1.25,
+  "bole_ratio": 0.11,
+  "base_size": 0.11,
+  "curve_deg": 4,
+  "curve_var_deg": 4,
+  "segments": 7,
+  "lean_deg": 3,
+  "stems": [
+   1,
+   1
+  ],
+  "stem_spread_deg": 0,
+  "split_prob": 0.03,
+  "split_count": 2,
+  "split_angle_deg": 12,
+  "bark_rgb": [
+   140,
+   112,
+   92
+  ],
+  "bark_pattern": "platy",
+  "twig_rgb": [
+   92,
+   74,
+   60
+  ],
+  "stubs": {
+   "count": [
+    6,
+    14
+   ],
+   "length_m": 0.5,
+   "radius_ratio": 0.12
+  },
+  "bark": {
+   "tile_m": [
+    0.7,
+    1.4
+   ],
+   "plate_m": [
+    0.2,
+    0.6
+   ],
+   "fissure": 0.95,
+   "contrast": 1.15,
+   "relief": 1.4
+  }
+ },
+ "crown": {
+  "shape": "conical",
+  "envelope": {
+   "profile": [
+    [
+     0.3,
+     0.13
+    ],
+    [
+     0.45,
+     0.14
+    ],
+    [
+     0.6,
+     0.13
+    ],
+    [
+     0.72,
+     0.11
+    ],
+    [
+     0.84,
+     0.08
+    ],
+    [
+     0.94,
+     0.05
+    ],
+    [
+     1.0,
+     0.02
+    ]
+   ],
+   "lobes": 3,
+   "lobe_depth": 0.1,
+   "asymmetry": 0.08,
+   "fill": 0.2,
+   "edge": 1.1
+  }
+ },
+ "levels": [
+  {
+   "count": 30,
+   "whorl": 3,
+   "down_angle_deg": 114,
+   "down_angle_tip_deg": 84,
+   "down_angle_var_deg": 10,
+   "rotation_deg": 37,
+   "rotation_var_deg": 25,
+   "length_ratio": 0.2,
+   "length_var": 0.2,
+   "curve_deg": 15,
+   "curve_var_deg": 16,
+   "tropism": 0.02,
+   "droop_deg": -3,
+   "upturn_deg": 7,
+   "taper": 0.95,
+   "radius_ratio": 0.16,
+   "segments": 3
+  },
+  {
+   "count": 6,
+   "start": 0.5,
+   "down_angle_deg": 39,
+   "down_angle_var_deg": 15,
+   "rotation_deg": -90,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.6,
+   "length_var": 0.3,
+   "curve_deg": 10,
+   "curve_var_deg": 10,
+   "tropism": 0.12,
+   "taper": 1,
+   "radius_ratio": 0.79,
+   "segments": 1,
+   "droop_deg": -11,
+   "upturn_deg": 11
+  }
+ ],
+ "foliage": {
+  "type": "needle",
+  "leaf_size_m": 0.06,
+  "leaf_shape": "needle_brush",
+  "cluster_m": 1.8,
+  "density": 7,
+  "start": 0.4,
+  "parent_start": 0.6,
+  "orientation": "along",
+  "needle_planes": 2,
+  "tuft_spread_deg": 22,
+  "tuft_up": 0.45,
+  "needle_normal": 0.55,
+  "needle_wrap": 0.35,
+  "translucency": 2.5,
+  "needle_scatter": 0.15,
+  "colors": {
+   "winter": [
+    86,
+    90,
+    52
+   ],
+   "spring": [
+    106,
+    112,
+    62
+   ],
+   "summer": [
+    94,
+    100,
+    54
+   ],
+   "fall": [
+    92,
+    96,
+    54
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "twist_deg": 50,
+  "clumps": {
+   "radius_m": 0.6,
+   "cards_per_clump": 2,
+   "shell": 0,
+   "flatten": 0.75,
+   "tip_bias": 1.6
+  },
+  "ao_min": 0.7,
+  "color_var": [
+   0.07,
+   0.03
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "whorl": true,
+  "length": 0.6,
+  "down_deg": 45,
+  "down_var_deg": 10,
+  "tropism": 0.2,
+  "segments": 1,
+  "radius_m": 0.014,
+  "taper": 0.4,
+  "fan_deg": 40,
+  "jitter": 0.05
+ },
+ "lod": {
+  "near_tris_budget": 2200,
+  "near_sides": [
+   8,
+   3,
+   0
+  ],
+  "mid_blobs": 5,
+  "mid_branches": 2,
+  "mid_blob_scale": 0.7,
+  "close_factor": 2,
+  "mid_planes": 1,
+  "mid_cards": 28
+ },
+ "targets": {
+  "crown_width_ratio": 0.28,
+  "crown_base_ratio": 0.35,
+  "porosity": 0.35,
+  "foliage_rg": 0.88,
+  "foliage_bg": 0.29,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-04), no photographs measured; to be replaced by photo measurements: a slim, straight pole of a tree with a short narrow crown, far narrower than ponderosa; yellow-green, lighter than the other pines"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "1",
+  "card": "library/plant_cards/pinus_contorta.json",
+  "card_sha256": "5dac7e0a5ee9db42",
+  "template": "pinus_ponderosa",
+  "template_common": "ponderosa pine",
+  "height_scale": 0.647
+ },
+ "notes": "The Sierra lodgepole (subsp. murrayana) is a single-stemmed, non-serotinous tree, unlike the Rocky Mountain lodgepole; the Gymnosperm Database notes that the largest lodgepoles of any subspecies are this one. Against the ponderosa template it needs a much thinner trunk, much narrower crown, short (4-8 cm) yellow-green paired needles in denser tufts and thin scaly bark without fissures, all set here; the dense even-aged doghair stands, dead grey stands after needleminer outbreaks, and the trees standing in meadow edges are matters for the species mix. The bark-feeding note for black bear is the drafter's knowledge (bears strip lodgepole bark for the sapwood in spring) and should be checked. Seeds feed chickarees, chipmunks and Clark's nutcracker (not in the library).",
+ "sources": [
+  "https://www.conifers.org/pi/Pinus_contorta.php",
+  "https://www.conifers.org/pi/Pinus_contorta_murrayana.php"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

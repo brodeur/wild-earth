@@ -1,0 +1,322 @@
+{
+ "id": "ericameria_ericoides",
+ "aliases": [
+  "mock_heather",
+  "california_goldenbush"
+ ],
+ "scientific": "Ericameria ericoides",
+ "common": "mock heather",
+ "form": "shrub",
+ "architectural_model": "Leeuwenberg (provisional)",
+ "deciduous": false,
+ "height_m": [
+  0.4,
+  1.1
+ ],
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    0.2,
+    0.5
+   ],
+   "deadwood": 0.08,
+   "set": {
+    "trunk": {
+     "stems": [
+      8,
+      14
+     ]
+    }
+   },
+   "note": "a small dense tuft on open sand"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 2,
+   "note": "(from the chamise template) the file as written"
+  },
+  {
+   "name": "decadent",
+   "weight": 0.25,
+   "height_m": [
+    0.8,
+    1.4
+   ],
+   "deadwood": 0.55,
+   "leaf_density": 0.75,
+   "set": {
+    "trunk": {
+     "stems": [
+      22,
+      34
+     ]
+    }
+   },
+   "note": "an old mound half buried in sand, grey dead stems among the green"
+  }
+ ],
+ "description": "A low, dense, heath-like shrub of the coastal dunes and sandy bluffs, its upright stems crowded with tiny needle-like leaves in tufts. From late summer into fall it is covered with small golden-yellow flower heads.",
+ "season_notes": {
+  "winter": "Dark green tufts on the grey dunes, last fall's flower heads brown and fluffy.",
+  "spring": "New growth freshens the green and the stems lengthen.",
+  "summer": "Buds gather at the branch tips and the first yellow heads open in August.",
+  "fall": "The mounds glow golden with flowers, alive with late bees and butterflies."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "barren": 0.6,
+   "chaparral": 0.9,
+   "grassland": 0.4,
+   "oak_woodland": 0.05,
+   "mixed_forest": 0.0,
+   "conifer_forest": 0.0,
+   "riparian": 0.0
+  },
+  "floor": 1.0,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 0.8,
+  "shade": 0.02,
+  "disturbed": 0.8
+ },
+ "relations": {
+  "eaten_by": [],
+  "cover_for": [
+   "sylvilagus_bachmani",
+   "callipepla_californica"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 1.0,
+  "radius_ratio": 0.012,
+  "taper": 0.9,
+  "flare": 1.5,
+  "bole_ratio": 0.05,
+  "base_size": 0.08,
+  "curve_deg": 8,
+  "curve_var_deg": 16,
+  "segments": 3,
+  "lean_deg": 0,
+  "stems": [
+   10,
+   18
+  ],
+  "stem_spread_deg": 52,
+  "split_prob": 0.0,
+  "split_count": 2,
+  "split_angle_deg": 20,
+  "bark_rgb": [
+   110,
+   98,
+   86
+  ],
+  "bark_pattern": "shreddy",
+  "twig_rgb": [
+   106,
+   90,
+   74
+  ],
+  "bark": {
+   "tile_m": [
+    0.1,
+    0.4
+   ]
+  }
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "envelope": {
+   "profile": [
+    [
+     0.0,
+     0.5
+    ],
+    [
+     0.15,
+     0.68
+    ],
+    [
+     0.35,
+     0.76
+    ],
+    [
+     0.55,
+     0.75
+    ],
+    [
+     0.75,
+     0.64
+    ],
+    [
+     0.9,
+     0.44
+    ],
+    [
+     1.0,
+     0.16
+    ]
+   ],
+   "lobes": 6,
+   "lobe_depth": 0.12,
+   "asymmetry": 0.12,
+   "fill": 0.5,
+   "edge": 1.1
+  }
+ },
+ "levels": [
+  {
+   "count": 3,
+   "start": 0.4,
+   "down_angle_deg": 22,
+   "down_angle_var_deg": 10,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.22,
+   "length_var": 0.4,
+   "curve_deg": 5,
+   "curve_var_deg": 15,
+   "tropism": 0.08,
+   "taper": 1.0,
+   "radius_ratio": 0.6,
+   "segments": 1
+  }
+ ],
+ "foliage": {
+  "type": "needle",
+  "leaf_size_m": 0.008,
+  "leaf_shape": "fascicle_wand",
+  "cluster_m": 0.42,
+  "density": 22,
+  "start": 0.1,
+  "orientation": "along",
+  "colors": {
+   "winter": [
+    90,
+    102,
+    70
+   ],
+   "spring": [
+    100,
+    116,
+    74
+   ],
+   "summer": [
+    96,
+    108,
+    72
+   ],
+   "fall": [
+    116,
+    112,
+    70
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "parent_start": 0.2,
+  "twist_deg": 60,
+  "tips": {
+   "spring": [
+    104,
+    118,
+    76
+   ],
+   "summer": [
+    178,
+    160,
+    78
+   ],
+   "fall": [
+    222,
+    186,
+    62
+   ],
+   "winter": [
+    146,
+    126,
+    94
+   ]
+  },
+  "ao_min": 0.72,
+  "color_var": [
+   0.1,
+   0.06
+  ]
+ },
+ "deadwood": {
+  "fraction": 0.3,
+  "levels": [
+   0
+  ],
+  "shorten": 0.85,
+  "rgb": [
+   132,
+   128,
+   122
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "prob": 0.6,
+  "split": 0.8,
+  "length": 0.9,
+  "down_deg": 14,
+  "down_var_deg": 6,
+  "tropism": 0.08,
+  "segments": 1,
+  "radius_m": 0.004,
+  "taper": 0.6
+ },
+ "lod": {
+  "near_tris_budget": 1000,
+  "near_sides": [
+   3,
+   0
+  ],
+  "mid_blobs": 3,
+  "mid_branches": 0,
+  "mid_sides": [
+   0,
+   0
+  ],
+  "mid_cards": 32
+ },
+ "targets": {
+  "crown_width_ratio": 1.5,
+  "crown_base_ratio": 0.05,
+  "porosity": 0.15,
+  "foliage_rg": 0.78,
+  "foliage_bg": 0.43,
+  "from": "judgement values, no photographs measured: a low, dense, rounded dune mound wider than tall (Santa Barbara Botanic Garden listing: about 0.3-0.9 m high by 0.6-1.2 m wide)"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "1",
+  "card": "library/plant_cards/ericameria_ericoides.json",
+  "card_sha256": "932730762f129b06",
+  "template": "adenostoma_fasciculatum",
+  "template_common": "chamise",
+  "height_scale": 0.417
+ },
+ "notes": "Grown from chamise for the many stems and the fascicled needle-leaf foliage (leaves about 1 cm, in comb-like fans, Wikipedia), but as a low, rounded, leafy-to-the-ground mound rather than chamise's tall open vase, and in a slightly brighter green. The wand tips (foliage.tips, as chamise) carry the season: golden yellow in fall when it flowers (Calscape: summer and fall), brown seed heads in winter. Doubts: no source read gave a firm height (Wikipedia: rarely near 1 m; nursery and Calscape listings 0.3-1.2 m), and no source read named animals that eat it, so eaten_by is empty; it gives cover to brush rabbits and quail on the dunes and nectar to insects, and white-crowned sparrows forage around it (not in the animal library). The Jepson eFlora page would not load (a verification wall), so Jepson is not cited.",
+ "sources": [
+  "Wikipedia, Ericameria ericoides, https://en.wikipedia.org/wiki/Ericameria_ericoides, read 2026-11-04",
+  "Calflora, Ericameria ericoides (coastal strand, coastal sage scrub), https://www.calflora.org/app/taxon?crn=3080, read 2026-11-04",
+  "Calscape and nursery listings for Ericameria ericoides (0.3-1.2 m, yellow summer-fall), seen in search results read 2026-11-04"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}
