@@ -4809,3 +4809,106 @@ Still wrong: the ground over the level by 1 m or more on 2-3% of samples. These 
 is the road) and cascades, where the level is a trend through steps. The 1 m ground has no culverts, so a reach under a
 19 m fill still drapes over it in the client (the carve stops at 2 m). The "after" captures on Yosemite were taken
 before the hidden pane had streamed the sky and the plants, so only their water and ground compare.
+
+## 2026-11-04: the close layer: the last metre round a small body (branch claude/close-layer-ea5b16)
+
+Aaron: "Is there an even better layer of detail realism we can achieve at <1m?", then yes to the plan. No survey data
+exists below about half a metre (the home tile's lidar is 21 points a square metre, a 0.5 m ground at best under
+canopy), so everything here is procedural, and each choice is conditioned on something real about the spot: the tree
+overhead (its species, its crown, its age, whether it is a snag), the water system's bars, the season, the weather,
+the north side, the tile's rainfall. Three commits, in the order asked.
+
+**1. Litter and micro relief by the tree overhead** (`litter.js`, `vegetation.js` nearPlants gains crownR, trunkR and
+snag, `terrain.js` MicroPatch.node). The litter ring already drew pebbles, oak leaves, caps, twigs and stems from the
+ground texture's own material weights; its oak leaves were the cell's oak share, not the tree above. Now the near trees
+are indexed on a 10 m grid and each 2 m cell lays the litter of the crowns that reach it (cover 1 inside 0.75 of the
+crown radius, falling to nothing at 1.35 R + 0.5 m: the drip line, spread by wind; several crowns combine as 1 - prod(1 -
+w) and a candidate takes one of them by weight):
+- leaves from an eight-cell atlas at each species' size and colours (blue, interior and canyon live, valley, black oak;
+  a lanceolate cell for bay, buckeye, willows, ash and walnut leaflets; an elliptic one for madrone, alder and
+  cottonwood; a palmate one for maple and sycamore), fewer the bigger they are (150 a square metre at 4.5 cm);
+- each species' month (`SEASONS`): the deciduous oaks, maple and walnut drop in October to December, the live oaks and
+  bay in April and May, madrone its leaves in June and July and its bark curls (an atlas cell, rolled by the leaf's
+  curl) in July to September, buckeye in July and August, the pines their needles in September to November; the fresh
+  share (paler, flatter, the fall colour) peaks then, the rest is old grey-brown and curled;
+- pine fascicles (three needles from a sheath, gray pine 20-30 cm at 350 a square metre, ponderosa 12-25 cm at 600;
+  Douglas-fir and incense cedar short), cones (one procedural cone, 72 scales on the golden-angle spiral with
+  apophysis, umbo and a hook the instance scales: a gray pine's 15-25 cm claws, a ponderosa's 8-13 cm prickles,
+  Douglas-fir 5-9 cm, cedar 2-3 cm), acorn caps under the oaks in autumn;
+- twigs, fallen branches with a side branch (0.08 a square metre under a crown, three times that under an old tree,
+  five round a snag; bigger under both), and surface roots from boles past 12 cm (three to seven, more on an old tree,
+  half buried, brown and soiled);
+- rounded, water-worn pebbles (0.6-4 cm, 160 a square metre) on the water system's bars and on the dry bed and margin
+  of gravel and cobble reaches, below the 5 cm stones rocks.js lays there.
+Where no crown reaches, the old rule stays at 40 % (the duff under shrubs, the cover the raster sees but no near tree
+carries); with no crown index yet, all of it. The litter darkens and deepens with the ground's wetness and hides under
+lying snow. The crown cover gives the micro patch's litter relief its height (`tile.closeDuff`: up to 2.5 times the
+2 cm litter amplitude, more under old trees and pines). Weak: the needles are a tone darker than real ponderosa duff in
+the canopy's shade; the roots are straight tubes, and from a vole's 3.5 cm eye the fallen limbs under an old tree read as dark, smooth logs in deep shade (procedural furrows, no bark texture); nothing of this is drawn for a body of scale 0.6 and up (a deer), as
+before.
+
+**2. Bark up close** (`treegen.js` barkTextureSteps, trunkMaterial; `weather.js`). Checked first: the bark material
+binds the colour map and the normal map; nothing here adds a sampler (the height goes into the normal map's alpha: a
+DataTexture, since through a canvas an alpha under 255 premultiplies the normal away) and no attribute (the per-tree
+offset and the foot height come from the instance matrix).
+- Hex tiling: three taps at random offsets per cell of a hexagonal grid over the bark (1.6 cells a tile, offsets only, so
+  the grain stays upright) and per tree, blended by the hex weights and each tap's height, sharpened so a seam is thin and
+  plates do not ghost. The 0.5 x 1 m tile no longer repeats round an old trunk.
+- Parallax within 1.5-2.5 m: the dominant tap marched along the view ray through the height field, 6 layers head-on to
+  12 grazing and a secant step, to the species' fissure depth (0.018 m x relief x (0.3 + 0.7 fissure): 2.2 cm in a
+  valley oak's furrows, 2 mm on a madrone), then 4 steps toward the sun, so a plate shades the fissure beside it. A cavity term darkens the sky
+  light in the fissures at every distance.
+- Moss on the north side and the foot of the trunk, in the fissures first, by the species' liking (from its lichen
+  value, almost none on madrone, manzanita and sycamore), the tile's climate (its weather file's mean yearly rain: 300 mm
+  none, 1500 mm full; the home tile 0.54) and the month (olive-brown and dormant June to September, green through the
+  rains, green again within days of rain); crustose lichen in pale rosettes on the plates.
+- Wet: the bark darkens and deepens with weather.js's ground wetness, the fissures darkest.
+- First cut too dear: six 3D noise lookups for the moss and lichen cost about a millisecond with a trunk filling the
+  screen; they share two now, the bark's own grain breaking them finer.
+- Rejected: a close trunk tier of displaced geometry within 2 m. The parallax gives the plates their depth inside the
+  silhouette; the outline still shows the polygon. Left for the squirrel's own lane if its climbing view needs it.
+
+**3. Leaves and small life** (`treegen.js` leafMaterial, `closeLife.js`, `litter.js`).
+- Leaf veins: the single-leaf level's broadleaves get a midrib and side veins pressed into their face as a normal detail
+  within 6 m (vein pairs by leaf shape), faded as a vein falls under a pixel.
+- Granaries: the acorn woodpeckers' storage trees are the acorn game's stash trees (`animals.js isStashTree`, now
+  exported: one oak in eight, the woodpecker families live on them), so the holes are where the game's woodpeckers
+  hammer. Within 25 m their bole is drilled from 0.6 m to the fork: 260 holes a square metre on an old tree or a snag, a
+  third of that on a younger one, each holding an acorn by the month's share (85 % in autumn and winter, 30 % in
+  summer) and at least as many as the game's granary holds. Each hole is cast out from the trunk's axis (the tree's own
+  wood, treegen.treeWood) onto the near trunk's triangles and lies flush on the facet it meets, a decal with polygon
+  offset; the acorn's blunt end a dome 3 mm proud. First tried as cups set on the stem's radius: on a polygon trunk they
+  stood out of the facets by up to 5 cm at the silhouette.
+- Galls: oak apples on valley oaks (3-10 cm) and smaller galls on blue oaks (1-3 cm) on the thinnest drawn wood, a third
+  of the trees heavily galled, coloured by the month (fresh cream in spring, tan in summer, brown in winter, a quarter of
+  them a year old and black).
+- Fungi: a placeholder, off by default (`?fungi=1`, `Litter.fungi`): a data table (`FUNGI`) of brackets along fallen
+  branches and capped mushrooms in troops in the oak litter, in the wet months. Stand-ins until the species and their
+  seasons are researched.
+
+**Cost** (GPU timer queries, a fence before each sample, 8 renders a sample, states alternated, medians; 1280 x 800 at
+DPR 1.5; the machine shared, load 5-6; the whole frame is about 19-20 ms of GPU here):
+
+| Pose | Whole frame, all on | ... without | Drawn alone (an upper bound: no early-z) |
+|---|---|---|---|
+| A vole under the valley oak (eye 3.5 cm) | 19.31 ms | litter off 19.17 ms (+0.14) | litter 0.73 ms (IQR 0.41-1.2) |
+| A squirrel's eye on the granary oak's bark (12 cm off, 2 m up) | 19.86 ms | old bark, no granary, no veins 19.81 ms (+0.05, IQR 0.2) | bark 2.3-2.5 ms new, 0.7-0.9 old; granary and galls 0.32 ms (3,335 holes, 2,818 acorns, 45 galls) |
+| The same oak from 3 m (no parallax) | | | bark 1.2-1.8 ms new, 0.5-0.9 old |
+| Leaves from 3 m (leaf level, 2 M triangles) | | | veins on 3.6 ms, off 4.5 ms (within the noise) |
+
+Drawn alone the new bark is two to three times the old where it fills the screen, but in the frame it hides under the
+vertex-bound work: the whole-frame difference is within the noise at every pose measured. CPU: planning a 2 m litter
+cell 0.84 ms (0.7 before; the 1.5 ms a frame budget is unchanged), a refill 0.7 ms; the granary layer's rebuild 2-4 ms
+when the eye has moved 4 m near a granary (the first time a tree's holes are cast onto its trunk included). No shader
+diagnostics (`renderer.info.programs`), no texture unit or vertex attribute added to any material but the litter's
+own new kinds (needle, wood, cone and fungus 10 attribute slots each, of 16).
+
+**Seen** in the worktree's viewer (port 8806) against main's (562409f on 8808) at the same poses, hour 13, the forager's
+halos off: a vole and a brush rabbit under a valley oak, under a gray pine, in open grass (a dry bar) and at an old
+valley oak granary; the bark at 12 and 25 cm and 2.5 m; galls with the foliage hidden. Captures in the shared notes
+folder (`close-layer-captures/`). Not done: a real squirrel climbing (the squirrel's view was a camera on the bark);
+other tiles.
+
+**Found on the way, not this lane's:** the forager's food halos (forage.js) wash a translucent band across a vole's
+eye view when one sits a few centimetres off the eye.
+

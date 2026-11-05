@@ -184,6 +184,16 @@ sequenced; Parked is in the brief but deliberately not started.
   again. Weak: clusters on an ellipsoid rather than the twigs, no sway, nothing eaten from them yet; the herbs' seeds
   and pine nuts not modelled; the grape, walnut and bay nut Meshy tries not adopted.
 
+- The close layer, 2026-11-04 (Aaron: "Is there an even better layer of detail realism we can achieve at <1m?";
+  docs/decisions.md "the close layer"): the last metre round a small body, procedural and conditioned on the spot. The
+  litter under each crown is that tree's own (eight leaf shapes by species and month, pine fascicles and cones, acorn
+  caps, twigs, fallen branches more under old trees and snags, surface roots), pebbles on the bars, the duff raising
+  the micro relief; bark with hex tiling, parallax and self-shadowed fissures within 2.5 m, moss on the north side by
+  species, rainfall and month, lichen, darkening when wet; leaf veins on the single-leaf level; the acorn woodpeckers'
+  granaries drilled into the game's stash trees and filled by the season and the game; oak galls; a fungi placeholder
+  (off). Weak: no displaced trunk geometry (the bark's outline is still the polygon), galls and holes do not sway with a
+  gale, needles a tone dark in deep shade; nothing of it for a body of scale 0.6 and up.
+
 ## Next: the visual pass, in order of effect per hour
 
 1. ~~Horizon~~ done 2026-10-23: two crossed-quad impostors with a canopy cap per
