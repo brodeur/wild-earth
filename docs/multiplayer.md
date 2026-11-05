@@ -449,6 +449,10 @@ together. Lane 3 needs lane 1's screen in main; lane 4 needs 1 to 3. Lane 5 is l
      px (0.36 to 1), the name under it, on screen within 400 m; off screen the video fills their edge avatar's
      circle (48 px). Two video elements on the one stream, so neither is moved between parents.
    - **Debugging**: `window.__weVoice` (peers, present, states, local, toggle('mic' | 'cam'), set(kind, on)).
+   - **The menu under the X** (2026-11-04, after this lane): with the menu open, Settings (the old right-hand panel)
+     and Exit to main screen, which leaves the hub's room as a switch does, tears the world down and makes the title
+     screen again, signed in still (docs/decisions.md, "the menu under the X"); the data panel (`#hud`) now stands on
+     the right under the mini-map, so the friends list opens right of the menu rather than right of the HUD.
    - Verified in the built-in browser with two tabs as two signed-in users (vv_a on 127.0.0.1:8793, vv_b on
      localhost:8793, so the cookies are separate; one group; the home tile), `getUserMedia` replaced in a scratch
      harness by a canvas's captureStream (a letter on a moving disc) and an oscillator bursting 1.2 s on and off:

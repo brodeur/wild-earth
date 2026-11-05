@@ -335,7 +335,9 @@ browser stays the renderer.
   with the hub relaying the signalling, each voice panned at the member's wisp or body through the soundscape's volume
   and mute, a speaking dot on the name and a ring on the edge avatar, each camera a small tile over the member (or in
   their edge avatar) and a self-view in the row; public STUN, TURN from env when Aaron sets one up (the TURN section in
-  `docs/multiplayer.md`). Next: TURN set up on the public hub (some NATs fail without it); MediaPipe cut-out figures in
+  `docs/multiplayer.md`). The menu under the X (2026-11-04, the same branch): Settings (the old right-hand panel, Perceives
+  removed) and Exit to main screen (back to the earth, signed in still); the data panel on the right under the
+  mini-map in smaller type. Next: TURN set up on the public hub (some NATs fail without it); MediaPipe cut-out figures in
   place of the tiles; an SFU (LiveKit) past about six; a push-to-talk key; the players on
   a tile outside the group (unseen by the privacy rule until Aaron widens it); the stream's rate under many players
   and the far fliers' detail; Discord needs Aaron's application registered; Google and Apple their keys.

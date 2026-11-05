@@ -369,10 +369,10 @@ class FieldGuide {
   place(anchor) {
     const el = this.el, w = el.offsetWidth, h = el.offsetHeight, W = innerWidth, H = innerHeight;
     const r = anchor && !anchor.classList.contains('hidden') ? anchor.getBoundingClientRect() : null;
-    // keep clear of the side panels: the right panel's left edge and the left HUD's right edge
+    // keep clear of the right column (the HUD under the mini-map, index.html #hud) and the controls row top left
     const box = id => { const b = document.getElementById(id)?.getBoundingClientRect(); return b && b.width ? b : null; };   // fixed elements: no offsetParent
-    const pr = box('panel'), hr = box('hud');
-    const maxX = (pr ? pr.left : W) - 10, minX = (hr ? hr.right : 0) + 10;
+    const hr = box('hud'), mr = box('minimap');
+    const maxX = Math.min(hr ? hr.left : W, mr ? mr.left : W) - 10, minX = 10;
     let x, y;
     if (r && r.width) {
       if (r.right + 10 + w <= maxX) { x = r.right + 10; y = r.top; }                 // right of the game HUD

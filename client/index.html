@@ -14,11 +14,31 @@
 <style>
   html,body { margin:0; height:100%; background:#0b0f0d; color:#e6ede7; font:13px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; overflow:hidden; }
   canvas { display:block; }
-  #hud { position:fixed; left:14px; top:54px; background:#0f1512bb; padding:10px 12px; border-radius:8px; min-width:220px; backdrop-filter:blur(4px); }
-  #hud h1 { font-size:14px; margin:0 0 4px; }
-  #hud .row { display:flex; justify-content:space-between; gap:12px; color:#b7c4ba; }
+  /* the data panel (Aaron, 2026-11-04: "text size decreased so that it can fit underneath the admin panel on the right"):
+     the right column under the mini-map, where the panel stood, in smaller type; it scrolls when the window is short */
+  #hud { position:fixed; right:14px; top:calc(var(--mapH, 0px) + 24px); box-sizing:border-box; width:230px; max-height:calc(100vh - var(--mapH, 0px) - 36px); overflow-x:hidden; overflow-y:auto; overscroll-behavior:contain;
+    background:#0f1512bb; padding:8px 10px; border-radius:8px; backdrop-filter:blur(4px); font-size:11.5px; line-height:1.3; }
+  #hud h1 { font-size:12.5px; margin:0 0 4px; }
+  #hud .row { display:flex; justify-content:space-between; gap:8px; color:#b7c4ba; }
   #hud .row b { color:#e6ede7; font-weight:600; font-variant-numeric:tabular-nums; }
-  #panel { position:fixed; right:14px; top:calc(var(--mapH, 0px) + 24px); max-height:calc(100vh - var(--mapH, 0px) - 36px); box-sizing:border-box; background:#0f1512bb; padding:10px 12px; border-radius:8px; width:230px; backdrop-filter:blur(4px); }
+  /* Settings (main.js; Aaron: "a 'Settings' page. Move the current admin panel into that area"): the old right-hand panel
+     (#panel, its controls and ids unchanged) in a card opened from the menu under the X; the X or Esc closes it */
+  #settings { position:fixed; left:50%; top:54px; transform:translateX(-50%); z-index:13; box-sizing:border-box; width:min(340px, calc(100vw - 28px)); max-height:calc(100vh - 66px); display:flex; flex-direction:column;
+    background:#0f1512ee; border:1px solid #263128; border-radius:12px; box-shadow:0 8px 30px #0009; backdrop-filter:blur(8px); }
+  #settings[hidden] { display:none; }
+  .st-head { display:flex; align-items:center; justify-content:space-between; padding:10px 12px 4px 14px; }
+  .st-head h2 { margin:0; font-size:14px; font-weight:600; letter-spacing:.02em; }
+  .st-close { background:none; border:none; color:#b7c4ba; font-size:20px; line-height:1; cursor:pointer; padding:2px 6px; }
+  .st-close:hover { color:#e6ede7; }
+  #panel { box-sizing:border-box; padding:0 14px 12px; overflow-y:auto; overscroll-behavior:contain; min-height:0; }
+  /* the menu under the X: Settings and Exit to the main screen (main.js) */
+  #menuList { position:fixed; left:14px; top:54px; z-index:12; display:flex; flex-direction:column; gap:4px; padding:5px; border-radius:10px; background:#0f1512cc; backdrop-filter:blur(6px); box-shadow:0 2px 10px #0006; }
+  #menuList button { display:flex; align-items:center; gap:9px; min-width:170px; padding:7px 12px 7px 9px; border:0; border-radius:7px; background:none; color:#e6ede7; font:inherit; text-align:left; cursor:pointer; }
+  #menuList button:hover, #menuList button:focus-visible, #menuList button[aria-expanded="true"] { background:#1f2b23; outline:none; }
+  #menuList svg { width:16px; height:16px; flex:none; color:#b7c4ba; }
+  html:not(.menu) #menuList { opacity:0; visibility:hidden; pointer-events:none; }
+  #menuList { transition:opacity .2s ease, visibility 0s linear 0s; }
+  html:not(.menu) #menuList { transition:opacity .2s ease, visibility 0s linear .2s; }
   #panel label { display:block; color:#b7c4ba; margin:6px 0 2px; font-size:11px; text-transform:uppercase; letter-spacing:.06em; }
   #panel select, #panel input[type=range] { width:100%; }
   #panel select { background:#0d1310; color:#e6ede7; border:1px solid #263128; border-radius:6px; padding:4px 6px; font:inherit; }
@@ -31,8 +51,8 @@
   html.menu #menuBtn i:nth-child(1) { transform:translateY(6px) rotate(45deg); }
   html.menu #menuBtn i:nth-child(2) { opacity:0; transform:scaleX(0); }
   html.menu #menuBtn i:nth-child(3) { transform:translateY(-6px) rotate(-45deg); }
-  #hud, #panel, #help { transition:opacity .25s ease; }
-  html:not(.menu) #hud, html:not(.menu) #panel, html:not(.menu) #help { opacity:0; visibility:hidden; pointer-events:none; transition:opacity .2s ease, visibility 0s linear .2s; }
+  #hud, #help { transition:opacity .25s ease; }
+  html:not(.menu) #hud, html:not(.menu) #help { opacity:0; visibility:hidden; pointer-events:none; transition:opacity .2s ease, visibility 0s linear .2s; }
   html.opening #menuBtn { display:none; }
   /* the controls row beside the menu button (Aaron, 2026-11-04): the sound (sound.js els.mute; N does the same), a speaker
      barred when muted; then the microphone and the camera (voice.js), shown only while another member of the group is in
@@ -204,7 +224,7 @@
   #gameHint { font-size:12px; margin-top:4px; max-width:280px; }
   #game.flash { animation:gameflash .7s ease-out; }
   @keyframes gameflash { from { background:#8a5a1ccc; } to { background:#0f1512bb; } }
-  #hud .row.wide b { text-align:right; max-width:300px; font-weight:500; }
+  #hud .row.wide b { text-align:right; max-width:140px; font-weight:500; }
   #hud .row.wide b i { color:#b7c4ba; font-weight:400; }
   #speciesCard { position:fixed; left:14px; bottom:58px; width:320px; max-width:calc(100vw - 28px); max-height:calc(100vh - 70px); overflow:auto; box-sizing:border-box; z-index:5;
     background:#0f1512dd; padding:10px 12px; border-radius:8px; backdrop-filter:blur(4px); color:#b7c4ba; }
@@ -227,7 +247,8 @@
   #soundBtn.on { background:#1d3340; border-color:#2f5a73; }
   #panel #soundRow input[type=range] { flex:1; min-width:0; width:auto; }
   /* Data and credits (credits.js): the HUD's Data link opens a panel built from the manifest's sources. */
-  #hud h1 { display:flex; align-items:baseline; gap:6px; }
+  #hud h1 { display:flex; flex-wrap:wrap; align-items:baseline; gap:0 6px; }
+  #hud h1 > .muted { min-width:0; overflow-wrap:anywhere; }
   #creditsLink { margin-left:auto; color:#b7c4ba; font-size:11px; font-weight:500; text-decoration:none; border:1px solid #263128; border-radius:10px; padding:0 7px; letter-spacing:.03em; }
   #creditsLink:hover, #creditsLink[aria-expanded="true"] { color:#e6ede7; border-color:#3d5244; background:#1f2a23; }
   #credits { position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); z-index:15; width:560px; max-width:calc(100vw - 32px); max-height:calc(100vh - 48px); overflow:auto; box-sizing:border-box;
@@ -250,26 +271,24 @@
   /* Narrow or short windows (main.js layoutHud sets html.narrow under 1200 x 760 px): the HUD, game box and panel
      shrink so the HUD and the game box sit side by side between the left edge and the panel, the mini-map shrinks,
      and the panel scrolls above it. layoutHud also moves the game box out of the HUD's way and caps the panel. */
-  #panel { overflow-y:auto; overscroll-behavior:contain; }
-  html.narrow #hud { font-size:12px; line-height:1.3; min-width:0; max-width:290px; padding:8px 10px; }
-  html.narrow #hud h1 { font-size:13px; }
-  html.narrow #hud .row { gap:8px; }
-  html.narrow #hud .row.wide b { max-width:170px; }
+  html.narrow #hud { width:212px; font-size:11px; line-height:1.25; padding:7px 9px; }
+  html.narrow #hud h1 { font-size:12px; }
+  html.narrow #hud .row { gap:6px; }
+  html.narrow #hud .row.wide b { max-width:132px; }
   html.narrow #game { font-size:12px; line-height:1.3; min-width:0; padding:7px 11px; }
   html.narrow #game .row { gap:8px; }
   html.narrow #gameHint { max-width:250px; }
-  html.narrow #panel { width:196px; padding:8px 10px; font-size:12px; }
-  html.narrow #panel label { margin:5px 0 1px; font-size:10.5px; }
+  html.narrow #panel { font-size:12px; }
   html.narrow #gameBtn, html.narrow #hoverBtn, html.narrow #peekBtn, html.narrow #soundBtn { padding:4px 8px; margin-top:5px; }
   html.narrow #soundRow { margin-top:5px; }
   html.narrow #minimap canvas { width:120px !important; height:120px !important; }
   html.narrow #help { font-size:11.5px; padding:6px 10px; }
   /* The opening screen hides the HUD (its styles: opening.css); the arrival caption. A tile switch from the game
      (main.js switchWorld) hides it too, but keeps the panel, whose Location box can send the page elsewhere. */
-  html.opening #hud, html.opening #panel, html.opening #help, html.opening #minimap, html.opening #status, html.opening #bodyBar, html.arriving #bodyBar, html.switching #bodyBar,
-  html.arriving #hud, html.arriving #panel, html.arriving #help, html.arriving #minimap, html.arriving #game, html.arriving #speciesCard,
+  html.opening #hud, html.opening #menuList, html.opening #settings, html.opening #help, html.opening #minimap, html.opening #status, html.opening #bodyBar, html.arriving #bodyBar, html.switching #bodyBar,
+  html.arriving #hud, html.arriving #help, html.arriving #minimap, html.arriving #game, html.arriving #speciesCard,
   html.switching #hud, html.switching #help, html.switching #minimap, html.switching #game, html.switching #speciesCard { opacity:0; pointer-events:none; }
-  #hud, #panel, #help, #minimap, #game { transition:opacity .9s ease; }
+  #hud, #help, #minimap, #game { transition:opacity .9s ease; }
   #caption { position:fixed; left:0; right:0; bottom:18%; z-index:8; text-align:center; pointer-events:none; padding:0 16px; opacity:0; }
   #caption[hidden] { display:none; }
   #caption .cap-text { display:inline-block; font-size:clamp(20px, 4.2vw, 38px); font-weight:300; letter-spacing:.03em; color:#f3f6f1; text-shadow:0 1px 3px #000a, 0 0 24px #0008; }
@@ -303,6 +322,12 @@
   <div class="row wide"><span>sound</span><b id="soundNow">–</b></div>
   <div class="row wide" title="other animals within 150 m that a raven perceives"><span>animals near</span><b id="animalsNear">–</b></div>
 </div>
+<div id="menuList" role="menu" aria-label="menu">
+  <button id="settingsBtn" type="button" role="menuitem" aria-expanded="false" aria-controls="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>Settings</button>
+  <button id="exitBtn" type="button" role="menuitem" title="leave this world for the earth and the places"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.6 2.6 14.4 0 17M12 3.5c-2.6 2.6-2.6 14.4 0 17"/></svg>Exit to main screen</button>
+</div>
+<div id="settings" role="dialog" aria-label="Settings" hidden>
+<div class="st-head"><h2>Settings</h2><button class="st-close" type="button" aria-label="close settings" title="close (Esc)">×</button></div>
 <div id="panel">
   <label for="gotoInput">Location</label>
   <div id="goto"><input id="gotoInput" placeholder="lat, lon" autocomplete="off" spellcheck="false"><button id="gotoBtn">Go</button></div>
@@ -320,8 +345,7 @@
   <input id="time" type="range" min="5.5" max="19.5" step="0.1" value="9">
   <label>Forest detail</label>
   <select id="detail"><option value="900">near (900 m)</option><option value="1500" selected>normal (1.5 km)</option><option value="2400">far (2.4 km, slow)</option></select>
-  <label>Perceives</label>
-  <div class="muted" id="perceives">–</div>
+</div>
 </div>
 <div id="help"><kbd>↑</kbd><kbd>↓</kbd> pitch · <kbd>←</kbd><kbd>→</kbd> turn · <kbd>W</kbd><kbd>S</kbd> speed · <kbd>X</kbd><kbd>Z</kbd> climb / descend · <kbd>space</kbd> flap · <kbd>H</kbd> hover · fly slowly into a branch or the ground to land, then <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> hop, <kbd>space</kbd> take off · <kbd>V</kbd> view · <kbd>R</kbd> reset · <kbd>M</kbd> map · <kbd>G</kbd> roads · <kbd>P</kbd> present day · <kbd>T</kbd> tags · <kbd>N</kbd> mute · <kbd>C</kbd> call · <kbd>B</kbd> back to spirit form · click a tree to identify · drag to steer in flight, to orbit the camera when still</div>
 <div id="speciesCard" class="hidden"></div>

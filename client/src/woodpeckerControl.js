@@ -564,7 +564,7 @@ export class WoodpeckerControl {
   // ---- acorns: E -----------------------------------------------------------------------------------
   ready() {
     const G = this.acorns;
-    if (!G || !G.running) { this.say('start a game (panel: Start game) to gather acorns'); return false; }
+    if (!G || !G.running) { this.say('start a game (menu, Settings: Start game) to gather acorns'); return false; }
     if (!G.collecting) { this.say(`no acorns for you in the ${G.season}: not your food this season`); return false; }
     return true;
   }

@@ -256,7 +256,7 @@ export class Multiplayer {
 
   // Keep the social list, the chat and the invite clear of the HUD's panels when both are showing: the friends row right
   // of the controls row (which grows by the mic, the camera and the self-view while the group is here), the list right
-  // of the HUD's readouts while the menu is open, the chat above the key line, the invite under the game box.
+  // of the menu under the X while the menu is open, the chat above the key line, the invite under the game box.
   layout() {
     const inWorld = !html.classList.contains('opening'), menu = html.classList.contains('menu');
     const hidden = html.classList.contains('arriving') || html.classList.contains('switching');
@@ -267,9 +267,9 @@ export class Multiplayer {
       const row = document.getElementById('ctlRow')?.getBoundingClientRect();
       this.social.el.style.left = inWorld && row?.width ? `${Math.round(row.right + 10)}px` : '';
       const panel = this.social.panel; panel.style.left = '';
-      if (inWorld && menu && this.social.open) {
-        const hud = document.getElementById('hud')?.getBoundingClientRect();
-        if (hud && hud.width) panel.style.left = `${Math.round(hud.right + 10 - this.social.el.getBoundingClientRect().left)}px`;
+      if (inWorld && menu && this.social.open) {   // right of the menu under the X (index.html #menuList)
+        const list = document.getElementById('menuList')?.getBoundingClientRect(), left = this.social.el.getBoundingClientRect().left;
+        if (list && list.width && list.right + 10 > left) panel.style.left = `${Math.round(list.right + 10 - left)}px`;
       }
     }
     if (this.chat) {

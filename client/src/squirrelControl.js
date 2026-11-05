@@ -920,7 +920,7 @@ export class SquirrelControl {
   // E on the wood: a crown acorn within CROWN_R; else which way the nearest within 5 m is.
   woodAction() {
     const G = this.acorns, P = this.flight.pos, w = this.w;
-    if (!G || !G.running) { this.say('start a game (panel: Start game) to gather acorns'); return true; }
+    if (!G || !G.running) { this.say('start a game (menu, Settings: Start game) to gather acorns'); return true; }
     if (!G.collecting) { this.say(`no acorns for you in the ${G.season}: not your food this season`); return true; }
     if (G.player.carrying > 0) { this.say('your mouth is full: bury this one first'); return true; }
     const near = G.acornNear(P.x, P.y, P.z, CROWN_R, true);
@@ -1044,7 +1044,7 @@ export class SquirrelControl {
   // E on the ground: pick up, bury or dig up.
   action() {
     const G = this.acorns, f = this.flight, P = f.pos, me = G?.player;
-    if (!G || !G.running) { this.say('start a game (panel: Start game) to gather acorns'); return; }
+    if (!G || !G.running) { this.say('start a game (menu, Settings: Start game) to gather acorns'); return; }
     if (!G.collecting) { this.say(`no acorns for you in the ${G.season}: not your food this season`); return; }
     const fx = -Math.sin(f.yaw), fz = -Math.cos(f.yaw), nx = P.x + fx * 0.2, nz = P.z + fz * 0.2;
     if (me.carrying > 0) {
@@ -1068,7 +1068,7 @@ export class SquirrelControl {
   // E on a trunk: a crown acorn within CROWN_R, or out along a limb to one within LIMB_R at about this height.
   crownAction() {
     const G = this.acorns, P = this.flight.pos;
-    if (!G || !G.running) { this.say('start a game (panel: Start game) to gather acorns'); return true; }
+    if (!G || !G.running) { this.say('start a game (menu, Settings: Start game) to gather acorns'); return true; }
     if (!G.collecting) { this.say(`no acorns for you in the ${G.season}: not your food this season`); return true; }
     if (G.player.carrying > 0) { this.say('your mouth is full: bury this one first'); return true; }
     const near = G.acornNear(P.x, P.y, P.z, CROWN_R, true);

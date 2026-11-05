@@ -49,7 +49,7 @@ const RAVEN_LOOK = 1.3;   // rad: how far the raven's head turns before the body
 const SPIRIT_FRAME = -0.45;   // where the wisp sits in the frame: this much of the half view below the middle (the lower third)
 // Scroll to zoom (owner, 2026-10-27): the wheel down zooms out, up zooms in. `zoom` scales the chase distance of every
 // camera (this one, the spirit's, the ground animals' in groundControl.js, the squirrel's, the woodpecker's), ZOOM_RANGE
-// times the set-up's own; a notch of 100 is about 11%. Not over the panel, the credits, a card or the opening screen.
+// times the set-up's own; a notch of 100 is about 11%. Not over Settings, the HUD, the credits, a card or the opening screen.
 const ZOOM_RANGE = [0.35, 4], ZOOM_RATE = 0.0012, ZOOM_STEP = 60, ZOOM_REACH = 2.5, ZOOM_EASE = 7;
 // One wheel event moves the target by at most ZOOM_STEP px worth (a line or a page of deltaMode scaled to px), the
 // target stays within ZOOM_REACH times the zoom the camera is at (so a trackpad flick's hundreds of events cannot pin
@@ -101,7 +101,7 @@ export class RavenFlight {
     this.orbitYaw = 0; this.orbitPitch = 0; this.orbitT = 9;
     this._zoom = 1; this.zoomTarget = 1; this._zoomAt = performance.now();   // the wheel's zoom (ZOOM_RANGE): every chase camera scales its distance by it
     window.addEventListener('wheel', e => {
-      if (document.documentElement.classList.contains('opening') || e.target?.closest?.('#panel, #credits, #speciesCard, #opening, #fieldGuide')) return;
+      if (document.documentElement.classList.contains('opening') || e.target?.closest?.('#settings, #hud, #credits, #speciesCard, #opening, #fieldGuide')) return;
       const px = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * 400 : e.deltaY, d = Math.max(-ZOOM_STEP, Math.min(ZOOM_STEP, px));
       const z = this.zoom, t = this.zoomTarget * Math.exp(d * ZOOM_RATE);   // down (positive) zooms out, up zooms in (owner, 2026-10-27: inverted from the first cut)
       this.zoomTarget = Math.min(ZOOM_RANGE[1], Math.max(ZOOM_RANGE[0], Math.min(z * ZOOM_REACH, Math.max(z / ZOOM_REACH, t))));

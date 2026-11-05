@@ -4449,3 +4449,33 @@ and "If the user is in a world with no other users, video and microphone should 
   Peers see each other's IP addresses through ICE; the docs say so. No accounts made; what Aaron needs to set up is
   in `docs/multiplayer.md` "TURN".
 
+## 2026-11-04: the menu under the X: Settings, Exit to main screen; the data panel on the right
+
+Aaron: "The current data panel should have its text size decreased so that it can fit underneath the admin panel on
+the right. Remove "PERCEIVES" and subsequent text from admin panel. Have a way to exit to the main screen underneath the
+X, and also a "Settings" page. Move the current admin panel into that area." Read as: the data panel is `#hud` (the
+readouts), the admin panel is `#panel` (Location, Start game, Hover, Present day, sound, Texture, Season, Time of day,
+Forest detail, Perceives), and "underneath the admin panel on the right" is where the admin panel stood, since the
+admin panel itself moves into Settings. Chosen:
+
+- **The data panel** stands in the right column under the mini-map (`top: --mapH + 24px`, 230 px wide; 212 on a narrow
+  window), at 11.5 px rows with a 1.3 line height (11 px narrow); at 1280x800 it is 322 px tall and does not scroll; on
+  a short window it scrolls above the body's row (layoutHud caps it as it capped the panel). Its title row wraps so the
+  tile id and the Data link never run off the edge.
+- **Perceives** is gone from the page and the code that wrote it with it (main.js showPerceives); the perception matrix
+  still drives the animals (animals.js setObserver).
+- **The menu under the X** (`#menuList`): Settings, then Exit to main screen, shown while the menu is open.
+- **Settings** (`#settings`): a card top middle holding `#panel` itself, every control with its id and handler as it
+  was. The X closes the menu and Settings with it (Settings is part of the menu); Esc or the card's x closes Settings
+  alone. Rejected: Settings as a full page replacing the view (the time of day and the season are adjusted while
+  looking at the world).
+- **Exit to main screen** (main.js exitToTitle): the hub's room left as a tile switch leaves it, the world torn down by
+  disposeWorld as a second choice on the earth tears one down, and the title screen made again over it through the same
+  constructor and hookup as at the start (`openTitle`, `mp.attach`), facing the tile last played: the session's
+  sign-in is known, so the earth rises lit with no sign-in; choosing a place builds a world as at the start. The direct
+  paths (?skip=1, ?game=1, ?as=) have no title in the page: Exit loads the page without them. Found in doing it: the
+  world's teardown drained its observer's pending records without the filter that skips the screen's own nodes, so a
+  title rendered in the same task as the teardown was swept as the world's (fixed: one `record` for both); and a
+  played world stays the listener scope, so the new title's key guard was recorded as the world's (the scope is let go
+  before the title is made).
+
