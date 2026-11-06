@@ -1,6 +1,6 @@
 {
  "tile": "utm12n_557_4964",
- "at": "2026-11-06T13:52:49Z",
+ "at": "2026-11-06T19:34:21Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -12,7 +12,7 @@
   "by_level": {
    "0": {
     "plants": 11,
-    "animals": 51
+    "animals": 39
    },
    "1": {
     "plants": 0,
@@ -20,31 +20,31 @@
    },
    "2": {
     "plants": 10,
-    "animals": 0
+    "animals": 1
    },
    "3": {
-    "plants": 4,
-    "animals": 25
+    "plants": 31,
+    "animals": 36
    },
    "4": {
     "plants": 1,
     "animals": 6
    }
   },
-  "plants": 26,
+  "plants": 53,
   "animals_present": 82,
   "animals_queued": 51,
   "meshy_credits_queued": 1515,
   "cards_queued": 11,
   "stand_ins": {
+   "amelanchier_alnifolia": null,
+   "ficus_densifolia": null,
    "pinus_longaeva": "pinus_ponderosa",
-   "geranium_viscosissimum": null,
    "chamaenerion_angustifolium": null,
    "clematis_hirsutissima": null,
    "geum_triflorum": null,
    "sedum_lanceolatum": null,
    "cirsium_scariosum": null,
-   "eriogonum_umbellatum": null,
    "cirsium_arvense": null,
    "linum_lewisii": null,
    "pinus_flexilis": "pinus_ponderosa"
@@ -60,21 +60,20 @@
    },
    "ground": {
     "target": 26,
-    "have": 1
+    "have": 28
    },
    "animal": {
     "target": 22,
     "have": 82,
-    "with_model": 31
+    "with_model": 43
    }
   },
   "hands": {
-   "count": 96,
+   "count": 80,
    "by_what": {
     "a trait card": 11,
     "a lexicon phrase or a species-mix rule": 18,
-    "a mesh": 51,
-    "a review of its generated traits": 16
+    "a mesh": 51
    }
   }
  },
@@ -93,25 +92,12 @@
    ]
   },
   {
-   "id": "phyllodoce_breweri",
-   "kind": "shrub",
-   "fidelity": 2,
-   "common": "red mountain heather",
-   "drawn_as": "phyllodoce_breweri",
-   "share": 1.0,
-   "why_needed": [
-    "named by EVT 9017 Rocky Mountain Alpine-Montane Wet Meadow (2590 cells)",
-    "named by EVT 7070 Rocky Mountain Alpine Dwarf-Shrubland (151 cells)",
-    "named by EVT 9016 Rocky Mountain Alpine Bedrock and Scree (130 cells)"
-   ]
-  },
-  {
    "id": "pseudotsuga_menziesii",
    "kind": "tree",
    "fidelity": 3,
    "common": "Douglas-fir",
    "drawn_as": "pseudotsuga_menziesii",
-   "share": 0.5,
+   "share": 0.5441,
    "why_needed": [
     "named by EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (16593 cells)",
     "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)",
@@ -124,22 +110,87 @@
    "fidelity": 2,
    "common": "lodgepole pine",
    "drawn_as": "pinus_contorta",
-   "share": 0.2716,
+   "share": 0.3263,
    "why_needed": [
     "named by EVT 7050 Rocky Mountain Lodgepole Pine Forest (9086 cells)",
     "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)"
    ]
   },
   {
-   "id": "juniperus_grandis",
+   "id": "festuca_idahoensis",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "Idaho fescue",
+   "drawn_as": "festuca_idahoensis",
+   "share": 0.098,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "carex_geyeri",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "Geyer's sedge",
+   "drawn_as": "carex_geyeri",
+   "share": 0.0872,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "pseudoroegneria_spicata",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "bluebunch wheatgrass",
+   "drawn_as": "pseudoroegneria_spicata",
+   "share": 0.0822,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "pinus_albicaulis",
    "kind": "tree",
    "fidelity": 2,
-   "common": "Sierra juniper",
-   "drawn_as": "juniperus_grandis",
-   "share": 0.0699,
+   "common": "whitebark pine",
+   "drawn_as": "pinus_albicaulis",
+   "share": 0.0778,
    "why_needed": [
-    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)",
-    "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (11 cells)"
+    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)"
+   ]
+  },
+  {
+   "id": "poa_secunda",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "Sandberg bluegrass",
+   "drawn_as": "poa_secunda",
+   "share": 0.0653,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "arnica_cordifolia",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "heartleaf arnica",
+   "drawn_as": "arnica_cordifolia",
+   "share": 0.0651,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "elymus_trachycaulus",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "slender wheatgrass",
+   "drawn_as": "elymus_trachycaulus",
+   "share": 0.0566,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
@@ -151,40 +202,239 @@
    "share": 0.0515,
    "why_needed": [
     "named by EVT 7011 Rocky Mountain Aspen Forest and Woodland (2547 cells)",
-    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)"
+    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)",
+    "canopy: records (GBIF: 3 records on the tile; height not yet screened)"
    ]
   },
   {
-   "id": "tsuga_mertensiana",
-   "kind": "tree",
-   "fidelity": 2,
-   "common": "mountain hemlock",
-   "drawn_as": "tsuga_mertensiana",
-   "share": 0.0355,
+   "id": "carex_rossii",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "Ross' sedge",
+   "drawn_as": "carex_rossii",
+   "share": 0.0482,
    "why_needed": [
-    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)"
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
-   "id": "pinus_monticola",
-   "kind": "tree",
-   "fidelity": 2,
-   "common": "western white pine",
-   "drawn_as": "pinus_monticola",
-   "share": 0.0348,
+   "id": "mertensia_ciliata",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "tall fringed bluebells",
+   "drawn_as": "mertensia_ciliata",
+   "share": 0.0481,
    "why_needed": [
-    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)"
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
-   "id": "pinus_albicaulis",
-   "kind": "tree",
-   "fidelity": 2,
-   "common": "whitebark pine",
-   "drawn_as": "pinus_albicaulis",
-   "share": 0.0321,
+   "id": "saxifraga_odontoloma",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "brook saxifrage",
+   "drawn_as": "saxifraga_odontoloma",
+   "share": 0.0477,
    "why_needed": [
-    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)"
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "geranium_viscosissimum",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "sticky purple geranium",
+   "drawn_as": "geranium_viscosissimum",
+   "share": 0.0449,
+   "why_needed": [
+    "GBIF: 39 records on the tile"
+   ]
+  },
+  {
+   "id": "carex_hoodii",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "Hood's sedge",
+   "drawn_as": "carex_hoodii",
+   "share": 0.0375,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "poa_wheeleri",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "Wheeler's bluegrass",
+   "drawn_as": "poa_wheeleri",
+   "share": 0.0366,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "lupinus_argenteus",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "silvery lupine",
+   "drawn_as": "lupinus_argenteus",
+   "share": 0.0359,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "eriogonum_umbellatum",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "sulphur-flower buckwheat",
+   "drawn_as": "eriogonum_umbellatum",
+   "share": 0.0351,
+   "why_needed": [
+    "GBIF: 11 records on the tile"
+   ]
+  },
+  {
+   "id": "elymus_elymoides",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "squirreltail",
+   "drawn_as": "elymus_elymoides",
+   "share": 0.0291,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "hesperostipa_comata",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "needle and thread",
+   "drawn_as": "hesperostipa_comata",
+   "share": 0.0291,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "balsamorhiza_sagittata",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "arrowleaf balsamroot",
+   "drawn_as": "balsamorhiza_sagittata",
+   "share": 0.0285,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "delphinium_bicolor",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "little larkspur",
+   "drawn_as": "delphinium_bicolor",
+   "share": 0.0273,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "castilleja_cusickii",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "Cusick's Indian paintbrush",
+   "drawn_as": "castilleja_cusickii",
+   "share": 0.0259,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "campanula_rotundifolia",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "bluebell bellflower",
+   "drawn_as": "campanula_rotundifolia",
+   "share": 0.0181,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "lupinus_alpestris",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "Great Basin lupine",
+   "drawn_as": "lupinus_alpestris",
+   "share": 0.0181,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "mertensia_paniculata",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "Alaska tall bluebells",
+   "drawn_as": "mertensia_paniculata",
+   "share": 0.0181,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "calamagrostis_canadensis",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "bluejoint",
+   "drawn_as": "calamagrostis_canadensis",
+   "share": 0.0063,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "eurybia_conspicua",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "western showy aster",
+   "drawn_as": "eurybia_conspicua",
+   "share": 0.0051,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "actaea_rubra",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "red baneberry",
+   "drawn_as": "actaea_rubra",
+   "share": 0.002,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "cornus_canadensis",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "bunchberry dogwood",
+   "drawn_as": "cornus_canadensis",
+   "share": 0.002,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "maianthemum_stellatum",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "starry false lily of the valley",
+   "drawn_as": "maianthemum_stellatum",
+   "share": 0.002,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
@@ -193,7 +443,7 @@
    "fidelity": 3,
    "common": "ponderosa pine",
    "drawn_as": "pinus_ponderosa",
-   "share": 0.0045,
+   "share": 0.0004,
    "why_needed": [
     "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)"
    ]
@@ -219,6 +469,18 @@
    "why_needed": [
     "GBIF: 16 records on the tile"
    ]
+  },
+  {
+   "id": "amelanchier_alnifolia",
+   "kind": "tree",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "canopy: records (GBIF: 2 records on the tile; height not yet screened)"
+   ],
+   "stand_in": null
   },
   {
    "id": "calocedrus_decurrens",
@@ -280,26 +542,14 @@
    "stand_in": null
   },
   {
-   "id": "eriogonum_umbellatum",
-   "kind": "forb",
+   "id": "ficus_densifolia",
+   "kind": "tree",
    "fidelity": 0,
    "common": null,
    "drawn_as": null,
    "share": 0,
    "why_needed": [
-    "GBIF: 11 records on the tile"
-   ],
-   "stand_in": null
-  },
-  {
-   "id": "geranium_viscosissimum",
-   "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "GBIF: 39 records on the tile"
+    "canopy: records (GBIF: 2 records on the tile; height not yet screened)"
    ],
    "stand_in": null
   },
@@ -316,6 +566,18 @@
    "stand_in": null
   },
   {
+   "id": "juniperus_grandis",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "Sierra juniper",
+   "drawn_as": "juniperus_grandis",
+   "share": 0,
+   "why_needed": [
+    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)",
+    "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (11 cells)"
+   ]
+  },
+  {
    "id": "linum_lewisii",
    "kind": "forb",
    "fidelity": 0,
@@ -326,6 +588,19 @@
     "GBIF: 10 records on the tile"
    ],
    "stand_in": null
+  },
+  {
+   "id": "phyllodoce_breweri",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "red mountain heather",
+   "drawn_as": "phyllodoce_breweri",
+   "share": 0,
+   "why_needed": [
+    "named by EVT 9017 Rocky Mountain Alpine-Montane Wet Meadow (2590 cells)",
+    "named by EVT 7070 Rocky Mountain Alpine Dwarf-Shrubland (151 cells)",
+    "named by EVT 9016 Rocky Mountain Alpine Bedrock and Scree (130 cells)"
+   ]
   },
   {
    "id": "pinus_flexilis",
@@ -363,6 +638,17 @@
    "stand_in": "pinus_ponderosa"
   },
   {
+   "id": "pinus_monticola",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "western white pine",
+   "drawn_as": "pinus_monticola",
+   "share": 0,
+   "why_needed": [
+    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)"
+   ]
+  },
+  {
    "id": "quercus_kelloggii",
    "kind": "tree",
    "fidelity": 3,
@@ -384,6 +670,17 @@
     "GBIF: 16 records on the tile"
    ],
    "stand_in": null
+  },
+  {
+   "id": "tsuga_mertensiana",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "mountain hemlock",
+   "drawn_as": "tsuga_mertensiana",
+   "share": 0,
+   "why_needed": [
+    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)"
+   ]
   }
  ],
  "animals": [
@@ -670,7 +967,7 @@
    "role": [
     "herbivore"
    ],
-   "traits": "library/animals/traits/branta_canadensis.json"
+   "traits": null
   },
   {
    "id": "pica_hudsonia",
@@ -694,7 +991,7 @@
    "scientific": "Grus canadensis",
    "common": "sandhill crane",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "most recorded: 6 of its class (3% of the class's records)"
@@ -702,7 +999,7 @@
    "role": [
     "omnivore"
    ],
-   "traits": "library/animals/traits/grus_canadensis.json"
+   "traits": null
   },
   {
    "id": "euphagus_cyanocephalus",
@@ -732,7 +1029,7 @@
    "role": [
     "insectivore"
    ],
-   "traits": "library/animals/traits/petrochelidon_pyrrhonota.json"
+   "traits": null
   },
   {
    "id": "cinclus_mexicanus",
@@ -792,7 +1089,7 @@
    "role": [
     "omnivore"
    ],
-   "traits": "library/animals/traits/sturnella_neglecta.json"
+   "traits": null
   },
   {
    "id": "pooecetes_gramineus",
@@ -807,14 +1104,14 @@
    "role": [
     "omnivore"
    ],
-   "traits": "library/animals/traits/pooecetes_gramineus.json"
+   "traits": null
   },
   {
    "id": "aquila_chrysaetos",
    "scientific": "Aquila chrysaetos",
    "common": "golden eagle",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "predator and scavenger",
@@ -839,7 +1136,7 @@
    "role": [
     "omnivore"
    ],
-   "traits": "library/animals/traits/agelaius_phoeniceus.json"
+   "traits": null
   },
   {
    "id": "falco_sparverius",
@@ -854,7 +1151,7 @@
    "role": [
     "insectivore"
    ],
-   "traits": "library/animals/traits/falco_sparverius.json"
+   "traits": null
   },
   {
    "id": "molothrus_ater",
@@ -884,7 +1181,7 @@
    "role": [
     "insectivore"
    ],
-   "traits": "library/animals/traits/bucephala_islandica.json"
+   "traits": null
   },
   {
    "id": "nucifraga_columbiana",
@@ -916,7 +1213,7 @@
    "role": [
     "herbivore"
    ],
-   "traits": "library/animals/traits/fulica_americana.json"
+   "traits": null
   },
   {
    "id": "colaptes_auratus",
@@ -999,7 +1296,7 @@
    "scientific": "Pelecanus erythrorhynchos",
    "common": "american white pelican",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "predator"
@@ -1104,7 +1401,7 @@
    "scientific": "Bison bison",
    "common": "american bison",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "most recorded: 1 of its class (45% of the class's records)"
@@ -1119,7 +1416,7 @@
    "scientific": "Antilocapra americana",
    "common": "pronghorn",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "most recorded: 2 of its class (17% of the class's records)"
@@ -1145,11 +1442,27 @@
    "traits": null
   },
   {
+   "id": "canis_lupus",
+   "scientific": "Canis lupus",
+   "common": "gray wolf",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "records",
+   "why": [
+    "predator",
+    "most recorded: 5 of its class (4% of the class's records)"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
    "id": "taxidea_taxus",
    "scientific": "Taxidea taxus",
    "common": "american badger",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "predator",
@@ -1165,7 +1478,7 @@
    "scientific": "Ursus arctos",
    "common": "brown bear",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "most recorded: 8 of its class (2% of the class's records)"
@@ -1180,7 +1493,7 @@
    "scientific": "Ovis canadensis",
    "common": "bighorn sheep",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "most recorded: 9 of its class (2% of the class's records)"
@@ -1211,7 +1524,7 @@
    "scientific": "Alces alces",
    "common": "moose",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "most recorded: 13 of its class (1% of the class's records)"
@@ -1266,7 +1579,7 @@
    "role": [
     "insectivore"
    ],
-   "traits": "library/animals/traits/myotis_lucifugus.json"
+   "traits": null
   },
   {
    "id": "zapus_princeps",
@@ -1281,7 +1594,7 @@
    "role": [
     "herbivore"
    ],
-   "traits": "library/animals/traits/zapus_princeps.json"
+   "traits": null
   },
   {
    "id": "castor_canadensis",
@@ -1341,14 +1654,14 @@
    "role": [
     "herbivore"
    ],
-   "traits": "library/animals/traits/microtus_pennsylvanicus.json"
+   "traits": null
   },
   {
    "id": "oreamnos_americanus",
    "scientific": "Oreamnos americanus",
    "common": "mountain goat",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "most recorded: 22 of its class (0% of the class's records)"
@@ -1356,7 +1669,7 @@
    "role": [
     "herbivore"
    ],
-   "traits": "library/animals/traits/oreamnos_americanus.json"
+   "traits": null
   },
   {
    "id": "ondatra_zibethicus",
@@ -1371,7 +1684,7 @@
    "role": [
     "herbivore"
    ],
-   "traits": "library/animals/traits/ondatra_zibethicus.json"
+   "traits": null
   },
   {
    "id": "sylvilagus_nuttallii",
@@ -1389,26 +1702,11 @@
    "traits": null
   },
   {
-   "id": "myodes_gapperi",
-   "scientific": "Myodes gapperi",
-   "common": "gapper's red-backed mouse",
-   "kind": "mammal",
-   "fidelity": 0,
-   "present": "records",
-   "why": [
-    "most recorded: 26 of its class (0% of the class's records)"
-   ],
-   "role": [
-    "herbivore"
-   ],
-   "traits": "library/animals/traits/myodes_gapperi.json"
-  },
-  {
    "id": "thamnophis_elegans",
    "scientific": "Thamnophis elegans",
    "common": "terrestrial garter snake",
    "kind": "reptile",
-   "fidelity": 0,
+   "fidelity": 2,
    "present": "records",
    "why": [
     "most recorded: 1 of its class (100% of the class's records)"
@@ -1440,25 +1738,33 @@
     "most recorded: 2 of its class (31% of the class's records)"
    ],
    "role": [],
-   "traits": "library/animals/traits/ambystoma_mavortium.json"
+   "traits": null
   }
  ],
  "queue": {
   "cards": [
+   {
+    "id": "amelanchier_alnifolia",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "canopy: records (GBIF: 2 records on the tile; height not yet screened)"
+    ]
+   },
+   {
+    "id": "ficus_densifolia",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "canopy: records (GBIF: 2 records on the tile; height not yet screened)"
+    ]
+   },
    {
     "id": "pinus_longaeva",
     "kind": "tree",
     "stand_in": "pinus_ponderosa",
     "why": [
      "named by EVT 7057 Rocky Mountain Subalpine-Montane Limber-Bristlecone Pine Woodland (132 cells)"
-    ]
-   },
-   {
-    "id": "geranium_viscosissimum",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 39 records on the tile"
     ]
    },
    {
@@ -1499,14 +1805,6 @@
     "stand_in": null,
     "why": [
      "GBIF: 13 records on the tile"
-    ]
-   },
-   {
-    "id": "eriogonum_umbellatum",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 11 records on the tile"
     ]
    },
    {
@@ -1881,6 +2179,22 @@
     "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
     "estimate_credits": 30,
     "stand_in": "falco_columbarius",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "canis_lupus",
+    "scientific": "Canis lupus",
+    "common": "gray wolf",
+    "kind": "mammal",
+    "records": 97,
+    "why": [
+     "predator",
+     "most recorded: 5 of its class (4% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": "canis_latrans",
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
@@ -2289,39 +2603,32 @@
     "estimate_credits": 30,
     "stand_in": "sylvilagus_bachmani",
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "myodes_gapperi",
-    "scientific": "Myodes gapperi",
-    "common": "gapper's red-backed mouse",
-    "kind": "mammal",
-    "records": 3,
-    "why": [
-     "most recorded: 26 of its class (0% of the class's records)"
-    ],
-    "body_plan": "rodent",
-    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
-    "estimate_credits": 30,
-    "stand_in": "microtus_californicus",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    }
   ]
  },
  "hands": [
+  {
+   "id": "amelanchier_alnifolia",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 2 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "ficus_densifolia",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 2 records on the tile; height not yet screened)"
+   ]
+  },
   {
    "id": "pinus_longaeva",
    "kind": "tree",
    "what": "a trait card",
    "why": [
     "named by EVT 7057 Rocky Mountain Subalpine-Montane Limber-Bristlecone Pine Woodland (132 cells)"
-   ]
-  },
-  {
-   "id": "geranium_viscosissimum",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 39 records on the tile"
    ]
   },
   {
@@ -2362,14 +2669,6 @@
    "what": "a trait card",
    "why": [
     "GBIF: 13 records on the tile"
-   ]
-  },
-  {
-   "id": "eriogonum_umbellatum",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 11 records on the tile"
    ]
   },
   {
@@ -2728,6 +3027,15 @@
    ]
   },
   {
+   "id": "canis_lupus",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator",
+    "most recorded: 5 of its class (4% of the class's records)"
+   ]
+  },
+  {
    "id": "buteo_swainsoni",
    "kind": "bird",
    "what": "a mesh (Meshy ~30 credits) and its review",
@@ -2943,142 +3251,6 @@
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
     "most recorded: 25 of its class (0% of the class's records)"
-   ]
-  },
-  {
-   "id": "myodes_gapperi",
-   "kind": "mammal",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "most recorded: 26 of its class (0% of the class's records)"
-   ]
-  },
-  {
-   "id": "branta_canadensis",
-   "kind": "bird",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "grus_canadensis",
-   "kind": "bird",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "petrochelidon_pyrrhonota",
-   "kind": "bird",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "sturnella_neglecta",
-   "kind": "bird",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "pooecetes_gramineus",
-   "kind": "bird",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "agelaius_phoeniceus",
-   "kind": "bird",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "falco_sparverius",
-   "kind": "bird",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "bucephala_islandica",
-   "kind": "bird",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "fulica_americana",
-   "kind": "bird",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "myotis_lucifugus",
-   "kind": "mammal",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "zapus_princeps",
-   "kind": "mammal",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "microtus_pennsylvanicus",
-   "kind": "mammal",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "oreamnos_americanus",
-   "kind": "mammal",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "ondatra_zibethicus",
-   "kind": "mammal",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "myodes_gapperi",
-   "kind": "mammal",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "ambystoma_mavortium",
-   "kind": "amphibian",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
    ]
   }
  ]

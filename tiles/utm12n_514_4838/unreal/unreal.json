@@ -20,20 +20,20 @@
   "scale_cm": {
    "x": 496.0317,
    "y": 496.0317,
-   "z": 447.146
+   "z": 447.179
   },
   "actor_location_cm": {
    "x": 0,
    "y": 0,
-   "z": 310615.0
+   "z": 310628.9
   },
   "note": "Place the actor so its centre is the tile centre; Unreal's Y points south, which matches image row order (row 0 = north edge), so no flip is needed."
  },
  "elevation_m": {
-  "min": 2015.97,
-  "max": 4196.33,
-  "mid": 3106.15,
-  "encoded_span": 2289.39,
+  "min": 2016.02,
+  "max": 4196.55,
+  "mid": 3106.29,
+  "encoded_span": 2289.56,
   "vertical_step_m": 0.0349
  },
  "layers": {
@@ -51,7 +51,7 @@
   },
   "grassland": {
    "path": "unreal/weights/grassland.png",
-   "coverage": 0.0541
+   "coverage": 0.054
   },
   "riparian": {
    "path": "unreal/weights/riparian.png",
@@ -63,7 +63,7 @@
   },
   "barren": {
    "path": "unreal/weights/barren.png",
-   "coverage": 0.34
+   "coverage": 0.3401
   }
  },
  "canopy": {

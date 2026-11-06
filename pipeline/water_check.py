@@ -149,6 +149,24 @@ def check(tile: Tile, channels: str = "hydro/channels.geojson", levels: str | No
     }
     if shift:
         rep["shift_from_5m"] = shift
+    # per reach (2026-11-06, Lamar): the share of reaches whose median bed gap is over 15 cm / 50 cm (the water sits above
+    # the cross-section's low point along most of the reach), and the named streams one by one
+    if len(x):
+        ids = np.unique(reach)
+        med = np.array([np.median(gap[reach == r]) for r in ids])
+        rep["by_reach"] = {"reaches": int(ids.size), "median_gap_over_15cm": round(float((med > 0.15).mean()), 3),
+                           "median_gap_over_50cm": round(float((med > 0.50).mean()), 3),
+                           "median_of_reach_medians_m": round(float(np.median(med)), 3)}
+        name_of = {r["id"]: r.get("name") for r in S["reaches"]}
+        names = np.array([name_of.get(int(r)) or "" for r in reach])
+        named = {}
+        for nm in sorted(set(names) - {""}):
+            sel = names == nm
+            if sel.sum() >= 40:
+                named[nm] = {"km": round(float(sel.sum()) * 2.5 / 1000, 1), "bed_within_15cm": round(float((gap[sel] <= 0.15).mean()), 3),
+                             "bed_gap_median_m": _pct(gap[sel], 50), "bed_gap_p95_m": _pct(gap[sel], 95),
+                             "clip_over_1m": round(float((clip[sel] > 1.0).mean()), 3)}
+        rep["named"] = named
     # the same away from the erased roads (reroute.road_zone): under a road fill the raw ground is the fill, not a bed
     from .reroute import road_zone
     zone5 = road_zone(tile)

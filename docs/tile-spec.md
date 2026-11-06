@@ -470,7 +470,11 @@ area, width, NHD name and permanence) and replaces its geometry with the path wa
 
 A tile whose `terrain/dem.tif` is not the 1 m ground averaged (std of the difference over 3 m; `utm11n_267_4175`,
 whose 5 m DEM is the 3DEP seamless product, 13.2 m) is refused: the client draws the 5 m heights, so water on the 1 m
-thalweg would not sit on the drawn ground. Rebuild its `dem.tif` from `dem_1m.tif` first.
+thalweg would not sit on the drawn ground. The step is then recorded `refused` with the reason (runlog.Refused):
+`--status` flags it and exits 1, the build exits 1, and the audit step fails. Since 2026-11-06 the dem step draws
+`terrain/dem.tif` from the 1 m ground wherever the 1 m products cover >= 95 % of the tile (`terrain.dem` `drawn`, the
+fetched DEM kept as `terrain/dem_5m.tif`, layer `terrain.dem_5m`: it fills only the gaps, shifted onto the 1 m ground
+within 50 m of the seam), so a tile whose ImageServer fetch fell back to the seamless 10 m is no longer refused.
 
 Outputs: `hydro/channels.geojson` (`"rerouted": true`; per reach `rerouted` true / "pond" / "kept", `snap_shift_m`
 the median distance from the 5 m line, `snap_shift_max_m`), the 5 m network kept as `hydro/channels_5m.geojson` (a

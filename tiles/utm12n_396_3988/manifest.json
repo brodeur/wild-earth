@@ -15,7 +15,7 @@
   36.12213224148818
  ],
  "size_m": 10000,
- "generated_at": "2026-11-06T18:49:31Z",
+ "generated_at": "2026-11-06T19:36:10Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -48,6 +48,8 @@
     "max": 2226.699951171875,
     "valid_fraction": 1.0
    },
+   "drawn": "fetched: the 1 m products cover 86.1% of the tile (< 95%)",
+   "share_1m": 0.861,
    "sha256": "370fb0c452acb9a67727f4abd751a97758deb9a439dd6b25d4d7c7a26c1fc545",
    "bytes": 11609536
   },
@@ -4754,20 +4756,26 @@
    "at": "2026-11-06T11:29:51Z",
    "seconds": 0.7,
    "ok": true
+  },
+  {
+   "step": "dem",
+   "at": "2026-11-06T19:36:10Z",
+   "seconds": 3.2,
+   "ok": true
   }
  ],
  "steps": {
   "dem": {
-   "version": "1",
-   "code": "1c8932603c02578a",
+   "version": "2",
+   "code": "a85aabe25d51c321",
    "params": {
     "tile": "utm12n_396_3988",
     "dem_res_m": 5.0
    },
-   "fingerprint": "87530d83b982bab1",
+   "fingerprint": "9bbdc43a73358d97",
    "parts": {
-    "version": "1",
-    "code": "1c8932603c02578a",
+    "version": "2",
+    "code": "a85aabe25d51c321",
     "params": {
      "tile": "utm12n_396_3988",
      "dem_res_m": 5.0
@@ -4775,7 +4783,7 @@
     "deps": {},
     "library": {}
    },
-   "ran_at": "2026-11-06T06:45:07Z",
+   "ran_at": "2026-11-06T19:36:07Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -4794,7 +4802,7 @@
     "network": 0,
     "cache": 16
    },
-   "seconds": 1.2
+   "seconds": 3.2
   },
   "naip": {
    "version": "1",

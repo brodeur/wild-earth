@@ -17,54 +17,55 @@
    7,
    8,
    9,
-   10
+   10,
+   11
   ],
-  "water_cells_5m": 243589,
+  "water_cells_5m": 244116,
   "reaches_tested": 362,
   "verdicts_before": {
-   "no water seen": 346,
-   "on water": 13,
-   "off water": 3
+   "no water seen": 352,
+   "off water": 4,
+   "on water": 6
   },
   "verdicts_after": {
-   "no water seen": 346,
-   "on water": 13,
+   "no water seen": 352,
+   "on water": 7,
    "off water": 3
   },
-  "stems": 7,
-  "stems_moved": 0,
-  "reaches_moved": 0,
+  "stems": 5,
+  "stems_moved": 1,
+  "reaches_moved": 1,
   "reaches_bent": 0,
   "reaches_extended": 0,
   "nhd_dropped": 0,
-  "side_channels": 0,
+  "side_channels": 1,
   "undrawn_patches": 3,
-  "undrawn_m2": 8675,
+  "undrawn_m2": 13350,
   "undrawn_by_map": {
-   "a rewilded reservoir or pond (human water, not drawn by the rule)": 6400,
-   "unmapped": 2275
+   "a rewilded reservoir or pond (human water, not drawn by the rule)": 4475,
+   "unmapped": 8875
   },
-  "seconds": 10.2
+  "seconds": 9.6
  },
  "stems": [
   {
-   "reaches": 4,
+   "reaches": 5,
    "names": [
     "Cottonwood Creek"
    ],
-   "length_m": 4791,
-   "area_km2": 132.6,
-   "width": 15.31,
+   "length_m": 4907,
+   "area_km2": 130.4,
+   "width": 15.44,
    "before": {
-    "on": 0.056,
-    "near": 0.056,
-    "samples": 481
+    "on": 0.059,
+    "near": 0.061,
+    "samples": 492
    },
    "verdict": "no water seen (kept: the trace is not on the imagery's water)",
    "after": {
-    "on": 0.053,
-    "near": 0.053,
-    "samples": 434
+    "on": 0.054,
+    "near": 0.054,
+    "samples": 444
    }
   },
   {
@@ -72,357 +73,341 @@
    "names": [
     "Cottonwood Creek"
    ],
-   "length_m": 3380,
-   "area_km2": 118.4,
-   "width": 14.16,
+   "length_m": 3550,
+   "area_km2": 120.5,
+   "width": 13.88,
    "before": {
-    "on": 0.074,
-    "near": 0.085,
-    "samples": 340
+    "on": 0.093,
+    "near": 0.107,
+    "samples": 356
    },
    "verdict": "no water seen (kept: the trace is not on the imagery's water)",
    "after": {
-    "on": 0.072,
-    "near": 0.072,
-    "samples": 292
+    "on": 0.1,
+    "near": 0.1,
+    "samples": 300
    }
   },
   {
    "reaches": 1,
    "names": [],
-   "length_m": 26,
-   "area_km2": 117.4,
-   "width": 13.66,
+   "length_m": 44,
+   "area_km2": 120.5,
+   "width": 13.82,
    "before": {
     "on": 1.0,
     "near": 1.0,
-    "samples": 4
+    "samples": 6
    },
    "verdict": "on water"
   },
   {
-   "reaches": 1,
+   "reaches": 3,
    "names": [],
-   "length_m": 6,
-   "area_km2": 117.4,
-   "width": 13.66,
+   "length_m": 963,
+   "area_km2": 59.6,
+   "width": 10.31,
    "before": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 2
-   },
-   "verdict": "on water"
-  },
-  {
-   "reaches": 1,
-   "names": [],
-   "length_m": 36,
-   "area_km2": 117.4,
-   "width": 13.66,
-   "before": {
-    "on": 0.6,
-    "near": 0.6,
-    "samples": 5
-   },
-   "verdict": "on water"
-  },
-  {
-   "reaches": 1,
-   "names": [],
-   "length_m": 962,
-   "area_km2": 60.0,
-   "width": 10.1,
-   "before": {
-    "on": 0.173,
+    "on": 0.194,
     "near": 0.214,
     "samples": 98
    },
    "verdict": "no water seen (kept: the trace is not on the imagery's water)",
    "after": {
-    "on": 0.212,
-    "near": 0.212,
-    "samples": 85
+    "on": 0.202,
+    "near": 0.214,
+    "samples": 84
    }
   },
   {
    "reaches": 1,
    "names": [],
-   "length_m": 53,
-   "area_km2": 60.0,
-   "width": 10.1,
+   "length_m": 46,
+   "area_km2": 59.6,
+   "width": 10.07,
    "before": {
-    "on": 0.143,
-    "near": 0.714,
-    "samples": 7
-   },
-   "verdict": "off water (kept: the trace is not on the imagery's water)",
-   "after": {
-    "on": 0.0,
+    "on": 0.167,
     "near": 1.0,
     "samples": 6
-   }
+   },
+   "verdict": "moved",
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 5
+   },
+   "shift_m_median": 21.0,
+   "shift_m_max": 26.7,
+   "ends": [
+    [
+     "snapped"
+    ],
+    [
+     "snapped"
+    ]
+   ]
   }
  ],
  "reaches": [
   {
-   "k": 82,
-   "name": "Cascade Creek",
-   "width": 8.64,
-   "length_m": 24,
-   "before": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 4
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 4
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": null
-  },
-  {
-   "k": 88,
+   "k": 6,
    "name": null,
-   "width": 3.43,
-   "length_m": 57,
+   "width": 10.07,
+   "length_m": 99,
    "before": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 7
+    "on": 0.273,
+    "near": 0.273,
+    "samples": 11
    },
    "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 7
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": null
-  },
-  {
-   "k": 114,
-   "name": "Cascade Creek",
-   "width": 8.32,
-   "length_m": 56,
-   "before": {
-    "on": 0.714,
-    "near": 0.714,
-    "samples": 7
-   },
-   "after": {
-    "on": 0.714,
-    "near": 0.714,
-    "samples": 7
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": null
-  },
-  {
-   "k": 147,
-   "name": null,
-   "width": 13.66,
-   "length_m": 26,
-   "before": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 4
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 4
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": null
-  },
-  {
-   "k": 148,
-   "name": null,
-   "width": 13.66,
-   "length_m": 6,
-   "before": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 2
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 2
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": null
-  },
-  {
-   "k": 149,
-   "name": null,
-   "width": 13.66,
-   "length_m": 36,
-   "before": {
-    "on": 0.6,
-    "near": 0.6,
-    "samples": 5
-   },
-   "after": {
-    "on": 0.6,
-    "near": 0.6,
-    "samples": 5
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": null
-  },
-  {
-   "k": 160,
-   "name": "Cottonwood Creek",
-   "width": 13.72,
-   "length_m": 3373,
-   "before": {
-    "on": 0.074,
-    "near": 0.083,
-    "samples": 339
-   },
-   "after": {
-    "on": 0.074,
-    "near": 0.083,
-    "samples": 339
+    "on": 0.273,
+    "near": 0.273,
+    "samples": 11
    },
    "verdict_before": "no water seen",
    "verdict_after": "no water seen",
    "moved": null
   },
   {
-   "k": 166,
+   "k": 7,
    "name": null,
-   "width": 1.68,
-   "length_m": 22,
+   "width": 10.07,
+   "length_m": 46,
    "before": {
-    "on": 0.75,
+    "on": 0.167,
     "near": 1.0,
-    "samples": 4
+    "samples": 6
    },
    "after": {
-    "on": 0.75,
+    "on": 1.0,
     "near": 1.0,
-    "samples": 4
+    "samples": 5
    },
-   "verdict_before": "on water",
+   "verdict_before": "off water",
    "verdict_after": "on water",
+   "moved": "moved"
+  },
+  {
+   "k": 11,
+   "name": null,
+   "width": 10.28,
+   "length_m": 233,
+   "before": {
+    "on": 0.28,
+    "near": 0.36,
+    "samples": 25
+   },
+   "after": {
+    "on": 0.28,
+    "near": 0.36,
+    "samples": 25
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
    "moved": null
   },
   {
-   "k": 267,
+   "k": 18,
    "name": null,
-   "width": 1.0,
-   "length_m": 4,
+   "width": 10.31,
+   "length_m": 632,
    "before": {
-    "on": 0.0,
-    "near": 0.5,
-    "samples": 2
+    "on": 0.108,
+    "near": 0.138,
+    "samples": 65
    },
    "after": {
-    "on": 0.0,
-    "near": 0.5,
-    "samples": 2
+    "on": 0.108,
+    "near": 0.138,
+    "samples": 65
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 26,
+   "name": null,
+   "width": 2.53,
+   "length_m": 144,
+   "before": {
+    "on": 0.375,
+    "near": 0.625,
+    "samples": 16
+   },
+   "after": {
+    "on": 0.375,
+    "near": 0.625,
+    "samples": 16
    },
    "verdict_before": "off water",
    "verdict_after": "off water",
    "moved": null
   },
   {
-   "k": 282,
-   "name": "Cottonwood Creek",
-   "width": 14.16,
-   "length_m": 8,
+   "k": 95,
+   "name": null,
+   "width": 3.36,
+   "length_m": 16,
    "before": {
     "on": 1.0,
     "near": 1.0,
-    "samples": 2
+    "samples": 3
    },
    "after": {
     "on": 1.0,
     "near": 1.0,
-    "samples": 2
+    "samples": 3
    },
    "verdict_before": "on water",
    "verdict_after": "on water",
    "moved": null
   },
   {
-   "k": 284,
-   "name": "Cottonwood Creek",
-   "width": 14.43,
-   "length_m": 2348,
+   "k": 112,
+   "name": "Cascade Creek",
+   "width": 8.36,
+   "length_m": 59,
    "before": {
-    "on": 0.114,
-    "near": 0.114,
-    "samples": 236
+    "on": 0.571,
+    "near": 0.571,
+    "samples": 7
    },
    "after": {
-    "on": 0.114,
-    "near": 0.114,
-    "samples": 236
+    "on": 0.571,
+    "near": 0.571,
+    "samples": 7
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 141,
+   "name": null,
+   "width": 13.82,
+   "length_m": 44,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 6
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 6
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 142,
+   "name": null,
+   "width": 13.82,
+   "length_m": 269,
+   "before": {
+    "on": 0.607,
+    "near": 0.679,
+    "samples": 28
+   },
+   "after": {
+    "on": 0.607,
+    "near": 0.679,
+    "samples": 28
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 157,
+   "name": "Cottonwood Creek",
+   "width": 13.88,
+   "length_m": 3281,
+   "before": {
+    "on": 0.052,
+    "near": 0.067,
+    "samples": 330
+   },
+   "after": {
+    "on": 0.052,
+    "near": 0.067,
+    "samples": 330
    },
    "verdict_before": "no water seen",
    "verdict_after": "no water seen",
    "moved": null
   },
   {
-   "k": 357,
-   "name": null,
-   "width": 4.39,
-   "length_m": 17,
+   "k": 271,
+   "name": "Cottonwood Creek",
+   "width": 14.32,
+   "length_m": 557,
    "before": {
-    "on": 0.667,
-    "near": 1.0,
-    "samples": 3
+    "on": 0.404,
+    "near": 0.439,
+    "samples": 57
    },
    "after": {
-    "on": 0.667,
+    "on": 0.404,
+    "near": 0.439,
+    "samples": 57
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 282,
+   "name": "Cottonwood Creek",
+   "width": 14.57,
+   "length_m": 2106,
+   "before": {
+    "on": 0.033,
+    "near": 0.033,
+    "samples": 212
+   },
+   "after": {
+    "on": 0.033,
+    "near": 0.033,
+    "samples": 212
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 347,
+   "name": null,
+   "width": 4.39,
+   "length_m": 64,
+   "before": {
+    "on": 1.0,
     "near": 1.0,
-    "samples": 3
+    "samples": 8
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 8
    },
    "verdict_before": "on water",
    "verdict_after": "on water",
    "moved": null
   },
   {
-   "k": 358,
+   "k": 348,
    "name": null,
    "width": 4.39,
-   "length_m": 19,
+   "length_m": 125,
    "before": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 3
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 3
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": null
-  },
-  {
-   "k": 359,
-   "name": null,
-   "width": 4.39,
-   "length_m": 126,
-   "before": {
-    "on": 0.143,
+    "on": 0.214,
     "near": 0.643,
     "samples": 14
    },
    "after": {
-    "on": 0.143,
+    "on": 0.214,
     "near": 0.643,
     "samples": 14
    },
@@ -433,65 +418,84 @@
   {
    "k": 366,
    "name": "Cottonwood Creek",
-   "width": 15.03,
-   "length_m": 478,
+   "width": 15.17,
+   "length_m": 292,
    "before": {
     "on": 0.0,
     "near": 0.0,
-    "samples": 49
+    "samples": 31
    },
    "after": {
     "on": 0.0,
     "near": 0.0,
-    "samples": 49
+    "samples": 31
    },
    "verdict_before": "no water seen",
    "verdict_after": "no water seen",
    "moved": null
   },
   {
-   "k": 374,
+   "k": 369,
    "name": "Cottonwood Creek",
-   "width": 15.08,
-   "length_m": 1192,
+   "width": 15.22,
+   "length_m": 1175,
    "before": {
     "on": 0.0,
     "near": 0.0,
-    "samples": 121
+    "samples": 119
    },
    "after": {
     "on": 0.0,
     "near": 0.0,
-    "samples": 121
+    "samples": 119
    },
    "verdict_before": "no water seen",
    "verdict_after": "no water seen",
    "moved": null
   },
   {
-   "k": 387,
+   "k": 381,
    "name": "Taggart Creek",
-   "width": 2.68,
-   "length_m": 45,
+   "width": 2.64,
+   "length_m": 72,
    "before": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 6
+    "on": 0.667,
+    "near": 0.667,
+    "samples": 9
    },
    "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 6
+    "on": 0.667,
+    "near": 0.667,
+    "samples": 9
    },
    "verdict_before": "on water",
    "verdict_after": "on water",
    "moved": null
   },
   {
-   "k": 432,
+   "k": 431,
+   "name": "Taggart Creek",
+   "width": 4.74,
+   "length_m": 26,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 4
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 4
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 433,
    "name": "Cottonwood Creek",
-   "width": 15.31,
-   "length_m": 773,
+   "width": 15.44,
+   "length_m": 777,
    "before": {
     "on": 0.0,
     "near": 0.0,
@@ -507,158 +511,89 @@
    "moved": null
   },
   {
-   "k": 437,
-   "name": "Taggart Creek",
-   "width": 4.73,
-   "length_m": 9,
-   "before": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 2
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 2
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": null
-  },
-  {
-   "k": 438,
-   "name": "Taggart Creek",
-   "width": 4.73,
-   "length_m": 12,
-   "before": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 3
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 3
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": null
-  },
-  {
-   "k": 468,
+   "k": 472,
    "name": null,
-   "width": 10.1,
-   "length_m": 962,
+   "width": 14.49,
+   "length_m": 50,
    "before": {
-    "on": 0.173,
-    "near": 0.214,
-    "samples": 98
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 7
    },
    "after": {
-    "on": 0.173,
-    "near": 0.214,
-    "samples": 98
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 7
    },
    "verdict_before": "no water seen",
    "verdict_after": "no water seen",
    "moved": null
   },
   {
-   "k": 469,
-   "name": null,
-   "width": 10.1,
-   "length_m": 53,
-   "before": {
-    "on": 0.143,
-    "near": 0.714,
-    "samples": 7
-   },
-   "after": {
-    "on": 0.143,
-    "near": 0.714,
-    "samples": 7
-   },
-   "verdict_before": "off water",
-   "verdict_after": "off water",
-   "moved": null
-  },
-  {
-   "k": 471,
-   "name": "Cottonwood Creek",
-   "width": 15.41,
-   "length_m": 60,
-   "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 8
-   },
-   "after": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 8
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "no water seen",
-   "moved": null
-  },
-  {
-   "k": 475,
+   "k": 473,
    "name": null,
    "width": 14.49,
    "length_m": 40,
    "before": {
     "on": 0.0,
     "near": 0.0,
-    "samples": 5
+    "samples": 6
    },
    "after": {
     "on": 0.0,
     "near": 0.0,
-    "samples": 5
+    "samples": 6
    },
    "verdict_before": "no water seen",
    "verdict_after": "no water seen",
    "moved": null
   }
  ],
- "side_channels": [],
+ "side_channels": [
+  {
+   "name": null,
+   "width": 10.1,
+   "length_m": 233,
+   "area_m2": 18575
+  }
+ ],
  "nhd_dropped": [],
  "undrawn": [
   {
    "at": [
-    3950,
-    3747
+    1353,
+    5784
    ],
-   "area_m2": 4175,
-   "freq_mean": 0.9,
+   "area_m2": 6600,
+   "freq_mean": 0.85,
    "nearest_reach": null,
-   "nearest_width": 1.22,
+   "nearest_width": 2.01,
+   "nearest_m": 262,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    3951,
+    3745
+   ],
+   "area_m2": 4475,
+   "freq_mean": 0.89,
+   "nearest_reach": null,
+   "nearest_width": 1.21,
    "nearest_m": 45,
    "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
   },
   {
    "at": [
-    6790,
-    7806
-   ],
-   "area_m2": 2275,
-   "freq_mean": 0.74,
-   "nearest_reach": "Cascade Creek",
-   "nearest_width": 8.64,
-   "nearest_m": 109,
-   "map": "unmapped"
-  },
-  {
-   "at": [
-    6792,
+    6793,
     9670
    ],
-   "area_m2": 2225,
-   "freq_mean": 0.81,
+   "area_m2": 2275,
+   "freq_mean": 0.8,
    "nearest_reach": null,
-   "nearest_width": 2.1,
-   "nearest_m": 26,
-   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+   "nearest_width": 2.22,
+   "nearest_m": 28,
+   "map": "unmapped"
   }
  ]
 }

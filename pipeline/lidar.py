@@ -162,11 +162,13 @@ def cell_metas(tile: Tile) -> list:
 
 
 def _fill_from_5m(tile: Tile, z: np.ndarray) -> float:
-    """Fill the 1 m grid's NODATA cells from the 5 m DEM (terrain/dem.tif) resampled bilinearly; the share filled."""
+    """Fill the 1 m grid's NODATA cells from the 5 m DEM as fetched (terrain/dem_5m.tif when the dem step drew
+    terrain/dem.tif from the 1 m ground: fetch_dem.drawn_dem; else terrain/dem.tif) resampled bilinearly; the share filled."""
     hole = z == NODATA
     if not hole.any():
         return 0.0
-    with rasterio.open(tile.path("terrain/dem.tif")) as src:
+    fetched = tile.path("terrain/dem_5m.tif")
+    with rasterio.open(fetched if fetched.exists() else tile.path("terrain/dem.tif")) as src:
         z5 = src.read(1, out_shape=(N1, N1), resampling=Resampling.bilinear).astype("float32")
         nd = src.nodata
     ok = hole & (z5 != nd) & np.isfinite(z5)
