@@ -132,6 +132,7 @@ record's own fields, the others into their `set`; a `grown` note (age, dbh, crow
 | field | meaning |
 |---|---|
 | `count` | level 1: branches per tree (per stem for shrubs). Deeper levels: branches per parent, scaled by the parent's length |
+| `count_of` | level 1, a shrub only: `"plant"` reads its `count` as the whole plant's, shared among its stems as a tree's is among its trunks. `pipeline/plantgen.py` sets it when a shrub card grows from a tree template (common juniper from Sierra juniper), whose count was the tree's |
 | `whorl` | level 1: branches per whorl (conifers); 0 = spiral |
 | `start` | deeper levels: fraction of the parent where branching starts (default 0.15) |
 | `down_angle_deg`, `down_angle_var_deg` | angle from the parent; 90 is perpendicular, over 90 droops |
@@ -1355,8 +1356,8 @@ now carry too.
 | `height` | times the type's clump height (the annual clump is about 0.45 m at full height, the bunch 0.6 m) |
 | `width` | times the clump's spread |
 | `palette` | per season (`winter`, `spring`, `summer`, `fall`): `root`, `tip`, `head`, `awn` sRGB 0-255, the blade from its base to its tip, the seed head and the awns; summer and fall are the cured colours |
-| `heads` | `{ shape, months: [from, to] }`: `panicle` (open, nodding: oats, ripgut), `spike` (a dense head: barley, wildrye), `raceme` (needlegrass's loose, awned); drawn while the month is in range, else the blades alone |
-| `cure` | 0-1, how fully it dries to straw in summer (annuals 1; needlegrass 0.5 stays grey-green at the base) |
+| `heads` | `{ shape, months: [from, to] }`: `panicle` (open, nodding: oats, ripgut), `spike` (a dense head: barley, wildrye), `raceme` (needlegrass's loose, awned); drawn while the month is in range, else the blades alone (calendar months at the places the record is for; on a tile outside the regional tables they wrap the year and the heads stand four months past the last) |
+| `cure` | 0-1, how fully it dries to straw in summer (annuals 1; needlegrass 0.5 stays grey-green at the base); on a tile outside the regional tables it scales the sward's dead-leaf share and the shortening of its cured leaves (`grass.js` ownSeasonCurve, with the record's `lifespan`: a perennial's tussock base stands all year, an annual starts again from seed) |
 
 `ground` for `form: "forb"` (`forbs.js` bakes one picture per species per month from it):
 

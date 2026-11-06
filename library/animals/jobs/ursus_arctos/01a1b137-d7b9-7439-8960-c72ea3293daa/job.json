@@ -1,0 +1,71 @@
+{
+  "species": "ursus_arctos",
+  "mode": "refine",
+  "kind": "text-to-3d",
+  "task_id": "01a1b137-d7b9-7439-8960-c72ea3293daa",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "refine",
+    "preview_task_id": "01a1b135-d41a-703c-8c4b-9dd18014a9e9",
+    "texture_resolution": "2k",
+    "enable_pbr": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Natural coat colours and markings of a wild adult Brown bear (Ursus arctos) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body cream, reddish, dark brown, brown; back brownish-black, whitish-cream, white; neck white; legs yellowish-brown. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+    "moderation": false
+  },
+  "prompt": "Natural coat colours and markings of a wild adult Brown bear (Ursus arctos) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body cream, reddish, dark brown, brown; back brownish-black, whitish-cream, white; neck white; legs yellowish-brown. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+  "image": null,
+  "preview_job": "library/animals/jobs/ursus_arctos/01a1b135-d41a-703c-8c4b-9dd18014a9e9",
+  "estimated_credits": 10,
+  "balance_before": 1187,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-06T14:16:29+00:00",
+    "created_at": "2026-11-06T14:16:31+00:00",
+    "started_at": "2026-11-06T14:16:31+00:00",
+    "finished_at": "2026-11-06T14:17:03+00:00",
+    "downloaded": "2026-11-06T14:17:15+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur, world pipeline",
+  "progress": 100,
+  "task": {
+    "id": "01a1b137-d7b9-7439-8960-c72ea3293daa",
+    "type": "text-to-3d-refine",
+    "status": "SUCCEEDED",
+    "created_at": 1793974591555,
+    "started_at": 1793974591562,
+    "finished_at": 1793974623555,
+    "consumed_credits": 10,
+    "task_error": null
+  },
+  "credits_charged": 10,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 6754684,
+      "sha256": "4911baeac34409ed73e7bf145672b2551345a1cb31f4d0c33a75461994a52ea9",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b137-d7b9-7439-8960-c72ea3293daa/output/model.glb"
+    },
+    {
+      "file": "texture_base_color.png",
+      "bytes": 7354879,
+      "sha256": "37bf71715499e6209e8b7175826931cb941737fc69398ebfdf9c32f95311960f",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b137-d7b9-7439-8960-c72ea3293daa/output/texture_0.png"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 110936,
+      "sha256": "3794f20af914b1cd8e9003bd58f0c384404668a3d64be1668cf1909092e7d64f",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b137-d7b9-7439-8960-c72ea3293daa/output/preview.png"
+    }
+  ],
+  "balance_after": 1177
+}

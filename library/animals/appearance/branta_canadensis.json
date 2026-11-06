@@ -1,0 +1,64 @@
+{
+ "format": 1,
+ "code": "branta_canadensis",
+ "scientific": "Branta canadensis",
+ "common": "canada goose (canadensis group)",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "brown-grey"
+   ],
+   "markings": []
+  },
+  "upperparts": {
+   "colours": [
+    "cream",
+    "white"
+   ],
+   "markings": []
+  },
+  "underparts": {
+   "colours": [
+    "white"
+   ],
+   "markings": []
+  },
+  "head": {
+   "colours": [
+    "black",
+    "white"
+   ],
+   "markings": []
+  },
+  "neck": {
+   "colours": [
+    "white"
+   ],
+   "markings": []
+  },
+  "legs": {
+   "colours": [
+    "black"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 8,
+ "dropped": {
+  "other taxa": 1,
+  "morph": 1,
+  "regional": 3
+ },
+ "sources": [
+  {
+   "url": "https://animaldiversity.org/accounts/Branta_canadensis/",
+   "title": "ADW: Branta canadensis",
+   "facts": 8
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body brown-grey; back cream, white; belly and underparts white; head black, white; neck white; legs black"
+}

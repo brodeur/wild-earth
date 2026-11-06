@@ -1,0 +1,210 @@
+{
+ "rock_classes": [
+  "greenstone_metavolcanic",
+  "serpentinite",
+  "slate_phyllite",
+  "schist",
+  "granitic",
+  "volcanic",
+  "sandstone_conglomerate",
+  "limestone_marble",
+  "alluvium",
+  "other"
+ ],
+ "resistance": {
+  "greenstone_metavolcanic": 0.9,
+  "granitic": 0.8,
+  "serpentinite": 0.8,
+  "schist": 0.6,
+  "slate_phyllite": 0.6,
+  "volcanic": 0.7,
+  "sandstone_conglomerate": 0.4,
+  "limestone_marble": 0.7,
+  "alluvium": 0.0,
+  "other": 0.4
+ },
+ "units": {
+  "1": {
+   "name": "Absaroka Volcanic Supergroup: Thorofare Creek Group - Two Ocean and Langford Formations",
+   "lithology": "Major: andesite",
+   "age": "Ypresian to Lutetian",
+   "age_bottom_ma": 38.3833,
+   "age_top_ma": 34.875,
+   "rock_class": "volcanic",
+   "rock_class_index": 6,
+   "water": false,
+   "description": "Dark-colored andesitic volcaniclastic rocks and flows underlain by light-colored andesitic tuffs and flows.  In places may include Trout Peak Trachyandesite of Sunlight Group.",
+   "reference": "Green, Gregory N., and Drouillard, Patricia H., 1994, The Digital Geologic Map of Wyoming in ARC/INFO Format: U.S. Geological Survey Open-File Report 94-0425, scale 1:500,000.",
+   "color": "#FDB46C",
+   "fraction": 0.0982
+  },
+  "2": {
+   "name": "Absaroka Volcanic Supergroup: Washburn Group",
+   "lithology": "Major: andesite, dacite",
+   "age": "Eocene",
+   "age_bottom_ma": 50.67,
+   "age_top_ma": 42.3834,
+   "rock_class": "volcanic",
+   "rock_class_index": 6,
+   "water": false,
+   "description": "Includes Sepulcher Formation (andesitic and dacitic volcaniclastic rocks), Lamar River Formation (andesitic lava and volcaniclastic rocks), and Cathedral Cliffs Formation (light-colored andesitic volcaniclastic rocks).",
+   "reference": "Green, Gregory N., and Drouillard, Patricia H., 1994, The Digital Geologic Map of Wyoming in ARC/INFO Format: U.S. Geological Survey Open-File Report 94-0425, scale 1:500,000.",
+   "color": "#FDB46C",
+   "fraction": 0.3942
+  },
+  "3": {
+   "name": "Basalt flows and intrusive igneous rocks",
+   "lithology": "Major: basalt, plutonic; Incidental: gravel, sand, silt",
+   "age": "Pleistocene",
+   "age_bottom_ma": 1.6219,
+   "age_top_ma": 0.0117,
+   "rock_class": "volcanic",
+   "rock_class_index": 6,
+   "water": false,
+   "description": "Yellowstone area--Includes Osprey, Madison River, Swan Lake Flat, and Falls River Basalts, basalts of Mariposa Lake, Undine Falls Basalt, and gravels, sands, silts, and basalts of The Narrows.  In and adjacent to Absaroka and Washakie Ranges--Includes basalt of Lava Mountain (age about 0.5 Ma).",
+   "reference": "Green, Gregory N., and Drouillard, Patricia H., 1994, The Digital Geologic Map of Wyoming in ARC/INFO Format: U.S. Geological Survey Open-File Report 94-0425, scale 1:500,000.",
+   "color": "#F9F97F",
+   "fraction": 0.0154
+  },
+  "4": {
+   "name": "Undivided surficial deposits",
+   "lithology": "Major: unconsolidated siliciclastic",
+   "age": "Pleistocene to Holocene",
+   "age_bottom_ma": 2.588,
+   "age_top_ma": 0,
+   "rock_class": "alluvium",
+   "rock_class_index": 9,
+   "water": false,
+   "description": "Mostly alluvium, colluvium, and glacial and landslide deposits.  Primarily in Yellowstone area and Bighorn Mountains.",
+   "reference": "Green, Gregory N., and Drouillard, Patricia H., 1994, The Digital Geologic Map of Wyoming in ARC/INFO Format: U.S. Geological Survey Open-File Report 94-0425, scale 1:500,000.",
+   "color": "#F9F97F",
+   "fraction": 0.4193
+  },
+  "5": {
+   "name": "Absaroka Volcanic Supergroup: Thorofare Creek and Sunlight Groups",
+   "lithology": "Major: andesite",
+   "age": "Ypresian to Lutetian",
+   "age_bottom_ma": 43.4666,
+   "age_top_ma": 38.675,
+   "rock_class": "volcanic",
+   "rock_class_index": 6,
+   "water": false,
+   "description": "Thorofare Creek Group - Light-colored volcaniclastic strata, andesite lava flows, and dark-brown breccia; Sunlight Group - including Trout Peak Trachyandesite, Wapiti Formation (andesitic volcaniclastic rocks), Crescent Hill Basalt, and Mount Wallace Formation (felsic and mafic volcaniclastic rocks).",
+   "reference": "Green, Gregory N., and Drouillard, Patricia H., 1994, The Digital Geologic Map of Wyoming in ARC/INFO Format: U.S. Geological Survey Open-File Report 94-0425, scale 1:500,000.",
+   "color": "#FCB482",
+   "fraction": 0.058
+  },
+  "6": {
+   "name": "Madison Group, Darby Formation, Three Forks and Jefferson Formations",
+   "lithology": "Major: limestone, dolostone; Minor: shale, siltstone",
+   "age": "Late Devonian to Mississippian",
+   "age_bottom_ma": 382.7,
+   "age_top_ma": 332.345,
+   "rock_class": "limestone_marble",
+   "rock_class_index": 8,
+   "water": false,
+   "description": "Madison Limestone or Group (Thrust Belt, North Wyoming and Northern Yellowstone area) - Group includes Mission Canyon Limestone (blue-gray massive limestone and dolomite), underlain by Lodgepole Limestone (gray cherty limestone and dolomite).  Darby Formation (Thrust Belt and North Wyoming) - Yellow and greenish-gray shale and dolomitic siltstone underlain by fetid brown dolomite and limestone.  Three Forks Formation (Northern Yellowstone area) - Pink, yellow, and green dolomitic siltstone and shale.  Jefferson Formation (Northern Yellowstone area) - Massive siliceous dolomite.",
+   "reference": "Green, Gregory N., and Drouillard, Patricia H., 1994, The Digital Geologic Map of Wyoming in ARC/INFO Format: U.S. Geological Survey Open-File Report 94-0425, scale 1:500,000.",
+   "color": "#998E4F",
+   "fraction": 0.0072
+  },
+  "7": {
+   "name": "Rhyolite flows, tuff, and intrusive igneous rocks",
+   "lithology": "Major: rhyolite; Minor: plutonic",
+   "age": "Pleistocene",
+   "age_bottom_ma": 2.3304,
+   "age_top_ma": 0.0117,
+   "rock_class": "volcanic",
+   "rock_class_index": 6,
+   "water": false,
+   "description": "Includes Plateau Rhyolite (age about 0.07 Ma) and interlayered sediments, Mount Jackson Rhyolite (age 0.6 to about 1 Ma), Lewis Canyon Rhyolite (age about 0.9 Ma); and Lava Creek Tuff of Yellowstone Group (age 0.6 to about 1 Ma).",
+   "reference": "Green, Gregory N., and Drouillard, Patricia H., 1994, The Digital Geologic Map of Wyoming in ARC/INFO Format: U.S. Geological Survey Open-File Report 94-0425, scale 1:500,000.",
+   "color": "#FFF2AE",
+   "fraction": 0.0059
+  },
+  "8": {
+   "name": "Oldest gneiss complex",
+   "lithology": "Major: gneiss, migmatite; Minor: metagraywacke, quartzite, banded iron formation, amphibolite",
+   "age": "Archean",
+   "age_bottom_ma": 4000,
+   "age_top_ma": 2500,
+   "rock_class": "schist",
+   "rock_class_index": 4,
+   "water": false,
+   "description": "Chiefly layered granitic gneiss, locally migmatitic.  Local masses of quartzite, metagraywacke, iron-formation, and other metasedimentary rocks and amphibolite and felsic gneiss thought to be volcanic; metasedimentary rocks in Beartooth Mountains contain detrital zircon dated at more than 3,400 Ma.  Inclusions show evidence of granulite-facies metamorphism prior to 2,800 Ma.  Mueller and others (1982) suggest that large areas in Beartooth Mountains were invaded by Late Archean granite (age about 2,800 Ma).  Bighorn Mountains--Dates of metamorphism 3,000+ Ma.",
+   "reference": "Green, Gregory N., and Drouillard, Patricia H., 1994, The Digital Geologic Map of Wyoming in ARC/INFO Format: U.S. Geological Survey Open-File Report 94-0425, scale 1:500,000.",
+   "color": "#FF3399",
+   "fraction": 0.0013
+  },
+  "9": {
+   "name": "Three Forks, Jefferson, and Beartooth Formations and Bighorn Dolomite",
+   "lithology": "Major: siltstone, shale, dolostone; Minor: limestone, sandstone",
+   "age": "Middle Ordovician to Late Devonian",
+   "age_bottom_ma": 458.4,
+   "age_top_ma": 358.9,
+   "rock_class": "sandstone_conglomerate",
+   "rock_class_index": 7,
+   "water": false,
+   "description": "Three Forks Formation (Northern Yellowstone area) - Pink, yellow, and green dolomitic siltstone and shale.  Three Forks Formation (North Wyoming) -  Yellow and greenish-gray shale and dolomitic siltstone.  Jefferson Formation (Northern Yellowstone area) - Massive siliceous dolomite.  Jefferson Formation (North Wyoming) - Fetid brown dolomite and limestone.  Bighorn Dolomite (Northern Yellowstone area) - Light-gray massive siliceous dolomite.  Bighorn Dolomite (North Wyoming) -  Gray massive cliff-forming siliceous dolomite and locally dolomitic limestone.  Beartooth Butte Formation - Red sandstone, limy siltstone, and limestone.  Occurs only in the Beartooth Mountains.",
+   "reference": "Green, Gregory N., and Drouillard, Patricia H., 1994, The Digital Geologic Map of Wyoming in ARC/INFO Format: U.S. Geological Survey Open-File Report 94-0425, scale 1:500,000.",
+   "color": "#99C08D",
+   "fraction": 0.0005
+  }
+ },
+ "rules": [
+  [
+   "serpentinite",
+   "serpentin|ultramafic|peridotit|dunite|harzburgite|pyroxenite"
+  ],
+  [
+   "greenstone_metavolcanic",
+   "greenstone|meta-?volcanic|metabasalt|meta-?andesite|amphibolite|spilite"
+  ],
+  [
+   "slate_phyllite",
+   "slate|phyllite|argillite"
+  ],
+  [
+   "schist",
+   "schist|gneiss|hornfels|quartzite|metasediment"
+  ],
+  [
+   "limestone_marble",
+   "limestone|marble|dolomite|dolostone|carbonate"
+  ],
+  [
+   "granitic",
+   "granit|granodiorit|tonalit|diorit|monzonit|syenit|gabbro|trondhjemit|plutonic|intrusive|pegmatit|aplite"
+  ],
+  [
+   "volcanic",
+   "volcanic|andesit|basalt|rhyolit|dacit|tuff|pyroclastic|lahar|mudflow|latite"
+  ],
+  [
+   "alluvium",
+   "alluvi|terrace|alluvial fan|unconsolidated|colluvi|landslide|surficial|\\bgravels?\\b|\\bsands?\\b"
+  ],
+  [
+   "sandstone_conglomerate",
+   "sandstone|conglomerate|gr[ae]ywacke|siltstone|mudstone|shale|breccia|clastic|sedimentary"
+  ]
+ ],
+ "rule_notes": "first match over major lithologies, then name, then the rule the description names most (ties to the earliest); volcanic with bottom age >= 145.0 Ma -> greenstone_metavolcanic; clastic sedimentary with bottom age <= 2.58 Ma -> alluvium; 'water' -> other",
+ "source": {
+  "source": "macrostrat",
+  "endpoint": "https://macrostrat.org/api/v2/geologic_units/map",
+  "scale": "medium",
+  "macrostrat_source_id": 133,
+  "scale_coverage_of_sample_points": {
+   "large": 0,
+   "medium": 25,
+   "small": 25,
+   "tiny": 25
+  },
+  "sample_points": 25,
+  "requests": 40,
+  "uncovered_pieces": 0,
+  "uncovered_fraction": 0.0,
+  "fallback_errors": []
+ }
+}

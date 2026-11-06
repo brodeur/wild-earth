@@ -44,7 +44,7 @@ KIN_MASS = {
 WATER_FAMILIES = {"Anatidae", "Ardeidae", "Alcedinidae", "Laridae", "Phalacrocoracidae", "Anhingidae", "Ciconiidae",
                   "Threskiornithidae", "Podicipedidae", "Rallidae", "Jacanidae", "Hippopotamidae", "Crocodylidae",
                   "Alligatoridae", "Gavialidae", "Lutrinae", "Pandionidae"}
-SKIP_ORDERS = {"Chiroptera", "Cetacea", "Sirenia", "Squamata_serpentes"}   # no rig yet: bats, whales, sea cows, snakes
+SKIP_ORDERS = {"Chiroptera", "Cetacea", "Sirenia"}   # no rig yet: bats, whales, sea cows
 SNAKE_FAMILIES = {"Colubridae", "Viperidae", "Elapidae", "Boidae", "Pythonidae", "Natricidae", "Lamprophiidae",
                   "Typhlopidae", "Leptotyphlopidae", "Dipsadidae", "Atractaspididae", "Psammophiidae", "Pseudoxyrhophiidae",
                   "Prosymnidae", "Homalopsidae", "Xenodermidae", "Uropeltidae", "Anomalepididae", "Gerrhopilidae", "Aniliidae",
@@ -60,13 +60,16 @@ SNAKE_FAMILIES = {"Colubridae", "Viperidae", "Elapidae", "Boidae", "Pythonidae",
 #   turtle       the other Testudines (terrapins, river and sea turtles): at the water, way 'water'
 #   chameleon    Chamaeleonidae: a lizard of the branches, way 'bask' (the fence lizard's trunk sites)
 #   monitor      Varanidae: the large lizards, way 'bask'
-#   snake        the snake and amphisbaenian families (SNAKE_FAMILIES): skipped, no rig
+#   snake        the snake and amphisbaenian families (SNAKE_FAMILIES): way 'snake' (2026-11-06), a legless body on the
+#                snake template (tools/build_snake.py; animals.js snUpdate): crawls on the ground, basks stretched out or
+#                coiled, flees into cover. Its kin is the fence lizard (the machine's cells and sites), whose body a
+#                snake never wears: a snake slot without a model of its own is not drawn (animals.js installFauna)
 #   lizard       the other squamates, way 'bask' (rocks, trunks, the open ground beside them)
 REPTILE_CLASSES = {"Reptilia", "Squamata", "Testudines", "Crocodylia", "Crocodilia", "Sauria"}
 CROCODILIANS = {"Crocodylidae", "Alligatoridae", "Gavialidae"}
 REPTILE_ARCHETYPE = {"crocodilian": "crocodilian", "tortoise": "tortoise", "turtle": "turtle", "chameleon": "chameleon",
                      "monitor": "monitor lizard", "lizard": "basking lizard", "snake": "snake"}
-REPTILE_WAY = {"crocodilian": "water", "turtle": "water", "tortoise": "walk"}
+REPTILE_WAY = {"crocodilian": "water", "turtle": "water", "tortoise": "walk", "snake": "snake"}
 # the lizards whose males bob and push up to display (the iguanians but the chameleons): the fence lizard's push-up bouts
 # (animals.js PUSHUP); a skink or a monitor never does
 PUSHUP_FAMILIES = {"Agamidae", "Iguanidae", "Phrynosomatidae", "Dactyloidae", "Tropiduridae", "Liolaemidae", "Crotaphytidae",
@@ -89,7 +92,7 @@ def reptile_group(tax: dict) -> str:
 
 
 def reptile_way(archetype: str) -> str:
-    """The way the fence lizard's machine runs for a reptile slot (animals.js REPT): 'bask', 'water' or 'walk'."""
+    """The way the fence lizard's machine runs for a reptile slot (animals.js REPT): 'bask', 'water', 'walk' or 'snake'."""
     g = next((k for k, v in REPTILE_ARCHETYPE.items() if v == archetype), "lizard")
     return REPTILE_WAY.get(g, "bask")
 
@@ -236,8 +239,9 @@ def kin_for(a: dict, t: dict) -> tuple[str | None, str, list[str]]:
         return "urocyon_cinereoargenteus", "mammal (unplaced)", [f"order {order} has no archetype rule"]
     if cls in REPTILE_CLASSES:
         group = reptile_group(tax)
-        if group == "snake":
-            return None, "no snake rig (a legless body: a spine-wave rig is not built yet)", []
+        if group == "snake":   # the snake template (tools/build_snake.py), drawn only with its own model
+            return "sceloporus_occidentalis", "snake", ["a snake on the fence lizard's cells, the snake machine (way 'snake'); "
+                                                        "not drawn without a model of its own (no stand-in body)"]
         # every reptile runs the fence lizard's machine (its cells, sites and dash) on the reptile part rig; the slot's
         # `reptile` way (reptile_way) turns that machine into a basker, a water-bound crocodilian or a slow walker
         k = {"crocodilian": ["a crocodilian on the fence lizard's machine: at the water's edge and in the water (way 'water')"],
@@ -304,7 +308,7 @@ GROUP = {"grazing or browsing herd": [5, 30], "arboreal climber": [3, 15], "larg
          "coursing predator": [1, 6], "ambush predator": [1, 4], "waterbird": [2, 10], "wading bird": [1, 3],
          "ground bird": [3, 12], "soaring scavenger": [1, 8], "perching bird": [1, 6], "rock colony": [3, 12],
          "ground colony": [3, 12], "gull": [1, 6], "crocodilian": [1, 5], "tortoise": [1, 2], "turtle": [1, 4],
-         "basking lizard": [1, 3], "monitor lizard": [1, 1], "chameleon": [1, 1]}
+         "basking lizard": [1, 3], "monitor lizard": [1, 1], "chameleon": [1, 1], "snake": [1, 1]}
 
 
 # ---- behaviour from traits (phase 1, iteration 3) ----------------------------------------------------------------------

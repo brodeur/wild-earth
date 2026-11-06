@@ -1,0 +1,84 @@
+{
+ "format": 1,
+ "code": "taxidea_taxus",
+ "scientific": "Taxidea taxus",
+ "common": "american badger",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "brown",
+    "black",
+    "white",
+    "brown-tan"
+   ],
+   "markings": []
+  },
+  "upperparts": {
+   "colours": [
+    "grayish",
+    "reddish",
+    "white"
+   ],
+   "markings": []
+  },
+  "flanks": {
+   "colours": [
+    "grayish",
+    "reddish"
+   ],
+   "markings": []
+  },
+  "head": {
+   "colours": [
+    "black",
+    "white",
+    "brown",
+    "blackish",
+    "whitish"
+   ],
+   "markings": [
+    {
+     "pattern": "stripes",
+     "colours": [
+      "white"
+     ]
+    },
+    {
+     "pattern": "patches",
+     "colours": [
+      "black"
+     ]
+    }
+   ]
+  },
+  "neck": {
+   "colours": [
+    "whitish"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 17,
+ "dropped": {
+  "regional": 2,
+  "no body word": 1
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/American_badger",
+   "title": "American badger",
+   "revision": 1382803347,
+   "facts": 9
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Taxidea_taxus/",
+   "title": "ADW: Taxidea taxus",
+   "facts": 8
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body brown, black, white, brown-tan; back grayish, reddish, white; flanks grayish, reddish; head black, white, brown, blackish with white stripes with black patches; neck whitish"
+}

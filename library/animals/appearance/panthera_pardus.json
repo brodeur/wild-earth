@@ -1,0 +1,88 @@
+{
+ "format": 1,
+ "code": "panthera_pardus",
+ "scientific": "Panthera pardus",
+ "common": "leopard",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "pale yellowish",
+    "dark golden"
+   ],
+   "markings": [
+    {
+     "pattern": "spots",
+     "colours": [
+      "dark"
+     ]
+    }
+   ]
+  },
+  "underparts": {
+   "colours": [
+    "white"
+   ],
+   "markings": [
+    {
+     "pattern": "spots",
+     "colours": [
+      "black"
+     ]
+    }
+   ]
+  },
+  "head": {
+   "colours": [],
+   "markings": [
+    {
+     "pattern": "spots",
+     "colours": [
+      "black"
+     ]
+    }
+   ]
+  },
+  "legs": {
+   "colours": [],
+   "markings": [
+    {
+     "pattern": "spots",
+     "colours": [
+      "black"
+     ]
+    }
+   ]
+  },
+  "tail": {
+   "colours": [
+    "white tip",
+    "white"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 14,
+ "dropped": {
+  "regional": 6,
+  "young": 2,
+  "morph": 3
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Leopard",
+   "title": "Leopard",
+   "revision": 1383314173,
+   "facts": 10
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Panthera_pardus/",
+   "title": "ADW: Panthera pardus",
+   "facts": 4
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body pale yellowish, dark golden with dark spots; belly and underparts white with black spots; head black spots; legs black spots; tail white tip, white"
+}

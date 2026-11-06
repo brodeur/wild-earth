@@ -788,10 +788,10 @@
    "foot_px": 185,
    "pose": "standing",
    "template": "lion",
-   "bytes": 14604,
+   "bytes": 14544,
    "source": {
     "model": "fauna/panthera_pardus.glb",
-    "sha": "33eeccf19547f399",
+    "sha": "3d6bd2253395e452",
     "v": "1"
    },
    "generator": "pipeline/stills.py",
@@ -914,10 +914,10 @@
    "foot_px": 84,
    "pose": "standing",
    "template": "quail",
-   "bytes": 1214,
+   "bytes": 1088,
    "source": {
     "model": "fauna/vanellus_armatus.glb",
-    "sha": "5bbeed5367fcd893",
+    "sha": "c33c9ff4d39d4be4",
     "v": "1"
    },
    "generator": "pipeline/stills.py",
@@ -950,10 +950,10 @@
    "foot_px": 24,
    "pose": "standing",
    "template": "sprawler",
-   "bytes": 884,
+   "bytes": 672,
    "source": {
     "model": "fauna/agama_mwanzae.glb",
-    "sha": "a95b9c89b36e55db",
+    "sha": "27f59e121f60c06a",
     "v": "1"
    },
    "generator": "pipeline/stills.py",
@@ -968,10 +968,10 @@
    "foot_px": 89,
    "pose": "standing",
    "template": "tortoise",
-   "bytes": 5784,
+   "bytes": 5788,
    "source": {
     "model": "fauna/stigmochelys_pardalis.glb",
-    "sha": "3bc264bfc0108f17",
+    "sha": "2159fe1bbe70c015",
     "v": "1"
    },
    "generator": "pipeline/stills.py",
@@ -994,9 +994,207 @@
    },
    "generator": "pipeline/stills.py",
    "fauna": true
+  },
+  "bison_bison": {
+   "file": "bison_bison.webp",
+   "width": 346,
+   "height": 258,
+   "px_per_m": 179.29,
+   "kind": "ground",
+   "foot_px": 232,
+   "pose": "standing",
+   "template": "elkCow",
+   "bytes": 10012,
+   "source": {
+    "model": "fauna/bison_bison.glb",
+    "sha": "5291a61c7084349a",
+    "v": "1"
+   },
+   "generator": "pipeline/stills.py",
+   "fauna": true
+  },
+  "antilocapra_americana": {
+   "file": "antilocapra_americana.webp",
+   "width": 267,
+   "height": 333,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 320,
+   "pose": "standing",
+   "template": "elkCow",
+   "bytes": 10082,
+   "source": {
+    "model": "fauna/antilocapra_americana.glb",
+    "sha": "f0f1339984393aea",
+    "v": "1"
+   },
+   "generator": "pipeline/stills.py",
+   "fauna": true
+  },
+  "ovis_canadensis": {
+   "file": "ovis_canadensis.webp",
+   "width": 290,
+   "height": 286,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 265,
+   "pose": "standing",
+   "template": "elkCow",
+   "bytes": 9608,
+   "source": {
+    "model": "fauna/ovis_canadensis.glb",
+    "sha": "df054a85ec57e0b5",
+    "v": "1"
+   },
+   "generator": "pipeline/stills.py",
+   "fauna": true
+  },
+  "taxidea_taxus": {
+   "file": "taxidea_taxus.webp",
+   "width": 135,
+   "height": 85,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 73,
+   "pose": "standing",
+   "template": "bobcat",
+   "bytes": 2894,
+   "source": {
+    "model": "fauna/taxidea_taxus.glb",
+    "sha": "324c4071f099eb6f",
+    "v": "1"
+   },
+   "generator": "pipeline/stills.py",
+   "fauna": true
+  },
+  "oreamnos_americanus": {
+   "file": "oreamnos_americanus.webp",
+   "width": 261,
+   "height": 268,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 254,
+   "pose": "standing",
+   "template": "elkCow",
+   "bytes": 9746,
+   "source": {
+    "model": "fauna/oreamnos_americanus.glb",
+    "sha": "31e3fc02efae5bc0",
+    "v": "1"
+   },
+   "generator": "pipeline/stills.py",
+   "fauna": true
+  },
+  "thamnophis_elegans": {
+   "file": "thamnophis_elegans.webp",
+   "width": 171,
+   "height": 28,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 14,
+   "pose": "standing",
+   "template": "snake",
+   "bytes": 1240,
+   "source": {
+    "model": "fauna/thamnophis_elegans.glb",
+    "sha": "a8cbf8fab73c91aa",
+    "v": "1"
+   },
+   "generator": "pipeline/stills.py",
+   "fauna": true
+  },
+  "ursus_arctos": {
+   "file": "ursus_arctos.webp",
+   "width": 314,
+   "height": 255,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 224,
+   "pose": "standing",
+   "template": "bear",
+   "bytes": 11046,
+   "source": {
+    "model": "fauna/ursus_arctos.glb",
+    "sha": "1ff0f6da88f35768",
+    "v": "1"
+   },
+   "generator": "pipeline/stills.py",
+   "fauna": true
+  },
+  "canis_lupus": {
+   "file": "canis_lupus.webp",
+   "width": 203,
+   "height": 175,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 156,
+   "pose": "standing",
+   "template": "lion",
+   "bytes": 7316,
+   "source": {
+    "model": "fauna/canis_lupus.glb",
+    "sha": "328c27111cbfbecb",
+    "v": "1"
+   },
+   "generator": "pipeline/stills.py",
+   "fauna": true
+  },
+  "grus_canadensis": {
+   "file": "grus_canadensis.webp",
+   "width": 130,
+   "height": 290,
+   "px_per_m": 185.154,
+   "kind": "ground",
+   "foot_px": 283,
+   "pose": "standing",
+   "template": "heron",
+   "bytes": 4554,
+   "source": {
+    "model": "fauna/grus_canadensis.glb",
+    "sha": "0c8bfb29e126d6c5",
+    "v": "1"
+   },
+   "generator": "pipeline/stills.py",
+   "fauna": true
+  },
+  "aquila_chrysaetos": {
+   "file": "aquila_chrysaetos.webp",
+   "width": 281,
+   "height": 249,
+   "px_per_m": 204.384,
+   "kind": "bird",
+   "foot_px": 241,
+   "pose": "soaring, wings flat",
+   "template": "vulture",
+   "bytes": 9178,
+   "source": {
+    "model": "fauna/aquila_chrysaetos.glb",
+    "sha": "13af57b77d3a0990",
+    "v": "1"
+   },
+   "generator": "pipeline/stills.py",
+   "fauna": true
+  },
+  "pelecanus_erythrorhynchos": {
+   "file": "pelecanus_erythrorhynchos.webp",
+   "width": 202,
+   "height": 310,
+   "px_per_m": 209.559,
+   "kind": "ground",
+   "foot_px": 135,
+   "pose": "standing",
+   "template": "merganser",
+   "bytes": 8732,
+   "source": {
+    "model": "fauna/pelecanus_erythrorhynchos.glb",
+    "sha": "a1bd9513bf31479a",
+    "v": "1"
+   },
+   "generator": "pipeline/stills.py",
+   "fauna": true
   }
  },
- "total_bytes": 1213038,
+ "total_bytes": 1297052,
  "stand_ins": {
   "acanthis_flammea": {
    "file": "cyanocitta_stelleri.webp",
@@ -1063,6 +1261,17 @@
    "height": 63,
    "foot_px": 59,
    "px_per_m": 416.149
+  },
+  "agelaius_phoeniceus": {
+   "file": "cyanocitta_stelleri.webp",
+   "kin": "cyanocitta_stelleri",
+   "scale": 0.751,
+   "kind": "bird",
+   "pose": "flying, wings up-stroke",
+   "width": 81,
+   "height": 63,
+   "foot_px": 59,
+   "px_per_m": 356.858
   },
   "alca_torda": {
    "file": "mergus_merganser.webp",
@@ -1141,6 +1350,17 @@
    "foot_px": 77,
    "px_per_m": 123.389
   },
+  "ambystoma_mavortium": {
+   "file": "plethodon_vehiculum.webp",
+   "kin": "plethodon_vehiculum",
+   "scale": 1.882,
+   "kind": "ground",
+   "pose": "standing",
+   "width": 29,
+   "height": 8,
+   "foot_px": 4,
+   "px_per_m": 142.402
+  },
   "anhinga_anhinga": {
    "file": "mergus_merganser.webp",
    "kin": "mergus_merganser",
@@ -1185,17 +1405,6 @@
    "foot_px": 47,
    "px_per_m": 572.65
   },
-  "antilocapra_americana": {
-   "file": "odocoileus_hemionus.webp",
-   "kin": "odocoileus_hemionus",
-   "scale": 0.916,
-   "kind": "ground",
-   "pose": "standing",
-   "width": 342,
-   "height": 374,
-   "foot_px": 354,
-   "px_per_m": 292.576
-  },
   "aphelocoma_woodhouseii": {
    "file": "corvus_corax.webp",
    "kin": "corvus_corax",
@@ -1206,17 +1415,6 @@
    "height": 162,
    "foot_px": 153,
    "px_per_m": 607.71
-  },
-  "aquila_chrysaetos": {
-   "file": "cathartes_aura.webp",
-   "kin": "cathartes_aura",
-   "scale": 1.385,
-   "kind": "bird",
-   "pose": "soaring, wings flat",
-   "width": 263,
-   "height": 190,
-   "foot_px": 161,
-   "px_per_m": 193.502
   },
   "aquila_rapax": {
    "file": "cathartes_aura.webp",
@@ -1383,17 +1581,6 @@
    "foot_px": 110,
    "px_per_m": 408.537
   },
-  "bison_bison": {
-   "file": "cervus_canadensis.webp",
-   "kin": "cervus_canadensis",
-   "scale": 1.245,
-   "kind": "ground",
-   "pose": "standing",
-   "width": 448,
-   "height": 473,
-   "foot_px": 450,
-   "px_per_m": 215.261
-  },
   "bradypus_variegatus": {
    "file": "urocyon_cinereoargenteus.webp",
    "kin": "urocyon_cinereoargenteus",
@@ -1404,6 +1591,28 @@
    "height": 123,
    "foot_px": 110,
    "px_per_m": 260.954
+  },
+  "branta_canadensis": {
+   "file": "mergus_merganser.webp",
+   "kin": "mergus_merganser",
+   "scale": 1.233,
+   "kind": "ground",
+   "pose": "standing",
+   "width": 164,
+   "height": 85,
+   "foot_px": 57,
+   "px_per_m": 217.356
+  },
+  "bucephala_islandica": {
+   "file": "mergus_merganser.webp",
+   "kin": "mergus_merganser",
+   "scale": 0.85,
+   "kind": "ground",
+   "pose": "standing",
+   "width": 164,
+   "height": 85,
+   "foot_px": 57,
+   "px_per_m": 315.294
   },
   "buceros_rhinoceros": {
    "file": "cyanocitta_stelleri.webp",
@@ -1680,6 +1889,17 @@
    "foot_px": 59,
    "px_per_m": 344.031
   },
+  "circus_cyaneus": {
+   "file": "buteo_jamaicensis.webp",
+   "kin": "buteo_jamaicensis",
+   "scale": 0.71,
+   "kind": "bird",
+   "pose": "soaring, wings flat",
+   "width": 196,
+   "height": 134,
+   "foot_px": 93,
+   "px_per_m": 377.465
+  },
   "colaptes_auratus": {
    "file": "leuconotopicus_villosus.webp",
    "kin": "leuconotopicus_villosus",
@@ -1944,6 +2164,17 @@
    "foot_px": 77,
    "px_per_m": 848.101
   },
+  "falco_mexicanus": {
+   "file": "buteo_jamaicensis.webp",
+   "kin": "buteo_jamaicensis",
+   "scale": 0.865,
+   "kind": "bird",
+   "pose": "soaring, wings flat",
+   "width": 196,
+   "height": 134,
+   "foot_px": 93,
+   "px_per_m": 309.827
+  },
   "falco_peregrinus": {
    "file": "buteo_jamaicensis.webp",
    "kin": "buteo_jamaicensis",
@@ -1954,6 +2185,17 @@
    "height": 134,
    "foot_px": 93,
    "px_per_m": 303.167
+  },
+  "falco_sparverius": {
+   "file": "buteo_jamaicensis.webp",
+   "kin": "buteo_jamaicensis",
+   "scale": 0.471,
+   "kind": "bird",
+   "pose": "soaring, wings flat",
+   "width": 196,
+   "height": 134,
+   "foot_px": 93,
+   "px_per_m": 569.002
   },
   "formicarius_analis": {
    "file": "callipepla_californica.webp",
@@ -1987,6 +2229,17 @@
    "height": 148,
    "foot_px": 86,
    "px_per_m": 242.096
+  },
+  "fulica_americana": {
+   "file": "mergus_merganser.webp",
+   "kin": "mergus_merganser",
+   "scale": 0.752,
+   "kind": "ground",
+   "pose": "standing",
+   "width": 164,
+   "height": 85,
+   "foot_px": 57,
+   "px_per_m": 356.383
   },
   "galeopterus_variegatus": {
    "file": "urocyon_cinereoargenteus.webp",
@@ -2450,6 +2703,28 @@
    "foot_px": 14,
    "px_per_m": 222.407
   },
+  "microtus_montanus": {
+   "file": "peromyscus_maniculatus.webp",
+   "kin": "peromyscus_maniculatus",
+   "scale": 1.22,
+   "kind": "ground",
+   "pose": "standing",
+   "width": 49,
+   "height": 18,
+   "foot_px": 14,
+   "px_per_m": 219.672
+  },
+  "microtus_pennsylvanicus": {
+   "file": "peromyscus_maniculatus.webp",
+   "kin": "peromyscus_maniculatus",
+   "scale": 1.224,
+   "kind": "ground",
+   "pose": "standing",
+   "width": 49,
+   "height": 18,
+   "foot_px": 14,
+   "px_per_m": 218.954
+  },
   "molothrus_ater": {
    "file": "callipepla_californica.webp",
    "kin": "callipepla_californica",
@@ -2549,6 +2824,17 @@
    "foot_px": 110,
    "px_per_m": 527.559
   },
+  "myodes_gapperi": {
+   "file": "peromyscus_maniculatus.webp",
+   "kin": "peromyscus_maniculatus",
+   "scale": 0.997,
+   "kind": "ground",
+   "pose": "standing",
+   "width": 49,
+   "height": 18,
+   "foot_px": 14,
+   "px_per_m": 268.806
+  },
   "myodes_rutilus": {
    "file": "peromyscus_maniculatus.webp",
    "kin": "peromyscus_maniculatus",
@@ -2637,6 +2923,17 @@
    "foot_px": 61,
    "px_per_m": 440.789
   },
+  "ondatra_zibethicus": {
+   "file": "peromyscus_maniculatus.webp",
+   "kin": "peromyscus_maniculatus",
+   "scale": 3.763,
+   "kind": "ground",
+   "pose": "standing",
+   "width": 49,
+   "height": 18,
+   "foot_px": 14,
+   "px_per_m": 71.22
+  },
   "opisthocomus_hoazin": {
    "file": "cyanocitta_stelleri.webp",
    "kin": "cyanocitta_stelleri",
@@ -2669,17 +2966,6 @@
    "height": 53,
    "foot_px": 47,
    "px_per_m": 267.198
-  },
-  "ovis_canadensis": {
-   "file": "odocoileus_hemionus.webp",
-   "kin": "odocoileus_hemionus",
-   "scale": 1.076,
-   "kind": "ground",
-   "pose": "standing",
-   "width": 342,
-   "height": 374,
-   "foot_px": 354,
-   "px_per_m": 249.071
   },
   "papio_anubis": {
    "file": "ursus_americanus.webp",
@@ -2747,17 +3033,6 @@
    "foot_px": 354,
    "px_per_m": 378.531
   },
-  "pelecanus_erythrorhynchos": {
-   "file": "mergus_merganser.webp",
-   "kin": "mergus_merganser",
-   "scale": 1.552,
-   "kind": "ground",
-   "pose": "standing",
-   "width": 164,
-   "height": 85,
-   "foot_px": 57,
-   "px_per_m": 172.68
-  },
   "pelecanus_occidentalis": {
    "file": "larus_glaucescens.webp",
    "kin": "larus_glaucescens",
@@ -2823,6 +3098,17 @@
    "height": 84,
    "foot_px": 77,
    "px_per_m": 190.883
+  },
+  "petrochelidon_pyrrhonota": {
+   "file": "cyanocitta_stelleri.webp",
+   "kin": "cyanocitta_stelleri",
+   "scale": 0.565,
+   "kind": "bird",
+   "pose": "flying, wings up-stroke",
+   "width": 81,
+   "height": 63,
+   "foot_px": 59,
+   "px_per_m": 474.336
   },
   "phacochoerus_africanus": {
    "file": "odocoileus_hemionus.webp",
@@ -2967,6 +3253,17 @@
    "foot_px": 215,
    "px_per_m": 373.259
   },
+  "pooecetes_gramineus": {
+   "file": "cyanocitta_stelleri.webp",
+   "kin": "cyanocitta_stelleri",
+   "scale": 0.598,
+   "kind": "bird",
+   "pose": "flying, wings up-stroke",
+   "width": 81,
+   "height": 63,
+   "foot_px": 59,
+   "px_per_m": 448.161
+  },
   "presbytis_rubicunda": {
    "file": "sciurus_griseus.webp",
    "kin": "sciurus_griseus",
@@ -3043,6 +3340,17 @@
    "height": 63,
    "foot_px": 59,
    "px_per_m": 151.841
+  },
+  "rana_luteiventris": {
+   "file": "plethodon_vehiculum.webp",
+   "kin": "plethodon_vehiculum",
+   "scale": 1.882,
+   "kind": "ground",
+   "pose": "standing",
+   "width": 29,
+   "height": 8,
+   "foot_px": 4,
+   "px_per_m": 142.402
   },
   "redunca_redunca": {
    "file": "odocoileus_hemionus.webp",
@@ -3396,6 +3704,17 @@
    "foot_px": 86,
    "px_per_m": 577.586
   },
+  "sturnella_neglecta": {
+   "file": "callipepla_californica.webp",
+   "kin": "callipepla_californica",
+   "scale": 0.822,
+   "kind": "ground",
+   "pose": "standing",
+   "width": 67,
+   "height": 51,
+   "foot_px": 47,
+   "px_per_m": 326.034
+  },
   "sus_barbatus": {
    "file": "odocoileus_hemionus.webp",
    "kin": "odocoileus_hemionus",
@@ -3693,17 +4012,6 @@
    "foot_px": 77,
    "px_per_m": 267.198
   },
-  "ursus_arctos": {
-   "file": "ursus_americanus.webp",
-   "kin": "ursus_americanus",
-   "scale": 1.218,
-   "kind": "ground",
-   "pose": "standing",
-   "width": 339,
-   "height": 234,
-   "foot_px": 215,
-   "px_per_m": 220.033
-  },
   "vireo_gilvus": {
    "file": "cyanocitta_stelleri.webp",
    "kin": "cyanocitta_stelleri",
@@ -3748,6 +4056,17 @@
    "foot_px": 59,
    "px_per_m": 338.384
   },
+  "zapus_princeps": {
+   "file": "peromyscus_maniculatus.webp",
+   "kin": "peromyscus_maniculatus",
+   "scale": 1.132,
+   "kind": "ground",
+   "pose": "standing",
+   "width": 49,
+   "height": 18,
+   "foot_px": 14,
+   "px_per_m": 236.749
+  },
   "zonotrichia_leucophrys": {
    "file": "cyanocitta_stelleri.webp",
    "kin": "cyanocitta_stelleri",
@@ -3763,6 +4082,6 @@
  "stills_pipeline": {
   "generator": "pipeline/stills.py + client/tools/opening_sprites.html (?job=, headless Chrome)",
   "render_version": "1",
-  "updated": "2026-11-06T12:13:03Z"
+  "updated": "2026-11-06T14:24:58Z"
  }
 }

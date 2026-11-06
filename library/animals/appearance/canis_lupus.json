@@ -1,0 +1,44 @@
+{
+ "format": 1,
+ "code": "canis_lupus",
+ "scientific": "Canis lupus",
+ "common": "gray wolf",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "white",
+    "black",
+    "gray",
+    "cinnamon",
+    "brown"
+   ],
+   "markings": []
+  },
+  "upperparts": {
+   "colours": [
+    "black"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 6,
+ "dropped": {
+  "other taxa": 2,
+  "regional": 7,
+  "morph": 1,
+  "not the body": 1,
+  "no body word": 2
+ },
+ "sources": [
+  {
+   "url": "https://animaldiversity.org/accounts/Canis_lupus/",
+   "title": "ADW: Canis lupus",
+   "facts": 6
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body white, black, gray, cinnamon; back black"
+}

@@ -15,7 +15,7 @@
   -2.4052817272586062
  ],
  "size_m": 10000,
- "generated_at": "2026-11-06T12:08:18Z",
+ "generated_at": "2026-11-06T12:52:15Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -3414,17 +3414,84 @@
    ],
    "pixels": 333,
    "resolution_m": 30.03003003003003,
-   "encoding": "R = the stand's top height in 0.5 m steps (0 none): the mean p95 height of the cell's 10 m sub-cells with tree cover >= 12 %, where 1 or more of them do; else the mean of the measured cells within 2 cells",
+   "encoding": "R = the stand's top height in 0.5 m steps (0 none): the mean p95 height of the cell's 10 m sub-cells with tree cover >= 12 %, where 1 or more of them do; else the mean of the measured cells within 2 cells. Map by rule (pipeline/canopy_top.py)",
    "derived_from": [
-    "vegetation.canopy_height_10m"
+    "vegetation.canopy_height_10m",
+    "vegetation.canopy_height_v2_10m",
+    "vegetation.canopy_height_eth_10m"
    ],
-   "stats": {
-    "cells": 50372,
-    "median_m": 7.0,
-    "p90_m": 11.1
+   "maps": {
+    "closed_cells": 9,
+    "lift_m": {
+     "tile": 0.0,
+     "block_min": 0.0,
+     "block_max": 0.0
+    },
+    "rule": "CHM v2 (v1 at v2's level where v2 has no data), lifted to ETH's level where v2 sees tall closed forest",
+    "v2_off_map_share": 0.0,
+    "v1_to_v2_ratio": 0.872,
+    "p50_p90_p95_m": {
+     "chm_v1": [
+      6.8,
+      11.8,
+      13.4
+     ],
+     "chm_v2": [
+      6.0,
+      9.1,
+      10.1
+     ],
+     "eth": [
+      4.0,
+      10.0,
+      11.5
+     ],
+     "chosen": [
+      6.0,
+      9.1,
+      10.1
+     ]
+    }
    },
-   "sha256": "bf6041035015ef6ae90ce92bee8c3f2329b7cc491aed7a0d0c3526a95c64218a",
-   "bytes": 26224
+   "stats": {
+    "cells": 46097,
+    "median_m": 5.9,
+    "p90_m": 8.4
+   },
+   "sha256": "2abc848f996c58d5c6d341a422fa4a33745694db749145bc2e4d044cbebfbb58",
+   "bytes": 21140
+  },
+  "vegetation.canopy_height_v2_10m": {
+   "path": "vegetation/canopy_height_v2_10m.tif",
+   "kind": "raster",
+   "resolution_m": 10.0,
+   "crs": "EPSG:32736",
+   "bounds": [
+    698000,
+    9724000,
+    708000,
+    9734000
+   ],
+   "source": "meta_canopy_height_v2",
+   "encoding": "band 1 the p95 height (m) of the 10 m cell's 2 m means of the 1 m map, band 2 tree cover (>= 4 m) %, band 3 shrub cover (0.5-4 m) %; -9999 off the map",
+   "sha256": "348a8cac07d6172d23d80dc3526f48f3044f7cd59e6eb49bdc7ab66305c38cd0",
+   "bytes": 707438
+  },
+  "vegetation.canopy_height_eth_10m": {
+   "path": "vegetation/canopy_height_eth_10m.tif",
+   "kind": "raster",
+   "resolution_m": 10.0,
+   "crs": "EPSG:32736",
+   "bounds": [
+    698000,
+    9724000,
+    708000,
+    9734000
+   ],
+   "source": "eth_canopy_height",
+   "encoding": "band 1 the canopy top height (m; GEDI RH98-calibrated), band 2 its standard deviation (m); -9999 no data",
+   "sha256": "b1fd3f687f2010ebb3ab55821a6ab6abf249ce2ef5ffc26d749df820a84f277f",
+   "bytes": 324933
   }
  },
  "sources": {
@@ -3599,6 +3666,26 @@
    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
    "attribution_url": "https://doi.org/10.55873/rba.v3i1.274",
    "attribution": "Vela-Apaza, C. I. & Gonzales-Ojeda, T. (2024). Flora arborea de los bosques de la planicie aluvial inundable en el Rio Los Amigos, Amazonia Peruana. Rev. Biodivers. Amaz. 3(1): e274; Wikipedia contributors (Parque nacional del Manu, es; Corcovado National Park, en)",
+   "attribution_required": true,
+   "retrieved": "2026-11-06"
+  },
+  "meta_canopy_height_v2": {
+   "name": "Meta and WRI global canopy height maps v2 (CHMv2, DINOv3), AWS open data",
+   "url": "https://registry.opendata.aws/dataforgood-fb-forestsv2/",
+   "license": "CC BY 4.0 (the AWS open-data registry entry dataforgood-fb-forestsv2, Meta's own listing; the CHMv2 paper's data record names 'the DINOv3 license', which governs the model)",
+   "license_url": "https://creativecommons.org/licenses/by/4.0/",
+   "attribution": "Canopy height v2: Meta and World Resources Institute (2026), Brandt, J. et al. CHMv2: Improvements in Global Canopy Height Mapping using DINOv3, arXiv:2603.06382. Source imagery for CHM \u00a9 2016 Vantor",
+   "attribution_url": "https://arxiv.org/abs/2603.06382",
+   "attribution_required": true,
+   "retrieved": "2026-11-06"
+  },
+  "eth_canopy_height": {
+   "name": "ETH Global Canopy Height 2020, 10 m (version 1), ETH Zurich research collection",
+   "url": "https://doi.org/10.3929/ethz-b-000609802",
+   "license": "CC BY 4.0 (the dataset's LICENSE.txt: 'free of charge, without restriction of use')",
+   "license_url": "https://creativecommons.org/licenses/by/4.0/",
+   "attribution": "Canopy height: Lang, N., Jetz, W., Schindler, K. and Wegner, J. D. (2023). A high-resolution canopy height model of the Earth. Nature Ecology & Evolution 7: 1778-1789",
+   "attribution_url": "https://doi.org/10.1038/s41559-023-02206-6",
    "attribution_required": true,
    "retrieved": "2026-11-06"
   }
@@ -4231,6 +4318,18 @@
    "step": "animals",
    "at": "2026-11-06T12:08:18Z",
    "seconds": 0.7,
+   "ok": true
+  },
+  {
+   "step": "canopy_top",
+   "at": "2026-11-06T12:43:54Z",
+   "seconds": 0.6,
+   "ok": true
+  },
+  {
+   "step": "canopy_top",
+   "at": "2026-11-06T12:52:15Z",
+   "seconds": 0.6,
    "ok": true
   }
  ],
@@ -5704,15 +5803,15 @@
    "seconds": 0.2
   },
   "canopy_top": {
-   "version": "1",
-   "code": "831bae93c94ee135",
+   "version": "2",
+   "code": "5e21e403e44de4f3",
    "params": {
     "tile": "utm36s_698_9724"
    },
-   "fingerprint": "76933e1a452e8616",
+   "fingerprint": "0e6fbf2ddc1acf07",
    "parts": {
-    "version": "1",
-    "code": "831bae93c94ee135",
+    "version": "2",
+    "code": "5e21e403e44de4f3",
     "params": {
      "tile": "utm36s_698_9724"
     },
@@ -5723,24 +5822,31 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-06T11:28:01Z",
+   "ran_at": "2026-11-06T12:52:14Z",
    "owner": null,
    "status": "ok",
    "layers": [
-    "client.canopy_top"
+    "client.canopy_top",
+    "vegetation.canopy_height_eth_10m",
+    "vegetation.canopy_height_v2_10m"
    ],
    "outputs": {
-    "client/canopy_top.png": "bf6041035015ef6a"
+    "client/canopy_top.png": "2abc848f996c58d5",
+    "vegetation/canopy_height_eth_10m.tif": "b1fd3f687f2010eb",
+    "vegetation/canopy_height_v2_10m.tif": "348a8cac07d6172d"
    },
-   "out_hash": "dd469bed4b020267",
-   "sources": {},
+   "out_hash": "46a925318b181923",
+   "sources": {
+    "eth_canopy_height": "2026-11-06",
+    "meta_canopy_height_v2": "2026-11-06"
+   },
    "fallbacks": [],
    "notes": [],
    "fetched": {
     "network": 0,
     "cache": 0
    },
-   "seconds": 0.5
+   "seconds": 0.6
   }
  },
  "seams": {

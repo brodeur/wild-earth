@@ -1,0 +1,64 @@
+{
+ "format": 1,
+ "code": "thamnophis_elegans",
+ "scientific": "Thamnophis elegans",
+ "common": "terrestrial garter snake",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "yellow"
+   ],
+   "markings": [
+    {
+     "pattern": "stripes",
+     "colours": [
+      "yellow"
+     ]
+    }
+   ]
+  },
+  "upperparts": {
+   "colours": [
+    "light orange",
+    "white",
+    "grayish-green",
+    "yellow"
+   ],
+   "markings": [
+    {
+     "pattern": "spots",
+     "colours": [
+      "red",
+      "black"
+     ]
+    },
+    {
+     "pattern": "spots",
+     "colours": [
+      "dark"
+     ]
+    }
+   ]
+  }
+ },
+ "facts": 9,
+ "dropped": {},
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Western_terrestrial_garter_snake",
+   "title": "Western terrestrial garter snake",
+   "revision": 1365666503,
+   "facts": 5
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Thamnophis_elegans/",
+   "title": "ADW: Thamnophis elegans",
+   "facts": 4
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body yellow with yellow stripes; back light orange, white, grayish-green, yellow with red, black, dark spots"
+}

@@ -1,0 +1,47 @@
+{
+ "format": 1,
+ "code": "syncerus_caffer",
+ "scientific": "Syncerus caffer",
+ "common": "african buffalo",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "rusty",
+    "black",
+    "dark brown",
+    "red"
+   ],
+   "markings": []
+  },
+  "tail": {
+   "colours": [
+    "black",
+    "dark tuft"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 10,
+ "dropped": {
+  "regional": 2,
+  "young": 2
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/African_buffalo",
+   "title": "African buffalo",
+   "revision": 1384026199,
+   "facts": 6
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Syncerus_caffer/",
+   "title": "ADW: Syncerus caffer",
+   "facts": 4
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body rusty, black, dark brown, red; tail black, dark tuft"
+}

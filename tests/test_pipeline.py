@@ -79,6 +79,20 @@ class TestGenerators(unittest.TestCase):
             if load_card(sid).get("deciduous") is False and "leaf_on_by_month" in (rec.get("foliage") or {}):
                 self.assertEqual(min(rec["foliage"]["leaf_on_by_month"]), 1.0, sid)
 
+    def test_a_shrub_on_a_tree_template_shares_the_trees_branches(self):
+        # 2026-11-06: a shrub card grown from a tree template keeps the template's level-1 count as the whole plant's
+        # (treegen shares it among the stems) and takes no standing dead tree; a shrub on a shrub template is unchanged
+        from pipeline.plantgen import build, cards, load_card, template_record
+        for sid in cards():
+            c = load_card(sid)
+            if c.get("form") not in ("shrub", "multi_stem_shrub_tree") or not c.get("template"):
+                continue
+            rec, tree = build(c), template_record(c["template"]).get("form", "tree") == "tree"
+            if rec.get("levels"):
+                self.assertEqual(rec["levels"][0].get("count_of") == "plant", tree, sid)
+            if tree:
+                self.assertNotIn("snag", rec, sid)
+
     def test_every_tree_research_record_makes_a_card(self):
         # pipeline/tree_cards.py: a research record -> a trait card that plantgen builds; a palm is flagged, never silent
         from pipeline.plantgen import build
@@ -164,9 +178,9 @@ class TestReptiles(unittest.TestCase):
         self.assertEqual(self.slot("Testudines", "Testudinidae", 20), ("sceloporus_occidentalis", "tortoise", "walk"))
         self.assertEqual(self.slot("Squamata", "Varanidae", 2.8), ("sceloporus_occidentalis", "monitor lizard", "bask"))
         self.assertEqual(self.slot("Squamata", "Agamidae", 0.1), ("sceloporus_occidentalis", "basking lizard", "bask"))
-        k, why, _ = self.slot("Squamata", "Viperidae", 2.4)
-        self.assertIsNone(k)
-        self.assertIn("snake", why)
+        # a snake (2026-11-06): the snake template, its own way on the lizard's cells
+        self.assertEqual(self.slot("Squamata", "Viperidae", 2.4), ("sceloporus_occidentalis", "snake", "snake"))
+        self.assertEqual(self.slot("Squamata", "Colubridae", 0.4), ("sceloporus_occidentalis", "snake", "snake"))
 
     def test_density_falls_with_mass(self):
         from pipeline.fauna_slots import density_km2
@@ -188,6 +202,22 @@ class TestReptiles(unittest.TestCase):
         self.assertIn("splayed", mesh)
         mesh, tex = F.prompts(fauna["slots"][2], "the Serengeti")
         self.assertIn("under the rim", mesh)
+
+    def test_snakes_choose_and_prompt(self):
+        from pipeline import fauna_models as F
+        fauna = {"slots": [
+            {"code": "a_croc", "archetype": "crocodilian", "reptile": "water", "mass_kg": 94, "records": 151},
+            {"code": "a_garter", "archetype": "snake", "reptile": "snake", "mass_kg": 0.4, "records": 28},
+            {"code": "a_python", "archetype": "snake", "reptile": "snake", "mass_kg": 73, "records": 3}]}
+        pick, rest = F.choose(fauna, 120, kind="snakes")
+        self.assertEqual([s["code"] for s in pick], ["a_python", "a_garter"])   # records x sqrt(mass)
+        self.assertEqual({s["code"] for s in rest}, {"a_croc"})
+        pick, _ = F.choose(fauna, 120, kind="reptiles")
+        self.assertEqual([s["code"] for s in pick], ["a_croc"])   # a snake is not a reptile build's
+        self.assertIsNone(F.reptile_build(fauna["slots"][1]))
+        mesh, _ = F._prompts(fauna["slots"][1], "Yellowstone")
+        self.assertIn("gentle S-curve", mesh)
+        self.assertIn("no coils", mesh)
 
 
 if __name__ == "__main__":

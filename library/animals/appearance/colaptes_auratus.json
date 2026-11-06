@@ -1,0 +1,114 @@
+{
+ "format": 1,
+ "code": "colaptes_auratus",
+ "scientific": "Colaptes auratus",
+ "common": "northern flicker",
+ "sex": "male",
+ "regions": {
+  "body": {
+   "colours": [
+    "brown",
+    "light tan"
+   ],
+   "markings": [
+    {
+     "pattern": "spots",
+     "colours": [
+      "black"
+     ]
+    }
+   ]
+  },
+  "upperparts": {
+   "colours": [
+    "white"
+   ],
+   "markings": [
+    {
+     "pattern": "bars",
+     "colours": [
+      "black"
+     ]
+    },
+    {
+     "pattern": "bars",
+     "colours": [
+      "gray-brown"
+     ]
+    }
+   ]
+  },
+  "underparts": {
+   "colours": [
+    "beige",
+    "black"
+   ],
+   "markings": [
+    {
+     "pattern": "patches",
+     "colours": [
+      "black"
+     ]
+    },
+    {
+     "pattern": "spots",
+     "colours": [
+      "black"
+     ]
+    }
+   ]
+  },
+  "head": {
+   "colours": [
+    "tan",
+    "gray"
+   ],
+   "markings": []
+  },
+  "neck": {
+   "colours": [
+    "red",
+    "black"
+   ],
+   "markings": []
+  },
+  "tail": {
+   "colours": [
+    "black"
+   ],
+   "markings": []
+  },
+  "wings": {
+   "colours": [],
+   "markings": [
+    {
+     "pattern": "bars",
+     "colours": [
+      "black"
+     ]
+    }
+   ]
+  }
+ },
+ "facts": 17,
+ "dropped": {
+  "regional": 2
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Northern_flicker",
+   "title": "Northern flicker",
+   "revision": 1382180514,
+   "facts": 7
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Colaptes_auratus/",
+   "title": "ADW: Colaptes auratus",
+   "facts": 10
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body brown, light tan with black spots; back white with black, gray-brown bars; belly and underparts beige, black with black patches with black spots; head tan, gray; neck red, black; tail black; wings black bars"
+}

@@ -198,12 +198,62 @@ if (!SPECIES[GENERIC_GRASS.id]) SPECIES[GENERIC_GRASS.id] = GENERIC_GRASS;
 export const GRASS_SPECIES = [...SPECIES_IDS.filter(id => SPECIES[id].form === 'grass').slice(0, GS_MAX - 1), GENERIC_GRASS.id].map((id, k) => {
   const s = SPECIES[id], g = s.ground || {};
   return { id, k, type: g.type === 'bunch' ? 1 : 0, height: g.height ?? 1, width: g.width ?? 1, palette: g.palette || null,
-    heads: g.heads?.months || null, cure: g.cure ?? 1, classes: s.habitat?.classes || {}, common: s.common, generic: !!s.generic };
+    heads: g.heads?.months || null, cure: g.cure ?? 1, annual: s.lifespan === 'annual', classes: s.habitat?.classes || {}, common: s.common, generic: !!s.generic };
 });
 const GS_GENERIC = GRASS_SPECIES.length - 1;
 const GS_FALLBACK = [GRASS_SPECIES.find(s => s.type === 0)?.k ?? 0, GRASS_SPECIES.find(s => s.type === 1)?.k ?? 0];
 const GS_OAT = GRASS_SPECIES.find(s => s.id === 'avena_fatua' || (SPECIES[s.id].aliases || []).includes('wild_oats'))?.k ?? GS_FALLBACK[0];
 const spDraw = seed => (seed * 7919.17) % 1;   // a second uniform from a plant's seed, for its species
+
+// ---- a grass's shape through the year on a tile outside the regional tables (2026-11-06, iteration 6) -------------
+// PALETTE's shape rows (height, heads, thatch, leaf by season) are California's annual grassland: green and half grown
+// in the winter rains, tall and flowering in spring, cured in summer. A tile that borrows nothing (class_fallback false)
+// takes them from its own measured season instead, where the client has it: the open grass's median NDVI of each
+// calendar month (the manifest's client.season_rgb months[].classes, open_grass else grassland; Sentinel-2, all years).
+//   live share g: the month's NDVI on the tile's own range, 1 at its greenest month, 0 at its driest; a tile whose
+//     NDVI swings less than 0.15 a year has a muted season (g never falls below 1 - swing / 0.15);
+//   standing grass, as shares of the sward at its green peak, run a year at a time to a steady cycle: live L = g; what
+//     dies back (L falling) is this year's straw F; a third of that straw weathers each month into last year's grey
+//     dead leaves O; and a fifth of all standing dead goes each month (grazing, trampling, decay and fire). The sward's
+//     height follows the standing total S = L + F + O (at most 1): it grows half the way to it a month while the grass
+//     grows, and drops with it at once; heightScale = hMin + (1 - hMin) height, hMin 0.5 for a perennial tussock (its
+//     base stands all year) and 0.3 for an annual (it starts again from seed), weighted by the grasses' share of the
+//     sward (their records' `lifespan`);
+//   thatch (the grey dead leaves among the live) = cure x O / S, and leaf length = 1 - 0.35 cure (F + O) / S (the dry
+//     leaves curl and break), with `cure` the records' (how fully the grass dries to straw; weighted the same way);
+//   heads: the season's `heads` stays up; each grass shows its own in its record's `heads.months`, read as calendar
+//     months at the tile (wrapping the year), from the first until four months after the last. The generic tufted grass
+//     has no months of its own: its heads come the two months before the tile's greenest month and in it.
+// The regional tiles (California, Teton, the Hoh) keep PALETTE's rows exactly. Returns null without a measured year.
+const OWN = { SWING: 0.15, GROW: 0.5, WEATHER: 1 / 3, LOSS: 0.2, H_PERENNIAL: 0.5, H_ANNUAL: 0.3, LEAF: 0.35 };
+function ownSeasonCurve(tile, w) {
+  const months = tile.manifest?.layers?.['client.season_rgb']?.months;
+  if (!Array.isArray(months) || months.length !== 12) return null;
+  const nd = months.map(m => (m.classes?.open_grass || m.classes?.grassland)?.ndvi);
+  if (nd.some(v => !Number.isFinite(v))) return null;
+  const lo = Math.min(...nd), hi = Math.max(...nd), swing = Math.min((hi - lo) / OWN.SWING, 1);
+  const g = nd.map(v => hi > lo ? 1 - swing * (hi - v) / (hi - lo) : 1);
+  let wt = 0, cure = 0, ann = 0;
+  for (const G of GRASS_SPECIES) { const x = w[G.k]; if (!(x > 0)) continue; wt += x; cure += x * G.cure; ann += x * (G.annual ? 1 : 0); }
+  cure = wt ? cure / wt : 1; ann = wt ? ann / wt : 0;
+  const hMin = OWN.H_PERENNIAL + (OWN.H_ANNUAL - OWN.H_PERENNIAL) * ann;
+  const height = new Array(12), thatch = new Array(12), leaf = new Array(12);
+  let F = 0, O = 0, h = 0.5, prev = g[11];
+  for (let yr = 0; yr < 6; yr++) for (let m = 0; m < 12; m++) {   // six years from bare: the cycle has settled
+    const L = g[m], died = Math.max(prev - L, 0); prev = L;
+    O = (O + OWN.WEATHER * F) * (1 - OWN.LOSS); F = F * (1 - OWN.WEATHER) * (1 - OWN.LOSS) + died;
+    const S = L + F + O, top = Math.min(S, 1);
+    h = top > h ? h + OWN.GROW * (top - h) : top;
+    height[m] = hMin + (1 - hMin) * h; thatch[m] = S > 0 ? cure * O / S : 0; leaf[m] = S > 0 ? 1 - OWN.LEAF * cure * (F + O) / S : 1;
+  }
+  const peak = g.indexOf(1) + 1;
+  return { ndvi: nd, g, height, thatch, leaf, cure, hMin, heads: [((peak + 9) % 12) + 1, peak] };
+}
+// A month-by-month value (12, January first, each the middle of its month) at a fractional month (1 = 1 January), round the year.
+function atMonth(v, month) {
+  const t = month - 1.5, i = Math.floor(t), f = t - i, a = ((i % 12) + 12) % 12;
+  return v[a] * (1 - f) + v[(a + 1) % 12] * f;
+}
 
 // ---- GLSL shared by both LODs ---------------------------------------------------------------
 const COMMON_VERT = /* glsl */`
@@ -1506,22 +1556,33 @@ export class Grass {
     // Each species' palette for the season (its record's sRGB 0-255, scaled as the type palettes are), and whether its
     // seed heads show this month; a species without a palette takes its type's.
     const month = seasonMonth(season, seasonState.date || undefined), s255 = rgb => rgb.map(v => v / 255);   // the day shown (a fixed date), else today
+    const own = this.ownCurve();   // the tile's own shape through the year (outside the regional tables), else PALETTE's
     for (let k = 0; k < GS_MAX; k++) {
       const G = GRASS_SPECIES[k], T = G && G.type ? P.bunch : P.annual, pal = G?.palette?.[season];
       set(u.spRoot.value[k], pal ? s255(pal.root) : T.root); set(u.spTip.value[k], pal ? s255(pal.tip) : T.tip);
       set(u.spHead.value[k], pal ? s255(pal.head) : T.head); set(u.spAwn.value[k], pal ? s255(pal.awn) : T.awn);
       // the heads stand from the species' first flowering month until four months after its last (the dry culms and
-      // empty glumes of the cured sward stand into the fall); the season's `heads` still takes them all down in winter
-      const hm = G?.heads; u.spHeads.value[k] = !hm ? 1 : month >= hm[0] && month < Math.min(hm[1] + 5, 12) ? 1 : 0;
+      // empty glumes of the cured sward stand into the fall); the season's `heads` still takes them all down in winter.
+      // On a tile with its own season curve (ownSeasonCurve) the months wrap the year and nothing else takes them down.
+      if (own) {
+        const hm = G?.generic ? own.heads : G?.heads;
+        u.spHeads.value[k] = !hm ? 1 : (month - hm[0] + 12) % 12 < Math.min((hm[1] - hm[0] + 12) % 12 + 5, 12) ? 1 : 0;
+      } else {
+        const hm = G?.heads; u.spHeads.value[k] = !hm ? 1 : month >= hm[0] && month < Math.min(hm[1] + 5, 12) ? 1 : 0;
+      }
     }
+    // `dry` stays the season's (the chaparral field reads its season from it, shrubfield.js seasonOfDry).
     u.heightScale.value = P.height; u.heads.value = P.heads; u.thatch.value = P.thatch; u.leafScale.value = P.leaf; u.dry.value = P.dry;
+    if (own) {
+      u.heightScale.value = atMonth(own.height, month); u.heads.value = 1;
+      u.thatch.value = atMonth(own.thatch, month); u.leafScale.value = atMonth(own.leaf, month);
+    }
     this.season = season;
   }
 
-  // The type palettes of a tile that borrows nothing, for the season: by type (annual, bunch), the mean of its own grasses'
-  // palettes weighted by their share of its cells (species_mix.json ground_bytes x cells; a row with no grass counts as
-  // the generic tufted grass); a type it has none of takes the other's. Palette values sRGB 0-1, as PALETTE's.
-  ownTypes(season, P) {
+  // A tile that borrows nothing: its grasses' weights (their share of its cells, species_mix.json ground_bytes x cells; a
+  // row with no grass counts as the generic tufted grass), and its own season curve from them (null where unmeasured).
+  ownWeights() {
     if (!this.ownW) {
       const w = this.ownW = new Float64Array(GRASS_SPECIES.length), byId = new Map(GRASS_SPECIES.map(s => [s.id, s.k]));
       for (const m of this.tile.speciesMix?.json?.mixes || []) {
@@ -1531,6 +1592,18 @@ export class Grass {
       }
       if (!w.some(v => v > 0)) w[GS_GENERIC] = 1;
     }
+    return this.ownW;
+  }
+  ownCurve() {
+    if (this._own === undefined) this._own = this.noFallback ? ownSeasonCurve(this.tile, this.ownWeights()) : null;
+    return this._own;
+  }
+
+  // The type palettes of a tile that borrows nothing, for the season: by type (annual, bunch), the mean of its own grasses'
+  // palettes weighted by their share of its cells (species_mix.json ground_bytes x cells; a row with no grass counts as
+  // the generic tufted grass); a type it has none of takes the other's. Palette values sRGB 0-1, as PALETTE's.
+  ownTypes(season, P) {
+    this.ownWeights();
     const parts = ['root', 'tip', 'head', 'awn'], acc = [null, null];
     for (const G of GRASS_SPECIES) {
       const wt = this.ownW[G.k]; if (!(wt > 0)) continue;

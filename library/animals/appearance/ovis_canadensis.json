@@ -1,0 +1,45 @@
+{
+ "format": 1,
+ "code": "ovis_canadensis",
+ "scientific": "Ovis canadensis",
+ "common": "bighorn sheep",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "light brown",
+    "grayish",
+    "chocolate brown",
+    "grey"
+   ],
+   "markings": []
+  },
+  "upperparts": {
+   "colours": [
+    "white"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 5,
+ "dropped": {
+  "age change": 1
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Bighorn_sheep",
+   "title": "Bighorn sheep",
+   "revision": 1377638644,
+   "facts": 4
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Ovis_canadensis/",
+   "title": "ADW: Ovis canadensis",
+   "facts": 1
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body light brown, grayish, chocolate brown, grey; back white"
+}

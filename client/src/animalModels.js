@@ -634,6 +634,15 @@ const RIG = {
   tortoise: { amp: [0.45, 0, 0.3, 0], pose: [1, 0, 0, 0],
     k: { wave: 0, waveK: 0, envS: 0, pushPitch: 0, baskAbduct: 0.15, squash: 0, legLift: 0.45, hindK: 1.0, bend: 0,
       flickYaw: 0.5, tipLag: 0 } },
+  // A tile's own snakes (tools/build_snake.py; loadFaunaModel; SNAKE_BODY): the body straight along +z, bent along its
+  // centreline. Everything is in the body's own length or diameter or in radians, so no constant is per species:
+  // waveA (rad) the heading's swing along the body at a full crawl, waveN the waves along the body then (lateral
+  // undulation: the wave stands in the ground's frame as the body slides through it); restA, restN the gentle S of a
+  // body lying still; envH the swing at the head over the body's (the head leads, steadier); coilR the coil's inner radius
+  // and coilGap the loops' pitch, in diameters; bendA (rad) the heading's change snout to tail in a turn of 1; lift (of
+  // the length) the fore body raised when alert; flickYaw (rad) the head's turn about the neck.
+  snake: { amp: [0, 0, 0, 0], pose: [0, 0, 0, 0],
+    k: { flickYaw: 0.5, waveA: 0.65, waveN: 1.35, restA: 0.32, restN: 0.75, envH: 0.35, coilR: 1.3, coilGap: 1.06, bendA: 1.4, lift: 0.07 } },
   // ---- the Hoh rain forest batch (2026-11-05; docs/animal-library.md "The Hoh rain forest batch"). Each is drawn with its
   // template's constants (its build script keeps that template's parts, pivots and extras.rig keys).
   // Roosevelt elk, bull and cow (tools/build_elk.py): skinned on the leg engine (tools/rig_quadruped.py, unguligrade); the
@@ -772,8 +781,10 @@ function rigLoader(name, opts) { return Object.assign(() => rigModel(name, opts)
 const BIRD_TEMPLATE = { soar: 'hawk', perch: 'stjay', ground: 'turkey', wade: 'heron', water: 'merganser' };
 // A reptile (model.kind 'reptile', tools/build_reptile.py: the reptile part rig, no skin) on the reptile template of its
 // build: a tortoise's shell on 'tortoise', a sprawler (the crocodilians, the lizards) on 'sprawler'.
+// A snake (model.kind 'snake', tools/build_snake.py) on the snake template.
 export function faunaTemplate(kinLoad, { role, archetype, mass_kg, model } = {}) {
   const t = kinLoad?.rig;
+  if (model?.kind === 'snake') return 'snake';
   if (model?.kind === 'reptile') return model.archetype === 'tortoise' ? 'tortoise' : 'sprawler';
   if (model?.kind === 'bird') {
     const a = BIRD_TEMPLATE[model.archetype] ? model.archetype : 'perch', k = RIG[t]?.k;
@@ -1369,6 +1380,74 @@ vec3 transformed;
 #ifdef USE_ALPHAHASH
   vPosition = vec3( position );
 #endif`;
+// The snake template (tools/build_snake.py; RIG.snake): the body lies straight along +z, each vertex's aPivot its point
+// on the centreline (x 0, z its arc: s = snout z - aPivot.z from the snout). The centreline is drawn again as a curve of
+// headings theta(s) (snTheta), integrated from the snout in SN_N steps (snCurve), its mean point and mean heading taken
+// out (the body stays centred on the instance and along its yaw), and each cross-section (position - aPivot) carried
+// round to its point and heading. The head (ahead of the neck) keeps the neck's heading, rigid, and turns about the neck
+// by the flick. aAnim = (phase, gait, pose, flick):
+//   phase  the travelling wave theta = A env(s) sin(phase - k s): animals.js advances it by k times the distance crawled,
+//          so the wave stands in the ground's frame and the body slides along its own track (lateral undulation), the
+//          head leading;
+//   gait   0 lying still (the gentle S: restA, restN) to 1 a full crawl (waveA, waveN);
+//   pose   0 stretched out to 1 coiled flat (a spiral from the tail tip at its middle out to the head, the loops
+//          touching); below 0 alert, the fore body raised (lift);
+//   flick  the head's turn about the neck (signed).
+// aAnim2 = (turn: a C along the body, signed as the yaw's turn; the coil's hand: below 0 the other way; the ground's sag
+// under the middle of the body, m, signed: the body follows a hollow or a hump; -).
+const SNAKE_DECL = `
+const int SN_N = 40;
+float snTheta(float s) {
+  float L = sn_snoutZ - sn_tailZ, sh = max(s, sn_snoutZ - sn_neckZ);
+  float g = clamp(aAnim.y, 0.0, 1.0);
+  float A = mix(rig_restA, rig_waveA, g), k = 6.28318 * mix(rig_restN, rig_waveN, g) / L;
+  float env = mix(rig_envH, 1.0, smoothstep(0.0, 0.3, sh / L));
+  float wave = A * env * sin(aAnim.x - k * sh) - aAnim2.x * rig_bendA * sh / L;
+  float d = 2.0 * sn_rad, b = d * rig_coilGap / 6.28318, r0 = d * rig_coilR, u = L - sh;
+  float coil = (aAnim2.y < 0.0 ? 1.0 : -1.0) * (sqrt(r0 * r0 + 2.0 * b * u) - r0) / b;
+  return mix(wave, coil, clamp(aAnim.z, 0.0, 1.0));
+}
+// the centreline in the ground plane (x, z) from the snout: the point at arc sv, the neck's, the mean point and heading
+void snCurve(float sv, out vec2 Pv, out vec2 Pn, out vec2 Pm, out float thm) {
+  float L = sn_snoutZ - sn_tailZ, ds = L / float(SN_N), sn = sn_snoutZ - sn_neckZ;
+  vec2 P = vec2(0.0); Pv = vec2(0.0); Pn = vec2(0.0); Pm = vec2(0.0); thm = 0.0;
+  int iv = min(int(sv / ds), SN_N - 1), in_ = min(int(sn / ds), SN_N - 1);   // the steps holding sv and the neck (the tail tip in the last)
+  for (int i = 0; i < SN_N; i++) {
+    float s0 = float(i) * ds, th = snTheta(s0 + 0.5 * ds);
+    vec2 D = vec2(-sin(th), -cos(th)), P1 = P + D * ds;
+    if (i == iv) Pv = P + D * (sv - s0);
+    if (i == in_) Pn = P + D * (sn - s0);
+    Pm += 0.5 * (P + P1); thm += th; P = P1;
+  }
+  Pm /= float(SN_N); thm /= float(SN_N);
+}`;
+const SNAKE_BODY = `
+vec3 animPos = position;
+vec3 animP = animPos - aPivot;
+mat3 animR = mat3(1.0);
+vec3 transformed;
+{
+  float snL = sn_snoutZ - sn_tailZ, snSv = clamp(sn_snoutZ - aPivot.z, 0.0, snL), snNeck = sn_snoutZ - sn_neckZ;
+  vec2 snPv, snPn, snPm; float snThm;
+  snCurve(snSv, snPv, snPn, snPm, snThm);
+  mat3 snM = animRY(-snThm);
+  float snZ0 = sn_snoutZ - 0.5 * snL;
+  vec3 snC = snM * vec3(snPv.x - snPm.x, 0.0, snPv.y - snPm.y) + vec3(0.0, aPivot.y, snZ0);
+  animR = animRY(snTheta(snSv) - snThm);
+  transformed = snC + animR * animP;
+  if (snSv < snNeck) {   // the head: rigid, turned about the neck by the flick
+    vec3 snN = snM * vec3(snPn.x - snPm.x, 0.0, snPn.y - snPm.y) + vec3(0.0, aPivot.y, snZ0);
+    mat3 snF = animRY(aAnim.w * rig_flickYaw);
+    transformed = snN + snF * (transformed - snN); animR = snF * animR;
+  }
+  float snU = snSv / snL, snCoil = clamp(aAnim.z, 0.0, 1.0);
+  transformed.y += aAnim2.z * 4.0 * snU * (1.0 - snU) * (1.0 - snCoil);   // the ground's sag or hump under the body
+  float snUp = max(-aAnim.z, 0.0) * rig_lift * snL * pow(max(0.0, 1.0 - snSv / (0.2 * snL)), 2.0);
+  transformed.y += snUp;   // alert: the fore body raised
+}
+#ifdef USE_ALPHAHASH
+  vPosition = vec3( position );
+#endif`;
 // The female's colours and the push-up's flash (color_vertex): the patches mixed to the file's off colours (the throat's
 // forward of the fore legs), brightened by the push-up or aAnim2.z (the patch itself, not its black edge).
 const REPTILE_COLOR = `
@@ -1547,9 +1626,10 @@ const decayConsts = model => {
   const f = x => x.toFixed(4);
   return { key: `d${c.map(f).join(',')},${f(hz)},${f(hy)}`, decl: `\nvarying float vDecay; varying float vDecayW; varying float vDecayFed;\nconst vec3 decay_c = vec3(${c.map(f).join(', ')});\nconst float decay_hz = ${f(hz)}, decay_hy = ${f(hy)};\n` };
 };
-const animBody = model => (model.skin ? SKIN_BODY : model.rig?.kind === 'reptile' ? REPTILE_BODY : ANIM_BODY) + DECAY_BODY;
+const animBody = model => (model.skin ? SKIN_BODY : model.rig?.kind === 'reptile' ? REPTILE_BODY : model.rig?.kind === 'snake' ? SNAKE_BODY : ANIM_BODY) + DECAY_BODY;
 const RIG_KEYS = ['spine', 'spinePhase', 'sit', 'foreFold', 'tipLag', 'tipWave', 'tipCurl', 'abduct', 'bob', 'handLag', 'handAmp', 'bow', 'spread', 'collapse', 'flickLift', 'flickOpen',
   'wave', 'waveK', 'envS', 'pushPitch', 'baskAbduct', 'squash', 'legLift', 'hindK', 'bend', 'flickYaw', 'turnFore', 'turnHead', 'eatHead', 'eatTip', 'eatDrop'];
+const SNAKE_KEYS = ['waveA', 'waveN', 'restA', 'restN', 'envH', 'coilR', 'coilGap', 'bendA', 'lift'];   // the snake template's own (RIG.snake; declared for it alone)
 // aAnim2 is declared for the rig templates, the quadrupeds' gait selector and the antlers (the geometry must then
 // carry it: a missing instanced attribute reads (0, 0, 0, 1), a bound gait and no antler growth).
 const hasAnim2 = model => !!(model.rig || model.gait || model.antler);
@@ -1580,6 +1660,13 @@ function rigDecl(model) {
     d += `#define RIG_REPTILE\nattribute float aBlue;\nconst float rep_snoutZ = ${f(piv.snout_z ?? 0.048)};\nconst float rep_tailEndZ = ${f(piv.tail_end_z ?? -0.13)};\n`
       + `const float rep_bellyY = ${f(piv.belly_y ?? 0.008)};\nconst float rep_drop = ${f(piv.drop ?? 0.007)};\nconst float rep_hipY = ${f(hy)};\nconst float rep_hipZ = ${f(hz)};\n`
       + `const float rep_throatZ = ${f((piv.fore?.[2] ?? 0.017) + 0.004)};\nconst vec3 rep_blueOff = ${v3(piv.blue_off || [0.45, 0.42, 0.35])};\nconst vec3 rep_throatOff = ${v3(piv.throat_off || [0.48, 0.445, 0.38])};\n`;
+  }
+  if (r.kind === 'snake') {   // the snake template's body (extras.rig; see SNAKE_BODY) and its constants (RIG.snake)
+    const sz = piv.snout_z ?? 0.5, tz = piv.tail_end_z ?? -0.5;
+    d += `#define RIG_SNAKE\nconst float sn_snoutZ = ${f(sz)};\nconst float sn_tailZ = ${f(tz)};\nconst float sn_neckZ = ${f(piv.neck_z ?? sz - 0.045 * (sz - tz))};\n`
+      + `const float sn_rad = ${f(piv.radius_m ?? 0.02 * (sz - tz))};\n`;
+    for (const k of SNAKE_KEYS) d += `const float rig_${k} = ${f(r.k[k])};\n`;
+    d += SNAKE_DECL + '\n';
   }
   return d;
 }

@@ -1,0 +1,104 @@
+{
+ "format": 1,
+ "code": "aquila_chrysaetos",
+ "scientific": "Aquila chrysaetos",
+ "common": "golden eagle",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "dark brown",
+    "golden-brown",
+    "black"
+   ],
+   "markings": []
+  },
+  "flanks": {
+   "colours": [
+    "golden"
+   ],
+   "markings": []
+  },
+  "underparts": {
+   "colours": [
+    "brownish gray"
+   ],
+   "markings": []
+  },
+  "head": {
+   "colours": [
+    "golden",
+    "blackish"
+   ],
+   "markings": []
+  },
+  "neck": {
+   "colours": [
+    "golden"
+   ],
+   "markings": []
+  },
+  "legs": {
+   "colours": [
+    "yellow"
+   ],
+   "markings": []
+  },
+  "tail": {
+   "colours": [
+    "grey",
+    "white",
+    "grayish brown"
+   ],
+   "markings": [
+    {
+     "pattern": "bands",
+     "colours": [
+      "white"
+     ]
+    },
+    {
+     "pattern": "bands",
+     "colours": [
+      "black"
+     ]
+    }
+   ]
+  },
+  "wings": {
+   "colours": [
+    "grey",
+    "white",
+    "rusty brown",
+    "brownish gray",
+    "blackish"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 26,
+ "dropped": {
+  "regional": 4,
+  "young": 8,
+  "no body word": 1,
+  "other taxa": 1,
+  "not the body": 1
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Golden_eagle",
+   "title": "Golden eagle",
+   "revision": 1380682560,
+   "facts": 11
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Aquila_chrysaetos/",
+   "title": "ADW: Aquila chrysaetos",
+   "facts": 15
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body dark brown, golden-brown, black; flanks golden; belly and underparts brownish gray; head golden, blackish; neck golden; legs yellow; tail grey, white, grayish brown with white, black bands; wings grey, white, rusty brown, brownish gray"
+}

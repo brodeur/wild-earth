@@ -37,7 +37,13 @@ import { SEASON_LOOK } from './season.js';
 // the nearest plant to a body (needs.js names it when "food here" is one of the body's foods), speciesAround(x, z, r)
 // what grows round it.
 const FORB_R = 45, FADE = [36, 45], D0 = 18, KMIN = 0.25, REFILL = 8, CAP = 40000, FORB_PER_M2 = 1.2, STRIDE = 10;   // STRIDE 10 (2026-11-06, was 8): + the ground's slope. CAP 40000 (2026-11-06, was 24000): a heath's carpet
-const CARPET_PER_M2 = 4.5, CARPET_MAX = 0.92, MAT_H = 0.7;   // the dwarf-shrub carpet's candidates per m^2 (enough for the closed patches); its cover at most; a mat's dome, of its box height
+const CARPET_PER_M2 = 2.2, CARPET_MAX = 0.95, MAT_H = 0.7;   // the dwarf-shrub carpet's candidates per m^2 (enough for the closed patches); its cover at most; a mat's dome, of its box height
+// A carpet mat is a clone's patch (2026-11-06, iteration 6): a heather or crowberry plant's shoots interlace with its
+// neighbours' and layer where they touch the ground, so a heath is patches a metre or two across, not single domes. Each
+// mat is drawn MAT_SPREAD x its card's crown width (heather 0.96 m -> 1.7 m, crowberry 0.85 -> 1.5) at the card's height,
+// a plateau with rounded shoulders rather than a dome, so overlapping mats make one lumpy surface at the carpet's height.
+// Its survivors in a closed patch (and of the distance thinning) grow across, hardly up (MAT_UP: height ~ width^0.35).
+const MAT_SPREAD = 1.8, MAT_UP = 0.35, MAT_R = 0.36, R2A = 0.7548776662466927, R2B = 0.5698402909980532;   // MAT_R: the mat's radius in its tile (and quad), the rest its skirt
 // The carpet reaches farther than the herbs (2026-11-06): it is the ground's cover, not a plant here and there, so it
 // stays to CARPET_R (dithering out over its last fifth) and hands over there to the ground texture, its colour taken
 // toward the texture's under it over the second half of its reach (the photo at 2.5 m is the heath's mean: mats and
@@ -85,7 +91,7 @@ export const groundPlant = s => !!s && (s.form === 'forb' || !!s.ground?.woody);
 function forbEntry(id, k) {
   const s = SPECIES[id], g = s.ground || {}, H = s.height_m || [0.2, 0.4], woody = !!g.woody, habit = g.habit || (woody ? 'mat' : 'erect');
   const hbm = (g.height_by_month && g.height_by_month.length === 12) ? g.height_by_month : new Array(12).fill(1);
-  const boxH = habit === 'floating' ? 0.002 : H[1], boxW = habit === 'floating' ? 0.6 : g.width_m || (ASPECT[habit] || 1) * H[1];
+  const boxH = habit === 'floating' ? 0.002 : H[1], boxW = habit === 'floating' ? 0.6 : (g.width_m || (ASPECT[habit] || 1) * H[1]) * (woody && habit === 'mat' ? MAT_SPREAD : 1);
   return { id, k, seed: woody ? 500 + WOODY_IDS.indexOf(id) : FORB_IDS.indexOf(id), common: s.common, habit, leaf: g.leaf || { shape: 'linear', size_m: 0.05, rgb: [100, 130, 80] }, flower: g.flower || null,
     fruit: g.fruit || null, hbm, dead: g.dead_rgb || [170, 150, 110], density: g.density ?? 1, classes: s.habitat?.classes || {}, shade: s.habitat?.shade ?? 0.2,
     disturbed: s.habitat?.disturbed ?? 1, boxH, boxW, evergreen: woody || Math.min(...hbm) >= 0.5, woody, area: Math.PI * boxW * boxW * 0.25 * 0.8,
@@ -191,7 +197,7 @@ function drawTile(g, F, st, cx, cy, top) {
   }
   // a mat's side view fills its box (the quad maps the tile to boxW x boxH: the dome MAT_H of it, flatter than the box),
   // its top view the disc
-  if (hb === 'mat') { drawMat(g, F, st, x0, y0, top ? W : T * 0.96, top ? H : T * MAT_H * st.h, Lf, ppm, top, rnd, leafCol); g.restore(); return; }
+  if (hb === 'mat') { drawMat(g, F, st, x0, y0, top ? W : T * 2 * MAT_R, top ? H : T * MAT_H * st.h, Lf, ppm, top, rnd, leafCol, top ? 1 : F.boxW / F.boxH); g.restore(); return; }
   if (top) {   // the plant from above: leaves radiating from the centre, the flowers on top
     const R = Math.min(W, T) * 0.5;
     for (let q = 0; q < nLeaves; q++) { const b = rnd() * Math.PI * 2, r = (hb === 'erect' || hb === 'bulb' ? 0.2 : 0.35 + 0.6 * rnd()) * R, L = Lf * (0.7 + 0.6 * rnd());
@@ -235,42 +241,62 @@ function drawTile(g, F, st, cx, cy, top) {
 // shoots drawn from the inside out, darker deep in the mat and toward its rim and base, brightest over its top; in
 // flower, the shoots near the surface carry their flowers along them (heather's racemes of small bells: a purple haze
 // over the whole mat, as a heath in August), the berries among them in their months.
-function drawMat(g, F, st, x0, y0, W, H, Lf, ppm, top, rnd, leafCol) {
+// (2026-11-06, iteration 6) A clone's patch rather than a dome: a plateau with rounded shoulders (side view and the top
+// quad's lift, MAT_R), the shoots in drifts of older, browner wood and fresher tips (and, in flower, of more and fewer
+// flowers), the side view's sprigs drawn for the box's aspect (the quad stretches the tile to boxW x boxH: a sprig drawn
+// round came out a smear), and from above a skirt round the disc: the mat's shade and litter on the ground, translucent
+// (alpha to coverage), so the ground between overlapping mats takes the carpet's dark tone instead of the photo's.
+// `asp`: the side view's px per m up over px per m across (boxW / boxH); 1 from above.
+function drawMat(g, F, st, x0, y0, W, H, Lf, ppm, top, rnd, leafCol, asp = 1) {
   // a shoot 3-5 cm (its leaves too small to draw one by one), enough of them to close the mat
-  const L = Math.min(14, Math.max(6, Math.max(Lf, 0.035 * ppm))), n = top ? 2600 : 1700, ns = top ? 0 : 14, fine = F.leaf.shape === 'linear' || F.leaf.shape === 'strap';
+  const L = Math.min(14, Math.max(6, Math.max(Lf, 0.035 * ppm))), n = top ? 2600 : 1900, ns = top ? 0 : 14, fine = F.leaf.shape === 'linear' || F.leaf.shape === 'strap';
   const fl = st.flowering && F.flower ? F.flower : null, show = fl ? Math.min(1, fl.size_m / 0.03) : 0, pf = fl ? Math.min(0.95, (fl.per_plant || 12) / 30) * show : 0;   // show: how much of the shoot its flowers cover (crowberry's 4 mm flowers little, heather's 6 cm racemes all)
   g.lineCap = 'round';
-  const R = top ? Math.min(W, T) * 0.48 : 0, rag = rnd() * 10;
+  const R = top ? T * MAT_R : 0, rag = rnd() * 10;
   // the top view's edge at angle b: lobed and ragged (a clone spreads unevenly), so a field of them is a mosaic, not dots
-  const rim = b => R * (0.62 + 0.38 * smooth(0.2, 0.8, 0.7 * vnoise(Math.cos(b) * 1.6 + rag, Math.sin(b) * 1.6, 91) + 0.3 * vnoise(Math.cos(b) * 5 + rag, Math.sin(b) * 5, 93)));
-  const dome = u => H * Math.pow(Math.max(0, 1 - 4 * u * u), 0.55) * (0.85 + 0.15 * vnoise(u * 6 + rag, 0, 92));   // the side view's top at u (-0.5..0.5 of W)
+  const rim = b => R * (0.72 + 0.28 * smooth(0.2, 0.8, 0.7 * vnoise(Math.cos(b) * 1.6 + rag, Math.sin(b) * 1.6, 91) + 0.3 * vnoise(Math.cos(b) * 5 + rag, Math.sin(b) * 5, 93)));
+  const plateau = q => Math.pow(Math.max(0, 1 - q * q * q * q), 0.5);   // the profile at q (0 centre, 1 rim): flat over most of the mat, rounding down at its edge
+  const dome = u => H * plateau(2 * Math.abs(u)) * (0.8 + 0.2 * vnoise(u * 7 + rag, 0, 92));   // the side view's top at u (-0.5..0.5 of W)
+  // the shoots' colour: the season's leaf, in drifts toward the old wood's (dead_rgb) and toward fresh tips
+  const leafRgb = st.dead ? F.dead : st.rgb || F.leaf.rgb, drift = (x, y) => vnoise((x - x0) / 34 + rag, (y - y0) / 34, 95);
+  const shoot = (k, x, y) => { const t = drift(x, y), o = 0.32 * smooth(0.45, 0.85, t), f = 0.12 * smooth(0.5, 0.15, t);
+    return css(leafRgb.map((c, i) => c * (1 - o) + F.dead[i] * o + (255 - c) * f * 0.25), k); };
+  if (top) {   // the skirt: shade and litter on the ground round the mat, fading out by the tile's edge
+    const sk = leafRgb.map((c, i) => (c * 0.7 + F.dead[i] * 0.3) * 0.62), grd = g.createRadialGradient(x0, y0, R * 0.6, x0, y0, T * 0.5);
+    grd.addColorStop(0, `rgba(${sk.map(v => v | 0).join(',')},0.85)`); grd.addColorStop((R * 1.02 - R * 0.6) / (T * 0.5 - R * 0.6), `rgba(${sk.map(v => v | 0).join(',')},0.7)`);
+    grd.addColorStop(1, `rgba(${sk.map(v => v | 0).join(',')},0)`);
+    g.fillStyle = grd; g.beginPath();
+    for (let q = 0; q <= 64; q++) { const b = q / 64 * Math.PI * 2, r = T * (0.4 + 0.1 * vnoise(Math.cos(b) * 2.5 + rag, Math.sin(b) * 2.5, 94)); q ? g.lineTo(x0 + Math.cos(b) * r, y0 + Math.sin(b) * r) : g.moveTo(x0 + r, y0); }
+    g.fill();
+  }
   g.fillStyle = leafCol(0.42); g.beginPath();   // the mat's dark inside
-  if (top) { for (let q = 0; q <= 64; q++) { const b = q / 64 * Math.PI * 2, r = rim(b) * 0.88; q ? g.lineTo(x0 + Math.cos(b) * r, y0 + Math.sin(b) * r) : g.moveTo(x0 + r, y0); } }
-  else { g.moveTo(x0 - W * 0.44, y0); for (let q = 0; q <= 32; q++) { const u = (q / 32 - 0.5) * 0.88; g.lineTo(x0 + u * W, y0 - dome(u) * 0.86); } g.lineTo(x0 + W * 0.44, y0); }
+  if (top) { for (let q = 0; q <= 64; q++) { const b = q / 64 * Math.PI * 2, r = rim(b) * 0.9; q ? g.lineTo(x0 + Math.cos(b) * r, y0 + Math.sin(b) * r) : g.moveTo(x0 + r, y0); } }
+  else { g.moveTo(x0 - W * 0.46, y0); for (let q = 0; q <= 32; q++) { const u = (q / 32 - 0.5) * 0.92; g.lineTo(x0 + u * W, y0 - dome(u) * 0.88); } g.lineTo(x0 + W * 0.46, y0); }
   g.fill();
   if (!top) {   // the woody shoots under the leaves
     g.strokeStyle = css(F.dead, 0.7);
-    for (let q = 0; q < ns; q++) { const u = rnd() - 0.5, x1 = x0 + u * W * 0.9, y1 = y0 - H * Math.pow(Math.max(0, 1 - 4 * u * u), 0.6) * (0.6 + 0.35 * rnd());
+    for (let q = 0; q < ns; q++) { const u = rnd() - 0.5, x1 = x0 + u * W * 0.9, y1 = y0 - H * plateau(2 * Math.abs(u)) * (0.6 + 0.35 * rnd());
       g.lineWidth = Math.max(1, H * 0.015); g.beginPath(); g.moveTo(x0 + u * W * 0.3, y0); g.quadraticCurveTo(x0 + u * W * 0.7, y0 - H * 0.15, x1, y1); g.stroke(); }
   }
   // the shoots: place them, then draw the deep ones first
   const S = [];
   for (let q = 0; q < n; q++) {
     let x, y, d, lit;   // d: depth into the mat (0 its surface, 1 deep inside); lit: the dome's light there (its top 1)
-    if (top) { const b = rnd() * Math.PI * 2, e = rim(b), rr = Math.sqrt(rnd()); x = x0 + Math.cos(b) * rr * e; y = y0 + Math.sin(b) * rr * e; d = Math.pow(rnd(), 1.5); lit = 1 - 0.3 * rr * rr; }
-    else { const u = rnd() - 0.5, v = Math.pow(rnd(), 0.4); x = x0 + u * W; y = y0 - v * dome(u); d = 1 - v; lit = 0.55 + 0.45 * v * (1 - 1.2 * u * u); }
+    if (top) { const b = rnd() * Math.PI * 2, e = rim(b), rr = Math.sqrt(rnd()); x = x0 + Math.cos(b) * rr * e; y = y0 + Math.sin(b) * rr * e; d = Math.pow(rnd(), 1.5); lit = 1 - 0.3 * Math.pow(rr, 4); }
+    else { const u = rnd() - 0.5, v = Math.pow(rnd(), 0.4); x = x0 + u * W; y = y0 - v * dome(u); d = 1 - v; lit = 0.55 + 0.45 * v * (1 - 0.6 * Math.pow(2 * u, 4)); }
     S.push([d, x, y, lit]);
   }
   S.sort((p, q) => q[0] - p[0]);
   for (const [d, x, y, lit] of S) {
     const k = (0.5 + 0.6 * (1 - d)) * lit * (0.82 + 0.36 * rnd());
-    const a = (rnd() - 0.5) * (top ? Math.PI * 2 : 1.8), l = L * (0.7 + 0.6 * rnd()), col = leafCol(Math.max(0.28, k));
-    if (fine) { g.strokeStyle = col; g.lineWidth = Math.max(1.6, l * 0.32); g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.sin(a) * l, y - Math.cos(a) * l); g.stroke(); }   // a needle-leaved shoot: a short thick sprig
+    const a = (rnd() - 0.5) * (top ? Math.PI * 2 : 1.8), l = L * (0.7 + 0.6 * rnd()), col = shoot(Math.max(0.28, k), x, y);
+    const dx = Math.sin(a) * l, dy = -Math.cos(a) * l * asp;   // the sprig as it will look once the quad maps the tile to the box
+    if (fine) { g.strokeStyle = col; g.lineWidth = Math.max(1.6, l * 0.32); g.beginPath(); g.moveTo(x, y); g.lineTo(x + dx, y + dy); g.stroke(); }   // a needle-leaved shoot: a short thick sprig
     else leaf(g, F, x, y, a, l, rnd, col);
-    if (fl && d < 0.7 && rnd() < pf) {   // its flowers along it
+    if (fl && d < 0.7 && rnd() < pf * (0.35 + 1.1 * smooth(0.25, 0.75, vnoise((x - x0) / 46 + rag, (y - y0) / 46, 96)))) {   // its flowers along it, in drifts
       const m = Math.round((2 + 7 * show) * (0.6 + 0.8 * rnd())), r0 = Math.max(0.9, Math.min(3, fl.size_m * ppm * 0.1));
       for (let q = 0; q < m; q++) { const t = 0.3 + 0.7 * q / m; g.fillStyle = css(fl.rgb, (0.75 + 0.4 * rnd()) * Math.min(1.1, 0.6 + 0.5 * lit));
-        g.beginPath(); g.arc(x + Math.sin(a) * l * t + (rnd() - 0.5) * 2, y - Math.cos(a) * l * t + (rnd() - 0.5) * 2, r0 * (0.8 + 0.4 * rnd()), 0, Math.PI * 2); g.fill(); }
+        g.beginPath(); g.ellipse(x + dx * t + (rnd() - 0.5) * 2, y + dy * t + (rnd() - 0.5) * 2 * asp, r0 * (0.8 + 0.4 * rnd()), r0 * (0.8 + 0.4 * rnd()) * Math.min(asp, 3), 0, 0, Math.PI * 2); g.fill(); }
     }
   }
   if (st.fruiting && F.fruit) {
@@ -278,16 +304,17 @@ function drawMat(g, F, st, x0, y0, W, H, Lf, ppm, top, rnd, leafCol) {
     for (let q = 0; q < (fr.per_plant || 20); q++) {
       let x, y; if (top) { const b = rnd() * Math.PI * 2, r = R * 0.85 * Math.sqrt(rnd()); x = x0 + Math.cos(b) * r; y = y0 + Math.sin(b) * r; }
       else { const u = (rnd() - 0.5) * 0.85; x = x0 + u * W; y = y0 - dome(u) * (0.75 + 0.25 * rnd()); }
-      g.beginPath(); g.arc(x, y, r0, 0, Math.PI * 2); g.fill();
+      g.beginPath(); g.ellipse(x, y, r0, r0 * Math.min(asp, 3), 0, 0, Math.PI * 2); g.fill();
     }
   }
 }
 
 // The mean albedo (linear) of the opaque texels of the atlas tile at (x, y), what the far colour match divides by, and
-// the share of the tile they cover (a mat's top view: its area, which the carpet's count is made from).
+// the share of the tile they cover (a mat's top view: its area, which the carpet's count is made from). The mat proper:
+// its translucent skirt (alpha under 0.8) is ground, not mat.
 function meanAlbedo(g, x, y) {
   const d = g.getImageData(x, y, T, T).data, lin = v => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }, m = [0, 0, 0];
-  let w = 0; for (let o = 0; o < d.length; o += 16) if (d[o + 3] > 76) { m[0] += lin(d[o]); m[1] += lin(d[o + 1]); m[2] += lin(d[o + 2]); w++; }
+  let w = 0; for (let o = 0; o < d.length; o += 16) if (d[o + 3] > 200) { m[0] += lin(d[o]); m[1] += lin(d[o + 1]); m[2] += lin(d[o + 2]); w++; }
   return { mean: w ? new THREE.Vector3(m[0] / w, m[1] / w, m[2] / w) : new THREE.Vector3(0.05, 0.08, 0.04), share: w / (d.length / 16) };
 }
 
@@ -303,6 +330,7 @@ const VERT = /* glsl */`
   attribute vec4 iPos; attribute vec4 iVar; attribute vec2 iSlope;   // root x y z, scale | species, seed, yaw, rank | the ground's slope dy/dx, dy/dz
   attribute float aQuad;   // 0, 1: the crossed uprights; 2: the one on the ground
   varying vec2 vUv; varying vec3 vSun; varying vec3 vAmb; varying vec3 vT; varying vec3 vIn; varying float vFade; varying float vDiff; varying float vGlow; varying vec3 vTint;
+  varying float vSkirt;   // a mat's skirt shows where the carpet closes (its cover there, the integer part of iVar.y / 32)
   float h11(float n) { return fract(sin(n) * 43758.5453123); }
   void main() {
     int sp = int(iVar.x + 0.5); vec4 B = spBox[sp];
@@ -322,7 +350,7 @@ const VERT = /* glsl */`
     }
     float gd = distance(iPos.xz, glow.xy);   // the glow: the species' weight, the gain, fading with the distance from the body, a boost for the nearest few
     vGlow = glowSp[sp] * glow.w * pow(clamp(1.0 - gd / max(glow.z, 0.01), 0.0, 1.0), 1.2) * (1.0 + 0.8 * (1.0 - smoothstep(0.0, 0.15 * glow.z, gd)));
-    float sc = iPos.w * mix(1.0, inversesqrt(keep), mat), scY = iPos.w, yaw = iVar.z + aQuad * 1.5707963;   // a mat grows across, not up
+    float sc = iPos.w * mix(1.0, inversesqrt(keep), mat), scY = mat > 0.5 ? pow(iPos.w, ${MAT_UP.toFixed(2)}) : iPos.w, yaw = iVar.z + aQuad * 1.5707963;   // a mat grows across, hardly up (MAT_UP)
     float c = cos(yaw), sn = sin(yaw);
     vec3 p;
     if (aQuad < 1.5) {   // upright: x across, y up; the picture's box is B.x wide, B.y tall (the plant B.z of it this month)
@@ -332,7 +360,8 @@ const VERT = /* glsl */`
       p.xz += windDir * windStrength * gust(iPos.xz) * t * t * 0.18 * B.y * scY;
     } else {   // on the ground, a little above it so it does not z-fight, the size of the top view
       vec2 q = vec2(position.x, position.y) * B.x * sc, o = vec2(q.x * c - q.y * sn, -(q.x * sn + q.y * c));
-      float lift = mat > 0.5 ? mix(0.02, B.w, pow(max(1.0 - 4.0 * dot(position.xy, position.xy), 0.0), 0.55)) * scY : B.w;   // a mat's dome: B.w at its centre
+      float qq = dot(position.xy, position.xy) / ${(MAT_R * MAT_R).toFixed(4)};   // (the radius over the mat's, MAT_R)^2
+      float lift = mat > 0.5 ? mix(0.02, B.w, sqrt(max(1.0 - qq * qq, 0.0))) * scY : B.w;   // a mat's plateau: B.w over most of it, down to the ground at its rim and under its skirt
       p = iPos.xyz + vec3(o.x, lift + dot(o, iSlope), o.y);   // on the ground's slope
     }
     // species k's pictures are the canvas's k-th row of tiles from the top; the CanvasTexture is flipped (flipY), so
@@ -345,11 +374,13 @@ const VERT = /* glsl */`
     // halfway (geometrically) to the photo's, and a shade of its own (a clone's), so the species' colours, heather's
     // flowers and crowberry's dark leaves, stay, but no mat is darker or brighter than the place measured allows; toward
     // the fade all the way, so it hands over to the ground texture without an edge.
-    vTint = vec3(1.0);
+    vTint = vec3(1.0); vSkirt = 1.0;
     if (mat > 0.5) {
+      vSkirt = aQuad > 1.5 ? smoothstep(0.55, 0.9, floor(iVar.y) / 32.0) : 1.0;
       vec3 gw; vec3 g = groundAlbedo(iPos.xyz, 1.0, gw);
       vec3 r = clamp(g / max(spMean[sp], vec3(1e-3)), vec3(0.25), vec3(4.0));
-      vec3 own = sqrt(r) * mix(vec3(0.86, 0.9, 0.86), vec3(1.12, 1.08, 1.1), h11(iVar.y * 517.3 + 3.1));
+      float hv = h11(iVar.y * 517.3 + 3.1), hw = h11(iVar.y * 91.7 + 7.3) - 0.5;   // a clone's own shade, and its own warmth (browner or greener)
+      vec3 own = sqrt(r) * mix(vec3(0.86, 0.9, 0.86), vec3(1.12, 1.08, 1.1), hv) * vec3(1.0 + 0.14 * hw, 1.0, 1.0 - 0.14 * hw);
       vTint = mix(own, r, smoothstep(0.45 * fd.x, fd.x, d));
     }
     // Light as the grass cards take it: sun on a surface facing the camera, bent to the ground normal; sky and
@@ -367,9 +398,11 @@ const VERT = /* glsl */`
 const FRAG = /* glsl */`
   uniform sampler2D atlas; uniform vec3 wxGround; uniform vec3 glowCol;
   varying vec2 vUv; varying vec3 vSun; varying vec3 vAmb; varying vec3 vT; varying vec3 vIn; varying float vFade; varying float vDiff; varying float vGlow; varying vec3 vTint;
+  varying float vSkirt;
   void main() {
     if (vFade < 0.995 && fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715)))) >= vFade) discard;
     vec4 t = texture2D(atlas, vUv);
+    if (t.a < 0.8) t.a *= vSkirt;   // a mat's skirt (translucent, round its disc) only where the carpet closes: elsewhere the ground is the gaps' own
     if (t.a < 0.3) discard;
     vec3 alb = t.rgb * vTint;   // the atlas is an sRGB texture, decoded to linear by the sampler (2026-11-06: a pow 2.2 on top decoded it twice, and a leaf of sRGB 64 came out black)
     alb = mix(alb, vec3(0.7, 0.73, 0.78), wxGround.z * 0.6);   // lying snow (weather.js)
@@ -402,18 +435,23 @@ export class Forbs {
       forbOn: { value: 1 },
       glow: { value: new THREE.Vector4(0, 0, 1, 0) }, glowSp: { value: new Float32Array(GS_MAX) }, glowCol: { value: new THREE.Color(1, 0.76, 0.34) } };   // the forager's food (forage.js writes them)
     // geometry: two crossed upright quads (x across, uv.y up) and one on the ground, 4 + 4 + 25 vertices: the ground one a
-    // 5 x 5 grid, so a mat's top view is its dome (the side view's profile, which the uprights stay inside), rising to the
-    // dome's height at the centre and meeting the ground at its rim (2026-11-06: lifted flat, the mats read as rugs
-    // floating over the slope; the herbs' stays flat, as before)
+    // centre, two rings of 8 (at 0.6 and 1.0 of the mat's radius MAT_R) and the square's 8 edge points, so a mat's top view
+    // is its plateau (the side view's profile, which the uprights stay inside), at its height over most of the mat and
+    // meeting the ground at its rim, its skirt on the ground (2026-11-06: lifted flat, the mats read as rugs floating over
+    // the slope; iteration 6: rings instead of a 5 x 5 grid, which could not hold a plateau's edge). The herbs' stays flat
+    // (every vertex in the one plane, so their pictures map exactly as on the square before)
     const g = new THREE.InstancedBufferGeometry(), pos = [], uv = [], quad = [], idx = [];
     for (let q = 0; q < 2; q++) {
       const b = pos.length / 3;
       pos.push(-0.5, 0, 0, 0.5, 0, 0, 0.5, 1, 0, -0.5, 1, 0); uv.push(0, 0, 1, 0, 1, 1, 0, 1);
       quad.push(q, q, q, q); idx.push(b, b + 1, b + 2, b, b + 2, b + 3);
     }
-    { const b = pos.length / 3;
-      for (let r = 0; r < 5; r++) for (let c = 0; c < 5; c++) { pos.push(c / 4 - 0.5, r / 4 - 0.5, 0); uv.push(c / 4, r / 4); quad.push(2); }
-      for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) { const v = b + r * 5 + c; idx.push(v, v + 1, v + 6, v, v + 6, v + 5); } }
+    { const b = pos.length / 3, P = (x, y) => { pos.push(x, y, 0); uv.push(x + 0.5, y + 0.5); quad.push(2); };
+      P(0, 0);
+      for (const rr of [0.6 * MAT_R, MAT_R]) for (let k = 0; k < 8; k++) P(rr * Math.cos(k * Math.PI / 4), rr * Math.sin(k * Math.PI / 4));
+      for (let k = 0; k < 8; k++) { const c = Math.cos(k * Math.PI / 4), sn = Math.sin(k * Math.PI / 4), m = 0.5 / Math.max(Math.abs(c), Math.abs(sn)); P(c * m, sn * m); }   // the square's mid-edges and corners
+      for (let k = 0; k < 8; k++) { const k1 = (k + 1) % 8; idx.push(b, b + 1 + k, b + 1 + k1);
+        for (const o of [1, 9]) idx.push(b + o + k, b + o + 8 + k, b + o + 8 + k1, b + o + k, b + o + 8 + k1, b + o + k1); } }
     g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
     g.setAttribute('aQuad', new THREE.Float32BufferAttribute(quad, 1)); g.setIndex(idx);
     this.buf = new THREE.InstancedInterleavedBuffer(new Float32Array(CAP * STRIDE), STRIDE, 1).setUsage(THREE.DynamicDrawUsage);
@@ -569,14 +607,18 @@ export class Forbs {
     // way, and the mats are larger where it is closed (old clones; 0.8-1.4 x). Each species in its own drifts. None
     // in a channel, a pond or its mud, half on a margin or a verge, none on pavement or water, thinned on outcrops.
     // Their rank + 2 marks them for the shader (the survivors of the distance thinning grow to keep the cover).
+    // (2026-11-06, iteration 6) Their places follow the R2 sequence from a point of the cell's own (Roberts 2018: every
+    // prefix of it spread evenly), not independent draws: at random the mats of a closed patch left a twentieth of it
+    // open in holes, and the distance thinning (a prefix by rank) kept clumps; evenly spread they close it and thin evenly.
     const crow = this.hasCarpet && SM ? SM.at(i, j) : null, cden = crow ? this.carpetRow.get(crow.index) || 0 : 0;
     const cm = cden > 0 ? this.carpetMix(crow) : null, cov = cm?.total > 0 ? Math.min(CARPET_MAX, cden * this.shrub[j * this.W + i]) : 0;
     if (cov > 0.005) {
       const NC = Math.round(res * res * CARPET_PER_M2), spread = 0.9 * Math.min(cov, 1 - cov), wts = cm.cum.map(([kk, a], q) => [kk, a - (q ? cm.cum[q - 1][1] : 0)]);
+      draw(i, j, N - 1); const a0 = U[6], b0 = U[7];   // the cell's start in the sequence
       for (let q = 0, qn = Math.min(NC, Math.ceil(kmax * NC)); q < qn; q++) {
         const k = N + q; if (gone?.has(`f:${i}.${j}.${k}`)) continue;
         draw(i, j, k);
-        const px = (i + U[0]) * res, pn = size - (j + U[1]) * res;
+        const px = (i + (a0 + q * R2A) % 1) * res, pn = size - (j + (b0 + q * R2B) % 1) * res;
         const sf = smooth(0.3, 0.7, 0.65 * vnoise(px / 16, pn / 16, 600) + 0.35 * vnoise(px / 5, pn / 5, 601));
         const c = Math.min(CARPET_MAX, Math.max(0.02, cov + spread * (2 * sf - 1)));
         let sp = wts[0][0];   // the species, each weighted by its own drifts here
@@ -591,7 +633,7 @@ export class Forbs {
         if (WG) { const z = WG.info(px, pn).zone; if (z === 1 || z === 5 || z === 6) continue; if (z === 2) keep *= 0.5; }
         if (U[7] >= keep || (wm && waterAt(wm, px, pn) === 255)) continue;
         const y = this.grass.ground(px, pn), sl = this.slope(px, pn, y);
-        out.push(px, y, -pn, sc, sp, U[5], U[6] * Math.PI * 2, 2 + (q + 0.5) / NC, sl[0], sl[1]); ks.push(k);
+        out.push(px, y, -pn, sc, sp, Math.round(32 * c) + U[5], U[6] * Math.PI * 2, 2 + (q + 0.5) / NC, sl[0], sl[1]); ks.push(k);   // the cover here in 32nds, and its seed
       }
     }
     c = bounds(new Float32Array(out), ks, i, j); c.kmax = kmax;

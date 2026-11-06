@@ -1,0 +1,142 @@
+{
+ "grid": {
+  "points": 2577815872,
+  "points_in_tile": 2577196485,
+  "nodes": 50972,
+  "max_depth": null,
+  "ept": {
+   "project": "WY_YellowstoneNP_2_2020",
+   "points": 183753966673,
+   "url": "https://usgs-lidar-public.s3.amazonaws.com/WY_YellowstoneNP_2_2020/ept.json"
+  },
+  "density_pts_m2": 25.8,
+  "empty_cell_fraction": 0.006
+ },
+ "grid_seconds": 1615.9,
+ "dtm_check": {
+  "ground_cell_fraction": 0.9782,
+  "median_offset_m": -0.029,
+  "mean_offset_m": -0.004,
+  "std_m": 0.437,
+  "p05_m": -0.15,
+  "p95_m": 0.103,
+  "fraction_within_0.15_m": 0.9218,
+  "fraction_beyond_0.5_m": 0.0212,
+  "best_shift_m": {
+   "east": 0,
+   "north": 0,
+   "rms_m": 0.258
+  }
+ },
+ "ground_from_points": {
+  "share": 0.0126,
+  "datum_offset_m": -0.029,
+  "note": "the 5 m DEM corrected by the ground returns where no 1 m product exists (their height less the DTM check's tile-wide offset)"
+ },
+ "coverage": {
+  "covered_share": 0.9966,
+  "client_cells_covered": 0.9981,
+  "rule": "a 10 m cell with returns in a quarter of its 1 m cells; client/lidar_cover.png: a 30 m cell half covered"
+ },
+ "canopy_10m": {
+  "p95_mean_m": 7.41,
+  "tree_cover_pct": 25.28,
+  "shrub_cover_pct": 8.36,
+  "filled_from_landfire_share": 0.0034
+ },
+ "crowns": {
+  "maxima": 371360,
+  "dropped_on_osm_buildings": 1,
+  "dropped_low_multi_return": 133,
+  "dropped_pole_like": 9490,
+  "dropped_shrub_in_shrub_canopy": 3610,
+  "dropped_on_bridges": 0,
+  "dropped_urban": 0,
+  "crowns": 358126,
+  "confidence_terms_median": {
+   "prominence": 0.959,
+   "width": 0.864,
+   "multi_return": 1.0,
+   "height": 1.0
+  },
+  "confidence_quantiles_p10_p50_p90": [
+   0.792,
+   0.901,
+   0.983
+  ],
+  "bytes": 2905044,
+  "crowns_per_ha": 35.8,
+  "max_per_index_cell": 156,
+  "height_histogram_m": {
+   "4-6": 14780,
+   "6-8": 39856,
+   "8-12": 51484,
+   "12-16": 41929,
+   "16-20": 55405,
+   "20-25": 84842,
+   "25-30": 52925,
+   "30-35": 14981,
+   "35-40": 1835,
+   "40-80": 89
+  },
+  "height_m": {
+   "median": 18.3,
+   "p95": 29.8,
+   "max": 48.6
+  },
+  "radius_m": {
+   "median": 3.74,
+   "p95": 6.38
+  },
+  "confidence_median": 0.901,
+  "seconds": 54.7
+ },
+ "lidar_micro": {
+  "intensity": {
+   "source_has_intensity": true,
+   "p2": 849.5,
+   "p50": 2101.3,
+   "p98": 3020.9,
+   "ground_pixel_fraction": 0.9963,
+   "filled_fraction": 0.0037
+  },
+  "roughness_cm": {
+   "p10": 1.17,
+   "p50": 2.69,
+   "p90": 5.42,
+   "p99": 12.4,
+   "clipped_fraction": 0.00098,
+   "measured_fraction": 0.996,
+   "filled_fraction": 0.004,
+   "with_tilt_p50": 7.98,
+   "with_tilt_p90": 17.73
+  },
+  "low_multi": {
+   "low_cell_fraction": 0.6899,
+   "share_in_low_cells_p50": 0.0,
+   "share_in_low_cells_p90": 0.15,
+   "pixels_b_over_0": 0.6125,
+   "pixels_b_over_10pct": 0.1104,
+   "pixels_b_over_30pct": 0.0089,
+   "b_mean": 8.24
+  },
+  "bytes": 12621596
+ },
+ "terrain_detail": {
+  "residual_m": {
+   "mean": 0.982,
+   "std": 3.958,
+   "p50_abs": 2.275,
+   "p99_abs": 12.584,
+   "max_abs": 52.2
+  },
+  "fraction_over_0.5_m": 0.8783,
+  "clipped_fraction": 0.175202
+ },
+ "roughness": {
+  "median_m": 0.047,
+  "p90_m": 0.123,
+  "p99_m": 0.451
+ },
+ "products_seconds": 144.1
+}

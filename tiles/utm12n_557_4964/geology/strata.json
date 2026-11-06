@@ -1,0 +1,261 @@
+{
+ "units": {
+  "1": {
+   "name": "Absaroka Volcanic Supergroup: Thorofare Creek Group - Two Ocean and Langford Formations",
+   "lithology": "volcanic",
+   "cells": 392982,
+   "elevation_m": {
+    "p5": 2521.1,
+    "p25": 2597.8,
+    "median": 2692.8,
+    "p75": 2782.3,
+    "p95": 2859.7
+   },
+   "candidate": true
+  },
+  "2": {
+   "name": "Absaroka Volcanic Supergroup: Washburn Group",
+   "lithology": "volcanic",
+   "cells": 1576254,
+   "elevation_m": {
+    "p5": 2081.9,
+    "p25": 2205.7,
+    "median": 2301.2,
+    "p75": 2411.7,
+    "p95": 2545.3
+   },
+   "candidate": true
+  },
+  "3": {
+   "name": "Basalt flows and intrusive igneous rocks",
+   "lithology": "basalt",
+   "cells": 61572,
+   "elevation_m": {
+    "p5": 1987.2,
+    "p25": 2030.9,
+    "median": 2048.9,
+    "p75": 2071.4,
+    "p95": 2088.6
+   },
+   "candidate": true
+  },
+  "4": {
+   "name": "Undivided surficial deposits",
+   "lithology": "surficial",
+   "cells": 1677211,
+   "elevation_m": {
+    "p5": 1985.0,
+    "p25": 2010.8,
+    "median": 2038.2,
+    "p75": 2116.1,
+    "p95": 2364.2
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "5": {
+   "name": "Absaroka Volcanic Supergroup: Thorofare Creek and Sunlight Groups",
+   "lithology": "volcanic",
+   "cells": 232086,
+   "elevation_m": {
+    "p5": 2409.1,
+    "p25": 2521.8,
+    "median": 2625.9,
+    "p75": 2744.8,
+    "p95": 2844.6
+   },
+   "candidate": true
+  },
+  "6": {
+   "name": "Madison Group, Darby Formation, Three Forks and Jefferson Formations",
+   "lithology": "limestone_marble",
+   "cells": 28853,
+   "elevation_m": {
+    "p5": 2032.4,
+    "p25": 2058.5,
+    "median": 2079.8,
+    "p75": 2095.9,
+    "p95": 2136.5
+   },
+   "candidate": true
+  },
+  "7": {
+   "name": "Rhyolite flows, tuff, and intrusive igneous rocks",
+   "lithology": "volcanic",
+   "cells": 23769,
+   "elevation_m": {
+    "p5": 2021.5,
+    "p25": 2051.5,
+    "median": 2071.9,
+    "p75": 2097.5,
+    "p95": 2112.5
+   },
+   "candidate": true
+  },
+  "8": {
+   "name": "Oldest gneiss complex",
+   "lithology": "schist",
+   "cells": 5286,
+   "elevation_m": {
+    "p5": 1992.2,
+    "p25": 1996.6,
+    "median": 1998.6,
+    "p75": 2000.6,
+    "p95": 2003.0
+   },
+   "candidate": true
+  },
+  "9": {
+   "name": "Three Forks, Jefferson, and Beartooth Formations and Bighorn Dolomite",
+   "lithology": "sandstone_conglomerate",
+   "cells": 1987,
+   "elevation_m": {
+    "p5": 2058.6,
+    "p25": 2068.2,
+    "median": 2081.8,
+    "p75": 2100.7,
+    "p95": 2114.0
+   },
+   "candidate": false,
+   "why_not": "too small"
+  }
+ },
+ "superposition": [
+  {
+   "upper": "Absaroka Volcanic Supergroup: Thorofare Creek and Sunlight Groups",
+   "lower": "Absaroka Volcanic Supergroup: Washburn Group",
+   "contact_cells": 2043,
+   "upper_on_top": 0.778
+  },
+  {
+   "upper": "Absaroka Volcanic Supergroup: Thorofare Creek Group - Two Ocean and Langford Formations",
+   "lower": "Absaroka Volcanic Supergroup: Washburn Group",
+   "contact_cells": 1418,
+   "upper_on_top": 0.877
+  },
+  {
+   "upper": "Absaroka Volcanic Supergroup: Washburn Group",
+   "lower": "Madison Group, Darby Formation, Three Forks and Jefferson Formations",
+   "contact_cells": 293,
+   "upper_on_top": 0.973
+  },
+  {
+   "upper": "Madison Group, Darby Formation, Three Forks and Jefferson Formations",
+   "lower": "Rhyolite flows, tuff, and intrusive igneous rocks",
+   "contact_cells": 82,
+   "upper_on_top": 0.11
+  },
+  {
+   "upper": "Absaroka Volcanic Supergroup: Washburn Group",
+   "lower": "Rhyolite flows, tuff, and intrusive igneous rocks",
+   "contact_cells": 62,
+   "upper_on_top": 1.0
+  }
+ ],
+ "consistent_pairs": 0.8,
+ "dropped": [
+  {
+   "unit": "Rhyolite flows, tuff, and intrusive igneous rocks",
+   "why": "not superposed: mixed sides along its contacts with Madison Group, Darby Formation, Three Forks and Jefferson Formations"
+  },
+  {
+   "unit": "Madison Group, Darby Formation, Three Forks and Jefferson Formations",
+   "why": "no base contact in the tile"
+  },
+  {
+   "unit": "Basalt flows and intrusive igneous rocks",
+   "why": "no base contact in the tile"
+  },
+  {
+   "unit": "Oldest gneiss complex",
+   "why": "its base is not seen in the tile: below the column"
+  },
+  {
+   "unit": "Absaroka Volcanic Supergroup: Thorofare Creek and Sunlight Groups",
+   "why": "its base horizon crosses the next unit's"
+  }
+ ],
+ "quality": {
+  "overall_fit_steep": 0.741,
+  "overall_fit_steep_strict": 0.726,
+  "map_tol_m": 20.0,
+  "dip_deg": 0.87,
+  "dip_azimuth_deg": 235.3,
+  "steep_cells_in_column": 455273,
+  "bands": 2,
+  "median_contact_sigma_m": 25.1,
+  "superposed_pairs": 0.8
+ },
+ "column": true,
+ "bands": [
+  {
+   "unit": 1,
+   "name": "Absaroka Volcanic Supergroup: Thorofare Creek Group - Two Ocean and Langford Formations",
+   "age": "Ypresian to Lutetian",
+   "lithology": "volcanic",
+   "base_m": 2593.9,
+   "slope_e": 0.012335,
+   "slope_n": 0.008564,
+   "thickness_at_centre_m": null,
+   "contact_sigma_m": 38.4,
+   "contact_cells": 1244,
+   "purity": 0.623,
+   "recall": 0.983,
+   "colour": [
+    0.44,
+    0.42,
+    0.4
+   ],
+   "alt": [
+    0.44,
+    0.42,
+    0.4
+   ],
+   "alt_share": 0.0,
+   "bedding": 0.07,
+   "from": "lithology: andesite"
+  },
+  {
+   "unit": 2,
+   "name": "Absaroka Volcanic Supergroup: Washburn Group",
+   "age": "Eocene",
+   "lithology": "volcanic",
+   "base_m": 2138.9,
+   "slope_e": 0.012532,
+   "slope_n": 0.008664,
+   "thickness_at_centre_m": 455.0,
+   "contact_sigma_m": 11.9,
+   "contact_cells": 339,
+   "purity": 0.805,
+   "recall": 0.927,
+   "colour": [
+    0.44,
+    0.42,
+    0.4
+   ],
+   "alt": [
+    0.44,
+    0.42,
+    0.4
+   ],
+   "alt_share": 0.0,
+   "bedding": 0.07,
+   "from": "lithology: andesite"
+  }
+ ],
+ "rule": {
+  "min_cells": 2000,
+  "min_fraction": 0.0005,
+  "contact_dz_m": 1.0,
+  "min_contact": 50,
+  "superposed": 0.75,
+  "steep_deg": 25.0,
+  "min_band_fit": 0.5,
+  "min_column_fit": 0.6,
+  "max_dip_deg": 8.0,
+  "tilt_prior": 200,
+  "tilt_scale_m": 3000.0,
+  "map_tol_m": 20.0,
+  "doc": "pipeline/strata.py"
+ }
+}

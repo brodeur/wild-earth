@@ -1,0 +1,62 @@
+{
+ "format": 1,
+ "code": "crocodylus_niloticus",
+ "scientific": "Crocodylus niloticus",
+ "common": "nile crocodile",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "dark bronze"
+   ],
+   "markings": []
+  },
+  "upperparts": {
+   "colours": [],
+   "markings": [
+    {
+     "pattern": "spots",
+     "colours": [
+      "blackish"
+     ]
+    }
+   ]
+  },
+  "flanks": {
+   "colours": [
+    "yellowish-green"
+   ],
+   "markings": [
+    {
+     "pattern": "patches",
+     "colours": [
+      "dark"
+     ]
+    }
+   ]
+  },
+  "underparts": {
+   "colours": [
+    "dingy off-yellow"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 5,
+ "dropped": {
+  "not the body": 1,
+  "young": 2
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Nile_crocodile",
+   "title": "Nile crocodile",
+   "revision": 1382567303,
+   "facts": 5
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body dark bronze; back blackish spots; flanks yellowish-green with dark patches; belly and underparts dingy off-yellow"
+}

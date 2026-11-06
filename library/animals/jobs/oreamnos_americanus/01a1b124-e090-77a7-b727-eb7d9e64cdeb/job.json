@@ -1,0 +1,71 @@
+{
+  "species": "oreamnos_americanus",
+  "mode": "refine",
+  "kind": "text-to-3d",
+  "task_id": "01a1b124-e090-77a7-b727-eb7d9e64cdeb",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "refine",
+    "preview_task_id": "01a1b123-5108-76b3-8527-b7f74abcd82c",
+    "texture_resolution": "2k",
+    "enable_pbr": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Natural coat colours and markings of a wild adult Mountain goat (Oreamnos americanus) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body white, brown. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+    "moderation": false
+  },
+  "prompt": "Natural coat colours and markings of a wild adult Mountain goat (Oreamnos americanus) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body white, brown. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+  "image": null,
+  "preview_job": "library/animals/jobs/oreamnos_americanus/01a1b123-5108-76b3-8527-b7f74abcd82c",
+  "estimated_credits": 10,
+  "balance_before": 1527,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-06T13:55:46+00:00",
+    "created_at": "2026-11-06T13:55:48+00:00",
+    "started_at": "2026-11-06T13:55:48+00:00",
+    "finished_at": "2026-11-06T13:56:18+00:00",
+    "downloaded": "2026-11-06T13:56:32+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur, world pipeline",
+  "progress": 100,
+  "task": {
+    "id": "01a1b124-e090-77a7-b727-eb7d9e64cdeb",
+    "type": "text-to-3d-refine",
+    "status": "SUCCEEDED",
+    "created_at": 1793973348330,
+    "started_at": 1793973348339,
+    "finished_at": 1793973378546,
+    "consumed_credits": 10,
+    "task_error": null
+  },
+  "credits_charged": 10,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 5992116,
+      "sha256": "f12a826e30133f03df36035adf5e1d74b171317f70843801e8b669e9c239f8bb",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b124-e090-77a7-b727-eb7d9e64cdeb/output/model.glb"
+    },
+    {
+      "file": "texture_base_color.png",
+      "bytes": 6294023,
+      "sha256": "2c637d69e478042435123967018bb664e06c4bc203e593fd3d7a68fb00c8b380",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b124-e090-77a7-b727-eb7d9e64cdeb/output/texture_0.png"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 94228,
+      "sha256": "c0a75092a27ab8fa1069bff20afe3f41f589a0b9fa74fbef209a0dffe5f20db0",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b124-e090-77a7-b727-eb7d9e64cdeb/output/preview.png"
+    }
+  ],
+  "balance_after": 1517
+}

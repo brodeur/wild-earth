@@ -1,0 +1,50 @@
+{
+ "format": 1,
+ "code": "giraffa_tippelskirchi",
+ "scientific": "Giraffa tippelskirchi",
+ "common": "masai giraffe",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "gray",
+    "tan",
+    "white",
+    "cream"
+   ],
+   "markings": [
+    {
+     "pattern": "blotches",
+     "colours": [
+      "dark",
+      "orange",
+      "chestnut",
+      "brown",
+      "nearly black"
+     ]
+    }
+   ]
+  },
+  "tail": {
+   "colours": [
+    "dark tuft"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 10,
+ "dropped": {},
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Giraffe",
+   "title": "Giraffe",
+   "revision": 1383950802,
+   "facts": 10,
+   "genus": true
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body gray, tan, white, cream with dark, orange, chestnut blotches; tail dark tuft"
+}

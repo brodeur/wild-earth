@@ -1,0 +1,115 @@
+{
+ "id": "grus_canadensis",
+ "scientific": "Grus canadensis",
+ "common": "sandhill crane",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Gruiformes",
+  "family": "Gruidae",
+  "genus": "Grus"
+ },
+ "body_plan": "bird",
+ "mass_kg": 4.2962,
+ "size": {
+  "length_m": 0.585,
+  "shoulder_or_wingspan_m": 0.936
+ },
+ "diet": {
+  "role": [
+   "omnivore"
+  ],
+  "diet_tenths": {
+   "inv": 2.0,
+   "vend": 2.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 2.0,
+   "nect": 0.0,
+   "seed": 1.0,
+   "planto": 3.0
+  },
+  "vertebrate_share": 0.2,
+  "mass_kg": 4.2962,
+  "activity": [],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 669.2
+  },
+  "sound": {
+   "range_m": 334.6
+  },
+  "scent": {
+   "range_m": 26.8
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "grus_canadensis",
+  "class": "Aves",
+  "order": "Gruiformes",
+  "family": "Gruidae",
+  "body_plan": "bird",
+  "mass_kg": 4.2962,
+  "length_m": 0.585,
+  "hip_m": 0.292,
+  "posture": "biped",
+  "gaits": {},
+  "walk_mps": 1.2,
+  "trot_mps": 2.68,
+  "cruise_mps": 4.07,
+  "top_mps": 6.78,
+  "stride_hz": 3.37,
+  "stride_m": 0.8,
+  "sprint_s": 5.4,
+  "recover_s": 18.9,
+  "turn_rad_s": 3.28,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.08,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T13:52:36Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

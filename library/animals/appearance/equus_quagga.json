@@ -1,0 +1,48 @@
+{
+ "format": 1,
+ "code": "equus_quagga",
+ "scientific": "Equus quagga",
+ "common": "plains zebra",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [],
+   "markings": [
+    {
+     "pattern": "stripes",
+     "colours": [
+      "black",
+      "white"
+     ]
+    },
+    {
+     "pattern": "stripes",
+     "colours": [
+      "black"
+     ]
+    }
+   ]
+  }
+ },
+ "facts": 3,
+ "dropped": {
+  "regional": 1,
+  "young": 1,
+  "morph": 3,
+  "past": 1,
+  "other taxa": 1,
+  "age change": 1
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Plains_zebra",
+   "title": "Plains zebra",
+   "revision": 1378842863,
+   "facts": 3
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body black, white stripes"
+}

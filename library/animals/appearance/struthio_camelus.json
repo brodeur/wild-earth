@@ -1,0 +1,56 @@
+{
+ "format": 1,
+ "code": "struthio_camelus",
+ "scientific": "Struthio camelus",
+ "common": "common ostrich",
+ "sex": "male",
+ "regions": {
+  "body": {
+   "colours": [
+    "black",
+    "white"
+   ],
+   "markings": []
+  },
+  "legs": {
+   "colours": [
+    "red"
+   ],
+   "markings": []
+  },
+  "tail": {
+   "colours": [
+    "white"
+   ],
+   "markings": []
+  },
+  "wings": {
+   "colours": [
+    "white"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 6,
+ "dropped": {
+  "young": 2,
+  "regional": 3
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Common_ostrich",
+   "title": "Common ostrich",
+   "revision": 1382458664,
+   "facts": 4
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Struthio_camelus/",
+   "title": "ADW: Struthio camelus",
+   "facts": 2
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body black, white; legs red; tail white; wings white"
+}

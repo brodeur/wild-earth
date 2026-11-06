@@ -291,9 +291,18 @@ def _species_mix(tile, m, force):
 
 def _canopy_top(tile, m, force):
     # The measured stand height per 30 m cell (pipeline/canopy_top.py) from the 10 m canopy height map, for the client's
-    # tree heights (client/src/stature.js: measured stature wins over a species' modelled curve).
+    # tree heights (client/src/stature.js: measured stature wins over a species' modelled curve). A lidar tile reads its
+    # point cloud's CHM; a global tile also fetches Meta's CHM v2 and ETH's GEDI-calibrated map (pipeline/canopy_maps.py)
+    # and takes its height by the rule in canopy_top.py (2026-11-06, iteration 6).
     from .canopy_top import canopy_top
-    add_layer(m, tile, "client.canopy_top", canopy_top(tile), fetched=False)
+    src = (m.get("layers", {}).get("vegetation.canopy_height_10m") or {}).get("source")
+    if not src and (m.get("status", {}).get("lidar") is True or tile.path("vegetation/chm_1m.tif").exists()):
+        src = "usgs_3dep_lpc"   # a fresh build's lidar CHM before its layer is recorded (Lamar, 2026-11-06)
+    if not (src or "").startswith("usgs_3dep"):
+        from .canopy_maps import fetch
+        for k, v in fetch(tile, force).items():
+            add_layer(m, tile, k, v)
+    add_layer(m, tile, "client.canopy_top", canopy_top(tile, src), fetched=False)
 
 
 def _has_canopy_map(tile, m):
@@ -530,8 +539,11 @@ STEPS: dict[str, Step] = {s.name: s for s in [
     Step("species_mix", "2", ["species_mix", "communities", "regions"], ["dem", "landcover", "water", "ice", "plants"],
          _species_mix, ["client.species_mix"], library=["library/species"],
          doc="trees, shrubs and ground layer per 30 m cell, with the unmatched communities read from their names", stage=F),
-    Step("canopy_top", "1", ["canopy_top"], ["landcover", "lidar", "terrain"], _canopy_top, ["client.canopy_top"],
-         applies=_has_canopy_map, doc="the measured stand height per 30 m cell, from the canopy height map", stage=F),
+    Step("canopy_top", "2", ["canopy_top", "canopy_maps"], ["landcover", "lidar", "terrain"], _canopy_top,
+         ["client.canopy_top", "vegetation.canopy_height_v2_10m", "vegetation.canopy_height_eth_10m"],
+         ["meta_canopy_height_v2", "eth_canopy_height"], applies=_has_canopy_map,
+         doc="the measured stand height per 30 m cell: the lidar CHM, else Meta's CHM v2 lifted to ETH's GEDI-calibrated "
+             "level where v2 sees tall closed forest", stage=F),
     Step("crowns", "1", ["lidar", "urban"], ["lidar", "osm", "landcover", "terrain", "species_mix"], _crowns,
          ["client.trees_lidar"], applies=_has_chm, doc="the lidar crowns, with the buildings, the rewilded classes and the urban mask",
          stage=F),

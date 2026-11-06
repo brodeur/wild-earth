@@ -1,0 +1,66 @@
+{
+ "format": 1,
+ "code": "panthera_leo",
+ "scientific": "Panthera leo",
+ "common": "lion",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "light buff",
+    "silvery grey",
+    "yellowish red",
+    "dark brown",
+    "tawny"
+   ],
+   "markings": []
+  },
+  "underparts": {
+   "colours": [
+    "white",
+    "black tuft"
+   ],
+   "markings": []
+  },
+  "neck": {
+   "colours": [
+    "brownish",
+    "yellow",
+    "rust",
+    "black"
+   ],
+   "markings": []
+  },
+  "tail": {
+   "colours": [
+    "dark tuft",
+    "black tuft"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 15,
+ "dropped": {
+  "regional": 2,
+  "young": 2,
+  "morph": 3,
+  "past": 1
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Lion",
+   "title": "Lion",
+   "revision": 1383140093,
+   "facts": 10
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Panthera_leo/",
+   "title": "ADW: Panthera leo",
+   "facts": 5
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body light buff, silvery grey, yellowish red, dark brown; belly and underparts white, black tuft; neck brownish, yellow, rust, black; tail dark tuft, black tuft"
+}

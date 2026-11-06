@@ -1,0 +1,80 @@
+{
+ "format": 1,
+ "code": "connochaetes_taurinus",
+ "scientific": "Connochaetes taurinus",
+ "common": "blue wildebeest",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "deep slate",
+    "bluish-gray",
+    "light gray",
+    "grayish-brown",
+    "tan"
+   ],
+   "markings": []
+  },
+  "upperparts": {
+   "colours": [],
+   "markings": [
+    {
+     "pattern": "stripes",
+     "colours": [
+      "dark"
+     ]
+    }
+   ]
+  },
+  "neck": {
+   "colours": [
+    "black",
+    "white"
+   ],
+   "markings": [
+    {
+     "pattern": "stripes",
+     "colours": [
+      "dark brown"
+     ]
+    },
+    {
+     "pattern": "stripes",
+     "colours": [
+      "dark"
+     ]
+    }
+   ]
+  },
+  "tail": {
+   "colours": [
+    "black"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 16,
+ "dropped": {
+  "other taxa": 4,
+  "regional": 5,
+  "young": 3,
+  "no body word": 3
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Blue_wildebeest",
+   "title": "Blue wildebeest",
+   "revision": 1377633143,
+   "facts": 12
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Connochaetes_taurinus/",
+   "title": "ADW: Connochaetes taurinus",
+   "facts": 4
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body deep slate, bluish-gray, light gray, grayish-brown; back dark stripes; neck black, white with dark brown, dark stripes; tail black"
+}

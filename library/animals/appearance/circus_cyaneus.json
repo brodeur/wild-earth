@@ -1,0 +1,78 @@
+{
+ "format": 1,
+ "code": "circus_cyaneus",
+ "scientific": "Circus cyaneus",
+ "common": "hen harrier",
+ "sex": "male",
+ "regions": {
+  "body": {
+   "colours": [
+    "grey",
+    "white",
+    "black",
+    "gray"
+   ],
+   "markings": [
+    {
+     "pattern": "bars",
+     "colours": [
+      "brown"
+     ]
+    }
+   ]
+  },
+  "upperparts": {
+   "colours": [
+    "grey",
+    "white"
+   ],
+   "markings": []
+  },
+  "underparts": {
+   "colours": [
+    "white",
+    "grey",
+    "buff",
+    "black"
+   ],
+   "markings": [
+    {
+     "pattern": "bars",
+     "colours": [
+      "brown"
+     ]
+    }
+   ]
+  },
+  "wings": {
+   "colours": [
+    "grey",
+    "black"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 16,
+ "dropped": {
+  "young": 5,
+  "no body word": 1,
+  "female": 1
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Hen_harrier",
+   "title": "Hen harrier",
+   "revision": 1383342684,
+   "facts": 12
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Circus_cyaneus/",
+   "title": "ADW: Circus cyaneus",
+   "facts": 4
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body grey, white, black, gray with brown bars; back grey, white; belly and underparts white, grey, buff, black with brown bars; wings grey, black"
+}

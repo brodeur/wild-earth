@@ -1,0 +1,94 @@
+{
+ "format": 1,
+ "code": "lycaon_pictus",
+ "scientific": "Lycaon pictus",
+ "common": "african wild dog",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "black",
+    "brown",
+    "red",
+    "yellow",
+    "white",
+    "blackish"
+   ],
+   "markings": []
+  },
+  "underparts": {
+   "colours": [
+    "white"
+   ],
+   "markings": []
+  },
+  "head": {
+   "colours": [
+    "black",
+    "brown",
+    "blackish-brown",
+    "yellow"
+   ],
+   "markings": [
+    {
+     "pattern": "lines",
+     "colours": [
+      "black"
+     ]
+    }
+   ]
+  },
+  "neck": {
+   "colours": [
+    "brown",
+    "yellow",
+    "white"
+   ],
+   "markings": []
+  },
+  "legs": {
+   "colours": [
+    "white"
+   ],
+   "markings": [
+    {
+     "pattern": "patches",
+     "colours": [
+      "white"
+     ]
+    }
+   ]
+  },
+  "tail": {
+   "colours": [
+    "white",
+    "black tip",
+    "brown tip",
+    "white tip"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 25,
+ "dropped": {
+  "no body word": 2,
+  "regional": 1
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/African_wild_dog",
+   "title": "African wild dog",
+   "revision": 1382180694,
+   "facts": 18
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Lycaon_pictus/",
+   "title": "ADW: Lycaon pictus",
+   "facts": 7
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body black, brown, red, yellow; belly and underparts white; head black, brown, blackish-brown, yellow with black lines; neck brown, yellow, white; legs white with white patches; tail white, black tip, brown tip, white tip"
+}

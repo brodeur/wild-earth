@@ -1,0 +1,116 @@
+{
+ "format": 1,
+ "code": "acinonyx_jubatus",
+ "scientific": "Acinonyx jubatus",
+ "common": "cheetah",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "tawny",
+    "creamy white",
+    "pale buff",
+    "pale yellow",
+    "gray"
+   ],
+   "markings": [
+    {
+     "pattern": "spots",
+     "colours": [
+      "black"
+     ]
+    },
+    {
+     "pattern": "marks",
+     "colours": [
+      "black"
+     ]
+    }
+   ]
+  },
+  "upperparts": {
+   "colours": [
+    "fawn"
+   ],
+   "markings": [
+    {
+     "pattern": "patches",
+     "colours": [
+      "black"
+     ]
+    }
+   ]
+  },
+  "underparts": {
+   "colours": [
+    "white",
+    "light tan"
+   ],
+   "markings": []
+  },
+  "head": {
+   "colours": [
+    "black",
+    "white",
+    "tawny"
+   ],
+   "markings": []
+  },
+  "neck": {
+   "colours": [
+    "white"
+   ],
+   "markings": []
+  },
+  "legs": {
+   "colours": [
+    "white"
+   ],
+   "markings": []
+  },
+  "tail": {
+   "colours": [
+    "white tuft",
+    "white tip"
+   ],
+   "markings": [
+    {
+     "pattern": "rings",
+     "colours": [
+      "dark"
+     ]
+    },
+    {
+     "pattern": "rings",
+     "colours": [
+      "dark",
+      "black"
+     ]
+    }
+   ]
+  }
+ },
+ "facts": 30,
+ "dropped": {
+  "regional": 1,
+  "young": 3,
+  "past": 1
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Cheetah",
+   "title": "Cheetah",
+   "revision": 1380372320,
+   "facts": 19
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Acinonyx_jubatus/",
+   "title": "ADW: Acinonyx jubatus",
+   "facts": 11
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body tawny, creamy white, pale buff, pale yellow with black spots with black marks; back fawn with black patches; belly and underparts white, light tan; head black, white, tawny; neck white; legs white; tail white tuft, white tip with dark, black rings"
+}

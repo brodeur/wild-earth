@@ -1,0 +1,54 @@
+{
+ "format": 1,
+ "code": "hippopotamus_amphibius",
+ "scientific": "Hippopotamus amphibius",
+ "common": "hippo",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "purplish-grey",
+    "blue-black",
+    "purple gray",
+    "slate"
+   ],
+   "markings": []
+  },
+  "underparts": {
+   "colours": [
+    "brownish-pink"
+   ],
+   "markings": []
+  },
+  "head": {
+   "colours": [
+    "brownish-pink",
+    "brownish pink"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 7,
+ "dropped": {
+  "regional": 1,
+  "not the body": 4,
+  "age change": 2
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Hippopotamus",
+   "title": "Hippopotamus",
+   "revision": 1382059641,
+   "facts": 4
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Hippopotamus_amphibius/",
+   "title": "ADW: Hippopotamus amphibius",
+   "facts": 3
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body purplish-grey, blue-black, purple gray, slate; belly and underparts brownish-pink; head brownish-pink, brownish pink"
+}
