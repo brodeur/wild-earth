@@ -5883,3 +5883,12 @@ traits, for every tile:
   Valley. At eye height it is not ready: the big sagebrush draws dark (the shrub field's own lighting darkens its grey-
   green record) over bare ground (the steppe's rows list no grasses: the tile is in no natural-region table and the
   library's grasses are California's). Next: a ground layer of the northern Rockies' bunchgrasses and silver shrubs.
+
+## 2026-11-06: the image leaves out Meshy's raw job outputs
+
+With iteration 6's 13 Lamar Valley models the image reached 1.7 GB, 776 MB of it in `library/animals/jobs`: every Meshy
+task's downloaded model, textures and thumbnail, kept so a paid result is never lost and the credit ledger can be read
+from the job records. The server and client read none of it; what the client draws is the built, rigged model in
+`client/assets/fauna`. `.dockerignore` now leaves `library/animals/jobs` out. The job records stay in git and the raw
+files stay on disk in the main checkout. A job is copied into its own task folder only, never one level up, or the
+ledger counts it twice.

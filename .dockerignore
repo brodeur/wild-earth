@@ -29,3 +29,6 @@ tiles/*/footprint/mask.geojson
 # the pipeline's shared download caches (Sentinel-2 composites alone reached 6.8 GB with the world probes, 2026-11-06,
 # and pushed the image past what the machine would take); the server reads none of them
 pipeline/_cache/sentinel
+# Meshy's raw job outputs (models, textures, thumbnails; 776 MB by 2026-11-06 and growing with each batch); the built,
+# rigged models the client loads live in client/assets/fauna, and the server reads none of these
+library/animals/jobs
