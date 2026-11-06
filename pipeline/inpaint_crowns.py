@@ -703,3 +703,44 @@ def main(argv=None) -> None:
 
 if __name__ == "__main__":
     sys.exit(main())
+
+
+# ---------------------------------------------------------------------------------------------- without a point cloud
+
+LITTER_RGB = (82, 67, 50)   # leaf litter and duff under a closed canopy, before the client's shade and detail
+
+
+def litter_under_canopy(tile: Tile) -> dict:
+    """World pipeline phase 1 (2026-11-06): on a tile without a point cloud the base texture is a satellite composite, so
+    under a closed canopy the floor shows the crowns' green from above (the probes' 'lawn' under rainforest). Here the
+    imagery is blended toward leaf litter by the canopy map's tree cover (vegetation/canopy_height_10m.tif band 2), keeping
+    a little of the imagery's own variation; open ground is untouched. Writes the same layers as inpaint_crowns."""
+    import rasterio
+    from rasterio.enums import Resampling
+    src = Image.open(tile.path("client/texture_imagery.jpg")).convert("RGB")
+    img = np.asarray(src).astype("float32")
+    n = img.shape[0]
+    with rasterio.open(tile.path("vegetation/canopy_height_10m.tif")) as s:
+        cover = s.read(2, out_shape=(img.shape[0], img.shape[1]), resampling=Resampling.bilinear).astype("float32") / 100
+    cover = np.nan_to_num(cover, nan=0.0)
+    a = 0.85 * np.clip((cover - 0.3) / 0.6, 0, 1) ** 1.2
+    lum = img @ LUM
+    var = (lum / max(float(lum.mean()), 1.0))[..., None]          # the imagery's own light and dark, kept as texture
+    litter = np.array(LITTER_RGB, "float32")[None, None, :] * np.clip(0.75 + 0.25 * var, 0.6, 1.3)
+    out = (img * (1 - a[..., None]) + litter * a[..., None]).clip(0, 255).round().astype("uint8")
+    Image.fromarray(out).save(tile.path("client/texture_ground.jpg"), quality=88)
+    m = (cv2.resize(a, (1000, 1000), interpolation=cv2.INTER_AREA) * 255).round().astype("uint8")
+    Image.fromarray(m).save(tile.path("client/texture_ground_mask.png"), optimize=True)
+    res = TILE_SIZE_M / n
+    return {
+        "client.texture_ground": {
+            "path": "client/texture_ground.jpg", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds), "pixels": n,
+            "resolution_m": res, "derived_from": ["client.texture_imagery", "vegetation.canopy_height_10m"],
+            "method": f"imagery blended toward leaf litter {LITTER_RGB} by tree cover (0.3 none to 0.9 full, 85 %), "
+                      "the imagery's luminance kept as variation; no point cloud on the tile",
+            "filled_fraction": round(float((a > 0.05).mean()), 4)},
+        "client.texture_ground_mask": {
+            "path": "client/texture_ground_mask.png", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
+            "pixels": 1000, "resolution_m": TILE_SIZE_M / 1000, "derived_from": ["client.texture_ground"],
+            "encoding": "8-bit grey, row 0 north: the litter blend's weight (255 full)"},
+    }

@@ -1,6 +1,6 @@
 {
  "tile": "utm33n_412_7531",
- "at": "2026-11-06T04:16:16Z",
+ "at": "2026-11-06T06:49:51Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -12,7 +12,7 @@
   "by_level": {
    "0": {
     "plants": 37,
-    "animals": 55
+    "animals": 64
    },
    "1": {
     "plants": 0,
@@ -32,9 +32,9 @@
    }
   },
   "plants": 45,
-  "animals_present": 60,
-  "animals_queued": 55,
-  "meshy_credits_queued": 1620,
+  "animals_present": 69,
+  "animals_queued": 64,
+  "meshy_credits_queued": 1860,
   "cards_queued": 37,
   "stand_ins": {
    "cornus_suecica": null,
@@ -90,16 +90,16 @@
    },
    "animal": {
     "target": 22,
-    "have": 60,
+    "have": 69,
     "with_model": 5
    }
   },
   "hands": {
-   "count": 94,
+   "count": 102,
    "by_what": {
     "a trait card": 37,
     "a lexicon phrase or a species-mix rule": 3,
-    "a mesh": 54
+    "a mesh": 62
    }
   }
  },
@@ -110,7 +110,7 @@
    "fidelity": 2,
    "common": "rowan",
    "drawn_as": "sorbus_aucuparia",
-   "share": 0.7294,
+   "share": 0.7409,
    "why_needed": [
     "GBIF: 83 records on the tile"
    ]
@@ -121,7 +121,7 @@
    "fidelity": 2,
    "common": "crowberry",
    "drawn_as": "empetrum_nigrum",
-   "share": 0.5569,
+   "share": 0.586,
    "why_needed": [
     "GBIF: 74 records on the tile"
    ]
@@ -132,7 +132,7 @@
    "fidelity": 2,
    "common": "downy birch (mountain birch)",
    "drawn_as": "betula_pubescens",
-   "share": 0.2706,
+   "share": 0.2591,
    "why_needed": [
     "GBIF: 31 records on the tile"
    ]
@@ -143,7 +143,7 @@
    "fidelity": 2,
    "common": "heather",
    "drawn_as": "calluna_vulgaris",
-   "share": 0.2706,
+   "share": 0.248,
    "why_needed": [
     "GBIF: 36 records on the tile"
    ]
@@ -154,7 +154,7 @@
    "fidelity": 2,
    "common": "common juniper (dwarf form)",
    "drawn_as": "juniperus_communis",
-   "share": 0.1725,
+   "share": 0.166,
    "why_needed": [
     "GBIF: 23 records on the tile"
    ]
@@ -851,11 +851,27 @@
    "fidelity": 0,
    "present": "records",
    "why": [
-    "predator and scavenger"
+    "predator and scavenger",
+    "most recorded: 12 of its class (2% of the class's records)"
    ],
    "role": [
     "predator",
     "scavenger"
+   ],
+   "traits": null
+  },
+  {
+   "id": "turdus_pilaris",
+   "scientific": "Turdus pilaris",
+   "common": "fieldfare",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 13 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
    ],
    "traits": null
   },
@@ -867,7 +883,8 @@
    "fidelity": 0,
    "present": "records",
    "why": [
-    "scavenger"
+    "scavenger",
+    "most recorded: 15 of its class (2% of the class's records)"
    ],
    "role": [
     "omnivore",
@@ -883,11 +900,57 @@
    "fidelity": 0,
    "present": "records",
    "why": [
-    "scavenger"
+    "scavenger",
+    "most recorded: 16 of its class (2% of the class's records)"
    ],
    "role": [
     "omnivore",
     "scavenger"
+   ],
+   "traits": null
+  },
+  {
+   "id": "phylloscopus_collybita",
+   "scientific": "Phylloscopus collybita",
+   "common": "common chiffchaff",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 17 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "phylloscopus_trochilus",
+   "scientific": "Phylloscopus trochilus",
+   "common": "willow warbler",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 18 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "chloris_chloris",
+   "scientific": "Chloris chloris",
+   "common": "european greenfinch",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 19 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
    ],
    "traits": null
   },
@@ -899,7 +962,8 @@
    "fidelity": 0,
    "present": "records",
    "why": [
-    "predator and scavenger"
+    "predator and scavenger",
+    "most recorded: 21 of its class (1% of the class's records)"
    ],
    "role": [
     "predator",
@@ -915,7 +979,8 @@
    "fidelity": 0,
    "present": "records",
    "why": [
-    "predator"
+    "predator",
+    "most recorded: 22 of its class (1% of the class's records)"
    ],
    "role": [
     "predator"
@@ -930,11 +995,42 @@
    "fidelity": 0,
    "present": "records",
    "why": [
-    "predator and scavenger"
+    "predator and scavenger",
+    "most recorded: 23 of its class (1% of the class's records)"
    ],
    "role": [
     "predator",
     "scavenger"
+   ],
+   "traits": null
+  },
+  {
+   "id": "anthus_pratensis",
+   "scientific": "Anthus pratensis",
+   "common": "meadow pipit",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 24 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "acanthis_flammea",
+   "scientific": "Acanthis flammea",
+   "common": "common redpoll",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 25 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
    ],
    "traits": null
   },
@@ -946,10 +1042,26 @@
    "fidelity": 0,
    "present": "records",
    "why": [
-    "predator"
+    "predator",
+    "most recorded: 26 of its class (1% of the class's records)"
    ],
    "role": [
     "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "lagopus_lagopus",
+   "scientific": "Lagopus lagopus",
+   "common": "willow ptarmigan",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 27 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
    ],
    "traits": null
   },
@@ -1523,6 +1635,21 @@
    "traits": null
   },
   {
+   "id": "myodes_rutilus",
+   "scientific": "Myodes rutilus",
+   "common": "northern red-backed mouse",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 9 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
    "id": "arion_ater",
    "scientific": "Arion ater",
    "common": "black arion",
@@ -1531,6 +1658,19 @@
    "present": "records",
    "why": [
     "most recorded: 1 of its class (13% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "patella_vulgata",
+   "scientific": "Patella vulgata",
+   "common": "common limpet",
+   "kind": "invertebrate",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 2 of its class (11% of the class's records)"
    ],
    "role": [],
    "traits": null
@@ -1999,12 +2139,28 @@
     "kind": "bird",
     "records": 174,
     "why": [
-     "predator and scavenger"
+     "predator and scavenger",
+     "most recorded: 12 of its class (2% of the class's records)"
     ],
     "body_plan": "bird",
     "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
     "estimate_credits": 30,
     "stand_in": "haliaeetus_leucocephalus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "turdus_pilaris",
+    "scientific": "Turdus pilaris",
+    "common": "fieldfare",
+    "kind": "bird",
+    "records": 164,
+    "why": [
+     "most recorded: 13 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "turdus_migratorius",
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
@@ -2014,7 +2170,8 @@
     "kind": "bird",
     "records": 146,
     "why": [
-     "scavenger"
+     "scavenger",
+     "most recorded: 15 of its class (2% of the class's records)"
     ],
     "body_plan": "bird",
     "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
@@ -2029,12 +2186,58 @@
     "kind": "bird",
     "records": 145,
     "why": [
-     "scavenger"
+     "scavenger",
+     "most recorded: 16 of its class (2% of the class's records)"
     ],
     "body_plan": "bird",
     "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
     "estimate_credits": 30,
     "stand_in": "poecile_rufescens",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "phylloscopus_collybita",
+    "scientific": "Phylloscopus collybita",
+    "common": "common chiffchaff",
+    "kind": "bird",
+    "records": 144,
+    "why": [
+     "most recorded: 17 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "phylloscopus_trochilus",
+    "scientific": "Phylloscopus trochilus",
+    "common": "willow warbler",
+    "kind": "bird",
+    "records": 135,
+    "why": [
+     "most recorded: 18 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "chloris_chloris",
+    "scientific": "Chloris chloris",
+    "common": "european greenfinch",
+    "kind": "bird",
+    "records": 125,
+    "why": [
+     "most recorded: 19 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
@@ -2044,7 +2247,8 @@
     "kind": "bird",
     "records": 103,
     "why": [
-     "predator and scavenger"
+     "predator and scavenger",
+     "most recorded: 21 of its class (1% of the class's records)"
     ],
     "body_plan": "bird",
     "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
@@ -2059,7 +2263,8 @@
     "kind": "bird",
     "records": 102,
     "why": [
-     "predator"
+     "predator",
+     "most recorded: 22 of its class (1% of the class's records)"
     ],
     "body_plan": "bird",
     "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
@@ -2074,12 +2279,43 @@
     "kind": "bird",
     "records": 99,
     "why": [
-     "predator and scavenger"
+     "predator and scavenger",
+     "most recorded: 23 of its class (1% of the class's records)"
     ],
     "body_plan": "bird",
     "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
     "estimate_credits": 30,
     "stand_in": "larus_glaucescens",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "anthus_pratensis",
+    "scientific": "Anthus pratensis",
+    "common": "meadow pipit",
+    "kind": "bird",
+    "records": 98,
+    "why": [
+     "most recorded: 24 of its class (1% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "acanthis_flammea",
+    "scientific": "Acanthis flammea",
+    "common": "common redpoll",
+    "kind": "bird",
+    "records": 97,
+    "why": [
+     "most recorded: 25 of its class (1% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
@@ -2089,12 +2325,28 @@
     "kind": "bird",
     "records": 89,
     "why": [
-     "predator"
+     "predator",
+     "most recorded: 26 of its class (1% of the class's records)"
     ],
     "body_plan": "bird",
     "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
     "estimate_credits": 30,
     "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "lagopus_lagopus",
+    "scientific": "Lagopus lagopus",
+    "common": "willow ptarmigan",
+    "kind": "bird",
+    "records": 83,
+    "why": [
+     "most recorded: 27 of its class (1% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "meleagris_gallopavo",
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
@@ -2582,6 +2834,21 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
+    "id": "patella_vulgata",
+    "scientific": "Patella vulgata",
+    "common": "common limpet",
+    "kind": "invertebrate",
+    "records": 6,
+    "why": [
+     "most recorded: 2 of its class (11% of the class's records)"
+    ],
+    "body_plan": "gastropod",
+    "rig": "none: procedural (a body of rings and a foot wave); no Meshy needed",
+    "estimate_credits": 0,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
     "id": "falco_peregrinus",
     "scientific": "Falco peregrinus",
     "common": "peregrine falcon",
@@ -2670,6 +2937,21 @@
     "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
     "estimate_credits": 30,
     "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "myodes_rutilus",
+    "scientific": "Myodes rutilus",
+    "common": "northern red-backed mouse",
+    "kind": "mammal",
+    "records": 3,
+    "why": [
+     "most recorded: 9 of its class (2% of the class's records)"
+    ],
+    "body_plan": "rodent",
+    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+    "estimate_credits": 30,
+    "stand_in": "microtus_californicus",
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    }
   ]
@@ -3086,7 +3368,16 @@
    "kind": "bird",
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
-    "predator and scavenger"
+    "predator and scavenger",
+    "most recorded: 12 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "turdus_pilaris",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 13 of its class (2% of the class's records)"
    ]
   },
   {
@@ -3094,7 +3385,8 @@
    "kind": "bird",
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
-    "scavenger"
+    "scavenger",
+    "most recorded: 15 of its class (2% of the class's records)"
    ]
   },
   {
@@ -3102,7 +3394,32 @@
    "kind": "bird",
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
-    "scavenger"
+    "scavenger",
+    "most recorded: 16 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "phylloscopus_collybita",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 17 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "phylloscopus_trochilus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 18 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "chloris_chloris",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 19 of its class (2% of the class's records)"
    ]
   },
   {
@@ -3110,7 +3427,8 @@
    "kind": "bird",
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
-    "predator and scavenger"
+    "predator and scavenger",
+    "most recorded: 21 of its class (1% of the class's records)"
    ]
   },
   {
@@ -3118,7 +3436,8 @@
    "kind": "bird",
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
-    "predator"
+    "predator",
+    "most recorded: 22 of its class (1% of the class's records)"
    ]
   },
   {
@@ -3126,7 +3445,24 @@
    "kind": "bird",
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
-    "predator and scavenger"
+    "predator and scavenger",
+    "most recorded: 23 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "anthus_pratensis",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 24 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "acanthis_flammea",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 25 of its class (1% of the class's records)"
    ]
   },
   {
@@ -3134,7 +3470,16 @@
    "kind": "bird",
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
-    "predator"
+    "predator",
+    "most recorded: 26 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "lagopus_lagopus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 27 of its class (1% of the class's records)"
    ]
   },
   {
@@ -3436,6 +3781,14 @@
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
     "most recorded: 8 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "myodes_rutilus",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 9 of its class (2% of the class's records)"
    ]
   }
  ]

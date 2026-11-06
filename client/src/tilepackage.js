@@ -569,7 +569,7 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
   for (const k of ['client.heights', 'client.texture', 'client.habitat', 'client.canopy', 'client.masks'])
     if (!L[k]) throw new Error(`tile ${id} lacks ${k}; run the derive step`);
   const MX = L['client.species_mix'], mixFiles = MX?.files || {};
-  const [heights, texture, habitat, canopy, masks, species, perception, calendar, games, locomotion, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior, detail, canopyHeight, groundTexture, seasonImage, lidarMicro, waterImg, waterWidthImg, substrate, substrateInfo, lidarCover] = await Promise.all([
+  const [heights, texture, habitat, canopy, masks, species, perception, calendar, games, locomotion, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior, detail, canopyHeight, groundTexture, seasonImage, lidarMicro, waterImg, waterWidthImg, substrate, substrateInfo, lidarCover, fauna] = await Promise.all([
     loadImageData(dir + L['client.heights'].path, signal), loadImageData(dir + L['client.texture'].path, signal),
     loadImageData(dir + L['client.habitat'].path, signal), loadImageData(dir + L['client.canopy'].path, signal),
     loadImageData(dir + L['client.masks'].path, signal),
@@ -625,6 +625,9 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
     // where the point cloud reaches (tile-spec "Lidar", 2026-11-04): 255 on the habitat grid where the lidar's crowns
     // stand; optional (absent: every cell of a crown tile is covered, as before)
     L['client.lidar_cover'] ? loadImageData(dir + L['client.lidar_cover'].path, signal).catch(() => null) : null,
+    // the tile's own fauna (pipeline: the species the client draws here; animals.js installFauna): a gate on the static
+    // cast and the tile's stand-in slots; optional (absent: every static species, as before)
+    L['client.fauna'] ? fetch(dir + L['client.fauna'].path, { signal }).then(r => r.ok ? r.json() : null).catch(() => null) : null,
   ]);
   if (signal?.aborted) throw aborted(signal);
   if (features) markRewilded(features, m);
@@ -665,6 +668,7 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
     // the imagery without trees (client.texture_ground), and the season_rgb sheet (an Image; season.js reads its frames)
     groundTextureImage: groundTexture, seasonImage,
     species, perception, calendar, games, locomotion, imagery, features, speciesPrior,
+    fauna: fauna && fauna.format === 1 ? fauna : null,   // client/fauna.json (animals.js installFauna), or null
     latitude: (m.bounds_wgs84[1] + m.bounds_wgs84[3]) / 2,
   };
 }

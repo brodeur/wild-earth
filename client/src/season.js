@@ -3,8 +3,17 @@ import { drain } from './slice.js';
 export const SEASONS = ['winter', 'spring', 'summer', 'fall'];
 const MIDPOINT_DOY = { winter: 15, spring: 105, summer: 196, fall: 288 };
 
+// The tile's own season of each month (world pipeline, 2026-11-06): the pipeline writes it in the manifest's
+// climate.normals layer (season_months, January first) for tiles it built from global data: a seasonally dry tropics maps
+// the season-keyed tables onto its own rainfall, a temperate south shifts them six months. setSeasonMonths(null) (every
+// tile without it) keeps the north's calendar quarters.
+let SEASON_MONTHS = null;
+export function setSeasonMonths(months) {
+  SEASON_MONTHS = Array.isArray(months) && months.length === 12 ? months.slice() : null;
+}
 export function seasonOfDate(d = new Date()) {
   const m = d.getMonth() + 1;
+  if (SEASON_MONTHS) return SEASON_MONTHS[m - 1];
   return m === 12 || m <= 2 ? 'winter' : m <= 5 ? 'spring' : m <= 8 ? 'summer' : 'fall';
 }
 

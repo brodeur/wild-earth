@@ -1,6 +1,6 @@
 {
  "tile": "utm12n_396_3988",
- "at": "2026-11-06T06:05:52Z",
+ "at": "2026-11-06T06:48:18Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -12,7 +12,7 @@
   "by_level": {
    "0": {
     "plants": 38,
-    "animals": 30
+    "animals": 55
    },
    "1": {
     "plants": 0,
@@ -32,9 +32,9 @@
    }
   },
   "plants": 54,
-  "animals_present": 64,
-  "animals_queued": 30,
-  "meshy_credits_queued": 860,
+  "animals_present": 89,
+  "animals_queued": 55,
+  "meshy_credits_queued": 1570,
   "cards_queued": 38,
   "stand_ins": {
    "pinus_monophylla": "pinus_sabiniana",
@@ -91,17 +91,16 @@
    },
    "animal": {
     "target": 22,
-    "have": 64,
+    "have": 89,
     "with_model": 34
    }
   },
   "hands": {
-   "count": 105,
+   "count": 110,
    "by_what": {
     "a trait card": 38,
     "a lexicon phrase or a species-mix rule": 19,
-    "a mesh": 29,
-    "a review of its generated traits": 19
+    "a mesh": 53
    }
   }
  },
@@ -125,7 +124,7 @@
    "fidelity": 2,
    "common": "big sagebrush",
    "drawn_as": "artemisia_tridentata",
-   "share": 0.3444,
+   "share": 0.3474,
    "why_needed": [
     "named by EVT 7080 Inter-Mountain Basins Big Sagebrush Shrubland (1024 cells)",
     "named by BPS 2705 Inter-Mountain Basins Big Sagebrush Shrubland-Upland (93 cells)",
@@ -138,7 +137,7 @@
    "fidelity": 4,
    "common": "whiteleaf manzanita",
    "drawn_as": "arctostaphylos_viscida",
-   "share": 0.2579,
+   "share": 0.2641,
    "why_needed": [
     "named by EVT 7104 Mogollon Chaparral (199 cells)"
    ]
@@ -149,7 +148,7 @@
    "fidelity": 4,
    "common": "chamise",
    "drawn_as": "adenostoma_fasciculatum",
-   "share": 0.2567,
+   "share": 0.2536,
    "why_needed": [
     "named by EVT 7104 Mogollon Chaparral (199 cells)"
    ]
@@ -184,7 +183,7 @@
    "fidelity": 4,
    "common": "buckbrush",
    "drawn_as": "ceanothus_cuneatus",
-   "share": 0.141,
+   "share": 0.1349,
    "why_needed": [
     "named by EVT 7104 Mogollon Chaparral (199 cells)"
    ]
@@ -1073,7 +1072,7 @@
    "role": [
     "omnivore"
    ],
-   "traits": "library/animals/traits/aphelocoma_woodhouseii.json"
+   "traits": null
   },
   {
    "id": "sialia_mexicana",
@@ -1088,7 +1087,7 @@
    "role": [
     "insectivore"
    ],
-   "traits": "library/animals/traits/sialia_mexicana.json"
+   "traits": null
   },
   {
    "id": "sitta_carolinensis",
@@ -1103,7 +1102,7 @@
    "role": [
     "omnivore"
    ],
-   "traits": "library/animals/traits/sitta_carolinensis.json"
+   "traits": null
   },
   {
    "id": "sitta_pygmaea",
@@ -1118,7 +1117,7 @@
    "role": [
     "insectivore"
    ],
-   "traits": "library/animals/traits/sitta_pygmaea.json"
+   "traits": null
   },
   {
    "id": "baeolophus_ridgwayi",
@@ -1133,7 +1132,7 @@
    "role": [
     "insectivore"
    ],
-   "traits": "library/animals/traits/baeolophus_ridgwayi.json"
+   "traits": null
   },
   {
    "id": "gymnogyps_californianus",
@@ -1150,7 +1149,172 @@
     "omnivore",
     "scavenger"
    ],
-   "traits": "library/animals/traits/gymnogyps_californianus.json"
+   "traits": null
+  },
+  {
+   "id": "tachycineta_thalassina",
+   "scientific": "Tachycineta thalassina",
+   "common": "violet-green swallow",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 12 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "aeronautes_saxatalis",
+   "scientific": "Aeronautes saxatalis",
+   "common": "white-throated swift",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 13 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "pipilo_maculatus",
+   "scientific": "Pipilo maculatus",
+   "common": "spotted towhee",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 15 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "omnivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "colaptes_auratus",
+   "scientific": "Colaptes auratus",
+   "common": "northern flicker",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 17 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "salpinctes_obsoletus",
+   "scientific": "Salpinctes obsoletus",
+   "common": "rock wren",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 18 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "psaltriparus_minimus",
+   "scientific": "Psaltriparus minimus",
+   "common": "bushtit",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 20 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "catherpes_mexicanus",
+   "scientific": "Catherpes mexicanus",
+   "common": "canyon wren",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 21 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "setophaga_nigrescens",
+   "scientific": "Setophaga nigrescens",
+   "common": "black-throated gray warbler",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 23 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "sitta_canadensis",
+   "scientific": "Sitta canadensis",
+   "common": "red-breasted nuthatch",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 24 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "omnivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "spinus_psaltria",
+   "scientific": "Spinus psaltria",
+   "common": "lesser goldfinch",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 25 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "euphagus_cyanocephalus",
+   "scientific": "Euphagus cyanocephalus",
+   "common": "brewer's blackbird",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 26 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
   },
   {
    "id": "buteo_albonotatus",
@@ -1165,7 +1329,7 @@
    "role": [
     "predator"
    ],
-   "traits": "library/animals/traits/buteo_albonotatus.json"
+   "traits": null
   },
   {
    "id": "falco_peregrinus",
@@ -1303,7 +1467,7 @@
    "role": [
     "predator"
    ],
-   "traits": "library/animals/traits/buteo_regalis.json"
+   "traits": null
   },
   {
    "id": "geococcyx_californianus",
@@ -1319,7 +1483,7 @@
     "predator",
     "scavenger"
    ],
-   "traits": "library/animals/traits/geococcyx_californianus.json"
+   "traits": null
   },
   {
    "id": "lanius_ludovicianus",
@@ -1335,7 +1499,7 @@
     "insectivore",
     "scavenger"
    ],
-   "traits": "library/animals/traits/lanius_ludovicianus.json"
+   "traits": null
   },
   {
    "id": "bubo_virginianus",
@@ -1365,7 +1529,7 @@
    "role": [
     "herbivore"
    ],
-   "traits": "library/animals/traits/otospermophilus_variegatus.json"
+   "traits": null
   },
   {
    "id": "tamias_dorsalis",
@@ -1380,7 +1544,7 @@
    "role": [
     "herbivore"
    ],
-   "traits": "library/animals/traits/tamias_dorsalis.json"
+   "traits": null
   },
   {
    "id": "ovis_canadensis",
@@ -1395,7 +1559,7 @@
    "role": [
     "herbivore"
    ],
-   "traits": "library/animals/traits/ovis_canadensis.json"
+   "traits": null
   },
   {
    "id": "peromyscus_maniculatus",
@@ -1429,7 +1593,7 @@
     "omnivore",
     "scavenger"
    ],
-   "traits": "library/animals/traits/peromyscus_eremicus.json"
+   "traits": null
   },
   {
    "id": "sylvilagus_audubonii",
@@ -1444,7 +1608,97 @@
    "role": [
     "herbivore"
    ],
-   "traits": "library/animals/traits/sylvilagus_audubonii.json"
+   "traits": null
+  },
+  {
+   "id": "chaetodipus_intermedius",
+   "scientific": "Chaetodipus intermedius",
+   "common": "rock pocket mouse",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 9 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "sciurus_aberti",
+   "scientific": "Sciurus aberti",
+   "common": "abert's squirrel",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 10 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "pecari_tajacu",
+   "scientific": "Pecari tajacu",
+   "common": "collared peccary",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 11 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "microtus_mexicanus",
+   "scientific": "Microtus mexicanus",
+   "common": "mexican vole",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 13 of its class (0% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "bassariscus_astutus",
+   "scientific": "Bassariscus astutus",
+   "common": "ringtail",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 15 of its class (0% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "tamias_umbrinus",
+   "scientific": "Tamias umbrinus",
+   "common": "uinta chipmunk",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 19 of its class (0% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
   },
   {
    "id": "peromyscus_boylii",
@@ -1454,11 +1708,42 @@
    "fidelity": 0,
    "present": "records",
    "why": [
-    "scavenger"
+    "scavenger",
+    "most recorded: 20 of its class (0% of the class's records)"
    ],
    "role": [
     "omnivore",
     "scavenger"
+   ],
+   "traits": null
+  },
+  {
+   "id": "callospermophilus_lateralis",
+   "scientific": "Callospermophilus lateralis",
+   "common": "golden-mantled ground squirrel",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 21 of its class (0% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "myotis_californicus",
+   "scientific": "Myotis californicus",
+   "common": "california myotis",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 22 of its class (0% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
    ],
    "traits": null
   },
@@ -1470,13 +1755,59 @@
    "fidelity": 0,
    "present": "records",
    "why": [
-    "scavenger"
+    "scavenger",
+    "most recorded: 23 of its class (0% of the class's records)"
    ],
    "role": [
     "omnivore",
     "scavenger"
    ],
-   "traits": "library/animals/traits/peromyscus_truei.json"
+   "traits": null
+  },
+  {
+   "id": "neotoma_lepida",
+   "scientific": "Neotoma lepida",
+   "common": "desert woodrat",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 24 of its class (0% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "thomomys_bottae",
+   "scientific": "Thomomys bottae",
+   "common": "botta's pocket gopher",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 25 of its class (0% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "sylvilagus_nuttallii",
+   "scientific": "Sylvilagus nuttallii",
+   "common": "mountain cottontail",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 27 of its class (0% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
   },
   {
    "id": "dryophytes_arenicolor",
@@ -1489,7 +1820,7 @@
     "most recorded: 1 of its class (37% of the class's records)"
    ],
    "role": [],
-   "traits": "library/animals/traits/dryophytes_arenicolor.json"
+   "traits": null
   },
   {
    "id": "anaxyrus_punctatus",
@@ -1502,7 +1833,33 @@
     "most recorded: 2 of its class (30% of the class's records)"
    ],
    "role": [],
-   "traits": "library/animals/traits/anaxyrus_punctatus.json"
+   "traits": null
+  },
+  {
+   "id": "anaxyrus_woodhousii",
+   "scientific": "Anaxyrus woodhousii",
+   "common": "woodhouse's toad",
+   "kind": "amphibian",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 3 of its class (27% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "ambystoma_tigrinum",
+   "scientific": "Ambystoma tigrinum",
+   "common": "tiger salamander",
+   "kind": "amphibian",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 4 of its class (3% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
   },
   {
    "id": "oreohelix_yavapai",
@@ -1515,7 +1872,20 @@
     "most recorded: 1 of its class (30% of the class's records)"
    ],
    "role": [],
-   "traits": "library/animals/traits/oreohelix_yavapai.json"
+   "traits": null
+  },
+  {
+   "id": "sonorella_coloradoensis",
+   "scientific": "Sonorella coloradoensis",
+   "common": "grand canyon talussnail",
+   "kind": "invertebrate",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 2 of its class (15% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
   }
  ],
  "queue": {
@@ -1934,6 +2304,126 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
+    "id": "tachycineta_thalassina",
+    "scientific": "Tachycineta thalassina",
+    "common": "violet-green swallow",
+    "kind": "bird",
+    "records": 2922,
+    "why": [
+     "most recorded: 12 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "aeronautes_saxatalis",
+    "scientific": "Aeronautes saxatalis",
+    "common": "white-throated swift",
+    "kind": "bird",
+    "records": 2828,
+    "why": [
+     "most recorded: 13 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "pipilo_maculatus",
+    "scientific": "Pipilo maculatus",
+    "common": "spotted towhee",
+    "kind": "bird",
+    "records": 2189,
+    "why": [
+     "most recorded: 15 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "junco_hyemalis",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "colaptes_auratus",
+    "scientific": "Colaptes auratus",
+    "common": "northern flicker",
+    "kind": "bird",
+    "records": 2032,
+    "why": [
+     "most recorded: 17 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "melanerpes_formicivorus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "salpinctes_obsoletus",
+    "scientific": "Salpinctes obsoletus",
+    "common": "rock wren",
+    "kind": "bird",
+    "records": 2001,
+    "why": [
+     "most recorded: 18 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "troglodytes_pacificus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "psaltriparus_minimus",
+    "scientific": "Psaltriparus minimus",
+    "common": "bushtit",
+    "kind": "bird",
+    "records": 1944,
+    "why": [
+     "most recorded: 20 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "catherpes_mexicanus",
+    "scientific": "Catherpes mexicanus",
+    "common": "canyon wren",
+    "kind": "bird",
+    "records": 1855,
+    "why": [
+     "most recorded: 21 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "troglodytes_pacificus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "setophaga_nigrescens",
+    "scientific": "Setophaga nigrescens",
+    "common": "black-throated gray warbler",
+    "kind": "bird",
+    "records": 1632,
+    "why": [
+     "most recorded: 23 of its class (1% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
     "id": "otospermophilus_variegatus",
     "scientific": "Otospermophilus variegatus",
     "common": "rock squirrel",
@@ -1946,6 +2436,51 @@
     "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
     "estimate_credits": 30,
     "stand_in": "otospermophilus_beecheyi",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "sitta_canadensis",
+    "scientific": "Sitta canadensis",
+    "common": "red-breasted nuthatch",
+    "kind": "bird",
+    "records": 1422,
+    "why": [
+     "most recorded: 24 of its class (1% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "spinus_psaltria",
+    "scientific": "Spinus psaltria",
+    "common": "lesser goldfinch",
+    "kind": "bird",
+    "records": 1387,
+    "why": [
+     "most recorded: 25 of its class (1% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "euphagus_cyanocephalus",
+    "scientific": "Euphagus cyanocephalus",
+    "common": "brewer's blackbird",
+    "kind": "bird",
+    "records": 1385,
+    "why": [
+     "most recorded: 26 of its class (1% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
@@ -2189,6 +2724,21 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
+    "id": "anaxyrus_woodhousii",
+    "scientific": "Anaxyrus woodhousii",
+    "common": "woodhouse's toad",
+    "kind": "amphibian",
+    "records": 57,
+    "why": [
+     "most recorded: 3 of its class (27% of the class's records)"
+    ],
+    "body_plan": "amphibian",
+    "rig": "none yet: the reptile template, hopping",
+    "estimate_credits": 25,
+    "stand_in": "anaxyrus_boreas",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
     "id": "peromyscus_eremicus",
     "scientific": "Peromyscus eremicus",
     "common": "cactus deermouse",
@@ -2235,6 +2785,51 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
+    "id": "chaetodipus_intermedius",
+    "scientific": "Chaetodipus intermedius",
+    "common": "rock pocket mouse",
+    "kind": "mammal",
+    "records": 35,
+    "why": [
+     "most recorded: 9 of its class (1% of the class's records)"
+    ],
+    "body_plan": "rodent",
+    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+    "estimate_credits": 30,
+    "stand_in": "microtus_californicus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "sciurus_aberti",
+    "scientific": "Sciurus aberti",
+    "common": "abert's squirrel",
+    "kind": "mammal",
+    "records": 34,
+    "why": [
+     "most recorded: 10 of its class (1% of the class's records)"
+    ],
+    "body_plan": "rodent",
+    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+    "estimate_credits": 30,
+    "stand_in": "sciurus_griseus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "pecari_tajacu",
+    "scientific": "Pecari tajacu",
+    "common": "collared peccary",
+    "kind": "mammal",
+    "records": 32,
+    "why": [
+     "most recorded: 11 of its class (1% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": "odocoileus_hemionus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
     "id": "oreohelix_yavapai",
     "scientific": "Oreohelix yavapai",
     "common": "yavapai mountainsnail",
@@ -2250,18 +2845,124 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
+    "id": "microtus_mexicanus",
+    "scientific": "Microtus mexicanus",
+    "common": "mexican vole",
+    "kind": "mammal",
+    "records": 16,
+    "why": [
+     "most recorded: 13 of its class (0% of the class's records)"
+    ],
+    "body_plan": "rodent",
+    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+    "estimate_credits": 30,
+    "stand_in": "microtus_californicus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "sonorella_coloradoensis",
+    "scientific": "Sonorella coloradoensis",
+    "common": "grand canyon talussnail",
+    "kind": "invertebrate",
+    "records": 16,
+    "why": [
+     "most recorded: 2 of its class (15% of the class's records)"
+    ],
+    "body_plan": "gastropod",
+    "rig": "none: procedural (a body of rings and a foot wave); no Meshy needed",
+    "estimate_credits": 0,
+    "stand_in": "ariolimax_columbianus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "bassariscus_astutus",
+    "scientific": "Bassariscus astutus",
+    "common": "ringtail",
+    "kind": "mammal",
+    "records": 9,
+    "why": [
+     "most recorded: 15 of its class (0% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": "canis_latrans",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "ambystoma_tigrinum",
+    "scientific": "Ambystoma tigrinum",
+    "common": "tiger salamander",
+    "kind": "amphibian",
+    "records": 7,
+    "why": [
+     "most recorded: 4 of its class (3% of the class's records)"
+    ],
+    "body_plan": "amphibian",
+    "rig": "none yet: the reptile template, hopping",
+    "estimate_credits": 25,
+    "stand_in": "plethodon_vehiculum",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "tamias_umbrinus",
+    "scientific": "Tamias umbrinus",
+    "common": "uinta chipmunk",
+    "kind": "mammal",
+    "records": 5,
+    "why": [
+     "most recorded: 19 of its class (0% of the class's records)"
+    ],
+    "body_plan": "rodent",
+    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+    "estimate_credits": 30,
+    "stand_in": "sciurus_griseus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
     "id": "peromyscus_boylii",
     "scientific": "Peromyscus boylii",
     "common": "brush mouse",
     "kind": "mammal",
     "records": 5,
     "why": [
-     "scavenger"
+     "scavenger",
+     "most recorded: 20 of its class (0% of the class's records)"
     ],
     "body_plan": "rodent",
     "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
     "estimate_credits": 30,
     "stand_in": "peromyscus_maniculatus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "callospermophilus_lateralis",
+    "scientific": "Callospermophilus lateralis",
+    "common": "golden-mantled ground squirrel",
+    "kind": "mammal",
+    "records": 5,
+    "why": [
+     "most recorded: 21 of its class (0% of the class's records)"
+    ],
+    "body_plan": "rodent",
+    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+    "estimate_credits": 30,
+    "stand_in": "sciurus_griseus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "myotis_californicus",
+    "scientific": "Myotis californicus",
+    "common": "california myotis",
+    "kind": "mammal",
+    "records": 4,
+    "why": [
+     "most recorded: 22 of its class (0% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": null,
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
@@ -2271,12 +2972,58 @@
     "kind": "mammal",
     "records": 4,
     "why": [
-     "scavenger"
+     "scavenger",
+     "most recorded: 23 of its class (0% of the class's records)"
     ],
     "body_plan": "rodent",
     "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
     "estimate_credits": 30,
     "stand_in": "peromyscus_maniculatus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "neotoma_lepida",
+    "scientific": "Neotoma lepida",
+    "common": "desert woodrat",
+    "kind": "mammal",
+    "records": 4,
+    "why": [
+     "most recorded: 24 of its class (0% of the class's records)"
+    ],
+    "body_plan": "rodent",
+    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+    "estimate_credits": 30,
+    "stand_in": "microtus_californicus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "thomomys_bottae",
+    "scientific": "Thomomys bottae",
+    "common": "botta's pocket gopher",
+    "kind": "mammal",
+    "records": 4,
+    "why": [
+     "most recorded: 25 of its class (0% of the class's records)"
+    ],
+    "body_plan": "rodent",
+    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+    "estimate_credits": 30,
+    "stand_in": "microtus_californicus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "sylvilagus_nuttallii",
+    "scientific": "Sylvilagus nuttallii",
+    "common": "mountain cottontail",
+    "kind": "mammal",
+    "records": 3,
+    "why": [
+     "most recorded: 27 of its class (0% of the class's records)"
+    ],
+    "body_plan": "lagomorph",
+    "rig": "tools/rig_quadruped.py lagomorph path, gait.js hopStep",
+    "estimate_credits": 30,
+    "stand_in": "sylvilagus_bachmani",
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    }
   ]
@@ -2797,11 +3544,99 @@
    ]
   },
   {
+   "id": "tachycineta_thalassina",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 12 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "aeronautes_saxatalis",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 13 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "pipilo_maculatus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 15 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "colaptes_auratus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 17 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "salpinctes_obsoletus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 18 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "psaltriparus_minimus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 20 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "catherpes_mexicanus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 21 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "setophaga_nigrescens",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 23 of its class (1% of the class's records)"
+   ]
+  },
+  {
    "id": "otospermophilus_variegatus",
    "kind": "mammal",
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
     "most recorded: 1 of its class (35% of the class's records)"
+   ]
+  },
+  {
+   "id": "sitta_canadensis",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 24 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "spinus_psaltria",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 25 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "euphagus_cyanocephalus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 26 of its class (1% of the class's records)"
    ]
   },
   {
@@ -2933,6 +3768,14 @@
    ]
   },
   {
+   "id": "anaxyrus_woodhousii",
+   "kind": "amphibian",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 3 of its class (27% of the class's records)"
+   ]
+  },
+  {
    "id": "peromyscus_eremicus",
    "kind": "mammal",
    "what": "a mesh (Meshy ~30 credits) and its review",
@@ -2958,11 +3801,84 @@
    ]
   },
   {
+   "id": "chaetodipus_intermedius",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 9 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "sciurus_aberti",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 10 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "pecari_tajacu",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 11 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "microtus_mexicanus",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 13 of its class (0% of the class's records)"
+   ]
+  },
+  {
+   "id": "bassariscus_astutus",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 15 of its class (0% of the class's records)"
+   ]
+  },
+  {
+   "id": "ambystoma_tigrinum",
+   "kind": "amphibian",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 4 of its class (3% of the class's records)"
+   ]
+  },
+  {
+   "id": "tamias_umbrinus",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 19 of its class (0% of the class's records)"
+   ]
+  },
+  {
    "id": "peromyscus_boylii",
    "kind": "mammal",
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
-    "scavenger"
+    "scavenger",
+    "most recorded: 20 of its class (0% of the class's records)"
+   ]
+  },
+  {
+   "id": "callospermophilus_lateralis",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 21 of its class (0% of the class's records)"
+   ]
+  },
+  {
+   "id": "myotis_californicus",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 22 of its class (0% of the class's records)"
    ]
   },
   {
@@ -2970,159 +3886,32 @@
    "kind": "mammal",
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
-    "scavenger"
+    "scavenger",
+    "most recorded: 23 of its class (0% of the class's records)"
    ]
   },
   {
-   "id": "aphelocoma_woodhouseii",
-   "kind": "bird",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "sialia_mexicana",
-   "kind": "bird",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "sitta_carolinensis",
-   "kind": "bird",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "sitta_pygmaea",
-   "kind": "bird",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "baeolophus_ridgwayi",
-   "kind": "bird",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "gymnogyps_californianus",
-   "kind": "bird",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "buteo_albonotatus",
-   "kind": "bird",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "buteo_regalis",
-   "kind": "bird",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "geococcyx_californianus",
-   "kind": "bird",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "lanius_ludovicianus",
-   "kind": "bird",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "otospermophilus_variegatus",
+   "id": "neotoma_lepida",
    "kind": "mammal",
-   "what": "a review of its generated traits",
+   "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
-    "generated"
+    "most recorded: 24 of its class (0% of the class's records)"
    ]
   },
   {
-   "id": "tamias_dorsalis",
+   "id": "thomomys_bottae",
    "kind": "mammal",
-   "what": "a review of its generated traits",
+   "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
-    "generated"
+    "most recorded: 25 of its class (0% of the class's records)"
    ]
   },
   {
-   "id": "ovis_canadensis",
+   "id": "sylvilagus_nuttallii",
    "kind": "mammal",
-   "what": "a review of its generated traits",
+   "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "peromyscus_eremicus",
-   "kind": "mammal",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "sylvilagus_audubonii",
-   "kind": "mammal",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "peromyscus_truei",
-   "kind": "mammal",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "dryophytes_arenicolor",
-   "kind": "amphibian",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "anaxyrus_punctatus",
-   "kind": "amphibian",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
-   ]
-  },
-  {
-   "id": "oreohelix_yavapai",
-   "kind": "invertebrate",
-   "what": "a review of its generated traits",
-   "why": [
-    "generated"
+    "most recorded: 27 of its class (0% of the class's records)"
    ]
   }
  ]

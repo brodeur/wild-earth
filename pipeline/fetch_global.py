@@ -324,3 +324,37 @@ def sentinel_true_colour(tile: Tile, res_m: float = 10.0, max_items: int = 14, y
     runlog.fetched("sentinel2_l2a")
     return out, {"source": "sentinel2_l2a", "scenes": len(stack), "clear_fraction": round(float(clear), 4),
                  "dates": sorted(i["properties"]["datetime"][:10] for i in items)}
+
+
+# ---------------------------------------------------------------------------------------------- the tile's seasons
+
+NORTH = ["winter", "winter", "spring", "spring", "spring", "summer", "summer", "summer", "fall", "fall", "fall", "winter"]
+
+
+def season_months(climate: dict, lat: float) -> tuple[list[str], str]:
+    """The season name of each month (January first) on this tile, and the rule. The season-keyed tables (resources,
+    calendars, colours) were written for a Mediterranean north: spring lush, summer dry and cured, fall the turn and the
+    mast, winter cool and wet. A temperate south shifts them six months; a seasonally dry tropics maps them onto its own
+    rainfall: the wettest three months spring, the driest three summer, the three after them fall, the rest winter; a
+    climate wet all year (driest month over 60 mm) keeps the north's names (its plants are evergreen anyway)."""
+    p = [float(x) for x in climate["precip_mm"]]
+    if abs(lat) < 23.5 and min(p) < 60:
+        block = lambda i: sum(p[(i + k) % 12] for k in range(3))   # noqa: E731
+        wet = max(range(12), key=block)
+        dry = min(range(12), key=block)
+        out = [None] * 12
+        for k in range(3):
+            out[(wet + k) % 12] = "spring"
+        for k in range(3):
+            if out[(dry + k) % 12] is None:
+                out[(dry + k) % 12] = "summer"
+        i = (dry + 3) % 12
+        for _ in range(3):
+            if out[i] is None:
+                out[i] = "fall"
+            i = (i + 1) % 12
+        out = [s or "winter" for s in out]
+        return out, f"tropical wet and dry: spring from month {wet + 1}, summer from month {dry + 1}"
+    if lat < -23.5:
+        return NORTH[6:] + NORTH[:6], "southern temperate: the north's seasons shifted six months"
+    return list(NORTH), "the north's calendar quarters"

@@ -225,6 +225,8 @@ def fetch_vegetation_global(tile: Tile) -> dict:
                                    "legend": "vegetation/ecosystem.json", "groups": summ["groups"][:8],
                                    "koppen": climate["koppen"], "source": "iucn_get",
                                    "rules": "pipeline/ecosystem.py"}
+    months, rule = G.season_months(climate, lat)
     out["climate.normals"] = {"path": "climate/normals.json", "kind": "table", "source": "open_meteo",
-                              "koppen": climate["koppen"], "annual": climate["annual"]}
+                              "koppen": climate["koppen"], "annual": climate["annual"],
+                              "season_months": months, "season_rule": rule}
     return out

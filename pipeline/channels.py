@@ -684,8 +684,31 @@ def rewild_inputs(tile: Tile):
             "breach_max_m": float(fc.get("breach_max_m") or BREACH_MAX_M)}
 
 
+def perennial_area_km2(tile: Tile) -> tuple[float | None, float | None]:
+    """Outside NHD, the drainage area above which a stream runs all year, from the tile's aridity index (annual
+    precipitation over potential evapotranspiration, ERA5 normals): humid >= 1: 0.5 km2; sub-humid 0.65-1: 10 km2;
+    semi-arid 0.2-0.65: 300 km2 (the big rivers); arid: none. None inside NHD, which records permanence itself."""
+    from . import regions
+    if regions.covers("nhdplus_hr", tile):
+        return None, None
+    try:
+        from .fetch_global import climate_normals
+        c = climate_normals(tile)
+        ai = float(c["annual"]["precip_mm"]) / max(1.0, float(c["annual"]["pet_mm"]))
+    except Exception:  # noqa: BLE001
+        return None, None
+    if ai >= 1.0:
+        return 0.5, ai
+    if ai >= 0.65:
+        return 10.0, ai
+    if ai >= 0.2:
+        return 300.0, ai
+    return None, ai
+
+
 def build_channels(tile: Tile, threshold_km2: float = THRESHOLD_KM2) -> dict:
     dem_path = tile.path("terrain/dem.tif")
+    perennial_km2, aridity = perennial_area_km2(tile)
     rw = rewild_inputs(tile)
     # routing runs on the rewilded copy of the DEM when there is one (terrain/dem.tif is never edited)
     with rasterio.open(rw["dem"] if rw and rw["dem"] else dem_path) as src:
@@ -868,6 +891,11 @@ def build_channels(tile: Tile, threshold_km2: float = THRESHOLD_KM2) -> dict:
         else:
             rc["name"] = None
             rc["fcode"] = INTERMITTENT if rc["area_km2"] >= INTERMITTENT_KM2 else EPHEMERAL
+        # outside NHD (world pipeline phase 1, 2026-11-06): OSM gives no permanence and the area rule alone made a
+        # rainforest's river intermittent (Danum's Segama drawn dry): the climate decides above its perennial area
+        if perennial_km2 is not None and rc["fcode"] in (INTERMITTENT, EPHEMERAL, None) and rc["area_km2"] >= perennial_km2:
+            rc["fcode"] = PERENNIAL
+            rc["permanence_rule"] = f"climate: aridity index {aridity:.2f}, perennial from {perennial_km2:g} km2"
 
     # NHD -> DEM coverage: keep NHD stretches with no DEM channel nearby
     dem_lines = [rc["line"] for rc in dem_reaches]

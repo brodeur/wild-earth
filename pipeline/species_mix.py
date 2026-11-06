@@ -525,6 +525,16 @@ def terrain_label(t: int) -> str:
 CONTEXT: dict = {"coast": False, "regions": []}   # set per tile by species_mix()
 
 
+_HAB_CACHE: dict = {}
+
+
+def _record_habitat(sid: str) -> dict | None:
+    if sid not in _HAB_CACHE:
+        f = LIBRARY / f"{sid}.json"
+        _HAB_CACHE[sid] = (json.loads(f.read_text()).get("habitat") if f.exists() else None) or None
+    return _HAB_CACHE[sid]
+
+
 def terrain_weights(weights: dict, t: int, fixed=(), rule: str | None = None) -> dict:
     grove, t = divmod(t, NTC)
     band, pos, nf = t // 6, (t // 2) % 3, t % 2
@@ -542,6 +552,12 @@ def terrain_weights(weights: dict, t: int, fixed=(), rule: str | None = None) ->
     out = {}
     for k, w in w0.items():
         f = reg.get(k) or TERRAIN.get(k)
+        if f is None and k not in fixed:   # no table row: the record's own niche on its card (floor / mid / steep / north)
+            h = _record_habitat(k)
+            if h:
+                pf = (h.get("floor", 1.0), h.get("mid", 1.0), h.get("steep", 1.0))[pos]
+                out[k] = w * pf * (h.get("north", 1.0) if nf else 1.0)
+                continue
         out[k] = w if (f is None or k in fixed) else w * _pad(f[0])[band] * f[1][pos] * f[2][nf]
     return resolve(out)
 
@@ -719,28 +735,80 @@ def named_rule(name: str, hab_code: int) -> dict | None:
             "note": "no rule: the species its name names (communities.LEXICON)", "fixed": [], "region": None}
 
 
+# The climate group a region's records were written for (their cards' `regions`): a functional stand-in is taken only
+# from records of the tile's own climate group, never another's (world pipeline phase 1, 2026-11-06: the probes drew
+# California's pines in the Amazon through the client's class fallback).
+REGION_CLIMATE = {"california": "temperate", "pacific_northwest": "temperate", "great_basin": "arid",
+                  "east_africa": "tropical_seasonal", "borneo": "tropical_wet", "scandinavia": "boreal"}
+
+
+def climate_group(koppen: str | None) -> str | None:
+    if not koppen:
+        return None
+    k = koppen[:2]
+    if k in ("Af", "Am"):
+        return "tropical_wet"
+    if k in ("Aw", "As") or koppen.startswith("BSh") or koppen.startswith("BWh"):
+        return "tropical_seasonal"
+    if koppen[0] == "B":
+        return "arid"
+    if koppen[0] == "C":
+        return "temperate"
+    return "boreal"   # D, E
+
+
+def _niche_weight(d: dict, hab_code: int) -> float:
+    """A record's own habitat preference for a habitat class (its card's habitat.classes): 1 when it names none."""
+    classes = (d.get("habitat") or {}).get("classes") or {}
+    if not classes:
+        return 1.0
+    return float(classes.get(CLASSES.get(hab_code, ""), 0.05))
+
+
 def research_rule(tile: Tile, name: str, hab_code: int) -> dict:
-    """World pipeline (2026-11-05): a community with no LANDFIRE rule, read from the tile's own plant research.
-    The trees and shrubs of species/plant_needs.json that have a library record, weighted by their GBIF records on the
-    tile (or their community cover), at the habitat class's densities. Composed per tile from the species list, not
-    from a regional table; a tile whose researched species have no record yet draws bare and says so."""
+    """World pipeline (2026-11-05, niches 2026-11-06): a community with no LANDFIRE rule, read from the tile's own plant
+    research. The trees and shrubs of species/plant_needs.json that have a library record, each weighted by its GBIF
+    records on the tile (or its community cover) times its own niche for this habitat class (habitat.classes on its
+    card: the riparian sausage tree off the open plains). With no tree of its own on record, a FUNCTIONAL STAND-IN: the
+    library's trees of the tile's climate group (REGION_CLIMATE) that suit the class, marked so; never another climate's."""
     pn = tile.path("species/plant_needs.json")
-    trees, shrubs = {}, {}
+    trees, shrubs, stand_in = {}, {}, []
     if pn.exists():
         for n in json.loads(pn.read_text()).get("needs", []):
             sid, kind = n.get("id"), n.get("kind")
-            if not sid or not (LIBRARY / f"{sid}.json").exists():
+            f = LIBRARY / f"{sid}.json"
+            if not sid or not f.exists():
                 continue
-            w = float(n.get("records") or 0) + 1000 * float(n.get("cover") or 0) or 1.0
+            w = (float(n.get("records") or 0) + 1000 * float(n.get("cover") or 0) or 1.0) * _niche_weight(json.loads(f.read_text()), hab_code)
+            if w <= 0:
+                continue
             if kind == "tree":
                 trees[sid] = w
             elif kind == "shrub":
                 shrubs[sid] = w
     td, sd = NAMED_DENSITY.get(CLASSES.get(hab_code), (0.8, 0.6))
+    if not trees and td > 0.1:
+        nj = tile.path("climate/normals.json")
+        group = climate_group(json.loads(nj.read_text()).get("koppen")) if nj.exists() else None
+        if group:
+            for f in sorted(LIBRARY.glob("*.json")):
+                if f.stem == "index":
+                    continue
+                d = json.loads(f.read_text())
+                if d.get("form") not in ("tree", "multi_stem_shrub_tree"):
+                    continue
+                if not any(REGION_CLIMATE.get(r) == group for r in (d.get("regions") or [])):
+                    continue
+                w = _niche_weight(d, hab_code)
+                if w >= 0.3:
+                    trees[f.stem] = w
+                    stand_in.append(f.stem)
+    note = "no regional rule: the tile's researched species with a record (plant_needs), weighted by records and their niche"
+    if stand_in:
+        note += f"; no tree of its own on record: functional stand-ins of its climate group ({', '.join(stand_in)})"
     return {"id": "research_" + (name or "none").split(" ")[0].replace(".", "_"), "trees": trees, "shrubs": shrubs,
             "tree_density": td if trees else 0.0, "shrub_density": sd if shrubs else 0.0,
-            "note": "no regional rule: the tile's researched species with a record (plant_needs), weighted by records",
-            "fixed": [], "region": None}
+            "note": note, "fixed": [], "region": None, "stand_in": stand_in}
 
 
 def _fallback(hab_code: int, regions=None) -> dict:
@@ -1020,8 +1088,12 @@ def species_mix(tile: Tile) -> dict:
         "mean_shrub_density": round(float(sd.mean()), 4),
         "rules": {k: round(v / n, 4) for k, v in sorted(by_rule.items(), key=lambda kv: -kv[1])},
     }
+    from .regions import covers as _covers
     doc = {
         "format": FORMAT,
+        # outside the regional tables (LANDFIRE's reach) a cell whose row has no trees or shrubs draws none: the client's
+        # own habitat-class mix is California's and must not stand in (world pipeline phase 1, 2026-11-06)
+        "class_fallback": bool(_covers("landfire", tile)),
         "grid": {"crs": tile.crs, "bounds": list(tile.bounds), "pixels": int(index.shape[0]), "resolution_m": res,
                  "origin": "row 0 = north edge, same grid as client/habitat.png"},
         "species": {"trees": trees_cols, "shrubs": shrub_cols, "ground": ground_cols},

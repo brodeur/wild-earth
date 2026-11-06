@@ -807,9 +807,118 @@ export function trunkAt(oak, h, out) {
 const forkHeight = oak => oak.stem ? Math.max(1.5, oak.scale * oak.stem.len * Math.cos(oak.stem.lean) - 0.3) : oak.conifer ? Math.min(14, Math.max(3, (oak.height || 10) * 0.3)) : 2.5;   // a conifer (the Douglas squirrel's): up to its first live limbs
 const treeHeight = oak => Math.max(3, (oak.height || 8) * oak.scale);
 
+// ---- the tile's own fauna (client/fauna.json, manifest layer client.fauna; tilepackage.js tile.fauna) -------------------
+// The cast above is a North American one. A tile elsewhere says which of it belongs there and what else lives there:
+// `gate` (with `allow`, the static species the tile's research or records list): every other static slot is never spawned
+// here (add() refuses it, perceivedOf leaves it out: no cell, territory, grid, herd variant, flock, colony, burrow, water
+// spawn, summon or carcass); a variant slot follows its base. `slots`: the tile's own species, each a STAND-IN on an
+// existing species' (its `kin`'s) mesh, scaled (scaledModel) and tinted, running the kin's behaviour machine as the Hoh
+// batch's slots run theirs (KIN), with the kin's per-species rules (HOH, MAMMAL, the cell rules by ID below), its group
+// size (`group`), numbers from `density_km2` (the kin's spawn parameter scaled by density / expectedPerKm2(kin)),
+// `night` (the jays' and the mammals' hours) and `water` (a water twin's rules: the mallard's, otter's or kingfisher's).
+// The slots are appended to SPECIES and its tables when the tile's Animals is made (installFauna) and taken out again
+// when it goes (restoreFauna, main.js disposeWorld; the next world's installFauna also restores first), so switching
+// tiles never leaks slots. A tile without the layer: no gate, no slots, everything as before.
+// ID[s]: the static slot whose identity rules slot s runs (itself for every static slot; the kin, or its water twin, for a
+// stand-in): every `s === XX` identity test in the class reads ID[s], so a stand-in takes its kin's branch everywhere.
+const STATIC_N = SPECIES.length, STATIC_PLAYABLE = PLAYABLE.length, STATIC_CONIFER = CONIFER_USERS.length, STATIC_TAG = TAG_DY.length;
+const ID = SPECIES.map((sp, k) => k);
+let GATE = null;                       // Set of the static codes allowed here, or null (no gate)
+const FAUNA = { owner: null, codes: [] };
+const GRP = {};                        // a stand-in's group size [lo, hi] (fauna.json `group`), over its kin machine's own
+const WATERY = new Set();              // stand-ins kept to water with no water twin: only cells at running or standing water
+const STAND_IN_MAX = 40;               // the pipeline sends at most 40; each is one instanced draw (and a planar shadow for the big)
+const WATER_IDS = new Set([KF, OT, GH, CM, MA]);
+const WATER_TWIN = { [QU]: MA, [MQ]: MA, [SG]: MA, [FX]: OT, [CY]: OT, [BC]: OT, [ST]: KF, [SJ]: KF };
+const NIGHT_PERCH = { n: [1, 1], h: [0.2, 0.2], beat: 6, move: [80, 200], ground: 0.05, flush: 12, hop: 0, night: true };   // a night bird on a jay's machine (the owls')
+const FLAT_SEASON = { fall: 1, winter: 1, spring: 1, summer: 1 };
+// A procedural model's colours times rgb (its vertex colours and the variant set); the geometry is the caller's own clone.
+function tintedModel(m, rgb) {
+  if (!Array.isArray(rgb) || rgb.length < 3 || !rgb.every(Number.isFinite)) return m;
+  for (const name of ['color', 'aColorB']) {
+    const at = m.geometry.getAttribute(name); if (!at) continue;
+    const A = at.array, n = at.itemSize;
+    for (let i = 0; i < A.length; i += n) for (let c = 0; c < 3; c++) A[i + c] *= rgb[c];
+    at.needsUpdate = true;
+  }
+  return m;
+}
+const clampN = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+// Put the tile's fauna in (owner: the Animals it belongs to); restores the static cast first.
+function installFauna(fauna, owner) {
+  restoreFauna(null);
+  if (!fauna || typeof fauna !== 'object') return;   // no layer: the static cast, no gate (every tile before the pipeline wrote one)
+  FAUNA.owner = owner;
+  if (fauna.gate) GATE = new Set(Array.isArray(fauna.allow) ? fauna.allow : []);
+  for (const f of (Array.isArray(fauna.slots) ? fauna.slots : []).slice(0, STAND_IN_MAX)) {
+    if (!f || typeof f.code !== 'string' || !f.code) continue;
+    if (INDEX[f.code] !== undefined) { if (GATE && INDEX[f.code] < STATIC_N) GATE.add(f.code); continue; }   // the client draws it already: allowed
+    const K = INDEX[f.kin];
+    if (K === undefined || K >= STATIC_N) { console.warn(`animals: fauna slot ${f.code}: no kin '${f.kin}' to stand in on`); continue; }
+    const water = !!f.water && !WATER_IDS.has(ID[K]), I = water && WATER_TWIN[K] !== undefined ? WATER_TWIN[K] : K;   // I: the rules it runs
+    const sK = SPECIES[K], sI = SPECIES[I], sc = Number.isFinite(f.scale) && f.scale > 0 ? clampN(f.scale, 0.05, 20) : 1;
+    const d = SPECIES.length;
+    const grp = Array.isArray(f.group) && f.group.length === 2 && f.group.every(Number.isFinite)
+      ? [clampN(Math.round(Math.min(f.group[0], f.group[1])), 1, 40), clampN(Math.round(Math.max(f.group[0], f.group[1])), 1, 40)] : null;
+    GROUP[d] = grp ? (grp[0] + grp[1]) / 2 : GROUP[I] || 1;
+    if (grp) GRP[d] = grp;
+    // numbers: the kin's spawn parameter times the density over the kin's own (per group: a bigger group, fewer groups)
+    const e0 = expectedPerKm2(I), ratio = Number.isFinite(f.density_km2) && f.density_km2 > 0 && e0 > 0 ? f.density_km2 / e0 * (GROUP[I] || 1) / GROUP[d] : 1;
+    const e = { code: f.code, one: f.one || f.common || f.code, many: f.many || f.one || f.common || f.code, common: f.common || f.one || f.code,
+      salt: 20000 + seedOf(f.code, 0xfa) % 60000, cap: clampN(Math.max(Math.round(sI.cap * clampN(ratio, 0.5, 2)), 2 * (grp?.[1] || 2)), 4, 160), scale: 1,
+      build: () => tintedModel(scaledModel(sK.build(), sc), f.tint), standIn: { kin: sK.code, rules: sI.code, scale: sc } };
+    if (sK.planar || sI.planar) e.planar = true;
+    if (sI.liveR) e.liveR = sI.liveR;
+    if (f.bird ?? sK.bird) e.bird = true;
+    if (f.archetype) e.archetype = f.archetype;
+    if (Number.isFinite(f.mass_kg)) e.mass_kg = f.mass_kg;
+    const spread = (G, p) => { p *= ratio; if (p > 0.9) { G /= Math.sqrt(p / 0.9); p = 0.9; } return [Math.max(150, G), Math.max(0.01, p)]; };
+    if (sI.grid) [e.grid, e.p] = spread(sI.grid, sI.p || 1);
+    else if (sI.territory) [e.territory, e.p] = spread(sI.territory, sI.p || 1);
+    else e.k = clampN((sI.k || 0) * ratio, 1e-5, 1.5);
+    SPECIES.push(e);
+    ID[d] = I; KIN[d] = KIN[I]; BASE[d] = d;
+    BODY_Y[d] = (BODY_Y[K] || 0) * sc; TAG_DY[d] = (TAG_DY[K] ?? 0.5) * sc;
+    if (CULL[I]) CULL[d] = CULL[I] * Math.max(1, Math.sqrt(sc));
+    if (MAMMAL[I]) MAMMAL[d] = f.night === true ? { ...MAMMAL[I], active: h => h < 8 || h > 17.5 } : MAMMAL[I];
+    if (HOH[I]) HOH[d] = { ...HOH[I] };
+    if (f.night === true && (KIN[I] === ST || KIN[I] === SJ)) HOH[d] = { ...(HOH[d] || NIGHT_PERCH), night: true };
+    if (grp && HOH[d]?.n) HOH[d].n = grp;
+    if (FG_SEEN[I]) FG_SEEN[d] = FG_SEEN[I];
+    if (REST_POSE[I] !== undefined) REST_POSE[d] = REST_POSE[I];
+    if (CARRION.reach[I] !== undefined) CARRION.reach[d] = CARRION.reach[I] * sc;
+    if (UPRIGHT.has(K)) UPRIGHT.add(d);
+    if (KILLABLE.has(I)) KILLABLE.add(d);
+    if (ALARM_AT.has(I)) ALARM_AT.add(d);
+    if (water && I === K) WATERY.add(d);
+    const statConifer = CONIFER_USERS.slice(0, STATIC_CONIFER);   // the near set's trees indexed for it (indexConifers: its conifers, and standInTree)
+    if (statConifer.includes(sI.code) || statConifer.includes(SPECIES[KIN[I]].code) || [SQ, SJ, ST].includes(KIN[I])) CONIFER_USERS.push(f.code);
+    if (I !== BS) PLAYABLE.push(d);
+    INDEX[f.code] = d; SUIT[f.code] = SUIT[sI.code]; SEASON[f.code] = FLAT_SEASON;
+    FAUNA.codes.push(f.code);
+  }
+}
+// Take the tile's fauna out again (owner: only when it is still that Animals' own; null: whatever is in).
+function restoreFauna(owner) {
+  if (owner && FAUNA.owner !== owner) return;
+  for (let k = STATIC_N; k < SPECIES.length; k++) {
+    for (const T of [HOH, CULL, GROUP, MAMMAL, FG_SEEN, REST_POSE, CARRION.reach, GRP]) delete T[k];
+    UPRIGHT.delete(k); KILLABLE.delete(k); ALARM_AT.delete(k);
+  }
+  for (const c of FAUNA.codes) { delete INDEX[c]; delete SUIT[c]; delete SEASON[c]; }
+  for (const A of [SPECIES, KIN, BASE, BODY_Y, ID]) A.length = STATIC_N;
+  TAG_DY.length = STATIC_TAG; PLAYABLE.length = STATIC_PLAYABLE; CONIFER_USERS.length = STATIC_CONIFER;
+  WATERY.clear(); FAUNA.codes = []; FAUNA.owner = null; GATE = null;
+}
+// The slots running slot k's identity rules (k and the stand-ins on it): the group and territory spawns, the coveys.
+const slotsOf = (...ks) => { const out = []; for (let s = 0; s < SPECIES.length; s++) if (ks.includes(ID[s])) out.push(s); return out; };
+// A stand-in's group size (GRP) over the kin machine's own n; a static slot keeps n (and draws nothing more from rnd).
+const grpN = (s, n, rnd) => { const g = GRP[s]; return g ? g[0] + Math.floor(rnd() * (g[1] - g[0] + 1)) : n; };
+
 export class Animals {
   constructor({ tile, scene, flight, veg, atmosphere, camera, identify = null, game = null }) {
     Object.assign(this, { tile, flight, veg, camera, identify, atmosphere, game });   // game: the acorn game (acorns.js), or null
+    installFauna(tile.fauna || null, this);   // the tile's own fauna (client/fauna.json): the gate and the stand-in slots, before any per-slot table
     this.searches = SEARCHES;
     // v4: families by granary (rebuilt with the live set), raiders the families may chase
     this.fams = new Map(); this.threats = new Map();
@@ -995,7 +1104,7 @@ export class Animals {
       if (PLAYABLE.includes(k)) { selfLit(m.material); m.layers.enable(1); }
       this.group.add(m);
       st.tiers.push(m);
-      (this.gmOf ||= {})[k] ||= new Uint8Array(cap); if (k === RV) this.rvGM = this.gmOf[k];   // per slot: on the ground (the ground model) or in the air
+      (this.gmOf ||= {})[k] ||= new Uint8Array(cap); if (ID[k] === RV) this.rvGM = this.gmOf[k];   // per slot: on the ground (the ground model) or in the air
     }
     sp.meshTris = model.tris;
   }
@@ -1070,7 +1179,12 @@ export class Animals {
     for (const fn of a.slice()) { try { fn(e); } catch (err) { console.error(`animals: '${type}' listener`, err); } }
   }
   // Unregister the shadow casters (a teardown; main.js keeps one Animals for the page's life).
-  dispose() { for (const m of this.meshes) removeCaster(m); this.group.removeFromParent(); }
+  dispose() { for (const m of this.meshes) removeCaster(m); this.group.removeFromParent(); this.releaseFauna(); }
+  // The tile's stand-in slots and gate out of the module's tables (main.js disposeWorld): the static cast as it was.
+  releaseFauna() { restoreFauna(this); }
+  // The stand-ins this tile drew (fauna.json slots that took): { code, one, common, kin, rules, scale } by slot index
+  // (playable.js registerStandIns; debugging).
+  get standIns() { const o = {}; for (let k = STATIC_N; k < SPECIES.length; k++) o[k] = { code: SPECIES[k].code, one: SPECIES[k].one, common: SPECIES[k].common, ...SPECIES[k].standIn }; return o; }
 
   // ---- perception --------------------------------------------------------------------------------
   // The species an observer of `code` perceives here (perception.json perceives): the spirit (no row) the present
@@ -1084,6 +1198,10 @@ export class Animals {
     // package knows and leaves out of every row is absent from the place (species.json `present`, 2026-10-28), not pending
     const known = new Set((this.tile.species || []).map(s => s.code));
     for (const c of PENDING) if (!named.has(c) && !known.has(c)) out.add(c);
+    // the tile's own fauna: its stand-ins seen as the matrix says, or by everyone when no row names them (as PENDING);
+    // the gate takes out every static species the tile does not list
+    for (const c of FAUNA.codes) if (!named.has(c)) out.add(c);
+    if (GATE) for (const c of [...out]) { const k = INDEX[c]; if (k !== undefined && k < STATIC_N && !GATE.has(c)) out.delete(c); }
     return out;
   }
   // The species simulated on this page (sim): the ones this player perceives and, as the host, the ones every other
@@ -1256,7 +1374,7 @@ export class Animals {
   huntAlive(t) { return t.sp === undefined ? this.flocks.includes(t) : this.alive(t); }
   fled(t) {
     if (t.sp === undefined) return t.state === TF_TREE || t.state === TF_ROOST;
-    switch (t.sp) {
+    switch (ID[t.sp]) {
       case DR: case BK: return (t.group?.fleeT || 0) > 0;
       case JR: return t.state === JK_BOLT;
       case RB: return t.state === B_BOLT;
@@ -1268,7 +1386,7 @@ export class Animals {
   }
   huntable(b) {
     if (b.remote) return false;   // another player's body (players.js): not the AI's prey
-    switch (b.sp) {
+    switch (ID[b.sp]) {
       case VO: return b.state !== VL_HIDE && !b.buried;   // not under the ground (dig.js)
       case RB: return b.state !== B_FORM && b.state !== B_BOLT && !b.buried;
       case JR: return b.state !== JK_BOLT;
@@ -1282,18 +1400,19 @@ export class Animals {
   huntTarget(a, R, kinds) {
     const prey = this.preySlots?.[a.sp]; if (!prey) return null;
     let best = null, bd = R * R;
-    for (const k of kinds) {
+    for (const k of STATIC_N < SPECIES.length ? slotsOf(...kinds) : kinds) {   // (the tile's stand-ins on those kinds too)
       if (!prey.has(k) || !this.sim[k]) continue;
       for (const b of this.bySpecies[k]) {
         if (!this.huntable(b)) continue;
         const d2 = (b.x - a.x) ** 2 + (b.z - a.z) ** 2; if (d2 < bd) { bd = d2; best = b; }
       }
     }
-    if (a.sp === ML && prey.has(TK) && this.sim[TK]) for (const g of this.flocks) {
+    if (ID[a.sp] === ML) for (const g of this.flocks) {
+      if (!prey.has(g.fsp ?? TK) || !this.sim[g.fsp ?? TK]) continue;
       if (g.state !== TF_FORAGE && g.state !== TF_WALK) continue;
       const d2 = (g.x - a.x) ** 2 + (g.z - a.z) ** 2; if (d2 < bd) { bd = d2; best = g; }
     }
-    if (best && (best.sp === DR || best.sp === BK) && best.group?.leader && this.alive(best.group.leader)) best = best.group.leader;
+    if (best && (ID[best.sp] === DR || ID[best.sp] === BK) && best.group?.leader && this.alive(best.group.leader)) best = best.group.leader;
     return best;
   }
   // A fox, coyote or lion (a group's leader or alone) looks for prey: when it is off its cooldown and finds some, the
@@ -1375,7 +1494,7 @@ export class Animals {
     } else { a.x = rec.x; a.z = rec.z; a.yaw = rec.yaw || 0; if (a.group) { const g = a.group; a.group = null; if (g.leader === a) { const o = this.list.find(b => b !== a && b.group === g && !b.dead); if (o) g.leader = o; } } }
     const skin = !!this.drawn[k]?.model?.skin;
     a.dead = true; a.diedAt = this.time; a.carrionUntil = Infinity; a.hunt = null; a.air = 0; a.speed = 0; a.spd = 0;
-    a.state = k === VO ? VL_SIT : k === RB ? B_FORM : k === JR ? JK_FORM : k === LZ ? L_BASK : D_BED;
+    a.state = ID[k] === VO ? VL_SIT : ID[k] === RB ? B_FORM : ID[k] === JR ? JK_FORM : ID[k] === LZ ? L_BASK : D_BED;
     a.fall = 1; a.amp0 = 0; a.pose0 = skin ? 1 : REST_POSE[k] ?? 1; a.pitch0 = 0; a.flick0 = 0; a.under = false;
     a.yDead = Math.max(rec.y ?? -Infinity, this.heights.atXZ(rec.x, rec.z)); a.y = a.yDead;
     if (skin) (a.cs ||= makeClipState()).quick = 0.35;
@@ -1442,9 +1561,9 @@ export class Animals {
   // lion stalks (M_STALK with a.hunt), a canid trots at it (M_RUSH). true when a hunt starts.
   huntStart(a) {
     if (this.time < (a.huntAt || 0) || !this.preySlots?.[a.sp]) return false;
-    const r = a.rng, lion = a.sp === ML;
-    if (a.sp === OT) return false;   // (the otter's fish and crayfish are not in the world yet)
-    const t = lion ? this.huntTarget(a, HUNT.lionR, [DR, BK, JR]) : this.huntTarget(a, HUNT.canidR, a.sp === FX ? [VO, RB, JR, GS, LZ] : a.sp === BC ? [SH, DM, TC, DS, VO, RB] : [VO, RB, JR, GS]);
+    const r = a.rng, lion = ID[a.sp] === ML;
+    if (ID[a.sp] === OT) return false;   // (the otter's fish and crayfish are not in the world yet)
+    const t = lion ? this.huntTarget(a, HUNT.lionR, [DR, BK, JR]) : this.huntTarget(a, HUNT.canidR, ID[a.sp] === FX ? [VO, RB, JR, GS, LZ] : ID[a.sp] === BC ? [SH, DM, TC, DS, VO, RB] : [VO, RB, JR, GS]);
     if (!t) { a.huntAt = this.time + HUNT.look[0] + r() * (HUNT.look[1] - HUNT.look[0]); return false; }
     a.hunt = t; a.rush = 0; a.rolled = 0; a.huntEnd = this.time + (lion ? HUNT.stalkMax : HUNT.trotMax); a.tx = t.x; a.tz = t.z;
     if (lion) { a.state = M_STALK; a.speed = MAMMAL[ML].walk; a.t = 1e9; }
@@ -1455,7 +1574,7 @@ export class Animals {
   }
   // The hunt is over (a kill or not): stand or feed (the lion) or sniff (a canid), and no new hunt for a while.
   huntOver(a, state) {
-    const r = a.rng, cool = a.sp === ML ? HUNT.lionCool : HUNT.canidCool;
+    const r = a.rng, cool = ID[a.sp] === ML ? HUNT.lionCool : HUNT.canidCool;
     a.hunt = null; a.rush = 0; a.state = state; a.t = state === M_SNIFF ? 2 + r() * 3 : 3 + r() * 4;
     a.huntAt = this.time + cool[0] + r() * (cool[1] - cool[0]);
   }
@@ -1522,7 +1641,7 @@ export class Animals {
   // Returns the family's members.
   familyOn(oak) {
     if (!oak) { this.familyIds = null; this.dirty = true; return []; }
-    const on = a => (a.sp === WP || a.sp === WF) && a.anchor && Math.abs(a.anchor.x - oak.x) < 0.5 && Math.abs(a.anchor.z - oak.z) < 0.5;
+    const on = a => (ID[a.sp] === WP || ID[a.sp] === WF) && a.anchor && Math.abs(a.anchor.x - oak.x) < 0.5 && Math.abs(a.anchor.z - oak.z) < 0.5;
     let fam = this.list.filter(on);
     if (!fam.length) {
       const keep = new Set(), rnd = mulberry32(seedOf(oak.id, 0xfa31));
@@ -1583,6 +1702,16 @@ export class Animals {
     }
     this.conifers = list; this.coniferGrid = grid; this.nearTrees = trees;
     if (!had && list.length) this.dirty = true;   // the first near set: place the jays now rather than after 100 m
+  }
+  // A stand-in's home tree where its kin's kind is missing (installFauna: a savanna starling on the Steller's jay's
+  // machine has no conifer, a monkey on the gray squirrel's no oak): the nearest tree over 4 m of the near set within r
+  // (nearTrees, indexConifers; read through the oak helpers as the Douglas squirrel's conifers are), or null. A static
+  // slot: null (its own rule only).
+  standInTree(s, x, z, r) {
+    if (s < STATIC_N) return null;
+    let best = null, bd = r * r;
+    for (const o of this.nearTrees || []) { const dx = o.x - x, dz = o.z - z, d2 = dx * dx + dz * dz; if (d2 < bd) { bd = d2; best = o; } }
+    return best;
   }
   // A tree within r of (x, z) whose trunk stands within 10 m of running or standing water (the kingfisher's perch), or null.
   waterTree(x, z, r, rng) {
@@ -1662,55 +1791,57 @@ export class Animals {
       for (let s = 0; s < SPECIES.length; s++) {
         if (!live[s] || SPECIES[s].grid || SPECIES[s].territory || SPECIES[s].variantOf !== undefined) continue;   // soarers, lion: territory cells; bucks: in the herds
         const sp = SPECIES[s]; if (sp.liveR && dist > sp.liveR) continue;
+        const band = s < STATIC_N;   // the elevation bands below are the Sierra's and the Olympics' own: a stand-in (installFauna) keeps its kin's habitat rule, not its range
         const suit = SUIT[sp.code][cls] || 0; if (!suit) continue;
         let f = suit;
-        if (s === SQ) f *= 0.25 + 0.75 * Math.min(1, tree * 1.5);
-        else if (s === WP) f *= 0.3 + 0.7 * Math.min(1, tree * 2);
-        else if (s === RV) f *= 0.6 + 0.6 * edge;
-        else if (s === QU) f *= (0.35 + 0.65 * edge) * (1 - 0.5 * Math.min(1, tree));   // open ground with cover near
-        else if (s === MQ) {   // brush and brushy edges in the mountains: 600-3,000 m (below 2,000 m in winter, under the snow)
-          const e = t.heights.at(cx, cn); if (e < 600 || e > (this.season === 'winter' ? 2000 : 3000)) continue;
+        if (ID[s] === SQ) f *= 0.25 + 0.75 * Math.min(1, tree * 1.5);
+        else if (ID[s] === WP) f *= 0.3 + 0.7 * Math.min(1, tree * 2);
+        else if (ID[s] === RV) f *= 0.6 + 0.6 * edge;
+        else if (ID[s] === QU) f *= (0.35 + 0.65 * edge) * (1 - 0.5 * Math.min(1, tree));   // open ground with cover near
+        else if (ID[s] === MQ) {   // brush and brushy edges in the mountains: 600-3,000 m (below 2,000 m in winter, under the snow)
+          const e = band ? t.heights.at(cx, cn) : 1000; if (e < 600 || e > (this.season === 'winter' ? 2000 : 3000)) continue;
           f *= (0.5 + 0.5 * edge) * (1 - 0.4 * Math.max(0, tree - 0.5)) * (0.3 + 0.7 * clamp01((e - 600) / 250));   // thins out toward the band's foot
         }
-        else if (s === SJ) f *= 0.4 + 0.6 * Math.min(1, tree * 2);
-        else if (s === ST) f *= 0.3 + 0.7 * Math.min(1, tree * 1.5);
-        else if (s === FX) f *= 0.35 + 0.65 * edge;                                  // woodland and chaparral edges
-        else if (s === CY) f *= (1 - 0.6 * Math.min(1, tree * 1.5)) * (0.8 + 0.3 * edge);   // open grass and savanna
-        else if (s === RB) f *= brushEdge;
-        else if (s === VO) f *= 1 - 0.8 * Math.min(1, tree * 1.5);                    // runways in open grass
-        else if (s === JR) f *= 1 - 0.9 * Math.min(1, tree * 1.6);                    // open: grass, savanna, pasture
-        else if (s === TK) f *= (0.3 + 0.7 * Math.min(1, tree * 2.5)) * (1 - 0.5 * Math.max(0, tree - 0.6));   // oaks with openings
-        else if (s === GS) f *= 1 - 0.9 * Math.min(1, tree * 1.8);                    // open grass, low shrubs
-        else if (s === LZ) { if (!lzOn) continue; f *= 0.25 + 0.75 * Math.min(1, (t.outcrop ? t.outcrop.at(cx, cn) / 255 : 0) * 2.5 + tree * 1.2); }
-        else if (s >= EL) {   // the Hoh batch (HOH)
-          if (s === EL) {   // the river flats and meadows; the valley floor in winter, up to the subalpine meadows in summer
-            const e = t.heights.at(cx, cn), top = this.season === 'winter' ? 700 : this.season === 'summer' ? 1700 : 1200;
+        else if (ID[s] === SJ) f *= 0.4 + 0.6 * Math.min(1, tree * 2);
+        else if (ID[s] === ST) f *= 0.3 + 0.7 * Math.min(1, tree * 1.5);
+        else if (ID[s] === FX) f *= 0.35 + 0.65 * edge;                                  // woodland and chaparral edges
+        else if (ID[s] === CY) f *= (1 - 0.6 * Math.min(1, tree * 1.5)) * (0.8 + 0.3 * edge);   // open grass and savanna
+        else if (ID[s] === RB) f *= brushEdge;
+        else if (ID[s] === VO) f *= 1 - 0.8 * Math.min(1, tree * 1.5);                    // runways in open grass
+        else if (ID[s] === JR) f *= 1 - 0.9 * Math.min(1, tree * 1.6);                    // open: grass, savanna, pasture
+        else if (ID[s] === TK) f *= (0.3 + 0.7 * Math.min(1, tree * 2.5)) * (1 - 0.5 * Math.max(0, tree - 0.6));   // oaks with openings
+        else if (ID[s] === GS) f *= 1 - 0.9 * Math.min(1, tree * 1.8);                    // open grass, low shrubs
+        else if (ID[s] === LZ) { if (!lzOn) continue; f *= 0.25 + 0.75 * Math.min(1, (t.outcrop ? t.outcrop.at(cx, cn) / 255 : 0) * 2.5 + tree * 1.2); }
+        else if (ID[s] >= EL) {   // the Hoh batch (HOH)
+          if (ID[s] === EL) {   // the river flats and meadows; the valley floor in winter, up to the subalpine meadows in summer
+            const e = band ? t.heights.at(cx, cn) : 300, top = this.season === 'winter' ? 700 : this.season === 'summer' ? 1700 : 1200;
             if (e > top) continue;
             f *= (0.55 + 0.45 * edge) * (1 - 0.5 * Math.max(0, tree - 0.6)) * (1 - 0.6 * clamp01((e - 300) / Math.max(1, top - 300)));
           }
-          else if (s === DS || s === GJ || s === CB || s === BO) f *= 0.2 + 0.8 * Math.min(1, tree * 1.4);   // in the crowns
-          else if (s === PW || s === SH || s === TC || s === RS || s === EN || s === BS) f *= 0.35 + 0.65 * Math.min(1, tree * 1.3);   // the shaded floor
-          else if (s === CR) f *= (0.4 + 0.6 * edge) * (1 - 0.6 * Math.min(1, tree));   // open ground and edges
-          else if (s === BC) f *= 0.5 + 0.6 * edge;
-          else if (s === KF || s === OT || s === GH || s === CM) {   // the water: a cell on or beside a stream or pond running now
-            const w = this.wetCell(cx, cn, s === CM ? 0.3 : 0.05, s === CM ? 6 : 18); if (!w) continue;
-            f *= s === CM || s === OT ? 0.4 + 0.6 * Math.min(1, w / 0.8) : 1;   // the mergansers and otters where it is deep
+          else if (ID[s] === DS || ID[s] === GJ || ID[s] === CB || ID[s] === BO) f *= 0.2 + 0.8 * Math.min(1, tree * 1.4);   // in the crowns
+          else if (ID[s] === PW || ID[s] === SH || ID[s] === TC || ID[s] === RS || ID[s] === EN || ID[s] === BS) f *= 0.35 + 0.65 * Math.min(1, tree * 1.3);   // the shaded floor
+          else if (ID[s] === CR) f *= (0.4 + 0.6 * edge) * (1 - 0.6 * Math.min(1, tree));   // open ground and edges
+          else if (ID[s] === BC) f *= 0.5 + 0.6 * edge;
+          else if (ID[s] === KF || ID[s] === OT || ID[s] === GH || ID[s] === CM) {   // the water: a cell on or beside a stream or pond running now
+            const w = this.wetCell(cx, cn, ID[s] === CM ? 0.3 : 0.05, ID[s] === CM ? 6 : 18); if (!w) continue;
+            f *= ID[s] === CM || ID[s] === OT ? 0.4 + 0.6 * Math.min(1, w / 0.8) : 1;   // the mergansers and otters where it is deep
           }
-          else if (s === RO || s === JU || s === SL) f *= 0.4 + 0.6 * edge;   // the forest's edges and openings
-          else if (s === VT || s === SR) f *= 0.35 + 0.65 * Math.min(1, tree * 1.3);
-          else if (s === KL || s === FC || s === SO || s === SW || s === HW) f *= 0.2 + 0.8 * Math.min(1, tree * 1.4);
-          else if (s === MA) { const w = this.wetCell(cx, cn, 0.08, 12); if (!w) continue; }
-          else if (s === SG) { const e = t.heights.at(cx, cn); if (e < 400) continue; f *= 0.3 + 0.7 * clamp01((e - 400) / 500); }   // the mountain forest
-          else if (s === MO) { const e = t.heights.at(cx, cn); if (e < 1300 || e > 2000) continue; f *= 1 - 0.8 * Math.min(1, tree * 2); }   // open subalpine meadows
-          else if (s === YC) { const e = t.heights.at(cx, cn); if (e < 900) continue; f *= 1 - 0.5 * Math.min(1, tree); }
-          else if (s === WT || s === CF) {   // near water: the toad within 150 m of it, the frog at subalpine ponds and wet meadows
-            if (s === CF && t.heights.at(cx, cn) < 700) continue;
-            const w = this.wetCell(cx, cn, 0.03, s === CF ? 25 : 60); if (!w && (s === CF || cls !== 5)) continue;
+          else if (ID[s] === RO || ID[s] === JU || ID[s] === SL) f *= 0.4 + 0.6 * edge;   // the forest's edges and openings
+          else if (ID[s] === VT || ID[s] === SR) f *= 0.35 + 0.65 * Math.min(1, tree * 1.3);
+          else if (ID[s] === KL || ID[s] === FC || ID[s] === SO || ID[s] === SW || ID[s] === HW) f *= 0.2 + 0.8 * Math.min(1, tree * 1.4);
+          else if (ID[s] === MA) { const w = this.wetCell(cx, cn, 0.08, 12); if (!w) continue; }
+          else if (ID[s] === SG) { const e = band ? t.heights.at(cx, cn) : 900; if (e < 400) continue; f *= 0.3 + 0.7 * clamp01((e - 400) / 500); }   // the mountain forest
+          else if (ID[s] === MO) { const e = band ? t.heights.at(cx, cn) : 1600; if (e < 1300 || e > 2000) continue; f *= 1 - 0.8 * Math.min(1, tree * 2); }   // open subalpine meadows
+          else if (ID[s] === YC) { const e = band ? t.heights.at(cx, cn) : 1000; if (e < 900) continue; f *= 1 - 0.5 * Math.min(1, tree); }
+          else if (ID[s] === WT || ID[s] === CF) {   // near water: the toad within 150 m of it, the frog at subalpine ponds and wet meadows
+            if (ID[s] === CF && band && t.heights.at(cx, cn) < 700) continue;
+            const w = this.wetCell(cx, cn, 0.03, ID[s] === CF ? 25 : 60); if (!w && (ID[s] === CF || cls !== 5)) continue;
           }
-          if (s === PW || s === TC || s === VT) { const e = t.heights.at(cx, cn); if (e > 1600) continue; }   // not on the high slopes and ice
-          if (s === RS || s === EN || s === BS) { const e = t.heights.at(cx, cn); if (e > 1200) continue; }   // the lowland and montane forest floor (species_data RANGE)
+          if (band && (ID[s] === PW || ID[s] === TC || ID[s] === VT)) { const e = t.heights.at(cx, cn); if (e > 1600) continue; }   // not on the high slopes and ice
+          if (band && (ID[s] === RS || ID[s] === EN || ID[s] === BS)) { const e = t.heights.at(cx, cn); if (e > 1200) continue; }   // the lowland and montane forest floor (species_data RANGE)
         }
         else f *= 0.6 + 0.5 * edge;
+        if (WATERY.has(s) && !this.wetCell(cx, cn, 0.03, 40)) continue;   // a stand-in kept to water with no water twin (installFauna)
         const lambda = sp.k * f * this.priorAt(sp.code, cx, cn) * (SEASON[sp.code][this.season] ?? 1);
         const rnd = mulberry32(hash(i, j, sp.salt));
         if (rnd() >= lambda) continue;
@@ -1718,9 +1849,9 @@ export class Animals {
       }
     }
     }
-    for (const s of [HK, TV, BA, OS, SS, ME, GW, CG, WG]) if (live[s]) this.spawnSoarers(s, px, pz, keep);
-    if (live[ML]) this.spawnLion(px, pz, keep);
-    if (live[BE]) this.spawnBear(px, pz, keep);
+    for (const s of slotsOf(HK, TV, BA, OS, SS, ME, GW, CG, WG)) if (live[s]) this.spawnSoarers(s, px, pz, keep);
+    for (const s of slotsOf(ML)) if (live[s]) this.spawnLion(px, pz, keep, s);   // (and the tile's stand-ins on them: slotsOf)
+    for (const s of slotsOf(BE)) if (live[s]) this.spawnBear(px, pz, keep, s);
     for (const id of this.debugIds) if (this.byId.has(id)) keep.add(id);   // summoned (debugging) animals stay
     for (const a of this.remotes.values()) keep.add(a.id);                  // the group members' bodies (players.js)
     if (this.familyIds) for (const id of this.familyIds) if (this.byId.has(id)) keep.add(id);   // the player woodpecker's family
@@ -1744,18 +1875,19 @@ export class Animals {
     this.bySpecies.forEach((arr, s) => { this.meshes[s].count = arr.length; });
     this.cullOn = SPECIES.map((sp, k) => !!CULL[k]);
     for (const a of this.list) a.culled = false;
-    const cov = new Set(); for (const a of this.bySpecies[QU]) if (a.group) cov.add(a.group);
+    // (each with the tile's stand-ins on it: slotsOf; static tiles: the same slots as ever)
+    const cov = new Set(); for (const s of slotsOf(QU)) for (const a of this.bySpecies[s]) if (a.group) cov.add(a.group);
     this.coveys = [...cov];
-    const mcov = new Set(); for (const a of this.bySpecies[MQ]) if (a.group) mcov.add(a.group);
+    const mcov = new Set(); for (const s of slotsOf(MQ)) for (const a of this.bySpecies[s]) if (a.group) mcov.add(a.group);
     this.mcoveys = [...mcov];
-    const wcov = new Set(); for (const s of [GH, CM]) for (const a of this.bySpecies[s]) if (a.group) wcov.add(a.group);   // the water birds (HOH)
+    const wcov = new Set(); for (const s of slotsOf(GH, CM)) for (const a of this.bySpecies[s]) if (a.group) wcov.add(a.group);   // the water birds (HOH)
     this.wcoveys = [...wcov];
-    const fl = new Set(); for (const a of this.bySpecies[TK]) if (a.group) fl.add(a.group);
+    const fl = new Set(); for (const s of slotsOf(TK)) for (const a of this.bySpecies[s]) if (a.group) fl.add(a.group);
     this.flocks = [...fl];
-    const col = new Set(); for (const s of [GS, MO]) for (const a of this.bySpecies[s]) if (a.group?.burrows) col.add(a.group);
+    const col = new Set(); for (const s of slotsOf(GS, MO)) for (const a of this.bySpecies[s]) if (a.group?.burrows) col.add(a.group);
     this.colonies = [...col]; this.placeBurrows();
     this.fams = new Map();   // v4: each granary's family
-    for (const a of this.list) if ((a.sp === WP || a.sp === WF) && a.anchor) { let f = this.fams.get(a.anchor.id); if (!f) this.fams.set(a.anchor.id, f = []); f.push(a); }
+    for (const a of this.list) if ((ID[a.sp] === WP || ID[a.sp] === WF) && a.anchor) { let f = this.fams.get(a.anchor.id); if (!f) this.fams.set(a.anchor.id, f = []); f.push(a); }
     this.tagged.length = 0;
   }
 
@@ -1800,11 +1932,11 @@ export class Animals {
     this.add(`${s}:T${I},${J}`, s, rnd, a => {
       a.hx = x; a.hz = z;
       const dir = rnd() < 0.5 ? 1 : -1, th = rnd() * TAU;
-      if (s === HK) this.soarStart(a, x, z, 45 + rnd() * 45, 100 + rnd() * 150, dir, th, H_SOAR);
-      else if (s === BA) this.soarStart(a, x, z, 70 + rnd() * 60, 80 + rnd() * 180, dir, th, H_SOAR);   // the eagle: wider circles over the river valley
-      else if (s === OS) this.soarStart(a, x, z, 50 + rnd() * 50, 40 + rnd() * 90, dir, th, H_SOAR);   // the osprey: over the river, lower
-      else if (s === SS || s === ME) this.soarStart(a, x, z, 25 + rnd() * 30, 25 + rnd() * 60, dir, th, H_SOAR);   // the small raptors: low and tight
-      else if (s === GW || s === CG || s === WG) this.soarStart(a, x, z, 60 + rnd() * 60, 30 + rnd() * 80, dir, th, V_SOAR);   // the gulls: up the river valley
+      if (ID[s] === HK) this.soarStart(a, x, z, 45 + rnd() * 45, 100 + rnd() * 150, dir, th, H_SOAR);
+      else if (ID[s] === BA) this.soarStart(a, x, z, 70 + rnd() * 60, 80 + rnd() * 180, dir, th, H_SOAR);   // the eagle: wider circles over the river valley
+      else if (ID[s] === OS) this.soarStart(a, x, z, 50 + rnd() * 50, 40 + rnd() * 90, dir, th, H_SOAR);   // the osprey: over the river, lower
+      else if (ID[s] === SS || ID[s] === ME) this.soarStart(a, x, z, 25 + rnd() * 30, 25 + rnd() * 60, dir, th, H_SOAR);   // the small raptors: low and tight
+      else if (ID[s] === GW || ID[s] === CG || ID[s] === WG) this.soarStart(a, x, z, 60 + rnd() * 60, 30 + rnd() * 80, dir, th, V_SOAR);   // the gulls: up the river valley
       else this.soarStart(a, x, z, 50 + rnd() * 60, 40 + rnd() * 140, dir, th, V_SOAR);
     }, keep);
   }
@@ -1812,8 +1944,8 @@ export class Animals {
   // The mountain lion: one per coarse territory cell (sp.territory m) with probability sp.p, its home a hashed point in
   // the cell that must be oak, mixed, chaparral or riparian; of the cells within LIVE_R + 150 m only the nearest
   // passing one lives (at most one adult, or a mother with young, in the live set; none is forced).
-  spawnLion(px, pz, keep) {
-    const sp = SPECIES[ML], G = sp.territory, north = -pz, R = LIVE_R + 150, size = this.tile.size;
+  spawnLion(px, pz, keep, s = ML) {
+    const sp = SPECIES[s], G = sp.territory, north = -pz, R = LIVE_R + 150, size = this.tile.size;
     let best = null, bd = Infinity;
     for (let J = Math.floor((north - R) / G); J <= Math.floor((north + R) / G); J++)
       for (let I = Math.floor((px - R) / G); I <= Math.floor((px + R) / G); I++) {
@@ -1821,18 +1953,18 @@ export class Animals {
         const hx = (I + 0.15 + 0.7 * rnd()) * G, hn = (J + 0.15 + 0.7 * rnd()) * G;
         if (hx < 0 || hn < 0 || hx > size || hn > size) continue;
         const d = Math.hypot(hx - px, hn - north); if (d > R || d >= bd) continue;
-        if ((SUIT.puma_concolor[this.tile.habitat.at(hx, hn)] || 0) < 0.6) continue;
+        if (!this.territoryHome(s, hx, hn, (SUIT.puma_concolor[this.tile.habitat.at(hx, hn)] || 0) >= 0.6)) continue;
         bd = d; best = [I, J, hx, -hn, rnd];
       }
-    if (best) this.spawnLionGroup(`${ML}:L${best[0]},${best[1]}`, best[2], best[3], best[4], keep);
+    if (best) this.spawnLionGroup(`${s}:L${best[0]},${best[1]}`, best[2], best[3], best[4], keep, s);
   }
-  spawnLionGroup(base, x, z, rnd, keep) {
-    const female = rnd() < 0.6, young = female && rnd() < 0.4 ? 1 + (rnd() < 0.4) : 0;
+  spawnLionGroup(base, x, z, rnd, keep, s = ML) {
+    const female = rnd() < 0.6, young = grpN(s, female && rnd() < 0.4 ? 2 + (rnd() < 0.4) : 1, rnd) - 1;
     const bed = this.nearestOak(x, z, 60);
     const g = { hx: x, hz: z, leader: null, bx: bed ? bed.x + 1.2 : x, bz: bed ? bed.z + 0.8 : z };
-    for (let m = 0; m <= young; m++) this.add(`${base}:${m}`, ML, rnd, a => {
+    for (let m = 0; m <= young; m++) this.add(`${base}:${m}`, s, rnd, a => {
       a.group = g; a.rank = m; if (!m) g.leader = a;
-      a.size = m ? 0.6 * (0.95 + 0.1 * rnd()) : female ? 0.94 : 1.04;
+      a.size = m ? (GRP[s] ? 0.85 + 0.2 * rnd() : 0.6 * (0.95 + 0.1 * rnd())) : female ? 0.94 : 1.04;   // (a stand-in's group, a pride or a pack: grown)
       a.ox = m ? (rnd() - 0.5) * 3 : 0; a.oz = m ? -1 - rnd() * 2 : 0;
       this.mmStart(a, x, z);
     }, keep);
@@ -1841,9 +1973,9 @@ export class Animals {
   // The black bear: as the lion, one group per coarse territory cell (sp.territory m) with probability sp.p (times the
   // season: few in winter, denned), its home a hashed point in the cell that bearHome accepts; only the nearest passing
   // cell within LIVE_R + 150 m lives (a lone bear, or a sow with one or two cubs).
-  spawnBear(px, pz, keep) {
-    const sp = SPECIES[BE], G = sp.territory, north = -pz, R = LIVE_R + 150, size = this.tile.size;
-    const p = sp.p * (SEASON.ursus_americanus[this.season] ?? 1);
+  spawnBear(px, pz, keep, s = BE) {
+    const sp = SPECIES[s], G = sp.territory, north = -pz, R = LIVE_R + 150, size = this.tile.size;
+    const p = sp.p * (SEASON[sp.code][this.season] ?? 1);
     let best = null, bd = Infinity;
     for (let J = Math.floor((north - R) / G); J <= Math.floor((north + R) / G); J++)
       for (let I = Math.floor((px - R) / G); I <= Math.floor((px + R) / G); I++) {
@@ -1851,10 +1983,16 @@ export class Animals {
         const hx = (I + 0.15 + 0.7 * rnd()) * G, hn = (J + 0.15 + 0.7 * rnd()) * G;
         if (hx < 0 || hn < 0 || hx > size || hn > size) continue;
         const d = Math.hypot(hx - px, hn - north); if (d > R || d >= bd) continue;
-        if (!this.bearHome(hx, hn)) continue;
+        if (!this.territoryHome(s, hx, hn, this.bearHome(hx, hn))) continue;
         bd = d; best = [I, J, hx, -hn, rnd];
       }
-    if (best) this.spawnBearGroup(`${BE}:B${best[0]},${best[1]}`, best[2], best[3], best[4], keep);
+    if (best) this.spawnBearGroup(`${s}:B${best[0]},${best[1]}`, best[2], best[3], best[4], keep, s);
+  }
+  // A territory's home for slot s: the static lion's and bear's own rule (ok); a stand-in on them (installFauna) any land
+  // but open water and bare rock (the tile's research put it here; its numbers are the pipeline's density)
+  territoryHome(s, x, north, ok) {
+    if (s < STATIC_N || ok) return ok;
+    const c = this.tile.habitat.at(x, north); return c !== 0 && c !== 7 && c !== 8;
   }
   // A bear's home ground (x, north): conifer or mixed forest, riparian woodland or chaparral at 1,000 m and above; oak
   // woodland from 800 m in fall, when the bears come down to the acorns (the pipeline's range is 800-3,000 m).
@@ -1863,13 +2001,13 @@ export class Animals {
     if (c === 1) return this.season === 'fall' && e >= 800;
     return (c === 2 || c === 3 || c === 4 || c === 6) && e >= 1000 && e <= 3000;
   }
-  spawnBearGroup(base, x, z, rnd, keep) {
-    const sow = rnd() < 0.55, cubs = sow && rnd() < 0.5 ? 1 + (rnd() < 0.45) : 0;
+  spawnBearGroup(base, x, z, rnd, keep, s = BE) {
+    const sow = rnd() < 0.55, cubs = grpN(s, sow && rnd() < 0.5 ? 2 + (rnd() < 0.45) : 1, rnd) - 1;
     const bed = this.nearestOak(x, z, 60) || this.nearestConifer(x, z, 60);   // bedded at the foot of a tree
     const g = { hx: x, hz: z, leader: null, bx: bed ? bed.x + 1.6 : x, bz: bed ? bed.z + 1.0 : z };
-    for (let m = 0; m <= cubs; m++) this.add(`${base}:${m}`, BE, rnd, a => {
+    for (let m = 0; m <= cubs; m++) this.add(`${base}:${m}`, s, rnd, a => {
       a.group = g; a.rank = m; if (!m) g.leader = a;
-      a.size = m ? 0.45 * (0.9 + 0.2 * rnd()) : sow ? 0.92 : 1.06;   // cubs of the year; a sow; a boar
+      a.size = m ? (GRP[s] ? 0.8 + 0.25 * rnd() : 0.45 * (0.9 + 0.2 * rnd())) : sow ? 0.92 : 1.06;   // cubs of the year; a sow; a boar (a stand-in's group, a troop: grown)
       a.ox = m ? (rnd() - 0.5) * 2.5 : 0; a.oz = m ? -0.8 - rnd() * 1.5 : 0;
       this.mmStart(a, x, z);
     }, keep);
@@ -1879,34 +2017,35 @@ export class Animals {
   spawnCell(s, i, j, cx, cn, rnd, keep, jitter = 30) {
     const x = cx + (rnd() - 0.5) * jitter, z = -(cn + (rnd() - 0.5) * jitter);
     const base = `${s}:${i},${j}`, kn = KIN[s], H2 = HOH[s];
-    if (s === BS) {   // banana slugs: one to three on the forest floor, a few metres apart
+    if (ID[s] === BS) {   // banana slugs: one to three on the forest floor, a few metres apart
       const n = 1 + Math.floor(rnd() * rnd() * 3);
       for (let m = 0; m < n; m++) this.add(`${base}:${m}`, s, rnd, a => {
         a.x = x + (rnd() - 0.5) * 6; a.z = z + (rnd() - 0.5) * 6; a.y = this.heights.atXZ(a.x, a.z); a.yaw = rnd() * TAU;
         a.size = 0.8 + rnd() * 0.4; a.state = SL_CRAWL; a.t = rnd() * 60;
       }, keep);
     } else if (kn === SQ) {   // the gray squirrel round an oak; the Douglas squirrel round a conifer
-      const home = s === DS ? this.nearestConifer(x, z, 45) : this.nearestOak(x, z, 45); if (!home) return;
+      const home = (ID[s] === DS ? this.nearestConifer(x, z, 45) : this.nearestOak(x, z, 45)) || this.standInTree(s, x, z, 45); if (!home) return;
       this.add(base, s, rnd, a => { a.anchor = home; a.tree = home; this.sqStart(a); }, keep);
-    } else if (s === WP) {   // a family of 3-6 on its granary (a stash tree; summoned ones take the nearest oak)
+    } else if (ID[s] === WP) {   // a family of 3-6 on its granary (a stash tree; summoned ones take the nearest oak)
       const gran = (this._near && (this.nearestOak(x, z, 30, true) || this.nearestOak(x, z, 30))) || this.nearestOak(x, z, 150, true) || this.nearestOak(x, z, 60);
       if (!gran) return;
-      const n = 3 + Math.floor(rnd() * 4);
+      const n = grpN(s, 3 + Math.floor(rnd() * 4), rnd);
       for (let m = 0; m < n; m++) {
         const id = `${base}:${m}`, female = (seedOf(id, 0xfe3) & 1) === 1;
-        this.add(id, female ? WF : s, rnd, a => { a.anchor = gran; this.wpStart(a, m); }, keep);
+        this.add(id, female && s < STATIC_N ? WF : s, rnd, a => { a.anchor = gran; this.wpStart(a, m); }, keep);   // (a stand-in: one slot, no female colouring)
       }
     } else if (kn === RV) {   // a raven pair (or one); crows in a family group of two to four, lower
-      const n = s === CR ? 2 + Math.floor(rnd() * 3) : rnd() < 0.55 ? 2 : 1, R = 35 + rnd() * 40, alt = (s === CR ? 25 : 50) + rnd() * (s === CR ? 50 : 100), dir = rnd() < 0.5 ? 1 : -1, th = rnd() * TAU;
+      const n = grpN(s, ID[s] === CR ? 2 + Math.floor(rnd() * 3) : rnd() < 0.55 ? 2 : 1, rnd), R = 35 + rnd() * 40, alt = (ID[s] === CR ? 25 : 50) + rnd() * (ID[s] === CR ? 50 : 100), dir = rnd() < 0.5 ? 1 : -1, th = rnd() * TAU;
       for (let m = 0; m < n; m++) this.add(`${base}:${m}`, s, rnd, a => {
         a.hx = x; a.hz = z; this.rvStart(a, x, z, R + m * 8, alt + m * 6, dir, th + m * 0.6);
       }, keep);
     } else if (kn === QU || kn === MQ) {   // a covey (the mountain quail's: a pair or three in spring, 6-12 the rest of the year)
       const se = this.season, W = H2?.water ? H2 : null;
-      let n = s === MQ ? (se === 'spring' ? 2 + (rnd() < 0.3) : 6 + Math.floor(rnd() * 7))
+      let n = ID[s] === MQ ? (se === 'spring' ? 2 + (rnd() < 0.3) : 6 + Math.floor(rnd() * 7))
         : se === 'spring' ? 2 + Math.floor(rnd() * 3) : se === 'summer' ? 6 + Math.floor(rnd() * 7) : 8 + Math.floor(rnd() * 8);
       let gx = x, gz = z;
       if (H2 && !W) n = H2.n[0] + Math.floor(rnd() * (H2.n[1] - H2.n[0] + 1));   // the sooty grouse: one to three
+      else if (!W) n = grpN(s, n, rnd);   // a stand-in's group (with HOH, its n is the group already)
       if (W) {   // the heron alone at the water's edge; the mergansers in a knot on the water (HOH)
         n = W.n[0] + Math.floor(rnd() * (W.n[1] - W.n[0] + 1));
         const w = this.waterSpot(x, z, 0, 40, W.depth[0], W.depth[1], rnd, 24); if (!w) return;
@@ -1919,39 +2058,39 @@ export class Animals {
         a.ox = Math.cos(ang) * d; a.oz = Math.sin(ang) * d;
         a.x = gx + a.ox; a.z = gz + a.oz; a.y = W ? this.surfAt(a.x, a.z) : this.heights.atXZ(a.x, a.z); a.yaw = rnd() * TAU;
         a.state = Q_FORAGE; a.pose = 1; a.t = rnd() * 3;
-        if (s === CM) a.variant = (seedOf(a.id, 0xd8a) % 100) < 35 ? 1 : 0;   // a drake now and then among the redheads
+        if (ID[s] === CM) a.variant = (seedOf(a.id, 0xd8a) % 100) < 35 ? 1 : 0;   // a drake now and then among the redheads
       }, keep);
     } else if (kn === SJ || kn === ST) {   // a family group around a home tree (oaks; pines for the Steller's jay; HOH: the conifer birds, the kingfisher's tree over the water)
-      const home = s === KF ? this.waterTree(x, z, 70, rnd) : s === SJ ? this.nearestOak(x, z, 60) : this.nearestConifer(x, z, 60); if (!home) return;
-      const n = H2 ? H2.n[0] + Math.floor(rnd() * (H2.n[1] - H2.n[0] + 1)) : 2 + Math.floor(rnd() * 3), g = { home, tree: home, leader: null, move: 0, t: 4 + rnd() * 15, ground: false };
+      const home = (ID[s] === KF ? this.waterTree(x, z, 70, rnd) : ID[s] === SJ ? this.nearestOak(x, z, 60) : this.nearestConifer(x, z, 60)) || this.standInTree(s, x, z, 60); if (!home) return;
+      const n = H2 ? H2.n[0] + Math.floor(rnd() * (H2.n[1] - H2.n[0] + 1)) : grpN(s, 2 + Math.floor(rnd() * 3), rnd), g = { home, tree: home, leader: null, move: 0, t: 4 + rnd() * 15, ground: false };
       for (let m = 0; m < n; m++) this.add(`${base}:${m}`, s, rnd, a => {
         a.group = g; a.rank = m; if (!m) g.leader = a; a.anchor = home; a.tree = home;
         this.jaySpot(a, home, false); a.x = a.tx; a.y = a.ty; a.z = a.tz;
         a.state = J_PERCH; a.pose = 1; a.yaw = rnd() * TAU; a.t = rnd() * 4;
-        if (s === KF) a.variant = (seedOf(a.id, 0xb1f) & 1);   // the male (no rufous band) half the time
+        if (ID[s] === KF) a.variant = (seedOf(a.id, 0xb1f) & 1);   // the male (no rufous band) half the time
       }, keep);
     } else if (kn === FX || kn === CY) {   // a fox alone; a coyote alone or a pair; HOH: a bobcat alone, an otter or a mother with one or two young by the water
       let hx = x, hz = z;
-      if (s === OT) { const w = this.waterSpot(x, z, 0, 40, 0.15, 9, rnd, 24); if (!w) return; hx = w.x; hz = w.z; }
-      const n = s === CY && rnd() < 0.4 ? 2 : s === OT && rnd() < 0.45 ? 2 + (rnd() < 0.4 ? 1 : 0) : 1, bed = s === FX ? this.nearestOak(x, z, 40) : s === BC ? this.nearestConifer(x, z, 40) : null;
+      if (ID[s] === OT) { const w = this.waterSpot(x, z, 0, 40, 0.15, 9, rnd, 24); if (!w) return; hx = w.x; hz = w.z; }
+      const n = grpN(s, ID[s] === CY && rnd() < 0.4 ? 2 : ID[s] === OT && rnd() < 0.45 ? 2 + (rnd() < 0.4 ? 1 : 0) : 1, rnd), bed = ID[s] === FX ? this.nearestOak(x, z, 40) : ID[s] === BC ? this.nearestConifer(x, z, 40) : null;
       const g = { hx, hz, leader: null, bx: bed ? bed.x + 1.5 : hx, bz: bed ? bed.z - 1 : hz };
       for (let m = 0; m < n; m++) this.add(`${base}:${m}`, s, rnd, a => {
         a.group = g; a.rank = m; if (!m) g.leader = a;
         a.ox = m ? (rnd() - 0.5) * 4 : 0; a.oz = m ? -2 - rnd() * 3 : 0;
         this.mmStart(a, hx, hz);
-        if (s === OT && m) a.size *= 0.65;   // the young
+        if (ID[s] === OT && m) a.size *= 0.65;   // the young
       }, keep);
     } else if (kn === RB) {   // one to three brush rabbits around a patch of cover (an oak if one is near, else the brush); a snowshoe hare or two under the conifers
-      const n = s === SH ? 1 + (rnd() < 0.25 ? 1 : 0) : 1 + Math.floor(rnd() * rnd() * 3), o = s === SH ? this.nearestConifer(x, z, 20) : this.nearestOak(x, z, 20);
+      const n = grpN(s, ID[s] === SH ? 1 + (rnd() < 0.25 ? 1 : 0) : 1 + Math.floor(rnd() * rnd() * 3), rnd), o = ID[s] === SH ? this.nearestConifer(x, z, 20) : this.nearestOak(x, z, 20);
       for (let m = 0; m < n; m++) this.add(`${base}:${m}`, s, rnd, a => {
         const ang = rnd() * TAU, d = rnd() * 4;
         a.hx = (o ? o.x : x) + Math.cos(ang) * d; a.hz = (o ? o.z : z) + Math.sin(ang) * d;
         a.x = a.hx; a.z = a.hz; a.y = this.heights.atXZ(a.x, a.z); a.yaw = rnd() * TAU; a.size = 0.9 + rnd() * 0.15;
         a.state = B_FORM; a.t = rnd() * 6;
-        if (s === SH) a.variant = this.season === 'winter' && this.heights.atXZ(a.x, a.z) > 900 ? 1 : 0;   // white above ~900 m in winter; the lowland hares stay brown
+        if (ID[s] === SH) a.variant = this.season === 'winter' && this.heights.atXZ(a.x, a.z) > 900 ? 1 : 0;   // white above ~900 m in winter; the lowland hares stay brown
       }, keep);
-    } else if (s === JR) {   // a jackrabbit, or two a few metres apart: each its own form, beside a shrub if one is near
-      const n = rnd() < 0.3 ? 2 : 1;
+    } else if (ID[s] === JR) {   // a jackrabbit, or two a few metres apart: each its own form, beside a shrub if one is near
+      const n = grpN(s, rnd() < 0.3 ? 2 : 1, rnd);
       for (let m = 0; m < n; m++) this.add(`${base}:${m}`, s, rnd, a => {
         let fx = x + (m ? (rnd() - 0.5) * 14 : 0), fz = z + (m ? (rnd() - 0.5) * 14 : 0);
         const sh = this.shrubSpot(fx, fz, 10); if (sh) { fx = sh.x; fz = sh.z; }
@@ -1964,9 +2103,9 @@ export class Animals {
         }
         a.y = this.heights.atXZ(a.x, a.z);
       }, keep);
-    } else if (s === TK) {   // a flock of 6-15 wild turkeys: hens (0.8 scale, the hen colours) and toms
-      const n = 6 + Math.floor(rnd() * 10);
-      const g = { x, z, hx: x, hz: z, tx: x, tz: z, state: TF_FORAGE, t: 5 + rnd() * 30, cool: 0, n, leader: null, tree: null, roost: false, ft: 0 };
+    } else if (ID[s] === TK) {   // a flock of 6-15 wild turkeys: hens (0.8 scale, the hen colours) and toms
+      const n = grpN(s, 6 + Math.floor(rnd() * 10), rnd);
+      const g = { fsp: s, x, z, hx: x, hz: z, tx: x, tz: z, state: TF_FORAGE, t: 5 + rnd() * 30, cool: 0, n, leader: null, tree: null, roost: false, ft: 0 };
       for (let m = 0; m < n; m++) this.add(`${base}:${m}`, s, rnd, a => {
         a.group = g; a.rank = m; if (!m) g.leader = a;
         const ang = rnd() * TAU, d = Math.sqrt(rnd()) * TURKEY.spread;
@@ -1983,7 +2122,7 @@ export class Animals {
         if (this.landOK(bx, bz)) burrows.push({ x: bx, z: bz, y: 0, yaw: rnd() * TAU });
       }
       if (!burrows.length) return;
-      const n = GSQ.members[0] + Math.floor(rnd() * (GSQ.members[1] - GSQ.members[0] + 1));
+      const n = grpN(s, GSQ.members[0] + Math.floor(rnd() * (GSQ.members[1] - GSQ.members[0] + 1)), rnd);
       const g = { sp: s, x, z, burrows, state: C_OK, t: 0, sentinel: null, watch: 5 + rnd() * 20, leader: null, threat: 0 };
       for (let m = 0; m < n; m++) this.add(`${base}:${m}`, s, rnd, a => {
         a.group = g; a.rank = m; if (!m) g.leader = a;
@@ -1992,7 +2131,7 @@ export class Animals {
         a.yaw = rnd() * TAU; a.size = 0.85 + rnd() * 0.25; a.state = G_FEED; a.t = rnd() * 3;
       }, keep);
     } else if (kn === LZ) {   // fence lizards at the cell's rocks and trunks (a male at each, a female or two near); the salamanders on the floor beside them
-      const amph = s !== LZ, sites = amph ? this.amphSites(x, z, rnd) : this.lzSites(x, z, cx, cn, rnd);
+      const amph = ID[s] !== LZ, sites = amph ? this.amphSites(x, z, rnd) : this.lzSites(x, z, cx, cn, rnd);
       for (let k = 0, m = 0; k < sites.length; k++) {
         const site = sites[k], nf = rnd() < 0.5 ? 0 : 1 + (rnd() < 0.3 ? 1 : 0);
         for (let f = 0; f <= nf; f++, m++) this.add(`${base}:${m}`, s, rnd, a => {
@@ -2002,7 +2141,7 @@ export class Animals {
         }, keep);
       }
     } else if (kn === VO) {   // a vole on its runway (two now and then): a 2-5 m track through the grass (HOH: a chipmunk along a log, a deer mouse on the floor)
-      const n = rnd() < 0.3 ? 2 : 1;
+      const n = grpN(s, rnd() < 0.3 ? 2 : 1, rnd);
       for (let m = 0; m < n; m++) this.add(`${base}:${m}`, s, rnd, a => {
         const ang = rnd() * TAU, L = 2 + rnd() * 3, cx = x + (rnd() - 0.5) * 6, cz = z + (rnd() - 0.5) * 6;
         a.sx = cx - Math.cos(ang) * L / 2; a.sz = cz - Math.sin(ang) * L / 2; a.tx = cx + Math.cos(ang) * L / 2; a.tz = cz + Math.sin(ang) * L / 2;
@@ -2013,11 +2152,11 @@ export class Animals {
       // deer: a herd of 3-6 around a leader doe; about one follower in three is a buck (its own slot, BK). Elk (HOH): a herd of
       // 5-16 cows, calves and yearlings round a lead cow; in the rut (September, October) a herd bull with it and a satellite or
       // two; otherwise a bull in seven or so (young bulls; the old ones in their own bands, not drawn yet)
-      const elk = s === EL, n = elk ? 5 + Math.floor(rnd() * 12) : 3 + Math.floor(rnd() * 4), g = { hx: x, hz: z, leader: null, wx: x, wz: z, gap: elk ? 3.6 : 2.6, spread: elk ? 16 : 9 };
+      const elk = ID[s] === EL, n = grpN(s, elk ? 5 + Math.floor(rnd() * 12) : 3 + Math.floor(rnd() * 4), rnd), g = { hx: x, hz: z, leader: null, wx: x, wz: z, gap: elk ? 3.6 : 2.6, spread: elk ? 16 : 9 };
       const rut = this.month >= 9 && this.month < 11;
       for (let m = 0; m < n; m++) {
         const id = `${base}:${m}`, buck = m > 0 && (this._forceBuck || (elk ? (rut && m <= 2) || (seedOf(id, 0xb0c) % 1000) < 140 : (seedOf(id, 0xb0c) % 1000) < 300));
-        this.add(id, buck ? (elk ? EB : BK) : s, rnd, a => {
+        this.add(id, buck && s < STATIC_N ? (elk ? EB : BK) : s, rnd, a => {   // (a stand-in's herd: all in its own slot)
           a.group = g; a.rank = m; a.ox = m ? (rnd() - 0.5) * g.spread : 0; a.oz = m ? (rnd() - 0.5) * g.spread : 0;
           if (elk && !buck && m > 0 && this.month >= 5 && (seedOf(id, 0xca1) % 100) < 30) a.size *= 0.55 + 0.25 * Math.min(1, (this.month - 5) / 7);   // the year's calves
           if (!m) g.leader = a;
@@ -2028,6 +2167,7 @@ export class Animals {
     }
   }
   add(id, s, rnd, init, keep) {
+    if (GATE && s < STATIC_N && !GATE.has(SPECIES[s].code)) return;   // not on this tile (installFauna's gate; a variant by its base's code)
     keep.add(id);
     if (this.held.has(id)) return;   // the player is in it (take)
     const old = this.byId.get(id);
@@ -2048,7 +2188,7 @@ export class Animals {
       anchor: null, tree: null, face: 0, h: 0, scared: 0,
       hx: 0, hz: 0, cx: 0, cz: 0, R: 50, alt: 80, dir: 1, th: 0, flapT: 0,
       group: null, ox: 0, oz: 0, rank: 0, air: 0, fly: 0, acc: 0, wait: 0, moveSeen: 0, peak: 0, V: 10, rock: 0,
-      e0: 0, e1: 0, variant: s === QU || s === MQ ? seedOf(id, 0x5e7) & 1 : 0,   // aAnim2 (drawn meshes); the quail's sex (from the id)
+      e0: 0, e1: 0, variant: ID[s] === QU || ID[s] === MQ ? seedOf(id, 0x5e7) & 1 : 0,   // aAnim2 (drawn meshes); the quail's sex (from the id)
       hopU: 1, hopX: 0, hopZ: 0, hopDX: 0, hopDZ: 0, hopH: 0,         // scrub-jay ground hop
       hFrac: 0.5,                                                      // Steller's jay: perch height in the crown (fraction of the tree)
       e2: 0, e3: 0, vis: 1, culled: false, next2: 0, cool: 0, zig: 0, zigT: 0,   // mammals (aAnim2.z, .w; hidden; pounce lift)
@@ -2214,7 +2354,7 @@ export class Animals {
     if ((a.state === S_PAUSE || a.state === S_WORK || a.state === S_EAT || (a.state === S_RUN && a.next !== S_CLIMB)) && near2 < 15 * 15 && (!pSq || chase)) {
       if (a.task !== T_STORE) this.dropTask(a);   // an acorn it holds goes up the tree with it
       if (a.state === S_EAT) a.carry = 0;          // (dropped while eating)
-      a.tree = (a.sp === DS ? this.nearestConifer(a.x, a.z, 30) : this.nearestOak(a.x, a.z, 30)) || a.anchor; a.scared = 1;
+      a.tree = (ID[a.sp] === DS ? this.nearestConifer(a.x, a.z, 30) : this.nearestOak(a.x, a.z, 30)) || a.anchor; a.scared = 1;
       this.sqToTrunk(a, 4.5);
     }
     a.t -= dt;
@@ -2232,7 +2372,7 @@ export class Animals {
             const x = o.x + Math.cos(ang) * d, z = o.z + Math.sin(ang) * d, dd = Math.hypot(x - a.x, z - a.z);
             this.sqRunTo(a, x, z, dd > 2 ? 3 : 1.5, S_PAUSE);
           } else if (q < (fall ? 0.86 : 0.65)) {   // over to another oak in the home range
-            const o2 = (a.sp === DS ? this.ringConifer(a.anchor.x, a.anchor.z, 0, 40, r, o) : this.randomOak(a.anchor.x, a.anchor.z, 40, r, o)) || a.anchor;
+            const o2 = (ID[a.sp] === DS ? this.ringConifer(a.anchor.x, a.anchor.z, 0, 40, r, o) : this.randomOak(a.anchor.x, a.anchor.z, 40, r, o)) || a.anchor;
             a.tree = o2; const ang = r() * TAU, d = (1 + r() * 2.5) * o2.scale;
             this.sqRunTo(a, o2.x + Math.cos(ang) * d, o2.z + Math.sin(ang) * d, 3, S_PAUSE);
           } else this.sqToTrunk(a, 2.5);   // up the tree
@@ -2876,7 +3016,7 @@ export class Animals {
     if (a.wait <= 0) { a.raidOak = null; a.task = 0; done(); return; }
     if (this.familyWithin(o.id, a.x, a.y, a.z, RAID_GUARD_R)) { a.t = 0.3; return; }
     G.collector(a.id, SPECIES[a.sp].code).carrying = a.carry;
-    if (G.raid(a.id, o.id, a.x, a.y, a.z)) { a.carry = 1; a.fleeOak = o; a.bx = a.x; a.bz = a.z; a.eatT = 0; a.task = a.sp === SQ ? T_STORE : 0; }
+    if (G.raid(a.id, o.id, a.x, a.y, a.z)) { a.carry = 1; a.fleeOak = o; a.bx = a.x; a.bz = a.z; a.eatT = 0; a.task = ID[a.sp] === SQ ? T_STORE : 0; }
     else a.task = 0;
     a.raidOak = null; done();
   }
@@ -2911,7 +3051,7 @@ export class Animals {
     const G = this.game;
     if (!G?.active || !e.pil || e.x === undefined || (e.by !== 'player' && G.aiLocal === false)) return;
     const o = e.own != null ? this.byId.get(e.own) : null;
-    if (!o || o.sp !== SQ || o.guard || o.state === S_CLIMB || o.state === S_OUT || o.state === S_SIT || o.state === S_IN
+    if (!o || ID[o.sp] !== SQ || o.guard || o.state === S_CLIMB || o.state === S_OUT || o.state === S_SIT || o.state === S_IN
       || o.state === S_DOWN || o.state === S_RAIDP) return;   // up a tree: it does not see
     if (Math.hypot(o.x - e.x, o.z - e.z) > GUARD.notice) return;
     if (o.task === T_GET) this.dropTask(o);
@@ -2960,14 +3100,14 @@ export class Animals {
     }
     a.raidOak = null; a.fleeOak = null; a.offT = this.time + DRIVEN_T; a.acorn = null;
     if (a.task !== T_STORE || !a.carry) a.task = 0;
-    if (a.sp === SQ) {
+    if (ID[a.sp] === SQ) {
       if (a.state === S_CLIMB && a.path) { a.scared = 1; a.pdir = -1; a.state = S_IN; }
       else if (a.state === S_RAIDP || a.state === S_CLIMB) { a.scared = 1; a.state = S_DOWN; }
       else if (a.state !== S_DOWN && a.state !== S_OUT && a.state !== S_SIT && a.state !== S_IN) {
         const ang = r() * TAU, d = 10 + r() * 10; this.sqRunTo(a, a.x + Math.cos(ang) * d, a.z + Math.sin(ang) * d, 5, S_PAUSE);
       }
-    } else if (a.sp === SJ || a.sp === ST) this.jayFlee(a);
-    else if (a.sp === RV) { a.task = 0; a.state = R_PERCH; a.t = 0; }
+    } else if (ID[a.sp] === SJ || ID[a.sp] === ST) this.jayFlee(a);
+    else if (ID[a.sp] === RV) { a.task = 0; a.state = R_PERCH; a.t = 0; }
   }
 
   // ---- acorn game: collectors (see the header) -------------------------------------------------------
@@ -3013,15 +3153,15 @@ export class Animals {
   // squirrel, the chest it hangs from) as the vertex shader does, then through the instance matrix m.
   carryPoint(a, m) {
     let C = CARRY[a.sp], chest = false, lift = 0, yaw = 0;
-    if (a.sp === RV && this.meshOn(RV)) { if (a.gm) { C = CARRY.rvGround; yaw = a.e1; } else lift = RAVEN_LIFT; }
-    if (a.sp === SQ && this.meshOn(SQ)) {
+    if (ID[a.sp] === RV && this.meshOn(RV)) { if (a.gm) { C = CARRY.rvGround; yaw = a.e1; } else lift = RAVEN_LIFT; }
+    if (ID[a.sp] === SQ && this.meshOn(SQ)) {
       C = CARRY.sqRig; chest = true;
       const piv = this.drawn[SQ].model?.rig?.piv;
       if (piv?.head && !C.fromModel) { C.py = piv.head[1]; C.pz = piv.head[2]; if (piv.chest) { C.cy = piv.chest[1]; C.cz = piv.chest[2]; } C.fromModel = true; }
     }
     let y = C.ty - C.py, z = C.tz - C.pz;
     // the eat past a flick of 1 (EAT_PECK) on a drawn rig model: the head's turn and the body's lean as the shader's (eatTurn)
-    const M = a.flick > 1 && ((a.sp === RV && a.gm) || chest) ? this.drawn[a.sp]?.model : null, E = M ? eatTurn(M, a.flick, a.pose) : null;
+    const M = a.flick > 1 && ((ID[a.sp] === RV && a.gm) || chest) ? this.drawn[a.sp]?.model : null, E = M ? eatTurn(M, a.flick, a.pose) : null;
     let g = (E ? E.head : a.flick * C.flick) + a.pose * C.pose, c = Math.cos(g), s = Math.sin(g);
     let y2 = c * y - s * z + C.py, z2 = s * y + c * z + C.pz;
     if (chest) {
@@ -3165,7 +3305,7 @@ export class Animals {
       const dx = T.x - g.x, dz = T.z - g.z;
       const d = Math.hypot(dx, dz), al = this.alarmed(g);
       if (!g.pilot && ((d < Math.min(ai ? HUNT.quail : W ? W.flush : 48, T.n) && T.y - gy < 42) || (al && d < ALARM_REACT_R))) {
-        this.flushCovey(g, T.x, T.z, al ? 'alarm' : !ai ? 'raven' : ai.sp === HK ? 'hawk' : ai.sp === RV ? 'raven' : 'hunter'); return;
+        this.flushCovey(g, T.x, T.z, al ? 'alarm' : !ai ? 'raven' : ID[ai.sp] === HK ? 'hawk' : ID[ai.sp] === RV ? 'raven' : 'hunter'); return;
       }
       if (g.cool <= 0 && r() < dt / 160) { const ang = r() * TAU; this.flushCovey(g, g.x + Math.cos(ang) * 30, g.z + Math.sin(ang) * 30, 'self'); return; }
     }
@@ -3198,7 +3338,7 @@ export class Animals {
     const s = g.sp ?? QU, list = this.bySpecies[s];
     const r = this.groupRng(g, list); if (!r) return;
     let n = 0; for (const a of list) if (a.group === g) n++;
-    if (n) this.emit(HOH[s] ? 'waterFlush' : 'flush', { group: s === QU ? g : null, covey: g, species: SPECIES[s].code, x: g.x, y: this.heights.atXZ(g.x, g.z), z: g.z, n, cause });   // (the water birds: no quail whirr in sound.js)
+    if (n) this.emit(HOH[s] ? 'waterFlush' : 'flush', { group: ID[s] === QU ? g : null, covey: g, species: SPECIES[s].code, x: g.x, y: this.heights.atXZ(g.x, g.z), z: g.z, n, cause });   // (the water birds: no quail whirr in sound.js)
     let ang = Math.atan2(g.z - fz, g.x - fx) + (r() - 0.5) * 0.8;   // away from the threat
     const W = HOH[s]?.water ? HOH[s] : null, d = W ? W.fly[0] + r() * (W.fly[1] - W.fly[0]) : 35 + r() * 40;
     let lx = g.x + Math.cos(ang) * d, lz = g.z + Math.sin(ang) * d;
@@ -3210,7 +3350,7 @@ export class Animals {
         const sc = Math.hypot(x2 - fx, z2 - fz) / 100 + r() * 0.3; if (sc > best) { best = sc; lx = x2; lz = z2; }
       }
       if (best === -Infinity) { lx = g.hx; lz = g.hz; }   // nowhere else: back to its home water
-    } else if (s === MQ) {   // the mountain quail: downhill if it can, into brush (chaparral best, then forest understory and streamside)
+    } else if (ID[s] === MQ) {   // the mountain quail: downhill if it can, into brush (chaparral best, then forest understory and streamside)
       const hab = this.tile.habitat, H = this.heights;
       let best = -Infinity;
       for (let k = 0; k < 6; k++) {
@@ -3283,7 +3423,7 @@ export class Animals {
     } else if (W?.dive && r() < dt * 0.06) { a.state = Q_DIVE; a.t = 8 + r() * 14; return; }   // a merganser dives
     else if (r() < dt * (W?.edge ? 0.12 : W ? 0.5 : 1.5)) { a.flickV = 1; a.eatK = EAT_PECK; }   // peck: the bill to the seed on the ground (the heron's strike, rarer; a merganser's dip)
     // standing and turning: walking in place in short steps, the head leading the turn (PART_TURN.bird; aAnim2.z)
-    const tA = this.turnStep(a, dt, BT, speed < 0.05, (a.sp === MQ ? 0.11 : W?.edge ? 0.3 : W ? 0.18 : 0.1) * a.size, W?.edge ? 0.5 : 0.14);
+    const tA = this.turnStep(a, dt, BT, speed < 0.05, (ID[a.sp] === MQ ? 0.11 : W?.edge ? 0.3 : W ? 0.18 : 0.1) * a.size, W?.edge ? 0.5 : 0.14);
     if (!tA) { a.amp = damp(a.amp, speed > 0.1 ? 1 : 0, 12, dt); a.phase += dt * TAU * speed / (W?.edge ? 0.5 : W ? 0.25 : 0.14); }
     a.pose = damp(a.pose, 1, 10, dt);
     a.e2 = damp(a.e2 || 0, Math.max(-BT.leadMax, Math.min(BT.leadMax, a.wr * BT.lead)), 10, dt);
@@ -3566,7 +3706,7 @@ export class Animals {
   // A point d m off in direction ang (radians from +x), pulled back to within `range` of home; dry land, a few tries.
   mmPoint(a, dMin, dMax, range, ang = null) {
     const r = a.rng; let x = a.x, z = a.z;
-    if (a.sp === OT) {   // the otter keeps to the water: a point on the stream or pond within its range, else along the bank
+    if (ID[a.sp] === OT) {   // the otter keeps to the water: a point on the stream or pond within its range, else along the bank
       const w = this.waterSpot(a.x, a.z, dMin, dMax, 0.05, 9, r);
       if (w && Math.hypot(w.x - a.hx, w.z - a.hz) < range + 40) { a.tx = w.x; a.tz = w.z; return; }
     }
@@ -3600,15 +3740,15 @@ export class Animals {
     if (!act) { a.tx = g.bx + a.ox; a.tz = g.bz + a.oz; this.mmGo(a, cfg.walk, M_BED); return; }
     a.carr = null; a.ate = 0;   // (a feeding spell over: carrion.js aiFeedTick)
     if (this.huntStart(a)) return;   // prey in reach: a stalk (the lion) or a trot at it (HUNT above)
-    if ((a.sp === CY || a.sp === BE) && this.carrion.length && this.time > (a.fedAt || 0)) {   // carrion about: trot (amble) to it and feed (Scavenge: carrion.js aiFeedTick in M_SNIFF)
-      const bear = a.sp === BE, c = this.carrionNear(a.x, a.z, bear ? cfg.scav : 200, a);
+    if ((ID[a.sp] === CY || ID[a.sp] === BE) && this.carrion.length && this.time > (a.fedAt || 0)) {   // carrion about: trot (amble) to it and feed (Scavenge: carrion.js aiFeedTick in M_SNIFF)
+      const bear = ID[a.sp] === BE, c = this.carrionNear(a.x, a.z, bear ? cfg.scav : 200, a);
       if (c) {
         a.tx = c.x + (r() - 0.5) * 2; a.tz = c.z + (r() - 0.5) * 2; a.fedAt = this.time + CARRION.t; a.carr = c;
         a.stay = bear ? cfg.feed : 25 + r() * 20; a.stay0 = a.stay;   // the bear stands over it and feeds a minute, the coyote half that
         this.mmGo(a, bear ? cfg.walk * 1.4 : cfg.trot, M_SNIFF); return;
       }
     }
-    if (a.sp === BE) {   // the bear: ambles, sniffs and digs for long spells; in fall it goes to an oak to feed under it
+    if (ID[a.sp] === BE) {   // the bear: ambles, sniffs and digs for long spells; in fall it goes to an oak to feed under it
       if (this.season === 'fall' && q < 0.4) {
         const o = this.nearestOak(a.x, a.z, 90);
         if (o) { const th = r() * TAU, d = 1.5 + r() * 3; a.tx = o.x + Math.cos(th) * d; a.tz = o.z + Math.sin(th) * d; a.stay = 15 + r() * 25; this.mmGo(a, cfg.walk, M_SNIFF); return; }
@@ -3617,18 +3757,18 @@ export class Animals {
       if (q < 0.85) { a.state = M_SNIFF; a.t = 6 + r() * 12; return; }
       a.state = M_STAND; a.t = 2 + r() * 4; return;
     }
-    if (a.sp === ML && q < 0.45) { this.mmPoint(a, 15, 40, cfg.range); a.speed = 0.35; a.state = M_STALK; a.t = 4 + r() * 6; return; }
+    if (ID[a.sp] === ML && q < 0.45) { this.mmPoint(a, 15, 40, cfg.range); a.speed = 0.35; a.state = M_STALK; a.t = 4 + r() * 6; return; }
     if (q < 0.5) {
-      const far = a.sp === CY ? [30, 120] : a.sp === FX ? [15, 60] : [40, 150];
+      const far = ID[a.sp] === CY ? [30, 120] : ID[a.sp] === FX ? [15, 60] : [40, 150];
       this.mmPoint(a, far[0], far[1], cfg.range);
-      const trot = a.sp === CY ? r() < 0.6 : a.sp === FX ? r() < 0.4 : false;
+      const trot = ID[a.sp] === CY ? r() < 0.6 : ID[a.sp] === FX ? r() < 0.4 : false;
       this.mmGo(a, trot ? cfg.trot : cfg.walk, M_STAND); return;
     }
     if (q < 0.8) { a.state = M_SNIFF; a.t = 3 + r() * 7; return; }
     a.state = M_STAND; a.t = 2 + r() * 4;
   }
   mmUpdate(a, dt, px, py, pz) {
-    const r = a.rng, cfg = MAMMAL[a.sp], g = a.group, H = this.heights, act = cfg.active(this.hour, this.season), lion = a.sp === ML, bear = a.sp === BE;
+    const r = a.rng, cfg = MAMMAL[a.sp], g = a.group, H = this.heights, act = cfg.active(this.hour, this.season), lion = ID[a.sp] === ML, bear = ID[a.sp] === BE;
     const pmax = this.poseMax[a.sp];
     a.t -= dt; a.cool -= dt; a.mvK = 1;
     let speed = 0, wantPose = 0, wantFlick = 0, twitch = 0;
@@ -3706,7 +3846,7 @@ export class Animals {
         if (a.wy !== a.wy && r() < dt * 0.4) a.wy = a.yaw + (r() - 0.5) * 1.2;   // a new heading, stepped round to (below)
         if (a.t <= 0) {
           if (act && this.huntStart(a)) break;   // a vole, rabbit, jackrabbit or ground squirrel in reach: after it
-          if (act && a.sp === CY && this.dig && (!g || g.leader === a) && (a.digAt ?? 0) < this.time) {   // the Dig game: a vole it smells underground, within 15 m: over it, and dig
+          if (act && ID[a.sp] === CY && this.dig && (!g || g.leader === a) && (a.digAt ?? 0) < this.time) {   // the Dig game: a vole it smells underground, within 15 m: over it, and dig
             a.digAt = this.time + 30;
             const v = this.dig.aiPitTarget(a, 15);
             if (v) { const back = 0.4 * a.size; a.digX = v.x; a.digZ = v.z; const d = Math.hypot(v.x - a.x, v.z - a.z) || 1; a.tx = v.x - (v.x - a.x) / d * back; a.tz = v.z - (v.z - a.z) / d * back; a.digT = 40 + r() * 50; this.mmGo(a, cfg.trot, M_DIGP); break; }
@@ -3722,9 +3862,9 @@ export class Animals {
         wantPose = 0.15; wantFlick = -0.3; a.roll = a.cock * 0.13 * Math.sin(this.time * 7 + a.rock);
         if (a.t <= 0) {
           if (alive) a.yaw = Math.atan2(t.x - a.x, t.z - a.z);
-          const L = alive ? Math.min(Math.hypot(t.x - a.x, t.z - a.z), HUNT.pounceD) : (a.sp === CY ? 1.5 : 1.1) + r() * 0.8;
+          const L = alive ? Math.min(Math.hypot(t.x - a.x, t.z - a.z), HUNT.pounceD) : (ID[a.sp] === CY ? 1.5 : 1.1) + r() * 0.8;
           a.sx = a.x; a.sz = a.z; a.tx = a.x + Math.sin(a.yaw) * L; a.tz = a.z + Math.cos(a.yaw) * L;
-          a.u = 0; a.dur = 0.5 + L * 0.08; a.peak = a.sp === CY ? 0.75 : 0.5; a.roll = 0; a.state = M_POUNCE;
+          a.u = 0; a.dur = 0.5 + L * 0.08; a.peak = ID[a.sp] === CY ? 0.75 : 0.5; a.roll = 0; a.state = M_POUNCE;
           if (alive) this.lastPounce = { id: a.id, prey: SPECIES[t.sp].code, t: this.time };
         }
         break;
@@ -3811,7 +3951,7 @@ export class Animals {
           speed = 0; break;
         }
         if (!a.rush) {
-          if (this.fled(t) && t.sp !== VO) { a.rush = 1; a.t = HUNT.chaseT[0] + r() * (HUNT.chaseT[1] - HUNT.chaseT[0]); }   // it bolts
+          if (this.fled(t) && ID[t.sp] !== VO) { a.rush = 1; a.t = HUNT.chaseT[0] + r() * (HUNT.chaseT[1] - HUNT.chaseT[0]); }   // it bolts
           else if (this.time > a.huntEnd || d > HUNT.canidR * 1.5) { this.huntOver(a, M_SNIFF); break; }
         } else if (a.t <= 0) { speed = 0; this.huntOver(a, lion ? M_STAND : M_SNIFF); break; }
         speed = a.speed = a.rush ? cfg.run : cfg.trot;
@@ -3903,7 +4043,7 @@ export class Animals {
     const hf = H.atXZ(a.x + sy * half, a.z + cy * half), hb = H.atXZ(a.x - sy * half, a.z - cy * half);
     if (!air) a.pitch = damp(a.pitch, -Math.atan2(hf - hb, 2 * half) * 0.8, 6, dt);
     a.y = Math.min(hf, hb) * 0.5 + H.atXZ(a.x, a.z) * 0.5 - this.drops[a.sp] * a.pose * a.size + a.lift;
-    if (a.sp === OT) {   // the otter in the water: swimming low, the back and head just out, level (HOH)
+    if (ID[a.sp] === OT) {   // the otter in the water: swimming low, the back and head just out, level (HOH)
       const D = waterDepthAt(a.x, -a.z), sw = D > 0.18 ? Math.min(1, (D - 0.18) / 0.2) : 0;
       a.swim = damp(a.swim || 0, sw, 4, dt);
       if (a.swim > 0.01) { a.y = a.y * (1 - a.swim) + (this.surfAt(a.x, a.z) - 0.13 * a.size) * a.swim; a.pitch *= 1 - a.swim; }
@@ -3966,7 +4106,7 @@ export class Animals {
   // ~9 m (or still within 15 m when the freeze ends) it bolts for cover in a zig-zag bound, the white tail up, and
   // sits tight there.
   rbBolt(a, px, pz) {
-    const D = a.sp === RB ? this.dig : null, h = D?.holeNear(a.x, a.z, 6, a, false, D.BURROW.fit);   // a burrow within reach that is not past the player: down it (dig.js; the hare does not burrow)
+    const D = ID[a.sp] === RB ? this.dig : null, h = D?.holeNear(a.x, a.z, 6, a, false, D.BURROW.fit);   // a burrow within reach that is not past the player: down it (dig.js; the hare does not burrow)
     if (h && Math.hypot(h.x - px, h.z - pz) > Math.hypot(a.x - px, a.z - pz) * 0.8) { a.hole = h.id; a.state = B_TOHOLE; a.speed = 5; a.zigT = 0; a.bolted = true; return; }
     const r = a.rng, toCover = Math.hypot(a.hx - a.x, a.hz - a.z), coverToP = Math.hypot(a.hx - px, a.hz - pz), meToP = Math.hypot(a.x - px, a.z - pz);
     if (toCover > 1 && coverToP > meToP * 0.8) {   // cover is not past the player: into it and a little beyond
@@ -3983,7 +4123,7 @@ export class Animals {
     a.tx = x; a.tz = z; a.state = B_HOP; a.next = next; a.speed = 1.1;
   }
   rbUpdate(a, dt, px, py, pz) {
-    const r = a.rng, H = this.heights, hr = this.hour, act = hr < 9.5 || hr > 16.5, S = a.sp, hare = S === SH;
+    const r = a.rng, H = this.heights, hr = this.hour, act = hr < 9.5 || hr > 16.5, S = a.sp, hare = ID[S] === SH;
     a.t -= dt;
     if (hare && this.season === 'winter') a.variant = this.heights.atXZ(a.hx, a.hz) > 900 ? 1 : 0;   // the montane hares white in winter (aAnim2.w)
     else if (hare) a.variant = 0;
@@ -4216,9 +4356,9 @@ export class Animals {
     const S = a.sp, T = this.threat(S, a, a.x, a.y, a.z, px, py, pz), tn = T.n; px = T.x; py = T.y; pz = T.z;   // the player or an AI hunter
     const near = py - a.y < 4 ? Math.hypot(a.x - px, a.z - pz) : Infinity;
     // the Dig game (dig.js): to a hole, through the tunnels, digging a burrow (the AI host's; the vole only)
-    const D = S === VO ? this.dig : null, scared = this.danger(S, a, near, S === TC ? 5 : 4, tn);
-    if (S !== VO && S !== SR) {   // HOH: the chipmunks are out by day, the deer mouse by night (a quarter of them about by day too; the shrew at any hour); otherwise down out of sight
-      const day = atmo.sunDir.value.y > 0.02, out = S === TC || S === YC ? day : !day || (a.u1x ??= r()) < 0.25;
+    const D = ID[S] === VO ? this.dig : null, scared = this.danger(S, a, near, ID[S] === TC ? 5 : 4, tn);
+    if (ID[S] !== VO && ID[S] !== SR) {   // HOH: the chipmunks are out by day, the deer mouse by night (a quarter of them about by day too; the shrew at any hour); otherwise down out of sight
+      const day = atmo.sunDir.value.y > 0.02, out = ID[S] === TC || ID[S] === YC ? day : !day || (a.u1x ??= r()) < 0.25;
       if (!out) { a.state = VL_HIDE; a.t = Math.max(a.t, 2); }
     }
     if (D && (a.state === VL_TOHOLE || a.state === VL_TUN || a.state === VL_DIG)) return this.voBurrow(a, dt, scared, near);
@@ -4296,7 +4436,7 @@ export class Animals {
   // the player's species) and comes down after 25-60 s, and flies up to roost in a tall oak at dusk, down at dawn.
   tkFlushR() { return TURKEY.flush[this.observer] ?? TURKEY.flushOther; }
   flockUpdate(g, dt, px, pz) {
-    const r = this.groupRng(g, this.bySpecies[TK]); if (!r) return;
+    const r = this.groupRng(g, this.bySpecies[g.fsp ?? TK]); if (!r) return;
     g.t -= dt; g.cool -= dt;
     const sun = atmo.sunDir.value.y;
     if (sun < 0.04 && g.state !== TF_ROOST) {   // dusk: up to roost (a flushed flock already up stays in its tree)
@@ -4335,7 +4475,7 @@ export class Animals {
   }
   // Flushed: up into the oak 12-70 m off that lies most nearly away from the threat; with none, the flock runs off.
   tkFlush(g, px, pz) {
-    const r = this.groupRng(g, this.bySpecies[TK]);
+    const r = this.groupRng(g, this.bySpecies[g.fsp ?? TK]);
     const ax = g.x - px, az = g.z - pz, al = Math.hypot(ax, az) || 1;
     let best = null, bs = -Infinity;
     for (let k = 0; k < 6; k++) {
@@ -4352,11 +4492,11 @@ export class Animals {
   // perch on top of a limb of the drawn wood 3 m or more up, else (the wood not known: beyond the near set) a place in
   // the crown, where it is out of sight once it gets there. At dusk with no oak in reach they are simply not drawn.
   tkToTree(g, oak, roost) {
-    const r = this.groupRng(g, this.bySpecies[TK]); if (!r) return;
+    const r = this.groupRng(g, this.bySpecies[g.fsp ?? TK]); if (!r) return;
     if (!oak && roost) oak = this.randomOak(g.x, g.z, 60, r, null, 9) || this.nearestOak(g.x, g.z, 150);
     g.state = roost ? TF_ROOST : TF_TREE; g.t = TURKEY.tree[0] + r() * (TURKEY.tree[1] - TURKEY.tree[0]); g.tree = oak;
     let k = 0;
-    for (const a of this.bySpecies[TK]) if (a.group === g) {
+    for (const a of this.bySpecies[g.fsp ?? TK]) if (a.group === g) {
       a.down = 0;
       if (!oak) { a.state = T_PERCH; a.hidden = 1; continue; }
       const P = this.tkPerch(oak, k++, r);
@@ -4385,12 +4525,12 @@ export class Animals {
   }
   // Down from the tree (after a flush, or at dawn) to the ground 12-27 m out, staggered.
   tkDown(g) {
-    const r = this.groupRng(g, this.bySpecies[TK]); if (!r) return;
+    const r = this.groupRng(g, this.bySpecies[g.fsp ?? TK]); if (!r) return;
     const o = g.tree, dawn = g.state === TF_ROOST, ang = r() * TAU, d = 12 + r() * 15;
     let x = (o ? o.x : g.x) + Math.cos(ang) * d, z = (o ? o.z : g.z) + Math.sin(ang) * d;
     if (!this.landOK(x, z)) { x = o ? o.x + 3 : g.x; z = o ? o.z + 3 : g.z; }
     g.x = x; g.z = z; g.state = TF_FORAGE; g.t = 10 + r() * 20; g.tree = null;
-    for (const a of this.bySpecies[TK]) if (a.group === g) {
+    for (const a of this.bySpecies[g.fsp ?? TK]) if (a.group === g) {
       if (!o) { a.hidden = 0; a.state = T_FORAGE; a.down = 0; continue; }   // a roost with no oak: they were just not drawn
       a.tx = x + a.ox; a.tz = z + a.oz; a.ty = this.heights.atXZ(a.tx, a.tz);
       a.state = T_WAIT; a.wait = dawn ? r() * 10 : r() * 4; a.down = 1;
@@ -4491,7 +4631,7 @@ export class Animals {
     let threat = this.danger(S, g, Math.sqrt((px - g.x) ** 2 + (py - gy) ** 2 + (pz - g.z) ** 2), R);
     if (!threat) {   // an AI hunter of ground squirrels (threat(); the player out of it): a raptor at GSQ.raptor m, others at GSQ.player
       const T = this.threat(S, g, g.x, gy, g.z, 1e7, 1e7, 1e7), h = T.who;
-      if (h) threat = this.danger(S, g, Math.sqrt((T.x - g.x) ** 2 + (T.y - gy) ** 2 + (T.z - g.z) ** 2), (h.sp === HK || h.sp === RV ? GSQ.raptor : GSQ.player) + GSQ.spread, T.n);
+      if (h) threat = this.danger(S, g, Math.sqrt((T.x - g.x) ** 2 + (T.y - gy) ** 2 + (T.z - g.z) ** 2), (ID[h.sp] === HK || ID[h.sp] === RV ? GSQ.raptor : GSQ.player) + GSQ.spread, T.n);
     }
     if (!threat) for (const h of this.bySpecies[HK]) if ((h.x - g.x) ** 2 + (h.y - gy) ** 2 + (h.z - g.z) ** 2 < (GSQ.raptor + GSQ.spread) ** 2) { threat = true; break; }
     const night = atmo.sunDir.value.y < 0.06;
@@ -4712,7 +4852,7 @@ export class Animals {
     a.state = L_SPRINT; a.u = 0; a.dur = 0.25 + r() * 0.3; a.flick = 0; a.fl = 0;
   }
   lzUpdate(a, dt, px, py, pz) {
-    const r = a.rng, H = this.heights, amph = a.sp !== LZ;   // amph: the salamanders (HOH): out in cool damp air, never basking, slow
+    const r = a.rng, H = this.heights, amph = ID[a.sp] !== LZ;   // amph: the salamanders (HOH): out in cool damp air, never basking, slow
     a.t -= dt;
     if (!(amph ? this.amOn : this.lzOn)) { a.vis = a.vis < 0.03 ? 0 : damp(a.vis, 0, 10, dt); a.amp = 0; return; }   // cold, dark or out of season (the salamanders: freezing or hot and dry)
     if (!a.home) {   // placed the first time it is near the eye (a budget per frame; retried while the rock or wood is not drawn)
@@ -4816,33 +4956,33 @@ export class Animals {
   // What an animal is doing, in a few words (identify.js species cards).
   activity(a) {
     const s = a.state;
-    if (a.sp === TK) {
+    if (ID[a.sp] === TK) {
       if (s === T_FLY) return a.down ? 'flying down from the tree' : 'flying up into a tree';
       if (s === T_PERCH || s === T_WAIT && !a.down && a.group.state !== TF_FORAGE) return a.group.state === TF_ROOST ? 'roosting for the night' : 'up in a tree, watching';
       if (s === T_SCRATCH) return 'scratching the leaves for food';
       return a.group.state === TF_WALK ? 'walking with its flock' : 'pecking for seeds and insects with its flock';
     }
-    if (a.sp === GS) return s === G_SENTRY ? 'on guard at the burrow' : s === G_DIVE ? 'running for its burrow' : s === G_SIT || s === G_PEEK ? 'sitting up, looking round' : 'feeding near its burrow';
-    if (a.sp === LZ) return s === L_BASK ? 'basking in the sun' : s === L_PUSH ? 'doing push-ups (a male showing off)' : s === L_SPRINT ? 'dashing for cover' : 'watching';
+    if (ID[a.sp] === GS) return s === G_SENTRY ? 'on guard at the burrow' : s === G_DIVE ? 'running for its burrow' : s === G_SIT || s === G_PEEK ? 'sitting up, looking round' : 'feeding near its burrow';
+    if (ID[a.sp] === LZ) return s === L_BASK ? 'basking in the sun' : s === L_PUSH ? 'doing push-ups (a male showing off)' : s === L_SPRINT ? 'dashing for cover' : 'watching';
     // the Hoh batch (HOH)
     const kn = KIN[a.sp];
     if (kn === LZ) return s === L_SPRINT ? 'wriggling away under the litter' : s === L_MOVE ? 'walking slowly over the damp moss' : 'resting on the damp forest floor';
-    if (a.sp === BS) return s === SL_IN ? 'pulled in, its eyestalks withdrawn' : s === SL_CRAWL ? 'gliding over the forest floor on its slime' : 'resting, eyestalks out';
-    if (a.sp === EL || a.sp === EB) return s === D_BED ? 'bedded down in the ferns' : s === D_WALK ? (a.group?.fleeT > 0 ? 'moving off with the herd' : 'walking with its herd') : 'grazing on the river flat';
-    if (a.sp === OT) return a.swim > 0.5 ? 'swimming in the river' : s === M_BED ? 'curled up in its den by the bank' : 'on the bank, nosing about';
-    if (a.sp === BO) return s === J_FLY ? 'flying silently between the trees' : atmo.sunDir.value.y > 0.05 ? 'roosting through the day' : 'watching and listening from its perch';
-    if (a.sp === KF) return s === J_FLY ? 'flying low over the water, rattling' : s === J_GROUND ? 'diving for a fish' : 'watching the water from its perch';
-    if (a.sp === GH) return s === Q_FLY ? 'flying off on slow deep wingbeats' : a.group?.state === G_RUN ? 'stalking slowly through the shallows' : 'standing still in the shallows, watching for fish';
-    if (a.sp === CM) return s === Q_FLY ? 'flying fast and low up the river' : s === Q_DIVE ? 'diving for fish' : 'swimming on the river';
-    if (a.sp === MA) return s === Q_FLY ? 'flying off, quacking' : 'dabbling at the water\'s edge';
-    if (a.sp === SG) return s === Q_FLY ? 'flushed, whirring off into the trees' : 'walking the forest floor, picking at needles and berries';
-    if (a.sp === HW) return s === J_FLY ? 'flying in deep undulations to the next trunk' : 'clinging to the bark, tapping for insects';
-    if (a.sp === SO || a.sp === SW) return s === J_FLY ? 'flying silently between the trees' : atmo.sunDir.value.y > 0.05 ? 'roosting through the day' : 'watching and listening from its perch';
-    if (a.sp === MO) return s === G_SENTRY ? 'sitting up at its burrow, keeping watch' : s === G_DIVE ? 'running for its burrow' : 'grazing the meadow near its burrow';
+    if (ID[a.sp] === BS) return s === SL_IN ? 'pulled in, its eyestalks withdrawn' : s === SL_CRAWL ? 'gliding over the forest floor on its slime' : 'resting, eyestalks out';
+    if (ID[a.sp] === EL || ID[a.sp] === EB) return s === D_BED ? 'bedded down in the ferns' : s === D_WALK ? (a.group?.fleeT > 0 ? 'moving off with the herd' : 'walking with its herd') : 'grazing on the river flat';
+    if (ID[a.sp] === OT) return a.swim > 0.5 ? 'swimming in the river' : s === M_BED ? 'curled up in its den by the bank' : 'on the bank, nosing about';
+    if (ID[a.sp] === BO) return s === J_FLY ? 'flying silently between the trees' : atmo.sunDir.value.y > 0.05 ? 'roosting through the day' : 'watching and listening from its perch';
+    if (ID[a.sp] === KF) return s === J_FLY ? 'flying low over the water, rattling' : s === J_GROUND ? 'diving for a fish' : 'watching the water from its perch';
+    if (ID[a.sp] === GH) return s === Q_FLY ? 'flying off on slow deep wingbeats' : a.group?.state === G_RUN ? 'stalking slowly through the shallows' : 'standing still in the shallows, watching for fish';
+    if (ID[a.sp] === CM) return s === Q_FLY ? 'flying fast and low up the river' : s === Q_DIVE ? 'diving for fish' : 'swimming on the river';
+    if (ID[a.sp] === MA) return s === Q_FLY ? 'flying off, quacking' : 'dabbling at the water\'s edge';
+    if (ID[a.sp] === SG) return s === Q_FLY ? 'flushed, whirring off into the trees' : 'walking the forest floor, picking at needles and berries';
+    if (ID[a.sp] === HW) return s === J_FLY ? 'flying in deep undulations to the next trunk' : 'clinging to the bark, tapping for insects';
+    if (ID[a.sp] === SO || ID[a.sp] === SW) return s === J_FLY ? 'flying silently between the trees' : atmo.sunDir.value.y > 0.05 ? 'roosting through the day' : 'watching and listening from its perch';
+    if (ID[a.sp] === MO) return s === G_SENTRY ? 'sitting up at its burrow, keeping watch' : s === G_DIVE ? 'running for its burrow' : 'grazing the meadow near its burrow';
     if (kn === ST && (s === J_GROUND)) return 'hopping on the ground, foraging';
-    if (a.sp === BE) return s === M_BED ? 'bedded down at the foot of a tree' : s === M_CHARGE ? 'bluff-charging' : s === M_SNIFF ? 'nosing and digging for food'
+    if (ID[a.sp] === BE) return s === M_BED ? 'bedded down at the foot of a tree' : s === M_CHARGE ? 'bluff-charging' : s === M_SNIFF ? 'nosing and digging for food'
       : s === M_MOVE ? 'ambling along' : a.watch > 0 ? 'standing its ground, watching you' : 'standing, testing the air';
-    if (a.sp === MQ) return s === Q_FLY ? 'flushed, whirring off downhill into the brush' : s === Q_WAIT ? 'crouched, about to flush'
+    if (ID[a.sp] === MQ) return s === Q_FLY ? 'flushed, whirring off downhill into the brush' : s === Q_WAIT ? 'crouched, about to flush'
       : a.group?.state === G_RUN ? 'running in single file with its covey' : 'scratching for seeds and berries with its covey';
     return '';
   }
@@ -4851,14 +4991,14 @@ export class Animals {
   shown(a) { return this.meshes[a.sp].visible && !a.culled && a.vis > 0.3 && this.present(a); }
   // Is this one present (the HUD and the cards): not down a burrow, not hidden in a crack or a crown, not too cold.
   present(a) {
-    if (a.sp === LZ) return this.lzOn && a.state !== L_HIDE;
+    if (ID[a.sp] === LZ) return this.lzOn && a.state !== L_HIDE;
     if (KIN[a.sp] === LZ) return this.amOn && a.state !== L_HIDE;   // the salamanders
-    if (a.sp === BS) return a.vis > 0.3;   // the slug: not under the litter
-    if (a.sp === CM) return a.state !== Q_DIVE;   // a merganser under the water
+    if (ID[a.sp] === BS) return a.vis > 0.3;   // the slug: not under the litter
+    if (ID[a.sp] === CM) return a.state !== Q_DIVE;   // a merganser under the water
     if (KIN[a.sp] === VO) return !a.buried && a.state !== VL_HIDE;   // the chipmunk and deer mouse below, out of sight
     if (KIN[a.sp] === GS) return a.state !== G_DOWN;
-    if (a.sp === TK) return a.vis > 0.3;
-    if (a.sp === VO) return !a.buried;   // down its tunnels (dig.js)
+    if (ID[a.sp] === TK) return a.vis > 0.3;
+    if (ID[a.sp] === VO) return !a.buried;   // down its tunnels (dig.js)
     return true;
   }
 
@@ -4871,13 +5011,13 @@ export class Animals {
     const C = this.camera, dir = new THREE.Vector3(); C.getWorldDirection(dir); dir.y = 0; dir.normalize();
     const x = C.position.x + dir.x * d, z = C.position.z + dir.z * d, keep = new Set(), n = ++this.debugN;
     const rnd = mulberry32(hash(n, 7, 9999 + k)), before = new Set(this.byId.keys());
-    if (k === ML) this.spawnLionGroup(`${ML}:dbg${n}`, x, z, rnd, keep);
-    else if (k === BE) this.spawnBearGroup(`${BE}:dbg${n}`, x, z, rnd, keep);
-    else { this._forceBuck = k === BK || k === EB; this._near = true; this.spawnCell(k === BK ? DR : k === EB ? EL : k === WF ? WP : k, 'dbg', n, x, -z, rnd, keep, 0); this._forceBuck = this._near = false; }
+    if (ID[k] === ML) this.spawnLionGroup(`${k}:dbg${n}`, x, z, rnd, keep, k);
+    else if (ID[k] === BE) this.spawnBearGroup(`${k}:dbg${n}`, x, z, rnd, keep, k);
+    else { this._forceBuck = ID[k] === BK || ID[k] === EB; this._near = true; this.spawnCell(ID[k] === BK ? DR : ID[k] === EB ? EL : ID[k] === WF ? WP : k, 'dbg', n, x, -z, rnd, keep, 0); this._forceBuck = this._near = false; }
     for (const id of keep) this.debugIds.add(id);
     this.dirty = true;
     const fresh = [...this.byId.values()].filter(a => !before.has(a.id));
-    if (k === RV) fresh.forEach((a, i) => {   // ravens come down: standing on the ground a while at the spot
+    if (ID[k] === RV) fresh.forEach((a, i) => {   // ravens come down: standing on the ground a while at the spot
       a.x = x + (i ? 0.9 : 0); a.z = z + (i ? 0.5 : 0); a.y = this.heights.atXZ(a.x, a.z); a.yaw = rnd() * TAU;
       a.state = R_PERCH; a.t = 30 + rnd() * 30; a.pose = 1; a.amp = 0; a.pitch = 0; a.roll = 0; a.fly = 0; a.perchY = null; a.air = 0;
     });
@@ -4923,18 +5063,18 @@ export class Animals {
   // squirrel out on the wood), 'cling' (a woodpecker on the bark: tree, face, h) or 'top' (perched up in a tree).
   info(a) {
     const s = a.sp, g = this.heights.atXZ(a.x, a.z);
-    const o = { id: a.id, code: SPECIES[s].code, sex: s === WF ? 'female' : s === WP ? 'male' : null, x: a.x, y: a.y, z: a.z,
+    const o = { id: a.id, code: SPECIES[s].code, sex: ID[s] === WF ? 'female' : ID[s] === WP ? 'male' : null, x: a.x, y: a.y, z: a.z,
       yaw: wrapAngle(a.yaw + Math.PI), pitch: 0, speed: 0, where: 'ground', tree: a.tree || null, face: a.face, h: a.h, anchor: a.anchor || null,
       size: a.size, soaring: false };
-    if (s === SQ) {
+    if (ID[s] === SQ) {
       if ((a.state === S_CLIMB || a.state === S_DOWN || a.state === S_RAIDP) && !a.path && a.tree) o.where = 'trunk';
       else if (a.y - g > 0.4) o.where = 'tree';
-    } else if (s === RV) {
+    } else if (ID[s] === RV) {
       if (a.state === R_SOAR) { o.where = 'air'; o.speed = 10; }
       else if (a.state === R_GLIDE || a.state === R_CLIMB) { o.where = 'air'; o.speed = Math.min(25, Math.hypot(a.tx - a.sx, a.ty - a.sy, a.tz - a.sz) / Math.max(0.5, a.dur)); }
       else o.where = a.perchY !== null && a.y - g > 0.5 ? 'top' : 'ground';
       if (o.where === 'air') o.pitch = -a.pitch;   // the animals' pitch is nose down positive
-    } else if (s === WP || s === WF) {
+    } else if (ID[s] === WP || ID[s] === WF) {
       if (a.state === W_CLING || a.state === S_RAIDP) o.where = 'cling';
       else if (a.state === W_FLY || a.state === W_MOB) { o.where = 'air'; o.speed = a.state === W_FLY ? Math.min(12, a.speed / Math.max(0.5, a.dur)) : 8; }
       else o.where = a.y - g < 0.3 ? 'ground' : 'top';
@@ -4944,8 +5084,8 @@ export class Animals {
         o.pitch = -a.pitch;
         o.soaring = a.state === H_SOAR || a.state === V_SOAR || a.state === V_GLIDE;
         const k = KIN[s];   // (the Hoh batch by its kin: the eagle as the hawk, the water birds as the quail)
-        o.speed = k === HK || s === TV ? (a.state === H_STOOP ? 24 : a.state === H_PULL ? a.speed : a.V || 9)
-          : k === QU || k === MQ ? (HOH[s]?.flyV ?? 13) : s === TK ? TURKEY.fly : Math.min(14, Math.hypot(a.tx - a.sx, a.tz - a.sz) / Math.max(0.5, a.dur));
+        o.speed = ID[k] === HK || ID[s] === TV ? (a.state === H_STOOP ? 24 : a.state === H_PULL ? a.speed : a.V || 9)
+          : ID[k] === QU || ID[k] === MQ ? (HOH[s]?.flyV ?? 13) : ID[s] === TK ? TURKEY.fly : Math.min(14, Math.hypot(a.tx - a.sx, a.tz - a.sz) / Math.max(0.5, a.dur));
       } else o.speed = a.amp > 0.3 ? a.speed || 0 : 0;
     }
     return o;
@@ -4983,14 +5123,14 @@ export class Animals {
     a.x = o.x; a.y = o.y; a.z = o.z; a.yaw = wrapAngle(o.yaw + Math.PI); a.pitch = 0; a.roll = 0; a.amp = 0;
     a.task = 0; a.acorn = null; a.guard = null; a.fleeOak = null; a.raidOak = null; a.mob = null; a.scared = 0;
     a.vis = 1; a.culled = false; a.acc = 0; a.air = 0; a.flickV = 0;
-    if (a.sp === SQ) {
+    if (ID[a.sp] === SQ) {
       a.path = null; a.via = false;
       const tr = oak(o.tree);
       if (o.where === 'trunk' && tr) { a.tree = tr; a.face = o.face; a.h = Math.max(0, o.h); a.state = S_DOWN; }   // down the bole
       else if (o.where === 'tree' && tr) {   // sits a while, then back along to the trunk and down (S_SIT without a path)
         a.tree = tr; a.face = Math.atan2(o.x - tr.x, o.z - tr.z); a.state = S_SIT; a.t = 3 + r() * 6; a.pose = 1; a.pitch = -0.55;
       } else { a.y = g; a.tree = this.nearestOak(o.x, o.z, 30) || a.anchor; a.state = S_PAUSE; a.t = 1 + r() * 2; }
-    } else if (a.sp === RV) {
+    } else if (ID[a.sp] === RV) {
       a.perchY = null; a.perchTop = false; a.task = 0; a.tRest = 0; a.hopping = 0; a.wing = 0; a.look = 0;
       if (o.where === 'air') {   // soaring on: a circle that passes through here along its heading
         const fx = Math.sin(a.yaw), fz = Math.cos(a.yaw), R = 35 + r() * 30, th = Math.atan2(-fx, fz);
@@ -5000,7 +5140,7 @@ export class Animals {
         if (o.where === 'top') a.perchY = o.y; else a.y = g;
         a.state = R_PERCH; a.t = 4 + r() * 10; a.pose = 1; a.gm = this.meshOn(a.sp) ? 1 : 0;
       }
-    } else if (a.sp !== WP && a.sp !== WF) this.releaseOther(a, o, g);
+    } else if (ID[a.sp] !== WP && ID[a.sp] !== WF) this.releaseOther(a, o, g);
     else {
       a.path = null;
       if (o.where === 'cling' && o.tree) {
@@ -5025,42 +5165,42 @@ export class Animals {
     const r = a.rng, s = KIN[a.sp], grp = a.group;   // s: the behaviour it runs (KIN: the Hoh batch by its kin's states)
     a.path = null; a.hidden = 0; a.down = 0; a.lift = 0; a.zig = 0; a.speed = 0; a.e3 = 0; a.wait = 0; a.look = 0;
     const far = (x, z) => Math.hypot(o.x - x, o.z - z) > 30;
-    if (s === HK || s === TV) {   // soaring on in a circle through here; a hawk off a perch or out of a glide flaps up first
+    if (ID[s] === HK || ID[s] === TV) {   // soaring on in a circle through here; a hawk off a perch or out of a glide flaps up first
       a.air = 1; a.fly = 1; a.pose = 0;
-      if (s === HK && !(o.where === 'air' && o.soaring)) { a.state = H_PULL; a.t = 4; a.speed = 9; a.pitch = 0; a.brake = 0; return; }
-      this.joinCircle(a, s === HK ? 40 + r() * 40 : 50 + r() * 50, r() < 0.5 ? 1 : -1);
-      a.alt = Math.max(s === HK ? 40 : 30, o.y - this.heights.atXZ(a.cx, a.cz)); a.V = 9;
-      a.state = s === HK ? H_SOAR : V_SOAR; a.t = 30 + r() * 40; return;
+      if (ID[s] === HK && !(o.where === 'air' && o.soaring)) { a.state = H_PULL; a.t = 4; a.speed = 9; a.pitch = 0; a.brake = 0; return; }
+      this.joinCircle(a, ID[s] === HK ? 40 + r() * 40 : 50 + r() * 50, r() < 0.5 ? 1 : -1);
+      a.alt = Math.max(ID[s] === HK ? 40 : 30, o.y - this.heights.atXZ(a.cx, a.cz)); a.V = 9;
+      a.state = ID[s] === HK ? H_SOAR : V_SOAR; a.t = 30 + r() * 40; return;
     }
-    if (s === SJ || s === ST) {   // perched, on the ground, or flying on to the group's tree
+    if (ID[s] === SJ || ID[s] === ST) {   // perched, on the ground, or flying on to the group's tree
       a.air = 0; a.moveSeen = grp ? grp.move : 0; a.hopU = 1;
-      if (o.where === 'top') { a.state = J_PERCH; a.t = 3 + r() * 6; a.pose = 1; a.tree = (s === ST ? this.nearestConifer(o.x, o.z, 20) : this.nearestOak(o.x, o.z, 20)) || a.tree || a.anchor; }
+      if (o.where === 'top') { a.state = J_PERCH; a.t = 3 + r() * 6; a.pose = 1; a.tree = (ID[s] === ST ? this.nearestConifer(o.x, o.z, 20) : this.nearestOak(o.x, o.z, 20)) || a.tree || a.anchor; }
       else if (o.where === 'ground') { a.y = g; a.state = J_GROUND; a.t = 3 + r() * 5; a.pose = 1; }
       else this.jayFly(a, grp?.tree || a.tree || a.anchor, false);
       return;
     }
     a.air = 0; a.fly = 0; a.y = g; a.vis = 1;
-    if (s === DR || s === BK) { a.state = D_GRAZE; a.t = 2 + r() * 4; a.pose = o.resting ? 1 : Math.min(a.pose, 0.2); }
-    else if (s === FX || s === CY || s === ML || s === BE) {
+    if (ID[s] === DR || ID[s] === BK) { a.state = D_GRAZE; a.t = 2 + r() * 4; a.pose = o.resting ? 1 : Math.min(a.pose, 0.2); }
+    else if (ID[s] === FX || ID[s] === CY || ID[s] === ML || ID[s] === BE) {
       a.tree = null; a.cool = 4; a.pose = o.resting ? this.poseMax[a.sp] : 0;
       a.state = o.resting ? M_BED : M_STAND; a.t = o.resting ? 20 + r() * 30 : 2 + r() * 4;
-    } else if (s === RB) { if (far(a.hx, a.hz)) { a.hx = o.x; a.hz = o.z; } a.state = B_FORAGE; a.t = 1 + r() * 3; a.pose = 0; }
-    else if (s === JR) {
+    } else if (ID[s] === RB) { if (far(a.hx, a.hz)) { a.hx = o.x; a.hz = o.z; } a.state = B_FORAGE; a.t = 1 + r() * 3; a.pose = 0; }
+    else if (ID[s] === JR) {
       if (far(a.hx, a.hz)) { a.hx = o.x; a.hz = o.z; }
       a.state = o.resting ? JK_FORM : JK_FEED; a.t = o.resting ? 20 + r() * 30 : 1 + r() * 3; a.pose = o.resting ? JACK.hunch : 0;
-    } else if (s === VO) {   // a new runway from here along its heading (the old one may be far)
+    } else if (ID[s] === VO) {   // a new runway from here along its heading (the old one may be far)
       const L = 1.5 + r() * 2;
       a.sx = o.x; a.sz = o.z; a.tx = o.x + Math.sin(a.yaw) * L; a.tz = o.z + Math.cos(a.yaw) * L; a.u = 0; a.h = 0; a.state = VL_PAUSE; a.t = 1 + r() * 2;
-    } else if (s === GS) { a.state = G_FEED; a.t = 2 + r() * 3; a.pose = 0; }
-    else if (s === LZ) {   // a new home on the ground here, facing its way
+    } else if (ID[s] === GS) { a.state = G_FEED; a.t = 2 + r() * 3; a.pose = 0; }
+    else if (ID[s] === LZ) {   // a new home on the ground here, facing its way
       a.site = { kind: 'ground', x: o.x, z: o.z, near: null };
       const h = a.home ||= { x: 0, y: 0, z: 0, nx: 0, ny: 1, nz: 0, fx: 0, fy: 0, fz: 1 };
       h.x = o.x; h.z = o.z; this.groundNormal(h.x, h.z, h); h.y = g;
       let fx = Math.sin(a.yaw), fz = Math.cos(a.yaw); const d = fx * h.nx + fz * h.nz;
       let fy = -h.ny * d; fx -= h.nx * d; fz -= h.nz * d; const L = Math.hypot(fx, fy, fz) || 1; h.fx = fx / L; h.fy = fy / L; h.fz = fz / L;
       this.lzHome(a); a.state = L_ALERT; a.t = 2 + r() * 4; a.tries = 0; a.fails = 0; a.pose = 0;
-    } else if (s === QU || s === MQ) { a.state = Q_FORAGE; a.t = 1 + r() * 2; a.pose = 1; a.pitch = 0; if (grp) { a.ox = a.x - grp.x; a.oz = a.z - grp.z; } }
-    else if (s === TK) { a.state = T_FORAGE; a.t = 1 + r() * 3; a.pose = 1; a.pitch = 0; if (grp) { a.ox = a.x - grp.x; a.oz = a.z - grp.z; } }
+    } else if (ID[s] === QU || ID[s] === MQ) { a.state = Q_FORAGE; a.t = 1 + r() * 2; a.pose = 1; a.pitch = 0; if (grp) { a.ox = a.x - grp.x; a.oz = a.z - grp.z; } }
+    else if (ID[s] === TK) { a.state = T_FORAGE; a.t = 1 + r() * 3; a.pose = 1; a.pitch = 0; if (grp) { a.ox = a.x - grp.x; a.oz = a.z - grp.z; } }
   }
   // Is this animal still in the live set (not dropped by a rebuild)?
   alive(a) { return this.byId.get(a.id) === a; }
@@ -5199,7 +5339,7 @@ export class Animals {
       a.e0 = m0[F.e0] * v + m1[F.e0] * u; a.e1 = m0[F.e1] * v + m1[F.e1] * u; a.e2 = m0[F.e2] * v + m1[F.e2] * u;
     }
     a.phase += (a.phz || 0) * dt;
-    if (KIN[a.sp] === ML || KIN[a.sp] === FX || a.sp === CY || a.sp === BE) a.lift = Math.max(0, a.lift);
+    if (KIN[a.sp] === ML || KIN[a.sp] === FX || ID[a.sp] === CY || ID[a.sp] === BE) a.lift = Math.max(0, a.lift);
   }
   mirrorDrop(n) {
     const a = this.byN.get(n); if (!a) return;
@@ -5326,12 +5466,12 @@ export class Animals {
     this.huntT = (this.huntT || 0) - dt;
     if (!mirror && (fresh || this.huntT <= 0)) { this.huntT = HUNT.every; this.refreshHunters(P); this.aiAlarms(); }   // the AI hunters (HUNT above)
     const sim = this.sim;   // the species run here: this player's perception and, as the host, every other player's
-    if (!mirror && sim[QU]) for (let k = 0; k < this.coveys.length; k++) this.coveyUpdate(this.coveys[k], dt, px, py, pz);
-    if (!mirror && sim[MQ]) for (let k = 0; k < this.mcoveys.length; k++) this.coveyUpdate(this.mcoveys[k], dt, px, py, pz);
+    if (!mirror) for (let k = 0; k < this.coveys.length; k++) if (sim[this.coveys[k].sp ?? QU]) this.coveyUpdate(this.coveys[k], dt, px, py, pz);   // (each by its own slot: a stand-in's too)
+    if (!mirror) for (let k = 0; k < this.mcoveys.length; k++) if (sim[this.mcoveys[k].sp ?? MQ]) this.coveyUpdate(this.mcoveys[k], dt, px, py, pz);
     if (!mirror) for (let k = 0; k < this.wcoveys.length; k++) this.coveyUpdate(this.wcoveys[k], dt, px, py, pz);   // the heron's and the mergansers' (HOH)
-    if (!mirror && sim[TK]) for (let k = 0; k < this.flocks.length; k++) this.flockUpdate(this.flocks[k], dt, px, pz);
+    if (!mirror) for (let k = 0; k < this.flocks.length; k++) if (sim[this.flocks[k].fsp ?? TK]) this.flockUpdate(this.flocks[k], dt, px, pz);
     if (!mirror) for (let k = 0; k < this.colonies.length; k++) if (sim[this.colonies[k].sp ?? GS]) this.colonyUpdate(this.colonies[k], dt, px, py, pz);
-    this.burrows.visible = (this.meshes[GS].visible || this.meshes[MO].visible) && this.burrowN > 0;
+    this.burrows.visible = this.colonies.some(g => this.meshes[g.sp ?? GS]?.visible) && this.burrowN > 0;
     const C = this.camPos, cx = C.x, cy = C.y, cz = C.z;
     const dt0 = dt;
     const camAGL = cy - this.heights.atXZ(cx, cz), cull = this.cullOn || [];

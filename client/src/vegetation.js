@@ -118,10 +118,14 @@ export function cellPlan(tile, i, j) {
   const clampD = v => Math.min(DENSITY[1], Math.max(DENSITY[0], v));
   const dens = row ? tile.speciesMix.density(i, j, row) : null;   // per cell (format 2) or the row's
   const td = dens ? clampD(dens[0]) : 1, sd = dens ? clampD(dens[1]) : 1;
-  const treeMix = (row && row.treeSum && knownMix(row.trees)) || MIX[cls], shrubMix = (row && row.shrubSum && knownMix(row.shrubs)) || SHRUB_MIX[cls];
+  // a tile built outside the regional tables (species_mix.json class_fallback false) never borrows the class mix, which is
+  // California's: a row without trees draws none (world pipeline phase 1, 2026-11-06: pines in the Amazon)
+  const noFallback = tile.speciesMix?.json?.class_fallback === false;
+  const treeMix = (row && row.treeSum && knownMix(row.trees)) || (noFallback ? null : MIX[cls]),
+    shrubMix = (row && row.shrubSum && knownMix(row.shrubs)) || (noFallback ? null : SHRUB_MIX[cls]);
   const rnd = mulberry32(hash(i, j, 7)), t = tree * td;
-  let nTrees = MIX[cls] ? Math.round(t * (cls === 5 ? 3 : 11) + (rnd() < (t * 11) % 1 ? 1 : 0)) : 0;
-  const nShrubs = SHRUB_MIX[cls] ? Math.round(shrub * sd * (cls === 4 ? 18 : 6)) : 0;
+  let nTrees = MIX[cls] && treeMix ? Math.round(t * (cls === 5 ? 3 : 11) + (rnd() < (t * 11) % 1 ? 1 : 0)) : 0;
+  const nShrubs = SHRUB_MIX[cls] && shrubMix ? Math.round(shrub * sd * (cls === 4 ? 18 : 6)) : 0;
   // Blue oak savanna the canopy layer calls treeless (EVC tree cover 0): about one oak per two cells.
   let savannaOak = false;
   if (!nTrees && tree === 0 && row?.savanna && (cls === 5 || cls === 1) && (hash(i, j, 23) & 1)) { nTrees = 1; savannaOak = true; }
@@ -143,6 +147,7 @@ function shrubScale(tile, i, j, nShrubs) {
 // where the class grows no trees. The crown plan (crowns.js) draws a crown's species from it.
 export function cellTreeMix(tile, i, j) {
   const cls = tile.habitat.channel(i, j, 0), row = tile.speciesMix ? tile.speciesMix.at(i, j) : null;
+  if (tile.speciesMix?.json?.class_fallback === false) return (row && row.treeSum && knownMix(row.trees)) || null;
   return (row && row.treeSum && knownMix(row.trees)) || MIX[cls] || null;
 }
 cellTreeMix.fallback = MIX[5];

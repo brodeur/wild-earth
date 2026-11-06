@@ -1,0 +1,118 @@
+{
+ "id": "rubigula_erythropthalmos",
+ "scientific": "Rubigula erythropthalmos",
+ "common": "spectacled bulbul",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Passeriformes",
+  "family": "Pycnonotidae",
+  "genus": "Rubigula"
+ },
+ "body_plan": "bird",
+ "mass_kg": 0.0361,
+ "size": {
+  "length_m": 0.119,
+  "shoulder_or_wingspan_m": 0.19
+ },
+ "diet": {
+  "role": [
+   "omnivore"
+  ],
+  "diet_tenths": {
+   "inv": 4.1,
+   "vend": 0.0,
+   "vect": 0.1,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 4.6,
+   "nect": 0.2,
+   "seed": 0.6,
+   "planto": 0.3
+  },
+  "vertebrate_share": 0.02,
+  "mass_kg": 0.0361,
+  "activity": [],
+  "source": "eltontraits (family)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 257.3
+  },
+  "sound": {
+   "range_m": 128.7
+  },
+  "scent": {
+   "range_m": 10.3
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "rubigula_erythropthalmos",
+  "class": "Aves",
+  "order": "Passeriformes",
+  "family": "Pycnonotidae",
+  "body_plan": "bird",
+  "mass_kg": 0.0361,
+  "length_m": 0.119,
+  "hip_m": 0.059,
+  "posture": "biped",
+  "gaits": {
+   "ground": "hop",
+   "flight": "flap-glide"
+  },
+  "walk_mps": 0.54,
+  "trot_mps": 1.21,
+  "cruise_mps": 1.57,
+  "top_mps": 2.62,
+  "stride_hz": 6.9,
+  "stride_m": 0.18,
+  "sprint_s": 1.6,
+  "recover_s": 5.7,
+  "turn_rad_s": 7.27,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.036,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": true
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T06:19:55Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (family)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

@@ -1,5 +1,6 @@
 {
  "format": 2,
+ "class_fallback": false,
  "grid": {
   "crs": "EPSG:32650",
   "bounds": [
@@ -80,20 +81,29 @@
   "terrain": "mixes[].terrain: the terrain classes (effective elevation band, floor / mid-slope / steep, north) whose cells use the row; a community (communities[], one per source and code: its name, the weights and densities as written, and a note) has one row per distinct terrain response (pipeline species_mix.py TERRAIN), and mixes[].community names it. The bytes are after the terrain factors"
  },
  "mixes": [
-  {"index":1,"source":"evt","code":9001,"name":"T1.1 Tropical/subtropical lowland rainforests","rule":"research_T1_1","community":1,"terrain":["<450 m floor","<450 m floor north","<450 m mid-slope","<450 m mid-slope north","<450 m steep","<450 m steep north","450-525 m floor","450-525 m floor north","450-525 m mid-slope","450-525 m mid-slope north","450-525 m steep","450-525 m steep north","525-600 m floor","525-600 m mid-slope","525-600 m mid-slope north","525-600 m steep","525-600 m steep north","600-1100 m floor","600-1100 m floor north","600-1100 m mid-slope","600-1100 m mid-slope north","600-1100 m steep","600-1100 m steep north"],"cells":110629,"tree_bytes":[["dryobalanops_lanceolata",64],["macaranga_gigantea",64],["parashorea_malaanonan",64],["shorea_leprosula",63]],"shrub_bytes":[],"ground_bytes":[],"density_bytes":[110,0]},
-  {"index":2,"source":"evt","code":9012,"name":"T4.1 Trophic savannas","rule":"research_T4_1","community":2,"terrain":["<450 m floor","<450 m mid-slope","<450 m mid-slope north"],"cells":8,"tree_bytes":[["dryobalanops_lanceolata",64],["macaranga_gigantea",64],["parashorea_malaanonan",64],["shorea_leprosula",63]],"shrub_bytes":[],"ground_bytes":[],"density_bytes":[5,0]},
-  {"index":3,"source":"evt","code":9020,"name":"T6.2 Polar/alpine cliffs, screes, outcrops and lava flows","rule":"research_T6_2","community":3,"terrain":["<450 m floor","<450 m mid-slope","<450 m mid-slope north","<450 m steep","<450 m steep north"],"cells":49,"tree_bytes":[["dryobalanops_lanceolata",64],["macaranga_gigantea",64],["parashorea_malaanonan",64],["shorea_leprosula",63]],"shrub_bytes":[],"ground_bytes":[],"density_bytes":[5,0]},
-  {"index":4,"source":"evt","code":9028,"name":"F1 Rivers and streams","rule":"research_F1","community":4,"terrain":["<450 m steep"],"cells":9,"tree_bytes":[["dryobalanops_lanceolata",64],["macaranga_gigantea",64],["parashorea_malaanonan",64],["shorea_leprosula",63]],"shrub_bytes":[],"ground_bytes":[],"density_bytes":[0,0]},
-  {"index":5,"source":"evt","code":9029,"name":"F2 Lakes","rule":"research_F2","community":5,"terrain":["<450 m floor","<450 m mid-slope","<450 m mid-slope north","<450 m steep","<450 m steep north"],"cells":188,"tree_bytes":[["dryobalanops_lanceolata",64],["macaranga_gigantea",64],["parashorea_malaanonan",64],["shorea_leprosula",63]],"shrub_bytes":[],"ground_bytes":[],"density_bytes":[0,0]},
-  {"index":6,"source":"bps","code":9001,"name":"T1.1 Tropical/subtropical lowland rainforests","rule":"research_T1_1","community":6,"terrain":["<450 m floor","<450 m mid-slope","<450 m steep"],"cells":6,"tree_bytes":[["dryobalanops_lanceolata",64],["macaranga_gigantea",64],["parashorea_malaanonan",64],["shorea_leprosula",63]],"shrub_bytes":[],"ground_bytes":[],"density_bytes":[110,0]}
+  {"index":1,"source":"evt","code":9001,"name":"T1.1 Tropical/subtropical lowland rainforests","rule":"research_T1_1","community":1,"terrain":["<450 m floor","<450 m floor north","450-525 m floor","450-525 m floor north","525-600 m floor","600-1100 m floor","600-1100 m floor north"],"cells":3423,"tree_bytes":[["dryobalanops_lanceolata",46],["macaranga_gigantea",64],["parashorea_malaanonan",81],["shorea_leprosula",64]],"shrub_bytes":[],"ground_bytes":[],"density_bytes":[110,0]},
+  {"index":2,"source":"evt","code":9001,"name":"T1.1 Tropical/subtropical lowland rainforests","rule":"research_T1_1","community":1,"terrain":["<450 m mid-slope","<450 m mid-slope north","450-525 m mid-slope","450-525 m mid-slope north","525-600 m mid-slope","525-600 m mid-slope north","600-1100 m mid-slope","600-1100 m mid-slope north"],"cells":50796,"tree_bytes":[["dryobalanops_lanceolata",67],["macaranga_gigantea",61],["parashorea_malaanonan",60],["shorea_leprosula",67]],"shrub_bytes":[],"ground_bytes":[],"density_bytes":[110,0]},
+  {"index":3,"source":"evt","code":9001,"name":"T1.1 Tropical/subtropical lowland rainforests","rule":"research_T1_1","community":1,"terrain":["<450 m steep","<450 m steep north","450-525 m steep","450-525 m steep north","525-600 m steep","525-600 m steep north","600-1100 m steep","600-1100 m steep north"],"cells":56410,"tree_bytes":[["dryobalanops_lanceolata",75],["macaranga_gigantea",75],["parashorea_malaanonan",45],["shorea_leprosula",60]],"shrub_bytes":[],"ground_bytes":[],"density_bytes":[110,0]},
+  {"index":4,"source":"evt","code":9012,"name":"T4.1 Trophic savannas","rule":"research_T4_1","community":2,"terrain":["<450 m floor"],"cells":2,"tree_bytes":[["dryobalanops_lanceolata",46],["macaranga_gigantea",64],["parashorea_malaanonan",81],["shorea_leprosula",64]],"shrub_bytes":[],"ground_bytes":[],"density_bytes":[5,0]},
+  {"index":5,"source":"evt","code":9012,"name":"T4.1 Trophic savannas","rule":"research_T4_1","community":2,"terrain":["<450 m mid-slope","<450 m mid-slope north"],"cells":6,"tree_bytes":[["dryobalanops_lanceolata",67],["macaranga_gigantea",61],["parashorea_malaanonan",60],["shorea_leprosula",67]],"shrub_bytes":[],"ground_bytes":[],"density_bytes":[5,0]},
+  {"index":6,"source":"evt","code":9020,"name":"T6.2 Polar/alpine cliffs, screes, outcrops and lava flows","rule":"research_T6_2","community":3,"terrain":["<450 m floor"],"cells":11,"tree_bytes":[["dryobalanops_lanceolata",46],["macaranga_gigantea",64],["parashorea_malaanonan",81],["shorea_leprosula",64]],"shrub_bytes":[],"ground_bytes":[],"density_bytes":[5,0]},
+  {"index":7,"source":"evt","code":9020,"name":"T6.2 Polar/alpine cliffs, screes, outcrops and lava flows","rule":"research_T6_2","community":3,"terrain":["<450 m mid-slope","<450 m mid-slope north"],"cells":19,"tree_bytes":[["dryobalanops_lanceolata",67],["macaranga_gigantea",61],["parashorea_malaanonan",60],["shorea_leprosula",67]],"shrub_bytes":[],"ground_bytes":[],"density_bytes":[5,0]},
+  {"index":8,"source":"evt","code":9020,"name":"T6.2 Polar/alpine cliffs, screes, outcrops and lava flows","rule":"research_T6_2","community":3,"terrain":["<450 m steep","<450 m steep north"],"cells":19,"tree_bytes":[["dryobalanops_lanceolata",75],["macaranga_gigantea",75],["parashorea_malaanonan",45],["shorea_leprosula",60]],"shrub_bytes":[],"ground_bytes":[],"density_bytes":[5,0]},
+  {"index":9,"source":"evt","code":9028,"name":"F1 Rivers and streams","rule":"research_F1","community":4,"terrain":["<450 m steep"],"cells":9,"tree_bytes":[["dryobalanops_lanceolata",75],["macaranga_gigantea",75],["parashorea_malaanonan",45],["shorea_leprosula",60]],"shrub_bytes":[],"ground_bytes":[],"density_bytes":[0,0]},
+  {"index":10,"source":"evt","code":9029,"name":"F2 Lakes","rule":"research_F2","community":5,"terrain":["<450 m floor"],"cells":8,"tree_bytes":[["dryobalanops_lanceolata",46],["macaranga_gigantea",64],["parashorea_malaanonan",81],["shorea_leprosula",64]],"shrub_bytes":[],"ground_bytes":[],"density_bytes":[0,0]},
+  {"index":11,"source":"evt","code":9029,"name":"F2 Lakes","rule":"research_F2","community":5,"terrain":["<450 m mid-slope","<450 m mid-slope north"],"cells":33,"tree_bytes":[["dryobalanops_lanceolata",67],["macaranga_gigantea",61],["parashorea_malaanonan",60],["shorea_leprosula",67]],"shrub_bytes":[],"ground_bytes":[],"density_bytes":[0,0]},
+  {"index":12,"source":"evt","code":9029,"name":"F2 Lakes","rule":"research_F2","community":5,"terrain":["<450 m steep","<450 m steep north"],"cells":147,"tree_bytes":[["dryobalanops_lanceolata",75],["macaranga_gigantea",75],["parashorea_malaanonan",45],["shorea_leprosula",60]],"shrub_bytes":[],"ground_bytes":[],"density_bytes":[0,0]},
+  {"index":13,"source":"bps","code":9001,"name":"T1.1 Tropical/subtropical lowland rainforests","rule":"research_T1_1","community":6,"terrain":["<450 m floor"],"cells":1,"tree_bytes":[["dryobalanops_lanceolata",46],["macaranga_gigantea",64],["parashorea_malaanonan",81],["shorea_leprosula",64]],"shrub_bytes":[],"ground_bytes":[],"density_bytes":[110,0]},
+  {"index":14,"source":"bps","code":9001,"name":"T1.1 Tropical/subtropical lowland rainforests","rule":"research_T1_1","community":6,"terrain":["<450 m mid-slope"],"cells":3,"tree_bytes":[["dryobalanops_lanceolata",67],["macaranga_gigantea",61],["parashorea_malaanonan",60],["shorea_leprosula",67]],"shrub_bytes":[],"ground_bytes":[],"density_bytes":[110,0]},
+  {"index":15,"source":"bps","code":9001,"name":"T1.1 Tropical/subtropical lowland rainforests","rule":"research_T1_1","community":6,"terrain":["<450 m steep"],"cells":2,"tree_bytes":[["dryobalanops_lanceolata",75],["macaranga_gigantea",75],["parashorea_malaanonan",45],["shorea_leprosula",60]],"shrub_bytes":[],"ground_bytes":[],"density_bytes":[110,0]}
  ],
  "communities": [
-  {"community":1,"source":"evt","code":9001,"name":"T1.1 Tropical/subtropical lowland rainforests","rule":"research_T1_1","trees":{"dryobalanops_lanceolata":1.0,"macaranga_gigantea":1.0,"parashorea_malaanonan":1.0,"shorea_leprosula":1.0},"shrubs":{},"ground":{},"tree_density":1.1,"shrub_density":0.0,"note":"no regional rule: the tile's researched species with a record (plant_needs), weighted by records","fixed":[],"cells":110629},
-  {"community":2,"source":"evt","code":9012,"name":"T4.1 Trophic savannas","rule":"research_T4_1","trees":{"dryobalanops_lanceolata":1.0,"macaranga_gigantea":1.0,"parashorea_malaanonan":1.0,"shorea_leprosula":1.0},"shrubs":{},"ground":{},"tree_density":0.05,"shrub_density":0.0,"note":"no regional rule: the tile's researched species with a record (plant_needs), weighted by records","fixed":[],"cells":8},
-  {"community":3,"source":"evt","code":9020,"name":"T6.2 Polar/alpine cliffs, screes, outcrops and lava flows","rule":"research_T6_2","trees":{"dryobalanops_lanceolata":1.0,"macaranga_gigantea":1.0,"parashorea_malaanonan":1.0,"shorea_leprosula":1.0},"shrubs":{},"ground":{},"tree_density":0.05,"shrub_density":0.0,"note":"no regional rule: the tile's researched species with a record (plant_needs), weighted by records","fixed":[],"cells":49},
-  {"community":4,"source":"evt","code":9028,"name":"F1 Rivers and streams","rule":"research_F1","trees":{"dryobalanops_lanceolata":1.0,"macaranga_gigantea":1.0,"parashorea_malaanonan":1.0,"shorea_leprosula":1.0},"shrubs":{},"ground":{},"tree_density":0.0,"shrub_density":0.0,"note":"no regional rule: the tile's researched species with a record (plant_needs), weighted by records","fixed":[],"cells":9},
-  {"community":5,"source":"evt","code":9029,"name":"F2 Lakes","rule":"research_F2","trees":{"dryobalanops_lanceolata":1.0,"macaranga_gigantea":1.0,"parashorea_malaanonan":1.0,"shorea_leprosula":1.0},"shrubs":{},"ground":{},"tree_density":0.0,"shrub_density":0.0,"note":"no regional rule: the tile's researched species with a record (plant_needs), weighted by records","fixed":[],"cells":188},
-  {"community":6,"source":"bps","code":9001,"name":"T1.1 Tropical/subtropical lowland rainforests","rule":"research_T1_1","trees":{"dryobalanops_lanceolata":1.0,"macaranga_gigantea":1.0,"parashorea_malaanonan":1.0,"shorea_leprosula":1.0},"shrubs":{},"ground":{},"tree_density":1.1,"shrub_density":0.0,"note":"no regional rule: the tile's researched species with a record (plant_needs), weighted by records","fixed":[],"cells":6}
+  {"community":1,"source":"evt","code":9001,"name":"T1.1 Tropical/subtropical lowland rainforests","rule":"research_T1_1","trees":{"dryobalanops_lanceolata":1.0,"macaranga_gigantea":1.0,"parashorea_malaanonan":1.0,"shorea_leprosula":1.0},"shrubs":{},"ground":{},"tree_density":1.1,"shrub_density":0.0,"note":"no regional rule: the tile's researched species with a record (plant_needs), weighted by records and their niche","fixed":[],"cells":110629},
+  {"community":2,"source":"evt","code":9012,"name":"T4.1 Trophic savannas","rule":"research_T4_1","trees":{"dryobalanops_lanceolata":0.05,"macaranga_gigantea":0.05,"parashorea_malaanonan":0.05,"shorea_leprosula":0.05},"shrubs":{},"ground":{},"tree_density":0.05,"shrub_density":0.0,"note":"no regional rule: the tile's researched species with a record (plant_needs), weighted by records and their niche","fixed":[],"cells":8},
+  {"community":3,"source":"evt","code":9020,"name":"T6.2 Polar/alpine cliffs, screes, outcrops and lava flows","rule":"research_T6_2","trees":{"dryobalanops_lanceolata":0.05,"macaranga_gigantea":0.05,"parashorea_malaanonan":0.05,"shorea_leprosula":0.05},"shrubs":{},"ground":{},"tree_density":0.05,"shrub_density":0.0,"note":"no regional rule: the tile's researched species with a record (plant_needs), weighted by records and their niche","fixed":[],"cells":49},
+  {"community":4,"source":"evt","code":9028,"name":"F1 Rivers and streams","rule":"research_F1","trees":{"dryobalanops_lanceolata":0.05,"macaranga_gigantea":0.05,"parashorea_malaanonan":0.05,"shorea_leprosula":0.05},"shrubs":{},"ground":{},"tree_density":0.0,"shrub_density":0.0,"note":"no regional rule: the tile's researched species with a record (plant_needs), weighted by records and their niche","fixed":[],"cells":9},
+  {"community":5,"source":"evt","code":9029,"name":"F2 Lakes","rule":"research_F2","trees":{"dryobalanops_lanceolata":0.05,"macaranga_gigantea":0.05,"parashorea_malaanonan":0.05,"shorea_leprosula":0.05},"shrubs":{},"ground":{},"tree_density":0.0,"shrub_density":0.0,"note":"no regional rule: the tile's researched species with a record (plant_needs), weighted by records and their niche","fixed":[],"cells":188},
+  {"community":6,"source":"bps","code":9001,"name":"T1.1 Tropical/subtropical lowland rainforests","rule":"research_T1_1","trees":{"dryobalanops_lanceolata":1.0,"macaranga_gigantea":1.0,"parashorea_malaanonan":1.0,"shorea_leprosula":1.0},"shrubs":{},"ground":{},"tree_density":1.1,"shrub_density":0.0,"note":"no regional rule: the tile's researched species with a record (plant_needs), weighted by records and their niche","fixed":[],"cells":6}
  ],
  "unmatched": [],
  "fractions": {
@@ -121,10 +131,10 @@
    "red_willow": 0.0,
    "pacific_willow": 0.0,
    "sycamore": 0.0,
-   "dryobalanops_lanceolata": 0.251,
-   "macaranga_gigantea": 0.251,
-   "parashorea_malaanonan": 0.251,
-   "shorea_leprosula": 0.2471
+   "dryobalanops_lanceolata": 0.2762,
+   "macaranga_gigantea": 0.2676,
+   "parashorea_malaanonan": 0.2078,
+   "shorea_leprosula": 0.2484
   },
   "tree_share_by_canopy": {
    "blue_oak": 0.0,
@@ -148,10 +158,10 @@
    "red_willow": 0.0,
    "pacific_willow": 0.0,
    "sycamore": 0.0,
-   "dryobalanops_lanceolata": 0.251,
-   "macaranga_gigantea": 0.251,
-   "parashorea_malaanonan": 0.251,
-   "shorea_leprosula": 0.2471
+   "dryobalanops_lanceolata": 0.276,
+   "macaranga_gigantea": 0.2672,
+   "parashorea_malaanonan": 0.2083,
+   "shorea_leprosula": 0.2486
   },
   "shrub_share": {
    "manzanita": 0.0,

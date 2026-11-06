@@ -1,5 +1,6 @@
 {
  "format": 2,
+ "class_fallback": false,
  "grid": {
   "crs": "EPSG:32736",
   "bounds": [
@@ -82,18 +83,22 @@
   "terrain": "mixes[].terrain: the terrain classes (effective elevation band, floor / mid-slope / steep, north) whose cells use the row; a community (communities[], one per source and code: its name, the weights and densities as written, and a note) has one row per distinct terrain response (pipeline species_mix.py TERRAIN), and mixes[].community names it. The bytes are after the terrain factors"
  },
  "mixes": [
-  {"index":1,"source":"evt","code":9002,"name":"T1.2 Tropical/subtropical dry forests and thickets","rule":"research_T1_2","community":1,"terrain":["1100-1800 m floor","1100-1800 m mid-slope"],"cells":11,"tree_bytes":[["kigelia_africana",193],["vachellia_tortilis",56],["balanites_aegyptiaca",6]],"shrub_bytes":[["vachellia_drepanolobium",255]],"ground_bytes":[["themeda_triandra",255]],"density_bytes":[110,50]},
-  {"index":2,"source":"evt","code":9012,"name":"T4.1 Trophic savannas","rule":"research_T4_1","community":2,"terrain":["1100-1800 m floor","1100-1800 m mid-slope","1100-1800 m mid-slope north","1100-1800 m steep"],"cells":110432,"tree_bytes":[["kigelia_africana",193],["vachellia_tortilis",56],["balanites_aegyptiaca",6]],"shrub_bytes":[["vachellia_drepanolobium",255]],"ground_bytes":[["themeda_triandra",255]],"density_bytes":[5,20]},
-  {"index":3,"source":"evt","code":9013,"name":"T4.2 Pyric tussock savannas","rule":"research_T4_2","community":3,"terrain":["1100-1800 m floor","1100-1800 m mid-slope","1100-1800 m mid-slope north"],"cells":287,"tree_bytes":[["kigelia_africana",193],["vachellia_tortilis",56],["balanites_aegyptiaca",6]],"shrub_bytes":[["vachellia_drepanolobium",255]],"ground_bytes":[["themeda_triandra",255]],"density_bytes":[5,20]},
-  {"index":4,"source":"evt","code":9020,"name":"T6.2 Polar/alpine cliffs, screes, outcrops and lava flows","rule":"research_T6_2","community":4,"terrain":["1100-1800 m mid-slope"],"cells":26,"tree_bytes":[["kigelia_africana",193],["vachellia_tortilis",56],["balanites_aegyptiaca",6]],"shrub_bytes":[["vachellia_drepanolobium",255]],"ground_bytes":[],"density_bytes":[5,10]},
-  {"index":5,"source":"bps","code":9012,"name":"T4.1 Trophic savannas","rule":"research_T4_1","community":5,"terrain":["1100-1800 m mid-slope","1100-1800 m mid-slope north"],"cells":133,"tree_bytes":[["kigelia_africana",193],["vachellia_tortilis",56],["balanites_aegyptiaca",6]],"shrub_bytes":[["vachellia_drepanolobium",255]],"ground_bytes":[["themeda_triandra",255]],"density_bytes":[5,20]}
+  {"index":1,"source":"evt","code":9002,"name":"T1.2 Tropical/subtropical dry forests and thickets","rule":"research_T1_2","community":1,"terrain":["1100-1800 m floor"],"cells":1,"tree_bytes":[["kigelia_africana",233],["vachellia_tortilis",21],["balanites_aegyptiaca",1]],"shrub_bytes":[["vachellia_drepanolobium",255]],"ground_bytes":[["themeda_triandra",255]],"density_bytes":[110,50]},
+  {"index":2,"source":"evt","code":9002,"name":"T1.2 Tropical/subtropical dry forests and thickets","rule":"research_T1_2","community":1,"terrain":["1100-1800 m mid-slope"],"cells":10,"tree_bytes":[["kigelia_africana",200],["vachellia_tortilis",53],["balanites_aegyptiaca",2]],"shrub_bytes":[["vachellia_drepanolobium",255]],"ground_bytes":[["themeda_triandra",255]],"density_bytes":[110,50]},
+  {"index":3,"source":"evt","code":9012,"name":"T4.1 Trophic savannas","rule":"research_T4_1","community":2,"terrain":["1100-1800 m floor"],"cells":307,"tree_bytes":[["kigelia_africana",52],["vachellia_tortilis",187],["balanites_aegyptiaca",16]],"shrub_bytes":[["vachellia_drepanolobium",255]],"ground_bytes":[["themeda_triandra",255]],"density_bytes":[5,20]},
+  {"index":4,"source":"evt","code":9012,"name":"T4.1 Trophic savannas","rule":"research_T4_1","community":2,"terrain":["1100-1800 m mid-slope","1100-1800 m mid-slope north"],"cells":110124,"tree_bytes":[["kigelia_africana",21],["vachellia_tortilis",221],["balanites_aegyptiaca",13]],"shrub_bytes":[["vachellia_drepanolobium",255]],"ground_bytes":[["themeda_triandra",255]],"density_bytes":[5,20]},
+  {"index":5,"source":"evt","code":9012,"name":"T4.1 Trophic savannas","rule":"research_T4_1","community":2,"terrain":["1100-1800 m steep"],"cells":1,"tree_bytes":[["kigelia_africana",25],["vachellia_tortilis",216],["balanites_aegyptiaca",14]],"shrub_bytes":[["vachellia_drepanolobium",255]],"ground_bytes":[["themeda_triandra",255]],"density_bytes":[5,20]},
+  {"index":6,"source":"evt","code":9013,"name":"T4.2 Pyric tussock savannas","rule":"research_T4_2","community":3,"terrain":["1100-1800 m floor"],"cells":5,"tree_bytes":[["kigelia_africana",52],["vachellia_tortilis",187],["balanites_aegyptiaca",16]],"shrub_bytes":[["vachellia_drepanolobium",255]],"ground_bytes":[["themeda_triandra",255]],"density_bytes":[5,20]},
+  {"index":7,"source":"evt","code":9013,"name":"T4.2 Pyric tussock savannas","rule":"research_T4_2","community":3,"terrain":["1100-1800 m mid-slope","1100-1800 m mid-slope north"],"cells":282,"tree_bytes":[["kigelia_africana",21],["vachellia_tortilis",221],["balanites_aegyptiaca",13]],"shrub_bytes":[["vachellia_drepanolobium",255]],"ground_bytes":[["themeda_triandra",255]],"density_bytes":[5,20]},
+  {"index":8,"source":"evt","code":9020,"name":"T6.2 Polar/alpine cliffs, screes, outcrops and lava flows","rule":"research_T6_2","community":4,"terrain":["1100-1800 m mid-slope"],"cells":26,"tree_bytes":[["kigelia_africana",161],["vachellia_tortilis",85],["balanites_aegyptiaca",9]],"shrub_bytes":[["vachellia_drepanolobium",255]],"ground_bytes":[],"density_bytes":[5,10]},
+  {"index":9,"source":"bps","code":9012,"name":"T4.1 Trophic savannas","rule":"research_T4_1","community":5,"terrain":["1100-1800 m mid-slope","1100-1800 m mid-slope north"],"cells":133,"tree_bytes":[["kigelia_africana",21],["vachellia_tortilis",221],["balanites_aegyptiaca",13]],"shrub_bytes":[["vachellia_drepanolobium",255]],"ground_bytes":[["themeda_triandra",255]],"density_bytes":[5,20]}
  ],
  "communities": [
-  {"community":1,"source":"evt","code":9002,"name":"T1.2 Tropical/subtropical dry forests and thickets","rule":"research_T1_2","trees":{"kigelia_africana":31.0,"vachellia_tortilis":9.0,"balanites_aegyptiaca":1.0},"shrubs":{"vachellia_drepanolobium":1.0},"ground":{"themeda_triandra":0.15},"tree_density":1.1,"shrub_density":0.5,"note":"no regional rule: the tile's researched species with a record (plant_needs), weighted by records","fixed":[],"cells":11},
-  {"community":2,"source":"evt","code":9012,"name":"T4.1 Trophic savannas","rule":"research_T4_1","trees":{"kigelia_africana":31.0,"vachellia_tortilis":9.0,"balanites_aegyptiaca":1.0},"shrubs":{"vachellia_drepanolobium":1.0},"ground":{"themeda_triandra":1.0},"tree_density":0.05,"shrub_density":0.2,"note":"no regional rule: the tile's researched species with a record (plant_needs), weighted by records","fixed":[],"cells":110432},
-  {"community":3,"source":"evt","code":9013,"name":"T4.2 Pyric tussock savannas","rule":"research_T4_2","trees":{"kigelia_africana":31.0,"vachellia_tortilis":9.0,"balanites_aegyptiaca":1.0},"shrubs":{"vachellia_drepanolobium":1.0},"ground":{"themeda_triandra":1.0},"tree_density":0.05,"shrub_density":0.2,"note":"no regional rule: the tile's researched species with a record (plant_needs), weighted by records","fixed":[],"cells":287},
-  {"community":4,"source":"evt","code":9020,"name":"T6.2 Polar/alpine cliffs, screes, outcrops and lava flows","rule":"research_T6_2","trees":{"kigelia_africana":31.0,"vachellia_tortilis":9.0,"balanites_aegyptiaca":1.0},"shrubs":{"vachellia_drepanolobium":1.0},"ground":{},"tree_density":0.05,"shrub_density":0.1,"note":"no regional rule: the tile's researched species with a record (plant_needs), weighted by records","fixed":[],"cells":26},
-  {"community":5,"source":"bps","code":9012,"name":"T4.1 Trophic savannas","rule":"research_T4_1","trees":{"kigelia_africana":31.0,"vachellia_tortilis":9.0,"balanites_aegyptiaca":1.0},"shrubs":{"vachellia_drepanolobium":1.0},"ground":{"themeda_triandra":1.0},"tree_density":0.05,"shrub_density":0.2,"note":"no regional rule: the tile's researched species with a record (plant_needs), weighted by records","fixed":[],"cells":133}
+  {"community":1,"source":"evt","code":9002,"name":"T1.2 Tropical/subtropical dry forests and thickets","rule":"research_T1_2","trees":{"kigelia_africana":12.4,"vachellia_tortilis":1.8,"balanites_aegyptiaca":0.05},"shrubs":{"vachellia_drepanolobium":0.05},"ground":{"themeda_triandra":0.15},"tree_density":1.1,"shrub_density":0.5,"note":"no regional rule: the tile's researched species with a record (plant_needs), weighted by records and their niche","fixed":[],"cells":11},
+  {"community":2,"source":"evt","code":9012,"name":"T4.1 Trophic savannas","rule":"research_T4_1","trees":{"kigelia_africana":1.55,"vachellia_tortilis":9.0,"balanites_aegyptiaca":0.6},"shrubs":{"vachellia_drepanolobium":1.0},"ground":{"themeda_triandra":1.0},"tree_density":0.05,"shrub_density":0.2,"note":"no regional rule: the tile's researched species with a record (plant_needs), weighted by records and their niche","fixed":[],"cells":110432},
+  {"community":3,"source":"evt","code":9013,"name":"T4.2 Pyric tussock savannas","rule":"research_T4_2","trees":{"kigelia_africana":1.55,"vachellia_tortilis":9.0,"balanites_aegyptiaca":0.6},"shrubs":{"vachellia_drepanolobium":1.0},"ground":{"themeda_triandra":1.0},"tree_density":0.05,"shrub_density":0.2,"note":"no regional rule: the tile's researched species with a record (plant_needs), weighted by records and their niche","fixed":[],"cells":287},
+  {"community":4,"source":"evt","code":9020,"name":"T6.2 Polar/alpine cliffs, screes, outcrops and lava flows","rule":"research_T6_2","trees":{"kigelia_africana":1.55,"vachellia_tortilis":0.45,"balanites_aegyptiaca":0.05},"shrubs":{"vachellia_drepanolobium":0.05},"ground":{},"tree_density":0.05,"shrub_density":0.1,"note":"no regional rule: the tile's researched species with a record (plant_needs), weighted by records and their niche","fixed":[],"cells":26},
+  {"community":5,"source":"bps","code":9012,"name":"T4.1 Trophic savannas","rule":"research_T4_1","trees":{"kigelia_africana":1.55,"vachellia_tortilis":9.0,"balanites_aegyptiaca":0.6},"shrubs":{"vachellia_drepanolobium":1.0},"ground":{"themeda_triandra":1.0},"tree_density":0.05,"shrub_density":0.2,"note":"no regional rule: the tile's researched species with a record (plant_needs), weighted by records and their niche","fixed":[],"cells":133}
  ],
  "unmatched": [],
  "fractions": {
@@ -121,9 +126,9 @@
    "red_willow": 0.0,
    "pacific_willow": 0.0,
    "sycamore": 0.0,
-   "kigelia_africana": 0.7569,
-   "vachellia_tortilis": 0.2196,
-   "balanites_aegyptiaca": 0.0235
+   "kigelia_africana": 0.0844,
+   "vachellia_tortilis": 0.8647,
+   "balanites_aegyptiaca": 0.0509
   },
   "tree_share_by_canopy": {
    "blue_oak": 0.0,
@@ -147,9 +152,9 @@
    "red_willow": 0.0,
    "pacific_willow": 0.0,
    "sycamore": 0.0,
-   "kigelia_africana": 0.7569,
-   "vachellia_tortilis": 0.2196,
-   "balanites_aegyptiaca": 0.0235
+   "kigelia_africana": 0.1995,
+   "vachellia_tortilis": 0.7565,
+   "balanites_aegyptiaca": 0.044
   },
   "shrub_share": {
    "manzanita": 0.0,

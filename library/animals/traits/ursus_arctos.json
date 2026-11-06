@@ -1,0 +1,130 @@
+{
+ "id": "ursus_arctos",
+ "scientific": "Ursus arctos",
+ "common": "brown bear",
+ "kind": "mammal",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Mammalia",
+  "order": "Carnivora",
+  "family": "Ursidae",
+  "genus": "Ursus"
+ },
+ "body_plan": "quadruped",
+ "mass_kg": 180.5204,
+ "size": {
+  "length_m": 2.035,
+  "shoulder_or_wingspan_m": 1.262
+ },
+ "diet": {
+  "role": [
+   "herbivore"
+  ],
+  "diet_tenths": {
+   "inv": 1.0,
+   "vend": 1.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 2.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 6.0
+  },
+  "vertebrate_share": 0.1,
+  "mass_kg": 180.5204,
+  "activity": [
+   "crepuscular",
+   "diurnal"
+  ],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 706.7
+  },
+  "sound": {
+   "range_m": 989.4
+  },
+  "scent": {
+   "range_m": 1413.4
+  }
+ },
+ "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+ "locomotion": {
+  "code": "ursus_arctos",
+  "class": "Mammalia",
+  "order": "Carnivora",
+  "family": "Ursidae",
+  "body_plan": "quadruped",
+  "mass_kg": 180.5204,
+  "length_m": 2.035,
+  "hip_m": 1.262,
+  "posture": "plantigrade",
+  "gaits": {
+   "walk": "amble",
+   "trot": "froude 2.5",
+   "gallop": "beyond",
+   "run": "bound"
+  },
+  "walk_mps": 2.49,
+  "trot_mps": 5.56,
+  "cruise_mps": 7.72,
+  "top_mps": 15.45,
+  "stride_hz": 1.92,
+  "stride_m": 2.89,
+  "sprint_s": 8.3,
+  "recover_s": 48.2,
+  "turn_rad_s": 1.76,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.188,
+   "max_rad": 0.44,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {},
+  "flier": false,
+  "catch": {
+   "move": "swat",
+   "name": "the swat",
+   "reach_m": 1.8,
+   "feed": {
+    "pose": "standing over it, head down",
+    "s": 60
+   }
+  }
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T06:19:56Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

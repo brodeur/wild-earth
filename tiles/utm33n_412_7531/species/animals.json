@@ -1,12 +1,12 @@
 {
  "tile": "utm33n_412_7531",
- "at": "2026-11-06T04:16:04Z",
+ "at": "2026-11-06T06:49:40Z",
  "target": 22,
- "listed": 60,
+ "listed": 69,
  "by_kind": {
-  "bird": 51,
-  "mammal": 8,
-  "invertebrate": 1
+  "bird": 58,
+  "mammal": 9,
+  "invertebrate": 2
  },
  "meets_target": true,
  "predators": [
@@ -237,12 +237,28 @@
    "kind": "bird",
    "records": 174,
    "why": [
-    "predator and scavenger"
+    "predator and scavenger",
+    "most recorded: 12 of its class (2% of the class's records)"
    ],
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
    "stand_in": "haliaeetus_leucocephalus",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "turdus_pilaris",
+   "scientific": "Turdus pilaris",
+   "common": "fieldfare",
+   "kind": "bird",
+   "records": 164,
+   "why": [
+    "most recorded: 13 of its class (2% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": "turdus_migratorius",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -252,7 +268,8 @@
    "kind": "bird",
    "records": 146,
    "why": [
-    "scavenger"
+    "scavenger",
+    "most recorded: 15 of its class (2% of the class's records)"
    ],
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
@@ -267,12 +284,58 @@
    "kind": "bird",
    "records": 145,
    "why": [
-    "scavenger"
+    "scavenger",
+    "most recorded: 16 of its class (2% of the class's records)"
    ],
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
    "stand_in": "poecile_rufescens",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "phylloscopus_collybita",
+   "scientific": "Phylloscopus collybita",
+   "common": "common chiffchaff",
+   "kind": "bird",
+   "records": 144,
+   "why": [
+    "most recorded: 17 of its class (2% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": "aphelocoma_californica",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "phylloscopus_trochilus",
+   "scientific": "Phylloscopus trochilus",
+   "common": "willow warbler",
+   "kind": "bird",
+   "records": 135,
+   "why": [
+    "most recorded: 18 of its class (2% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": "aphelocoma_californica",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "chloris_chloris",
+   "scientific": "Chloris chloris",
+   "common": "european greenfinch",
+   "kind": "bird",
+   "records": 125,
+   "why": [
+    "most recorded: 19 of its class (2% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": "aphelocoma_californica",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -282,7 +345,8 @@
    "kind": "bird",
    "records": 103,
    "why": [
-    "predator and scavenger"
+    "predator and scavenger",
+    "most recorded: 21 of its class (1% of the class's records)"
    ],
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
@@ -297,7 +361,8 @@
    "kind": "bird",
    "records": 102,
    "why": [
-    "predator"
+    "predator",
+    "most recorded: 22 of its class (1% of the class's records)"
    ],
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
@@ -312,12 +377,43 @@
    "kind": "bird",
    "records": 99,
    "why": [
-    "predator and scavenger"
+    "predator and scavenger",
+    "most recorded: 23 of its class (1% of the class's records)"
    ],
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
    "stand_in": "larus_glaucescens",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "anthus_pratensis",
+   "scientific": "Anthus pratensis",
+   "common": "meadow pipit",
+   "kind": "bird",
+   "records": 98,
+   "why": [
+    "most recorded: 24 of its class (1% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": "aphelocoma_californica",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "acanthis_flammea",
+   "scientific": "Acanthis flammea",
+   "common": "common redpoll",
+   "kind": "bird",
+   "records": 97,
+   "why": [
+    "most recorded: 25 of its class (1% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": "aphelocoma_californica",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -327,12 +423,28 @@
    "kind": "bird",
    "records": 89,
    "why": [
-    "predator"
+    "predator",
+    "most recorded: 26 of its class (1% of the class's records)"
    ],
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
    "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "lagopus_lagopus",
+   "scientific": "Lagopus lagopus",
+   "common": "willow ptarmigan",
+   "kind": "bird",
+   "records": 83,
+   "why": [
+    "most recorded: 27 of its class (1% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": "meleagris_gallopavo",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -896,6 +1008,21 @@
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
+   "id": "myodes_rutilus",
+   "scientific": "Myodes rutilus",
+   "common": "northern red-backed mouse",
+   "kind": "mammal",
+   "records": 3,
+   "why": [
+    "most recorded: 9 of its class (2% of the class's records)"
+   ],
+   "body_plan": "rodent",
+   "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+   "estimate_credits": 30,
+   "stand_in": "microtus_californicus",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
    "id": "arion_ater",
    "scientific": "Arion ater",
    "common": "black arion",
@@ -909,9 +1036,24 @@
    "estimate_credits": 0,
    "stand_in": "ariolimax_columbianus",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "patella_vulgata",
+   "scientific": "Patella vulgata",
+   "common": "common limpet",
+   "kind": "invertebrate",
+   "records": 6,
+   "why": [
+    "most recorded: 2 of its class (11% of the class's records)"
+   ],
+   "body_plan": "gastropod",
+   "rig": "none: procedural (a body of rings and a foot wave); no Meshy needed",
+   "estimate_credits": 0,
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   }
  ],
- "queued_credits": 1620,
+ "queued_credits": 1860,
  "animals": [
   {
    "gbif_key": 2481205,
@@ -1206,7 +1348,34 @@
    ],
    "mass_kg": 4.7293,
    "why": [
-    "predator and scavenger"
+    "predator and scavenger",
+    "most recorded: 12 of its class (2% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2490737,
+   "scientific": "Turdus pilaris",
+   "common": "fieldfare",
+   "records": 164,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Turdidae",
+    "genus": "Turdus"
+   },
+   "kind": "bird",
+   "rank_in_class": 13,
+   "share_of_class": 0.0225,
+   "id": "turdus_pilaris",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.106,
+   "why": [
+    "most recorded: 13 of its class (2% of the class's records)"
    ],
    "listed": true
   },
@@ -1233,7 +1402,8 @@
    ],
    "mass_kg": 0.2175,
    "why": [
-    "scavenger"
+    "scavenger",
+    "most recorded: 15 of its class (2% of the class's records)"
    ],
    "listed": true
   },
@@ -1260,7 +1430,86 @@
    ],
    "mass_kg": 0.0163,
    "why": [
-    "scavenger"
+    "scavenger",
+    "most recorded: 16 of its class (2% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2493091,
+   "scientific": "Phylloscopus collybita",
+   "common": "common chiffchaff",
+   "records": 144,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Phylloscopidae",
+    "genus": "Phylloscopus"
+   },
+   "kind": "bird",
+   "rank_in_class": 17,
+   "share_of_class": 0.0198,
+   "id": "phylloscopus_collybita",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.0083,
+   "why": [
+    "most recorded: 17 of its class (2% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2493052,
+   "scientific": "Phylloscopus trochilus",
+   "common": "willow warbler",
+   "records": 135,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Phylloscopidae",
+    "genus": "Phylloscopus"
+   },
+   "kind": "bird",
+   "rank_in_class": 18,
+   "share_of_class": 0.0185,
+   "id": "phylloscopus_trochilus",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.0087,
+   "why": [
+    "most recorded: 18 of its class (2% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 5845582,
+   "scientific": "Chloris chloris",
+   "common": "european greenfinch",
+   "records": 125,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Fringillidae",
+    "genus": "Chloris"
+   },
+   "kind": "bird",
+   "rank_in_class": 19,
+   "share_of_class": 0.0171,
+   "id": "chloris_chloris",
+   "role": [
+    "herbivore"
+   ],
+   "mass_kg": 0.0232,
+   "why": [
+    "most recorded: 19 of its class (2% of the class's records)"
    ],
    "listed": true
   },
@@ -1288,6 +1537,7 @@
    "mass_kg": 0.928,
    "why": [
     "scavenger",
+    "most recorded: 20 of its class (2% of the class's records)",
     "curated and present"
    ],
    "listed": true
@@ -1315,7 +1565,8 @@
    ],
    "mass_kg": 0.7624,
    "why": [
-    "predator and scavenger"
+    "predator and scavenger",
+    "most recorded: 21 of its class (1% of the class's records)"
    ],
    "listed": true
   },
@@ -1341,7 +1592,8 @@
    ],
    "mass_kg": 1.443,
    "why": [
-    "predator"
+    "predator",
+    "most recorded: 22 of its class (1% of the class's records)"
    ],
    "listed": true
   },
@@ -1368,7 +1620,60 @@
    ],
    "mass_kg": 0.1292,
    "why": [
-    "predator and scavenger"
+    "predator and scavenger",
+    "most recorded: 23 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2490266,
+   "scientific": "Anthus pratensis",
+   "common": "meadow pipit",
+   "records": 98,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Motacillidae",
+    "genus": "Anthus"
+   },
+   "kind": "bird",
+   "rank_in_class": 24,
+   "share_of_class": 0.0134,
+   "id": "anthus_pratensis",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.0184,
+   "why": [
+    "most recorded: 24 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 5231630,
+   "scientific": "Acanthis flammea",
+   "common": "common redpoll",
+   "records": 97,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Fringillidae",
+    "genus": "Acanthis"
+   },
+   "kind": "bird",
+   "rank_in_class": 25,
+   "share_of_class": 0.0133,
+   "id": "acanthis_flammea",
+   "role": [
+    "herbivore"
+   ],
+   "mass_kg": 0.0232,
+   "why": [
+    "most recorded: 25 of its class (1% of the class's records)"
    ],
    "listed": true
   },
@@ -1394,7 +1699,34 @@
    ],
    "mass_kg": 2.529,
    "why": [
-    "predator"
+    "predator",
+    "most recorded: 26 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2473421,
+   "scientific": "Lagopus lagopus",
+   "common": "willow ptarmigan",
+   "records": 83,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Galliformes",
+    "family": "Phasianidae",
+    "genus": "Lagopus"
+   },
+   "kind": "bird",
+   "rank_in_class": 27,
+   "share_of_class": 0.0114,
+   "id": "lagopus_lagopus",
+   "role": [
+    "herbivore"
+   ],
+   "mass_kg": 0.5669,
+   "why": [
+    "most recorded: 27 of its class (1% of the class's records)"
    ],
    "listed": true
   },
@@ -2483,6 +2815,32 @@
    "listed": true
   },
   {
+   "gbif_key": 5706762,
+   "scientific": "Myodes rutilus",
+   "common": "northern red-backed mouse",
+   "records": 3,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Mammalia",
+    "order": "Rodentia",
+    "family": "Cricetidae",
+    "genus": "Myodes"
+   },
+   "kind": "mammal",
+   "rank_in_class": 9,
+   "share_of_class": 0.0214,
+   "id": "myodes_rutilus",
+   "role": [
+    "herbivore"
+   ],
+   "mass_kg": 0.0199,
+   "why": [
+    "most recorded: 9 of its class (2% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
    "gbif_key": 2294101,
    "scientific": "Arion ater",
    "common": "black arion",
@@ -2503,6 +2861,30 @@
    "mass_kg": null,
    "why": [
     "most recorded: 1 of its class (13% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 5190391,
+   "scientific": "Patella vulgata",
+   "common": "common limpet",
+   "records": 6,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Mollusca",
+    "class": "Gastropoda",
+    "order": null,
+    "family": "Patellidae",
+    "genus": "Patella"
+   },
+   "kind": "invertebrate",
+   "rank_in_class": 2,
+   "share_of_class": 0.1091,
+   "id": "patella_vulgata",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 2 of its class (11% of the class's records)"
    ],
    "listed": true
   }
@@ -2667,7 +3049,7 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "pica_pica",
@@ -2708,7 +3090,7 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "phylloscopus_trochilus",
@@ -2721,7 +3103,7 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "chloris_chloris",
@@ -2734,7 +3116,7 @@
    "role": [
     "herbivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "corvus_corax",
@@ -2802,7 +3184,7 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "acanthis_flammea",
@@ -2815,7 +3197,7 @@
    "role": [
     "herbivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "phalacrocorax_carbo",
@@ -2841,7 +3223,7 @@
    "role": [
     "herbivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "phalacrocorax_aristotelis",
@@ -4554,7 +4936,7 @@
    "role": [
     "herbivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "mustela_erminea",
@@ -4667,7 +5049,7 @@
    "rank_in_class": 2,
    "share_of_class": 0.1091,
    "role": [],
-   "listed": false
+   "listed": true
   },
   {
    "id": "nucella_lapillus",

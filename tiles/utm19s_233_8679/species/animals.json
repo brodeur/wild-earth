@@ -1,13 +1,12 @@
 {
  "tile": "utm19s_233_8679",
- "at": "2026-11-06T05:27:07Z",
+ "at": "2026-11-06T06:51:54Z",
  "target": 22,
- "listed": 43,
+ "listed": 63,
  "by_kind": {
-  "bird": 32,
-  "mammal": 8,
-  "amphibian": 2,
-  "invertebrate": 1
+  "bird": 47,
+  "mammal": 12,
+  "amphibian": 4
  },
  "meets_target": true,
  "predators": [
@@ -37,47 +36,7 @@
   "coragyps_atratus",
   "daptrius_ater"
  ],
- "generated_traits": [
-  "xiphorhynchus_guttatus",
-  "monasa_nigrifrons",
-  "lipaugus_vociferans",
-  "cacicus_cela",
-  "formicarius_analis",
-  "thamnomanes_ardesiacus",
-  "ramphastos_tucanus",
-  "momotus_momota",
-  "crypturellus_undulatus",
-  "patagioenas_plumbea",
-  "phalacrocorax_brasilianus",
-  "anhinga_anhinga",
-  "megaceryle_torquata",
-  "phaetusa_simplex",
-  "ardea_cocoi",
-  "aramus_guarauna",
-  "sternula_superciliaris",
-  "cathartes_melambrotus",
-  "butorides_striata",
-  "rynchops_niger",
-  "heliornis_fulica",
-  "falco_rufigularis",
-  "coragyps_atratus",
-  "chloroceryle_americana",
-  "rupornis_magnirostris",
-  "chloroceryle_amazona",
-  "daptrius_ater",
-  "chloroceryle_inda",
-  "saimiri_boliviensis",
-  "rhynchonycteris_naso",
-  "sapajus_apella",
-  "alouatta_seniculus",
-  "leontocebus_weddelli",
-  "pteronura_brasiliensis",
-  "alouatta_sara",
-  "leopardus_pardalis",
-  "rhinella_marina",
-  "ceratophrys_cornuta",
-  "megalobulimus_popelairianus"
- ],
+ "generated_traits": [],
  "queue": [
   {
    "id": "xiphorhynchus_guttatus",
@@ -227,6 +186,231 @@
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
    "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "trogon_melanurus",
+   "scientific": "Trogon melanurus",
+   "common": "black-tailed trogon",
+   "kind": "bird",
+   "records": 587,
+   "why": [
+    "most recorded: 11 of its class (1% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "capito_auratus",
+   "scientific": "Capito auratus",
+   "common": "gilded barbet",
+   "kind": "bird",
+   "records": 562,
+   "why": [
+    "most recorded: 12 of its class (1% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": "melanerpes_formicivorus",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "thamnophilus_schistaceus",
+   "scientific": "Thamnophilus schistaceus",
+   "common": "plain-winged antshrike",
+   "kind": "bird",
+   "records": 537,
+   "why": [
+    "most recorded: 13 of its class (1% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": "aphelocoma_californica",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "tachycineta_albiventer",
+   "scientific": "Tachycineta albiventer",
+   "common": "white-winged swallow",
+   "kind": "bird",
+   "records": 526,
+   "why": [
+    "most recorded: 14 of its class (1% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": "aphelocoma_californica",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "myrmotherula_longipennis",
+   "scientific": "Myrmotherula longipennis",
+   "common": "long-winged antwren",
+   "kind": "bird",
+   "records": 508,
+   "why": [
+    "most recorded: 15 of its class (1% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": "aphelocoma_californica",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "habia_rubica",
+   "scientific": "Habia rubica",
+   "common": "red-crowned ant-tanager",
+   "kind": "bird",
+   "records": 507,
+   "why": [
+    "most recorded: 16 of its class (1% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": "aphelocoma_californica",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "turdus_hauxwelli",
+   "scientific": "Turdus hauxwelli",
+   "common": "hauxwell's thrush",
+   "kind": "bird",
+   "records": 506,
+   "why": [
+    "most recorded: 17 of its class (1% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": "turdus_migratorius",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "myrmoborus_myotherinus",
+   "scientific": "Myrmoborus myotherinus",
+   "common": "black-faced antbird",
+   "kind": "bird",
+   "records": 500,
+   "why": [
+    "most recorded: 18 of its class (1% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": "aphelocoma_californica",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "psarocolius_angustifrons",
+   "scientific": "Psarocolius angustifrons",
+   "common": "russet-backed oropendola",
+   "kind": "bird",
+   "records": 493,
+   "why": [
+    "most recorded: 19 of its class (1% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": "aphelocoma_californica",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "opisthocomus_hoazin",
+   "scientific": "Opisthocomus hoazin",
+   "common": "hoatzin",
+   "kind": "bird",
+   "records": 493,
+   "why": [
+    "most recorded: 20 of its class (1% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "ara_macao",
+   "scientific": "Ara macao",
+   "common": "scarlet macaw",
+   "kind": "bird",
+   "records": 490,
+   "why": [
+    "most recorded: 21 of its class (1% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "myrmotherula_axillaris",
+   "scientific": "Myrmotherula axillaris",
+   "common": "white-flanked antwren",
+   "kind": "bird",
+   "records": 489,
+   "why": [
+    "most recorded: 22 of its class (1% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": "aphelocoma_californica",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "ara_ararauna",
+   "scientific": "Ara ararauna",
+   "common": "blue-and-yellow macaw",
+   "kind": "bird",
+   "records": 489,
+   "why": [
+    "most recorded: 23 of its class (1% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "paroaria_gularis",
+   "scientific": "Paroaria gularis",
+   "common": "red-capped cardinal",
+   "kind": "bird",
+   "records": 470,
+   "why": [
+    "most recorded: 24 of its class (1% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": "aphelocoma_californica",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "myrmeciza_hyperythra",
+   "scientific": "Myrmeciza hyperythra",
+   "common": "plumbeous antbird",
+   "kind": "bird",
+   "records": 464,
+   "why": [
+    "most recorded: 25 of its class (1% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": "aphelocoma_californica",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -652,6 +836,66 @@
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
+   "id": "ateles_paniscus",
+   "scientific": "Ateles paniscus",
+   "common": "red-faced spider monkey",
+   "kind": "mammal",
+   "records": 3,
+   "why": [
+    "most recorded: 9 of its class (2% of the class's records)"
+   ],
+   "body_plan": "quadruped",
+   "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+   "estimate_credits": 30,
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "ateles_chamek",
+   "scientific": "Ateles chamek",
+   "common": "black-faced spider monkey",
+   "kind": "mammal",
+   "records": 3,
+   "why": [
+    "most recorded: 10 of its class (2% of the class's records)"
+   ],
+   "body_plan": "quadruped",
+   "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+   "estimate_credits": 30,
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "cuniculus_paca",
+   "scientific": "Cuniculus paca",
+   "common": "lowland paca",
+   "kind": "mammal",
+   "records": 3,
+   "why": [
+    "most recorded: 11 of its class (2% of the class's records)"
+   ],
+   "body_plan": "rodent",
+   "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+   "estimate_credits": 30,
+   "stand_in": "microtus_californicus",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "mazama_americana",
+   "scientific": "Mazama americana",
+   "common": "red brocket",
+   "kind": "mammal",
+   "records": 3,
+   "why": [
+    "most recorded: 12 of its class (2% of the class's records)"
+   ],
+   "body_plan": "quadruped",
+   "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+   "estimate_credits": 30,
+   "stand_in": "odocoileus_hemionus",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
    "id": "rhinella_marina",
    "scientific": "Rhinella marina",
    "common": "bufo toad, bullfrog, cane toad, giant american toad, marine toad, suriname toad",
@@ -682,22 +926,37 @@
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
-   "id": "megalobulimus_popelairianus",
-   "scientific": "Megalobulimus popelairianus",
-   "common": null,
-   "kind": "invertebrate",
-   "records": 2,
+   "id": "edalorhina_perezi",
+   "scientific": "Edalorhina perezi",
+   "common": "eyelashed forest frog",
+   "kind": "amphibian",
+   "records": 21,
    "why": [
-    "most recorded: 1 of its class (67% of the class's records)"
+    "most recorded: 3 of its class (13% of the class's records)"
    ],
-   "body_plan": "gastropod",
-   "rig": "none: procedural (a body of rings and a foot wave); no Meshy needed",
-   "estimate_credits": 0,
-   "stand_in": "ariolimax_columbianus",
+   "body_plan": "amphibian",
+   "rig": "none yet: the reptile template, hopping",
+   "estimate_credits": 25,
+   "stand_in": "anaxyrus_boreas",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "boana_geographica",
+   "scientific": "Boana geographica",
+   "common": "map treefrog",
+   "kind": "amphibian",
+   "records": 19,
+   "why": [
+    "most recorded: 4 of its class (12% of the class's records)"
+   ],
+   "body_plan": "amphibian",
+   "rig": "none yet: the reptile template, hopping",
+   "estimate_credits": 25,
+   "stand_in": "anaxyrus_boreas",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   }
  ],
- "queued_credits": 1190,
+ "queued_credits": 1810,
  "animals": [
   {
    "gbif_key": 5230139,
@@ -723,8 +982,7 @@
    "why": [
     "most recorded: 1 of its class (2% of the class's records)"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/xiphorhynchus_guttatus.json"
+   "listed": true
   },
   {
    "gbif_key": 2475187,
@@ -750,8 +1008,7 @@
    "why": [
     "most recorded: 2 of its class (2% of the class's records)"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/monasa_nigrifrons.json"
+   "listed": true
   },
   {
    "gbif_key": 2486506,
@@ -777,8 +1034,7 @@
    "why": [
     "most recorded: 3 of its class (1% of the class's records)"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/lipaugus_vociferans.json"
+   "listed": true
   },
   {
    "gbif_key": 5229832,
@@ -804,8 +1060,7 @@
    "why": [
     "most recorded: 4 of its class (1% of the class's records)"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/cacicus_cela.json"
+   "listed": true
   },
   {
    "gbif_key": 2490551,
@@ -831,8 +1086,7 @@
    "why": [
     "most recorded: 5 of its class (1% of the class's records)"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/formicarius_analis.json"
+   "listed": true
   },
   {
    "gbif_key": 2490218,
@@ -858,8 +1112,7 @@
    "why": [
     "most recorded: 6 of its class (1% of the class's records)"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/thamnomanes_ardesiacus.json"
+   "listed": true
   },
   {
    "gbif_key": 2478774,
@@ -885,8 +1138,7 @@
    "why": [
     "most recorded: 7 of its class (1% of the class's records)"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/ramphastos_tucanus.json"
+   "listed": true
   },
   {
    "gbif_key": 2475290,
@@ -912,8 +1164,7 @@
    "why": [
     "most recorded: 8 of its class (1% of the class's records)"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/momotus_momota.json"
+   "listed": true
   },
   {
    "gbif_key": 2477560,
@@ -939,8 +1190,7 @@
    "why": [
     "most recorded: 9 of its class (1% of the class's records)"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/crypturellus_undulatus.json"
+   "listed": true
   },
   {
    "gbif_key": 2495314,
@@ -966,8 +1216,397 @@
    "why": [
     "most recorded: 10 of its class (1% of the class's records)"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/patagioenas_plumbea.json"
+   "listed": true
+  },
+  {
+   "gbif_key": 9429836,
+   "scientific": "Trogon melanurus",
+   "common": "black-tailed trogon",
+   "records": 587,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Trogoniformes",
+    "family": "Trogonidae",
+    "genus": "Trogon"
+   },
+   "kind": "bird",
+   "rank_in_class": 11,
+   "share_of_class": 0.0116,
+   "id": "trogon_melanurus",
+   "role": [
+    "herbivore"
+   ],
+   "mass_kg": 0.114,
+   "why": [
+    "most recorded: 11 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2479031,
+   "scientific": "Capito auratus",
+   "common": "gilded barbet",
+   "records": 562,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Piciformes",
+    "family": "Capitonidae",
+    "genus": "Capito"
+   },
+   "kind": "bird",
+   "rank_in_class": 12,
+   "share_of_class": 0.0111,
+   "id": "capito_auratus",
+   "role": [
+    "herbivore"
+   ],
+   "mass_kg": 0.0574,
+   "why": [
+    "most recorded: 12 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 5959219,
+   "scientific": "Thamnophilus schistaceus",
+   "common": "plain-winged antshrike",
+   "records": 537,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Thamnophilidae",
+    "genus": "Thamnophilus"
+   },
+   "kind": "bird",
+   "rank_in_class": 13,
+   "share_of_class": 0.0106,
+   "id": "thamnophilus_schistaceus",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.0203,
+   "why": [
+    "most recorded: 13 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 5230759,
+   "scientific": "Tachycineta albiventer",
+   "common": "white-winged swallow",
+   "records": 526,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Hirundinidae",
+    "genus": "Tachycineta"
+   },
+   "kind": "bird",
+   "rank_in_class": 14,
+   "share_of_class": 0.0104,
+   "id": "tachycineta_albiventer",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.0177,
+   "why": [
+    "most recorded: 14 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2490190,
+   "scientific": "Myrmotherula longipennis",
+   "common": "long-winged antwren",
+   "records": 508,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Thamnophilidae",
+    "genus": "Myrmotherula"
+   },
+   "kind": "bird",
+   "rank_in_class": 15,
+   "share_of_class": 0.01,
+   "id": "myrmotherula_longipennis",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.0094,
+   "why": [
+    "most recorded: 15 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 5230705,
+   "scientific": "Habia rubica",
+   "common": "red-crowned ant-tanager",
+   "records": 507,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Cardinalidae",
+    "genus": "Habia"
+   },
+   "kind": "bird",
+   "rank_in_class": 16,
+   "share_of_class": 0.01,
+   "id": "habia_rubica",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.0325,
+   "why": [
+    "most recorded: 16 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2490743,
+   "scientific": "Turdus hauxwelli",
+   "common": "hauxwell's thrush",
+   "records": 506,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Turdidae",
+    "genus": "Turdus"
+   },
+   "kind": "bird",
+   "rank_in_class": 17,
+   "share_of_class": 0.01,
+   "id": "turdus_hauxwelli",
+   "role": [
+    "omnivore"
+   ],
+   "mass_kg": 0.069,
+   "why": [
+    "most recorded: 17 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2490125,
+   "scientific": "Myrmoborus myotherinus",
+   "common": "black-faced antbird",
+   "records": 500,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Thamnophilidae",
+    "genus": "Myrmoborus"
+   },
+   "kind": "bird",
+   "rank_in_class": 18,
+   "share_of_class": 0.0099,
+   "id": "myrmoborus_myotherinus",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.0188,
+   "why": [
+    "most recorded: 18 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2484222,
+   "scientific": "Psarocolius angustifrons",
+   "common": "russet-backed oropendola",
+   "records": 493,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Icteridae",
+    "genus": "Psarocolius"
+   },
+   "kind": "bird",
+   "rank_in_class": 19,
+   "share_of_class": 0.0097,
+   "id": "psarocolius_angustifrons",
+   "role": [
+    "omnivore"
+   ],
+   "mass_kg": 0.2715,
+   "why": [
+    "most recorded: 19 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2496202,
+   "scientific": "Opisthocomus hoazin",
+   "common": "hoatzin",
+   "records": 493,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Opisthocomiformes",
+    "family": "Opisthocomidae",
+    "genus": "Opisthocomus"
+   },
+   "kind": "bird",
+   "rank_in_class": 20,
+   "share_of_class": 0.0097,
+   "id": "opisthocomus_hoazin",
+   "role": [
+    "herbivore"
+   ],
+   "mass_kg": 0.696,
+   "why": [
+    "most recorded: 20 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 5959227,
+   "scientific": "Ara macao",
+   "common": "scarlet macaw",
+   "records": 490,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Psittaciformes",
+    "family": "Psittacidae",
+    "genus": "Ara"
+   },
+   "kind": "bird",
+   "rank_in_class": 21,
+   "share_of_class": 0.0097,
+   "id": "ara_macao",
+   "role": [
+    "herbivore"
+   ],
+   "mass_kg": 1.015,
+   "why": [
+    "most recorded: 21 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2490191,
+   "scientific": "Myrmotherula axillaris",
+   "common": "white-flanked antwren",
+   "records": 489,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Thamnophilidae",
+    "genus": "Myrmotherula"
+   },
+   "kind": "bird",
+   "rank_in_class": 22,
+   "share_of_class": 0.0097,
+   "id": "myrmotherula_axillaris",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.0081,
+   "why": [
+    "most recorded: 22 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 5959231,
+   "scientific": "Ara ararauna",
+   "common": "blue-and-yellow macaw",
+   "records": 489,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Psittaciformes",
+    "family": "Psittacidae",
+    "genus": "Ara"
+   },
+   "kind": "bird",
+   "rank_in_class": 23,
+   "share_of_class": 0.0097,
+   "id": "ara_ararauna",
+   "role": [
+    "herbivore"
+   ],
+   "mass_kg": 1.125,
+   "why": [
+    "most recorded: 23 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2492082,
+   "scientific": "Paroaria gularis",
+   "common": "red-capped cardinal",
+   "records": 470,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Thraupidae",
+    "genus": "Paroaria"
+   },
+   "kind": "bird",
+   "rank_in_class": 24,
+   "share_of_class": 0.0093,
+   "id": "paroaria_gularis",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.0236,
+   "why": [
+    "most recorded: 24 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2490146,
+   "scientific": "Myrmeciza hyperythra",
+   "common": "plumbeous antbird",
+   "records": 464,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Thamnophilidae",
+    "genus": "Myrmeciza"
+   },
+   "kind": "bird",
+   "rank_in_class": 25,
+   "share_of_class": 0.0092,
+   "id": "myrmeciza_hyperythra",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.041,
+   "why": [
+    "most recorded: 25 of its class (1% of the class's records)"
+   ],
+   "listed": true
   },
   {
    "gbif_key": 9399113,
@@ -993,8 +1632,7 @@
    "why": [
     "predator"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/phalacrocorax_brasilianus.json"
+   "listed": true
   },
   {
    "gbif_key": 9752617,
@@ -1046,8 +1684,7 @@
    "why": [
     "predator"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/anhinga_anhinga.json"
+   "listed": true
   },
   {
    "gbif_key": 2475466,
@@ -1073,8 +1710,7 @@
    "why": [
     "predator"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/megaceryle_torquata.json"
+   "listed": true
   },
   {
    "gbif_key": 5229213,
@@ -1100,8 +1736,7 @@
    "why": [
     "predator"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/phaetusa_simplex.json"
+   "listed": true
   },
   {
    "gbif_key": 2480951,
@@ -1127,8 +1762,7 @@
    "why": [
     "predator"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/ardea_cocoi.json"
+   "listed": true
   },
   {
    "gbif_key": 2474337,
@@ -1154,8 +1788,7 @@
    "why": [
     "predator"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/aramus_guarauna.json"
+   "listed": true
   },
   {
    "gbif_key": 5789280,
@@ -1181,8 +1814,7 @@
    "why": [
     "predator"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/sternula_superciliaris.json"
+   "listed": true
   },
   {
    "gbif_key": 2481929,
@@ -1209,8 +1841,7 @@
    "why": [
     "scavenger"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/cathartes_melambrotus.json"
+   "listed": true
   },
   {
    "gbif_key": 2480824,
@@ -1236,8 +1867,7 @@
    "why": [
     "predator"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/butorides_striata.json"
+   "listed": true
   },
   {
    "gbif_key": 2481209,
@@ -1263,8 +1893,7 @@
    "why": [
     "predator"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/rynchops_niger.json"
+   "listed": true
   },
   {
    "gbif_key": 2474343,
@@ -1290,8 +1919,7 @@
    "why": [
     "predator"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/heliornis_fulica.json"
+   "listed": true
   },
   {
    "gbif_key": 2481033,
@@ -1317,8 +1945,7 @@
    "why": [
     "predator"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/falco_rufigularis.json"
+   "listed": true
   },
   {
    "gbif_key": 2480873,
@@ -1371,8 +1998,7 @@
    "why": [
     "scavenger"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/coragyps_atratus.json"
+   "listed": true
   },
   {
    "gbif_key": 2475486,
@@ -1398,8 +2024,7 @@
    "why": [
     "predator"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/chloroceryle_americana.json"
+   "listed": true
   },
   {
    "gbif_key": 5844398,
@@ -1425,8 +2050,7 @@
    "why": [
     "predator"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/rupornis_magnirostris.json"
+   "listed": true
   },
   {
    "gbif_key": 2475482,
@@ -1452,8 +2076,7 @@
    "why": [
     "predator"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/chloroceryle_amazona.json"
+   "listed": true
   },
   {
    "gbif_key": 2481073,
@@ -1480,8 +2103,7 @@
    "why": [
     "predator and scavenger"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/daptrius_ater.json"
+   "listed": true
   },
   {
    "gbif_key": 2475492,
@@ -1507,8 +2129,7 @@
    "why": [
     "predator"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/chloroceryle_inda.json"
+   "listed": true
   },
   {
    "gbif_key": 2436663,
@@ -1534,8 +2155,7 @@
    "why": [
     "most recorded: 1 of its class (9% of the class's records)"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/saimiri_boliviensis.json"
+   "listed": true
   },
   {
    "gbif_key": 2433095,
@@ -1561,8 +2181,7 @@
    "why": [
     "most recorded: 2 of its class (8% of the class's records)"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/rhynchonycteris_naso.json"
+   "listed": true
   },
   {
    "gbif_key": 7477334,
@@ -1588,8 +2207,7 @@
    "why": [
     "most recorded: 3 of its class (7% of the class's records)"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/sapajus_apella.json"
+   "listed": true
   },
   {
    "gbif_key": 2436648,
@@ -1615,8 +2233,7 @@
    "why": [
     "most recorded: 4 of its class (6% of the class's records)"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/alouatta_seniculus.json"
+   "listed": true
   },
   {
    "gbif_key": 9530430,
@@ -1640,8 +2257,7 @@
    "why": [
     "most recorded: 5 of its class (4% of the class's records)"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/leontocebus_weddelli.json"
+   "listed": true
   },
   {
    "gbif_key": 2433681,
@@ -1668,8 +2284,7 @@
     "predator",
     "most recorded: 6 of its class (3% of the class's records)"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/pteronura_brasiliensis.json"
+   "listed": true
   },
   {
    "gbif_key": 2436651,
@@ -1695,8 +2310,7 @@
    "why": [
     "most recorded: 7 of its class (3% of the class's records)"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/alouatta_sara.json"
+   "listed": true
   },
   {
    "gbif_key": 2434982,
@@ -1723,8 +2337,111 @@
     "predator",
     "most recorded: 8 of its class (2% of the class's records)"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/leopardus_pardalis.json"
+   "listed": true
+  },
+  {
+   "gbif_key": 2436645,
+   "scientific": "Ateles paniscus",
+   "common": "red-faced spider monkey",
+   "records": 3,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Mammalia",
+    "order": "Primates",
+    "family": "Atelidae",
+    "genus": "Ateles"
+   },
+   "kind": "mammal",
+   "rank_in_class": 9,
+   "share_of_class": 0.0208,
+   "id": "ateles_paniscus",
+   "role": [
+    "herbivore"
+   ],
+   "mass_kg": 7.9001,
+   "why": [
+    "most recorded: 9 of its class (2% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2436646,
+   "scientific": "Ateles chamek",
+   "common": "black-faced spider monkey",
+   "records": 3,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Mammalia",
+    "order": "Primates",
+    "family": "Atelidae",
+    "genus": "Ateles"
+   },
+   "kind": "mammal",
+   "rank_in_class": 10,
+   "share_of_class": 0.0208,
+   "id": "ateles_chamek",
+   "role": [
+    "herbivore"
+   ],
+   "mass_kg": 6.0,
+   "why": [
+    "most recorded: 10 of its class (2% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 4263039,
+   "scientific": "Cuniculus paca",
+   "common": "lowland paca",
+   "records": 3,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Mammalia",
+    "order": "Rodentia",
+    "family": "Cuniculidae",
+    "genus": "Cuniculus"
+   },
+   "kind": "mammal",
+   "rank_in_class": 11,
+   "share_of_class": 0.0208,
+   "id": "cuniculus_paca",
+   "role": [
+    "herbivore"
+   ],
+   "mass_kg": 8.1725,
+   "why": [
+    "most recorded: 11 of its class (2% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 5220123,
+   "scientific": "Mazama americana",
+   "common": "red brocket",
+   "records": 3,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Mammalia",
+    "order": "Artiodactyla",
+    "family": "Cervidae",
+    "genus": "Mazama"
+   },
+   "kind": "mammal",
+   "rank_in_class": 12,
+   "share_of_class": 0.0208,
+   "id": "mazama_americana",
+   "role": [
+    "herbivore"
+   ],
+   "mass_kg": 22.7997,
+   "why": [
+    "most recorded: 12 of its class (2% of the class's records)"
+   ],
+   "listed": true
   },
   {
    "gbif_key": 5216933,
@@ -1748,8 +2465,7 @@
    "why": [
     "most recorded: 1 of its class (18% of the class's records)"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/rhinella_marina.json"
+   "listed": true
   },
   {
    "gbif_key": 2424456,
@@ -1773,33 +2489,55 @@
    "why": [
     "most recorded: 2 of its class (14% of the class's records)"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/ceratophrys_cornuta.json"
+   "listed": true
   },
   {
-   "gbif_key": 10671286,
-   "scientific": "Megalobulimus popelairianus",
-   "common": null,
-   "records": 2,
+   "gbif_key": 2423530,
+   "scientific": "Edalorhina perezi",
+   "common": "eyelashed forest frog",
+   "records": 21,
    "taxonomy": {
     "kingdom": "Animalia",
-    "phylum": "Mollusca",
-    "class": "Gastropoda",
-    "order": "Stylommatophora",
-    "family": "Strophocheilidae",
-    "genus": "Megalobulimus"
+    "phylum": "Chordata",
+    "class": "Amphibia",
+    "order": "Anura",
+    "family": "Leptodactylidae",
+    "genus": "Edalorhina"
    },
-   "kind": "invertebrate",
-   "rank_in_class": 1,
-   "share_of_class": 0.6667,
-   "id": "megalobulimus_popelairianus",
+   "kind": "amphibian",
+   "rank_in_class": 3,
+   "share_of_class": 0.1313,
+   "id": "edalorhina_perezi",
    "role": [],
    "mass_kg": null,
    "why": [
-    "most recorded: 1 of its class (67% of the class's records)"
+    "most recorded: 3 of its class (13% of the class's records)"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/megalobulimus_popelairianus.json"
+   "listed": true
+  },
+  {
+   "gbif_key": 10399964,
+   "scientific": "Boana geographica",
+   "common": "map treefrog",
+   "records": 19,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Amphibia",
+    "order": "Anura",
+    "family": "Hylidae",
+    "genus": "Boana"
+   },
+   "kind": "amphibian",
+   "rank_in_class": 4,
+   "share_of_class": 0.1187,
+   "id": "boana_geographica",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 4 of its class (12% of the class's records)"
+   ],
+   "listed": true
   },
   {
    "id": "cathartes_aura",
@@ -1968,7 +2706,7 @@
    "role": [
     "herbivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "capito_auratus",
@@ -1981,7 +2719,7 @@
    "role": [
     "herbivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "thamnophilus_schistaceus",
@@ -1994,7 +2732,7 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "tachycineta_albiventer",
@@ -2007,7 +2745,7 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "myrmotherula_longipennis",
@@ -2020,7 +2758,7 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "habia_rubica",
@@ -2033,7 +2771,7 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "turdus_hauxwelli",
@@ -2046,7 +2784,7 @@
    "role": [
     "omnivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "myrmoborus_myotherinus",
@@ -2059,7 +2797,7 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "psarocolius_angustifrons",
@@ -2072,7 +2810,7 @@
    "role": [
     "omnivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "opisthocomus_hoazin",
@@ -2085,7 +2823,7 @@
    "role": [
     "herbivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "ara_macao",
@@ -2098,7 +2836,7 @@
    "role": [
     "herbivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "myrmotherula_axillaris",
@@ -2111,7 +2849,7 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "ara_ararauna",
@@ -2124,7 +2862,7 @@
    "role": [
     "herbivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "paroaria_gularis",
@@ -2137,7 +2875,7 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "myrmeciza_hyperythra",
@@ -2150,7 +2888,7 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "attila_spadiceus",
@@ -3893,7 +4631,7 @@
    "role": [
     "herbivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "ateles_chamek",
@@ -3906,7 +4644,7 @@
    "role": [
     "herbivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "cuniculus_paca",
@@ -3919,7 +4657,7 @@
    "role": [
     "herbivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "mazama_americana",
@@ -3932,7 +4670,7 @@
    "role": [
     "herbivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "dasyprocta_variegata",
@@ -4716,7 +5454,7 @@
    "rank_in_class": 3,
    "share_of_class": 0.1313,
    "role": [],
-   "listed": false
+   "listed": true
   },
   {
    "id": "boana_geographica",
@@ -4727,7 +5465,7 @@
    "rank_in_class": 4,
    "share_of_class": 0.1187,
    "role": [],
-   "listed": false
+   "listed": true
   },
   {
    "id": "ameerega_trivittata",
@@ -4947,7 +5685,7 @@
    "rank_in_class": 1,
    "share_of_class": 0.6667,
    "role": [],
-   "listed": true
+   "listed": false
   },
   {
    "id": "pomacea_canaliculata",

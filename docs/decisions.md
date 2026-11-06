@@ -5498,3 +5498,40 @@ within the US. Maybe Grand Canyon, Wyoming. I'm also curious about Costa Rica or
   variable, reached when USGS answered 502); Macrostrat's coverage test failed every coastal tile. The US point clouds were
   skipped with the lidar step's DEM-only mode (4-5 h each; crowns proven elsewhere). The later captures used a headless
   Chrome over the DevTools protocol, the pane being hidden.
+
+## 2026-11-06: phase 1, iteration 1: every fix a rule for every tile (branch claude/sweet-feistel-2054bb)
+
+Aaron: "implement as many as you can on your own before showing me something you all are proud of that is the result of
+the pipeline not fiddling with individual species." The seven probes are the regression set (tools/probes: fixed poses,
+a headless Chrome over CDP, the sheet and the satellite statistics); each change below is a rule, a generator or a data
+source that holds on every tile, and is judged by re-running the set.
+
+- **The tile's own animals** (`pipeline/fauna_slots.py`, the `animals` step; the client side in `animals.js`): the
+  client spawned a fixed North American cast by habitat (about 190 in Borneo). Now every tile writes `client/fauna.json`:
+  which curated species may spawn there (those the tile's research or records list; the rest are gated off) and up to
+  40 stand-in slots for its own researched species, each an existing species' body and behaviour (its kin) chosen by rules
+  over taxonomy, diet and mass, scaled by the mass ratio's cube root, at a density from body mass (Damuth 1981 for
+  herbivores, 30 / mass kg for carnivores, a softer law for birds), with group size by guild and hours and water from
+  the traits. Known errors are listed per slot (a giraffe on a deer's proportions). A tile without the layer is unchanged.
+- **The research lists the animals that matter** (`fauna.py` CLASS_QUOTA): the quota of 8 mammals by records left out
+  the Serengeti's wildebeest, zebra, giraffe, elephant and buffalo (11th-22nd by records); it is now 25 mammals, 25 birds
+  (5 reptiles, 4 amphibians), each needing 3 records, and the client slots order mammals by records x sqrt(mass).
+- **Composition by the records' own niches** (`species_mix.research_rule`, `terrain_weights`): a researched species is
+  weighted by its card's habitat class weights (the riparian sausage tree is no longer the commonest tree on the open
+  plains: weight 31 -> 1.5) and, where no regional table has a row, by its own floor / mid / steep / north factors.
+- **No other climate's plants** (`species_mix` class_fallback, `vegetation.js cellPlan`): a cell whose row had no
+  trees borrowed the client's California class mix (the pines in Manu and Corcovado). Outside LANDFIRE's reach the
+  client no longer borrows it, and a tile whose research has no tree on record gets functional stand-ins from the
+  library's trees of its own climate group only (REGION_CLIMATE), labelled as stand-ins.
+- **Rivers run where the climate says** (`channels.perennial_area_km2`): outside NHD, OSM gives no permanence and the
+  area rule made a rainforest's river intermittent (Danum's drawn dry). Now the aridity index (ERA5 precipitation over
+  potential evapotranspiration) sets the drainage area above which a stream is perennial (humid 0.5 km2, sub-humid 10,
+  semi-arid 300, arid none). The Serengeti's Seronera stays seasonal.
+- **A forest floor under the canopy without a point cloud** (`inpaint_crowns.litter_under_canopy`): the base texture on a
+  global tile is a satellite composite, so a closed canopy's floor showed the crowns' green from above (the "lawn"). The
+  imagery is now blended toward leaf litter by the canopy map's tree cover.
+- **The tile's own seasons** (`fetch_global.season_months`, in `climate.normals`): the season-keyed tables were written
+  for a Mediterranean north; a seasonally dry tropics now maps them onto its own rainfall (the Serengeti: spring
+  November-January, summer June-August), a temperate south shifts six months.
+- **The judge compares like with like** (`tools/probes`): the top-down render is drawn without haze (Sentinel-2 L2A is
+  corrected for the atmosphere) and compared with the Sentinel-2 composite of the capture's own month.

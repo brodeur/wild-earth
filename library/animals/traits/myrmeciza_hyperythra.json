@@ -1,0 +1,118 @@
+{
+ "id": "myrmeciza_hyperythra",
+ "scientific": "Myrmeciza hyperythra",
+ "common": "plumbeous antbird",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Passeriformes",
+  "family": "Thamnophilidae",
+  "genus": "Myrmeciza"
+ },
+ "body_plan": "bird",
+ "mass_kg": 0.041,
+ "size": {
+  "length_m": 0.124,
+  "shoulder_or_wingspan_m": 0.198
+ },
+ "diet": {
+  "role": [
+   "insectivore"
+  ],
+  "diet_tenths": {
+   "inv": 10.0,
+   "vend": 0.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.0,
+  "mass_kg": 0.041,
+  "activity": [],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 264.0
+  },
+  "sound": {
+   "range_m": 132.0
+  },
+  "scent": {
+   "range_m": 10.6
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "myrmeciza_hyperythra",
+  "class": "Aves",
+  "order": "Passeriformes",
+  "family": "Thamnophilidae",
+  "body_plan": "bird",
+  "mass_kg": 0.041,
+  "length_m": 0.124,
+  "hip_m": 0.062,
+  "posture": "biped",
+  "gaits": {
+   "ground": "hop",
+   "flight": "flap-glide"
+  },
+  "walk_mps": 0.55,
+  "trot_mps": 1.23,
+  "cruise_mps": 1.66,
+  "top_mps": 2.77,
+  "stride_hz": 6.77,
+  "stride_m": 0.18,
+  "sprint_s": 1.7,
+  "recover_s": 5.9,
+  "turn_rad_s": 7.12,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.037,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": true
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T06:19:58Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

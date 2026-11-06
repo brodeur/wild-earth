@@ -1,0 +1,1150 @@
+{
+ "format": 1,
+ "gate": true,
+ "allow": [
+  "pandion_haliaetus"
+ ],
+ "slots": [
+  {
+   "code": "loxodonta_africana",
+   "scientific": "Loxodonta africana",
+   "common": "African elephant",
+   "one": "african elephant",
+   "many": "african elephants",
+   "kin": "cervus_canadensis",
+   "archetype": "grazing or browsing herd",
+   "scale": 2.359,
+   "tint": null,
+   "mass_kg": 3940.034,
+   "density_km2": 0.9602,
+   "group": [
+    5,
+    30
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": [
+    "a pachyderm on a deer's body"
+   ]
+  },
+  {
+   "code": "hippopotamus_amphibius",
+   "scientific": "Hippopotamus amphibius",
+   "common": "Hippo",
+   "one": "hippo",
+   "many": "hippos",
+   "kin": "cervus_canadensis",
+   "archetype": "grazing or browsing herd",
+   "scale": 1.678,
+   "tint": null,
+   "mass_kg": 1417.49,
+   "density_km2": 2.067,
+   "group": [
+    5,
+    30
+   ],
+   "bird": false,
+   "night": true,
+   "water": true,
+   "role": [
+    "herbivore"
+   ],
+   "known": [
+    "a pachyderm on a deer's body"
+   ]
+  },
+  {
+   "code": "damaliscus_korrigum",
+   "scientific": "Damaliscus korrigum",
+   "common": "Topi",
+   "one": "topi",
+   "many": "topis",
+   "kin": "odocoileus_hemionus",
+   "archetype": "grazing or browsing herd",
+   "scale": 1.285,
+   "tint": null,
+   "mass_kg": 127.195,
+   "density_km2": 12.6072,
+   "group": [
+    5,
+    30
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "giraffa_tippelskirchi",
+   "scientific": "Giraffa tippelskirchi",
+   "common": "Masai giraffe",
+   "one": "masai giraffe",
+   "many": "masai giraffes",
+   "kin": "cervus_canadensis",
+   "archetype": "grazing or browsing herd",
+   "scale": 1.442,
+   "tint": null,
+   "mass_kg": 899.995,
+   "density_km2": 2.906,
+   "group": [
+    5,
+    30
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": [
+    "a giraffe on a deer's proportions"
+   ]
+  },
+  {
+   "code": "aepyceros_melampus",
+   "scientific": "Aepyceros melampus",
+   "common": "Impala",
+   "one": "impala",
+   "many": "impalas",
+   "kin": "odocoileus_hemionus",
+   "archetype": "grazing or browsing herd",
+   "scale": 0.956,
+   "tint": null,
+   "mass_kg": 52.5,
+   "density_km2": 24.4822,
+   "group": [
+    5,
+    30
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "panthera_leo",
+   "scientific": "Panthera leo",
+   "common": "Lion",
+   "one": "lion",
+   "many": "lions",
+   "kin": "puma_concolor",
+   "archetype": "ambush predator",
+   "scale": 1.432,
+   "tint": null,
+   "mass_kg": 161.499,
+   "density_km2": 0.1858,
+   "group": [
+    1,
+    4
+   ],
+   "bird": false,
+   "night": true,
+   "water": false,
+   "role": [
+    "predator",
+    "scavenger"
+   ],
+   "known": []
+  },
+  {
+   "code": "crocuta_crocuta",
+   "scientific": "Crocuta crocuta",
+   "common": "Spotted hyaena",
+   "one": "spotted hyaena",
+   "many": "spotted hyaenas",
+   "kin": "canis_latrans",
+   "archetype": "coursing predator",
+   "scale": 1.723,
+   "tint": null,
+   "mass_kg": 66.492,
+   "density_km2": 0.4512,
+   "group": [
+    1,
+    6
+   ],
+   "bird": false,
+   "night": true,
+   "water": false,
+   "role": [
+    "predator"
+   ],
+   "known": []
+  },
+  {
+   "code": "alcelaphus_buselaphus",
+   "scientific": "Alcelaphus buselaphus",
+   "common": "Hartebeest",
+   "one": "hartebeest",
+   "many": "hartebeests",
+   "kin": "cervus_canadensis",
+   "archetype": "grazing or browsing herd",
+   "scale": 0.829,
+   "tint": null,
+   "mass_kg": 171.001,
+   "density_km2": 10.0976,
+   "group": [
+    5,
+    30
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "syncerus_caffer",
+   "scientific": "Syncerus caffer",
+   "common": "African buffalo",
+   "one": "african buffalo",
+   "many": "african buffalos",
+   "kin": "cervus_canadensis",
+   "archetype": "grazing or browsing herd",
+   "scale": 1.246,
+   "tint": null,
+   "mass_kg": 580.003,
+   "density_km2": 4.0402,
+   "group": [
+    5,
+    30
+   ],
+   "bird": false,
+   "night": true,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "equus_quagga",
+   "scientific": "Equus quagga",
+   "common": "Plains zebra",
+   "one": "plains zebra",
+   "many": "plains zebras",
+   "kin": "cervus_canadensis",
+   "archetype": "grazing or browsing herd",
+   "scale": 1.101,
+   "tint": null,
+   "mass_kg": 400.0,
+   "density_km2": 5.3386,
+   "group": [
+    5,
+    30
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "connochaetes_taurinus",
+   "scientific": "Connochaetes taurinus",
+   "common": "Blue wildebeest",
+   "one": "blue wildebeest",
+   "many": "blue wildebeests",
+   "kin": "cervus_canadensis",
+   "archetype": "grazing or browsing herd",
+   "scale": 0.843,
+   "tint": null,
+   "mass_kg": 179.999,
+   "density_km2": 9.7167,
+   "group": [
+    5,
+    30
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "papio_anubis",
+   "scientific": "Papio anubis",
+   "common": "Olive baboon",
+   "one": "olive baboon",
+   "many": "olive baboons",
+   "kin": "ursus_americanus",
+   "archetype": "large ground primate (stand-in walker)",
+   "scale": 0.562,
+   "tint": null,
+   "mass_kg": 17.729,
+   "density_km2": 11.0534,
+   "group": [
+    5,
+    30
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [
+    "omnivore"
+   ],
+   "known": [
+    "a primate on a bear's body"
+   ]
+  },
+  {
+   "code": "phacochoerus_africanus",
+   "scientific": "Phacochoerus africanus",
+   "common": "Common warthog",
+   "one": "common warthog",
+   "many": "common warthogs",
+   "kin": "odocoileus_hemionus",
+   "archetype": "grazing or browsing herd",
+   "scale": 1.112,
+   "tint": null,
+   "mass_kg": 82.5,
+   "density_km2": 17.4433,
+   "group": [
+    5,
+    30
+   ],
+   "bird": false,
+   "night": true,
+   "water": false,
+   "role": [
+    "herbivore",
+    "scavenger"
+   ],
+   "known": []
+  },
+  {
+   "code": "redunca_redunca",
+   "scientific": "Redunca redunca",
+   "common": "Bohor reedbuck",
+   "one": "bohor reedbuck",
+   "many": "bohor reedbucks",
+   "kin": "odocoileus_hemionus",
+   "archetype": "grazing or browsing herd",
+   "scale": 0.902,
+   "tint": null,
+   "mass_kg": 44.05,
+   "density_km2": 27.9259,
+   "group": [
+    5,
+    30
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "heterohyrax_brucei",
+   "scientific": "Heterohyrax brucei",
+   "common": "Rock hyrax",
+   "one": "rock hyrax",
+   "many": "rock hyraxs",
+   "kin": "otospermophilus_beecheyi",
+   "archetype": "rock colony",
+   "scale": 1.636,
+   "tint": null,
+   "mass_kg": 2.625,
+   "density_km2": 46.3077,
+   "group": [
+    3,
+    12
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "eudorcas_thomsonii",
+   "scientific": "Eudorcas thomsonii",
+   "common": "Thomson's gazelle",
+   "one": "thomson's gazelle",
+   "many": "thomson's gazelles",
+   "kin": "odocoileus_hemionus",
+   "archetype": "grazing or browsing herd",
+   "scale": 0.725,
+   "tint": null,
+   "mass_kg": 22.907,
+   "density_km2": 45.6024,
+   "group": [
+    5,
+    30
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "panthera_pardus",
+   "scientific": "Panthera pardus",
+   "common": "Leopard",
+   "one": "leopard",
+   "many": "leopards",
+   "kin": "puma_concolor",
+   "archetype": "ambush predator",
+   "scale": 0.982,
+   "tint": null,
+   "mass_kg": 52.038,
+   "density_km2": 0.5765,
+   "group": [
+    1,
+    4
+   ],
+   "bird": false,
+   "night": true,
+   "water": false,
+   "role": [
+    "predator"
+   ],
+   "known": []
+  },
+  {
+   "code": "acinonyx_jubatus",
+   "scientific": "Acinonyx jubatus",
+   "common": "Cheetah",
+   "one": "cheetah",
+   "many": "cheetahs",
+   "kin": "puma_concolor",
+   "archetype": "ambush predator",
+   "scale": 0.947,
+   "tint": null,
+   "mass_kg": 46.7,
+   "density_km2": 0.6424,
+   "group": [
+    1,
+    4
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [
+    "predator"
+   ],
+   "known": []
+  },
+  {
+   "code": "nanger_granti",
+   "scientific": "Nanger granti",
+   "common": "Grant's gazelle",
+   "one": "grant's gazelle",
+   "many": "grant's gazelles",
+   "kin": "odocoileus_hemionus",
+   "archetype": "grazing or browsing herd",
+   "scale": 0.974,
+   "tint": null,
+   "mass_kg": 55.465,
+   "density_km2": 23.4941,
+   "group": [
+    5,
+    30
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "chlorocebus_pygerythrus",
+   "scientific": "Chlorocebus pygerythrus",
+   "common": "Vervet monkey",
+   "one": "vervet monkey",
+   "many": "vervet monkeys",
+   "kin": "sciurus_griseus",
+   "archetype": "arboreal climber",
+   "scale": 2.026,
+   "tint": null,
+   "mass_kg": 4.993,
+   "density_km2": 28.591,
+   "group": [
+    3,
+    15
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [
+    "omnivore"
+   ],
+   "known": [
+    "a monkey on a squirrel's body"
+   ]
+  },
+  {
+   "code": "procavia_capensis",
+   "scientific": "Procavia capensis",
+   "common": "Cape hyrax",
+   "one": "cape hyrax",
+   "many": "cape hyraxs",
+   "kin": "otospermophilus_beecheyi",
+   "archetype": "rock colony",
+   "scale": 1.716,
+   "tint": null,
+   "mass_kg": 3.03,
+   "density_km2": 41.5832,
+   "group": [
+    3,
+    12
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "mungos_mungo",
+   "scientific": "Mungos mungo",
+   "common": "Banded mongoose",
+   "one": "banded mongoose",
+   "many": "banded mongooses",
+   "kin": "urocyon_cinereoargenteus",
+   "archetype": "small carnivore",
+   "scale": 0.784,
+   "tint": null,
+   "mass_kg": 1.925,
+   "density_km2": 58.4355,
+   "group": [
+    1,
+    3
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [
+    "insectivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "leptailurus_serval",
+   "scientific": "Leptailurus serval",
+   "common": "Serval",
+   "one": "serval",
+   "many": "servals",
+   "kin": "lynx_rufus",
+   "archetype": "ambush predator",
+   "scale": 1.063,
+   "tint": null,
+   "mass_kg": 12.0,
+   "density_km2": 2.5,
+   "group": [
+    1,
+    4
+   ],
+   "bird": false,
+   "night": true,
+   "water": false,
+   "role": [
+    "predator"
+   ],
+   "known": []
+  },
+  {
+   "code": "helogale_parvula",
+   "scientific": "Helogale parvula",
+   "common": "Common dwarf mongoose",
+   "one": "common dwarf mongoose",
+   "many": "common dwarf mongooses",
+   "kin": "urocyon_cinereoargenteus",
+   "archetype": "small carnivore",
+   "scale": 0.422,
+   "tint": null,
+   "mass_kg": 0.3,
+   "density_km2": 235.5912,
+   "group": [
+    1,
+    3
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [
+    "insectivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "otocyon_megalotis",
+   "scientific": "Otocyon megalotis",
+   "common": "Bat-eared fox",
+   "one": "bat-eared fox",
+   "many": "bat-eared foxs",
+   "kin": "urocyon_cinereoargenteus",
+   "archetype": "coursing predator",
+   "scale": 1.012,
+   "tint": null,
+   "mass_kg": 4.15,
+   "density_km2": 32.8446,
+   "group": [
+    1,
+    6
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [
+    "omnivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "canis_aureus",
+   "scientific": "Canis aureus",
+   "common": "Golden jackal",
+   "one": "golden jackal",
+   "many": "golden jackals",
+   "kin": "canis_latrans",
+   "archetype": "coursing predator",
+   "scale": 0.927,
+   "tint": null,
+   "mass_kg": 10.345,
+   "density_km2": 2.8999,
+   "group": [
+    1,
+    6
+   ],
+   "bird": false,
+   "night": true,
+   "water": false,
+   "role": [
+    "predator"
+   ],
+   "known": []
+  },
+  {
+   "code": "canis_mesomelas",
+   "scientific": "Canis mesomelas",
+   "common": "Black-backed jackal",
+   "one": "black-backed jackal",
+   "many": "black-backed jackals",
+   "kin": "canis_latrans",
+   "archetype": "coursing predator",
+   "scale": 0.868,
+   "tint": null,
+   "mass_kg": 8.5,
+   "density_km2": 19.1839,
+   "group": [
+    1,
+    6
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [
+    "omnivore",
+    "scavenger"
+   ],
+   "known": []
+  },
+  {
+   "code": "lycaon_pictus",
+   "scientific": "Lycaon pictus",
+   "common": "African wild dog",
+   "one": "african wild dog",
+   "many": "african wild dogs",
+   "kin": "canis_latrans",
+   "archetype": "coursing predator",
+   "scale": 1.193,
+   "tint": null,
+   "mass_kg": 22.05,
+   "density_km2": 1.3605,
+   "group": [
+    1,
+    6
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [
+    "predator"
+   ],
+   "known": []
+  },
+  {
+   "code": "genetta_genetta",
+   "scientific": "Genetta genetta",
+   "common": "Common genet",
+   "one": "common genet",
+   "many": "common genets",
+   "kin": "urocyon_cinereoargenteus",
+   "archetype": "small carnivore",
+   "scale": 0.766,
+   "tint": null,
+   "mass_kg": 1.8,
+   "density_km2": 16.6667,
+   "group": [
+    1,
+    3
+   ],
+   "bird": false,
+   "night": true,
+   "water": false,
+   "role": [
+    "predator"
+   ],
+   "known": []
+  },
+  {
+   "code": "lamprotornis_superbus",
+   "scientific": "Lamprotornis superbus",
+   "common": "Superb starling",
+   "one": "superb starling",
+   "many": "superb starlings",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 0.815,
+   "tint": null,
+   "mass_kg": 0.065,
+   "density_km2": 44.7913,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "predator"
+   ],
+   "known": []
+  },
+  {
+   "code": "alopochen_aegyptiaca",
+   "scientific": "Alopochen aegyptiaca",
+   "common": "Egyptian goose",
+   "one": "egyptian goose",
+   "many": "egyptian gooses",
+   "kin": "mergus_merganser",
+   "archetype": "waterbird",
+   "scale": 1.077,
+   "tint": null,
+   "mass_kg": 1.873,
+   "density_km2": 11.6701,
+   "group": [
+    2,
+    10
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "herbivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "vanellus_armatus",
+   "scientific": "Vanellus armatus",
+   "common": "Blacksmith lapwing",
+   "one": "blacksmith lapwing",
+   "many": "blacksmith lapwings",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 1.091,
+   "tint": null,
+   "mass_kg": 0.156,
+   "density_km2": 31.5385,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "insectivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "leptoptilos_crumenifer",
+   "scientific": "Leptoptilos crumenifer",
+   "common": "Marabou stork",
+   "one": "marabou stork",
+   "many": "marabou storks",
+   "kin": "ardea_herodias",
+   "archetype": "wading bird",
+   "scale": 1.335,
+   "tint": null,
+   "mass_kg": 5.23,
+   "density_km2": 0.1446,
+   "group": [
+    1,
+    3
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "predator",
+    "scavenger"
+   ],
+   "known": []
+  },
+  {
+   "code": "eurocephalus_ruppelli",
+   "scientific": "Eurocephalus ruppelli",
+   "common": "White-rumped shrike",
+   "one": "white-rumped shrike",
+   "many": "white-rumped shrikes",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 0.793,
+   "tint": null,
+   "mass_kg": 0.06,
+   "density_km2": 46.2819,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "insectivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "trachyphonus_darnaudii",
+   "scientific": "Trachyphonus darnaudii",
+   "common": "D'arnaud's barbet",
+   "one": "d'arnaud's barbet",
+   "many": "d'arnaud's barbets",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 0.668,
+   "tint": null,
+   "mass_kg": 0.036,
+   "density_km2": 56.8884,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "omnivore"
+   ],
+   "known": [
+    "a parrot, toucan or hornbill on a jay's body"
+   ]
+  },
+  {
+   "code": "coracias_caudatus",
+   "scientific": "Coracias caudatus",
+   "common": "Lilac-breasted roller",
+   "one": "lilac-breasted roller",
+   "many": "lilac-breasted rollers",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 0.971,
+   "tint": null,
+   "mass_kg": 0.11,
+   "density_km2": 36.2689,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "predator"
+   ],
+   "known": []
+  },
+  {
+   "code": "lamprotornis_hildebrandti",
+   "scientific": "Lamprotornis hildebrandti",
+   "common": "Hildebrandt's starling",
+   "one": "hildebrandt's starling",
+   "many": "hildebrandt's starlings",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 0.775,
+   "tint": null,
+   "mass_kg": 0.056,
+   "density_km2": 47.5474,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "insectivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "dinemellia_dinemelli",
+   "scientific": "Dinemellia dinemelli",
+   "common": "White-headed buffalo-weaver",
+   "one": "white-headed buffalo-weaver",
+   "many": "white-headed buffalo-weavers",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 0.811,
+   "tint": null,
+   "mass_kg": 0.064,
+   "density_km2": 45.0703,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "ardea_melanocephala",
+   "scientific": "Ardea melanocephala",
+   "common": "Black-headed heron",
+   "one": "black-headed heron",
+   "many": "black-headed herons",
+   "kin": "ardea_herodias",
+   "archetype": "wading bird",
+   "scale": 0.784,
+   "tint": null,
+   "mass_kg": 1.06,
+   "density_km2": 0.4786,
+   "group": [
+    1,
+    3
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "predator",
+    "scavenger"
+   ],
+   "known": []
+  },
+  {
+   "code": "lamprotornis_purpuroptera",
+   "scientific": "Lamprotornis purpuroptera",
+   "common": "R\u00fcppell's starling",
+   "one": "r\u00fcppell's starling",
+   "many": "r\u00fcppell's starlings",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 0.864,
+   "tint": null,
+   "mass_kg": 0.077,
+   "density_km2": 41.7441,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "predator"
+   ],
+   "known": []
+  }
+ ],
+ "skipped": [
+  {
+   "id": "pseudonigrita_arnaudi",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "numida_meleagris",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "empidornis_semipartitus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "aquila_rapax",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "sporopipes_frontalis",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "agapornis_fischeri",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "sagittarius_serpentarius",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "lanius_excubitoroides",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "streptopelia_capicola",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "merops_pusillus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "amaurornis_flavirostra",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "urolestes_melanoleucus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "torgos_tracheliotos",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "struthio_camelus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "gyps_africanus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "terathopius_ecaudatus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "melierax_metabates",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "elanus_caeruleus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "centropus_superciliosus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "ardea_cinerea",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "polemaetus_bellicosus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "necrosyrtes_monachus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "gyps_rueppellii",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "mycteria_ibis",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "polihierax_semitorquatus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "scopus_umbretta",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "haliaeetus_vocifer",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "trigonoceps_occipitalis",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "circaetus_pectoralis",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "lophaetus_occipitalis",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "bubulcus_ibis",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "ephippiorhynchus_senegalensis",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "circus_pygargus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "circus_macrourus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "ciconia_ciconia",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "falco_ardosiaceus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "onychognathus_morio",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "buteo_augur",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "circaetus_cinereus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "phrynobatrachus_mababiensis",
+   "why": "over the 40-slot cap"
+  }
+ ],
+ "rules": "pipeline/fauna_slots.py: kin by taxonomy, diet and mass; scale = (mass / kin mass)^(1/3), 0.25-4; density Damuth 1981 (herbivores; large ones times HERBIVORE_PRODUCTIVITY of the tile's ecosystem), 30 / mass kg (carnivores), birds 15 m^-0.4 (cap 70) or 0.5 m^-0.75 (raptors)",
+ "ecosystem": "T4.1"
+}

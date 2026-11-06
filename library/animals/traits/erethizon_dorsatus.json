@@ -1,0 +1,120 @@
+{
+ "id": "erethizon_dorsatus",
+ "scientific": "Erethizon dorsatus",
+ "common": "north american porcupine",
+ "kind": "mammal",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Mammalia",
+  "order": "Rodentia",
+  "family": "Erethizontidae",
+  "genus": "Erethizon"
+ },
+ "body_plan": "rodent",
+ "mass_kg": 7.0853,
+ "size": {
+  "length_m": 0.691,
+  "shoulder_or_wingspan_m": 0.207
+ },
+ "diet": {
+  "role": [
+   "herbivore"
+  ],
+  "diet_tenths": {
+   "inv": 0.0,
+   "vend": 0.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 1.0,
+   "nect": 0.0,
+   "seed": 2.0,
+   "planto": 7.0
+  },
+  "vertebrate_share": 0.0,
+  "mass_kg": 7.0853,
+  "activity": [],
+  "source": "eltontraits (genus)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 369.8
+  },
+  "sound": {
+   "range_m": 517.8
+  },
+  "scent": {
+   "range_m": 739.7
+  }
+ },
+ "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+ "locomotion": {
+  "code": "erethizon_dorsatus",
+  "class": "Mammalia",
+  "order": "Rodentia",
+  "family": "Erethizontidae",
+  "body_plan": "rodent",
+  "mass_kg": 7.0853,
+  "length_m": 0.691,
+  "hip_m": 0.207,
+  "posture": "parasagittal",
+  "gaits": {
+   "walk": "froude 0.5",
+   "trot": "froude 2.5",
+   "gallop": "beyond",
+   "run": "bound"
+  },
+  "walk_mps": 1.01,
+  "trot_mps": 2.25,
+  "cruise_mps": 8.12,
+  "top_mps": 12.5,
+  "stride_hz": 3.12,
+  "stride_m": 0.72,
+  "sprint_s": 6.1,
+  "recover_s": 21.5,
+  "turn_rad_s": 3.02,
+  "turn": {
+   "on": 0.6,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    1.2,
+    4.0
+   ]
+  },
+  "lag": {
+   "s": 0.073,
+   "max_rad": 0.3,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "sit_up": true
+  },
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T06:19:56Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (genus)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}
