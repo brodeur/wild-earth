@@ -864,7 +864,7 @@ export class GroundControl {
   updateCamera(dt) {
     const f = this.flight, cam = this.camera, C = this.S.cam, off = this._v, aim = this._w;
     const P = this.mode === 'tunnel' ? (this._pu ||= new THREE.Vector3()).set(f.pos.x, Math.max(f.pos.y, this.heights.atXZ(f.pos.x, f.pos.z)), f.pos.z) : f.pos;   // underground: framed from the ground over the body (dig.js xray)
-    f.easeOrbit(dt, f.moving());   // the drag's orbit round the body (flight.js), back behind once the keys move it
+    f.easeOrbit(dt, f.moving(), this.mode === 'tunnel' || !!this.digging);   // the drag's orbit round the body (flight.js), back behind once the keys move it; underground and digging its pitch held (the dig's aim, dig.js aimPitch)
     const rate = wrap(f.yaw - (this.camYaw ?? f.yaw)) / Math.max(dt, 1e-3); this.camYaw = f.yaw;
     if (Math.abs(rate) > 0.3) this.camSide = damp(this.camSide, -Math.sign(rate) * C.side, 1.6, dt);
     const low = this.resting ? 0.7 : 1, fly = this.mode === 'fly' ? 1.4 : 1;

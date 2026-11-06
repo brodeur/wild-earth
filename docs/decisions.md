@@ -5295,3 +5295,28 @@ eight mergansers (one diving), banana slugs; all moving and phasing, no NaN in 2
 the eagle, the chickadee, the bobcat, the otter, the salamander, the merganser and the Douglas squirrel from the spirit.
 The lineup page drew all twenty models at their brief's sizes. Tests pass. Fauna and games rerun on both Hoh tiles: all
 nineteen present by their records, each at registry fidelity 3.
+
+## 2026-11-05: the dig goes the way the orbit camera looks (docs/game-dig.md "Steering by the camera")
+
+Aaron: "Can you make the orbit controls work for digging - so that it's easy to dig down."
+
+Since the orbit camera, a drag on the ground only swung the camera, so the dig's slope (the flight's pitch) was
+always 0. A player could not dig down past the opening dive.
+
+The orbit is now the aim:
+- **Pitch.** Its pitch off the set-up is the slope, down to 83 degrees and up to 57. A level view digs level, so the
+  keyboard path is unchanged.
+- **Held.** Underground and while digging, its pitch is held rather than eased back.
+- **Yaw.** While digging, its yaw turns the body as fast as the face can curve.
+
+Considered:
+- **Arrow keys or a modifier for pitch.** Rejected: Aaron asked for the orbit, and the drag is already in the
+  player's hand.
+- **The camera's exact view direction as the dig direction.** Rejected: the chase camera's set-up already looks down
+  20-40 degrees to frame the body, so a neutral view would dig downhill.
+- **Steering the body by the camera at all times underground.** Rejected: orbiting to look at the animal would spin
+  it round. The steer applies only while digging, and only with the camera within 100 degrees of behind.
+
+Walking a shaft by looking up or down came with it: the walk direction and the branch choice weigh a segment's slope by
+the aim, and are unchanged on the slopes the old dig could make.
+

@@ -168,11 +168,12 @@ export class RavenFlight {
   resetOrbit() { this.orbitYaw = 0; this.orbitPitch = 0; this.orbitT = 9; }
   // each camera calls this once a frame: the orbit eases back behind once the body moves on; the head turns toward it
   // going: whether the body is moving on (the walkers pass their keys; the fliers, a flight that is not hovering)
-  easeOrbit(dt, going = this.moving() || (!this.landed && !this.hover && Math.abs(this.speed) > 3)) {
+  // holdPitch: the pitch stays where the drag left it (a digger's aim, dig.js aimPitch); only the yaw eases back
+  easeOrbit(dt, going = this.moving() || (!this.landed && !this.hover && Math.abs(this.speed) > 3), holdPitch = false) {
     if (this.drag && !this.steering()) this.orbitT = 0; else this.orbitT += dt;
-    if (this.orbitT > ORBIT_HOLD && going && (this.orbitYaw || this.orbitPitch)) {
+    if (this.orbitT > ORBIT_HOLD && going && (this.orbitYaw || (this.orbitPitch && !holdPitch))) {
       const k = 1 - Math.exp(-dt * ORBIT_BACK);
-      this.orbitYaw -= this.orbitYaw * k; this.orbitPitch -= this.orbitPitch * k;
+      this.orbitYaw -= this.orbitYaw * k; if (!holdPitch) this.orbitPitch -= this.orbitPitch * k;
       if (Math.abs(this.orbitYaw) < 1e-3 && Math.abs(this.orbitPitch) < 1e-3) this.orbitYaw = this.orbitPitch = 0;
     }
     if (this.lookMax) this.headYaw.value = THREE.MathUtils.clamp(this.look + 0.7 * this.orbitYaw, -this.lookMax, this.lookMax);
