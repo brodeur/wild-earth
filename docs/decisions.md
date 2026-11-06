@@ -5897,6 +5897,10 @@ Iteration 8 brought the image to 1.4 GB (v36) with the pipeline's build-time cac
 segmentations and the model-check builds (`pipeline/_cache/references`, `segmentation`, `verdict_builds`, about 470 MB).
 Only the pipeline reads them while it builds models, so `.dockerignore` leaves them out too.
 
+The hosted server never answered `/api/weather` (503 since the weather step): `pipeline/fetch_weather.py` imports
+`requests`, which the image did not install, and the bare except turned the import error into "weather unavailable",
+so every client fell back to last year's day. The Dockerfile now installs requests and tzdata.
+
 ## 2026-11-06: phase 1, iteration 7 (branch claude/sweet-feistel-2054bb)
 
 - **The riparian weight rides in the cover texture's alpha; the micro patch's program fits in 16 texture units**
