@@ -29,15 +29,17 @@ import { releaseTexture } from './gpuRelease.js';
 // litter.js) take it as groundGain; trees, shrubs, animals and rock keep their own colours, already near their
 // reflectance. The exposure is raised by one constant for every tile and hour (EXPOSURE_K), so the scene stays about
 // as bright as it was while the ground and the canopy keep their true ratio. ?ground=display draws the ground as
-// before (gain 1, the old exposure); ?ground=luminance keeps the photo's hue; ?gexp=<k> tries another exposure factor.
+// before (gain 1, the old exposure); ?ground=physical takes Sentinel-2's hue per channel; ?gexp=<k> tries another exposure.
 const GROUND_PARAMS = typeof location !== 'undefined' ? new URLSearchParams(location.search) : null;
 // EXPOSURE_K: the factor that keeps the mean L* of the eight probes' 32 frames where it was (50.1-50.4 before; ground at its
 // reflectance with the old exposure 43.8, x1.6 53.0: interpolated in log exposure, 1.38; docs/decisions.md 2026-11-06)
 const EXPOSURE_K = 1.38;
 // GROUND_HUE: the factor per channel, so the ground takes Sentinel-2's measured hue too (NAIP's colour balance is greener
-// than L2A on the home foothills: red / green 0.99 against 1.28); false keeps the photo's hue (the luminance factor)
-const GROUND_HUE = true;
-const GROUND_PHYSICAL = GROUND_PARAMS?.get('ground') === 'physical';   // default: display until Aaron approves the pair (ground-albedo-v2)
+// than L2A on the home foothills: red / green 0.99 against 1.28). Off by default: the luminance factor keeps the photo's hue
+// (Aaron, 2026-11-06, "Go ahead" on luminance: per-channel turned the home foothills red-brown in May); ?ground=physical
+// shows the per-channel look for comparison.
+const GROUND_HUE = GROUND_PARAMS?.get('ground') === 'physical';
+const GROUND_PHYSICAL = GROUND_PARAMS?.get('ground') !== 'display';   // Aaron, 2026-11-06: "Physical, re-tune exposure"
 export const groundLook = {
   physical: GROUND_PHYSICAL, gain: new THREE.Vector3(1, 1, 1), basis: null,
   exposureK: GROUND_PHYSICAL ? (+(GROUND_PARAMS?.get('gexp') || 0) || EXPOSURE_K) : 1,
@@ -47,8 +49,8 @@ export function setGroundLook(tile) {
   const L = tile?.manifest?.layers?.['client.ground_albedo'], g = L?.gain;
   const on = groundLook.physical && Array.isArray(g) && g.length === 3 && g.every(v => v > 0.05 && v < 2);
   groundLook.gain.set(...(on ? g : [1, 1, 1]));
-  // ?ground=luminance: the factor's luminance on every channel (today's hue kept; GROUND_HUE false makes it the rule)
-  if (on && (!GROUND_HUE || GROUND_PARAMS?.get('ground') === 'luminance')) { const y = L.gain_luminance || (0.2126 * g[0] + 0.7152 * g[1] + 0.0722 * g[2]); groundLook.gain.set(y, y, y); }
+  // the factor's luminance on every channel (today's hue kept), unless ?ground=physical asks for the per-channel factor
+  if (on && !GROUND_HUE) { const y = L.gain_luminance || (0.2126 * g[0] + 0.7152 * g[1] + 0.0722 * g[2]); groundLook.gain.set(y, y, y); }
   groundLook.basis = on ? L.basis : null;
   return groundLook;
 }
