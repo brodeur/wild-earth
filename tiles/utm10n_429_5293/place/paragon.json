@@ -1,0 +1,66 @@
+{
+  "schema": "wild-earth/paragon@1",
+  "tile": "utm10n_429_5293",
+  "status": "prototype 2026-11-05: written by hand from the sources, the lidar and the photo statistics to show the schema and the checks; the paragon step's agent writes this file",
+  "place": {
+    "name": "Hoh Rain Forest",
+    "region": "pacific_northwest",
+    "protected": "Olympic National Park (World Heritage Site)",
+    "elevation_m": [166, 1632],
+    "valley_floor_elevation_m": 246
+  },
+  "gestalt": "A valley of giants standing in moss. On the Hoh's terraces Sitka spruce and western hemlock rise 75-80 m, widely spaced, over a floor that is more than half moss and carpeted with sword fern and oxalis rather than brush, because the elk eat the brush. Every fallen tree becomes a nursery: nearly all young trees stand on logs, so the living forest grows in rows, on stilts and arches of root. Bigleaf maple groves carry more living epiphyte than leaf, their limbs fat with moss and hung with clubmoss streamers that glow yellow-green when the light comes through. The light is soft, green and wet; fog sits in the valley in the mornings. Beside it all runs the river, milky slate blue from the glaciers of Mount Olympus, braided over wide grey bars piled with whole drift trees, alder on the older bars, the valley walls rising into cloud.",
+  "settings": [
+    { "card": "pnw_valley_rainforest", "share": 0.144, "where": "forest below 320 m off the active channel belt (EVT 7036, 7178, 7039, 7042 on the floor)", "measured": "settings prototype from evt.tif and dem.tif" },
+    { "card": "pnw_braided_gravel_bar", "share": 0.071, "where": "EVT 7156, 7157, 7292, 7662 below 320 m: the channel belt, bars and alder flats" },
+    { "card": "pnw_montane_silver_fir", "share": 0.753, "where": "the valley walls: silver fir, western hemlock and Douglas-fir forest above 320 m", "status": "card not written (a hand edit); its photos are few: pool with Mount Olympus" },
+    { "card": "pnw_subalpine_parkland", "share": 0.032, "where": "mountain hemlock, parkland, heath, rock and ice on the ridge tops", "status": "card not written; shared with utm10n_439_5293" }
+  ],
+  "signature": [
+    { "id": "moss_floor", "label": "moss carpets on the valley floor, logs and the feet of trunks", "weight": 1.0, "settings": ["pnw_valley_rainforest"], "traits": ["bryophytes.cover.soil", "bryophytes.cover.log", "bryophytes.cover.root_and_trunk_base", "bryophytes.green_by_month"], "evidence": { "photos_est": 49, "sources": ["mckee1982", "harmon1989a", "woods2021"] }, "drawn_by": ["groundDetail moss layer (new)", "treegen bark moss (parameter)", "deadwood moss (new)", "litter moss cushion (new kind)"], "today": "absent: the ground is a uniform dark green texture; bark moss browns in summer" },
+    { "id": "maple_clubmoss", "label": "bigleaf maples draped with clubmoss and moss mats", "weight": 0.95, "settings": ["pnw_valley_rainforest"], "traits": ["epiphytes.by_host.acer_macrophyllum"], "evidence": { "photos_est": 22, "sources": ["nadkarni1984", "nps_hoh"] }, "drawn_by": ["epiphytes.js (new)", "treegen limb moss (new term)"], "today": "absent" },
+    { "id": "nurse_logs", "label": "nurse logs with seedlings, colonnades and stilt-rooted trees", "weight": 0.9, "settings": ["pnw_valley_rainforest"], "traits": ["deadwood.*"], "evidence": { "photos_est": 18, "sources": ["harmon1989a", "harmon1989b", "mckee1982", "woods2021"] }, "drawn_by": ["deadwood.js (new)", "treegen stilt roots (root-flare option)"], "today": "absent: no logs on the ground" },
+    { "id": "open_giants", "label": "huge, widely spaced conifers over an open, elk-browsed understory of fern and oxalis", "weight": 0.85, "settings": ["pnw_valley_rainforest"], "traits": ["structure.*", "understory.browse_pressure", "understory.species_weights"], "evidence": { "photos_est": 40, "sources": ["mckee1982", "woodward2021"], "lidar": "canopy height p99 82 m, p90 72 m on the floor's Sitka spruce cells; 26 % of the floor under 2 m at 1 m (openings)" }, "drawn_by": ["lidar crowns (exists)", "species_mix browse (parameter)", "fern habit (new)"], "today": "partly: the crowns are right in height; trunks read thin; no fern habit" },
+    { "id": "green_light", "label": "soft, green-filtered, wet light; morning fog in the valley", "weight": 0.8, "settings": ["pnw_valley_rainforest", "pnw_braided_gravel_bar"], "traits": ["light.*", "air.fog", "palette", "wet.baseline_by_month"], "evidence": { "photos_est": 56, "sources": ["nps_hoh", "nps_fog"] }, "drawn_by": ["atmosphere (parameter)", "grade (new)", "wet sheen (parameter)"], "today": "wrong: twice too dark (L* 20 against 39), blue-green (hue 145 against 117)" },
+    { "id": "sword_fern", "label": "sword fern everywhere at knee to waist height", "weight": 0.75, "settings": ["pnw_valley_rainforest"], "traits": ["understory.fern_cover", "understory.species_weights.polystichum_munitum"], "evidence": { "photos_est": 45, "sources": ["mckee1982", "gbif_tile: 398 records, the tile's most-recorded plant"] }, "drawn_by": ["fern habit (new)"], "today": "drawn as a rosette forb" },
+    { "id": "braided_bars", "label": "braided milky slate-blue river over wide grey bars with drift-tree jams", "weight": 0.7, "settings": ["pnw_braided_gravel_bar"], "traits": ["river.colour", "deadwood.jams", "ground.materials"], "evidence": { "photos_est": 7, "sources": ["wp_hoh_river", "east2017"] }, "drawn_by": ["water.js colour and turbidity (parameter)", "deadwood.js jams (new)", "rocks.js bar mix (exists)"], "today": "partly: the bars and channels are routed; water colour generic; no jams" },
+    { "id": "elk", "label": "Roosevelt elk herds on the floor and the bars", "weight": 0.6, "settings": ["pnw_valley_rainforest", "pnw_braided_gravel_bar"], "traits": ["fauna.cervus_canadensis"], "evidence": { "photos_est": 6, "sources": ["houston1987", "nps_elk"] }, "drawn_by": ["animals.js (exists, numbers to look.json)"], "today": "present (2026-11-05)" }
+  ],
+  "views": [
+    { "id": "hall_of_mosses", "setting": "pnw_valley_rainforest", "what": "a maple grove from the trail at a person's eye: clubmoss curtains against back light, sword fern, a nurse log", "eye_m": 1.6, "month": 6, "hour": 11, "weather": "overcast" },
+    { "id": "spruce_terrace", "setting": "pnw_valley_rainforest", "what": "two or three giant spruce trunks, an open fern and oxalis floor, a colonnade", "eye_m": 1.6, "month": 7, "hour": 10, "weather": "overcast" },
+    { "id": "elk_floor", "setting": "pnw_valley_rainforest", "what": "an elk's eye across the browsed floor", "eye_m": 1.7, "month": 10, "hour": 9, "weather": "fog" },
+    { "id": "squirrel_log", "setting": "pnw_valley_rainforest", "what": "a Douglas squirrel's eye along a mossy nurse log with hemlock seedlings", "eye_m": 0.1, "month": 9, "hour": 14, "weather": "overcast" },
+    { "id": "river_bar", "setting": "pnw_braided_gravel_bar", "what": "upstream over a gravel bar: braided channels, a drift-tree jam, alder, cloud on the valley walls", "eye_m": 1.6, "month": 8, "hour": 15, "weather": "partly cloudy" },
+    { "id": "valley_from_slope", "setting": "pnw_montane_silver_fir", "what": "down the valley from the slope: the floor's emergent spruce, mist in the valley", "eye_m": 1.6, "month": 9, "hour": 8, "weather": "fog" }
+  ],
+  "fauna": {
+    "signature": ["cervus_canadensis", "tamiasciurus_douglasii", "troglodytes_pacificus", "ariolimax_columbianus", "lontra_canadensis", "haliaeetus_leucocephalus", "ursus_americanus", "puma_concolor", "ixoreus_naevius", "dryocopus_pileatus"],
+    "missing_from_research": { "puma_concolor": "not in the tile's GBIF ranking (cougars are rarely recorded); the park reports a low-density population (NPS)", "ixoreus_naevius": "the varied thrush is a named signature bird (NPS)", "dryocopus_pileatus": "a cavity-maker others depend on (Aubry and Raley 2002)", "oncorhynchus": "the salmon runs: 13 salmonid populations; no fish rig yet" }
+  },
+  "interactions": [
+    { "type": "browses", "from": "cervus_canadensis", "to": ["acer_circinatum", "vaccinium_parvifolium", "rubus_spectabilis", "oxalis_oregana", "lobaria_oregana"], "effect": "keeps the understory open: without elk, shrubs 5-6 fold in 36 years", "src": ["woodward2021"], "game": "forage rows; a browse resource drawn down by the herd" },
+    { "type": "preysOn", "from": "puma_concolor", "to": ["cervus_canadensis", "odocoileus_hemionus"], "src": ["eltontraits", "nps"], "game": "hunt and evade" },
+    { "type": "scavenges", "from": ["corvus_corax", "haliaeetus_leucocephalus", "ursus_americanus", "cathartes_aura"], "to": ["elk carcass", "salmon carcass"], "src": ["cederholm1989"], "game": "carrion.js" },
+    { "type": "providesNutrientsFor", "from": "oncorhynchus", "to": ["the riparian forest", "ursus_americanus", "haliaeetus_leucocephalus", "lontra_canadensis"], "effect": "22 species fed on placed coho carcasses; most stayed within 600 m of the stream", "src": ["cederholm1989"], "game": "a season event on the bars (needs fish)" },
+    { "type": "caches", "from": "tamiasciurus_douglasii", "to": ["picea_sitchensis cones"], "effect": "middens several metres across", "src": ["wp_douglas_squirrel"], "game": "the acorn stash with cones" },
+    { "type": "createsHabitatFor", "from": "dryocopus_pileatus", "to": ["owls", "Barrow's goldeneye", "tamiasciurus_douglasii"], "effect": "roosts in hollow redcedars 155-309 cm across", "src": ["aubry2002"], "game": "a cavity resource" },
+    { "type": "competes", "from": "strix_varia", "to": ["strix_occidentalis_caurina"], "effect": "spotted owls at 19 of 54 territories in one year, about 4 % a year decline", "src": ["pdn_owls"], "game": "shared hotspots" },
+    { "type": "nurses", "from": "fallen logs", "to": ["picea_sitchensis", "tsuga_heterophylla"], "effect": "88-97 % of seedlings on logs", "src": ["mckee1982"], "game": "none: drives deadwood" },
+    { "type": "epiphyteOf", "from": ["selaginella_oregana", "isothecium_myosuroides", "polypodium_glycyrrhiza"], "to": ["acer_macrophyllum"], "src": ["nadkarni1984"], "game": "none: drives the epiphytes" }
+  ],
+  "photos": { "file": "place/photos.json", "categories": { "understory": 56, "close": 17, "river": 7, "species": 15 }, "rejected": 139, "sources": "Wikimedia Commons only in this prototype; iNaturalist (1,163 observations with open photos) not yet read" },
+  "check": {
+    "built": "2026-11-05, by hand: the steps the paragon_check step will run. photos_est in the signature is a count by eye from the contact sheets, approximate; the grounding pass will count it",
+    "results": [
+      { "trait": "structure.canopy_top_m", "claim": "75-85 m (McKee 1982)", "measured": "lidar canopy height on the floor's Sitka spruce cells: p90 72 m, p99 82 m, max 99 m (10 m grid)", "verdict": "pass" },
+      { "trait": "structure.canopy_cover_densiometer", "claim": "0.93 (Woods 2021)", "measured": "1 m CHM on the floor's Sitka spruce cells: 74 % over 5 m, 26 % under 2 m", "verdict": "warn", "why": "a densiometer reads the hemisphere, the CHM the vertical; 26 % openings matches McKee's 'openings up to several hectares'. Keep the lidar value for drawing, the densiometer value for the light" },
+      { "trait": "bryophytes.green_by_month", "claim": "green all year", "measured": "last year's weather: wet season November to April; July 66 mm (climate table)", "verdict": "warn", "why": "summer is dry by rain; the claim rests on fog drip (one snippet source). Photo check by month needed: summer photos show green moss (June 2018 set)" },
+      { "trait": "palette", "claim": "from photo_stats", "measured": "56 photos, per-photo median L* 32-48", "verdict": "pass" },
+      { "trait": "understory.browse_line_m", "claim": "1.8 m (judgement)", "measured": "none", "verdict": "warn", "why": "no source; needs photo grounding" },
+      { "trait": "deadwood.colonnades_per_ha", "claim": "2 /ha (judgement)", "measured": "none", "verdict": "warn", "why": "never counted in the literature; lidar may find rows of trunks on old log lines" },
+      { "trait": "species", "claim": "every named species in the tile's or region's records", "measured": "mosses and Selaginella are not in the tile's vascular-plant research (GBIF facet)", "verdict": "warn", "why": "the plants step must add non-vascular signature species from the paragon" }
+    ]
+  },
+  "sources": "the setting cards' sources, plus: eltontraits (Wilman et al. 2014), nps (Olympic NP pages), wp_douglas_squirrel (Wikipedia), aubry2002 (Aubry and Raley 2002, J. Wildl. Manage.), pdn_owls (Peninsula Daily News, via search), cederholm1989"
+}

@@ -5295,3 +5295,45 @@ eight mergansers (one diving), banana slugs; all moving and phasing, no NaN in 2
 the eagle, the chickadee, the bobcat, the otter, the salamander, the merganser and the Douglas squirrel from the spirit.
 The lineup page drew all twenty models at their brief's sizes. Tests pass. Fauna and games rerun on both Hoh tiles: all
 nineteen present by their records, each at registry fidelity 3.
+
+## 2026-11-05: the gestalt pipeline: a paragon per tile, carried into every generator and judged against photos (design; branch claude/sweet-feistel-2054bb)
+
+Aaron: "Research the square, understand the major animals and plant and tree species, what is the 'vibe' or gestalt of
+that area. Collect reference photos ... and what the inter-species dynamics are (for games)", and "a pipeline that
+produces something that feels like the place, by producing each object in such a way that it contains the vibe of the
+paragon." A design for review, `docs/gestalt-pipeline.md`; the published page: https://claude.ai/artifact/CRXGhhEe16r6njnDD8dKvU.
+Nothing in the step graph or the client changed.
+
+- **Chosen: two new stages around the existing four**, `place` after base (settings_map, structure, sources, photos,
+  photo_stats, paragon, paragon_check) and `judge` last (poses, render, judge), plus `deadwood` and `look` in flora and
+  `interactions` in fauna. Place reads only base, so flora can read it; judge needs the finished tile. Rejected: a
+  separate tool outside `build_tile` (it would lose `--plan`, `--status`, the fingerprints and `cost.json`).
+- **Chosen: settings, not one description per tile.** A setting (valley-floor rain forest, braided gravel bar, montane
+  silver fir, subalpine) is a card in `library/settings/` keyed by EVT, landform and region and reused by neighbours; the
+  tile's paragon names its settings, shares, ranked signature features, views and interactions. Rejected: a single
+  per-tile gestalt (the Hoh tile is 75 % valley wall; an average would lose the valley floor's look).
+- **Chosen: every number is a sourced, checked trait** with a range and the look parameters it drives. Source order:
+  this tile's measurement, then classification text (LANDFIRE BpS, NatureServe), then literature, then judgement marked
+  low. The check fails on a schema error or a contradicted measurement and warns on the rest.
+- **Chosen: the agent writes files, the pipeline stays deterministic.** The paragon step is a trait card's pattern: an
+  agent (`claude -p`, fixed prompt) writes the setting cards and the paragon; the step records its inputs' hashes and is
+  stale, not re-run, when they change, unless `--research`.
+- **Chosen: photos are measured and judged, never shipped.** CC0, PDM, US Government, CC BY and CC BY-SA only, filtered
+  per photo; licence and author kept per photo; the client gets numbers only.
+- **Chosen: a judge with four parts**: image statistics (30), a vision rubric (40), the signature checklist (20) and a
+  blind place test (10). Tuning is bounded to each trait's sourced range, so the loop cannot paint renders to match
+  photos the paragon does not support; structural gaps become registry hand edits.
+- **Measured today, the prototype**: 234 openly licensed Commons photos geotagged in the Hoh tile (75 public domain,
+  mostly NPS); 56 forest interiors against the current render in CIELAB: median lightness 39 against 20, green hue 117°
+  against 145°, moss-green pixels 32 % against 0.03 %, a*b* overlap 0.18 (two photo sets of the place: 0.82). Lidar
+  against the literature: canopy p99 82 m on the floor's Sitka spruce cells against McKee's 75-85 m (pass); 74 % cover
+  over 5 m in the 1 m CHM against Woods' 93 % densiometer (warn: different instruments).
+- **Prototype files**: `library/settings/pnw_valley_rainforest.json`, `library/settings/pnw_braided_gravel_bar.json`,
+  `tiles/utm10n_429_5293/place/paragon.json`, `tiles/utm10n_429_5293/place/photos.json`. The scripts, contact sheets,
+  the source-licence survey and the Hoh fact sheet are in the shared notes folder.
+- **Cost**: per new place $5-12 of Claude, under 100 MB, 40-70 min on top of the four stages; to implement $225-355, no
+  Meshy credits.
+- **First new place, recommended: Lamar Valley, Yellowstone** (`utm12n_558_4964`): unlike both the foothills and the Hoh,
+  the hardest test of the interactions and games, and mostly existing archetypes (4-6 Meshy jobs, about 150 credits).
+  Then Saguaro West (`utm12n_479_3565`, the generator stress test), then the Smokies' Greenbrier (`utm17n_279_3949`).
+  Not run; that waits for Aaron's review.

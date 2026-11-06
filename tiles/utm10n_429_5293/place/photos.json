@@ -1,0 +1,1070 @@
+{
+ "schema": "wild-earth/photos@1",
+ "tile": "utm10n_429_5293",
+ "built": "2026-11-05",
+ "status": "prototype: Wikimedia Commons only (geosearch on the tile box); classified by eye, as the Haiku pass will; thumbnails 480 px, not kept in the repo",
+ "searched": {
+  "commons_geotagged": 242,
+  "commons_openly_licensed": 234,
+  "inaturalist_research_grade_open_photos": 1163,
+  "inaturalist_used": 0
+ },
+ "allow": [
+  "CC0",
+  "Public Domain Mark",
+  "Public domain (US Government work)",
+  "CC BY",
+  "CC BY-SA"
+ ],
+ "categories": {
+  "understory": 56,
+  "river": 7,
+  "close": 17,
+  "species": 15
+ },
+ "rejected": 139,
+ "rejected_why": "signs, buildings, people in front, exhibits, other tiles (Mount Olympus), night and black-and-white",
+ "licences_used": {
+  "CC BY-SA 3.0": 2,
+  "CC BY 2.0": 50,
+  "Public domain": 26,
+  "CC BY 2.5": 1,
+  "CC BY-SA 4.0": 11,
+  "CC BY 3.0": 2,
+  "CC BY-SA 2.0": 3
+ },
+ "stats": {
+  "understory": {
+   "n": 56,
+   "pooled": {
+    "L_p10": 15.106,
+    "L_med": 39.385,
+    "L_p90": 64.772,
+    "chroma_med": 14.572,
+    "green_frac": 0.515,
+    "yellowgreen_frac": 0.315,
+    "cyan_frac": 0.006,
+    "hue_green_med": 117.255,
+    "dark_frac": 0.161
+   },
+   "per_photo_p10_p50_p90": {
+    "L_med": [
+     32.476,
+     38.783,
+     48.217
+    ],
+    "green_frac": [
+     0.295,
+     0.536,
+     0.853
+    ],
+    "chroma_med": [
+     8.368,
+     13.644,
+     38.451
+    ]
+   },
+   "palette": [
+    {
+     "hex": "#5d5b4e",
+     "w": 0.261
+    },
+    {
+     "hex": "#2b281e",
+     "w": 0.238
+    },
+    {
+     "hex": "#858b64",
+     "w": 0.157
+    },
+    {
+     "hex": "#4c5322",
+     "w": 0.154
+    },
+    {
+     "hex": "#7a9837",
+     "w": 0.097
+    },
+    {
+     "hex": "#a3a7a4",
+     "w": 0.093
+    }
+   ]
+  },
+  "river": {
+   "n": 7,
+   "pooled": {
+    "L_p10": 15.416,
+    "L_med": 48.946,
+    "L_p90": 84.569,
+    "chroma_med": 4.959,
+    "green_frac": 0.084,
+    "yellowgreen_frac": 0.056,
+    "cyan_frac": 0.06,
+    "hue_green_med": 104.762,
+    "dark_frac": 0.149
+   },
+   "per_photo_p10_p50_p90": {
+    "L_med": [
+     38.774,
+     51.368,
+     55.141
+    ],
+    "green_frac": [
+     0.027,
+     0.087,
+     0.148
+    ],
+    "chroma_med": [
+     3.317,
+     4.009,
+     9.669
+    ]
+   },
+   "palette": [
+    {
+     "hex": "#939293",
+     "w": 0.275
+    },
+    {
+     "hex": "#d2d2d9",
+     "w": 0.207
+    },
+    {
+     "hex": "#222221",
+     "w": 0.165
+    },
+    {
+     "hex": "#485863",
+     "w": 0.152
+    },
+    {
+     "hex": "#4b473a",
+     "w": 0.142
+    },
+    {
+     "hex": "#7b714d",
+     "w": 0.058
+    }
+   ]
+  },
+  "close": {
+   "n": 17,
+   "pooled": {
+    "L_p10": 14.752,
+    "L_med": 43.143,
+    "L_p90": 71.917,
+    "chroma_med": 10.704,
+    "green_frac": 0.401,
+    "yellowgreen_frac": 0.252,
+    "cyan_frac": 0.009,
+    "hue_green_med": 116.659,
+    "dark_frac": 0.155
+   },
+   "per_photo_p10_p50_p90": {
+    "L_med": [
+     28.701,
+     44.56,
+     52.547
+    ],
+    "green_frac": [
+     0.184,
+     0.377,
+     0.68
+    ],
+    "chroma_med": [
+     5.264,
+     10.497,
+     29.951
+    ]
+   },
+   "palette": [
+    {
+     "hex": "#7c7c6f",
+     "w": 0.23
+    },
+    {
+     "hex": "#4a473e",
+     "w": 0.221
+    },
+    {
+     "hex": "#201e19",
+     "w": 0.156
+    },
+    {
+     "hex": "#b7b8ae",
+     "w": 0.146
+    },
+    {
+     "hex": "#575a28",
+     "w": 0.139
+    },
+    {
+     "hex": "#94a251",
+     "w": 0.108
+    }
+   ]
+  },
+  "species": {
+   "n": 15,
+   "pooled": {
+    "L_p10": 14.449,
+    "L_med": 49.324,
+    "L_p90": 76.088,
+    "chroma_med": 21.701,
+    "green_frac": 0.525,
+    "yellowgreen_frac": 0.272,
+    "cyan_frac": 0.002,
+    "hue_green_med": 122.84,
+    "dark_frac": 0.149
+   },
+   "per_photo_p10_p50_p90": {
+    "L_med": [
+     23.13,
+     50.864,
+     60.508
+    ],
+    "green_frac": [
+     0.018,
+     0.572,
+     0.789
+    ],
+    "chroma_med": [
+     7.165,
+     20.742,
+     33.887
+    ]
+   },
+   "palette": [
+    {
+     "hex": "#2a251a",
+     "w": 0.215
+    },
+    {
+     "hex": "#849b69",
+     "w": 0.171
+    },
+    {
+     "hex": "#8a9d3b",
+     "w": 0.171
+    },
+    {
+     "hex": "#73614c",
+     "w": 0.166
+    },
+    {
+     "hex": "#c0b9b1",
+     "w": 0.141
+    },
+    {
+     "hex": "#4c5e2c",
+     "w": 0.136
+    }
+   ]
+  }
+ },
+ "render_compared": {
+  "what": "the root-flare lane's three Hoh poses on main (2026-11-05), right-hand column of cmp_hoh_a.jpg",
+  "pooled": {
+   "L_p10": 12.366,
+   "L_med": 20.001,
+   "L_p90": 57.931,
+   "chroma_med": 12.323,
+   "green_frac": 0.614,
+   "yellowgreen_frac": 0.0,
+   "cyan_frac": 0.278,
+   "hue_green_med": 144.907,
+   "dark_frac": 0.5
+  },
+  "palette": [
+   {
+    "hex": "#243526",
+    "w": 0.397
+   },
+   {
+    "hex": "#192419",
+    "w": 0.295
+   },
+   {
+    "hex": "#375855",
+    "w": 0.099
+   },
+   {
+    "hex": "#668684",
+    "w": 0.096
+   },
+   {
+    "hex": "#a6c1c2",
+    "w": 0.072
+   },
+   {
+    "hex": "#294e38",
+    "w": 0.041
+   }
+  ],
+  "ab_histogram_overlap_with_understory": 0.176,
+  "close_vs_understory_photos_overlap": 0.817
+ },
+ "photos": [
+  {
+   "id": "commons:Blacktail Doe in the Hoh rainforest - panoramio.jpg",
+   "category": "species",
+   "setting": null,
+   "licence": "CC BY-SA 3.0",
+   "author": "sandyriverfisher",
+   "url": "https://commons.wikimedia.org/wiki/File:Blacktail_Doe_in_the_Hoh_rainforest_-_panoramio.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54018547722.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54018547722.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54018550312.jpg",
+   "category": "river",
+   "setting": "pnw_braided_gravel_bar",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54018550312.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019450531.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019450531.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019451136.jpg",
+   "category": "close",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019451136.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019451491.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019451491.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019677123.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019677123.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019677353.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019677353.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019678253.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019678253.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019781964.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019781964.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019782694.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019782694.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019784489.jpg",
+   "category": "river",
+   "setting": "pnw_braided_gravel_bar",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019784489.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019784519.jpg",
+   "category": "river",
+   "setting": "pnw_braided_gravel_bar",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019784519.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019786104.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019786104.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019879400.jpg",
+   "category": "river",
+   "setting": "pnw_braided_gravel_bar",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019879400.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019888885.jpg",
+   "category": "close",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019888885.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019889160.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019889160.jpg"
+  },
+  {
+   "id": "commons:Animals elk female face Hoh NPS Photo j Preston (17302394215).jpg",
+   "category": "species",
+   "setting": null,
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Animals_elk_female_face_Hoh_NPS_Photo_j_Preston_(17302394215).jpg"
+  },
+  {
+   "id": "commons:HohRiverTrail 7322.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.5",
+   "author": "Wsiegmund",
+   "url": "https://commons.wikimedia.org/wiki/File:HohRiverTrail_7322.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54018538707.jpg",
+   "category": "species",
+   "setting": null,
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54018538707.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019667763.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019667763.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019673798.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019673798.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019679908.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019679908.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019774144.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019774144.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019780064.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019780064.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019787904.jpg",
+   "category": "close",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019787904.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019887175.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019887175.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019887535.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019887535.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019893505.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019893505.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - panoramio.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY-SA 3.0",
+   "author": "Sualkdd",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_panoramio.jpg"
+  },
+  {
+   "id": "commons:Hoh River Trail 2022.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY-SA 4.0",
+   "author": "Sea Cow",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_River_Trail_2022.jpg"
+  },
+  {
+   "id": "commons:Hoh rainforest - panoramio.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 3.0",
+   "author": "gorian21",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_rainforest_-_panoramio.jpg"
+  },
+  {
+   "id": "commons:Hoh river scenic trees clouds NPS Photo (17287389016).jpg",
+   "category": "river",
+   "setting": "pnw_braided_gravel_bar",
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_river_scenic_trees_clouds_NPS_Photo_(17287389016).jpg"
+  },
+  {
+   "id": "commons:Juvenile Bald Eagle, Olympic National Forest (25159968184).jpg",
+   "category": "species",
+   "setting": null,
+   "licence": "Public domain",
+   "author": "U.S. Forest Service- Pacific Northwest Region",
+   "url": "https://commons.wikimedia.org/wiki/File:Juvenile_Bald_Eagle,_Olympic_National_Forest_(25159968184).jpg"
+  },
+  {
+   "id": "commons:Pacific Wren on Mossy Branch.jpg",
+   "category": "species",
+   "setting": null,
+   "licence": "CC BY-SA 2.0",
+   "author": "stevehfung",
+   "url": "https://commons.wikimedia.org/wiki/File:Pacific_Wren_on_Mossy_Branch.jpg"
+  },
+  {
+   "id": "commons:Animals mammal deer fawn hidden HR NPS Photo 6-09 (17094928257).jpg",
+   "category": "species",
+   "setting": null,
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Animals_mammal_deer_fawn_hidden_HR_NPS_Photo_6-09_(17094928257).jpg"
+  },
+  {
+   "id": "commons:Animals mountain beaver Hoh NPS Photo j Preston (17302487225).jpg",
+   "category": "species",
+   "setting": null,
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Animals_mountain_beaver_Hoh_NPS_Photo_j_Preston_(17302487225).jpg"
+  },
+  {
+   "id": "commons:Banana slug spotted Hoh NPS Photo j Preston (17302301391).jpg",
+   "category": "species",
+   "setting": null,
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Banana_slug_spotted_Hoh_NPS_Photo_j_Preston_(17302301391).jpg"
+  },
+  {
+   "id": "commons:Hoh Rainforest, mossy log tree NPS Photo (16680304244).jpg",
+   "category": "close",
+   "setting": "pnw_valley_rainforest",
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rainforest,_mossy_log_tree_NPS_Photo_(16680304244).jpg"
+  },
+  {
+   "id": "commons:Hoh creek greens water cbubar (17116538369).jpg",
+   "category": "close",
+   "setting": "pnw_valley_rainforest",
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_creek_greens_water_cbubar_(17116538369).jpg"
+  },
+  {
+   "id": "commons:Hoh elk bull grazing cbubar (17300894582).jpg",
+   "category": "species",
+   "setting": null,
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_elk_bull_grazing_cbubar_(17300894582).jpg"
+  },
+  {
+   "id": "commons:Hoh rainforest scenic mossy logs r mckenna march 2015 (17125821760).jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_rainforest_scenic_mossy_logs_r_mckenna_march_2015_(17125821760).jpg"
+  },
+  {
+   "id": "commons:Hoh river water splash cbubar NPS Photo (17116532299).jpg",
+   "category": "river",
+   "setting": "pnw_braided_gravel_bar",
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_river_water_splash_cbubar_NPS_Photo_(17116532299).jpg"
+  },
+  {
+   "id": "commons:Hoh squirrel fall cbubar NPS Photo (17302751765).jpg",
+   "category": "species",
+   "setting": null,
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_squirrel_fall_cbubar_NPS_Photo_(17302751765).jpg"
+  },
+  {
+   "id": "commons:Hohriver (17116573499).jpg",
+   "category": "river",
+   "setting": "pnw_braided_gravel_bar",
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Hohriver_(17116573499).jpg"
+  },
+  {
+   "id": "commons:Lichens moss forest floor hoh rainforest c bubar march 05 2015 (17299019466).jpg",
+   "category": "close",
+   "setting": "pnw_valley_rainforest",
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Lichens_moss_forest_floor_hoh_rainforest_c_bubar_march_05_2015_(17299019466).jpg"
+  },
+  {
+   "id": "commons:Nurse log hoh rainforest c bubar march 05-2015 (16693104543).jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Nurse_log_hoh_rainforest_c_bubar_march_05-2015_(16693104543).jpg"
+  },
+  {
+   "id": "commons:Plant moss lichen green Hoh NPS Photo j preston (17116553079).jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Plant_moss_lichen_green_Hoh_NPS_Photo_j_preston_(17116553079).jpg"
+  },
+  {
+   "id": "commons:Stair step moss hoh rainforest c bubar july 2014 (17302769445).jpg",
+   "category": "close",
+   "setting": "pnw_valley_rainforest",
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Stair_step_moss_hoh_rainforest_c_bubar_july_2014_(17302769445).jpg"
+  },
+  {
+   "id": "commons:Stair step moss stump hoh rainforest c bubar july 2014 (17302171651).jpg",
+   "category": "close",
+   "setting": "pnw_valley_rainforest",
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Stair_step_moss_stump_hoh_rainforest_c_bubar_july_2014_(17302171651).jpg"
+  },
+  {
+   "id": "commons:Tree canopy mossy branches ferns bark hoh rainforest d archuleta march 05 2015 (17115543767).jpg",
+   "category": "close",
+   "setting": "pnw_valley_rainforest",
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Tree_canopy_mossy_branches_ferns_bark_hoh_rainforest_d_archuleta_march_05_2015_(17115543767).jpg"
+  },
+  {
+   "id": "commons:Wildlife elk female fawn Hoh NPS photo j Preston (17116175979).jpg",
+   "category": "species",
+   "setting": null,
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Wildlife_elk_female_fawn_Hoh_NPS_photo_j_Preston_(17116175979).jpg"
+  },
+  {
+   "id": "commons:Animal mammal Mountain Beaver Hoh NPS PhotoJuly 11, 2006 (16680015014).jpg",
+   "category": "species",
+   "setting": null,
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Animal_mammal_Mountain_Beaver_Hoh_NPS_PhotoJuly_11,_2006_(16680015014).jpg"
+  },
+  {
+   "id": "commons:Birds chickadee Hoh NPS Photo j Preston (22914535072).jpg",
+   "category": "species",
+   "setting": null,
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Birds_chickadee_Hoh_NPS_Photo_j_Preston_(22914535072).jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54018554827.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54018554827.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019893800.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019893800.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest Olympic June 2018 004.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY-SA 4.0",
+   "author": "King of Hearts",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_Olympic_June_2018_004.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest Olympic June 2018 005.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY-SA 4.0",
+   "author": "King of Hearts",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_Olympic_June_2018_005.jpg"
+  },
+  {
+   "id": "commons:Hoh hanging moss lichen rainforest NPS Photo (17116425149).jpg",
+   "category": "close",
+   "setting": "pnw_valley_rainforest",
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_hanging_moss_lichen_rainforest_NPS_Photo_(17116425149).jpg"
+  },
+  {
+   "id": "commons:Hoh moss forest cbubar (17116539749).jpg",
+   "category": "close",
+   "setting": "pnw_valley_rainforest",
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_moss_forest_cbubar_(17116539749).jpg"
+  },
+  {
+   "id": "commons:Pittoilet backcountry infrastructure rainforest moss covered NPS Photo (17276632776).jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Pittoilet_backcountry_infrastructure_rainforest_moss_covered_NPS_Photo_(17276632776).jpg"
+  },
+  {
+   "id": "commons:Western screech owl, Olympic National Park 2 (16680312234).jpg",
+   "category": "species",
+   "setting": null,
+   "licence": "Public domain",
+   "author": "Olympic National Park",
+   "url": "https://commons.wikimedia.org/wiki/File:Western_screech_owl,_Olympic_National_Park_2_(16680312234).jpg"
+  },
+  {
+   "id": "commons:Hall Of Mosses (213654479).jpeg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 3.0",
+   "author": "\nBrandon Kuschel",
+   "url": "https://commons.wikimedia.org/wiki/File:Hall_Of_Mosses_(213654479).jpeg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54018557832.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54018557832.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019456031.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019456031.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019456086.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019456086.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019790884.jpg",
+   "category": "close",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019790884.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019791019.jpg",
+   "category": "close",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019791019.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019796294.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019796294.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019897135.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019897135.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019901955.jpg",
+   "category": "close",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019901955.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019902515.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019902515.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest Olympic June 2018 003.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY-SA 4.0",
+   "author": "King of Hearts",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_Olympic_June_2018_003.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest Olympic June 2018 006.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY-SA 4.0",
+   "author": "King of Hearts",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_Olympic_June_2018_006.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest Olympic June 2018 011.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY-SA 4.0",
+   "author": "King of Hearts",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_Olympic_June_2018_011.jpg"
+  },
+  {
+   "id": "commons:Bigleaf maples and ferns in the Hoh Rain Forest, Olympic National Park (August 2018).jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY-SA 4.0",
+   "author": "Ben1152000",
+   "url": "https://commons.wikimedia.org/wiki/File:Bigleaf_maples_and_ferns_in_the_Hoh_Rain_Forest,_Olympic_National_Park_(August_2018).jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54018560002.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54018560002.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54018561137.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54018561137.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019457341.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019457341.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019458796.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019458796.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019686773.jpg",
+   "category": "close",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019686773.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019687363.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019687363.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019687998.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019687998.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019688058.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019688058.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019794764.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019794764.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019794769.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019794769.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019795239.jpg",
+   "category": "close",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019795239.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019898805.jpg",
+   "category": "close",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019898805.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest - 54019899830.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY 2.0",
+   "author": "Roller Coaster Philosophy",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_-_54019899830.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest Olympic June 2018 008.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY-SA 4.0",
+   "author": "King of Hearts",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_Olympic_June_2018_008.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest Olympic June 2018 009.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY-SA 4.0",
+   "author": "King of Hearts",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_Olympic_June_2018_009.jpg"
+  },
+  {
+   "id": "commons:Hoh Rain Forest Olympic June 2018 010.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY-SA 4.0",
+   "author": "King of Hearts",
+   "url": "https://commons.wikimedia.org/wiki/File:Hoh_Rain_Forest_Olympic_June_2018_010.jpg"
+  },
+  {
+   "id": "commons:Mossy Forest (Olympic National Park).jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY-SA 2.0",
+   "author": "stevehfung",
+   "url": "https://commons.wikimedia.org/wiki/File:Mossy_Forest_(Olympic_National_Park).jpg"
+  },
+  {
+   "id": "commons:Olympic National Park - Hoh Valley - Hall of Mosses Trail - Flickr - rachel thecat.jpg",
+   "category": "understory",
+   "setting": "pnw_valley_rainforest",
+   "licence": "CC BY-SA 2.0",
+   "author": "rachel_thecat",
+   "url": "https://commons.wikimedia.org/wiki/File:Olympic_National_Park_-_Hoh_Valley_-_Hall_of_Mosses_Trail_-_Flickr_-_rachel_thecat.jpg"
+  },
+  {
+   "id": "commons:Roosevelt elk bull in Hoh Rainforest 2022-05-30.jpg",
+   "category": "species",
+   "setting": null,
+   "licence": "CC BY-SA 4.0",
+   "author": "DeVos Max",
+   "url": "https://commons.wikimedia.org/wiki/File:Roosevelt_elk_bull_in_Hoh_Rainforest_2022-05-30.jpg"
+  }
+ ]
+}

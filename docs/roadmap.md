@@ -250,6 +250,20 @@ sequenced; Parked is in the brief but deliberately not started.
 9. The San Francisco cells' lidar re-streamed (`--force lidar`): their products predate multi_1m and lidar_micro, so
    their crowns step fails loudly until then.
 
+## Next: the gestalt pipeline, after Aaron's review (designed 2026-11-05)
+
+`docs/gestalt-pipeline.md`; page: https://claude.ai/artifact/CRXGhhEe16r6njnDD8dKvU. In this order:
+
+1. The place stage (settings_map, structure, sources, photos, photo_stats, the paragon agent, paragon_check) and the
+   judge stage (poses, headless render, statistics, rubric, score): the Hoh gets a score before any generator changes.
+2. look.json plumbing (bark moss season, fog, animals' numbers), the moss ground layer and the ground colour from the
+   palette, a bounded colour grade, wet sheen.
+3. New generators: epiphytes (limb moss, clubmoss curtains, licorice fern), deadwood (logs by decay class, nurse logs,
+   colonnades, jams), a fern habit.
+4. The interactions step (GloBI, EltonTraits, the paragon's links) and the games that read it (browse pressure,
+   cavities, cone caches).
+5. The first new place: Lamar Valley, Yellowstone (`utm12n_558_4964`), then Saguaro West, then the Smokies.
+
 ## Next: the visual pass, in order of effect per hour
 
 1. ~~Horizon~~ done 2026-10-23: two crossed-quad impostors with a canopy cap per
