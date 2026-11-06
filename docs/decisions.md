@@ -5586,3 +5586,12 @@ iteration replaces that, for four-legged mammals, with one path that reads every
   (`tilepackage.js ringBands`). Then it, and Corcovado, threw: a cell with no tree mix (iteration 1's no-fallback rule)
   still drew its riparian extras from the null mix (`vegetation.js`, `impostors.js`). The capture script now gives up on
   a page that never becomes ready and the run goes on to the next probe.
+
+## 2026-11-06: the image leaves out the pipeline's Sentinel-2 cache
+
+The world probes left 6.8 GB of Sentinel-2 composites in `pipeline/_cache/sentinel`. Because the Dockerfile copies
+`pipeline/` whole, the image grew from 4.0 GB to 8.4 GB. Fly recorded releases v27 and v28, but the machine stayed on
+v26's image, and the live site served the old client with no error from `fly deploy`. `.dockerignore` now leaves that
+cache out (the server reads no pipeline cache). After a deploy, check the machine's image (`fly machine status`), not
+only the release list, and compare a live file's md5 with the local copy.
+

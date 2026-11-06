@@ -26,3 +26,6 @@ tiles/*/lidar
 tiles/*/game
 tiles/*/footprint/*.tif
 tiles/*/footprint/mask.geojson
+# the pipeline's shared download caches (Sentinel-2 composites alone reached 6.8 GB with the world probes, 2026-11-06,
+# and pushed the image past what the machine would take); the server reads none of them
+pipeline/_cache/sentinel
