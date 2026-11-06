@@ -61,3 +61,10 @@ def note_layer(name: str) -> None:
     r = _rec()
     if r is not None:
         r.setdefault("layers", []).append(name)
+
+
+class Refused(RuntimeError):
+    """A step that will not run on this tile as it stands, for a reason the build must show (2026-11-06: Lamar's reroute
+    refused, recorded `ok` with no outputs, and its water stayed on the 5 m lines unseen). The runner records the step
+    `refused` with the reason; its dependents still run (on what the step would have replaced), but --status, the
+    audit step and the build's exit code report it as a failure until the cause is fixed."""

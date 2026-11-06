@@ -5,11 +5,11 @@
    "lithology": "volcanic",
    "cells": 392982,
    "elevation_m": {
-    "p5": 2521.1,
-    "p25": 2597.8,
-    "median": 2692.8,
-    "p75": 2782.3,
-    "p95": 2859.7
+    "p5": 2522.2,
+    "p25": 2600.9,
+    "median": 2695.2,
+    "p75": 2784.5,
+    "p95": 2861.0
    },
    "candidate": true
   },
@@ -18,11 +18,11 @@
    "lithology": "volcanic",
    "cells": 1576254,
    "elevation_m": {
-    "p5": 2081.9,
-    "p25": 2205.7,
-    "median": 2301.2,
-    "p75": 2411.7,
-    "p95": 2545.3
+    "p5": 2083.5,
+    "p25": 2207.0,
+    "median": 2302.3,
+    "p75": 2412.4,
+    "p95": 2548.3
    },
    "candidate": true
   },
@@ -31,11 +31,11 @@
    "lithology": "basalt",
    "cells": 61572,
    "elevation_m": {
-    "p5": 1987.2,
-    "p25": 2030.9,
-    "median": 2048.9,
-    "p75": 2071.4,
-    "p95": 2088.6
+    "p5": 1978.0,
+    "p25": 2033.2,
+    "median": 2049.5,
+    "p75": 2072.6,
+    "p95": 2089.2
    },
    "candidate": true
   },
@@ -44,11 +44,11 @@
    "lithology": "surficial",
    "cells": 1677211,
    "elevation_m": {
-    "p5": 1985.0,
-    "p25": 2010.8,
-    "median": 2038.2,
-    "p75": 2116.1,
-    "p95": 2364.2
+    "p5": 1985.2,
+    "p25": 2010.9,
+    "median": 2040.5,
+    "p75": 2115.4,
+    "p95": 2363.2
    },
    "candidate": false,
    "why_not": "surficial deposit"
@@ -58,11 +58,11 @@
    "lithology": "volcanic",
    "cells": 232086,
    "elevation_m": {
-    "p5": 2409.1,
-    "p25": 2521.8,
-    "median": 2625.9,
-    "p75": 2744.8,
-    "p95": 2844.6
+    "p5": 2409.9,
+    "p25": 2523.4,
+    "median": 2626.7,
+    "p75": 2745.7,
+    "p95": 2845.3
    },
    "candidate": true
   },
@@ -71,11 +71,11 @@
    "lithology": "limestone_marble",
    "cells": 28853,
    "elevation_m": {
-    "p5": 2032.4,
-    "p25": 2058.5,
-    "median": 2079.8,
-    "p75": 2095.9,
-    "p95": 2136.5
+    "p5": 2031.5,
+    "p25": 2056.5,
+    "median": 2078.9,
+    "p75": 2094.7,
+    "p95": 2142.0
    },
    "candidate": true
   },
@@ -84,11 +84,11 @@
    "lithology": "volcanic",
    "cells": 23769,
    "elevation_m": {
-    "p5": 2021.5,
-    "p25": 2051.5,
-    "median": 2071.9,
-    "p75": 2097.5,
-    "p95": 2112.5
+    "p5": 2020.1,
+    "p25": 2050.5,
+    "median": 2071.5,
+    "p75": 2096.3,
+    "p95": 2112.8
    },
    "candidate": true
   },
@@ -97,11 +97,11 @@
    "lithology": "schist",
    "cells": 5286,
    "elevation_m": {
-    "p5": 1992.2,
-    "p25": 1996.6,
-    "median": 1998.6,
-    "p75": 2000.6,
-    "p95": 2003.0
+    "p5": 1991.9,
+    "p25": 1993.8,
+    "median": 1996.9,
+    "p75": 2001.1,
+    "p95": 2005.7
    },
    "candidate": true
   },
@@ -110,11 +110,11 @@
    "lithology": "sandstone_conglomerate",
    "cells": 1987,
    "elevation_m": {
-    "p5": 2058.6,
-    "p25": 2068.2,
-    "median": 2081.8,
-    "p75": 2100.7,
-    "p95": 2114.0
+    "p5": 2062.9,
+    "p25": 2071.5,
+    "median": 2088.7,
+    "p75": 2108.9,
+    "p95": 2121.1
    },
    "candidate": false,
    "why_not": "too small"
@@ -124,35 +124,29 @@
   {
    "upper": "Absaroka Volcanic Supergroup: Thorofare Creek and Sunlight Groups",
    "lower": "Absaroka Volcanic Supergroup: Washburn Group",
-   "contact_cells": 2043,
-   "upper_on_top": 0.778
+   "contact_cells": 2044,
+   "upper_on_top": 0.783
   },
   {
    "upper": "Absaroka Volcanic Supergroup: Thorofare Creek Group - Two Ocean and Langford Formations",
    "lower": "Absaroka Volcanic Supergroup: Washburn Group",
-   "contact_cells": 1418,
-   "upper_on_top": 0.877
+   "contact_cells": 1406,
+   "upper_on_top": 0.853
   },
   {
    "upper": "Absaroka Volcanic Supergroup: Washburn Group",
    "lower": "Madison Group, Darby Formation, Three Forks and Jefferson Formations",
-   "contact_cells": 293,
-   "upper_on_top": 0.973
+   "contact_cells": 287,
+   "upper_on_top": 0.941
   },
   {
    "upper": "Madison Group, Darby Formation, Three Forks and Jefferson Formations",
    "lower": "Rhyolite flows, tuff, and intrusive igneous rocks",
-   "contact_cells": 82,
-   "upper_on_top": 0.11
-  },
-  {
-   "upper": "Absaroka Volcanic Supergroup: Washburn Group",
-   "lower": "Rhyolite flows, tuff, and intrusive igneous rocks",
-   "contact_cells": 62,
-   "upper_on_top": 1.0
+   "contact_cells": 83,
+   "upper_on_top": 0.193
   }
  ],
- "consistent_pairs": 0.8,
+ "consistent_pairs": 0.75,
  "dropped": [
   {
    "unit": "Rhyolite flows, tuff, and intrusive igneous rocks",
@@ -176,15 +170,15 @@
   }
  ],
  "quality": {
-  "overall_fit_steep": 0.741,
-  "overall_fit_steep_strict": 0.726,
+  "overall_fit_steep": 0.761,
+  "overall_fit_steep_strict": 0.747,
   "map_tol_m": 20.0,
-  "dip_deg": 0.87,
-  "dip_azimuth_deg": 235.3,
-  "steep_cells_in_column": 455273,
+  "dip_deg": 1.06,
+  "dip_azimuth_deg": 235.8,
+  "steep_cells_in_column": 555455,
   "bands": 2,
-  "median_contact_sigma_m": 25.1,
-  "superposed_pairs": 0.8
+  "median_contact_sigma_m": 24.5,
+  "superposed_pairs": 0.75
  },
  "column": true,
  "bands": [
@@ -193,14 +187,14 @@
    "name": "Absaroka Volcanic Supergroup: Thorofare Creek Group - Two Ocean and Langford Formations",
    "age": "Ypresian to Lutetian",
    "lithology": "volcanic",
-   "base_m": 2593.9,
-   "slope_e": 0.012335,
-   "slope_n": 0.008564,
+   "base_m": 2609.4,
+   "slope_e": 0.015092,
+   "slope_n": 0.010416,
    "thickness_at_centre_m": null,
-   "contact_sigma_m": 38.4,
-   "contact_cells": 1244,
-   "purity": 0.623,
-   "recall": 0.983,
+   "contact_sigma_m": 40.5,
+   "contact_cells": 1200,
+   "purity": 0.697,
+   "recall": 0.98,
    "colour": [
     0.44,
     0.42,
@@ -220,14 +214,14 @@
    "name": "Absaroka Volcanic Supergroup: Washburn Group",
    "age": "Eocene",
    "lithology": "volcanic",
-   "base_m": 2138.9,
-   "slope_e": 0.012532,
-   "slope_n": 0.008664,
-   "thickness_at_centre_m": 455.0,
-   "contact_sigma_m": 11.9,
-   "contact_cells": 339,
-   "purity": 0.805,
-   "recall": 0.927,
+   "base_m": 2141.6,
+   "slope_e": 0.015523,
+   "slope_n": 0.010414,
+   "thickness_at_centre_m": 467.8,
+   "contact_sigma_m": 8.5,
+   "contact_cells": 270,
+   "purity": 0.792,
+   "recall": 0.919,
    "colour": [
     0.44,
     0.42,

@@ -21,933 +21,696 @@
    10,
    11
   ],
-  "water_cells_5m": 27209,
-  "reaches_tested": 365,
+  "water_cells_5m": 26876,
+  "reaches_tested": 391,
   "verdicts_before": {
-   "no water seen": 327,
-   "on water": 19,
-   "off water": 19
+   "no water seen": 345,
+   "off water": 5,
+   "on water": 41
   },
   "verdicts_after": {
-   "no water seen": 311,
-   "on water": 47,
-   "off water": 7
+   "no water seen": 345,
+   "off water": 5,
+   "on water": 41
   },
-  "stems": 9,
-  "stems_moved": 3,
-  "reaches_moved": 53,
-  "reaches_bent": 48,
-  "reaches_extended": 30,
-  "nhd_dropped": 7,
-  "side_channels": 10,
-  "undrawn_patches": 2,
-  "undrawn_m2": 6675,
+  "stems": 14,
+  "stems_moved": 0,
+  "reaches_moved": 0,
+  "reaches_bent": 0,
+  "reaches_extended": 0,
+  "nhd_dropped": 0,
+  "side_channels": 0,
+  "undrawn_patches": 11,
+  "undrawn_m2": 59250,
   "undrawn_by_map": {
-   "unmapped": 6675
+   "a mapped polygon water_seasons judged dry": 15575,
+   "unmapped": 43675
   },
-  "seconds": 13.0
+  "seconds": 9.7
  },
  "stems": [
   {
-   "reaches": 19,
+   "reaches": 9,
    "names": [
     "Lamar River"
    ],
-   "length_m": 5798,
-   "area_km2": 1538.6,
+   "length_m": 4154,
+   "area_km2": 1553.8,
    "width": 30.0,
    "before": {
-    "on": 0.318,
-    "near": 0.463,
-    "samples": 581
+    "on": 0.964,
+    "near": 0.966,
+    "samples": 417
    },
-   "verdict": "moved",
-   "after": {
-    "on": 0.877,
-    "near": 0.884,
-    "samples": 544
-   },
-   "shift_m_median": 42.5,
-   "shift_m_max": 424.5,
-   "ends": [
-    [
-     "snapped"
-    ],
-    [
-     "fixed"
-    ]
-   ]
-  },
-  {
-   "reaches": 18,
-   "names": [
-    "Lamar River"
-   ],
-   "length_m": 5581,
-   "area_km2": 757.1,
-   "width": 30.0,
-   "before": {
-    "on": 0.304,
-    "near": 0.495,
-    "samples": 560
-   },
-   "verdict": "moved",
-   "after": {
-    "on": 0.882,
-    "near": 0.887,
-    "samples": 515
-   },
-   "shift_m_median": 123.9,
-   "shift_m_max": 445.8,
-   "ends": [
-    [
-     "snapped"
-    ],
-    [
-     "snapped"
-    ]
-   ]
+   "verdict": "on water"
   },
   {
    "reaches": 2,
-   "names": [],
-   "length_m": 231,
-   "area_km2": 755.3,
+   "names": [
+    "Lamar River"
+   ],
+   "length_m": 324,
+   "area_km2": 1531.7,
    "width": 30.0,
    "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 25
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 34
    },
-   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
-   "after": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 24
-   }
+   "verdict": "on water"
   },
   {
    "reaches": 1,
    "names": [],
-   "length_m": 141,
-   "area_km2": 755.3,
+   "length_m": 102,
+   "area_km2": 1531.7,
    "width": 30.0,
    "before": {
-    "on": 0.0,
-    "near": 0.25,
-    "samples": 16
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 12
    },
-   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
-   "after": {
-    "on": 0.267,
-    "near": 0.267,
-    "samples": 15
-   }
+   "verdict": "on water"
   },
   {
-   "reaches": 11,
+   "reaches": 2,
+   "names": [],
+   "length_m": 774,
+   "area_km2": 1514.0,
+   "width": 30.0,
+   "before": {
+    "on": 0.696,
+    "near": 0.81,
+    "samples": 79
+   },
+   "verdict": "on water"
+  },
+  {
+   "reaches": 1,
+   "names": [],
+   "length_m": 2402,
+   "area_km2": 1511.5,
+   "width": 30.0,
+   "before": {
+    "on": 0.979,
+    "near": 0.988,
+    "samples": 242
+   },
+   "verdict": "on water"
+  },
+  {
+   "reaches": 2,
+   "names": [
+    "Lamar River"
+   ],
+   "length_m": 772,
+   "area_km2": 1510.2,
+   "width": 30.0,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 79
+   },
+   "verdict": "on water"
+  },
+  {
+   "reaches": 5,
+   "names": [
+    "Lamar River",
+    "Soda Butte Creek"
+   ],
+   "length_m": 958,
+   "area_km2": 757.5,
+   "width": 30.0,
+   "before": {
+    "on": 0.897,
+    "near": 0.897,
+    "samples": 97
+   },
+   "verdict": "on water"
+  },
+  {
+   "reaches": 3,
    "names": [
     "Soda Butte Creek"
    ],
-   "length_m": 2663,
-   "area_km2": 249.7,
+   "length_m": 884,
+   "area_km2": 755.6,
    "width": 30.0,
    "before": {
-    "on": 0.041,
-    "near": 0.086,
-    "samples": 268
+    "on": 0.189,
+    "near": 0.233,
+    "samples": 90
    },
    "verdict": "no water seen (kept: the trace is not on the imagery's water)",
    "after": {
-    "on": 0.038,
-    "near": 0.092,
-    "samples": 260
+    "on": 0.229,
+    "near": 0.229,
+    "samples": 83
    }
   },
   {
-   "reaches": 16,
+   "reaches": 10,
+   "names": [
+    "Soda Butte Creek"
+   ],
+   "length_m": 4070,
+   "area_km2": 245.6,
+   "width": 30.0,
+   "before": {
+    "on": 0.191,
+    "near": 0.233,
+    "samples": 408
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.229,
+    "near": 0.242,
+    "samples": 388
+   }
+  },
+  {
+   "reaches": 8,
    "names": [
     "Lamar River"
    ],
-   "length_m": 7000,
+   "length_m": 6237,
+   "area_km2": 722.0,
+   "width": 30.0,
+   "before": {
+    "on": 0.877,
+    "near": 0.883,
+    "samples": 625
+   },
+   "verdict": "on water"
+  },
+  {
+   "reaches": 4,
+   "names": [
+    "Lamar River"
+   ],
+   "length_m": 2183,
    "area_km2": 509.5,
    "width": 30.0,
    "before": {
-    "on": 0.571,
-    "near": 0.705,
-    "samples": 702
+    "on": 0.945,
+    "near": 0.959,
+    "samples": 220
    },
-   "verdict": "moved",
-   "after": {
-    "on": 0.904,
-    "near": 0.91,
-    "samples": 770
-   },
-   "shift_m_median": 19.2,
-   "shift_m_max": 411.7,
-   "ends": [
-    [
-     "snapped"
-    ],
-    [
-     "fixed"
-    ]
-   ]
+   "verdict": "on water"
   },
   {
    "reaches": 2,
-   "names": [],
-   "length_m": 601,
-   "area_km2": 245.6,
-   "width": 19.07,
-   "before": {
-    "on": 0.016,
-    "near": 0.032,
-    "samples": 62
-   },
-   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
-   "after": {
-    "on": 0.017,
-    "near": 0.017,
-    "samples": 58
-   }
-  },
-  {
-   "reaches": 1,
-   "names": [],
-   "length_m": 159,
-   "area_km2": 245.2,
-   "width": 19.03,
+   "names": [
+    "Soda Butte Creek"
+   ],
+   "length_m": 939,
+   "area_km2": 249.8,
+   "width": 19.35,
    "before": {
     "on": 0.0,
-    "near": 0.0,
-    "samples": 17
+    "near": 0.063,
+    "samples": 95
    },
    "verdict": "no water seen (kept: the trace is not on the imagery's water)",
    "after": {
-    "on": 0.05,
-    "near": 0.05,
-    "samples": 20
+    "on": 0.0,
+    "near": 0.077,
+    "samples": 78
    }
   },
   {
    "reaches": 1,
    "names": [],
-   "length_m": 381,
+   "length_m": 250,
+   "area_km2": 245.3,
+   "width": 19.03,
+   "before": {
+    "on": 0.038,
+    "near": 0.077,
+    "samples": 26
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.16,
+    "near": 0.16,
+    "samples": 25
+   }
+  },
+  {
+   "reaches": 1,
+   "names": [
+    "Cache Creek"
+   ],
+   "length_m": 451,
    "area_km2": 210.8,
    "width": 17.78,
    "before": {
-    "on": 0.025,
-    "near": 0.275,
-    "samples": 40
+    "on": 0.383,
+    "near": 0.447,
+    "samples": 47
    },
    "verdict": "no water seen (kept: the trace is not on the imagery's water)",
    "after": {
-    "on": 0.304,
-    "near": 0.304,
-    "samples": 46
+    "on": 0.364,
+    "near": 0.386,
+    "samples": 44
    }
   }
  ],
  "reaches": [
   {
-   "k": 15,
-   "name": "Lamar River",
-   "width": 30.0,
-   "length_m": 247,
-   "before": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 26
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 26
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 24,
-   "name": "Lamar River",
-   "width": 30.0,
-   "length_m": 672,
-   "before": {
-    "on": 0.855,
-    "near": 1.0,
-    "samples": 69
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 65
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 34,
-   "name": "Lamar River",
-   "width": 30.0,
-   "length_m": 331,
-   "before": {
-    "on": 0.829,
-    "near": 1.0,
-    "samples": 35
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 35
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 50,
-   "name": "Lamar River",
-   "width": 30.0,
-   "length_m": 650,
-   "before": {
-    "on": 0.273,
-    "near": 0.636,
-    "samples": 66
-   },
-   "after": {
-    "on": 0.982,
-    "near": 0.982,
-    "samples": 57
-   },
-   "verdict_before": "off water",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 55,
+   "k": 14,
    "name": null,
-   "width": 30.0,
-   "length_m": 319,
+   "width": 2.84,
+   "length_m": 417,
    "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 33
+    "on": 0.233,
+    "near": 0.535,
+    "samples": 43
    },
    "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 31
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 56,
-   "name": null,
-   "width": 30.0,
-   "length_m": 25,
-   "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 4
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 4
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 58,
-   "name": null,
-   "width": 30.0,
-   "length_m": 73,
-   "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 9
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 8
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 62,
-   "name": null,
-   "width": 30.0,
-   "length_m": 228,
-   "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 24
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 23
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 65,
-   "name": null,
-   "width": 30.0,
-   "length_m": 273,
-   "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 29
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 27
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 66,
-   "name": null,
-   "width": 30.0,
-   "length_m": 14,
-   "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 3
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 3
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 67,
-   "name": null,
-   "width": 30.0,
-   "length_m": 11,
-   "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 3
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 3
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 78,
-   "name": null,
-   "width": 30.0,
-   "length_m": 426,
-   "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 44
-   },
-   "after": {
-    "on": 0.902,
-    "near": 0.902,
-    "samples": 41
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 88,
-   "name": null,
-   "width": 30.0,
-   "length_m": 170,
-   "before": {
-    "on": 0.333,
-    "near": 0.611,
-    "samples": 18
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 23
-   },
-   "verdict_before": "off water",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 93,
-   "name": "Lamar River",
-   "width": 30.0,
-   "length_m": 373,
-   "before": {
-    "on": 0.667,
-    "near": 1.0,
-    "samples": 39
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 36
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 99,
-   "name": "Lamar River",
-   "width": 30.0,
-   "length_m": 592,
-   "before": {
-    "on": 0.164,
-    "near": 0.18,
-    "samples": 61
-   },
-   "after": {
-    "on": 0.827,
-    "near": 0.827,
-    "samples": 52
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 104,
-   "name": null,
-   "width": 30.0,
-   "length_m": 313,
-   "before": {
-    "on": 0.0,
-    "near": 0.03,
-    "samples": 33
-   },
-   "after": {
-    "on": 0.935,
-    "near": 0.935,
-    "samples": 31
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 113,
-   "name": "Lamar River",
-   "width": 30.0,
-   "length_m": 646,
-   "before": {
-    "on": 0.303,
-    "near": 0.591,
-    "samples": 66
-   },
-   "after": {
-    "on": 0.746,
-    "near": 0.81,
-    "samples": 63
-   },
-   "verdict_before": "off water",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 121,
-   "name": null,
-   "width": 30.0,
-   "length_m": 119,
-   "before": {
-    "on": 0.0,
-    "near": 0.538,
-    "samples": 13
-   },
-   "after": {
-    "on": 0.364,
-    "near": 0.364,
-    "samples": 11
-   },
-   "verdict_before": "off water",
-   "verdict_after": "no water seen",
-   "moved": "moved"
-  },
-  {
-   "k": 130,
-   "name": null,
-   "width": 30.0,
-   "length_m": 315,
-   "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 33
-   },
-   "after": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 31
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "no water seen",
-   "moved": "moved"
-  },
-  {
-   "k": 137,
-   "name": null,
-   "width": 30.0,
-   "length_m": 83,
-   "before": {
-    "on": 0.0,
-    "near": 0.5,
-    "samples": 10
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
+    "on": 0.233,
+    "near": 0.535,
     "samples": 43
    },
    "verdict_before": "off water",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 138,
-   "name": null,
-   "width": 30.0,
-   "length_m": 330,
-   "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 34
-   },
-   "after": {
-    "on": 0.938,
-    "near": 0.938,
-    "samples": 32
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 140,
-   "name": "Lamar River",
-   "width": 30.0,
-   "length_m": 403,
-   "before": {
-    "on": 0.167,
-    "near": 0.262,
-    "samples": 42
-   },
-   "after": {
-    "on": 0.692,
-    "near": 0.692,
-    "samples": 39
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 145,
-   "name": null,
-   "width": 30.0,
-   "length_m": 88,
-   "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 10
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 10
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 146,
-   "name": null,
-   "width": 30.0,
-   "length_m": 28,
-   "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 4
-   },
-   "after": {
-    "on": 0.25,
-    "near": 0.25,
-    "samples": 4
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "no water seen",
-   "moved": "moved"
-  },
-  {
-   "k": 148,
-   "name": null,
-   "width": 30.0,
-   "length_m": 126,
-   "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 14
-   },
-   "after": {
-    "on": 0.154,
-    "near": 0.154,
-    "samples": 13
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "no water seen",
-   "moved": "moved"
-  },
-  {
-   "k": 149,
-   "name": "Lamar River",
-   "width": 30.0,
-   "length_m": 374,
-   "before": {
-    "on": 0.795,
-    "near": 0.846,
-    "samples": 39
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 2
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 152,
-   "name": "Lamar River",
-   "width": 30.0,
-   "length_m": 224,
-   "before": {
-    "on": 0.167,
-    "near": 1.0,
-    "samples": 24
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 22
-   },
-   "verdict_before": "off water",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 155,
-   "name": null,
-   "width": 19.04,
-   "length_m": 62,
-   "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 8
-   },
-   "after": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 8
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "no water seen",
-   "moved": null
-  },
-  {
-   "k": 156,
-   "name": null,
-   "width": 1.0,
-   "length_m": 725,
-   "before": {
-    "on": 0.662,
-    "near": 0.851,
-    "samples": 74
-   },
-   "after": {
-    "on": 0.5,
-    "near": 0.754,
-    "samples": 114
-   },
-   "verdict_before": "on water",
    "verdict_after": "off water",
-   "moved": "bent"
-  },
-  {
-   "k": 157,
-   "name": null,
-   "width": 19.07,
-   "length_m": 540,
-   "before": {
-    "on": 0.0,
-    "near": 0.018,
-    "samples": 55
-   },
-   "after": {
-    "on": 0.0,
-    "near": 0.018,
-    "samples": 55
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "no water seen",
    "moved": null
   },
   {
-   "k": 158,
+   "k": 16,
    "name": "Lamar River",
    "width": 30.0,
-   "length_m": 507,
+   "length_m": 215,
    "before": {
-    "on": 0.346,
-    "near": 0.558,
-    "samples": 52
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 23
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 23
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 19,
+   "name": "Lamar River",
+   "width": 30.0,
+   "length_m": 68,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 8
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 8
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 22,
+   "name": "Lamar River",
+   "width": 30.0,
+   "length_m": 156,
+   "before": {
+    "on": 0.941,
+    "near": 1.0,
+    "samples": 17
+   },
+   "after": {
+    "on": 0.941,
+    "near": 1.0,
+    "samples": 17
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 27,
+   "name": "Lamar River",
+   "width": 30.0,
+   "length_m": 465,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 48
    },
    "after": {
     "on": 1.0,
     "near": 1.0,
     "samples": 48
    },
-   "verdict_before": "off water",
+   "verdict_before": "on water",
    "verdict_after": "on water",
-   "moved": "moved"
+   "moved": null
   },
   {
-   "k": 168,
-   "name": "Lamar River",
-   "width": 30.0,
-   "length_m": 88,
+   "k": 38,
+   "name": null,
+   "width": 1.0,
+   "length_m": 439,
    "before": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 10
+    "on": 0.622,
+    "near": 0.711,
+    "samples": 45
    },
    "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 10
+    "on": 0.622,
+    "near": 0.711,
+    "samples": 45
    },
    "verdict_before": "on water",
    "verdict_after": "on water",
-   "moved": "moved"
+   "moved": null
   },
   {
-   "k": 169,
+   "k": 39,
    "name": "Lamar River",
    "width": 30.0,
-   "length_m": 7,
+   "length_m": 364,
    "before": {
-    "on": 0.5,
-    "near": 0.5,
-    "samples": 2
+    "on": 0.789,
+    "near": 0.789,
+    "samples": 38
+   },
+   "after": {
+    "on": 0.789,
+    "near": 0.789,
+    "samples": 38
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 84,
+   "name": "Lamar River",
+   "width": 30.0,
+   "length_m": 2013,
+   "before": {
+    "on": 0.966,
+    "near": 0.966,
+    "samples": 203
+   },
+   "after": {
+    "on": 0.966,
+    "near": 0.966,
+    "samples": 203
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 92,
+   "name": null,
+   "width": 4.55,
+   "length_m": 316,
+   "before": {
+    "on": 0.909,
+    "near": 1.0,
+    "samples": 33
+   },
+   "after": {
+    "on": 0.909,
+    "near": 1.0,
+    "samples": 33
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 97,
+   "name": "Lamar River",
+   "width": 30.0,
+   "length_m": 382,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 40
    },
    "after": {
     "on": 1.0,
     "near": 1.0,
+    "samples": 40
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 100,
+   "name": "Lamar River",
+   "width": 30.0,
+   "length_m": 119,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 13
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 13
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 112,
+   "name": null,
+   "width": 30.0,
+   "length_m": 372,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 39
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 39
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 114,
+   "name": "Lamar River",
+   "width": 30.0,
+   "length_m": 138,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 15
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 15
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 120,
+   "name": null,
+   "width": 1.0,
+   "length_m": 512,
+   "before": {
+    "on": 0.623,
+    "near": 0.66,
+    "samples": 53
+   },
+   "after": {
+    "on": 0.623,
+    "near": 0.66,
+    "samples": 53
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 132,
+   "name": null,
+   "width": 30.0,
+   "length_m": 705,
+   "before": {
+    "on": 0.653,
+    "near": 0.792,
+    "samples": 72
+   },
+   "after": {
+    "on": 0.653,
+    "near": 0.792,
+    "samples": 72
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 140,
+   "name": null,
+   "width": 1.89,
+   "length_m": 8,
+   "before": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 2
+   },
+   "after": {
+    "on": 0.0,
+    "near": 1.0,
     "samples": 2
    },
    "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 141,
+   "name": null,
+   "width": 1.89,
+   "length_m": 34,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 5
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 5
+   },
+   "verdict_before": "on water",
    "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 173,
-   "name": null,
-   "width": 19.03,
-   "length_m": 159,
-   "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 17
-   },
-   "after": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 17
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "no water seen",
    "moved": null
   },
   {
-   "k": 178,
-   "name": null,
-   "width": 26.1,
-   "length_m": 87,
-   "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 10
-   },
-   "after": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 10
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "no water seen",
-   "moved": null
-  },
-  {
-   "k": 179,
+   "k": 153,
    "name": null,
    "width": 30.0,
-   "length_m": 285,
+   "length_m": 187,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 20
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 20
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 154,
+   "name": null,
+   "width": 30.0,
+   "length_m": 102,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 12
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 12
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 156,
+   "name": null,
+   "width": 30.0,
+   "length_m": 68,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 8
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 8
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 176,
+   "name": null,
+   "width": 19.04,
+   "length_m": 419,
    "before": {
     "on": 0.0,
-    "near": 0.0,
-    "samples": 30
+    "near": 0.023,
+    "samples": 43
    },
    "after": {
     "on": 0.0,
-    "near": 0.0,
-    "samples": 30
+    "near": 0.023,
+    "samples": 43
    },
    "verdict_before": "no water seen",
    "verdict_after": "no water seen",
    "moved": null
   },
   {
-   "k": 181,
-   "name": "Soda Butte Creek",
-   "width": 19.19,
-   "length_m": 105,
+   "k": 182,
+   "name": null,
+   "width": 19.05,
+   "length_m": 60,
    "before": {
     "on": 0.0,
-    "near": 0.0,
-    "samples": 12
+    "near": 0.625,
+    "samples": 8
    },
    "after": {
     "on": 0.0,
-    "near": 0.0,
-    "samples": 12
+    "near": 0.625,
+    "samples": 8
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 184,
+   "name": null,
+   "width": 26.01,
+   "length_m": 620,
+   "before": {
+    "on": 0.266,
+    "near": 0.297,
+    "samples": 64
+   },
+   "after": {
+    "on": 0.266,
+    "near": 0.297,
+    "samples": 64
    },
    "verdict_before": "no water seen",
    "verdict_after": "no water seen",
@@ -955,113 +718,56 @@
   },
   {
    "k": 187,
-   "name": "Soda Butte Creek",
-   "width": 30.0,
-   "length_m": 299,
+   "name": null,
+   "width": 19.03,
+   "length_m": 250,
    "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 31
+    "on": 0.038,
+    "near": 0.077,
+    "samples": 26
    },
    "after": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 31
+    "on": 0.038,
+    "near": 0.077,
+    "samples": 26
    },
    "verdict_before": "no water seen",
    "verdict_after": "no water seen",
    "moved": null
   },
   {
-   "k": 188,
+   "k": 191,
    "name": null,
-   "width": 30.0,
-   "length_m": 462,
+   "width": 2.36,
+   "length_m": 2028,
    "before": {
-    "on": 0.167,
-    "near": 0.625,
-    "samples": 48
+    "on": 0.676,
+    "near": 0.765,
+    "samples": 204
    },
    "after": {
-    "on": 0.988,
-    "near": 0.988,
-    "samples": 85
+    "on": 0.676,
+    "near": 0.765,
+    "samples": 204
    },
-   "verdict_before": "off water",
+   "verdict_before": "on water",
    "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 189,
-   "name": null,
-   "width": 2.26,
-   "length_m": 5,
-   "before": {
-    "on": 0.5,
-    "near": 1.0,
-    "samples": 2
-   },
-   "after": {
-    "on": 0.667,
-    "near": 1.0,
-    "samples": 3
-   },
-   "verdict_before": "off water",
-   "verdict_after": "on water",
-   "moved": "bent"
-  },
-  {
-   "k": 190,
-   "name": null,
-   "width": 30.0,
-   "length_m": 73,
-   "before": {
-    "on": 0.0,
-    "near": 1.0,
-    "samples": 9
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 8
-   },
-   "verdict_before": "off water",
-   "verdict_after": "on water",
-   "moved": "moved"
+   "moved": null
   },
   {
    "k": 196,
-   "name": null,
-   "width": 30.0,
-   "length_m": 215,
-   "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 23
-   },
-   "after": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 23
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "no water seen",
-   "moved": null
-  },
-  {
-   "k": 205,
    "name": "Soda Butte Creek",
-   "width": 30.0,
-   "length_m": 591,
+   "width": 19.19,
+   "length_m": 545,
    "before": {
-    "on": 0.066,
-    "near": 0.197,
-    "samples": 61
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 56
    },
    "after": {
-    "on": 0.066,
-    "near": 0.197,
-    "samples": 61
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 56
    },
    "verdict_before": "no water seen",
    "verdict_after": "no water seen",
@@ -1069,227 +775,170 @@
   },
   {
    "k": 206,
-   "name": "Lamar River",
-   "width": 30.0,
-   "length_m": 487,
-   "before": {
-    "on": 0.94,
-    "near": 1.0,
-    "samples": 50
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 5
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 207,
-   "name": "Lamar River",
-   "width": 30.0,
-   "length_m": 222,
-   "before": {
-    "on": 0.917,
-    "near": 1.0,
-    "samples": 24
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 71
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 209,
-   "name": null,
-   "width": 30.0,
-   "length_m": 483,
-   "before": {
-    "on": 0.1,
-    "near": 0.44,
-    "samples": 50
-   },
-   "after": {
-    "on": 0.196,
-    "near": 0.283,
-    "samples": 46
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "no water seen",
-   "moved": "moved"
-  },
-  {
-   "k": 210,
-   "name": null,
-   "width": 30.0,
-   "length_m": 32,
+   "name": "Soda Butte Creek",
+   "width": 19.35,
+   "length_m": 394,
    "before": {
     "on": 0.0,
-    "near": 0.0,
-    "samples": 5
+    "near": 0.146,
+    "samples": 41
    },
    "after": {
     "on": 0.0,
-    "near": 0.0,
-    "samples": 5
+    "near": 0.146,
+    "samples": 41
    },
    "verdict_before": "no water seen",
    "verdict_after": "no water seen",
    "moved": null
   },
   {
-   "k": 213,
-   "name": null,
-   "width": 1.0,
-   "length_m": 211,
+   "k": 208,
+   "name": "Soda Butte Creek",
+   "width": 26.02,
+   "length_m": 115,
    "before": {
-    "on": 0.391,
-    "near": 0.565,
-    "samples": 23
+    "on": 0.154,
+    "near": 0.154,
+    "samples": 13
    },
    "after": {
-    "on": 0.409,
-    "near": 0.848,
-    "samples": 66
+    "on": 0.154,
+    "near": 0.154,
+    "samples": 13
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 211,
+   "name": "Soda Butte Creek",
+   "width": 30.0,
+   "length_m": 194,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 21
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 21
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 217,
+   "name": null,
+   "width": 1.0,
+   "length_m": 241,
+   "before": {
+    "on": 0.308,
+    "near": 0.538,
+    "samples": 26
+   },
+   "after": {
+    "on": 0.308,
+    "near": 0.538,
+    "samples": 26
    },
    "verdict_before": "off water",
    "verdict_after": "off water",
-   "moved": "bent"
-  },
-  {
-   "k": 215,
-   "name": "Soda Butte Creek",
-   "width": 30.0,
-   "length_m": 21,
-   "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 4
-   },
-   "after": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 4
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "no water seen",
-   "moved": null
-  },
-  {
-   "k": 216,
-   "name": "Soda Butte Creek",
-   "width": 30.0,
-   "length_m": 482,
-   "before": {
-    "on": 0.06,
-    "near": 0.1,
-    "samples": 50
-   },
-   "after": {
-    "on": 0.06,
-    "near": 0.1,
-    "samples": 50
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "no water seen",
    "moved": null
   },
   {
    "k": 219,
    "name": null,
    "width": 30.0,
-   "length_m": 782,
+   "length_m": 2402,
    "before": {
-    "on": 0.362,
-    "near": 0.487,
-    "samples": 80
+    "on": 0.979,
+    "near": 0.988,
+    "samples": 242
    },
    "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 24
+    "on": 0.979,
+    "near": 0.988,
+    "samples": 242
    },
-   "verdict_before": "no water seen",
+   "verdict_before": "on water",
    "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 220,
-   "name": null,
-   "width": 30.0,
-   "length_m": 813,
-   "before": {
-    "on": 0.0,
-    "near": 0.084,
-    "samples": 83
-   },
-   "after": {
-    "on": 0.961,
-    "near": 0.961,
-    "samples": 76
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "on water",
-   "moved": "moved"
+   "moved": null
   },
   {
    "k": 221,
    "name": null,
    "width": 30.0,
-   "length_m": 326,
+   "length_m": 793,
    "before": {
-    "on": 0.029,
-    "near": 0.088,
-    "samples": 34
+    "on": 0.222,
+    "near": 0.259,
+    "samples": 81
    },
    "after": {
-    "on": 0.029,
-    "near": 0.088,
-    "samples": 34
+    "on": 0.222,
+    "near": 0.259,
+    "samples": 81
    },
    "verdict_before": "no water seen",
    "verdict_after": "no water seen",
    "moved": null
   },
   {
-   "k": 225,
-   "name": null,
+   "k": 222,
+   "name": "Soda Butte Creek",
    "width": 30.0,
-   "length_m": 199,
+   "length_m": 824,
    "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 21
+    "on": 0.131,
+    "near": 0.19,
+    "samples": 84
    },
    "after": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 21
+    "on": 0.131,
+    "near": 0.19,
+    "samples": 84
    },
    "verdict_before": "no water seen",
    "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 223,
+   "name": "Soda Butte Creek",
+   "width": 30.0,
+   "length_m": 143,
+   "before": {
+    "on": 0.625,
+    "near": 0.625,
+    "samples": 16
+   },
+   "after": {
+    "on": 0.625,
+    "near": 0.625,
+    "samples": 16
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
    "moved": null
   },
   {
    "k": 226,
    "name": null,
    "width": 30.0,
-   "length_m": 141,
+   "length_m": 3,
    "before": {
     "on": 0.0,
-    "near": 0.25,
-    "samples": 16
+    "near": 0.0,
+    "samples": 2
    },
    "after": {
     "on": 0.0,
-    "near": 0.25,
-    "samples": 16
+    "near": 0.0,
+    "samples": 2
    },
    "verdict_before": "no water seen",
    "verdict_after": "no water seen",
@@ -1297,18 +946,18 @@
   },
   {
    "k": 227,
-   "name": null,
+   "name": "Soda Butte Creek",
    "width": 30.0,
-   "length_m": 241,
+   "length_m": 144,
    "before": {
-    "on": 0.154,
-    "near": 0.154,
-    "samples": 26
+    "on": 0.375,
+    "near": 0.375,
+    "samples": 16
    },
    "after": {
-    "on": 0.154,
-    "near": 0.154,
-    "samples": 26
+    "on": 0.375,
+    "near": 0.375,
+    "samples": 16
    },
    "verdict_before": "no water seen",
    "verdict_after": "no water seen",
@@ -1316,416 +965,492 @@
   },
   {
    "k": 228,
-   "name": null,
+   "name": "Soda Butte Creek",
    "width": 30.0,
-   "length_m": 10,
+   "length_m": 88,
    "before": {
     "on": 0.0,
-    "near": 0.0,
-    "samples": 3
+    "near": 0.1,
+    "samples": 10
    },
    "after": {
     "on": 0.0,
-    "near": 0.0,
-    "samples": 3
+    "near": 0.1,
+    "samples": 10
    },
    "verdict_before": "no water seen",
    "verdict_after": "no water seen",
    "moved": null
   },
   {
-   "k": 229,
+   "k": 230,
    "name": "Lamar River",
    "width": 30.0,
-   "length_m": 107,
+   "length_m": 170,
    "before": {
-    "on": 0.833,
+    "on": 1.0,
     "near": 1.0,
-    "samples": 12
+    "samples": 19
    },
    "after": {
-    "on": 0.589,
-    "near": 0.607,
-    "samples": 56
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 19
    },
    "verdict_before": "on water",
-   "verdict_after": "off water",
-   "moved": "moved"
+   "verdict_after": "on water",
+   "moved": null
   },
   {
-   "k": 242,
+   "k": 232,
    "name": "Lamar River",
    "width": 30.0,
-   "length_m": 396,
+   "length_m": 7,
    "before": {
-    "on": 0.049,
-    "near": 0.195,
-    "samples": 41
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 2
    },
    "after": {
     "on": 1.0,
     "near": 1.0,
     "samples": 2
    },
-   "verdict_before": "no water seen",
+   "verdict_before": "on water",
    "verdict_after": "on water",
-   "moved": "moved"
+   "moved": null
   },
   {
-   "k": 247,
+   "k": 233,
+   "name": "Lamar River",
+   "width": 30.0,
+   "length_m": 467,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 48
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 48
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 238,
+   "name": "Lamar River",
+   "width": 30.0,
+   "length_m": 361,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 38
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 38
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 239,
+   "name": "Lamar River",
+   "width": 30.0,
+   "length_m": 171,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 19
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 19
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 242,
+   "name": "Lamar River",
+   "width": 30.0,
+   "length_m": 411,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 43
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 43
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 244,
    "name": null,
    "width": 1.0,
-   "length_m": 569,
+   "length_m": 413,
    "before": {
-    "on": 0.466,
-    "near": 0.517,
-    "samples": 58
+    "on": 0.442,
+    "near": 0.605,
+    "samples": 43
    },
    "after": {
-    "on": 0.537,
-    "near": 0.582,
-    "samples": 67
+    "on": 0.442,
+    "near": 0.605,
+    "samples": 43
    },
    "verdict_before": "off water",
    "verdict_after": "off water",
-   "moved": "bent"
+   "moved": null
   },
   {
-   "k": 276,
-   "name": null,
+   "k": 252,
+   "name": "Soda Butte Creek",
    "width": 30.0,
-   "length_m": 910,
+   "length_m": 961,
    "before": {
-    "on": 0.402,
-    "near": 0.543,
-    "samples": 92
+    "on": 0.306,
+    "near": 0.316,
+    "samples": 98
    },
    "after": {
-    "on": 0.921,
-    "near": 0.921,
-    "samples": 101
-   },
-   "verdict_before": "off water",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 285,
-   "name": null,
-   "width": 30.0,
-   "length_m": 316,
-   "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 33
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 36
+    "on": 0.306,
+    "near": 0.316,
+    "samples": 98
    },
    "verdict_before": "no water seen",
-   "verdict_after": "on water",
-   "moved": "moved"
+   "verdict_after": "no water seen",
+   "moved": null
   },
   {
-   "k": 293,
+   "k": 258,
+   "name": "Soda Butte Creek",
+   "width": 30.0,
+   "length_m": 73,
+   "before": {
+    "on": 0.111,
+    "near": 0.111,
+    "samples": 9
+   },
+   "after": {
+    "on": 0.111,
+    "near": 0.111,
+    "samples": 9
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 261,
+   "name": "Soda Butte Creek",
+   "width": 30.0,
+   "length_m": 659,
+   "before": {
+    "on": 0.179,
+    "near": 0.284,
+    "samples": 67
+   },
+   "after": {
+    "on": 0.179,
+    "near": 0.284,
+    "samples": 67
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 264,
+   "name": "Lamar River",
+   "width": 30.0,
+   "length_m": 849,
+   "before": {
+    "on": 0.686,
+    "near": 0.709,
+    "samples": 86
+   },
+   "after": {
+    "on": 0.686,
+    "near": 0.709,
+    "samples": 86
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 278,
    "name": null,
-   "width": 1.42,
-   "length_m": 923,
-   "before": {
-    "on": 0.574,
-    "near": 0.734,
-    "samples": 94
-   },
-   "after": {
-    "on": 0.546,
-    "near": 0.765,
-    "samples": 119
-   },
-   "verdict_before": "off water",
-   "verdict_after": "off water",
-   "moved": "bent"
-  },
-  {
-   "k": 326,
-   "name": "Lamar River",
    "width": 30.0,
-   "length_m": 1356,
+   "length_m": 520,
    "before": {
-    "on": 0.416,
-    "near": 0.657,
-    "samples": 137
+    "on": 0.811,
+    "near": 0.849,
+    "samples": 53
    },
    "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 171
-   },
-   "verdict_before": "off water",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 338,
-   "name": "Lamar River",
-   "width": 30.0,
-   "length_m": 97,
-   "before": {
-    "on": 0.545,
-    "near": 0.545,
-    "samples": 11
-   },
-   "after": {
-    "on": 0.545,
-    "near": 0.545,
-    "samples": 11
-   },
-   "verdict_before": "off water",
-   "verdict_after": "off water",
-   "moved": "moved"
-  },
-  {
-   "k": 341,
-   "name": "Lamar River",
-   "width": 30.0,
-   "length_m": 779,
-   "before": {
-    "on": 0.646,
-    "near": 0.848,
-    "samples": 79
-   },
-   "after": {
-    "on": 0.805,
-    "near": 0.844,
-    "samples": 77
+    "on": 0.811,
+    "near": 0.849,
+    "samples": 53
    },
    "verdict_before": "on water",
    "verdict_after": "on water",
-   "moved": "moved"
+   "moved": null
   },
   {
-   "k": 344,
+   "k": 348,
    "name": "Lamar River",
    "width": 30.0,
-   "length_m": 445,
+   "length_m": 2175,
    "before": {
-    "on": 0.696,
-    "near": 0.804,
-    "samples": 46
+    "on": 0.995,
+    "near": 0.995,
+    "samples": 219
    },
    "after": {
-    "on": 0.809,
-    "near": 0.809,
-    "samples": 47
+    "on": 0.995,
+    "near": 0.995,
+    "samples": 219
    },
    "verdict_before": "on water",
    "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 347,
-   "name": "Lamar River",
-   "width": 30.0,
-   "length_m": 314,
-   "before": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 33
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 35
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": "moved"
+   "moved": null
   },
   {
    "k": 352,
-   "name": "Lamar River",
-   "width": 30.0,
-   "length_m": 331,
-   "before": {
-    "on": 0.629,
-    "near": 0.629,
-    "samples": 35
-   },
-   "after": {
-    "on": 0.676,
-    "near": 0.676,
-    "samples": 34
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 354,
-   "name": "Lamar River",
-   "width": 30.0,
-   "length_m": 99,
-   "before": {
-    "on": 0.455,
-    "near": 0.545,
-    "samples": 11
-   },
-   "after": {
-    "on": 0.417,
-    "near": 0.5,
-    "samples": 12
-   },
-   "verdict_before": "off water",
-   "verdict_after": "off water",
-   "moved": "moved"
-  },
-  {
-   "k": 355,
-   "name": "Lamar River",
-   "width": 30.0,
-   "length_m": 335,
-   "before": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 35
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 32
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 356,
-   "name": "Lamar River",
-   "width": 30.0,
-   "length_m": 198,
-   "before": {
-    "on": 0.762,
-    "near": 0.762,
-    "samples": 21
-   },
-   "after": {
-    "on": 0.762,
-    "near": 0.762,
-    "samples": 21
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 365,
-   "name": "Lamar River",
-   "width": 30.0,
-   "length_m": 729,
-   "before": {
-    "on": 0.986,
-    "near": 0.986,
-    "samples": 74
-   },
-   "after": {
-    "on": 0.986,
-    "near": 0.986,
-    "samples": 72
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": "moved"
-  },
-  {
-   "k": 367,
    "name": null,
-   "width": 17.78,
-   "length_m": 381,
+   "width": 1.98,
+   "length_m": 56,
    "before": {
-    "on": 0.025,
-    "near": 0.275,
-    "samples": 40
-   },
-   "after": {
-    "on": 0.096,
-    "near": 0.385,
-    "samples": 52
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "no water seen",
-   "moved": "bent"
-  },
-  {
-   "k": 370,
-   "name": "Lamar River",
-   "width": 30.0,
-   "length_m": 236,
-   "before": {
-    "on": 0.68,
-    "near": 0.96,
-    "samples": 25
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 7
    },
    "after": {
     "on": 1.0,
     "near": 1.0,
-    "samples": 44
+    "samples": 7
    },
    "verdict_before": "on water",
    "verdict_after": "on water",
-   "moved": "moved"
+   "moved": null
   },
   {
-   "k": 375,
-   "name": null,
-   "width": 26.44,
-   "length_m": 353,
+   "k": 359,
+   "name": "Lamar River",
+   "width": 30.0,
+   "length_m": 281,
    "before": {
-    "on": 0.297,
-    "near": 0.703,
-    "samples": 37
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 30
    },
    "after": {
     "on": 1.0,
     "near": 1.0,
-    "samples": 40
+    "samples": 30
    },
-   "verdict_before": "off water",
+   "verdict_before": "on water",
    "verdict_after": "on water",
-   "moved": "moved"
+   "moved": null
+  },
+  {
+   "k": 374,
+   "name": "Lamar River",
+   "width": 30.0,
+   "length_m": 778,
+   "before": {
+    "on": 0.924,
+    "near": 0.924,
+    "samples": 79
+   },
+   "after": {
+    "on": 0.924,
+    "near": 0.924,
+    "samples": 79
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
   },
   {
    "k": 384,
-   "name": null,
-   "width": 19.22,
-   "length_m": 60,
+   "name": "Lamar River",
+   "width": 30.0,
+   "length_m": 873,
    "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 8
+    "on": 0.787,
+    "near": 0.787,
+    "samples": 89
    },
    "after": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 8
+    "on": 0.787,
+    "near": 0.787,
+    "samples": 89
    },
-   "verdict_before": "no water seen",
-   "verdict_after": "no water seen",
+   "verdict_before": "on water",
+   "verdict_after": "on water",
    "moved": null
   },
   {
-   "k": 386,
+   "k": 387,
+   "name": "Lamar River",
+   "width": 30.0,
+   "length_m": 634,
+   "before": {
+    "on": 0.831,
+    "near": 0.831,
+    "samples": 65
+   },
+   "after": {
+    "on": 0.831,
+    "near": 0.831,
+    "samples": 65
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 388,
+   "name": "Lamar River",
+   "width": 30.0,
+   "length_m": 355,
+   "before": {
+    "on": 0.784,
+    "near": 0.811,
+    "samples": 37
+   },
+   "after": {
+    "on": 0.784,
+    "near": 0.811,
+    "samples": 37
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 390,
+   "name": "Lamar River",
+   "width": 30.0,
+   "length_m": 125,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 14
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 14
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 399,
+   "name": "Lamar River",
+   "width": 30.0,
+   "length_m": 274,
+   "before": {
+    "on": 0.966,
+    "near": 0.966,
+    "samples": 29
+   },
+   "after": {
+    "on": 0.966,
+    "near": 0.966,
+    "samples": 29
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 406,
+   "name": "Lamar River",
+   "width": 30.0,
+   "length_m": 652,
+   "before": {
+    "on": 0.97,
+    "near": 0.97,
+    "samples": 67
+   },
+   "after": {
+    "on": 0.97,
+    "near": 0.97,
+    "samples": 67
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 407,
    "name": "Cache Creek",
-   "width": 17.77,
-   "length_m": 60,
+   "width": 17.78,
+   "length_m": 451,
+   "before": {
+    "on": 0.383,
+    "near": 0.447,
+    "samples": 47
+   },
+   "after": {
+    "on": 0.383,
+    "near": 0.447,
+    "samples": 47
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 417,
+   "name": "Lamar River",
+   "width": 26.44,
+   "length_m": 901,
+   "before": {
+    "on": 0.989,
+    "near": 1.0,
+    "samples": 92
+   },
+   "after": {
+    "on": 0.989,
+    "near": 1.0,
+    "samples": 92
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 420,
+   "name": null,
+   "width": 19.03,
+   "length_m": 63,
    "before": {
     "on": 0.0,
-    "near": 0.125,
+    "near": 0.0,
     "samples": 8
    },
    "after": {
     "on": 0.0,
-    "near": 0.125,
+    "near": 0.0,
     "samples": 8
    },
    "verdict_before": "no water seen",
@@ -1733,8 +1458,8 @@
    "moved": null
   },
   {
-   "k": 389,
-   "name": null,
+   "k": 421,
+   "name": "Soda Butte Creek",
    "width": 19.19,
    "length_m": 40,
    "before": {
@@ -1752,173 +1477,196 @@
    "moved": null
   },
   {
-   "k": 394,
+   "k": 422,
    "name": null,
-   "width": 19.03,
-   "length_m": 40,
+   "width": 30.0,
+   "length_m": 90,
    "before": {
     "on": 0.0,
-    "near": 0.167,
-    "samples": 6
+    "near": 0.0,
+    "samples": 10
    },
    "after": {
     "on": 0.0,
-    "near": 0.167,
-    "samples": 6
+    "near": 0.0,
+    "samples": 10
    },
    "verdict_before": "no water seen",
    "verdict_after": "no water seen",
    "moved": null
   },
   {
-   "k": 395,
+   "k": 423,
    "name": "Lamar River",
    "width": 30.0,
-   "length_m": 50,
+   "length_m": 80,
    "before": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 7
+    "on": 0.6,
+    "near": 0.6,
+    "samples": 10
    },
    "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 7
+    "on": 0.6,
+    "near": 0.6,
+    "samples": 10
    },
    "verdict_before": "on water",
    "verdict_after": "on water",
    "moved": null
-  }
- ],
- "side_channels": [
-  {
-   "name": "Lamar River",
-   "width": 13.8,
-   "length_m": 309,
-   "area_m2": 4800
   },
   {
-   "name": "Lamar River",
-   "width": 15.0,
-   "length_m": 290,
-   "area_m2": 4925
-  },
-  {
-   "name": "Lamar River",
-   "width": 30.0,
-   "length_m": 415,
-   "area_m2": 13650
-  },
-  {
-   "name": "Lamar River",
-   "width": 22.5,
-   "length_m": 236,
-   "area_m2": 5275
-  },
-  {
-   "name": "Lamar River",
-   "width": 17.5,
-   "length_m": 172,
-   "area_m2": 3125
-  },
-  {
-   "name": "Lamar River",
-   "width": 20.0,
-   "length_m": 186,
-   "area_m2": 3650
-  },
-  {
+   "k": 426,
    "name": null,
-   "width": 27.5,
-   "length_m": 259,
-   "area_m2": 7675
-  },
-  {
-   "name": "Lamar River",
-   "width": 22.5,
-   "length_m": 210,
-   "area_m2": 4875
-  },
-  {
-   "name": "Lamar River",
-   "width": 12.5,
-   "length_m": 415,
-   "area_m2": 6550
-  },
-  {
-   "name": "Lamar River",
-   "width": 10.0,
-   "length_m": 469,
-   "area_m2": 4900
-  }
- ],
- "nhd_dropped": [
-  {
-   "k": 385,
-   "name": null,
-   "length_m": 100,
-   "width": 30.0
-  },
-  {
-   "k": 388,
-   "name": null,
+   "width": 19.7,
    "length_m": 40,
-   "width": 30.0
-  },
-  {
-   "k": 390,
-   "name": "Soda Butte Creek",
-   "length_m": 60,
-   "width": 19.65
-  },
-  {
-   "k": 391,
-   "name": null,
-   "length_m": 50,
-   "width": 30.0
-  },
-  {
-   "k": 393,
-   "name": null,
-   "length_m": 50,
-   "width": 30.0
-  },
-  {
-   "k": 396,
-   "name": "Lamar River",
-   "length_m": 70,
-   "width": 30.0
-  },
-  {
-   "k": 399,
-   "name": null,
-   "length_m": 47,
-   "width": 30.0
+   "before": {
+    "on": 0.0,
+    "near": 0.2,
+    "samples": 5
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.2,
+    "samples": 5
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
   }
  ],
+ "side_channels": [],
+ "nhd_dropped": [],
  "undrawn": [
   {
    "at": [
-    9823,
-    48
+    5130,
+    5099
    ],
-   "area_m2": 4525,
-   "freq_mean": 0.7,
+   "area_m2": 13225,
+   "freq_mean": 0.65,
    "nearest_reach": null,
-   "nearest_width": 26.44,
-   "nearest_m": 97,
+   "nearest_width": 30.0,
+   "nearest_m": 103,
    "map": "unmapped"
   },
   {
    "at": [
-    4605,
-    5807
+    7205,
+    3202
    ],
-   "area_m2": 2150,
+   "area_m2": 12325,
    "freq_mean": 0.57,
    "nearest_reach": "Lamar River",
    "nearest_width": 30.0,
-   "nearest_m": 56,
+   "nearest_m": 42,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    3077,
+    6725
+   ],
+   "area_m2": 7825,
+   "freq_mean": 0.63,
+   "nearest_reach": null,
+   "nearest_width": 30.0,
+   "nearest_m": 151,
+   "map": "a mapped polygon water_seasons judged dry"
+  },
+  {
+   "at": [
+    3208,
+    6285
+   ],
+   "area_m2": 5275,
+   "freq_mean": 0.61,
+   "nearest_reach": null,
+   "nearest_width": 1.67,
+   "nearest_m": 189,
+   "map": "a mapped polygon water_seasons judged dry"
+  },
+  {
+   "at": [
+    4638,
+    5850
+   ],
+   "area_m2": 5150,
+   "freq_mean": 0.64,
+   "nearest_reach": null,
+   "nearest_width": 30.0,
+   "nearest_m": 57,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    900,
+    9174
+   ],
+   "area_m2": 3625,
+   "freq_mean": 0.59,
+   "nearest_reach": "Lamar River",
+   "nearest_width": 30.0,
+   "nearest_m": 78,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    846,
+    9441
+   ],
+   "area_m2": 3450,
+   "freq_mean": 0.66,
+   "nearest_reach": "Lamar River",
+   "nearest_width": 30.0,
+   "nearest_m": 47,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    3388,
+    6211
+   ],
+   "area_m2": 2475,
+   "freq_mean": 0.58,
+   "nearest_reach": null,
+   "nearest_width": 5.76,
+   "nearest_m": 81,
+   "map": "a mapped polygon water_seasons judged dry"
+  },
+  {
+   "at": [
+    5720,
+    4768
+   ],
+   "area_m2": 2025,
+   "freq_mean": 0.61,
+   "nearest_reach": "Lamar River",
+   "nearest_width": 30.0,
+   "nearest_m": 45,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    6113,
+    4790
+   ],
+   "area_m2": 1950,
+   "freq_mean": 0.6,
+   "nearest_reach": "Lamar River",
+   "nearest_width": 30.0,
+   "nearest_m": 39,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    660,
+    9483
+   ],
+   "area_m2": 1925,
+   "freq_mean": 0.59,
+   "nearest_reach": "Lamar River",
+   "nearest_width": 30.0,
+   "nearest_m": 46,
    "map": "unmapped"
   }
  ]

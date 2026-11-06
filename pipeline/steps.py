@@ -25,10 +25,13 @@ The manifest's `steps` holds, per step: version, code hash, parameters, the fing
 made of, the output layers and files with their hashes, the sources it used (with the date they were retrieved), the
 fallbacks it took (runlog.fallback: a Planetary Computer DEM after a USGS timeout, DEM-only lidar, a LANDFIRE export
 answered on its third try), the network reads and whether they came from the cache, its status (ok, not_applicable,
-failed), when it ran and for how long. The old `log` list is kept and appended to as before.
+refused, failed), when it ran and for how long. The old `log` list is kept and appended to as before.
 
 A step that fails stops the build (its dependents cannot be right), and the command exits 1; --keep-going runs the
-steps that do not depend on it.
+steps that do not depend on it. A step that refuses (runlog.Refused: the reroute on a tile whose drawn DEM is not the
+1 m ground) does not stop the build, since its dependents run on what it would have replaced. It is recorded `refused`
+with its reason and is never current, so every build tries it again. --status flags it, the build and --status exit 1,
+and the audit step fails on it (refusals).
 """
 from __future__ import annotations
 
@@ -70,8 +73,17 @@ class Step:
 # The steps' bodies (moved from build_tile.run, 2026-11-04). Each records its layers with add_layer.
 
 def _dem(tile, m, force):
-    from .fetch_dem import fetch_dem
-    add_layer(m, tile, "terrain.dem", fetch_dem(tile, force))
+    # The drawn DEM (terrain/dem.tif, what the client's ground is made of): the fetched 5 m, or, where the 3DEP 1 m
+    # products cover >= 95 % of the tile, the 1 m ground averaged with the fetched DEM filling the gaps
+    # (fetch_dem.drawn_dem, 2026-11-06: Lamar's reroute refused on the 3DEP seamless 10 m the flaky ImageServer left it).
+    from .fetch_dem import drawn_dem, fetch_dem
+    info = drawn_dem(tile, fetch_dem(tile, force), force)
+    fetched = info.pop("_fetched", None)
+    if fetched:
+        add_layer(m, tile, "terrain.dem_5m", fetched)
+    else:
+        m["layers"].pop("terrain.dem_5m", None)
+    add_layer(m, tile, "terrain.dem", info)
 
 
 def _lidar(tile, m, force):
@@ -134,6 +146,8 @@ def _reroute(tile, m, force):
     # 2026-11-04), keeping the 5 m network's topology and attributes; the depth profile, incision and client features
     # re-derived. A tile whose 5 m heights disagree with its 1 m ground (utm11n_267_4175) is refused by reroute.py: the
     # client draws the 5 m heights, so the step records the refusal and the water keeps the 5 m lines (loud, not fatal).
+    # 2026-11-06: the refusal is the step's status (runlog.Refused: `refused`, shown by --status and failed by the
+    # audit), not an `ok` with no outputs; the dem step now draws such a tile's DEM from the 1 m ground.
     from .reroute import reroute
     try:
         out, stats = reroute(tile)
@@ -141,8 +155,7 @@ def _reroute(tile, m, force):
         if not str(e).startswith("terrain/dem.tif is not the 1 m ground"):
             raise
         m["status"]["reroute"] = "refused: " + str(e)
-        print(f"[{tile.tile_id}] reroute refused: {e}", flush=True)
-        return
+        raise runlog.Refused(str(e)) from None
     m["status"]["reroute"] = "rerouted"
     for k, v in out.items():
         add_layer(m, tile, k, v, fetched=False)
@@ -520,8 +533,12 @@ def _audit(tile, m, force):
     a = audit(tile.tile_id)
     m["licence_audit"] = {"at": now_iso(), "problems": problems, "warnings": warnings,
                           "occurrence_records": a["records"], "non_commercial_fraction": a["non_commercial_fraction"]}
-    if problems:
-        raise RuntimeError("licence audit: " + "; ".join(problems[:6]))
+    # the build's own audit (2026-11-06): a step that refused or failed is a problem of the tile, not a pass
+    build_problems = refusals(m)
+    m["build_audit"] = {"at": now_iso(), "problems": build_problems}
+    if problems or build_problems:
+        raise RuntimeError("; ".join((["licence audit: " + "; ".join(problems[:6])] if problems else []) +
+                                     (["build audit: " + "; ".join(build_problems[:6])] if build_problems else [])))
 
 
 def _species_prior(tile, m, force):
@@ -539,8 +556,10 @@ B, F, A, G = STAGES
 
 STEPS: dict[str, Step] = {s.name: s for s in [
     # ---------------------------------------------------------------- base
-    Step("dem", "1", ["fetch_dem", "arcgis", "fetch_global"], [], _dem, ["terrain.dem"], ["usgs_3dep", "pc_3dep_seamless", "nasadem", "copernicus_dem_glo30"],
-         doc="the 5 m bare-earth DEM", stage=B),
+    Step("dem", "2", ["fetch_dem", "arcgis", "fetch_global", "lidar", "fetch_lidar"], [], _dem, ["terrain.dem", "terrain.dem_5m"],
+         ["usgs_3dep", "pc_3dep_seamless", "nasadem", "copernicus_dem_glo30", "usgs_3dep_lidar"],
+         doc="the drawn 5 m bare-earth DEM: the 1 m ground averaged where its products cover >= 95 % of the tile, "
+             "else the fetched 5 m", stage=B),
     Step("naip", "1", ["fetch_naip", "arcgis", "fetch_global"], [], _naip, ["imagery.naip"], ["pc_naip", "usgs_naip", "sentinel2_l2a"],
          doc="present-day imagery at 2.5 m", stage=B),
     Step("osm", "1", ["fetch_osm"], [], _osm, ["footprint.mask"], ["osm"], doc="the human footprint: buildings, roads, dams", stage=B),
@@ -857,7 +876,16 @@ def run_step(tile: Tile, step: Step, m: dict, force: bool, hashes: Hashes) -> di
                                 "cache": sum(1 for f in r["fetched"] if f["cached"])})
             rec["_fetched"] = r["fetched"]
             if step.name == "audit":
-                rec["out_hash"] = _h(m.get("licence_audit", {}).get("problems"))
+                rec["out_hash"] = _h([m.get("licence_audit", {}).get("problems"), m.get("build_audit", {}).get("problems")])
+        ok = True
+    except runlog.Refused as e:
+        # not fatal to the build (the dependents run on what the step would have replaced) but never `ok`: --status, the
+        # audit step and the exit code report it (2026-11-06)
+        r = runlog.end()
+        reason = str(e)[:800]
+        rec.update(status="refused", reason=reason, outputs={}, out_hash=_h(["refused", reason]), fallbacks=r["fallbacks"],
+                   notes=r["notes"])
+        print(f"[{tile.tile_id}] {step.name} REFUSED: {reason[:300]}", file=sys.stderr, flush=True)
         ok = True
     except Exception as e:  # noqa: BLE001
         traceback.print_exc()
@@ -892,12 +920,14 @@ def run_step(tile: Tile, step: Step, m: dict, force: bool, hashes: Hashes) -> di
     import shutil
     shutil.rmtree(meter_dir, ignore_errors=True)
     m.setdefault("steps", {})[step.name] = rec
-    m.setdefault("log", []).append({"step": step.name, "at": now_iso(), "seconds": rec["seconds"], "ok": ok,
+    m.setdefault("log", []).append({"step": step.name, "at": now_iso(), "seconds": rec["seconds"],
+                                    "ok": ok and rec["status"] != "refused",
                                     **({"error": rec["error"][:500]} if not ok else {}),
+                                    **({"refused": rec["reason"][:500]} if rec["status"] == "refused" else {}),
                                     **({"not_applicable": rec["reason"]} if rec.get("status") == "not_applicable" else {})})
     hashes.save()
     save(tile, m)
-    state = rec["status"] if ok else "FAILED: " + rec.get("error", "")[:300]
+    state = (rec["status"] if rec["status"] != "refused" else "REFUSED: " + rec["reason"][:300]) if ok else "FAILED: " + rec.get("error", "")[:300]
     fb = f", {len(rec.get('fallbacks') or [])} fallback(s)" if rec.get("fallbacks") else ""
     print(f"[{tile.tile_id}] {step.name} {state} in {rec['seconds']:.1f}s{fb}", flush=True)
     return rec
@@ -936,6 +966,7 @@ def build(tile: Tile, *, steps: list[str] | None = None, force: set[str] = froze
     if unknown:
         raise ValueError(f"unknown step(s) {unknown}; steps are {ORDER + list(EXTRA)}")
     failed: set[str] = set()
+    refused: set[str] = set()
     plan = []
     run = {"started_at": now_iso(), "stages": []}
     cur_stage = None
@@ -948,7 +979,7 @@ def build(tile: Tile, *, steps: list[str] | None = None, force: set[str] = froze
             run["stages"].append({"stage": cur_stage, "started_at": now_iso(), "steps_run": [], "steps_skipped": []})
         blocked = [d for d in step.after if d in failed]
         missing = [d for d in step.after if d not in names and
-                   (m["steps"].get(d) or {}).get("status") not in ("ok", "not_applicable", "adopted", "stale")]
+                   (m["steps"].get(d) or {}).get("status") not in ("ok", "not_applicable", "adopted", "stale", "refused")]
         if blocked or missing:
             failed.add(n)
             why = (f"blocked by {', '.join(blocked)}" if blocked else
@@ -972,6 +1003,8 @@ def build(tile: Tile, *, steps: list[str] | None = None, force: set[str] = froze
             continue
         rec = run_step(tile, step, m, refetch and n in force, hashes)
         run["stages"][-1]["steps_run"].append(n)
+        if rec["status"] == "refused":
+            refused.add(n)
         if rec["status"] == "failed":
             failed.add(n)
             if not keep_going:
@@ -982,6 +1015,7 @@ def build(tile: Tile, *, steps: list[str] | None = None, force: set[str] = froze
         run["stages"][-1]["ended_at"] = now_iso()
     run["ended_at"] = now_iso()
     run["failed"] = sorted(failed)
+    run["refused"] = sorted(refused)
     if plan_only:
         w = max(len(n) for n, _ in plan) if plan else 4
         for n, why in plan:
@@ -991,7 +1025,25 @@ def build(tile: Tile, *, steps: list[str] | None = None, force: set[str] = froze
         from . import cost
         cost.record_run(tile, run)
     m["_failed"] = sorted(failed)
+    # every step whose last run refused, run here or before (a skipped one is re-run: `current` is never true for it)
+    m["_refused"] = sorted(n for n in ORDER if (m.get("steps", {}).get(n) or {}).get("status") == "refused")
     return m
+
+
+def refusals(m: dict) -> list[str]:
+    """The steps whose last run refused or failed, with the reason, and any status entry saying so: what the audit step
+    fails on and --status prints (2026-11-06: a refused reroute had read `ok`)."""
+    out = []
+    for n in ORDER:
+        if n == "audit":
+            continue
+        rec = (m.get("steps", {}) or {}).get(n) or {}
+        if rec.get("status") in ("refused", "failed"):
+            out.append(f"{n} {rec['status']}: {(rec.get('reason') or rec.get('error') or '')[:300]}")
+    for k, v in (m.get("status") or {}).items():
+        if isinstance(v, str) and v.startswith("refused") and not any(o.startswith(k + " ") for o in out):
+            out.append(f"status.{k}: {v[:300]}")
+    return out
 
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -1038,6 +1090,8 @@ def status(tile: Tile) -> list[dict]:
         expect = step.layers
         if n == "lidar" and m.get("status", {}).get("lidar") == "dem_only":
             expect = ["terrain.dem_1m", "client.terrain_detail", "terrain.roughness"]
+        if n == "dem" and not (m["layers"].get("terrain.dem") or {}).get("fetched_source"):
+            expect = ["terrain.dem"]    # the fetched DEM is a layer of its own only when the 1 m rule drew terrain.dem
         missing = [l for l in expect if not l.endswith(".") and l not in m["layers"]]
         mism = []
         for l in have:
@@ -1051,9 +1105,15 @@ def status(tile: Tile) -> list[dict]:
                 mism.append(l + " (file missing)")
         changed = _git_changed_after([f"pipeline/{x}.py" for x in step.modules] + step.library, at) if at else []
         na = step.applies(tile, m) if step.applies else None
+        rec = m.get("steps", {}).get(n) or {}
         rows.append({"step": n, "ran": at, "layers": len(have), "missing_layers": missing if not na else [],
                      "hash_mismatch": mism, "code_since": changed, "not_applicable": na,
-                     "graph": (m.get("steps", {}).get(n) or {}).get("status")})
+                     "graph": rec.get("status"),
+                     "problem": (f"{rec['status']}: {(rec.get('reason') or rec.get('error') or '')[:300]}"
+                                 if rec.get("status") in ("refused", "failed", "blocked") else
+                                 # a refusal recorded before the runner knew the status (Lamar's reroute: `ok`, no outputs)
+                                 f"refused: {sv[len('refused: '):][:300]}" if isinstance(sv := (m.get("status") or {}).get(n), str)
+                                 and sv.startswith("refused") else None)})
     hashes.save()
     return rows
 

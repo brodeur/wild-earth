@@ -6333,3 +6333,58 @@ ledger counts it twice.
   So a recorded, repeatable per-species tuning step (a judged photo pick, an accepted model over a check's flag, a
   species' correction kept as data with its reason) is a legitimate stage of the pipeline, not a violation of it; what
   stays out is unrecorded hand edits. The judge verdicts and picks already stored in library/animals are that stage.
+- **Lamar's water in the low points: the drawn DEM from the 1 m ground, and a refused step that fails loudly**
+  (`pipeline/fetch_dem.py` drawn_dem, `pipeline/steps.py`, `pipeline/runlog.py` Refused, `pipeline/build_tile.py`,
+  `pipeline/lidar.py` _fill_from_5m, `pipeline/water_check.py` by_reach and named; tests/test_drawn_dem.py). Aaron on
+  Lamar: "the waterways look like they are not in the right area based on the ground color and elevation - has the 'put
+  water in the low points' part of the pipeline not happened yet?" It had not. The USGS ImageServer answered 504, so the
+  dem step took the 3DEP seamless 10 m, an older survey 3.9 m (std) off the 1 m lidar ground, and the reroute refused
+  the tile. The step record still read `ok` with no outputs after 4 s, and the water stayed on the 5 m lines: Soda Butte
+  Creek ran straight across the meadow, and the Lamar's ribbon turned into dry stony bed where its line left the drawn
+  channel.
+  - *The rule* (every tile, the dem step, version 2): wherever the 3DEP 1 m products cover at least 95 % of the tile
+    (`DRAWN_1M_MIN_SHARE`), terrain/dem.tif is the 1 m ground averaged, each 5 m cell the mean of its 25 1 m cells,
+    where all 25 are the product's. This holds whichever 5 m service answered. The fetched DEM is kept as
+    terrain/dem_5m.tif (layer `terrain.dem_5m`) and fills only the gaps, shifted toward the 1 m ground near the seam:
+    the seam's difference is smoothed over 15 m and fades to 0 over 50 m into the gap. The dem step builds the 1 m
+    mosaic itself (lidar.build_dem_1m, filling from the fetched DEM), and the lidar step reuses it.
+    *The threshold, from the evidence*: Teton has 100 % coverage; Lamar 98.7 % (one gap, the south-west corner, at the
+    collection's edge); the Grand Canyon 86.1 % (a 1.1 x 8 km strip on its west side, in three pieces); the Hoh 0 %.
+    At 95 % or more the gaps are a collection's ragged edge, and the reroute's test (std <= 3 m) holds by construction:
+    Lamar is now at 0.13 m. Below it, the 1 m is one source of two over a large part of the tile. The tile then keeps
+    the ImageServer's DEM, itself the 1 m resampled where it exists: the Grand Canyon's agrees at 1.6 m and was
+    already rerouted. Its dem step re-ran and wrote byte-identical output, so nothing downstream of it moved.
+  - *Order of reroute and water_imagery* (kept: reroute, then water_imagery): reroute puts every reach on the 1 m
+    thalweg, the only evidence that resolves streams the 20 m Sentinel-2 water cannot see (Soda Butte Creek). Then
+    water_imagery moves only a large river (>= 10 m) whose rerouted line still misses the imagery's water, for example
+    a channel that moved after the lidar was flown. Lamar's 1 m collection (WY_GrandTetonNP_D22) was flown in
+    September 2022, after the June flood, so its thalweg is the present channel. water_imagery now moves nothing
+    there: 41 reaches on water, 5 off, 345 with no water seen. Before the fix it moved 3 stems that were 20-450 m off
+    on the 10 m DEM.
+  - *A refusal is a failure*: a step raising runlog.Refused is recorded `refused` with its reason (never `ok`) and is
+    never current, so every build tries it again. Its dependents still run, on the lines it would have replaced. The
+    build and `--status` exit 1. `--status` flags the step, including a refusal recorded the old way (status.reroute
+    "refused: ..." with the step `ok`). The audit step fails on any step whose last run refused or failed
+    (`build_audit` in the manifest, steps.refusals).
+  - *Results on Lamar* (water_check, before -> after; the before is the branch's tile from just before the rebuild):
+    bed within 5 cm of the section's lowest 1 m ground 28.0 % -> 87.6 % of samples, within 15 cm 47.2 % -> 94.4 %;
+    median gap 0.173 -> 0.005 m, p95 1.905 -> 0.169 m; reaches whose median gap is over 15 cm (the water above the
+    low point along most of the reach) 53.7 % -> 1.4 %; ground over the level by more than 1 m 51.7 % -> 0.56 %;
+    level over the bank by more than 10 cm 35.0 % -> 0.29 %; rises into the receiving reach 28 -> 0. Within 15 cm per
+    stream: the Lamar 71.5 % -> 97.5 %, Soda Butte Creek 19.4 % -> 84.0 %, Rose Creek 18.7 % -> 98.3 %. Aaron's view,
+    before and after, is in the shared notes folder `lamar-river/` (30 m up along the river at the Soda Butte
+    junction, top-down, the mini-map). Rebuilt: the base stage, then species_mix, canopy_top, crowns, inpaint,
+    resources, games, game_seeds, registry and audit. plants, species, animals and stills are left stale by other
+    lanes' library changes; their inputs do not depend on the heights.
+  - *Teton* (`utm12n_514_4838`, 100 % 1 m, ImageServer DEM; it had been rerouted at std 1.47 m) takes the rule too:
+    its drawn ground moves by 1.47 m (std; mean +0.07 m), and the reroute's agreement goes from 1.47 to 0.0 m.
+    Rebuilt the same way. water_check, before -> after: bed within 5 cm 76.8 % -> 78.4 %, within 15 cm 86.2 % ->
+    87.4 %, p95 gap 0.55 -> 0.52 m, reaches whose median gap is over 15 cm 4.7 % -> 3.1 %. Its seasons step re-ran in
+    the cascade and took one new Sentinel-2 scene (November), so water_seasons and water_imagery now judge 7 months.
+    water_imagery moved one stem (6 / 4 / 352 -> 7 / 3 / 352; it was 13 / 3 / 346 on the old months and lines).
+    Teton's audit is blocked, as before: its stills step has never run (the fauna lane's).
+  - Not rebuilt here: `utm11n_267_4175` (its rasters are not in this worktree; its dem step will take the rule when it
+    next runs) and the home tile `utm10n_680_4280` (it has no coverage record; its 1 m DEM is treated as 100 %, so its
+    next dem run draws from the 1 m and re-runs the stale steps it already has). Every other tile's dem step re-runs
+    once for the new code and version: where the 1 m covers under 95 % and the fetched DEM's chips are
+    cached (`_cache/3dep_5m_*`), the output is the same bytes, so nothing downstream re-runs. 158 tests pass (3 new).
