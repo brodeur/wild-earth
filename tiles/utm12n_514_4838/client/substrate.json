@@ -48,17 +48,17 @@
    "notes": "massive; exfoliation sheets parallel to the surface, two steep joint sets: big smooth faces, long cracks",
    "index": 1,
    "fraction": 0.2576,
-   "exposed_fraction": 0.5998,
+   "exposed_fraction": 0.6,
    "joints": {
     "strikes_deg": [
-     77.5,
-     47.5
+     72.5,
+     42.5
     ],
     "peak_over_mean": [
-     1.25,
-     1.18
+     1.27,
+     1.12
     ],
-    "cells": 177295,
+    "cells": 176067,
     "source": "DEM: strikes of the faces steeper than 55 degrees"
    }
   },
@@ -205,17 +205,17 @@
    "notes": "massive to blocky, irregular joints; knobby dark faces",
    "index": 4,
    "fraction": 0.2046,
-   "exposed_fraction": 0.5693,
+   "exposed_fraction": 0.5695,
    "joints": {
     "strikes_deg": [
-     82.5,
-     52.5
+     77.5,
+     107.5
     ],
     "peak_over_mean": [
-     1.42,
+     1.44,
      1.24
     ],
-    "cells": 112431,
+    "cells": 111834,
     "source": "DEM: strikes of the faces steeper than 55 degrees"
    }
   },
@@ -497,7 +497,7 @@
    "notes": "alluvium, till, talus, dune sand, fill, landslides: no bedrock face (a cut bank at most)",
    "index": 10,
    "fraction": 0.5378,
-   "exposed_fraction": 0.0015,
+   "exposed_fraction": 0.0016,
    "joints": {
     "strikes_deg": [],
     "source": "too few steep faces"
@@ -556,12 +556,12 @@
   }
  },
  "stats": {
-  "exposed_fraction": 0.2718,
+  "exposed_fraction": 0.272,
   "exposed_mean": 0.2605,
-  "patches": 1191,
-  "patches_over_1000m2": 211,
-  "patches_over_1ha": 25,
-  "largest_patch_m2": 18453525,
+  "patches": 1175,
+  "patches_over_1000m2": 214,
+  "patches_over_1ha": 24,
+  "largest_patch_m2": 18462900,
   "slope_source": "max(5 m, 0.85 x 1 m mean)",
   "cover_source": "LANDFIRE EVC tree cover (30 m, smoothed)",
   "photo": "client/texture_imagery.jpg (NAIP, humans erased)",

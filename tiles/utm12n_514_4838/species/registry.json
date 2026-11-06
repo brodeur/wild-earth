@@ -1,6 +1,6 @@
 {
  "tile": "utm12n_514_4838",
- "at": "2026-11-06T06:48:50Z",
+ "at": "2026-11-06T19:40:07Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -11,8 +11,8 @@
  "summary": {
   "by_level": {
    "0": {
-    "plants": 44,
-    "animals": 51
+    "plants": 37,
+    "animals": 44
    },
    "1": {
     "plants": 0,
@@ -20,23 +20,28 @@
    },
    "2": {
     "plants": 12,
-    "animals": 0
+    "animals": 1
    },
    "3": {
-    "plants": 4,
-    "animals": 29
+    "plants": 33,
+    "animals": 36
    },
    "4": {
     "plants": 1,
     "animals": 7
    }
   },
-  "plants": 61,
-  "animals_present": 87,
-  "animals_queued": 51,
-  "meshy_credits_queued": 1525,
-  "cards_queued": 44,
+  "plants": 83,
+  "animals_present": 88,
+  "animals_queued": 52,
+  "meshy_credits_queued": 1550,
+  "cards_queued": 37,
   "stand_ins": {
+   "sorbus_scopulina": null,
+   "acer_glabrum": null,
+   "amelanchier_alnifolia": null,
+   "prunus_virginiana": null,
+   "picea_engelmannii": null,
    "pinus_longaeva": "pinus_ponderosa",
    "pinus_flexilis": "pinus_ponderosa",
    "ceanothus_velutinus": null,
@@ -46,10 +51,8 @@
    "wyethia_sagittata": null,
    "chamaenerion_angustifolium": null,
    "ipomopsis_aggregata": null,
-   "sorbus_scopulina": null,
    "erythranthe_lewisii": null,
    "campanula_petiolata": null,
-   "actaea_rubra": null,
    "aquilegia_coerulea": null,
    "pterospora_andromedea": null,
    "streptopus_amplexifolius": null,
@@ -57,29 +60,19 @@
    "paxistima_myrsinites": null,
    "rhododendron_menziesii": null,
    "carduus_nutans": null,
-   "eriogonum_umbellatum": null,
    "maianthemum_racemosum": null,
-   "geranium_viscosissimum": null,
    "heracleum_maximum": null,
    "clematis_occidentalis": null,
    "hydrophyllum_capitatum": null,
    "claytonia_lanceolata": null,
-   "anaphalis_margaritacea": null,
-   "pedicularis_bracteosa": null,
-   "fritillaria_pudica": null,
-   "pteridium_aquilinum": null,
    "lonicera_involucrata": null,
-   "rubus_idaeus": null,
-   "acer_glabrum": null,
    "vaccinium_membranaceum": null,
    "vaccinium_scoparium": null,
    "ribes_viscosissimum": null,
    "orthilia_secunda": null,
-   "castilleja_miniata": null,
    "kalmia_microphylla": null,
    "sambucus_racemosa": null,
    "pyrola_asarifolia": null,
-   "picea_engelmannii": null,
    "ribes_lacustre": null
   },
   "density": {
@@ -93,20 +86,20 @@
    },
    "ground": {
     "target": 26,
-    "have": 1
+    "have": 30
    },
    "animal": {
     "target": 22,
-    "have": 87,
-    "with_model": 36
+    "have": 88,
+    "with_model": 44
    }
   },
   "hands": {
-   "count": 111,
+   "count": 105,
    "by_what": {
-    "a trait card": 44,
+    "a trait card": 37,
     "a lexicon phrase or a species-mix rule": 16,
-    "a mesh": 51
+    "a mesh": 52
    }
   }
  },
@@ -117,10 +110,11 @@
    "fidelity": 2,
    "common": "big sagebrush",
    "drawn_as": "artemisia_tridentata",
-   "share": 0.7324,
+   "share": 1.0,
    "why_needed": [
     "named by EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (26281 cells)",
-    "named by BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (691 cells)"
+    "named by BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (691 cells)",
+    "canopy: records (GBIF: 23 records on the tile; height not yet screened)"
    ]
   },
   {
@@ -129,10 +123,11 @@
    "fidelity": 2,
    "common": "lodgepole pine",
    "drawn_as": "pinus_contorta",
-   "share": 0.4295,
+   "share": 0.5295,
    "why_needed": [
     "named by EVT 7050 Rocky Mountain Lodgepole Pine Forest (9076 cells)",
-    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (2953 cells)"
+    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (2953 cells)",
+    "canopy: records (GBIF: 155 records on the tile; height not yet screened)"
    ]
   },
   {
@@ -141,46 +136,11 @@
    "fidelity": 3,
    "common": "Douglas-fir",
    "drawn_as": "pseudotsuga_menziesii",
-   "share": 0.2906,
+   "share": 0.3351,
    "why_needed": [
     "named by EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (6244 cells)",
-    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)"
-   ]
-  },
-  {
-   "id": "phyllodoce_breweri",
-   "kind": "shrub",
-   "fidelity": 2,
-   "common": "red mountain heather",
-   "drawn_as": "phyllodoce_breweri",
-   "share": 0.2676,
-   "why_needed": [
-    "named by EVT 9016 Rocky Mountain Alpine Bedrock and Scree (31668 cells)",
-    "named by EVT 7144 Rocky Mountain Alpine Turf (1532 cells)",
-    "named by EVT 9017 Rocky Mountain Alpine-Montane Wet Meadow (404 cells)"
-   ]
-  },
-  {
-   "id": "juniperus_grandis",
-   "kind": "tree",
-   "fidelity": 2,
-   "common": "Sierra juniper",
-   "drawn_as": "juniperus_grandis",
-   "share": 0.1197,
-   "why_needed": [
-    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (2953 cells)",
-    "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (19 cells)"
-   ]
-  },
-  {
-   "id": "pinus_monticola",
-   "kind": "tree",
-   "fidelity": 2,
-   "common": "western white pine",
-   "drawn_as": "pinus_monticola",
-   "share": 0.0525,
-   "why_needed": [
-    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (2953 cells)"
+    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)",
+    "canopy: records (GBIF: 23 records on the tile; height not yet screened)"
    ]
   },
   {
@@ -189,20 +149,295 @@
    "fidelity": 2,
    "common": "whitebark pine",
    "drawn_as": "pinus_albicaulis",
-   "share": 0.0455,
+   "share": 0.1182,
    "why_needed": [
     "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (2953 cells)"
    ]
   },
   {
-   "id": "tsuga_mertensiana",
-   "kind": "tree",
-   "fidelity": 2,
-   "common": "mountain hemlock",
-   "drawn_as": "tsuga_mertensiana",
+   "id": "carex_geyeri",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "Geyer's sedge",
+   "drawn_as": "carex_geyeri",
+   "share": 0.1035,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "festuca_idahoensis",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "Idaho fescue",
+   "drawn_as": "festuca_idahoensis",
+   "share": 0.1019,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "lupinus_argenteus",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "silvery lupine",
+   "drawn_as": "lupinus_argenteus",
+   "share": 0.0773,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "elymus_trachycaulus",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "slender wheatgrass",
+   "drawn_as": "elymus_trachycaulus",
+   "share": 0.0644,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "carex_rossii",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "Ross' sedge",
+   "drawn_as": "carex_rossii",
+   "share": 0.0582,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "arnica_cordifolia",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "heartleaf arnica",
+   "drawn_as": "arnica_cordifolia",
+   "share": 0.0559,
+   "why_needed": [
+    "GBIF: 27 records on the tile"
+   ]
+  },
+  {
+   "id": "bromus_carinatus",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "California brome",
+   "drawn_as": "bromus_carinatus",
    "share": 0.0441,
    "why_needed": [
-    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (2953 cells)"
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "pseudoroegneria_spicata",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "bluebunch wheatgrass",
+   "drawn_as": "pseudoroegneria_spicata",
+   "share": 0.0435,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "poa_secunda",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "Sandberg bluegrass",
+   "drawn_as": "poa_secunda",
+   "share": 0.0432,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "trisetum_spicatum",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "spike trisetum",
+   "drawn_as": "trisetum_spicatum",
+   "share": 0.0426,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "erythronium_grandiflorum",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "yellow avalanche-lily",
+   "drawn_as": "erythronium_grandiflorum",
+   "share": 0.0341,
+   "why_needed": [
+    "GBIF: 13 records on the tile"
+   ]
+  },
+  {
+   "id": "calamagrostis_canadensis",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "bluejoint",
+   "drawn_as": "calamagrostis_canadensis",
+   "share": 0.0331,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "eurybia_conspicua",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "western showy aster",
+   "drawn_as": "eurybia_conspicua",
+   "share": 0.0261,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "actaea_rubra",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "red baneberry",
+   "drawn_as": "actaea_rubra",
+   "share": 0.0256,
+   "why_needed": [
+    "GBIF: 86 records on the tile"
+   ]
+  },
+  {
+   "id": "erigeron_engelmannii",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "Engelmann's fleabane",
+   "drawn_as": "erigeron_engelmannii",
+   "share": 0.0256,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "maianthemum_stellatum",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "starry false lily of the valley",
+   "drawn_as": "maianthemum_stellatum",
+   "share": 0.0256,
+   "why_needed": [
+    "GBIF: 10 records on the tile"
+   ]
+  },
+  {
+   "id": "saxifraga_bronchialis",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "yellowdot saxifrage",
+   "drawn_as": "saxifraga_bronchialis",
+   "share": 0.0256,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "elymus_elymoides",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "squirreltail",
+   "drawn_as": "elymus_elymoides",
+   "share": 0.0208,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "hesperostipa_comata",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "needle and thread",
+   "drawn_as": "hesperostipa_comata",
+   "share": 0.0208,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "castilleja_miniata",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "giant red Indian paintbrush",
+   "drawn_as": "castilleja_miniata",
+   "share": 0.0202,
+   "why_needed": [
+    "GBIF: 44 records on the tile"
+   ]
+  },
+  {
+   "id": "geranium_viscosissimum",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "sticky purple geranium",
+   "drawn_as": "geranium_viscosissimum",
+   "share": 0.0184,
+   "why_needed": [
+    "GBIF: 61 records on the tile"
+   ]
+  },
+  {
+   "id": "campanula_rotundifolia",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "bluebell bellflower",
+   "drawn_as": "campanula_rotundifolia",
+   "share": 0.0179,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "delphinium_burkei",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "larkspur",
+   "drawn_as": "delphinium_burkei",
+   "share": 0.0178,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "delphinium_nuttallianum",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "twolobe larkspur",
+   "drawn_as": "delphinium_nuttallianum",
+   "share": 0.0178,
+   "why_needed": [
+    "GBIF: 10 records on the tile"
+   ]
+  },
+  {
+   "id": "eriogonum_umbellatum",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "sulphur-flower buckwheat",
+   "drawn_as": "eriogonum_umbellatum",
+   "share": 0.0177,
+   "why_needed": [
+    "GBIF: 69 records on the tile"
+   ]
+  },
+  {
+   "id": "balsamorhiza_sagittata",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "arrowleaf balsamroot",
+   "drawn_as": "balsamorhiza_sagittata",
+   "share": 0.0176,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
@@ -211,7 +446,7 @@
    "fidelity": 2,
    "common": "quaking aspen",
    "drawn_as": "populus_tremuloides",
-   "share": 0.016,
+   "share": 0.0162,
    "why_needed": [
     "named by EVT 7011 Rocky Mountain Aspen Forest and Woodland (461 cells)",
     "named by BPS 686 Rocky Mountain Aspen Forest and Woodland (29 cells)",
@@ -224,9 +459,20 @@
    "fidelity": 3,
    "common": "ponderosa pine",
    "drawn_as": "pinus_ponderosa",
-   "share": 0.0019,
+   "share": 0.001,
    "why_needed": [
     "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)"
+   ]
+  },
+  {
+   "id": "potentilla_gracilis",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "slender cinquefoil",
+   "drawn_as": "potentilla_gracilis",
+   "share": 0.0005,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
@@ -235,18 +481,7 @@
    "fidelity": 2,
    "common": "white fir",
    "drawn_as": "abies_concolor",
-   "share": 0.0001,
-   "why_needed": [
-    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)"
-   ]
-  },
-  {
-   "id": "quercus_kelloggii",
-   "kind": "tree",
-   "fidelity": 3,
-   "common": "California black oak",
-   "drawn_as": "quercus_kelloggii",
-   "share": 0.0001,
+   "share": 0,
    "why_needed": [
     "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)"
    ]
@@ -259,18 +494,18 @@
    "drawn_as": "abies_lasiocarpa",
    "share": 0,
    "why_needed": [
-    "GBIF: 74 records on the tile"
+    "canopy: records (GBIF: 74 records on the tile; height not yet screened)"
    ]
   },
   {
    "id": "acer_glabrum",
-   "kind": "shrub",
+   "kind": "tree",
    "fidelity": 0,
    "common": null,
    "drawn_as": null,
    "share": 0,
    "why_needed": [
-    "GBIF: 41 records on the tile"
+    "canopy: records (GBIF: 41 records on the tile; height not yet screened)"
    ],
    "stand_in": null
   },
@@ -298,26 +533,14 @@
    "stand_in": null
   },
   {
-   "id": "actaea_rubra",
-   "kind": "forb",
+   "id": "amelanchier_alnifolia",
+   "kind": "tree",
    "fidelity": 0,
    "common": null,
    "drawn_as": null,
    "share": 0,
    "why_needed": [
-    "GBIF: 86 records on the tile"
-   ],
-   "stand_in": null
-  },
-  {
-   "id": "anaphalis_margaritacea",
-   "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "GBIF: 49 records on the tile"
+    "canopy: records (GBIF: 40 records on the tile; height not yet screened)"
    ],
    "stand_in": null
   },
@@ -369,16 +592,15 @@
    "stand_in": null
   },
   {
-   "id": "castilleja_miniata",
-   "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
+   "id": "carex_hoodii",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "Hood's sedge",
+   "drawn_as": "carex_hoodii",
    "share": 0,
    "why_needed": [
-    "GBIF: 44 records on the tile"
-   ],
-   "stand_in": null
+    "GBIF: 12 records on the tile"
+   ]
   },
   {
    "id": "ceanothus_velutinus",
@@ -441,18 +663,6 @@
    "stand_in": null
   },
   {
-   "id": "eriogonum_umbellatum",
-   "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "GBIF: 69 records on the tile"
-   ],
-   "stand_in": null
-  },
-  {
    "id": "erythranthe_lewisii",
    "kind": "forb",
    "fidelity": 0,
@@ -461,30 +671,6 @@
    "share": 0,
    "why_needed": [
     "GBIF: 102 records on the tile"
-   ],
-   "stand_in": null
-  },
-  {
-   "id": "fritillaria_pudica",
-   "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "GBIF: 47 records on the tile"
-   ],
-   "stand_in": null
-  },
-  {
-   "id": "geranium_viscosissimum",
-   "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "GBIF: 61 records on the tile"
    ],
    "stand_in": null
   },
@@ -523,6 +709,18 @@
     "GBIF: 107 records on the tile"
    ],
    "stand_in": null
+  },
+  {
+   "id": "juniperus_grandis",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "Sierra juniper",
+   "drawn_as": "juniperus_grandis",
+   "share": 0,
+   "why_needed": [
+    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (2953 cells)",
+    "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (19 cells)"
+   ]
   },
   {
    "id": "kalmia_microphylla",
@@ -585,6 +783,17 @@
    "stand_in": null
   },
   {
+   "id": "mertensia_ciliata",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "tall fringed bluebells",
+   "drawn_as": "mertensia_ciliata",
+   "share": 0,
+   "why_needed": [
+    "GBIF: 13 records on the tile"
+   ]
+  },
+  {
    "id": "orthilia_secunda",
    "kind": "shrub",
    "fidelity": 0,
@@ -609,16 +818,17 @@
    "stand_in": null
   },
   {
-   "id": "pedicularis_bracteosa",
-   "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
+   "id": "phyllodoce_breweri",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "red mountain heather",
+   "drawn_as": "phyllodoce_breweri",
    "share": 0,
    "why_needed": [
-    "GBIF: 48 records on the tile"
-   ],
-   "stand_in": null
+    "named by EVT 9016 Rocky Mountain Alpine Bedrock and Scree (31668 cells)",
+    "named by EVT 7144 Rocky Mountain Alpine Turf (1532 cells)",
+    "named by EVT 9017 Rocky Mountain Alpine-Montane Wet Meadow (404 cells)"
+   ]
   },
   {
    "id": "picea_engelmannii",
@@ -628,7 +838,7 @@
    "drawn_as": null,
    "share": 0,
    "why_needed": [
-    "GBIF: 10 records on the tile"
+    "canopy: records (GBIF: 10 records on the tile; height not yet screened)"
    ],
    "stand_in": null
   },
@@ -668,14 +878,25 @@
    "stand_in": "pinus_ponderosa"
   },
   {
-   "id": "pteridium_aquilinum",
-   "kind": "fern",
+   "id": "pinus_monticola",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "western white pine",
+   "drawn_as": "pinus_monticola",
+   "share": 0,
+   "why_needed": [
+    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (2953 cells)"
+   ]
+  },
+  {
+   "id": "prunus_virginiana",
+   "kind": "tree",
    "fidelity": 0,
    "common": null,
    "drawn_as": null,
    "share": 0,
    "why_needed": [
-    "GBIF: 46 records on the tile"
+    "canopy: records (GBIF: 19 records on the tile; height not yet screened)"
    ],
    "stand_in": null
   },
@@ -702,6 +923,17 @@
     "GBIF: 11 records on the tile"
    ],
    "stand_in": null
+  },
+  {
+   "id": "quercus_kelloggii",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "California black oak",
+   "drawn_as": "quercus_kelloggii",
+   "share": 0,
+   "why_needed": [
+    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)"
+   ]
   },
   {
    "id": "rhododendron_menziesii",
@@ -740,18 +972,6 @@
    "stand_in": null
   },
   {
-   "id": "rubus_idaeus",
-   "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "GBIF: 43 records on the tile"
-   ],
-   "stand_in": null
-  },
-  {
    "id": "rubus_parviflorus",
    "kind": "shrub",
    "fidelity": 2,
@@ -776,13 +996,13 @@
   },
   {
    "id": "sorbus_scopulina",
-   "kind": "forb",
+   "kind": "tree",
    "fidelity": 0,
    "common": null,
    "drawn_as": null,
    "share": 0,
    "why_needed": [
-    "GBIF: 106 records on the tile"
+    "canopy: records (GBIF: 106 records on the tile; height not yet screened)"
    ],
    "stand_in": null
   },
@@ -797,6 +1017,17 @@
     "GBIF: 80 records on the tile"
    ],
    "stand_in": null
+  },
+  {
+   "id": "tsuga_mertensiana",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "mountain hemlock",
+   "drawn_as": "tsuga_mertensiana",
+   "share": 0,
+   "why_needed": [
+    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (2953 cells)"
+   ]
   },
   {
    "id": "vaccinium_membranaceum",
@@ -1459,7 +1690,7 @@
    "scientific": "Pelecanus erythrorhynchos",
    "common": "american white pelican",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "predator"
@@ -1504,7 +1735,7 @@
    "scientific": "Aquila chrysaetos",
    "common": "golden eagle",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "predator and scavenger"
@@ -1643,7 +1874,7 @@
    "scientific": "Alces alces",
    "common": "moose",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "most recorded: 1 of its class (18% of the class's records)"
@@ -1718,7 +1949,7 @@
    "scientific": "Antilocapra americana",
    "common": "pronghorn",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "most recorded: 8 of its class (4% of the class's records)"
@@ -1825,7 +2056,7 @@
    "scientific": "Ursus arctos",
    "common": "brown bear",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "most recorded: 18 of its class (0% of the class's records)"
@@ -1855,7 +2086,7 @@
    "scientific": "Bison bison",
    "common": "american bison",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "most recorded: 20 of its class (0% of the class's records)"
@@ -1887,7 +2118,7 @@
    "scientific": "Ovis canadensis",
    "common": "bighorn sheep",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "most recorded: 23 of its class (0% of the class's records)"
@@ -1929,6 +2160,19 @@
    "traits": null
   },
   {
+   "id": "thamnophis_elegans",
+   "scientific": "Thamnophis elegans",
+   "common": "terrestrial garter snake",
+   "kind": "reptile",
+   "fidelity": 2,
+   "present": "records",
+   "why": [
+    "most recorded: 1 of its class (99% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
    "id": "rana_luteiventris",
    "scientific": "Rana luteiventris",
    "common": "columbia spotted frog",
@@ -1944,6 +2188,46 @@
  ],
  "queue": {
   "cards": [
+   {
+    "id": "sorbus_scopulina",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "canopy: records (GBIF: 106 records on the tile; height not yet screened)"
+    ]
+   },
+   {
+    "id": "acer_glabrum",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "canopy: records (GBIF: 41 records on the tile; height not yet screened)"
+    ]
+   },
+   {
+    "id": "amelanchier_alnifolia",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "canopy: records (GBIF: 40 records on the tile; height not yet screened)"
+    ]
+   },
+   {
+    "id": "prunus_virginiana",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "canopy: records (GBIF: 19 records on the tile; height not yet screened)"
+    ]
+   },
+   {
+    "id": "picea_engelmannii",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "canopy: records (GBIF: 10 records on the tile; height not yet screened)"
+    ]
+   },
    {
     "id": "pinus_longaeva",
     "kind": "tree",
@@ -2017,14 +2301,6 @@
     ]
    },
    {
-    "id": "sorbus_scopulina",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 106 records on the tile"
-    ]
-   },
-   {
     "id": "erythranthe_lewisii",
     "kind": "forb",
     "stand_in": null,
@@ -2038,14 +2314,6 @@
     "stand_in": null,
     "why": [
      "GBIF: 93 records on the tile"
-    ]
-   },
-   {
-    "id": "actaea_rubra",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 86 records on the tile"
     ]
    },
    {
@@ -2105,27 +2373,11 @@
     ]
    },
    {
-    "id": "eriogonum_umbellatum",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 69 records on the tile"
-    ]
-   },
-   {
     "id": "maianthemum_racemosum",
     "kind": "forb",
     "stand_in": null,
     "why": [
      "GBIF: 69 records on the tile"
-    ]
-   },
-   {
-    "id": "geranium_viscosissimum",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 61 records on the tile"
     ]
    },
    {
@@ -2161,59 +2413,11 @@
     ]
    },
    {
-    "id": "anaphalis_margaritacea",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 49 records on the tile"
-    ]
-   },
-   {
-    "id": "pedicularis_bracteosa",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 48 records on the tile"
-    ]
-   },
-   {
-    "id": "fritillaria_pudica",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 47 records on the tile"
-    ]
-   },
-   {
-    "id": "pteridium_aquilinum",
-    "kind": "fern",
-    "stand_in": null,
-    "why": [
-     "GBIF: 46 records on the tile"
-    ]
-   },
-   {
     "id": "lonicera_involucrata",
     "kind": "shrub",
     "stand_in": null,
     "why": [
      "GBIF: 44 records on the tile"
-    ]
-   },
-   {
-    "id": "rubus_idaeus",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 43 records on the tile"
-    ]
-   },
-   {
-    "id": "acer_glabrum",
-    "kind": "shrub",
-    "stand_in": null,
-    "why": [
-     "GBIF: 41 records on the tile"
     ]
    },
    {
@@ -2249,14 +2453,6 @@
     ]
    },
    {
-    "id": "castilleja_miniata",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 44 records on the tile"
-    ]
-   },
-   {
     "id": "kalmia_microphylla",
     "kind": "shrub",
     "stand_in": null,
@@ -2278,14 +2474,6 @@
     "stand_in": null,
     "why": [
      "GBIF: 11 records on the tile"
-    ]
-   },
-   {
-    "id": "picea_engelmannii",
-    "kind": "tree",
-    "stand_in": null,
-    "why": [
-     "GBIF: 10 records on the tile"
     ]
    },
    {
@@ -2735,6 +2923,21 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
+    "id": "thamnophis_elegans",
+    "scientific": "Thamnophis elegans",
+    "common": "terrestrial garter snake",
+    "kind": "reptile",
+    "records": 69,
+    "why": [
+     "most recorded: 1 of its class (99% of the class's records)"
+    ],
+    "body_plan": "snake",
+    "rig": "none yet: a spine-wave rig",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
     "id": "vulpes_vulpes",
     "scientific": "Vulpes vulpes",
     "common": "red fox",
@@ -3071,6 +3274,46 @@
  },
  "hands": [
   {
+   "id": "sorbus_scopulina",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 106 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "acer_glabrum",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 41 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "amelanchier_alnifolia",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 40 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "prunus_virginiana",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 19 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "picea_engelmannii",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 10 records on the tile; height not yet screened)"
+   ]
+  },
+  {
    "id": "pinus_longaeva",
    "kind": "tree",
    "what": "a trait card",
@@ -3143,14 +3386,6 @@
    ]
   },
   {
-   "id": "sorbus_scopulina",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 106 records on the tile"
-   ]
-  },
-  {
    "id": "erythranthe_lewisii",
    "kind": "forb",
    "what": "a trait card",
@@ -3164,14 +3399,6 @@
    "what": "a trait card",
    "why": [
     "GBIF: 93 records on the tile"
-   ]
-  },
-  {
-   "id": "actaea_rubra",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 86 records on the tile"
    ]
   },
   {
@@ -3231,27 +3458,11 @@
    ]
   },
   {
-   "id": "eriogonum_umbellatum",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 69 records on the tile"
-   ]
-  },
-  {
    "id": "maianthemum_racemosum",
    "kind": "forb",
    "what": "a trait card",
    "why": [
     "GBIF: 69 records on the tile"
-   ]
-  },
-  {
-   "id": "geranium_viscosissimum",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 61 records on the tile"
    ]
   },
   {
@@ -3287,59 +3498,11 @@
    ]
   },
   {
-   "id": "anaphalis_margaritacea",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 49 records on the tile"
-   ]
-  },
-  {
-   "id": "pedicularis_bracteosa",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 48 records on the tile"
-   ]
-  },
-  {
-   "id": "fritillaria_pudica",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 47 records on the tile"
-   ]
-  },
-  {
-   "id": "pteridium_aquilinum",
-   "kind": "fern",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 46 records on the tile"
-   ]
-  },
-  {
    "id": "lonicera_involucrata",
    "kind": "shrub",
    "what": "a trait card",
    "why": [
     "GBIF: 44 records on the tile"
-   ]
-  },
-  {
-   "id": "rubus_idaeus",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 43 records on the tile"
-   ]
-  },
-  {
-   "id": "acer_glabrum",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 41 records on the tile"
    ]
   },
   {
@@ -3375,14 +3538,6 @@
    ]
   },
   {
-   "id": "castilleja_miniata",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 44 records on the tile"
-   ]
-  },
-  {
    "id": "kalmia_microphylla",
    "kind": "shrub",
    "what": "a trait card",
@@ -3404,14 +3559,6 @@
    "what": "a trait card",
    "why": [
     "GBIF: 11 records on the tile"
-   ]
-  },
-  {
-   "id": "picea_engelmannii",
-   "kind": "tree",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 10 records on the tile"
    ]
   },
   {
@@ -3781,6 +3928,14 @@
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
     "predator"
+   ]
+  },
+  {
+   "id": "thamnophis_elegans",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 1 of its class (99% of the class's records)"
    ]
   },
   {

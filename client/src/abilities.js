@@ -47,6 +47,7 @@
 // The table is by species code (SPECIES), falling back by the walker's rig (RIG: quad, rodent, bird, lizard) and by the
 // control (the moves: groundMoves, FLIER_AIR / FLIER_FOOT, SQUIRREL, WOODPECKER, SPIRIT). The slots are rebuilt when the
 // body changes and otherwise only have their classes toggled (lit, tired, hidden) when they change, every frame.
+import { setStill } from './stills.js';
 
 const on = (name, key, lit = null, more = {}) => ({ name, key, built: true, lit, ...more });
 const no = (name, key = '', more = {}) => ({ name, key, built: false, ...more });
@@ -76,17 +77,8 @@ const DIG_PIT = on('dig', 'Q', c => !!c.ground.digging, { title: 'Q held (or E w
 
 // The walkers' moves, from groundControl's species entry S.
 function groundMoves(S) {
-  const g = c => c.ground, still = c => !c.shift;
   const alert = S.alert?.pushups ? 'push-ups' : S.alert?.pose ? 'sit up' : 'alert';
-  return [
-    on('run', 'W S', c => still(c) && !c.alt && c.k('KeyW', 'KeyS', 'ArrowUp', 'ArrowDown'), { title: `W: up to ${S.cruise ?? S.run} m/s, the pace it can hold` }),
-    on('turn', 'A D', c => c.k('KeyA', 'KeyD', 'ArrowLeft', 'ArrowRight')),
-    on(S.stalk ? 'stalk' : 'walk', 'alt W', c => c.alt && c.k('KeyW', 'ArrowUp')),
-    on(S.stalk ? 'rush' : 'sprint', 'shift W', c => !!g(c).rush || (c.shift && !g(c).tired && c.k('KeyW', 'ArrowUp')), { tired: c => !!g(c).tired, title: `Shift W: ${S.run} m/s for ${S.sprint} s, then the legs are tired; back over ${S.recover} s` }),
-    on(S.flush ? 'hop' : 'jump', 'space', c => c.k('Space') && g(c).mode !== 'fly'),
-    S.flush && on('flush', 'space', c => g(c).mode === 'fly', { title: 'Space from a run: flush and fly' }),
-    on(alert, 'shift', c => g(c).sit > 0.5, { title: 'Shift held still' }),
-  ].filter(Boolean);
+  return [on(alert, 'shift', c => c.ground.sit > 0.5, { title: 'Shift held still' })];   // (the moves themselves are keys only, 2026-11-06: the strip over the slots names them)
 }
 // X: lie down, hunch, freeze (the brush rabbit) or bask (S.rest), else grey (a bird's roost, a rodent's rest)
 const restOf = S => { const r = { bed: 'lie down', hunch: 'hunch', bask: 'bask', freeze: 'freeze' }[S.rest]; return r ? on(r, 'X', c => !!c.ground.resting) : no(S.rig === 'bird' ? 'roost' : 'rest', 'X'); };
@@ -96,9 +88,9 @@ const actOf = (name, title) => on(name, 'E', c => c.ground.actT > 0 || E(c), { r
 // Per species: the walker's act word (E) and its verbs, built then not yet. Order on the bar: the moves, act, rest, verbs.
 const SPECIES = {
   odocoileus_hemionus: { act: 'graze', verbs: [DRINK, SMELL, SWIM, MARK, no('rut', 'F'), CALL] },
-  urocyon_cinereoargenteus: { act: 'sniff', verbs: [POUNCE_AT, DRINK, SMELL, EAT, DIG, DEN, MARK, SWIM] },
-  canis_latrans: { act: 'sniff', verbs: [POUNCE_AT, FEED, DRINK, SMELL, DIG_PIT, DEN, MARK, SWIM, CALL] },
-  puma_concolor: { act: 'sniff', verbs: [CATCH, on('leap', '', c => c.ground.mode === 'leap', { title: 'the rush\'s last bound: a leap onto prey within 3 m ahead, the kill at the landing' }), on('feed', 'E', c => !!c.ground.feeding, { ready: carcassNear, title: 'crouched over the kill after a catch, or E beside one' }), DRINK, SMELL, DEN, MARK, SWIM] },
+  urocyon_cinereoargenteus: { act: 'sniff', verbs: [DRINK, SMELL, EAT, DIG, DEN, MARK, SWIM] },
+  canis_latrans: { act: 'sniff', verbs: [FEED, DRINK, SMELL, DIG_PIT, DEN, MARK, SWIM, CALL] },
+  puma_concolor: { act: 'sniff', verbs: [on('feed', 'E', c => !!c.ground.feeding, { ready: carcassNear, title: 'crouched over the kill after a catch, or E beside one' }), DRINK, SMELL, DEN, MARK, SWIM] },
   ursus_americanus: { act: 'dig', verbs: [FEED, DRINK, SMELL, CARRY, CLIMB, DEN, MARK, SWIM] },
   sylvilagus_bachmani: { act: 'nibble', verbs: [DRINK, SMELL, DIG_BURROW, BURROW_IN, PULL, SWIM] },
   lepus_californicus: { act: 'nibble', verbs: [DRINK, SMELL, DIG_FORM, SWIM] },
@@ -127,35 +119,28 @@ const RIG = {
   lizard: { verbs: [DRINK, no('hide', 'J')] },
 };
 
+// The hunt's actions (owner, 2026-11-06: "For all hunters When a prey is targeted, the controls for the hunt appear"): shown
+// only while a prey animal is selected (quarry.js), greyed while out of reach (`oor`), a radial sweep while cooling (`cd`).
+// The dive (dive.js) for a hunting bird, key 1 (or Q); the walkers' strikes (combat.js: bite, swipe, pounce or lunge by
+// family) on 1-3. A press of the slot plays it too.
+const DIVE = on('dive', '1', c => !!c.dive?.active, { show: c => !!c.dive && !!c.quarry?.target && (c.dive.active || c.dive.me().hunts), oor: c => !c.dive.active && !c.dive.can(),
+  press: (c, down) => { if (down) c.dive.toggle(); }, title: '1 (or Q) with a prey animal selected (Tab, or click it) below you: tuck the wings and stoop straight at it; it may see you coming; losing sight of it calls the dive off' });
+const strikeSlot = (m, i) => on(m.name, String(i + 1), c => c.ground.strike?.kind === m.key || (m.key === 'pounce' && c.ground.mode === 'leap') || (m.key === 'lunge' && c.ground.mode === 'pounce'),
+  { show: c => !!c.quarry?.target && !!c.combat?.active, oor: c => !c.combat.inReach(m.key), cd: c => c.combat.cooling(m.key), left: c => Math.max((c.combat.cd.get(m.key) || 0), c.combat.gcd) - c.combat.t,
+    press: (c, down) => { if (down) c.combat.use(m.key); }, title: `${i + 1}: ${m.title} (its own cooldown ${m.cd} s)` });
+// The spirit's one action while it holds a target (owner, 2026-11-06: "there is only one "action" [ Embody ] with the model
+// of the animal as the icon"): the spirit flies itself into that animal and becomes it (pilot.js embody).
+const EMBODY = on('embody', '1', c => !!c.pilot?.embodying, { show: c => !!c.quarry?.target, icon: c => c.quarry.target ? c.quarry.animals.speciesList()[c.quarry.target.sp] : null,
+  press: (c, down) => { if (down) c.pilot?.embody(); }, title: '1 (or E): fly into this animal and become it' });
 // The fliers' moves (flight.js on flierControl's numbers, and the raven's own): aloft, and on its feet.
 const aloft = c => !c.flight.landed, afoot = c => !!c.flight.landed;
-function flierMoves(soar) {
-  return [
-    on('pitch', '↑ ↓', c => c.k('ArrowUp', 'ArrowDown'), { show: aloft }),
-    on('turn', 'A D', c => c.k('KeyA', 'KeyD', 'ArrowLeft', 'ArrowRight'), { show: aloft }),
-    on('speed', 'W S', c => c.k('KeyW', 'KeyS'), { show: aloft }),
-    on('sprint', 'shift', c => c.shift && !c.flight.tired, { show: aloft, tired: c => !!c.flight.tired, title: 'Shift: the true top speed for a few seconds, then the wings are tired' }),
-    on('flap', 'space', c => c.k('Space') || c.flight.flap > 0, { show: aloft }),
-    on('climb', 'X', c => c.k('KeyX'), { show: aloft }),
-    on('descend', 'Z', c => c.k('KeyZ'), { show: aloft }),
-    on(soar ? 'soar' : 'hover', 'H', c => !!c.flight.hover, { show: aloft }),
-    on('land', '', null, { show: aloft, title: 'fly slowly into a limb or the ground' }),
-    on('hop', 'W S', c => !c.shift && c.k('KeyW', 'KeyS'), { show: afoot }),
-    on('turn', 'A D', c => !c.shift && c.k('KeyA', 'KeyD'), { show: afoot }),
-    on('take off', 'space', c => c.k('Space') || c.flight.gnd?.lift >= 0, { show: afoot }),
-    on('peck', 'E', c => E(c) || c.flight.gnd?.peck > 0, { show: afoot }),
-  ];
+function flierMoves() {
+  return [on('peck', 'E', c => E(c) || c.flight.gnd?.peck > 0, { show: afoot })];   // (the flight's moves are keys only: the strip names them)
 }
 // The squirrel's (squirrelControl.js): its modes ground, trunk, wood, limb, leap, air, work, stun.
 const sqUp = c => ['trunk', 'wood', 'limb'].includes(c.squirrel.mode), sqWork = k => c => c.squirrel.work?.kind === k;
 const SQUIRREL = [
-  on('run', 'W S', c => c.k('KeyW', 'KeyS', 'ArrowUp', 'ArrowDown')),
-  on('turn', 'A D', c => c.k('KeyA', 'KeyD', 'ArrowLeft', 'ArrowRight')),
-  on('sprint', 'shift W', c => c.shift && !c.squirrel.tired && c.k('KeyW', 'ArrowUp') && !sqUp(c), { tired: c => !!c.squirrel.tired, title: 'Shift W: the full bound for 4 s, then tired; back over 20 s' }),
-  on('jump', 'space', c => c.k('Space') && !sqUp(c)),
   on('sit up', 'shift', c => c.squirrel.sit > 0.5),
-  on('climb', '', sqUp, { title: 'run into a trunk' }),
-  on('leap', 'space', c => c.squirrel.mode === 'leap', { title: 'Space on the wood: a leap to wood ahead, or a drop' }),
   on('pick up', 'E', sqWork('pick')), on('bury', 'E', sqWork('bury')), on('dig', 'E', sqWork('dig')),
   on('call', 'C', c => c.k('KeyC')), SMELL,
   DRINK_NO, SWIM, no('nest', 'J'),
@@ -163,15 +148,6 @@ const SQUIRREL = [
 // The woodpecker's (woodpeckerControl.js): on a trunk (cling, and its work and paths), or flying.
 const wpFly = c => c.woodpecker.mode === 'fly', wpOn = c => !wpFly(c);
 const WOODPECKER = [
-  on('hitch', 'W S', c => c.k('KeyW', 'KeyS'), { show: wpOn }),
-  on('round', 'A D', c => c.k('KeyA', 'KeyD'), { show: wpOn }),
-  on('fly', 'space', c => c.k('Space'), { show: wpOn }),
-  on('speed', 'W S', c => c.k('KeyW', 'KeyS'), { show: wpFly }),
-  on('sprint', 'shift', c => c.shift && !c.woodpecker.tired, { show: wpFly, tired: c => !!c.woodpecker.tired, title: 'Shift: full speed for 4 s, then tired' }),
-  on('turn', 'A D', c => c.k('KeyA', 'KeyD', 'ArrowLeft', 'ArrowRight'), { show: wpFly }),
-  on('climb · dive', '↑ ↓', c => c.k('ArrowUp', 'ArrowDown'), { show: wpFly }),
-  on('burst', 'space', c => c.k('Space'), { show: wpFly }),
-  on('cling', '', null, { show: wpFly, title: 'fly into a trunk; S low to land' }),
   on('take acorn', 'E', c => c.woodpecker.work?.kind === 'pick'),
   on('hammer', 'E', c => c.woodpecker.work?.kind === 'hammer', { title: 'E on your family\'s granary' }),
   on('call', 'C', c => c.k('KeyC')),
@@ -179,17 +155,19 @@ const WOODPECKER = [
 ];
 // The spirit's (spirit.js, flight.js updateSpirit).
 const SPIRIT = [
-  on('fly', 'W S', c => c.k('KeyW', 'KeyS')),
-  on('turn', 'A D', c => c.k('KeyA', 'KeyD', 'ArrowLeft', 'ArrowRight')),
-  on('pitch', '↑ ↓', c => c.k('ArrowUp', 'ArrowDown')),
-  on('rush', 'shift', c => c.shift),
-  on('rise', 'X', c => c.k('KeyX')),
-  on('sink', 'Z', c => c.k('KeyZ')),
-  on('lift', 'space', c => c.k('Space')),
-  on('hover', 'H', c => !!c.flight.hover),
-  on('become', '', null, { title: 'touch an animal to become it (the warm ones)' }),
+  EMBODY,
 ];
 // The page's keys, by control, as each help line has them: the dim line over the slots.
+// the movement keys (2026-11-06: the slots for them are gone; this strip is where the keys are taught)
+const MOVE_KEYS = {
+  ground: [['W S', 'move'], ['A D', 'turn'], ['shift W', 'sprint'], ['alt W', 'walk'], ['space', 'jump']],
+  flier: [['↑ ↓', 'pitch'], ['A D', 'turn'], ['W S', 'speed'], ['shift', 'sprint'], ['space', 'flap'], ['X Z', 'climb · descend'], ['H', 'soar or hover']],
+  raven: [['↑ ↓', 'pitch'], ['A D', 'turn'], ['W S', 'speed'], ['shift', 'sprint'], ['space', 'flap'], ['X Z', 'climb · descend'], ['H', 'hover']],
+  squirrel: [['W S', 'run'], ['A D', 'turn'], ['shift W', 'sprint'], ['space', 'jump · leap']],
+  woodpecker: [['W S', 'hitch · speed'], ['A D', 'round · turn'], ['↑ ↓', 'climb · dive'], ['space', 'fly · burst']],
+  spirit: [['W S', 'fly'], ['A D', 'turn'], ['↑ ↓', 'pitch'], ['shift', 'rush'], ['X Z', 'rise · sink'], ['H', 'hover'], ['tab', 'target']],
+};
+const HUNT_KEYS = [['tab', 'target prey'], ['esc', 'clear']];
 const MORE = {
   ground: [['M', 'map'], ['G', 'roads'], ['P', 'present day'], ['T', 'tags'], ['N', 'mute'], ['B', 'spirit form']],
   flier: [['V', 'view'], ['M', 'map'], ['P', 'present day'], ['T', 'tags'], ['N', 'mute'], ['B', 'spirit form']],
@@ -203,13 +181,14 @@ const MOUSE_AIR = 'drag to steer in flight, to orbit the camera when still · cl
 const MOUSE_SPIRIT = 'drag to steer · click a tree to identify';
 
 // The slots for a body: kind is the control (ground, flier, raven, squirrel, woodpecker, spirit), code the species.
-export function abilitiesFor(kind, code, S = null) {
+export function abilitiesFor(kind, code, S = null, strikes = null) {
   const sp = SPECIES[code];
   if (kind === 'ground' && S) {
     const t = sp || RIG[S.rig] || { verbs: [] }, word = t.act || S.act?.word || 'act';
-    return [...groundMoves(S), actOf(word), restOf(S), ...t.verbs].filter(Boolean);
+    return [...(strikes || []).map(strikeSlot), ...groundMoves(S), actOf(word), restOf(S), ...t.verbs].filter(Boolean);
   }
-  if (kind === 'flier' || kind === 'raven') return [...flierMoves(!!S?.flight?.soar), ...(sp?.verbs || [DRINK_NO, CALL])];
+  if (kind === 'flier') return [DIVE, ...flierMoves(), ...(sp?.verbs || [DRINK_NO, CALL])];
+  if (kind === 'raven') return [...flierMoves(), ...(sp?.verbs || [DRINK_NO, CALL])];
   if (kind === 'squirrel') return SQUIRREL;
   if (kind === 'woodpecker') return WOODPECKER;
   return SPIRIT;
@@ -218,12 +197,12 @@ export function abilitiesFor(kind, code, S = null) {
 export class Abilities {
   // el: #abilities; legs: #legs (the legs meter in the status column); bar: #bodyBar (the row); the controls, the
   // flight, the needs and the hunt as main.js makes them
-  constructor({ el, legs, bar, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent = null, carrion = null }) {
-    Object.assign(this, { el, legs, bar, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent, carrion });
+  constructor({ el, legs, bar, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent = null, carrion = null, dive = null, combat = null, quarry = null, pilot = null }) {
+    Object.assign(this, { el, legs, bar, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent, carrion, dive, combat, quarry, pilot });
     this.body = ''; this.slots = []; this.visible = null;
     this.legsBar = legs?.querySelector('b') || null;
     const keys = flight.keys;
-    this.c = { k: (...codes) => codes.some(x => keys.has(x)), shift: false, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent, carrion };
+    this.c = { k: (...codes) => codes.some(x => keys.has(x)), shift: false, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent, carrion, dive, combat, quarry, pilot };
   }
   // which body the player is in: [control, species code, the species' entry]
   which() {
@@ -236,9 +215,13 @@ export class Abilities {
   }
   build(kind, code, S) {
     const row = document.createElement('div'); row.className = 'ab-row';
-    this.slots = abilitiesFor(kind, code, S).map(entry => {
+    const strikes = kind === 'ground' && this.combat?.code === code ? this.combat.moves : null;
+    this.slots = abilitiesFor(kind, code, S, strikes).map(entry => {
       const d = document.createElement('div');
       d.className = entry.built ? 'ab' : 'ab off';
+      let img = null, cd = null;
+      if (entry.icon) { img = document.createElement('img'); img.className = 'ab-icon'; img.alt = ''; d.append(img); d.classList.add('icon'); }   // the target's still (the Embody slot)
+      if (entry.cd) { cd = document.createElement('i'); cd.className = 'ab-cd'; cd.hidden = true; d.append(cd); }   // the cooldown's radial sweep
       d.title = entry.built ? (entry.title || entry.name) : (entry.title || 'not yet');
       const n = document.createElement('span'); n.className = 'ab-name'; n.textContent = entry.name; d.append(n);
       if (entry.key) {
@@ -253,10 +236,10 @@ export class Abilities {
         d.addEventListener('pointerup', up); d.addEventListener('pointercancel', up); d.addEventListener('pointerleave', up);
       }
       row.append(d);
-      return { entry, el: d, lit: false, tired: false, ready: false, shown: true };
+      return { entry, el: d, img, cd, iconSp: null, cdf: -1, lit: false, tired: false, ready: false, oor: false, shown: true };
     });
     const more = document.createElement('div'); more.className = 'ab-more';
-    for (const [key, word] of MORE[kind] || []) { const s = document.createElement('span'), b = document.createElement('kbd'); b.textContent = key; s.append(b, ` ${word}`); more.append(s); }
+    for (const [key, word] of [...(MOVE_KEYS[kind] || []), ...(strikes?.length || kind === 'flier' ? HUNT_KEYS : []), ...(MORE[kind] || [])]) { const s = document.createElement('span'), b = document.createElement('kbd'); b.textContent = key; s.append(b, ` ${word}`); more.append(s); }
     const m = document.createElement('span'); m.textContent = kind === 'spirit' ? MOUSE_SPIRIT : kind === 'raven' || kind === 'flier' ? MOUSE_AIR : MOUSE; more.append(m);
     this.el.replaceChildren(more, row);
   }
@@ -275,6 +258,16 @@ export class Abilities {
       if (lit !== s.lit) { s.lit = lit; s.el.classList.toggle('lit', lit); }
       if (tired !== s.tired) { s.tired = tired; s.el.classList.toggle('tired', tired); }
       if (ready !== s.ready) { s.ready = ready; s.el.classList.toggle('ready', ready); }
+      if (!shown) continue;
+      if (e.oor) { const o = !!e.oor(c) && !lit; if (o !== s.oor) { s.oor = o; s.el.classList.toggle('oor', o); } }
+      if (s.cd) {   // WoW's clock: the dark part is what is left, cleared clockwise from twelve; the seconds over 1.5
+        const f = Math.max(0, Math.min(1, e.cd(c))), q = Math.round(f * 120) / 120;
+        if (q !== s.cdf) {
+          s.cdf = q; s.cd.hidden = q <= 0;
+          if (q > 0) { s.cd.style.background = `conic-gradient(transparent 0deg ${((1 - q) * 360).toFixed(1)}deg, rgba(4,8,6,.68) 0deg)`; const left = e.left?.(c) ?? 0; s.cd.textContent = left > 1.5 ? `${Math.ceil(left)}` : ''; }
+        }
+      }
+      if (s.img) { const sp = e.icon(c); if (sp && sp !== s.iconSp) { s.iconSp = sp; setStill(s.img, sp); } }
     }
     // the legs (the wings for a bird): every body's sprint meter (groundControl, squirrelControl, woodpeckerControl, the
     // birds' flight: stamina 0..1 and tired), red when tired

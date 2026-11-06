@@ -302,7 +302,7 @@
    "notes": "columnar jointing: vertical columns about a metre across",
    "index": 6,
    "fraction": 0.0154,
-   "exposed_fraction": 0.0056,
+   "exposed_fraction": 0.006,
    "joints": {
     "strikes_deg": [],
     "source": "too few steep faces"
@@ -347,17 +347,17 @@
    "notes": "andesite, rhyolite, tuff and mudflow rock: blocky, rough",
    "index": 7,
    "fraction": 0.5563,
-   "exposed_fraction": 0.0069,
+   "exposed_fraction": 0.0068,
    "joints": {
     "strikes_deg": [
      42.5,
-     87.5
+     72.5
     ],
     "peak_over_mean": [
      1.68,
-     1.67
+     1.19
     ],
-    "cells": 3142,
+    "cells": 7874,
     "source": "DEM: strikes of the faces steeper than 55 degrees"
    }
   },
@@ -452,7 +452,7 @@
    "notes": "massive; solution flutes down the face",
    "index": 9,
    "fraction": 0.0072,
-   "exposed_fraction": 0.0006,
+   "exposed_fraction": 0.0009,
    "joints": {
     "strikes_deg": [],
     "source": "too few steep faces"
@@ -571,11 +571,11 @@
  },
  "stats": {
   "exposed_fraction": 0.0039,
-  "exposed_mean": 0.0104,
-  "patches": 343,
-  "patches_over_1000m2": 75,
-  "patches_over_1ha": 8,
-  "largest_patch_m2": 24975,
+  "exposed_mean": 0.0105,
+  "patches": 401,
+  "patches_over_1000m2": 83,
+  "patches_over_1ha": 6,
+  "largest_patch_m2": 26100,
   "slope_source": "max(5 m, 0.85 x 1 m mean)",
   "cover_source": "lidar canopy_height_10m (tree >= 4 m, shrub 0.5-4 m)",
   "photo": "client/texture_imagery.jpg (NAIP, humans erased)",

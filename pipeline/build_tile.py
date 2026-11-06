@@ -77,6 +77,8 @@ def main(argv=None) -> None:
         rows = status(tile)
         for r in rows:
             flags = []
+            if r.get("problem"):
+                flags.append(r["problem"].split(":", 1)[0].upper() + ":" + r["problem"].split(":", 1)[1][:160])
             if r["not_applicable"]:
                 flags.append("n/a: " + r["not_applicable"][:70])
             if r["missing_layers"]:
@@ -87,6 +89,10 @@ def main(argv=None) -> None:
                 flags.append(f"code changed since ({len(r['code_since'])}): {r['code_since'][0]}")
             print(f"  {r['step']:<13} {(r['ran'] or 'never')[:16]:<16} {'; '.join(flags)}")
         print(json.dumps(rows), file=open(os.devnull, "w"))
+        bad = [r["step"] for r in rows if (r.get("problem") or "").startswith(("refused", "failed"))]
+        if bad:
+            print(f"refused or failed: {', '.join(bad)}", file=sys.stderr)
+            sys.exit(1)
         return
     if a.adopt:
         m = adopt(tile)
@@ -103,9 +109,13 @@ def main(argv=None) -> None:
         force = set(ORDER) if a.force == "*" else {x.strip() for x in a.force.split(",") if x.strip()}
         m = build(tile, stages=stages, force=force, keep_going=a.keep_going, refetch=bool(force))
         failed = m.pop("_failed", [])
+        refused = m.pop("_refused", [])
         print("layers:", len(m["layers"]))
+        if refused:
+            print("refused steps:", refused, file=sys.stderr)
         if failed:
             print("failed or blocked steps:", failed, file=sys.stderr)
+        if failed or refused:
             sys.exit(1)
         return
     if a.steps:
@@ -121,9 +131,13 @@ def main(argv=None) -> None:
             ap.error(f"unknown step(s) to force: {sorted(bad)}")
         m = build(tile, force=force, keep_going=a.keep_going, refetch=bool(force))
     failed = m.pop("_failed", [])
+    refused = m.pop("_refused", [])
     print("layers:", len(m["layers"]))
+    if refused:   # the build went on without them, but the tile is not right (runlog.Refused)
+        print("refused steps:", refused, file=sys.stderr)
     if failed:
         print("failed steps:", failed, file=sys.stderr)
+    if failed or refused:
         sys.exit(1)
 
 

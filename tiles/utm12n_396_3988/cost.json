@@ -3,10 +3,10 @@
  "steps": {
   "dem": {
    "stage": "base",
-   "started_at": "2026-11-06T06:45:07Z",
-   "ended_at": "2026-11-06T06:45:08Z",
-   "wall_s": 1.2,
-   "cpu_self_s": 1.1,
+   "started_at": "2026-11-06T19:36:07Z",
+   "ended_at": "2026-11-06T19:36:10Z",
+   "wall_s": 3.2,
+   "cpu_self_s": 3.1,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {
@@ -616,10 +616,10 @@
  },
  "stages": {
   "base": {
-   "started_at": "2026-11-06T09:49:29Z",
-   "ended_at": "2026-11-06T09:50:51Z",
-   "wall_s": 2472.3,
-   "cpu_s": 468.0,
+   "started_at": "2026-11-06T19:36:07Z",
+   "ended_at": "2026-11-06T19:36:10Z",
+   "wall_s": 2474.3,
+   "cpu_s": 470.0,
    "download_bytes": 32239160,
    "cache_hits": 23,
    "cache_misses": 497,
@@ -967,11 +967,28 @@
    "failed": [
     "water_imagery"
    ]
+  },
+  {
+   "started_at": "2026-11-06T19:36:07Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-06T19:36:07Z",
+     "steps_run": [
+      "dem"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T19:36:10Z"
+    }
+   ],
+   "ended_at": "2026-11-06T19:36:10Z",
+   "failed": [],
+   "refused": []
   }
  ],
  "totals": {
-  "wall_s": 3013.7,
-  "cpu_s": 493.0,
+  "wall_s": 3015.7,
+  "cpu_s": 495.0,
   "download_bytes": 122090859,
   "cache_hits": 503,
   "cache_misses": 817,
@@ -979,9 +996,9 @@
   "meshy_spent": 0,
   "meshy_queued_credits_est": 1570
  },
- "updated_at": "2026-11-06T18:49:31Z",
+ "updated_at": "2026-11-06T19:36:10Z",
  "client": {
-  "bytes": 49282187,
+  "bytes": 49282375,
   "files": 48,
   "largest": {
    "client/terrain_detail.png": 12710190,
