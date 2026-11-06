@@ -292,6 +292,25 @@ def _water_seasons(tile, m, force):
         add_layer(m, tile, k, v, fetched=False)
 
 
+def _water_imagery(tile, m, force):
+    # The reverse of water_seasons (pipeline/water_imagery.py): every drawn reach against the imagery's water, the
+    # undrawn water listed, and the large rivers whose drawn line misses the imagery's channel moved onto it (the Lamar
+    # River on the 5 m DEM's thalweg 20-200 m from its 2022 channel); the profile, incision and features re-derived.
+    from .water_imagery import water_imagery
+    layers, stats = water_imagery(tile)
+    for k, v in layers.items():
+        add_layer(m, tile, k, v, fetched=False)
+    ch = m["layers"].get("hydro.channels")
+    moved = bool(stats.get("reaches_moved") or stats.get("reaches_bent") or stats.get("side_channels") or stats.get("nhd_dropped"))
+    if ch:
+        add_layer(m, tile, "hydro.channels", {**ch, "imagery_moved": moved, "water_imagery": stats,
+                                              "derived_from": sorted(set(ch.get("derived_from", []) + ["seasons.s2_monthly"]))},
+                  fetched=False)
+    for k in ("client.channel_profile", "client.channel_depth"):   # rewritten in place when a line moved
+        if k in m["layers"]:
+            add_layer(m, tile, k, m["layers"][k], fetched=False)
+
+
 def _terrain(tile, m, force):
     # The base layer's client rasters (was the first half of `derive`): hillshade, terrain RGB, footprint raster, NAIP png,
     # habitat png, the rewilded texture, heights, habitat, canopy, roads, the textures, masks and features (places,
@@ -460,6 +479,14 @@ def _seasons(tile, m, force):
     m["sources"][src]["years_used"] = m["layers"]["seasons.s2_monthly"]["years"]
 
 
+def _ground_albedo(tile, m, force):
+    # The factor from the ground texture's display colour to surface reflectance, fitted against the reference month's
+    # Sentinel-2 L2A composite over open ground (pipeline/ground_albedo.py); the client scales the ground and the herb
+    # layer by it.
+    from .ground_albedo import ground_albedo
+    add_layer(m, tile, "client.ground_albedo", ground_albedo(tile, m), fetched=False)
+
+
 def _weather(tile, m, force):
     # Last year's hourly weather at the tile centre from Open-Meteo's archive (pipeline/fetch_weather.py); the raw
     # answer is cached under pipeline/_cache/weather/<tile>/ per period end date.
@@ -543,7 +570,11 @@ STEPS: dict[str, Step] = {s.name: s for s in [
          doc="Sentinel-2 monthly ground colour", stage=B),
     Step("water_seasons", "1", ["water_seasons"], ["hydro", "seasons"], _water_seasons, ["hydro.waterbody_seasons"], [],
          owner="water lane", doc="every mapped waterbody against the monthly Sentinel-2: permanent, seasonal or dry", stage=B),
-    Step("water", "2", ["water", "water_seams", "water_seasons"], ["dem", "rewild_hydro", "reroute", "hydro", "lidar", "water_seasons"], _water,
+    Step("water_imagery", "1", ["water_imagery", "water_seasons", "reroute", "rewild_hydro", "channels"],
+         ["dem", "channels", "rewild_hydro", "reroute", "seasons", "water_seasons", "hydro"], _water_imagery,
+         ["hydro.water_imagery", "hydro.channels_dem"], [], owner="water lane",
+         doc="the reverse test: drawn reaches against the imagery's water; large rivers moved onto it", stage=B),
+    Step("water", "2", ["water", "water_seams", "water_seasons"], ["dem", "rewild_hydro", "reroute", "hydro", "lidar", "water_seasons", "water_imagery"], _water,
          ["terrain.dem_banked", "client.heights", "client.water", "hydro.water_reaches"], [], owner="water lane",
          doc="banks, beds, levels and riparian zones", stage=B),
     Step("ground", "2", ["ground", "fetch_soils", "fetch_geology", "soils_global", "fetch_global", "strata", "substrate"], ["dem", "landcover", "lidar"], _ground,
@@ -559,6 +590,8 @@ STEPS: dict[str, Step] = {s.name: s for s in [
          ["client.texture_imagery"], doc="the imagery with the human footprint removed", stage=B),
     Step("substrate", "1", ["substrate"], ["ground", "water", "dem", "lidar", "naip", "landcover", "erase", "terrain", "ice"],
          _substrate, ["client.substrate", "client.substrate_classes"], doc="lithology, cliff morphology, exposed rock", stage=B),
+    Step("ground_albedo", "1", ["ground_albedo"], ["seasons", "erase", "terrain"], _ground_albedo, ["client.ground_albedo"], [],
+         doc="the ground texture's factor to surface reflectance, fitted against the Sentinel-2 composite", stage=B),
     Step("weather", "1", ["fetch_weather"], [], _weather, ["client.weather"], ["open_meteo"],
          doc="last year's hourly weather at the tile centre", stage=B),
     Step("unreal", "1", ["export_unreal"], ["dem", "landcover"], _unreal, ["unreal"], doc="the Unreal landscape export", stage=B),

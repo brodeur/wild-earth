@@ -963,6 +963,22 @@
    ],
    "ended_at": "2026-11-06T02:50:20Z",
    "failed": []
+  },
+  {
+   "started_at": "2026-11-06T18:49:17Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-06T18:49:17Z",
+     "steps_run": [],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T18:49:17Z"
+    }
+   ],
+   "ended_at": "2026-11-06T18:49:17Z",
+   "failed": [
+    "water_imagery"
+   ]
   }
  ],
  "totals": {
@@ -975,10 +991,10 @@
   "meshy_spent": 0,
   "meshy_queued_credits_est": 0
  },
- "updated_at": "2026-11-06T02:50:20Z",
+ "updated_at": "2026-11-06T18:49:17Z",
  "client": {
-  "bytes": 60398259,
-  "files": 51,
+  "bytes": 60400451,
+  "files": 52,
   "largest": {
    "client/lidar_micro.png": 7921507,
    "client/terrain_detail.png": 7579807,

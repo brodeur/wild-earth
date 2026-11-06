@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { drain } from './slice.js';
 import { uploadImageSteps, uploadDataSteps, canBand } from './gpuUpload.js';
 import { releaseGeometry, releaseTexture } from './gpuRelease.js';
-import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
+import { uniforms as atmo, ATMOSPHERE_GLSL, groundLook } from './atmosphere.js';
 import { windUniforms, WIND_GLSL } from './wind.js';
 import { GroundDetail, detailUniforms, DETAIL_GLSL, CELL_LAYER, CELL_N, DETAIL_PX, buildDetailMaskSteps, resetDetailUniforms, detailWeightsAt, setDetailOrigin } from './groundDetail.js';
 import { SeasonColour, LITTER } from './season.js';
@@ -48,6 +48,11 @@ export const groundUniforms = {
   // 0); the terrain FRAG discards the ground inside them, so a hole is seen from above and the sky from below. The
   // mesh is not edited; digCutN 0 costs one compare.
   digCuts: { value: Array.from({ length: 8 }, () => new THREE.Vector4()) }, digCutN: { value: 0 },
+  // The ground at its measured reflectance (atmosphere.js groundLook; pipeline/ground_albedo.py): the factor from the
+  // texture's display colour to surface reflectance, linear R G B, the tile's. groundAlbedo returns the ground with it;
+  // the terrain FRAG lays it on the photo's colour once its own display-tuned recolouring is done (before the cliffs
+  // and the weather, whose rock and snow are their own albedo); the herb layer's palettes take it on the CPU.
+  groundGain: { value: groundLook.gain },
 };
 // The measured season for the CPU side: grass.js takes its blades' tint from `grass` (the open grass's
 // flat-ground ratio for the date over July, linear) when it is set; `version` bumps on each change.
@@ -404,6 +409,7 @@ export const GROUND_GLSL = /* glsl */`
   uniform float groundFx; uniform sampler2D canopyMap; uniform sampler2D contactAO; uniform mat4 contactAOMatrix;
   uniform sampler2D seasonMap; uniform float seasonOn; uniform vec3 wxGround;
   uniform sampler2D waterMap; uniform float waterOn; uniform float waterPx;
+  uniform vec3 groundGain;   // the texture's display colour -> surface reflectance (groundUniforms.groundGain)
   const vec3 G_LUMA = vec3(0.299, 0.587, 0.114);
   // The water system's ground (waterMap R: the zone in the low 4 bits): the wet margin of a channel darker and greener
   // (moist soil under the sedges), a pond's drawdown margin mud, its basin dark silt when the water is gone, a dry
@@ -477,11 +483,12 @@ export const GROUND_GLSL = /* glsl */`
     if (max(e.x, e.y) >= 1.0) return 1.0;
     return 1.0 - texture(contactAO, uv).r * (1.0 - smoothstep(0.8, 1.0, max(e.x, e.y)));
   }
-  // Ground albedo at a point, for vertex shaders (explicit mip level; lod 1 is ~5 m on the NAIP).
+  // Ground albedo at a point, for vertex shaders (explicit mip level; lod 1 is ~5 m on the NAIP): the photo's colour
+  // recoloured for the season, times groundGain (its reflectance), under the weather.
   vec3 groundAlbedo(vec3 posW, float lod, out vec3 w) {
     vec2 uv = groundUv(posW);
     w = groundWeights(uv, lod);
-    return groundWeather(groundRecolour(textureLod(map, uv, lod).rgb, w, uv, groundPave(uv, lod)), 1.0, 0.0, 0.0);
+    return groundWeather(groundGain * groundRecolour(textureLod(map, uv, lod).rgb, w, uv, groundPave(uv, lod)), 1.0, 0.0, 0.0);
   }
 `;
 
@@ -733,6 +740,9 @@ const FRAG = /* glsl */`
       vec3 nd = normalize(mix(dToWorld(axA, t1, nGeo), dToWorld(axB, t2, nGeo), mB));
       nL = normalize(mix(nGeo, nd, fade));
     }
+    // The ground at its reflectance (groundGain): everything above is the photo's display colour and the palettes and
+    // tints tuned against it; the cliff rock and the snow below are their own albedo.
+    c *= groundGain;
     // Cliffs at any distance (CLIFF_GLSL cliffShade): past ~40 degrees the photo is a smear stretched down the face,
     // so the face takes the cliff material in its place, at every distance, as its lithology breaks (where: cliff, above).
     float cliffW = 0.0;   // the face's rock: the canopy's 30 m sky occlusion is not laid on it (below)
@@ -740,7 +750,7 @@ const FRAG = /* glsl */`
       #ifndef NO_CLIFF
       if (cliff > 0.0) {
         vec3 nC;
-        vec3 cC = cliffShade(vPosW, nMac, dpx, dpy, lith, sband, dot(photo, G_LUMA), foot, nC);
+        vec3 cC = cliffShade(vPosW, nMac, dpx, dpy, lith, sband, dot(photo * groundGain, G_LUMA), foot, nC);
         c = mix(c, cC, cliff); nL = normalize(mix(nL, nC, cliff)); cliffW = cliff;
       }
       #endif

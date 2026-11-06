@@ -502,6 +502,22 @@
    ],
    "ended_at": "2026-11-05T06:12:35Z",
    "failed": []
+  },
+  {
+   "started_at": "2026-11-06T18:49:31Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-06T18:49:31Z",
+     "steps_run": [],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T18:49:31Z"
+    }
+   ],
+   "ended_at": "2026-11-06T18:49:31Z",
+   "failed": [
+    "water_imagery"
+   ]
   }
  ],
  "totals": {
@@ -514,23 +530,23 @@
   "meshy_spent": 0,
   "meshy_queued_credits_est": 980
  },
- "updated_at": "2026-11-05T06:12:35Z",
+ "updated_at": "2026-11-06T18:49:31Z",
  "client": {
-  "bytes": 74962381,
-  "files": 50,
+  "bytes": 2500788,
+  "files": 13,
   "largest": {
-   "client/lidar_micro.png": 13985065,
-   "client/terrain_detail.png": 10405273,
-   "client/texture_ground.jpg": 7850624,
-   "client/season_rgb.png": 6400252,
-   "client/texture_present.jpg": 6383671,
-   "client/texture_imagery.jpg": 6262255,
-   "client/trees_lidar.bin": 4239828,
-   "client/texture.png": 4210791,
-   "client/heights.png": 3071140,
-   "client/canopy_height.png": 2418808,
-   "client/imagery.png": 2376587,
-   "client/season_ndvi.png": 2242282
+   "client/weather.json": 649701,
+   "client/features.json": 554905,
+   "games.json": 413589,
+   "client/species_mix.json": 343627,
+   "client/species_prior.json": 242442,
+   "manifest.json": 181288,
+   "client/ground_classes.json": 29486,
+   "perception.json": 21943,
+   "locomotion.json": 20576,
+   "calendar.json": 18259,
+   "species/species.json": 13183,
+   "client/substrate.json": 11065
   },
   "note": "every file under client/ and the tables the viewer fetches; an upper bound (the present-day texture is fetched only on request)"
  }

@@ -959,6 +959,29 @@ per-class means. `seasons.s2_monthly` (`seasons/months.json` and
 Copernicus's free, full and open notice: the credit line ("Contains modified Copernicus Sentinel
 data ...") is required, and the source entry records `years_used`.
 
+## Ground albedo
+
+The ground texture's colour is a display value, not a reflectance: NAIP's digital numbers (each state's acquisition
+balanced for viewing), or on a world tile the Sentinel-2 composite stretched as sRGB(2.5 x reflectance). The
+`ground_albedo` step (`pipeline/ground_albedo.py`, after `seasons`, `erase` and `terrain`) fits the factor from one to
+the other, per channel, on every tile by one rule:
+
+```
+  gain_c = sum over open pixels of the reference month's L2A reflectance_c / sum of the texture's linear colour_c
+```
+
+at 20 m (the texture averaged in linear light onto the composite's pixels). The reference month is the one the
+client's season multiplier is relative to (`seasons.s2_monthly` `naip_reference.month`, else July), so after the
+multiplier for any date the ground's mean is that month's composite. Open: tree cover under 10 % and shrub cover under
+15 % (`client/canopy.png`), not water, built or nodata, no clipped pixel in either (reflectance 0.35 and over, the
+sheet's range, or texture byte 250). The composite comes from `seasons/s2_MM.tif` where present, else
+`client/season_rgb.png`. Under 500 open pixels or without the seasons layers the tile takes the fit of the nearest tile
+with the same imagery source and year, else that source's median, else the encoding's 0.4 (Sentinel-2).
+`client/ground_albedo.json` and the manifest layer `client.ground_albedo` carry `gain` (linear R G B; the client reads
+it from the manifest), `gain_luminance`, `basis` (`fit`, `nearest_same_acquisition`, `source_median`, `encoding`),
+`reference`, `open_pixels`, the per-pixel ratio's quartiles and, on a Sentinel-2 tile, the stretch's own 0.4 as a
+check. The client multiplies the ground and the herb layer (grass, sward, forbs, litter) by it.
+
 ## Weather
 
 Every day of play has weather: the weather that day had. Picking a season starts on a random day of

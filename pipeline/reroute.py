@@ -555,6 +555,9 @@ def reroute(tile: Tile) -> dict:
                            "Rebuild terrain/dem.tif from terrain/dem_1m.tif (and the steps after it) first.")
     ch_path = tile.path("hydro/channels.geojson")
     doc = json.load(open(ch_path))
+    if doc.get("imagery_moved") and tile.path("hydro/channels_dem.geojson").exists():
+        # the water_imagery step moved the large rivers onto the imagery after this step: start from its input
+        doc = json.load(open(tile.path("hydro/channels_dem.geojson")))
     if doc.get("rerouted"):
         if not tile.path(FIVE_M).exists():
             raise RuntimeError("channels.geojson is rerouted but hydro/channels_5m.geojson is missing: run the channels step")

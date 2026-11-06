@@ -1,0 +1,24 @@
+{
+ "derived_from": [
+  "client.texture_imagery",
+  "client.season_rgb",
+  "client.canopy",
+  "client.habitat"
+ ],
+ "encoding": "gain: per channel (linear R G B) the factor from the ground texture's linear colour to surface reflectance; the client multiplies the ground and the herb layer's albedo by it",
+ "method": "sum of the reference month's L2A reflectance over the sum of the texture's linear colour, open ground (tree < 10 %, shrub < 15 %, not water or built), 20 m",
+ "imagery": [
+  "pc_naip",
+  2022
+ ],
+ "basis": "nearest_same_acquisition",
+ "why": "no Sentinel-2 composite on this tile",
+ "from_tile": "utm10n_680_4280",
+ "distance_km": 153,
+ "gain": [
+  0.7228,
+  0.5582,
+  0.5985
+ ],
+ "gain_luminance": 0.5958
+}

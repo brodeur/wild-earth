@@ -29,7 +29,7 @@ import { TitleScreen } from './title.js';
 import { Multiplayer } from './multiplayer.js';
 import { SEASON_LOOK, seasonOfDate, sunDirection, dateForSeason, parseDate, setSeasonMonths } from './season.js';
 import { AcornGame } from './acorns.js';
-import { Identify } from './identify.js';
+import { Identify, habitatLabel } from './identify.js';
 import { PlaceNames } from './placenames.js';
 import { Soundscape } from './sound.js';
 import { Shadows, forgetQueuedCasters } from './shadows.js';
@@ -979,7 +979,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
       $('hoverBtn').classList.toggle('on', !!f.hover); $('hoverBtn').textContent = f.hover ? 'Resume flight' : 'Hover';
       $('agl').textContent = `${f.agl.toFixed(0)} m`; $('elev').textContent = `${f.elev.toFixed(0)} m`;
       $('speed').textContent = `${f.speed.toFixed(1)} m/s`; $('heading').textContent = `${f.heading.toFixed(0)}°`;
-      $('habitat').textContent = HABITAT_NAMES[tile.habitat.at(flight.pos.x, -flight.pos.z)] || '–';
+      $('habitat').textContent = habitatLabel(tile, flight.pos.x, -flight.pos.z);   // the cell's own community (identify.js)
       $('trees').textContent = peek.shown ? 'hidden (present day)' : `${veg.count.toLocaleString()} near · ${far.count.toLocaleString()} far`;
       identify.tick(now);
       const where = places.describe(flight.pos.x, -flight.pos.z);

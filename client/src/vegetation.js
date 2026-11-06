@@ -111,6 +111,29 @@ const knownMix = mix => {
   }
   knownMixes.set(mix, m); return m;
 };
+// Whether a tile borrows nothing from the client's habitat-class tables (MIX, SHRUB_MIX above: California's foothill
+// species): built outside the regional tables (species_mix.json class_fallback false), or in LANDFIRE's reach but in no
+// natural region the species tables were written for (natural_regions empty: Grand Teton, Yellowstone's Lamar Valley).
+// Such a tile draws and names only its own rows' species: a cell whose row has no trees (or no shrubs) draws none, and
+// the crown plan's last resort is the tile's own tree shares (2026-11-06, iteration 8: blue oak and gray pine on Teton's
+// sagebrush steppe). The same test as grass.js ownGround. A tile with neither key (California's) keeps the class mixes.
+export function borrowsNothing(tile) {
+  const json = tile?.speciesMix?.json;
+  return json?.class_fallback === false || (Array.isArray(json?.natural_regions) && json.natural_regions.length === 0);
+}
+// The crown plan's last resort for a crown with no tree mix within two cells: the class savanna mix (California's) on a
+// tile that may borrow it, else the tile's own tree shares (species_mix.json fractions.tree_share, the drawn species
+// only), or null when the tile's rows name no tree.
+const ownTreeShares = new WeakMap();
+export function crownFallback(tile) {
+  if (!borrowsNothing(tile)) return MIX[5];
+  if (ownTreeShares.has(tile)) return ownTreeShares.get(tile);
+  const sh = tile.speciesMix?.json?.fractions?.tree_share || {}, out = {};
+  let tot = 0;
+  for (const [k, w] of Object.entries(sh)) { const id = resolveSpecies(k); if (id && w > 0 && !SPECIES[id].shrub) { out[id] = (out[id] || 0) + w; tot += w; } }
+  const m = tot > 0 ? Object.fromEntries(Object.entries(out).map(([k, w]) => [k, w / tot])) : null;
+  ownTreeShares.set(tile, m); return m;
+}
 export function cellPlan(tile, i, j) {
   const cls = tile.habitat.channel(i, j, 0); if (!MIX[cls] && !SHRUB_MIX[cls]) return null;
   const can = tile.canopy, tree = can.channel(i, j, 0) / 100, shrub = can.channel(i, j, 1) / 100;
@@ -118,18 +141,23 @@ export function cellPlan(tile, i, j) {
   const clampD = v => Math.min(DENSITY[1], Math.max(DENSITY[0], v));
   const dens = row ? tile.speciesMix.density(i, j, row) : null;   // per cell (format 2) or the row's
   const td = dens ? clampD(dens[0]) : 1, sd = dens ? clampD(dens[1]) : 1;
-  // a tile built outside the regional tables (species_mix.json class_fallback false) never borrows the class mix, which is
-  // California's: a row without trees draws none (world pipeline phase 1, 2026-11-06: pines in the Amazon)
-  const noFallback = tile.speciesMix?.json?.class_fallback === false;
+  // a tile built outside the regional tables never borrows the class mix, which is California's: a row without trees draws
+  // none (world pipeline phase 1, 2026-11-06: pines in the Amazon; iteration 8: blue oaks on Teton, borrowsNothing above)
+  const noFallback = borrowsNothing(tile);
   const treeMix = (row && row.treeSum && knownMix(row.trees)) || (noFallback ? null : MIX[cls]),
     shrubMix = (row && row.shrubSum && knownMix(row.shrubs)) || (noFallback ? null : SHRUB_MIX[cls]);
+  // A tile in LANDFIRE's reach but no natural region (class_fallback true, natural_regions empty) drew the class mix until
+  // iteration 8: its cells keep counting the plants the class mix drew (skipDraws), and the placers skip them after their
+  // draws, so every plant of its own rows stands where it stood (only the borrowed blue oaks, gray pines, chamise and
+  // manzanita are gone).
+  const skipDraws = noFallback && tile.speciesMix?.json?.class_fallback !== false;
   const rnd = mulberry32(hash(i, j, 7)), t = tree * td;
-  let nTrees = MIX[cls] && treeMix ? Math.round(t * (cls === 5 ? 3 : 11) + (rnd() < (t * 11) % 1 ? 1 : 0)) : 0;
-  const nShrubs = SHRUB_MIX[cls] && shrubMix ? Math.round(shrub * sd * (cls === 4 ? 18 : 6)) : 0;
+  let nTrees = MIX[cls] && (treeMix || skipDraws) ? Math.round(t * (cls === 5 ? 3 : 11) + (rnd() < (t * 11) % 1 ? 1 : 0)) : 0;
+  const nShrubs = SHRUB_MIX[cls] && (shrubMix || skipDraws) ? Math.round(shrub * sd * (cls === 4 ? 18 : 6)) : 0;
   // Blue oak savanna the canopy layer calls treeless (EVC tree cover 0): about one oak per two cells.
   let savannaOak = false;
   if (!nTrees && tree === 0 && row?.savanna && (cls === 5 || cls === 1) && (hash(i, j, 23) & 1)) { nTrees = 1; savannaOak = true; }
-  return { cls, rnd, nTrees, nShrubs: shrubScale(tile, i, j, nShrubs), treeMix: savannaOak ? oakMix(row) : treeMix, shrubMix };
+  return { cls, rnd, nTrees, nShrubs: shrubScale(tile, i, j, nShrubs), treeMix: savannaOak ? oakMix(row) : treeMix, shrubMix, skipDraws };
 }
 // Shrub counts follow the lidar's shrub cover where the tile exposes it (tile.canopyHeight, client/canopy_height.png:
 // B shrub cover % of the 0.5-4 m layer on a 10 m grid): a cell's count is scaled by the lidar cover over the 30 m
@@ -147,10 +175,9 @@ function shrubScale(tile, i, j, nShrubs) {
 // where the class grows no trees. The crown plan (crowns.js) draws a crown's species from it.
 export function cellTreeMix(tile, i, j) {
   const cls = tile.habitat.channel(i, j, 0), row = tile.speciesMix ? tile.speciesMix.at(i, j) : null;
-  if (tile.speciesMix?.json?.class_fallback === false) return (row && row.treeSum && knownMix(row.trees)) || null;
+  if (borrowsNothing(tile)) return (row && row.treeSum && knownMix(row.trees)) || null;
   return (row && row.treeSum && knownMix(row.trees)) || MIX[cls] || null;
 }
-cellTreeMix.fallback = MIX[5];
 
 // Rare species share their meshes between age classes (2026-10-26, the draw-call budget: each distinct tree is a
 // mesh set, two draw calls per tier). By the tile's shares (species_mix.json fractions.tree_share, shrub_share):
@@ -295,7 +322,7 @@ export function riparianExtra(tile, i, j, crowns) {
 // so a library of any size costs a tile only what it grows.
 export function tileSpecies(tile) {
   const out = new Set();
-  for (const m of [...Object.values(MIX), ...Object.values(SHRUB_MIX)]) for (const k of Object.keys(m)) out.add(resolveSpecies(k));
+  if (!borrowsNothing(tile)) for (const m of [...Object.values(MIX), ...Object.values(SHRUB_MIX)]) for (const k of Object.keys(m)) out.add(resolveSpecies(k));
   for (const k of tile.speciesMix?.species || []) { const id = resolveSpecies(k); if (id) out.add(id); }   // the riparian rows' trees and shrubs are in it too
   return SPECIES_IDS.filter(id => out.has(id) && !SPECIES[id].groundForm);   // library order; never a grass, forb or emergent (grass.js, forbs.js, emergents.js)
 }
@@ -317,7 +344,7 @@ export function crownPlan(tile) {
     // Planned in slices (crowns.js planCrownsSteps, slice.js) so the opening screen stays responsive; the same plan.
     p = loadCrowns(tile).then(async raw => {
       const t1 = performance.now();
-      const plan = await runSliced(planCrownsSteps(tile, raw, { treeMix: Object.assign((i, j) => cellTreeMix(tile, i, j), { fallback: cellTreeMix.fallback }),
+      const plan = await runSliced(planCrownsSteps(tile, raw, { treeMix: Object.assign((i, j) => cellTreeMix(tile, i, j), { fallback: crownFallback(tile) }),
         dims: (id, v) => slotDims.get(`${id}:${v}`), speciesIds: SPECIES_IDS }), 'planCrowns', { signal: tile.signal });
       const old = Object.values(plan.stats).reduce((a, s) => a + s.old, 0), snag = Object.values(plan.stats).reduce((a, s) => a + s.snag, 0);
       console.info(`crowns: ${plan.count.toLocaleString()} lidar crowns loaded in ${Math.round(t1 - t0)} ms (page at ${(t1 / 1000).toFixed(1)} s), planned in ${plan.ms} ms: ${Object.keys(plan.stats).length} species, ${old.toLocaleString()} old, ${snag.toLocaleString()} snags, ${plan.landmarks.length} landmarks; ${plan.moved} moved off water (${plan.wet} wet), ${plan.borrowed.toLocaleString()} drew a neighbour's mix`);
@@ -381,9 +408,20 @@ const SEAT_GLSL = `#ifdef USE_INSTANCING
 // role 'leaf' (the leaf level): a vertex beyond R_leaf + band + 1 m is collapsed; in the fragment the leaf keeps the
 // pixels whose dither value is at least 1 - its share, by the fragment's distance. `hand` (the close canopy): a flagged
 // instance (leafHand 1) gives those pixels up, the complement.
-function lodPatch(material, u, role, fade = false, inner = false, hand = false) {
+// `whole` (a shrub's materials, 2026-11-06, iteration 8): every hand-over of the plant (near / mid, near / close, close /
+// leaf level) keeps or gives up the whole plant by a hash of its root instead of a dither of its pixels, and the leaf
+// level's share is taken at the plant's root, not per fragment: a shrub is a metre across, and the pixel dither read as a
+// haze over every sagebrush in its bands (Teton). The two sides of each hand-over hash the same root, so they stay
+// complementary; trees keep the pixel dither (a crown straddling a band would pop as one).
+function lodPatch(material, u, role, fade = false, inner = false, hand = false, whole = false) {
   const W = fade ? LOD_BAND.toFixed(1) : '0.0', CW = CLOSE_BAND.toFixed(1), near = role === 'near', mid = role === 'mid', leaf = role === 'leaf';
-  const leafS = 'clamp((leafR.x + leafR.y - length(vViewPosition)) / (2.0 * leafR.y), 0.0, 1.0)';
+  const leafS = `clamp((leafR.x + leafR.y - ${whole ? 'vLodD' : 'length(vViewPosition)'}) / (2.0 * leafR.y), 0.0, 1.0)`;
+  const wholeV = whole ? `
+        { vec3 lodO = modelMatrix[3].xyz;
+          #ifdef USE_INSTANCING
+          lodO = (modelMatrix * instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
+          #endif
+          vLodH = fract(sin(dot(floor(lodO.xz * 64.0), vec2(12.9898, 78.233))) * 43758.5453); vLodD = distance(lodO, closeEye); }` : '';
   const keep = leaf ? ''
     : role === 'close'   // vLodT: the fraction of pixels this layer gives up (near) or keeps (mid, close)
     ? `float cD = distance(lodP, closeEye);${hand ? '\n       vLeafH = leafHand;' : ''}
@@ -398,22 +436,22 @@ function lodPatch(material, u, role, fade = false, inner = false, hand = false) 
        ${inner ? `float cD = distance(lodP, closeEye);
        vLodT = max(vLodT, clamp((closeR + ${CW} - cD) / (2.0 * ${CW}), 0.0, 1.0));
        if (cD < closeR - ${CW}) gl_Position = vec4(2.0, 2.0, 2.0, 1.0);` : ''}`;
-  return chainShader(material, `lod-${role}${fade ? '-fade' : ''}${inner ? '-inner' : ''}${hand ? '-hand' : ''}`, shader => {
+  return chainShader(material, `lod-${role}${fade ? '-fade' : ''}${inner ? '-inner' : ''}${hand ? '-hand' : ''}${whole ? '-whole' : ''}`, shader => {
     shader.uniforms.lodEye = u.lodEye; shader.uniforms.lodR = u.lodR; shader.uniforms.closeEye = u.closeEye; shader.uniforms.closeR = u.closeR; shader.uniforms.leafR = u.leafR;
     shader.uniforms.farR = handover.r;
     shader.uniforms.seatF = u.seatF; shader.uniforms.seatB = u.seatB; shader.uniforms.seatOn = u.seatOn;
     shader.vertexShader = shader.vertexShader
-      .replace('#include <common>', '#include <common>\nuniform vec3 lodEye;\nuniform float lodR;\nuniform vec3 closeEye;\nuniform float closeR;\nuniform vec2 farR;\nvarying float vLodT;\nuniform vec4 seatF;\nuniform float seatB;\nuniform float seatOn;\nuniform vec2 leafR;\n#ifdef USE_INSTANCING\nattribute float seatDc;\n#endif' + (hand ? '\nvarying float vLeafH;\n#ifdef USE_INSTANCING\nattribute float leafHand;\n#endif' : ''))
+      .replace('#include <common>', '#include <common>\nuniform vec3 lodEye;\nuniform float lodR;\nuniform vec3 closeEye;\nuniform float closeR;\nuniform vec2 farR;\nvarying float vLodT;\nuniform vec4 seatF;\nuniform float seatB;\nuniform float seatOn;\nuniform vec2 leafR;\n#ifdef USE_INSTANCING\nattribute float seatDc;\n#endif' + (whole ? '\nvarying float vLodH;\nvarying float vLodD;' : '') + (hand ? '\nvarying float vLeafH;\n#ifdef USE_INSTANCING\nattribute float leafHand;\n#endif' : ''))
       .replace('#include <project_vertex>', `${SEAT_GLSL}#include <project_vertex>
-        vLodT = 0.0;${hand ? ' vLeafH = 0.0;' : ''}${leaf ? `
+        vLodT = 0.0;${hand ? ' vLeafH = 0.0;' : ''}${wholeV}${leaf ? `
         if (distance((modelMatrix * vec4(transformed, 1.0)).xyz, closeEye) > leafR.x + leafR.y + 1.0) gl_Position = vec4(2.0, 2.0, 2.0, 1.0);` : ''}
         #ifdef USE_INSTANCING
         { vec3 lodP = (modelMatrix * instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
           ${keep} }
         #endif`);
     if (fade) shader.fragmentShader = shader.fragmentShader
-      .replace('#include <common>', '#include <common>\nvarying float vLodT;\nuniform vec2 leafR;' + (hand ? '\nvarying float vLeafH;' : ''))
-      .replace('#include <clipping_planes_fragment>', `{ float lodN = fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715))));
+      .replace('#include <common>', '#include <common>\nvarying float vLodT;\nuniform vec2 leafR;' + (hand ? '\nvarying float vLeafH;' : '') + (whole ? '\nvarying float vLodH;\nvarying float vLodD;' : ''))
+      .replace('#include <clipping_planes_fragment>', `{ float lodN = ${whole ? 'vLodH' : 'fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715))))'};
           if (${leaf ? `lodN < 1.0 - ${leafS}` : hand ? `lodN >= min(vLodT, 1.0 - vLeafH * ${leafS})` : near ? 'lodN < vLodT' : 'lodN >= vLodT'}) discard; }
         #include <clipping_planes_fragment>`);
   });
@@ -471,10 +509,11 @@ export class Vegetation {
         if (cards) { yield `${id} ${lod} leaves`; yield* leafTextureSteps(spec, close ? spec.lod.close_scale : lod === 'mid' ? spec.lod.mid_tex_scale ?? 2 : 1); }
       }
       if (typeof document !== 'undefined') { yield `${id} bark`; yield* barkTextureSteps(spec); }
-      const near = lodPatch(canopyMaterial(spec, 'near', patch), this.lodU, 'near', true, true); yield;
-      const mid = lodPatch(canopyMaterial(spec, 'mid', patch), this.lodU, 'mid', true); yield;
-      this.canopyMat[id] = { near, mid, close: lodPatch(canopyMaterial(spec, 'close', patch), this.lodU, 'close', true, false, true) }; yield;
-      const lm = leafMaterial(spec, patch); this.leafMat[id] = lm ? lodPatch(lm, this.lodU, 'leaf', true) : null; yield;
+      const whole = !!spec.shrub;   // a shrub hands over whole (lodPatch)
+      const near = lodPatch(canopyMaterial(spec, 'near', patch), this.lodU, 'near', true, true, false, whole); yield;
+      const mid = lodPatch(canopyMaterial(spec, 'mid', patch), this.lodU, 'mid', true, false, false, whole); yield;
+      this.canopyMat[id] = { near, mid, close: lodPatch(canopyMaterial(spec, 'close', patch), this.lodU, 'close', true, false, true, whole) }; yield;
+      const lm = leafMaterial(spec, patch); this.leafMat[id] = lm ? lodPatch(lm, this.lodU, 'leaf', true, false, false, whole) : null; yield;
       this.barkMat[id] = { near: lodPatch(trunkFlex(trunkMaterial(patch, spec)), this.lodU, 'near'), mid: this.trunkMat.mid };   // bark texture within NEAR_R; beyond, plain vertex colour (same mean)
       yield;
       this.meshes[id] = []; this.slots[id] = [];
@@ -616,7 +655,7 @@ export class Vegetation {
       let site = null;   // the cell's stature (stature.js: the measured stand height, else the site factor), once a canopy tree needs it
       for (let k = 0; k < nTrees + nShrubs + nRip; k++) {
         const isTree = k < nTrees || k >= nTrees + nShrubs, rip = k >= nTrees + nShrubs;
-        if (!(isTree ? treeMix : shrubMix)) continue;   // a tile with no class fallback (species_mix class_fallback false): no mix, no plant (the riparian extras too)
+        if (!(isTree ? treeMix : shrubMix)) { if (plan.skipDraws) for (let q = 0; q < 6; q++) rnd(); continue; }   // a tile that borrows nothing (borrowsNothing): no mix, no plant (the riparian extras too); its six draws taken where the class mix drew one (cellPlan skipDraws)
         let name = pick(isTree ? treeMix : shrubMix, rnd());
         const vdraw = rnd();
         let px = (i + rnd()) * res, pn = size - (j + rnd()) * res;

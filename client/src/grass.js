@@ -347,7 +347,7 @@ const COMMON_VERT = /* glsl */`
     float on = smoothstep(0.05, 0.4, gw.r + 0.5 * gw.g);
     if (on < 0.01) return c;
     vec2 guv = groundUv(root);
-    vec3 gr = groundRecolour(textureLod(map, guv, 8.0).rgb, gw, guv, groundPave(guv, 8.0));
+    vec3 gr = groundGain * groundRecolour(textureLod(map, guv, 8.0).rgb, gw, guv, groundPave(guv, 8.0));   // as groundAlbedo's g
     vec3 local = c * clamp(g / max(gr, vec3(1e-3)), vec3(0.75), vec3(1.3));
     vec3 mean = type > 0.5 ? mix(bRoot, bTip, 0.6) : mix(aRoot, aTip, 0.6);
     float ml = dot(mean, G_LUMA), gl = dot(g, G_LUMA);
@@ -1602,9 +1602,13 @@ export class Grass {
       const ms = mean(PALETTE.summer.annual), mp = mean(P.annual);
       kl = ms.map((v, i) => Math.min(Math.max(v * g[i] / mp[i], 0.4), 2.5));
     }
+    // Every palette is drawn at the ground's reflectance (groundUniforms.groundGain, atmosphere.js groundLook): the
+    // palettes were made to match the photo's display colour, so they take the same factor as the photo under them.
+    const gg = u.groundGain.value;
     const set = kl   // uni: a uniform, or a Color of the species arrays
-      ? (uni, rgb) => { const c = uni.value || uni; c.setRGB(rgb[0], rgb[1], rgb[2], THREE.SRGBColorSpace); c.r *= kl[0]; c.g *= kl[1]; c.b *= kl[2]; }
-      : (uni, rgb) => (uni.value || uni).setRGB(rgb[0] * k[0], rgb[1] * k[1], rgb[2] * k[2], THREE.SRGBColorSpace);
+      ? (uni, rgb) => { const c = uni.value || uni; c.setRGB(rgb[0], rgb[1], rgb[2], THREE.SRGBColorSpace); c.r *= kl[0] * gg.x; c.g *= kl[1] * gg.y; c.b *= kl[2] * gg.z; }
+      : (uni, rgb) => { const c = (uni.value || uni).setRGB(rgb[0] * k[0], rgb[1] * k[1], rgb[2] * k[2], THREE.SRGBColorSpace); c.r *= gg.x; c.g *= gg.y; c.b *= gg.z; };
+    { const c = u.thatchCol.value.setRGB(...THATCH, THREE.SRGBColorSpace); c.r *= gg.x; c.g *= gg.y; c.b *= gg.z; }
     // The type palettes (the sward sheets, the ground's sward paint, the far colour match): California's annual sward and
     // needlegrass, or on a tile that borrows nothing its own grasses' (ownTypes: the Serengeti's red oat grass, the
     // generic tufted grass at Lofoten).

@@ -1,11 +1,12 @@
 import * as THREE from 'three';
 import { mulberry32, SPECIES, SPECIES_IDS } from './trees.js';
 import { leafOnAt, decoActive, seasonMonth } from './treegen.js';
-import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
+import { uniforms as atmo, ATMOSPHERE_GLSL, groundLook } from './atmosphere.js';
 import { groundUniforms, GROUND_GLSL } from './terrain.js';
 import { windUniforms, WIND_GLSL } from './wind.js';
 import { rockKeep } from './tilepackage.js';
 import { releaseTexture } from './gpuRelease.js';
+import { borrowsNothing } from './vegetation.js';
 
 // Clump fields: vegetation seen from the air as many cheap impostors, one camera-facing quad per
 // clump. ShrubField (chaparral) shades each quad per pixel as an ellipsoid whose normal is rebuilt
@@ -105,12 +106,19 @@ const VERT = /* glsl */`
     // sinking back into it): each plant has its own in and out distances inside the band edges and
     // dithers out over a short window around them (vFade, screen-space dither in the fragment), so
     // the field thins and fills plant by plant. The density LOD's rank cut is dithered the same way.
-    float din = mix(band.x, band.y, ph(iPos.xz, 1u)), dout = mix(band.z, band.w, ph(iPos.xz, 2u));
-    float wi = max(0.12 * (band.y - band.x), 0.4), wo = max(0.12 * (band.w - band.z), 0.4);
-    float s = clamp((keep - rank) / 0.05, 0.0, 1.0) * smoothstep(din - wi, din + wi, d) * (1.0 - smoothstep(dout - wo, dout + wo, d));
+    float dout = mix(band.z, band.w, ph(iPos.xz, 2u)), wo = max(0.12 * (band.w - band.z), 0.4);
+    // At the camera a plant goes whole, and only when the camera is in or at its crown (the distance to the crown's centre
+    // under its half extent plus 0.1-0.4 m, the plant's own): a walker's eye can stand a metre from a sagebrush and see it,
+    // and nothing dissolves into a screen door at the feet (2026-11-06, iteration 8; it was a dithered fade over
+    // band.x-band.y m of the root, 1.2-3.5 m, which also took the shrub one walked up to). band.x-y stay for the uniforms.
+    float sIn = step(max(R, 0.5 * H) * 1.05 + mix(0.1, 0.4, ph(iPos.xz, 1u)), distance(cameraPosition, iPos.xyz + vec3(0.0, 0.5 * H, 0.0)));
+    float s = clamp((keep - rank) / 0.05, 0.0, 1.0) * sIn * (1.0 - smoothstep(dout - wo, dout + wo, d));
     if (s < 0.01) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
     vFade = s;
-    float nearK = 1.0 - smoothstep(nearBand.x, nearBand.y, d);
+    // Near and far hand a plant over whole, at its own distance inside nearBand (a hash of its root), never by a dither of
+    // its pixels: the two programs light a foothill shrub alike (FRAG), and a per-pixel split read as a coarse screen
+    // door over every crown 14-26 m off (2026-11-06, iteration 8; Aaron on Teton's sage).
+    float nearK = d < mix(nearBand.x, nearBand.y, ph(iPos.xz, 3u)) ? 1.0 : 0.0;
     #ifdef NEAR
     if (nearK <= 0.0) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
     #else
@@ -158,9 +166,16 @@ const VERT = /* glsl */`
     a *= mix(vec3(1.05, 1.0, 0.9), vec3(0.94, 1.0, 1.06), stand) * (0.78 + 0.44 * v2);
     float al = dot(a, G_LUMA);
     // the chaparral domes are pulled toward the photo under them; a foothill shrub keeps its record's colour (fhSeason)
-    if (!fh) a = mix(a, gc * al / max(gl, 1e-3), 0.2) * mix(1.0, clamp(gl / 0.075, 0.8, 1.25), 0.5);
+    if (!fh) a = mix(a, gc * al / max(gl, 1e-3), 0.2) * mix(1.0, clamp(gl / (0.075 * dot(groundGain, G_LUMA)), 0.8, 1.25), 0.5);   // against the ground's reflectance (terrain.js groundGain)
     vAlbedo = a;
-    vSun = sunLight * cloudShadow(C); vAmb = ambientGround * occ; vAmbUp = ambientSky * occ;
+    // The cast shadows (shadows.js's cascades), per plant: tested where the crown takes the sun, on its sun-facing side and
+    // on its top, half each, not once at its centre 2 m toward the sun. The centre test put a whole crown in a neighbour's
+    // shadow (or its own caster's) whenever that one point was: every such plant drew in sky light only, near-black among
+    // lit ones, within the near cascade's reach (10-20 m, where the shrubs cast; 2026-11-06, iteration 8: Aaron's black
+    // sagebrush on Teton, Lamar's black crowns at eye height).
+    float shS = 0.5 * (csmShadow(C + sunDir * max(R, 0.5 * H) + vec3(0.0, 0.25 * H, 0.0), vec3(0.0), 0.0, 0.3, 0.0)
+                     + csmShadow(C + vec3(0.0, 0.5 * H, 0.0), vec3(0.0), 0.0, 0.6, 0.0));
+    vSun = sunLight * cloudOnly(C) * shS; vAmb = ambientGround * occ; vAmbUp = ambientSky * occ;
     vIn = atmosphereApply(vec3(0.0), C, cameraPosition);
     vT = atmosphereApply(vec3(1.0), C, cameraPosition) - vIn;
     gl_Position = projectionMatrix * viewMatrix * vec4(p, 1.0);
@@ -168,7 +183,7 @@ const VERT = /* glsl */`
 
 const FRAG = /* glsl */`
   uniform vec3 sunDir; uniform float heads; uniform float dry;   // dry: the season (grass.js's palette value)
-  uniform sampler2D leafM; uniform sampler2D leafC; uniform vec4 leafGain; uniform vec2 leafGainF;   // leaf pictures (bakeLeaves); their gain in sun (manzanita, chamise) and in shade (same)
+  uniform sampler2D leafM; uniform sampler2D leafC; uniform vec4 leafGain; uniform vec2 leafGainF; uniform vec3 leafMean;   // leaf pictures (bakeLeaves); their gain in sun (manzanita, chamise) and in shade (same)
   // The foothill shrubs (FH: kinds -1 to -6, index -1 - kind), this season (fhSeason): leaf-on (0 bare .. 1), the bark
   // and bare-twig albedo, and the flowers or berries showing (albedo, share of the outer crown they cover).
   uniform float fhLeaf[${FH_N}]; uniform vec3 fhBark[${FH_N}]; uniform vec4 fhDeco[${FH_N}];
@@ -211,14 +226,10 @@ const FRAG = /* glsl */`
     // with), never a size change.
     if (vFade < 0.995 && fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715)))) >= vFade) discard;
     // Near and far are two programs from this one source (NEAR defined for the near one), each drawing
-    // only its own plants; across nearBand a plant is handed from one to the other by a dither of its
-    // pixels (an R2 pattern, apart from the fade's), so no pixel runs both.
-    float split = fract(dot(floor(gl_FragCoord.xy), vec2(0.7548777, 0.5698403)));
+    // only its own plants (vDim.w: 1 near, 0 far, per plant; the vertex shader collapses the other's).
     #ifdef NEAR
-    if (split >= vDim.w) discard;
     const float near = 1.0;
     #else
-    if (split < vDim.w) discard;
     const float near = 0.0;
     #endif
     float kind = vKind, vv = vVar;
@@ -425,6 +436,9 @@ const FRAG = /* glsl */`
     // (a porous crown is lit tuft by tuft more than as one dome: its normal bent further by the crown's octaves)
     vec3 N = normalize(nW + (vec3(lobe, 0.5, twig) - 0.5) * (fine ? 0.9 + 2.0 * FH_POR[fk] : 0.9));
     float diff = max(dot(N, sunDir), 0.0);
+    // A porous foothill crown lets the sun through its tufts: its far side is lit through the crown (a wrap of 2 x its
+    // porosity, both programs alike), so a sagebrush reads as a soft grey bush, not a stone with a hard terminator.
+    if (fh) { float wr = 2.0 * FH_POR[fk]; diff = max((dot(N, sunDir) + wr) / (1.0 + wr), 0.0); }
     float ao = mix(0.6, 1.0, smoothstep(-0.7, 0.6, nW.y)) * mix(0.75, 1.0, lc);
     vec3 amb = mix(vAmb, vAmbUp, 0.5 + 0.5 * N.y);
     vec3 outH = vec3(0.0), outN = vec3(0.0);
@@ -513,6 +527,17 @@ const FRAG = /* glsl */`
       vec3 base = mix(colF, texWood, woodF);
       vec2 gn = picM ? leafGain.xz : picF ? leafGainF : leafGain.yw;
       vec3 folLit = base * cl * (sunL * leafSun * shade * gn.x + ambL * (0.5 + 0.5 * shade) * gn.y);
+      // A foothill shrub up close is lit as its far program lights it (the same albedo, dome, clusters, sun and sky:
+      // outH above), the picture only modulating that around its own mean (leafMean: the picture's mean shade over its
+      // leaves), at 0.6 of its contrast, so near and far are one colour by construction (2026-11-06, iteration 8: the
+      // measured gains put the sprig's lit tufts at 2.5-3.7x the record's albedo, white over the far side's dark gaps,
+      // Lamar's and Teton's sage read as snow-dusted stones). The chaparral keeps its measured gains.
+      if (fh) {
+        float kS = mix(1.0, shade / (picM ? leafMean.x : picF ? leafMean.z : leafMean.y), 0.6);
+        folLit = base * (0.6 + 0.8 * lc) * kS * (vSun * diff * mix(0.75, 1.0, lc) * leafSun + ambL);
+        // and where the picture is not resolved, the crown's holes in its shaded inside, as the far program draws them
+        folLit *= mix(1.0, 0.4 / (0.6 + 0.8 * lc), smoothstep(0.3, 0.16, lc) * (1.0 - fringe * 0.7) * 0.7 * (1.0 - lres));
+      }
       // The geometric stems and wands show through the picture's gaps in the lower crown and the holes.
       float show = max(rim, smoothstep(Hh * 0.75, Hh * 0.45, hgt));
       folLit = mix(folLit, woodLit, woodCov * show * (1.0 - smoothstep(0.3, 0.5, tex.g)) * lres);
@@ -746,7 +771,7 @@ function mergeByRank(a, b) {
 // kind: true manzanita, false chamise, 'sprig' the fine-leaved foothill shrubs (2026-11-06, iteration 8: big sagebrush,
 // coyote brush, buckbrush, snowberry drew chamise's wands, long dark stripes down a sagebrush; the sprig picture is small
 // leaves in tufts at the ends of short crooked twigs, the gaps between tufts open, sized by the record's leaf: FH_T).
-const leafPictures = new Map(), leafCoverage = new Map();
+const leafPictures = new Map(), leafCoverage = new Map(), leafShadeMean = new Map();
 export { leafCoverage };
 export function shrubLeaves(kind) { let t = leafPictures.get(kind); if (!t) leafPictures.set(kind, t = bakeLeaves(kind)); return t; }
 function bakeLeaves(kind) {
@@ -834,6 +859,8 @@ function bakeLeaves(kind) {
   let cov = 0;
   for (let i = 0; i < S * S; i++) { for (let c = 0; c < 4; c++) data[i * 4 + c] = img[c][i * 4]; if (img[1][i * 4] > 115) cov++; }
   leafCoverage.set(kind, cov / (S * S));   // the share the near crown keeps (g over 0.45), for inspection
+  let sh = 0; for (let i = 0; i < S * S; i++) if (img[1][i * 4] > 115) sh += img[0][i * 4] / 255;
+  leafShadeMean.set(kind, cov ? sh / cov : 0.6);   // the mean shade over its leaves (FRAG leafMean)
   const t = new THREE.DataTexture(data, S, S, THREE.RGBAFormat);
   t.wrapS = t.wrapT = THREE.RepeatWrapping; t.magFilter = THREE.LinearFilter; t.minFilter = THREE.LinearMipmapLinearFilter;
   t.generateMipmaps = true; t.anisotropy = 4; t.needsUpdate = true;
@@ -883,7 +910,9 @@ export function ShrubField(tile, ground, uniforms) {
   // On a regional-table tile a shrubland cell draws the chaparral only where its own row lists a chaparral species
   // (2026-11-06: Yellowstone's Lamar Valley drew manzanita domes over its big sagebrush steppe); California's chaparral
   // rows list them, so the home tiles are unchanged.
-  const mix = tile.speciesMix, own = mix?.json?.class_fallback === false;
+  // (the same for a tile in no natural region of the tables, vegetation.js borrowsNothing: Teton's class-4 cells whose row
+  // lists no shrub drew chamise and manzanita)
+  const mix = tile.speciesMix, own = borrowsNothing(tile);
   for (let j = 0; j < H; j++) for (let i = 0; i < W; i++)
     if (hab.channel(i, j, 0) === 4) {
       const o = j * W + i, row = own ? mix.at(i, j) : null;
@@ -953,6 +982,7 @@ export function ShrubField(tile, ground, uniforms) {
   field.uniforms.nearBand = { value: new THREE.Vector2(14, 26) };
   field.uniforms.leafM = { value: shrubLeaves(true) }; field.uniforms.leafC = { value: shrubLeaves(false) }; field.uniforms.leafF = { value: shrubLeaves('sprig') };
   field.uniforms.leafGain = { value: new THREE.Vector4(2.5, 4.0, 1.25, 1.4) };   // the near look matched to the far one in mean (measured on screen)
+  field.uniforms.leafMean = { value: new THREE.Vector3(...[true, false, 'sprig'].map(k => leafShadeMean.get(k) || 0.6)) };   // (after shrubLeaves baked them)
   field.uniforms.leafGainF = { value: new THREE.Vector2(3.4, 1.2) };   // the sprig picture's (sun, shade), measured the same way (Lamar's sagebrush, 2026-11-06)
   // The foothill shrubs' season (fhSeason), set from the field's season (grass.js's `dry`) when it changes.
   Object.assign(field.uniforms, {
@@ -986,9 +1016,13 @@ export function ShrubField(tile, ground, uniforms) {
 const FH_UNDER = { 1: 0.14, 2: 0.08, 3: 0.12, 5: 0.03, 6: 0.18 }, FH_CHAP = 0.8, FH_AREA = 3, FH_MAX = 0.4;
 // The chaparral program's species (ShrubField): a row listing any of them is California's chaparral.
 const CHAP_IDS = ['adenostoma_fasciculatum', 'chamise', 'arctostaphylos_viscida', 'arctostaphylos_manzanita', 'manzanita'];
-// Albedo from a species file's sRGB colour: linear, times FH_GAIN, the same for every channel (2026-11-06).
-const FH_GAIN = 1.3;
-const linK = c => c.map(v => Math.pow(v / 255, 2.2) * FH_GAIN);
+// Albedo from a species file's sRGB colour: linear, times FH_GAIN, the same for every channel (2026-11-06). 1.3 was a
+// display-era lift (the ground drawn at its photo's display colour, the old exposure); with the ground at its reflectance
+// (atmosphere.js groundLook.physical) the exposure is raised by groundLook.exposureK for the whole scene, and the record's
+// colour is taken as it is, as the trees' leaves are (iteration 8: 1.3 on top of the 1.38 exposure drew Lamar's sagebrush
+// near-white, the snow-dusted stones again).
+const FH_GAIN = () => (groundLook.physical ? 1.0 : 1.3);
+const linK = c => { const g = FH_GAIN(); return c.map(v => Math.pow(v / 255, 2.2) * g); };
 const seasonOfDry = d => d < 0.05 ? 'winter' : d < 0.5 ? 'spring' : d < 0.93 ? 'fall' : 'summer';   // as FRAG reads it
 function fhSeason(u, season) {
   const month = seasonMonth(season);

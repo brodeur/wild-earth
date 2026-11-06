@@ -380,7 +380,7 @@ const VERT = /* glsl */`
     if (mat > 0.5) {
       vSkirt = aQuad > 1.5 ? smoothstep(0.55, 0.9, floor(iVar.y) / 32.0) : 1.0;
       vec3 gw; vec3 g = groundAlbedo(iPos.xyz, 1.0, gw);
-      vec3 r = clamp(g / max(spMean[sp], vec3(1e-3)), vec3(0.25), vec3(4.0));
+      vec3 r = clamp(g / max(spMean[sp] * groundGain, vec3(1e-3)), vec3(0.25), vec3(4.0));   // the picture at the ground's reflectance (FRAG)
       float hv = h11(iVar.y * 517.3 + 3.1), hw = h11(iVar.y * 91.7 + 7.3) - 0.5;   // a clone's own shade, and its own warmth (browner or greener)
       vec3 own = sqrt(r) * mix(vec3(0.86, 0.9, 0.86), vec3(1.12, 1.08, 1.1), hv) * vec3(1.0 + 0.14 * hw, 1.0, 1.0 - 0.14 * hw);
       vTint = mix(own, r, smoothstep(0.45 * fd.x, fd.x, d));
@@ -398,7 +398,7 @@ const VERT = /* glsl */`
     gl_Position = projectionMatrix * viewMatrix * vec4(p, 1.0);
   }`;
 const FRAG = /* glsl */`
-  uniform sampler2D atlas; uniform vec3 wxGround; uniform vec3 glowCol;
+  uniform sampler2D atlas; uniform vec3 wxGround; uniform vec3 glowCol; uniform vec3 groundGain;
   varying vec2 vUv; varying vec3 vSun; varying vec3 vAmb; varying vec3 vT; varying vec3 vIn; varying float vFade; varying float vDiff; varying float vGlow; varying vec3 vTint;
   varying float vSkirt;
   void main() {
@@ -406,14 +406,16 @@ const FRAG = /* glsl */`
     vec4 t = texture2D(atlas, vUv);
     if (t.a < 0.8) t.a *= vSkirt;   // a mat's skirt (translucent, round its disc) only where the carpet closes: elsewhere the ground is the gaps' own
     if (t.a < 0.3) discard;
-    vec3 alb = t.rgb * vTint;   // the atlas is an sRGB texture, decoded to linear by the sampler (2026-11-06: a pow 2.2 on top decoded it twice, and a leaf of sRGB 64 came out black)
+    // the pictures were drawn to match the photo's display colour: at the ground's reflectance they take its factor
+    // (terrain.js groundGain, as the grass palettes do)
+    vec3 alb = t.rgb * vTint * groundGain;   // the atlas is an sRGB texture, decoded to linear by the sampler (2026-11-06: a pow 2.2 on top decoded it twice, and a leaf of sRGB 64 came out black)
     alb = mix(alb, vec3(0.7, 0.73, 0.78), wxGround.z * 0.6);   // lying snow (weather.js)
     vec3 col = (alb * (vSun * (0.4 + 0.6 * vDiff) + vAmb) + alb * alb * vSun * 0.15) * 0.3183099;
     // the forager's glow (forage.js): the plant lit warm against the light of the hour, by the leaf's own tone and its
     // texel's alpha, so the picture's structure stays under the light and the mip-averaged haze of a dense card a few
     // metres off is lit less than its leaves (a halo from the alpha skirt under the cut, and a glow strongest at the
     // soft edges, were tried first: both lit that haze into a yellow block)
-    if (vGlow > 0.0) col += glowCol * vGlow * dot(vSun * 0.5 + vAmb * 1.5, vec3(0.3333)) * 0.3183099 * 0.6 * (0.35 + 0.65 * smoothstep(0.3, 0.8, t.a)) * (0.4 + 0.6 * min(1.0, dot(alb, vec3(0.3333)) / 0.2));
+    if (vGlow > 0.0) col += glowCol * vGlow * dot(vSun * 0.5 + vAmb * 1.5, vec3(0.3333)) * 0.3183099 * 0.6 * (0.35 + 0.65 * smoothstep(0.3, 0.8, t.a)) * (0.4 + 0.6 * min(1.0, dot(alb / max(groundGain, vec3(0.05)), vec3(0.3333)) / 0.2));   // the leaf's tone as drawn
     gl_FragColor = vec4(col * vT + vIn, t.a);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>

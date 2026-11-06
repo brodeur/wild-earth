@@ -646,18 +646,35 @@
     "queued_credits_est": 0
    },
    "status": "ok"
+  },
+  "water_imagery": {
+   "stage": "base",
+   "started_at": "2026-11-06T18:49:31Z",
+   "ended_at": "2026-11-06T18:49:42Z",
+   "wall_s": 11.0,
+   "cpu_self_s": 11.0,
+   "cpu_children_s": 0.0,
+   "downloads": {},
+   "cache": {},
+   "disk_bytes": 6279186,
+   "meshy": {
+    "spent": 0,
+    "queued": 0,
+    "queued_credits_est": 0
+   },
+   "status": "ok"
   }
  },
  "stages": {
   "base": {
-   "started_at": "2026-11-06T17:04:43Z",
-   "ended_at": "2026-11-06T17:05:22Z",
-   "wall_s": 313.8,
-   "cpu_s": 182.3,
+   "started_at": "2026-11-06T18:49:31Z",
+   "ended_at": "2026-11-06T18:49:42Z",
+   "wall_s": 324.8,
+   "cpu_s": 193.3,
    "download_bytes": 12670209,
    "cache_hits": 568,
    "cache_misses": 3,
-   "disk_bytes": 431957448,
+   "disk_bytes": 438236634,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -1044,22 +1061,38 @@
    ],
    "ended_at": "2026-11-06T17:05:32Z",
    "failed": []
+  },
+  {
+   "started_at": "2026-11-06T18:49:31Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-06T18:49:31Z",
+     "steps_run": [
+      "water_imagery"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T18:49:42Z"
+    }
+   ],
+   "ended_at": "2026-11-06T18:49:42Z",
+   "failed": []
   }
  ],
  "totals": {
-  "wall_s": 352.7,
-  "cpu_s": 201.4,
+  "wall_s": 363.7,
+  "cpu_s": 212.4,
   "download_bytes": 12671457,
   "cache_hits": 3330,
   "cache_misses": 19,
-  "disk_bytes": 438750305,
+  "disk_bytes": 445029491,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 1525
  },
- "updated_at": "2026-11-06T17:05:32Z",
+ "updated_at": "2026-11-06T18:49:43Z",
  "client": {
-  "bytes": 47045425,
-  "files": 46,
+  "bytes": 47053060,
+  "files": 47,
   "largest": {
    "client/terrain_detail.png": 12862035,
    "client/texture.png": 5672964,

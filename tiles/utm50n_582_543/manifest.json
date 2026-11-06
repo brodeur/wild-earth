@@ -15,7 +15,7 @@
   5.002619399566649
  ],
  "size_m": 10000,
- "generated_at": "2026-11-06T17:06:57Z",
+ "generated_at": "2026-11-06T18:50:33Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -100,10 +100,11 @@
    "kind": "vector",
    "source": "usgs_3dep",
    "derived_from": [
-    "terrain.dem",
     "hydro.flowlines",
-    "hydro.waterbodies",
     "hydro.human_water",
+    "hydro.waterbodies",
+    "seasons.s2_monthly",
+    "terrain.dem",
     "terrain.dem_rewilded"
    ],
    "feature_count": 303,
@@ -162,7 +163,48 @@
     "routed_on": "terrain/dem_rewilded.tif"
    },
    "sha256": "222869671deaf7fcb3a107991f0dd748198c02300a15fa43f7e33b3de0a050dd",
-   "bytes": 579645
+   "bytes": 579645,
+   "imagery_moved": false,
+   "water_imagery": {
+    "months_used": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11
+    ],
+    "water_cells_5m": 2475,
+    "reaches_tested": 303,
+    "verdicts_before": {
+     "no water seen": 298,
+     "off water": 2,
+     "on water": 3
+    },
+    "verdicts_after": {
+     "no water seen": 298,
+     "off water": 2,
+     "on water": 3
+    },
+    "stems": 1,
+    "stems_moved": 0,
+    "reaches_moved": 0,
+    "reaches_bent": 0,
+    "reaches_extended": 0,
+    "nhd_dropped": 0,
+    "side_channels": 0,
+    "undrawn_patches": 1,
+    "undrawn_m2": 1875,
+    "undrawn_by_map": {
+     "unmapped": 1875
+    },
+    "seconds": 11.0
+   }
   },
   "client.channel_depth": {
    "path": "client/channel_depth.png",
@@ -3026,6 +3068,127 @@
    "evidence": [],
    "sha256": "44e6a9f9812e8567ec03b05d1146db91274f86b27ef8ebaf76e490cf960b9a56",
    "bytes": 913
+  },
+  "client.ground_albedo": {
+   "path": "client/ground_albedo.json",
+   "kind": "table",
+   "derived_from": [
+    "client.texture_imagery",
+    "client.season_rgb",
+    "client.canopy",
+    "client.habitat"
+   ],
+   "encoding": "gain: per channel (linear R G B) the factor from the ground texture's linear colour to surface reflectance; the client multiplies the ground and the herb layer's albedo by it",
+   "method": "sum of the reference month's L2A reflectance over the sum of the texture's linear colour, open ground (tree < 10 %, shrub < 15 %, not water or built), 20 m",
+   "imagery": {
+    "source": "sentinel2_l2a",
+    "year": null
+   },
+   "basis": "fit",
+   "gain": [
+    0.4313,
+    0.431,
+    0.4512
+   ],
+   "gain_luminance": 0.432,
+   "reference": "seasons/s2_07.tif",
+   "reference_month": 7,
+   "open_pixels": 16134,
+   "open_share": 0.065,
+   "ratio_luminance_p25_p50_p75": [
+    0.401,
+    0.432,
+    0.464
+   ],
+   "texture_mean_linear": [
+    0.0563,
+    0.1053,
+    0.0595
+   ],
+   "reflectance_mean": [
+    0.0243,
+    0.0454,
+    0.0268
+   ],
+   "encoding_check": {
+    "stretch_gain": 0.4,
+    "note": "the texture's own encoding (2.5 x the three-year median reflectance); the fit also carries the reference month against that median"
+   },
+   "sha256": "04650fbe78cfaafe02156419e91b9e160a223db389237b4e30a3d7582cd4e0a7",
+   "bytes": 1097
+  },
+  "hydro.water_imagery": {
+   "path": "hydro/water_imagery.json",
+   "kind": "table",
+   "derived_from": [
+    "hydro.channels",
+    "seasons.s2_monthly",
+    "terrain.dem"
+   ],
+   "method": "the reverse test of mapped water: drawn reaches against the imagery's water, the large rivers moved onto it (pipeline/water_imagery.py)",
+   "rule": {
+    "water_pixel": "seasons/s2_MM.tif: NDWI (NIR from red and NDVI) > 0 or NIR < 0.04, not bright (water_seasons.py)",
+    "water": "per 20 m pixel max(frequency, fraction): frequency = wet months / observed (>= 3); fraction = its NDWI's 75th percentile over the clear months unmixed between the never-wet land within 300 m and the tile's always-wet water (median NDWI; 0.3 with under 10 such pixels); DEM slope < 0.2, DEM > 0.5 m; bilinear onto the 5 m grid, water at >= 0.5",
+    "naip": "imagery/naip.tif is RGB (no NIR band): not used",
+    "reach": "on: water within max(w/2, 10 m); near: within max(60 m, 2 w); every 10 m; on water >= 0.6, off water: near >= 0.5, else no water seen",
+    "move": "stems of DEM reaches with width >= 10 m not on water: least-cost path on the 5 m grid within 600 m of the drawn stem on ground <= 10 m over its nearest DEM line cell (water 1 + 2 exp(-d_in/6 m), land 12 x (0.4 + 0.6 min(1, d_dem/30 m))), edge ends fixed, interior ends snapped to water within 60 m, a junction on a moved stem taken as moved, smoothed 10 m; kept when on >= 0.5 and >= the old line's + 0.2; the reaches meeting a moved node bent to it over 2 |shift| + 20 m (shift <= 30 m) or extended straight to it (one per node)",
+    "nhd_dropped": "NHD-sourced stretches with width >= 10 m, no water seen, within 600 m of a moved stem's old or new line, off the tile edge: the map's pieces of a river where the imagery shows none",
+    "width": "a moved reach takes the water's median cross-section when >= 40 m and wider than drawn",
+    "side_channels": "the river's water within 250 m, off the moved ribbon (w/2 + 10 m), its skeleton's longest path >= 150 m: a reach at its measured width (source imagery)",
+    "undrawn": "water patches >= 1600 m2 beyond w/2 + 20 m of every reach and 20 m of every kept pond"
+   },
+   "stats": {
+    "months_used": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11
+    ],
+    "water_cells_5m": 2475,
+    "reaches_tested": 303,
+    "verdicts_before": {
+     "no water seen": 298,
+     "off water": 2,
+     "on water": 3
+    },
+    "verdicts_after": {
+     "no water seen": 298,
+     "off water": 2,
+     "on water": 3
+    },
+    "stems": 1,
+    "stems_moved": 0,
+    "reaches_moved": 0,
+    "reaches_bent": 0,
+    "reaches_extended": 0,
+    "nhd_dropped": 0,
+    "side_channels": 0,
+    "undrawn_patches": 1,
+    "undrawn_m2": 1875,
+    "undrawn_by_map": {
+     "unmapped": 1875
+    },
+    "seconds": 11.0
+   },
+   "sha256": "42f6a404eecd3e18f5ce981f7fe5b178a3f48881710efed923f30c6faa2bee83",
+   "bytes": 5919
+  },
+  "hydro.channels_dem": {
+   "path": "hydro/channels_dem.geojson",
+   "kind": "vector",
+   "derived_from": [
+    "hydro.channels"
+   ],
+   "encoding": "the channels as the DEM routed them (after the reroute step), before the water_imagery step moved the large rivers onto the imagery's water",
+   "sha256": "222869671deaf7fcb3a107991f0dd748198c02300a15fa43f7e33b3de0a050dd",
+   "bytes": 579645
   }
  },
  "sources": {
@@ -3822,6 +3985,12 @@
    "step": "resources",
    "at": "2026-11-06T17:06:57Z",
    "seconds": 11.8,
+   "ok": true
+  },
+  {
+   "step": "water_imagery",
+   "at": "2026-11-06T18:50:33Z",
+   "seconds": 11.7,
    "ok": true
   }
  ],
@@ -5344,6 +5513,59 @@
     "cache": 0
    },
    "seconds": 0.5
+  },
+  "water_imagery": {
+   "version": "1",
+   "code": "ebf8ac9b30256797",
+   "params": {
+    "tile": "utm50n_582_543"
+   },
+   "fingerprint": "4c9e5da0e2cc9c73",
+   "parts": {
+    "version": "1",
+    "code": "ebf8ac9b30256797",
+    "params": {
+     "tile": "utm50n_582_543"
+    },
+    "deps": {
+     "dem": "3d1f5ea2b535dab9",
+     "channels": "97578dcdc18cc4dd",
+     "rewild_hydro": "b37fffb1d80914ca",
+     "reroute": "5a125a52ab4a9bfe",
+     "seasons": "d71cf970fcce1fea",
+     "water_seasons": "2790b9d4851293c7",
+     "hydro": "6f7458ac56ea0c48"
+    },
+    "library": {}
+   },
+   "ran_at": "2026-11-06T18:50:21Z",
+   "owner": "water lane",
+   "status": "ok",
+   "layers": [
+    "client.channel_depth",
+    "client.channel_profile",
+    "hydro.channels",
+    "hydro.channels_dem",
+    "hydro.water_imagery"
+   ],
+   "outputs": {
+    "client/channel_depth.png": "145476c74a2aa6af",
+    "client/channel_profile.png": "8ad014187d6bd057",
+    "hydro/channels.geojson": "222869671deaf7fc",
+    "hydro/channels_dem.geojson": "222869671deaf7fc",
+    "hydro/water_imagery.json": "42f6a404eecd3e18"
+   },
+   "out_hash": "c07bfd78ca69c0a3",
+   "sources": {
+    "usgs_3dep": "2026-11-06"
+   },
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 0
+   },
+   "seconds": 11.7
   }
  },
  "seams": {

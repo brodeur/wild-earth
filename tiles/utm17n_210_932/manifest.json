@@ -15,7 +15,7 @@
   8.513615135330369
  ],
  "size_m": 10000,
- "generated_at": "2026-11-06T12:52:14Z",
+ "generated_at": "2026-11-06T18:49:43Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -4101,6 +4101,54 @@
    "encoding": "band 1 the canopy top height (m; GEDI RH98-calibrated), band 2 its standard deviation (m); -9999 no data",
    "sha256": "edcf42208a434da072cf5f59c99cf637f5e4f0f60b6d927d50753b24045f2604",
    "bytes": 332629
+  },
+  "client.ground_albedo": {
+   "path": "client/ground_albedo.json",
+   "kind": "table",
+   "derived_from": [
+    "client.texture_imagery",
+    "client.season_rgb",
+    "client.canopy",
+    "client.habitat"
+   ],
+   "encoding": "gain: per channel (linear R G B) the factor from the ground texture's linear colour to surface reflectance; the client multiplies the ground and the herb layer's albedo by it",
+   "method": "sum of the reference month's L2A reflectance over the sum of the texture's linear colour, open ground (tree < 10 %, shrub < 15 %, not water or built), 20 m",
+   "imagery": {
+    "source": "sentinel2_l2a",
+    "year": null
+   },
+   "basis": "fit",
+   "gain": [
+    0.4731,
+    0.4701,
+    0.5053
+   ],
+   "gain_luminance": 0.4724,
+   "reference": "seasons/s2_07.tif",
+   "reference_month": 7,
+   "open_pixels": 1131,
+   "open_share": 0.005,
+   "ratio_luminance_p25_p50_p75": [
+    0.412,
+    0.465,
+    0.531
+   ],
+   "texture_mean_linear": [
+    0.1057,
+    0.1429,
+    0.093
+   ],
+   "reflectance_mean": [
+    0.05,
+    0.0672,
+    0.047
+   ],
+   "encoding_check": {
+    "stretch_gain": 0.4,
+    "note": "the texture's own encoding (2.5 x the three-year median reflectance); the fit also carries the reference month against that median"
+   },
+   "sha256": "d85a5100cf0e3775af40b96dec07ddf071f2645e0d453bd5d6d95fd91d3f079f",
+   "bytes": 1094
   }
  },
  "sources": {
@@ -6377,6 +6425,10 @@
     "cache": 0
    },
    "seconds": 0.6
+  },
+  "water_imagery": {
+   "status": "blocked",
+   "reason": "needs water_seasons (base stage), never run"
   }
  },
  "seams": {

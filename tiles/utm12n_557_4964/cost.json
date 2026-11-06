@@ -219,10 +219,10 @@
   },
   "reroute": {
    "stage": "base",
-   "started_at": "2026-11-06T13:35:26Z",
-   "ended_at": "2026-11-06T13:35:28Z",
-   "wall_s": 2.0,
-   "cpu_self_s": 2.0,
+   "started_at": "2026-11-06T18:39:35Z",
+   "ended_at": "2026-11-06T18:39:39Z",
+   "wall_s": 4.1,
+   "cpu_self_s": 3.7,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {},
@@ -236,14 +236,14 @@
   },
   "water": {
    "stage": "base",
-   "started_at": "2026-11-06T17:03:48Z",
-   "ended_at": "2026-11-06T17:04:04Z",
-   "wall_s": 15.8,
-   "cpu_self_s": 17.4,
+   "started_at": "2026-11-06T18:43:43Z",
+   "ended_at": "2026-11-06T18:44:04Z",
+   "wall_s": 21.1,
+   "cpu_self_s": 16.9,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {},
-   "disk_bytes": 20282653,
+   "disk_bytes": 20313577,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -279,10 +279,10 @@
   },
   "terrain": {
    "stage": "base",
-   "started_at": "2026-11-06T17:04:04Z",
-   "ended_at": "2026-11-06T17:04:26Z",
-   "wall_s": 22.0,
-   "cpu_self_s": 21.8,
+   "started_at": "2026-11-06T18:44:04Z",
+   "ended_at": "2026-11-06T18:44:31Z",
+   "wall_s": 27.3,
+   "cpu_self_s": 23.2,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {
@@ -291,7 +291,7 @@
      "misses": 0
     }
    },
-   "disk_bytes": 32712059,
+   "disk_bytes": 32863936,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -318,14 +318,14 @@
   },
   "substrate": {
    "stage": "base",
-   "started_at": "2026-11-06T13:36:57Z",
-   "ended_at": "2026-11-06T13:37:02Z",
-   "wall_s": 4.9,
-   "cpu_self_s": 4.8,
+   "started_at": "2026-11-06T18:44:31Z",
+   "ended_at": "2026-11-06T18:44:37Z",
+   "wall_s": 5.8,
+   "cpu_self_s": 5.1,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {},
-   "disk_bytes": 506493,
+   "disk_bytes": 506425,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -401,8 +401,8 @@
   },
   "seams": {
    "stage": "base",
-   "started_at": "2026-11-06T13:43:57Z",
-   "ended_at": "2026-11-06T13:43:57Z",
+   "started_at": "2026-11-06T18:44:37Z",
+   "ended_at": "2026-11-06T18:44:37Z",
    "wall_s": 0.0,
    "cpu_self_s": 0.0,
    "cpu_children_s": 0.0,
@@ -695,18 +695,40 @@
     "queued_credits_est": 0
    },
    "status": "ok"
+  },
+  "water_imagery": {
+   "stage": "base",
+   "started_at": "2026-11-06T18:43:26Z",
+   "ended_at": "2026-11-06T18:43:43Z",
+   "wall_s": 16.4,
+   "cpu_self_s": 14.2,
+   "cpu_children_s": 0.0,
+   "downloads": {},
+   "cache": {
+    "osm": {
+     "hits": 1,
+     "misses": 0
+    }
+   },
+   "disk_bytes": 2761277,
+   "meshy": {
+    "spent": 0,
+    "queued": 0,
+    "queued_credits_est": 0
+   },
+   "status": "ok"
   }
  },
  "stages": {
   "base": {
-   "started_at": "2026-11-06T17:03:48Z",
-   "ended_at": "2026-11-06T17:04:26Z",
-   "wall_s": 4471.6,
-   "cpu_s": 2717.4,
+   "started_at": "2026-11-06T18:43:26Z",
+   "ended_at": "2026-11-06T18:44:37Z",
+   "wall_s": 4501.6,
+   "cpu_s": 2734.5,
    "download_bytes": 15318805971,
-   "cache_hits": 1,
+   "cache_hits": 2,
    "cache_misses": 502,
-   "disk_bytes": 687998556,
+   "disk_bytes": 690942566,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -1053,32 +1075,73 @@
    ],
    "ended_at": "2026-11-06T17:04:38Z",
    "failed": []
+  },
+  {
+   "started_at": "2026-11-06T18:39:35Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-06T18:39:35Z",
+     "steps_run": [
+      "reroute",
+      "water_imagery",
+      "water",
+      "terrain",
+      "substrate",
+      "seams"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T18:40:51Z"
+    }
+   ],
+   "ended_at": "2026-11-06T18:40:51Z",
+   "failed": []
+  },
+  {
+   "started_at": "2026-11-06T18:43:26Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-06T18:43:26Z",
+     "steps_run": [
+      "water_imagery",
+      "water",
+      "terrain",
+      "substrate",
+      "seams"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T18:44:37Z"
+    }
+   ],
+   "ended_at": "2026-11-06T18:44:37Z",
+   "failed": []
   }
  ],
  "totals": {
-  "wall_s": 4672.4,
-  "cpu_s": 2903.8,
+  "wall_s": 4702.4,
+  "cpu_s": 2920.9,
   "download_bytes": 15318814509,
-  "cache_hits": 2626,
+  "cache_hits": 2627,
   "cache_misses": 534,
-  "disk_bytes": 698729582,
+  "disk_bytes": 701673592,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 1515
  },
- "updated_at": "2026-11-06T17:04:38Z",
+ "updated_at": "2026-11-06T18:44:37Z",
  "client": {
-  "bytes": 58859112,
-  "files": 54,
+  "bytes": 59045719,
+  "files": 55,
   "largest": {
    "client/lidar_micro.png": 12621596,
-   "client/terrain_detail.png": 10135109,
+   "client/terrain_detail.png": 10144729,
    "client/season_rgb.png": 4713471,
    "client/texture_imagery.jpg": 4281049,
    "client/texture_present.jpg": 4280350,
-   "client/texture.png": 3596585,
+   "client/texture.png": 3600616,
    "client/texture_ground.jpg": 2955645,
    "client/trees_lidar.bin": 2905044,
-   "client/heights.png": 2241158,
+   "client/heights.png": 2241557,
    "client/imagery.png": 2072763,
    "client/season_ndvi.png": 1740093,
    "client/canopy_height.png": 1363785

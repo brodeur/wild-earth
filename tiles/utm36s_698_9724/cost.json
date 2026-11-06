@@ -680,18 +680,35 @@
     "queued_credits_est": 0
    },
    "status": "ok"
+  },
+  "water_imagery": {
+   "stage": "base",
+   "started_at": "2026-11-06T18:50:10Z",
+   "ended_at": "2026-11-06T18:50:21Z",
+   "wall_s": 11.3,
+   "cpu_self_s": 10.6,
+   "cpu_children_s": 0.0,
+   "downloads": {},
+   "cache": {},
+   "disk_bytes": 1682716,
+   "meshy": {
+    "spent": 0,
+    "queued": 0,
+    "queued_credits_est": 0
+   },
+   "status": "ok"
   }
  },
  "stages": {
   "base": {
-   "started_at": "2026-11-06T17:08:06Z",
-   "ended_at": "2026-11-06T17:09:06Z",
-   "wall_s": 492.0,
-   "cpu_s": 117.8,
+   "started_at": "2026-11-06T18:50:10Z",
+   "ended_at": "2026-11-06T18:50:21Z",
+   "wall_s": 503.3,
+   "cpu_s": 128.4,
    "download_bytes": 15546976,
    "cache_hits": 473,
    "cache_misses": 8,
-   "disk_bytes": 99655353,
+   "disk_bytes": 101338069,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -1484,22 +1501,38 @@
    ],
    "ended_at": "2026-11-06T17:09:29Z",
    "failed": []
+  },
+  {
+   "started_at": "2026-11-06T18:50:10Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-06T18:50:10Z",
+     "steps_run": [
+      "water_imagery"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T18:50:21Z"
+    }
+   ],
+   "ended_at": "2026-11-06T18:50:21Z",
+   "failed": []
   }
  ],
  "totals": {
-  "wall_s": 523.7,
-  "cpu_s": 138.6,
+  "wall_s": 535.0,
+  "cpu_s": 149.2,
   "download_bytes": 15547259,
   "cache_hits": 1224,
   "cache_misses": 10,
-  "disk_bytes": 102450600,
+  "disk_bytes": 104133316,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 2395
  },
- "updated_at": "2026-11-06T17:09:29Z",
+ "updated_at": "2026-11-06T18:50:21Z",
  "client": {
-  "bytes": 15962651,
-  "files": 48,
+  "bytes": 15970385,
+  "files": 49,
   "largest": {
    "client/season_rgb.png": 4174717,
    "client/texture.png": 2351677,

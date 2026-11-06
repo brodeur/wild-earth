@@ -619,6 +619,22 @@
     "crowns",
     "inpaint"
    ]
+  },
+  {
+   "started_at": "2026-11-06T18:49:17Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-06T18:49:17Z",
+     "steps_run": [],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T18:49:17Z"
+    }
+   ],
+   "ended_at": "2026-11-06T18:49:17Z",
+   "failed": [
+    "water_imagery"
+   ]
   }
  ],
  "totals": {
@@ -631,23 +647,23 @@
   "meshy_spent": 0,
   "meshy_queued_credits_est": 2000
  },
- "updated_at": "2026-11-05T06:54:20Z",
+ "updated_at": "2026-11-06T18:49:17Z",
  "client": {
-  "bytes": 39543132,
-  "files": 49,
+  "bytes": 3311942,
+  "files": 13,
   "largest": {
-   "client/season_rgb.png": 6463594,
-   "client/terrain_detail.png": 5148489,
-   "client/texture_present.jpg": 4593226,
-   "client/texture.png": 3964574,
-   "client/texture_ground.jpg": 3131663,
-   "client/texture_imagery.jpg": 3105676,
-   "client/imagery.png": 2202794,
-   "client/heights.png": 1984016,
-   "client/season_ndvi.png": 1967664,
    "client/features.json": 1427232,
-   "client/substrate.png": 841504,
-   "client/masks.png": 699627
+   "client/weather.json": 655897,
+   "games.json": 391825,
+   "client/species_mix.json": 318574,
+   "client/species_prior.json": 243095,
+   "manifest.json": 177698,
+   "perception.json": 21651,
+   "locomotion.json": 20576,
+   "calendar.json": 18259,
+   "species/species.json": 13002,
+   "client/ground_classes.json": 12217,
+   "client/substrate.json": 11191
   },
   "note": "every file under client/ and the tables the viewer fetches; an upper bound (the present-day texture is fetched only on request)"
  }
