@@ -37,7 +37,7 @@ const EXPOSURE_K = 1.38;
 // GROUND_HUE: the factor per channel, so the ground takes Sentinel-2's measured hue too (NAIP's colour balance is greener
 // than L2A on the home foothills: red / green 0.99 against 1.28); false keeps the photo's hue (the luminance factor)
 const GROUND_HUE = true;
-const GROUND_PHYSICAL = GROUND_PARAMS?.get('ground') === 'physical';   // default: display until Aaron approves the pair (ground-albedo-v2)
+const GROUND_PHYSICAL = GROUND_PARAMS?.get('ground') !== 'display';   // Aaron, 2026-11-06: "Physical, re-tune exposure"
 export const groundLook = {
   physical: GROUND_PHYSICAL, gain: new THREE.Vector3(1, 1, 1), basis: null,
   exposureK: GROUND_PHYSICAL ? (+(GROUND_PARAMS?.get('gexp') || 0) || EXPOSURE_K) : 1,
