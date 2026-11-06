@@ -1,0 +1,102 @@
+{
+ "units": {
+  "1": {
+   "name": "Igneous: intrusive; Intrusive: granitic",
+   "lithology": "granitic",
+   "cells": 358429,
+   "elevation_m": {
+    "p5": 0.0,
+    "p25": 0.3,
+    "median": 12.7,
+    "p75": 147.9,
+    "p95": 389.2
+   },
+   "candidate": true
+  },
+  "2": {
+   "name": "Igneous: intrusive; Intrusive: tonalitic-granodioritic",
+   "lithology": "granitic",
+   "cells": 3294031,
+   "elevation_m": {
+    "p5": 0.0,
+    "p25": 0.0,
+    "median": 122.9,
+    "p75": 346.4,
+    "p95": 622.7
+   },
+   "candidate": true
+  },
+  "3": {
+   "name": "Sedimentary; Sedimentary: undivided",
+   "lithology": "sandstone_conglomerate",
+   "cells": 293651,
+   "elevation_m": {
+    "p5": 0.0,
+    "p25": 0.0,
+    "median": 0.0,
+    "p75": 0.0,
+    "p95": 0.0
+   },
+   "candidate": true
+  },
+  "4": {
+   "name": "Supracrustal; Sedimentary and/or volcanic: undivided",
+   "lithology": "schist",
+   "cells": 53869,
+   "elevation_m": {
+    "p5": 0.0,
+    "p25": 11.6,
+    "median": 332.7,
+    "p75": 502.8,
+    "p95": 620.7
+   },
+   "candidate": true
+  }
+ },
+ "superposition": [
+  {
+   "upper": "Igneous: intrusive; Intrusive: tonalitic-granodioritic",
+   "lower": "Igneous: intrusive; Intrusive: granitic",
+   "contact_cells": 1049,
+   "upper_on_top": 0.631
+  },
+  {
+   "upper": "Supracrustal; Sedimentary and/or volcanic: undivided",
+   "lower": "Igneous: intrusive; Intrusive: tonalitic-granodioritic",
+   "contact_cells": 368,
+   "upper_on_top": 0.823
+  }
+ ],
+ "consistent_pairs": 0.5,
+ "dropped": [
+  {
+   "unit": "Igneous: intrusive; Intrusive: granitic",
+   "why": "not superposed: mixed sides along its contacts with Igneous: intrusive; Intrusive: tonalitic-granodioritic"
+  },
+  {
+   "unit": "Sedimentary; Sedimentary: undivided",
+   "why": "its base is not seen in the tile: below the column"
+  },
+  {
+   "unit": "Igneous: intrusive; Intrusive: tonalitic-granodioritic",
+   "why": "its band's steep cells are 86% its own unit and hold 13% of the unit's steep cells (under 50%)"
+  }
+ ],
+ "column": false,
+ "reason": "fewer than two units left in the column",
+ "rule": {
+  "min_cells": 2000,
+  "min_fraction": 0.0005,
+  "contact_dz_m": 1.0,
+  "min_contact": 50,
+  "superposed": 0.75,
+  "steep_deg": 25.0,
+  "min_band_fit": 0.5,
+  "min_column_fit": 0.6,
+  "max_dip_deg": 8.0,
+  "tilt_prior": 200,
+  "tilt_scale_m": 3000.0,
+  "map_tol_m": 20.0,
+  "doc": "pipeline/strata.py"
+ }
+}

@@ -1,0 +1,178 @@
+{
+ "tile": "utm17n_210_932",
+ "version": "1",
+ "context": {
+  "centre": [
+   -83.58842246346467,
+   8.4681340958846
+  ],
+  "elevation_m": 38.0,
+  "koppen": "Af",
+  "group": "tropical_wet",
+  "wcvp_area": "COS"
+ },
+ "plots": [],
+ "rule": "pipeline/tree_cards.py choose(): plots, then named trees of open place descriptions, then the tile's most-recorded WCVP trees that reach the subcanopy; shares by tier (TIER_SHARE)",
+ "trees": [
+  {
+   "id": "peltogyne_purpurea",
+   "scientific": "Peltogyne purpurea",
+   "family": "Fabaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "named",
+   "value": 1.0,
+   "evidence": [
+    "enwiki_corcovado_national_park: named as purple heart (linked to Peltogyne) (characteristic); 83 GBIF records within 0.5 deg"
+   ],
+   "role": "characteristic",
+   "named_as": "Peltogyne purpurea",
+   "share": 0.12,
+   "research": true,
+   "card": true
+  },
+  {
+   "id": "terminalia_amazonia",
+   "scientific": "Terminalia amazonia",
+   "family": "Combretaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "named",
+   "value": 1.0,
+   "evidence": [
+    "enwiki_corcovado_national_park: named as nargusta (characteristic); 34 GBIF records within 0.5 deg"
+   ],
+   "role": "characteristic",
+   "named_as": "Terminalia amazonia",
+   "share": 0.12,
+   "research": true,
+   "card": true
+  },
+  {
+   "id": "brosimum_utile",
+   "scientific": "Brosimum utile",
+   "family": "Moraceae",
+   "wcvp_lifeform": "tree",
+   "tier": "named",
+   "value": 1.0,
+   "evidence": [
+    "enwiki_corcovado_national_park: named as cow tree (characteristic); 61 GBIF records within 0.5 deg"
+   ],
+   "role": "characteristic",
+   "named_as": "Brosimum utile",
+   "share": 0.12,
+   "research": true,
+   "card": true
+  },
+  {
+   "id": "anacardium_excelsum",
+   "scientific": "Anacardium excelsum",
+   "family": "Anacardiaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "named",
+   "value": 1.0,
+   "evidence": [
+    "enwiki_corcovado_national_park: named as espave (characteristic); 101 GBIF records within 0.5 deg"
+   ],
+   "role": "characteristic",
+   "named_as": "Anacardium excelsum",
+   "share": 0.12,
+   "research": true,
+   "card": true
+  },
+  {
+   "id": "carapa_guianensis",
+   "scientific": "Carapa guianensis",
+   "family": "Meliaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "named",
+   "value": 1.0,
+   "evidence": [
+    "enwiki_corcovado_national_park: named as crabwood (characteristic); 49 GBIF records within 0.5 deg"
+   ],
+   "role": "characteristic",
+   "named_as": "Carapa guianensis",
+   "share": 0.12,
+   "research": true,
+   "card": true
+  },
+  {
+   "id": "trichilia_tuberculata",
+   "scientific": "Trichilia tuberculata",
+   "family": "Meliaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 39.0,
+   "evidence": [
+    "GBIF: 39 records on the tile; sourced maximum height 30 m"
+   ],
+   "share": 0.0836,
+   "research": true,
+   "card": true
+  },
+  {
+   "id": "astrocaryum_standleyanum",
+   "scientific": "Astrocaryum standleyanum",
+   "family": "Arecaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 37.333333333333336,
+   "evidence": [
+    "GBIF: 7 records on the tile; sourced maximum height 20 m"
+   ],
+   "records": 7.0,
+   "share": 0.08,
+   "research": true,
+   "card": true
+  },
+  {
+   "id": "socratea_exorrhiza",
+   "scientific": "Socratea exorrhiza",
+   "family": "Arecaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 37.333333333333336,
+   "evidence": [
+    "GBIF: 2 records on the tile; sourced maximum height 25 m"
+   ],
+   "records": 2.0,
+   "share": 0.08,
+   "research": true,
+   "card": true
+  },
+  {
+   "id": "heisteria_acuminata",
+   "scientific": "Heisteria acuminata",
+   "family": "Olacaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 37.0,
+   "evidence": [
+    "GBIF: 37 records on the tile; sourced maximum height 15 m"
+   ],
+   "share": 0.0793,
+   "research": true,
+   "card": true
+  },
+  {
+   "id": "pouteria_subrotata",
+   "scientific": "Pouteria subrotata",
+   "family": "Sapotaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 36.0,
+   "evidence": [
+    "GBIF: 36 records on the tile; sourced maximum height 20 m"
+   ],
+   "share": 0.0771,
+   "research": true,
+   "card": true
+  }
+ ],
+ "queued": [],
+ "log": [
+  "plot vela_apaza_2024_los_amigos: not used (2774 km, 212 m apart, climate Am)",
+  "enwiki_corcovado_national_park: 'poponjoche' not resolved (unresolved: no open source found for the name)",
+  "enwiki_corcovado_national_park: 'banak' not resolved (unresolved: Wikipedia's 'banak' is a Belizean name (Virola); not confirmed for Costa Rica)",
+  "records: Crossopetalum parviflorum skipped (sourced maximum height 5 m < 12 m)"
+ ],
+ "cards_written": []
+}

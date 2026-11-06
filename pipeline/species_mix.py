@@ -27,6 +27,7 @@ Every rule is a first guess meant to be tuned in the viewer, like the habitat ta
 from __future__ import annotations
 
 import json
+import math
 import pathlib
 import warnings
 
@@ -570,6 +571,46 @@ def terrain_weights(weights: dict, t: int, fixed=(), rule: str | None = None) ->
 # and forb layers draw each cell's grasses and forbs from the row's ground_bytes (the grasses' share and the
 # forbs' share of it, by form). Cells without a row keep the client's own defaults.
 GROUND_FORMS = ("grass", "forb")
+# The dwarf shrubs (2026-11-06): a woody record with a `ground` block marked woody (pipeline/plantgen.py gives one to every
+# card whose height tops out at or below plantgen.DWARF_SHRUB_MAX_M, 0.5 m: crowberry, heather, the mountain heathers)
+# is a ground-layer plant, not a shrub: a heath is a carpet of them, which the shrub layer's ~11 whole shrub models per
+# cell drew as bare ground. Wherever a community's shrubs name one (its rule, its name or the tile's research) it
+# leaves the shrub weights for the ground weights (split_dwarf_shrubs); the row's carpet density (density_bytes[2],
+# species_mix_density.png B) is the dwarfs' share of the community's shrubs, which the client's ground layer
+# (client/src/forbs.js) multiplies by the cell's shrub cover (canopy.png G: landcover_global's DWARF_SHRUB cover in a
+# heath or tundra) to lay the carpet; the shrub density keeps the rest of the shrubs' share (the junipers). They are not added to communities by
+# habitat class as the grasses and forbs are: only where a community has them.
+
+
+def is_dwarf_shrub(sid: str) -> bool:
+    if sid not in _DWARF_CACHE:
+        f = LIBRARY / f"{sid}.json"
+        d = json.loads(f.read_text()) if f.exists() else {}
+        _DWARF_CACHE[sid] = d.get("form") not in GROUND_FORMS and bool((d.get("ground") or {}).get("woody"))
+    return _DWARF_CACHE[sid]
+
+
+_DWARF_CACHE: dict = {}
+
+
+def split_dwarf_shrubs(row: dict) -> dict:
+    """Move a community row's dwarf shrubs from its shrubs to its ground layer (in place): the remaining shrubs keep
+    (1 - their share) of the shrub density, the carpet density is their share of the shrub cover (none where the
+    community draws no shrubs); the dwarfs' ground weights sum to the row's
+    other ground weights (or 1), so each form's share stays readable in 255 bytes. Returns {dwarf id: weight}."""
+    tot = sum(row["shrubs"].values())
+    dwarf = {k: w for k, w in row["shrubs"].items() if w > 0 and is_dwarf_shrub(k)}
+    row["carpet_density"] = 0.0
+    if not dwarf or tot <= 0:
+        return {}
+    share = sum(dwarf.values()) / tot
+    row["shrubs"] = {k: w for k, w in row["shrubs"].items() if k not in dwarf}
+    row["carpet_density"] = share if row["shrub_density"] > 0 else 0.0
+    row["shrub_density"] = row["shrub_density"] * (1.0 - share)
+    scale = (sum(row["ground"].values()) or 1.0) / sum(dwarf.values())
+    for k, w in dwarf.items():
+        row["ground"][k] = w * scale
+    return dwarf
 GROUND_RULES = {
     "rewilded_meadow": {"danthonia_californica": 2.0, "elymus_glaucus": 1.5, "achillea_millefolium": 1.5},   # a wet meadow: the perennials
     "ruderal_forest": {"bromus_diandrus": 1.6, "hordeum_murinum": 1.6, "erodium_cicutarium": 1.4},
@@ -587,7 +628,7 @@ GROUND_RULES = {
 # zone, order and permanence from client/water.png R and draws the zone's trees, shrubs and ground layer from the row.
 RIPARIAN_ZONES = ("channel", "margin", "bank", "terrace", "pond_water", "pond_margin", "pond_shore", "pond_terrace")
 RIPARIAN_ORDER_CLASSES = (("small", 1, 2), ("medium", 3, 4), ("large", 5, 9))
-RIPARIAN_FORMS = {"tree": "trees", "multi_stem_shrub_tree": "trees", "shrub": "shrubs", "grass": "ground", "forb": "ground", "emergent": "ground"}
+RIPARIAN_FORMS = {"tree": "trees", "multi_stem_shrub_tree": "trees", "shrub": "shrubs", "grass": "ground", "forb": "ground", "emergent": "ground"}   # a dwarf shrub: ground
 # plant density per zone (trees, shrubs, ground), relative to the client's per-class counts: a gallery on the bank and
 # terrace, willow clumps on the margin, no trees in the channel or the water
 RIPARIAN_DENSITY = {"channel": (0.0, 0.0, 1.0), "margin": (0.5, 1.2, 1.2), "bank": (1.6, 1.4, 1.0), "terrace": (1.3, 1.0, 1.0),
@@ -614,7 +655,7 @@ def riparian_species(regions=None) -> list[dict]:
         if not _in_regions(sid, d, regions):
             continue
         rz = (d.get("habitat") or {}).get("riparian")
-        layer = RIPARIAN_FORMS.get(d.get("form"))
+        layer = "ground" if is_dwarf_shrub(sid) else RIPARIAN_FORMS.get(d.get("form"))
         if not rz or not rz.get("zones") or not layer:
             continue
         out.append({"id": sid, "form": d["form"], "layer": layer, "zones": rz["zones"], "orders": rz.get("orders") or [1, 9],
@@ -735,11 +776,56 @@ def named_rule(name: str, hab_code: int) -> dict | None:
             "note": "no rule: the species its name names (communities.LEXICON)", "fixed": [], "region": None}
 
 
+# Stems to fill the cover (world pipeline phase 1, iteration 4): the client places a cell's trees by its canopy cover
+# whatever their crowns, so a row of narrow crowns (Manu's stilt and stem palms, 10-24 m2) left the measured cover open.
+# A row's tree density is multiplied by the library's median crown (its California trees, the scale the client's counts
+# were tuned on) over the row's weighted mean crown, crown = pi (profile's widest radius x mean height)^2 from the
+# records; never below 1 (big crowns already fill the cover) and at most 3.
+_CROWN: dict = {}
+
+
+def crown_area(sid: str) -> float | None:
+    if sid not in _CROWN:
+        try:
+            d = json.loads((LIBRARY / f"{sid}.json").read_text())
+        except (OSError, ValueError):
+            _CROWN[sid] = None
+            return None
+        c = d.get("crown") or {}
+        prof = (c.get("envelope") or c).get("profile") or []
+        r = max((p[1] for p in prof if len(p) > 1), default=None)
+        h = d.get("height_m") or [10, 20]
+        _CROWN[sid] = math.pi * (r * sum(h) / len(h)) ** 2 if r else None
+    return _CROWN[sid]
+
+
+def crown_fill(trees: dict) -> float:
+    if "ref" not in _CROWN:
+        index = json.loads((LIBRARY / "index.json").read_text())
+        areas = []
+        for sid in index.get("species", []):
+            f = LIBRARY / f"{sid}.json"
+            if sid.startswith("_") or not f.exists():
+                continue
+            d = json.loads(f.read_text())
+            if d.get("form") in ("tree", "multi_stem_shrub_tree") and "california" in (d.get("regions") or []):
+                a = crown_area(sid)
+                if a:
+                    areas.append(a)
+        _CROWN["ref"] = float(np.median(areas)) if areas else None
+    ref = _CROWN["ref"]
+    ws = {k: w for k, w in (trees or {}).items() if w > 0 and crown_area(k)}
+    if not ref or not ws:
+        return 1.0
+    mean = sum(w * crown_area(k) for k, w in ws.items()) / sum(ws.values())
+    return float(min(3.0, max(1.0, ref / mean)))
+
+
 # The climate group a region's records were written for (their cards' `regions`): a functional stand-in is taken only
 # from records of the tile's own climate group, never another's (world pipeline phase 1, 2026-11-06: the probes drew
 # California's pines in the Amazon through the client's class fallback).
 REGION_CLIMATE = {"california": "temperate", "pacific_northwest": "temperate", "great_basin": "arid",
-                  "east_africa": "tropical_seasonal", "borneo": "tropical_wet", "scandinavia": "boreal"}
+                  "east_africa": "tropical_seasonal", "borneo": "tropical_wet", "neotropics": "tropical_wet", "scandinavia": "boreal"}
 
 
 def climate_group(koppen: str | None) -> str | None:
@@ -997,9 +1083,18 @@ def species_mix(tile: Tile) -> dict:
     CONTEXT["coast"] = coast_cells / tot >= COAST_MIN and "california" in regions
     SUBSTITUTIONS.clear()
     gspecies = ground_species(regions)   # a tile outside every table's region: none, recorded below
-    ground_cols = [sp["id"] for sp in gspecies]
     for b in base_rows:
         b["ground"] = ground_weights(b["habitat"], b["rule"], gspecies)
+    # the dwarf shrubs of each community into its ground layer (split_dwarf_shrubs), as ground species with their own
+    # terrain factors (their records' habitat block)
+    dwarfs: list[str] = []
+    for b in base_rows:
+        for k in split_dwarf_shrubs(b):
+            if k not in dwarfs:
+                dwarfs.append(k)
+    for k in dwarfs:
+        gspecies.append({"id": k, "form": "dwarf_shrub", "habitat": _record_habitat(k) or {}, "density": 1.0})
+    ground_cols = [sp["id"] for sp in gspecies]
     tcls = terrain_classes(tile, index.shape) + NTC * grove_mask(tile, index.shape)
     pair = index * (2 * NTC) + tcls
     # weights first (after the zones, the coast, the groves and the stand-ins), so the columns hold every species drawn
@@ -1013,6 +1108,8 @@ def species_mix(tile: Tile) -> dict:
     trees_cols, shrub_cols = columns(base_rows, [w[2] for w in weights.values()], [w[3] for w in weights.values()])
     nt, ns, ng = len(trees_cols), len(shrub_cols), len(ground_cols)
     final: dict[tuple, dict] = {}
+    from .regions import covers as _covers
+    regional = bool(_covers("landfire", tile))   # the regional tables' densities were tuned by eye: crown_fill only elsewhere
     out_index = np.zeros(index.shape, "int64")
     for code, (b, t, tw, sw) in weights.items():
         tb = _bytes(tw, trees_cols)
@@ -1023,7 +1120,8 @@ def species_mix(tile: Tile) -> dict:
         if r is None:
             r = final[key] = {"index": len(final) + 1, "source": b["source"], "code": b["code"], "name": b["name"],
                               "rule": b["rule"], "community": b["index"], "terrain": [], "cells": 0, "_tb": tb, "_sb": sb, "_gb": gb,
-                              "tree_density": b["tree_density"], "shrub_density": b["shrub_density"]}
+                              "tree_density": b["tree_density"] * (1.0 if regional else crown_fill(b["trees"])), "shrub_density": b["shrub_density"],
+                              "carpet_density": b.get("carpet_density", 0.0)}
             if r["index"] > 65535:
                 raise ValueError("more than 65535 distinct mixes; species_mix_index.png holds 16 bits")
         r["terrain"].append(terrain_label(t))
@@ -1032,25 +1130,27 @@ def species_mix(tile: Tile) -> dict:
     table = sorted(final.values(), key=lambda r: r["index"])
     # Per-row bytes: tree weights over the tree columns, shrub weights over the shrub columns (each
     # summing to 255 or all zero), then the two density bytes. lut[0] (no mix) is all zero.
-    lut = np.zeros((len(table) + 1, nt + ns + ng + 2), "int64")
+    lut = np.zeros((len(table) + 1, nt + ns + ng + 3), "int64")
     for r in table:
         tb, sb, gb = r.pop("_tb"), r.pop("_sb"), r.pop("_gb")
         td = min(round(r["tree_density"] * DENSITY_SCALE), 255)
         sd = min(round(r["shrub_density"] * DENSITY_SCALE), 255)
-        lut[r["index"]] = tb + sb + gb + [td, sd]
+        cd = min(round(r["carpet_density"] * DENSITY_SCALE), 255)
+        lut[r["index"]] = tb + sb + gb + [td, sd, cd]
         r["cells"] = int((index == r["index"]).sum())
         r["tree_bytes"] = [[k, b] for k, b in zip(trees_cols, tb) if b]
         r["shrub_bytes"] = [[k, b] for k, b in zip(shrub_cols, sb) if b]
         r["ground_bytes"] = [[k, b] for k, b in zip(ground_cols, gb) if b]
-        r["density_bytes"] = [td, sd]
-        del r["tree_density"], r["shrub_density"]
+        r["density_bytes"] = [td, sd, cd] if cd else [td, sd]   # [2]: the dwarf-shrub carpet (split_dwarf_shrubs)
+        del r["tree_density"], r["shrub_density"], r["carpet_density"]
     # The communities as written (one per source and code, before the terrain factors), for people.
     communities = [{"community": b["index"], "source": b["source"], "code": b["code"], "name": b["name"], "rule": b["rule"],
                     "trees": b["trees"], "shrubs": b["shrubs"], "ground": {k: round(v, 3) for k, v in b["ground"].items()}, "tree_density": b["tree_density"],
-                    "shrub_density": b["shrub_density"], "note": b["note"], "fixed": b["fixed"],
+                    "shrub_density": b["shrub_density"], **({"carpet_density": round(b["carpet_density"], 4)} if b.get("carpet_density") else {}),
+                    "note": b["note"], "fixed": b["fixed"],
                     "cells": int(sum(r["cells"] for r in table if r["community"] == b["index"]))} for b in base_rows]
     px = lut[index]
-    TD, SD = nt + ns + ng, nt + ns + ng + 1
+    TD, SD, CD = nt + ns + ng, nt + ns + ng + 1, nt + ns + ng + 2
     for old in ("species_mix_a.png", "species_mix_b.png", "species_mix_c.png"):   # format 1 products
         if tile.path(f"client/{old}").exists():
             tile.path(f"client/{old}").unlink()
@@ -1060,7 +1160,7 @@ def species_mix(tile: Tile) -> dict:
     else:
         rgb = np.stack([index & 255, index >> 8, np.zeros_like(index)], -1).astype("uint8")
         Image.fromarray(rgb, "RGB").save(tile.path("client/species_mix_index.png"), optimize=True)
-    dens = np.stack([px[..., TD], px[..., SD], np.zeros_like(px[..., TD])], -1).astype("uint8")
+    dens = np.stack([px[..., TD], px[..., SD], px[..., CD]], -1).astype("uint8")
     Image.fromarray(dens, "RGB").save(tile.path("client/species_mix_density.png"), optimize=True)
 
     # Per-tile fractions
@@ -1106,12 +1206,15 @@ def species_mix(tile: Tile) -> dict:
                      "8-bit grey; with index_bytes 2, RGB with the row = R + 256 G",
             "density": f"species_mix_density.png RGB: R tree_density, G shrub_density, multiplier = byte / {DENSITY_SCALE} "
                        "on the client's per-habitat-class plant count (1.0 = the fixed-mix count; the count still scales "
-                       "with client/canopy.png cover); B unused. The same bytes as the row's density_bytes",
+                       "with client/canopy.png cover); B carpet_density, the dwarf shrubs' share of the shrub density, "
+                       "laid by the ground layer as a carpet in proportion to the canopy.png shrub cover (0: none). The "
+                       "same bytes as the row's density_bytes [tree, shrub(, carpet)]",
             "weights": "mixes[].tree_bytes and shrub_bytes: [[species id, byte], ...], the species with a non-zero weight "
                        "in the column order of `species`, each layer summing to 255 (absent: no trees or no shrubs). "
                        "The client draws a species by walking this list in order, so the order is part of the format",
             "ground": "mixes[].ground_bytes: [[species id, byte], ...] over species.ground (the grasses and forbs, "
-                      "library records of form grass or forb), summing to 255; from each record's habitat block "
+                      "library records of form grass or forb, and the dwarf shrubs of the tile's communities: records "
+                      "whose ground block is woody, moved from the shrubs), summing to 255; from each record's habitat block "
                       "(classes, floor / mid / steep / north) and ground.density, with GROUND_RULES per rule. The "
                       "client's grass layer draws a cell's grasses from the grasses' share of it and the forb layer "
                       "its forbs from the forbs' share",

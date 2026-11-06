@@ -1,0 +1,224 @@
+{
+ "tile": "utm50n_582_543",
+ "version": "1",
+ "context": {
+  "centre": [
+   117.78474177776584,
+   4.957336973903956
+  ],
+  "elevation_m": 340.0,
+  "koppen": "Af",
+  "group": "tropical_wet",
+  "wcvp_area": null
+ },
+ "plots": [],
+ "rule": "pipeline/tree_cards.py choose(): plots, then named trees of open place descriptions, then the tile's most-recorded WCVP trees that reach the subcanopy; shares by tier (TIER_SHARE)",
+ "trees": [
+  {
+   "id": "dillenia_excelsa",
+   "scientific": "Dillenia excelsa",
+   "family": "Dilleniaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 13.0,
+   "evidence": [
+    "GBIF: 13 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.13,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "paranephelium_xestophyllum",
+   "scientific": "Paranephelium xestophyllum",
+   "family": "Sapindaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 11.0,
+   "evidence": [
+    "GBIF: 11 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.11,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "aglaia_odoratissima",
+   "scientific": "Aglaia odoratissima",
+   "family": "Meliaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 11.0,
+   "evidence": [
+    "GBIF: 11 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.11,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "cowiea_borneensis",
+   "scientific": "Cowiea borneensis",
+   "family": "Rubiaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 10.0,
+   "evidence": [
+    "GBIF: 10 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.1,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "antidesma_neurocarpum",
+   "scientific": "Antidesma neurocarpum",
+   "family": "Phyllanthaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 10.0,
+   "evidence": [
+    "GBIF: 10 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.1,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "neonauclea_longipedunculata",
+   "scientific": "Neonauclea longipedunculata",
+   "family": "Rubiaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 9.0,
+   "evidence": [
+    "GBIF: 9 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.09,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "polyalthia_cinnamomea",
+   "scientific": "Polyalthia cinnamomea",
+   "family": "Annonaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 9.0,
+   "evidence": [
+    "GBIF: 9 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.09,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "maasia_sumatrana",
+   "scientific": "Maasia sumatrana",
+   "family": "Annonaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 9.0,
+   "evidence": [
+    "GBIF: 9 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.09,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "dimocarpus_dentatus",
+   "scientific": "Dimocarpus dentatus",
+   "family": "Sapindaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 9.0,
+   "evidence": [
+    "GBIF: 9 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.09,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "xanthophyllum_reticulatum",
+   "scientific": "Xanthophyllum reticulatum",
+   "family": "Polygalaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 9.0,
+   "evidence": [
+    "GBIF: 9 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.09,
+   "research": false,
+   "card": false
+  }
+ ],
+ "queued": [
+  {
+   "id": "dillenia_excelsa",
+   "scientific": "Dillenia excelsa",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "paranephelium_xestophyllum",
+   "scientific": "Paranephelium xestophyllum",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "aglaia_odoratissima",
+   "scientific": "Aglaia odoratissima",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "cowiea_borneensis",
+   "scientific": "Cowiea borneensis",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "antidesma_neurocarpum",
+   "scientific": "Antidesma neurocarpum",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "neonauclea_longipedunculata",
+   "scientific": "Neonauclea longipedunculata",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "polyalthia_cinnamomea",
+   "scientific": "Polyalthia cinnamomea",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "maasia_sumatrana",
+   "scientific": "Maasia sumatrana",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "dimocarpus_dentatus",
+   "scientific": "Dimocarpus dentatus",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "xanthophyllum_reticulatum",
+   "scientific": "Xanthophyllum reticulatum",
+   "why": "needs a research record (its height decides whether it stays)"
+  }
+ ],
+ "log": [
+  "plot vela_apaza_2024_los_amigos: not used (18804 km, 90 m apart, climate Am)"
+ ],
+ "cards_written": []
+}

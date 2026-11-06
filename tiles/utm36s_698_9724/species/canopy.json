@@ -1,0 +1,85 @@
+{
+ "tile": "utm36s_698_9724",
+ "version": "1",
+ "context": {
+  "centre": [
+   34.82566000146915,
+   -2.450555954240801
+  ],
+  "elevation_m": 1520.0,
+  "koppen": "Aw",
+  "group": "tropical_seasonal",
+  "wcvp_area": null
+ },
+ "plots": [],
+ "rule": "pipeline/tree_cards.py choose(): plots, then named trees of open place descriptions, then the tile's most-recorded WCVP trees that reach the subcanopy; shares by tier (TIER_SHARE)",
+ "trees": [
+  {
+   "id": "kigelia_africana",
+   "scientific": "Kigelia africana",
+   "family": "Bignoniaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 31.0,
+   "evidence": [
+    "GBIF: 31 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.5439,
+   "research": false,
+   "card": true
+  },
+  {
+   "id": "phoenix_reclinata",
+   "scientific": "Phoenix reclinata",
+   "family": "Arecaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 19.0,
+   "evidence": [
+    "GBIF: 11 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "records": 11.0,
+   "share": 0.3333,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "vachellia_xanthophloea",
+   "scientific": "Vachellia xanthophloea",
+   "family": "Fabaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 7.0,
+   "evidence": [
+    "GBIF: 7 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.1228,
+   "research": false,
+   "card": false
+  }
+ ],
+ "queued": [
+  {
+   "id": "kigelia_africana",
+   "scientific": "Kigelia africana",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "phoenix_reclinata",
+   "scientific": "Phoenix reclinata",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "vachellia_xanthophloea",
+   "scientific": "Vachellia xanthophloea",
+   "why": "needs a research record (its height decides whether it stays)"
+  }
+ ],
+ "log": [
+  "plot vela_apaza_2024_los_amigos: not used (11564 km, 1270 m apart, climate Am)"
+ ],
+ "cards_written": []
+}

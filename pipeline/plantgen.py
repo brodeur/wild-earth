@@ -13,6 +13,8 @@ docs/species-library.md) that treegen.js grows like any other:
            + the card's identity, heights (every age class scaled by the card's height against the template's,
              unless the card gives an age class its own), crown outline, foliage colours and leaf-on by season,
              bark, photo targets, description, season notes, habitat, relations
+           + for a dwarf shrub (a woody card whose height tops out at or below DWARF_SHRUB_MAX_M: crowberry, heather,
+             the mountain heathers) a `ground` block (ground_block) for the ground layer, which draws it as a carpet
            + the card's `patch` (any other key of the schema, deep-merged) and `variant_patches` per age class
            + a `generated` block: the card, its sha256, the template, the generator version
 
@@ -35,7 +37,7 @@ import pathlib
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 LIBRARY = ROOT / "library" / "species"
 CARDS = ROOT / "library" / "plant_cards"
-VERSION = "2"   # 2 (2026-11-04): leaf_on_by_month follows the card's deciduous
+VERSION = "3"   # 2 (2026-11-04): leaf_on_by_month follows the card's deciduous; 3 (2026-11-06): a dwarf shrub's ground block
 
 # Keys of a template that describe the template species itself, not its architecture.
 TEMPLATE_OWN = ("id", "aliases", "scientific", "common", "stature", "growth", "description", "season_notes", "status",
@@ -76,6 +78,59 @@ def load_card(sid: str) -> dict:
 
 def cards() -> list[str]:
     return sorted(p.stem for p in CARDS.glob("*.json") if not p.stem.startswith("_"))
+
+
+# A dwarf shrub (2026-11-06): a woody species whose card height tops out at or below this. Its plants are a carpet (a
+# heath of crowberry and heather is 60 % cover of mats a hand high), which the shrub layer's whole shrub models, ~11 per
+# 30 m cell, cannot draw: the ground layer (client/src/forbs.js) draws it from the record's `ground` block, and
+# pipeline/species_mix.py moves it from a community's shrubs into its ground layer.
+DWARF_SHRUB_MAX_M = 0.5
+WOODY_FORMS = ("shrub", "multi_stem_shrub_tree", "tree")
+# the card's leaf shapes and flower forms (the tree generator's vocabulary) as the ground layer's (forbs.js leaf, flower)
+GROUND_LEAF = {"lanceolate": "linear", "needle": "linear", "needle_cluster": "linear", "needle_fascicle": "linear",
+               "fascicle_wand": "linear", "needle_brush": "linear", "needle_drooping": "linear", "scale": "linear",
+               "lobed": "lobed", "palmate": "palmate", "pinnate": "pinnate", "round_vertical": "round"}
+GROUND_FLOWER = {"candle": "spike", "spike": "spike", "raceme": "spike", "catkin": "spike", "umbel": "umbel", "cluster": "umbel",
+                 "daisy": "daisy", "cup": "cup", "ball": "ball", "head": "ball", "pea": "pea"}
+
+
+def is_dwarf_shrub(card: dict) -> bool:
+    h = card.get("height_m") or [0, 99]
+    return card.get("form") in WOODY_FORMS and float(h[1]) <= DWARF_SHRUB_MAX_M
+
+
+def ground_block(card: dict, rec: dict) -> dict:
+    """The ground layer's description of a dwarf shrub, from its card (falling back on the record it grows from): an
+    evergreen (or leafy-season) mat as wide as the card's crown width ratio makes it, the card's leaf colour by season,
+    leaf shape and size, its flowers and berries in their months."""
+    fol = rec.get("foliage") or {}
+    cfol = card.get("foliage") or {}
+    colors = cfol.get("colors") or fol.get("colors") or {}
+    h1 = float(card["height_m"][1])
+    cwr = float((card.get("targets") or {}).get("crown_width_ratio") or (rec.get("targets") or {}).get("crown_width_ratio") or 3.0)
+    bark = (card.get("trunk") or {}).get("bark_rgb") or (rec.get("trunk") or {}).get("bark_rgb") or [110, 90, 70]
+    summer = colors.get("summer") or colors.get("spring") or [70, 90, 60]
+    by_season = {k: list(v) for k, v in colors.items() if k in ("winter", "spring", "summer", "fall")}
+    deciduous = bool(card.get("deciduous"))
+    lom = fol.get("leaf_on_by_month") if isinstance(fol.get("leaf_on_by_month"), list) and len(fol["leaf_on_by_month"]) == 12 else None
+    if deciduous:   # the woody mat stays; its leaves go: the bark's colour in winter
+        by_season["winter"] = list(bark)
+    shape = cfol.get("leaf_shape") or fol.get("leaf_shape") or "oval"
+    g = {"habit": "mat", "woody": True, "width_m": round(min(1.5, max(0.4, h1 * cwr)), 2),
+         "leaf": {"shape": GROUND_LEAF.get(shape, "ovate"), "size_m": float(cfol.get("leaf_size_m") or fol.get("leaf_size_m") or 0.01),
+                  "rgb": list(summer), "rgb_by_season": by_season},
+         "height_by_month": [round(max(0.6, v), 2) for v in lom] if (deciduous and lom) else [1.0] * 12,
+         "dead_rgb": list(bark), "density": 1.0,
+         "from": f"pipeline/plantgen.py ground_block: a dwarf shrub (card height to {h1} m <= {DWARF_SHRUB_MAX_M} m)"}
+    fl = cfol.get("flowers") if "flowers" in cfol else fol.get("flowers")
+    if fl and fl.get("months") and fl.get("rgb"):
+        g["flower"] = {"shape": GROUND_FLOWER.get(fl.get("form"), "tiny"), "rgb": list(fl["rgb"]), "size_m": float(fl.get("size_m") or 0.01),
+                       "months": list(fl["months"]), "per_plant": int(round(6 + 30 * float(fl.get("density") or 0.5)))}
+    be = cfol.get("berries") if "berries" in cfol else fol.get("berries")
+    if be and be.get("months") and be.get("rgb"):
+        g["fruit"] = {"rgb": list(be["rgb"]), "size_m": float(be.get("size_m") or 0.006), "months": list(be["months"]),
+                      "per_plant": int(round(10 + 40 * float(be.get("density") or 0.5)))}
+    return g
 
 
 def _mid(h) -> float:
@@ -152,6 +207,8 @@ def build(card: dict) -> dict:
     targets["from"] = (card.get("targets") or {}).get("from") or "the trait card's values (no photographs measured)"
     rec["targets"] = targets
 
+    if is_dwarf_shrub(card):   # the ground layer's carpet (a card's patch may still refine it)
+        rec["ground"] = ground_block(card, rec)
     if card.get("patch"):
         rec = deep_merge(rec, card["patch"])
     for name, p in (card.get("variant_patches") or {}).items():

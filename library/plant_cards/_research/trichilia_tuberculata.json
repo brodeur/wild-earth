@@ -1,0 +1,149 @@
+{
+ "id": "trichilia_tuberculata",
+ "scientific": "Trichilia tuberculata",
+ "family": "Meliaceae",
+ "common": "canfín",
+ "aliases": [
+  "camfin",
+  "canfin",
+  "odontandra_tuberculata"
+ ],
+ "habit": "broadleaf_tree",
+ "height_m": {
+  "typical": [
+   20,
+   30
+  ],
+  "max": 30,
+  "src": 2
+ },
+ "dbh_cm": {
+  "typical": [
+   40,
+   50
+  ],
+  "max": null,
+  "src": 1
+ },
+ "bole": {
+  "clear_fraction": 0.4,
+  "straight": false,
+  "buttresses": "none",
+  "buttress_height_m": null,
+  "stilt_roots": false,
+  "stilt_root_height_m": null,
+  "spines": false,
+  "text": "Trunk moderately irregular in cross-section, not very straight, bending gradually as it rises through the understorey; short thin limbs cover half to two-thirds of the bole (Manuel Antonio).",
+  "src": 1
+ },
+ "crown": {
+  "shape": "narrow",
+  "width_m": null,
+  "depth_fraction": 0.6,
+  "density": "dense",
+  "position": "subcanopy",
+  "text": "Narrow, vertically organised, opaque crown of dense dark emerald-green foliage; subcanopy, rarely canopy. Profuse short thin limbs.",
+  "src": 1
+ },
+ "leaf": {
+  "type": "pinnate",
+  "length_cm": [
+   30,
+   30
+  ],
+  "width_cm": [
+   20,
+   20
+  ],
+  "leaflet_length_cm": [
+   7,
+   15
+  ],
+  "frond_count": null,
+  "shape": "elliptic",
+  "texture": null,
+  "upper_colour": "dark green",
+  "under_colour": null,
+  "new_flush_colour": null,
+  "src": 1
+ },
+ "phenology": {
+  "leaf_habit": "evergreen",
+  "leafless_months": [],
+  "flowering_months": [
+   12,
+   1,
+   2,
+   3
+  ],
+  "flower_colour": "green-yellow, minute, in axillary panicles to 25 cm",
+  "fruiting_months": [
+   7,
+   8,
+   9
+  ],
+  "fruit": "ovoid capsule c. 2.5 x 1.5 cm, green turning yellow, covered in short waxy tubercles; splits in 3, seeds in a bright red aril",
+  "src": 1
+ },
+ "bark": {
+  "colour": "dark brown or grey with cream lenticels",
+  "texture": "lenticellate",
+  "text": "Mostly smooth, marked by vertical cream-coloured lenticels.",
+  "src": 1
+ },
+ "habitat": {
+  "forest_types": [
+   "primary forest (little-disturbed)"
+  ],
+  "light": "shade-tolerant",
+  "elevation_m": [
+   0,
+   150
+  ],
+  "range": "Costa Rica (mainly central and southern Pacific), Panama, Colombia, Ecuador, Peru, Brazil",
+  "src": 0
+ },
+ "eaten_by": [
+  {
+   "animal": "Saimiri (squirrel monkeys)",
+   "part": "fruit",
+   "src": 1
+  },
+  {
+   "animal": "Ateles (spider monkeys)",
+   "part": "fruit",
+   "src": 1
+  },
+  {
+   "animal": "Ramphastidae (toucans)",
+   "part": "fruit",
+   "src": 2
+  },
+  {
+   "animal": "Cracidae (guans)",
+   "part": "fruit",
+   "src": 2
+  }
+ ],
+ "notes": "Phenology is for southern-central Pacific Costa Rica (Manuel Antonio, crtrees.org): flowering mostly Dec-Mar, peaking in Feb, with flowers seen Oct-May; fruit Jul-Sep; new leaves from late Oct. Osa Arboretum gives white flowers in Feb-Mar and yellow fruit in Jul-Oct. Panama atlas gives flowering and fruiting Apr-Nov. Height: Tree Atlas of Panama 20-30 m (a dominant canopy tree on BCI); Osa up to 30 m; crtrees 15-23 m, as a subcanopy and rarely canopy tree in Manuel Antonio. The sources disagree on the bole: the Panama atlas says large trees have straight cylindrical trunks branched only near the top, with no buttresses (English) or small tabular roots (Spanish), and a rounded dense crown. The bole and crown values follow crtrees (Costa Rica). clear_fraction 0.4 and depth_fraction 0.6 are read off 'limbs covering half to two-thirds of the bole'. Panama atlas leaflets: 5-9, 10-20 x 3-5 cm. Light: crtrees says usually shaded by taller trees. Spider monkeys eat the fruit on BCI per crtrees, but are absent from Manuel Antonio. The animal sources give common names only, mapped here to genus or family. dbh is crtrees' trunk diameter of about 40-50 cm.",
+ "sources": [
+  {
+   "title": "Trichilia tuberculata - Osa Arboretum (Osa Conservation)",
+   "url": "https://osa-arboretum.org/?p=1333",
+   "licence": "unknown (no licence stated; Osa Conservation arboretum site)",
+   "read": "2026-11-06"
+  },
+  {
+   "title": "Trichilia tuberculata - Trees of Costa Rica's Pacific Slope (crtrees.org)",
+   "url": "https://crtrees.org/species-accounts/trichilia-tuberculata/",
+   "licence": "unknown (no licence stated; WordPress.com site 'Trees of Costa Rica's Pacific Slope')",
+   "read": "2026-11-06"
+  },
+  {
+   "title": "Trichilia tuberculata - STRI Research Portal (Perez & Condit, Tree Atlas of Panama)",
+   "url": "https://panamabiota.org/stri/taxa/index.php?tid=70539",
+   "licence": "unknown (no licence stated; STRI Research Portal, text from Perez & Condit, Tree Atlas of Panama)",
+   "read": "2026-11-06"
+  }
+ ]
+}

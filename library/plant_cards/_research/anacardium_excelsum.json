@@ -1,0 +1,160 @@
+{
+ "id": "anacardium_excelsum",
+ "scientific": "Anacardium excelsum",
+ "family": "Anacardiaceae",
+ "common": "espave",
+ "aliases": [
+  "wild_cashew",
+  "espavel",
+  "espave_acanju",
+  "caracoli",
+  "anacardium_rhinocarpus",
+  "rhinocarpus_excelsa"
+ ],
+ "habit": "broadleaf_tree",
+ "height_m": {
+  "typical": [
+   20,
+   40
+  ],
+  "max": 48,
+  "src": 2
+ },
+ "dbh_cm": {
+  "typical": null,
+  "max": 300,
+  "src": 0
+ },
+ "bole": {
+  "clear_fraction": null,
+  "straight": true,
+  "buttresses": "none",
+  "buttress_height_m": null,
+  "stilt_roots": false,
+  "stilt_root_height_m": null,
+  "spines": false,
+  "text": "Straight cylindrical trunk, light coloured, sometimes pinkish (Spanish Wikipedia); bole free of branches up to 18 m, some basal swellings but no well-developed buttresses (Useful Tropical Plants, src 3). Very old trees sometimes hollow, with shallow spreading roots at the base (src 2).",
+  "src": 3
+ },
+ "crown": {
+  "shape": "rounded",
+  "width_m": null,
+  "depth_fraction": null,
+  "density": "dense",
+  "position": null,
+  "text": "Rounded, dense crown (TTSM src 0, Spanish Wikipedia); 'broadly rounded or elongate' (Useful Tropical Plants).",
+  "src": 0
+ },
+ "leaf": {
+  "type": "simple",
+  "length_cm": [
+   15,
+   30
+  ],
+  "width_cm": [
+   5,
+   12
+  ],
+  "leaflet_length_cm": null,
+  "frond_count": null,
+  "shape": "obovate",
+  "texture": null,
+  "upper_colour": null,
+  "under_colour": null,
+  "new_flush_colour": null,
+  "src": 2
+ },
+ "phenology": {
+  "leaf_habit": "brevideciduous",
+  "leafless_months": [],
+  "flowering_months": [
+   1,
+   2,
+   3,
+   4
+  ],
+  "flower_colour": "pale green to white, turning pink with age (clove-like scent)",
+  "fruiting_months": [
+   3,
+   4,
+   5
+  ],
+  "fruit": "kidney-shaped drupe (nut) 2.5-3.5 x 1-2 cm, hanging from a curved, fleshy, S-shaped receptacle",
+  "src": 0
+ },
+ "bark": {
+  "colour": "brown-grey (grey to black per Spanish Wikipedia); inner bark red or pink",
+  "texture": "flaking",
+  "text": "Brown-grey bark, scaly or smooth, with leaf scars (TTSM). Spanish Wikipedia: outer bark grey or black, laminar, sometimes with deep vertical fissures; inner bark red or pink with vertical white lines; wounds exude an aromatic resin that turns red or black.",
+  "src": 0
+ },
+ "habitat": {
+  "forest_types": [
+   "riverbank",
+   "floodplain (varzea)",
+   "secondary/gaps"
+  ],
+  "light": "light-demanding pioneer",
+  "elevation_m": [
+   0,
+   1300
+  ],
+  "range": "Guatemala/Honduras to Ecuador, Colombia, Venezuela and the Guianas; Atlantic and Pacific watersheds.",
+  "src": 3
+ },
+ "eaten_by": [
+  {
+   "animal": "Chiroptera (fruit-eating bats, species not named)",
+   "part": "fruit",
+   "src": 1
+  },
+  {
+   "animal": "Micronycteris hirsuta",
+   "part": "fruit",
+   "src": 4
+  },
+  {
+   "animal": "Cebus capucinus (white-faced monkey)",
+   "part": "fruit",
+   "src": 4
+  },
+  {
+   "animal": "Alouatta palliata (howler monkey)",
+   "part": "fruit",
+   "src": 4
+  }
+ ],
+ "notes": "Leaf habit: Spanish Wikipedia says partly deciduous, leaves yellowing then dropping partly in the dry season and replaced at the start of the rains; English Wikipedia calls it evergreen; TTSM (Fournier, Costa Rica) notes flushes of new foliage in January, then flowers through April (citing Jimenez et al. 1996). No source gives leafless months. Spanish Wikipedia: flowers and fruits Feb-May, fruit ripe Mar-May. Months are Costa Rica/Central America, not Osa-specific. Leaf size: 15-30 x 5-12 cm (en and es Wikipedia description); es Wikipedia habitat section 10-35 x 4-12 cm; leaves clustered at twig ends, obovate, apex rounded, notched or acute. Leaf colour and texture not found. Height: 20-40 m (es Wikipedia), 45 m (TTSM), 48 m (en Wikipedia). dbh max: TTSM 3 m d.b.h.; Useful Tropical Plants up to 200 cm. Habitat: TTSM, often dominant on flood plains and in gallery forests; Useful Tropical Plants, secondary forest, stream sides, sometimes pure stands, young plants need sun and are seldom in mature woodland (basis for 'light-demanding'). The monkey and bat records are Croat's Flora of Barro Colorado (Panama), quoted on the HVAA Symbiota page; the source names them 'white-faced and howler monkeys' and I added the scientific names. Bats eat only the fleshy receptacle and drop the nut (Wikipedia).",
+ "sources": [
+  {
+   "title": "Fournier, L.A. Anacardium excelsum (Bertero & Balb. ex Kunth) Skeels. In: Vozzo, J.A. (ed.) Tropical Tree Seed Manual, USDA Forest Service Agriculture Handbook 721 (2002), pp. 294-296",
+   "url": "https://rngr.net/publications/ttsm/species/Anacardium%20excelsum.pdf/at_download/file",
+   "licence": "unknown (US federal government publication; no licence stated on rngr.net)",
+   "read": "2026-11-06"
+  },
+  {
+   "title": "Anacardium excelsum - Wikipedia",
+   "url": "https://en.wikipedia.org/wiki/Anacardium_excelsum",
+   "licence": "CC BY-SA 4.0",
+   "read": "2026-11-06"
+  },
+  {
+   "title": "Anacardium excelsum - Wikipedia, la enciclopedia libre",
+   "url": "https://es.wikipedia.org/wiki/Anacardium_excelsum",
+   "licence": "CC BY-SA 4.0",
+   "read": "2026-11-06"
+  },
+  {
+   "title": "Anacardium excelsum - Useful Tropical Plants",
+   "url": "https://tropical.theferns.info/viewtropical.php?id=Anacardium+excelsum",
+   "licence": "CC BY-NC-SA 3.0 (database and code)",
+   "read": "2026-11-06"
+  },
+  {
+   "title": "Anacardium excelsum - Herbario Virtual Austral Americano (Symbiota), description from Croat, The Flora of Barro Colorado Island",
+   "url": "https://herbariovaa.org/taxa/index.php?tid=16778",
+   "licence": "unknown (links a data use policy)",
+   "read": "2026-11-06"
+  }
+ ]
+}

@@ -149,6 +149,76 @@
    "built": "2026-11-05",
    "build": "tools/build_quadruped.py",
    "tile": "utm36s_698_9724"
+  },
+  "torgos_tracheliotos": {
+   "kind": "bird",
+   "glb": "client/assets/fauna/torgos_tracheliotos.glb",
+   "jobs": [
+    "library/animals/jobs/torgos_tracheliotos/01a1b048-6b98-76b5-b585-c185c0cafb5e",
+    "library/animals/jobs/torgos_tracheliotos/01a1b049-1d29-7795-a0d6-4bc059962d66"
+   ],
+   "credits": 30,
+   "attempts": 1,
+   "built": "2026-11-06",
+   "build": "tools/build_bird.py",
+   "tile": "utm36s_698_9724",
+   "archetype": "soar"
+  },
+  "leptoptilos_crumenifer": {
+   "kind": "bird",
+   "glb": "client/assets/fauna/leptoptilos_crumenifer.glb",
+   "jobs": [
+    "library/animals/jobs/leptoptilos_crumenifer/01a1b049-fff2-7433-be39-e833e823d777",
+    "library/animals/jobs/leptoptilos_crumenifer/01a1b04a-b2d1-719b-bfb6-6b5229ef55ea"
+   ],
+   "credits": 30,
+   "attempts": 1,
+   "built": "2026-11-06",
+   "build": "tools/build_bird.py",
+   "tile": "utm36s_698_9724",
+   "archetype": "wade"
+  },
+  "struthio_camelus": {
+   "kind": "bird",
+   "glb": "client/assets/fauna/struthio_camelus.glb",
+   "jobs": [
+    "library/animals/jobs/struthio_camelus/01a1b04b-9b4e-7547-bb00-f5b9165cbfaa",
+    "library/animals/jobs/struthio_camelus/01a1b04d-2769-77eb-8bee-f804e419abaf"
+   ],
+   "credits": 30,
+   "attempts": 1,
+   "built": "2026-11-06",
+   "build": "tools/build_bird.py",
+   "tile": "utm36s_698_9724",
+   "archetype": "ground"
+  },
+  "alopochen_aegyptiaca": {
+   "kind": "bird",
+   "glb": "client/assets/fauna/alopochen_aegyptiaca.glb",
+   "jobs": [
+    "library/animals/jobs/alopochen_aegyptiaca/01a1b04e-2346-72ad-88b8-1fd14c504ab9",
+    "library/animals/jobs/alopochen_aegyptiaca/01a1b04f-3812-7354-b582-2b3339b6a64c"
+   ],
+   "credits": 30,
+   "attempts": 1,
+   "built": "2026-11-06",
+   "build": "tools/build_bird.py",
+   "tile": "utm36s_698_9724",
+   "archetype": "water"
+  },
+  "vanellus_armatus": {
+   "kind": "bird",
+   "glb": "client/assets/fauna/vanellus_armatus.glb",
+   "jobs": [
+    "library/animals/jobs/vanellus_armatus/01a1b050-207e-74af-9687-68e363ec0b9d",
+    "library/animals/jobs/vanellus_armatus/01a1b050-d4f9-761a-a518-57d0d141f289"
+   ],
+   "credits": 30,
+   "attempts": 1,
+   "built": "2026-11-06",
+   "build": "tools/build_bird.py",
+   "tile": "utm36s_698_9724",
+   "archetype": "perch"
   }
  }
 }

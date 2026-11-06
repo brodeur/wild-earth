@@ -1,0 +1,149 @@
+{
+ "id": "ceiba_pentandra",
+ "scientific": "Ceiba pentandra",
+ "family": "Malvaceae",
+ "common": "kapok",
+ "aliases": [
+  "ceiba",
+  "ceibo",
+  "lupuna",
+  "huimba",
+  "mapajo",
+  "pochote",
+  "silk_cotton",
+  "samauma",
+  "java_cotton",
+  "fromager",
+  "bombax_pentandrum"
+ ],
+ "habit": "broadleaf_tree",
+ "height_m": {
+  "typical": null,
+  "max": 60,
+  "src": 0
+ },
+ "dbh_cm": {
+  "typical": [
+   100,
+   300
+  ],
+  "max": 300,
+  "src": 2
+ },
+ "bole": {
+  "clear_fraction": null,
+  "straight": true,
+  "buttresses": "large plank",
+  "buttress_height_m": [
+   12,
+   15
+  ],
+  "stilt_roots": false,
+  "stilt_root_height_m": null,
+  "spines": true,
+  "text": "Bole straight and cylindrical, usually spiny (UTP). Large plank buttresses: Wikipedia says they run 12-15 m up the trunk and spread up to 20 m out from it (this reads as the largest trees). The trunk and many larger branches often carry large simple spines; Spanish Wikipedia says thick conical spines are on the trunk and young branches.",
+  "src": 0
+ },
+ "crown": {
+  "shape": "umbrella",
+  "width_m": 60,
+  "depth_fraction": null,
+  "density": "open",
+  "position": "emergent",
+  "text": "width_m is the stated maximum ('up to 60 m'). Usually 4-6 major branches up to 1.8 m thick, crown up to 60 m wide (Wikipedia). Crown of wide horizontal branches (Spanish Wikipedia); thin, pagoda-shaped crown (UTP). Gribel et al. and UTP call it emergent. 'umbrella' is a reading of the horizontal-branch descriptions.",
+  "src": 0
+ },
+ "leaf": {
+  "type": "palmate_compound",
+  "length_cm": null,
+  "width_cm": null,
+  "leaflet_length_cm": [
+   5,
+   21
+  ],
+  "frond_count": null,
+  "shape": "palmate, 5-9 (up to 15) leaflets, each 5-21 x 2-6.5 cm",
+  "texture": null,
+  "upper_colour": null,
+  "under_colour": null,
+  "new_flush_colour": null,
+  "src": 0
+ },
+ "phenology": {
+  "leaf_habit": "brevideciduous",
+  "leafless_months": [],
+  "flowering_months": [
+   12,
+   1,
+   2,
+   3
+  ],
+  "flower_colour": "white (cream-white filaments, gold-yellow anthers); Spanish Wikipedia: white, pink or yellow",
+  "fruiting_months": [
+   4,
+   5,
+   6
+  ],
+  "fruit": "pendant, elliptic, brown, five-valved capsule, about 15 cm (Spanish Wikipedia), with 66-250 seeds of 4-6 mm in pale yellow kapok fibre; wind-dispersed. Fruits ripen 80-100 days after flowering (UTP).",
+  "src": 1
+ },
+ "bark": {
+  "colour": null,
+  "texture": null,
+  "text": "Bark colour and texture not found in the sources read; trunk spiny (see bole).",
+  "src": 0
+ },
+ "habitat": {
+  "forest_types": [
+   "floodplain (varzea)",
+   "riverbank",
+   "secondary/gaps"
+  ],
+  "light": "light-demanding pioneer",
+  "elevation_m": [
+   0,
+   1200
+  ],
+  "range": "Mexico, Central America, the Caribbean and the northern half of South America (Brazil, Bolivia, Peru, Ecuador, Colombia, Venezuela, the Guianas); also West Africa, possibly native there",
+  "src": 2
+ },
+ "eaten_by": [
+  {
+   "animal": "Phyllostomus hastatus",
+   "part": "nectar",
+   "src": 3
+  },
+  {
+   "animal": "Phyllostomus discolor",
+   "part": "nectar",
+   "src": 3
+  }
+ ],
+ "notes": "Height: Wikipedia to 60 m, UTP to 70 m. UTP's typical 10-30 m covers the whole range including secondary growth, so typical height is left null for the wild emergent. Diameter: Spanish Wikipedia about 3 m. Habitat (UTP): emergent in moist evergreen and semi-deciduous forests including seasonally flooded ones, plus gallery and dry forests; mostly in secondary forest as a pioneer; to 1200 m (Spanish Wikipedia 0-1500 m). 'riverbank' reads UTP's gallery forest. Phenology: no Madre de Dios or Osa months found. Spanish Wikipedia (no region given, likely Mesoamerica) says it drops its leaves at the start of the dry season, flowers Dec-Mar (not every year) and fruits Apr-Jun. English Wikipedia says it flowers while briefly leafless. UTP says leafing and flowering are highly irregular in moist areas. In central Amazonia, 17 of 21 trees flowered once or twice in six years (Gribel et al. 1999), so mass flowering is supra-annual there. Leafless months unknown. Flowers open at night with a strong odour. Visitors (Gribel): bats, marsupials, night monkeys, hawkmoths, bees, wasps and hummingbirds; only phyllostomid bats matter for pollination. No source read named animals eating its seeds or leaves (a diet-overlap database listing Ateles paniscus and Ara macao was not used).",
+ "sources": [
+  {
+   "title": "Ceiba pentandra - Wikipedia (English)",
+   "url": "https://en.wikipedia.org/wiki/Ceiba_pentandra",
+   "licence": "CC BY-SA 4.0",
+   "read": "2026-11-06"
+  },
+  {
+   "title": "Ceiba pentandra - Wikipedia (Spanish)",
+   "url": "https://es.wikipedia.org/wiki/Ceiba_pentandra",
+   "licence": "CC BY-SA 4.0",
+   "read": "2026-11-06"
+  },
+  {
+   "title": "Ceiba pentandra - Useful Tropical Plants",
+   "url": "https://tropical.theferns.info/viewtropical.php?id=Ceiba+pentandra",
+   "licence": "CC BY-NC-SA 3.0 Unported",
+   "read": "2026-11-06"
+  },
+  {
+   "title": "Gribel, Gibbs & Queiroz 1999. Flowering phenology and pollination biology of Ceiba pentandra (Bombacaceae) in Central Amazonia. J. Trop. Ecol. 15 (abstract only)",
+   "url": "https://www.cambridge.org/core/journals/journal-of-tropical-ecology/article/flowering-phenology-and-pollination-biology-of-ceiba-pentandra-bombacaceae-in-central-amazonia/437E68405DD5D3DF709C8097182B59BC",
+   "licence": "(c) 1999 Cambridge University Press; abstract read, paywalled",
+   "read": "2026-11-06"
+  }
+ ]
+}

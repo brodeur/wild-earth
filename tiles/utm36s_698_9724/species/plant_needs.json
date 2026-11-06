@@ -41,9 +41,9 @@
    "id": "kigelia_africana",
    "kind": "tree",
    "why": [
-    "GBIF: 31 records on the tile"
+    "canopy: records (GBIF: 31 records on the tile; height not yet screened)"
    ],
-   "cover": 0.0,
+   "cover": 0.0001,
    "records": 31,
    "scientific": "Kigelia africana",
    "record": true,
@@ -68,9 +68,9 @@
   },
   {
    "id": "phoenix_reclinata",
-   "kind": "forb",
+   "kind": "tree",
    "why": [
-    "GBIF: 11 records on the tile"
+    "canopy: records (GBIF: 11 records on the tile; height not yet screened)"
    ],
    "cover": 0.0,
    "records": 11,
@@ -133,6 +133,21 @@
    "card": true,
    "drawn_as": "vachellia_drepanolobium",
    "rank": 7
+  },
+  {
+   "id": "vachellia_xanthophloea",
+   "kind": "tree",
+   "why": [
+    "canopy: records (GBIF: 7 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0,
+   "records": 0,
+   "scientific": "Vachellia xanthophloea",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 8
   }
  ],
  "gbif_plants": [
@@ -1344,9 +1359,9 @@
   "ground": 26
  },
  "by_layer": {
-  "tree": 3,
+  "tree": 5,
   "shrub": 1,
-  "ground": 3
+  "ground": 2
  },
  "hands": [
   {
@@ -1359,29 +1374,37 @@
   },
   {
    "id": "phoenix_reclinata",
-   "kind": "forb",
+   "kind": "tree",
    "what": "a trait card",
    "why": [
-    "GBIF: 11 records on the tile"
+    "canopy: records (GBIF: 11 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "vachellia_xanthophloea",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 7 records on the tile; height not yet screened)"
    ]
   }
  ],
  "summary": {
-  "needed": 7,
+  "needed": 8,
   "with_record": 5,
   "generated_now": 0,
-  "queued": 2,
+  "queued": 3,
   "unread_communities": 0,
   "by_layer": {
-   "tree": 3,
+   "tree": 5,
    "shrub": 1,
-   "ground": 3
+   "ground": 2
   },
   "meets_target": {
    "tree": false,
    "shrub": false,
    "ground": false
   },
-  "hands": 2
+  "hands": 3
  }
 }

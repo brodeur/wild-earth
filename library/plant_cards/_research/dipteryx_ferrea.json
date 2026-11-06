@@ -1,0 +1,32 @@
+{
+ "id": "dipteryx_ferrea",
+ "scientific": "Dipteryx ferrea",
+ "family": "Fabaceae",
+ "common": "shihuahuaco",
+ "aliases": ["dipteryx_micrantha", "coumarouna_ferrea", "coumarouna_micrantha", "cumaru", "charapilla", "almendrillo", "coumarou", "mawi", "huamansamana", "shihuahuaco_negro"],
+ "habit": "broadleaf_tree",
+ "height_m": {"typical": [44, 44], "max": 60, "src": 0},
+ "dbh_cm": {"typical": null, "max": 200, "src": 0},
+ "bole": {"clear_fraction": null, "straight": null, "buttresses": "large plank", "buttress_height_m": 4, "stilt_roots": false, "stilt_root_height_m": null, "spines": false, "text": "Very large emergent; trunk to c. 2 m diameter; large buttresses to c. 4 m high and 1.5 m thick in mature trees.", "src": 0},
+ "crown": {"shape": null, "width_m": null, "depth_fraction": null, "density": null, "position": "emergent", "text": "Emergent; flowers borne in bunches high in the canopy. Wikipedia's wording mentions a wide 'parasol-shaped' form but it is ambiguous whether this is the base or crown.", "src": 0},
+ "leaf": {"type": "pinnate", "length_cm": null, "width_cm": null, "leaflet_length_cm": [11.6, 11.6], "frond_count": null, "shape": null, "texture": null, "upper_colour": null, "under_colour": null, "new_flush_colour": null, "src": 2},
+ "phenology": {"leaf_habit": "evergreen", "leafless_months": [], "flowering_months": [], "flower_colour": "lilac to light violet; calyx leathery, pinkish", "fruiting_months": [6, 7, 8, 9], "fruit": "ovoid to oblong drupaceous pod with fleshy pericarp, one large oily edible seed, no coumarin scent; ripens at the height of the dry season", "src": 0},
+ "bark": {"colour": "salmon", "texture": null, "text": "Bark salmon-coloured (Wikipedia).", "src": 0},
+ "habitat": {"forest_types": ["terra firme", "secondary/gaps"], "light": "intermediate", "elevation_m": [135, 400], "range": "Bolivia, Brazil (Acre, Amazonas, Rondonia), Colombia, Ecuador, Peru (Huanuco, Loreto, Madre de Dios, Puno, Ucayali); 0-6 trees/ha", "src": 0},
+ "eaten_by": [
+  {"animal": "Artibeus spp. (fruit bats)", "part": "fruit", "src": 0},
+  {"animal": "Ateles paniscus", "part": "fruit", "src": 0},
+  {"animal": "Didelphis spp.", "part": "fruit", "src": 0},
+  {"animal": "Proechimys spp.", "part": "seeds", "src": 0},
+  {"animal": "Dasyprocta variegata", "part": "seeds", "src": 0},
+  {"animal": "macaws (genus not given; Brazil)", "part": "fruit", "src": 0}
+ ],
+ "notes": "Names: Wikipedia's 'Dipteryx micrantha' article covers the Madre de Dios shihuahuaco (avg 44 m in Manu) and says Lima (1989) sank D. ferrea into D. micrantha but by 2010 treated it as separate again; Wikipedia's Dipteryx genus page lists D. ferrea (Ducke) Ducke as accepted ('synonymised to D. micrantha in 1989, now recognised again'). Useful Tropical Plants (src 3) still lists D. ferrea and Coumarouna ferrea as synonyms of D. micrantha. Aldana Gomero et al. 2016 (src 2) say all Peruvian Dipteryx are called shihuahuaco in the field and call Madre de Dios plants D. micrantha morphotype 1 (3-5 leaflet pairs, leaflets avg 11.6 x 5.4 cm); they do not mention D. ferrea. So nearly all values here were published under D. micrantha. Leaflet count: Wikipedia 6-14 (also cites 9-11); rachis grooved above. Height 'typical' is the Manu mean. Fruiting months are derived: Wikipedia 'height of the dry season' + Vela-Apaza 2024 (src 4) dry season June-September in Madre de Dios. Flowering 'shortly after the rainy season starts' (no months). Habitat: mature seasonal evergreen forest on alluvial soils, avoids seasonally flooded varzea; also secondary woodland/pastures; seedlings recruit mainly in gaps (light 'intermediate' is my reading of that). UTP: to 30-40 m, up to 500 m, evergreen, not in inundated areas. Ateles paniscus as named in the source (Madre de Dios spider monkey is usually listed as A. chamek; not changed). Not found: crown width/shape, leaf colours, bark texture.",
+ "sources": [
+  {"title": "Dipteryx micrantha - Wikipedia", "url": "https://en.wikipedia.org/wiki/Dipteryx_micrantha", "licence": "CC BY-SA 4.0", "read": "2026-11-06"},
+  {"title": "Dipteryx - Wikipedia (species list)", "url": "https://en.wikipedia.org/wiki/Dipteryx", "licence": "CC BY-SA 4.0", "read": "2026-11-06"},
+  {"title": "Aldana Gomero et al. 2016, Analisis morfometrico de las especies de Dipteryx en la Amazonia peruana, Folia Amazonica 25(2):101-118, doi 10.24841/fa.v25i2.394 (abstract page)", "url": "https://revistas.iiap.gob.pe/index.php/foliaamazonica/article/view/394", "licence": "CC BY 4.0", "read": "2026-11-06"},
+  {"title": "Dipteryx micrantha - Useful Tropical Plants", "url": "https://tropical.theferns.info/viewtropical.php?id=Dipteryx+micrantha", "licence": "CC BY-NC-SA 3.0", "read": "2026-11-06"},
+  {"title": "Vela-Apaza & Gonzales-Ojeda 2024, Flora arborea de los bosques de la planicie aluvial inundable en el Rio Los Amigos, Rev. Biodivers. Amaz. 3(1) e274, doi 10.55873/rba.v3i1.274", "url": "https://revistas.unamad.edu.pe/index.php/rba/article/view/274", "licence": "CC BY 4.0", "read": "2026-11-06"}
+ ]
+}

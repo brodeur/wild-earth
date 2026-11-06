@@ -1036,8 +1036,8 @@
    "mass_kg": 6.296,
    "density_km2": 18.92,
    "group": [
-    5,
-    23
+    12,
+    24
    ],
    "bird": false,
    "night": false,
@@ -1079,7 +1079,7 @@
     "eltontraits (activity)",
     "pantheria"
    ],
-   "group_source": "pantheria social group size (species)",
+   "group_source": "prox2020 average group size 24",
    "density_source": "pantheria population density (species)"
   },
   {
@@ -1306,6 +1306,62 @@
    "group_source": "pantheria: solitary"
   },
   {
+   "code": "buceros_rhinoceros",
+   "scientific": "Buceros rhinoceros",
+   "common": "Rhinoceros hornbill",
+   "one": "rhinoceros hornbill",
+   "many": "rhinoceros hornbills",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 2.704,
+   "tint": null,
+   "mass_kg": 2.372,
+   "density_km2": 10.6188,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": [
+    "a parrot, toucan or hornbill on a jay's body"
+   ],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
    "code": "hirundo_javanica",
    "scientific": "Hirundo javanica",
    "common": "Pacific swallow",
@@ -1326,6 +1382,60 @@
    "water": false,
    "role": [
     "insectivore"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "argusianus_argus",
+   "scientific": "Argusianus argus",
+   "common": "Great argus",
+   "one": "great argus",
+   "many": "great argus",
+   "kin": "meleagris_gallopavo",
+   "archetype": "ground bird",
+   "scale": 0.689,
+   "tint": null,
+   "mass_kg": 1.96,
+   "density_km2": 11.4603,
+   "group": [
+    3,
+    12
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
    ],
    "known": [],
    "active_hours": [
@@ -1414,6 +1524,60 @@
    ]
   },
   {
+   "code": "lophura_ignita",
+   "scientific": "Lophura ignita",
+   "common": "Crested fireback",
+   "one": "crested fireback",
+   "many": "crested firebacks",
+   "kin": "meleagris_gallopavo",
+   "archetype": "ground bird",
+   "scale": 0.665,
+   "tint": null,
+   "mass_kg": 1.768,
+   "density_km2": 11.9423,
+   "group": [
+    3,
+    12
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
    "code": "hemiprocne_comata",
    "scientific": "Hemiprocne comata",
    "common": "Whiskered treeswift",
@@ -1424,171 +1588,6 @@
    "scale": 0.556,
    "tint": null,
    "mass_kg": 0.021,
-   "density_km2": 70.0,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "insectivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "buceros_rhinoceros",
-   "scientific": "Buceros rhinoceros",
-   "common": "Rhinoceros hornbill",
-   "one": "rhinoceros hornbill",
-   "many": "rhinoceros hornbills",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 2.704,
-   "tint": null,
-   "mass_kg": 2.372,
-   "density_km2": 10.6188,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "herbivore"
-   ],
-   "known": [
-    "a parrot, toucan or hornbill on a jay's body"
-   ],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "corvus_enca",
-   "scientific": "Corvus enca",
-   "common": "Slender-billed crow",
-   "one": "slender-billed crow",
-   "many": "slender-billed crows",
-   "kin": "corvus_corax",
-   "archetype": "corvid",
-   "scale": 0.594,
-   "tint": null,
-   "mass_kg": 0.251,
-   "density_km2": 26.0748,
-   "group": [
-    1,
-    3
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "omnivore",
-    "scavenger"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "rhipidura_javanica",
-   "scientific": "Rhipidura javanica",
-   "common": "Malaysian pied-fantail",
-   "one": "malaysian pied-fantail",
-   "many": "malaysian pied-fantails",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.471,
-   "tint": null,
-   "mass_kg": 0.013,
    "density_km2": 70.0,
    "group": [
     1,
@@ -1687,6 +1686,279 @@
    ]
   },
   {
+   "code": "anthracoceros_albirostris",
+   "scientific": "Anthracoceros albirostris",
+   "common": "Oriental pied-hornbill",
+   "one": "oriental pied-hornbill",
+   "many": "oriental pied-hornbills",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 1.952,
+   "tint": null,
+   "mass_kg": 0.893,
+   "density_km2": 15.6953,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "omnivore"
+   ],
+   "known": [
+    "a parrot, toucan or hornbill on a jay's body"
+   ],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "corvus_enca",
+   "scientific": "Corvus enca",
+   "common": "Slender-billed crow",
+   "one": "slender-billed crow",
+   "many": "slender-billed crows",
+   "kin": "corvus_corax",
+   "archetype": "corvid",
+   "scale": 0.594,
+   "tint": null,
+   "mass_kg": 0.251,
+   "density_km2": 26.0748,
+   "group": [
+    1,
+    3
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "omnivore",
+    "scavenger"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "ketupa_ketupu",
+   "scientific": "Ketupa ketupu",
+   "common": "Buffy fish-owl",
+   "one": "buffy fish-owl",
+   "many": "buffy fish-owls",
+   "kin": "strix_varia",
+   "archetype": "night perching bird",
+   "scale": 1.227,
+   "tint": null,
+   "mass_kg": 1.293,
+   "density_km2": 0.4124,
+   "group": [
+    1,
+    3
+   ],
+   "bird": true,
+   "night": true,
+   "water": false,
+   "role": [
+    "predator"
+   ],
+   "known": [],
+   "active_hours": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "rhipidura_javanica",
+   "scientific": "Rhipidura javanica",
+   "common": "Malaysian pied-fantail",
+   "one": "malaysian pied-fantail",
+   "many": "malaysian pied-fantails",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 0.471,
+   "tint": null,
+   "mass_kg": 0.013,
+   "density_km2": 70.0,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "insectivore"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "anhinga_melanogaster",
+   "scientific": "Anhinga melanogaster",
+   "common": "Oriental darter",
+   "one": "oriental darter",
+   "many": "oriental darters",
+   "kin": "mergus_merganser",
+   "archetype": "waterbird",
+   "scale": 0.996,
+   "tint": null,
+   "mass_kg": 1.48,
+   "density_km2": 0.3726,
+   "group": [
+    2,
+    10
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "predator"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
    "code": "chloropsis_cyanopogon",
    "scientific": "Chloropsis cyanopogon",
    "common": "Lesser green leafbird",
@@ -1741,6 +2013,60 @@
    ]
   },
   {
+   "code": "spilornis_cheela",
+   "scientific": "Spilornis cheela",
+   "common": "Crested serpent-eagle",
+   "one": "crested serpent-eagle",
+   "many": "crested serpent-eagles",
+   "kin": "buteo_jamaicensis",
+   "archetype": "soaring raptor",
+   "scale": 0.816,
+   "tint": null,
+   "mass_kg": 0.598,
+   "density_km2": 0.7355,
+   "group": [
+    1,
+    3
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "predator"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
    "code": "arachnothera_longirostra",
    "scientific": "Arachnothera longirostra",
    "common": "Little spiderhunter",
@@ -1761,60 +2087,6 @@
    "water": false,
    "role": [
     "omnivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "rhaphidura_leucopygialis",
-   "scientific": "Rhaphidura leucopygialis",
-   "common": "Silver-rumped needletail",
-   "one": "silver-rumped needletail",
-   "many": "silver-rumped needletails",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.484,
-   "tint": null,
-   "mass_kg": 0.014,
-   "density_km2": 70.0,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "insectivore"
    ],
    "known": [],
    "active_hours": [
@@ -1903,232 +2175,16 @@
    ]
   },
   {
-   "code": "argusianus_argus",
-   "scientific": "Argusianus argus",
-   "common": "Great argus",
-   "one": "great argus",
-   "many": "great argus",
-   "kin": "meleagris_gallopavo",
-   "archetype": "ground bird",
-   "scale": 0.689,
-   "tint": null,
-   "mass_kg": 1.96,
-   "density_km2": 11.4603,
-   "group": [
-    3,
-    12
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "herbivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "macronus_bornensis",
-   "scientific": "Macronus bornensis",
-   "common": "Macronus bornensis",
-   "one": "macronus bornensis",
-   "many": "macronus bornensis",
+   "code": "rhaphidura_leucopygialis",
+   "scientific": "Rhaphidura leucopygialis",
+   "common": "Silver-rumped needletail",
+   "one": "silver-rumped needletail",
+   "many": "silver-rumped needletails",
    "kin": "cyanocitta_stelleri",
    "archetype": "perching bird",
-   "scale": 0.686,
+   "scale": 0.484,
    "tint": null,
-   "mass_kg": 0.039,
-   "density_km2": 55.0248,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "insectivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "pycnonotus_brunneus",
-   "scientific": "Pycnonotus brunneus",
-   "common": "Red-eyed bulbul",
-   "one": "red-eyed bulbul",
-   "many": "red-eyed bulbuls",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.621,
-   "tint": null,
-   "mass_kg": 0.029,
-   "density_km2": 61.9918,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "herbivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "prionochilus_xanthopygius",
-   "scientific": "Prionochilus xanthopygius",
-   "common": "Yellow-rumped flowerpecker",
-   "one": "yellow-rumped flowerpecker",
-   "many": "yellow-rumped flowerpeckers",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.399,
-   "tint": null,
-   "mass_kg": 0.008,
-   "density_km2": 70.0,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "herbivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "malacopteron_affine",
-   "scientific": "Malacopteron affine",
-   "common": "Sooty-capped babbler",
-   "one": "sooty-capped babbler",
-   "many": "sooty-capped babblers",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.522,
-   "tint": null,
-   "mass_kg": 0.017,
+   "mass_kg": 0.014,
    "density_km2": 70.0,
    "group": [
     1,
@@ -2139,60 +2195,6 @@
    "water": false,
    "role": [
     "insectivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "rubigula_erythropthalmos",
-   "scientific": "Rubigula erythropthalmos",
-   "common": "Spectacled bulbul",
-   "one": "spectacled bulbul",
-   "many": "spectacled bulbuls",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.67,
-   "tint": null,
-   "mass_kg": 0.036,
-   "density_km2": 56.6355,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "omnivore"
    ],
    "known": [],
    "active_hours": [
@@ -2241,15 +2243,7 @@
    "why": "no rig for Chiroptera"
   },
   {
-   "id": "anthracoceros_albirostris",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "stachyris_erythroptera",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "cymbirhynchus_macrorhynchos",
+   "id": "strix_leptogrammica",
    "why": "over the 40-slot cap"
   },
   {
@@ -2257,15 +2251,27 @@
    "why": "over the 40-slot cap"
   },
   {
-   "id": "malacopteron_magnum",
+   "id": "macronus_bornensis",
    "why": "over the 40-slot cap"
   },
   {
-   "id": "lophura_ignita",
+   "id": "pycnonotus_brunneus",
    "why": "over the 40-slot cap"
   },
   {
-   "id": "dicaeum_trigonostigma",
+   "id": "prionochilus_xanthopygius",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "malacopteron_affine",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "cymbirhynchus_macrorhynchos",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "rubigula_erythropthalmos",
    "why": "over the 40-slot cap"
   },
   {
@@ -2273,31 +2279,27 @@
    "why": "over the 40-slot cap"
   },
   {
-   "id": "ketupa_ketupu",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "spilornis_cheela",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "anhinga_melanogaster",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "strix_leptogrammica",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "pelargopsis_capensis",
-   "why": "over the 40-slot cap"
-  },
-  {
    "id": "ictinaetus_malayensis",
    "why": "over the 40-slot cap"
   },
   {
+   "id": "stachyris_erythroptera",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "malacopteron_magnum",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "dicaeum_trigonostigma",
+   "why": "over the 40-slot cap"
+  },
+  {
    "id": "nisaetus_nanus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "pelargopsis_capensis",
    "why": "over the 40-slot cap"
   },
   {

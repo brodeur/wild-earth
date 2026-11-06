@@ -38,140 +38,175 @@
     "rock_class": "sandstone_conglomerate",
     "age": "Early Permian",
     "lithology": "",
-    "fraction": 0.0033
+    "fraction": 0.0076
    },
    "3": {
     "name": "Wescogame Formation, Manakacha Formation, Watahomigi Formation",
-    "rock_class": "limestone_marble",
+    "rock_class": "sandstone_conglomerate",
     "age": "Late Mississippian to Late Pennsylvanian",
     "lithology": "",
-    "fraction": 0.0765
+    "fraction": 0.0872
    },
    "4": {
     "name": "Toroweap Formation",
-    "rock_class": "limestone_marble",
+    "rock_class": "sandstone_conglomerate",
     "age": "Early Permian",
     "lithology": "",
-    "fraction": 0.0064
+    "fraction": 0.0158
    },
    "5": {
     "name": "Redwall Limestone",
     "rock_class": "limestone_marble",
     "age": "Mississippian",
     "lithology": "",
-    "fraction": 0.0318
+    "fraction": 0.0559
    },
    "6": {
     "name": "Bright Angel Shale",
     "rock_class": "sandstone_conglomerate",
     "age": "Middle Cambrian",
     "lithology": "",
-    "fraction": 0.1622
+    "fraction": 0.1746
    },
    "7": {
     "name": "Young granite and pegmatite",
     "rock_class": "granitic",
     "age": "Calymmian",
     "lithology": "",
-    "fraction": 0.0086
+    "fraction": 0.0229
    },
    "8": {
     "name": "Brahma Schist",
     "rock_class": "schist",
     "age": "Statherian",
     "lithology": "",
-    "fraction": 0.0192
+    "fraction": 0.0403
    },
    "9": {
     "name": "Landslide deposits",
     "rock_class": "alluvium",
     "age": "Pleistocene to Holocene",
     "lithology": "",
-    "fraction": 0.0008
+    "fraction": 0.0023
    },
    "10": {
     "name": "Tapeats Sandstone",
     "rock_class": "sandstone_conglomerate",
     "age": "Early Cambrian to Middle Cambrian",
     "lithology": "",
-    "fraction": 0.0594
+    "fraction": 0.0767
    },
    "11": {
     "name": "Muav Limestone",
     "rock_class": "limestone_marble",
     "age": "Middle Cambrian",
     "lithology": "",
-    "fraction": 0.0659
+    "fraction": 0.0834
    },
    "12": {
     "name": "Granite, granitic pegmatite, and aplite",
     "rock_class": "granitic",
     "age": "Statherian",
     "lithology": "",
-    "fraction": 0.0111
+    "fraction": 0.0379
    },
    "13": {
     "name": "Rama Schist",
     "rock_class": "schist",
     "age": "Statherian",
     "lithology": "",
-    "fraction": 0.0112
+    "fraction": 0.0155
    },
    "14": {
     "name": "Vishnu Schist",
     "rock_class": "schist",
     "age": "Statherian",
     "lithology": "",
-    "fraction": 0.0051
+    "fraction": 0.0147
    },
    "15": {
     "name": "water",
     "rock_class": "other",
     "age": null,
     "lithology": "",
-    "fraction": 0.0041
+    "fraction": 0.0058
    },
    "16": {
     "name": "Hakatai Shale",
     "rock_class": "sandstone_conglomerate",
     "age": "Mesoproterozoic",
     "lithology": "",
-    "fraction": 0.0163
+    "fraction": 0.0269
    },
    "17": {
     "name": "Bass Formation",
-    "rock_class": "schist",
+    "rock_class": "sandstone_conglomerate",
     "age": "Mesoproterozoic",
     "lithology": "",
-    "fraction": 0.0027
+    "fraction": 0.0098
    },
    "18": {
     "name": "Hermit Formation",
-    "rock_class": "alluvium",
+    "rock_class": "sandstone_conglomerate",
     "age": "Early Permian",
     "lithology": "",
-    "fraction": 0.0154
+    "fraction": 0.0218
    },
    "19": {
     "name": "Shinumo Quartzite",
     "rock_class": "schist",
     "age": "Mesoproterozoic",
     "lithology": "",
-    "fraction": 0.0027
+    "fraction": 0.0137
    },
    "20": {
     "name": "Ultramafic rocks",
     "rock_class": "serpentinite",
     "age": "Paleoproterozoic",
     "lithology": "",
-    "fraction": 0.0006
+    "fraction": 0.0007
    },
    "21": {
     "name": "Surprise Canyon Formation",
-    "rock_class": "limestone_marble",
+    "rock_class": "sandstone_conglomerate",
     "age": "Late Mississippian",
     "lithology": "",
-    "fraction": 0.0009
+    "fraction": 0.0039
+   },
+   "22": {
+    "name": "Esplanade Sandstone",
+    "rock_class": "sandstone_conglomerate",
+    "age": "Early Permian",
+    "lithology": "",
+    "fraction": 0.0128
+   },
+   "23": {
+    "name": "Colorado River gravel deposits",
+    "rock_class": "alluvium",
+    "age": "Holocene",
+    "lithology": "gravel, sand",
+    "fraction": 0.0017
+   },
+   "24": {
+    "name": "Temple Butte Formation",
+    "rock_class": "limestone_marble",
+    "age": "Middle Devonian to Late Devonian",
+    "lithology": "",
+    "fraction": 0.0081
+   },
+   "25": {
+    "name": "Granodiorite complexes",
+    "rock_class": "granitic",
+    "age": "Statherian",
+    "lithology": "",
+    "fraction": 0.0003
+   },
+   "26": {
+    "name": "Unnamed diabase sills and dikes",
+    "rock_class": "other",
+    "age": "Stenian",
+    "lithology": "",
+    "fraction": 0.0007
    }
   },
   "source": "macrostrat"
@@ -710,13 +745,13 @@
  },
  "fractions": {
   "rock_class": {
-   "serpentinite": 0.0006,
-   "schist": 0.041,
-   "granitic": 0.0197,
-   "sandstone_conglomerate": 0.2411,
-   "limestone_marble": 0.439,
-   "alluvium": 0.0162,
-   "other": 0.0041
+   "serpentinite": 0.0007,
+   "schist": 0.0842,
+   "granitic": 0.0611,
+   "sandstone_conglomerate": 0.4371,
+   "limestone_marble": 0.4048,
+   "alluvium": 0.004,
+   "other": 0.0065
   },
   "texture_class": {
    "unknown": 0.3304,
@@ -763,8 +798,8 @@
  },
  "outcrop": {
   "formula": "outcrop = clip(resistance[rock_class] * shallowness * terrain * (1 - tree_cover_pct/100 * 0.5) * lidar, 0, 1); shallowness = clip((150 - depth_to_bedrock_cm) / (150 - 25), 0, 1) (0 where depth unknown); terrain = min(slope_deg / 35, 1) + 0.5 * clip(TPI_m / 1.5, 0, 1), TPI = z - mean(z, 150 m window) on the DEM averaged to 30 m; tree cover from LANDFIRE EVC; water = 0; lidar = 0.5 + min(roughness_m / 0.12, 1.5), roughness = 30 m mean of terrain/roughness_10m.tif (std of the 1 m lidar DEM about a quadratic fitted per 10 m cell)",
-  "mean": 0.4435,
-  "fraction_above_0.5": 0.4261,
-  "fraction_above_0.25": 0.5149
+  "mean": 0.4532,
+  "fraction_above_0.5": 0.4406,
+  "fraction_above_0.25": 0.5335
  }
 }

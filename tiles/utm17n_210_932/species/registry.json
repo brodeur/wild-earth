@@ -1,6 +1,6 @@
 {
  "tile": "utm17n_210_932",
- "at": "2026-11-06T06:49:53Z",
+ "at": "2026-11-06T10:36:19Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -11,7 +11,7 @@
  "summary": {
   "by_level": {
    "0": {
-    "plants": 32,
+    "plants": 31,
     "animals": 77
    },
    "1": {
@@ -19,7 +19,7 @@
     "animals": 0
    },
    "2": {
-    "plants": 4,
+    "plants": 11,
     "animals": 0
    },
    "3": {
@@ -31,25 +31,21 @@
     "animals": 1
    }
   },
-  "plants": 36,
+  "plants": 42,
   "animals_present": 83,
   "animals_queued": 77,
   "meshy_credits_queued": 2230,
-  "cards_queued": 32,
+  "cards_queued": 31,
   "stand_ins": {
    "aechmea_magdalenae": null,
    "hyperbaena_leptobotryosa": null,
    "damburneya_umbrosa": null,
    "palicourea_hoffmannseggiana": null,
    "aspasia_epidendroides": null,
-   "trichilia_tuberculata": null,
    "chomelia_microloba": null,
    "crossopetalum_parviflorum": null,
    "anthurium_eximium": null,
-   "heisteria_acuminata": null,
-   "pouteria_subrotata": null,
    "hamelia_axillaris": null,
-   "croton_schiedeanus": null,
    "goeppertia_marantifolia": null,
    "guatteria_amplifolia": null,
    "hieronyma_alchorneoides": null,
@@ -57,7 +53,6 @@
    "callicarpa_acuminata": null,
    "ficus_zarzalensis": null,
    "passiflora_vitifolia": null,
-   "anacardium_excelsum": null,
    "miconia_aguilarii": null,
    "stigmaphyllon_ellipticum": null,
    "dalbergia_brownei": null,
@@ -65,6 +60,10 @@
    "guarea_glabra": null,
    "guettarda_foliacea": null,
    "pterygota_excelsa": null,
+   "cissus_biformifolia": null,
+   "geonoma_cuneata": null,
+   "anthurium_pentaphyllum": null,
+   "desmodium_axillare": null,
    "tetrathylacium_macrophyllum": null,
    "ocotea_insularis": null,
    "nectandra_hihua": null,
@@ -73,7 +72,7 @@
   "density": {
    "tree": {
     "target": 21,
-    "have": 4
+    "have": 11
    },
    "shrub": {
     "target": 23,
@@ -90,9 +89,9 @@
    }
   },
   "hands": {
-   "count": 110,
+   "count": 109,
    "by_what": {
-    "a trait card": 32,
+    "a trait card": 31,
     "a lexicon phrase or a species-mix rule": 3,
     "a mesh": 75
    }
@@ -100,47 +99,124 @@
  },
  "plants": [
   {
-   "id": "dryobalanops_lanceolata",
+   "id": "anacardium_excelsum",
    "kind": "tree",
    "fidelity": 2,
-   "common": "kapur paji",
-   "drawn_as": "dryobalanops_lanceolata",
-   "share": 0.2747,
+   "common": "espave",
+   "drawn_as": "anacardium_excelsum",
+   "share": 0.1268,
    "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+    "canopy: named (enwiki_corcovado_national_park: named as espave (characteristic); 101 GBIF records within 0.5 deg)"
    ]
   },
   {
-   "id": "macaranga_gigantea",
+   "id": "heisteria_acuminata",
    "kind": "tree",
    "fidelity": 2,
-   "common": "giant mahang",
-   "drawn_as": "macaranga_gigantea",
-   "share": 0.2665,
+   "common": "gorrita",
+   "drawn_as": "heisteria_acuminata",
+   "share": 0.1229,
    "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+    "canopy: records (GBIF: 37 records on the tile; sourced maximum height 15 m)"
    ]
   },
   {
-   "id": "shorea_leprosula",
+   "id": "trichilia_tuberculata",
    "kind": "tree",
    "fidelity": 2,
-   "common": "light red meranti",
-   "drawn_as": "shorea_leprosula",
-   "share": 0.2489,
+   "common": "canf\u00edn",
+   "drawn_as": "trichilia_tuberculata",
+   "share": 0.1116,
    "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+    "canopy: records (GBIF: 39 records on the tile; sourced maximum height 30 m)"
    ]
   },
   {
-   "id": "parashorea_malaanonan",
+   "id": "pouteria_subrotata",
    "kind": "tree",
    "fidelity": 2,
-   "common": "white seraya",
-   "drawn_as": "parashorea_malaanonan",
-   "share": 0.2099,
+   "common": "zapotillo",
+   "drawn_as": "pouteria_subrotata",
+   "share": 0.1031,
    "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+    "canopy: records (GBIF: 36 records on the tile; sourced maximum height 20 m)"
+   ]
+  },
+  {
+   "id": "brosimum_utile",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "milk tree",
+   "drawn_as": "brosimum_utile",
+   "share": 0.0956,
+   "why_needed": [
+    "canopy: named (enwiki_corcovado_national_park: named as cow tree (characteristic); 61 GBIF records within 0.5 deg)"
+   ]
+  },
+  {
+   "id": "carapa_guianensis",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "andiroba",
+   "drawn_as": "carapa_guianensis",
+   "share": 0.0955,
+   "why_needed": [
+    "canopy: named (enwiki_corcovado_national_park: named as crabwood (characteristic); 49 GBIF records within 0.5 deg)"
+   ]
+  },
+  {
+   "id": "terminalia_amazonia",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "roble coral",
+   "drawn_as": "terminalia_amazonia",
+   "share": 0.0955,
+   "why_needed": [
+    "canopy: named (enwiki_corcovado_national_park: named as nargusta (characteristic); 34 GBIF records within 0.5 deg)"
+   ]
+  },
+  {
+   "id": "peltogyne_purpurea",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "purpleheart",
+   "drawn_as": "peltogyne_purpurea",
+   "share": 0.0954,
+   "why_needed": [
+    "canopy: named (enwiki_corcovado_national_park: named as purple heart (linked to Peltogyne) (characteristic); 83 GBIF records within 0.5 deg)"
+   ]
+  },
+  {
+   "id": "astrocaryum_standleyanum",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "black palm",
+   "drawn_as": "astrocaryum_standleyanum",
+   "share": 0.053,
+   "why_needed": [
+    "canopy: records (GBIF: 7 records on the tile; sourced maximum height 20 m)"
+   ]
+  },
+  {
+   "id": "socratea_exorrhiza",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "walking palm",
+   "drawn_as": "socratea_exorrhiza",
+   "share": 0.053,
+   "why_needed": [
+    "canopy: records (GBIF: 2 records on the tile; sourced maximum height 25 m)"
+   ]
+  },
+  {
+   "id": "croton_schiedeanus",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "copalch\u00ed",
+   "drawn_as": "croton_schiedeanus",
+   "share": 0.0477,
+   "why_needed": [
+    "GBIF: 34 records on the tile"
    ]
   },
   {
@@ -156,18 +232,6 @@
    "stand_in": null
   },
   {
-   "id": "anacardium_excelsum",
-   "kind": "shrub",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "GBIF: 31 records on the tile"
-   ],
-   "stand_in": null
-  },
-  {
    "id": "anthurium_eximium",
    "kind": "forb",
    "fidelity": 0,
@@ -176,6 +240,18 @@
    "share": 0,
    "why_needed": [
     "GBIF: 37 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "anthurium_pentaphyllum",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 28 records on the tile"
    ],
    "stand_in": null
   },
@@ -216,6 +292,18 @@
    "stand_in": null
   },
   {
+   "id": "cissus_biformifolia",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 29 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
    "id": "crossopetalum_parviflorum",
    "kind": "forb",
    "fidelity": 0,
@@ -224,18 +312,6 @@
    "share": 0,
    "why_needed": [
     "GBIF: 38 records on the tile"
-   ],
-   "stand_in": null
-  },
-  {
-   "id": "croton_schiedeanus",
-   "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "GBIF: 34 records on the tile"
    ],
    "stand_in": null
   },
@@ -264,6 +340,18 @@
    "stand_in": null
   },
   {
+   "id": "desmodium_axillare",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 28 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
    "id": "faramea_occidentalis",
    "kind": "forb",
    "fidelity": 0,
@@ -284,6 +372,18 @@
    "share": 0,
    "why_needed": [
     "GBIF: 32 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "geonoma_cuneata",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 29 records on the tile"
    ],
    "stand_in": null
   },
@@ -344,18 +444,6 @@
    "share": 0,
    "why_needed": [
     "GBIF: 35 records on the tile"
-   ],
-   "stand_in": null
-  },
-  {
-   "id": "heisteria_acuminata",
-   "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "GBIF: 37 records on the tile"
    ],
    "stand_in": null
   },
@@ -468,18 +556,6 @@
    "stand_in": null
   },
   {
-   "id": "pouteria_subrotata",
-   "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "GBIF: 36 records on the tile"
-   ],
-   "stand_in": null
-  },
-  {
    "id": "pterygota_excelsa",
    "kind": "forb",
    "fidelity": 0,
@@ -512,18 +588,6 @@
    "share": 0,
    "why_needed": [
     "GBIF: 24 records on the tile"
-   ],
-   "stand_in": null
-  },
-  {
-   "id": "trichilia_tuberculata",
-   "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "GBIF: 39 records on the tile"
    ],
    "stand_in": null
   }
@@ -1785,14 +1849,6 @@
     ]
    },
    {
-    "id": "trichilia_tuberculata",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 39 records on the tile"
-    ]
-   },
-   {
     "id": "chomelia_microloba",
     "kind": "forb",
     "stand_in": null,
@@ -1817,35 +1873,11 @@
     ]
    },
    {
-    "id": "heisteria_acuminata",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 37 records on the tile"
-    ]
-   },
-   {
-    "id": "pouteria_subrotata",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 36 records on the tile"
-    ]
-   },
-   {
     "id": "hamelia_axillaris",
     "kind": "forb",
     "stand_in": null,
     "why": [
      "GBIF: 35 records on the tile"
-    ]
-   },
-   {
-    "id": "croton_schiedeanus",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 34 records on the tile"
     ]
    },
    {
@@ -1905,14 +1937,6 @@
     ]
    },
    {
-    "id": "anacardium_excelsum",
-    "kind": "shrub",
-    "stand_in": null,
-    "why": [
-     "GBIF: 31 records on the tile"
-    ]
-   },
-   {
     "id": "miconia_aguilarii",
     "kind": "forb",
     "stand_in": null,
@@ -1966,6 +1990,38 @@
     "stand_in": null,
     "why": [
      "GBIF: 30 records on the tile"
+    ]
+   },
+   {
+    "id": "cissus_biformifolia",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 29 records on the tile"
+    ]
+   },
+   {
+    "id": "geonoma_cuneata",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 29 records on the tile"
+    ]
+   },
+   {
+    "id": "anthurium_pentaphyllum",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 28 records on the tile"
+    ]
+   },
+   {
+    "id": "desmodium_axillare",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 28 records on the tile"
     ]
    },
    {
@@ -3209,14 +3265,6 @@
    ]
   },
   {
-   "id": "trichilia_tuberculata",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 39 records on the tile"
-   ]
-  },
-  {
    "id": "chomelia_microloba",
    "kind": "forb",
    "what": "a trait card",
@@ -3241,35 +3289,11 @@
    ]
   },
   {
-   "id": "heisteria_acuminata",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 37 records on the tile"
-   ]
-  },
-  {
-   "id": "pouteria_subrotata",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 36 records on the tile"
-   ]
-  },
-  {
    "id": "hamelia_axillaris",
    "kind": "forb",
    "what": "a trait card",
    "why": [
     "GBIF: 35 records on the tile"
-   ]
-  },
-  {
-   "id": "croton_schiedeanus",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 34 records on the tile"
    ]
   },
   {
@@ -3329,14 +3353,6 @@
    ]
   },
   {
-   "id": "anacardium_excelsum",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 31 records on the tile"
-   ]
-  },
-  {
    "id": "miconia_aguilarii",
    "kind": "forb",
    "what": "a trait card",
@@ -3390,6 +3406,38 @@
    "what": "a trait card",
    "why": [
     "GBIF: 30 records on the tile"
+   ]
+  },
+  {
+   "id": "cissus_biformifolia",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 29 records on the tile"
+   ]
+  },
+  {
+   "id": "geonoma_cuneata",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 29 records on the tile"
+   ]
+  },
+  {
+   "id": "anthurium_pentaphyllum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 28 records on the tile"
+   ]
+  },
+  {
+   "id": "desmodium_axillare",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 28 records on the tile"
    ]
   },
   {

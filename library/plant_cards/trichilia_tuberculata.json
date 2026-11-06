@@ -1,0 +1,236 @@
+{
+ "id": "trichilia_tuberculata",
+ "scientific": "Trichilia tuberculata",
+ "common": "canf\u00edn",
+ "aliases": [
+  "camfin",
+  "canfin",
+  "odontandra_tuberculata"
+ ],
+ "family": "Meliaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "parashorea_malaanonan",
+ "regions": [
+  "neotropics"
+ ],
+ "height_m": [
+  20.0,
+  30.0
+ ],
+ "stature": {
+  "typical_m": 25.0,
+  "tall_m": 30.0,
+  "record_m": null,
+  "source": "Trichilia tuberculata - STRI Research Portal (Perez & Condit, Tree Atlas of Panama) (research record)"
+ },
+ "variants_height_m": {
+  "young": [
+   3.0,
+   12.0
+  ],
+  "veteran": [
+   30.0,
+   33.0
+  ]
+ },
+ "crown": {
+  "shape": "cylindrical",
+  "profile": [
+   [
+    0.4,
+    0.125
+   ],
+   [
+    0.52,
+    0.212
+   ],
+   [
+    0.67,
+    0.25
+   ],
+   [
+    0.82,
+    0.212
+   ],
+   [
+    0.94,
+    0.125
+   ],
+   [
+    1.0,
+    0.025
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.18,
+  "asymmetry": 0.18,
+  "fill": 0.5,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    52,
+    76,
+    40
+   ],
+   "spring": [
+    52,
+    76,
+    40
+   ],
+   "summer": [
+    52,
+    76,
+    40
+   ],
+   "fall": [
+    52,
+    76,
+    40
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "leaf_size_m": 0.11,
+  "leaf_shape": "pinnate_compound",
+  "flowers": {
+   "season": "winter",
+   "months": [
+    12,
+    3
+   ],
+   "form": "cluster",
+   "rgb": [
+    142,
+    141,
+    63
+   ],
+   "size_m": 0.08,
+   "density": 0.4
+  },
+  "berries": null
+ },
+ "trunk": {
+  "stems": [
+   1,
+   1
+  ],
+  "bark_rgb": [
+   82,
+   66,
+   54
+  ],
+  "bark_pattern": "smooth",
+  "flare": 1.3,
+  "roots": {
+   "buttress": 0.2,
+   "note": "no buttresses (sources)"
+  },
+  "bole_ratio": 0.4,
+  "base_size": 0.4
+ },
+ "targets": {
+  "crown_width_ratio": 0.5,
+  "crown_base_ratio": 0.4,
+  "porosity": 0.2,
+  "from": "pipeline/tree_cards.py from the research record (crown: Narrow, vertically organised, opaque crown of dense dark emerald-green foliage; subcanopy, rarely canopy. Profuse short thin limbs.), no photographs measured"
+ },
+ "description": "A tree of primary forest (little-disturbed), 20-30 m tall. Trunk moderately irregular in cross-section, not very straight, bending gradually as it rises through the understorey; short thin limbs cover half to two-thirds of the bole (Manuel Antonio). Narrow, vertically organised, opaque crown of dense dark emerald-green foliage; subcanopy, rarely canopy. Fruit: ovoid capsule c.",
+ "season_notes": {
+  "winter": "In leaf. Flowering (green-yellow, minute, in axillary panicles to 25 cm).",
+  "spring": "In leaf. Flowering (green-yellow, minute, in axillary panicles to 25 cm).",
+  "summer": "In leaf. Fruiting.",
+  "fall": "In leaf. Fruiting."
+ },
+ "habitat": {
+  "classes": {
+   "mixed_forest": 1.0,
+   "riparian": 0.3
+  },
+  "floor": 1.0,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 1.0,
+  "shade": 0.8,
+  "disturbed": 0.7
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "saimiri_(squirrel",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "ateles_(spider",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "ramphastidae_(toucans)",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "cracidae_(guans)",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": []
+ },
+ "range": {
+  "elev_m": [
+   0,
+   150
+  ],
+  "where": "Costa Rica (mainly central and southern Pacific), Panama, Colombia, Ecuador, Peru, Brazil"
+ },
+ "stand_in": "parashorea_malaanonan",
+ "notes": "Template parashorea_malaanonan: a canopy tree: a clear bole and a broad crown (white seraya). NOT SOURCED (the template's or a default value): crown width (the template's ratio). Research notes: Phenology is for southern-central Pacific Costa Rica (Manuel Antonio, crtrees.org): flowering mostly Dec-Mar, peaking in Feb, with flowers seen Oct-May; fruit Jul-Sep; new leaves from late Oct. Osa Arboretum gives white flowers in Feb-Mar and yellow fruit in Jul-Oct. Panama atlas gives flowering and fruiting Apr-Nov. Height: Tree Atlas of Panama 20-30 m (a dominant canopy tree on BCI); Osa up to 30 m; crtrees 15-23 m, as a subcanopy and rarely canopy tree in Manuel Antonio. The sources disagree on the bole: the Panama atlas says large trees have straight cylindrical trunks branched only near the top, with no buttresses (English) or small tabular roots (Spanish), and a rounded dense crown. The bole and crown values follow crtrees (Costa Rica). clear_fraction 0.4 and depth_fraction 0.6 are read off 'limbs covering half to two-thirds of the bole'. Panama atlas leaflets: 5-9, 10-20 x 3-5 cm. Light: crtrees says usually shaded by taller trees. Spider monkeys eat the fruit on BCI per crtrees, but are absent from Manuel Antonio. The animal sources give common names only, mapped here to genus or family. dbh is crtrees' trunk diameter of about 40-50 cm.",
+ "sources": [
+  "Trichilia tuberculata - Osa Arboretum (Osa Conservation), https://osa-arboretum.org/?p=1333 (unknown (no licence stated; Osa Conservation arboretum site)), read 2026-11-06",
+  "Trichilia tuberculata - Trees of Costa Rica's Pacific Slope (crtrees.org), https://crtrees.org/species-accounts/trichilia-tuberculata/ (unknown (no licence stated; WordPress.com site 'Trees of Costa Rica's Pacific Slope')), read 2026-11-06",
+  "Trichilia tuberculata - STRI Research Portal (Perez & Condit, Tree Atlas of Panama), https://panamabiota.org/stri/taxa/index.php?tid=70539 (unknown (no licence stated; STRI Research Portal, text from Perez & Condit, Tree Atlas of Panama)), read 2026-11-06",
+  "research record library/plant_cards/_research/trichilia_tuberculata.json (pipeline/tree_cards.py)"
+ ],
+ "authors": [
+  "Wild Earth (pipeline/tree_cards.py from an agent's sourced research record, 2026-11-06); needs local sign-off"
+ ],
+ "generated_by": {
+  "by": "pipeline/tree_cards.py",
+  "version": "1"
+ }
+}

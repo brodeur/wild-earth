@@ -304,7 +304,7 @@
    "mass_kg": 0.615,
    "density_km2": 28.7,
    "group": [
-    8,
+    25,
     30
    ],
    "bird": false,
@@ -347,7 +347,7 @@
     "eltontraits (activity)",
     "pantheria"
    ],
-   "group_source": "pantheria social group size (species)",
+   "group_source": "prox2020 average group size 50",
    "density_source": "pantheria population density (species)"
   },
   {
@@ -640,6 +640,62 @@
    ]
   },
   {
+   "code": "ramphastos_tucanus",
+   "scientific": "Ramphastos tucanus",
+   "common": "White-throated toucan",
+   "one": "white-throated toucan",
+   "many": "white-throated toucans",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 1.765,
+   "tint": null,
+   "mass_kg": 0.66,
+   "density_km2": 17.7165,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": [
+    "a parrot, toucan or hornbill on a jay's body"
+   ],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
    "code": "xiphorhynchus_guttatus",
    "scientific": "Xiphorhynchus guttatus",
    "common": "Buff-throated woodcreeper",
@@ -662,6 +718,62 @@
     "insectivore"
    ],
    "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "ara_ararauna",
+   "scientific": "Ara ararauna",
+   "common": "Blue-and-yellow macaw",
+   "one": "blue-and-yellow macaw",
+   "many": "blue-and-yellow macaws",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 2.109,
+   "tint": null,
+   "mass_kg": 1.125,
+   "density_km2": 14.3097,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": [
+    "a parrot, toucan or hornbill on a jay's body"
+   ],
    "active_hours": [
     0,
     0,
@@ -750,6 +862,60 @@
    ]
   },
   {
+   "code": "ardea_alba",
+   "scientific": "Ardea alba",
+   "common": "Great egret",
+   "one": "great egret",
+   "many": "great egrets",
+   "kin": "ardea_herodias",
+   "archetype": "wading bird",
+   "scale": 0.919,
+   "tint": null,
+   "mass_kg": 1.707,
+   "density_km2": 0.3348,
+   "group": [
+    1,
+    3
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "predator"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
    "code": "lipaugus_vociferans",
    "scientific": "Lipaugus vociferans",
    "common": "Screaming piha",
@@ -804,179 +970,17 @@
    ]
   },
   {
-   "code": "cacicus_cela",
-   "scientific": "Cacicus cela",
-   "common": "Yellow-rumped cacique",
-   "one": "yellow-rumped cacique",
-   "many": "yellow-rumped caciques",
+   "code": "ara_macao",
+   "scientific": "Ara macao",
+   "common": "Scarlet macaw",
+   "one": "scarlet macaw",
+   "many": "scarlet macaws",
    "kin": "cyanocitta_stelleri",
    "archetype": "perching bird",
-   "scale": 0.893,
+   "scale": 2.037,
    "tint": null,
-   "mass_kg": 0.085,
-   "density_km2": 40.1336,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "omnivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "formicarius_analis",
-   "scientific": "Formicarius analis",
-   "common": "Black-faced antthrush",
-   "one": "black-faced antthrush",
-   "many": "black-faced antthrushs",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.803,
-   "tint": null,
-   "mass_kg": 0.062,
-   "density_km2": 45.5591,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "insectivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "thamnomanes_ardesiacus",
-   "scientific": "Thamnomanes ardesiacus",
-   "common": "Dusky-throated antshrike",
-   "one": "dusky-throated antshrike",
-   "many": "dusky-throated antshrikes",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.528,
-   "tint": null,
-   "mass_kg": 0.018,
-   "density_km2": 70.0,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "insectivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "ramphastos_tucanus",
-   "scientific": "Ramphastos tucanus",
-   "common": "White-throated toucan",
-   "one": "white-throated toucan",
-   "many": "white-throated toucans",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 1.765,
-   "tint": null,
-   "mass_kg": 0.66,
-   "density_km2": 17.7165,
+   "mass_kg": 1.015,
+   "density_km2": 14.9109,
    "group": [
     1,
     6
@@ -1022,17 +1026,17 @@
    ]
   },
   {
-   "code": "momotus_momota",
-   "scientific": "Momotus momota",
-   "common": "Amazonian motmot",
-   "one": "amazonian motmot",
-   "many": "amazonian motmots",
+   "code": "cacicus_cela",
+   "scientific": "Cacicus cela",
+   "common": "Yellow-rumped cacique",
+   "one": "yellow-rumped cacique",
+   "many": "yellow-rumped caciques",
    "kin": "cyanocitta_stelleri",
    "archetype": "perching bird",
-   "scale": 0.986,
+   "scale": 0.893,
    "tint": null,
-   "mass_kg": 0.115,
-   "density_km2": 35.6297,
+   "mass_kg": 0.085,
+   "density_km2": 40.1336,
    "group": [
     1,
     6
@@ -1130,6 +1134,438 @@
    ]
   },
   {
+   "code": "formicarius_analis",
+   "scientific": "Formicarius analis",
+   "common": "Black-faced antthrush",
+   "one": "black-faced antthrush",
+   "many": "black-faced antthrushs",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 0.803,
+   "tint": null,
+   "mass_kg": 0.062,
+   "density_km2": 45.5591,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "insectivore"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "phalacrocorax_brasilianus",
+   "scientific": "Phalacrocorax brasilianus",
+   "common": "Neotropic cormorant",
+   "one": "neotropic cormorant",
+   "many": "neotropic cormorants",
+   "kin": "mergus_merganser",
+   "archetype": "waterbird",
+   "scale": 0.938,
+   "tint": null,
+   "mass_kg": 1.239,
+   "density_km2": 0.4257,
+   "group": [
+    2,
+    10
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "predator"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "thamnomanes_ardesiacus",
+   "scientific": "Thamnomanes ardesiacus",
+   "common": "Dusky-throated antshrike",
+   "one": "dusky-throated antshrike",
+   "many": "dusky-throated antshrikes",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 0.528,
+   "tint": null,
+   "mass_kg": 0.018,
+   "density_km2": 70.0,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "insectivore"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "ardea_cocoi",
+   "scientific": "Ardea cocoi",
+   "common": "Cocoi heron",
+   "one": "cocoi heron",
+   "many": "cocoi herons",
+   "kin": "ardea_herodias",
+   "archetype": "wading bird",
+   "scale": 0.927,
+   "tint": null,
+   "mass_kg": 1.752,
+   "density_km2": 0.3283,
+   "group": [
+    1,
+    3
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "predator"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "opisthocomus_hoazin",
+   "scientific": "Opisthocomus hoazin",
+   "common": "Hoatzin",
+   "one": "hoatzin",
+   "many": "hoatzins",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 1.797,
+   "tint": null,
+   "mass_kg": 0.696,
+   "density_km2": 17.3399,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "momotus_momota",
+   "scientific": "Momotus momota",
+   "common": "Amazonian motmot",
+   "one": "amazonian motmot",
+   "many": "amazonian motmots",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 0.986,
+   "tint": null,
+   "mass_kg": 0.115,
+   "density_km2": 35.6297,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "omnivore"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "anhinga_anhinga",
+   "scientific": "Anhinga anhinga",
+   "common": "Anhinga",
+   "one": "anhinga",
+   "many": "anhingas",
+   "kin": "mergus_merganser",
+   "archetype": "waterbird",
+   "scale": 0.937,
+   "tint": null,
+   "mass_kg": 1.235,
+   "density_km2": 0.4268,
+   "group": [
+    2,
+    10
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "predator"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "aramus_guarauna",
+   "scientific": "Aramus guarauna",
+   "common": "Limpkin",
+   "one": "limpkin",
+   "many": "limpkins",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 2.08,
+   "tint": null,
+   "mass_kg": 1.08,
+   "density_km2": 0.472,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "predator"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
    "code": "patagioenas_plumbea",
    "scientific": "Patagioenas plumbea",
    "common": "Plumbeous pigeon",
@@ -1177,6 +1613,61 @@
     0,
     0,
     0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "coragyps_atratus",
+   "scientific": "Coragyps atratus",
+   "common": "Black vulture",
+   "one": "black vulture",
+   "many": "black vultures",
+   "kin": "cathartes_aura",
+   "archetype": "soaring scavenger",
+   "scale": 1.056,
+   "tint": null,
+   "mass_kg": 1.882,
+   "density_km2": 11.6485,
+   "group": [
+    1,
+    8
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "omnivore",
+    "scavenger"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
    ],
    "rest": "lie",
    "behaviour_sources": [
@@ -1238,6 +1729,61 @@
    ]
   },
   {
+   "code": "cathartes_melambrotus",
+   "scientific": "Cathartes melambrotus",
+   "common": "Greater yellow-headed vulture",
+   "one": "greater yellow-headed vulture",
+   "many": "greater yellow-headed vultures",
+   "kin": "cathartes_aura",
+   "archetype": "soaring scavenger",
+   "scale": 0.95,
+   "tint": null,
+   "mass_kg": 1.373,
+   "density_km2": 13.2137,
+   "group": [
+    1,
+    8
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "omnivore",
+    "scavenger"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
    "code": "capito_auratus",
    "scientific": "Capito auratus",
    "common": "Gilded barbet",
@@ -1262,6 +1808,60 @@
    "known": [
     "a parrot, toucan or hornbill on a jay's body"
    ],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "psarocolius_angustifrons",
+   "scientific": "Psarocolius angustifrons",
+   "common": "Russet-backed oropendola",
+   "one": "russet-backed oropendola",
+   "many": "russet-backed oropendolas",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 1.313,
+   "tint": null,
+   "mass_kg": 0.272,
+   "density_km2": 25.2687,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "omnivore"
+   ],
+   "known": [],
    "active_hours": [
     0,
     0,
@@ -1395,6 +1995,60 @@
     0,
     0,
     0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "rupornis_magnirostris",
+   "scientific": "Rupornis magnirostris",
+   "common": "Roadside hawk",
+   "one": "roadside hawk",
+   "many": "roadside hawks",
+   "kin": "buteo_jamaicensis",
+   "archetype": "soaring raptor",
+   "scale": 1.057,
+   "tint": null,
+   "mass_kg": 1.3,
+   "density_km2": 0.4108,
+   "group": [
+    1,
+    3
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "predator"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
    ],
    "rest": "lie",
    "behaviour_sources": [
@@ -1562,658 +2216,6 @@
    "behaviour_sources": [
     "eltontraits (activity)"
    ]
-  },
-  {
-   "code": "myrmoborus_myotherinus",
-   "scientific": "Myrmoborus myotherinus",
-   "common": "Black-faced antbird",
-   "one": "black-faced antbird",
-   "many": "black-faced antbirds",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.539,
-   "tint": null,
-   "mass_kg": 0.019,
-   "density_km2": 70.0,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "insectivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "psarocolius_angustifrons",
-   "scientific": "Psarocolius angustifrons",
-   "common": "Russet-backed oropendola",
-   "one": "russet-backed oropendola",
-   "many": "russet-backed oropendolas",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 1.313,
-   "tint": null,
-   "mass_kg": 0.272,
-   "density_km2": 25.2687,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "omnivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "opisthocomus_hoazin",
-   "scientific": "Opisthocomus hoazin",
-   "common": "Hoatzin",
-   "one": "hoatzin",
-   "many": "hoatzins",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 1.797,
-   "tint": null,
-   "mass_kg": 0.696,
-   "density_km2": 17.3399,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "herbivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "ara_macao",
-   "scientific": "Ara macao",
-   "common": "Scarlet macaw",
-   "one": "scarlet macaw",
-   "many": "scarlet macaws",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 2.037,
-   "tint": null,
-   "mass_kg": 1.015,
-   "density_km2": 14.9109,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "herbivore"
-   ],
-   "known": [
-    "a parrot, toucan or hornbill on a jay's body"
-   ],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "myrmotherula_axillaris",
-   "scientific": "Myrmotherula axillaris",
-   "common": "White-flanked antwren",
-   "one": "white-flanked antwren",
-   "many": "white-flanked antwrens",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.407,
-   "tint": null,
-   "mass_kg": 0.008,
-   "density_km2": 70.0,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "insectivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "ara_ararauna",
-   "scientific": "Ara ararauna",
-   "common": "Blue-and-yellow macaw",
-   "one": "blue-and-yellow macaw",
-   "many": "blue-and-yellow macaws",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 2.109,
-   "tint": null,
-   "mass_kg": 1.125,
-   "density_km2": 14.3097,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "herbivore"
-   ],
-   "known": [
-    "a parrot, toucan or hornbill on a jay's body"
-   ],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "paroaria_gularis",
-   "scientific": "Paroaria gularis",
-   "common": "Red-capped cardinal",
-   "one": "red-capped cardinal",
-   "many": "red-capped cardinals",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.582,
-   "tint": null,
-   "mass_kg": 0.024,
-   "density_km2": 67.1315,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "insectivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "myrmeciza_hyperythra",
-   "scientific": "Myrmeciza hyperythra",
-   "common": "Plumbeous antbird",
-   "one": "plumbeous antbird",
-   "many": "plumbeous antbirds",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.699,
-   "tint": null,
-   "mass_kg": 0.041,
-   "density_km2": 53.8242,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "insectivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "phalacrocorax_brasilianus",
-   "scientific": "Phalacrocorax brasilianus",
-   "common": "Neotropic cormorant",
-   "one": "neotropic cormorant",
-   "many": "neotropic cormorants",
-   "kin": "mergus_merganser",
-   "archetype": "waterbird",
-   "scale": 0.938,
-   "tint": null,
-   "mass_kg": 1.239,
-   "density_km2": 0.4257,
-   "group": [
-    2,
-    10
-   ],
-   "bird": true,
-   "night": false,
-   "water": true,
-   "role": [
-    "predator"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "ardea_alba",
-   "scientific": "Ardea alba",
-   "common": "Great egret",
-   "one": "great egret",
-   "many": "great egrets",
-   "kin": "ardea_herodias",
-   "archetype": "wading bird",
-   "scale": 0.919,
-   "tint": null,
-   "mass_kg": 1.707,
-   "density_km2": 0.3348,
-   "group": [
-    1,
-    3
-   ],
-   "bird": true,
-   "night": false,
-   "water": true,
-   "role": [
-    "predator"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "anhinga_anhinga",
-   "scientific": "Anhinga anhinga",
-   "common": "Anhinga",
-   "one": "anhinga",
-   "many": "anhingas",
-   "kin": "mergus_merganser",
-   "archetype": "waterbird",
-   "scale": 0.937,
-   "tint": null,
-   "mass_kg": 1.235,
-   "density_km2": 0.4268,
-   "group": [
-    2,
-    10
-   ],
-   "bird": true,
-   "night": false,
-   "water": true,
-   "role": [
-    "predator"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "megaceryle_torquata",
-   "scientific": "Megaceryle torquata",
-   "common": "Ringed kingfisher",
-   "one": "ringed kingfisher",
-   "many": "ringed kingfishers",
-   "kin": "megaceryle_alcyon",
-   "archetype": "kingfisher",
-   "scale": 1.283,
-   "tint": null,
-   "mass_kg": 0.317,
-   "density_km2": 1.1835,
-   "group": [
-    1,
-    3
-   ],
-   "bird": true,
-   "night": false,
-   "water": true,
-   "role": [
-    "predator"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
   }
  ],
  "skipped": [
@@ -2222,15 +2224,15 @@
    "why": "no rig for Chiroptera"
   },
   {
-   "id": "phaetusa_simplex",
+   "id": "myrmoborus_myotherinus",
    "why": "over the 40-slot cap"
   },
   {
-   "id": "ardea_cocoi",
+   "id": "megaceryle_torquata",
    "why": "over the 40-slot cap"
   },
   {
-   "id": "aramus_guarauna",
+   "id": "myrmotherula_axillaris",
    "why": "over the 40-slot cap"
   },
   {
@@ -2238,23 +2240,15 @@
    "why": "over the 40-slot cap"
   },
   {
-   "id": "cathartes_melambrotus",
+   "id": "paroaria_gularis",
    "why": "over the 40-slot cap"
   },
   {
-   "id": "butorides_striata",
+   "id": "phaetusa_simplex",
    "why": "over the 40-slot cap"
   },
   {
-   "id": "rynchops_niger",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "heliornis_fulica",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "falco_rufigularis",
+   "id": "myrmeciza_hyperythra",
    "why": "over the 40-slot cap"
   },
   {
@@ -2262,15 +2256,23 @@
    "why": "over the 40-slot cap"
   },
   {
-   "id": "coragyps_atratus",
+   "id": "rynchops_niger",
    "why": "over the 40-slot cap"
   },
   {
-   "id": "chloroceryle_americana",
+   "id": "daptrius_ater",
    "why": "over the 40-slot cap"
   },
   {
-   "id": "rupornis_magnirostris",
+   "id": "butorides_striata",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "falco_rufigularis",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "heliornis_fulica",
    "why": "over the 40-slot cap"
   },
   {
@@ -2278,7 +2280,7 @@
    "why": "over the 40-slot cap"
   },
   {
-   "id": "daptrius_ater",
+   "id": "chloroceryle_americana",
    "why": "over the 40-slot cap"
   },
   {

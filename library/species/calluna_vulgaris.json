@@ -407,7 +407,7 @@
  },
  "generated": {
   "by": "pipeline/plantgen.py",
-  "version": "2",
+  "version": "3",
   "card": "library/plant_cards/calluna_vulgaris.json",
   "card_sha256": "8271c6c432dd30ad",
   "template": "cassiope_mertensiana",
@@ -421,5 +421,76 @@
  "authors": [
   "Wild Earth (agent draft, 2026-11-05); needs local sign-off"
  ],
- "license": "CC BY-SA 4.0"
+ "license": "CC BY-SA 4.0",
+ "ground": {
+  "habit": "mat",
+  "woody": true,
+  "width_m": 0.96,
+  "leaf": {
+   "shape": "linear",
+   "size_m": 0.003,
+   "rgb": [
+    64,
+    86,
+    54
+   ],
+   "rgb_by_season": {
+    "winter": [
+     92,
+     82,
+     60
+    ],
+    "spring": [
+     70,
+     84,
+     56
+    ],
+    "summer": [
+     64,
+     86,
+     54
+    ],
+    "fall": [
+     100,
+     82,
+     70
+    ]
+   }
+  },
+  "height_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "dead_rgb": [
+   98,
+   74,
+   58
+  ],
+  "density": 1.0,
+  "from": "pipeline/plantgen.py ground_block: a dwarf shrub (card height to 0.4 m <= 0.5 m)",
+  "flower": {
+   "shape": "spike",
+   "rgb": [
+    196,
+    128,
+    180
+   ],
+   "size_m": 0.06,
+   "months": [
+    8,
+    9
+   ],
+   "per_plant": 28
+  }
+ }
 }

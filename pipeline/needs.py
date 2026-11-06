@@ -4,6 +4,8 @@ A tile needs every species that
   - its vegetation communities name (LANDFIRE EVT for natural cells, BpS for the rewilded human ones, as species_mix
     reads them; communities.named_species reads the names),
   - the species-mix rule that matches each community gives a weight (species_mix.match), and
+  - its canopy names (species/canopy.json, pipeline/tree_cards.py: the dominant trees from open plots, place
+    descriptions and records, with their share of the canopy as cover),
   - its GBIF records name often (fetch_species.inventory's vascular plants, MIN_RECORDS or more), where the library,
     a trait card or the lexicon knows the species (the rest are listed, not needed: GBIF's most-recorded plants of a
     tile are mostly herbs and garden escapes).
@@ -27,6 +29,7 @@ from .config import Tile, read_json, write_json
 MIN_RECORDS = 10        # GBIF records on the tile that make a library-known plant a need
 MIN_RECORDS_KNOWN = 2   # a species with a record or card already needs fewer (sparse tiles: the Serengeti's 459 plant records)
 MIN_CELLS = 10          # 30 m cells of a community before its species count (a stray pixel is not a forest)
+FOREST_CLASSES = ("mixed_forest", "conifer_forest", "oak_woodland", "riparian")   # habitat classes a canopy covers
 
 
 def communities(tile: Tile) -> list[dict]:
@@ -125,6 +128,18 @@ def plant_needs(tile: Tile, generate=False) -> dict:
                  cover=0.0 if rule else share / max(1, len(named)))
         if not rule and not named:
             unread.append({"source": c["source"], "code": c["code"], "name": c["name"], "cells": c["cells"]})
+
+    # the tile's canopy (pipeline/tree_cards.py, species/canopy.json, 2026-11-06): its dominant trees chosen from open
+    # plots, place descriptions and records, each with its share of the canopy; its cover is that share of the tile's
+    # forest (the cells of its forest communities), so species_mix weights the tile's own trees by it
+    cj = tile.path("species/canopy.json")
+    if cj.exists():
+        classes = read_json(tile.path("vegetation/classes.json"))
+        forest = sum(c["cells"] for c in comms
+                     if (classes.get(c["source"], {}).get(str(c["code"])) or {}).get("habitat") in FOREST_CLASSES) / total_cells
+        for t in read_json(cj).get("trees", []):
+            need(t["id"], "tree", f"canopy: {t['tier']} ({t['evidence'][0]})", cover=forest * float(t.get("share") or 0))
+            needs[t["id"]]["scientific"] = t["scientific"]
 
     # GBIF's most-recorded vascular plants on the tile (cached facet counts): the populous species the communities miss
     gbif = []

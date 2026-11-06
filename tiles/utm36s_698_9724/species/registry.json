@@ -1,6 +1,6 @@
 {
  "tile": "utm36s_698_9724",
- "at": "2026-11-06T06:49:23Z",
+ "at": "2026-11-06T10:49:27Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -11,8 +11,8 @@
  "summary": {
   "by_level": {
    "0": {
-    "plants": 2,
-    "animals": 80
+    "plants": 3,
+    "animals": 64
    },
    "1": {
     "plants": 0,
@@ -24,21 +24,22 @@
    },
    "3": {
     "plants": 0,
-    "animals": 1
+    "animals": 17
    },
    "4": {
     "plants": 1,
     "animals": 0
    }
   },
-  "plants": 7,
+  "plants": 8,
   "animals_present": 81,
   "animals_queued": 80,
   "meshy_credits_queued": 2395,
-  "cards_queued": 2,
+  "cards_queued": 3,
   "stand_ins": {
    "euphorbia_ingens": null,
-   "phoenix_reclinata": null
+   "phoenix_reclinata": null,
+   "vachellia_xanthophloea": null
   },
   "density": {
    "tree": {
@@ -56,13 +57,13 @@
    "animal": {
     "target": 22,
     "have": 81,
-    "with_model": 1
+    "with_model": 17
    }
   },
   "hands": {
-   "count": 82,
+   "count": 83,
    "by_what": {
-    "a trait card": 2,
+    "a trait card": 3,
     "a mesh": 80
    }
   }
@@ -96,7 +97,7 @@
    "fidelity": 2,
    "common": "umbrella thorn",
    "drawn_as": "vachellia_tortilis",
-   "share": 0.8647,
+   "share": 0.8651,
    "why_needed": [
     "GBIF: 9 records on the tile"
    ]
@@ -107,9 +108,9 @@
    "fidelity": 2,
    "common": "sausage tree",
    "drawn_as": "kigelia_africana",
-   "share": 0.0844,
+   "share": 0.084,
    "why_needed": [
-    "GBIF: 31 records on the tile"
+    "canopy: records (GBIF: 31 records on the tile; height not yet screened)"
    ]
   },
   {
@@ -137,13 +138,25 @@
   },
   {
    "id": "phoenix_reclinata",
-   "kind": "forb",
+   "kind": "tree",
    "fidelity": 0,
    "common": null,
    "drawn_as": null,
    "share": 0,
    "why_needed": [
-    "GBIF: 11 records on the tile"
+    "canopy: records (GBIF: 11 records on the tile; height not yet screened)"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "vachellia_xanthophloea",
+   "kind": "tree",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "canopy: records (GBIF: 7 records on the tile; height not yet screened)"
    ],
    "stand_in": null
   }
@@ -179,7 +192,7 @@
    "scientific": "Alopochen aegyptiaca",
    "common": "egyptian goose",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "most recorded: 2 of its class (2% of the class's records)"
@@ -194,7 +207,7 @@
    "scientific": "Vanellus armatus",
    "common": "blacksmith lapwing",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "most recorded: 3 of its class (2% of the class's records)"
@@ -209,7 +222,7 @@
    "scientific": "Leptoptilos crumenifer",
    "common": "marabou stork",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "predator and scavenger",
@@ -517,7 +530,7 @@
    "scientific": "Torgos tracheliotos",
    "common": "lappet-faced vulture",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "scavenger",
@@ -534,7 +547,7 @@
    "scientific": "Struthio camelus",
    "common": "common ostrich",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "most recorded: 25 of its class (1% of the class's records)"
@@ -994,7 +1007,7 @@
    "scientific": "Crocuta crocuta",
    "common": "spotted hyaena",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "predator",
@@ -1055,7 +1068,7 @@
    "scientific": "Panthera leo",
    "common": "lion",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "predator and scavenger",
@@ -1117,7 +1130,7 @@
    "scientific": "Hippopotamus amphibius",
    "common": "hippo",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "most recorded: 13 of its class (3% of the class's records)"
@@ -1132,7 +1145,7 @@
    "scientific": "Giraffa tippelskirchi",
    "common": "masai giraffe",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "most recorded: 14 of its class (3% of the class's records)"
@@ -1164,7 +1177,7 @@
    "scientific": "Loxodonta africana",
    "common": "african elephant",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "most recorded: 16 of its class (2% of the class's records)"
@@ -1194,7 +1207,7 @@
    "scientific": "Equus quagga",
    "common": "plains zebra",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "most recorded: 18 of its class (2% of the class's records)"
@@ -1209,7 +1222,7 @@
    "scientific": "Connochaetes taurinus",
    "common": "blue wildebeest",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "most recorded: 19 of its class (2% of the class's records)"
@@ -1224,7 +1237,7 @@
    "scientific": "Panthera pardus",
    "common": "leopard",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "predator",
@@ -1240,7 +1253,7 @@
    "scientific": "Acinonyx jubatus",
    "common": "cheetah",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "predator",
@@ -1256,7 +1269,7 @@
    "scientific": "Syncerus caffer",
    "common": "african buffalo",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "most recorded: 22 of its class (2% of the class's records)"
@@ -1363,7 +1376,7 @@
    "scientific": "Lycaon pictus",
    "common": "african wild dog",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "predator"
@@ -1399,10 +1412,18 @@
    },
    {
     "id": "phoenix_reclinata",
-    "kind": "forb",
+    "kind": "tree",
     "stand_in": null,
     "why": [
-     "GBIF: 11 records on the tile"
+     "canopy: records (GBIF: 11 records on the tile; height not yet screened)"
+    ]
+   },
+   {
+    "id": "vachellia_xanthophloea",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "canopy: records (GBIF: 7 records on the tile; height not yet screened)"
     ]
    }
   ],
@@ -2633,10 +2654,18 @@
   },
   {
    "id": "phoenix_reclinata",
-   "kind": "forb",
+   "kind": "tree",
    "what": "a trait card",
    "why": [
-    "GBIF: 11 records on the tile"
+    "canopy: records (GBIF: 11 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "vachellia_xanthophloea",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 7 records on the tile; height not yet screened)"
    ]
   },
   {

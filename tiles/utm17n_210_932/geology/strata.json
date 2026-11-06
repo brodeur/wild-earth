@@ -1,0 +1,34 @@
+{
+ "units": {
+  "1": {
+   "name": "Mesozoic-Cenozoic sedimentary rocks",
+   "lithology": "sandstone_conglomerate",
+   "cells": 2259669,
+   "elevation_m": {
+    "p5": 0.0,
+    "p25": 25.9,
+    "median": 83.2,
+    "p75": 162.6,
+    "p95": 282.9
+   },
+   "candidate": true
+  }
+ },
+ "column": false,
+ "reason": "1 bedrock unit(s) large enough: no column",
+ "rule": {
+  "min_cells": 2000,
+  "min_fraction": 0.0005,
+  "contact_dz_m": 1.0,
+  "min_contact": 50,
+  "superposed": 0.75,
+  "steep_deg": 25.0,
+  "min_band_fit": 0.5,
+  "min_column_fit": 0.6,
+  "max_dip_deg": 8.0,
+  "tilt_prior": 200,
+  "tilt_scale_m": 3000.0,
+  "map_tol_m": 20.0,
+  "doc": "pipeline/strata.py"
+ }
+}

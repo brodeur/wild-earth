@@ -1,0 +1,306 @@
+{
+ "id": "astrocaryum_standleyanum",
+ "scientific": "Astrocaryum standleyanum",
+ "common": "black palm",
+ "aliases": [
+  "astrocaryum_trachycarpum",
+  "chunga",
+  "guerre",
+  "guerregue",
+  "guinul",
+  "macora",
+  "mocora",
+  "mocora_palm",
+  "palma_negra",
+  "pejibaye_de_indio",
+  "pejibaye_de_montana"
+ ],
+ "family": "Arecaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "juglans_hindsii",
+ "regions": [
+  "neotropics"
+ ],
+ "height_m": [
+  15.0,
+  20.0
+ ],
+ "stature": {
+  "typical_m": 17.5,
+  "tall_m": 20.0,
+  "record_m": null,
+  "source": "Astrocaryum standleyanum - Wikipedia (English) (research record)"
+ },
+ "variants_height_m": {
+  "young": [
+   2.2,
+   9.0
+  ],
+  "veteran": [
+   20.0,
+   22.0
+  ]
+ },
+ "crown": {
+  "shape": "spherical",
+  "profile": [
+   [
+    0.769,
+    0.072
+   ],
+   [
+    0.827,
+    0.164
+   ],
+   [
+    0.896,
+    0.205
+   ],
+   [
+    0.954,
+    0.195
+   ],
+   [
+    0.988,
+    0.123
+   ],
+   [
+    1.0,
+    0.031
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.18,
+  "asymmetry": 0.18,
+  "fill": 0.4,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    52,
+    76,
+    40
+   ],
+   "spring": [
+    52,
+    76,
+    40
+   ],
+   "summer": [
+    52,
+    76,
+    40
+   ],
+   "fall": [
+    52,
+    76,
+    40
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "leaf_size_m": 0.6,
+  "leaf_shape": "pinnate_compound",
+  "flowers": null,
+  "berries": null
+ },
+ "trunk": {
+  "stems": [
+   1,
+   1
+  ],
+  "bark_rgb": [
+   96,
+   94,
+   90
+  ],
+  "bark_pattern": "smooth_grey",
+  "split_prob": 0.0,
+  "length_ratio": 1.0,
+  "bole_ratio": 0.769,
+  "base_size": 0.749,
+  "taper": 0.3,
+  "curve_deg": 2,
+  "lean_deg": 3,
+  "flare": 1.15,
+  "roots": false
+ },
+ "targets": {
+  "crown_width_ratio": 0.411,
+  "crown_base_ratio": 0.769,
+  "porosity": 0.3,
+  "from": "pipeline/tree_cards.py from the research record (crown: Umbrella-shaped crown of about 15 pinnate leaves (Monaco Nature Encyclopedia). Spanish Wikipedia and Useful Tropical Plants: 11-18 leaves, held horizontally / spreading horizontally.), no photographs measured"
+ },
+ "description": "A palm of lowland rain forest, secondary/gaps, 15-20 m tall. Trunk densely covered in sharp, flattened black spines up to 20 cm long, set between the leaf scars (English Wikipedia). Umbrella-shaped crown of about 15 pinnate leaves (Monaco Nature Encyclopedia). Fruit: Ovoid, grey-green turning bright orange when ripe, with sweet pulpy orange flesh; 2.5-6 cm long and 2-3 cm wide (Spanish Wikipedia; Monaco to 6 x 3 cm); about 25 g (English Wikipedia); one large seed in a hard black stony endocarp of about 10 g (Jansen et al.",
+ "season_notes": {
+  "winter": "In leaf.",
+  "spring": "In leaf. Fruiting.",
+  "summer": "In leaf. Fruiting.",
+  "fall": "In leaf."
+ },
+ "habitat": {
+  "classes": {
+   "mixed_forest": 1.0,
+   "riparian": 0.3
+  },
+  "floor": 1.0,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 1.0,
+  "shade": 0.4,
+  "disturbed": 1.0
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "dasyprocta_punctata",
+    "part": "seeds",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   },
+   {
+    "animal": "proechimys_semispinosus",
+    "part": "seeds",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   },
+   {
+    "animal": "sciurus_granatensis",
+    "part": "seeds",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   },
+   {
+    "animal": "potamocarcinus_richmondi",
+    "part": "seeds",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   },
+   {
+    "animal": "sylvilagus_brasiliensis",
+    "part": "berries",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": []
+ },
+ "range": {
+  "elev_m": [
+   0,
+   500
+  ],
+  "where": "Southeastern Costa Rica to northeastern Ecuador, including the Pacific lowlands of Colombia (Choco and Antioquia to Narino); most common in central Panama, abundant around the Panama Canal"
+ },
+ "stand_in": "juglans_hindsii",
+ "notes": "Template juglans_hindsii: a palm: treegen has no palm architecture (Corner's model: one unbranched stem, a crown of fronds); California black walnut is the nearest by leaf (pinnate). Crown width: twice the frond length, the fronds arching (no source gives the crown's width). Leaf size clamped to 0.6 m (the source's 110 cm is past what a leaf card carries). Palm stand-in: the bole runs clear and unforked to the crown (split_prob 0, bole and base_size at the crown's base) and a compact crown of pinnate leaf sprays stands for the fronds; the walnut's branching still makes short limbs inside that crown, which a palm does not have. Research notes: Field provenance where a block mixes sources: frond_count [11, 18] is Spanish Wikipedia and Useful Tropical Plants (English Wikipedia and Monaco: about 15; 3-5 new leaves a year, each living about 4.5 years). leaf.length_cm: English Wikipedia up to 4 m, Spanish Wikipedia about 4 m, Monaco up to 5 m. leaflet_length_cm [110, 110] is only the maximum for the central pinnae (Monaco); no minimum or proximal length was found. Undersides glaucous: English Wikipedia and Monaco both say so. Height: English Wikipedia and Monaco 15-20 m; Spanish Wikipedia and UTP 6-15 m (UTP table 10 m). Stem diameter: English Wikipedia 18-25 cm; Spanish Wikipedia and UTP 16-22 cm; Monaco up to 30 cm. Spines: up to 20 cm (English Wikipedia, Monaco) vs 10-15 cm (UTP). Evergreen is stated by UTP. Flowers: white (English Wikipedia), cream (Monaco), in erect interfoliar inflorescences that bend down in fruit; flowering 'during the rainy season' (English Wikipedia, Monaco) with no months given, so flowering_months is empty. Fruiting March-June is English Wikipedia (region not stated); Jansen et al. 2012 give a peak in May-June on Barro Colorado Island, Panama, up to 1,500 fruits per palm. No Costa Rica / Osa months found. Habitat: English Wikipedia wet forest up to 500 m; Spanish Wikipedia well-drained soils, usually below 200 m; UTP lowland rain forest on imperfectly drained soils below 200 m, and often left standing in pastures when forest is cleared (the basis for 'secondary/gaps'); Colplanta 0-200 m; Monaco non-flooded forest to about 300 m. Sources disagree on drainage. Animals: in the Jansen et al. camera study agoutis removed 83% of the seeds taken; spiny rats recovered ~4%, red-tailed squirrels ~1%, land crabs ~1% of cached seeds. English Wikipedia also lists capuchins, opossums, pacas, coatis, peccaries and squirrels without scientific names, ants and bruchid and scolytid beetles as seed predators, and gomphotheres as presumed past dispersers. Spanish Wikipedia: pulp eaten by agoutis, squirrels, mice, toucans, guans and parrots (no scientific names). No source read names bats as eating the fruit; eMammal's BCI palm camera project page names no species. Uses: young-leaf fibre woven by Wounaan and Embera (Spanish Wikipedia); palm heart eaten (UTP). NYBG Osa taxon page gave only common names and specimens (no Osa/Corcovado specimen listed); its vh page and floracostaricensis.myspecies.info were blocked (human check / 403). Monaco Nature Encyclopedia text is all rights reserved: use its values, not its wording. The walnut's first-order limbs stand in for the 14 fronds (4.5 m, arching), leafy along their length; a pinnate leaf card stands for the leaflets.",
+ "sources": [
+  "Astrocaryum standleyanum - Wikipedia (English), https://en.wikipedia.org/wiki/Astrocaryum_standleyanum (CC BY-SA 4.0), read 2026-11-06",
+  "Astrocaryum standleyanum - Wikipedia (Spanish), https://es.wikipedia.org/wiki/Astrocaryum_standleyanum (CC BY-SA 4.0), read 2026-11-06",
+  "Astrocaryum standleyanum - Useful Tropical Plants (Ken Fern), https://tropical.theferns.info/viewtropical.php?id=Astrocaryum+standleyanum (CC BY-NC-SA 3.0 Unported), read 2026-11-06",
+  "Jansen, P. A., Hirsch, B. T., Emsens, W.-J., Zamora-Gutierrez, V., Wikelski, M. & Kays, R. 2012. Thieving rodents as substitute dispersers of megafaunal seeds. PNAS 109(31): 12610-12615, https://pmc.ncbi.nlm.nih.gov/articles/PMC3412018 (unknown (PNAS open access option; no CC licence stated on the PMC page)), read 2026-11-06",
+  "Astrocaryum standleyanum - Monaco Nature Encyclopedia (A. Marini, trans. M. Beltramini), https://www.monaconatureencyclopedia.com/astrocaryum-standleyanum/?lang=en (All rights reserved), read 2026-11-06",
+  "Astrocaryum standleyanum - Vascular Plants of the Osa Peninsula, Costa Rica (NYBG taxon page), https://sweetgum.nybg.org/science/projects/osa/taxon-details/?irn=281468 (unknown (copyright NYBG, no licence stated)), read 2026-11-06",
+  "Astrocaryum standleyanum - Colplanta (RBG Kew; Catalogo de Plantas y Liquenes de Colombia, Useful Plants and Fungi of Colombia), https://colplanta.org/taxon/urn:lsid:ipni.org:names:25887-2/general-information (mixed per section: CC BY-NC-SA 3.0 (Colombian catalogue, UPFC), CC BY 3.0/4.0 (Kew backbone, extinction-risk predictions)), read 2026-11-06",
+  "research record library/plant_cards/_research/astrocaryum_standleyanum.json (pipeline/tree_cards.py)"
+ ],
+ "authors": [
+  "Wild Earth (pipeline/tree_cards.py from an agent's sourced research record, 2026-11-06); needs local sign-off"
+ ],
+ "generated_by": {
+  "by": "pipeline/tree_cards.py",
+  "version": "1"
+ },
+ "patch": {
+  "foliage": {
+   "flowers": null,
+   "berries": null,
+   "start": 0.0,
+   "parent_start": 0.05,
+   "cards_per_m2": 1.2,
+   "density": 14,
+   "winter_twigs": 0.0,
+   "leaf_on_var": 0.0
+  },
+  "levels": [
+   {
+    "count": 14,
+    "down_angle_deg": 55,
+    "down_angle_tip_deg": 20,
+    "down_angle_var_deg": 15,
+    "rotation_deg": 140,
+    "rotation_var_deg": 30,
+    "length_ratio": 0.334,
+    "length_var": 0.15,
+    "curve_deg": 0,
+    "curve_var_deg": 18,
+    "zigzag_deg": 4,
+    "tropism": 0.0,
+    "droop_deg": 35,
+    "taper": 0.9,
+    "radius_ratio": 0.25,
+    "segments": 4
+   },
+   {
+    "count": 9,
+    "start": 0.05,
+    "down_angle_deg": 70,
+    "down_angle_var_deg": 15,
+    "rotation_deg": 140,
+    "rotation_var_deg": 30,
+    "length_ratio": 0.35,
+    "length_var": 0.2,
+    "curve_deg": 0,
+    "curve_var_deg": 18,
+    "zigzag_deg": 6,
+    "tropism": 0.04,
+    "taper": 1.0,
+    "radius_ratio": 0.45,
+    "segments": 2
+   }
+  ],
+  "snag": {
+   "fraction": 0.0
+  }
+ },
+ "variant_patches": {
+  "young": {
+   "set": {
+    "trunk": {
+     "split_prob": 0.0
+    }
+   },
+   "note": "a young palm: a rosette of fronds near the ground before the stem rises"
+  }
+ }
+}

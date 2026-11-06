@@ -79,6 +79,146 @@
  ],
  "needs": [
   {
+   "id": "anacardium_excelsum",
+   "kind": "tree",
+   "why": [
+    "canopy: named (enwiki_corcovado_national_park: named as espave (characteristic); 101 GBIF records within 0.5 deg)"
+   ],
+   "cover": 0.0583,
+   "records": 31,
+   "scientific": "Anacardium excelsum",
+   "record": true,
+   "card": true,
+   "drawn_as": "anacardium_excelsum",
+   "rank": 1
+  },
+  {
+   "id": "brosimum_utile",
+   "kind": "tree",
+   "why": [
+    "canopy: named (enwiki_corcovado_national_park: named as cow tree (characteristic); 61 GBIF records within 0.5 deg)"
+   ],
+   "cover": 0.0583,
+   "records": 0,
+   "scientific": "Brosimum utile",
+   "record": true,
+   "card": true,
+   "drawn_as": "brosimum_utile",
+   "rank": 2
+  },
+  {
+   "id": "carapa_guianensis",
+   "kind": "tree",
+   "why": [
+    "canopy: named (enwiki_corcovado_national_park: named as crabwood (characteristic); 49 GBIF records within 0.5 deg)"
+   ],
+   "cover": 0.0583,
+   "records": 0,
+   "scientific": "Carapa guianensis",
+   "record": true,
+   "card": true,
+   "drawn_as": "carapa_guianensis",
+   "rank": 3
+  },
+  {
+   "id": "peltogyne_purpurea",
+   "kind": "tree",
+   "why": [
+    "canopy: named (enwiki_corcovado_national_park: named as purple heart (linked to Peltogyne) (characteristic); 83 GBIF records within 0.5 deg)"
+   ],
+   "cover": 0.0583,
+   "records": 0,
+   "scientific": "Peltogyne purpurea",
+   "record": true,
+   "card": true,
+   "drawn_as": "peltogyne_purpurea",
+   "rank": 4
+  },
+  {
+   "id": "terminalia_amazonia",
+   "kind": "tree",
+   "why": [
+    "canopy: named (enwiki_corcovado_national_park: named as nargusta (characteristic); 34 GBIF records within 0.5 deg)"
+   ],
+   "cover": 0.0583,
+   "records": 0,
+   "scientific": "Terminalia amazonia",
+   "record": true,
+   "card": true,
+   "drawn_as": "terminalia_amazonia",
+   "rank": 5
+  },
+  {
+   "id": "trichilia_tuberculata",
+   "kind": "tree",
+   "why": [
+    "canopy: records (GBIF: 39 records on the tile; sourced maximum height 30 m)"
+   ],
+   "cover": 0.0406,
+   "records": 39,
+   "scientific": "Trichilia tuberculata",
+   "record": true,
+   "card": true,
+   "drawn_as": "trichilia_tuberculata",
+   "rank": 6
+  },
+  {
+   "id": "astrocaryum_standleyanum",
+   "kind": "tree",
+   "why": [
+    "canopy: records (GBIF: 7 records on the tile; sourced maximum height 20 m)"
+   ],
+   "cover": 0.0389,
+   "records": 0,
+   "scientific": "Astrocaryum standleyanum",
+   "record": true,
+   "card": true,
+   "drawn_as": "astrocaryum_standleyanum",
+   "rank": 7
+  },
+  {
+   "id": "socratea_exorrhiza",
+   "kind": "tree",
+   "why": [
+    "canopy: records (GBIF: 2 records on the tile; sourced maximum height 25 m)"
+   ],
+   "cover": 0.0389,
+   "records": 0,
+   "scientific": "Socratea exorrhiza",
+   "record": true,
+   "card": true,
+   "drawn_as": "socratea_exorrhiza",
+   "rank": 8
+  },
+  {
+   "id": "heisteria_acuminata",
+   "kind": "tree",
+   "why": [
+    "canopy: records (GBIF: 37 records on the tile; sourced maximum height 15 m)"
+   ],
+   "cover": 0.0386,
+   "records": 37,
+   "scientific": "Heisteria acuminata",
+   "record": true,
+   "card": true,
+   "drawn_as": "heisteria_acuminata",
+   "rank": 9
+  },
+  {
+   "id": "pouteria_subrotata",
+   "kind": "tree",
+   "why": [
+    "canopy: records (GBIF: 36 records on the tile; sourced maximum height 20 m)"
+   ],
+   "cover": 0.0375,
+   "records": 36,
+   "scientific": "Pouteria subrotata",
+   "record": true,
+   "card": true,
+   "drawn_as": "pouteria_subrotata",
+   "rank": 10
+  },
+  {
    "id": "aechmea_magdalenae",
    "kind": "forb",
    "why": [
@@ -91,7 +231,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 1
+   "rank": 11
   },
   {
    "id": "hyperbaena_leptobotryosa",
@@ -106,7 +246,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 2
+   "rank": 12
   },
   {
    "id": "damburneya_umbrosa",
@@ -121,7 +261,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 3
+   "rank": 13
   },
   {
    "id": "palicourea_hoffmannseggiana",
@@ -136,7 +276,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 4
+   "rank": 14
   },
   {
    "id": "aspasia_epidendroides",
@@ -151,22 +291,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 5
-  },
-  {
-   "id": "trichilia_tuberculata",
-   "kind": "forb",
-   "why": [
-    "GBIF: 39 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 39,
-   "scientific": "Trichilia tuberculata",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 6
+   "rank": 15
   },
   {
    "id": "chomelia_microloba",
@@ -181,7 +306,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 7
+   "rank": 16
   },
   {
    "id": "crossopetalum_parviflorum",
@@ -196,7 +321,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 8
+   "rank": 17
   },
   {
    "id": "anthurium_eximium",
@@ -211,37 +336,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 9
-  },
-  {
-   "id": "heisteria_acuminata",
-   "kind": "forb",
-   "why": [
-    "GBIF: 37 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 37,
-   "scientific": "Heisteria acuminata",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 10
-  },
-  {
-   "id": "pouteria_subrotata",
-   "kind": "forb",
-   "why": [
-    "GBIF: 36 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 36,
-   "scientific": "Pouteria subrotata",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 11
+   "rank": 18
   },
   {
    "id": "hamelia_axillaris",
@@ -256,22 +351,21 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 12
+   "rank": 19
   },
   {
    "id": "croton_schiedeanus",
-   "kind": "forb",
+   "kind": "tree",
    "why": [
     "GBIF: 34 records on the tile"
    ],
    "cover": 0.0,
    "records": 34,
    "scientific": "Croton schiedeanus",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 13
+   "record": true,
+   "card": true,
+   "drawn_as": "croton_schiedeanus",
+   "rank": 20
   },
   {
    "id": "goeppertia_marantifolia",
@@ -286,7 +380,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 14
+   "rank": 21
   },
   {
    "id": "guatteria_amplifolia",
@@ -301,7 +395,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 15
+   "rank": 22
   },
   {
    "id": "hieronyma_alchorneoides",
@@ -316,7 +410,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 16
+   "rank": 23
   },
   {
    "id": "palicourea_racemosa",
@@ -331,7 +425,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 17
+   "rank": 24
   },
   {
    "id": "callicarpa_acuminata",
@@ -346,7 +440,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 18
+   "rank": 25
   },
   {
    "id": "ficus_zarzalensis",
@@ -361,7 +455,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 19
+   "rank": 26
   },
   {
    "id": "passiflora_vitifolia",
@@ -376,22 +470,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 20
-  },
-  {
-   "id": "anacardium_excelsum",
-   "kind": "shrub",
-   "why": [
-    "GBIF: 31 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 31,
-   "scientific": "Anacardium excelsum",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 21
+   "rank": 27
   },
   {
    "id": "miconia_aguilarii",
@@ -406,7 +485,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 22
+   "rank": 28
   },
   {
    "id": "stigmaphyllon_ellipticum",
@@ -421,7 +500,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 23
+   "rank": 29
   },
   {
    "id": "dalbergia_brownei",
@@ -436,7 +515,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 24
+   "rank": 30
   },
   {
    "id": "faramea_occidentalis",
@@ -451,7 +530,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 25
+   "rank": 31
   },
   {
    "id": "guarea_glabra",
@@ -466,7 +545,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 26
+   "rank": 32
   },
   {
    "id": "guettarda_foliacea",
@@ -481,7 +560,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 27
+   "rank": 33
   },
   {
    "id": "pterygota_excelsa",
@@ -496,7 +575,67 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 28
+   "rank": 34
+  },
+  {
+   "id": "cissus_biformifolia",
+   "kind": "forb",
+   "why": [
+    "GBIF: 29 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 29,
+   "scientific": "Cissus biformifolia",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 35
+  },
+  {
+   "id": "geonoma_cuneata",
+   "kind": "forb",
+   "why": [
+    "GBIF: 29 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 29,
+   "scientific": "Geonoma cuneata",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 36
+  },
+  {
+   "id": "anthurium_pentaphyllum",
+   "kind": "forb",
+   "why": [
+    "GBIF: 28 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 28,
+   "scientific": "Anthurium pentaphyllum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 37
+  },
+  {
+   "id": "desmodium_axillare",
+   "kind": "forb",
+   "why": [
+    "GBIF: 28 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 28,
+   "scientific": "Desmodium axillare",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 38
   },
   {
    "id": "tetrathylacium_macrophyllum",
@@ -511,7 +650,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 29
+   "rank": 39
   },
   {
    "id": "ocotea_insularis",
@@ -526,7 +665,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 30
+   "rank": 40
   },
   {
    "id": "nectandra_hihua",
@@ -541,7 +680,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 31
+   "rank": 41
   },
   {
    "id": "paullinia_bracteosa",
@@ -556,7 +695,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 32
+   "rank": 42
   }
  ],
  "gbif_plants": [
@@ -596,9 +735,9 @@
    "id": "trichilia_tuberculata",
    "scientific": "Trichilia tuberculata",
    "family": "Meliaceae",
-   "kind": "forb",
+   "kind": "tree",
    "records": 39,
-   "known": false
+   "known": true
   },
   {
    "id": "aspasia_epidendroides",
@@ -636,17 +775,17 @@
    "id": "heisteria_acuminata",
    "scientific": "Heisteria acuminata",
    "family": "Erythropalaceae",
-   "kind": "forb",
+   "kind": "tree",
    "records": 37,
-   "known": false
+   "known": true
   },
   {
    "id": "pouteria_subrotata",
    "scientific": "Pouteria subrotata",
    "family": "Sapotaceae",
-   "kind": "forb",
+   "kind": "tree",
    "records": 36,
-   "known": false
+   "known": true
   },
   {
    "id": "hamelia_axillaris",
@@ -660,9 +799,9 @@
    "id": "croton_schiedeanus",
    "scientific": "Croton schiedeanus",
    "family": "Euphorbiaceae",
-   "kind": "forb",
+   "kind": "tree",
    "records": 34,
-   "known": false
+   "known": true
   },
   {
    "id": "palicourea_racemosa",
@@ -724,9 +863,9 @@
    "id": "anacardium_excelsum",
    "scientific": "Anacardium excelsum",
    "family": "Anacardiaceae",
-   "kind": "shrub",
+   "kind": "tree",
    "records": 31,
-   "known": false
+   "known": true
   },
   {
    "id": "stigmaphyllon_ellipticum",
@@ -1768,8 +1907,8 @@
   "ground": 26
  },
  "by_layer": {
-  "tree": 3,
-  "shrub": 3,
+  "tree": 14,
+  "shrub": 2,
   "ground": 26
  },
  "hands": [
@@ -1814,14 +1953,6 @@
    ]
   },
   {
-   "id": "trichilia_tuberculata",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 39 records on the tile"
-   ]
-  },
-  {
    "id": "chomelia_microloba",
    "kind": "forb",
    "what": "a trait card",
@@ -1846,35 +1977,11 @@
    ]
   },
   {
-   "id": "heisteria_acuminata",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 37 records on the tile"
-   ]
-  },
-  {
-   "id": "pouteria_subrotata",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 36 records on the tile"
-   ]
-  },
-  {
    "id": "hamelia_axillaris",
    "kind": "forb",
    "what": "a trait card",
    "why": [
     "GBIF: 35 records on the tile"
-   ]
-  },
-  {
-   "id": "croton_schiedeanus",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 34 records on the tile"
    ]
   },
   {
@@ -1934,14 +2041,6 @@
    ]
   },
   {
-   "id": "anacardium_excelsum",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 31 records on the tile"
-   ]
-  },
-  {
    "id": "miconia_aguilarii",
    "kind": "forb",
    "what": "a trait card",
@@ -1995,6 +2094,38 @@
    "what": "a trait card",
    "why": [
     "GBIF: 30 records on the tile"
+   ]
+  },
+  {
+   "id": "cissus_biformifolia",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 29 records on the tile"
+   ]
+  },
+  {
+   "id": "geonoma_cuneata",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 29 records on the tile"
+   ]
+  },
+  {
+   "id": "anthurium_pentaphyllum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 28 records on the tile"
+   ]
+  },
+  {
+   "id": "desmodium_axillare",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 28 records on the tile"
    ]
   },
   {
@@ -2055,14 +2186,14 @@
   }
  ],
  "summary": {
-  "needed": 32,
-  "with_record": 0,
+  "needed": 42,
+  "with_record": 11,
   "generated_now": 0,
-  "queued": 32,
+  "queued": 31,
   "unread_communities": 3,
   "by_layer": {
-   "tree": 3,
-   "shrub": 3,
+   "tree": 14,
+   "shrub": 2,
    "ground": 26
   },
   "meets_target": {
@@ -2070,6 +2201,6 @@
    "shrub": false,
    "ground": true
   },
-  "hands": 35
+  "hands": 34
  }
 }

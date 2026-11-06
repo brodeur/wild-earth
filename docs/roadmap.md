@@ -261,9 +261,11 @@ Where it stands (2026-11-06): phase 1 iterations 1 and 2 are on branch claude/sw
 the regression set (docs/probes-2026-11.md). The Serengeti deep pass ran: 11 signature species modelled by the pipeline for
 480 Meshy credits (`pipeline/fauna_models.py`, `tools/build_quadruped.py`). Iteration 3 added behaviour from traits (each slot's own hours, rest posture,
 groups and measured density: EltonTraits, PanTHERIA), two-sided broadleaf leaves and a fair judge (the satellite through
-the viewer's own light). Next, in order: physical ground albedo (the fair judge shows open ground 12-20 L* too bright;
-a look change on every tile, for Aaron); the ground layer's species chosen per tile (Lofoten's heath); trait cards for a
-tropical tile's own trees; a stratigraphic column for the Grand Canyon's bands; generic builds for birds.
+the viewer's own light). Iteration 4 made the ground layer and the canopy a tile's own (per-tile
+forb atlas, dwarf shrubs as carpets, tree cards from open plots and records), learned the Grand Canyon's strata from map
+and DEM, gave birds a generic build (5 Serengeti birds, 150 credits) and prides their size (Prox and Farine 2020). Held:
+physical ground albedo (for Aaron). Next: a palm architecture; kin rules for ground birds; a sprawling build for
+reptiles; heights from the canopy height map; Lofoten's carpet density.
 
 The earlier gestalt order, now phase 2:
 

@@ -1,0 +1,85 @@
+{
+ "tile": "utm33n_412_7531",
+ "version": "1",
+ "context": {
+  "centre": [
+   13.020345450566925,
+   67.92647294684576
+  ],
+  "elevation_m": 530.0,
+  "koppen": "ET",
+  "group": "boreal",
+  "wcvp_area": "NOR"
+ },
+ "plots": [],
+ "rule": "pipeline/tree_cards.py choose(): plots, then named trees of open place descriptions, then the tile's most-recorded WCVP trees that reach the subcanopy; shares by tier (TIER_SHARE)",
+ "trees": [
+  {
+   "id": "sorbus_aucuparia",
+   "scientific": "Sorbus aucuparia",
+   "family": "Rosaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 83.0,
+   "evidence": [
+    "GBIF: 83 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.664,
+   "research": false,
+   "card": true
+  },
+  {
+   "id": "betula_pubescens",
+   "scientific": "Betula pubescens",
+   "family": "Betulaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 31.0,
+   "evidence": [
+    "GBIF: 31 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.248,
+   "research": false,
+   "card": true
+  },
+  {
+   "id": "salix_caprea",
+   "scientific": "Salix caprea",
+   "family": "Salicaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 11.0,
+   "evidence": [
+    "GBIF: 11 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.088,
+   "research": false,
+   "card": false
+  }
+ ],
+ "queued": [
+  {
+   "id": "sorbus_aucuparia",
+   "scientific": "Sorbus aucuparia",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "betula_pubescens",
+   "scientific": "Betula pubescens",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "salix_caprea",
+   "scientific": "Salix caprea",
+   "why": "needs a research record (its height decides whether it stays)"
+  }
+ ],
+ "log": [
+  "plot vela_apaza_2024_los_amigos: not used (11017 km, 280 m apart, climate Am)",
+  "records: Acer pseudoplatanus skipped (WCVP: not native in NOR)"
+ ],
+ "cards_written": []
+}

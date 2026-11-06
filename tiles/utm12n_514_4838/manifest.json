@@ -15,7 +15,7 @@
   43.78492414769734
  ],
  "size_m": 10000,
- "generated_at": "2026-11-06T08:46:34Z",
+ "generated_at": "2026-11-06T09:49:47Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -3748,6 +3748,7 @@
     "sample_points": 25,
     "requests": 45,
     "uncovered_pieces": 0,
+    "uncovered_fraction": 0.0,
     "fallback_errors": []
    },
    "licence": "public domain (USGS SGMC) via Macrostrat, CC-BY 4.0",
@@ -3758,8 +3759,8 @@
    "path": "geology/classes.json",
    "kind": "table",
    "source": "macrostrat",
-   "sha256": "4459da565e24440bef4e349f2a366ea566eb2fdbcade459f43fdb3cda44a772a",
-   "bytes": 7103
+   "sha256": "ad9dd42ce6c041c8cc216bb37a2387e602960595ea2716c7f3ad2960b0453cca",
+   "bytes": 7179
   },
   "client.geology": {
    "path": "client/geology.png",
@@ -7043,7 +7044,7 @@
    "generated_traits": 0,
    "queued": 51,
    "queued_credits": 1525,
-   "sha256": "8f86d71c1aa0efa97e7463d54237e1575f0b84c3df0ced1343d1e8eca823422b",
+   "sha256": "2597a285e38fbe3010ed2cb76d2ef068c68c9c988d736d1b1cdde40339712208",
    "bytes": 122377
   },
   "resources": {
@@ -7226,6 +7227,18 @@
    },
    "sha256": "e3df7a36268a5c44fd464986dfa9f6ac0c64f7f70d0d73fcc2c1c3fe7208318b",
    "bytes": 33472
+  },
+  "geology.strata": {
+   "path": "geology/strata.json",
+   "kind": "table",
+   "derived_from": [
+    "geology.units",
+    "terrain.dem"
+   ],
+   "column": false,
+   "reason": "fewer than two units left in the column",
+   "sha256": "ead631fcfbb83be27932c97c150f389b8280b3e495e5a6f2e75ba584d2bf5bb1",
+   "bytes": 2700
   }
  },
  "sources": {
@@ -7739,6 +7752,24 @@
    "at": "2026-11-06T08:46:34Z",
    "seconds": 0.6,
    "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T09:32:32Z",
+   "seconds": 0.6,
+   "ok": true
+  },
+  {
+   "step": "ground",
+   "at": "2026-11-06T09:49:41Z",
+   "seconds": 1.6,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-06T09:49:47Z",
+   "seconds": 5.7,
+   "ok": true
   }
  ],
  "steps": {
@@ -8246,15 +8277,15 @@
    "seconds": 17.8
   },
   "ground": {
-   "version": "1",
-   "code": "3d08289ed3722f2d",
+   "version": "2",
+   "code": "bdf9e60ccbacc069",
    "params": {
     "tile": "utm12n_514_4838"
    },
-   "fingerprint": "5e8d4c8f183a9066",
+   "fingerprint": "e8cf1b64021c1208",
    "parts": {
-    "version": "1",
-    "code": "3d08289ed3722f2d",
+    "version": "2",
+    "code": "bdf9e60ccbacc069",
     "params": {
      "tile": "utm12n_514_4838"
     },
@@ -8265,7 +8296,7 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-06T06:47:20Z",
+   "ran_at": "2026-11-06T09:49:39Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -8274,6 +8305,7 @@
     "client.outcrop",
     "client.soils",
     "geology.classes",
+    "geology.strata",
     "geology.units",
     "soils.classes",
     "soils.mapunits"
@@ -8283,12 +8315,13 @@
     "client/ground_classes.json": "1da55ff93d1e56ce",
     "client/outcrop.png": "6bdec543662203ea",
     "client/soils.png": "c110dd2662e29055",
-    "geology/classes.json": "4459da565e24440b",
+    "geology/classes.json": "ad9dd42ce6c041c8",
+    "geology/strata.json": "ead631fcfbb83be2",
     "geology/units.geojson": "59b43b91e6f52237",
     "soils/classes.json": "fd5323b0f3896a09",
     "soils/mapunits.geojson": "4c924446a8ef20f2"
    },
-   "out_hash": "b4e389c4792e87a7",
+   "out_hash": "077e37491f566f57",
    "sources": {
     "macrostrat": "2026-11-06",
     "usgs_sgmc": "2026-11-06",
@@ -8300,7 +8333,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 0.8
+   "seconds": 1.6
   },
   "terrain": {
    "version": "1",
@@ -8434,7 +8467,7 @@
    "params": {
     "tile": "utm12n_514_4838"
    },
-   "fingerprint": "f21d0fb2cfc43df8",
+   "fingerprint": "a94754f332721f87",
    "parts": {
     "version": "1",
     "code": "2e65b327a37a5d98",
@@ -8442,7 +8475,7 @@
      "tile": "utm12n_514_4838"
     },
     "deps": {
-     "ground": "b4e389c4792e87a7",
+     "ground": "077e37491f566f57",
      "water": "4c2086d7018908a1",
      "dem": "72b8ece09500edf1",
      "lidar": "123fe53ce031f393",
@@ -8454,7 +8487,7 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-06T06:47:52Z",
+   "ran_at": "2026-11-06T09:49:41Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -8473,7 +8506,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 6.0
+   "seconds": 5.7
   },
   "seasons": {
    "version": "1",
@@ -8846,15 +8879,15 @@
    "seconds": 1.4
   },
   "animals": {
-   "version": "3",
-   "code": "be670a1c30ba43d8",
+   "version": "4",
+   "code": "2e6da1fc957a6827",
    "params": {
     "tile": "utm12n_514_4838"
    },
-   "fingerprint": "2000810c018ecedc",
+   "fingerprint": "23e1ff7b078e9763",
    "parts": {
-    "version": "3",
-    "code": "be670a1c30ba43d8",
+    "version": "4",
+    "code": "2e6da1fc957a6827",
     "params": {
      "tile": "utm12n_514_4838"
     },
@@ -8867,7 +8900,7 @@
      "data/eltontraits": "e3b0c44298fc1c14"
     }
    },
-   "ran_at": "2026-11-06T08:46:33Z",
+   "ran_at": "2026-11-06T09:32:31Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -8876,9 +8909,9 @@
    ],
    "outputs": {
     "client/fauna.json": "e3df7a36268a5c44",
-    "species/animals.json": "8f86d71c1aa0efa9"
+    "species/animals.json": "2597a285e38fbe30"
    },
-   "out_hash": "40b7ce40bbab5aa0",
+   "out_hash": "b6024602f8472e0d",
    "sources": {
     "gbif": "2026-11-06",
     "eltontraits": "2026-11-06"
@@ -8887,7 +8920,7 @@
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 206
+    "cache": 207
    },
    "seconds": 0.6
   },

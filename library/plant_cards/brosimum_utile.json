@@ -1,0 +1,208 @@
+{
+ "id": "brosimum_utile",
+ "scientific": "Brosimum utile",
+ "common": "milk tree",
+ "aliases": [
+  "baco",
+  "lechoso",
+  "mastate",
+  "vaco"
+ ],
+ "family": "Moraceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "shorea_leprosula",
+ "regions": [
+  "neotropics"
+ ],
+ "height_m": [
+  30.0,
+  40.0
+ ],
+ "stature": {
+  "typical_m": 35.0,
+  "tall_m": 50.0,
+  "record_m": null,
+  "source": "Brosimum utile - Wikipedia, la enciclopedia libre (research record)"
+ },
+ "variants_height_m": {
+  "young": [
+   4.5,
+   18.0
+  ],
+  "veteran": [
+   40.0,
+   50.0
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.6,
+    0.145
+   ],
+   [
+    0.68,
+    0.246
+   ],
+   [
+    0.78,
+    0.29
+   ],
+   [
+    0.88,
+    0.261
+   ],
+   [
+    0.96,
+    0.16
+   ],
+   [
+    1.0,
+    0.035
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.18,
+  "asymmetry": 0.18,
+  "fill": 0.4,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    80,
+    106,
+    56
+   ],
+   "spring": [
+    80,
+    106,
+    56
+   ],
+   "summer": [
+    80,
+    106,
+    56
+   ],
+   "fall": [
+    80,
+    106,
+    56
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "leaf_size_m": 0.17,
+  "leaf_shape": "elliptic_glossy",
+  "flowers": null,
+  "berries": null
+ },
+ "trunk": {
+  "stems": [
+   1,
+   1
+  ],
+  "bark_rgb": [
+   142,
+   138,
+   128
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 0.58,
+  "crown_base_ratio": 0.6,
+  "porosity": 0.3,
+  "from": "pipeline/tree_cards.py from the research record (crown: Climax species that dominates canopies on well-drained slopes (English Wikipedia).), no photographs measured"
+ },
+ "description": "A tree of terra firme, slopes, 30-40 m tall (to 50 m). Straight cylindrical bole 75-115 cm diameter (Useful Tropical Plants). Climax species that dominates canopies on well-drained slopes (English Wikipedia). Fruit: round, juicy, fleshy fruit up to 5 cm diameter with edible seeds.",
+ "season_notes": {
+  "winter": "In leaf.",
+  "spring": "In leaf. Fruiting.",
+  "summer": "In leaf. Fruiting.",
+  "fall": "In leaf."
+ },
+ "habitat": {
+  "classes": {
+   "mixed_forest": 1.0,
+   "riparian": 0.3
+  },
+  "floor": 1.0,
+  "mid": 1.1,
+  "steep": 1.0,
+  "north": 1.0,
+  "shade": 0.8,
+  "disturbed": 0.7
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "monkeys_(species",
+    "part": "berries",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   },
+   {
+    "animal": "pecari_tajacu",
+    "part": "berries",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   },
+   {
+    "animal": "tayassu_pecari",
+    "part": "berries",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": []
+ },
+ "range": {
+  "elev_m": [
+   0,
+   400
+  ],
+  "where": "Costa Rica (central and south Pacific, including Osa) and Panama to Colombia, Venezuela, Ecuador, Peru, Bolivia, the Guianas and the Amazon basin."
+ },
+ "stand_in": "shorea_leprosula",
+ "notes": "Template shorea_leprosula: an emergent: a buttressed clear bole under an umbrella crown (light red meranti). NOT SOURCED (the template's or a default value): crown width (the template's ratio); crown depth (the template's); leaf size (the median of the research records' sourced simple leaves, 0.17 m); leaf colour (a tropical evergreen's mid green); bark texture (the template's). Research notes: Height: Spanish Wikipedia up to 50 m; Titi Conservation Alliance up to 40 m; English Wikipedia and Useful Tropical Plants 30 m. typical [30,40] spans those maxima, not a measured typical. Leaves: simple, alternate, large, with a very acute apex; hairy stipules enclose the developing leaves (es Wikipedia, src 3); no sizes or colours found. Phenology is from the Titi Conservation Alliance (central and south Pacific Costa Rica, Quepos to Osa): flowers all year, fruit mainly April-June. Flower colour: cream or yellowish (es Wikipedia); small and white (src 3). Fruit size 'up to 5 cm' from es Wikipedia, which also says many species eat the fruit avidly without naming them. Evergreen per Useful Tropical Plants ('Evergreen forest formations below 400 m'). Shade-tolerant per English Wikipedia. Src 3 names 'sainos' and 'chanchos de monte'; the scientific names are my mapping of those Costa Rican names (collared and white-lipped peccary). Domestic animals: cattle eat leaves and branch tips, pigs the fruit (en Wikipedia), not listed. No Corcovado-specific fauna records found. Costa Rican trees are subsp. occidentale per HVAA image captions (not verified in a treatment). Flora Costaricensis and the Golfo Dulce field guide (Stapfia 78) were blocked (403).",
+ "sources": [
+  "Brosimum utile - Wikipedia, https://en.wikipedia.org/wiki/Brosimum_utile (CC BY-SA 4.0), read 2026-11-06",
+  "Brosimum utile - Wikipedia, la enciclopedia libre, https://es.wikipedia.org/wiki/Brosimum_utile (CC BY-SA 4.0), read 2026-11-06",
+  "Brosimum utile - Useful Tropical Plants, https://tropical.theferns.info/viewtropical.php?id=Brosimum+utile (CC BY-NC-SA 3.0 (database and code)), read 2026-11-06",
+  "Tree of the Month: El Lechoso (Milk tree) - Titi Conservation Alliance, https://monotiti.org/tree-month-el-lechoso/ (All Rights Reserved (Titi Conservation Alliance)), read 2026-11-06",
+  "research record library/plant_cards/_research/brosimum_utile.json (pipeline/tree_cards.py)"
+ ],
+ "authors": [
+  "Wild Earth (pipeline/tree_cards.py from an agent's sourced research record, 2026-11-06); needs local sign-off"
+ ],
+ "generated_by": {
+  "by": "pipeline/tree_cards.py",
+  "version": "1"
+ }
+}

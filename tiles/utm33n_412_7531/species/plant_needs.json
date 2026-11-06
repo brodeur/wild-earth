@@ -117,6 +117,49 @@
  ],
  "needs": [
   {
+   "id": "sorbus_aucuparia",
+   "kind": "tree",
+   "why": [
+    "canopy: records (GBIF: 83 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0909,
+   "records": 83,
+   "scientific": "Sorbus aucuparia",
+   "record": true,
+   "card": true,
+   "drawn_as": "sorbus_aucuparia",
+   "rank": 1
+  },
+  {
+   "id": "betula_pubescens",
+   "kind": "tree",
+   "why": [
+    "canopy: records (GBIF: 31 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.034,
+   "records": 31,
+   "scientific": "Betula pubescens",
+   "record": true,
+   "card": true,
+   "drawn_as": "betula_pubescens",
+   "rank": 2
+  },
+  {
+   "id": "salix_caprea",
+   "kind": "tree",
+   "why": [
+    "canopy: records (GBIF: 11 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.012,
+   "records": 11,
+   "scientific": "Salix caprea",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 3
+  },
+  {
    "id": "cornus_suecica",
    "kind": "shrub",
    "why": [
@@ -129,21 +172,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 1
-  },
-  {
-   "id": "sorbus_aucuparia",
-   "kind": "tree",
-   "why": [
-    "GBIF: 83 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 83,
-   "scientific": "Sorbus aucuparia",
-   "record": true,
-   "card": true,
-   "drawn_as": "sorbus_aucuparia",
-   "rank": 2
+   "rank": 4
   },
   {
    "id": "empetrum_nigrum",
@@ -157,7 +186,7 @@
    "record": true,
    "card": true,
    "drawn_as": "empetrum_nigrum",
-   "rank": 3
+   "rank": 5
   },
   {
    "id": "succisa_pratensis",
@@ -172,7 +201,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 4
+   "rank": 6
   },
   {
    "id": "chamaenerion_angustifolium",
@@ -187,7 +216,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 5
+   "rank": 7
   },
   {
    "id": "potentilla_erecta",
@@ -202,7 +231,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 6
+   "rank": 8
   },
   {
    "id": "silene_dioica",
@@ -217,7 +246,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 7
+   "rank": 9
   },
   {
    "id": "rhodiola_rosea",
@@ -232,7 +261,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 8
+   "rank": 10
   },
   {
    "id": "filipendula_ulmaria",
@@ -247,7 +276,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 9
+   "rank": 11
   },
   {
    "id": "geranium_sylvaticum",
@@ -262,7 +291,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 10
+   "rank": 12
   },
   {
    "id": "reynoutria_japonica",
@@ -277,7 +306,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 11
+   "rank": 13
   },
   {
    "id": "dactylorhiza_maculata",
@@ -292,7 +321,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 12
+   "rank": 14
   },
   {
    "id": "lysimachia_europaea",
@@ -307,7 +336,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 13
+   "rank": 15
   },
   {
    "id": "deschampsia_cespitosa",
@@ -322,7 +351,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 14
+   "rank": 16
   },
   {
    "id": "carex_nigra",
@@ -337,7 +366,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 15
+   "rank": 17
   },
   {
    "id": "trichophorum_cespitosum",
@@ -352,7 +381,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 16
+   "rank": 18
   },
   {
    "id": "vaccinium_uliginosum",
@@ -367,7 +396,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 17
+   "rank": 19
   },
   {
    "id": "calluna_vulgaris",
@@ -381,7 +410,7 @@
    "record": true,
    "card": true,
    "drawn_as": "calluna_vulgaris",
-   "rank": 18
+   "rank": 20
   },
   {
    "id": "campanula_rotundifolia",
@@ -396,7 +425,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 19
+   "rank": 21
   },
   {
    "id": "cicerbita_alpina",
@@ -411,7 +440,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 20
+   "rank": 22
   },
   {
    "id": "narthecium_ossifragum",
@@ -426,7 +455,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 21
+   "rank": 23
   },
   {
    "id": "vaccinium_myrtillus",
@@ -441,7 +470,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 22
+   "rank": 24
   },
   {
    "id": "equisetum_sylvaticum",
@@ -456,7 +485,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 23
+   "rank": 25
   },
   {
    "id": "rumex_acetosa",
@@ -471,21 +500,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 24
-  },
-  {
-   "id": "betula_pubescens",
-   "kind": "tree",
-   "why": [
-    "GBIF: 31 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 31,
-   "scientific": "Betula pubescens",
-   "record": true,
-   "card": true,
-   "drawn_as": "betula_pubescens",
-   "rank": 25
+   "rank": 26
   },
   {
    "id": "caltha_palustris",
@@ -500,7 +515,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 26
+   "rank": 27
   },
   {
    "id": "avenella_flexuosa",
@@ -515,7 +530,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 27
+   "rank": 28
   },
   {
    "id": "luzula_sylvatica",
@@ -530,7 +545,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 28
+   "rank": 29
   },
   {
    "id": "vaccinium_vitis_idaea",
@@ -545,7 +560,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 29
+   "rank": 30
   },
   {
    "id": "anthoxanthum_odoratum",
@@ -560,7 +575,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 30
+   "rank": 31
   },
   {
    "id": "solidago_virgaurea",
@@ -575,7 +590,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 31
+   "rank": 32
   },
   {
    "id": "alchemilla_alpina",
@@ -590,7 +605,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 32
+   "rank": 33
   },
   {
    "id": "andromeda_polifolia",
@@ -605,7 +620,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 33
+   "rank": 34
   },
   {
    "id": "juniperus_communis",
@@ -619,7 +634,7 @@
    "record": true,
    "card": true,
    "drawn_as": "juniperus_communis",
-   "rank": 34
+   "rank": 35
   },
   {
    "id": "arctostaphylos_alpinus",
@@ -634,7 +649,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 35
+   "rank": 36
   },
   {
    "id": "acer_pseudoplatanus",
@@ -649,7 +664,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 36
+   "rank": 37
   },
   {
    "id": "achillea_millefolium",
@@ -663,7 +678,7 @@
    "record": true,
    "card": false,
    "drawn_as": "achillea_millefolium",
-   "rank": 37
+   "rank": 38
   },
   {
    "id": "valeriana_excelsa",
@@ -678,7 +693,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 38
+   "rank": 39
   },
   {
    "id": "empetrum_hermaphroditum",
@@ -693,7 +708,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 39
+   "rank": 40
   },
   {
    "id": "kalmia_procumbens",
@@ -704,21 +719,6 @@
    "cover": 0.0,
    "records": 12,
    "scientific": "Kalmia procumbens",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 40
-  },
-  {
-   "id": "salix_caprea",
-   "kind": "shrub",
-   "why": [
-    "GBIF: 11 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 11,
-   "scientific": "Salix caprea",
    "record": false,
    "card": false,
    "drawn_as": null,
@@ -1993,11 +1993,19 @@
   "ground": 26
  },
  "by_layer": {
-  "tree": 2,
-  "shrub": 17,
+  "tree": 3,
+  "shrub": 16,
   "ground": 26
  },
  "hands": [
+  {
+   "id": "salix_caprea",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 11 records on the tile; height not yet screened)"
+   ]
+  },
   {
    "id": "cornus_suecica",
    "kind": "shrub",
@@ -2271,14 +2279,6 @@
    ]
   },
   {
-   "id": "salix_caprea",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 11 records on the tile"
-   ]
-  },
-  {
    "id": "salix_glauca",
    "kind": "shrub",
    "what": "a trait card",
@@ -2326,8 +2326,8 @@
   "queued": 37,
   "unread_communities": 3,
   "by_layer": {
-   "tree": 2,
-   "shrub": 17,
+   "tree": 3,
+   "shrub": 16,
    "ground": 26
   },
   "meets_target": {

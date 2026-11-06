@@ -87,6 +87,8 @@ tiles/<tile_id>/
   client/soils.png              derived   R soil map unit index, G surface rock fragments % 0-100, B depth to bedrock dm (255 none/unknown), 30 m grid
   client/outcrop.png            derived   outcrop likelihood 0-255 in R, 30 m grid (formula in the manifest layer)
   client/ground_classes.json    derived   rock classes, unit and map unit tables for the two PNGs, per-tile fractions, outcrop summary
+  geology/strata.json           optional  the stratigraphic column test: unit elevations, superposition per pair, units dropped and why, band fits (see Stratigraphic column)
+  client/strata.json            derived   where the strata lie flat: elevation bands top to bottom (base plane, unit, lithology, rock colours); absent where they do not sort
   client/substrate.png          derived   5 m RGB: R exposed rock 0-255, G lithology index (1-based into substrate.json), B exposed patch size code (see Substrate and exposed rock)
   client/substrate.json         derived   the lithologies with their cliff morphology and the orientations derived for the tile, unit -> lithology table, exposure formula and stats
   client/texture_imagery.jpg    derived   NAIP with the human footprint erased and pavement bleached, 4000 px (2.5 m) JPEG
@@ -623,7 +625,26 @@ metres. Each unit gets one rock class by keyword rules over its major lithologie
 then its description (`pipeline/fetch_geology.py`): `greenstone_metavolcanic`, `serpentinite`,
 `slate_phyllite`, `schist`, `granitic`, `volcanic`, `sandstone_conglomerate`, `limestone_marble`,
 `alluvium`, `other`. Volcanic rocks Jurassic or older (bottom age >= 145 Ma) are counted as
-metavolcanic.
+metavolcanic. A description is read for the rule it names most (each rule's matches counted, ties to the earliest), not
+the first rule to match anywhere in it: one "sand dune" made the Grand Canyon's Hermit Formation (red siltstone and
+sandstone) alluvium. The gap-filling queries stop at 600 (80 left a quarter of the Grand Canyon tile, whose 1:24 000 map
+has hundreds of polygons, unmapped); the share left uncovered is recorded (`uncovered_fraction`) and logged past 1%.
+
+**Stratigraphic column** (`pipeline/strata.py`, in the `ground` step). Where a tile's strata lie flat or dip gently,
+the map and the DEM say which unit outcrops at which elevation, and a steep face, whose colour the photo only smears
+down it from above, takes the rock of the band at its height. The units are rasterized on the 5 m DEM grid; every
+contact across at least 1 m of relief says which unit lies on top; a pair of units is superposed when the higher (by
+median elevation) is on top along 75% of their contact, and while a pair is not, the smaller unit leaves the chain
+(intrusions, the tilted beds under an unconformity). Each remaining unit's base is fitted as a plane through its base
+contacts (one shared dip, each base a small ridge-held tilt of its own), and bands whose steep cells are under 50% their
+own unit (within 20 m of height, the map's line on a steep wall), or that hold under 50% of their unit's steep cells,
+drop out (lenses, monadnocks). The column holds with two or more bands, 60% of the steep cells in the column matching
+their band, and a dip under 8 degrees; `client/strata.json` is written only then. Each band's colour comes from its
+unit's colour words (name, then description; sentences about a cliff or ledge count three times those about a slope;
+the colour of a minor component, "red chert nodules", hardly counts), as two colours by a weighted 2-means (the main
+one and that of its other beds, with their share), else from a lithology table (GSA Rock-Color Chart names; field
+colours of each rock). The client (terrain.js `strataUniforms`, uniforms only) draws a steep face's cliff material in
+the band's lithology and colour, with its beds; below the column's lowest base, and on surficial deposits, as before.
 
 Soils are SSURGO from USDA Soil Data Access: one SQL request per table for the map units
 intersecting the tile, polygons clipped server-side. Each map unit takes its dominant component

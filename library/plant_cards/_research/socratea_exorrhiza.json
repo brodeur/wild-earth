@@ -1,0 +1,27 @@
+{
+ "id": "socratea_exorrhiza",
+ "scientific": "Socratea exorrhiza",
+ "family": "Arecaceae",
+ "common": "walking palm",
+ "aliases": ["cashapona", "pona", "zancona", "paxiuba", "jira_palm", "chonta", "pambil", "rayador", "palmera_caminante", "iriartea_exorrhiza"],
+ "habit": "palm_solitary",
+ "height_m": {"typical": [15, 20], "max": 25, "src": 2},
+ "dbh_cm": {"typical": [13, 18], "max": 18, "src": 0},
+ "bole": {"clear_fraction": null, "straight": true, "buttresses": "none", "buttress_height_m": null, "stilt_roots": true, "stilt_root_height_m": [1, 2], "spines": false, "text": "Stilt roots up to 25, widely spaced in a loose open cone, diagonal, branched near or below ground, terete, 1-2(-4) m long and to 9 cm thick, brown turning black, with spines to 2 cm (stem itself smooth). Cone height is not given: [1, 2] is the root length, and the roots are diagonal, so the cone is lower. Useful Tropical Plants: roots up to 3 m long. Crownshaft present and compact: 90-150 cm, greyish-green, densely white-tomentose when young (Mori et al.: cylindrical, glaucous green, to 1.5 m).", "src": 0},
+ "crown": {"shape": "shuttlecock (palm)", "width_m": null, "depth_fraction": null, "density": "open", "position": "canopy", "text": "About 7 spreading leaves (Henderson); 5-8 arching leaves forming a plumose crown (Mori et al. 1997). Mori calls it a canopy palm. 'open' density follows from the leaf count, not a stated value.", "src": 0},
+ "leaf": {"type": "pinnate_palm_frond", "length_cm": [140, 280], "width_cm": null, "leaflet_length_cm": [40, 90], "frond_count": [5, 8], "shape": "pinnae 15-25 per side, asymmetrically cuneate (wedge-shaped) with a praemorse (jagged) tip; middle pinnae split to the base into segments; young plants hold the pinnae in one plane, older ones in many planes (plumose)", "texture": null, "upper_colour": null, "under_colour": null, "new_flush_colour": null, "src": 0},
+ "phenology": {"leaf_habit": "evergreen", "leafless_months": [], "flowering_months": [], "flower_colour": "cream", "fruiting_months": [], "fruit": "ovoid-cylindric, 2.5-3.5 x 1.5-2 cm, epicarp yellowish at maturity, splitting from the apex; seed 1.5-2.5 x 1-1.5 cm. Inflorescences to 90 cm, pendulous at anthesis.", "src": 0},
+ "bark": {"colour": "grey", "texture": "smooth", "text": "Stem grey and smooth with obscure nodes; 13-18 cm diam. at base, about 10 cm at apex.", "src": 0},
+ "habitat": {"forest_types": ["lowland rain forest", "secondary/gaps"], "light": null, "elevation_m": [0, 1000], "range": "Nicaragua south to Bolivia and east through Venezuela, the Guianas and Brazil", "src": 0},
+ "eaten_by": [
+  {"animal": "Tayassu pecari", "part": "seeds", "src": 2}
+ ],
+ "notes": "Height: Wikipedia typically 15-20, to 25 m; Henderson to 20 m, usually less; UTP 8-25 m. Stem diameter: Wikipedia typically about 12, to 16 cm. Leaves: UTP about 7, 1.5-2 m long; leaf.length_cm is the rachis (Henderson 1.4-2.8 m), and the petiole adds 15-40 cm. Pinnae: Henderson to 90 x 20 cm, Mori to 100 x 30 cm; 40 cm is the proximal pinna. 'secondary/gaps' comes from UTP ('common in non-flooded fields and fallows'), and evergreen is assumed for a palm, not stated. Mori: on all soil and drainage types in French Guiana, never dense. Phenology: Wikipedia says flowering is mostly in the dry season (no region given); Mori: flowers and fruits year-round (French Guiana). No Madre de Dios or Osa months found. Fruit is yellow and edible (Wikipedia). White-lipped peccaries eat many seeds (Wikipedia); collared peccaries damage stilt-root tips (Spanish Wikipedia). The Napo camera-trap study covered Socratea spp. only. Palmweb blocked automated fetches.",
+ "sources": [
+  {"title": "Henderson, A. 1990. Arecaceae Part I: Introduction and the Iriarteinae. Flora Neotropica Monogr. 53 (NYBG World Flora monograph record: Socratea exorrhiza)", "url": "https://sweetgum.nybg.org/science/world-flora/monographs-details/?irn=19093", "licence": "unknown (NYBG Terms & Conditions linked, no licence stated)", "read": "2026-11-06"},
+  {"title": "Mori, S. A. et al. 1997. Guide to the vascular plants of central French Guiana, Part 1. Mem. New York Bot. Gard. 76 (NYBG monograph record: Socratea exorrhiza)", "url": "https://sweetgum.nybg.org/science/vh/monographs-details/?irn=30382", "licence": "unknown (NYBG Terms & Conditions linked, no licence stated)", "read": "2026-11-06"},
+  {"title": "Socratea exorrhiza - Wikipedia (English)", "url": "https://en.wikipedia.org/wiki/Socratea_exorrhiza", "licence": "CC BY-SA 4.0", "read": "2026-11-06"},
+  {"title": "Socratea exorrhiza - Wikipedia (Spanish)", "url": "https://es.wikipedia.org/wiki/Socratea_exorrhiza", "licence": "CC BY-SA 4.0", "read": "2026-11-06"},
+  {"title": "Socratea exorrhiza - Useful Tropical Plants", "url": "https://tropical.theferns.info/viewtropical.php?id=Socratea+exorrhiza", "licence": "CC BY-NC-SA 3.0 Unported", "read": "2026-11-06"}
+ ]
+}

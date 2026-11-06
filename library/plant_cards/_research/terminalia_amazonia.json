@@ -1,0 +1,149 @@
+{
+ "id": "terminalia_amazonia",
+ "scientific": "Terminalia amazonia",
+ "family": "Combretaceae",
+ "common": "roble coral",
+ "aliases": [
+  "chuncoa_amazonia",
+  "chuncoa_amazonica"
+ ],
+ "habit": "broadleaf_tree",
+ "height_m": {
+  "typical": [
+   10,
+   60
+  ],
+  "max": 70,
+  "src": 1
+ },
+ "dbh_cm": {
+  "typical": null,
+  "max": 100,
+  "src": 4
+ },
+ "bole": {
+  "clear_fraction": null,
+  "straight": true,
+  "buttresses": "large plank",
+  "buttress_height_m": 3,
+  "stilt_roots": false,
+  "stilt_root_height_m": null,
+  "spines": false,
+  "text": "Plank buttresses, sometimes branching, to 3 m high and 2 m out from the trunk (Flora Neotropica). Bole quite straight, asymmetrical, often grooved in the basal third; buttresses larger in flooded or swampy sites (TTSM, src 0). Straight cylindrical bole unbranched for 15-18 m (Useful Tropical Plants, src 4).",
+  "src": 1
+ },
+ "crown": {
+  "shape": "layered, spreading (plagiotropic branches)",
+  "width_m": null,
+  "depth_fraction": null,
+  "density": null,
+  "position": "emergent",
+  "text": "Monopodial axis; branches from each growth flush sympodial and plagiotropic (horizontal), their distal ends turning downward when old, a distinctive trait (TTSM). Leaves produced at the ends of spur shoots. Useful Tropical Plants: a large crown.",
+  "src": 0
+ },
+ "leaf": {
+  "type": "simple",
+  "length_cm": [
+   4,
+   10
+  ],
+  "width_cm": [
+   2,
+   5
+  ],
+  "leaflet_length_cm": null,
+  "frond_count": null,
+  "shape": "obovate",
+  "texture": "papery to leathery (chartaceous to subcoriaceous)",
+  "upper_colour": "dark green, glossy",
+  "under_colour": "light green, dull",
+  "new_flush_colour": null,
+  "src": 1
+ },
+ "phenology": {
+  "leaf_habit": "evergreen",
+  "leafless_months": [],
+  "flowering_months": [
+   1,
+   2,
+   3,
+   4
+  ],
+  "flower_colour": "greenish yellow (also cream, whitish)",
+  "fruiting_months": [
+   2,
+   3,
+   4,
+   5
+  ],
+  "fruit": "small five-winged samara, two large wings and three small or vestigial, about 0.5-0.7 x 0.8-1.8 cm, usually straw-coloured, wind-dispersed",
+  "src": 0
+ },
+ "bark": {
+  "colour": "greyish brown or greyish yellow",
+  "texture": "flaking",
+  "text": "Thin (1 cm), dull, greyish brown or greyish yellow with shallow vertical fissures (TTSM, src 0). On the lower trunk it curls into thin sheets that peel off easily and litter the ground (Useful Tropical Plants). Spanish Wikipedia: smooth.",
+  "src": 4
+ },
+ "habitat": {
+  "forest_types": [
+   "terra firme",
+   "slopes",
+   "swamp",
+   "riverbank",
+   "secondary/gaps"
+  ],
+  "light": null,
+  "elevation_m": [
+   0,
+   800
+  ],
+  "range": "Veracruz, Mexico through Central America to the Guianas, Amazonia and central Bolivia; also Trinidad.",
+  "src": 1
+ },
+ "eaten_by": [
+  {
+   "animal": "Atta cephalotes",
+   "part": "leaves",
+   "src": 0
+  },
+  {
+   "animal": "Acromyrmex sp.",
+   "part": "leaves",
+   "src": 0
+  }
+ ],
+ "notes": "Sources disagree on leaf habit: TTSM (Flores, a Costa Rican author) 'tall, evergreen', Useful Tropical Plants 'virtually evergreen', Spanish Wikipedia 'perennifolio'; Flora Neotropica (src 1) says 'Deciduous tree'. No source gives leafless months. Phenology: TTSM range-wide, flowering Jan-Apr, fruit ripening Feb-May, varying by region (no Osa months found); Wikipedia flowers Feb-Apr, fruit Mar-May; Flora Neotropica 'most months of the year according to location'. Height: Flora Neotropica (4-)10-60(-70) m; TTSM more than 50 m in Central American forests, up to 70 m in Mexico; Useful Tropical Plants up to 40 m. dbh: Useful Tropical Plants about 100 cm; Wikipedia 'diameter of 1 to 3 m' (unclear if trunk). Leaf colour from Wikipedia (src 2). Leaf size Flora Neotropica (2-)4-10(-15) x 2-5(-6.5) cm. Elevation: Flora Neotropica 0-2000 m, mostly below 800 m; TTSM 40-1200 m. Ants attack seedlings and saplings in nurseries and plantations (TTSM), not mature trees. A search snippet said immature fruits are eaten by parrots, but I could not read that passage, so it is left out. Light requirement not stated by any source read. Pages of the TTSM PDF are scanned images and were only partly readable. Common name 'roble coral' comes from a search snippet citing Flores (1994), not from a page I read; the Wikipedia vernacular-name list was not extracted.",
+ "sources": [
+  {
+   "title": "Flores, E.M. Terminalia amazonia (J.F. Gmel.) Exell. In: Vozzo, J.A. (ed.) Tropical Tree Seed Manual, USDA Forest Service Agriculture Handbook 721 (2002), pp. 748-751",
+   "url": "https://rngr.net/publications/ttsm/species/PDF.2004-03-16.5805/at_download/file",
+   "licence": "unknown (US federal government publication; no licence stated on rngr.net)",
+   "read": "2026-11-06"
+  },
+  {
+   "title": "Stace, C.A. & Alwan, A.-R.A. (2010) Combretaceae. Flora Neotropica Monograph 107 - Terminalia amazonia account (NYBG Virtual Herbarium)",
+   "url": "https://sweetgum.nybg.org/science/vh/monographs-details/?irn=20213",
+   "licence": "unknown",
+   "read": "2026-11-06"
+  },
+  {
+   "title": "Terminalia amazonia - Wikipedia",
+   "url": "https://en.wikipedia.org/wiki/Terminalia_amazonia",
+   "licence": "CC BY-SA 4.0",
+   "read": "2026-11-06"
+  },
+  {
+   "title": "Terminalia amazonia - Wikipedia, la enciclopedia libre",
+   "url": "https://es.wikipedia.org/wiki/Terminalia_amazonia",
+   "licence": "CC BY-SA 4.0",
+   "read": "2026-11-06"
+  },
+  {
+   "title": "Terminalia amazonia - Useful Tropical Plants",
+   "url": "https://tropical.theferns.info/viewtropical.php?id=Terminalia+amazonia",
+   "licence": "CC BY-NC-SA 3.0 (database and code)",
+   "read": "2026-11-06"
+  }
+ ]
+}

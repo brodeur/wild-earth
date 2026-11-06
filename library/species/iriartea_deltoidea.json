@@ -1,0 +1,457 @@
+{
+ "id": "iriartea_deltoidea",
+ "aliases": [
+  "barrigona",
+  "bombona",
+  "cacho_de_vaca",
+  "chonta",
+  "jiagina",
+  "pachiuba_barriguda",
+  "pambil",
+  "pona_lisa",
+  "tepa"
+ ],
+ "scientific": "Iriartea deltoidea",
+ "common": "pona palm",
+ "form": "tree",
+ "regions": [
+  "neotropics"
+ ],
+ "architectural_model": "Rauh",
+ "deciduous": false,
+ "height_m": [
+  20.0,
+  35.0
+ ],
+ "stature": {
+  "typical_m": 27.5,
+  "tall_m": 35.0,
+  "record_m": null,
+  "source": "Iriartea deltoidea - Wikipedia (English) (research record)"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    3.0,
+    12.0
+   ],
+   "trunk_radius": 0.65,
+   "crown_scale": 0.8,
+   "branches": 0.8,
+   "set": {
+    "trunk": {
+     "length_ratio": 0.55,
+     "split_prob": 0.0
+    },
+    "foliage": {
+     "clumps": {
+      "radius_m": 0.8
+     }
+    }
+   },
+   "note": "a young palm: a rosette of fronds near the ground before the stem rises"
+  },
+  {
+   "name": "mature",
+   "weight": 0.55,
+   "seeds": 1,
+   "note": "(from the northern California black walnut template) the file as written"
+  },
+  {
+   "name": "veteran",
+   "weight": 0.15,
+   "height_m": [
+    35.0,
+    38.5
+   ],
+   "trunk_radius": 1.3,
+   "crown_scale": 1.12,
+   "gnarl": 1.2,
+   "deadwood": {
+    "fraction": 0.18,
+    "levels": [
+     1,
+     2
+    ],
+    "where": "inner"
+   },
+   "set": {
+    "trunk": {
+     "split_prob": 0.7,
+     "lean_deg": 10
+    }
+   },
+   "note": "(from the northern California black walnut template) a massive dark trunk forking into heavy limbs, a broad open dome with some dead branches"
+  }
+ ],
+ "snag": {
+  "fraction": 0.0,
+  "from": "veteran",
+  "height_m": [
+   12,
+   20
+  ],
+  "limbs": 0.55,
+  "twigs": 0.2,
+  "levels": 1,
+  "shorten": [
+   0.45,
+   0.9
+  ],
+  "rgb": [
+   128,
+   122,
+   114
+  ]
+ },
+ "description": "A palm of lowland rain forest, montane rain forest, 20-35 m tall. Stem more or less ventricose: 10-30 cm diam. 4-7 leaves, stiffly spreading, on a glaucous-green crownshaft. Fruit: globose, 2-2.7 x 2.4-2.8 cm, epicarp greenish-yellow at maturity; seed c.",
+ "season_notes": {
+  "winter": "In leaf. Fruiting.",
+  "spring": "In leaf. Fruiting.",
+  "summer": "In leaf. Fruiting.",
+  "fall": "In leaf. Fruiting."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "mixed_forest": 1.0,
+   "riparian": 0.3
+  },
+  "floor": 1.0,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 1.0,
+  "shade": 0.4,
+  "disturbed": 1.0
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "ramphastos_swainsonii",
+    "part": "berries",
+    "seasons": [
+     "winter",
+     "spring",
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "ramphastos_sulfuratus",
+    "part": "berries",
+    "seasons": [
+     "winter",
+     "spring",
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "ateles_geoffroyi",
+    "part": "berries",
+    "seasons": [
+     "winter",
+     "spring",
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "cebus_capucinus",
+    "part": "berries",
+    "seasons": [
+     "winter",
+     "spring",
+     "summer",
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": []
+ },
+ "trunk": {
+  "length_ratio": 1.0,
+  "radius_ratio": 0.048,
+  "taper": 0.3,
+  "flare": 1.15,
+  "bole_ratio": 0.897,
+  "base_size": 0.877,
+  "curve_deg": 2,
+  "curve_var_deg": 12,
+  "segments": 5,
+  "lean_deg": 3,
+  "stems": [
+   1,
+   1
+  ],
+  "stem_spread_deg": 0,
+  "split_prob": 0.0,
+  "split_count": 2,
+  "split_angle_deg": 28,
+  "bark_rgb": [
+   142,
+   138,
+   128
+  ],
+  "bark_pattern": "smooth_grey",
+  "twig_rgb": [
+   122,
+   114,
+   100
+  ],
+  "bark": {
+   "tile_m": [
+    0.4,
+    0.8
+   ],
+   "ridge_m": 0.04,
+   "block_m": 0.12,
+   "fissure": 0.6,
+   "contrast": 1.2,
+   "lichen": 0.15,
+   "relief": 1.4
+  },
+  "roots": false
+ },
+ "crown": {
+  "shape": "spherical",
+  "envelope": {
+   "profile": [
+    [
+     0.897,
+     0.025
+    ],
+    [
+     0.928,
+     0.075
+    ],
+    [
+     0.959,
+     0.1
+    ],
+    [
+     0.985,
+     0.085
+    ],
+    [
+     1.0,
+     0.035
+    ]
+   ],
+   "lobes": 4,
+   "lobe_depth": 0.25,
+   "asymmetry": 0.25,
+   "fill": 0.3,
+   "edge": 1.1
+  }
+ },
+ "levels": [
+  {
+   "count": 6,
+   "down_angle_deg": 55,
+   "down_angle_tip_deg": 20,
+   "down_angle_var_deg": 15,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.149,
+   "length_var": 0.15,
+   "curve_deg": 0,
+   "curve_var_deg": 18,
+   "zigzag_deg": 4,
+   "tropism": 0.0,
+   "droop_deg": 35,
+   "taper": 0.9,
+   "radius_ratio": 0.25,
+   "segments": 4
+  },
+  {
+   "count": 9,
+   "start": 0.05,
+   "down_angle_deg": 70,
+   "down_angle_var_deg": 15,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.35,
+   "length_var": 0.2,
+   "curve_deg": 0,
+   "curve_var_deg": 18,
+   "zigzag_deg": 6,
+   "tropism": 0.04,
+   "taper": 1.0,
+   "radius_ratio": 0.45,
+   "segments": 2
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.6,
+  "leaf_shape": "pinnate_compound",
+  "leaflets": [
+   15,
+   19
+  ],
+  "cluster_m": 1.4,
+  "density": 14,
+  "cards_per_m2": 1.2,
+  "leaf_fill": 2.0,
+  "roll_deg": 60,
+  "start": 0.0,
+  "parent_start": 0.05,
+  "orientation": "outward",
+  "colors": {
+   "winter": [
+    80,
+    106,
+    56
+   ],
+   "spring": [
+    80,
+    106,
+    56
+   ],
+   "summer": [
+    80,
+    106,
+    56
+   ],
+   "fall": [
+    80,
+    106,
+    56
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "clumps": {
+   "radius_m": 1.0,
+   "cards_per_clump": 7,
+   "shell": 0.3,
+   "flatten": 0.75,
+   "tip_bias": 1.4
+  },
+  "palette": [
+   [
+    0.8,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.2,
+    [
+     1.12,
+     1.12,
+     0.95
+    ]
+   ]
+  ],
+  "winter_twigs": 0.0,
+  "ao_min": 0.7,
+  "color_var": [
+   0.08,
+   0.05
+  ],
+  "leaf_on_var": 0.0,
+  "berries": null,
+  "flowers": null
+ },
+ "deadwood": {
+  "fraction": 0.06,
+  "where": "inner",
+  "levels": [
+   2
+  ],
+  "shorten": 0.6,
+  "rgb": [
+   124,
+   118,
+   110
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "length": 0.6,
+  "down_deg": 45,
+  "down_var_deg": 18,
+  "curve_var_deg": 20,
+  "segments": 2,
+  "radius_m": 0.012,
+  "taper": 0.6,
+  "zigzag_deg": 10,
+  "fan_deg": 50,
+  "jitter": 0.2
+ },
+ "lod": {
+  "near_tris_budget": 2000,
+  "near_sides": [
+   7,
+   3,
+   0
+  ],
+  "mid_blobs": 5,
+  "mid_branches": 4,
+  "mid_segments": [
+   3,
+   2
+  ],
+  "mid_blob_scale": 0.85,
+  "close_factor": 2
+ },
+ "targets": {
+  "crown_width_ratio": 0.2,
+  "crown_base_ratio": 0.897,
+  "porosity": 0.45,
+  "foliage_rg": 0.56,
+  "foliage_bg": 0.27,
+  "fall_rg": 1.3,
+  "fall_bg": 0.26,
+  "from": "pipeline/tree_cards.py from the research record (crown: 4-7 leaves, stiffly spreading, on a glaucous-green crownshaft. Wikipedia calls it a canopy tree. 'open' density follows from 4-7 leaves, not a stated value.), no photographs measured"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "3",
+  "card": "library/plant_cards/iriartea_deltoidea.json",
+  "card_sha256": "7acadb0a615416f4",
+  "template": "juglans_hindsii",
+  "template_common": "northern California black walnut",
+  "height_scale": 1.833
+ },
+ "notes": "Template juglans_hindsii: a palm: treegen has no palm architecture (Corner's model: one unbranched stem, a crown of fronds); California black walnut is the nearest by leaf (pinnate). Crown width: twice the frond length, the fronds arching (no source gives the crown's width). Leaf size clamped to 0.6 m (the source's 86 cm is past what a leaf card carries). Palm stand-in: the bole runs clear and unforked to the crown (split_prob 0, bole and base_size at the crown's base) and a compact crown of pinnate leaf sprays stands for the fronds; the walnut's branching still makes short limbs inside that crown, which a palm does not have. Stilt roots (2 m) are not drawn: treegen has no stilt-root primitive. NOT SOURCED (the template's or a default value): leaf colour (a tropical evergreen's mid green). Research notes: Height: Wikipedia 20-35 m; Henderson monograph to 25 m; Useful Tropical Plants (UTP) to 30 m. UTP: stem to 30 (-70) cm, 4-7 leaves, evergreen, 150-1300 m; Colplanta: 0-1350 m. Wikipedia: leaves to 5 m, leaflets to 1 m x 25 cm; leaf.length_cm is the rachis (2-4.3 m) and the petiole adds 2-13 cm. Leaf colour not found (an unread guide snippet said green on both sides). Phenology: no Madre de Dios or Osa months found; fruiting year-round and asynchronous comes from La Selva, Caribbean Costa Rica (Sezen et al. 2009). Eaten_by are Costa Rican taxa (La Selva); toucans are the main dispersers there and regurgitate seeds. A Napo, Ecuador camera-trap study (Alvarez Solas et al. 2019, Mammalia aequatorialis, not open licence) recorded visits, not confirmed feeding, by Cuniculus paca, Dasypus novemcinctus, Hadrosciurus igniventris, Myoprocta pratti, Dasyprocta fuliginosa and Eira barbara. Wikipedia names bats and toucans as main dispersers. Palmweb blocked automated fetches. The walnut's first-order limbs stand in for the 6 fronds (3.15 m, arching), leafy along their length; a pinnate leaf card stands for the leaflets.",
+ "sources": [
+  "Henderson, A. 1990. Arecaceae Part I: Introduction and the Iriarteinae. Flora Neotropica Monogr. 53 (NYBG World Flora monograph record: Iriartea deltoidea), https://sweetgum.nybg.org/science/vh/monographs-details/?irn=19076 (unknown (NYBG Terms & Conditions linked, no licence stated)), read 2026-11-06",
+  "Iriartea deltoidea - Wikipedia (English), https://en.wikipedia.org/wiki/Iriartea_deltoidea (CC BY-SA 4.0), read 2026-11-06",
+  "Iriartea deltoidea - Useful Tropical Plants, https://tropical.theferns.info/viewtropical.php?id=Iriartea+deltoidea (CC BY-NC-SA 3.0 Unported), read 2026-11-06",
+  "Sezen, Chazdon & Holsinger 2009. Proximity is not a proxy for parentage in an animal-dispersed Neotropical canopy palm. Proc. R. Soc. B 276: 2037-2044, https://pmc.ncbi.nlm.nih.gov/articles/PMC2677255 ((c) 2009 The Royal Society; no open licence stated), read 2026-11-06",
+  "Iriartea deltoidea - Colplanta (Catalogue of Plants of Colombia; Useful Plants and Fungi of Colombia), https://colplanta.org/taxon/urn:lsid:ipni.org:names:667594-1/general-information (CC BY-NC-SA 3.0), read 2026-11-06",
+  "research record library/plant_cards/_research/iriartea_deltoidea.json (pipeline/tree_cards.py)"
+ ],
+ "authors": [
+  "Wild Earth (pipeline/tree_cards.py from an agent's sourced research record, 2026-11-06); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

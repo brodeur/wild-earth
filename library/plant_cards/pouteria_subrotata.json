@@ -1,0 +1,242 @@
+{
+ "id": "pouteria_subrotata",
+ "scientific": "Pouteria subrotata",
+ "common": "zapotillo",
+ "aliases": [
+  "sapote_de_mico"
+ ],
+ "family": "Sapotaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "macaranga_gigantea",
+ "regions": [
+  "neotropics"
+ ],
+ "height_m": [
+  12.0,
+  20.0
+ ],
+ "stature": {
+  "typical_m": 16.0,
+  "tall_m": 20.0,
+  "record_m": null,
+  "source": "Pouteria subrotata - Trees of Costa Rica's Pacific Slope (crtrees.org) (research record)"
+ },
+ "variants_height_m": {
+  "young": [
+   1.8,
+   7.2
+  ],
+  "veteran": [
+   20.0,
+   22.0
+  ]
+ },
+ "crown": {
+  "shape": "cylindrical",
+  "profile": [
+   [
+    0.5,
+    0.212
+   ],
+   [
+    0.6,
+    0.361
+   ],
+   [
+    0.725,
+    0.425
+   ],
+   [
+    0.85,
+    0.361
+   ],
+   [
+    0.95,
+    0.212
+   ],
+   [
+    1.0,
+    0.043
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.18,
+  "asymmetry": 0.18,
+  "fill": 0.4,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    80,
+    106,
+    56
+   ],
+   "spring": [
+    80,
+    106,
+    56
+   ],
+   "summer": [
+    80,
+    106,
+    56
+   ],
+   "fall": [
+    80,
+    106,
+    56
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "leaf_size_m": 0.25,
+  "leaf_shape": "oval",
+  "flowers": {
+   "season": "winter",
+   "months": [
+    1,
+    4
+   ],
+   "form": "cluster",
+   "rgb": [
+    196,
+    192,
+    182
+   ],
+   "size_m": 0.08,
+   "density": 0.4
+  },
+  "berries": null
+ },
+ "trunk": {
+  "stems": [
+   1,
+   1
+  ],
+  "bark_rgb": [
+   82,
+   66,
+   54
+  ],
+  "bark_pattern": "smooth",
+  "flare": 1.5,
+  "roots": {
+   "buttress": 0.6,
+   "buttresses": [
+    3,
+    5
+   ],
+   "height": 1.0,
+   "roots": [
+    0,
+    2
+   ],
+   "note": "small buttresses (sources)"
+  },
+  "bole_ratio": 0.5,
+  "base_size": 0.5
+ },
+ "targets": {
+  "crown_width_ratio": 0.85,
+  "crown_base_ratio": 0.5,
+  "porosity": 0.3,
+  "from": "pipeline/tree_cards.py from the research record (crown: Narrow, moderately dense crown with a single layer of foliage; leaves clustered near branch tips, lower limbs bare.), no photographs measured"
+ },
+ "description": "A tree of riverbank, poorly drained lowland primary forest, 12-20 m tall. Bole irregular but straight, deeply fluted lengthwise, with periodic horizontal swellings (knobs), some bearing thin sprouts; low buttresses at the base; branching in the upper half. Narrow, moderately dense crown with a single layer of foliage; leaves clustered near branch tips, lower limbs bare. Fruit: near-spherical drupe c.",
+ "season_notes": {
+  "winter": "In leaf. Flowering (white (corolla), c. 0.5 cm, in near-sessile axillary clusters on leafless branch sections; buds tan with maroon speckling).",
+  "spring": "In leaf. Flowering (white (corolla), c. 0.5 cm, in near-sessile axillary clusters on leafless branch sections; buds tan with maroon speckling).",
+  "summer": "In leaf. Fruiting.",
+  "fall": "In leaf. Fruiting."
+ },
+ "habitat": {
+  "classes": {
+   "mixed_forest": 1.0,
+   "riparian": 0.6
+  },
+  "floor": 1.3,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 1.0,
+  "shade": 0.4,
+  "disturbed": 1.0
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "primates_(monkeys)",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "arboreal_mammals",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "aves_(birds,",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "psittacidae?_(suspected",
+    "part": "seeds",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": []
+ },
+ "range": {
+  "elev_m": [
+   0,
+   1000
+  ],
+  "where": "Nicaragua to northern Venezuela and Amazonian Peru; in Costa Rica at Manuel Antonio, Punta Leona, Carara and the Sirena station of Corcovado"
+ },
+ "stand_in": "macaranga_gigantea",
+ "notes": "Template macaranga_gigantea: a subcanopy tree: a tropical evergreen on one stem with an open crown (giant mahang). NOT SOURCED (the template's or a default value): crown width (the template's ratio); leaf colour (a tropical evergreen's mid green). Research notes: Phenology is for Pacific Costa Rica (crtrees.org, Manuel Antonio): flowering irregular, in 2-3 short bursts between Jan and Apr in active years; fruit rare and moderate, late Jul to early Sep; new leaves irregularly Dec-Mar. Osa Arboretum gives yellowish flowers in Jan, Mar, Apr and Jun, and yellowish edible fruit. crtrees calls it rare. The sources' 'understory or subcanopy tree' maps to position subcanopy. Crown depth_fraction 0.5 and clear_fraction 0.5 are read off 'branching occurs in the upper half'. crtrees says the leaf is smooth and translucent, with prominent pinnate veins and no drip tip or a very small one; texture is left null. A search result quoting WorldFloraDB (not read directly) gave 10-15 m, leaves 10-23 x 5-11.5 cm, and fruit green or yellow-green turning red, 2-2.5 x 1.2 cm. Parrot seed predation is inferred by crtrees from cracked seed coats and was not observed. Elevation and light are not given.",
+ "sources": [
+  "Pouteria subrotata - Trees of Costa Rica's Pacific Slope (crtrees.org), https://crtrees.org/species-accounts/pouteria-subrotata/ (unknown (no licence stated; WordPress.com site 'Trees of Costa Rica's Pacific Slope')), read 2026-11-06",
+  "Pouteria subrotata - Osa Arboretum (Osa Conservation), https://osa-arboretum.org/?p=1364 (unknown (no licence stated; Osa Conservation arboretum site)), read 2026-11-06",
+  "research record library/plant_cards/_research/pouteria_subrotata.json (pipeline/tree_cards.py)"
+ ],
+ "authors": [
+  "Wild Earth (pipeline/tree_cards.py from an agent's sourced research record, 2026-11-06); needs local sign-off"
+ ],
+ "generated_by": {
+  "by": "pipeline/tree_cards.py",
+  "version": "1"
+ }
+}

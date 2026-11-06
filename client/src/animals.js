@@ -820,7 +820,8 @@ const treeHeight = oak => Math.max(3, (oak.height || 8) * oak.scale);
 // The slots are appended to SPECIES and its tables when the tile's Animals is made (installFauna) and taken out again
 // when it goes (restoreFauna, main.js disposeWorld; the next world's installFauna also restores first), so switching
 // tiles never leaks slots. A tile without the layer: no gate, no slots, everything as before.
-// A slot with its own `model` ({ path, kind: 'quadruped', skin }: a GLB under client/assets, tools/build_quadruped.py) is
+// A slot with its own `model` ({ path, kind: 'quadruped', skin }: a GLB under client/assets, tools/build_quadruped.py; or
+// { path, kind: 'bird', archetype, skin: false }: tools/build_bird.py, on a bird template, animalModels.js faunaTemplate) is
 // drawn by it as the static drawn quadrupeds are (a DRAWN entry for the slot, out again with the slot), still on its kin's
 // rules; the stand-in body is its fallback (the mesh failed, or ?animals=proc / ?<code>=proc).
 // ID[s]: the static slot whose identity rules slot s runs (itself for every static slot; the kin, or its water twin, for a
@@ -908,7 +909,7 @@ function installFauna(fauna, owner) {
     // scale stays 1; the procedural fallback above keeps its baked scale), on its kin's template or one by what it is
     // (animalModels.js faunaTemplate), switched like the kin's (lod) times the size ratio
     const M = f.model, KD = DRAWN[K];
-    if (M && typeof M === 'object' && M.kind === 'quadruped' && typeof M.path === 'string' && !KD?.hybrid) {
+    if (M && typeof M === 'object' && (M.kind === 'quadruped' || M.kind === 'bird') && typeof M.path === 'string' && !KD?.hybrid) {
       const tpl = faunaTemplate(KD?.load, f), skin = M.skin !== false, lod0 = (KD?.lod || [30, 90]).map(r => r * sc);
       const l0 = clampN(lod0[0], 4, 120), l1 = clampN(lod0[1], l0 * 1.5, 360);
       DRAWN[d] = { name: f.code, param: f.code, load: () => loadFaunaModel(M.path, tpl, { skin }), lod: [l0, l1], planar: !!(KD ? KD.planar : sK.planar), fauna: tpl };

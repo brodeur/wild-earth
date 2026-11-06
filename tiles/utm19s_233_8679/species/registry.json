@@ -1,6 +1,6 @@
 {
  "tile": "utm19s_233_8679",
- "at": "2026-11-06T06:52:07Z",
+ "at": "2026-11-06T10:35:39Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -11,7 +11,7 @@
  "summary": {
   "by_level": {
    "0": {
-    "plants": 17,
+    "plants": 16,
     "animals": 61
    },
    "1": {
@@ -19,7 +19,7 @@
     "animals": 0
    },
    "2": {
-    "plants": 4,
+    "plants": 10,
     "animals": 0
    },
    "3": {
@@ -31,17 +31,16 @@
     "animals": 0
    }
   },
-  "plants": 21,
+  "plants": 26,
   "animals_present": 63,
   "animals_queued": 61,
   "meshy_credits_queued": 1810,
-  "cards_queued": 17,
+  "cards_queued": 16,
   "stand_ins": {
    "guarea_macrophylla": null,
    "pseudomalmea_diclina": null,
    "guarea_kunthiana": null,
    "klarobelia_candida": null,
-   "otoba_parvifolia": null,
    "oxandra_espintana": null,
    "rinorea_viridifolia": null,
    "trichilia_poeppigii": null,
@@ -58,7 +57,7 @@
   "density": {
    "tree": {
     "target": 21,
-    "have": 4
+    "have": 10
    },
    "shrub": {
     "target": 23,
@@ -75,56 +74,122 @@
    }
   },
   "hands": {
-   "count": 78,
+   "count": 77,
    "by_what": {
-    "a trait card": 17,
+    "a trait card": 16,
     "a mesh": 61
    }
   }
  },
  "plants": [
   {
-   "id": "shorea_leprosula",
+   "id": "iriartea_deltoidea",
    "kind": "tree",
    "fidelity": 2,
-   "common": "light red meranti",
-   "drawn_as": "shorea_leprosula",
-   "share": 0.2602,
+   "common": "pona palm",
+   "drawn_as": "iriartea_deltoidea",
+   "share": 0.2649,
    "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+    "canopy: plot (vela_apaza_2024_los_amigos: importance value index 116 (161 km away))"
    ]
   },
   {
-   "id": "dryobalanops_lanceolata",
+   "id": "pseudolmedia_laevis",
    "kind": "tree",
    "fidelity": 2,
-   "common": "kapur paji",
-   "drawn_as": "dryobalanops_lanceolata",
-   "share": 0.2565,
+   "common": "pseudolmedia laevis",
+   "drawn_as": "pseudolmedia_laevis",
+   "share": 0.1277,
    "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+    "canopy: plot (vela_apaza_2024_los_amigos: importance value index 55 (161 km away))"
    ]
   },
   {
-   "id": "macaranga_gigantea",
+   "id": "brosimum_lactescens",
    "kind": "tree",
    "fidelity": 2,
-   "common": "giant mahang",
-   "drawn_as": "macaranga_gigantea",
-   "share": 0.2431,
+   "common": "brosimum lactescens",
+   "drawn_as": "brosimum_lactescens",
+   "share": 0.1126,
    "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+    "canopy: plot (vela_apaza_2024_los_amigos: importance value index 42 (161 km away))"
    ]
   },
   {
-   "id": "parashorea_malaanonan",
+   "id": "socratea_exorrhiza",
    "kind": "tree",
    "fidelity": 2,
-   "common": "white seraya",
-   "drawn_as": "parashorea_malaanonan",
-   "share": 0.2402,
+   "common": "walking palm",
+   "drawn_as": "socratea_exorrhiza",
+   "share": 0.0975,
    "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+    "canopy: plot (vela_apaza_2024_los_amigos: importance value index 43 (161 km away))"
+   ]
+  },
+  {
+   "id": "otoba_parvifolia",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "cumala",
+   "drawn_as": "otoba_parvifolia",
+   "share": 0.0934,
+   "why_needed": [
+    "canopy: plot (vela_apaza_2024_los_amigos: importance value index 31 (161 km away))"
+   ]
+  },
+  {
+   "id": "euterpe_precatoria",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "huasai",
+   "drawn_as": "euterpe_precatoria",
+   "share": 0.0895,
+   "why_needed": [
+    "canopy: plot (vela_apaza_2024_los_amigos: importance value index 36 (161 km away))"
+   ]
+  },
+  {
+   "id": "dipteryx_ferrea",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "shihuahuaco",
+   "drawn_as": "dipteryx_ferrea",
+   "share": 0.0583,
+   "why_needed": [
+    "canopy: named (eswiki_parque_nacional_del_manu: named as shihuahuaco (Dipteryx micrantha) (emergent); no GBIF record of Dipteryx micrantha within 0.5 deg; its congener Dipteryx ferrea has 4 on the tile)"
+   ]
+  },
+  {
+   "id": "quararibea_wittii",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "quararibea wittii",
+   "drawn_as": "quararibea_wittii",
+   "share": 0.056,
+   "why_needed": [
+    "canopy: plot (vela_apaza_2024_los_amigos: importance value index 21 (161 km away))"
+   ]
+  },
+  {
+   "id": "unonopsis_floribunda",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "unonopsis floribunda",
+   "drawn_as": "unonopsis_floribunda",
+   "share": 0.0519,
+   "why_needed": [
+    "canopy: plot (vela_apaza_2024_los_amigos: importance value index 22 (161 km away))"
+   ]
+  },
+  {
+   "id": "ceiba_pentandra",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "kapok",
+   "drawn_as": "ceiba_pentandra",
+   "share": 0.0482,
+   "why_needed": [
+    "canopy: named (eswiki_parque_nacional_del_manu: named as lupuna (Ceiba pentandra) (emergent); 12 GBIF records within 0.5 deg)"
    ]
   },
   {
@@ -220,18 +285,6 @@
    "share": 0,
    "why_needed": [
     "GBIF: 16 records on the tile"
-   ],
-   "stand_in": null
-  },
-  {
-   "id": "otoba_parvifolia",
-   "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "GBIF: 15 records on the tile"
    ],
    "stand_in": null
   },
@@ -1297,14 +1350,6 @@
     ]
    },
    {
-    "id": "otoba_parvifolia",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 15 records on the tile"
-    ]
-   },
-   {
     "id": "oxandra_espintana",
     "kind": "forb",
     "stand_in": null,
@@ -2352,14 +2397,6 @@
    "what": "a trait card",
    "why": [
     "GBIF: 16 records on the tile"
-   ]
-  },
-  {
-   "id": "otoba_parvifolia",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 15 records on the tile"
    ]
   },
   {

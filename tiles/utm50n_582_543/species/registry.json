@@ -1,6 +1,6 @@
 {
  "tile": "utm50n_582_543",
- "at": "2026-11-06T06:50:10Z",
+ "at": "2026-11-06T10:45:00Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -11,7 +11,7 @@
  "summary": {
   "by_level": {
    "0": {
-    "plants": 21,
+    "plants": 26,
     "animals": 64
    },
    "1": {
@@ -31,12 +31,22 @@
     "animals": 0
    }
   },
-  "plants": 25,
+  "plants": 30,
   "animals_present": 64,
   "animals_queued": 64,
   "meshy_credits_queued": 1840,
-  "cards_queued": 21,
+  "cards_queued": 26,
   "stand_ins": {
+   "dillenia_excelsa": null,
+   "aglaia_odoratissima": null,
+   "paranephelium_xestophyllum": null,
+   "antidesma_neurocarpum": null,
+   "cowiea_borneensis": null,
+   "dimocarpus_dentatus": null,
+   "maasia_sumatrana": null,
+   "neonauclea_longipedunculata": null,
+   "polyalthia_cinnamomea": null,
+   "xanthophyllum_reticulatum": null,
    "calanthe_zollingeri": null,
    "miconia_crenata": null,
    "musa_beccarii": null,
@@ -44,16 +54,11 @@
    "etlingera_brevilabrum": null,
    "etlingera_megalocheilos": null,
    "alsomitra_macrocarpa": null,
-   "dillenia_excelsa": null,
    "knema_latericia": null,
    "praravinia_suberosa": null,
    "diospyros_euphlebia": null,
-   "aglaia_odoratissima": null,
    "ficus_punctata": null,
-   "paranephelium_xestophyllum": null,
    "uncaria_canescens": null,
-   "antidesma_neurocarpum": null,
-   "cowiea_borneensis": null,
    "etlingera_elatior": null,
    "melastoma_malabathricum": null,
    "senna_alata": null,
@@ -79,9 +84,9 @@
    }
   },
   "hands": {
-   "count": 83,
+   "count": 88,
    "by_what": {
-    "a trait card": 21,
+    "a trait card": 26,
     "a mesh": 62
    }
   }
@@ -133,13 +138,13 @@
   },
   {
    "id": "aglaia_odoratissima",
-   "kind": "forb",
+   "kind": "tree",
    "fidelity": 0,
    "common": null,
    "drawn_as": null,
    "share": 0,
    "why_needed": [
-    "GBIF: 11 records on the tile"
+    "canopy: records (GBIF: 11 records on the tile; height not yet screened)"
    ],
    "stand_in": null
   },
@@ -157,13 +162,13 @@
   },
   {
    "id": "antidesma_neurocarpum",
-   "kind": "forb",
+   "kind": "tree",
    "fidelity": 0,
    "common": null,
    "drawn_as": null,
    "share": 0,
    "why_needed": [
-    "GBIF: 10 records on the tile"
+    "canopy: records (GBIF: 10 records on the tile; height not yet screened)"
    ],
    "stand_in": null
   },
@@ -181,25 +186,37 @@
   },
   {
    "id": "cowiea_borneensis",
-   "kind": "forb",
+   "kind": "tree",
    "fidelity": 0,
    "common": null,
    "drawn_as": null,
    "share": 0,
    "why_needed": [
-    "GBIF: 10 records on the tile"
+    "canopy: records (GBIF: 10 records on the tile; height not yet screened)"
    ],
    "stand_in": null
   },
   {
    "id": "dillenia_excelsa",
-   "kind": "forb",
+   "kind": "tree",
    "fidelity": 0,
    "common": null,
    "drawn_as": null,
    "share": 0,
    "why_needed": [
-    "GBIF: 13 records on the tile"
+    "canopy: records (GBIF: 13 records on the tile; height not yet screened)"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "dimocarpus_dentatus",
+   "kind": "tree",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "canopy: records (GBIF: 9 records on the tile; height not yet screened)"
    ],
    "stand_in": null
   },
@@ -276,6 +293,18 @@
    "stand_in": null
   },
   {
+   "id": "maasia_sumatrana",
+   "kind": "tree",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "canopy: records (GBIF: 9 records on the tile; height not yet screened)"
+   ],
+   "stand_in": null
+  },
+  {
    "id": "melastoma_malabathricum",
    "kind": "forb",
    "fidelity": 0,
@@ -312,14 +341,26 @@
    "stand_in": null
   },
   {
-   "id": "paranephelium_xestophyllum",
-   "kind": "shrub",
+   "id": "neonauclea_longipedunculata",
+   "kind": "tree",
    "fidelity": 0,
    "common": null,
    "drawn_as": null,
    "share": 0,
    "why_needed": [
-    "GBIF: 11 records on the tile"
+    "canopy: records (GBIF: 9 records on the tile; height not yet screened)"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "paranephelium_xestophyllum",
+   "kind": "tree",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "canopy: records (GBIF: 11 records on the tile; height not yet screened)"
    ],
    "stand_in": null
   },
@@ -332,6 +373,18 @@
    "share": 0,
    "why_needed": [
     "GBIF: 21 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "polyalthia_cinnamomea",
+   "kind": "tree",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "canopy: records (GBIF: 9 records on the tile; height not yet screened)"
    ],
    "stand_in": null
   },
@@ -380,6 +433,18 @@
    "share": 0,
    "why_needed": [
     "GBIF: 10 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "xanthophyllum_reticulatum",
+   "kind": "tree",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "canopy: records (GBIF: 9 records on the tile; height not yet screened)"
    ],
    "stand_in": null
   }
@@ -1343,6 +1408,86 @@
  "queue": {
   "cards": [
    {
+    "id": "dillenia_excelsa",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "canopy: records (GBIF: 13 records on the tile; height not yet screened)"
+    ]
+   },
+   {
+    "id": "aglaia_odoratissima",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "canopy: records (GBIF: 11 records on the tile; height not yet screened)"
+    ]
+   },
+   {
+    "id": "paranephelium_xestophyllum",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "canopy: records (GBIF: 11 records on the tile; height not yet screened)"
+    ]
+   },
+   {
+    "id": "antidesma_neurocarpum",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "canopy: records (GBIF: 10 records on the tile; height not yet screened)"
+    ]
+   },
+   {
+    "id": "cowiea_borneensis",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "canopy: records (GBIF: 10 records on the tile; height not yet screened)"
+    ]
+   },
+   {
+    "id": "dimocarpus_dentatus",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "canopy: records (GBIF: 9 records on the tile; height not yet screened)"
+    ]
+   },
+   {
+    "id": "maasia_sumatrana",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "canopy: records (GBIF: 9 records on the tile; height not yet screened)"
+    ]
+   },
+   {
+    "id": "neonauclea_longipedunculata",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "canopy: records (GBIF: 9 records on the tile; height not yet screened)"
+    ]
+   },
+   {
+    "id": "polyalthia_cinnamomea",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "canopy: records (GBIF: 9 records on the tile; height not yet screened)"
+    ]
+   },
+   {
+    "id": "xanthophyllum_reticulatum",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "canopy: records (GBIF: 9 records on the tile; height not yet screened)"
+    ]
+   },
+   {
     "id": "calanthe_zollingeri",
     "kind": "forb",
     "stand_in": null,
@@ -1399,14 +1544,6 @@
     ]
    },
    {
-    "id": "dillenia_excelsa",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 13 records on the tile"
-    ]
-   },
-   {
     "id": "knema_latericia",
     "kind": "forb",
     "stand_in": null,
@@ -1431,24 +1568,8 @@
     ]
    },
    {
-    "id": "aglaia_odoratissima",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 11 records on the tile"
-    ]
-   },
-   {
     "id": "ficus_punctata",
     "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 11 records on the tile"
-    ]
-   },
-   {
-    "id": "paranephelium_xestophyllum",
-    "kind": "shrub",
     "stand_in": null,
     "why": [
      "GBIF: 11 records on the tile"
@@ -1460,22 +1581,6 @@
     "stand_in": null,
     "why": [
      "GBIF: 11 records on the tile"
-    ]
-   },
-   {
-    "id": "antidesma_neurocarpum",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 10 records on the tile"
-    ]
-   },
-   {
-    "id": "cowiea_borneensis",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 10 records on the tile"
     ]
    },
    {
@@ -2480,6 +2585,86 @@
  },
  "hands": [
   {
+   "id": "dillenia_excelsa",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 13 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "aglaia_odoratissima",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 11 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "paranephelium_xestophyllum",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 11 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "antidesma_neurocarpum",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 10 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "cowiea_borneensis",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 10 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "dimocarpus_dentatus",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 9 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "maasia_sumatrana",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 9 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "neonauclea_longipedunculata",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 9 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "polyalthia_cinnamomea",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 9 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "xanthophyllum_reticulatum",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 9 records on the tile; height not yet screened)"
+   ]
+  },
+  {
    "id": "calanthe_zollingeri",
    "kind": "forb",
    "what": "a trait card",
@@ -2536,14 +2721,6 @@
    ]
   },
   {
-   "id": "dillenia_excelsa",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 13 records on the tile"
-   ]
-  },
-  {
    "id": "knema_latericia",
    "kind": "forb",
    "what": "a trait card",
@@ -2568,24 +2745,8 @@
    ]
   },
   {
-   "id": "aglaia_odoratissima",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 11 records on the tile"
-   ]
-  },
-  {
    "id": "ficus_punctata",
    "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 11 records on the tile"
-   ]
-  },
-  {
-   "id": "paranephelium_xestophyllum",
-   "kind": "shrub",
    "what": "a trait card",
    "why": [
     "GBIF: 11 records on the tile"
@@ -2597,22 +2758,6 @@
    "what": "a trait card",
    "why": [
     "GBIF: 11 records on the tile"
-   ]
-  },
-  {
-   "id": "antidesma_neurocarpum",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 10 records on the tile"
-   ]
-  },
-  {
-   "id": "cowiea_borneensis",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 10 records on the tile"
    ]
   },
   {

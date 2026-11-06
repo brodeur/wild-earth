@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { uniforms as atmo } from './atmosphere.js';
 import { SPECIES } from './trees.js';
-import { FORB_SPECIES, FORB_MAX } from './forbs.js';
+import { FORB_MAX } from './forbs.js';   // the herbs' slots; the species in them are the tile's own (forbs.species, forbs.js forbSet)
 import { FH } from './shrubfield.js';
 
 // The forager's food (Aaron, 2026-11-01: "For animals that can forage, plants they can forage should glow. They can
@@ -111,7 +111,7 @@ export class Forage {
       let set = this.parts.get(plant); if (!set) this.parts.set(plant, set = new Set()); set.add(part);
     }
     this.grassFood.clear(); this.shrubIds.clear();
-    for (const id of this.ids) { const s = SPECIES[id]; if (!s) continue; if (s.form === 'grass') this.grassFood.add(id); else if (s.form !== 'forb' && s.form !== 'emergent' && s.form !== 'tree') this.shrubIds.add(id); }
+    for (const id of this.ids) { const s = SPECIES[id]; if (!s) continue; if (s.form === 'grass') this.grassFood.add(id); else if (s.form !== 'forb' && s.form !== 'emergent' && s.form !== 'tree' && !this.forbs.species.some(f => f.id === id)) this.shrubIds.add(id); }   // a dwarf shrub of the ground layer glows with the herbs
     this.R = R_BY[code] ?? R_DEFAULT;
     this.refreshMasks();
   }
@@ -122,7 +122,7 @@ export class Forage {
   }
   refreshMasks() {
     const F = this.forbs, st = F.states;
-    for (let k = 0; k < FORB_MAX; k++) { const sp = FORB_SPECIES[k], s = sp && st[k]; this.forbW[k] = sp && s && s.h > 0 ? this.weight(sp.id, s.flowering || s.dead) : 0; }
+    for (let k = 0; k < FORB_MAX; k++) { const sp = F.species[k], s = sp && st[k]; this.forbW[k] = sp && s && s.h > 0 ? this.weight(sp.id, s.flowering || s.dead) : 0; }
     const deco = this.shrubs.uniforms.fhDeco?.value;
     for (let k = 0; k < FH.length; k++) this.fhW[k] = this.weight(FH[k], !!(deco && deco[k].w > 0));
     this.chapW[0] = this.weight(CHAP[0], false); this.chapW[1] = this.weight(CHAP[1], false);
@@ -186,7 +186,7 @@ export class Forage {
       const dx = buf[o] - x, dz = buf[o + 2] - z, d2 = dx * dx + dz * dz; if (d2 > r2 || d2 >= bd[sp]) continue;
       bd[sp] = d2; bx[sp] = buf[o]; bz[sp] = buf[o + 2]; any = true;
     }
-    if (any) for (let k = 0; k < FORB_MAX; k++) if (bd[k] < Infinity) { const s = this.source(FORB_SPECIES[k].id, FORB_SPECIES[k].common || FORB_SPECIES[k].id); s.x = bx[k]; s.z = bz[k]; cb(s); }
+    if (any) for (let k = 0; k < FORB_MAX; k++) if (bd[k] < Infinity) { const G = F.species[k], s = this.source(G.id, G.common || G.id); s.x = bx[k]; s.z = bz[k]; cb(s); }
     // the shrubs: the near 3D plants and the impostor field's cached cells, the nearest of each food species
     if (this.shrubIds.size) {
       const B = this.bestShrub; B.clear();

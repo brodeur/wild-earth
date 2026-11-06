@@ -1,0 +1,534 @@
+{
+ "id": "carapa_guianensis",
+ "aliases": [
+  "bastard_mahogany",
+  "caobilla",
+  "carapa_latifolia",
+  "carapa_nicaraguensis",
+  "crabwood",
+  "xylocarpus_carapa"
+ ],
+ "scientific": "Carapa guianensis",
+ "common": "andiroba",
+ "form": "tree",
+ "regions": [
+  "neotropics"
+ ],
+ "architectural_model": "Rauh",
+ "deciduous": false,
+ "height_m": [
+  33.0,
+  46.8
+ ],
+ "stature": {
+  "typical_m": 39.9,
+  "tall_m": 55.0,
+  "record_m": null,
+  "source": "Carapa guianensis - Useful Tropical Plants (research record)"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    5.0,
+    19.8
+   ],
+   "trunk_radius": 0.65,
+   "crown_scale": 0.8,
+   "branches": 0.8,
+   "set": {
+    "trunk": {
+     "length_ratio": 0.7,
+     "split_prob": 0.05,
+     "bark_rgb": [
+      200,
+      198,
+      180
+     ],
+     "bark_pattern": "smooth_grey",
+     "flare": 1.4,
+     "base_size": 0.3,
+     "bole_ratio": 0.4
+    },
+    "foliage": {
+     "clumps": {
+      "radius_m": 0.8
+     }
+    },
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.25,
+        0.1
+       ],
+       [
+        0.4,
+        0.16
+       ],
+       [
+        0.6,
+        0.17
+       ],
+       [
+        0.8,
+        0.13
+       ],
+       [
+        0.93,
+        0.07
+       ],
+       [
+        1.0,
+        0.02
+       ]
+      ]
+     }
+    }
+   },
+   "note": "(from the light red meranti template) a pole in the understorey or a gap: a straight slender stem with a narrow, monopodial crown of tiers of horizontal branches (Roux's model), waiting for light"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 2,
+   "note": "(from the light red meranti template) (from the black cottonwood template) (from the Fremont cottonwood template) the file as written"
+  },
+  {
+   "name": "veteran",
+   "weight": 0.17,
+   "height_m": [
+    46.8,
+    55.0
+   ],
+   "trunk_radius": 1.3,
+   "crown_scale": 1.15,
+   "gnarl": 1.3,
+   "deadwood": {
+    "fraction": 0.22,
+    "levels": [
+     1,
+     2
+    ],
+    "where": "inner"
+   },
+   "set": {
+    "trunk": {
+     "split_prob": 0.8,
+     "split_count": 3,
+     "lean_deg": 4,
+     "flare": 2.8
+    }
+   },
+   "note": "(from the light red meranti template) an emergent giant: a huge pale bole with towering plank buttresses, the crown a few massive limbs bearing cauliflower clumps of leaves high above the canopy"
+  }
+ ],
+ "snag": {
+  "fraction": 0.08,
+  "from": "veteran",
+  "height_m": [
+   14,
+   24
+  ],
+  "limbs": 0.5,
+  "twigs": 0.2,
+  "levels": 1,
+  "shorten": [
+   0.4,
+   0.9
+  ],
+  "rgb": [
+   172,
+   166,
+   156
+  ]
+ },
+ "description": "A tree of swamp, riverbank, floodplain (varzea), slopes, 33-46.8 m tall (to 55 m). Bole straight and cylindrical, branchless up to 20 (max 30) m, sometimes fluted, short buttresses up to 2 m high (ICRAF). Canopy or subcanopy element of lowland rainforest (Useful Tropical Plants, ICRAF); 'tall tree with dense foliage' (English Wikipedia, src 5). Fruit: quadrangular woody 4-valved capsule 9-16 cm wide and about as long, falling to the ground; large angular red-brown seeds.",
+ "season_notes": {
+  "winter": "In leaf.",
+  "spring": "In leaf. Fruiting.",
+  "summer": "In leaf. Fruiting.",
+  "fall": "In leaf."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "mixed_forest": 1.0,
+   "riparian": 0.6
+  },
+  "floor": 1.0,
+  "mid": 1.1,
+  "steep": 1.0,
+  "north": 1.0,
+  "shade": 0.4,
+  "disturbed": 1.0
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "tayassu_tajacu",
+    "part": "seeds",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   },
+   {
+    "animal": "tayassu_pecari",
+    "part": "seeds",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   },
+   {
+    "animal": "dasyprocta_punctata",
+    "part": "seeds",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   },
+   {
+    "animal": "agouti_paca",
+    "part": "seeds",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   },
+   {
+    "animal": "hoplomys_gymnurus",
+    "part": "roots of young seedlings",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   },
+   {
+    "animal": "hypsipyla_ferrealis",
+    "part": "seeds",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   },
+   {
+    "animal": "hypsipyla_grandella",
+    "part": "seeds and young shoots",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": []
+ },
+ "trunk": {
+  "length_ratio": 0.62,
+  "radius_ratio": 0.03,
+  "taper": 0.75,
+  "flare": 1.5,
+  "bole_ratio": 0.8,
+  "base_size": 0.82,
+  "curve_deg": 3,
+  "curve_var_deg": 5,
+  "segments": 6,
+  "lean_deg": 3,
+  "stems": [
+   1,
+   1
+  ],
+  "stem_spread_deg": 0,
+  "split_prob": 0.6,
+  "split_count": 3,
+  "split_angle_deg": 28,
+  "bark_rgb": [
+   172,
+   168,
+   158
+  ],
+  "bark_pattern": "plates",
+  "twig_rgb": [
+   120,
+   96,
+   76
+  ],
+  "bark": {
+   "tile_m": [
+    0.4,
+    0.8
+   ],
+   "ridge_m": 0.05,
+   "block_m": 0.14,
+   "fissure": 0.55,
+   "contrast": 1.1,
+   "lichen": 0.2,
+   "relief": 1.4
+  },
+  "roots": {
+   "buttress": 0.6,
+   "buttresses": [
+    3,
+    5
+   ],
+   "height": 1.0,
+   "roots": [
+    0,
+    2
+   ],
+   "note": "small buttresses (sources)"
+  },
+  "split_height": 0.86
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "envelope": {
+   "profile": [
+    [
+     0.6,
+     0.145
+    ],
+    [
+     0.68,
+     0.246
+    ],
+    [
+     0.78,
+     0.29
+    ],
+    [
+     0.88,
+     0.261
+    ],
+    [
+     0.96,
+     0.16
+    ],
+    [
+     1.0,
+     0.035
+    ]
+   ],
+   "lobes": 6,
+   "lobe_depth": 0.18,
+   "asymmetry": 0.18,
+   "fill": 0.5,
+   "edge": 1.1
+  }
+ },
+ "levels": [
+  {
+   "count": 9,
+   "down_angle_deg": 42,
+   "down_angle_tip_deg": 28,
+   "down_angle_var_deg": 14,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 1.0,
+   "length_var": 0.25,
+   "curve_deg": 8,
+   "curve_var_deg": 20,
+   "zigzag_deg": 6,
+   "tropism": 0.02,
+   "droop_deg": 4,
+   "taper": 0.9,
+   "radius_ratio": 0.6,
+   "segments": 3,
+   "sinuous_deg": 5
+  },
+  {
+   "count": 11,
+   "start": 0.1,
+   "down_angle_deg": 50,
+   "down_angle_var_deg": 15,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.5,
+   "length_var": 0.3,
+   "curve_deg": 0,
+   "curve_var_deg": 20,
+   "zigzag_deg": 8,
+   "tropism": 0.04,
+   "taper": 1.0,
+   "radius_ratio": 0.45,
+   "segments": 2
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.17,
+  "leaf_shape": "pinnate_compound",
+  "cluster_m": 1.9,
+  "density": 14,
+  "leaf_fill": 3.6,
+  "start": 0.05,
+  "parent_start": 0.35,
+  "orientation": "outward",
+  "roll_deg": 70,
+  "colors": {
+   "winter": [
+    80,
+    106,
+    56
+   ],
+   "spring": [
+    80,
+    106,
+    56
+   ],
+   "summer": [
+    80,
+    106,
+    56
+   ],
+   "fall": [
+    80,
+    106,
+    56
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "clumps": {
+   "radius_m": 1.5,
+   "cards_per_clump": 10,
+   "shell": 0.1,
+   "flatten": 0.7,
+   "tip_bias": 1.4
+  },
+  "palette": [
+   [
+    0.7,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.2,
+    [
+     1.18,
+     1.2,
+     1.08
+    ]
+   ],
+   [
+    0.1,
+    [
+     0.8,
+     0.84,
+     0.8
+    ]
+   ]
+  ],
+  "winter_twigs": 0.45,
+  "ao_min": 0.66,
+  "color_var": [
+   0.07,
+   0.05
+  ],
+  "leaf_on_var": 0.5,
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "flowers": null,
+  "berries": null
+ },
+ "deadwood": {
+  "fraction": 0.08,
+  "where": "inner",
+  "levels": [
+   1,
+   2
+  ],
+  "shorten": 0.6,
+  "rgb": [
+   160,
+   154,
+   144
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "length": 0.6,
+  "down_deg": 45,
+  "down_var_deg": 18,
+  "curve_var_deg": 22,
+  "segments": 2,
+  "radius_m": 0.011,
+  "taper": 0.6,
+  "zigzag_deg": 14,
+  "fan_deg": 50,
+  "jitter": 0.2
+ },
+ "lod": {
+  "near_tris_budget": 2200,
+  "near_sides": [
+   7,
+   3,
+   0
+  ],
+  "mid_blobs": 5,
+  "mid_branches": 4,
+  "mid_segments": [
+   3,
+   2
+  ],
+  "mid_blob_scale": 0.9,
+  "close_factor": 2
+ },
+ "targets": {
+  "crown_width_ratio": 0.58,
+  "crown_base_ratio": 0.6,
+  "porosity": 0.2,
+  "foliage_rg": 0.56,
+  "foliage_bg": 0.27,
+  "fall_rg": 1.41,
+  "fall_bg": 0.43,
+  "from": "pipeline/tree_cards.py from the research record (crown: Canopy or subcanopy element of lowland rainforest (Useful Tropical Plants, ICRAF); 'tall tree with dense foliage' (English Wikipedia, src 5).), no photographs measured"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "3",
+  "card": "library/plant_cards/carapa_guianensis.json",
+  "card_sha256": "7711b44850c3afbe",
+  "template": "shorea_leprosula",
+  "template_common": "light red meranti",
+  "height_scale": 0.84
+ },
+ "notes": "Template shorea_leprosula: an emergent: a buttressed clear bole under an umbrella crown (light red meranti). Briefly deciduous by the sources, but no months given: drawn evergreen. NOT SOURCED (the template's or a default value): crown width (the template's ratio); crown depth (the template's); leaf size (the median of the research records' sourced simple leaves, 0.17 m); leaf colour (a tropical evergreen's mid green). Research notes: Name: the Manual de Plantas de Costa Rica's 2007 Meliaceae treatment (reported by MOBOT, src 3) restricts C. guianensis to a species 'quite rare in Costa Rica'; most Costa Rican populations, presumably including Osa, are C. nicaraguensis (Kenfack's distinction). TTSM, Useful Tropical Plants, Spanish Wikipedia and HVAA treat C. nicaraguensis as a synonym of C. guianensis, and all trait values here come from C. guianensis in the broad sense. TTSM also notes Costa Rican Atlantic and Pacific populations may be different ecotypes. Leaf habit: TTSM 'evergreen or deciduous', Useful Tropical Plants 'semi-deciduous', ICRAF 'deciduous or semi-evergreen'; I mapped this to brevideciduous; no leafless months given. Leaves: paripinnate with a dormant glandular leaflet at the tip, leaflets opposite and entire, very large leaves in the unbranched juvenile stage (ICRAF); no sizes found. Flowering: one short period a year, months not given (ICRAF, UTP). Fruits take 8-12 months to mature; TTSM says harvested May-Aug (region not stated, probably Costa Rica). Seeds float and are dispersed by water; in Costa Rica agoutis scatter-hoard them, and occasionally pigs (ICRAF, UTP). Height: usually up to 35 m, occasionally 55 m (UTP, ICRAF); TTSM up to 60 m. dbh max 200 cm (ICRAF, TTSM 2 m); UTP 180 cm recorded. Light: 'moderately tolerant of shade, but full overhead light is required for fast growth' (UTP). Elevation: usually below 700 m, occasionally to 1000 m (TTSM, UTP); ICRAF 0-1200 m. Animal names as spelled in TTSM (Tayassu tajacu = Pecari tajacu, Agouti paca = Cuniculus paca, 'Hypsiphyla' = Hypsipyla); TTSM says the birds use it for 'food and nesting' without naming the part eaten. Flower colour: ICRAF white; TTSM fragment mentions 'a light pinkish color externally'. Parts of the TTSM PDF are scanned and were only partly readable.",
+ "sources": [
+  "Fournier, L.A. Carapa guianensis Aubl. In: Vozzo, J.A. (ed.) Tropical Tree Seed Manual, USDA Forest Service Agriculture Handbook 721 (2002), pp. 360-362, https://rngr.net/publications/ttsm/species/PDF.2003-12-03.2328/at_download/file (unknown (US federal government publication; no licence stated on rngr.net)), read 2026-11-06",
+  "Carapa guianensis - Useful Tropical Plants, https://tropical.theferns.info/viewtropical.php?id=Carapa+guianensis (CC BY-NC-SA 3.0 (database and code)), read 2026-11-06",
+  "Orwa et al. (2009) Carapa guianensis. Agroforestree Database 4.0, World Agroforestry, http://apps.worldagroforestry.org/treedb/AFTPDFS/Carapa_guianensis.PDF (unknown), read 2026-11-06",
+  "MBG Research: Costa Rica: The Cutting Edge, Vol. XXVII No. 2 (April 2020), https://www.mobot.org/MOBOT/research/Edge/apr20/apr20lea.shtml (All Rights Reserved (Missouri Botanical Garden)), read 2026-11-06",
+  "Carapa guianensis - Wikipedia, la enciclopedia libre, https://es.wikipedia.org/wiki/Carapa_guianensis (CC BY-SA 4.0), read 2026-11-06",
+  "Carapa guianensis - Wikipedia, https://en.wikipedia.org/wiki/Carapa_guianensis (CC BY-SA 4.0), read 2026-11-06",
+  "research record library/plant_cards/_research/carapa_guianensis.json (pipeline/tree_cards.py)"
+ ],
+ "authors": [
+  "Wild Earth (pipeline/tree_cards.py from an agent's sourced research record, 2026-11-06); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

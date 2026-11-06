@@ -1,0 +1,48 @@
+{
+ "units": {
+  "1": {
+   "name": "Neogene - Quaternary Siliciclastic",
+   "lithology": "sandstone_conglomerate",
+   "cells": 1453022,
+   "elevation_m": {
+    "p5": 341.7,
+    "p25": 358.5,
+    "median": 370.0,
+    "p75": 380.2,
+    "p95": 391.6
+   },
+   "candidate": true
+  },
+  "2": {
+   "name": "Quaternary Siliciclastic",
+   "lithology": "surficial",
+   "cells": 2546978,
+   "elevation_m": {
+    "p5": 323.0,
+    "p25": 337.0,
+    "median": 342.6,
+    "p75": 347.0,
+    "p95": 354.4
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  }
+ },
+ "column": false,
+ "reason": "1 bedrock unit(s) large enough: no column",
+ "rule": {
+  "min_cells": 2000,
+  "min_fraction": 0.0005,
+  "contact_dz_m": 1.0,
+  "min_contact": 50,
+  "superposed": 0.75,
+  "steep_deg": 25.0,
+  "min_band_fit": 0.5,
+  "min_column_fit": 0.6,
+  "max_dip_deg": 8.0,
+  "tilt_prior": 200,
+  "tilt_scale_m": 3000.0,
+  "map_tol_m": 20.0,
+  "doc": "pipeline/strata.py"
+ }
+}

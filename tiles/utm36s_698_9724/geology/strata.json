@@ -1,0 +1,55 @@
+{
+ "units": {
+  "1": {
+   "name": "",
+   "lithology": "volcanic",
+   "cells": 3989140,
+   "elevation_m": {
+    "p5": 1489.8,
+    "p25": 1509.5,
+    "median": 1524.1,
+    "p75": 1539.9,
+    "p95": 1557.6
+   },
+   "candidate": true
+  },
+  "2": {
+   "name": "",
+   "lithology": "greenstone_metavolcanic",
+   "cells": 10860,
+   "elevation_m": {
+    "p5": 1513.9,
+    "p25": 1519.9,
+    "median": 1524.9,
+    "p75": 1559.3,
+    "p95": 1564.7
+   },
+   "candidate": true
+  }
+ },
+ "superposition": [],
+ "consistent_pairs": 0.0,
+ "dropped": [
+  {
+   "unit": "",
+   "why": "no base contact in the tile"
+  }
+ ],
+ "column": false,
+ "reason": "fewer than two units left in the column",
+ "rule": {
+  "min_cells": 2000,
+  "min_fraction": 0.0005,
+  "contact_dz_m": 1.0,
+  "min_contact": 50,
+  "superposed": 0.75,
+  "steep_deg": 25.0,
+  "min_band_fit": 0.5,
+  "min_column_fit": 0.6,
+  "max_dip_deg": 8.0,
+  "tilt_prior": 200,
+  "tilt_scale_m": 3000.0,
+  "map_tol_m": 20.0,
+  "doc": "pipeline/strata.py"
+ }
+}

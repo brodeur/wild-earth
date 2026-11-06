@@ -1,0 +1,20 @@
+{
+ "_doc": "A tree's research record: every value read from a cited source (pipeline/tree_cards.py writes the trait card from it). `src` on a value is the index (0-based) into `sources`. Write null where no source gives a value; never guess. Free-text fields are short and factual.",
+ "id": "genus_species (lower case, underscore)",
+ "scientific": "Genus species (the WCVP accepted name)",
+ "family": "Family",
+ "common": "an English common name if one is in use, else the most used local name",
+ "aliases": ["other common names, lower case, underscores for spaces", "synonyms in use"],
+ "habit": "one of: broadleaf_tree | palm_solitary | palm_clustered | strangler | other (describe in notes)",
+ "height_m": {"typical": [15, 25], "max": 35, "src": 0},
+ "dbh_cm": {"typical": [30, 60], "max": 120, "src": 0},
+ "bole": {"clear_fraction": 0.5, "straight": true, "buttresses": "none | small | plank | large plank", "buttress_height_m": null, "stilt_roots": false, "stilt_root_height_m": null, "spines": false, "text": "short description", "src": 0},
+ "crown": {"shape": "e.g. umbrella | hemispherical | narrow | open irregular | shuttlecock (palm)", "width_m": [8, 15], "depth_fraction": 0.35, "density": "dense | medium | open", "position": "emergent | canopy | subcanopy | understorey", "text": "short", "src": 0},
+ "leaf": {"type": "simple | pinnate | bipinnate | palmate_compound | trifoliate | pinnate_palm_frond | palmate_palm_frond", "length_cm": [10, 20], "width_cm": [4, 8], "leaflet_length_cm": null, "frond_count": null, "shape": "elliptic | oblong | lanceolate | obovate | ovate | cordate", "texture": "glossy | matte | leathery | papery | hairy", "upper_colour": "words, e.g. dark glossy green", "under_colour": "words", "new_flush_colour": "words or null", "src": 0},
+ "phenology": {"leaf_habit": "evergreen | brevideciduous | deciduous", "leafless_months": [], "flowering_months": [], "flower_colour": "words or null", "fruiting_months": [], "fruit": "short description (size, colour)", "src": 0},
+ "bark": {"colour": "words", "texture": "smooth | lenticellate | flaking | fissured | furrowed | ringed (palm)", "text": "short", "src": 0},
+ "habitat": {"forest_types": ["terra firme", "floodplain (varzea)", "swamp", "riverbank", "slopes", "ridges", "secondary/gaps"], "light": "shade-tolerant | intermediate | light-demanding pioneer", "elevation_m": [0, 1000], "range": "short distribution", "src": 0},
+ "eaten_by": [{"animal": "Genus species (scientific, as eaten in the source)", "part": "fruit | seeds | leaves | flowers | nectar", "src": 0}],
+ "notes": "anything the card writer should know: what the sources disagree on, what was not found",
+ "sources": [{"title": "", "url": "", "licence": "as stated by the site (e.g. CC BY-SA 4.0 for Wikipedia)", "read": "2026-11-06"}]
+}

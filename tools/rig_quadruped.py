@@ -148,6 +148,11 @@ def band_at(L, y, h, n=3):
 def skeleton(P, part, pw, piv, idx, rig, posture, wrist_k, hock_k, withers):
     part = part.astype(int)
     H = withers
+    if 'tail' not in rig:   # no tail found by the build (a ground squirrel's tail lying against the legs, a hippo's stub):
+        # the root at the rump, the rearmost trunk point near the midline, at its height there
+        tr = P[(part == 0) & (np.abs(P[:, 0]) < 0.15 * H)]
+        back = tr[tr[:, 2] < np.percentile(tr[:, 2], 3)]
+        rig = {**rig, 'tail': [0.0, float(back[:, 1].mean()), float(back[:, 2].mean())]}
     fore_z = (rig['fore'][2] + rig['hind'][2]) / 2
     legs = {}
     for name in LEGS:

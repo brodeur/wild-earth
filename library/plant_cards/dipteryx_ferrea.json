@@ -1,0 +1,224 @@
+{
+ "id": "dipteryx_ferrea",
+ "scientific": "Dipteryx ferrea",
+ "common": "shihuahuaco",
+ "aliases": [
+  "almendrillo",
+  "charapilla",
+  "coumarou",
+  "coumarouna_ferrea",
+  "coumarouna_micrantha",
+  "cumaru",
+  "dipteryx_micrantha",
+  "huamansamana",
+  "mawi",
+  "shihuahuaco_negro"
+ ],
+ "family": "Fabaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "shorea_leprosula",
+ "regions": [
+  "neotropics"
+ ],
+ "height_m": [
+  35.2,
+  44.0
+ ],
+ "stature": {
+  "typical_m": 39.6,
+  "tall_m": 60.0,
+  "record_m": null,
+  "source": "Dipteryx micrantha - Wikipedia (research record)"
+ },
+ "variants_height_m": {
+  "young": [
+   5.3,
+   21.1
+  ],
+  "veteran": [
+   44.0,
+   60.0
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.6,
+    0.145
+   ],
+   [
+    0.68,
+    0.246
+   ],
+   [
+    0.78,
+    0.29
+   ],
+   [
+    0.88,
+    0.261
+   ],
+   [
+    0.96,
+    0.16
+   ],
+   [
+    1.0,
+    0.035
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.18,
+  "asymmetry": 0.18,
+  "fill": 0.4,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    80,
+    106,
+    56
+   ],
+   "spring": [
+    80,
+    106,
+    56
+   ],
+   "summer": [
+    80,
+    106,
+    56
+   ],
+   "fall": [
+    80,
+    106,
+    56
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "leaf_size_m": 0.116,
+  "leaf_shape": "pinnate_compound",
+  "flowers": null,
+  "berries": null
+ },
+ "trunk": {
+  "stems": [
+   1,
+   1
+  ],
+  "flare": 2.27,
+  "roots": {
+   "buttress": 0.95,
+   "buttresses": [
+    3,
+    6
+   ],
+   "height": 1.8,
+   "roots": [
+    0,
+    2
+   ],
+   "note": "plank buttresses to about 4 m (sources)"
+  }
+ },
+ "targets": {
+  "crown_width_ratio": 0.58,
+  "crown_base_ratio": 0.6,
+  "porosity": 0.3,
+  "from": "pipeline/tree_cards.py from the research record (crown: Emergent; flowers borne in bunches high in the canopy. Wikipedia's wording mentions a wide 'parasol-shaped' form but it is ambiguous whether this is the base or crown.), no photographs measured"
+ },
+ "description": "A tree of terra firme, secondary/gaps, 35.2-44 m tall (to 60 m). Very large emergent; trunk to c. Emergent; flowers borne in bunches high in the canopy. Fruit: ovoid to oblong drupaceous pod with fleshy pericarp, one large oily edible seed, no coumarin scent; ripens at the height of the dry season.",
+ "season_notes": {
+  "winter": "In leaf.",
+  "spring": "In leaf.",
+  "summer": "In leaf. Fruiting.",
+  "fall": "In leaf. Fruiting."
+ },
+ "habitat": {
+  "classes": {
+   "mixed_forest": 1.0,
+   "riparian": 0.3
+  },
+  "floor": 1.0,
+  "mid": 1.1,
+  "steep": 1.0,
+  "north": 1.0,
+  "shade": 0.4,
+  "disturbed": 1.0
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "ateles_paniscus",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "dasyprocta_variegata",
+    "part": "seeds",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "macaws_(genus",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": []
+ },
+ "range": {
+  "elev_m": [
+   135,
+   400
+  ],
+  "where": "Bolivia, Brazil (Acre, Amazonas, Rondonia), Colombia, Ecuador, Peru (Huanuco, Loreto, Madre de Dios, Puno, Ucayali); 0-6 trees/ha"
+ },
+ "stand_in": "shorea_leprosula",
+ "notes": "Template shorea_leprosula: an emergent: a buttressed clear bole under an umbrella crown (light red meranti). NOT SOURCED (the template's or a default value): crown width (the template's ratio); crown depth (the template's); leaf colour (a tropical evergreen's mid green); bark colour (the template's); bark texture (the template's). Research notes: Names: Wikipedia's 'Dipteryx micrantha' article covers the Madre de Dios shihuahuaco (avg 44 m in Manu) and says Lima (1989) sank D. ferrea into D. micrantha but by 2010 treated it as separate again; Wikipedia's Dipteryx genus page lists D. ferrea (Ducke) Ducke as accepted ('synonymised to D. micrantha in 1989, now recognised again'). Useful Tropical Plants (src 3) still lists D. ferrea and Coumarouna ferrea as synonyms of D. micrantha. Aldana Gomero et al. 2016 (src 2) say all Peruvian Dipteryx are called shihuahuaco in the field and call Madre de Dios plants D. micrantha morphotype 1 (3-5 leaflet pairs, leaflets avg 11.6 x 5.4 cm); they do not mention D. ferrea. So nearly all values here were published under D. micrantha. Leaflet count: Wikipedia 6-14 (also cites 9-11); rachis grooved above. Height 'typical' is the Manu mean. Fruiting months are derived: Wikipedia 'height of the dry season' + Vela-Apaza 2024 (src 4) dry season June-September in Madre de Dios. Flowering 'shortly after the rainy season starts' (no months). Habitat: mature seasonal evergreen forest on alluvial soils, avoids seasonally flooded varzea; also secondary woodland/pastures; seedlings recruit mainly in gaps (light 'intermediate' is my reading of that). UTP: to 30-40 m, up to 500 m, evergreen, not in inundated areas. Ateles paniscus as named in the source (Madre de Dios spider monkey is usually listed as A. chamek; not changed). Not found: crown width/shape, leaf colours, bark texture.",
+ "sources": [
+  "Dipteryx micrantha - Wikipedia, https://en.wikipedia.org/wiki/Dipteryx_micrantha (CC BY-SA 4.0), read 2026-11-06",
+  "Dipteryx - Wikipedia (species list), https://en.wikipedia.org/wiki/Dipteryx (CC BY-SA 4.0), read 2026-11-06",
+  "Aldana Gomero et al. 2016, Analisis morfometrico de las especies de Dipteryx en la Amazonia peruana, Folia Amazonica 25(2):101-118, doi 10.24841/fa.v25i2.394 (abstract page), https://revistas.iiap.gob.pe/index.php/foliaamazonica/article/view/394 (CC BY 4.0), read 2026-11-06",
+  "Dipteryx micrantha - Useful Tropical Plants, https://tropical.theferns.info/viewtropical.php?id=Dipteryx+micrantha (CC BY-NC-SA 3.0), read 2026-11-06",
+  "Vela-Apaza & Gonzales-Ojeda 2024, Flora arborea de los bosques de la planicie aluvial inundable en el Rio Los Amigos, Rev. Biodivers. Amaz. 3(1) e274, doi 10.55873/rba.v3i1.274, https://revistas.unamad.edu.pe/index.php/rba/article/view/274 (CC BY 4.0), read 2026-11-06",
+  "research record library/plant_cards/_research/dipteryx_ferrea.json (pipeline/tree_cards.py)"
+ ],
+ "authors": [
+  "Wild Earth (pipeline/tree_cards.py from an agent's sourced research record, 2026-11-06); needs local sign-off"
+ ],
+ "generated_by": {
+  "by": "pipeline/tree_cards.py",
+  "version": "1"
+ }
+}
