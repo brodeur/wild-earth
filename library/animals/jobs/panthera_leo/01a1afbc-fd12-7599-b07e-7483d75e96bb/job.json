@@ -1,0 +1,66 @@
+{
+  "species": "panthera_leo",
+  "mode": "preview",
+  "kind": "text-to-3d",
+  "task_id": "01a1afbc-fd12-7599-b07e-7483d75e96bb",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "preview",
+    "prompt": "A wild Lion (Panthera leo) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+    "ai_model": "latest",
+    "target_formats": [
+      "glb"
+    ],
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 30000,
+    "moderation": false
+  },
+  "prompt": "A wild Lion (Panthera leo) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+  "image": null,
+  "preview_job": null,
+  "estimated_credits": 20,
+  "balance_before": 2357,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-06T07:22:40+00:00",
+    "created_at": "2026-11-06T07:22:42+00:00",
+    "started_at": "2026-11-06T07:22:42+00:00",
+    "finished_at": "2026-11-06T07:23:59+00:00",
+    "downloaded": "2026-11-06T07:24:21+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur, world pipeline",
+  "progress": 100,
+  "task": {
+    "id": "01a1afbc-fd12-7599-b07e-7483d75e96bb",
+    "type": "text-to-3d-preview",
+    "status": "SUCCEEDED",
+    "created_at": 1793949762701,
+    "started_at": 1793949762711,
+    "finished_at": 1793949839348,
+    "consumed_credits": 20,
+    "task_error": null
+  },
+  "credits_charged": 20,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 2167916,
+      "sha256": "b6cb28ebd097ad6a90cb2910ba1ab0b48c5981f5cd8d5473cb00559e51f09aac",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1afbc-fd12-7599-b07e-7483d75e96bb/output/model.glb"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 81980,
+      "sha256": "d739d1dcc30a8d96401c07ed7eaec3c64ddac0803ac497092783d741e73ae2ed",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1afbc-fd12-7599-b07e-7483d75e96bb/output/preview.png"
+    }
+  ],
+  "balance_after": 2337
+}

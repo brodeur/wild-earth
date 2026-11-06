@@ -263,7 +263,7 @@ export class Forbs {
     this.n = 0; this.staged = []; this.on = true;
     this.gone = null;   // the plants pulled down from below (dig.js: the world's pulls, by id `f:<i>.<j>.<k>`): not drawn
     this.buildDensity();
-    this.mixCache = new Map();
+    this.mixCache = new Map(); this.noFallback = this.tile?.speciesMix?.json?.class_fallback === false;
   }
   // Forb density per cell: the herb cover (floored at 0.3, as the grass takes it) times the habitat class's share.
   buildDensity() {
@@ -291,7 +291,9 @@ export class Forbs {
     const cum = []; let acc = 0;
     for (const F of FORB_SPECIES) {
       const st = this.states[F.k]; if (!st || st.h <= 0) continue;
-      let w = fromRow ? row.ground[F.id] || 0 : (F.classes[cls] || 0) * F.density;
+      // a tile built outside the regional tables (species_mix.json class_fallback false) never borrows the class weights,
+      // which are California's forbs (world pipeline phase 1: filaree rosettes lying flat on the Serengeti and at Lofoten)
+      let w = fromRow ? row.ground[F.id] || 0 : this.noFallback ? 0 : (F.classes[cls] || 0) * F.density;
       w *= F.shade > 0.5 ? 0.25 + 1.5 * cover : 1.2 - cover * (1 - F.shade);   // shade lovers under the trees, the rest in the open
       if (w <= 0) continue;
       acc += w; cum.push([F.k, acc]);

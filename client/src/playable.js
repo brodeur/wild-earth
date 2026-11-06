@@ -13,7 +13,8 @@ export const SHORT = Object.fromEntries([...Object.entries(GROUND), ...Object.en
 // The tile's stand-ins (animals.js installFauna: a species of the tile's own drawn on a kin's mesh, running its machine) take
 // their kin's body: its walker or flier entry (the raven's, squirrel's and woodpecker's own controls by the nearest
 // walker or flier: the crow, the Douglas squirrel, the hairy woodpecker), named for the species; their code is their short
-// name (?as=<code>). registerStandIns(animals.standIns) when a world is made, registerStandIns({}) when it goes (main.js).
+// name (?as=<code>); a slot with its own model (fauna.json `model`, standIns' drawn) takes that body.
+// registerStandIns(animals.standIns) when a world is made, registerStandIns({}) when it goes (main.js).
 const OWN_TWIN = { corvus_corax: ['flier', 'corvus_brachyrhynchos'], sciurus_griseus: ['ground', 'tamiasciurus_douglasii'], melanerpes_formicivorus: ['flier', 'leuconotopicus_villosus'] };
 let standIns = [];
 export function registerStandIns(list) {
@@ -23,7 +24,7 @@ export function registerStandIns(list) {
     const code = o?.code, kin = o?.kin; if (!code || GROUND[code] || FLIERS[code] || OWN[code]) continue;
     const tw = OWN_TWIN[kin], T = GROUND[kin] ? GROUND : FLIERS[kin] ? FLIERS : tw ? (tw[0] === 'ground' ? GROUND : FLIERS) : null;
     const base = T ? T[kin] || T[tw?.[1]] : null; if (!base) continue;
-    T[code] = { ...base, short: code, common: o.common || o.one || code };
+    T[code] = { ...base, short: code, common: o.common || o.one || code, ...(o.drawn ? { model: o.drawn } : {}) };   // drawn: its own model (animals.playerModel)
     SHORT[code] = code; standIns.push(code);
   }
 }

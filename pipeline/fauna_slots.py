@@ -44,6 +44,9 @@ SNAKE_FAMILIES = {"Colubridae", "Viperidae", "Elapidae", "Boidae", "Pythonidae",
                   "Typhlopidae", "Leptotyphlopidae", "Dipsadidae"}
 
 
+from .fauna_models import model_for   # noqa: E402
+
+
 def static_codes() -> list[str]:
     """The curated client species: the `code:` of each entry in animals.js SPECIES."""
     src = ANIMALS_JS.read_text()
@@ -214,6 +217,9 @@ def fauna_slots(tile: Tile) -> dict:
             "group": GROUP.get(archetype, [1, 3]), "bird": a.get("kind") == "bird",
             "night": "nocturnal" in act and "diurnal" not in act, "water": fam in WATER_FAMILIES or kin == "lontra_canadensis",
             "role": a.get("role") or [], "known": known})
+        mdl = model_for(a["id"])   # a body of its own from the library (pipeline/fauna_models.py), drawn at its real size
+        if mdl:
+            slots[-1]["model"] = mdl
         slots[-1]["density_km2"] = density_km2(a, kin, archetype, efg)
     out = {"format": 1, "gate": True, "allow": allow, "slots": slots, "skipped": skipped,
            "rules": "pipeline/fauna_slots.py: kin by taxonomy, diet and mass; scale = (mass / kin mass)^(1/3), 0.25-4; density "

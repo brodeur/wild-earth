@@ -512,9 +512,9 @@
   },
   "animals": {
    "stage": "fauna",
-   "started_at": "2026-11-06T06:44:45Z",
-   "ended_at": "2026-11-06T06:44:46Z",
-   "wall_s": 0.7,
+   "started_at": "2026-11-06T08:05:52Z",
+   "ended_at": "2026-11-06T08:05:53Z",
+   "wall_s": 0.6,
    "cpu_self_s": 0.5,
    "cpu_children_s": 0.0,
    "downloads": {},
@@ -528,7 +528,7 @@
      "misses": 0
     }
    },
-   "disk_bytes": 161004,
+   "disk_bytes": 162152,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -653,14 +653,14 @@
    "meshy_queued_credits_est": 0
   },
   "fauna": {
-   "started_at": "2026-11-06T06:49:09Z",
-   "ended_at": "2026-11-06T06:49:23Z",
-   "wall_s": 273.8,
+   "started_at": "2026-11-06T08:05:52Z",
+   "ended_at": "2026-11-06T08:05:53Z",
+   "wall_s": 273.7,
    "cpu_s": 18.5,
    "download_bytes": 108746,
    "cache_hits": 360,
    "cache_misses": 205,
-   "disk_bytes": 496241,
+   "disk_bytes": 497389,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -962,21 +962,37 @@
    ],
    "ended_at": "2026-11-06T06:49:24Z",
    "failed": []
+  },
+  {
+   "started_at": "2026-11-06T08:05:52Z",
+   "stages": [
+    {
+     "stage": "fauna",
+     "started_at": "2026-11-06T08:05:52Z",
+     "steps_run": [
+      "animals"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T08:05:53Z"
+    }
+   ],
+   "ended_at": "2026-11-06T08:05:53Z",
+   "failed": []
   }
  ],
  "totals": {
-  "wall_s": 1483.3,
+  "wall_s": 1483.2,
   "cpu_s": 258.1,
   "download_bytes": 15660538,
   "cache_hits": 518,
   "cache_misses": 681,
-  "disk_bytes": 101331019,
+  "disk_bytes": 101332167,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 2395
  },
- "updated_at": "2026-11-06T06:49:24Z",
+ "updated_at": "2026-11-06T08:05:53Z",
  "client": {
-  "bytes": 15899533,
+  "bytes": 15900778,
   "files": 47,
   "largest": {
    "client/season_rgb.png": 4174717,

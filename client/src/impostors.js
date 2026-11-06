@@ -482,6 +482,7 @@ export class Impostors {
       let site = -1;
       for (let k = 0; k < nTrees + nShrubs + nRip; k++) {
         const isTree = k < nTrees || k >= nTrees + nShrubs, rip = k >= nTrees + nShrubs;
+        if (!(isTree ? treeMix : shrubMix)) continue;   // a tile with no class fallback (species_mix class_fallback false): no mix, no plant (the riparian extras too)
         let name = pick(isTree ? treeMix : shrubMix, rnd());
         let variant = Math.floor(rnd() * VARIANTS);
         let px = (i + rnd()) * res, pn = size - (j + rnd()) * res;

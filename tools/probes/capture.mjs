@@ -13,7 +13,8 @@ await send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 800, dev
 await send('Page.navigate', { url });
 const t0 = Date.now(); let ready = false;
 while (Date.now() - t0 < 600000) { await new Promise(r => setTimeout(r, 5000)); ready = await ev('!!(window.__weWorld && window.__weWorld()?.ready)'); if (ready === true) break; }
-const err = await ev('document.body.innerText.slice(0,200)');
+const err = await Promise.race([ev('document.body.innerText.slice(0,200)'), new Promise(r => setTimeout(() => r('page busy'), 15000))]);
+if (ready !== true) { console.log(JSON.stringify({ ready, err })); await fetch(`http://127.0.0.1:${port}/json/close/${tabs.id}`); process.exit(1); }
 console.log(JSON.stringify({ ready, loadSeconds: Math.round((Date.now() - t0) / 1000), err }));
 if (ready !== true) process.exit(1);
 await ev(`new Promise(r => { const s = document.createElement('script'); s.src = '/scratch/whitewater_harness.js?v=' + Date.now(); s.onload = r; document.head.append(s); })`);

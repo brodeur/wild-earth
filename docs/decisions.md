@@ -5535,3 +5535,54 @@ source that holds on every tile, and is judged by re-running the set.
   November-January, summer June-August), a temperate south shifts six months.
 - **The judge compares like with like** (`tools/probes`): the top-down render is drawn without haze (Sentinel-2 L2A is
   corrected for the atmosphere) and compared with the Sentinel-2 composite of the capture's own month.
+
+## 2026-11-06: phase 1, iteration 2: the tile's own animals get bodies of their own (branch claude/sweet-feistel-2054bb)
+
+Aaron: "the Serengeti deep pass waits until phase 1 spawns a tile's own animals (archetype plus stand-in body)... Build
+that first, then model", and "the result of the pipeline not fiddling with individual species". Every hand build before
+this one (build_cougar.py, build_elk.py ...) carried its species' palette, landmarks and reshapes in code. This
+iteration replaces that, for four-legged mammals, with one path that reads everything from data.
+
+- **One build for every quadruped** (`tools/build_quadruped.py`): parts from the geometry (the tail behind a cut at the
+  rump, narrower than the body; the feet on the floor split fore and hind at the widest gap; the legs below the belly
+  line; the head ahead of a plane at the neck base), colour from the Meshy refine's texture (each face of each tier the
+  mean of the nearest source faces' texture colour), size from the body mass, then the existing `rig_quadruped.py` and
+  `bake_gait.mjs`. Tried without credits on the ground squirrel, cougar and bear jobs already in the library.
+- **Meshy meshes are not manifold** (a refine had 627 edges on three or more faces), and the collapse decimation stalls
+  on them (3,821 triangles whatever the ratio). The build voxel-remeshes at 1/200 of the length after reading the
+  colour (colour goes by position, so the UVs are no longer needed).
+- **Size from mass, not the trait card's shoulder height**: the cards' shoulder heights are allometric guesses from mass
+  that ignore build (a hippo 2.5 m at the shoulder, a zebra 1.65 m). The build sizes the closed mesh so its volume at
+  1,000 kg/m3 holds the card's mass (EltonTraits / PanTHERIA): the cougar comes out 0.70 m at the withers (hand build
+  0.72), the lion 1.0 m. The prompts carry no dimensions.
+- **Which species get a model** (`pipeline/fauna_models.py`, run by hand with a credit budget, never by a tile build):
+  every predator over 15 kg (largest first), then the four-legged mammals by biomass (density x mass), until the budget;
+  a model the library already has costs nothing on any tile. The prompts come from the card and the place (OpenStreetMap
+  reverse geocoding: "Serengeti, Mara Region, Tanzania") with a fixed pose the build needs (side-on, four feet flat,
+  nothing else on the ground). A build that cannot find four legs earns one more preview, then the slot stays a stand-in.
+  The ledger per run: tiles/<tile>/fauna/models_run.json; the library's models: library/animals/models.json; the tile's
+  fauna.json slot carries `model` when the library has one (`fauna_slots.py`).
+- **The coat's contrast** (found in the Serengeti pass): a face coloured by the mean texture under it turned the zebra
+  grey and the leopard plain. Each face now takes the commonest of the coat's own palette colours under it (k-means, 10
+  colours), and a patterned coat (the mean lightness step between neighbouring source faces: plain coats 0.024-0.058,
+  the zebra, giraffe, cheetah and leopard 0.089-0.125) gets up to 12,000 triangles at the near tier (4,000 for a plain
+  one).
+- **Legs that stand on the floor**: an elephant's trunk hanging below the leg cut was taken for a foreleg, a narrow
+  antelope's close-set legs for its belly, and a walking pose passed with a hind leg missed. A leg is now a piece below
+  the cut that reaches the floor; the belly is the torso's down-facing underside; every quadrant must have a foot on the
+  floor or the attempt fails (and the slot gets its one retry, then stays a stand-in: the hartebeest).
+- **Paid jobs first**: before buying a species, the step rebuilds its existing refine jobs with today's build;
+  `--rebuild` rebuilds every library model from its job (all eleven were, after each rule above).
+- **No California forbs outside the regional tables** (`forbs.js`): iteration 1 stopped the class mix for trees and
+  shrubs; the forbs still took their class weights (filaree rosettes lying flat on the Serengeti and at Lofoten, the
+  "floating leaf cards"). A tile with `class_fallback` false now draws only its own rows' forbs.
+- **The measured ceiling** (docs/probes-2026-11.md): twelve signature species of the Serengeti, 480 credits; 11
+  modelled, the hartebeest a stand-in; 30 credits a species when the first preview stands square, 60 when it takes two.
+- **A client that draws a slot's own model** (`animalModels.js loadFaunaModel`, `animals.js installFauna`): a slot with
+  `model` gets a drawn mesh on the skinned path, real size, with the template of its kin; the procedural stand-in stays
+  the fallback.
+- **Fixes the regression set found**: Manu's page hung for ten minutes building the water grid (a 1,624-vertex OSM river
+  polygon over the whole tile, tested whole at each of 4 million pixels): rings are now indexed by 30 m band of north
+  (`tilepackage.js ringBands`). Then it, and Corcovado, threw: a cell with no tree mix (iteration 1's no-fallback rule)
+  still drew its riparian extras from the null mix (`vegetation.js`, `impostors.js`). The capture script now gives up on
+  a page that never becomes ready and the run goes on to the next probe.

@@ -15,7 +15,7 @@
   -2.4052817272586062
  ],
  "size_m": 10000,
- "generated_at": "2026-11-06T06:49:24Z",
+ "generated_at": "2026-11-06T08:05:53Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -3139,7 +3139,7 @@
    "generated_traits": 0,
    "queued": 80,
    "queued_credits": 2395,
-   "sha256": "e8389a57ac52dd2fe386080a6228542b92f401dbe10d241c41a187709c273e66",
+   "sha256": "236b22057a3acb353fdc1cade0200df22e39f0710d16e333a9be5643e7e694be",
    "bytes": 138875
   },
   "resources": {
@@ -3320,8 +3320,8 @@
     "connochaetes_taurinus": "cervus_canadensis",
     "papio_anubis": "ursus_americanus"
    },
-   "sha256": "c4fe32cad63f0f1cf43b882fa23cbbbd980616f3e1c14df5f199ce750339ef1c",
-   "bytes": 22129
+   "sha256": "4cd2fd901361ca1e4ccd38ba8ca1512ea996279ca14a11263db46b1aef20c5a7",
+   "bytes": 23277
   },
   "client.texture_ground": {
    "path": "client/texture_ground.jpg",
@@ -3900,6 +3900,12 @@
    "step": "audit",
    "at": "2026-11-06T06:49:24Z",
    "seconds": 0.0,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T08:05:53Z",
+   "seconds": 0.6,
    "ok": true
   }
  ],
@@ -5053,15 +5059,15 @@
    "seconds": 259.9
   },
   "animals": {
-   "version": "1",
-   "code": "e82edf1c6f689aa8",
+   "version": "2",
+   "code": "6b1064156476995e",
    "params": {
     "tile": "utm36s_698_9724"
    },
-   "fingerprint": "24582322168f3555",
+   "fingerprint": "d13c784351a7d186",
    "parts": {
-    "version": "1",
-    "code": "e82edf1c6f689aa8",
+    "version": "2",
+    "code": "6b1064156476995e",
     "params": {
      "tile": "utm36s_698_9724"
     },
@@ -5070,11 +5076,11 @@
      "plants": "1603ad05a0780c51"
     },
     "library": {
-     "library/animals": "a8c74e9e35eea5e9",
+     "library/animals": "9b343de56ec44a44",
      "data/eltontraits": "e3b0c44298fc1c14"
     }
    },
-   "ran_at": "2026-11-06T06:44:45Z",
+   "ran_at": "2026-11-06T08:05:52Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -5082,10 +5088,10 @@
     "species.animals"
    ],
    "outputs": {
-    "client/fauna.json": "c4fe32cad63f0f1c",
-    "species/animals.json": "e8389a57ac52dd2f"
+    "client/fauna.json": "4cd2fd901361ca1e",
+    "species/animals.json": "236b22057a3acb35"
    },
-   "out_hash": "35ddd5d7489c6919",
+   "out_hash": "47ff549556f76d78",
    "sources": {
     "gbif": "2026-11-06",
     "eltontraits": "2026-11-06"
@@ -5096,7 +5102,7 @@
     "network": 0,
     "cache": 224
    },
-   "seconds": 0.7
+   "seconds": 0.6
   },
   "resources": {
    "version": "1",

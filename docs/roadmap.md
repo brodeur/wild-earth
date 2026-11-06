@@ -257,6 +257,12 @@ satellite judge); phase 2, places feel true (the list below); phase 3, the rest 
 polar and arid forms, swim and snake rigs). First run: probes on the Serengeti, Lofoten and Danum Valley after phase 1,
 then the Serengeti deep.
 
+Where it stands (2026-11-06): phase 1 iterations 1 and 2 are on branch claude/sweet-feistel-2054bb, with the seven probes as
+the regression set (docs/probes-2026-11.md). The Serengeti deep pass ran: 11 signature species modelled by the pipeline for
+480 Meshy credits (`pipeline/fauna_models.py`, `tools/build_quadruped.py`). Next, in order: behaviour from traits (rest,
+activity, group size, the pull of water) instead of the kin's table; dark closed canopies from above; trait cards for a
+tropical tile's own trees; the heath and tundra ground layer; strata colours from geology; generic builds for birds.
+
 The earlier gestalt order, now phase 2:
 
 `docs/gestalt-pipeline.md`; page: https://claude.ai/artifact/CRXGhhEe16r6njnDD8dKvU. In this order:

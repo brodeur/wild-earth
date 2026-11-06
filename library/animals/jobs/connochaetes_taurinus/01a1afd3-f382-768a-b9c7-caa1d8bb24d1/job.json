@@ -1,0 +1,66 @@
+{
+  "species": "connochaetes_taurinus",
+  "mode": "preview",
+  "kind": "text-to-3d",
+  "task_id": "01a1afd3-f382-768a-b9c7-caa1d8bb24d1",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "preview",
+    "prompt": "A wild Blue wildebeest (Connochaetes taurinus) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+    "ai_model": "latest",
+    "target_formats": [
+      "glb"
+    ],
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 30000,
+    "moderation": false
+  },
+  "prompt": "A wild Blue wildebeest (Connochaetes taurinus) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+  "image": null,
+  "preview_job": null,
+  "estimated_credits": 20,
+  "balance_before": 1997,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-06T07:47:45+00:00",
+    "created_at": "2026-11-06T07:47:47+00:00",
+    "started_at": "2026-11-06T07:47:47+00:00",
+    "finished_at": "2026-11-06T07:48:25+00:00",
+    "downloaded": "2026-11-06T07:48:30+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur, world pipeline",
+  "progress": 100,
+  "task": {
+    "id": "01a1afd3-f382-768a-b9c7-caa1d8bb24d1",
+    "type": "text-to-3d-preview",
+    "status": "SUCCEEDED",
+    "created_at": 1793951267756,
+    "started_at": 1793951267762,
+    "finished_at": 1793951305120,
+    "consumed_credits": 20,
+    "task_error": null
+  },
+  "credits_charged": 20,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 1576004,
+      "sha256": "03b4ad87615dd655ad8155534366725ef6159a73ee89271f03296337e4783db4",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1afd3-f382-768a-b9c7-caa1d8bb24d1/output/model.glb"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 71752,
+      "sha256": "23ab0a22abae1d92074636e6bd84fbb0c3c84e3e96b1d26f32015cf6dbe13c45",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1afd3-f382-768a-b9c7-caa1d8bb24d1/output/preview.png"
+    }
+  ],
+  "balance_after": 1977
+}

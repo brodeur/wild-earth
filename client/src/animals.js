@@ -19,7 +19,8 @@ import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buil
   loadHeronMesh, loadMerganserMesh, loadSalamanderMesh, loadEnsatinaMesh, scaledModel, buildSlug,
   loadRobinMesh, loadStarlingMesh, loadVariedThrushMesh, loadJuncoMesh, loadKingletMesh, loadFlycatcherMesh, loadScreechOwlMesh, loadSawWhetOwlMesh,
   loadOspreyMesh, loadSharpShinnedMesh, loadMerlinMesh, loadGlaucousGullMesh, loadCaliforniaGullMesh, loadWesternGullMesh, loadMallardMesh,
-  loadGrouseMesh, loadMarmotMesh, loadYellowPineChipmunkMesh, loadShrewMesh, loadToadMesh, loadFrogMesh, buildHairyWoodpecker } from './animalModels.js';
+  loadGrouseMesh, loadMarmotMesh, loadYellowPineChipmunkMesh, loadShrewMesh, loadToadMesh, loadFrogMesh, buildHairyWoodpecker,
+  loadFaunaModel, faunaTemplate } from './animalModels.js';
 import { depthAt as waterDepthAt } from './water.js';
 
 // Ambient animals: the first step toward "many of each species always present" (docs/brief.md,
@@ -819,6 +820,9 @@ const treeHeight = oak => Math.max(3, (oak.height || 8) * oak.scale);
 // The slots are appended to SPECIES and its tables when the tile's Animals is made (installFauna) and taken out again
 // when it goes (restoreFauna, main.js disposeWorld; the next world's installFauna also restores first), so switching
 // tiles never leaks slots. A tile without the layer: no gate, no slots, everything as before.
+// A slot with its own `model` ({ path, kind: 'quadruped', skin }: a GLB under client/assets, tools/build_quadruped.py) is
+// drawn by it as the static drawn quadrupeds are (a DRAWN entry for the slot, out again with the slot), still on its kin's
+// rules; the stand-in body is its fallback (the mesh failed, or ?animals=proc / ?<code>=proc).
 // ID[s]: the static slot whose identity rules slot s runs (itself for every static slot; the kin, or its water twin, for a
 // stand-in): every `s === XX` identity test in the class reads ID[s], so a stand-in takes its kin's branch everywhere.
 const STATIC_N = SPECIES.length, STATIC_PLAYABLE = PLAYABLE.length, STATIC_CONIFER = CONIFER_USERS.length, STATIC_TAG = TAG_DY.length;
@@ -894,6 +898,16 @@ function installFauna(fauna, owner) {
     const statConifer = CONIFER_USERS.slice(0, STATIC_CONIFER);   // the near set's trees indexed for it (indexConifers: its conifers, and standInTree)
     if (statConifer.includes(sI.code) || statConifer.includes(SPECIES[KIN[I]].code) || [SQ, SJ, ST].includes(KIN[I])) CONIFER_USERS.push(f.code);
     if (I !== BS) PLAYABLE.push(d);
+    // its own body (fauna.json `model`): a drawn mesh like the static quadrupeds' (DRAWN), at its real size (the slot's
+    // scale stays 1; the procedural fallback above keeps its baked scale), on its kin's template or one by what it is
+    // (animalModels.js faunaTemplate), switched like the kin's (lod) times the size ratio
+    const M = f.model, KD = DRAWN[K];
+    if (M && typeof M === 'object' && M.kind === 'quadruped' && typeof M.path === 'string' && !KD?.hybrid) {
+      const tpl = faunaTemplate(KD?.load, f), skin = M.skin !== false, lod0 = (KD?.lod || [30, 90]).map(r => r * sc);
+      const l0 = clampN(lod0[0], 4, 120), l1 = clampN(lod0[1], l0 * 1.5, 360);
+      DRAWN[d] = { name: f.code, param: f.code, load: () => loadFaunaModel(M.path, tpl, { skin }), lod: [l0, l1], planar: !!(KD ? KD.planar : sK.planar), fauna: tpl };
+      e.standIn.model = M.path;
+    }
     INDEX[f.code] = d; SUIT[f.code] = SUIT[sI.code]; SEASON[f.code] = FLAT_SEASON;
     FAUNA.codes.push(f.code);
   }
@@ -902,7 +916,7 @@ function installFauna(fauna, owner) {
 function restoreFauna(owner) {
   if (owner && FAUNA.owner !== owner) return;
   for (let k = STATIC_N; k < SPECIES.length; k++) {
-    for (const T of [HOH, CULL, GROUP, MAMMAL, FG_SEEN, REST_POSE, CARRION.reach, GRP]) delete T[k];
+    for (const T of [HOH, CULL, GROUP, MAMMAL, FG_SEEN, REST_POSE, CARRION.reach, GRP, DRAWN]) delete T[k];
     UPRIGHT.delete(k); KILLABLE.delete(k); ALARM_AT.delete(k);
   }
   for (const c of FAUNA.codes) { delete INDEX[c]; delete SUIT[c]; delete SEASON[c]; }
@@ -1182,9 +1196,14 @@ export class Animals {
   dispose() { for (const m of this.meshes) removeCaster(m); this.group.removeFromParent(); this.releaseFauna(); }
   // The tile's stand-in slots and gate out of the module's tables (main.js disposeWorld): the static cast as it was.
   releaseFauna() { restoreFauna(this); }
-  // The stand-ins this tile drew (fauna.json slots that took): { code, one, common, kin, rules, scale } by slot index
+  // The stand-ins this tile drew (fauna.json slots that took): { code, one, common, kin, rules, scale } by slot index, and
+  // for a slot with its own model (DRAWN) model (its path) and drawn (its DRAWN name, playerModel's: the player's body)
   // (playable.js registerStandIns; debugging).
-  get standIns() { const o = {}; for (let k = STATIC_N; k < SPECIES.length; k++) o[k] = { code: SPECIES[k].code, one: SPECIES[k].one, common: SPECIES[k].common, ...SPECIES[k].standIn }; return o; }
+  get standIns() {
+    const o = {};
+    for (let k = STATIC_N; k < SPECIES.length; k++) o[k] = { code: SPECIES[k].code, one: SPECIES[k].one, common: SPECIES[k].common, ...SPECIES[k].standIn, ...(DRAWN[k] ? { drawn: DRAWN[k].name } : {}) };
+    return o;
+  }
 
   // ---- perception --------------------------------------------------------------------------------
   // The species an observer of `code` perceives here (perception.json perceives): the spirit (no row) the present

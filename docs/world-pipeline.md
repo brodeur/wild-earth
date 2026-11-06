@@ -364,6 +364,12 @@ The world runs on the tile's own calendar, not four northern seasons:
 - **Bodies** climb the registry's ladder. A stand-in is the archetype's model recoloured from photos (0 credits). A
   variant is a related model reshaped (0 credits). Then comes Meshy (about 25-30 credits), then rigged and animated. The
   ladder makes every tile populated on day one, and credits are spent on the signature species first.
+  *Built 2026-11-06 (phase 1, iteration 2)*: `pipeline/fauna_models.py` picks the signature species by rule (every
+  predator over 15 kg, then the four-legged mammals by biomass), writes the prompts from the card and the place, runs
+  Meshy (a preview and a 2K refine, 30 credits) and one generic build (`tools/build_quadruped.py`: parts from the
+  geometry, colour from the texture, size from the body mass), then the existing rigger and gait baker. A model is the
+  library's, so every later tile with the species pays nothing. Birds, snakes and other plans still stop at the
+  stand-in rung.
 
 ### Games (today's games, on global inputs)
 
