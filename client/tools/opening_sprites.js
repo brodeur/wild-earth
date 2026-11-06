@@ -10,6 +10,7 @@ import {
   loadRobinMesh, loadStarlingMesh, loadVariedThrushMesh, loadJuncoMesh, loadKingletMesh, loadFlycatcherMesh, loadScreechOwlMesh, loadSawWhetOwlMesh,
   loadOspreyMesh, loadSharpShinnedMesh, loadMerlinMesh, loadGlaucousGullMesh, loadCaliforniaGullMesh, loadWesternGullMesh, loadMallardMesh,
   loadGrouseMesh, loadMarmotMesh, loadYellowPineChipmunkMesh, loadShrewMesh, loadToadMesh, loadFrogMesh, buildHairyWoodpecker,
+  faunaTemplate, loadFaunaModel,
 } from '../src/animalModels.js';
 
 // The opening screen's sprites (client/src/arrival.js plays them with CSS, so nothing on the screen animates from
@@ -25,11 +26,19 @@ import {
 // Sends PNGs to tools/sprite_receiver.py, which converts them to WebP and writes index.json.
 // ?only=<code,...>: render just those stills (no wisp) and merge them into the index.json already published, so a new
 // species does not re-render (and re-encode) the rest.
+// ?job=<url>: the pipeline's stills (pipeline/stills.py, a tile build's `stills` step): a JSON list of a tile's own animals
+// (client/fauna.json slots) to render, each { code, model?, kin, role, archetype, mass_kg, tint }: a slot with its own
+// model (fauna/<code>.glb) drawn as the client draws it (loadFaunaModel on faunaTemplate's template, posed as that
+// template's own still is), a tinted stand-in as its kin's body times the tint (as animals.js tintedModel). Only the
+// PNGs and their entries are sent (POST /done { species }); pipeline/stills.py merges them into index.json. A still
+// over MAX_PX on a side is drawn at fewer px per metre (its px_per_m says how many), so an elephant is not 1600 px wide.
+// A full run keeps the index's entries this page does not make (the pipeline's: `fauna` in species, and stand_ins).
 
 const RECV = new URLSearchParams(location.search).get('recv') || 'http://127.0.0.1:8798';   // ?recv=: the receiver on another port
 const N = 48, FRAME = 384, COLS = 8, ROWS = 6, LOOP_S = 1.2;     // the wisp loop
 const R = 0.45, SWELL = 0.3, HALF = 1.0, FOV = 20;                // m: the circle's radius; the frame's half-width
 const PX_PER_M = 268;                                              // the stills: the deer (1.345 m to the ear tips) ~360 px
+const MAX_PX = 512;                                                // a still's longest side at most (the elk's 473 px fits)
 const TILT = 0.24, YAW = Math.PI / 2 - 0.45;                       // the lineup's view: a little from above, 3/4 facing right
 const G = 'ground', B = 'bird';
 const SPECIES = {
@@ -111,9 +120,21 @@ async function renderWisp() {
     view: 'from straight above, one anticlockwise lap per loop (the spirit chasing its tail)', circle_m: R, frame_m: 2 * HALF, swell: SWELL };
 }
 
-async function renderStill(renderer, code, [kind, load, pose = 0, soar]) {
+// A procedural or drawn model's colours times rgb (animals.js tintedModel, on the still's own clone of the geometry)
+function tintGeometry(geo, rgb) {
+  if (!Array.isArray(rgb) || rgb.length < 3 || !rgb.every(Number.isFinite)) return;
+  for (const name of ['color', 'aColorB']) {
+    const at = geo.getAttribute(name); if (!at) continue;
+    const A = at.array, n = at.itemSize;
+    for (let i = 0; i < A.length; i += n) for (let c = 0; c < 3; c++) A[i + c] *= rgb[c];
+    at.needsUpdate = true;
+  }
+}
+
+async function renderStill(renderer, code, [kind, load, pose = 0, soar], { tint = null } = {}) {
   const model = await load();
   const geo = (model.tiers ? model.tiers[0] : model.geometry).clone();
+  if (tint) tintGeometry(geo, tint);
   const anim = new THREE.InstancedBufferAttribute(new Float32Array(4), 4); geo.setAttribute('aAnim', anim);
   if (hasAnim2(model)) geo.setAttribute('aAnim2', new THREE.InstancedBufferAttribute(new Float32Array([soar ? 0.2 : 0, 0.25, 0, 0]), 4));
   // ground: standing (no gait), the folded-wing birds pose 1; birds on the wing: wings spread, a little above level
@@ -130,8 +151,9 @@ async function renderStill(renderer, code, [kind, load, pose = 0, soar]) {
   geo.computeBoundingBox();
   const box = geo.boundingBox.clone().applyMatrix4(mesh.matrixWorld), pad = 0.15 * Math.max(box.max.x - box.min.x, box.max.y - box.min.y) + 0.02;
   const x0 = box.min.x - pad, x1 = box.max.x + pad, y0 = box.min.y - pad, y1 = box.max.y + pad;
-  const W = Math.ceil((x1 - x0) * PX_PER_M), H = Math.ceil((y1 - y0) * PX_PER_M);
-  const cam = new THREE.OrthographicCamera(x0, x0 + W / PX_PER_M, y0 + H / PX_PER_M, y0, -50, 50); cam.position.z = 10;
+  const ppm = Math.min(PX_PER_M, MAX_PX / Math.max(x1 - x0, y1 - y0));   // the big ones (an elephant, a giraffe) at fewer px a metre
+  const W = Math.ceil((x1 - x0) * ppm), H = Math.ceil((y1 - y0) * ppm);
+  const cam = new THREE.OrthographicCamera(x0, x0 + W / ppm, y0 + H / ppm, y0, -50, 50); cam.position.z = 10;
   renderer.setSize(W, H, false); renderer.render(scene, cam);
   // crop to the drawn pixels (+2 px)
   const c = canvas2d(W, H), g = c.getContext('2d'); g.drawImage(renderer.domElement, 0, 0);
@@ -143,24 +165,67 @@ async function renderStill(renderer, code, [kind, load, pose = 0, soar]) {
   const out = canvas2d(r - l + 1, b - t + 1); out.getContext('2d').drawImage(c, l, t, out.width, out.height, 0, 0, out.width, out.height);
   // the feet: where the model's origin (on the ground) lands in the crop, for the baseline
   const o = new THREE.Vector3().applyMatrix4(mesh.matrixWorld);
-  const footY = Math.round((y1 - y0) * PX_PER_M - (o.y - y0) * PX_PER_M) - t;
+  const footY = Math.round((y1 - y0) * ppm - (o.y - y0) * ppm) - t;
   $('out').append(Object.assign(out, { title: code }));
   const bytes = await send(`${code}.png`, out);
   geo.dispose(); mesh.material.dispose();
   log(`${code}: ${out.width}x${out.height} px, foot at ${footY}, png ${(bytes / 1024).toFixed(0)} KB`);
-  return { file: `${code}.webp`, width: out.width, height: out.height, px_per_m: PX_PER_M, kind, foot_px: Math.min(out.height, Math.max(0, footY)),
+  return { file: `${code}.webp`, width: out.width, height: out.height, px_per_m: +ppm.toFixed(3), kind, foot_px: Math.min(out.height, Math.max(0, footY)),
     pose: kind === G ? 'standing' : soar ? 'soaring, wings flat' : 'flying, wings up-stroke' };
+}
+
+// A fauna model's pose: a quadruped standing; a bird by its build (model.archetype): a soarer on the wing, wings spread
+// flat, as the soarers' stills; any other standing, the flight cards folded into the shoulder (pose 1: the template's
+// collapse), the neutral pose a chip reads best in (a lapwing or a stork in flight is a dark cross at chip size).
+function faunaPose(model) {
+  if (model?.kind !== 'bird') return [G, 0, undefined];
+  return model.archetype === 'soar' ? [B, 0, 'soar'] : [G, 1, undefined];
+}
+// One job item (pipeline/stills.py): its spec for renderStill and the tint
+function jobSpec(it) {
+  const kin = SPECIES[it.kin];
+  if (it.model) {
+    const tpl = faunaTemplate(kin?.[1], it), [kind, pose, soar] = faunaPose(it.model);
+    return { spec: [kind, () => loadFaunaModel(it.model.path, tpl, { skin: it.model.skin !== false }), pose, soar], template: tpl };
+  }
+  if (!kin) throw new Error(`no kin '${it.kin}' with a still`);
+  return { spec: kin, tint: it.tint, template: null };
+}
+async function runJob(url) {
+  const job = await fetch(url, { cache: 'no-store' }).then(r => r.json());
+  const renderer = new THREE.WebGLRenderer({ alpha: true, premultipliedAlpha: true, antialias: true, preserveDrawingBuffer: true });
+  renderer.setPixelRatio(1); renderer.setClearColor(0, 0); renderer.outputColorSpace = THREE.SRGBColorSpace;
+  const species = {}, failed = {};
+  for (const it of job.items || []) {
+    try {
+      const { spec, tint, template } = jobSpec(it);
+      const st = await renderStill(renderer, it.code, spec, { tint });
+      species[it.code] = { ...st, ...(template ? { template } : {}) };
+    } catch (e) { failed[it.code] = String(e.message || e); log(`${it.code}: failed (${e.message})`); }
+  }
+  renderer.dispose();
+  const r = await fetch(`${RECV}/done`, { method: 'POST', body: JSON.stringify({ species, failed }) });
+  log(`receiver: ${JSON.stringify(await r.json())}`);
+  return { species, failed };
 }
 
 async function run() {
   $('go').disabled = true; $('log').textContent = ''; $('out').innerHTML = '';
+  const jobUrl = new URLSearchParams(location.search).get('job');
+  if (jobUrl) {
+    try { window.__spritesDone = await runJob(jobUrl); log('done'); } catch (e) { log(`error: ${e.stack || e}`); window.__spritesDone = { error: String(e) }; }
+    $('go').disabled = false;
+    return;
+  }
   try {
     const only = (new URLSearchParams(location.search).get('only') || '').split(',').filter(Boolean);
-    const prev = only.length ? await fetch('../assets/opening/index.json', { cache: 'no-store' }).then(r => r.json()) : null;
+    const prev = await fetch('../assets/opening/index.json', { cache: 'no-store' }).then(r => r.json()).catch(() => null);
+    if (only.length && !prev) throw new Error('?only= needs the published index.json');
     const wisp = only.length ? prev.wisp : await renderWisp();
     const renderer = new THREE.WebGLRenderer({ alpha: true, premultipliedAlpha: true, antialias: true, preserveDrawingBuffer: true });
     renderer.setPixelRatio(1); renderer.setClearColor(0, 0); renderer.outputColorSpace = THREE.SRGBColorSpace;
-    const species = only.length ? { ...prev.species } : {};
+    // the pipeline's own (a tile's modelled animals, pipeline/stills.py) are kept whatever this run renders
+    const species = only.length ? { ...prev.species } : Object.fromEntries(Object.entries(prev?.species || {}).filter(([, v]) => v.fauna));
     for (const [code, spec] of Object.entries(SPECIES)) {
       if (only.length && !only.includes(code)) continue;
       try { species[code] = await renderStill(renderer, code, spec); } catch (e) { log(`${code}: skipped (${e.message})`); }
@@ -173,7 +238,7 @@ async function run() {
         + 'client/src/animalModels.js) and of the spirit\'s wisp (client/src/spirit.js). The models\' sources, authors and licences are in '
         + 'docs/animal-library.md and in each tile manifest\'s sources; these renders carry the same credits.',
       px_per_m: PX_PER_M, view: { tilt_rad: TILT, yaw_rad: YAW, facing: 'right', light: 'hemisphere 0xe4ecff/0x40372a 2.2 + directional 0xfff1dc 2.4 from upper left front' },
-      wisp, species,
+      wisp, species, ...(prev?.stand_ins ? { stand_ins: prev.stand_ins } : {}),
     };
     if ($('send').checked) {
       const r = await fetch(`${RECV}/done`, { method: 'POST', body: JSON.stringify(index) });

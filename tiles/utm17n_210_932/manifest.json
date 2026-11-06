@@ -15,7 +15,7 @@
   8.513615135330369
  ],
  "size_m": 10000,
- "generated_at": "2026-11-06T10:36:19Z",
+ "generated_at": "2026-11-06T11:29:53Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -3558,14 +3558,14 @@
     "gbif",
     "eltontraits"
    ],
-   "listed": 83,
+   "listed": 88,
    "predators": 29,
    "scavengers": 8,
    "generated_traits": 0,
-   "queued": 77,
-   "queued_credits": 2230,
-   "sha256": "75be3599b98fb97066b452594abe01cf8d5afea191b79a29181e22e1836b58ca",
-   "bytes": 151245
+   "queued": 82,
+   "queued_credits": 2360,
+   "sha256": "441b7d791d30e65a9ac922b11d20ab949385c18c8096892c7879a4cd749ac4d2",
+   "bytes": 164548
   },
   "resources": {
    "path": "resources/resources.json",
@@ -3922,7 +3922,7 @@
    ],
    "allow": 6,
    "slots": 40,
-   "skipped": 37,
+   "skipped": 42,
    "stand_ins": {
     "tapirella_bairdii": "cervus_canadensis",
     "pecari_tajacu": "odocoileus_hemionus",
@@ -3937,8 +3937,8 @@
     "saimiri_oerstedii": "sciurus_griseus",
     "choloepus_hoffmanni": "urocyon_cinereoargenteus"
    },
-   "sha256": "501f341aa1620981e31890285eddfe68224b694468281c96d81aeb1b74502e0a",
-   "bytes": 35233
+   "sha256": "0d0c651d9242fe08de782c1f2561c9d163da62da94523d321bc04d6db15484d1",
+   "bytes": 40741
   },
   "client.texture_ground": {
    "path": "client/texture_ground.jpg",
@@ -3991,9 +3991,11 @@
    "trees": 10,
    "with_card": 10,
    "queued": 0,
-   "cards_written": [],
-   "sha256": "636a3edae545c0c7fc3ef81892d9865c446a8498f79b7cfa9ee2ca042fec940d",
-   "bytes": 4695
+   "cards_written": [
+    "astrocaryum_standleyanum"
+   ],
+   "sha256": "391b75ec584e85b85ccfef7986b5f44eb932e6923f2ffb97e7849ba5064f3d27",
+   "bytes": 4726
   },
   "geology.strata": {
    "path": "geology/strata.json",
@@ -4006,6 +4008,30 @@
    "reason": "1 bedrock unit(s) large enough: no column",
    "sha256": "579480c4621b512faab4afa6d0a3f57200a719a9a9538e01706ca60bd0e428a9",
    "bytes": 670
+  },
+  "client.canopy_top": {
+   "path": "client/canopy_top.png",
+   "kind": "raster",
+   "crs": "EPSG:32617",
+   "bounds": [
+    210000,
+    932000,
+    220000,
+    942000
+   ],
+   "pixels": 333,
+   "resolution_m": 30.03003003003003,
+   "encoding": "R = the stand's top height in 0.5 m steps (0 none): the mean p95 height of the cell's 10 m sub-cells with tree cover >= 12 %, where 1 or more of them do; else the mean of the measured cells within 2 cells",
+   "derived_from": [
+    "vegetation.canopy_height_10m"
+   ],
+   "stats": {
+    "cells": 55511,
+    "median_m": 21.1,
+    "p90_m": 25.4
+   },
+   "sha256": "af55337aa667271be18e3635e78e9a97020d1c418d0986ff3f1fdee21d890328",
+   "bytes": 34362
   }
  },
  "sources": {
@@ -4717,6 +4743,54 @@
    "step": "audit",
    "at": "2026-11-06T10:36:19Z",
    "seconds": 0.0,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T11:12:20Z",
+   "seconds": 35.0,
+   "ok": true
+  },
+  {
+   "step": "canopy_top",
+   "at": "2026-11-06T11:15:47Z",
+   "seconds": 0.3,
+   "ok": true
+  },
+  {
+   "step": "canopy_top",
+   "at": "2026-11-06T11:28:01Z",
+   "seconds": 0.5,
+   "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-06T11:28:12Z",
+   "seconds": 2.1,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-06T11:28:13Z",
+   "seconds": 0.9,
+   "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-06T11:28:36Z",
+   "seconds": 1.7,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-06T11:28:37Z",
+   "seconds": 0.9,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T11:29:53Z",
+   "seconds": 0.7,
    "ok": true
   }
  ],
@@ -5659,15 +5733,15 @@
    "seconds": 0.0
   },
   "plants": {
-   "version": "2",
-   "code": "39cb23c36c783bb4",
+   "version": "3",
+   "code": "2d1ad5009738fa78",
    "params": {
     "tile": "utm17n_210_932"
    },
-   "fingerprint": "25aac364f58c5691",
+   "fingerprint": "9f3c3aec4992d1fe",
    "parts": {
-    "version": "2",
-    "code": "39cb23c36c783bb4",
+    "version": "3",
+    "code": "2d1ad5009738fa78",
     "params": {
      "tile": "utm17n_210_932"
     },
@@ -5676,11 +5750,11 @@
      "ice": "0798e2e5f57a646d"
     },
     "library": {
-     "library/plant_cards": "4abde1c743a6da1d",
-     "library/plant_cards/_research": "637526a3f77e3385"
+     "library/plant_cards": "135a23e7f7e1d8b5",
+     "library/plant_cards/_research": "76160f150981cd69"
     }
    },
-   "ran_at": "2026-11-06T10:33:05Z",
+   "ran_at": "2026-11-06T11:28:34Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -5688,10 +5762,10 @@
     "species.plant_needs"
    ],
    "outputs": {
-    "species/canopy.json": "636a3edae545c0c7",
+    "species/canopy.json": "391b75ec584e85b8",
     "species/plant_needs.json": "d9b7a31e0d013134"
    },
-   "out_hash": "0545d5cc13a397dd",
+   "out_hash": "ea64c84c7c9027fc",
    "sources": {
     "wcvp": "2026-11-06",
     "canopy_plots": "2026-11-06",
@@ -5704,7 +5778,7 @@
     "network": 0,
     "cache": 188
    },
-   "seconds": 1.4
+   "seconds": 1.7
   },
   "species_mix": {
    "version": "2",
@@ -5712,7 +5786,7 @@
    "params": {
     "tile": "utm17n_210_932"
    },
-   "fingerprint": "dd2443a1d99ebe1d",
+   "fingerprint": "f9702fd9878ed180",
    "parts": {
     "version": "2",
     "code": "f86907582f657365",
@@ -5724,13 +5798,13 @@
      "landcover": "f31067ba01a91dce",
      "water": "05258ed207e24835",
      "ice": "0798e2e5f57a646d",
-     "plants": "0545d5cc13a397dd"
+     "plants": "ea64c84c7c9027fc"
     },
     "library": {
-     "library/species": "33f9e4c9f7acb46a"
+     "library/species": "d4a2da98159ff26b"
     }
    },
-   "ran_at": "2026-11-06T10:36:07Z",
+   "ran_at": "2026-11-06T11:28:36Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -5749,7 +5823,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 0.5
+   "seconds": 0.9
   },
   "crowns": {
    "version": "1",
@@ -5885,28 +5959,28 @@
    "seconds": 0.6
   },
   "animals": {
-   "version": "4",
-   "code": "a8eed9ca07495d82",
+   "version": "5",
+   "code": "9ede32ed0ac306d7",
    "params": {
     "tile": "utm17n_210_932"
    },
-   "fingerprint": "8d5855fdc1a57150",
+   "fingerprint": "7bdb8b4eb35faca6",
    "parts": {
-    "version": "4",
-    "code": "a8eed9ca07495d82",
+    "version": "5",
+    "code": "9ede32ed0ac306d7",
     "params": {
      "tile": "utm17n_210_932"
     },
     "deps": {
      "species": "2aff85281f4babf1",
-     "plants": "0545d5cc13a397dd"
+     "plants": "ea64c84c7c9027fc"
     },
     "library": {
      "library/animals": "522e5b0ee36723ba",
      "data/eltontraits": "e3b0c44298fc1c14"
     }
    },
-   "ran_at": "2026-11-06T10:36:09Z",
+   "ran_at": "2026-11-06T11:29:52Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -5914,10 +5988,10 @@
     "species.animals"
    ],
    "outputs": {
-    "client/fauna.json": "501f341aa1620981",
-    "species/animals.json": "75be3599b98fb970"
+    "client/fauna.json": "0d0c651d9242fe08",
+    "species/animals.json": "441b7d791d30e65a"
    },
-   "out_hash": "940bf22236dda15b",
+   "out_hash": "0dbf1cbbc4f8f067",
    "sources": {
     "gbif": "2026-11-06",
     "eltontraits": "2026-11-06"
@@ -5926,9 +6000,9 @@
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 275
+    "cache": 313
    },
-   "seconds": 0.4
+   "seconds": 0.7
   },
   "resources": {
    "version": "1",
@@ -6156,6 +6230,45 @@
     "cache": 0
    },
    "seconds": 0.0
+  },
+  "canopy_top": {
+   "version": "1",
+   "code": "831bae93c94ee135",
+   "params": {
+    "tile": "utm17n_210_932"
+   },
+   "fingerprint": "716792031d63170f",
+   "parts": {
+    "version": "1",
+    "code": "831bae93c94ee135",
+    "params": {
+     "tile": "utm17n_210_932"
+    },
+    "deps": {
+     "landcover": "f31067ba01a91dce",
+     "lidar": "35a6a2ce16d0808d",
+     "terrain": "5922c464e3695738"
+    },
+    "library": {}
+   },
+   "ran_at": "2026-11-06T11:28:01Z",
+   "owner": null,
+   "status": "ok",
+   "layers": [
+    "client.canopy_top"
+   ],
+   "outputs": {
+    "client/canopy_top.png": "af55337aa667271b"
+   },
+   "out_hash": "3120eed88e73bcc8",
+   "sources": {},
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 0
+   },
+   "seconds": 0.5
   }
  },
  "seams": {

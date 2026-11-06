@@ -5,7 +5,9 @@ from a near relative: its names, its heights, its crown's outline, its leaf and 
 habitat and who eats it, and the sources they were read from. Its `template` names the library species whose
 branching, foliage cards, level-of-detail budgets and age classes it starts from (the same genus where the library
 has one, else the same family and leaf type: a fir from Douglas-fir, a pine from ponderosa, a cypress from incense
-cedar, an aspen from Fremont cottonwood). The file written is a normal library/species/<id>.json (the schema of
+cedar, an aspen from Fremont cottonwood). A palm (family Arecaceae, or form "palm") grows from PALM_TEMPLATE whatever its
+card's template says: Corner's model, treegen's palm architecture (one unbranched stem, a crown of large leaves at its top;
+docs/species-library.md "Palms"), its card's `palm` block the parameters. The file written is a normal library/species/<id>.json (the schema of
 docs/species-library.md) that treegen.js grows like any other:
 
     record = template, minus everything that was the template's own (its names, notes, sources, photographs,
@@ -37,7 +39,8 @@ import pathlib
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 LIBRARY = ROOT / "library" / "species"
 CARDS = ROOT / "library" / "plant_cards"
-VERSION = "3"   # 2 (2026-11-04): leaf_on_by_month follows the card's deciduous; 3 (2026-11-06): a dwarf shrub's ground block
+VERSION = "4"   # 2 (2026-11-04): leaf_on_by_month follows the card's deciduous; 3 (2026-11-06): a dwarf shrub's ground block;
+# 4 (2026-11-06): palms from PALM_TEMPLATE (Corner's model) and their card's palm block
 
 # Keys of a template that describe the template species itself, not its architecture.
 TEMPLATE_OWN = ("id", "aliases", "scientific", "common", "stature", "growth", "description", "season_notes", "status",
@@ -137,9 +140,53 @@ def _mid(h) -> float:
     return (float(h[0]) + float(h[1])) / 2
 
 
+# Palms (2026-11-06): Corner's model in treegen (client/src/treegen.js palmSkeleton: one stem, a spiral of large leaves at
+# its apex, the crownshaft, stilt roots, spines and clumps from the record's `palm` block). The template is not a library
+# species: it is the architecture's own defaults, which every palm card's `palm` block (pipeline/tree_cards.py writes it
+# from a research record's) and heights fill in. Age classes: a young palm (its leaves shorter: treegen scales them by the
+# square root of its height's share of the mature height; its stem already its full width), the mature palms (two
+# seeds), the tallest of the stand. No snag (a dead palm's stem stands bare a while; not drawn yet).
+PALM_ID = "palm"
+_SEASONS = ("winter", "spring", "summer", "fall")
+PALM_TEMPLATE = {
+    "id": PALM_ID, "common": "Corner's-model palm (pipeline/plantgen.py PALM_TEMPLATE)", "form": "tree", "architectural_model": "Corner",
+    "deciduous": False, "height_m": [15.0, 25.0],
+    "variants": [
+        {"name": "young", "weight": 0.25, "height_m": [3.0, 9.0], "note": "a young palm: shorter leaves on a short stem already its full width"},
+        {"name": "mature", "weight": 0.6, "seeds": 2, "note": "the file as written"},
+        {"name": "veteran", "weight": 0.15, "height_m": [25.0, 28.0], "note": "the tallest palms of the stand"}],
+    "snag": {"fraction": 0.0},
+    "trunk": {"length_ratio": 1.0, "radius_ratio": 0.02, "taper": 0.1, "flare": 1.0, "bole_ratio": 0.9, "base_size": 0.9, "segments": 6,
+              "curve_deg": 3, "curve_var_deg": 8, "lean_deg": 3, "tropism": 0.02, "stems": [1, 1], "split_prob": 0.0,
+              "bark_rgb": [142, 138, 128], "bark_pattern": "palm_ringed", "twig_rgb": [110, 112, 80],
+              "bark": {"tile_m": [0.5, 0.9], "ring_m": 0.15, "relief": 0.9, "lichen": 0.15}, "roots": False},
+    "crown": {"shape": "spherical", "envelope": {"profile": [[0.85, 0.05], [0.92, 0.12], [1.0, 0.04]]}},
+    "levels": [],
+    "foliage": {"type": "palm", "leaf_shape": "palm_pinnate", "leaf_size_m": 0.6, "cluster_m": 1.0, "density": 1, "orientation": "outward",
+                "colors": {s: [80, 106, 56] for s in _SEASONS}, "leaf_on": {s: 1.0 for s in _SEASONS}, "leaf_on_by_month": [1.0] * 12,
+                "palette": [[0.8, [1, 1, 1]], [0.2, [1.12, 1.12, 0.95]]], "color_var": [0.08, 0.05], "ao_min": 0.7,
+                "leaf_on_var": 0.0, "winter_twigs": 0.0, "flowers": None, "berries": None},
+    "lod": {"near_tris_budget": 1600, "near_sides": [7, 3, 3], "mid_sides": [5, 0, 0], "mid_segments": [3, 1], "mid_branches": 0,
+            "stilt_roots_max": 24},
+    "palm": {},
+    "targets": {"crown_width_ratio": 0.3, "crown_base_ratio": 0.85, "porosity": 0.45},
+}
+
+
+def is_palm(card: dict) -> bool:
+    return card.get("family") == "Arecaceae" or card.get("form") == "palm" or bool(card.get("palm"))
+
+
+def template_record(tid: str) -> dict:
+    """The record a card grows from: the library species `tid`, or PALM_TEMPLATE for "palm"."""
+    if tid == PALM_ID:
+        return copy.deepcopy(PALM_TEMPLATE)
+    return json.loads((LIBRARY / f"{tid}.json").read_text())
+
+
 def build(card: dict) -> dict:
-    tid = card["template"]
-    tpl = json.loads((LIBRARY / f"{tid}.json").read_text())
+    tid = PALM_ID if is_palm(card) else card["template"]
+    tpl = template_record(tid)
     rec = {k: copy.deepcopy(v) for k, v in tpl.items() if k not in TEMPLATE_OWN}
     for k in IDENTITY:
         if k in card:
@@ -207,6 +254,10 @@ def build(card: dict) -> dict:
     targets["from"] = (card.get("targets") or {}).get("from") or "the trait card's values (no photographs measured)"
     rec["targets"] = targets
 
+    if tid == PALM_ID:   # a palm: the card's palm block over the architecture's defaults; drawn as a tree
+        rec["palm"] = deep_merge(rec.get("palm") or {}, card.get("palm") or {})
+        rec["form"] = "tree"
+        rec.setdefault("foliage", {})["leaf_shape"] = "palm_palmate" if rec["palm"].get("leaf") == "palmate" else "palm_pinnate"
     if is_dwarf_shrub(card):   # the ground layer's carpet (a card's patch may still refine it)
         rec["ground"] = ground_block(card, rec)
     if card.get("patch"):
@@ -231,7 +282,7 @@ def build(card: dict) -> dict:
         rec["regions"] = list(card["regions"])
     order = ["id", "aliases", "scientific", "common", "form", "regions", "architectural_model", "deciduous", "height_m", "stature",
              "variants", "snag", "description", "season_notes", "status", "review", "habitat", "relations", "trunk", "crown", "levels",
-             "foliage", "deadwood", "twigs", "lod", "targets", "generated", "notes", "sources", "authors", "license"]
+             "foliage", "palm", "deadwood", "twigs", "lod", "targets", "generated", "notes", "sources", "authors", "license"]
     return {k: rec[k] for k in order if k in rec} | {k: v for k, v in rec.items() if k not in order}
 
 

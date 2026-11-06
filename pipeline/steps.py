@@ -289,6 +289,19 @@ def _species_mix(tile, m, force):
     add_layer(m, tile, "client.species_mix", species_mix(tile))
 
 
+def _canopy_top(tile, m, force):
+    # The measured stand height per 30 m cell (pipeline/canopy_top.py) from the 10 m canopy height map, for the client's
+    # tree heights (client/src/stature.js: measured stature wins over a species' modelled curve).
+    from .canopy_top import canopy_top
+    add_layer(m, tile, "client.canopy_top", canopy_top(tile), fetched=False)
+
+
+def _has_canopy_map(tile, m):
+    if tile.path("vegetation/canopy_height_10m.tif").exists():
+        return None
+    return "no canopy height map on this tile (LANDFIRE's EVH is a modelled class, not a measurement): the modelled heights stand"
+
+
 def _resources(tile, m, force):
     # The fauna stage's resources (pipeline/resources.py): what an animal eats, drinks and hides in, by season; and the
     # acorn mast raster for the acorn game (client/mast.png, written by derive.client_rasters once acorn_mast exists).
@@ -333,6 +346,14 @@ def _animals(tile, m, force):
     # the tile's own animals for the client (world pipeline phase 1): which curated species may spawn here, and a stand-in
     # slot per researched species (pipeline/fauna_slots.py)
     add_layer(m, tile, "client.fauna", fauna_slots(tile), fetched=False)
+
+
+def _stills(tile, m, force):
+    # A still for every slot of client/fauna.json (pipeline/stills.py): a modelled animal's model rendered headless in the
+    # stills' framing, a stand-in's its kin's still; shared assets (client/assets/opening/, index.json), the tile's report
+    # its layer (which file each chip shows and how it was made).
+    from .stills import tile_stills
+    add_layer(m, tile, "fauna.stills", tile_stills(tile, force), fetched=False)
 
 
 def _game_seeds(tile, m, force):
@@ -501,7 +522,7 @@ STEPS: dict[str, Step] = {s.name: s for s in [
     Step("seams", "1", ["seams"], ["dem", "channels", "water"], _seams, [],
          doc="the DEM and streams agree with every built neighbour along the shared edge", stage=B),
     # ---------------------------------------------------------------- flora
-    Step("plants", "2", ["needs", "plantgen", "communities", "research", "tree_cards"], ["landcover", "ice"], _plants,
+    Step("plants", "3", ["needs", "plantgen", "communities", "research", "tree_cards"], ["landcover", "ice"], _plants,
          ["species.canopy", "species.plant_needs"], ["gbif", "wcvp", "canopy_plots"],
          library=["library/plant_cards", "library/plant_cards/_research"],
          doc="the tile's canopy trees and their cards; the plants the tile needs, ranked; missing ones grown from their "
@@ -509,6 +530,8 @@ STEPS: dict[str, Step] = {s.name: s for s in [
     Step("species_mix", "2", ["species_mix", "communities", "regions"], ["dem", "landcover", "water", "ice", "plants"],
          _species_mix, ["client.species_mix"], library=["library/species"],
          doc="trees, shrubs and ground layer per 30 m cell, with the unmatched communities read from their names", stage=F),
+    Step("canopy_top", "1", ["canopy_top"], ["landcover", "lidar", "terrain"], _canopy_top, ["client.canopy_top"],
+         applies=_has_canopy_map, doc="the measured stand height per 30 m cell, from the canopy height map", stage=F),
     Step("crowns", "1", ["lidar", "urban"], ["lidar", "osm", "landcover", "terrain", "species_mix"], _crowns,
          ["client.trees_lidar"], applies=_has_chm, doc="the lidar crowns, with the buildings, the rewilded classes and the urban mask",
          stage=F),
@@ -520,10 +543,12 @@ STEPS: dict[str, Step] = {s.name: s for s in [
          ["species.list", "species.occurrences", "species.seasonal", "species.inventory", "perception", "calendar",
           "locomotion", "client.species_prior"], ["gbif"], library=["library/animals"],
          doc="GBIF presence, perception, calendar, locomotion, the client's density prior", stage=A),
-    Step("animals", "4", ["fauna", "fauna_slots", "fauna_models", "pantheria", "sociality", "research", "locomotion"], ["species", "plants"], _animals, ["species.animals", "client.fauna"], ["gbif"],
+    Step("animals", "5", ["fauna", "fauna_slots", "fauna_models", "pantheria", "sociality", "avonet", "amniote", "research", "locomotion"], ["species", "plants"], _animals, ["species.animals", "client.fauna"], ["gbif"],
          library=["library/animals", "data/eltontraits"],
          doc="every animal recorded on the tile, ranked; predators and scavengers; traits for those without; the Meshy queue",
          stage=A),
+    Step("stills", "1", ["stills"], ["animals"], _stills, ["fauna.stills"], library=["library/animals", "client/assets/opening"],
+         doc="a still for every animal's species chip: a model rendered, a stand-in's kin's (client/assets/opening)", stage=A),
     Step("resources", "1", ["resources", "derive"], ["dem", "hydro", "landcover", "terrain", "species_mix", "species"], _resources,
          ["resources", "client.mast"], doc="food, water and cover per season; the acorn mast", stage=A),
     # ---------------------------------------------------------------- games

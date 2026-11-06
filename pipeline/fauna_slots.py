@@ -6,7 +6,8 @@ none of a tile's own researched species. This turns the research (species/animal
   allow   the curated client species (animals.js SPECIES codes) the tile's own research or records list: only these of
           the static cast spawn on the tile (`gate`)
   slots   up to MAX_SLOTS new species, each a STAND-IN: an existing species' body and behaviour (its `kin`) scaled to the
-          species' mass, chosen by RULES from taxonomy, diet, mass and habits; a density from body mass (Damuth 1981 for
+          species' mass, chosen by RULES from taxonomy, diet, mass and habits (a bird's by its way of life, AVONET's
+          lifestyle and flightlessness: bird_life; a ground bird's gait from its locomotion row); a density from body mass (Damuth 1981 for
           herbivores; an inverse-mass rule for carnivores; a softer one for birds); group size by guild; active hours
           from the traits (EltonTraits activity); water from the family
 
@@ -23,6 +24,9 @@ from pathlib import Path
 from .config import REPO_ROOT, Tile, write_json
 
 MAX_SLOTS = 40
+# the reptiles and amphibians come after the mammals and birds and found the 40 taken (the Serengeti's crocodile, 151
+# records, behind its fortieth bird): up to MAX_OTHER more slots are theirs, after the cap (animals.js STAND_IN_MAX 48)
+MAX_OTHER = 6
 TRAITS = REPO_ROOT / "library" / "animals" / "traits"
 ANIMALS_JS = REPO_ROOT / "client" / "src" / "animals.js"
 
@@ -39,10 +43,55 @@ KIN_MASS = {
 
 WATER_FAMILIES = {"Anatidae", "Ardeidae", "Alcedinidae", "Laridae", "Phalacrocoracidae", "Anhingidae", "Ciconiidae",
                   "Threskiornithidae", "Podicipedidae", "Rallidae", "Jacanidae", "Hippopotamidae", "Crocodylidae",
-                  "Alligatoridae", "Lutrinae", "Pandionidae"}
+                  "Alligatoridae", "Gavialidae", "Lutrinae", "Pandionidae"}
 SKIP_ORDERS = {"Chiroptera", "Cetacea", "Sirenia", "Squamata_serpentes"}   # no rig yet: bats, whales, sea cows, snakes
 SNAKE_FAMILIES = {"Colubridae", "Viperidae", "Elapidae", "Boidae", "Pythonidae", "Natricidae", "Lamprophiidae",
-                  "Typhlopidae", "Leptotyphlopidae", "Dipsadidae"}
+                  "Typhlopidae", "Leptotyphlopidae", "Dipsadidae", "Atractaspididae", "Psammophiidae", "Pseudoxyrhophiidae",
+                  "Prosymnidae", "Homalopsidae", "Xenodermidae", "Uropeltidae", "Anomalepididae", "Gerrhopilidae", "Aniliidae",
+                  "Tropidophiidae", "Acrochordidae", "Pareidae", "Pareatidae", "Calamariidae", "Cylindrophiidae",
+                  "Xenopeltidae", "Loxocemidae", "Sibynophiidae", "Grayiidae", "Colubrinae", "Amphisbaenidae", "Trogonophidae",
+                  "Bipedidae", "Blanidae", "Rhineuridae", "Cadeidae"}   # (and the legless amphisbaenians)
+
+# ---- reptiles (2026-11-06) ---------------------------------------------------------------------------------------------
+# GBIF's backbone has no class Reptilia: its reptile classes are Squamata, Testudines and Crocodylia (pipeline/research.py),
+# so a record's `class` is one of those and its order is empty. The group is read from the class, order and family:
+#   crocodilian  Crocodylia (Crocodylidae, Alligatoridae, Gavialidae): kept to water (the slot's `water`), way 'water'
+#   tortoise     Testudinidae: a slow walker on the ground, way 'walk'
+#   turtle       the other Testudines (terrapins, river and sea turtles): at the water, way 'water'
+#   chameleon    Chamaeleonidae: a lizard of the branches, way 'bask' (the fence lizard's trunk sites)
+#   monitor      Varanidae: the large lizards, way 'bask'
+#   snake        the snake and amphisbaenian families (SNAKE_FAMILIES): skipped, no rig
+#   lizard       the other squamates, way 'bask' (rocks, trunks, the open ground beside them)
+REPTILE_CLASSES = {"Reptilia", "Squamata", "Testudines", "Crocodylia", "Crocodilia", "Sauria"}
+CROCODILIANS = {"Crocodylidae", "Alligatoridae", "Gavialidae"}
+REPTILE_ARCHETYPE = {"crocodilian": "crocodilian", "tortoise": "tortoise", "turtle": "turtle", "chameleon": "chameleon",
+                     "monitor": "monitor lizard", "lizard": "basking lizard", "snake": "snake"}
+REPTILE_WAY = {"crocodilian": "water", "turtle": "water", "tortoise": "walk"}
+# the lizards whose males bob and push up to display (the iguanians but the chameleons): the fence lizard's push-up bouts
+# (animals.js PUSHUP); a skink or a monitor never does
+PUSHUP_FAMILIES = {"Agamidae", "Iguanidae", "Phrynosomatidae", "Dactyloidae", "Tropiduridae", "Liolaemidae", "Crotaphytidae",
+                   "Corytophanidae", "Leiocephalidae", "Opluridae", "Polychrotidae", "Hoplocercidae", "Leiosauridae"}
+
+
+def reptile_group(tax: dict) -> str:
+    cls, order, fam = tax.get("class"), tax.get("order"), tax.get("family")
+    if cls in ("Crocodylia", "Crocodilia") or order in ("Crocodylia", "Crocodilia") or fam in CROCODILIANS:
+        return "crocodilian"
+    if cls == "Testudines" or order == "Testudines":
+        return "tortoise" if fam == "Testudinidae" else "turtle"
+    if fam in SNAKE_FAMILIES or order == "Serpentes":
+        return "snake"
+    if fam == "Chamaeleonidae":
+        return "chameleon"
+    if fam == "Varanidae":
+        return "monitor"
+    return "lizard"
+
+
+def reptile_way(archetype: str) -> str:
+    """The way the fence lizard's machine runs for a reptile slot (animals.js REPT): 'bask', 'water' or 'walk'."""
+    g = next((k for k, v in REPTILE_ARCHETYPE.items() if v == archetype), "lizard")
+    return REPTILE_WAY.get(g, "bask")
 
 
 from .fauna_models import model_for   # noqa: E402
@@ -60,6 +109,46 @@ def _traits(sid: str) -> dict:
     return json.loads(p.read_text()) if p.exists() else {}
 
 
+# ---- birds by way of life (2026-11-06) ---------------------------------------------------------------------------------
+# By taxonomy alone a lapwing (a plover of open short grass) fell through to the Steller's jay and perched in trees, and the
+# ostrich ran the turkey's machine and flushed into flight. A bird's kin is now chosen by what it does, from AVONET (Tobias
+# et al. 2022, CC BY 4.0; pipeline/avonet.py):
+#   flightless   a ratite or penguin family (FLIGHTLESS_FAMILIES), or a Hand-Wing Index under FLIGHTLESS_HWI (the
+#                ratites' 0.1; a flying bird's is 5 or more but for a few rails): a ground kin (an aquatic one: the
+#                waterbird's) whose escape is a run, never flight (the slot's `flightless`; animals.js)
+#   guild        the families whose kin is their guild's own machine come next, whatever the lifestyle: the soaring
+#                scavengers and raptors, owls, corvids, waders, waterbirds, gulls, kingfishers, woodpeckers
+#   lifestyle    then AVONET's Primary.Lifestyle: Terrestrial a ground bird (quail or turkey machinery by mass: walks,
+#                runs, flushes); Aquatic a waterbird; Aerial over the open sea (Habitat Marine) a gull, the
+#                seabird on the wing; Insessorial, Generalist and the other Aerial a perching bird
+#   taxonomy     a bird AVONET does not know falls back to the orders and families of the ground birds, else a perching bird
+# Known misses: the flightless rails, the kakapo and the steamer ducks fly by these rules (their Hand-Wing Index is a
+# flier's); a list of flightless species (Sayol et al. 2020) would catch them.
+FLIGHTLESS_FAMILIES = {"Struthionidae", "Rheidae", "Casuariidae", "Dromaiidae", "Apterygidae", "Spheniscidae"}
+FLIGHTLESS_HWI = 1.0
+GROUND_ORDERS = {"Galliformes", "Tinamiformes", "Otidiformes", "Struthioniformes", "Rheiformes", "Casuariiformes",
+                 "Apterygiformes"}
+GROUND_FAMILIES = {"Numididae", "Phasianidae", "Cracidae", "Tinamidae", "Otididae", "Odontophoridae", "Megapodiidae"}
+SEA_HABITATS = {"Marine"}
+
+
+def bird_life(a: dict, t: dict) -> dict:
+    """AVONET's lifestyle, Hand-Wing Index and habitat for a bird, and whether it flies: {lifestyle, hwi, habitat,
+    flightless, source}."""
+    from . import avonet
+    tax = a.get("taxonomy") or t.get("taxonomy") or {}
+    try:
+        A = avonet.lookup(a.get("scientific") or t.get("scientific") or "")
+    except Exception as e:   # noqa: BLE001 (no AVONET: the taxonomy alone)
+        A = {"error": str(e)}
+    fam = tax.get("family") or A.get("family")
+    hwi = A.get("hwi")
+    flightless = fam in FLIGHTLESS_FAMILIES or (hwi is not None and hwi < FLIGHTLESS_HWI)
+    src = f"avonet ({A['level']})" if A.get("level") else "taxonomy"
+    return {"lifestyle": A.get("lifestyle"), "hwi": hwi, "habitat": A.get("habitat"), "habitat_density": A.get("habitat_density"),
+            "flightless": bool(flightless), "source": src}
+
+
 def kin_for(a: dict, t: dict) -> tuple[str | None, str, list[str]]:
     """(kin code, archetype name, known errors) for an animal, or (None, why, []) when no stand-in fits."""
     tax = a.get("taxonomy") or t.get("taxonomy") or {}
@@ -68,6 +157,15 @@ def kin_for(a: dict, t: dict) -> tuple[str | None, str, list[str]]:
     role = set(a.get("role") or (t.get("diet") or {}).get("role") or [])
     known: list[str] = []
     if cls == "Aves":
+        life = bird_life(a, t)
+        ls = life["lifestyle"]
+        ground = "meleagris_gallopavo" if (m or 0) > 1.5 else "callipepla_californica"
+        if life["flightless"]:
+            if ls == "Aquatic" or fam == "Spheniscidae":
+                return "mergus_merganser", "waterbird", ["a flightless swimmer on the merganser's machine"]
+            if (m or 0) > 20:
+                known.append("a giant flightless bird on the turkey's flock machine")
+            return ground, "ground bird", known
         if "scavenger" in role and (m or 0) > 1.0 and fam in ("Accipitridae", "Cathartidae"):
             return "cathartes_aura", "soaring scavenger", known
         if order in ("Accipitriformes", "Falconiformes") or fam in ("Accipitridae", "Falconidae", "Pandionidae", "Sagittariidae"):
@@ -84,13 +182,16 @@ def kin_for(a: dict, t: dict) -> tuple[str | None, str, list[str]]:
             return "larus_glaucescens", "gull", known
         if fam == "Alcedinidae":
             return "megaceryle_alcyon", "kingfisher", known
-        if order in ("Galliformes", "Tinamiformes", "Otidiformes", "Struthioniformes", "Rheiformes", "Casuariiformes") \
-                or fam in ("Numididae", "Phasianidae", "Cracidae", "Tinamidae", "Otididae"):
-            if (m or 0) > 20:
-                known.append("a giant flightless bird on the turkey's body")
-            return ("meleagris_gallopavo" if (m or 0) > 1.5 else "callipepla_californica"), "ground bird", known
         if fam == "Picidae":
             return "leuconotopicus_villosus", "woodpecker", known
+        if ls == "Terrestrial":
+            return ground, "ground bird", known
+        if ls == "Aquatic":
+            return "mergus_merganser", "waterbird", known
+        if ls == "Aerial" and life["habitat"] in SEA_HABITATS:
+            return "larus_glaucescens", "gull", ["a seabird on the gull's machine"]
+        if not ls and (order in GROUND_ORDERS or fam in GROUND_FAMILIES):
+            return ground, "ground bird", known
         if order in ("Psittaciformes", "Bucerotiformes", "Piciformes") and fam != "Picidae":
             known.append("a parrot, toucan or hornbill on a jay's body")
         return "cyanocitta_stelleri", "perching bird", known
@@ -133,11 +234,16 @@ def kin_for(a: dict, t: dict) -> tuple[str | None, str, list[str]]:
             return ("urocyon_cinereoargenteus" if (m or 0) > 1 else "microtus_californicus"), "small ground mammal", \
                 ["an anteater, armadillo or shrew on a fox's or vole's body"]
         return "urocyon_cinereoargenteus", "mammal (unplaced)", [f"order {order} has no archetype rule"]
-    if cls in ("Reptilia", "Squamata", "Testudines", "Crocodylia"):
-        if fam in SNAKE_FAMILIES:
-            return None, "no snake rig", []
-        k = ["a crocodilian or tortoise on a lizard's body"] if order in ("Crocodylia", "Testudines") else []
-        return "sceloporus_occidentalis", "reptile", k
+    if cls in REPTILE_CLASSES:
+        group = reptile_group(tax)
+        if group == "snake":
+            return None, "no snake rig (a legless body: a spine-wave rig is not built yet)", []
+        # every reptile runs the fence lizard's machine (its cells, sites and dash) on the reptile part rig; the slot's
+        # `reptile` way (reptile_way) turns that machine into a basker, a water-bound crocodilian or a slow walker
+        k = {"crocodilian": ["a crocodilian on the fence lizard's machine: at the water's edge and in the water (way 'water')"],
+             "tortoise": ["a tortoise on the fence lizard's machine: a slow walker on the ground (way 'walk')"],
+             "turtle": ["a turtle on the fence lizard's machine: at the water (way 'water')"]}.get(group, [])
+        return "sceloporus_occidentalis", REPTILE_ARCHETYPE[group], k
     if cls == "Amphibia":
         return "plethodon_vehiculum", "amphibian", known
     return None, f"no archetype for class {cls}", []
@@ -165,15 +271,40 @@ def density_km2(a: dict, kin: str, archetype: str, efg: str | None = None) -> fl
             d = 10 ** 4.23 * (m * 1000) ** -0.75      # Damuth 1981 (g -> per km2)
             if m > 20:
                 d *= HERBIVORE_PRODUCTIVITY.get(efg or "", 1.0)
+    elif cls in REPTILE_CLASSES:
+        # an allometric guess, inverse with mass as the carnivores' (a skink some 700 per km2, an agama 170, a monitor 14,
+        # a leopard tortoise 3, a Nile crocodile 1, kept to its water by the slot's `water`)
+        d = 30.0 * m ** -0.75
     else:
         d = 50.0
     return round(min(max(d, 0.005), 2000.0), 4)
 
 
+# A ground bird's gait (2026-11-06): the kin's machine walks and runs at the kin's speeds and strides (a turkey's 0.55 m
+# step under a 2.8 m ostrich); the slot carries its own from its trait card's locomotion row (pipeline/locomotion.py:
+# the walk at Froude 0.5 of the hip height, the top speed by Garland 1983 capped by the hip, the stride at the trot-
+# gallop change) over the kin's own, and the client scales the kin's speeds and strides by them (animals.js BGAIT).
+GAIT_KINS = {"meleagris_gallopavo", "callipepla_californica"}
+
+
+def gait(t: dict, kin: str) -> dict | None:
+    from . import locomotion
+    L = t.get("locomotion") or {}
+    K = locomotion.resolve(kin) or {}
+    if not (L.get("walk_mps") and L.get("stride_m") and K.get("walk_mps") and K.get("stride_m")):
+        return None
+    out = {k: L[k] for k in ("walk_mps", "cruise_mps", "top_mps", "stride_m", "sprint_s") if L.get(k)}
+    out["speed_k"] = round(L["walk_mps"] / K["walk_mps"], 3)
+    out["stride_k"] = round(L["stride_m"] / K["stride_m"], 3)
+    out["source"] = f"trait card locomotion over {kin}'s (pipeline/locomotion.py)"
+    return out
+
+
 GROUP = {"grazing or browsing herd": [5, 30], "arboreal climber": [3, 15], "large ground primate (stand-in walker)": [5, 30],
          "coursing predator": [1, 6], "ambush predator": [1, 4], "waterbird": [2, 10], "wading bird": [1, 3],
          "ground bird": [3, 12], "soaring scavenger": [1, 8], "perching bird": [1, 6], "rock colony": [3, 12],
-         "ground colony": [3, 12], "gull": [1, 6]}
+         "ground colony": [3, 12], "gull": [1, 6], "crocodilian": [1, 5], "tortoise": [1, 2], "turtle": [1, 4],
+         "basking lizard": [1, 3], "monitor lizard": [1, 1], "chameleon": [1, 1]}
 
 
 # ---- behaviour from traits (phase 1, iteration 3) ----------------------------------------------------------------------
@@ -274,34 +405,60 @@ def fauna_slots(tile: Tile) -> dict:
     eco = tile.path("vegetation/ecosystem.json")
     efg = (json.loads(eco.read_text()).get("groups") or [{}])[0].get("code") if eco.exists() else None
     slots, skipped = [], []
+    n_main = n_other = 0
     for a in order:
-        if len(slots) >= MAX_SLOTS:
-            skipped.append({"id": a["id"], "why": f"over the {MAX_SLOTS}-slot cap"})
+        other = a.get("kind") not in ("mammal", "bird")
+        if (n_other >= MAX_OTHER) if other else (n_main >= MAX_SLOTS):
+            skipped.append({"id": a["id"], "why": f"over the {MAX_OTHER if other else MAX_SLOTS}-slot cap"})
             continue
         t = _traits(a["id"])
         kin, archetype, known = kin_for(a, t)
         if not kin:
             skipped.append({"id": a["id"], "why": archetype})
             continue
+        if other:
+            n_other += 1
+        else:
+            n_main += 1
         m = float(a.get("mass_kg") or t.get("mass_kg") or KIN_MASS[kin])
-        scale = round(min(max((m / KIN_MASS[kin]) ** (1 / 3), 0.25), 4.0), 3)
+        # (to 20: a Nile crocodile is 18 fence lizards long; the client clamps at 20 too)
+        scale = round(min(max((m / KIN_MASS[kin]) ** (1 / 3), 0.25), 20.0), 3)
         act = set((t.get("diet") or {}).get("activity") or [])
         fam = (a.get("taxonomy") or {}).get("family")
         name = (a.get("common") or a["scientific"]).strip()
         slots.append({
             "code": a["id"], "scientific": a["scientific"], "common": name[:1].upper() + name[1:], "one": name.lower(),
             "many": name.lower() + ("" if name.endswith("s") else "s"), "kin": kin, "archetype": archetype,
-            "scale": scale, "tint": None, "mass_kg": round(m, 3), "density_km2": density_km2(a, kin, archetype),
+            "scale": scale, "tint": None, "mass_kg": round(m, 3), "density_km2": density_km2({**a, "mass_kg": m}, kin, archetype),
             "group": GROUP.get(archetype, [1, 3]), "bird": a.get("kind") == "bird",
             "night": "nocturnal" in act and "diurnal" not in act, "water": fam in WATER_FAMILIES or kin == "lontra_canadensis",
             "role": a.get("role") or [], "known": known})
+        if (a.get("taxonomy") or {}).get("class") in REPTILE_CLASSES:
+            slots[-1]["reptile"] = reptile_way(archetype)   # the lizard machine's way: bask, water or walk (animals.js REPT)
+            slots[-1]["records"] = a.get("records") or 0   # (pipeline/fauna_models.py ranks the reptiles by records x sqrt(mass))
+            if fam in PUSHUP_FAMILIES:
+                slots[-1]["pushup"] = True
+            if (t.get("generated") or {}).get("from") and len(t["generated"]["from"]) > 1:
+                slots[-1]["mass_source"] = t["generated"]["from"][1]
+        if a.get("kind") == "bird" or (a.get("taxonomy") or {}).get("class") == "Aves":
+            life = bird_life(a, t)
+            slots[-1].update({"flightless": life["flightless"], "lifestyle": life["lifestyle"], "kin_source": life["source"]})
+            if life["hwi"] is not None:
+                slots[-1]["hand_wing_index"] = life["hwi"]
+            if life["habitat"]:   # AVONET's habitat and its density (1 dense, 2 semi-open, 3 open): where a ground bird forages
+                slots[-1]["habitat"] = life["habitat"]
+            if life["habitat_density"]:
+                slots[-1]["habitat_density"] = int(life["habitat_density"])
+            g = gait(t, kin) if kin in GAIT_KINS else None
+            if g:
+                slots[-1]["gait"] = g
         mdl = model_for(a["id"])   # a body of its own from the library (pipeline/fauna_models.py), drawn at its real size
         if mdl:
             slots[-1]["model"] = mdl
-        slots[-1]["density_km2"] = density_km2(a, kin, archetype, efg)
+        slots[-1]["density_km2"] = density_km2({**a, "mass_kg": m}, kin, archetype, efg)
         slots[-1].update(behaviour(a, t, m, archetype))   # its own day, rest, group and (measured) density
     out = {"format": 1, "gate": True, "allow": allow, "slots": slots, "skipped": skipped,
-           "rules": "pipeline/fauna_slots.py: kin by taxonomy, diet and mass; scale = (mass / kin mass)^(1/3), 0.25-4; density "
+           "rules": "pipeline/fauna_slots.py: kin by taxonomy, diet and mass (a bird's by AVONET's lifestyle and flightlessness); scale = (mass / kin mass)^(1/3), 0.25-4; density "
                     "Damuth 1981 (herbivores; large ones times HERBIVORE_PRODUCTIVITY of the tile's ecosystem), 30 / mass kg "
                     "(carnivores), birds 15 m^-0.4 (cap 70) or 0.5 m^-0.75 (raptors), or PanTHERIA's measured density; behaviour() for "
                     "the hours about, rest posture and group", "ecosystem": efg}

@@ -15,7 +15,7 @@
   67.97272862561803
  ],
  "size_m": 10000,
- "generated_at": "2026-11-06T10:51:20Z",
+ "generated_at": "2026-11-06T11:29:49Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -5797,8 +5797,8 @@
    "generated_traits": 0,
    "queued": 64,
    "queued_credits": 1860,
-   "sha256": "3e0e91cfc377d774d463447ebf9f689698c2182f6a204800db772720f65a35db",
-   "bytes": 114433
+   "sha256": "7ca8662312b7ccab8feef0f124c65d2d7b20fb51d1f237ec06fe8a5c6ed6d6d0",
+   "bytes": 114432
   },
   "resources": {
    "path": "resources/resources.json",
@@ -5978,8 +5978,8 @@
     "larus_canus": "larus_glaucescens",
     "corvus_cornix": "corvus_corax"
    },
-   "sha256": "024966869cba0fda7434e02dbac6994858d4e74e30ea5d18dffafd7c62d5fbf7",
-   "bytes": 31944
+   "sha256": "a8a7018224f505f3e12970e115c47533077ade3d0885f8d08858ba6868c35479",
+   "bytes": 38936
   },
   "client.texture_ground": {
    "path": "client/texture_ground.jpg",
@@ -6047,6 +6047,30 @@
    "cards_written": [],
    "sha256": "090b07422c67a3fd674b9e08731b56f9874b027cbb793a0ce70fae30352cdc31",
    "bytes": 2068
+  },
+  "client.canopy_top": {
+   "path": "client/canopy_top.png",
+   "kind": "raster",
+   "crs": "EPSG:32633",
+   "bounds": [
+    412000,
+    7531000,
+    422000,
+    7541000
+   ],
+   "pixels": 333,
+   "resolution_m": 30.03003003003003,
+   "encoding": "R = the stand's top height in 0.5 m steps (0 none): the mean p95 height of the cell's 10 m sub-cells with tree cover >= 12 %, where 1 or more of them do; else the mean of the measured cells within 2 cells",
+   "derived_from": [
+    "vegetation.canopy_height_10m"
+   ],
+   "stats": {
+    "cells": 17378,
+    "median_m": 5.0,
+    "p90_m": 6.9
+   },
+   "sha256": "fb053156b0ed89a08d0141e0e3d81822d8ee0f32ab6c84b290ce4949bf3327bc",
+   "bytes": 9594
   }
  },
  "sources": {
@@ -6879,6 +6903,30 @@
    "step": "audit",
    "at": "2026-11-06T10:51:20Z",
    "seconds": 0.0,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T11:10:44Z",
+   "seconds": 7.7,
+   "ok": true
+  },
+  {
+   "step": "canopy_top",
+   "at": "2026-11-06T11:15:48Z",
+   "seconds": 0.3,
+   "ok": true
+  },
+  {
+   "step": "canopy_top",
+   "at": "2026-11-06T11:28:03Z",
+   "seconds": 0.5,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T11:29:49Z",
+   "seconds": 0.7,
    "ok": true
   }
  ],
@@ -8048,15 +8096,15 @@
    "seconds": 0.4
   },
   "animals": {
-   "version": "4",
-   "code": "a8eed9ca07495d82",
+   "version": "5",
+   "code": "9ede32ed0ac306d7",
    "params": {
     "tile": "utm33n_412_7531"
    },
-   "fingerprint": "aa20972794c8f93e",
+   "fingerprint": "8d0321398f34536f",
    "parts": {
-    "version": "4",
-    "code": "a8eed9ca07495d82",
+    "version": "5",
+    "code": "9ede32ed0ac306d7",
     "params": {
      "tile": "utm33n_412_7531"
     },
@@ -8069,7 +8117,7 @@
      "data/eltontraits": "e3b0c44298fc1c14"
     }
    },
-   "ran_at": "2026-11-06T10:51:09Z",
+   "ran_at": "2026-11-06T11:29:48Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -8077,10 +8125,10 @@
     "species.animals"
    ],
    "outputs": {
-    "client/fauna.json": "024966869cba0fda",
-    "species/animals.json": "3e0e91cfc377d774"
+    "client/fauna.json": "a8a7018224f505f3",
+    "species/animals.json": "7ca8662312b7ccab"
    },
-   "out_hash": "6361ba65d589fc5b",
+   "out_hash": "06be4eb2780f34ff",
    "sources": {
     "gbif": "2026-11-06",
     "eltontraits": "2026-11-06"
@@ -8089,9 +8137,9 @@
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 196
+    "cache": 199
    },
-   "seconds": 0.3
+   "seconds": 0.7
   },
   "resources": {
    "version": "1",
@@ -8319,6 +8367,45 @@
     "cache": 0
    },
    "seconds": 0.0
+  },
+  "canopy_top": {
+   "version": "1",
+   "code": "831bae93c94ee135",
+   "params": {
+    "tile": "utm33n_412_7531"
+   },
+   "fingerprint": "6b109a9ed01c2b86",
+   "parts": {
+    "version": "1",
+    "code": "831bae93c94ee135",
+    "params": {
+     "tile": "utm33n_412_7531"
+    },
+    "deps": {
+     "landcover": "e7db68ec14c7a7b1",
+     "lidar": "1be75aaade8440cb",
+     "terrain": "6d96c2be186f96af"
+    },
+    "library": {}
+   },
+   "ran_at": "2026-11-06T11:28:02Z",
+   "owner": null,
+   "status": "ok",
+   "layers": [
+    "client.canopy_top"
+   ],
+   "outputs": {
+    "client/canopy_top.png": "fb053156b0ed89a0"
+   },
+   "out_hash": "05052681e7788e83",
+   "sources": {},
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 0
+   },
+   "seconds": 0.5
   }
  },
  "seams": {

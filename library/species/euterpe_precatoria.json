@@ -19,7 +19,7 @@
  "regions": [
   "neotropics"
  ],
- "architectural_model": "Rauh",
+ "architectural_model": "Corner",
  "deciduous": false,
  "height_m": [
   12.0,
@@ -39,27 +39,13 @@
     1.8,
     7.2
    ],
-   "trunk_radius": 0.65,
-   "crown_scale": 0.8,
-   "branches": 0.8,
-   "set": {
-    "trunk": {
-     "length_ratio": 0.55,
-     "split_prob": 0.0
-    },
-    "foliage": {
-     "clumps": {
-      "radius_m": 0.8
-     }
-    }
-   },
-   "note": "a young palm: a rosette of fronds near the ground before the stem rises"
+   "note": "(from the Corner's-model palm (pipeline/plantgen.py PALM_TEMPLATE) template) a young palm: shorter leaves on a short stem already its full width"
   },
   {
    "name": "mature",
-   "weight": 0.55,
-   "seeds": 1,
-   "note": "(from the northern California black walnut template) the file as written"
+   "weight": 0.6,
+   "seeds": 2,
+   "note": "(from the Corner's-model palm (pipeline/plantgen.py PALM_TEMPLATE) template) the file as written"
   },
   {
    "name": "veteran",
@@ -68,45 +54,11 @@
     20.0,
     22.0
    ],
-   "trunk_radius": 1.3,
-   "crown_scale": 1.12,
-   "gnarl": 1.2,
-   "deadwood": {
-    "fraction": 0.18,
-    "levels": [
-     1,
-     2
-    ],
-    "where": "inner"
-   },
-   "set": {
-    "trunk": {
-     "split_prob": 0.7,
-     "lean_deg": 10
-    }
-   },
-   "note": "(from the northern California black walnut template) a massive dark trunk forking into heavy limbs, a broad open dome with some dead branches"
+   "note": "(from the Corner's-model palm (pipeline/plantgen.py PALM_TEMPLATE) template) the tallest palms of the stand"
   }
  ],
  "snag": {
-  "fraction": 0.0,
-  "from": "veteran",
-  "height_m": [
-   12,
-   20
-  ],
-  "limbs": 0.55,
-  "twigs": 0.2,
-  "levels": 1,
-  "shorten": [
-   0.45,
-   0.9
-  ],
-  "rgb": [
-   128,
-   122,
-   114
-  ]
+  "fraction": 0.0
  },
  "description": "A palm of floodplain (varzea), riverbank, swamp, terra firme, 12-20 m tall. A cone of roots shows at the stem base: roots bright red when young, up to 1 m long (cone height not given; 1 m is the root length). 5-10(-20) leaves, spreading and somewhat arched, with pendulous pinnae. Fruit: globose drupe, 0.9-1.3 cm, purple-black epicarp, thin pulp; more than 1,000 fruits per bunch.",
  "season_notes": {
@@ -134,45 +86,41 @@
  },
  "trunk": {
   "length_ratio": 1.0,
-  "radius_ratio": 0.048,
-  "taper": 0.3,
-  "flare": 1.15,
-  "bole_ratio": 0.854,
-  "base_size": 0.834,
-  "curve_deg": 2,
-  "curve_var_deg": 12,
-  "segments": 5,
+  "radius_ratio": 0.02,
+  "taper": 0.1,
+  "flare": 1.0,
+  "bole_ratio": 0.9,
+  "base_size": 0.9,
+  "segments": 6,
+  "curve_deg": 3,
+  "curve_var_deg": 8,
   "lean_deg": 3,
+  "tropism": 0.02,
   "stems": [
    1,
    1
   ],
-  "stem_spread_deg": 0,
   "split_prob": 0.0,
-  "split_count": 2,
-  "split_angle_deg": 28,
   "bark_rgb": [
    132,
    121,
    107
   ],
-  "bark_pattern": "smooth",
+  "bark_pattern": "palm_ringed",
   "twig_rgb": [
-   122,
-   114,
-   100
+   110,
+   112,
+   80
   ],
   "bark": {
    "tile_m": [
-    0.4,
-    0.8
+    0.5,
+    0.88
    ],
-   "ridge_m": 0.04,
-   "block_m": 0.12,
-   "fissure": 0.6,
-   "contrast": 1.2,
+   "ring_m": 0.11,
+   "relief": 0.9,
    "lichen": 0.15,
-   "relief": 1.4
+   "contrast": 1.0
   },
   "roots": false
  },
@@ -208,58 +156,13 @@
    "edge": 1.1
   }
  },
- "levels": [
-  {
-   "count": 8,
-   "down_angle_deg": 55,
-   "down_angle_tip_deg": 20,
-   "down_angle_var_deg": 15,
-   "rotation_deg": 140,
-   "rotation_var_deg": 30,
-   "length_ratio": 0.211,
-   "length_var": 0.15,
-   "curve_deg": 0,
-   "curve_var_deg": 18,
-   "zigzag_deg": 4,
-   "tropism": 0.0,
-   "droop_deg": 35,
-   "taper": 0.9,
-   "radius_ratio": 0.25,
-   "segments": 4
-  },
-  {
-   "count": 9,
-   "start": 0.05,
-   "down_angle_deg": 70,
-   "down_angle_var_deg": 15,
-   "rotation_deg": 140,
-   "rotation_var_deg": 30,
-   "length_ratio": 0.35,
-   "length_var": 0.2,
-   "curve_deg": 0,
-   "curve_var_deg": 18,
-   "zigzag_deg": 6,
-   "tropism": 0.04,
-   "taper": 1.0,
-   "radius_ratio": 0.45,
-   "segments": 2
-  }
- ],
+ "levels": [],
  "foliage": {
-  "type": "broadleaf",
+  "type": "palm",
+  "leaf_shape": "palm_pinnate",
   "leaf_size_m": 0.6,
-  "leaf_shape": "pinnate_compound",
-  "leaflets": [
-   15,
-   19
-  ],
-  "cluster_m": 1.4,
-  "density": 14,
-  "cards_per_m2": 1.2,
-  "leaf_fill": 2.0,
-  "roll_deg": 60,
-  "start": 0.0,
-  "parent_start": 0.05,
+  "cluster_m": 1.0,
+  "density": 1,
   "orientation": "outward",
   "colors": {
    "winter": [
@@ -303,13 +206,6 @@
    1.0,
    1.0
   ],
-  "clumps": {
-   "radius_m": 1.0,
-   "cards_per_clump": 7,
-   "shell": 0.3,
-   "flatten": 0.75,
-   "tip_bias": 1.4
-  },
   "palette": [
    [
     0.8,
@@ -328,81 +224,124 @@
     ]
    ]
   ],
-  "winter_twigs": 0.0,
-  "ao_min": 0.7,
   "color_var": [
    0.08,
    0.05
   ],
+  "ao_min": 0.7,
   "leaf_on_var": 0.0,
-  "berries": null,
-  "flowers": null
+  "winter_twigs": 0.0,
+  "flowers": null,
+  "berries": null
  },
- "deadwood": {
-  "fraction": 0.06,
-  "where": "inner",
-  "levels": [
-   2
+ "palm": {
+  "leaf": "pinnate",
+  "leaves": [
+   5,
+   10
   ],
-  "shorten": 0.6,
-  "rgb": [
-   124,
-   118,
-   110
+  "leaf_length_m": [
+   1.72,
+   4.17
+  ],
+  "petiole_m": [
+   0.12,
+   0.57
+  ],
+  "leaflet_length_m": [
+   0.6,
+   0.88
+  ],
+  "leaflet_width_m": [
+   0.01,
+   0.03
+  ],
+  "leaflets_per_side": [
+   43,
+   91
+  ],
+  "pinna_shape": "linear",
+  "plumose": 0.0,
+  "droop": 0.75,
+  "posture_deg": [
+   20,
+   95
+  ],
+  "arch": 0.45,
+  "stem_diameter_m": [
+   0.16,
+   0.148,
+   0.136
+  ],
+  "rings_m": 0.11,
+  "crownshaft": {
+   "length_m": 1.05,
+   "rgb": [
+    80,
+    106,
+    56
+   ],
+   "swell": 1.06
+  },
+  "stilt_roots": {
+   "count": [
+    8,
+    16
+   ],
+   "length_m": [
+    0.6,
+    1.0
+   ],
+   "radius_m": 0.015,
+   "angle_deg": 20,
+   "rgb": [
+    150,
+    70,
+    56
+   ]
+  },
+  "stems": [
+   1,
+   1
   ]
  },
- "twigs": {
-  "count": [
-   1,
-   2
-  ],
-  "length": 0.6,
-  "down_deg": 45,
-  "down_var_deg": 18,
-  "curve_var_deg": 20,
-  "segments": 2,
-  "radius_m": 0.012,
-  "taper": 0.6,
-  "zigzag_deg": 10,
-  "fan_deg": 50,
-  "jitter": 0.2
- },
  "lod": {
-  "near_tris_budget": 2000,
+  "near_tris_budget": 1600,
   "near_sides": [
    7,
    3,
+   3
+  ],
+  "mid_sides": [
+   5,
+   0,
    0
   ],
-  "mid_blobs": 5,
-  "mid_branches": 4,
   "mid_segments": [
    3,
-   2
+   1
   ],
-  "mid_blob_scale": 0.85,
-  "close_factor": 2
+  "mid_branches": 0,
+  "stilt_roots_max": 24
  },
  "targets": {
   "crown_width_ratio": 0.26,
   "crown_base_ratio": 0.854,
   "porosity": 0.3,
+  "from": "pipeline/tree_cards.py from the research record (crown: 5-10(-20) leaves, spreading and somewhat arched, with pendulous pinnae. 'medium' density is inferred from the leaf count, not stated.), no photographs measured",
   "foliage_rg": 0.56,
-  "foliage_bg": 0.27,
-  "fall_rg": 1.3,
-  "fall_bg": 0.26,
-  "from": "pipeline/tree_cards.py from the research record (crown: 5-10(-20) leaves, spreading and somewhat arched, with pendulous pinnae. 'medium' density is inferred from the leaf count, not stated.), no photographs measured"
+  "foliage_bg": 0.27
  },
  "generated": {
   "by": "pipeline/plantgen.py",
-  "version": "3",
+  "version": "4",
   "card": "library/plant_cards/euterpe_precatoria.json",
-  "card_sha256": "fd67b96cd941f577",
-  "template": "juglans_hindsii",
-  "template_common": "northern California black walnut",
-  "height_scale": 1.067
+  "card_sha256": "2c719db1bf8a9e2d",
+  "template": "palm",
+  "template_common": "Corner's-model palm (pipeline/plantgen.py PALM_TEMPLATE)",
+  "height_scale": 0.8
  },
- "notes": "Template juglans_hindsii: a palm: treegen has no palm architecture (Corner's model: one unbranched stem, a crown of fronds); California black walnut is the nearest by leaf (pinnate). Crown width: twice the frond length, the fronds arching (no source gives the crown's width). Leaf size clamped to 0.6 m (the source's 74 cm is past what a leaf card carries). Palm stand-in: the bole runs clear and unforked to the crown (split_prob 0, bole and base_size at the crown's base) and a compact crown of pinnate leaf sprays stands for the fronds; the walnut's branching still makes short limbs inside that crown, which a palm does not have. Stilt roots (1 m) are not drawn: treegen has no stilt-root primitive. NOT SOURCED (the template's or a default value): leaf colour (a tropical evergreen's mid green). Research notes: Height and diameter are the species range (Henderson & Galeano 1996); adults reach about 20 m and 16 cm at breast height (da Rocha et al. 2025). Leaves: 5-10(-20) in the monograph; 10-15 in Spanish/Portuguese Wikipedia; about 14 in adults (da Rocha). leaf.length_cm is the rachis (1.6-3.6 m); the petiole adds (0-)12-57 cm. Habitat: var. precatoria lowland rain forest, commonly along rivers in periodically inundated areas, below 350 m (occasionally to 600 m). da Rocha lists terra firme, swampy blackwater lowlands (baixios) and high varzea. UTP says 'swampy ground'. Phenology: no Madre de Dios data. fruiting_months are from the upper Acre River (Epitaciolandia, Acre, Brazil, next to Madre de Dios): baixio Mar-Jun, terra firme Jun-Oct. Elsewhere in Acre: Chico Mendes reserve Mar-Sep; Tarauaca baixio Jan-Apr, terra firme Jul-Sep. Inflorescences emerge mainly Aug-Dec at Manaus (central Amazon), so flowering_months are left empty. Flower colour not found. Eaten_by: da Rocha says the fruits feed birds, fruit bats and rodents but names no species; no species-level frugivore source found (toucan/guan studies found were on Euterpe edulis). Evergreen is assumed for a palm, not stated. The walnut's first-order limbs stand in for the 8 fronds (2.6 m, arching), leafy along their length; a pinnate leaf card stands for the leaflets.",
+ "notes": "Template palm: a palm: Corner's model (one unbranched stem, a crown of large leaves at its top), the palm block from the research's. Crown width: twice the frond length, the fronds arching (no source gives the crown's width). Leaf size clamped to 0.6 m (the source's 74 cm is past what a leaf card carries). NOT SOURCED (the template's or a default value): leaf colour (a tropical evergreen's mid green); the stem's diameter at the top (0.85 of the base's); stilt root count (8-16); stilt root thickness (3 cm); the stilt roots' angle (20 degrees off the vertical). Research notes: Height and diameter are the species range (Henderson & Galeano 1996); adults reach about 20 m and 16 cm at breast height (da Rocha et al. 2025). Leaves: 5-10(-20) in the monograph; 10-15 in Spanish/Portuguese Wikipedia; about 14 in adults (da Rocha). leaf.length_cm is the rachis (1.6-3.6 m); the petiole adds (0-)12-57 cm. Habitat: var. precatoria lowland rain forest, commonly along rivers in periodically inundated areas, below 350 m (occasionally to 600 m). da Rocha lists terra firme, swampy blackwater lowlands (baixios) and high varzea. UTP says 'swampy ground'. Phenology: no Madre de Dios data. fruiting_months are from the upper Acre River (Epitaciolandia, Acre, Brazil, next to Madre de Dios): baixio Mar-Jun, terra firme Jun-Oct. Elsewhere in Acre: Chico Mendes reserve Mar-Sep; Tarauaca baixio Jan-Apr, terra firme Jul-Sep. Inflorescences emerge mainly Aug-Dec at Manaus (central Amazon), so flowering_months are left empty. Flower colour not found. Eaten_by: da Rocha says the fruits feed birds, fruit bats and rodents but names no species; no species-level frugivore source found (toucan/guan studies found were on Euterpe edulis). Evergreen is assumed for a palm, not stated.",
  "sources": [
   "Henderson, A. & Galeano, G. 1996. Euterpe, Prestoea, and Neonicholsonia (Palmae). Fl. Neotrop. Monogr. 72 (NYBG monograph record: Euterpe precatoria), https://sweetgum.nybg.org/science/world-flora/monographs-details/?irn=14583 (unknown (NYBG Terms & Conditions linked, no licence stated)), read 2026-11-06",
   "Henderson & Galeano 1996 (NYBG monograph record: Euterpe precatoria var. precatoria), https://sweetgum.nybg.org/science/world-flora/monographs-details/?irn=14584 (unknown (NYBG Terms & Conditions linked, no licence stated)), read 2026-11-06",

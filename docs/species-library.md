@@ -1505,3 +1505,46 @@ mountain misery, red mountain heather, big sagebrush) and the coast (coast redwo
 pine, Monterey cypress; California sagebrush, yellow bush lupine, evergreen huckleberry, salal, mock heather). Jepson
 eFlora could not be read (a verification page); heights and forms rest on the Gymnosperm Database, FEIS, Silvics and
 Calscape, colours and crown proportions are judgement values with no photographs measured.
+
+## Palms (2026-11-06)
+
+A palm is not a branching tree: Corner's model (Hallé & Oldeman 1970), one unbranched stem that ends in a crown of
+large leaves. treegen grows a record with a `palm` block (`architectural_model: "Corner"`) by `palmSkeleton`, not by
+the branching levels (a palm record has `levels: []`). The block's fields (defaults in treegen.js `PALM`; a range is
+drawn per tree or per leaf):
+
+| field | meaning |
+|---|---|
+| `leaf` | `pinnate` (a rachis with pinnae both sides) or `palmate` (a fan of segments from the top of the petiole) |
+| `leaves` | leaves in the crown, [min, max] |
+| `leaf_length_m`, `petiole_m` | the whole leaf (petiole and rachis, or petiole and blade); its bare stalk |
+| `leaflet_length_m`, `leaflet_width_m`, `leaflets_per_side` | the middle pinnae (the basal and apical ones are drawn shorter) or the fan's segments |
+| `pinna_angle_deg`, `pinna_shape`, `pinna_groups` | a pinna's angle off the rachis; `linear`, or `wedge` (cuneate, praemorse, split into segments: the Iriarteae); pinnae in groups of n |
+| `plumose` | 0-1: pinnae in several planes, drawn as a second plane each side of the rachis |
+| `droop` | 0-1: the pinnae hang from the rachis (a V under it); below 0 they rise |
+| `posture_deg`, `arch` | [youngest, oldest] leaf off the vertical (the spear leaf erect, the old ones spreading); how far the rachis bends down along its length |
+| `stem_diameter_m`, `rings_m` | [base, middle, top] (a ventricose stem swells in the middle; the swelling grows with the stem); leaf-scar spacing |
+| `crownshaft` | `{ length_m, rgb, swell }`: the tube of leaf sheaths at the stem's top, its own colour; null: none |
+| `stilt_roots` | `{ count, length_m, radius_m, angle_deg, rgb }`: a cone of roots from the lower stem into the ground; null: none |
+| `spines` | `{ length_m, density, spacing_m, rgb }`: spines on the stem, drawn into the bark texture (`trunk.bark.spines`) |
+| `stems`, `clump_m`, `clump_lean_deg` | a caespitose palm's stems, spread over clump_m, the others shorter and leaning out |
+
+How it grows: the crown first, about the apex: the leaves a spiral 137.5 degrees apart, each a rachis (a level-1 stem,
+a thin tube in the near and close tiers, plain colour) bending down along its length, with ribs from which
+`frondGeometry` hangs alpha-tested strips, from the rachis to the pinnae's tips either side. The stem is the sampled
+height less the crown's rise (no rescaling: the stem's diameter and the leaves' length are the record's). A young palm
+(an age class below the mature height) keeps its stem's width and has leaves shorter by the square root of its height's
+share. The frond texture (`palmTexture`) is one repeat of pinnae either side of a rachis, tiled along the strip (it
+wraps in v; a fan for a palmate leaf); the bark pattern `palm_ringed` draws the leaf-scar rings and the spines.
+
+Tiers: near (six strip segments a leaf, a second plane each side when plumose; stem, rachises, stilt roots up to
+`lod.stilt_roots_max`), close (all twelve rib segments, the 512 px texture), mid (three segments, one plane a side, no
+rachis; `cardOff` zero, so the mid material never thins them), far (the impostor bake of the near tree, as any tree).
+A palm has no leaf level (no leaf records): the close strips are its nearest tier.
+
+Cards: `pipeline/tree_cards.py` writes a palm's card (habit `palm_*`) with template `palm` and a `palm` block from the
+research record's `palm` block (`_research/_schema.json`: stem diameters, crownshaft, petiole, pinnae per side, width
+and shape, planes, hang, the leaves' posture words, stilt roots, stem spines; a single number is the sources' maximum,
+read as 0.6-1 of it), by rule (`palm_block`; the words through the POSTURE, HANG and ROOT_ANGLE lexicons); what no
+source gives is a default listed in the card's notes. `pipeline/plantgen.py` grows any card of family Arecaceae (or form
+`palm`) from `PALM_TEMPLATE`, the architecture's defaults, whatever its card's template.

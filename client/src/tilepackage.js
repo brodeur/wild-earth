@@ -581,7 +581,7 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
   for (const k of ['client.heights', 'client.texture', 'client.habitat', 'client.canopy', 'client.masks'])
     if (!L[k]) throw new Error(`tile ${id} lacks ${k}; run the derive step`);
   const MX = L['client.species_mix'], mixFiles = MX?.files || {};
-  const [heights, texture, habitat, canopy, masks, species, perception, calendar, games, locomotion, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior, detail, canopyHeight, groundTexture, seasonImage, lidarMicro, waterImg, waterWidthImg, substrate, substrateInfo, lidarCover, fauna, strata] = await Promise.all([
+  const [heights, texture, habitat, canopy, masks, species, perception, calendar, games, locomotion, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior, detail, canopyHeight, groundTexture, seasonImage, lidarMicro, waterImg, waterWidthImg, substrate, substrateInfo, lidarCover, fauna, strata, canopyTop] = await Promise.all([
     loadImageData(dir + L['client.heights'].path, signal), loadImageData(dir + L['client.texture'].path, signal),
     loadImageData(dir + L['client.habitat'].path, signal), loadImageData(dir + L['client.canopy'].path, signal),
     loadImageData(dir + L['client.masks'].path, signal),
@@ -643,6 +643,9 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
     // the stratigraphic column where the strata lie flat (pipeline/strata.py): elevation bands with their rock colours,
     // which terrain.js draws on the steep faces; optional (absent: the faces as before)
     L['client.strata'] ? fetch(dir + L['client.strata'].path, { signal }).then(r => r.ok ? r.json() : null).catch(() => null) : null,
+    // the measured stand height on the habitat grid (pipeline/canopy_top.py: R x 0.5 m, 0 none), which the tree heights
+    // follow (stature.js cellStature); optional (absent: the modelled heights)
+    L['client.canopy_top'] ? loadImageData(dir + L['client.canopy_top'].path, signal).catch(() => null) : null,
   ]);
   if (signal?.aborted) throw aborted(signal);
   if (features) markRewilded(features, m);
@@ -670,6 +673,8 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
     strata: strata?.bands?.length ? strata : null,
     // lidar canopy (client/canopy_height.png, 10 m): R p95 canopy height x 0.25 m, G tree cover %, B shrub cover %; null without the lidar step
     canopyHeight: canopyHeight ? new Grid8(canopyHeight, size) : null,
+    // the measured stand height (client/canopy_top.png, habitat grid): R the stand's top x 0.5 m, 0 where unmeasured; null without it
+    canopyTop: canopyTop && canopyTop.width === habitat.width ? new Grid8(canopyTop, size) : null,
     // the lidar's reach on the habitat grid (client/lidar_cover.png R 255 = crowns real here), or null (all of a crown tile)
     lidarCover: lidarCover && lidarCover.width === habitat.width ? new Grid8(lidarCover, size) : null,
     // lidar micro (client/lidar_micro.png, 2 m, RGB as loadLidarMicro): { width, height, data, channels }, or null

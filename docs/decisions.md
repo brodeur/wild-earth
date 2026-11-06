@@ -5677,3 +5677,57 @@ traits, for every tile:
   lappet-faced vulture, marabou, ostrich, Egyptian goose and blacksmith lapwing: 150 credits, all first attempts
   (balance 1,727). Bird slots now alternate a size-weighted and a sighting-count ranking (the Serengeti's birds had been
   starlings and weavers only). Reptiles (sprawling legs) need their own build: notes in the probe report.
+
+## 2026-11-06: phase 1, iteration 5 (branch claude/sweet-feistel-2054bb)
+
+- **Reptiles were never researched** (`research.ANIMAL_CLASSES`): GBIF's backbone no longer has a class Reptilia (key 358
+  returns no records anywhere); its reptiles are the classes Squamata, Testudines and Crocodylia. Every tile's research
+  listed no reptile. The three are now faceted and ranked together as reptiles: the Serengeti lists the Nile crocodile
+  (151 records), Mwanza flat-headed agama, leopard tortoise, Nile monitor, striped skink, flap-necked chameleon, the
+  African rock python and the puff adder.
+- **Birds' kin by way of life** (`pipeline/avonet.py`, `fauna_slots.kin_for`; AVONET, Tobias et al. 2022, CC BY 4.0): a
+  bird's kin now comes from its primary lifestyle (terrestrial, insessorial, aquatic, aerial), its Hand-Wing Index and
+  flightlessness (the ratite and penguin families, or an index under 1), before the family rules. A flightless slot never
+  takes off: its flush is a run at its own cruise speed (the ostrich ~7 m/s), it stands at night instead of roosting,
+  and its stride, speed and flush distance scale by its trait card's gait. The Serengeti's lapwings and starlings walk
+  the grass (quail machinery); Lofoten's auks and loons swim, its oystercatcher and pipits walk. Static species unchanged.
+- **Every species chip has an image** (`pipeline/stills.py`, the `stills` step): a modelled species is rendered by the
+  page that made the hand-made stills (same framing, light and size); a stand-in reuses its kin's still at the slot's
+  scale (it is drawn with the kin's body); the client falls back to a glyph. Manu's chips: 40 of 40 empty -> 0.
+- **Canopy height from the map** (`pipeline/canopy_top.py`, the `canopy_top` step; `stature.js cellStature`): where a
+  tile has the measured canopy height (Meta/WRI, global tiles), each 30 m cell's tree mix is scaled so the stand's top
+  matches it, keeping each species' relative stature, a sourced height only moving by what lies outside its range, crown
+  widths kept. It went the other way from expected: the tropical canopies drew about twice the map (Manu 42 m vs 19 m)
+  and now match it (18.2 / 19.2, Danum 23.3 / 23.1, Corcovado 22.2 / 21.9). Open question: Meta's first canopy map
+  is reported to underestimate tall canopies; the cards' sourced 40-55 m dipterocarps disagree with it at Danum. One
+  function (`speciesScale`) decides which wins. Lidar and LANDFIRE tiles unchanged.
+- **Shrubs drawn at their own size** (`stature.js shrubSlot`): one shrub slot in twelve drew common juniper as its
+  Sierra juniper template's 15.5 m snag (820 dead trees on Lofoten); a shrub slot outside 0.5-2x its class's height range
+  now draws a slot that fits (junipers 0.13 / 0.51 / 0.71 m at the 10th / 50th / 90th percentile vs the card's 0.2-0.7).
+- **Heath as heath** (`forbs.js`): the carpet laid as a mosaic of closed patches and gaps holding the cell's cover,
+  domed mats lying on the slope, heather's purple in its months (the ground layer now follows the day shown, not the
+  season's middle), reaching 80 m at eye height and 260 m from 150 m up. Lofoten's probe pose moved by rule onto the
+  heath cell with the highest carpet cover near the old one (201 m away).
+- **A tile's own grass** (`grass.js`): a tile outside the regional tables never borrows California's grasses (the
+  Serengeti had drawn mostly wild oat); where its grasses have no record, a generic perennial tufted grass coloured by the
+  tile's measured season.
+- **Palms as palms** (`treegen.js` palmSkeleton, plantgen v4, tree_cards palm_block): Corner's model, one unbranched stem
+  (or a clump), a crownshaft, a spiral of pinnate or palmate leaves with leaflet strips, ringed and spined stems, stilt
+  roots, at every tier including the far impostor bake; driven by card fields from the palms' sources (Henderson 1990,
+  Henderson & Galeano 1996 and others). Near-tier palms cost 700-1,300 triangles against 2,600 for a broadleaf emergent.
+- **The grass follows the tile's own seasons** (`grass.js`): on a tile outside the regional tables a grass's record
+  palette was rescaled to California's July sward times the measured ratio, so the Serengeti's wet-season February drew
+  straw; outside July's own season (by the tile's season months) a tile's own grass now keeps its record's palette. The
+  Serengeti in February is green, July red-straw; Lofoten and Teton unchanged. Still California's: the winter grass shape
+  (half height, last year's dead leaves).
+- **Reptiles with legs** (`tools/build_reptile.py`; `pipeline/amniote.py`, Myhrvold et al. 2015 amniote life-history
+  database, CC0): feet within 0.6 % of the length of the floor in four corners (the rear third ignored for sprawlers, so
+  a tail on the ground is not a foot), legs as the pieces reaching a foot beyond the flank (or under a tortoise's
+  shell), pivots at the shoulder and hip, the tail behind the hips, the neck at the narrowest point behind the head;
+  size from mass at 1,000 kg/m3 (EltonTraits has no reptiles: the amniote database's masses replace the cards'
+  defaults, the crocodile 94 kg); the palette vote; a gate that refuses unusable meshes, run on the untextured preview
+  before paying for the refine. The Nile crocodile, Nile monitor, leopard tortoise and Mwanza agama: 120 credits, all first
+  attempts (balance 1,607; the Serengeti 750 of its 800). Client: a sprawler and a tortoise template; crocodiles bask on
+  the bank in the warm hours and float in the water otherwise, hurrying in when threatened; tortoises walk slowly and
+  freeze; lizards bask on the fence lizard's machinery without its Sierra season. Reptiles get up to 6 slots beyond the 40
+  (client cap 48). Snakes have no rig and are skipped with a reason.

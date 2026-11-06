@@ -35,7 +35,10 @@ KINDS = ("tree", "shrub", "forb", "grass", "emergent", "fern", "moss", "mammal",
          "invertebrate", "fungus")
 TARGET = {"tree": 21, "shrub": 23, "ground": 26, "animal": 22}   # the home tile, utm10n_680_4280 (2026-11-04)
 ANIMAL_CLASSES = {  # GBIF class key -> (kind, how many of the most recorded)
-    212: ("bird", 150), 359: ("mammal", 80), 358: ("reptile", 30), 131: ("amphibian", 30), 204: ("fish", 30),
+    # reptiles: GBIF's backbone has no class Reptilia any more (key 358 returns no records; 2026-11-06): its classes are
+    # Squamata, Testudines and Crocodylia, each faceted on its own and ranked together as reptiles (animal_records)
+    212: ("bird", 150), 359: ("mammal", 80), 11592253: ("reptile", 30), 11418114: ("reptile", 10), 11493978: ("reptile", 5),
+    131: ("amphibian", 30), 204: ("fish", 30),
     225: ("invertebrate", 20),   # Gastropoda: land snails and slugs (the banana slug)
 }
 PLANT_LIMIT = 150
@@ -82,9 +85,12 @@ def plant_records(tile: Tile) -> list[dict]:
 
 
 def animal_records(tile: Tile) -> list[dict]:
+    by_kind: dict[str, list] = {}
+    for key, (kind, lim) in ANIMAL_CLASSES.items():   # (several GBIF classes may make one kind: the reptiles)
+        by_kind.setdefault(kind, []).extend(_facet(tile, "classKey", key, lim))
     out = []
-    for key, (kind, lim) in ANIMAL_CLASSES.items():
-        rows = _facet(tile, "classKey", key, lim)
+    for kind, rows in by_kind.items():
+        rows.sort(key=lambda r: -r["records"])
         tot = sum(r["records"] for r in rows) or 1
         for i, r in enumerate(rows):
             out.append({**r, "kind": kind, "rank_in_class": i + 1, "share_of_class": round(r["records"] / tot, 4)})

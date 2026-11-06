@@ -664,6 +664,12 @@
    "known": [
     "a parrot, toucan or hornbill on a jay's body"
    ],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 15.3,
+   "habitat": "Forest",
+   "habitat_density": 1,
    "active_hours": [
     0,
     0,
@@ -718,6 +724,12 @@
     "insectivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 15.2,
+   "habitat": "Forest",
+   "habitat_density": 1,
    "active_hours": [
     0,
     0,
@@ -774,6 +786,12 @@
    "known": [
     "a parrot, toucan or hornbill on a jay's body"
    ],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 30.1,
+   "habitat": "Forest",
+   "habitat_density": 1,
    "active_hours": [
     0,
     0,
@@ -830,6 +848,12 @@
    "known": [
     "a parrot, toucan or hornbill on a jay's body"
    ],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 16.8,
+   "habitat": "Forest",
+   "habitat_density": 1,
    "active_hours": [
     0,
     0,
@@ -884,6 +908,12 @@
     "predator"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Terrestrial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 32.1,
+   "habitat": "Wetland",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -938,6 +968,12 @@
     "omnivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 16.9,
+   "habitat": "Forest",
+   "habitat_density": 1,
    "active_hours": [
     0,
     0,
@@ -994,6 +1030,12 @@
    "known": [
     "a parrot, toucan or hornbill on a jay's body"
    ],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 32.7,
+   "habitat": "Forest",
+   "habitat_density": 2,
    "active_hours": [
     0,
     0,
@@ -1048,6 +1090,12 @@
     "omnivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 27.2,
+   "habitat": "Forest",
+   "habitat_density": 1,
    "active_hours": [
     0,
     0,
@@ -1102,6 +1150,22 @@
     "herbivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Terrestrial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 20.3,
+   "habitat": "Forest",
+   "habitat_density": 1,
+   "gait": {
+    "walk_mps": 0.85,
+    "cruise_mps": 2.9,
+    "top_mps": 4.84,
+    "stride_m": 0.42,
+    "sprint_s": 3.3,
+    "speed_k": 1.09,
+    "stride_k": 1.312,
+    "source": "trait card locomotion over callipepla_californica's (pipeline/locomotion.py)"
+   },
    "active_hours": [
     0,
     0,
@@ -1139,15 +1203,15 @@
    "common": "Black-faced antthrush",
    "one": "black-faced antthrush",
    "many": "black-faced antthrushs",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.803,
+   "kin": "callipepla_californica",
+   "archetype": "ground bird",
+   "scale": 0.702,
    "tint": null,
    "mass_kg": 0.062,
    "density_km2": 45.5591,
    "group": [
-    1,
-    6
+    3,
+    12
    ],
    "bird": true,
    "night": false,
@@ -1156,6 +1220,22 @@
     "insectivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Terrestrial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 16.6,
+   "habitat": "Forest",
+   "habitat_density": 1,
+   "gait": {
+    "walk_mps": 0.59,
+    "cruise_mps": 1.98,
+    "top_mps": 3.3,
+    "stride_m": 0.21,
+    "sprint_s": 1.9,
+    "speed_k": 0.756,
+    "stride_k": 0.656,
+    "source": "trait card locomotion over callipepla_californica's (pipeline/locomotion.py)"
+   },
    "active_hours": [
     0,
     0,
@@ -1210,6 +1290,12 @@
     "predator"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Generalist",
+   "kin_source": "avonet (crosswalk)",
+   "hand_wing_index": 32.4,
+   "habitat": "Wetland",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -1264,6 +1350,12 @@
     "insectivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 17.0,
+   "habitat": "Forest",
+   "habitat_density": 1,
    "active_hours": [
     0,
     0,
@@ -1318,6 +1410,12 @@
     "predator"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Terrestrial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 31.8,
+   "habitat": "Wetland",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -1372,6 +1470,12 @@
     "herbivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 14.8,
+   "habitat": "Riverine",
+   "habitat_density": 2,
    "active_hours": [
     0,
     0,
@@ -1426,6 +1530,12 @@
     "omnivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 18.6,
+   "habitat": "Forest",
+   "habitat_density": 1,
    "active_hours": [
     0,
     0,
@@ -1480,6 +1590,12 @@
     "predator"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Aquatic",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 19.6,
+   "habitat": "Wetland",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -1517,15 +1633,15 @@
    "common": "Limpkin",
    "one": "limpkin",
    "many": "limpkins",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 2.08,
+   "kin": "callipepla_californica",
+   "archetype": "ground bird",
+   "scale": 1.817,
    "tint": null,
    "mass_kg": 1.08,
    "density_km2": 0.472,
    "group": [
-    1,
-    6
+    3,
+    12
    ],
    "bird": true,
    "night": false,
@@ -1534,6 +1650,22 @@
     "predator"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Terrestrial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 11.1,
+   "habitat": "Wetland",
+   "habitat_density": 3,
+   "gait": {
+    "walk_mps": 0.95,
+    "cruise_mps": 3.23,
+    "top_mps": 5.38,
+    "stride_m": 0.51,
+    "sprint_s": 3.8,
+    "speed_k": 1.218,
+    "stride_k": 1.594,
+    "source": "trait card locomotion over callipepla_californica's (pipeline/locomotion.py)"
+   },
    "active_hours": [
     0,
     1,
@@ -1588,6 +1720,12 @@
     "herbivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 34.9,
+   "habitat": "Forest",
+   "habitat_density": 1,
    "active_hours": [
     0,
     0,
@@ -1643,6 +1781,12 @@
     "scavenger"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Terrestrial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 14.3,
+   "habitat": "Human Modified",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -1697,6 +1841,12 @@
     "herbivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 35.0,
+   "habitat": "Forest",
+   "habitat_density": 1,
    "active_hours": [
     0,
     0,
@@ -1752,6 +1902,12 @@
     "scavenger"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Terrestrial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 16.5,
+   "habitat": "Forest",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -1808,6 +1964,12 @@
    "known": [
     "a parrot, toucan or hornbill on a jay's body"
    ],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 18.4,
+   "habitat": "Forest",
+   "habitat_density": 1,
    "active_hours": [
     0,
     0,
@@ -1862,6 +2024,12 @@
     "omnivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 24.8,
+   "habitat": "Forest",
+   "habitat_density": 1,
    "active_hours": [
     0,
     0,
@@ -1916,6 +2084,12 @@
     "insectivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 13.2,
+   "habitat": "Forest",
+   "habitat_density": 1,
    "active_hours": [
     0,
     0,
@@ -1970,6 +2144,12 @@
     "insectivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Aerial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 50.9,
+   "habitat": "Riverine",
+   "habitat_density": 3,
    "active_hours": [
     0,
     0,
@@ -2024,6 +2204,12 @@
     "predator"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 28.0,
+   "habitat": "Forest",
+   "habitat_density": 1,
    "active_hours": [
     0,
     1,
@@ -2078,6 +2264,12 @@
     "insectivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 18.2,
+   "habitat": "Forest",
+   "habitat_density": 1,
    "active_hours": [
     0,
     0,
@@ -2132,6 +2324,12 @@
     "insectivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 17.6,
+   "habitat": "Forest",
+   "habitat_density": 1,
    "active_hours": [
     0,
     0,
@@ -2186,6 +2384,12 @@
     "omnivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 24.4,
+   "habitat": "Forest",
+   "habitat_density": 1,
    "active_hours": [
     0,
     0,
@@ -2302,8 +2506,28 @@
   {
    "id": "boana_geographica",
    "why": "over the 40-slot cap"
+  },
+  {
+   "id": "thecadactylus_solimoensis",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "ameiva_ameiva",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "anolis_fuscoauratus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "melanosuchus_niger",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "corallus_hortulana",
+   "why": "over the 40-slot cap"
   }
  ],
- "rules": "pipeline/fauna_slots.py: kin by taxonomy, diet and mass; scale = (mass / kin mass)^(1/3), 0.25-4; density Damuth 1981 (herbivores; large ones times HERBIVORE_PRODUCTIVITY of the tile's ecosystem), 30 / mass kg (carnivores), birds 15 m^-0.4 (cap 70) or 0.5 m^-0.75 (raptors), or PanTHERIA's measured density; behaviour() for the hours about, rest posture and group",
+ "rules": "pipeline/fauna_slots.py: kin by taxonomy, diet and mass (a bird's by AVONET's lifestyle and flightlessness); scale = (mass / kin mass)^(1/3), 0.25-4; density Damuth 1981 (herbivores; large ones times HERBIVORE_PRODUCTIVITY of the tile's ecosystem), 30 / mass kg (carnivores), birds 15 m^-0.4 (cap 70) or 0.5 m^-0.75 (raptors), or PanTHERIA's measured density; behaviour() for the hours about, rest posture and group",
  "ecosystem": "T1.1"
 }

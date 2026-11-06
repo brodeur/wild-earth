@@ -15,7 +15,7 @@
   43.78492414769734
  ],
  "size_m": 10000,
- "generated_at": "2026-11-06T09:49:47Z",
+ "generated_at": "2026-11-06T11:29:52Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -7038,14 +7038,14 @@
     "gbif",
     "eltontraits"
    ],
-   "listed": 87,
+   "listed": 88,
    "predators": 23,
    "scavengers": 15,
    "generated_traits": 0,
-   "queued": 51,
-   "queued_credits": 1525,
-   "sha256": "2597a285e38fbe3010ed2cb76d2ef068c68c9c988d736d1b1cdde40339712208",
-   "bytes": 122377
+   "queued": 52,
+   "queued_credits": 1550,
+   "sha256": "ac03b73bc95ebbd8f1460481eb4036c47e780853c0720f4c5a73c300042a6611",
+   "bytes": 123872
   },
   "resources": {
    "path": "resources/resources.json",
@@ -7210,7 +7210,7 @@
    ],
    "allow": 36,
    "slots": 40,
-   "skipped": 11,
+   "skipped": 12,
    "stand_ins": {
     "alces_alces": "cervus_canadensis",
     "alces_americanus": "cervus_canadensis",
@@ -7225,8 +7225,8 @@
     "tamiasciurus_hudsonicus": "sciurus_griseus",
     "urocitellus_armatus": "sciurus_griseus"
    },
-   "sha256": "e3df7a36268a5c44fd464986dfa9f6ac0c64f7f70d0d73fcc2c1c3fe7208318b",
-   "bytes": 33472
+   "sha256": "3c5c2ea2c6d488309f5a056d38fd03fd0eb0270a5fcf58eacaf9d16a1898103b",
+   "bytes": 37540
   },
   "geology.strata": {
    "path": "geology/strata.json",
@@ -7769,6 +7769,25 @@
    "step": "substrate",
    "at": "2026-11-06T09:49:47Z",
    "seconds": 5.7,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T11:11:44Z",
+   "seconds": 4.7,
+   "ok": true
+  },
+  {
+   "step": "canopy_top",
+   "at": "2026-11-06T11:15:49Z",
+   "seconds": 0.0,
+   "ok": true,
+   "not_applicable": "no canopy height map on this tile (LANDFIRE's EVH is a modelled class, not a measurement): the modelled heights stand"
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T11:29:52Z",
+   "seconds": 0.7,
    "ok": true
   }
  ],
@@ -8879,15 +8898,15 @@
    "seconds": 1.4
   },
   "animals": {
-   "version": "4",
-   "code": "2e6da1fc957a6827",
+   "version": "5",
+   "code": "9ede32ed0ac306d7",
    "params": {
     "tile": "utm12n_514_4838"
    },
-   "fingerprint": "23e1ff7b078e9763",
+   "fingerprint": "b468fbf96357a60c",
    "parts": {
-    "version": "4",
-    "code": "2e6da1fc957a6827",
+    "version": "5",
+    "code": "9ede32ed0ac306d7",
     "params": {
      "tile": "utm12n_514_4838"
     },
@@ -8896,11 +8915,11 @@
      "plants": "19b4766a5e4d088c"
     },
     "library": {
-     "library/animals": "9b343de56ec44a44",
+     "library/animals": "522e5b0ee36723ba",
      "data/eltontraits": "e3b0c44298fc1c14"
     }
    },
-   "ran_at": "2026-11-06T09:32:31Z",
+   "ran_at": "2026-11-06T11:29:51Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -8908,10 +8927,10 @@
     "species.animals"
    ],
    "outputs": {
-    "client/fauna.json": "e3df7a36268a5c44",
-    "species/animals.json": "2597a285e38fbe30"
+    "client/fauna.json": "3c5c2ea2c6d48830",
+    "species/animals.json": "ac03b73bc95ebbd8"
    },
-   "out_hash": "b6024602f8472e0d",
+   "out_hash": "d6d6e63a07c36ef0",
    "sources": {
     "gbif": "2026-11-06",
     "eltontraits": "2026-11-06"
@@ -8920,9 +8939,9 @@
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 207
+    "cache": 212
    },
-   "seconds": 0.6
+   "seconds": 0.7
   },
   "resources": {
    "version": "1",
@@ -9150,6 +9169,34 @@
     "cache": 0
    },
    "seconds": 0.1
+  },
+  "canopy_top": {
+   "version": "1",
+   "code": "78303485e7fbf3a9",
+   "params": {
+    "tile": "utm12n_514_4838"
+   },
+   "fingerprint": "3fe99c66e5254256",
+   "parts": {
+    "version": "1",
+    "code": "78303485e7fbf3a9",
+    "params": {
+     "tile": "utm12n_514_4838"
+    },
+    "deps": {
+     "landcover": "bd9de479eda06329",
+     "lidar": "123fe53ce031f393",
+     "terrain": "f6f8d8dc093fa535"
+    },
+    "library": {}
+   },
+   "ran_at": "2026-11-06T11:15:49Z",
+   "owner": null,
+   "status": "not_applicable",
+   "reason": "no canopy height map on this tile (LANDFIRE's EVH is a modelled class, not a measurement): the modelled heights stand",
+   "outputs": {},
+   "out_hash": "57fff4dc648b3abf",
+   "seconds": 0.0
   }
  },
  "seams": {

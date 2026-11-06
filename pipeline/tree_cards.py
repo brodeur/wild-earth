@@ -37,9 +37,8 @@ The cards (card()). Each chosen tree needs a research record, _research/<id>.jso
 its heights, bole, crown, leaf, phenology, bark, habitat and who eats it, every value read from a cited source
 (Wikipedia, open floras and papers, Useful Tropical Plants...), null where no source gives one. The research is an
 agent's web reading, the same procedure for every tree (brief()); the card is written from it by rule, here:
-  template   the library record whose architecture it starts from: a palm -> walnut (juglans_hindsii; there is no
-             palm architecture, Corner's model, in treegen: the nearest honest template by leaf, pinnate, flagged in
-             the card's notes); an emergent (crown position emergent, or 40 m or more) -> light red meranti
+  template   the library record whose architecture it starts from: a palm -> "palm", treegen's Corner's-model palm
+             (pipeline/plantgen.py PALM_TEMPLATE), its card's `palm` block from the research's (palm_block); an emergent (crown position emergent, or 40 m or more) -> light red meranti
              (shorea_leprosula: buttressed clear bole, umbrella crown); a canopy tree (25 m or more) -> white seraya
              (parashorea_malaanonan); a smaller tree -> giant mahang (macaranga_gigantea: a tropical evergreen on one
              stem with an open crown)
@@ -71,7 +70,7 @@ RESEARCH = CARDS / "_research"
 CANOPY_SOURCES = RESEARCH / "_canopy_sources.json"
 WCVP_DIR = REPO_ROOT / "pipeline" / "_cache" / "wcvp"   # a folder of its own: downloaded data, never executed
 WCVP_URL = "https://sftp.kew.org/pub/data-repositories/WCVP/wcvp.zip"
-VERSION = "1"
+VERSION = "1"   # (2026-11-06: palms are Corner's-model palms, palm_block; their cards changed, no other card did)
 
 PLOT_RADIUS_KM = 250
 PLOT_ELEV_M = 400
@@ -505,8 +504,7 @@ def template_for(r: dict) -> tuple[str, str]:
     top = _num(h.get("max"), _num(h.get("typical"), 0.0))
     pos = ((r.get("crown") or {}).get("position") or "").lower()
     if habit.startswith("palm"):
-        return "juglans_hindsii", ("a palm: treegen has no palm architecture (Corner's model: one unbranched stem, a crown "
-                                   "of fronds); California black walnut is the nearest by leaf (pinnate)")
+        return "palm", "a palm: Corner's model (one unbranched stem, a crown of large leaves at its top), the palm block from the research's"
     if pos == "emergent" or top >= 40:
         return "shorea_leprosula", "an emergent: a buttressed clear bole under an umbrella crown (light red meranti)"
     if pos == "canopy" or top >= 25:
@@ -564,11 +562,157 @@ def _src(r: dict, block: str) -> str:
     return ""
 
 
+# Palms (2026-11-06): the research's palm block (with its leaf and bole) as the card's `palm` block, the parameters of
+# treegen's Corner's-model palm (client/src/treegen.js PALM; docs/species-library.md "Palms"). A single number in the
+# research is the sources' maximum ("to 30 cm"): the card spans MAX_SPAN of it; a range is the typical span as it is.
+MAX_SPAN = (0.6, 1.0)
+POSTURE = (   # the leaves' posture words -> (posture_deg [youngest, oldest] off the vertical, arch 0..1); the first that matches
+    ("droop", ([25, 115], 0.8)), ("pendul", ([25, 115], 0.8)), ("arching", ([20, 100], 0.6)), ("arched", ([20, 95], 0.45)),
+    ("horizontal", ([50, 100], 0.3)), ("stiff", ([20, 80], 0.15)), ("spread", ([20, 90], 0.35)), ("erect", ([10, 50], 0.2)),
+    ("ascend", ([10, 55], 0.2)))
+HANG = {"pendulous": 0.75, "drooping": 0.45, "horizontal": 0.05}   # the pinnae's hang -> droop
+ROOT_ANGLE = (("vertical", 10), ("diagonal", 35), ("spread", 40))  # a stilt-root cone's words -> its roots off the vertical (deg)
+
+
+def _rng(x, k=1.0):
+    """A research value (a range, or a single number: the sources' maximum) as [lo, hi] times k; None if missing."""
+    if x is None or (isinstance(x, (list, tuple)) and not [v for v in x if v is not None]):
+        return None
+    if isinstance(x, (int, float)):
+        return [round(float(x) * MAX_SPAN[0] * k, 3), round(float(x) * MAX_SPAN[1] * k, 3)]
+    v = [float(a) for a in x if a is not None]
+    return [round(min(v) * k, 3), round(max(v) * k, 3)]
+
+
+def palm_block(r: dict, notes: list, unsourced: list) -> tuple[dict, dict]:
+    """(the card's palm block, its trunk) from a palm's research record, by rule; what no source gave is a default, listed
+    in `unsourced`."""
+    pb, leaf, bole, bark, crown = (r.get(k) or {} for k in ("palm", "leaf", "bole", "bark", "crown"))
+    palmate = (leaf.get("type") or "").startswith("palmate")
+    out: dict = {"leaf": "palmate" if palmate else "pinnate"}
+    fc = _rng(leaf.get("frond_count"))
+    out["leaves"] = [max(1, round(fc[0])), max(1, round(fc[1]))] if fc else [8, 12]
+    if not fc:
+        unsourced.append("leaf count (8-12)")
+    lam = _rng(leaf.get("length_cm"), 0.01)
+    if not lam:
+        lam = [2.5, 3.5]
+        unsourced.append("leaf length (2.5-3.5 m)")
+    pet = _rng(pb.get("petiole_cm"), 0.01)
+    if not pet:
+        pet = [round(0.08 * lam[0], 2), round(0.08 * lam[1], 2)]
+        unsourced.append("petiole length (8 % of the leaf)")
+    out["leaf_length_m"] = [round(lam[0] + pet[0], 2), round(lam[1] + pet[1], 2)]
+    out["petiole_m"] = pet
+    ll = _rng(leaf.get("leaflet_length_cm"), 0.01)
+    if not ll:
+        ll = [round(0.5 * lam[0], 2), round(0.5 * lam[1], 2)] if palmate else [round(0.22 * lam[0], 2), round(0.22 * lam[1], 2)]
+        unsourced.append("pinna (or fan segment) length (from the leaf's)")
+    out["leaflet_length_m"] = ll
+    pw = _rng(pb.get("pinna_width_cm"), 0.01)
+    if not pw:
+        pw = [0.02, 0.04]
+        unsourced.append("pinna width (2-4 cm)")
+    out["leaflet_width_m"] = pw
+    nps = _rng(pb.get("pinnae_per_side"))
+    if not nps:
+        nps = [30, 50] if not palmate else [30, 60]
+        unsourced.append("pinnae per side")
+    out["leaflets_per_side"] = [round(nps[0]), round(nps[1])]
+    out["pinna_shape"] = "wedge" if "wedge" in (pb.get("pinna_shape") or "") else "linear"
+    out["plumose"] = 0.6 if "several" in (pb.get("pinnae_planes") or "") else 0.0
+    hang = pb.get("pinnae_hang")
+    out["droop"] = HANG.get(hang, 0.15)
+    if hang not in HANG:
+        unsourced.append("the pinnae's hang (a little: droop 0.15)")
+    if pb.get("pinnae_grouped"):
+        out["pinna_groups"] = 3
+        unsourced.append("pinnae per group (3; the sources say only that they are grouped)")
+    words = (pb.get("leaf_posture") or crown.get("text") or "").lower()
+    post = next((v for k, v in POSTURE if k in words), None)
+    if post is None:
+        post = ([15, 95], 0.4)
+        unsourced.append("the leaves' posture (spreading)")
+    out["posture_deg"], out["arch"] = post[0], post[1]
+    # the stem: base, middle, apex diameters
+    sd = pb.get("stem_diameter_cm") or {}
+    b = _mid(_rng(sd.get("base")) or (r.get("dbh_cm") or {}).get("typical"))
+    if not b:
+        b = 20.0
+        unsourced.append("stem diameter (20 cm)")
+    a = _mid(_rng(sd.get("apex")))
+    if not a:
+        a = 0.85 * b
+        unsourced.append("the stem's diameter at the top (0.85 of the base's)")
+    m = _mid(_rng(sd.get("middle"))) or (a + b) / 2
+    out["stem_diameter_m"] = [round(b / 100, 3), round(m / 100, 3), round(a / 100, 3)]
+    rings = _mid(_rng(pb.get("ring_spacing_cm"), 0.01))
+    if not rings:
+        rings = 0.15
+        unsourced.append("leaf-scar ring spacing (15 cm)")
+    out["rings_m"] = round(rings, 3)
+    cs = pb.get("crownshaft")
+    if cs and cs.get("present"):
+        col, _ = _colour(cs.get("colour"), LEAF_BASE)
+        L = _mid(_rng(cs.get("length_cm"), 0.01)) or 1.0
+        out["crownshaft"] = {"length_m": round(L, 2), "rgb": col or [96, 120, 90], "swell": 1.06}
+        if not col:
+            unsourced.append("crownshaft colour")
+    else:
+        out["crownshaft"] = None
+        if cs is None:
+            notes.append("No source describes a crownshaft (present or absent): none is drawn.")
+    sr = pb.get("stilt_roots") or ({"length_cm": _num(bole.get("stilt_root_height_m"), 1.0) * 100} if bole.get("stilt_roots") else None)
+    if sr:
+        cnt = _rng(sr.get("count"))
+        if not cnt:
+            cnt = [8, 16]
+            unsourced.append("stilt root count (8-16)")
+        ln = _rng(sr.get("length_cm"), 0.01)
+        if not ln:
+            ln = [0.6, 1.0]
+            unsourced.append("stilt root length (0.6-1 m)")
+        th = _mid(_rng(sr.get("thickness_cm"), 0.01))
+        if not th:
+            th = 0.03
+            unsourced.append("stilt root thickness (3 cm)")
+        aw = (sr.get("angle") or "").lower()
+        ang = next((v for k, v in ROOT_ANGLE if k in aw), None)
+        if ang is None:
+            ang = 20
+            unsourced.append("the stilt roots' angle (20 degrees off the vertical)")
+        rc, _ = _colour(sr.get("colour"), BARK_BASE)
+        out["stilt_roots"] = {"count": [round(cnt[0]), round(cnt[1])], "length_m": ln, "radius_m": round(th / 2, 3), "angle_deg": ang,
+                              "rgb": rc or list(BARK_BASE)}
+    else:
+        out["stilt_roots"] = None
+    sp = pb.get("stem_spines") or ({} if bole.get("spines") else None)
+    spines = None
+    if sp is not None:
+        sl = _mid(_rng(sp.get("length_cm"), 0.01)) or 0.05
+        dens = {"dense": 0.85, "sparse": 0.4}.get((sp.get("density") or "").lower(), 0.65)
+        scol, _ = _colour(sp.get("colour"), BARK_BASE)
+        spines = {"length_m": round(sl, 3), "density": dens, "spacing_m": 0.03, "rgb": scol or [58, 56, 54]}
+        out["spines"] = spines
+    clustered = (r.get("habit") or "") == "palm_clustered" or (pb.get("stems") or "") == "clustered"
+    out["stems"] = [3, 8] if clustered else [1, 1]
+    if clustered:
+        unsourced.append("stems in a clump (3-8)")
+    # the trunk: its bark ringed with leaf scars (faint where the nodes are obscure), spines in its texture
+    faint = any(w in (bark.get("text") or "").lower() for w in ("obscure", "faint"))
+    th_tile = round(rings * max(1, round(0.9 / rings)), 3)
+    trunk = {"stems": [1, 1], "split_prob": 0.0, "flare": 1.0, "roots": False, "bark_pattern": "palm_ringed",
+             "bark": {"tile_m": [0.5, th_tile], "ring_m": out["rings_m"], "relief": 0.9, "lichen": 0.15, "contrast": 0.55 if faint else 1.0,
+                      **({"spines": spines} if spines else {})}}
+    return out, trunk
+
+
 def card(r: dict, regions=("neotropics",)) -> dict:
     """A trait card from a research record, by rule (module docstring)."""
     sid = r["id"]
     tid, why = template_for(r)
-    tpl = json.loads((REPO_ROOT / "library" / "species" / f"{tid}.json").read_text())
+    from .plantgen import template_record
+    tpl = template_record(tid)
     h, crown, leaf, ph, bark, bole, hab = (r.get(k) or {} for k in ("height_m", "crown", "leaf", "phenology", "bark", "bole", "habitat"))
     notes, unsourced = [f"Template {tid}: {why}."], []
     palm = (r.get("habit") or "").startswith("palm")
@@ -683,14 +827,12 @@ def card(r: dict, regions=("neotropics",)) -> dict:
     else:
         unsourced.append("bark texture (the template's)")
     butt = (bole.get("buttresses") or "").lower()
+    palm_out = None
     if palm:
-        trunk.update({"split_prob": 0.0, "length_ratio": 1.0, "bole_ratio": round(base, 3), "base_size": round(max(0.5, base - 0.02), 3),
-                      "taper": 0.3, "curve_deg": 2, "lean_deg": 3, "flare": 1.15, "roots": False})
-        notes.append("Palm stand-in: the bole runs clear and unforked to the crown (split_prob 0, bole and base_size at the "
-                     "crown's base) and a compact crown of pinnate leaf sprays stands for the fronds; the walnut's branching "
-                     "still makes short limbs inside that crown, which a palm does not have.")
-        if bole.get("stilt_roots"):
-            notes.append(f"Stilt roots ({bole.get('stilt_root_height_m') or '?'} m) are not drawn: treegen has no stilt-root primitive.")
+        palm_out, ptrunk = palm_block(r, notes, unsourced)
+        trunk.update(ptrunk)
+        leaf_shape = "palm_palmate" if palm_out["leaf"] == "palmate" else "palm_pinnate"
+        fol["leaf_shape"] = leaf_shape
     elif butt in ("plank", "large plank"):
         bh = _num(bole.get("buttress_height_m"), 4.0 if butt == "large plank" else 2.5)
         trunk.update({"flare": round(min(2.8, 1.6 + bh / 6), 2), "roots": {"buttress": 0.95, "buttresses": [3, 6],
@@ -769,20 +911,9 @@ def card(r: dict, regions=("neotropics",)) -> dict:
         "authors": ["Wild Earth (pipeline/tree_cards.py from an agent's sourced research record, 2026-11-06); needs local sign-off"],
         "generated_by": {"by": "pipeline/tree_cards.py", "version": VERSION},
     }
-    if palm:   # the walnut's limbs as the fronds: as many as the sources count, as long, arching, leafy along their length
-        fronds = round(_mid(leaf.get("frond_count"), 8))
-        flen = _mid(leaf.get("length_cm"), 300) / 100
-        out["patch"] = {
-            "foliage": {"flowers": None, "berries": None, "start": 0.0, "parent_start": 0.05, "cards_per_m2": 1.2,
-                        "density": 14, "winter_twigs": 0.0, "leaf_on_var": 0.0},
-            "levels": [{**tpl["levels"][0], "count": fronds, "down_angle_deg": 55, "down_angle_tip_deg": 20, "down_angle_var_deg": 15,
-                        "length_ratio": round(min(3.0, 1.3 * flen / _mid(height)), 3), "length_var": 0.15,
-                        "droop_deg": 35, "tropism": 0.0, "curve_deg": 0, "radius_ratio": 0.25, "segments": 4},
-                       {**tpl["levels"][1], "count": 9, "start": 0.05, "down_angle_deg": 70, "length_ratio": 0.35, "length_var": 0.2}],
-            "snag": {"fraction": 0.0}}
-        out["notes"] += (f" The walnut's first-order limbs stand in for the {fronds} fronds ({flen:g} m, arching), leafy along "
-                         "their length; a pinnate leaf card stands for the leaflets.")
-        out["variant_patches"] = {"young": {"set": {"trunk": {"split_prob": 0.0}}, "note": "a young palm: a rosette of fronds near the ground before the stem rises"}}
+    if palm:   # Corner's model: the palm block; no stand-in (the record is the palm itself)
+        out["palm"] = palm_out
+        out.pop("stand_in", None)
     return out
 
 

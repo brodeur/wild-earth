@@ -1,0 +1,98 @@
+{
+ "id": "varanus_niloticus",
+ "scientific": "Varanus niloticus",
+ "common": "nile monitor",
+ "kind": "reptile",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Squamata",
+  "order": null,
+  "family": "Varanidae",
+  "genus": "Varanus"
+ },
+ "body_plan": "reptile",
+ "mass_kg": 2.8267,
+ "size": {
+  "length_m": 0.509,
+  "shoulder_or_wingspan_m": 0.061
+ },
+ "diet": null,
+ "senses": {
+  "sight": {
+   "range_m": 307.7
+  },
+  "sound": {
+   "range_m": 430.8
+  },
+  "scent": {
+   "range_m": 615.5
+  }
+ },
+ "rig": "reptile part rig template",
+ "locomotion": {
+  "code": "varanus_niloticus",
+  "class": "Squamata",
+  "order": null,
+  "family": "Varanidae",
+  "body_plan": "reptile",
+  "mass_kg": 2.8267,
+  "length_m": 0.509,
+  "hip_m": 0.061,
+  "posture": "sprawling",
+  "gaits": {
+   "walk": "sprawl",
+   "run": "sprawl-undulate"
+  },
+  "walk_mps": 0.55,
+  "trot_mps": 1.22,
+  "cruise_mps": 1.86,
+  "top_mps": 3.09,
+  "stride_hz": 3.59,
+  "stride_m": 0.34,
+  "sprint_s": 4.9,
+  "recover_s": 17.1,
+  "turn_rad_s": 3.52,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.031,
+   "max_rad": 0.2,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "turn_bend": true
+  },
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T11:52:49Z",
+  "from": [
+   "gbif taxonomy",
+   "amniote life-history database (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

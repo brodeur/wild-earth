@@ -219,6 +219,66 @@
    "build": "tools/build_bird.py",
    "tile": "utm36s_698_9724",
    "archetype": "perch"
+  },
+  "crocodylus_niloticus": {
+   "kind": "reptile",
+   "glb": "client/assets/fauna/crocodylus_niloticus.glb",
+   "jobs": [
+    "library/animals/jobs/crocodylus_niloticus/01a1b0b5-7e2d-779d-ab35-f232aae70a79",
+    "library/animals/jobs/crocodylus_niloticus/01a1b0be-0d2f-7559-a8d7-4fa1b54d7587"
+   ],
+   "credits": 30,
+   "attempts": 1,
+   "built": "2026-11-06",
+   "build": "tools/build_reptile.py",
+   "tile": "utm36s_698_9724",
+   "archetype": "sprawl",
+   "note": "preview and refine run by hand (tools/meshy_generate.py, the prompts of pipeline/fauna_models.py), the build checked on the preview before the refine; then registered by fauna_models from the paid refine"
+  },
+  "stigmochelys_pardalis": {
+   "kind": "reptile",
+   "glb": "client/assets/fauna/stigmochelys_pardalis.glb",
+   "jobs": [
+    "library/animals/jobs/stigmochelys_pardalis/01a1b0b6-e5a5-712f-a3c3-2359f238ae3e",
+    "library/animals/jobs/stigmochelys_pardalis/01a1b0c0-4888-7401-88fa-0e7be6ad0154"
+   ],
+   "credits": 30,
+   "attempts": 1,
+   "built": "2026-11-06",
+   "build": "tools/build_reptile.py",
+   "tile": "utm36s_698_9724",
+   "archetype": "tortoise",
+   "note": "preview and refine run by hand (tools/meshy_generate.py, the prompts of pipeline/fauna_models.py), the build checked on the preview before the refine; then registered by fauna_models from the paid refine"
+  },
+  "agama_mwanzae": {
+   "kind": "reptile",
+   "glb": "client/assets/fauna/agama_mwanzae.glb",
+   "jobs": [
+    "library/animals/jobs/agama_mwanzae/01a1b0b7-fcb0-72d5-a12c-ff05fc4c1d55",
+    "library/animals/jobs/agama_mwanzae/01a1b0c1-02f3-7233-94b5-04e29fb1103a"
+   ],
+   "credits": 30,
+   "attempts": 1,
+   "built": "2026-11-06",
+   "build": "tools/build_reptile.py",
+   "tile": "utm36s_698_9724",
+   "archetype": "sprawl",
+   "note": "preview and refine run by hand (tools/meshy_generate.py, the prompts of pipeline/fauna_models.py), the build checked on the preview before the refine; then registered by fauna_models from the paid refine"
+  },
+  "varanus_niloticus": {
+   "kind": "reptile",
+   "glb": "client/assets/fauna/varanus_niloticus.glb",
+   "jobs": [
+    "library/animals/jobs/varanus_niloticus/01a1b0b6-31a2-777c-82da-3ae68d038d1a",
+    "library/animals/jobs/varanus_niloticus/01a1b0bf-2b22-7473-8384-e7813b1d714e"
+   ],
+   "credits": 30,
+   "attempts": 1,
+   "built": "2026-11-06",
+   "build": "tools/build_reptile.py",
+   "tile": "utm36s_698_9724",
+   "archetype": "sprawl",
+   "note": "preview and refine run by hand (tools/meshy_generate.py, the prompts of pipeline/fauna_models.py), the build checked on the preview before the refine; then registered by fauna_models from the paid refine"
   }
  }
 }

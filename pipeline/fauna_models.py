@@ -8,17 +8,22 @@ in it is per species:
             every large predator (a predator over 15 kg), the largest first; then the birds (2026-11-06): the scavengers
             and raptors first (a soaring archetype, or a scavenger over 1 kg), the heaviest first, then the rest by mass
             (the bigger, the more visible), the first pass taking one bird per build archetype (so every bird template
-            gets a body of its own before any gets a second), then the rest in the same order; until the credit
+            gets a body of its own before any gets a second), then the rest in the same order; then the reptiles
+            (2026-11-06), the most visible first (records x sqrt(mass)), one per build archetype (a sprawler, a
+            tortoise) first; until the credit
             budget; the rest stay on the stand-in ladder (a model already in the library is reused at no cost by every
             tile). --kind birds or mammals limits a run to one;
   prompt    the mesh and texture prompts from the trait card alone (common and scientific name, the place, a fixed pose
             and framing that the generic build needs: a quadruped side-on, all four feet flat, nothing else touching
             the ground; a bird by its archetype (BIRD_BUILD): a soarer in flight with the wings spread flat, any other
-            standing side-on with the wings folded and the legs apart);
+            standing side-on with the wings folded and the legs apart; a reptile by its archetype (REPTILE_BUILD): a
+            sprawler side-on with the belly just clear of the ground, the legs splayed beyond the flanks and the tail
+            straight behind, a tortoise with its legs straight down under the shell's rim);
   generate  tools/meshy_generate.py: a text-to-3D preview (latest, 20 credits) and its refine (2K texture, 10 credits);
   build     a quadruped: tools/build_quadruped.py (parts from the geometry, colour from the texture, size from the trait
             card), tools/rig_quadruped.py (skin), tools/bake_gait.mjs (gait clips); a bird: tools/build_bird.py (the
-            part rig of its archetype's template, its flight cards); a build that cannot find its legs (or a bird's
+            part rig of its archetype's template, its flight cards); a reptile: tools/build_reptile.py (the reptile
+            part rig); a build that cannot find its legs (or a bird's
             wing root or neck) is a failed attempt, and the slot gets one more preview (a fresh seed) before it is left
             a stand-in;
   record    library/animals/models.json: per species the GLB, the jobs, credits spent, attempts; and the run's ledger
@@ -56,6 +61,12 @@ BIRD_BUILD = {"soaring scavenger": "soar", "soaring raptor": "soar", "gull": "so
               "ground bird": "ground", "perching bird": "perch", "night perching bird": "perch", "kingfisher": "perch",
               "woodpecker": "perch"}
 SCAVENGER_KG = 1.0
+# A reptile slot's archetype (pipeline/fauna_slots.py kin_for, reptile_group) -> tools/build_reptile.py --archetype: a
+# sprawler (the crocodilians and lizards: belly low, four legs splayed beyond the flanks, the tail on the ground) or a
+# tortoise (a rigid shell over legs standing under its rim). Both draw on the reptile part rig (animalModels.js RIG_REPTILE).
+# No snakes (no rig).
+REPTILE_BUILD = {"crocodilian": "sprawl", "monitor lizard": "sprawl", "basking lizard": "sprawl", "chameleon": "sprawl",
+                 "tortoise": "tortoise", "turtle": "tortoise"}
 
 
 def _traits(code: str) -> dict:
@@ -82,6 +93,8 @@ def model_for(code: str) -> dict | None:
         return None
     if e.get("kind") == "bird":   # the part rig (tools/build_bird.py): no skin, no clips
         return {"path": f"fauna/{code}.glb", "kind": "bird", "archetype": e.get("archetype"), "skin": False}
+    if e.get("kind") == "reptile":   # the reptile part rig (tools/build_reptile.py): no skin, no clips
+        return {"path": f"fauna/{code}.glb", "kind": "reptile", "archetype": e.get("archetype"), "skin": False}
     if not (ASSETS / f"{code}_clips.json").exists():
         return None
     return {"path": f"fauna/{code}.glb", "kind": e.get("kind", "quadruped"), "skin": True}
@@ -118,6 +131,11 @@ def quadruped(slot: dict, t: dict) -> bool:
     return not slot.get("bird") and plan == "quadruped" and cls == "mammalia"
 
 
+def reptile_build(slot: dict) -> str | None:
+    """The build archetype of a reptile slot (REPTILE_BUILD), or None (not a reptile, or a snake)."""
+    return REPTILE_BUILD.get(slot.get("archetype") or "") if slot.get("reptile") else None
+
+
 def bird_build(slot: dict) -> str | None:
     """The build archetype of a bird slot (BIRD_BUILD), or None (not a bird, or a kin no fauna model replaces)."""
     return BIRD_BUILD.get(slot.get("archetype") or "") if slot.get("bird") else None
@@ -126,21 +144,24 @@ def bird_build(slot: dict) -> str | None:
 def choose(fauna: dict, budget: int, max_n: int = 12, kind: str = "all") -> tuple[list[dict], list[dict]]:
     """(to model, left as stand-ins), each slot with the reason. Ranked: the quadrupeds, large predators first (largest
     first), then the rest by biomass (density x mass); then the birds, scavengers and raptors first (heaviest first),
-    then the rest by mass, one per build archetype before any second; a slot whose model the library already has costs
-    nothing and is always taken."""
-    cand, birds, rest = [], [], []
+    then the rest by mass, one per build archetype before any second; then the reptiles, the most visible first (records x
+    sqrt(mass): a crocodile's 151 records at 94 kg before an agama's 63 at 0.1 kg), one per build archetype (a sprawler, a
+    tortoise) before any second; a slot whose model the library already has costs nothing and is always taken."""
+    cand, birds, reps, rest = [], [], [], []
     for s in fauna.get("slots", []):
         t = _traits(s["code"])
         mass, dens = float(s.get("mass_kg") or 0), float(s.get("density_km2") or 0)
         if quadruped(s, t) and kind in ("all", "mammals"):
             pred = "predator" in (s.get("role") or []) and mass >= PREDATOR_KG
             cand.append({**s, "biomass": dens * mass, "pred": pred})
+        elif reptile_build(s) and kind in ("all", "reptiles"):
+            reps.append({**s, "pred": False, "build_archetype": reptile_build(s), "visible": float(s.get("records") or 0) * mass ** 0.5})
         elif bird_build(s) and kind in ("all", "birds"):
             arch = s.get("archetype") or ""
             raptor = arch.startswith("soaring") or ("scavenger" in (s.get("role") or []) and mass >= SCAVENGER_KG)
             birds.append({**s, "pred": raptor, "build_archetype": bird_build(s)})
         else:
-            rest.append({**s, "why": "not a four-legged mammal or a bird with a template (the generic builds)" if kind == "all"
+            rest.append({**s, "why": "not a four-legged mammal, a bird or a reptile with a template (the generic builds)" if kind == "all"
                          else f"not in this run (--kind {kind})"})
     cand.sort(key=lambda s: (not s["pred"], -(s["mass_kg"] if s["pred"] else s["biomass"])))
     birds.sort(key=lambda s: (not s["pred"], -float(s.get("mass_kg") or 0)))
@@ -149,12 +170,19 @@ def choose(fauna: dict, budget: int, max_n: int = 12, kind: str = "all") -> tupl
         if s["build_archetype"] not in seen:
             seen.add(s["build_archetype"]); first.append(s)
     birds = first + [s for s in birds if s not in first]
+    reps.sort(key=lambda s: -s["visible"])
+    first, seen = [], set()
+    for s in reps:
+        if s["build_archetype"] not in seen:
+            seen.add(s["build_archetype"]); first.append(s)
+    reps = first + [s for s in reps if s not in first]
     pick, spend = [], 0
-    for s in cand + birds:
+    for s in cand + birds + reps:
         have = model_for(s["code"]) is not None
         cost = 0 if have else COST["preview"] + COST["refine"]
         if have or (len(pick) < max_n and spend + cost <= budget):
-            why = "in the library" if have else (("scavenger or raptor" if s["pred"] else "bird by mass, one per archetype first")
+            why = "in the library" if have else ("reptile by records x sqrt(mass), one per archetype first" if s.get("reptile") else
+                                                 ("scavenger or raptor" if s["pred"] else "bird by mass, one per archetype first")
                                                  if s.get("build_archetype") else ("large predator" if s["pred"] else "biomass rank"))
             pick.append({**s, "why": why})
             spend += cost
@@ -167,6 +195,31 @@ def prompts(slot: dict, place: str) -> tuple[str, str]:
     t = _traits(slot["code"])
     common = (slot.get("common") or t.get("common") or slot["code"]).strip()
     sci = slot.get("scientific") or t.get("scientific") or slot["code"].replace("_", " ").capitalize()
+    rarch = reptile_build(slot)
+    if rarch:
+        # the pose the reptile build needs: a sprawler with its belly just clear of the ground (the bask lowers it in the
+        # client), its four legs splayed out beyond the flanks so each is a piece of its own, the tail straight behind on
+        # the ground; a tortoise with its legs straight down under the shell's rim. No sizes (the build sizes by mass).
+        if rarch == "tortoise":
+            mesh = (f"A wild {common} ({sci}) of {place}, one adult, realistic anatomy and proportions. Standing still on flat "
+                    "ground in a side-on neutral pose: the shell level, all four legs straight down under the rim of the shell "
+                    "with clear gaps between them, all four feet flat on the ground, the head and neck stretched out in front "
+                    "looking forward, the short tail behind; nothing but the four feet touches the ground. No base, no ground "
+                    "plane, no rocks, no props. Game-ready.")
+            tex = (f"Natural colours and markings of a wild adult {common} ({sci}) as seen in {place}: the shell's scutes, "
+                   "the skin of the head and legs, in their true colours; realistic, evenly lit albedo with no baked shadows "
+                   "or highlights; eyes, beak and claws in their true colours.")
+        else:
+            mesh = (f"A wild {common} ({sci}) of {place}, one adult, realistic anatomy and proportions. Standing still on flat "
+                    "ground in a side-on neutral pose, the body straight and low, the belly just clear of the ground, all four "
+                    "legs splayed out to the sides with bent elbows and knees and all four feet flat on the ground well "
+                    "out from the body, the head straight forward in line with the body, mouth closed, the tail straight out "
+                    "behind in line with the body, resting on the ground. No base, no ground plane, no water, no rocks, no "
+                    "props. Game-ready.")
+            tex = (f"Natural skin and scale colours and markings of a wild adult {common} ({sci}) as seen in {place}; "
+                   "realistic, evenly lit albedo with no baked shadows or highlights; the back, flanks, belly, legs and tail "
+                   "in their true colours, eyes and claws in their true colours.")
+        return mesh[:800], tex[:800]
     arch = bird_build(slot)
     if arch:
         # the pose the build needs for the archetype's template: a soarer's flight mesh (the wings are the mesh, spread for
@@ -223,10 +276,13 @@ def balance() -> int | None:
         return None
 
 
-def build(code: str, job: Path, tile: str, bird: str | None = None) -> tuple[bool, str]:
+def build(code: str, job: Path, tile: str, bird: str | None = None, reptile: str | None = None) -> tuple[bool, str]:
     out = ASSETS / f"{code}.glb"
     ASSETS.mkdir(parents=True, exist_ok=True)
     steps = [
+        [BLENDER, "-b", "--factory-startup", "-P", str(ROOT / "tools" / "build_reptile.py"), "--", str(job), str(out), "--species", code,
+         "--archetype", reptile],
+    ] if reptile else [
         [BLENDER, "-b", "--factory-startup", "-P", str(ROOT / "tools" / "build_bird.py"), "--", str(job), str(out), "--species", code,
          "--archetype", bird],
     ] if bird else [
@@ -256,12 +312,15 @@ def paid_refines(code: str) -> list[Path]:
     return out
 
 
-def register(reg: dict, code: str, jobs: list[str], credits: int, attempts: int, tile_id: str, bird: str | None = None) -> None:
+def register(reg: dict, code: str, jobs: list[str], credits: int, attempts: int, tile_id: str, bird: str | None = None,
+             reptile: str | None = None) -> None:
     e = reg.setdefault("species", {}).get(code, {})
-    reg["species"][code] = {"kind": "bird" if bird else "quadruped", "glb": f"client/assets/fauna/{code}.glb", "jobs": jobs or e.get("jobs", []),
+    kind = "reptile" if reptile else "bird" if bird else "quadruped"
+    reg["species"][code] = {"kind": kind, "glb": f"client/assets/fauna/{code}.glb", "jobs": jobs or e.get("jobs", []),
                             "credits": e.get("credits", 0) + credits, "attempts": e.get("attempts", 0) + attempts,
-                            "built": dt.date.today().isoformat(), "build": "tools/build_bird.py" if bird else "tools/build_quadruped.py",
-                            "tile": e.get("tile", tile_id), **({"archetype": bird} if bird else {})}
+                            "built": dt.date.today().isoformat(),
+                            "build": {"reptile": "tools/build_reptile.py", "bird": "tools/build_bird.py"}.get(kind, "tools/build_quadruped.py"),
+                            "tile": e.get("tile", tile_id), **({"archetype": bird or reptile} if bird or reptile else {})}
     REGISTRY.write_text(json.dumps(reg, indent=1) + "\n")
 
 
@@ -270,7 +329,8 @@ def rebuild(tile_id: str) -> dict:
     out = {}
     for code, e in registry().get("species", {}).items():
         jobs = [ROOT / j for j in e.get("jobs", []) if (ROOT / j / "job.json").exists() and json.loads((ROOT / j / "job.json").read_text()).get("mode") == "refine"]
-        ok, log = build(code, jobs[-1], tile_id, e.get("archetype") if e.get("kind") == "bird" else None) if jobs else (False, "no refine job")
+        ok, log = build(code, jobs[-1], tile_id, e.get("archetype") if e.get("kind") == "bird" else None,
+                        e.get("archetype") if e.get("kind") == "reptile" else None) if jobs else (False, "no refine job")
         out[code] = ok
         print(f"{code}: {'rebuilt' if ok else 'FAILED: ' + log.splitlines()[-1] if log else 'FAILED'}", flush=True)
     return out
@@ -287,18 +347,19 @@ def run(tile_id: str, budget: int, reserve: int, max_n: int, dry: bool, kind: st
     spent = 0
     for s in pick:
         code = s["code"]
-        bird = s.get("build_archetype")
+        bird = None if s.get("reptile") else s.get("build_archetype")
+        rept = s.get("build_archetype") if s.get("reptile") else None
         row = {"code": code, "why": s["why"], "attempts": 0, "credits": 0, "jobs": [], "ok": model_for(code) is not None,
-               **({"archetype": bird} if bird else {})}
+               **({"archetype": bird or rept} if bird or rept else {})}
         ledger["species"].append(row)
         if row["ok"]:
             continue
         # the jobs already paid for, newest first: a build rule fixed since may make one of them pass at no cost
         for job in sorted(paid_refines(code), key=lambda d: d.stat().st_mtime, reverse=True):
-            ok, log = build(code, job, tile_id, bird)
+            ok, log = build(code, job, tile_id, bird, rept)
             if ok:
                 row["ok"], row["build_log"], row["reused"] = True, log, str(job.relative_to(ROOT))
-                register(reg, code, [str(job.relative_to(ROOT))], 0, 0, tile_id, bird)
+                register(reg, code, [str(job.relative_to(ROOT))], 0, 0, tile_id, bird, rept)
                 break
         if row["ok"]:
             print(f"{code}: modelled from a paid job, 0 credits", flush=True)
@@ -306,7 +367,7 @@ def run(tile_id: str, budget: int, reserve: int, max_n: int, dry: bool, kind: st
         mesh, tex = prompts(s, place)
         row["prompt"], row["texture_prompt"] = mesh, tex
         if dry:
-            print(f"[dry] {code} ({s['why']}{', ' + bird if bird else ''}, {s.get('mass_kg')} kg): {mesh}\n      texture: {tex}")
+            print(f"[dry] {code} ({s['why']}{', ' + (bird or rept) if bird or rept else ''}, {s.get('mass_kg')} kg): {mesh}\n      texture: {tex}")
             continue
         for attempt in range(1, attempts + 1):
             bal = balance()
@@ -327,11 +388,11 @@ def run(tile_id: str, budget: int, reserve: int, max_n: int, dry: bool, kind: st
             row["jobs"] += [{"mode": "preview", "dir": str(pv.relative_to(ROOT))}, {"mode": "refine", "dir": str(rf.relative_to(ROOT)) if rf else None}]
             if not rf:
                 continue
-            ok, log = build(code, rf, tile_id, bird)
+            ok, log = build(code, rf, tile_id, bird, rept)
             row["build_log"] = log
             if ok:
                 row["ok"] = True
-                register(reg, code, [j["dir"] for j in row["jobs"] if j.get("dir")], row["credits"], attempt, tile_id, bird)
+                register(reg, code, [j["dir"] for j in row["jobs"] if j.get("dir")], row["credits"], attempt, tile_id, bird, rept)
                 break
         print(f"{code}: {'modelled' if row['ok'] else 'stand-in'} after {row['attempts']} attempt(s), {row['credits']} credits", flush=True)
     ledger["spent"] = spent
@@ -357,7 +418,7 @@ def main() -> None:
     ap.add_argument("--reserve", type=int, default=300); ap.add_argument("--max", type=int, default=12)
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--attempts", type=int, default=2, help="previews per species before it is left a stand-in")
-    ap.add_argument("--kind", choices=("all", "mammals", "birds"), default="all", help="model only the mammals or only the birds")
+    ap.add_argument("--kind", choices=("all", "mammals", "birds", "reptiles"), default="all", help="model only the mammals, birds or reptiles")
     ap.add_argument("--rebuild", action="store_true", help="rebuild every library model from its job (no credits), then stop")
     a = ap.parse_args()
     if a.rebuild:

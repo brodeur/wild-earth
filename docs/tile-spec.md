@@ -103,6 +103,9 @@ tiles/<tile_id>/
   client/trees_lidar.bin        derived   lidar tree crowns: position, height, crown radius, confidence; 100 m cell index (see Lidar)
   vegetation/multi_1m.tif       derived   1 m multi-return share, uint8 x 255 (pipeline only: the crowns step re-runs the finder from it)
   client/canopy_height.png      derived   10 m RGB: R p95 canopy height (0.25 m), G tree cover %, B shrub cover % (see Lidar)
+  client/canopy_top.png         derived   habitat grid, R the stand's measured top height (0.5 m; 0 none): the mean p95 of the
+                                          cell's treed 10 m sub-cells of vegetation/canopy_height_10m.tif (canopy_top step, pipeline/
+                                          canopy_top.py); the tree heights follow it (client/src/stature.js cellStature)
   client/masks.png              derived   soft season-recolour weights: R grassland, G oak woodland, B chaparral
   client/season_rgb.png         derived   Sentinel-2 median colour per calendar month, 12 frames of 500 px (20 m) in a 4 x 3 sheet (see Seasonal colour)
   client/season_ndvi.png        derived   the same months' median NDVI, grey, same sheet layout

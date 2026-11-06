@@ -61,7 +61,9 @@ SENSES = {  # the class's ranges in m for a 1 kg animal; scaled by mass^0.2
     "Reptilia": {"sight": 60, "sound": 20, "scent": 30}, "Amphibia": {"sight": 20, "sound": 30, "scent": 10},
     "Gastropoda": {"sight": 0.5, "sound": 0, "scent": 5}, "Actinopterygii": {"sight": 15, "sound": 30, "scent": 20},
 }
-TYPICAL_MASS = {"Mammalia": 1.0, "Aves": 0.05, "Reptilia": 0.05, "Amphibia": 0.02, "Gastropoda": 0.05, "Actinopterygii": 0.5}
+TYPICAL_MASS = {"Mammalia": 1.0, "Aves": 0.05, "Reptilia": 0.05, "Amphibia": 0.02, "Gastropoda": 0.05, "Actinopterygii": 0.5,
+                "Squamata": 0.05, "Testudines": 1.0, "Crocodylia": 50.0}
+REPTILE_CLASSES = ("Reptilia", "Squamata", "Testudines", "Crocodylia")
 
 
 def body_plan(tax: dict) -> str:
@@ -74,8 +76,9 @@ def body_plan(tax: dict) -> str:
         if o in ("Rodentia", "Eulipotyphla", "Soricomorpha"):
             return "rodent"
         return "quadruped"
-    if c in ("Reptilia", "Squamata") or o == "Squamata":
-        return "snake" if f in ("Colubridae", "Viperidae", "Boidae", "Natricidae", "Dipsadidae") else "reptile"
+    if c in ("Reptilia", "Squamata", "Testudines", "Crocodylia") or o in ("Squamata", "Testudines", "Crocodylia", "Crocodilia"):
+        from .fauna_slots import SNAKE_FAMILIES   # (GBIF's reptile classes: Squamata, Testudines, Crocodylia; research.py)
+        return "snake" if f in SNAKE_FAMILIES else "reptile"
     if c == "Amphibia":
         return "amphibian"
     if c == "Gastropoda":
@@ -115,6 +118,20 @@ def nearest(tax: dict, known: dict) -> str | None:
     return None
 
 
+def _stale_default(p, row: dict) -> bool:
+    """A generated card (never a hand-edited one) that took its class's typical mass, for a reptile that a measured source
+    now has (the amniote database, 2026-11-06: the Nile crocodile's card said 0.5 kg): written again."""
+    try:
+        old = json.loads(p.read_text())
+    except (OSError, ValueError):
+        return False
+    gen = old.get("generated") or {}
+    if not gen or "class defaults" not in (gen.get("from") or []) or row.get("kind") != "reptile":
+        return False
+    from .amniote import lookup
+    return bool(lookup(row["scientific"]).get("mass_kg"))
+
+
 def make_traits(row: dict) -> dict:
     """A generated behaviour entry: what the taxon, the body and EltonTraits say. Written once; a hand edit (drop the
     `generated` block) is never overwritten."""
@@ -123,7 +140,15 @@ def make_traits(row: dict) -> dict:
     sci = SYNONYMS.get(" ".join(row["scientific"].split()[:2]), row["scientific"])
     t = trophic(sci, tax.get("family"))
     cls = tax.get("class") or ""
-    mass = (t or {}).get("mass_kg") or TYPICAL_MASS.get(cls, 0.5)
+    mass = (t or {}).get("mass_kg")
+    msrc = (t or {}).get("source") or "class defaults"
+    if not mass and cls in REPTILE_CLASSES:
+        # EltonTraits has no reptiles: the amniote life-history database's adult body mass (species, else genus median)
+        from .amniote import lookup
+        am = lookup(row["scientific"])
+        if am.get("mass_kg"):
+            mass, msrc = am["mass_kg"], f"amniote life-history database ({am['mass_level']})"
+    mass = mass or TYPICAL_MASS.get(cls, 0.5)
     plan = body_plan(tax)
     length = round(0.36 * mass ** (1 / 3) * (1.6 if plan in ("snake", "fish") else 1.0), 3)   # nose to tail base, m
     shoulder = round(length * {"quadruped": 0.62, "rodent": 0.3, "lagomorph": 0.45, "reptile": 0.12, "snake": 0.03,
@@ -139,7 +164,7 @@ def make_traits(row: dict) -> dict:
     if plan == "gastropod" and loco:   # a slug's foot wave: millimetres a second, whatever the walkers' laws say
         loco.update(walk_mps=0.001, trot_mps=0.002, cruise_mps=0.0015, top_mps=0.003, sprint_s=1.0)
     rec["locomotion"] = loco
-    rec["generated"] = {"by": "pipeline/fauna.py", "at": now_iso(), "from": ["gbif taxonomy", (t or {}).get("source") or "class defaults",
+    rec["generated"] = {"by": "pipeline/fauna.py", "at": now_iso(), "from": ["gbif taxonomy", msrc,
                                                                          "pipeline/locomotion.py"],
                         "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"}
     rec["license"] = "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
@@ -187,9 +212,10 @@ def animal_research(tile: Tile) -> dict:
     for r in listed:
         k = known.get(r["id"], {})
         has = k.get("library") or k.get("species_data") or k.get("traits")
-        if not has and r.get("taxonomy"):
+        stale = k.get("traits") and not (k.get("library") or k.get("species_data")) and _stale_default(TRAITS / f"{r['id']}.json", r)
+        if (not has or stale) and r.get("taxonomy"):
             p = TRAITS / f"{r['id']}.json"
-            if not p.exists():
+            if not p.exists() or stale:
                 write_json(p, make_traits(r))
                 generated.append(r["id"])
             r["traits"] = f"library/animals/traits/{r['id']}.json"
