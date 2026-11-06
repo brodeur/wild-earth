@@ -32,3 +32,8 @@ pipeline/_cache/sentinel
 # Meshy's raw job outputs (models, textures, thumbnails; 776 MB by 2026-11-06 and growing with each batch); the built,
 # rigged models the client loads live in client/assets/fauna, and the server reads none of these
 library/animals/jobs
+# Build-time caches of the reference photos, their segmentations and the model-check builds (about 470 MB by
+# 2026-11-06); only the pipeline reads them while it builds models, never the server or the client
+pipeline/_cache/references
+pipeline/_cache/segmentation
+pipeline/_cache/verdict_builds

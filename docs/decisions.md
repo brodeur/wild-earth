@@ -5893,6 +5893,10 @@ from the job records. The server and client read none of it; what the client dra
 files stay on disk in the main checkout. A job is copied into its own task folder only, never one level up, or the
 ledger counts it twice.
 
+Iteration 8 brought the image to 1.4 GB (v36) with the pipeline's build-time caches of reference photos, their
+segmentations and the model-check builds (`pipeline/_cache/references`, `segmentation`, `verdict_builds`, about 470 MB).
+Only the pipeline reads them while it builds models, so `.dockerignore` leaves them out too.
+
 ## 2026-11-06: phase 1, iteration 7 (branch claude/sweet-feistel-2054bb)
 
 - **The riparian weight rides in the cover texture's alpha; the micro patch's program fits in 16 texture units**
