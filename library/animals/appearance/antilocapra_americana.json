@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "antilocapra_americana",
  "scientific": "Antilocapra americana",
  "common": "pronghorn",
@@ -53,5 +53,44 @@
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "body white with white patches; back rufous brown; neck creamy"
+ "summary": "body white with white patches; back rufous brown; neck creamy",
+ "features": {
+  "horns": {
+   "described": true,
+   "words": [
+    "straight",
+    "hooked",
+    "short",
+    "pronged"
+   ],
+   "colours": [
+    "black"
+   ],
+   "length_m": [
+    0.25,
+    0.25
+   ]
+  },
+  "tail": {
+   "words": [
+    "long"
+   ],
+   "length_m": [
+    0.105,
+    0.105
+   ]
+  },
+  "shoulder_m": [
+   0.86,
+   0.875
+  ],
+  "head_body_m": [
+   1.4105,
+   1.4105
+  ],
+  "total_m": [
+   1.3106,
+   1.4935
+  ]
+ }
 }

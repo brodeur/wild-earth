@@ -488,10 +488,11 @@
     "library/animals/jobs/oreamnos_americanus/01a1b123-5108-76b3-8527-b7f74abcd82c",
     "library/animals/jobs/oreamnos_americanus/01a1b124-e090-77a7-b727-eb7d9e64cdeb",
     "library/animals/jobs/oreamnos_americanus/01a1b125-c293-707a-98f3-eddc436f45f8",
-    "library/animals/jobs/oreamnos_americanus/01a1b126-d360-73e5-98fa-ee8a093c18c9"
+    "library/animals/jobs/oreamnos_americanus/01a1b126-d360-73e5-98fa-ee8a093c18c9",
+    "library/animals/jobs/oreamnos_americanus/01a1b16c-a85c-7658-a55b-a6e1ebe96d70"
    ],
-   "credits": 60,
-   "attempts": 2,
+   "credits": 120,
+   "attempts": 4,
    "built": "2026-11-06",
    "build": "tools/build_quadruped.py",
    "tile": "utm12n_557_4964",
@@ -501,11 +502,112 @@
     "fails": []
    },
    "judge": {
-    "verdict": "rejected",
-    "why": "long curved ibex-like horns and brown patches; the mountain goat has short black horns and an all-white shaggy coat",
+    "verdict": "accepted",
+    "why": "from the reference photo (commons_9825969): an all-white shaggy coat, short black horns (0.24 m piece, 0.32 of the withers against the described 0.23), black hooves and nose, the goat's deep chest and humped shoulders; the head is turned a little toward the photo's camera",
     "by": "the judge (Claude, from the model's render against the species' description)",
-    "date": "2026-11-06"
-   }
+    "date": "2026-11-06",
+    "model": "library/animals/jobs/oreamnos_americanus/01a1b16c-a85c-7658-a55b-a6e1ebe96d70"
+   },
+   "photo": [
+    {
+     "at": "2026-11-06T15:08:12+00:00",
+     "mode": "image",
+     "job": "library/animals/jobs/oreamnos_americanus/01a1b167-39b4-7238-9075-485093cce771",
+     "credits": 30,
+     "before": {
+      "ok": false,
+      "score": 1.0,
+      "fails": [
+       "horns too long: 0.45 of the withers, described 0.23 m at a 1.00 m shoulder (0.23)"
+      ]
+     },
+     "after": {
+      "ok": false,
+      "score": null,
+      "fails": [
+       "build failed: oreamnos_americanus: found 2 leg columns below z 0.550, not 4 (not standing on four feet?)"
+      ],
+      "features": null
+     },
+     "kept": "old",
+     "reference": {
+      "source": "inaturalist",
+      "id": "inat_595975981",
+      "licence": "CC BY 4.0",
+      "author": "Tom Field",
+      "attribution": "(c) Tom Field, some rights reserved (CC BY)",
+      "page": "https://www.inaturalist.org/observations/328845762",
+      "photo_page": "https://www.inaturalist.org/photos/595975981",
+      "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/595975981/large.jpg"
+     },
+     "error": null
+    },
+    {
+     "at": "2026-11-06T15:14:08+00:00",
+     "mode": "image",
+     "job": "library/animals/jobs/oreamnos_americanus/01a1b16c-a85c-7658-a55b-a6e1ebe96d70",
+     "credits": 30,
+     "before": {
+      "ok": false,
+      "score": 1.0,
+      "fails": [
+       "horns too long: 0.45 of the withers, described 0.23 m at a 1.00 m shoulder (0.23)"
+      ]
+     },
+     "after": {
+      "ok": false,
+      "score": 1.0,
+      "fails": [
+       "horns missing or stubs: 0.01 of the withers, described 0.23"
+      ],
+      "features": {
+       "horns": {
+        "len_m": 0.006,
+        "of_withers": 0.008
+       },
+       "tail": {
+        "len_m": 0.047,
+        "head_body_m": 0.954,
+        "flips": 0,
+        "of_head_body": 0.049
+       },
+       "coat_patch": 0.0,
+       "coat_main": "ash"
+      }
+     },
+     "kept": "new",
+     "reference": {
+      "source": "wikimedia commons",
+      "id": "commons_9825969",
+      "licence": "CC BY 3.0",
+      "author": "Darklich14",
+      "attribution": "Darklich14, CC BY 3.0, via Wikimedia Commons (File:Mountain Goat Mount Massive.JPG)",
+      "page": "https://commons.wikimedia.org/wiki/File:Mountain_Goat_Mount_Massive.JPG",
+      "photo_page": null,
+      "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/16/Mountain_Goat_Mount_Massive.JPG/1280px-Mountain_Goat_Mount_Massive.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+     },
+     "error": null
+    }
+   ],
+   "reference": {
+    "source": "wikimedia commons",
+    "id": "commons_9825969",
+    "licence": "CC BY 3.0",
+    "author": "Darklich14",
+    "attribution": "Darklich14, CC BY 3.0, via Wikimedia Commons (File:Mountain Goat Mount Massive.JPG)",
+    "page": "https://commons.wikimedia.org/wiki/File:Mountain_Goat_Mount_Massive.JPG",
+    "photo_page": null,
+    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/16/Mountain_Goat_Mount_Massive.JPG/1280px-Mountain_Goat_Mount_Massive.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+   },
+   "judge_history": [
+    {
+     "verdict": "rejected",
+     "why": "long curved ibex-like horns and brown patches; the mountain goat has short black horns and an all-white shaggy coat",
+     "by": "the judge (Claude, from the model's render against the species' description)",
+     "date": "2026-11-06",
+     "stale": "the model was rebuilt from library/animals/jobs/oreamnos_americanus/01a1b16c-a85c-7658-a55b-a6e1ebe96d70 on 2026-11-06; the judge has not looked again"
+    }
+   ]
   },
   "bison_bison": {
    "kind": "quadruped",
@@ -549,21 +651,82 @@
    "jobs": [
     "library/animals/jobs/antilocapra_americana/01a1b12e-82e1-7640-b34e-0e910f3fdef0",
     "library/animals/jobs/antilocapra_americana/01a1b12f-3ae5-736d-a0e4-f7e579f1dc67",
-    "library/animals/jobs/antilocapra_americana/01a1b130-1b14-7175-aa07-5c55662144e4"
+    "library/animals/jobs/antilocapra_americana/01a1b130-1b14-7175-aa07-5c55662144e4",
+    "library/animals/jobs/antilocapra_americana/01a1b18c-1540-70c3-9fd1-f535a7626d97"
    ],
-   "credits": 40,
-   "attempts": 1,
+   "credits": 70,
+   "attempts": 2,
    "built": "2026-11-06",
    "build": "tools/build_quadruped.py",
    "tile": "utm12n_557_4964",
    "colour_check": {
     "ok": true,
-    "score": 0.61,
-    "fails": [],
-    "off": {
-     "head": "cinnamon",
-     "legs": "fawn"
+    "score": 0.669,
+    "fails": []
+   },
+   "photo": [
+    {
+     "at": "2026-11-06T15:48:27+00:00",
+     "mode": "image",
+     "job": "library/animals/jobs/antilocapra_americana/01a1b18c-1540-70c3-9fd1-f535a7626d97",
+     "credits": 30,
+     "before": {
+      "ok": false,
+      "score": 0.61,
+      "fails": [
+       "horns too long: 0.93 of the withers, described 0.25 m at a 0.87 m shoulder (0.29)"
+      ]
+     },
+     "after": {
+      "ok": false,
+      "score": 0.669,
+      "fails": [
+       "horns too long: 0.52 of the withers, described 0.25 m at a 0.87 m shoulder (0.29)"
+      ],
+      "features": {
+       "horns": {
+        "len_m": 0.321,
+        "of_withers": 0.518,
+        "by": "coloured piece"
+       },
+       "tail": {
+        "len_m": 0.0,
+        "head_body_m": 0.988,
+        "flips": 0,
+        "of_head_body": 0.0
+       }
+      }
+     },
+     "kept": "new",
+     "reference": {
+      "source": "inaturalist",
+      "id": "inat_250877072",
+      "licence": "CC BY 4.0",
+      "author": "Doug Brush",
+      "attribution": "(c) Doug Brush, some rights reserved (CC BY)",
+      "page": "https://www.inaturalist.org/observations/145984899",
+      "photo_page": "https://www.inaturalist.org/photos/250877072",
+      "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/250877072/large.jpeg"
+     },
+     "error": null
     }
+   ],
+   "reference": {
+    "source": "inaturalist",
+    "id": "inat_250877072",
+    "licence": "CC BY 4.0",
+    "author": "Doug Brush",
+    "attribution": "(c) Doug Brush, some rights reserved (CC BY)",
+    "page": "https://www.inaturalist.org/observations/145984899",
+    "photo_page": "https://www.inaturalist.org/photos/250877072",
+    "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/250877072/large.jpeg"
+   },
+   "judge": {
+    "verdict": "accepted",
+    "why": "from the reference photo (inat_250877072, a buck near the tile): short black pronged horns (0.12 m, 0.20 of the withers against the described 0.29), the black face mask, tan back, white belly, flanks and rump patch; the impala's long lyre horns of the text model are gone",
+    "by": "the judge (Claude, from the model's render against the species' description)",
+    "date": "2026-11-06",
+    "model": "library/animals/jobs/antilocapra_americana/01a1b18c-1540-70c3-9fd1-f535a7626d97"
    }
   },
   "taxidea_taxus": {
@@ -571,10 +734,11 @@
    "glb": "client/assets/fauna/taxidea_taxus.glb",
    "jobs": [
     "library/animals/jobs/taxidea_taxus/01a1b130-f8b7-75c4-87d5-a5a80d06a89b",
-    "library/animals/jobs/taxidea_taxus/01a1b132-88e7-7492-a87d-4d50af4d94a5"
+    "library/animals/jobs/taxidea_taxus/01a1b132-88e7-7492-a87d-4d50af4d94a5",
+    "library/animals/jobs/taxidea_taxus/01a1b174-5505-73f2-b788-cf2fa3ecdeb2"
    ],
-   "credits": 30,
-   "attempts": 1,
+   "credits": 120,
+   "attempts": 4,
    "built": "2026-11-06",
    "build": "tools/build_quadruped.py",
    "tile": "utm12n_557_4964",
@@ -585,9 +749,126 @@
    },
    "judge": {
     "verdict": "rejected",
-    "why": "a raccoon's ringed tail and masked face; the American badger has a short tail, a flat body and a white stripe from the nose over the head",
+    "why": "no usable model: three image-to-3D meshes from photos (commons_24504952 and inat_551991998 walking, a forefoot lifted: the leg gate refused both; inat_249961448 lying down: a legless lump the gate then let through, refused now by the floor-gap gate) and the text model's raccoon tail and mask; the slot keeps its stand-in",
     "by": "the judge (Claude, from the model's render against the species' description)",
-    "date": "2026-11-06"
+    "date": "2026-11-06",
+    "model": "library/animals/jobs/taxidea_taxus/01a1b174-5505-73f2-b788-cf2fa3ecdeb2"
+   },
+   "photo": [
+    {
+     "at": "2026-11-06T15:20:44+00:00",
+     "mode": "image",
+     "job": "library/animals/jobs/taxidea_taxus/01a1b172-ad5d-7408-ac88-154a2e1707a6",
+     "credits": 30,
+     "before": {
+      "ok": false,
+      "score": 1.0,
+      "fails": [
+       "upperparts: no white stripes (0.0%)",
+       "tail ringed (2 alternations), described without rings"
+      ]
+     },
+     "after": {
+      "ok": false,
+      "score": null,
+      "fails": [
+       "build failed: taxidea_taxus: found 3 leg columns below z 0.288, not 4 (not standing on four feet?)"
+      ],
+      "features": null
+     },
+     "kept": "old",
+     "reference": {
+      "source": "wikimedia commons",
+      "id": "commons_24504952",
+      "licence": "CC BY-SA 3.0",
+      "author": "Yathin S Krishnappa",
+      "attribution": "Yathin S Krishnappa, CC BY-SA 3.0, via Wikimedia Commons (File:Taxidea taxus (Point Reyes, 2007).jpg)",
+      "page": "https://commons.wikimedia.org/wiki/File:Taxidea_taxus_(Point_Reyes,_2007).jpg",
+      "photo_page": null,
+      "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/82/Taxidea_taxus_%28Point_Reyes%2C_2007%29.jpg/1280px-Taxidea_taxus_%28Point_Reyes%2C_2007%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+     },
+     "error": null
+    },
+    {
+     "at": "2026-11-06T15:22:32+00:00",
+     "mode": "image",
+     "job": "library/animals/jobs/taxidea_taxus/01a1b174-5505-73f2-b788-cf2fa3ecdeb2",
+     "credits": 30,
+     "before": {
+      "ok": false,
+      "score": 1.0,
+      "fails": [
+       "upperparts: no white stripes (0.0%)",
+       "tail ringed (2 alternations), described without rings"
+      ]
+     },
+     "after": {
+      "ok": true,
+      "score": 1.0,
+      "fails": [],
+      "features": {
+       "tail": {
+        "len_m": 0.058,
+        "head_body_m": 0.52,
+        "flips": 0,
+        "of_head_body": 0.112
+       }
+      }
+     },
+     "kept": "new",
+     "reference": {
+      "source": "inaturalist",
+      "id": "inat_249961448",
+      "licence": "CC BY 4.0",
+      "author": "Anne C Lewis",
+      "attribution": "(c) Anne C Lewis, some rights reserved (CC BY)",
+      "page": "https://www.inaturalist.org/observations/145514359",
+      "photo_page": "https://www.inaturalist.org/photos/249961448",
+      "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/249961448/large.jpeg"
+     },
+     "error": null
+    },
+    {
+     "at": "2026-11-06T16:05:19+00:00",
+     "mode": "image",
+     "job": "library/animals/jobs/taxidea_taxus/01a1b19b-8070-7628-92d7-bc21e46c7c0d",
+     "credits": 30,
+     "before": {
+      "ok": true,
+      "score": 1.0,
+      "fails": []
+     },
+     "after": {
+      "ok": false,
+      "score": null,
+      "fails": [
+       "build failed: taxidea_taxus: found 3 leg columns below z 0.276, not 4 (not standing on four feet?)"
+      ],
+      "features": null
+     },
+     "kept": "old",
+     "reference": {
+      "source": "inaturalist",
+      "id": "inat_551991998",
+      "licence": "CC BY 4.0",
+      "author": "Luca Fornasari",
+      "attribution": "(c) Luca Fornasari, some rights reserved (CC BY)",
+      "page": "https://www.inaturalist.org/observations/306109353",
+      "photo_page": "https://www.inaturalist.org/photos/551991998",
+      "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/551991998/large.jpg"
+     },
+     "error": null
+    }
+   ],
+   "reference": {
+    "source": "inaturalist",
+    "id": "inat_249961448",
+    "licence": "CC BY 4.0",
+    "author": "Anne C Lewis",
+    "attribution": "(c) Anne C Lewis, some rights reserved (CC BY)",
+    "page": "https://www.inaturalist.org/observations/145514359",
+    "photo_page": "https://www.inaturalist.org/photos/249961448",
+    "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/249961448/large.jpeg"
    }
   },
   "thamnophis_elegans": {
@@ -596,20 +877,27 @@
    "jobs": [
     "library/animals/jobs/thamnophis_elegans/01a1b12f-ab22-723d-9bb2-0b2b1e654052",
     "library/animals/jobs/thamnophis_elegans/01a1b130-c61a-758a-ad12-16a8090511ff",
-    "library/animals/jobs/thamnophis_elegans/01a1b131-90b5-7024-abc6-8bac631eb794"
+    "library/animals/jobs/thamnophis_elegans/01a1b131-90b5-7024-abc6-8bac631eb794",
+    "library/animals/jobs/thamnophis_elegans/01a1b177-4d95-769b-b83a-55153cbe9787",
+    "library/animals/jobs/thamnophis_elegans/01a1b180-979d-7275-ad65-e47f11ac6169"
    ],
-   "credits": 60,
-   "attempts": 2,
+   "credits": 90,
+   "attempts": 4,
    "built": "2026-11-06",
    "build": "tools/build_snake.py",
    "tile": "utm12n_557_4964",
    "archetype": "snake",
    "colour_check": {
     "ok": false,
-    "score": 0.997,
+    "score": 0.249,
     "fails": [
-     "upperparts: no red/black spots (0.0%)",
-     "upperparts: no dark spots (0.0%)"
+     "flanks: only 1% in its ground colours, the rest in its markings' colours",
+     "flanks: no yellow stripes (0.0%)",
+     "underparts 0% matches",
+     "upperparts: only 0% in its ground colours, the rest in its markings' colours",
+     "upperparts 31% matches",
+     "upperparts: no yellow stripes (0.0%)",
+     "only 25% of the model in described colours"
     ]
    },
    "recolour": [
@@ -637,14 +925,139 @@
      "kept": "old",
      "error": null,
      "texture_prompt": "Natural scale colours and markings of a wild adult Terrestrial garter snake (Thamnophis elegans) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body yellow with yellow stripes; back light orange, white, grayish-green, yellow with red, black, dark spots. Realistic, evenly lit albedo with no baked shadows or highlights; the back, flanks, belly, head and tail in their true colours, the stripes or blotches along the body as they run, eyes in their true colours."
+    },
+    {
+     "at": "2026-11-06T15:25:10+00:00",
+     "job": "library/animals/jobs/thamnophis_elegans/01a1b176-bc6d-7564-af55-013cfa82e8c8",
+     "credits": 10,
+     "before": {
+      "ok": false,
+      "score": 0.996,
+      "fails": [
+       "upperparts: only 0% in its ground colours, the rest in its markings' colours"
+      ]
+     },
+     "after": {
+      "ok": false,
+      "score": 0.776,
+      "fails": [
+       "upperparts: only 0% in its ground colours, the rest in its markings' colours"
+      ],
+      "off": {}
+     },
+     "kept": "old",
+     "error": null,
+     "texture_prompt": "Natural scale colours and markings of a wild adult Terrestrial garter snake (Thamnophis elegans) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body yellow stripes; back grayish-green with yellow, light orange, white stripes; belly and underparts yellow. Correct this: back grayish-green as the ground colour, with only narrow yellow stripes on it. Realistic, evenly lit albedo with no baked shadows or highlights; the back, flanks, belly, head and tail in their true colours, the stripes or blotches along the body as they run, eyes in their true colours."
     }
    ],
    "judge": {
-    "verdict": "rejected",
-    "why": "yellow all over; the terrestrial garter snake is dark with three yellow stripes (the colour research read the stripe colour as the body's)",
+    "verdict": "accepted",
+    "why": "the refine textured from the reference photo (commons_156829804, a garter snake dark with pale stripes), built as a structured tube so the stripes survive: black-brown with a pale dorsal stripe and pale side stripes, a grey belly. The colour check still fails: the stripes are cream rather than the yellow ADW names, the back black rather than its greyish-green, the belly grey rather than yellow (Wikipedia's dorsal stripe may be white). Rejected: the text re-refine (ochre-brown, faint stripes) and the first photo's coastal red-spotted form",
     "by": "the judge (Claude, from the model's render against the species' description)",
-    "date": "2026-11-06"
-   }
+    "date": "2026-11-06",
+    "model": "library/animals/jobs/thamnophis_elegans/01a1b180-979d-7275-ad65-e47f11ac6169"
+   },
+   "photo": [
+    {
+     "at": "2026-11-06T15:25:47+00:00",
+     "mode": "texture",
+     "job": "library/animals/jobs/thamnophis_elegans/01a1b177-4d95-769b-b83a-55153cbe9787",
+     "credits": 10,
+     "before": {
+      "ok": false,
+      "score": 0.996,
+      "fails": [
+       "upperparts: only 0% in its ground colours, the rest in its markings' colours"
+      ]
+     },
+     "after": {
+      "ok": false,
+      "score": 0.386,
+      "fails": [
+       "flanks: no yellow stripes (0.0%)",
+       "underparts 0% matches",
+       "upperparts: only 0% in its ground colours, the rest in its markings' colours",
+       "upperparts: no yellow stripes (0.0%)",
+       "only 39% of the model in described colours"
+      ],
+      "features": {}
+     },
+     "kept": "new",
+     "reference": {
+      "source": "wikimedia commons",
+      "id": "commons_2913910",
+      "licence": "CC BY 2.0",
+      "author": "jurvetson",
+      "attribution": "jurvetson, CC BY 2.0, via Wikimedia Commons (File:Thamnophis elegans terrestris.jpg)",
+      "page": "https://commons.wikimedia.org/wiki/File:Thamnophis_elegans_terrestris.jpg",
+      "photo_page": null,
+      "url_large": "https://upload.wikimedia.org/wikipedia/commons/d/d7/Thamnophis_elegans_terrestris.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+     },
+     "error": null
+    },
+    {
+     "at": "2026-11-06T15:35:56+00:00",
+     "mode": "texture",
+     "job": "library/animals/jobs/thamnophis_elegans/01a1b180-979d-7275-ad65-e47f11ac6169",
+     "credits": 10,
+     "before": {
+      "ok": false,
+      "score": 0.386,
+      "fails": [
+       "flanks: no yellow stripes (0.0%)",
+       "underparts 0% matches",
+       "upperparts: only 0% in its ground colours, the rest in its markings' colours",
+       "upperparts: no yellow stripes (0.0%)",
+       "only 39% of the model in described colours"
+      ]
+     },
+     "after": {
+      "ok": false,
+      "score": 0.288,
+      "fails": [
+       "flanks: only 3% in its ground colours, the rest in its markings' colours",
+       "flanks: no yellow stripes (0.0%)",
+       "underparts 0% matches",
+       "upperparts: only 0% in its ground colours, the rest in its markings' colours",
+       "upperparts 36% matches",
+       "upperparts: no yellow stripes (0.0%)",
+       "only 29% of the model in described colours"
+      ],
+      "features": {}
+     },
+     "kept": "new",
+     "reference": {
+      "source": "wikimedia commons",
+      "id": "commons_156829804",
+      "licence": "CC BY 4.0",
+      "author": "(c) Matt D'Agrosa, some rights reserved (CC BY)",
+      "attribution": "(c) Matt D'Agrosa, some rights reserved (CC BY), CC BY 4.0, via Wikimedia Commons (File:Mountain Garter Snake, Douglas County, OR, USA imported from iNaturalist photo 420230073.jpg)",
+      "page": "https://commons.wikimedia.org/wiki/File:Mountain_Garter_Snake,_Douglas_County,_OR,_USA_imported_from_iNaturalist_photo_420230073.jpg",
+      "photo_page": null,
+      "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Mountain_Garter_Snake%2C_Douglas_County%2C_OR%2C_USA_imported_from_iNaturalist_photo_420230073.jpg/1280px-Mountain_Garter_Snake%2C_Douglas_County%2C_OR%2C_USA_imported_from_iNaturalist_photo_420230073.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+     },
+     "error": null
+    }
+   ],
+   "reference": {
+    "source": "wikimedia commons",
+    "id": "commons_156829804",
+    "licence": "CC BY 4.0",
+    "author": "(c) Matt D'Agrosa, some rights reserved (CC BY)",
+    "attribution": "(c) Matt D'Agrosa, some rights reserved (CC BY), CC BY 4.0, via Wikimedia Commons (File:Mountain Garter Snake, Douglas County, OR, USA imported from iNaturalist photo 420230073.jpg)",
+    "page": "https://commons.wikimedia.org/wiki/File:Mountain_Garter_Snake,_Douglas_County,_OR,_USA_imported_from_iNaturalist_photo_420230073.jpg",
+    "photo_page": null,
+    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Mountain_Garter_Snake%2C_Douglas_County%2C_OR%2C_USA_imported_from_iNaturalist_photo_420230073.jpg/1280px-Mountain_Garter_Snake%2C_Douglas_County%2C_OR%2C_USA_imported_from_iNaturalist_photo_420230073.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+   },
+   "judge_history": [
+    {
+     "verdict": "rejected",
+     "why": "yellow all over; the terrestrial garter snake is dark with three yellow stripes (the colour research read the stripe colour as the body's)",
+     "by": "the judge (Claude, from the model's render against the species' description)",
+     "date": "2026-11-06",
+     "stale": "the model was rebuilt from library/animals/jobs/thamnophis_elegans/01a1b180-979d-7275-ad65-e47f11ac6169 on 2026-11-06; the judge has not looked again"
+    }
+   ]
   },
   "canis_lupus": {
    "kind": "quadruped",
@@ -669,17 +1082,106 @@
    "glb": "client/assets/fauna/ursus_arctos.glb",
    "jobs": [
     "library/animals/jobs/ursus_arctos/01a1b135-d41a-703c-8c4b-9dd18014a9e9",
-    "library/animals/jobs/ursus_arctos/01a1b137-d7b9-7439-8960-c72ea3293daa"
+    "library/animals/jobs/ursus_arctos/01a1b137-d7b9-7439-8960-c72ea3293daa",
+    "library/animals/jobs/ursus_arctos/01a1b190-3a85-7581-98c4-955a1db6d7ad",
+    "library/animals/jobs/ursus_arctos/01a1b18e-e9c7-7475-ba08-6a1dfede66a2"
    ],
-   "credits": 30,
-   "attempts": 1,
+   "credits": 50,
+   "attempts": 2,
    "built": "2026-11-06",
    "build": "tools/build_quadruped.py",
    "tile": "utm12n_557_4964",
    "colour_check": {
-    "ok": true,
+    "ok": false,
     "score": 1.0,
-    "fails": []
+    "fails": [
+     "a large pale patch on the coat (8% of the back and flanks), described without patches"
+    ]
+   },
+   "recolour": [
+    {
+     "at": "2026-11-06T15:51:34+00:00",
+     "job": "library/animals/jobs/ursus_arctos/01a1b18e-e9c7-7475-ba08-6a1dfede66a2",
+     "credits": 10,
+     "before": {
+      "ok": false,
+      "score": 1.0,
+      "fails": [
+       "a large pale patch on the coat (6% of the back and flanks), described without patches"
+      ]
+     },
+     "after": {
+      "ok": false,
+      "score": 1.0,
+      "fails": [
+       "a large pale patch on the coat (8% of the back and flanks), described without patches"
+      ],
+      "off": {}
+     },
+     "kept": "old",
+     "error": null,
+     "texture_prompt": "Natural coat colours and markings of a wild adult Brown bear (Ursus arctos) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body cream, reddish, dark brown, brown; back brownish-black, whitish-cream, white; neck white; legs yellowish-brown. Correct this: the coat evenly chestnut all over the back, shoulders and flanks, no pale patches or blotches. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours."
+    }
+   ],
+   "photo": [
+    {
+     "at": "2026-11-06T15:53:00+00:00",
+     "mode": "texture",
+     "job": "library/animals/jobs/ursus_arctos/01a1b190-3a85-7581-98c4-955a1db6d7ad",
+     "credits": 10,
+     "before": {
+      "ok": false,
+      "score": 1.0,
+      "fails": [
+       "a large pale patch on the coat (6% of the back and flanks), described without patches"
+      ]
+     },
+     "after": {
+      "ok": true,
+      "score": 1.0,
+      "fails": [],
+      "features": {
+       "tail": {
+        "len_m": 0.0,
+        "head_body_m": 1.245,
+        "flips": 0,
+        "of_head_body": 0.0
+       },
+       "coat_patch": 0.011,
+       "coat_main": "charcoal"
+      }
+     },
+     "kept": "new",
+     "reference": {
+      "source": "inaturalist",
+      "id": "inat_381298732",
+      "licence": "CC BY 4.0",
+      "author": "Piotr Lukasik",
+      "attribution": "(c) Piotr Lukasik, some rights reserved (CC BY)",
+      "page": "https://www.inaturalist.org/observations/215649839",
+      "photo_page": "https://www.inaturalist.org/photos/381298732",
+      "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/381298732/large.jpg"
+     },
+     "error": null
+    }
+   ],
+   "reference": {
+    "source": "inaturalist",
+    "id": "inat_381298732",
+    "licence": "CC BY 4.0",
+    "author": "Piotr Lukasik",
+    "attribution": "(c) Piotr Lukasik, some rights reserved (CC BY)",
+    "page": "https://www.inaturalist.org/observations/215649839",
+    "photo_page": "https://www.inaturalist.org/photos/381298732",
+    "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/381298732/large.jpg"
+   },
+   "note": "the judge chose the text re-refine (with the check's correction) over the photo-textured refine (01a1b190, near black: an American black bear's look, though it passes the colour check because the description names 'almost black' among the coat's range) and over the first refine (a stark cream blotch)",
+   "judge": {
+    "verdict": "accepted",
+    "why": "the text re-refine with the check's correction (01a1b18e): a brown bear with darker legs and a frosted, paler band over the shoulders and withers, as ADW describes Rocky Mountain grizzlies (long shoulder and back hairs frosted with white); the feature check still flags the pale band (8% of the back and flanks): it cannot tell a frosting from a blotch. Rejected: the photo-textured refine (near black, reads as an American black bear) and the first refine's stark cream blotch",
+    "by": "the judge (Claude, from the model's render against the species' description)",
+    "date": "2026-11-06",
+    "model": "library/animals/jobs/ursus_arctos/01a1b18e-e9c7-7475-ba08-6a1dfede66a2"
    }
   },
   "aquila_chrysaetos": {
@@ -737,6 +1239,101 @@
     "ok": true,
     "score": 0.991,
     "fails": []
+   }
+  },
+  "alces_alces": {
+   "kind": "quadruped",
+   "glb": "client/assets/fauna/alces_alces.glb",
+   "jobs": [
+    "library/animals/jobs/alces_alces/01a1b12c-3122-71ab-bae6-1e6250ba60f5"
+   ],
+   "credits": 120,
+   "attempts": 4,
+   "built": "2026-11-06",
+   "build": "tools/build_quadruped.py",
+   "tile": "utm12n_557_4964",
+   "photo": [
+    {
+     "at": "2026-11-06T15:55:50+00:00",
+     "mode": "image",
+     "job": "library/animals/jobs/alces_alces/01a1b192-d11a-731b-a1a7-bb9da5131bed",
+     "credits": 30,
+     "before": {
+      "ok": false,
+      "score": null,
+      "fails": [
+       "no model"
+      ]
+     },
+     "after": {
+      "ok": false,
+      "score": null,
+      "fails": [
+       "build failed: alces_alces: found 3 leg columns below z 0.787, not 4 (not standing on four feet?)"
+      ],
+      "features": null
+     },
+     "kept": "old",
+     "reference": {
+      "source": "inaturalist",
+      "id": "inat_299039125",
+      "licence": "CC BY 4.0",
+      "author": "Kaden Slone",
+      "attribution": "(c) Kaden Slone, some rights reserved (CC BY)",
+      "page": "https://www.inaturalist.org/observations/172271778",
+      "photo_page": "https://www.inaturalist.org/photos/299039125",
+      "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/299039125/large.jpeg"
+     },
+     "error": null
+    },
+    {
+     "at": "2026-11-06T15:57:07+00:00",
+     "mode": "image",
+     "job": "library/animals/jobs/alces_alces/01a1b193-fdd5-706d-82ab-cedd3fb0f9eb",
+     "credits": 30,
+     "before": {
+      "ok": false,
+      "score": null,
+      "fails": [
+       "no model"
+      ]
+     },
+     "after": {
+      "ok": false,
+      "score": null,
+      "fails": [
+       "build failed: alces_alces: found 2 leg columns below z 0.602, not 4 (not standing on four feet?)"
+      ],
+      "features": null
+     },
+     "kept": "old",
+     "reference": {
+      "source": "inaturalist",
+      "id": "inat_299039100",
+      "licence": "CC BY 4.0",
+      "author": "Kaden Slone",
+      "attribution": "(c) Kaden Slone, some rights reserved (CC BY)",
+      "page": "https://www.inaturalist.org/observations/172271778",
+      "photo_page": "https://www.inaturalist.org/photos/299039100",
+      "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/299039100/large.jpeg"
+     },
+     "error": null
+    }
+   ],
+   "colour_check": {
+    "ok": false,
+    "score": 1.0,
+    "fails": [
+     "a large pale patch on the coat (5% of the back and flanks), described without patches"
+    ]
+   },
+   "note": "built at no cost from iteration 6's second paid refine once the build centred the body on its feet instead of its bounding box (the antlers' spread had put both forelegs in one quadrant); the two image-to-3D meshes from photos failed the leg gate (the head turned to the camera, the forelegs together)",
+   "judge": {
+    "verdict": "accepted",
+    "why": "iteration 6's second paid refine, built once the build centred the body on its median vertex (the antlers had shifted the box): a dark brown bull with palmate pale antlers, the dewlap, humped shoulders and long dark legs; the two photo meshes failed the leg gate",
+    "by": "the judge (Claude, from the model's render against the species' description)",
+    "date": "2026-11-06",
+    "model": "library/animals/jobs/alces_alces/01a1b12c-3122-71ab-bae6-1e6250ba60f5"
    }
   }
  }

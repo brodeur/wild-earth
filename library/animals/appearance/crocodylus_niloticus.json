@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "crocodylus_niloticus",
  "scientific": "Crocodylus niloticus",
  "common": "nile crocodile",
@@ -58,5 +58,22 @@
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "body dark bronze; back blackish spots; flanks yellowish-green with dark patches; belly and underparts dingy off-yellow"
+ "summary": "body dark bronze; back blackish spots; flanks yellowish-green with dark patches; belly and underparts dingy off-yellow",
+ "features": {
+  "horns": {
+   "described": false,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [
+    "long"
+   ],
+   "length_m": null
+  },
+  "shoulder_m": null,
+  "head_body_m": null,
+  "total_m": null
+ }
 }

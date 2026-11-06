@@ -1,0 +1,3020 @@
+{
+ "tile": "utm12n_557_4964",
+ "version": "1",
+ "map_zone": 21,
+ "rule": "pipeline/ground_cards.py choose(): each community's LANDFIRE BpS description (its dominant and indicator species, then the species its vegetation description names), grasses and forbs by the PLANTS growth habit, native, recorded within 0.5 deg; weights 1.0 table, 0.5 text",
+ "communities": [
+  {
+   "source": "bps",
+   "code": 410,
+   "name": "Inter-Mountain Basins Sparsely Vegetated Systems",
+   "habitat": "barren",
+   "cells": 68,
+   "model": "10010",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": []
+  },
+  {
+   "source": "bps",
+   "code": 411,
+   "name": "Rocky Mountain Alpine/Montane Sparsely Vegetated Systems",
+   "habitat": "barren",
+   "cells": 152,
+   "model": "10060",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": []
+  },
+  {
+   "source": "bps",
+   "code": 686,
+   "name": "Rocky Mountain Aspen Forest and Woodland",
+   "habitat": "mixed_forest",
+   "cells": 4159,
+   "model": "10110_21",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "calamagrostis_canadensis",
+     "scientific": "Calamagrostis canadensis",
+     "symbol": "CACA4",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10110_21 Vegetation Description: named as Calamagrostis canadensis; 19 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_geyeri",
+     "scientific": "Carex geyeri",
+     "symbol": "CAGE2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10110_21 Vegetation Description: named as Carex geyeri; 20 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_rossii",
+     "scientific": "Carex rossii",
+     "symbol": "CARO5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10110_21 Vegetation Description: named as Carex rossii; 26 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "elymus_trachycaulus",
+     "scientific": "Elymus trachycaulus",
+     "symbol": "ELTR7",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10110_21 Vegetation Description: named as Elymus trachycaulus; 5 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "festuca_idahoensis",
+     "scientific": "Festuca idahoensis",
+     "symbol": "FEID",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10110_21 Vegetation Description: named as Festuca idahoensis; 35 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "eurybia_conspicua",
+     "scientific": "Eurybia conspicua",
+     "symbol": "EUCO36",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10110_21 Vegetation Description: named as Aster conspicuus (PLANTS: Eurybia conspicua); 19 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "delphinium_bicolor",
+     "scientific": "Delphinium bicolor",
+     "symbol": "DEBI",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10110_21 Vegetation Description: 'Delphinium spp.': the tile's most-recorded native congener Delphinium bicolor (2 GBIF records); 50 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "geranium_viscosissimum",
+     "scientific": "Geranium viscosissimum",
+     "symbol": "GEVI2",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10110_21 Vegetation Description: named as Geranium viscosissimum; 601 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10110_21",
+    "title": "Rocky Mountain Aspen Forest and Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10110_21.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 689,
+   "name": "Northern Rocky Mountain Subalpine Woodland and Parkland",
+   "habitat": "conifer_forest",
+   "cells": 6019,
+   "model": "10460_21",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "carex_geyeri",
+     "scientific": "Carex geyeri",
+     "symbol": "CAGE2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Carex geyeri; 20 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_rossii",
+     "scientific": "Carex rossii",
+     "symbol": "CARO5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Carex rossii; 26 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "festuca_idahoensis",
+     "scientific": "Festuca idahoensis",
+     "symbol": "FEID",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Festuca idahoensis; 35 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "elymus_trachycaulus",
+     "scientific": "Elymus trachycaulus",
+     "symbol": "ELTR7",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Elymus trachycaulus; 5 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "arnica_cordifolia",
+     "scientific": "Arnica cordifolia",
+     "symbol": "ARCO9",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Arnica cordifolia; 71 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "lupinus_argenteus",
+     "scientific": "Lupinus argenteus",
+     "symbol": "LUAR3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Lupinus argenteus; 67 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10460_21",
+    "title": "Northern Rocky Mountain Subalpine Woodland and Parkland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10460_21.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 690,
+   "name": "Rocky Mountain Foothill Limber Pine-Juniper Woodland",
+   "habitat": "conifer_forest",
+   "cells": 7,
+   "model": "10490_19_20_21_23_28_29",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "poa_secunda",
+     "scientific": "Poa secunda",
+     "symbol": "POSE",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10490_19_20_21_23_28_29 Dominant and Indicator Species (POSE): named as Poa secunda; 73 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "hesperostipa_comata",
+     "scientific": "Hesperostipa comata",
+     "symbol": "HECO26",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10490_19_20_21_23_28_29 Vegetation Description: named as Hesperostipa comata; 13 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "pseudoroegneria_spicata",
+     "scientific": "Pseudoroegneria spicata",
+     "symbol": "PSSP6",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10490_19_20_21_23_28_29 Vegetation Description: named as Pseudoroegneria spicata; 43 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10490_19_20_21_23_28_29",
+    "title": "Rocky Mountain Foothill Limber Pine-Juniper Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10490_19_20_21_23_28_29.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 693,
+   "name": "Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland",
+   "habitat": "conifer_forest",
+   "cells": 23458,
+   "model": "10550_21_22",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "arnica_cordifolia",
+     "scientific": "Arnica cordifolia",
+     "symbol": "ARCO9",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "10550_21_22 Dominant and Indicator Species (ARCO9): named as Arnica cordifolia; 71 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_geyeri",
+     "scientific": "Carex geyeri",
+     "symbol": "CAGE2",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10550_21_22 Dominant and Indicator Species (CAGE2): named as Carex geyeri; 20 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "poa_wheeleri",
+     "scientific": "Poa wheeleri",
+     "symbol": "POWH2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10550_21_22 Vegetation Description: named as Poa wheeleri; 16 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_rossii",
+     "scientific": "Carex rossii",
+     "symbol": "CARO5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10550_21_22 Vegetation Description: named as Carex rossii; 26 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_hoodii",
+     "scientific": "Carex hoodii",
+     "symbol": "CAHO5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10550_21_22 Vegetation Description: named as Carex hoodii; 35 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10550_21_22",
+    "title": "Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10550_21_22.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 694,
+   "name": "Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland",
+   "habitat": "conifer_forest",
+   "cells": 8760,
+   "model": "10560_21_22",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "eurybia_conspicua",
+     "scientific": "Eurybia conspicua",
+     "symbol": "EUCO36",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10560_21_22 Vegetation Description: named as Eurybia conspicua; 19 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_geyeri",
+     "scientific": "Carex geyeri",
+     "symbol": "CAGE2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10560_21_22 Vegetation Description: named as Carex geyeri; 20 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "actaea_rubra",
+     "scientific": "Actaea rubra",
+     "symbol": "ACRU2",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10560_21_22 Vegetation Description: named as Actaea rubra; 64 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "maianthemum_stellatum",
+     "scientific": "Maianthemum stellatum",
+     "symbol": "MAST4",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10560_21_22 Vegetation Description: named as Maianthemum stellatum; 106 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "cornus_canadensis",
+     "scientific": "Cornus canadensis",
+     "symbol": "COCA13",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10560_21_22 Vegetation Description: named as Cornus canadensis; 10 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "lupinus_argenteus",
+     "scientific": "Lupinus argenteus",
+     "symbol": "LUAR3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10560_21_22 Vegetation Description: named as Lupinus argenteus; 67 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "calamagrostis_canadensis",
+     "scientific": "Calamagrostis canadensis",
+     "symbol": "CACA4",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10560_21_22 Vegetation Description: named as Calamagrostis canadensis; 19 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10560_21_22",
+    "title": "Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10560_21_22.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 697,
+   "name": "Inter-Mountain Basins Big Sagebrush Shrubland-Basin Big Sagebrush",
+   "habitat": "chaparral",
+   "cells": 56,
+   "model": "10801_21_22_28",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "elymus_trachycaulus",
+     "scientific": "Elymus trachycaulus",
+     "symbol": "ELTR7",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10801_21_22_28 Dominant and Indicator Species (ELTR7): named as Elymus trachycaulus; 5 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "poa_secunda",
+     "scientific": "Poa secunda",
+     "symbol": "POSE",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10801_21_22_28 Dominant and Indicator Species (POSE): named as Poa secunda; 73 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "festuca_idahoensis",
+     "scientific": "Festuca idahoensis",
+     "symbol": "FEID",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10801_21_22_28 Dominant and Indicator Species (FEID): named as Festuca idahoensis; 35 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "hesperostipa_comata",
+     "scientific": "Hesperostipa comata",
+     "symbol": "HECO26",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10801_21_22_28 Vegetation Description: named as Hesperostipa comata; 13 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "elymus_elymoides",
+     "scientific": "Elymus elymoides",
+     "symbol": "ELEL5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10801_21_22_28 Vegetation Description: named as Elymus elymoides; 16 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "lupinus_argenteus",
+     "scientific": "Lupinus argenteus",
+     "symbol": "LUAR3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10801_21_22_28 Vegetation Description: 'Lupinus spp.': the tile's most-recorded native congener Lupinus argenteus (3 GBIF records); 67 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "eriogonum_umbellatum",
+     "scientific": "Eriogonum umbellatum",
+     "symbol": "ERUM",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10801_21_22_28 Vegetation Description: 'Eriogonum spp.': the tile's most-recorded native congener Eriogonum umbellatum (11 GBIF records); 377 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10801_21_22_28",
+    "title": "Inter-Mountain Basins Big Sagebrush Shrubland - Basin Big Sagebrush",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10801_21_22_28.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 701,
+   "name": "Northern Rocky Mountain Montane-Foothill Deciduous Shrubland",
+   "habitat": "chaparral",
+   "cells": 1,
+   "model": "11060_20_21_29",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [],
+   "doc": {
+    "model": "11060_20_21_29",
+    "title": "Northern Rocky Mountain Montane-Foothill Deciduous Shrubland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11060_20_21_29.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 704,
+   "name": "Inter-Mountain Basins Montane Sagebrush Steppe",
+   "habitat": "chaparral",
+   "cells": 23281,
+   "model": "11260_21",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "pseudoroegneria_spicata",
+     "scientific": "Pseudoroegneria spicata",
+     "symbol": "PSSP6",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11260_21 Dominant and Indicator Species (PSSP6): named as Pseudoroegneria spicata; 43 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "festuca_idahoensis",
+     "scientific": "Festuca idahoensis",
+     "symbol": "FEID",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11260_21 Dominant and Indicator Species (FEID): named as Festuca idahoensis; 35 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "poa_secunda",
+     "scientific": "Poa secunda",
+     "symbol": "POSE",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11260_21 Dominant and Indicator Species (POSE): named as Poa secunda; 73 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "elymus_elymoides",
+     "scientific": "Elymus elymoides",
+     "symbol": "ELEL5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: named as Elymus elymoides; 16 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "elymus_trachycaulus",
+     "scientific": "Elymus trachycaulus",
+     "symbol": "ELTR7",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: named as Elymus trachycaulus; 5 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "hesperostipa_comata",
+     "scientific": "Hesperostipa comata",
+     "symbol": "HECO26",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: named as Hesperostipa comata; 13 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "eriogonum_umbellatum",
+     "scientific": "Eriogonum umbellatum",
+     "symbol": "ERUM",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: named as Eriogonum umbellatum; 377 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "balsamorhiza_sagittata",
+     "scientific": "Balsamorhiza sagittata",
+     "symbol": "BASA3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: named as Balsamorhiza sagittata; 311 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "lupinus_argenteus",
+     "scientific": "Lupinus argenteus",
+     "symbol": "LUAR3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: 'Lupinus spp.': the tile's most-recorded native congener Lupinus argenteus (3 GBIF records); 67 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "delphinium_bicolor",
+     "scientific": "Delphinium bicolor",
+     "symbol": "DEBI",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: 'Delphinium spp.': the tile's most-recorded native congener Delphinium bicolor (2 GBIF records); 50 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "castilleja_cusickii",
+     "scientific": "Castilleja cusickii",
+     "symbol": "CACU7",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: 'Castilleja spp.': the tile's most-recorded native congener Castilleja cusickii (2 GBIF records); 2 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "geranium_viscosissimum",
+     "scientific": "Geranium viscosissimum",
+     "symbol": "GEVI2",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: named as Geranium viscosissimum; 601 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11260_21",
+    "title": "Inter-Mountain Basins Montane Sagebrush Steppe",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11260_21.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 707,
+   "name": "Northern Rocky Mountain Subalpine-Upper Montane Grassland",
+   "habitat": "grassland",
+   "cells": 14,
+   "model": "11400_21",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "festuca_idahoensis",
+     "scientific": "Festuca idahoensis",
+     "symbol": "FEID",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11400_21 Dominant and Indicator Species (FEID): named as Festuca idahoensis; 35 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "eriogonum_umbellatum",
+     "scientific": "Eriogonum umbellatum",
+     "symbol": "ERUM",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11400_21 Vegetation Description: 'Eriogonum spp.': the tile's most-recorded native congener Eriogonum umbellatum (11 GBIF records); 377 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "lupinus_argenteus",
+     "scientific": "Lupinus argenteus",
+     "symbol": "LUAR3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11400_21 Vegetation Description: 'Lupinus spp.': the tile's most-recorded native congener Lupinus argenteus (3 GBIF records); 67 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "geranium_viscosissimum",
+     "scientific": "Geranium viscosissimum",
+     "symbol": "GEVI2",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11400_21 Vegetation Description: 'Geranium spp.': the tile's most-recorded native congener Geranium viscosissimum (39 GBIF records); 601 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "pseudoroegneria_spicata",
+     "scientific": "Pseudoroegneria spicata",
+     "symbol": "PSSP6",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11400_21 Vegetation Description: named as Pseudoroegneria spicata; 43 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "balsamorhiza_sagittata",
+     "scientific": "Balsamorhiza sagittata",
+     "symbol": "BASA3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11400_21 Vegetation Description: named as Balsamorhiza sagittata; 311 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "poa_secunda",
+     "scientific": "Poa secunda",
+     "symbol": "POSE",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11400_21 Vegetation Description: named as Poa secunda; 73 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11400_21",
+    "title": "Northern Rocky Mountain Subalpine-Upper Montane Grassland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11400_21.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 709,
+   "name": "Rocky Mountain Alpine Turf",
+   "habitat": "grassland",
+   "cells": 205,
+   "model": "11440_21_22",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [],
+   "doc": {
+    "model": "11440_21_22",
+    "title": "Rocky Mountain Alpine Turf",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11440_21_22.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 710,
+   "name": "Rocky Mountain Subalpine-Montane Mesic Meadow",
+   "habitat": "grassland",
+   "cells": 254,
+   "model": "11450_21",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "mertensia_paniculata",
+     "scientific": "Mertensia paniculata",
+     "symbol": "MEPAA",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "11450_21 Dominant and Indicator Species (MERTE): named as Mertensia (PLANTS: Mertensia paniculata); 1 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "campanula_rotundifolia",
+     "scientific": "Campanula rotundifolia",
+     "symbol": "CARO2",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "11450_21 Dominant and Indicator Species (CAMPA): named as Campanula (PLANTS: Campanula rotundifolia); 20 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "lupinus_alpestris",
+     "scientific": "Lupinus alpestris",
+     "symbol": "LUAL5",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "11450_21 Dominant and Indicator Species (LUPIN): named as Lupinus (PLANTS: Lupinus \u00d7alpestris); 1 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11450_21",
+    "title": "Rocky Mountain Subalpine-Montane Mesic Meadow",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11450_21.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 712,
+   "name": "Rocky Mountain Montane Riparian Systems",
+   "habitat": "riparian",
+   "cells": 1152,
+   "model": "11590_21",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [],
+   "doc": {
+    "model": "11590_21",
+    "title": "Rocky Mountain Montane Riparian Systems",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11590_21.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 713,
+   "name": "Rocky Mountain Subalpine/Upper Montane Riparian Systems",
+   "habitat": "riparian",
+   "cells": 11681,
+   "model": "11600_21",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "mertensia_ciliata",
+     "scientific": "Mertensia ciliata",
+     "symbol": "MECI3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11600_21 Vegetation Description: named as Mertensia ciliata; 81 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "saxifraga_odontoloma",
+     "scientific": "Saxifraga odontoloma",
+     "symbol": "SAOD2",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11600_21 Vegetation Description: named as Saxifraga odontoloma; 5 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11600_21",
+    "title": "Rocky Mountain Subalpine/Upper Montane Riparian Systems",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11600_21.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 714,
+   "name": "Northern Rocky Mountain Conifer Swamp",
+   "habitat": "conifer_forest",
+   "cells": 344,
+   "model": "11610_21",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "actaea_rubra",
+     "scientific": "Actaea rubra",
+     "symbol": "ACRU2",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11610_21 Vegetation Description: named as Actaea rubra; 64 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "calamagrostis_canadensis",
+     "scientific": "Calamagrostis canadensis",
+     "symbol": "CACA4",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11610_21 Vegetation Description: named as Calamagrostis canadensis; 19 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11610_21",
+    "title": "Northern Rocky Mountain Conifer Swamp",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11610_21.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 715,
+   "name": "Middle Rocky Mountain Montane Douglas-fir Forest and Woodland",
+   "habitat": "conifer_forest",
+   "cells": 28992,
+   "model": "11660_21",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [],
+   "doc": {
+    "model": "11660_21",
+    "title": "Middle Rocky Mountain Montane Douglas-fir Forest and Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11660_21.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 716,
+   "name": "Rocky Mountain Poor-Site Lodgepole Pine Forest",
+   "habitat": "conifer_forest",
+   "cells": 11,
+   "model": "11670_21",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "carex_geyeri",
+     "scientific": "Carex geyeri",
+     "symbol": "CAGE2",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11670_21 Dominant and Indicator Species (CAGE2): named as Carex geyeri; 20 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_rossii",
+     "scientific": "Carex rossii",
+     "symbol": "CARO5",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11670_21 Dominant and Indicator Species (CARO5): named as Carex rossii; 26 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11670_21",
+    "title": "Rocky Mountain Poor-Site Lodgepole Pine Forest",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11670_21.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7011,
+   "name": "Rocky Mountain Aspen Forest and Woodland",
+   "habitat": "mixed_forest",
+   "cells": 2547,
+   "model": "10110_21",
+   "how": "the same system's model in map zone 21",
+   "species": [
+    {
+     "id": "calamagrostis_canadensis",
+     "scientific": "Calamagrostis canadensis",
+     "symbol": "CACA4",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10110_21 Vegetation Description: named as Calamagrostis canadensis; 19 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_geyeri",
+     "scientific": "Carex geyeri",
+     "symbol": "CAGE2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10110_21 Vegetation Description: named as Carex geyeri; 20 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_rossii",
+     "scientific": "Carex rossii",
+     "symbol": "CARO5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10110_21 Vegetation Description: named as Carex rossii; 26 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "elymus_trachycaulus",
+     "scientific": "Elymus trachycaulus",
+     "symbol": "ELTR7",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10110_21 Vegetation Description: named as Elymus trachycaulus; 5 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "festuca_idahoensis",
+     "scientific": "Festuca idahoensis",
+     "symbol": "FEID",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10110_21 Vegetation Description: named as Festuca idahoensis; 35 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "eurybia_conspicua",
+     "scientific": "Eurybia conspicua",
+     "symbol": "EUCO36",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10110_21 Vegetation Description: named as Aster conspicuus (PLANTS: Eurybia conspicua); 19 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "delphinium_bicolor",
+     "scientific": "Delphinium bicolor",
+     "symbol": "DEBI",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10110_21 Vegetation Description: 'Delphinium spp.': the tile's most-recorded native congener Delphinium bicolor (2 GBIF records); 50 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "geranium_viscosissimum",
+     "scientific": "Geranium viscosissimum",
+     "symbol": "GEVI2",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10110_21 Vegetation Description: named as Geranium viscosissimum; 601 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10110_21",
+    "title": "Rocky Mountain Aspen Forest and Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10110_21.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7046,
+   "name": "Northern Rocky Mountain Subalpine Woodland and Parkland",
+   "habitat": "conifer_forest",
+   "cells": 3069,
+   "model": "10460_21",
+   "how": "the same system's model in map zone 21",
+   "species": [
+    {
+     "id": "carex_geyeri",
+     "scientific": "Carex geyeri",
+     "symbol": "CAGE2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Carex geyeri; 20 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_rossii",
+     "scientific": "Carex rossii",
+     "symbol": "CARO5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Carex rossii; 26 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "festuca_idahoensis",
+     "scientific": "Festuca idahoensis",
+     "symbol": "FEID",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Festuca idahoensis; 35 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "elymus_trachycaulus",
+     "scientific": "Elymus trachycaulus",
+     "symbol": "ELTR7",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Elymus trachycaulus; 5 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "arnica_cordifolia",
+     "scientific": "Arnica cordifolia",
+     "symbol": "ARCO9",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Arnica cordifolia; 71 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "lupinus_argenteus",
+     "scientific": "Lupinus argenteus",
+     "symbol": "LUAR3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Lupinus argenteus; 67 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10460_21",
+    "title": "Northern Rocky Mountain Subalpine Woodland and Parkland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10460_21.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7049,
+   "name": "Rocky Mountain Foothill Limber Pine-Juniper Woodland",
+   "habitat": "conifer_forest",
+   "cells": 11,
+   "model": "10490_19_20_21_23_28_29",
+   "how": "the same system's model in map zone 21",
+   "species": [
+    {
+     "id": "poa_secunda",
+     "scientific": "Poa secunda",
+     "symbol": "POSE",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10490_19_20_21_23_28_29 Dominant and Indicator Species (POSE): named as Poa secunda; 73 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "hesperostipa_comata",
+     "scientific": "Hesperostipa comata",
+     "symbol": "HECO26",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10490_19_20_21_23_28_29 Vegetation Description: named as Hesperostipa comata; 13 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "pseudoroegneria_spicata",
+     "scientific": "Pseudoroegneria spicata",
+     "symbol": "PSSP6",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10490_19_20_21_23_28_29 Vegetation Description: named as Pseudoroegneria spicata; 43 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10490_19_20_21_23_28_29",
+    "title": "Rocky Mountain Foothill Limber Pine-Juniper Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10490_19_20_21_23_28_29.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7050,
+   "name": "Rocky Mountain Lodgepole Pine Forest",
+   "habitat": "conifer_forest",
+   "cells": 9086,
+   "model": "10550_21_22",
+   "how": "the BpS under most of its cells on the tile (5062 of 9086: Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland)",
+   "species": [
+    {
+     "id": "arnica_cordifolia",
+     "scientific": "Arnica cordifolia",
+     "symbol": "ARCO9",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "10550_21_22 Dominant and Indicator Species (ARCO9): named as Arnica cordifolia; 71 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_geyeri",
+     "scientific": "Carex geyeri",
+     "symbol": "CAGE2",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10550_21_22 Dominant and Indicator Species (CAGE2): named as Carex geyeri; 20 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "poa_wheeleri",
+     "scientific": "Poa wheeleri",
+     "symbol": "POWH2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10550_21_22 Vegetation Description: named as Poa wheeleri; 16 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_rossii",
+     "scientific": "Carex rossii",
+     "symbol": "CARO5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10550_21_22 Vegetation Description: named as Carex rossii; 26 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_hoodii",
+     "scientific": "Carex hoodii",
+     "symbol": "CAHO5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10550_21_22 Vegetation Description: named as Carex hoodii; 35 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10550_21_22",
+    "title": "Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10550_21_22.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7055,
+   "name": "Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland",
+   "habitat": "conifer_forest",
+   "cells": 12756,
+   "model": "10550_21_22",
+   "how": "the same system's model in map zone 21",
+   "species": [
+    {
+     "id": "arnica_cordifolia",
+     "scientific": "Arnica cordifolia",
+     "symbol": "ARCO9",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "10550_21_22 Dominant and Indicator Species (ARCO9): named as Arnica cordifolia; 71 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_geyeri",
+     "scientific": "Carex geyeri",
+     "symbol": "CAGE2",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10550_21_22 Dominant and Indicator Species (CAGE2): named as Carex geyeri; 20 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "poa_wheeleri",
+     "scientific": "Poa wheeleri",
+     "symbol": "POWH2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10550_21_22 Vegetation Description: named as Poa wheeleri; 16 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_rossii",
+     "scientific": "Carex rossii",
+     "symbol": "CARO5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10550_21_22 Vegetation Description: named as Carex rossii; 26 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_hoodii",
+     "scientific": "Carex hoodii",
+     "symbol": "CAHO5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10550_21_22 Vegetation Description: named as Carex hoodii; 35 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10550_21_22",
+    "title": "Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10550_21_22.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7056,
+   "name": "Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland",
+   "habitat": "conifer_forest",
+   "cells": 1306,
+   "model": "10560_21_22",
+   "how": "the same system's model in map zone 21",
+   "species": [
+    {
+     "id": "eurybia_conspicua",
+     "scientific": "Eurybia conspicua",
+     "symbol": "EUCO36",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10560_21_22 Vegetation Description: named as Eurybia conspicua; 19 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_geyeri",
+     "scientific": "Carex geyeri",
+     "symbol": "CAGE2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10560_21_22 Vegetation Description: named as Carex geyeri; 20 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "actaea_rubra",
+     "scientific": "Actaea rubra",
+     "symbol": "ACRU2",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10560_21_22 Vegetation Description: named as Actaea rubra; 64 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "maianthemum_stellatum",
+     "scientific": "Maianthemum stellatum",
+     "symbol": "MAST4",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10560_21_22 Vegetation Description: named as Maianthemum stellatum; 106 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "cornus_canadensis",
+     "scientific": "Cornus canadensis",
+     "symbol": "COCA13",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10560_21_22 Vegetation Description: named as Cornus canadensis; 10 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "lupinus_argenteus",
+     "scientific": "Lupinus argenteus",
+     "symbol": "LUAR3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10560_21_22 Vegetation Description: named as Lupinus argenteus; 67 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "calamagrostis_canadensis",
+     "scientific": "Calamagrostis canadensis",
+     "symbol": "CACA4",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10560_21_22 Vegetation Description: named as Calamagrostis canadensis; 19 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10560_21_22",
+    "title": "Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10560_21_22.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7057,
+   "name": "Rocky Mountain Subalpine-Montane Limber-Bristlecone Pine Woodland",
+   "habitat": "conifer_forest",
+   "cells": 132,
+   "model": "11660_21",
+   "how": "the BpS under most of its cells on the tile (55 of 132: Middle Rocky Mountain Montane Douglas-fir Forest and Woodland)",
+   "species": [],
+   "doc": {
+    "model": "11660_21",
+    "title": "Middle Rocky Mountain Montane Douglas-fir Forest and Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11660_21.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7061,
+   "name": "Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland",
+   "habitat": "mixed_forest",
+   "cells": 10,
+   "model": "10550_21_22",
+   "how": "the BpS under most of its cells on the tile (4 of 10: Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland)",
+   "species": [
+    {
+     "id": "arnica_cordifolia",
+     "scientific": "Arnica cordifolia",
+     "symbol": "ARCO9",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "10550_21_22 Dominant and Indicator Species (ARCO9): named as Arnica cordifolia; 71 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_geyeri",
+     "scientific": "Carex geyeri",
+     "symbol": "CAGE2",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10550_21_22 Dominant and Indicator Species (CAGE2): named as Carex geyeri; 20 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "poa_wheeleri",
+     "scientific": "Poa wheeleri",
+     "symbol": "POWH2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10550_21_22 Vegetation Description: named as Poa wheeleri; 16 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_rossii",
+     "scientific": "Carex rossii",
+     "symbol": "CARO5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10550_21_22 Vegetation Description: named as Carex rossii; 26 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_hoodii",
+     "scientific": "Carex hoodii",
+     "symbol": "CAHO5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10550_21_22 Vegetation Description: named as Carex hoodii; 35 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10550_21_22",
+    "title": "Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10550_21_22.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7070,
+   "name": "Rocky Mountain Alpine Dwarf-Shrubland",
+   "habitat": "chaparral",
+   "cells": 151,
+   "model": "10700_21",
+   "how": "the same system's model in map zone 21",
+   "species": [
+    {
+     "id": "castilleja_cusickii",
+     "scientific": "Castilleja cusickii",
+     "symbol": "CACU7",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10700_21 Vegetation Description: 'Castilleja spp.': the tile's most-recorded native congener Castilleja cusickii (2 GBIF records); 2 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10700_21",
+    "title": "Rocky Mountain Alpine Dwarf-Shrubland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10700_21.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7106,
+   "name": "Northern Rocky Mountain Montane-Foothill Deciduous Shrubland",
+   "habitat": "chaparral",
+   "cells": 80,
+   "model": "11060_20_21_29",
+   "how": "the same system's model in map zone 21",
+   "species": [],
+   "doc": {
+    "model": "11060_20_21_29",
+    "title": "Northern Rocky Mountain Montane-Foothill Deciduous Shrubland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11060_20_21_29.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7125,
+   "name": "Inter-Mountain Basins Big Sagebrush Steppe",
+   "habitat": "chaparral",
+   "cells": 82,
+   "model": "11600_21",
+   "how": "the BpS under most of its cells on the tile (43 of 82: Rocky Mountain Subalpine/Upper Montane Riparian Systems)",
+   "species": [
+    {
+     "id": "mertensia_ciliata",
+     "scientific": "Mertensia ciliata",
+     "symbol": "MECI3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11600_21 Vegetation Description: named as Mertensia ciliata; 81 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "saxifraga_odontoloma",
+     "scientific": "Saxifraga odontoloma",
+     "symbol": "SAOD2",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11600_21 Vegetation Description: named as Saxifraga odontoloma; 5 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11600_21",
+    "title": "Rocky Mountain Subalpine/Upper Montane Riparian Systems",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11600_21.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7126,
+   "name": "Inter-Mountain Basins Montane Sagebrush Steppe",
+   "habitat": "chaparral",
+   "cells": 35709,
+   "model": "11260_21",
+   "how": "the same system's model in map zone 21",
+   "species": [
+    {
+     "id": "pseudoroegneria_spicata",
+     "scientific": "Pseudoroegneria spicata",
+     "symbol": "PSSP6",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11260_21 Dominant and Indicator Species (PSSP6): named as Pseudoroegneria spicata; 43 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "festuca_idahoensis",
+     "scientific": "Festuca idahoensis",
+     "symbol": "FEID",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11260_21 Dominant and Indicator Species (FEID): named as Festuca idahoensis; 35 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "poa_secunda",
+     "scientific": "Poa secunda",
+     "symbol": "POSE",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11260_21 Dominant and Indicator Species (POSE): named as Poa secunda; 73 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "elymus_elymoides",
+     "scientific": "Elymus elymoides",
+     "symbol": "ELEL5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: named as Elymus elymoides; 16 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "elymus_trachycaulus",
+     "scientific": "Elymus trachycaulus",
+     "symbol": "ELTR7",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: named as Elymus trachycaulus; 5 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "hesperostipa_comata",
+     "scientific": "Hesperostipa comata",
+     "symbol": "HECO26",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: named as Hesperostipa comata; 13 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "eriogonum_umbellatum",
+     "scientific": "Eriogonum umbellatum",
+     "symbol": "ERUM",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: named as Eriogonum umbellatum; 377 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "balsamorhiza_sagittata",
+     "scientific": "Balsamorhiza sagittata",
+     "symbol": "BASA3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: named as Balsamorhiza sagittata; 311 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "lupinus_argenteus",
+     "scientific": "Lupinus argenteus",
+     "symbol": "LUAR3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: 'Lupinus spp.': the tile's most-recorded native congener Lupinus argenteus (3 GBIF records); 67 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "delphinium_bicolor",
+     "scientific": "Delphinium bicolor",
+     "symbol": "DEBI",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: 'Delphinium spp.': the tile's most-recorded native congener Delphinium bicolor (2 GBIF records); 50 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "castilleja_cusickii",
+     "scientific": "Castilleja cusickii",
+     "symbol": "CACU7",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: 'Castilleja spp.': the tile's most-recorded native congener Castilleja cusickii (2 GBIF records); 2 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "geranium_viscosissimum",
+     "scientific": "Geranium viscosissimum",
+     "symbol": "GEVI2",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: named as Geranium viscosissimum; 601 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11260_21",
+    "title": "Inter-Mountain Basins Montane Sagebrush Steppe",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11260_21.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7139,
+   "name": "Northern Rocky Mountain Lower Montane-Foothill-Valley Grassland",
+   "habitat": "grassland",
+   "cells": 6392,
+   "model": "11390_21",
+   "how": "the same system's model in map zone 21",
+   "species": [
+    {
+     "id": "pseudoroegneria_spicata",
+     "scientific": "Pseudoroegneria spicata",
+     "symbol": "PSSP6",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11390_21 Dominant and Indicator Species (PSSP6): named as Pseudoroegneria spicata; 43 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "festuca_idahoensis",
+     "scientific": "Festuca idahoensis",
+     "symbol": "FEID",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11390_21 Dominant and Indicator Species (FEID): named as Festuca idahoensis; 35 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "elymus_trachycaulus",
+     "scientific": "Elymus trachycaulus",
+     "symbol": "ELTR7",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11390_21 Dominant and Indicator Species (ELTR7): named as Elymus trachycaulus; 5 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "geranium_viscosissimum",
+     "scientific": "Geranium viscosissimum",
+     "symbol": "GEVI2",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "11390_21 Dominant and Indicator Species (GEVI2): named as Geranium viscosissimum; 601 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "eriogonum_umbellatum",
+     "scientific": "Eriogonum umbellatum",
+     "symbol": "ERUM",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11390_21 Vegetation Description: 'Eriogonum spp.': the tile's most-recorded native congener Eriogonum umbellatum (11 GBIF records); 377 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11390_21",
+    "title": "Northern Rocky Mountain Lower Montane-Foothill-Valley Grassland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11390_21.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7140,
+   "name": "Northern Rocky Mountain Subalpine-Upper Montane Grassland",
+   "habitat": "grassland",
+   "cells": 3514,
+   "model": "11400_21",
+   "how": "the same system's model in map zone 21",
+   "species": [
+    {
+     "id": "festuca_idahoensis",
+     "scientific": "Festuca idahoensis",
+     "symbol": "FEID",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11400_21 Dominant and Indicator Species (FEID): named as Festuca idahoensis; 35 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "eriogonum_umbellatum",
+     "scientific": "Eriogonum umbellatum",
+     "symbol": "ERUM",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11400_21 Vegetation Description: 'Eriogonum spp.': the tile's most-recorded native congener Eriogonum umbellatum (11 GBIF records); 377 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "lupinus_argenteus",
+     "scientific": "Lupinus argenteus",
+     "symbol": "LUAR3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11400_21 Vegetation Description: 'Lupinus spp.': the tile's most-recorded native congener Lupinus argenteus (3 GBIF records); 67 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "geranium_viscosissimum",
+     "scientific": "Geranium viscosissimum",
+     "symbol": "GEVI2",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11400_21 Vegetation Description: 'Geranium spp.': the tile's most-recorded native congener Geranium viscosissimum (39 GBIF records); 601 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "pseudoroegneria_spicata",
+     "scientific": "Pseudoroegneria spicata",
+     "symbol": "PSSP6",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11400_21 Vegetation Description: named as Pseudoroegneria spicata; 43 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "balsamorhiza_sagittata",
+     "scientific": "Balsamorhiza sagittata",
+     "symbol": "BASA3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11400_21 Vegetation Description: named as Balsamorhiza sagittata; 311 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "poa_secunda",
+     "scientific": "Poa secunda",
+     "symbol": "POSE",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11400_21 Vegetation Description: named as Poa secunda; 73 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11400_21",
+    "title": "Northern Rocky Mountain Subalpine-Upper Montane Grassland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11400_21.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7143,
+   "name": "Rocky Mountain Alpine Fell-Field",
+   "habitat": "grassland",
+   "cells": 25,
+   "model": "11430_9_19_21_28",
+   "how": "the same system's model in map zone 21",
+   "species": [],
+   "doc": {
+    "model": "11430_9_19_21_28",
+    "title": "Rocky Mountain Alpine Fell-Field",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11430_9_19_21_28.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7144,
+   "name": "Rocky Mountain Alpine Turf",
+   "habitat": "grassland",
+   "cells": 113,
+   "model": "11440_21_22",
+   "how": "the same system's model in map zone 21",
+   "species": [],
+   "doc": {
+    "model": "11440_21_22",
+    "title": "Rocky Mountain Alpine Turf",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11440_21_22.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7145,
+   "name": "Rocky Mountain Subalpine-Montane Mesic Meadow",
+   "habitat": "grassland",
+   "cells": 4922,
+   "model": "11450_21",
+   "how": "the same system's model in map zone 21",
+   "species": [
+    {
+     "id": "mertensia_paniculata",
+     "scientific": "Mertensia paniculata",
+     "symbol": "MEPAA",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "11450_21 Dominant and Indicator Species (MERTE): named as Mertensia (PLANTS: Mertensia paniculata); 1 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "campanula_rotundifolia",
+     "scientific": "Campanula rotundifolia",
+     "symbol": "CARO2",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "11450_21 Dominant and Indicator Species (CAMPA): named as Campanula (PLANTS: Campanula rotundifolia); 20 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "lupinus_alpestris",
+     "scientific": "Lupinus alpestris",
+     "symbol": "LUAL5",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "11450_21 Dominant and Indicator Species (LUPIN): named as Lupinus (PLANTS: Lupinus \u00d7alpestris); 1 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11450_21",
+    "title": "Rocky Mountain Subalpine-Montane Mesic Meadow",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11450_21.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7166,
+   "name": "Middle Rocky Mountain Montane Douglas-fir Forest and Woodland",
+   "habitat": "conifer_forest",
+   "cells": 16593,
+   "model": "11660_21",
+   "how": "the same system's model in map zone 21",
+   "species": [],
+   "doc": {
+    "model": "11660_21",
+    "title": "Middle Rocky Mountain Montane Douglas-fir Forest and Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11660_21.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7167,
+   "name": "Rocky Mountain Poor-Site Lodgepole Pine Forest",
+   "habitat": "conifer_forest",
+   "cells": 7,
+   "model": "11670_21",
+   "how": "the same system's model in map zone 21",
+   "species": [
+    {
+     "id": "carex_geyeri",
+     "scientific": "Carex geyeri",
+     "symbol": "CAGE2",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11670_21 Dominant and Indicator Species (CAGE2): named as Carex geyeri; 20 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_rossii",
+     "scientific": "Carex rossii",
+     "symbol": "CARO5",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11670_21 Dominant and Indicator Species (CARO5): named as Carex rossii; 26 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11670_21",
+    "title": "Rocky Mountain Poor-Site Lodgepole Pine Forest",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11670_21.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7169,
+   "name": "Northern Rocky Mountain Subalpine Deciduous Shrubland",
+   "habitat": "chaparral",
+   "cells": 272,
+   "model": "10460_21",
+   "how": "the BpS under most of its cells on the tile (165 of 272: Northern Rocky Mountain Subalpine Woodland and Parkland)",
+   "species": [
+    {
+     "id": "carex_geyeri",
+     "scientific": "Carex geyeri",
+     "symbol": "CAGE2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Carex geyeri; 20 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_rossii",
+     "scientific": "Carex rossii",
+     "symbol": "CARO5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Carex rossii; 26 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "festuca_idahoensis",
+     "scientific": "Festuca idahoensis",
+     "symbol": "FEID",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Festuca idahoensis; 35 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "elymus_trachycaulus",
+     "scientific": "Elymus trachycaulus",
+     "symbol": "ELTR7",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Elymus trachycaulus; 5 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "arnica_cordifolia",
+     "scientific": "Arnica cordifolia",
+     "symbol": "ARCO9",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Arnica cordifolia; 71 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "lupinus_argenteus",
+     "scientific": "Lupinus argenteus",
+     "symbol": "LUAR3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Lupinus argenteus; 67 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10460_21",
+    "title": "Northern Rocky Mountain Subalpine Woodland and Parkland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10460_21.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 9011,
+   "name": "North American Arid West Emergent Marsh",
+   "habitat": "riparian",
+   "cells": 20,
+   "model": "11600_21",
+   "how": "the BpS under most of its cells on the tile (10 of 20: Rocky Mountain Subalpine/Upper Montane Riparian Systems)",
+   "species": [
+    {
+     "id": "mertensia_ciliata",
+     "scientific": "Mertensia ciliata",
+     "symbol": "MECI3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11600_21 Vegetation Description: named as Mertensia ciliata; 81 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "saxifraga_odontoloma",
+     "scientific": "Saxifraga odontoloma",
+     "symbol": "SAOD2",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11600_21 Vegetation Description: named as Saxifraga odontoloma; 5 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11600_21",
+    "title": "Rocky Mountain Subalpine/Upper Montane Riparian Systems",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11600_21.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 9016,
+   "name": "Rocky Mountain Alpine Bedrock and Scree",
+   "habitat": "barren",
+   "cells": 130,
+   "model": "10460_21",
+   "how": "the BpS under most of its cells on the tile (89 of 130: Northern Rocky Mountain Subalpine Woodland and Parkland)",
+   "species": [
+    {
+     "id": "carex_geyeri",
+     "scientific": "Carex geyeri",
+     "symbol": "CAGE2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Carex geyeri; 20 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_rossii",
+     "scientific": "Carex rossii",
+     "symbol": "CARO5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Carex rossii; 26 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "festuca_idahoensis",
+     "scientific": "Festuca idahoensis",
+     "symbol": "FEID",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Festuca idahoensis; 35 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "elymus_trachycaulus",
+     "scientific": "Elymus trachycaulus",
+     "symbol": "ELTR7",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Elymus trachycaulus; 5 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "arnica_cordifolia",
+     "scientific": "Arnica cordifolia",
+     "symbol": "ARCO9",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Arnica cordifolia; 71 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "lupinus_argenteus",
+     "scientific": "Lupinus argenteus",
+     "symbol": "LUAR3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10460_21 Vegetation Description: named as Lupinus argenteus; 67 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10460_21",
+    "title": "Northern Rocky Mountain Subalpine Woodland and Parkland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10460_21.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 9017,
+   "name": "Rocky Mountain Alpine-Montane Wet Meadow",
+   "habitat": "riparian",
+   "cells": 2590,
+   "model": "11600_21",
+   "how": "the BpS under most of its cells on the tile (2108 of 2590: Rocky Mountain Subalpine/Upper Montane Riparian Systems)",
+   "species": [
+    {
+     "id": "mertensia_ciliata",
+     "scientific": "Mertensia ciliata",
+     "symbol": "MECI3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11600_21 Vegetation Description: named as Mertensia ciliata; 81 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "saxifraga_odontoloma",
+     "scientific": "Saxifraga odontoloma",
+     "symbol": "SAOD2",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11600_21 Vegetation Description: named as Saxifraga odontoloma; 5 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11600_21",
+    "title": "Rocky Mountain Subalpine/Upper Montane Riparian Systems",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11600_21.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 9018,
+   "name": "Rocky Mountain Cliff Canyon and Massive Bedrock",
+   "habitat": "barren",
+   "cells": 1415,
+   "model": "11660_21",
+   "how": "the BpS under most of its cells on the tile (329 of 1415: Middle Rocky Mountain Montane Douglas-fir Forest and Woodland)",
+   "species": [],
+   "doc": {
+    "model": "11660_21",
+    "title": "Middle Rocky Mountain Montane Douglas-fir Forest and Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11660_21.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 9019,
+   "name": "Rocky Mountain Lower Montane-Foothill Riparian Woodland",
+   "habitat": "riparian",
+   "cells": 646,
+   "model": "11600_21",
+   "how": "the BpS under most of its cells on the tile (399 of 646: Rocky Mountain Subalpine/Upper Montane Riparian Systems)",
+   "species": [
+    {
+     "id": "mertensia_ciliata",
+     "scientific": "Mertensia ciliata",
+     "symbol": "MECI3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11600_21 Vegetation Description: named as Mertensia ciliata; 81 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "saxifraga_odontoloma",
+     "scientific": "Saxifraga odontoloma",
+     "symbol": "SAOD2",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11600_21 Vegetation Description: named as Saxifraga odontoloma; 5 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11600_21",
+    "title": "Rocky Mountain Subalpine/Upper Montane Riparian Systems",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11600_21.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 9021,
+   "name": "Rocky Mountain Subalpine-Montane Riparian Shrubland",
+   "habitat": "riparian",
+   "cells": 16,
+   "model": "11600_21",
+   "how": "the BpS under most of its cells on the tile (8 of 16: Rocky Mountain Subalpine/Upper Montane Riparian Systems)",
+   "species": [
+    {
+     "id": "mertensia_ciliata",
+     "scientific": "Mertensia ciliata",
+     "symbol": "MECI3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11600_21 Vegetation Description: named as Mertensia ciliata; 81 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "saxifraga_odontoloma",
+     "scientific": "Saxifraga odontoloma",
+     "symbol": "SAOD2",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11600_21 Vegetation Description: named as Saxifraga odontoloma; 5 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11600_21",
+    "title": "Rocky Mountain Subalpine/Upper Montane Riparian Systems",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11600_21.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 9022,
+   "name": "Rocky Mountain Subalpine-Montane Riparian Woodland",
+   "habitat": "riparian",
+   "cells": 256,
+   "model": "10550_21_22",
+   "how": "the BpS under most of its cells on the tile (78 of 256: Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland)",
+   "species": [
+    {
+     "id": "arnica_cordifolia",
+     "scientific": "Arnica cordifolia",
+     "symbol": "ARCO9",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "10550_21_22 Dominant and Indicator Species (ARCO9): named as Arnica cordifolia; 71 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_geyeri",
+     "scientific": "Carex geyeri",
+     "symbol": "CAGE2",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10550_21_22 Dominant and Indicator Species (CAGE2): named as Carex geyeri; 20 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "poa_wheeleri",
+     "scientific": "Poa wheeleri",
+     "symbol": "POWH2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10550_21_22 Vegetation Description: named as Poa wheeleri; 16 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_rossii",
+     "scientific": "Carex rossii",
+     "symbol": "CARO5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10550_21_22 Vegetation Description: named as Carex rossii; 26 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_hoodii",
+     "scientific": "Carex hoodii",
+     "symbol": "CAHO5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10550_21_22 Vegetation Description: named as Carex hoodii; 35 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10550_21_22",
+    "title": "Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10550_21_22.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 9519,
+   "name": "Rocky Mountain Lower Montane-Foothill Riparian Shrubland",
+   "habitat": "riparian",
+   "cells": 4901,
+   "model": "11600_21",
+   "how": "the BpS under most of its cells on the tile (3261 of 4901: Rocky Mountain Subalpine/Upper Montane Riparian Systems)",
+   "species": [
+    {
+     "id": "mertensia_ciliata",
+     "scientific": "Mertensia ciliata",
+     "symbol": "MECI3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11600_21 Vegetation Description: named as Mertensia ciliata; 81 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "saxifraga_odontoloma",
+     "scientific": "Saxifraga odontoloma",
+     "symbol": "SAOD2",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11600_21 Vegetation Description: named as Saxifraga odontoloma; 5 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11600_21",
+    "title": "Rocky Mountain Subalpine/Upper Montane Riparian Systems",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11600_21.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 9828,
+   "name": "Interior Western North American Temperate Ruderal Grassland",
+   "habitat": "grassland",
+   "cells": 1292,
+   "model": "11260_21",
+   "how": "the BpS under most of its cells on the tile (788 of 1292: Inter-Mountain Basins Montane Sagebrush Steppe)",
+   "species": [
+    {
+     "id": "pseudoroegneria_spicata",
+     "scientific": "Pseudoroegneria spicata",
+     "symbol": "PSSP6",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11260_21 Dominant and Indicator Species (PSSP6): named as Pseudoroegneria spicata; 43 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "festuca_idahoensis",
+     "scientific": "Festuca idahoensis",
+     "symbol": "FEID",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11260_21 Dominant and Indicator Species (FEID): named as Festuca idahoensis; 35 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "poa_secunda",
+     "scientific": "Poa secunda",
+     "symbol": "POSE",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11260_21 Dominant and Indicator Species (POSE): named as Poa secunda; 73 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "elymus_elymoides",
+     "scientific": "Elymus elymoides",
+     "symbol": "ELEL5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: named as Elymus elymoides; 16 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "elymus_trachycaulus",
+     "scientific": "Elymus trachycaulus",
+     "symbol": "ELTR7",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: named as Elymus trachycaulus; 5 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "hesperostipa_comata",
+     "scientific": "Hesperostipa comata",
+     "symbol": "HECO26",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: named as Hesperostipa comata; 13 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "eriogonum_umbellatum",
+     "scientific": "Eriogonum umbellatum",
+     "symbol": "ERUM",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: named as Eriogonum umbellatum; 377 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "balsamorhiza_sagittata",
+     "scientific": "Balsamorhiza sagittata",
+     "symbol": "BASA3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: named as Balsamorhiza sagittata; 311 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "lupinus_argenteus",
+     "scientific": "Lupinus argenteus",
+     "symbol": "LUAR3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: 'Lupinus spp.': the tile's most-recorded native congener Lupinus argenteus (3 GBIF records); 67 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "delphinium_bicolor",
+     "scientific": "Delphinium bicolor",
+     "symbol": "DEBI",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: 'Delphinium spp.': the tile's most-recorded native congener Delphinium bicolor (2 GBIF records); 50 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "castilleja_cusickii",
+     "scientific": "Castilleja cusickii",
+     "symbol": "CACU7",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: 'Castilleja spp.': the tile's most-recorded native congener Castilleja cusickii (2 GBIF records); 2 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "geranium_viscosissimum",
+     "scientific": "Geranium viscosissimum",
+     "symbol": "GEVI2",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11260_21 Vegetation Description: named as Geranium viscosissimum; 601 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11260_21",
+    "title": "Inter-Mountain Basins Montane Sagebrush Steppe",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11260_21.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 9829,
+   "name": "Western North American Ruderal Wet Meadow & Marsh",
+   "habitat": "riparian",
+   "cells": 287,
+   "model": "11600_21",
+   "how": "the BpS under most of its cells on the tile (253 of 287: Rocky Mountain Subalpine/Upper Montane Riparian Systems)",
+   "species": [
+    {
+     "id": "mertensia_ciliata",
+     "scientific": "Mertensia ciliata",
+     "symbol": "MECI3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11600_21 Vegetation Description: named as Mertensia ciliata; 81 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "saxifraga_odontoloma",
+     "scientific": "Saxifraga odontoloma",
+     "symbol": "SAOD2",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11600_21 Vegetation Description: named as Saxifraga odontoloma; 5 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11600_21",
+    "title": "Rocky Mountain Subalpine/Upper Montane Riparian Systems",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11600_21.docx"
+   }
+  }
+ ],
+ "species": [
+  {
+   "id": "festuca_idahoensis",
+   "scientific": "Festuca idahoensis",
+   "symbol": "FEID",
+   "form": "grass",
+   "common": "Idaho fescue",
+   "family": "Poaceae",
+   "score": 78356.0,
+   "classes": {
+    "mixed_forest": 0.5,
+    "conifer_forest": 0.5,
+    "chaparral": 1.0,
+    "grassland": 1.0,
+    "barren": 0.5
+   },
+   "communities": [
+    "bps 686",
+    "bps 689",
+    "bps 697",
+    "bps 704",
+    "bps 707",
+    "evt 7011",
+    "evt 7046",
+    "evt 7126",
+    "evt 7139",
+    "evt 7140",
+    "evt 7169",
+    "evt 9016",
+    "evt 9828"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "pseudoroegneria_spicata",
+   "scientific": "Pseudoroegneria spicata",
+   "symbol": "PSSP6",
+   "form": "grass",
+   "common": "bluebunch wheatgrass",
+   "family": "Poaceae",
+   "score": 68447.0,
+   "classes": {
+    "conifer_forest": 0.5,
+    "chaparral": 1.0,
+    "grassland": 1.0
+   },
+   "communities": [
+    "bps 690",
+    "bps 704",
+    "bps 707",
+    "evt 7049",
+    "evt 7126",
+    "evt 7139",
+    "evt 7140",
+    "evt 9828"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "poa_secunda",
+   "scientific": "Poa secunda",
+   "symbol": "POSE",
+   "form": "grass",
+   "common": "Sandberg bluegrass",
+   "family": "Poaceae",
+   "score": 62120.0,
+   "classes": {
+    "conifer_forest": 1.0,
+    "chaparral": 1.0,
+    "grassland": 1.0
+   },
+   "communities": [
+    "bps 690",
+    "bps 697",
+    "bps 704",
+    "bps 707",
+    "evt 7049",
+    "evt 7126",
+    "evt 7140",
+    "evt 9828"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "carex_geyeri",
+   "scientific": "Carex geyeri",
+   "symbol": "CAGE2",
+   "form": "grass",
+   "common": "Geyer's sedge",
+   "family": "Cyperaceae",
+   "score": 58715.0,
+   "classes": {
+    "mixed_forest": 1.0,
+    "conifer_forest": 1.0,
+    "chaparral": 0.5,
+    "barren": 0.5,
+    "riparian": 1.0
+   },
+   "communities": [
+    "bps 686",
+    "bps 689",
+    "bps 693",
+    "bps 694",
+    "bps 716",
+    "evt 7011",
+    "evt 7046",
+    "evt 7050",
+    "evt 7055",
+    "evt 7056",
+    "evt 7061",
+    "evt 7167",
+    "evt 7169",
+    "evt 9016",
+    "evt 9022"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "arnica_cordifolia",
+   "scientific": "Arnica cordifolia",
+   "symbol": "ARCO9",
+   "form": "forb",
+   "common": "heartleaf arnica",
+   "family": "Asteraceae",
+   "score": 50311.0,
+   "classes": {
+    "conifer_forest": 1.0,
+    "mixed_forest": 1.0,
+    "chaparral": 0.5,
+    "barren": 0.5,
+    "riparian": 1.0
+   },
+   "communities": [
+    "bps 689",
+    "bps 693",
+    "evt 7046",
+    "evt 7050",
+    "evt 7055",
+    "evt 7061",
+    "evt 7169",
+    "evt 9016",
+    "evt 9022"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "elymus_trachycaulus",
+   "scientific": "Elymus trachycaulus",
+   "symbol": "ELTR7",
+   "form": "grass",
+   "common": "slender wheatgrass",
+   "family": "Poaceae",
+   "score": 44687.0,
+   "classes": {
+    "mixed_forest": 0.5,
+    "conifer_forest": 0.5,
+    "chaparral": 1.0,
+    "grassland": 1.0,
+    "barren": 0.5
+   },
+   "communities": [
+    "bps 686",
+    "bps 689",
+    "bps 697",
+    "bps 704",
+    "evt 7011",
+    "evt 7046",
+    "evt 7126",
+    "evt 7139",
+    "evt 7169",
+    "evt 9016",
+    "evt 9828"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "lupinus_argenteus",
+   "scientific": "Lupinus argenteus",
+   "symbol": "LUAR3",
+   "form": "forb",
+   "common": "silvery lupine",
+   "family": "Fabaceae",
+   "score": 41711.0,
+   "classes": {
+    "conifer_forest": 0.5,
+    "chaparral": 0.5,
+    "grassland": 0.5,
+    "barren": 0.5
+   },
+   "communities": [
+    "bps 689",
+    "bps 694",
+    "bps 697",
+    "bps 704",
+    "bps 707",
+    "evt 7046",
+    "evt 7056",
+    "evt 7126",
+    "evt 7140",
+    "evt 7169",
+    "evt 9016",
+    "evt 9828"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "geranium_viscosissimum",
+   "scientific": "Geranium viscosissimum",
+   "symbol": "GEVI2",
+   "form": "forb",
+   "common": "sticky purple geranium",
+   "family": "Geraniaceae",
+   "score": 41650.0,
+   "classes": {
+    "mixed_forest": 0.5,
+    "chaparral": 0.5,
+    "grassland": 1.0
+   },
+   "communities": [
+    "bps 686",
+    "bps 704",
+    "bps 707",
+    "evt 7011",
+    "evt 7126",
+    "evt 7139",
+    "evt 7140",
+    "evt 9828"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "eriogonum_umbellatum",
+   "scientific": "Eriogonum umbellatum",
+   "symbol": "ERUM",
+   "form": "forb",
+   "common": "sulphur-flower buckwheat",
+   "family": "Polygonaceae",
+   "score": 35129.0,
+   "classes": {
+    "chaparral": 0.5,
+    "grassland": 0.5
+   },
+   "communities": [
+    "bps 697",
+    "bps 704",
+    "bps 707",
+    "evt 7126",
+    "evt 7139",
+    "evt 7140",
+    "evt 9828"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "delphinium_bicolor",
+   "scientific": "Delphinium bicolor",
+   "symbol": "DEBI",
+   "form": "forb",
+   "common": "little larkspur",
+   "family": "Ranunculaceae",
+   "score": 33494.0,
+   "classes": {
+    "mixed_forest": 0.5,
+    "chaparral": 0.5,
+    "grassland": 0.5
+   },
+   "communities": [
+    "bps 686",
+    "bps 704",
+    "evt 7011",
+    "evt 7126",
+    "evt 9828"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "balsamorhiza_sagittata",
+   "scientific": "Balsamorhiza sagittata",
+   "symbol": "BASA3",
+   "form": "forb",
+   "common": "arrowleaf balsamroot",
+   "family": "Asteraceae",
+   "score": 31905.0,
+   "classes": {
+    "chaparral": 0.5,
+    "grassland": 0.5
+   },
+   "communities": [
+    "bps 704",
+    "bps 707",
+    "evt 7126",
+    "evt 7140",
+    "evt 9828"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "carex_rossii",
+   "scientific": "Carex rossii",
+   "symbol": "CARO5",
+   "form": "grass",
+   "common": "Ross' sedge",
+   "family": "Cyperaceae",
+   "score": 30899.0,
+   "classes": {
+    "mixed_forest": 0.5,
+    "conifer_forest": 1.0,
+    "chaparral": 0.5,
+    "barren": 0.5,
+    "riparian": 0.5
+   },
+   "communities": [
+    "bps 686",
+    "bps 689",
+    "bps 693",
+    "bps 716",
+    "evt 7011",
+    "evt 7046",
+    "evt 7050",
+    "evt 7055",
+    "evt 7061",
+    "evt 7167",
+    "evt 7169",
+    "evt 9016",
+    "evt 9022"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "castilleja_cusickii",
+   "scientific": "Castilleja cusickii",
+   "symbol": "CACU7",
+   "form": "forb",
+   "common": "Cusick's Indian paintbrush",
+   "family": "Scrophulariaceae",
+   "score": 30216.5,
+   "classes": {
+    "chaparral": 0.5,
+    "grassland": 0.5
+   },
+   "communities": [
+    "bps 704",
+    "evt 7070",
+    "evt 7126",
+    "evt 9828"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "hesperostipa_comata",
+   "scientific": "Hesperostipa comata",
+   "symbol": "HECO26",
+   "form": "grass",
+   "common": "needle and thread",
+   "family": "Poaceae",
+   "score": 30178.0,
+   "classes": {
+    "conifer_forest": 0.5,
+    "chaparral": 0.5,
+    "grassland": 0.5
+   },
+   "communities": [
+    "bps 690",
+    "bps 697",
+    "bps 704",
+    "evt 7049",
+    "evt 7126",
+    "evt 9828"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "elymus_elymoides",
+   "scientific": "Elymus elymoides",
+   "symbol": "ELEL5",
+   "form": "grass",
+   "common": "squirreltail",
+   "family": "Poaceae",
+   "score": 30169.0,
+   "classes": {
+    "chaparral": 0.5,
+    "grassland": 0.5
+   },
+   "communities": [
+    "bps 697",
+    "bps 704",
+    "evt 7126",
+    "evt 9828"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "poa_wheeleri",
+   "scientific": "Poa wheeleri",
+   "symbol": "POWH2",
+   "form": "grass",
+   "common": "Wheeler's bluegrass",
+   "family": "Poaceae",
+   "score": 22783.0,
+   "classes": {
+    "conifer_forest": 0.5,
+    "mixed_forest": 0.5,
+    "riparian": 0.5
+   },
+   "communities": [
+    "bps 693",
+    "evt 7050",
+    "evt 7055",
+    "evt 7061",
+    "evt 9022"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "carex_hoodii",
+   "scientific": "Carex hoodii",
+   "symbol": "CAHO5",
+   "form": "grass",
+   "common": "Hood's sedge",
+   "family": "Cyperaceae",
+   "score": 22783.0,
+   "classes": {
+    "conifer_forest": 0.5,
+    "mixed_forest": 0.5,
+    "riparian": 0.5
+   },
+   "communities": [
+    "bps 693",
+    "evt 7050",
+    "evt 7055",
+    "evt 7061",
+    "evt 9022"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "mertensia_ciliata",
+   "scientific": "Mertensia ciliata",
+   "symbol": "MECI3",
+   "form": "forb",
+   "common": "tall fringed bluebells",
+   "family": "Boraginaceae",
+   "score": 10111.5,
+   "classes": {
+    "riparian": 0.5,
+    "chaparral": 0.5
+   },
+   "communities": [
+    "bps 713",
+    "evt 7125",
+    "evt 9011",
+    "evt 9017",
+    "evt 9019",
+    "evt 9021",
+    "evt 9519",
+    "evt 9829"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "saxifraga_odontoloma",
+   "scientific": "Saxifraga odontoloma",
+   "symbol": "SAOD2",
+   "form": "forb",
+   "common": "brook saxifrage",
+   "family": "Saxifragaceae",
+   "score": 10111.5,
+   "classes": {
+    "riparian": 0.5,
+    "chaparral": 0.5
+   },
+   "communities": [
+    "bps 713",
+    "evt 7125",
+    "evt 9011",
+    "evt 9017",
+    "evt 9019",
+    "evt 9021",
+    "evt 9519",
+    "evt 9829"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "calamagrostis_canadensis",
+   "scientific": "Calamagrostis canadensis",
+   "symbol": "CACA4",
+   "form": "grass",
+   "common": "bluejoint",
+   "family": "Poaceae",
+   "score": 8558.0,
+   "classes": {
+    "mixed_forest": 0.5,
+    "conifer_forest": 0.5
+   },
+   "communities": [
+    "bps 686",
+    "bps 694",
+    "bps 714",
+    "evt 7011",
+    "evt 7056"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "eurybia_conspicua",
+   "scientific": "Eurybia conspicua",
+   "symbol": "EUCO36",
+   "form": "forb",
+   "common": "western showy aster",
+   "family": "Asteraceae",
+   "score": 8386.0,
+   "classes": {
+    "mixed_forest": 0.5,
+    "conifer_forest": 0.5
+   },
+   "communities": [
+    "bps 686",
+    "bps 694",
+    "evt 7011",
+    "evt 7056"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "actaea_rubra",
+   "scientific": "Actaea rubra",
+   "symbol": "ACRU2",
+   "form": "forb",
+   "common": "red baneberry",
+   "family": "Ranunculaceae",
+   "score": 5205.0,
+   "classes": {
+    "conifer_forest": 0.5
+   },
+   "communities": [
+    "bps 694",
+    "bps 714",
+    "evt 7056"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "mertensia_paniculata",
+   "scientific": "Mertensia paniculata",
+   "symbol": "MEPAA",
+   "form": "forb",
+   "common": "Alaska tall bluebells",
+   "family": "Boraginaceae",
+   "score": 5176.0,
+   "classes": {
+    "grassland": 1.0
+   },
+   "communities": [
+    "bps 710",
+    "evt 7145"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "campanula_rotundifolia",
+   "scientific": "Campanula rotundifolia",
+   "symbol": "CARO2",
+   "form": "forb",
+   "common": "bluebell bellflower",
+   "family": "Campanulaceae",
+   "score": 5176.0,
+   "classes": {
+    "grassland": 1.0
+   },
+   "communities": [
+    "bps 710",
+    "evt 7145"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "lupinus_alpestris",
+   "scientific": "Lupinus alpestris",
+   "symbol": "LUAL5",
+   "form": "forb",
+   "common": "Great Basin lupine",
+   "family": "Fabaceae",
+   "score": 5176.0,
+   "classes": {
+    "grassland": 1.0
+   },
+   "communities": [
+    "bps 710",
+    "evt 7145"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "maianthemum_stellatum",
+   "scientific": "Maianthemum stellatum",
+   "symbol": "MAST4",
+   "form": "forb",
+   "common": "starry false lily of the valley",
+   "family": "Liliaceae",
+   "score": 5033.0,
+   "classes": {
+    "conifer_forest": 0.5
+   },
+   "communities": [
+    "bps 694",
+    "evt 7056"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "cornus_canadensis",
+   "scientific": "Cornus canadensis",
+   "symbol": "COCA13",
+   "form": "forb",
+   "common": "bunchberry dogwood",
+   "family": "Cornaceae",
+   "score": 5033.0,
+   "classes": {
+    "conifer_forest": 0.5
+   },
+   "communities": [
+    "bps 694",
+    "evt 7056"
+   ],
+   "record": "card"
+  }
+ ],
+ "log": [
+  "BpS model 10010: no description document",
+  "BpS model 10060: no description document",
+  "'Vaccinium spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Thalictrum occidentalie dropped: not in the PLANTS Database",
+  "'Vaccinium spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Claytonia lanccolata dropped: not in the PLANTS Database",
+  "Vaccinium spp dropped: not in the PLANTS Database",
+  "Ribes viscossissimum dropped: not in the PLANTS Database",
+  "Salix scouleriama dropped: not in the PLANTS Database",
+  "Elymus glauccus dropped: not in the PLANTS Database",
+  "Hieracium alboflorum dropped: not in the PLANTS Database",
+  "bps 694: Erigeron engelmannii skipped (no GBIF record within 0.5 deg)",
+  "Carex generii dropped: not in the PLANTS Database",
+  "bps 697: Sporobolus airoides skipped (no GBIF record within 0.5 deg)",
+  "'Chrysothamnus spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Leymus cinerius dropped: not in the PLANTS Database",
+  "'Cordylanthus spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Mertensia spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Aster spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Phlox species dropped: not in the PLANTS Database",
+  "'Prunus spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Symphoricarpos spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Agropyron spicata dropped: not in the PLANTS Database",
+  "Antennaria microphyla dropped: not in the PLANTS Database",
+  "bps 707: Symphyotrichum amethystinum skipped (no GBIF record within 0.5 deg)",
+  "bps 707: Bromus pectinatus skipped (no GBIF record within 0.5 deg)",
+  "bps 707: Danthonia compressa skipped (no GBIF record within 0.5 deg)",
+  "'Aster spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Danthonia spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Potentilla spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Carex elymoides dropped: not in the PLANTS Database",
+  "Geum rosii dropped: not in the PLANTS Database",
+  "bps 710: Erigeron arthurii skipped (no GBIF record within 0.5 deg)",
+  "bps 710: Penstemon crideri skipped (no GBIF record within 0.5 deg)",
+  "bps 710: Solidago asperula skipped (no GBIF record within 0.5 deg)",
+  "bps 710: Delphinium burkei skipped (no GBIF record within 0.5 deg)",
+  "'Helianthella spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Mertensia spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Solidago spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Ligusticum spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Osmorhiza spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Valeriana spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Veratrum spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Aconitum spp.' dropped: no native ground congener in the tile's GBIF records",
+  "bps 712: Carex abitibiana skipped (no GBIF record within 0.5 deg)",
+  "Carex aaquatilis dropped: not in the PLANTS Database",
+  "Mertensia ciliatus dropped: not in the PLANTS Database",
+  "bps 713: Carex abitibiana skipped (no GBIF record within 0.5 deg)",
+  "Carex brunnscens dropped: not in the PLANTS Database",
+  "Epilobium angustifoilium dropped: not in the PLANTS Database",
+  "bps 715: Begonia reniformis skipped (no GBIF record within 0.5 deg)",
+  "bps 715: Carex geophila skipped (no GBIF record within 0.5 deg)",
+  "'Symphoricarpos spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Picea engelmanii dropped: not in the PLANTS Database",
+  "'Vaccinium spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Thalictrum occidentalie dropped: not in the PLANTS Database",
+  "'Vaccinium spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Claytonia lanccolata dropped: not in the PLANTS Database",
+  "Vaccinium spp dropped: not in the PLANTS Database",
+  "Ribes viscossissimum dropped: not in the PLANTS Database",
+  "Salix scouleriama dropped: not in the PLANTS Database",
+  "Elymus glauccus dropped: not in the PLANTS Database",
+  "Hieracium alboflorum dropped: not in the PLANTS Database",
+  "Vaccinium spp dropped: not in the PLANTS Database",
+  "Ribes viscossissimum dropped: not in the PLANTS Database",
+  "Salix scouleriama dropped: not in the PLANTS Database",
+  "Elymus glauccus dropped: not in the PLANTS Database",
+  "Hieracium alboflorum dropped: not in the PLANTS Database",
+  "evt 7056: Erigeron engelmannii skipped (no GBIF record within 0.5 deg)",
+  "Carex generii dropped: not in the PLANTS Database",
+  "evt 7057: Begonia reniformis skipped (no GBIF record within 0.5 deg)",
+  "evt 7057: Carex geophila skipped (no GBIF record within 0.5 deg)",
+  "'Symphoricarpos spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Picea engelmanii dropped: not in the PLANTS Database",
+  "Vaccinium spp dropped: not in the PLANTS Database",
+  "Ribes viscossissimum dropped: not in the PLANTS Database",
+  "Salix scouleriama dropped: not in the PLANTS Database",
+  "Elymus glauccus dropped: not in the PLANTS Database",
+  "Hieracium alboflorum dropped: not in the PLANTS Database",
+  "evt 7070: Dryas integrifolia skipped (no GBIF record within 0.5 deg)",
+  "evt 7070: Erigeron arthurii skipped (no GBIF record within 0.5 deg)",
+  "evt 7070: Dryas integrifolia skipped (no GBIF record within 0.5 deg)",
+  "'Vaccinium spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Erythronium spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Pinus ablicaulis dropped: not in the PLANTS Database",
+  "Ribes montigenus dropped: not in the PLANTS Database",
+  "'Prunus spp.' dropped: no native ground congener in the tile's GBIF records",
+  "evt 7125: Carex abitibiana skipped (no GBIF record within 0.5 deg)",
+  "Carex brunnscens dropped: not in the PLANTS Database",
+  "'Symphoricarpos spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Agropyron spicata dropped: not in the PLANTS Database",
+  "Antennaria microphyla dropped: not in the PLANTS Database",
+  "evt 7139: Phlox glutinosa skipped (no GBIF record within 0.5 deg)",
+  "Achnatherum letermanii dropped: not in the PLANTS Database",
+  "Trisetum spicata dropped: not in the PLANTS Database",
+  "evt 7140: Symphyotrichum amethystinum skipped (no GBIF record within 0.5 deg)",
+  "evt 7140: Bromus pectinatus skipped (no GBIF record within 0.5 deg)",
+  "evt 7140: Danthonia compressa skipped (no GBIF record within 0.5 deg)",
+  "'Aster spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Danthonia spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Potentilla spp.' dropped: no native ground congener in the tile's GBIF records",
+  "evt 7143: Phlox condensata skipped (no GBIF record within 0.5 deg)",
+  "Carex elymoides dropped: not in the PLANTS Database",
+  "Geum rosii dropped: not in the PLANTS Database",
+  "evt 7145: Erigeron arthurii skipped (no GBIF record within 0.5 deg)",
+  "evt 7145: Penstemon crideri skipped (no GBIF record within 0.5 deg)",
+  "evt 7145: Solidago asperula skipped (no GBIF record within 0.5 deg)",
+  "evt 7145: Delphinium burkei skipped (no GBIF record within 0.5 deg)",
+  "'Helianthella spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Mertensia spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Solidago spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Ligusticum spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Osmorhiza spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Valeriana spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Veratrum spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Aconitum spp.' dropped: no native ground congener in the tile's GBIF records",
+  "evt 7166: Begonia reniformis skipped (no GBIF record within 0.5 deg)",
+  "evt 7166: Carex geophila skipped (no GBIF record within 0.5 deg)",
+  "'Symphoricarpos spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Picea engelmanii dropped: not in the PLANTS Database",
+  "'Vaccinium spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Claytonia lanccolata dropped: not in the PLANTS Database",
+  "evt 9011: Carex abitibiana skipped (no GBIF record within 0.5 deg)",
+  "Carex brunnscens dropped: not in the PLANTS Database",
+  "'Vaccinium spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Claytonia lanccolata dropped: not in the PLANTS Database",
+  "evt 9017: Carex abitibiana skipped (no GBIF record within 0.5 deg)",
+  "Carex brunnscens dropped: not in the PLANTS Database",
+  "evt 9018: Begonia reniformis skipped (no GBIF record within 0.5 deg)",
+  "evt 9018: Carex geophila skipped (no GBIF record within 0.5 deg)",
+  "'Symphoricarpos spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Picea engelmanii dropped: not in the PLANTS Database",
+  "evt 9019: Carex abitibiana skipped (no GBIF record within 0.5 deg)",
+  "Carex brunnscens dropped: not in the PLANTS Database",
+  "evt 9021: Carex abitibiana skipped (no GBIF record within 0.5 deg)",
+  "Carex brunnscens dropped: not in the PLANTS Database",
+  "Vaccinium spp dropped: not in the PLANTS Database",
+  "Ribes viscossissimum dropped: not in the PLANTS Database",
+  "Salix scouleriama dropped: not in the PLANTS Database",
+  "Elymus glauccus dropped: not in the PLANTS Database",
+  "Hieracium alboflorum dropped: not in the PLANTS Database",
+  "evt 9519: Carex abitibiana skipped (no GBIF record within 0.5 deg)",
+  "Carex brunnscens dropped: not in the PLANTS Database",
+  "'Symphoricarpos spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Agropyron spicata dropped: not in the PLANTS Database",
+  "Antennaria microphyla dropped: not in the PLANTS Database",
+  "evt 9829: Carex abitibiana skipped (no GBIF record within 0.5 deg)",
+  "Carex brunnscens dropped: not in the PLANTS Database",
+  "achnatherum_nelsonii: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "achnatherum_lettermanii: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "koeleria_macrantha: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "bromus_carinatus: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "trisetum_spicatum: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "elymus_glaucus: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "elymus_lanceolatus: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "carex_microptera: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "phleum_alpinum: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "bromus_marginatus: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "carex_utriculata: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "deschampsia_cespitosa: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "carex_elynoides: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "carex_siccata: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "carex_scirpoidea: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "carex_nardina: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "carex_rupestris: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "juncus_parryi: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "luzula_piperi: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "carex_spectabilis: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "carex_nigricans: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "leymus_cinereus: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "festuca_brachyphylla: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "bouteloua_gracilis: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "leucopoa_kingii: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "calamagrostis_rubescens: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "saxifraga_bronchialis: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "antennaria_dimorpha: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "erythronium_grandiflorum: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "potentilla_gracilis: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "taraxacum_officinale: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "achillea_millefolium: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "erigeron_compositus: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "agastache_urticifolia: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "chamerion_angustifolium: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "helianthella_uniflora: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "equisetum_arvense: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "geum_macrophyllum: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "dryas_octopetala: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "senecio_triangularis: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "streptopus_amplexifolius: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "phlox_pulvinata: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "trifolium_dasyphyllum: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "antennaria_lanata: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "oreostemma_alpigenum: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "pedicularis_bracteosa: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "artemisia_dracunculus: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "crepis_acuminata: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "silene_acaulis: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "trifolium_nanum: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "claytonia_megarhiza: dropped (the tile's 16 forb slots are taken by better-represented species)"
+ ],
+ "cards_written": [
+  "festuca_idahoensis",
+  "pseudoroegneria_spicata",
+  "poa_secunda",
+  "carex_geyeri",
+  "arnica_cordifolia",
+  "elymus_trachycaulus",
+  "lupinus_argenteus",
+  "geranium_viscosissimum",
+  "eriogonum_umbellatum",
+  "delphinium_bicolor",
+  "balsamorhiza_sagittata",
+  "carex_rossii",
+  "castilleja_cusickii",
+  "hesperostipa_comata",
+  "elymus_elymoides",
+  "poa_wheeleri",
+  "carex_hoodii",
+  "mertensia_ciliata",
+  "saxifraga_odontoloma",
+  "calamagrostis_canadensis",
+  "eurybia_conspicua",
+  "actaea_rubra",
+  "mertensia_paniculata",
+  "campanula_rotundifolia",
+  "lupinus_alpestris",
+  "maianthemum_stellatum",
+  "cornus_canadensis"
+ ]
+}

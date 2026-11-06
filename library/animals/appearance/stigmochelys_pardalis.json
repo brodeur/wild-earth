@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "stigmochelys_pardalis",
  "scientific": "Stigmochelys pardalis",
  "common": "leopard tortoise",
@@ -50,5 +50,20 @@
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "body yellow with black blotches; head yellow, tan, brown; legs yellow, tan, brown"
+ "summary": "body yellow with black blotches; head yellow, tan, brown; legs yellow, tan, brown",
+ "features": {
+  "horns": {
+   "described": false,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [],
+   "length_m": null
+  },
+  "shoulder_m": null,
+  "head_body_m": null,
+  "total_m": null
+ }
 }

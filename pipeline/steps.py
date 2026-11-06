@@ -256,7 +256,12 @@ def _plants(tile, m, force):
     # and records, and a trait card for each that has a research record, so a tile draws its own trees.
     from .needs import plant_needs
     from .tree_cards import run as canopy
+    from .ground_cards import run as ground_cards
     add_layer(m, tile, "species.canopy", canopy(tile), fetched=False)
+    # Outside the regional tables (2026-11-06, iteration 7): the tile's own grasses and forbs (pipeline/ground_cards.py)
+    g = ground_cards(tile)
+    if not g.get("skipped"):
+        add_layer(m, tile, "species.ground", g, fetched=False)
     add_layer(m, tile, "species.plant_needs", plant_needs(tile, generate=True), fetched=False)
 
 
@@ -531,12 +536,12 @@ STEPS: dict[str, Step] = {s.name: s for s in [
     Step("seams", "1", ["seams"], ["dem", "channels", "water"], _seams, [],
          doc="the DEM and streams agree with every built neighbour along the shared edge", stage=B),
     # ---------------------------------------------------------------- flora
-    Step("plants", "3", ["needs", "plantgen", "communities", "research", "tree_cards"], ["landcover", "ice"], _plants,
-         ["species.canopy", "species.plant_needs"], ["gbif", "wcvp", "canopy_plots"],
+    Step("plants", "4", ["needs", "plantgen", "communities", "research", "tree_cards", "ground_cards"], ["landcover", "ice"], _plants,
+         ["species.canopy", "species.plant_needs", "species.ground"], ["gbif", "wcvp", "canopy_plots", "landfire_bps", "usda_plants"],
          library=["library/plant_cards", "library/plant_cards/_research"],
-         doc="the tile's canopy trees and their cards; the plants the tile needs, ranked; missing ones grown from their "
-             "trait cards", stage=F),
-    Step("species_mix", "2", ["species_mix", "communities", "regions"], ["dem", "landcover", "water", "ice", "plants"],
+         doc="the tile's canopy trees and their cards; outside the regional tables its own grasses and forbs and their cards "
+             "(ground_cards); the plants the tile needs, ranked; missing ones grown from their trait cards", stage=F),
+    Step("species_mix", "4", ["species_mix", "communities", "regions", "ground_cards"], ["dem", "landcover", "water", "ice", "plants"],
          _species_mix, ["client.species_mix"], library=["library/species"],
          doc="trees, shrubs and ground layer per 30 m cell, with the unmatched communities read from their names", stage=F),
     Step("canopy_top", "2", ["canopy_top", "canopy_maps"], ["landcover", "lidar", "terrain"], _canopy_top,

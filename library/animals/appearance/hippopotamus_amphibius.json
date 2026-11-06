@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "hippopotamus_amphibius",
  "scientific": "Hippopotamus amphibius",
  "common": "hippo",
@@ -31,8 +31,9 @@
  "facts": 7,
  "dropped": {
   "regional": 1,
-  "not the body": 4,
-  "age change": 2
+  "morph": 1,
+  "age change": 2,
+  "not the body": 3
  },
  "sources": [
   {
@@ -50,5 +51,32 @@
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "body purplish-grey, blue-black, purple gray, slate; belly and underparts brownish-pink; head brownish-pink, brownish pink"
+ "summary": "body purplish-grey, blue-black, purple gray, slate; belly and underparts brownish-pink; head brownish-pink, brownish pink",
+ "features": {
+  "horns": {
+   "described": false,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [
+    "long",
+    "short"
+   ],
+   "length_m": [
+    0.35,
+    0.455
+   ]
+  },
+  "shoulder_m": [
+   1.35,
+   1.55
+  ],
+  "head_body_m": [
+   3.3,
+   3.45
+  ],
+  "total_m": null
+ }
 }

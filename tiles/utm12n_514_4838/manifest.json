@@ -15,7 +15,7 @@
   43.78492414769734
  ],
  "size_m": 10000,
- "generated_at": "2026-11-06T11:29:52Z",
+ "generated_at": "2026-11-06T16:41:33Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -6653,24 +6653,24 @@
     "gbif",
     "landfire"
    ],
-   "needed": 61,
-   "with_record": 17,
+   "needed": 64,
+   "with_record": 27,
    "generated_now": 0,
-   "queued": 44,
+   "queued": 37,
    "unread_communities": 16,
    "meets_target": {
     "tree": false,
     "shrub": false,
     "ground": true
    },
-   "hands": 60,
+   "hands": 53,
    "by_layer": {
-    "tree": 16,
-    "shrub": 19,
+    "tree": 20,
+    "shrub": 18,
     "ground": 26
    },
-   "sha256": "e077b1013bd011d51c048fd58ed6f09c9b28b3456d678de31d30204f2c25eb66",
-   "bytes": 64259
+   "sha256": "153938fd995201097ba3e126f78b4c280948b4799dd2ba273672bcfc1602cb95",
+   "bytes": 64509
   },
   "client.species_mix": {
    "path": "client/species_mix.json",
@@ -6687,12 +6687,12 @@
    "format": 2,
    "files": {
     "client/species_mix_index.png": {
-     "sha256": "c9dc6d07d552459be8d45b9ba1302eca06cb0fbef693e4556968f91ef6f502ba",
-     "bytes": 38453
+     "sha256": "134b077b0230c7874e6465c7320289f40b792e88729a8bb72b01aea87a3d4a80",
+     "bytes": 37921
     },
     "client/species_mix_density.png": {
-     "sha256": "01cf907ce84eb9164311a1dc66864863b70cefabad8c0fdffc2f0c4f3239b2d9",
-     "bytes": 17728
+     "sha256": "71fd2b350b84989d2acd67637980f741f68e158e7d3a311fdfa6f3eca83c5f23",
+     "bytes": 14166
     }
    },
    "derived_from": [
@@ -6729,12 +6729,7 @@
      "platanus_racemosa",
      "populus_tremuloides",
      "pinus_albicaulis",
-     "tsuga_mertensiana",
-     "pinus_contorta",
-     "pinus_monticola",
-     "juniperus_grandis",
-     "pinus_lambertiana",
-     "abies_concolor"
+     "pinus_contorta"
     ],
     "shrubs": [
      "arctostaphylos_viscida",
@@ -6760,12 +6755,39 @@
      "rubus_ursinus",
      "vitis_californica",
      "calycanthus_occidentalis",
-     "phyllodoce_breweri",
      "artemisia_tridentata"
     ],
-    "ground": []
+    "ground": [
+     "actaea_rubra",
+     "arnica_cordifolia",
+     "balsamorhiza_sagittata",
+     "bromus_carinatus",
+     "calamagrostis_canadensis",
+     "campanula_rotundifolia",
+     "carex_geyeri",
+     "carex_rossii",
+     "castilleja_miniata",
+     "delphinium_burkei",
+     "delphinium_nuttallianum",
+     "elymus_elymoides",
+     "elymus_trachycaulus",
+     "erigeron_engelmannii",
+     "eriogonum_umbellatum",
+     "erythronium_grandiflorum",
+     "eurybia_conspicua",
+     "festuca_idahoensis",
+     "geranium_viscosissimum",
+     "hesperostipa_comata",
+     "lupinus_argenteus",
+     "maianthemum_stellatum",
+     "poa_secunda",
+     "potentilla_gracilis",
+     "pseudoroegneria_spicata",
+     "saxifraga_bronchialis",
+     "trisetum_spicatum"
+    ]
    },
-   "mixes": 86,
+   "mixes": 83,
    "unmatched": 36,
    "fractions": {
     "from_evt": 0.9723,
@@ -6774,38 +6796,7 @@
      "blue_oak": 0.0,
      "live_oak": 0.0,
      "gray_pine": 0.0,
-     "ponderosa": 0.0019,
-     "willow": 0.0,
-     "alder": 0.0,
-     "cottonwood": 0.0,
-     "valley_oak": 0.0,
-     "canyon_live_oak": 0.0,
-     "black_oak": 0.0001,
-     "buckeye": 0.0,
-     "madrone": 0.0,
-     "bay": 0.0,
-     "walnut": 0.0,
-     "maple": 0.0,
-     "ash": 0.0,
-     "incense_cedar": 0.0,
-     "douglas_fir": 0.2906,
-     "red_willow": 0.0,
-     "pacific_willow": 0.0,
-     "sycamore": 0.0,
-     "populus_tremuloides": 0.016,
-     "pinus_albicaulis": 0.0455,
-     "tsuga_mertensiana": 0.0441,
-     "pinus_contorta": 0.4295,
-     "pinus_monticola": 0.0525,
-     "juniperus_grandis": 0.1197,
-     "pinus_lambertiana": 0.0,
-     "abies_concolor": 0.0001
-    },
-    "tree_share_by_canopy": {
-     "blue_oak": 0.0,
-     "live_oak": 0.0,
-     "gray_pine": 0.0,
-     "ponderosa": 0.0013,
+     "ponderosa": 0.001,
      "willow": 0.0,
      "alder": 0.0,
      "cottonwood": 0.0,
@@ -6819,18 +6810,39 @@
      "maple": 0.0,
      "ash": 0.0,
      "incense_cedar": 0.0,
-     "douglas_fir": 0.2955,
+     "douglas_fir": 0.335,
      "red_willow": 0.0,
      "pacific_willow": 0.0,
      "sycamore": 0.0,
-     "populus_tremuloides": 0.01,
-     "pinus_albicaulis": 0.0371,
-     "tsuga_mertensiana": 0.0387,
-     "pinus_contorta": 0.469,
-     "pinus_monticola": 0.0464,
-     "juniperus_grandis": 0.1018,
-     "pinus_lambertiana": 0.0,
-     "abies_concolor": 0.0
+     "populus_tremuloides": 0.0162,
+     "pinus_albicaulis": 0.1184,
+     "pinus_contorta": 0.5293
+    },
+    "tree_share_by_canopy": {
+     "blue_oak": 0.0,
+     "live_oak": 0.0,
+     "gray_pine": 0.0,
+     "ponderosa": 0.0007,
+     "willow": 0.0,
+     "alder": 0.0,
+     "cottonwood": 0.0,
+     "valley_oak": 0.0,
+     "canyon_live_oak": 0.0,
+     "black_oak": 0.0,
+     "buckeye": 0.0,
+     "madrone": 0.0,
+     "bay": 0.0,
+     "walnut": 0.0,
+     "maple": 0.0,
+     "ash": 0.0,
+     "incense_cedar": 0.0,
+     "douglas_fir": 0.3381,
+     "red_willow": 0.0,
+     "pacific_willow": 0.0,
+     "sycamore": 0.0,
+     "populus_tremuloides": 0.0101,
+     "pinus_albicaulis": 0.0929,
+     "pinus_contorta": 0.5582
     },
     "shrub_share": {
      "manzanita": 0.0,
@@ -6856,32 +6868,57 @@
      "blackberry": 0.0,
      "wild_grape": 0.0,
      "spicebush": 0.0,
-     "phyllodoce_breweri": 0.2676,
-     "artemisia_tridentata": 0.7324
+     "artemisia_tridentata": 1.0
     },
-    "ground_share": {},
+    "ground_share": {
+     "actaea_rubra": 0.0256,
+     "arnica_cordifolia": 0.0559,
+     "balsamorhiza_sagittata": 0.0176,
+     "bromus_carinatus": 0.0441,
+     "calamagrostis_canadensis": 0.0331,
+     "campanula_rotundifolia": 0.0179,
+     "carex_geyeri": 0.1035,
+     "carex_rossii": 0.0582,
+     "castilleja_miniata": 0.0202,
+     "delphinium_burkei": 0.0178,
+     "delphinium_nuttallianum": 0.0178,
+     "elymus_elymoides": 0.0208,
+     "elymus_trachycaulus": 0.0644,
+     "erigeron_engelmannii": 0.0256,
+     "eriogonum_umbellatum": 0.0177,
+     "erythronium_grandiflorum": 0.0341,
+     "eurybia_conspicua": 0.0261,
+     "festuca_idahoensis": 0.1019,
+     "geranium_viscosissimum": 0.0184,
+     "hesperostipa_comata": 0.0208,
+     "lupinus_argenteus": 0.0773,
+     "maianthemum_stellatum": 0.0256,
+     "poa_secunda": 0.0432,
+     "potentilla_gracilis": 0.0005,
+     "pseudoroegneria_spicata": 0.0435,
+     "saxifraga_bronchialis": 0.0256,
+     "trisetum_spicatum": 0.0426
+    },
     "mean_tree_density": 0.3055,
-    "mean_shrub_density": 0.3494,
+    "mean_shrub_density": 0.2585,
     "rules": {
-     "named_from_phyllodoce_breweri": 0.298,
+     "tile_pool_grassland": 0.3771,
      "named_from_artemisia_tridentata": 0.2432,
-     "tile_pool_grassland": 0.0852,
-     "tile_pool_conifer_forest": 0.0852,
+     "tile_pool_conifer_forest": 0.0855,
      "named_from_pinus_contorta": 0.0818,
      "open_water": 0.0663,
      "named_from_pseudotsuga_menziesii": 0.0564,
-     "named_from_pinus_albicaulis_tsuga_mertensiana_pinus_contorta": 0.0266,
-     "tile_pool_riparian": 0.0223,
+     "named_from_pinus_albicaulis_pinus_contorta": 0.0266,
+     "tile_pool_riparian": 0.0259,
      "snow_ice": 0.0173,
-     "tile_pool_chaparral": 0.0128,
+     "tile_pool_chaparral": 0.0152,
      "named_from_populus_tremuloides": 0.0044,
-     "named_from_pinus_longaeva": 0.0003,
-     "named_from_pinus_flexilis_juniperus_grandis": 0.0002,
-     "named_from_pinus_ponderosa_pinus_lambertiana_abies_concolor": 0.0001
+     "named_from_pinus_flexilis": 0.0002,
+     "named_from_pseudotsuga_menziesii_populus_tremuloides": 0.0001
     }
    },
-   "sha256": "c86ec6232d30768dbfdb8014adcd107214aee7eea1657130f61a9cacab4db39d",
-   "bytes": 69095
+   "sha256": "b9e8a708f7c1f98ec39ead6f4a635a89385b916b584fc25f087ae1bbeed88685",
+   "bytes": 81951
   },
   "species.list": {
    "path": "species/species.json",
@@ -7239,6 +7276,59 @@
    "reason": "fewer than two units left in the column",
    "sha256": "ead631fcfbb83be27932c97c150f389b8280b3e495e5a6f2e75ba584d2bf5bb1",
    "bytes": 2700
+  },
+  "species.canopy": {
+   "path": "species/canopy.json",
+   "kind": "table",
+   "sources_used": [
+    "wcvp",
+    "canopy_plots",
+    "gbif"
+   ],
+   "trees": 10,
+   "with_card": 4,
+   "queued": 10,
+   "cards_written": [],
+   "sha256": "620c832ba30df19c6d332b71545da1ab715610e5f9ddc5d86c286dfbe241ada4",
+   "bytes": 5452
+  },
+  "species.ground": {
+   "path": "species/ground.json",
+   "kind": "table",
+   "sources_used": [
+    "landfire_bps",
+    "usda_plants",
+    "gbif"
+   ],
+   "species": 27,
+   "communities": 35,
+   "cards_written": [
+    "festuca_idahoensis",
+    "lupinus_argenteus",
+    "elymus_trachycaulus",
+    "pseudoroegneria_spicata",
+    "poa_secunda",
+    "calamagrostis_canadensis",
+    "geranium_viscosissimum",
+    "eurybia_conspicua",
+    "delphinium_nuttallianum",
+    "castilleja_miniata",
+    "actaea_rubra",
+    "maianthemum_stellatum",
+    "erigeron_engelmannii",
+    "saxifraga_bronchialis",
+    "eriogonum_umbellatum",
+    "balsamorhiza_sagittata",
+    "hesperostipa_comata",
+    "elymus_elymoides",
+    "bromus_carinatus",
+    "trisetum_spicatum",
+    "erythronium_grandiflorum",
+    "delphinium_burkei",
+    "potentilla_gracilis"
+   ],
+   "sha256": "ccda5a2071e10b36e00de85a9e7f9c5e9dc1c8dfa1911603f7a5ca7b0bdd96dd",
+   "bytes": 113987
   }
  },
  "sources": {
@@ -7384,6 +7474,46 @@
    "attribution": "Diet and body mass: Wilman, H., Belmaker, J., Simpson, J., de la Rosa, C., Rivadeneira, M. M. and Jetz, W. (2014). EltonTraits 1.0. Ecology 95: 2027. Body masses after Smith et al. 2003 and Dunning 2007",
    "attribution_url": "https://doi.org/10.1890/13-1917.1",
    "attribution_required": true,
+   "retrieved": "2026-11-06"
+  },
+  "wcvp": {
+   "name": "World Checklist of Vascular Plants (WCVP), Royal Botanic Gardens, Kew",
+   "url": "https://sftp.kew.org/pub/data-repositories/WCVP/",
+   "license": "CC BY 4.0",
+   "license_url": "https://creativecommons.org/licenses/by/4.0/",
+   "attribution": "Govaerts, R., Nic Lughadha, E., Black, N., Turner, R. and Paton, A. (2021). The World Checklist of Vascular Plants, a continuously updated resource for exploring global plant diversity. Scientific Data 8: 215",
+   "attribution_url": "https://doi.org/10.1038/s41597-021-00997-6",
+   "attribution_required": true,
+   "retrieved": "2026-11-06"
+  },
+  "canopy_plots": {
+   "name": "Open forest-plot inventories and place descriptions read for a tile's canopy (library/plant_cards/_research/_canopy_sources.json lists each with its citation and licence)",
+   "url": "https://doi.org/10.55873/rba.v3i1.274",
+   "license": "CC BY 4.0 / CC BY-SA 4.0 (per source)",
+   "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+   "attribution_url": "https://doi.org/10.55873/rba.v3i1.274",
+   "attribution": "Vela-Apaza, C. I. & Gonzales-Ojeda, T. (2024). Flora arborea de los bosques de la planicie aluvial inundable en el Rio Los Amigos, Amazonia Peruana. Rev. Biodivers. Amaz. 3(1): e274; Wikipedia contributors (Parque nacional del Manu, es; Corcovado National Park, en)",
+   "attribution_required": true,
+   "retrieved": "2026-11-06"
+  },
+  "landfire_bps": {
+   "name": "LANDFIRE Biophysical Settings Models and Descriptions (USDA Forest Service, U.S. Department of the Interior, U.S. Geological Survey, The Nature Conservancy)",
+   "url": "https://landfirereview.org/search.php",
+   "license": "Public domain (U.S. Government work; access and use constraints: none)",
+   "license_url": "https://landfire.gov/data/faqs",
+   "attribution": "LANDFIRE. 2020. Biophysical settings models and descriptions. In: LANDFIRE Biophysical Settings Models and Descriptions [Online]. Washington, DC: USDA Forest Service; U.S. Department of the Interior; U.S. Geological Survey; Arlington, VA: The Nature Conservancy (Producers). Blankenship et al. 2021, Ecosphere 12(4): e03484",
+   "attribution_url": "https://doi.org/10.1002/ecs2.3484",
+   "attribution_required": false,
+   "retrieved": "2026-11-06"
+  },
+  "usda_plants": {
+   "name": "USDA, NRCS. The PLANTS Database: plant profiles and characteristics",
+   "url": "https://plants.usda.gov",
+   "license": "Public domain (U.S. Government work)",
+   "license_url": "https://plants.usda.gov/home/help",
+   "attribution": "USDA, NRCS. 2026. The PLANTS Database (http://plants.usda.gov). National Plant Data Team, Greensboro, NC USA",
+   "attribution_url": "https://plants.usda.gov",
+   "attribution_required": false,
    "retrieved": "2026-11-06"
   }
  },
@@ -7788,6 +7918,36 @@
    "step": "animals",
    "at": "2026-11-06T11:29:52Z",
    "seconds": 0.7,
+   "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-06T15:22:40Z",
+   "seconds": 4.3,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-06T15:22:41Z",
+   "seconds": 1.1,
+   "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-06T15:26:06Z",
+   "seconds": 2.6,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-06T15:26:07Z",
+   "seconds": 1.1,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-06T16:41:32Z",
+   "seconds": 23.0,
    "ok": true
   }
  ],
@@ -8695,15 +8855,15 @@
    "seconds": 0.0
   },
   "plants": {
-   "version": "1",
-   "code": "720f197613ab9e8d",
+   "version": "4",
+   "code": "881a57ad9a604630",
    "params": {
     "tile": "utm12n_514_4838"
    },
-   "fingerprint": "58c729af2f875004",
+   "fingerprint": "ccf0191755a27377",
    "parts": {
-    "version": "1",
-    "code": "720f197613ab9e8d",
+    "version": "4",
+    "code": "881a57ad9a604630",
     "params": {
      "tile": "utm12n_514_4838"
     },
@@ -8712,41 +8872,50 @@
      "ice": "2d721bcc6d7811af"
     },
     "library": {
-     "library/plant_cards": "ee12514a4e80d1ec"
+     "library/plant_cards": "b9ce0f6867e5233b",
+     "library/plant_cards/_research": "76160f150981cd69"
     }
    },
-   "ran_at": "2026-11-06T06:48:36Z",
+   "ran_at": "2026-11-06T15:26:03Z",
    "owner": null,
    "status": "ok",
    "layers": [
+    "species.canopy",
+    "species.ground",
     "species.plant_needs"
    ],
    "outputs": {
-    "species/plant_needs.json": "e077b1013bd011d5"
+    "species/canopy.json": "620c832ba30df19c",
+    "species/ground.json": "ccda5a2071e10b36",
+    "species/plant_needs.json": "153938fd99520109"
    },
-   "out_hash": "19b4766a5e4d088c",
+   "out_hash": "5ad7cb1250284b58",
    "sources": {
+    "wcvp": "2026-11-06",
+    "canopy_plots": "2026-11-06",
     "gbif": "2026-11-06",
+    "landfire_bps": "2026-11-06",
+    "usda_plants": "2026-11-06",
     "landfire": "2026-11-06"
    },
    "fallbacks": [],
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 153
+    "cache": 2144
    },
-   "seconds": 0.2
+   "seconds": 2.6
   },
   "species_mix": {
-   "version": "1",
-   "code": "524de0e5f6feef36",
+   "version": "4",
+   "code": "0aaa3ecbe181215d",
    "params": {
     "tile": "utm12n_514_4838"
    },
-   "fingerprint": "0597eca9ed11fbfc",
+   "fingerprint": "1854006f767bb1b0",
    "parts": {
-    "version": "1",
-    "code": "524de0e5f6feef36",
+    "version": "4",
+    "code": "0aaa3ecbe181215d",
     "params": {
      "tile": "utm12n_514_4838"
     },
@@ -8755,32 +8924,90 @@
      "landcover": "bd9de479eda06329",
      "water": "4c2086d7018908a1",
      "ice": "2d721bcc6d7811af",
-     "plants": "19b4766a5e4d088c"
+     "plants": "5ad7cb1250284b58"
     },
     "library": {
-     "library/species": "6ee3896f8d92a386"
+     "library/species": "dad76da283687713"
     }
    },
-   "ran_at": "2026-11-06T06:48:36Z",
+   "ran_at": "2026-11-06T16:41:10Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "client.species_mix"
    ],
    "outputs": {
-    "client/species_mix.json": "c86ec6232d30768d",
-    "client/species_mix_index.png": "c9dc6d07d552459b",
-    "client/species_mix_density.png": "01cf907ce84eb916"
+    "client/species_mix.json": "b9e8a708f7c1f98e",
+    "client/species_mix_index.png": "134b077b0230c787",
+    "client/species_mix_density.png": "71fd2b350b84989d"
    },
-   "out_hash": "507b85e803fc7b1b",
+   "out_hash": "784aba34892e482f",
    "sources": {},
-   "fallbacks": [],
+   "fallbacks": [
+    {
+     "what": "community 'Northern Rocky Mountain Lower Montane-Foothill-Valley Grassland' (127 cells): no rule, no species in its name, no other grassland community on the tile: drawn bare"
+    },
+    {
+     "what": "community 'Northern Rocky Mountain Subalpine-Upper Montane Grassland' (246 cells): no rule, no species in its name, no other grassland community on the tile: drawn bare"
+    },
+    {
+     "what": "community 'Rocky Mountain Alpine Fell-Field' (246 cells): no rule, no species in its name, no other grassland community on the tile: drawn bare"
+    },
+    {
+     "what": "community 'Rocky Mountain Alpine Turf' (1389 cells): no rule, no species in its name, no other grassland community on the tile: drawn bare"
+    },
+    {
+     "what": "community 'Rocky Mountain Subalpine-Montane Mesic Meadow' (3340 cells): no rule, no species in its name, no other grassland community on the tile: drawn bare"
+    },
+    {
+     "what": "community 'Rocky Mountain Subalpine/Upper Montane Riparian Systems' (44 cells): no rule, no species in its name, no other riparian community on the tile: drawn bare"
+    },
+    {
+     "what": "community 'Rocky Mountain Montane Riparian Systems' (103 cells): no rule, no species in its name, no other riparian community on the tile: drawn bare"
+    },
+    {
+     "what": "community 'North American Arid West Emergent Marsh' (2 cells): no rule, no species in its name, no other riparian community on the tile: drawn bare"
+    },
+    {
+     "what": "community 'Rocky Mountain Alpine Bedrock and Scree' (30737 cells): no rule, no species in its name, no other grassland community on the tile: drawn bare"
+    },
+    {
+     "what": "community 'Rocky Mountain Alpine-Montane Wet Meadow' (401 cells): no rule, no species in its name, no other riparian community on the tile: drawn bare"
+    },
+    {
+     "what": "community 'Rocky Mountain Cliff Canyon and Massive Bedrock' (5549 cells): no rule, no species in its name, no other grassland community on the tile: drawn bare"
+    },
+    {
+     "what": "community 'Rocky Mountain Lower Montane-Foothill Riparian Woodland' (1309 cells): no rule, no species in its name, no other riparian community on the tile: drawn bare"
+    },
+    {
+     "what": "community 'Rocky Mountain Subalpine-Montane Riparian Shrubland' (60 cells): no rule, no species in its name, no other riparian community on the tile: drawn bare"
+    },
+    {
+     "what": "community 'Rocky Mountain Subalpine-Montane Riparian Woodland' (411 cells): no rule, no species in its name, no other riparian community on the tile: drawn bare"
+    },
+    {
+     "what": "community 'Rocky Mountain Lower Montane-Foothill Riparian Shrubland' (489 cells): no rule, no species in its name, no other riparian community on the tile: drawn bare"
+    },
+    {
+     "what": "community 'Interior Western North American Temperate Ruderal Grassland' (93 cells): no rule, no species in its name, no other grassland community on the tile: drawn bare"
+    },
+    {
+     "what": "community 'Western North American Ruderal Wet Meadow & Marsh' (2 cells): no rule, no species in its name, no other riparian community on the tile: drawn bare"
+    },
+    {
+     "what": "community 'tile pool grassland' (93 cells): no rule, no species in its name, no other grassland community on the tile: drawn bare"
+    },
+    {
+     "what": "community 'tile pool riparian' (51 cells): no rule, no species in its name, no other riparian community on the tile: drawn bare"
+    }
+   ],
    "notes": [],
    "fetched": {
-    "network": 0,
-    "cache": 0
+    "network": 16,
+    "cache": 42
    },
-   "seconds": 0.7
+   "seconds": 23.0
   },
   "crowns": {
    "version": "1",

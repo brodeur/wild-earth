@@ -55,12 +55,13 @@ ROOT = Path(__file__).resolve().parent.parent
 STORE = ROOT / "library" / "animals" / "appearance"
 CACHE = ROOT / "pipeline" / "_cache" / "appearance"   # the fetched source text (git-ignored), so a rule change re-reads offline
 UA = {"User-Agent": "wild-earth-pipeline/1 (https://github.com/; world pipeline appearance research)"}
-FORMAT = 1
+FORMAT = 2            # 2: the features (horns, tail, sizes) and the marking-before-region-word rule (2026-11-06, iteration 7)
 MATCH_DE = 16.0       # CIEDE2000 (kL 2) within which a face's colour is one the description names
 REGION_PASS = 0.5     # a region passes when at least this share of its area matches
 MARK_SHARE = 0.015    # a described marking's colour must cover at least this share of its region
 MIN_REGION = 0.06     # regions under this share of the model's area are not judged
 SCORE_PASS = 0.6      # and most of the model, all regions together, must be in described colours
+GROUND_MIN = 0.12     # where markings are described, at least this share of the region in its ground colours
 
 # ---- colours: the words a description uses, as an sRGB guess for a natural animal colour ----
 BASE = {
@@ -97,7 +98,7 @@ REGION = {
     "backs": "upperparts", "upperparts": "upperparts", "above": "upperparts", "dorsal": "upperparts", "dorsum": "upperparts",
     "mantle": "upperparts", "carapace": "upperparts", "shell": "upperparts", "scutes": "upperparts", "rump": "upperparts",
     "flanks": "flanks", "flank": "flanks", "sides": "flanks", "belly": "underparts", "underbelly": "underparts",
-    "underparts": "underparts", "underside": "underparts", "undersides": "underparts", "below": "underparts",
+    "bellies": "underparts", "underparts": "underparts", "underside": "underparts", "undersides": "underparts", "below": "underparts",
     "ventral": "underparts", "chest": "underparts", "chests": "underparts", "breast": "underparts", "abdomen": "underparts",
     "plastron": "underparts", "thigh": "underparts", "thighs": "underparts", "leg": "legs", "legs": "legs", "limbs": "legs",
     "feet": "legs", "foot": "legs", "paws": "legs", "hooves": "legs", "tarsus": "legs", "toes": "legs", "tail": "tail",
@@ -114,7 +115,7 @@ YOUNG = re.compile(r"\b(juveniles?|young|cubs?|chicks?|foals?|calf|calves|hatchl
                    r"immatures?|subadults?|kittens?|pups?|infants?|nestlings?|fledglings?)\b", re.I)
 ADULTS_TOO = re.compile(r"\badults\b|\byoung adults?\b", re.I)
 AGE_CHANGE = re.compile(r"\bfades?\s+to\b|\btend to fade\b|\bwith age\b|\bmature adults\b|\bbecom\w*\b|\bturns?\b|\bold age\b", re.I)
-MORPH = re.compile(r"\b(morphs?|melanis\w*|leucis\w*|albin\w*|panthers?|captiv\w*|hybrids?|aberrant|domestic\w*)\b", re.I)
+MORPH = re.compile(r"\b(variet\w*|occasional\w*|sometimes|rarely|some individuals|morphs?|melanis\w*|leucis\w*|albin\w*|panthers?|captiv\w*|hybrids?|aberrant|domestic\w*)\b", re.I)
 REGIONAL = re.compile(r"\b(subspecies|populations?|climates?|peninsula|arabian|india|regions|habitats?|forests?|deserts?)\b|\bin (?:the )?(?:more )?"
                       r"(?:north|south|east|west|central)\w*\b|\b(?:north|south|east|west)\w*\s+african\b", re.I)
 OTHER_TAXA = re.compile(r"\b(unlike|confused with|other species|related species|similar species|distinguish\w* from|"
@@ -317,7 +318,7 @@ def _next_word(after: str, n: int = 1) -> str:
             continue
         if w in ".;:":
             break
-        if re.fullmatch(skip, w) or re.fullmatch(rf"(?:{COLOUR_RE})(?:ish)?(?:-(?:{COLOUR_RE})(?:ish)?)*", w):
+        if re.fullmatch(skip, w) or w in MODS or re.fullmatch(rf"(?:{COLOUR_RE})(?:ish)?(?:-(?:{COLOUR_RE})(?:ish)?)*", w):
             continue
         out.append(w)
         if len(out) >= n:
@@ -373,11 +374,14 @@ def facts_from(text: str, sci: str, names: list[str], male_text: bool, trace: li
                 verb = re.search(r"\b(is|are|has|have|was|appears?|ranges?|varies|vary|being)\b", low[lo:a])
                 subj = _specific(r for p, r in win_b if not verb or p < lo + verb.start()) if win_b else []
                 nxt = _next_word(after)
-                if _pattern(nxt):
-                    pat = _pattern(nxt)
+                # a region word between the colour and a pattern word is the marking's place, not the colour's ground: "a
+                # yellow dorsal stripe" (2026-11-06: the garter snake's stripe colour was read as its back's)
+                reg_mark = REGION.get(nxt) and nxt not in ("body", "coat", "skin", "fur", "scales") and _pattern(_next_word(after, 2))
+                if _pattern(nxt) or reg_mark:
+                    pat = _pattern(nxt) or _pattern(_next_word(after, 2))
                     near = [(p, r) for p, r in regs if p >= b]   # the marking's place: the nearest body word after it
                     near = [r for p, r in near if p <= near[0][0] + 25] if near else []
-                    rr = _specific(near) or subj or last or prev or ["body"]
+                    rr = ([REGION[nxt]] if reg_mark else []) or _specific(near) or subj or last or prev or ["body"]
                     if pat in ("tip", "tuft") and set(rr) <= {"body"}:
                         rr = ["tail"]
                     for r in rr:
@@ -484,7 +488,9 @@ def research(code: str, sci: str, common: str | None = None, refresh: bool = Fal
     refresh = refresh or refetch or explain
     if p.exists() and not refresh:
         try:
-            return json.loads(p.read_text())
+            old = json.loads(p.read_text())
+            if old.get("format", 1) >= FORMAT:
+                return old
         except ValueError:
             pass
     names = [n for n in {common, (common or "").lower(), sci} if n]
@@ -525,10 +531,147 @@ def research(code: str, sci: str, common: str | None = None, refresh: bool = Fal
            "retrieved": dt.date.today().isoformat(), "by": "pipeline/appearance.py",
            "licence": "facts (colours by body region) read from the sources listed; no text copied"}
     app["summary"] = summary_text(app)
+    app["features"] = features_from([s for s in srcs], sci, names)
     STORE.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps(app, indent=1) + "\n")
     log(f"{code}: {app['facts']} facts from {len(used)} source(s): {app['summary'][:300]}")
     return app
+
+
+# ---- features: what the description says of the horns, the tail and the size (iteration 7) ----
+# The colour facts above leave out the horns (non-body matter) and every number. A model can wear the right colours and
+# still be another animal: an ibex's long curved horns on a mountain goat, a raccoon's long ringed tail on a badger. These
+# are read from the same sources, by one rule for every species: each measurement (a number with a unit, or a range) is
+# given to the subject named nearest before it in its clause, or to the phrase just after it ("at the shoulder", "from
+# nose to tail", "in head-and-body length"); a unit conversion in brackets after a measurement is dropped; the horns'
+# and the tail's words (short, long, curved, pronged ...) and the horns' colour are read from the clauses that name them.
+# Sentences about the young, females only, other taxa, regional forms and the past are dropped as for the colours.
+UNIT = {"mm": 0.001, "cm": 0.01, "m": 1.0, "in": 0.0254, "ft": 0.3048}
+_NUM = r"\d+(?:\.\d+)?"
+MEAS = re.compile(rf"(?<![\d.])({_NUM})(?:\s*(mm|cm|m|in|ft)\b)?\s*(?:to|–|—|-|and)\s*({_NUM})\s*(mm|cm|m|in|ft)\b"
+                  rf"|(?<![\d.])({_NUM})\s*(mm|cm|m|in|ft)\b")
+SUBJECT_BEFORE = [("horn", r"\bhorns?\b|\bhorn sheaths?\b"), ("antler", r"\bantlers?\b"), ("tail", r"\btails?\b"),
+                  ("ear", r"\bears?\b"), ("shoulder", r"\bshoulders?\b|\bwithers\b"),
+                  ("total", r"\b(?:head|nose|snout) to (?:the )?tail\b|\btotal length\b"),
+                  ("head_body", r"\bhead[\s–-]*(?:and|to)?[\s–-]*body\b|\bbody length\b"),
+                  ("other", r"\b(?:manes?|beards?|hairs?|fur|hooves|feet|foot|skull|neck|legs?|wingspan|eggs?|young|weigh\w*)\b")]
+SUBJECT_AFTER = [("shoulder", r"^[^.;]{0,30}?\b(?:at|to) the (?:shoulders?|withers)\b|^[^.;]{0,25}?shoulder height"),
+                 ("total", r"^[^.;]{0,25}?\b(?:from )?(?:the )?(?:head|nose|snout) to (?:the )?tail\b|^[^.;]{0,20}?total length"),
+                 ("head_body", r"^[^.;]{0,25}?\bhead[\s–-]*(?:and|to)?[\s–-]*body\b|^[^.;]{0,20}?body length")]
+HORN_WORDS = {"short": "short", "small": "short", "long": "long", "large": "long", "massive": "long", "curved": "curved",
+              "curve": "curved", "curves": "curved", "curl": "curled", "curled": "curled", "curling": "curled",
+              "spiral": "spiral", "spiralled": "spiral", "twisted": "spiral", "straight": "straight", "erect": "straight",
+              "pronged": "pronged", "prong": "pronged", "prongs": "pronged", "forked": "pronged", "hook": "hooked",
+              "hooked": "hooked", "thin": "thin", "slender": "thin"}
+TAIL_WORDS = {"short": "short", "small": "short", "stubby": "short", "stub": "short", "inconspicuous": "short",
+              "vestigial": "short", "tiny": "short", "long": "long", "bushy": "bushy", "ringed": "rings", "rings": "rings",
+              "banded": "rings", "bands": "rings"}
+PAST_F = re.compile(r"\b(had|were|existed|extinct|fossils?|pleistocene|epoch|prehistoric|ancestors?)\b", re.I)
+
+
+def _raw_sentences(text: str) -> list[str]:
+    """Sentences with their numbers kept; a bracketed conversion after a measurement dropped ("1 m (3.3 ft)")."""
+    text = re.sub(r"\s+", " ", text)
+    text = re.sub(rf"((?:{_NUM})\s*(?:mm|cm|m|in|ft|kg|lb|g)\b)\s*\([^()]*\)", r"\1", text)
+    text = re.sub(r"\(([^()]*)\)", r", \1,", text)
+    return [x.strip() for x in re.split(r"(?<=[.!?])\s+(?=[A-Z])", text) if x.strip()]
+
+
+def _subject(clause: str, start: int, end: int, lo: int) -> str | None:
+    after = clause[end:end + 60]
+    for name, rx in SUBJECT_AFTER:
+        if re.search(rx, after, re.I):
+            return name
+    best, bp = None, -1
+    for name, rx in SUBJECT_BEFORE:
+        for m in re.finditer(rx, clause[lo:start], re.I):
+            if m.start() > bp:
+                best, bp = name, m.start()
+    return best
+
+
+def features_from(sources: list[dict], sci: str, names: list[str]) -> dict:
+    """{horns, tail, shoulder_m, head_body_m, total_m} read from the sources' sections (see above)."""
+    meas: dict[str, list[tuple[float, float]]] = {}
+    horn = {"described": False, "words": [], "colours": []}
+    tail = {"words": []}
+    for src in sources:
+        for _, text in src.get("sections", []):
+            for sent in _raw_sentences(text):
+                s2 = _strip_names(sent, names)
+                if YOUNG.search(s2) and not ADULTS_TOO.search(s2):
+                    continue
+                if FEMALE.search(s2) and not MALE.search(s2) and not re.search(r"\bboth sexes\b|\bmale and female\b", s2, re.I):
+                    continue
+                if any(rx.search(s2) for rx in (MORPH, REGIONAL, OTHER_TAXA, PAST_F)):
+                    continue
+                for cl in re.split(r";|,\s*while\s|\swhereas\s|,?\s+but\s", s2):
+                    lo = 0
+                    for m in MEAS.finditer(cl):
+                        if m.group(5):
+                            a = b = float(m.group(5)); u = m.group(6)
+                        else:
+                            a, b, u = float(m.group(1)), float(m.group(3)), m.group(4)
+                            if m.group(2) and m.group(2) != u:
+                                a = a * UNIT[m.group(2)] / UNIT[u]
+                        subj = _subject(cl, m.start(), m.end(), lo)
+                        if re.search(r"\b(?:span|spread|across|apart|wide|width|circumference|girth|base)\b", cl[max(lo, m.start() - 40):m.end() + 25], re.I):
+                            subj = None   # a horn span or a base's girth, not a length
+                        lo = m.end()
+                        if subj in ("horn", "tail", "shoulder", "total", "head_body"):
+                            meas.setdefault(subj, []).append((min(a, b) * UNIT[u], max(a, b) * UNIT[u]))
+                    low = cl.lower()
+                    if re.search(r"\bhorns?\b", low) and not re.search(r"\bhorn to horn\b|\bbetween (?:the |its |their )?horns\b", low):
+                        horn["described"] = True
+                        for w in re.findall(r"[a-z]+", low):
+                            if w in HORN_WORDS and HORN_WORDS[w] not in horn["words"]:
+                                horn["words"].append(HORN_WORDS[w])
+                        for ph in PHRASE.finditer(low):
+                            nxt = _next_word(low[ph.end():ph.end() + 40])
+                            if (nxt.startswith("horn") or re.match(r"\s*in colou?r", low[ph.end():ph.end() + 12])) \
+                                    and colour_lab(ph.group(0)) is not None and ph.group(0) not in horn["colours"]:
+                                horn["colours"].append(ph.group(0))
+                    if re.search(r"\btails?\b", low):
+                        # the words of the tail's own phrase: "a short tail", "the tail is short", not "long ears and an
+                        # inconspicuous tail" (the ears' long)
+                        for m in re.finditer(r"\btails?\b", low):
+                            near = re.findall(r"[a-z]+", low[max(0, m.start() - 25):m.end() + 25])
+                            for w in near:
+                                if w in TAIL_WORDS and TAIL_WORDS[w] not in tail["words"] and not \
+                                        re.search(rf"\b{w}\s+(?:ears?|legs?|hair|mane|neck|horns?)\b", low):
+                                    tail["words"].append(TAIL_WORDS[w])
+    # each measure as the median of the lower bounds and of the upper ones: a stray figure (a moose "more than 30 cm
+    # higher at the shoulder than the next-largest deer") does not stretch the range
+    rng = lambda k: [round(float(np.median([a for a, _ in meas[k]])), 4), round(float(np.median([b for _, b in meas[k]])), 4)] if meas.get(k) else None
+    if rng("horn"):
+        horn["described"] = True
+    horn["length_m"] = rng("horn")
+    tail["length_m"] = rng("tail")
+    return {"horns": horn, "tail": tail, "shoulder_m": rng("shoulder"), "head_body_m": rng("head_body"), "total_m": rng("total")}
+
+
+
+def feature_lead(app: dict | None) -> str:
+    """The described defining features as a sentence for the mesh prompt ('' when none): "Horns short, black, pronged,
+    about 25 cm long. Tail short, about 10 cm." (iteration 7: a mountain goat asked for in words got an ibex's horns)."""
+    f = (app or {}).get("features") or {}
+    bits = []
+    h = f.get("horns") or {}
+    if h.get("described"):
+        w = [x for x in h.get("words", []) if not (x == "long" and "short" in h.get("words", []) and h.get("length_m"))]
+        hl = h.get("length_m")
+        if hl and f.get("shoulder_m") and _mid(hl) / _mid(f["shoulder_m"]) < 0.4:
+            w = ["short"] + [x for x in w if x not in ("short", "long")]
+        desc = ", ".join(dict.fromkeys(w + h.get("colours", [])[:1]))
+        bits.append(f"Horns {desc}" + (f", about {round(_mid(hl) * 100)} cm long" if hl else "") + ".")
+    t = f.get("tail") or {}
+    tl = t.get("length_m")
+    if tl or "short" in t.get("words", []):
+        hb = _mid(f.get("head_body_m")) or ((_mid(f.get("total_m")) - _mid(tl)) if tl and f.get("total_m") else None)
+        short = ("short" in t.get("words", []) and "long" not in t.get("words", [])) or (tl and hb and _mid(tl) / hb < 0.25)
+        if short:
+            bits.append("Tail short" + (f", about {round(_mid(tl) * 100)} cm" if tl else "") + ".")
+    return " ".join(bits)
 
 
 def texture_lead(app: dict | None, kind: str | None = None) -> str:
@@ -630,6 +773,23 @@ def correction(result: dict, app: dict, kind: str | None = None, earlier: list |
             bits.append(f"{name} {', '.join(want)}, not {' or '.join(dict.fromkeys(bad))}")
         for m in e.get("missing", []):
             bits.append(f"{name} with {m.split(' (')[0]}")
+    # the texture's features (iteration 7): what the feature check found on the coat
+    fe = result.get("features") or {}
+    main = (fe.get("measured") or {}).get("coat_main")
+    for f in fe.get("texture", []):
+        if f.startswith("tail ringed"):
+            bits.append("the tail plain, no rings or bands")
+        elif "pale patch" in f:   # the coat's own main colour, without the patch
+            bits.append(f"the coat evenly {main or 'one colour'} all over the back, shoulders and flanks, no pale patches or blotches")
+    # a region in its markings' colours: its ground colour named, the markings kept narrow (the garter snake's stripes)
+    for f in result.get("fails") or []:
+        m = re.match(r"(\w+): only \d+% in its ground colours", f)
+        if m:
+            r = m.group(1); e = regs.get(r) or {}
+            ground = [c for c in e.get("colours", []) if not c.endswith(("tip", "tuft"))][:2]
+            marks = [(mk["pattern"], mk["colours"][0]) for mk in e.get("markings", []) + (regs.get("body") or {}).get("markings", [])][:1]
+            if ground:
+                bits.append(f"{NICE[r]} {' or '.join(ground)} as the ground colour" + (f", with only narrow {marks[0][1]} {marks[0][0]} on it" if marks else ""))
     bits = list(dict.fromkeys(bits))
     return ("Correct this: " + "; ".join(bits) + ".") if bits else ""
 
@@ -678,6 +838,14 @@ def check(glb: Path, app: dict) -> dict:
             continue
         d = de2000(L, _between(labs)).min(1)
         match = float(A[d <= MATCH_DE].sum() / max(A.sum(), 1e-12))
+        # a marking is a marking (iteration 7): where markings are described, the ground colours (the region's and the
+        # regions it borrows from, without the markings') must hold GROUND_MIN of it; a garter snake yellow all over
+        # matched its own stripes' yellow and passed
+        ground = [colour_lab(re.sub(r"\s+(tip|tuft)$", "", c)) for src in [r] + ALLOW.get(r, []) for c in (regs.get(src) or {}).get("colours", [])]
+        ground = [x for x in ground if x is not None]
+        gshare = None
+        if marks and ground:
+            gshare = float(A[de2000(L, _between(ground)).min(1) <= MATCH_DE].sum() / max(A.sum(), 1e-12))
         off = _name_of(L[d > MATCH_DE], A[d > MATCH_DE]) if match < 0.9 else None
         miss = []
         if share >= MIN_REGION and own is not None:
@@ -687,7 +855,10 @@ def check(glb: Path, app: dict) -> dict:
                     have = float(A[de2000(L, ml).min(1) <= MATCH_DE].sum() / max(A.sum(), 1e-12))
                     if have < MARK_SHARE:
                         miss.append(f"{'/'.join(cols)} {pat} ({have:.1%})")
+        if gshare is not None and gshare < GROUND_MIN and (own or r in ("upperparts", "flanks")):
+            fails.append(f"{r}: only {gshare:.0%} in its ground colours, the rest in its markings' colours")
         out[r] = {"share": round(share, 3), "match": round(match, 3), **({"missing": miss} if miss else {}),
+                  **({"ground": round(gshare, 3)} if gshare is not None else {}),
                   **({"off": off} if off else {}), "described": bool(own)}
         num += match * share; den += share
         if match < REGION_PASS and (own or r in ("upperparts", "flanks")):
@@ -696,7 +867,295 @@ def check(glb: Path, app: dict) -> dict:
     score = round(num / den, 3) if den else None
     if score is not None and score < SCORE_PASS:
         fails.append(f"only {score:.0%} of the model in described colours")
-    return {"ok": not fails, "score": score, "fails": fails, "regions": out, "match_de": MATCH_DE}
+    # the defining features (iteration 7): horns, tail, rings, a pale patch, on a quadruped
+    fc = feature_check(glb, app)
+    return {"ok": not fails and not fc["fails"], "score": score, "fails": fails + fc["fails"], "colour_fails": fails,
+            "features": fc, "regions": out, "match_de": MATCH_DE}
+
+
+# ---- the feature check (iteration 7): the defining features the description gives, measured on the built model ----
+# What the colours cannot see. On a quadruped's GLB (tools/build_quadruped.py: _PART per vertex, extras.withers_m and
+# extras.rig): the horns are the thin pieces standing out from the top of the head (the head part voxelised, opened by a
+# ball of half the skull's thickness; what the opening removes and stands above the skull's centre is a protrusion, its
+# length the geodesic distance from its base to its tip; when the horns' colour is described, the protrusions in it);
+# their length is measured against the withers and compared with the described horn length against the described
+# shoulder height; the tail's length (its parts' farthest point from the tail root) against the head and body (nose to
+# tail root), compared with the description's tail against head-and-body (or total less tail); a tail is ringed when its
+# lightness along its length alternates three times or more; a coat described with no markings on the back and flanks
+# must not carry a large patch of a contrasting colour there (a white blotch on a grizzly's shoulder). Every comparison
+# allows FEATURE_TOL either way of the described ratio (the descriptions give ranges; a model sized by mass may be
+# stockier than the measured animal). A failed geometric feature (horns, tail length) needs a new mesh: the next rung is
+# the reference photo (pipeline/fauna_models.py); a failed pattern (rings, patch) a new texture.
+FEATURE_TOL = 1.6       # a measured ratio within 1/1.6 - 1.6 times the described one passes
+SHORT_HORN = 0.35       # "short horns" with no figure: at most this share of the withers
+SHORT_TAIL = 0.25       # "a short tail" with no figure: at most this share of head and body
+PATCH_DE = 25.0         # a coat colour this far (CIEDE2000, kL 1) from the coat's main colour is a contrasting one
+PATCH_DL = 15.0         # ... and this much lighter (a pale blotch)
+PATCH_SHARE = 0.05      # a pale patch over this share of the back and flanks, on a coat described plain, fails
+RING_DL = 7.0           # a tail band: lightness this far from the tail's median
+RING_FLIPS = 2          # alternations along the tail that make it ringed
+
+
+def glb_extras(path: Path) -> dict:
+    b = Path(path).read_bytes()
+    n = struct.unpack("<I", b[12:16])[0]
+    return json.loads(b[20:20 + n]).get("extras") or {}
+
+
+def _inside(P: np.ndarray, I: np.ndarray, lo: np.ndarray, h: float, shape: tuple) -> np.ndarray:
+    """Voxel centres inside the closed surface (ray parity along x per (y, z) column)."""
+    ny, nz = shape[1], shape[2]
+    ys = lo[1] + (np.arange(ny) + 0.5) * h; zs = lo[2] + (np.arange(nz) + 0.5) * h
+    cross: dict = {}
+    tri = P[I]; hi = lo + np.array(shape) * h
+    tmin, tmax = tri.min(1), tri.max(1)
+    keep = (tmax[:, 1] >= lo[1]) & (tmin[:, 1] <= hi[1]) & (tmax[:, 2] >= lo[2]) & (tmin[:, 2] <= hi[2])
+    for t in tri[keep]:
+        j0 = max(0, int(np.ceil((t[:, 1].min() - lo[1]) / h - 0.5))); j1 = min(ny - 1, int(np.floor((t[:, 1].max() - lo[1]) / h - 0.5)))
+        k0 = max(0, int(np.ceil((t[:, 2].min() - lo[2]) / h - 0.5))); k1 = min(nz - 1, int(np.floor((t[:, 2].max() - lo[2]) / h - 0.5)))
+        if j1 < j0 or k1 < k0:
+            continue
+        Y, Z = np.meshgrid(ys[j0:j1 + 1], zs[k0:k1 + 1], indexing="ij")
+        (y0, z0), (y1, z1), (y2, z2) = t[0, 1:], t[1, 1:], t[2, 1:]
+        d = (y1 - y0) * (z2 - z0) - (y2 - y0) * (z1 - z0)
+        if abs(d) < 1e-14:
+            continue
+        a = ((y1 - Y) * (z2 - Z) - (y2 - Y) * (z1 - Z)) / d
+        b = ((y2 - Y) * (z0 - Z) - (y0 - Y) * (z2 - Z)) / d
+        m = (a >= 0) & (b >= 0) & (a + b <= 1)
+        X = a * t[0, 0] + b * t[1, 0] + (1 - a - b) * t[2, 0]
+        for jj, kk in zip(*np.nonzero(m)):
+            cross.setdefault((j0 + jj, k0 + kk), []).append(X[jj, kk])
+    G = np.zeros(shape, bool)
+    xs = lo[0] + (np.arange(shape[0]) + 0.5) * h
+    for (j, k), c in cross.items():
+        c.sort()
+        for q in range(0, len(c) - 1, 2):
+            G[(xs > c[q]) & (xs < c[q + 1]), j, k] = True
+    return G
+
+
+def head_protrusions(P, C, R, I, withers: float, neck_base=None) -> list[dict]:
+    """The thin pieces standing out from the top of the head part (horns, ears, antlers), longest first: {len_m, lab,
+    rel (len / withers)}. See the section's comment."""
+    from scipy import ndimage
+    from scipy.spatial import cKDTree
+    from skimage.graph import MCP_Geometric
+    head = R == 6
+    if head.sum() < 20:
+        return []
+    hp = P[head]
+    h = withers / 120
+    lo = hp.min(0) - 3 * h; hi = hp.max(0) + 3 * h
+    shape = tuple(int(x) for x in np.ceil((hi - lo) / h))
+    G = _inside(P, I, lo, h, shape)
+    G = ndimage.binary_closing(G) | G
+    idx = np.argwhere(G)
+    if not len(idx):
+        return []
+    tree = cKDTree(P)
+    _, nn = tree.query(lo + (idx + 0.5) * h)
+    hv = np.zeros(shape, bool); hv[tuple(idx.T)] = head[nn]
+    if not hv.any():
+        return []
+    edt = ndimage.distance_transform_edt(G)
+    # the snout: the head part's point farthest from the neck base (a head turned toward the camera, from a photo, has
+    # its snout off the +z axis); the skull: the thickest point within a fifth of the withers of it
+    nb = np.array(neck_base, dtype=np.float64) if neck_base is not None else hp.mean(0)
+    hornless = hp[np.argsort(np.linalg.norm(hp - nb, axis=1))[: max(1, int(0.9 * len(hp)))]]   # horn tips are far too
+    nose = hornless[np.argmax(np.linalg.norm(hornless - nb, axis=1) - 0.5 * np.maximum(hornless[:, 1] - nb[1], 0))]
+    vi = np.argwhere(hv); vc = lo + (vi + 0.5) * h
+    near = np.linalg.norm(vc - nose, axis=1) < 0.2 * withers
+    if not near.any():
+        return []
+    en = edt[tuple(vi[near].T)]
+    skull = lo + (vi[near][np.argmax(en)] + 0.5) * h
+    t = max(2.0, 0.55 * float(en.max()))
+    r = int(t)
+    ball = np.linalg.norm(np.mgrid[-r:r + 1, -r:r + 1, -r:r + 1], axis=0) <= t
+    opened = ndimage.binary_dilation(ndimage.binary_erosion(G, ball), ball) & G
+    thin = G & ~opened & hv
+    lab_, n = ndimage.label(thin, np.ones((3, 3, 3)))
+    base = ndimage.binary_dilation(opened, np.ones((3, 3, 3)))
+    out = []
+    for k in range(1, n + 1):
+        comp = lab_ == k
+        if comp.sum() < 4:
+            continue
+        seeds = np.argwhere(comp & base)
+        if not len(seeds):
+            continue
+        if lo[1] + (seeds[:, 1].mean() + 0.5) * h < skull[1]:   # below the skull's centre: a beard, a dewlap, the jaw
+            continue
+        dist, _ = MCP_Geometric(np.where(comp, 1.0, np.inf)).find_costs([tuple(x) for x in seeds])
+        L = float(np.nanmax(np.where(comp, dist, np.nan))) * h + h
+        _, nv = tree.query(lo + (np.argwhere(comp) + 0.5) * h)
+        out.append({"len_m": round(L, 3), "rel": round(L / withers, 3), "lab": lab(C[nv].mean(0)).round(1).tolist()})
+    return sorted(out, key=lambda o: -o["len_m"])
+
+
+def coloured_pieces(P, C, R, I, want: np.ndarray, part: int = 6) -> list[dict]:
+    """The pieces of a part (the head's, by default) in a described colour (a horn's black), longest first: {len_m (the
+    piece's longest chord), n faces}. A horn too thin for the voxels at lod0 (a mountain goat's, 18 vertices) is still a
+    piece of its own colour; the snout's black is a short one."""
+    from scipy.sparse import coo_matrix
+    from scipy.sparse.csgraph import connected_components
+    from scipy.spatial import cKDTree
+    fp = np.round(np.median(R[I], axis=1)).astype(int) == part
+    if not fp.any() or not len(want):
+        return []
+    F = I[fp]
+    hit = de2000(lab(C[F].mean(1)), want).min(1) <= MATCH_DE
+    F = F[hit]
+    if not len(F):
+        return []
+    cen = P[F].mean(1)
+    e = float(np.median(np.linalg.norm(P[F][:, 0] - P[F][:, 1], axis=1)))
+    pairs = cKDTree(cen).query_pairs(2.0 * e, output_type="ndarray")
+    n = len(F)
+    g = coo_matrix((np.ones(len(pairs)), (pairs[:, 0], pairs[:, 1])), shape=(n, n)) if len(pairs) else coo_matrix((n, n))
+    k, lab_ = connected_components(g, directed=False)
+    out = []
+    for i in range(k):
+        v = P[np.unique(F[lab_ == i].ravel())]
+        if len(v) < 3:
+            continue
+        d = np.linalg.norm(v[:, None] - v[None], axis=-1).max()
+        out.append({"len_m": round(float(d), 3), "faces": int((lab_ == i).sum())})
+    return sorted(out, key=lambda o: -o["len_m"])
+
+
+def tail_measure(P, C, R, I, rig: dict) -> dict:
+    """{len_m, head_body_m, flips}: the tail parts' farthest point from the tail root, the nose to the tail root, and
+    how often the tail's lightness along its length crosses from a dark band to a light one and back."""
+    nose_z = float(P[:, 2].max())
+    root = np.array(rig.get("tail") or [0, 0, P[:, 2].min()], dtype=np.float64)
+    hb = nose_z - float(root[2])
+    tv = np.isin(np.round(R).astype(int), (3, 8))
+    if tv.sum() < 6 or not rig.get("tail"):
+        return {"len_m": 0.0, "head_body_m": round(hb, 3), "flips": 0}
+    d = np.linalg.norm(P[tv] - root, axis=1)
+    tri = I[np.all(tv[I], axis=1)]
+    flips = 0
+    if len(tri) >= 20:
+        dc = np.linalg.norm(P[tri].mean(1) - root, axis=1)
+        L = lab(C[tri].mean(1))[:, 0]
+        cr = np.cross(P[tri][:, 1] - P[tri][:, 0], P[tri][:, 2] - P[tri][:, 0]); A = np.linalg.norm(cr, axis=1) / 2
+        edges = np.quantile(dc, np.linspace(0, 1, 13))
+        prof = [float(np.average(L[(dc >= a) & (dc <= b)], weights=A[(dc >= a) & (dc <= b)] + 1e-12)) for a, b in zip(edges, edges[1:])
+                if ((dc >= a) & (dc <= b)).any()]
+        med = float(np.median(prof)); signs = [np.sign(x - med) for x in prof if abs(x - med) > RING_DL]
+        flips = sum(1 for a, b in zip(signs, signs[1:]) if a != b)
+    return {"len_m": round(float(d.max()), 3), "head_body_m": round(hb, 3), "flips": int(flips)}
+
+
+def coat_patch(P, C, R, I, with_main: bool = False):
+    """The largest connected pale patch of a colour contrasting with the coat's main colour, as a share of the back
+    and flanks (the body part's faces facing up or sideways)."""
+    from scipy.sparse import coo_matrix
+    from scipy.sparse.csgraph import connected_components
+    from scipy.spatial import cKDTree
+    tri = P[I]
+    cr = np.cross(tri[:, 1] - tri[:, 0], tri[:, 2] - tri[:, 0]); A = np.linalg.norm(cr, axis=1) / 2
+    ny = cr[:, 1] / (2 * A + 1e-12)
+    part = np.round(np.median(R[I], axis=1)).astype(int)
+    sel = (part == 0) & (ny >= -0.35) & (A > 0)
+    if sel.sum() < 30:
+        return (0.0, None) if with_main else 0.0
+    L = lab(C[I[sel]].mean(1)); As = A[sel]; cen = tri[sel].mean(1)
+    # the coat's main colour: of its distinct colours, the one with the most area within PATCH_DE / 2 of it (shades of
+    # one coat count together)
+    uniq, inv = np.unique(np.round(L, 0), axis=0, return_inverse=True)
+    ua = np.bincount(inv.ravel(), weights=As)
+    top = np.argsort(-ua)[:40]
+    near = de2000(uniq[top], uniq, kL=1.0) <= PATCH_DE / 2
+    main = uniq[top[int(np.argmax(near @ ua))]]
+    # a pale patch on the coat (a darker saddle or dorsal shading is common and seldom described: the wolf's)
+    far = (de2000(L, main[None], kL=1.0)[:, 0] > PATCH_DE) & (L[:, 0] > main[0] + PATCH_DL)
+    if not far.any():
+        return (0.0, main) if with_main else 0.0
+    fc = cen[far]; fa = As[far]
+    rad = 2.5 * float(np.sqrt(np.median(As)))
+    pairs = cKDTree(fc).query_pairs(rad, output_type="ndarray")
+    n = len(fc)
+    g = coo_matrix((np.ones(len(pairs)), (pairs[:, 0], pairs[:, 1])), shape=(n, n)) if len(pairs) else coo_matrix((n, n))
+    _, labels = connected_components(g, directed=False)
+    share = round(float(np.bincount(labels, weights=fa).max() / As.sum()), 3)
+    return (share, main) if with_main else share
+
+
+def _mid(r):
+    return (r[0] + r[1]) / 2 if r else None
+
+
+def feature_check(glb: Path, app: dict) -> dict:
+    """The defining features the description gives, measured on a quadruped's GLB (see the section's comment):
+    {fails, geometry (the failures a new mesh must fix), texture (a new texture), measured, expected}."""
+    feats = app.get("features") or {}
+    ex = glb_extras(glb)
+    rig = ex.get("rig") or {}
+    if rig.get("kind") != "quadruped" or not feats:
+        return {"fails": [], "geometry": [], "texture": [], "measured": {}, "expected": {}}
+    P, C, R, I = read_glb(glb)
+    wm = float(ex.get("withers_m") or 1.0)
+    geo, tex, meas, exp = [], [], {}, {}
+    horns = feats.get("horns") or {}
+    if horns.get("described"):
+        prot = head_protrusions(P, C, R, I, wm, rig.get("head"))
+        want = [colour_lab(c) for c in horns.get("colours", [])]; want = [w for w in want if w is not None]
+        # the protrusions in the described horn colour; when the voxels find none (a horn too thin for them at lod0: a
+        # mountain goat's, 18 vertices), the head's pieces in that colour, their longest chord (a black face mask that
+        # joins the horns overstates it, so it is only the fallback); with no colour described, the longest protrusion
+        cand = [p for p in prot if want and float(de2000(np.array([p["lab"]]), np.array(want)).min()) <= 2 * MATCH_DE and p["len_m"] > 2 * wm / 120]
+        by = "voxel protrusion in the horn colour"
+        if want and not cand:
+            cand, by = coloured_pieces(P, C, R, I, np.array(want)), "piece in the horn colour"
+        if not want:
+            cand, by = prot, "voxel protrusion"
+        best = cand[0]["len_m"] if cand else 0.0
+        hl, sh = _mid(horns.get("length_m")), _mid(feats.get("shoulder_m"))
+        rel = round(best / wm, 3)
+        meas["horns"] = {"len_m": best, "of_withers": rel, "by": by}
+        if hl and sh:
+            e = hl / sh; exp["horns_of_withers"] = round(e, 3)
+            if rel > e * FEATURE_TOL:
+                geo.append(f"horns too long: {rel:.2f} of the withers, described {hl:.2f} m at a {sh:.2f} m shoulder ({e:.2f})")
+            elif rel < 0.3 * e:
+                geo.append(f"horns missing or stubs: {rel:.2f} of the withers, described {e:.2f}")
+        elif "short" in horns.get("words", []) and "long" not in horns.get("words", []):
+            exp["horns_of_withers"] = f"<= {SHORT_HORN} (short)"
+            if rel > SHORT_HORN:
+                geo.append(f"horns too long: {rel:.2f} of the withers, described short")
+        elif not cand:
+            geo.append("no horns: the description gives horns")
+    tail = feats.get("tail") or {}
+    tm = tail_measure(P, C, R, I, rig)
+    rel = tm["len_m"] / max(tm["head_body_m"], 1e-6)
+    meas["tail"] = {**tm, "of_head_body": round(rel, 3)}
+    tl = _mid(tail.get("length_m"))
+    hb = _mid(feats.get("head_body_m")) or ((_mid(feats.get("total_m")) - tl) if tl and feats.get("total_m") else None)
+    if tl and hb and hb > tl:
+        e = tl / hb; exp["tail_of_head_body"] = round(e, 3)
+        if rel > e * FEATURE_TOL and rel - e > 0.05:
+            geo.append(f"tail too long: {rel:.2f} of the head and body, described {tl:.2f} m of {hb:.2f} m ({e:.2f})")
+    elif "short" in tail.get("words", []) and "long" not in tail.get("words", []):
+        exp["tail_of_head_body"] = f"<= {SHORT_TAIL} (short)"
+        if rel > SHORT_TAIL:
+            geo.append(f"tail too long: {rel:.2f} of the head and body, described short")
+    regs = app.get("regions") or {}
+    # rings on the tail are described there, or come with a banded or striped body (a zebra's); a dorsal stripe is no band
+    tail_marks = [m["pattern"] for r in ("tail", "body", "flanks") for m in (regs.get(r) or {}).get("markings", [])]
+    if tm["flips"] >= RING_FLIPS and not ({"rings", "bands", "bars", "stripes"} & set(tail_marks)) and "rings" not in tail.get("words", []):
+        tex.append(f"tail ringed ({tm['flips']} alternations), described without rings")
+    marked = any((regs.get(r) or {}).get("markings") for r in ("body", "upperparts", "flanks"))
+    if not marked and regs:
+        share, main = coat_patch(P, C, R, I, with_main=True)
+        meas["coat_patch"] = share
+        if main is not None:
+            meas["coat_main"] = _name_of(main[None], np.ones(1))
+        if share > PATCH_SHARE:
+            tex.append(f"a large pale patch on the coat ({share:.0%} of the back and flanks), described without patches")
+    return {"fails": geo + tex, "geometry": geo, "texture": tex, "measured": meas, "expected": exp}
 
 
 def main(argv=None) -> int:

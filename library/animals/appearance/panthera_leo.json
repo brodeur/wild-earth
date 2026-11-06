@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "panthera_leo",
  "scientific": "Panthera leo",
  "common": "lion",
@@ -41,9 +41,9 @@
  },
  "facts": 15,
  "dropped": {
-  "regional": 2,
+  "regional": 1,
   "young": 2,
-  "morph": 3,
+  "morph": 4,
   "past": 1
  },
  "sources": [
@@ -62,5 +62,25 @@
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "body light buff, silvery grey, yellowish red, dark brown; belly and underparts white, black tuft; neck brownish, yellow, rust, black; tail dark tuft, black tuft"
+ "summary": "body light buff, silvery grey, yellowish red, dark brown; belly and underparts white, black tuft; neck brownish, yellow, rust, black; tail dark tuft, black tuft",
+ "features": {
+  "horns": {
+   "described": false,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [
+    "long"
+   ],
+   "length_m": [
+    0.3025,
+    0.5025
+   ]
+  },
+  "shoulder_m": null,
+  "head_body_m": null,
+  "total_m": null
+ }
 }

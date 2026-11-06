@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "panthera_pardus",
  "scientific": "Panthera pardus",
  "common": "leopard",
@@ -84,5 +84,29 @@
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "body pale yellowish, dark golden with dark spots; belly and underparts white with black spots; head black spots; legs black spots; tail white tip, white"
+ "summary": "body pale yellowish, dark golden with dark spots; belly and underparts white with black spots; head black spots; legs black spots; tail white tip, white",
+ "features": {
+  "horns": {
+   "described": false,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [
+    "long",
+    "rings"
+   ],
+   "length_m": [
+    0.6,
+    1.0
+   ]
+  },
+  "shoulder_m": [
+   0.63,
+   0.86
+  ],
+  "head_body_m": null,
+  "total_m": null
+ }
 }

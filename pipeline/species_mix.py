@@ -761,11 +761,25 @@ NAMED_DENSITY = {"conifer_forest": (1.2, 0.5), "mixed_forest": (1.1, 0.5), "oak_
                  "chaparral": (0.2, 1.0), "grassland": (0.05, 0.2), "barren": (0.05, 0.1), "water": (0.0, 0.0)}
 
 
+NAMED_NEAR_DEG = 0.5
+
+
 def named_rule(name: str, hab_code: int) -> dict | None:
     """A rule read from the community's name (communities.named_species): its named species, equal weights, densities
     by habitat class. None when the name names no species."""
     from .communities import named_species
     named = named_species(name)
+    # A tile outside every natural-region table reads community names with California's lexicon (communities.LEXICON),
+    # so "alpine" named Brewer's mountain heather, a California endemic, in Yellowstone (2026-11-06). There a named
+    # species is kept only where GBIF has it within NEAR_DEG of the tile (tree_cards._near): big sagebrush stays.
+    if named and CONTEXT.get("regions") == [] and CONTEXT.get("tile") is not None:
+        from .tree_cards import _near
+        def sci(sid):
+            try:
+                return json.loads((LIBRARY / f"{sid}.json").read_text()).get("scientific") or sid.replace("_", " ")
+            except (OSError, ValueError):
+                return sid.replace("_", " ")
+        named = [(sid, kind) for sid, kind in named if _near(CONTEXT["tile"], " ".join(sci(sid).split()[:2]), NAMED_NEAR_DEG) > 0]
     if not named:
         return None
     trees = {sid: 1.0 for sid, kind in named if kind == "tree"}
@@ -993,6 +1007,7 @@ def species_mix(tile: Tile) -> dict:
     from .regions import natural_regions
     regions = natural_regions(tile)
     CONTEXT["regions"] = regions
+    CONTEXT["tile"] = tile
 
     def row_for(source: str, code: int, name: str | None, hab_code: int, rule: dict | None = None) -> int:
         key = (source, code)
@@ -1083,8 +1098,25 @@ def species_mix(tile: Tile) -> dict:
     CONTEXT["coast"] = coast_cells / tot >= COAST_MIN and "california" in regions
     SUBSTITUTIONS.clear()
     gspecies = ground_species(regions)   # a tile outside every table's region: none, recorded below
+    # A tile outside every table's region (2026-11-06, iteration 7): its own ground layer, each community's grasses and
+    # forbs from its LANDFIRE description (pipeline/ground_cards.py, species/ground.json), weight x the record's density
+    from .ground_cards import own_ground
+    own = own_ground(tile) if not regions else None
+    if own:
+        gspecies = []
+        for k in sorted({k for w in own.values() for k in w}):
+            f = LIBRARY / f"{k}.json"
+            if not f.exists():
+                continue
+            d = json.loads(f.read_text())
+            gspecies.append({"id": k, "form": d.get("form"), "habitat": d.get("habitat") or {},
+                             "density": float((d.get("ground") or {}).get("density", 1.0))})
+        dens_of = {sp["id"]: sp["density"] for sp in gspecies}
     for b in base_rows:
-        b["ground"] = ground_weights(b["habitat"], b["rule"], gspecies)
+        if own:
+            b["ground"] = {k: w * dens_of[k] for k, w in own.get((b["source"], int(b["code"])), {}).items() if k in dens_of}
+        else:
+            b["ground"] = ground_weights(b["habitat"], b["rule"], gspecies)
     # the dwarf shrubs of each community into its ground layer (split_dwarf_shrubs), as ground species with their own
     # terrain factors (their records' habitat block)
     dwarfs: list[str] = []
@@ -1194,6 +1226,9 @@ def species_mix(tile: Tile) -> dict:
         # outside the regional tables (LANDFIRE's reach) a cell whose row has no trees or shrubs draws none: the client's
         # own habitat-class mix is California's and must not stand in (world pipeline phase 1, 2026-11-06)
         "class_fallback": bool(_covers("landfire", tile)),
+        # the natural regions whose tables the tile uses (pipeline/regions.py NATURAL); empty: none, and the client's grass
+        # layer draws only the tile's own grasses (client/src/grass.js ownGround, grassSet)
+        "natural_regions": list(regions),
         "grid": {"crs": tile.crs, "bounds": list(tile.bounds), "pixels": int(index.shape[0]), "resolution_m": res,
                  "origin": "row 0 = north edge, same grid as client/habitat.png"},
         "species": {"trees": trees_cols, "shrubs": shrub_cols, "ground": ground_cols},

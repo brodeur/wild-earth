@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "taxidea_taxus",
  "scientific": "Taxidea taxus",
  "common": "american badger",
@@ -17,10 +17,16 @@
   "upperparts": {
    "colours": [
     "grayish",
-    "reddish",
-    "white"
+    "reddish"
    ],
-   "markings": []
+   "markings": [
+    {
+     "pattern": "stripes",
+     "colours": [
+      "white"
+     ]
+    }
+   ]
   },
   "flanks": {
    "colours": [
@@ -80,5 +86,26 @@
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "body brown, black, white, brown-tan; back grayish, reddish, white; flanks grayish, reddish; head black, white, brown, blackish with white stripes with black patches; neck whitish"
+ "summary": "body brown, black, white, brown-tan; back grayish, reddish with white stripes; flanks grayish, reddish; head black, white, brown, blackish with white stripes with black patches; neck whitish",
+ "features": {
+  "horns": {
+   "described": false,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [],
+   "length_m": [
+    0.1,
+    0.155
+   ]
+  },
+  "shoulder_m": null,
+  "head_body_m": null,
+  "total_m": [
+   0.52,
+   0.875
+  ]
+ }
 }

@@ -39,10 +39,10 @@ NODATA = -9999.0
 SOURCES["meta_canopy_height_v2"] = {
     "name": "Meta and WRI global canopy height maps v2 (CHMv2, DINOv3), AWS open data",
     "url": "https://registry.opendata.aws/dataforgood-fb-forestsv2/",
-    "license": "CC BY 4.0 (the AWS open-data registry entry dataforgood-fb-forestsv2, Meta's own listing; the CHMv2 "
-               "paper's data record names 'the DINOv3 license', which governs the model)",
+    "license": "CC BY 4.0 (the AWS open-data registry entry dataforgood-fb-forestsv2 and Source Coop's mirror: the "
+               "published maps; the DINOv3 licence covers the model weights, which the pipeline never runs)",
     "license_url": "https://creativecommons.org/licenses/by/4.0/",
-    "attribution": "Canopy height v2: Meta and World Resources Institute (2026), Brandt, J. et al. CHMv2: Improvements in "
+    "attribution": "WRI and Meta (Data for Good), CHMv2, CC BY 4.0. Brandt, J. et al. (2026) CHMv2: Improvements in "
                    "Global Canopy Height Mapping using DINOv3, arXiv:2603.06382. Source imagery for CHM © 2016 Vantor",
     "attribution_url": "https://arxiv.org/abs/2603.06382", "attribution_required": True,
 }

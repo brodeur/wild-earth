@@ -7,6 +7,7 @@ import { rockKeep } from './tilepackage.js';
 import { SPECIES, SPECIES_IDS, mulberry32 } from './trees.js';
 import { seasonMonth } from './treegen.js';
 import { SEASON_LOOK } from './season.js';
+import { ownGround } from './grass.js';
 
 // The herbs (2026-10-29; Aaron: "more grass and shrub and herb species, especially for terrestrial animals"): the
 // library's records of form "forb" (library/species, docs/species-library.md "Grasses, herbs and shrubs of the
@@ -112,9 +113,10 @@ export function forbSet(tile) {
   for (const m of json?.mixes || []) for (const [id, b] of m.ground_bytes || []) { const c = canon(id); if (c) score.set(c, (score.get(c) || 0) + b * (m.cells || 1)); }
   let tot = 0; for (const v of score.values()) tot += v;
   for (const r of SM?.rip?.values() || []) for (const id of Object.keys(r.ground)) { const c = canon(id); if (c) score.set(c, (score.get(c) || 0) + 0.02 * (tot || 1)); }
-  if (!score.size) return json?.class_fallback === false ? [] : FORB_SPECIES;   // a tile outside the regional tables borrows nothing
+  // a tile outside the regional tables (class_fallback false, or natural_regions empty: grass.js ownGround) borrows nothing
+  if (!score.size) return ownGround(json) ? [] : FORB_SPECIES;
   const ids = [...score.keys()].sort((a, b) => score.get(b) - score.get(a)).slice(0, GS_MAX);
-  if (json?.class_fallback !== false) for (const id of FORB_IDS) { if (ids.length >= GS_MAX) break; if (!ids.includes(id)) ids.push(id); }
+  if (!ownGround(json)) for (const id of FORB_IDS) { if (ids.length >= GS_MAX) break; if (!ids.includes(id)) ids.push(id); }
   const order = id => SPECIES_IDS.indexOf(id);
   return ids.sort((a, b) => order(a) - order(b)).map(forbEntry);
 }
@@ -464,7 +466,7 @@ export class Forbs {
     this.n = 0; this.staged = []; this.on = true; this._sl = [0, 0];
     this.gone = null;   // the plants pulled down from below (dig.js: the world's pulls, by id `f:<i>.<j>.<k>`): not drawn
     this.buildDensity();
-    this.mixCache = new Map(); this.noFallback = this.tile?.speciesMix?.json?.class_fallback === false;
+    this.mixCache = new Map(); this.noFallback = ownGround(this.tile?.speciesMix?.json);   // 2026-11-06 (iteration 7): natural_regions empty too
     // the dwarf-shrub carpet (2026-11-06): a row's carpet density (species_mix.json mixes[].density_bytes[2] / 100: the
     // dwarf shrubs' share of the community's shrubs) times the cell's shrub cover (canopy.png G) is the carpet's cover
     this.carpetRow = new Map();

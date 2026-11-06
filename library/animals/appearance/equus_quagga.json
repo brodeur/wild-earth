@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "equus_quagga",
  "scientific": "Equus quagga",
  "common": "plains zebra",
@@ -44,5 +44,26 @@
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "body black, white stripes"
+ "summary": "body black, white stripes",
+ "features": {
+  "horns": {
+   "described": false,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [],
+   "length_m": [
+    0.47,
+    0.565
+   ]
+  },
+  "shoulder_m": null,
+  "head_body_m": [
+   1.72,
+   1.93
+  ],
+  "total_m": null
+ }
 }
