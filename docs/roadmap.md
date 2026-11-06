@@ -507,7 +507,20 @@ browser stays the renderer.
   scent.js draws a scent only when new (it flickers in and away) or while the player sniffs (L, the slot, or the
   canids' and the lion's E), every strand with its label. Open: the chance's numbers are first guesses to tune
   (sight.js RATE, STILL..BOLT, SEES_K); one colour for "spotted" and "it sees you" (the throb tells them apart); the
-  fliers' sight untried; the sniff slot untried with the pointer; a carcass's "dead" label unseen. The forager's food
+  fliers' sight untried; the sniff slot untried with the pointer; a carcass's "dead" label unseen. A predator's eyes,
+  the quarry and the dive (2026-11-06, docs/decisions.md "a predator's eyes, the selected quarry and the dive"): the
+  player's prey seen to 600 m by the line of sight alone and lit in its colour (a dot far off), Tab or a click selects
+  one (a ring under it), and a hunting bird above it dives (Q) at it; the prey may see it coming and run its own escape;
+  works from a mirror page. Open: the raven and the ground predators have no dive (a lion's rush at a selection would
+  be the next); the ground squirrels, tree squirrels and quail are not killable yet, so no dive is offered at them (nor
+  at the Serengeti's hyraxes and lapwings, on those kin); the Serengeti has no predation pairs (pipeline DIET is North
+  American), and its stand-in raptors on the vulture's flight (the tawny eagle) have no catch reach; the chase camera
+  trails a stoop far behind the bird; the vole's escape (a run along its runway) rarely beats a stoop. Then the same day
+  (decisions "the hunt's strikes, keys for the moves, and the spirit's targets"): the movement slots gone (the keys in the
+  strip), the walkers' strikes with health bars and cooldowns (cats bite, swipe, pounce; the rest bite and lunge), the
+  host deciding every hit, the dive from far away, and the spirit's targets, chips that fly it there, and Embody. Open:
+  the numbers want playing (cooldowns, the 18% fight-back, the regeneration); no strikes for the raven, the squirrel, the
+  woodpecker or the bird's dive; ground squirrels, tree squirrels and quail not killable. The forager's food
   (2026-11-01, docs/decisions.md "the forager's food glows", client/src/forage.js): for a body with forage rows this
   season the herbs, the shrub impostors, the near 3D shrubs and the sward under the nose glow warm within the body's
   radius (a deer 22 m, a vole 3), brighter hungry and for the part in season, and the food plants are scents (0.35 of

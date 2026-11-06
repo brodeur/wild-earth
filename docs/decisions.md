@@ -6341,3 +6341,153 @@ so every client fell back to last year's day. The Dockerfile now installs reques
   So a recorded, repeatable per-species tuning step (a judged photo pick, an accepted model over a check's flag, a
   species' correction kept as data with its reason) is a legitimate stage of the pipeline, not a violation of it; what
   stays out is unrecorded hand edits. The judge verdicts and picks already stored in library/animals are that stage.
+
+## 2026-11-06: a predator's eyes, the selected quarry and the dive (branch claude/predator-dive)
+
+Aaron: "For predators - predators should be able to see prey from very far away. When a user spots prey they must be
+actually visible line of sight to the camera. When they are line of sight they become highlighted in the species
+highlight color. The user can press "tab" or click on a prey species to "select" them. This creates a glowing ring on
+the ground below the prey if on the ground or just below if flying. For predator birds above their prey, their should
+be a "swoop" or "dive" attack button when a prey is selected and the bird is above the prey. The bird tucks its wings
+and flies directly to the prey. The prey has a chance to detect this attack, increasing as the bird gets closer and
+closer. If the bird loses line of sight the attack is canceled and the bird reverts to soaring."
+
+- **Seeing prey far off is the line of sight, not a roll.** sight.js already lit what the camera had in sight by a
+  chance per second within the smaller of the player's vision and the target's sight signature (a vole's is 10 m). For
+  the species the player's species hunts (`animals.preySlots`, from games.json `relations.predation`: no hand list) the
+  roll gives way to the line itself: in the camera's view, within the player's vision (perception.json
+  `senses[player].vision`, capped at 600 m), lit while its visibility is 0.3 or more and for 0.5 s after. The prey's
+  sight signature is how near a watcher must be to notice it, not how far a hawk's eye reaches, so it is not the limit.
+  The predators the player is prey to keep the roll. Rejected: raycasts against the meshes (the tree crowns are
+  alpha-tested cards, thousands a frame).
+- **The test stays cheap.** The existing line test (a heightfield march; the near trees' crowns and trunks; the canopy
+  raster beyond 180 m; the target cell's shrub cover) now finds its trees through a 20 m grid walked along the line, each
+  cell once, instead of every near tree per test; each animal is tested at most four times a second and the frame at
+  most 24 times (round robin from where the last frame stopped); the selected quarry ten times a second, in or out of the
+  frame. Measured on the home tile as a red-tail soaring 230 m up (headless Chrome, the machine at load 7 to 10, so
+  high): 8.4 µs a test, about 480 tests a second, the whole sight pass 0.30 ms a frame at the median, 0.5 at the 90th
+  percentile and 0.7 at the 99th, with 141 prey alive, 70 of them in the frame and 24 to 48 lit.
+- **Two faults in the line test, found from the air.** A crown was a sphere a third of the tree's height across, so a
+  Serengeti sausage tree's umbrella (7 m tall, 22 m across) hid a skink under it and the dive went through the crown; a
+  crown is now an ellipsoid with the plant's drawn half-width (vegetation.js `nearPlants` crownR, and its bole's trunkR),
+  its top at the tree's top and no deeper than 0.4 of the height (a shrub's foliage still to the ground). And the canopy
+  raster dimmed the line for every wooded cell it crossed past 180 m, even 100 m over the trees, which a ground animal
+  never noticed and a hawk's every long line did; a cell now counts only where the line runs under the stand's top
+  (the lidar p95 canopy height, else the measured stand top, else 15 m).
+- **A predator's prey lives as far as its eyes.** Voles were culled 40 m from the camera (and under a camera over 10 m),
+  rabbits 120, ground squirrels 150, and spawned only within 140 to 300 m, so a soaring hawk had nothing to see. For the
+  player's prey species (and, on the host, another player's: `centres[].sp`) the cull and the spawn radius become 320 m
+  (`animals.js EYE_R`, `eyeOf`, `inEye`). About 100 more animals live round a hawk on the home tile, 0.1 to 0.2 ms more of
+  `animals.update` a frame.
+- **Far off a body is under a pixel**, so a lit prey animal also gets a dot of its species' colour (`rarityColor`, the
+  colour of its highlight, its soul and its chip) that keeps 13 px on the screen, faded in from 18 to 45 m away: one
+  Points draw over the scene.
+- **Selecting** (quarry.js): Tab takes the lit prey animal nearest the screen's centre, each Tab after it the next out;
+  a click within 30 px of a lit one takes it (identify.js asks `claim` first, so it opens no card). The ring under it is
+  its colour, on the ground's slope (level a little under a flier), at least 3.2% of the distance in radius so it reads at
+  any range, drawn over the scene with no depth test (the leaf cards and grass round a vole hid it), bright while the
+  line to it is open and dim while not. Escape clears it and then does not also leave the body (spirit.js reads
+  `e.quarryCleared`); so does 3 s without a line to it (turning the camera away is not losing it), its death, or leaving
+  the body. The hunt panel names the selection as its goal.
+- **The dive** (dive.js; the action bar's dive slot, key Q, shown only while it can start): a flier whose species hunts,
+  in the air, with the selection in its line of sight at least 8 m below it and 15 degrees under the horizon, within
+  600 m, and the catch able to take it (`animals.killable`: KILLABLE has no ground squirrel, tree squirrel or quail yet,
+  so Tab selects them but no dive is offered: a dive at a hyrax on the Serengeti only ever missed). The bird is turned straight at the prey at 2.6 rad/s, its pitch let down to 87 degrees (flight.js `pitchMin`),
+  wings tucked (flierControl's stoop pose for any flier; a jay's folded) and no wingbeat, gaining 4 m/s² plus gravity
+  along the slope up to its top speed (a red-tail from 11 to 45 m/s in about 2.4 s). Within a frame's flight plus its
+  reach it strikes: `animals.catchNear` at the prey (the kill, or on a mirror the host's confirmation), the bird down on
+  it with no landing hops (a hop ends the hawk's mantle) and fed. Lost line of sight for 0.3 s cancels it: the bird pulls
+  its nose up for 1.1 s and soars again. Q again or Escape calls it off.
+- **The prey's chance of seeing it coming** is a hazard of 0.9 (1 - d/n)² a second inside n, n how far the prey's
+  species notices the player's (perception.json `detects`, 150 m where the tile does not say), so it rises as the bird
+  closes. A prey animal that sees it is alarmed for 8 s (`animals.startle`, as a watcher's call alarms it) and its own
+  flight from danger runs: the brush rabbit and the jackrabbit bolt, the ground squirrel goes down its burrow, the vole
+  runs to hide, the gray squirrel runs up its tree (its scare now also follows an alarm). Two changes made that true:
+  for the alarm's while the diver counts as at the prey's own level (`diveSeen`), since a vole pays no mind to a flier
+  more than 4 m over it and a rabbit 20, which hid every stoop; and a prey animal that saw the dive and reached cover (the
+  vole hidden, the ground squirrel down, the lizard in its crevice) is not there to take (`reachedCover`, in the catch
+  and the host's confirmation alike), while one still running can be caught. Rejected: a dodge roll at the strike (the
+  species' own escapes already exist and are what Aaron asked for).
+- **Multiplayer** follows the catch: a mirror's strike is the existing `catch` request; its detection is a new `startle`
+  request (`areq {k: 'startle', n, x, y, z, sp}`), and the host alarms the prey with the remote diver as a stand-in
+  hunter at its point (`threat` accepts it), within 600 m of where the diver says it is. A pre-existing race broke every
+  mirror's catch: the carcass's own message on the dig channel (carrion.js `adopt`) often came before the animal
+  channel's kill and killed the mirror's copy as 'shared', and `applyEvent` then dropped the kill as already done, so
+  the striker was never told it had caught. A kill for this page on a body already dead now still calls `onCaught`.
+- **Not done:** the raven (its own control) and the ground predators get the eyes, the selection and the ring but no
+  dive; the Serengeti has no predation pairs in games.json (pipeline/species_data.py DIET covers the North American cast
+  only), so nothing is prey there until the pipeline writes them; the hunt panel's kill count on a mirror misses a catch
+  that came by the race above (the feeding and the toast do not).
+
+## 2026-11-06: the hunt's strikes, keys for the moves, and the spirit's targets (branch claude/predator-dive)
+
+Aaron extended the predator work the same day: "Controls for all animals can have their movement control buttons
+removed. For ground hunters, the targeting works the same way. For all hunters When a prey is targeted, the controls for
+the hunt appear. For birds, they can initiate a dive from far away. But for cats, they will have bite, swipe and pounce.
+Those only work when a prey animal is in range. Bite, swipe and pounce have different animations and deal different
+damage. When the prey is targeted, they have a health bar. Each type of attack should affect the health bar and have a
+cooldown - think WoW game mechanics for combat rather than tekken." Then, for the spirit: "When in spirit form, if I click
+on any of the species along the bottom of the screen (species within view), my spirit changes course and pilots itself
+directly to the closest species." and "If a spirit clicks on an animal's avatar, rather than the chip, that animal
+becomes targeted. Tab also cycles through targeting every available target. In spirit form, when an animal is targeted
+there is only one "action" [ Embody ] with the model of the animal as the icon. Clicking on it pilots the spirit
+directly to/into the target animal".
+
+- **The movement slots are gone** (abilities.js): run, turn, walk, sprint, jump, hop, flush, pitch, speed, flap, climb,
+  descend, hover, soar, land, take off, the squirrel's and the woodpecker's and the spirit's moves. They were labels, not
+  buttons (a phone steers by the drag on the canvas, flight.js pointer events, which stays), and the help line hides while
+  the bar is up, so the keys moved into the dim strip over the slots ("W S move · A D turn · shift W sprint ..."), now the
+  one place they are taught. The actions stay (act, rest, sniff, drink, dig, peck, call, the greyed verbs).
+- **The strikes** (strikes.js the rules, combat.js the player's side, groundControl.js the bodies). By family from the
+  tile's locomotion layer (a stand-in through its kin): the cats bite, swipe and pounce; the bears bite, swipe and lunge;
+  every other hunter bites and lunges. Keys 1 to 3, and slots shown only while a prey animal is selected, greyed while out
+  of that strike's reach, with WoW's clock sweep and the seconds while cooling (its own cooldown, or the 1 s global one
+  after any strike). Nothing per species: health is 10 m^0.75 (Kleiber), a strike deals its share of that for the
+  striker's mass (bite 0.34, swipe 0.12, pounce 0.2, lunge 0.18), so three bites kill prey of the striker's own size; reach
+  is a share of the striker's length (bite 1.0, swipe 1.15, pounce 5, lunge 3.5) plus half the prey's; cooldowns bite 4 s,
+  swipe 1.5 s, pounce 12 s, lunge 7 s. A mule deer has about 220 to 250 health, a puma's bite 69, its pounce 40, its
+  swipe 24; the Serengeti's buffalo 953 against the lion's bite 154. Health comes back 2% a second once 8 s pass without
+  a hit (worked out when read, so a mirror needs no stream for it). At none, the kill is the catch's (fed, the word, the
+  cat over its kill). E with prey in reach is the bite now, and a hunter with strikes no longer kills by the rush's last
+  bound or the canids' E-pounce alone (an instant kill would make the bar meaningless); small prey still die to one hit.
+  The elk joined KILLABLE (it runs the deer's machine and dies the deer's way), so the Serengeti's zebra, wildebeest and
+  buffalo can be killed.
+- **The animations** are procedural on the leg engine's pose channels, as the hawk's tuck is: the bite winds up (the head
+  drawn up and back), then lunges up to a metre in and snaps down and through; the swipe raises the forequarters, turned
+  to a side, one foreleg reaching (the gallop's flight pose), then rakes across; the pounce is a crouch (0.28 s) and the
+  cat's existing leap stretched to the distance; the lunge is the canids' existing spring. No rig has clips for these.
+- **Struck prey reacts:** it flees with its own escape (animals.startle, as at a seen dive); prey heavier than 0.6 of the
+  striker now and then (18%) fights back instead: the striker is thrown back about a metre, staggers, and cannot strike for
+  1.5 s ('kick').
+- **The target frame** (index.html #targetFrame, combat.js): the selection's name, its bar and numbers at the top centre,
+  red under 30%, and a small bar over the animal with the struck numbers floating up from it; for any selection,
+  the spirit's too.
+- **Multiplayer:** the host decides every hit. A mirror's strike is a `hit` request (`areq {k: 'hit', n, mv, sp, x, y,
+  z}`); the host checks the move is one the striker's family has, the prey is its prey and within that move's reach (and
+  the stream's slack), and the move's cooldown (a fifth's leeway), then deals the damage by the striker's mass, and tells
+  everyone (`aev {k: 'hp', n, hp, max, by, mv}`); a kick goes to the striker (`aev {k: 'kick', to, n}`); a kill is the
+  existing kill event, the striker's own catch. Seen with two headless Chromes: a mirror puma's bite and the host
+  coyote's bite set the same bar on both pages (246.2, 177.5, 153.7), and the mirror's last strike killed the deer on the
+  host, the mirror fed by onCaught.
+- **The dive from far away:** the bird only has to be over the prey (3 m), within 600 m; the old rule asked for 15
+  degrees under the horizon. Key 1 as well as Q. In the home tile's oak woodland a shallow dive mostly loses its line in
+  the crowns on the long approach and is called off; steeper ones catch.
+- **Ground hunters target as birds do**: the same sight, highlight, Tab, click and ring (they always had it; the strikes
+  now hang on it).
+- **The spirit's targets** (quarry.js mode 'spirit'): any animal is a target. A click takes the one at the pointer, Tab
+  walks every animal on the screen with a line of sight (out from the centre; a round remembers who it has visited, so it
+  walks them all as birds fly in and out of the line), and the selection stays until Escape or its going. The bar's one
+  action is **Embody** (key 1 or E) with the species' still as its icon (stills.js, as the chips).
+- **The chips** (nearBar.js) are buttons and show in a body too: a chip selects the nearest individual of its species (the
+  next nearest on a second click). In the spirit the autopilot (pilot.js) then flies there: straight at it, holding 18 m
+  over the highest ground in the next 220 m (a ridge is a climb and a descent, never a line through the hill), slowing
+  from 45 m/s, and stops short at nine times the body's size (9 to 40 m off, 0.45 of that above), circling it slowly. Embody
+  flies the same way into the animal and becomes that individual by the existing become (spirit.enter), else the nearest
+  of its kind. Any movement key, a moving drag or a touch steer hands control back and keeps the target. In a body a chip
+  selects only one the camera can see. Seen on the home tile: from 320 m behind a ridge standing 25 m over the straight
+  line, the spirit climbed 42 m over it (10 m clear at the crest) and came down to hold 9 m off a deer; a turn key took it
+  back; Embody from 45 m became that deer (its id) in 5.4 s.
+- **Not done:** the bird's dive deals no damage (a stoop at small prey is the catch, as before); the raven, squirrel and
+  woodpecker controls have no strikes; ground squirrels, tree squirrels and quail still cannot be killed, so no strike or
+  dive is offered at them; the fight-back has no health of the player's to take (it staggers); the swipe has no paw of its
+  own on the part rig (the leg engine's foreleg reach stands in).
