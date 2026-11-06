@@ -60,7 +60,38 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ]
   },
   {
    "code": "ovis_canadensis",
@@ -73,10 +104,10 @@
    "scale": 1.076,
    "tint": null,
    "mass_kg": 74.645,
-   "density_km2": 3.7605,
+   "density_km2": 1.48,
    "group": [
     5,
-    30
+    22
    ],
    "bird": false,
    "night": false,
@@ -84,7 +115,40 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (genus)",
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "pecari_tajacu",
@@ -97,10 +161,10 @@
    "scale": 0.708,
    "tint": null,
    "mass_kg": 21.267,
-   "density_km2": 9.6433,
+   "density_km2": 7.92,
    "group": [
-    5,
-    30
+    4,
+    20
    ],
    "bird": false,
    "night": true,
@@ -108,7 +172,40 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (species)",
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "tamias_dorsalis",
@@ -123,7 +220,7 @@
    "mass_kg": 0.071,
    "density_km2": 693.582,
    "group": [
-    1,
+    2,
     3
    ],
    "bird": false,
@@ -132,7 +229,39 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (genus)"
   },
   {
    "code": "sylvilagus_audubonii",
@@ -145,10 +274,10 @@
    "scale": 1.083,
    "tint": null,
    "mass_kg": 0.89,
-   "density_km2": 104.2567,
+   "density_km2": 290.0,
    "group": [
     1,
-    3
+    1
    ],
    "bird": false,
    "night": true,
@@ -156,7 +285,40 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (genus)",
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "sciurus_aberti",
@@ -169,10 +331,10 @@
    "scale": 1.013,
    "tint": null,
    "mass_kg": 0.624,
-   "density_km2": 136.0228,
+   "density_km2": 114.0,
    "group": [
     1,
-    3
+    1
    ],
    "bird": false,
    "night": false,
@@ -180,7 +342,40 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (genus)",
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "bassariscus_astutus",
@@ -193,7 +388,7 @@
    "scale": 0.656,
    "tint": null,
    "mass_kg": 1.129,
-   "density_km2": 87.1636,
+   "density_km2": 3.58,
    "group": [
     1,
     3
@@ -204,7 +399,39 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "peromyscus_eremicus",
@@ -217,10 +444,10 @@
    "scale": 1.057,
    "tint": null,
    "mass_kg": 0.024,
-   "density_km2": 1586.0468,
+   "density_km2": 431.41,
    "group": [
     1,
-    3
+    1
    ],
    "bird": false,
    "night": true,
@@ -229,7 +456,40 @@
     "omnivore",
     "scavenger"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (species)",
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "chaetodipus_intermedius",
@@ -242,10 +502,10 @@
    "scale": 0.938,
    "tint": null,
    "mass_kg": 0.017,
-   "density_km2": 2000.0,
+   "density_km2": 425.17,
    "group": [
     1,
-    3
+    1
    ],
    "bird": false,
    "night": true,
@@ -253,7 +513,40 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (genus)",
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "callospermophilus_lateralis",
@@ -277,7 +570,38 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ]
   },
   {
    "code": "microtus_mexicanus",
@@ -290,9 +614,9 @@
    "scale": 1.205,
    "tint": null,
    "mass_kg": 0.035,
-   "density_km2": 1180.1819,
+   "density_km2": 1483.67,
    "group": [
-    1,
+    2,
     3
    ],
    "bird": false,
@@ -301,7 +625,40 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (genus)",
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "sylvilagus_nuttallii",
@@ -314,10 +671,10 @@
    "scale": 1.026,
    "tint": null,
    "mass_kg": 0.755,
-   "density_km2": 117.8953,
+   "density_km2": 86.25,
    "group": [
     1,
-    3
+    1
    ],
    "bird": false,
    "night": true,
@@ -325,7 +682,40 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (genus)",
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "neotoma_lepida",
@@ -338,10 +728,10 @@
    "scale": 2.016,
    "tint": null,
    "mass_kg": 0.164,
-   "density_km2": 370.9066,
+   "density_km2": 674.58,
    "group": [
     1,
-    3
+    1
    ],
    "bird": false,
    "night": true,
@@ -349,7 +739,40 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (genus)",
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "thomomys_bottae",
@@ -362,10 +785,10 @@
    "scale": 1.79,
    "tint": null,
    "mass_kg": 0.115,
-   "density_km2": 484.221,
+   "density_km2": 5250.0,
    "group": [
     1,
-    3
+    1
    ],
    "bird": false,
    "night": true,
@@ -373,7 +796,40 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (species)",
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "tamias_umbrinus",
@@ -386,9 +842,9 @@
    "scale": 0.472,
    "tint": null,
    "mass_kg": 0.063,
-   "density_km2": 759.442,
+   "density_km2": 253.71,
    "group": [
-    1,
+    2,
     3
    ],
    "bird": false,
@@ -397,7 +853,40 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (genus)",
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "peromyscus_boylii",
@@ -410,10 +899,10 @@
    "scale": 1.023,
    "tint": null,
    "mass_kg": 0.021,
-   "density_km2": 1706.8277,
+   "density_km2": 521.08,
    "group": [
     1,
-    3
+    1
    ],
    "bird": false,
    "night": true,
@@ -422,7 +911,40 @@
     "omnivore",
     "scavenger"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (genus)",
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "peromyscus_truei",
@@ -435,10 +957,10 @@
    "scale": 1.111,
    "tint": null,
    "mass_kg": 0.027,
-   "density_km2": 1418.0354,
+   "density_km2": 1419.62,
    "group": [
     1,
-    3
+    1
    ],
    "bird": false,
    "night": true,
@@ -447,7 +969,40 @@
     "omnivore",
     "scavenger"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (genus)",
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "poecile_gambeli",
@@ -471,7 +1026,37 @@
    "role": [
     "insectivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "aphelocoma_woodhouseii",
@@ -495,7 +1080,37 @@
    "role": [
     "omnivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "sialia_mexicana",
@@ -519,7 +1134,37 @@
    "role": [
     "insectivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "sitta_carolinensis",
@@ -543,7 +1188,37 @@
    "role": [
     "omnivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "sitta_pygmaea",
@@ -567,7 +1242,37 @@
    "role": [
     "insectivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "baeolophus_ridgwayi",
@@ -591,7 +1296,37 @@
    "role": [
     "insectivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "gymnogyps_californianus",
@@ -616,7 +1351,37 @@
     "omnivore",
     "scavenger"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "tachycineta_thalassina",
@@ -640,7 +1405,37 @@
    "role": [
     "insectivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "aeronautes_saxatalis",
@@ -664,7 +1459,37 @@
    "role": [
     "insectivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "pipilo_maculatus",
@@ -688,7 +1513,37 @@
    "role": [
     "omnivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "colaptes_auratus",
@@ -712,7 +1567,37 @@
    "role": [
     "insectivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "salpinctes_obsoletus",
@@ -736,7 +1621,37 @@
    "role": [
     "insectivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "psaltriparus_minimus",
@@ -760,7 +1675,37 @@
    "role": [
     "insectivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "catherpes_mexicanus",
@@ -784,7 +1729,37 @@
    "role": [
     "insectivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "setophaga_nigrescens",
@@ -808,7 +1783,37 @@
    "role": [
     "insectivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "sitta_canadensis",
@@ -832,7 +1837,37 @@
    "role": [
     "omnivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "spinus_psaltria",
@@ -856,7 +1891,37 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "euphagus_cyanocephalus",
@@ -880,7 +1945,37 @@
    "role": [
     "insectivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "buteo_albonotatus",
@@ -904,7 +1999,37 @@
    "role": [
     "predator"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "falco_peregrinus",
@@ -928,7 +2053,37 @@
    "role": [
     "predator"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "nucifraga_columbiana",
@@ -953,7 +2108,37 @@
     "omnivore",
     "scavenger"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "buteo_swainsoni",
@@ -977,7 +2162,37 @@
    "role": [
     "predator"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "circus_cyaneus",
@@ -1002,7 +2217,37 @@
     "predator",
     "scavenger"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   }
  ],
  "skipped": [
@@ -1067,6 +2312,6 @@
    "why": "over the 40-slot cap"
   }
  ],
- "rules": "pipeline/fauna_slots.py: kin by taxonomy, diet and mass; scale = (mass / kin mass)^(1/3), 0.25-4; density Damuth 1981 (herbivores; large ones times HERBIVORE_PRODUCTIVITY of the tile's ecosystem), 30 / mass kg (carnivores), birds 15 m^-0.4 (cap 70) or 0.5 m^-0.75 (raptors)",
+ "rules": "pipeline/fauna_slots.py: kin by taxonomy, diet and mass; scale = (mass / kin mass)^(1/3), 0.25-4; density Damuth 1981 (herbivores; large ones times HERBIVORE_PRODUCTIVITY of the tile's ecosystem), 30 / mass kg (carnivores), birds 15 m^-0.4 (cap 70) or 0.5 m^-0.75 (raptors), or PanTHERIA's measured density; behaviour() for the hours about, rest posture and group",
  "ecosystem": null
 }

@@ -32,7 +32,38 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ]
   },
   {
    "code": "pecari_tajacu",
@@ -45,10 +76,10 @@
    "scale": 0.708,
    "tint": null,
    "mass_kg": 21.267,
-   "density_km2": 9.6433,
+   "density_km2": 7.92,
    "group": [
-    5,
-    30
+    4,
+    20
    ],
    "bird": false,
    "night": true,
@@ -56,7 +87,40 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (species)",
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "nasua_narica",
@@ -69,7 +133,7 @@
    "scale": 1.003,
    "tint": null,
    "mass_kg": 4.03,
-   "density_km2": 33.5748,
+   "density_km2": 6.07,
    "group": [
     1,
     3
@@ -80,7 +144,39 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "alouatta_palliata",
@@ -93,10 +189,10 @@
    "scale": 2.297,
    "tint": null,
    "mass_kg": 7.275,
-   "density_km2": 21.5591,
+   "density_km2": 58.99,
    "group": [
-    3,
-    15
+    4,
+    13
    ],
    "bird": false,
    "night": false,
@@ -106,7 +202,40 @@
    ],
    "known": [
     "a monkey on a squirrel's body"
-   ]
+   ],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (species)",
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "tamandua_mexicana",
@@ -119,10 +248,10 @@
    "scale": 1.017,
    "tint": null,
    "mass_kg": 4.21,
-   "density_km2": 32.4929,
+   "density_km2": 4.84,
    "group": [
     1,
-    3
+    1
    ],
    "bird": false,
    "night": false,
@@ -132,7 +261,40 @@
    ],
    "known": [
     "an anteater, armadillo or shrew on a fox's or vole's body"
-   ]
+   ],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (species)",
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "bradypus_variegatus",
@@ -145,10 +307,10 @@
    "scale": 1.027,
    "tint": null,
    "mass_kg": 4.335,
-   "density_km2": 31.7876,
+   "density_km2": 508.44,
    "group": [
     1,
-    3
+    1
    ],
    "bird": false,
    "night": false,
@@ -158,7 +320,40 @@
    ],
    "known": [
     "an anteater, armadillo or shrew on a fox's or vole's body"
-   ]
+   ],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (species)",
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "ateles_geoffroyi",
@@ -171,10 +366,10 @@
    "scale": 2.065,
    "tint": null,
    "mass_kg": 5.285,
-   "density_km2": 27.3982,
+   "density_km2": 19.06,
    "group": [
-    3,
-    15
+    6,
+    30
    ],
    "bird": false,
    "night": false,
@@ -184,7 +379,40 @@
    ],
    "known": [
     "a monkey on a squirrel's body"
-   ]
+   ],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (species)",
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "dasyprocta_punctata",
@@ -197,10 +425,10 @@
    "scale": 4.0,
    "tint": null,
    "mass_kg": 2.675,
-   "density_km2": 45.657,
+   "density_km2": 17.44,
    "group": [
     1,
-    3
+    1
    ],
    "bird": false,
    "night": false,
@@ -208,7 +436,40 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (species)",
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "mazama_temama",
@@ -223,8 +484,8 @@
    "mass_kg": 18.81,
    "density_km2": 10.5733,
    "group": [
-    5,
-    30
+    1,
+    1
    ],
    "bird": false,
    "night": false,
@@ -232,7 +493,39 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (genus)"
   },
   {
    "code": "cebus_imitator",
@@ -248,7 +541,7 @@
    "density_km2": 45.4596,
    "group": [
     3,
-    15
+    11
    ],
    "bird": false,
    "night": false,
@@ -258,7 +551,39 @@
    ],
    "known": [
     "a monkey on a squirrel's body"
-   ]
+   ],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (genus)"
   },
   {
    "code": "saimiri_oerstedii",
@@ -271,10 +596,10 @@
    "scale": 0.774,
    "tint": null,
    "mass_kg": 0.279,
-   "density_km2": 249.1042,
+   "density_km2": 128.8,
    "group": [
-    3,
-    15
+    5,
+    25
    ],
    "bird": false,
    "night": false,
@@ -284,7 +609,40 @@
    ],
    "known": [
     "a monkey on a squirrel's body"
-   ]
+   ],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (species)",
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "choloepus_hoffmanni",
@@ -297,10 +655,10 @@
    "scale": 1.059,
    "tint": null,
    "mass_kg": 4.75,
-   "density_km2": 29.6811,
+   "density_km2": 118.42,
    "group": [
     1,
-    3
+    1
    ],
    "bird": false,
    "night": true,
@@ -310,7 +668,40 @@
    ],
    "known": [
     "an anteater, armadillo or shrew on a fox's or vole's body"
-   ]
+   ],
+   "active_hours": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (species)",
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "leopardus_pardalis",
@@ -323,7 +714,7 @@
    "scale": 1.06,
    "tint": null,
    "mass_kg": 11.9,
-   "density_km2": 2.521,
+   "density_km2": 0.42,
    "group": [
     1,
     4
@@ -334,7 +725,39 @@
    "role": [
     "predator"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "sciurus_granatensis",
@@ -347,10 +770,10 @@
    "scale": 0.747,
    "tint": null,
    "mass_kg": 0.25,
-   "density_km2": 270.1127,
+   "density_km2": 77.94,
    "group": [
     1,
-    3
+    1
    ],
    "bird": false,
    "night": false,
@@ -358,7 +781,40 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "group_source": "pantheria social group size (species)",
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "eira_barbara",
@@ -371,7 +827,7 @@
    "scale": 0.992,
    "tint": null,
    "mass_kg": 3.91,
-   "density_km2": 7.6726,
+   "density_km2": 1.77,
    "group": [
     1,
     3
@@ -382,7 +838,39 @@
    "role": [
     "predator"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)",
+    "pantheria"
+   ],
+   "density_source": "pantheria population density (species)"
   },
   {
    "code": "crax_rubra",
@@ -406,7 +894,37 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "tinamus_major",
@@ -430,7 +948,37 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "trogon_rufus",
@@ -454,7 +1002,37 @@
    "role": [
     "insectivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "buteogallus_anthracinus",
@@ -478,7 +1056,37 @@
    "role": [
     "predator"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "ramphastos_ambiguus",
@@ -504,6 +1112,36 @@
    ],
    "known": [
     "a parrot, toucan or hornbill on a jay's body"
+   ],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
    ]
   },
   {
@@ -528,7 +1166,37 @@
    "role": [
     "insectivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "myrmeciza_exsul",
@@ -552,7 +1220,37 @@
    "role": [
     "insectivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "cantorchilus_semibadius",
@@ -576,7 +1274,37 @@
    "role": [
     "insectivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "coragyps_atratus",
@@ -601,7 +1329,37 @@
     "omnivore",
     "scavenger"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "ara_macao",
@@ -627,6 +1385,36 @@
    ],
    "known": [
     "a parrot, toucan or hornbill on a jay's body"
+   ],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
    ]
   },
   {
@@ -651,7 +1439,37 @@
    "role": [
     "insectivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "egretta_caerulea",
@@ -675,7 +1493,37 @@
    "role": [
     "insectivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "penelope_purpurascens",
@@ -699,7 +1547,37 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "campephilus_guatemalensis",
@@ -723,7 +1601,37 @@
    "role": [
     "insectivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "tigrisoma_mexicanum",
@@ -747,7 +1655,37 @@
    "role": [
     "predator"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "pelecanus_occidentalis",
@@ -772,7 +1710,37 @@
     "predator",
     "scavenger"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "egretta_thula",
@@ -796,7 +1764,37 @@
    "role": [
     "predator"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "lipaugus_unirufus",
@@ -820,7 +1818,37 @@
    "role": [
     "omnivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "platyrinchus_coronatus",
@@ -844,7 +1872,37 @@
    "role": [
     "insectivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "cacicus_uropygialis",
@@ -868,7 +1926,37 @@
    "role": [
     "insectivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "patagioenas_nigrirostris",
@@ -892,7 +1980,37 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "xiphorhynchus_susurrans",
@@ -916,7 +2034,37 @@
    "role": [
     "insectivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "trogon_massena",
@@ -940,7 +2088,37 @@
    "role": [
     "herbivore"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "fregata_magnificens",
@@ -965,7 +2143,37 @@
     "predator",
     "scavenger"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   },
   {
    "code": "rupornis_magnirostris",
@@ -989,7 +2197,37 @@
    "role": [
     "predator"
    ],
-   "known": []
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   }
  ],
  "skipped": [
@@ -1142,6 +2380,6 @@
    "why": "over the 40-slot cap"
   }
  ],
- "rules": "pipeline/fauna_slots.py: kin by taxonomy, diet and mass; scale = (mass / kin mass)^(1/3), 0.25-4; density Damuth 1981 (herbivores; large ones times HERBIVORE_PRODUCTIVITY of the tile's ecosystem), 30 / mass kg (carnivores), birds 15 m^-0.4 (cap 70) or 0.5 m^-0.75 (raptors)",
+ "rules": "pipeline/fauna_slots.py: kin by taxonomy, diet and mass; scale = (mass / kin mass)^(1/3), 0.25-4; density Damuth 1981 (herbivores; large ones times HERBIVORE_PRODUCTIVITY of the tile's ecosystem), 30 / mass kg (carnivores), birds 15 m^-0.4 (cap 70) or 0.5 m^-0.75 (raptors), or PanTHERIA's measured density; behaviour() for the hours about, rest posture and group",
  "ecosystem": "M1"
 }

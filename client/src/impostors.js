@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { SPECIES, SPECIES_IDS, mulberry32, resolveSpecies } from './trees.js';
 import { VARIANTS, pick, hash, variantSeed, handover, cellPlan, placementSkip, placePlant, monthFor, crownPlan, rareSpecies, drawnSeed, tileSpecies, zoneSpecies, riparianExtra } from './vegetation.js';
-import { variantSlots, leafOnAt, treeWood } from './treegen.js';
+import { variantSlots, leafOnAt, treeWood, leafTransmit } from './treegen.js';
 import { hasCrowns, crownCell, SCALE } from './crowns.js';
 import { stature, siteFactor, emergentOf, drawTree } from './stature.js';
 import { bakeSteps, VIEWS, SIDE_VIEWS, ALPHA_REF } from './impostorBake.js';
@@ -25,6 +25,9 @@ import { seasonOfDate } from './season.js';
 //     prefiltered (impostorBake.js: averaged, not renormalised), so a texel over lobes facing several
 //     ways is lit by the mean of their sun terms (a smooth max of the mean normal's term and its
 //     spread) rather than by one arbitrary lobe: a far crown shades as a crown, not as salt and pepper.
+//   - Broadleaf crowns are lit two-sided as the real ones are (treegen leafTransmit: the sun and the sky through the
+//     back of the leaves, foliage.leaf_translucency x translucency_rgb), with the mean over the texel's spread of normals
+//     taken for the light through the leaves as for the light on them, so the hand-over shows no step.
 //   - Pines get the real needles' light (treegen canopyMaterial: wrap, light through the needles when
 //     backlit, the weak glow of a backlit crown) with the same fade, out by 900..1500 m from the eye,
 //     so with the near forest radius (900 m) a backlit stand no longer darkens where it hands over
@@ -145,12 +148,13 @@ const VERT = /* glsl */`
   attribute vec4 iPos; attribute vec4 iA;
   uniform vec4 frame[NT]; uniform vec4 vext[NT * ${VIEWS}]; uniform vec3 tint[NS];
   uniform vec4 needle[NS]; uniform vec3 needleTint[NS];   // pines: wrap, translucency, scatter, mean thinness | glow tint
+  uniform vec3 leafT[NS];   // broadleaf: the light through the leaves (treegen leafTransmit), times the season's leaf-on
   uniform vec3 eye; uniform vec2 grid;
   ${GROWTH_GLSL}
   ${HAND_GLSL}
   varying float vMidShare;
   varying vec4 vUv; varying vec2 vMirror; varying float vBlend; varying vec3 vR; varying vec3 vU; varying vec3 vF;
-  varying float vFade; varying vec3 vTint; varying vec3 vSun; varying vec3 vHazeT; varying vec3 vHazeS; varying float vSky;
+  varying float vFade; varying vec3 vTint; varying vec3 vSun; varying vec3 vHazeT; varying vec3 vHazeS; varying vec4 vSky;
   #ifdef NEEDLE
   varying vec4 vNeedle;
   #endif
@@ -219,9 +223,10 @@ const VERT = /* glsl */`
     // as transmittance T and in-scatter S, the two halves of atmosphereApply(c) = c * T + S.
     vec3 r = base + vec3(0.0, y0 + 0.5 * H, 0.0) - eye;
     vSun = sunLight * cloudShadow(eye + r) * (1.0 - 0.4 * v);
-    vSky = 1.0 - 0.15 * v;   // and some of the sky light, to the crowns around it
+    vSky = vec4(0.0, 0.0, 0.0, 1.0 - 0.15 * v);   // and some of the sky light, to the crowns around it (w)
     vHazeT = atmoTransmittance(r, eye.y); vHazeS = atmoInscatter(r / max(length(r), 1e-3)) * (1.0 - vHazeT);
     int si = int(hr.w + 0.5);
+    vSky.xyz = leafT[si];
     vTint = tint[si] * (0.93 + 0.14 * r6) * vec3(1.0 + 0.06 * (r7 - 0.5), 1.0, 1.0 - 0.06 * (r7 - 0.5));
     #ifdef NEEDLE   // only in materials that can draw trees nearer than the fade's end (Impostors.update)
     // Needle light (pines), faded with the view distance exactly as on the real pines (treegen
@@ -239,7 +244,7 @@ const FRAG = /* glsl */`
   uniform sampler2D albedoMap; uniform sampler2D normalMap;
   varying float vMidShare;
   varying vec4 vUv; varying vec2 vMirror; varying float vBlend; varying vec3 vR; varying vec3 vU; varying vec3 vF;
-  varying float vFade; varying vec3 vTint; varying vec3 vSun; varying vec3 vHazeT; varying vec3 vHazeS; varying float vSky;
+  varying float vFade; varying vec3 vTint; varying vec3 vSun; varying vec3 vHazeT; varying vec3 vHazeS; varying vec4 vSky;
   #ifdef NEEDLE
   varying vec4 vNeedle;
   #endif
@@ -267,11 +272,13 @@ const FRAG = /* glsl */`
     float w = 0.0;
     #endif
     float l2 = dot(N, N), m = (dot(N, sunDir) + w) / (1.0 + w);
-    float sun = 0.5 * (m + sqrt(m * m + 0.25 * max(0.0, 1.0 - l2)));
+    float q = sqrt(m * m + 0.25 * max(0.0, 1.0 - l2)), sun = 0.5 * (m + q);
+    // Broadleaf: the light through the leaves (vSky.xyz, 0 for pines) by the same smooth mean, of max(-n.L, 0) (q - m),
+    // and the sky through the back of the leaves (the hemisphere at -N).
+    vec3 irr = vSun * (sun + vSky.xyz * (0.5 * (q - m))) + (mix(ambientGround, ambientSky, 0.5 + 0.5 * N.y) + vSky.xyz * mix(ambientGround, ambientSky, 0.5 - 0.5 * N.y)) * vSky.w;
     // Light through the needles (pines within the fade): on the real crown the crown's own shadow
     // (shadows.js) takes it away except at the rim and in the gaps, so here it is weighted by how far the
     // texel is from the solid inside of the crown (its coverage below 1).
-    vec3 irr = vSun * sun + mix(ambientGround, ambientSky, 0.5 + 0.5 * N.y) * vSky;
     #ifdef NEEDLE
     irr += vNeedle.rgb * (1.0 - smoothstep(${ALPHA_REF.toFixed(2)}, 1.0, c.a));
     #endif
@@ -348,6 +355,7 @@ export class Impostors {
     const t2 = performance.now();
 
     const NT = bake.frames.length, NS = ids.length;
+    this.leafT = ids.map(id => { const f = bake.frames.find(q => q.species === resolveSpecies(id)); return f && f.thin > 0 ? [0, 0, 0] : leafTransmit(SPECIES[id].foliage); });
     this.uniforms = {
       albedoMap: { value: bake.albedo }, normalMap: { value: bake.normal },
       frame: { value: bake.frames.map(f => new THREE.Vector4(f.W, f.H, f.y0, f.capY)) },
@@ -363,6 +371,9 @@ export class Impostors {
       needle: { value: ids.map(id => { const F = SPECIES[id].foliage, f = bake.frames.find(q => q.species === resolveSpecies(id));
         return f && f.thin > 0 ? new THREE.Vector4(F.needle_wrap ?? 0.35, F.translucency ?? 2.5, F.needle_scatter ?? 0.15, f.thin) : new THREE.Vector4(); }) },
       needleTint: { value: ids.map(id => new THREE.Vector3(...(SPECIES[id].foliage.translucency_rgb || [1, 1.12, 0.55]))) },
+      // Two-sided leaves per species (treegen leafTransmit, as canopyMaterial gives the cards; none where the bake has
+      // needle thinness: those are lit as needles), scaled by the season's leaf-on in setSeason.
+      leafT: { value: ids.map(() => new THREE.Vector3()) },
       eye: { value: new THREE.Vector3() }, nearRadius: { value: 1500 }, thin: { value: new THREE.Vector4() }, crownKeep: { value: 1 },
       handEye: handover.eye, hand: handover.r,
       grid: { value: new THREE.Vector2(...bake.grid) },
@@ -630,6 +641,7 @@ export class Impostors {
       const bark = SPECIES[id].trunk.bark_rgb.map((x, i) => srgbToLin(x) / Math.max(1e-4, srgbToLin(c.summer[i])) * 0.6);
       const wBark = (1 - on) * (1 - on);   // a thinned crown mostly shows its remaining leaves; a bare one, its twigs
       this.uniforms.tint.value[k].set(...t.map((x, i) => x * (1 - wBark) + bark[i] * wBark));
+      if (this.leafT) this.uniforms.leafT.value[k].set(...this.leafT[k].map(x => x * on));   // a bare crown passes no light through leaves
     });
   }
 

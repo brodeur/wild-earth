@@ -21,18 +21,27 @@ await ev(`new Promise(r => { const s = document.createElement('script'); s.src =
 await ev(`(async () => { window.__we.spirit.on = false; await window.__ww.wait(3000); return 1; })()`);
 const out = {};
 // The top-down pose ('d_...') is judged against Sentinel-2 L2A, which is corrected for the atmosphere: it is rendered
-// without the haze (the Mie and Rayleigh extinction zeroed for that one frame), so surface is compared with surface.
+// without the haze (the Mie and Rayleigh extinction zeroed for that one frame), so surface is compared with surface; and
+// under a clear sky, since the composite is the month's cloud-free median (the tropical probes' archived days are
+// overcast: their canopies were judged in the shade of a full deck). The eye-height poses keep the day's real weather.
 for (const [k, p] of Object.entries(poses)) {
   const clear = k.startsWith('d_');
-  out[k] = await ev(`(async () => { const H = window.__ww; window.__we.setHour(${+hour}); await H.view(...${JSON.stringify(p)}); await H.wait(3000);
+  out[k] = await ev(`(async () => { const H = window.__ww, W = window.__we.weather, wup = W.update;
+    if (${clear}) W.update = function (dt, h) { const fx = wup.call(this, dt, h); Object.assign(fx, { slab: 0, high: 0, overcast: 0, sunDim: 1, fog: 0, hazeMul: 1, hazeAdd: 0, rain: 0, drizzle: 0, snow: 0, flash: 0, rainVis: 0 }); return fx; };
+    window.__we.setHour(${+hour}); await H.view(...${JSON.stringify(p)}); await H.wait(3000);
     let u = null, keep = null;
     if (${clear}) { u = (await import('/client/src/atmosphere.js')).uniforms; keep = [u.hazeDensity.value, u.hazeRayleigh.value.clone()]; u.hazeDensity.value = 0; u.hazeRayleigh.value.set(0, 0, 0); }
     const r = H.save(${JSON.stringify(prefix + '_')} + ${JSON.stringify(k)}, 0.82, 8811);
+    const saved = await r;
+    if (${clear}) { const au = (await import('/client/src/atmosphere.js')).uniforms; window.__probeLight = { sun: au.sunLight.value.toArray(), dy: au.sunDir.value.y, amb: au.ambientSky.value.toArray(), exp: window.__we.renderer.toneMappingExposure }; }
     if (u) { u.hazeDensity.value = keep[0]; u.hazeRayleigh.value.copy(keep[1]); }
-    return (await r).slice(-40); })()`);
+    W.update = wup;
+    return saved.slice(-40); })()`);
 }
 out.animals = await ev(`(() => { const A = window.__we.animals, bs = A.bySpecies, o = {}; if (Array.isArray(bs)) bs.forEach((v, i) => { const n = (v?.length ?? v?.size ?? 0); if (n) o[A.names?.[i] ?? i] = n; }); return o; })()`);
 out.errors = await ev(`(window.__weRenderer?.info?.programs || []).filter(p => p.diagnostics).length`);
+const light = await ev('window.__probeLight || null');
+if (light && process.env.LIGHT_OUT) (await import('node:fs')).writeFileSync(process.env.LIGHT_OUT, JSON.stringify(light));
 console.log(JSON.stringify(out));
 await fetch(`http://127.0.0.1:${port}/json/close/${tabs.id}`);
 process.exit(0);

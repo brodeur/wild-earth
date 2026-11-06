@@ -25,10 +25,32 @@ else:
         a=s.read(window=((r0,r1),(c0,c1)))
     ref='imagery'
 sat=Image.fromarray(np.moveaxis(a,0,-1)).resize((W,H))
+# The fair reference (2026-11-06): the composite's reflectance as this viewer would show a flat Lambertian surface of it
+# under the capture's own sun and sky, exposure and three's ACES curve (the light the capture recorded, <name>_light.json).
+# reflectance/0.35 shown as sRGB (the panel above) is brighter than the viewer can make a surface of that reflectance:
+# a reflectance of 0.035 judges L* 38 that way and renders about L* 19 under perfect light.
+fair = None
+lp = D+f'{name}_light.json'
+if mp and os.path.exists(mp) and os.path.exists(lp):
+    l = json.load(open(lp))
+    with rasterio.open(mp) as s:
+        refl = np.moveaxis(np.nan_to_num(s.read([1,2,3], window=((r0,r1),(c0,c1))).astype('float32')), 0, -1)
+    Min=np.array([[0.59719,0.35458,0.04823],[0.07600,0.90834,0.01566],[0.02840,0.13383,0.83777]])
+    Mout=np.array([[1.60475,-0.53108,-0.07367],[-0.10208,1.10813,-0.00605],[-0.00327,-0.07276,1.07602]])
+    rrt=lambda v:(v*(v+0.0245786)-0.000090537)/(v*(0.983729*v+0.4329510)+0.238081)
+    xf=refl/np.pi*(np.array(l['sun'])*max(l['dy'],0)+np.array(l['amb']))*l['exp']/0.6
+    yf=np.clip(np.einsum('ij,...j->...i',Mout,rrt(np.einsum('ij,...j->...i',Min,xf))),0,1)
+    yf=np.where(yf<=0.0031308,12.92*yf,1.055*np.power(yf,1/2.4)-0.055)
+    fair=Image.fromarray((yf*255).astype('uint8')).resize((W,H))
 Lr, Ls = lab(ims[3]), lab(sat)
+Lf = lab(fair) if fair is not None else None
 st={'reference': ref, 'overlap': round(float(np.minimum(hist(Lr),hist(Ls)).sum()),3), 'L_render': round(float(np.median(Lr[:,0])),1), 'L_sat': round(float(np.median(Ls[:,0])),1), 'chroma_render': round(float(np.median(np.hypot(Lr[:,1],Lr[:,2]))),1), 'chroma_sat': round(float(np.median(np.hypot(Ls[:,1],Ls[:,2]))),1)}
+if Lf is not None:
+    st.update({'overlap_fair': round(float(np.minimum(hist(Lr),hist(Lf)).sum()),3), 'L_fair': round(float(np.median(Lf[:,0])),1),
+               'chroma_fair': round(float(np.median(np.hypot(Lf[:,1],Lf[:,2]))),1)})
+panels = ims+[sat]+([fair] if fair is not None else []); labels = [k[2:].replace('_',' ') for k in keys[:3]]+['top-down render, 900 m up',ref+', same footprint']+(['the same through the viewer\'s light'] if fair is not None else [])
 sheet=Image.new('RGB',(W*2+10,H*3+20),'white'); d=ImageDraw.Draw(sheet)
-for i,(im,l) in enumerate(zip(ims+[sat],[k[2:].replace('_',' ') for k in keys[:3]]+['top-down render, 900 m up',ref+', same footprint'])):
+for i,(im,l) in enumerate(zip(panels,labels)):
     x=(i%2)*(W+10); y=(i//2)*(H+10); sheet.paste(im,(x,y)); d.rectangle([x,y,x+240,y+18],fill='black'); d.text((x+4,y+3),l,fill='yellow')
 sheet.save(D+f'sheet_{name}.jpg',quality=80)
 for k,im in zip(keys,ims): im.resize((560,int(560*H/W))).save(O+f'{name}_{k}.jpg',quality=72)

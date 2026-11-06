@@ -728,13 +728,21 @@
    "name": "Tree Cover >= 99%",
    "pixels": 99
   },
+  "235": {
+   "name": "Shrub Cover = 35%",
+   "pixels": 6743
+  },
   "245": {
    "name": "Shrub Cover = 45%",
    "pixels": 1
   },
+  "260": {
+   "name": "Shrub Cover = 60%",
+   "pixels": 28058
+  },
   "370": {
    "name": "Herb Cover = 70%",
-   "pixels": 42239
+   "pixels": 7438
   }
  },
  "evh": {
@@ -838,14 +846,18 @@
    "name": "Tree Height = 21 meters",
    "pixels": 1
   },
+  "203": {
+   "name": "Shrub Height = 0.3 meter",
+   "pixels": 34801
+  },
   "210": {
    "name": "Shrub Height = 1 meter",
    "pixels": 1
   },
   "305": {
    "name": "Herb Height = 0.5 meter",
-   "pixels": 42239
+   "pixels": 7438
   }
  },
- "evc_note": "tree cover from the canopy map; shrub (45 %) and herb (70 %) cover are typical values for the WorldCover class, not measured"
+ "evc_note": "tree cover from the canopy map; shrub (45 %) and herb (70 %) cover are typical values for the WorldCover class, not measured; open cells of a heath, shrubland or tundra group carry its dwarf-shrub cover ({'T3.3': 60, 'T3.2': 50, 'T3.1': 45, 'T6.3': 35, 'T6.4': 30})"
 }

@@ -2273,6 +2273,44 @@ export function thinMidCanopy(geometry, d) {
   return g;
 }
 
+// Two-sided leaves (2026-11-06). A broadleaf leaf is thin: of the light falling on one face it reflects ρ and passes
+// τ on out of the other face, diffusely, and in the green τ is most of ρ (PROSPECT / LOPEX leaves at 550 nm: ρ about
+// 0.10-0.15, τ about 0.06-0.12; in the red and blue both are small and τ smaller still, so the light through a leaf is
+// a yellower green than the light off it: foliage.translucency_rgb). Seen from the side away from the sun a leaf
+// therefore shows τ/ρ of the sun it would show facing it, and the same for the sky. Until now the card tiers lit
+// foliage one-sided (three's Lambert: the sun by max(N.L, 0), the sky by the hemisphere at N only), so every card
+// whose crown-shaped normal faced away from the sun, the lee side of a crown and the inner and lower crown seen
+// through the gaps, got the ground's bounce light alone and went nearly black (Danum from 900 m up, clear sky: luma
+// p10/p50/p90 13/39/76, L* 18.2; with the rule 24/47/80, L* 22.5. The Sentinel-2 reflectance of the same footprint,
+// lit by the same sun and sky and put through the same exposure and ACES curve, is L* 20.9: the satellite's 38 is its
+// reflectance shown linearly, and ACES's toe takes a canopy's 4 % reflectance to about half that lightness). The rule, for every broadleaf crown at every tier (the near, mid
+// and close cards and blobs here, the leaf level, the far impostors in impostors.js) with the same per-species value:
+//   sun  E_sun S (max(N.L, 0) + T max(-N.L, 0))      S: the cloud and cast shadow, as before, on both terms
+//   sky  hemi(N) + T hemi(-N)                         the hemisphere light seen through the back of the leaf
+// T = foliage.leaf_translucency (τ/ρ, default 0.5; the leaf level's existing light-through-the-leaf weight) times
+// foliage.translucency_rgb. Light through a leaf in a cast shadow stays in the shadow, so the inside of a stand and the
+// view up from under a canopy keep their shade; only what the sun or the sky actually reaches is lifted.
+// Pine needle cards keep their own model (wrap, translucency, the backlit glow); scale and needle foliage take no T.
+export function leafTransmit(F) {
+  if (F.type !== 'broadleaf') return [0, 0, 0];
+  const t = F.leaf_translucency ?? 0.5, rgb = F.translucency_rgb || [1, 1.12, 0.55];
+  return rgb.map(v => t * v);
+}
+const RE_DIRECT_TWO_SIDED = `
+  void RE_Direct_TwoSided( const in IncidentLight directLight, const in vec3 geometryPosition, const in vec3 geometryNormal, const in vec3 geometryViewDir, const in vec3 geometryClearcoatNormal, const in LambertMaterial material, inout ReflectedLight reflectedLight ) {
+    float dotNL = dot( geometryNormal, directLight.direction );
+    reflectedLight.directDiffuse += directLight.color * BRDF_Lambert( material.diffuseColor ) * ( saturate( dotNL ) + leafTrans * saturate( -dotNL ) );
+  }
+  #undef RE_Direct
+  #define RE_Direct RE_Direct_TwoSided`;
+// three's lights loop with the hemisphere light taken on both faces (leafTrans: the light through the leaf)
+const HEMI_CALL = 'getHemisphereLightIrradiance( hemisphereLights[ i ], geometryNormal )';
+function lightsTwoSided() {
+  const src = THREE.ShaderChunk.lights_fragment_begin;
+  if (!src.includes(HEMI_CALL)) console.warn('treegen: two-sided leaves: the hemisphere call was not found in lights_fragment_begin');
+  return src.replace(HEMI_CALL, `( ${HEMI_CALL} + leafTrans * getHemisphereLightIrradiance( hemisphereLights[ i ], -geometryNormal ) )`);
+}
+
 // Canopy material for a species and LOD. `patch` (optional) runs first, e.g. atmosphere.patchLambert.
 // Leaf-on below 1 discards the cards (or blobs) whose rank is above it, so a deciduous crown thins
 // rather than fading; the near cards keep their crown-shaped normals on both faces.
@@ -2326,7 +2364,10 @@ export function canopyMaterial(spec, lod = 'near', patch = null) {
   const NL = aux ? [F0.needle_normal ?? 0.55, F0.needle_wrap ?? 0.35, F0.translucency ?? 2.5, 0.6] : null;
   if (aux) m.userData.needleAux = { get value() { return (m.map && m.map.userData.aux) || aux; } };
   if (aux) { m.userData.needleLight = { value: new THREE.Vector4(...NL) }; m.userData.needleScatterK = { value: F0.needle_scatter ?? 0.15 }; m.userData.needleTint = { value: new THREE.Vector3(...(F0.translucency_rgb || [1, 1.12, 0.55])) }; }
-  chainShader(m, (close ? 'leaf-close' : lod === 'mid' ? 'leaf-mid' : 'leaf-near') + `-v${cv[0]}-${cv[1]}-${lv}${thin ? '-thin' : ''}${aux ? '-needle' : ''}`, shader => {
+  // Two-sided leaves (leafTransmit above): broadleaf foliage that is not needle cards. userData.leafTrans is a uniform.
+  const LT = aux ? [0, 0, 0] : leafTransmit(F0), two = LT.some(v => v > 0);
+  if (two) m.userData.leafTrans = { value: new THREE.Vector3(...LT) };
+  chainShader(m, (close ? 'leaf-close' : lod === 'mid' ? 'leaf-mid' : 'leaf-near') + `-v${cv[0]}-${cv[1]}-${lv}${thin ? '-thin' : ''}${aux ? '-needle' : ''}${two ? '-two' : ''}`, shader => {
     shader.uniforms.leafOn = m.userData.leafOn; shader.uniforms.leafVar = m.userData.leafVar;
     shader.uniforms.time = windUniforms.time; shader.uniforms.windDir = windUniforms.windDir; shader.uniforms.windStrength = windUniforms.windStrength;
     shader.uniforms.crownSway = CROWN_SWAY; shader.uniforms.crownFlex = CROWN_FLEX;
@@ -2358,6 +2399,13 @@ export function canopyMaterial(spec, lod = 'near', patch = null) {
       .replace('#include <color_fragment>', vary ? '#include <color_fragment>\ndiffuseColor.rgb *= vPlantTint;' : '#include <color_fragment>');
     if (near) shader.fragmentShader = shader.fragmentShader.replace('#include <normal_fragment_begin>',
       THREE.ShaderChunk.normal_fragment_begin.replace('normal *= faceDirection;', ''));
+    if (two) {
+      shader.uniforms.leafTrans = m.userData.leafTrans;
+      shader.fragmentShader = shader.fragmentShader
+        .replace('#include <common>', '#include <common>\nuniform vec3 leafTrans;')
+        .replace('#include <lights_lambert_pars_fragment>', '#include <lights_lambert_pars_fragment>' + RE_DIRECT_TWO_SIDED)
+        .replace('#include <lights_fragment_begin>', lightsTwoSided());
+    }
     if (aux) shader.fragmentShader = shader.fragmentShader
       .replace('#include <common>', '#include <common>\nuniform sampler2D needleAux;\nuniform vec4 needleLight;\nuniform float needleScatterK;\nuniform vec3 needleTint;\nfloat needleThin = 0.0, needleFade = 0.0;\nvec3 needleScatter = vec3( 0.0 );')
       .replace('#include <lights_lambert_pars_fragment>', `#include <lights_lambert_pars_fragment>
@@ -2657,8 +2705,9 @@ export function trunkLean(material) {
 // 256 px atlas, leaves with their veins) with a back-light tint, two-sided, alpha-tested with alpha to coverage.
 // Lighting (leafMaterial): the crown-shaped normal of the close cards mixed with the leaf's own face (LEAF_NORMAL_K),
 // so a leaf turned to the sun is brighter than its neighbour but the crown keeps its shading; light through the
-// leaf (foliage.leaf_translucency, foliage.translucency_rgb, default yellow-green) when the sun is behind it, most
-// when the camera looks toward the sun. Each leaf flutters about its base from leafWave (the same travelling wave
+// leaf (foliage.leaf_translucency, foliage.translucency_rgb, default yellow-green) when the sun is behind it: the cards'
+// two-sided rule (leafTransmit; sun and sky through the back face, by the shading normal), plus a lobe by the leaf's
+// own face when the camera looks toward the sun. Each leaf flutters about its base from leafWave (the same travelling wave
 // and gust gate as the shimmer) plus a small fast tremble of its own, and shimmers as the cards do.
 // Caps: a tree's leaves are capped at LEAF_CAP (100 k); beyond it a fixed fraction keep of them is kept (by hash) and
 // each kept leaf grows enough to keep its card's cover (leafCover: the card's effective cover over the leaves' summed
@@ -2921,6 +2970,10 @@ export function leafMaterial(spec, patch = null) {
   const ndl = F.type !== 'broadleaf';
   ud.leafLight = { value: new THREE.Vector4(ndl ? 0.2 : LEAF_NORMAL_K, ndl ? (F.translucency ?? 2.5) * 0.6 : F.leaf_translucency ?? 0.5, ndl ? F.needle_wrap ?? 0.35 : 0, ndl ? 1 : 0) };
   ud.leafTint = { value: new THREE.Vector3(...(F.translucency_rgb || [1, 1.12, 0.55])) };
+  // two-sided leaves (leafTransmit): a broadleaf leaf's back face passes leafLight.y x leafTint of the sun and the sky
+  // on, as the cards it replaces do; the view-dependent lobe (most when the camera looks toward the sun) is on top
+  const LT = leafTransmit(F), two = LT.some(v => v > 0);
+  if (two) ud.leafTrans = { value: new THREE.Vector3(...LT) };
   // Veins (2026-11-04, the close layer): a broadleaf's midrib and side veins pressed into its face as a normal detail
   // within 6 m of the eye: (strength, side vein pairs, how far a side vein rises toward the tip across the half width).
   // A compound leaf's leaflets and a lobed blade keep the same pinnate pattern; a palmate leaf has its own veins drawn.
@@ -2930,7 +2983,8 @@ export function leafMaterial(spec, patch = null) {
   m.color.setScalar(ud.gain);
   if (patch) patch(m);
   const cv = F.color_var || [0, 0], lv = F.leaf_on_var || 0, T = LEAF_TILE, W = 2 * T, PD = LEAF_PAD;
-  chainShader(m, `leaf-level-v${cv[0]}-${cv[1]}-${lv}`, shader => {
+  chainShader(m, `leaf-level-v${cv[0]}-${cv[1]}-${lv}${two ? '-two' : ''}`, shader => {
+    if (two) shader.uniforms.leafTrans = ud.leafTrans;
     Object.assign(shader.uniforms, { leafOn: ud.leafOn, leafVar: ud.leafVar, leafBase: ud.leafBase, leafLight: ud.leafLight, leafTint: ud.leafTint, leafVein: ud.leafVein,
       time: windUniforms.time, windDir: windUniforms.windDir, windStrength: windUniforms.windStrength, crownSway: CROWN_SWAY, crownFlex: CROWN_FLEX });
     shader.vertexShader = shader.vertexShader
@@ -3006,13 +3060,18 @@ export function leafMaterial(spec, patch = null) {
         #endif`)
       .replace('#include <lights_lambert_pars_fragment>', `#include <lights_lambert_pars_fragment>
         void RE_Direct_Leaf( const in IncidentLight directLight, const in vec3 geometryPosition, const in vec3 geometryNormal, const in vec3 geometryViewDir, const in vec3 geometryClearcoatNormal, const in LambertMaterial material, inout ReflectedLight reflectedLight ) {
-          float dotNL = saturate( ( dot( geometryNormal, directLight.direction ) + leafLight.z ) / ( 1.0 + leafLight.z ) );
+          float nl = dot( geometryNormal, directLight.direction ), dotNL = saturate( ( nl + leafLight.z ) / ( 1.0 + leafLight.z ) );
           float back = saturate( -dot( leafFace, directLight.direction ) ), fwd = saturate( -dot( geometryViewDir, directLight.direction ) ), f2 = fwd * fwd;
-          vec3 tr = leafLight.y * mix( back * ( 0.35 + 0.65 * f2 ), 0.25 * fwd + 0.75 * f2 * f2, leafLight.w ) * leafTint;
+          // a leaf: the diffuse light through it by the shading normal (the cards' two-sided rule) plus the forward lobe
+          // by its own face; tufts and sprays: the needle cards' light
+          vec3 tr = leafLight.y * mix( saturate( -nl ) + 0.65 * back * f2, 0.25 * fwd + 0.75 * f2 * f2, leafLight.w ) * leafTint;
           reflectedLight.directDiffuse += directLight.color * BRDF_Lambert( material.diffuseColor ) * ( dotNL + tr );
         }
         #undef RE_Direct
         #define RE_Direct RE_Direct_Leaf`);
+    if (two) shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>', '#include <common>\nuniform vec3 leafTrans;')
+      .replace('#include <lights_fragment_begin>', lightsTwoSided());
     shader.fragmentShader = shader.fragmentShader.replace(/vec3 outgoingLight = [^;]*;/, x => x + SHIMMER_FRAG);
   });
   return m;
