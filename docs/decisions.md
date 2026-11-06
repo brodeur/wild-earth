@@ -6105,3 +6105,76 @@ closer. If the bird loses line of sight the attack is canceled and the bird reve
   dive; the Serengeti has no predation pairs in games.json (pipeline/species_data.py DIET covers the North American cast
   only), so nothing is prey there until the pipeline writes them; the hunt panel's kill count on a mirror misses a catch
   that came by the race above (the feeding and the toast do not).
+
+## 2026-11-06: the hunt's strikes, keys for the moves, and the spirit's targets (branch claude/predator-dive)
+
+Aaron extended the predator work the same day: "Controls for all animals can have their movement control buttons
+removed. For ground hunters, the targeting works the same way. For all hunters When a prey is targeted, the controls for
+the hunt appear. For birds, they can initiate a dive from far away. But for cats, they will have bite, swipe and pounce.
+Those only work when a prey animal is in range. Bite, swipe and pounce have different animations and deal different
+damage. When the prey is targeted, they have a health bar. Each type of attack should affect the health bar and have a
+cooldown - think WoW game mechanics for combat rather than tekken." Then, for the spirit: "When in spirit form, if I click
+on any of the species along the bottom of the screen (species within view), my spirit changes course and pilots itself
+directly to the closest species." and "If a spirit clicks on an animal's avatar, rather than the chip, that animal
+becomes targeted. Tab also cycles through targeting every available target. In spirit form, when an animal is targeted
+there is only one "action" [ Embody ] with the model of the animal as the icon. Clicking on it pilots the spirit
+directly to/into the target animal".
+
+- **The movement slots are gone** (abilities.js): run, turn, walk, sprint, jump, hop, flush, pitch, speed, flap, climb,
+  descend, hover, soar, land, take off, the squirrel's and the woodpecker's and the spirit's moves. They were labels, not
+  buttons (a phone steers by the drag on the canvas, flight.js pointer events, which stays), and the help line hides while
+  the bar is up, so the keys moved into the dim strip over the slots ("W S move · A D turn · shift W sprint ..."), now the
+  one place they are taught. The actions stay (act, rest, sniff, drink, dig, peck, call, the greyed verbs).
+- **The strikes** (strikes.js the rules, combat.js the player's side, groundControl.js the bodies). By family from the
+  tile's locomotion layer (a stand-in through its kin): the cats bite, swipe and pounce; the bears bite, swipe and lunge;
+  every other hunter bites and lunges. Keys 1 to 3, and slots shown only while a prey animal is selected, greyed while out
+  of that strike's reach, with WoW's clock sweep and the seconds while cooling (its own cooldown, or the 1 s global one
+  after any strike). Nothing per species: health is 10 m^0.75 (Kleiber), a strike deals its share of that for the
+  striker's mass (bite 0.34, swipe 0.12, pounce 0.2, lunge 0.18), so three bites kill prey of the striker's own size; reach
+  is a share of the striker's length (bite 1.0, swipe 1.15, pounce 5, lunge 3.5) plus half the prey's; cooldowns bite 4 s,
+  swipe 1.5 s, pounce 12 s, lunge 7 s. A mule deer has about 220 to 250 health, a puma's bite 69, its pounce 40, its
+  swipe 24; the Serengeti's buffalo 953 against the lion's bite 154. Health comes back 2% a second once 8 s pass without
+  a hit (worked out when read, so a mirror needs no stream for it). At none, the kill is the catch's (fed, the word, the
+  cat over its kill). E with prey in reach is the bite now, and a hunter with strikes no longer kills by the rush's last
+  bound or the canids' E-pounce alone (an instant kill would make the bar meaningless); small prey still die to one hit.
+  The elk joined KILLABLE (it runs the deer's machine and dies the deer's way), so the Serengeti's zebra, wildebeest and
+  buffalo can be killed.
+- **The animations** are procedural on the leg engine's pose channels, as the hawk's tuck is: the bite winds up (the head
+  drawn up and back), then lunges up to a metre in and snaps down and through; the swipe raises the forequarters, turned
+  to a side, one foreleg reaching (the gallop's flight pose), then rakes across; the pounce is a crouch (0.28 s) and the
+  cat's existing leap stretched to the distance; the lunge is the canids' existing spring. No rig has clips for these.
+- **Struck prey reacts:** it flees with its own escape (animals.startle, as at a seen dive); prey heavier than 0.6 of the
+  striker now and then (18%) fights back instead: the striker is thrown back about a metre, staggers, and cannot strike for
+  1.5 s ('kick').
+- **The target frame** (index.html #targetFrame, combat.js): the selection's name, its bar and numbers at the top centre,
+  red under 30%, and a small bar over the animal with the struck numbers floating up from it; for any selection,
+  the spirit's too.
+- **Multiplayer:** the host decides every hit. A mirror's strike is a `hit` request (`areq {k: 'hit', n, mv, sp, x, y,
+  z}`); the host checks the move is one the striker's family has, the prey is its prey and within that move's reach (and
+  the stream's slack), and the move's cooldown (a fifth's leeway), then deals the damage by the striker's mass, and tells
+  everyone (`aev {k: 'hp', n, hp, max, by, mv}`); a kick goes to the striker (`aev {k: 'kick', to, n}`); a kill is the
+  existing kill event, the striker's own catch. Seen with two headless Chromes: a mirror puma's bite and the host
+  coyote's bite set the same bar on both pages (246.2, 177.5, 153.7), and the mirror's last strike killed the deer on the
+  host, the mirror fed by onCaught.
+- **The dive from far away:** the bird only has to be over the prey (3 m), within 600 m; the old rule asked for 15
+  degrees under the horizon. Key 1 as well as Q. In the home tile's oak woodland a shallow dive mostly loses its line in
+  the crowns on the long approach and is called off; steeper ones catch.
+- **Ground hunters target as birds do**: the same sight, highlight, Tab, click and ring (they always had it; the strikes
+  now hang on it).
+- **The spirit's targets** (quarry.js mode 'spirit'): any animal is a target. A click takes the one at the pointer, Tab
+  walks every animal on the screen with a line of sight (out from the centre; a round remembers who it has visited, so it
+  walks them all as birds fly in and out of the line), and the selection stays until Escape or its going. The bar's one
+  action is **Embody** (key 1 or E) with the species' still as its icon (stills.js, as the chips).
+- **The chips** (nearBar.js) are buttons and show in a body too: a chip selects the nearest individual of its species (the
+  next nearest on a second click). In the spirit the autopilot (pilot.js) then flies there: straight at it, holding 18 m
+  over the highest ground in the next 220 m (a ridge is a climb and a descent, never a line through the hill), slowing
+  from 45 m/s, and stops short at nine times the body's size (9 to 40 m off, 0.45 of that above), circling it slowly. Embody
+  flies the same way into the animal and becomes that individual by the existing become (spirit.enter), else the nearest
+  of its kind. Any movement key, a moving drag or a touch steer hands control back and keeps the target. In a body a chip
+  selects only one the camera can see. Seen on the home tile: from 320 m behind a ridge standing 25 m over the straight
+  line, the spirit climbed 42 m over it (10 m clear at the crest) and came down to hold 9 m off a deer; a turn key took it
+  back; Embody from 45 m became that deer (its id) in 5.4 s.
+- **Not done:** the bird's dive deals no damage (a stoop at small prey is the catch, as before); the raven, squirrel and
+  woodpecker controls have no strikes; ground squirrels, tree squirrels and quail still cannot be killed, so no strike or
+  dive is offered at them; the fight-back has no health of the player's to take (it staggers); the swipe has no paw of its
+  own on the part rig (the leg engine's foreleg reach stands in).

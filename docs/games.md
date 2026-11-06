@@ -131,6 +131,14 @@ that saw it all the same: their run to hide follows the runway at 1.6 m/s, slowe
 saw it bolted out of sight and the dive was called off. Earlier runs had a ground squirrel go down its burrow and a
 jackrabbit run into cover the same way.
 
+The strikes (2026-11-06, `client/src/strikes.js`, `combat.js`; decisions, "the hunt's strikes"): with a prey animal
+selected a walking hunter has its family's strikes (the cats bite, swipe, pounce; the bears add a swipe to bite and lunge;
+the rest bite and lunge) on keys 1-3, each with its reach, damage and cooldown from the bodies' masses and lengths, the
+prey's health bar on the screen and over it, health coming back slowly out of a fight, and at none the existing kill.
+Struck prey runs its own escape, or, much the bigger, now and then fights back. In spirit form any animal is a target
+(click, Tab), the chips fly the spirit to the nearest of a species, and the one action, Embody, flies into the target
+and becomes it.
+
 ## What it finds on the home tile
 
 Eighteen species, 275 games, 146 of them collective, 29 predator-prey pairs, 5 scavenging links

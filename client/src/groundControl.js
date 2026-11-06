@@ -491,6 +491,8 @@ export class GroundControl {
     else if (this.mode === 'fly') this.fly(dt, k, jump);
     else if (this.mode === 'leap') this.leapStep(dt);
     else if (this.mode === 'pounce') this.pounceStep(dt);
+    else if (this.mode === 'strike') this.strikeStep(dt);
+    else if (this.mode === 'kicked') this.kickedStep(dt);
     else if (this.mode === 'tunnel') this.dig.tunnelStep(dt, k, rest);   // the vole or the brush rabbit underground (dig.js)
     else this.ground(dt, k, jump, act, rest);
     if (this.mode === 'ground') this.trunkPush(P);
@@ -521,12 +523,14 @@ export class GroundControl {
       this.animals.setStalk((this.sit > 0.5 ? 0.4 : v < 0.9 ? 0.55 : v < 2.4 ? 1 : 1.3) * (1 - 0.65 * this.cover));
     }
     if (act) { this.actT = S.act.t; this.resting = false; if (S.act.headFlick) ps.fl = (Math.random() < 0.5 ? -1 : 1) * (0.6 + Math.random() * 0.6); if (S.act.scratch) this.scratch = Math.random() < 0.4; }
-    if (act && S.catch === 'pounce' && this.needs?.hunter) {   // a canid's E: prey within CATCH.pounce.d m ahead gets the mousing pounce (pounceStep: the fix, the spring, the kill at the landing)
+    const fights = !!this.combat?.active;   // a hunter with strikes (combat.js): E is its bite, the rush no longer kills on its own
+    if (act && fights && this.combat.useNear('bite')) { this.actT = 0; return; }
+    if (act && S.catch === 'pounce' && this.needs?.hunter && !fights) {   // a canid's E: prey within CATCH.pounce.d m ahead gets the mousing pounce (pounceStep: the fix, the spring, the kill at the landing)
       const p = this.animals.preyNear?.(P.x, P.y, P.z, CATCH.pounce.d, f.yaw, 1.0);
       if (p) return this.startPounce(p, true);
     }
     if (act && this.animals?.catchNear) {   // a hunter's E within reach of its prey: the catch (animals.js kill, CARRION)
-      const c = this.animals.catchNear(P.x, P.y, P.z);
+      const c = fights ? null : this.animals.catchNear(P.x, P.y, P.z);
       if (c) this.caught(c);
       else { const k = this.animals.feedNear?.(P.x, P.y, P.z); if (k) { const f = this.animals.playerFeed?.(k); if (f) { this.needs?.fed?.(f.share); this.say(f.text); } } }   // a scavenger at carrion: a bite from it (carrion.js)
       if (!c && S.catch === 'leap' && this.needs?.hunter) { const c2 = this.animals.carrionNear?.(P.x, P.z, 2.5); if (c2) this.feeding = { t: CATCH.leap.feed, at: c2 }; }   // E beside a kill: crouch over it and feed
@@ -557,7 +561,7 @@ export class GroundControl {
       const rushing = fast && !this.tired;
       if (rushing && !this.rush) { this.rush = { t: 0, kill: false }; this.rushes = (this.rushes || 0) + 1; }
       if (this.rush) { this.rush.t += dt; if (!rushing) { if (!this.rush.kill && this.rush.t > 1 && this.needs?.hunter) this.animals?.known?.(45); this.rush = null; } }   // a hunter's failed rush makes it known; a deer's sprint is just a sprint
-      if (rushing && this.needs?.hunter && (this.catchT = (this.catchT || 0) - dt) <= 0) {   // the rush that reaches its prey catches it
+      if (rushing && this.needs?.hunter && !fights && (this.catchT = (this.catchT || 0) - dt) <= 0) {   // the rush that reaches its prey catches it
         this.catchT = 0.1;
         if (S.catch === 'leap') {   // the cat: the last bound is a leap onto prey within CATCH.leap.d m ahead (leapStep: the kill at the landing)
           const p = this.animals.preyNear?.(P.x, P.y, P.z, CATCH.leap.d, f.yaw, 0.8);
@@ -605,9 +609,9 @@ export class GroundControl {
   }
   // The cat's leap (CATCH.leap): from the rush, a bound of dur s that homes on the prey p and lands with the forequarters
   // over its back; the controls are the leap's until it lands.
-  startLeap(p) {
+  startLeap(p, o = null) {   // o: a strike's pounce (combat.js): { dur, peak, onLand } in place of the catch at the landing
     const P = this.flight.pos, L = CATCH.leap;
-    this.leap = { u: 0, dur: L.dur, sx: P.x, sz: P.z, tx: p.x, tz: p.z, prey: p, peak: L.peak };
+    this.leap = { u: 0, dur: o?.dur ?? L.dur, sx: P.x, sz: P.z, tx: p.x, tz: p.z, prey: p, peak: o?.peak ?? L.peak, onLand: o?.onLand || null };
     this.mode = 'leap'; this.sit = 0; this.resting = false; this.actT = 0;
   }
   leapStep(dt) {
@@ -624,7 +628,8 @@ export class GroundControl {
     ps.e2 = 0; ps.roll = damp(ps.roll, 0, 8, dt);
     this.v = Math.hypot(L.tx - L.sx, L.tz - L.sz) / L.dur;
     if (u >= 1) {   // the landing: the kill within reach, or the miss (a twist away, and the rush that failed makes the hunter known: ground)
-      P.y = g; this.setWet(F); this.mode = 'ground'; this.leap = null; this.v = S.walk * 0.5;
+      P.y = g; this.setWet(F); this.mode = 'ground'; this.v = S.walk * 0.5;
+      const on = L.onLand; this.leap = null; if (on) { on(); this.spd = this.v; this.inAir = false; return; }   // a strike's pounce: its hit at the landing (combat.js)
       const c = this.animals.catchNear(P.x, P.y, P.z);
       if (c) this.caught(c); else if (!this.animals.catchAsked) { this.twist = { t: C.twist, s: Math.random() < 0.5 ? -1 : 1 }; this.say('the leap misses'); }   // (asked of the animal host: its answer comes as a catch or a miss, animals.js)
     }
@@ -632,9 +637,9 @@ export class GroundControl {
   }
   // The canid's mousing pounce (CATCH.pounce) at prey p: the fix (when `fix`), the spring, and at the landing the kill
   // (the head toss) or the miss (the paw strikes); the controls are the pounce's until it is done.
-  startPounce(p, fix) {
+  startPounce(p, fix, onLand = null) {   // onLand: a strike's lunge (combat.js): its hit at the landing in place of the catch
     const P = this.flight.pos, C = CATCH.pounce;
-    this.pounce = { ph: fix ? 'fix' : 'spring', t: 0, u: 0, dur: C.dur, sx: P.x, sz: P.z, tx: p.x, tz: p.z, prey: p, peak: this.S.jumpH * C.peakK, cock: Math.random() < 0.5 ? -1 : 1 };
+    this.pounce = { ph: fix ? 'fix' : 'spring', t: 0, u: 0, dur: C.dur, sx: P.x, sz: P.z, tx: p.x, tz: p.z, prey: p, peak: this.S.jumpH * C.peakK, cock: Math.random() < 0.5 ? -1 : 1, onLand };
     if (!fix) this.aimPounce();
     this.mode = 'pounce'; this.sit = 0; this.resting = false; this.actT = 0; this.v = 0;
   }
@@ -658,6 +663,7 @@ export class GroundControl {
       ps.amp = 0; ps.pitch = -0.6 * Math.cos(Math.PI * u); ps.flick = damp(ps.flick, u > 0.55 ? 1 : -0.3, 14, dt); ps.roll = damp(ps.roll, 0, 10, dt); ps.pose = damp(ps.pose, 0, 8, dt);
       if (u >= 1) {
         P.y = g; this.setWet(F); Q.t = 0;
+        if (Q.onLand) { const on = Q.onLand; Q.onLand = null; Q.ph = on() === 'kill' ? 'toss' : 'paw'; Q.t = Q.ph === 'paw' ? CATCH.pounce.paw * 0.6 : 0; this.spd = 0; this.inAir = false; return; }   // a lunge: its hit (combat.js), then the head toss for a kill, a short paw for a hit
         const c = this.animals.catchNear(P.x, P.y, P.z);
         if (c) { this.caught(c); Q.ph = 'toss'; } else { Q.ph = 'paw'; if (!this.animals.catchAsked) this.say('the pounce misses'); }
       }
@@ -670,6 +676,59 @@ export class GroundControl {
       if (Q.t >= C.paw) { this.mode = 'ground'; this.pounce = null; this.actT = 2; ps.lift = 0; }
     }
     this.spd = 0; this.inAir = Q.ph === 'spring';
+  }
+  // A strike (combat.js): the bite (a lunge forward and a snap: the head drawn up and back, then driven down and forward
+  // through the prey, the forequarters dipping) or the swipe (the forequarters up and turned, one foreleg reaching, then
+  // raked across and down), its hit at hitAt s; the pounce is the leap above (startLeap with a crouch first), the lunge the
+  // canids' spring (startPounce). The controls are the strike's until it ends.
+  attack(kind, p, o) {
+    const f = this.flight, P = f.pos;
+    f.yaw = Math.atan2(-(p.x - P.x), -(p.z - P.z));
+    this.sit = 0; this.resting = false; this.actT = 0; this.feeding = null;
+    if (kind === 'pounce') {   // the crouch, then the leap (strikeStep hands over)
+      this.strike = { kind, t: 0, dur: 0.28, p, o, crouch: true }; this.mode = 'strike'; this.v = 0; return;
+    }
+    if (kind === 'lunge') { this.startPounce(p, false, o.onLand); return; }
+    this.strike = { kind, t: 0, dur: o.dur, hitAt: o.hitAt, p, o, fired: false, side: Math.random() < 0.5 ? -1 : 1, sx: P.x, sz: P.z }; this.mode = 'strike'; this.v = 0;
+  }
+  strikeStep(dt) {
+    const f = this.flight, P = f.pos, T = this.strike, ps = this.pose, p = T.p, pmax = this.modelPoseMax();
+    T.t += dt; const u = Math.min(1, T.t / T.dur);
+    if (p && !p.dead && !p.gone) f.yaw = Math.atan2(-(p.x - P.x), -(p.z - P.z));
+    const F = this.sq.footing(P.x, P.z, P.y + 1), g = F.surf !== null ? F.bed : F.y;
+    ps.amp = damp(ps.amp, 0, 14, dt); ps.lift = 0; ps.e2 = 0;
+    if (T.crouch) {   // the pounce's crouch: low on the haunches, the head level and fixed on it, the tail tip working
+      ps.pose = damp(ps.pose, 0.35 * pmax, 14, dt); ps.pitch = damp(ps.pitch, 0.12, 12, dt); ps.flick = damp(ps.flick, -0.1, 12, dt);
+      P.y = g;
+      if (u >= 1) { this.strike = null; this.mode = 'ground'; const d = p ? Math.hypot(p.x - P.x, p.z - P.z) : 3; this.startLeap(p, { dur: 0.3 + d * 0.045, peak: 0.35 + d * 0.06, onLand: T.o.onLand }); }
+      this.spd = 0; this.inAir = false; return;
+    }
+    const s = Math.sin(Math.PI * u);
+    if (T.kind === 'bite') {   // up and back (wind-up), then down and through: a lunge of up to 0.6 m that stops at the prey
+      const snap = u < 0.4 ? -0.5 * (u / 0.4) : u < 0.6 ? -0.5 + 1.9 * ((u - 0.4) / 0.2) : 1.4 * (1 - (u - 0.6) / 0.4);
+      ps.flick = snap; ps.pitch = u < 0.4 ? -0.12 * (u / 0.4) : 0.18 * s; ps.pose = damp(ps.pose, 0.12 * pmax, 10, dt);
+      if (p && u > 0.25 && u < 0.6) { const dx = p.x - P.x, dz = p.z - P.z, d = Math.hypot(dx, dz), stop = (T.o.stop || 0.8); if (d > stop) { const m = Math.min(d - stop, 6 * dt); P.x += dx / d * m; P.z += dz / d * m; } }   // the lunge: up to a metre in
+    } else {   // swipe: the forequarters up and over to one side, the near foreleg reaching (the gallop's flight pose), then raked across
+      ps.pitch = -0.32 * s; ps.roll = T.side * 0.16 * s; ps.lift = 0.08 * s;
+      ps.amp = 1.2 * s; ps.phase = Math.PI * (0.5 + (u < 0.45 ? 0 : 0.9 * (u - 0.45) / 0.55)); ps.flick = damp(ps.flick, 0.2, 12, dt);
+    }
+    P.y = g + ps.lift;
+    if (!T.fired && T.t >= T.hitAt) { T.fired = true; T.o.onHit?.(); }
+    if (u >= 1) { this.strike = null; this.mode = 'ground'; ps.roll = 0; ps.lift = 0; }
+    this.spd = 0; this.inAir = false;
+  }
+  // Big prey fighting back (animals.js hurt 'kick'): thrown back from it, a short stagger, the controls back after STUN s
+  kicked(from) {
+    const P = this.flight.pos, dx = P.x - from.x, dz = P.z - from.z, d = Math.hypot(dx, dz) || 1;
+    this.kick = { t: 0, vx: dx / d * 4, vz: dz / d * 4 }; this.mode = 'kicked'; this.strike = null; this.leap = null; this.pounce = null; this.v = 0;
+  }
+  kickedStep(dt) {
+    const f = this.flight, P = f.pos, K = this.kick, ps = this.pose; K.t += dt;
+    const k = Math.max(0, 1 - K.t / 0.5); P.x = clamp(P.x + K.vx * k * dt, 5, this.tile.size - 5); P.z = clamp(P.z + K.vz * k * dt, -this.tile.size + 5, -5);
+    const F = this.sq.footing(P.x, P.z, P.y + 1); P.y = F.surf !== null ? F.bed : F.y;
+    ps.roll = 0.3 * Math.sin(K.t * 18) * k; ps.pitch = -0.2 * k; ps.amp = 0;
+    if (K.t >= 0.9) { this.mode = 'ground'; this.kick = null; ps.roll = 0; }
+    this.spd = 0; this.inAir = false;
   }
   setWet(F) {
     if (F.surf === null || F.depth <= 0.005) { this.wet = null; return; }

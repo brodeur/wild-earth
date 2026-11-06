@@ -296,7 +296,7 @@ export class RavenFlight {
     const pitchIn = (k.has('ArrowUp') ? 1 : 0) - (k.has('ArrowDown') ? 1 : 0);
     this.yaw += yawIn * turn * dt;
     this.pitch = THREE.MathUtils.clamp(this.pitch + pitchIn * pitchRate * dt, -1.3, 1.1);
-    if (!pitchIn && !this.drag) this.pitch = THREE.MathUtils.lerp(this.pitch, 0, 1 - Math.exp(-dt * 0.3));   // levels out, slowly
+    if (!pitchIn && !this.drag && !this.piloted) this.pitch = THREE.MathUtils.lerp(this.pitch, 0, 1 - Math.exp(-dt * 0.3));   // levels out, slowly (not under the autopilot: pilot.js)
     this.roll = THREE.MathUtils.lerp(this.roll, yawIn * 0.5, 1 - Math.exp(-dt * 2));
     const boost = k.has('ShiftLeft') || k.has('ShiftRight'), push = k.has('KeyW') || boost, slow = k.has('KeyS');
     const ramp = hold => SPIRIT_RAMP[0] * Math.pow(SPIRIT_RAMP[1] / SPIRIT_RAMP[0], Math.min(1, hold / SPIRIT_RAMP_T));   // the rate per second, exponential in the hold
@@ -316,7 +316,7 @@ export class RavenFlight {
     } else this.sHold = 0;
     if (!slow) this.sDwell = 0;
     if (this.hover) this.speed = THREE.MathUtils.lerp(this.speed, 0, 1 - Math.exp(-dt * 3));
-    else if (!push && !k.has('KeyS') && this.speed > 4) this.speed += (SPIRIT_CRUISE - this.speed) * (1 - Math.exp(-dt * 0.7));   // back to cruise
+    else if (!push && !k.has('KeyS') && this.speed > 4 && !this.piloted) this.speed += (SPIRIT_CRUISE - this.speed) * (1 - Math.exp(-dt * 0.7));   // back to cruise
     const holding = this.hover || Math.abs(this.speed) < 1.0;
     this._q.setFromEuler(this._e.set(this.pitch, this.yaw, 0));
     const dir = this._v.set(0, 0, -1).applyQuaternion(this._q);

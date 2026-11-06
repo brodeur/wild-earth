@@ -7,7 +7,8 @@ import { uniforms as atmo } from './atmosphere.js';
 import { fieldGuide } from './fieldguide.js';
 import { scentCarry } from './wind.js';
 import { LegsPool } from './legs.js';   // the quadrupeds' leg engine (gait.js; docs/movement.md "The legs")
-import { NF, F, FL_AIR, FL_GM, FL_BURIED, FL_HIDDEN, FL_DEAD } from './animalNet.js';   // the shared animals' stream (the mirror below)
+import { NF, F, FL_AIR, FL_GM, FL_BURIED, FL_HIDDEN, FL_DEAD } from './animalNet.js';
+import { MOVES, bodyOf, maxHp, damage, reachOf, movesFor, REGEN, REGEN_DELAY, FIGHT_K, FIGHT_P } from './strikes.js';   // the hunt's strikes: health and damage from the bodies (hurt)   // the shared animals' stream (the mirror below)
 import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buildJay, buildHawk, buildVulture, buildStellersJay,
   buildDeerBuck, buildFox, buildCoyote, buildCougar, buildRabbit, buildVole, buildJackrabbit, buildTurkey, buildGroundSquirrel, buildLizard, buildBear, buildMountainQuail,
   animalMaterial, animalDepthMaterial, planarShadowMaterial, loadDeerMesh, loadSquirrelMesh, loadQuailMesh, loadJayMesh, driveClips, makeClipState, DEER_DRIVE, turnFollow, bendOf, PART_TURN,
@@ -769,7 +770,7 @@ const DEER_TURN = { w: 2.2, fast: 6, go: 0.5, stop: 1.4, slow: 1.2, face: 0.7, g
 // at the ground), the gait's amplitude slackening to nothing and the pose going to the species' rest (REST_POSE: the
 // deer's bed clip blended in at a third of its usual time, a lizard flat), instead of snapping onto its side.
 const CARRION = { t: 600, small: 150, reach: { [ML]: 2.4, [CY]: 1.6, [FX]: 1.3, [HK]: 1.4, [RV]: 0.9, [SJ]: 0.6, [BC]: 1.4, [BA]: 1.6, [CR]: 0.7 }, lionCatch: 0.35, canidCatch: 0.4, scavR: 300, ravenStay: [20, 45], feed: 45, fall: 0.4 };
-const KILLABLE = new Set([DR, BK, JR, RB, VO, LZ, SH, DM, TC]);   // (+ the Hoh batch's hare, deer mouse and chipmunk: the bobcat's and the hawk's prey)
+const KILLABLE = new Set([DR, BK, JR, RB, VO, LZ, SH, DM, TC, EL, EB]);   // (+ the elk, 2026-11-06: on the deer's machine, it dies as the deer does; the Serengeti's zebra, wildebeest and buffalo stand in on it)   // (+ the Hoh batch's hare, deer mouse and chipmunk: the bobcat's and the hawk's prey)
 const REST_POSE = { [LZ]: -0.95 };   // the pose a dead body settles to (1 for the rest: the deer's bed, the small bodies' rest); the lizard flat
 const HUNT = { r: 300, every: 0.3, lionR: 200, near: 60, stalk: 0.5, rush: 25, rushFar: 50, rushT: [4, 5], lose: 260, stalkMax: 180,
   lionCool: [60, 120], canidR: 60, trotMax: 25, pounceD: 2.4, chaseT: [2, 3.5], canidCool: [20, 45], look: [8, 16], hawk: 0.5, quail: 30,
@@ -1447,6 +1448,42 @@ export class Animals {
     if (!best && by && lim === Infinity && (this.alive(by) || by.diver)) best = by;   // (a diver: another page's player, startle)
     if (best) { T.x = best.x; T.y = best.y; T.z = best.z; T.n = row[best.sp]; T.who = best; }
     return this.diveSeen(o, y, T);
+  }
+  // ---- the hunt's strikes (strikes.js; combat.js plays them) --------------------------------------------------
+  // A species' body (mass, length, family), once per slot; an animal's health: full until struck, then what the last hit
+  // left, coming back REGEN of the full a second once REGEN_DELAY s have passed with no hit (worked out when read, so a
+  // mirror's bar, set by the host's 'hp' event, comes back at the same pace with no stream of its own).
+  bodyK(k) { return (this._bodies ||= [])[k] ||= bodyOf(this.tile, SPECIES[k]); }
+  massOf(a) { return this.bodyK(a.sp).m * (a.size || 1) ** 3; }
+  hpMax(a) { return a.hpMax ??= maxHp(this.massOf(a)); }
+  hpNow(a) {
+    const M = this.hpMax(a); if (a.hp === undefined || a.dead) return a.dead ? 0 : M;
+    const idle = this.time - (a.hitAt || 0) - REGEN_DELAY;
+    return idle > 0 ? Math.min(M, a.hp + REGEN * M * idle) : a.hp;
+  }
+  // How far (m, centre to centre) the move by a striker of species code reaches at a.
+  strikeReach(move, code, a) { const k = INDEX[code]; return k === undefined ? 0 : reachOf(move, this.bodyK(k).len * (code === this.observer ? (this.playerSize || 1) : 1), this.bodyK(a.sp).len * (a.size || 1)); }
+  // A strike landed (combat.js; on the host, or a mirror's `hit` request: from its number, at its point x, y, z): the damage
+  // by the striker's mass, everyone's bar ('hp' event), and at none left the kill (as the catch's: the striker's own catch).
+  // Struck prey flees as at a dive it saw (startle), or, much the bigger, now and then fights back ('kick'). On a mirror:
+  // the host is asked. Returns 'kill', 'hit', 'asked' or null (not prey it can be struck: no move, no killable body).
+  hurt(a, mv, code, from = 0, x = NaN, y = NaN, z = NaN) {
+    const move = MOVES[mv], k = INDEX[code];
+    if (!a || !move || k === undefined || a.dead || a.gone || a.remote || !KILLABLE.has(a.sp)) return null;
+    if (this.mirror) {
+      if (a.n < 0) return null;
+      this.catchPending = this.time + 1;
+      this.relay?.request({ k: 'hit', n: a.n, mv, sp: code, x: r2(x), y: r2(y), z: r2(z) });
+      return 'asked';
+    }
+    const M = this.massOf(a), hp = Math.max(0, this.hpNow(a) - damage(move, this.bodyK(k).m * (from ? 1 : (this.playerSize || 1)) ** 3));
+    a.hp = hp; a.hitAt = this.time;
+    this.emit('hp', { animal: a, hp, max: this.hpMax(a), aid: from, move: mv });
+    if (hp <= 0) { this.kill(a, from ? { code, aid: from } : 'player'); return 'kill'; }
+    const big = M > FIGHT_K * this.bodyK(k).m;
+    if (big && Math.random() < FIGHT_P) { this.emit('kick', { animal: a, aid: from }); if (!from) this.onKicked?.(a); }   // the zebra kicks back
+    else if ([x, y, z].every(Number.isFinite)) this.startle(a, x, y, z, code, !!from);
+    return 'hit';
   }
   // Whether the catch can take this animal at all (KILLABLE: the ground squirrels, tree squirrels and quail are not yet; dive.js offers no dive at them)
   killable(a) { return !!a && !a.remote && KILLABLE.has(a.sp); }
@@ -5743,6 +5780,8 @@ export class Animals {
         return;
       }
       case 'miss': if (e.to === me) { this.catchPending = 0; this.onMiss?.(a); } return;
+      case 'hp': if (a && !a.dead) { a.hp = +e.hp; a.hpMax = +e.max || a.hpMax; a.hitAt = this.time; if (e.by === me) this.catchPending = 0; this.emit('hp', { animal: a, hp: a.hp, max: a.hpMax, aid: e.by, move: e.mv, mine: e.by === me }); } return;
+      case 'kick': if (a && e.to === me) this.onKicked?.(a); return;
       case 'gone': if (a && a.dead && !a.gone) this.bury(a); return;
       case 'flush': case 'turkeyFlush': case 'gsAlarm': {
         const g = e.g >= 0 ? this.mgroup(e.g) : null, quail = INDEX[e.species] === QU;
@@ -5765,6 +5804,13 @@ export class Animals {
       let ok = !!(a && !a.dead && !a.buried && P && R && P.has(a.sp) && KILLABLE.has(a.sp) && !this.reachedCover(a));
       if (ok) { const dx = a.x - e.x, dz = a.z - e.z, d2 = dx * dx + (a.y - e.y) ** 2 * 0.25 + dz * dz, slack = R + 1 + 0.3 * (a.spd || 0); ok = d2 <= slack * slack; }
       if (ok) this.kill(a, { code: e.sp, aid: from }); else this.relay?.emitted('miss', { aid: from, animal: a });
+    } else if (e.k === 'hit') {   // a mirror's strike: its move is one its species has, it is within that move's reach (and the stream's slack), and not sooner than the move's cooldown allows
+      const a = this.numbered(e.n), k = INDEX[e.sp], move = MOVES[e.mv];
+      if (!this.preySlots) this.buildHunts();
+      let ok = !!(a && move && k !== undefined && !a.dead && this.preySlots?.[k]?.has(a.sp) && movesFor(this.bodyK(k).family).includes(move));
+      const key = `${from}:${e.mv}`, last = (this._hitAt ||= new Map()).get(key) ?? -1e9;
+      if (ok) { const d = Math.hypot(a.x - e.x, a.z - e.z), R = this.strikeReach(move, e.sp, a) + 1 + 0.3 * (a.spd || 0); ok = d <= R && this.time - last >= move.cd * 0.8; }
+      if (ok) { this._hitAt.set(key, this.time); this.hurt(a, e.mv, e.sp, from, +e.x, +e.y, +e.z); } else this.relay?.emitted('miss', { aid: from, animal: a });
     } else if (e.k === 'startle') {   // a mirror's dive was seen coming (startle): within the stream's slack of where the diver says it is
       const a = this.numbered(e.n), x = +e.x, y = +e.y, z = +e.z;
       if (a && !a.dead && typeof e.sp === 'string' && INDEX[e.sp] !== undefined && (a.x - x) ** 2 + (a.z - z) ** 2 < 600 * 600) this.startle(a, x, y, z, e.sp, true);

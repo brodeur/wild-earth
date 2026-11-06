@@ -584,7 +584,11 @@ coming is a `startle` request (`areq {k: 'startle', n, x, y, z, sp}`): the host 
 stand-in hunter at the point it gave, within 600 m of the prey. Seen 2026-11-06 with two headless Chromes on the home
 tile: the mirror's red-tail stooped at a brush rabbit, the host killed it, the mirror was fed and mantled; a vole the
 mirror's dive startled was alarmed on the host with the diver as its threat; a gray squirrel startled from the mirror ran
-up its oak on the host.
+up its oak on the host. The strikes (2026-11-06, decisions "the hunt's strikes") follow the same road: a mirror's strike is a
+`hit` request the host checks (the family's move, its prey, the move's reach with the stream's slack, its cooldown) and
+deals; everyone's bar comes from the host's `hp` event (the regeneration is worked out when read, so it needs no
+stream); a big prey's fight-back is a `kick` event to the striker; the kill is the kill event. Two players striking one
+deer saw the same numbers on both pages.
 
 **Seen** (2026-11-02, two pages on the home tile against the worktree's server, the pane hidden so the frames came
 from a timer at 13 to 16 a second): both pages listed the same 327 animals with the same ids, and the deer herds at

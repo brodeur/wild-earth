@@ -8,8 +8,8 @@ import * as THREE from 'three';
 // Offered (can(): the action bar's dive slot shows, Q or the slot starts it) while the player is a flier whose species
 // hunts (flierControl.js FLIERS, animals.js preySlots), in the air, with a prey animal selected (quarry.js) that it has
 // a line of sight to (sight.js losOf), that the catch can take (animals.js killable: not yet a ground squirrel, a tree
-// squirrel or a quail, which Tab still selects), and is above: at least ABOVE_MIN m over it and looking down on it at least ABOVE_ANG, within
-// DIVE_R m. Then each frame, before the flight moves (flierControl.update calls steer), the bird is turned straight at
+// squirrel or a quail, which Tab still selects), and is below it (ABOVE_MIN m or more) within DIVE_R m: from far away too
+// (2026-11-06: "For birds, they can initiate a dive from far away"; it first asked to be over the prey). Then each frame, before the flight moves (flierControl.update calls steer), the bird is turned straight at
 // the prey's body (TURN rad/s, the flight's pitch let down to PITCH_MIN for a stoop near the vertical), its wings tucked
 // (flierControl.draw: the soarers' stoop pose, a jay's folded wings) and no wingbeat, and it gains speed as a falling
 // body does (ACC m/s^2 plus gravity along the slope) up to the species' top (the flight's vmax).
@@ -24,7 +24,7 @@ import * as THREE from 'three';
 // reach) the strike is handed to the catch as the hawk's contact strike is (animals.js catchNear: the kill, or on a
 // mirror the host's confirmation, animals.onCaught then flierControl.took), the bird down on it; a strike that finds no
 // prey there is a miss, and the bird pulls out.
-const ABOVE_MIN = 8, ABOVE_ANG = 0.26, DIVE_R = 600;          // m over the prey; rad below the horizon; m away (the eye's reach)
+const ABOVE_MIN = 3, DIVE_R = 600;                             // m over the prey (2026-11-06: from far away, no longer from over it); m away (the eye's reach)
 const TURN = 2.6, PITCH_MIN = -1.52, ACC = 4;                  // rad/s at the prey; the steepest stoop (rad); m/s^2 over the glide's own
 const DET_K = 0.9, DET_N = 150, LOST_T = 0.3, PULL_T = 1.1;   // the prey's hazard at the strike (per s), its reach where unknown (m); s of no line before the cancel; the pull-out
 const SEEN_VIS = 0.3;                                          // sight.js SEEN_VIS: the visibility that counts as in sight
@@ -38,7 +38,7 @@ export class Dive {
     this.last = null;   // the last dive's end: { why, t, detected, d0 } (tests, the docs' verification)
     const typing = e => e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement || e.target instanceof HTMLTextAreaElement;
     this.onKey = e => {
-      if (e.code !== 'KeyQ' || e.repeat || typing(e) || e.metaKey || e.ctrlKey || e.altKey || !this.flier.on) return;
+      if ((e.code !== 'KeyQ' && e.code !== 'Digit1') || e.repeat || typing(e) || e.metaKey || e.ctrlKey || e.altKey || !this.flier.on) return;
       this.toggle();
     };
     addEventListener('keydown', this.onKey);
@@ -52,7 +52,7 @@ export class Dive {
   aim(a) { return this.animals.scentHeight(a) + (a.air ? 0 : 0.25 * (a.size || 1)); }
   above(a) {
     const P = this.flight.pos, dy = P.y - this.aim(a), h = Math.hypot(a.x - P.x, a.z - P.z);
-    return dy >= ABOVE_MIN && Math.atan2(dy, h) >= ABOVE_ANG && Math.hypot(h, dy) <= DIVE_R;
+    return dy >= ABOVE_MIN && Math.hypot(h, dy) <= DIVE_R;
   }
   can() {
     const a = this.quarry.target, f = this.flight;

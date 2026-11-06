@@ -7,18 +7,22 @@
 // souls' spectrum runs from purple to red. Hidden while the player is in a body. The slots are rebuilt only when the
 // set or a count changes; the bar's own element is the page's (index.html #nearBar), its slots a world's (torn down
 // with it).
+// 2026-11-06: a chip is a button (onPick(k): quarry.js pickSpecies, the nearest of that species selected and, for the
+// spirit, flown to: pilot.js) and the bar shows in a body too (a click there selects one the camera can see); the
+// selection's species' chip is marked (`sel`).
 import { rarityColor } from './animals.js';
 import { loadStills, stillsReady, setStill } from './stills.js';
 
 export class NearBar {
-  constructor({ el, animals }) {
-    this.el = el; this.animals = animals; this.species = animals.speciesList(); this.slots = new Map(); this.last = '';
+  constructor({ el, animals, onPick = null }) {
+    this.el = el; this.animals = animals; this.species = animals.speciesList(); this.slots = new Map(); this.last = ''; this.onPick = onPick; this.selK = -1;
     loadStills().then(() => { this.last = ''; });
   }
   // counts: per species index (animals.counts, filled by describe each HUD tick); on: in spirit form
-  update(counts, on) {
+  update(counts, on, selK = -1) {
     this.el.hidden = !on;
     if (!on || !stillsReady()) return;
+    if (selK !== this.selK) { this.slots.get(this.selK)?.classList.remove('sel'); this.selK = selK; this.slots.get(selK)?.classList.add('sel'); }
     const rar = this.animals.rarity, show = [];
     for (let k = 0; k < counts.length; k++) if (counts[k] > 0) show.push(k);
     show.sort((a, b) => (rar[a] - rar[b]) || (a - b));
@@ -29,7 +33,7 @@ export class NearBar {
     let prev = null;
     for (const k of show) {
       let slot = this.slots.get(k);
-      if (!slot) { slot = this.makeSlot(k); this.slots.set(k, slot); }
+      if (!slot) { slot = this.makeSlot(k); this.slots.set(k, slot); if (k === this.selK) slot.classList.add('sel'); }
       slot.lastChild.textContent = counts[k];
       const want = prev ? prev.nextSibling : this.el.firstChild;
       if (want !== slot) this.el.insertBefore(slot, want);
@@ -45,6 +49,7 @@ export class NearBar {
     setStill(img, sp);
     const n = document.createElement('b'); n.className = 'nb-n';
     slot.append(disc, img, n);
+    slot.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); this.onPick?.(k); });
     return slot;
   }
 }
