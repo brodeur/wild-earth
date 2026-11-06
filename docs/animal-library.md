@@ -637,3 +637,43 @@ otter's swim is the walker lowered into the water (no paddling gait); the fish t
 eagle eat are not in the world. The salamanders sit at a conifer's foot as a stand-in for the logs they live under. The
 deer mouse's rump is heavy; the chipmunk has no stripes on lod2; the bobcat's spots read as mottling. No voices yet. The
 camera often sits in the foliage when playing a small bird or the merganser among trees.
+
+## The rest of the Hoh and Mount Olympus (2026-11-06)
+
+Aaron approved modelling the animals both Olympic tiles still listed without a model: the Hoh's fourteen and Mount
+Olympus's eight more. Twenty-two species for 25 credits (670 -> 695 of 1,000), five lite previews and the rest variants;
+both tiles' queues are now empty and every listed animal has a model (fidelity 3; level 4 needs voices). Lineup:
+[lineup-hoh-animals-2.jpg](lineup-hoh-animals-2.jpg).
+
+| species | how | credits | build | client (KIN) |
+|---|---|---|---|---|
+| American robin, European starling | lite previews | 10 | `build_songbird.py` | the Steller's jay's machine, mostly on the ground (`HOH` ground 0.6-0.65) |
+| varied thrush | variant of the robin | 0 | `build_songbird.py` | as the robin, the dark forest floor |
+| dark-eyed junco, golden-crowned kinglet, Pacific-slope flycatcher | variants of the chickadee | 0 | `build_songbird.py` | juncos in flocks low and on the ground; kinglets high in the crowns; the flycatcher alone, upright |
+| western screech-owl, northern saw-whet owl | variants of the barred owl | 0 | `build_songbird.py` | the barred owl's rules (roost by day) |
+| hairy woodpecker | procedural (the acorn woodpecker's builder, recoloured) | 0 | `animalModels.js buildHairyWoodpecker` | the jay machine with `trunk`: clings to the bark facing it, hops up, flies tree to tree |
+| osprey, sharp-shinned hawk, merlin | variants of the red-tail | 0 | `build_soarer.py --species` | the hawk's soaring, lower and tighter for the small two |
+| glaucous-winged, California and western gulls | variants of the red-tail (lofted gull wings and bill) | 0 | `build_soarer.py` | the vulture's circling glides up the river |
+| mallard (hen; drake in `_COLORB`) | variant of the merganser | 0 | `build_mallard.py` | the mergansers' water covey, dabbling (no dive) |
+| sooty grouse (male; hen in `_COLORB`) | lite preview (came back pigeon-like, reshaped) | 5 | `build_grouse.py` | the quail's covey in the mountain forest (from 400 m) |
+| Olympic marmot | lite preview | 5 | `build_marmot.py` | the ground squirrel's colonies and sentinel, on the subalpine meadows and talus (1,300-2,000 m) |
+| yellow-pine chipmunk | variant of Townsend's chipmunk | 0 | `build_yellow_pine_chipmunk.py` | the vole's runways by day, from 900 m |
+| montane shrew | variant of the deer mouse | 0 | `build_shrew.py` | the vole's runways at any hour (absent on both tiles by the presence rule: under 3 records) |
+| western toad | lite preview | 5 | `build_toad.py` (the salamander's reptile template, tail stubs) | the salamanders' slow walk, near water and on meadows |
+| Cascades frog | variant of the toad | 0 | `build_frog.py` | as the toad, at subalpine ponds and wet meadows (from 700 m) |
+
+Also: the colony machine reads its own species (`g.sp`), so the marmots' colonies run beside the ground squirrel's; the
+covey machine's water rules key on `HOH.water` (the grouse walks the forest); the near bar's stills and the lineup rows
+for all twenty-two. All but the shrew (absent) and the soarers were summoned or met in the world and moved; the robin,
+junco, hairy woodpecker, a gull, the marmot, the frog, the grouse, the kinglet and the owls entered from the spirit.
+
+**The two fixes.** `tools/rig_quadruped.py` no longer crashes on a short decimated leg: each leg band (the toe, the
+wrist or hock, the ring under the elbow) widens until it holds three vertices, else takes the nearest (`band_at`;
+`tests/test_rig_quadruped.py`); the fox, otter and bear rig as before. The owls, the kingfisher and the flycatcher,
+modelled perched upright, now fly level as the player: `flierControl.js FLIERS[...].upright` tips the drawn body
+forward in the air (the AI's were already pitched by `UPRIGHT`).
+
+**Still wrong or open.** The flat plate tails read as sticks side-on; per-face colour turns fine barring and speckle
+into mottling (the starling, the owls, the sharp-shin); the raptors and gulls keep the red-tail's head; no juvenile gull
+plumages; the hairy woodpecker is primitive shapes with no braced tail; the toad's and frog's far tier is a lump; the
+marmot colonies' burrow mouths are the ground squirrel's size; no voices.

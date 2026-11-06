@@ -1,6 +1,6 @@
 {
  "tile": "utm10n_439_5293",
- "at": "2026-11-05T21:14:41Z",
+ "at": "2026-11-06T02:59:15Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -12,7 +12,7 @@
   "by_level": {
    "0": {
     "plants": 11,
-    "animals": 13
+    "animals": 0
    },
    "1": {
     "plants": 0,
@@ -24,7 +24,7 @@
    },
    "3": {
     "plants": 3,
-    "animals": 21
+    "animals": 42
    },
    "4": {
     "plants": 16,
@@ -32,9 +32,9 @@
    }
   },
   "plants": 49,
-  "animals_present": 38,
-  "animals_queued": 13,
-  "meshy_credits_queued": 380,
+  "animals_present": 46,
+  "animals_queued": 0,
+  "meshy_credits_queued": 0,
   "cards_queued": 11,
   "stand_ins": {
    "corydalis_scouleri": null,
@@ -64,16 +64,15 @@
    },
    "animal": {
     "target": 22,
-    "have": 38,
-    "with_model": 25
+    "have": 46,
+    "with_model": 46
    }
   },
   "hands": {
-   "count": 25,
+   "count": 12,
    "by_what": {
     "a trait card": 11,
-    "a lexicon phrase or a species-mix rule": 1,
-    "a mesh": 13
+    "a lexicon phrase or a species-mix rule": 1
    }
   }
  },
@@ -898,161 +897,191 @@
    "evidence": "221 records within 10 km in 2011-2026 (>= 3)"
   },
   {
-   "id": "junco_hyemalis",
-   "scientific": "Junco hyemalis",
-   "common": "dark-eyed junco",
-   "kind": "bird",
-   "fidelity": 0,
-   "present": "records",
-   "why": [
-    "most recorded: 1 of its class (6% of the class's records)"
-   ],
-   "role": [
-    "herbivore"
-   ],
-   "traits": null
-  },
-  {
    "id": "turdus_migratorius",
    "scientific": "Turdus migratorius",
-   "common": "american robin",
+   "common": "American robin",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
-   "why": [
-    "most recorded: 3 of its class (5% of the class's records)"
-   ],
-   "role": [
-    "omnivore"
-   ],
-   "traits": null
+   "evidence": "1663 records within 10 km in 2011-2026 (>= 3)"
   },
   {
-   "id": "dendragapus_fuliginosus",
-   "scientific": "Dendragapus fuliginosus",
-   "common": "sooty grouse",
+   "id": "sturnus_vulgaris",
+   "scientific": "Sturnus vulgaris",
+   "common": "European starling",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
-   "why": [
-    "most recorded: 4 of its class (4% of the class's records)"
-   ],
-   "role": [
-    "herbivore"
-   ],
-   "traits": null
-  },
-  {
-   "id": "empidonax_difficilis",
-   "scientific": "Empidonax difficilis",
-   "common": "pacific-slope flycatcher",
-   "kind": "bird",
-   "fidelity": 0,
-   "present": "records",
-   "why": [
-    "most recorded: 6 of its class (4% of the class's records)"
-   ],
-   "role": [
-    "insectivore"
-   ],
-   "traits": null
+   "evidence": "50 records within 10 km in 2011-2026 (>= 3)"
   },
   {
    "id": "ixoreus_naevius",
    "scientific": "Ixoreus naevius",
    "common": "varied thrush",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
-   "why": [
-    "most recorded: 7 of its class (4% of the class's records)"
-   ],
-   "role": [
-    "omnivore"
-   ],
-   "traits": null
+   "evidence": "843 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "junco_hyemalis",
+   "scientific": "Junco hyemalis",
+   "common": "dark-eyed junco",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "1609 records within 10 km in 2011-2026 (>= 3)"
   },
   {
    "id": "regulus_satrapa",
    "scientific": "Regulus satrapa",
    "common": "golden-crowned kinglet",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
-   "why": [
-    "most recorded: 9 of its class (3% of the class's records)"
-   ],
-   "role": [
-    "insectivore"
-   ],
-   "traits": null
+   "evidence": "1228 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "empidonax_difficilis",
+   "scientific": "Empidonax difficilis",
+   "common": "Pacific-slope flycatcher",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "832 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "megascops_kennicottii",
+   "scientific": "Megascops kennicottii",
+   "common": "western screech-owl",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "8 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "aegolius_acadicus",
+   "scientific": "Aegolius acadicus",
+   "common": "northern saw-whet owl",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "4 records within 10 km in 2011-2026 (>= 3)"
   },
   {
    "id": "leuconotopicus_villosus",
    "scientific": "Leuconotopicus villosus",
    "common": "hairy woodpecker",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
-   "why": [
-    "most recorded: 10 of its class (3% of the class's records)"
-   ],
-   "role": [
-    "insectivore"
-   ],
-   "traits": null
+   "evidence": "785 records within 10 km in 2011-2026 (>= 3)"
   },
   {
    "id": "pandion_haliaetus",
    "scientific": "Pandion haliaetus",
    "common": "osprey",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
-   "why": [
-    "predator"
-   ],
-   "role": [
-    "predator"
-   ],
-   "traits": null
+   "evidence": "81 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "accipiter_striatus",
+   "scientific": "Accipiter striatus",
+   "common": "sharp-shinned hawk",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "19 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "falco_columbarius",
+   "scientific": "Falco columbarius",
+   "common": "merlin",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "13 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "larus_glaucescens",
+   "scientific": "Larus glaucescens",
+   "common": "glaucous-winged gull",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "8 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "larus_californicus",
+   "scientific": "Larus californicus",
+   "common": "California gull",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "3 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "anas_platyrhynchos",
+   "scientific": "Anas platyrhynchos",
+   "common": "mallard",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "886 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "dendragapus_fuliginosus",
+   "scientific": "Dendragapus fuliginosus",
+   "common": "sooty grouse",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "342 records within 10 km in 2011-2026 (>= 3)"
   },
   {
    "id": "marmota_olympus",
    "scientific": "Marmota olympus",
-   "common": "olympic marmot",
+   "common": "Olympic marmot",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
-   "why": [
-    "most recorded: 4 of its class (9% of the class's records)"
-   ],
-   "role": [
-    "herbivore"
-   ],
-   "traits": null
+   "evidence": "47 records within 10 km in 2011-2026 (>= 3)"
   },
   {
    "id": "tamias_amoenus",
    "scientific": "Tamias amoenus",
    "common": "yellow-pine chipmunk",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
-   "why": [
-    "most recorded: 7 of its class (4% of the class's records)"
-   ],
-   "role": [
-    "herbivore"
-   ],
-   "traits": null
+   "evidence": "17 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "anaxyrus_boreas",
+   "scientific": "Anaxyrus boreas",
+   "common": "western toad",
+   "kind": "amphibian",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "89 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "rana_cascadae",
+   "scientific": "Rana cascadae",
+   "common": "Cascades frog",
+   "kind": "amphibian",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "31 records within 10 km in 2011-2026 (>= 3)"
   },
   {
    "id": "sorex_monticolus",
    "scientific": "Sorex monticolus",
    "common": "montane shrew",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "most recorded: 8 of its class (2% of the class's records)"
@@ -1061,32 +1090,6 @@
     "insectivore",
     "scavenger"
    ],
-   "traits": null
-  },
-  {
-   "id": "anaxyrus_boreas",
-   "scientific": "Anaxyrus boreas",
-   "common": "western toad",
-   "kind": "amphibian",
-   "fidelity": 0,
-   "present": "records",
-   "why": [
-    "most recorded: 1 of its class (52% of the class's records)"
-   ],
-   "role": [],
-   "traits": null
-  },
-  {
-   "id": "rana_cascadae",
-   "scientific": "Rana cascadae",
-   "common": "cascades frog",
-   "kind": "amphibian",
-   "fidelity": 0,
-   "present": "records",
-   "why": [
-    "most recorded: 2 of its class (12% of the class's records)"
-   ],
-   "role": [],
    "traits": null
   }
  ],
@@ -1181,203 +1184,7 @@
     ]
    }
   ],
-  "meshy": [
-   {
-    "id": "junco_hyemalis",
-    "scientific": "Junco hyemalis",
-    "common": "dark-eyed junco",
-    "kind": "bird",
-    "records": 24,
-    "why": [
-     "most recorded: 1 of its class (6% of the class's records)"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "aphelocoma_californica",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "turdus_migratorius",
-    "scientific": "Turdus migratorius",
-    "common": "american robin",
-    "kind": "bird",
-    "records": 22,
-    "why": [
-     "most recorded: 3 of its class (5% of the class's records)"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "aphelocoma_californica",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "anaxyrus_boreas",
-    "scientific": "Anaxyrus boreas",
-    "common": "western toad",
-    "kind": "amphibian",
-    "records": 22,
-    "why": [
-     "most recorded: 1 of its class (52% of the class's records)"
-    ],
-    "body_plan": "amphibian",
-    "rig": "none yet: the reptile template, hopping",
-    "estimate_credits": 25,
-    "stand_in": null,
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "dendragapus_fuliginosus",
-    "scientific": "Dendragapus fuliginosus",
-    "common": "sooty grouse",
-    "kind": "bird",
-    "records": 18,
-    "why": [
-     "most recorded: 4 of its class (4% of the class's records)"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "meleagris_gallopavo",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "empidonax_difficilis",
-    "scientific": "Empidonax difficilis",
-    "common": "pacific-slope flycatcher",
-    "kind": "bird",
-    "records": 17,
-    "why": [
-     "most recorded: 6 of its class (4% of the class's records)"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "aphelocoma_californica",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "ixoreus_naevius",
-    "scientific": "Ixoreus naevius",
-    "common": "varied thrush",
-    "kind": "bird",
-    "records": 16,
-    "why": [
-     "most recorded: 7 of its class (4% of the class's records)"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "aphelocoma_californica",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "regulus_satrapa",
-    "scientific": "Regulus satrapa",
-    "common": "golden-crowned kinglet",
-    "kind": "bird",
-    "records": 15,
-    "why": [
-     "most recorded: 9 of its class (3% of the class's records)"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "aphelocoma_californica",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "leuconotopicus_villosus",
-    "scientific": "Leuconotopicus villosus",
-    "common": "hairy woodpecker",
-    "kind": "bird",
-    "records": 15,
-    "why": [
-     "most recorded: 10 of its class (3% of the class's records)"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "melanerpes_formicivorus",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "rana_cascadae",
-    "scientific": "Rana cascadae",
-    "common": "cascades frog",
-    "kind": "amphibian",
-    "records": 5,
-    "why": [
-     "most recorded: 2 of its class (12% of the class's records)"
-    ],
-    "body_plan": "amphibian",
-    "rig": "none yet: the reptile template, hopping",
-    "estimate_credits": 25,
-    "stand_in": null,
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "marmota_olympus",
-    "scientific": "Marmota olympus",
-    "common": "olympic marmot",
-    "kind": "mammal",
-    "records": 4,
-    "why": [
-     "most recorded: 4 of its class (9% of the class's records)"
-    ],
-    "body_plan": "rodent",
-    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
-    "estimate_credits": 30,
-    "stand_in": "sciurus_griseus",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "pandion_haliaetus",
-    "scientific": "Pandion haliaetus",
-    "common": "osprey",
-    "kind": "bird",
-    "records": 3,
-    "why": [
-     "predator"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "buteo_jamaicensis",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "tamias_amoenus",
-    "scientific": "Tamias amoenus",
-    "common": "yellow-pine chipmunk",
-    "kind": "mammal",
-    "records": 2,
-    "why": [
-     "most recorded: 7 of its class (4% of the class's records)"
-    ],
-    "body_plan": "rodent",
-    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
-    "estimate_credits": 30,
-    "stand_in": "sciurus_griseus",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "sorex_monticolus",
-    "scientific": "Sorex monticolus",
-    "common": "montane shrew",
-    "kind": "mammal",
-    "records": 1,
-    "why": [
-     "most recorded: 8 of its class (2% of the class's records)"
-    ],
-    "body_plan": "rodent",
-    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
-    "estimate_credits": 30,
-    "stand_in": null,
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   }
-  ]
+  "meshy": []
  },
  "hands": [
   {
@@ -1474,110 +1281,6 @@
    "what": "a lexicon phrase or a species-mix rule",
    "why": [
     "3533 cells"
-   ]
-  },
-  {
-   "id": "junco_hyemalis",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "most recorded: 1 of its class (6% of the class's records)"
-   ]
-  },
-  {
-   "id": "turdus_migratorius",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "most recorded: 3 of its class (5% of the class's records)"
-   ]
-  },
-  {
-   "id": "anaxyrus_boreas",
-   "kind": "amphibian",
-   "what": "a mesh (Meshy ~25 credits) and its review",
-   "why": [
-    "most recorded: 1 of its class (52% of the class's records)"
-   ]
-  },
-  {
-   "id": "dendragapus_fuliginosus",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "most recorded: 4 of its class (4% of the class's records)"
-   ]
-  },
-  {
-   "id": "empidonax_difficilis",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "most recorded: 6 of its class (4% of the class's records)"
-   ]
-  },
-  {
-   "id": "ixoreus_naevius",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "most recorded: 7 of its class (4% of the class's records)"
-   ]
-  },
-  {
-   "id": "regulus_satrapa",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "most recorded: 9 of its class (3% of the class's records)"
-   ]
-  },
-  {
-   "id": "leuconotopicus_villosus",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "most recorded: 10 of its class (3% of the class's records)"
-   ]
-  },
-  {
-   "id": "rana_cascadae",
-   "kind": "amphibian",
-   "what": "a mesh (Meshy ~25 credits) and its review",
-   "why": [
-    "most recorded: 2 of its class (12% of the class's records)"
-   ]
-  },
-  {
-   "id": "marmota_olympus",
-   "kind": "mammal",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "most recorded: 4 of its class (9% of the class's records)"
-   ]
-  },
-  {
-   "id": "pandion_haliaetus",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "predator"
-   ]
-  },
-  {
-   "id": "tamias_amoenus",
-   "kind": "mammal",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "most recorded: 7 of its class (4% of the class's records)"
-   ]
-  },
-  {
-   "id": "sorex_monticolus",
-   "kind": "mammal",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "most recorded: 8 of its class (2% of the class's records)"
    ]
   }
  ]

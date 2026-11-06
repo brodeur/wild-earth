@@ -2441,13 +2441,18 @@ export function canopyMaterial(spec, lod = 'near', patch = null) {
 // wind in km/h times the gust swell; 0.12 is calm), and three smoothsteps over WIND_TIERS (m/s) drive three motions:
 // windLeaves() (0.3-3.5) the flutter, the shimmer's gate and the leaf level's turn, plus a quick per-spray flutter
 // of the cards (2.2-3.5 Hz, 1.2 cm at the outer crown), full by a gentle breeze and no faster after; windLimbs()
-// (4.5-12) the crown's slow wave and each spray's own swing (crownSwayW, as before at a strong breeze); windTrunks()
-// (9-19) the lean and rock of the whole tree (crownFlexW: 0.25 x windLimbs() + 3 x windTrunks() times CROWN_FLEX.x,
+// (0.8-12, a ramp: 0.35 at 3 m/s) the crown's slow wave and each spray's own swing (crownSwayW); windTrunks()
+// (1.2-19, a ramp: 0.18 at 3 m/s) the lean and rock of the whole tree (crownFlexW: 0.25 x windLimbs() + 3 x windTrunks() times CROWN_FLEX.x,
 // so a 12 m tree's top bows about 0.8 m in a gale's gust and its rock widens with the wind), and in a gale the mid
 // crowns and mid trunks bow too (shimmerVertex's mid branch, trunkLean), so the far forest moves. Measured on the home
 // tile from 25 m up (the mean pixel change over half a second, time and wind pinned): 0.53 at 3 m/s, nearly all leaf
 // flutter; 1.71 at 8 m/s, the sprays four-fifths of it; 5.11 at 20 m/s, the trunks as much as the sprays.
-export const WIND_TIERS = { leaves: [0.3, 3.5], limbs: [4.5, 12.0], trunks: [9.0, 19.0] };   // m/s: each tier's smoothstep from first motion to full
+// 2026-11-05 (Aaron: "I don't see the trunks swaying in the breeze, still just the leaf cards - it doesn't look like the
+// branches are moving either"): the limbs started at 4.5 m/s and the trunks at 9, both on smoothsteps flat at the foot,
+// so the usual 2-4 m/s breeze moved only the cards. They now start at 0.8 and 1.2 m/s on ramps that rise from the foot
+// (windRamp); the full motion at 12 and 19 m/s is unchanged. On the Hoh at 3 m/s from the forest floor (a fixed camera,
+// frames 0.15 s apart for 4.5 s, the most any frame differs from the first): the trunk area 0.54 -> 3.67, the crowns 2.95 -> 5.93.
+export const WIND_TIERS = { leaves: [0.3, 3.5], limbs: [0.8, 12.0], trunks: [1.2, 19.0] };   // m/s: the leaves' smoothstep, and the limbs' and trunks' ramps, from first motion to full
 export const CROWN_SWAY = { value: new THREE.Vector4(0.2, 3.5, 4.0, 1.6) };   // 0.35 until Aaron's "the swaying is too intense" (2026-10-29)
 export const CROWN_FLEX = { value: new THREE.Vector4(0.02, 0.4, 0.3, 0.2) };   // (0.035, 0.4, 0.4, 0.3) the same
 export const LEAF_WAVE_GLSL = `
@@ -2455,8 +2460,11 @@ export const LEAF_WAVE_GLSL = `
   // the wind's speed in m/s, gusts included (weather.js windStrength inverted), and the three tiers it drives
   float windMs() { return 2.778 * pow(max(windStrength - 0.12, 0.0) / 0.3, 1.25); }
   float windLeaves() { return smoothstep(${WIND_TIERS.leaves[0].toFixed(1)}, ${WIND_TIERS.leaves[1].toFixed(1)}, windMs()); }
-  float windLimbs() { return smoothstep(${WIND_TIERS.limbs[0].toFixed(1)}, ${WIND_TIERS.limbs[1].toFixed(1)}, windMs()); }
-  float windTrunks() { return smoothstep(${WIND_TIERS.trunks[0].toFixed(1)}, ${WIND_TIERS.trunks[1].toFixed(1)}, windMs()); }
+  // the limbs and trunks rise from their first motion rather than easing in (a smoothstep is flat at its foot), so a
+  // breeze already sways them a little: about 0.3 of full for the limbs and 0.15 for the trunks at 3 m/s, as before at 12 and 19
+  float windRamp(float a, float b, float k) { return pow(clamp((windMs() - a) / (b - a), 0.0, 1.0), k); }
+  float windLimbs() { return windRamp(${WIND_TIERS.limbs[0].toFixed(1)}, ${WIND_TIERS.limbs[1].toFixed(1)}, 0.65); }
+  float windTrunks() { return windRamp(${WIND_TIERS.trunks[0].toFixed(1)}, ${WIND_TIERS.trunks[1].toFixed(1)}, 0.75); }
   float leafWave(vec3 wp, float h, out float gate, out float slow) {
     slow = smoothstep(0.15, 0.75, wNoise((wp.xz - windDir * time * 4.0) * 0.045));
     gate = windLeaves() * (slow + (1.0 - slow) * 0.5 * windLimbs());   // a breeze flutters the leaves in its gusts; a strong wind keeps them going in the lulls

@@ -7,6 +7,9 @@ import {
   loadElkCowMesh, loadBobcatMesh, loadOtterMesh, loadHareMesh, loadDouglasSquirrelMesh, loadChipmunkMesh, loadDeerMouseMesh,
   loadWrenMesh, loadGrayJayMesh, loadChickadeeMesh, loadOwlMesh, loadKingfisherMesh, loadEagleMesh, loadCrowGroundMesh,
   loadHeronMesh, loadMerganserMesh, loadSalamanderMesh, loadEnsatinaMesh, buildSlug,
+  loadRobinMesh, loadStarlingMesh, loadVariedThrushMesh, loadJuncoMesh, loadKingletMesh, loadFlycatcherMesh, loadScreechOwlMesh, loadSawWhetOwlMesh,
+  loadOspreyMesh, loadSharpShinnedMesh, loadMerlinMesh, loadGlaucousGullMesh, loadCaliforniaGullMesh, loadWesternGullMesh, loadMallardMesh,
+  loadGrouseMesh, loadMarmotMesh, loadYellowPineChipmunkMesh, loadShrewMesh, loadToadMesh, loadFrogMesh, buildHairyWoodpecker,
 } from '../src/animalModels.js';
 
 // The opening screen's sprites (client/src/arrival.js plays them with CSS, so nothing on the screen animates from
@@ -43,6 +46,14 @@ const SPECIES = {
   ardea_herodias: [G, loadHeronMesh], mergus_merganser: [G, loadMerganserMesh], corvus_brachyrhynchos: [G, loadCrowGroundMesh],
   troglodytes_pacificus: [B, loadWrenMesh], perisoreus_canadensis: [B, loadGrayJayMesh], poecile_rufescens: [B, loadChickadeeMesh],
   strix_varia: [B, loadOwlMesh], megaceryle_alcyon: [B, loadKingfisherMesh], haliaeetus_leucocephalus: [B, loadEagleMesh, 0, 'soar'],
+  // the second batch (2026-11-06)
+  turdus_migratorius: [G, loadRobinMesh], sturnus_vulgaris: [G, loadStarlingMesh], ixoreus_naevius: [G, loadVariedThrushMesh], junco_hyemalis: [G, loadJuncoMesh],
+  regulus_satrapa: [B, loadKingletMesh], empidonax_difficilis: [B, loadFlycatcherMesh], megascops_kennicottii: [B, loadScreechOwlMesh],
+  aegolius_acadicus: [B, loadSawWhetOwlMesh], leuconotopicus_villosus: [B, async () => buildHairyWoodpecker()],
+  pandion_haliaetus: [B, loadOspreyMesh, 0, 'soar'], accipiter_striatus: [B, loadSharpShinnedMesh, 0, 'soar'], falco_columbarius: [B, loadMerlinMesh, 0, 'soar'],
+  larus_glaucescens: [B, loadGlaucousGullMesh, 0, 'soar'], larus_californicus: [B, loadCaliforniaGullMesh, 0, 'soar'], larus_occidentalis: [B, loadWesternGullMesh, 0, 'soar'],
+  anas_platyrhynchos: [G, loadMallardMesh], dendragapus_fuliginosus: [G, loadGrouseMesh], marmota_olympus: [G, loadMarmotMesh],
+  tamias_amoenus: [G, loadYellowPineChipmunkMesh], sorex_monticolus: [G, loadShrewMesh], anaxyrus_boreas: [G, loadToadMesh], rana_cascadae: [G, loadFrogMesh],
 };
 const PLAIN = {   // animalMaterial without the game's atmosphere (as the old openingScene.js did)
   patchLambert(m) {

@@ -16,7 +16,10 @@ import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buil
   loadMountainQuailMesh, RAVEN_GROUND, hasAnim2, antlerState, SEASON_MONTH, eatTurn,
   loadElkBullMesh, loadElkCowMesh, loadBobcatMesh, loadOtterMesh, loadHareMesh, loadDouglasSquirrelMesh, loadChipmunkMesh, loadDeerMouseMesh,
   loadWrenMesh, loadGrayJayMesh, loadChickadeeMesh, loadOwlMesh, loadKingfisherMesh, loadEagleMesh, loadCrowGroundMesh, CROW_GROUND,
-  loadHeronMesh, loadMerganserMesh, loadSalamanderMesh, loadEnsatinaMesh, scaledModel, buildSlug } from './animalModels.js';
+  loadHeronMesh, loadMerganserMesh, loadSalamanderMesh, loadEnsatinaMesh, scaledModel, buildSlug,
+  loadRobinMesh, loadStarlingMesh, loadVariedThrushMesh, loadJuncoMesh, loadKingletMesh, loadFlycatcherMesh, loadScreechOwlMesh, loadSawWhetOwlMesh,
+  loadOspreyMesh, loadSharpShinnedMesh, loadMerlinMesh, loadGlaucousGullMesh, loadCaliforniaGullMesh, loadWesternGullMesh, loadMallardMesh,
+  loadGrouseMesh, loadMarmotMesh, loadYellowPineChipmunkMesh, loadShrewMesh, loadToadMesh, loadFrogMesh, buildHairyWoodpecker } from './animalModels.js';
 import { depthAt as waterDepthAt } from './water.js';
 
 // Ambient animals: the first step toward "many of each species always present" (docs/brief.md,
@@ -225,6 +228,23 @@ const SUIT = {
   ariolimax_columbianus:    { 2: 1, 3: 1, 6: 1 },                           // the wet forest floor
   ardea_herodias:           { 6: 1, 7: 1, 5: 0.3 },                         // the shallows of rivers, streams and ponds (rebuild: water's edge)
   mergus_merganser:         { 6: 1, 7: 1 },                                  // rivers and big streams (rebuild: on water)
+  // the second batch (2026-11-06)
+  turdus_migratorius:       { 2: 0.6, 3: 1, 5: 1, 6: 1, 9: 1, 4: 0.5 },     // forest edges, meadows, river bars
+  sturnus_vulgaris:         { 5: 1, 9: 1, 6: 0.5, 8: 0.4 },                  // open ground (few here: the tile's few records)
+  ixoreus_naevius:          { 2: 1, 3: 1, 6: 0.9 },                          // the dark wet forest floor
+  junco_hyemalis:           { 2: 0.8, 3: 1, 5: 0.8, 6: 0.9, 4: 0.8, 8: 0.5 }, // edges, clearings, the subalpine
+  regulus_satrapa:          { 2: 1, 3: 0.8 },                                // conifer crowns
+  empidonax_difficilis:     { 2: 1, 3: 1, 6: 1 },                            // shaded forest, streamsides
+  megascops_kennicottii:    { 3: 1, 6: 1, 2: 0.6 },                          // riparian and mixed woods
+  aegolius_acadicus:        { 2: 1, 3: 1, 6: 0.7 },
+  leuconotopicus_villosus:  { 2: 1, 3: 1, 6: 0.9 },                          // trunks of the conifers and alders
+  anas_platyrhynchos:       { 6: 1, 7: 1 },                                  // ponds, sloughs, quiet river edges (rebuild: on water)
+  dendragapus_fuliginosus:  { 2: 1, 3: 0.8, 4: 0.6, 5: 0.5 },                // conifer forest and the subalpine edges (rebuild: elevation)
+  marmota_olympus:          { 5: 1, 8: 0.8, 4: 0.4 },                        // subalpine meadows and talus (rebuild: elevation)
+  tamias_amoenus:           { 2: 0.8, 3: 0.6, 4: 1, 5: 0.6, 8: 0.6 },        // open forest, brush and rock up high (rebuild: elevation)
+  sorex_monticolus:         { 2: 1, 3: 1, 6: 1, 5: 0.7, 4: 0.7 },            // the damp floor, meadows
+  anaxyrus_boreas:          { 2: 0.6, 3: 0.8, 5: 1, 6: 1, 4: 0.6, 8: 0.4 },  // meadows and forest near water
+  rana_cascadae:            { 5: 1, 6: 1, 7: 0.6 },                          // subalpine ponds and wet meadows (rebuild: elevation, water)
 };
 // Expected individuals (or groups) per 30 m cell at suitability 1, and season multipliers.
 const SEASON = {
@@ -264,6 +284,22 @@ const SEASON = {
   ariolimax_columbianus:    { fall: 1.2, winter: 0.3, spring: 1.1, summer: 0.7 },
   ardea_herodias:           { fall: 1, winter: 1, spring: 1, summer: 1 },
   mergus_merganser:         { fall: 1, winter: 1.2, spring: 1, summer: 0.8 },
+  turdus_migratorius:       { fall: 0.8, winter: 0.5, spring: 1.2, summer: 1.1 },
+  sturnus_vulgaris:         { fall: 1, winter: 1, spring: 1, summer: 1 },
+  ixoreus_naevius:          { fall: 1.1, winter: 1.3, spring: 1, summer: 0.7 },   // down in the valley forest in winter
+  junco_hyemalis:           { fall: 1.2, winter: 1.3, spring: 1, summer: 0.9 },
+  regulus_satrapa:          { fall: 1, winter: 1.1, spring: 1, summer: 1 },
+  empidonax_difficilis:     { fall: 0.3, winter: 0, spring: 1, summer: 1.2 },     // a summer visitor (Mexico in winter)
+  megascops_kennicottii:    { fall: 1, winter: 1, spring: 1, summer: 1 },
+  aegolius_acadicus:        { fall: 1, winter: 1, spring: 1, summer: 1 },
+  leuconotopicus_villosus:  { fall: 1, winter: 1, spring: 1, summer: 1 },
+  anas_platyrhynchos:       { fall: 1.2, winter: 1.3, spring: 1, summer: 0.8 },
+  dendragapus_fuliginosus:  { fall: 1, winter: 0.8, spring: 1.1, summer: 1 },
+  marmota_olympus:          { fall: 0.6, winter: 0, spring: 0.5, summer: 1 },     // hibernating October to May
+  tamias_amoenus:           { fall: 1, winter: 0.1, spring: 0.8, summer: 1 },
+  sorex_monticolus:         { fall: 1, winter: 0.8, spring: 1, summer: 1 },
+  anaxyrus_boreas:          { fall: 0.6, winter: 0.1, spring: 1.2, summer: 1 },
+  rana_cascadae:            { fall: 0.5, winter: 0, spring: 1, summer: 1.2 },
 };
 const SPECIES = [
   { code: 'sciurus_griseus', one: 'squirrel', many: 'squirrels', k: 0.45, salt: 9101, cap: 160, scale: 1, build: buildSquirrel },
@@ -320,6 +356,29 @@ const SPECIES = [
   { code: 'ariolimax_columbianus', one: 'banana slug', many: 'banana slugs', k: 1.0, salt: 9961, cap: 120, scale: 1, build: buildSlug, liveR: 50, common: 'Pacific banana slug' },
   { code: 'ardea_herodias', one: 'great blue heron', many: 'great blue herons', k: 0.02, salt: 9962, cap: 8, scale: 1, build: () => scaledModel(buildTurkey(), 1.0), bird: true, common: 'Great blue heron' },
   { code: 'mergus_merganser', one: 'merganser', many: 'mergansers', k: 0.04, salt: 9963, cap: 40, scale: 1, build: () => scaledModel(buildQuail(), 2.4), bird: true, common: 'Common merganser' },
+  // 2026-11-06: the rest of the Hoh and Mount Olympus lists (HOH2 below)
+  { code: 'turdus_migratorius', one: 'robin', many: 'robins', k: 0.06, salt: 9964, cap: 60, scale: 1, build: () => scaledModel(buildStellersJay(), 0.8), bird: true, liveR: 300, common: 'American robin' },
+  { code: 'sturnus_vulgaris', one: 'starling', many: 'starlings', k: 0.008, salt: 9965, cap: 30, scale: 1, build: () => scaledModel(buildStellersJay(), 0.68), bird: true, liveR: 300, common: 'European starling' },
+  { code: 'ixoreus_naevius', one: 'varied thrush', many: 'varied thrushes', k: 0.05, salt: 9966, cap: 50, scale: 1, build: () => scaledModel(buildStellersJay(), 0.77), bird: true, liveR: 300, common: 'Varied thrush' },
+  { code: 'junco_hyemalis', one: 'junco', many: 'juncos', k: 0.06, salt: 9967, cap: 80, scale: 1, build: () => scaledModel(buildStellersJay(), 0.48), bird: true, liveR: 250, common: 'Dark-eyed junco' },
+  { code: 'regulus_satrapa', one: 'kinglet', many: 'kinglets', k: 0.05, salt: 9968, cap: 80, scale: 1, build: () => scaledModel(buildStellersJay(), 0.29), bird: true, liveR: 200, common: 'Golden-crowned kinglet' },
+  { code: 'empidonax_difficilis', one: 'flycatcher', many: 'flycatchers', k: 0.04, salt: 9969, cap: 40, scale: 1, build: () => scaledModel(buildStellersJay(), 0.45), bird: true, liveR: 250, common: 'Pacific-slope flycatcher' },
+  { code: 'megascops_kennicottii', one: 'screech-owl', many: 'screech-owls', k: 0.0012, salt: 9970, cap: 4, scale: 1, build: () => scaledModel(buildStellersJay(), 0.7), bird: true, common: 'Western screech-owl' },
+  { code: 'aegolius_acadicus', one: 'saw-whet owl', many: 'saw-whet owls', k: 0.0012, salt: 9971, cap: 4, scale: 1, build: () => scaledModel(buildStellersJay(), 0.65), bird: true, common: 'Northern saw-whet owl' },
+  { code: 'leuconotopicus_villosus', one: 'hairy woodpecker', many: 'hairy woodpeckers', k: 0.02, salt: 9972, cap: 30, scale: 1, build: () => buildHairyWoodpecker(), bird: true, common: 'Hairy woodpecker' },
+  { code: 'pandion_haliaetus', one: 'osprey', many: 'ospreys', salt: 9973, cap: 3, scale: 1, build: () => scaledModel(buildHawk(), 1.3), bird: true, common: 'Osprey', grid: 1800, p: 0.4 },
+  { code: 'accipiter_striatus', one: 'sharp-shinned hawk', many: 'sharp-shinned hawks', salt: 9974, cap: 3, scale: 1, build: () => scaledModel(buildHawk(), 0.47), bird: true, common: 'Sharp-shinned hawk', grid: 1500, p: 0.35 },
+  { code: 'falco_columbarius', one: 'merlin', many: 'merlins', salt: 9975, cap: 3, scale: 1, build: () => scaledModel(buildHawk(), 0.48), bird: true, common: 'Merlin', grid: 1800, p: 0.25 },
+  { code: 'larus_glaucescens', one: 'glaucous-winged gull', many: 'glaucous-winged gulls', salt: 9976, cap: 4, scale: 1, build: () => scaledModel(buildVulture(), 0.8), bird: true, common: 'Glaucous-winged gull', grid: 1600, p: 0.3 },
+  { code: 'larus_californicus', one: 'California gull', many: 'California gulls', salt: 9977, cap: 4, scale: 1, build: () => scaledModel(buildVulture(), 0.74), bird: true, common: 'California gull', grid: 1800, p: 0.2 },
+  { code: 'larus_occidentalis', one: 'western gull', many: 'western gulls', salt: 9978, cap: 4, scale: 1, build: () => scaledModel(buildVulture(), 0.8), bird: true, common: 'Western gull', grid: 2000, p: 0.2 },
+  { code: 'anas_platyrhynchos', one: 'mallard', many: 'mallards', k: 0.03, salt: 9979, cap: 40, scale: 1, build: () => scaledModel(buildQuail(), 2.2), bird: true, common: 'Mallard' },
+  { code: 'dendragapus_fuliginosus', one: 'sooty grouse', many: 'sooty grouse', k: 0.006, salt: 9980, cap: 20, scale: 1, build: () => scaledModel(buildMountainQuail(), 1.8), bird: true, common: 'Sooty grouse' },
+  { code: 'marmota_olympus', one: 'Olympic marmot', many: 'Olympic marmots', k: 0.03, salt: 9981, cap: 60, scale: 1, build: () => scaledModel(buildGroundSquirrel(), 2.3), liveR: 300, common: 'Olympic marmot' },
+  { code: 'tamias_amoenus', one: 'yellow-pine chipmunk', many: 'yellow-pine chipmunks', k: 0.25, salt: 9982, cap: 80, scale: 1, build: () => scaledModel(buildGroundSquirrel(), 0.5), liveR: 140, common: 'Yellow-pine chipmunk' },
+  { code: 'sorex_monticolus', one: 'montane shrew', many: 'montane shrews', k: 0.4, salt: 9983, cap: 80, scale: 1, build: () => scaledModel(buildVole(), 0.6), liveR: 100, common: 'Montane shrew' },
+  { code: 'anaxyrus_boreas', one: 'western toad', many: 'western toads', k: 0.3, salt: 9984, cap: 60, scale: 1, build: () => scaledModel(buildLizard(), 0.55), liveR: 70, common: 'Western toad' },
+  { code: 'rana_cascadae', one: 'Cascades frog', many: 'Cascades frogs', k: 0.3, salt: 9985, cap: 60, scale: 1, build: () => scaledModel(buildLizard(), 0.4), liveR: 70, common: 'Cascades frog' },
 ];
 const SQ = 0, WP = 1, RV = 2, DR = 3, QU = 4, SJ = 5, HK = 6, TV = 7, ST = 8, FX = 9, CY = 10, RB = 11, VO = 12, ML = 13, BK = 14, WF = 15, JR = 16, TK = 17, GS = 18, LZ = 19, BE = 20,
   MQ = 21;
@@ -328,6 +387,11 @@ const SQ = 0, WP = 1, RV = 2, DR = 3, QU = 4, SJ = 5, HK = 6, TV = 7, ST = 8, FX
 // Townsend's chipmunk, deer mouse, western red-backed salamander, ensatina, Pacific banana slug, great blue heron, common merganser
 const EL = 22, EB = 23, DS = 24, PW = 25, GJ = 26, CB = 27, BO = 28, KF = 29, BA = 30, CR = 31, BC = 32, OT = 33, SH = 34, TC = 35, DM = 36,
   RS = 37, EN = 38, BS = 39, GH = 40, CM = 41;
+// the second Hoh batch (2026-11-06): robin, starling, varied thrush, junco, kinglet, flycatcher, screech-owl, saw-whet owl, hairy
+// woodpecker, osprey, sharp-shinned hawk, merlin, three gulls, mallard, sooty grouse, Olympic marmot, yellow-pine chipmunk,
+// montane shrew, western toad, Cascades frog
+const RO = 42, SL = 43, VT = 44, JU = 45, KL = 46, FC = 47, SO = 48, SW = 49, HW = 50, OS = 51, SS = 52, ME = 53, GW = 54, CG = 55, WG = 56,
+  MA = 57, SG = 58, MO = 59, YC = 60, SR = 61, WT = 62, CF = 63;
 // KIN: the behaviour each new slot reuses (the update, spawn and extra() of that species; the per-species rules in HOH): elk the
 // deer's herds (the bulls the bucks'), the Douglas squirrel the gray squirrel's trees (conifers here), the small birds and the owl the
 // Steller's jay's conifers, the kingfisher too (trees over water), the eagle the hawk's soaring, the crow the raven's ground and air,
@@ -335,7 +399,13 @@ const EL = 22, EB = 23, DS = 24, PW = 25, GJ = 26, CB = 27, BO = 28, KF = 29, BA
 // vole's runways, the salamanders the fence lizard's sites, the heron and the merganser the quail's covey machine on the water, and
 // the slug its own crawl (slUpdate). An original species is its own kin.
 const KIN_OF = { [EL]: DR, [EB]: BK, [DS]: SQ, [PW]: ST, [GJ]: ST, [CB]: ST, [BO]: ST, [KF]: ST, [BA]: HK, [CR]: RV, [BC]: FX, [OT]: FX,
-  [SH]: RB, [TC]: VO, [DM]: VO, [RS]: LZ, [EN]: LZ, [BS]: BS, [GH]: QU, [CM]: QU };
+  [SH]: RB, [TC]: VO, [DM]: VO, [RS]: LZ, [EN]: LZ, [BS]: BS, [GH]: QU, [CM]: QU,
+  // the second batch: the thrushes, starling, junco, kinglet, flycatcher, small owls and the hairy woodpecker (on the trunk) the
+  // Steller's jay's; the osprey and the small raptors the hawk's; the gulls the vulture's circling glides; the mallard the
+  // mergansers' water covey; the grouse the quail's covey in the forest; the marmot the ground squirrel's colonies; the yellow-pine
+  // chipmunk and the shrew the vole's runways; the toad and the frog the salamanders'
+  [RO]: ST, [SL]: ST, [VT]: ST, [JU]: ST, [KL]: ST, [FC]: ST, [SO]: ST, [SW]: ST, [HW]: ST, [OS]: HK, [SS]: HK, [ME]: HK,
+  [GW]: TV, [CG]: TV, [WG]: TV, [MA]: QU, [SG]: QU, [MO]: GS, [YC]: VO, [SR]: VO, [WT]: LZ, [CF]: LZ };
 const KIN = SPECIES.map((sp, k) => KIN_OF[k] ?? k);
 const BASE = SPECIES.map((sp, k) => sp.variantOf ?? k);   // the species a variant slot belongs to (buck: deer; bull elk: elk)
 // Per-species rules of the Hoh batch on their kin's machinery: group sizes, perch heights in the crown, flight beat, how often
@@ -346,14 +416,28 @@ const HOH = {
   [CB]: { n: [3, 7], h: [0.45, 0.35], beat: 20, move: [5, 14], ground: 0.03, flush: 6, hop: 0.05 },
   [BO]: { n: [1, 1], h: [0.25, 0.2], beat: 4, move: [80, 200], ground: 0.05, flush: 18, hop: 0, night: true },
   [KF]: { n: [1, 1], h: [0.15, 0.2], beat: 9, move: [20, 60], ground: 0, flush: 25, hop: 0, water: true },
-  [GH]: { n: [1, 1], walk: 0.15, run: 0.6, spread: 0.5, beat: 2.5, flyV: 7, peak: [6, 12], fly: [80, 220], flush: 35, depth: [0.02, 0.5], edge: true },
-  [CM]: { n: [3, 8], walk: 0.3, run: 0.7, spread: 2.2, beat: 8, flyV: 15, peak: [2, 4], fly: [100, 260], flush: 40, depth: [0.25, 9], dive: true },
+  [GH]: { n: [1, 1], walk: 0.15, run: 0.6, spread: 0.5, beat: 2.5, flyV: 7, peak: [6, 12], fly: [80, 220], flush: 35, depth: [0.02, 0.5], edge: true, water: true },
+  [CM]: { n: [3, 8], walk: 0.3, run: 0.7, spread: 2.2, beat: 8, flyV: 15, peak: [2, 4], fly: [100, 260], flush: 40, depth: [0.25, 9], dive: true, water: true },
+  // the second batch
+  [RO]: { n: [1, 3], h: [0.2, 0.3], beat: 14, move: [8, 25], ground: 0.65, flush: 10, hop: 0.05 },
+  [SL]: { n: [3, 8], h: [0.5, 0.35], beat: 16, move: [6, 20], ground: 0.6, flush: 12, hop: 0.03 },
+  [VT]: { n: [1, 2], h: [0.15, 0.3], beat: 14, move: [10, 30], ground: 0.55, flush: 10, hop: 0.05 },
+  [JU]: { n: [3, 8], h: [0.05, 0.2], beat: 18, move: [5, 15], ground: 0.7, flush: 7, hop: 0.03 },
+  [KL]: { n: [2, 6], h: [0.5, 0.35], beat: 22, move: [4, 12], ground: 0, flush: 5, hop: 0.06 },
+  [FC]: { n: [1, 1], h: [0.25, 0.25], beat: 18, move: [6, 20], ground: 0.02, flush: 6, hop: 0 },
+  [SO]: { n: [1, 1], h: [0.15, 0.15], beat: 6, move: [80, 200], ground: 0.05, flush: 10, hop: 0, night: true },
+  [SW]: { n: [1, 1], h: [0.12, 0.15], beat: 6, move: [80, 200], ground: 0.05, flush: 8, hop: 0, night: true },
+  [HW]: { n: [1, 2], h: [0.1, 0.4], beat: 12, move: [15, 45], ground: 0, flush: 10, hop: 0.04, trunk: true },
+  [MA]: { n: [2, 8], walk: 0.3, run: 0.7, spread: 2.0, beat: 9, flyV: 16, peak: [2, 5], fly: [100, 260], flush: 35, depth: [0.08, 9], water: true },
+  [SG]: { n: [1, 3], beat: 12 },
 };
-const VARIANT = new Set([QU, MQ, TK, KF, CM, SH]);   // slots whose aAnim2.w is the colour variant (a.variant): the hens, the male kingfisher and merganser, the hare's winter coat
-const UPRIGHT = new Set([BO, KF]);   // perched upright (the meshes stand so): pitched level in flight
+const VARIANT = new Set([QU, MQ, TK, KF, CM, SH, RO, MA, SG]);   // slots whose aAnim2.w is the colour variant (a.variant): the hens, the male kingfisher and merganser, the hare's winter coat
+const UPRIGHT = new Set([BO, KF, SO, SW, FC]);   // perched upright (the meshes stand so): pitched level in flight
 // the species that look for conifers in the near set (indexConifers): the Steller's jay, the lizards' trunks, and the Hoh batch's tree users
 const CONIFER_USERS = ['cyanocitta_stelleri', 'sceloporus_occidentalis', 'tamiasciurus_douglasii', 'troglodytes_pacificus', 'perisoreus_canadensis',
-  'poecile_rufescens', 'strix_varia', 'megaceryle_alcyon', 'lepus_americanus', 'lynx_rufus', 'plethodon_vehiculum', 'ensatina_eschscholtzii'];
+  'poecile_rufescens', 'strix_varia', 'megaceryle_alcyon', 'lepus_americanus', 'lynx_rufus', 'plethodon_vehiculum', 'ensatina_eschscholtzii',
+  'turdus_migratorius', 'sturnus_vulgaris', 'ixoreus_naevius', 'junco_hyemalis', 'regulus_satrapa', 'empidonax_difficilis', 'megascops_kennicottii',
+  'aegolius_acadicus', 'leuconotopicus_villosus', 'anaxyrus_boreas', 'rana_cascadae'];
 SPECIES[DR].planar = true;
 // the spirit's bodies (playableNear): the species a player can take over (all of them), and their body centre over the
 // origin standing (m; in the air the origin is the body)
@@ -362,7 +446,9 @@ const BODY_Y = SPECIES.map(() => 0); BODY_Y[SQ] = 0.12; BODY_Y[RV] = 0.2; BODY_Y
 BODY_Y[DR] = 0.75; BODY_Y[BK] = 0.8; BODY_Y[FX] = 0.25; BODY_Y[CY] = 0.4; BODY_Y[ML] = 0.5; BODY_Y[RB] = 0.1; BODY_Y[JR] = 0.15;
 BODY_Y[VO] = 0.02; BODY_Y[TK] = 0.45; BODY_Y[GS] = 0.08; BODY_Y[LZ] = 0.02; BODY_Y[QU] = 0.1; BODY_Y[SJ] = BODY_Y[ST] = 0.1; BODY_Y[BE] = 0.55; BODY_Y[MQ] = 0.11;
 Object.assign(BODY_Y, { [EL]: 1.1, [EB]: 1.2, [DS]: 0.07, [PW]: 0.04, [GJ]: 0.1, [CB]: 0.04, [BO]: 0.25, [KF]: 0.1, [CR]: 0.15, [BC]: 0.3, [OT]: 0.15,
-  [SH]: 0.12, [TC]: 0.04, [DM]: 0.02, [RS]: 0.005, [EN]: 0.006, [BS]: 0.01, [GH]: 0.75, [CM]: 0.05 });
+  [SH]: 0.12, [TC]: 0.04, [DM]: 0.02, [RS]: 0.005, [EN]: 0.006, [BS]: 0.01, [GH]: 0.75, [CM]: 0.05,
+  [RO]: 0.08, [SL]: 0.07, [VT]: 0.08, [JU]: 0.05, [KL]: 0.03, [FC]: 0.05, [SO]: 0.12, [SW]: 0.11, [HW]: 0.06, [MA]: 0.05, [SG]: 0.15,
+  [MO]: 0.12, [YC]: 0.03, [SR]: 0.015, [WT]: 0.02, [CF]: 0.015 });
 // The spirit's view (spirit.js SpiritLook): while the world's light goes faint and blue-green, the playable species are
 // drawn in their own colour, self-lit and clear of the haze: SELF_LIT.value (0..1) blends their lit and hazed colour
 // toward their albedo times SELF_LIGHT. A wrapper on their materials (selfLit), with its own program cache key. Their meshes are also on camera
@@ -396,7 +482,8 @@ function selfLit(m) {
   return m;
 }
 const TAG_DY = [0.5, 0.5, 0.7, 2.1, 0.4, 0.4, 0.7, 0.7, 0.45, 0.65, 0.95, 0.4, 0.2, 1.1, 2.2, 0.5, 0.6, 1.2, 0.32, 0.12, 1.25, 0.45,
-  2.6, 2.9, 0.3, 0.2, 0.35, 0.2, 0.7, 0.4, 0.7, 0.45, 0.75, 0.5, 0.45, 0.2, 0.12, 0.06, 0.06, 0.06, 1.4, 0.45];
+  2.6, 2.9, 0.3, 0.2, 0.35, 0.2, 0.7, 0.4, 0.7, 0.45, 0.75, 0.5, 0.45, 0.2, 0.12, 0.06, 0.06, 0.06, 1.4, 0.45,
+  0.3, 0.28, 0.3, 0.22, 0.15, 0.25, 0.35, 0.32, 0.3, 0.6, 0.4, 0.4, 0.6, 0.55, 0.6, 0.45, 0.5, 0.55, 0.18, 0.1, 0.12, 0.1];
 const INDEX = Object.fromEntries(SPECIES.map((sp, k) => [sp.code, k]).filter(([, k]) => SPECIES[k].variantOf === undefined));
 // The expected population per km^2 of each species, from the spawn rules above: a cell species (k per BUCKET m cell,
 // spawnCell) is k times the mean size of what a cell spawns (GROUP: a woodpecker family of 3-6, a quail covey of 5-20, a
@@ -406,7 +493,8 @@ const INDEX = Object.fromEntries(SPECIES.map((sp, k) => [sp.code, k]).filter(([,
 // variant (buck, female woodpecker) is its base species. Only the order matters (rarity). The mountain quail: coveys of
 // 6-12 (9), half the California quail's k: rarer than it, commoner than the turkey.
 const GROUP = { [WP]: 4.5, [RV]: 1.55, [DR]: 1.6, [QU]: 12, [SJ]: 3, [ST]: 3, [CY]: 1.4, [RB]: 1.3, [VO]: 1.3, [TK]: 10.5, [GS]: 8, [ML]: 1.3, [BE]: 1.4,
-  [MQ]: 9, [EL]: 9.5, [PW]: 1.5, [GJ]: 3, [CB]: 5, [CR]: 3, [OT]: 2, [DM]: 1.3, [TC]: 1.3, [RS]: 1.5, [EN]: 1.5, [BS]: 2, [CM]: 5.5 };
+  [MQ]: 9, [EL]: 9.5, [PW]: 1.5, [GJ]: 3, [CB]: 5, [CR]: 3, [OT]: 2, [DM]: 1.3, [TC]: 1.3, [RS]: 1.5, [EN]: 1.5, [BS]: 2, [CM]: 5.5,
+  [RO]: 2, [SL]: 5.5, [VT]: 1.5, [JU]: 5.5, [KL]: 4, [HW]: 1.5, [MA]: 5, [SG]: 2, [MO]: 6, [YC]: 1.3, [SR]: 1.3, [WT]: 1.5, [CF]: 1.5 };
 export function expectedPerKm2(s) {
   const sp = SPECIES[s];
   if (sp.variantOf !== undefined) return expectedPerKm2(sp.variantOf);
@@ -458,13 +546,36 @@ const DRAWN = {
   [EN]: { name: 'ensatina', param: 'ensatina', load: loadEnsatinaMesh, lod: [2, 7] },
   [GH]: { name: 'heron', param: 'heron', load: loadHeronMesh, lod: [30, 90] },
   [CM]: { name: 'merganser', param: 'merganser', load: loadMerganserMesh, lod: [15, 50] },
+  // the second batch (2026-11-06; the hairy woodpecker is procedural, as the acorn woodpecker)
+  [RO]: { name: 'robin', param: 'robin', load: loadRobinMesh, lod: [10, 32] },
+  [SL]: { name: 'starling', param: 'starling', load: loadStarlingMesh, lod: [10, 32] },
+  [VT]: { name: 'varied-thrush', param: 'thrush', load: loadVariedThrushMesh, lod: [10, 32] },
+  [JU]: { name: 'junco', param: 'junco', load: loadJuncoMesh, lod: [8, 24] },
+  [KL]: { name: 'kinglet', param: 'kinglet', load: loadKingletMesh, lod: [5, 16] },
+  [FC]: { name: 'flycatcher', param: 'flycatcher', load: loadFlycatcherMesh, lod: [7, 22] },
+  [SO]: { name: 'screech-owl', param: 'screechowl', load: loadScreechOwlMesh, lod: [10, 32] },
+  [SW]: { name: 'saw-whet-owl', param: 'sawwhet', load: loadSawWhetOwlMesh, lod: [10, 32] },
+  [OS]: { name: 'osprey', param: 'osprey', load: loadOspreyMesh, lod: [45, 160] },
+  [SS]: { name: 'sharp-shinned-hawk', param: 'sharpie', load: loadSharpShinnedMesh, lod: [25, 90] },
+  [ME]: { name: 'merlin', param: 'merlin', load: loadMerlinMesh, lod: [25, 90] },
+  [GW]: { name: 'glaucous-winged-gull', param: 'gwgull', load: loadGlaucousGullMesh, lod: [40, 150] },
+  [CG]: { name: 'california-gull', param: 'cagull', load: loadCaliforniaGullMesh, lod: [40, 150] },
+  [WG]: { name: 'western-gull', param: 'wegull', load: loadWesternGullMesh, lod: [40, 150] },
+  [MA]: { name: 'mallard', param: 'mallard', load: loadMallardMesh, lod: [15, 50] },
+  [SG]: { name: 'sooty-grouse', param: 'grouse', load: loadGrouseMesh, lod: [15, 50] },
+  [MO]: { name: 'marmot', param: 'marmot', load: loadMarmotMesh, lod: [15, 50] },
+  [YC]: { name: 'yellow-pine-chipmunk', param: 'ypchipmunk', load: loadYellowPineChipmunkMesh, lod: [4, 12] },
+  [SR]: { name: 'shrew', param: 'shrew', load: loadShrewMesh, lod: [2, 8] },
+  [WT]: { name: 'toad', param: 'toad', load: loadToadMesh, lod: [3, 10] },
+  [CF]: { name: 'frog', param: 'frog', load: loadFrogMesh, lod: [2, 8] },
 };
 const PROC_RAVEN_BODY_Y = 0.09, RAVEN_LIFT = RAVEN_GROUND.bodyY - PROC_RAVEN_BODY_Y;   // m, at size 1
 // the hybrids' lift: the flying (procedural) model drawn this much higher along its up axis than the ground model's origin,
 // so the bodies line up at a swap (the crow's flying model is the raven's at 0.72)
 const LIFT = { [RV]: RAVEN_LIFT, [CR]: CROW_GROUND.bodyY - PROC_RAVEN_BODY_Y * 0.72 };
 const CULL = { [RB]: 120, [VO]: 40, [JR]: 250, [GS]: 150, [LZ]: 25,
-  [DS]: 150, [PW]: 80, [CB]: 100, [SH]: 120, [TC]: 40, [DM]: 30, [RS]: 20, [EN]: 20, [BS]: 15 }, VOLE_CAM = 10;   // m from the eye; voles (and the vole's kin) also only under a camera this low (m above ground)
+  [DS]: 150, [PW]: 80, [CB]: 100, [SH]: 120, [TC]: 40, [DM]: 30, [RS]: 20, [EN]: 20, [BS]: 15,
+  [JU]: 120, [KL]: 70, [FC]: 90, [YC]: 40, [SR]: 25, [WT]: 25, [CF]: 20, [MO]: 200 }, VOLE_CAM = 10;   // m from the eye; voles (and the vole's kin) also only under a camera this low (m above ground)
 // Steller's jays perch in conifers (veg.nearPlants, the plants within ~240 m of the eye; veg.oaks holds only oaks)
 // Crown radius as a fraction of the tree's height, by height fraction (the crown envelopes in library/species/).
 // (2026-11-05: every conifer of the tree generator by genus, so the Olympic forest's hemlock, spruce, fir and cedar hold
@@ -1585,7 +1696,19 @@ export class Animals {
             const w = this.wetCell(cx, cn, s === CM ? 0.3 : 0.05, s === CM ? 6 : 18); if (!w) continue;
             f *= s === CM || s === OT ? 0.4 + 0.6 * Math.min(1, w / 0.8) : 1;   // the mergansers and otters where it is deep
           }
-          if (s === PW || s === TC || s === DM || s === RS || s === EN || s === BS) { const e = t.heights.at(cx, cn); if (e > 1600) continue; }   // not on the high slopes and ice
+          else if (s === RO || s === JU || s === SL) f *= 0.4 + 0.6 * edge;   // the forest's edges and openings
+          else if (s === VT || s === SR) f *= 0.35 + 0.65 * Math.min(1, tree * 1.3);
+          else if (s === KL || s === FC || s === SO || s === SW || s === HW) f *= 0.2 + 0.8 * Math.min(1, tree * 1.4);
+          else if (s === MA) { const w = this.wetCell(cx, cn, 0.08, 12); if (!w) continue; }
+          else if (s === SG) { const e = t.heights.at(cx, cn); if (e < 400) continue; f *= 0.3 + 0.7 * clamp01((e - 400) / 500); }   // the mountain forest
+          else if (s === MO) { const e = t.heights.at(cx, cn); if (e < 1300 || e > 2000) continue; f *= 1 - 0.8 * Math.min(1, tree * 2); }   // open subalpine meadows
+          else if (s === YC) { const e = t.heights.at(cx, cn); if (e < 900) continue; f *= 1 - 0.5 * Math.min(1, tree); }
+          else if (s === WT || s === CF) {   // near water: the toad within 150 m of it, the frog at subalpine ponds and wet meadows
+            if (s === CF && t.heights.at(cx, cn) < 700) continue;
+            const w = this.wetCell(cx, cn, 0.03, s === CF ? 25 : 60); if (!w && (s === CF || cls !== 5)) continue;
+          }
+          if (s === PW || s === TC || s === VT) { const e = t.heights.at(cx, cn); if (e > 1600) continue; }   // not on the high slopes and ice
+          if (s === RS || s === EN || s === BS) { const e = t.heights.at(cx, cn); if (e > 1200) continue; }   // the lowland and montane forest floor (species_data RANGE)
         }
         else f *= 0.6 + 0.5 * edge;
         const lambda = sp.k * f * this.priorAt(sp.code, cx, cn) * (SEASON[sp.code][this.season] ?? 1);
@@ -1595,7 +1718,7 @@ export class Animals {
       }
     }
     }
-    for (const s of [HK, TV, BA]) if (live[s]) this.spawnSoarers(s, px, pz, keep);
+    for (const s of [HK, TV, BA, OS, SS, ME, GW, CG, WG]) if (live[s]) this.spawnSoarers(s, px, pz, keep);
     if (live[ML]) this.spawnLion(px, pz, keep);
     if (live[BE]) this.spawnBear(px, pz, keep);
     for (const id of this.debugIds) if (this.byId.has(id)) keep.add(id);   // summoned (debugging) animals stay
@@ -1629,7 +1752,7 @@ export class Animals {
     this.wcoveys = [...wcov];
     const fl = new Set(); for (const a of this.bySpecies[TK]) if (a.group) fl.add(a.group);
     this.flocks = [...fl];
-    const col = new Set(); for (const a of this.bySpecies[GS]) if (a.group?.burrows) col.add(a.group);
+    const col = new Set(); for (const s of [GS, MO]) for (const a of this.bySpecies[s]) if (a.group?.burrows) col.add(a.group);
     this.colonies = [...col]; this.placeBurrows();
     this.fams = new Map();   // v4: each granary's family
     for (const a of this.list) if ((a.sp === WP || a.sp === WF) && a.anchor) { let f = this.fams.get(a.anchor.id); if (!f) this.fams.set(a.anchor.id, f = []); f.push(a); }
@@ -1679,6 +1802,9 @@ export class Animals {
       const dir = rnd() < 0.5 ? 1 : -1, th = rnd() * TAU;
       if (s === HK) this.soarStart(a, x, z, 45 + rnd() * 45, 100 + rnd() * 150, dir, th, H_SOAR);
       else if (s === BA) this.soarStart(a, x, z, 70 + rnd() * 60, 80 + rnd() * 180, dir, th, H_SOAR);   // the eagle: wider circles over the river valley
+      else if (s === OS) this.soarStart(a, x, z, 50 + rnd() * 50, 40 + rnd() * 90, dir, th, H_SOAR);   // the osprey: over the river, lower
+      else if (s === SS || s === ME) this.soarStart(a, x, z, 25 + rnd() * 30, 25 + rnd() * 60, dir, th, H_SOAR);   // the small raptors: low and tight
+      else if (s === GW || s === CG || s === WG) this.soarStart(a, x, z, 60 + rnd() * 60, 30 + rnd() * 80, dir, th, V_SOAR);   // the gulls: up the river valley
       else this.soarStart(a, x, z, 50 + rnd() * 60, 40 + rnd() * 140, dir, th, V_SOAR);
     }, keep);
   }
@@ -1776,10 +1902,11 @@ export class Animals {
         a.hx = x; a.hz = z; this.rvStart(a, x, z, R + m * 8, alt + m * 6, dir, th + m * 0.6);
       }, keep);
     } else if (kn === QU || kn === MQ) {   // a covey (the mountain quail's: a pair or three in spring, 6-12 the rest of the year)
-      const se = this.season, W = H2;
+      const se = this.season, W = H2?.water ? H2 : null;
       let n = s === MQ ? (se === 'spring' ? 2 + (rnd() < 0.3) : 6 + Math.floor(rnd() * 7))
         : se === 'spring' ? 2 + Math.floor(rnd() * 3) : se === 'summer' ? 6 + Math.floor(rnd() * 7) : 8 + Math.floor(rnd() * 8);
       let gx = x, gz = z;
+      if (H2 && !W) n = H2.n[0] + Math.floor(rnd() * (H2.n[1] - H2.n[0] + 1));   // the sooty grouse: one to three
       if (W) {   // the heron alone at the water's edge; the mergansers in a knot on the water (HOH)
         n = W.n[0] + Math.floor(rnd() * (W.n[1] - W.n[0] + 1));
         const w = this.waterSpot(x, z, 0, 40, W.depth[0], W.depth[1], rnd, 24); if (!w) return;
@@ -1849,7 +1976,7 @@ export class Animals {
         a.size = (a.variant ? 0.8 : 1) * (0.95 + 0.1 * rnd());
         a.state = T_FORAGE; a.pose = 1; a.t = rnd() * 3;
       }, keep);
-    } else if (s === GS) {   // a colony of 4-12 round 3-6 burrow mouths
+    } else if (kn === GS) {   // a colony of 4-12 round 3-6 burrow mouths (HOH: a marmot family of 3-8 on a subalpine meadow)
       const nb = GSQ.burrows[0] + Math.floor(rnd() * (GSQ.burrows[1] - GSQ.burrows[0] + 1)), burrows = [];
       for (let b = 0; b < nb * 3 && burrows.length < nb; b++) {
         const ang = rnd() * TAU, d = 1 + rnd() * 4, bx = x + Math.cos(ang) * d, bz = z + Math.sin(ang) * d;
@@ -1857,7 +1984,7 @@ export class Animals {
       }
       if (!burrows.length) return;
       const n = GSQ.members[0] + Math.floor(rnd() * (GSQ.members[1] - GSQ.members[0] + 1));
-      const g = { x, z, burrows, state: C_OK, t: 0, sentinel: null, watch: 5 + rnd() * 20, leader: null, threat: 0 };
+      const g = { sp: s, x, z, burrows, state: C_OK, t: 0, sentinel: null, watch: 5 + rnd() * 20, leader: null, threat: 0 };
       for (let m = 0; m < n; m++) this.add(`${base}:${m}`, s, rnd, a => {
         a.group = g; a.rank = m; if (!m) g.leader = a;
         const b = burrows[m % burrows.length], ang = rnd() * TAU, d = rnd() * 4;
@@ -3030,7 +3157,7 @@ export class Animals {
   coveyUpdate(g, dt, px, py, pz) {
     const s = g.sp ?? QU;   // California or mountain quail (the same machinery); HOH: the heron and the mergansers on the water (W)
     const r = this.groupRng(g, this.bySpecies[s]); if (!r) return;
-    const H = this.heights, W = HOH[s];
+    const H = this.heights, W = HOH[s]?.water ? HOH[s] : null;
     g.t -= dt; g.cool -= dt;
     if (g.state !== G_SETTLE && (g.cool <= 0 || this.alarmed(g))) {   // an alarm call sends a settled covey to cover again
       // the player's low pass (48 m), or an AI hunter of quail on the ground within HUNT.quail m (threat())
@@ -3073,7 +3200,7 @@ export class Animals {
     let n = 0; for (const a of list) if (a.group === g) n++;
     if (n) this.emit(HOH[s] ? 'waterFlush' : 'flush', { group: s === QU ? g : null, covey: g, species: SPECIES[s].code, x: g.x, y: this.heights.atXZ(g.x, g.z), z: g.z, n, cause });   // (the water birds: no quail whirr in sound.js)
     let ang = Math.atan2(g.z - fz, g.x - fx) + (r() - 0.5) * 0.8;   // away from the threat
-    const W = HOH[s], d = W ? W.fly[0] + r() * (W.fly[1] - W.fly[0]) : 35 + r() * 40;
+    const W = HOH[s]?.water ? HOH[s] : null, d = W ? W.fly[0] + r() * (W.fly[1] - W.fly[0]) : 35 + r() * 40;
     let lx = g.x + Math.cos(ang) * d, lz = g.z + Math.sin(ang) * d;
     if (W) {   // the heron and the mergansers: up or down the river to water away from the threat (the best of a few tries)
       let best = -Infinity;
@@ -3099,7 +3226,7 @@ export class Animals {
     }
   }
   quUpdate(a, dt) {
-    const r = a.rng, g = a.group, H = this.heights, W = HOH[a.sp];
+    const r = a.rng, g = a.group, H = this.heights, W = HOH[a.sp]?.water ? HOH[a.sp] : null;
     a.t -= dt;
     if (a.state === Q_WAIT || a.state === Q_FLY || a.state === Q_DIVE) { a.turnC = null; a.yP = a.yaw; a.tq = 0; a.wr = 0; a.e2 = damp(a.e2 || 0, 0, 8, dt); }   // off the ground: no stepping turn
     if (a.state === Q_DIVE) {   // a merganser under the water after fish (out of sight), up again a few metres on
@@ -3125,7 +3252,7 @@ export class Animals {
       a.y = Math.max(H.atXZ(a.x, a.z) + 0.15, a.sy + (a.ty - a.sy) * u + a.peak * rise);
       const whirr = W ? (W.edge ? u < 0.3 || u > 0.9 || Math.sin(u * 40) > -0.2 : u < 0.97) : u < 0.5 || u > 0.93;   // the heron's slow beats and glides; the mergansers beat all the way
       a.amp = damp(a.amp, whirr ? 1 : 0, W ? 8 : 25, dt); a.pose = damp(a.pose, 0, 20, dt);
-      if (whirr) a.phase += dt * TAU * (W ? W.beat : 19); else a.phase = damp(a.phase, Math.round(a.phase / TAU) * TAU + 0.6, 8, dt);
+      if (whirr) a.phase += dt * TAU * (HOH[a.sp]?.beat ?? 19); else a.phase = damp(a.phase, Math.round(a.phase / TAU) * TAU + 0.6, 8, dt);
       const vx = a.x - ox, vy = a.y - oy, vz = a.z - oz, vh = Math.hypot(vx, vz);
       if (vh > 1e-5) a.yaw = Math.atan2(vx, vz);
       a.pitch = -Math.atan2(vy, vh + 1e-5) * 0.6;
@@ -3197,8 +3324,10 @@ export class Animals {
     } else {
       const lo = J ? J.h[0] : o.sp === 'pinus_sabiniana' ? 0.3 : 0.45, span = J ? J.h[1] : 0.25;
       const h = hop ? Math.min(J ? lo + span : 0.9, a.hFrac + hop) : lo + r() * span; a.hFrac = h;
-      const d = H * crownR(o.sp, h) * (0.3 + 0.5 * r());
+      // the hairy woodpecker (J.trunk) clings to the bark itself: at the trunk's radius there, facing it (a.face, J_PERCH)
+      const d = J?.trunk ? (o.trunkR || 0.3) * Math.max(0.3, 1 - h) + 0.04 : H * crownR(o.sp, h) * (0.3 + 0.5 * r());
       a.tx = o.x + Math.cos(ang) * d; a.tz = o.z + Math.sin(ang) * d; a.ty = o.y + H * h;
+      if (J?.trunk) a.face = Math.atan2(o.x - a.tx, o.z - a.tz);
     }
     a.next = ground ? J_GROUND : J_PERCH;
   }
@@ -3249,7 +3378,8 @@ export class Animals {
       return;
     }
     if (a.state === J_PERCH) {
-      a.pitch = damp(a.pitch, UPRIGHT.has(a.sp) ? 0 : -0.2, 5, dt); if (r() < dt * (J ? 0.25 : 0.6)) a.flickV = 1; if (r() < dt * (J?.night ? 0.12 : 0.3)) a.yaw += (r() - 0.5) * 2;
+      if (J?.trunk) { a.pitch = damp(a.pitch, CLING_PITCH, 8, dt); a.yaw = a.face ?? a.yaw; if (r() < dt * 2.5) a.flickV = 1; }   // clinging, the bill at the bark (drumming, probing)
+      else { a.pitch = damp(a.pitch, UPRIGHT.has(a.sp) ? 0 : -0.2, 5, dt); if (r() < dt * (J ? 0.25 : 0.6)) a.flickV = 1; if (r() < dt * (J?.night ? 0.12 : 0.3)) a.yaw += (r() - 0.5) * 2; }
       if (a.tree?.conifer && (J ? J.hop > 0 && a.hFrac < J.h[0] + J.h[1] : a.hFrac < 0.84) && a.moveSeen === g.move && r() < dt * 0.08) { this.jayFly(a, a.tree, false, J ? J.hop * (1 + r()) : 0.05 + 0.07 * r()); return; }
       if (a.carry && (a.eatT += dt) > 5) a.carry = 0;   // v4: a stolen acorn, eaten on the perch
       if (!a.carry && this.time > a.offT && r() < dt * (RAID_ODDS.jay[this.season] || 0) && this.gameOn(a)) {   // v4: a raid on a granary
@@ -4087,8 +4217,8 @@ export class Animals {
     const near = py - a.y < 4 ? Math.hypot(a.x - px, a.z - pz) : Infinity;
     // the Dig game (dig.js): to a hole, through the tunnels, digging a burrow (the AI host's; the vole only)
     const D = S === VO ? this.dig : null, scared = this.danger(S, a, near, S === TC ? 5 : 4, tn);
-    if (S !== VO) {   // HOH: the chipmunk is out by day, the deer mouse by night (a quarter of them about by day too); otherwise down out of sight
-      const day = atmo.sunDir.value.y > 0.02, out = S === TC ? day : !day || (a.u1x ??= r()) < 0.25;
+    if (S !== VO && S !== SR) {   // HOH: the chipmunks are out by day, the deer mouse by night (a quarter of them about by day too; the shrew at any hour); otherwise down out of sight
+      const day = atmo.sunDir.value.y > 0.02, out = S === TC || S === YC ? day : !day || (a.u1x ??= r()) < 0.25;
       if (!out) { a.state = VL_HIDE; a.t = Math.max(a.t, 2); }
     }
     if (D && (a.state === VL_TOHOLE || a.state === VL_TUN || a.state === VL_DIG)) return this.voBurrow(a, dt, scared, near);
@@ -4353,34 +4483,35 @@ export class Animals {
   // species within GSQ.player m; or night) sends them all running for the nearest burrow, where they vanish; 20-40 s
   // after it has gone they come up again one by one, sit at the mouth a moment and go back to feeding.
   colonyUpdate(g, dt, px, py, pz) {
-    const r = this.groupRng(g, this.bySpecies[GS]); if (!r) return;
+    const S = g.sp ?? GS;   // the ground squirrel's colony, or the marmots' (HOH): the members are of g.sp
+    const r = this.groupRng(g, this.bySpecies[S]); if (!r) return;
     g.t -= dt; g.watch -= dt;
     const H = this.heights, gy = H.atXZ(g.x, g.z);
     const R = (this.observer === 'corvus_corax' || this.observer === 'buteo_jamaicensis' ? GSQ.raptor : GSQ.player) + GSQ.spread;
-    let threat = this.danger(GS, g, Math.sqrt((px - g.x) ** 2 + (py - gy) ** 2 + (pz - g.z) ** 2), R);
+    let threat = this.danger(S, g, Math.sqrt((px - g.x) ** 2 + (py - gy) ** 2 + (pz - g.z) ** 2), R);
     if (!threat) {   // an AI hunter of ground squirrels (threat(); the player out of it): a raptor at GSQ.raptor m, others at GSQ.player
-      const T = this.threat(GS, g, g.x, gy, g.z, 1e7, 1e7, 1e7), h = T.who;
-      if (h) threat = this.danger(GS, g, Math.sqrt((T.x - g.x) ** 2 + (T.y - gy) ** 2 + (T.z - g.z) ** 2), (h.sp === HK || h.sp === RV ? GSQ.raptor : GSQ.player) + GSQ.spread, T.n);
+      const T = this.threat(S, g, g.x, gy, g.z, 1e7, 1e7, 1e7), h = T.who;
+      if (h) threat = this.danger(S, g, Math.sqrt((T.x - g.x) ** 2 + (T.y - gy) ** 2 + (T.z - g.z) ** 2), (h.sp === HK || h.sp === RV ? GSQ.raptor : GSQ.player) + GSQ.spread, T.n);
     }
     if (!threat) for (const h of this.bySpecies[HK]) if ((h.x - g.x) ** 2 + (h.y - gy) ** 2 + (h.z - g.z) ** 2 < (GSQ.raptor + GSQ.spread) ** 2) { threat = true; break; }
     const night = atmo.sunDir.value.y < 0.06;
     g.threat = threat;
     if ((threat || night) && g.state === C_OK) {
       g.state = C_ALARM; g.sentinel = null;
-      for (const a of this.bySpecies[GS]) if (a.group === g && a.state !== G_DOWN) this.gsDive(a, a.state === G_SENTRY ? 0 : 0.15 + r() * 0.5);
+      for (const a of this.bySpecies[S]) if (a.group === g && a.state !== G_DOWN) this.gsDive(a, a.state === G_SENTRY ? 0 : 0.15 + r() * 0.5);
       if (threat) this.emit('gsAlarm', { group: g, x: g.x, y: gy, z: g.z });
     }
     if (g.state !== C_OK) {
       if (threat || night) g.t = GSQ.down[0] + r() * (GSQ.down[1] - GSQ.down[0]);   // down while it lasts, then 20-40 s more
       else if (g.t <= 0) {
         g.state = C_OK; g.watch = 4 + r() * 6;
-        for (const a of this.bySpecies[GS]) if (a.group === g) { a.state = G_DOWN; a.t = r() * 8; a.up = 1; }
+        for (const a of this.bySpecies[S]) if (a.group === g) { a.state = G_DOWN; a.t = r() * 8; a.up = 1; }
       }
       return;
     }
     if (g.watch <= 0 || !g.sentinel || g.sentinel.group !== g || !this.alive(g.sentinel)) {   // a new sentinel
       const old = g.sentinel; let pick = null, seen = 0;
-      for (const a of this.bySpecies[GS]) if (a.group === g && a !== old && (a.state === G_FEED || a.state === G_SIT)) { seen++; if (r() * seen < 1) pick = a; }
+      for (const a of this.bySpecies[S]) if (a.group === g && a !== old && (a.state === G_FEED || a.state === G_SIT)) { seen++; if (r() * seen < 1) pick = a; }
       if (old && old.state === G_SENTRY) { old.state = G_FEED; old.t = 1 + r() * 3; }
       g.sentinel = pick; g.watch = GSQ.watch[0] + r() * (GSQ.watch[1] - GSQ.watch[0]);
       if (pick) {
@@ -4442,7 +4573,7 @@ export class Animals {
     a.e2 = a.amp > 0.05 ? Math.atan2(a.wr * lever, Math.max(speed, RT.vMin)) : damp(a.e2 || 0, 0, 8, dt);   // the fore legs' step turned (aAnim2.z)
     a.spd = speed;
     a.pose = damp(a.pose, pose, 5, dt);
-    a.y = H.atXZ(a.x, a.z) - this.drops[GS] * Math.max(0, a.pose) * a.size;
+    a.y = H.atXZ(a.x, a.z) - this.drops[a.sp] * Math.max(0, a.pose) * a.size;
   }
   // The burrow mouths of the live colonies (a dark hole in a ring of bare dirt, tilted to the slope).
   placeBurrows() {
@@ -4703,6 +4834,12 @@ export class Animals {
     if (a.sp === KF) return s === J_FLY ? 'flying low over the water, rattling' : s === J_GROUND ? 'diving for a fish' : 'watching the water from its perch';
     if (a.sp === GH) return s === Q_FLY ? 'flying off on slow deep wingbeats' : a.group?.state === G_RUN ? 'stalking slowly through the shallows' : 'standing still in the shallows, watching for fish';
     if (a.sp === CM) return s === Q_FLY ? 'flying fast and low up the river' : s === Q_DIVE ? 'diving for fish' : 'swimming on the river';
+    if (a.sp === MA) return s === Q_FLY ? 'flying off, quacking' : 'dabbling at the water\'s edge';
+    if (a.sp === SG) return s === Q_FLY ? 'flushed, whirring off into the trees' : 'walking the forest floor, picking at needles and berries';
+    if (a.sp === HW) return s === J_FLY ? 'flying in deep undulations to the next trunk' : 'clinging to the bark, tapping for insects';
+    if (a.sp === SO || a.sp === SW) return s === J_FLY ? 'flying silently between the trees' : atmo.sunDir.value.y > 0.05 ? 'roosting through the day' : 'watching and listening from its perch';
+    if (a.sp === MO) return s === G_SENTRY ? 'sitting up at its burrow, keeping watch' : s === G_DIVE ? 'running for its burrow' : 'grazing the meadow near its burrow';
+    if (kn === ST && (s === J_GROUND)) return 'hopping on the ground, foraging';
     if (a.sp === BE) return s === M_BED ? 'bedded down at the foot of a tree' : s === M_CHARGE ? 'bluff-charging' : s === M_SNIFF ? 'nosing and digging for food'
       : s === M_MOVE ? 'ambling along' : a.watch > 0 ? 'standing its ground, watching you' : 'standing, testing the air';
     if (a.sp === MQ) return s === Q_FLY ? 'flushed, whirring off downhill into the brush' : s === Q_WAIT ? 'crouched, about to flush'
@@ -4719,7 +4856,7 @@ export class Animals {
     if (a.sp === BS) return a.vis > 0.3;   // the slug: not under the litter
     if (a.sp === CM) return a.state !== Q_DIVE;   // a merganser under the water
     if (KIN[a.sp] === VO) return !a.buried && a.state !== VL_HIDE;   // the chipmunk and deer mouse below, out of sight
-    if (a.sp === GS) return a.state !== G_DOWN;
+    if (KIN[a.sp] === GS) return a.state !== G_DOWN;
     if (a.sp === TK) return a.vis > 0.3;
     if (a.sp === VO) return !a.buried;   // down its tunnels (dig.js)
     return true;
@@ -5193,8 +5330,8 @@ export class Animals {
     if (!mirror && sim[MQ]) for (let k = 0; k < this.mcoveys.length; k++) this.coveyUpdate(this.mcoveys[k], dt, px, py, pz);
     if (!mirror) for (let k = 0; k < this.wcoveys.length; k++) this.coveyUpdate(this.wcoveys[k], dt, px, py, pz);   // the heron's and the mergansers' (HOH)
     if (!mirror && sim[TK]) for (let k = 0; k < this.flocks.length; k++) this.flockUpdate(this.flocks[k], dt, px, pz);
-    if (!mirror && sim[GS]) for (let k = 0; k < this.colonies.length; k++) this.colonyUpdate(this.colonies[k], dt, px, py, pz);
-    this.burrows.visible = this.meshes[GS].visible && this.burrowN > 0;
+    if (!mirror) for (let k = 0; k < this.colonies.length; k++) if (sim[this.colonies[k].sp ?? GS]) this.colonyUpdate(this.colonies[k], dt, px, py, pz);
+    this.burrows.visible = (this.meshes[GS].visible || this.meshes[MO].visible) && this.burrowN > 0;
     const C = this.camPos, cx = C.x, cy = C.y, cz = C.z;
     const dt0 = dt;
     const camAGL = cy - this.heights.atXZ(cx, cz), cull = this.cullOn || [];

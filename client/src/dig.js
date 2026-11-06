@@ -27,8 +27,9 @@ import { Roots } from './digRoots.js';
 // openings' patches (groundUniforms.digCuts), under the spoil.
 //
 // Controls. The vole (groundControl.js, mode 'tunnel'): Q held, or E held with nothing to eat under the nose, digs
-// from the nose at RATE m/s (1.27 cm/s) down the slope it looks along (the drag's pitch, within SLOPE_MAX; from the
-// surface it starts at START_PITCH until it is under), turning as it turns; a dig that brings the face within
+// from the nose at RATE m/s the way the orbit camera looks (aimPitch: the camera swung up over the body digs down, to
+// near straight down; swung low digs up; the camera's heading steers; see DOWN_MAX; from the surface it starts at
+// START_PITCH or steeper until it is under), turning as it turns (A / D or the camera); a dig that brings the face within
 // CHAMBER_NEAR of another node of the system joins them and widens the nodes round into a chamber (up to R_CHAMBER);
 // a face that reaches the surface breaks out as a hole. W walks the tunnel along its centreline (the branch nearest
 // the way it faces at a junction), S backs, W at a hole with no tunnel ahead climbs out; a vole on the surface walking
@@ -63,7 +64,17 @@ export const RATE = 0.0127 * DIG_SPEED;     // m/s
 export const R_TUBE = 0.03, R_CHAMBER = 0.10, CHAMBER_NEAR = 0.13, WIDEN_STEP = 0.025;
 const R_MAX = R_CHAMBER;
 const JOIN_PATH = 0.3, R_TURN = 0.07;   // m along the tunnel within which a node is the face's own last stretch, not a place to join; the tightest curve a digging vole makes (a chamber is dug round one)
-const SLOPE_MAX = 0.6, START_PITCH = -0.55, STEP = 0.02, BEND = 0.2, SEG_MAX = 0.35;
+// The aim (Aaron, 2026-11-05: "make the orbit controls work for digging - so that it's easy to dig down"): the player's
+// dig goes the way the orbit camera looks. The drag's orbit pitch (flight.js orbitPitch) is the dig's slope: the camera
+// swung up over the body (looking down) digs down, to DOWN_MAX at AIM_DOWN rad of orbit, swung low (looking up) digs
+// up, to UP_MAX at the orbit's lowest (AIM_UP); within AIM_DZ of the set-up it digs level, as before. Underground the
+// orbit's pitch is held (groundControl updateCamera), so a steep dig stays steep while the keys walk and dig. The
+// drag's orbit yaw steers: while digging, the body turns toward the camera's heading (when the camera is within
+// STEER_MAX of behind it) as fast as the face can carry the curve, and the orbit gives up what the body turns, so the
+// view stays still. The face's slope turns at the same rate (D.pitch, aimed by digFrom). A dig nearing the digger's
+// depthMax levels off within 2.5 radii of it (digDir).
+const DOWN_MAX = 1.45, UP_MAX = 1.0, AIM_DZ = 0.04, AIM_DOWN = 0.9, AIM_UP = 0.45, STEER_MAX = 1.75;
+const START_PITCH = -0.55, STEP = 0.02, BEND = 0.2, SEG_MAX = 0.35;
 const PIT_R0 = 0.1, PIT_RK = 0.45, PIT_MAX = 0.6, PIT_STEP = 0.01, PAW_AHEAD = 1.1;   // PAW_AHEAD: body half-lengths ahead of the centre
 const COLLAR_UP = 0.45;    // where the light down a hole comes from: radii over the ground
 const SAVE_S = 2, GLOW_T = 0.25, GLOW_L = 1.0, VISIT_MS = 3600e3;   // glow falls by e per GLOW_L m along the tunnel from a vole
@@ -553,7 +564,7 @@ export class Dig {
       if (!this.dispatch({ type: 'hole', id, x: nx, y: gy - r, z: nz, r })) return false;
       const n = this.node(id); this.tun = { a: n.id, b: n.id, t: 1, prev: -1 }; this.pd.face = 0; this.pd.startDown = true;
       gc.mode = 'tunnel'; gc.v = 0; gc.sit = 0; gc.resting = false; gc.actT = 0; this.soilAt(nx, -nz);
-      gc.say(spec.nest ? 'digging a burrow' : 'digging in');
+      gc.say(spec.nest ? 'digging a burrow: swing the view up over you to dig down' : 'digging in: swing the view up over you to dig down');
       return true;
     }
     if (spec.kind === 'form') return this.formDig(dt);
@@ -647,11 +658,13 @@ export class Dig {
     if (en && en.left > 0) { if (k.fwd < 0 || held) en.left = 0; else { const kk = this._kEnter ||= {}; Object.assign(kk, k); kk.fwd = 1; k = kk; en.left -= Math.max(Math.abs(gc.v), 0.1) * dt; } }
     const dig = held && !this.broke;   // after a break-out the key must be let go before the next dig
     if (k.fwd || dig) gc.resting = false;
-    f.yaw += k.turn * (this.digging ? Math.min(S.turn, spec.rate * this.mult / (R_TURN * spec.r / R_TUBE)) : S.turn) * dt;   // digging, the body turns only as the face can carry a curve
+    const wDig = Math.min(S.turn, spec.rate * this.mult / (R_TURN * spec.r / R_TUBE));
+    f.yaw += k.turn * (this.digging ? wDig : S.turn) * dt;   // digging, the body turns only as the face can carry a curve
+    if (this.digging && f.orbitYaw && Math.abs(f.orbitYaw) < STEER_MAX) { const d = clamp(f.orbitYaw, -wDig * dt, wDig * dt); f.yaw += d; f.orbitYaw -= d; }   // steered by the camera's heading (see DOWN_MAX)
     let A = this.node(T.a), B = this.node(T.b);
     let L = Math.hypot(B.x - A.x, B.y - A.y, B.z - A.z);
-    const segYaw = L > 1e-6 ? Math.atan2(-(B.x - A.x), -(B.z - A.z)) : f.yaw;
-    const fwd = L > 1e-6 ? Math.cos(wrap(f.yaw - segYaw)) >= 0 : true;   // facing toward B
+    const aim = this.aimPitch(), c0 = L > 1e-6 ? this.aimDot(A, B, f.yaw, aim) : 1;
+    const fwd = T.fwd = Math.abs(c0) < 0.02 && T.fwd !== undefined ? T.fwd : c0 >= 0;   // facing toward B (by the aim: down a shaft looking down; kept while the aim is square across it)
     // speed along the tunnel (a walk; W builds to the cruise), signed toward B
     const vw = Math.min(1, 0.5 * Math.sqrt(Math.max(1, S.half / 0.05)));   // a walk in the tunnel: the vole's 0.5 m/s, a rabbit's a little more
     const want = k.fwd > 0 ? vw : k.fwd < 0 ? -0.6 * vw : (dig ? 0.3 : 0);   // the dig key walks it on to the node ahead
@@ -664,15 +677,15 @@ export class Dig {
     } else if (L <= 1e-6) atNode = B;
     // at a node: the branch nearest the way it faces (within 100 degrees), else stop; out of a hole facing no branch
     if (atNode && along !== 0 || (atNode && dig)) {
-      const n = atNode, cur = T.a === T.b ? null : (T.a === n.id ? T.b : T.a), fx = -Math.sin(f.yaw), fz = -Math.cos(f.yaw);
+      const n = atNode, cur = T.a === T.b ? null : (T.a === n.id ? T.b : T.a);
       let best = null, bc = -0.17;
       for (const id of n.segs) {
         const o = this.node(this.otherEnd(id, n)); if (o.id === cur && n.segs.length > 1 && k.fwd > 0) continue;
         if (!o.room && o.r < (spec.fit ?? 0)) continue;   // a bore too narrow for the body
-        const dx = o.x - n.x, dz = o.z - n.z, dl = Math.hypot(dx, dz) || 1e-6, c = (dx * fx + dz * fz) / dl;
+        const c = this.aimDot(n, o, f.yaw, aim);
         if (c > bc) { bc = c; best = o; }
       }
-      if (best && (k.fwd > 0 || (dig && !this.wantNewDig(n, f)))) { T.prev = cur ?? T.prev; T.a = n.id; T.b = best.id; T.t = 0; A = n; B = best; L = Math.hypot(B.x - A.x, B.y - A.y, B.z - A.z); }
+      if (best && (k.fwd > 0 || (dig && !this.wantNewDig(n, f)))) { T.prev = cur ?? T.prev; T.a = n.id; T.b = best.id; T.t = 0; T.fwd = true; A = n; B = best; L = Math.hypot(B.x - A.x, B.y - A.y, B.z - A.z); }
       else if (n.hole && k.fwd > 0 && !dig) { this.leaveHole(n); return; }
       else if (!dig) gc.v = 0;
     }
@@ -696,7 +709,7 @@ export class Dig {
     const pitch = dh > 1e-6 ? -Math.atan2(dy, dh) : 0, fwd2 = Math.cos(wrap(f.yaw - (dh > 1e-6 ? Math.atan2(-(B2.x - A2.x), -(B2.z - A2.z)) : f.yaw))) >= 0;
     ps.pitch = damp(ps.pitch, (fwd2 ? pitch : -pitch) * 0.9, 10, dt);
     if (this.digging) {   // the dig's pose: nose down into the face, the fore feet scrabbling fast and low, the dirt back
-      ps.pitch = damp(ps.pitch, 0.35 + 0.08 * Math.sin(this.time * 40), 14, dt); ps.amp = 0.45; ps.phase += dt * TAU * 9; ps.lift = 0.002 * Math.max(0, Math.sin(ps.phase * 2));
+      ps.pitch = damp(ps.pitch, clamp(0.35 - 0.8 * (this.pd.d?.phi || 0), 0, 1.45) + 0.08 * Math.sin(this.time * 40), 14, dt);   // nose into the face, down a steep dig ps.amp = 0.45; ps.phase += dt * TAU * 9; ps.lift = 0.002 * Math.max(0, Math.sin(ps.phase * 2));
       ps.flick = damp(ps.flick, 0.6 + 0.3 * Math.sin(this.time * 31), 12, dt);
     }
     gc.spd = Math.abs(gc.v); gc.inAir = false;
@@ -755,19 +768,34 @@ export class Dig {
     const dx = B.x - A.x, dz = B.z - A.z, l2 = dx * dx + dz * dz, t = l2 > 1e-8 ? clamp(((x - A.x) * dx + (z - A.z) * dz) / l2, -1, 2) : 0, tr = clamp(t, 0, 1);
     return A.y + (B.y - A.y) * (l2 > 1e-8 ? t : 0) - (A.r + (B.r - A.r) * tr) * 0.85;
   }
+  // the player's aim pitch (see DOWN_MAX): the orbit camera's pitch off its set-up, as a slope; + the flight's own pitch
+  aimPitch() {
+    const f = this.gc.flight, op = f.orbitPitch || 0;
+    const a = op > AIM_DZ ? -Math.min(1, (op - AIM_DZ) / (AIM_DOWN - AIM_DZ)) * DOWN_MAX : op < -AIM_DZ ? Math.min(1, (-op - AIM_DZ) / (AIM_UP - AIM_DZ)) * UP_MAX : 0;
+    return clamp(a + (f.pitch || 0), -DOWN_MAX, UP_MAX);
+  }
+  // how well the way from n to o matches a heading yaw and aim pitch: the horizontal cosine weighted by the aim's
+  // cos, the slope's sine by its sin. A level aim on a slope up to the old 0.6 rad is the old horizontal test; a
+  // steeper segment's heading counts for less (a shaft is chosen, and walked, by looking down or up it)
+  aimDot(n, o, yaw, pitch) {
+    const dx = o.x - n.x, dy = o.y - n.y, dz = o.z - n.z, h = Math.hypot(dx, dz), l = Math.hypot(h, dy) || 1e-6;
+    const hc = h > 1e-3 * l ? -(dx * Math.sin(yaw) + dz * Math.cos(yaw)) / h * Math.min(1, h / (0.825 * l)) : 0;
+    return Math.cos(pitch) * hc + Math.sin(pitch) * dy / l;
+  }
   // a dig from node n goes a new way when the body faces no existing segment within BEND of it (else it walks on)
   wantNewDig(n, f) {
-    const d = this.digDir(n, f.yaw, f.pitch, this.pd), w = this.world;
+    const d = this.digDir(n, f.yaw, this.aimPitch(), this.pd), w = this.world;
     for (const id of n.segs) { const o = this.node(this.otherEnd(id, n)); const dx = o.x - n.x, dy = o.y - n.y, dz = o.z - n.z, l = Math.hypot(dx, dy, dz) || 1e-6; if ((dx * d.x + dy * d.y + dz * d.z) / l > Math.cos(BEND)) return false; }
     return true;
   }
-  // the way a dig from node n goes: the heading yaw (the flight's convention: forward -z at 0) and the look's pitch,
-  // steeply down from the surface until under (D.startDown), level or up once as deep as a vole goes. Into D.d.
+  // the way a dig from node n goes: the heading yaw (the flight's convention: forward -z at 0) and the aim's pitch,
+  // steeply down from the surface until under (D.startDown), level or up once as deep as the digger goes. Into D.d.
   digDir(n, yaw, pitch, D) {
     const d = D.d ||= { x: 0, y: 0, z: 0, phi: 0 }, gy = this.groundY(n.x, n.z), depth = gy - n.y;
-    let phi = clamp(pitch, -SLOPE_MAX, SLOPE_MAX);
-    if (D.startDown && depth < 3 * (D.r || R_TUBE)) phi = Math.min(phi, START_PITCH); else D.startDown = false;
-    if (depth > (D.depthMax || 0.5)) phi = Math.max(phi, 0.08);
+    const r = D.r || R_TUBE, dm = D.depthMax || 0.5;
+    let phi = clamp(pitch, -DOWN_MAX, UP_MAX);
+    if (D.startDown && depth < 3 * r) phi = Math.min(phi, START_PITCH); else D.startDown = false;
+    if (depth > dm) phi = Math.max(phi, Math.min(0.08, 4 * (depth - dm))); else phi = Math.max(phi, -DOWN_MAX * clamp((dm - depth) / (2.5 * r), 0, 1));   // levelling off over the last 2.5 radii above the deepest
     const c = Math.cos(phi); d.x = -Math.sin(yaw) * c; d.y = Math.sin(phi); d.z = -Math.cos(yaw) * c; d.phi = phi;
     return d;
   }
@@ -835,14 +863,18 @@ export class Dig {
     const gc = this.gc, f = gc.flight, T = this.tun, D = this.pd, spec = DIGGERS[gc.code] || DIGGERS.microtus_californicus;
     D.r = spec.r !== R_TUBE ? spec.r : undefined; D.rate = spec.rate; D.depthMax = spec.depth; D.nest = spec.nest;
     if (!this.wantNewDig(n, f)) { this.digging = 0; gc.digging = 0; return; }
-    if (n.hole && n.segs.length && this.digDir(n, f.yaw, f.pitch, D).y > -0.15) {   // at a hole the way up is the open air: W climbs out
+    const aim = this.aimPitch();
+    if (n.hole && n.segs.length && this.digDir(n, f.yaw, aim, D).y > -0.15) {   // at a hole the way up is the open air: W climbs out
       this.digging = 0; gc.digging = 0; if (!this.toldOut) { this.toldOut = true; gc.say('at the surface: W climbs out'); } return;
     }
+    // the face's slope toward the aim, turning as fast as the face can carry the curve (a fresh dig takes it at once)
+    const wP = spec.rate * this.mult / (R_TURN * spec.r / R_TUBE) * dt;
+    D.pitch = this.digging && Number.isFinite(D.pitch) ? D.pitch + clamp(aim - D.pitch, -wP, wP) : aim;
     this.toldOut = false; this.digging = 1; gc.digging = 1; gc.actT = 0;
-    const d = this.digDir(n, f.yaw, f.pitch, D);
+    const d = this.digDir(n, f.yaw, D.pitch, D);
     const big = spec.r > 0.04;   // a rabbit's fore feet throw more, and further
     this.specksFrom(n.x + d.x * n.r, n.y - n.r * 0.5, n.z + d.z * n.r, -d.x, -d.z, big ? 0.008 : 0.004, dt, big ? 45 : 30, big ? 0.6 : 0.25);
-    D.at = n.id; D.prev = T.a === T.b ? null : (T.a === n.id ? T.b : T.a); D.yaw = f.yaw; D.pitch = f.pitch;
+    D.at = n.id; D.prev = T.a === T.b ? null : (T.a === n.id ? T.b : T.a); D.yaw = f.yaw;
     const res = this.digCore(D, dt, false);
     if (D.at !== n.id) { T.prev = D.prev; T.a = D.prev ?? D.at; T.b = D.at; T.t = 1; }
     this.faceAhead(res ? null : this.node(D.at), D);

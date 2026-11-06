@@ -1,0 +1,78 @@
+{
+  "id": "turdus_migratorius",
+  "aliases": [
+    "american_robin",
+    "robin"
+  ],
+  "scientific": "Turdus migratorius",
+  "common": "American robin",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Turdidae",
+    "genus": "Turdus"
+  },
+  "mass_kg": 0.077,
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.25,
+    "shoulder_or_wingspan_m": 0.37,
+    "note": "Length 20-28 cm, wingspan 31-41 cm, 77-85 g. Built 0.250 m bill to tail (0.150 m bill tip to the neck to the rump, plus a 0.100 m tail), 0.122 m tall; wing cards 0.37 m across."
+  },
+  "source": {
+    "kind": "meshy",
+    "title": "American robin",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": null,
+    "file": "library/animals/jobs/turdus_migratorius/01a1ae89-b054-70ad-a469-fe5fce865630/model.glb (local; jobs/ meshes are not tracked)",
+    "original": "Meshy text-to-3D preview, meshy-6-lite, triangle mesh, 20,327 triangles, one piece, untextured",
+    "prompt": "An American robin (Turdus migratorius), one adult male standing on the ground, side-on pose, upright alert thrush posture, wings folded tight against the body. Realistic proportions: 25 cm long, a round chest, a medium-long tail, a straight yellow bill, long thin legs. Dark grey-brown back, wings and tail, a blackish head with a broken white eye ring, a white-streaked throat, a brick-red orange breast and belly, white under the tail. Three toes forward and one back. No base, no perch. Game-ready, clean closed mesh.",
+    "job_id": "01a1ae89-b054-70ad-a469-fe5fce865630",
+    "job": "library/animals/jobs/turdus_migratorius/01a1ae89-b054-70ad-a469-fe5fce865630/job.json",
+    "credits": 5,
+    "date": "2026-11-06 (UTC)",
+    "adopted_by": "tools/build_songbird.py --species turdus_migratorius",
+    "build": "tools/build_songbird.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the adopted GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" in README, the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 998,
+    "lod1": 400,
+    "lod2": 120,
+    "file": "client/assets/american_robin.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT",
+      "_COLORB (linear; the female)"
+    ],
+    "lod_m": [
+      8,
+      25
+    ],
+    "note": "Scaled to 0.25 m bill to tail. The preview (a faceted but good thrush) kept: the head, round chest and straight bill; pitched 6 degrees nose-down from its alert pose to a ground forager's near-level stance (the body about 25 degrees nose-up); the generated legs and long tail cut and replaced by long dark procedural legs and a square 10 cm tail 16 degrees below level; black eyes with a pale ring behind each; round flight cards with a rufous underwing. Colours (COLOR_0, the male): blackish head, white throat streaked black, dark grey-brown back, wings and tail with pale feather edges on lod0, brick-red orange breast and flanks, white lower belly, vent and undertail, yellow bill with a dark tip. _COLORB is the female: greyer head and back, paler orange breast. Triangles: lod0 998 = 829 body + 169 legs, tail, cards, eyes; lod1 400 = 311 body + 89 legs, tail, cards, eyes; lod2 120 = 93 body + 27 legs, tail, cards, eyes. GLB 213,188 bytes. lod_m is a suggestion."
+  },
+  "rig": "bird rig template of the Steller's jay (tools/build_stellersjay.py; drawn with client/src/animalModels.js RIG.stjay's constants): PART BODY 0, LEG_A 1 / LEG_B 2 procedural legs (pivot at the knee), TAIL 3 procedural tail (pivot at the rump), HEAD 6 (head and neck, pivot at the base of the neck), WING_L/R 4/5 and HAND_L/R 9/10 flight cards that collapse into the shoulder on pose; extras.rig {kind 'bird', wing (shoulder), tail (rump), head (neck base), length_m}; no skin; extras.rig.variant 'female in _COLORB': aAnim2.w selects the female colour set (_COLORB), as the turkey's hen",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Built 2026-11-06. Reads at once as a robin: dark head, orange breast, yellow bill, white vent, the long dark tail. Still open: the eye ring is one pale octahedron behind each eye, so it reads as a full ring (the real one is broken above and below); the throat streaks are per-face colour, coarse at lod0; the tail is a flat plate, thin side-on; the orange-grey boundary on the flank is saw-toothed (per-face colour).",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (Meshy candidate, build script, rig, tiers, entry)"
+  ],
+  "sources": [
+    "The Sibley Guide to Birds, 2nd edition (D. A. Sibley, 2014): plumage, shape and posture",
+    "Cornell Lab of Ornithology, All About Birds and Birds of the World species accounts: size, mass, wingspan, plumage",
+    "docs/animal-library.md",
+    "library/animals/README.md",
+    "tools/build_songbird.py",
+    "tools/build_stellersjay.py"
+  ]
+}

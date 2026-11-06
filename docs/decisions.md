@@ -5375,3 +5375,55 @@ https://claude.ai/artifact/CRXGhhEe16r6njnDD8dKvU. Nothing built.
   `utm33n_412_7531`; Danum Valley, Borneo `utm50n_582_543`), about $50-80 and no credits; then the Serengeti taken deep
   (about 8 Meshy models, 200-240 credits, $60-100). Lamar Valley stays the lower-risk US alternative. Not run; waits for
   Aaron's review.
+
+## 2026-11-05: the dig goes the way the orbit camera looks (docs/game-dig.md "Steering by the camera")
+
+Aaron: "Can you make the orbit controls work for digging - so that it's easy to dig down."
+
+Since the orbit camera, a drag on the ground only swung the camera, so the dig's slope (the flight's pitch) was
+always 0. A player could not dig down past the opening dive.
+
+The orbit is now the aim:
+- **Pitch.** Its pitch off the set-up is the slope, down to 83 degrees and up to 57. A level view digs level, so the
+  keyboard path is unchanged.
+- **Held.** Underground and while digging, its pitch is held rather than eased back.
+- **Yaw.** While digging, its yaw turns the body as fast as the face can curve.
+
+Considered:
+- **Arrow keys or a modifier for pitch.** Rejected: Aaron asked for the orbit, and the drag is already in the
+  player's hand.
+- **The camera's exact view direction as the dig direction.** Rejected: the chase camera's set-up already looks down
+  20-40 degrees to frame the body, so a neutral view would dig downhill.
+- **Steering the body by the camera at all times underground.** Rejected: orbiting to look at the animal would spin
+  it round. The steer applies only while digging, and only with the camera within 100 degrees of behind.
+
+Walking a shaft by looking up or down came with it: the walk direction and the branch choice weigh a segment's slope by
+the aim, and are unchanged on the slopes the old dig could make.
+
+
+## 2026-11-05: limbs and trunks sway in a breeze, not only in a strong wind
+
+Aaron: "I don't see the trunks swaying in the breeze, still just the leaf cards - it doesn't look like the branches are moving either". The wind tiers of 2026-11-04 started the limbs at 4.5 m/s and the trunks at 9 m/s, each on a smoothstep, which is flat at its foot. So the 2-4 m/s breeze that the hourly weather usually gives moved only the cards: at 3 m/s the limbs and trunks were exactly still. Now `windLimbs()` ramps from 0.8 to 12 m/s and `windTrunks()` from 1.2 to 19 m/s, on ramps that rise from the foot (`windRamp`, exponents 0.65 and 0.75): 0.35 and 0.18 of full at 3 m/s, 0.53 and 0.31 at 5, and the full motion at 12 and 19 as before. The amplitudes (`CROWN_SWAY`, `CROWN_FLEX`, cut on 2026-10-29 for "the swaying is too intense") are unchanged, so a breeze gives a slow, gentle sway of the crowns and the whole tree rather than a fast one. The mid crowns and trunks, gated on `windTrunks() > 0`, now bow together in any breeze over 1.2 m/s.
+
+The measurement: on the Hoh at 3 m/s from the forest floor, with a fixed camera and frames 0.15 s apart for 4.5 s, the most any frame differs from the first went from 0.54 to 3.67 in the trunk area and from 2.95 to 5.93 in the crowns.
+
+## 2026-11-06: the rest of the Olympic animals; the rigger's short legs; upright birds fly level (branch hoh-birds-2)
+
+Aaron approved modelling the animals the Hoh and Mount Olympus still listed without a model: 22 species (the Hoh's 14,
+Olympus's 8 more), for 25 credits (670 -> 695 of 1,000): lite previews of the robin, starling, sooty grouse, Olympic
+marmot and western toad; every other one a variant (the varied thrush of the robin; the junco, kinglet and flycatcher of
+the chickadee; the two small owls of the barred owl; the osprey, sharp-shinned hawk, merlin and three gulls of the
+red-tail, one parameterised `tools/build_soarer.py`; the mallard of the merganser; the yellow-pine chipmunk of Townsend's;
+the montane shrew of the deer mouse; the Cascades frog of the toad), and the hairy woodpecker procedural as the acorn
+woodpecker is. Each runs a kin's behaviour as the first batch's do (`animals.js KIN`, `HOH`); the marmot gets the ground
+squirrel's colonies (`colonyUpdate` by `g.sp`), the woodpecker clings to the conifers' bark (`HOH.trunk`).
+
+Fauna and games rerun on both tiles: both queues empty, all 46 listed animals on each tile with a model at fidelity 3.
+The montane shrew and (on Olympus) the western gull stay absent by the presence rule (under 3 records near the tile).
+Verified on both tiles: the new slots spawn where their rules put them (the robins, juncos, thrushes, starlings, the
+woodpecker, toads and gulls on the Hoh's river flats; marmots and yellow-pine chipmunks on Olympus's talus at 1,500 m,
+sharp-shins and merlins over it), move and phase with no NaN, and play; animals.update 0.66 ms a frame with 236 animals.
+
+Two fixes asked for with it: `tools/rig_quadruped.py`'s leg bands widen instead of failing on a short decimated leg
+(`band_at`, a test), and the upright meshes (the owls, the kingfisher, the flycatcher) tip forward to fly level as the
+player (`flierControl.js` `upright`).

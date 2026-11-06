@@ -1,0 +1,74 @@
+{
+  "id": "larus_californicus",
+  "aliases": [
+    "california_gull",
+    "gull"
+  ],
+  "scientific": "Larus californicus",
+  "common": "California gull",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Charadriiformes",
+    "family": "Laridae",
+    "genus": "Larus"
+  },
+  "mass_kg": 0.6,
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.53,
+    "shoulder_or_wingspan_m": 1.3,
+    "note": "Length 0.47-0.55 m, wingspan 1.22-1.40 m, 0.43-1.05 kg. The flight mesh is scaled to 0.530 m bill tip to tail tip and lofted to a 1.30 m span (tip to tip): head and bill project 0.188 m ahead of the wing's leading edge at the root, the tail 0.135 m behind its trailing edge; wing chord 0.207 m over the arm; the source body scaled 0.687 (and narrowed per recipe)."
+  },
+  "source": {
+    "kind": "variant",
+    "title": "California gull, soaring (variant of the red-tailed hawk's Meshy flight mesh)",
+    "author": "variant of buteo_jamaicensis by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/buteo_jamaicensis/01a1719d-772f-76b4-9155-823815fec267/model.glb (main checkout, local, git-ignored; generated with Meshy (meshy.ai))",
+    "original": "the red-tailed hawk's Meshy text-to-3D preview, task 01a1719d-772f-76b4-9155-823815fec267, ai_model meshy-6-lite, triangle remesh to 20,000 faces, 20,779 triangles, untextured (2026-10-25); its body and head kept and reshaped, the wings, tail and bill rebuilt",
+    "prompt": "(the red-tail's) A red-tailed hawk (Buteo jamaicensis), one adult bird soaring in mid-air, wings fully spread out flat to the sides and symmetrical, about 125 cm wingspan and 55 cm long, shaped to read from below and from above. Broad rounded wings with a straight leading edge and five separated, fingered primary feathers at each wingtip. Short, broad brick-red tail fanned wide into a rounded fan. Legs and feet tucked up under the body. Big rounded head and short hooked bill projecting ahead of the wings. Pale underwing with a dark leading-edge bar and a dark wrist mark, pale breast with a dark belly band. Not an eagle, not a falcon. Single bird, no base, no perch. Game-ready, clean closed mesh.",
+    "job_id": "01a1719d-772f-76b4-9155-823815fec267",
+    "job": "library/animals/jobs/buteo_jamaicensis/01a1719d-772f-76b4-9155-823815fec267/job.json (main checkout)",
+    "credits": 0,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_soarer.py --species larus_californicus"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the built GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder, not CC BY-SA licensees).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "A variant built from an earlier Meshy job: no new generation was used. Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 2000,
+    "lod1": 800,
+    "lod2": 220,
+    "file": "client/assets/california_gull.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "lod_m": [
+      60,
+      200
+    ],
+    "note": "Ambient flight mesh as the hawk's and the eagle's: body and head from the generated mesh (feet and tail deleted, head reshaped, pitched 12 degrees nose-down); as the glaucous-winged gull's, a little slimmer (chord 0.9x, body narrower), the bill slimmer; the wings, tail and bill lofted per tier in rows and stations placed on the field marks (lod2 wings 2.5x thicker). Tier switches suggested at 60 and 200 m (not wired). GLB 303,592 bytes."
+  },
+  "rig": "bird rig template, flight mesh, exactly as client/assets/redtail.glb (the client draws the raptors with the hawk's soaring and the gulls with the vulture's circling glides): PART BODY 0, TAIL 3 (pivot at the tail root), HEAD 6 (head, neck and bill, pivot at the neck's base), WING_L/R 4/5 (the arm, pivot at the shoulder, weight ramped in over the wing root), HAND_L/R 9/10 (pivot at the wrist, weight ramped over the hand); collapse 0 (the wings never fold). extras.rig keys as the hawk's: kind 'bird', wing (shoulder [0.055, 0.11, 0.02]), wrist [0.273, 0.133, 0.02], tail [0.0, 0.086, -0.074], head [0.0, 0.102, 0.151], span_m 1.3, dihedral_deg -1.6 (shoulder to wingtip). Origin 0.11 m below the shoulder line. No skin.",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Field marks: white head, body and tail; medium grey mantle and upperwing with a white trailing edge; black outer primaries (the outer fifth of the span, above and below) with a white mirror; the underwing white with grey flight feathers; a yellow bill with a black ring and a red gonys spot (lod0); a dark eye. No legs show (tucked), so the greenish-yellow legs are not drawn. Reads as a medium gull with black wingtips and a medium-grey mantle, darker than the glaucous-winged and paler than the western. Still open: the wingtip is one black block with one white mirror (a real one has two mirrors and white apical spots); the bill's black and red spots are lod0 only; the mantle shade against a ring-billed gull's and the head streaking of winter adults are not modelled; immatures not drawn.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (variant: build script recipe, plan outline, lofted wings and tail, gull bill, recolour, rig, tiers)"
+  ],
+  "sources": [
+    "Howell, S. N. G. and Dunn, J. (2007), Gulls of the Americas (adult wingtip patterns, bill marks, mantle shades) - from the agent's knowledge, not reopened for this entry",
+    "Sibley, D. A. (2014), The Sibley Guide to Birds, 2nd ed. (flight shapes, field marks) - from the agent's knowledge",
+    "Cornell Lab of Ornithology, All About Birds and Birds of the World species accounts (size, mass) - from the agent's knowledge",
+    "tools/build_bald_eagle.py, tools/build_redtail.py and library/animals/buteo_jamaicensis.json (template and source mesh)"
+  ]
+}

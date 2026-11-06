@@ -1,0 +1,72 @@
+{
+  "id": "rana_cascadae",
+  "aliases": [
+    "cascades_frog",
+    "cascade_frog",
+    "frog"
+  ],
+  "scientific": "Rana cascadae",
+  "common": "Cascades frog",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Amphibia",
+    "order": "Anura",
+    "family": "Ranidae",
+    "genus": "Rana"
+  },
+  "mass_kg": 0.025,
+  "body_plan": "amphibian",
+  "size": {
+    "length_m": 0.065,
+    "shoulder_or_wingspan_m": 0.022,
+    "note": "Adults 4.5-7.5 cm snout to vent, slim and smooth-skinned with prominent dorsolateral folds and long hind legs; in the Olympics in subalpine ponds and wet meadows. Built at 0.065 m snout to vent (0.066 m in all as it sits), the trunk 3.0 cm across (4.7 cm with the legs folded out), the back 2.2 cm up; crouched on its belly. length_m here is snout to vent; shoulder_or_wingspan_m is the back's height."
+  },
+  "source": {
+    "kind": "variant",
+    "title": "Cascades frog (variant of the western toad's Meshy mesh)",
+    "author": "variant of anaxyrus_boreas by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/anaxyrus_boreas/01a1ae8d-0b79-7550-84cb-9b7d4e6f1127/model.glb (local, git-ignored; generated with Meshy (meshy.ai))",
+    "original": "the western toad's text-to-3D preview, ai_model meshy-6-lite, triangle remesh to 20,000 faces, untextured",
+    "prompt": "(the toad's) A western toad (Anaxyrus boreas), NOT a frog, NOT a cartoon. One adult sitting on the ground in a neutral crouch, side-on pose, the four legs folded under it, the front feet planted. Realistic proportions: 10 cm long, a squat broad warty body, a blunt rounded head with big oval parotoid glands behind the eyes, golden eyes with horizontal pupils, short thick legs. Olive-grey to greenish brown skin with dark warts ringed in rusty brown, a thin pale cream stripe down the middle of the back, a pale mottled belly. No base, no ground. Game-ready, clean closed mesh.",
+    "job_id": "01a1ae8d-0b79-7550-84cb-9b7d4e6f1127",
+    "job": "library/animals/jobs/anaxyrus_boreas/01a1ae8d-0b79-7550-84cb-9b7d4e6f1127/job.json",
+    "credits": 0,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_frog.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the built GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder, not CC BY-SA licensees).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "A variant built from an earlier Meshy job: no new generation, no credits. Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 1200,
+    "lod1": 400,
+    "lod2": 120,
+    "file": "client/assets/cascades_frog.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT",
+      "_BLUE (0 everywhere: no blue patches; kept so the shader path is the lizard's)"
+    ],
+    "note": "tools/build_toad.py's build with the frog's shape: the warty skin smoothed flat (14 Laplacian passes), the hind legs 1.35x longer fore and aft about the hip (1.08x outward), the snout ahead of the eyes drawn out 1.25x and narrowed to a point, low dorsolateral ridges raised along each side of the back; no stripe ribbon, no warts. lod0 = 1,184 body + 16 pupils; lod1 = 400; lod2 = 120. GLB 191,832 bytes."
+  },
+  "rig": "reptile template exactly as client/assets/western_toad.glb (tools/build_toad.py): BODY 0, LEG_A 1 (left fore, right hind), LEG_B 2 (right fore, left hind), HEAD 6, TAIL 3 and TAIL_TIP 8 tiny stubs at the vent (lod2 has none), _BLUE 0. extras.rig (kind 'reptile'): head, tail, tail_tip, fore, hind, legs, snout_z 0.0388, vent_z -0.0262, tail_end_z -0.2862 (5 snout-vent lengths behind the snout: the wave stays tiny), belly_y, back_y, drop, blue_off, throat_off (the belly cream), length_m 0.065. To be drawn with the salamanders' slow walk constants (a frog's hop is not in the template). No skin.",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Reads as a ranid frog beside the toad: smooth skin, a pointed snout, olive-brown to tan above with crisp black spots on the back and legs, pale dorsolateral folds along each side of the back, a dark mask behind the eye over a pale jaw stripe, golden eyes with a dark pupil (lod0), yellow under the hind legs, a cream belly. Still open: it sits in the toad's crouch, so it is squatter than a Cascades frog at rest; the longer hind legs are folded and mostly read from behind; the spots are whole hashed faces (some large); the folds are low ridges and a colour band, not sharp; lod2 (120 triangles) is a lump. The tympanum is not marked.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (variant: build script, smoothing, legs, snout, folds, palette, rig, tiers, entry)"
+  ],
+  "sources": [
+    "Jones, Leonard & Olson (eds.), Amphibians of the Pacific Northwest (2005): Cascades frog size, spots, folds, the yellow under the legs, the Olympic populations",
+    "Leonard, Brown, Jones, McAllister & Storm, Amphibians of Washington and Oregon (1993): field marks and habitat",
+    "AmphibiaWeb, Rana cascadae account: size, colour, range",
+    "tools/build_toad.py (template)"
+  ]
+}

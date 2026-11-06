@@ -1,0 +1,71 @@
+{
+  "id": "sorex_monticolus",
+  "aliases": [
+    "montane_shrew",
+    "dusky_shrew",
+    "shrew"
+  ],
+  "scientific": "Sorex monticolus",
+  "common": "montane shrew",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Mammalia",
+    "order": "Eulipotyphla",
+    "family": "Soricidae",
+    "genus": "Sorex"
+  },
+  "mass_kg": 0.006,
+  "body_plan": "rodent",
+  "size": {
+    "length_m": 0.11,
+    "shoulder_or_wingspan_m": 0.024,
+    "note": "Head and body 0.06-0.07 m, tail 0.04-0.05 m, 4-8 g. Built at 0.065 m head and body (nose to tail root) and a 0.045 m slim tail (0.11 m in all); the back 0.024 m up; a long pointed snout drawn out ahead of the tiny eyes, the ears hidden in the fur. body_plan is the rodent template the client draws it with; a shrew is not a rodent (order Eulipotyphla)."
+  },
+  "source": {
+    "kind": "variant",
+    "title": "Montane shrew (variant of the deer mouse on the California vole's Meshy mesh)",
+    "author": "variant of peromyscus_maniculatus by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/microtus_californicus/01a171bc-b285-71cb-9e16-dc06982a34e4/model.glb (local, git-ignored; generated with Meshy (meshy.ai))",
+    "original": "the California vole's text-to-3D preview, ai_model meshy-6-lite, triangle remesh to 20,000 faces",
+    "prompt": "(the vole's) A California vole (Microtus californicus), a wild meadow vole, NOT a mouse, NOT a hamster. One adult on all fours in a neutral side-on pose, feet on the ground, head level. Realistic proportions: 17 cm long including a short 4.5 cm tail, stocky cylindrical body, short legs, blunt rounded face, small beady eyes, small round ears almost hidden in fur. Grizzled cinnamon-brown back with darker ticking, grey belly, grey feet, tail dark above and grey below. No whiskers as strands. No base, no ground. Game-ready.",
+    "job_id": "01a171bc-b285-71cb-9e16-dc06982a34e4",
+    "job": "library/animals/jobs/microtus_californicus/01a171bc-b285-71cb-9e16-dc06982a34e4/job.json",
+    "credits": 0,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_shrew.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the built GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder, not CC BY-SA licensees).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "A variant built from an earlier Meshy job: no new generation, no credits. Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 699,
+    "lod1": 250,
+    "lod2": 69,
+    "file": "client/assets/montane_shrew.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "note": "tools/build_deer_mouse.py's build made a shrew: the muzzle ahead of the eyes stretched 1.8x and tapered to a point (0.70 across, 0.60 in depth at the tip), the ears pressed into the fur (0.2x about their base), the legs below the belly line 0.85x, the trunk 0.78x across and 0.85x high; a slim lofted tail; tiny eyes on lod0 only. lod0 = body 608 + tail and eyes 91; lod1 = 214 + tail 36; lod2 = 54 + tail 15. GLB 128,116 bytes."
+  },
+  "rig": "Template R (rodent), exactly as client/assets/deer_mouse.glb (tools/build_deer_mouse.py) and to be loaded with the deer mouse's constants: BODY 0 (hindquarters), CHEST 7 (pivot at the lumbar), LEG_A 1 (fore pair, elbows) and HEAD 6 (neck, head and the long snout; pivot at the neck) children of the chest, LEG_B 2 (hind pair, stifles), TAIL 3 (lofted, pivot at its root). extras.rig keys (the deer mouse's): kind 'rodent', chest [0, 0.0132, -0.004], tail [0, 0.0078, -0.0269], head [0, 0.0163, 0.0118], fore [0.0038, 0.0034, 0.0073], hind [0.0032, 0.0034, -0.013], length_m 0.11. No TAIL_TIP. No skin.",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Reads as a shrew, not a mouse: a long pointed snout with a pinkish tip, no visible ears, tiny eyes, a slender low body on short legs, a slim tail; uniform dark brown above, slightly paler grey-brown below, pinkish feet. Still open: the snout is one rigid piece with the head (no separate twitch); the body is the vole's, slimmed, so the shoulders are a little humped; the tail is a thin tube, faintly bicoloured; lod2 (69 triangles) is a dark wedge with a thread tail. Montane and vagrant shrews look alike in the field; the colours are generic Sorex.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (variant: build script, snout, ears, legs, palette, rig, tiers, entry)"
+  ],
+  "sources": [
+    "Hennings, D. and R. S. Hoffmann (1977), A review of the taxonomy of the Sorex vagrans species complex from western North America (size, pelage)",
+    "Verts, B. J. and L. N. Carraway (1998), Land Mammals of Oregon: dusky (montane) shrew (description, measurements)",
+    "Burke Museum, Mammals of Washington: montane shrew (read, not copied; from the agent's knowledge)",
+    "tools/build_deer_mouse.py and library/animals/peromyscus_maniculatus.json (template)"
+  ]
+}
