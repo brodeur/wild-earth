@@ -17,8 +17,9 @@ export { latLonToXYZ };
 // setReady(tileId) report its build, readyIds remembers the built ones, point and onPoint are the arrival's, onBegin(choice)
 // enters, close() takes the screen down.
 //
-// What happens: WILD EARTH over the stars while the page loads what the screen needs; then the earth rises as a
-// crescent and the sign-in (account.js, through onGate; Explore when there is no hub) stands on the right, where the
+// What happens: WILD EARTH over the stars while the page loads what the screen needs (the boot screen's green faded to
+// black and the stars twinkled in first: firstDrawn); then the title rises to its place at the top, the earth rises as a
+// crescent, and the sign-in (account.js, through onGate; Explore when there is no hub) stands on the right, where the
 // social panel will be. Signed in, the earth rises the rest of the way, the sun swings round, the map comes up over the
 // earth (mapGlobe.js: OpenStreetMap's map from OpenFreeMap's vector tiles, draped on the globe, a globe from space and a
 // map at a few kilometres), a dot marks each built tile, and the places are listed on the left with a search box at the
@@ -56,7 +57,13 @@ const Y_BELOW = -2.7, Y_CRESCENT = -1.12;                  // where the earth's 
 const SUN_CRESCENT = [152 * DEG, 26 * DEG], SUN_LIT = [30 * DEG, 14 * DEG];   // [azimuth about Y from the camera's side, elevation]
 const PITCH_MAX = 85 * DEG;
 const STAR_N = 1500, STAR_R = 40;
-const TITLE_MIN_MS = 2200, LOAD_MAX_MS = 12000;            // the title is seen at least this long; the loading waits at most this long
+const TITLE_MIN_MS = 2400, LOAD_MAX_MS = 12000;            // the title is seen at least this long; the loading waits at most this long
+// The start (Aaron, 2026-11-06): the boot screen's green fades to black on the first frame drawn, the stars twinkle in
+// one by one (the brightest first) over STARS_IN_S, the title fades in from TITLE_IN_S, and when the earth is ready the
+// title rises from the middle to its place at the top (RISE_MS; a cross-fade under reduced motion) before the side
+// panels slide in (html.tt-panels: the sign-in, the places, the social column).
+const STARS_IN_S = 2.6, TITLE_IN_S = 0.7, RISE_MS = 1400, REFADE_MS = 1000;
+const reducedMotion = () => !!globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 const DOT_LIFT = 0.004;                                    // the dots stand off the surface from space, on it up close
 const HOVER_PX = 16;
 const FLING_MAX = 3;                                       // rad/s: the fastest a released drag keeps the earth turning
@@ -153,15 +160,20 @@ const ATMO_FRAG = /* glsl */`
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
   }`;
+// Each star comes in at its own aDelay (seconds after uIn starts counting): a quick rise with a glint that settles
+// (uGlint 0 under reduced motion: a plain fade).
 const STAR_VERT = /* glsl */`
-  attribute float aSize; attribute float aPhase;
-  uniform float uT; uniform float uDpr;
+  attribute float aSize; attribute float aPhase; attribute float aDelay;
+  uniform float uT; uniform float uDpr; uniform float uIn; uniform float uGlint;
   varying float vA;
   void main() {
     vec4 mv = modelViewMatrix * vec4(position, 1.0);
     gl_Position = projectionMatrix * mv;
-    vA = (0.7 + 0.3 * sin(uT * (1.2 + aPhase * 2.5) + aPhase * 40.0)) * (0.45 + 0.55 * min(aSize, 1.0));
-    gl_PointSize = max(1.5, aSize * 2.4 * uDpr);
+    float s = uIn - aDelay;
+    float glint = s > 0.0 ? uGlint * 1.6 * exp(-s * 3.5) : 0.0;
+    float on = clamp(s / mix(0.6, 0.22, uGlint), 0.0, 1.0);
+    vA = (0.7 + 0.3 * sin(uT * (1.2 + aPhase * 2.5) + aPhase * 40.0)) * (0.45 + 0.55 * min(aSize, 1.0)) * on * (1.0 + glint);
+    gl_PointSize = max(1.5, aSize * 2.4 * uDpr * (1.0 + 0.5 * glint));
   }`;
 const STAR_FRAG = /* glsl */`
   uniform float uFade;
@@ -252,7 +264,7 @@ export class TitleScreen {
     this.vyaw = 0; this.vpitch = 0; this.drag = null; this.hover = null; this.anchor = null;
     this.alt = ALT0; this.altGoal = ALT0; this.flying = null;
     this.sun = [...SUN_CRESCENT]; this.mapFade = 0; this.offX = 0;
-    this.tweens = []; this.time = 0; this.last = performance.now();
+    this.tweens = []; this.time = 0; this.last = this.bornMs = performance.now();
     this.px = -1; this.py = -1; this.listKey = '';
     this._v = new THREE.Vector3(); this._w = new THREE.Vector3(); this._q = new THREE.Quaternion(); this._size = new THREE.Vector2(); this._cc = new THREE.Color(); this._e = new THREE.Euler();
     this._ray = new THREE.Raycaster(); this._ndc = new THREE.Vector2(); this._sph = new THREE.Sphere(new THREE.Vector3(), 1); this._m = new THREE.Matrix4();
@@ -312,7 +324,6 @@ export class TitleScreen {
       </div>`;
     this.wrap = this.$('.tt-wrap'); this.card = this.$('.tt-pcard'); this.bar = this.$('.tt-bar'); this.list = this.$('.tt-places');
     this.wrap.style.setProperty('--hl', seasonHighlight(this.season));
-    requestAnimationFrame(() => this.$('.tt-title')?.classList.add('on'));   // fades in from black
     this.$('.tt-explore').onclick = () => this.onSignedIn(null);
     {   // the Layers menu (Aaron, 2026-11-04: "we can remove place names from the globe, or its a toggle under a Layers menu")
       const btn = this.$('.tt-layersbtn'), list = this.$('.tt-layerlist');
@@ -488,14 +499,16 @@ export class TitleScreen {
     this.cam = new THREE.PerspectiveCamera(FOV_FAR, 16 / 9, 0.01, 80);
     const sunDir = this.sunDir = sunVec(this.sun, new THREE.Vector3());
     const dpr = this.renderer.getPixelRatio();
-    const sg = new THREE.BufferGeometry(), sp = new Float32Array(STAR_N * 3), ss = new Float32Array(STAR_N), sph = new Float32Array(STAR_N);
+    const sg = new THREE.BufferGeometry(), sp = new Float32Array(STAR_N * 3), ss = new Float32Array(STAR_N), sph = new Float32Array(STAR_N), sd = new Float32Array(STAR_N);
     for (let i = 0; i < STAR_N; i++) {
       const u = Math.random() * 2 - 1, a = Math.random() * Math.PI * 2, r = Math.sqrt(1 - u * u);
       sp[3 * i] = r * Math.cos(a) * STAR_R; sp[3 * i + 1] = u * STAR_R; sp[3 * i + 2] = r * Math.sin(a) * STAR_R;
       const m = Math.random(); ss[i] = m < 0.8 ? 0.45 + Math.random() * 0.5 : m < 0.97 ? 0.9 + Math.random() * 0.6 : 1.5 + Math.random() * 0.8; sph[i] = Math.random();
+      // the brightest first, as at dusk, each with some scatter, all in by STARS_IN_S after the first frame
+      sd[i] = 0.3 + (1 - Math.min(1, (ss[i] - 0.45) / 1.6)) * (STARS_IN_S - 1.1) * 0.75 + Math.random() * (STARS_IN_S - 1.1) * 0.35;
     }
-    sg.setAttribute('position', new THREE.BufferAttribute(sp, 3)); sg.setAttribute('aSize', new THREE.BufferAttribute(ss, 1)); sg.setAttribute('aPhase', new THREE.BufferAttribute(sph, 1));
-    this.starU = { uT: { value: 0 }, uDpr: { value: dpr }, uFade: { value: 0 } };
+    sg.setAttribute('position', new THREE.BufferAttribute(sp, 3)); sg.setAttribute('aSize', new THREE.BufferAttribute(ss, 1)); sg.setAttribute('aPhase', new THREE.BufferAttribute(sph, 1)); sg.setAttribute('aDelay', new THREE.BufferAttribute(sd, 1));
+    this.starU = { uT: { value: 0 }, uDpr: { value: dpr }, uFade: { value: 1 }, uIn: { value: 0 }, uGlint: { value: reducedMotion() ? 0 : 1 } };
     this.stars = new THREE.Points(sg, new THREE.ShaderMaterial({ uniforms: this.starU, vertexShader: STAR_VERT, fragmentShader: STAR_FRAG, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false }));
     this.stars.rotation.z = 0.3; this.stars.renderOrder = -1; scene.add(this.stars);
     const earth = this.earth = new THREE.Group(); earth.position.set(0, Y_BELOW, 0); scene.add(earth);
@@ -539,8 +552,10 @@ export class TitleScreen {
     await wait(Math.max(0, TITLE_MIN_MS - (performance.now() - t0)));
     if (this.closed) return;
     this.setPhase('crescent');
-    await this.tween(2800, u => { this.earth.position.y = lerp(Y_BELOW, Y_CRESCENT, u); }, easeOut, 500).p;
+    this.crescentT = this.tween(2800, u => { this.earth.position.y = lerp(Y_BELOW, Y_CRESCENT, u); }, easeOut, 200);
+    await this.rise();   // the title up to its place; the earth rises under it
     if (this.closed) return;
+    this.panelsIn();
     this.setPhase('gate');
     if (this.user) { await wait(400); if (!this.closed) this.onSignedIn(this.user); }   // the stub, or a session the hub already knows
     else if (this.onGate) this.onGate(this);                                              // the modal (account.js; it handles no hub too)
@@ -560,6 +575,17 @@ export class TitleScreen {
       say(`loading the places… ${++n} / ${this.places.length}`);
     }));
   }
+  // The title from the middle up to its place at the top (title.css .risen), with the earth rising under it; under
+  // reduced motion it fades out in the middle and in at its place. Resolves when it has landed.
+  async rise() {
+    const t = this.$('.tt-title'); if (!t) return;
+    t.classList.add('on');   // in already, unless the loading was quicker than its fade
+    t.classList.add('risen');
+    await wait(reducedMotion() ? REFADE_MS : RISE_MS);
+  }
+  // The side panels may come in now (title.css: the sign-in and Explore from the right, the places from the left, the
+  // social column and the chat from the right); taken off when the screen closes.
+  panelsIn() { if (!this.closed) document.documentElement.classList.add('tt-panels'); }
   setPhase(ph) {
     this.wrap.classList.remove(`phase-${this.phase}`); this.phase = ph; this.wrap.classList.add(`phase-${ph}`);
   }
@@ -577,6 +603,8 @@ export class TitleScreen {
     this.user = user || null;
     this.setPhase('lit');
     this.hub.watch?.(true);
+    this.panelsIn();
+    this.endTween(this.crescentT); this.crescentT = null;   // a sign-in before the crescent is up takes the earth on from where it is
     const y0 = this.earth.position.y, s0 = [...this.sun];
     this.rising = true;
     this.tween(2400, u => { this.earth.position.y = lerp(y0, 0, u); }, easeInOut, 100).p.then(() => { this.rising = false; });
@@ -632,6 +660,7 @@ export class TitleScreen {
     return this.flyTo(c.lat, c.lon, c.alt).then(() => { if (this.sel === id && !this.closed) this.card.classList.add('on'); });
   }
   // A tween run by frame(): fn(eased 0..1) over ms after delay; .p resolves when done (or stopped); .view marks one a drag cancels.
+  endTween(t) { const i = t ? this.tweens.indexOf(t) : -1; if (i < 0) return; this.tweens.splice(i, 1); if (this.flying === t) this.flying = null; t.done(); }
   tween(ms, fn, ease = easeInOut, delay = 0) {
     const t = { t: -delay, ms, fn, ease, done: null, view: false };
     t.p = new Promise(r => { t.done = r; });
@@ -763,6 +792,14 @@ export class TitleScreen {
     }, 1500);
   }
 
+  // The first frame is drawn (the stars' shader compiled): the boot screen's green fades to black (index.html #boot) and
+  // the stars start coming in.
+  firstDrawn() {
+    this.drawnAt = this.time; this.drawnMs = performance.now();   // debugging: the page's clock at the first frame
+    const boot = document.getElementById('boot');
+    if (boot && !boot.classList.contains('out')) { boot.classList.add('out'); setTimeout(() => boot.remove(), 1000); }
+  }
+
   // ---- every frame --------------------------------------------------------------------------------------------------
   // The space the earth's point of interest is centred in: between the list (left) and the social panel (right).
   freeArea(W) {
@@ -818,7 +855,11 @@ export class TitleScreen {
     }
     this.stars.rotation.y += dt * 0.004; this.stars.rotation.x += dt * 0.0007;
     this.stars.position.copy(cam.position);
-    this.starU.uT.value = this.time; this.starU.uFade.value = Math.min(1, this.starU.uFade.value + dt * 0.5);
+    this.starU.uT.value = this.time;
+    if (this.drawnAt != null) {
+      this.starU.uIn.value = this.time - this.drawnAt;
+      if (!this.titleOn && this.starU.uIn.value > TITLE_IN_S) { this.titleOn = true; this.$('.tt-title')?.classList.add('on'); }
+    }
     sunVec(this.sun, this.sunDir);
     // the map over the earth, the dots on it, the chosen tile's outline (and the others' up close)
     this.map.mix = mapMixFor(A) * this.mapFade;
@@ -843,6 +884,7 @@ export class TitleScreen {
     r.setRenderTarget(null); r.setScissorTest(false); r.setViewport(0, 0, size.x, size.y); r.autoClear = true; r.setClearColor(0x000000, 1);
     r.render(this.scene, cam);
     r.setClearColor(this._cc, ca); r.autoClear = ac;
+    if (this.drawnAt == null) this.firstDrawn();
     if (this.phase === 'lit') this.syncPlaces(W, H, dt);
   }
   // The dots on screen (the hover and its name), the labels of the places on the map, the pin of a search, the card over
@@ -932,6 +974,7 @@ export class TitleScreen {
     if (this.closed) return;
     this.closed = true; this.ownsCanvas = false;
     cancelAnimationFrame(this.raf);
+    document.documentElement.classList.remove('tt-panels');
     this.geo.cancel();
     for (const ev of ['keydown', 'keyup']) removeEventListener(ev, this.guard, true);
     document.activeElement?.blur?.();
