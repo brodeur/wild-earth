@@ -6601,3 +6601,13 @@ either side panel. Side panels fade and slide in from the sides."
   boot screen), `?skip=1` (no boot screen, straight in). The reduced-motion cross-fade was checked by applying its CSS rule
   directly (the pane cannot emulate the media query); it moves only while invisible. A cold load over the network was not
   measured: the local server answers in milliseconds. Debugging fields: `__weTitle.bornMs` and `drawnMs`.
+
+## 2026-11-06: the keys strip lives in the menu, top centre
+
+Aaron: "This toolbar can be moved into the menu and can be displayed at the top in the middle." The dim strip of the
+page's keys over the body's slots (abilities.js `.ab-more`: the movement keys, the hunt's, map, roads, present day,
+tags, mute and the mouse) now shows only while the menu is open, centred at the top between the menu button's row and
+the mini-map, in the menu's own card style; it wraps to two lines at 1280 px wide. The hunt's target frame steps down
+under it while the menu is open (`--abMoreH`, measured when the strip is built). On a phone the top holds the menu list
+and the map, so there it sits at the bottom over the nearby-animals row instead. The slots themselves stay where they
+were, bottom right, and always show.

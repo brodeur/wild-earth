@@ -242,6 +242,7 @@ export class Abilities {
     for (const [key, word] of [...(MOVE_KEYS[kind] || []), ...(strikes?.length || kind === 'flier' ? HUNT_KEYS : []), ...(MORE[kind] || [])]) { const s = document.createElement('span'), b = document.createElement('kbd'); b.textContent = key; s.append(b, ` ${word}`); more.append(s); }
     const m = document.createElement('span'); m.textContent = kind === 'spirit' ? MOUSE_SPIRIT : kind === 'raven' || kind === 'flier' ? MOUSE_AIR : MOUSE; more.append(m);
     this.el.replaceChildren(more, row);
+    requestAnimationFrame(() => document.documentElement.style.setProperty('--abMoreH', `${more.offsetHeight || 30}px`));   // the target frame steps under the strip while the menu is open (index.html)
   }
   // every frame: show: the world is up and playable (not behind the opening screen)
   update(show = true) {
