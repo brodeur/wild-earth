@@ -15,7 +15,7 @@
   67.97272862561803
  ],
  "size_m": 10000,
- "generated_at": "2026-11-06T12:52:16Z",
+ "generated_at": "2026-11-06T18:50:09Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -102,10 +102,11 @@
    "kind": "vector",
    "source": "usgs_3dep",
    "derived_from": [
-    "terrain.dem",
     "hydro.flowlines",
-    "hydro.waterbodies",
     "hydro.human_water",
+    "hydro.waterbodies",
+    "seasons.s2_monthly",
+    "terrain.dem",
     "terrain.dem_rewilded"
    ],
    "feature_count": 383,
@@ -164,7 +165,45 @@
     "routed_on": "terrain/dem_rewilded.tif"
    },
    "sha256": "a82230951ad3da88a35b99609608c7b17d0304ed8bc7d155572592e580cdf104",
-   "bytes": 428038
+   "bytes": 428038,
+   "imagery_moved": false,
+   "water_imagery": {
+    "months_used": [
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10
+    ],
+    "water_cells_5m": 205253,
+    "reaches_tested": 264,
+    "verdicts_before": {
+     "no water seen": 222,
+     "off water": 20,
+     "on water": 22
+    },
+    "verdicts_after": {
+     "no water seen": 222,
+     "off water": 20,
+     "on water": 22
+    },
+    "stems": 0,
+    "stems_moved": 0,
+    "reaches_moved": 0,
+    "reaches_bent": 0,
+    "reaches_extended": 0,
+    "nhd_dropped": 0,
+    "side_channels": 0,
+    "undrawn_patches": 28,
+    "undrawn_m2": 673100,
+    "undrawn_by_map": {
+     "a rewilded reservoir or pond (human water, not drawn by the rule)": 50750,
+     "unmapped": 622350
+    },
+    "seconds": 12.6
+   }
   },
   "client.channel_depth": {
    "path": "client/channel_depth.png",
@@ -1022,7 +1061,8 @@
    "counts": {
     "roads": 130,
     "streams": 383,
-    "waterbodies": 115,
+    "waterbodies": 110,
+    "dry_waterbodies": 5,
     "glaciers": 0,
     "places": 124,
     "territories": 0
@@ -1033,10 +1073,11 @@
     "footprint.mask",
     "hydro.channels",
     "hydro.waterbodies",
+    "hydro.waterbody_seasons",
     "osm"
    ],
-   "sha256": "196d62d988d7d2e8bb75d9e90ebaa4f2c7dcf4cc5a40de1bd755c136eeecf780",
-   "bytes": 261233
+   "sha256": "0ef20aff11b624cca093afc10d769fc38506f185b1eb4efef9cb30491bcc4d18",
+   "bytes": 265817
   },
   "vegetation.evt": {
    "path": "vegetation/evt.tif",
@@ -1325,10 +1366,10 @@
     "hydro.human_water"
    ],
    "modification": "terrain/dem.tif with every channel carved to its graded cross-section (channel bed L - D(1 - (o/wh)^2), wet margin, bank and the pond basins; cells only lowered, at most 3 m); the client's heights come from it",
-   "cells_lowered": 154254,
-   "max_cut_m": 4.0,
-   "sha256": "80efbe7e12a9cc36d37224d523b52a7c55c2fe193150ec9d5a75bbdd22a967dc",
-   "bytes": 6168044
+   "cells_lowered": 151379,
+   "max_cut_m": 2.0,
+   "sha256": "ebc95887e769814cbb2a4d78e42b9ee6e951b1474072cc88ffffb00ea5ffefad",
+   "bytes": 6166317
   },
   "client.heights": {
    "path": "client/heights.png",
@@ -1347,8 +1388,8 @@
     -4.326253890991211,
     924.1563110351562
    ],
-   "sha256": "8ecfa962f07759ba738f14aebb0754cc8a87c2de21951dc43f21661cdc366e70",
-   "bytes": 1964952
+   "sha256": "44c69bfe9ac4f280eee428adccb11d5f60b3152335092b604b8a297fa0eb662e",
+   "bytes": 1964375
   },
   "client.water": {
    "path": "client/water.png",
@@ -1372,8 +1413,8 @@
    "encoding": "RGB, row 0 north. R: zone (low 4 bits; 1 channel bed, 2 wet margin, 3 bank, 4 terrace, 5 pond water, 6 pond margin, 7 pond shore, 8 pond terrace) | stream order << 4 | 128 perennial. G: bed material (low 3 bits: 1 silt, 2 sand, 3 gravel, 4 cobble, 5 boulder) | 8 bar. B: water level = heights.png height at the cell + (B - 128) x 0.02 m (0: none). client/water_width.png (8-bit grey, same grid): water half width at the nearest centreline sample, 0.1 m units",
    "files": {
     "client/water_width.png": {
-     "sha256": "a0fb37714219a504975a0869e0646b0ed871c898a305f3ef9c086b36ce647146",
-     "bytes": 87186
+     "sha256": "47258c215b6a86750a1e7faadf30d473b207e2c6b7c33a1f86e2e9dd4f91ccfb",
+     "bytes": 87213
     }
    },
    "zones": {
@@ -1446,52 +1487,52 @@
     }
    },
    "stats": {
-    "reaches": 267,
-    "samples": 54531,
+    "reaches": 270,
+    "samples": 54601,
     "skipped": {
-     "in_pond": 116,
+     "in_pond": 113,
      "nhd_duplicate": 0
     },
     "zone_cells": {
-     "channel": 10401,
-     "margin": 37300,
-     "bank": 29976,
-     "terrace": 76031,
-     "pond_water": 248413,
-     "pond_margin": 13788,
-     "pond_shore": 16690,
-     "pond_terrace": 33456
+     "channel": 10420,
+     "margin": 37342,
+     "bank": 30012,
+     "terrace": 76180,
+     "pond_water": 246614,
+     "pond_margin": 13205,
+     "pond_shore": 16107,
+     "pond_terrace": 32200
     },
     "zone_area_ha": {
-     "channel": 26.0,
-     "margin": 93.25,
-     "bank": 74.94,
-     "terrace": 190.08,
-     "pond_water": 621.03,
-     "pond_margin": 34.47,
-     "pond_shore": 41.73,
-     "pond_terrace": 83.64
+     "channel": 26.05,
+     "margin": 93.36,
+     "bank": 75.03,
+     "terrace": 190.45,
+     "pond_water": 616.53,
+     "pond_margin": 33.01,
+     "pond_shore": 40.27,
+     "pond_terrace": 80.5
     },
     "material_cells": {
-     "silt": 249202,
-     "sand": 57004,
-     "gravel": 17595,
-     "cobble": 2101,
-     "boulder": 690
+     "silt": 247403,
+     "sand": 55849,
+     "gravel": 17635,
+     "cobble": 2106,
+     "boulder": 695
     },
     "bar_cells": 24,
     "cut": {
-     "cells": 154254,
-     "mean_m": 1.675,
+     "cells": 151379,
+     "mean_m": 1.676,
      "p95_m": 2.0,
-     "max_m": 4.0
+     "max_m": 2.0
     },
     "ponds": {
-     "kept": 114,
-     "intermittent": 0,
+     "kept": 109,
+     "intermittent": 1,
      "basins": [
       {
-       "id": null,
+       "id": "way/20839971",
        "name": "Mengelsdalsvatnet",
        "area_m2": 208148.3,
        "level_m": 345.99,
@@ -1500,7 +1541,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/20840409",
        "name": "Reinevatnet",
        "area_m2": 166969.8,
        "level_m": 55.81,
@@ -1509,7 +1550,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/146631317",
        "name": "\u00d8vervatnet",
        "area_m2": 23227.8,
        "level_m": 135.96,
@@ -1518,7 +1559,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/146631318",
        "name": "Hermannsdalsvatnet",
        "area_m2": 200908.4,
        "level_m": 1.52,
@@ -1527,16 +1568,7 @@
        "intermittent": false
       },
       {
-       "id": null,
-       "name": "Tj\u00f8nntj\u00f8nna",
-       "area_m2": 2458.4,
-       "level_m": 1.08,
-       "max_depth_m": 0.65,
-       "cells": 99,
-       "intermittent": false
-      },
-      {
-       "id": null,
+       "id": "way/146649516",
        "name": null,
        "area_m2": 4465.6,
        "level_m": 7.96,
@@ -1545,7 +1577,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/146649518",
        "name": "Austerdalsvatnet",
        "area_m2": 169162.8,
        "level_m": 234.66,
@@ -1554,7 +1586,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/171483478",
        "name": null,
        "area_m2": 371.5,
        "level_m": 6.83,
@@ -1563,7 +1595,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/171591806",
        "name": null,
        "area_m2": 590.4,
        "level_m": 89.52,
@@ -1572,7 +1604,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/171591814",
        "name": null,
        "area_m2": 1878.2,
        "level_m": 73.36,
@@ -1581,7 +1613,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/171818573",
        "name": null,
        "area_m2": 141.5,
        "level_m": 178.41,
@@ -1590,7 +1622,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/171818574",
        "name": null,
        "area_m2": 236.7,
        "level_m": 157.77,
@@ -1599,7 +1631,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/171818576",
        "name": null,
        "area_m2": 103.9,
        "level_m": 192.6,
@@ -1608,7 +1640,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/171818577",
        "name": "Kj\u00f8lvatna",
        "area_m2": 12160.0,
        "level_m": 320.83,
@@ -1617,7 +1649,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/171818580",
        "name": null,
        "area_m2": 60.9,
        "level_m": 204.81,
@@ -1626,7 +1658,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/171818581",
        "name": null,
        "area_m2": 794.8,
        "level_m": 199.24,
@@ -1635,7 +1667,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/171818583",
        "name": null,
        "area_m2": 412.7,
        "level_m": 40.56,
@@ -1644,7 +1676,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/171818586",
        "name": null,
        "area_m2": 689.7,
        "level_m": 195.67,
@@ -1653,7 +1685,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/171818587",
        "name": null,
        "area_m2": 1028.7,
        "level_m": 213.5,
@@ -1662,7 +1694,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/171818595",
        "name": null,
        "area_m2": 372.3,
        "level_m": 174.43,
@@ -1671,7 +1703,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/171818602",
        "name": null,
        "area_m2": 254.7,
        "level_m": 171.64,
@@ -1680,7 +1712,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/171818605",
        "name": null,
        "area_m2": 1504.7,
        "level_m": 198.12,
@@ -1689,7 +1721,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/171818606",
        "name": null,
        "area_m2": 932.6,
        "level_m": 188.91,
@@ -1698,7 +1730,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/172033655",
        "name": null,
        "area_m2": 939.7,
        "level_m": 2.64,
@@ -1707,7 +1739,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/231248854",
        "name": null,
        "area_m2": 890.0,
        "level_m": 3.16,
@@ -1716,7 +1748,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/364711020",
        "name": null,
        "area_m2": 565.9,
        "level_m": 220.33,
@@ -1725,16 +1757,7 @@
        "intermittent": false
       },
       {
-       "id": null,
-       "name": null,
-       "area_m2": 1700.5,
-       "level_m": 322.89,
-       "max_depth_m": 0.61,
-       "cells": 67,
-       "intermittent": false
-      },
-      {
-       "id": null,
+       "id": "way/375722123",
        "name": null,
        "area_m2": 1293.1,
        "level_m": 203.57,
@@ -1743,7 +1766,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722125",
        "name": null,
        "area_m2": 4723.7,
        "level_m": 409.07,
@@ -1752,7 +1775,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722134",
        "name": null,
        "area_m2": 7462.5,
        "level_m": 315.84,
@@ -1761,7 +1784,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722137",
        "name": null,
        "area_m2": 18887.5,
        "level_m": 1.7,
@@ -1770,7 +1793,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722144",
        "name": null,
        "area_m2": 145.2,
        "level_m": 285.55,
@@ -1779,7 +1802,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722146",
        "name": null,
        "area_m2": 66.6,
        "level_m": 571.65,
@@ -1788,7 +1811,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722151",
        "name": null,
        "area_m2": 289.0,
        "level_m": 405.13,
@@ -1797,7 +1820,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722154",
        "name": null,
        "area_m2": 204.7,
        "level_m": 14.67,
@@ -1806,7 +1829,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722155",
        "name": null,
        "area_m2": 855.2,
        "level_m": 309.55,
@@ -1815,7 +1838,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722157",
        "name": null,
        "area_m2": 148.1,
        "level_m": 317.79,
@@ -1824,7 +1847,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722158",
        "name": null,
        "area_m2": 103.9,
        "level_m": 594.51,
@@ -1833,7 +1856,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722165",
        "name": null,
        "area_m2": 195.8,
        "level_m": 593.35,
@@ -1842,7 +1865,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722166",
        "name": null,
        "area_m2": 46.4,
        "level_m": 214.55,
@@ -1851,7 +1874,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722168",
        "name": null,
        "area_m2": 650.4,
        "level_m": 133.21,
@@ -1860,7 +1883,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722169",
        "name": null,
        "area_m2": 144.9,
        "level_m": 365.32,
@@ -1869,7 +1892,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722170",
        "name": null,
        "area_m2": 310.9,
        "level_m": 583.95,
@@ -1878,7 +1901,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722174",
        "name": null,
        "area_m2": 217.9,
        "level_m": 356.52,
@@ -1887,7 +1910,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722175",
        "name": null,
        "area_m2": 533.0,
        "level_m": 312.83,
@@ -1896,7 +1919,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722176",
        "name": null,
        "area_m2": 201.5,
        "level_m": 358.01,
@@ -1905,7 +1928,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722178",
        "name": null,
        "area_m2": 211.0,
        "level_m": 302.52,
@@ -1914,7 +1937,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722180",
        "name": null,
        "area_m2": 374.3,
        "level_m": 496.31,
@@ -1923,7 +1946,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722181",
        "name": null,
        "area_m2": 315.7,
        "level_m": 602.56,
@@ -1932,7 +1955,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722182",
        "name": null,
        "area_m2": 302.4,
        "level_m": 14.46,
@@ -1941,7 +1964,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722185",
        "name": null,
        "area_m2": 626.9,
        "level_m": 429.08,
@@ -1950,7 +1973,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722195",
        "name": null,
        "area_m2": 424.0,
        "level_m": 439.5,
@@ -1959,7 +1982,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722196",
        "name": null,
        "area_m2": 760.9,
        "level_m": 418.05,
@@ -1968,7 +1991,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722201",
        "name": null,
        "area_m2": 404.0,
        "level_m": 0.51,
@@ -1977,7 +2000,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722203",
        "name": null,
        "area_m2": 571.0,
        "level_m": 341.76,
@@ -1986,7 +2009,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722210",
        "name": null,
        "area_m2": 1262.4,
        "level_m": 6.89,
@@ -1995,7 +2018,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722212",
        "name": null,
        "area_m2": 1198.6,
        "level_m": 200.26,
@@ -2004,7 +2027,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722213",
        "name": null,
        "area_m2": 1019.3,
        "level_m": 167.25,
@@ -2013,16 +2036,16 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722214",
        "name": null,
        "area_m2": 1969.5,
        "level_m": 582.64,
        "max_depth_m": 0.62,
        "cells": 80,
-       "intermittent": false
+       "intermittent": true
       },
       {
-       "id": null,
+       "id": "way/375722217",
        "name": null,
        "area_m2": 895.5,
        "level_m": 287.15,
@@ -2031,7 +2054,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722219",
        "name": null,
        "area_m2": 571.1,
        "level_m": 0.96,
@@ -2040,7 +2063,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722221",
        "name": null,
        "area_m2": 1365.8,
        "level_m": 368.48,
@@ -2049,7 +2072,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722225",
        "name": null,
        "area_m2": 774.2,
        "level_m": 326.5,
@@ -2058,7 +2081,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722227",
        "name": null,
        "area_m2": 2205.2,
        "level_m": 299.67,
@@ -2067,7 +2090,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/375722228",
        "name": null,
        "area_m2": 753.5,
        "level_m": 301.83,
@@ -2076,7 +2099,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/670632863",
        "name": null,
        "area_m2": 272.6,
        "level_m": 0.63,
@@ -2085,7 +2108,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/808086687",
        "name": null,
        "area_m2": 339.1,
        "level_m": 110.37,
@@ -2094,7 +2117,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/808086689",
        "name": null,
        "area_m2": 128.9,
        "level_m": 162.05,
@@ -2103,7 +2126,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/1095736492",
        "name": null,
        "area_m2": 224.5,
        "level_m": 208.43,
@@ -2112,7 +2135,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/1559160945",
        "name": null,
        "area_m2": 158.2,
        "level_m": 99.59,
@@ -2121,7 +2144,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "way/1559160952",
        "name": null,
        "area_m2": 169.8,
        "level_m": 225.23,
@@ -2130,16 +2153,7 @@
        "intermittent": false
       },
       {
-       "id": null,
-       "name": null,
-       "area_m2": 2775.1,
-       "level_m": 15.89,
-       "max_depth_m": 0.66,
-       "cells": 111,
-       "intermittent": false
-      },
-      {
-       "id": null,
+       "id": "relation/2327087",
        "name": "S\u00f8rv\u00e5gvatnet",
        "area_m2": 201510.1,
        "level_m": 0.28,
@@ -2148,7 +2162,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595066",
        "name": "Austervatnet",
        "area_m2": 27945.8,
        "level_m": 60.69,
@@ -2157,7 +2171,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595066",
        "name": "Austervatnet",
        "area_m2": 2885.9,
        "level_m": 5.15,
@@ -2166,7 +2180,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595066",
        "name": "Austervatnet",
        "area_m2": 376.7,
        "level_m": 19.33,
@@ -2175,7 +2189,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595066",
        "name": "Austervatnet",
        "area_m2": 2820.4,
        "level_m": 19.04,
@@ -2184,7 +2198,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595067",
        "name": "Festh\u00e6lvatnet",
        "area_m2": 291825.8,
        "level_m": 0.59,
@@ -2193,7 +2207,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595068",
        "name": "Fjerddalsvatnet",
        "area_m2": 5521.0,
        "level_m": 202.05,
@@ -2202,16 +2216,7 @@
        "intermittent": false
       },
       {
-       "id": null,
-       "name": "Fjerddalsvatnet",
-       "area_m2": 23053.8,
-       "level_m": 202.05,
-       "max_depth_m": 1.16,
-       "cells": 922,
-       "intermittent": false
-      },
-      {
-       "id": null,
+       "id": "relation/5595068",
        "name": "Fjerddalsvatnet",
        "area_m2": 12146.4,
        "level_m": 201.96,
@@ -2220,7 +2225,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595068",
        "name": "Fjerddalsvatnet",
        "area_m2": 515364.1,
        "level_m": 205.24,
@@ -2229,7 +2234,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595070",
        "name": "Kringeldalsvatn",
        "area_m2": 74455.7,
        "level_m": 354.08,
@@ -2238,7 +2243,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595070",
        "name": "Kringeldalsvatn",
        "area_m2": 8019.3,
        "level_m": 305.5,
@@ -2247,7 +2252,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595071",
        "name": "Krokvatnet",
        "area_m2": 904887.7,
        "level_m": 251.81,
@@ -2256,7 +2261,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595071",
        "name": "Krokvatnet",
        "area_m2": 600095.2,
        "level_m": 253.89,
@@ -2265,7 +2270,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595072",
        "name": "Stuvdalsvatnet",
        "area_m2": 46100.9,
        "level_m": 55.37,
@@ -2274,7 +2279,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595072",
        "name": "Stuvdalsvatnet",
        "area_m2": 33857.4,
        "level_m": 59.3,
@@ -2283,7 +2288,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595072",
        "name": "Stuvdalsvatnet",
        "area_m2": 51164.8,
        "level_m": 48.05,
@@ -2292,7 +2297,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595072",
        "name": "Stuvdalsvatnet",
        "area_m2": 71353.6,
        "level_m": 49.38,
@@ -2301,7 +2306,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595073",
        "name": "Tennesvatnet",
        "area_m2": 177094.1,
        "level_m": 187.05,
@@ -2310,7 +2315,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595073",
        "name": "Tennesvatnet",
        "area_m2": 700815.6,
        "level_m": 187.05,
@@ -2319,7 +2324,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595074",
        "name": "Tindsvatnet",
        "area_m2": 37013.6,
        "level_m": 27.28,
@@ -2328,7 +2333,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595074",
        "name": "Tindsvatnet",
        "area_m2": 77555.3,
        "level_m": 9.77,
@@ -2337,7 +2342,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595075",
        "name": "Tridalsvatnet",
        "area_m2": 585.1,
        "level_m": 89.05,
@@ -2346,7 +2351,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595075",
        "name": "Tridalsvatnet",
        "area_m2": 1618.6,
        "level_m": 89.05,
@@ -2355,7 +2360,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595075",
        "name": "Tridalsvatnet",
        "area_m2": 93764.5,
        "level_m": 90.47,
@@ -2364,16 +2369,7 @@
        "intermittent": false
       },
       {
-       "id": null,
-       "name": "Trolldalsvatnet",
-       "area_m2": 47739.1,
-       "level_m": 110.98,
-       "max_depth_m": 1.49,
-       "cells": 1943,
-       "intermittent": false
-      },
-      {
-       "id": null,
+       "id": "relation/5595076",
        "name": "Trolldalsvatnet",
        "area_m2": 175625.6,
        "level_m": 114.32,
@@ -2382,7 +2378,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595076",
        "name": "Trolldalsvatnet",
        "area_m2": 25616.5,
        "level_m": 262.81,
@@ -2391,7 +2387,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595076",
        "name": "Trolldalsvatnet",
        "area_m2": 726766.5,
        "level_m": 111.34,
@@ -2400,7 +2396,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595079",
        "name": null,
        "area_m2": 7439.6,
        "level_m": 322.03,
@@ -2409,7 +2405,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595081",
        "name": "\u00c5gvatnet",
        "area_m2": 434664.4,
        "level_m": 1.07,
@@ -2418,7 +2414,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595081",
        "name": "\u00c5gvatnet",
        "area_m2": 414.2,
        "level_m": 0.21,
@@ -2427,7 +2423,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595081",
        "name": "\u00c5gvatnet",
        "area_m2": 33084.4,
        "level_m": 0.17,
@@ -2436,7 +2432,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595081",
        "name": "\u00c5gvatnet",
        "area_m2": 60.1,
        "level_m": 0.14,
@@ -2445,7 +2441,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/5595081",
        "name": "\u00c5gvatnet",
        "area_m2": 257008.3,
        "level_m": 0.38,
@@ -2454,7 +2450,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/13030360",
        "name": "Moskenesvatnet",
        "area_m2": 150053.6,
        "level_m": 194.5,
@@ -2463,7 +2459,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/13030360",
        "name": "Moskenesvatnet",
        "area_m2": 209.6,
        "level_m": 182.14,
@@ -2472,7 +2468,7 @@
        "intermittent": false
       },
       {
-       "id": null,
+       "id": "relation/13030360",
        "name": "Moskenesvatnet",
        "area_m2": 32.4,
        "level_m": 180.09,
@@ -2480,7 +2476,12 @@
        "cells": 1,
        "intermittent": false
       }
-     ]
+     ],
+     "by_imagery": {
+      "permanent": 108,
+      "seasonal": 1
+     },
+     "dry_dropped": 5
     },
     "bank_params": {
      "1": {
@@ -2520,16 +2521,16 @@
      }
     },
     "by_order": {
-     "1": 35071,
+     "1": 35084,
      "2": 11259,
-     "3": 6547,
-     "4": 1654
+     "3": 6594,
+     "4": 1664
     },
     "species_mix": "32 riparian rows written into client/species_mix.json",
     "levels_from": "terrain/dem.tif (5 m)"
    },
-   "sha256": "0259962c1add676a1a383e217ea53d08382a49661462dd612fe266b045f42887",
-   "bytes": 261992
+   "sha256": "b8777a53a64fdf545f2d21bcad5d6b649f9e2d041cb9ae661a715530a948def0",
+   "bytes": 260370
   },
   "hydro.water_reaches": {
    "path": "hydro/water_reaches.json",
@@ -2538,8 +2539,8 @@
     "hydro.channels"
    ],
    "encoding": "per drawn reach: id, name, order, area_km2, width, class (0 ephemeral, 1 intermittent, 2 perennial), samples, length; the kept ponds' basins",
-   "sha256": "b0f4d22d8f87420369573fc03ebefdd289f1b645b6fa7fc98d4cce6fd1220871",
-   "bytes": 56352
+   "sha256": "24641cbcc12e3811ec1ea527c6f0cc767b587089d3e67719c322412bfff6bd7c",
+   "bytes": 57261
   },
   "geology.units": {
    "path": "geology/units.geojson",
@@ -2726,8 +2727,8 @@
     "azimuth": 315.0,
     "altitude": 45.0
    },
-   "sha256": "f87f93be4322b8804e6706025457fa5d06a48c92b3f74d60df416e460ac2c6cc",
-   "bytes": 1458980
+   "sha256": "ec189c93409b30fb400424b256ebd8fd0f3416e30ff0ff1c535c58f1adee89ec",
+   "bytes": 1457245
   },
   "terrain.terrain_rgb": {
    "path": "terrain/terrain_rgb.png",
@@ -2746,8 +2747,8 @@
     -4.2437238693237305,
     923.8424682617188
    ],
-   "sha256": "f668b41eed86c36f914a26ef46ec5804b0d6945aaadab5bd558a7ace96113e35",
-   "bytes": 1915069
+   "sha256": "0821b4ae8c55f576c9b95fd565d0b826a9cdfa6829a76cda376992a57b882568",
+   "bytes": 1914301
   },
   "footprint.mask_raster": {
    "path": "footprint/mask.png",
@@ -2825,8 +2826,8 @@
     "terrain.hillshade",
     "vegetation.habitat"
    ],
-   "sha256": "b55642b8b076c1f7e893b7cf4bea9151b725adfdb1349c9e42ef6f4f356a14a3",
-   "bytes": 2005714
+   "sha256": "8b62ad9e47d9b17031c4c3cd9deb1a8c8cd2b4f9d218d96ea986eb979477f5d0",
+   "bytes": 2003902
   },
   "client.habitat": {
    "path": "client/habitat.png",
@@ -2939,8 +2940,8 @@
     "vegetation.evc",
     "footprint.mask"
    ],
-   "sha256": "e5b508e5b832cc88f0fd751f3f04e70fbdd1fd4dc62198b2e4bc5bc48f1fc93c",
-   "bytes": 3216401
+   "sha256": "5e8eea790ef70b2d088749c016214c050f6f9497aeeaf684c2c4e225f33ac618",
+   "bytes": 3215360
   },
   "client.masks": {
    "path": "client/masks.png",
@@ -5632,8 +5633,8 @@
      "research_TF1_3": 0.0001
     }
    },
-   "sha256": "79b02f942d19df6c12f3207723dfedaf1ae05eab75090c7e2aace277123b7783",
-   "bytes": 46605
+   "sha256": "582d91c7451955418295b1774c958487b4a9af87f8c5e1b364c3399985f38077",
+   "bytes": 46604
   },
   "species.list": {
    "path": "species/species.json",
@@ -5870,10 +5871,10 @@
      "fall": 27.0
     },
     "water": {
-     "winter": 31.4,
-     "spring": 31.4,
-     "summer": 31.4,
-     "fall": 31.4
+     "winter": 31.3,
+     "spring": 31.3,
+     "summer": 31.3,
+     "fall": 31.3
     }
    },
    "client_png": {
@@ -5887,7 +5888,7 @@
     "burrow": "client/res_burrow.png",
     "water": "client/res_water.png"
    },
-   "sha256": "601b172a18f0e75e80a4bc2d8985f849b3dd567220683cc9ab6d9fe3f97b8d71",
+   "sha256": "88671dad353f6f14e3624a1af15f61d6741d74b7b8dc359417e744c6f607760c",
    "bytes": 5514
   },
   "client.mast": {
@@ -6140,6 +6141,2469 @@
    "encoding": "band 1 the canopy top height (m; GEDI RH98-calibrated), band 2 its standard deviation (m); -9999 no data",
    "sha256": "9dd1aefe217256891a8867a6d3d28ecdb0482dcdac847e559cac666880134e3a",
    "bytes": 483429
+  },
+  "hydro.waterbody_seasons": {
+   "path": "hydro/waterbody_seasons.json",
+   "kind": "table",
+   "derived_from": [
+    "hydro.waterbodies",
+    "seasons.s2_monthly"
+   ],
+   "method": "every mapped waterbody against the tile's monthly Sentinel-2 composites (pipeline/water_seasons.py)",
+   "rule": {
+    "bands": "seasons/s2_MM.tif red, green, blue, NDVI (no SWIR); NIR = red (1 + NDVI) / (1 - NDVI)",
+    "water_pixel": "NDWI (green - NIR) / (green + NIR) > 0 or NIR < 0.04, and not bright",
+    "bright_pixel": "green >= 0.2 or (NDVI < 0.1 and blue >= 0.12): ice, snow, cloud (not counted)",
+    "core": "the polygon inset 10 m (pixels wholly inside), at least 2 pixels",
+    "wet_month": "water fraction of the core's clear pixels >= 0.25; observed when clear >= half the core",
+    "classes": "dry: wet in none of >= 3 observed months; permanent: wet in >= 75% of them; seasonal: the rest; unresolved: by the tags",
+    "dry_bed": "meadow when the greenest observed month's median NDVI >= 0.3, else bare"
+   },
+   "months_used": [
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "counts": {
+    "permanent": 109,
+    "seasonal": 1,
+    "dry": 5
+   },
+   "basis": {
+    "imagery": 44,
+    "tags": 71
+   },
+   "evidence": [
+    {
+     "id": "way/20839971#0",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 480,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.983,
+      0.983,
+      0.987,
+      0.987,
+      0.981,
+      0.977,
+      0.973,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/20840312#1",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 449,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.976,
+      0.976,
+      0.979,
+      0.987,
+      0.98,
+      0.975,
+      0.989,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/20840409#2",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 374,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.986,
+      0.981,
+      0.976,
+      0.989,
+      0.989,
+      1.0,
+      1.0,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/146631317#3",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 47,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.809,
+      0.809,
+      0.787,
+      0.822,
+      0.809,
+      1.0,
+      1.0,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/146631318#4",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 436,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.97,
+      0.95,
+      0.911,
+      0.915,
+      0.938,
+      1.0,
+      1.0,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/146649238#5",
+     "class": "dry",
+     "basis": "imagery",
+     "core_px": 2,
+     "bed": "meadow",
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/146649516#6",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 3,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.667,
+      0.667,
+      0.667,
+      0.667,
+      0.667,
+      0.333,
+      1.0,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/146649518#7",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 375,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.922,
+      0.945,
+      0.947,
+      0.949,
+      0.939,
+      0.923,
+      0.898,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/171483478#8",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/171591806#9",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/171591814#10",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/171818573#11",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/171818574#12",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/171818576#13",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/171818577#14",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 19,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.737,
+      0.737,
+      0.737,
+      0.737,
+      0.737,
+      0.684,
+      0.263,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/171818580#15",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/171818581#16",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/171818583#17",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/171818586#18",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/171818587#19",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/171818595#20",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/171818602#21",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/171818605#22",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 1,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/171818606#23",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/172033655#24",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/231248854#25",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/364711020#26",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722115#27",
+     "class": "dry",
+     "basis": "imagery",
+     "core_px": 2,
+     "bed": "meadow",
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722123#28",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722125#29",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 4,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.25,
+      0.0,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722134#30",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 7,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.429,
+      0.429,
+      0.571,
+      0.714,
+      0.571,
+      0.429,
+      0.429,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722137#31",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 32,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.906,
+      0.844,
+      0.812,
+      0.75,
+      0.806,
+      1.0,
+      1.0,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722144#32",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722146#33",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722151#34",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722154#35",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722155#36",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722157#37",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722158#38",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722165#39",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722166#40",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722168#41",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722169#42",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722170#43",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722174#44",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722175#45",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722176#46",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722178#47",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722180#48",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722181#49",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722182#50",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722185#51",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722195#52",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722196#53",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722201#54",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722203#55",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722210#56",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 1,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722212#57",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 1,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722213#58",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722214#59",
+     "class": "seasonal",
+     "basis": "imagery",
+     "core_px": 2,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.5,
+      0.0,
+      0.0,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722217#60",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722219#61",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722221#62",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722225#63",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722227#64",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 1,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.0,
+      1.0,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/375722228#65",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/670632863#66",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/808086687#67",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/808086689#68",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/1095736492#69",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/1559160945#70",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "way/1559160952#71",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/2284860#72",
+     "class": "dry",
+     "basis": "imagery",
+     "core_px": 2,
+     "bed": "meadow",
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/2327087#73",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 424,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.913,
+      0.915,
+      0.896,
+      0.908,
+      0.894,
+      0.88,
+      0.828,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595066#74",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595066#75",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 2,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595066#76",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595066#77",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595066#78",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595066#79",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595067#80",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 411,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.984,
+      0.978,
+      0.978,
+      0.973,
+      0.98,
+      0.993,
+      0.993,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595067#81",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595068#82",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 3,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      1.0,
+      1.0,
+      1.0,
+      0.667,
+      1.0,
+      0.333,
+      0.333,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595068#83",
+     "class": "dry",
+     "basis": "imagery",
+     "core_px": 37,
+     "bed": "meadow",
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.029,
+      0.029,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595068#84",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 17,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.882,
+      0.941,
+      0.941,
+      0.941,
+      0.938,
+      0.765,
+      0.706,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595068#85",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 1200,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.928,
+      0.94,
+      0.946,
+      0.949,
+      0.944,
+      0.942,
+      0.94,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595070#86",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 159,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.95,
+      0.95,
+      0.95,
+      0.975,
+      0.968,
+      0.931,
+      0.937,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595070#87",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 7,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.667,
+      0.667,
+      0.667,
+      0.667,
+      0.667,
+      1.0,
+      1.0,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595071#88",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 2148,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.969,
+      0.969,
+      0.983,
+      0.992,
+      0.988,
+      0.99,
+      0.987,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595071#89",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 1417,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.969,
+      0.968,
+      0.977,
+      0.987,
+      0.986,
+      0.988,
+      0.988,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595072#90",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 85,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.976,
+      0.965,
+      0.871,
+      0.953,
+      0.918,
+      0.871,
+      0.812,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595072#91",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 58,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.966,
+      0.966,
+      0.983,
+      0.948,
+      0.966,
+      0.966,
+      0.931,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595072#92",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 96,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.979,
+      0.979,
+      0.979,
+      0.938,
+      0.969,
+      0.99,
+      0.948,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595072#93",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 140,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.979,
+      0.986,
+      0.979,
+      0.978,
+      0.964,
+      0.95,
+      0.957,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595073#94",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 394,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.99,
+      0.99,
+      0.995,
+      0.995,
+      0.992,
+      0.977,
+      0.97,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595073#95",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 1661,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.985,
+      0.985,
+      0.989,
+      0.991,
+      0.987,
+      0.987,
+      0.989,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595074#96",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 67,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.94,
+      0.91,
+      0.925,
+      0.925,
+      0.881,
+      0.925,
+      0.91,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595074#97",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 159,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.956,
+      0.969,
+      0.956,
+      0.962,
+      0.95,
+      0.931,
+      0.912,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595075#98",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595075#99",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595075#100",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 190,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.951,
+      0.947,
+      0.916,
+      0.932,
+      0.921,
+      0.905,
+      0.879,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595076#101",
+     "class": "dry",
+     "basis": "imagery",
+     "core_px": 77,
+     "bed": "meadow",
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.013,
+      0.0,
+      0.078,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595076#102",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 336,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.984,
+      0.976,
+      0.949,
+      0.946,
+      0.936,
+      0.97,
+      0.976,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595076#103",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 42,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595076#104",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 1702,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.994,
+      0.988,
+      0.987,
+      0.984,
+      0.981,
+      0.976,
+      0.953,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595079#105",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 12,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.667,
+      0.667,
+      0.667,
+      0.583,
+      0.5,
+      0.5,
+      0.417,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595081#106",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 982,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.977,
+      0.973,
+      0.958,
+      0.969,
+      0.967,
+      0.95,
+      0.916,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595081#107",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595081#108",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595081#109",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 77,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.974,
+      0.948,
+      0.974,
+      0.959,
+      0.945,
+      1.0,
+      1.0,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595081#110",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/5595081#111",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 567,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.956,
+      0.947,
+      0.926,
+      0.933,
+      0.931,
+      0.929,
+      0.952,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/13030360#112",
+     "class": "permanent",
+     "basis": "imagery",
+     "core_px": 330,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      0.936,
+      0.961,
+      0.958,
+      0.958,
+      0.93,
+      0.939,
+      0.891,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/13030360#113",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    {
+     "id": "relation/13030360#114",
+     "class": "permanent",
+     "basis": "tags",
+     "core_px": 0,
+     "water_fraction": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    }
+   ],
+   "sha256": "ba613d6ffb9041690a610068882e79f110d00db2fea635ca8ea1dc4fe270a847",
+   "bytes": 56714
+  },
+  "client.ground_albedo": {
+   "path": "client/ground_albedo.json",
+   "kind": "table",
+   "derived_from": [
+    "client.texture_imagery",
+    "client.season_rgb",
+    "client.canopy",
+    "client.habitat"
+   ],
+   "encoding": "gain: per channel (linear R G B) the factor from the ground texture's linear colour to surface reflectance; the client multiplies the ground and the herb layer's albedo by it",
+   "method": "sum of the reference month's L2A reflectance over the sum of the texture's linear colour, open ground (tree < 10 %, shrub < 15 %, not water or built), 20 m",
+   "imagery": {
+    "source": "sentinel2_l2a",
+    "year": null
+   },
+   "basis": "fit",
+   "gain": [
+    0.4509,
+    0.4752,
+    0.4992
+   ],
+   "gain_luminance": 0.4718,
+   "reference": "seasons/s2_07.tif",
+   "reference_month": 7,
+   "open_pixels": 49465,
+   "open_share": 0.198,
+   "ratio_luminance_p25_p50_p75": [
+    0.404,
+    0.437,
+    0.559
+   ],
+   "texture_mean_linear": [
+    0.1233,
+    0.1534,
+    0.0887
+   ],
+   "reflectance_mean": [
+    0.0556,
+    0.0729,
+    0.0443
+   ],
+   "encoding_check": {
+    "stretch_gain": 0.4,
+    "note": "the texture's own encoding (2.5 x the three-year median reflectance); the fit also carries the reference month against that median"
+   },
+   "sha256": "a8f74de18ab85d14f6c8c8867ca1225484354bae8bb14a55d640e8f23443df11",
+   "bytes": 1099
+  },
+  "hydro.water_imagery": {
+   "path": "hydro/water_imagery.json",
+   "kind": "table",
+   "derived_from": [
+    "hydro.channels",
+    "seasons.s2_monthly",
+    "terrain.dem"
+   ],
+   "method": "the reverse test of mapped water: drawn reaches against the imagery's water, the large rivers moved onto it (pipeline/water_imagery.py)",
+   "rule": {
+    "water_pixel": "seasons/s2_MM.tif: NDWI (NIR from red and NDVI) > 0 or NIR < 0.04, not bright (water_seasons.py)",
+    "water": "per 20 m pixel max(frequency, fraction): frequency = wet months / observed (>= 3); fraction = its NDWI's 75th percentile over the clear months unmixed between the never-wet land within 300 m and the tile's always-wet water (median NDWI; 0.3 with under 10 such pixels); DEM slope < 0.2, DEM > 0.5 m; bilinear onto the 5 m grid, water at >= 0.5",
+    "naip": "imagery/naip.tif is RGB (no NIR band): not used",
+    "reach": "on: water within max(w/2, 10 m); near: within max(60 m, 2 w); every 10 m; on water >= 0.6, off water: near >= 0.5, else no water seen",
+    "move": "stems of DEM reaches with width >= 10 m not on water: least-cost path on the 5 m grid within 600 m of the drawn stem on ground <= 10 m over its nearest DEM line cell (water 1 + 2 exp(-d_in/6 m), land 12 x (0.4 + 0.6 min(1, d_dem/30 m))), edge ends fixed, interior ends snapped to water within 60 m, a junction on a moved stem taken as moved, smoothed 10 m; kept when on >= 0.5 and >= the old line's + 0.2; the reaches meeting a moved node bent to it over 2 |shift| + 20 m (shift <= 30 m) or extended straight to it (one per node)",
+    "nhd_dropped": "NHD-sourced stretches with width >= 10 m, no water seen, within 600 m of a moved stem's old or new line, off the tile edge: the map's pieces of a river where the imagery shows none",
+    "width": "a moved reach takes the water's median cross-section when >= 40 m and wider than drawn",
+    "side_channels": "the river's water within 250 m, off the moved ribbon (w/2 + 10 m), its skeleton's longest path >= 150 m: a reach at its measured width (source imagery)",
+    "undrawn": "water patches >= 1600 m2 beyond w/2 + 20 m of every reach and 20 m of every kept pond"
+   },
+   "stats": {
+    "months_used": [
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10
+    ],
+    "water_cells_5m": 205253,
+    "reaches_tested": 264,
+    "verdicts_before": {
+     "no water seen": 222,
+     "off water": 20,
+     "on water": 22
+    },
+    "verdicts_after": {
+     "no water seen": 222,
+     "off water": 20,
+     "on water": 22
+    },
+    "stems": 0,
+    "stems_moved": 0,
+    "reaches_moved": 0,
+    "reaches_bent": 0,
+    "reaches_extended": 0,
+    "nhd_dropped": 0,
+    "side_channels": 0,
+    "undrawn_patches": 28,
+    "undrawn_m2": 673100,
+    "undrawn_by_map": {
+     "a rewilded reservoir or pond (human water, not drawn by the rule)": 50750,
+     "unmapped": 622350
+    },
+    "seconds": 12.6
+   },
+   "sha256": "b166338d64f6295cad93dc9dff8fe31fefd73710bc5e62324aff267af7060d88",
+   "bytes": 20350
+  },
+  "hydro.channels_dem": {
+   "path": "hydro/channels_dem.geojson",
+   "kind": "vector",
+   "derived_from": [
+    "hydro.channels"
+   ],
+   "encoding": "the channels as the DEM routed them (after the reroute step), before the water_imagery step moved the large rivers onto the imagery's water",
+   "sha256": "a82230951ad3da88a35b99609608c7b17d0304ed8bc7d155572592e580cdf104",
+   "bytes": 428038
   }
  },
  "sources": {
@@ -7029,6 +9493,36 @@
    "at": "2026-11-06T12:52:16Z",
    "seconds": 0.6,
    "ok": true
+  },
+  {
+   "step": "water_seasons",
+   "at": "2026-11-06T17:05:33Z",
+   "seconds": 0.6,
+   "ok": true
+  },
+  {
+   "step": "water",
+   "at": "2026-11-06T17:05:38Z",
+   "seconds": 4.6,
+   "ok": true
+  },
+  {
+   "step": "terrain",
+   "at": "2026-11-06T17:05:58Z",
+   "seconds": 19.8,
+   "ok": true
+  },
+  {
+   "step": "resources",
+   "at": "2026-11-06T17:06:09Z",
+   "seconds": 11.3,
+   "ok": true
+  },
+  {
+   "step": "water_imagery",
+   "at": "2026-11-06T18:50:09Z",
+   "seconds": 13.2,
+   "ok": true
   }
  ],
  "steps": {
@@ -7511,15 +10005,15 @@
    "seconds": 0.0
   },
   "water": {
-   "version": "1",
-   "code": "ecb655be9a0401cf",
+   "version": "2",
+   "code": "8d0ca2f8662243f2",
    "params": {
     "tile": "utm33n_412_7531"
    },
-   "fingerprint": "a09ab611b45e434a",
+   "fingerprint": "5a062a32ca2e10bf",
    "parts": {
-    "version": "1",
-    "code": "ecb655be9a0401cf",
+    "version": "2",
+    "code": "8d0ca2f8662243f2",
     "params": {
      "tile": "utm33n_412_7531"
     },
@@ -7528,11 +10022,12 @@
      "rewild_hydro": "5a31986b0b4322c5",
      "reroute": "5a125a52ab4a9bfe",
      "hydro": "27cb60ddbce19fe8",
-     "lidar": "1be75aaade8440cb"
+     "lidar": "1be75aaade8440cb",
+     "water_seasons": "c9951e5cf01e872b"
     },
     "library": {}
    },
-   "ran_at": "2026-11-06T06:47:46Z",
+   "ran_at": "2026-11-06T17:05:33Z",
    "owner": "water lane",
    "status": "ok",
    "layers": [
@@ -7543,16 +10038,16 @@
     "terrain.dem_banked"
    ],
    "outputs": {
-    "client/heights.png": "8ecfa962f07759ba",
-    "client/species_mix.json": "0772c3a084c581e6",
+    "client/heights.png": "44c69bfe9ac4f280",
+    "client/species_mix.json": "582d91c745195541",
     "client/species_mix_index.png": "bb207687b44f6589",
-    "client/species_mix_density.png": "4e11f8e8007836c3",
-    "client/water.png": "0259962c1add676a",
-    "client/water_width.png": "a0fb37714219a504",
-    "hydro/water_reaches.json": "b0f4d22d8f874203",
-    "terrain/dem_banked.tif": "80efbe7e12a9cc36"
+    "client/species_mix_density.png": "2f29a8f83878f45e",
+    "client/water.png": "b8777a53a64fdf54",
+    "client/water_width.png": "47258c215b6a8675",
+    "hydro/water_reaches.json": "24641cbcc12e3811",
+    "terrain/dem_banked.tif": "ebc95887e769814c"
    },
-   "out_hash": "2326be94c52a428b",
+   "out_hash": "a7ce3a39a2b454d8",
    "sources": {},
    "fallbacks": [],
    "notes": [],
@@ -7560,7 +10055,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 5.1
+   "seconds": 4.6
   },
   "ground": {
    "version": "2",
@@ -7631,15 +10126,15 @@
    "seconds": 95.2
   },
   "terrain": {
-   "version": "1",
-   "code": "64b8aa305178942b",
+   "version": "2",
+   "code": "7ab60c942874360a",
    "params": {
     "tile": "utm33n_412_7531"
    },
-   "fingerprint": "b470b6e8acc33ca2",
+   "fingerprint": "4eb700b63aca32e7",
    "parts": {
-    "version": "1",
-    "code": "64b8aa305178942b",
+    "version": "2",
+    "code": "7ab60c942874360a",
     "params": {
      "tile": "utm33n_412_7531"
     },
@@ -7650,13 +10145,14 @@
      "hydro": "27cb60ddbce19fe8",
      "channels": "db9d3bb9fa349d20",
      "rewild_hydro": "5a31986b0b4322c5",
-     "water": "2326be94c52a428b",
+     "water": "a7ce3a39a2b454d8",
+     "water_seasons": "c9951e5cf01e872b",
      "landcover": "e7db68ec14c7a7b1",
      "ice": "bff0b7511f93da9f"
     },
     "library": {}
    },
-   "ran_at": "2026-11-06T08:42:41Z",
+   "ran_at": "2026-11-06T17:05:38Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -7680,24 +10176,24 @@
    ],
    "outputs": {
     "client/canopy.png": "27ecb9162c384c5c",
-    "client/features.json": "196d62d988d7d2e8",
+    "client/features.json": "0ef20aff11b624cc",
     "client/habitat.png": "3f723e8c8ba4a3f3",
-    "client/heights.png": "8ecfa962f07759ba",
+    "client/heights.png": "44c69bfe9ac4f280",
     "client/imagery.png": "6ef419c71ef06a6f",
     "client/masks.png": "b84116c7b15a8dcb",
     "client/roads.png": "286475c10c55cdfc",
-    "client/texture.png": "e5b508e5b832cc88",
+    "client/texture.png": "5e8eea790ef70b2d",
     "client/texture_present.jpg": "b85bab2f7e41a9ad",
     "footprint/mask.png": "07cf13ea2134d742",
     "footprint/urban.tif": "5a12c2731cfc3eec",
     "imagery/naip.png": "34cf90d4f1edd0ef",
-    "terrain/hillshade.png": "f87f93be4322b880",
-    "terrain/rewilded.png": "b55642b8b076c1f7",
-    "terrain/terrain_rgb.png": "f668b41eed86c36f",
+    "terrain/hillshade.png": "ec189c93409b30fb",
+    "terrain/rewilded.png": "8b62ad9e47d9b170",
+    "terrain/terrain_rgb.png": "0821b4ae8c55f576",
     "vegetation/habitat.png": "a4034eb4be161905",
     "vegetation/habitat_present.png": "a74ac6614f2e7fbe"
    },
-   "out_hash": "6d96c2be186f96af",
+   "out_hash": "636318a873c42d4e",
    "sources": {
     "sentinel2_l2a": "2026-11-06",
     "osm": "2026-11-06",
@@ -7709,7 +10205,7 @@
     "network": 0,
     "cache": 1
    },
-   "seconds": 20.9
+   "seconds": 19.8
   },
   "erase": {
    "version": "1",
@@ -8243,29 +10739,30 @@
    "seconds": 0.7
   },
   "resources": {
-   "version": "1",
-   "code": "67750b3fa4a41b46",
+   "version": "2",
+   "code": "573a16a3c7049f27",
    "params": {
     "tile": "utm33n_412_7531"
    },
-   "fingerprint": "b32fe2d8047ecbf1",
+   "fingerprint": "538dadfb02d9c02f",
    "parts": {
-    "version": "1",
-    "code": "67750b3fa4a41b46",
+    "version": "2",
+    "code": "573a16a3c7049f27",
     "params": {
      "tile": "utm33n_412_7531"
     },
     "deps": {
      "dem": "7e15b5cc4915e7a8",
      "hydro": "27cb60ddbce19fe8",
+     "water_seasons": "c9951e5cf01e872b",
      "landcover": "e7db68ec14c7a7b1",
-     "terrain": "6d96c2be186f96af",
+     "terrain": "636318a873c42d4e",
      "species_mix": "08dba24edb6b00cb",
      "species": "509cf664876a67d4"
     },
     "library": {}
    },
-   "ran_at": "2026-11-06T10:51:09Z",
+   "ran_at": "2026-11-06T17:05:58Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -8274,9 +10771,9 @@
    ],
    "outputs": {
     "client/mast.png": "1af7c2890e2b1f20",
-    "resources/resources.json": "601b172a18f0e75e"
+    "resources/resources.json": "88671dad353f6f14"
    },
-   "out_hash": "06682026278c5894",
+   "out_hash": "30339ae511406c07",
    "sources": {},
    "fallbacks": [],
    "notes": [],
@@ -8284,7 +10781,7 @@
     "network": 0,
     "cache": 1
    },
-   "seconds": 10.1
+   "seconds": 11.3
   },
   "games": {
    "version": "1",
@@ -8514,6 +11011,97 @@
     "cache": 0
    },
    "seconds": 0.6
+  },
+  "water_seasons": {
+   "version": "1",
+   "code": "1c5e2adbf6314696",
+   "params": {
+    "tile": "utm33n_412_7531"
+   },
+   "fingerprint": "ee0128d25cfb38a0",
+   "parts": {
+    "version": "1",
+    "code": "1c5e2adbf6314696",
+    "params": {
+     "tile": "utm33n_412_7531"
+    },
+    "deps": {
+     "hydro": "27cb60ddbce19fe8",
+     "seasons": "eb7e10f2e6c59a5f"
+    },
+    "library": {}
+   },
+   "ran_at": "2026-11-06T17:05:33Z",
+   "owner": "water lane",
+   "status": "ok",
+   "layers": [
+    "hydro.waterbody_seasons"
+   ],
+   "outputs": {
+    "hydro/waterbody_seasons.json": "ba613d6ffb904169"
+   },
+   "out_hash": "c9951e5cf01e872b",
+   "sources": {},
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 0
+   },
+   "seconds": 0.6
+  },
+  "water_imagery": {
+   "version": "1",
+   "code": "ebf8ac9b30256797",
+   "params": {
+    "tile": "utm33n_412_7531"
+   },
+   "fingerprint": "8033f93c80d14d1e",
+   "parts": {
+    "version": "1",
+    "code": "ebf8ac9b30256797",
+    "params": {
+     "tile": "utm33n_412_7531"
+    },
+    "deps": {
+     "dem": "7e15b5cc4915e7a8",
+     "channels": "db9d3bb9fa349d20",
+     "rewild_hydro": "5a31986b0b4322c5",
+     "reroute": "5a125a52ab4a9bfe",
+     "seasons": "eb7e10f2e6c59a5f",
+     "water_seasons": "c9951e5cf01e872b",
+     "hydro": "27cb60ddbce19fe8"
+    },
+    "library": {}
+   },
+   "ran_at": "2026-11-06T18:49:56Z",
+   "owner": "water lane",
+   "status": "ok",
+   "layers": [
+    "client.channel_depth",
+    "client.channel_profile",
+    "hydro.channels",
+    "hydro.channels_dem",
+    "hydro.water_imagery"
+   ],
+   "outputs": {
+    "client/channel_depth.png": "a8e1de8b642f7f01",
+    "client/channel_profile.png": "2ecc674390de83a6",
+    "hydro/channels.geojson": "a82230951ad3da88",
+    "hydro/channels_dem.geojson": "a82230951ad3da88",
+    "hydro/water_imagery.json": "b166338d64f6295c"
+   },
+   "out_hash": "0dd683cf0113bd80",
+   "sources": {
+    "usgs_3dep": "2026-11-06"
+   },
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 0
+   },
+   "seconds": 13.2
   }
  },
  "seams": {

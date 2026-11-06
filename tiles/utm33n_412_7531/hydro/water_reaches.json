@@ -1211,6 +1211,16 @@
    "length_m": 285.0
   },
   {
+   "id": 139,
+   "name": null,
+   "order": 1,
+   "area_km2": 0.6355,
+   "width": 1.3,
+   "cls": 2,
+   "samples": 13,
+   "length_m": 28.0
+  },
+  {
    "id": 141,
    "name": null,
    "order": 1,
@@ -1961,6 +1971,16 @@
    "length_m": 56.6
   },
   {
+   "id": 276,
+   "name": null,
+   "order": 3,
+   "area_km2": 6.2316,
+   "width": 3.64,
+   "cls": 2,
+   "samples": 47,
+   "length_m": 114.2
+  },
+  {
    "id": 278,
    "name": null,
    "order": 3,
@@ -2189,6 +2209,16 @@
    "cls": 2,
    "samples": 99,
    "length_m": 242.9
+  },
+  {
+   "id": 315,
+   "name": null,
+   "order": 4,
+   "area_km2": 14.822,
+   "width": 5.38,
+   "cls": 2,
+   "samples": 10,
+   "length_m": 21.4
   },
   {
    "id": 318,
@@ -2673,7 +2703,7 @@
  ],
  "ponds": [
   {
-   "id": null,
+   "id": "way/20839971",
    "name": "Mengelsdalsvatnet",
    "area_m2": 208148.3,
    "level_m": 345.99,
@@ -2682,7 +2712,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/20840409",
    "name": "Reinevatnet",
    "area_m2": 166969.8,
    "level_m": 55.81,
@@ -2691,7 +2721,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/146631317",
    "name": "\u00d8vervatnet",
    "area_m2": 23227.8,
    "level_m": 135.96,
@@ -2700,7 +2730,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/146631318",
    "name": "Hermannsdalsvatnet",
    "area_m2": 200908.4,
    "level_m": 1.52,
@@ -2709,16 +2739,7 @@
    "intermittent": false
   },
   {
-   "id": null,
-   "name": "Tj\u00f8nntj\u00f8nna",
-   "area_m2": 2458.4,
-   "level_m": 1.08,
-   "max_depth_m": 0.65,
-   "cells": 99,
-   "intermittent": false
-  },
-  {
-   "id": null,
+   "id": "way/146649516",
    "name": null,
    "area_m2": 4465.6,
    "level_m": 7.96,
@@ -2727,7 +2748,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/146649518",
    "name": "Austerdalsvatnet",
    "area_m2": 169162.8,
    "level_m": 234.66,
@@ -2736,7 +2757,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/171483478",
    "name": null,
    "area_m2": 371.5,
    "level_m": 6.83,
@@ -2745,7 +2766,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/171591806",
    "name": null,
    "area_m2": 590.4,
    "level_m": 89.52,
@@ -2754,7 +2775,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/171591814",
    "name": null,
    "area_m2": 1878.2,
    "level_m": 73.36,
@@ -2763,7 +2784,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/171818573",
    "name": null,
    "area_m2": 141.5,
    "level_m": 178.41,
@@ -2772,7 +2793,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/171818574",
    "name": null,
    "area_m2": 236.7,
    "level_m": 157.77,
@@ -2781,7 +2802,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/171818576",
    "name": null,
    "area_m2": 103.9,
    "level_m": 192.6,
@@ -2790,7 +2811,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/171818577",
    "name": "Kj\u00f8lvatna",
    "area_m2": 12160.0,
    "level_m": 320.83,
@@ -2799,7 +2820,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/171818580",
    "name": null,
    "area_m2": 60.9,
    "level_m": 204.81,
@@ -2808,7 +2829,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/171818581",
    "name": null,
    "area_m2": 794.8,
    "level_m": 199.24,
@@ -2817,7 +2838,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/171818583",
    "name": null,
    "area_m2": 412.7,
    "level_m": 40.56,
@@ -2826,7 +2847,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/171818586",
    "name": null,
    "area_m2": 689.7,
    "level_m": 195.67,
@@ -2835,7 +2856,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/171818587",
    "name": null,
    "area_m2": 1028.7,
    "level_m": 213.5,
@@ -2844,7 +2865,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/171818595",
    "name": null,
    "area_m2": 372.3,
    "level_m": 174.43,
@@ -2853,7 +2874,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/171818602",
    "name": null,
    "area_m2": 254.7,
    "level_m": 171.64,
@@ -2862,7 +2883,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/171818605",
    "name": null,
    "area_m2": 1504.7,
    "level_m": 198.12,
@@ -2871,7 +2892,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/171818606",
    "name": null,
    "area_m2": 932.6,
    "level_m": 188.91,
@@ -2880,7 +2901,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/172033655",
    "name": null,
    "area_m2": 939.7,
    "level_m": 2.64,
@@ -2889,7 +2910,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/231248854",
    "name": null,
    "area_m2": 890.0,
    "level_m": 3.16,
@@ -2898,7 +2919,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/364711020",
    "name": null,
    "area_m2": 565.9,
    "level_m": 220.33,
@@ -2907,16 +2928,7 @@
    "intermittent": false
   },
   {
-   "id": null,
-   "name": null,
-   "area_m2": 1700.5,
-   "level_m": 322.89,
-   "max_depth_m": 0.61,
-   "cells": 67,
-   "intermittent": false
-  },
-  {
-   "id": null,
+   "id": "way/375722123",
    "name": null,
    "area_m2": 1293.1,
    "level_m": 203.57,
@@ -2925,7 +2937,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722125",
    "name": null,
    "area_m2": 4723.7,
    "level_m": 409.07,
@@ -2934,7 +2946,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722134",
    "name": null,
    "area_m2": 7462.5,
    "level_m": 315.84,
@@ -2943,7 +2955,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722137",
    "name": null,
    "area_m2": 18887.5,
    "level_m": 1.7,
@@ -2952,7 +2964,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722144",
    "name": null,
    "area_m2": 145.2,
    "level_m": 285.55,
@@ -2961,7 +2973,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722146",
    "name": null,
    "area_m2": 66.6,
    "level_m": 571.65,
@@ -2970,7 +2982,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722151",
    "name": null,
    "area_m2": 289.0,
    "level_m": 405.13,
@@ -2979,7 +2991,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722154",
    "name": null,
    "area_m2": 204.7,
    "level_m": 14.67,
@@ -2988,7 +3000,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722155",
    "name": null,
    "area_m2": 855.2,
    "level_m": 309.55,
@@ -2997,7 +3009,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722157",
    "name": null,
    "area_m2": 148.1,
    "level_m": 317.79,
@@ -3006,7 +3018,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722158",
    "name": null,
    "area_m2": 103.9,
    "level_m": 594.51,
@@ -3015,7 +3027,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722165",
    "name": null,
    "area_m2": 195.8,
    "level_m": 593.35,
@@ -3024,7 +3036,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722166",
    "name": null,
    "area_m2": 46.4,
    "level_m": 214.55,
@@ -3033,7 +3045,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722168",
    "name": null,
    "area_m2": 650.4,
    "level_m": 133.21,
@@ -3042,7 +3054,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722169",
    "name": null,
    "area_m2": 144.9,
    "level_m": 365.32,
@@ -3051,7 +3063,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722170",
    "name": null,
    "area_m2": 310.9,
    "level_m": 583.95,
@@ -3060,7 +3072,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722174",
    "name": null,
    "area_m2": 217.9,
    "level_m": 356.52,
@@ -3069,7 +3081,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722175",
    "name": null,
    "area_m2": 533.0,
    "level_m": 312.83,
@@ -3078,7 +3090,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722176",
    "name": null,
    "area_m2": 201.5,
    "level_m": 358.01,
@@ -3087,7 +3099,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722178",
    "name": null,
    "area_m2": 211.0,
    "level_m": 302.52,
@@ -3096,7 +3108,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722180",
    "name": null,
    "area_m2": 374.3,
    "level_m": 496.31,
@@ -3105,7 +3117,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722181",
    "name": null,
    "area_m2": 315.7,
    "level_m": 602.56,
@@ -3114,7 +3126,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722182",
    "name": null,
    "area_m2": 302.4,
    "level_m": 14.46,
@@ -3123,7 +3135,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722185",
    "name": null,
    "area_m2": 626.9,
    "level_m": 429.08,
@@ -3132,7 +3144,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722195",
    "name": null,
    "area_m2": 424.0,
    "level_m": 439.5,
@@ -3141,7 +3153,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722196",
    "name": null,
    "area_m2": 760.9,
    "level_m": 418.05,
@@ -3150,7 +3162,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722201",
    "name": null,
    "area_m2": 404.0,
    "level_m": 0.51,
@@ -3159,7 +3171,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722203",
    "name": null,
    "area_m2": 571.0,
    "level_m": 341.76,
@@ -3168,7 +3180,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722210",
    "name": null,
    "area_m2": 1262.4,
    "level_m": 6.89,
@@ -3177,7 +3189,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722212",
    "name": null,
    "area_m2": 1198.6,
    "level_m": 200.26,
@@ -3186,7 +3198,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722213",
    "name": null,
    "area_m2": 1019.3,
    "level_m": 167.25,
@@ -3195,16 +3207,16 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722214",
    "name": null,
    "area_m2": 1969.5,
    "level_m": 582.64,
    "max_depth_m": 0.62,
    "cells": 80,
-   "intermittent": false
+   "intermittent": true
   },
   {
-   "id": null,
+   "id": "way/375722217",
    "name": null,
    "area_m2": 895.5,
    "level_m": 287.15,
@@ -3213,7 +3225,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722219",
    "name": null,
    "area_m2": 571.1,
    "level_m": 0.96,
@@ -3222,7 +3234,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722221",
    "name": null,
    "area_m2": 1365.8,
    "level_m": 368.48,
@@ -3231,7 +3243,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722225",
    "name": null,
    "area_m2": 774.2,
    "level_m": 326.5,
@@ -3240,7 +3252,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722227",
    "name": null,
    "area_m2": 2205.2,
    "level_m": 299.67,
@@ -3249,7 +3261,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/375722228",
    "name": null,
    "area_m2": 753.5,
    "level_m": 301.83,
@@ -3258,7 +3270,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/670632863",
    "name": null,
    "area_m2": 272.6,
    "level_m": 0.63,
@@ -3267,7 +3279,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/808086687",
    "name": null,
    "area_m2": 339.1,
    "level_m": 110.37,
@@ -3276,7 +3288,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/808086689",
    "name": null,
    "area_m2": 128.9,
    "level_m": 162.05,
@@ -3285,7 +3297,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/1095736492",
    "name": null,
    "area_m2": 224.5,
    "level_m": 208.43,
@@ -3294,7 +3306,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/1559160945",
    "name": null,
    "area_m2": 158.2,
    "level_m": 99.59,
@@ -3303,7 +3315,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "way/1559160952",
    "name": null,
    "area_m2": 169.8,
    "level_m": 225.23,
@@ -3312,16 +3324,7 @@
    "intermittent": false
   },
   {
-   "id": null,
-   "name": null,
-   "area_m2": 2775.1,
-   "level_m": 15.89,
-   "max_depth_m": 0.66,
-   "cells": 111,
-   "intermittent": false
-  },
-  {
-   "id": null,
+   "id": "relation/2327087",
    "name": "S\u00f8rv\u00e5gvatnet",
    "area_m2": 201510.1,
    "level_m": 0.28,
@@ -3330,7 +3333,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595066",
    "name": "Austervatnet",
    "area_m2": 27945.8,
    "level_m": 60.69,
@@ -3339,7 +3342,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595066",
    "name": "Austervatnet",
    "area_m2": 2885.9,
    "level_m": 5.15,
@@ -3348,7 +3351,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595066",
    "name": "Austervatnet",
    "area_m2": 376.7,
    "level_m": 19.33,
@@ -3357,7 +3360,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595066",
    "name": "Austervatnet",
    "area_m2": 2820.4,
    "level_m": 19.04,
@@ -3366,7 +3369,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595067",
    "name": "Festh\u00e6lvatnet",
    "area_m2": 291825.8,
    "level_m": 0.59,
@@ -3375,7 +3378,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595068",
    "name": "Fjerddalsvatnet",
    "area_m2": 5521.0,
    "level_m": 202.05,
@@ -3384,16 +3387,7 @@
    "intermittent": false
   },
   {
-   "id": null,
-   "name": "Fjerddalsvatnet",
-   "area_m2": 23053.8,
-   "level_m": 202.05,
-   "max_depth_m": 1.16,
-   "cells": 922,
-   "intermittent": false
-  },
-  {
-   "id": null,
+   "id": "relation/5595068",
    "name": "Fjerddalsvatnet",
    "area_m2": 12146.4,
    "level_m": 201.96,
@@ -3402,7 +3396,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595068",
    "name": "Fjerddalsvatnet",
    "area_m2": 515364.1,
    "level_m": 205.24,
@@ -3411,7 +3405,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595070",
    "name": "Kringeldalsvatn",
    "area_m2": 74455.7,
    "level_m": 354.08,
@@ -3420,7 +3414,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595070",
    "name": "Kringeldalsvatn",
    "area_m2": 8019.3,
    "level_m": 305.5,
@@ -3429,7 +3423,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595071",
    "name": "Krokvatnet",
    "area_m2": 904887.7,
    "level_m": 251.81,
@@ -3438,7 +3432,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595071",
    "name": "Krokvatnet",
    "area_m2": 600095.2,
    "level_m": 253.89,
@@ -3447,7 +3441,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595072",
    "name": "Stuvdalsvatnet",
    "area_m2": 46100.9,
    "level_m": 55.37,
@@ -3456,7 +3450,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595072",
    "name": "Stuvdalsvatnet",
    "area_m2": 33857.4,
    "level_m": 59.3,
@@ -3465,7 +3459,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595072",
    "name": "Stuvdalsvatnet",
    "area_m2": 51164.8,
    "level_m": 48.05,
@@ -3474,7 +3468,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595072",
    "name": "Stuvdalsvatnet",
    "area_m2": 71353.6,
    "level_m": 49.38,
@@ -3483,7 +3477,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595073",
    "name": "Tennesvatnet",
    "area_m2": 177094.1,
    "level_m": 187.05,
@@ -3492,7 +3486,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595073",
    "name": "Tennesvatnet",
    "area_m2": 700815.6,
    "level_m": 187.05,
@@ -3501,7 +3495,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595074",
    "name": "Tindsvatnet",
    "area_m2": 37013.6,
    "level_m": 27.28,
@@ -3510,7 +3504,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595074",
    "name": "Tindsvatnet",
    "area_m2": 77555.3,
    "level_m": 9.77,
@@ -3519,7 +3513,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595075",
    "name": "Tridalsvatnet",
    "area_m2": 585.1,
    "level_m": 89.05,
@@ -3528,7 +3522,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595075",
    "name": "Tridalsvatnet",
    "area_m2": 1618.6,
    "level_m": 89.05,
@@ -3537,7 +3531,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595075",
    "name": "Tridalsvatnet",
    "area_m2": 93764.5,
    "level_m": 90.47,
@@ -3546,16 +3540,7 @@
    "intermittent": false
   },
   {
-   "id": null,
-   "name": "Trolldalsvatnet",
-   "area_m2": 47739.1,
-   "level_m": 110.98,
-   "max_depth_m": 1.49,
-   "cells": 1943,
-   "intermittent": false
-  },
-  {
-   "id": null,
+   "id": "relation/5595076",
    "name": "Trolldalsvatnet",
    "area_m2": 175625.6,
    "level_m": 114.32,
@@ -3564,7 +3549,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595076",
    "name": "Trolldalsvatnet",
    "area_m2": 25616.5,
    "level_m": 262.81,
@@ -3573,7 +3558,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595076",
    "name": "Trolldalsvatnet",
    "area_m2": 726766.5,
    "level_m": 111.34,
@@ -3582,7 +3567,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595079",
    "name": null,
    "area_m2": 7439.6,
    "level_m": 322.03,
@@ -3591,7 +3576,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595081",
    "name": "\u00c5gvatnet",
    "area_m2": 434664.4,
    "level_m": 1.07,
@@ -3600,7 +3585,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595081",
    "name": "\u00c5gvatnet",
    "area_m2": 414.2,
    "level_m": 0.21,
@@ -3609,7 +3594,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595081",
    "name": "\u00c5gvatnet",
    "area_m2": 33084.4,
    "level_m": 0.17,
@@ -3618,7 +3603,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595081",
    "name": "\u00c5gvatnet",
    "area_m2": 60.1,
    "level_m": 0.14,
@@ -3627,7 +3612,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/5595081",
    "name": "\u00c5gvatnet",
    "area_m2": 257008.3,
    "level_m": 0.38,
@@ -3636,7 +3621,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/13030360",
    "name": "Moskenesvatnet",
    "area_m2": 150053.6,
    "level_m": 194.5,
@@ -3645,7 +3630,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/13030360",
    "name": "Moskenesvatnet",
    "area_m2": 209.6,
    "level_m": 182.14,
@@ -3654,7 +3639,7 @@
    "intermittent": false
   },
   {
-   "id": null,
+   "id": "relation/13030360",
    "name": "Moskenesvatnet",
    "area_m2": 32.4,
    "level_m": 180.09,

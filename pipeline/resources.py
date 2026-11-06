@@ -50,9 +50,16 @@ def _water_score(tile: Tile, shape_, transform, res) -> dict[str, np.ndarray]:
             fcode = int(feat["properties"].get("fcode") or 0)
             g = shp_transform(to_tile, shape(feat["geometry"]))
             (intermittent if fcode in (46003, 46007) else perennial).append(g)
+    # the waterbodies as the imagery judged them (pipeline/water_seasons.py): a dry one is no water, a seasonal one
+    # counts with the intermittent streams
+    from .water_seasons import body_id, load_classes
+    classes = load_classes(tile) or {}
     with open(tile.path("hydro/waterbodies.geojson")) as f:
-        for feat in json.load(f)["features"]:
-            perennial.append(shp_transform(to_tile, shape(feat["geometry"])))
+        for i, feat in enumerate(json.load(f)["features"]):
+            c = (classes.get(body_id(feat.get("properties") or {}, i)) or {}).get("class")
+            if c == "dry":
+                continue
+            (intermittent if c == "seasonal" else perennial).append(shp_transform(to_tile, shape(feat["geometry"])))
 
     def score(geoms):
         out = np.zeros(shape_, "float32")

@@ -540,7 +540,9 @@ export class Water {
         if (lv.length) { lv.sort((a, b) => a - b); level = lv[lv.length >> 1]; }
       }
       const g = pondGeometry(ring, level, Math.min(POND_FADE, Math.sqrt(area) * 0.08));
-      const intermittent = POND_INTERMITTENT.has(w.fcode);
+      // the imagery's verdict when the pipeline judged the polygon (pipeline/water_seasons.py: `water` permanent or seasonal;
+      // the ones dry in every month never reach here, features.dry_waterbodies), else the NHD FCode
+      const intermittent = w.water ? w.water === 'seasonal' : POND_INTERMITTENT.has(w.fcode);
       if (intermittent) { seasonal.push(g); dry.push(g.clone()); } else permanent.push(g);
       rings.push({ ring, bbox: [x0, y0, x1, y1], intermittent, level, area });
     }

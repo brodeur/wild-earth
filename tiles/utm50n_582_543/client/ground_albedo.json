@@ -1,0 +1,44 @@
+{
+ "derived_from": [
+  "client.texture_imagery",
+  "client.season_rgb",
+  "client.canopy",
+  "client.habitat"
+ ],
+ "encoding": "gain: per channel (linear R G B) the factor from the ground texture's linear colour to surface reflectance; the client multiplies the ground and the herb layer's albedo by it",
+ "method": "sum of the reference month's L2A reflectance over the sum of the texture's linear colour, open ground (tree < 10 %, shrub < 15 %, not water or built), 20 m",
+ "imagery": {
+  "source": "sentinel2_l2a",
+  "year": null
+ },
+ "basis": "fit",
+ "gain": [
+  0.4313,
+  0.431,
+  0.4512
+ ],
+ "gain_luminance": 0.432,
+ "reference": "seasons/s2_07.tif",
+ "reference_month": 7,
+ "open_pixels": 16134,
+ "open_share": 0.065,
+ "ratio_luminance_p25_p50_p75": [
+  0.401,
+  0.432,
+  0.464
+ ],
+ "texture_mean_linear": [
+  0.0563,
+  0.1053,
+  0.0595
+ ],
+ "reflectance_mean": [
+  0.0243,
+  0.0454,
+  0.0268
+ ],
+ "encoding_check": {
+  "stretch_gain": 0.4,
+  "note": "the texture's own encoding (2.5 x the three-year median reflectance); the fit also carries the reference month against that median"
+ }
+}

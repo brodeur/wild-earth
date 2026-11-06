@@ -15,7 +15,7 @@
   47.87830820952735
  ],
  "size_m": 10000,
- "generated_at": "2026-11-06T02:51:48Z",
+ "generated_at": "2026-11-06T18:49:17Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -5367,6 +5367,34 @@
    "encoding": "every stream crossing a tile edge (UTM): side, along, x, y, dir in/out, tangent, name, fcode, order, area_km2, width, bed_width, level, depth, half_width (the water step's), source own or neighbour <id> (pipeline/water_seams.py)",
    "sha256": "b0a0e27d93e2b72f98f53baf61d8c8ad49c98fb525d22d96d545a23245f59807",
    "bytes": 13899
+  },
+  "client.ground_albedo": {
+   "path": "client/ground_albedo.json",
+   "kind": "table",
+   "derived_from": [
+    "client.texture_imagery",
+    "client.season_rgb",
+    "client.canopy",
+    "client.habitat"
+   ],
+   "encoding": "gain: per channel (linear R G B) the factor from the ground texture's linear colour to surface reflectance; the client multiplies the ground and the herb layer's albedo by it",
+   "method": "sum of the reference month's L2A reflectance over the sum of the texture's linear colour, open ground (tree < 10 %, shrub < 15 %, not water or built), 20 m",
+   "imagery": [
+    "pc_naip",
+    2023
+   ],
+   "basis": "nearest_same_acquisition",
+   "why": "no Sentinel-2 composite on this tile",
+   "from_tile": "utm10n_429_5293",
+   "distance_km": 10,
+   "gain": [
+    0.2192,
+    0.2062,
+    0.1666
+   ],
+   "gain_luminance": 0.2056,
+   "sha256": "e7667269137b26fd2a6b473ed7dc444624d4a98ca662e7046816c3d71f04d3b7",
+   "bytes": 724
   }
  },
  "sources": {
@@ -7208,6 +7236,10 @@
     "cache": 0
    },
    "seconds": 0.0
+  },
+  "water_imagery": {
+   "status": "blocked",
+   "reason": "needs water_seasons (base stage), never run"
   }
  },
  "seams": {

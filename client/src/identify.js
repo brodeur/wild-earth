@@ -38,6 +38,23 @@ const ANIMAL_SEASON = {
   sceloporus_occidentalis: { winter: 'Winter: hidden under bark, logs and rocks; out only on the warmest days.', spring: 'Spring: the males push up from every rock and post to hold their patch.', summer: 'Summer: out in the morning and late afternoon, in the shade at midday.', fall: 'Fall: out on warm afternoons until the nights turn cold.' },
 };
 
+// The HUD's "below me": a cell named by its own community, the species-mix row's name (LANDFIRE's ecological system:
+// "Inter-Mountain Basins Montane Sagebrush Steppe"), else a class name. The class names are the habitat raster's, and
+// class 4's "chaparral" is California's word: a tile outside California's tables (a natural_regions list without it, or
+// class_fallback false) calls a shrubland a shrubland (2026-11-06, iteration 8: "below me: chaparral" on Teton's steppe).
+// A row named for the tile's pool of a class ("tile pool grassland") is not a community: its class name stands.
+const CLASS_WORD = { 0: '–', 1: 'oak woodland', 2: 'conifer forest', 3: 'mixed forest', 4: 'chaparral', 5: 'grassland', 6: 'riparian', 7: 'water', 8: 'barren', 9: 'human' };
+const NEUTRAL_WORD = { ...CLASS_WORD, 1: 'woodland', 4: 'shrubland' };
+export function habitatLabel(tile, x, north) {
+  const hab = tile?.habitat; if (!hab) return '–';
+  const [i, j] = hab.cellOf(x, north), cls = hab.channel(i, j, 0), row = tile.speciesMix?.at(i, j);
+  const name = row?.name && !/^tile pool\b/i.test(row.name) ? row.name : null;
+  if (name) return name;
+  const json = tile.speciesMix?.json, regions = Array.isArray(json?.natural_regions) ? json.natural_regions : null;
+  const californian = json?.class_fallback !== false && (!regions || regions.includes('california'));
+  return (californian ? CLASS_WORD : NEUTRAL_WORD)[cls] || '–';
+}
+
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const tagged = id => ((Math.imul(id, 0x9E3779B1) >>> 0) >>> 8) % TAG_EVERY === 0;
 

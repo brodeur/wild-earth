@@ -51,6 +51,7 @@ tiles/<tile_id>/
   hydro/osm_water.geojson       derived   OSM water polygons, dams and NID dam points (Overpass cache for the rewild step)
   terrain/dem_rewilded.tif      derived   dem.tif with the restored thalwegs carved through rewilded beds (routing only; dem.tif untouched)
   terrain/dem_banked.tif        derived   dem.tif with every channel's bed and wet margin and every kept pond's basin carved (see Water and riparian); the client's heights come from it
+  hydro/waterbody_seasons.json  derived   every mapped waterbody against the monthly Sentinel-2: class (permanent, seasonal, dry), basis (imagery or tags), core pixels, water fraction per month, a dry one's bed (see Water and riparian, Mapped water against the imagery)
   hydro/water_reaches.json      derived   the reaches the water step drew (id, name, order, area, width, class, samples, length) and the ponds' basins (level, depth)
   client/water.png              derived   RGB on the DEM grid: R riparian zone | order << 4 | 128 perennial, G bed material | 8 bar, B water level (see Water and riparian)
   client/water_width.png        derived   8-bit grey on the DEM grid: the channel's water half width at the nearest centreline sample, 0.1 m
@@ -536,6 +537,20 @@ carved channel and places the riparian plants by zone and every animal can use i
 once it has run. Aaron (2026-10-29): "banks have a transition 'down' into the body; the bottoms of waterways should
 have lots of rocks when the waterway dries; water systems are first class citizens like animals."
 
+Mapped water against the imagery. Build step `water_seasons` (`pipeline/water_seasons.py`, after `seasons`, before
+`water`) tests every polygon of `hydro/waterbodies.geojson` (NHD lakes, ponds, marshes, reservoirs; OSM natural=water
+of every kind, river polygons included) against the monthly composites `seasons/s2_MM.tif`. They carry red, green,
+blue and NDVI (no SWIR), so the near infrared is recovered as red (1 + NDVI) / (1 - NDVI). Per month, over the pixels
+wholly inside the polygon (inset 10 m): a pixel is water where NDWI = (green - NIR) / (green + NIR) > 0 or NIR < 0.04;
+bright pixels (green >= 0.2, or NDVI < 0.1 with blue >= 0.12: ice, snow, cloud) leave the count; the month's water
+fraction is water over the clear pixels, observed when they cover half the core, wet when the fraction is >= 0.25.
+Wet in no month of three or more observed: dry (not a pond, no basin, no pond zone, the streams through it drawn as
+streams; listed under `dry_waterbodies` in `client/features.json` with its bed, meadow at a greenest-month NDVI >= 0.3
+else bare); wet in >= 75% of the observed months: permanent; else seasonal (water.js's intermittent ponds). Under two
+core pixels or three observed months the tags decide (NHD intermittent FCodes and Swamp/Marsh 46600, OSM
+intermittent=yes, seasonal=*, natural=wetland: seasonal; the rest permanent). `client/features.json` waterbodies carry
+`water` and `wet_months`; the manifest layer `hydro.waterbody_seasons` carries the rule and every polygon's evidence.
+
 Reaches. Every drawn reach of `hydro/channels.geojson` (canals 33600 left out, pieces inside a kept pond and
 NHD-sourced stretches within 15 m of a DEM reach left out as the client leaves them) is sampled every 2.5 m with its
 order, drainage area, width, permanence (perennial 46006/55800, intermittent 46003/33400, else ephemeral), the
@@ -943,6 +958,29 @@ per-class means. `seasons.s2_monthly` (`seasons/months.json` and
 `seasons/s2_<mm>.tif`) is the float version for pipeline work; it is not shipped. The licence is
 Copernicus's free, full and open notice: the credit line ("Contains modified Copernicus Sentinel
 data ...") is required, and the source entry records `years_used`.
+
+## Ground albedo
+
+The ground texture's colour is a display value, not a reflectance: NAIP's digital numbers (each state's acquisition
+balanced for viewing), or on a world tile the Sentinel-2 composite stretched as sRGB(2.5 x reflectance). The
+`ground_albedo` step (`pipeline/ground_albedo.py`, after `seasons`, `erase` and `terrain`) fits the factor from one to
+the other, per channel, on every tile by one rule:
+
+```
+  gain_c = sum over open pixels of the reference month's L2A reflectance_c / sum of the texture's linear colour_c
+```
+
+at 20 m (the texture averaged in linear light onto the composite's pixels). The reference month is the one the
+client's season multiplier is relative to (`seasons.s2_monthly` `naip_reference.month`, else July), so after the
+multiplier for any date the ground's mean is that month's composite. Open: tree cover under 10 % and shrub cover under
+15 % (`client/canopy.png`), not water, built or nodata, no clipped pixel in either (reflectance 0.35 and over, the
+sheet's range, or texture byte 250). The composite comes from `seasons/s2_MM.tif` where present, else
+`client/season_rgb.png`. Under 500 open pixels or without the seasons layers the tile takes the fit of the nearest tile
+with the same imagery source and year, else that source's median, else the encoding's 0.4 (Sentinel-2).
+`client/ground_albedo.json` and the manifest layer `client.ground_albedo` carry `gain` (linear R G B; the client reads
+it from the manifest), `gain_luminance`, `basis` (`fit`, `nearest_same_acquisition`, `source_median`, `encoding`),
+`reference`, `open_pixels`, the per-pixel ratio's quartiles and, on a Sentinel-2 tile, the stretch's own 0.4 as a
+check. The client multiplies the ground and the herb layer (grass, sward, forbs, litter) by it.
 
 ## Weather
 

@@ -951,6 +951,22 @@
    ],
    "ended_at": "2026-11-06T11:29:51Z",
    "failed": []
+  },
+  {
+   "started_at": "2026-11-06T18:49:31Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-06T18:49:31Z",
+     "steps_run": [],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T18:49:31Z"
+    }
+   ],
+   "ended_at": "2026-11-06T18:49:31Z",
+   "failed": [
+    "water_imagery"
+   ]
   }
  ],
  "totals": {
@@ -963,10 +979,10 @@
   "meshy_spent": 0,
   "meshy_queued_credits_est": 1570
  },
- "updated_at": "2026-11-06T11:29:51Z",
+ "updated_at": "2026-11-06T18:49:31Z",
  "client": {
-  "bytes": 49280009,
-  "files": 47,
+  "bytes": 49282187,
+  "files": 48,
   "largest": {
    "client/terrain_detail.png": 12710190,
    "client/season_rgb.png": 6495623,

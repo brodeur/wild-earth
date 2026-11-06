@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "taxidea_taxus",
  "scientific": "Taxidea taxus",
  "plan": "quadruped",
@@ -14,8 +14,172 @@
  },
  "by": "pipeline/reference_photos.py",
  "licences": "CC0, CC BY or CC BY-SA only, each photo's own",
- "chosen": "inat_551991998",
+ "chosen": null,
  "candidates": [
+  {
+   "source": "inaturalist",
+   "id": "inat_517509392",
+   "licence": "CC BY 4.0",
+   "author": "Jared Shorma",
+   "attribution": "(c) Jared Shorma, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/287798458",
+   "photo_page": "https://www.inaturalist.org/photos/517509392",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/517509392/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/517509392/large.jpg",
+   "adult": false,
+   "local": true,
+   "file_small": "pipeline/_cache/references/taxidea_taxus/inat_517509392/photo.jpg",
+   "score": {
+    "total": 0.007,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.842,
+    "band_px": 15.4,
+    "clear": 0.05,
+    "size": 0.693,
+    "solid": 1.0,
+    "head_end": 0.297,
+    "side": 1.0,
+    "legs": 0.975,
+    "stance": 0.502,
+    "spread": 22.8,
+    "lean": 20.1,
+    "belly_gap": 0.75,
+    "leg_zone": 0.237,
+    "leans": [
+     21.4,
+     20.1,
+     -1.4
+    ],
+    "lifts": [
+     0.0,
+     0.0,
+     0.053
+    ],
+    "plain": 0.212,
+    "colour": 1.0,
+    "box": [
+     0.341,
+     0.418,
+     0.715,
+     0.57
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance",
+     "clear"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_44595668",
+   "licence": "CC BY 4.0",
+   "author": "Cody Stricker",
+   "attribution": "(c) Cody Stricker, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/28600908",
+   "photo_page": "https://www.inaturalist.org/photos/44595668",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/44595668/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/44595668/large.jpeg",
+   "adult": false,
+   "local": true,
+   "file_small": "pipeline/_cache/references/taxidea_taxus/inat_44595668/photo.jpg",
+   "score": {
+    "total": 0.006,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.2,
+    "band_px": 3.02,
+    "clear": 1.0,
+    "size": 0.01,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.925,
+    "stance": 0.933,
+    "spread": 7.0,
+    "lean": 16.0,
+    "belly_gap": 0.698,
+    "leg_zone": 0.231,
+    "leans": [
+     19.5,
+     12.5
+    ],
+    "lifts": [
+     0.0,
+     0.015
+    ],
+    "plain": 0.263,
+    "colour": 1.0,
+    "box": [
+     0.428,
+     0.315,
+     0.584,
+     0.517
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_116358007",
+   "licence": "CC BY-SA 4.0",
+   "author": "Garst, Warren, 1922-2016, photographer",
+   "attribution": "Garst, Warren, 1922-2016, photographer, CC BY-SA 4.0, via Wikimedia Commons (File:American badger lying on ground - DPLA - 01610700d52ea68b625efee38ae877ae.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:American_badger_lying_on_ground_-_DPLA_-_01610700d52ea68b625efee38ae877ae.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/American_badger_lying_on_ground_-_DPLA_-_01610700d52ea68b625efee38ae877ae.jpg/500px-American_badger_lying_on_ground_-_DPLA_-_01610700d52ea68b625efee38ae877ae.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/American_badger_lying_on_ground_-_DPLA_-_01610700d52ea68b625efee38ae877ae.jpg/1280px-American_badger_lying_on_ground_-_DPLA_-_01610700d52ea68b625efee38ae877ae.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/taxidea_taxus/commons_116358007/photo.jpg",
+   "score": {
+    "total": 0.003,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.714,
+    "band_px": 4.19,
+    "clear": 0.984,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.294,
+    "side": 0.495,
+    "legs": 0.475,
+    "stance": 0.035,
+    "spread": 37.3,
+    "lean": 14.1,
+    "belly_gap": 0.199,
+    "leg_zone": 0.177,
+    "leans": [
+     -4.6,
+     32.7
+    ],
+    "lifts": [
+     0.018,
+     0.0
+    ],
+    "plain": 0.146,
+    "colour": 1.0,
+    "box": [
+     0.178,
+     0.13,
+     0.932,
+     0.779
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
   {
    "source": "inaturalist",
    "id": "inat_551986324",
@@ -30,21 +194,42 @@
    "local": true,
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_551986324/photo.jpg",
    "score": {
-    "total": 0.569,
-    "whole": 0.846,
-    "side": 1.0,
+    "total": 0.0,
+    "whole": 0.331,
+    "single": 1.0,
+    "aspect": 2.824,
+    "band_px": 4.0,
+    "clear": 1.0,
     "size": 1.0,
-    "single": 0.989,
-    "legs": 1.0,
-    "stance": 1.0,
-    "plain": 0.355,
-    "colour": 1.0,
-    "aspect": 2.789,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.81,
+    "legs": 0.02,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 61.0,
+    "belly_gap": 0.262,
+    "leg_zone": 0.136,
+    "leans": [
+     -61.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.372,
+    "colour": 0.895,
     "box": [
-     0.352,
-     0.366,
-     0.96,
-     0.584
+     0.294,
+     0.37,
+     1.0,
+     0.62
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    },
@@ -65,21 +250,42 @@
    "local": true,
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_630608872/photo.jpg",
    "score": {
-    "total": 0.412,
+    "total": 0.0,
     "whole": 1.0,
+    "single": 0.909,
+    "aspect": 2.474,
+    "band_px": 7.68,
+    "clear": 0.693,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
     "side": 1.0,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.5,
-    "stance": 1.0,
-    "plain": 0.269,
-    "colour": 1.0,
-    "aspect": 2.491,
+    "legs": 0.048,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 54.5,
+    "belly_gap": 0.52,
+    "leg_zone": 0.158,
+    "leans": [
+     54.5
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.265,
+    "colour": 0.995,
     "box": [
-     0.16,
-     0.136,
-     0.728,
-     0.44
+     0.366,
+     0.336,
+     0.554,
+     0.437
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -98,21 +304,46 @@
    "local": true,
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_551991998/photo.jpg",
    "score": {
-    "total": 0.393,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
+    "single": 0.996,
+    "aspect": 2.26,
+    "band_px": 3.58,
+    "clear": 1.0,
     "size": 1.0,
-    "single": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
     "legs": 1.0,
-    "stance": 0.5,
-    "plain": 0.309,
+    "stance": 0.0,
+    "spread": 43.6,
+    "lean": 0.4,
+    "belly_gap": 0.557,
+    "leg_zone": 0.267,
+    "leans": [
+     -23.4,
+     5.3,
+     -4.4,
+     20.2
+    ],
+    "lifts": [
+     0.0,
+     0.038,
+     0.038,
+     0.023
+    ],
+    "plain": 0.303,
     "colour": 1.0,
-    "aspect": 1.987,
     "box": [
      0.322,
-     0.237,
-     0.926,
-     0.643
+     0.235,
+     0.914,
+     0.584
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 1.0
    },
@@ -133,21 +364,38 @@
    "local": true,
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_487340430/photo.jpg",
    "score": {
-    "total": 0.362,
-    "whole": 0.974,
-    "side": 1.0,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 1.0,
-    "stance": 0.5,
-    "plain": 0.238,
+    "aspect": 1.128,
+    "band_px": 9.33,
+    "clear": 0.556,
+    "size": 0.896,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.232,
     "colour": 1.0,
-    "aspect": 1.533,
     "box": [
-     0.332,
-     0.39,
-     0.942,
-     0.96
+     0.356,
+     0.387,
+     0.69,
+     0.811
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -163,21 +411,41 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/33/BADGER_%28taxidea_taxus%29_%289-27-10%29_san_rafael_valley_grasslands%2C_scc%2C_az_-01_%285031293992%29.jpg/1280px-BADGER_%28taxidea_taxus%29_%289-27-10%29_san_rafael_valley_grasslands%2C_scc%2C_az_-01_%285031293992%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/taxidea_taxus/commons_57046556/photo.jpg",
    "score": {
-    "total": 0.272,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 1.0,
-    "stance": 0.5,
-    "plain": 0.211,
-    "colour": 1.0,
-    "aspect": 1.918,
+    "aspect": 1.64,
+    "band_px": 9.59,
+    "clear": 0.534,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.146,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 4.0,
+    "belly_gap": 0.919,
+    "leg_zone": 0.237,
+    "leans": [
+     -4.0
+    ],
+    "lifts": [
+     0.004
+    ],
+    "plain": 0.209,
+    "colour": 0.975,
     "box": [
-     0.286,
-     0.327,
-     0.754,
-     0.639
+     0.276,
+     0.33,
+     0.768,
+     0.714
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -196,21 +464,45 @@
    "local": true,
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_604235637/photo.jpg",
    "score": {
-    "total": 0.256,
-    "whole": 1.0,
-    "side": 1.0,
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 1.848,
+    "band_px": 4.31,
+    "clear": 0.974,
     "size": 1.0,
-    "single": 0.997,
-    "legs": 0.5,
-    "stance": 0.5,
-    "plain": 0.315,
+    "solid": 1.0,
+    "head_end": 0.072,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 47.1,
+    "lean": 35.0,
+    "belly_gap": 0.632,
+    "leg_zone": 0.249,
+    "leans": [
+     -35.0,
+     -38.7,
+     8.4
+    ],
+    "lifts": [
+     0.0,
+     0.015,
+     0.102
+    ],
+    "plain": 0.318,
     "colour": 1.0,
-    "aspect": 1.694,
     "box": [
-     0.268,
-     0.26,
-     0.932,
-     0.847
+     0.272,
+     0.249,
+     1.0,
+     0.838
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "stance"
     ],
     "local": 1.0
    }
@@ -229,21 +521,46 @@
    "local": true,
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_604235697/photo.jpg",
    "score": {
-    "total": 0.256,
-    "whole": 1.0,
-    "side": 1.0,
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 1.711,
+    "band_px": 7.31,
+    "clear": 0.724,
     "size": 1.0,
-    "single": 0.999,
-    "legs": 0.5,
-    "stance": 0.5,
-    "plain": 0.311,
-    "colour": 1.0,
-    "aspect": 1.637,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.945,
+    "legs": 0.25,
+    "stance": 0.0,
+    "spread": 114.3,
+    "lean": 5.2,
+    "belly_gap": 0.289,
+    "leg_zone": 0.15,
+    "leans": [
+     5.2,
+     -54.0,
+     60.3
+    ],
+    "lifts": [
+     0.0,
+     0.07,
+     0.08
+    ],
+    "plain": 0.372,
+    "colour": 0.999,
     "box": [
-     0.366,
-     0.3,
-     0.952,
-     0.831
+     0.36,
+     0.273,
+     1.0,
+     0.828
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -262,21 +579,42 @@
    "local": true,
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_522639645/photo.jpg",
    "score": {
-    "total": 0.23,
-    "whole": 0.538,
-    "side": 1.0,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 0.5,
-    "stance": 1.0,
-    "plain": 0.319,
-    "colour": 1.0,
-    "aspect": 1.557,
+    "aspect": 2.061,
+    "band_px": 5.96,
+    "clear": 0.837,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.478,
+    "side": 1.0,
+    "legs": 0.077,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 28.8,
+    "belly_gap": 0.673,
+    "leg_zone": 0.182,
+    "leans": [
+     -28.8
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.315,
+    "colour": 0.896,
     "box": [
-     0.04,
-     0.442,
-     0.957,
-     0.884
+     0.323,
+     0.444,
+     0.504,
+     0.51
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -295,21 +633,42 @@
    "local": true,
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_515009840/photo.jpg",
    "score": {
-    "total": 0.217,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.449,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 0.5,
-    "stance": 1.0,
-    "plain": 0.49,
+    "aspect": 1.696,
+    "band_px": 2.48,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.121,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 60.9,
+    "belly_gap": 0.469,
+    "leg_zone": 0.217,
+    "leans": [
+     60.9
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.313,
     "colour": 1.0,
-    "aspect": 1.169,
     "box": [
-     0.339,
-     0.44,
-     0.947,
-     0.83
+     0.507,
+     0.534,
+     0.611,
+     0.58
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -328,21 +687,41 @@
    "local": true,
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_101067448/photo.jpg",
    "score": {
-    "total": 0.194,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.29,
+    "aspect": 1.941,
+    "band_px": 8.06,
+    "clear": 0.662,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.211,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 60.0,
+    "belly_gap": 0.462,
+    "leg_zone": 0.297,
+    "leans": [
+     -60.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.287,
     "colour": 1.0,
-    "aspect": 1.739,
     "box": [
-     0.226,
-     0.374,
-     0.692,
-     0.711
+     0.228,
+     0.379,
+     0.686,
+     0.676
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -361,21 +740,41 @@
    "local": true,
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_551991995/photo.jpg",
    "score": {
-    "total": 0.173,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
-    "size": 0.89,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
+    "aspect": 1.74,
+    "band_px": 2.46,
+    "clear": 1.0,
+    "size": 0.912,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.58,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 63.3,
+    "belly_gap": 0.216,
+    "leg_zone": 0.366,
+    "leans": [
+     63.3
+    ],
+    "lifts": [
+     0.0
+    ],
     "plain": 0.297,
-    "colour": 1.0,
-    "aspect": 1.754,
+    "colour": 0.999,
     "box": [
      0.232,
-     0.315,
+     0.309,
      0.66,
-     0.64
+     0.637
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -394,21 +793,42 @@
    "local": true,
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_293132761/photo.jpg",
    "score": {
-    "total": 0.15,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
-    "size": 0.8,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
+    "aspect": 2.126,
+    "band_px": 6.62,
+    "clear": 0.781,
+    "size": 0.816,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 26.6,
+    "lean": 8.2,
+    "belly_gap": 0.845,
+    "leg_zone": 0.389,
+    "leans": [
+     -21.5,
+     5.1
+    ],
+    "lifts": [
+     0.01,
+     0.2
+    ],
     "plain": 0.251,
-    "colour": 1.0,
-    "aspect": 1.737,
+    "colour": 0.998,
     "box": [
-     0.454,
-     0.272,
-     0.864,
-     0.587
+     0.458,
+     0.339,
+     0.862,
+     0.592
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 1.0
    }
@@ -424,21 +844,41 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/48/Badger_7211.jpg/1280px-Badger_7211.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/taxidea_taxus/commons_137806522/photo.jpg",
    "score": {
-    "total": 0.142,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.26,
+    "aspect": 1.636,
+    "band_px": 2.47,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 49.6,
+    "belly_gap": 0.731,
+    "leg_zone": 0.326,
+    "leans": [
+     49.6
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.262,
     "colour": 1.0,
-    "aspect": 2.174,
     "box": [
      0.068,
-     0.195,
-     0.668,
-     0.61
+     0.186,
+     0.68,
+     0.748
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -457,21 +897,42 @@
    "local": true,
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_44933230/photo.jpg",
    "score": {
-    "total": 0.134,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.752,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.183,
-    "colour": 1.0,
-    "aspect": 1.351,
+    "aspect": 1.975,
+    "band_px": 6.06,
+    "clear": 0.828,
+    "size": 0.48,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.128,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 12.7,
+    "belly_gap": 0.703,
+    "leg_zone": 0.222,
+    "leans": [
+     12.7
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.182,
+    "colour": 0.985,
     "box": [
-     0.058,
-     0.278,
-     0.704,
-     0.77
+     0.382,
+     0.457,
+     0.702,
+     0.623
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -490,21 +951,43 @@
    "local": true,
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_659203275/photo.jpg",
    "score": {
-    "total": 0.131,
-    "whole": 0.739,
-    "side": 1.0,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.182,
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.47,
+    "aspect": 1.068,
+    "band_px": 18.06,
+    "clear": 0.0,
+    "size": 0.0,
+    "solid": 0.736,
+    "head_end": 0.846,
+    "side": 0.92,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 13.8,
+    "belly_gap": 0.816,
+    "leg_zone": 0.75,
+    "leans": [
+     -13.8
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.144,
     "colour": 1.0,
-    "aspect": 1.629,
     "box": [
-     0.04,
-     0.043,
-     0.874,
-     0.725
+     0.564,
+     0.173,
+     0.658,
+     0.291
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance",
+     "clear"
     ],
     "local": 1.0
    }
@@ -520,51 +1003,41 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/Badger_7213.jpg/1280px-Badger_7213.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/taxidea_taxus/commons_137806525/photo.jpg",
    "score": {
-    "total": 0.131,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.983,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.177,
+    "aspect": 1.433,
+    "band_px": 5.88,
+    "clear": 0.844,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 10.7,
+    "belly_gap": 0.711,
+    "leg_zone": 0.255,
+    "leans": [
+     10.7
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.178,
     "colour": 1.0,
-    "aspect": 1.49,
     "box": [
      0.124,
      0.24,
      0.72,
-     0.841
+     0.865
     ],
-    "local": 0.75
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_116358007",
-   "licence": "CC BY-SA 4.0",
-   "author": "Garst, Warren, 1922-2016, photographer",
-   "attribution": "Garst, Warren, 1922-2016, photographer, CC BY-SA 4.0, via Wikimedia Commons (File:American badger lying on ground - DPLA - 01610700d52ea68b625efee38ae877ae.jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:American_badger_lying_on_ground_-_DPLA_-_01610700d52ea68b625efee38ae877ae.jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/American_badger_lying_on_ground_-_DPLA_-_01610700d52ea68b625efee38ae877ae.jpg/500px-American_badger_lying_on_ground_-_DPLA_-_01610700d52ea68b625efee38ae877ae.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/American_badger_lying_on_ground_-_DPLA_-_01610700d52ea68b625efee38ae877ae.jpg/1280px-American_badger_lying_on_ground_-_DPLA_-_01610700d52ea68b625efee38ae877ae.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "file_small": "pipeline/_cache/references/taxidea_taxus/commons_116358007/photo.jpg",
-   "score": {
-    "total": 0.129,
-    "whole": 1.0,
-    "side": 1.0,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.149,
-    "colour": 1.0,
-    "aspect": 1.606,
-    "box": [
-     0.21,
-     0.136,
-     0.92,
-     0.788
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -580,21 +1053,46 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/82/Taxidea_taxus_%28Point_Reyes%2C_2007%29.jpg/1280px-Taxidea_taxus_%28Point_Reyes%2C_2007%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/taxidea_taxus/commons_24504952/photo.jpg",
    "score": {
-    "total": 0.128,
-    "whole": 0.718,
-    "side": 1.0,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 0.5,
-    "stance": 0.5,
-    "plain": 0.211,
+    "aspect": 2.6,
+    "band_px": 4.68,
+    "clear": 0.943,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.85,
+    "stance": 0.0,
+    "spread": 94.9,
+    "lean": 11.5,
+    "belly_gap": 0.57,
+    "leg_zone": 0.222,
+    "leans": [
+     -47.8,
+     40.7,
+     -17.8,
+     47.1
+    ],
+    "lifts": [
+     0.0,
+     0.0,
+     0.043,
+     0.011
+    ],
+    "plain": 0.203,
     "colour": 1.0,
-    "aspect": 2.359,
     "box": [
-     0.04,
+     0.012,
      0.072,
-     0.96,
-     0.658
+     0.974,
+     0.628
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 0.75
    }
@@ -613,21 +1111,42 @@
    "local": true,
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_233758699/photo.jpg",
    "score": {
-    "total": 0.12,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.426,
-    "size": 0.68,
     "single": 1.0,
-    "legs": 0.5,
-    "stance": 1.0,
-    "plain": 0.278,
+    "aspect": 1.054,
+    "band_px": 10.5,
+    "clear": 0.458,
+    "size": 0.966,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.022,
+    "legs": 0.147,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 30.1,
+    "belly_gap": 0.105,
+    "leg_zone": 0.238,
+    "leans": [
+     30.1
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.275,
     "colour": 1.0,
-    "aspect": 1.156,
     "box": [
-     0.332,
-     0.306,
-     0.718,
-     0.808
+     0.426,
+     0.312,
+     0.736,
+     0.754
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -643,21 +1162,41 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/88/Wah-ba-shik-a_Nature_Center_-_November_2023_-_Sarah_Stierch_06.jpg/1280px-Wah-ba-shik-a_Nature_Center_-_November_2023_-_Sarah_Stierch_06.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/taxidea_taxus/commons_140681713/photo.jpg",
    "score": {
-    "total": 0.106,
-    "whole": 0.829,
-    "side": 0.968,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.171,
-    "colour": 1.0,
-    "aspect": 1.481,
+    "aspect": 2.565,
+    "band_px": 3.95,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 4.6,
+    "belly_gap": 0.432,
+    "leg_zone": 0.257,
+    "leans": [
+     -4.6
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.186,
+    "colour": 0.991,
     "box": [
-     0.048,
-     0.048,
-     0.96,
-     0.869
+     0.206,
+     0.24,
+     0.796,
+     0.547
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -673,21 +1212,41 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/12/Badger_genera_map.png/1280px-Badger_genera_map.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/taxidea_taxus/commons_16281681/photo.png",
    "score": {
-    "total": 0.105,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.726,
-    "size": 0.86,
-    "single": 0.859,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.644,
-    "colour": 0.99,
-    "aspect": 1.335,
+    "single": 0.701,
+    "aspect": 1.286,
+    "band_px": 3.64,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 7.4,
+    "belly_gap": 0.818,
+    "leg_zone": 0.448,
+    "leans": [
+     -7.4
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.636,
+    "colour": 0.047,
     "box": [
-     0.422,
-     0.085,
-     0.844,
-     0.834
+     0.424,
+     0.1,
+     0.82,
+     0.829
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -706,21 +1265,44 @@
    "local": true,
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_515009824/photo.jpg",
    "score": {
-    "total": 0.103,
-    "whole": 0.908,
-    "side": 1.0,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 0.5,
-    "plain": 0.258,
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.638,
+    "aspect": 0.529,
+    "band_px": 24.33,
+    "clear": 0.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.796,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 16.7,
+    "belly_gap": 0.375,
+    "leg_zone": 0.353,
+    "leans": [
+     -16.7
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.245,
     "colour": 1.0,
-    "aspect": 1.515,
     "box": [
-     0.152,
-     0.516,
-     0.96,
-     0.916
+     0.883,
+     0.39,
+     0.907,
+     0.424
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance",
+     "clear"
     ],
     "local": 1.0
    }
@@ -739,21 +1321,42 @@
    "local": true,
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_42903143/photo.jpg",
    "score": {
-    "total": 0.103,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.625,
+    "single": 0.964,
+    "aspect": 1.014,
+    "band_px": 14.7,
+    "clear": 0.108,
     "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.095,
-    "colour": 1.0,
-    "aspect": 1.275,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.784,
+    "legs": 0.147,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 43.5,
+    "belly_gap": 0.717,
+    "leg_zone": 0.238,
+    "leans": [
+     -43.5
+    ],
+    "lifts": [
+     0.004
+    ],
+    "plain": 0.092,
+    "colour": 0.998,
     "box": [
-     0.046,
-     0.161,
-     0.946,
-     0.916
+     0.392,
+     0.379,
+     0.842,
+     0.854
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance",
+     "clear"
     ],
     "local": 1.0
    }
@@ -769,21 +1372,46 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/Taxidea_taxus_%28Point_Reyes%2C_2007%29_cropped.jpg/1280px-Taxidea_taxus_%28Point_Reyes%2C_2007%29_cropped.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/taxidea_taxus/commons_79445057/photo.jpg",
    "score": {
-    "total": 0.081,
-    "whole": 0.454,
-    "side": 1.0,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 0.5,
-    "stance": 0.5,
-    "plain": 0.219,
-    "colour": 1.0,
-    "aspect": 2.359,
+    "aspect": 2.594,
+    "band_px": 4.83,
+    "clear": 0.931,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.892,
+    "stance": 0.0,
+    "spread": 93.3,
+    "lean": 8.9,
+    "belly_gap": 0.554,
+    "leg_zone": 0.227,
+    "leans": [
+     -50.1,
+     41.1,
+     -23.4,
+     43.2
+    ],
+    "lifts": [
+     0.003,
+     0.003,
+     0.029,
+     0.013
+    ],
+    "plain": 0.207,
+    "colour": 0.999,
     "box": [
-     0.04,
+     0.006,
      0.105,
-     0.96,
-     0.961
+     0.976,
+     0.925
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 0.75
    }
@@ -799,21 +1427,38 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8b/American_badger_lying_on_ground_-_DPLA_-_460b99f1ba04d336a43eb8cf60320a0e.jpg/1280px-American_badger_lying_on_ground_-_DPLA_-_460b99f1ba04d336a43eb8cf60320a0e.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/taxidea_taxus/commons_116342697/photo.jpg",
    "score": {
-    "total": 0.045,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.344,
-    "size": 1.0,
     "single": 1.0,
+    "aspect": 1.75,
+    "band_px": 7.27,
+    "clear": 0.728,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.16,
+    "side": 0.0,
     "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.158,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.029,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.155,
     "colour": 1.0,
-    "aspect": 1.106,
     "box": [
-     0.186,
-     0.119,
-     0.686,
-     0.794
+     0.124,
+     0.116,
+     0.908,
+     0.785
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -832,21 +1477,43 @@
    "local": true,
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_409785850/photo.jpg",
    "score": {
-    "total": 0.039,
-    "whole": 0.188,
-    "side": 1.0,
-    "size": 1.0,
-    "single": 0.999,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.384,
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.33,
+    "aspect": 2.25,
+    "band_px": 17.62,
+    "clear": 0.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.75,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.25,
+    "leg_zone": 0.25,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.129,
     "colour": 1.0,
-    "aspect": 2.55,
     "box": [
-     0.042,
-     0.302,
-     0.96,
-     0.943
+     0.138,
+     0.068,
+     0.156,
+     0.082
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance",
+     "clear"
     ],
     "local": 1.0
    }
@@ -862,21 +1529,45 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4e/BADGER_%286-21-06%29-3_%28569845666%29.jpg/1280px-BADGER_%286-21-06%29-3_%28569845666%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/taxidea_taxus/commons_57046561/photo.jpg",
    "score": {
-    "total": 0.039,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.27,
-    "size": 1.0,
-    "single": 0.999,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.275,
-    "colour": 1.0,
-    "aspect": 1.062,
+    "single": 1.0,
+    "aspect": 1.725,
+    "band_px": 13.89,
+    "clear": 0.176,
+    "size": 0.608,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.55,
+    "stance": 0.0,
+    "spread": 50.5,
+    "lean": 13.1,
+    "belly_gap": 0.312,
+    "leg_zone": 0.186,
+    "leans": [
+     -25.6,
+     13.1,
+     24.9
+    ],
+    "lifts": [
+     0.0,
+     0.029,
+     0.0
+    ],
+    "plain": 0.266,
+    "colour": 0.983,
     "box": [
      0.314,
-     0.246,
-     0.828,
-     0.914
+     0.243,
+     0.666,
+     0.525
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance",
+     "clear"
     ],
     "local": 0.75
    }
@@ -892,21 +1583,41 @@
    "url_large": "https://upload.wikimedia.org/wikipedia/commons/4/42/American_Badger_area.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
    "file_small": "pipeline/_cache/references/taxidea_taxus/commons_12189563/photo.png",
    "score": {
-    "total": 0.032,
-    "whole": 0.101,
-    "side": 0.707,
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.98,
+    "band_px": 4.93,
+    "clear": 0.923,
     "size": 1.0,
-    "single": 0.987,
-    "legs": 0.5,
-    "stance": 1.0,
-    "plain": 0.821,
-    "colour": 1.0,
-    "aspect": 1.324,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.699,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 24.0,
+    "belly_gap": 0.745,
+    "leg_zone": 0.423,
+    "leans": [
+     24.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.696,
+    "colour": 0.101,
     "box": [
-     0.088,
-     0.038,
-     0.961,
-     0.93
+     0.245,
+     0.174,
+     0.74,
+     0.857
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -922,21 +1633,43 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/AmericanBadger.JPG/1280px-AmericanBadger.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/taxidea_taxus/commons_3011851/photo.jpg",
    "score": {
-    "total": 0.029,
-    "whole": 0.404,
-    "side": 0.49,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 0.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.307,
+    "aspect": 1.146,
+    "band_px": 5.17,
+    "clear": 0.903,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.03,
+    "legs": 0.07,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 39.8,
+    "belly_gap": 0.106,
+    "leg_zone": 0.176,
+    "leans": [
+     39.8
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.312,
     "colour": 1.0,
-    "aspect": 1.194,
     "box": [
-     0.078,
-     0.04,
-     0.866,
-     0.92
+     0.07,
+     0.0,
+     0.87,
+     0.931
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -952,21 +1685,42 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/40/American_badger_near_rock_-_DPLA_-_f763ea97aa7cd60943915a66433f424a.jpg/1280px-American_badger_near_rock_-_DPLA_-_f763ea97aa7cd60943915a66433f424a.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/taxidea_taxus/commons_116311798/photo.jpg",
    "score": {
-    "total": 0.026,
-    "whole": 0.608,
-    "side": 0.303,
+    "total": 0.0,
+    "whole": 0.844,
+    "single": 0.999,
+    "aspect": 1.126,
+    "band_px": 9.05,
+    "clear": 0.579,
     "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.227,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 52.8,
+    "lean": 5.7,
+    "belly_gap": 0.537,
+    "leg_zone": 0.265,
+    "leans": [
+     32.1,
+     -20.7
+    ],
+    "lifts": [
+     0.0,
+     0.053
+    ],
+    "plain": 0.222,
     "colour": 1.0,
-    "aspect": 1.082,
     "box": [
-     0.212,
-     0.039,
-     0.872,
-     0.946
+     0.0,
+     0.045,
+     0.68,
+     0.943
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 0.75
    }
@@ -982,21 +1736,38 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/68/American_badger_lying_on_ground_-_DPLA_-_f4cd4424dad16aa98dee94a92957b052.jpg/1280px-American_badger_lying_on_ground_-_DPLA_-_f4cd4424dad16aa98dee94a92957b052.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/taxidea_taxus/commons_116328810/photo.jpg",
    "score": {
-    "total": 0.023,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.182,
-    "size": 0.99,
     "single": 1.0,
+    "aspect": 1.675,
+    "band_px": 11.1,
+    "clear": 0.408,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
     "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.151,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.038,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.155,
     "colour": 1.0,
-    "aspect": 1.009,
     "box": [
-     0.236,
-     0.172,
-     0.684,
-     0.831
+     0.108,
+     0.169,
+     0.892,
+     0.864
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -1015,21 +1786,43 @@
    "local": true,
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_531068083/photo.jpg",
    "score": {
-    "total": 0.022,
-    "whole": 0.318,
-    "side": 0.379,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.232,
+    "aspect": 1.932,
+    "band_px": 12.6,
+    "clear": 0.283,
+    "size": 0.678,
+    "solid": 1.0,
+    "head_end": 0.412,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 66.9,
+    "lean": 6.8,
+    "belly_gap": 0.838,
+    "leg_zone": 0.261,
+    "leans": [
+     -40.3,
+     26.6
+    ],
+    "lifts": [
+     0.011,
+     0.079
+    ],
+    "plain": 0.205,
     "colour": 1.0,
-    "aspect": 1.128,
     "box": [
-     0.039,
-     0.144,
-     0.961,
-     0.52
+     0.283,
+     0.546,
+     0.652,
+     0.634
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance",
+     "clear"
     ],
     "local": 1.0
    }
@@ -1048,21 +1841,45 @@
    "local": true,
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_517509416/photo.jpg",
    "score": {
-    "total": 0.014,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.08,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.197,
+    "single": 0.729,
+    "aspect": 1.389,
+    "band_px": 15.84,
+    "clear": 0.013,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.975,
+    "stance": 0.625,
+    "spread": 25.5,
+    "lean": 8.1,
+    "belly_gap": 0.6,
+    "leg_zone": 0.237,
+    "leans": [
+     8.1,
+     18.0,
+     -7.5
+    ],
+    "lifts": [
+     0.033,
+     0.014,
+     0.014
+    ],
+    "plain": 0.191,
     "colour": 1.0,
-    "aspect": 0.948,
     "box": [
-     0.341,
-     0.398,
-     0.928,
-     0.862
+     0.496,
+     0.496,
+     0.696,
+     0.604
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "clear"
     ],
     "local": 1.0
    }
@@ -1078,56 +1895,45 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/American_badger_diorama_at_American_Museum_of_Natural_History.jpg/1280px-American_badger_diorama_at_American_Museum_of_Natural_History.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/taxidea_taxus/commons_165487727/photo.jpg",
    "score": {
-    "total": 0.013,
-    "whole": 0.246,
-    "side": 0.398,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.132,
-    "colour": 1.0,
-    "aspect": 1.139,
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.964,
+    "aspect": 1.079,
+    "band_px": 30.0,
+    "clear": 0.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.947,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 21.0,
+    "belly_gap": 0.781,
+    "leg_zone": 0.316,
+    "leans": [
+     21.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.138,
+    "colour": 0.246,
     "box": [
-     0.039,
-     0.152,
-     0.961,
-     0.758
+     0.449,
+     0.682,
+     0.556,
+     0.756
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance",
+     "clear"
     ],
     "local": 0.75
-   }
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_517509392",
-   "licence": "CC BY 4.0",
-   "author": "Jared Shorma",
-   "attribution": "(c) Jared Shorma, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/287798458",
-   "photo_page": "https://www.inaturalist.org/photos/517509392",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/517509392/medium.jpg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/517509392/large.jpg",
-   "adult": false,
-   "local": true,
-   "file_small": "pipeline/_cache/references/taxidea_taxus/inat_517509392/photo.jpg",
-   "score": {
-    "total": 0.004,
-    "whole": 1.0,
-    "side": 0.021,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.218,
-    "colour": 1.0,
-    "aspect": 0.912,
-    "box": [
-     0.229,
-     0.244,
-     0.952,
-     0.838
-    ],
-    "local": 1.0
    }
   },
   {
@@ -1141,21 +1947,43 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/41/Badger_7217.jpg/1280px-Badger_7217.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/taxidea_taxus/commons_137806526/photo.jpg",
    "score": {
-    "total": 0.001,
-    "whole": 1.0,
-    "side": 0.03,
-    "size": 0.21,
+    "total": 0.0,
+    "whole": 0.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.213,
+    "aspect": 0.655,
+    "band_px": 6.34,
+    "clear": 0.805,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.032,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 39.4,
+    "belly_gap": 0.096,
+    "leg_zone": 0.146,
+    "leans": [
+     -39.4
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.22,
     "colour": 1.0,
-    "aspect": 0.918,
     "box": [
      0.352,
-     0.366,
-     0.644,
-     0.844
+     0.216,
+     0.694,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -1176,19 +2004,40 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
+    "single": 1.0,
+    "aspect": 2.42,
+    "band_px": 2.16,
+    "clear": 1.0,
+    "size": 0.168,
+    "solid": 1.0,
+    "head_end": 0.0,
     "side": 1.0,
-    "size": 0.0,
-    "single": 0.895,
-    "legs": 1.0,
-    "stance": 0.5,
-    "plain": 0.497,
-    "colour": 1.0,
-    "aspect": 2.327,
+    "legs": 0.125,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 52.8,
+    "belly_gap": 0.719,
+    "leg_zone": 0.22,
+    "leans": [
+     -52.8
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.496,
+    "colour": 0.989,
     "box": [
      0.308,
      0.498,
      0.55,
-     0.655
+     0.649
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    },
@@ -1207,20 +2056,37 @@
    "file_small": "pipeline/_cache/references/taxidea_taxus/commons_36502839/photo.jpg",
    "score": {
     "total": 0.0,
-    "whole": 0.0,
-    "side": 0.894,
-    "size": 1.0,
+    "whole": 1.0,
     "single": 1.0,
+    "aspect": 0.928,
+    "band_px": 4.11,
+    "clear": 0.991,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
     "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.165,
-    "colour": 1.0,
-    "aspect": 1.436,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.147,
+    "colour": 0.999,
     "box": [
-     0.054,
-     0.146,
-     0.89,
-     0.961
+     0.152,
+     0.148,
+     0.64,
+     0.885
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -1237,20 +2103,37 @@
    "file_small": "pipeline/_cache/references/taxidea_taxus/commons_110701612/photo.jpg",
    "score": {
     "total": 0.0,
-    "whole": 0.0,
-    "side": 1.0,
-    "size": 1.0,
+    "whole": 1.0,
     "single": 1.0,
+    "aspect": 0.932,
+    "band_px": 4.14,
+    "clear": 0.988,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
     "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.173,
-    "colour": 1.0,
-    "aspect": 1.574,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.148,
+    "colour": 0.999,
     "box": [
-     0.042,
-     0.146,
-     0.958,
-     0.961
+     0.15,
+     0.148,
+     0.64,
+     0.885
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -1267,6 +2150,42 @@
    "file_small": "pipeline/_cache/references/taxidea_taxus/commons_137806524/photo.jpg",
    "score": {
     "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.632,
+    "band_px": 3.43,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 35.3,
+    "belly_gap": 0.531,
+    "leg_zone": 0.329,
+    "leans": [
+     -35.3
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.183,
+    "colour": 1.0,
+    "box": [
+     0.366,
+     0.498,
+     0.49,
+     0.613
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ],
     "local": 0.75
    }
   },
@@ -1283,19 +2202,41 @@
    "score": {
     "total": 0.0,
     "whole": 0.0,
-    "side": 1.0,
+    "single": 0.657,
+    "aspect": 0.845,
+    "band_px": 7.26,
+    "clear": 0.728,
     "size": 1.0,
-    "single": 0.98,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.163,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.364,
+    "legs": 0.667,
+    "stance": 0.846,
+    "spread": 14.2,
+    "lean": 16.1,
+    "belly_gap": 0.844,
+    "leg_zone": 0.2,
+    "leans": [
+     -23.2,
+     -9.0
+    ],
+    "lifts": [
+     0.0,
+     0.067
+    ],
+    "plain": 0.16,
     "colour": 1.0,
-    "aspect": 3.013,
     "box": [
-     0.04,
-     0.039,
-     0.938,
-     0.485
+     0.0,
+     0.012,
+     0.558,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side"
     ],
     "local": 0.75
    }
@@ -1315,20 +2256,43 @@
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_531068082/photo.jpg",
    "score": {
     "total": 0.0,
-    "whole": 0.161,
-    "side": 0.016,
-    "size": 1.0,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.231,
+    "aspect": 2.4,
+    "band_px": 11.35,
+    "clear": 0.388,
+    "size": 0.87,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 40.6,
+    "lean": 4.9,
+    "belly_gap": 0.844,
+    "leg_zone": 0.3,
+    "leans": [
+     -34.9,
+     5.7,
+     -4.9
+    ],
+    "lifts": [
+     0.05,
+     0.0,
+     0.075
+    ],
+    "plain": 0.194,
     "colour": 1.0,
-    "aspect": 0.91,
     "box": [
-     0.039,
-     0.064,
-     0.961,
-     0.53
+     0.296,
+     0.508,
+     0.713,
+     0.588
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 1.0
    }
@@ -1349,19 +2313,40 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
+    "single": 1.0,
+    "aspect": 2.706,
+    "band_px": 2.68,
+    "clear": 1.0,
     "size": 0.0,
-    "single": 0.872,
-    "legs": 1.0,
-    "stance": 0.6,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.044,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.918,
+    "leg_zone": 0.155,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.008
+    ],
     "plain": 0.624,
-    "colour": 1.0,
-    "aspect": 2.812,
+    "colour": 0.998,
     "box": [
-     0.346,
+     0.34,
      0.523,
-     0.526,
-     0.619
+     0.524,
+     0.625
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -1382,19 +2367,40 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 0.858,
+    "single": 1.0,
+    "aspect": 1.762,
+    "band_px": 5.23,
+    "clear": 0.897,
     "size": 0.0,
-    "single": 0.986,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.322,
-    "colour": 1.0,
-    "aspect": 1.415,
+    "solid": 1.0,
+    "head_end": 0.194,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 5.8,
+    "belly_gap": 0.746,
+    "leg_zone": 0.262,
+    "leans": [
+     5.8
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.321,
+    "colour": 0.961,
     "box": [
      0.072,
      0.512,
-     0.272,
-     0.618
+     0.269,
+     0.596
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -1414,6 +2420,42 @@
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_423650694/photo.jpg",
    "score": {
     "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.855,
+    "band_px": 2.44,
+    "clear": 1.0,
+    "size": 0.12,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.965,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 55.9,
+    "belly_gap": 0.293,
+    "leg_zone": 0.419,
+    "leans": [
+     -55.9
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.209,
+    "colour": 0.994,
+    "box": [
+     0.292,
+     0.369,
+     0.522,
+     0.556
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ],
     "local": 1.0
    }
   },
@@ -1433,19 +2475,41 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
+    "single": 1.0,
+    "aspect": 3.794,
+    "band_px": 5.7,
+    "clear": 0.858,
+    "size": 0.232,
+    "solid": 1.0,
+    "head_end": 0.0,
     "side": 1.0,
-    "size": 0.0,
-    "single": 0.703,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.401,
-    "colour": 1.0,
-    "aspect": 1.708,
+    "legs": 0.758,
+    "stance": 0.0,
+    "spread": 65.2,
+    "lean": 2.4,
+    "belly_gap": 0.721,
+    "leg_zone": 0.211,
+    "leans": [
+     30.2,
+     -35.0
+    ],
+    "lifts": [
+     0.005,
+     0.034
+    ],
+    "plain": 0.408,
+    "colour": 0.984,
     "box": [
      0.376,
-     0.39,
-     0.458,
+     0.37,
+     0.634,
      0.438
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
     ],
     "local": 1.0
    }
@@ -1466,19 +2530,37 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 0.235,
-    "size": 0.0,
-    "single": 0.992,
+    "single": 1.0,
+    "aspect": 1.084,
+    "band_px": 7.35,
+    "clear": 0.721,
+    "size": 0.213,
+    "solid": 1.0,
+    "head_end": 0.284,
+    "side": 0.0,
     "legs": 0.0,
-    "stance": 1.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
     "plain": 0.309,
-    "colour": 1.0,
-    "aspect": 1.041,
+    "colour": 0.972,
     "box": [
-     0.46,
-     0.36,
+     0.458,
+     0.355,
      0.664,
-     0.621
+     0.608
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -1499,38 +2581,41 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
-    "size": 0.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
+    "aspect": 1.613,
+    "band_px": 5.36,
+    "clear": 0.886,
+    "size": 0.168,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 36.7,
+    "belly_gap": 0.51,
+    "leg_zone": 0.267,
+    "leans": [
+     36.7
+    ],
+    "lifts": [
+     0.0
+    ],
     "plain": 0.274,
-    "colour": 1.0,
-    "aspect": 1.545,
+    "colour": 0.996,
     "box": [
-     0.308,
-     0.317,
+     0.304,
+     0.323,
      0.546,
      0.523
     ],
-    "local": 1.0
-   }
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_44595668",
-   "licence": "CC BY 4.0",
-   "author": "Cody Stricker",
-   "attribution": "(c) Cody Stricker, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/28600908",
-   "photo_page": "https://www.inaturalist.org/photos/44595668",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/44595668/medium.jpeg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/44595668/large.jpeg",
-   "adult": false,
-   "local": true,
-   "file_small": "pipeline/_cache/references/taxidea_taxus/inat_44595668/photo.jpg",
-   "score": {
-    "total": 0.0,
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ],
     "local": 1.0
    }
   },
@@ -1549,6 +2634,42 @@
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_44595665/photo.jpg",
    "score": {
     "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.284,
+    "band_px": 4.32,
+    "clear": 0.974,
+    "size": 0.035,
+    "solid": 1.0,
+    "head_end": 0.293,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 32.4,
+    "belly_gap": 0.58,
+    "leg_zone": 0.275,
+    "leans": [
+     32.4
+    ],
+    "lifts": [
+     0.007
+    ],
+    "plain": 0.268,
+    "colour": 1.0,
+    "box": [
+     0.43,
+     0.349,
+     0.602,
+     0.558
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ],
     "local": 1.0
    }
   },
@@ -1567,6 +2688,40 @@
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_409785840/photo.jpg",
    "score": {
     "total": 0.0,
+    "whole": 1.0,
+    "single": 0.368,
+    "aspect": 2.333,
+    "band_px": 19.5,
+    "clear": 0.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.133,
+    "colour": 1.0,
+    "box": [
+     0.142,
+     0.068,
+     0.156,
+     0.078
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ],
     "local": 1.0
    }
   },
@@ -1585,20 +2740,39 @@
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_733202781/photo.jpg",
    "score": {
     "total": 0.0,
-    "whole": 1.0,
-    "side": 0.0,
-    "size": 0.23,
+    "whole": 0.0,
     "single": 1.0,
+    "aspect": 0.694,
+    "band_px": 1.12,
+    "clear": 1.0,
+    "size": 0.352,
+    "solid": 1.0,
+    "head_end": 0.018,
+    "side": 0.0,
     "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.156,
-    "colour": 1.0,
-    "aspect": 0.828,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.16,
+    "colour": 0.61,
     "box": [
-     0.304,
-     0.684,
-     0.6,
-     0.952
+     0.331,
+     0.712,
+     0.597,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "size",
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -1618,20 +2792,42 @@
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_733202775/photo.jpg",
    "score": {
     "total": 0.0,
-    "whole": 0.863,
-    "side": 0.0,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.182,
+    "whole": 1.0,
+    "single": 0.514,
+    "aspect": 1.684,
+    "band_px": 19.97,
+    "clear": 0.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.455,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.64,
+    "leg_zone": 0.263,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.154,
     "colour": 1.0,
-    "aspect": 0.791,
     "box": [
-     0.04,
-     0.1,
-     0.939,
-     0.952
+     0.605,
+     0.65,
+     0.691,
+     0.688
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance",
+     "clear"
     ],
     "local": 1.0
    }
@@ -1651,20 +2847,38 @@
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_659203218/photo.jpg",
    "score": {
     "total": 0.0,
-    "whole": 0.883,
-    "side": 1.0,
-    "size": 0.0,
+    "whole": 0.0,
     "single": 1.0,
+    "aspect": 0.799,
+    "band_px": 1.57,
+    "clear": 1.0,
+    "size": 0.597,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.0,
     "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.157,
-    "colour": 1.0,
-    "aspect": 1.574,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.164,
+    "colour": 0.6,
     "box": [
-     0.683,
-     0.852,
-     0.909,
-     0.96
+     0.651,
+     0.672,
+     1.0,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -1684,6 +2898,10 @@
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_645485969/photo.jpg",
    "score": {
     "total": 0.0,
+    "usable": false,
+    "why_not": [
+     "no subject"
+    ],
     "local": 1.0
    }
   },
@@ -1702,6 +2920,10 @@
    "file_small": "pipeline/_cache/references/taxidea_taxus/inat_645486117/photo.jpg",
    "score": {
     "total": 0.0,
+    "usable": false,
+    "why_not": [
+     "no subject"
+    ],
     "local": 1.0
    }
   },
@@ -1717,20 +2939,38 @@
    "file_small": "pipeline/_cache/references/taxidea_taxus/commons_36502694/photo.jpg",
    "score": {
     "total": 0.0,
-    "whole": 0.112,
-    "side": 0.0,
-    "size": 1.0,
+    "whole": 0.0,
     "single": 1.0,
+    "aspect": 0.756,
+    "band_px": 5.12,
+    "clear": 0.907,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
     "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.115,
-    "colour": 1.0,
-    "aspect": 0.822,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.769,
+    "colour": 0.993,
     "box": [
-     0.041,
-     0.08,
-     0.962,
-     0.879
+     0.0,
+     0.057,
+     1.0,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -1748,19 +2988,41 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 0.474,
-    "size": 0.0,
     "single": 1.0,
-    "legs": 0.5,
-    "stance": 1.0,
-    "plain": 0.271,
+    "aspect": 1.324,
+    "band_px": 9.5,
+    "clear": 0.542,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 13.4,
+    "lean": 6.7,
+    "belly_gap": 0.806,
+    "leg_zone": 0.294,
+    "leans": [
+     0.0,
+     -13.4
+    ],
+    "lifts": [
+     0.176,
+     0.0
+    ],
+    "plain": 0.27,
     "colour": 1.0,
-    "aspect": 1.184,
     "box": [
-     0.466,
+     0.468,
      0.416,
-     0.556,
-     0.53
+     0.558,
+     0.518
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
     ],
     "local": 0.75
    }
@@ -1777,6 +3039,41 @@
    "file_small": "pipeline/_cache/references/taxidea_taxus/commons_116295231/photo.jpg",
    "score": {
     "total": 0.0,
+    "whole": 0.902,
+    "single": 1.0,
+    "aspect": 1.143,
+    "band_px": 6.6,
+    "clear": 0.784,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.256,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 58.1,
+    "belly_gap": 0.332,
+    "leg_zone": 0.248,
+    "leans": [
+     -58.1
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.22,
+    "colour": 1.0,
+    "box": [
+     0.322,
+     0.0,
+     0.976,
+     0.859
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ],
     "local": 0.75
    }
   },
@@ -1792,14 +3089,52 @@
    "file_small": "pipeline/_cache/references/taxidea_taxus/commons_34603630/photo.jpg",
    "score": {
     "total": 0.0,
+    "whole": 1.0,
+    "single": 0.901,
+    "aspect": 1.226,
+    "band_px": 13.96,
+    "clear": 0.17,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.101,
+    "side": 1.0,
+    "legs": 0.051,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 33.0,
+    "belly_gap": 0.839,
+    "leg_zone": 0.161,
+    "leans": [
+     33.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.169,
+    "colour": 1.0,
+    "box": [
+     0.336,
+     0.356,
+     0.412,
+     0.444
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance",
+     "clear"
+    ],
     "local": 0.75
    }
   }
  ],
- "shortlist": [
-  "inat_551991998"
- ],
- "chosen_by": {
+ "judged": {
+  "chosen": "inat_551991998",
+  "shortlist": [
+   "inat_551991998"
+  ],
   "by": "the judge (Claude, from the contact sheet of the rule's top candidates)",
   "rule_rank": [
    3

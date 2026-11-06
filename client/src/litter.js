@@ -455,10 +455,12 @@ function litterMaterial(kind, atmosphere, ring, leafTex) {
         ${kind === 'leaf' ? `vLitUv = vec2((aLitUv.x + aLitR.y) * ${(1 / LEAF_CELLS).toFixed(6)}, aLitUv.y);` : ''}
         #include <uv_vertex>`)
       .replace('#include <color_vertex>', `#include <color_vertex>
-        { vec3 c = aLitC;
+        // the palettes and GROUND_REF were set against the photo's display colour: at the ground's reflectance both take
+        // its factor (terrain.js groundGain), so a pebble keeps its brightness against the ground under it
+        { vec3 c = aLitC * groundGain;
           { vec3 gw; vec3 g = groundAlbedo(litO, 1.0, gw);
             float lg = max(dot(g, G_LUMA), 1e-3);
-            c *= clamp(mix(1.0, lg / ${GROUND_REF.toFixed(3)}, litBright), 0.6, 2.2);
+            c *= clamp(mix(1.0, lg / (${GROUND_REF.toFixed(3)} * dot(groundGain, G_LUMA)), litBright), 0.6, 2.2);
             c = mix(c, g * (dot(c, G_LUMA) / lg), litGround); }
           { float l = dot(c, G_LUMA); c = mix(c, max(mix(vec3(l), c, 1.25), 0.0) * (1.0 - litWet), wxGround.x); }   // soaked: darker, a little richer
           vColor.rgb *= c;

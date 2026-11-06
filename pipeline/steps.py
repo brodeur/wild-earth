@@ -178,18 +178,37 @@ def _water(tile, m, force):
         p = tile.path("client/species_mix.json")
         doc = _json.loads(p.read_text())
         if "riparian" in doc:
+            # the top-level key (a line at the document's one-space indent): the first '"riparian":' in the text can be
+            # a community's share inside `context` (the home tile's, 2026-11-06: the splice ate the rest of the file)
             text = p.read_text()
-            new = _json.dumps(riparian_rows(natural_regions(tile)), separators=(",", ":"))
-            start = text.index('"riparian":') + len('"riparian":')
-            depth, i = 0, start
-            while i < len(text):
-                ch = text[i]
-                depth += ch == "{"
-                depth -= ch == "}"
-                i += 1
-                if depth == 0 and ch == "}":
-                    break
-            p.write_text(text[:start] + new + text[i:])
+            rows = riparian_rows(natural_regions(tile))
+            new = _json.dumps(rows, separators=(",", ":"))
+            key = '\n "riparian":'
+            k = text.rfind(key)
+            out = None
+            if k >= 0:
+                start = k + len(key)
+                while start < len(text) and text[start] in " \t":
+                    start += 1
+                depth, i = 0, start
+                while i < len(text) and text[start] == "{":
+                    ch = text[i]
+                    depth += ch == "{"
+                    depth -= ch == "}"
+                    i += 1
+                    if depth == 0:
+                        break
+                if depth == 0 and i > start:
+                    out = text[:start] + new + text[i:]
+                    try:
+                        if _json.loads(out).get("riparian") != rows:
+                            out = None
+                    except ValueError:
+                        out = None
+            if out is None:     # not the layout water.py writes: re-serialise (loses the one-row-per-line layout)
+                doc["riparian"] = rows
+                out = _json.dumps(doc, indent=1)
+            p.write_text(out)
         add_layer(m, tile, "client.species_mix", m["layers"]["client.species_mix"], fetched=False)
     if "hydro.edges" in m["layers"] and tile.path("hydro/edges.json").exists():
         # water.py writes the level, depth and half width at each crossing into the reroute step's hydro/edges.json
@@ -263,6 +282,33 @@ def _plants(tile, m, force):
     if not g.get("skipped"):
         add_layer(m, tile, "species.ground", g, fetched=False)
     add_layer(m, tile, "species.plant_needs", plant_needs(tile, generate=True), fetched=False)
+
+
+def _water_seasons(tile, m, force):
+    # Every mapped waterbody tested against the tile's monthly Sentinel-2 composites (pipeline/water_seasons.py): the
+    # polygons open water in no month are dropped as water (their bed recorded), those wet in some months are seasonal.
+    from .water_seasons import classify
+    for k, v in classify(tile).items():
+        add_layer(m, tile, k, v, fetched=False)
+
+
+def _water_imagery(tile, m, force):
+    # The reverse of water_seasons (pipeline/water_imagery.py): every drawn reach against the imagery's water, the
+    # undrawn water listed, and the large rivers whose drawn line misses the imagery's channel moved onto it (the Lamar
+    # River on the 5 m DEM's thalweg 20-200 m from its 2022 channel); the profile, incision and features re-derived.
+    from .water_imagery import water_imagery
+    layers, stats = water_imagery(tile)
+    for k, v in layers.items():
+        add_layer(m, tile, k, v, fetched=False)
+    ch = m["layers"].get("hydro.channels")
+    moved = bool(stats.get("reaches_moved") or stats.get("reaches_bent") or stats.get("side_channels") or stats.get("nhd_dropped"))
+    if ch:
+        add_layer(m, tile, "hydro.channels", {**ch, "imagery_moved": moved, "water_imagery": stats,
+                                              "derived_from": sorted(set(ch.get("derived_from", []) + ["seasons.s2_monthly"]))},
+                  fetched=False)
+    for k in ("client.channel_profile", "client.channel_depth"):   # rewritten in place when a line moved
+        if k in m["layers"]:
+            add_layer(m, tile, k, m["layers"][k], fetched=False)
 
 
 def _terrain(tile, m, force):
@@ -433,6 +479,14 @@ def _seasons(tile, m, force):
     m["sources"][src]["years_used"] = m["layers"]["seasons.s2_monthly"]["years"]
 
 
+def _ground_albedo(tile, m, force):
+    # The factor from the ground texture's display colour to surface reflectance, fitted against the reference month's
+    # Sentinel-2 L2A composite over open ground (pipeline/ground_albedo.py); the client scales the ground and the herb
+    # layer by it.
+    from .ground_albedo import ground_albedo
+    add_layer(m, tile, "client.ground_albedo", ground_albedo(tile, m), fetched=False)
+
+
 def _weather(tile, m, force):
     # Last year's hourly weather at the tile centre from Open-Meteo's archive (pipeline/fetch_weather.py); the raw
     # answer is cached under pipeline/_cache/weather/<tile>/ per period end date.
@@ -511,14 +565,23 @@ STEPS: dict[str, Step] = {s.name: s for s in [
     Step("reroute", "1", ["reroute", "rewild_hydro", "water_seams"], ["dem", "channels", "rewild_hydro", "hydro", "lidar", "ice"],
          _reroute, ["hydro.channels_5m", "hydro.edges"], applies=_reroute_applies, owner="water lane",
          doc="every stream onto the 1 m lidar thalweg; meltwater from the ice's toes; streams continued across the seams", stage=B),
-    Step("water", "1", ["water", "water_seams"], ["dem", "rewild_hydro", "reroute", "hydro", "lidar"], _water,
+    Step("seasons", "1", ["fetch_sentinel"], ["landcover", "lidar", "naip"], _seasons,
+         ["seasons.s2_monthly", "client.season_rgb", "client.season_ndvi"], ["sentinel2_l2a"],
+         doc="Sentinel-2 monthly ground colour", stage=B),
+    Step("water_seasons", "1", ["water_seasons"], ["hydro", "seasons"], _water_seasons, ["hydro.waterbody_seasons"], [],
+         owner="water lane", doc="every mapped waterbody against the monthly Sentinel-2: permanent, seasonal or dry", stage=B),
+    Step("water_imagery", "1", ["water_imagery", "water_seasons", "reroute", "rewild_hydro", "channels"],
+         ["dem", "channels", "rewild_hydro", "reroute", "seasons", "water_seasons", "hydro"], _water_imagery,
+         ["hydro.water_imagery", "hydro.channels_dem"], [], owner="water lane",
+         doc="the reverse test: drawn reaches against the imagery's water; large rivers moved onto it", stage=B),
+    Step("water", "2", ["water", "water_seams", "water_seasons"], ["dem", "rewild_hydro", "reroute", "hydro", "lidar", "water_seasons", "water_imagery"], _water,
          ["terrain.dem_banked", "client.heights", "client.water", "hydro.water_reaches"], [], owner="water lane",
          doc="banks, beds, levels and riparian zones", stage=B),
     Step("ground", "2", ["ground", "fetch_soils", "fetch_geology", "soils_global", "fetch_global", "strata", "substrate"], ["dem", "landcover", "lidar"], _ground,
          ["geology.", "soils.", "client.geology", "client.soils", "client.outcrop", "client.ground_classes", "client.strata"],
          ["macrostrat", "usda_sda", "soilgrids"], doc="geology and soils, outcrop likelihood, ground classes, the stratigraphic column", stage=B),
-    Step("terrain", "1", ["derive", "urban", "habitat", "fetch_places", "fetch_territories"],
-         ["dem", "naip", "osm", "hydro", "channels", "rewild_hydro", "water", "landcover", "ice"], _terrain,
+    Step("terrain", "2", ["derive", "urban", "habitat", "fetch_places", "fetch_territories", "water_seasons"],
+         ["dem", "naip", "osm", "hydro", "channels", "rewild_hydro", "water", "water_seasons", "landcover", "ice"], _terrain,
          ["terrain.hillshade", "terrain.terrain_rgb", "footprint.mask_raster", "imagery.naip_png", "vegetation.habitat_png",
           "vegetation.habitat_present_png", "terrain.rewilded", "client.habitat", "client.canopy", "footprint.urban",
           "client.roads", "client.texture", "client.masks", "client.imagery", "client.texture_present", "client.features"],
@@ -527,9 +590,8 @@ STEPS: dict[str, Step] = {s.name: s for s in [
          ["client.texture_imagery"], doc="the imagery with the human footprint removed", stage=B),
     Step("substrate", "1", ["substrate"], ["ground", "water", "dem", "lidar", "naip", "landcover", "erase", "terrain", "ice"],
          _substrate, ["client.substrate", "client.substrate_classes"], doc="lithology, cliff morphology, exposed rock", stage=B),
-    Step("seasons", "1", ["fetch_sentinel"], ["landcover", "lidar", "naip"], _seasons,
-         ["seasons.s2_monthly", "client.season_rgb", "client.season_ndvi"], ["sentinel2_l2a"],
-         doc="Sentinel-2 monthly ground colour", stage=B),
+    Step("ground_albedo", "1", ["ground_albedo"], ["seasons", "erase", "terrain"], _ground_albedo, ["client.ground_albedo"], [],
+         doc="the ground texture's factor to surface reflectance, fitted against the Sentinel-2 composite", stage=B),
     Step("weather", "1", ["fetch_weather"], [], _weather, ["client.weather"], ["open_meteo"],
          doc="last year's hourly weather at the tile centre", stage=B),
     Step("unreal", "1", ["export_unreal"], ["dem", "landcover"], _unreal, ["unreal"], doc="the Unreal landscape export", stage=B),
@@ -541,7 +603,7 @@ STEPS: dict[str, Step] = {s.name: s for s in [
          library=["library/plant_cards", "library/plant_cards/_research"],
          doc="the tile's canopy trees and their cards; outside the regional tables its own grasses and forbs and their cards "
              "(ground_cards); the plants the tile needs, ranked; missing ones grown from their trait cards", stage=F),
-    Step("species_mix", "4", ["species_mix", "communities", "regions", "ground_cards"], ["dem", "landcover", "water", "ice", "plants"],
+    Step("species_mix", "5", ["species_mix", "communities", "regions", "ground_cards"], ["dem", "landcover", "water", "ice", "plants"],
          _species_mix, ["client.species_mix"], library=["library/species"],
          doc="trees, shrubs and ground layer per 30 m cell, with the unmatched communities read from their names", stage=F),
     Step("canopy_top", "2", ["canopy_top", "canopy_maps"], ["landcover", "lidar", "terrain"], _canopy_top,
@@ -566,7 +628,7 @@ STEPS: dict[str, Step] = {s.name: s for s in [
          stage=A),
     Step("stills", "1", ["stills"], ["animals"], _stills, ["fauna.stills"], library=["library/animals", "client/assets/opening"],
          doc="a still for every animal's species chip: a model rendered, a stand-in's kin's (client/assets/opening)", stage=A),
-    Step("resources", "1", ["resources", "derive"], ["dem", "hydro", "landcover", "terrain", "species_mix", "species"], _resources,
+    Step("resources", "2", ["resources", "derive", "water_seasons"], ["dem", "hydro", "water_seasons", "landcover", "terrain", "species_mix", "species"], _resources,
          ["resources", "client.mast"], doc="food, water and cover per season; the acorn mast", stage=A),
     # ---------------------------------------------------------------- games
     Step("games", "1", ["games"], ["species", "resources", "animals"], _games, ["games"],

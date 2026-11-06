@@ -1,0 +1,1191 @@
+{
+ "rule": {
+  "water_pixel": "seasons/s2_MM.tif: NDWI (NIR from red and NDVI) > 0 or NIR < 0.04, not bright (water_seasons.py)",
+  "water": "per 20 m pixel max(frequency, fraction): frequency = wet months / observed (>= 3); fraction = its NDWI's 75th percentile over the clear months unmixed between the never-wet land within 300 m and the tile's always-wet water (median NDWI; 0.3 with under 10 such pixels); DEM slope < 0.2, DEM > 0.5 m; bilinear onto the 5 m grid, water at >= 0.5",
+  "naip": "imagery/naip.tif is RGB (no NIR band): not used",
+  "reach": "on: water within max(w/2, 10 m); near: within max(60 m, 2 w); every 10 m; on water >= 0.6, off water: near >= 0.5, else no water seen",
+  "move": "stems of DEM reaches with width >= 10 m not on water: least-cost path on the 5 m grid within 600 m of the drawn stem on ground <= 10 m over its nearest DEM line cell (water 1 + 2 exp(-d_in/6 m), land 12 x (0.4 + 0.6 min(1, d_dem/30 m))), edge ends fixed, interior ends snapped to water within 60 m, a junction on a moved stem taken as moved, smoothed 10 m; kept when on >= 0.5 and >= the old line's + 0.2; the reaches meeting a moved node bent to it over 2 |shift| + 20 m (shift <= 30 m) or extended straight to it (one per node)",
+  "nhd_dropped": "NHD-sourced stretches with width >= 10 m, no water seen, within 600 m of a moved stem's old or new line, off the tile edge: the map's pieces of a river where the imagery shows none",
+  "width": "a moved reach takes the water's median cross-section when >= 40 m and wider than drawn",
+  "side_channels": "the river's water within 250 m, off the moved ribbon (w/2 + 10 m), its skeleton's longest path >= 150 m: a reach at its measured width (source imagery)",
+  "undrawn": "water patches >= 1600 m2 beyond w/2 + 20 m of every reach and 20 m of every kept pond"
+ },
+ "stats": {
+  "months_used": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "water_cells_5m": 205253,
+  "reaches_tested": 264,
+  "verdicts_before": {
+   "no water seen": 222,
+   "off water": 20,
+   "on water": 22
+  },
+  "verdicts_after": {
+   "no water seen": 222,
+   "off water": 20,
+   "on water": 22
+  },
+  "stems": 0,
+  "stems_moved": 0,
+  "reaches_moved": 0,
+  "reaches_bent": 0,
+  "reaches_extended": 0,
+  "nhd_dropped": 0,
+  "side_channels": 0,
+  "undrawn_patches": 28,
+  "undrawn_m2": 673100,
+  "undrawn_by_map": {
+   "a rewilded reservoir or pond (human water, not drawn by the rule)": 50750,
+   "unmapped": 622350
+  },
+  "seconds": 12.6
+ },
+ "stems": [],
+ "reaches": [
+  {
+   "k": 6,
+   "name": null,
+   "width": 1.4,
+   "length_m": 30,
+   "before": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 4
+   },
+   "after": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 4
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 42,
+   "name": null,
+   "width": 2.05,
+   "length_m": 174,
+   "before": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 19
+   },
+   "after": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 19
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 46,
+   "name": null,
+   "width": 1.02,
+   "length_m": 148,
+   "before": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 16
+   },
+   "after": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 16
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 51,
+   "name": null,
+   "width": 1.14,
+   "length_m": 38,
+   "before": {
+    "on": 0.6,
+    "near": 1.0,
+    "samples": 5
+   },
+   "after": {
+    "on": 0.6,
+    "near": 1.0,
+    "samples": 5
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 53,
+   "name": null,
+   "width": 1.0,
+   "length_m": 77,
+   "before": {
+    "on": 0.222,
+    "near": 1.0,
+    "samples": 9
+   },
+   "after": {
+    "on": 0.222,
+    "near": 1.0,
+    "samples": 9
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 56,
+   "name": null,
+   "width": 2.15,
+   "length_m": 26,
+   "before": {
+    "on": 0.5,
+    "near": 1.0,
+    "samples": 4
+   },
+   "after": {
+    "on": 0.5,
+    "near": 1.0,
+    "samples": 4
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 59,
+   "name": null,
+   "width": 2.29,
+   "length_m": 40,
+   "before": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 5
+   },
+   "after": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 5
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 94,
+   "name": null,
+   "width": 1.45,
+   "length_m": 52,
+   "before": {
+    "on": 0.143,
+    "near": 0.571,
+    "samples": 7
+   },
+   "after": {
+    "on": 0.143,
+    "near": 0.571,
+    "samples": 7
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 96,
+   "name": null,
+   "width": 1.45,
+   "length_m": 242,
+   "before": {
+    "on": 0.038,
+    "near": 0.769,
+    "samples": 26
+   },
+   "after": {
+    "on": 0.038,
+    "near": 0.769,
+    "samples": 26
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 100,
+   "name": null,
+   "width": 1.0,
+   "length_m": 129,
+   "before": {
+    "on": 0.357,
+    "near": 0.5,
+    "samples": 14
+   },
+   "after": {
+    "on": 0.357,
+    "near": 0.5,
+    "samples": 14
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 123,
+   "name": null,
+   "width": 3.66,
+   "length_m": 90,
+   "before": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 11
+   },
+   "after": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 11
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 124,
+   "name": null,
+   "width": 1.0,
+   "length_m": 120,
+   "before": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 13
+   },
+   "after": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 13
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 137,
+   "name": null,
+   "width": 1.63,
+   "length_m": 14,
+   "before": {
+    "on": 0.0,
+    "near": 0.667,
+    "samples": 3
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.667,
+    "samples": 3
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 147,
+   "name": null,
+   "width": 1.32,
+   "length_m": 144,
+   "before": {
+    "on": 0.125,
+    "near": 1.0,
+    "samples": 16
+   },
+   "after": {
+    "on": 0.125,
+    "near": 1.0,
+    "samples": 16
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 148,
+   "name": null,
+   "width": 1.32,
+   "length_m": 49,
+   "before": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 6
+   },
+   "after": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 6
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 149,
+   "name": null,
+   "width": 1.32,
+   "length_m": 40,
+   "before": {
+    "on": 0.167,
+    "near": 1.0,
+    "samples": 6
+   },
+   "after": {
+    "on": 0.167,
+    "near": 1.0,
+    "samples": 6
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 189,
+   "name": null,
+   "width": 1.0,
+   "length_m": 181,
+   "before": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 20
+   },
+   "after": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 20
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 204,
+   "name": null,
+   "width": 1.95,
+   "length_m": 5,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 2
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 2
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 213,
+   "name": null,
+   "width": 1.0,
+   "length_m": 48,
+   "before": {
+    "on": 0.167,
+    "near": 0.667,
+    "samples": 6
+   },
+   "after": {
+    "on": 0.167,
+    "near": 0.667,
+    "samples": 6
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 228,
+   "name": null,
+   "width": 1.07,
+   "length_m": 22,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 4
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 4
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 241,
+   "name": null,
+   "width": 2.96,
+   "length_m": 118,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 13
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 13
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 252,
+   "name": null,
+   "width": 2.16,
+   "length_m": 583,
+   "before": {
+    "on": 0.083,
+    "near": 1.0,
+    "samples": 60
+   },
+   "after": {
+    "on": 0.083,
+    "near": 1.0,
+    "samples": 60
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 257,
+   "name": null,
+   "width": 1.53,
+   "length_m": 84,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 10
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 10
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 262,
+   "name": null,
+   "width": 3.25,
+   "length_m": 220,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 24
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 24
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 274,
+   "name": null,
+   "width": 1.02,
+   "length_m": 42,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 6
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 6
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 275,
+   "name": null,
+   "width": 1.32,
+   "length_m": 57,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 7
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 7
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 278,
+   "name": null,
+   "width": 3.64,
+   "length_m": 407,
+   "before": {
+    "on": 0.976,
+    "near": 1.0,
+    "samples": 42
+   },
+   "after": {
+    "on": 0.976,
+    "near": 1.0,
+    "samples": 42
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 279,
+   "name": null,
+   "width": 3.64,
+   "length_m": 322,
+   "before": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 34
+   },
+   "after": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 34
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 280,
+   "name": null,
+   "width": 3.64,
+   "length_m": 17,
+   "before": {
+    "on": 0.667,
+    "near": 0.667,
+    "samples": 3
+   },
+   "after": {
+    "on": 0.667,
+    "near": 0.667,
+    "samples": 3
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 283,
+   "name": null,
+   "width": 3.32,
+   "length_m": 546,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 56
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 56
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 286,
+   "name": null,
+   "width": 1.09,
+   "length_m": 485,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 50
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 50
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 290,
+   "name": null,
+   "width": 1.05,
+   "length_m": 149,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 16
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 16
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 293,
+   "name": null,
+   "width": 4.15,
+   "length_m": 148,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 16
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 16
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 295,
+   "name": null,
+   "width": 1.13,
+   "length_m": 30,
+   "before": {
+    "on": 0.6,
+    "near": 0.6,
+    "samples": 5
+   },
+   "after": {
+    "on": 0.6,
+    "near": 0.6,
+    "samples": 5
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 298,
+   "name": null,
+   "width": 1.0,
+   "length_m": 98,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 11
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 11
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 299,
+   "name": null,
+   "width": 4.24,
+   "length_m": 212,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 23
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 23
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 301,
+   "name": null,
+   "width": 5.22,
+   "length_m": 105,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 12
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 12
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 304,
+   "name": null,
+   "width": 3.84,
+   "length_m": 28,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 4
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 4
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 310,
+   "name": null,
+   "width": 4.05,
+   "length_m": 124,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 14
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 14
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 319,
+   "name": null,
+   "width": 5.38,
+   "length_m": 14,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 3
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 3
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 330,
+   "name": null,
+   "width": 1.0,
+   "length_m": 101,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 12
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 12
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 379,
+   "name": null,
+   "width": 1.0,
+   "length_m": 47,
+   "before": {
+    "on": 0.0,
+    "near": 0.5,
+    "samples": 6
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.5,
+    "samples": 6
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  }
+ ],
+ "side_channels": [],
+ "nhd_dropped": [],
+ "undrawn": [
+  {
+   "at": [
+    1863,
+    2226
+   ],
+   "area_m2": 144600,
+   "freq_mean": 0.99,
+   "nearest_reach": null,
+   "nearest_width": 3.64,
+   "nearest_m": 163,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    1937,
+    2658
+   ],
+   "area_m2": 99575,
+   "freq_mean": 0.97,
+   "nearest_reach": null,
+   "nearest_width": 3.25,
+   "nearest_m": 153,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    3853,
+    2169
+   ],
+   "area_m2": 72925,
+   "freq_mean": 1.0,
+   "nearest_reach": null,
+   "nearest_width": 3.32,
+   "nearest_m": 125,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    3898,
+    7159
+   ],
+   "area_m2": 69550,
+   "freq_mean": 0.9,
+   "nearest_reach": null,
+   "nearest_width": 1.0,
+   "nearest_m": 148,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    4071,
+    2140
+   ],
+   "area_m2": 66025,
+   "freq_mean": 1.0,
+   "nearest_reach": null,
+   "nearest_width": 3.32,
+   "nearest_m": 94,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    2583,
+    6694
+   ],
+   "area_m2": 44850,
+   "freq_mean": 0.88,
+   "nearest_reach": null,
+   "nearest_width": 1.45,
+   "nearest_m": 110,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  },
+  {
+   "at": [
+    3426,
+    6597
+   ],
+   "area_m2": 37325,
+   "freq_mean": 0.9,
+   "nearest_reach": null,
+   "nearest_width": 1.0,
+   "nearest_m": 111,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    4159,
+    1975
+   ],
+   "area_m2": 20250,
+   "freq_mean": 0.99,
+   "nearest_reach": null,
+   "nearest_width": 1.09,
+   "nearest_m": 60,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    4286,
+    7579
+   ],
+   "area_m2": 13700,
+   "freq_mean": 0.88,
+   "nearest_reach": null,
+   "nearest_width": 4.69,
+   "nearest_m": 100,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    6137,
+    9263
+   ],
+   "area_m2": 11725,
+   "freq_mean": 0.89,
+   "nearest_reach": null,
+   "nearest_width": 1.0,
+   "nearest_m": 116,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    3898,
+    1853
+   ],
+   "area_m2": 9325,
+   "freq_mean": 1.0,
+   "nearest_reach": null,
+   "nearest_width": 4.24,
+   "nearest_m": 42,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    3621,
+    2083
+   ],
+   "area_m2": 8950,
+   "freq_mean": 1.0,
+   "nearest_reach": null,
+   "nearest_width": 1.05,
+   "nearest_m": 61,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    3067,
+    4957
+   ],
+   "area_m2": 8150,
+   "freq_mean": 0.77,
+   "nearest_reach": null,
+   "nearest_width": 1.05,
+   "nearest_m": 203,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    3742,
+    1987
+   ],
+   "area_m2": 7250,
+   "freq_mean": 1.0,
+   "nearest_reach": null,
+   "nearest_width": 4.15,
+   "nearest_m": 57,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    4250,
+    9321
+   ],
+   "area_m2": 7225,
+   "freq_mean": 0.85,
+   "nearest_reach": null,
+   "nearest_width": 2.12,
+   "nearest_m": 99,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    272,
+    8585
+   ],
+   "area_m2": 7075,
+   "freq_mean": 0.79,
+   "nearest_reach": null,
+   "nearest_width": 2.93,
+   "nearest_m": 397,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    4452,
+    7499
+   ],
+   "area_m2": 6500,
+   "freq_mean": 0.82,
+   "nearest_reach": null,
+   "nearest_width": 1.0,
+   "nearest_m": 120,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    8765,
+    6186
+   ],
+   "area_m2": 6075,
+   "freq_mean": 0.75,
+   "nearest_reach": null,
+   "nearest_width": 2.64,
+   "nearest_m": 244,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    2381,
+    6659
+   ],
+   "area_m2": 5900,
+   "freq_mean": 0.83,
+   "nearest_reach": null,
+   "nearest_width": 1.45,
+   "nearest_m": 255,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  },
+  {
+   "at": [
+    399,
+    9755
+   ],
+   "area_m2": 4575,
+   "freq_mean": 0.79,
+   "nearest_reach": null,
+   "nearest_width": 2.05,
+   "nearest_m": 731,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    1404,
+    8584
+   ],
+   "area_m2": 4000,
+   "freq_mean": 0.5,
+   "nearest_reach": null,
+   "nearest_width": 1.02,
+   "nearest_m": 130,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    4666,
+    7405
+   ],
+   "area_m2": 3825,
+   "freq_mean": 0.72,
+   "nearest_reach": null,
+   "nearest_width": 1.0,
+   "nearest_m": 270,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    2221,
+    8298
+   ],
+   "area_m2": 3525,
+   "freq_mean": 0.63,
+   "nearest_reach": null,
+   "nearest_width": 2.15,
+   "nearest_m": 51,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    453,
+    8646
+   ],
+   "area_m2": 2475,
+   "freq_mean": 0.72,
+   "nearest_reach": null,
+   "nearest_width": 2.05,
+   "nearest_m": 312,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    581,
+    7168
+   ],
+   "area_m2": 2450,
+   "freq_mean": 0.85,
+   "nearest_reach": null,
+   "nearest_width": 1.0,
+   "nearest_m": 44,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    4025,
+    2426
+   ],
+   "area_m2": 1975,
+   "freq_mean": 1.0,
+   "nearest_reach": null,
+   "nearest_width": 2.96,
+   "nearest_m": 36,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    5206,
+    9813
+   ],
+   "area_m2": 1700,
+   "freq_mean": 0.69,
+   "nearest_reach": null,
+   "nearest_width": 6.54,
+   "nearest_m": 487,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    4146,
+    5470
+   ],
+   "area_m2": 1600,
+   "freq_mean": 0.74,
+   "nearest_reach": null,
+   "nearest_width": 1.22,
+   "nearest_m": 89,
+   "map": "unmapped"
+  }
+ ]
+}

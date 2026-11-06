@@ -1,0 +1,44 @@
+{
+ "tile": "utm10n_680_4270",
+ "steps": {},
+ "stages": {},
+ "runs": [
+  {
+   "started_at": "2026-11-06T18:49:18Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-06T18:49:18Z",
+     "steps_run": [],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T18:49:18Z"
+    }
+   ],
+   "ended_at": "2026-11-06T18:49:18Z",
+   "failed": [
+    "water_imagery"
+   ]
+  }
+ ],
+ "client": {
+  "bytes": 2368114,
+  "files": 13,
+  "largest": {
+   "client/weather.json": 633557,
+   "client/features.json": 631889,
+   "games.json": 397983,
+   "client/species_prior.json": 228620,
+   "client/species_mix.json": 224404,
+   "manifest.json": 139005,
+   "client/ground_classes.json": 25891,
+   "perception.json": 22695,
+   "locomotion.json": 20576,
+   "calendar.json": 18259,
+   "species/species.json": 12932,
+   "client/substrate.json": 11579
+  },
+  "note": "every file under client/ and the tables the viewer fetches; an upper bound (the present-day texture is fetched only on request)"
+ },
+ "totals": {},
+ "updated_at": "2026-11-06T18:49:18Z"
+}

@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "alces_alces",
  "scientific": "Alces alces",
  "plan": "quadruped",
@@ -14,8 +14,989 @@
  },
  "by": "pipeline/reference_photos.py",
  "licences": "CC0, CC BY or CC BY-SA only, each photo's own",
- "chosen": "inat_299039125",
+ "chosen": "commons_540185",
  "candidates": [
+  {
+   "source": "wikimedia commons",
+   "id": "commons_540185",
+   "licence": "CC BY-SA 2.5",
+   "author": "",
+   "attribution": "unknown, CC BY-SA 2.5, via Wikimedia Commons (File:Lonesome-Lake-Moose.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Lonesome-Lake-Moose.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e9/Lonesome-Lake-Moose.jpg/500px-Lonesome-Lake-Moose.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/e/e9/Lonesome-Lake-Moose.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/alces_alces/commons_540185/photo.jpg",
+   "score": {
+    "total": 0.298,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.764,
+    "band_px": 2.71,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.567,
+    "stance": 1.0,
+    "spread": 10.6,
+    "lean": 3.8,
+    "belly_gap": 0.752,
+    "leg_zone": 0.188,
+    "leans": [
+     -0.9,
+     -11.5,
+     -3.8
+    ],
+    "lifts": [
+     0.002,
+     0.019,
+     0.04
+    ],
+    "plain": 0.167,
+    "colour": 0.971,
+    "box": [
+     0.074,
+     0.115,
+     0.91,
+     0.747
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true,
+    "local": 0.75
+   },
+   "file_large": "pipeline/_cache/references/alces_alces/commons_540185_large/photo.jpg",
+   "file_crop": "pipeline/_cache/references/alces_alces/commons_540185_crop/reference.png"
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_11410048",
+   "licence": "CC BY-SA 3.0",
+   "author": "Badzil",
+   "attribution": "Badzil, CC BY-SA 3.0, via Wikimedia Commons (File:Elk-telemark.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Elk-telemark.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/Elk-telemark.jpg/500px-Elk-telemark.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/Elk-telemark.jpg/1280px-Elk-telemark.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/alces_alces/commons_11410048/photo.jpg",
+   "score": {
+    "total": 0.264,
+    "whole": 1.0,
+    "single": 0.985,
+    "aspect": 1.271,
+    "band_px": 3.71,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.754,
+    "side": 1.0,
+    "legs": 0.75,
+    "stance": 0.973,
+    "spread": 12.0,
+    "lean": 15.4,
+    "belly_gap": 0.726,
+    "leg_zone": 0.21,
+    "leans": [
+     15.4,
+     5.5,
+     17.5
+    ],
+    "lifts": [
+     0.011,
+     0.0,
+     0.031
+    ],
+    "plain": 0.166,
+    "colour": 0.807,
+    "box": [
+     0.126,
+     0.176,
+     0.792,
+     0.875
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true,
+    "local": 0.75
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_469944294",
+   "licence": "CC BY 4.0",
+   "author": "CaracalShan",
+   "attribution": "(c) CaracalShan, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/257951683",
+   "photo_page": "https://www.inaturalist.org/photos/469944294",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/469944294/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/469944294/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/alces_alces/inat_469944294/photo.jpg",
+   "score": {
+    "total": 0.087,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.341,
+    "band_px": 8.34,
+    "clear": 0.638,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.192,
+    "side": 1.0,
+    "legs": 0.708,
+    "stance": 0.6,
+    "spread": 7.7,
+    "lean": 3.9,
+    "belly_gap": 0.769,
+    "leg_zone": 0.205,
+    "leans": [
+     7.7,
+     -0.0
+    ],
+    "lifts": [
+     0.0,
+     0.092
+    ],
+    "plain": 0.239,
+    "colour": 0.681,
+    "box": [
+     0.366,
+     0.198,
+     0.862,
+     0.754
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true,
+    "local": 1.0
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_10679832",
+   "licence": "CC BY-SA 2.0",
+   "author": "Dave Bezaire & Susi Havens-Bezaire",
+   "attribution": "Dave Bezaire & Susi Havens-Bezaire, CC BY-SA 2.0, via Wikimedia Commons (File:Moose in Gros Ventre Campgroud 4.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Moose_in_Gros_Ventre_Campgroud_4.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c6/Moose_in_Gros_Ventre_Campgroud_4.jpg/500px-Moose_in_Gros_Ventre_Campgroud_4.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/c/c6/Moose_in_Gros_Ventre_Campgroud_4.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/alces_alces/commons_10679832/photo.jpg",
+   "score": {
+    "total": 0.193,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.748,
+    "band_px": 3.18,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.208,
+    "stance": 1.0,
+    "spread": 8.4,
+    "lean": 7.1,
+    "belly_gap": 0.709,
+    "leg_zone": 0.145,
+    "leans": [
+     -11.3,
+     -2.9
+    ],
+    "lifts": [
+     0.054,
+     0.001
+    ],
+    "plain": 0.167,
+    "colour": 0.981,
+    "box": [
+     0.106,
+     0.199,
+     0.966,
+     0.888
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_157471129",
+   "licence": "CC BY 4.0",
+   "author": "John Rosford",
+   "attribution": "(c) John Rosford, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/94895048",
+   "photo_page": "https://www.inaturalist.org/photos/157471129",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/157471129/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/157471129/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/alces_alces/inat_157471129/photo.jpg",
+   "score": {
+    "total": 0.087,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.178,
+    "band_px": 9.31,
+    "clear": 0.558,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.467,
+    "stance": 0.495,
+    "spread": 27.3,
+    "lean": 0.9,
+    "belly_gap": 0.43,
+    "leg_zone": 0.176,
+    "leans": [
+     6.3,
+     -4.4,
+     -15.5,
+     11.8
+    ],
+    "lifts": [
+     0.023,
+     0.066,
+     0.042,
+     0.0
+    ],
+    "plain": 0.167,
+    "colour": 0.799,
+    "box": [
+     0.238,
+     0.183,
+     0.74,
+     0.702
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_57508326",
+   "licence": "CC BY-SA 2.0",
+   "author": "KimonBerlin",
+   "attribution": "KimonBerlin, CC BY-SA 2.0, via Wikimedia Commons (File:Lake Agnes 7-19 (15520634198).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Lake_Agnes_7-19_(15520634198).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/Lake_Agnes_7-19_%2815520634198%29.jpg/500px-Lake_Agnes_7-19_%2815520634198%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/Lake_Agnes_7-19_%2815520634198%29.jpg/1280px-Lake_Agnes_7-19_%2815520634198%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/alces_alces/commons_57508326/photo.jpg",
+   "score": {
+    "total": 0.08,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.51,
+    "band_px": 2.19,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.025,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.42,
+    "spread": 24.4,
+    "lean": 4.4,
+    "belly_gap": 0.862,
+    "leg_zone": 0.412,
+    "leans": [
+     -4.4,
+     15.5,
+     -8.9
+    ],
+    "lifts": [
+     0.002,
+     0.064,
+     0.088
+    ],
+    "plain": 0.16,
+    "colour": 0.8,
+    "box": [
+     0.108,
+     0.21,
+     0.742,
+     0.841
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_153839749",
+   "licence": "CC BY 4.0",
+   "author": "Rogars",
+   "attribution": "Rogars, CC BY 4.0, via Wikimedia Commons (File:Bull moose with reflection.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Bull_moose_with_reflection.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/Bull_moose_with_reflection.jpg/500px-Bull_moose_with_reflection.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/Bull_moose_with_reflection.jpg/1280px-Bull_moose_with_reflection.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/alces_alces/commons_153839749/photo.jpg",
+   "score": {
+    "total": 0.074,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.5,
+    "band_px": 2.39,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.328,
+    "spread": 15.4,
+    "lean": 4.4,
+    "belly_gap": 0.863,
+    "leg_zone": 0.303,
+    "leans": [
+     -11.4,
+     -2.4,
+     4.0,
+     -6.4
+    ],
+    "lifts": [
+     0.0,
+     0.098,
+     0.0,
+     0.09
+    ],
+    "plain": 0.205,
+    "colour": 0.98,
+    "box": [
+     0.219,
+     0.15,
+     0.697,
+     0.389
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_65369050",
+   "licence": "CC BY 4.0",
+   "author": "Justin Flint",
+   "attribution": "(c) Justin Flint, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/41218219",
+   "photo_page": "https://www.inaturalist.org/photos/65369050",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/65369050/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/65369050/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/alces_alces/inat_65369050/photo.jpg",
+   "score": {
+    "total": 0.067,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 3.395,
+    "band_px": 2.2,
+    "clear": 1.0,
+    "size": 0.368,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.587,
+    "spread": 11.3,
+    "lean": 5.7,
+    "belly_gap": 0.573,
+    "leg_zone": 0.256,
+    "leans": [
+     -11.3,
+     0.0
+    ],
+    "lifts": [
+     0.093,
+     0.0
+    ],
+    "plain": 0.252,
+    "colour": 0.99,
+    "box": [
+     0.252,
+     0.407,
+     0.544,
+     0.536
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_36533916",
+   "licence": "CC BY-SA 4.0",
+   "author": "Paxson Woelber",
+   "attribution": "Paxson Woelber, CC BY-SA 4.0, via Wikimedia Commons (File:Alaska moose.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Alaska_moose.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/Alaska_moose.jpg/500px-Alaska_moose.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/Alaska_moose.jpg/1280px-Alaska_moose.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/alces_alces/commons_36533916/photo.jpg",
+   "score": {
+    "total": 0.05,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.804,
+    "band_px": 8.6,
+    "clear": 0.617,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.622,
+    "side": 1.0,
+    "legs": 0.483,
+    "stance": 0.35,
+    "spread": 23.7,
+    "lean": 5.1,
+    "belly_gap": 0.796,
+    "leg_zone": 0.178,
+    "leans": [
+     -5.0,
+     18.7,
+     5.1
+    ],
+    "lifts": [
+     0.0,
+     0.084,
+     0.084
+    ],
+    "plain": 0.256,
+    "colour": 0.94,
+    "box": [
+     0.14,
+     0.144,
+     0.912,
+     0.787
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_469944387",
+   "licence": "CC BY 4.0",
+   "author": "CaracalShan",
+   "attribution": "(c) CaracalShan, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/257951684",
+   "photo_page": "https://www.inaturalist.org/photos/469944387",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/469944387/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/469944387/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/alces_alces/inat_469944387/photo.jpg",
+   "score": {
+    "total": 0.042,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.707,
+    "band_px": 9.64,
+    "clear": 0.53,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.342,
+    "side": 1.0,
+    "legs": 0.783,
+    "stance": 0.235,
+    "spread": 29.8,
+    "lean": 17.5,
+    "belly_gap": 0.735,
+    "leg_zone": 0.214,
+    "leans": [
+     -4.8,
+     17.5,
+     25.0
+    ],
+    "lifts": [
+     0.003,
+     0.031,
+     0.085
+    ],
+    "plain": 0.244,
+    "colour": 0.941,
+    "box": [
+     0.356,
+     0.339,
+     0.858,
+     0.781
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_157459565",
+   "licence": "CC BY 4.0",
+   "author": "John Rosford",
+   "attribution": "(c) John Rosford, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/94888852",
+   "photo_page": "https://www.inaturalist.org/photos/157459565",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/157459565/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/157459565/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/alces_alces/inat_157459565/photo.jpg",
+   "score": {
+    "total": 0.031,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.794,
+    "band_px": 3.05,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.975,
+    "side": 0.234,
+    "legs": 0.942,
+    "stance": 0.3,
+    "spread": 5.7,
+    "lean": 11.5,
+    "belly_gap": 0.725,
+    "leg_zone": 0.233,
+    "leans": [
+     11.5,
+     8.8,
+     14.5
+    ],
+    "lifts": [
+     0.116,
+     0.024,
+     0.0
+    ],
+    "plain": 0.203,
+    "colour": 0.691,
+    "box": [
+     0.107,
+     0.1,
+     0.851,
+     0.856
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_489617",
+   "licence": "CC BY 2.5",
+   "author": "",
+   "attribution": "unknown, CC BY 2.5, via Wikimedia Commons (File:Moose-Gustav.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Moose-Gustav.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c9/Moose-Gustav.jpg/500px-Moose-Gustav.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Moose-Gustav.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/alces_alces/commons_489617/photo.jpg",
+   "score": {
+    "total": 0.019,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.587,
+    "band_px": 2.35,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 0.979,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.106,
+    "spread": 26.7,
+    "lean": 7.6,
+    "belly_gap": 0.843,
+    "leg_zone": 0.52,
+    "leans": [
+     -20.5,
+     6.2,
+     -7.6
+    ],
+    "lifts": [
+     0.125,
+     0.043,
+     0.0
+    ],
+    "plain": 0.092,
+    "colour": 0.829,
+    "box": [
+     0.064,
+     0.205,
+     0.956,
+     0.955
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_587223641",
+   "licence": "CC BY 4.0",
+   "author": "Whitney Brook Matson",
+   "attribution": "(c) Whitney Brook Matson, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/324418804",
+   "photo_page": "https://www.inaturalist.org/photos/587223641",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/587223641/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/587223641/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/alces_alces/inat_587223641/photo.jpg",
+   "score": {
+    "total": 0.013,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.041,
+    "band_px": 2.98,
+    "clear": 1.0,
+    "size": 0.432,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.851,
+    "legs": 1.0,
+    "stance": 0.125,
+    "spread": 35.5,
+    "lean": 1.9,
+    "belly_gap": 0.683,
+    "leg_zone": 0.293,
+    "leans": [
+     15.8,
+     -19.7
+    ],
+    "lifts": [
+     0.003,
+     0.003
+    ],
+    "plain": 0.118,
+    "colour": 0.997,
+    "box": [
+     0.392,
+     0.358,
+     0.7,
+     0.654
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_250876982",
+   "licence": "CC BY 4.0",
+   "author": "Doug Brush",
+   "attribution": "(c) Doug Brush, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/145984893",
+   "photo_page": "https://www.inaturalist.org/photos/250876982",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/250876982/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/250876982/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/alces_alces/inat_250876982/photo.jpg",
+   "score": {
+    "total": 0.012,
+    "whole": 1.0,
+    "single": 0.989,
+    "aspect": 0.832,
+    "band_px": 10.06,
+    "clear": 0.495,
+    "size": 0.672,
+    "solid": 0.954,
+    "head_end": 0.879,
+    "side": 0.329,
+    "legs": 0.333,
+    "stance": 0.382,
+    "spread": 22.4,
+    "lean": 11.4,
+    "belly_gap": 0.5,
+    "leg_zone": 0.16,
+    "leans": [
+     11.4,
+     -5.7,
+     16.7
+    ],
+    "lifts": [
+     0.002,
+     0.084,
+     0.084
+    ],
+    "plain": 0.223,
+    "colour": 0.99,
+    "box": [
+     0.276,
+     0.292,
+     0.582,
+     0.66
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_299039100",
+   "licence": "CC BY 4.0",
+   "author": "Kaden Slone",
+   "attribution": "(c) Kaden Slone, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/172271778",
+   "photo_page": "https://www.inaturalist.org/photos/299039100",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/299039100/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/299039100/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/alces_alces/inat_299039100/photo.jpg",
+   "score": {
+    "total": 0.011,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.69,
+    "band_px": 1.9,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.04,
+    "spread": 36.7,
+    "lean": 13.9,
+    "belly_gap": 0.846,
+    "leg_zone": 0.386,
+    "leans": [
+     -16.2,
+     -13.9,
+     20.5
+    ],
+    "lifts": [
+     0.0,
+     0.063,
+     0.089
+    ],
+    "plain": 0.165,
+    "colour": 0.982,
+    "box": [
+     0.194,
+     0.363,
+     0.728,
+     0.838
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 1.0
+   },
+   "file_large": "pipeline/_cache/references/alces_alces/inat_299039100_large/photo.jpg",
+   "file_crop": "pipeline/_cache/references/alces_alces/inat_299039100_crop/reference.png"
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_55713870",
+   "licence": "CC BY-SA 4.0",
+   "author": "Holger Uwe Schmitt",
+   "attribution": "Holger Uwe Schmitt, CC BY-SA 4.0, via Wikimedia Commons (File:Winter im Wildpark Bad Mergentheim, Elch.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Winter_im_Wildpark_Bad_Mergentheim,_Elch.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Winter_im_Wildpark_Bad_Mergentheim%2C_Elch.jpg/500px-Winter_im_Wildpark_Bad_Mergentheim%2C_Elch.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Winter_im_Wildpark_Bad_Mergentheim%2C_Elch.jpg/1280px-Winter_im_Wildpark_Bad_Mergentheim%2C_Elch.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/alces_alces/commons_55713870/photo.jpg",
+   "score": {
+    "total": 0.011,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.305,
+    "band_px": 3.58,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.049,
+    "spread": 30.0,
+    "lean": 6.0,
+    "belly_gap": 0.635,
+    "leg_zone": 0.487,
+    "leans": [
+     -17.0,
+     4.9,
+     -18.9,
+     11.1
+    ],
+    "lifts": [
+     0.001,
+     0.029,
+     0.061,
+     0.13
+    ],
+    "plain": 0.116,
+    "colour": 0.995,
+    "box": [
+     0.22,
+     0.036,
+     0.87,
+     0.784
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_65369046",
+   "licence": "CC BY 4.0",
+   "author": "Justin Flint",
+   "attribution": "(c) Justin Flint, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/41218219",
+   "photo_page": "https://www.inaturalist.org/photos/65369046",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/65369046/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/65369046/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/alces_alces/inat_65369046/photo.jpg",
+   "score": {
+    "total": 0.01,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 3.229,
+    "band_px": 2.78,
+    "clear": 1.0,
+    "size": 0.104,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.325,
+    "spread": 0.0,
+    "lean": 0.0,
+    "belly_gap": 0.633,
+    "leg_zone": 0.286,
+    "leans": [
+     0.0,
+     0.0
+    ],
+    "lifts": [
+     0.114,
+     0.0
+    ],
+    "plain": 0.212,
+    "colour": 0.974,
+    "box": [
+     0.222,
+     0.524,
+     0.448,
+     0.629
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_250877025",
+   "licence": "CC BY 4.0",
+   "author": "Doug Brush",
+   "attribution": "(c) Doug Brush, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/145984895",
+   "photo_page": "https://www.inaturalist.org/photos/250877025",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/250877025/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/250877025/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/alces_alces/inat_250877025/photo.jpg",
+   "score": {
+    "total": 0.009,
+    "whole": 1.0,
+    "single": 0.998,
+    "aspect": 1.013,
+    "band_px": 3.54,
+    "clear": 1.0,
+    "size": 0.811,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.783,
+    "legs": 1.0,
+    "stance": 0.078,
+    "spread": 7.5,
+    "lean": 22.1,
+    "belly_gap": 0.885,
+    "leg_zone": 0.31,
+    "leans": [
+     -25.9,
+     -18.4
+    ],
+    "lifts": [
+     0.002,
+     0.128
+    ],
+    "plain": 0.225,
+    "colour": 0.373,
+    "box": [
+     0.42,
+     0.413,
+     0.726,
+     0.816
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
   {
    "source": "inaturalist",
    "id": "inat_152832",
@@ -30,21 +1011,41 @@
    "local": true,
    "file_small": "pipeline/_cache/references/alces_alces/inat_152832/photo.jpg",
    "score": {
-    "total": 0.536,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 0.5,
-    "stance": 1.0,
-    "plain": 0.648,
-    "colour": 1.0,
     "aspect": 2.099,
+    "band_px": 2.07,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.932,
+    "side": 0.775,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 5.4,
+    "belly_gap": 0.255,
+    "leg_zone": 0.405,
+    "leans": [
+     -5.4
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.644,
+    "colour": 0.995,
     "box": [
      0.278,
      0.281,
      0.828,
      0.719
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
     ],
     "local": 1.0
    },
@@ -65,21 +1066,46 @@
    "local": true,
    "file_small": "pipeline/_cache/references/alces_alces/inat_152831/photo.jpg",
    "score": {
-    "total": 0.465,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 1.0,
-    "stance": 0.5,
-    "plain": 0.551,
-    "colour": 1.0,
-    "aspect": 1.847,
+    "aspect": 1.887,
+    "band_px": 1.59,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.542,
+    "stance": 0.0,
+    "spread": 55.8,
+    "lean": 15.2,
+    "belly_gap": 0.647,
+    "leg_zone": 0.185,
+    "leans": [
+     -41.8,
+     -4.6,
+     -25.8,
+     14.0
+    ],
+    "lifts": [
+     0.0,
+     0.016,
+     0.056,
+     0.089
+    ],
+    "plain": 0.552,
+    "colour": 0.998,
     "box": [
-     0.268,
+     0.258,
      0.29,
      0.726,
      0.657
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 1.0
    },
@@ -100,21 +1126,42 @@
    "local": true,
    "file_small": "pipeline/_cache/references/alces_alces/inat_293095366/photo.jpg",
    "score": {
-    "total": 0.45,
-    "whole": 0.826,
-    "side": 1.0,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 1.0,
     "single": 1.0,
+    "aspect": 1.34,
+    "band_px": 3.57,
+    "clear": 1.0,
+    "size": 0.808,
+    "solid": 1.0,
+    "head_end": 0.842,
+    "side": 1.0,
     "legs": 0.5,
-    "stance": 1.0,
-    "plain": 0.677,
-    "colour": 1.0,
-    "aspect": 1.905,
+    "stance": 0.0,
+    "spread": 114.6,
+    "lean": 1.0,
+    "belly_gap": 0.381,
+    "leg_zone": 0.18,
+    "leans": [
+     -58.3,
+     56.3
+    ],
+    "lifts": [
+     0.0,
+     0.0
+    ],
+    "plain": 0.534,
+    "colour": 0.993,
     "box": [
-     0.04,
-     0.216,
-     0.802,
-     0.749
+     0.392,
+     0.229,
+     0.794,
+     0.629
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 1.0
    }
@@ -133,21 +1180,44 @@
    "local": true,
    "file_small": "pipeline/_cache/references/alces_alces/inat_721372261/photo.jpg",
    "score": {
-    "total": 0.408,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 1.0,
-    "stance": 0.5,
-    "plain": 0.36,
-    "colour": 1.0,
-    "aspect": 2.359,
+    "single": 0.755,
+    "aspect": 0.882,
+    "band_px": 20.95,
+    "clear": 0.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.07,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.083,
+    "leg_zone": 0.176,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.234,
+    "colour": 0.643,
     "box": [
-     0.082,
-     0.378,
-     0.95,
-     0.931
+     0.52,
+     0.498,
+     0.55,
+     0.55
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance",
+     "clear"
     ],
     "local": 1.0
    }
@@ -163,89 +1233,46 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1f/%C3%84lg_och_%C3%A5sk%C3%A5dare_vid_G%C3%A5rdsj%C3%B6_%C3%A4lgpark.jpg/1280px-%C3%84lg_och_%C3%A5sk%C3%A5dare_vid_G%C3%A5rdsj%C3%B6_%C3%A4lgpark.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/alces_alces/commons_151576448/photo.jpg",
    "score": {
-    "total": 0.291,
-    "whole": 0.696,
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.993,
+    "aspect": 1.476,
+    "band_px": 5.22,
+    "clear": 0.898,
+    "size": 0.928,
+    "solid": 1.0,
+    "head_end": 0.0,
     "side": 1.0,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 1.0,
-    "stance": 1.0,
-    "plain": 0.115,
-    "colour": 1.0,
-    "aspect": 2.538,
+    "legs": 0.85,
+    "stance": 0.0,
+    "spread": 45.4,
+    "lean": 6.1,
+    "belly_gap": 0.758,
+    "leg_zone": 0.222,
+    "leans": [
+     0.0,
+     45.4,
+     6.1
+    ],
+    "lifts": [
+     0.115,
+     0.091,
+     0.007
+    ],
+    "plain": 0.114,
+    "colour": 0.953,
     "box": [
-     0.042,
-     0.258,
-     0.962,
-     0.461
+     0.181,
+     0.32,
+     0.613,
+     0.484
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 0.75
-   }
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_250876982",
-   "licence": "CC BY 4.0",
-   "author": "Doug Brush",
-   "attribution": "(c) Doug Brush, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/145984893",
-   "photo_page": "https://www.inaturalist.org/photos/250876982",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/250876982/medium.jpeg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/250876982/large.jpeg",
-   "adult": true,
-   "local": true,
-   "file_small": "pipeline/_cache/references/alces_alces/inat_250876982/photo.jpg",
-   "score": {
-    "total": 0.251,
-    "whole": 1.0,
-    "side": 0.68,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 1.0,
-    "stance": 0.5,
-    "plain": 0.228,
-    "colour": 1.0,
-    "aspect": 1.308,
-    "box": [
-     0.298,
-     0.316,
-     0.782,
-     0.686
-    ],
-    "local": 1.0
-   }
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_469944387",
-   "licence": "CC BY 4.0",
-   "author": "CaracalShan",
-   "attribution": "(c) CaracalShan, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/257951684",
-   "photo_page": "https://www.inaturalist.org/photos/469944387",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/469944387/medium.jpg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/469944387/large.jpg",
-   "adult": true,
-   "local": true,
-   "file_small": "pipeline/_cache/references/alces_alces/inat_469944387/photo.jpg",
-   "score": {
-    "total": 0.242,
-    "whole": 1.0,
-    "side": 1.0,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.5,
-    "stance": 0.5,
-    "plain": 0.243,
-    "colour": 1.0,
-    "aspect": 1.813,
-    "box": [
-     0.356,
-     0.345,
-     0.86,
-     0.763
-    ],
-    "local": 1.0
    }
   },
   {
@@ -262,56 +1289,49 @@
    "local": true,
    "file_small": "pipeline/_cache/references/alces_alces/inat_299039125/photo.jpg",
    "score": {
-    "total": 0.226,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 0.5,
-    "stance": 0.5,
+    "aspect": 1.646,
+    "band_px": 1.87,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 40.2,
+    "lean": 11.3,
+    "belly_gap": 0.797,
+    "leg_zone": 0.351,
+    "leans": [
+     -18.7,
+     -11.3,
+     21.5
+    ],
+    "lifts": [
+     0.003,
+     0.034,
+     0.078
+    ],
     "plain": 0.157,
-    "colour": 1.0,
-    "aspect": 1.721,
+    "colour": 0.987,
     "box": [
      0.23,
      0.423,
      0.76,
-     0.886
+     0.907
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 1.0
    },
    "file_large": "pipeline/_cache/references/alces_alces/inat_299039125_large/photo.jpg",
    "file_crop": "pipeline/_cache/references/alces_alces/inat_299039125_crop/reference.png"
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_153839749",
-   "licence": "CC BY 4.0",
-   "author": "Rogars",
-   "attribution": "Rogars, CC BY 4.0, via Wikimedia Commons (File:Bull moose with reflection.jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:Bull_moose_with_reflection.jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/Bull_moose_with_reflection.jpg/500px-Bull_moose_with_reflection.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/Bull_moose_with_reflection.jpg/1280px-Bull_moose_with_reflection.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "file_small": "pipeline/_cache/references/alces_alces/commons_153839749/photo.jpg",
-   "score": {
-    "total": 0.21,
-    "whole": 1.0,
-    "side": 1.0,
-    "size": 1.0,
-    "single": 0.525,
-    "legs": 0.5,
-    "stance": 1.0,
-    "plain": 0.206,
-    "colour": 1.0,
-    "aspect": 1.557,
-    "box": [
-     0.225,
-     0.152,
-     0.692,
-     0.377
-    ],
-    "local": 0.75
-   }
   },
   {
    "source": "inaturalist",
@@ -327,83 +1347,42 @@
    "local": true,
    "file_small": "pipeline/_cache/references/alces_alces/inat_721372258/photo.jpg",
    "score": {
-    "total": 0.205,
-    "whole": 0.977,
-    "side": 1.0,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 1.0,
     "single": 1.0,
+    "aspect": 1.222,
+    "band_px": 17.02,
+    "clear": 0.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.164,
+    "side": 0.0,
     "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.399,
-    "colour": 1.0,
-    "aspect": 1.966,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.232,
+    "colour": 0.604,
     "box": [
-     0.044,
-     0.234,
-     0.956,
-     0.931
+     0.514,
+     0.505,
+     0.558,
+     0.559
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance",
+     "clear"
     ],
     "local": 1.0
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_57508326",
-   "licence": "CC BY-SA 2.0",
-   "author": "KimonBerlin",
-   "attribution": "KimonBerlin, CC BY-SA 2.0, via Wikimedia Commons (File:Lake Agnes 7-19 (15520634198).jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:Lake_Agnes_7-19_(15520634198).jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/Lake_Agnes_7-19_%2815520634198%29.jpg/500px-Lake_Agnes_7-19_%2815520634198%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/Lake_Agnes_7-19_%2815520634198%29.jpg/1280px-Lake_Agnes_7-19_%2815520634198%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "file_small": "pipeline/_cache/references/alces_alces/commons_57508326/photo.jpg",
-   "score": {
-    "total": 0.203,
-    "whole": 1.0,
-    "side": 1.0,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 1.0,
-    "stance": 0.333,
-    "plain": 0.16,
-    "colour": 1.0,
-    "aspect": 1.612,
-    "box": [
-     0.108,
-     0.21,
-     0.74,
-     0.799
-    ],
-    "local": 0.75
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_11410048",
-   "licence": "CC BY-SA 3.0",
-   "author": "Badzil",
-   "attribution": "Badzil, CC BY-SA 3.0, via Wikimedia Commons (File:Elk-telemark.jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:Elk-telemark.jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/Elk-telemark.jpg/500px-Elk-telemark.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/Elk-telemark.jpg/1280px-Elk-telemark.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "file_small": "pipeline/_cache/references/alces_alces/commons_11410048/photo.jpg",
-   "score": {
-    "total": 0.191,
-    "whole": 1.0,
-    "side": 0.669,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.5,
-    "stance": 1.0,
-    "plain": 0.168,
-    "colour": 0.998,
-    "aspect": 1.301,
-    "box": [
-     0.144,
-     0.176,
-     0.792,
-     0.84
-    ],
-    "local": 0.75
    }
   },
   {
@@ -420,21 +1399,42 @@
    "local": true,
    "file_small": "pipeline/_cache/references/alces_alces/inat_469944392/photo.jpg",
    "score": {
-    "total": 0.187,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.246,
-    "colour": 1.0,
-    "aspect": 2.268,
+    "aspect": 1.918,
+    "band_px": 4.32,
+    "clear": 0.973,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.075,
+    "side": 1.0,
+    "legs": 0.675,
+    "stance": 0.0,
+    "spread": 64.1,
+    "lean": 7.9,
+    "belly_gap": 0.782,
+    "leg_zone": 0.201,
+    "leans": [
+     -24.1,
+     40.0
+    ],
+    "lifts": [
+     0.003,
+     0.069
+    ],
+    "plain": 0.245,
+    "colour": 0.806,
     "box": [
-     0.258,
-     0.243,
-     0.952,
-     0.726
+     0.252,
+     0.224,
+     0.95,
+     0.798
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 1.0
    }
@@ -450,21 +1450,48 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c2/G%C3%A5rdsj%C3%B6_%C3%A4lgpark_%C3%A4lgar.jpg/1280px-G%C3%A5rdsj%C3%B6_%C3%A4lgpark_%C3%A4lgar.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/alces_alces/commons_151576446/photo.jpg",
    "score": {
-    "total": 0.178,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
+    "single": 0.953,
+    "aspect": 1.638,
+    "band_px": 3.15,
+    "clear": 1.0,
     "size": 1.0,
-    "single": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
     "legs": 1.0,
-    "stance": 0.286,
-    "plain": 0.109,
-    "colour": 1.0,
-    "aspect": 2.569,
+    "stance": 0.0,
+    "spread": 33.8,
+    "lean": 0.8,
+    "belly_gap": 0.884,
+    "leg_zone": 0.428,
+    "leans": [
+     -3.8,
+     0.8,
+     -17.9,
+     15.9,
+     3.9
+    ],
+    "lifts": [
+     0.167,
+     0.181,
+     0.0,
+     0.109,
+     0.203
+    ],
+    "plain": 0.098,
+    "colour": 0.991,
     "box": [
-     0.046,
-     0.125,
-     0.832,
-     0.669
+     0.302,
+     0.331,
+     0.754,
+     0.822
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 0.75
    }
@@ -483,118 +1510,47 @@
    "local": true,
    "file_small": "pipeline/_cache/references/alces_alces/inat_531882518/photo.jpg",
    "score": {
-    "total": 0.175,
-    "whole": 1.0,
-    "side": 0.99,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 0.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.176,
-    "colour": 1.0,
-    "aspect": 1.494,
-    "box": [
-     0.398,
-     0.417,
-     0.9,
-     0.922
-    ],
-    "local": 1.0
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_10679832",
-   "licence": "CC BY-SA 2.0",
-   "author": "Dave Bezaire & Susi Havens-Bezaire",
-   "attribution": "Dave Bezaire & Susi Havens-Bezaire, CC BY-SA 2.0, via Wikimedia Commons (File:Moose in Gros Ventre Campgroud 4.jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:Moose_in_Gros_Ventre_Campgroud_4.jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c6/Moose_in_Gros_Ventre_Campgroud_4.jpg/500px-Moose_in_Gros_Ventre_Campgroud_4.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://upload.wikimedia.org/wikipedia/commons/c/c6/Moose_in_Gros_Ventre_Campgroud_4.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-   "file_small": "pipeline/_cache/references/alces_alces/commons_10679832/photo.jpg",
-   "score": {
-    "total": 0.167,
-    "whole": 0.817,
-    "side": 1.0,
+    "aspect": 1.882,
+    "band_px": 7.73,
+    "clear": 0.689,
     "size": 1.0,
-    "single": 0.999,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
     "legs": 1.0,
-    "stance": 0.333,
-    "plain": 0.165,
-    "colour": 1.0,
-    "aspect": 1.739,
-    "box": [
-     0.108,
-     0.202,
-     0.96,
-     0.888
+    "stance": 0.0,
+    "spread": 28.8,
+    "lean": 7.8,
+    "belly_gap": 0.407,
+    "leg_zone": 0.353,
+    "leans": [
+     -7.8,
+     0.0,
+     -28.8
     ],
-    "local": 0.75
-   }
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_299039100",
-   "licence": "CC BY 4.0",
-   "author": "Kaden Slone",
-   "attribution": "(c) Kaden Slone, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/172271778",
-   "photo_page": "https://www.inaturalist.org/photos/299039100",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/299039100/medium.jpeg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/299039100/large.jpeg",
-   "adult": true,
-   "local": true,
-   "file_small": "pipeline/_cache/references/alces_alces/inat_299039100/photo.jpg",
-   "score": {
-    "total": 0.161,
-    "whole": 1.0,
-    "side": 0.919,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.17,
-    "colour": 1.0,
-    "aspect": 1.451,
+    "lifts": [
+     0.176,
+     0.0,
+     0.0
+    ],
+    "plain": 0.216,
+    "colour": 0.913,
     "box": [
-     0.194,
-     0.363,
-     0.76,
-     0.949
+     0.208,
+     0.387,
+     0.976,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "stance"
     ],
     "local": 1.0
-   },
-   "file_large": "pipeline/_cache/references/alces_alces/inat_299039100_large/photo.jpg",
-   "file_crop": "pipeline/_cache/references/alces_alces/inat_299039100_crop/reference.png"
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_36533916",
-   "licence": "CC BY-SA 4.0",
-   "author": "Paxson Woelber",
-   "attribution": "Paxson Woelber, CC BY-SA 4.0, via Wikimedia Commons (File:Alaska moose.jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:Alaska_moose.jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/Alaska_moose.jpg/500px-Alaska_moose.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/Alaska_moose.jpg/1280px-Alaska_moose.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "file_small": "pipeline/_cache/references/alces_alces/commons_36533916/photo.jpg",
-   "score": {
-    "total": 0.143,
-    "whole": 1.0,
-    "side": 1.0,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.265,
-    "colour": 1.0,
-    "aspect": 1.55,
-    "box": [
-     0.14,
-     0.147,
-     0.85,
-     0.835
-    ],
-    "local": 0.75
    }
   },
   {
@@ -611,54 +1567,41 @@
    "local": true,
    "file_small": "pipeline/_cache/references/alces_alces/inat_21529054/photo.jpg",
    "score": {
-    "total": 0.142,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.773,
-    "size": 1.0,
-    "single": 0.999,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.223,
-    "colour": 1.0,
-    "aspect": 1.364,
-    "box": [
-     0.064,
-     0.29,
-     0.853,
-     0.724
-    ],
-    "local": 1.0
-   }
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_65369050",
-   "licence": "CC BY 4.0",
-   "author": "Justin Flint",
-   "attribution": "(c) Justin Flint, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/41218219",
-   "photo_page": "https://www.inaturalist.org/photos/65369050",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/65369050/medium.jpg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/65369050/large.jpg",
-   "adult": true,
-   "local": true,
-   "file_small": "pipeline/_cache/references/alces_alces/inat_65369050/photo.jpg",
-   "score": {
-    "total": 0.138,
-    "whole": 1.0,
-    "side": 1.0,
-    "size": 0.22,
     "single": 1.0,
-    "legs": 1.0,
-    "stance": 1.0,
-    "plain": 0.252,
-    "colour": 1.0,
-    "aspect": 3.341,
+    "aspect": 1.357,
+    "band_px": 4.21,
+    "clear": 0.983,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 12.6,
+    "belly_gap": 0.836,
+    "leg_zone": 0.343,
+    "leans": [
+     12.6
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.224,
+    "colour": 0.973,
     "box": [
-     0.25,
-     0.407,
-     0.544,
-     0.539
+     0.08,
+     0.302,
+     0.851,
+     0.728
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -674,21 +1617,41 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c0/Shiras_Bull_at_Cecret_Lake_c_07-25-12.JPG/1280px-Shiras_Bull_at_Cecret_Lake_c_07-25-12.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/alces_alces/commons_20608510/photo.jpg",
    "score": {
-    "total": 0.104,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.849,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.09,
-    "colour": 1.0,
-    "aspect": 1.409,
+    "aspect": 1.36,
+    "band_px": 3.74,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.83,
+    "side": 1.0,
+    "legs": 0.119,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 23.5,
+    "belly_gap": 0.989,
+    "leg_zone": 0.215,
+    "leans": [
+     23.5
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.089,
+    "colour": 0.991,
     "box": [
      0.206,
      0.128,
-     0.922,
-     0.805
+     0.916,
+     0.824
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -707,21 +1670,43 @@
    "local": true,
    "file_small": "pipeline/_cache/references/alces_alces/inat_469944288/photo.jpg",
    "score": {
-    "total": 0.098,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
-    "size": 0.55,
-    "single": 0.617,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.549,
-    "colour": 1.0,
-    "aspect": 2.951,
+    "single": 1.0,
+    "aspect": 4.371,
+    "band_px": 2.66,
+    "clear": 1.0,
+    "size": 0.424,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.73,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 73.3,
+    "lean": 36.6,
+    "belly_gap": 0.246,
+    "leg_zone": 0.257,
+    "leans": [
+     73.3,
+     0.0
+    ],
+    "lifts": [
+     0.0,
+     0.143
+    ],
+    "plain": 0.535,
+    "colour": 0.975,
     "box": [
      0.298,
      0.414,
-     0.658,
-     0.598
+     0.604,
+     0.52
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
     ],
     "local": 1.0
    }
@@ -737,86 +1722,45 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Bull_Moose_%2850437572167%29.jpg/1280px-Bull_Moose_%2850437572167%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/alces_alces/commons_111225141/photo.jpg",
    "score": {
-    "total": 0.08,
-    "whole": 0.283,
-    "side": 1.0,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 0.0,
     "single": 1.0,
-    "legs": 1.0,
-    "stance": 0.5,
-    "plain": 0.252,
-    "colour": 1.0,
-    "aspect": 1.534,
-    "box": [
-     0.04,
-     0.066,
-     0.844,
-     0.853
-    ],
-    "local": 0.75
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_540185",
-   "licence": "CC BY-SA 2.5",
-   "author": "",
-   "attribution": "unknown, CC BY-SA 2.5, via Wikimedia Commons (File:Lonesome-Lake-Moose.jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:Lonesome-Lake-Moose.jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e9/Lonesome-Lake-Moose.jpg/500px-Lonesome-Lake-Moose.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://upload.wikimedia.org/wikipedia/commons/e/e9/Lonesome-Lake-Moose.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-   "file_small": "pipeline/_cache/references/alces_alces/commons_540185/photo.jpg",
-   "score": {
-    "total": 0.07,
-    "whole": 0.518,
-    "side": 1.0,
+    "aspect": 1.493,
+    "band_px": 5.77,
+    "clear": 0.852,
     "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.4,
     "stance": 1.0,
-    "plain": 0.191,
-    "colour": 1.0,
-    "aspect": 1.555,
+    "spread": 8.7,
+    "lean": 12.0,
+    "belly_gap": 0.827,
+    "leg_zone": 0.168,
+    "leans": [
+     -7.7,
+     -16.4
+    ],
+    "lifts": [
+     0.0,
+     0.021
+    ],
+    "plain": 0.269,
+    "colour": 0.925,
     "box": [
-     0.046,
-     0.205,
-     0.926,
-     0.96
+     0.0,
+     0.0,
+     0.854,
+     0.859
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "legs"
     ],
     "local": 0.75
-   }
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_157471129",
-   "licence": "CC BY 4.0",
-   "author": "John Rosford",
-   "attribution": "(c) John Rosford, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/94895048",
-   "photo_page": "https://www.inaturalist.org/photos/157471129",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/157471129/medium.jpg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/157471129/large.jpg",
-   "adult": true,
-   "local": true,
-   "file_small": "pipeline/_cache/references/alces_alces/inat_157471129/photo.jpg",
-   "score": {
-    "total": 0.068,
-    "whole": 1.0,
-    "side": 0.249,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 1.0,
-    "stance": 0.333,
-    "plain": 0.167,
-    "colour": 1.0,
-    "aspect": 1.05,
-    "box": [
-     0.24,
-     0.185,
-     0.706,
-     0.727
-    ],
-    "local": 1.0
    }
   },
   {
@@ -830,21 +1774,41 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cc/Orignal_01_r%C3%A9serve_faunique_de_matane_%282005-08%29.JPG/1280px-Orignal_01_r%C3%A9serve_faunique_de_matane_%282005-08%29.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/alces_alces/commons_364117/photo.jpg",
    "score": {
-    "total": 0.053,
-    "whole": 0.699,
-    "side": 0.596,
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.919,
+    "band_px": 2.33,
+    "clear": 1.0,
     "size": 1.0,
-    "single": 0.887,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.221,
-    "colour": 1.0,
-    "aspect": 1.258,
+    "solid": 1.0,
+    "head_end": 0.523,
+    "side": 0.547,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 1.4,
+    "belly_gap": 0.89,
+    "leg_zone": 0.324,
+    "leans": [
+     -1.4
+    ],
+    "lifts": [
+     0.004
+    ],
+    "plain": 0.211,
+    "colour": 0.996,
     "box": [
-     0.04,
-     0.309,
-     0.626,
-     0.931
+     0.214,
+     0.213,
+     0.622,
+     0.805
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -863,21 +1827,43 @@
    "local": true,
    "file_small": "pipeline/_cache/references/alces_alces/inat_469942440/photo.jpg",
    "score": {
-    "total": 0.047,
-    "whole": 0.124,
-    "side": 1.0,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 0.5,
-    "stance": 1.0,
-    "plain": 0.178,
-    "colour": 1.0,
-    "aspect": 3.594,
+    "aspect": 1.611,
+    "band_px": 5.54,
+    "clear": 0.872,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.651,
+    "side": 0.0,
+    "legs": 0.093,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.083,
+    "leg_zone": 0.194,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.199,
+    "colour": 0.928,
     "box": [
-     0.04,
-     0.36,
-     0.96,
-     0.745
+     0.154,
+     0.538,
+     0.212,
+     0.592
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -893,21 +1879,38 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Leif_Lindh_G%C3%A5rdsj%C3%B6_%C3%A4lgpark.jpg/1280px-Leif_Lindh_G%C3%A5rdsj%C3%B6_%C3%A4lgpark.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/alces_alces/commons_151576447/photo.jpg",
    "score": {
-    "total": 0.043,
-    "whole": 0.84,
-    "side": 0.404,
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.999,
+    "aspect": 0.262,
+    "band_px": 2.84,
+    "clear": 1.0,
     "size": 1.0,
-    "single": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
     "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.12,
-    "colour": 0.999,
-    "aspect": 1.142,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.036,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.11,
+    "colour": 0.983,
     "box": [
-     0.038,
+     0.174,
      0.227,
-     0.962,
-     0.68
+     0.411,
+     0.734
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -926,21 +1929,43 @@
    "local": true,
    "file_small": "pipeline/_cache/references/alces_alces/inat_735959933/photo.jpg",
    "score": {
-    "total": 0.041,
-    "whole": 0.23,
-    "side": 1.0,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.191,
-    "colour": 1.0,
-    "aspect": 1.865,
+    "aspect": 0.827,
+    "band_px": 3.55,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.317,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 3.1,
+    "belly_gap": 0.676,
+    "leg_zone": 0.519,
+    "leans": [
+     -3.1
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.168,
+    "colour": 0.975,
     "box": [
-     0.044,
-     0.405,
-     0.82,
-     0.96
+     0.422,
+     0.547,
+     0.508,
+     0.685
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -956,21 +1981,46 @@
    "url_large": "https://upload.wikimedia.org/wikipedia/commons/3/30/Alsenor.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
    "file_small": "pipeline/_cache/references/alces_alces/commons_33583135/photo.jpg",
    "score": {
-    "total": 0.04,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.305,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.15,
-    "colour": 1.0,
-    "aspect": 1.083,
+    "aspect": 1.61,
+    "band_px": 2.12,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.55,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 44.6,
+    "lean": 2.8,
+    "belly_gap": 0.75,
+    "leg_zone": 0.285,
+    "leans": [
+     21.8,
+     1.1,
+     -22.8,
+     4.4
+    ],
+    "lifts": [
+     0.104,
+     0.009,
+     0.076,
+     0.085
+    ],
+    "plain": 0.141,
+    "colour": 0.892,
     "box": [
-     0.251,
-     0.239,
+     0.153,
+     0.234,
      0.816,
-     0.914
+     0.766
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 0.75
    }
@@ -989,21 +2039,46 @@
    "local": true,
    "file_small": "pipeline/_cache/references/alces_alces/inat_168367057/photo.jpg",
    "score": {
-    "total": 0.026,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
-    "size": 0.09,
     "single": 1.0,
-    "legs": 1.0,
-    "stance": 0.333,
-    "plain": 0.22,
-    "colour": 1.0,
-    "aspect": 1.523,
+    "aspect": 1.411,
+    "band_px": 3.53,
+    "clear": 1.0,
+    "size": 0.338,
+    "solid": 1.0,
+    "head_end": 0.903,
+    "side": 1.0,
+    "legs": 0.225,
+    "stance": 0.0,
+    "spread": 46.4,
+    "lean": 2.0,
+    "belly_gap": 0.636,
+    "leg_zone": 0.147,
+    "leans": [
+     -2.0,
+     -41.5,
+     4.9
+    ],
+    "lifts": [
+     0.042,
+     0.0,
+     0.053
+    ],
+    "plain": 0.221,
+    "colour": 0.935,
     "box": [
      0.45,
-     0.389,
+     0.38,
      0.718,
-     0.653
+     0.665
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -1022,54 +2097,42 @@
    "local": true,
    "file_small": "pipeline/_cache/references/alces_alces/inat_587179350/photo.jpg",
    "score": {
-    "total": 0.024,
-    "whole": 0.287,
-    "side": 0.49,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.145,
-    "colour": 0.982,
-    "aspect": 1.194,
-    "box": [
-     0.04,
-     0.168,
-     0.96,
-     0.746
-    ],
-    "local": 1.0
-   }
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_250877025",
-   "licence": "CC BY 4.0",
-   "author": "Doug Brush",
-   "attribution": "(c) Doug Brush, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/145984895",
-   "photo_page": "https://www.inaturalist.org/photos/250877025",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/250877025/medium.jpeg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/250877025/large.jpeg",
-   "adult": true,
-   "local": true,
-   "file_small": "pipeline/_cache/references/alces_alces/inat_250877025/photo.jpg",
-   "score": {
-    "total": 0.023,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.398,
-    "size": 0.31,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.225,
-    "colour": 1.0,
     "aspect": 1.139,
+    "band_px": 2.05,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 1.0,
+    "spread": 14.0,
+    "lean": 3.9,
+    "belly_gap": 0.719,
+    "leg_zone": 0.306,
+    "leans": [
+     10.9,
+     -3.1
+    ],
+    "lifts": [
+     0.0,
+     0.056
+    ],
+    "plain": 0.143,
+    "colour": 1.0,
     "box": [
-     0.422,
-     0.395,
-     0.734,
-     0.76
+     0.309,
+     0.662,
+     0.419,
+     0.734
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size"
     ],
     "local": 1.0
    }
@@ -1085,21 +2148,46 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/Moose_in_Grand_Teton_National_Park_3_%288007698498%29.jpg/1280px-Moose_in_Grand_Teton_National_Park_3_%288007698498%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/alces_alces/commons_27317651/photo.jpg",
    "score": {
-    "total": 0.013,
-    "whole": 0.039,
-    "side": 0.726,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 0.0,
     "single": 1.0,
-    "legs": 1.0,
-    "stance": 1.0,
-    "plain": 0.172,
-    "colour": 1.0,
-    "aspect": 1.336,
+    "aspect": 1.335,
+    "band_px": 2.92,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.378,
+    "side": 0.64,
+    "legs": 0.267,
+    "stance": 0.0,
+    "spread": 71.4,
+    "lean": 10.6,
+    "belly_gap": 0.228,
+    "leg_zone": 0.152,
+    "leans": [
+     -10.6,
+     12.6,
+     -58.8
+    ],
+    "lifts": [
+     0.0,
+     0.0,
+     0.006
+    ],
+    "plain": 0.168,
+    "colour": 0.974,
     "box": [
      0.156,
-     0.038,
-     0.96,
-     0.757
+     0.0,
+     1.0,
+     0.754
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -1115,21 +2203,43 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8c/Bull_moose_standing_close_up_-_DPLA_-_6411b9e2a17898f99c9c11839ba6513b.jpg/1280px-Bull_moose_standing_close_up_-_DPLA_-_6411b9e2a17898f99c9c11839ba6513b.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/alces_alces/commons_116339696/photo.jpg",
    "score": {
-    "total": 0.013,
-    "whole": 0.206,
-    "side": 0.461,
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 1.243,
+    "band_px": 4.3,
+    "clear": 0.975,
     "size": 1.0,
-    "single": 0.983,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.196,
-    "colour": 1.0,
-    "aspect": 1.176,
+    "solid": 1.0,
+    "head_end": 0.745,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 12.3,
+    "lean": 4.5,
+    "belly_gap": 0.763,
+    "leg_zone": 0.319,
+    "leans": [
+     -1.6,
+     10.7
+    ],
+    "lifts": [
+     0.145,
+     0.0
+    ],
+    "plain": 0.188,
+    "colour": 0.988,
     "box": [
-     0.28,
-     0.096,
-     0.96,
-     0.961
+     0.314,
+     0.174,
+     1.0,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "stance"
     ],
     "local": 0.75
    }
@@ -1148,21 +2258,48 @@
    "local": true,
    "file_small": "pipeline/_cache/references/alces_alces/inat_250877006/photo.jpg",
    "score": {
-    "total": 0.007,
-    "whole": 0.163,
-    "side": 0.083,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 0.0,
     "single": 1.0,
-    "legs": 1.0,
-    "stance": 0.667,
-    "plain": 0.325,
-    "colour": 1.0,
-    "aspect": 0.95,
+    "aspect": 0.924,
+    "band_px": 19.46,
+    "clear": 0.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.648,
+    "side": 0.56,
+    "legs": 0.675,
+    "stance": 0.146,
+    "spread": 32.8,
+    "lean": 2.8,
+    "belly_gap": 0.439,
+    "leg_zone": 0.201,
+    "leans": [
+     14.1,
+     -8.6,
+     -12.2,
+     20.6
+    ],
+    "lifts": [
+     0.0,
+     0.071,
+     0.034,
+     0.088
+    ],
+    "plain": 0.377,
+    "colour": 0.97,
     "box": [
-     0.244,
-     0.098,
-     0.96,
-     0.852
+     0.248,
+     0.096,
+     1.0,
+     0.91
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "stance",
+     "clear"
     ],
     "local": 1.0
    }
@@ -1181,21 +2318,44 @@
    "local": true,
    "file_small": "pipeline/_cache/references/alces_alces/inat_304669388/photo.jpg",
    "score": {
-    "total": 0.001,
-    "whole": 0.009,
-    "side": 0.764,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.302,
-    "colour": 1.0,
-    "aspect": 1.358,
+    "aspect": 0.389,
+    "band_px": 14.62,
+    "clear": 0.115,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.571,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 11.3,
+    "belly_gap": 0.333,
+    "leg_zone": 0.306,
+    "leans": [
+     -11.3
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.151,
+    "colour": 0.985,
     "box": [
-     0.04,
-     0.348,
-     0.96,
-     0.856
+     0.589,
+     0.578,
+     0.608,
+     0.614
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance",
+     "clear"
     ],
     "local": 1.0
    }
@@ -1213,19 +2373,42 @@
    "score": {
     "total": 0.0,
     "whole": 0.0,
-    "side": 0.0,
+    "single": 0.999,
+    "aspect": 1.141,
+    "band_px": 18.24,
+    "clear": 0.0,
     "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.247,
-    "colour": 1.0,
-    "aspect": 0.803,
+    "solid": 1.0,
+    "head_end": 0.137,
+    "side": 1.0,
+    "legs": 0.508,
+    "stance": 0.0,
+    "spread": 38.8,
+    "lean": 37.8,
+    "belly_gap": 0.85,
+    "leg_zone": 0.181,
+    "leans": [
+     -18.4,
+     -57.2
+    ],
+    "lifts": [
+     0.0,
+     0.093
+    ],
+    "plain": 0.088,
+    "colour": 0.999,
     "box": [
-     0.038,
+     0.0,
      0.293,
-     0.962,
-     0.938
+     0.815,
+     0.693
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "stance",
+     "clear"
     ],
     "local": 0.75
    }
@@ -1242,20 +2425,42 @@
    "file_small": "pipeline/_cache/references/alces_alces/commons_151576442/photo.jpg",
    "score": {
     "total": 0.0,
-    "whole": 0.0,
-    "side": 0.05,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.619,
+    "band_px": 13.02,
+    "clear": 0.248,
     "size": 1.0,
-    "single": 0.999,
-    "legs": 0.5,
-    "stance": 1.0,
-    "plain": 0.179,
-    "colour": 1.0,
-    "aspect": 0.93,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.0,
+    "legs": 0.085,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 37.0,
+    "belly_gap": 0.568,
+    "leg_zone": 0.188,
+    "leans": [
+     -37.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.128,
+    "colour": 0.995,
     "box": [
-     0.038,
-     0.039,
-     0.962,
-     0.596
+     0.192,
+     0.156,
+     0.672,
+     0.592
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance",
+     "clear"
     ],
     "local": 0.75
    }
@@ -1275,86 +2480,43 @@
    "file_small": "pipeline/_cache/references/alces_alces/inat_291023711/photo.jpg",
    "score": {
     "total": 0.0,
-    "whole": 0.0,
-    "side": 0.009,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.092,
-    "colour": 0.977,
-    "aspect": 0.906,
-    "box": [
-     0.04,
-     0.092,
-     0.96,
-     0.854
-    ],
-    "local": 1.0
-   }
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_157459565",
-   "licence": "CC BY 4.0",
-   "author": "John Rosford",
-   "attribution": "(c) John Rosford, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/94888852",
-   "photo_page": "https://www.inaturalist.org/photos/157459565",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/157459565/medium.jpg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/157459565/large.jpg",
-   "adult": true,
-   "local": true,
-   "file_small": "pipeline/_cache/references/alces_alces/inat_157459565/photo.jpg",
-   "score": {
-    "total": 0.0,
     "whole": 1.0,
-    "side": 0.0,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.202,
-    "colour": 1.0,
-    "aspect": 0.766,
-    "box": [
-     0.107,
-     0.078,
-     0.854,
-     0.864
-    ],
-    "local": 1.0
-   }
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_65369046",
-   "licence": "CC BY 4.0",
-   "author": "Justin Flint",
-   "attribution": "(c) Justin Flint, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/41218219",
-   "photo_page": "https://www.inaturalist.org/photos/65369046",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/65369046/medium.jpg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/65369046/large.jpg",
-   "adult": true,
-   "local": true,
-   "file_small": "pipeline/_cache/references/alces_alces/inat_65369046/photo.jpg",
-   "score": {
-    "total": 0.0,
-    "whole": 1.0,
-    "side": 1.0,
+    "aspect": 2.042,
+    "band_px": 1.78,
+    "clear": 1.0,
     "size": 0.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 0.333,
-    "plain": 0.212,
-    "colour": 1.0,
-    "aspect": 2.971,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 1.0,
+    "spread": 16.7,
+    "lean": 0.0,
+    "belly_gap": 0.8,
+    "leg_zone": 0.25,
+    "leans": [
+     -16.7,
+     0.0,
+     0.0
+    ],
+    "lifts": [
+     0.0,
+     0.042,
+     0.042
+    ],
+    "plain": 0.101,
+    "colour": 0.935,
     "box": [
-     0.24,
-     0.524,
-     0.448,
-     0.629
+     0.323,
+     0.596,
+     0.453,
+     0.644
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size"
     ],
     "local": 1.0
    }
@@ -1374,6 +2536,43 @@
    "file_small": "pipeline/_cache/references/alces_alces/inat_291023678/photo.jpg",
    "score": {
     "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.899,
+    "band_px": 6.11,
+    "clear": 0.824,
+    "size": 0.149,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.497,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 10.9,
+    "belly_gap": 0.569,
+    "leg_zone": 0.488,
+    "leans": [
+     10.9
+    ],
+    "lifts": [
+     0.004
+    ],
+    "plain": 0.14,
+    "colour": 0.957,
+    "box": [
+     0.416,
+     0.62,
+     0.653,
+     0.818
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
+    ],
     "local": 1.0
    }
   },
@@ -1392,39 +2591,44 @@
    "file_small": "pipeline/_cache/references/alces_alces/inat_683134991/photo.jpg",
    "score": {
     "total": 0.0,
-    "whole": 1.0,
-    "side": 0.0,
-    "size": 1.0,
+    "whole": 0.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.16,
-    "colour": 1.0,
-    "aspect": 0.575,
-    "box": [
-     0.356,
-     0.272,
-     0.819,
-     0.724
+    "aspect": 0.54,
+    "band_px": 8.03,
+    "clear": 0.664,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.787,
+    "side": 0.0,
+    "legs": 1.0,
+    "stance": 0.149,
+    "spread": 19.7,
+    "lean": 1.2,
+    "belly_gap": 0.872,
+    "leg_zone": 0.286,
+    "leans": [
+     -11.0,
+     8.7
     ],
-    "local": 1.0
-   }
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_469944294",
-   "licence": "CC BY 4.0",
-   "author": "CaracalShan",
-   "attribution": "(c) CaracalShan, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/257951683",
-   "photo_page": "https://www.inaturalist.org/photos/469944294",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/469944294/medium.jpg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/469944294/large.jpg",
-   "adult": true,
-   "local": true,
-   "file_small": "pipeline/_cache/references/alces_alces/inat_469944294/photo.jpg",
-   "score": {
-    "total": 0.0,
+    "lifts": [
+     0.127,
+     0.0
+    ],
+    "plain": 0.164,
+    "colour": 0.931,
+    "box": [
+     0.167,
+     0.0,
+     1.0,
+     0.866
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "stance"
+    ],
     "local": 1.0
    }
   },
@@ -1443,6 +2647,46 @@
    "file_small": "pipeline/_cache/references/alces_alces/inat_654825333/photo.jpg",
    "score": {
     "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.71,
+    "band_px": 7.88,
+    "clear": 0.677,
+    "size": 0.048,
+    "solid": 1.0,
+    "head_end": 0.65,
+    "side": 1.0,
+    "legs": 0.475,
+    "stance": 0.0,
+    "spread": 43.5,
+    "lean": 10.9,
+    "belly_gap": 0.447,
+    "leg_zone": 0.177,
+    "leans": [
+     10.9,
+     0.0,
+     43.5
+    ],
+    "lifts": [
+     0.0,
+     0.097,
+     0.065
+    ],
+    "plain": 0.16,
+    "colour": 0.92,
+    "box": [
+     0.41,
+     0.491,
+     0.622,
+     0.656
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ],
     "local": 1.0
    }
   },
@@ -1461,53 +2705,39 @@
    "file_small": "pipeline/_cache/references/alces_alces/inat_704116461/photo.jpg",
    "score": {
     "total": 0.0,
-    "whole": 0.0,
-    "side": 0.0,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.079,
-    "colour": 1.0,
-    "aspect": 0.78,
-    "box": [
-     0.039,
-     0.086,
-     0.961,
-     0.75
-    ],
-    "local": 1.0
-   }
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_587223641",
-   "licence": "CC BY 4.0",
-   "author": "Whitney Brook Matson",
-   "attribution": "(c) Whitney Brook Matson, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/324418804",
-   "photo_page": "https://www.inaturalist.org/photos/587223641",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/587223641/medium.jpg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/587223641/large.jpg",
-   "adult": true,
-   "local": true,
-   "file_small": "pipeline/_cache/references/alces_alces/inat_587223641/photo.jpg",
-   "score": {
-    "total": 0.0,
     "whole": 1.0,
-    "side": 0.0,
-    "size": 0.34,
     "single": 1.0,
+    "aspect": 1.333,
+    "band_px": 68.2,
+    "clear": 0.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.125,
+    "side": 0.0,
     "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.114,
-    "colour": 1.0,
-    "aspect": 0.704,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.289,
+    "colour": 0.167,
     "box": [
-     0.392,
-     0.188,
-     0.71,
-     0.64
+     0.907,
+     0.362,
+     0.922,
+     0.368
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance",
+     "clear"
     ],
     "local": 1.0
    }
@@ -1527,6 +2757,42 @@
    "file_small": "pipeline/_cache/references/alces_alces/inat_746599837/photo.jpg",
    "score": {
     "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.043,
+    "band_px": 12.38,
+    "clear": 0.302,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.856,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 17.5,
+    "belly_gap": 0.875,
+    "leg_zone": 0.489,
+    "leans": [
+     17.5
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.254,
+    "colour": 0.963,
+    "box": [
+     0.384,
+     0.501,
+     0.482,
+     0.627
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ],
     "local": 1.0
    }
   },
@@ -1545,6 +2811,43 @@
    "file_small": "pipeline/_cache/references/alces_alces/inat_746599852/photo.jpg",
    "score": {
     "total": 0.0,
+    "whole": 1.0,
+    "single": 0.823,
+    "aspect": 1.353,
+    "band_px": 13.47,
+    "clear": 0.211,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.195,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 5.7,
+    "belly_gap": 0.892,
+    "leg_zone": 0.412,
+    "leans": [
+     -5.7
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.233,
+    "colour": 1.0,
+    "box": [
+     0.466,
+     0.512,
+     0.558,
+     0.603
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance",
+     "clear"
+    ],
     "local": 1.0
    }
   },
@@ -1563,20 +2866,9 @@
    "file_small": "pipeline/_cache/references/alces_alces/inat_469942446/photo.jpg",
    "score": {
     "total": 0.0,
-    "whole": 1.0,
-    "side": 0.414,
-    "size": 0.0,
-    "single": 0.765,
-    "legs": 0.5,
-    "stance": 1.0,
-    "plain": 0.828,
-    "colour": 1.0,
-    "aspect": 1.148,
-    "box": [
-     0.736,
-     0.378,
-     0.798,
-     0.459
+    "usable": false,
+    "why_not": [
+     "no subject"
     ],
     "local": 1.0
    }
@@ -1596,6 +2888,44 @@
    "file_small": "pipeline/_cache/references/alces_alces/inat_284566299/photo.jpg",
    "score": {
     "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.041,
+    "band_px": 4.37,
+    "clear": 0.969,
+    "size": 0.544,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.853,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 23.3,
+    "lean": 21.8,
+    "belly_gap": 0.782,
+    "leg_zone": 0.424,
+    "leans": [
+     -1.2,
+     22.1,
+     21.8
+    ],
+    "lifts": [
+     0.002,
+     0.019,
+     0.2
+    ],
+    "plain": 0.103,
+    "colour": 0.878,
+    "box": [
+     0.248,
+     0.348,
+     0.584,
+     0.59
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
     "local": 1.0
    }
   },
@@ -1614,6 +2944,44 @@
    "file_small": "pipeline/_cache/references/alces_alces/inat_284565241/photo.jpg",
    "score": {
     "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.833,
+    "band_px": 18.93,
+    "clear": 0.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.333,
+    "legs": 0.085,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.375,
+    "leg_zone": 0.188,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.151,
+    "colour": 0.968,
+    "box": [
+     0.574,
+     0.362,
+     0.614,
+     0.41
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ],
     "local": 1.0
    }
   },
@@ -1629,20 +2997,41 @@
    "file_small": "pipeline/_cache/references/alces_alces/commons_151576440/photo.jpg",
    "score": {
     "total": 0.0,
-    "whole": 0.577,
-    "side": 0.0,
-    "size": 1.0,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.09,
-    "colour": 1.0,
-    "aspect": 0.665,
+    "aspect": 0.408,
+    "band_px": 1.71,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 1.0,
+    "stance": 0.73,
+    "spread": 5.7,
+    "lean": 19.0,
+    "belly_gap": 0.43,
+    "leg_zone": 0.281,
+    "leans": [
+     -16.2,
+     -21.9
+    ],
+    "lifts": [
+     0.0,
+     0.042
+    ],
+    "plain": 0.094,
+    "colour": 0.967,
     "box": [
-     0.038,
-     0.273,
-     0.557,
-     0.711
+     0.22,
+     0.271,
+     0.561,
+     0.74
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side"
     ],
     "local": 0.75
    }
@@ -1659,21 +3048,43 @@
    "file_small": "pipeline/_cache/references/alces_alces/commons_69586552/photo.jpg",
    "score": {
     "total": 0.0,
-    "local": 0.75
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_489617",
-   "licence": "CC BY 2.5",
-   "author": "",
-   "attribution": "unknown, CC BY 2.5, via Wikimedia Commons (File:Moose-Gustav.jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:Moose-Gustav.jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c9/Moose-Gustav.jpg/500px-Moose-Gustav.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Moose-Gustav.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-   "file_small": "pipeline/_cache/references/alces_alces/commons_489617/photo.jpg",
-   "score": {
-    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.86,
+    "band_px": 6.64,
+    "clear": 0.78,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.391,
+    "side": 0.401,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 12.7,
+    "belly_gap": 0.533,
+    "leg_zone": 0.267,
+    "leans": [
+     12.7
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.152,
+    "colour": 0.385,
+    "box": [
+     0.514,
+     0.357,
+     0.588,
+     0.478
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
+    ],
     "local": 0.75
    }
   },
@@ -1690,49 +3101,40 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 0.0,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 0.5,
-    "stance": 1.0,
-    "plain": 0.215,
-    "colour": 1.0,
-    "aspect": 0.569,
+    "aspect": 0.548,
+    "band_px": 2.01,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 18.7,
+    "belly_gap": 0.674,
+    "leg_zone": 0.507,
+    "leans": [
+     -18.7
+    ],
+    "lifts": [
+     0.002
+    ],
+    "plain": 0.221,
+    "colour": 0.853,
     "box": [
      0.136,
      0.1,
      0.768,
-     0.93
+     0.963
     ],
-    "local": 0.75
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_55713870",
-   "licence": "CC BY-SA 4.0",
-   "author": "Holger Uwe Schmitt",
-   "attribution": "Holger Uwe Schmitt, CC BY-SA 4.0, via Wikimedia Commons (File:Winter im Wildpark Bad Mergentheim, Elch.jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:Winter_im_Wildpark_Bad_Mergentheim,_Elch.jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Winter_im_Wildpark_Bad_Mergentheim%2C_Elch.jpg/500px-Winter_im_Wildpark_Bad_Mergentheim%2C_Elch.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Winter_im_Wildpark_Bad_Mergentheim%2C_Elch.jpg/1280px-Winter_im_Wildpark_Bad_Mergentheim%2C_Elch.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "file_small": "pipeline/_cache/references/alces_alces/commons_55713870/photo.jpg",
-   "score": {
-    "total": 0.0,
-    "whole": 1.0,
-    "side": 0.722,
-    "size": 0.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.108,
-    "colour": 1.0,
-    "aspect": 1.333,
-    "box": [
-     0.612,
-     0.673,
-     0.62,
-     0.682
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -1749,6 +3151,44 @@
    "file_small": "pipeline/_cache/references/alces_alces/commons_16116616/photo.jpg",
    "score": {
     "total": 0.0,
+    "whole": 0.0,
+    "single": 0.666,
+    "aspect": 1.661,
+    "band_px": 3.47,
+    "clear": 1.0,
+    "size": 0.728,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.233,
+    "stance": 0.0,
+    "spread": 63.3,
+    "lean": 31.6,
+    "belly_gap": 0.303,
+    "leg_zone": 0.148,
+    "leans": [
+     -63.3,
+     0.0
+    ],
+    "lifts": [
+     0.0,
+     0.0
+    ],
+    "plain": 0.159,
+    "colour": 0.976,
+    "box": [
+     0.0,
+     0.454,
+     0.382,
+     0.797
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "legs",
+     "stance"
+    ],
     "local": 0.75
    }
   },
@@ -1764,15 +3204,56 @@
    "file_small": "pipeline/_cache/references/alces_alces/commons_136628836/photo.jpg",
    "score": {
     "total": 0.0,
+    "whole": 1.0,
+    "single": 0.891,
+    "aspect": 0.709,
+    "band_px": 6.49,
+    "clear": 0.792,
+    "size": 0.043,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.022,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 31.7,
+    "lean": 11.9,
+    "belly_gap": 0.756,
+    "leg_zone": 0.475,
+    "leans": [
+     -29.7,
+     -11.9,
+     2.0
+    ],
+    "lifts": [
+     0.241,
+     0.0,
+     0.013
+    ],
+    "plain": 0.141,
+    "colour": 0.934,
+    "box": [
+     0.236,
+     0.411,
+     0.348,
+     0.621
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "stance"
+    ],
     "local": 0.75
    }
   }
  ],
- "shortlist": [
-  "inat_299039125",
-  "inat_299039100"
- ],
- "chosen_by": {
+ "judged": {
+  "chosen": "inat_299039125",
+  "shortlist": [
+   "inat_299039125",
+   "inat_299039100"
+  ],
   "by": "the judge (Claude, from the contact sheet of the rule's top candidates)",
   "rule_rank": [
    8,

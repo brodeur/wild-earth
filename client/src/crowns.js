@@ -179,7 +179,10 @@ export function* planCrownsSteps(tile, raw, { treeMix, dims: given, speciesIds }
         if (ii < 0 || jj < 0 || ii >= W || jj >= Hh) continue;
         const m = treeMix(ii, jj), cc = m && cands(m); if (cc && cc.length) c = cc;
       }
-      if (!c) c = cands(fallback);
+      if (!c) c = fallback ? cands(fallback) : null;
+      // no tree mix anywhere near and none for the tile (a tile whose rows name no tree): the plan fails, and the trees
+      // come from the cell plan (vegetation.js crownPlan), which draws none in such cells
+      if (!c || !c.length) throw new Error('a crown with no tree mix near it and none on the tile');
     }
     const e = chooseSpecies(c, h[q], u01(q, 1));
     sp[q] = libIdx.get(e.id); rot[q] = u01(q, 2) * Math.PI * 2;

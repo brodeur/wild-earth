@@ -15,7 +15,7 @@
   47.877435895323295
  ],
  "size_m": 10000,
- "generated_at": "2026-11-06T02:50:20Z",
+ "generated_at": "2026-11-06T18:49:17Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -4898,6 +4898,50 @@
    "encoding": "every stream crossing a tile edge (UTM): side, along, x, y, dir in/out, tangent, name, fcode, order, area_km2, width, bed_width, level, depth, half_width (the water step's), source own or neighbour <id> (pipeline/water_seams.py)",
    "sha256": "017da77469e91ea37d396090bfecf508b89bd31db4295b42e540ad788cbaa2d5",
    "bytes": 23814
+  },
+  "client.ground_albedo": {
+   "path": "client/ground_albedo.json",
+   "kind": "table",
+   "derived_from": [
+    "client.texture_imagery",
+    "client.season_rgb",
+    "client.canopy",
+    "client.habitat"
+   ],
+   "encoding": "gain: per channel (linear R G B) the factor from the ground texture's linear colour to surface reflectance; the client multiplies the ground and the herb layer's albedo by it",
+   "method": "sum of the reference month's L2A reflectance over the sum of the texture's linear colour, open ground (tree < 10 %, shrub < 15 %, not water or built), 20 m",
+   "imagery": {
+    "source": "pc_naip",
+    "year": 2023
+   },
+   "basis": "fit",
+   "gain": [
+    0.2192,
+    0.2062,
+    0.1666
+   ],
+   "gain_luminance": 0.2056,
+   "reference": "client/season_rgb.png month 8",
+   "reference_month": 8,
+   "open_pixels": 2605,
+   "open_share": 0.01,
+   "ratio_luminance_p25_p50_p75": [
+    0.147,
+    0.179,
+    0.255
+   ],
+   "texture_mean_linear": [
+    0.2738,
+    0.3317,
+    0.3309
+   ],
+   "reflectance_mean": [
+    0.06,
+    0.0684,
+    0.0552
+   ],
+   "sha256": "0cac28253df52dc2dd9a4c62ff149e404c6263c941a3329ab81d4e003ed7d7ed",
+   "bytes": 910
   }
  },
  "sources": {
@@ -6817,6 +6861,10 @@
     "cache": 0
    },
    "seconds": 0.1
+  },
+  "water_imagery": {
+   "status": "blocked",
+   "reason": "needs water_seasons (base stage), never run"
   }
  },
  "seams": {

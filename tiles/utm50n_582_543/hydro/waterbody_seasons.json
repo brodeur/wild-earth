@@ -1,0 +1,34 @@
+{
+ "rule": {
+  "bands": "seasons/s2_MM.tif red, green, blue, NDVI (no SWIR); NIR = red (1 + NDVI) / (1 - NDVI)",
+  "water_pixel": "NDWI (green - NIR) / (green + NIR) > 0 or NIR < 0.04, and not bright",
+  "bright_pixel": "green >= 0.2 or (NDVI < 0.1 and blue >= 0.12): ice, snow, cloud (not counted)",
+  "core": "the polygon inset 10 m (pixels wholly inside), at least 2 pixels",
+  "wet_month": "water fraction of the core's clear pixels >= 0.25; observed when clear >= half the core",
+  "classes": "dry: wet in none of >= 3 observed months; permanent: wet in >= 75% of them; seasonal: the rest; unresolved: by the tags",
+  "dry_bed": "meadow when the greenest observed month's median NDVI >= 0.3, else bare"
+ },
+ "months_used": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11
+ ],
+ "counts": {
+  "permanent": 0,
+  "seasonal": 0,
+  "dry": 0
+ },
+ "basis": {
+  "imagery": 0,
+  "tags": 0
+ },
+ "bodies": []
+}

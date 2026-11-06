@@ -180,5 +180,44 @@ class Prompt(unittest.TestCase):
         self.assertEqual(fm._with_lead(tex, ""), tex)
 
 
+class Iteration8(unittest.TestCase):
+    """The check's rules that let it agree with the judge (iteration 8)."""
+    def test_grey_before_a_hue_is_a_low_chroma(self):
+        g = ap.colour_lab("grayish-green")
+        green = ap.colour_lab("green")
+        self.assertLess(float(np.hypot(g[1], g[2])), 0.5 * float(np.hypot(green[1], green[2])))
+        self.assertLess(g[1], 0)   # still a green
+        self.assertGreater(float(np.hypot(*ap.colour_lab("yellowish-brown")[1:])), 20)   # a hue modifier stays a hue
+
+    def test_a_pale_patch_in_a_described_coat_colour(self):
+        cream = ap.colour_lab("cream")
+        self.assertEqual(ap.described_pale(cream, {"upperparts": {"colours": ["whitish-cream"]}}, ap.MATCH_DE), "whitish-cream")
+        # the pale end of a range of individuals is no pattern on one animal
+        self.assertIsNone(ap.described_pale(cream, {"body": {"colours": ["dark brown", "almost white"]}}, ap.MATCH_DE))
+
+    def test_one_marking_per_pattern_over_the_body(self):
+        regs = {"body": {"colours": [], "markings": [{"pattern": "stripes", "colours": ["yellow"]}]},
+                "upperparts": {"colours": ["black"], "markings": [{"pattern": "stripes", "colours": ["yellow", "white"]}]}}
+        black, white = ap.colour_lab("black"), ap.colour_lab("white")
+        mr = {"upperparts": (np.array([black] * 8 + [white] * 2), np.ones(10)), "flanks": (np.array([black] * 10), np.ones(10))}
+        st = ap.colour_stats(mr, regs)
+        self.assertEqual(list(st["body_marks"]), ["yellow/white stripes"])
+        self.assertFalse(ap.colour_fails(st, ap.CHECK_PARAMS)["fails"])   # white stripes, as one source gives them
+
+    def test_a_snakes_underside_is_not_judged(self):
+        regs = {"upperparts": {"colours": ["black"], "markings": []}, "underparts": {"colours": ["yellow"], "markings": []}}
+        grey = ap.colour_lab("grey")
+        mr = {"upperparts": (np.array([ap.colour_lab("black")] * 10), np.ones(10)), "underparts": (np.array([grey] * 10), np.ones(10))}
+        self.assertTrue(ap.colour_fails(ap.colour_stats(mr, regs), ap.CHECK_PARAMS)["fails"])
+        st = ap.colour_stats(mr, regs, kind="snake")
+        self.assertTrue(st["regions"]["underparts"].get("hidden"))
+        self.assertFalse(ap.colour_fails(st, ap.CHECK_PARAMS)["fails"])
+
+    def test_known_verdicts(self):
+        k = ap.known_verdicts()
+        self.assertTrue(any(x["verdict"] == "rejected" and x["model"] != "current" for x in k))
+        self.assertTrue(all(x["verdict"] in ("accepted", "rejected") for x in k))
+
+
 if __name__ == "__main__":
     unittest.main()

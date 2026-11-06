@@ -319,19 +319,19 @@
     0
    ],
    "b_valley_eye": [
-    5300,
-    5300,
+    5310,
+    5306,
     1.6,
-    4500,
-    6000,
+    4510,
+    6006,
     0.5
    ],
    "c_river": [
-    5300,
-    4900,
+    5296,
+    4892,
     1.7,
-    4700,
-    5250,
+    5205,
+    4945,
     0.3
    ],
    "d_topdown": [
@@ -342,6 +342,10 @@
     5008,
     0
    ]
+  },
+  "_notes": {
+   "b_valley_eye": "By rule (tools/probes/pose_rule.js eye(), 2026-11-06): the nearest position (2 m grid, within 300 m) to the old pose [5300, 5300] in the same species-mix row (51: 35,705 cells), whose cell's shrub cover (canopy.png G) is within max(3, 20 %) of the row's median (34 %), whose sward (grass.js swardDensity over a 6 m disc and the foreground 4-16 m along the view) averages at least the row's median cell sward (0.841) and nowhere falls under 0.75 of it, with no road within 20 m and no water-system zone within 30 m; the view keeps the old bearing. The old pose stood in a bare patch (sward 0.66 mean, 0.007 min); the new one 11.7 m off: shrub 35 %, sward 0.99 mean, 0.65 min.",
+   "c_river": "By rule (tools/probes/pose_rule.js river(), 2026-11-06): the nearest position (1 m grid, within 300 m) to the old pose [5300, 4900] on the bank or terrace (water.png zone 3 or 4) of the highest-order stream within 150 m (order 6: the Lamar River as the water_imagery step moved it onto the imagery's channel), on dry ground (the water level at least 0.1 m under the ground there and within 3 m), within 25 m of the edge of the river's ribbon, looking at its centreline cell 40-120 m away nearest the old bearing, 0.3 m up. The old pose now stands in the drawn river (zone 1, 0.32 m of water); the new one 8.9 m off, 8.9 m from the centreline, the target 106 m downstream (north-west), the bearing unchanged."
   }
  }
 }

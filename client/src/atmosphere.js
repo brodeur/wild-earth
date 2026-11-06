@@ -21,6 +21,38 @@ import { releaseTexture } from './gpuRelease.js';
 // the light (the sun dimmed, the sky light raised and desaturated, the dome greyed); humidity, rain, drizzle, snow
 // and fog thicken the haze. The spirit's look (spirit.js) is applied on top after this.
 
+// The ground at its measured reflectance (2026-11-06; Aaron: "Physical, re-tune exposure"). The ground texture's colour
+// is a display value (NAIP's numbers, or the Sentinel-2 composite stretched for viewing), 1.2 to 5 times the ground's
+// surface reflectance; the pipeline fits the factor per tile against the Sentinel-2 L2A composite of the month the
+// season multiplier is relative to (pipeline/ground_albedo.py, the manifest layer client.ground_albedo: `gain`, linear
+// R G B). The ground and the herb layer drawn to match it (terrain.js, grassShells.js, grass.js palettes, forbs.js,
+// litter.js) take it as groundGain; trees, shrubs, animals and rock keep their own colours, already near their
+// reflectance. The exposure is raised by one constant for every tile and hour (EXPOSURE_K), so the scene stays about
+// as bright as it was while the ground and the canopy keep their true ratio. ?ground=display draws the ground as
+// before (gain 1, the old exposure); ?ground=luminance keeps the photo's hue; ?gexp=<k> tries another exposure factor.
+const GROUND_PARAMS = typeof location !== 'undefined' ? new URLSearchParams(location.search) : null;
+// EXPOSURE_K: the factor that keeps the mean L* of the eight probes' 32 frames where it was (50.1-50.4 before; ground at its
+// reflectance with the old exposure 43.8, x1.6 53.0: interpolated in log exposure, 1.38; docs/decisions.md 2026-11-06)
+const EXPOSURE_K = 1.38;
+// GROUND_HUE: the factor per channel, so the ground takes Sentinel-2's measured hue too (NAIP's colour balance is greener
+// than L2A on the home foothills: red / green 0.99 against 1.28); false keeps the photo's hue (the luminance factor)
+const GROUND_HUE = true;
+const GROUND_PHYSICAL = GROUND_PARAMS?.get('ground') === 'physical';   // default: display until Aaron approves the pair (ground-albedo-v2)
+export const groundLook = {
+  physical: GROUND_PHYSICAL, gain: new THREE.Vector3(1, 1, 1), basis: null,
+  exposureK: GROUND_PHYSICAL ? (+(GROUND_PARAMS?.get('gexp') || 0) || EXPOSURE_K) : 1,
+};
+// The tile's factor (Atmosphere's constructor, the first thing a world builds); 1 without the layer or in display mode.
+export function setGroundLook(tile) {
+  const L = tile?.manifest?.layers?.['client.ground_albedo'], g = L?.gain;
+  const on = groundLook.physical && Array.isArray(g) && g.length === 3 && g.every(v => v > 0.05 && v < 2);
+  groundLook.gain.set(...(on ? g : [1, 1, 1]));
+  // ?ground=luminance: the factor's luminance on every channel (today's hue kept; GROUND_HUE false makes it the rule)
+  if (on && (!GROUND_HUE || GROUND_PARAMS?.get('ground') === 'luminance')) { const y = L.gain_luminance || (0.2126 * g[0] + 0.7152 * g[1] + 0.0722 * g[2]); groundLook.gain.set(y, y, y); }
+  groundLook.basis = on ? L.basis : null;
+  return groundLook;
+}
+
 export const CLOUD_PERIOD = 30000;     // metres covered by the baked shadow map (cloudMap) around the camera
 const CLOUD_SLICES = 3;               // cuts through the cloud slab per ray (dome and shadow bake alike)
 const CLOUD_BAKE_RES = 768;            // texels across it: 39 m each
@@ -364,6 +396,8 @@ export class Atmosphere {
     // the clear-air blue (x sea-level Rayleigh), contrast the dark-surface air-light reduction, gold the
     // blue taken out of a low sun's glow.
     this.tune = { sun: 11, ambient: 1.4, ambientSat: 0.6, exposure: 0.62, mie: 1.0, mieHeight: 800, rayleigh: 2.0, contrast: 0.4, gold: 1.0 };
+    if (tile?.manifest) setGroundLook(tile);   // a stand-in tile (lineupAnimals.js) keeps the page's last world's gain
+    this.tune.exposure *= groundLook.exposureK;
     this.time = 0; this._v = new THREE.Vector3(); this._c = new THREE.Color(); this._c2 = new THREE.Color();
   }
   // Sky dome material hooks: drive its parameters from the same haze state and draw the clouds.
