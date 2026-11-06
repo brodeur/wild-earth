@@ -49,6 +49,9 @@ HUMAN = {40: (9101, "Agricultural", "Cropland (ESA WorldCover; rewilded)"),
          50: (9102, "Developed-High Intensity", "Built-up (ESA WorldCover; rewilded)")}
 # typical cover and height for the classes WorldCover names but does not measure (marked as such)
 SHRUB_COVER, SHRUB_H_DM, HERB_COVER, HERB_H_DM = 45, 10, 70, 5
+# the dwarf-shrub cover % of the open cells by ecosystem group (typical of each: Atlantic heath 50-80 %, Mediterranean
+# garrigue and tropical dry scrub about half, arctic and alpine tundra a third); height DWARF_H_DM dm
+DWARF_SHRUB, DWARF_H_DM = {"T3.3": 60, "T3.2": 50, "T3.1": 45, "T6.3": 35, "T6.4": 30}, 3
 
 
 def _write(tile, rel, arr, dtype, nodata, count=1):
@@ -143,6 +146,12 @@ def fetch_vegetation_global(tile: Tile) -> dict:
     evc[shrub], evh[shrub] = 200 + SHRUB_COVER, 200 + SHRUB_H_DM
     herb = ~treeish & np.isin(wc30, [30, 90, 100, 40])
     evc[herb], evh[herb] = 300 + HERB_COVER, 300 + HERB_H_DM
+    # Dwarf shrubs the canopy map cannot see (it starts at 0.5 m) and WorldCover calls grass or moss: in a heathland,
+    # shrubland or tundra group the open cells carry the group's dwarf-shrub cover at 0.3 m (Lofoten's heath was drawn
+    # bare: its crowberry, heather and juniper had no cover to stand in)
+    for code, cover in DWARF_SHRUB.items():
+        m = herb & (efg == eco.CODE[code])
+        evc[m], evh[m] = 200 + cover, 200 + DWARF_H_DM
     evc[wc30 == 80], evh[wc30 == 80] = 11, 11
     evc[wc30 == 70], evh[wc30 == 70] = 12, 12
     evc[wc30 == 50], evh[wc30 == 50] = 24, 24
@@ -179,7 +188,8 @@ def fetch_vegetation_global(tile: Tile) -> dict:
         classes[k] = {str(int(c)): {"name": (tab.get(int(c)) or {}).get("CLASSNAMES", "?"), "pixels": int((arr == c).sum())}
                       for c in np.unique(arr)}
     classes["evc_note"] = (f"tree cover from the canopy map; shrub ({SHRUB_COVER} %) and herb ({HERB_COVER} %) cover are "
-                           "typical values for the WorldCover class, not measured")
+                           "typical values for the WorldCover class, not measured; open cells of a heath, shrubland or "
+                           f"tundra group carry its dwarf-shrub cover ({DWARF_SHRUB})")
 
     def remap(arr, lut):
         out = np.zeros(arr.shape, "uint8")

@@ -456,7 +456,7 @@ STEPS: dict[str, Step] = {s.name: s for s in [
     Step("rewild_hydro", "1", ["rewild_hydro", "channels"], ["dem", "channels", "hydro", "osm"], _rewild_hydro,
          ["hydro.human_water", "terrain.dem_rewilded", "client.channel_profile"], ["osm", "native_land"],
          owner="water lane", doc="dams breached, reservoirs drained, channels re-routed, pool-riffle profile", stage=B),
-    Step("landcover", "1", ["fetch_vegetation", "habitat", "landcover_global", "ecosystem", "fetch_global"], ["rewild_hydro"], _veg,
+    Step("landcover", "2", ["fetch_vegetation", "habitat", "landcover_global", "ecosystem", "fetch_global"], ["rewild_hydro"], _veg,
          ["vegetation.", "climate."], ["landfire", "esa_worldcover", "meta_canopy_height", "open_meteo", "soilgrids", "iucn_get"],
          doc="LANDFIRE EVT/EVC/EVH/BpS and the habitat classes, human cells backfilled from BpS: what covers the ground, "
              "which the base layer's erasure, substrate and textures need; the flora stage reads it for its species", stage=B),
@@ -512,7 +512,7 @@ STEPS: dict[str, Step] = {s.name: s for s in [
          ["species.list", "species.occurrences", "species.seasonal", "species.inventory", "perception", "calendar",
           "locomotion", "client.species_prior"], ["gbif"], library=["library/animals"],
          doc="GBIF presence, perception, calendar, locomotion, the client's density prior", stage=A),
-    Step("animals", "2", ["fauna", "fauna_slots", "fauna_models", "research", "locomotion"], ["species", "plants"], _animals, ["species.animals", "client.fauna"], ["gbif"],
+    Step("animals", "3", ["fauna", "fauna_slots", "fauna_models", "pantheria", "research", "locomotion"], ["species", "plants"], _animals, ["species.animals", "client.fauna"], ["gbif"],
          library=["library/animals", "data/eltontraits"],
          doc="every animal recorded on the tile, ranked; predators and scavengers; traits for those without; the Meshy queue",
          stage=A),

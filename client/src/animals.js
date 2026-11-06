@@ -831,6 +831,10 @@ let GATE = null;                       // Set of the static codes allowed here, 
 const FAUNA = { owner: null, codes: [] };
 const GRP = {};                        // a stand-in's group size [lo, hi] (fauna.json `group`), over its kin machine's own
 const WATERY = new Set();              // stand-ins kept to water with no water twin: only cells at running or standing water
+// A slot's own day and rest (client/fauna.json active_hours, rest; pipeline/fauna_slots.py behaviour(): EltonTraits and
+// PanTHERIA): ACT[slot] the 24 hours, 1 = about (the kin's clock where absent); REST_STAND the slots that rest on their feet
+const ACT = {}, REST_STAND = new Set();
+const actAt = (s, h) => ACT[s][(((h | 0) % 24) + 24) % 24] === 1;
 const STAND_IN_MAX = 40;               // the pipeline sends at most 40; each is one instanced draw (and a planar shadow for the big)
 const WATER_IDS = new Set([KF, OT, GH, CM, MA]);
 const WATER_TWIN = { [QU]: MA, [MQ]: MA, [SG]: MA, [FX]: OT, [CY]: OT, [BC]: OT, [ST]: KF, [SJ]: KF };
@@ -884,7 +888,9 @@ function installFauna(fauna, owner) {
     ID[d] = I; KIN[d] = KIN[I]; BASE[d] = d;
     BODY_Y[d] = (BODY_Y[K] || 0) * sc; TAG_DY[d] = (TAG_DY[K] ?? 0.5) * sc;
     if (CULL[I]) CULL[d] = CULL[I] * Math.max(1, Math.sqrt(sc));
-    if (MAMMAL[I]) MAMMAL[d] = f.night === true ? { ...MAMMAL[I], active: h => h < 8 || h > 17.5 } : MAMMAL[I];
+    if (Array.isArray(f.active_hours) && f.active_hours.length === 24) ACT[d] = Uint8Array.from(f.active_hours, v => (v ? 1 : 0));
+    if (f.rest === 'stand') REST_STAND.add(d);
+    if (MAMMAL[I]) MAMMAL[d] = ACT[d] ? { ...MAMMAL[I], active: h => actAt(d, h) } : f.night === true ? { ...MAMMAL[I], active: h => h < 8 || h > 17.5 } : MAMMAL[I];
     if (HOH[I]) HOH[d] = { ...HOH[I] };
     if (f.night === true && (KIN[I] === ST || KIN[I] === SJ)) HOH[d] = { ...(HOH[d] || NIGHT_PERCH), night: true };
     if (grp && HOH[d]?.n) HOH[d].n = grp;
@@ -922,7 +928,7 @@ function restoreFauna(owner) {
   for (const c of FAUNA.codes) { delete INDEX[c]; delete SUIT[c]; delete SEASON[c]; }
   for (const A of [SPECIES, KIN, BASE, BODY_Y, ID]) A.length = STATIC_N;
   TAG_DY.length = STATIC_TAG; PLAYABLE.length = STATIC_PLAYABLE; CONIFER_USERS.length = STATIC_CONIFER;
-  WATERY.clear(); FAUNA.codes = []; FAUNA.owner = null; GATE = null;
+  WATERY.clear(); REST_STAND.clear(); for (const k of Object.keys(ACT)) delete ACT[k]; FAUNA.codes = []; FAUNA.owner = null; GATE = null;
 }
 // The slots running slot k's identity rules (k and the stand-ins on it): the group and territory spawns, the coveys.
 const slotsOf = (...ks) => { const out = []; for (let s = 0; s < SPECIES.length; s++) if (ks.includes(ID[s])) out.push(s); return out; };
@@ -3228,10 +3234,12 @@ export class Animals {
       if (g.fleeT > 0 && g.fleeT < 7 && dh < 40) g.gallopT = Math.max(g.gallopT || 0, 2);   // the first second of a flight is a startled trot: the ambush's window
       if ((g.gallopT || 0) > 0) g.gallopT -= dt;
     }
-    const active = !!g.pilot || g.fleeT > 0 || alertNow || hr < 9.5 || hr > 16.5;   // dawn and dusk; bedded through the middle of the day (a piloted, fleeing or alert herd is up)
+    const active = !!g.pilot || g.fleeT > 0 || alertNow || (ACT[a.sp] ? actAt(a.sp, hr) : hr < 9.5 || hr > 16.5);   // dawn and dusk; bedded through the middle of the day (a piloted, fleeing or alert herd is up); a tile's slot by its own day (ACT)
     a.t -= dt;
     let speed = 0;
-    if (!active) {
+    if (!active && REST_STAND.has(a.sp)) {   // resting on its feet (an elephant, a giraffe): still, head level
+      a.state = D_GRAZE; a.pose = damp(a.pose, 0, 1.2, dt); a.flick = damp(a.flick, 0, 2, dt);
+    } else if (!active) {
       a.state = D_BED; a.pose = damp(a.pose, 1, 0.8, dt); a.flick = damp(a.flick, 0, 2, dt);
     } else {
       a.pose = damp(a.pose, 0, 1.2, dt);

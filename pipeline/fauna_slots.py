@@ -16,6 +16,7 @@ stand-in through the registry, not here. The rules' known errors are listed in `
 from __future__ import annotations
 
 import json
+import math
 import re
 from pathlib import Path
 
@@ -175,6 +176,62 @@ GROUP = {"grazing or browsing herd": [5, 30], "arboreal climber": [3, 15], "larg
          "ground colony": [3, 12], "gull": [1, 6]}
 
 
+# ---- behaviour from traits (phase 1, iteration 3) ----------------------------------------------------------------------
+# The stand-ins ran their kin's clock: every grazer bedded 9:30-16:30 like a mule deer, every big cat like a cougar. Now
+# a slot carries its own day (24 hours, 1 = about), its rest posture and its group, from the traits:
+#   diel weight per hour from EltonTraits' activity flags and PanTHERIA's activity cycle (1 nocturnal, 2 both, 3
+#   diurnal); none known: a herbivore diurnal and crepuscular, a carnivore nocturnal and crepuscular;
+#   the share of the day about from diet and mass: a herbivore feeds longer the larger it is (Owen-Smith 1988: about half
+#   the day for a 50 kg antelope, three quarters for an elephant), 0.35 + 0.1 log10(kg), 0.4-0.75; a carnivore rests
+#   most of the day, 0.45 - 0.07 log10(kg), 0.15-0.45 (a lion about 0.3: lions rest 18-20 h); a bird or other 0.5;
+#   the hours about: the highest-weighted hours of the day up to that share (the midday heat weighs a little less);
+#   rest posture: lying, except the very large on land (over 800 kg: elephants, giraffes and rhinos sleep standing most
+#   nights; a hippo lies in the water);
+#   group: PanTHERIA's social group size g (species, else genus median) as [sqrt(g), g] up to 30, else the archetype's.
+DIURNAL = [0.0] * 5 + [0.5, 1, 1, 1, 1, 1, 1, 0.8, 0.8, 0.8, 1, 1, 1, 0.5] + [0.0] * 5
+CREPUSCULAR = [0, 0, 0, 0, 0.3, 1, 1, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 1, 1, 0.3, 0, 0, 0]
+NOCTURNAL = [1, 1, 1, 1, 1, 0.6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.6, 1, 1, 1, 1]
+REST_STANDING_KG = 800
+
+
+def behaviour(a: dict, t: dict, mass_kg: float, archetype: str) -> dict:
+    from . import pantheria
+    flags = set((t.get("diet") or {}).get("activity") or [])
+    role = set(a.get("role") or [])
+    carn = "predator" in role or "scavenger" in role
+    P = pantheria.lookup(a.get("scientific") or "") if a.get("kind") == "mammal" else {}
+    cyc = P.get("activity")
+    if not flags and cyc:
+        flags = {1: {"nocturnal"}, 2: {"crepuscular", "nocturnal", "diurnal"}, 3: {"diurnal"}}.get(int(round(cyc)), set())
+    if not flags:
+        flags = {"nocturnal", "crepuscular"} if carn else {"diurnal", "crepuscular"}
+    w = [0.0] * 24
+    for f, row in (("diurnal", DIURNAL), ("crepuscular", CREPUSCULAR), ("nocturnal", NOCTURNAL)):
+        if f in flags:
+            w = [x + y for x, y in zip(w, row)]
+    lm = math.log10(max(mass_kg, 0.01))
+    share = (min(0.45, max(0.15, 0.45 - 0.07 * lm)) if carn else min(0.75, max(0.4, 0.35 + 0.1 * lm))) \
+        if a.get("kind") == "mammal" else 0.5
+    n = max(3, round(24 * share))
+    # ties: nearer dawn (6) or dusk (18.5) first, so a short day keeps the twilights
+    order = sorted(range(24), key=lambda h: (-w[h], min(abs(h - 6), abs(h - 18.5))))
+    hours = [0] * 24
+    for h in order[:n]:
+        hours[h] = 1
+    water = (a.get("taxonomy") or {}).get("family") in WATER_FAMILIES
+    out = {"active_hours": hours, "rest": "stand" if mass_kg >= REST_STANDING_KG and a.get("kind") == "mammal" and not water else "lie",
+           "behaviour_sources": ["eltontraits (activity)"] + (["pantheria"] if P else [])}
+    g = P.get("group")
+    if g:
+        out["group"] = [max(1, round(g ** 0.5)), max(1, min(30, round(g)))]
+        out["group_source"] = f"pantheria social group size ({P.get('group_level')})"
+    elif P.get("population_group") == 1 and P.get("population_group_level") == "species":   # (not a genus median: the lion)
+        out["group"], out["group_source"] = [1, 1], "pantheria: solitary"
+    if P.get("density_km2") and P.get("density_km2_level") == "species":
+        out["density_km2"], out["density_source"] = round(P["density_km2"], 3), "pantheria population density (species)"
+    return out
+
+
 def fauna_slots(tile: Tile) -> dict:
     research = json.loads(tile.path("species/animals.json").read_text())
     codes = static_codes()
@@ -221,10 +278,12 @@ def fauna_slots(tile: Tile) -> dict:
         if mdl:
             slots[-1]["model"] = mdl
         slots[-1]["density_km2"] = density_km2(a, kin, archetype, efg)
+        slots[-1].update(behaviour(a, t, m, archetype))   # its own day, rest, group and (measured) density
     out = {"format": 1, "gate": True, "allow": allow, "slots": slots, "skipped": skipped,
            "rules": "pipeline/fauna_slots.py: kin by taxonomy, diet and mass; scale = (mass / kin mass)^(1/3), 0.25-4; density "
                     "Damuth 1981 (herbivores; large ones times HERBIVORE_PRODUCTIVITY of the tile's ecosystem), 30 / mass kg "
-                    "(carnivores), birds 15 m^-0.4 (cap 70) or 0.5 m^-0.75 (raptors)", "ecosystem": efg}
+                    "(carnivores), birds 15 m^-0.4 (cap 70) or 0.5 m^-0.75 (raptors), or PanTHERIA's measured density; behaviour() for "
+                    "the hours about, rest posture and group", "ecosystem": efg}
     write_json(tile.path("client/fauna.json"), out)
     return {"path": "client/fauna.json", "kind": "table", "derived_from": ["species.animals", "species.presence"],
             "allow": len(allow), "slots": len(slots), "skipped": len(skipped),

@@ -5586,3 +5586,40 @@ iteration replaces that, for four-legged mammals, with one path that reads every
   (`tilepackage.js ringBands`). Then it, and Corcovado, threw: a cell with no tree mix (iteration 1's no-fallback rule)
   still drew its riparian extras from the null mix (`vegetation.js`, `impostors.js`). The capture script now gives up on
   a page that never becomes ready and the run goes on to the next probe.
+
+## 2026-11-06: phase 1, iteration 3: behaviour from traits, the judge's clear sky, heath cover, the registry (branch claude/sweet-feistel-2054bb)
+
+The Serengeti evaluation's first finding: the bodies were the species' own, the behaviour was still the kin's (every
+grazer bedded 9:30-16:30 like a mule deer, giraffes lay down in a crowd, leopards came in fours). Fixed by rules over the
+traits, for every tile:
+
+- **A slot's own day** (`fauna_slots.behaviour`, client `animals.js` ACT): 24 hours about or resting, from EltonTraits'
+  activity flags and PanTHERIA's activity cycle, and a share of the day from diet and mass (a herbivore feeds longer the
+  larger it is, 0.35 + 0.1 log10 kg, 0.4-0.75, after Owen-Smith 1988; a carnivore rests most of the day, 0.45 - 0.07
+  log10 kg, 0.15-0.45). The Serengeti: wildebeest about 5-12 and 14-19, hippos at night, lions seven hours at dawn and
+  dusk. The deer and carnivore machines read it in place of their own clocks.
+- **Rest posture**: lying, except land mammals over 800 kg, which rest on their feet (elephants, giraffes; a hippo lies
+  in the water).
+- **Groups and numbers from PanTHERIA** (`pipeline/pantheria.py`, Jones et al. 2009; "Copyright restrictions: None"): the
+  social group size as [sqrt(g), g] up to 30 (buffalo 3-12, wildebeest 4-20, elephants 4-20), solitary where the species'
+  own population group is 1 (the leopard; not from a genus median, which made the lion solitary), and the measured
+  population density where the species has one (lion 0.11 per km2, wildebeest 8.0) in place of the allometric rule.
+- **The judge's top-down under a clear sky** (`tools/probes/capture.mjs`): the composite is the month's cloud-free
+  median, and the tropical probes' archived days are overcast. Danum moved only from L* 17 to 18: the darkness is the
+  canopy's own shading (below).
+- **Heath cover** (`landcover_global.DWARF_SHRUB`): the canopy map starts at 0.5 m and WorldCover calls heath grass or
+  moss, so Lofoten's heath had no shrub cover. The open cells of a heath, shrubland or tundra group now carry its typical
+  dwarf-shrub cover (T3.3 60 %, T3.2 50 %, T3.1 45 %, T6.3 35 %, T6.4 30 %). Not yet visible: a crowberry carpet needs
+  thousands of plants a cell, which only the ground layer draws, and the ground layer's species atlas is fixed at load
+  for the whole library (24 slots, 21 used by California and Olympic forbs). A per-tile atlas is the next step there.
+- **Two-sided leaves** (`treegen.js` leafTransmit, canopyMaterial, leafMaterial; `impostors.js`): broadleaf foliage was
+  one-sided Lambert, so every card facing away from the sun got only the ground's bounce light and shaded crowns went
+  black. A thin leaf passes about as much green light as it reflects (PROSPECT / LOPEX: reflectance 0.10-0.15,
+  transmittance 0.06-0.12 at 550 nm), so the sun and sky now also light a leaf from behind, by the card's own
+  translucency (default 0.5), under the same cast and cloud shadow; the same rule at the near, mid and impostor tiers (no
+  seam). Pines and scales unchanged. Tropical canopies +4.5 L* from above; Teton and the Serengeti unchanged.
+- **A fair judge** (`tools/probes/sheet.py`, `capture.mjs`): the composite's reflectance through the capture's own light,
+  exposure and ACES, beside the old stretch. Through it the canopies sit within 2 L* of their reflectance and the open
+  ground is the outlier (docs/probes-2026-11.md, iteration 3).
+- **The registry knows the pipeline's models** (`pipeline/registry.py`): the eleven Serengeti models are fidelity 3 (own
+  mesh, skinned, the leg engine), with credits, attempts and how each was sized.

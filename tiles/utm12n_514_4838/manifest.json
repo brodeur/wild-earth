@@ -15,7 +15,7 @@
   43.78492414769734
  ],
  "size_m": 10000,
- "generated_at": "2026-11-06T06:48:50Z",
+ "generated_at": "2026-11-06T08:46:34Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -7043,7 +7043,7 @@
    "generated_traits": 0,
    "queued": 51,
    "queued_credits": 1525,
-   "sha256": "03833eb5e2c9680ae650517b3c06cf3bfcb0d84fa3a2c0c901ccf2670a87ab20",
+   "sha256": "8f86d71c1aa0efa97e7463d54237e1575f0b84c3df0ced1343d1e8eca823422b",
    "bytes": 122377
   },
   "resources": {
@@ -7224,8 +7224,8 @@
     "tamiasciurus_hudsonicus": "sciurus_griseus",
     "urocitellus_armatus": "sciurus_griseus"
    },
-   "sha256": "398d7b7473b2379414ff0080dc6ef1f8c1a6103332224ed4489f9962b8bb81a7",
-   "bytes": 20683
+   "sha256": "e3df7a36268a5c44fd464986dfa9f6ac0c64f7f70d0d73fcc2c1c3fe7208318b",
+   "bytes": 33472
   }
  },
  "sources": {
@@ -7732,6 +7732,12 @@
    "step": "audit",
    "at": "2026-11-06T06:48:50Z",
    "seconds": 0.1,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T08:46:34Z",
+   "seconds": 0.6,
    "ok": true
   }
  ],
@@ -8840,15 +8846,15 @@
    "seconds": 1.4
   },
   "animals": {
-   "version": "1",
-   "code": "e82edf1c6f689aa8",
+   "version": "3",
+   "code": "be670a1c30ba43d8",
    "params": {
     "tile": "utm12n_514_4838"
    },
-   "fingerprint": "6e755b748fc7f05c",
+   "fingerprint": "2000810c018ecedc",
    "parts": {
-    "version": "1",
-    "code": "e82edf1c6f689aa8",
+    "version": "3",
+    "code": "be670a1c30ba43d8",
     "params": {
      "tile": "utm12n_514_4838"
     },
@@ -8857,11 +8863,11 @@
      "plants": "19b4766a5e4d088c"
     },
     "library": {
-     "library/animals": "a8c74e9e35eea5e9",
+     "library/animals": "9b343de56ec44a44",
      "data/eltontraits": "e3b0c44298fc1c14"
     }
    },
-   "ran_at": "2026-11-06T06:48:38Z",
+   "ran_at": "2026-11-06T08:46:33Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -8869,10 +8875,10 @@
     "species.animals"
    ],
    "outputs": {
-    "client/fauna.json": "398d7b7473b23794",
-    "species/animals.json": "03833eb5e2c9680a"
+    "client/fauna.json": "e3df7a36268a5c44",
+    "species/animals.json": "8f86d71c1aa0efa9"
    },
-   "out_hash": "6d69dab5fd9d4a13",
+   "out_hash": "40b7ce40bbab5aa0",
    "sources": {
     "gbif": "2026-11-06",
     "eltontraits": "2026-11-06"
@@ -8881,9 +8887,9 @@
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 205
+    "cache": 206
    },
-   "seconds": 0.3
+   "seconds": 0.6
   },
   "resources": {
    "version": "1",
