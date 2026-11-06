@@ -243,7 +243,88 @@ the pipeline may create, within rules:
 4. **Deterministic**: seeded by the tile and the place, so neighbours agree and a rebuild is the same.
 5. **Reviewed**: an invented layer is a hand-edit item until someone has looked at it.
 
+**Under water: rich, invented, and placed by physics** (Aaron: "interesting and detailed where it makes sense, but also
+large portions will be sandy or muddy at the outflow of a river... the pipeline should invent rich ecosystems even if there
+isn't data to support that"). Two passes, both labelled `invented` wherever no survey stands behind them:
+
+*1. The sea floor's sediment and rock, from what is measured.* Inputs: bathymetry and its slope and rugosity (GEBCO,
+EMODnet, national surveys); the river mouths and their sediment supply (the routed channels reaching the coast, their
+drainage area times runoff times the catchment's erodibility from the geology); wave exposure (fetch along the coastline
+and ERA5 wave height); tidal range (EOT20 or FES2022); the coast's rock; sea temperature and turbidity (Sentinel-2 and
+the marine reanalysis); latitude. Rules, in order:
+
+| where | sediment | why |
+|---|---|---|
+| off a river mouth, within a distance that grows with the sediment supply | a fan or delta: sand bars at the mouth fining seaward to silt, then prodelta mud; a turbid plume over it | the river drops its load where the current slows |
+| sheltered bays and inlets, deep basins below the storm wave base (about 2-3 times the 1-in-1-year wave height) | mud | nothing stirs it |
+| the exposed shelf within the wave base | sand, rippled across the dominant wave direction | waves winnow the fines |
+| steep slopes, drop-offs, headlands of resistant rock (the geology's resistance), high rugosity | bare rock, boulders, cobble | too steep or too exposed for sediment to stay |
+| the shore | sand beaches in sheltered concave coves with supply; gravel and cobble on exposed hard-rock coasts; mudflats in sheltered tidal flats | the coast's rock, exposure and tide |
+
+So most of a coast's sea floor is plain sand and mud, as Aaron expects, and the detail gathers where it belongs.
+
+*2. Life on it, invented where the data is thin.* Habitat by substrate, depth and light (the plume cuts light), water
+temperature and latitude:
+
+| substrate | conditions | habitat |
+|---|---|---|
+| rock | cold to temperate (sea surface under about 20 deg C), lit | kelp forest (Lofoten: Laminaria hyperborea), urchin barrens where kelp is grazed |
+| rock or carbonate | warm (winter minimum above about 18 deg C), clear, lit, away from plumes | coral reef: fringing reef on the shore, bommies, a drop-off at its edge |
+| sand or mud | lit, sheltered | seagrass meadows (temperate Zostera, tropical Thalassia) |
+| mud | intertidal, tropical / temperate | mangrove (WorldCover maps it) / salt marsh and mudflat |
+| rock walls, drop-offs | below the light | sponges, sea fans, anemones |
+| sand and mud | deep, dark | burrowed mud: sea pens, burrows, brittle stars |
+
+The species are chosen from OBIS records of the marine ecoregion and depth band (CC0 and CC BY records only), mapped to
+marine archetypes the client can draw (kelp, seagrass, coral heads by growth form, sponge, anemone, sea star, urchin, a
+schooling fish, a reef fish, a ray, a shark, a turtle, an octopus, a seal, an otter). Where OBIS is thin, a habitat card
+holds the typical community of that habitat in that climate. The arrangement at a metre's scale (bommies along a reef
+edge, sand channels, kelp holdfasts, ripple fields, boulder fields sized by the rock class, schools over the drop-off) is
+invented, seeded and labelled. Detail and richness are spent where the habitat is complex (reefs, kelp, walls) and plain
+sand stays plain.
+
 The same licence will serve the other places the data cannot reach (caves, the soil's life under a digging animal).
+
+### 3e. Bark from research: a description, then parameters, then a texture where parameters run out
+
+Aaron: "there should be a research step to find descriptions of the bark and generate based on the description." Today a
+species' bark is a few fields on its trait card (`trunk`: colour and one pattern of plates, fibrous, shreddy, smooth,
+peeling or mottled), drawn by `treegen.js` (`barkTextureSteps`, the per-species `barkSp` moss, lichen and fissure depth)
+with the close layer's parallax, hex tiling, moss and wet (decisions, 2026-11-04). The probes drew a Bornean dipterocarp,
+an umbrella thorn and a downy birch with those few words; the generator had nothing else to go on.
+
+**The research step** (`bark`, flora stage, before `plants`; one run per species, cached in the library like a card):
+an agent reads published descriptions (floras and eFloras, Silvics of North America and FEIS (public domain), POWO (CC BY),
+PROSEA and national floras, Wikipedia (CC BY-SA), field guides read for facts only), records each source and its licence,
+and writes a structured `bark` block on the card:
+
+| field | example (downy birch) | example (Parashorea malaanonan) |
+|---|---|---|
+| colour by age (young, mature, old), words and CIELAB | white to grey-white; old base dark grey-brown | grey to pale brown; reddish inner bark |
+| pattern | smooth, lenticellate, peeling in thin horizontal strips; fissured at the base when old | flaky, shed in large thin irregular plates; buttressed |
+| furrows: depth, width, orientation | old base only: 1-2 cm, vertical | shallow, none to 0.5 cm |
+| plates and scales: size, shape | none | 10-30 cm, thin, irregular |
+| lenticels: shape, size, density | horizontal dark bands 1-5 cm, dense | sparse, round |
+| peeling: unit, colour under | papery strips, pink-orange under | plates, ochre under |
+| age transitions | smooth to 30 cm dbh, base fissured past 60 years | smooth when young, flaking from 20 cm dbh |
+| sources, confidence | per field | per field |
+
+**Where the description becomes parameters.** Most of it maps onto what `treegen` already draws, widened: colour by age
+class (the age classes exist), the pattern widened to the classes above, fissure depth and orientation (the parallax's
+height field), plate and scale size (the hex tiling's cell size and the height profile per cell), lenticel bands (a new
+term in the same shader: a horizontal dash pattern), peeling (the madrone's curl already exists), and a smooth-to-rough
+transition by trunk diameter. **Where parameters run out** (a pattern the shader cannot make: the kigelia's flaking grey,
+a paperbark, a strangler fig's lattice), a **texture is generated from the description**: procedurally first (a library of
+bark recipes keyed by the pattern classes, seeded per species), and by a generative image model only where its licence
+allows the output to ship (an open question kept from revision 1). Generated textures are CC0 by construction in the
+procedural case and are recorded with their method either way.
+
+**Checked against photos**: openly licensed close-ups of the species' bark (iNaturalist and Commons, CC0, CC BY, CC BY-SA,
+filtered per photo as for the place photos), else of its genus. The render of the bark at 1 m is compared by the same
+statistics as the place photos (CIELAB palette, lightness, the texture's orientation and feature size) and by the vision
+rubric ("does this bark match these photos?"). A miss tunes the parameters inside the description's ranges; a species
+without photos keeps the description's values, marked unchecked. Cost: about $0.30-0.60 of Claude a species for the
+research, once; the photo check is compute.
 
 ### Seasons (new as a stage; built from today's seasons and resources steps)
 
@@ -418,6 +499,61 @@ a plant form (succulent, palm, mangrove, bamboo, fern, epiphyte, deadwood) or an
 About $800-1,250 of Claude in all, plus Meshy credits per species. Phase 1 alone makes any land tile on Earth build at
 fidelity 2 or better in every layer.
 
+
+## 6b. The ceiling for a fresh tile in a fresh region, and pricing
+
+Aaron: "I want to find out what the ceiling is for a fresh tile in a fresh region - I need to figure out pricing." A fresh
+region is one whose species have no relatives in the library (the Serengeti), so nothing is a variant.
+
+**What we have measured.** The Meshy ledger: 695 credits across 41 species with jobs (fruit included); per species 5-40
+credits typically, the worst 80 (the raven, the first experiments) and 70 (the acorn woodpecker, every candidate
+rejected). The Hoh's first batch, on the California library: 19 species, 120 credits, $41 of Claude. Its second batch, on
+the first: 22 species, 25 credits, $31 of Claude, nearly all variants. A tile lists about 46 animals (the Hoh); the
+density target is 22. Trait cards: about $0.50 of Claude each. The probes: about 27 minutes and $3-5 of Claude a tile
+for the pipeline itself.
+
+**Meshy's prices** (meshy.ai/pricing and docs.meshy.ai/en/api/pricing, read 2026-11-05): Pro $20 a month for 1,000
+credits ($0.020 a credit), Premium $40 for 3,000 ($0.013), Ultra $100 for 8,000 ($0.0125), Studio $70 for 5,500 pooled
+($0.013); Enterprise is custom, annual and volume-based. The API needs Pro or above and uses prepaid credits; extra credit
+packs exist (Pro gets 20 % off them) but their prices are not published. Per call: a text-to-3D preview 20 credits
+(meshy-7.1 or 6; 5 for lite), refine 10 (15 at 8K), image-to-3D with texture 15-35, retexture 10, remesh 5, auto-rigging 5,
+animation 3 a clip. Paid plans own their outputs; the free plan's are CC BY 4.0.
+
+**The ceiling, per tile:**
+
+| | worst case: fresh region, everything modelled | typical: fresh region, the density target modelled | a neighbour in a grown region |
+|---|---|---|---|
+| animals modelled fresh | 46 at 80 credits (two failed candidates each) | 22 at 35 credits; the other 24 as stand-ins | 3-6 new, mostly variants |
+| Meshy credits | 3,680 (about $46-74) | 770 (about $10-15) | 0-150 (under $3) |
+| Claude: animals (build, rig fit, review) | 46 x $6 = $276 | 22 x $4 = $88 | $10-25 |
+| Claude: new body plans (rigs: primate, snake, swimmer, giraffe proportions) | 4 x $50 = $200 | 2 x $40 = $80 | none |
+| Claude: plants (cards, bark research, new forms) | 60 cards and bark $50, 2 new forms $100 | 40 cards and bark $30, 1 form $40 | 5-10 cards, $5 |
+| Claude: pipeline, signature research, judge | $10-15 | $8-12 | $5-8 |
+| compute and downloads | 1.5 h and 9 GB with lidar; 30-40 min and 1-3 GB without | the same | the same |
+| **total** | **about $640-700 of Claude and $46-74 of Meshy** | **about $250-260 of Claude and $10-15 of Meshy** | **about $20-40 of Claude, under $3 of Meshy** |
+
+Two things the table says. Claude's time, not Meshy's credits, dominates the price of a fresh tile: even the worst case's
+credits cost less than a tenth of the agent work (the credit budget has been the binding limit so far, not the dollars).
+And the cost falls fast as a region's library grows, as the Hoh's two batches show (a second batch at a fifth of the
+credits and three-quarters of the Claude): by the evidence so far, the second tile of a region costs about a third of the
+first, and from the fifth or so tile a new tile costs its pipeline run plus a few species.
+
+**A pricing model for "pay to have a tile made"**: a price per tile set from the cost of its unique work, plus a share of
+the species it brings into the library, because a species modelled once serves every later tile of its region.
+
+- *Neighbour tile* (its region's library exists): a fixed price, set from the $20-40 of cost.
+- *First tile of a new region*: the founder's price, set from the typical $250-275 of cost, and capped by the plan (the
+  density target modelled, the rest as stand-ins until later tiles fund them). The founder is credited on the region.
+- *Pooling*: requests in the same region pool their payments toward the region's first tile (the brief's matching pool),
+  so the founder price is shared; later requesters pay neighbour prices.
+
+**Batching shared species across requests.** The queue groups pending requests by region and takes the union of their
+species lists. Each species is modelled once, in the order that serves the most pending tiles (a greedy cover: the
+species on the most lists first), and the tiles are built in the order that reuses the most (the tile whose species
+cover most of the others' first). Trait cards and bark research for a region run as one agent session (shared context,
+cached reads), and Meshy jobs go in batches. A request's cost is its tile's unique work plus its share of the species it
+shares with others.
+
 ## 7. The first run
 
 The first run should test the claim "anywhere". So it is three cheap probes chosen for the gaps, then one place taken
@@ -447,7 +583,7 @@ today's US sources and tests a steppe and its wolves, elk, bison and ravens (abo
 
 ## 7b. The probes ran (2026-11-05), and the revised phase 1
 
-The three probes went through today's primitives with only what they needed to run outside the US; the full report is
+The probes (three, then four more: the Grand Canyon, Grand Teton, Corcovado and Manu) went through today's primitives with only what they needed to run outside the US; the full report is
 `docs/probes-2026-11.md`. Terrain, water routing, land cover, canopy, geology, soil, species research and the step graph
 carried over. What failed is where a place's life is decided: which plants grow where (no niches; records taken for
 abundance; growth forms guessed from a temperate family list), what the ground is made of (the foothills' materials
@@ -467,7 +603,8 @@ Phase 1 is reordered by what the probes showed, before any new generator:
 | 6 | national lidar outside the US; GLO-30 lowered by the canopy elsewhere | $20-40 |
 | 7 | geology: Macrostrat licence filter, finer open national maps, depth to bedrock | $15-25 |
 | 8 | the satellite judge automated, with the fidelity report | $20-30 |
-| | **phase 1, revised** | **$275-425** |
+| 9 | from the four later probes: no other region's species as a client fallback; formation colour and banding from the geology units; humidity haze in the tropics | $25-40 |
+| | **phase 1, revised** | **$300-465** |
 
 The probes and the code that let them run cost about $30 of Claude (on top of the $20 the design took), no Meshy credits.
 

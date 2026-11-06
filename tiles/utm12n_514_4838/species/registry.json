@@ -1,0 +1,3366 @@
+{
+ "tile": "utm12n_514_4838",
+ "at": "2026-11-06T05:35:02Z",
+ "levels": {
+  "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
+  "1": "stand-in look: another species' model with its own size and colour",
+  "2": "its own model: own crown, branching and foliage (plants) or own mesh (animals), not animated",
+  "3": "rigged and animated (animals); grown: three or more age classes and four seasons' colours (plants)",
+  "4": "full: behaviour, sound and seasonal states (animals); the ecology, habitat and relations (plants)"
+ },
+ "summary": {
+  "by_level": {
+   "0": {
+    "plants": 44,
+    "animals": 32
+   },
+   "1": {
+    "plants": 0,
+    "animals": 0
+   },
+   "2": {
+    "plants": 12,
+    "animals": 0
+   },
+   "3": {
+    "plants": 4,
+    "animals": 29
+   },
+   "4": {
+    "plants": 1,
+    "animals": 7
+   }
+  },
+  "plants": 61,
+  "animals_present": 68,
+  "animals_queued": 32,
+  "meshy_credits_queued": 925,
+  "cards_queued": 44,
+  "stand_ins": {
+   "pinus_longaeva": "pinus_ponderosa",
+   "pinus_flexilis": "pinus_ponderosa",
+   "ceanothus_velutinus": null,
+   "lonicera_utahensis": null,
+   "aconitum_columbianum": null,
+   "mahonia_repens": null,
+   "wyethia_sagittata": null,
+   "chamaenerion_angustifolium": null,
+   "ipomopsis_aggregata": null,
+   "sorbus_scopulina": null,
+   "erythranthe_lewisii": null,
+   "campanula_petiolata": null,
+   "actaea_rubra": null,
+   "aquilegia_coerulea": null,
+   "pterospora_andromedea": null,
+   "streptopus_amplexifolius": null,
+   "chimaphila_umbellata": null,
+   "paxistima_myrsinites": null,
+   "rhododendron_menziesii": null,
+   "carduus_nutans": null,
+   "eriogonum_umbellatum": null,
+   "maianthemum_racemosum": null,
+   "geranium_viscosissimum": null,
+   "heracleum_maximum": null,
+   "clematis_occidentalis": null,
+   "hydrophyllum_capitatum": null,
+   "claytonia_lanceolata": null,
+   "anaphalis_margaritacea": null,
+   "pedicularis_bracteosa": null,
+   "fritillaria_pudica": null,
+   "pteridium_aquilinum": null,
+   "lonicera_involucrata": null,
+   "rubus_idaeus": null,
+   "acer_glabrum": null,
+   "vaccinium_membranaceum": null,
+   "vaccinium_scoparium": null,
+   "ribes_viscosissimum": null,
+   "orthilia_secunda": null,
+   "castilleja_miniata": null,
+   "kalmia_microphylla": null,
+   "sambucus_racemosa": null,
+   "pyrola_asarifolia": null,
+   "picea_engelmannii": null,
+   "ribes_lacustre": null
+  },
+  "density": {
+   "tree": {
+    "target": 21,
+    "have": 13
+   },
+   "shrub": {
+    "target": 23,
+    "have": 3
+   },
+   "ground": {
+    "target": 26,
+    "have": 1
+   },
+   "animal": {
+    "target": 22,
+    "have": 68,
+    "with_model": 36
+   }
+  },
+  "hands": {
+   "count": 109,
+   "by_what": {
+    "a trait card": 44,
+    "a lexicon phrase or a species-mix rule": 16,
+    "a mesh": 31,
+    "a review of its generated traits": 18
+   }
+  }
+ },
+ "plants": [
+  {
+   "id": "artemisia_tridentata",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "big sagebrush",
+   "drawn_as": "artemisia_tridentata",
+   "share": 0.7324,
+   "why_needed": [
+    "named by EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (26281 cells)",
+    "named by BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (691 cells)"
+   ]
+  },
+  {
+   "id": "pinus_contorta",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "lodgepole pine",
+   "drawn_as": "pinus_contorta",
+   "share": 0.4302,
+   "why_needed": [
+    "named by EVT 7050 Rocky Mountain Lodgepole Pine Forest (9076 cells)",
+    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (2953 cells)"
+   ]
+  },
+  {
+   "id": "pseudotsuga_menziesii",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "Douglas-fir",
+   "drawn_as": "pseudotsuga_menziesii",
+   "share": 0.2912,
+   "why_needed": [
+    "named by EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (6244 cells)",
+    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)"
+   ]
+  },
+  {
+   "id": "phyllodoce_breweri",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "red mountain heather",
+   "drawn_as": "phyllodoce_breweri",
+   "share": 0.2676,
+   "why_needed": [
+    "named by EVT 9016 Rocky Mountain Alpine Bedrock and Scree (31668 cells)",
+    "named by EVT 7144 Rocky Mountain Alpine Turf (1532 cells)",
+    "named by EVT 9017 Rocky Mountain Alpine-Montane Wet Meadow (404 cells)"
+   ]
+  },
+  {
+   "id": "juniperus_grandis",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "Sierra juniper",
+   "drawn_as": "juniperus_grandis",
+   "share": 0.1184,
+   "why_needed": [
+    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (2953 cells)",
+    "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (19 cells)"
+   ]
+  },
+  {
+   "id": "pinus_monticola",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "western white pine",
+   "drawn_as": "pinus_monticola",
+   "share": 0.0524,
+   "why_needed": [
+    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (2953 cells)"
+   ]
+  },
+  {
+   "id": "pinus_albicaulis",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "whitebark pine",
+   "drawn_as": "pinus_albicaulis",
+   "share": 0.0454,
+   "why_needed": [
+    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (2953 cells)"
+   ]
+  },
+  {
+   "id": "tsuga_mertensiana",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "mountain hemlock",
+   "drawn_as": "tsuga_mertensiana",
+   "share": 0.0444,
+   "why_needed": [
+    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (2953 cells)"
+   ]
+  },
+  {
+   "id": "populus_tremuloides",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "quaking aspen",
+   "drawn_as": "populus_tremuloides",
+   "share": 0.016,
+   "why_needed": [
+    "named by EVT 7011 Rocky Mountain Aspen Forest and Woodland (461 cells)",
+    "named by BPS 686 Rocky Mountain Aspen Forest and Woodland (29 cells)",
+    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)"
+   ]
+  },
+  {
+   "id": "pinus_ponderosa",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "ponderosa pine",
+   "drawn_as": "pinus_ponderosa",
+   "share": 0.0019,
+   "why_needed": [
+    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)"
+   ]
+  },
+  {
+   "id": "abies_concolor",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "white fir",
+   "drawn_as": "abies_concolor",
+   "share": 0.0001,
+   "why_needed": [
+    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)"
+   ]
+  },
+  {
+   "id": "quercus_kelloggii",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "California black oak",
+   "drawn_as": "quercus_kelloggii",
+   "share": 0.0001,
+   "why_needed": [
+    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)"
+   ]
+  },
+  {
+   "id": "abies_lasiocarpa",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "subalpine fir",
+   "drawn_as": "abies_lasiocarpa",
+   "share": 0,
+   "why_needed": [
+    "GBIF: 74 records on the tile"
+   ]
+  },
+  {
+   "id": "acer_glabrum",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 41 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "achillea_millefolium",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "yarrow",
+   "drawn_as": "achillea_millefolium",
+   "share": 0,
+   "why_needed": [
+    "GBIF: 31 records on the tile"
+   ]
+  },
+  {
+   "id": "aconitum_columbianum",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 146 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "actaea_rubra",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 86 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "anaphalis_margaritacea",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 49 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "aquilegia_coerulea",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 83 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "calocedrus_decurrens",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "incense cedar",
+   "drawn_as": "calocedrus_decurrens",
+   "share": 0,
+   "why_needed": [
+    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)"
+   ]
+  },
+  {
+   "id": "campanula_petiolata",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 93 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "carduus_nutans",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 69 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "castilleja_miniata",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 44 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "ceanothus_velutinus",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 183 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "chamaenerion_angustifolium",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 126 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "chimaphila_umbellata",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 77 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "claytonia_lanceolata",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 50 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "clematis_occidentalis",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 55 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "eriogonum_umbellatum",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 69 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "erythranthe_lewisii",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 102 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "fritillaria_pudica",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 47 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "geranium_viscosissimum",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 61 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "heracleum_maximum",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 58 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "hydrophyllum_capitatum",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 51 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "ipomopsis_aggregata",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 107 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "kalmia_microphylla",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 12 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "lonicera_involucrata",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 44 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "lonicera_utahensis",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 175 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "mahonia_repens",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 134 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "maianthemum_racemosum",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 69 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "orthilia_secunda",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 18 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "paxistima_myrsinites",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 77 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "pedicularis_bracteosa",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 48 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "picea_engelmannii",
+   "kind": "tree",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 10 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "pinus_flexilis",
+   "kind": "tree",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": "pinus_ponderosa",
+   "share": 0,
+   "why_needed": [
+    "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (19 cells)"
+   ],
+   "stand_in": "pinus_ponderosa"
+  },
+  {
+   "id": "pinus_lambertiana",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "sugar pine",
+   "drawn_as": "pinus_lambertiana",
+   "share": 0,
+   "why_needed": [
+    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)"
+   ]
+  },
+  {
+   "id": "pinus_longaeva",
+   "kind": "tree",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": "pinus_ponderosa",
+   "share": 0,
+   "why_needed": [
+    "named by EVT 7057 Rocky Mountain Subalpine-Montane Limber-Bristlecone Pine Woodland (30 cells)"
+   ],
+   "stand_in": "pinus_ponderosa"
+  },
+  {
+   "id": "pteridium_aquilinum",
+   "kind": "fern",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 46 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "pterospora_andromedea",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 81 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "pyrola_asarifolia",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 11 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "rhododendron_menziesii",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 71 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "ribes_lacustre",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 10 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "ribes_viscosissimum",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 20 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "rubus_idaeus",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 43 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "rubus_parviflorus",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "thimbleberry",
+   "drawn_as": "rubus_parviflorus",
+   "share": 0,
+   "why_needed": [
+    "GBIF: 273 records on the tile"
+   ]
+  },
+  {
+   "id": "sambucus_racemosa",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 12 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "sorbus_scopulina",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 106 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "streptopus_amplexifolius",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 80 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "vaccinium_membranaceum",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 25 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "vaccinium_scoparium",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 23 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "wyethia_sagittata",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 127 records on the tile"
+   ],
+   "stand_in": null
+  }
+ ],
+ "animals": [
+  {
+   "id": "corvus_corax",
+   "scientific": "Corvus corax",
+   "common": "common raven",
+   "kind": "bird",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "6501 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "buteo_jamaicensis",
+   "scientific": "Buteo jamaicensis",
+   "common": "red-tailed hawk",
+   "kind": "bird",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "1927 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "odocoileus_hemionus",
+   "scientific": "Odocoileus hemionus",
+   "common": "black-tailed deer",
+   "kind": "mammal",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "446 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "cyanocitta_stelleri",
+   "scientific": "Cyanocitta stelleri",
+   "common": "Steller's jay",
+   "kind": "bird",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "901 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "cathartes_aura",
+   "scientific": "Cathartes aura",
+   "common": "turkey vulture",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "1566 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "canis_latrans",
+   "scientific": "Canis latrans",
+   "common": "coyote",
+   "kind": "mammal",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "76 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "puma_concolor",
+   "scientific": "Puma concolor",
+   "common": "mountain lion",
+   "kind": "mammal",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "3 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "ursus_americanus",
+   "scientific": "Ursus americanus",
+   "common": "American black bear",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "457 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "meleagris_gallopavo",
+   "scientific": "Meleagris gallopavo",
+   "common": "wild turkey",
+   "kind": "bird",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "6 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "cervus_canadensis",
+   "scientific": "Cervus canadensis",
+   "common": "Roosevelt elk",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "501 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "troglodytes_pacificus",
+   "scientific": "Troglodytes pacificus",
+   "common": "Pacific wren",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "38 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "perisoreus_canadensis",
+   "scientific": "Perisoreus canadensis",
+   "common": "Canada jay",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "816 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "strix_varia",
+   "scientific": "Strix varia",
+   "common": "barred owl",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "4 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "megaceryle_alcyon",
+   "scientific": "Megaceryle alcyon",
+   "common": "belted kingfisher",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "772 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "haliaeetus_leucocephalus",
+   "scientific": "Haliaeetus leucocephalus",
+   "common": "bald eagle",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "2008 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "corvus_brachyrhynchos",
+   "scientific": "Corvus brachyrhynchos",
+   "common": "American crow",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "1177 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "lontra_canadensis",
+   "scientific": "Lontra canadensis",
+   "common": "North American river otter",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "12 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "lepus_americanus",
+   "scientific": "Lepus americanus",
+   "common": "snowshoe hare",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "3 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "peromyscus_maniculatus",
+   "scientific": "Peromyscus maniculatus",
+   "common": "deer mouse",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "4 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "ardea_herodias",
+   "scientific": "Ardea herodias",
+   "common": "great blue heron",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "1412 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "mergus_merganser",
+   "scientific": "Mergus merganser",
+   "common": "common merganser",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "3169 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "turdus_migratorius",
+   "scientific": "Turdus migratorius",
+   "common": "American robin",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "7430 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "sturnus_vulgaris",
+   "scientific": "Sturnus vulgaris",
+   "common": "European starling",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "560 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "junco_hyemalis",
+   "scientific": "Junco hyemalis",
+   "common": "dark-eyed junco",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "4025 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "regulus_satrapa",
+   "scientific": "Regulus satrapa",
+   "common": "golden-crowned kinglet",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "714 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "empidonax_difficilis",
+   "scientific": "Empidonax difficilis",
+   "common": "Pacific-slope flycatcher",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "172 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "aegolius_acadicus",
+   "scientific": "Aegolius acadicus",
+   "common": "northern saw-whet owl",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "15 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "leuconotopicus_villosus",
+   "scientific": "Leuconotopicus villosus",
+   "common": "hairy woodpecker",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "1431 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "pandion_haliaetus",
+   "scientific": "Pandion haliaetus",
+   "common": "osprey",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "1862 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "accipiter_striatus",
+   "scientific": "Accipiter striatus",
+   "common": "sharp-shinned hawk",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "321 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "falco_columbarius",
+   "scientific": "Falco columbarius",
+   "common": "merlin",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "64 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "larus_californicus",
+   "scientific": "Larus californicus",
+   "common": "California gull",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "256 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "anas_platyrhynchos",
+   "scientific": "Anas platyrhynchos",
+   "common": "mallard",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "2915 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "tamias_amoenus",
+   "scientific": "Tamias amoenus",
+   "common": "yellow-pine chipmunk",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "40 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "anaxyrus_boreas",
+   "scientific": "Anaxyrus boreas",
+   "common": "western toad",
+   "kind": "amphibian",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "29 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "setophaga_coronata",
+   "scientific": "Setophaga coronata",
+   "common": "yellow-rumped warbler",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 2 of its class (4% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "poecile_gambeli",
+   "scientific": "Poecile gambeli",
+   "common": "mountain chickadee",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 3 of its class (4% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "spizella_passerina",
+   "scientific": "Spizella passerina",
+   "common": "chipping sparrow",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 5 of its class (4% of the class's records)"
+   ],
+   "role": [
+    "omnivore"
+   ],
+   "traits": "library/animals/traits/spizella_passerina.json"
+  },
+  {
+   "id": "regulus_calendula",
+   "scientific": "Regulus calendula",
+   "common": "ruby-crowned kinglet",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 6 of its class (3% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": "library/animals/traits/regulus_calendula.json"
+  },
+  {
+   "id": "piranga_ludoviciana",
+   "scientific": "Piranga ludoviciana",
+   "common": "western tanager",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 7 of its class (3% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": "library/animals/traits/piranga_ludoviciana.json"
+  },
+  {
+   "id": "setophaga_aestiva",
+   "scientific": "Setophaga aestiva",
+   "common": "american yellow warbler",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 9 of its class (3% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": "library/animals/traits/setophaga_aestiva.json"
+  },
+  {
+   "id": "spinus_pinus",
+   "scientific": "Spinus pinus",
+   "common": "pine siskin",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 10 of its class (3% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": "library/animals/traits/spinus_pinus.json"
+  },
+  {
+   "id": "nucifraga_columbiana",
+   "scientific": "Nucifraga columbiana",
+   "common": "clark's nutcracker",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "scavenger"
+   ],
+   "role": [
+    "omnivore",
+    "scavenger"
+   ],
+   "traits": null
+  },
+  {
+   "id": "pica_hudsonia",
+   "scientific": "Pica hudsonia",
+   "common": "black-billed magpie",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "scavenger"
+   ],
+   "role": [
+    "omnivore",
+    "scavenger"
+   ],
+   "traits": "library/animals/traits/pica_hudsonia.json"
+  },
+  {
+   "id": "pelecanus_erythrorhynchos",
+   "scientific": "Pelecanus erythrorhynchos",
+   "common": "american white pelican",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": "library/animals/traits/pelecanus_erythrorhynchos.json"
+  },
+  {
+   "id": "buteo_swainsoni",
+   "scientific": "Buteo swainsoni",
+   "common": "swainson's hawk",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "falco_peregrinus",
+   "scientific": "Falco peregrinus",
+   "common": "peregrine falcon",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "aquila_chrysaetos",
+   "scientific": "Aquila chrysaetos",
+   "common": "golden eagle",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator and scavenger"
+   ],
+   "role": [
+    "predator",
+    "scavenger"
+   ],
+   "traits": null
+  },
+  {
+   "id": "phalacrocorax_auritus",
+   "scientific": "Phalacrocorax auritus",
+   "common": "double-crested cormorant",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "falco_atricapillus",
+   "scientific": "Falco atricapillus",
+   "common": null,
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "aechmophorus_occidentalis",
+   "scientific": "Aechmophorus occidentalis",
+   "common": "western grebe",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "circus_cyaneus",
+   "scientific": "Circus cyaneus",
+   "common": "hen harrier",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator and scavenger"
+   ],
+   "role": [
+    "predator",
+    "scavenger"
+   ],
+   "traits": null
+  },
+  {
+   "id": "larus_delawarensis",
+   "scientific": "Larus delawarensis",
+   "common": "ring-billed gull",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "scavenger"
+   ],
+   "role": [
+    "omnivore",
+    "scavenger"
+   ],
+   "traits": null
+  },
+  {
+   "id": "bubo_virginianus",
+   "scientific": "Bubo virginianus",
+   "common": "great horned owl",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "falco_mexicanus",
+   "scientific": "Falco mexicanus",
+   "common": "prairie falcon",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "leucophaeus_pipixcan",
+   "scientific": "Leucophaeus pipixcan",
+   "common": "franklin's gull",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "scavenger"
+   ],
+   "role": [
+    "omnivore",
+    "scavenger"
+   ],
+   "traits": "library/animals/traits/leucophaeus_pipixcan.json"
+  },
+  {
+   "id": "alces_alces",
+   "scientific": "Alces alces",
+   "common": "moose",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 1 of its class (18% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": "library/animals/traits/alces_alces.json"
+  },
+  {
+   "id": "marmota_flaviventris",
+   "scientific": "Marmota flaviventris",
+   "common": "yellow-bellied marmot",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 2 of its class (15% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": "library/animals/traits/marmota_flaviventris.json"
+  },
+  {
+   "id": "callospermophilus_lateralis",
+   "scientific": "Callospermophilus lateralis",
+   "common": "golden-mantled ground squirrel",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 3 of its class (12% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": "library/animals/traits/callospermophilus_lateralis.json"
+  },
+  {
+   "id": "ochotona_princeps",
+   "scientific": "Ochotona princeps",
+   "common": "american pika",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 4 of its class (10% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": "library/animals/traits/ochotona_princeps.json"
+  },
+  {
+   "id": "tamiasciurus_hudsonicus",
+   "scientific": "Tamiasciurus hudsonicus",
+   "common": "american red squirrel",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 7 of its class (7% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": "library/animals/traits/tamiasciurus_hudsonicus.json"
+  },
+  {
+   "id": "antilocapra_americana",
+   "scientific": "Antilocapra americana",
+   "common": "pronghorn",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 8 of its class (4% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": "library/animals/traits/antilocapra_americana.json"
+  },
+  {
+   "id": "vulpes_vulpes",
+   "scientific": "Vulpes vulpes",
+   "common": "red fox",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "martes_caurina",
+   "scientific": "Martes caurina",
+   "common": "pacific marten",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": "library/animals/traits/martes_caurina.json"
+  },
+  {
+   "id": "sorex_monticolus",
+   "scientific": "Sorex monticolus",
+   "common": "montane shrew",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "records",
+   "why": [
+    "scavenger"
+   ],
+   "role": [
+    "insectivore",
+    "scavenger"
+   ],
+   "traits": null
+  },
+  {
+   "id": "mustela_erminea",
+   "scientific": "Mustela erminea",
+   "common": "stoat",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": "library/animals/traits/mustela_erminea.json"
+  },
+  {
+   "id": "rana_luteiventris",
+   "scientific": "Rana luteiventris",
+   "common": "columbia spotted frog",
+   "kind": "amphibian",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 1 of its class (39% of the class's records)"
+   ],
+   "role": [],
+   "traits": "library/animals/traits/rana_luteiventris.json"
+  },
+  {
+   "id": "vertigo_modesta",
+   "scientific": "Vertigo modesta",
+   "common": "cross vertigo",
+   "kind": "invertebrate",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 1 of its class (50% of the class's records)"
+   ],
+   "role": [],
+   "traits": "library/animals/traits/vertigo_modesta.json"
+  }
+ ],
+ "queue": {
+  "cards": [
+   {
+    "id": "pinus_longaeva",
+    "kind": "tree",
+    "stand_in": "pinus_ponderosa",
+    "why": [
+     "named by EVT 7057 Rocky Mountain Subalpine-Montane Limber-Bristlecone Pine Woodland (30 cells)"
+    ]
+   },
+   {
+    "id": "pinus_flexilis",
+    "kind": "tree",
+    "stand_in": "pinus_ponderosa",
+    "why": [
+     "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (19 cells)"
+    ]
+   },
+   {
+    "id": "ceanothus_velutinus",
+    "kind": "shrub",
+    "stand_in": null,
+    "why": [
+     "GBIF: 183 records on the tile"
+    ]
+   },
+   {
+    "id": "lonicera_utahensis",
+    "kind": "shrub",
+    "stand_in": null,
+    "why": [
+     "GBIF: 175 records on the tile"
+    ]
+   },
+   {
+    "id": "aconitum_columbianum",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 146 records on the tile"
+    ]
+   },
+   {
+    "id": "mahonia_repens",
+    "kind": "shrub",
+    "stand_in": null,
+    "why": [
+     "GBIF: 134 records on the tile"
+    ]
+   },
+   {
+    "id": "wyethia_sagittata",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 127 records on the tile"
+    ]
+   },
+   {
+    "id": "chamaenerion_angustifolium",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 126 records on the tile"
+    ]
+   },
+   {
+    "id": "ipomopsis_aggregata",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 107 records on the tile"
+    ]
+   },
+   {
+    "id": "sorbus_scopulina",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 106 records on the tile"
+    ]
+   },
+   {
+    "id": "erythranthe_lewisii",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 102 records on the tile"
+    ]
+   },
+   {
+    "id": "campanula_petiolata",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 93 records on the tile"
+    ]
+   },
+   {
+    "id": "actaea_rubra",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 86 records on the tile"
+    ]
+   },
+   {
+    "id": "aquilegia_coerulea",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 83 records on the tile"
+    ]
+   },
+   {
+    "id": "pterospora_andromedea",
+    "kind": "shrub",
+    "stand_in": null,
+    "why": [
+     "GBIF: 81 records on the tile"
+    ]
+   },
+   {
+    "id": "streptopus_amplexifolius",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 80 records on the tile"
+    ]
+   },
+   {
+    "id": "chimaphila_umbellata",
+    "kind": "shrub",
+    "stand_in": null,
+    "why": [
+     "GBIF: 77 records on the tile"
+    ]
+   },
+   {
+    "id": "paxistima_myrsinites",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 77 records on the tile"
+    ]
+   },
+   {
+    "id": "rhododendron_menziesii",
+    "kind": "shrub",
+    "stand_in": null,
+    "why": [
+     "GBIF: 71 records on the tile"
+    ]
+   },
+   {
+    "id": "carduus_nutans",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 69 records on the tile"
+    ]
+   },
+   {
+    "id": "eriogonum_umbellatum",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 69 records on the tile"
+    ]
+   },
+   {
+    "id": "maianthemum_racemosum",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 69 records on the tile"
+    ]
+   },
+   {
+    "id": "geranium_viscosissimum",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 61 records on the tile"
+    ]
+   },
+   {
+    "id": "heracleum_maximum",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 58 records on the tile"
+    ]
+   },
+   {
+    "id": "clematis_occidentalis",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 55 records on the tile"
+    ]
+   },
+   {
+    "id": "hydrophyllum_capitatum",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 51 records on the tile"
+    ]
+   },
+   {
+    "id": "claytonia_lanceolata",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 50 records on the tile"
+    ]
+   },
+   {
+    "id": "anaphalis_margaritacea",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 49 records on the tile"
+    ]
+   },
+   {
+    "id": "pedicularis_bracteosa",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 48 records on the tile"
+    ]
+   },
+   {
+    "id": "fritillaria_pudica",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 47 records on the tile"
+    ]
+   },
+   {
+    "id": "pteridium_aquilinum",
+    "kind": "fern",
+    "stand_in": null,
+    "why": [
+     "GBIF: 46 records on the tile"
+    ]
+   },
+   {
+    "id": "lonicera_involucrata",
+    "kind": "shrub",
+    "stand_in": null,
+    "why": [
+     "GBIF: 44 records on the tile"
+    ]
+   },
+   {
+    "id": "rubus_idaeus",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 43 records on the tile"
+    ]
+   },
+   {
+    "id": "acer_glabrum",
+    "kind": "shrub",
+    "stand_in": null,
+    "why": [
+     "GBIF: 41 records on the tile"
+    ]
+   },
+   {
+    "id": "vaccinium_membranaceum",
+    "kind": "shrub",
+    "stand_in": null,
+    "why": [
+     "GBIF: 25 records on the tile"
+    ]
+   },
+   {
+    "id": "vaccinium_scoparium",
+    "kind": "shrub",
+    "stand_in": null,
+    "why": [
+     "GBIF: 23 records on the tile"
+    ]
+   },
+   {
+    "id": "ribes_viscosissimum",
+    "kind": "shrub",
+    "stand_in": null,
+    "why": [
+     "GBIF: 20 records on the tile"
+    ]
+   },
+   {
+    "id": "orthilia_secunda",
+    "kind": "shrub",
+    "stand_in": null,
+    "why": [
+     "GBIF: 18 records on the tile"
+    ]
+   },
+   {
+    "id": "castilleja_miniata",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 44 records on the tile"
+    ]
+   },
+   {
+    "id": "kalmia_microphylla",
+    "kind": "shrub",
+    "stand_in": null,
+    "why": [
+     "GBIF: 12 records on the tile"
+    ]
+   },
+   {
+    "id": "sambucus_racemosa",
+    "kind": "shrub",
+    "stand_in": null,
+    "why": [
+     "GBIF: 12 records on the tile"
+    ]
+   },
+   {
+    "id": "pyrola_asarifolia",
+    "kind": "shrub",
+    "stand_in": null,
+    "why": [
+     "GBIF: 11 records on the tile"
+    ]
+   },
+   {
+    "id": "picea_engelmannii",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "GBIF: 10 records on the tile"
+    ]
+   },
+   {
+    "id": "ribes_lacustre",
+    "kind": "shrub",
+    "stand_in": null,
+    "why": [
+     "GBIF: 10 records on the tile"
+    ]
+   }
+  ],
+  "meshy": [
+   {
+    "id": "setophaga_coronata",
+    "scientific": "Setophaga coronata",
+    "common": "yellow-rumped warbler",
+    "kind": "bird",
+    "records": 1752,
+    "why": [
+     "most recorded: 2 of its class (4% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "poecile_gambeli",
+    "scientific": "Poecile gambeli",
+    "common": "mountain chickadee",
+    "kind": "bird",
+    "records": 1629,
+    "why": [
+     "most recorded: 3 of its class (4% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "poecile_rufescens",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "spizella_passerina",
+    "scientific": "Spizella passerina",
+    "common": "chipping sparrow",
+    "kind": "bird",
+    "records": 1559,
+    "why": [
+     "most recorded: 5 of its class (4% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "junco_hyemalis",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "regulus_calendula",
+    "scientific": "Regulus calendula",
+    "common": "ruby-crowned kinglet",
+    "kind": "bird",
+    "records": 1406,
+    "why": [
+     "most recorded: 6 of its class (3% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "regulus_satrapa",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "piranga_ludoviciana",
+    "scientific": "Piranga ludoviciana",
+    "common": "western tanager",
+    "kind": "bird",
+    "records": 1400,
+    "why": [
+     "most recorded: 7 of its class (3% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "setophaga_aestiva",
+    "scientific": "Setophaga aestiva",
+    "common": "american yellow warbler",
+    "kind": "bird",
+    "records": 1152,
+    "why": [
+     "most recorded: 9 of its class (3% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "spinus_pinus",
+    "scientific": "Spinus pinus",
+    "common": "pine siskin",
+    "kind": "bird",
+    "records": 1089,
+    "why": [
+     "most recorded: 10 of its class (3% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "nucifraga_columbiana",
+    "scientific": "Nucifraga columbiana",
+    "common": "clark's nutcracker",
+    "kind": "bird",
+    "records": 752,
+    "why": [
+     "scavenger"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "alces_alces",
+    "scientific": "Alces alces",
+    "common": "moose",
+    "kind": "mammal",
+    "records": 451,
+    "why": [
+     "most recorded: 1 of its class (18% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": "odocoileus_hemionus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "marmota_flaviventris",
+    "scientific": "Marmota flaviventris",
+    "common": "yellow-bellied marmot",
+    "kind": "mammal",
+    "records": 365,
+    "why": [
+     "most recorded: 2 of its class (15% of the class's records)"
+    ],
+    "body_plan": "rodent",
+    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+    "estimate_credits": 30,
+    "stand_in": "marmota_olympus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "callospermophilus_lateralis",
+    "scientific": "Callospermophilus lateralis",
+    "common": "golden-mantled ground squirrel",
+    "kind": "mammal",
+    "records": 308,
+    "why": [
+     "most recorded: 3 of its class (12% of the class's records)"
+    ],
+    "body_plan": "rodent",
+    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+    "estimate_credits": 30,
+    "stand_in": "sciurus_griseus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "pica_hudsonia",
+    "scientific": "Pica hudsonia",
+    "common": "black-billed magpie",
+    "kind": "bird",
+    "records": 250,
+    "why": [
+     "scavenger"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "ochotona_princeps",
+    "scientific": "Ochotona princeps",
+    "common": "american pika",
+    "kind": "mammal",
+    "records": 238,
+    "why": [
+     "most recorded: 4 of its class (10% of the class's records)"
+    ],
+    "body_plan": "lagomorph",
+    "rig": "tools/rig_quadruped.py lagomorph path, gait.js hopStep",
+    "estimate_credits": 30,
+    "stand_in": "lepus_californicus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "tamiasciurus_hudsonicus",
+    "scientific": "Tamiasciurus hudsonicus",
+    "common": "american red squirrel",
+    "kind": "mammal",
+    "records": 164,
+    "why": [
+     "most recorded: 7 of its class (7% of the class's records)"
+    ],
+    "body_plan": "rodent",
+    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+    "estimate_credits": 30,
+    "stand_in": "tamiasciurus_douglasii",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "pelecanus_erythrorhynchos",
+    "scientific": "Pelecanus erythrorhynchos",
+    "common": "american white pelican",
+    "kind": "bird",
+    "records": 160,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "ardea_herodias",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "buteo_swainsoni",
+    "scientific": "Buteo swainsoni",
+    "common": "swainson's hawk",
+    "kind": "bird",
+    "records": 105,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "buteo_jamaicensis",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "antilocapra_americana",
+    "scientific": "Antilocapra americana",
+    "common": "pronghorn",
+    "kind": "mammal",
+    "records": 95,
+    "why": [
+     "most recorded: 8 of its class (4% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": "odocoileus_hemionus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "falco_peregrinus",
+    "scientific": "Falco peregrinus",
+    "common": "peregrine falcon",
+    "kind": "bird",
+    "records": 73,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "falco_columbarius",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "vulpes_vulpes",
+    "scientific": "Vulpes vulpes",
+    "common": "red fox",
+    "kind": "mammal",
+    "records": 67,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": "canis_latrans",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "aquila_chrysaetos",
+    "scientific": "Aquila chrysaetos",
+    "common": "golden eagle",
+    "kind": "bird",
+    "records": 66,
+    "why": [
+     "predator and scavenger"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "buteo_jamaicensis",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "phalacrocorax_auritus",
+    "scientific": "Phalacrocorax auritus",
+    "common": "double-crested cormorant",
+    "kind": "bird",
+    "records": 50,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "falco_atricapillus",
+    "scientific": "Falco atricapillus",
+    "common": null,
+    "kind": "bird",
+    "records": 48,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "falco_columbarius",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "aechmophorus_occidentalis",
+    "scientific": "Aechmophorus occidentalis",
+    "common": "western grebe",
+    "kind": "bird",
+    "records": 44,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "circus_cyaneus",
+    "scientific": "Circus cyaneus",
+    "common": "hen harrier",
+    "kind": "bird",
+    "records": 38,
+    "why": [
+     "predator and scavenger"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "buteo_jamaicensis",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "martes_caurina",
+    "scientific": "Martes caurina",
+    "common": "pacific marten",
+    "kind": "mammal",
+    "records": 24,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": "lontra_canadensis",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "larus_delawarensis",
+    "scientific": "Larus delawarensis",
+    "common": "ring-billed gull",
+    "kind": "bird",
+    "records": 17,
+    "why": [
+     "scavenger"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "larus_glaucescens",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "bubo_virginianus",
+    "scientific": "Bubo virginianus",
+    "common": "great horned owl",
+    "kind": "bird",
+    "records": 17,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "strix_varia",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "falco_mexicanus",
+    "scientific": "Falco mexicanus",
+    "common": "prairie falcon",
+    "kind": "bird",
+    "records": 15,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "falco_columbarius",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "leucophaeus_pipixcan",
+    "scientific": "Leucophaeus pipixcan",
+    "common": "franklin's gull",
+    "kind": "bird",
+    "records": 9,
+    "why": [
+     "scavenger"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "larus_glaucescens",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "rana_luteiventris",
+    "scientific": "Rana luteiventris",
+    "common": "columbia spotted frog",
+    "kind": "amphibian",
+    "records": 9,
+    "why": [
+     "most recorded: 1 of its class (39% of the class's records)"
+    ],
+    "body_plan": "amphibian",
+    "rig": "none yet: the reptile template, hopping",
+    "estimate_credits": 25,
+    "stand_in": "rana_cascadae",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "mustela_erminea",
+    "scientific": "Mustela erminea",
+    "common": "stoat",
+    "kind": "mammal",
+    "records": 4,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": "lontra_canadensis",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "vertigo_modesta",
+    "scientific": "Vertigo modesta",
+    "common": "cross vertigo",
+    "kind": "invertebrate",
+    "records": 1,
+    "why": [
+     "most recorded: 1 of its class (50% of the class's records)"
+    ],
+    "body_plan": "gastropod",
+    "rig": "none: procedural (a body of rings and a foot wave); no Meshy needed",
+    "estimate_credits": 0,
+    "stand_in": "ariolimax_columbianus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   }
+  ]
+ },
+ "hands": [
+  {
+   "id": "pinus_longaeva",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "named by EVT 7057 Rocky Mountain Subalpine-Montane Limber-Bristlecone Pine Woodland (30 cells)"
+   ]
+  },
+  {
+   "id": "pinus_flexilis",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (19 cells)"
+   ]
+  },
+  {
+   "id": "ceanothus_velutinus",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 183 records on the tile"
+   ]
+  },
+  {
+   "id": "lonicera_utahensis",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 175 records on the tile"
+   ]
+  },
+  {
+   "id": "aconitum_columbianum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 146 records on the tile"
+   ]
+  },
+  {
+   "id": "mahonia_repens",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 134 records on the tile"
+   ]
+  },
+  {
+   "id": "wyethia_sagittata",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 127 records on the tile"
+   ]
+  },
+  {
+   "id": "chamaenerion_angustifolium",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 126 records on the tile"
+   ]
+  },
+  {
+   "id": "ipomopsis_aggregata",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 107 records on the tile"
+   ]
+  },
+  {
+   "id": "sorbus_scopulina",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 106 records on the tile"
+   ]
+  },
+  {
+   "id": "erythranthe_lewisii",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 102 records on the tile"
+   ]
+  },
+  {
+   "id": "campanula_petiolata",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 93 records on the tile"
+   ]
+  },
+  {
+   "id": "actaea_rubra",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 86 records on the tile"
+   ]
+  },
+  {
+   "id": "aquilegia_coerulea",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 83 records on the tile"
+   ]
+  },
+  {
+   "id": "pterospora_andromedea",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 81 records on the tile"
+   ]
+  },
+  {
+   "id": "streptopus_amplexifolius",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 80 records on the tile"
+   ]
+  },
+  {
+   "id": "chimaphila_umbellata",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 77 records on the tile"
+   ]
+  },
+  {
+   "id": "paxistima_myrsinites",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 77 records on the tile"
+   ]
+  },
+  {
+   "id": "rhododendron_menziesii",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 71 records on the tile"
+   ]
+  },
+  {
+   "id": "carduus_nutans",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 69 records on the tile"
+   ]
+  },
+  {
+   "id": "eriogonum_umbellatum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 69 records on the tile"
+   ]
+  },
+  {
+   "id": "maianthemum_racemosum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 69 records on the tile"
+   ]
+  },
+  {
+   "id": "geranium_viscosissimum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 61 records on the tile"
+   ]
+  },
+  {
+   "id": "heracleum_maximum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 58 records on the tile"
+   ]
+  },
+  {
+   "id": "clematis_occidentalis",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 55 records on the tile"
+   ]
+  },
+  {
+   "id": "hydrophyllum_capitatum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 51 records on the tile"
+   ]
+  },
+  {
+   "id": "claytonia_lanceolata",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 50 records on the tile"
+   ]
+  },
+  {
+   "id": "anaphalis_margaritacea",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 49 records on the tile"
+   ]
+  },
+  {
+   "id": "pedicularis_bracteosa",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 48 records on the tile"
+   ]
+  },
+  {
+   "id": "fritillaria_pudica",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 47 records on the tile"
+   ]
+  },
+  {
+   "id": "pteridium_aquilinum",
+   "kind": "fern",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 46 records on the tile"
+   ]
+  },
+  {
+   "id": "lonicera_involucrata",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 44 records on the tile"
+   ]
+  },
+  {
+   "id": "rubus_idaeus",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 43 records on the tile"
+   ]
+  },
+  {
+   "id": "acer_glabrum",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 41 records on the tile"
+   ]
+  },
+  {
+   "id": "vaccinium_membranaceum",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 25 records on the tile"
+   ]
+  },
+  {
+   "id": "vaccinium_scoparium",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 23 records on the tile"
+   ]
+  },
+  {
+   "id": "ribes_viscosissimum",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 20 records on the tile"
+   ]
+  },
+  {
+   "id": "orthilia_secunda",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 18 records on the tile"
+   ]
+  },
+  {
+   "id": "castilleja_miniata",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 44 records on the tile"
+   ]
+  },
+  {
+   "id": "kalmia_microphylla",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 12 records on the tile"
+   ]
+  },
+  {
+   "id": "sambucus_racemosa",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 12 records on the tile"
+   ]
+  },
+  {
+   "id": "pyrola_asarifolia",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 11 records on the tile"
+   ]
+  },
+  {
+   "id": "picea_engelmannii",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 10 records on the tile"
+   ]
+  },
+  {
+   "id": "ribes_lacustre",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 10 records on the tile"
+   ]
+  },
+  {
+   "id": "Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "5844 cells"
+   ]
+  },
+  {
+   "id": "Rocky Mountain Cliff Canyon and Massive Bedrock",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "5611 cells"
+   ]
+  },
+  {
+   "id": "Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "3470 cells"
+   ]
+  },
+  {
+   "id": "Rocky Mountain Subalpine-Montane Mesic Meadow",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "3345 cells"
+   ]
+  },
+  {
+   "id": "Rocky Mountain Lower Montane-Foothill Riparian Woodland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "1315 cells"
+   ]
+  },
+  {
+   "id": "Northern Rocky Mountain Montane-Foothill Deciduous Shrubland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "1181 cells"
+   ]
+  },
+  {
+   "id": "Rocky Mountain Lower Montane-Foothill Riparian Shrubland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "489 cells"
+   ]
+  },
+  {
+   "id": "Rocky Mountain Subalpine-Montane Riparian Woodland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "416 cells"
+   ]
+  },
+  {
+   "id": "Northern Rocky Mountain Subalpine-Upper Montane Grassland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "246 cells"
+   ]
+  },
+  {
+   "id": "Northern Rocky Mountain Subalpine Deciduous Shrubland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "235 cells"
+   ]
+  },
+  {
+   "id": "Northern Rocky Mountain Lower Montane-Foothill-Valley Grassland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "127 cells"
+   ]
+  },
+  {
+   "id": "Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "127 cells"
+   ]
+  },
+  {
+   "id": "Rocky Mountain Montane Riparian Systems",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "103 cells"
+   ]
+  },
+  {
+   "id": "Interior Western North American Temperate Ruderal Grassland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "93 cells"
+   ]
+  },
+  {
+   "id": "Rocky Mountain Subalpine-Montane Riparian Shrubland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "60 cells"
+   ]
+  },
+  {
+   "id": "Rocky Mountain Subalpine/Upper Montane Riparian Systems",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "44 cells"
+   ]
+  },
+  {
+   "id": "setophaga_coronata",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 2 of its class (4% of the class's records)"
+   ]
+  },
+  {
+   "id": "poecile_gambeli",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 3 of its class (4% of the class's records)"
+   ]
+  },
+  {
+   "id": "spizella_passerina",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 5 of its class (4% of the class's records)"
+   ]
+  },
+  {
+   "id": "regulus_calendula",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 6 of its class (3% of the class's records)"
+   ]
+  },
+  {
+   "id": "piranga_ludoviciana",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 7 of its class (3% of the class's records)"
+   ]
+  },
+  {
+   "id": "setophaga_aestiva",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 9 of its class (3% of the class's records)"
+   ]
+  },
+  {
+   "id": "spinus_pinus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 10 of its class (3% of the class's records)"
+   ]
+  },
+  {
+   "id": "nucifraga_columbiana",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "scavenger"
+   ]
+  },
+  {
+   "id": "alces_alces",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 1 of its class (18% of the class's records)"
+   ]
+  },
+  {
+   "id": "marmota_flaviventris",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 2 of its class (15% of the class's records)"
+   ]
+  },
+  {
+   "id": "callospermophilus_lateralis",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 3 of its class (12% of the class's records)"
+   ]
+  },
+  {
+   "id": "pica_hudsonia",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "scavenger"
+   ]
+  },
+  {
+   "id": "ochotona_princeps",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 4 of its class (10% of the class's records)"
+   ]
+  },
+  {
+   "id": "tamiasciurus_hudsonicus",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 7 of its class (7% of the class's records)"
+   ]
+  },
+  {
+   "id": "pelecanus_erythrorhynchos",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "buteo_swainsoni",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "antilocapra_americana",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 8 of its class (4% of the class's records)"
+   ]
+  },
+  {
+   "id": "falco_peregrinus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "vulpes_vulpes",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "aquila_chrysaetos",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator and scavenger"
+   ]
+  },
+  {
+   "id": "phalacrocorax_auritus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "falco_atricapillus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "aechmophorus_occidentalis",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "circus_cyaneus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator and scavenger"
+   ]
+  },
+  {
+   "id": "martes_caurina",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "larus_delawarensis",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "scavenger"
+   ]
+  },
+  {
+   "id": "bubo_virginianus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "falco_mexicanus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "leucophaeus_pipixcan",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "scavenger"
+   ]
+  },
+  {
+   "id": "rana_luteiventris",
+   "kind": "amphibian",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 1 of its class (39% of the class's records)"
+   ]
+  },
+  {
+   "id": "mustela_erminea",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "spizella_passerina",
+   "kind": "bird",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "regulus_calendula",
+   "kind": "bird",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "piranga_ludoviciana",
+   "kind": "bird",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "setophaga_aestiva",
+   "kind": "bird",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "spinus_pinus",
+   "kind": "bird",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "pica_hudsonia",
+   "kind": "bird",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "pelecanus_erythrorhynchos",
+   "kind": "bird",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "leucophaeus_pipixcan",
+   "kind": "bird",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "alces_alces",
+   "kind": "mammal",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "marmota_flaviventris",
+   "kind": "mammal",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "callospermophilus_lateralis",
+   "kind": "mammal",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "ochotona_princeps",
+   "kind": "mammal",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "tamiasciurus_hudsonicus",
+   "kind": "mammal",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "antilocapra_americana",
+   "kind": "mammal",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "martes_caurina",
+   "kind": "mammal",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "mustela_erminea",
+   "kind": "mammal",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "rana_luteiventris",
+   "kind": "amphibian",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "vertigo_modesta",
+   "kind": "invertebrate",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  }
+ ]
+}

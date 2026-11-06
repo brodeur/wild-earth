@@ -5465,3 +5465,36 @@ the ecosystem classifier) and the probes run instead.
 - **Regression**: the Hoh (`utm10n_429_5293`) rebuilt with this branch's code in a scratch copy: the steps whose code
   changed re-ran, 173 files byte-identical, the 7 that differ are timestamps or the 2 forage rows the new library species
   add; audit passes, seams unchanged; the viewer loads it with no console error. All 63 tests pass.
+
+## 2026-11-05 (late night): a cost ceiling and pricing, bark from research, the sea floor by physics, four more probes (branch claude/sweet-feistel-2054bb)
+
+Aaron: "For Meshy at scale, I want to find out what the ceiling is for a fresh tile in a fresh region - I need to figure
+out pricing. For generative textures, there should be a research step to find descriptions of the bark and generate based
+on the description. For underwater topography... large portions will be sandy or muddy at the outflow of a river... the
+pipeline should invent rich ecosystems even if there isn't data to support that." Then: "We should also run something
+within the US. Maybe Grand Canyon, Wyoming. I'm also curious about Costa Rica or somewhere dramatic in the Amazon."
+
+- **The ceiling** (`docs/world-pipeline.md` 6b): a fresh tile in a fresh region costs about $640-700 of Claude and $46-74
+  of Meshy at worst (all 46 animals modelled fresh at 80 credits, four new body plans), about $250-260 and $10-15 typically
+  (the 22 of the density target), and $20-40 once a region's library has grown. Claude's agent time dominates, not the
+  credits: Meshy is $0.0125-0.020 a credit (meshy.ai/pricing, read 2026-11-05: Pro $20 for 1,000, Ultra $100 for 8,000).
+  Pricing: a fixed neighbour price, a founder's price for a region's first tile, payments pooled per region; the queue
+  models each shared species once, ordered by how many pending tiles need it.
+- **Bark from research** (3e): a per-species research step writes a structured bark block (colour by age, pattern,
+  furrows, plates, lenticels, peeling, age transitions, sources and licences); most of it maps onto treegen's bark
+  parameters, a procedural recipe (CC0 by construction) fills what they cannot draw, a generative model only where its
+  licence lets the output ship; checked against openly licensed bark photos.
+- **The sea floor** (3c): sediment placed by physics (fans and deltas off river mouths by sediment supply, mud below the
+  wave base and in sheltered bays, rippled sand on the exposed shelf, rock on steep and hard-rock ground), then life
+  invented on it by substrate, light, temperature and latitude (kelp, reef, seagrass, mangrove, walls, burrowed mud), the
+  species from OBIS by marine ecoregion and depth, labelled invented.
+- **Four more probes** (`docs/probes-2026-11.md`): the Grand Canyon (`utm12n_396_3988`), Grand Teton (`utm12n_514_4838`,
+  chosen over Lamar Valley for testing more at once), Corcovado (`utm17n_210_932`) and Manu (`utm19s_233_8679`). The US
+  path works on new land and the Tetons read as the place (imagery overlap 0.52); Macrostrat gives the Canyon's real
+  formations but the client draws three rock classes; on the tropical tiles an empty species mix lets the client's
+  California fallback draw pines, and the humid haze washes the scene out. Phase 1 gains a ninth item ($25-40): no other
+  region's species as a fallback, formation colours from the geology, humid haze. Revised phase 1: $300-465.
+- Fixed on the way: the dem step's Planetary Computer fallback wrote the open dataset into the manifest (a shadowed
+  variable, reached when USGS answered 502); Macrostrat's coverage test failed every coastal tile. The US point clouds were
+  skipped with the lidar step's DEM-only mode (4-5 h each; crowns proven elsewhere). The later captures used a headless
+  Chrome over the DevTools protocol, the pane being hidden.

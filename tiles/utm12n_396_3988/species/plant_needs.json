@@ -1,0 +1,2884 @@
+{
+ "tile": "utm12n_396_3988",
+ "regions": [
+  "great_basin"
+ ],
+ "communities": [
+  {
+   "source": "evt",
+   "code": 9001,
+   "name": "Colorado Plateau Mixed Bedrock Canyon and Tableland",
+   "cells": 42161,
+   "rule": null,
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7078,
+   "name": "Colorado Plateau Blackbrush-Mormon-tea Shrubland",
+   "cells": 19780,
+   "rule": null,
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7054,
+   "name": "Southern Rocky Mountain Ponderosa Pine Woodland",
+   "cells": 16191,
+   "rule": "named_from_pinus_ponderosa",
+   "named": [
+    "pinus_ponderosa"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7016,
+   "name": "Colorado Plateau Pinyon-Juniper Woodland",
+   "cells": 12829,
+   "rule": "named_from_juniperus_grandis_pinus_monophylla",
+   "named": [
+    "juniperus_grandis",
+    "pinus_monophylla"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7087,
+   "name": "Sonora-Mojave Creosotebush-White Bursage Desert Scrub",
+   "cells": 5408,
+   "rule": null,
+   "named": []
+  },
+  {
+   "source": "bps",
+   "code": 1190,
+   "name": "Southern Rocky Mountain Ponderosa Pine Woodland",
+   "cells": 3455,
+   "rule": "named_from_pinus_ponderosa",
+   "named": [
+    "pinus_ponderosa"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7082,
+   "name": "Mojave Mid-Elevation Mixed Desert Scrub",
+   "cells": 2453,
+   "rule": null,
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7135,
+   "name": "Inter-Mountain Basins Semi-Desert Grassland",
+   "cells": 1890,
+   "rule": null,
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 9009,
+   "name": "Inter-Mountain Basins Shale Badland",
+   "cells": 1268,
+   "rule": null,
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7127,
+   "name": "Inter-Mountain Basins Semi-Desert Shrub-Steppe",
+   "cells": 1191,
+   "rule": null,
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7080,
+   "name": "Inter-Mountain Basins Big Sagebrush Shrubland",
+   "cells": 1024,
+   "rule": "named_from_artemisia_tridentata",
+   "named": [
+    "artemisia_tridentata"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7292,
+   "name": "Open Water",
+   "cells": 711,
+   "rule": "open_water",
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7107,
+   "name": "Rocky Mountain Gambel Oak-Mixed Montane Shrubland",
+   "cells": 460,
+   "rule": null,
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7081,
+   "name": "Inter-Mountain Basins Mixed Salt Desert Scrub",
+   "cells": 422,
+   "rule": null,
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7102,
+   "name": "Colorado Plateau Pinyon-Juniper Shrubland",
+   "cells": 401,
+   "rule": "named_from_juniperus_grandis_pinus_monophylla",
+   "named": [
+    "juniperus_grandis",
+    "pinus_monophylla"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7104,
+   "name": "Mogollon Chaparral",
+   "cells": 199,
+   "rule": "named_from_adenostoma_fasciculatum_arctostaphylos_viscida_ceanothus_cuneatus",
+   "named": [
+    "adenostoma_fasciculatum",
+    "arctostaphylos_viscida",
+    "ceanothus_cuneatus"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 9336,
+   "name": "Great Basin & Intermountain Ruderal Shrubland",
+   "cells": 188,
+   "rule": null,
+   "named": []
+  },
+  {
+   "source": "bps",
+   "code": 1182,
+   "name": "Colorado Plateau Pinyon-Juniper Woodland",
+   "cells": 117,
+   "rule": "named_from_juniperus_grandis_pinus_monophylla",
+   "named": [
+    "juniperus_grandis",
+    "pinus_monophylla"
+   ]
+  },
+  {
+   "source": "bps",
+   "code": 1203,
+   "name": "Rocky Mountain Gambel Oak-Mixed Montane Shrubland",
+   "cells": 109,
+   "rule": null,
+   "named": []
+  },
+  {
+   "source": "bps",
+   "code": 2705,
+   "name": "Inter-Mountain Basins Big Sagebrush Shrubland-Upland",
+   "cells": 93,
+   "rule": "named_from_artemisia_tridentata",
+   "named": [
+    "artemisia_tridentata"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7086,
+   "name": "Rocky Mountain Lower Montane-Foothill Shrubland",
+   "cells": 92,
+   "rule": null,
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7115,
+   "name": "Inter-Mountain Basins Juniper Savanna",
+   "cells": 81,
+   "rule": "named_from_juniperus_grandis",
+   "named": [
+    "juniperus_grandis"
+   ]
+  },
+  {
+   "source": "bps",
+   "code": 1214,
+   "name": "Rocky Mountain Montane Riparian Systems",
+   "cells": 72,
+   "rule": null,
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7126,
+   "name": "Inter-Mountain Basins Montane Sagebrush Steppe",
+   "cells": 65,
+   "rule": "named_from_artemisia_tridentata",
+   "named": [
+    "artemisia_tridentata"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 7051,
+   "name": "Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland",
+   "cells": 46,
+   "rule": "named_from_pinus_ponderosa_pinus_lambertiana_abies_concolor",
+   "named": [
+    "pinus_ponderosa",
+    "pinus_lambertiana",
+    "abies_concolor",
+    "calocedrus_decurrens",
+    "pseudotsuga_menziesii",
+    "quercus_kelloggii"
+   ]
+  },
+  {
+   "source": "bps",
+   "code": 1211,
+   "name": "Southern Rocky Mountain Montane-Subalpine Grassland",
+   "cells": 39,
+   "rule": null,
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 9327,
+   "name": "Interior West Ruderal Riparian Forest",
+   "cells": 36,
+   "rule": null,
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 9019,
+   "name": "Rocky Mountain Lower Montane-Foothill Riparian Woodland",
+   "cells": 19,
+   "rule": null,
+   "named": []
+  },
+  {
+   "source": "bps",
+   "code": 1207,
+   "name": "Southern Rocky Mountain Ponderosa Pine Savanna",
+   "cells": 17,
+   "rule": "named_from_pinus_ponderosa",
+   "named": [
+    "pinus_ponderosa"
+   ]
+  },
+  {
+   "source": "evt",
+   "code": 9011,
+   "name": "North American Arid West Emergent Marsh",
+   "cells": 13,
+   "rule": null,
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 9827,
+   "name": "Interior West Ruderal Riparian Scrub",
+   "cells": 11,
+   "rule": null,
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 7146,
+   "name": "Southern Rocky Mountain Montane-Subalpine Grassland",
+   "cells": 10,
+   "rule": null,
+   "named": []
+  }
+ ],
+ "unread": [
+  {
+   "source": "evt",
+   "code": 9001,
+   "name": "Colorado Plateau Mixed Bedrock Canyon and Tableland",
+   "cells": 42161
+  },
+  {
+   "source": "evt",
+   "code": 7078,
+   "name": "Colorado Plateau Blackbrush-Mormon-tea Shrubland",
+   "cells": 19780
+  },
+  {
+   "source": "evt",
+   "code": 7087,
+   "name": "Sonora-Mojave Creosotebush-White Bursage Desert Scrub",
+   "cells": 5408
+  },
+  {
+   "source": "evt",
+   "code": 7082,
+   "name": "Mojave Mid-Elevation Mixed Desert Scrub",
+   "cells": 2453
+  },
+  {
+   "source": "evt",
+   "code": 7135,
+   "name": "Inter-Mountain Basins Semi-Desert Grassland",
+   "cells": 1890
+  },
+  {
+   "source": "evt",
+   "code": 9009,
+   "name": "Inter-Mountain Basins Shale Badland",
+   "cells": 1268
+  },
+  {
+   "source": "evt",
+   "code": 7127,
+   "name": "Inter-Mountain Basins Semi-Desert Shrub-Steppe",
+   "cells": 1191
+  },
+  {
+   "source": "evt",
+   "code": 7107,
+   "name": "Rocky Mountain Gambel Oak-Mixed Montane Shrubland",
+   "cells": 460
+  },
+  {
+   "source": "evt",
+   "code": 7081,
+   "name": "Inter-Mountain Basins Mixed Salt Desert Scrub",
+   "cells": 422
+  },
+  {
+   "source": "evt",
+   "code": 9336,
+   "name": "Great Basin & Intermountain Ruderal Shrubland",
+   "cells": 188
+  },
+  {
+   "source": "bps",
+   "code": 1203,
+   "name": "Rocky Mountain Gambel Oak-Mixed Montane Shrubland",
+   "cells": 109
+  },
+  {
+   "source": "evt",
+   "code": 7086,
+   "name": "Rocky Mountain Lower Montane-Foothill Shrubland",
+   "cells": 92
+  },
+  {
+   "source": "bps",
+   "code": 1214,
+   "name": "Rocky Mountain Montane Riparian Systems",
+   "cells": 72
+  },
+  {
+   "source": "bps",
+   "code": 1211,
+   "name": "Southern Rocky Mountain Montane-Subalpine Grassland",
+   "cells": 39
+  },
+  {
+   "source": "evt",
+   "code": 9327,
+   "name": "Interior West Ruderal Riparian Forest",
+   "cells": 36
+  },
+  {
+   "source": "evt",
+   "code": 9019,
+   "name": "Rocky Mountain Lower Montane-Foothill Riparian Woodland",
+   "cells": 19
+  },
+  {
+   "source": "evt",
+   "code": 9011,
+   "name": "North American Arid West Emergent Marsh",
+   "cells": 13
+  },
+  {
+   "source": "evt",
+   "code": 9827,
+   "name": "Interior West Ruderal Riparian Scrub",
+   "cells": 11
+  },
+  {
+   "source": "evt",
+   "code": 7146,
+   "name": "Southern Rocky Mountain Montane-Subalpine Grassland",
+   "cells": 10
+  }
+ ],
+ "needs": [
+  {
+   "id": "pinus_ponderosa",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7054 Southern Rocky Mountain Ponderosa Pine Woodland (16191 cells)",
+    "named by BPS 1190 Southern Rocky Mountain Ponderosa Pine Woodland (3455 cells)",
+    "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)",
+    "named by BPS 1207 Southern Rocky Mountain Ponderosa Pine Savanna (17 cells)"
+   ],
+   "cover": 0.1774,
+   "records": 71,
+   "record": true,
+   "card": false,
+   "drawn_as": "pinus_ponderosa",
+   "rank": 1
+  },
+  {
+   "id": "juniperus_grandis",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (12829 cells)",
+    "named by EVT 7102 Colorado Plateau Pinyon-Juniper Shrubland (401 cells)",
+    "named by BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (117 cells)",
+    "named by EVT 7115 Inter-Mountain Basins Juniper Savanna (81 cells)"
+   ],
+   "cover": 0.0609,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "juniperus_grandis",
+   "rank": 2
+  },
+  {
+   "id": "pinus_monophylla",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (12829 cells)",
+    "named by EVT 7102 Colorado Plateau Pinyon-Juniper Shrubland (401 cells)",
+    "named by BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (117 cells)"
+   ],
+   "cover": 0.0602,
+   "records": 0,
+   "record": false,
+   "card": false,
+   "drawn_as": "pinus_sabiniana",
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 3
+  },
+  {
+   "id": "artemisia_tridentata",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 7080 Inter-Mountain Basins Big Sagebrush Shrubland (1024 cells)",
+    "named by BPS 2705 Inter-Mountain Basins Big Sagebrush Shrubland-Upland (93 cells)",
+    "named by EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (65 cells)"
+   ],
+   "cover": 0.0107,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "artemisia_tridentata",
+   "rank": 4
+  },
+  {
+   "id": "adenostoma_fasciculatum",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 7104 Mogollon Chaparral (199 cells)"
+   ],
+   "cover": 0.0006,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "adenostoma_fasciculatum",
+   "rank": 5
+  },
+  {
+   "id": "arctostaphylos_viscida",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 7104 Mogollon Chaparral (199 cells)"
+   ],
+   "cover": 0.0006,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "arctostaphylos_viscida",
+   "rank": 6
+  },
+  {
+   "id": "ceanothus_cuneatus",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 7104 Mogollon Chaparral (199 cells)"
+   ],
+   "cover": 0.0006,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "ceanothus_cuneatus",
+   "rank": 7
+  },
+  {
+   "id": "pseudotsuga_menziesii",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)"
+   ],
+   "cover": 0.0001,
+   "records": 40,
+   "record": true,
+   "card": false,
+   "drawn_as": "pseudotsuga_menziesii",
+   "rank": 8
+  },
+  {
+   "id": "abies_concolor",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)"
+   ],
+   "cover": 0.0001,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "abies_concolor",
+   "rank": 9
+  },
+  {
+   "id": "calocedrus_decurrens",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)"
+   ],
+   "cover": 0.0001,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "calocedrus_decurrens",
+   "rank": 10
+  },
+  {
+   "id": "pinus_lambertiana",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)"
+   ],
+   "cover": 0.0001,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "pinus_lambertiana",
+   "rank": 11
+  },
+  {
+   "id": "quercus_kelloggii",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)"
+   ],
+   "cover": 0.0001,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "quercus_kelloggii",
+   "rank": 12
+  },
+  {
+   "id": "pinus_edulis",
+   "kind": "tree",
+   "why": [
+    "GBIF: 479 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 479,
+   "scientific": "Pinus edulis",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 13
+  },
+  {
+   "id": "fallugia_paradoxa",
+   "kind": "forb",
+   "why": [
+    "GBIF: 433 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 433,
+   "scientific": "Fallugia paradoxa",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 14
+  },
+  {
+   "id": "chamaebatiaria_millefolium",
+   "kind": "forb",
+   "why": [
+    "GBIF: 428 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 428,
+   "scientific": "Chamaebatiaria millefolium",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 15
+  },
+  {
+   "id": "quercus_gambelii",
+   "kind": "tree",
+   "why": [
+    "GBIF: 260 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 260,
+   "scientific": "Quercus gambelii",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 16
+  },
+  {
+   "id": "juniperus_osteosperma",
+   "kind": "tree",
+   "why": [
+    "GBIF: 239 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 239,
+   "scientific": "Juniperus osteosperma",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 17
+  },
+  {
+   "id": "purshia_stansburiana",
+   "kind": "forb",
+   "why": [
+    "GBIF: 237 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 237,
+   "scientific": "Purshia stansburiana",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 18
+  },
+  {
+   "id": "opuntia_phaeacantha",
+   "kind": "forb",
+   "why": [
+    "GBIF: 211 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 211,
+   "scientific": "Opuntia phaeacantha",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 19
+  },
+  {
+   "id": "yucca_baccata",
+   "kind": "forb",
+   "why": [
+    "GBIF: 193 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 193,
+   "scientific": "Yucca baccata",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 20
+  },
+  {
+   "id": "agave_utahensis",
+   "kind": "forb",
+   "why": [
+    "GBIF: 172 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 172,
+   "scientific": "Agave utahensis",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 21
+  },
+  {
+   "id": "ericameria_nauseosa",
+   "kind": "forb",
+   "why": [
+    "GBIF: 151 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 151,
+   "scientific": "Ericameria nauseosa",
+   "record": false,
+   "card": false,
+   "drawn_as": "baccharis_pilularis",
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 22
+  },
+  {
+   "id": "echinocereus_triglochidiatus",
+   "kind": "forb",
+   "why": [
+    "GBIF: 144 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 144,
+   "scientific": "Echinocereus triglochidiatus",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 23
+  },
+  {
+   "id": "cirsium_arizonicum",
+   "kind": "forb",
+   "why": [
+    "GBIF: 143 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 143,
+   "scientific": "Cirsium arizonicum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 24
+  },
+  {
+   "id": "opuntia_polyacantha",
+   "kind": "forb",
+   "why": [
+    "GBIF: 135 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 135,
+   "scientific": "Opuntia polyacantha",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 25
+  },
+  {
+   "id": "datura_wrightii",
+   "kind": "forb",
+   "why": [
+    "GBIF: 125 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 125,
+   "scientific": "Datura wrightii",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 26
+  },
+  {
+   "id": "phoradendron_juniperinum",
+   "kind": "forb",
+   "why": [
+    "GBIF: 124 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 124,
+   "scientific": "Phoradendron juniperinum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 27
+  },
+  {
+   "id": "penstemon_palmeri",
+   "kind": "forb",
+   "why": [
+    "GBIF: 121 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 121,
+   "scientific": "Penstemon palmeri",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 28
+  },
+  {
+   "id": "petrophytum_caespitosum",
+   "kind": "forb",
+   "why": [
+    "GBIF: 121 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 121,
+   "scientific": "Petrophytum caespitosum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 29
+  },
+  {
+   "id": "penstemon_pachyphyllus",
+   "kind": "forb",
+   "why": [
+    "GBIF: 110 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 110,
+   "scientific": "Penstemon pachyphyllus",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 30
+  },
+  {
+   "id": "asclepias_subverticillata",
+   "kind": "forb",
+   "why": [
+    "GBIF: 104 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 104,
+   "scientific": "Asclepias subverticillata",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 31
+  },
+  {
+   "id": "alloberberis_fremontii",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 88 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 88,
+   "scientific": "Alloberberis fremontii",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 32
+  },
+  {
+   "id": "phlox_austromontana",
+   "kind": "forb",
+   "why": [
+    "GBIF: 80 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 80,
+   "scientific": "Phlox austromontana",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 33
+  },
+  {
+   "id": "echinocactus_polycephalus",
+   "kind": "forb",
+   "why": [
+    "GBIF: 77 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 77,
+   "scientific": "Echinocactus polycephalus",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 34
+  },
+  {
+   "id": "penstemon_eatonii",
+   "kind": "forb",
+   "why": [
+    "GBIF: 77 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 77,
+   "scientific": "Penstemon eatonii",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 35
+  },
+  {
+   "id": "solanum_elaeagnifolium",
+   "kind": "forb",
+   "why": [
+    "GBIF: 72 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 72,
+   "scientific": "Solanum elaeagnifolium",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 36
+  },
+  {
+   "id": "castilleja_integra",
+   "kind": "forb",
+   "why": [
+    "GBIF: 71 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 71,
+   "scientific": "Castilleja integra",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 37
+  },
+  {
+   "id": "packera_multilobata",
+   "kind": "forb",
+   "why": [
+    "GBIF: 68 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 68,
+   "scientific": "Packera multilobata",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 38
+  },
+  {
+   "id": "astragalus_calycosus",
+   "kind": "forb",
+   "why": [
+    "GBIF: 67 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 67,
+   "scientific": "Astragalus calycosus",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 39
+  },
+  {
+   "id": "pelecyphora_vivipara",
+   "kind": "forb",
+   "why": [
+    "GBIF: 66 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 66,
+   "scientific": "Pelecyphora vivipara",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 40
+  },
+  {
+   "id": "ribes_cereum",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 56 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 56,
+   "scientific": "Ribes cereum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 41
+  },
+  {
+   "id": "erodium_cicutarium",
+   "kind": "forb",
+   "why": [
+    "GBIF: 50 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 50,
+   "scientific": "Erodium cicutarium",
+   "record": true,
+   "card": false,
+   "drawn_as": "erodium_cicutarium",
+   "rank": 42
+  },
+  {
+   "id": "mahonia_repens",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 28 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 28,
+   "scientific": "Mahonia repens",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 43
+  },
+  {
+   "id": "ribes_velutinum",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 27 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 27,
+   "scientific": "Ribes velutinum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 44
+  },
+  {
+   "id": "fraxinus_anomala",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 26 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 26,
+   "scientific": "Fraxinus anomala",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 45
+  },
+  {
+   "id": "fendlera_rupicola",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 25 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 25,
+   "scientific": "Fendlera rupicola",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 46
+  },
+  {
+   "id": "ostrya_knowltonii",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 23 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 23,
+   "scientific": "Ostrya knowltonii",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 47
+  },
+  {
+   "id": "acer_negundo",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 20 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 20,
+   "scientific": "Acer negundo",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 48
+  },
+  {
+   "id": "cercis_occidentalis",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 17 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 17,
+   "scientific": "Cercis occidentalis",
+   "record": true,
+   "card": false,
+   "drawn_as": "cercis_occidentalis",
+   "rank": 49
+  },
+  {
+   "id": "populus_fremontii",
+   "kind": "tree",
+   "why": [
+    "GBIF: 17 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 17,
+   "scientific": "Populus fremontii",
+   "record": true,
+   "card": false,
+   "drawn_as": "populus_fremontii",
+   "rank": 50
+  },
+  {
+   "id": "hordeum_murinum",
+   "kind": "grass",
+   "why": [
+    "GBIF: 14 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 14,
+   "scientific": "Hordeum murinum",
+   "record": true,
+   "card": false,
+   "drawn_as": "hordeum_murinum",
+   "rank": 51
+  },
+  {
+   "id": "rhus_trilobata",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 13 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 13,
+   "scientific": "Rhus trilobata",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 52
+  },
+  {
+   "id": "shepherdia_rotundifolia",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 12 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 12,
+   "scientific": "Shepherdia rotundifolia",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 53
+  }
+ ],
+ "gbif_plants": [
+  {
+   "id": "pinus_edulis",
+   "scientific": "Pinus edulis",
+   "family": "Pinaceae",
+   "kind": "tree",
+   "records": 479,
+   "known": false
+  },
+  {
+   "id": "fallugia_paradoxa",
+   "scientific": "Fallugia paradoxa",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 433,
+   "known": false
+  },
+  {
+   "id": "chamaebatiaria_millefolium",
+   "scientific": "Chamaebatiaria millefolium",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 428,
+   "known": false
+  },
+  {
+   "id": "quercus_gambelii",
+   "scientific": "Quercus gambelii",
+   "family": "Fagaceae",
+   "kind": "tree",
+   "records": 260,
+   "known": false
+  },
+  {
+   "id": "juniperus_osteosperma",
+   "scientific": "Juniperus osteosperma",
+   "family": "Cupressaceae",
+   "kind": "tree",
+   "records": 239,
+   "known": false
+  },
+  {
+   "id": "purshia_stansburiana",
+   "scientific": "Purshia stansburiana",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 237,
+   "known": false
+  },
+  {
+   "id": "opuntia_phaeacantha",
+   "scientific": "Opuntia phaeacantha",
+   "family": "Cactaceae",
+   "kind": "forb",
+   "records": 211,
+   "known": false
+  },
+  {
+   "id": "yucca_baccata",
+   "scientific": "Yucca baccata",
+   "family": "Asparagaceae",
+   "kind": "forb",
+   "records": 193,
+   "known": false
+  },
+  {
+   "id": "agave_utahensis",
+   "scientific": "Agave utahensis",
+   "family": "Asparagaceae",
+   "kind": "forb",
+   "records": 172,
+   "known": false
+  },
+  {
+   "id": "ericameria_nauseosa",
+   "scientific": "Ericameria nauseosa",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 151,
+   "known": false
+  },
+  {
+   "id": "echinocereus_triglochidiatus",
+   "scientific": "Echinocereus triglochidiatus",
+   "family": "Cactaceae",
+   "kind": "forb",
+   "records": 144,
+   "known": false
+  },
+  {
+   "id": "cirsium_arizonicum",
+   "scientific": "Cirsium arizonicum",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 143,
+   "known": false
+  },
+  {
+   "id": "opuntia_polyacantha",
+   "scientific": "Opuntia polyacantha",
+   "family": "Cactaceae",
+   "kind": "forb",
+   "records": 135,
+   "known": false
+  },
+  {
+   "id": "datura_wrightii",
+   "scientific": "Datura wrightii",
+   "family": "Solanaceae",
+   "kind": "forb",
+   "records": 125,
+   "known": false
+  },
+  {
+   "id": "phoradendron_juniperinum",
+   "scientific": "Phoradendron juniperinum",
+   "family": "Viscaceae",
+   "kind": "forb",
+   "records": 124,
+   "known": false
+  },
+  {
+   "id": "petrophytum_caespitosum",
+   "scientific": "Petrophytum caespitosum",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 121,
+   "known": false
+  },
+  {
+   "id": "penstemon_palmeri",
+   "scientific": "Penstemon palmeri",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 121,
+   "known": false
+  },
+  {
+   "id": "penstemon_pachyphyllus",
+   "scientific": "Penstemon pachyphyllus",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 110,
+   "known": false
+  },
+  {
+   "id": "asclepias_subverticillata",
+   "scientific": "Asclepias subverticillata",
+   "family": "Apocynaceae",
+   "kind": "forb",
+   "records": 104,
+   "known": false
+  },
+  {
+   "id": "alloberberis_fremontii",
+   "scientific": "Alloberberis fremontii",
+   "family": "Berberidaceae",
+   "kind": "shrub",
+   "records": 88,
+   "known": false
+  },
+  {
+   "id": "phlox_austromontana",
+   "scientific": "Phlox austromontana",
+   "family": "Polemoniaceae",
+   "kind": "forb",
+   "records": 80,
+   "known": false
+  },
+  {
+   "id": "echinocactus_polycephalus",
+   "scientific": "Echinocactus polycephalus",
+   "family": "Cactaceae",
+   "kind": "forb",
+   "records": 77,
+   "known": false
+  },
+  {
+   "id": "penstemon_eatonii",
+   "scientific": "Penstemon eatonii",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 77,
+   "known": false
+  },
+  {
+   "id": "solanum_elaeagnifolium",
+   "scientific": "Solanum elaeagnifolium",
+   "family": "Solanaceae",
+   "kind": "forb",
+   "records": 72,
+   "known": false
+  },
+  {
+   "id": "castilleja_integra",
+   "scientific": "Castilleja integra",
+   "family": "Orobanchaceae",
+   "kind": "forb",
+   "records": 71,
+   "known": false
+  },
+  {
+   "id": "pinus_ponderosa",
+   "scientific": "Pinus ponderosa",
+   "family": "Pinaceae",
+   "kind": "tree",
+   "records": 71,
+   "known": true
+  },
+  {
+   "id": "packera_multilobata",
+   "scientific": "Packera multilobata",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 68,
+   "known": false
+  },
+  {
+   "id": "astragalus_calycosus",
+   "scientific": "Astragalus calycosus",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 67,
+   "known": false
+  },
+  {
+   "id": "pelecyphora_vivipara",
+   "scientific": "Pelecyphora vivipara",
+   "family": "Cactaceae",
+   "kind": "forb",
+   "records": 66,
+   "known": false
+  },
+  {
+   "id": "laphamia_congesta",
+   "scientific": "Laphamia congesta",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 66,
+   "known": false
+  },
+  {
+   "id": "echinocereus_engelmannii",
+   "scientific": "Echinocereus engelmannii",
+   "family": "Cactaceae",
+   "kind": "forb",
+   "records": 64,
+   "known": false
+  },
+  {
+   "id": "ptelea_trifoliata",
+   "scientific": "Ptelea trifoliata",
+   "family": "Rutaceae",
+   "kind": "forb",
+   "records": 64,
+   "known": false
+  },
+  {
+   "id": "cochemiea_grahamii",
+   "scientific": "Cochemiea grahamii",
+   "family": "Cactaceae",
+   "kind": "forb",
+   "records": 64,
+   "known": false
+  },
+  {
+   "id": "verbascum_thapsus",
+   "scientific": "Verbascum thapsus",
+   "family": "Scrophulariaceae",
+   "kind": "forb",
+   "records": 63,
+   "known": false
+  },
+  {
+   "id": "castilleja_chromosa",
+   "scientific": "Castilleja chromosa",
+   "family": "Orobanchaceae",
+   "kind": "forb",
+   "records": 58,
+   "known": false
+  },
+  {
+   "id": "ribes_cereum",
+   "scientific": "Ribes cereum",
+   "family": "Grossulariaceae",
+   "kind": "shrub",
+   "records": 56,
+   "known": false
+  },
+  {
+   "id": "opuntia_basilaris",
+   "scientific": "Opuntia basilaris",
+   "family": "Cactaceae",
+   "kind": "forb",
+   "records": 56,
+   "known": false
+  },
+  {
+   "id": "opuntia_engelmannii",
+   "scientific": "Opuntia engelmannii",
+   "family": "Cactaceae",
+   "kind": "forb",
+   "records": 53,
+   "known": false
+  },
+  {
+   "id": "amelanchier_utahensis",
+   "scientific": "Amelanchier utahensis",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 52,
+   "known": false
+  },
+  {
+   "id": "arceuthobium_divaricatum",
+   "scientific": "Arceuthobium divaricatum",
+   "family": "Viscaceae",
+   "kind": "forb",
+   "records": 51,
+   "known": false
+  },
+  {
+   "id": "marrubium_vulgare",
+   "scientific": "Marrubium vulgare",
+   "family": "Lamiaceae",
+   "kind": "forb",
+   "records": 51,
+   "known": false
+  },
+  {
+   "id": "verbena_macdougalii",
+   "scientific": "Verbena macdougalii",
+   "family": "Verbenaceae",
+   "kind": "forb",
+   "records": 50,
+   "known": false
+  },
+  {
+   "id": "pedicularis_centranthera",
+   "scientific": "Pedicularis centranthera",
+   "family": "Orobanchaceae",
+   "kind": "forb",
+   "records": 50,
+   "known": false
+  },
+  {
+   "id": "erodium_cicutarium",
+   "scientific": "Erodium cicutarium",
+   "family": "Geraniaceae",
+   "kind": "forb",
+   "records": 50,
+   "known": true
+  },
+  {
+   "id": "opuntia_chlorotica",
+   "scientific": "Opuntia chlorotica",
+   "family": "Cactaceae",
+   "kind": "forb",
+   "records": 49,
+   "known": false
+  },
+  {
+   "id": "maurandella_antirrhiniflora",
+   "scientific": "Maurandella antirrhiniflora",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 48,
+   "known": false
+  },
+  {
+   "id": "psilostrophe_sparsiflora",
+   "scientific": "Psilostrophe sparsiflora",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 47,
+   "known": false
+  },
+  {
+   "id": "ephedra_viridis",
+   "scientific": "Ephedra viridis",
+   "family": "Ephedraceae",
+   "kind": "forb",
+   "records": 44,
+   "known": false
+  },
+  {
+   "id": "encelia_farinosa",
+   "scientific": "Encelia farinosa",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 42,
+   "known": false
+  },
+  {
+   "id": "thymophylla_pentachaeta",
+   "scientific": "Thymophylla pentachaeta",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 42,
+   "known": false
+  },
+  {
+   "id": "pseudotsuga_menziesii",
+   "scientific": "Pseudotsuga menziesii",
+   "family": "Pinaceae",
+   "kind": "tree",
+   "records": 40,
+   "known": true
+  },
+  {
+   "id": "dieteria_canescens",
+   "scientific": "Dieteria canescens",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 39,
+   "known": false
+  },
+  {
+   "id": "yucca_utahensis",
+   "scientific": "Yucca utahensis",
+   "family": "Asparagaceae",
+   "kind": "forb",
+   "records": 38,
+   "known": false
+  },
+  {
+   "id": "echinocereus_bakeri",
+   "scientific": "Echinocereus bakeri",
+   "family": "Cactaceae",
+   "kind": "forb",
+   "records": 36,
+   "known": false
+  },
+  {
+   "id": "verbesina_encelioides",
+   "scientific": "Verbesina encelioides",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 36,
+   "known": false
+  },
+  {
+   "id": "gutierrezia_sarothrae",
+   "scientific": "Gutierrezia sarothrae",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 36,
+   "known": false
+  },
+  {
+   "id": "eurybia_glauca",
+   "scientific": "Eurybia glauca",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 36,
+   "known": false
+  },
+  {
+   "id": "asclepias_asperula",
+   "scientific": "Asclepias asperula",
+   "family": "Apocynaceae",
+   "kind": "forb",
+   "records": 36,
+   "known": false
+  },
+  {
+   "id": "cylindropuntia_whipplei",
+   "scientific": "Cylindropuntia whipplei",
+   "family": "Cactaceae",
+   "kind": "forb",
+   "records": 34,
+   "known": false
+  },
+  {
+   "id": "calochortus_flexuosus",
+   "scientific": "Calochortus flexuosus",
+   "family": "Liliaceae",
+   "kind": "forb",
+   "records": 32,
+   "known": false
+  },
+  {
+   "id": "cylindropuntia_whipplei",
+   "scientific": "Cylindropuntia whipplei",
+   "family": "Cactaceae",
+   "kind": "forb",
+   "records": 32,
+   "known": false
+  },
+  {
+   "id": "tetraneuris_acaulis",
+   "scientific": "Tetraneuris acaulis",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 31,
+   "known": false
+  },
+  {
+   "id": "xylorhiza_tortifolia",
+   "scientific": "Xylorhiza tortifolia",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 31,
+   "known": false
+  },
+  {
+   "id": "cercis_orbiculata",
+   "scientific": "Cercis orbiculata",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 31,
+   "known": false
+  },
+  {
+   "id": "penstemon_utahensis",
+   "scientific": "Penstemon utahensis",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 30,
+   "known": false
+  },
+  {
+   "id": "mahonia_repens",
+   "scientific": "Mahonia repens",
+   "family": "Berberidaceae",
+   "kind": "shrub",
+   "records": 28,
+   "known": false
+  },
+  {
+   "id": "petradoria_pumila",
+   "scientific": "Petradoria pumila",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 28,
+   "known": false
+  },
+  {
+   "id": "eriogonum_microtheca",
+   "scientific": "Eriogonum microtheca",
+   "family": "Polygonaceae",
+   "kind": "forb",
+   "records": 28,
+   "known": false
+  },
+  {
+   "id": "senegalia_greggii",
+   "scientific": "Senegalia greggii",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 27,
+   "known": false
+  },
+  {
+   "id": "ribes_velutinum",
+   "scientific": "Ribes velutinum",
+   "family": "Grossulariaceae",
+   "kind": "shrub",
+   "records": 27,
+   "known": false
+  },
+  {
+   "id": "sphaeralcea_parvifolia",
+   "scientific": "Sphaeralcea parvifolia",
+   "family": "Malvaceae",
+   "kind": "forb",
+   "records": 27,
+   "known": false
+  },
+  {
+   "id": "townsendia_exscapa",
+   "scientific": "Townsendia exscapa",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 27,
+   "known": false
+  },
+  {
+   "id": "coleogyne_ramosissima",
+   "scientific": "Coleogyne ramosissima",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 26,
+   "known": false
+  },
+  {
+   "id": "fraxinus_anomala",
+   "scientific": "Fraxinus anomala",
+   "family": "Oleaceae",
+   "kind": "shrub",
+   "records": 26,
+   "known": false
+  },
+  {
+   "id": "stanleya_pinnata",
+   "scientific": "Stanleya pinnata",
+   "family": "Brassicaceae",
+   "kind": "forb",
+   "records": 26,
+   "known": false
+  },
+  {
+   "id": "fendlera_rupicola",
+   "scientific": "Fendlera rupicola",
+   "family": "Hydrangeaceae",
+   "kind": "shrub",
+   "records": 25,
+   "known": false
+  },
+  {
+   "id": "chorispora_tenella",
+   "scientific": "Chorispora tenella",
+   "family": "Brassicaceae",
+   "kind": "forb",
+   "records": 25,
+   "known": false
+  },
+  {
+   "id": "penstemon_linarioides",
+   "scientific": "Penstemon linarioides",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 25,
+   "known": false
+  },
+  {
+   "id": "brickellia_californica",
+   "scientific": "Brickellia californica",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 25,
+   "known": false
+  },
+  {
+   "id": "adiantum_capillus_veneris",
+   "scientific": "Adiantum capillus-veneris",
+   "family": "Pteridaceae",
+   "kind": "fern",
+   "records": 24,
+   "known": false
+  },
+  {
+   "id": "baccharis_salicifolia",
+   "scientific": "Baccharis salicifolia",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 24,
+   "known": false
+  },
+  {
+   "id": "erigeron_divergens",
+   "scientific": "Erigeron divergens",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 24,
+   "known": false
+  },
+  {
+   "id": "phlox_longifolia",
+   "scientific": "Phlox longifolia",
+   "family": "Polemoniaceae",
+   "kind": "forb",
+   "records": 23,
+   "known": false
+  },
+  {
+   "id": "vitis_arizonica",
+   "scientific": "Vitis arizonica",
+   "family": "Vitaceae",
+   "kind": "forb",
+   "records": 23,
+   "known": false
+  },
+  {
+   "id": "ostrya_knowltonii",
+   "scientific": "Ostrya knowltonii",
+   "family": "Betulaceae",
+   "kind": "shrub",
+   "records": 23,
+   "known": false
+  },
+  {
+   "id": "boechera_perennans",
+   "scientific": "Boechera perennans",
+   "family": "Brassicaceae",
+   "kind": "forb",
+   "records": 22,
+   "known": false
+  },
+  {
+   "id": "penstemon_rostriflorus",
+   "scientific": "Penstemon rostriflorus",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 22,
+   "known": false
+  },
+  {
+   "id": "imperata_brevifolia",
+   "scientific": "Imperata brevifolia",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 22,
+   "known": false
+  },
+  {
+   "id": "astragalus_lentiginosus",
+   "scientific": "Astragalus lentiginosus",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 22,
+   "known": false
+  },
+  {
+   "id": "eucnide_urens",
+   "scientific": "Eucnide urens",
+   "family": "Loasaceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "lupinus_argenteus",
+   "scientific": "Lupinus argenteus",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "sphaeralcea_grossulariifolia",
+   "scientific": "Sphaeralcea grossulariifolia",
+   "family": "Malvaceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "penstemon_barbatus",
+   "scientific": "Penstemon barbatus",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "acer_negundo",
+   "scientific": "Acer negundo",
+   "family": "Sapindaceae",
+   "kind": "shrub",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "potentilla_osterhoutii",
+   "scientific": "Potentilla osterhoutii",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "physaria_purpurea",
+   "scientific": "Physaria purpurea",
+   "family": "Brassicaceae",
+   "kind": "forb",
+   "records": 19,
+   "known": false
+  },
+  {
+   "id": "heterotheca_polothrix",
+   "scientific": "Heterotheca polothrix",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 19,
+   "known": false
+  },
+  {
+   "id": "cochemiea_tetrancistra",
+   "scientific": "Cochemiea tetrancistra",
+   "family": "Cactaceae",
+   "kind": "forb",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "nolina_microcarpa",
+   "scientific": "Nolina microcarpa",
+   "family": "Asparagaceae",
+   "kind": "forb",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "verbena_bracteata",
+   "scientific": "Verbena bracteata",
+   "family": "Verbenaceae",
+   "kind": "forb",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "mirabilis_multiflora",
+   "scientific": "Mirabilis multiflora",
+   "family": "Nyctaginaceae",
+   "kind": "forb",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "encelia_resinifera",
+   "scientific": "Encelia resinifera",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "lobelia_cardinalis",
+   "scientific": "Lobelia cardinalis",
+   "family": "Campanulaceae",
+   "kind": "forb",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "erythranthe_verbenacea",
+   "scientific": "Erythranthe verbenacea",
+   "family": "Phrymaceae",
+   "kind": "forb",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "myriopteris_parryi",
+   "scientific": "Myriopteris parryi",
+   "family": "Pteridaceae",
+   "kind": "fern",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "populus_fremontii",
+   "scientific": "Populus fremontii",
+   "family": "Salicaceae",
+   "kind": "tree",
+   "records": 17,
+   "known": true
+  },
+  {
+   "id": "cirsium_vulgare",
+   "scientific": "Cirsium vulgare",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 17,
+   "known": false
+  },
+  {
+   "id": "artemisia_nova",
+   "scientific": "Artemisia nova",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 17,
+   "known": false
+  },
+  {
+   "id": "thamnosma_montana",
+   "scientific": "Thamnosma montana",
+   "family": "Rutaceae",
+   "kind": "forb",
+   "records": 17,
+   "known": false
+  },
+  {
+   "id": "cercis_occidentalis",
+   "scientific": "Cercis occidentalis",
+   "family": "Fabaceae",
+   "kind": "shrub",
+   "records": 17,
+   "known": true
+  },
+  {
+   "id": "allionia_incarnata",
+   "scientific": "Allionia incarnata",
+   "family": "Nyctaginaceae",
+   "kind": "forb",
+   "records": 17,
+   "known": false
+  },
+  {
+   "id": "brickellia_atractyloides",
+   "scientific": "Brickellia atractyloides",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 17,
+   "known": false
+  },
+  {
+   "id": "phacelia_crenulata",
+   "scientific": "Phacelia crenulata",
+   "family": "Hydrophyllaceae",
+   "kind": "forb",
+   "records": 16,
+   "known": false
+  },
+  {
+   "id": "thelypodium_wrightii",
+   "scientific": "Thelypodium wrightii",
+   "family": "Brassicaceae",
+   "kind": "forb",
+   "records": 16,
+   "known": false
+  },
+  {
+   "id": "nepeta_cataria",
+   "scientific": "Nepeta cataria",
+   "family": "Lamiaceae",
+   "kind": "forb",
+   "records": 16,
+   "known": false
+  },
+  {
+   "id": "bouteloua_gracilis",
+   "scientific": "Bouteloua gracilis",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 16,
+   "known": false
+  },
+  {
+   "id": "cladium_mariscus",
+   "scientific": "Cladium mariscus",
+   "family": "Cyperaceae",
+   "kind": "emergent",
+   "records": 15,
+   "known": false
+  },
+  {
+   "id": "eriogonum_racemosum",
+   "scientific": "Eriogonum racemosum",
+   "family": "Polygonaceae",
+   "kind": "forb",
+   "records": 15,
+   "known": false
+  },
+  {
+   "id": "acourtia_wrightii",
+   "scientific": "Acourtia wrightii",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 15,
+   "known": false
+  },
+  {
+   "id": "hedeoma_drummondii",
+   "scientific": "Hedeoma drummondii",
+   "family": "Lamiaceae",
+   "kind": "forb",
+   "records": 14,
+   "known": false
+  },
+  {
+   "id": "salvia_dorrii",
+   "scientific": "Salvia dorrii",
+   "family": "Lamiaceae",
+   "kind": "forb",
+   "records": 14,
+   "known": false
+  },
+  {
+   "id": "ceratocephala_orthoceras",
+   "scientific": "Ceratocephala orthoceras",
+   "family": "Ranunculaceae",
+   "kind": "forb",
+   "records": 14,
+   "known": false
+  },
+  {
+   "id": "bernardia_incana",
+   "scientific": "Bernardia incana",
+   "family": "Euphorbiaceae",
+   "kind": "forb",
+   "records": 14,
+   "known": false
+  },
+  {
+   "id": "celtis_reticulata",
+   "scientific": "Celtis reticulata",
+   "family": "Cannabaceae",
+   "kind": "forb",
+   "records": 14,
+   "known": false
+  },
+  {
+   "id": "hordeum_murinum",
+   "scientific": "Hordeum murinum",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 14,
+   "known": true
+  },
+  {
+   "id": "poa_fendleriana",
+   "scientific": "Poa fendleriana",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "eriogonum_inflatum",
+   "scientific": "Eriogonum inflatum",
+   "family": "Polygonaceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "ipomopsis_multiflora",
+   "scientific": "Ipomopsis multiflora",
+   "family": "Polemoniaceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "senna_covesii",
+   "scientific": "Senna covesii",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "lupinus_hillii",
+   "scientific": "Lupinus hillii",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "noccaea_fendleri",
+   "scientific": "Noccaea fendleri",
+   "family": "Brassicaceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "ericameria_arizonica",
+   "scientific": "Ericameria arizonica",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "bebbia_juncea",
+   "scientific": "Bebbia juncea",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "hymenopappus_filifolius",
+   "scientific": "Hymenopappus filifolius",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "stephanomeria_pauciflora",
+   "scientific": "Stephanomeria pauciflora",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "androsace_septentrionalis",
+   "scientific": "Androsace septentrionalis",
+   "family": "Primulaceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "rhus_trilobata",
+   "scientific": "Rhus trilobata",
+   "family": "Anacardiaceae",
+   "kind": "shrub",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "astrolepis_cochisensis",
+   "scientific": "Astrolepis cochisensis",
+   "family": "Pteridaceae",
+   "kind": "fern",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "bouteloua_curtipendula",
+   "scientific": "Bouteloua curtipendula",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "lepidium_montanum",
+   "scientific": "Lepidium montanum",
+   "family": "Brassicaceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "opuntia_macrorhiza",
+   "scientific": "Opuntia macrorhiza",
+   "family": "Cactaceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "brickellia_longifolia",
+   "scientific": "Brickellia longifolia",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "solidago_velutina",
+   "scientific": "Solidago velutina",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "johnstonella_racemosa",
+   "scientific": "Johnstonella racemosa",
+   "family": "Boraginaceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "euphorbia_arizonica",
+   "scientific": "Euphorbia arizonica",
+   "family": "Euphorbiaceae",
+   "kind": "forb",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "shepherdia_rotundifolia",
+   "scientific": "Shepherdia rotundifolia",
+   "family": "Elaeagnaceae",
+   "kind": "shrub",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "trixis_californica",
+   "scientific": "Trixis californica",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "eriocoma_hymenoides",
+   "scientific": "Eriocoma hymenoides",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "eriogonum_arcuatum",
+   "scientific": "Eriogonum arcuatum",
+   "family": "Polygonaceae",
+   "kind": "forb",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "nicotiana_obtusifolia",
+   "scientific": "Nicotiana obtusifolia",
+   "family": "Solanaceae",
+   "kind": "forb",
+   "records": 12,
+   "known": false
+  }
+ ],
+ "generated": [],
+ "target": {
+  "tree": 21,
+  "shrub": 23,
+  "ground": 26
+ },
+ "by_layer": {
+  "tree": 12,
+  "shrub": 15,
+  "ground": 26
+ },
+ "hands": [
+  {
+   "id": "pinus_monophylla",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "named by EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (12829 cells)",
+    "named by EVT 7102 Colorado Plateau Pinyon-Juniper Shrubland (401 cells)"
+   ]
+  },
+  {
+   "id": "pinus_edulis",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 479 records on the tile"
+   ]
+  },
+  {
+   "id": "fallugia_paradoxa",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 433 records on the tile"
+   ]
+  },
+  {
+   "id": "chamaebatiaria_millefolium",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 428 records on the tile"
+   ]
+  },
+  {
+   "id": "quercus_gambelii",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 260 records on the tile"
+   ]
+  },
+  {
+   "id": "juniperus_osteosperma",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 239 records on the tile"
+   ]
+  },
+  {
+   "id": "purshia_stansburiana",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 237 records on the tile"
+   ]
+  },
+  {
+   "id": "opuntia_phaeacantha",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 211 records on the tile"
+   ]
+  },
+  {
+   "id": "yucca_baccata",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 193 records on the tile"
+   ]
+  },
+  {
+   "id": "agave_utahensis",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 172 records on the tile"
+   ]
+  },
+  {
+   "id": "ericameria_nauseosa",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 151 records on the tile"
+   ]
+  },
+  {
+   "id": "echinocereus_triglochidiatus",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 144 records on the tile"
+   ]
+  },
+  {
+   "id": "cirsium_arizonicum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 143 records on the tile"
+   ]
+  },
+  {
+   "id": "opuntia_polyacantha",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 135 records on the tile"
+   ]
+  },
+  {
+   "id": "datura_wrightii",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 125 records on the tile"
+   ]
+  },
+  {
+   "id": "phoradendron_juniperinum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 124 records on the tile"
+   ]
+  },
+  {
+   "id": "penstemon_palmeri",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 121 records on the tile"
+   ]
+  },
+  {
+   "id": "petrophytum_caespitosum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 121 records on the tile"
+   ]
+  },
+  {
+   "id": "penstemon_pachyphyllus",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 110 records on the tile"
+   ]
+  },
+  {
+   "id": "asclepias_subverticillata",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 104 records on the tile"
+   ]
+  },
+  {
+   "id": "alloberberis_fremontii",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 88 records on the tile"
+   ]
+  },
+  {
+   "id": "phlox_austromontana",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 80 records on the tile"
+   ]
+  },
+  {
+   "id": "echinocactus_polycephalus",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 77 records on the tile"
+   ]
+  },
+  {
+   "id": "penstemon_eatonii",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 77 records on the tile"
+   ]
+  },
+  {
+   "id": "solanum_elaeagnifolium",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 72 records on the tile"
+   ]
+  },
+  {
+   "id": "castilleja_integra",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 71 records on the tile"
+   ]
+  },
+  {
+   "id": "packera_multilobata",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 68 records on the tile"
+   ]
+  },
+  {
+   "id": "astragalus_calycosus",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 67 records on the tile"
+   ]
+  },
+  {
+   "id": "pelecyphora_vivipara",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 66 records on the tile"
+   ]
+  },
+  {
+   "id": "ribes_cereum",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 56 records on the tile"
+   ]
+  },
+  {
+   "id": "mahonia_repens",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 28 records on the tile"
+   ]
+  },
+  {
+   "id": "ribes_velutinum",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 27 records on the tile"
+   ]
+  },
+  {
+   "id": "fraxinus_anomala",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 26 records on the tile"
+   ]
+  },
+  {
+   "id": "fendlera_rupicola",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 25 records on the tile"
+   ]
+  },
+  {
+   "id": "ostrya_knowltonii",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 23 records on the tile"
+   ]
+  },
+  {
+   "id": "acer_negundo",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 20 records on the tile"
+   ]
+  },
+  {
+   "id": "rhus_trilobata",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 13 records on the tile"
+   ]
+  },
+  {
+   "id": "shepherdia_rotundifolia",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 12 records on the tile"
+   ]
+  },
+  {
+   "id": "Colorado Plateau Mixed Bedrock Canyon and Tableland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "42161 cells"
+   ]
+  },
+  {
+   "id": "Colorado Plateau Blackbrush-Mormon-tea Shrubland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "19780 cells"
+   ]
+  },
+  {
+   "id": "Sonora-Mojave Creosotebush-White Bursage Desert Scrub",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "5408 cells"
+   ]
+  },
+  {
+   "id": "Mojave Mid-Elevation Mixed Desert Scrub",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "2453 cells"
+   ]
+  },
+  {
+   "id": "Inter-Mountain Basins Semi-Desert Grassland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "1890 cells"
+   ]
+  },
+  {
+   "id": "Inter-Mountain Basins Shale Badland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "1268 cells"
+   ]
+  },
+  {
+   "id": "Inter-Mountain Basins Semi-Desert Shrub-Steppe",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "1191 cells"
+   ]
+  },
+  {
+   "id": "Rocky Mountain Gambel Oak-Mixed Montane Shrubland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "460 cells"
+   ]
+  },
+  {
+   "id": "Inter-Mountain Basins Mixed Salt Desert Scrub",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "422 cells"
+   ]
+  },
+  {
+   "id": "Great Basin & Intermountain Ruderal Shrubland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "188 cells"
+   ]
+  },
+  {
+   "id": "Rocky Mountain Gambel Oak-Mixed Montane Shrubland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "109 cells"
+   ]
+  },
+  {
+   "id": "Rocky Mountain Lower Montane-Foothill Shrubland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "92 cells"
+   ]
+  },
+  {
+   "id": "Rocky Mountain Montane Riparian Systems",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "72 cells"
+   ]
+  },
+  {
+   "id": "Southern Rocky Mountain Montane-Subalpine Grassland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "39 cells"
+   ]
+  },
+  {
+   "id": "Interior West Ruderal Riparian Forest",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "36 cells"
+   ]
+  },
+  {
+   "id": "Rocky Mountain Lower Montane-Foothill Riparian Woodland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "19 cells"
+   ]
+  },
+  {
+   "id": "North American Arid West Emergent Marsh",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "13 cells"
+   ]
+  },
+  {
+   "id": "Interior West Ruderal Riparian Scrub",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "11 cells"
+   ]
+  },
+  {
+   "id": "Southern Rocky Mountain Montane-Subalpine Grassland",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "10 cells"
+   ]
+  }
+ ],
+ "summary": {
+  "needed": 53,
+  "with_record": 15,
+  "generated_now": 0,
+  "queued": 38,
+  "unread_communities": 19,
+  "by_layer": {
+   "tree": 12,
+   "shrub": 15,
+   "ground": 26
+  },
+  "meets_target": {
+   "tree": false,
+   "shrub": false,
+   "ground": true
+  },
+  "hands": 57
+ }
+}

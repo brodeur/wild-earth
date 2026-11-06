@@ -1,0 +1,832 @@
+{
+ "source": "copernicus_sentinel2_l2a",
+ "years": [
+  2019,
+  2026
+ ],
+ "stretch": 0.35,
+ "ndvi_range": [
+  -0.2,
+  0.9
+ ],
+ "min_looks": 3,
+ "naip_reference": null,
+ "months": [
+  {
+   "month": 1,
+   "looks_dates": 40,
+   "looks_median": 32,
+   "looks_min": 1,
+   "looks_p05": 13,
+   "refused": false,
+   "filled_fraction": 0.0,
+   "filled_pixels": 10,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.2752,
+      0.3892,
+      0.2975
+     ],
+     "reflectance": [
+      0.0215,
+      0.0439,
+      0.0252
+     ],
+     "ndvi": 0.868,
+     "cells": 121445
+    },
+    "grassland": {
+     "srgb": [
+      0.4244,
+      0.4774,
+      0.4001
+     ],
+     "reflectance": [
+      0.0527,
+      0.0678,
+      0.0465
+     ],
+     "ndvi": 0.592,
+     "cells": 172
+    },
+    "riparian": {
+     "srgb": [
+      0.3733,
+      0.4352,
+      0.3517
+     ],
+     "reflectance": [
+      0.0402,
+      0.0556,
+      0.0355
+     ],
+     "ndvi": 0.632,
+     "cells": 163
+    },
+    "open_grass": {
+     "srgb": [
+      0.4578,
+      0.4951,
+      0.4222
+     ],
+     "reflectance": [
+      0.0619,
+      0.0733,
+      0.0521
+     ],
+     "ndvi": 0.5,
+     "cells": 118
+    }
+   }
+  },
+  {
+   "month": 2,
+   "looks_dates": 34,
+   "looks_median": 28,
+   "looks_min": 0,
+   "looks_p05": 11,
+   "refused": false,
+   "filled_fraction": 0.0001,
+   "filled_pixels": 28,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.2794,
+      0.3971,
+      0.2949
+     ],
+     "reflectance": [
+      0.0222,
+      0.0458,
+      0.0248
+     ],
+     "ndvi": 0.872,
+     "cells": 121445
+    },
+    "grassland": {
+     "srgb": [
+      0.4441,
+      0.4876,
+      0.4036
+     ],
+     "reflectance": [
+      0.0581,
+      0.071,
+      0.0474
+     ],
+     "ndvi": 0.555,
+     "cells": 172
+    },
+    "riparian": {
+     "srgb": [
+      0.3936,
+      0.4484,
+      0.3556
+     ],
+     "reflectance": [
+      0.045,
+      0.0593,
+      0.0363
+     ],
+     "ndvi": 0.608,
+     "cells": 163
+    },
+    "open_grass": {
+     "srgb": [
+      0.4776,
+      0.5024,
+      0.4236
+     ],
+     "reflectance": [
+      0.0679,
+      0.0757,
+      0.0525
+     ],
+     "ndvi": 0.454,
+     "cells": 118
+    }
+   }
+  },
+  {
+   "month": 3,
+   "looks_dates": 38,
+   "looks_median": 34,
+   "looks_min": 0,
+   "looks_p05": 15,
+   "refused": false,
+   "filled_fraction": 0.0003,
+   "filled_pixels": 66,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.2884,
+      0.4088,
+      0.3045
+     ],
+     "reflectance": [
+      0.0237,
+      0.0487,
+      0.0264
+     ],
+     "ndvi": 0.872,
+     "cells": 121445
+    },
+    "grassland": {
+     "srgb": [
+      0.477,
+      0.503,
+      0.4285
+     ],
+     "reflectance": [
+      0.0677,
+      0.0759,
+      0.0538
+     ],
+     "ndvi": 0.503,
+     "cells": 172
+    },
+    "riparian": {
+     "srgb": [
+      0.4322,
+      0.4779,
+      0.3925
+     ],
+     "reflectance": [
+      0.0548,
+      0.068,
+      0.0447
+     ],
+     "ndvi": 0.541,
+     "cells": 163
+    },
+    "open_grass": {
+     "srgb": [
+      0.5138,
+      0.5188,
+      0.4514
+     ],
+     "reflectance": [
+      0.0795,
+      0.0811,
+      0.0601
+     ],
+     "ndvi": 0.386,
+     "cells": 118
+    }
+   }
+  },
+  {
+   "month": 4,
+   "looks_dates": 20,
+   "looks_median": 17,
+   "looks_min": 0,
+   "looks_p05": 6,
+   "refused": false,
+   "filled_fraction": 0.0083,
+   "filled_pixels": 2064,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.3052,
+      0.4281,
+      0.3279
+     ],
+     "reflectance": [
+      0.0265,
+      0.0537,
+      0.0307
+     ],
+     "ndvi": 0.86,
+     "cells": 121445
+    },
+    "grassland": {
+     "srgb": [
+      0.4861,
+      0.5117,
+      0.4421
+     ],
+     "reflectance": [
+      0.0705,
+      0.0788,
+      0.0575
+     ],
+     "ndvi": 0.468,
+     "cells": 172
+    },
+    "riparian": {
+     "srgb": [
+      0.4325,
+      0.4736,
+      0.3895
+     ],
+     "reflectance": [
+      0.0549,
+      0.0666,
+      0.044
+     ],
+     "ndvi": 0.521,
+     "cells": 163
+    },
+    "open_grass": {
+     "srgb": [
+      0.5253,
+      0.5294,
+      0.4672
+     ],
+     "reflectance": [
+      0.0834,
+      0.0848,
+      0.0647
+     ],
+     "ndvi": 0.354,
+     "cells": 118
+    }
+   }
+  },
+  {
+   "month": 5,
+   "looks_dates": 11,
+   "looks_median": 7,
+   "looks_min": 0,
+   "looks_p05": 2,
+   "refused": false,
+   "filled_fraction": 0.0815,
+   "filled_pixels": 20379,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.3111,
+      0.4348,
+      0.3367
+     ],
+     "reflectance": [
+      0.0276,
+      0.0555,
+      0.0325
+     ],
+     "ndvi": 0.858,
+     "cells": 121445
+    },
+    "grassland": {
+     "srgb": [
+      0.4811,
+      0.5167,
+      0.4443
+     ],
+     "reflectance": [
+      0.0689,
+      0.0804,
+      0.0581
+     ],
+     "ndvi": 0.493,
+     "cells": 172
+    },
+    "riparian": {
+     "srgb": [
+      0.434,
+      0.4809,
+      0.3969
+     ],
+     "reflectance": [
+      0.0553,
+      0.0689,
+      0.0457
+     ],
+     "ndvi": 0.534,
+     "cells": 163
+    },
+    "open_grass": {
+     "srgb": [
+      0.5211,
+      0.5362,
+      0.4707
+     ],
+     "reflectance": [
+      0.0819,
+      0.0872,
+      0.0658
+     ],
+     "ndvi": 0.373,
+     "cells": 118
+    }
+   }
+  },
+  {
+   "month": 6,
+   "looks_dates": 9,
+   "looks_median": 6,
+   "looks_min": 0,
+   "looks_p05": 1,
+   "refused": false,
+   "filled_fraction": 0.1492,
+   "filled_pixels": 37312,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.31,
+      0.4349,
+      0.3391
+     ],
+     "reflectance": [
+      0.0274,
+      0.0555,
+      0.0329
+     ],
+     "ndvi": 0.86,
+     "cells": 121445
+    },
+    "grassland": {
+     "srgb": [
+      0.4708,
+      0.5208,
+      0.4468
+     ],
+     "reflectance": [
+      0.0658,
+      0.0818,
+      0.0588
+     ],
+     "ndvi": 0.526,
+     "cells": 172
+    },
+    "riparian": {
+     "srgb": [
+      0.4237,
+      0.4775,
+      0.3966
+     ],
+     "reflectance": [
+      0.0525,
+      0.0678,
+      0.0457
+     ],
+     "ndvi": 0.556,
+     "cells": 163
+    },
+    "open_grass": {
+     "srgb": [
+      0.5097,
+      0.5418,
+      0.4733
+     ],
+     "reflectance": [
+      0.0781,
+      0.0892,
+      0.0666
+     ],
+     "ndvi": 0.418,
+     "cells": 118
+    }
+   }
+  },
+  {
+   "month": 7,
+   "looks_dates": 6,
+   "looks_median": 3,
+   "looks_min": 0,
+   "looks_p05": 0,
+   "refused": false,
+   "filled_fraction": 0.3722,
+   "filled_pixels": 93052,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.3121,
+      0.433,
+      0.3406
+     ],
+     "reflectance": [
+      0.0278,
+      0.055,
+      0.0332
+     ],
+     "ndvi": 0.857,
+     "cells": 121445
+    },
+    "grassland": {
+     "srgb": [
+      0.4713,
+      0.5223,
+      0.4504
+     ],
+     "reflectance": [
+      0.066,
+      0.0823,
+      0.0598
+     ],
+     "ndvi": 0.537,
+     "cells": 172
+    },
+    "riparian": {
+     "srgb": [
+      0.416,
+      0.4729,
+      0.3872
+     ],
+     "reflectance": [
+      0.0505,
+      0.0664,
+      0.0434
+     ],
+     "ndvi": 0.574,
+     "cells": 163
+    },
+    "open_grass": {
+     "srgb": [
+      0.4965,
+      0.5328,
+      0.4626
+     ],
+     "reflectance": [
+      0.0738,
+      0.086,
+      0.0634
+     ],
+     "ndvi": 0.451,
+     "cells": 118
+    }
+   }
+  },
+  {
+   "month": 8,
+   "looks_dates": 6,
+   "looks_median": 3,
+   "looks_min": 0,
+   "looks_p05": 0,
+   "refused": false,
+   "filled_fraction": 0.464,
+   "filled_pixels": 115999,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.3169,
+      0.4347,
+      0.3446
+     ],
+     "reflectance": [
+      0.0287,
+      0.0555,
+      0.0341
+     ],
+     "ndvi": 0.851,
+     "cells": 121445
+    },
+    "grassland": {
+     "srgb": [
+      0.4702,
+      0.5224,
+      0.4498
+     ],
+     "reflectance": [
+      0.0656,
+      0.0824,
+      0.0597
+     ],
+     "ndvi": 0.54,
+     "cells": 172
+    },
+    "riparian": {
+     "srgb": [
+      0.4146,
+      0.4723,
+      0.3873
+     ],
+     "reflectance": [
+      0.0502,
+      0.0663,
+      0.0434
+     ],
+     "ndvi": 0.573,
+     "cells": 163
+    },
+    "open_grass": {
+     "srgb": [
+      0.4948,
+      0.5329,
+      0.4618
+     ],
+     "reflectance": [
+      0.0733,
+      0.086,
+      0.0631
+     ],
+     "ndvi": 0.456,
+     "cells": 118
+    }
+   }
+  },
+  {
+   "month": 9,
+   "looks_dates": 7,
+   "looks_median": 5,
+   "looks_min": 0,
+   "looks_p05": 1,
+   "refused": false,
+   "filled_fraction": 0.128,
+   "filled_pixels": 32003,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.3099,
+      0.4239,
+      0.3344
+     ],
+     "reflectance": [
+      0.0274,
+      0.0526,
+      0.032
+     ],
+     "ndvi": 0.853,
+     "cells": 121445
+    },
+    "grassland": {
+     "srgb": [
+      0.471,
+      0.5213,
+      0.4498
+     ],
+     "reflectance": [
+      0.0658,
+      0.082,
+      0.0597
+     ],
+     "ndvi": 0.534,
+     "cells": 172
+    },
+    "riparian": {
+     "srgb": [
+      0.4116,
+      0.473,
+      0.3821
+     ],
+     "reflectance": [
+      0.0494,
+      0.0665,
+      0.0422
+     ],
+     "ndvi": 0.571,
+     "cells": 163
+    },
+    "open_grass": {
+     "srgb": [
+      0.4965,
+      0.5326,
+      0.4625
+     ],
+     "reflectance": [
+      0.0738,
+      0.0859,
+      0.0633
+     ],
+     "ndvi": 0.445,
+     "cells": 118
+    }
+   }
+  },
+  {
+   "month": 10,
+   "looks_dates": 7,
+   "looks_median": 5,
+   "looks_min": 0,
+   "looks_p05": 2,
+   "refused": false,
+   "filled_fraction": 0.1342,
+   "filled_pixels": 33541,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.3083,
+      0.4206,
+      0.3336
+     ],
+     "reflectance": [
+      0.0271,
+      0.0517,
+      0.0319
+     ],
+     "ndvi": 0.848,
+     "cells": 121445
+    },
+    "grassland": {
+     "srgb": [
+      0.4666,
+      0.5212,
+      0.4497
+     ],
+     "reflectance": [
+      0.0645,
+      0.082,
+      0.0596
+     ],
+     "ndvi": 0.554,
+     "cells": 172
+    },
+    "riparian": {
+     "srgb": [
+      0.4013,
+      0.4621,
+      0.3849
+     ],
+     "reflectance": [
+      0.0468,
+      0.0632,
+      0.0429
+     ],
+     "ndvi": 0.589,
+     "cells": 163
+    },
+    "open_grass": {
+     "srgb": [
+      0.4905,
+      0.5319,
+      0.4612
+     ],
+     "reflectance": [
+      0.0719,
+      0.0857,
+      0.0629
+     ],
+     "ndvi": 0.472,
+     "cells": 118
+    }
+   }
+  },
+  {
+   "month": 11,
+   "looks_dates": 11,
+   "looks_median": 8,
+   "looks_min": 0,
+   "looks_p05": 1,
+   "refused": false,
+   "filled_fraction": 0.163,
+   "filled_pixels": 40741,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.3185,
+      0.4205,
+      0.3484
+     ],
+     "reflectance": [
+      0.029,
+      0.0517,
+      0.0348
+     ],
+     "ndvi": 0.833,
+     "cells": 121445
+    },
+    "grassland": {
+     "srgb": [
+      0.4693,
+      0.521,
+      0.4549
+     ],
+     "reflectance": [
+      0.0654,
+      0.0819,
+      0.0611
+     ],
+     "ndvi": 0.542,
+     "cells": 172
+    },
+    "riparian": {
+     "srgb": [
+      0.3832,
+      0.4493,
+      0.3729
+     ],
+     "reflectance": [
+      0.0425,
+      0.0595,
+      0.0401
+     ],
+     "ndvi": 0.625,
+     "cells": 163
+    },
+    "open_grass": {
+     "srgb": [
+      0.4818,
+      0.5225,
+      0.4542
+     ],
+     "reflectance": [
+      0.0692,
+      0.0824,
+      0.0609
+     ],
+     "ndvi": 0.472,
+     "cells": 118
+    }
+   }
+  },
+  {
+   "month": 12,
+   "looks_dates": 27,
+   "looks_median": 21,
+   "looks_min": 0,
+   "looks_p05": 9,
+   "refused": false,
+   "filled_fraction": 0.0003,
+   "filled_pixels": 77,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.2816,
+      0.3859,
+      0.2996
+     ],
+     "reflectance": [
+      0.0226,
+      0.0431,
+      0.0256
+     ],
+     "ndvi": 0.857,
+     "cells": 121445
+    },
+    "grassland": {
+     "srgb": [
+      0.4269,
+      0.4851,
+      0.4092
+     ],
+     "reflectance": [
+      0.0534,
+      0.0702,
+      0.0488
+     ],
+     "ndvi": 0.594,
+     "cells": 172
+    },
+    "riparian": {
+     "srgb": [
+      0.3653,
+      0.4302,
+      0.3495
+     ],
+     "reflectance": [
+      0.0384,
+      0.0543,
+      0.0351
+     ],
+     "ndvi": 0.658,
+     "cells": 163
+    },
+    "open_grass": {
+     "srgb": [
+      0.4577,
+      0.5026,
+      0.429
+     ],
+     "reflectance": [
+      0.0619,
+      0.0757,
+      0.0539
+     ],
+     "ndvi": 0.51,
+     "cells": 118
+    }
+   }
+  }
+ ]
+}

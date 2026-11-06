@@ -1,0 +1,77 @@
+{
+ "encoding": "client/soils.png R = index here, G = rock_fragments_pct, B = depth_to_bedrock_cm / 10 (255 = none/unknown)",
+ "source": "soilgrids",
+ "rules": {
+  "texture": "USDA triangle from SoilGrids 2.0 sand and clay, 0-5 cm mean",
+  "modifier": "SoilGrids cfvo: gravelly >= 15 %, very gravelly >= 35 %, extremely >= 60 %",
+  "rock": "WorldCover bare / sparse (60) cells are rock outcrop, 100 % fragments, bedrock at 0",
+  "depth_to_bedrock": "unknown elsewhere (not in SoilGrids)"
+ },
+ "mapunits": {
+  "1": {
+   "muname": "Water",
+   "texture_class": "water",
+   "texture_modifier": "none",
+   "source": "soilgrids",
+   "rock_land": false,
+   "rock_fragments_pct": 0.0,
+   "depth_to_bedrock_cm": null,
+   "bedrock_restriction": false,
+   "ph": 5.5,
+   "soc_g_kg": 94.1,
+   "fraction": 0.5125
+  },
+  "2": {
+   "muname": "clay loam",
+   "texture_class": "clay loam",
+   "texture_modifier": "none",
+   "source": "soilgrids",
+   "rock_land": false,
+   "rock_fragments_pct": 9.1,
+   "depth_to_bedrock_cm": null,
+   "bedrock_restriction": false,
+   "ph": 5.34,
+   "soc_g_kg": 50.0,
+   "fraction": 0.4484
+  },
+  "3": {
+   "muname": "unknown",
+   "texture_class": "unknown",
+   "texture_modifier": "none",
+   "source": "soilgrids",
+   "rock_land": false,
+   "rock_fragments_pct": 0.0,
+   "depth_to_bedrock_cm": null,
+   "bedrock_restriction": false,
+   "ph": null,
+   "soc_g_kg": null,
+   "fraction": 0.0333
+  },
+  "4": {
+   "muname": "loam",
+   "texture_class": "loam",
+   "texture_modifier": "none",
+   "source": "soilgrids",
+   "rock_land": false,
+   "rock_fragments_pct": 7.4,
+   "depth_to_bedrock_cm": null,
+   "bedrock_restriction": false,
+   "ph": 5.49,
+   "soc_g_kg": 61.0,
+   "fraction": 0.0053
+  },
+  "5": {
+   "muname": "rock outcrop",
+   "texture_class": "rock outcrop",
+   "texture_modifier": "none",
+   "source": "soilgrids",
+   "rock_land": true,
+   "rock_fragments_pct": 1.8,
+   "depth_to_bedrock_cm": 0,
+   "bedrock_restriction": true,
+   "ph": 5.45,
+   "soc_g_kg": 105.7,
+   "fraction": 0.0005
+  }
+ }
+}

@@ -1,0 +1,75 @@
+{
+ "type": "FeatureCollection",
+ "breach_max_m": 300.0,
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -112.150769,
+       36.050124
+      ],
+      [
+       -112.150384,
+       36.05008
+      ],
+      [
+       -112.150479,
+       36.04954699999999
+      ],
+      [
+       -112.150878,
+       36.04958
+      ],
+      [
+       -112.150769,
+       36.050124
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:123286244",
+    "nhd_id": "123286244",
+    "name": null,
+    "source": "nhd",
+    "fcode": 43612,
+    "ftype": 436,
+    "evidence": {
+     "area_m2": 2148.7,
+     "level_m": 2064.27,
+     "outlet": [
+      346.9,
+      2117.4
+     ],
+     "drop_below_m": 4.78,
+     "crest_above_m": 0.63,
+     "edge_len_m": 24.4,
+     "edge_rms": 0.14,
+     "dam_evidence": false
+    },
+    "reasons": [
+     "NHD FType 436 reservoir (FCode 43612)"
+    ],
+    "kind": "reservoir",
+    "carve": null,
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": null,
+     "thalweg_held_fraction": null,
+     "bed_held_fraction": 0.678,
+     "bed_held_max_m": 0.81,
+     "cells": 87
+    },
+    "rewilded": true,
+    "area_m2": 2148.7
+   }
+  }
+ ]
+}

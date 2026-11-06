@@ -85,8 +85,8 @@ def _from_planetary_computer(tile: Tile, collection="3dep-seamless") -> tuple[np
     with rasterio.Env(GDAL_DISABLE_READDIR_ON_OPEN="EMPTY_DIR", GDAL_HTTP_USERAGENT=USER_AGENT):
         for it in items:
             href = it["assets"][asset]["href"] + "?" + token
-            with rasterio.open(href) as src, WarpedVRT(
-                    src, crs=tile.crs, transform=transform, width=n, height=n,
+            with rasterio.open(href) as ds, WarpedVRT(   # not `src`: that names the source returned below (it was
+                    ds, crs=tile.crs, transform=transform, width=n, height=n,   # the dataset in the manifest, 2026-11-05)
                     resampling=Resampling.bilinear, nodata=NODATA) as vrt:
                 data = vrt.read(1)
             take = (data != NODATA) & np.isfinite(data) & (out == NODATA)

@@ -140,7 +140,9 @@ def _from_macrostrat(tile: Tile, tpoly: Polygon) -> tuple[list[dict], dict]:
 
     # Finest scale answering at every sample point; within it the preferred source.
     scale_cover = {s: sum(any(f["properties"].get("scale") == s for f in a) for a in answers) for s in SCALES}
-    full = [s for s in SCALES if scale_cover[s] == len(pts)]
+    # a sample point no scale answers is off the map (the sea: Corcovado, 2026-11-05); the finest scale must cover the land
+    land = sum(1 for a in answers if a)
+    full = [s for s in SCALES if land and scale_cover[s] == land]
     if not full:
         raise RuntimeError(f"no Macrostrat scale covers the tile: {scale_cover}")
     scale = full[0]

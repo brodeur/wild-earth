@@ -1,0 +1,2145 @@
+{
+ "generated": "2026-11-06T05:27:21Z",
+ "tile_id": "utm19s_233_8679",
+ "archetypes": {
+  "gather": "find the resource's hotspots, feed, keep an eye out: the predators listed hunt here; the competitors eat the same cells",
+  "drink": "reach water on a rhythm; in summer the few sources draw every species, and the ambush predators, together",
+  "hunt": "find the prey (perception), close unseen, strike; the prey's game is its dual: evade",
+  "evade": "notice the predator before it is close (perception, the watchers' alarms), reach cover, keep the group together",
+  "cache": "store the resource in its season, recover it later; the competitors pilfer; a family's granary is defended together",
+  "shelter": "be in cover, a cavity, a burrow or a roost before dusk, a storm or a predator; the weather sets the pressure",
+  "court": "find and win a mate in the season: display, call, chase",
+  "rear": "keep the young fed and alive through the season: an escort game, collective where the young travel with the group",
+  "disperse": "leave the natal range and find an empty territory: a map-scale game",
+  "watch": "the collective's sentinel: someone looks up while the rest feed; an alarm sends everyone to cover"
+ },
+ "requests": [
+  {
+   "kind": "resource",
+   "resource": "cavity",
+   "needed_by": [
+    "cathartes_aura"
+   ],
+   "raster": "client/res_cavity.png",
+   "objects": [
+    {
+     "object": "cavity trees and granaries",
+     "client": "acorns.js (granaries); no other cavities",
+     "status": "partial"
+    }
+   ],
+   "status": "partial"
+  },
+  {
+   "kind": "resource",
+   "resource": "cliff_or_snag",
+   "needed_by": [
+    "cathartes_aura",
+    "pandion_haliaetus"
+   ],
+   "raster": "client/res_cliff_or_snag.png",
+   "objects": [
+    {
+     "object": "snags, cliffs and tall perch trees",
+     "client": "vegetation.js (old trees), rocks.js",
+     "status": "partial"
+    }
+   ],
+   "status": "partial"
+  },
+  {
+   "kind": "resource",
+   "resource": "water",
+   "needed_by": [
+    "cathartes_aura",
+    "pandion_haliaetus"
+   ],
+   "raster": "client/res_water.png",
+   "objects": [
+    {
+     "object": "water surfaces: streams, ponds",
+     "client": "water.js",
+     "status": "drawn"
+    }
+   ],
+   "status": "drawn"
+  }
+ ],
+ "relations": {
+  "predation": [],
+  "competition": {
+   "cliff_or_snag": {
+    "summer": [
+     "cathartes_aura"
+    ],
+    "spring": [
+     "pandion_haliaetus"
+    ]
+   },
+   "cavity": {
+    "summer": [
+     "cathartes_aura"
+    ]
+   },
+   "water": {
+    "winter": [
+     "pandion_haliaetus"
+    ],
+    "summer": [
+     "pandion_haliaetus"
+    ],
+    "fall": [
+     "pandion_haliaetus"
+    ]
+   }
+  },
+  "scavenge": [],
+  "alarm": [],
+  "forage": [],
+  "cover": []
+ },
+ "resources": {
+  "acorn_mast": {
+   "winter": {
+    "scarcity": 1.0,
+    "mean": 23.9,
+    "hotspots": 0
+   },
+   "spring": {
+    "scarcity": 1.0,
+    "mean": 4.8,
+    "hotspots": 0
+   },
+   "summer": {
+    "scarcity": 1.0,
+    "mean": 1.9,
+    "hotspots": 0
+   },
+   "fall": {
+    "scarcity": 0.045,
+    "mean": 47.8,
+    "hotspots": 12
+   }
+  },
+  "grass_forbs": {
+   "winter": {
+    "scarcity": 0.995,
+    "mean": 14.6,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.995,
+    "mean": 24.3,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 1.0,
+    "mean": 4.9,
+    "hotspots": 0
+   },
+   "fall": {
+    "scarcity": 1.0,
+    "mean": 6.8,
+    "hotspots": 0
+   }
+  },
+  "browse": {
+   "winter": {
+    "scarcity": 1.0,
+    "mean": 28.7,
+    "hotspots": 1
+   },
+   "spring": {
+    "scarcity": 0.045,
+    "mean": 47.8,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 1.0,
+    "mean": 33.5,
+    "hotspots": 1
+   },
+   "fall": {
+    "scarcity": 1.0,
+    "mean": 23.9,
+    "hotspots": 0
+   }
+  },
+  "cover": {
+   "winter": {
+    "scarcity": 0.045,
+    "mean": 71.1,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.045,
+    "mean": 84.3,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.045,
+    "mean": 84.3,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.045,
+    "mean": 84.3,
+    "hotspots": 12
+   }
+  },
+  "insects": {
+   "winter": {
+    "scarcity": 1.0,
+    "mean": 4.8,
+    "hotspots": 0
+   },
+   "spring": {
+    "scarcity": 0.04,
+    "mean": 48.1,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.995,
+    "mean": 38.5,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 1.0,
+    "mean": 19.2,
+    "hotspots": 0
+   }
+  },
+  "cavity": {
+   "winter": {
+    "scarcity": 0.079,
+    "mean": 67.1,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.079,
+    "mean": 67.1,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.079,
+    "mean": 67.1,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.079,
+    "mean": 67.1,
+    "hotspots": 12
+   }
+  },
+  "cliff_or_snag": {
+   "winter": {
+    "scarcity": 0.038,
+    "mean": 48.6,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.038,
+    "mean": 48.6,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.038,
+    "mean": 48.6,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.038,
+    "mean": 48.6,
+    "hotspots": 12
+   }
+  },
+  "burrow": {
+   "winter": {
+    "scarcity": 0.995,
+    "mean": 23.2,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.995,
+    "mean": 29.1,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.995,
+    "mean": 29.1,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.995,
+    "mean": 29.1,
+    "hotspots": 12
+   }
+  },
+  "water": {
+   "winter": {
+    "scarcity": 0.88,
+    "mean": 17.6,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.88,
+    "mean": 17.6,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.88,
+    "mean": 17.6,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.88,
+    "mean": 17.6,
+    "hotspots": 12
+   }
+  }
+ },
+ "species": {
+  "cathartes_aura": {
+   "unit": "solitary",
+   "predators": [],
+   "prey": [],
+   "games": [
+    {
+     "id": "cathartes_aura:winter:forage",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "soar and sniff out carcasses"
+    },
+    {
+     "id": "cathartes_aura:spring:forage",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false
+    },
+    {
+     "id": "cathartes_aura:spring:court",
+     "archetype": "court",
+     "verb": "court",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "ground display, wings spread",
+     "resource": "cliff_or_snag",
+     "requires": [
+      {
+       "object": "snags, cliffs and tall perch trees",
+       "client": "vegetation.js (old trees), rocks.js",
+       "status": "partial"
+      }
+     ],
+     "raster": "client/res_cliff_or_snag.png",
+     "hotspots": [
+      [
+       3348.3,
+       9985.0,
+       90
+      ],
+      [
+       3378.4,
+       9834.8,
+       90
+      ],
+      [
+       1876.9,
+       9804.8,
+       90
+      ],
+      [
+       1006.0,
+       9744.7,
+       90
+      ],
+      [
+       1666.7,
+       9714.7,
+       90
+      ],
+      [
+       1997.0,
+       9714.7,
+       90
+      ],
+      [
+       3348.3,
+       9684.7,
+       90
+      ],
+      [
+       1786.8,
+       9624.6,
+       90
+      ],
+      [
+       1066.1,
+       9564.6,
+       90
+      ],
+      [
+       1906.9,
+       9534.5,
+       90
+      ],
+      [
+       855.9,
+       9504.5,
+       90
+      ],
+      [
+       1126.1,
+       9414.4,
+       90
+      ]
+     ],
+     "scarcity": 0.038,
+     "competitors": [
+      "pandion_haliaetus"
+     ]
+    },
+    {
+     "id": "cathartes_aura:summer:forage",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false
+    },
+    {
+     "id": "cathartes_aura:summer:rear:cliff_or_snag",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "raise chicks in a cliff or snag cavity, no nest built",
+     "resource": "cliff_or_snag",
+     "requires": [
+      {
+       "object": "snags, cliffs and tall perch trees",
+       "client": "vegetation.js (old trees), rocks.js",
+       "status": "partial"
+      }
+     ],
+     "raster": "client/res_cliff_or_snag.png",
+     "hotspots": [
+      [
+       3348.3,
+       9985.0,
+       90
+      ],
+      [
+       3378.4,
+       9834.8,
+       90
+      ],
+      [
+       1876.9,
+       9804.8,
+       90
+      ],
+      [
+       1006.0,
+       9744.7,
+       90
+      ],
+      [
+       1666.7,
+       9714.7,
+       90
+      ],
+      [
+       1997.0,
+       9714.7,
+       90
+      ],
+      [
+       3348.3,
+       9684.7,
+       90
+      ],
+      [
+       1786.8,
+       9624.6,
+       90
+      ],
+      [
+       1066.1,
+       9564.6,
+       90
+      ],
+      [
+       1906.9,
+       9534.5,
+       90
+      ],
+      [
+       855.9,
+       9504.5,
+       90
+      ],
+      [
+       1126.1,
+       9414.4,
+       90
+      ]
+     ],
+     "scarcity": 0.038,
+     "competitors": []
+    },
+    {
+     "id": "cathartes_aura:summer:rear:cavity",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "raise chicks in a cliff or snag cavity, no nest built",
+     "resource": "cavity",
+     "requires": [
+      {
+       "object": "cavity trees and granaries",
+       "client": "acorns.js (granaries); no other cavities",
+       "status": "partial"
+      }
+     ],
+     "raster": "client/res_cavity.png",
+     "hotspots": [
+      [
+       15.0,
+       9985.0,
+       72
+      ],
+      [
+       165.2,
+       9985.0,
+       72
+      ],
+      [
+       315.3,
+       9985.0,
+       72
+      ],
+      [
+       465.5,
+       9985.0,
+       72
+      ],
+      [
+       615.6,
+       9985.0,
+       72
+      ],
+      [
+       915.9,
+       9985.0,
+       72
+      ],
+      [
+       1066.1,
+       9985.0,
+       72
+      ],
+      [
+       1216.2,
+       9985.0,
+       72
+      ],
+      [
+       1366.4,
+       9985.0,
+       72
+      ],
+      [
+       1666.7,
+       9985.0,
+       72
+      ],
+      [
+       1816.8,
+       9985.0,
+       72
+      ],
+      [
+       1967.0,
+       9985.0,
+       72
+      ]
+     ],
+     "scarcity": 0.079,
+     "competitors": []
+    },
+    {
+     "id": "cathartes_aura:fall:forage",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "roost communally on snags"
+    },
+    {
+     "id": "cathartes_aura:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       645.6,
+       9985.0,
+       100
+      ],
+      [
+       795.8,
+       9985.0,
+       100
+      ],
+      [
+       1426.4,
+       9985.0,
+       100
+      ],
+      [
+       1576.6,
+       9985.0,
+       100
+      ],
+      [
+       3168.2,
+       9985.0,
+       100
+      ],
+      [
+       3318.3,
+       9985.0,
+       100
+      ],
+      [
+       915.9,
+       9894.9,
+       100
+      ],
+      [
+       1696.7,
+       9894.9,
+       100
+      ],
+      [
+       705.7,
+       9834.8,
+       100
+      ],
+      [
+       1846.8,
+       9834.8,
+       100
+      ],
+      [
+       3198.2,
+       9834.8,
+       100
+      ],
+      [
+       3348.3,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.88,
+     "competitors": [
+      "pandion_haliaetus"
+     ]
+    },
+    {
+     "id": "cathartes_aura:winter:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       3348.3,
+       9985.0,
+       90
+      ],
+      [
+       3378.4,
+       9834.8,
+       90
+      ],
+      [
+       1876.9,
+       9804.8,
+       90
+      ],
+      [
+       1006.0,
+       9744.7,
+       90
+      ],
+      [
+       1666.7,
+       9714.7,
+       90
+      ],
+      [
+       1997.0,
+       9714.7,
+       90
+      ],
+      [
+       3348.3,
+       9684.7,
+       90
+      ],
+      [
+       1786.8,
+       9624.6,
+       90
+      ],
+      [
+       1066.1,
+       9564.6,
+       90
+      ],
+      [
+       1906.9,
+       9534.5,
+       90
+      ],
+      [
+       855.9,
+       9504.5,
+       90
+      ],
+      [
+       1126.1,
+       9414.4,
+       90
+      ]
+     ],
+     "scarcity": 0.038,
+     "competitors": [
+      "pandion_haliaetus"
+     ]
+    },
+    {
+     "id": "cathartes_aura:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       645.6,
+       9985.0,
+       100
+      ],
+      [
+       795.8,
+       9985.0,
+       100
+      ],
+      [
+       1426.4,
+       9985.0,
+       100
+      ],
+      [
+       1576.6,
+       9985.0,
+       100
+      ],
+      [
+       3168.2,
+       9985.0,
+       100
+      ],
+      [
+       3318.3,
+       9985.0,
+       100
+      ],
+      [
+       915.9,
+       9894.9,
+       100
+      ],
+      [
+       1696.7,
+       9894.9,
+       100
+      ],
+      [
+       705.7,
+       9834.8,
+       100
+      ],
+      [
+       1846.8,
+       9834.8,
+       100
+      ],
+      [
+       3198.2,
+       9834.8,
+       100
+      ],
+      [
+       3348.3,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.88,
+     "competitors": [
+      "pandion_haliaetus"
+     ]
+    },
+    {
+     "id": "cathartes_aura:spring:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       3348.3,
+       9985.0,
+       90
+      ],
+      [
+       3378.4,
+       9834.8,
+       90
+      ],
+      [
+       1876.9,
+       9804.8,
+       90
+      ],
+      [
+       1006.0,
+       9744.7,
+       90
+      ],
+      [
+       1666.7,
+       9714.7,
+       90
+      ],
+      [
+       1997.0,
+       9714.7,
+       90
+      ],
+      [
+       3348.3,
+       9684.7,
+       90
+      ],
+      [
+       1786.8,
+       9624.6,
+       90
+      ],
+      [
+       1066.1,
+       9564.6,
+       90
+      ],
+      [
+       1906.9,
+       9534.5,
+       90
+      ],
+      [
+       855.9,
+       9504.5,
+       90
+      ],
+      [
+       1126.1,
+       9414.4,
+       90
+      ]
+     ],
+     "scarcity": 0.038,
+     "competitors": [
+      "pandion_haliaetus"
+     ]
+    },
+    {
+     "id": "cathartes_aura:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       645.6,
+       9985.0,
+       100
+      ],
+      [
+       795.8,
+       9985.0,
+       100
+      ],
+      [
+       1426.4,
+       9985.0,
+       100
+      ],
+      [
+       1576.6,
+       9985.0,
+       100
+      ],
+      [
+       3168.2,
+       9985.0,
+       100
+      ],
+      [
+       3318.3,
+       9985.0,
+       100
+      ],
+      [
+       915.9,
+       9894.9,
+       100
+      ],
+      [
+       1696.7,
+       9894.9,
+       100
+      ],
+      [
+       705.7,
+       9834.8,
+       100
+      ],
+      [
+       1846.8,
+       9834.8,
+       100
+      ],
+      [
+       3198.2,
+       9834.8,
+       100
+      ],
+      [
+       3348.3,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.88,
+     "competitors": [
+      "pandion_haliaetus"
+     ]
+    },
+    {
+     "id": "cathartes_aura:summer:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       3348.3,
+       9985.0,
+       90
+      ],
+      [
+       3378.4,
+       9834.8,
+       90
+      ],
+      [
+       1876.9,
+       9804.8,
+       90
+      ],
+      [
+       1006.0,
+       9744.7,
+       90
+      ],
+      [
+       1666.7,
+       9714.7,
+       90
+      ],
+      [
+       1997.0,
+       9714.7,
+       90
+      ],
+      [
+       3348.3,
+       9684.7,
+       90
+      ],
+      [
+       1786.8,
+       9624.6,
+       90
+      ],
+      [
+       1066.1,
+       9564.6,
+       90
+      ],
+      [
+       1906.9,
+       9534.5,
+       90
+      ],
+      [
+       855.9,
+       9504.5,
+       90
+      ],
+      [
+       1126.1,
+       9414.4,
+       90
+      ]
+     ],
+     "scarcity": 0.038,
+     "competitors": [
+      "pandion_haliaetus"
+     ]
+    },
+    {
+     "id": "cathartes_aura:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       645.6,
+       9985.0,
+       100
+      ],
+      [
+       795.8,
+       9985.0,
+       100
+      ],
+      [
+       1426.4,
+       9985.0,
+       100
+      ],
+      [
+       1576.6,
+       9985.0,
+       100
+      ],
+      [
+       3168.2,
+       9985.0,
+       100
+      ],
+      [
+       3318.3,
+       9985.0,
+       100
+      ],
+      [
+       915.9,
+       9894.9,
+       100
+      ],
+      [
+       1696.7,
+       9894.9,
+       100
+      ],
+      [
+       705.7,
+       9834.8,
+       100
+      ],
+      [
+       1846.8,
+       9834.8,
+       100
+      ],
+      [
+       3198.2,
+       9834.8,
+       100
+      ],
+      [
+       3348.3,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.88,
+     "competitors": [
+      "pandion_haliaetus"
+     ]
+    },
+    {
+     "id": "cathartes_aura:fall:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       3348.3,
+       9985.0,
+       90
+      ],
+      [
+       3378.4,
+       9834.8,
+       90
+      ],
+      [
+       1876.9,
+       9804.8,
+       90
+      ],
+      [
+       1006.0,
+       9744.7,
+       90
+      ],
+      [
+       1666.7,
+       9714.7,
+       90
+      ],
+      [
+       1997.0,
+       9714.7,
+       90
+      ],
+      [
+       3348.3,
+       9684.7,
+       90
+      ],
+      [
+       1786.8,
+       9624.6,
+       90
+      ],
+      [
+       1066.1,
+       9564.6,
+       90
+      ],
+      [
+       1906.9,
+       9534.5,
+       90
+      ],
+      [
+       855.9,
+       9504.5,
+       90
+      ],
+      [
+       1126.1,
+       9414.4,
+       90
+      ]
+     ],
+     "scarcity": 0.038,
+     "competitors": [
+      "pandion_haliaetus"
+     ]
+    }
+   ]
+  },
+  "pandion_haliaetus": {
+   "unit": "solitary",
+   "predators": [],
+   "prey": [],
+   "games": [
+    {
+     "id": "pandion_haliaetus:winter:hunt:water",
+     "archetype": "hunt",
+     "verb": "hunt",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "plunges feet first for fish",
+     "resource": "water",
+     "requires": [
+      {
+       "object": "water surfaces: streams, ponds",
+       "client": "water.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_water.png",
+     "hotspots": [
+      [
+       645.6,
+       9985.0,
+       100
+      ],
+      [
+       795.8,
+       9985.0,
+       100
+      ],
+      [
+       1426.4,
+       9985.0,
+       100
+      ],
+      [
+       1576.6,
+       9985.0,
+       100
+      ],
+      [
+       3168.2,
+       9985.0,
+       100
+      ],
+      [
+       3318.3,
+       9985.0,
+       100
+      ],
+      [
+       915.9,
+       9894.9,
+       100
+      ],
+      [
+       1696.7,
+       9894.9,
+       100
+      ],
+      [
+       705.7,
+       9834.8,
+       100
+      ],
+      [
+       1846.8,
+       9834.8,
+       100
+      ],
+      [
+       3198.2,
+       9834.8,
+       100
+      ],
+      [
+       3348.3,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.88,
+     "competitors": []
+    },
+    {
+     "id": "pandion_haliaetus:spring:nest:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "nest",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "a stick nest on a broken-top snag",
+     "resource": "cliff_or_snag",
+     "requires": [
+      {
+       "object": "snags, cliffs and tall perch trees",
+       "client": "vegetation.js (old trees), rocks.js",
+       "status": "partial"
+      }
+     ],
+     "raster": "client/res_cliff_or_snag.png",
+     "hotspots": [
+      [
+       3348.3,
+       9985.0,
+       90
+      ],
+      [
+       3378.4,
+       9834.8,
+       90
+      ],
+      [
+       1876.9,
+       9804.8,
+       90
+      ],
+      [
+       1006.0,
+       9744.7,
+       90
+      ],
+      [
+       1666.7,
+       9714.7,
+       90
+      ],
+      [
+       1997.0,
+       9714.7,
+       90
+      ],
+      [
+       3348.3,
+       9684.7,
+       90
+      ],
+      [
+       1786.8,
+       9624.6,
+       90
+      ],
+      [
+       1066.1,
+       9564.6,
+       90
+      ],
+      [
+       1906.9,
+       9534.5,
+       90
+      ],
+      [
+       855.9,
+       9504.5,
+       90
+      ],
+      [
+       1126.1,
+       9414.4,
+       90
+      ]
+     ],
+     "scarcity": 0.038,
+     "competitors": []
+    },
+    {
+     "id": "pandion_haliaetus:summer:hunt:water",
+     "archetype": "hunt",
+     "verb": "hunt",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "requires": [
+      {
+       "object": "water surfaces: streams, ponds",
+       "client": "water.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_water.png",
+     "hotspots": [
+      [
+       645.6,
+       9985.0,
+       100
+      ],
+      [
+       795.8,
+       9985.0,
+       100
+      ],
+      [
+       1426.4,
+       9985.0,
+       100
+      ],
+      [
+       1576.6,
+       9985.0,
+       100
+      ],
+      [
+       3168.2,
+       9985.0,
+       100
+      ],
+      [
+       3318.3,
+       9985.0,
+       100
+      ],
+      [
+       915.9,
+       9894.9,
+       100
+      ],
+      [
+       1696.7,
+       9894.9,
+       100
+      ],
+      [
+       705.7,
+       9834.8,
+       100
+      ],
+      [
+       1846.8,
+       9834.8,
+       100
+      ],
+      [
+       3198.2,
+       9834.8,
+       100
+      ],
+      [
+       3348.3,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.88,
+     "competitors": []
+    },
+    {
+     "id": "pandion_haliaetus:summer:hunt:water",
+     "archetype": "hunt",
+     "verb": "hunt",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "requires": [
+      {
+       "object": "water surfaces: streams, ponds",
+       "client": "water.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_water.png",
+     "hotspots": [
+      [
+       645.6,
+       9985.0,
+       100
+      ],
+      [
+       795.8,
+       9985.0,
+       100
+      ],
+      [
+       1426.4,
+       9985.0,
+       100
+      ],
+      [
+       1576.6,
+       9985.0,
+       100
+      ],
+      [
+       3168.2,
+       9985.0,
+       100
+      ],
+      [
+       3318.3,
+       9985.0,
+       100
+      ],
+      [
+       915.9,
+       9894.9,
+       100
+      ],
+      [
+       1696.7,
+       9894.9,
+       100
+      ],
+      [
+       705.7,
+       9834.8,
+       100
+      ],
+      [
+       1846.8,
+       9834.8,
+       100
+      ],
+      [
+       3198.2,
+       9834.8,
+       100
+      ],
+      [
+       3348.3,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.88,
+     "competitors": []
+    },
+    {
+     "id": "pandion_haliaetus:fall:hunt:water",
+     "archetype": "hunt",
+     "verb": "hunt",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "requires": [
+      {
+       "object": "water surfaces: streams, ponds",
+       "client": "water.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_water.png",
+     "hotspots": [
+      [
+       645.6,
+       9985.0,
+       100
+      ],
+      [
+       795.8,
+       9985.0,
+       100
+      ],
+      [
+       1426.4,
+       9985.0,
+       100
+      ],
+      [
+       1576.6,
+       9985.0,
+       100
+      ],
+      [
+       3168.2,
+       9985.0,
+       100
+      ],
+      [
+       3318.3,
+       9985.0,
+       100
+      ],
+      [
+       915.9,
+       9894.9,
+       100
+      ],
+      [
+       1696.7,
+       9894.9,
+       100
+      ],
+      [
+       705.7,
+       9834.8,
+       100
+      ],
+      [
+       1846.8,
+       9834.8,
+       100
+      ],
+      [
+       3198.2,
+       9834.8,
+       100
+      ],
+      [
+       3348.3,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.88,
+     "competitors": []
+    },
+    {
+     "id": "pandion_haliaetus:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       645.6,
+       9985.0,
+       100
+      ],
+      [
+       795.8,
+       9985.0,
+       100
+      ],
+      [
+       1426.4,
+       9985.0,
+       100
+      ],
+      [
+       1576.6,
+       9985.0,
+       100
+      ],
+      [
+       3168.2,
+       9985.0,
+       100
+      ],
+      [
+       3318.3,
+       9985.0,
+       100
+      ],
+      [
+       915.9,
+       9894.9,
+       100
+      ],
+      [
+       1696.7,
+       9894.9,
+       100
+      ],
+      [
+       705.7,
+       9834.8,
+       100
+      ],
+      [
+       1846.8,
+       9834.8,
+       100
+      ],
+      [
+       3198.2,
+       9834.8,
+       100
+      ],
+      [
+       3348.3,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.88,
+     "competitors": [
+      "cathartes_aura"
+     ]
+    },
+    {
+     "id": "pandion_haliaetus:winter:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       3348.3,
+       9985.0,
+       90
+      ],
+      [
+       3378.4,
+       9834.8,
+       90
+      ],
+      [
+       1876.9,
+       9804.8,
+       90
+      ],
+      [
+       1006.0,
+       9744.7,
+       90
+      ],
+      [
+       1666.7,
+       9714.7,
+       90
+      ],
+      [
+       1997.0,
+       9714.7,
+       90
+      ],
+      [
+       3348.3,
+       9684.7,
+       90
+      ],
+      [
+       1786.8,
+       9624.6,
+       90
+      ],
+      [
+       1066.1,
+       9564.6,
+       90
+      ],
+      [
+       1906.9,
+       9534.5,
+       90
+      ],
+      [
+       855.9,
+       9504.5,
+       90
+      ],
+      [
+       1126.1,
+       9414.4,
+       90
+      ]
+     ],
+     "scarcity": 0.038,
+     "competitors": [
+      "cathartes_aura"
+     ]
+    },
+    {
+     "id": "pandion_haliaetus:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       645.6,
+       9985.0,
+       100
+      ],
+      [
+       795.8,
+       9985.0,
+       100
+      ],
+      [
+       1426.4,
+       9985.0,
+       100
+      ],
+      [
+       1576.6,
+       9985.0,
+       100
+      ],
+      [
+       3168.2,
+       9985.0,
+       100
+      ],
+      [
+       3318.3,
+       9985.0,
+       100
+      ],
+      [
+       915.9,
+       9894.9,
+       100
+      ],
+      [
+       1696.7,
+       9894.9,
+       100
+      ],
+      [
+       705.7,
+       9834.8,
+       100
+      ],
+      [
+       1846.8,
+       9834.8,
+       100
+      ],
+      [
+       3198.2,
+       9834.8,
+       100
+      ],
+      [
+       3348.3,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.88,
+     "competitors": [
+      "cathartes_aura"
+     ]
+    },
+    {
+     "id": "pandion_haliaetus:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       645.6,
+       9985.0,
+       100
+      ],
+      [
+       795.8,
+       9985.0,
+       100
+      ],
+      [
+       1426.4,
+       9985.0,
+       100
+      ],
+      [
+       1576.6,
+       9985.0,
+       100
+      ],
+      [
+       3168.2,
+       9985.0,
+       100
+      ],
+      [
+       3318.3,
+       9985.0,
+       100
+      ],
+      [
+       915.9,
+       9894.9,
+       100
+      ],
+      [
+       1696.7,
+       9894.9,
+       100
+      ],
+      [
+       705.7,
+       9834.8,
+       100
+      ],
+      [
+       1846.8,
+       9834.8,
+       100
+      ],
+      [
+       3198.2,
+       9834.8,
+       100
+      ],
+      [
+       3348.3,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.88,
+     "competitors": [
+      "cathartes_aura"
+     ]
+    },
+    {
+     "id": "pandion_haliaetus:summer:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       3348.3,
+       9985.0,
+       90
+      ],
+      [
+       3378.4,
+       9834.8,
+       90
+      ],
+      [
+       1876.9,
+       9804.8,
+       90
+      ],
+      [
+       1006.0,
+       9744.7,
+       90
+      ],
+      [
+       1666.7,
+       9714.7,
+       90
+      ],
+      [
+       1997.0,
+       9714.7,
+       90
+      ],
+      [
+       3348.3,
+       9684.7,
+       90
+      ],
+      [
+       1786.8,
+       9624.6,
+       90
+      ],
+      [
+       1066.1,
+       9564.6,
+       90
+      ],
+      [
+       1906.9,
+       9534.5,
+       90
+      ],
+      [
+       855.9,
+       9504.5,
+       90
+      ],
+      [
+       1126.1,
+       9414.4,
+       90
+      ]
+     ],
+     "scarcity": 0.038,
+     "competitors": [
+      "cathartes_aura"
+     ]
+    },
+    {
+     "id": "pandion_haliaetus:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       645.6,
+       9985.0,
+       100
+      ],
+      [
+       795.8,
+       9985.0,
+       100
+      ],
+      [
+       1426.4,
+       9985.0,
+       100
+      ],
+      [
+       1576.6,
+       9985.0,
+       100
+      ],
+      [
+       3168.2,
+       9985.0,
+       100
+      ],
+      [
+       3318.3,
+       9985.0,
+       100
+      ],
+      [
+       915.9,
+       9894.9,
+       100
+      ],
+      [
+       1696.7,
+       9894.9,
+       100
+      ],
+      [
+       705.7,
+       9834.8,
+       100
+      ],
+      [
+       1846.8,
+       9834.8,
+       100
+      ],
+      [
+       3198.2,
+       9834.8,
+       100
+      ],
+      [
+       3348.3,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.88,
+     "competitors": [
+      "cathartes_aura"
+     ]
+    },
+    {
+     "id": "pandion_haliaetus:fall:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       3348.3,
+       9985.0,
+       90
+      ],
+      [
+       3378.4,
+       9834.8,
+       90
+      ],
+      [
+       1876.9,
+       9804.8,
+       90
+      ],
+      [
+       1006.0,
+       9744.7,
+       90
+      ],
+      [
+       1666.7,
+       9714.7,
+       90
+      ],
+      [
+       1997.0,
+       9714.7,
+       90
+      ],
+      [
+       3348.3,
+       9684.7,
+       90
+      ],
+      [
+       1786.8,
+       9624.6,
+       90
+      ],
+      [
+       1066.1,
+       9564.6,
+       90
+      ],
+      [
+       1906.9,
+       9534.5,
+       90
+      ],
+      [
+       855.9,
+       9504.5,
+       90
+      ],
+      [
+       1126.1,
+       9414.4,
+       90
+      ]
+     ],
+     "scarcity": 0.038,
+     "competitors": [
+      "cathartes_aura"
+     ]
+    }
+   ]
+  }
+ },
+ "plays": {
+  "dig": {
+   "client": "client/src/dig.js",
+   "species": []
+  }
+ }
+}
