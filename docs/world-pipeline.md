@@ -10,6 +10,22 @@ It builds on the four-stage pipeline that exists (`docs/pipeline.md`: base, flor
 `cost.json`, the registry) and keeps its rules: every source credited, nothing non-commercial in a client layer, a stage
 reads only earlier stages, hand edits are the measure of repeatability.
 
+## Revision 2 (2026-11-05, after Aaron's review)
+
+Aaron: "I don't see geology or soil - both of those should be a part of the pipeline... we need to understand the rocks
+in order to produce good results. Probes first - figure out if the primitives are correct. IUCN may be a good base layer
+but we can also build our ecosystems based on the research step for species. Grows on the shady side of mountains. Grows
+in riparian zones. The sea and waterways are going to be necessary to figure out... we will need to give license for
+creativity to make the underwater world interesting - the data is too thin. Players judging will be a later feature. For
+now, I think we will allow players to 'request a tile'. Eventually, we will allow players to pay to have tiles made."
+
+What changed, section by section below: **geology and soil** are first-class layers of the land stage (3a); **ecosystems
+are composed from the species' researched niches**, with the IUCN groups as the structural base layer beneath them (3b);
+**the sea and waterways** get their own design, with a labelled licence to invent under water (3c); **players request
+tiles** through a queue, and judging by players comes later (3d); and the order of work is **probes first**: the three
+probe tiles run through today's primitives with only what they need to run outside the US, and phase 1 is decided by
+what they show (7, and the probe report `docs/probes-2026-11.md`).
+
 ## 1. The problem
 
 **What makes a generated place feel true.** People recognise a scene's kind before they recognise anything in it:
@@ -123,6 +139,31 @@ modules, inputs, outputs and a fingerprint.
 | climate | Open-Meteo last year hourly (exists, global) | ERA5 monthly normals | WorldClim is non-commercial: pipeline-only |
 | human footprint | OSM (exists, global) | + WorldCover built-up | |
 
+### 3a. Geology and soil: first-class layers of the land stage
+
+The US tiles already carry both. `geology/` (Macrostrat, then USGS SGMC) gives map units and a rock class per 30 m cell
+(`client/geology.png`: unit index, rock class); `soils/` (SSURGO) gives map units with texture, rock fragments and depth to
+bedrock (`client/soils.png`); `ground` combines them with slope, convexity and canopy into the outcrop likelihood
+(`client/outcrop.png`) and ground classes; `substrate` makes the exposed rock, cliffs and their facets (`client/substrate.png`).
+The world pipeline makes each global and makes rock drive more:
+
+| layer | best | global | notes |
+|---|---|---|---|
+| bedrock lithology and age | national geological surveys (US SGMC; BGS, NGU, Geoscience Australia ... where open) | Macrostrat (CC BY 4.0, global carto layers; already the first source) then GLiM (the Global Lithological Map) as the coarse floor | rock class from lithology: the classes the client draws (sheeted granite, bedded slate and schist, blocky greenstone and volcanic) widened to limestone/karst, sandstone, basalt, serpentinite/ultramafic, unconsolidated sediment, ice |
+| soil | SSURGO (US), national soil maps | SoilGrids 2.0 250 m (texture, coarse fragments, pH, organic carbon), in the SSURGO encoding (`pipeline/soils_global.py`, done for the probes) | depth to bedrock is not in SoilGrids: a global depth-to-bedrock layer (licence to check) or the rock and slope rule |
+| exposed rock, cliffs, talus | lidar roughness (US) | outcrop from rock resistance x slope x convexity x thin soil; talus below cliffs by rock class and slope | the substrate step exists |
+
+What rock drives, and where each lands in the pipeline:
+
+- **Landform texture**: the cliff pattern, joints and scree size per rock class (client terrain shader, exists for three classes).
+- **Outcrops, cliffs, talus**: the ground and substrate steps (exist), with the resistance of each new rock class.
+- **Soil**: where no soil map exists, the parent rock sets texture and pH (granite: sandy, acid; limestone: clay, alkaline;
+  basalt: fertile clay; serpentine: thin, toxic).
+- **Water chemistry**: carbonate rock makes hard, clear water, travertine and springs; granite soft water; peat brown water.
+  A per-reach water colour and clarity in the water step.
+- **Species**: a species' niche names the rock and soil it needs (serpentine endemics, limestone calcicoles, granite-outcrop
+  specialists, black cotton soil for whistling thorn); the composition step reads it (3b).
+
 ### Ecosystem (today's flora, keyed globally)
 
 **The ecosystem map.** Every 10 m cell gets an ecosystem functional group (EFG) and a local setting:
@@ -157,6 +198,52 @@ park pages, Wikipedia, open literature) and photos. It writes only what the meas
 of signature features and species, each with evidence, and the views the judge should render. In the Hoh that is the
 clubmoss maples, nurse logs and colonnades. In the Serengeti it is kopjes, whistling-thorn and umbrella-thorn, and the
 migration. With thin evidence the list is short or empty, and the tile still stands on its measurement and card.
+
+### 3b. Ecosystems from the species' niches, on an IUCN base layer
+
+Aaron's point: the habitat rules should come from each species' researched niche ("grows on the shady side of
+mountains", "grows in riparian zones"), composed per tile from the species list. The two fit as two layers:
+
+- **The base layer (IUCN group, measured cover)** decides *structure*: how much of a cell is tree, shrub, herb, rock or
+  water and how tall (WorldCover, canopy height, lidar), and gives what cannot be measured or researched for every
+  species: the ground materials, moss and deadwood loads, phenology shape and the look. It also stands in when a tile's
+  species are unknown.
+- **The niche layer (species research)** decides *who* fills each cell. Every plant species gets a niche block on its trait
+  card: elevation band, aspect (pole-facing, equator-facing), slope, height above the nearest stream and wetness index
+  (riparian, floodplain, upland), rock class and soil (texture, pH, depth), light (canopy, gap, open), salt and tide, fire.
+  Sources: the literature the card already cites, and the species' own GBIF occurrences on and around the tile
+  sampled against the tile's rasters (an occurrence envelope: the 5-95 % range of each variable where it was recorded).
+- **Composition** per 30 m cell: each candidate species' suitability is the product of its niche terms, times its regional
+  abundance (GBIF records, vegetation plots), within the layer capacity the base layer measured (one canopy, an
+  understory under it). The Hoh's zonation (Sitka spruce in the valleys, silver fir on the slopes, mountain hemlock high,
+  alder on the bars) then comes out of the species' own niches instead of a regional table, and a new place needs no rule.
+- The probes ran a first step of this (`species_mix.research_rule`): outside the regional tables a community is filled from
+  the tile's researched species that have a record, weighted by records. Niches come next (phase 1).
+
+### 3c. The sea and waterways
+
+| part | measured | rules | invented (labelled) |
+|---|---|---|---|
+| rivers and streams | routing on the DEM (exists, global), OSM names, river width where open data allows, permanence from climate | banks, beds, pools and riffles (exist); width from discharge where unmeasured | |
+| lakes | OSM, JRC surface water by month, HydroLAKES | depth from shore slope where no bathymetry | lake-bed texture |
+| coast | OSM coastline, the DEM, WorldCover, lithology | cliff or beach from slope and rock; dunes behind sand; the intertidal zone from tide range and slope | |
+| tides and waves | a tide model where its licence allows redistribution, national predictions; ERA5 waves | tide rhythm on the tile's clock; surf height from wave height and exposure | |
+| sea floor | GEBCO (public domain), national and EMODnet bathymetry near shore | sediment from open seabed maps where they exist, else from depth, slope and the coast's rock | the scene under water: kelp, rock, sand ripples, coral, the small life |
+| habitats | kelp, coral and seagrass extents where open (CC BY) | the marine ecoregion's typical habitats by depth and light | their arrangement at metre scale |
+
+**The licence to invent under water.** The data is too thin to draw the sea floor at a diver's scale anywhere. Under water
+the pipeline may create, within rules:
+
+1. **Plausible for the place**: a scene is chosen from a library of sea-floor archetypes (kelp on rock, sand with seagrass,
+   coral bommies, mud with burrows, boulder fields) by what is measured or known: depth, light, temperature, the coast's
+   rock and sediment, the marine ecoregion. A tropical lagoon gets no kelp; Lofoten gets no coral.
+2. **Never over a measurement**: a mapped reef, kelp bed or bathymetry is drawn as measured; invention fills only between.
+3. **Labelled**: every invented layer carries `invented: true`, the rule and its seed in the manifest; the fidelity report
+   lists invented layers apart from measured ones (an "I", never a level); the client can show what is real.
+4. **Deterministic**: seeded by the tile and the place, so neighbours agree and a rebuild is the same.
+5. **Reviewed**: an invented layer is a hand-edit item until someone has looked at it.
+
+The same licence will serve the other places the data cannot reach (caves, the soil's life under a digging animal).
 
 ### Seasons (new as a stage; built from today's seasons and resources steps)
 
@@ -211,6 +298,23 @@ The world runs on the tile's own calendar, not four northern seasons:
 - **Balance by simulation.** Before players see a tile, an AI-only season runs headless: every species' needs met, kills
   per predator against the literature's rates, encounter rates, carcass turnover, hotspot crowding. A food web that
   starves its predators, or a hunt that never lands, fails the judge.
+
+### 3d. Requests: how a player's wish becomes a tile
+
+Players judging tiles is a later feature. For now players can **request a tile**:
+
+1. **Ask**: on the map, a player picks a 10 km cell and requests it. The request stores the cell id and the account, never
+   a point (the anchor rule: a location is snapped to its cell and discarded). Requests for the same cell add up.
+2. **Preflight** (automatic, minutes, no Claude): `build_tile --plan` plus an evidence check like the probes' table
+   (GBIF records by kind, open photos, lidar, sea share, which ecosystem cards and species records exist) and a cost
+   estimate from the cost model.
+3. **Queue**: ranked by requests, readiness and cost, with neighbours of built tiles ahead (shared cards and seams).
+   Aaron approves the next build, and any Meshy spend, from the queue.
+4. **Build**: one worker runs `build_tile --stage all` and the judge; the tile's fidelity report and captures attach to
+   the request.
+5. **Publish**: after review the tile goes live and the requesters are told.
+
+Later, paid requests: a payment funds the build and its models and moves the request up the queue.
 
 ### Judge (new)
 
@@ -272,6 +376,16 @@ it. Full table with URLs: `global-data-licences.md` in the shared notes folder.
   every CC BY-NC record; sPlotOpen plots and the Movebank default until confirmed.
 - **Avoid**: BIEN (CC BY-NC-ND) and the TPXO tide model (academic-only); FES if its terms allow redistribution.
 
+Geology and the sea (checked 2026-11-05; `geology-marine-licences.md` in the shared notes): client OK are GLiM's 0.5
+degree grid (CC BY 3.0), GLHYMPS (CC BY 4.0), OpenLandMap lithology (CC BY-SA 4.0), SoilGrids WRB classes (CC BY 4.0),
+GSOCmap, GEBCO and its TID grid (public domain), EMODnet seabed habitats and substrate (CC BY 4.0), the Dutkiewicz seafloor
+lithology grid (CC BY 3.0), Allen Coral Atlas per tile (CC BY 4.0), EOT20 tides (CC BY 4.0) and NOAA CO-OPS (CC0),
+FES2022's derived tide predictions (its raw grids may not be re-served), HydroLAKES, GRWL, SWORD, GLOBathy (CC0) and the
+OSM coastline (ODbL). **Macrostrat needs a per-source filter**: the site is CC BY 4.0, but 112 Arizona maps are CC BY-NC-SA
+and most world-scale sources record no licence. Pipeline-only: HWSD v2 (CC BY-NC-SA), MEOW and PPOW, full-resolution GLiM,
+Kelpwatch and NASA's GOT until confirmed. Avoid: the CGMW world GIS and UNEP-WCMC seagrass. OneGeology has no common
+licence (and has closed): go to open national surveys directly.
+
 ## 6. Cost
 
 Prices: `tools/token_meter.py`'s rates (Opus 5.5 $4 / $20 per million in / out; Haiku 5.5 $0.10 / $0.50). The Hoh, for
@@ -330,6 +444,32 @@ research and two judge-and-tune passes. About $60-100 of Claude.
 If Aaron wants a lower-risk first step before phase 1 exists, Lamar Valley, Yellowstone (`utm12n_558_4964`) runs on
 today's US sources and tests a steppe and its wolves, elk, bison and ravens (about 150 credits). Białowieża
 (`utm34n_687_5843`) is the data-rich European alternative: 243 k GBIF records and national lidar.
+
+## 7b. The probes ran (2026-11-05), and the revised phase 1
+
+The three probes went through today's primitives with only what they needed to run outside the US; the full report is
+`docs/probes-2026-11.md`. Terrain, water routing, land cover, canopy, geology, soil, species research and the step graph
+carried over. What failed is where a place's life is decided: which plants grow where (no niches; records taken for
+abundance; growth forms guessed from a temperate family list), what the ground is made of (the foothills' materials
+everywhere), which animals are drawn (a fixed North American cast by habitat: Danum got about 190 of them), and when the
+seasons are (northern quarters everywhere). Against Sentinel-2 the renders share 0.00-0.15 of the satellite's colour
+histogram, 7-10 L* lighter and half the chroma.
+
+Phase 1 is reordered by what the probes showed, before any new generator:
+
+| | piece | Claude (estimate) |
+|---|---|---|
+| 1 | composition by niche: niche blocks on plant cards (from sources and occurrence envelopes), abundance from cover, growth form from a trait source; the IUCN groups as the structural base layer | $60-90 |
+| 2 | animals from the tile's own list: archetype, stand-in body and behaviour numbers per researched species; the client spawns only those; calendars and needs from traits | $60-90 |
+| 3 | ground materials, grass and forbs from the tile; haze and colour calibrated against Sentinel-2 | $40-60 |
+| 4 | water permanence from climate and drainage area; the sea surface and shore | $30-50 |
+| 5 | seasons from the tile's climate in the pipeline and the client | $30-40 |
+| 6 | national lidar outside the US; GLO-30 lowered by the canopy elsewhere | $20-40 |
+| 7 | geology: Macrostrat licence filter, finer open national maps, depth to bedrock | $15-25 |
+| 8 | the satellite judge automated, with the fidelity report | $20-30 |
+| | **phase 1, revised** | **$275-425** |
+
+The probes and the code that let them run cost about $30 of Claude (on top of the $20 the design took), no Meshy credits.
 
 ## 8. What happens to the paragon
 

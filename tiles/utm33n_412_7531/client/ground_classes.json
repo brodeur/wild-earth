@@ -1,0 +1,228 @@
+{
+ "rock_classes": [
+  "greenstone_metavolcanic",
+  "serpentinite",
+  "slate_phyllite",
+  "schist",
+  "granitic",
+  "volcanic",
+  "sandstone_conglomerate",
+  "limestone_marble",
+  "alluvium",
+  "other"
+ ],
+ "resistance": {
+  "greenstone_metavolcanic": 0.9,
+  "granitic": 0.8,
+  "serpentinite": 0.8,
+  "schist": 0.6,
+  "slate_phyllite": 0.6,
+  "volcanic": 0.7,
+  "sandstone_conglomerate": 0.4,
+  "limestone_marble": 0.7,
+  "alluvium": 0.0,
+  "other": 0.4
+ },
+ "geology": {
+  "encoding": "client/geology.png R = unit index, G = rock class index (1-based into rock_classes)",
+  "units": {
+   "1": {
+    "name": "Igneous: intrusive; Intrusive: granitic",
+    "rock_class": "granitic",
+    "age": "Siderian to Orosirian",
+    "lithology": "charnockite, mangerite, norite, gabbro, anorthosite",
+    "fraction": 0.0896
+   },
+   "2": {
+    "name": "Igneous: intrusive; Intrusive: tonalitic-granodioritic",
+    "rock_class": "granitic",
+    "age": "Mesoarchean to Neoarchean",
+    "lithology": "tonalite, granodiorite, granite gneiss, enderbite, migmatite",
+    "fraction": 0.8235
+   },
+   "3": {
+    "name": "Sedimentary; Sedimentary: undivided",
+    "rock_class": "sandstone_conglomerate",
+    "age": "Triassic to Jurassic",
+    "lithology": "sandstone, siltstone, shale, limestone",
+    "fraction": 0.0734
+   },
+   "4": {
+    "name": "Supracrustal; Sedimentary and/or volcanic: undivided",
+    "rock_class": "schist",
+    "age": "Siderian to Orosirian",
+    "lithology": "banded gneiss, undivided supracrustal rocks",
+    "fraction": 0.0135
+   }
+  },
+  "source": "macrostrat"
+ },
+ "soils": {
+  "encoding": "client/soils.png R = map unit index, G = surface rock fragments %, B = depth to bedrock dm (255 none)",
+  "mapunits": {
+   "1": {
+    "musym": null,
+    "muname": "Water",
+    "component": null,
+    "texture_class": "water",
+    "texture_modifier": "none",
+    "surface_texture": null,
+    "rock_fragments_pct": 0.0,
+    "depth_to_bedrock_cm": null,
+    "bedrock_restriction": false,
+    "rock_outcrop_pct": null,
+    "rock_land": false,
+    "parent_material": null,
+    "taxorder": null,
+    "drainage": null,
+    "fraction": 0.4029
+   },
+   "2": {
+    "musym": null,
+    "muname": "gravelly sandy loam",
+    "component": null,
+    "texture_class": "sandy loam",
+    "texture_modifier": "gravelly",
+    "surface_texture": null,
+    "rock_fragments_pct": 17.2,
+    "depth_to_bedrock_cm": null,
+    "bedrock_restriction": false,
+    "rock_outcrop_pct": null,
+    "rock_land": false,
+    "parent_material": null,
+    "taxorder": null,
+    "drainage": null,
+    "fraction": 0.3506
+   },
+   "3": {
+    "musym": null,
+    "muname": "unknown",
+    "component": null,
+    "texture_class": "unknown",
+    "texture_modifier": "none",
+    "surface_texture": null,
+    "rock_fragments_pct": 0.0,
+    "depth_to_bedrock_cm": null,
+    "bedrock_restriction": false,
+    "rock_outcrop_pct": null,
+    "rock_land": false,
+    "parent_material": null,
+    "taxorder": null,
+    "drainage": null,
+    "fraction": 0.1739
+   },
+   "4": {
+    "musym": null,
+    "muname": "Water",
+    "component": null,
+    "texture_class": "water",
+    "texture_modifier": "gravelly",
+    "surface_texture": null,
+    "rock_fragments_pct": 17.3,
+    "depth_to_bedrock_cm": null,
+    "bedrock_restriction": false,
+    "rock_outcrop_pct": null,
+    "rock_land": false,
+    "parent_material": null,
+    "taxorder": null,
+    "drainage": null,
+    "fraction": 0.048
+   },
+   "5": {
+    "musym": null,
+    "muname": "gravelly rock outcrop",
+    "component": null,
+    "texture_class": "rock outcrop",
+    "texture_modifier": "gravelly",
+    "surface_texture": null,
+    "rock_fragments_pct": 17.4,
+    "depth_to_bedrock_cm": 0,
+    "bedrock_restriction": true,
+    "rock_outcrop_pct": null,
+    "rock_land": true,
+    "parent_material": null,
+    "taxorder": null,
+    "drainage": null,
+    "fraction": 0.0185
+   },
+   "6": {
+    "musym": null,
+    "muname": "rock outcrop",
+    "component": null,
+    "texture_class": "rock outcrop",
+    "texture_modifier": "none",
+    "surface_texture": null,
+    "rock_fragments_pct": 0.0,
+    "depth_to_bedrock_cm": 0,
+    "bedrock_restriction": true,
+    "rock_outcrop_pct": null,
+    "rock_land": true,
+    "parent_material": null,
+    "taxorder": null,
+    "drainage": null,
+    "fraction": 0.0037
+   },
+   "7": {
+    "musym": null,
+    "muname": "sandy loam",
+    "component": null,
+    "texture_class": "sandy loam",
+    "texture_modifier": "none",
+    "surface_texture": null,
+    "rock_fragments_pct": 14.8,
+    "depth_to_bedrock_cm": null,
+    "bedrock_restriction": false,
+    "rock_outcrop_pct": null,
+    "rock_land": false,
+    "parent_material": null,
+    "taxorder": null,
+    "drainage": null,
+    "fraction": 0.0024
+   }
+  }
+ },
+ "fractions": {
+  "rock_class": {
+   "schist": 0.0135,
+   "granitic": 0.9131,
+   "sandstone_conglomerate": 0.0734
+  },
+  "texture_class": {
+   "water": 0.4509,
+   "sandy loam": 0.3531,
+   "unknown": 0.1739,
+   "rock outcrop": 0.0221
+  },
+  "texture_modifier": {
+   "none": 0.5829,
+   "gravelly": 0.4171
+  },
+  "depth_to_bedrock": {
+   "0-25": 0.0221,
+   "25-50": 0.0,
+   "50-100": 0.0,
+   "100-150": 0.0,
+   ">=150": 0.0,
+   "none_or_unknown": 0.9779
+  }
+ },
+ "rock_fragments_pct": {
+  "min": 0.0,
+  "p10": 0.0,
+  "median": 0.0,
+  "p90": 18.0,
+  "max": 100.0,
+  "mean": 9.1
+ },
+ "depth_to_bedrock_cm": {
+  "min": 0.0,
+  "median": 0.0,
+  "max": 0.0
+ },
+ "outcrop": {
+  "formula": "outcrop = clip(resistance[rock_class] * shallowness * terrain * (1 - tree_cover_pct/100 * 0.5), 0, 1); shallowness = clip((150 - depth_to_bedrock_cm) / (150 - 25), 0, 1) (0 where depth unknown); terrain = min(slope_deg / 35, 1) + 0.5 * clip(TPI_m / 1.5, 0, 1), TPI = z - mean(z, 150 m window) on the DEM averaged to 30 m; tree cover from LANDFIRE EVC; water = 0",
+  "mean": 0.0161,
+  "fraction_above_0.5": 0.0176,
+  "fraction_above_0.25": 0.0207
+ }
+}

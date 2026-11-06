@@ -719,6 +719,30 @@ def named_rule(name: str, hab_code: int) -> dict | None:
             "note": "no rule: the species its name names (communities.LEXICON)", "fixed": [], "region": None}
 
 
+def research_rule(tile: Tile, name: str, hab_code: int) -> dict:
+    """World pipeline (2026-11-05): a community with no LANDFIRE rule, read from the tile's own plant research.
+    The trees and shrubs of species/plant_needs.json that have a library record, weighted by their GBIF records on the
+    tile (or their community cover), at the habitat class's densities. Composed per tile from the species list, not
+    from a regional table; a tile whose researched species have no record yet draws bare and says so."""
+    pn = tile.path("species/plant_needs.json")
+    trees, shrubs = {}, {}
+    if pn.exists():
+        for n in json.loads(pn.read_text()).get("needs", []):
+            sid, kind = n.get("id"), n.get("kind")
+            if not sid or not (LIBRARY / f"{sid}.json").exists():
+                continue
+            w = float(n.get("records") or 0) + 1000 * float(n.get("cover") or 0) or 1.0
+            if kind == "tree":
+                trees[sid] = w
+            elif kind == "shrub":
+                shrubs[sid] = w
+    td, sd = NAMED_DENSITY.get(CLASSES.get(hab_code), (0.8, 0.6))
+    return {"id": "research_" + (name or "none").split(" ")[0].replace(".", "_"), "trees": trees, "shrubs": shrubs,
+            "tree_density": td if trees else 0.0, "shrub_density": sd if shrubs else 0.0,
+            "note": "no regional rule: the tile's researched species with a record (plant_needs), weighted by records",
+            "fixed": [], "region": None}
+
+
 def _fallback(hab_code: int, regions=None) -> dict:
     """The habitat-class default: California's foothill mix, in California only. Elsewhere a placeholder the tile pool
     (species_mix) fills from the tile's own communities of the same habitat class, or leaves bare."""
@@ -839,11 +863,13 @@ def species_mix(tile: Tile) -> dict:
     for e_code, b_code, h_code in combos.tolist():
         e = evt_tab.get(str(e_code))
         if e and not _is_human(e):
-            idx = row_for("evt", e_code, e.get("name"), h_code)
+            idx = row_for("evt", e_code, e.get("name"), h_code,
+                          research_rule(tile, e.get("name"), h_code) if e.get("synthetic") else None)
         else:
             b = bps_tab.get(str(b_code))
             if b and b.get("habitat") not in (None, "human"):
-                idx = row_for("bps", b_code, b.get("name"), h_code)
+                idx = row_for("bps", b_code, b.get("name"), h_code,
+                              research_rule(tile, b.get("name"), h_code) if b.get("synthetic") else None)
             else:   # BpS human/unknown: grassland savanna, as habitat.py backfills
                 idx = row_for("habitat", h_code, None, h_code if h_code != 9 else 5)
         index[(evt == e_code) & (bps == b_code) & (hab == h_code)] = idx

@@ -195,11 +195,27 @@ def build_ground(tile: Tile, force=False) -> tuple[dict, list[str]]:
         layers.update(fetch_geology(tile, force))
     except Exception as e:  # noqa: BLE001
         errors.append(f"geology: {e}")
-    try:
-        from .fetch_soils import fetch_soils
-        layers.update(fetch_soils(tile, force))
-    except Exception as e:  # noqa: BLE001
-        errors.append(f"soils (SDA): {e}")
+    from . import regions, runlog
+    if regions.covers("usda_sda", tile):
+        try:
+            from .fetch_soils import fetch_soils
+            layers.update(fetch_soils(tile, force))
+        except Exception as e:  # noqa: BLE001
+            errors.append(f"soils (SDA): {e}")
+    else:   # outside SSURGO: SoilGrids 2.0 in the same encoding (pipeline/soils_global.py)
+        try:
+            from .soils_global import fetch_soils_global
+            wc = None
+            p = tile.path("vegetation/worldcover_30m.tif")
+            if p.exists():
+                import rasterio
+                with rasterio.open(p) as src:
+                    wc = src.read(1)
+            runlog.fallback("outside SSURGO: soils from SoilGrids 2.0 (250 m texture, fragments, pH; no depth to bedrock)",
+                            source="soilgrids")
+            layers.update(fetch_soils_global(tile, wc))
+        except Exception as e:  # noqa: BLE001
+            errors.append(f"soils (SoilGrids): {e}")
     if "client.geology" in layers and "client.soils" in layers:
         info, arrays = outcrop(tile)
         layers["client.outcrop"] = info

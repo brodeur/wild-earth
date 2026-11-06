@@ -1,0 +1,3475 @@
+{
+ "about": "how each animal moves, from its taxon and its body (pipeline/locomotion.py; docs/movement.md)",
+ "species": {
+  "corvus_corax": {
+   "code": "corvus_corax",
+   "class": "Aves",
+   "order": "Passeriformes",
+   "family": "Corvidae",
+   "body_plan": "bird",
+   "mass_kg": 1.2,
+   "length_m": 0.62,
+   "hip_m": 0.31,
+   "posture": "biped",
+   "gaits": {
+    "ground": "walk-hop",
+    "flight": "flap-glide"
+   },
+   "walk_mps": 1.23,
+   "trot_mps": 2.76,
+   "cruise_mps": 4.19,
+   "top_mps": 6.98,
+   "stride_hz": 4.08,
+   "stride_m": 0.68,
+   "sprint_s": 3.9,
+   "recover_s": 13.8,
+   "turn_rad_s": 3.19,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.083,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": true,
+   "catch": {
+    "move": "stab",
+    "name": "the bill stab",
+    "reach_m": 0.9,
+    "stabs": 3,
+    "stab_s": 0.2,
+    "feed": {
+     "pose": "stabs with pauses",
+     "burst_s": 0.75,
+     "hz": 4
+    }
+   }
+  },
+  "buteo_jamaicensis": {
+   "code": "buteo_jamaicensis",
+   "class": "Aves",
+   "order": "Accipitriformes",
+   "family": "Accipitridae",
+   "body_plan": "bird",
+   "mass_kg": 1.1,
+   "length_m": 0.55,
+   "hip_m": 0.275,
+   "posture": "biped",
+   "gaits": {
+    "flight": "soar"
+   },
+   "walk_mps": 1.16,
+   "trot_mps": 2.6,
+   "cruise_mps": 3.94,
+   "top_mps": 6.57,
+   "stride_hz": 4.13,
+   "stride_m": 0.63,
+   "sprint_s": 1.9,
+   "recover_s": 11.6,
+   "turn_rad_s": 3.38,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.078,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": true,
+   "catch": {
+    "move": "talon",
+    "name": "the talon strike and the mantle",
+    "reach_m": 1.4,
+    "brake_s": 0.4,
+    "over_m": 0.35,
+    "feed": {
+     "pose": "mantling: wings half spread and drooped round the kill, the tail fanned, head down",
+     "s": [
+      18,
+      35
+     ]
+    }
+   }
+  },
+  "odocoileus_hemionus": {
+   "code": "odocoileus_hemionus",
+   "class": "Mammalia",
+   "order": "Artiodactyla",
+   "family": "Cervidae",
+   "body_plan": "quadruped",
+   "mass_kg": 60.0,
+   "length_m": 1.5,
+   "hip_m": 0.95,
+   "posture": "unguligrade",
+   "gaits": {
+    "walk": "froude 0.5",
+    "trot": "froude 2.5",
+    "gallop": "beyond"
+   },
+   "walk_mps": 2.16,
+   "trot_mps": 4.83,
+   "cruise_mps": 9.19,
+   "top_mps": 15.32,
+   "stride_hz": 2.27,
+   "stride_m": 2.13,
+   "sprint_s": 10.5,
+   "recover_s": 36.6,
+   "turn_rad_s": 2.05,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.161,
+    "max_rad": 0.44,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "stot": true
+   },
+   "flier": false
+  },
+  "urocyon_cinereoargenteus": {
+   "code": "urocyon_cinereoargenteus",
+   "class": "Mammalia",
+   "order": "Carnivora",
+   "family": "Canidae",
+   "body_plan": "quadruped",
+   "mass_kg": 4.0,
+   "length_m": 0.6,
+   "hip_m": 0.37,
+   "posture": "digitigrade",
+   "gaits": {
+    "walk": "froude 0.5",
+    "trot": "froude 2.5",
+    "gallop": "beyond"
+   },
+   "walk_mps": 1.35,
+   "trot_mps": 3.01,
+   "cruise_mps": 7.38,
+   "top_mps": 11.35,
+   "stride_hz": 3.4,
+   "stride_m": 0.89,
+   "sprint_s": 4.7,
+   "recover_s": 16.4,
+   "turn_rad_s": 3.24,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.102,
+    "max_rad": 0.44,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {},
+   "flier": false,
+   "catch": {
+    "move": "pounce",
+    "name": "the mousing pounce",
+    "reach_m": 1.3,
+    "from_m": 2.4,
+    "fix_s": [
+     0.45,
+     0.8
+    ],
+    "duration_s": 0.55,
+    "height_m": 0.5,
+    "miss": {
+     "move": "paw strikes",
+     "hz": 4,
+     "s": 0.75
+    },
+    "feed": {
+     "pose": "the kill tossed in the jaws, then the nose down at it",
+     "toss_s": 0.3
+    }
+   }
+  },
+  "sciurus_griseus": {
+   "code": "sciurus_griseus",
+   "class": "Mammalia",
+   "order": "Rodentia",
+   "family": "Sciuridae",
+   "body_plan": "rodent",
+   "mass_kg": 0.8,
+   "length_m": 0.55,
+   "hip_m": 0.165,
+   "posture": "parasagittal",
+   "gaits": {
+    "walk": "froude 0.5",
+    "trot": "froude 2.5",
+    "gallop": "beyond",
+    "run": "bound"
+   },
+   "walk_mps": 0.9,
+   "trot_mps": 2.01,
+   "cruise_mps": 5.12,
+   "top_mps": 7.87,
+   "stride_hz": 4.33,
+   "stride_m": 0.46,
+   "sprint_s": 3.6,
+   "recover_s": 12.4,
+   "turn_rad_s": 3.38,
+   "turn": {
+    "on": 0.6,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     1.2,
+     4.0
+    ]
+   },
+   "lag": {
+    "s": 0.065,
+    "max_rad": 0.3,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "sit_up": true,
+    "tail_flag": true
+   },
+   "flier": false
+  },
+  "melanerpes_formicivorus": {
+   "code": "melanerpes_formicivorus",
+   "class": "Aves",
+   "order": "Piciformes",
+   "family": "Picidae",
+   "body_plan": "bird",
+   "mass_kg": 0.08,
+   "length_m": 0.21,
+   "hip_m": 0.105,
+   "posture": "biped",
+   "gaits": {
+    "flight": "undulate",
+    "ground": "hop"
+   },
+   "walk_mps": 0.72,
+   "trot_mps": 1.6,
+   "cruise_mps": 2.19,
+   "top_mps": 3.65,
+   "stride_hz": 6.12,
+   "stride_m": 0.26,
+   "sprint_s": 2.0,
+   "recover_s": 7.0,
+   "turn_rad_s": 5.47,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.048,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true,
+    "cling": true
+   },
+   "flier": true
+  },
+  "callipepla_californica": {
+   "code": "callipepla_californica",
+   "class": "Aves",
+   "order": "Galliformes",
+   "family": "Odontophoridae",
+   "body_plan": "bird",
+   "mass_kg": 0.18,
+   "length_m": 0.25,
+   "hip_m": 0.125,
+   "posture": "biped",
+   "gaits": {
+    "ground": "walk-run",
+    "flight": "flush"
+   },
+   "walk_mps": 0.78,
+   "trot_mps": 1.75,
+   "cruise_mps": 2.88,
+   "top_mps": 4.43,
+   "stride_hz": 5.42,
+   "stride_m": 0.32,
+   "sprint_s": 2.4,
+   "recover_s": 8.6,
+   "turn_rad_s": 5.02,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.053,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": false
+  },
+  "oreortyx_pictus": {
+   "code": "oreortyx_pictus",
+   "class": "Aves",
+   "order": "Galliformes",
+   "family": "Odontophoridae",
+   "body_plan": "bird",
+   "mass_kg": 0.23,
+   "length_m": 0.27,
+   "hip_m": 0.135,
+   "posture": "biped",
+   "gaits": {
+    "ground": "walk-run",
+    "flight": "flush"
+   },
+   "walk_mps": 0.81,
+   "trot_mps": 1.82,
+   "cruise_mps": 2.99,
+   "top_mps": 4.6,
+   "stride_hz": 5.22,
+   "stride_m": 0.35,
+   "sprint_s": 2.6,
+   "recover_s": 9.1,
+   "turn_rad_s": 4.83,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.055,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": false
+  },
+  "aphelocoma_californica": {
+   "code": "aphelocoma_californica",
+   "class": "Aves",
+   "order": "Passeriformes",
+   "family": "Corvidae",
+   "body_plan": "bird",
+   "mass_kg": 0.08,
+   "length_m": 0.29,
+   "hip_m": 0.145,
+   "posture": "biped",
+   "gaits": {
+    "ground": "walk-hop",
+    "flight": "flap-glide"
+   },
+   "walk_mps": 0.84,
+   "trot_mps": 1.89,
+   "cruise_mps": 2.19,
+   "top_mps": 3.65,
+   "stride_hz": 6.12,
+   "stride_m": 0.31,
+   "sprint_s": 2.0,
+   "recover_s": 7.0,
+   "turn_rad_s": 4.66,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.057,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": true,
+   "catch": {
+    "move": "stab",
+    "name": "the bill stab",
+    "reach_m": 0.6,
+    "stabs": 3,
+    "stab_s": 0.2,
+    "feed": {
+     "pose": "stabs with pauses",
+     "burst_s": 0.75,
+     "hz": 4
+    }
+   }
+  },
+  "cyanocitta_stelleri": {
+   "code": "cyanocitta_stelleri",
+   "class": "Aves",
+   "order": "Passeriformes",
+   "family": "Corvidae",
+   "body_plan": "bird",
+   "mass_kg": 0.1,
+   "length_m": 0.31,
+   "hip_m": 0.155,
+   "posture": "biped",
+   "gaits": {
+    "ground": "walk-hop",
+    "flight": "flap-glide"
+   },
+   "walk_mps": 0.87,
+   "trot_mps": 1.95,
+   "cruise_mps": 2.39,
+   "top_mps": 3.98,
+   "stride_hz": 5.92,
+   "stride_m": 0.33,
+   "sprint_s": 2.1,
+   "recover_s": 7.4,
+   "turn_rad_s": 4.51,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.059,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": true,
+   "catch": {
+    "move": "stab",
+    "name": "the bill stab",
+    "reach_m": 0.9,
+    "stabs": 3,
+    "stab_s": 0.2,
+    "feed": {
+     "pose": "stabs with pauses",
+     "burst_s": 0.75,
+     "hz": 4
+    }
+   }
+  },
+  "cathartes_aura": {
+   "code": "cathartes_aura",
+   "class": "Aves",
+   "order": "Cathartiformes",
+   "family": "Cathartidae",
+   "body_plan": "bird",
+   "mass_kg": 1.5,
+   "length_m": 0.7,
+   "hip_m": 0.35,
+   "posture": "biped",
+   "gaits": {
+    "flight": "soar-teeter"
+   },
+   "walk_mps": 1.31,
+   "trot_mps": 2.93,
+   "cruise_mps": 4.45,
+   "top_mps": 7.41,
+   "stride_hz": 3.94,
+   "stride_m": 0.74,
+   "sprint_s": 1.2,
+   "recover_s": 16.6,
+   "turn_rad_s": 3.0,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.088,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": true
+  },
+  "sylvilagus_bachmani": {
+   "code": "sylvilagus_bachmani",
+   "class": "Mammalia",
+   "order": "Lagomorpha",
+   "family": "Leporidae",
+   "body_plan": "rodent",
+   "mass_kg": 0.7,
+   "length_m": 0.33,
+   "hip_m": 0.17,
+   "posture": "parasagittal",
+   "gaits": {
+    "walk": "froude 0.5",
+    "trot": "froude 2.5",
+    "gallop": "beyond",
+    "run": "hop"
+   },
+   "walk_mps": 0.91,
+   "trot_mps": 2.04,
+   "cruise_mps": 4.55,
+   "top_mps": 7.59,
+   "stride_hz": 4.42,
+   "stride_m": 0.46,
+   "sprint_s": 3.4,
+   "recover_s": 12.0,
+   "turn_rad_s": 4.37,
+   "turn": {
+    "on": 0.6,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     1.2,
+     3.5
+    ]
+   },
+   "lag": {
+    "s": 0.05,
+    "max_rad": 0.3,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {},
+   "flier": false,
+   "hop": {
+    "set": "half-bound",
+    "shuffle_froude": 1.0,
+    "flex_rad": 0.28
+   }
+  },
+  "lepus_californicus": {
+   "code": "lepus_californicus",
+   "class": "Mammalia",
+   "order": "Lagomorpha",
+   "family": "Leporidae",
+   "body_plan": "rodent",
+   "mass_kg": 2.5,
+   "length_m": 0.55,
+   "hip_m": 0.29,
+   "posture": "parasagittal",
+   "gaits": {
+    "walk": "froude 0.5",
+    "trot": "froude 2.5",
+    "gallop": "beyond",
+    "run": "hop"
+   },
+   "walk_mps": 1.19,
+   "trot_mps": 2.67,
+   "cruise_mps": 6.21,
+   "top_mps": 10.35,
+   "stride_hz": 3.65,
+   "stride_m": 0.73,
+   "sprint_s": 4.7,
+   "recover_s": 16.6,
+   "turn_rad_s": 3.38,
+   "turn": {
+    "on": 0.6,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     1.2,
+     3.5
+    ]
+   },
+   "lag": {
+    "s": 0.065,
+    "max_rad": 0.3,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {},
+   "flier": false,
+   "hop": {
+    "set": "half-bound",
+    "shuffle_froude": 1.0,
+    "flex_rad": 0.28,
+    "observe": {
+     "every": [
+      4,
+      7
+     ],
+     "longer": 1.4,
+     "higher_hip": 0.6
+    }
+   }
+  },
+  "microtus_californicus": {
+   "code": "microtus_californicus",
+   "class": "Mammalia",
+   "order": "Rodentia",
+   "family": "Cricetidae",
+   "body_plan": "rodent",
+   "mass_kg": 0.05,
+   "length_m": 0.17,
+   "hip_m": 0.055,
+   "posture": "parasagittal",
+   "gaits": {
+    "walk": "froude 0.5",
+    "trot": "froude 2.5",
+    "gallop": "beyond",
+    "run": "bound"
+   },
+   "walk_mps": 0.52,
+   "trot_mps": 1.16,
+   "cruise_mps": 1.04,
+   "top_mps": 1.6,
+   "stride_hz": 6.57,
+   "stride_m": 0.18,
+   "sprint_s": 1.8,
+   "recover_s": 6.2,
+   "turn_rad_s": 6.08,
+   "turn": {
+    "on": 0.6,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     2.0,
+     5.0
+    ]
+   },
+   "lag": {
+    "s": 0.036,
+    "max_rad": 0.3,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "sit_up": true
+   },
+   "flier": false
+  },
+  "canis_latrans": {
+   "code": "canis_latrans",
+   "class": "Mammalia",
+   "order": "Carnivora",
+   "family": "Canidae",
+   "body_plan": "quadruped",
+   "mass_kg": 13.0,
+   "length_m": 0.85,
+   "hip_m": 0.58,
+   "posture": "digitigrade",
+   "gaits": {
+    "walk": "froude 0.5",
+    "trot": "froude 2.5",
+    "gallop": "beyond"
+   },
+   "walk_mps": 1.69,
+   "trot_mps": 3.77,
+   "cruise_mps": 8.83,
+   "top_mps": 13.58,
+   "stride_hz": 2.85,
+   "stride_m": 1.32,
+   "sprint_s": 6.7,
+   "recover_s": 23.4,
+   "turn_rad_s": 2.72,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.121,
+    "max_rad": 0.44,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {},
+   "flier": false,
+   "catch": {
+    "move": "pounce",
+    "name": "the mousing pounce",
+    "reach_m": 1.6,
+    "from_m": 2.4,
+    "fix_s": [
+     0.45,
+     0.8
+    ],
+    "duration_s": 0.55,
+    "height_m": 0.75,
+    "miss": {
+     "move": "paw strikes",
+     "hz": 4,
+     "s": 0.75
+    },
+    "feed": {
+     "pose": "the kill tossed in the jaws, then the nose down at it",
+     "toss_s": 0.3
+    }
+   }
+  },
+  "puma_concolor": {
+   "code": "puma_concolor",
+   "class": "Mammalia",
+   "order": "Carnivora",
+   "family": "Felidae",
+   "body_plan": "quadruped",
+   "mass_kg": 55.0,
+   "length_m": 1.07,
+   "hip_m": 0.72,
+   "posture": "digitigrade",
+   "gaits": {
+    "walk": "froude 0.5",
+    "trot": "froude 2.5",
+    "gallop": "beyond"
+   },
+   "walk_mps": 1.88,
+   "trot_mps": 4.2,
+   "cruise_mps": 6.87,
+   "top_mps": 15.27,
+   "stride_hz": 2.3,
+   "stride_m": 1.83,
+   "sprint_s": 3.1,
+   "recover_s": 25.6,
+   "turn_rad_s": 2.42,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.35,
+     0.55
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.136,
+    "max_rad": 0.44,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "stalk": true
+   },
+   "flier": false,
+   "stalk_mps": 0.45,
+   "catch": {
+    "move": "leap",
+    "name": "the leap and the neck bite",
+    "reach_m": 2.4,
+    "from_m": 3.2,
+    "duration_s": 0.45,
+    "height_m": 0.55,
+    "over_m": 0.7,
+    "miss": {
+     "move": "a twist away",
+     "s": 0.4
+    },
+    "feed": {
+     "pose": "crouched over the kill, head low",
+     "s": 45
+    }
+   }
+  },
+  "ursus_americanus": {
+   "code": "ursus_americanus",
+   "class": "Mammalia",
+   "order": "Carnivora",
+   "family": "Ursidae",
+   "body_plan": "quadruped",
+   "mass_kg": 120.0,
+   "length_m": 1.34,
+   "hip_m": 0.8,
+   "posture": "plantigrade",
+   "gaits": {
+    "walk": "amble",
+    "trot": "froude 2.5",
+    "gallop": "beyond",
+    "run": "bound"
+   },
+   "walk_mps": 1.98,
+   "trot_mps": 4.43,
+   "cruise_mps": 7.76,
+   "top_mps": 15.52,
+   "stride_hz": 2.04,
+   "stride_m": 2.17,
+   "sprint_s": 7.5,
+   "recover_s": 43.6,
+   "turn_rad_s": 2.17,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.152,
+    "max_rad": 0.44,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {},
+   "flier": false,
+   "catch": {
+    "move": "swat",
+    "name": "the swat",
+    "reach_m": 1.8,
+    "feed": {
+     "pose": "standing over it, head down",
+     "s": 60
+    }
+   }
+  },
+  "meleagris_gallopavo": {
+   "code": "meleagris_gallopavo",
+   "class": "Aves",
+   "order": "Galliformes",
+   "family": "Phasianidae",
+   "body_plan": "bird",
+   "mass_kg": 6.0,
+   "length_m": 1.1,
+   "hip_m": 0.55,
+   "posture": "biped",
+   "gaits": {
+    "ground": "walk-run",
+    "flight": "flush"
+   },
+   "walk_mps": 1.64,
+   "trot_mps": 3.67,
+   "cruise_mps": 6.04,
+   "top_mps": 9.29,
+   "stride_hz": 3.2,
+   "stride_m": 1.15,
+   "sprint_s": 5.9,
+   "recover_s": 20.6,
+   "turn_rad_s": 2.39,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.11,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": false
+  },
+  "otospermophilus_beecheyi": {
+   "code": "otospermophilus_beecheyi",
+   "class": "Mammalia",
+   "order": "Rodentia",
+   "family": "Sciuridae",
+   "body_plan": "rodent",
+   "mass_kg": 0.6,
+   "length_m": 0.26,
+   "hip_m": 0.106,
+   "posture": "parasagittal",
+   "gaits": {
+    "walk": "froude 0.5",
+    "trot": "froude 2.5",
+    "gallop": "beyond",
+    "run": "bound"
+   },
+   "walk_mps": 0.72,
+   "trot_mps": 1.61,
+   "cruise_mps": 4.72,
+   "top_mps": 7.26,
+   "stride_hz": 4.52,
+   "stride_m": 0.36,
+   "sprint_s": 3.3,
+   "recover_s": 11.6,
+   "turn_rad_s": 4.92,
+   "turn": {
+    "on": 0.6,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     1.2,
+     4.0
+    ]
+   },
+   "lag": {
+    "s": 0.045,
+    "max_rad": 0.3,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "sit_up": true,
+    "tail_flag": true
+   },
+   "flier": false
+  },
+  "sceloporus_occidentalis": {
+   "code": "sceloporus_occidentalis",
+   "class": "Reptilia",
+   "order": "Squamata",
+   "family": "Phrynosomatidae",
+   "body_plan": "reptile",
+   "mass_kg": 0.015,
+   "length_m": 0.18,
+   "hip_m": 0.025,
+   "posture": "sprawling",
+   "gaits": {
+    "walk": "sprawl",
+    "run": "sprawl-undulate"
+   },
+   "walk_mps": 0.35,
+   "trot_mps": 0.78,
+   "cruise_mps": 1.5,
+   "top_mps": 2.5,
+   "stride_hz": 7.87,
+   "stride_m": 0.1,
+   "sprint_s": 1.0,
+   "recover_s": 5.0,
+   "turn_rad_s": 5.91,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.019,
+    "max_rad": 0.2,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "turn_bend": true
+   },
+   "flier": false
+  },
+  "cervus_canadensis": {
+   "code": "cervus_canadensis",
+   "class": "Mammalia",
+   "order": "Artiodactyla",
+   "family": "Cervidae",
+   "body_plan": "quadruped",
+   "mass_kg": 400.0,
+   "length_m": 2.45,
+   "hip_m": 1.5,
+   "posture": "unguligrade",
+   "gaits": {
+    "walk": "froude 0.5",
+    "trot": "froude 2.5",
+    "gallop": "beyond"
+   },
+   "walk_mps": 2.71,
+   "trot_mps": 6.07,
+   "cruise_mps": 8.95,
+   "top_mps": 14.92,
+   "stride_hz": 1.71,
+   "stride_m": 3.56,
+   "sprint_s": 16.8,
+   "recover_s": 58.9,
+   "turn_rad_s": 1.6,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.206,
+    "max_rad": 0.44,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "stot": true
+   },
+   "flier": false
+  },
+  "tamiasciurus_douglasii": {
+   "code": "tamiasciurus_douglasii",
+   "class": "Mammalia",
+   "order": "Rodentia",
+   "family": "Sciuridae",
+   "body_plan": "rodent",
+   "mass_kg": 0.25,
+   "length_m": 0.29,
+   "hip_m": 0.06,
+   "posture": "parasagittal",
+   "gaits": {
+    "walk": "froude 0.5",
+    "trot": "froude 2.5",
+    "gallop": "beyond",
+    "run": "bound"
+   },
+   "walk_mps": 0.54,
+   "trot_mps": 1.21,
+   "cruise_mps": 3.6,
+   "top_mps": 5.54,
+   "stride_hz": 5.16,
+   "stride_m": 0.24,
+   "sprint_s": 2.7,
+   "recover_s": 9.3,
+   "turn_rad_s": 4.66,
+   "turn": {
+    "on": 0.6,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     1.2,
+     4.0
+    ]
+   },
+   "lag": {
+    "s": 0.047,
+    "max_rad": 0.3,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "sit_up": true,
+    "tail_flag": true
+   },
+   "flier": false
+  },
+  "troglodytes_pacificus": {
+   "code": "troglodytes_pacificus",
+   "class": "Aves",
+   "order": "Passeriformes",
+   "family": "Troglodytidae",
+   "body_plan": "bird",
+   "mass_kg": 0.009,
+   "length_m": 0.1,
+   "hip_m": 0.05,
+   "posture": "biped",
+   "gaits": {
+    "ground": "hop",
+    "flight": "flap-glide"
+   },
+   "walk_mps": 0.5,
+   "trot_mps": 1.11,
+   "cruise_mps": 0.81,
+   "top_mps": 1.35,
+   "stride_hz": 8.49,
+   "stride_m": 0.13,
+   "sprint_s": 1.2,
+   "recover_s": 5.0,
+   "turn_rad_s": 7.93,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.033,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": true
+  },
+  "perisoreus_canadensis": {
+   "code": "perisoreus_canadensis",
+   "class": "Aves",
+   "order": "Passeriformes",
+   "family": "Corvidae",
+   "body_plan": "bird",
+   "mass_kg": 0.07,
+   "length_m": 0.29,
+   "hip_m": 0.145,
+   "posture": "biped",
+   "gaits": {
+    "ground": "walk-hop",
+    "flight": "flap-glide"
+   },
+   "walk_mps": 0.84,
+   "trot_mps": 1.89,
+   "cruise_mps": 2.08,
+   "top_mps": 3.46,
+   "stride_hz": 6.24,
+   "stride_m": 0.3,
+   "sprint_s": 1.9,
+   "recover_s": 6.8,
+   "turn_rad_s": 4.66,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.057,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": true,
+   "catch": {
+    "move": "stab",
+    "name": "the bill stab",
+    "reach_m": 0.9,
+    "stabs": 3,
+    "stab_s": 0.2,
+    "feed": {
+     "pose": "stabs with pauses",
+     "burst_s": 0.75,
+     "hz": 4
+    }
+   }
+  },
+  "poecile_rufescens": {
+   "code": "poecile_rufescens",
+   "class": "Aves",
+   "order": "Passeriformes",
+   "family": "Paridae",
+   "body_plan": "bird",
+   "mass_kg": 0.01,
+   "length_m": 0.115,
+   "hip_m": 0.058,
+   "posture": "biped",
+   "gaits": {
+    "ground": "hop",
+    "flight": "flap-glide"
+   },
+   "walk_mps": 0.53,
+   "trot_mps": 1.19,
+   "cruise_mps": 0.86,
+   "top_mps": 1.43,
+   "stride_hz": 8.36,
+   "stride_m": 0.14,
+   "sprint_s": 1.2,
+   "recover_s": 5.0,
+   "turn_rad_s": 7.4,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.036,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": true
+  },
+  "strix_varia": {
+   "code": "strix_varia",
+   "class": "Aves",
+   "order": "Strigiformes",
+   "family": "Strigidae",
+   "body_plan": "bird",
+   "mass_kg": 0.7,
+   "length_m": 0.48,
+   "hip_m": 0.24,
+   "posture": "biped",
+   "gaits": {},
+   "walk_mps": 1.08,
+   "trot_mps": 2.43,
+   "cruise_mps": 3.68,
+   "top_mps": 6.14,
+   "stride_hz": 4.42,
+   "stride_m": 0.55,
+   "sprint_s": 3.4,
+   "recover_s": 12.0,
+   "turn_rad_s": 3.62,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.073,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": false
+  },
+  "megaceryle_alcyon": {
+   "code": "megaceryle_alcyon",
+   "class": "Aves",
+   "order": "Coraciiformes",
+   "family": "Alcedinidae",
+   "body_plan": "bird",
+   "mass_kg": 0.15,
+   "length_m": 0.32,
+   "hip_m": 0.16,
+   "posture": "biped",
+   "gaits": {},
+   "walk_mps": 0.89,
+   "trot_mps": 1.98,
+   "cruise_mps": 2.78,
+   "top_mps": 4.63,
+   "stride_hz": 5.57,
+   "stride_m": 0.36,
+   "sprint_s": 2.3,
+   "recover_s": 8.2,
+   "turn_rad_s": 4.43,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.06,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": false
+  },
+  "haliaeetus_leucocephalus": {
+   "code": "haliaeetus_leucocephalus",
+   "class": "Aves",
+   "order": "Accipitriformes",
+   "family": "Accipitridae",
+   "body_plan": "bird",
+   "mass_kg": 4.5,
+   "length_m": 0.85,
+   "hip_m": 0.425,
+   "posture": "biped",
+   "gaits": {
+    "flight": "soar"
+   },
+   "walk_mps": 1.44,
+   "trot_mps": 3.23,
+   "cruise_mps": 4.9,
+   "top_mps": 8.17,
+   "stride_hz": 3.34,
+   "stride_m": 0.97,
+   "sprint_s": 2.7,
+   "recover_s": 16.4,
+   "turn_rad_s": 2.72,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.097,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": true,
+   "catch": {
+    "move": "talon",
+    "name": "the talon strike and the mantle",
+    "reach_m": 1.4,
+    "brake_s": 0.4,
+    "over_m": 0.35,
+    "feed": {
+     "pose": "mantling: wings half spread and drooped round the kill, the tail fanned, head down",
+     "s": [
+      18,
+      35
+     ]
+    }
+   }
+  },
+  "corvus_brachyrhynchos": {
+   "code": "corvus_brachyrhynchos",
+   "class": "Aves",
+   "order": "Passeriformes",
+   "family": "Corvidae",
+   "body_plan": "bird",
+   "mass_kg": 0.45,
+   "length_m": 0.44,
+   "hip_m": 0.22,
+   "posture": "biped",
+   "gaits": {
+    "ground": "walk-hop",
+    "flight": "flap-glide"
+   },
+   "walk_mps": 1.04,
+   "trot_mps": 2.32,
+   "cruise_mps": 3.53,
+   "top_mps": 5.88,
+   "stride_hz": 4.72,
+   "stride_m": 0.49,
+   "sprint_s": 3.1,
+   "recover_s": 10.8,
+   "turn_rad_s": 3.78,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.07,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": true,
+   "catch": {
+    "move": "stab",
+    "name": "the bill stab",
+    "reach_m": 0.9,
+    "stabs": 3,
+    "stab_s": 0.2,
+    "feed": {
+     "pose": "stabs with pauses",
+     "burst_s": 0.75,
+     "hz": 4
+    }
+   }
+  },
+  "lynx_rufus": {
+   "code": "lynx_rufus",
+   "class": "Mammalia",
+   "order": "Carnivora",
+   "family": "Felidae",
+   "body_plan": "quadruped",
+   "mass_kg": 10.0,
+   "length_m": 0.68,
+   "hip_m": 0.5,
+   "posture": "digitigrade",
+   "gaits": {
+    "walk": "froude 0.5",
+    "trot": "froude 2.5",
+    "gallop": "beyond"
+   },
+   "walk_mps": 1.57,
+   "trot_mps": 3.5,
+   "cruise_mps": 5.91,
+   "top_mps": 13.13,
+   "stride_hz": 2.97,
+   "stride_m": 1.18,
+   "sprint_s": 2.0,
+   "recover_s": 16.7,
+   "turn_rad_s": 3.04,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.35,
+     0.55
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.108,
+    "max_rad": 0.44,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "stalk": true
+   },
+   "flier": false,
+   "catch": {
+    "move": "leap",
+    "name": "the leap and the neck bite",
+    "reach_m": 2.4,
+    "from_m": 3.2,
+    "duration_s": 0.45,
+    "height_m": 0.55,
+    "over_m": 0.7,
+    "miss": {
+     "move": "a twist away",
+     "s": 0.4
+    },
+    "feed": {
+     "pose": "crouched over the kill, head low",
+     "s": 45
+    }
+   }
+  },
+  "lontra_canadensis": {
+   "code": "lontra_canadensis",
+   "class": "Mammalia",
+   "order": "Carnivora",
+   "family": "Mustelidae",
+   "body_plan": "quadruped",
+   "mass_kg": 8.0,
+   "length_m": 1.1,
+   "hip_m": 0.28,
+   "posture": "digitigrade",
+   "gaits": {
+    "walk": "froude 0.5",
+    "trot": "froude 2.5",
+    "gallop": "beyond"
+   },
+   "walk_mps": 1.17,
+   "trot_mps": 2.62,
+   "cruise_mps": 7.89,
+   "top_mps": 12.73,
+   "stride_hz": 3.07,
+   "stride_m": 0.85,
+   "sprint_s": 6.3,
+   "recover_s": 22.1,
+   "turn_rad_s": 2.39,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.138,
+    "max_rad": 0.44,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {},
+   "flier": false
+  },
+  "lepus_americanus": {
+   "code": "lepus_americanus",
+   "class": "Mammalia",
+   "order": "Lagomorpha",
+   "family": "Leporidae",
+   "body_plan": "rodent",
+   "mass_kg": 1.4,
+   "length_m": 0.42,
+   "hip_m": 0.22,
+   "posture": "parasagittal",
+   "gaits": {
+    "walk": "froude 0.5",
+    "trot": "froude 2.5",
+    "gallop": "beyond",
+    "run": "hop"
+   },
+   "walk_mps": 1.04,
+   "trot_mps": 2.32,
+   "cruise_mps": 5.45,
+   "top_mps": 9.08,
+   "stride_hz": 3.98,
+   "stride_m": 0.58,
+   "sprint_s": 4.1,
+   "recover_s": 14.3,
+   "turn_rad_s": 3.87,
+   "turn": {
+    "on": 0.6,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     1.2,
+     3.5
+    ]
+   },
+   "lag": {
+    "s": 0.057,
+    "max_rad": 0.3,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {},
+   "flier": false,
+   "hop": {
+    "set": "half-bound",
+    "shuffle_froude": 1.0,
+    "flex_rad": 0.28,
+    "observe": {
+     "every": [
+      4,
+      7
+     ],
+     "longer": 1.4,
+     "higher_hip": 0.6
+    }
+   }
+  },
+  "tamias_townsendii": {
+   "code": "tamias_townsendii",
+   "class": "Mammalia",
+   "order": "Rodentia",
+   "family": "Sciuridae",
+   "body_plan": "rodent",
+   "mass_kg": 0.09,
+   "length_m": 0.25,
+   "hip_m": 0.057,
+   "posture": "parasagittal",
+   "gaits": {
+    "walk": "froude 0.5",
+    "trot": "froude 2.5",
+    "gallop": "beyond",
+    "run": "bound"
+   },
+   "walk_mps": 0.53,
+   "trot_mps": 1.18,
+   "cruise_mps": 2.49,
+   "top_mps": 3.83,
+   "stride_hz": 6.01,
+   "stride_m": 0.2,
+   "sprint_s": 2.1,
+   "recover_s": 7.2,
+   "turn_rad_s": 5.02,
+   "turn": {
+    "on": 0.6,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     1.2,
+     4.0
+    ]
+   },
+   "lag": {
+    "s": 0.044,
+    "max_rad": 0.3,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "sit_up": true,
+    "tail_flag": true
+   },
+   "flier": false
+  },
+  "peromyscus_maniculatus": {
+   "code": "peromyscus_maniculatus",
+   "class": "Mammalia",
+   "order": "Rodentia",
+   "family": "Cricetidae",
+   "body_plan": "rodent",
+   "mass_kg": 0.02,
+   "length_m": 0.18,
+   "hip_m": 0.035,
+   "posture": "parasagittal",
+   "gaits": {
+    "walk": "froude 0.5",
+    "trot": "froude 2.5",
+    "gallop": "beyond",
+    "run": "bound"
+   },
+   "walk_mps": 0.41,
+   "trot_mps": 0.93,
+   "cruise_mps": 1.3,
+   "top_mps": 2.0,
+   "stride_hz": 7.53,
+   "stride_m": 0.12,
+   "sprint_s": 1.4,
+   "recover_s": 5.0,
+   "turn_rad_s": 5.91,
+   "turn": {
+    "on": 0.6,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     2.0,
+     5.0
+    ]
+   },
+   "lag": {
+    "s": 0.037,
+    "max_rad": 0.3,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "sit_up": true
+   },
+   "flier": false
+  },
+  "plethodon_vehiculum": {
+   "code": "plethodon_vehiculum",
+   "class": "Amphibia",
+   "order": "Caudata",
+   "family": "Plethodontidae",
+   "body_plan": "amphibian",
+   "mass_kg": 0.002,
+   "length_m": 0.1,
+   "hip_m": 0.03,
+   "posture": null,
+   "gaits": {},
+   "walk_mps": 0.38,
+   "trot_mps": 0.86,
+   "cruise_mps": 0.59,
+   "top_mps": 0.99,
+   "stride_hz": 10.64,
+   "stride_m": 0.08,
+   "sprint_s": 1.0,
+   "recover_s": 5.0,
+   "turn_rad_s": 7.93,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.042,
+    "max_rad": 0.44,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {},
+   "flier": false
+  },
+  "ensatina_eschscholtzii": {
+   "code": "ensatina_eschscholtzii",
+   "class": "Amphibia",
+   "order": "Caudata",
+   "family": "Plethodontidae",
+   "body_plan": "amphibian",
+   "mass_kg": 0.005,
+   "length_m": 0.11,
+   "hip_m": 0.033,
+   "posture": null,
+   "gaits": {},
+   "walk_mps": 0.4,
+   "trot_mps": 0.9,
+   "cruise_mps": 0.59,
+   "top_mps": 0.99,
+   "stride_hz": 9.28,
+   "stride_m": 0.1,
+   "sprint_s": 1.0,
+   "recover_s": 5.0,
+   "turn_rad_s": 7.56,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.044,
+    "max_rad": 0.44,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {},
+   "flier": false
+  },
+  "ariolimax_columbianus": {
+   "code": "ariolimax_columbianus",
+   "class": "Gastropoda",
+   "order": "Stylommatophora",
+   "family": "Ariolimacidae",
+   "body_plan": "gastropod",
+   "mass_kg": 0.08,
+   "length_m": 0.18,
+   "hip_m": 0.022,
+   "posture": null,
+   "gaits": {},
+   "walk_mps": 0.33,
+   "trot_mps": 0.73,
+   "cruise_mps": 1.11,
+   "top_mps": 1.86,
+   "stride_hz": 6.12,
+   "stride_m": 0.12,
+   "sprint_s": 2.0,
+   "recover_s": 7.0,
+   "turn_rad_s": 5.91,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.056,
+    "max_rad": 0.44,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": null,
+   "flags": {},
+   "flier": false
+  },
+  "ardea_herodias": {
+   "code": "ardea_herodias",
+   "class": "Aves",
+   "order": "Pelecaniformes",
+   "family": "Ardeidae",
+   "body_plan": "bird",
+   "mass_kg": 2.3,
+   "length_m": 1.0,
+   "hip_m": 0.5,
+   "posture": "biped",
+   "gaits": {},
+   "walk_mps": 1.57,
+   "trot_mps": 3.5,
+   "cruise_mps": 5.32,
+   "top_mps": 8.86,
+   "stride_hz": 3.7,
+   "stride_m": 0.95,
+   "sprint_s": 4.6,
+   "recover_s": 16.2,
+   "turn_rad_s": 2.51,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.105,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": false
+  },
+  "mergus_merganser": {
+   "code": "mergus_merganser",
+   "class": "Aves",
+   "order": "Anseriformes",
+   "family": "Anatidae",
+   "body_plan": "bird",
+   "mass_kg": 1.4,
+   "length_m": 0.62,
+   "hip_m": 0.31,
+   "posture": "biped",
+   "gaits": {},
+   "walk_mps": 1.23,
+   "trot_mps": 2.76,
+   "cruise_mps": 4.19,
+   "top_mps": 6.98,
+   "stride_hz": 3.98,
+   "stride_m": 0.69,
+   "sprint_s": 4.1,
+   "recover_s": 14.3,
+   "turn_rad_s": 3.19,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.083,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": false
+  },
+  "turdus_migratorius": {
+   "code": "turdus_migratorius",
+   "class": "Aves",
+   "order": "Passeriformes",
+   "family": "Turdidae",
+   "body_plan": "bird",
+   "mass_kg": 0.077,
+   "length_m": 0.25,
+   "hip_m": 0.125,
+   "posture": "biped",
+   "gaits": {
+    "ground": "hop",
+    "flight": "flap-glide"
+   },
+   "walk_mps": 0.78,
+   "trot_mps": 1.75,
+   "cruise_mps": 2.16,
+   "top_mps": 3.6,
+   "stride_hz": 6.16,
+   "stride_m": 0.28,
+   "sprint_s": 2.0,
+   "recover_s": 6.9,
+   "turn_rad_s": 5.02,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.053,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": true
+  },
+  "sturnus_vulgaris": {
+   "code": "sturnus_vulgaris",
+   "class": "Aves",
+   "order": "Passeriformes",
+   "family": "Sturnidae",
+   "body_plan": "bird",
+   "mass_kg": 0.078,
+   "length_m": 0.21,
+   "hip_m": 0.105,
+   "posture": "biped",
+   "gaits": {
+    "ground": "hop",
+    "flight": "flap-glide"
+   },
+   "walk_mps": 0.72,
+   "trot_mps": 1.6,
+   "cruise_mps": 2.17,
+   "top_mps": 3.62,
+   "stride_hz": 6.14,
+   "stride_m": 0.26,
+   "sprint_s": 2.0,
+   "recover_s": 7.0,
+   "turn_rad_s": 5.47,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.048,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": true
+  },
+  "ixoreus_naevius": {
+   "code": "ixoreus_naevius",
+   "class": "Aves",
+   "order": "Passeriformes",
+   "family": "Turdidae",
+   "body_plan": "bird",
+   "mass_kg": 0.078,
+   "length_m": 0.24,
+   "hip_m": 0.12,
+   "posture": "biped",
+   "gaits": {
+    "ground": "hop",
+    "flight": "flap-glide"
+   },
+   "walk_mps": 0.77,
+   "trot_mps": 1.72,
+   "cruise_mps": 2.17,
+   "top_mps": 3.62,
+   "stride_hz": 6.14,
+   "stride_m": 0.28,
+   "sprint_s": 2.0,
+   "recover_s": 7.0,
+   "turn_rad_s": 5.12,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.052,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": true
+  },
+  "junco_hyemalis": {
+   "code": "junco_hyemalis",
+   "class": "Aves",
+   "order": "Passeriformes",
+   "family": "Passerellidae",
+   "body_plan": "bird",
+   "mass_kg": 0.02,
+   "length_m": 0.15,
+   "hip_m": 0.075,
+   "posture": "biped",
+   "gaits": {
+    "ground": "hop",
+    "flight": "flap-glide"
+   },
+   "walk_mps": 0.61,
+   "trot_mps": 1.36,
+   "cruise_mps": 1.2,
+   "top_mps": 2.0,
+   "stride_hz": 7.53,
+   "stride_m": 0.18,
+   "sprint_s": 1.4,
+   "recover_s": 5.0,
+   "turn_rad_s": 6.48,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.041,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": true
+  },
+  "regulus_satrapa": {
+   "code": "regulus_satrapa",
+   "class": "Aves",
+   "order": "Passeriformes",
+   "family": "Regulidae",
+   "body_plan": "bird",
+   "mass_kg": 0.006,
+   "length_m": 0.09,
+   "hip_m": 0.045,
+   "posture": "biped",
+   "gaits": {
+    "ground": "hop",
+    "flight": "flap-glide"
+   },
+   "walk_mps": 0.47,
+   "trot_mps": 1.05,
+   "cruise_mps": 0.66,
+   "top_mps": 1.09,
+   "stride_hz": 9.03,
+   "stride_m": 0.12,
+   "sprint_s": 1.0,
+   "recover_s": 5.0,
+   "turn_rad_s": 8.0,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.032,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": true
+  },
+  "empidonax_difficilis": {
+   "code": "empidonax_difficilis",
+   "class": "Aves",
+   "order": "Passeriformes",
+   "family": "Tyrannidae",
+   "body_plan": "bird",
+   "mass_kg": 0.011,
+   "length_m": 0.14,
+   "hip_m": 0.07,
+   "posture": "biped",
+   "gaits": {
+    "ground": "hop",
+    "flight": "flap-glide"
+   },
+   "walk_mps": 0.59,
+   "trot_mps": 1.31,
+   "cruise_mps": 0.9,
+   "top_mps": 1.5,
+   "stride_hz": 8.24,
+   "stride_m": 0.16,
+   "sprint_s": 1.2,
+   "recover_s": 5.0,
+   "turn_rad_s": 6.7,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.039,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": true
+  },
+  "megascops_kennicottii": {
+   "code": "megascops_kennicottii",
+   "class": "Aves",
+   "order": "Strigiformes",
+   "family": "Strigidae",
+   "body_plan": "bird",
+   "mass_kg": 0.15,
+   "length_m": 0.22,
+   "hip_m": 0.11,
+   "posture": "biped",
+   "gaits": {},
+   "walk_mps": 0.73,
+   "trot_mps": 1.64,
+   "cruise_mps": 2.49,
+   "top_mps": 4.16,
+   "stride_hz": 5.57,
+   "stride_m": 0.29,
+   "sprint_s": 2.3,
+   "recover_s": 8.2,
+   "turn_rad_s": 5.35,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.049,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": false
+  },
+  "aegolius_acadicus": {
+   "code": "aegolius_acadicus",
+   "class": "Aves",
+   "order": "Strigiformes",
+   "family": "Strigidae",
+   "body_plan": "bird",
+   "mass_kg": 0.08,
+   "length_m": 0.2,
+   "hip_m": 0.1,
+   "posture": "biped",
+   "gaits": {},
+   "walk_mps": 0.7,
+   "trot_mps": 1.57,
+   "cruise_mps": 2.19,
+   "top_mps": 3.65,
+   "stride_hz": 6.12,
+   "stride_m": 0.26,
+   "sprint_s": 2.0,
+   "recover_s": 7.0,
+   "turn_rad_s": 5.61,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.047,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": false
+  },
+  "leuconotopicus_villosus": {
+   "code": "leuconotopicus_villosus",
+   "class": "Aves",
+   "order": "Piciformes",
+   "family": "Picidae",
+   "body_plan": "bird",
+   "mass_kg": 0.07,
+   "length_m": 0.23,
+   "hip_m": 0.115,
+   "posture": "biped",
+   "gaits": {
+    "flight": "undulate",
+    "ground": "hop"
+   },
+   "walk_mps": 0.75,
+   "trot_mps": 1.68,
+   "cruise_mps": 2.08,
+   "top_mps": 3.46,
+   "stride_hz": 6.24,
+   "stride_m": 0.27,
+   "sprint_s": 1.9,
+   "recover_s": 6.8,
+   "turn_rad_s": 5.23,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.05,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true,
+    "cling": true
+   },
+   "flier": true
+  },
+  "pandion_haliaetus": {
+   "code": "pandion_haliaetus",
+   "class": "Aves",
+   "order": "Accipitriformes",
+   "family": "Pandionidae",
+   "body_plan": "bird",
+   "mass_kg": 1.6,
+   "length_m": 0.56,
+   "hip_m": 0.28,
+   "posture": "biped",
+   "gaits": {
+    "flight": "soar"
+   },
+   "walk_mps": 1.17,
+   "trot_mps": 2.62,
+   "cruise_mps": 3.98,
+   "top_mps": 6.63,
+   "stride_hz": 3.9,
+   "stride_m": 0.67,
+   "sprint_s": 2.1,
+   "recover_s": 12.7,
+   "turn_rad_s": 3.35,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.079,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": true
+  },
+  "accipiter_striatus": {
+   "code": "accipiter_striatus",
+   "class": "Aves",
+   "order": "Accipitriformes",
+   "family": "Accipitridae",
+   "body_plan": "bird",
+   "mass_kg": 0.14,
+   "length_m": 0.29,
+   "hip_m": 0.145,
+   "posture": "biped",
+   "gaits": {
+    "flight": "soar"
+   },
+   "walk_mps": 0.84,
+   "trot_mps": 1.89,
+   "cruise_mps": 2.71,
+   "top_mps": 4.52,
+   "stride_hz": 5.63,
+   "stride_m": 0.34,
+   "sprint_s": 1.2,
+   "recover_s": 6.9,
+   "turn_rad_s": 4.66,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.057,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": true,
+   "catch": {
+    "move": "talon",
+    "name": "the talon strike and the mantle",
+    "reach_m": 1.4,
+    "brake_s": 0.4,
+    "over_m": 0.35,
+    "feed": {
+     "pose": "mantling: wings half spread and drooped round the kill, the tail fanned, head down",
+     "s": [
+      18,
+      35
+     ]
+    }
+   }
+  },
+  "falco_columbarius": {
+   "code": "falco_columbarius",
+   "class": "Aves",
+   "order": "Falconiformes",
+   "family": "Falconidae",
+   "body_plan": "bird",
+   "mass_kg": 0.19,
+   "length_m": 0.27,
+   "hip_m": 0.135,
+   "posture": "biped",
+   "gaits": {},
+   "walk_mps": 0.81,
+   "trot_mps": 1.82,
+   "cruise_mps": 2.76,
+   "top_mps": 4.6,
+   "stride_hz": 5.38,
+   "stride_m": 0.34,
+   "sprint_s": 2.5,
+   "recover_s": 8.7,
+   "turn_rad_s": 4.83,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.055,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": false
+  },
+  "larus_glaucescens": {
+   "code": "larus_glaucescens",
+   "class": "Aves",
+   "order": "Charadriiformes",
+   "family": "Laridae",
+   "body_plan": "bird",
+   "mass_kg": 1.0,
+   "length_m": 0.63,
+   "hip_m": 0.315,
+   "posture": "biped",
+   "gaits": {},
+   "walk_mps": 1.24,
+   "trot_mps": 2.78,
+   "cruise_mps": 4.22,
+   "top_mps": 7.03,
+   "stride_hz": 4.19,
+   "stride_m": 0.66,
+   "sprint_s": 3.8,
+   "recover_s": 13.2,
+   "turn_rad_s": 3.16,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.084,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": false
+  },
+  "larus_californicus": {
+   "code": "larus_californicus",
+   "class": "Aves",
+   "order": "Charadriiformes",
+   "family": "Laridae",
+   "body_plan": "bird",
+   "mass_kg": 0.6,
+   "length_m": 0.53,
+   "hip_m": 0.265,
+   "posture": "biped",
+   "gaits": {},
+   "walk_mps": 1.14,
+   "trot_mps": 2.55,
+   "cruise_mps": 3.87,
+   "top_mps": 6.45,
+   "stride_hz": 4.52,
+   "stride_m": 0.56,
+   "sprint_s": 3.3,
+   "recover_s": 11.6,
+   "turn_rad_s": 3.45,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.077,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": false
+  },
+  "larus_occidentalis": {
+   "code": "larus_occidentalis",
+   "class": "Aves",
+   "order": "Charadriiformes",
+   "family": "Laridae",
+   "body_plan": "bird",
+   "mass_kg": 1.0,
+   "length_m": 0.6,
+   "hip_m": 0.3,
+   "posture": "biped",
+   "gaits": {},
+   "walk_mps": 1.21,
+   "trot_mps": 2.71,
+   "cruise_mps": 4.12,
+   "top_mps": 6.86,
+   "stride_hz": 4.19,
+   "stride_m": 0.65,
+   "sprint_s": 3.8,
+   "recover_s": 13.2,
+   "turn_rad_s": 3.24,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.082,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": false
+  },
+  "anas_platyrhynchos": {
+   "code": "anas_platyrhynchos",
+   "class": "Aves",
+   "order": "Anseriformes",
+   "family": "Anatidae",
+   "body_plan": "bird",
+   "mass_kg": 1.1,
+   "length_m": 0.58,
+   "hip_m": 0.29,
+   "posture": "biped",
+   "gaits": {},
+   "walk_mps": 1.19,
+   "trot_mps": 2.67,
+   "cruise_mps": 4.05,
+   "top_mps": 6.75,
+   "stride_hz": 4.13,
+   "stride_m": 0.65,
+   "sprint_s": 3.9,
+   "recover_s": 13.5,
+   "turn_rad_s": 3.29,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.08,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": false
+  },
+  "dendragapus_fuliginosus": {
+   "code": "dendragapus_fuliginosus",
+   "class": "Aves",
+   "order": "Galliformes",
+   "family": "Phasianidae",
+   "body_plan": "bird",
+   "mass_kg": 1.0,
+   "length_m": 0.5,
+   "hip_m": 0.25,
+   "posture": "biped",
+   "gaits": {
+    "ground": "walk-run",
+    "flight": "flush"
+   },
+   "walk_mps": 1.11,
+   "trot_mps": 2.48,
+   "cruise_mps": 4.07,
+   "top_mps": 6.26,
+   "stride_hz": 4.19,
+   "stride_m": 0.59,
+   "sprint_s": 3.8,
+   "recover_s": 13.2,
+   "turn_rad_s": 3.55,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.074,
+    "max_rad": 0.35,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "head_lead": true
+   },
+   "flier": false
+  },
+  "marmota_olympus": {
+   "code": "marmota_olympus",
+   "class": "Mammalia",
+   "order": "Rodentia",
+   "family": "Sciuridae",
+   "body_plan": "rodent",
+   "mass_kg": 6.0,
+   "length_m": 0.7,
+   "hip_m": 0.31,
+   "posture": "parasagittal",
+   "gaits": {
+    "walk": "froude 0.5",
+    "trot": "froude 2.5",
+    "gallop": "beyond",
+    "run": "bound"
+   },
+   "walk_mps": 1.23,
+   "trot_mps": 2.76,
+   "cruise_mps": 7.91,
+   "top_mps": 12.18,
+   "stride_hz": 3.2,
+   "stride_m": 0.86,
+   "sprint_s": 5.9,
+   "recover_s": 20.6,
+   "turn_rad_s": 3.0,
+   "turn": {
+    "on": 0.6,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     1.2,
+     4.0
+    ]
+   },
+   "lag": {
+    "s": 0.073,
+    "max_rad": 0.3,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "sit_up": true,
+    "tail_flag": true
+   },
+   "flier": false
+  },
+  "tamias_amoenus": {
+   "code": "tamias_amoenus",
+   "class": "Mammalia",
+   "order": "Rodentia",
+   "family": "Sciuridae",
+   "body_plan": "rodent",
+   "mass_kg": 0.05,
+   "length_m": 0.21,
+   "hip_m": 0.049,
+   "posture": "parasagittal",
+   "gaits": {
+    "walk": "froude 0.5",
+    "trot": "froude 2.5",
+    "gallop": "beyond",
+    "run": "bound"
+   },
+   "walk_mps": 0.49,
+   "trot_mps": 1.1,
+   "cruise_mps": 1.96,
+   "top_mps": 3.01,
+   "stride_hz": 6.57,
+   "stride_m": 0.17,
+   "sprint_s": 1.8,
+   "recover_s": 6.2,
+   "turn_rad_s": 5.47,
+   "turn": {
+    "on": 0.6,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     1.2,
+     4.0
+    ]
+   },
+   "lag": {
+    "s": 0.04,
+    "max_rad": 0.3,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {
+    "sit_up": true,
+    "tail_flag": true
+   },
+   "flier": false
+  },
+  "sorex_monticolus": {
+   "code": "sorex_monticolus",
+   "class": "Mammalia",
+   "order": "Eulipotyphla",
+   "family": "Soricidae",
+   "body_plan": "rodent",
+   "mass_kg": 0.006,
+   "length_m": 0.11,
+   "hip_m": 0.024,
+   "posture": "parasagittal",
+   "gaits": {
+    "walk": "froude 0.5",
+    "trot": "froude 2.5",
+    "gallop": "beyond"
+   },
+   "walk_mps": 0.34,
+   "trot_mps": 0.77,
+   "cruise_mps": 0.66,
+   "top_mps": 1.09,
+   "stride_hz": 9.03,
+   "stride_m": 0.08,
+   "sprint_s": 1.0,
+   "recover_s": 5.0,
+   "turn_rad_s": 7.56,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.044,
+    "max_rad": 0.44,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {},
+   "flier": false
+  },
+  "anaxyrus_boreas": {
+   "code": "anaxyrus_boreas",
+   "class": "Amphibia",
+   "order": "Anura",
+   "family": "Bufonidae",
+   "body_plan": "amphibian",
+   "mass_kg": 0.06,
+   "length_m": 0.1,
+   "hip_m": 0.04,
+   "posture": null,
+   "gaits": {},
+   "walk_mps": 0.44,
+   "trot_mps": 0.99,
+   "cruise_mps": 1.5,
+   "top_mps": 2.51,
+   "stride_hz": 6.39,
+   "stride_m": 0.16,
+   "sprint_s": 1.9,
+   "recover_s": 6.5,
+   "turn_rad_s": 7.93,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.042,
+    "max_rad": 0.44,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {},
+   "flier": false
+  },
+  "rana_cascadae": {
+   "code": "rana_cascadae",
+   "class": "Amphibia",
+   "order": "Anura",
+   "family": "Ranidae",
+   "body_plan": "amphibian",
+   "mass_kg": 0.025,
+   "length_m": 0.065,
+   "hip_m": 0.022,
+   "posture": null,
+   "gaits": {},
+   "walk_mps": 0.33,
+   "trot_mps": 0.73,
+   "cruise_mps": 1.11,
+   "top_mps": 1.86,
+   "stride_hz": 7.29,
+   "stride_m": 0.1,
+   "sprint_s": 1.5,
+   "recover_s": 5.2,
+   "turn_rad_s": 8.0,
+   "turn": {
+    "on": 0.45,
+    "off": 0.2,
+    "hold": 0.35,
+    "amp": [
+     0.4,
+     0.6
+    ],
+    "hz": [
+     0.7,
+     2.4
+    ]
+   },
+   "lag": {
+    "s": 0.034,
+    "max_rad": 0.44,
+    "v": [
+     0.3,
+     1.2
+    ]
+   },
+   "bend": {
+    "spine": 1.0,
+    "lead": 0.12,
+    "lead_max": 0.25
+   },
+   "flags": {},
+   "flier": false
+  }
+ }
+}

@@ -1,0 +1,138 @@
+{
+ "id": "acinonyx_jubatus",
+ "scientific": "Acinonyx jubatus",
+ "common": "cheetah",
+ "kind": "mammal",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Mammalia",
+  "order": "Carnivora",
+  "family": "Felidae",
+  "genus": "Acinonyx"
+ },
+ "body_plan": "quadruped",
+ "mass_kg": 46.7,
+ "size": {
+  "length_m": 1.296,
+  "shoulder_or_wingspan_m": 0.804
+ },
+ "diet": {
+  "role": [
+   "predator"
+  ],
+  "diet_tenths": {
+   "inv": 0.0,
+   "vend": 10.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 1.0,
+  "mass_kg": 46.7,
+  "activity": [
+   "diurnal"
+  ],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 539.3
+  },
+  "sound": {
+   "range_m": 755.0
+  },
+  "scent": {
+   "range_m": 1078.5
+  }
+ },
+ "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+ "locomotion": {
+  "code": "acinonyx_jubatus",
+  "class": "Mammalia",
+  "order": "Carnivora",
+  "family": "Felidae",
+  "body_plan": "quadruped",
+  "mass_kg": 46.7,
+  "length_m": 1.296,
+  "hip_m": 0.804,
+  "posture": "digitigrade",
+  "gaits": {
+   "walk": "froude 0.5",
+   "trot": "froude 2.5",
+   "gallop": "beyond"
+  },
+  "walk_mps": 1.99,
+  "trot_mps": 4.44,
+  "cruise_mps": 6.82,
+  "top_mps": 15.15,
+  "stride_hz": 2.35,
+  "stride_m": 1.89,
+  "sprint_s": 2.9,
+  "recover_s": 24.6,
+  "turn_rad_s": 2.2,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.35,
+    0.55
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.15,
+   "max_rad": 0.44,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "stalk": true
+  },
+  "flier": false,
+  "catch": {
+   "move": "leap",
+   "name": "the leap and the neck bite",
+   "reach_m": 2.4,
+   "from_m": 3.2,
+   "duration_s": 0.45,
+   "height_m": 0.55,
+   "over_m": 0.7,
+   "miss": {
+    "move": "a twist away",
+    "s": 0.4
+   },
+   "feed": {
+    "pose": "crouched over the kill, head low",
+    "s": 45
+   }
+  }
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T04:09:49Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

@@ -92,12 +92,21 @@ def fetch_naip(tile: Tile, force=False) -> dict:
                 "bands": ["red", "green", "blue"], "source": tags.get("WE_SOURCE", "pc_naip"),
                 "naip_year": int(tags["WE_NAIP_YEAR"]) if tags.get("WE_NAIP_YEAR") else None,
                 "cached": True}
-    try:
-        data, meta = _from_planetary_computer(tile, n)
-    except Exception as e:  # noqa: BLE001
+    from . import regions
+    if not regions.covers("usgs_naip", tile):   # world pipeline: a Sentinel-2 composite at 10 m, resampled to the grid
         from . import runlog
-        runlog.fallback(f"Planetary Computer NAIP failed ({str(e)[:160]}); USGS NAIP Plus chips", source="usgs_naip")
-        data, n, meta = _from_usgs(tile)
+        from .fetch_global import sentinel_true_colour
+        runlog.fallback("outside NAIP: Sentinel-2 L2A true-colour median composite at 10 m", source="sentinel2_l2a")
+        rgb10, meta = sentinel_true_colour(tile)
+        from PIL import Image as _I
+        data = np.stack([np.asarray(_I.fromarray(b).resize((n, n), _I.BILINEAR)) for b in rgb10])
+    else:
+        try:
+            data, meta = _from_planetary_computer(tile, n)
+        except Exception as e:  # noqa: BLE001
+            from . import runlog
+            runlog.fallback(f"Planetary Computer NAIP failed ({str(e)[:160]}); USGS NAIP Plus chips", source="usgs_naip")
+            data, n, meta = _from_usgs(tile)
     profile = {
         "driver": "GTiff", "dtype": "uint8", "count": 3, "width": n, "height": n,
         "crs": tile.crs, "transform": from_bounds(x0, y0, x1, y1, n, n),

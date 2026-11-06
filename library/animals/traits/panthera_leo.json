@@ -1,0 +1,140 @@
+{
+ "id": "panthera_leo",
+ "scientific": "Panthera leo",
+ "common": "lion",
+ "kind": "mammal",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Mammalia",
+  "order": "Carnivora",
+  "family": "Felidae",
+  "genus": "Panthera"
+ },
+ "body_plan": "quadruped",
+ "mass_kg": 161.4991,
+ "size": {
+  "length_m": 1.96,
+  "shoulder_or_wingspan_m": 1.215
+ },
+ "diet": {
+  "role": [
+   "predator",
+   "scavenger"
+  ],
+  "diet_tenths": {
+   "inv": 0.0,
+   "vend": 9.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 1.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.9,
+  "mass_kg": 161.4991,
+  "activity": [
+   "nocturnal",
+   "crepuscular"
+  ],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 691.2
+  },
+  "sound": {
+   "range_m": 967.6
+  },
+  "scent": {
+   "range_m": 1382.3
+  }
+ },
+ "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+ "locomotion": {
+  "code": "panthera_leo",
+  "class": "Mammalia",
+  "order": "Carnivora",
+  "family": "Felidae",
+  "body_plan": "quadruped",
+  "mass_kg": 161.4991,
+  "length_m": 1.96,
+  "hip_m": 1.215,
+  "posture": "digitigrade",
+  "gaits": {
+   "walk": "froude 0.5",
+   "trot": "froude 2.5",
+   "gallop": "beyond"
+  },
+  "walk_mps": 2.44,
+  "trot_mps": 5.46,
+  "cruise_mps": 6.97,
+  "top_mps": 15.48,
+  "stride_hz": 1.95,
+  "stride_m": 2.79,
+  "sprint_s": 4.0,
+  "recover_s": 33.5,
+  "turn_rad_s": 1.79,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.35,
+    0.55
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.184,
+   "max_rad": 0.44,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "stalk": true
+  },
+  "flier": false,
+  "catch": {
+   "move": "leap",
+   "name": "the leap and the neck bite",
+   "reach_m": 2.4,
+   "from_m": 3.2,
+   "duration_s": 0.45,
+   "height_m": 0.55,
+   "over_m": 0.7,
+   "miss": {
+    "move": "a twist away",
+    "s": 0.4
+   },
+   "feed": {
+    "pose": "crouched over the kill, head low",
+    "s": 45
+   }
+  }
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T04:09:49Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

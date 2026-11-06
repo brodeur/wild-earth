@@ -1,0 +1,232 @@
+{
+ "generated": "2026-11-06T04:16:15Z",
+ "tile_id": "utm50n_582_543",
+ "archetypes": {
+  "gather": "find the resource's hotspots, feed, keep an eye out: the predators listed hunt here; the competitors eat the same cells",
+  "drink": "reach water on a rhythm; in summer the few sources draw every species, and the ambush predators, together",
+  "hunt": "find the prey (perception), close unseen, strike; the prey's game is its dual: evade",
+  "evade": "notice the predator before it is close (perception, the watchers' alarms), reach cover, keep the group together",
+  "cache": "store the resource in its season, recover it later; the competitors pilfer; a family's granary is defended together",
+  "shelter": "be in cover, a cavity, a burrow or a roost before dusk, a storm or a predator; the weather sets the pressure",
+  "court": "find and win a mate in the season: display, call, chase",
+  "rear": "keep the young fed and alive through the season: an escort game, collective where the young travel with the group",
+  "disperse": "leave the natal range and find an empty territory: a map-scale game",
+  "watch": "the collective's sentinel: someone looks up while the rest feed; an alarm sends everyone to cover"
+ },
+ "requests": [],
+ "relations": {
+  "predation": [],
+  "competition": {},
+  "scavenge": [],
+  "alarm": [],
+  "forage": [],
+  "cover": []
+ },
+ "resources": {
+  "acorn_mast": {
+   "winter": {
+    "scarcity": 1.0,
+    "mean": 24.9,
+    "hotspots": 0
+   },
+   "spring": {
+    "scarcity": 1.0,
+    "mean": 5.0,
+    "hotspots": 0
+   },
+   "summer": {
+    "scarcity": 1.0,
+    "mean": 2.0,
+    "hotspots": 0
+   },
+   "fall": {
+    "scarcity": 0.002,
+    "mean": 49.9,
+    "hotspots": 12
+   }
+  },
+  "grass_forbs": {
+   "winter": {
+    "scarcity": 1.0,
+    "mean": 15.0,
+    "hotspots": 3
+   },
+   "spring": {
+    "scarcity": 1.0,
+    "mean": 24.9,
+    "hotspots": 3
+   },
+   "summer": {
+    "scarcity": 1.0,
+    "mean": 5.0,
+    "hotspots": 0
+   },
+   "fall": {
+    "scarcity": 1.0,
+    "mean": 7.0,
+    "hotspots": 0
+   }
+  },
+  "browse": {
+   "winter": {
+    "scarcity": 1.0,
+    "mean": 29.9,
+    "hotspots": 0
+   },
+   "spring": {
+    "scarcity": 0.002,
+    "mean": 49.9,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 1.0,
+    "mean": 34.9,
+    "hotspots": 0
+   },
+   "fall": {
+    "scarcity": 1.0,
+    "mean": 24.9,
+    "hotspots": 0
+   }
+  },
+  "cover": {
+   "winter": {
+    "scarcity": 0.002,
+    "mean": 73.0,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.002,
+    "mean": 86.4,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.002,
+    "mean": 86.4,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.002,
+    "mean": 86.4,
+    "hotspots": 12
+   }
+  },
+  "insects": {
+   "winter": {
+    "scarcity": 1.0,
+    "mean": 5.0,
+    "hotspots": 0
+   },
+   "spring": {
+    "scarcity": 0.002,
+    "mean": 49.9,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 1.0,
+    "mean": 39.9,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 1.0,
+    "mean": 20.0,
+    "hotspots": 0
+   }
+  },
+  "cavity": {
+   "winter": {
+    "scarcity": 0.112,
+    "mean": 66.3,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.112,
+    "mean": 66.3,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.112,
+    "mean": 66.3,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.112,
+    "mean": 66.3,
+    "hotspots": 12
+   }
+  },
+  "cliff_or_snag": {
+   "winter": {
+    "scarcity": 0.0,
+    "mean": 56.9,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.0,
+    "mean": 56.9,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.0,
+    "mean": 56.9,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.0,
+    "mean": 56.9,
+    "hotspots": 12
+   }
+  },
+  "burrow": {
+   "winter": {
+    "scarcity": 1.0,
+    "mean": 24.0,
+    "hotspots": 3
+   },
+   "spring": {
+    "scarcity": 1.0,
+    "mean": 29.9,
+    "hotspots": 3
+   },
+   "summer": {
+    "scarcity": 1.0,
+    "mean": 29.9,
+    "hotspots": 3
+   },
+   "fall": {
+    "scarcity": 1.0,
+    "mean": 29.9,
+    "hotspots": 3
+   }
+  },
+  "water": {
+   "winter": {
+    "scarcity": 0.968,
+    "mean": 6.2,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.968,
+    "mean": 6.2,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.968,
+    "mean": 6.2,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.968,
+    "mean": 6.2,
+    "hotspots": 12
+   }
+  }
+ },
+ "species": {},
+ "plays": {
+  "dig": {
+   "client": "client/src/dig.js",
+   "species": []
+  }
+ }
+}

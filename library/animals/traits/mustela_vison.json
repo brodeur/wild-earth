@@ -1,0 +1,117 @@
+{
+ "id": "mustela_vison",
+ "scientific": "Mustela vison",
+ "common": "mink",
+ "kind": "mammal",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Mammalia",
+  "order": "Carnivora",
+  "family": "Mustelidae",
+  "genus": "Mustela"
+ },
+ "body_plan": "quadruped",
+ "mass_kg": 0.5239,
+ "size": {
+  "length_m": 0.29,
+  "shoulder_or_wingspan_m": 0.18
+ },
+ "diet": {
+  "role": [
+   "predator"
+  ],
+  "diet_tenths": {
+   "inv": 0.6,
+   "vend": 8.4,
+   "vect": 0.4,
+   "vfish": 0.3,
+   "vunk": 0.2,
+   "scav": 0.0,
+   "fruit": 0.2,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.92,
+  "mass_kg": 0.5239,
+  "activity": [],
+  "source": "eltontraits (genus)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 219.7
+  },
+  "sound": {
+   "range_m": 307.6
+  },
+  "scent": {
+   "range_m": 439.4
+  }
+ },
+ "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+ "locomotion": {
+  "code": "mustela_vison",
+  "class": "Mammalia",
+  "order": "Carnivora",
+  "family": "Mustelidae",
+  "body_plan": "quadruped",
+  "mass_kg": 0.5239,
+  "length_m": 0.29,
+  "hip_m": 0.18,
+  "posture": "digitigrade",
+  "gaits": {
+   "walk": "froude 0.5",
+   "trot": "froude 2.5",
+   "gallop": "beyond"
+  },
+  "walk_mps": 0.94,
+  "trot_mps": 2.1,
+  "cruise_mps": 4.33,
+  "top_mps": 6.98,
+  "stride_hz": 4.62,
+  "stride_m": 0.46,
+  "sprint_s": 3.2,
+  "recover_s": 11.2,
+  "turn_rad_s": 4.66,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.071,
+   "max_rad": 0.44,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {},
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T04:05:07Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (genus)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

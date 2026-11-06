@@ -1,0 +1,4811 @@
+{
+ "generated": "2026-11-06T04:16:15Z",
+ "tile_id": "utm33n_412_7531",
+ "archetypes": {
+  "gather": "find the resource's hotspots, feed, keep an eye out: the predators listed hunt here; the competitors eat the same cells",
+  "drink": "reach water on a rhythm; in summer the few sources draw every species, and the ambush predators, together",
+  "hunt": "find the prey (perception), close unseen, strike; the prey's game is its dual: evade",
+  "evade": "notice the predator before it is close (perception, the watchers' alarms), reach cover, keep the group together",
+  "cache": "store the resource in its season, recover it later; the competitors pilfer; a family's granary is defended together",
+  "shelter": "be in cover, a cavity, a burrow or a roost before dusk, a storm or a predator; the weather sets the pressure",
+  "court": "find and win a mate in the season: display, call, chase",
+  "rear": "keep the young fed and alive through the season: an escort game, collective where the young travel with the group",
+  "disperse": "leave the natal range and find an empty territory: a map-scale game",
+  "watch": "the collective's sentinel: someone looks up while the rest feed; an alarm sends everyone to cover"
+ },
+ "requests": [
+  {
+   "kind": "resource",
+   "resource": "acorn_mast",
+   "needed_by": [
+    "corvus_corax"
+   ],
+   "raster": "client/res_acorn_mast.png",
+   "objects": [
+    {
+     "object": "acorns under and in the oaks",
+     "client": "acorns.js",
+     "status": "drawn"
+    }
+   ],
+   "status": "drawn"
+  },
+  {
+   "kind": "resource",
+   "resource": "grass_forbs",
+   "needed_by": [
+    "anas_platyrhynchos",
+    "sturnus_vulgaris"
+   ],
+   "raster": "client/res_grass_forbs.png",
+   "objects": [
+    {
+     "object": "grass blades and tufts, forbs",
+     "client": "grass.js",
+     "status": "drawn"
+    }
+   ],
+   "status": "drawn"
+  },
+  {
+   "kind": "resource",
+   "resource": "cover",
+   "needed_by": [
+    "anas_platyrhynchos",
+    "corvus_corax"
+   ],
+   "raster": "client/res_cover.png",
+   "objects": [
+    {
+     "object": "shrubs and trees to hide in",
+     "client": "shrubfield.js, vegetation.js",
+     "status": "drawn"
+    }
+   ],
+   "status": "drawn"
+  },
+  {
+   "kind": "resource",
+   "resource": "insects",
+   "needed_by": [
+    "corvus_corax",
+    "sturnus_vulgaris"
+   ],
+   "raster": "client/res_insects.png",
+   "objects": [
+    {
+     "object": "insects",
+     "client": null,
+     "status": "missing"
+    }
+   ],
+   "status": "missing"
+  },
+  {
+   "kind": "resource",
+   "resource": "cavity",
+   "needed_by": [
+    "mergus_merganser",
+    "sturnus_vulgaris"
+   ],
+   "raster": "client/res_cavity.png",
+   "objects": [
+    {
+     "object": "cavity trees and granaries",
+     "client": "acorns.js (granaries); no other cavities",
+     "status": "partial"
+    }
+   ],
+   "status": "partial"
+  },
+  {
+   "kind": "resource",
+   "resource": "cliff_or_snag",
+   "needed_by": [
+    "corvus_corax",
+    "falco_columbarius"
+   ],
+   "raster": "client/res_cliff_or_snag.png",
+   "objects": [
+    {
+     "object": "snags, cliffs and tall perch trees",
+     "client": "vegetation.js (old trees), rocks.js",
+     "status": "partial"
+    }
+   ],
+   "status": "partial"
+  },
+  {
+   "kind": "resource",
+   "resource": "water",
+   "needed_by": [
+    "anas_platyrhynchos",
+    "corvus_corax",
+    "falco_columbarius",
+    "mergus_merganser",
+    "sturnus_vulgaris"
+   ],
+   "raster": "client/res_water.png",
+   "objects": [
+    {
+     "object": "water surfaces: streams, ponds",
+     "client": "water.js",
+     "status": "drawn"
+    }
+   ],
+   "status": "drawn"
+  },
+  {
+   "kind": "prey",
+   "species": "sturnus_vulgaris",
+   "needed_by": [
+    "falco_columbarius"
+   ],
+   "status": "drawn"
+  }
+ ],
+ "relations": {
+  "predation": [
+   [
+    "falco_columbarius",
+    "sturnus_vulgaris"
+   ]
+  ],
+  "competition": {
+   "cliff_or_snag": {
+    "winter": [
+     "corvus_corax"
+    ],
+    "spring": [
+     "corvus_corax",
+     "falco_columbarius"
+    ]
+   },
+   "insects": {
+    "spring": [
+     "corvus_corax"
+    ],
+    "summer": [
+     "corvus_corax",
+     "sturnus_vulgaris"
+    ],
+    "winter": [
+     "sturnus_vulgaris"
+    ],
+    "fall": [
+     "sturnus_vulgaris"
+    ]
+   },
+   "cover": {
+    "summer": [
+     "corvus_corax"
+    ],
+    "spring": [
+     "anas_platyrhynchos"
+    ]
+   },
+   "acorn_mast": {
+    "fall": [
+     "corvus_corax"
+    ]
+   },
+   "water": {
+    "winter": [
+     "mergus_merganser"
+    ],
+    "summer": [
+     "mergus_merganser",
+     "anas_platyrhynchos"
+    ],
+    "fall": [
+     "mergus_merganser"
+    ]
+   },
+   "cavity": {
+    "spring": [
+     "mergus_merganser",
+     "sturnus_vulgaris"
+    ]
+   },
+   "grass_forbs": {
+    "summer": [
+     "sturnus_vulgaris",
+     "anas_platyrhynchos"
+    ],
+    "winter": [
+     "anas_platyrhynchos"
+    ],
+    "fall": [
+     "anas_platyrhynchos"
+    ]
+   }
+  },
+  "scavenge": [],
+  "alarm": [],
+  "forage": [
+   [
+    "sturnus_vulgaris",
+    "sorbus_aucuparia",
+    "berries",
+    "browse",
+    [
+     "summer",
+     "fall"
+    ]
+   ],
+   [
+    "corvus_corax",
+    "empetrum_nigrum",
+    "berries",
+    "browse",
+    [
+     "fall",
+     "winter"
+    ]
+   ]
+  ],
+  "cover": [
+   [
+    "corvus_corax",
+    "hesperocyparis_macrocarpa"
+   ],
+   [
+    "corvus_corax",
+    "populus_trichocarpa"
+   ]
+  ]
+ },
+ "resources": {
+  "acorn_mast": {
+   "winter": {
+    "scarcity": 1.0,
+    "mean": 1.4,
+    "hotspots": 0
+   },
+   "spring": {
+    "scarcity": 1.0,
+    "mean": 0.3,
+    "hotspots": 0
+   },
+   "summer": {
+    "scarcity": 1.0,
+    "mean": 0.1,
+    "hotspots": 0
+   },
+   "fall": {
+    "scarcity": 0.963,
+    "mean": 2.9,
+    "hotspots": 12
+   }
+  },
+  "grass_forbs": {
+   "winter": {
+    "scarcity": 0.87,
+    "mean": 9.4,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.87,
+    "mean": 15.7,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 1.0,
+    "mean": 3.1,
+    "hotspots": 0
+   },
+   "fall": {
+    "scarcity": 1.0,
+    "mean": 4.7,
+    "hotspots": 0
+   }
+  },
+  "browse": {
+   "winter": {
+    "scarcity": 1.0,
+    "mean": 16.2,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.703,
+    "mean": 26.9,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.74,
+    "mean": 18.9,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 1.0,
+    "mean": 13.5,
+    "hotspots": 12
+   }
+  },
+  "cover": {
+   "winter": {
+    "scarcity": 0.603,
+    "mean": 30.8,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.603,
+    "mean": 36.5,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.603,
+    "mean": 36.5,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.603,
+    "mean": 36.5,
+    "hotspots": 12
+   }
+  },
+  "insects": {
+   "winter": {
+    "scarcity": 1.0,
+    "mean": 2.8,
+    "hotspots": 0
+   },
+   "spring": {
+    "scarcity": 0.573,
+    "mean": 28.0,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.87,
+    "mean": 22.4,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 1.0,
+    "mean": 11.2,
+    "hotspots": 0
+   }
+  },
+  "cavity": {
+   "winter": {
+    "scarcity": 0.992,
+    "mean": 2.9,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.992,
+    "mean": 2.9,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.992,
+    "mean": 2.9,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.992,
+    "mean": 2.9,
+    "hotspots": 12
+   }
+  },
+  "cliff_or_snag": {
+   "winter": {
+    "scarcity": 0.523,
+    "mean": 38.3,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.523,
+    "mean": 38.3,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.523,
+    "mean": 38.3,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.523,
+    "mean": 38.3,
+    "hotspots": 12
+   }
+  },
+  "burrow": {
+   "winter": {
+    "scarcity": 0.87,
+    "mean": 21.6,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.61,
+    "mean": 27.0,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.61,
+    "mean": 27.0,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.61,
+    "mean": 27.0,
+    "hotspots": 12
+   }
+  },
+  "water": {
+   "winter": {
+    "scarcity": 0.788,
+    "mean": 31.4,
+    "hotspots": 12
+   },
+   "spring": {
+    "scarcity": 0.788,
+    "mean": 31.4,
+    "hotspots": 12
+   },
+   "summer": {
+    "scarcity": 0.788,
+    "mean": 31.4,
+    "hotspots": 12
+   },
+   "fall": {
+    "scarcity": 0.788,
+    "mean": 31.4,
+    "hotspots": 12
+   }
+  }
+ },
+ "species": {
+  "corvus_corax": {
+   "unit": "pair",
+   "predators": [],
+   "prey": [],
+   "games": [
+    {
+     "id": "corvus_corax:winter:forage",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "winter",
+     "unit": "pair",
+     "collective": true,
+     "goal": "follow predators to kills"
+    },
+    {
+     "id": "corvus_corax:winter:court:cliff_or_snag",
+     "archetype": "court",
+     "verb": "court",
+     "season": "winter",
+     "unit": "pair",
+     "collective": true,
+     "goal": "pair up before nesting",
+     "resource": "cliff_or_snag",
+     "requires": [
+      {
+       "object": "snags, cliffs and tall perch trees",
+       "client": "vegetation.js (old trees), rocks.js",
+       "status": "partial"
+      }
+     ],
+     "raster": "client/res_cliff_or_snag.png",
+     "hotspots": [
+      [
+       675.7,
+       9985.0,
+       90
+      ],
+      [
+       825.8,
+       9985.0,
+       90
+      ],
+      [
+       976.0,
+       9985.0,
+       90
+      ],
+      [
+       1126.1,
+       9985.0,
+       90
+      ],
+      [
+       1276.3,
+       9985.0,
+       90
+      ],
+      [
+       1426.4,
+       9985.0,
+       90
+      ],
+      [
+       1576.6,
+       9985.0,
+       90
+      ],
+      [
+       1786.8,
+       9985.0,
+       90
+      ],
+      [
+       2027.0,
+       9985.0,
+       90
+      ],
+      [
+       2177.2,
+       9985.0,
+       90
+      ],
+      [
+       2327.3,
+       9985.0,
+       90
+      ],
+      [
+       2747.7,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.523,
+     "competitors": []
+    },
+    {
+     "id": "corvus_corax:spring:nest:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "nest",
+     "season": "spring",
+     "unit": "pair",
+     "collective": true,
+     "goal": "build a stick nest",
+     "resource": "cliff_or_snag",
+     "requires": [
+      {
+       "object": "snags, cliffs and tall perch trees",
+       "client": "vegetation.js (old trees), rocks.js",
+       "status": "partial"
+      }
+     ],
+     "raster": "client/res_cliff_or_snag.png",
+     "hotspots": [
+      [
+       675.7,
+       9985.0,
+       90
+      ],
+      [
+       825.8,
+       9985.0,
+       90
+      ],
+      [
+       976.0,
+       9985.0,
+       90
+      ],
+      [
+       1126.1,
+       9985.0,
+       90
+      ],
+      [
+       1276.3,
+       9985.0,
+       90
+      ],
+      [
+       1426.4,
+       9985.0,
+       90
+      ],
+      [
+       1576.6,
+       9985.0,
+       90
+      ],
+      [
+       1786.8,
+       9985.0,
+       90
+      ],
+      [
+       2027.0,
+       9985.0,
+       90
+      ],
+      [
+       2177.2,
+       9985.0,
+       90
+      ],
+      [
+       2327.3,
+       9985.0,
+       90
+      ],
+      [
+       2747.7,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.523,
+     "competitors": [
+      "falco_columbarius"
+     ]
+    },
+    {
+     "id": "corvus_corax:spring:rear:insects",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "spring",
+     "unit": "pair",
+     "collective": true,
+     "goal": "feed nestlings",
+     "resource": "insects",
+     "requires": [
+      {
+       "object": "insects",
+       "client": null,
+       "status": "missing"
+      }
+     ],
+     "raster": "client/res_insects.png",
+     "hotspots": [
+      [
+       8153.2,
+       9564.6,
+       90
+      ],
+      [
+       8994.0,
+       9444.4,
+       90
+      ],
+      [
+       9504.5,
+       7012.0,
+       90
+      ],
+      [
+       2447.4,
+       6891.9,
+       90
+      ],
+      [
+       2537.5,
+       6771.8,
+       90
+      ],
+      [
+       2387.4,
+       6741.7,
+       90
+      ],
+      [
+       4459.5,
+       1126.1,
+       90
+      ],
+      [
+       795.8,
+       345.3,
+       90
+      ],
+      [
+       735.7,
+       195.2,
+       90
+      ],
+      [
+       1306.3,
+       9985.0,
+       70
+      ],
+      [
+       1456.5,
+       9985.0,
+       70
+      ],
+      [
+       1606.6,
+       9985.0,
+       70
+      ]
+     ],
+     "scarcity": 0.573,
+     "competitors": []
+    },
+    {
+     "id": "corvus_corax:summer:forage:insects",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "pair",
+     "collective": true,
+     "resource": "insects",
+     "requires": [
+      {
+       "object": "insects",
+       "client": null,
+       "status": "missing"
+      }
+     ],
+     "raster": "client/res_insects.png",
+     "hotspots": [
+      [
+       8153.2,
+       9564.6,
+       72
+      ],
+      [
+       8994.0,
+       9444.4,
+       72
+      ],
+      [
+       9504.5,
+       7012.0,
+       72
+      ],
+      [
+       2447.4,
+       6891.9,
+       72
+      ],
+      [
+       2537.5,
+       6771.8,
+       72
+      ],
+      [
+       2387.4,
+       6741.7,
+       72
+      ],
+      [
+       4459.5,
+       1126.1,
+       72
+      ],
+      [
+       795.8,
+       345.3,
+       72
+      ],
+      [
+       735.7,
+       195.2,
+       72
+      ],
+      [
+       1306.3,
+       9985.0,
+       56
+      ],
+      [
+       1456.5,
+       9985.0,
+       56
+      ],
+      [
+       1606.6,
+       9985.0,
+       56
+      ]
+     ],
+     "scarcity": 0.87,
+     "competitors": [
+      "sturnus_vulgaris"
+     ],
+     "plants": []
+    },
+    {
+     "id": "corvus_corax:summer:rear:cover",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "pair",
+     "collective": true,
+     "goal": "fledglings",
+     "resource": "cover",
+     "requires": [
+      {
+       "object": "shrubs and trees to hide in",
+       "client": "shrubfield.js, vegetation.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_cover.png",
+     "hotspots": [
+      [
+       525.5,
+       9985.0,
+       90
+      ],
+      [
+       675.7,
+       9985.0,
+       90
+      ],
+      [
+       945.9,
+       9985.0,
+       90
+      ],
+      [
+       1096.1,
+       9985.0,
+       90
+      ],
+      [
+       2327.3,
+       9985.0,
+       90
+      ],
+      [
+       2477.5,
+       9985.0,
+       90
+      ],
+      [
+       2627.6,
+       9985.0,
+       90
+      ],
+      [
+       2777.8,
+       9985.0,
+       90
+      ],
+      [
+       2927.9,
+       9985.0,
+       90
+      ],
+      [
+       3078.1,
+       9985.0,
+       90
+      ],
+      [
+       3228.2,
+       9985.0,
+       90
+      ],
+      [
+       3378.4,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.603,
+     "competitors": []
+    },
+    {
+     "id": "corvus_corax:fall:forage:acorn_mast",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "pair",
+     "collective": true,
+     "resource": "acorn_mast",
+     "requires": [
+      {
+       "object": "acorns under and in the oaks",
+       "client": "acorns.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_acorn_mast.png",
+     "hotspots": [
+      [
+       465.5,
+       9985.0,
+       50
+      ],
+      [
+       7522.5,
+       9985.0,
+       50
+      ],
+      [
+       8543.5,
+       9985.0,
+       50
+      ],
+      [
+       8693.7,
+       9985.0,
+       50
+      ],
+      [
+       8843.8,
+       9985.0,
+       50
+      ],
+      [
+       645.6,
+       9955.0,
+       50
+      ],
+      [
+       6261.3,
+       9955.0,
+       50
+      ],
+      [
+       4189.2,
+       9924.9,
+       50
+      ],
+      [
+       5090.1,
+       9924.9,
+       50
+      ],
+      [
+       7612.6,
+       9864.9,
+       50
+      ],
+      [
+       7462.5,
+       9834.8,
+       50
+      ],
+      [
+       8633.6,
+       9834.8,
+       50
+      ]
+     ],
+     "scarcity": 0.963,
+     "competitors": [],
+     "plants": []
+    },
+    {
+     "id": "corvus_corax:fall:cache:acorn_mast",
+     "archetype": "cache",
+     "verb": "cache",
+     "season": "fall",
+     "unit": "pair",
+     "collective": true,
+     "goal": "hide food from other ravens",
+     "resource": "acorn_mast",
+     "requires": [
+      {
+       "object": "acorns under and in the oaks",
+       "client": "acorns.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_acorn_mast.png",
+     "hotspots": [
+      [
+       465.5,
+       9985.0,
+       50
+      ],
+      [
+       7522.5,
+       9985.0,
+       50
+      ],
+      [
+       8543.5,
+       9985.0,
+       50
+      ],
+      [
+       8693.7,
+       9985.0,
+       50
+      ],
+      [
+       8843.8,
+       9985.0,
+       50
+      ],
+      [
+       645.6,
+       9955.0,
+       50
+      ],
+      [
+       6261.3,
+       9955.0,
+       50
+      ],
+      [
+       4189.2,
+       9924.9,
+       50
+      ],
+      [
+       5090.1,
+       9924.9,
+       50
+      ],
+      [
+       7612.6,
+       9864.9,
+       50
+      ],
+      [
+       7462.5,
+       9834.8,
+       50
+      ],
+      [
+       8633.6,
+       9834.8,
+       50
+      ]
+     ],
+     "scarcity": 0.963,
+     "competitors": []
+    },
+    {
+     "id": "corvus_corax:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "pair",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": [
+      "mergus_merganser",
+      "sturnus_vulgaris",
+      "falco_columbarius",
+      "anas_platyrhynchos"
+     ]
+    },
+    {
+     "id": "corvus_corax:winter:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "pair",
+     "collective": true,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       675.7,
+       9985.0,
+       90
+      ],
+      [
+       825.8,
+       9985.0,
+       90
+      ],
+      [
+       976.0,
+       9985.0,
+       90
+      ],
+      [
+       1126.1,
+       9985.0,
+       90
+      ],
+      [
+       1276.3,
+       9985.0,
+       90
+      ],
+      [
+       1426.4,
+       9985.0,
+       90
+      ],
+      [
+       1576.6,
+       9985.0,
+       90
+      ],
+      [
+       1786.8,
+       9985.0,
+       90
+      ],
+      [
+       2027.0,
+       9985.0,
+       90
+      ],
+      [
+       2177.2,
+       9985.0,
+       90
+      ],
+      [
+       2327.3,
+       9985.0,
+       90
+      ],
+      [
+       2747.7,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.523,
+     "competitors": [
+      "falco_columbarius"
+     ]
+    },
+    {
+     "id": "corvus_corax:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "pair",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": [
+      "mergus_merganser",
+      "sturnus_vulgaris",
+      "falco_columbarius",
+      "anas_platyrhynchos"
+     ]
+    },
+    {
+     "id": "corvus_corax:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "pair",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": [
+      "mergus_merganser",
+      "sturnus_vulgaris",
+      "falco_columbarius",
+      "anas_platyrhynchos"
+     ]
+    },
+    {
+     "id": "corvus_corax:summer:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "pair",
+     "collective": true,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       675.7,
+       9985.0,
+       90
+      ],
+      [
+       825.8,
+       9985.0,
+       90
+      ],
+      [
+       976.0,
+       9985.0,
+       90
+      ],
+      [
+       1126.1,
+       9985.0,
+       90
+      ],
+      [
+       1276.3,
+       9985.0,
+       90
+      ],
+      [
+       1426.4,
+       9985.0,
+       90
+      ],
+      [
+       1576.6,
+       9985.0,
+       90
+      ],
+      [
+       1786.8,
+       9985.0,
+       90
+      ],
+      [
+       2027.0,
+       9985.0,
+       90
+      ],
+      [
+       2177.2,
+       9985.0,
+       90
+      ],
+      [
+       2327.3,
+       9985.0,
+       90
+      ],
+      [
+       2747.7,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.523,
+     "competitors": [
+      "falco_columbarius"
+     ]
+    },
+    {
+     "id": "corvus_corax:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "pair",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": [
+      "mergus_merganser",
+      "sturnus_vulgaris",
+      "falco_columbarius",
+      "anas_platyrhynchos"
+     ]
+    },
+    {
+     "id": "corvus_corax:fall:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "pair",
+     "collective": true,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       675.7,
+       9985.0,
+       90
+      ],
+      [
+       825.8,
+       9985.0,
+       90
+      ],
+      [
+       976.0,
+       9985.0,
+       90
+      ],
+      [
+       1126.1,
+       9985.0,
+       90
+      ],
+      [
+       1276.3,
+       9985.0,
+       90
+      ],
+      [
+       1426.4,
+       9985.0,
+       90
+      ],
+      [
+       1576.6,
+       9985.0,
+       90
+      ],
+      [
+       1786.8,
+       9985.0,
+       90
+      ],
+      [
+       2027.0,
+       9985.0,
+       90
+      ],
+      [
+       2177.2,
+       9985.0,
+       90
+      ],
+      [
+       2327.3,
+       9985.0,
+       90
+      ],
+      [
+       2747.7,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.523,
+     "competitors": [
+      "falco_columbarius"
+     ]
+    }
+   ]
+  },
+  "mergus_merganser": {
+   "unit": "flock",
+   "predators": [],
+   "prey": [],
+   "games": [
+    {
+     "id": "mergus_merganser:winter:hunt:water",
+     "archetype": "hunt",
+     "verb": "hunt",
+     "season": "winter",
+     "unit": "flock",
+     "collective": true,
+     "goal": "flocks diving for fish in the river",
+     "resource": "water",
+     "requires": [
+      {
+       "object": "water surfaces: streams, ponds",
+       "client": "water.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_water.png",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": []
+    },
+    {
+     "id": "mergus_merganser:spring:nest:cavity",
+     "archetype": "shelter",
+     "verb": "nest",
+     "season": "spring",
+     "unit": "flock",
+     "collective": true,
+     "goal": "a tree cavity near the river",
+     "resource": "cavity",
+     "requires": [
+      {
+       "object": "cavity trees and granaries",
+       "client": "acorns.js (granaries); no other cavities",
+       "status": "partial"
+      }
+     ],
+     "raster": "client/res_cavity.png",
+     "hotspots": [
+      [
+       7552.6,
+       9985.0,
+       72
+      ],
+      [
+       8633.6,
+       9774.8,
+       72
+      ],
+      [
+       8933.9,
+       9714.7,
+       72
+      ],
+      [
+       9024.0,
+       9564.6,
+       72
+      ],
+      [
+       8033.0,
+       9474.5,
+       72
+      ],
+      [
+       9114.1,
+       9384.4,
+       72
+      ],
+      [
+       8123.1,
+       9354.4,
+       72
+      ],
+      [
+       9084.1,
+       9234.2,
+       72
+      ],
+      [
+       8123.1,
+       9204.2,
+       72
+      ],
+      [
+       9084.1,
+       9054.1,
+       72
+      ],
+      [
+       8033.0,
+       8994.0,
+       72
+      ],
+      [
+       8033.0,
+       8723.7,
+       72
+      ]
+     ],
+     "scarcity": 0.992,
+     "competitors": [
+      "sturnus_vulgaris"
+     ]
+    },
+    {
+     "id": "mergus_merganser:summer:rear:water",
+     "archetype": "rear",
+     "verb": "rear",
+     "season": "summer",
+     "unit": "flock",
+     "collective": true,
+     "goal": "the hen leads her brood downriver",
+     "resource": "water",
+     "requires": [
+      {
+       "object": "water surfaces: streams, ponds",
+       "client": "water.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_water.png",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": [
+      "anas_platyrhynchos"
+     ]
+    },
+    {
+     "id": "mergus_merganser:fall:hunt:water",
+     "archetype": "hunt",
+     "verb": "hunt",
+     "season": "fall",
+     "unit": "flock",
+     "collective": true,
+     "resource": "water",
+     "requires": [
+      {
+       "object": "water surfaces: streams, ponds",
+       "client": "water.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_water.png",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": []
+    },
+    {
+     "id": "mergus_merganser:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "flock",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": [
+      "corvus_corax",
+      "sturnus_vulgaris",
+      "falco_columbarius",
+      "anas_platyrhynchos"
+     ]
+    },
+    {
+     "id": "mergus_merganser:winter:shelter:cavity",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "flock",
+     "collective": true,
+     "resource": "cavity",
+     "hotspots": [
+      [
+       7552.6,
+       9985.0,
+       72
+      ],
+      [
+       8633.6,
+       9774.8,
+       72
+      ],
+      [
+       8933.9,
+       9714.7,
+       72
+      ],
+      [
+       9024.0,
+       9564.6,
+       72
+      ],
+      [
+       8033.0,
+       9474.5,
+       72
+      ],
+      [
+       9114.1,
+       9384.4,
+       72
+      ],
+      [
+       8123.1,
+       9354.4,
+       72
+      ],
+      [
+       9084.1,
+       9234.2,
+       72
+      ],
+      [
+       8123.1,
+       9204.2,
+       72
+      ],
+      [
+       9084.1,
+       9054.1,
+       72
+      ],
+      [
+       8033.0,
+       8994.0,
+       72
+      ],
+      [
+       8033.0,
+       8723.7,
+       72
+      ]
+     ],
+     "scarcity": 0.992,
+     "competitors": [
+      "sturnus_vulgaris"
+     ]
+    },
+    {
+     "id": "mergus_merganser:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "flock",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": [
+      "corvus_corax",
+      "sturnus_vulgaris",
+      "falco_columbarius",
+      "anas_platyrhynchos"
+     ]
+    },
+    {
+     "id": "mergus_merganser:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "flock",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": [
+      "corvus_corax",
+      "sturnus_vulgaris",
+      "falco_columbarius",
+      "anas_platyrhynchos"
+     ]
+    },
+    {
+     "id": "mergus_merganser:summer:shelter:cavity",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "flock",
+     "collective": true,
+     "resource": "cavity",
+     "hotspots": [
+      [
+       7552.6,
+       9985.0,
+       72
+      ],
+      [
+       8633.6,
+       9774.8,
+       72
+      ],
+      [
+       8933.9,
+       9714.7,
+       72
+      ],
+      [
+       9024.0,
+       9564.6,
+       72
+      ],
+      [
+       8033.0,
+       9474.5,
+       72
+      ],
+      [
+       9114.1,
+       9384.4,
+       72
+      ],
+      [
+       8123.1,
+       9354.4,
+       72
+      ],
+      [
+       9084.1,
+       9234.2,
+       72
+      ],
+      [
+       8123.1,
+       9204.2,
+       72
+      ],
+      [
+       9084.1,
+       9054.1,
+       72
+      ],
+      [
+       8033.0,
+       8994.0,
+       72
+      ],
+      [
+       8033.0,
+       8723.7,
+       72
+      ]
+     ],
+     "scarcity": 0.992,
+     "competitors": [
+      "sturnus_vulgaris"
+     ]
+    },
+    {
+     "id": "mergus_merganser:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "flock",
+     "collective": true,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": [
+      "corvus_corax",
+      "sturnus_vulgaris",
+      "falco_columbarius",
+      "anas_platyrhynchos"
+     ]
+    },
+    {
+     "id": "mergus_merganser:fall:shelter:cavity",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "flock",
+     "collective": true,
+     "resource": "cavity",
+     "hotspots": [
+      [
+       7552.6,
+       9985.0,
+       72
+      ],
+      [
+       8633.6,
+       9774.8,
+       72
+      ],
+      [
+       8933.9,
+       9714.7,
+       72
+      ],
+      [
+       9024.0,
+       9564.6,
+       72
+      ],
+      [
+       8033.0,
+       9474.5,
+       72
+      ],
+      [
+       9114.1,
+       9384.4,
+       72
+      ],
+      [
+       8123.1,
+       9354.4,
+       72
+      ],
+      [
+       9084.1,
+       9234.2,
+       72
+      ],
+      [
+       8123.1,
+       9204.2,
+       72
+      ],
+      [
+       9084.1,
+       9054.1,
+       72
+      ],
+      [
+       8033.0,
+       8994.0,
+       72
+      ],
+      [
+       8033.0,
+       8723.7,
+       72
+      ]
+     ],
+     "scarcity": 0.992,
+     "competitors": [
+      "sturnus_vulgaris"
+     ]
+    }
+   ]
+  },
+  "sturnus_vulgaris": {
+   "unit": "solitary",
+   "predators": [
+    "falco_columbarius"
+   ],
+   "prey": [],
+   "games": [
+    {
+     "id": "sturnus_vulgaris:winter:forage:insects",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "probing the grass in flocks",
+     "resource": "insects",
+     "requires": [
+      {
+       "object": "insects",
+       "client": null,
+       "status": "missing"
+      }
+     ],
+     "raster": "client/res_insects.png",
+     "hotspots": [],
+     "scarcity": 1.0,
+     "competitors": [],
+     "plants": [],
+     "predators": [
+      "falco_columbarius"
+     ]
+    },
+    {
+     "id": "sturnus_vulgaris:spring:nest:cavity",
+     "archetype": "shelter",
+     "verb": "nest",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "an old woodpecker hole",
+     "resource": "cavity",
+     "requires": [
+      {
+       "object": "cavity trees and granaries",
+       "client": "acorns.js (granaries); no other cavities",
+       "status": "partial"
+      }
+     ],
+     "raster": "client/res_cavity.png",
+     "hotspots": [
+      [
+       7552.6,
+       9985.0,
+       72
+      ],
+      [
+       8633.6,
+       9774.8,
+       72
+      ],
+      [
+       8933.9,
+       9714.7,
+       72
+      ],
+      [
+       9024.0,
+       9564.6,
+       72
+      ],
+      [
+       8033.0,
+       9474.5,
+       72
+      ],
+      [
+       9114.1,
+       9384.4,
+       72
+      ],
+      [
+       8123.1,
+       9354.4,
+       72
+      ],
+      [
+       9084.1,
+       9234.2,
+       72
+      ],
+      [
+       8123.1,
+       9204.2,
+       72
+      ],
+      [
+       9084.1,
+       9054.1,
+       72
+      ],
+      [
+       8033.0,
+       8994.0,
+       72
+      ],
+      [
+       8033.0,
+       8723.7,
+       72
+      ]
+     ],
+     "scarcity": 0.992,
+     "competitors": [
+      "mergus_merganser"
+     ],
+     "predators": [
+      "falco_columbarius"
+     ]
+    },
+    {
+     "id": "sturnus_vulgaris:summer:forage:insects",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "insects",
+     "requires": [
+      {
+       "object": "insects",
+       "client": null,
+       "status": "missing"
+      }
+     ],
+     "raster": "client/res_insects.png",
+     "hotspots": [
+      [
+       8153.2,
+       9564.6,
+       72
+      ],
+      [
+       8994.0,
+       9444.4,
+       72
+      ],
+      [
+       9504.5,
+       7012.0,
+       72
+      ],
+      [
+       2447.4,
+       6891.9,
+       72
+      ],
+      [
+       2537.5,
+       6771.8,
+       72
+      ],
+      [
+       2387.4,
+       6741.7,
+       72
+      ],
+      [
+       4459.5,
+       1126.1,
+       72
+      ],
+      [
+       795.8,
+       345.3,
+       72
+      ],
+      [
+       735.7,
+       195.2,
+       72
+      ],
+      [
+       1306.3,
+       9985.0,
+       56
+      ],
+      [
+       1456.5,
+       9985.0,
+       56
+      ],
+      [
+       1606.6,
+       9985.0,
+       56
+      ]
+     ],
+     "scarcity": 0.87,
+     "competitors": [
+      "corvus_corax"
+     ],
+     "plants": [],
+     "predators": [
+      "falco_columbarius"
+     ]
+    },
+    {
+     "id": "sturnus_vulgaris:summer:forage:grass_forbs",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "grass_forbs",
+     "requires": [
+      {
+       "object": "grass blades and tufts, forbs",
+       "client": "grass.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_grass_forbs.png",
+     "hotspots": [],
+     "scarcity": 1.0,
+     "competitors": [
+      "anas_platyrhynchos"
+     ],
+     "plants": [],
+     "predators": [
+      "falco_columbarius"
+     ]
+    },
+    {
+     "id": "sturnus_vulgaris:fall:forage:insects",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "insects",
+     "requires": [
+      {
+       "object": "insects",
+       "client": null,
+       "status": "missing"
+      }
+     ],
+     "raster": "client/res_insects.png",
+     "hotspots": [],
+     "scarcity": 1.0,
+     "competitors": [],
+     "plants": [],
+     "predators": [
+      "falco_columbarius"
+     ]
+    },
+    {
+     "id": "sturnus_vulgaris:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": [
+      "corvus_corax",
+      "mergus_merganser",
+      "falco_columbarius",
+      "anas_platyrhynchos"
+     ],
+     "predators": [
+      "falco_columbarius"
+     ]
+    },
+    {
+     "id": "sturnus_vulgaris:winter:shelter:cavity",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cavity",
+     "hotspots": [
+      [
+       7552.6,
+       9985.0,
+       72
+      ],
+      [
+       8633.6,
+       9774.8,
+       72
+      ],
+      [
+       8933.9,
+       9714.7,
+       72
+      ],
+      [
+       9024.0,
+       9564.6,
+       72
+      ],
+      [
+       8033.0,
+       9474.5,
+       72
+      ],
+      [
+       9114.1,
+       9384.4,
+       72
+      ],
+      [
+       8123.1,
+       9354.4,
+       72
+      ],
+      [
+       9084.1,
+       9234.2,
+       72
+      ],
+      [
+       8123.1,
+       9204.2,
+       72
+      ],
+      [
+       9084.1,
+       9054.1,
+       72
+      ],
+      [
+       8033.0,
+       8994.0,
+       72
+      ],
+      [
+       8033.0,
+       8723.7,
+       72
+      ]
+     ],
+     "scarcity": 0.992,
+     "competitors": [
+      "mergus_merganser"
+     ],
+     "predators": [
+      "falco_columbarius"
+     ]
+    },
+    {
+     "id": "sturnus_vulgaris:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": [
+      "corvus_corax",
+      "mergus_merganser",
+      "falco_columbarius",
+      "anas_platyrhynchos"
+     ],
+     "predators": [
+      "falco_columbarius"
+     ]
+    },
+    {
+     "id": "sturnus_vulgaris:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": [
+      "corvus_corax",
+      "mergus_merganser",
+      "falco_columbarius",
+      "anas_platyrhynchos"
+     ],
+     "predators": [
+      "falco_columbarius"
+     ]
+    },
+    {
+     "id": "sturnus_vulgaris:summer:shelter:cavity",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cavity",
+     "hotspots": [
+      [
+       7552.6,
+       9985.0,
+       72
+      ],
+      [
+       8633.6,
+       9774.8,
+       72
+      ],
+      [
+       8933.9,
+       9714.7,
+       72
+      ],
+      [
+       9024.0,
+       9564.6,
+       72
+      ],
+      [
+       8033.0,
+       9474.5,
+       72
+      ],
+      [
+       9114.1,
+       9384.4,
+       72
+      ],
+      [
+       8123.1,
+       9354.4,
+       72
+      ],
+      [
+       9084.1,
+       9234.2,
+       72
+      ],
+      [
+       8123.1,
+       9204.2,
+       72
+      ],
+      [
+       9084.1,
+       9054.1,
+       72
+      ],
+      [
+       8033.0,
+       8994.0,
+       72
+      ],
+      [
+       8033.0,
+       8723.7,
+       72
+      ]
+     ],
+     "scarcity": 0.992,
+     "competitors": [
+      "mergus_merganser"
+     ],
+     "predators": [
+      "falco_columbarius"
+     ]
+    },
+    {
+     "id": "sturnus_vulgaris:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": [
+      "corvus_corax",
+      "mergus_merganser",
+      "falco_columbarius",
+      "anas_platyrhynchos"
+     ],
+     "predators": [
+      "falco_columbarius"
+     ]
+    },
+    {
+     "id": "sturnus_vulgaris:fall:shelter:cavity",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cavity",
+     "hotspots": [
+      [
+       7552.6,
+       9985.0,
+       72
+      ],
+      [
+       8633.6,
+       9774.8,
+       72
+      ],
+      [
+       8933.9,
+       9714.7,
+       72
+      ],
+      [
+       9024.0,
+       9564.6,
+       72
+      ],
+      [
+       8033.0,
+       9474.5,
+       72
+      ],
+      [
+       9114.1,
+       9384.4,
+       72
+      ],
+      [
+       8123.1,
+       9354.4,
+       72
+      ],
+      [
+       9084.1,
+       9234.2,
+       72
+      ],
+      [
+       8123.1,
+       9204.2,
+       72
+      ],
+      [
+       9084.1,
+       9054.1,
+       72
+      ],
+      [
+       8033.0,
+       8994.0,
+       72
+      ],
+      [
+       8033.0,
+       8723.7,
+       72
+      ]
+     ],
+     "scarcity": 0.992,
+     "competitors": [
+      "mergus_merganser"
+     ],
+     "predators": [
+      "falco_columbarius"
+     ]
+    },
+    {
+     "id": "sturnus_vulgaris:falco_columbarius:evade",
+     "archetype": "evade",
+     "verb": "evade",
+     "season": "all",
+     "unit": "solitary",
+     "collective": false,
+     "predator": "falco_columbarius",
+     "notice_m": 300,
+     "watchers": []
+    }
+   ]
+  },
+  "falco_columbarius": {
+   "unit": "solitary",
+   "predators": [],
+   "prey": [
+    "sturnus_vulgaris"
+   ],
+   "games": [
+    {
+     "id": "falco_columbarius:winter:hunt",
+     "archetype": "hunt",
+     "verb": "hunt",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "chases small birds in fast low flight"
+    },
+    {
+     "id": "falco_columbarius:spring:nest:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "nest",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "an old crow nest",
+     "resource": "cliff_or_snag",
+     "requires": [
+      {
+       "object": "snags, cliffs and tall perch trees",
+       "client": "vegetation.js (old trees), rocks.js",
+       "status": "partial"
+      }
+     ],
+     "raster": "client/res_cliff_or_snag.png",
+     "hotspots": [
+      [
+       675.7,
+       9985.0,
+       90
+      ],
+      [
+       825.8,
+       9985.0,
+       90
+      ],
+      [
+       976.0,
+       9985.0,
+       90
+      ],
+      [
+       1126.1,
+       9985.0,
+       90
+      ],
+      [
+       1276.3,
+       9985.0,
+       90
+      ],
+      [
+       1426.4,
+       9985.0,
+       90
+      ],
+      [
+       1576.6,
+       9985.0,
+       90
+      ],
+      [
+       1786.8,
+       9985.0,
+       90
+      ],
+      [
+       2027.0,
+       9985.0,
+       90
+      ],
+      [
+       2177.2,
+       9985.0,
+       90
+      ],
+      [
+       2327.3,
+       9985.0,
+       90
+      ],
+      [
+       2747.7,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.523,
+     "competitors": [
+      "corvus_corax"
+     ]
+    },
+    {
+     "id": "falco_columbarius:summer:hunt",
+     "archetype": "hunt",
+     "verb": "hunt",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "prey": [
+      "sturnus_vulgaris"
+     ],
+     "noticed_at_m": {
+      "sturnus_vulgaris": 300
+     }
+    },
+    {
+     "id": "falco_columbarius:fall:hunt",
+     "archetype": "hunt",
+     "verb": "hunt",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false
+    },
+    {
+     "id": "falco_columbarius:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": [
+      "corvus_corax",
+      "mergus_merganser",
+      "sturnus_vulgaris",
+      "anas_platyrhynchos"
+     ]
+    },
+    {
+     "id": "falco_columbarius:winter:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       675.7,
+       9985.0,
+       90
+      ],
+      [
+       825.8,
+       9985.0,
+       90
+      ],
+      [
+       976.0,
+       9985.0,
+       90
+      ],
+      [
+       1126.1,
+       9985.0,
+       90
+      ],
+      [
+       1276.3,
+       9985.0,
+       90
+      ],
+      [
+       1426.4,
+       9985.0,
+       90
+      ],
+      [
+       1576.6,
+       9985.0,
+       90
+      ],
+      [
+       1786.8,
+       9985.0,
+       90
+      ],
+      [
+       2027.0,
+       9985.0,
+       90
+      ],
+      [
+       2177.2,
+       9985.0,
+       90
+      ],
+      [
+       2327.3,
+       9985.0,
+       90
+      ],
+      [
+       2747.7,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.523,
+     "competitors": [
+      "corvus_corax"
+     ]
+    },
+    {
+     "id": "falco_columbarius:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": [
+      "corvus_corax",
+      "mergus_merganser",
+      "sturnus_vulgaris",
+      "anas_platyrhynchos"
+     ]
+    },
+    {
+     "id": "falco_columbarius:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": [
+      "corvus_corax",
+      "mergus_merganser",
+      "sturnus_vulgaris",
+      "anas_platyrhynchos"
+     ]
+    },
+    {
+     "id": "falco_columbarius:summer:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       675.7,
+       9985.0,
+       90
+      ],
+      [
+       825.8,
+       9985.0,
+       90
+      ],
+      [
+       976.0,
+       9985.0,
+       90
+      ],
+      [
+       1126.1,
+       9985.0,
+       90
+      ],
+      [
+       1276.3,
+       9985.0,
+       90
+      ],
+      [
+       1426.4,
+       9985.0,
+       90
+      ],
+      [
+       1576.6,
+       9985.0,
+       90
+      ],
+      [
+       1786.8,
+       9985.0,
+       90
+      ],
+      [
+       2027.0,
+       9985.0,
+       90
+      ],
+      [
+       2177.2,
+       9985.0,
+       90
+      ],
+      [
+       2327.3,
+       9985.0,
+       90
+      ],
+      [
+       2747.7,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.523,
+     "competitors": [
+      "corvus_corax"
+     ]
+    },
+    {
+     "id": "falco_columbarius:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "often",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": [
+      "corvus_corax",
+      "mergus_merganser",
+      "sturnus_vulgaris",
+      "anas_platyrhynchos"
+     ]
+    },
+    {
+     "id": "falco_columbarius:fall:shelter:cliff_or_snag",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cliff_or_snag",
+     "hotspots": [
+      [
+       675.7,
+       9985.0,
+       90
+      ],
+      [
+       825.8,
+       9985.0,
+       90
+      ],
+      [
+       976.0,
+       9985.0,
+       90
+      ],
+      [
+       1126.1,
+       9985.0,
+       90
+      ],
+      [
+       1276.3,
+       9985.0,
+       90
+      ],
+      [
+       1426.4,
+       9985.0,
+       90
+      ],
+      [
+       1576.6,
+       9985.0,
+       90
+      ],
+      [
+       1786.8,
+       9985.0,
+       90
+      ],
+      [
+       2027.0,
+       9985.0,
+       90
+      ],
+      [
+       2177.2,
+       9985.0,
+       90
+      ],
+      [
+       2327.3,
+       9985.0,
+       90
+      ],
+      [
+       2747.7,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.523,
+     "competitors": [
+      "corvus_corax"
+     ]
+    }
+   ]
+  },
+  "anas_platyrhynchos": {
+   "unit": "solitary",
+   "predators": [],
+   "prey": [],
+   "games": [
+    {
+     "id": "anas_platyrhynchos:winter:forage:grass_forbs",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "dabbling in quiet water",
+     "resource": "grass_forbs",
+     "requires": [
+      {
+       "object": "grass blades and tufts, forbs",
+       "client": "grass.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_grass_forbs.png",
+     "hotspots": [
+      [
+       1306.3,
+       9985.0,
+       54
+      ],
+      [
+       1456.5,
+       9985.0,
+       54
+      ],
+      [
+       1606.6,
+       9985.0,
+       54
+      ],
+      [
+       1756.8,
+       9985.0,
+       54
+      ],
+      [
+       1906.9,
+       9985.0,
+       54
+      ],
+      [
+       2057.1,
+       9985.0,
+       54
+      ],
+      [
+       2207.2,
+       9985.0,
+       54
+      ],
+      [
+       3138.1,
+       9985.0,
+       54
+      ],
+      [
+       4639.6,
+       9985.0,
+       54
+      ],
+      [
+       6621.6,
+       9985.0,
+       54
+      ],
+      [
+       6771.8,
+       9985.0,
+       54
+      ],
+      [
+       6921.9,
+       9985.0,
+       54
+      ]
+     ],
+     "scarcity": 0.87,
+     "competitors": [],
+     "plants": []
+    },
+    {
+     "id": "anas_platyrhynchos:spring:nest:cover",
+     "archetype": "shelter",
+     "verb": "nest",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "goal": "a ground nest in tall grass near water",
+     "resource": "cover",
+     "requires": [
+      {
+       "object": "shrubs and trees to hide in",
+       "client": "shrubfield.js, vegetation.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_cover.png",
+     "hotspots": [
+      [
+       525.5,
+       9985.0,
+       90
+      ],
+      [
+       675.7,
+       9985.0,
+       90
+      ],
+      [
+       945.9,
+       9985.0,
+       90
+      ],
+      [
+       1096.1,
+       9985.0,
+       90
+      ],
+      [
+       2327.3,
+       9985.0,
+       90
+      ],
+      [
+       2477.5,
+       9985.0,
+       90
+      ],
+      [
+       2627.6,
+       9985.0,
+       90
+      ],
+      [
+       2777.8,
+       9985.0,
+       90
+      ],
+      [
+       2927.9,
+       9985.0,
+       90
+      ],
+      [
+       3078.1,
+       9985.0,
+       90
+      ],
+      [
+       3228.2,
+       9985.0,
+       90
+      ],
+      [
+       3378.4,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.603,
+     "competitors": []
+    },
+    {
+     "id": "anas_platyrhynchos:summer:forage:grass_forbs",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "grass_forbs",
+     "requires": [
+      {
+       "object": "grass blades and tufts, forbs",
+       "client": "grass.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_grass_forbs.png",
+     "hotspots": [],
+     "scarcity": 1.0,
+     "competitors": [
+      "sturnus_vulgaris"
+     ],
+     "plants": []
+    },
+    {
+     "id": "anas_platyrhynchos:summer:forage:water",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "requires": [
+      {
+       "object": "water surfaces: streams, ponds",
+       "client": "water.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_water.png",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": [
+      "mergus_merganser"
+     ],
+     "plants": []
+    },
+    {
+     "id": "anas_platyrhynchos:fall:forage:grass_forbs",
+     "archetype": "gather",
+     "verb": "forage",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "grass_forbs",
+     "requires": [
+      {
+       "object": "grass blades and tufts, forbs",
+       "client": "grass.js",
+       "status": "drawn"
+      }
+     ],
+     "raster": "client/res_grass_forbs.png",
+     "hotspots": [],
+     "scarcity": 1.0,
+     "competitors": [],
+     "plants": []
+    },
+    {
+     "id": "anas_platyrhynchos:winter:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": [
+      "corvus_corax",
+      "mergus_merganser",
+      "sturnus_vulgaris",
+      "falco_columbarius"
+     ]
+    },
+    {
+     "id": "anas_platyrhynchos:winter:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "winter",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cover",
+     "hotspots": [
+      [
+       525.5,
+       9985.0,
+       76
+      ],
+      [
+       675.7,
+       9985.0,
+       76
+      ],
+      [
+       945.9,
+       9985.0,
+       76
+      ],
+      [
+       1096.1,
+       9985.0,
+       76
+      ],
+      [
+       2327.3,
+       9985.0,
+       76
+      ],
+      [
+       2477.5,
+       9985.0,
+       76
+      ],
+      [
+       2627.6,
+       9985.0,
+       76
+      ],
+      [
+       2777.8,
+       9985.0,
+       76
+      ],
+      [
+       2927.9,
+       9985.0,
+       76
+      ],
+      [
+       3078.1,
+       9985.0,
+       76
+      ],
+      [
+       3228.2,
+       9985.0,
+       76
+      ],
+      [
+       3378.4,
+       9985.0,
+       76
+      ]
+     ],
+     "scarcity": 0.603,
+     "competitors": []
+    },
+    {
+     "id": "anas_platyrhynchos:spring:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "spring",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": [
+      "corvus_corax",
+      "mergus_merganser",
+      "sturnus_vulgaris",
+      "falco_columbarius"
+     ]
+    },
+    {
+     "id": "anas_platyrhynchos:summer:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": [
+      "corvus_corax",
+      "mergus_merganser",
+      "sturnus_vulgaris",
+      "falco_columbarius"
+     ]
+    },
+    {
+     "id": "anas_platyrhynchos:summer:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "summer",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cover",
+     "hotspots": [
+      [
+       525.5,
+       9985.0,
+       90
+      ],
+      [
+       675.7,
+       9985.0,
+       90
+      ],
+      [
+       945.9,
+       9985.0,
+       90
+      ],
+      [
+       1096.1,
+       9985.0,
+       90
+      ],
+      [
+       2327.3,
+       9985.0,
+       90
+      ],
+      [
+       2477.5,
+       9985.0,
+       90
+      ],
+      [
+       2627.6,
+       9985.0,
+       90
+      ],
+      [
+       2777.8,
+       9985.0,
+       90
+      ],
+      [
+       2927.9,
+       9985.0,
+       90
+      ],
+      [
+       3078.1,
+       9985.0,
+       90
+      ],
+      [
+       3228.2,
+       9985.0,
+       90
+      ],
+      [
+       3378.4,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.603,
+     "competitors": []
+    },
+    {
+     "id": "anas_platyrhynchos:fall:drink",
+     "archetype": "drink",
+     "verb": "drink",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "water",
+     "rhythm": "daily",
+     "hotspots": [
+      [
+       7432.4,
+       9985.0,
+       100
+      ],
+      [
+       7642.6,
+       9985.0,
+       100
+      ],
+      [
+       7792.8,
+       9985.0,
+       100
+      ],
+      [
+       7942.9,
+       9985.0,
+       100
+      ],
+      [
+       8093.1,
+       9985.0,
+       100
+      ],
+      [
+       8243.2,
+       9985.0,
+       100
+      ],
+      [
+       8693.7,
+       9985.0,
+       100
+      ],
+      [
+       8843.8,
+       9985.0,
+       100
+      ],
+      [
+       8363.4,
+       9894.9,
+       100
+      ],
+      [
+       7522.5,
+       9864.9,
+       100
+      ],
+      [
+       1456.5,
+       9834.8,
+       100
+      ],
+      [
+       7672.7,
+       9834.8,
+       100
+      ]
+     ],
+     "scarcity": 0.788,
+     "competitors": [
+      "corvus_corax",
+      "mergus_merganser",
+      "sturnus_vulgaris",
+      "falco_columbarius"
+     ]
+    },
+    {
+     "id": "anas_platyrhynchos:fall:shelter:cover",
+     "archetype": "shelter",
+     "verb": "shelter",
+     "season": "fall",
+     "unit": "solitary",
+     "collective": false,
+     "resource": "cover",
+     "hotspots": [
+      [
+       525.5,
+       9985.0,
+       90
+      ],
+      [
+       675.7,
+       9985.0,
+       90
+      ],
+      [
+       945.9,
+       9985.0,
+       90
+      ],
+      [
+       1096.1,
+       9985.0,
+       90
+      ],
+      [
+       2327.3,
+       9985.0,
+       90
+      ],
+      [
+       2477.5,
+       9985.0,
+       90
+      ],
+      [
+       2627.6,
+       9985.0,
+       90
+      ],
+      [
+       2777.8,
+       9985.0,
+       90
+      ],
+      [
+       2927.9,
+       9985.0,
+       90
+      ],
+      [
+       3078.1,
+       9985.0,
+       90
+      ],
+      [
+       3228.2,
+       9985.0,
+       90
+      ],
+      [
+       3378.4,
+       9985.0,
+       90
+      ]
+     ],
+     "scarcity": 0.603,
+     "competitors": []
+    }
+   ]
+  }
+ },
+ "plays": {
+  "dig": {
+   "client": "client/src/dig.js",
+   "species": []
+  }
+ }
+}

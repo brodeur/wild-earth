@@ -1,0 +1,285 @@
+{
+ "id": "juniperus_communis",
+ "scientific": "Juniperus communis",
+ "common": "common juniper (dwarf form)",
+ "aliases": [
+  "common_juniper",
+  "juniper",
+  "dwarf_juniper",
+  "einer",
+  "juniperus_nana"
+ ],
+ "family": "Cupressaceae",
+ "form": "shrub",
+ "deciduous": false,
+ "template": "juniperus_grandis",
+ "regions": [
+  "scandinavia"
+ ],
+ "height_m": [
+  0.2,
+  0.7
+ ],
+ "stature": {
+  "typical_m": 0.4,
+  "tall_m": 1.5,
+  "record_m": null,
+  "source": "the drafter's estimate for the prostrate coastal and alpine form (subsp. alpina, syn. nana) on Lofoten; upright columnar junipers of several metres grow in sheltered inland Norway; read 2026-11-05"
+ },
+ "variants_height_m": {
+  "young": [
+   0.1,
+   0.25
+  ],
+  "old-growth": [
+   0.5,
+   1.2
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    1.2
+   ],
+   [
+    0.3,
+    1.6
+   ],
+   [
+    0.6,
+    1.5
+   ],
+   [
+    0.85,
+    1.1
+   ],
+   [
+    1.0,
+    0.4
+   ]
+  ],
+  "lobes": 5,
+  "lobe_depth": 0.25,
+  "asymmetry": 0.35,
+  "fill": 0.55,
+  "edge": 1.08
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    86,
+    94,
+    80
+   ],
+   "spring": [
+    92,
+    108,
+    90
+   ],
+   "summer": [
+    88,
+    108,
+    92
+   ],
+   "fall": [
+    88,
+    102,
+    86
+   ]
+  },
+  "leaf_size_m": 0.01,
+  "berries": {
+   "season": [
+    "winter",
+    "spring",
+    "summer",
+    "fall"
+   ],
+   "months": [
+    1,
+    12
+   ],
+   "form": "bud",
+   "rgb": [
+    58,
+    66,
+    92
+   ],
+   "size_m": 0.008,
+   "density": 0.3
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   128,
+   82,
+   62
+  ],
+  "bark_pattern": "shreddy",
+  "stems": [
+   3,
+   8
+  ],
+  "stem_spread_deg": 68,
+  "lean_deg": 10,
+  "flare": 1.1,
+  "length_ratio": 0.9
+ },
+ "targets": {
+  "crown_width_ratio": 3.0,
+  "crown_base_ratio": 0.0,
+  "porosity": 0.2,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-05), no photographs measured; to be replaced by photo measurements: a low, flat, spreading mat of prickly grey-green to blue-green foliage over the rocks, several times wider than tall, a few blue-black berries in it"
+ },
+ "variant_patches": {
+  "young": {
+   "set": {
+    "trunk": {
+     "stems": [
+      2,
+      4
+     ]
+    },
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.0,
+        0.9
+       ],
+       [
+        0.3,
+        1.2
+       ],
+       [
+        0.6,
+        1.1
+       ],
+       [
+        0.85,
+        0.8
+       ],
+       [
+        1.0,
+        0.3
+       ]
+      ],
+      "lobe_depth": 0.15,
+      "asymmetry": 0.2
+     }
+    }
+   },
+   "note": "a small prickly cushion in a rock crevice"
+  },
+  "old-growth": {
+   "set": {
+    "trunk": {
+     "stems": [
+      5,
+      10
+     ],
+     "flare": 1.1
+    },
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.0,
+        1.4
+       ],
+       [
+        0.3,
+        1.8
+       ],
+       [
+        0.6,
+        1.7
+       ],
+       [
+        0.85,
+        1.3
+       ],
+       [
+        1.0,
+        0.5
+       ]
+      ],
+      "lobes": 5,
+      "lobe_depth": 0.3,
+      "asymmetry": 0.4
+     },
+     "shape": "hemispherical"
+    }
+   },
+   "note": "an old mat several metres across, the inner stems dead and silver, the edges rooting"
+  }
+ },
+ "description": "On the windswept Lofoten heath the common juniper is a low, sprawling mat 20-70 cm tall and a few metres across, its stems hugging the rock under dense, prickly, awl-shaped needles in whorls of three, each with a white band on top that makes the plant look grey-green. The blue-black, bloomy 'berries' are cones that take two or three years to ripen, so a bush carries them all year.",
+ "season_notes": {
+  "winter": "Grey-green with a bronze tinge, often under snow; the old berries blue-black.",
+  "spring": "Small yellow pollen cones on the male plants in May and June.",
+  "summer": "Fresh paler shoots; green first-year berries among the ripe blue-black ones.",
+  "fall": "Unchanged evergreen; fieldfares and thrushes take the ripe berries."
+ },
+ "habitat": {
+  "classes": {
+   "chaparral": 1.0,
+   "barren": 0.7,
+   "grassland": 0.4,
+   "conifer_forest": 0.4,
+   "mixed_forest": 0.3
+  },
+  "floor": 0.7,
+  "mid": 1.0,
+  "steep": 1.2,
+  "north": 0.9,
+  "shade": 0.1,
+  "disturbed": 0.7
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "turdus_pilaris",
+    "part": "berries",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   },
+   {
+    "animal": "lagopus_lagopus",
+    "part": "berries",
+    "seasons": [
+     "winter"
+    ]
+   },
+   {
+    "animal": "cervus_elaphus",
+    "part": "browse",
+    "seasons": [
+     "winter"
+    ]
+   }
+  ],
+  "cover_for": [
+   "lagopus_lagopus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   0,
+   800
+  ],
+  "where": "the most widespread conifer in the world, circumboreal; on Moskenesoya on rocky heath, ledges and outcrops from the shore to the fell-field"
+ },
+ "stand_in": "juniperus_grandis",
+ "notes": "Grown from Sierra juniper (the same genus, a tree) as a prostrate shrub: 3-8 stems splayed 68 degrees from the base and an envelope 1.6 times as wide as tall at every height, so the stems are clipped into a flat mat; the template's tree age classes have their own envelopes, which the variant patches replace. This is untested in the lineup: the generator has no prostrate or creeping stems (no krummholz, no layering, no stems running along the ground), so the mat may read as a low splayed bush. COMPROMISES: the foliage is the template's 'needle_scale' sprays of scale leaves, while J. communis has spreading, prickly, awl-shaped needles 5-15 mm in whorls of three with a white stomatal band; the colours are pushed grey-blue-green to suggest the band. The berries are single bloomy blue-black 'bud' berries all year (they take two to three years to ripen). Heights, colours and the animals are the drafter's knowledge (no source read beyond the GBIF name check). Lofoten's calendar: polar night in December and early January, birch bare from about October to the end of May, leaf-out in late May and June, autumn yellow in September; the climate is oceanic, winters mild for the latitude, the treeline low (a few hundred metres) under salt wind. Region tag scandinavia is not yet a natural region in pipeline/regions.py.",
+ "sources": [
+  "GBIF species match, Juniperus communis: ACCEPTED, https://api.gbif.org/v1/species/match?name=Juniperus%20communis, read 2026-11-05"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-05); needs local sign-off"
+ ]
+}

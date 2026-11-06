@@ -1,0 +1,304 @@
+{
+ "id": "kigelia_africana",
+ "scientific": "Kigelia africana",
+ "common": "sausage tree",
+ "aliases": [
+  "sausage_tree",
+  "kigelia",
+  "cucumber_tree"
+ ],
+ "family": "Bignoniaceae",
+ "form": "tree",
+ "deciduous": true,
+ "template": "juglans_hindsii",
+ "regions": [
+  "east_africa"
+ ],
+ "height_m": [
+  10,
+  18
+ ],
+ "stature": {
+  "typical_m": 14,
+  "tall_m": 20,
+  "record_m": 24,
+  "source": "typical: the drafter's estimate for the Seronera and Grumeti river fringes; tall: Useful Tropical Plants, typically 20 m; record: Wikipedia, about 24 m (UTP: up to 23 m); read 2026-11-05"
+ },
+ "variants_height_m": {
+  "young": [
+   4,
+   8
+  ],
+  "veteran": [
+   16,
+   23
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.15,
+    0.3
+   ],
+   [
+    0.3,
+    0.52
+   ],
+   [
+    0.48,
+    0.62
+   ],
+   [
+    0.64,
+    0.6
+   ],
+   [
+    0.8,
+    0.48
+   ],
+   [
+    0.92,
+    0.28
+   ],
+   [
+    1.0,
+    0.08
+   ]
+  ],
+  "lobes": 5,
+  "lobe_depth": 0.12,
+  "asymmetry": 0.18,
+  "fill": 0.6,
+  "edge": 1.08
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    80,
+    104,
+    60
+   ],
+   "spring": [
+    76,
+    100,
+    58
+   ],
+   "summer": [
+    92,
+    106,
+    66
+   ],
+   "fall": [
+    96,
+    106,
+    68
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 0.8,
+   "fall": 0.7
+  },
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   0.95,
+   0.8,
+   0.65,
+   0.6,
+   0.7,
+   0.9,
+   1.0
+  ],
+  "leaf_size_m": 0.4,
+  "leaf_shape": "pinnate_compound",
+  "leaflets": [
+   7,
+   11
+  ],
+  "flowers": {
+   "season": [
+    "summer",
+    "fall"
+   ],
+   "months": [
+    7,
+    10
+   ],
+   "form": "cluster",
+   "rgb": [
+    118,
+    28,
+    40
+   ],
+   "size_m": 0.12,
+   "density": 0.25,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": [
+    "fall",
+    "winter",
+    "spring"
+   ],
+   "months": [
+    10,
+    5
+   ],
+   "form": "bud",
+   "rgb": [
+    134,
+    126,
+    104
+   ],
+   "size_m": 0.4,
+   "density": 0.06
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   140,
+   132,
+   118
+  ],
+  "bark_pattern": "mottled",
+  "stems": [
+   1,
+   1
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 1.25,
+  "crown_base_ratio": 0.15,
+  "porosity": 0.2,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-05), no photographs measured; to be replaced by photo measurements: a short thick pale trunk and a broad, dense, rounded crown of large dull-green pinnate leaves; huge grey sausage fruits hang on long cords below the crown"
+ },
+ "variant_patches": {
+  "young": {
+   "note": "a young riverbank tree, smooth grey bark, a narrower rounded crown"
+  },
+  "veteran": {
+   "set": {
+    "trunk": {
+     "split_prob": 0.7,
+     "lean_deg": 8
+    }
+   },
+   "note": "a massive old tree with scaly, flaking bark and low spreading limbs over the riverbank"
+  }
+ },
+ "description": "A broad, shady riverside tree 10-18 m tall with a thick pale trunk, flaking grey bark and a dense rounded crown of large pinnate leaves. In the dry season dark maroon, bell-shaped flowers hang on metre-long cords and open at night for bats, then the famous fruits: grey woody sausages up to half a metre long and several kilograms each.",
+ "season_notes": {
+  "winter": "December to February: full, dark green leaf; the huge sausage fruits hanging on their cords.",
+  "spring": "March to May: in full leaf along the flowing river; ripe fruits dropping.",
+  "summer": "June to August, the dry season: the crown thins; maroon flowers open at night, and fallen flowers on the ground draw impala, baboons and monkeys in the morning.",
+  "fall": "September to November: last flowers, young green fruits lengthening; new leaves with the short rains."
+ },
+ "habitat": {
+  "classes": {
+   "riparian": 1.0,
+   "mixed_forest": 0.4,
+   "oak_woodland": 0.3
+  },
+  "floor": 1.6,
+  "mid": 0.6,
+  "steep": 0.4,
+  "north": 1.0,
+  "shade": 0.3,
+  "disturbed": 0.8,
+  "riparian": {
+   "zones": {
+    "terrace": 1.0,
+    "bank": 0.8,
+    "pond_terrace": 0.5,
+    "pond_shore": 0.3
+   },
+   "orders": [
+    2,
+    7
+   ],
+   "permanence": "intermittent",
+   "water": "Needs groundwater within reach: the banks and terraces of the Seronera and other rivers, which shrink to pools in the dry season."
+  }
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "aepyceros_melampus",
+    "part": "flowers",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "papio_anubis",
+    "part": "flowers",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "chlorocebus_pygerythrus",
+    "part": "flowers",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "loxodonta_africana",
+    "part": "berries",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "papio_anubis",
+    "part": "berries",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "giraffa_camelopardalis",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring",
+     "summer",
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "panthera_pardus"
+  ],
+  "shades_water": 0.7
+ },
+ "range": {
+  "elev_m": [
+   0,
+   3000
+  ],
+  "where": "tropical Africa in wetter places: rainforest, woodland, wetter savanna (Wikipedia), often riverine (UTP); in the Serengeti the river fringes of the Seronera, Grumeti and Mara"
+ },
+ "stand_in": "juglans_hindsii",
+ "notes": "Grown from northern California black walnut, a broad-crowned riparian tree with large pinnate leaves, the closest library tree in leaf and form (no Bignoniaceae in the library). COMPROMISES: the flowers hang on long pendant cords up to a metre (UTP); the generator draws flower clusters at twig ends, so they sit in the crown instead of dangling below it. The sausage fruits (30-100 cm long, 5-10 kg, Wikipedia; UTP up to 45 cm by 15 cm) are drawn as large round 'bud' berries 40 cm across: a ball, not a hanging sausage on a cord, and the berry primitive is sized for small fruit, so this needs a lineup look. The bark's flaking scales are the sycamore's 'mottled' pattern. Semi-deciduous (UTP): a leaf_on_by_month dip to 0.6 in September, the drafter's judgement for a riverside tree that keeps groundwater; flowering is intermittent year round (UTP) and is set to the dry-season peak here, the drafter's knowledge. Bats pollinate (Wikipedia); impala, baboons and vervets eating fallen flowers and elephants and baboons the fruit are the drafter's knowledge plus Wikipedia (elephants and baboons eat the fruit). The fruit is poisonous unripe and mostly left alone by people. The client's seasons are calendar quarters (winter Dec-Feb, spring Mar-May, summer Jun-Aug, fall Sep-Nov) whatever the hemisphere or climate; the colours and leaf-on here are given for those months at the tile, not for a temperate winter. Animals are GBIF ids not yet in the library. Region tag east_africa is not yet a natural region in pipeline/regions.py. Marked deciduous (2026-11-05): leaf_on_by_month falls to 0.6 in the dry season, so it is not an evergreen in the schema's sense.",
+ "sources": [
+  "GBIF species match, Kigelia africana: ACCEPTED, https://api.gbif.org/v1/species/match?name=Kigelia%20africana, read 2026-11-05",
+  "https://en.wikipedia.org/wiki/Kigelia, read 2026-11-05",
+  "Useful Tropical Plants, Kigelia africana, https://tropical.theferns.info/viewtropical.php?id=Kigelia+africana, read 2026-11-05"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-05); needs local sign-off"
+ ]
+}

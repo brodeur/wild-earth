@@ -1,0 +1,332 @@
+{
+ "id": "shorea_leprosula",
+ "scientific": "Shorea leprosula",
+ "common": "light red meranti",
+ "aliases": [
+  "light_red_meranti",
+  "meranti_tembaga",
+  "rubroshorea_leprosula",
+  "seraya_tembaga"
+ ],
+ "family": "Dipterocarpaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "populus_trichocarpa",
+ "regions": [
+  "borneo"
+ ],
+ "height_m": [
+  40,
+  55
+ ],
+ "stature": {
+  "typical_m": 48,
+  "tall_m": 60,
+  "record_m": null,
+  "source": "Useful Tropical Plants: up to 54 m (its table 45 m), bole clear to 35 m, diameter to 161 cm, buttresses to 2 m; Wikipedia: to 60 m and 100 cm; read 2026-11-05"
+ },
+ "variants_height_m": {
+  "young": [
+   8,
+   25
+  ],
+  "veteran": [
+   50,
+   62
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.58,
+    0.14
+   ],
+   [
+    0.65,
+    0.25
+   ],
+   [
+    0.75,
+    0.3
+   ],
+   [
+    0.85,
+    0.29
+   ],
+   [
+    0.94,
+    0.18
+   ],
+   [
+    1.0,
+    0.05
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.2,
+  "asymmetry": 0.2,
+  "fill": 0.45,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    96,
+    102,
+    70
+   ],
+   "spring": [
+    98,
+    104,
+    70
+   ],
+   "summer": [
+    96,
+    102,
+    70
+   ],
+   "fall": [
+    96,
+    102,
+    70
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "leaf_size_m": 0.11,
+  "leaf_shape": "elliptic_glossy",
+  "flowers": null,
+  "berries": null
+ },
+ "trunk": {
+  "length_ratio": 0.62,
+  "bole_ratio": 0.8,
+  "base_size": 0.82,
+  "radius_ratio": 0.03,
+  "taper": 0.75,
+  "curve_deg": 3,
+  "curve_var_deg": 5,
+  "lean_deg": 3,
+  "stems": [
+   1,
+   1
+  ],
+  "stem_spread_deg": 0,
+  "split_prob": 0.6,
+  "split_height": 0.86,
+  "split_count": 3,
+  "split_angle_deg": 28,
+  "segments": 6,
+  "flare": 2.1,
+  "roots": {
+   "buttress": 0.9,
+   "buttresses": [
+    3,
+    6
+   ],
+   "height": 1.6,
+   "roots": [
+    0,
+    2
+   ],
+   "note": "stout buttresses to about 2 m"
+  },
+  "bark_rgb": [
+   118,
+   104,
+   94
+  ],
+  "bark_pattern": "furrowed",
+  "twig_rgb": [
+   120,
+   96,
+   76
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 0.58,
+  "crown_base_ratio": 0.6,
+  "porosity": 0.25,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-05), no photographs measured; to be replaced by photo measurements: a tall straight grey-brown bole with shallow V fissures above stout buttresses, a wide umbrella-shaped emergent crown with a coppery-brown sheen from the scaly leaf undersides"
+ },
+ "patch": {
+  "levels": [
+   {
+    "count": 9,
+    "down_angle_deg": 42,
+    "down_angle_tip_deg": 28,
+    "down_angle_var_deg": 14,
+    "rotation_deg": 140,
+    "rotation_var_deg": 30,
+    "length_ratio": 1.0,
+    "length_var": 0.25,
+    "curve_deg": 8,
+    "curve_var_deg": 20,
+    "zigzag_deg": 6,
+    "tropism": 0.02,
+    "droop_deg": 4,
+    "taper": 0.9,
+    "radius_ratio": 0.6,
+    "segments": 3,
+    "sinuous_deg": 5
+   },
+   {
+    "count": 11,
+    "start": 0.1,
+    "down_angle_deg": 50,
+    "down_angle_var_deg": 15,
+    "rotation_deg": 140,
+    "rotation_var_deg": 30,
+    "length_ratio": 0.5,
+    "length_var": 0.3,
+    "curve_deg": 0,
+    "curve_var_deg": 20,
+    "zigzag_deg": 8,
+    "tropism": 0.04,
+    "taper": 1.0,
+    "radius_ratio": 0.45,
+    "segments": 2
+   }
+  ]
+ },
+ "variant_patches": {
+  "young": {
+   "set": {
+    "trunk": {
+     "length_ratio": 0.7,
+     "split_prob": 0.05,
+     "flare": 1.4,
+     "base_size": 0.3,
+     "bole_ratio": 0.4
+    },
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.25,
+        0.1
+       ],
+       [
+        0.4,
+        0.16
+       ],
+       [
+        0.6,
+        0.17
+       ],
+       [
+        0.8,
+        0.13
+       ],
+       [
+        0.93,
+        0.07
+       ],
+       [
+        1.0,
+        0.02
+       ]
+      ]
+     }
+    }
+   },
+   "note": "a pole in the understorey or a gap: a straight slender stem with a narrow, monopodial crown of tiers of horizontal branches (Roux's model), waiting for light"
+  },
+  "veteran": {
+   "set": {
+    "trunk": {
+     "split_prob": 0.8,
+     "lean_deg": 4,
+     "flare": 2.8
+    }
+   },
+   "note": "an emergent giant: a huge pale bole with towering plank buttresses, the crown a few massive limbs bearing cauliflower clumps of leaves high above the canopy"
+  }
+ },
+ "description": "A fast-growing, light-demanding meranti 40-55 m tall, with a straight bole clear for up to 35 m, stout buttresses and grey-brown bark in shallow V-shaped fissures, and a wide, umbrella-shaped emergent crown. The undersides of its leaves are covered in tiny coppery scales, so the crown has a bronze cast when the wind turns them.",
+ "season_notes": {
+  "winter": "Evergreen, the bronze sheen of the leaf undersides in the wind.",
+  "spring": "Evergreen; in a mast year a crown full of small cream flowers, pollinated by thrips.",
+  "summer": "Evergreen; in a mast year winged fruits spinning down about fourteen weeks after flowering.",
+  "fall": "Evergreen, unchanged."
+ },
+ "habitat": {
+  "classes": {
+   "mixed_forest": 1.0,
+   "riparian": 0.3
+  },
+  "floor": 1.1,
+  "mid": 1.1,
+  "steep": 0.8,
+  "north": 1.0,
+  "shade": 0.2,
+  "disturbed": 1.3
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "sus_barbatus",
+    "part": "seeds",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   },
+   {
+    "animal": "presbytis_rubicunda",
+    "part": "seeds",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   },
+   {
+    "animal": "ratufa_affinis",
+    "part": "seeds",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": [
+   "buceros_rhinoceros"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   0,
+   700
+  ],
+  "where": "Peninsular Malaysia, Sumatra and Borneo; undisturbed mixed dipterocarp forest to about 700 m, on foothills, hillsides and alluvial sites, colonising gaps in disturbed forest, not on waterlogged ground or peat (UTP)"
+ },
+ "stand_in": "populus_trichocarpa",
+ "notes": "COMPROMISES: there is no dipterocarp, no tropical tree and no tree over 45 m with a broadleaf crown in the library; black cottonwood is the template for its tall straight bole only. The trunk patch makes the bole run clear to about 0.55 of the height, then fork into three limbs under a flat, wide, 'cauliflower' crown envelope, and the buttresses are the root-flare primitive (trunk.flare 2.4, roots.buttress 0.95, 3-6 buttresses, 2.2 times the default flare height): real plank buttresses run 2-4 m up the bole and several metres out, thin and steep-sided, which the flare's rounded fins approximate only in the near tier (the mid tier draws one ring, the far impostors none). The crown's clumped, 'broccoli' sub-crowns of reiterated limbs are the template's clumps, not a modelled reiteration. Under a 60 m tree the scale of everything (bark tiles, leaf cards, LOD budgets) is the cottonwood's at 1.6 times, untested in the lineup. GBIF accepts Shorea leprosula; the 2022 revision moves it to Rubroshorea leprosula (Wikipedia's title), kept here as an alias. Heights, bole, buttresses (stout, to 2 m), the wide umbrella-shaped crown and habitat from Useful Tropical Plants; bark (greyish brown, shallowly V-fissured, outer bark dull purple-brown) and leaves (elliptic to ovate, 8-14 by 3.5-5.5 cm, acuminate) from Wikipedia. The coppery-scaled leaf undersides (drafter's knowledge) cannot be drawn as a two-sided leaf: the summer colour is pulled a little toward brown instead. Strongly light-demanding (Wikipedia), so disturbed 1.3 and shade 0.2: it is the meranti of old logging gaps and the edges of Danum's logged forest. Thrips pollination and fruit 14 weeks after flowering are UTP. Danum is aseasonal: evergreen, no leaf-off, colours constant through the four calendar seasons except for small flushes of new red-bronze leaves. Dipterocarps flower and fruit together in irregular mast years every two to ten years, after an El Nino dry spell; the game's seasons cannot express a mast year, so no flowers or fruit are drawn and the seed entries in eaten_by are marked as mast-year food. Animals as for white seraya (drafter's knowledge, not in the library). Region tag borneo is not yet a natural region in pipeline/regions.py.",
+ "sources": [
+  "GBIF species match, Shorea leprosula: ACCEPTED, https://api.gbif.org/v1/species/match?name=Shorea%20leprosula, read 2026-11-05",
+  "https://en.wikipedia.org/wiki/Shorea_leprosula, read 2026-11-05",
+  "Useful Tropical Plants, Shorea leprosula, https://tropical.theferns.info/viewtropical.php?id=Shorea+leprosula, read 2026-11-05"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-05); needs local sign-off"
+ ]
+}

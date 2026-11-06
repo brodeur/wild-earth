@@ -1,0 +1,355 @@
+{
+ "id": "vachellia_tortilis",
+ "scientific": "Vachellia tortilis",
+ "common": "umbrella thorn",
+ "aliases": [
+  "umbrella_thorn",
+  "umbrella_thorn_acacia",
+  "acacia_tortilis",
+  "israeli_babool"
+ ],
+ "family": "Fabaceae",
+ "form": "tree",
+ "deciduous": true,
+ "template": "cercis_occidentalis",
+ "regions": [
+  "east_africa"
+ ],
+ "height_m": [
+  5,
+  12
+ ],
+ "stature": {
+  "typical_m": 8,
+  "tall_m": 15,
+  "record_m": 21,
+  "source": "typical and tall: the drafter's estimate for the Serengeti's central plains and woodland edges (subsp. spirocarpa); record: Wikipedia, up to 21 m in good conditions; read 2026-11-05"
+ },
+ "variants_height_m": {
+  "young": [
+   1.5,
+   4
+  ],
+  "old": [
+   10,
+   16
+  ]
+ },
+ "crown": {
+  "shape": "inverse_conical",
+  "profile": [
+   [
+    0.4,
+    0.18
+   ],
+   [
+    0.55,
+    0.5
+   ],
+   [
+    0.7,
+    0.78
+   ],
+   [
+    0.82,
+    0.88
+   ],
+   [
+    0.92,
+    0.82
+   ],
+   [
+    0.98,
+    0.5
+   ],
+   [
+    1.0,
+    0.15
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.1,
+  "asymmetry": 0.2,
+  "fill": 0.5,
+  "edge": 1.06
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    92,
+    114,
+    68
+   ],
+   "spring": [
+    88,
+    112,
+    64
+   ],
+   "summer": [
+    110,
+    116,
+    78
+   ],
+   "fall": [
+    118,
+    118,
+    84
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 0.75,
+   "fall": 0.6
+  },
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   0.9,
+   0.75,
+   0.6,
+   0.5,
+   0.55,
+   0.85,
+   1.0
+  ],
+  "leaf_size_m": 0.025,
+  "leaf_shape": "pinnate_compound",
+  "leaflets": [
+   9,
+   13
+  ],
+  "flowers": {
+   "season": "fall",
+   "months": [
+    10,
+    12
+   ],
+   "form": "cluster",
+   "rgb": [
+    246,
+    240,
+    214
+   ],
+   "size_m": 0.03,
+   "density": 0.45,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": [
+    "summer",
+    "fall"
+   ],
+   "months": [
+    6,
+    9
+   ],
+   "form": "cluster",
+   "rgb": [
+    176,
+    146,
+    96
+   ],
+   "size_m": 0.06,
+   "density": 0.3
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   88,
+   80,
+   72
+  ],
+  "bark_pattern": "furrowed",
+  "stems": [
+   1,
+   2
+  ],
+  "stem_spread_deg": 22,
+  "length_ratio": 0.5,
+  "radius_ratio": 0.045,
+  "bole_ratio": 0.35,
+  "base_size": 0.3,
+  "split_prob": 0.85,
+  "split_height": 0.4,
+  "split_count": 3,
+  "split_angle_deg": 32,
+  "lean_deg": 6,
+  "flare": 1.3,
+  "twig_rgb": [
+   120,
+   84,
+   66
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 1.7,
+  "crown_base_ratio": 0.4,
+  "porosity": 0.35,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-05), no photographs measured; to be replaced by photo measurements: a short dark trunk forking low into a few ascending limbs that spread into a flat, wide, thin umbrella of fine grey-green foliage, much wider than tall"
+ },
+ "patch": {
+  "levels": [
+   {
+    "count": 9,
+    "start": 0.12,
+    "down_angle_deg": 62,
+    "down_angle_var_deg": 12,
+    "rotation_deg": 140,
+    "rotation_var_deg": 30,
+    "length_ratio": 1.8,
+    "length_var": 0.3,
+    "curve_deg": 10,
+    "curve_var_deg": 14,
+    "tropism": 0.0,
+    "taper": 0.9,
+    "radius_ratio": 0.55,
+    "segments": 3,
+    "zigzag_deg": 8,
+    "down_angle_tip_deg": 78
+   },
+   {
+    "count": 5,
+    "start": 0.3,
+    "down_angle_deg": 55,
+    "down_angle_var_deg": 15,
+    "rotation_deg": -70,
+    "rotation_var_deg": 25,
+    "length_ratio": 0.45,
+    "length_var": 0.25,
+    "curve_deg": 8,
+    "curve_var_deg": 16,
+    "tropism": 0.0,
+    "taper": 1.0,
+    "radius_ratio": 0.5,
+    "segments": 1,
+    "zigzag_deg": 12
+   }
+  ]
+ },
+ "variant_patches": {
+  "young": {
+   "set": {
+    "trunk": {
+     "stems": [
+      1,
+      3
+     ],
+     "stem_spread_deg": 25,
+     "split_prob": 0.4
+    }
+   },
+   "note": "a sapling or browsed bush: a low, spiny, flat-topped thicket, often shaped by giraffe and impala"
+  },
+  "old": {
+   "set": {
+    "trunk": {
+     "stems": [
+      1,
+      2
+     ],
+     "split_prob": 0.95
+    }
+   },
+   "note": "a big old tree: a thick fissured trunk and a broad, perfectly flat crown, the classic silhouette"
+  }
+ },
+ "description": "The flat-topped thorn tree of the Serengeti's plains and woodland edges, 5-12 m tall and often twice as wide, a dark fissured trunk forking low into ascending limbs that carry a thin umbrella of tiny feathery leaves. Paired thorns, one long straight and white, one short hooked and dark, guard every twig, and the coiled pods fall in the dry season.",
+ "season_notes": {
+  "winter": "December to February, after the short rains: in full leaf, fresh green, the fragrant white puffball flowers finishing.",
+  "spring": "March to May, the long rains: dense grey-green leaf over green grass; pods forming.",
+  "summer": "June to August, the dry season: leaves thinning and yellowing, the coiled pods ripening and dropping; giraffe, elephants and impala gather under the trees for them.",
+  "fall": "September to November: the thinnest crowns of the year on the driest ground, then a new flush and the white flowers ahead of the short rains."
+ },
+ "habitat": {
+  "classes": {
+   "grassland": 1.0,
+   "oak_woodland": 0.6,
+   "chaparral": 0.5,
+   "mixed_forest": 0.2,
+   "riparian": 0.2
+  },
+  "floor": 1.0,
+  "mid": 1.1,
+  "steep": 0.6,
+  "north": 1.0,
+  "shade": 0.0,
+  "disturbed": 1.2
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "giraffa_camelopardalis",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring",
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "loxodonta_africana",
+    "part": "browse",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "loxodonta_africana",
+    "part": "seeds",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "aepyceros_melampus",
+    "part": "seeds",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "aepyceros_melampus",
+    "part": "browse",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "papio_anubis",
+    "part": "seeds",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "panthera_pardus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   0,
+   2000
+  ],
+  "where": "Africa's dry savannas and the Sahel to Arabia and the Levant; in the Serengeti the open acacia savanna of the central plains around Seronera, the edges of the short-grass plains and the Kopjes, on well-drained sandy and stony soils"
+ },
+ "stand_in": "cercis_occidentalis",
+ "notes": "Grown from western redbud (the library's only tree-like legume, a Troll-model vase like the acacias) as a single tree: the trunk forks low (split at 0.4 of its length into three limbs) and the first branch level is long and nearly horizontal at the top, clipped by a flat, wide envelope (radius 0.88 of the height) into the umbrella. This is untested in the lineup and the generator's envelope fit may round the top. COMPROMISES: the leaves are bipinnate with tiny leaflets (pinnae 4-10 pairs, each with up to 15 pairs of leaflets, the leaf about 2.5 cm, Wikipedia); the generator has no bipinnate leaf, so they are drawn as tiny pinnate leaves, which reads as a fine texture at distance only. The paired thorns are not drawn at all (there is no spine primitive). The coiled, spring-like pods are drawn as pale brown berry clusters. Leaf loss in the dry season is a leaf_on_by_month curve (lowest in September), the drafter's judgement: the species is semi-deciduous, never fully bare in the Serengeti. The client's seasons are calendar quarters (winter Dec-Feb, spring Mar-May, summer Jun-Aug, fall Sep-Nov) whatever the hemisphere or climate; the colours and leaf-on here are given for those months at the tile, not for a temperate winter. The flowering months (October to December, ahead of and in the short rains) are the drafter's knowledge and vary by year. Browsers: giraffe browse it year round (the trees' flat tops are partly their work), elephants break branches and eat pods, impala and baboons take fallen pods (the drafter's knowledge; Wikipedia says only that pods and foliage feed desert grazers). None of these animals is in the library yet; the ids are GBIF binomials so games.py links them when they arrive. Leopards rest and cache kills in acacias (cover_for). Region tag east_africa is not yet a natural region in pipeline/regions.py.",
+ "sources": [
+  "GBIF species match, Vachellia tortilis: ACCEPTED, https://api.gbif.org/v1/species/match?name=Vachellia%20tortilis, read 2026-11-05",
+  "https://en.wikipedia.org/wiki/Vachellia_tortilis, read 2026-11-05"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-05); needs local sign-off"
+ ]
+}

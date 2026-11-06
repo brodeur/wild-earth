@@ -84,6 +84,10 @@ def _write(tile: Tile, rel: str, arr: np.ndarray, n: int, dtype: str, nodata) ->
 
 
 def fetch_vegetation(tile: Tile, force=False) -> dict:
+    from . import regions
+    if not regions.covers("landfire", tile):   # world pipeline: the same files from WorldCover, canopy, climate, soils
+        from .landcover_global import fetch_vegetation_global
+        return fetch_vegetation_global(tile)
     x0, y0, x1, y1 = tile.bounds
     n = int(round((x1 - x0) / RES_M))
     rasters = {k: _export(tile, k, n, force) for k in PRODUCTS}

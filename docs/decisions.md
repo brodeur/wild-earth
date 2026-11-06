@@ -5427,3 +5427,41 @@ sharp-shins and merlins over it), move and phase with no NaN, and play; animals.
 Two fixes asked for with it: `tools/rig_quadruped.py`'s leg bands widen instead of failing on a short decimated leg
 (`band_at`, a test), and the upright meshes (the owls, the kingfisher, the flycatcher) tip forward to fly level as the
 player (`flierControl.js` `upright`).
+
+## 2026-11-05 (night): the probes first; geology and soil, niches, the sea and tile requests in the design (branch claude/sweet-feistel-2054bb)
+
+Aaron, after reviewing the world pipeline: geology and soil must be first-class; "Probes first - figure out if the
+primitives are correct"; ecosystems from the species research ("grows on the shady side of mountains", "in riparian
+zones") with IUCN as a possible base; the sea and waterways designed for, with "license for creativity" under water;
+players request tiles now, judge later, pay later. Phase 1 was stopped at a clean commit (564adc6: the global readers and
+the ecosystem classifier) and the probes run instead.
+
+- **The probes ran** (`docs/probes-2026-11.md`): Seronera (`utm36s_698_9724`), Moskenesoya (`utm33n_412_7531`) and Danum
+  Valley (`utm50n_582_543`) through all four stages with only what a tile needs outside the US, each recorded as a
+  fallback: Copernicus GLO-30 for the DEM (NASADEM stops at 60 N), a Sentinel-2 composite for NAIP, OSM for NHD (with the
+  osm step's curl-capable Overpass reader), WorldCover, Meta canopy height, ERA5 and SoilGrids written as LANDFIRE-shaped
+  rasters (`pipeline/landcover_global.py`) plus the IUCN GET ecosystem map, SoilGrids in SSURGO's encoding
+  (`pipeline/soils_global.py`), communities composed from the tile's own researched species (`species_mix.research_rule`),
+  and 14 trait cards for the probes' dominants. About 27 min each, no Meshy credits. Captured at fixed poses and compared
+  with Sentinel-2 by hand.
+- **Found**: terrain, routing, land cover, canopy, geology, soil, the species research and the step graph carry over. What
+  fails is where a place's life is decided: composition (no niches; records taken for abundance; growth form guessed from
+  a temperate family list, so Danum's research had no trees), the ground (the foothills' materials and grasses
+  everywhere), the animals (the client draws a fixed North American cast by habitat: about 190 in Borneo), the seasons
+  (northern quarters everywhere), water permanence (NHD codes: Danum's big river is dry), and colour (satellite overlap
+  0.00-0.15, lighter and half the chroma). Global geology is coarse where the signature is rock (no kopjes), and
+  Macrostrat's per-source licences are not filtered.
+- **Phase 1 reordered by the findings**: composition by niche; animals from the tile's own list; ground and palette;
+  water permanence and the sea surface; seasons from the tile's climate; national lidar and canopy-corrected GLO-30;
+  geology licence filter and finer maps; the satellite judge automated. $275-425 of Claude, estimated.
+- **Design, revision 2** (`docs/world-pipeline.md`, the page republished as v3): geology and soil as land-stage layers and
+  what rock drives; the niche layer composing species per cell over the IUCN base layer; the sea and waterways with a
+  labelled licence to invent under water (plausible for the place, never over a measurement, labelled `invented`,
+  deterministic, reviewed); the request queue (ask by cell id only, preflight, queue, build, publish; paid later).
+- **Fixes the probes forced**: a treegen guard for a reference tree without a crown envelope; `write_json` is atomic and
+  the tile index skips a manifest mid-write (parallel builds); the hydro OSM fallback uses the osm step's reader; the
+  ecosystem layer's source registered (the audit refused it until then). Two semi-deciduous cards (desert date, sausage
+  tree) corrected after the card test caught them.
+- **Regression**: the Hoh (`utm10n_429_5293`) rebuilt with this branch's code in a scratch copy: the steps whose code
+  changed re-ran, 173 files byte-identical, the 7 that differ are timestamps or the 2 forage rows the new library species
+  add; audit passes, seams unchanged; the viewer loads it with no console error. All 63 tests pass.

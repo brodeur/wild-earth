@@ -1,0 +1,131 @@
+{
+ "id": "pica_pica",
+ "scientific": "Pica pica",
+ "common": "eurasian magpie",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Passeriformes",
+  "family": "Corvidae",
+  "genus": "Pica"
+ },
+ "body_plan": "bird",
+ "mass_kg": 0.2175,
+ "size": {
+  "length_m": 0.216,
+  "shoulder_or_wingspan_m": 0.346
+ },
+ "diet": {
+  "role": [
+   "omnivore",
+   "scavenger"
+  ],
+  "diet_tenths": {
+   "inv": 2.0,
+   "vend": 2.0,
+   "vect": 2.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 2.0,
+   "fruit": 1.0,
+   "nect": 0.0,
+   "seed": 1.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.4,
+  "mass_kg": 0.2175,
+  "activity": [],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 368.5
+  },
+  "sound": {
+   "range_m": 184.3
+  },
+  "scent": {
+   "range_m": 14.7
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "pica_pica",
+  "class": "Aves",
+  "order": "Passeriformes",
+  "family": "Corvidae",
+  "body_plan": "bird",
+  "mass_kg": 0.2175,
+  "length_m": 0.216,
+  "hip_m": 0.108,
+  "posture": "biped",
+  "gaits": {
+   "ground": "walk-hop",
+   "flight": "flap-glide"
+  },
+  "walk_mps": 0.73,
+  "trot_mps": 1.63,
+  "cruise_mps": 2.47,
+  "top_mps": 4.12,
+  "stride_hz": 5.27,
+  "stride_m": 0.31,
+  "sprint_s": 2.6,
+  "recover_s": 9.0,
+  "turn_rad_s": 5.4,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.049,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": true,
+  "catch": {
+   "move": "stab",
+   "name": "the bill stab",
+   "reach_m": 0.9,
+   "stabs": 3,
+   "stab_s": 0.2,
+   "feed": {
+    "pose": "stabs with pauses",
+    "burst_s": 0.75,
+    "hz": 4
+   }
+  }
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T04:05:07Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

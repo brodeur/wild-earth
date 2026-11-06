@@ -1,0 +1,63 @@
+{
+ "tile_id": "utm50n_582_543",
+ "crs": "EPSG:32650",
+ "bounds": [
+  582000,
+  543000,
+  592000,
+  553000
+ ],
+ "heightmap": {
+  "path": "unreal/heightmap.png",
+  "format": "16-bit PNG",
+  "size_px": 2017
+ },
+ "landscape": {
+  "overall_resolution": "2017 x 2017",
+  "section_size_quads": 63,
+  "sections_per_component": 1,
+  "components": "32 x 32",
+  "scale_cm": {
+   "x": 496.0317,
+   "y": 496.0317,
+   "z": 154.4185
+  },
+  "actor_location_cm": {
+   "x": 0,
+   "y": 0,
+   "z": 49606.2
+  },
+  "note": "Place the actor so its centre is the tile centre; Unreal's Y points south, which matches image row order (row 0 = north edge), so no flip is needed."
+ },
+ "elevation_m": {
+  "min": 119.57,
+  "max": 872.55,
+  "mid": 496.06,
+  "encoded_span": 790.62,
+  "vertical_step_m": 0.0121
+ },
+ "layers": {
+  "mixed_forest": {
+   "path": "unreal/weights/mixed_forest.png",
+   "coverage": 0.9977
+  },
+  "grassland": {
+   "path": "unreal/weights/grassland.png",
+   "coverage": 0.0001
+  },
+  "water": {
+   "path": "unreal/weights/water.png",
+   "coverage": 0.0018
+  },
+  "barren": {
+   "path": "unreal/weights/barren.png",
+   "coverage": 0.0004
+  }
+ },
+ "canopy": {
+  "tree": "unreal/canopy_tree.png",
+  "shrub": "unreal/canopy_shrub.png",
+  "herb": "unreal/canopy_herb.png"
+ },
+ "pcg_hint": "Sample canopy_tree.png for tree density and the weight layers for species mix; seed points by (tile_id, cell) so placement matches the web client."
+}

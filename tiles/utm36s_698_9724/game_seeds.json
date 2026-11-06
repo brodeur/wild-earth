@@ -1,0 +1,33 @@
+{
+ "tile": "utm36s_698_9724",
+ "generated": "2026-11-06T04:16:18Z",
+ "games": {
+  "acorn": {
+   "seed": 2173059809,
+   "players": [],
+   "hotspots": [],
+   "resource": "acorn_mast",
+   "client": "client/src/acorns.js",
+   "world": "server.py GameWorld",
+   "playable_here": false
+  },
+  "dig": {
+   "seed": 4187391008,
+   "players": [],
+   "hotspots": [],
+   "resource": "burrow",
+   "client": "client/src/dig.js",
+   "world": "digworld.py",
+   "playable_here": false
+  },
+  "carrion": {
+   "seed": 2631768346,
+   "players": [],
+   "hotspots": [],
+   "resource": null,
+   "client": "client/src/carrion.js",
+   "world": "carrionworld.py",
+   "playable_here": false
+  }
+ }
+}

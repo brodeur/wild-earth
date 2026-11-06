@@ -1,0 +1,2340 @@
+{
+ "tile": "utm33n_412_7531",
+ "regions": [
+  "scandinavia"
+ ],
+ "communities": [
+  {
+   "source": "evt",
+   "code": 9030,
+   "name": "M1 Marine shelf",
+   "cells": 42402
+  },
+  {
+   "source": "evt",
+   "code": 9011,
+   "name": "T3.3 Cool temperate heathlands",
+   "cells": 28414
+  },
+  {
+   "source": "evt",
+   "code": 9004,
+   "name": "T2.1 Boreal and temperate high montane forests and woodlands",
+   "cells": 11034
+  },
+  {
+   "source": "evt",
+   "code": 9029,
+   "name": "F2 Lakes",
+   "cells": 7539
+  },
+  {
+   "source": "evt",
+   "code": 9015,
+   "name": "T4.5 Temperate subhumid grasslands",
+   "cells": 7454
+  },
+  {
+   "source": "evt",
+   "code": 9021,
+   "name": "T6.3 Polar tundra and deserts",
+   "cells": 6758
+  },
+  {
+   "source": "evt",
+   "code": 9005,
+   "name": "T2.2 Deciduous temperate forests",
+   "cells": 4135
+  },
+  {
+   "source": "evt",
+   "code": 9020,
+   "name": "T6.2 Polar/alpine cliffs, screes, outcrops and lava flows",
+   "cells": 2371
+  },
+  {
+   "source": "bps",
+   "code": 9011,
+   "name": "T3.3 Cool temperate heathlands",
+   "cells": 382
+  },
+  {
+   "source": "evt",
+   "code": 9019,
+   "name": "T6.1 Ice sheets, glaciers and perennial snowfields",
+   "cells": 243
+  },
+  {
+   "source": "evt",
+   "code": 9027,
+   "name": "MT1.3 Sandy shorelines",
+   "cells": 64,
+   "rule": null,
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 9028,
+   "name": "F1 Rivers and streams",
+   "cells": 62
+  },
+  {
+   "source": "evt",
+   "code": 9026,
+   "name": "MT1.1 Rocky shorelines",
+   "cells": 19,
+   "rule": null,
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 9024,
+   "name": "TF1.3 Permanent marshes",
+   "cells": 12,
+   "rule": null,
+   "named": []
+  }
+ ],
+ "unread": [
+  {
+   "source": "evt",
+   "code": 9027,
+   "name": "MT1.3 Sandy shorelines",
+   "cells": 64
+  },
+  {
+   "source": "evt",
+   "code": 9026,
+   "name": "MT1.1 Rocky shorelines",
+   "cells": 19
+  },
+  {
+   "source": "evt",
+   "code": 9024,
+   "name": "TF1.3 Permanent marshes",
+   "cells": 12
+  }
+ ],
+ "needs": [
+  {
+   "id": "cornus_suecica",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 142 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 142,
+   "scientific": "Cornus suecica",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 1
+  },
+  {
+   "id": "sorbus_aucuparia",
+   "kind": "tree",
+   "why": [
+    "GBIF: 83 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 83,
+   "scientific": "Sorbus aucuparia",
+   "record": true,
+   "card": true,
+   "drawn_as": "sorbus_aucuparia",
+   "rank": 2
+  },
+  {
+   "id": "empetrum_nigrum",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 74 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 74,
+   "scientific": "Empetrum nigrum",
+   "record": true,
+   "card": true,
+   "drawn_as": "empetrum_nigrum",
+   "rank": 3
+  },
+  {
+   "id": "succisa_pratensis",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 67 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 67,
+   "scientific": "Succisa pratensis",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 4
+  },
+  {
+   "id": "chamaenerion_angustifolium",
+   "kind": "forb",
+   "why": [
+    "GBIF: 63 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 63,
+   "scientific": "Chamaenerion angustifolium",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 5
+  },
+  {
+   "id": "potentilla_erecta",
+   "kind": "forb",
+   "why": [
+    "GBIF: 63 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 63,
+   "scientific": "Potentilla erecta",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 6
+  },
+  {
+   "id": "silene_dioica",
+   "kind": "forb",
+   "why": [
+    "GBIF: 62 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 62,
+   "scientific": "Silene dioica",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 7
+  },
+  {
+   "id": "rhodiola_rosea",
+   "kind": "forb",
+   "why": [
+    "GBIF: 59 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 59,
+   "scientific": "Rhodiola rosea",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 8
+  },
+  {
+   "id": "filipendula_ulmaria",
+   "kind": "forb",
+   "why": [
+    "GBIF: 47 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 47,
+   "scientific": "Filipendula ulmaria",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 9
+  },
+  {
+   "id": "geranium_sylvaticum",
+   "kind": "forb",
+   "why": [
+    "GBIF: 44 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 44,
+   "scientific": "Geranium sylvaticum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 10
+  },
+  {
+   "id": "reynoutria_japonica",
+   "kind": "forb",
+   "why": [
+    "GBIF: 44 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 44,
+   "scientific": "Reynoutria japonica",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 11
+  },
+  {
+   "id": "dactylorhiza_maculata",
+   "kind": "forb",
+   "why": [
+    "GBIF: 42 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 42,
+   "scientific": "Dactylorhiza maculata",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 12
+  },
+  {
+   "id": "lysimachia_europaea",
+   "kind": "forb",
+   "why": [
+    "GBIF: 42 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 42,
+   "scientific": "Lysimachia europaea",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 13
+  },
+  {
+   "id": "deschampsia_cespitosa",
+   "kind": "grass",
+   "why": [
+    "GBIF: 41 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 41,
+   "scientific": "Deschampsia cespitosa",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 14
+  },
+  {
+   "id": "carex_nigra",
+   "kind": "emergent",
+   "why": [
+    "GBIF: 37 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 37,
+   "scientific": "Carex nigra",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 15
+  },
+  {
+   "id": "trichophorum_cespitosum",
+   "kind": "emergent",
+   "why": [
+    "GBIF: 37 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 37,
+   "scientific": "Trichophorum cespitosum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 16
+  },
+  {
+   "id": "vaccinium_uliginosum",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 37 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 37,
+   "scientific": "Vaccinium uliginosum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 17
+  },
+  {
+   "id": "calluna_vulgaris",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 36 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 36,
+   "scientific": "Calluna vulgaris",
+   "record": true,
+   "card": true,
+   "drawn_as": "calluna_vulgaris",
+   "rank": 18
+  },
+  {
+   "id": "campanula_rotundifolia",
+   "kind": "forb",
+   "why": [
+    "GBIF: 36 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 36,
+   "scientific": "Campanula rotundifolia",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 19
+  },
+  {
+   "id": "cicerbita_alpina",
+   "kind": "forb",
+   "why": [
+    "GBIF: 36 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 36,
+   "scientific": "Cicerbita alpina",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 20
+  },
+  {
+   "id": "narthecium_ossifragum",
+   "kind": "forb",
+   "why": [
+    "GBIF: 36 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 36,
+   "scientific": "Narthecium ossifragum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 21
+  },
+  {
+   "id": "vaccinium_myrtillus",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 36 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 36,
+   "scientific": "Vaccinium myrtillus",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 22
+  },
+  {
+   "id": "equisetum_sylvaticum",
+   "kind": "fern",
+   "why": [
+    "GBIF: 33 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 33,
+   "scientific": "Equisetum sylvaticum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 23
+  },
+  {
+   "id": "rumex_acetosa",
+   "kind": "forb",
+   "why": [
+    "GBIF: 32 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 32,
+   "scientific": "Rumex acetosa",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 24
+  },
+  {
+   "id": "betula_pubescens",
+   "kind": "tree",
+   "why": [
+    "GBIF: 31 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 31,
+   "scientific": "Betula pubescens",
+   "record": true,
+   "card": true,
+   "drawn_as": "betula_pubescens",
+   "rank": 25
+  },
+  {
+   "id": "caltha_palustris",
+   "kind": "forb",
+   "why": [
+    "GBIF: 31 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 31,
+   "scientific": "Caltha palustris",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 26
+  },
+  {
+   "id": "avenella_flexuosa",
+   "kind": "grass",
+   "why": [
+    "GBIF: 30 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 30,
+   "scientific": "Avenella flexuosa",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 27
+  },
+  {
+   "id": "luzula_sylvatica",
+   "kind": "emergent",
+   "why": [
+    "GBIF: 30 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 30,
+   "scientific": "Luzula sylvatica",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 28
+  },
+  {
+   "id": "vaccinium_vitis_idaea",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 29 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 29,
+   "scientific": "Vaccinium vitis-idaea",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 29
+  },
+  {
+   "id": "anthoxanthum_odoratum",
+   "kind": "grass",
+   "why": [
+    "GBIF: 27 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 27,
+   "scientific": "Anthoxanthum odoratum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 30
+  },
+  {
+   "id": "solidago_virgaurea",
+   "kind": "forb",
+   "why": [
+    "GBIF: 27 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 27,
+   "scientific": "Solidago virgaurea",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 31
+  },
+  {
+   "id": "alchemilla_alpina",
+   "kind": "forb",
+   "why": [
+    "GBIF: 26 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 26,
+   "scientific": "Alchemilla alpina",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 32
+  },
+  {
+   "id": "andromeda_polifolia",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 25 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 25,
+   "scientific": "Andromeda polifolia",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 33
+  },
+  {
+   "id": "juniperus_communis",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 23 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 23,
+   "scientific": "Juniperus communis",
+   "record": true,
+   "card": true,
+   "drawn_as": "juniperus_communis",
+   "rank": 34
+  },
+  {
+   "id": "arctostaphylos_alpinus",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 19 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 19,
+   "scientific": "Arctostaphylos alpinus",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 35
+  },
+  {
+   "id": "acer_pseudoplatanus",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 16 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 16,
+   "scientific": "Acer pseudoplatanus",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 36
+  },
+  {
+   "id": "achillea_millefolium",
+   "kind": "forb",
+   "why": [
+    "GBIF: 14 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 14,
+   "scientific": "Achillea millefolium",
+   "record": true,
+   "card": false,
+   "drawn_as": "achillea_millefolium",
+   "rank": 37
+  },
+  {
+   "id": "valeriana_excelsa",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 14 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 14,
+   "scientific": "Valeriana excelsa",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 38
+  },
+  {
+   "id": "empetrum_hermaphroditum",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 12 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 12,
+   "scientific": "Empetrum hermaphroditum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 39
+  },
+  {
+   "id": "kalmia_procumbens",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 12 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 12,
+   "scientific": "Kalmia procumbens",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 40
+  },
+  {
+   "id": "salix_caprea",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 11 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 11,
+   "scientific": "Salix caprea",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 41
+  },
+  {
+   "id": "salix_glauca",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 10 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 10,
+   "scientific": "Salix glauca",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 42
+  },
+  {
+   "id": "salix_herbacea",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 10 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 10,
+   "scientific": "Salix herbacea",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 43
+  },
+  {
+   "id": "juncus_effusus",
+   "kind": "emergent",
+   "why": [
+    "GBIF: 8 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 8,
+   "scientific": "Juncus effusus",
+   "record": true,
+   "card": false,
+   "drawn_as": "juncus_effusus",
+   "rank": 44
+  },
+  {
+   "id": "urtica_dioica",
+   "kind": "forb",
+   "why": [
+    "GBIF: 8 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 8,
+   "scientific": "Urtica dioica",
+   "record": true,
+   "card": false,
+   "drawn_as": "urtica_dioica",
+   "rank": 45
+  }
+ ],
+ "gbif_plants": [
+  {
+   "id": "cornus_suecica",
+   "scientific": "Cornus suecica",
+   "family": "Cornaceae",
+   "kind": "shrub",
+   "records": 142,
+   "known": false
+  },
+  {
+   "id": "sorbus_aucuparia",
+   "scientific": "Sorbus aucuparia",
+   "family": "Rosaceae",
+   "kind": "tree",
+   "records": 83,
+   "known": true
+  },
+  {
+   "id": "empetrum_nigrum",
+   "scientific": "Empetrum nigrum",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 74,
+   "known": true
+  },
+  {
+   "id": "succisa_pratensis",
+   "scientific": "Succisa pratensis",
+   "family": "Caprifoliaceae",
+   "kind": "shrub",
+   "records": 67,
+   "known": false
+  },
+  {
+   "id": "potentilla_erecta",
+   "scientific": "Potentilla erecta",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 63,
+   "known": false
+  },
+  {
+   "id": "chamaenerion_angustifolium",
+   "scientific": "Chamaenerion angustifolium",
+   "family": "Onagraceae",
+   "kind": "forb",
+   "records": 63,
+   "known": false
+  },
+  {
+   "id": "silene_dioica",
+   "scientific": "Silene dioica",
+   "family": "Caryophyllaceae",
+   "kind": "forb",
+   "records": 62,
+   "known": false
+  },
+  {
+   "id": "rhodiola_rosea",
+   "scientific": "Rhodiola rosea",
+   "family": "Crassulaceae",
+   "kind": "forb",
+   "records": 59,
+   "known": false
+  },
+  {
+   "id": "filipendula_ulmaria",
+   "scientific": "Filipendula ulmaria",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 47,
+   "known": false
+  },
+  {
+   "id": "reynoutria_japonica",
+   "scientific": "Reynoutria japonica",
+   "family": "Polygonaceae",
+   "kind": "forb",
+   "records": 44,
+   "known": false
+  },
+  {
+   "id": "geranium_sylvaticum",
+   "scientific": "Geranium sylvaticum",
+   "family": "Geraniaceae",
+   "kind": "forb",
+   "records": 44,
+   "known": false
+  },
+  {
+   "id": "dactylorhiza_maculata",
+   "scientific": "Dactylorhiza maculata",
+   "family": "Orchidaceae",
+   "kind": "forb",
+   "records": 42,
+   "known": false
+  },
+  {
+   "id": "lysimachia_europaea",
+   "scientific": "Lysimachia europaea",
+   "family": "Primulaceae",
+   "kind": "forb",
+   "records": 42,
+   "known": false
+  },
+  {
+   "id": "deschampsia_cespitosa",
+   "scientific": "Deschampsia cespitosa",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 41,
+   "known": false
+  },
+  {
+   "id": "trichophorum_cespitosum",
+   "scientific": "Trichophorum cespitosum",
+   "family": "Cyperaceae",
+   "kind": "emergent",
+   "records": 37,
+   "known": false
+  },
+  {
+   "id": "carex_nigra",
+   "scientific": "Carex nigra",
+   "family": "Cyperaceae",
+   "kind": "emergent",
+   "records": 37,
+   "known": false
+  },
+  {
+   "id": "vaccinium_uliginosum",
+   "scientific": "Vaccinium uliginosum",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 37,
+   "known": false
+  },
+  {
+   "id": "calluna_vulgaris",
+   "scientific": "Calluna vulgaris",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 36,
+   "known": true
+  },
+  {
+   "id": "vaccinium_myrtillus",
+   "scientific": "Vaccinium myrtillus",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 36,
+   "known": false
+  },
+  {
+   "id": "cicerbita_alpina",
+   "scientific": "Cicerbita alpina",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 36,
+   "known": false
+  },
+  {
+   "id": "campanula_rotundifolia",
+   "scientific": "Campanula rotundifolia",
+   "family": "Campanulaceae",
+   "kind": "forb",
+   "records": 36,
+   "known": false
+  },
+  {
+   "id": "narthecium_ossifragum",
+   "scientific": "Narthecium ossifragum",
+   "family": "Nartheciaceae",
+   "kind": "forb",
+   "records": 36,
+   "known": false
+  },
+  {
+   "id": "equisetum_sylvaticum",
+   "scientific": "Equisetum sylvaticum",
+   "family": "Equisetaceae",
+   "kind": "fern",
+   "records": 33,
+   "known": false
+  },
+  {
+   "id": "rumex_acetosa",
+   "scientific": "Rumex acetosa",
+   "family": "Polygonaceae",
+   "kind": "forb",
+   "records": 32,
+   "known": false
+  },
+  {
+   "id": "caltha_palustris",
+   "scientific": "Caltha palustris",
+   "family": "Ranunculaceae",
+   "kind": "forb",
+   "records": 31,
+   "known": false
+  },
+  {
+   "id": "betula_pubescens",
+   "scientific": "Betula pubescens",
+   "family": "Betulaceae",
+   "kind": "tree",
+   "records": 31,
+   "known": true
+  },
+  {
+   "id": "luzula_sylvatica",
+   "scientific": "Luzula sylvatica",
+   "family": "Juncaceae",
+   "kind": "emergent",
+   "records": 30,
+   "known": false
+  },
+  {
+   "id": "avenella_flexuosa",
+   "scientific": "Avenella flexuosa",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 30,
+   "known": false
+  },
+  {
+   "id": "vaccinium_vitis_idaea",
+   "scientific": "Vaccinium vitis-idaea",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 29,
+   "known": false
+  },
+  {
+   "id": "anthoxanthum_odoratum",
+   "scientific": "Anthoxanthum odoratum",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 27,
+   "known": false
+  },
+  {
+   "id": "solidago_virgaurea",
+   "scientific": "Solidago virgaurea",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 27,
+   "known": false
+  },
+  {
+   "id": "alchemilla_alpina",
+   "scientific": "Alchemilla alpina",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 26,
+   "known": false
+  },
+  {
+   "id": "trifolium_pratense",
+   "scientific": "Trifolium pratense",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 26,
+   "known": false
+  },
+  {
+   "id": "cirsium_heterophyllum",
+   "scientific": "Cirsium heterophyllum",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 25,
+   "known": false
+  },
+  {
+   "id": "andromeda_polifolia",
+   "scientific": "Andromeda polifolia",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 25,
+   "known": false
+  },
+  {
+   "id": "rubus_chamaemorus",
+   "scientific": "Rubus chamaemorus",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 24,
+   "known": false
+  },
+  {
+   "id": "lotus_corniculatus",
+   "scientific": "Lotus corniculatus",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 24,
+   "known": false
+  },
+  {
+   "id": "pinguicula_vulgaris",
+   "scientific": "Pinguicula vulgaris",
+   "family": "Lentibulariaceae",
+   "kind": "forb",
+   "records": 24,
+   "known": false
+  },
+  {
+   "id": "juniperus_communis",
+   "scientific": "Juniperus communis",
+   "family": "Cupressaceae",
+   "kind": "shrub",
+   "records": 23,
+   "known": true
+  },
+  {
+   "id": "eriophorum_angustifolium",
+   "scientific": "Eriophorum angustifolium",
+   "family": "Cyperaceae",
+   "kind": "emergent",
+   "records": 22,
+   "known": false
+  },
+  {
+   "id": "ranunculus_acris",
+   "scientific": "Ranunculus acris",
+   "family": "Ranunculaceae",
+   "kind": "forb",
+   "records": 22,
+   "known": false
+  },
+  {
+   "id": "lysimachia_punctata",
+   "scientific": "Lysimachia punctata",
+   "family": "Primulaceae",
+   "kind": "forb",
+   "records": 22,
+   "known": false
+  },
+  {
+   "id": "lupinus_polyphyllus",
+   "scientific": "Lupinus polyphyllus",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 21,
+   "known": false
+  },
+  {
+   "id": "struthiopteris_spicant",
+   "scientific": "Struthiopteris spicant",
+   "family": "Blechnaceae",
+   "kind": "fern",
+   "records": 21,
+   "known": false
+  },
+  {
+   "id": "comarum_palustre",
+   "scientific": "Comarum palustre",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "arctostaphylos_alpinus",
+   "scientific": "Arctostaphylos alpinus",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 19,
+   "known": false
+  },
+  {
+   "id": "nardus_stricta",
+   "scientific": "Nardus stricta",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "agrostis_capillaris",
+   "scientific": "Agrostis capillaris",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "rhinanthus_minor",
+   "scientific": "Rhinanthus minor",
+   "family": "Orobanchaceae",
+   "kind": "forb",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "molinia_caerulea",
+   "scientific": "Molinia caerulea",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "festuca_vivipara",
+   "scientific": "Festuca vivipara",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 17,
+   "known": false
+  },
+  {
+   "id": "bistorta_vivipara",
+   "scientific": "Bistorta vivipara",
+   "family": "Polygonaceae",
+   "kind": "forb",
+   "records": 16,
+   "known": false
+  },
+  {
+   "id": "bartsia_alpina",
+   "scientific": "Bartsia alpina",
+   "family": "Orobanchaceae",
+   "kind": "forb",
+   "records": 16,
+   "known": false
+  },
+  {
+   "id": "veronica_officinalis",
+   "scientific": "Veronica officinalis",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 16,
+   "known": false
+  },
+  {
+   "id": "acer_pseudoplatanus",
+   "scientific": "Acer pseudoplatanus",
+   "family": "Sapindaceae",
+   "kind": "shrub",
+   "records": 16,
+   "known": false
+  },
+  {
+   "id": "athyrium_filix_femina",
+   "scientific": "Athyrium filix-femina",
+   "family": "Athyriaceae",
+   "kind": "fern",
+   "records": 16,
+   "known": false
+  },
+  {
+   "id": "sedum_annuum",
+   "scientific": "Sedum annuum",
+   "family": "Crassulaceae",
+   "kind": "forb",
+   "records": 16,
+   "known": false
+  },
+  {
+   "id": "angelica_sylvestris",
+   "scientific": "Angelica sylvestris",
+   "family": "Apiaceae",
+   "kind": "forb",
+   "records": 16,
+   "known": false
+  },
+  {
+   "id": "phegopteris_connectilis",
+   "scientific": "Phegopteris connectilis",
+   "family": "Thelypteridaceae",
+   "kind": "forb",
+   "records": 15,
+   "known": false
+  },
+  {
+   "id": "orchis_mascula",
+   "scientific": "Orchis mascula",
+   "family": "Orchidaceae",
+   "kind": "forb",
+   "records": 15,
+   "known": false
+  },
+  {
+   "id": "achillea_ptarmica",
+   "scientific": "Achillea ptarmica",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 15,
+   "known": false
+  },
+  {
+   "id": "dryopteris_expansa",
+   "scientific": "Dryopteris expansa",
+   "family": "Dryopteridaceae",
+   "kind": "fern",
+   "records": 15,
+   "known": false
+  },
+  {
+   "id": "dryopteris_filix_mas",
+   "scientific": "Dryopteris filix-mas",
+   "family": "Dryopteridaceae",
+   "kind": "fern",
+   "records": 15,
+   "known": false
+  },
+  {
+   "id": "ficaria_verna",
+   "scientific": "Ficaria verna",
+   "family": "Ranunculaceae",
+   "kind": "forb",
+   "records": 15,
+   "known": false
+  },
+  {
+   "id": "dactylis_glomerata",
+   "scientific": "Dactylis glomerata",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 14,
+   "known": false
+  },
+  {
+   "id": "carex_echinata",
+   "scientific": "Carex echinata",
+   "family": "Cyperaceae",
+   "kind": "emergent",
+   "records": 14,
+   "known": false
+  },
+  {
+   "id": "rumex_longifolius",
+   "scientific": "Rumex longifolius",
+   "family": "Polygonaceae",
+   "kind": "forb",
+   "records": 14,
+   "known": false
+  },
+  {
+   "id": "achillea_millefolium",
+   "scientific": "Achillea millefolium",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 14,
+   "known": true
+  },
+  {
+   "id": "viscaria_alpina",
+   "scientific": "Viscaria alpina",
+   "family": "Caryophyllaceae",
+   "kind": "forb",
+   "records": 14,
+   "known": false
+  },
+  {
+   "id": "valeriana_excelsa",
+   "scientific": "Valeriana excelsa",
+   "family": "Caprifoliaceae",
+   "kind": "shrub",
+   "records": 14,
+   "known": false
+  },
+  {
+   "id": "ajuga_pyramidalis",
+   "scientific": "Ajuga pyramidalis",
+   "family": "Lamiaceae",
+   "kind": "forb",
+   "records": 14,
+   "known": false
+  },
+  {
+   "id": "centaurea_montana",
+   "scientific": "Centaurea montana",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 14,
+   "known": false
+  },
+  {
+   "id": "festuca_rubra",
+   "scientific": "Festuca rubra",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "carex_pilulifera",
+   "scientific": "Carex pilulifera",
+   "family": "Cyperaceae",
+   "kind": "emergent",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "rumex_obtusifolius",
+   "scientific": "Rumex obtusifolius",
+   "family": "Polygonaceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "trifolium_repens",
+   "scientific": "Trifolium repens",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "saussurea_alpina",
+   "scientific": "Saussurea alpina",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "plantago_lanceolata",
+   "scientific": "Plantago lanceolata",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 13,
+   "known": false
+  },
+  {
+   "id": "luzula_multiflora",
+   "scientific": "Luzula multiflora",
+   "family": "Juncaceae",
+   "kind": "emergent",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "pseudorchis_albida",
+   "scientific": "Pseudorchis albida",
+   "family": "Orchidaceae",
+   "kind": "forb",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "drosera_rotundifolia",
+   "scientific": "Drosera rotundifolia",
+   "family": "Droseraceae",
+   "kind": "forb",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "anthoxanthum_nipponicum",
+   "scientific": "Anthoxanthum nipponicum",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "menyanthes_trifoliata",
+   "scientific": "Menyanthes trifoliata",
+   "family": "Menyanthaceae",
+   "kind": "forb",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "crepis_paludosa",
+   "scientific": "Crepis paludosa",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "empetrum_hermaphroditum",
+   "scientific": "Empetrum hermaphroditum",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "kalmia_procumbens",
+   "scientific": "Kalmia procumbens",
+   "family": "Ericaceae",
+   "kind": "shrub",
+   "records": 12,
+   "known": false
+  },
+  {
+   "id": "gymnocarpium_dryopteris",
+   "scientific": "Gymnocarpium dryopteris",
+   "family": "Cystopteridaceae",
+   "kind": "fern",
+   "records": 11,
+   "known": false
+  },
+  {
+   "id": "luzula_spicata",
+   "scientific": "Luzula spicata",
+   "family": "Juncaceae",
+   "kind": "emergent",
+   "records": 11,
+   "known": false
+  },
+  {
+   "id": "rubus_saxatilis",
+   "scientific": "Rubus saxatilis",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 11,
+   "known": false
+  },
+  {
+   "id": "alchemilla_glabra",
+   "scientific": "Alchemilla glabra",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 11,
+   "known": false
+  },
+  {
+   "id": "epipactis_atrorubens",
+   "scientific": "Epipactis atrorubens",
+   "family": "Orchidaceae",
+   "kind": "forb",
+   "records": 11,
+   "known": false
+  },
+  {
+   "id": "viola_biflora",
+   "scientific": "Viola biflora",
+   "family": "Violaceae",
+   "kind": "forb",
+   "records": 11,
+   "known": false
+  },
+  {
+   "id": "anthriscus_sylvestris",
+   "scientific": "Anthriscus sylvestris",
+   "family": "Apiaceae",
+   "kind": "forb",
+   "records": 11,
+   "known": false
+  },
+  {
+   "id": "salix_caprea",
+   "scientific": "Salix caprea",
+   "family": "Salicaceae",
+   "kind": "shrub",
+   "records": 11,
+   "known": false
+  },
+  {
+   "id": "micranthes_stellaris",
+   "scientific": "Micranthes stellaris",
+   "family": "Saxifragaceae",
+   "kind": "forb",
+   "records": 11,
+   "known": false
+  },
+  {
+   "id": "lycopodium_clavatum",
+   "scientific": "Lycopodium clavatum",
+   "family": "Lycopodiaceae",
+   "kind": "fern",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "juncus_filiformis",
+   "scientific": "Juncus filiformis",
+   "family": "Juncaceae",
+   "kind": "emergent",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "lilium_martagon",
+   "scientific": "Lilium martagon",
+   "family": "Liliaceae",
+   "kind": "forb",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "ranunculus_repens",
+   "scientific": "Ranunculus repens",
+   "family": "Ranunculaceae",
+   "kind": "forb",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "cerastium_alpinum",
+   "scientific": "Cerastium alpinum",
+   "family": "Caryophyllaceae",
+   "kind": "forb",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "dryas_octopetala",
+   "scientific": "Dryas octopetala",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "polypodium_vulgare",
+   "scientific": "Polypodium vulgare",
+   "family": "Polypodiaceae",
+   "kind": "fern",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "anthyllis_vulneraria",
+   "scientific": "Anthyllis vulneraria",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "geum_rivale",
+   "scientific": "Geum rivale",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "salix_glauca",
+   "scientific": "Salix glauca",
+   "family": "Salicaceae",
+   "kind": "shrub",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "salix_herbacea",
+   "scientific": "Salix herbacea",
+   "family": "Salicaceae",
+   "kind": "shrub",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "antennaria_dioica",
+   "scientific": "Antennaria dioica",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "equisetum_arvense",
+   "scientific": "Equisetum arvense",
+   "family": "Equisetaceae",
+   "kind": "fern",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "asplenium_trichomanes",
+   "scientific": "Asplenium trichomanes",
+   "family": "Aspleniaceae",
+   "kind": "fern",
+   "records": 10,
+   "known": false
+  },
+  {
+   "id": "oreopteris_limbosperma",
+   "scientific": "Oreopteris limbosperma",
+   "family": "Thelypteridaceae",
+   "kind": "forb",
+   "records": 9,
+   "known": false
+  },
+  {
+   "id": "juncus_articulatus",
+   "scientific": "Juncus articulatus",
+   "family": "Juncaceae",
+   "kind": "emergent",
+   "records": 9,
+   "known": false
+  },
+  {
+   "id": "carex_bigelowii",
+   "scientific": "Carex bigelowii",
+   "family": "Cyperaceae",
+   "kind": "emergent",
+   "records": 9,
+   "known": false
+  },
+  {
+   "id": "carex_demissa",
+   "scientific": "Carex demissa",
+   "family": "Cyperaceae",
+   "kind": "emergent",
+   "records": 9,
+   "known": false
+  },
+  {
+   "id": "polygonatum_verticillatum",
+   "scientific": "Polygonatum verticillatum",
+   "family": "Asparagaceae",
+   "kind": "forb",
+   "records": 9,
+   "known": false
+  },
+  {
+   "id": "vicia_cracca",
+   "scientific": "Vicia cracca",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 9,
+   "known": false
+  },
+  {
+   "id": "rosa_rugosa",
+   "scientific": "Rosa rugosa",
+   "family": "Rosaceae",
+   "kind": "forb",
+   "records": 9,
+   "known": false
+  },
+  {
+   "id": "omalotheca_norvegica",
+   "scientific": "Omalotheca norvegica",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 9,
+   "known": false
+  },
+  {
+   "id": "viola_tricolor",
+   "scientific": "Viola tricolor",
+   "family": "Violaceae",
+   "kind": "forb",
+   "records": 9,
+   "known": false
+  },
+  {
+   "id": "silene_flos_cuculi",
+   "scientific": "Silene flos-cuculi",
+   "family": "Caryophyllaceae",
+   "kind": "forb",
+   "records": 9,
+   "known": false
+  },
+  {
+   "id": "silene_acaulis",
+   "scientific": "Silene acaulis",
+   "family": "Caryophyllaceae",
+   "kind": "forb",
+   "records": 9,
+   "known": false
+  },
+  {
+   "id": "viola_riviniana",
+   "scientific": "Viola riviniana",
+   "family": "Violaceae",
+   "kind": "forb",
+   "records": 9,
+   "known": false
+  },
+  {
+   "id": "carex_leporina",
+   "scientific": "Carex leporina",
+   "family": "Cyperaceae",
+   "kind": "emergent",
+   "records": 9,
+   "known": false
+  },
+  {
+   "id": "juncus_effusus",
+   "scientific": "Juncus effusus",
+   "family": "Juncaceae",
+   "kind": "emergent",
+   "records": 8,
+   "known": true
+  },
+  {
+   "id": "juncus_bulbosus",
+   "scientific": "Juncus bulbosus",
+   "family": "Juncaceae",
+   "kind": "emergent",
+   "records": 8,
+   "known": false
+  },
+  {
+   "id": "sparganium_angustifolium",
+   "scientific": "Sparganium angustifolium",
+   "family": "Typhaceae",
+   "kind": "emergent",
+   "records": 8,
+   "known": false
+  },
+  {
+   "id": "eriophorum_vaginatum",
+   "scientific": "Eriophorum vaginatum",
+   "family": "Cyperaceae",
+   "kind": "emergent",
+   "records": 8,
+   "known": false
+  },
+  {
+   "id": "rumex_acetosella",
+   "scientific": "Rumex acetosella",
+   "family": "Polygonaceae",
+   "kind": "forb",
+   "records": 8,
+   "known": false
+  },
+  {
+   "id": "aegopodium_podagraria",
+   "scientific": "Aegopodium podagraria",
+   "family": "Apiaceae",
+   "kind": "forb",
+   "records": 8,
+   "known": false
+  },
+  {
+   "id": "plantago_maritima",
+   "scientific": "Plantago maritima",
+   "family": "Plantaginaceae",
+   "kind": "forb",
+   "records": 8,
+   "known": false
+  },
+  {
+   "id": "epilobium_montanum",
+   "scientific": "Epilobium montanum",
+   "family": "Onagraceae",
+   "kind": "forb",
+   "records": 8,
+   "known": false
+  },
+  {
+   "id": "viola_canina",
+   "scientific": "Viola canina",
+   "family": "Violaceae",
+   "kind": "forb",
+   "records": 8,
+   "known": false
+  },
+  {
+   "id": "melampyrum_pratense",
+   "scientific": "Melampyrum pratense",
+   "family": "Orobanchaceae",
+   "kind": "forb",
+   "records": 8,
+   "known": false
+  },
+  {
+   "id": "urtica_dioica",
+   "scientific": "Urtica dioica",
+   "family": "Urticaceae",
+   "kind": "forb",
+   "records": 8,
+   "known": true
+  },
+  {
+   "id": "botrychium_lunaria",
+   "scientific": "Botrychium lunaria",
+   "family": "Ophioglossaceae",
+   "kind": "forb",
+   "records": 7,
+   "known": false
+  },
+  {
+   "id": "cystopteris_fragilis",
+   "scientific": "Cystopteris fragilis",
+   "family": "Cystopteridaceae",
+   "kind": "fern",
+   "records": 7,
+   "known": false
+  },
+  {
+   "id": "polystichum_lonchitis",
+   "scientific": "Polystichum lonchitis",
+   "family": "Dryopteridaceae",
+   "kind": "fern",
+   "records": 7,
+   "known": false
+  },
+  {
+   "id": "equisetum_fluviatile",
+   "scientific": "Equisetum fluviatile",
+   "family": "Equisetaceae",
+   "kind": "fern",
+   "records": 7,
+   "known": false
+  },
+  {
+   "id": "anthoxanthum_nitens",
+   "scientific": "Anthoxanthum nitens",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 7,
+   "known": false
+  },
+  {
+   "id": "carex_pallescens",
+   "scientific": "Carex pallescens",
+   "family": "Cyperaceae",
+   "kind": "emergent",
+   "records": 7,
+   "known": false
+  },
+  {
+   "id": "neottia_ovata",
+   "scientific": "Neottia ovata",
+   "family": "Orchidaceae",
+   "kind": "forb",
+   "records": 7,
+   "known": false
+  },
+  {
+   "id": "galium_palustre",
+   "scientific": "Galium palustre",
+   "family": "Rubiaceae",
+   "kind": "forb",
+   "records": 7,
+   "known": false
+  },
+  {
+   "id": "vicia_sepium",
+   "scientific": "Vicia sepium",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 7,
+   "known": false
+  },
+  {
+   "id": "aquilegia_vulgaris",
+   "scientific": "Aquilegia vulgaris",
+   "family": "Ranunculaceae",
+   "kind": "forb",
+   "records": 7,
+   "known": false
+  },
+  {
+   "id": "matricaria_discoidea",
+   "scientific": "Matricaria discoidea",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 7,
+   "known": false
+  },
+  {
+   "id": "heracleum_persicum",
+   "scientific": "Heracleum persicum",
+   "family": "Apiaceae",
+   "kind": "forb",
+   "records": 7,
+   "known": false
+  },
+  {
+   "id": "euphrasia_wettsteinii",
+   "scientific": "Euphrasia wettsteinii",
+   "family": "Orobanchaceae",
+   "kind": "forb",
+   "records": 7,
+   "known": false
+  },
+  {
+   "id": "pseudathyrium_alpestre",
+   "scientific": "Pseudathyrium alpestre",
+   "family": "Athyriaceae",
+   "kind": "fern",
+   "records": 7,
+   "known": false
+  },
+  {
+   "id": "selaginella_selaginoides",
+   "scientific": "Selaginella selaginoides",
+   "family": "Selaginellaceae",
+   "kind": "fern",
+   "records": 6,
+   "known": false
+  },
+  {
+   "id": "poa_pratensis",
+   "scientific": "Poa pratensis",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 6,
+   "known": false
+  },
+  {
+   "id": "carex_lachenalii",
+   "scientific": "Carex lachenalii",
+   "family": "Cyperaceae",
+   "kind": "emergent",
+   "records": 6,
+   "known": false
+  }
+ ],
+ "generated": [],
+ "target": {
+  "tree": 21,
+  "shrub": 23,
+  "ground": 26
+ },
+ "by_layer": {
+  "tree": 2,
+  "shrub": 17,
+  "ground": 26
+ },
+ "hands": [
+  {
+   "id": "cornus_suecica",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 142 records on the tile"
+   ]
+  },
+  {
+   "id": "succisa_pratensis",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 67 records on the tile"
+   ]
+  },
+  {
+   "id": "chamaenerion_angustifolium",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 63 records on the tile"
+   ]
+  },
+  {
+   "id": "potentilla_erecta",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 63 records on the tile"
+   ]
+  },
+  {
+   "id": "silene_dioica",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 62 records on the tile"
+   ]
+  },
+  {
+   "id": "rhodiola_rosea",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 59 records on the tile"
+   ]
+  },
+  {
+   "id": "filipendula_ulmaria",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 47 records on the tile"
+   ]
+  },
+  {
+   "id": "geranium_sylvaticum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 44 records on the tile"
+   ]
+  },
+  {
+   "id": "reynoutria_japonica",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 44 records on the tile"
+   ]
+  },
+  {
+   "id": "dactylorhiza_maculata",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 42 records on the tile"
+   ]
+  },
+  {
+   "id": "lysimachia_europaea",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 42 records on the tile"
+   ]
+  },
+  {
+   "id": "deschampsia_cespitosa",
+   "kind": "grass",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 41 records on the tile"
+   ]
+  },
+  {
+   "id": "carex_nigra",
+   "kind": "emergent",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 37 records on the tile"
+   ]
+  },
+  {
+   "id": "trichophorum_cespitosum",
+   "kind": "emergent",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 37 records on the tile"
+   ]
+  },
+  {
+   "id": "vaccinium_uliginosum",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 37 records on the tile"
+   ]
+  },
+  {
+   "id": "campanula_rotundifolia",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 36 records on the tile"
+   ]
+  },
+  {
+   "id": "cicerbita_alpina",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 36 records on the tile"
+   ]
+  },
+  {
+   "id": "narthecium_ossifragum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 36 records on the tile"
+   ]
+  },
+  {
+   "id": "vaccinium_myrtillus",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 36 records on the tile"
+   ]
+  },
+  {
+   "id": "equisetum_sylvaticum",
+   "kind": "fern",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 33 records on the tile"
+   ]
+  },
+  {
+   "id": "rumex_acetosa",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 32 records on the tile"
+   ]
+  },
+  {
+   "id": "caltha_palustris",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 31 records on the tile"
+   ]
+  },
+  {
+   "id": "avenella_flexuosa",
+   "kind": "grass",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 30 records on the tile"
+   ]
+  },
+  {
+   "id": "luzula_sylvatica",
+   "kind": "emergent",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 30 records on the tile"
+   ]
+  },
+  {
+   "id": "vaccinium_vitis_idaea",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 29 records on the tile"
+   ]
+  },
+  {
+   "id": "anthoxanthum_odoratum",
+   "kind": "grass",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 27 records on the tile"
+   ]
+  },
+  {
+   "id": "solidago_virgaurea",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 27 records on the tile"
+   ]
+  },
+  {
+   "id": "alchemilla_alpina",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 26 records on the tile"
+   ]
+  },
+  {
+   "id": "andromeda_polifolia",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 25 records on the tile"
+   ]
+  },
+  {
+   "id": "arctostaphylos_alpinus",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 19 records on the tile"
+   ]
+  },
+  {
+   "id": "acer_pseudoplatanus",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 16 records on the tile"
+   ]
+  },
+  {
+   "id": "valeriana_excelsa",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 14 records on the tile"
+   ]
+  },
+  {
+   "id": "empetrum_hermaphroditum",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 12 records on the tile"
+   ]
+  },
+  {
+   "id": "kalmia_procumbens",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 12 records on the tile"
+   ]
+  },
+  {
+   "id": "salix_caprea",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 11 records on the tile"
+   ]
+  },
+  {
+   "id": "salix_glauca",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 10 records on the tile"
+   ]
+  },
+  {
+   "id": "salix_herbacea",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 10 records on the tile"
+   ]
+  },
+  {
+   "id": "MT1.3 Sandy shorelines",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "64 cells"
+   ]
+  },
+  {
+   "id": "MT1.1 Rocky shorelines",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "19 cells"
+   ]
+  },
+  {
+   "id": "TF1.3 Permanent marshes",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "12 cells"
+   ]
+  }
+ ],
+ "summary": {
+  "needed": 45,
+  "with_record": 8,
+  "generated_now": 0,
+  "queued": 37,
+  "unread_communities": 3,
+  "by_layer": {
+   "tree": 2,
+   "shrub": 17,
+   "ground": 26
+  },
+  "meets_target": {
+   "tree": false,
+   "shrub": false,
+   "ground": true
+  },
+  "hands": 40
+ }
+}

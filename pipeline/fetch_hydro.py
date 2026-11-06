@@ -41,15 +41,10 @@ def _osm_fallback(tile: Tile) -> tuple[list[dict], list[dict]]:
     w, s, e, n = tile.bounds_wgs84
     q = f"""[out:json][timeout:180][bbox:{s},{w},{n},{e}];
 (way["waterway"~"^(river|stream)$"]; way["natural"="water"]; relation["natural"="water"];); out geom;"""
-    data = None
-    for url in MIRRORS:
-        try:
-            data = post(url, {"data": q}).json()
-            break
-        except Exception:  # noqa: BLE001
-            continue
-    if data is None:
-        raise RuntimeError("OSM hydro fallback failed on all mirrors")
+    # the osm step's reader: every mirror, then the system curl on a TLS failure, cached by the tile (2026-11-05: the
+    # requests-only loop here hung on the probes, where Python's TLS could not reach overpass-api.de)
+    from .fetch_osm import overpass
+    data = overpass(q, tile.path("_cache/overpass_hydro.json"))
     flow, water = [], []
     for el in data.get("elements", []):
         tags = el.get("tags", {})
@@ -76,13 +71,18 @@ def _osm_fallback(tile: Tile) -> tuple[list[dict], list[dict]]:
 
 def fetch_hydro(tile: Tile, force=False) -> dict:
     source = "nhdplus_hr"
-    try:
-        flow = _query(FLOWLINE_LAYER, tile, FLOWLINE_FIELDS)
-        water = _query(WATERBODY_LAYER, tile, WATERBODY_FIELDS)
-    except Exception as e:  # noqa: BLE001
-        print(f"NHDPlus HR failed ({e}); falling back to OSM waterways")
+    from . import regions
+    if not regions.covers("nhdplus_hr", tile):   # outside NHD the service answers empty, not an error: go to OSM directly
         flow, water = _osm_fallback(tile)
         source = "osm"
+    else:
+        try:
+            flow = _query(FLOWLINE_LAYER, tile, FLOWLINE_FIELDS)
+            water = _query(WATERBODY_LAYER, tile, WATERBODY_FIELDS)
+        except Exception as e:  # noqa: BLE001
+            print(f"NHDPlus HR failed ({e}); falling back to OSM waterways")
+            flow, water = _osm_fallback(tile)
+            source = "osm"
     write_json(tile.path("hydro/flowlines.geojson"), {"type": "FeatureCollection", "features": flow})
     write_json(tile.path("hydro/waterbodies.geojson"), {"type": "FeatureCollection", "features": water})
     reservoirs = [f["properties"].get("gnis_name") for f in water

@@ -61,6 +61,13 @@ SOURCES["meta_canopy_height"] = {
                    "Environment 300:113888",
     "attribution_url": "https://doi.org/10.1016/j.rse.2023.113888", "attribution_required": True,
 }
+SOURCES["iucn_get"] = {
+    "name": "IUCN Global Ecosystem Typology 2.0 (the functional group codes and names; the rules are the pipeline's)",
+    "url": "https://global-ecosystems.org/", "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "attribution": "Ecosystem groups: Keith, D.A. et al. (2022) A function-based typology for Earth's ecosystems. Nature 610:513",
+    "attribution_url": "https://doi.org/10.1038/s41586-022-05318-4", "attribution_required": True,
+}
 SOURCES["soilgrids"] = {
     "name": "ISRIC SoilGrids 2.0 (250 m), 0-5 cm mean",
     "url": "https://www.isric.org/explore/soilgrids",
@@ -261,3 +268,59 @@ def climate_normals(tile: Tile, years: int = 10, force=False) -> dict:
                      "pet_mm": round(float(np.sum(out["pet_mm"])))}
     out["koppen"] = koppen(t, p, lat)
     return out
+
+
+# ---------------------------------------------------------------------------------------------- imagery
+
+SOURCES.setdefault("sentinel2_l2a", {
+    "name": "Copernicus Sentinel-2 L2A via Microsoft Planetary Computer",
+    "url": "https://planetarycomputer.microsoft.com/dataset/sentinel-2-l2a",
+    "license": "Copernicus Sentinel data terms (free, full and open)",
+    "license_url": "https://sentinels.copernicus.eu/documents/247904/690755/Sentinel_Data_Legal_Notice",
+    "attribution": "Contains modified Copernicus Sentinel data", "attribution_url": "https://sentinels.copernicus.eu/",
+    "attribution_required": True})
+
+CLOUDY_SCL = (0, 1, 3, 8, 9, 10)   # no data, saturated, cloud shadow, cloud medium / high, cirrus
+
+
+def sentinel_true_colour(tile: Tile, res_m: float = 10.0, max_items: int = 14, years: int = 3) -> tuple[np.ndarray, dict]:
+    """A cloud-masked median true-colour composite of the clearest Sentinel-2 L2A scenes of the last `years` years,
+    as uint8 RGB (3, n, n) on the tile grid at res_m, encoded like the seasons step's colour (sRGB of 2.5 x reflectance)."""
+    from datetime import date as _d
+    end = _d.today()
+    rng = f"{end.year - years}-{end.month:02d}-01/{end.isoformat()}"
+    items = []
+    for cc in (20, 50, 80):
+        items = pc_items("sentinel-2-l2a", tile, query={"eo:cloud_cover": {"lt": cc}}, limit=200)
+        items = [i for i in items if rng.split("/")[0] <= i["properties"]["datetime"][:10]]
+        if len(items) >= 6:
+            break
+    if not items:
+        raise RuntimeError("no Sentinel-2 L2A scenes over this tile")
+    items = sorted(items, key=lambda i: i["properties"].get("eo:cloud_cover", 100))[:max_items]
+    n, _ = grid(tile, res_m)
+    stack = []
+    for it in items:
+        try:
+            scl = read_to_grid([_sign(it["assets"]["SCL"]["href"])], tile, res_m, resampling=Resampling.nearest,
+                               nodata=0, dtype="uint8")
+            bands = [read_to_grid([_sign(it["assets"][b]["href"])], tile, res_m, nodata=0, dtype="float32")
+                     for b in ("B04", "B03", "B02")]
+        except Exception as e:  # noqa: BLE001
+            runlog.note(f"sentinel scene {it['id']} unreadable: {str(e)[:120]}")
+            continue
+        off = 1000.0 if float(it["properties"].get("s2:processing_baseline", "0") or 0) >= 4.0 else 0.0
+        rgb = np.stack([(b - off) / 10000.0 for b in bands])
+        bad = np.isin(scl, CLOUDY_SCL) | (bands[0] == 0)
+        rgb[:, bad] = np.nan
+        stack.append(rgb.astype("float32"))
+    if not stack:
+        raise RuntimeError("no readable Sentinel-2 scenes")
+    med = np.nanmedian(np.stack(stack), axis=0)
+    clear = np.isfinite(med[0]).mean()
+    med = np.where(np.isfinite(med), med, np.nanmedian(med))
+    from .fetch_sentinel import _srgb_encode
+    out = np.round(_srgb_encode(np.clip(med * 2.5, 0, 1)) * 255).astype("uint8")
+    runlog.fetched("sentinel2_l2a")
+    return out, {"source": "sentinel2_l2a", "scenes": len(stack), "clear_fraction": round(float(clear), 4),
+                 "dates": sorted(i["properties"]["datetime"][:10] for i in items)}

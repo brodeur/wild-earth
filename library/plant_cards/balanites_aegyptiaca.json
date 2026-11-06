@@ -1,0 +1,281 @@
+{
+ "id": "balanites_aegyptiaca",
+ "scientific": "Balanites aegyptiaca",
+ "common": "desert date",
+ "aliases": [
+  "desert_date",
+  "soapberry_tree",
+  "thorn_tree",
+  "lalob"
+ ],
+ "family": "Zygophyllaceae",
+ "form": "tree",
+ "deciduous": true,
+ "template": "quercus_wislizeni",
+ "regions": [
+  "east_africa"
+ ],
+ "height_m": [
+  5,
+  10
+ ],
+ "stature": {
+  "typical_m": 7,
+  "tall_m": 12,
+  "record_m": null,
+  "source": "tall: Wikipedia, about 10 m; typical: the drafter's estimate for the Serengeti; read 2026-11-05"
+ },
+ "variants_height_m": {
+  "young": [
+   1.5,
+   4
+  ],
+  "veteran": [
+   9,
+   12
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.2,
+    0.25
+   ],
+   [
+    0.35,
+    0.38
+   ],
+   [
+    0.55,
+    0.45
+   ],
+   [
+    0.72,
+    0.42
+   ],
+   [
+    0.86,
+    0.3
+   ],
+   [
+    1.0,
+    0.08
+   ]
+  ],
+  "lobes": 5,
+  "lobe_depth": 0.18,
+  "asymmetry": 0.25,
+  "fill": 0.55,
+  "edge": 1.08
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    96,
+    112,
+    72
+   ],
+   "spring": [
+    94,
+    110,
+    70
+   ],
+   "summer": [
+    104,
+    114,
+    78
+   ],
+   "fall": [
+    106,
+    114,
+    80
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 0.9,
+   "fall": 0.85
+  },
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   0.95,
+   0.9,
+   0.85,
+   0.8,
+   0.85,
+   0.95,
+   1.0
+  ],
+  "leaf_size_m": 0.04,
+  "leaf_shape": "oval",
+  "flowers": {
+   "season": "summer",
+   "months": [
+    7,
+    9
+   ],
+   "form": "cluster",
+   "rgb": [
+    206,
+    210,
+    140
+   ],
+   "size_m": 0.03,
+   "density": 0.3,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": [
+    "winter",
+    "spring"
+   ],
+   "months": [
+    12,
+    4
+   ],
+   "form": "bud",
+   "rgb": [
+    190,
+    150,
+    80
+   ],
+   "size_m": 0.035,
+   "density": 0.3
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   112,
+   104,
+   90
+  ],
+  "bark_pattern": "furrowed",
+  "stems": [
+   1,
+   2
+  ],
+  "twig_rgb": [
+   98,
+   120,
+   70
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 0.9,
+  "crown_base_ratio": 0.2,
+  "porosity": 0.3,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-05), no photographs measured; to be replaced by photo measurements: a fluted grey-brown trunk and a dense, rounded to irregular crown of tangled, spiny, green twigs with small grey-green leaves, darker and denser than the acacias around it"
+ },
+ "variant_patches": {
+  "young": {
+   "set": {
+    "trunk": {
+     "stems": [
+      1,
+      3
+     ]
+    }
+   },
+   "note": "a spiny green bush, the twigs themselves green and photosynthetic"
+  },
+  "veteran": {
+   "set": {
+    "trunk": {
+     "stems": [
+      1,
+      2
+     ]
+    }
+   },
+   "note": "an old tree with a deeply fluted trunk and ragged bark showing yellow-green patches"
+  }
+ },
+ "description": "A spiny, evergreen savanna tree 5-10 m tall with a fluted trunk, ragged grey-brown bark and a dense, rounded crown of tangled green twigs armed with long straight spines, each carrying a pair of small grey-green leaflets. Its olive-sized fruits, the 'desert dates', ripen yellow-brown and are taken by elephants, baboons and antelope.",
+ "season_notes": {
+  "winter": "December to February: in leaf; the fruit ripening yellow-brown.",
+  "spring": "March to May: in leaf; fallen fruit under the tree.",
+  "summer": "June to August, the dry season: it keeps most of its leaves when the acacias thin; small greenish-yellow flowers.",
+  "fall": "September to November: the greenest tree on the dry plains; new fruit set."
+ },
+ "habitat": {
+  "classes": {
+   "grassland": 0.6,
+   "chaparral": 0.7,
+   "oak_woodland": 0.6,
+   "riparian": 0.4
+  },
+  "floor": 1.3,
+  "mid": 1.0,
+  "steep": 0.6,
+  "north": 1.0,
+  "shade": 0.1,
+  "disturbed": 1.1
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "loxodonta_africana",
+    "part": "berries",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "papio_anubis",
+    "part": "berries",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "chlorocebus_pygerythrus",
+    "part": "berries",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "giraffa_camelopardalis",
+    "part": "browse",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "aepyceros_melampus",
+    "part": "berries",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   }
+  ],
+  "cover_for": []
+ },
+ "range": {
+  "elev_m": [
+   0,
+   2000
+  ],
+  "where": "arid to subhumid Africa and the Middle East, on sand to heavy clay (Wikipedia); in the Serengeti scattered in the acacia savanna and along drainage lines and floodplain margins"
+ },
+ "stand_in": "quercus_wislizeni",
+ "notes": "No relative in the library (Zygophyllaceae); grown from interior live oak, an evergreen tree with a dense rounded crown of small leaves, which is the closest architecture. COMPROMISES: the long green spines and green photosynthetic twigs are not drawn (no spine primitive; twig_rgb is green as a nod to them); the leaves are bifoliolate (two leaflets 2.5-6 cm) and are drawn as single small ovals; the fluted trunk is round (the generator has no fluting) with 'furrowed' bark standing in for ragged, shedding bark. Wikipedia: about 10 m, generally narrow form, fluted trunk, grey-brown ragged bark shedding to yellow-green patches, long straight green spines, greenish-yellow flowers, ellipsoid fruit under 4 cm ripening brown to pale brown, elephants eat the fruit, tolerant of flooding, fire and livestock. Phenology and the fruit and flower months are the drafter's judgement (it fruits even in dry times); the fruit is a single 'bud' berry. The client's seasons are calendar quarters (winter Dec-Feb, spring Mar-May, summer Jun-Aug, fall Sep-Nov) whatever the hemisphere or climate; the colours and leaf-on here are given for those months at the tile, not for a temperate winter. Animals are GBIF ids not yet in the library. Region tag east_africa is not yet a natural region in pipeline/regions.py. Marked deciduous (2026-11-05): facultatively so, it sheds part of its leaves late in the dry season (leaf_on_by_month to 0.8), so it is not an evergreen in the schema's sense.",
+ "sources": [
+  "GBIF species match, Balanites aegyptiaca: ACCEPTED, https://api.gbif.org/v1/species/match?name=Balanites%20aegyptiaca, read 2026-11-05",
+  "https://en.wikipedia.org/wiki/Balanites_aegyptiaca, read 2026-11-05"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-05); needs local sign-off"
+ ]
+}

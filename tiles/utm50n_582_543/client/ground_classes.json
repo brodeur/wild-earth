@@ -1,0 +1,171 @@
+{
+ "rock_classes": [
+  "greenstone_metavolcanic",
+  "serpentinite",
+  "slate_phyllite",
+  "schist",
+  "granitic",
+  "volcanic",
+  "sandstone_conglomerate",
+  "limestone_marble",
+  "alluvium",
+  "other"
+ ],
+ "resistance": {
+  "greenstone_metavolcanic": 0.9,
+  "granitic": 0.8,
+  "serpentinite": 0.8,
+  "schist": 0.6,
+  "slate_phyllite": 0.6,
+  "volcanic": 0.7,
+  "sandstone_conglomerate": 0.4,
+  "limestone_marble": 0.7,
+  "alluvium": 0.0,
+  "other": 0.4
+ },
+ "geology": {
+  "encoding": "client/geology.png R = unit index, G = rock class index (1-based into rock_classes)",
+  "units": {
+   "1": {
+    "name": "Mesozoic sedimentary rocks",
+    "rock_class": "sandstone_conglomerate",
+    "age": "Mesozoic",
+    "lithology": "sedimentary rocks",
+    "fraction": 1.0
+   }
+  },
+  "source": "macrostrat"
+ },
+ "soils": {
+  "encoding": "client/soils.png R = map unit index, G = surface rock fragments %, B = depth to bedrock dm (255 none)",
+  "mapunits": {
+   "1": {
+    "musym": null,
+    "muname": "clay loam",
+    "component": null,
+    "texture_class": "clay loam",
+    "texture_modifier": "none",
+    "surface_texture": null,
+    "rock_fragments_pct": 9.3,
+    "depth_to_bedrock_cm": null,
+    "bedrock_restriction": false,
+    "rock_outcrop_pct": null,
+    "rock_land": false,
+    "parent_material": null,
+    "taxorder": null,
+    "drainage": null,
+    "fraction": 0.7953
+   },
+   "2": {
+    "musym": null,
+    "muname": "clay",
+    "component": null,
+    "texture_class": "clay",
+    "texture_modifier": "none",
+    "surface_texture": null,
+    "rock_fragments_pct": 8.1,
+    "depth_to_bedrock_cm": null,
+    "bedrock_restriction": false,
+    "rock_outcrop_pct": null,
+    "rock_land": false,
+    "parent_material": null,
+    "taxorder": null,
+    "drainage": null,
+    "fraction": 0.2018
+   },
+   "3": {
+    "musym": null,
+    "muname": "Water",
+    "component": null,
+    "texture_class": "water",
+    "texture_modifier": "none",
+    "surface_texture": null,
+    "rock_fragments_pct": 10.3,
+    "depth_to_bedrock_cm": null,
+    "bedrock_restriction": false,
+    "rock_outcrop_pct": null,
+    "rock_land": false,
+    "parent_material": null,
+    "taxorder": null,
+    "drainage": null,
+    "fraction": 0.0018
+   },
+   "4": {
+    "musym": null,
+    "muname": "gravelly clay loam",
+    "component": null,
+    "texture_class": "clay loam",
+    "texture_modifier": "gravelly",
+    "surface_texture": null,
+    "rock_fragments_pct": 15.1,
+    "depth_to_bedrock_cm": null,
+    "bedrock_restriction": false,
+    "rock_outcrop_pct": null,
+    "rock_land": false,
+    "parent_material": null,
+    "taxorder": null,
+    "drainage": null,
+    "fraction": 0.0007
+   },
+   "5": {
+    "musym": null,
+    "muname": "rock outcrop",
+    "component": null,
+    "texture_class": "rock outcrop",
+    "texture_modifier": "none",
+    "surface_texture": null,
+    "rock_fragments_pct": 10.6,
+    "depth_to_bedrock_cm": 0,
+    "bedrock_restriction": true,
+    "rock_outcrop_pct": null,
+    "rock_land": true,
+    "parent_material": null,
+    "taxorder": null,
+    "drainage": null,
+    "fraction": 0.0004
+   }
+  }
+ },
+ "fractions": {
+  "rock_class": {
+   "sandstone_conglomerate": 1.0
+  },
+  "texture_class": {
+   "clay loam": 0.796,
+   "clay": 0.2018,
+   "water": 0.0018,
+   "rock outcrop": 0.0004
+  },
+  "texture_modifier": {
+   "none": 0.9993,
+   "gravelly": 0.0007
+  },
+  "depth_to_bedrock": {
+   "0-25": 0.0004,
+   "25-50": 0.0,
+   "50-100": 0.0,
+   "100-150": 0.0,
+   ">=150": 0.0,
+   "none_or_unknown": 0.9996
+  }
+ },
+ "rock_fragments_pct": {
+  "min": 5.0,
+  "p10": 7.0,
+  "median": 9.0,
+  "p90": 11.0,
+  "max": 100.0,
+  "mean": 9.1
+ },
+ "depth_to_bedrock_cm": {
+  "min": 0.0,
+  "median": 0.0,
+  "max": 0.0
+ },
+ "outcrop": {
+  "formula": "outcrop = clip(resistance[rock_class] * shallowness * terrain * (1 - tree_cover_pct/100 * 0.5), 0, 1); shallowness = clip((150 - depth_to_bedrock_cm) / (150 - 25), 0, 1) (0 where depth unknown); terrain = min(slope_deg / 35, 1) + 0.5 * clip(TPI_m / 1.5, 0, 1), TPI = z - mean(z, 150 m window) on the DEM averaged to 30 m; tree cover from LANDFIRE EVC; water = 0",
+  "mean": 0.0001,
+  "fraction_above_0.5": 0.0,
+  "fraction_above_0.25": 0.0
+ }
+}

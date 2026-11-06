@@ -425,9 +425,9 @@ B, F, A, G = STAGES
 
 STEPS: dict[str, Step] = {s.name: s for s in [
     # ---------------------------------------------------------------- base
-    Step("dem", "1", ["fetch_dem", "arcgis"], [], _dem, ["terrain.dem"], ["usgs_3dep", "pc_3dep_seamless", "nasadem"],
+    Step("dem", "1", ["fetch_dem", "arcgis", "fetch_global"], [], _dem, ["terrain.dem"], ["usgs_3dep", "pc_3dep_seamless", "nasadem", "copernicus_dem_glo30"],
          doc="the 5 m bare-earth DEM", stage=B),
-    Step("naip", "1", ["fetch_naip", "arcgis"], [], _naip, ["imagery.naip"], ["pc_naip", "usgs_naip"],
+    Step("naip", "1", ["fetch_naip", "arcgis", "fetch_global"], [], _naip, ["imagery.naip"], ["pc_naip", "usgs_naip", "sentinel2_l2a"],
          doc="present-day imagery at 2.5 m", stage=B),
     Step("osm", "1", ["fetch_osm"], [], _osm, ["footprint.mask"], ["osm"], doc="the human footprint: buildings, roads, dams", stage=B),
     Step("hydro", "1", ["fetch_hydro"], [], _hydro, ["hydro.flowlines", "hydro.waterbodies"], ["nhdplus_hr", "osm"],
@@ -437,7 +437,8 @@ STEPS: dict[str, Step] = {s.name: s for s in [
     Step("rewild_hydro", "1", ["rewild_hydro", "channels"], ["dem", "channels", "hydro", "osm"], _rewild_hydro,
          ["hydro.human_water", "terrain.dem_rewilded", "client.channel_profile"], ["osm", "native_land"],
          owner="water lane", doc="dams breached, reservoirs drained, channels re-routed, pool-riffle profile", stage=B),
-    Step("landcover", "1", ["fetch_vegetation", "habitat"], ["rewild_hydro"], _veg, ["vegetation."], ["landfire"],
+    Step("landcover", "1", ["fetch_vegetation", "habitat", "landcover_global", "ecosystem", "fetch_global"], ["rewild_hydro"], _veg,
+         ["vegetation.", "climate."], ["landfire", "esa_worldcover", "meta_canopy_height", "open_meteo", "soilgrids", "iucn_get"],
          doc="LANDFIRE EVT/EVC/EVH/BpS and the habitat classes, human cells backfilled from BpS: what covers the ground, "
              "which the base layer's erasure, substrate and textures need; the flora stage reads it for its species", stage=B),
     Step("ice", "1", ["ice"], ["dem", "landcover"], _ice, ["terrain.ice"], ["osm"],
@@ -453,9 +454,9 @@ STEPS: dict[str, Step] = {s.name: s for s in [
     Step("water", "1", ["water", "water_seams"], ["dem", "rewild_hydro", "reroute", "hydro", "lidar"], _water,
          ["terrain.dem_banked", "client.heights", "client.water", "hydro.water_reaches"], [], owner="water lane",
          doc="banks, beds, levels and riparian zones", stage=B),
-    Step("ground", "1", ["ground", "fetch_soils", "fetch_geology"], ["dem", "landcover", "lidar"], _ground,
+    Step("ground", "1", ["ground", "fetch_soils", "fetch_geology", "soils_global", "fetch_global"], ["dem", "landcover", "lidar"], _ground,
          ["geology.", "soils.", "client.geology", "client.soils", "client.outcrop", "client.ground_classes"],
-         ["macrostrat", "usda_sda"], doc="geology and soils, outcrop likelihood, ground classes", stage=B),
+         ["macrostrat", "usda_sda", "soilgrids"], doc="geology and soils, outcrop likelihood, ground classes", stage=B),
     Step("terrain", "1", ["derive", "urban", "habitat", "fetch_places", "fetch_territories"],
          ["dem", "naip", "osm", "hydro", "channels", "rewild_hydro", "water", "landcover", "ice"], _terrain,
          ["terrain.hillshade", "terrain.terrain_rgb", "footprint.mask_raster", "imagery.naip_png", "vegetation.habitat_png",

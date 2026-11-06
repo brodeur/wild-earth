@@ -1,0 +1,119 @@
+{
+ "id": "echinosorex_gymnura",
+ "scientific": "Echinosorex gymnura",
+ "common": "moonrat",
+ "kind": "mammal",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Mammalia",
+  "order": "Erinaceomorpha",
+  "family": "Erinaceidae",
+  "genus": "Echinosorex"
+ },
+ "body_plan": "quadruped",
+ "mass_kg": 0.957,
+ "size": {
+  "length_m": 0.355,
+  "shoulder_or_wingspan_m": 0.22
+ },
+ "diet": {
+  "role": [
+   "predator"
+  ],
+  "diet_tenths": {
+   "inv": 5.0,
+   "vend": 0.0,
+   "vect": 3.0,
+   "vfish": 2.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.5,
+  "mass_kg": 0.957,
+  "activity": [
+   "nocturnal"
+  ],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 247.8
+  },
+  "sound": {
+   "range_m": 346.9
+  },
+  "scent": {
+   "range_m": 495.6
+  }
+ },
+ "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+ "locomotion": {
+  "code": "echinosorex_gymnura",
+  "class": "Mammalia",
+  "order": "Erinaceomorpha",
+  "family": "Erinaceidae",
+  "body_plan": "quadruped",
+  "mass_kg": 0.957,
+  "length_m": 0.355,
+  "hip_m": 0.22,
+  "posture": "parasagittal",
+  "gaits": {
+   "walk": "froude 0.5",
+   "trot": "froude 2.5",
+   "gallop": "beyond"
+  },
+  "walk_mps": 1.04,
+  "trot_mps": 2.32,
+  "cruise_mps": 4.95,
+  "top_mps": 8.26,
+  "stride_hz": 4.22,
+  "stride_m": 0.55,
+  "sprint_s": 3.7,
+  "recover_s": 13.0,
+  "turn_rad_s": 4.21,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.078,
+   "max_rad": 0.44,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {},
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T04:06:18Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}
