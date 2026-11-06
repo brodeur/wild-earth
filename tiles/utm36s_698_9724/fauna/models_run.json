@@ -1,385 +1,645 @@
 {
  "tile": "utm36s_698_9724",
- "started": "2026-11-06T07:27:00+00:00",
- "budget": 770,
- "reserve": 300,
+ "started": "2026-11-06T09:54:57+00:00",
+ "budget": 170,
+ "reserve": 1700,
  "species": [
   {
-   "code": "panthera_leo",
-   "why": "in the library",
-   "attempts": 0,
-   "credits": 0,
-   "jobs": [],
-   "ok": true
-  },
-  {
-   "code": "crocuta_crocuta",
-   "why": "large predator",
+   "code": "torgos_tracheliotos",
+   "why": "scavenger or raptor",
    "attempts": 1,
    "credits": 30,
    "jobs": [
     {
      "mode": "preview",
-     "dir": "library/animals/jobs/crocuta_crocuta/01a1afc0-f8d7-715e-a352-483f96c04a09"
+     "dir": "library/animals/jobs/torgos_tracheliotos/01a1b048-6b98-76b5-b585-c185c0cafb5e"
     },
     {
      "mode": "refine",
-     "dir": "library/animals/jobs/crocuta_crocuta/01a1afc1-aabb-77ff-a76a-e1ad3680bc8e"
+     "dir": "library/animals/jobs/torgos_tracheliotos/01a1b049-1d29-7795-a0d6-4bc059962d66"
     }
    ],
    "ok": true,
-   "prompt": "A wild Spotted hyaena (Crocuta crocuta) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
-   "texture_prompt": "Natural coat colours and markings of a wild adult Spotted hyaena (Crocuta crocuta) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
-   "build_log": "INFO islands 1 dropped faces 0 kept 30836\nINFO colour from texture source faces 30836\nINFO remeshed 68806 faces\nINFO tail cut y 0.830, 3816 vertices\nINFO feet y fore/hind -0.398 0.686, gap 0.617, leg cut z 0.631\nINFO size by mass mass 66.4921 volume 0.3204 units -> withers 0.83 m; card shoulder 0.904\nLANDMARKS withers 0.83 scale 0.592 head-body 1.09 tail 0.399 nose [0.009, -0.677, 0.642] neck base [0.0, -0.303, 0.684] pivots {'FR': [-0.095, -0.185, 0.373], 'HR': [-0.105, 0.273, 0.373], 'FL': [0.105, -0.138, 0.373], 'HL': [0.117, 0.295, 0.373]}\nINFO tier lod0 from 137612 to 3000\nINFO tier lod1 from 137612 to 1200\nINFO tier lod2 from 137612 to 350\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/crocuta_crocuta.glb 628128 bytes; lod0 3000 tris, lod1 1200 tris, lod2 350 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/crocuta_crocuta.glb: species crocuta_crocuta, posture digitigrade, withers 0.83 m, wrist 0.42 hock 0.5\nTIER lod0: 8964 -> 9208 vertices, 3244 triangles\nTIER lod1: 3564 -> 3712 vertices, 1348 triangles\nTIER lod2: 1014 -> 1080 vertices, 418 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/crocuta_crocuta.glb 932352 bytes\nINFO crocuta_crocuta.glb: crocuta_crocuta, no row: the body alone; walk 2.02 trot 4.51 m/s, stride 1.94 m at 2.32 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 23 frames, 0.779 s, stride 0.943 m at 1.21 m/s, duty 0.62, touchdown 0.2609\nCLIP Trot: 15 frames, 0.491 s, stride 1.660 m at 3.38 m/s, duty 0.50, touchdown 0.5333\nCLIP Gallop: 12 frames, 0.402 s, stride 2.903 m at 7.22 m/s, duty 0.38, touchdown 0.5\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/crocuta_crocuta_clips.bin (25440 bytes, 60x53 rgba16f, values to 1.00) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/crocuta_crocuta_clips.json (6 clips)"
+   "archetype": "soar",
+   "prompt": "A wild Lappet-faced vulture (Torgos tracheliotos) of Serengeti, Mara Region, Tanzania, one adult bird soaring in mid-air, realistic anatomy and proportions. Seen level, the body horizontal like an airplane: both wings fully spread flat and straight out to the sides, wingtips level with the body, the flight feathers spread, the tail spread, the head forward, the legs and feet tucked up under the body, nothing hanging below. Single bird, no base, no perch, no ground. Game-ready.",
+   "texture_prompt": "Natural plumage colours and markings of a wild adult Lappet-faced vulture (Torgos tracheliotos) as seen in Serengeti, Mara Region, Tanzania, both the upper side and the underside of the wings and tail in their true colours; realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin and feet in their true colours.",
+   "build_log": "INFO islands 1 dropped faces 0 kept 30777\nINFO colour from texture source faces 30777 archetype soar mass 6.969\nINFO remeshed 35956 faces\nINFO soar: wing root x 0.120, wrist x 0.494, semi-span 1.000, body height 0.238, tail root y -0.152, neck y -0.714\nINFO size by mass at 250 kg/m3 over the body slab volume 0.0388 (body 0.0220) units, scale 1.0827 -> length 1.073 m, height 0.866 m, width 2.162 m\nINFO span 2.162 m (the span rule for a soarer, 1.4 M^0.39: 2.985 m)\nINFO palette shares [0.097, 0.06, 0.103, 0.142, 0.13, 0.121, 0.024, 0.121, 0.091, 0.111] pattern 0.0621 -> tiers [('lod0', 3079), ('lod1', 1108), ('lod2', 307)]\nINFO tier lod0 from 71912 to 3078 triangles with the cards\nINFO tier lod1 from 71912 to 1108 triangles with the cards\nINFO tier lod2 from 71912 to 306 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/torgos_tracheliotos.glb 328484 bytes; lod0 3078 tris, lod1 1108 tris, lod2 306 tris"
   },
   {
-   "code": "panthera_pardus",
-   "why": "large predator",
+   "code": "leptoptilos_crumenifer",
+   "why": "scavenger or raptor",
    "attempts": 1,
    "credits": 30,
    "jobs": [
     {
      "mode": "preview",
-     "dir": "library/animals/jobs/panthera_pardus/01a1afc2-f23a-7178-9340-a3a4958b5a67"
+     "dir": "library/animals/jobs/leptoptilos_crumenifer/01a1b049-fff2-7433-be39-e833e823d777"
     },
     {
      "mode": "refine",
-     "dir": "library/animals/jobs/panthera_pardus/01a1afc3-a655-7458-a751-18ba3a79cc3a"
+     "dir": "library/animals/jobs/leptoptilos_crumenifer/01a1b04a-b2d1-719b-bfb6-6b5229ef55ea"
     }
    ],
    "ok": true,
-   "prompt": "A wild Leopard (Panthera pardus) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
-   "texture_prompt": "Natural coat colours and markings of a wild adult Leopard (Panthera pardus) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
-   "build_log": "INFO islands 1 dropped faces 0 kept 30985\nINFO colour from texture source faces 30985\nINFO remeshed 73054 faces\nINFO tail cut y 0.610, 4807 vertices\nINFO feet y fore/hind -0.549 0.472, gap 0.740, leg cut z 0.622\nINFO size by mass mass 52.0382 volume 0.3668 units -> withers 0.675 m; card shoulder 0.833\nLANDMARKS withers 0.675 scale 0.5216 head-body 0.85 tail 0.545 nose [0.076, -0.501, 0.581] neck base [0.0, -0.251, 0.523] pivots {'FR': [-0.078, -0.202, 0.324], 'FL': [0.072, -0.164, 0.324], 'HR': [-0.109, 0.233, 0.324], 'HL': [0.091, 0.233, 0.324]}\nINFO tier lod0 from 146108 to 3000\nINFO tier lod1 from 146108 to 1200\nINFO tier lod2 from 146108 to 350\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/panthera_pardus.glb 622164 bytes; lod0 3000 tris, lod1 1200 tris, lod2 350 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/panthera_pardus.glb: species panthera_pardus, posture digitigrade, withers 0.675 m, wrist 0.42 hock 0.5\nTIER lod0: 8919 -> 9183 vertices, 3264 triangles\nTIER lod1: 3519 -> 3675 vertices, 1356 triangles\nTIER lod2: 969 -> 1056 vertices, 442 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/panthera_pardus.glb 927160 bytes\nINFO panthera_pardus.glb: panthera_pardus, no row: the body alone; walk 1.82 trot 4.07 m/s, stride 1.60 m at 2.55 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 21 frames, 0.710 s, stride 0.775 m at 1.09 m/s, duty 0.62, touchdown 0.2381\nCLIP Trot: 13 frames, 0.447 s, stride 1.364 m at 3.05 m/s, duty 0.50, touchdown 0.5385\nCLIP Gallop: 11 frames, 0.366 s, stride 2.385 m at 6.51 m/s, duty 0.38, touchdown 0.5455\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/panthera_pardus_clips.bin (23040 bytes, 60x48 rgba16f, values to 1.00) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/panthera_pardus_clips.json (6 clips)"
+   "archetype": "wade",
+   "prompt": "A wild Marabou stork (Leptoptilos crumenifer) of Serengeti, Mara Region, Tanzania, one adult bird, realistic anatomy and proportions. Standing still on the ground in a side-on neutral pose: the wings folded tight against the body, both legs straight and apart with a clear gap between them, both feet flat on the ground, the head up and looking forward, the bill closed, the tail held clear of the ground; nothing but the feet touches the ground. No base, no ground plane, no perch, no water, no props. Game-ready.",
+   "texture_prompt": "Natural plumage colours and markings of a wild adult Marabou stork (Leptoptilos crumenifer) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin, legs and feet in their true colours.",
+   "build_log": "INFO remeshed 138168 faces\nINFO legs: cut z 1.960, feet y -0.293, split x 0.001 (gap 0.101), 67161 leg vertices\nINFO head: tip [-0.0, -1.0, 2.955], neck none, base at 1.230 along (ring 0.260 of body 0.416), pivot [0.001, -0.258, 3.516]\nINFO tail: root y -0.003 (depth; body depth 1.891), pivot [0.0, -0.003, 2.78]; head 14% of the bird\nINFO size by mass at 150 kg/m3 over the whole mesh volume 0.7378 (body 0.7378) units, scale 0.3615 -> length 0.723 m, height 1.406 m, width 0.454 m\nINFO cards: span 2.478 m (1.3 M^0.39), shoulder [0.027, 0.031, 1.218]\nINFO palette shares [0.151, 0.063, 0.048, 0.147, 0.084, 0.138, 0.172, 0.111, 0.042, 0.044] pattern 0.0542 -> tiers [('lod0', 2710), ('lod1', 975), ('lod2', 271)]\nINFO loose pieces 13 joined to their nearest part\nINFO tier lod0 from 276336 to 2746 triangles with the cards\nINFO tier lod1 from 276336 to 1010 triangles with the cards\nINFO tier lod2 from 276336 to 298 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/leptoptilos_crumenifer.glb 235308 bytes; lod0 2746 tris, lod1 1010 tris, lod2 298 tris"
   },
   {
-   "code": "acinonyx_jubatus",
-   "why": "large predator",
+   "code": "struthio_camelus",
+   "why": "bird by mass, one per archetype first",
    "attempts": 1,
    "credits": 30,
    "jobs": [
     {
      "mode": "preview",
-     "dir": "library/animals/jobs/acinonyx_jubatus/01a1afc4-85e9-732c-b12c-b42fecd2564a"
+     "dir": "library/animals/jobs/struthio_camelus/01a1b04b-9b4e-7547-bb00-f5b9165cbfaa"
     },
     {
      "mode": "refine",
-     "dir": "library/animals/jobs/acinonyx_jubatus/01a1afc5-37bb-77f7-b39c-7a0eb62f47f5"
+     "dir": "library/animals/jobs/struthio_camelus/01a1b04d-2769-77eb-8bee-f804e419abaf"
     }
    ],
    "ok": true,
-   "prompt": "A wild Cheetah (Acinonyx jubatus) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
-   "texture_prompt": "Natural coat colours and markings of a wild adult Cheetah (Acinonyx jubatus) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
-   "build_log": "INFO islands 1 dropped faces 0 kept 31224\nINFO colour from texture source faces 31224\nINFO remeshed 49868 faces\nINFO tail cut y 0.580, 4063 vertices\nINFO feet y fore/hind -0.505 0.554, gap 0.567, leg cut z 0.518\nINFO size by mass mass 46.7 volume 0.2013 units -> withers 0.664 m; card shoulder 0.804\nLANDMARKS withers 0.664 scale 0.6144 head-body 0.977 tail 0.475 nose [0.089, -0.629, 0.659] neck base [0.0, -0.307, 0.522] pivots {'FR': [-0.092, -0.309, 0.318], 'HR': [-0.079, 0.275, 0.318], 'FL': [0.084, -0.194, 0.318], 'HL': [0.082, 0.243, 0.318]}\nINFO tier lod0 from 99736 to 3000\nINFO tier lod1 from 99736 to 1200\nINFO tier lod2 from 99736 to 350\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/acinonyx_jubatus.glb 632872 bytes; lod0 3000 tris, lod1 1200 tris, lod2 350 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/acinonyx_jubatus.glb: species acinonyx_jubatus, posture digitigrade, withers 0.664 m, wrist 0.42 hock 0.5\nTIER lod0: 9000 -> 9276 vertices, 3276 triangles\nTIER lod1: 3600 -> 3740 vertices, 1340 triangles\nTIER lod2: 1050 -> 1116 vertices, 416 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/acinonyx_jubatus.glb 940932 bytes\nINFO acinonyx_jubatus.glb: acinonyx_jubatus, no row: the body alone; walk 1.80 trot 4.04 m/s, stride 1.57 m at 2.57 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 21 frames, 0.705 s, stride 0.763 m at 1.08 m/s, duty 0.62, touchdown 0.2381\nCLIP Trot: 13 frames, 0.444 s, stride 1.343 m at 3.03 m/s, duty 0.50, touchdown 0.5385\nCLIP Gallop: 11 frames, 0.364 s, stride 2.348 m at 6.46 m/s, duty 0.38, touchdown 0.5455\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/acinonyx_jubatus_clips.bin (23040 bytes, 60x48 rgba16f, values to 1.00) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/acinonyx_jubatus_clips.json (6 clips)"
+   "archetype": "ground",
+   "prompt": "A wild Common ostrich (Struthio camelus) of Serengeti, Mara Region, Tanzania, one adult bird, realistic anatomy and proportions. Standing still on the ground in a side-on neutral pose: the wings folded tight against the body, both legs straight and apart with a clear gap between them, both feet flat on the ground, the head up and looking forward, the bill closed, the tail held clear of the ground; nothing but the feet touches the ground. No base, no ground plane, no perch, no water, no props. Game-ready.",
+   "texture_prompt": "Natural plumage colours and markings of a wild adult Common ostrich (Struthio camelus) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin, legs and feet in their true colours.",
+   "build_log": "INFO remeshed 168134 faces\nINFO legs: cut z 1.236, feet y -0.261, split x -0.000 (gap 0.439), 18776 leg vertices\nINFO head: tip [-0.005, -0.892, 3.114], neck dip, base at 1.590 along (ring 0.276 of body 0.552), pivot [-0.001, -0.72, 2.008]\nINFO tail: root y 0.999 (depth; body depth 1.139), pivot [0.0, 0.999, 1.146]; head 13% of the bird\nINFO size by mass at 150 kg/m3 over the whole mesh volume 1.2167 (body 1.2167) units, scale 0.8473 -> length 1.688 m, height 2.779 m, width 1.034 m\nINFO cards: span 0.000 m (flightless), shoulder [0.348, -0.098, 1.555]\nINFO palette shares [0.049, 0.064, 0.047, 0.065, 0.068, 0.129, 0.417, 0.054, 0.046, 0.06] pattern 0.0798 -> tiers [('lod0', 4805), ('lod1', 1729), ('lod2', 480)]\nINFO loose pieces 93 joined to their nearest part\nINFO tier lod0 from 336268 to 4804 triangles with the cards\nINFO tier lod1 from 336268 to 1728 triangles with the cards\nINFO tier lod2 from 336268 to 480 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/struthio_camelus.glb 380748 bytes; lod0 4804 tris, lod1 1728 tris, lod2 480 tris"
   },
   {
-   "code": "lycaon_pictus",
-   "why": "large predator",
-   "attempts": 2,
-   "credits": 60,
-   "jobs": [
-    {
-     "mode": "preview",
-     "dir": "library/animals/jobs/lycaon_pictus/01a1afc6-0bbe-7471-a574-acb474c69e45"
-    },
-    {
-     "mode": "refine",
-     "dir": "library/animals/jobs/lycaon_pictus/01a1afc7-21f1-7015-b1f1-88a7dd8ff20b"
-    },
-    {
-     "mode": "preview",
-     "dir": "library/animals/jobs/lycaon_pictus/01a1afc7-f945-772e-9fd8-6771064135c8"
-    },
-    {
-     "mode": "refine",
-     "dir": "library/animals/jobs/lycaon_pictus/01a1afc8-a68f-7210-bf77-c2d2b6d91d66"
-    }
-   ],
-   "ok": true,
-   "prompt": "A wild African wild dog (Lycaon pictus) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
-   "texture_prompt": "Natural coat colours and markings of a wild adult African wild dog (Lycaon pictus) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
-   "build_log": "INFO islands 1 dropped faces 0 kept 31105\nINFO colour from texture source faces 31105\nINFO remeshed 64464 faces\nINFO tail cut y 0.850, 3115 vertices\nINFO feet y fore/hind -0.397 0.772, gap 0.994, leg cut z 0.738\nINFO size by mass mass 22.0501 volume 0.2667 units -> withers 0.623 m; card shoulder 0.626\nLANDMARKS withers 0.623 scale 0.4357 head-body 0.808 tail 0.161 nose [-0.095, -0.517, 0.631] neck base [0.0, -0.242, 0.517] pivots {'FR': [-0.055, -0.18, 0.322], 'HR': [-0.049, 0.185, 0.322], 'FL': [0.09, -0.177, 0.322], 'HL': [0.061, 0.199, 0.322]}\nINFO tier lod0 from 128928 to 3000\nINFO tier lod1 from 128928 to 1200\nINFO tier lod2 from 128928 to 350\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/lycaon_pictus.glb 632876 bytes; lod0 3000 tris, lod1 1200 tris, lod2 350 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/lycaon_pictus.glb: species lycaon_pictus, posture digitigrade, withers 0.623 m, wrist 0.42 hock 0.5\nTIER lod0: 9000 -> 9284 vertices, 3284 triangles\nTIER lod1: 3600 -> 3786 vertices, 1388 triangles\nTIER lod2: 1050 -> 1133 vertices, 438 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/lycaon_pictus.glb 945944 bytes\nINFO lycaon_pictus.glb: lycaon_pictus, no row: the body alone; walk 1.75 trot 3.91 m/s, stride 1.48 m at 2.64 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 21 frames, 0.685 s, stride 0.718 m at 1.05 m/s, duty 0.62, touchdown 0.2381\nCLIP Trot: 13 frames, 0.431 s, stride 1.264 m at 2.93 m/s, duty 0.50, touchdown 0.5385\nCLIP Gallop: 11 frames, 0.353 s, stride 2.210 m at 6.25 m/s, duty 0.38, touchdown 0.5455\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/lycaon_pictus_clips.bin (23040 bytes, 60x48 rgba16f, values to 1.00) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/lycaon_pictus_clips.json (6 clips)"
-  },
-  {
-   "code": "loxodonta_africana",
-   "why": "biomass rank",
+   "code": "alopochen_aegyptiaca",
+   "why": "bird by mass, one per archetype first",
    "attempts": 1,
    "credits": 30,
    "jobs": [
     {
      "mode": "preview",
-     "dir": "library/animals/jobs/loxodonta_africana/01a1afc9-7baa-77dc-be52-18a94756b653"
+     "dir": "library/animals/jobs/alopochen_aegyptiaca/01a1b04e-2346-72ad-88b8-1fd14c504ab9"
     },
     {
      "mode": "refine",
-     "dir": "library/animals/jobs/loxodonta_africana/01a1afca-37c9-721c-9f0a-9578f56a080c"
+     "dir": "library/animals/jobs/alopochen_aegyptiaca/01a1b04f-3812-7354-b582-2b3339b6a64c"
     }
    ],
    "ok": true,
-   "prompt": "A wild African elephant (Loxodonta africana) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
-   "texture_prompt": "Natural coat colours and markings of a wild adult African elephant (Loxodonta africana) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
-   "build_log": "INFO islands 1 dropped faces 0 kept 31202\nINFO colour from texture source faces 31202\nINFO remeshed 93286 faces\nINFO tail cut y 0.800, 1812 vertices\nINFO feet y fore/hind -0.250 0.433, gap 0.404, leg cut z 0.538\nINFO size by mass mass 3940.0343 volume 0.5318 units -> withers 2.83 m; card shoulder 3.525\nLANDMARKS withers 2.83 scale 1.9494 head-body 3.525 tail 1.38 nose [0.492, -2.127, 1.458] neck base [0.0, -0.607, 2.097] pivots {'FR': [-0.242, -0.834, 1.049], 'HR': [-0.306, 0.774, 1.049], 'FL': [0.236, -0.936, 1.049], 'HL': [0.307, 0.773, 1.049]}\nINFO tier lod0 from 186572 to 3000\nINFO tier lod1 from 186572 to 1200\nINFO tier lod2 from 186572 to 350\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/loxodonta_africana.glb 632868 bytes; lod0 3000 tris, lod1 1200 tris, lod2 350 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/loxodonta_africana.glb: species loxodonta_africana, posture digitigrade, withers 2.83 m, wrist 0.42 hock 0.5\nTIER lod0: 9000 -> 9236 vertices, 3236 triangles\nTIER lod1: 3600 -> 3726 vertices, 1326 triangles\nTIER lod2: 1050 -> 1114 vertices, 414 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/loxodonta_africana.glb 937012 bytes\nINFO loxodonta_africana.glb: loxodonta_africana, no row: the body alone; walk 3.73 trot 8.33 m/s, stride 6.24 m at 1.34 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 41 frames, 1.353 s, stride 3.025 m at 2.24 m/s, duty 0.62, touchdown 0.2439\nCLIP Trot: 26 frames, 0.852 s, stride 5.324 m at 6.25 m/s, duty 0.50, touchdown 0.5\nCLIP Gallop: 21 frames, 0.698 s, stride 9.308 m at 13.33 m/s, duty 0.38, touchdown 0.5238\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/loxodonta_africana_clips.bin (43680 bytes, 60x91 rgba16f, values to 3.16) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/loxodonta_africana_clips.json (6 clips)"
+   "archetype": "water",
+   "prompt": "A wild Egyptian goose (Alopochen aegyptiaca) of Serengeti, Mara Region, Tanzania, one adult bird, realistic anatomy and proportions. Standing still on the ground in a side-on neutral pose: the wings folded tight against the body, both legs straight and apart with a clear gap between them, both feet flat on the ground, the head up and looking forward, the bill closed, the tail held clear of the ground; nothing but the feet touches the ground. No base, no ground plane, no perch, no water, no props. Game-ready.",
+   "texture_prompt": "Natural plumage colours and markings of a wild adult Egyptian goose (Alopochen aegyptiaca) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin, legs and feet in their true colours.",
+   "build_log": "INFO remeshed 89058 faces\nINFO legs: knees z 1.000 1.080, belly 1.116, feet y -0.337, split x 0.184 (gap 0.020), 8327 leg vertices\nINFO head: tip [-0.004, -0.997, 2.374], neck dip, base at 1.350 along (ring 0.336 of body 0.663), pivot [-0.001, -0.483, 1.581]\nINFO tail: root y -0.512 (rings; body depth 0.027), pivot [0.0, -0.512, 1.217]; head 22% of the bird\nINFO size by mass at 150 kg/m3 over the whole mesh volume 0.4779 (body 0.4779) units, scale 0.2967 -> length 0.593 m, height 0.772 m, width 0.235 m\nINFO cards: span 1.213 m (0.95 M^0.39), shoulder [0.076, -0.045, 0.053]\nINFO palette shares [0.07, 0.264, 0.038, 0.113, 0.109, 0.052, 0.093, 0.145, 0.034, 0.082] pattern 0.0431 -> tiers [('lod0', 2218), ('lod1', 798), ('lod2', 221)]\nINFO loose pieces 8 joined to their nearest part\nINFO tier lod0 from 178116 to 2250 triangles with the cards\nINFO tier lod1 from 178116 to 830 triangles with the cards\nINFO tier lod2 from 178116 to 244 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/alopochen_aegyptiaca.glb 177936 bytes; lod0 2250 tris, lod1 830 tris, lod2 244 tris"
   },
   {
-   "code": "hippopotamus_amphibius",
-   "why": "biomass rank",
+   "code": "vanellus_armatus",
+   "why": "bird by mass, one per archetype first",
    "attempts": 1,
    "credits": 30,
    "jobs": [
     {
      "mode": "preview",
-     "dir": "library/animals/jobs/hippopotamus_amphibius/01a1afcb-12a0-701e-9bb3-657d55679c44"
+     "dir": "library/animals/jobs/vanellus_armatus/01a1b050-207e-74af-9687-68e363ec0b9d"
     },
     {
      "mode": "refine",
-     "dir": "library/animals/jobs/hippopotamus_amphibius/01a1afcc-2706-7124-b087-7e773857348d"
+     "dir": "library/animals/jobs/vanellus_armatus/01a1b050-d4f9-761a-a518-57d0d141f289"
     }
    ],
    "ok": true,
-   "prompt": "A wild Hippo (Hippopotamus amphibius) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
-   "texture_prompt": "Natural coat colours and markings of a wild adult Hippo (Hippopotamus amphibius) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
-   "build_log": "INFO islands 1 dropped faces 0 kept 31155\nINFO colour from texture source faces 31155\nINFO remeshed 69652 faces\nINFO tail cut y 0.870, 1742 vertices\nINFO feet y fore/hind -0.236 0.606, gap 0.657, leg cut z 0.261\nINFO size by mass mass 1417.49 volume 0.5316 units -> withers 1.47 m; card shoulder 2.507\nLANDMARKS withers 1.47 scale 1.3867 head-body 2.6 tail 0.512 nose [-0.076, -1.643, 0.894] neck base [0.0, -0.542, 1.004] pivots {'FR': [-0.266, -0.496, 0.361], 'HR': [-0.335, 0.686, 0.361], 'FL': [0.268, -0.496, 0.361], 'HL': [0.335, 0.686, 0.361]}\nINFO tier lod0 from 139304 to 3000\nINFO tier lod1 from 139304 to 1200\nINFO tier lod2 from 139304 to 350\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/hippopotamus_amphibius.glb 632856 bytes; lod0 3000 tris, lod1 1200 tris, lod2 350 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/hippopotamus_amphibius.glb: species hippopotamus_amphibius, posture digitigrade, withers 1.47 m, wrist 0.42 hock 0.5\nTIER lod0: 9000 -> 9244 vertices, 3244 triangles\nTIER lod1: 3600 -> 3739 vertices, 1340 triangles\nTIER lod2: 1050 -> 1111 vertices, 412 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/hippopotamus_amphibius.glb 938284 bytes\nINFO hippopotamus_amphibius.glb: hippopotamus_amphibius, no row: the body alone; walk 2.69 trot 6.00 m/s, stride 3.35 m at 1.79 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 30 frames, 1.008 s, stride 1.623 m at 1.61 m/s, duty 0.62, touchdown 0.2667\nCLIP Trot: 19 frames, 0.635 s, stride 2.857 m at 4.50 m/s, duty 0.50, touchdown 0.5263\nCLIP Gallop: 16 frames, 0.520 s, stride 4.996 m at 9.61 m/s, duty 0.38, touchdown 0.5\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/hippopotamus_amphibius_clips.bin (32640 bytes, 60x68 rgba16f, values to 1.97) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/hippopotamus_amphibius_clips.json (6 clips)"
-  },
-  {
-   "code": "giraffa_tippelskirchi",
-   "why": "biomass rank",
-   "attempts": 1,
-   "credits": 30,
-   "jobs": [
-    {
-     "mode": "preview",
-     "dir": "library/animals/jobs/giraffa_tippelskirchi/01a1afcd-02de-746a-9245-73a5e1dcabf4"
-    },
-    {
-     "mode": "refine",
-     "dir": "library/animals/jobs/giraffa_tippelskirchi/01a1afcd-b7e5-77a1-bf0a-54951fd8636c"
-    }
-   ],
-   "ok": true,
-   "prompt": "A wild Masai giraffe (Giraffa tippelskirchi) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
-   "texture_prompt": "Natural coat colours and markings of a wild adult Masai giraffe (Giraffa tippelskirchi) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
-   "build_log": "INFO islands 1 dropped faces 0 kept 31134\nINFO colour from texture source faces 31134\nINFO remeshed 78694 faces\nINFO tail cut y 0.680, 2587 vertices\nINFO feet y fore/hind -0.319 0.523, gap 0.687, leg cut z 1.280\nINFO size by mass mass 899.9948 volume 0.3181 units -> withers 3.186 m; card shoulder 2.155\nLANDMARKS withers 3.186 scale 1.4143 head-body 2.41 tail 1.692 nose [-0.177, -1.558, 3.487] neck base [0.0, -0.553, 2.764] pivots {'FR': [-0.158, -0.476, 1.81], 'HR': [-0.157, 0.585, 1.81], 'FL': [0.229, -0.478, 1.81], 'HL': [0.225, 0.584, 1.81]}\nINFO tier lod0 from 157388 to 3000\nINFO tier lod1 from 157388 to 1200\nINFO tier lod2 from 157388 to 350\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/giraffa_tippelskirchi.glb 632868 bytes; lod0 3000 tris, lod1 1200 tris, lod2 350 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/giraffa_tippelskirchi.glb: species giraffa_tippelskirchi, posture digitigrade, withers 3.186 m, wrist 0.42 hock 0.5\nTIER lod0: 9000 -> 9186 vertices, 3186 triangles\nTIER lod1: 3600 -> 3716 vertices, 1316 triangles\nTIER lod2: 1050 -> 1112 vertices, 412 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/giraffa_tippelskirchi.glb 932676 bytes\nINFO giraffa_tippelskirchi.glb: giraffa_tippelskirchi, no row: the body alone; walk 3.95 trot 8.84 m/s, stride 6.98 m at 1.27 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 43 frames, 1.427 s, stride 3.385 m at 2.37 m/s, duty 0.62, touchdown 0.2558\nCLIP Trot: 27 frames, 0.899 s, stride 5.958 m at 6.63 m/s, duty 0.50, touchdown 0.5185\nCLIP Gallop: 22 frames, 0.737 s, stride 10.417 m at 14.14 m/s, duty 0.38, touchdown 0.5\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/giraffa_tippelskirchi_clips.bin (45600 bytes, 60x95 rgba16f, values to 4.09) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/giraffa_tippelskirchi_clips.json (6 clips)"
-  },
-  {
-   "code": "syncerus_caffer",
-   "why": "biomass rank",
-   "attempts": 2,
-   "credits": 60,
-   "jobs": [
-    {
-     "mode": "preview",
-     "dir": "library/animals/jobs/syncerus_caffer/01a1afce-9344-75f5-99f4-a1e8c16a21a2"
-    },
-    {
-     "mode": "refine",
-     "dir": "library/animals/jobs/syncerus_caffer/01a1afcf-4555-7496-8562-d634d7a3e033"
-    },
-    {
-     "mode": "preview",
-     "dir": "library/animals/jobs/syncerus_caffer/01a1afd0-7cf3-705c-93c7-bdbb44c324c7"
-    },
-    {
-     "mode": "refine",
-     "dir": "library/animals/jobs/syncerus_caffer/01a1afd1-29ec-7126-bc99-5bd3809bc5cc"
-    }
-   ],
-   "ok": true,
-   "prompt": "A wild African buffalo (Syncerus caffer) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
-   "texture_prompt": "Natural coat colours and markings of a wild adult African buffalo (Syncerus caffer) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
-   "build_log": "INFO islands 1 dropped faces 0 kept 31029\nINFO colour from texture source faces 31029\nINFO remeshed 71690 faces\nINFO tail cut y 0.880, 2552 vertices\nINFO feet y fore/hind -0.278 0.622, gap 0.659, leg cut z 0.436\nINFO size by mass mass 580.0027 volume 0.3998 units -> withers 1.498 m; card shoulder 1.861\nLANDMARKS withers 1.498 scale 1.132 head-body 2.151 tail 1.163 nose [0.232, -1.326, 1.024] neck base [0.0, -0.476, 0.998] pivots {'FR': [-0.236, -0.403, 0.493], 'HR': [-0.154, 0.637, 0.493], 'FL': [0.067, -0.452, 0.493], 'HL': [0.041, 0.642, 0.493]}\nINFO tier lod0 from 143380 to 3000\nINFO tier lod1 from 143380 to 1200\nINFO tier lod2 from 143380 to 350\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/syncerus_caffer.glb 632876 bytes; lod0 3000 tris, lod1 1200 tris, lod2 350 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/syncerus_caffer.glb: species syncerus_caffer, posture digitigrade, withers 1.498 m, wrist 0.42 hock 0.5\nTIER lod0: 9000 -> 9184 vertices, 3184 triangles\nTIER lod1: 3600 -> 3712 vertices, 1312 triangles\nTIER lod2: 1050 -> 1088 vertices, 388 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/syncerus_caffer.glb 930580 bytes\nINFO syncerus_caffer.glb: syncerus_caffer, no row: the body alone; walk 2.71 trot 6.06 m/s, stride 3.41 m at 1.78 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 30 frames, 1.016 s, stride 1.653 m at 1.63 m/s, duty 0.62, touchdown 0.2667\nCLIP Trot: 19 frames, 0.640 s, stride 2.909 m at 4.55 m/s, duty 0.50, touchdown 0.5263\nCLIP Gallop: 16 frames, 0.524 s, stride 5.086 m at 9.70 m/s, duty 0.38, touchdown 0.5\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/syncerus_caffer_clips.bin (32640 bytes, 60x68 rgba16f, values to 1.86) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/syncerus_caffer_clips.json (6 clips)"
-  },
-  {
-   "code": "equus_quagga",
-   "why": "biomass rank",
-   "attempts": 1,
-   "credits": 30,
-   "jobs": [
-    {
-     "mode": "preview",
-     "dir": "library/animals/jobs/equus_quagga/01a1afd1-ffac-7640-89b5-f6a52f438291"
-    },
-    {
-     "mode": "refine",
-     "dir": "library/animals/jobs/equus_quagga/01a1afd3-16e2-7077-973c-e816dfa42f6d"
-    }
-   ],
-   "ok": true,
-   "prompt": "A wild Plains zebra (Equus quagga) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
-   "texture_prompt": "Natural coat colours and markings of a wild adult Plains zebra (Equus quagga) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
-   "build_log": "INFO islands 1 dropped faces 0 kept 30980\nINFO colour from texture source faces 30980\nINFO remeshed 73008 faces\nINFO tail cut y 0.890, 2205 vertices\nINFO feet y fore/hind -0.325 0.571, gap 0.485, leg cut z 0.669\nINFO size by mass mass 400.0 volume 0.3958 units -> withers 1.473 m; card shoulder 1.645\nLANDMARKS withers 1.473 scale 1.0035 head-body 1.915 tail 0.659 nose [0.26, -1.126, 1.029] neck base [0.0, -0.42, 1.089] pivots {'HL': [0.088, 0.586, 0.672], 'FL': [0.106, -0.419, 0.672], 'FR': [-0.159, -0.339, 0.672], 'HR': [-0.158, 0.52, 0.672]}\nINFO tier lod0 from 146016 to 3000\nINFO tier lod1 from 146016 to 1200\nINFO tier lod2 from 146016 to 350\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/equus_quagga.glb 632852 bytes; lod0 3000 tris, lod1 1200 tris, lod2 350 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/equus_quagga.glb: species equus_quagga, posture digitigrade, withers 1.473 m, wrist 0.42 hock 0.5\nTIER lod0: 9000 -> 9196 vertices, 3196 triangles\nTIER lod1: 3600 -> 3714 vertices, 1314 triangles\nTIER lod2: 1050 -> 1110 vertices, 410 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/equus_quagga.glb 933084 bytes\nINFO equus_quagga.glb: equus_quagga, no row: the body alone; walk 2.69 trot 6.01 m/s, stride 3.35 m at 1.79 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 30 frames, 1.009 s, stride 1.627 m at 1.61 m/s, duty 0.62, touchdown 0.2667\nCLIP Trot: 19 frames, 0.635 s, stride 2.863 m at 4.51 m/s, duty 0.50, touchdown 0.5263\nCLIP Gallop: 16 frames, 0.520 s, stride 5.005 m at 9.62 m/s, duty 0.38, touchdown 0.5\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/equus_quagga_clips.bin (32640 bytes, 60x68 rgba16f, values to 1.68) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/equus_quagga_clips.json (6 clips)"
-  },
-  {
-   "code": "connochaetes_taurinus",
-   "why": "biomass rank",
-   "attempts": 2,
-   "credits": 60,
-   "jobs": [
-    {
-     "mode": "preview",
-     "dir": "library/animals/jobs/connochaetes_taurinus/01a1afd3-f382-768a-b9c7-caa1d8bb24d1"
-    },
-    {
-     "mode": "refine",
-     "dir": "library/animals/jobs/connochaetes_taurinus/01a1afd4-a694-77eb-92ed-6803dcf32505"
-    },
-    {
-     "mode": "preview",
-     "dir": "library/animals/jobs/connochaetes_taurinus/01a1afd5-e62f-734e-b865-83eceb1c2534"
-    },
-    {
-     "mode": "refine",
-     "dir": "library/animals/jobs/connochaetes_taurinus/01a1afd6-f7cb-7769-a932-5a50e0f7a733"
-    }
-   ],
-   "ok": true,
-   "prompt": "A wild Blue wildebeest (Connochaetes taurinus) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
-   "texture_prompt": "Natural coat colours and markings of a wild adult Blue wildebeest (Connochaetes taurinus) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
-   "build_log": "INFO islands 1 dropped faces 0 kept 30374\nINFO colour from texture source faces 30374\nINFO remeshed 87480 faces\nINFO tail cut y 0.770, 3139 vertices\nINFO feet y fore/hind -0.436 0.600, gap 0.675, leg cut z 0.765\nINFO size by mass mass 179.999 volume 0.4950 units -> withers 1.249 m; card shoulder 1.26\nLANDMARKS withers 1.249 scale 0.7138 head-body 1.28 tail 0.729 nose [0.261, -0.772, 0.81] neck base [0.0, -0.348, 0.898] pivots {'HR': [-0.172, 0.351, 0.546], 'FR': [-0.181, -0.317, 0.546], 'FL': [0.043, -0.296, 0.546], 'HL': [0.05, 0.422, 0.546]}\nINFO tier lod0 from 174960 to 2998\nINFO tier lod1 from 174960 to 1200\nINFO tier lod2 from 174960 to 348\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/connochaetes_taurinus.glb 622432 bytes; lod0 2998 tris, lod1 1200 tris, lod2 348 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/connochaetes_taurinus.glb: species connochaetes_taurinus, posture digitigrade, withers 1.249 m, wrist 0.42 hock 0.5\nTIER lod0: 8919 -> 9077 vertices, 3156 triangles\nTIER lod1: 3525 -> 3607 vertices, 1282 triangles\nTIER lod2: 969 -> 997 vertices, 376 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/connochaetes_taurinus.glb 910772 bytes\nINFO connochaetes_taurinus.glb: connochaetes_taurinus, no row: the body alone; walk 2.48 trot 5.53 m/s, stride 2.87 m at 1.93 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 28 frames, 0.936 s, stride 1.391 m at 1.49 m/s, duty 0.62, touchdown 0.25\nCLIP Trot: 18 frames, 0.590 s, stride 2.448 m at 4.15 m/s, duty 0.50, touchdown 0.5\nCLIP Gallop: 14 frames, 0.483 s, stride 4.279 m at 8.86 m/s, duty 0.38, touchdown 0.5\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/connochaetes_taurinus_clips.bin (30240 bytes, 60x63 rgba16f, values to 1.34) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/connochaetes_taurinus_clips.json (6 clips)"
-  },
-  {
-   "code": "alcelaphus_buselaphus",
-   "why": "biomass rank",
-   "attempts": 2,
-   "credits": 60,
-   "jobs": [
-    {
-     "mode": "preview",
-     "dir": "library/animals/jobs/alcelaphus_buselaphus/01a1afd7-d25a-75ae-af68-66e839d54bf8"
-    },
-    {
-     "mode": "refine",
-     "dir": "library/animals/jobs/alcelaphus_buselaphus/01a1afd8-e9c1-7256-a979-b90bf86ff517"
-    },
-    {
-     "mode": "preview",
-     "dir": "library/animals/jobs/alcelaphus_buselaphus/01a1afd9-b83a-754b-a2d5-9b942c181bb8"
-    },
-    {
-     "mode": "refine",
-     "dir": "library/animals/jobs/alcelaphus_buselaphus/01a1afda-6563-7188-8005-864af3fbc0b3"
-    }
-   ],
-   "ok": false,
-   "prompt": "A wild Hartebeest (Alcelaphus buselaphus) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
-   "texture_prompt": "Natural coat colours and markings of a wild adult Hartebeest (Alcelaphus buselaphus) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
-   "build_log": "INFO islands 1 dropped faces 0 kept 31129\nINFO colour from texture source faces 31129\nINFO remeshed 62452 faces\nINFO tail none found\nINFO feet y fore/hind -0.365 0.903, gap 0.942, leg cut z 0.020\nalcelaphus_buselaphus: found 3 leg columns below z 0.020, not 4 (not standing on four feet?)"
+   "archetype": "perch",
+   "prompt": "A wild Blacksmith lapwing (Vanellus armatus) of Serengeti, Mara Region, Tanzania, one adult bird, realistic anatomy and proportions. Standing still on the ground in a side-on neutral pose: the wings folded tight against the body, both legs straight and apart with a clear gap between them, both feet flat on the ground, the head up and looking forward, the bill closed, the tail held clear of the ground; nothing but the feet touches the ground. No base, no ground plane, no perch, no water, no props. Game-ready.",
+   "texture_prompt": "Natural plumage colours and markings of a wild adult Blacksmith lapwing (Vanellus armatus) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin, legs and feet in their true colours.",
+   "build_log": "INFO remeshed 60556 faces\nINFO legs: knees z 0.860 0.860, belly 0.872, feet y -0.325, split x -0.000 (gap 0.210), 8395 leg vertices\nINFO head: tip [-0.002, -1.0, 2.012], neck dip, base at 0.930 along (ring 0.231 of body 0.347), pivot [0.002, -0.554, 1.447]\nINFO tail: root y 0.355 (depth; body depth 0.697), pivot [0.0, 0.355, 1.095]; head 19% of the bird\nINFO size by mass at 150 kg/m3 over the whole mesh volume 0.3228 (body 0.3228) units, scale 0.1477 -> length 0.295 m, height 0.318 m, width 0.109 m\nINFO cards: span 0.485 m (1.0 M^0.39), shoulder [0.039, -0.007, 0.203]\nINFO palette shares [0.085, 0.123, 0.073, 0.076, 0.185, 0.044, 0.026, 0.183, 0.144, 0.061] pattern 0.0426 -> tiers [('lod0', 1354), ('lod1', 487), ('lod2', 135)]\nINFO loose pieces 3 joined to their nearest part\nINFO tier lod0 from 121112 to 1390 triangles with the cards\nINFO tier lod1 from 121112 to 522 triangles with the cards\nINFO tier lod2 from 121112 to 162 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/vanellus_armatus.glb 126312 bytes; lod0 1390 tris, lod1 522 tris, lod2 162 tris"
   }
  ],
  "stand_ins": [
   {
-   "code": "lamprotornis_superbus",
-   "why": "not a four-legged mammal (the generic build is quadrupeds only)"
+   "code": "loxodonta_africana",
+   "why": "not in this run (--kind birds)"
   },
   {
-   "code": "alopochen_aegyptiaca",
-   "why": "not a four-legged mammal (the generic build is quadrupeds only)"
-  },
-  {
-   "code": "vanellus_armatus",
-   "why": "not a four-legged mammal (the generic build is quadrupeds only)"
-  },
-  {
-   "code": "leptoptilos_crumenifer",
-   "why": "not a four-legged mammal (the generic build is quadrupeds only)"
-  },
-  {
-   "code": "eurocephalus_ruppelli",
-   "why": "not a four-legged mammal (the generic build is quadrupeds only)"
-  },
-  {
-   "code": "trachyphonus_darnaudii",
-   "why": "not a four-legged mammal (the generic build is quadrupeds only)"
-  },
-  {
-   "code": "coracias_caudatus",
-   "why": "not a four-legged mammal (the generic build is quadrupeds only)"
-  },
-  {
-   "code": "lamprotornis_hildebrandti",
-   "why": "not a four-legged mammal (the generic build is quadrupeds only)"
-  },
-  {
-   "code": "dinemellia_dinemelli",
-   "why": "not a four-legged mammal (the generic build is quadrupeds only)"
-  },
-  {
-   "code": "ardea_melanocephala",
-   "why": "not a four-legged mammal (the generic build is quadrupeds only)"
-  },
-  {
-   "code": "lamprotornis_purpuroptera",
-   "why": "not a four-legged mammal (the generic build is quadrupeds only)"
+   "code": "hippopotamus_amphibius",
+   "why": "not in this run (--kind birds)"
   },
   {
    "code": "damaliscus_korrigum",
-   "why": "over the budget or the count"
+   "why": "not in this run (--kind birds)"
   },
   {
-   "code": "phacochoerus_africanus",
-   "why": "over the budget or the count"
-  },
-  {
-   "code": "nanger_granti",
-   "why": "over the budget or the count"
+   "code": "giraffa_tippelskirchi",
+   "why": "not in this run (--kind birds)"
   },
   {
    "code": "aepyceros_melampus",
-   "why": "over the budget or the count"
+   "why": "not in this run (--kind birds)"
   },
   {
-   "code": "redunca_redunca",
-   "why": "over the budget or the count"
+   "code": "panthera_leo",
+   "why": "not in this run (--kind birds)"
   },
   {
-   "code": "eudorcas_thomsonii",
-   "why": "over the budget or the count"
+   "code": "crocuta_crocuta",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "alcelaphus_buselaphus",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "syncerus_caffer",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "equus_quagga",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "connochaetes_taurinus",
+   "why": "not in this run (--kind birds)"
   },
   {
    "code": "papio_anubis",
-   "why": "over the budget or the count"
+   "why": "not in this run (--kind birds)"
   },
   {
-   "code": "canis_mesomelas",
-   "why": "over the budget or the count"
+   "code": "phacochoerus_africanus",
+   "why": "not in this run (--kind birds)"
   },
   {
-   "code": "chlorocebus_pygerythrus",
-   "why": "over the budget or the count"
-  },
-  {
-   "code": "otocyon_megalotis",
-   "why": "over the budget or the count"
-  },
-  {
-   "code": "procavia_capensis",
-   "why": "over the budget or the count"
+   "code": "redunca_redunca",
+   "why": "not in this run (--kind birds)"
   },
   {
    "code": "heterohyrax_brucei",
-   "why": "over the budget or the count"
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "eudorcas_thomsonii",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "panthera_pardus",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "acinonyx_jubatus",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "nanger_granti",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "chlorocebus_pygerythrus",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "procavia_capensis",
+   "why": "not in this run (--kind birds)"
   },
   {
    "code": "mungos_mungo",
-   "why": "over the budget or the count"
-  },
-  {
-   "code": "helogale_parvula",
-   "why": "over the budget or the count"
-  },
-  {
-   "code": "genetta_genetta",
-   "why": "over the budget or the count"
+   "why": "not in this run (--kind birds)"
   },
   {
    "code": "leptailurus_serval",
-   "why": "over the budget or the count"
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "helogale_parvula",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "otocyon_megalotis",
+   "why": "not in this run (--kind birds)"
   },
   {
    "code": "canis_aureus",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "canis_mesomelas",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "lycaon_pictus",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "genetta_genetta",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "gyps_africanus",
+   "why": "over the budget or the count"
+  },
+  {
+   "code": "sagittarius_serpentarius",
+   "why": "over the budget or the count"
+  },
+  {
+   "code": "aquila_rapax",
+   "why": "over the budget or the count"
+  },
+  {
+   "code": "lamprotornis_superbus",
+   "why": "over the budget or the count"
+  },
+  {
+   "code": "eurocephalus_ruppelli",
+   "why": "over the budget or the count"
+  },
+  {
+   "code": "trachyphonus_darnaudii",
    "why": "over the budget or the count"
   }
  ],
- "spent": 450,
- "balance_after": 1877,
- "modelled": 11
+ "spent": 150,
+ "balance_after": 1727,
+ "modelled": 5,
+ "earlier": [
+  {
+   "tile": "utm36s_698_9724",
+   "started": "2026-11-06T07:27:00+00:00",
+   "budget": 770,
+   "reserve": 300,
+   "species": [
+    {
+     "code": "panthera_leo",
+     "why": "in the library",
+     "attempts": 0,
+     "credits": 0,
+     "jobs": [],
+     "ok": true
+    },
+    {
+     "code": "crocuta_crocuta",
+     "why": "large predator",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/crocuta_crocuta/01a1afc0-f8d7-715e-a352-483f96c04a09"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/crocuta_crocuta/01a1afc1-aabb-77ff-a76a-e1ad3680bc8e"
+      }
+     ],
+     "ok": true,
+     "prompt": "A wild Spotted hyaena (Crocuta crocuta) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+     "texture_prompt": "Natural coat colours and markings of a wild adult Spotted hyaena (Crocuta crocuta) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+     "build_log": "INFO islands 1 dropped faces 0 kept 30836\nINFO colour from texture source faces 30836\nINFO remeshed 68806 faces\nINFO tail cut y 0.830, 3816 vertices\nINFO feet y fore/hind -0.398 0.686, gap 0.617, leg cut z 0.631\nINFO size by mass mass 66.4921 volume 0.3204 units -> withers 0.83 m; card shoulder 0.904\nLANDMARKS withers 0.83 scale 0.592 head-body 1.09 tail 0.399 nose [0.009, -0.677, 0.642] neck base [0.0, -0.303, 0.684] pivots {'FR': [-0.095, -0.185, 0.373], 'HR': [-0.105, 0.273, 0.373], 'FL': [0.105, -0.138, 0.373], 'HL': [0.117, 0.295, 0.373]}\nINFO tier lod0 from 137612 to 3000\nINFO tier lod1 from 137612 to 1200\nINFO tier lod2 from 137612 to 350\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/crocuta_crocuta.glb 628128 bytes; lod0 3000 tris, lod1 1200 tris, lod2 350 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/crocuta_crocuta.glb: species crocuta_crocuta, posture digitigrade, withers 0.83 m, wrist 0.42 hock 0.5\nTIER lod0: 8964 -> 9208 vertices, 3244 triangles\nTIER lod1: 3564 -> 3712 vertices, 1348 triangles\nTIER lod2: 1014 -> 1080 vertices, 418 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/crocuta_crocuta.glb 932352 bytes\nINFO crocuta_crocuta.glb: crocuta_crocuta, no row: the body alone; walk 2.02 trot 4.51 m/s, stride 1.94 m at 2.32 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 23 frames, 0.779 s, stride 0.943 m at 1.21 m/s, duty 0.62, touchdown 0.2609\nCLIP Trot: 15 frames, 0.491 s, stride 1.660 m at 3.38 m/s, duty 0.50, touchdown 0.5333\nCLIP Gallop: 12 frames, 0.402 s, stride 2.903 m at 7.22 m/s, duty 0.38, touchdown 0.5\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/crocuta_crocuta_clips.bin (25440 bytes, 60x53 rgba16f, values to 1.00) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/crocuta_crocuta_clips.json (6 clips)"
+    },
+    {
+     "code": "panthera_pardus",
+     "why": "large predator",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/panthera_pardus/01a1afc2-f23a-7178-9340-a3a4958b5a67"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/panthera_pardus/01a1afc3-a655-7458-a751-18ba3a79cc3a"
+      }
+     ],
+     "ok": true,
+     "prompt": "A wild Leopard (Panthera pardus) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+     "texture_prompt": "Natural coat colours and markings of a wild adult Leopard (Panthera pardus) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+     "build_log": "INFO islands 1 dropped faces 0 kept 30985\nINFO colour from texture source faces 30985\nINFO remeshed 73054 faces\nINFO tail cut y 0.610, 4807 vertices\nINFO feet y fore/hind -0.549 0.472, gap 0.740, leg cut z 0.622\nINFO size by mass mass 52.0382 volume 0.3668 units -> withers 0.675 m; card shoulder 0.833\nLANDMARKS withers 0.675 scale 0.5216 head-body 0.85 tail 0.545 nose [0.076, -0.501, 0.581] neck base [0.0, -0.251, 0.523] pivots {'FR': [-0.078, -0.202, 0.324], 'FL': [0.072, -0.164, 0.324], 'HR': [-0.109, 0.233, 0.324], 'HL': [0.091, 0.233, 0.324]}\nINFO tier lod0 from 146108 to 3000\nINFO tier lod1 from 146108 to 1200\nINFO tier lod2 from 146108 to 350\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/panthera_pardus.glb 622164 bytes; lod0 3000 tris, lod1 1200 tris, lod2 350 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/panthera_pardus.glb: species panthera_pardus, posture digitigrade, withers 0.675 m, wrist 0.42 hock 0.5\nTIER lod0: 8919 -> 9183 vertices, 3264 triangles\nTIER lod1: 3519 -> 3675 vertices, 1356 triangles\nTIER lod2: 969 -> 1056 vertices, 442 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/panthera_pardus.glb 927160 bytes\nINFO panthera_pardus.glb: panthera_pardus, no row: the body alone; walk 1.82 trot 4.07 m/s, stride 1.60 m at 2.55 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 21 frames, 0.710 s, stride 0.775 m at 1.09 m/s, duty 0.62, touchdown 0.2381\nCLIP Trot: 13 frames, 0.447 s, stride 1.364 m at 3.05 m/s, duty 0.50, touchdown 0.5385\nCLIP Gallop: 11 frames, 0.366 s, stride 2.385 m at 6.51 m/s, duty 0.38, touchdown 0.5455\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/panthera_pardus_clips.bin (23040 bytes, 60x48 rgba16f, values to 1.00) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/panthera_pardus_clips.json (6 clips)"
+    },
+    {
+     "code": "acinonyx_jubatus",
+     "why": "large predator",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/acinonyx_jubatus/01a1afc4-85e9-732c-b12c-b42fecd2564a"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/acinonyx_jubatus/01a1afc5-37bb-77f7-b39c-7a0eb62f47f5"
+      }
+     ],
+     "ok": true,
+     "prompt": "A wild Cheetah (Acinonyx jubatus) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+     "texture_prompt": "Natural coat colours and markings of a wild adult Cheetah (Acinonyx jubatus) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+     "build_log": "INFO islands 1 dropped faces 0 kept 31224\nINFO colour from texture source faces 31224\nINFO remeshed 49868 faces\nINFO tail cut y 0.580, 4063 vertices\nINFO feet y fore/hind -0.505 0.554, gap 0.567, leg cut z 0.518\nINFO size by mass mass 46.7 volume 0.2013 units -> withers 0.664 m; card shoulder 0.804\nLANDMARKS withers 0.664 scale 0.6144 head-body 0.977 tail 0.475 nose [0.089, -0.629, 0.659] neck base [0.0, -0.307, 0.522] pivots {'FR': [-0.092, -0.309, 0.318], 'HR': [-0.079, 0.275, 0.318], 'FL': [0.084, -0.194, 0.318], 'HL': [0.082, 0.243, 0.318]}\nINFO tier lod0 from 99736 to 3000\nINFO tier lod1 from 99736 to 1200\nINFO tier lod2 from 99736 to 350\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/acinonyx_jubatus.glb 632872 bytes; lod0 3000 tris, lod1 1200 tris, lod2 350 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/acinonyx_jubatus.glb: species acinonyx_jubatus, posture digitigrade, withers 0.664 m, wrist 0.42 hock 0.5\nTIER lod0: 9000 -> 9276 vertices, 3276 triangles\nTIER lod1: 3600 -> 3740 vertices, 1340 triangles\nTIER lod2: 1050 -> 1116 vertices, 416 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/acinonyx_jubatus.glb 940932 bytes\nINFO acinonyx_jubatus.glb: acinonyx_jubatus, no row: the body alone; walk 1.80 trot 4.04 m/s, stride 1.57 m at 2.57 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 21 frames, 0.705 s, stride 0.763 m at 1.08 m/s, duty 0.62, touchdown 0.2381\nCLIP Trot: 13 frames, 0.444 s, stride 1.343 m at 3.03 m/s, duty 0.50, touchdown 0.5385\nCLIP Gallop: 11 frames, 0.364 s, stride 2.348 m at 6.46 m/s, duty 0.38, touchdown 0.5455\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/acinonyx_jubatus_clips.bin (23040 bytes, 60x48 rgba16f, values to 1.00) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/acinonyx_jubatus_clips.json (6 clips)"
+    },
+    {
+     "code": "lycaon_pictus",
+     "why": "large predator",
+     "attempts": 2,
+     "credits": 60,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/lycaon_pictus/01a1afc6-0bbe-7471-a574-acb474c69e45"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/lycaon_pictus/01a1afc7-21f1-7015-b1f1-88a7dd8ff20b"
+      },
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/lycaon_pictus/01a1afc7-f945-772e-9fd8-6771064135c8"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/lycaon_pictus/01a1afc8-a68f-7210-bf77-c2d2b6d91d66"
+      }
+     ],
+     "ok": true,
+     "prompt": "A wild African wild dog (Lycaon pictus) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+     "texture_prompt": "Natural coat colours and markings of a wild adult African wild dog (Lycaon pictus) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+     "build_log": "INFO islands 1 dropped faces 0 kept 31105\nINFO colour from texture source faces 31105\nINFO remeshed 64464 faces\nINFO tail cut y 0.850, 3115 vertices\nINFO feet y fore/hind -0.397 0.772, gap 0.994, leg cut z 0.738\nINFO size by mass mass 22.0501 volume 0.2667 units -> withers 0.623 m; card shoulder 0.626\nLANDMARKS withers 0.623 scale 0.4357 head-body 0.808 tail 0.161 nose [-0.095, -0.517, 0.631] neck base [0.0, -0.242, 0.517] pivots {'FR': [-0.055, -0.18, 0.322], 'HR': [-0.049, 0.185, 0.322], 'FL': [0.09, -0.177, 0.322], 'HL': [0.061, 0.199, 0.322]}\nINFO tier lod0 from 128928 to 3000\nINFO tier lod1 from 128928 to 1200\nINFO tier lod2 from 128928 to 350\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/lycaon_pictus.glb 632876 bytes; lod0 3000 tris, lod1 1200 tris, lod2 350 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/lycaon_pictus.glb: species lycaon_pictus, posture digitigrade, withers 0.623 m, wrist 0.42 hock 0.5\nTIER lod0: 9000 -> 9284 vertices, 3284 triangles\nTIER lod1: 3600 -> 3786 vertices, 1388 triangles\nTIER lod2: 1050 -> 1133 vertices, 438 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/lycaon_pictus.glb 945944 bytes\nINFO lycaon_pictus.glb: lycaon_pictus, no row: the body alone; walk 1.75 trot 3.91 m/s, stride 1.48 m at 2.64 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 21 frames, 0.685 s, stride 0.718 m at 1.05 m/s, duty 0.62, touchdown 0.2381\nCLIP Trot: 13 frames, 0.431 s, stride 1.264 m at 2.93 m/s, duty 0.50, touchdown 0.5385\nCLIP Gallop: 11 frames, 0.353 s, stride 2.210 m at 6.25 m/s, duty 0.38, touchdown 0.5455\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/lycaon_pictus_clips.bin (23040 bytes, 60x48 rgba16f, values to 1.00) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/lycaon_pictus_clips.json (6 clips)"
+    },
+    {
+     "code": "loxodonta_africana",
+     "why": "biomass rank",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/loxodonta_africana/01a1afc9-7baa-77dc-be52-18a94756b653"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/loxodonta_africana/01a1afca-37c9-721c-9f0a-9578f56a080c"
+      }
+     ],
+     "ok": true,
+     "prompt": "A wild African elephant (Loxodonta africana) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+     "texture_prompt": "Natural coat colours and markings of a wild adult African elephant (Loxodonta africana) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+     "build_log": "INFO islands 1 dropped faces 0 kept 31202\nINFO colour from texture source faces 31202\nINFO remeshed 93286 faces\nINFO tail cut y 0.800, 1812 vertices\nINFO feet y fore/hind -0.250 0.433, gap 0.404, leg cut z 0.538\nINFO size by mass mass 3940.0343 volume 0.5318 units -> withers 2.83 m; card shoulder 3.525\nLANDMARKS withers 2.83 scale 1.9494 head-body 3.525 tail 1.38 nose [0.492, -2.127, 1.458] neck base [0.0, -0.607, 2.097] pivots {'FR': [-0.242, -0.834, 1.049], 'HR': [-0.306, 0.774, 1.049], 'FL': [0.236, -0.936, 1.049], 'HL': [0.307, 0.773, 1.049]}\nINFO tier lod0 from 186572 to 3000\nINFO tier lod1 from 186572 to 1200\nINFO tier lod2 from 186572 to 350\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/loxodonta_africana.glb 632868 bytes; lod0 3000 tris, lod1 1200 tris, lod2 350 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/loxodonta_africana.glb: species loxodonta_africana, posture digitigrade, withers 2.83 m, wrist 0.42 hock 0.5\nTIER lod0: 9000 -> 9236 vertices, 3236 triangles\nTIER lod1: 3600 -> 3726 vertices, 1326 triangles\nTIER lod2: 1050 -> 1114 vertices, 414 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/loxodonta_africana.glb 937012 bytes\nINFO loxodonta_africana.glb: loxodonta_africana, no row: the body alone; walk 3.73 trot 8.33 m/s, stride 6.24 m at 1.34 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 41 frames, 1.353 s, stride 3.025 m at 2.24 m/s, duty 0.62, touchdown 0.2439\nCLIP Trot: 26 frames, 0.852 s, stride 5.324 m at 6.25 m/s, duty 0.50, touchdown 0.5\nCLIP Gallop: 21 frames, 0.698 s, stride 9.308 m at 13.33 m/s, duty 0.38, touchdown 0.5238\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/loxodonta_africana_clips.bin (43680 bytes, 60x91 rgba16f, values to 3.16) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/loxodonta_africana_clips.json (6 clips)"
+    },
+    {
+     "code": "hippopotamus_amphibius",
+     "why": "biomass rank",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/hippopotamus_amphibius/01a1afcb-12a0-701e-9bb3-657d55679c44"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/hippopotamus_amphibius/01a1afcc-2706-7124-b087-7e773857348d"
+      }
+     ],
+     "ok": true,
+     "prompt": "A wild Hippo (Hippopotamus amphibius) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+     "texture_prompt": "Natural coat colours and markings of a wild adult Hippo (Hippopotamus amphibius) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+     "build_log": "INFO islands 1 dropped faces 0 kept 31155\nINFO colour from texture source faces 31155\nINFO remeshed 69652 faces\nINFO tail cut y 0.870, 1742 vertices\nINFO feet y fore/hind -0.236 0.606, gap 0.657, leg cut z 0.261\nINFO size by mass mass 1417.49 volume 0.5316 units -> withers 1.47 m; card shoulder 2.507\nLANDMARKS withers 1.47 scale 1.3867 head-body 2.6 tail 0.512 nose [-0.076, -1.643, 0.894] neck base [0.0, -0.542, 1.004] pivots {'FR': [-0.266, -0.496, 0.361], 'HR': [-0.335, 0.686, 0.361], 'FL': [0.268, -0.496, 0.361], 'HL': [0.335, 0.686, 0.361]}\nINFO tier lod0 from 139304 to 3000\nINFO tier lod1 from 139304 to 1200\nINFO tier lod2 from 139304 to 350\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/hippopotamus_amphibius.glb 632856 bytes; lod0 3000 tris, lod1 1200 tris, lod2 350 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/hippopotamus_amphibius.glb: species hippopotamus_amphibius, posture digitigrade, withers 1.47 m, wrist 0.42 hock 0.5\nTIER lod0: 9000 -> 9244 vertices, 3244 triangles\nTIER lod1: 3600 -> 3739 vertices, 1340 triangles\nTIER lod2: 1050 -> 1111 vertices, 412 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/hippopotamus_amphibius.glb 938284 bytes\nINFO hippopotamus_amphibius.glb: hippopotamus_amphibius, no row: the body alone; walk 2.69 trot 6.00 m/s, stride 3.35 m at 1.79 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 30 frames, 1.008 s, stride 1.623 m at 1.61 m/s, duty 0.62, touchdown 0.2667\nCLIP Trot: 19 frames, 0.635 s, stride 2.857 m at 4.50 m/s, duty 0.50, touchdown 0.5263\nCLIP Gallop: 16 frames, 0.520 s, stride 4.996 m at 9.61 m/s, duty 0.38, touchdown 0.5\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/hippopotamus_amphibius_clips.bin (32640 bytes, 60x68 rgba16f, values to 1.97) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/hippopotamus_amphibius_clips.json (6 clips)"
+    },
+    {
+     "code": "giraffa_tippelskirchi",
+     "why": "biomass rank",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/giraffa_tippelskirchi/01a1afcd-02de-746a-9245-73a5e1dcabf4"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/giraffa_tippelskirchi/01a1afcd-b7e5-77a1-bf0a-54951fd8636c"
+      }
+     ],
+     "ok": true,
+     "prompt": "A wild Masai giraffe (Giraffa tippelskirchi) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+     "texture_prompt": "Natural coat colours and markings of a wild adult Masai giraffe (Giraffa tippelskirchi) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+     "build_log": "INFO islands 1 dropped faces 0 kept 31134\nINFO colour from texture source faces 31134\nINFO remeshed 78694 faces\nINFO tail cut y 0.680, 2587 vertices\nINFO feet y fore/hind -0.319 0.523, gap 0.687, leg cut z 1.280\nINFO size by mass mass 899.9948 volume 0.3181 units -> withers 3.186 m; card shoulder 2.155\nLANDMARKS withers 3.186 scale 1.4143 head-body 2.41 tail 1.692 nose [-0.177, -1.558, 3.487] neck base [0.0, -0.553, 2.764] pivots {'FR': [-0.158, -0.476, 1.81], 'HR': [-0.157, 0.585, 1.81], 'FL': [0.229, -0.478, 1.81], 'HL': [0.225, 0.584, 1.81]}\nINFO tier lod0 from 157388 to 3000\nINFO tier lod1 from 157388 to 1200\nINFO tier lod2 from 157388 to 350\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/giraffa_tippelskirchi.glb 632868 bytes; lod0 3000 tris, lod1 1200 tris, lod2 350 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/giraffa_tippelskirchi.glb: species giraffa_tippelskirchi, posture digitigrade, withers 3.186 m, wrist 0.42 hock 0.5\nTIER lod0: 9000 -> 9186 vertices, 3186 triangles\nTIER lod1: 3600 -> 3716 vertices, 1316 triangles\nTIER lod2: 1050 -> 1112 vertices, 412 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/giraffa_tippelskirchi.glb 932676 bytes\nINFO giraffa_tippelskirchi.glb: giraffa_tippelskirchi, no row: the body alone; walk 3.95 trot 8.84 m/s, stride 6.98 m at 1.27 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 43 frames, 1.427 s, stride 3.385 m at 2.37 m/s, duty 0.62, touchdown 0.2558\nCLIP Trot: 27 frames, 0.899 s, stride 5.958 m at 6.63 m/s, duty 0.50, touchdown 0.5185\nCLIP Gallop: 22 frames, 0.737 s, stride 10.417 m at 14.14 m/s, duty 0.38, touchdown 0.5\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/giraffa_tippelskirchi_clips.bin (45600 bytes, 60x95 rgba16f, values to 4.09) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/giraffa_tippelskirchi_clips.json (6 clips)"
+    },
+    {
+     "code": "syncerus_caffer",
+     "why": "biomass rank",
+     "attempts": 2,
+     "credits": 60,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/syncerus_caffer/01a1afce-9344-75f5-99f4-a1e8c16a21a2"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/syncerus_caffer/01a1afcf-4555-7496-8562-d634d7a3e033"
+      },
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/syncerus_caffer/01a1afd0-7cf3-705c-93c7-bdbb44c324c7"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/syncerus_caffer/01a1afd1-29ec-7126-bc99-5bd3809bc5cc"
+      }
+     ],
+     "ok": true,
+     "prompt": "A wild African buffalo (Syncerus caffer) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+     "texture_prompt": "Natural coat colours and markings of a wild adult African buffalo (Syncerus caffer) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+     "build_log": "INFO islands 1 dropped faces 0 kept 31029\nINFO colour from texture source faces 31029\nINFO remeshed 71690 faces\nINFO tail cut y 0.880, 2552 vertices\nINFO feet y fore/hind -0.278 0.622, gap 0.659, leg cut z 0.436\nINFO size by mass mass 580.0027 volume 0.3998 units -> withers 1.498 m; card shoulder 1.861\nLANDMARKS withers 1.498 scale 1.132 head-body 2.151 tail 1.163 nose [0.232, -1.326, 1.024] neck base [0.0, -0.476, 0.998] pivots {'FR': [-0.236, -0.403, 0.493], 'HR': [-0.154, 0.637, 0.493], 'FL': [0.067, -0.452, 0.493], 'HL': [0.041, 0.642, 0.493]}\nINFO tier lod0 from 143380 to 3000\nINFO tier lod1 from 143380 to 1200\nINFO tier lod2 from 143380 to 350\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/syncerus_caffer.glb 632876 bytes; lod0 3000 tris, lod1 1200 tris, lod2 350 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/syncerus_caffer.glb: species syncerus_caffer, posture digitigrade, withers 1.498 m, wrist 0.42 hock 0.5\nTIER lod0: 9000 -> 9184 vertices, 3184 triangles\nTIER lod1: 3600 -> 3712 vertices, 1312 triangles\nTIER lod2: 1050 -> 1088 vertices, 388 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/syncerus_caffer.glb 930580 bytes\nINFO syncerus_caffer.glb: syncerus_caffer, no row: the body alone; walk 2.71 trot 6.06 m/s, stride 3.41 m at 1.78 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 30 frames, 1.016 s, stride 1.653 m at 1.63 m/s, duty 0.62, touchdown 0.2667\nCLIP Trot: 19 frames, 0.640 s, stride 2.909 m at 4.55 m/s, duty 0.50, touchdown 0.5263\nCLIP Gallop: 16 frames, 0.524 s, stride 5.086 m at 9.70 m/s, duty 0.38, touchdown 0.5\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/syncerus_caffer_clips.bin (32640 bytes, 60x68 rgba16f, values to 1.86) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/syncerus_caffer_clips.json (6 clips)"
+    },
+    {
+     "code": "equus_quagga",
+     "why": "biomass rank",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/equus_quagga/01a1afd1-ffac-7640-89b5-f6a52f438291"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/equus_quagga/01a1afd3-16e2-7077-973c-e816dfa42f6d"
+      }
+     ],
+     "ok": true,
+     "prompt": "A wild Plains zebra (Equus quagga) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+     "texture_prompt": "Natural coat colours and markings of a wild adult Plains zebra (Equus quagga) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+     "build_log": "INFO islands 1 dropped faces 0 kept 30980\nINFO colour from texture source faces 30980\nINFO remeshed 73008 faces\nINFO tail cut y 0.890, 2205 vertices\nINFO feet y fore/hind -0.325 0.571, gap 0.485, leg cut z 0.669\nINFO size by mass mass 400.0 volume 0.3958 units -> withers 1.473 m; card shoulder 1.645\nLANDMARKS withers 1.473 scale 1.0035 head-body 1.915 tail 0.659 nose [0.26, -1.126, 1.029] neck base [0.0, -0.42, 1.089] pivots {'HL': [0.088, 0.586, 0.672], 'FL': [0.106, -0.419, 0.672], 'FR': [-0.159, -0.339, 0.672], 'HR': [-0.158, 0.52, 0.672]}\nINFO tier lod0 from 146016 to 3000\nINFO tier lod1 from 146016 to 1200\nINFO tier lod2 from 146016 to 350\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/equus_quagga.glb 632852 bytes; lod0 3000 tris, lod1 1200 tris, lod2 350 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/equus_quagga.glb: species equus_quagga, posture digitigrade, withers 1.473 m, wrist 0.42 hock 0.5\nTIER lod0: 9000 -> 9196 vertices, 3196 triangles\nTIER lod1: 3600 -> 3714 vertices, 1314 triangles\nTIER lod2: 1050 -> 1110 vertices, 410 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/equus_quagga.glb 933084 bytes\nINFO equus_quagga.glb: equus_quagga, no row: the body alone; walk 2.69 trot 6.01 m/s, stride 3.35 m at 1.79 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 30 frames, 1.009 s, stride 1.627 m at 1.61 m/s, duty 0.62, touchdown 0.2667\nCLIP Trot: 19 frames, 0.635 s, stride 2.863 m at 4.51 m/s, duty 0.50, touchdown 0.5263\nCLIP Gallop: 16 frames, 0.520 s, stride 5.005 m at 9.62 m/s, duty 0.38, touchdown 0.5\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/equus_quagga_clips.bin (32640 bytes, 60x68 rgba16f, values to 1.68) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/equus_quagga_clips.json (6 clips)"
+    },
+    {
+     "code": "connochaetes_taurinus",
+     "why": "biomass rank",
+     "attempts": 2,
+     "credits": 60,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/connochaetes_taurinus/01a1afd3-f382-768a-b9c7-caa1d8bb24d1"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/connochaetes_taurinus/01a1afd4-a694-77eb-92ed-6803dcf32505"
+      },
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/connochaetes_taurinus/01a1afd5-e62f-734e-b865-83eceb1c2534"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/connochaetes_taurinus/01a1afd6-f7cb-7769-a932-5a50e0f7a733"
+      }
+     ],
+     "ok": true,
+     "prompt": "A wild Blue wildebeest (Connochaetes taurinus) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+     "texture_prompt": "Natural coat colours and markings of a wild adult Blue wildebeest (Connochaetes taurinus) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+     "build_log": "INFO islands 1 dropped faces 0 kept 30374\nINFO colour from texture source faces 30374\nINFO remeshed 87480 faces\nINFO tail cut y 0.770, 3139 vertices\nINFO feet y fore/hind -0.436 0.600, gap 0.675, leg cut z 0.765\nINFO size by mass mass 179.999 volume 0.4950 units -> withers 1.249 m; card shoulder 1.26\nLANDMARKS withers 1.249 scale 0.7138 head-body 1.28 tail 0.729 nose [0.261, -0.772, 0.81] neck base [0.0, -0.348, 0.898] pivots {'HR': [-0.172, 0.351, 0.546], 'FR': [-0.181, -0.317, 0.546], 'FL': [0.043, -0.296, 0.546], 'HL': [0.05, 0.422, 0.546]}\nINFO tier lod0 from 174960 to 2998\nINFO tier lod1 from 174960 to 1200\nINFO tier lod2 from 174960 to 348\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/connochaetes_taurinus.glb 622432 bytes; lod0 2998 tris, lod1 1200 tris, lod2 348 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/connochaetes_taurinus.glb: species connochaetes_taurinus, posture digitigrade, withers 1.249 m, wrist 0.42 hock 0.5\nTIER lod0: 8919 -> 9077 vertices, 3156 triangles\nTIER lod1: 3525 -> 3607 vertices, 1282 triangles\nTIER lod2: 969 -> 997 vertices, 376 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/connochaetes_taurinus.glb 910772 bytes\nINFO connochaetes_taurinus.glb: connochaetes_taurinus, no row: the body alone; walk 2.48 trot 5.53 m/s, stride 2.87 m at 1.93 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 28 frames, 0.936 s, stride 1.391 m at 1.49 m/s, duty 0.62, touchdown 0.25\nCLIP Trot: 18 frames, 0.590 s, stride 2.448 m at 4.15 m/s, duty 0.50, touchdown 0.5\nCLIP Gallop: 14 frames, 0.483 s, stride 4.279 m at 8.86 m/s, duty 0.38, touchdown 0.5\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/connochaetes_taurinus_clips.bin (30240 bytes, 60x63 rgba16f, values to 1.34) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/connochaetes_taurinus_clips.json (6 clips)"
+    },
+    {
+     "code": "alcelaphus_buselaphus",
+     "why": "biomass rank",
+     "attempts": 2,
+     "credits": 60,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/alcelaphus_buselaphus/01a1afd7-d25a-75ae-af68-66e839d54bf8"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/alcelaphus_buselaphus/01a1afd8-e9c1-7256-a979-b90bf86ff517"
+      },
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/alcelaphus_buselaphus/01a1afd9-b83a-754b-a2d5-9b942c181bb8"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/alcelaphus_buselaphus/01a1afda-6563-7188-8005-864af3fbc0b3"
+      }
+     ],
+     "ok": false,
+     "prompt": "A wild Hartebeest (Alcelaphus buselaphus) of Serengeti, Mara Region, Tanzania, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+     "texture_prompt": "Natural coat colours and markings of a wild adult Hartebeest (Alcelaphus buselaphus) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+     "build_log": "INFO islands 1 dropped faces 0 kept 31129\nINFO colour from texture source faces 31129\nINFO remeshed 62452 faces\nINFO tail none found\nINFO feet y fore/hind -0.365 0.903, gap 0.942, leg cut z 0.020\nalcelaphus_buselaphus: found 3 leg columns below z 0.020, not 4 (not standing on four feet?)"
+    }
+   ],
+   "stand_ins": [
+    {
+     "code": "lamprotornis_superbus",
+     "why": "not a four-legged mammal (the generic build is quadrupeds only)"
+    },
+    {
+     "code": "alopochen_aegyptiaca",
+     "why": "not a four-legged mammal (the generic build is quadrupeds only)"
+    },
+    {
+     "code": "vanellus_armatus",
+     "why": "not a four-legged mammal (the generic build is quadrupeds only)"
+    },
+    {
+     "code": "leptoptilos_crumenifer",
+     "why": "not a four-legged mammal (the generic build is quadrupeds only)"
+    },
+    {
+     "code": "eurocephalus_ruppelli",
+     "why": "not a four-legged mammal (the generic build is quadrupeds only)"
+    },
+    {
+     "code": "trachyphonus_darnaudii",
+     "why": "not a four-legged mammal (the generic build is quadrupeds only)"
+    },
+    {
+     "code": "coracias_caudatus",
+     "why": "not a four-legged mammal (the generic build is quadrupeds only)"
+    },
+    {
+     "code": "lamprotornis_hildebrandti",
+     "why": "not a four-legged mammal (the generic build is quadrupeds only)"
+    },
+    {
+     "code": "dinemellia_dinemelli",
+     "why": "not a four-legged mammal (the generic build is quadrupeds only)"
+    },
+    {
+     "code": "ardea_melanocephala",
+     "why": "not a four-legged mammal (the generic build is quadrupeds only)"
+    },
+    {
+     "code": "lamprotornis_purpuroptera",
+     "why": "not a four-legged mammal (the generic build is quadrupeds only)"
+    },
+    {
+     "code": "damaliscus_korrigum",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "phacochoerus_africanus",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "nanger_granti",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "aepyceros_melampus",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "redunca_redunca",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "eudorcas_thomsonii",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "papio_anubis",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "canis_mesomelas",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "chlorocebus_pygerythrus",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "otocyon_megalotis",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "procavia_capensis",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "heterohyrax_brucei",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "mungos_mungo",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "helogale_parvula",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "genetta_genetta",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "leptailurus_serval",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "canis_aureus",
+     "why": "over the budget or the count"
+    }
+   ],
+   "spent": 450,
+   "balance_after": 1877,
+   "modelled": 11
+  }
+ ]
 }

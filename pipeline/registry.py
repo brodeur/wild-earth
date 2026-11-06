@@ -299,14 +299,17 @@ def scan() -> dict:
             for m in (gj or {}).get("meshes", []):
                 pr = (m.get("primitives") or [{}])[0]
                 if "indices" in pr: tris[m["name"]] = gj["accessors"][pr["indices"]]["count"] // 3
-            ok = bool(gj and ex.get("skin"))
+            bird = (ex.get("rig") or {}).get("kind") == "bird"   # tools/build_bird.py: the bird part rig, no skin
+            ok = bool(gj and (ex.get("skin") or bird))
             species[k] = {"id": t["id"], "scientific": t.get("scientific"), "common": t.get("common"), "kind": t.get("kind"),
                           "fidelity": 3 if ok else (2 if gj else 0),
-                          "why": [f"own mesh (pipeline: Meshy, tools/build_quadruped.py; {tris.get('lod0') or '?'} triangles)"]
-                                 + (["rigged and animated: skinned clips, the leg engine", "for 4: a voice and curated behaviour"] if ok else []),
+                          "why": [f"own mesh (pipeline: Meshy, {ex.get('build') or mdl.get('build') or 'tools/build_quadruped.py'}; {tris.get('lod0') or '?'} triangles)"]
+                                 + ((["rigged and animated: the bird part rig (" + str(ex.get("archetype")) + ")"] if bird else
+                                     ["rigged and animated: skinned clips, the leg engine"]) + ["for 4: a voice and curated behaviour"] if ok else []),
                           "assets": {"mesh": {"fidelity": 2 if gj else 0, "file": mdl["glb"], "source": "meshy (pipeline)",
                                               "job_id": (mdl.get("jobs") or [""])[-1].rsplit("/", 1)[-1], "triangles": {n: c for n, c in tris.items() if c}},
-                                     "rig": {"animated": ok, "kind": "skin" if ok else None, "clips": mdl["glb"].replace(".glb", "_clips.json"), "leg_engine": ok},
+                                     "rig": {"animated": ok, "kind": ("part" if bird else "skin") if ok else None,
+                                             "clips": None if bird else mdl["glb"].replace(".glb", "_clips.json"), "leg_engine": ok and not bird},
                                      "behaviour": {"generated": True, "file": f"library/animals/traits/{p.name}", "diet": bool(t.get("diet")),
                                                    "locomotion": bool(t.get("locomotion"))}},
                           "meshy": ledger["by_species"].get(t["id"]), "model": {"credits": mdl.get("credits"), "attempts": mdl.get("attempts"),

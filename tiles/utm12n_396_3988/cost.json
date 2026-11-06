@@ -234,14 +234,14 @@
   },
   "ground": {
    "stage": "base",
-   "started_at": "2026-11-06T06:47:19Z",
-   "ended_at": "2026-11-06T06:47:27Z",
-   "wall_s": 8.0,
-   "cpu_self_s": 7.7,
+   "started_at": "2026-11-06T09:49:29Z",
+   "ended_at": "2026-11-06T09:50:45Z",
+   "wall_s": 75.9,
+   "cpu_self_s": 76.0,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {},
-   "disk_bytes": 2486513,
+   "disk_bytes": 3863641,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -290,14 +290,14 @@
   },
   "substrate": {
    "stage": "base",
-   "started_at": "2026-11-06T06:47:58Z",
-   "ended_at": "2026-11-06T06:48:04Z",
+   "started_at": "2026-11-06T09:50:45Z",
+   "ended_at": "2026-11-06T09:50:51Z",
    "wall_s": 6.6,
    "cpu_self_s": 6.4,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {},
-   "disk_bytes": 2164539,
+   "disk_bytes": 2172153,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -495,10 +495,10 @@
   },
   "animals": {
    "stage": "fauna",
-   "started_at": "2026-11-06T08:46:32Z",
-   "ended_at": "2026-11-06T08:46:33Z",
+   "started_at": "2026-11-06T09:32:31Z",
+   "ended_at": "2026-11-06T09:32:31Z",
    "wall_s": 0.6,
-   "cpu_self_s": 0.6,
+   "cpu_self_s": 0.5,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {
@@ -508,6 +508,10 @@
     },
     "eltontraits": {
      "hits": 3,
+     "misses": 0
+    },
+    "ndownloader.figshare.com": {
+     "hits": 1,
      "misses": 0
     }
    },
@@ -612,14 +616,14 @@
  },
  "stages": {
   "base": {
-   "started_at": "2026-11-06T06:45:07Z",
-   "ended_at": "2026-11-06T06:48:04Z",
-   "wall_s": 2404.4,
-   "cpu_s": 399.7,
+   "started_at": "2026-11-06T09:49:29Z",
+   "ended_at": "2026-11-06T09:50:51Z",
+   "wall_s": 2472.3,
+   "cpu_s": 468.0,
    "download_bytes": 32239160,
    "cache_hits": 23,
    "cache_misses": 497,
-   "disk_bytes": 457892285,
+   "disk_bytes": 459277027,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -636,12 +640,12 @@
    "meshy_queued_credits_est": 0
   },
   "fauna": {
-   "started_at": "2026-11-06T08:46:32Z",
-   "ended_at": "2026-11-06T08:46:33Z",
+   "started_at": "2026-11-06T09:32:31Z",
+   "ended_at": "2026-11-06T09:32:31Z",
    "wall_s": 419.5,
-   "cpu_s": 21.0,
+   "cpu_s": 20.9,
    "download_bytes": 89708535,
-   "cache_hits": 432,
+   "cache_hits": 433,
    "cache_misses": 181,
    "disk_bytes": 8244316,
    "meshy_spent": 0,
@@ -850,22 +854,87 @@
    ],
    "ended_at": "2026-11-06T08:46:33Z",
    "failed": []
+  },
+  {
+   "started_at": "2026-11-06T09:32:31Z",
+   "stages": [
+    {
+     "stage": "fauna",
+     "started_at": "2026-11-06T09:32:31Z",
+     "steps_run": [
+      "animals"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T09:32:31Z"
+    }
+   ],
+   "ended_at": "2026-11-06T09:32:31Z",
+   "failed": []
+  },
+  {
+   "started_at": "2026-11-06T09:41:14Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-06T09:41:14Z",
+     "steps_run": [
+      "ground"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T09:41:23Z"
+    }
+   ],
+   "ended_at": "2026-11-06T09:41:23Z",
+   "failed": []
+  },
+  {
+   "started_at": "2026-11-06T09:42:52Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-06T09:42:52Z",
+     "steps_run": [
+      "ground"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T09:48:39Z"
+    }
+   ],
+   "ended_at": "2026-11-06T09:48:39Z",
+   "failed": []
+  },
+  {
+   "started_at": "2026-11-06T09:49:29Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-06T09:49:29Z",
+     "steps_run": [
+      "ground",
+      "substrate"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T09:50:51Z"
+    }
+   ],
+   "ended_at": "2026-11-06T09:50:51Z",
+   "failed": []
   }
  ],
  "totals": {
-  "wall_s": 2945.7,
-  "cpu_s": 424.6,
+  "wall_s": 3013.6,
+  "cpu_s": 492.8,
   "download_bytes": 122090859,
-  "cache_hits": 469,
+  "cache_hits": 470,
   "cache_misses": 817,
-  "disk_bytes": 467095141,
+  "disk_bytes": 468479883,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 1570
  },
- "updated_at": "2026-11-06T08:46:33Z",
+ "updated_at": "2026-11-06T09:50:51Z",
  "client": {
-  "bytes": 49259401,
-  "files": 46,
+  "bytes": 49275017,
+  "files": 47,
   "largest": {
    "client/terrain_detail.png": 12710190,
    "client/season_rgb.png": 6495623,
@@ -873,7 +942,7 @@
    "client/texture_present.jpg": 4546406,
    "client/texture_imagery.jpg": 4529470,
    "client/heights.png": 3842866,
-   "client/substrate.png": 2150180,
+   "client/substrate.png": 2156732,
    "client/imagery.png": 2053563,
    "client/season_ndvi.png": 1919361,
    "client/masks.png": 754475,

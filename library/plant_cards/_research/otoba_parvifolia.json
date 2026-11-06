@@ -1,0 +1,22 @@
+{
+ "id": "otoba_parvifolia",
+ "scientific": "Otoba parvifolia",
+ "family": "Myristicaceae",
+ "common": "cumala",
+ "aliases": ["cumala_colorada", "aguanillo", "aguanillo_blanco", "sangre_de_toro", "llora_sangre", "cuangare", "guapa"],
+ "habit": "broadleaf_tree",
+ "height_m": {"typical": null, "max": null, "src": null},
+ "dbh_cm": {"typical": null, "max": null, "src": null},
+ "bole": {"clear_fraction": null, "straight": null, "buttresses": null, "buttress_height_m": null, "stilt_roots": false, "stilt_root_height_m": null, "spines": false, "text": "Trunk used for timber in Ecuador and Peru; bark decoction used as a red dye (vernacular names 'sangre de toro', 'llora sangre').", "src": 0},
+ "crown": {"shape": null, "width_m": null, "depth_fraction": null, "density": null, "position": null, "text": "Not described by a source read.", "src": null},
+ "leaf": {"type": "simple", "length_cm": [8, 26], "width_cm": [3, 11], "leaflet_length_cm": null, "frond_count": null, "shape": null, "texture": null, "upper_colour": null, "under_colour": "usually whitish, glabrescent", "new_flush_colour": null, "src": 0},
+ "phenology": {"leaf_habit": null, "leafless_months": [], "flowering_months": [], "flower_colour": null, "fruiting_months": [], "fruit": "globose to subglobose capsule 2.0-3.0 x 1.5-2.0 cm, apex mucronate; aril white-yellow", "src": 0},
+ "bark": {"colour": null, "texture": null, "text": "Not described; used for a red dye.", "src": 0},
+ "habitat": {"forest_types": ["floodplain (varzea)", "terra firme"], "light": null, "elevation_m": [150, 2500], "range": "north-central Venezuela to central Bolivia; highest-reaching American Myristicaceae (to 2500 m)", "src": 0},
+ "eaten_by": [],
+ "notes": "Jaramillo-Vivanco & Balslev 2020 revision (src 0, read as Plazi XML; partial treatment): lamina 8-26 x 3-11 cm, petiole 15-30 mm winged, 8-14 secondary veins per side; no height, bark colour, flower colour or phenology in the text. Holotype label: 'flood-free rainforest' at 150 m (Maranon); 'simple' leaf implied by lamina/petiole, not stated. Vela-Apaza 2024 (src 1): present in the Madre de Dios river floodplain plots Cocha Lobo and Jacaratia (seasonally flooded) but nearly absent from the Los Amigos plots; patchy/clumped. Search snippets cited herbarium labels (tree 17-28 m, fruit green turning red) but those NYBG pages were not readable, so not entered. No frugivore source found.",
+ "sources": [
+  {"title": "Jaramillo-Vivanco & Balslev 2020, Revision of Otoba (Myristicaceae), Phytotaxa 441(2):143-175, doi 10.11646/phytotaxa.441.2.3 (Plazi treatment XML)", "url": "https://tb.plazi.org/GgServer/xml/03CB87E4D244FFABFF0CFB03FC47F9BA", "licence": "unspecified (Plazi metadata: zenodo-license-treatments UNSPECIFIED)", "read": "2026-11-06"},
+  {"title": "Vela-Apaza & Gonzales-Ojeda 2024, Flora arborea de los bosques de la planicie aluvial inundable en el Rio Los Amigos, Rev. Biodivers. Amaz. 3(1) e274, doi 10.55873/rba.v3i1.274", "url": "https://revistas.unamad.edu.pe/index.php/rba/article/view/274", "licence": "CC BY 4.0", "read": "2026-11-06"}
+ ]
+}

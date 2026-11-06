@@ -1,0 +1,102 @@
+{
+ "rule": "max height >= 12 m from a source",
+ "tile": "utm17n_210_932",
+ "species": [
+  {
+   "scientific": "Trichilia tuberculata",
+   "max_m": 30,
+   "typical_m": [
+    20,
+    30
+   ],
+   "source_url": "https://osa-arboretum.org/?p=1333",
+   "licence": "unknown (no licence stated; Osa Conservation arboretum site)",
+   "passes": true,
+   "notes": "Osa Arboretum: up to 30 m in little-disturbed forest. Typical 20-30 m from Tree Atlas of Panama (panamabiota.org/stri/taxa/index.php?tid=70539); crtrees.org (Manuel Antonio) gives 15-23 m."
+  },
+  {
+   "scientific": "Crossopetalum parviflorum",
+   "max_m": 5,
+   "typical_m": null,
+   "source_url": "https://worldfloradb.net/plants/crossopetalum-parviflorum-hemsl-lundell",
+   "licence": "unknown",
+   "passes": false,
+   "notes": "Only figure found: WorldFloraDB 'about 5 m', seen in a search-engine excerpt (the site refused direct fetch, so not read in full). NYBG genus treatment: 'Shrubs or small trees', no height. No source gives 12 m or more."
+  },
+  {
+   "scientific": "Heisteria acuminata",
+   "max_m": 15,
+   "typical_m": [
+    5,
+    10
+   ],
+   "source_url": "https://osa-arboretum.org/?p=1177",
+   "licence": "unknown (no licence stated; Osa Conservation arboretum site)",
+   "passes": true,
+   "notes": "Osa Arboretum: reaches up to 15 m. Tree Atlas of Panama: forest treelet 5-10 m; Manual de Plantas de Costa Rica specimens mostly 1-2.5 m shrubs, two trees of 7 and 8 m. Passes on the Osa figure alone, a marginal pass."
+  },
+  {
+   "scientific": "Pouteria subrotata",
+   "max_m": 20,
+   "typical_m": [
+    12,
+    20
+   ],
+   "source_url": "https://crtrees.org/species-accounts/pouteria-subrotata/",
+   "licence": "unknown (no licence stated; WordPress.com site 'Trees of Costa Rica's Pacific Slope')",
+   "passes": true,
+   "notes": "crtrees.org: understory or subcanopy tree 12-20 m, recorded at Sirena, Corcovado. Osa Arboretum (?p=1364) also gives 20 m."
+  },
+  {
+   "scientific": "Croton schiedeanus",
+   "max_m": 24,
+   "typical_m": [
+    8,
+    15
+   ],
+   "source_url": "https://floracostaricensis.myspecies.info/taxonomy/term/22384/descriptions",
+   "licence": "unknown",
+   "passes": true,
+   "notes": "Flora de Costa Rica: 'Arbusto o árbol de 8 a 15 (24) m de altura'. The page refused direct fetch (403), so this comes from the search engine's excerpt of the page. crtrees.org (Manuel Antonio) gives 10-15 m, still a pass."
+  },
+  {
+   "scientific": "Hieronyma alchorneoides",
+   "max_m": 50,
+   "typical_m": null,
+   "source_url": "https://npn.rngr.net/publications/ttsm/species/PDF.2004-03-03.4653/at_download/file",
+   "licence": "unknown (USDA Forest Service Tropical Tree Seed Manual; no licence statement read)",
+   "passes": true,
+   "notes": "E.M. Flores in Tropical Tree Seed Manual: 'may reach up to 50 m in height and 100 to 120 cm d.b.h.'"
+  },
+  {
+   "scientific": "Ficus zarzalensis",
+   "max_m": null,
+   "typical_m": null,
+   "source_url": "https://osa-arboretum.org/?p=1838",
+   "licence": "unknown (no licence stated; Osa Conservation arboretum site)",
+   "passes": null,
+   "notes": "No source gives a height. Osa Arboretum describes a strangler-like habit (grows on a host, then stands as its own tree). A search result summarising POWO treated the name as a synonym of Ficus pertusa; this was not checked, because POWO blocks direct fetch."
+  },
+  {
+   "scientific": "Guarea glabra",
+   "max_m": 30,
+   "typical_m": [
+    25,
+    30
+   ],
+   "source_url": "https://npn.rngr.net/publications/ttsm/species/PDF.2004-03-03.2352/at_download/file",
+   "licence": "unknown (USDA Forest Service Tropical Tree Seed Manual; no licence statement read)",
+   "passes": true,
+   "notes": "E.M. Flores in Tropical Tree Seed Manual: 'reaches 25 to 30 m in height and more than 1 m d.b.h.'"
+  },
+  {
+   "scientific": "Pterygota excelsa",
+   "max_m": null,
+   "typical_m": null,
+   "source_url": "https://malvaceae.info/Genera/Pterygota/Pterygota.php",
+   "licence": "unknown",
+   "passes": null,
+   "notes": "malvaceae.info: 'a tall buttressed tree', dry-season deciduous, with no figure given. No numeric height found, though it is clearly a canopy tree."
+  }
+ ]
+}

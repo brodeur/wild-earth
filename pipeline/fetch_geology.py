@@ -32,6 +32,9 @@ SGMC = ("https://services.arcgis.com/v01gqwM5QqNysAAi/ArcGIS/rest/services/"
 SCALES = ["large", "medium", "small", "tiny"]
 PREFERRED_SOURCES = [133]          # Macrostrat source_id of the SGMC (USGS DS 1052)
 GRID_N = 5                         # initial sample grid per side
+# Gap-filling queries after the grid. 80 left a quarter of the Grand Canyon tile unmapped (its 1:24 000-scale map has a
+# hundred polygons in the tile; 2026-11-06), so the cap is generous and what is left uncovered is recorded.
+MAX_FILL_QUERIES = 600
 GRID_PX = 333                      # the 30 m vegetation grid (10 000 m / 333)
 
 # Macrostrat asks for credit to Macrostrat and to the original map; CC BY 4.0 also asks that changes
@@ -75,20 +78,38 @@ OLD_VOLCANIC_MA = 145.0
 QUATERNARY_MA = 2.58
 
 
+def _description_class(t: str) -> str | None:
+    """The rule a long unit description speaks of most: each rule's matches counted, ties to the earliest. (First rule
+    in RULES order to match anywhere, as for a name, made the Grand Canyon's Hermit Formation, 'Red, slope-forming,
+    fine-grained, thin-bedded siltstone and sandstone ... low sand dune accumulations', alluvium by its one 'sand'.)"""
+    best = None
+    for k, (cls, pat) in enumerate(RULES):
+        hits = [m.start() for m in re.finditer(pat, t)]
+        if hits:
+            key = (-len(hits), hits[0], k)
+            if best is None or key < best[0]:
+                best = (key, cls)
+    return best[1] if best else None
+
+
 def rock_class(majors: list[str], name: str, descrip: str, b_age: float | None, t_age: float | None) -> str:
-    for text in [*majors, name or "", descrip or ""]:
+    texts = [*majors, name or "", descrip or ""]
+    for i, text in enumerate(texts):
         t = text.lower()
         if not t.strip():
             continue
         if t.strip() == "water":
             return "other"
-        for cls, pat in RULES:
-            if re.search(pat, t):
-                if cls == "volcanic" and b_age is not None and b_age >= OLD_VOLCANIC_MA:
-                    return "greenstone_metavolcanic"
-                if cls == "sandstone_conglomerate" and b_age is not None and b_age <= QUATERNARY_MA:
-                    return "alluvium"
-                return cls
+        if i == len(texts) - 1:   # the description: the lithology it names most
+            cls = _description_class(t)
+        else:
+            cls = next((c for c, pat in RULES if re.search(pat, t)), None)
+        if cls:
+            if cls == "volcanic" and b_age is not None and b_age >= OLD_VOLCANIC_MA:
+                return "greenstone_metavolcanic"
+            if cls == "sandstone_conglomerate" and b_age is not None and b_age <= QUATERNARY_MA:
+                return "alluvium"
+            return cls
     return "other"
 
 
@@ -161,7 +182,7 @@ def _from_macrostrat(tile: Tile, tpoly: Polygon) -> tuple[list[dict], dict]:
         for f in pick(a):
             polys[f["properties"]["map_id"]] = f
     holes = []
-    for _ in range(80):
+    for _ in range(MAX_FILL_QUERIES):
         covered = unary_union([shape(f["geometry"]).buffer(0) for f in polys.values()]) if polys else Polygon()
         gap = tpoly.difference(covered)
         for h in holes:
@@ -200,6 +221,11 @@ def _from_macrostrat(tile: Tile, tpoly: Polygon) -> tuple[list[dict], dict]:
     meta = {"source": "macrostrat", "endpoint": MACROSTRAT, "scale": scale, "macrostrat_source_id": source_id,
             "scale_coverage_of_sample_points": scale_cover, "sample_points": len(pts), "requests": requests,
             "uncovered_pieces": len(holes)}
+    covered = unary_union([shape(f["geometry"]).buffer(0) for f in polys.values()]) if polys else Polygon()
+    meta["uncovered_fraction"] = round(float(tpoly.difference(covered).area / tpoly.area), 4)
+    if meta["uncovered_fraction"] > 0.01:
+        from . import runlog
+        runlog.fallback(f"geology: {meta['uncovered_fraction']:.1%} of the tile has no map unit", source="macrostrat")
     return features, meta
 
 
@@ -329,7 +355,7 @@ def fetch_geology(tile: Tile, force=False, prefer="macrostrat") -> dict:
     fractions = {c: round(float((rcls == i).sum() / total), 4) for i, c in enumerate(ROCK_CLASSES, 1) if (rcls == i).any()}
     classes = {"rock_classes": ROCK_CLASSES, "resistance": RESISTANCE,
                "units": {str(i): r for i, r in enumerate(unit_rows, 1)}, "rules": [list(r) for r in RULES],
-               "rule_notes": f"first match over major lithologies, then name, then description; volcanic with bottom "
+               "rule_notes": f"first match over major lithologies, then name, then the rule the description names most (ties to the earliest); volcanic with bottom "
                              f"age >= {OLD_VOLCANIC_MA} Ma -> greenstone_metavolcanic; clastic sedimentary with "
                              f"bottom age <= {QUATERNARY_MA} Ma -> alluvium; 'water' -> other",
                "source": meta}

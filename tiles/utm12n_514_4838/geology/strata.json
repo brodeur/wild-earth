@@ -1,0 +1,132 @@
+{
+ "units": {
+  "1": {
+   "name": "Metasedimentary and metavolcanic rocks",
+   "lithology": "greenstone_metavolcanic",
+   "cells": 818499,
+   "elevation_m": {
+    "p5": 2308.8,
+    "p25": 2617.5,
+    "median": 2895.6,
+    "p75": 3148.6,
+    "p95": 3485.4
+   },
+   "candidate": true
+  },
+  "2": {
+   "name": "Glacial deposits",
+   "lithology": "surficial",
+   "cells": 679852,
+   "elevation_m": {
+    "p5": 2056.8,
+    "p25": 2074.7,
+    "median": 2111.9,
+    "p75": 2170.9,
+    "p95": 2464.2
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "3": {
+   "name": "Gravel, pediment, and fan deposits",
+   "lithology": "surficial",
+   "cells": 882855,
+   "elevation_m": {
+    "p5": 2025.6,
+    "p25": 2042.6,
+    "median": 2060.8,
+    "p75": 2080.6,
+    "p95": 2105.5
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "4": {
+   "name": "Granitic rocks of 2,600-Ma Age Group",
+   "lithology": "granitic",
+   "cells": 1030401,
+   "elevation_m": {
+    "p5": 2336.1,
+    "p25": 2700.2,
+    "median": 3000.2,
+    "p75": 3261.6,
+    "p95": 3644.1
+   },
+   "candidate": true
+  },
+  "5": {
+   "name": "water",
+   "lithology": "surficial",
+   "cells": 149595,
+   "elevation_m": {
+    "p5": 2068.5,
+    "p25": 2068.5,
+    "median": 2068.5,
+    "p75": 2068.5,
+    "p95": 2116.3
+   },
+   "candidate": false,
+   "why_not": "water"
+  },
+  "6": {
+   "name": "Landslide deposits",
+   "lithology": "surficial",
+   "cells": 273952,
+   "elevation_m": {
+    "p5": 2330.6,
+    "p25": 2644.8,
+    "median": 2901.2,
+    "p75": 3073.2,
+    "p95": 3279.4
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "7": {
+   "name": "Alluvium and Colluvium",
+   "lithology": "surficial",
+   "cells": 164846,
+   "elevation_m": {
+    "p5": 2064.0,
+    "p25": 2246.5,
+    "median": 2334.7,
+    "p75": 2421.0,
+    "p95": 2601.9
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  }
+ },
+ "superposition": [
+  {
+   "upper": "Granitic rocks of 2,600-Ma Age Group",
+   "lower": "Metasedimentary and metavolcanic rocks",
+   "contact_cells": 3298,
+   "upper_on_top": 0.639
+  }
+ ],
+ "consistent_pairs": 0.0,
+ "dropped": [
+  {
+   "unit": "Metasedimentary and metavolcanic rocks",
+   "why": "not superposed: mixed sides along its contacts with Granitic rocks of 2,600-Ma Age Group"
+  }
+ ],
+ "column": false,
+ "reason": "fewer than two units left in the column",
+ "rule": {
+  "min_cells": 2000,
+  "min_fraction": 0.0005,
+  "contact_dz_m": 1.0,
+  "min_contact": 50,
+  "superposed": 0.75,
+  "steep_deg": 25.0,
+  "min_band_fit": 0.5,
+  "min_column_fit": 0.6,
+  "max_dip_deg": 8.0,
+  "tilt_prior": 200,
+  "tilt_scale_m": 3000.0,
+  "map_tol_m": 20.0,
+  "doc": "pipeline/strata.py"
+ }
+}

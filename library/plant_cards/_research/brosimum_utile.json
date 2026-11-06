@@ -1,0 +1,151 @@
+{
+ "id": "brosimum_utile",
+ "scientific": "Brosimum utile",
+ "family": "Moraceae",
+ "common": "milk tree",
+ "aliases": [
+  "vaco",
+  "mastate",
+  "lechoso",
+  "baco"
+ ],
+ "habit": "broadleaf_tree",
+ "height_m": {
+  "typical": [
+   30,
+   40
+  ],
+  "max": 50,
+  "src": 1
+ },
+ "dbh_cm": {
+  "typical": [
+   75,
+   115
+  ],
+  "max": 150,
+  "src": 2
+ },
+ "bole": {
+  "clear_fraction": null,
+  "straight": true,
+  "buttresses": "present, size not stated",
+  "buttress_height_m": null,
+  "stilt_roots": false,
+  "stilt_root_height_m": null,
+  "spines": false,
+  "text": "Straight cylindrical bole 75-115 cm diameter (Useful Tropical Plants). Branching mainly near the top; Spanish Wikipedia mentions 'gambas' (buttresses). English Wikipedia: latex is tapped from the buttresses in the Golfo Dulce forest. Titi Conservation Alliance (src 3): 'large well developed roots' supporting the tree, trunk up to 1.5 m.",
+  "src": 2
+ },
+ "crown": {
+  "shape": null,
+  "width_m": null,
+  "depth_fraction": null,
+  "density": null,
+  "position": "canopy",
+  "text": "Climax species that dominates canopies on well-drained slopes (English Wikipedia).",
+  "src": 0
+ },
+ "leaf": {
+  "type": "simple",
+  "length_cm": null,
+  "width_cm": null,
+  "leaflet_length_cm": null,
+  "frond_count": null,
+  "shape": null,
+  "texture": null,
+  "upper_colour": null,
+  "under_colour": null,
+  "new_flush_colour": null,
+  "src": 1
+ },
+ "phenology": {
+  "leaf_habit": "evergreen",
+  "leafless_months": [],
+  "flowering_months": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "flower_colour": "cream or yellowish (small globular flower heads)",
+  "fruiting_months": [
+   4,
+   5,
+   6
+  ],
+  "fruit": "round, juicy, fleshy fruit up to 5 cm diameter with edible seeds",
+  "src": 3
+ },
+ "bark": {
+  "colour": "grey, with irregular whitish horizontal patches",
+  "texture": null,
+  "text": "Greyish bark with irregular whitish horizontal patches (Spanish Wikipedia, src 1); grey and thick, exuding white sticky latex when cut (src 3). The fibrous bark was used for cloth and sails (UTP, en Wikipedia).",
+  "src": 1
+ },
+ "habitat": {
+  "forest_types": [
+   "terra firme",
+   "slopes"
+  ],
+  "light": "shade-tolerant",
+  "elevation_m": [
+   0,
+   400
+  ],
+  "range": "Costa Rica (central and south Pacific, including Osa) and Panama to Colombia, Venezuela, Ecuador, Peru, Bolivia, the Guianas and the Amazon basin.",
+  "src": 0
+ },
+ "eaten_by": [
+  {
+   "animal": "monkeys (species not named)",
+   "part": "fruit",
+   "src": 3
+  },
+  {
+   "animal": "Pecari tajacu ('sainos')",
+   "part": "fruit",
+   "src": 3
+  },
+  {
+   "animal": "Tayassu pecari ('chanchos de monte')",
+   "part": "fruit",
+   "src": 3
+  }
+ ],
+ "notes": "Height: Spanish Wikipedia up to 50 m; Titi Conservation Alliance up to 40 m; English Wikipedia and Useful Tropical Plants 30 m. typical [30,40] spans those maxima, not a measured typical. Leaves: simple, alternate, large, with a very acute apex; hairy stipules enclose the developing leaves (es Wikipedia, src 3); no sizes or colours found. Phenology is from the Titi Conservation Alliance (central and south Pacific Costa Rica, Quepos to Osa): flowers all year, fruit mainly April-June. Flower colour: cream or yellowish (es Wikipedia); small and white (src 3). Fruit size 'up to 5 cm' from es Wikipedia, which also says many species eat the fruit avidly without naming them. Evergreen per Useful Tropical Plants ('Evergreen forest formations below 400 m'). Shade-tolerant per English Wikipedia. Src 3 names 'sainos' and 'chanchos de monte'; the scientific names are my mapping of those Costa Rican names (collared and white-lipped peccary). Domestic animals: cattle eat leaves and branch tips, pigs the fruit (en Wikipedia), not listed. No Corcovado-specific fauna records found. Costa Rican trees are subsp. occidentale per HVAA image captions (not verified in a treatment). Flora Costaricensis and the Golfo Dulce field guide (Stapfia 78) were blocked (403).",
+ "sources": [
+  {
+   "title": "Brosimum utile - Wikipedia",
+   "url": "https://en.wikipedia.org/wiki/Brosimum_utile",
+   "licence": "CC BY-SA 4.0",
+   "read": "2026-11-06"
+  },
+  {
+   "title": "Brosimum utile - Wikipedia, la enciclopedia libre",
+   "url": "https://es.wikipedia.org/wiki/Brosimum_utile",
+   "licence": "CC BY-SA 4.0",
+   "read": "2026-11-06"
+  },
+  {
+   "title": "Brosimum utile - Useful Tropical Plants",
+   "url": "https://tropical.theferns.info/viewtropical.php?id=Brosimum+utile",
+   "licence": "CC BY-NC-SA 3.0 (database and code)",
+   "read": "2026-11-06"
+  },
+  {
+   "title": "Tree of the Month: El Lechoso (Milk tree) - Titi Conservation Alliance",
+   "url": "https://monotiti.org/tree-month-el-lechoso/",
+   "licence": "All Rights Reserved (Titi Conservation Alliance)",
+   "read": "2026-11-06"
+  }
+ ]
+}

@@ -77,7 +77,7 @@
    "sandstone|conglomerate|gr[ae]ywacke|siltstone|mudstone|shale|breccia|clastic|sedimentary"
   ]
  ],
- "rule_notes": "first match over major lithologies, then name, then description; volcanic with bottom age >= 145.0 Ma -> greenstone_metavolcanic; clastic sedimentary with bottom age <= 2.58 Ma -> alluvium; 'water' -> other",
+ "rule_notes": "first match over major lithologies, then name, then the rule the description names most (ties to the earliest); volcanic with bottom age >= 145.0 Ma -> greenstone_metavolcanic; clastic sedimentary with bottom age <= 2.58 Ma -> alluvium; 'water' -> other",
  "source": {
   "source": "macrostrat",
   "endpoint": "https://macrostrat.org/api/v2/geologic_units/map",
@@ -92,6 +92,7 @@
   "sample_points": 25,
   "requests": 26,
   "uncovered_pieces": 1,
+  "uncovered_fraction": 0.4368,
   "fallback_errors": []
  }
 }

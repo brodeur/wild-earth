@@ -19,7 +19,7 @@
    "density_km2": 6.72,
    "group": [
     4,
-    20
+    8
    ],
    "bird": false,
    "night": false,
@@ -66,7 +66,7 @@
     "eltontraits (activity)",
     "pantheria"
    ],
-   "group_source": "pantheria social group size (species)",
+   "group_source": "prox2020 average group size 15 (fission-fusion)",
    "density_source": "pantheria population density (species)"
   },
   {
@@ -322,7 +322,7 @@
    "mass_kg": 161.499,
    "density_km2": 0.11,
    "group": [
-    1,
+    3,
     4
    ],
    "bird": false,
@@ -369,6 +369,7 @@
     "eltontraits (activity)",
     "pantheria"
    ],
+   "group_source": "prox2020 average group size 7 (fission-fusion)",
    "density_source": "pantheria population density (species)"
   },
   {
@@ -384,8 +385,8 @@
    "mass_kg": 66.492,
    "density_km2": 0.12,
    "group": [
-    1,
-    6
+    7,
+    17
    ],
    "bird": false,
    "night": true,
@@ -430,6 +431,7 @@
     "eltontraits (activity)",
     "pantheria"
    ],
+   "group_source": "prox2020 average group size 45 (fission-fusion)",
    "density_source": "pantheria population density (species)"
   },
   {
@@ -502,8 +504,8 @@
    "mass_kg": 580.003,
    "density_km2": 5.84,
    "group": [
-    3,
-    12
+    30,
+    30
    ],
    "bird": false,
    "night": true,
@@ -548,7 +550,7 @@
     "eltontraits (activity)",
     "pantheria"
    ],
-   "group_source": "pantheria social group size (species)",
+   "group_source": "prox2020 average group size 200",
    "density_source": "pantheria population density (species)"
   },
   {
@@ -1035,8 +1037,8 @@
    "mass_kg": 46.7,
    "density_km2": 0.01,
    "group": [
-    1,
-    4
+    2,
+    3
    ],
    "bird": false,
    "night": false,
@@ -1081,6 +1083,7 @@
     "eltontraits (activity)",
     "pantheria"
    ],
+   "group_source": "prox2020 average group size 3",
    "density_source": "pantheria population density (species)"
   },
   {
@@ -1267,8 +1270,8 @@
    "mass_kg": 1.925,
    "density_km2": 16.98,
    "group": [
-    1,
-    3
+    8,
+    15
    ],
    "bird": false,
    "night": false,
@@ -1308,6 +1311,7 @@
     "eltontraits (activity)",
     "pantheria"
    ],
+   "group_source": "prox2020 average group size 15",
    "density_source": "pantheria population density (species)"
   },
   {
@@ -1378,8 +1382,8 @@
    "mass_kg": 0.3,
    "density_km2": 235.5912,
    "group": [
-    1,
-    3
+    4,
+    9
    ],
    "bird": false,
    "night": false,
@@ -1418,7 +1422,8 @@
    "behaviour_sources": [
     "eltontraits (activity)",
     "pantheria"
-   ]
+   ],
+   "group_source": "prox2020 average group size 9"
   },
   {
    "code": "otocyon_megalotis",
@@ -1433,8 +1438,8 @@
    "mass_kg": 4.15,
    "density_km2": 1.18,
    "group": [
-    1,
-    6
+    2,
+    3
    ],
    "bird": false,
    "night": false,
@@ -1474,6 +1479,7 @@
     "eltontraits (activity)",
     "pantheria"
    ],
+   "group_source": "prox2020 average group size 3",
    "density_source": "pantheria population density (species)"
   },
   {
@@ -1602,8 +1608,8 @@
    "mass_kg": 22.05,
    "density_km2": 0.01,
    "group": [
-    1,
-    6
+    4,
+    7
    ],
    "bird": false,
    "night": false,
@@ -1648,6 +1654,7 @@
     "eltontraits (activity)",
     "pantheria"
    ],
+   "group_source": "prox2020 average group size 7",
    "density_source": "pantheria population density (species)"
   },
   {
@@ -1707,6 +1714,68 @@
    "density_source": "pantheria population density (species)"
   },
   {
+   "code": "struthio_camelus",
+   "scientific": "Struthio camelus",
+   "common": "Common ostrich",
+   "one": "common ostrich",
+   "many": "common ostrichs",
+   "kin": "meleagris_gallopavo",
+   "archetype": "ground bird",
+   "scale": 2.645,
+   "tint": null,
+   "mass_kg": 111.0,
+   "density_km2": 2.2801,
+   "group": [
+    3,
+    12
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": [
+    "a giant flightless bird on the turkey's body"
+   ],
+   "model": {
+    "path": "fauna/struthio_camelus.glb",
+    "kind": "bird",
+    "archetype": "ground",
+    "skin": false
+   },
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
    "code": "lamprotornis_superbus",
    "scientific": "Lamprotornis superbus",
    "common": "Superb starling",
@@ -1761,6 +1830,67 @@
    ]
   },
   {
+   "code": "leptoptilos_crumenifer",
+   "scientific": "Leptoptilos crumenifer",
+   "common": "Marabou stork",
+   "one": "marabou stork",
+   "many": "marabou storks",
+   "kin": "ardea_herodias",
+   "archetype": "wading bird",
+   "scale": 1.335,
+   "tint": null,
+   "mass_kg": 5.23,
+   "density_km2": 0.1446,
+   "group": [
+    1,
+    3
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "predator",
+    "scavenger"
+   ],
+   "known": [],
+   "model": {
+    "path": "fauna/leptoptilos_crumenifer.glb",
+    "kind": "bird",
+    "archetype": "wade",
+    "skin": false
+   },
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
    "code": "alopochen_aegyptiaca",
    "scientific": "Alopochen aegyptiaca",
    "common": "Egyptian goose",
@@ -1783,6 +1913,12 @@
     "herbivore"
    ],
    "known": [],
+   "model": {
+    "path": "fauna/alopochen_aegyptiaca.glb",
+    "kind": "bird",
+    "archetype": "water",
+    "skin": false
+   },
    "active_hours": [
     0,
     0,
@@ -1815,6 +1951,67 @@
    ]
   },
   {
+   "code": "torgos_tracheliotos",
+   "scientific": "Torgos tracheliotos",
+   "common": "Lappet-faced vulture",
+   "one": "lappet-faced vulture",
+   "many": "lappet-faced vultures",
+   "kin": "cathartes_aura",
+   "archetype": "soaring scavenger",
+   "scale": 1.633,
+   "tint": null,
+   "mass_kg": 6.969,
+   "density_km2": 6.8996,
+   "group": [
+    1,
+    8
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "omnivore",
+    "scavenger"
+   ],
+   "known": [],
+   "model": {
+    "path": "fauna/torgos_tracheliotos.glb",
+    "kind": "bird",
+    "archetype": "soar",
+    "skin": false
+   },
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
    "code": "vanellus_armatus",
    "scientific": "Vanellus armatus",
    "common": "Blacksmith lapwing",
@@ -1829,6 +2026,66 @@
    "group": [
     1,
     6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "insectivore"
+   ],
+   "known": [],
+   "model": {
+    "path": "fauna/vanellus_armatus.glb",
+    "kind": "bird",
+    "archetype": "perch",
+    "skin": false
+   },
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "sagittarius_serpentarius",
+   "scientific": "Sagittarius serpentarius",
+   "common": "Secretarybird",
+   "one": "secretarybird",
+   "many": "secretarybirds",
+   "kin": "buteo_jamaicensis",
+   "archetype": "soaring raptor",
+   "scale": 1.54,
+   "tint": null,
+   "mass_kg": 4.017,
+   "density_km2": 8.6006,
+   "group": [
+    1,
+    3
    ],
    "bird": true,
    "night": false,
@@ -1862,61 +2119,6 @@
     0,
     0,
     0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "leptoptilos_crumenifer",
-   "scientific": "Leptoptilos crumenifer",
-   "common": "Marabou stork",
-   "one": "marabou stork",
-   "many": "marabou storks",
-   "kin": "ardea_herodias",
-   "archetype": "wading bird",
-   "scale": 1.335,
-   "tint": null,
-   "mass_kg": 5.23,
-   "density_km2": 0.1446,
-   "group": [
-    1,
-    3
-   ],
-   "bird": true,
-   "night": false,
-   "water": true,
-   "role": [
-    "predator",
-    "scavenger"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
    ],
    "rest": "lie",
    "behaviour_sources": [
@@ -1971,6 +2173,61 @@
     0,
     0,
     0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "gyps_africanus",
+   "scientific": "Gyps africanus",
+   "common": "White-backed vulture",
+   "one": "white-backed vulture",
+   "many": "white-backed vultures",
+   "kin": "cathartes_aura",
+   "archetype": "soaring scavenger",
+   "scale": 1.503,
+   "tint": null,
+   "mass_kg": 5.433,
+   "density_km2": 7.6221,
+   "group": [
+    1,
+    8
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "omnivore",
+    "scavenger"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
    ],
    "rest": "lie",
    "behaviour_sources": [
@@ -2034,243 +2291,27 @@
    ]
   },
   {
-   "code": "coracias_caudatus",
-   "scientific": "Coracias caudatus",
-   "common": "Lilac-breasted roller",
-   "one": "lilac-breasted roller",
-   "many": "lilac-breasted rollers",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.971,
+   "code": "aquila_rapax",
+   "scientific": "Aquila rapax",
+   "common": "Tawny eagle",
+   "one": "tawny eagle",
+   "many": "tawny eagles",
+   "kin": "cathartes_aura",
+   "archetype": "soaring scavenger",
+   "scale": 1.118,
    "tint": null,
-   "mass_kg": 0.11,
-   "density_km2": 36.2689,
+   "mass_kg": 2.236,
+   "density_km2": 0.2734,
    "group": [
     1,
-    6
+    8
    ],
    "bird": true,
    "night": false,
    "water": false,
-   "role": [
-    "predator"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "lamprotornis_hildebrandti",
-   "scientific": "Lamprotornis hildebrandti",
-   "common": "Hildebrandt's starling",
-   "one": "hildebrandt's starling",
-   "many": "hildebrandt's starlings",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.775,
-   "tint": null,
-   "mass_kg": 0.056,
-   "density_km2": 47.5474,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "insectivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "dinemellia_dinemelli",
-   "scientific": "Dinemellia dinemelli",
-   "common": "White-headed buffalo-weaver",
-   "one": "white-headed buffalo-weaver",
-   "many": "white-headed buffalo-weavers",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.811,
-   "tint": null,
-   "mass_kg": 0.064,
-   "density_km2": 45.0703,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "herbivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "ardea_melanocephala",
-   "scientific": "Ardea melanocephala",
-   "common": "Black-headed heron",
-   "one": "black-headed heron",
-   "many": "black-headed herons",
-   "kin": "ardea_herodias",
-   "archetype": "wading bird",
-   "scale": 0.784,
-   "tint": null,
-   "mass_kg": 1.06,
-   "density_km2": 0.4786,
-   "group": [
-    1,
-    3
-   ],
-   "bird": true,
-   "night": false,
-   "water": true,
    "role": [
     "predator",
     "scavenger"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "lamprotornis_purpuroptera",
-   "scientific": "Lamprotornis purpuroptera",
-   "common": "R\u00fcppell's starling",
-   "one": "r\u00fcppell's starling",
-   "many": "r\u00fcppell's starlings",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.864,
-   "tint": null,
-   "mass_kg": 0.077,
-   "density_km2": 41.7441,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "predator"
    ],
    "known": [],
    "active_hours": [
@@ -2307,7 +2348,7 @@
  ],
  "skipped": [
   {
-   "id": "pseudonigrita_arnaudi",
+   "id": "coracias_caudatus",
    "why": "over the 40-slot cap"
   },
   {
@@ -2315,11 +2356,51 @@
    "why": "over the 40-slot cap"
   },
   {
+   "id": "lamprotornis_hildebrandti",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "ardea_melanocephala",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "dinemellia_dinemelli",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "terathopius_ecaudatus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "gyps_rueppellii",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "lamprotornis_purpuroptera",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "polemaetus_bellicosus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "pseudonigrita_arnaudi",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "necrosyrtes_monachus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "ardea_cinerea",
+   "why": "over the 40-slot cap"
+  },
+  {
    "id": "empidornis_semipartitus",
    "why": "over the 40-slot cap"
   },
   {
-   "id": "aquila_rapax",
+   "id": "haliaeetus_vocifer",
    "why": "over the 40-slot cap"
   },
   {
@@ -2327,15 +2408,27 @@
    "why": "over the 40-slot cap"
   },
   {
+   "id": "mycteria_ibis",
+   "why": "over the 40-slot cap"
+  },
+  {
    "id": "agapornis_fischeri",
    "why": "over the 40-slot cap"
   },
   {
-   "id": "sagittarius_serpentarius",
+   "id": "melierax_metabates",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "ephippiorhynchus_senegalensis",
    "why": "over the 40-slot cap"
   },
   {
    "id": "lanius_excubitoroides",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "trigonoceps_occipitalis",
    "why": "over the 40-slot cap"
   },
   {
@@ -2351,27 +2444,11 @@
    "why": "over the 40-slot cap"
   },
   {
+   "id": "ciconia_ciconia",
+   "why": "over the 40-slot cap"
+  },
+  {
    "id": "urolestes_melanoleucus",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "torgos_tracheliotos",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "struthio_camelus",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "gyps_africanus",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "terathopius_ecaudatus",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "melierax_metabates",
    "why": "over the 40-slot cap"
   },
   {
@@ -2379,27 +2456,19 @@
    "why": "over the 40-slot cap"
   },
   {
+   "id": "circaetus_pectoralis",
+   "why": "over the 40-slot cap"
+  },
+  {
    "id": "centropus_superciliosus",
    "why": "over the 40-slot cap"
   },
   {
-   "id": "ardea_cinerea",
+   "id": "lophaetus_occipitalis",
    "why": "over the 40-slot cap"
   },
   {
-   "id": "polemaetus_bellicosus",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "necrosyrtes_monachus",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "gyps_rueppellii",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "mycteria_ibis",
+   "id": "circaetus_cinereus",
    "why": "over the 40-slot cap"
   },
   {
@@ -2411,27 +2480,11 @@
    "why": "over the 40-slot cap"
   },
   {
-   "id": "haliaeetus_vocifer",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "trigonoceps_occipitalis",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "circaetus_pectoralis",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "lophaetus_occipitalis",
+   "id": "buteo_augur",
    "why": "over the 40-slot cap"
   },
   {
    "id": "bubulcus_ibis",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "ephippiorhynchus_senegalensis",
    "why": "over the 40-slot cap"
   },
   {
@@ -2443,23 +2496,11 @@
    "why": "over the 40-slot cap"
   },
   {
-   "id": "ciconia_ciconia",
-   "why": "over the 40-slot cap"
-  },
-  {
    "id": "falco_ardosiaceus",
    "why": "over the 40-slot cap"
   },
   {
    "id": "onychognathus_morio",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "buteo_augur",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "circaetus_cinereus",
    "why": "over the 40-slot cap"
   },
   {

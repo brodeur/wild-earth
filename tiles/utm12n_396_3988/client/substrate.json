@@ -47,18 +47,18 @@
    "dip_deg": null,
    "notes": "massive; exfoliation sheets parallel to the surface, two steep joint sets: big smooth faces, long cracks",
    "index": 1,
-   "fraction": 0.0197,
-   "exposed_fraction": 0.5114,
+   "fraction": 0.0611,
+   "exposed_fraction": 0.4943,
    "joints": {
     "strikes_deg": [
-     122.5,
-     92.5
+     117.5,
+     87.5
     ],
     "peak_over_mean": [
-     1.31,
-     1.18
+     1.33,
+     1.16
     ],
-    "cells": 20459,
+    "cells": 70167,
     "source": "DEM: strikes of the faces steeper than 55 degrees"
    }
   },
@@ -152,29 +152,29 @@
    "dip_deg": 70.0,
    "notes": "wavy foliation, silvery; slabby faces",
    "index": 3,
-   "fraction": 0.0408,
-   "exposed_fraction": 0.3786,
+   "fraction": 0.0841,
+   "exposed_fraction": 0.3908,
    "fabric": {
     "strike_deg": 325.0,
     "dip_deg": 70.0,
     "strike_source": "regional default (N35W)",
     "contacts": {
-     "strike_deg": 22.1,
-     "resultant": 0.225,
-     "contact_km": 66.4
+     "strike_deg": 14.3,
+     "resultant": 0.196,
+     "contact_km": 151.51
     },
     "dip_source": "lithology default"
    },
    "joints": {
     "strikes_deg": [
-     172.5,
-     42.5
+     132.5,
+     162.5
     ],
     "peak_over_mean": [
-     1.22,
-     1.04
+     1.16,
+     1.08
     ],
-    "cells": 48319,
+    "cells": 84937,
     "source": "DEM: strikes of the faces steeper than 55 degrees"
    }
   },
@@ -261,29 +261,29 @@
    "dip_deg": 12.0,
    "notes": "bedded: ledges and overhangs along the beds, vertical joints between",
    "index": 5,
-   "fraction": 0.2412,
-   "exposed_fraction": 0.0606,
+   "fraction": 0.4372,
+   "exposed_fraction": 0.1397,
    "fabric": {
     "strike_deg": 325.0,
     "dip_deg": 12.0,
     "strike_source": "regional default (N35W)",
     "contacts": {
-     "strike_deg": 1.2,
-     "resultant": 0.098,
-     "contact_km": 231.71
+     "strike_deg": 154.1,
+     "resultant": 0.097,
+     "contact_km": 555.71
     },
     "dip_source": "lithology default"
    },
    "joints": {
     "strikes_deg": [
-     47.5,
-     132.5
+     137.5,
+     177.5
     ],
     "peak_over_mean": [
-     1.17,
-     1.11
+     1.23,
+     1.1
     ],
-    "cells": 32215,
+    "cells": 116912,
     "source": "DEM: strikes of the faces steeper than 55 degrees"
    }
   },
@@ -415,16 +415,16 @@
    "dip_deg": 60.0,
    "notes": "sheared: scaly, slickensided lenses, waxy green",
    "index": 8,
-   "fraction": 0.0006,
-   "exposed_fraction": 0.2876,
+   "fraction": 0.0007,
+   "exposed_fraction": 0.2522,
    "fabric": {
-    "strike_deg": 24.1,
+    "strike_deg": 26.3,
     "dip_deg": 60.0,
     "strike_source": "geologic contacts",
     "contacts": {
-     "strike_deg": 24.1,
-     "resultant": 0.513,
-     "contact_km": 1.22
+     "strike_deg": 26.3,
+     "resultant": 0.312,
+     "contact_km": 1.64
     },
     "dip_source": "lithology default"
    },
@@ -471,18 +471,18 @@
    "dip_deg": null,
    "notes": "massive; solution flutes down the face",
    "index": 9,
-   "fraction": 0.4391,
-   "exposed_fraction": 0.1094,
+   "fraction": 0.4049,
+   "exposed_fraction": 0.0962,
    "joints": {
     "strikes_deg": [
-     177.5,
-     47.5
+     2.5,
+     42.5
     ],
     "peak_over_mean": [
-     1.21,
-     1.17
+     1.26,
+     1.25
     ],
-    "cells": 104284,
+    "cells": 103071,
     "source": "DEM: strikes of the faces steeper than 55 degrees"
    }
   },
@@ -524,8 +524,8 @@
    "dip_deg": null,
    "notes": "alluvium, till, talus, dune sand, fill, landslides: no bedrock face (a cut bank at most)",
    "index": 10,
-   "fraction": 0.0204,
-   "exposed_fraction": 0.0006,
+   "fraction": 0.0105,
+   "exposed_fraction": 0.0001,
    "joints": {
     "strikes_deg": [],
     "source": "too few steep faces"
@@ -545,147 +545,182 @@
    "rock_class": "sandstone_conglomerate",
    "lithology": "sandstone_conglomerate",
    "why": "rock class sandstone_conglomerate",
-   "fraction": 0.0033
+   "fraction": 0.0076
   },
   "3": {
    "name": "Wescogame Formation, Manakacha Formation, Watahomigi Formation",
-   "rock_class": "limestone_marble",
-   "lithology": "limestone_marble",
-   "why": "rock class limestone_marble",
-   "fraction": 0.0765
+   "rock_class": "sandstone_conglomerate",
+   "lithology": "sandstone_conglomerate",
+   "why": "rock class sandstone_conglomerate",
+   "fraction": 0.0872
   },
   "4": {
    "name": "Toroweap Formation",
-   "rock_class": "limestone_marble",
-   "lithology": "limestone_marble",
-   "why": "rock class limestone_marble",
-   "fraction": 0.0064
+   "rock_class": "sandstone_conglomerate",
+   "lithology": "sandstone_conglomerate",
+   "why": "rock class sandstone_conglomerate",
+   "fraction": 0.0158
   },
   "5": {
    "name": "Redwall Limestone",
    "rock_class": "limestone_marble",
    "lithology": "limestone_marble",
    "why": "rock class limestone_marble",
-   "fraction": 0.0318
+   "fraction": 0.0559
   },
   "6": {
    "name": "Bright Angel Shale",
    "rock_class": "sandstone_conglomerate",
    "lithology": "sandstone_conglomerate",
    "why": "rock class sandstone_conglomerate",
-   "fraction": 0.1622
+   "fraction": 0.1746
   },
   "7": {
    "name": "Young granite and pegmatite",
    "rock_class": "granitic",
    "lithology": "granitic",
    "why": "rock class granitic",
-   "fraction": 0.0086
+   "fraction": 0.0229
   },
   "8": {
    "name": "Brahma Schist",
    "rock_class": "schist",
    "lithology": "schist",
    "why": "rock class schist",
-   "fraction": 0.0192
+   "fraction": 0.0403
   },
   "9": {
    "name": "Landslide deposits",
    "rock_class": "alluvium",
    "lithology": "surficial",
    "why": "name: surficial deposit",
-   "fraction": 0.0008
+   "fraction": 0.0023
   },
   "10": {
    "name": "Tapeats Sandstone",
    "rock_class": "sandstone_conglomerate",
    "lithology": "sandstone_conglomerate",
    "why": "rock class sandstone_conglomerate",
-   "fraction": 0.0594
+   "fraction": 0.0767
   },
   "11": {
    "name": "Muav Limestone",
    "rock_class": "limestone_marble",
    "lithology": "limestone_marble",
    "why": "rock class limestone_marble",
-   "fraction": 0.0659
+   "fraction": 0.0834
   },
   "12": {
    "name": "Granite, granitic pegmatite, and aplite",
    "rock_class": "granitic",
    "lithology": "granitic",
    "why": "rock class granitic",
-   "fraction": 0.0111
+   "fraction": 0.0379
   },
   "13": {
    "name": "Rama Schist",
    "rock_class": "schist",
    "lithology": "schist",
    "why": "rock class schist",
-   "fraction": 0.0112
+   "fraction": 0.0155
   },
   "14": {
    "name": "Vishnu Schist",
    "rock_class": "schist",
    "lithology": "schist",
    "why": "rock class schist",
-   "fraction": 0.0051
+   "fraction": 0.0147
   },
   "15": {
    "name": "water",
    "rock_class": "other",
    "lithology": "surficial",
    "why": "water",
-   "fraction": 0.0041
+   "fraction": 0.0058
   },
   "16": {
    "name": "Hakatai Shale",
    "rock_class": "sandstone_conglomerate",
    "lithology": "sandstone_conglomerate",
    "why": "rock class sandstone_conglomerate",
-   "fraction": 0.0163
+   "fraction": 0.0269
   },
   "17": {
    "name": "Bass Formation",
-   "rock_class": "schist",
-   "lithology": "schist",
-   "why": "rock class schist",
-   "fraction": 0.0027
+   "rock_class": "sandstone_conglomerate",
+   "lithology": "sandstone_conglomerate",
+   "why": "rock class sandstone_conglomerate",
+   "fraction": 0.0098
   },
   "18": {
    "name": "Hermit Formation",
-   "rock_class": "alluvium",
-   "lithology": "surficial",
-   "why": "rock class alluvium",
-   "fraction": 0.0154
+   "rock_class": "sandstone_conglomerate",
+   "lithology": "sandstone_conglomerate",
+   "why": "rock class sandstone_conglomerate",
+   "fraction": 0.0218
   },
   "19": {
    "name": "Shinumo Quartzite",
    "rock_class": "schist",
    "lithology": "schist",
    "why": "rock class schist",
-   "fraction": 0.0027
+   "fraction": 0.0137
   },
   "20": {
    "name": "Ultramafic rocks",
    "rock_class": "serpentinite",
    "lithology": "serpentinite",
    "why": "rock class serpentinite",
-   "fraction": 0.0006
+   "fraction": 0.0007
   },
   "21": {
    "name": "Surprise Canyon Formation",
+   "rock_class": "sandstone_conglomerate",
+   "lithology": "sandstone_conglomerate",
+   "why": "rock class sandstone_conglomerate",
+   "fraction": 0.0039
+  },
+  "22": {
+   "name": "Esplanade Sandstone",
+   "rock_class": "sandstone_conglomerate",
+   "lithology": "sandstone_conglomerate",
+   "why": "rock class sandstone_conglomerate",
+   "fraction": 0.0128
+  },
+  "23": {
+   "name": "Colorado River gravel deposits",
+   "rock_class": "alluvium",
+   "lithology": "surficial",
+   "why": "rock class alluvium",
+   "fraction": 0.0017
+  },
+  "24": {
+   "name": "Temple Butte Formation",
    "rock_class": "limestone_marble",
    "lithology": "limestone_marble",
    "why": "rock class limestone_marble",
-   "fraction": 0.0009
+   "fraction": 0.0081
+  },
+  "25": {
+   "name": "Granodiorite complexes",
+   "rock_class": "granitic",
+   "lithology": "granitic",
+   "why": "rock class granitic",
+   "fraction": 0.0003
+  },
+  "26": {
+   "name": "Unnamed diabase sills and dikes",
+   "rock_class": "other",
+   "lithology": "surficial",
+   "why": "rock class other, no bedrock named",
+   "fraction": 0.0007
   }
  },
  "stats": {
-  "exposed_fraction": 0.163,
-  "exposed_mean": 0.1867,
-  "patches": 2700,
-  "patches_over_1000m2": 526,
+  "exposed_fraction": 0.1637,
+  "exposed_mean": 0.1884,
+  "patches": 2732,
+  "patches_over_1000m2": 523,
   "patches_over_1ha": 97,
   "largest_patch_m2": 1521200,
   "slope_source": "max(5 m, 0.85 x 1 m mean)",

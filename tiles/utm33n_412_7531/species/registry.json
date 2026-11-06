@@ -1,6 +1,6 @@
 {
  "tile": "utm33n_412_7531",
- "at": "2026-11-06T08:44:00Z",
+ "at": "2026-11-06T10:51:20Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -37,6 +37,7 @@
   "meshy_credits_queued": 1860,
   "cards_queued": 37,
   "stand_ins": {
+   "salix_caprea": null,
    "cornus_suecica": null,
    "succisa_pratensis": null,
    "chamaenerion_angustifolium": null,
@@ -71,7 +72,6 @@
    "valeriana_excelsa": null,
    "empetrum_hermaphroditum": null,
    "kalmia_procumbens": null,
-   "salix_caprea": null,
    "salix_glauca": null,
    "salix_herbacea": null
   },
@@ -105,14 +105,25 @@
  },
  "plants": [
   {
+   "id": "juniperus_communis",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "common juniper (dwarf form)",
+   "drawn_as": "juniperus_communis",
+   "share": 1.0,
+   "why_needed": [
+    "GBIF: 23 records on the tile"
+   ]
+  },
+  {
    "id": "sorbus_aucuparia",
    "kind": "tree",
    "fidelity": 2,
    "common": "rowan",
    "drawn_as": "sorbus_aucuparia",
-   "share": 0.7409,
+   "share": 0.7399,
    "why_needed": [
-    "GBIF: 83 records on the tile"
+    "canopy: records (GBIF: 83 records on the tile; height not yet screened)"
    ]
   },
   {
@@ -121,20 +132,9 @@
    "fidelity": 2,
    "common": "crowberry",
    "drawn_as": "empetrum_nigrum",
-   "share": 0.586,
+   "share": 0.6786,
    "why_needed": [
     "GBIF: 74 records on the tile"
-   ]
-  },
-  {
-   "id": "betula_pubescens",
-   "kind": "tree",
-   "fidelity": 2,
-   "common": "downy birch (mountain birch)",
-   "drawn_as": "betula_pubescens",
-   "share": 0.2591,
-   "why_needed": [
-    "GBIF: 31 records on the tile"
    ]
   },
   {
@@ -143,20 +143,20 @@
    "fidelity": 2,
    "common": "heather",
    "drawn_as": "calluna_vulgaris",
-   "share": 0.248,
+   "share": 0.3214,
    "why_needed": [
     "GBIF: 36 records on the tile"
    ]
   },
   {
-   "id": "juniperus_communis",
-   "kind": "shrub",
+   "id": "betula_pubescens",
+   "kind": "tree",
    "fidelity": 2,
-   "common": "common juniper (dwarf form)",
-   "drawn_as": "juniperus_communis",
-   "share": 0.166,
+   "common": "downy birch (mountain birch)",
+   "drawn_as": "betula_pubescens",
+   "share": 0.2601,
    "why_needed": [
-    "GBIF: 23 records on the tile"
+    "canopy: records (GBIF: 31 records on the tile; height not yet screened)"
    ]
   },
   {
@@ -495,13 +495,13 @@
   },
   {
    "id": "salix_caprea",
-   "kind": "shrub",
+   "kind": "tree",
    "fidelity": 0,
    "common": null,
    "drawn_as": null,
    "share": 0,
    "why_needed": [
-    "GBIF: 11 records on the tile"
+    "canopy: records (GBIF: 11 records on the tile; height not yet screened)"
    ],
    "stand_in": null
   },
@@ -1679,6 +1679,14 @@
  "queue": {
   "cards": [
    {
+    "id": "salix_caprea",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "canopy: records (GBIF: 11 records on the tile; height not yet screened)"
+    ]
+   },
+   {
     "id": "cornus_suecica",
     "kind": "shrub",
     "stand_in": null,
@@ -1948,14 +1956,6 @@
     "stand_in": null,
     "why": [
      "GBIF: 12 records on the tile"
-    ]
-   },
-   {
-    "id": "salix_caprea",
-    "kind": "shrub",
-    "stand_in": null,
-    "why": [
-     "GBIF: 11 records on the tile"
     ]
    },
    {
@@ -2958,6 +2958,14 @@
  },
  "hands": [
   {
+   "id": "salix_caprea",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 11 records on the tile; height not yet screened)"
+   ]
+  },
+  {
    "id": "cornus_suecica",
    "kind": "shrub",
    "what": "a trait card",
@@ -3227,14 +3235,6 @@
    "what": "a trait card",
    "why": [
     "GBIF: 12 records on the tile"
-   ]
-  },
-  {
-   "id": "salix_caprea",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 11 records on the tile"
    ]
   },
   {

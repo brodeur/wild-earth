@@ -1,0 +1,33 @@
+{
+ "id": "iriartea_deltoidea",
+ "scientific": "Iriartea deltoidea",
+ "family": "Arecaceae",
+ "common": "pona palm",
+ "aliases": ["pambil", "bombona", "barrigona", "cacho_de_vaca", "chonta", "pona_lisa", "pachiuba_barriguda", "tepa", "jiagina"],
+ "habit": "palm_solitary",
+ "height_m": {"typical": [20, 35], "max": 35, "src": 1},
+ "dbh_cm": {"typical": [10, 30], "max": 70, "src": 0},
+ "bole": {"clear_fraction": null, "straight": false, "buttresses": "none", "buttress_height_m": null, "stilt_roots": true, "stilt_root_height_m": 2, "spines": false, "text": "Stem more or less ventricose: 10-30 cm diam. at base, swelling to 12-70 cm mid-stem, 11-23 cm at apex. Stilt roots to 100, terete, nearly vertical, closely spaced in a dense cone, black, to 2 m x 3.5 cm, with sharp spines (stem itself smooth). Cone height not given; 2 m is the maximum root length, and the roots are near vertical. Wikipedia: cone up to 1 m diameter at base. Crownshaft present: sheaths 60-150 cm long, glaucous green with brown or white scales.", "src": 0},
+ "crown": {"shape": "shuttlecock (palm)", "width_m": null, "depth_fraction": null, "density": "open", "position": "canopy", "text": "4-7 leaves, stiffly spreading, on a glaucous-green crownshaft. Wikipedia calls it a canopy tree. 'open' density follows from 4-7 leaves, not a stated value.", "src": 0},
+ "leaf": {"type": "pinnate_palm_frond", "length_cm": [200, 430], "width_cm": null, "leaflet_length_cm": [50, 122], "frond_count": [4, 7], "shape": "pinnae deltate with praemorse (jagged) tips, 15-27 per side, middle ones split into up to 18 segments held in different planes (plumose, two-ranked look); apical pinna entire, fan-shaped, 35-38 x 17 cm", "texture": "leathery", "upper_colour": null, "under_colour": null, "new_flush_colour": null, "src": 0},
+ "phenology": {"leaf_habit": "evergreen", "leafless_months": [], "flowering_months": [], "flower_colour": "yellowish at anthesis", "fruiting_months": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], "fruit": "globose, 2-2.7 x 2.4-2.8 cm, epicarp greenish-yellow at maturity; seed c. 1.5 cm. Inflorescences pendulous, to 2 m, below the crownshaft.", "src": 0},
+ "bark": {"colour": "grey", "texture": "smooth", "text": "Stem grey and smooth; nodes obscure, internodes to 30 cm (ring scars faint).", "src": 0},
+ "habitat": {"forest_types": ["lowland rain forest", "montane rain forest"], "light": null, "elevation_m": [0, 1300], "range": "Nicaragua south to Bolivia and east through the western Amazon basin (Brazil, Venezuela)", "src": 0},
+ "eaten_by": [
+  {"animal": "Ramphastos swainsonii", "part": "fruit", "src": 3},
+  {"animal": "Ramphastos sulfuratus", "part": "fruit", "src": 3},
+  {"animal": "Artibeus spp.", "part": "fruit", "src": 3},
+  {"animal": "Ateles geoffroyi", "part": "fruit", "src": 3},
+  {"animal": "Cebus capucinus", "part": "fruit", "src": 3},
+  {"animal": "Tayassu spp.", "part": "fruit", "src": 3},
+  {"animal": "Tapirus spp.", "part": "fruit", "src": 3}
+ ],
+ "notes": "Height: Wikipedia 20-35 m; Henderson monograph to 25 m; Useful Tropical Plants (UTP) to 30 m. UTP: stem to 30 (-70) cm, 4-7 leaves, evergreen, 150-1300 m; Colplanta: 0-1350 m. Wikipedia: leaves to 5 m, leaflets to 1 m x 25 cm; leaf.length_cm is the rachis (2-4.3 m) and the petiole adds 2-13 cm. Leaf colour not found (an unread guide snippet said green on both sides). Phenology: no Madre de Dios or Osa months found; fruiting year-round and asynchronous comes from La Selva, Caribbean Costa Rica (Sezen et al. 2009). Eaten_by are Costa Rican taxa (La Selva); toucans are the main dispersers there and regurgitate seeds. A Napo, Ecuador camera-trap study (Alvarez Solas et al. 2019, Mammalia aequatorialis, not open licence) recorded visits, not confirmed feeding, by Cuniculus paca, Dasypus novemcinctus, Hadrosciurus igniventris, Myoprocta pratti, Dasyprocta fuliginosa and Eira barbara. Wikipedia names bats and toucans as main dispersers. Palmweb blocked automated fetches.",
+ "sources": [
+  {"title": "Henderson, A. 1990. Arecaceae Part I: Introduction and the Iriarteinae. Flora Neotropica Monogr. 53 (NYBG World Flora monograph record: Iriartea deltoidea)", "url": "https://sweetgum.nybg.org/science/vh/monographs-details/?irn=19076", "licence": "unknown (NYBG Terms & Conditions linked, no licence stated)", "read": "2026-11-06"},
+  {"title": "Iriartea deltoidea - Wikipedia (English)", "url": "https://en.wikipedia.org/wiki/Iriartea_deltoidea", "licence": "CC BY-SA 4.0", "read": "2026-11-06"},
+  {"title": "Iriartea deltoidea - Useful Tropical Plants", "url": "https://tropical.theferns.info/viewtropical.php?id=Iriartea+deltoidea", "licence": "CC BY-NC-SA 3.0 Unported", "read": "2026-11-06"},
+  {"title": "Sezen, Chazdon & Holsinger 2009. Proximity is not a proxy for parentage in an animal-dispersed Neotropical canopy palm. Proc. R. Soc. B 276: 2037-2044", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2677255", "licence": "(c) 2009 The Royal Society; no open licence stated", "read": "2026-11-06"},
+  {"title": "Iriartea deltoidea - Colplanta (Catalogue of Plants of Colombia; Useful Plants and Fungi of Colombia)", "url": "https://colplanta.org/taxon/urn:lsid:ipni.org:names:667594-1/general-information", "licence": "CC BY-NC-SA 3.0", "read": "2026-11-06"}
+ ]
+}

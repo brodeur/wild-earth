@@ -1,0 +1,195 @@
+{
+ "id": "croton_schiedeanus",
+ "scientific": "Croton schiedeanus",
+ "common": "copalch\u00ed",
+ "aliases": [
+  "colpechi",
+  "copalchi"
+ ],
+ "family": "Euphorbiaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "macaranga_gigantea",
+ "regions": [
+  "neotropics"
+ ],
+ "height_m": [
+  8.0,
+  15.0
+ ],
+ "stature": {
+  "typical_m": 11.5,
+  "tall_m": 24.0,
+  "record_m": null,
+  "source": "Flora de Costa Rica (Flora Costaricensis scratchpad): Croton schiedeanus descriptions (research record)"
+ },
+ "variants_height_m": {
+  "young": [
+   1.5,
+   4.8
+  ],
+  "veteran": [
+   15.0,
+   24.0
+  ]
+ },
+ "crown": {
+  "shape": "cylindrical",
+  "profile": [
+   [
+    0.35,
+    0.212
+   ],
+   [
+    0.48,
+    0.361
+   ],
+   [
+    0.643,
+    0.425
+   ],
+   [
+    0.805,
+    0.361
+   ],
+   [
+    0.935,
+    0.212
+   ],
+   [
+    1.0,
+    0.043
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.18,
+  "asymmetry": 0.18,
+  "fill": 0.5,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    52,
+    76,
+    40
+   ],
+   "spring": [
+    52,
+    76,
+    40
+   ],
+   "summer": [
+    52,
+    76,
+    40
+   ],
+   "fall": [
+    52,
+    76,
+    40
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "leaf_size_m": 0.155,
+  "leaf_shape": "oval",
+  "flowers": {
+   "season": "winter",
+   "months": [
+    12,
+    4
+   ],
+   "form": "cluster",
+   "rgb": [
+    196,
+    192,
+    182
+   ],
+   "size_m": 0.08,
+   "density": 0.4
+  },
+  "berries": null
+ },
+ "trunk": {
+  "stems": [
+   1,
+   1
+  ],
+  "bark_rgb": [
+   82,
+   66,
+   54
+  ],
+  "bark_pattern": "smooth"
+ },
+ "targets": {
+  "crown_width_ratio": 0.85,
+  "crown_base_ratio": 0.35,
+  "porosity": 0.2,
+  "from": "pipeline/tree_cards.py from the research record (crown: Dense but narrow crown of dark green foliage, branched thickly along the bole; an occasional understorey evergreen (Manuel Antonio).), no photographs measured"
+ },
+ "description": "A tree of secondary/gaps, riverbank, road and trail edges, 8-15 m tall (to 24 m). Small trunk, 15-20 cm wide, cylindrical and regular; thick branching along the bole. Dense but narrow crown of dark green foliage, branched thickly along the bole; an occasional understorey evergreen (Manuel Antonio). Fruit: dry woody green spherical capsule c.",
+ "season_notes": {
+  "winter": "In leaf. Flowering (white (tiny translucent petals, pale sepals), in axillary racemes to c. 10 cm). Fruiting.",
+  "spring": "In leaf. Flowering (white (tiny translucent petals, pale sepals), in axillary racemes to c. 10 cm). Fruiting.",
+  "summer": "In leaf. Fruiting.",
+  "fall": "In leaf. Fruiting."
+ },
+ "habitat": {
+  "classes": {
+   "mixed_forest": 1.0,
+   "riparian": 0.6
+  },
+  "floor": 1.3,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 1.0,
+  "shade": 0.05,
+  "disturbed": 2.0
+ },
+ "relations": {
+  "eaten_by": [],
+  "cover_for": []
+ },
+ "range": {
+  "elev_m": [
+   20,
+   850
+  ],
+  "where": "Mexico to Bolivia, Venezuela, the Guianas and Brazil; in Costa Rica widespread in humid forests on both the Atlantic and Pacific slopes"
+ },
+ "stand_in": "macaranga_gigantea",
+ "notes": "Template macaranga_gigantea: a subcanopy tree: a tropical evergreen on one stem with an open crown (giant mahang). NOT SOURCED (the template's or a default value): crown width (the template's ratio); crown depth (the template's). Research notes: Height: Flora de Costa Rica (src 2) gives 'arbusto o \u00e1rbol de 8 a 15 (24) m'; crtrees.org (Manuel Antonio) gives 10-15 m and calls it an occasional understorey tree; Osa Arboretum says small to mid-sized. Flora de Costa Rica refused direct fetch (HTTP 403), so its values (height, elevation 20-850 m, leaves 4-26 x 2-10 cm, broad-elliptic to elliptic-oblong, petioles without glands, lepidote indument, leaves drying dark brown, range to Bolivia, the Guianas and Brazil) come from search-engine excerpts of that page. The habitat elevation is from src 2; the rest of the habitat block is from crtrees ('light-loving secondary forest species' in gaps, streambanks and roadsides), and the Costa Rica slopes are from Osa. Phenology is for Pacific Costa Rica (crtrees): flowering irregular, almost any month except May-Jul, with short synchronised peaks Dec-Apr (the months listed); fruit at low levels year-round. Osa Arboretum lists flowering and fruiting in every month, white flowers and greenish aromatic fruit. Leaf texture 'papery' maps crtrees' 'thin and flexible'. eaten_by is empty because no source names a fruit eater; crtrees says the fruits fall directly to the forest floor and are poorly dispersed. Pollinators are bees and wasps. The trunk diameter of 15-20 cm is used as dbh.",
+ "sources": [
+  "Croton schiedeanus - Trees of Costa Rica's Pacific Slope (crtrees.org), https://crtrees.org/species-accounts/croton-schiedeanus/ (unknown (no licence stated; WordPress.com site 'Trees of Costa Rica's Pacific Slope')), read 2026-11-06",
+  "Croton schiedeanus - Osa Arboretum (Osa Conservation), https://osa-arboretum.org/?p=1134 (unknown (no licence stated; Osa Conservation arboretum site)), read 2026-11-06",
+  "Flora de Costa Rica (Flora Costaricensis scratchpad): Croton schiedeanus descriptions, https://floracostaricensis.myspecies.info/taxonomy/term/22384/descriptions (unknown), read 2026-11-06",
+  "research record library/plant_cards/_research/croton_schiedeanus.json (pipeline/tree_cards.py)"
+ ],
+ "authors": [
+  "Wild Earth (pipeline/tree_cards.py from an agent's sourced research record, 2026-11-06); needs local sign-off"
+ ],
+ "generated_by": {
+  "by": "pipeline/tree_cards.py",
+  "version": "1"
+ }
+}

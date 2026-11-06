@@ -79,6 +79,21 @@ class TestGenerators(unittest.TestCase):
             if load_card(sid).get("deciduous") is False and "leaf_on_by_month" in (rec.get("foliage") or {}):
                 self.assertEqual(min(rec["foliage"]["leaf_on_by_month"]), 1.0, sid)
 
+    def test_every_tree_research_record_makes_a_card(self):
+        # pipeline/tree_cards.py: a research record -> a trait card that plantgen builds; a palm is flagged, never silent
+        from pipeline.plantgen import build
+        from pipeline.tree_cards import RESEARCH, card
+        for p in sorted(RESEARCH.glob("*.json")):
+            if p.stem.startswith("_"):
+                continue
+            c = card(json.loads(p.read_text()))
+            self.assertEqual(c["id"], p.stem)
+            self.assertTrue(c["sources"], p.stem)
+            rec = build(c)
+            self.assertGreater(rec["height_m"][1], rec["height_m"][0], p.stem)
+            if (json.loads(p.read_text()).get("habit") or "").startswith("palm"):
+                self.assertIn("no palm architecture", c["notes"], p.stem)
+
     def test_the_olympic_species_have_cards(self):
         from pipeline.plantgen import card_path
         for sid in ("picea_sitchensis", "tsuga_heterophylla", "thuja_plicata", "acer_circinatum", "polystichum_munitum",

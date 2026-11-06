@@ -209,6 +209,8 @@ def _ground(tile, m, force):
     layers, errors = build_ground(tile, force)
     for k, v in layers.items():
         add_layer(m, tile, k, v)
+    if "client.strata" not in layers:   # no column on this tile (pipeline/strata.py): none left from an earlier build
+        m["layers"].pop("client.strata", None)
     if errors:
         raise RuntimeError("; ".join(errors))
 
@@ -250,7 +252,11 @@ def _plants(tile, m, force):
     # The tile's plant needs (pipeline/needs.py): every species its LANDFIRE communities and its GBIF records name;
     # those with a trait card and no library record are grown now (pipeline/plantgen.py), the rest queued with the
     # stand-in the species mix draws for them.
+    # First the tile's canopy (pipeline/tree_cards.py, 2026-11-06): its dominant trees by open plots, place descriptions
+    # and records, and a trait card for each that has a research record, so a tile draws its own trees.
     from .needs import plant_needs
+    from .tree_cards import run as canopy
+    add_layer(m, tile, "species.canopy", canopy(tile), fetched=False)
     add_layer(m, tile, "species.plant_needs", plant_needs(tile, generate=True), fetched=False)
 
 
@@ -473,9 +479,9 @@ STEPS: dict[str, Step] = {s.name: s for s in [
     Step("water", "1", ["water", "water_seams"], ["dem", "rewild_hydro", "reroute", "hydro", "lidar"], _water,
          ["terrain.dem_banked", "client.heights", "client.water", "hydro.water_reaches"], [], owner="water lane",
          doc="banks, beds, levels and riparian zones", stage=B),
-    Step("ground", "1", ["ground", "fetch_soils", "fetch_geology", "soils_global", "fetch_global"], ["dem", "landcover", "lidar"], _ground,
-         ["geology.", "soils.", "client.geology", "client.soils", "client.outcrop", "client.ground_classes"],
-         ["macrostrat", "usda_sda", "soilgrids"], doc="geology and soils, outcrop likelihood, ground classes", stage=B),
+    Step("ground", "2", ["ground", "fetch_soils", "fetch_geology", "soils_global", "fetch_global", "strata", "substrate"], ["dem", "landcover", "lidar"], _ground,
+         ["geology.", "soils.", "client.geology", "client.soils", "client.outcrop", "client.ground_classes", "client.strata"],
+         ["macrostrat", "usda_sda", "soilgrids"], doc="geology and soils, outcrop likelihood, ground classes, the stratigraphic column", stage=B),
     Step("terrain", "1", ["derive", "urban", "habitat", "fetch_places", "fetch_territories"],
          ["dem", "naip", "osm", "hydro", "channels", "rewild_hydro", "water", "landcover", "ice"], _terrain,
          ["terrain.hillshade", "terrain.terrain_rgb", "footprint.mask_raster", "imagery.naip_png", "vegetation.habitat_png",
@@ -495,10 +501,12 @@ STEPS: dict[str, Step] = {s.name: s for s in [
     Step("seams", "1", ["seams"], ["dem", "channels", "water"], _seams, [],
          doc="the DEM and streams agree with every built neighbour along the shared edge", stage=B),
     # ---------------------------------------------------------------- flora
-    Step("plants", "1", ["needs", "plantgen", "communities", "research"], ["landcover", "ice"], _plants, ["species.plant_needs"],
-         ["gbif"], library=["library/plant_cards"],
-         doc="the plants the tile needs, ranked; missing ones grown from their trait cards", stage=F),
-    Step("species_mix", "1", ["species_mix", "communities", "regions"], ["dem", "landcover", "water", "ice", "plants"],
+    Step("plants", "2", ["needs", "plantgen", "communities", "research", "tree_cards"], ["landcover", "ice"], _plants,
+         ["species.canopy", "species.plant_needs"], ["gbif", "wcvp", "canopy_plots"],
+         library=["library/plant_cards", "library/plant_cards/_research"],
+         doc="the tile's canopy trees and their cards; the plants the tile needs, ranked; missing ones grown from their "
+             "trait cards", stage=F),
+    Step("species_mix", "2", ["species_mix", "communities", "regions"], ["dem", "landcover", "water", "ice", "plants"],
          _species_mix, ["client.species_mix"], library=["library/species"],
          doc="trees, shrubs and ground layer per 30 m cell, with the unmatched communities read from their names", stage=F),
     Step("crowns", "1", ["lidar", "urban"], ["lidar", "osm", "landcover", "terrain", "species_mix"], _crowns,
@@ -512,7 +520,7 @@ STEPS: dict[str, Step] = {s.name: s for s in [
          ["species.list", "species.occurrences", "species.seasonal", "species.inventory", "perception", "calendar",
           "locomotion", "client.species_prior"], ["gbif"], library=["library/animals"],
          doc="GBIF presence, perception, calendar, locomotion, the client's density prior", stage=A),
-    Step("animals", "3", ["fauna", "fauna_slots", "fauna_models", "pantheria", "research", "locomotion"], ["species", "plants"], _animals, ["species.animals", "client.fauna"], ["gbif"],
+    Step("animals", "4", ["fauna", "fauna_slots", "fauna_models", "pantheria", "sociality", "research", "locomotion"], ["species", "plants"], _animals, ["species.animals", "client.fauna"], ["gbif"],
          library=["library/animals", "data/eltontraits"],
          doc="every animal recorded on the tile, ranked; predators and scavengers; traits for those without; the Meshy queue",
          stage=A),

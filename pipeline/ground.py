@@ -216,6 +216,12 @@ def build_ground(tile: Tile, force=False) -> tuple[dict, list[str]]:
             layers.update(fetch_soils_global(tile, wc))
         except Exception as e:  # noqa: BLE001
             errors.append(f"soils (SoilGrids): {e}")
+    if "client.geology" in layers:   # the stratigraphic column where the strata lie flat (pipeline/strata.py)
+        try:
+            from .strata import build_column
+            layers.update(build_column(tile))
+        except Exception as e:  # noqa: BLE001
+            errors.append(f"strata: {e}")
     if "client.geology" in layers and "client.soils" in layers:
         info, arrays = outcrop(tile)
         layers["client.outcrop"] = info

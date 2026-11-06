@@ -166,7 +166,61 @@ export function setLithologies(info) {
   U.cliffSub.value = info ? 1 : 0;
 }
 setLithologies(null);
+// The stratigraphic column (2026-11-06; pipeline/strata.py, client/strata.json): where a tile's strata lie flat, the
+// map and the DEM give each unit's band of elevation, and a steep face takes the rock of the band at its height, its
+// colour and lithology, in place of the colour the photo smears down it from above and of the 5 m map's one unit per
+// cell (a wall of the Grand Canyon spans a dozen units in a few hundred metres). Per band, top to bottom: stratBand =
+// (base at the tile's origin, its slope east, its slope north, lithology index: the base is the plane base + se x +
+// sn north, x and north of the south-west corner), stratCol = (main colour linear, the bedding's tone contrast),
+// stratAlt = (the colour of its other beds, their share). A face below the last base, or a tile without the column
+// (stratN 0), is drawn as before. stratOn 0: off (A/B: __we.terrain.uniforms.stratOn.value = 0).
+export const STRATA_N = 12;
+export const strataUniforms = {
+  stratOn: { value: 1 }, stratN: { value: 0 },
+  stratBand: { value: Array.from({ length: STRATA_N }, () => new THREE.Vector4()) },
+  stratCol: { value: Array.from({ length: STRATA_N }, () => new THREE.Vector4()) },
+  stratAlt: { value: Array.from({ length: STRATA_N }, () => new THREE.Vector4()) },
+};
+const LITH_NAMES = ['plain', 'granitic', 'slate_phyllite', 'schist', 'greenstone_metavolcanic', 'sandstone_conglomerate', 'basalt', 'volcanic', 'serpentinite', 'limestone_marble', 'surficial'];
+export function setStrata(strata, substrateInfo) {
+  const U = strataUniforms, bands = (strata?.bands || []).slice(0, STRATA_N);
+  const [cx, cn] = strata?.centre || [5000, 5000], rows = substrateInfo?.lithologies || [];
+  const lithIndex = name => rows.find(r => r.name === name)?.index ?? Math.max(LITH_NAMES.indexOf(name), 0);
+  const c = new THREE.Color();
+  bands.forEach((b, i) => {
+    U.stratBand.value[i].set(b.base_m - b.slope_e * cx - b.slope_n * cn, b.slope_e, b.slope_n, lithIndex(b.lithology));
+    c.setRGB(...b.colour, THREE.SRGBColorSpace); U.stratCol.value[i].set(c.r, c.g, c.b, b.bedding ?? 0.07);
+    c.setRGB(...(b.alt || b.colour), THREE.SRGBColorSpace); U.stratAlt.value[i].set(c.r, c.g, c.b, b.alt_share ?? 0);
+  });
+  U.stratN.value = bands.length;
+}
 export const CLIFF_GLSL = /* glsl */`
+  uniform float stratOn; uniform int stratN;
+  uniform vec4 stratBand[${STRATA_N}]; uniform vec4 stratCol[${STRATA_N}]; uniform vec4 stratAlt[${STRATA_N}];
+  // The column's band at p (scene: x east, z south, y up), -1 above none or below the column. The height is moved
+  // +-1.5 m by a ~40 m noise along the face, so a contact is not a ruled line (the units' contacts carry a few metres
+  // of erosional relief).
+  int strataBand(vec3 p) {
+    if (stratOn < 0.5) return -1;
+    float y = p.y + 3.0 * (rnoise(p.xz, 0.61, 40.0) - 0.5);
+    vec2 xn = vec2(p.x, -p.z);
+    for (int i = 0; i < ${STRATA_N}; i++) {
+      if (i >= stratN) break;
+      if (y >= stratBand[i].x + dot(stratBand[i].yz, xn)) return i;
+    }
+    return -1;
+  }
+  // The band's rock at p: its beds, a share stratAlt.w of them in the other colour, ~1.5-6 m thick and wandering a
+  // metre over ~60 m of face, and the fine beds' tone within; both settle to their mean once a bed spans a few pixels.
+  vec3 strataColour(int b, vec3 p, float foot) {
+    vec4 C = stratCol[b], A = stratAlt[b];
+    float y = p.y + 2.0 * (rnoise(p.xz + 13.0, 1.07, 60.0) - 0.5);
+    float bed = vnoise(vec2(y / 3.1, float(b) * 7.3 + 0.5));
+    float altK = A.w > 0.0 ? smoothstep(1.0 - A.w - 0.06, 1.0 - A.w + 0.06, bed) : 0.0;
+    vec3 c = mix(mix(C.rgb, A.rgb, A.w), mix(C.rgb, A.rgb, altK), 1.0 - smoothstep(0.8, 3.0, foot));
+    float fine = vnoise(vec2(y / 0.85, float(b) * 3.1 + 11.0)) - 0.5;
+    return c * (1.0 + 2.0 * C.w * fine * (1.0 - smoothstep(0.25, 0.9, foot)));
+  }
   uniform float cliffOn; uniform float cliffSub;
   uniform vec4 cliffCol[11]; uniform vec4 cliffBreak[11]; uniform vec4 cliffFabric[11]; uniform vec4 cliffJoint[11];
   uniform vec4 cliffOct[66];   // per lithology and scale (setLithologies): [6L + 2o] and [6L + 2o + 1]
@@ -227,8 +281,9 @@ export const CLIFF_GLSL = /* glsl */`
   // The cliff material at p with the face's normal nG (linear colour), and its lighting normal in nOut. L: the
   // lithology; lum: the photo's luminance here (a third of its own light and dark is kept: the dark diorite of a wall is
   // in the photo); foot: metres per pixel.
-  vec3 cliffShade(vec3 p, vec3 nG, vec3 dpx, vec3 dpy, int L, float lum, float foot, out vec3 nOut) {
+  vec3 cliffShade(vec3 p, vec3 nG, vec3 dpx, vec3 dpy, int L, int SB, float lum, float foot, out vec3 nOut) {
     vec4 col = cliffCol[L], fab = cliffFabric[L], br = cliffBreak[L];
+    if (SB >= 0) col.rgb = strataColour(SB, p, foot);   // the column's band at this height (strataBand)
     float form = col.w;
     bool longJ = form == 1.0 || form == 8.0 || form == 6.0;
     // One plane per pixel, the one the face faces most: facing x (h, y) = (z, y), facing z (x, y), and on gentle rock
@@ -554,7 +609,7 @@ const FRAG = /* glsl */`
     // of rock skips (it would be drawn over). NO_CLIFF: a chunk without exposed rock (Terrain.build), whose program
     // has none of the cliff code (its registers weighed on every pixel of the terrain: ~0.4 ms at 1920x1200).
     float cliff = 0.0;
-    int lith = 0;
+    int lith = 0, sband = -1;
     #ifndef NO_CLIFF
     if (cliffSub > 0.5) {
       // the slope from the drawn mesh's interpolated normal, not the 10 m mask: thresholding the mask's bilinear
@@ -569,6 +624,9 @@ const FRAG = /* glsl */`
       lith = pat == 1 ? 1 : pat == 2 ? 2 : pat == 3 ? 4 : 0;
     }
     if (lith == 10) cliff *= 0.5;   // a cut bank in a surficial deposit: half rock
+    // the column's band at this height (strataBand): its lithology and colour on the bedrock faces (a surficial deposit,
+    // talus or a landslide, keeps its own)
+    else if (cliff > 0.0 && stratN > 0) { sband = strataBand(vPosW); if (sband >= 0) lith = int(stratBand[sband].w + 0.5); }
     #endif
     bool allRock = cliff > 0.99;
     float swCov = 0.0;   // how much of this pixel the painted sward's blades cover (swardPaint)
@@ -681,7 +739,7 @@ const FRAG = /* glsl */`
       #ifndef NO_CLIFF
       if (cliff > 0.0) {
         vec3 nC;
-        vec3 cC = cliffShade(vPosW, nMac, dpx, dpy, lith, dot(photo, G_LUMA), foot, nC);
+        vec3 cC = cliffShade(vPosW, nMac, dpx, dpy, lith, sband, dot(photo, G_LUMA), foot, nC);
         c = mix(c, cC, cliff); nL = normalize(mix(nL, nC, cliff)); cliffW = cliff;
       }
       #endif
@@ -789,6 +847,7 @@ export class Terrain {
       if (tile.roadsImage) { roads.generateMipmaps = true; roads.minFilter = THREE.LinearMipmapLinearFilter; }
     }
     setLithologies(tile.substrateInfo);
+    setStrata(tile.strata, tile.substrateInfo);
     G.masks.value = masks; G.roads.value = roads; G.tileSize.value = tile.size;
     if (tile.canopy?.img?.image) {   // same orientation as the masks (image rows north to south, flipY)
       const canopy = new THREE.Texture(tile.canopy.img.image); canopy.needsUpdate = true;
@@ -814,7 +873,7 @@ export class Terrain {
       wt.minFilter = THREE.NearestFilter; wt.magFilter = THREE.NearestFilter; wt.needsUpdate = true;
       G.waterMap.value = wt; G.waterOn.value = 1; G.waterPx.value = tile.water.width; this.waterTexture = wt;
     } else { G.waterMap.value = null; G.waterOn.value = 0; }
-    this.uniforms = { ...G, ...windUniforms, ...atmo, ...detailUniforms, ...ripUniforms, ...cliffUniforms, geoSlope: { value: tile.heights.detail ? 1 : 0 } };   // shared objects, so one update reaches every material
+    this.uniforms = { ...G, ...windUniforms, ...atmo, ...detailUniforms, ...ripUniforms, ...cliffUniforms, ...strataUniforms, geoSlope: { value: tile.heights.detail ? 1 : 0 } };   // shared objects, so one update reaches every material
     this.material = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms: this.uniforms });
     // the chunks with no exposed rock (nowhere over the chunk and two texels round it is the substrate's exposure past
     // the cliff rule's 0.15 on ground steeper than 28 degrees, the rule's 34 less a margin for the mesh's normal) take

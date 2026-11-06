@@ -1,0 +1,133 @@
+{
+ "id": "pouteria_subrotata",
+ "scientific": "Pouteria subrotata",
+ "family": "Sapotaceae",
+ "common": "zapotillo",
+ "aliases": [
+  "sapote_de_mico"
+ ],
+ "habit": "broadleaf_tree",
+ "height_m": {
+  "typical": [
+   12,
+   20
+  ],
+  "max": 20,
+  "src": 0
+ },
+ "dbh_cm": {
+  "typical": null,
+  "max": 30,
+  "src": 0
+ },
+ "bole": {
+  "clear_fraction": 0.5,
+  "straight": true,
+  "buttresses": "small",
+  "buttress_height_m": null,
+  "stilt_roots": false,
+  "stilt_root_height_m": null,
+  "spines": false,
+  "text": "Bole irregular but straight, deeply fluted lengthwise, with periodic horizontal swellings (knobs), some bearing thin sprouts; low buttresses at the base; branching in the upper half. White sticky latex (family-level, Osa).",
+  "src": 0
+ },
+ "crown": {
+  "shape": "narrow",
+  "width_m": null,
+  "depth_fraction": 0.5,
+  "density": "medium",
+  "position": "subcanopy",
+  "text": "Narrow, moderately dense crown with a single layer of foliage; leaves clustered near branch tips, lower limbs bare.",
+  "src": 0
+ },
+ "leaf": {
+  "type": "simple",
+  "length_cm": [
+   18,
+   32
+  ],
+  "width_cm": [
+   8,
+   11
+  ],
+  "leaflet_length_cm": null,
+  "frond_count": null,
+  "shape": "elliptic",
+  "texture": null,
+  "upper_colour": null,
+  "under_colour": null,
+  "new_flush_colour": null,
+  "src": 0
+ },
+ "phenology": {
+  "leaf_habit": "evergreen",
+  "leafless_months": [],
+  "flowering_months": [
+   1,
+   2,
+   3,
+   4
+  ],
+  "flower_colour": "white (corolla), c. 0.5 cm, in near-sessile axillary clusters on leafless branch sections; buds tan with maroon speckling",
+  "fruiting_months": [
+   7,
+   8,
+   9
+  ],
+  "fruit": "near-spherical drupe c. 2 cm, glossy green ripening deep russet with yellowish bands; thin skin, pasty pulp, one glossy coffee-brown seed c. 1.5 cm",
+  "src": 0
+ },
+ "bark": {
+  "colour": "rich dark brown",
+  "texture": "smooth",
+  "text": "Mostly smooth; may peel in wide vertical strips.",
+  "src": 0
+ },
+ "habitat": {
+  "forest_types": [
+   "riverbank",
+   "poorly drained lowland primary forest"
+  ],
+  "light": null,
+  "elevation_m": null,
+  "range": "Nicaragua to northern Venezuela and Amazonian Peru; in Costa Rica at Manuel Antonio, Punta Leona, Carara and the Sirena station of Corcovado",
+  "src": 0
+ },
+ "eaten_by": [
+  {
+   "animal": "Primates (monkeys)",
+   "part": "fruit",
+   "src": 1
+  },
+  {
+   "animal": "arboreal mammals (unspecified)",
+   "part": "fruit",
+   "src": 0
+  },
+  {
+   "animal": "Aves (birds, unspecified)",
+   "part": "fruit",
+   "src": 1
+  },
+  {
+   "animal": "Psittacidae? (suspected parrot seed predation, not observed)",
+   "part": "seeds",
+   "src": 0
+  }
+ ],
+ "notes": "Phenology is for Pacific Costa Rica (crtrees.org, Manuel Antonio): flowering irregular, in 2-3 short bursts between Jan and Apr in active years; fruit rare and moderate, late Jul to early Sep; new leaves irregularly Dec-Mar. Osa Arboretum gives yellowish flowers in Jan, Mar, Apr and Jun, and yellowish edible fruit. crtrees calls it rare. The sources' 'understory or subcanopy tree' maps to position subcanopy. Crown depth_fraction 0.5 and clear_fraction 0.5 are read off 'branching occurs in the upper half'. crtrees says the leaf is smooth and translucent, with prominent pinnate veins and no drip tip or a very small one; texture is left null. A search result quoting WorldFloraDB (not read directly) gave 10-15 m, leaves 10-23 x 5-11.5 cm, and fruit green or yellow-green turning red, 2-2.5 x 1.2 cm. Parrot seed predation is inferred by crtrees from cracked seed coats and was not observed. Elevation and light are not given.",
+ "sources": [
+  {
+   "title": "Pouteria subrotata - Trees of Costa Rica's Pacific Slope (crtrees.org)",
+   "url": "https://crtrees.org/species-accounts/pouteria-subrotata/",
+   "licence": "unknown (no licence stated; WordPress.com site 'Trees of Costa Rica's Pacific Slope')",
+   "read": "2026-11-06"
+  },
+  {
+   "title": "Pouteria subrotata - Osa Arboretum (Osa Conservation)",
+   "url": "https://osa-arboretum.org/?p=1364",
+   "licence": "unknown (no licence stated; Osa Conservation arboretum site)",
+   "read": "2026-11-06"
+  }
+ ]
+}

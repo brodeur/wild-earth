@@ -373,7 +373,7 @@
  },
  "generated": {
   "by": "pipeline/plantgen.py",
-  "version": "2",
+  "version": "3",
   "card": "library/plant_cards/phyllodoce_breweri.json",
   "card_sha256": "ba250a5c702ecec5",
   "template": "ribes_roezlii",
@@ -387,5 +387,76 @@
  "authors": [
   "Wild Earth (agent draft, 2026-11-04); needs local sign-off"
  ],
- "license": "CC BY-SA 4.0"
+ "license": "CC BY-SA 4.0",
+ "ground": {
+  "habit": "mat",
+  "woody": true,
+  "width_m": 0.66,
+  "leaf": {
+   "shape": "linear",
+   "size_m": 0.01,
+   "rgb": [
+    74,
+    94,
+    60
+   ],
+   "rgb_by_season": {
+    "winter": [
+     70,
+     86,
+     58
+    ],
+    "spring": [
+     82,
+     102,
+     64
+    ],
+    "summer": [
+     74,
+     94,
+     60
+    ],
+    "fall": [
+     76,
+     90,
+     58
+    ]
+   }
+  },
+  "height_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "dead_rgb": [
+   110,
+   82,
+   70
+  ],
+  "density": 1.0,
+  "from": "pipeline/plantgen.py ground_block: a dwarf shrub (card height to 0.3 m <= 0.5 m)",
+  "flower": {
+   "shape": "tiny",
+   "rgb": [
+    204,
+    72,
+    140
+   ],
+   "size_m": 0.012,
+   "months": [
+    7,
+    8
+   ],
+   "per_plant": 24
+  }
+ }
 }

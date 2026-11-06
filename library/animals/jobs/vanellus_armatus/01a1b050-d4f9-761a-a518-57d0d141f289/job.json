@@ -1,0 +1,71 @@
+{
+  "species": "vanellus_armatus",
+  "mode": "refine",
+  "kind": "text-to-3d",
+  "task_id": "01a1b050-d4f9-761a-a518-57d0d141f289",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "refine",
+    "preview_task_id": "01a1b050-207e-74af-9687-68e363ec0b9d",
+    "texture_resolution": "2k",
+    "enable_pbr": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Natural plumage colours and markings of a wild adult Blacksmith lapwing (Vanellus armatus) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin, legs and feet in their true colours.",
+    "moderation": false
+  },
+  "prompt": "Natural plumage colours and markings of a wild adult Blacksmith lapwing (Vanellus armatus) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin, legs and feet in their true colours.",
+  "image": null,
+  "preview_job": "library/animals/jobs/vanellus_armatus/01a1b050-207e-74af-9687-68e363ec0b9d",
+  "estimated_credits": 10,
+  "balance_before": 1737,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-06T10:04:09+00:00",
+    "created_at": "2026-11-06T10:04:12+00:00",
+    "started_at": "2026-11-06T10:04:12+00:00",
+    "finished_at": "2026-11-06T10:04:40+00:00",
+    "downloaded": "2026-11-06T10:04:56+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur, world pipeline",
+  "progress": 100,
+  "task": {
+    "id": "01a1b050-d4f9-761a-a518-57d0d141f289",
+    "type": "text-to-3d-refine",
+    "status": "SUCCEEDED",
+    "created_at": 1793959452097,
+    "started_at": 1793959452104,
+    "finished_at": 1793959480758,
+    "consumed_credits": 10,
+    "task_error": null
+  },
+  "credits_charged": 10,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 4575204,
+      "sha256": "4ba289062874d68ec25892692a0440fb2bd0cbbadb4bb83eefc45ecc9b106131",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b050-d4f9-761a-a518-57d0d141f289/output/model.glb"
+    },
+    {
+      "file": "texture_base_color.png",
+      "bytes": 5743752,
+      "sha256": "5e5d71c17588eb2218b20c095e857bda6d64fea9d304778db90cbc95fef36bf7",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b050-d4f9-761a-a518-57d0d141f289/output/texture_0.png"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 59578,
+      "sha256": "6a2f807e370b0b034c39fa2f4557d13ef657b1e273f1ee34fbe8f6aee74b5fd7",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b050-d4f9-761a-a518-57d0d141f289/output/preview.png"
+    }
+  ],
+  "balance_after": 1727
+}

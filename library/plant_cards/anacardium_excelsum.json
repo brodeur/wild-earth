@@ -1,0 +1,235 @@
+{
+ "id": "anacardium_excelsum",
+ "scientific": "Anacardium excelsum",
+ "common": "espave",
+ "aliases": [
+  "anacardium_rhinocarpus",
+  "caracoli",
+  "espave_acanju",
+  "espavel",
+  "rhinocarpus_excelsa",
+  "wild_cashew"
+ ],
+ "family": "Anacardiaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "shorea_leprosula",
+ "regions": [
+  "neotropics"
+ ],
+ "height_m": [
+  20.0,
+  40.0
+ ],
+ "stature": {
+  "typical_m": 30.0,
+  "tall_m": 48.0,
+  "record_m": null,
+  "source": "Anacardium excelsum - Wikipedia, la enciclopedia libre (research record)"
+ },
+ "variants_height_m": {
+  "young": [
+   3.0,
+   12.0
+  ],
+  "veteran": [
+   40.0,
+   48.0
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.6,
+    0.145
+   ],
+   [
+    0.68,
+    0.246
+   ],
+   [
+    0.78,
+    0.29
+   ],
+   [
+    0.88,
+    0.261
+   ],
+   [
+    0.96,
+    0.16
+   ],
+   [
+    1.0,
+    0.035
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.18,
+  "asymmetry": 0.18,
+  "fill": 0.5,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    80,
+    106,
+    56
+   ],
+   "spring": [
+    80,
+    106,
+    56
+   ],
+   "summer": [
+    80,
+    106,
+    56
+   ],
+   "fall": [
+    80,
+    106,
+    56
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "leaf_size_m": 0.225,
+  "leaf_shape": "oval",
+  "flowers": {
+   "season": "winter",
+   "months": [
+    1,
+    4
+   ],
+   "form": "cluster",
+   "rgb": [
+    118,
+    142,
+    84
+   ],
+   "size_m": 0.08,
+   "density": 0.4
+  },
+  "berries": null
+ },
+ "trunk": {
+  "stems": [
+   1,
+   1
+  ],
+  "bark_rgb": [
+   129,
+   116,
+   102
+  ],
+  "bark_pattern": "plates",
+  "flare": 1.3,
+  "roots": {
+   "buttress": 0.2,
+   "note": "no buttresses (sources)"
+  }
+ },
+ "targets": {
+  "crown_width_ratio": 0.58,
+  "crown_base_ratio": 0.6,
+  "porosity": 0.2,
+  "from": "pipeline/tree_cards.py from the research record (crown: Rounded, dense crown (TTSM src 0, Spanish Wikipedia); 'broadly rounded or elongate' (Useful Tropical Plants).), no photographs measured"
+ },
+ "description": "A tree of riverbank, floodplain (varzea), secondary/gaps, 20-40 m tall (to 48 m). Straight cylindrical trunk, light coloured, sometimes pinkish (Spanish Wikipedia); bole free of branches up to 18 m, some basal swellings but no well-developed buttresses (Useful Tropical Plants, src 3). Rounded, dense crown (TTSM src 0, Spanish Wikipedia); 'broadly rounded or elongate' (Useful Tropical Plants). Fruit: kidney-shaped drupe (nut) 2.5-3.5 x 1-2 cm, hanging from a curved, fleshy, S-shaped receptacle.",
+ "season_notes": {
+  "winter": "In leaf. Flowering (pale green to white, turning pink with age (clove-like scent)).",
+  "spring": "In leaf. Flowering (pale green to white, turning pink with age (clove-like scent)). Fruiting.",
+  "summer": "In leaf.",
+  "fall": "In leaf."
+ },
+ "habitat": {
+  "classes": {
+   "mixed_forest": 1.0,
+   "riparian": 0.6
+  },
+  "floor": 1.3,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 1.0,
+  "shade": 0.05,
+  "disturbed": 2.0
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "chiroptera_(fruit_eating",
+    "part": "berries",
+    "seasons": [
+     "spring"
+    ]
+   },
+   {
+    "animal": "micronycteris_hirsuta",
+    "part": "berries",
+    "seasons": [
+     "spring"
+    ]
+   },
+   {
+    "animal": "cebus_capucinus",
+    "part": "berries",
+    "seasons": [
+     "spring"
+    ]
+   },
+   {
+    "animal": "alouatta_palliata",
+    "part": "berries",
+    "seasons": [
+     "spring"
+    ]
+   }
+  ],
+  "cover_for": []
+ },
+ "range": {
+  "elev_m": [
+   0,
+   1300
+  ],
+  "where": "Guatemala/Honduras to Ecuador, Colombia, Venezuela and the Guianas; Atlantic and Pacific watersheds."
+ },
+ "stand_in": "shorea_leprosula",
+ "notes": "Template shorea_leprosula: an emergent: a buttressed clear bole under an umbrella crown (light red meranti). Briefly deciduous by the sources, but no months given: drawn evergreen. NOT SOURCED (the template's or a default value): crown width (the template's ratio); crown depth (the template's); leaf colour (a tropical evergreen's mid green). Research notes: Leaf habit: Spanish Wikipedia says partly deciduous, leaves yellowing then dropping partly in the dry season and replaced at the start of the rains; English Wikipedia calls it evergreen; TTSM (Fournier, Costa Rica) notes flushes of new foliage in January, then flowers through April (citing Jimenez et al. 1996). No source gives leafless months. Spanish Wikipedia: flowers and fruits Feb-May, fruit ripe Mar-May. Months are Costa Rica/Central America, not Osa-specific. Leaf size: 15-30 x 5-12 cm (en and es Wikipedia description); es Wikipedia habitat section 10-35 x 4-12 cm; leaves clustered at twig ends, obovate, apex rounded, notched or acute. Leaf colour and texture not found. Height: 20-40 m (es Wikipedia), 45 m (TTSM), 48 m (en Wikipedia). dbh max: TTSM 3 m d.b.h.; Useful Tropical Plants up to 200 cm. Habitat: TTSM, often dominant on flood plains and in gallery forests; Useful Tropical Plants, secondary forest, stream sides, sometimes pure stands, young plants need sun and are seldom in mature woodland (basis for 'light-demanding'). The monkey and bat records are Croat's Flora of Barro Colorado (Panama), quoted on the HVAA Symbiota page; the source names them 'white-faced and howler monkeys' and I added the scientific names. Bats eat only the fleshy receptacle and drop the nut (Wikipedia).",
+ "sources": [
+  "Fournier, L.A. Anacardium excelsum (Bertero & Balb. ex Kunth) Skeels. In: Vozzo, J.A. (ed.) Tropical Tree Seed Manual, USDA Forest Service Agriculture Handbook 721 (2002), pp. 294-296, https://rngr.net/publications/ttsm/species/Anacardium%20excelsum.pdf/at_download/file (unknown (US federal government publication; no licence stated on rngr.net)), read 2026-11-06",
+  "Anacardium excelsum - Wikipedia, https://en.wikipedia.org/wiki/Anacardium_excelsum (CC BY-SA 4.0), read 2026-11-06",
+  "Anacardium excelsum - Wikipedia, la enciclopedia libre, https://es.wikipedia.org/wiki/Anacardium_excelsum (CC BY-SA 4.0), read 2026-11-06",
+  "Anacardium excelsum - Useful Tropical Plants, https://tropical.theferns.info/viewtropical.php?id=Anacardium+excelsum (CC BY-NC-SA 3.0 (database and code)), read 2026-11-06",
+  "Anacardium excelsum - Herbario Virtual Austral Americano (Symbiota), description from Croat, The Flora of Barro Colorado Island, https://herbariovaa.org/taxa/index.php?tid=16778 (unknown (links a data use policy)), read 2026-11-06",
+  "research record library/plant_cards/_research/anacardium_excelsum.json (pipeline/tree_cards.py)"
+ ],
+ "authors": [
+  "Wild Earth (pipeline/tree_cards.py from an agent's sourced research record, 2026-11-06); needs local sign-off"
+ ],
+ "generated_by": {
+  "by": "pipeline/tree_cards.py",
+  "version": "1"
+ }
+}

@@ -1,0 +1,410 @@
+{
+ "id": "unonopsis_floribunda",
+ "aliases": [],
+ "scientific": "Unonopsis floribunda",
+ "common": "unonopsis floribunda",
+ "form": "tree",
+ "regions": [
+  "neotropics"
+ ],
+ "architectural_model": "Rauh",
+ "deciduous": false,
+ "height_m": [
+  6.4,
+  8.0
+ ],
+ "stature": {
+  "typical_m": 7.2,
+  "tall_m": 8.0,
+  "record_m": null,
+  "source": "Atrium (Andes to Amazon), specimen of Unonopsis floribunda, Los Amigos Biological Station (research record)"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    1.5,
+    3.8
+   ],
+   "trunk_radius": 0.65,
+   "crown_scale": 0.8,
+   "branches": 0.8,
+   "set": {
+    "trunk": {
+     "length_ratio": 0.8,
+     "split_prob": 0.0
+    },
+    "foliage": {
+     "clumps": {
+      "radius_m": 0.9
+     }
+    }
+   },
+   "note": "(from the giant mahang template) a fast sapling in a new gap, a single stem with a rosette of leaves up to a metre across"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 1,
+   "note": "(from the giant mahang template) (from the big-leaf maple template) the file as written"
+  },
+  {
+   "name": "veteran",
+   "weight": 0.2,
+   "height_m": [
+    8.0,
+    8.8
+   ],
+   "trunk_radius": 1.3,
+   "crown_scale": 1.12,
+   "gnarl": 1.25,
+   "deadwood": {
+    "fraction": 0.2,
+    "levels": [
+     1,
+     2
+    ],
+    "where": "inner"
+   },
+   "set": {
+    "trunk": {
+     "stems": [
+      2,
+      4
+     ],
+     "stem_spread_deg": 20,
+     "lean_deg": 12,
+     "split_prob": 0.5
+    }
+   },
+   "note": "(from the giant mahang template) a tall, short-lived pioneer, the canopy closing over it"
+  }
+ ],
+ "snag": {
+  "fraction": 0.05,
+  "from": "veteran",
+  "height_m": [
+   14,
+   24
+  ],
+  "limbs": 0.5,
+  "twigs": 0.2,
+  "levels": 1,
+  "shorten": [
+   0.4,
+   0.9
+  ],
+  "rgb": [
+   140,
+   134,
+   124
+  ]
+ },
+ "description": "A tree of floodplain (varzea), 6.4-8 m tall. Produces red latex (Wikipedia). Genus-level: shrubs or small to medium-sized trees. Fruit: fruit black when mature, green when immature (Wikipedia; Los Amigos specimen 13 May 2001); genus-level: apocarpous, seeds pitted, no aril.",
+ "season_notes": {
+  "winter": "In leaf.",
+  "spring": "In leaf. Fruiting.",
+  "summer": "In leaf.",
+  "fall": "In leaf."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "mixed_forest": 1.0,
+   "riparian": 0.6
+  },
+  "floor": 1.3,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 1.0,
+  "shade": 0.4,
+  "disturbed": 1.0
+ },
+ "relations": {
+  "eaten_by": [],
+  "cover_for": []
+ },
+ "trunk": {
+  "length_ratio": 0.45,
+  "radius_ratio": 0.04,
+  "taper": 0.65,
+  "flare": 1.35,
+  "bole_ratio": 0.35,
+  "base_size": 0.15,
+  "curve_deg": 10,
+  "curve_var_deg": 14,
+  "segments": 5,
+  "lean_deg": 6,
+  "stems": [
+   1,
+   1
+  ],
+  "stem_spread_deg": 16,
+  "split_prob": 0.3,
+  "split_count": 2,
+  "split_angle_deg": 26,
+  "bark_rgb": [
+   176,
+   172,
+   160
+  ],
+  "bark_pattern": "smooth_grey",
+  "twig_rgb": [
+   150,
+   150,
+   130
+  ],
+  "bark": {
+   "tile_m": [
+    0.35,
+    0.7
+   ],
+   "ridge_m": 0.03,
+   "block_m": 0.08,
+   "fissure": 0.45,
+   "contrast": 0.9,
+   "lichen": 0.7,
+   "relief": 1.0
+  }
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "envelope": {
+   "profile": [
+    [
+     0.35,
+     0.212
+    ],
+    [
+     0.48,
+     0.361
+    ],
+    [
+     0.643,
+     0.425
+    ],
+    [
+     0.805,
+     0.383
+    ],
+    [
+     0.935,
+     0.234
+    ],
+    [
+     1.0,
+     0.051
+    ]
+   ],
+   "lobes": 6,
+   "lobe_depth": 0.18,
+   "asymmetry": 0.18,
+   "fill": 0.4,
+   "edge": 1.1
+  }
+ },
+ "levels": [
+  {
+   "count": 10,
+   "down_angle_deg": 55,
+   "down_angle_tip_deg": 30,
+   "down_angle_var_deg": 14,
+   "rotation_deg": 90,
+   "rotation_var_deg": 25,
+   "length_ratio": 1.8,
+   "length_var": 0.25,
+   "curve_deg": 8,
+   "curve_var_deg": 18,
+   "tropism": 0.04,
+   "taper": 0.9,
+   "radius_ratio": 0.55,
+   "segments": 4,
+   "droop_deg": 8
+  },
+  {
+   "count": 8,
+   "start": 0.15,
+   "down_angle_deg": 50,
+   "down_angle_var_deg": 15,
+   "rotation_deg": 90,
+   "rotation_var_deg": 20,
+   "length_ratio": 0.5,
+   "length_var": 0.3,
+   "curve_deg": 0,
+   "curve_var_deg": 18,
+   "zigzag_deg": 6,
+   "tropism": 0.04,
+   "taper": 1.0,
+   "radius_ratio": 0.45,
+   "segments": 2
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.17,
+  "leaf_shape": "elliptic_glossy",
+  "lobes": 5,
+  "lobe_depth": 0.6,
+  "lobe_style": "palmate",
+  "cluster_m": 1.6,
+  "density": 8,
+  "cards_per_m2": 0.55,
+  "leaf_fill": 1.8,
+  "roll_deg": 50,
+  "start": 0.1,
+  "parent_start": 0.4,
+  "orientation": "outward",
+  "colors": {
+   "winter": [
+    80,
+    106,
+    56
+   ],
+   "spring": [
+    80,
+    106,
+    56
+   ],
+   "summer": [
+    80,
+    106,
+    56
+   ],
+   "fall": [
+    80,
+    106,
+    56
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "clumps": {
+   "radius_m": 1.2,
+   "cards_per_clump": 9,
+   "shell": 0.2,
+   "flatten": 0.65,
+   "tip_bias": 1.4
+  },
+  "palette": [
+   [
+    0.8,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.2,
+    [
+     1.15,
+     1.18,
+     1.0
+    ]
+   ]
+  ],
+  "winter_twigs": 0.4,
+  "ao_min": 0.68,
+  "color_var": [
+   0.08,
+   0.05
+  ],
+  "leaf_on_var": 0.5,
+  "flowers": null,
+  "berries": null
+ },
+ "deadwood": {
+  "fraction": 0.06,
+  "where": "inner",
+  "levels": [
+   2
+  ],
+  "shorten": 0.6,
+  "rgb": [
+   140,
+   134,
+   124
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "length": 0.6,
+  "down_deg": 50,
+  "down_var_deg": 18,
+  "curve_var_deg": 18,
+  "segments": 2,
+  "radius_m": 0.01,
+  "taper": 0.6,
+  "zigzag_deg": 8,
+  "fan_deg": 55,
+  "jitter": 0.2
+ },
+ "lod": {
+  "near_tris_budget": 2200,
+  "near_sides": [
+   7,
+   3,
+   0
+  ],
+  "mid_blobs": 5,
+  "mid_branches": 4,
+  "mid_segments": [
+   3,
+   2
+  ],
+  "mid_blob_scale": 0.9,
+  "close_factor": 2
+ },
+ "targets": {
+  "crown_width_ratio": 0.85,
+  "crown_base_ratio": 0.35,
+  "porosity": 0.3,
+  "foliage_rg": 0.56,
+  "foliage_bg": 0.27,
+  "fall_rg": 1.7,
+  "fall_bg": 0.22,
+  "from": "pipeline/tree_cards.py from the research record (crown: Genus-level: shrubs or small to medium-sized trees. Position inferred from the 8 m Los Amigos specimen.), no photographs measured"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "3",
+  "card": "library/plant_cards/unonopsis_floribunda.json",
+  "card_sha256": "eaadd7ac6c14dd51",
+  "template": "macaranga_gigantea",
+  "template_common": "giant mahang",
+  "height_scale": 0.48
+ },
+ "notes": "Template macaranga_gigantea: a subcanopy tree: a tropical evergreen on one stem with an open crown (giant mahang). NOT SOURCED (the template's or a default value): crown width (the template's ratio); crown depth (the template's); leaf size (the median of the research records' sourced simple leaves, 0.17 m); leaf colour (a tropical evergreen's mid green); bark colour (the template's); bark texture (the template's). Research notes: Poorly documented. Wikipedia stub (src 0): tree with dark bark, black fruit, red latex; range six countries. Atrium specimen (src 1), Los Amigos Biological Station, 270 m, lower terrace young floodplain, old growth, seasonally inundated in parts: 'Tree 8 m. Immature fruit green. Mature fruit black.' (13 May 2001) - height and fruiting month are this one tree. Genus-level (src 2, Berry, Flora of the Venezuelan Guayana; U. floribunda not treated there): shrubs or small-medium trees, small bisexual flowers, inflorescences ramiflorous/cauliflorous, seeds pitted without aril. Search snippets quoted an Atrium description (tree to c. 20 m, strong fibrous bark, few ellipsoid monocarps to 2 cm, orange then purple-black) and a Tambopata label (tree to 14 m, bark fissured dark brown) but the description tab did not load and the NYBG page was blocked, so not entered. Leaf data not found (Annonaceae leaves are simple, but no source read says so for this species).",
+ "sources": [
+  "Unonopsis floribunda - Wikipedia, https://en.wikipedia.org/wiki/Unonopsis_floribunda (CC BY-SA 4.0), read 2026-11-06",
+  "Atrium (Andes to Amazon), specimen of Unonopsis floribunda, Los Amigos Biological Station, https://www.andesamazon.org/collection_display_info.php?id=55212 (unknown (footer: (c) 2005-26 Botanical Research Institute of Texas & San Diego Zoo Wildlife Alliance; terms not read)), read 2026-11-06",
+  "Berry, Flora of the Venezuelan Guayana: Annonaceae, Unonopsis (Missouri Botanical Garden), https://www.mobot.org/MOBOT/Research/ven-guayana/annonaceae/page16.shtml ((c) 1995-2025 Missouri Botanical Garden, All Rights Reserved), read 2026-11-06",
+  "research record library/plant_cards/_research/unonopsis_floribunda.json (pipeline/tree_cards.py)"
+ ],
+ "authors": [
+  "Wild Earth (pipeline/tree_cards.py from an agent's sourced research record, 2026-11-06); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

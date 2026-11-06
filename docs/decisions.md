@@ -5631,3 +5631,49 @@ traits, for every tile:
   ground is the outlier (docs/probes-2026-11.md, iteration 3).
 - **The registry knows the pipeline's models** (`pipeline/registry.py`): the eleven Serengeti models are fidelity 3 (own
   mesh, skinned, the leg engine), with credits, attempts and how each was sized.
+
+## 2026-11-06: phase 1, iteration 4: groups from social organisation (branch claude/sweet-feistel-2054bb)
+
+- **Group sizes from Prox and Farine 2020** (`pipeline/sociality.py`; CC BY 4.0, figshare 10.6084/m9.figshare.8208959):
+  PanTHERIA has no social group size for the lion, so the Serengeti's lions came in the ambush archetype's 1-4. This
+  scoring of 180 mammal societies gives each an average group size and a fission-fusion flag: a fission-fusion society
+  (a pride, a hyena clan, an elephant family) is seen in its subgroups, [g^0.5, g^0.75]; a cohesive one (a wild dog
+  pack, a cheetah coalition) whole, [g/2, g]; capped at 30 a group. Lions 3-4 (pride 7), hyenas 7-17 (clan 45), wild dogs
+  4-7, cheetahs 2-3, elephants 4-8, buffalo 30. It comes before PanTHERIA; PanTHERIA, then the archetype, where it has no
+  row. Rows are matched by the genus column and the epithet beside it ("Leo panthera, males"; "Acynoncyx jubatus").
+- **Ground brightness, a preview for Aaron** (notes folder `ground-albedo/`): the home tile and the Serengeti with the
+  terrain at its measured reflectance (x0.46 NAIP, x0.38 Sentinel-2), page-side only. Held for Aaron's look decision.
+- **Rock walls coloured by their strata** (`pipeline/strata.py`, terrain.js `strataUniforms`; tile-spec "Stratigraphic
+  column"): where the map's units sort by elevation (superposed along their contacts, bases fitted as gently dipping
+  planes), a steep face takes the lithology and colour of the band at its height, the colour read from each unit's
+  own description (cliff sentences first), else a lithology table; uniforms only, no sampler. The Grand Canyon tile gets
+  ten bands, Kaibab to Tapeats; the other probes none. Two fixes found on the way: a description's rock class is the rule
+  it names most (the Hermit Formation was alluvium by one "sand dune"), and the geology fetch's gap filling stops at
+  600 queries, not 80 (a quarter of the Grand Canyon tile was unmapped).
+- **A tile's own ground plants** (`forbs.js` forbSet, `forage.js`): the herb layer's 24-species atlas was fixed at load
+  for the whole library (21 slots used by California and Olympic forbs), so no other region's ground plants could ever
+  draw. It is now chosen per tile from its own mix (its ground species and riparian rows, ranked by cells), the library
+  set filling empty slots only where a tile may borrow the class weights. Two old bugs fixed on the way, which change the
+  home tiles' look slightly: the atlas was flipped (slot k drew species 23-k's picture; poppy and both lupines were
+  invisible) and the colours were decoded twice (dark leaves drew black).
+- **Dwarf shrubs are ground plants** (`plantgen.py` v3, `species_mix.py`): a woody card topping out at 0.5 m or less
+  gets a `ground` block from the card (a mat as wide as height x crown ratio, leaf colour by season, flowers and berries
+  in their months) and goes to the ground layer as a carpet (a third density byte: the carpet's share of the shrub
+  cover). Lofoten's heath now carries crowberry and heather mats; they read as sparse dark mats more than a carpet, and
+  the junipers (0.7 m, still shrubs) draw far too large.
+- **Stems fill the cover** (`species_mix.crown_fill`): on tiles outside the regional tables a row's tree density is
+  multiplied by the library's median California crown (318 m2) over the row's mean crown, 1-3x: Manu's stilt and stem
+  palms (10-24 m2 crowns) had left the measured canopy open.
+- **A tile's own trees** (`pipeline/tree_cards.py`, the `plants` step): the canopy's dominant trees chosen from open plot
+  inventories within 250 km (by importance value), open descriptions of the place, and the tile's GBIF records of species
+  WCVP calls trees (Kew, CC BY 4.0; introduced species dropped), then a sourced trait card for each (every value cited,
+  null where no source had it). Manu and Corcovado draw 20 neotropical species instead of Borneo's dipterocarps. The
+  palms stand on a broadleaf template until treegen has a palm architecture (Corner's model). Some research records cite
+  pages that are not openly licensed: only facts (heights, leaf sizes) are taken from them, never text or images.
+- **Birds get bodies of their own** (`tools/build_bird.py`, `fauna_models.py --kind birds`): the archetype decides the
+  pose asked of Meshy (soarers in flight, the rest standing), the parts come from the geometry (wing roots where the body
+  thins, legs traced up from the feet, the neck walked from the bill), standing birds get generated flight wing cards,
+  size from mass at a feathered outline's density (150 kg/m3 standing, 250 for a soarer's body). The rule chose the
+  lappet-faced vulture, marabou, ostrich, Egyptian goose and blacksmith lapwing: 150 credits, all first attempts
+  (balance 1,727). Bird slots now alternate a size-weighted and a sighting-count ranking (the Serengeti's birds had been
+  starlings and weavers only). Reptiles (sprawling legs) need their own build: notes in the probe report.

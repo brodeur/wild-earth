@@ -1,0 +1,220 @@
+{
+ "id": "terminalia_amazonia",
+ "scientific": "Terminalia amazonia",
+ "common": "roble coral",
+ "aliases": [
+  "chuncoa_amazonia",
+  "chuncoa_amazonica"
+ ],
+ "family": "Combretaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "shorea_leprosula",
+ "regions": [
+  "neotropics"
+ ],
+ "height_m": [
+  36.0,
+  60.0
+ ],
+ "stature": {
+  "typical_m": 48.0,
+  "tall_m": 70.0,
+  "record_m": null,
+  "source": "Stace, C.A. & Alwan, A.-R.A. (2010) Combretaceae. Flora Neotropica Monograph 107 - Terminalia amazonia account (NYBG Virtual Herbarium) (research record)"
+ },
+ "variants_height_m": {
+  "young": [
+   5.4,
+   21.6
+  ],
+  "veteran": [
+   60.0,
+   70.0
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.6,
+    0.101
+   ],
+   [
+    0.7,
+    0.232
+   ],
+   [
+    0.82,
+    0.29
+   ],
+   [
+    0.92,
+    0.275
+   ],
+   [
+    0.98,
+    0.174
+   ],
+   [
+    1.0,
+    0.043
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.18,
+  "asymmetry": 0.18,
+  "fill": 0.4,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    52,
+    76,
+    40
+   ],
+   "spring": [
+    52,
+    76,
+    40
+   ],
+   "summer": [
+    52,
+    76,
+    40
+   ],
+   "fall": [
+    52,
+    76,
+    40
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "leaf_size_m": 0.07,
+  "leaf_shape": "elliptic_glossy",
+  "flowers": {
+   "season": "winter",
+   "months": [
+    1,
+    4
+   ],
+   "form": "cluster",
+   "rgb": [
+    162,
+    152,
+    83
+   ],
+   "size_m": 0.08,
+   "density": 0.4
+  },
+  "berries": null
+ },
+ "trunk": {
+  "stems": [
+   1,
+   1
+  ],
+  "bark_rgb": [
+   129,
+   116,
+   102
+  ],
+  "bark_pattern": "plates",
+  "flare": 2.1,
+  "roots": {
+   "buttress": 0.95,
+   "buttresses": [
+    3,
+    6
+   ],
+   "height": 1.6,
+   "roots": [
+    0,
+    2
+   ],
+   "note": "plank buttresses to about 3 m (sources)"
+  }
+ },
+ "targets": {
+  "crown_width_ratio": 0.58,
+  "crown_base_ratio": 0.6,
+  "porosity": 0.3,
+  "from": "pipeline/tree_cards.py from the research record (crown: Monopodial axis; branches from each growth flush sympodial and plagiotropic (horizontal), their distal ends turning downward when old, a distinctive trait (TTSM). Leaves produced at the ends of spur shoots. Useful Tropical Plants: a large crown.), no photographs measured"
+ },
+ "description": "A tree of terra firme, slopes, swamp, riverbank, secondary/gaps, 36-60 m tall (to 70 m). Plank buttresses, sometimes branching, to 3 m high and 2 m out from the trunk (Flora Neotropica). Monopodial axis; branches from each growth flush sympodial and plagiotropic (horizontal), their distal ends turning downward when old, a distinctive trait (TTSM). Fruit: small five-winged samara, two large wings and three small or vestigial, about 0.5-0.7 x 0.8-1.8 cm, usually straw-coloured, wind-dispersed.",
+ "season_notes": {
+  "winter": "In leaf. Flowering (greenish yellow (also cream, whitish)). Fruiting.",
+  "spring": "In leaf. Flowering (greenish yellow (also cream, whitish)). Fruiting.",
+  "summer": "In leaf.",
+  "fall": "In leaf."
+ },
+ "habitat": {
+  "classes": {
+   "mixed_forest": 1.0,
+   "riparian": 0.6
+  },
+  "floor": 1.0,
+  "mid": 1.1,
+  "steep": 1.0,
+  "north": 1.0,
+  "shade": 0.4,
+  "disturbed": 1.0
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "atta_cephalotes",
+    "part": "leaves",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   }
+  ],
+  "cover_for": []
+ },
+ "range": {
+  "elev_m": [
+   0,
+   800
+  ],
+  "where": "Veracruz, Mexico through Central America to the Guianas, Amazonia and central Bolivia; also Trinidad."
+ },
+ "stand_in": "shorea_leprosula",
+ "notes": "Template shorea_leprosula: an emergent: a buttressed clear bole under an umbrella crown (light red meranti). NOT SOURCED (the template's or a default value): crown width (the template's ratio); crown depth (the template's). Research notes: Sources disagree on leaf habit: TTSM (Flores, a Costa Rican author) 'tall, evergreen', Useful Tropical Plants 'virtually evergreen', Spanish Wikipedia 'perennifolio'; Flora Neotropica (src 1) says 'Deciduous tree'. No source gives leafless months. Phenology: TTSM range-wide, flowering Jan-Apr, fruit ripening Feb-May, varying by region (no Osa months found); Wikipedia flowers Feb-Apr, fruit Mar-May; Flora Neotropica 'most months of the year according to location'. Height: Flora Neotropica (4-)10-60(-70) m; TTSM more than 50 m in Central American forests, up to 70 m in Mexico; Useful Tropical Plants up to 40 m. dbh: Useful Tropical Plants about 100 cm; Wikipedia 'diameter of 1 to 3 m' (unclear if trunk). Leaf colour from Wikipedia (src 2). Leaf size Flora Neotropica (2-)4-10(-15) x 2-5(-6.5) cm. Elevation: Flora Neotropica 0-2000 m, mostly below 800 m; TTSM 40-1200 m. Ants attack seedlings and saplings in nurseries and plantations (TTSM), not mature trees. A search snippet said immature fruits are eaten by parrots, but I could not read that passage, so it is left out. Light requirement not stated by any source read. Pages of the TTSM PDF are scanned images and were only partly readable. Common name 'roble coral' comes from a search snippet citing Flores (1994), not from a page I read; the Wikipedia vernacular-name list was not extracted.",
+ "sources": [
+  "Flores, E.M. Terminalia amazonia (J.F. Gmel.) Exell. In: Vozzo, J.A. (ed.) Tropical Tree Seed Manual, USDA Forest Service Agriculture Handbook 721 (2002), pp. 748-751, https://rngr.net/publications/ttsm/species/PDF.2004-03-16.5805/at_download/file (unknown (US federal government publication; no licence stated on rngr.net)), read 2026-11-06",
+  "Stace, C.A. & Alwan, A.-R.A. (2010) Combretaceae. Flora Neotropica Monograph 107 - Terminalia amazonia account (NYBG Virtual Herbarium), https://sweetgum.nybg.org/science/vh/monographs-details/?irn=20213 (unknown), read 2026-11-06",
+  "Terminalia amazonia - Wikipedia, https://en.wikipedia.org/wiki/Terminalia_amazonia (CC BY-SA 4.0), read 2026-11-06",
+  "Terminalia amazonia - Wikipedia, la enciclopedia libre, https://es.wikipedia.org/wiki/Terminalia_amazonia (CC BY-SA 4.0), read 2026-11-06",
+  "Terminalia amazonia - Useful Tropical Plants, https://tropical.theferns.info/viewtropical.php?id=Terminalia+amazonia (CC BY-NC-SA 3.0 (database and code)), read 2026-11-06",
+  "research record library/plant_cards/_research/terminalia_amazonia.json (pipeline/tree_cards.py)"
+ ],
+ "authors": [
+  "Wild Earth (pipeline/tree_cards.py from an agent's sourced research record, 2026-11-06); needs local sign-off"
+ ],
+ "generated_by": {
+  "by": "pipeline/tree_cards.py",
+  "version": "1"
+ }
+}

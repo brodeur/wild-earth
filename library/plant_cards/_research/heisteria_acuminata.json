@@ -1,0 +1,136 @@
+{
+ "id": "heisteria_acuminata",
+ "scientific": "Heisteria acuminata",
+ "family": "Olacaceae",
+ "common": "gorrita",
+ "aliases": [
+  "chupeta",
+  "heisteria_longipes",
+  "heisteria_pallida"
+ ],
+ "habit": "broadleaf_tree",
+ "height_m": {
+  "typical": [
+   5,
+   10
+  ],
+  "max": 15,
+  "src": 0
+ },
+ "dbh_cm": {
+  "typical": null,
+  "max": null,
+  "src": null
+ },
+ "bole": {
+  "clear_fraction": null,
+  "straight": true,
+  "buttresses": null,
+  "buttress_height_m": null,
+  "stilt_roots": null,
+  "stilt_root_height_m": null,
+  "spines": null,
+  "text": "Trunk straight and cylindrical; milky latex flows slowly from any broken part.",
+  "src": 1
+ },
+ "crown": {
+  "shape": null,
+  "width_m": null,
+  "depth_fraction": null,
+  "density": null,
+  "position": "understorey",
+  "text": "Forest treelet; terminal twigs cylindrical to slightly angled, arching at the tips; branches droop less than in H. concinna.",
+  "src": 1
+ },
+ "leaf": {
+  "type": "simple",
+  "length_cm": [
+   3,
+   15
+  ],
+  "width_cm": [
+   3,
+   7
+  ],
+  "leaflet_length_cm": null,
+  "frond_count": null,
+  "shape": "elliptic",
+  "texture": "glossy",
+  "upper_colour": "very shiny green",
+  "under_colour": null,
+  "new_flush_colour": null,
+  "src": 1
+ },
+ "phenology": {
+  "leaf_habit": null,
+  "leafless_months": [],
+  "flowering_months": [
+   4,
+   5,
+   6,
+   7
+  ],
+  "flower_colour": "white, in axillary fascicles",
+  "fruiting_months": [
+   7,
+   8,
+   9
+  ],
+  "fruit": "drupe 1-1.5 cm, green turning white, its base set in the spreading red lobes of the enlarged calyx",
+  "src": 1
+ },
+ "bark": {
+  "colour": "black",
+  "texture": "lenticellate",
+  "text": "Outer bark black and lenticellate.",
+  "src": 1
+ },
+ "habitat": {
+  "forest_types": [
+   "primary forest understorey",
+   "disturbed forest",
+   "ridges",
+   "trails"
+  ],
+  "light": null,
+  "elevation_m": [
+   2,
+   1800
+  ],
+  "range": "Costa Rica: Puntarenas (incl. Osa Peninsula), San José, Guanacaste, Limón. Overall southern Mexico, and Costa Rica to Brazil and Bolivia (Osa Arboretum)",
+  "src": 2
+ },
+ "eaten_by": [
+  {
+   "animal": "Ramphastidae (toucans)",
+   "part": "fruit",
+   "src": 1
+  },
+  {
+   "animal": "Cracidae (guans, 'pavas de monte')",
+   "part": "fruit",
+   "src": 1
+  }
+ ],
+ "notes": "Marginal subcanopy species. The only figure of 12 m or more is the Osa Arboretum's 'up to 15 m'. The Tree Atlas of Panama calls it a forest treelet of 5-10 m, and Manual de Plantas de Costa Rica specimens are mostly shrubs of 1-2.5 m, with two trees of 7 and 8 m. Typical height [5,10] is from the Panama atlas (src 1). Phenology is for Panama (Tree Atlas English): flowers Apr-Jul, fruit Jul-Sep; the Spanish text says Apr-Sep for both. Osa Arboretum (Costa Rica) lists flowering in Jan-Jun, Aug, Oct and Nov, with no fruiting months; Costa Rican specimens carry fruit in Jan, Mar, May, Aug, Oct and Dec. Colours disagree: the Panama atlas gives white flowers and drupes turning white; Osa gives small yellow flowers and ripe fruit dark purple on a round red calyx; Costa Rican specimens give green fruit turning purple or black, a red calyx, and flowers red, pinkish or white. A purple-black drupe on a red calyx fits the Costa Rican sources best. Family: the sources say Olacaceae; recent treatments place Heisteria in Erythropalaceae (seen only in a search result, not verified). Leaf habit is not stated. The aliases are USDA-listed synonyms seen in a search result.",
+ "sources": [
+  {
+   "title": "Heisteria acuminata - Osa Arboretum (Osa Conservation)",
+   "url": "https://osa-arboretum.org/?p=1177",
+   "licence": "unknown (no licence stated; Osa Conservation arboretum site)",
+   "read": "2026-11-06"
+  },
+  {
+   "title": "Heisteria acuminata - STRI Research Portal (Perez & Condit, Tree Atlas of Panama)",
+   "url": "https://panamabiota.org/stri/taxa/index.php?taxon=65323&clid=64",
+   "licence": "unknown (no licence stated; STRI Research Portal, text from Perez & Condit, Tree Atlas of Panama)",
+   "read": "2026-11-06"
+  },
+  {
+   "title": "Flora de Costa Rica (Manual de Plantas de Costa Rica): Heisteria acuminata specimen list",
+   "url": "http://www.mobot.org/Manual.Plantas/028365/S028377.html",
+   "licence": "© Instituto Nacional de Biodiversidad and Missouri Botanical Garden 1995 (no licence stated)",
+   "read": "2026-11-06"
+  }
+ ]
+}

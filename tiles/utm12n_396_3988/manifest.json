@@ -15,7 +15,7 @@
   36.12213224148818
  ],
  "size_m": 10000,
- "generated_at": "2026-11-06T08:46:33Z",
+ "generated_at": "2026-11-06T09:50:51Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -1026,8 +1026,8 @@
    "sources_used": [
     "macrostrat"
    ],
-   "feature_count": 100,
-   "units": 21,
+   "feature_count": 444,
+   "units": 26,
    "fetch": {
     "source": "macrostrat",
     "endpoint": "https://macrostrat.org/api/v2/geologic_units/map",
@@ -1040,20 +1040,21 @@
      "tiny": 25
     },
     "sample_points": 25,
-    "requests": 105,
-    "uncovered_pieces": 0,
+    "requests": 450,
+    "uncovered_pieces": 1,
+    "uncovered_fraction": 0.0015,
     "fallback_errors": []
    },
    "licence": "CC-BY 4.0 (Macrostrat)",
-   "sha256": "272e3471cf348eb0e09e4c0e2cbf33df7259deaf59d1e04c9cb67951965ac4d3",
-   "bytes": 1085582
+   "sha256": "42255e166610e7de94dbac6fd35d0b0224eec93a32dddac17c04f68816ca090c",
+   "bytes": 2430179
   },
   "geology.classes": {
    "path": "geology/classes.json",
    "kind": "table",
    "source": "macrostrat",
-   "sha256": "00dbbf00ad808ce6e95fa143f9ee07e24bbe92365987eb76a301b26b53e314d1",
-   "bytes": 34252
+   "sha256": "244bc51ed9825fb9d610ca5850b9c19078686ddc81ce8396c6f149baf231c6b3",
+   "bytes": 40502
   },
   "client.geology": {
    "path": "client/geology.png",
@@ -1070,16 +1071,16 @@
    "derived_from": "geology.units",
    "encoding": "R = geology unit index (geology/classes.json units; 0 none), G = rock class index (1-based into rock_classes)",
    "rock_class_fractions": {
-    "serpentinite": 0.0006,
-    "schist": 0.041,
-    "granitic": 0.0197,
-    "sandstone_conglomerate": 0.2411,
-    "limestone_marble": 0.439,
-    "alluvium": 0.0162,
-    "other": 0.0041
+    "serpentinite": 0.0007,
+    "schist": 0.0842,
+    "granitic": 0.0611,
+    "sandstone_conglomerate": 0.4371,
+    "limestone_marble": 0.4048,
+    "alluvium": 0.004,
+    "other": 0.0065
    },
-   "sha256": "9a0f4d3f3aaa3094ae41db7b17e9bab3c1de7f87ebaa69dc1deca40f8b51fa32",
-   "bytes": 14189
+   "sha256": "0e784834fcad124427278a4c291bf518818f29b92209f43c98015378d7e4b27d",
+   "bytes": 16229
   },
   "soils.mapunits": {
    "path": "soils/mapunits.geojson",
@@ -1165,9 +1166,9 @@
     "rough_full_m": 0.12,
     "rough_cap": 1.5
    },
-   "mean": 0.4435,
-   "fraction_above_0.5": 0.4261,
-   "fraction_above_0.25": 0.5149,
+   "mean": 0.4532,
+   "fraction_above_0.5": 0.4406,
+   "fraction_above_0.25": 0.5335,
    "slope_deg_mean": 24.78,
    "convex_fraction": 0.4863,
    "lidar_roughness_m": {
@@ -1179,8 +1180,8 @@
     "min": 0.5,
     "max": 2.0
    },
-   "sha256": "6580b447c4ff5310a71ab171137a8ac91035cb2badb111643c912a85c71ae2d3",
-   "bytes": 67352
+   "sha256": "09906724b82c4cc66ac0db0369cc857b968c5ca012c175ea3555dfa75b363329",
+   "bytes": 66778
   },
   "client.ground_classes": {
    "path": "client/ground_classes.json",
@@ -1192,13 +1193,13 @@
    ],
    "fractions": {
     "rock_class": {
-     "serpentinite": 0.0006,
-     "schist": 0.041,
-     "granitic": 0.0197,
-     "sandstone_conglomerate": 0.2411,
-     "limestone_marble": 0.439,
-     "alluvium": 0.0162,
-     "other": 0.0041
+     "serpentinite": 0.0007,
+     "schist": 0.0842,
+     "granitic": 0.0611,
+     "sandstone_conglomerate": 0.4371,
+     "limestone_marble": 0.4048,
+     "alluvium": 0.004,
+     "other": 0.0065
     },
     "texture_class": {
      "unknown": 0.3304,
@@ -1230,8 +1231,8 @@
      "none_or_unknown": 0.1102
     }
    },
-   "sha256": "3826847f0f3d27aac134d146deb726ce33dc64fb0696d2a6a6ecc440114253c1",
-   "bytes": 22861
+   "sha256": "e39ba1939ebcc6747a805cc30c51aee36a9e3049bd668b44f612fa374b5e7eed",
+   "bytes": 23745
   },
   "terrain.hillshade": {
    "path": "terrain/hillshade.png",
@@ -1623,10 +1624,10 @@
     "imagery.naip",
     "vegetation"
    ],
-   "exposed_fraction": 0.163,
-   "exposed_mean": 0.1867,
-   "patches": 2700,
-   "patches_over_1000m2": 526,
+   "exposed_fraction": 0.1637,
+   "exposed_mean": 0.1884,
+   "patches": 2732,
+   "patches_over_1000m2": 523,
    "patches_over_1ha": 97,
    "largest_patch_m2": 1521200,
    "slope_source": "max(5 m, 0.85 x 1 m mean)",
@@ -1634,8 +1635,8 @@
    "photo": "client/texture_imagery.jpg (NAIP, humans erased)",
    "photo_green_ref": 0.0775,
    "dem": "terrain/dem_banked.tif",
-   "sha256": "8330b278b13c24d69e913ed560cdafb4a1857352bba9ff267da966119d167945",
-   "bytes": 2150180
+   "sha256": "9d48d1020bacd510364ab3d9cf5db15eb1bf3625e891ef05be6cc834f07fa53f",
+   "bytes": 2156732
   },
   "client.substrate_classes": {
    "path": "client/substrate.json",
@@ -1643,8 +1644,8 @@
    "derived_from": [
     "client.substrate"
    ],
-   "sha256": "31c2b39d7bd7173197e1fbfe6a510c037442eb0f20693789c301719f66a6fb28",
-   "bytes": 14359
+   "sha256": "1518a19d8de54c35850810a66c01b6ca68de4bd33b5b5b454b06a8f8f4651f0e",
+   "bytes": 15421
   },
   "seasons.s2_monthly": {
    "path": "seasons/months.json",
@@ -3994,7 +3995,7 @@
    "generated_traits": 0,
    "queued": 55,
    "queued_credits": 1570,
-   "sha256": "545eb7e7756ffd5a180b884d5093924b38b5581974503275d56feda1d73f6035",
+   "sha256": "dccdda6c6dda1a5f16ae0f926545250808764dfce57535f4f17eb4fed3132cdf",
    "bytes": 132142
   },
   "resources": {
@@ -4177,6 +4178,39 @@
    },
    "sha256": "dff9d266d9c48b28b333d06b469858a675feab2eefbcd02f6545cf2603668727",
    "bytes": 33917
+  },
+  "geology.strata": {
+   "path": "geology/strata.json",
+   "kind": "table",
+   "derived_from": [
+    "geology.units",
+    "terrain.dem"
+   ],
+   "column": true,
+   "quality": {
+    "overall_fit_steep": 0.772,
+    "overall_fit_steep_strict": 0.661,
+    "map_tol_m": 20.0,
+    "dip_deg": 0.66,
+    "dip_azimuth_deg": 236.8,
+    "steep_cells_in_column": 1414929,
+    "bands": 10,
+    "median_contact_sigma_m": 37.6,
+    "superposed_pairs": 0.667
+   },
+   "sha256": "ee3fd6d5f80c8b2c7f9e6363caccb2e494223f3c2421027511ed19736e82d816",
+   "bytes": 20196
+  },
+  "client.strata": {
+   "path": "client/strata.json",
+   "kind": "table",
+   "derived_from": [
+    "geology.strata"
+   ],
+   "encoding": "bands top to bottom; band i holds the ground at or above its base, base_m + slope_e (x - 5000) + slope_n (n - 5000) with x, n metres east and north of the tile's south-west corner, and below the base of the band over it (the first is open above); below the last base there is no column. colour and alt sRGB 0..1, alt_share the share of beds in the alt colour, bedding the beds' tone contrast; lithology one of client/substrate.json lithologies",
+   "bands": 10,
+   "sha256": "06ea92eaf62c18bf0fb3cae96b9235145db84efac746670a5c10ff47b73e99ab",
+   "bytes": 3735
   }
  },
  "sources": {
@@ -4633,6 +4667,36 @@
    "step": "animals",
    "at": "2026-11-06T08:46:33Z",
    "seconds": 0.6,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T09:32:31Z",
+   "seconds": 0.6,
+   "ok": true
+  },
+  {
+   "step": "ground",
+   "at": "2026-11-06T09:41:23Z",
+   "seconds": 8.8,
+   "ok": true
+  },
+  {
+   "step": "ground",
+   "at": "2026-11-06T09:48:39Z",
+   "seconds": 346.9,
+   "ok": true
+  },
+  {
+   "step": "ground",
+   "at": "2026-11-06T09:50:45Z",
+   "seconds": 75.9,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-06T09:50:51Z",
+   "seconds": 6.6,
    "ok": true
   }
  ],
@@ -5141,15 +5205,15 @@
    "seconds": 18.1
   },
   "ground": {
-   "version": "1",
-   "code": "3d08289ed3722f2d",
+   "version": "2",
+   "code": "bdf9e60ccbacc069",
    "params": {
     "tile": "utm12n_396_3988"
    },
-   "fingerprint": "553babab906bcad5",
+   "fingerprint": "2e86f154a1d3b8d6",
    "parts": {
-    "version": "1",
-    "code": "3d08289ed3722f2d",
+    "version": "2",
+    "code": "bdf9e60ccbacc069",
     "params": {
      "tile": "utm12n_396_3988"
     },
@@ -5160,7 +5224,7 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-06T06:47:19Z",
+   "ran_at": "2026-11-06T09:49:29Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -5168,22 +5232,26 @@
     "client.ground_classes",
     "client.outcrop",
     "client.soils",
+    "client.strata",
     "geology.classes",
+    "geology.strata",
     "geology.units",
     "soils.classes",
     "soils.mapunits"
    ],
    "outputs": {
-    "client/geology.png": "9a0f4d3f3aaa3094",
-    "client/ground_classes.json": "3826847f0f3d27aa",
-    "client/outcrop.png": "6580b447c4ff5310",
+    "client/geology.png": "0e784834fcad1244",
+    "client/ground_classes.json": "e39ba1939ebcc674",
+    "client/outcrop.png": "09906724b82c4cc6",
     "client/soils.png": "b48b23e972cb13f3",
-    "geology/classes.json": "00dbbf00ad808ce6",
-    "geology/units.geojson": "272e3471cf348eb0",
+    "client/strata.json": "06ea92eaf62c18bf",
+    "geology/classes.json": "244bc51ed9825fb9",
+    "geology/strata.json": "ee3fd6d5f80c8b2c",
+    "geology/units.geojson": "42255e166610e7de",
     "soils/classes.json": "6fc65d4acea51d7e",
     "soils/mapunits.geojson": "360626d3ded37bb9"
    },
-   "out_hash": "3cb8e023fb8a777c",
+   "out_hash": "777f4f3a6e51da31",
    "sources": {
     "macrostrat": "2026-11-06",
     "usda_ssurgo": "2026-11-06"
@@ -5194,7 +5262,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 8.0
+   "seconds": 75.9
   },
   "terrain": {
    "version": "1",
@@ -5328,7 +5396,7 @@
    "params": {
     "tile": "utm12n_396_3988"
    },
-   "fingerprint": "ab194b8fe34584cd",
+   "fingerprint": "266f75e7e3cc33ee",
    "parts": {
     "version": "1",
     "code": "2e65b327a37a5d98",
@@ -5336,7 +5404,7 @@
      "tile": "utm12n_396_3988"
     },
     "deps": {
-     "ground": "3cb8e023fb8a777c",
+     "ground": "777f4f3a6e51da31",
      "water": "5c05657c7838f280",
      "dem": "2575b976b9a948a6",
      "lidar": "38d0c925c3c5ae1a",
@@ -5348,7 +5416,7 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-06T06:47:58Z",
+   "ran_at": "2026-11-06T09:50:45Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -5356,10 +5424,10 @@
     "client.substrate_classes"
    ],
    "outputs": {
-    "client/substrate.png": "8330b278b13c24d6",
-    "client/substrate.json": "31c2b39d7bd71731"
+    "client/substrate.png": "9d48d1020bacd510",
+    "client/substrate.json": "1518a19d8de54c35"
    },
-   "out_hash": "2639b0d2bcc49cc4",
+   "out_hash": "c70ca6ec9c252b4d",
    "sources": {},
    "fallbacks": [],
    "notes": [],
@@ -5786,15 +5854,15 @@
    "seconds": 407.8
   },
   "animals": {
-   "version": "3",
-   "code": "be670a1c30ba43d8",
+   "version": "4",
+   "code": "2e6da1fc957a6827",
    "params": {
     "tile": "utm12n_396_3988"
    },
-   "fingerprint": "4d55a650a794c223",
+   "fingerprint": "b7b7473069ae0d1e",
    "parts": {
-    "version": "3",
-    "code": "be670a1c30ba43d8",
+    "version": "4",
+    "code": "2e6da1fc957a6827",
     "params": {
      "tile": "utm12n_396_3988"
     },
@@ -5807,7 +5875,7 @@
      "data/eltontraits": "e3b0c44298fc1c14"
     }
    },
-   "ran_at": "2026-11-06T08:46:32Z",
+   "ran_at": "2026-11-06T09:32:31Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -5816,9 +5884,9 @@
    ],
    "outputs": {
     "client/fauna.json": "dff9d266d9c48b28",
-    "species/animals.json": "545eb7e7756ffd5a"
+    "species/animals.json": "dccdda6c6dda1a5f"
    },
-   "out_hash": "58c8fe432ce8cb7a",
+   "out_hash": "b6c741eb0fc73784",
    "sources": {
     "gbif": "2026-11-06",
     "eltontraits": "2026-11-06"
@@ -5827,7 +5895,7 @@
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 233
+    "cache": 234
    },
    "seconds": 0.6
   },

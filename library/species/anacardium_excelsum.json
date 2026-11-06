@@ -1,0 +1,510 @@
+{
+ "id": "anacardium_excelsum",
+ "aliases": [
+  "anacardium_rhinocarpus",
+  "caracoli",
+  "espave_acanju",
+  "espavel",
+  "rhinocarpus_excelsa",
+  "wild_cashew"
+ ],
+ "scientific": "Anacardium excelsum",
+ "common": "espave",
+ "form": "tree",
+ "regions": [
+  "neotropics"
+ ],
+ "architectural_model": "Rauh",
+ "deciduous": false,
+ "height_m": [
+  20.0,
+  40.0
+ ],
+ "stature": {
+  "typical_m": 30.0,
+  "tall_m": 48.0,
+  "record_m": null,
+  "source": "Anacardium excelsum - Wikipedia, la enciclopedia libre (research record)"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    3.0,
+    12.0
+   ],
+   "trunk_radius": 0.65,
+   "crown_scale": 0.8,
+   "branches": 0.8,
+   "set": {
+    "trunk": {
+     "length_ratio": 0.7,
+     "split_prob": 0.05,
+     "bark_rgb": [
+      157,
+      146,
+      124
+     ],
+     "bark_pattern": "smooth_grey",
+     "flare": 1.4,
+     "base_size": 0.3,
+     "bole_ratio": 0.4
+    },
+    "foliage": {
+     "clumps": {
+      "radius_m": 0.8
+     }
+    },
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.25,
+        0.1
+       ],
+       [
+        0.4,
+        0.16
+       ],
+       [
+        0.6,
+        0.17
+       ],
+       [
+        0.8,
+        0.13
+       ],
+       [
+        0.93,
+        0.07
+       ],
+       [
+        1.0,
+        0.02
+       ]
+      ]
+     }
+    }
+   },
+   "note": "(from the light red meranti template) a pole in the understorey or a gap: a straight slender stem with a narrow, monopodial crown of tiers of horizontal branches (Roux's model), waiting for light"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 2,
+   "note": "(from the light red meranti template) (from the black cottonwood template) (from the Fremont cottonwood template) the file as written"
+  },
+  {
+   "name": "veteran",
+   "weight": 0.17,
+   "height_m": [
+    40.0,
+    48.0
+   ],
+   "trunk_radius": 1.3,
+   "crown_scale": 1.15,
+   "gnarl": 1.3,
+   "deadwood": {
+    "fraction": 0.22,
+    "levels": [
+     1,
+     2
+    ],
+    "where": "inner"
+   },
+   "set": {
+    "trunk": {
+     "split_prob": 0.8,
+     "split_count": 3,
+     "lean_deg": 4,
+     "flare": 2.8
+    }
+   },
+   "note": "(from the light red meranti template) an emergent giant: a huge pale bole with towering plank buttresses, the crown a few massive limbs bearing cauliflower clumps of leaves high above the canopy"
+  }
+ ],
+ "snag": {
+  "fraction": 0.08,
+  "from": "veteran",
+  "height_m": [
+   14,
+   24
+  ],
+  "limbs": 0.5,
+  "twigs": 0.2,
+  "levels": 1,
+  "shorten": [
+   0.4,
+   0.9
+  ],
+  "rgb": [
+   172,
+   166,
+   156
+  ]
+ },
+ "description": "A tree of riverbank, floodplain (varzea), secondary/gaps, 20-40 m tall (to 48 m). Straight cylindrical trunk, light coloured, sometimes pinkish (Spanish Wikipedia); bole free of branches up to 18 m, some basal swellings but no well-developed buttresses (Useful Tropical Plants, src 3). Rounded, dense crown (TTSM src 0, Spanish Wikipedia); 'broadly rounded or elongate' (Useful Tropical Plants). Fruit: kidney-shaped drupe (nut) 2.5-3.5 x 1-2 cm, hanging from a curved, fleshy, S-shaped receptacle.",
+ "season_notes": {
+  "winter": "In leaf. Flowering (pale green to white, turning pink with age (clove-like scent)).",
+  "spring": "In leaf. Flowering (pale green to white, turning pink with age (clove-like scent)). Fruiting.",
+  "summer": "In leaf.",
+  "fall": "In leaf."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "mixed_forest": 1.0,
+   "riparian": 0.6
+  },
+  "floor": 1.3,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 1.0,
+  "shade": 0.05,
+  "disturbed": 2.0
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "chiroptera_(fruit_eating",
+    "part": "berries",
+    "seasons": [
+     "spring"
+    ]
+   },
+   {
+    "animal": "micronycteris_hirsuta",
+    "part": "berries",
+    "seasons": [
+     "spring"
+    ]
+   },
+   {
+    "animal": "cebus_capucinus",
+    "part": "berries",
+    "seasons": [
+     "spring"
+    ]
+   },
+   {
+    "animal": "alouatta_palliata",
+    "part": "berries",
+    "seasons": [
+     "spring"
+    ]
+   }
+  ],
+  "cover_for": []
+ },
+ "trunk": {
+  "length_ratio": 0.62,
+  "radius_ratio": 0.03,
+  "taper": 0.75,
+  "flare": 1.3,
+  "bole_ratio": 0.8,
+  "base_size": 0.82,
+  "curve_deg": 3,
+  "curve_var_deg": 5,
+  "segments": 6,
+  "lean_deg": 3,
+  "stems": [
+   1,
+   1
+  ],
+  "stem_spread_deg": 0,
+  "split_prob": 0.6,
+  "split_count": 3,
+  "split_angle_deg": 28,
+  "bark_rgb": [
+   129,
+   116,
+   102
+  ],
+  "bark_pattern": "plates",
+  "twig_rgb": [
+   120,
+   96,
+   76
+  ],
+  "bark": {
+   "tile_m": [
+    0.4,
+    0.8
+   ],
+   "ridge_m": 0.05,
+   "block_m": 0.14,
+   "fissure": 0.55,
+   "contrast": 1.1,
+   "lichen": 0.2,
+   "relief": 1.4
+  },
+  "roots": {
+   "buttress": 0.2,
+   "note": "no buttresses (sources)"
+  },
+  "split_height": 0.86
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "envelope": {
+   "profile": [
+    [
+     0.6,
+     0.145
+    ],
+    [
+     0.68,
+     0.246
+    ],
+    [
+     0.78,
+     0.29
+    ],
+    [
+     0.88,
+     0.261
+    ],
+    [
+     0.96,
+     0.16
+    ],
+    [
+     1.0,
+     0.035
+    ]
+   ],
+   "lobes": 6,
+   "lobe_depth": 0.18,
+   "asymmetry": 0.18,
+   "fill": 0.5,
+   "edge": 1.1
+  }
+ },
+ "levels": [
+  {
+   "count": 9,
+   "down_angle_deg": 42,
+   "down_angle_tip_deg": 28,
+   "down_angle_var_deg": 14,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 1.0,
+   "length_var": 0.25,
+   "curve_deg": 8,
+   "curve_var_deg": 20,
+   "zigzag_deg": 6,
+   "tropism": 0.02,
+   "droop_deg": 4,
+   "taper": 0.9,
+   "radius_ratio": 0.6,
+   "segments": 3,
+   "sinuous_deg": 5
+  },
+  {
+   "count": 11,
+   "start": 0.1,
+   "down_angle_deg": 50,
+   "down_angle_var_deg": 15,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.5,
+   "length_var": 0.3,
+   "curve_deg": 0,
+   "curve_var_deg": 20,
+   "zigzag_deg": 8,
+   "tropism": 0.04,
+   "taper": 1.0,
+   "radius_ratio": 0.45,
+   "segments": 2
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.225,
+  "leaf_shape": "oval",
+  "cluster_m": 1.9,
+  "density": 14,
+  "leaf_fill": 3.6,
+  "start": 0.05,
+  "parent_start": 0.35,
+  "orientation": "outward",
+  "roll_deg": 70,
+  "colors": {
+   "winter": [
+    80,
+    106,
+    56
+   ],
+   "spring": [
+    80,
+    106,
+    56
+   ],
+   "summer": [
+    80,
+    106,
+    56
+   ],
+   "fall": [
+    80,
+    106,
+    56
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "clumps": {
+   "radius_m": 1.5,
+   "cards_per_clump": 10,
+   "shell": 0.1,
+   "flatten": 0.7,
+   "tip_bias": 1.4
+  },
+  "palette": [
+   [
+    0.7,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.2,
+    [
+     1.18,
+     1.2,
+     1.08
+    ]
+   ],
+   [
+    0.1,
+    [
+     0.8,
+     0.84,
+     0.8
+    ]
+   ]
+  ],
+  "winter_twigs": 0.45,
+  "ao_min": 0.66,
+  "color_var": [
+   0.07,
+   0.05
+  ],
+  "leaf_on_var": 0.5,
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "flowers": {
+   "season": "winter",
+   "months": [
+    1,
+    4
+   ],
+   "form": "cluster",
+   "rgb": [
+    118,
+    142,
+    84
+   ],
+   "size_m": 0.08,
+   "density": 0.4
+  },
+  "berries": null
+ },
+ "deadwood": {
+  "fraction": 0.08,
+  "where": "inner",
+  "levels": [
+   1,
+   2
+  ],
+  "shorten": 0.6,
+  "rgb": [
+   160,
+   154,
+   144
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "length": 0.6,
+  "down_deg": 45,
+  "down_var_deg": 18,
+  "curve_var_deg": 22,
+  "segments": 2,
+  "radius_m": 0.011,
+  "taper": 0.6,
+  "zigzag_deg": 14,
+  "fan_deg": 50,
+  "jitter": 0.2
+ },
+ "lod": {
+  "near_tris_budget": 2200,
+  "near_sides": [
+   7,
+   3,
+   0
+  ],
+  "mid_blobs": 5,
+  "mid_branches": 4,
+  "mid_segments": [
+   3,
+   2
+  ],
+  "mid_blob_scale": 0.9,
+  "close_factor": 2
+ },
+ "targets": {
+  "crown_width_ratio": 0.58,
+  "crown_base_ratio": 0.6,
+  "porosity": 0.2,
+  "foliage_rg": 0.56,
+  "foliage_bg": 0.27,
+  "fall_rg": 1.41,
+  "fall_bg": 0.43,
+  "from": "pipeline/tree_cards.py from the research record (crown: Rounded, dense crown (TTSM src 0, Spanish Wikipedia); 'broadly rounded or elongate' (Useful Tropical Plants).), no photographs measured"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "3",
+  "card": "library/plant_cards/anacardium_excelsum.json",
+  "card_sha256": "6baf81697a654b87",
+  "template": "shorea_leprosula",
+  "template_common": "light red meranti",
+  "height_scale": 0.632
+ },
+ "notes": "Template shorea_leprosula: an emergent: a buttressed clear bole under an umbrella crown (light red meranti). Briefly deciduous by the sources, but no months given: drawn evergreen. NOT SOURCED (the template's or a default value): crown width (the template's ratio); crown depth (the template's); leaf colour (a tropical evergreen's mid green). Research notes: Leaf habit: Spanish Wikipedia says partly deciduous, leaves yellowing then dropping partly in the dry season and replaced at the start of the rains; English Wikipedia calls it evergreen; TTSM (Fournier, Costa Rica) notes flushes of new foliage in January, then flowers through April (citing Jimenez et al. 1996). No source gives leafless months. Spanish Wikipedia: flowers and fruits Feb-May, fruit ripe Mar-May. Months are Costa Rica/Central America, not Osa-specific. Leaf size: 15-30 x 5-12 cm (en and es Wikipedia description); es Wikipedia habitat section 10-35 x 4-12 cm; leaves clustered at twig ends, obovate, apex rounded, notched or acute. Leaf colour and texture not found. Height: 20-40 m (es Wikipedia), 45 m (TTSM), 48 m (en Wikipedia). dbh max: TTSM 3 m d.b.h.; Useful Tropical Plants up to 200 cm. Habitat: TTSM, often dominant on flood plains and in gallery forests; Useful Tropical Plants, secondary forest, stream sides, sometimes pure stands, young plants need sun and are seldom in mature woodland (basis for 'light-demanding'). The monkey and bat records are Croat's Flora of Barro Colorado (Panama), quoted on the HVAA Symbiota page; the source names them 'white-faced and howler monkeys' and I added the scientific names. Bats eat only the fleshy receptacle and drop the nut (Wikipedia).",
+ "sources": [
+  "Fournier, L.A. Anacardium excelsum (Bertero & Balb. ex Kunth) Skeels. In: Vozzo, J.A. (ed.) Tropical Tree Seed Manual, USDA Forest Service Agriculture Handbook 721 (2002), pp. 294-296, https://rngr.net/publications/ttsm/species/Anacardium%20excelsum.pdf/at_download/file (unknown (US federal government publication; no licence stated on rngr.net)), read 2026-11-06",
+  "Anacardium excelsum - Wikipedia, https://en.wikipedia.org/wiki/Anacardium_excelsum (CC BY-SA 4.0), read 2026-11-06",
+  "Anacardium excelsum - Wikipedia, la enciclopedia libre, https://es.wikipedia.org/wiki/Anacardium_excelsum (CC BY-SA 4.0), read 2026-11-06",
+  "Anacardium excelsum - Useful Tropical Plants, https://tropical.theferns.info/viewtropical.php?id=Anacardium+excelsum (CC BY-NC-SA 3.0 (database and code)), read 2026-11-06",
+  "Anacardium excelsum - Herbario Virtual Austral Americano (Symbiota), description from Croat, The Flora of Barro Colorado Island, https://herbariovaa.org/taxa/index.php?tid=16778 (unknown (links a data use policy)), read 2026-11-06",
+  "research record library/plant_cards/_research/anacardium_excelsum.json (pipeline/tree_cards.py)"
+ ],
+ "authors": [
+  "Wild Earth (pipeline/tree_cards.py from an agent's sourced research record, 2026-11-06); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

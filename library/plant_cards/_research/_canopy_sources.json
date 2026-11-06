@@ -1,0 +1,81 @@
+{
+ "_doc": "Open sources of which trees make a forest's canopy, read by pipeline/tree_cards.py to choose a tile's dominant trees. plots: published plot inventories (abundance, basal area or importance value per species) with their location; a plot within tree_cards.PLOT_RADIUS_KM of a tile, at an elevation within PLOT_ELEV_M and in the tile's climate group, ranks the tile's trees. descriptions: open texts that name a place's characteristic or emergent trees, with the box (west, south, east, north) and elevation band they describe; each name is resolved to a WCVP species with the source of the resolution. Every entry carries its licence; only CC0, CC BY and CC BY-SA sources are listed. Values were read by an agent from the source (figures read off a chart are marked so).",
+ "plots": [
+  {
+   "id": "vela_apaza_2024_los_amigos",
+   "citation": "Vela-Apaza, C. I. & Gonzales-Ojeda, T. (2024). Flora arborea de los bosques de la planicie aluvial inundable en el Rio Los Amigos, Amazonia Peruana. Revista Biodiversidad Amazonica 3(1): e274",
+   "url": "https://doi.org/10.55873/rba.v3i1.274",
+   "licence": "CC BY 4.0 (stated in the article PDF)",
+   "read": "2026-11-06",
+   "where": "four 1-ha plots (Bajio CM3, Bambu CM3, Cocha Lobo, Jacaratia) in the floodplain forest of the Los Amigos and Madre de Dios rivers, CICRA, Madre de Dios, Peru; three seasonally flooded, one on a terra firme terrace; trees >= 10 cm dbh, lianas excluded, 2097 stems, 317 species",
+   "lonlat": [-70.10, -12.57],
+   "elevation_m": 250,
+   "koppen": "Am",
+   "measure": "importance value index (IVI = relative density + relative dominance + relative frequency), summed over the four plots",
+   "measure_note": "read off Figure 5 (stacked bars of the 20 most important species) to about +-1; abundance order (Figure 4) agrees: Iriartea deltoidea 284 stems, Pseudolmedia laevis 139, Euterpe precatoria 101, Socratea exorrhiza 94, Otoba parvifolia 83",
+   "species": [
+    ["Iriartea deltoidea", 116],
+    ["Pseudolmedia laevis", 55],
+    ["Socratea exorrhiza", 43],
+    ["Brosimum lactescens", 42],
+    ["Euterpe precatoria", 36],
+    ["Otoba parvifolia", 31],
+    ["Unonopsis floribunda", 22],
+    ["Quararibea wittii", 21],
+    ["Theobroma cacao", 20],
+    ["Sorocea pileata", 18],
+    ["Celtis schippii", 16],
+    ["Luehea cymulosa", 15],
+    ["Leonia crassa", 15],
+    ["Terminalia oblonga", 13],
+    ["Apeiba membranacea", 13],
+    ["Virola surinamensis", 13],
+    ["Couratari macrosperma", 12],
+    ["Leonia glycycarpa", 12],
+    ["Aspidosperma vargasii", 11],
+    ["Matisia cordata", 10]
+   ]
+  }
+ ],
+ "descriptions": [
+  {
+   "id": "eswiki_parque_nacional_del_manu",
+   "citation": "Parque nacional del Manu, Wikipedia (Spanish), section on the lowland forest of the Manu river",
+   "url": "https://es.wikipedia.org/wiki/Parque_nacional_del_Manu",
+   "licence": "CC BY-SA 4.0",
+   "read": "2026-11-06",
+   "box": [-72.45, -13.25, -70.85, -11.15],
+   "elevation_m": [150, 600],
+   "says": "in the zone of the meandering Manu river the trees are gigantic, and some species emerge above their crowns: shihuahuaco (Dipteryx micrantha) and lupuna (Ceiba pentandra)",
+   "role": "emergent",
+   "names": [
+    {"name": "Dipteryx micrantha", "as_written": "shihuahuaco (Dipteryx micrantha)", "resolved_by": "named in the text"},
+    {"name": "Ceiba pentandra", "as_written": "lupuna (Ceiba pentandra)", "resolved_by": "named in the text"}
+   ]
+  },
+  {
+   "id": "enwiki_corcovado_national_park",
+   "citation": "Corcovado National Park, Wikipedia (English), flora paragraph",
+   "url": "https://en.wikipedia.org/wiki/Corcovado_National_Park",
+   "licence": "CC BY-SA 4.0",
+   "read": "2026-11-06",
+   "box": [-83.75, 8.35, -83.30, 8.65],
+   "elevation_m": [0, 800],
+   "says": "over 500 tree species, including purple heart, poponjoche, nargusta, banak, cow tree, espave and crabwood",
+   "role": "characteristic",
+   "names": [
+    {"name": "Peltogyne purpurea", "as_written": "purple heart (linked to Peltogyne)", "resolved_by": "https://en.wikipedia.org/wiki/Peltogyne_purpurea: 'commonly known as purpleheart', the Peltogyne of Costa Rica and Panama"},
+    {"name": "Terminalia amazonia", "as_written": "nargusta", "resolved_by": "https://en.wikipedia.org/wiki/Terminalia_amazonia: 'referred as nargusta'"},
+    {"name": "Brosimum utile", "as_written": "cow tree", "resolved_by": "https://en.wikipedia.org/wiki/Brosimum_utile: the cow-tree; the only 'cow tree' of the Costa Rican lowlands among the Wikipedia articles of that name (Couma and Manilkara are South American)"},
+    {"name": "Anacardium excelsum", "as_written": "espave", "resolved_by": "https://en.wikipedia.org/wiki/Anacardium_excelsum: 'espavel or espave'"},
+    {"name": "Carapa guianensis", "as_written": "crabwood", "resolved_by": "https://en.wikipedia.org/wiki/Carapa_guianensis: 'also known by the common names andiroba or crabwood'"},
+    {"name": null, "as_written": "poponjoche", "resolved_by": "unresolved: no open source found for the name"},
+    {"name": null, "as_written": "banak", "resolved_by": "unresolved: Wikipedia's 'banak' is a Belizean name (Virola); not confirmed for Costa Rica"}
+   ]
+  }
+ ],
+ "wanted": [
+  {"what": "Morera-Beita et al. 2019, tree and palm abundance (individuals/ha) in 20 one-hectare plots of the Golfo Dulce region, Costa Rica (Biotropica 51: 117-128)", "url": "https://datadryad.org/dataset/doi:10.5061/dryad.6d8p7j1", "licence": "CC0 1.0 (Dryad)", "why_not_yet": "the download sits behind Dryad's bot challenge and a bearer token; download tree_abundance_data_GolfoDulce_BITR-18-091R2.xlsx by hand into pipeline/_cache/plots/ and add it as a plot here"},
+  {"what": "sPlotOpen (Sabatini et al. 2021), an open global set of 95,104 vegetation plots with species cover", "url": "https://doi.org/10.25829/idiv.3474-40-3292", "licence": "CC BY 4.0", "why_not_yet": "not wired in; would give plots for tiles no paper covers"}
+ ]
+}

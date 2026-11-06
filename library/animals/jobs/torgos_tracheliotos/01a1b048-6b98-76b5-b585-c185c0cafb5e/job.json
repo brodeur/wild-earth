@@ -1,0 +1,66 @@
+{
+  "species": "torgos_tracheliotos",
+  "mode": "preview",
+  "kind": "text-to-3d",
+  "task_id": "01a1b048-6b98-76b5-b585-c185c0cafb5e",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "preview",
+    "prompt": "A wild Lappet-faced vulture (Torgos tracheliotos) of Serengeti, Mara Region, Tanzania, one adult bird soaring in mid-air, realistic anatomy and proportions. Seen level, the body horizontal like an airplane: both wings fully spread flat and straight out to the sides, wingtips level with the body, the flight feathers spread, the tail spread, the head forward, the legs and feet tucked up under the body, nothing hanging below. Single bird, no base, no perch, no ground. Game-ready.",
+    "ai_model": "latest",
+    "target_formats": [
+      "glb"
+    ],
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 30000,
+    "moderation": false
+  },
+  "prompt": "A wild Lappet-faced vulture (Torgos tracheliotos) of Serengeti, Mara Region, Tanzania, one adult bird soaring in mid-air, realistic anatomy and proportions. Seen level, the body horizontal like an airplane: both wings fully spread flat and straight out to the sides, wingtips level with the body, the flight feathers spread, the tail spread, the head forward, the legs and feet tucked up under the body, nothing hanging below. Single bird, no base, no perch, no ground. Game-ready.",
+  "image": null,
+  "preview_job": null,
+  "estimated_credits": 20,
+  "balance_before": 1877,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-06T09:54:58+00:00",
+    "created_at": "2026-11-06T09:55:00+00:00",
+    "started_at": "2026-11-06T09:55:00+00:00",
+    "finished_at": "2026-11-06T09:55:40+00:00",
+    "downloaded": "2026-11-06T09:55:43+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur, world pipeline",
+  "progress": 100,
+  "task": {
+    "id": "01a1b048-6b98-76b5-b585-c185c0cafb5e",
+    "type": "text-to-3d-preview",
+    "status": "SUCCEEDED",
+    "created_at": 1793958900265,
+    "started_at": 1793958900276,
+    "finished_at": 1793958940056,
+    "consumed_credits": 20,
+    "task_error": null
+  },
+  "credits_charged": 20,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 1571000,
+      "sha256": "c68e3455073fd7da18d024c41742da38bf3e9965783fc1960a08ff3016f96002",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b048-6b98-76b5-b585-c185c0cafb5e/output/model.glb"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 42011,
+      "sha256": "f8e7599b9165f8b6d02fb443335b6cb21e2d71ad53e7e908a9c38da2b9b6e409",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b048-6b98-76b5-b585-c185c0cafb5e/output/preview.png"
+    }
+  ],
+  "balance_after": 1857
+}

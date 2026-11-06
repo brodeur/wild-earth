@@ -1,0 +1,214 @@
+{
+ "id": "peltogyne_purpurea",
+ "scientific": "Peltogyne purpurea",
+ "common": "purpleheart",
+ "aliases": [
+  "aromo",
+  "morado",
+  "nazareno",
+  "nene",
+  "purple_heart"
+ ],
+ "family": "Fabaceae",
+ "form": "tree",
+ "deciduous": true,
+ "template": "shorea_leprosula",
+ "regions": [
+  "neotropics"
+ ],
+ "height_m": [
+  35.0,
+  40.0
+ ],
+ "stature": {
+  "typical_m": 37.5,
+  "tall_m": 50.0,
+  "record_m": null,
+  "source": "Fournier, L.A. Peltogyne purpurea Pittier. In: Vozzo, J.A. (ed.) Tropical Tree Seed Manual, USDA Forest Service Agriculture Handbook 721 (2002), pp. 599-600 (research record)"
+ },
+ "variants_height_m": {
+  "young": [
+   5.2,
+   21.0
+  ],
+  "veteran": [
+   40.0,
+   50.0
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.6,
+    0.145
+   ],
+   [
+    0.68,
+    0.246
+   ],
+   [
+    0.78,
+    0.29
+   ],
+   [
+    0.88,
+    0.261
+   ],
+   [
+    0.96,
+    0.16
+   ],
+   [
+    1.0,
+    0.035
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.18,
+  "asymmetry": 0.18,
+  "fill": 0.4,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    80,
+    106,
+    56
+   ],
+   "spring": [
+    80,
+    106,
+    56
+   ],
+   "summer": [
+    80,
+    106,
+    56
+   ],
+   "fall": [
+    80,
+    106,
+    56
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.78,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "leaf_on_by_month": [
+   0.35,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "leaf_size_m": 0.065,
+  "leaf_shape": "pinnate_compound",
+  "flowers": {
+   "season": "spring",
+   "months": [
+    5,
+    8
+   ],
+   "form": "cluster",
+   "rgb": [
+    196,
+    192,
+    182
+   ],
+   "size_m": 0.08,
+   "density": 0.4
+  },
+  "berries": null
+ },
+ "trunk": {
+  "stems": [
+   1,
+   1
+  ],
+  "bark_rgb": [
+   142,
+   138,
+   128
+  ],
+  "bark_pattern": "smooth_grey",
+  "flare": 2.1,
+  "roots": {
+   "buttress": 0.95,
+   "buttresses": [
+    3,
+    6
+   ],
+   "height": 1.6,
+   "roots": [
+    0,
+    2
+   ],
+   "note": "plank buttresses to about 3 m (sources)"
+  }
+ },
+ "targets": {
+  "crown_width_ratio": 0.58,
+  "crown_base_ratio": 0.6,
+  "porosity": 0.3,
+  "from": "pipeline/tree_cards.py from the research record (crown: Wikipedia: rounded crown, a common canopy tree. Useful Tropical Plants (src 2) says elongated crown instead.), no photographs measured"
+ },
+ "description": "A tree of slopes, ridges, 35-40 m tall (to 50 m). Moderately buttressed (TTSM); 'grandes gambas delgadas', large thin buttresses (src 3); short buttresses sometimes reaching 3 m (Wikipedia, src 1, gives the height). Wikipedia: rounded crown, a common canopy tree. Fruit: brown, flat, obliquely obovoid-oblong one-seeded pod about 5 cm long.",
+ "season_notes": {
+  "winter": "Briefly leafless in the dry season. Fruiting.",
+  "spring": "In leaf. Flowering (white (small, fragrant, in subterminal panicles)).",
+  "summer": "In leaf. Flowering (white (small, fragrant, in subterminal panicles)).",
+  "fall": "In leaf. Fruiting."
+ },
+ "habitat": {
+  "classes": {
+   "mixed_forest": 1.0,
+   "riparian": 0.3
+  },
+  "floor": 1.0,
+  "mid": 1.1,
+  "steep": 1.0,
+  "north": 1.0,
+  "shade": 0.8,
+  "disturbed": 0.7
+ },
+ "relations": {
+  "eaten_by": [],
+  "cover_for": []
+ },
+ "range": {
+  "elev_m": [
+   50,
+   500
+  ],
+  "where": "Southern Pacific Costa Rica (Osa, Golfo Dulce) and Panama; Wikipedia adds the Atlantic coast of Colombia."
+ },
+ "stand_in": "shorea_leprosula",
+ "notes": "Template shorea_leprosula: an emergent: a buttressed clear bole under an umbrella crown (light red meranti). NOT SOURCED (the template's or a default value): crown width (the template's ratio); crown depth (the template's); leaf colour (a tropical evergreen's mid green). Research notes: Leaves: one pair of leaflets (occasionally three), elliptic-lanceolate, long acuminate, leathery, 5-8 x 3-4 cm (TTSM); Wikipedia gives leaflets 5-7 x 2-3 cm. Phenology is Osa-specific: Vilchez (1997, cited in TTSM) at Mogos, Osa: intensive leaf fall Jan-Feb, leaf flush mainly Mar-Apr, flowers May-Aug (peak June), mature fruit Nov-Jan. Allen (1956, cited in TTSM): briefly deciduous late Dec/early Jan, brown leaves conspicuous before falling, new foliage almost immediately, the flushing tree visible for many kilometres (flush colour not given); flowers early Aug-Sep, fruit early Feb. Wikipedia: flowers Aug-Dec, fruit Nov-Feb. leafless_months [1] is my reading of 'briefly deciduous'; no source gives a leafless month count. Fruiting is not annual: mast crop Feb-Mar 2000 after little or no fruit 1995-1999 (src 4). Shade tolerance from src 3: high sapling survival in shade, high mortality in sun, poor regeneration in gaps (the paper does not use the word). dbh typical is the adult-population mode at Mogos (70-80 cm class, src 3); max 1 m from TTSM and Useful Tropical Plants. Height max 50 m from src 1 and src 3; TTSM 35-40 m. TTSM and Useful Tropical Plants call it deciduous. No source read names animals eating its fruit, seeds or leaves; src 4 discusses seed predation only generally.",
+ "sources": [
+  "Fournier, L.A. Peltogyne purpurea Pittier. In: Vozzo, J.A. (ed.) Tropical Tree Seed Manual, USDA Forest Service Agriculture Handbook 721 (2002), pp. 599-600, https://rngr.net/publications/ttsm/species/PDF.2004-03-15.0054/at_download/file (unknown (US federal government publication; no licence stated on rngr.net)), read 2026-11-06",
+  "Peltogyne purpurea - Wikipedia, https://en.wikipedia.org/wiki/Peltogyne_purpurea (CC BY-SA 4.0), read 2026-11-06",
+  "Peltogyne purpurea - Useful Tropical Plants, https://tropical.theferns.info/viewtropical.php?id=Peltogyne+purpurea (CC BY-NC-SA 3.0 (database and code)), read 2026-11-06",
+  "Vilchez, B. & Rocha, O. (2006) Estructura de una poblacion del arbol Peltogyne purpurea (Cesalpinaceae) en un bosque intervenido de la Peninsula de Osa, Costa Rica. Revista de Biologia Tropical 54(3), https://www.scielo.sa.cr/scielo.php?script=sci_arttext&pid=S0034-77442006000300035&lng=en&nrm=iso (CC BY-NC 3.0 (journal badge)), read 2026-11-06",
+  "Rocha, O., Vilchez, B. & Araya Anchetta (2006) A mast fruiting episode of the tropical tree Peltogyne purpurea (Caesalpinaceae) in the Osa Peninsula, Costa Rica. Revista de Biologia Tropical 54(4), https://www.scielo.sa.cr/scielo.php?script=sci_arttext&pid=S0034-77442006000400013&lng=en&nrm=iso (CC BY-NC 3.0 (journal badge)), read 2026-11-06",
+  "research record library/plant_cards/_research/peltogyne_purpurea.json (pipeline/tree_cards.py)"
+ ],
+ "authors": [
+  "Wild Earth (pipeline/tree_cards.py from an agent's sourced research record, 2026-11-06); needs local sign-off"
+ ],
+ "generated_by": {
+  "by": "pipeline/tree_cards.py",
+  "version": "1"
+ }
+}

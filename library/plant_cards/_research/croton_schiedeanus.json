@@ -1,0 +1,136 @@
+{
+ "id": "croton_schiedeanus",
+ "scientific": "Croton schiedeanus",
+ "family": "Euphorbiaceae",
+ "common": "copalchí",
+ "aliases": [
+  "colpechi",
+  "copalchi"
+ ],
+ "habit": "broadleaf_tree",
+ "height_m": {
+  "typical": [
+   8,
+   15
+  ],
+  "max": 24,
+  "src": 2
+ },
+ "dbh_cm": {
+  "typical": [
+   15,
+   20
+  ],
+  "max": null,
+  "src": 0
+ },
+ "bole": {
+  "clear_fraction": null,
+  "straight": true,
+  "buttresses": null,
+  "buttress_height_m": null,
+  "stilt_roots": null,
+  "stilt_root_height_m": null,
+  "spines": null,
+  "text": "Small trunk, 15-20 cm wide, cylindrical and regular; thick branching along the bole.",
+  "src": 0
+ },
+ "crown": {
+  "shape": "narrow",
+  "width_m": null,
+  "depth_fraction": null,
+  "density": "dense",
+  "position": "understorey",
+  "text": "Dense but narrow crown of dark green foliage, branched thickly along the bole; an occasional understorey evergreen (Manuel Antonio).",
+  "src": 0
+ },
+ "leaf": {
+  "type": "simple",
+  "length_cm": [
+   10,
+   21
+  ],
+  "width_cm": [
+   4,
+   8
+  ],
+  "leaflet_length_cm": null,
+  "frond_count": null,
+  "shape": "elliptic",
+  "texture": "papery",
+  "upper_colour": "dark green",
+  "under_colour": null,
+  "new_flush_colour": null,
+  "src": 0
+ },
+ "phenology": {
+  "leaf_habit": "evergreen",
+  "leafless_months": [],
+  "flowering_months": [
+   12,
+   1,
+   2,
+   3,
+   4
+  ],
+  "flower_colour": "white (tiny translucent petals, pale sepals), in axillary racemes to c. 10 cm",
+  "fruiting_months": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "fruit": "dry woody green spherical capsule c. 1 cm, covered in small protuberances; splits in 6, releasing 3 brown seeds",
+  "src": 0
+ },
+ "bark": {
+  "colour": "dark brown",
+  "texture": "smooth",
+  "text": "Smooth; freshly peeled bark smells strongly of menthol or pine.",
+  "src": 0
+ },
+ "habitat": {
+  "forest_types": [
+   "secondary/gaps",
+   "riverbank",
+   "road and trail edges"
+  ],
+  "light": "light-demanding pioneer",
+  "elevation_m": [
+   20,
+   850
+  ],
+  "range": "Mexico to Bolivia, Venezuela, the Guianas and Brazil; in Costa Rica widespread in humid forests on both the Atlantic and Pacific slopes",
+  "src": 0
+ },
+ "eaten_by": [],
+ "notes": "Height: Flora de Costa Rica (src 2) gives 'arbusto o árbol de 8 a 15 (24) m'; crtrees.org (Manuel Antonio) gives 10-15 m and calls it an occasional understorey tree; Osa Arboretum says small to mid-sized. Flora de Costa Rica refused direct fetch (HTTP 403), so its values (height, elevation 20-850 m, leaves 4-26 x 2-10 cm, broad-elliptic to elliptic-oblong, petioles without glands, lepidote indument, leaves drying dark brown, range to Bolivia, the Guianas and Brazil) come from search-engine excerpts of that page. The habitat elevation is from src 2; the rest of the habitat block is from crtrees ('light-loving secondary forest species' in gaps, streambanks and roadsides), and the Costa Rica slopes are from Osa. Phenology is for Pacific Costa Rica (crtrees): flowering irregular, almost any month except May-Jul, with short synchronised peaks Dec-Apr (the months listed); fruit at low levels year-round. Osa Arboretum lists flowering and fruiting in every month, white flowers and greenish aromatic fruit. Leaf texture 'papery' maps crtrees' 'thin and flexible'. eaten_by is empty because no source names a fruit eater; crtrees says the fruits fall directly to the forest floor and are poorly dispersed. Pollinators are bees and wasps. The trunk diameter of 15-20 cm is used as dbh.",
+ "sources": [
+  {
+   "title": "Croton schiedeanus - Trees of Costa Rica's Pacific Slope (crtrees.org)",
+   "url": "https://crtrees.org/species-accounts/croton-schiedeanus/",
+   "licence": "unknown (no licence stated; WordPress.com site 'Trees of Costa Rica's Pacific Slope')",
+   "read": "2026-11-06"
+  },
+  {
+   "title": "Croton schiedeanus - Osa Arboretum (Osa Conservation)",
+   "url": "https://osa-arboretum.org/?p=1134",
+   "licence": "unknown (no licence stated; Osa Conservation arboretum site)",
+   "read": "2026-11-06"
+  },
+  {
+   "title": "Flora de Costa Rica (Flora Costaricensis scratchpad): Croton schiedeanus descriptions",
+   "url": "https://floracostaricensis.myspecies.info/taxonomy/term/22384/descriptions",
+   "licence": "unknown",
+   "read": "2026-11-06"
+  }
+ ]
+}

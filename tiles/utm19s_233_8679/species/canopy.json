@@ -1,0 +1,172 @@
+{
+ "tile": "utm19s_233_8679",
+ "version": "1",
+ "context": {
+  "centre": [
+   -71.40520440989684,
+   -11.894302284987411
+  ],
+  "elevation_m": 338.0,
+  "koppen": "Am",
+  "group": "tropical_wet",
+  "wcvp_area": "PER"
+ },
+ "plots": [
+  {
+   "id": "vela_apaza_2024_los_amigos",
+   "km": 161,
+   "citation": "Vela-Apaza, C. I. & Gonzales-Ojeda, T. (2024). Flora arborea de los bosques de la planicie aluvial inundable en el Rio Los Amigos, Amazonia Peruana. Revista Biodiversidad Amazonica 3(1): e274",
+   "licence": "CC BY 4.0 (stated in the article PDF)"
+  }
+ ],
+ "rule": "pipeline/tree_cards.py choose(): plots, then named trees of open place descriptions, then the tile's most-recorded WCVP trees that reach the subcanopy; shares by tier (TIER_SHARE)",
+ "trees": [
+  {
+   "id": "iriartea_deltoidea",
+   "scientific": "Iriartea deltoidea",
+   "family": "Arecaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "plot",
+   "value": 116.0,
+   "evidence": [
+    "vela_apaza_2024_los_amigos: importance value index 116 (161 km away)"
+   ],
+   "share": 0.2836,
+   "research": true,
+   "card": true
+  },
+  {
+   "id": "pseudolmedia_laevis",
+   "scientific": "Pseudolmedia laevis",
+   "family": "Moraceae",
+   "wcvp_lifeform": "tree",
+   "tier": "plot",
+   "value": 55.0,
+   "evidence": [
+    "vela_apaza_2024_los_amigos: importance value index 55 (161 km away)"
+   ],
+   "share": 0.1345,
+   "research": true,
+   "card": true
+  },
+  {
+   "id": "socratea_exorrhiza",
+   "scientific": "Socratea exorrhiza",
+   "family": "Arecaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "plot",
+   "value": 43.0,
+   "evidence": [
+    "vela_apaza_2024_los_amigos: importance value index 43 (161 km away)"
+   ],
+   "share": 0.1051,
+   "research": true,
+   "card": true
+  },
+  {
+   "id": "brosimum_lactescens",
+   "scientific": "Brosimum lactescens",
+   "family": "Moraceae",
+   "wcvp_lifeform": "tree",
+   "tier": "plot",
+   "value": 42.0,
+   "evidence": [
+    "vela_apaza_2024_los_amigos: importance value index 42 (161 km away)"
+   ],
+   "share": 0.1027,
+   "research": true,
+   "card": true
+  },
+  {
+   "id": "euterpe_precatoria",
+   "scientific": "Euterpe precatoria",
+   "family": "Arecaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "plot",
+   "value": 36.0,
+   "evidence": [
+    "vela_apaza_2024_los_amigos: importance value index 36 (161 km away)"
+   ],
+   "share": 0.088,
+   "research": true,
+   "card": true
+  },
+  {
+   "id": "otoba_parvifolia",
+   "scientific": "Otoba parvifolia",
+   "family": "Myristicaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "plot",
+   "value": 31.0,
+   "evidence": [
+    "vela_apaza_2024_los_amigos: importance value index 31 (161 km away)"
+   ],
+   "share": 0.0758,
+   "research": true,
+   "card": true
+  },
+  {
+   "id": "unonopsis_floribunda",
+   "scientific": "Unonopsis floribunda",
+   "family": "Annonaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "plot",
+   "value": 22.0,
+   "evidence": [
+    "vela_apaza_2024_los_amigos: importance value index 22 (161 km away)"
+   ],
+   "share": 0.0538,
+   "research": true,
+   "card": true
+  },
+  {
+   "id": "dipteryx_ferrea",
+   "scientific": "Dipteryx ferrea",
+   "family": "Fabaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "named",
+   "value": 1.0,
+   "evidence": [
+    "eswiki_parque_nacional_del_manu: named as shihuahuaco (Dipteryx micrantha) (emergent); no GBIF record of Dipteryx micrantha within 0.5 deg; its congener Dipteryx ferrea has 4 on the tile"
+   ],
+   "role": "emergent",
+   "named_as": "Dipteryx micrantha",
+   "share": 0.0526,
+   "research": true,
+   "card": true
+  },
+  {
+   "id": "ceiba_pentandra",
+   "scientific": "Ceiba pentandra",
+   "family": "Malvaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "named",
+   "value": 1.0,
+   "evidence": [
+    "eswiki_parque_nacional_del_manu: named as lupuna (Ceiba pentandra) (emergent); 12 GBIF records within 0.5 deg"
+   ],
+   "role": "emergent",
+   "named_as": "Ceiba pentandra",
+   "share": 0.0526,
+   "research": true,
+   "card": true
+  },
+  {
+   "id": "quararibea_wittii",
+   "scientific": "Quararibea wittii",
+   "family": "Malvaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "plot",
+   "value": 21.0,
+   "evidence": [
+    "vela_apaza_2024_los_amigos: importance value index 21 (161 km away)"
+   ],
+   "share": 0.0513,
+   "research": true,
+   "card": true
+  }
+ ],
+ "queued": [],
+ "log": [],
+ "cards_written": []
+}

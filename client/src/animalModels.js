@@ -746,14 +746,28 @@ function rigLoader(name, opts) { return Object.assign(() => rigModel(name, opts)
 
 // ---- a tile's own modelled animals (fauna.json slot `model`; animals.js installFauna) ---------------------------------
 // A slot of the tile's fauna may carry its own body: model = { path, kind: 'quadruped', skin } with path under client/assets
+// (or kind 'bird', skin false, archetype: tools/build_bird.py's part-rigged bird, the same file shape as the hand-built birds)
 // (fauna/<code>.glb, tools/build_quadruped.py at its real size, skinned by tools/rig_quadruped.py, its gait clips beside it
 // as <code>_clips.json/.bin, tools/bake_gait.mjs): the same file shape as the skinned quadrupeds above, so it loads the
 // same way, on the constants of a template (RIG) for the part rig's fallback and the program's tables.
 // The template: the kin's own when the kin is drawn by a skinned quadruped template (a rigLoader with skin on a RIG entry
 // with the part rig's gait: the lion, bear, bobcat, elk, otter); else by what the slot is: a carnivore (its role or
 // archetype a predator's) on a cat's (the bobcat's under 25 kg, else the lion's), anything else on the elk cow's.
-export function faunaTemplate(kinLoad, { role, archetype, mass_kg } = {}) {
-  const t = kinLoad?.rig; if (t && kinLoad.skin && RIG[t]?.gait) return t;
+// A bird (model.kind 'bird', tools/build_bird.py: the part rig, no skin) is drawn on a bird template whose wings match
+// its build (model.archetype): a soarer's flight mesh on a template whose wings never fold (collapse 0: the vulture's,
+// hawk's, eagle's, gulls'), a standing bird's on one whose flight cards fold into the shoulder (collapse 1): the kin's
+// own template when it is such a bird template (the kin's behaviour machine is tuned to it), else by the archetype.
+const BIRD_TEMPLATE = { soar: 'hawk', perch: 'stjay', ground: 'turkey', wade: 'heron', water: 'merganser' };
+export function faunaTemplate(kinLoad, { role, archetype, mass_kg, model } = {}) {
+  const t = kinLoad?.rig;
+  if (model?.kind === 'bird') {
+    const a = BIRD_TEMPLATE[model.archetype] ? model.archetype : 'perch', k = RIG[t]?.k;
+    if (k && k.handLag !== undefined && !k.ground && (k.collapse === 0) === (a === 'soar')) return t;
+    if (a === 'soar' && /scaveng/i.test([...(Array.isArray(role) ? role : [role]), archetype].join(' '))) return 'vulture';
+    if (a === 'ground' && !(mass_kg > 1.5)) return 'quail';
+    return BIRD_TEMPLATE[a];
+  }
+  if (t && kinLoad.skin && RIG[t]?.gait) return t;
   const words = [...(Array.isArray(role) ? role : [role]), archetype].filter(w => typeof w === 'string').join(' ');
   if (/predat|carniv|hunt|ambush|pursuit/i.test(words)) return Number.isFinite(mass_kg) && mass_kg > 0 && mass_kg < 25 ? 'bobcat' : 'lion';
   return 'elkCow';

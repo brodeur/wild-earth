@@ -187,7 +187,8 @@ GROUP = {"grazing or browsing herd": [5, 30], "arboreal climber": [3, 15], "larg
 #   the hours about: the highest-weighted hours of the day up to that share (the midday heat weighs a little less);
 #   rest posture: lying, except the very large on land (over 800 kg: elephants, giraffes and rhinos sleep standing most
 #   nights; a hippo lies in the water);
-#   group: PanTHERIA's social group size g (species, else genus median) as [sqrt(g), g] up to 30, else the archetype's.
+#   group: Prox and Farine 2020's average group size (a fission-fusion society seen in subgroups), else PanTHERIA's social
+#   group size g (species, else genus median) as [sqrt(g), g] up to 30, else the archetype's.
 DIURNAL = [0.0] * 5 + [0.5, 1, 1, 1, 1, 1, 1, 0.8, 0.8, 0.8, 1, 1, 1, 0.5] + [0.0] * 5
 CREPUSCULAR = [0, 0, 0, 0, 0.3, 1, 1, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 1, 1, 0.3, 0, 0, 0]
 NOCTURNAL = [1, 1, 1, 1, 1, 0.6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.6, 1, 1, 1, 1]
@@ -221,8 +222,18 @@ def behaviour(a: dict, t: dict, mass_kg: float, archetype: str) -> dict:
     water = (a.get("taxonomy") or {}).get("family") in WATER_FAMILIES
     out = {"active_hours": hours, "rest": "stand" if mass_kg >= REST_STANDING_KG and a.get("kind") == "mammal" and not water else "lie",
            "behaviour_sources": ["eltontraits (activity)"] + (["pantheria"] if P else [])}
+    from . import sociality
+    soc = sociality.lookup(a.get("scientific") or "") if a.get("kind") == "mammal" else None
     g = P.get("group")
-    if g:
+    if soc and soc.get("group"):
+        # Prox and Farine 2020 (CC BY): the society's average group size; a fission-fusion society (a pride, a clan, an
+        # elephant family) is seen in its subgroups, [g^0.5, g^0.75]; a cohesive one (a pack, a coalition) whole, [g/2, g]
+        gs = soc["group"]
+        lo, hi = (gs ** 0.5, gs ** 0.75) if soc.get("fission_fusion") else (gs / 2, gs)
+        hi = max(1, min(30, round(hi)))
+        out["group"] = [max(1, min(hi, round(lo))), hi]
+        out["group_source"] = f"prox2020 average group size {gs:g}" + (" (fission-fusion)" if soc.get("fission_fusion") else "")
+    elif g:
         out["group"] = [max(1, round(g ** 0.5)), max(1, min(30, round(g)))]
         out["group_source"] = f"pantheria social group size ({P.get('group_level')})"
     elif P.get("population_group") == 1 and P.get("population_group_level") == "species":   # (not a genus median: the lion)
@@ -244,12 +255,22 @@ def fauna_slots(tile: Tile) -> dict:
     tile_ids = {a["id"] for a in listed} | present
     allow = sorted(c for c in codes if c in tile_ids)
     # mammals first, the most visible first: records x sqrt(mass) (an elephant with 46 records before a mongoose with 83);
-    # then birds by records; then the rest
+    # then birds, two rankings taken in turn: by records x sqrt(mass), as the mammals (the big birds seen from afar: a
+    # vulture, an ostrich, a stork; by records alone the Serengeti's eleven bird slots were all starlings, weavers and a
+    # barbet, and no vulture), and by records (the common small birds seen near); then the rest
+    def mass(a):
+        return float(a.get("mass_kg") or _traits(a["id"]).get("mass_kg") or 1)
     def visible(a):
-        m = float(a.get("mass_kg") or _traits(a["id"]).get("mass_kg") or 1)
-        return (a.get("records") or 0) * (m ** 0.5 if a.get("kind") == "mammal" else 1)
-    order = sorted((a for a in listed if a["id"] not in codes),
-                   key=lambda a: ({"mammal": 0, "bird": 1}.get(a.get("kind"), 2), -visible(a)))
+        return (a.get("records") or 0) * (mass(a) ** 0.5 if a.get("kind") in ("mammal", "bird") else 1)
+    rest_ = [a for a in listed if a["id"] not in codes]
+    birds_big = sorted((a for a in rest_ if a.get("kind") == "bird"), key=lambda a: -visible(a))
+    birds_common = sorted((a for a in rest_ if a.get("kind") == "bird"), key=lambda a: -(a.get("records") or 0))
+    birds, seen_ = [], set()
+    for pair in zip(birds_big, birds_common):
+        for a in pair:
+            if a["id"] not in seen_: seen_.add(a["id"]); birds.append(a)
+    order = sorted((a for a in rest_ if a.get("kind") == "mammal"), key=lambda a: -visible(a)) + birds + \
+        sorted((a for a in rest_ if a.get("kind") not in ("mammal", "bird")), key=lambda a: -visible(a))
     eco = tile.path("vegetation/ecosystem.json")
     efg = (json.loads(eco.read_text()).get("groups") or [{}])[0].get("code") if eco.exists() else None
     slots, skipped = [], []

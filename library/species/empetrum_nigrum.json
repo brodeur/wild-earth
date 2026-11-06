@@ -434,7 +434,7 @@
  },
  "generated": {
   "by": "pipeline/plantgen.py",
-  "version": "2",
+  "version": "3",
   "card": "library/plant_cards/empetrum_nigrum.json",
   "card_sha256": "552157c8a60ade65",
   "template": "phyllodoce_empetriformis",
@@ -448,5 +448,89 @@
  "authors": [
   "Wild Earth (agent draft, 2026-11-05); needs local sign-off"
  ],
- "license": "CC BY-SA 4.0"
+ "license": "CC BY-SA 4.0",
+ "ground": {
+  "habit": "mat",
+  "woody": true,
+  "width_m": 0.85,
+  "leaf": {
+   "shape": "linear",
+   "size_m": 0.005,
+   "rgb": [
+    44,
+    70,
+    44
+   ],
+   "rgb_by_season": {
+    "winter": [
+     70,
+     60,
+     44
+    ],
+    "spring": [
+     52,
+     72,
+     46
+    ],
+    "summer": [
+     44,
+     70,
+     44
+    ],
+    "fall": [
+     54,
+     64,
+     44
+    ]
+   }
+  },
+  "height_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "dead_rgb": [
+   92,
+   58,
+   46
+  ],
+  "density": 1.0,
+  "from": "pipeline/plantgen.py ground_block: a dwarf shrub (card height to 0.25 m <= 0.5 m)",
+  "flower": {
+   "shape": "tiny",
+   "rgb": [
+    130,
+    50,
+    70
+   ],
+   "size_m": 0.004,
+   "months": [
+    5,
+    6
+   ],
+   "per_plant": 21
+  },
+  "fruit": {
+   "rgb": [
+    26,
+    24,
+    32
+   ],
+   "size_m": 0.007,
+   "months": [
+    8,
+    5
+   ],
+   "per_plant": 28
+  }
+ }
 }

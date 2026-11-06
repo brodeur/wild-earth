@@ -230,14 +230,14 @@
   },
   "ground": {
    "stage": "base",
-   "started_at": "2026-11-06T06:47:20Z",
-   "ended_at": "2026-11-06T06:47:21Z",
-   "wall_s": 0.8,
-   "cpu_self_s": 0.8,
+   "started_at": "2026-11-06T09:49:39Z",
+   "ended_at": "2026-11-06T09:49:41Z",
+   "wall_s": 1.6,
+   "cpu_self_s": 3.2,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {},
-   "disk_bytes": 1907911,
+   "disk_bytes": 1910687,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -286,10 +286,10 @@
   },
   "substrate": {
    "stage": "base",
-   "started_at": "2026-11-06T06:47:52Z",
-   "ended_at": "2026-11-06T06:47:58Z",
-   "wall_s": 6.0,
-   "cpu_self_s": 5.8,
+   "started_at": "2026-11-06T09:49:41Z",
+   "ended_at": "2026-11-06T09:49:47Z",
+   "wall_s": 5.7,
+   "cpu_self_s": 5.5,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {},
@@ -481,8 +481,8 @@
   },
   "animals": {
    "stage": "fauna",
-   "started_at": "2026-11-06T08:46:33Z",
-   "ended_at": "2026-11-06T08:46:34Z",
+   "started_at": "2026-11-06T09:32:31Z",
+   "ended_at": "2026-11-06T09:32:32Z",
    "wall_s": 0.6,
    "cpu_self_s": 0.5,
    "cpu_children_s": 0.0,
@@ -494,6 +494,10 @@
     },
     "eltontraits": {
      "hits": 3,
+     "misses": 0
+    },
+    "ndownloader.figshare.com": {
+     "hits": 1,
      "misses": 0
     }
    },
@@ -598,14 +602,14 @@
  },
  "stages": {
   "base": {
-   "started_at": "2026-11-06T06:45:07Z",
-   "ended_at": "2026-11-06T06:48:36Z",
-   "wall_s": 312.3,
-   "cpu_s": 178.4,
+   "started_at": "2026-11-06T09:49:39Z",
+   "ended_at": "2026-11-06T09:49:47Z",
+   "wall_s": 312.8,
+   "cpu_s": 180.5,
    "download_bytes": 12670209,
    "cache_hits": 568,
    "cache_misses": 3,
-   "disk_bytes": 431900701,
+   "disk_bytes": 431903477,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -622,12 +626,12 @@
    "meshy_queued_credits_est": 0
   },
   "fauna": {
-   "started_at": "2026-11-06T08:46:33Z",
-   "ended_at": "2026-11-06T08:46:34Z",
+   "started_at": "2026-11-06T09:32:31Z",
+   "ended_at": "2026-11-06T09:32:32Z",
    "wall_s": 12.4,
    "cpu_s": 12.1,
    "download_bytes": 0,
-   "cache_hits": 570,
+   "cache_hits": 571,
    "cache_misses": 0,
    "disk_bytes": 5669783,
    "meshy_spent": 0,
@@ -834,21 +838,54 @@
    ],
    "ended_at": "2026-11-06T08:46:34Z",
    "failed": []
+  },
+  {
+   "started_at": "2026-11-06T09:32:31Z",
+   "stages": [
+    {
+     "stage": "fauna",
+     "started_at": "2026-11-06T09:32:31Z",
+     "steps_run": [
+      "animals"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T09:32:32Z"
+    }
+   ],
+   "ended_at": "2026-11-06T09:32:32Z",
+   "failed": []
+  },
+  {
+   "started_at": "2026-11-06T09:49:39Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-06T09:49:39Z",
+     "steps_run": [
+      "ground",
+      "substrate"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T09:49:47Z"
+    }
+   ],
+   "ended_at": "2026-11-06T09:49:47Z",
+   "failed": []
   }
  ],
  "totals": {
-  "wall_s": 326.4,
-  "cpu_s": 192.0,
+  "wall_s": 326.9,
+  "cpu_s": 194.1,
   "download_bytes": 12670209,
-  "cache_hits": 1291,
+  "cache_hits": 1292,
   "cache_misses": 3,
-  "disk_bytes": 438559544,
+  "disk_bytes": 438562320,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 1525
  },
- "updated_at": "2026-11-06T08:46:34Z",
+ "updated_at": "2026-11-06T09:49:47Z",
  "client": {
-  "bytes": 46996487,
+  "bytes": 46997200,
   "files": 46,
   "largest": {
    "client/terrain_detail.png": 12853157,

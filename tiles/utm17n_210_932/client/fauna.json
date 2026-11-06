@@ -135,8 +135,8 @@
    "mass_kg": 4.03,
    "density_km2": 6.07,
    "group": [
-    1,
-    3
+    6,
+    12
    ],
    "bird": false,
    "night": false,
@@ -176,6 +176,7 @@
     "eltontraits (activity)",
     "pantheria"
    ],
+   "group_source": "prox2020 average group size 12",
    "density_source": "pantheria population density (species)"
   },
   {
@@ -191,8 +192,8 @@
    "mass_kg": 7.275,
    "density_km2": 58.99,
    "group": [
-    4,
-    13
+    5,
+    11
    ],
    "bird": false,
    "night": false,
@@ -234,7 +235,7 @@
     "eltontraits (activity)",
     "pantheria"
    ],
-   "group_source": "pantheria social group size (species)",
+   "group_source": "prox2020 average group size 23 (fission-fusion)",
    "density_source": "pantheria population density (species)"
   },
   {
@@ -368,8 +369,8 @@
    "mass_kg": 5.285,
    "density_km2": 19.06,
    "group": [
-    6,
-    30
+    4,
+    9
    ],
    "bird": false,
    "night": false,
@@ -411,7 +412,7 @@
     "eltontraits (activity)",
     "pantheria"
    ],
-   "group_source": "pantheria social group size (species)",
+   "group_source": "prox2020 average group size 20 (fission-fusion)",
    "density_source": "pantheria population density (species)"
   },
   {
@@ -540,8 +541,8 @@
    "mass_kg": 2.691,
    "density_km2": 45.4596,
    "group": [
-    3,
-    11
+    8,
+    16
    ],
    "bird": false,
    "night": false,
@@ -583,7 +584,7 @@
     "eltontraits (activity)",
     "pantheria"
    ],
-   "group_source": "pantheria social group size (genus)"
+   "group_source": "prox2020 average group size 16"
   },
   {
    "code": "saimiri_oerstedii",
@@ -927,6 +928,61 @@
    ]
   },
   {
+   "code": "pelecanus_occidentalis",
+   "scientific": "Pelecanus occidentalis",
+   "common": "Brown pelican",
+   "one": "brown pelican",
+   "many": "brown pelicans",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 3.057,
+   "tint": null,
+   "mass_kg": 3.428,
+   "density_km2": 0.1985,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "predator",
+    "scavenger"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
    "code": "tinamus_major",
    "scientific": "Tinamus major",
    "common": "Great tinamou",
@@ -981,6 +1037,61 @@
    ]
   },
   {
+   "code": "coragyps_atratus",
+   "scientific": "Coragyps atratus",
+   "common": "Black vulture",
+   "one": "black vulture",
+   "many": "black vultures",
+   "kin": "cathartes_aura",
+   "archetype": "soaring scavenger",
+   "scale": 1.056,
+   "tint": null,
+   "mass_kg": 1.882,
+   "density_km2": 11.6485,
+   "group": [
+    1,
+    8
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "omnivore",
+    "scavenger"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
    "code": "trogon_rufus",
    "scientific": "Trogon rufus",
    "common": "Black-throated trogon",
@@ -1001,6 +1112,60 @@
    "water": false,
    "role": [
     "insectivore"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "penelope_purpurascens",
+   "scientific": "Penelope purpurascens",
+   "common": "Crested guan",
+   "one": "crested guan",
+   "many": "crested guans",
+   "kin": "meleagris_gallopavo",
+   "archetype": "ground bird",
+   "scale": 0.7,
+   "tint": null,
+   "mass_kg": 2.06,
+   "density_km2": 11.2343,
+   "group": [
+    3,
+    12
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
    ],
    "known": [],
    "active_hours": [
@@ -1199,6 +1364,62 @@
    ]
   },
   {
+   "code": "ara_macao",
+   "scientific": "Ara macao",
+   "common": "Scarlet macaw",
+   "one": "scarlet macaw",
+   "many": "scarlet macaws",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 2.037,
+   "tint": null,
+   "mass_kg": 1.015,
+   "density_km2": 14.9109,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": [
+    "a parrot, toucan or hornbill on a jay's body"
+   ],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
    "code": "myrmeciza_exsul",
    "scientific": "Myrmeciza exsul",
    "common": "Chestnut-backed antbird",
@@ -1307,333 +1528,6 @@
    ]
   },
   {
-   "code": "coragyps_atratus",
-   "scientific": "Coragyps atratus",
-   "common": "Black vulture",
-   "one": "black vulture",
-   "many": "black vultures",
-   "kin": "cathartes_aura",
-   "archetype": "soaring scavenger",
-   "scale": 1.056,
-   "tint": null,
-   "mass_kg": 1.882,
-   "density_km2": 11.6485,
-   "group": [
-    1,
-    8
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "omnivore",
-    "scavenger"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "ara_macao",
-   "scientific": "Ara macao",
-   "common": "Scarlet macaw",
-   "one": "scarlet macaw",
-   "many": "scarlet macaws",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 2.037,
-   "tint": null,
-   "mass_kg": 1.015,
-   "density_km2": 14.9109,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "herbivore"
-   ],
-   "known": [
-    "a parrot, toucan or hornbill on a jay's body"
-   ],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "actitis_macularius",
-   "scientific": "Actitis macularius",
-   "common": "Spotted sandpiper",
-   "one": "spotted sandpiper",
-   "many": "spotted sandpipers",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.696,
-   "tint": null,
-   "mass_kg": 0.04,
-   "density_km2": 54.1426,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "insectivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "egretta_caerulea",
-   "scientific": "Egretta caerulea",
-   "common": "Little blue heron",
-   "one": "little blue heron",
-   "many": "little blue herons",
-   "kin": "ardea_herodias",
-   "archetype": "wading bird",
-   "scale": 0.536,
-   "tint": null,
-   "mass_kg": 0.339,
-   "density_km2": 23.1322,
-   "group": [
-    1,
-    3
-   ],
-   "bird": true,
-   "night": false,
-   "water": true,
-   "role": [
-    "insectivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "penelope_purpurascens",
-   "scientific": "Penelope purpurascens",
-   "common": "Crested guan",
-   "one": "crested guan",
-   "many": "crested guans",
-   "kin": "meleagris_gallopavo",
-   "archetype": "ground bird",
-   "scale": 0.7,
-   "tint": null,
-   "mass_kg": 2.06,
-   "density_km2": 11.2343,
-   "group": [
-    3,
-    12
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "herbivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "campephilus_guatemalensis",
-   "scientific": "Campephilus guatemalensis",
-   "common": "Pale-billed woodpecker",
-   "one": "pale-billed woodpecker",
-   "many": "pale-billed woodpeckers",
-   "kin": "leuconotopicus_villosus",
-   "archetype": "woodpecker",
-   "scale": 1.512,
-   "tint": null,
-   "mass_kg": 0.242,
-   "density_km2": 26.4585,
-   "group": [
-    1,
-    3
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "insectivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
    "code": "tigrisoma_mexicanum",
    "scientific": "Tigrisoma mexicanum",
    "common": "Bare-throated tiger-heron",
@@ -1681,439 +1575,6 @@
     1,
     1,
     1
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "pelecanus_occidentalis",
-   "scientific": "Pelecanus occidentalis",
-   "common": "Brown pelican",
-   "one": "brown pelican",
-   "many": "brown pelicans",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 3.057,
-   "tint": null,
-   "mass_kg": 3.428,
-   "density_km2": 0.1985,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "predator",
-    "scavenger"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "egretta_thula",
-   "scientific": "Egretta thula",
-   "common": "Snowy egret",
-   "one": "snowy egret",
-   "many": "snowy egrets",
-   "kin": "ardea_herodias",
-   "archetype": "wading bird",
-   "scale": 0.552,
-   "tint": null,
-   "mass_kg": 0.371,
-   "density_km2": 1.0518,
-   "group": [
-    1,
-    3
-   ],
-   "bird": true,
-   "night": false,
-   "water": true,
-   "role": [
-    "predator"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "lipaugus_unirufus",
-   "scientific": "Lipaugus unirufus",
-   "common": "Rufous piha",
-   "one": "rufous piha",
-   "many": "rufous pihas",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.881,
-   "tint": null,
-   "mass_kg": 0.082,
-   "density_km2": 40.7712,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "omnivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "platyrinchus_coronatus",
-   "scientific": "Platyrinchus coronatus",
-   "common": "Golden-crowned spadebill",
-   "one": "golden-crowned spadebill",
-   "many": "golden-crowned spadebills",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.423,
-   "tint": null,
-   "mass_kg": 0.009,
-   "density_km2": 70.0,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "insectivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "cacicus_uropygialis",
-   "scientific": "Cacicus uropygialis",
-   "common": "Scarlet-rumped cacique",
-   "one": "scarlet-rumped cacique",
-   "many": "scarlet-rumped caciques",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.799,
-   "tint": null,
-   "mass_kg": 0.061,
-   "density_km2": 45.8554,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "insectivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "patagioenas_nigrirostris",
-   "scientific": "Patagioenas nigrirostris",
-   "common": "Short-billed pigeon",
-   "one": "short-billed pigeon",
-   "many": "short-billed pigeons",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 1.136,
-   "tint": null,
-   "mass_kg": 0.176,
-   "density_km2": 30.0529,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "herbivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "xiphorhynchus_susurrans",
-   "scientific": "Xiphorhynchus susurrans",
-   "common": "Cocoa woodcreeper",
-   "one": "cocoa woodcreeper",
-   "many": "cocoa woodcreepers",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.73,
-   "tint": null,
-   "mass_kg": 0.047,
-   "density_km2": 51.0934,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "insectivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "eltontraits (activity)"
-   ]
-  },
-  {
-   "code": "trogon_massena",
-   "scientific": "Trogon massena",
-   "common": "Slaty-tailed trogon",
-   "one": "slaty-tailed trogon",
-   "many": "slaty-tailed trogons",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 1.055,
-   "tint": null,
-   "mass_kg": 0.141,
-   "density_km2": 32.84,
-   "group": [
-    1,
-    6
-   ],
-   "bird": true,
-   "night": false,
-   "water": false,
-   "role": [
-    "herbivore"
-   ],
-   "known": [],
-   "active_hours": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0
    ],
    "rest": "lie",
    "behaviour_sources": [
@@ -2228,6 +1689,548 @@
    "behaviour_sources": [
     "eltontraits (activity)"
    ]
+  },
+  {
+   "code": "actitis_macularius",
+   "scientific": "Actitis macularius",
+   "common": "Spotted sandpiper",
+   "one": "spotted sandpiper",
+   "many": "spotted sandpipers",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 0.696,
+   "tint": null,
+   "mass_kg": 0.04,
+   "density_km2": 54.1426,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "insectivore"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "eudocimus_albus",
+   "scientific": "Eudocimus albus",
+   "common": "White ibis",
+   "one": "white ibis",
+   "many": "white ibis",
+   "kin": "ardea_herodias",
+   "archetype": "wading bird",
+   "scale": 0.74,
+   "tint": null,
+   "mass_kg": 0.89,
+   "density_km2": 0.5458,
+   "group": [
+    1,
+    3
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "predator"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "egretta_caerulea",
+   "scientific": "Egretta caerulea",
+   "common": "Little blue heron",
+   "one": "little blue heron",
+   "many": "little blue herons",
+   "kin": "ardea_herodias",
+   "archetype": "wading bird",
+   "scale": 0.536,
+   "tint": null,
+   "mass_kg": 0.339,
+   "density_km2": 23.1322,
+   "group": [
+    1,
+    3
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "insectivore"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "egretta_thula",
+   "scientific": "Egretta thula",
+   "common": "Snowy egret",
+   "one": "snowy egret",
+   "many": "snowy egrets",
+   "kin": "ardea_herodias",
+   "archetype": "wading bird",
+   "scale": 0.552,
+   "tint": null,
+   "mass_kg": 0.371,
+   "density_km2": 1.0518,
+   "group": [
+    1,
+    3
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "predator"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "campephilus_guatemalensis",
+   "scientific": "Campephilus guatemalensis",
+   "common": "Pale-billed woodpecker",
+   "one": "pale-billed woodpecker",
+   "many": "pale-billed woodpeckers",
+   "kin": "leuconotopicus_villosus",
+   "archetype": "woodpecker",
+   "scale": 1.512,
+   "tint": null,
+   "mass_kg": 0.242,
+   "density_km2": 26.4585,
+   "group": [
+    1,
+    3
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "insectivore"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "egretta_tricolor",
+   "scientific": "Egretta tricolor",
+   "common": "Tricolored heron",
+   "one": "tricolored heron",
+   "many": "tricolored herons",
+   "kin": "ardea_herodias",
+   "archetype": "wading bird",
+   "scale": 0.553,
+   "tint": null,
+   "mass_kg": 0.372,
+   "density_km2": 1.0491,
+   "group": [
+    1,
+    3
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "predator"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "caracara_plancus",
+   "scientific": "Caracara plancus",
+   "common": "Southern caracara",
+   "one": "southern caracara",
+   "many": "southern caracaras",
+   "kin": "buteo_jamaicensis",
+   "archetype": "soaring raptor",
+   "scale": 0.993,
+   "tint": null,
+   "mass_kg": 1.079,
+   "density_km2": 14.5528,
+   "group": [
+    1,
+    3
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "omnivore",
+    "scavenger"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "sarcoramphus_papa",
+   "scientific": "Sarcoramphus papa",
+   "common": "King vulture",
+   "one": "king vulture",
+   "many": "king vultures",
+   "kin": "cathartes_aura",
+   "archetype": "soaring scavenger",
+   "scale": 1.286,
+   "tint": null,
+   "mass_kg": 3.4,
+   "density_km2": 9.1939,
+   "group": [
+    1,
+    8
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "omnivore",
+    "scavenger"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "lipaugus_unirufus",
+   "scientific": "Lipaugus unirufus",
+   "common": "Rufous piha",
+   "one": "rufous piha",
+   "many": "rufous pihas",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 0.881,
+   "tint": null,
+   "mass_kg": 0.082,
+   "density_km2": 40.7712,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "omnivore"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "patagioenas_nigrirostris",
+   "scientific": "Patagioenas nigrirostris",
+   "common": "Short-billed pigeon",
+   "one": "short-billed pigeon",
+   "many": "short-billed pigeons",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 1.136,
+   "tint": null,
+   "mass_kg": 0.176,
+   "density_km2": 30.0529,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   }
  ],
  "skipped": [
@@ -2280,19 +2283,19 @@
    "why": "no rig for Chiroptera"
   },
   {
-   "id": "eudocimus_albus",
+   "id": "platyrinchus_coronatus",
    "why": "over the 40-slot cap"
   },
   {
-   "id": "egretta_tricolor",
+   "id": "cacicus_uropygialis",
    "why": "over the 40-slot cap"
   },
   {
-   "id": "chloroceryle_americana",
+   "id": "trogon_massena",
    "why": "over the 40-slot cap"
   },
   {
-   "id": "caracara_plancus",
+   "id": "xiphorhynchus_susurrans",
    "why": "over the 40-slot cap"
   },
   {
@@ -2300,11 +2303,19 @@
    "why": "over the 40-slot cap"
   },
   {
+   "id": "chloroceryle_americana",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "ardea_alba",
+   "why": "over the 40-slot cap"
+  },
+  {
    "id": "megaceryle_torquata",
    "why": "over the 40-slot cap"
   },
   {
-   "id": "sarcoramphus_papa",
+   "id": "platalea_ajaja",
    "why": "over the 40-slot cap"
   },
   {
@@ -2316,19 +2327,15 @@
    "why": "over the 40-slot cap"
   },
   {
+   "id": "micrastur_semitorquatus",
+   "why": "over the 40-slot cap"
+  },
+  {
    "id": "bubulcus_ibis",
    "why": "over the 40-slot cap"
   },
   {
    "id": "butorides_virescens",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "micrastur_semitorquatus",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "ardea_alba",
    "why": "over the 40-slot cap"
   },
   {
@@ -2340,15 +2347,11 @@
    "why": "over the 40-slot cap"
   },
   {
-   "id": "thalasseus_sandvicensis",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "platalea_ajaja",
-   "why": "over the 40-slot cap"
-  },
-  {
    "id": "egretta_rufescens",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "thalasseus_sandvicensis",
    "why": "over the 40-slot cap"
   },
   {
