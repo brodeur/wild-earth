@@ -739,6 +739,7 @@ const FG_SEEN = { [TK]: 25, [GS]: 15, [LZ]: 3 };   // m from the player: the fie
 // (once per ALARM_COOL s per species, the 'alarm' event); every animal of a species the player hunts within the
 // call's carry is alarmed for ALARM_T s, and an alarmed animal goes to cover or flees as if the player were at its
 // flee radius while it is within ALARM_REACT_R m of it.
+const EYE_R = 320;   // m: how far a predator's eyes keep its prey alive and drawn (eyeOf), past their near cull
 const ALERT_MAX = 120, ALARM_NEAR = 120, ALARM_T = 8, ALARM_COOL = 12, ALARM_REACT_R = 150, DEER_FLEE = 35;   // ALARM_NEAR: a watcher calls at a predator this close (and noticed), not one it merely sees far off
 // A deer's turn (drSteer): at most w rad/s walking and fast fleeing; it walks on at full speed within go rad of its way,
 // slows past it and stands to step round from stop rad (about 80 degrees). Standing, it steps round at slow rad/s to face
@@ -1311,7 +1312,38 @@ export class Animals {
     this.noticeSmell = SPECIES.map(sp => { const o = sen?.[sp.code.split(':')[0]]; return o && sig ? Math.min(o.smell ?? 0, sig.scent ?? 0) : 0; });
     this.stalkK = 1; this.notice = this.noticeBase.slice();
     this.preyOf = new Set((this.tile.games?.relations?.predation || []).filter(([pr]) => pr === code).map(([, q]) => q));
+    this.eyeR = this.eyeOf(code);
     this.dirty = true;
+  }
+  // A predator's eyes (sight.js, 2026-11-06): the species code hunts (preySlots) are kept alive and drawn out to EYE_R m
+  // from its eye in place of their near cull (CULL), and a vole is not hidden from a high camera, so a hawk soaring high
+  // sees the voles and rabbits below it; null for a species that hunts nothing. By species slot; cached by code.
+  eyeOf(code) {
+    const k = code ? INDEX[code] : undefined; if (k === undefined) return null;
+    const c = this._eyes ||= new Map(); if (c.has(code)) return c.get(code);
+    if (!this.preySlots) this.buildHunts();
+    const prey = this.preySlots?.[k];
+    let out = null;
+    if (prey?.size) { out = []; for (const q of prey) if (CULL[q]) out[q] = Math.max(CULL[q], EYE_R); }
+    c.set(code, out); return out;
+  }
+  // a culled-at-distance animal (cull) the player's eyes or, as the host, another hunting player's (centres: c.sp) still reach
+  inEye(a, sp, d2) {
+    const R = this.eyeR?.[sp]; if (R && d2 < R * R) return true;
+    for (const c of this.centres) { const r = c.sp && this.eyeOf(c.sp)?.[sp]; if (r && (a.x - c.x) ** 2 + (a.z - c.z) ** 2 < r * r) return true; }
+    return false;
+  }
+  // A prey animal that has seen the player's dive coming (dive.js): it is alarmed (ALARM_T s), so its own flight from
+  // danger runs as it does at a watcher's call, from the diver at (x, y, z). On a mirror the host is asked to; on the host
+  // a remote diver (remote: the request of another page) is a stand-in hunter record at its point (threat()).
+  startle(a, x, y, z, code, remote = false) {
+    if (!a || a.dead || a.gone || a.remote || ![x, y, z].every(Number.isFinite)) return false;
+    if (this.mirror) { if (a.n >= 0) this.relay?.request({ k: 'startle', n: a.n, x: r2(x), y: r2(y), z: r2(z), sp: code }); return true; }
+    const k = INDEX[code]; if (k === undefined) return false;
+    const by = remote ? { id: -1, sp: k, x, y, z, diver: true } : null, until = this.time + ALARM_T;
+    a.alarmUntil = a.seenUntil = until; a.alarmBy = by; if (a.group) { a.group.alarmUntil = a.group.seenUntil = until; a.group.alarmBy = by; }
+    this.lastStartle = { prey: SPECIES[a.sp].code, by: code, t: this.time };
+    return true;
   }
   // The player's stalk (groundControl): k scales how far every species notices the player (1 walking; 0.55 creeping,
   // 0.4 frozen, 1.3 running: the signature of a hunter moving low and slow is smaller, a running one's larger).
@@ -1403,7 +1435,7 @@ export class Animals {
     const T = this._T ||= { x: 0, y: 0, z: 0, n: 0, who: null };
     T.x = px; T.y = py; T.z = pz; T.n = this.noticeAt(sp, x, z, px, pz); T.who = null;   // the player, by sight and sound or by the nose (the wind)
     const hs = this.huntersOf?.[sp], by = (o?.alarmUntil || 0) > this.time ? (o.alarmBy ?? null) : undefined;
-    if ((!hs?.length && !by) || !this.det) return T;
+    if ((!hs?.length && !by) || !this.det) return this.diveSeen(o, y, T);
     const pn = T.n, dp = (px - x) ** 2 + (pz - z) ** 2, row = this.det[sp];
     const lim = dp < pn * pn || by === null ? dp : Infinity;
     let best = null, bd = lim;
@@ -1412,10 +1444,23 @@ export class Animals {
       const d2 = (h.x - x) ** 2 + (h.z - z) ** 2, n = row[h.sp];
       if (d2 < bd && d2 < n * n) { bd = d2; best = h; }
     }
-    if (!best && by && lim === Infinity && this.alive(by)) best = by;
+    if (!best && by && lim === Infinity && (this.alive(by) || by.diver)) best = by;   // (a diver: another page's player, startle)
     if (best) { T.x = best.x; T.y = best.y; T.z = best.z; T.n = row[best.sp]; T.who = best; }
-    return T;
+    return this.diveSeen(o, y, T);
   }
+  // Whether the catch can take this animal at all (KILLABLE: the ground squirrels, tree squirrels and quail are not yet; dive.js offers no dive at them)
+  killable(a) { return !!a && !a.remote && KILLABLE.has(a.sp); }
+  // A prey animal that saw a dive coming (startle) and has got to cover (a vole hidden in the grass, a ground squirrel
+  // down its burrow, a lizard in its crevice: the hiding states fled() and huntable() know) is not there to take; one
+  // still running (a bolting rabbit or jackrabbit) can still be caught.
+  reachedCover(a) {
+    if (!((a.seenUntil || 0) > this.time)) return false;
+    switch (ID[a.sp]) { case VO: return a.state === VL_HIDE; case GS: return a.state === G_DOWN; case LZ: return a.state === L_HIDE; }
+    return false;
+  }
+  // A dive the prey saw coming (startle): for that while the diver counts as at the prey's own level, so the height over
+  // which a ground animal pays a flier no mind (a vole's 4 m, a rabbit's 20) does not hide the hawk stooping at it.
+  diveSeen(o, y, T) { if ((o?.seenUntil || 0) > this.time && T.y > y) T.y = y; return T; }
   // The watchers' alarm calls at AI hunters (a fox, coyote, lion or hawk; ALARM_AT): as alarms() does for the player,
   // with 2.5x the cooldown per watcher species (the hunters are about all dawn); the alarmed are that hunter's prey within the carry, and flee from it.
   aiAlarms() {
@@ -1609,7 +1654,7 @@ export class Animals {
     const fx = -Math.sin(yaw), fz = -Math.cos(yaw), cc = Math.cos(cone);
     let best = null, bd = reach * reach;
     for (const a of this.list) {
-      if (!prey.has(a.sp) || a.dead || a.culled || a.buried || a.remote || !KILLABLE.has(a.sp)) continue;   // buried: in a tunnel not opened (dig.js); remote: another player's body
+      if (!prey.has(a.sp) || a.dead || a.culled || a.buried || a.remote || !KILLABLE.has(a.sp) || this.reachedCover(a)) continue;   // buried: in a tunnel not opened (dig.js); remote: another player's body; reachedCover: it saw the dive coming
       const dx = a.x - x, dz = a.z - z, d2 = dx * dx + (a.y - y) ** 2 * 0.25 + dz * dz; if (d2 >= bd) continue;
       if (yaw === yaw && d2 > 0.25 && (dx * fx + dz * fz) < cc * Math.sqrt(dx * dx + dz * dz)) continue;   // not ahead
       bd = d2; best = a;
@@ -1835,6 +1880,8 @@ export class Animals {
     // the cells within LIVE_R of this player and, as the host, of each other player in the world (centres), each once
     const C = [[px, north]]; for (const c of this.centres) C.push([c.x, -c.z]);
     const seen = C.length > 1 ? new Set() : null;
+    // a predator's prey spawned out to its eyes (eyeOf), this player's or, as the host, another's
+    const eyeLive = []; for (const E of [this.eyeR, ...this.centres.map(c => this.eyeOf(c.sp))]) if (E) E.forEach((r, s) => { if (r > (eyeLive[s] || 0)) eyeLive[s] = r; });
     for (const [qx, qn] of C) {
     const [ci, cj] = hab.cellOf(qx, qn);
     for (let j = cj - cells; j <= cj + cells; j++) for (let i = ci - cells; i <= ci + cells; i++) {
@@ -1856,7 +1903,7 @@ export class Animals {
         }
       }
       let brushEdge = 0;   // brush rabbits: brush (chaparral, riparian) beside grass, or grass beside brush
-      if (live[RB] && dist < SPECIES[RB].liveR) {
+      if (live[RB] && dist < Math.max(SPECIES[RB].liveR, eyeLive[RB] || 0)) {
         const brush = c => c === 4 || c === 6, grass = c => c === 5 || c === 9;
         if (brush(cls) || grass(cls)) for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1], [2, 0], [-2, 0], [0, 2], [0, -2]]) {
           const ii = i + di, jj = j + dj; if (ii < 0 || jj < 0 || ii >= hab.img.width || jj >= hab.img.height) continue;
@@ -1866,7 +1913,7 @@ export class Animals {
       }
       for (let s = 0; s < SPECIES.length; s++) {
         if (!live[s] || SPECIES[s].grid || SPECIES[s].territory || SPECIES[s].variantOf !== undefined) continue;   // soarers, lion: territory cells; bucks: in the herds
-        const sp = SPECIES[s]; if (sp.liveR && dist > sp.liveR) continue;
+        const sp = SPECIES[s]; if (sp.liveR && dist > Math.max(sp.liveR, eyeLive[s] || 0)) continue;
         const band = s < STATIC_N;   // the elevation bands below are the Sierra's and the Olympics' own: a stand-in (installFauna) keeps its kin's habitat rule, not its range
         const suit = SUIT[sp.code][cls] || 0; if (!suit) continue;
         let f = suit;
@@ -2437,7 +2484,7 @@ export class Animals {
     // (a player squirrel, squirrelControl.js, is one of them: it does not send them up the trees by being near)
     // (a player squirrel only when it runs at one: within 4 m at over 2.5 m/s, on the ground: a chase)
     const pSq = this.observer === SPECIES[SQ].code, chase = pSq && near2 < 4 * 4 && (this.flight.speed || 0) > 2.5 && Math.abs(dy) < 1.5;
-    if ((a.state === S_PAUSE || a.state === S_WORK || a.state === S_EAT || (a.state === S_RUN && a.next !== S_CLIMB)) && near2 < 15 * 15 && (!pSq || chase)) {
+    if ((a.state === S_PAUSE || a.state === S_WORK || a.state === S_EAT || (a.state === S_RUN && a.next !== S_CLIMB)) && ((near2 < 15 * 15 && (!pSq || chase)) || (!pSq && this.alarmed(a)))) {   // (alarmed: a watcher's call, or a hawk's dive it saw coming: startle)
       if (a.task !== T_STORE) this.dropTask(a);   // an acorn it holds goes up the tree with it
       if (a.state === S_EAT) a.carry = 0;          // (dropped while eating)
       a.tree = (ID[a.sp] === DS ? this.nearestConifer(a.x, a.z, 30) : this.nearestOak(a.x, a.z, 30)) || a.anchor; a.scared = 1;
@@ -5686,8 +5733,9 @@ export class Animals {
     const a = e.n >= 0 ? this.byN.get(e.n) : null;
     switch (e.k) {
       case 'kill': {
-        if (!a || a.dead) return;
+        if (!a) return;
         const mine = e.by === `p:${me}`;
+        if (a.dead) { if (mine && this.catchPending) { this.catchPending = 0; this.onCaught?.(a); } return; }   // the carcass's own message (carrion.js adopt, the dig channel) can come first and kill it as 'shared': the catch is still this page's
         a.x = e.x; a.y = e.y; a.z = e.z; a.yaw = e.yaw; a.pitch = e.pitch; a.roll = e.roll; a.amp = e.amp; a.pose = e.pose; a.flick = e.flick; a.air = 0; a.lift = 0;
         this.kill(a, mine ? 'player' : { code: e.bysp || e.by });
         a.lieRoll = e.lr || 1; this.mirrorSeed(a);
@@ -5714,9 +5762,12 @@ export class Animals {
       const a = this.numbered(e.n), k = INDEX[e.sp];
       if (!this.preySlots) this.buildHunts();
       const P = k === undefined ? null : this.preySlots?.[k], R = k === undefined ? null : this.reach?.[k];
-      let ok = !!(a && !a.dead && !a.buried && P && R && P.has(a.sp) && KILLABLE.has(a.sp));
+      let ok = !!(a && !a.dead && !a.buried && P && R && P.has(a.sp) && KILLABLE.has(a.sp) && !this.reachedCover(a));
       if (ok) { const dx = a.x - e.x, dz = a.z - e.z, d2 = dx * dx + (a.y - e.y) ** 2 * 0.25 + dz * dz, slack = R + 1 + 0.3 * (a.spd || 0); ok = d2 <= slack * slack; }
       if (ok) this.kill(a, { code: e.sp, aid: from }); else this.relay?.emitted('miss', { aid: from, animal: a });
+    } else if (e.k === 'startle') {   // a mirror's dive was seen coming (startle): within the stream's slack of where the diver says it is
+      const a = this.numbered(e.n), x = +e.x, y = +e.y, z = +e.z;
+      if (a && !a.dead && typeof e.sp === 'string' && INDEX[e.sp] !== undefined && (a.x - x) ** 2 + (a.z - z) ** 2 < 600 * 600) this.startle(a, x, y, z, e.sp, true);
     } else if (e.k === 'take') {
       const a = this.numbered(e.n); if (!a || a.dead || a.remote || !PLAYABLE.includes(a.sp) || this.held.has(a.id)) return;
       const o = this.take(a.id); if (o) this.relay?.remoteHeld.set(a.id, { from, o });
@@ -5816,7 +5867,7 @@ export class Animals {
       if (dead) { if (!a.gone) { if (this.time > a.carrionUntil && !mirror) this.bury(a); else this.lieStill(a, dt0); } if (a.gone) { a.acc = 0; continue; } }
       if (cull[sp]) {   // rabbits, jackrabbits and voles: neither drawn nor thought beyond CULL (voles: also under a high camera)
         const R = CULL[sp];
-        if (dn2 > R * R || (kn === VO && camAGL > VOLE_CAM && !nearOther)) {
+        if ((dn2 > R * R || (kn === VO && camAGL > VOLE_CAM && !nearOther)) && !this.inEye(a, sp, d2)) {   // (a predator's eyes reach farther: eyeOf)
           if (!a.culled || fresh) { this.meshes[sp].instanceMatrix.array.fill(0, a.slot * 16, a.slot * 16 + 16); a.culled = true; }
           a.acc = 0; continue;
         }

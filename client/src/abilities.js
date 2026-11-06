@@ -127,6 +127,9 @@ const RIG = {
   lizard: { verbs: [DRINK, no('hide', 'J')] },
 };
 
+// The dive (dive.js, 2026-11-06): shown only while it can start (a hunting flier above a selected prey animal in sight:
+// Dive.can) or is on; Q or a press of the slot starts it, again calls it off.
+const DIVE = on('dive', 'Q', c => !!c.dive?.active, { show: c => !!c.dive && (c.dive.active || c.dive.can()), press: (c, down) => { if (down) c.dive.toggle(); }, title: 'Q with a prey animal selected (Tab, or click it) below you: tuck the wings and stoop straight at it; it may see you coming; losing sight of it calls the dive off' });
 // The fliers' moves (flight.js on flierControl's numbers, and the raven's own): aloft, and on its feet.
 const aloft = c => !c.flight.landed, afoot = c => !!c.flight.landed;
 function flierMoves(soar) {
@@ -209,7 +212,8 @@ export function abilitiesFor(kind, code, S = null) {
     const t = sp || RIG[S.rig] || { verbs: [] }, word = t.act || S.act?.word || 'act';
     return [...groundMoves(S), actOf(word), restOf(S), ...t.verbs].filter(Boolean);
   }
-  if (kind === 'flier' || kind === 'raven') return [...flierMoves(!!S?.flight?.soar), ...(sp?.verbs || [DRINK_NO, CALL])];
+  if (kind === 'flier') return [...flierMoves(!!S?.flight?.soar), DIVE, ...(sp?.verbs || [DRINK_NO, CALL])];
+  if (kind === 'raven') return [...flierMoves(false), ...(sp?.verbs || [DRINK_NO, CALL])];
   if (kind === 'squirrel') return SQUIRREL;
   if (kind === 'woodpecker') return WOODPECKER;
   return SPIRIT;
@@ -218,12 +222,12 @@ export function abilitiesFor(kind, code, S = null) {
 export class Abilities {
   // el: #abilities; legs: #legs (the legs meter in the status column); bar: #bodyBar (the row); the controls, the
   // flight, the needs and the hunt as main.js makes them
-  constructor({ el, legs, bar, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent = null, carrion = null }) {
-    Object.assign(this, { el, legs, bar, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent, carrion });
+  constructor({ el, legs, bar, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent = null, carrion = null, dive = null }) {
+    Object.assign(this, { el, legs, bar, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent, carrion, dive });
     this.body = ''; this.slots = []; this.visible = null;
     this.legsBar = legs?.querySelector('b') || null;
     const keys = flight.keys;
-    this.c = { k: (...codes) => codes.some(x => keys.has(x)), shift: false, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent, carrion };
+    this.c = { k: (...codes) => codes.some(x => keys.has(x)), shift: false, squirrel, woodpecker, ground, flier, spirit, flight, needs, hunt, scent, carrion, dive };
   }
   // which body the player is in: [control, species code, the species' entry]
   which() {

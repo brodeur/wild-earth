@@ -117,6 +117,20 @@ meets opens and glows toward the voles. The burrow request's objects now name di
 burrows (still partial). The tunnels are the tile's shared state on the game server, decaying after a week no animal
 has been inside; the AI voles and coyotes dig and use them too.
 
+The predator's eyes, the quarry and the dive (2026-11-06, `client/src/sight.js`, `quarry.js`, `dive.js`; decisions, "a
+predator's eyes, the selected quarry and the dive"): the hunt relation read once more. For a body whose species hunts
+(`relations.predation`), the species it hunts are seen as far as its eyes reach (perception.json `senses.vision`, capped
+at 600 m; kept alive and drawn to 320 m for it) and are lit in their colour while the camera has a line of sight to
+them: the ground, the near trees' crowns and trunks and the canopy raster close it, cheaply and a few times a second per
+animal. Tab, or a click on a lit one, selects it: a ring of its colour under it, the hunt panel's goal. A hunting bird
+above its selection gets the dive (Q): wings tucked, straight at it, faster and faster; the prey may see it coming, more
+likely the nearer it gets, and then runs its own escape (a rabbit bolts, a ground squirrel goes down, a vole hides); a
+prey that reached cover is not there to take, and losing the line of sight calls the dive off. The strike is the catch.
+On the home tile as a red-tail, the last batch on the finished code: 6 dives, the prey saw 4 coming, 5 caught (the voles
+that saw it all the same: their run to hide follows the runway at 1.6 m/s, slower than a stoop), and a brush rabbit that
+saw it bolted out of sight and the dive was called off. Earlier runs had a ground squirrel go down its burrow and a
+jackrabbit run into cover the same way.
+
 ## What it finds on the home tile
 
 Eighteen species, 275 games, 146 of them collective, 29 predator-prey pairs, 5 scavenging links

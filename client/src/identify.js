@@ -165,6 +165,7 @@ export class Identify {
 
   // ---- click to identify -----------------------------------------------------------------------
   click(cx, cy) {
+    if (this.claim?.(cx, cy)) return;   // a predator's click on a prey animal in sight selects it (quarry.js claim; main.js sets it)
     const hit = this.pick(cx, cy), ah = this.pickAnimal(cx, cy, hit ? hit.distance : this.raycaster.far);
     if (ah) this.showAnimalCard(ah);
     else if (hit) this.showCard(hit);

@@ -219,7 +219,7 @@ export class RavenFlight {
     let yawIn = (k.has('ArrowLeft') || k.has('KeyA') ? 1 : 0) - (k.has('ArrowRight') || k.has('KeyD') ? 1 : 0);
     let pitchIn = (k.has('ArrowUp') ? 1 : 0) - (k.has('ArrowDown') ? 1 : 0);
     this.yaw += yawIn * turn * dt;
-    this.pitch = THREE.MathUtils.clamp(this.pitch + pitchIn * pitchRate * dt, -1.2, 0.9);
+    this.pitch = THREE.MathUtils.clamp(this.pitch + pitchIn * pitchRate * dt, this.pitchMin ?? -1.2, 0.9);   // pitchMin: a dive's steeper stoop (dive.js)
     if (!pitchIn) this.pitch = THREE.MathUtils.lerp(this.pitch, -0.05, 1 - Math.exp(-dt * 0.15));  // settle toward a shallow glide, slowly (~7 s)
     this.roll = THREE.MathUtils.lerp(this.roll, yawIn * 0.6, 1 - Math.exp(-dt * 1.0));   // bank into the turn: left turn dips the left wing
     // W speeds up to sp.fast (a pace the bird holds; the true top sp.vmax is the sprint's, or a dive's); S slows to a stop

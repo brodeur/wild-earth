@@ -121,7 +121,7 @@ export class SpiritControl {
     addEventListener('keydown', e => {
       if (e.repeat || typing(e) || e.metaKey || e.ctrlKey || e.altKey) return;
       const card = document.getElementById('speciesCard'), cardOpen = !!card && !card.classList.contains('hidden');
-      if (e.code === 'KeyB' || (e.code === 'Escape' && !e.fieldGuideClosed && !e.speciesCardClosed && !cardOpen)) this.leave();
+      if (e.code === 'KeyB' || (e.code === 'Escape' && !e.fieldGuideClosed && !e.speciesCardClosed && !e.quarryCleared && !cardOpen)) this.leave();   // (quarryCleared: the Escape let go of a selected prey, quarry.js)
     });
   }
 
