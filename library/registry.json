@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-05T21:14:41Z",
+ "generated_at": "2026-11-06T02:59:15Z",
  "about": "The species registry: every species the game knows or needs, the assets it has, and how far along each is.",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
@@ -28,10 +28,10 @@
  "summary": {
   "species": 269,
   "by_level": {
-   "0": 107,
+   "0": 85,
    "1": 0,
    "2": 44,
-   "3": 40,
+   "3": 62,
    "4": 78
   },
   "by_kind": {
@@ -71,11 +71,18 @@
     "4": 3
    },
    "bird": {
-    "0": 68,
+    "0": 51,
     "1": 0,
     "2": 0,
-    "3": 10,
+    "3": 27,
     "4": 8
+   },
+   "amphibian": {
+    "0": 3,
+    "1": 0,
+    "2": 0,
+    "3": 4,
+    "4": 0
    },
    "gastropod": {
     "0": 0,
@@ -85,18 +92,11 @@
     "4": 0
    },
    "mammal": {
-    "0": 27,
+    "0": 24,
     "1": 0,
     "2": 0,
-    "3": 11,
+    "3": 14,
     "4": 6
-   },
-   "amphibian": {
-    "0": 5,
-    "1": 0,
-    "2": 0,
-    "3": 2,
-    "4": 0
    },
    "reptile": {
     "0": 0,
@@ -115,9 +115,9 @@
   }
  },
  "meshy": {
-  "spent": 670,
+  "spent": 695,
   "budget": 1000,
-  "left": 330,
+  "left": 305,
   "estimate_note": "a 'latest' model preview (20) and a texture refine (10); rigging and clips by our own tools (tools/rig_quadruped.py, the bird and rodent part-rig templates), no credits",
   "queued": [
    {
@@ -185,9 +185,9 @@
     "scientific": "Junco hyemalis",
     "common": "dark-eyed junco",
     "kind": "bird",
-    "records": 80941,
+    "records": 79606,
     "why": [
-     "most recorded: 4 of its class (5% of the class's records)"
+     "most recorded: 7 of its class (3% of the class's records)"
     ],
     "body_plan": "bird",
     "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
@@ -195,8 +195,6 @@
     "stand_in": "aphelocoma_californica",
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
-     "utm10n_429_5293",
-     "utm10n_439_5293",
      "utm10n_540_4170",
      "utm10n_540_4180",
      "utm10n_731_4235",
@@ -250,9 +248,10 @@
     "scientific": "Larus occidentalis",
     "common": "western gull",
     "kind": "bird",
-    "records": 69913,
+    "records": 69910,
     "why": [
-     "predator and scavenger"
+     "predator and scavenger",
+     "most recorded: 9 of its class (2% of the class's records)"
     ],
     "body_plan": "bird",
     "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
@@ -260,33 +259,8 @@
     "stand_in": null,
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
-     "utm10n_429_5293",
      "utm10n_540_4170",
      "utm10n_540_4180"
-    ],
-    "within_budget": true
-   },
-   {
-    "id": "turdus_migratorius",
-    "scientific": "Turdus migratorius",
-    "common": "american robin",
-    "kind": "bird",
-    "records": 59985,
-    "why": [
-     "most recorded: 3 of its class (6% of the class's records)"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "aphelocoma_californica",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
-    "tiles": [
-     "utm10n_429_5293",
-     "utm10n_439_5293",
-     "utm10n_540_4180",
-     "utm10n_731_4235",
-     "utm11n_267_4175",
-     "utm11n_270_4180"
     ],
     "within_budget": true
    },
@@ -307,6 +281,28 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
      "utm10n_540_4170",
+     "utm10n_540_4180",
+     "utm10n_731_4235",
+     "utm11n_267_4175",
+     "utm11n_270_4180"
+    ],
+    "within_budget": true
+   },
+   {
+    "id": "turdus_migratorius",
+    "scientific": "Turdus migratorius",
+    "common": "american robin",
+    "kind": "bird",
+    "records": 58536,
+    "why": [
+     "most recorded: 8 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
+    "tiles": [
      "utm10n_540_4180",
      "utm10n_731_4235",
      "utm11n_267_4175",
@@ -357,7 +353,7 @@
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
-    "within_budget": true
+    "within_budget": false
    },
    {
     "id": "ardea_herodias",
@@ -407,7 +403,7 @@
     "scientific": "Sturnus vulgaris",
     "common": "european starling",
     "kind": "bird",
-    "records": 29892,
+    "records": 29837,
     "why": [
      "scavenger"
     ],
@@ -417,7 +413,6 @@
     "stand_in": "aphelocoma_californica",
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
-     "utm10n_429_5293",
      "utm10n_540_4170",
      "utm10n_540_4180",
      "utm10n_731_4235",
@@ -431,7 +426,7 @@
     "scientific": "Larus californicus",
     "common": "california gull",
     "kind": "bird",
-    "records": 28645,
+    "records": 28641,
     "why": [
      "scavenger"
     ],
@@ -441,7 +436,6 @@
     "stand_in": null,
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
-     "utm10n_429_5293",
      "utm10n_540_4170",
      "utm10n_540_4180",
      "utm11n_267_4175",
@@ -576,7 +570,7 @@
     "scientific": "Larus glaucescens",
     "common": "glaucous-winged gull",
     "kind": "bird",
-    "records": 13116,
+    "records": 13110,
     "why": [
      "predator and scavenger"
     ],
@@ -586,7 +580,6 @@
     "stand_in": null,
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
-     "utm10n_429_5293",
      "utm10n_540_4170",
      "utm10n_540_4180"
     ],
@@ -657,7 +650,7 @@
     "scientific": "Accipiter striatus",
     "common": "sharp-shinned hawk",
     "kind": "bird",
-    "records": 9115,
+    "records": 9101,
     "why": [
      "predator"
     ],
@@ -667,7 +660,6 @@
     "stand_in": "buteo_jamaicensis",
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
-     "utm10n_429_5293",
      "utm10n_540_4170",
      "utm10n_540_4180",
      "utm10n_731_4235",
@@ -1052,7 +1044,7 @@
     "scientific": "Pandion haliaetus",
     "common": "osprey",
     "kind": "bird",
-    "records": 4411,
+    "records": 4331,
     "why": [
      "predator"
     ],
@@ -1062,8 +1054,6 @@
     "stand_in": "buteo_jamaicensis",
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
-     "utm10n_429_5293",
-     "utm10n_439_5293",
      "utm10n_540_4170",
      "utm10n_540_4180",
      "utm10n_731_4235",
@@ -1116,7 +1106,7 @@
     "scientific": "Falco columbarius",
     "common": "merlin",
     "kind": "bird",
-    "records": 3777,
+    "records": 3769,
     "why": [
      "predator"
     ],
@@ -1126,7 +1116,6 @@
     "stand_in": null,
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
-     "utm10n_429_5293",
      "utm10n_540_4170",
      "utm10n_540_4180",
      "utm10n_731_4235"
@@ -1272,27 +1261,6 @@
     "within_budget": false
    },
    {
-    "id": "leuconotopicus_villosus",
-    "scientific": "Leuconotopicus villosus",
-    "common": "hairy woodpecker",
-    "kind": "bird",
-    "records": 1601,
-    "why": [
-     "most recorded: 10 of its class (3% of the class's records)"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "melanerpes_formicivorus",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
-    "tiles": [
-     "utm10n_429_5293",
-     "utm10n_439_5293",
-     "utm10n_731_4235"
-    ],
-    "within_budget": false
-   },
-   {
     "id": "batrachoseps_attenuatus",
     "scientific": "Batrachoseps attenuatus",
     "common": "california slender salamander",
@@ -1348,26 +1316,6 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
      "utm10n_731_4235"
-    ],
-    "within_budget": false
-   },
-   {
-    "id": "regulus_satrapa",
-    "scientific": "Regulus satrapa",
-    "common": "golden-crowned kinglet",
-    "kind": "bird",
-    "records": 1064,
-    "why": [
-     "most recorded: 6 of its class (4% of the class's records)"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "aphelocoma_californica",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
-    "tiles": [
-     "utm10n_429_5293",
-     "utm10n_439_5293"
     ],
     "within_budget": false
    },
@@ -1431,21 +1379,21 @@
     "within_budget": false
    },
    {
-    "id": "anas_platyrhynchos",
-    "scientific": "Anas platyrhynchos",
-    "common": "mallard",
+    "id": "leuconotopicus_villosus",
+    "scientific": "Leuconotopicus villosus",
+    "common": "hairy woodpecker",
     "kind": "bird",
-    "records": 919,
+    "records": 879,
     "why": [
-     "most recorded: 9 of its class (4% of the class's records)"
+     "most recorded: 10 of its class (3% of the class's records)"
     ],
     "body_plan": "bird",
     "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
     "estimate_credits": 30,
-    "stand_in": "mergus_merganser",
+    "stand_in": "melanerpes_formicivorus",
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
-     "utm10n_429_5293"
+     "utm10n_731_4235"
     ],
     "within_budget": false
    },
@@ -1705,9 +1653,9 @@
     "scientific": "Sorex monticolus",
     "common": "montane shrew",
     "kind": "mammal",
-    "records": 191,
+    "records": 190,
     "why": [
-     "most recorded: 8 of its class (2% of the class's records)"
+     "scavenger"
     ],
     "body_plan": "rodent",
     "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
@@ -1715,7 +1663,6 @@
     "stand_in": null,
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
-     "utm10n_439_5293",
      "utm11n_267_4175",
      "utm11n_270_4180"
     ],
@@ -1844,26 +1791,6 @@
     "within_budget": false
    },
    {
-    "id": "anaxyrus_boreas",
-    "scientific": "Anaxyrus boreas",
-    "common": "western toad",
-    "kind": "amphibian",
-    "records": 116,
-    "why": [
-     "most recorded: 1 of its class (52% of the class's records)"
-    ],
-    "body_plan": "amphibian",
-    "rig": "none yet: the reptile template, hopping",
-    "estimate_credits": 25,
-    "stand_in": null,
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
-    "tiles": [
-     "utm10n_439_5293",
-     "utm11n_270_4180"
-    ],
-    "within_budget": false
-   },
-   {
     "id": "sorex_vagrans",
     "scientific": "Sorex vagrans",
     "common": "vagrant shrew",
@@ -1904,28 +1831,6 @@
     "within_budget": false
    },
    {
-    "id": "aegolius_acadicus",
-    "scientific": "Aegolius acadicus",
-    "common": "northern saw-whet owl",
-    "kind": "bird",
-    "records": 102,
-    "why": [
-     "predator"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "strix_varia",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
-    "tiles": [
-     "utm10n_429_5293",
-     "utm10n_731_4235",
-     "utm11n_267_4175",
-     "utm11n_270_4180"
-    ],
-    "within_budget": false
-   },
-   {
     "id": "hydromantes_platycephalus",
     "scientific": "Hydromantes platycephalus",
     "common": "mount lyell salamander",
@@ -1941,6 +1846,46 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
      "utm11n_267_4175"
+    ],
+    "within_budget": false
+   },
+   {
+    "id": "aegolius_acadicus",
+    "scientific": "Aegolius acadicus",
+    "common": "northern saw-whet owl",
+    "kind": "bird",
+    "records": 99,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
+    "tiles": [
+     "utm10n_731_4235",
+     "utm11n_267_4175",
+     "utm11n_270_4180"
+    ],
+    "within_budget": false
+   },
+   {
+    "id": "anaxyrus_boreas",
+    "scientific": "Anaxyrus boreas",
+    "common": "western toad",
+    "kind": "amphibian",
+    "records": 94,
+    "why": [
+     "most recorded: 1 of its class (30% of the class's records)"
+    ],
+    "body_plan": "amphibian",
+    "rig": "none yet: the reptile template, hopping",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
+    "tiles": [
+     "utm11n_270_4180"
     ],
     "within_budget": false
    },
@@ -1970,17 +1915,16 @@
     "scientific": "Megascops kennicottii",
     "common": "western screech-owl",
     "kind": "bird",
-    "records": 53,
+    "records": 45,
     "why": [
      "predator"
     ],
     "body_plan": "bird",
     "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
     "estimate_credits": 30,
-    "stand_in": "strix_varia",
+    "stand_in": null,
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
     "tiles": [
-     "utm10n_429_5293",
      "utm10n_731_4235",
      "utm11n_267_4175",
      "utm11n_270_4180"
@@ -2122,63 +2066,6 @@
     "tiles": [
      "utm10n_540_4170",
      "utm10n_540_4180"
-    ],
-    "within_budget": false
-   },
-   {
-    "id": "dendragapus_fuliginosus",
-    "scientific": "Dendragapus fuliginosus",
-    "common": "sooty grouse",
-    "kind": "bird",
-    "records": 18,
-    "why": [
-     "most recorded: 4 of its class (4% of the class's records)"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "meleagris_gallopavo",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
-    "tiles": [
-     "utm10n_439_5293"
-    ],
-    "within_budget": false
-   },
-   {
-    "id": "empidonax_difficilis",
-    "scientific": "Empidonax difficilis",
-    "common": "pacific-slope flycatcher",
-    "kind": "bird",
-    "records": 17,
-    "why": [
-     "most recorded: 6 of its class (4% of the class's records)"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "aphelocoma_californica",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
-    "tiles": [
-     "utm10n_439_5293"
-    ],
-    "within_budget": false
-   },
-   {
-    "id": "ixoreus_naevius",
-    "scientific": "Ixoreus naevius",
-    "common": "varied thrush",
-    "kind": "bird",
-    "records": 16,
-    "why": [
-     "most recorded: 7 of its class (4% of the class's records)"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "aphelocoma_californica",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
-    "tiles": [
-     "utm10n_439_5293"
     ],
     "within_budget": false
    },
@@ -2336,44 +2223,6 @@
     "within_budget": false
    },
    {
-    "id": "rana_cascadae",
-    "scientific": "Rana cascadae",
-    "common": "cascades frog",
-    "kind": "amphibian",
-    "records": 5,
-    "why": [
-     "most recorded: 2 of its class (12% of the class's records)"
-    ],
-    "body_plan": "amphibian",
-    "rig": "none yet: the reptile template, hopping",
-    "estimate_credits": 25,
-    "stand_in": null,
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
-    "tiles": [
-     "utm10n_439_5293"
-    ],
-    "within_budget": false
-   },
-   {
-    "id": "marmota_olympus",
-    "scientific": "Marmota olympus",
-    "common": "olympic marmot",
-    "kind": "mammal",
-    "records": 4,
-    "why": [
-     "most recorded: 4 of its class (9% of the class's records)"
-    ],
-    "body_plan": "rodent",
-    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
-    "estimate_credits": 30,
-    "stand_in": "sciurus_griseus",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
-    "tiles": [
-     "utm10n_439_5293"
-    ],
-    "within_budget": false
-   },
-   {
     "id": "strix_occidentalis",
     "scientific": "Strix occidentalis",
     "common": "spotted owl",
@@ -2431,25 +2280,6 @@
     "within_budget": false
    },
    {
-    "id": "tamias_amoenus",
-    "scientific": "Tamias amoenus",
-    "common": "yellow-pine chipmunk",
-    "kind": "mammal",
-    "records": 2,
-    "why": [
-     "most recorded: 7 of its class (4% of the class's records)"
-    ],
-    "body_plan": "rodent",
-    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
-    "estimate_credits": 30,
-    "stand_in": "sciurus_griseus",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget",
-    "tiles": [
-     "utm10n_439_5293"
-    ],
-    "within_budget": false
-   },
-   {
     "id": "prophysaon_andersonii",
     "scientific": "Prophysaon andersonii",
     "common": "reticulate taildropper",
@@ -2469,7 +2299,7 @@
     "within_budget": false
    }
   ],
-  "queued_credits": 3300,
+  "queued_credits": 3065,
   "rule": "queued, never run: generation past the 1,000-credit budget needs Aaron's go-ahead"
  },
  "cards_queued": [
@@ -3900,23 +3730,61 @@
    "scientific": "Accipiter striatus",
    "common": "sharp-shinned hawk",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (variant; 2000 triangles)",
+    "rigged and animated: part rig",
+    "for 4: voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/accipiter_striatus.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/sharp_shinned_hawk.glb",
+     "source": "variant",
+     "job_id": "01a1719d-772f-76b4-9155-823815fec267",
+     "triangles": {
+      "lod0": 2000,
+      "lod1": 800,
+      "lod2": 220
+     }
     },
     "rig": {
-     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": true,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of buteo_jamaicensis by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Acer circinatum": {
    "id": "acer_circinatum",
@@ -4272,25 +4140,63 @@
   "Aegolius acadicus": {
    "id": "aegolius_acadicus",
    "scientific": "Aegolius acadicus",
-   "common": "northern saw-whet owl",
+   "common": "Northern saw-whet owl",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (variant; 1199 triangles)",
+    "rigged and animated: part rig",
+    "for 4: voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/aegolius_acadicus.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/saw_whet_owl.glb",
+     "source": "variant",
+     "job_id": "01a1ad38-4e76-7191-8ddc-c7409132af60",
+     "triangles": {
+      "lod0": 1199,
+      "lod1": 449,
+      "lod2": 140
+     }
     },
     "rig": {
-     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": true,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of strix_varia by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Aesculus californica": {
    "id": "aesculus_californica",
@@ -4571,46 +4477,125 @@
    "scientific": "Anas platyrhynchos",
    "common": "mallard",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (variant; 1199 triangles)",
+    "rigged and animated: part rig",
+    "for 4: diet, voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/anas_platyrhynchos.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/mallard.glb",
+     "source": "variant",
+     "job_id": "01a1ad3c-fd50-7790-860b-de59283a3ab8",
+     "triangles": {
+      "lod0": 1199,
+      "lod1": 449,
+      "lod2": 149
+     }
     },
     "rig": {
-     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of mergus_merganser by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Anaxyrus boreas": {
    "id": "anaxyrus_boreas",
    "scientific": "Anaxyrus boreas",
    "common": "western toad",
    "kind": "amphibian",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (meshy; 1200 triangles)",
+    "rigged and animated: part rig",
+    "for 4: diet, voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/anaxyrus_boreas.json",
-     "diet": false,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/western_toad.glb",
+     "source": "meshy",
+     "job_id": "01a1ae8d-0b79-7550-84cb-9b7d4e6f1127",
+     "triangles": {
+      "lod0": 1200,
+      "lod1": 400,
+      "lod2": 120
+     }
     },
     "rig": {
-     "template": "none yet: the reptile template, hopping"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": {
+    "jobs": 1,
+    "credits": 5
+   },
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Aphelocoma californica": {
    "id": "aphelocoma_californica",
@@ -7885,23 +7870,64 @@
    "scientific": "Dendragapus fuliginosus",
    "common": "sooty grouse",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (meshy; 1200 triangles)",
+    "rigged and animated: part rig",
+    "for 4: diet, voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/dendragapus_fuliginosus.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/sooty_grouse.glb",
+     "source": "meshy",
+     "job_id": "01a1ae8b-eb2c-73d6-867c-037ab6578488",
+     "triangles": {
+      "lod0": 1200,
+      "lod1": 450,
+      "lod2": 150
+     }
     },
     "rig": {
-     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": {
+    "jobs": 1,
+    "credits": 5
+   },
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Didelphis virginiana": {
    "id": "didelphis_virginiana",
@@ -8176,25 +8202,63 @@
   "Empidonax difficilis": {
    "id": "empidonax_difficilis",
    "scientific": "Empidonax difficilis",
-   "common": "pacific-slope flycatcher",
+   "common": "Pacific-slope flycatcher",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (variant; 999 triangles)",
+    "rigged and animated: part rig",
+    "for 4: diet, voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/empidonax_difficilis.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/flycatcher.glb",
+     "source": "variant",
+     "job_id": "01a1ad39-ae77-7764-bea5-e718f3527f65",
+     "triangles": {
+      "lod0": 999,
+      "lod1": 399,
+      "lod2": 119
+     }
     },
     "rig": {
-     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of poecile_rufescens by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Enhydra lutris": {
    "id": "enhydra_lutris",
@@ -8628,23 +8692,61 @@
    "scientific": "Falco columbarius",
    "common": "merlin",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (variant; 2000 triangles)",
+    "rigged and animated: part rig",
+    "for 4: voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/falco_columbarius.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/merlin.glb",
+     "source": "variant",
+     "job_id": "01a1719d-772f-76b4-9155-823815fec267",
+     "triangles": {
+      "lod0": 2000,
+      "lod1": 800,
+      "lod2": 220
+     }
     },
     "rig": {
-     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": true,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of buteo_jamaicensis by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Falco mexicanus": {
    "id": "falco_mexicanus",
@@ -9377,25 +9479,63 @@
   "Ixoreus naevius": {
    "id": "ixoreus_naevius",
    "scientific": "Ixoreus naevius",
-   "common": "varied thrush",
+   "common": "Varied thrush",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (variant; 1000 triangles)",
+    "rigged and animated: part rig",
+    "for 4: diet, voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/ixoreus_naevius.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/varied_thrush.glb",
+     "source": "variant",
+     "job_id": "01a1ae89-b054-70ad-a469-fe5fce865630",
+     "triangles": {
+      "lod0": 1000,
+      "lod1": 400,
+      "lod2": 120
+     }
     },
     "rig": {
-     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of turdus_migratorius by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Juglans hindsii": {
    "id": "juglans_hindsii",
@@ -9483,25 +9623,63 @@
   "Junco hyemalis": {
    "id": "junco_hyemalis",
    "scientific": "Junco hyemalis",
-   "common": "dark-eyed junco",
+   "common": "Dark-eyed junco",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (variant; 999 triangles)",
+    "rigged and animated: part rig",
+    "for 4: diet, voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/junco_hyemalis.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/junco.glb",
+     "source": "variant",
+     "job_id": "01a1ad39-ae77-7764-bea5-e718f3527f65",
+     "triangles": {
+      "lod0": 999,
+      "lod1": 399,
+      "lod2": 119
+     }
     },
     "rig": {
-     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of poecile_rufescens by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Juncus effusus": {
    "id": "juncus_effusus",
@@ -9645,25 +9823,63 @@
   "Larus californicus": {
    "id": "larus_californicus",
    "scientific": "Larus californicus",
-   "common": "california gull",
+   "common": "California gull",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (variant; 2000 triangles)",
+    "rigged and animated: part rig",
+    "for 4: voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/larus_californicus.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/california_gull.glb",
+     "source": "variant",
+     "job_id": "01a1719d-772f-76b4-9155-823815fec267",
+     "triangles": {
+      "lod0": 2000,
+      "lod1": 800,
+      "lod2": 220
+     }
     },
     "rig": {
-     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": true,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of buteo_jamaicensis by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Larus delawarensis": {
    "id": "larus_delawarensis",
@@ -9693,23 +9909,61 @@
    "scientific": "Larus glaucescens",
    "common": "glaucous-winged gull",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (variant; 2000 triangles)",
+    "rigged and animated: part rig",
+    "for 4: voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/larus_glaucescens.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/glaucous_winged_gull.glb",
+     "source": "variant",
+     "job_id": "01a1719d-772f-76b4-9155-823815fec267",
+     "triangles": {
+      "lod0": 2000,
+      "lod1": 800,
+      "lod2": 220
+     }
     },
     "rig": {
-     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": true,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of buteo_jamaicensis by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Larus glaucoides": {
    "id": "larus_glaucoides",
@@ -9762,23 +10016,57 @@
    "scientific": "Larus occidentalis",
    "common": "western gull",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (variant; 2000 triangles)",
+    "rigged and animated: part rig",
+    "for 4: voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/larus_occidentalis.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/western_gull.glb",
+     "source": "variant",
+     "job_id": "01a1719d-772f-76b4-9155-823815fec267",
+     "triangles": {
+      "lod0": 2000,
+      "lod1": 800,
+      "lod2": 220
+     }
     },
     "rig": {
-     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": true,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of buteo_jamaicensis by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    }
+   ]
   },
   "Larus smithsonianus": {
    "id": "larus_smithsonianus",
@@ -10040,23 +10328,57 @@
    "scientific": "Leuconotopicus villosus",
    "common": "hairy woodpecker",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own procedural model drawn by the client (no adopted mesh yet)",
+    "rigged and animated: posed by client code",
+    "for 4: diet, voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/leuconotopicus_villosus.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 0,
+     "file": null,
+     "source": "procedural",
+     "job_id": null,
+     "triangles": {}
     },
     "rig": {
-     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
-    }
+     "animated": true,
+     "kind": "client code",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "agent (Claude) for Aaron Brodeur",
+    "url": null
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Lontra canadensis": {
    "id": "lontra_canadensis",
@@ -10502,25 +10824,66 @@
   "Marmota olympus": {
    "id": "marmota_olympus",
    "scientific": "Marmota olympus",
-   "common": "olympic marmot",
+   "common": "Olympic marmot",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (meshy; 1800 triangles)",
+    "rigged and animated: part rig",
+    "for 4: diet, voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/marmota_olympus.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/marmot.glb",
+     "source": "meshy",
+     "job_id": "01a1ae8c-9bb0-776b-bbdb-68618e5863e6",
+     "triangles": {
+      "lod0": 1800,
+      "lod1": 600,
+      "lod2": 180
+     }
     },
     "rig": {
-     "template": "rodent part rig R (animalModels.js), the hop gait for lagomorphs"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": {
+    "jobs": 1,
+    "credits": 5
+   },
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Megaceryle alcyon": {
    "id": "megaceryle_alcyon",
@@ -10612,25 +10975,63 @@
   "Megascops kennicottii": {
    "id": "megascops_kennicottii",
    "scientific": "Megascops kennicottii",
-   "common": "western screech-owl",
+   "common": "Western screech-owl",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (variant; 1199 triangles)",
+    "rigged and animated: part rig",
+    "for 4: voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/megascops_kennicottii.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/screech_owl.glb",
+     "source": "variant",
+     "job_id": "01a1ad38-4e76-7191-8ddc-c7409132af60",
+     "triangles": {
+      "lod0": 1199,
+      "lod1": 449,
+      "lod2": 140
+     }
     },
     "rig": {
-     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": true,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of strix_varia by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Melanerpes formicivorus": {
    "id": "melanerpes_formicivorus",
@@ -11579,23 +11980,61 @@
    "scientific": "Pandion haliaetus",
    "common": "osprey",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (variant; 2000 triangles)",
+    "rigged and animated: part rig",
+    "for 4: diet, voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/pandion_haliaetus.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/osprey.glb",
+     "source": "variant",
+     "job_id": "01a1719d-772f-76b4-9155-823815fec267",
+     "triangles": {
+      "lod0": 2000,
+      "lod1": 800,
+      "lod2": 220
+     }
     },
     "rig": {
-     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of buteo_jamaicensis by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Pekania pennanti": {
    "id": "pekania_pennanti",
@@ -13887,48 +14326,124 @@
   "Rana cascadae": {
    "id": "rana_cascadae",
    "scientific": "Rana cascadae",
-   "common": "cascades frog",
+   "common": "Cascades frog",
    "kind": "amphibian",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (variant; 1200 triangles)",
+    "rigged and animated: part rig",
+    "for 4: diet, voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/rana_cascadae.json",
-     "diet": false,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/cascades_frog.glb",
+     "source": "variant",
+     "job_id": "01a1ae8d-0b79-7550-84cb-9b7d4e6f1127",
+     "triangles": {
+      "lod0": 1200,
+      "lod1": 400,
+      "lod2": 120
+     }
     },
     "rig": {
-     "template": "none yet: the reptile template, hopping"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of anaxyrus_boreas by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Regulus satrapa": {
    "id": "regulus_satrapa",
    "scientific": "Regulus satrapa",
-   "common": "golden-crowned kinglet",
+   "common": "Golden-crowned kinglet",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (variant; 1000 triangles)",
+    "rigged and animated: part rig",
+    "for 4: diet, voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/regulus_satrapa.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/kinglet.glb",
+     "source": "variant",
+     "job_id": "01a1ad39-ae77-7764-bea5-e718f3527f65",
+     "triangles": {
+      "lod0": 1000,
+      "lod1": 400,
+      "lod2": 120
+     }
     },
     "rig": {
-     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of poecile_rufescens by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Ribes malvaceum": {
    "id": "ribes_malvaceum",
@@ -15194,22 +15709,51 @@
    "scientific": "Sorex monticolus",
    "common": "montane shrew",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (variant; 699 triangles)",
+    "rigged and animated: part rig",
+    "for 4: diet, voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/sorex_monticolus.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/montane_shrew.glb",
+     "source": "variant",
+     "job_id": "01a171bc-b285-71cb-9e16-dc06982a34e4",
+     "triangles": {
+      "lod0": 699,
+      "lod1": 250,
+      "lod2": 69
+     }
     },
     "rig": {
-     "template": "rodent part rig R (animalModels.js), the hop gait for lagomorphs"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of peromyscus_maniculatus by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
    "tiles": []
   },
   "Sorex palustris": {
@@ -15430,25 +15974,66 @@
   "Sturnus vulgaris": {
    "id": "sturnus_vulgaris",
    "scientific": "Sturnus vulgaris",
-   "common": "european starling",
+   "common": "European starling",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (meshy; 998 triangles)",
+    "rigged and animated: part rig",
+    "for 4: diet, voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/sturnus_vulgaris.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/starling.glb",
+     "source": "meshy",
+     "job_id": "01a1ae8b-3af1-7031-aa17-96a16473bf59",
+     "triangles": {
+      "lod0": 998,
+      "lod1": 400,
+      "lod2": 120
+     }
     },
     "rig": {
-     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": {
+    "jobs": 1,
+    "credits": 5
+   },
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": null
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Sylvilagus bachmani": {
    "id": "sylvilagus_bachmani",
@@ -15614,23 +16199,61 @@
    "scientific": "Tamias amoenus",
    "common": "yellow-pine chipmunk",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (variant; 1442 triangles)",
+    "rigged and animated: part rig",
+    "for 4: diet, voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/tamias_amoenus.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/yellow_pine_chipmunk.glb",
+     "source": "variant",
+     "job_id": "01a179c2-9f55-776f-980c-940a3bd13203",
+     "triangles": {
+      "lod0": 1442,
+      "lod1": 486,
+      "lod2": 150
+     }
     },
     "rig": {
-     "template": "rodent part rig R (animalModels.js), the hop gait for lagomorphs"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": null,
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "variant of tamias_townsendii by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai"
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Tamias quadrimaculatus": {
    "id": "tamias_quadrimaculatus",
@@ -16232,25 +16855,66 @@
   "Turdus migratorius": {
    "id": "turdus_migratorius",
    "scientific": "Turdus migratorius",
-   "common": "american robin",
+   "common": "American robin",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "why": [
-    "generated traits (diet, senses, size, locomotion), no model yet"
+    "own mesh (meshy; 998 triangles)",
+    "rigged and animated: part rig",
+    "for 4: diet, voice"
    ],
    "assets": {
-    "behaviour": {
-     "generated": true,
-     "file": "library/animals/traits/turdus_migratorius.json",
-     "diet": true,
-     "locomotion": true
+    "mesh": {
+     "fidelity": 2,
+     "file": "client/assets/american_robin.glb",
+     "source": "meshy",
+     "job_id": "01a1ae89-b054-70ad-a469-fe5fce865630",
+     "triangles": {
+      "lod0": 998,
+      "lod1": 400,
+      "lod2": 120
+     }
     },
     "rig": {
-     "template": "bird part rig (animalModels.js RIG.bird), flierControl"
-    }
+     "animated": true,
+     "kind": "part rig",
+     "clips": null,
+     "leg_engine": false
+    },
+    "sound": {
+     "voice": false,
+     "where": null
+    },
+    "behaviour": {
+     "senses": true,
+     "diet": false,
+     "needs": true,
+     "calendar": true,
+     "range": true
+    },
+    "locomotion": null,
+    "playable": true
    },
-   "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)",
-   "tiles": []
+   "meshy": {
+    "jobs": 1,
+    "credits": 5
+   },
+   "license": "CC BY-SA 4.0",
+   "provenance": {
+    "status": "agent draft, needs local sign-off",
+    "source": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": null
+   },
+   "tiles": [
+    {
+     "tile": "utm10n_429_5293",
+     "present": "records"
+    },
+    {
+     "tile": "utm10n_439_5293",
+     "present": "records"
+    }
+   ]
   },
   "Tursiops truncatus": {
    "id": "tursiops_truncatus",

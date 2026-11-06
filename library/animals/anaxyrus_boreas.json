@@ -1,0 +1,73 @@
+{
+  "id": "anaxyrus_boreas",
+  "aliases": [
+    "western_toad",
+    "boreal_toad",
+    "bufo_boreas",
+    "toad"
+  ],
+  "scientific": "Anaxyrus boreas",
+  "common": "western toad",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Amphibia",
+    "order": "Anura",
+    "family": "Bufonidae",
+    "genus": "Anaxyrus"
+  },
+  "mass_kg": 0.06,
+  "body_plan": "amphibian",
+  "size": {
+    "length_m": 0.1,
+    "shoulder_or_wingspan_m": 0.04,
+    "note": "Adults 5.5-13 cm snout to vent (most 6-11 cm), squat and broad, warty, with large oval parotoid glands; no tail. Built at 0.10 m snout to vent (0.102 m in all), the trunk 6 cm across (8.9 cm with the legs folded out), the back 4 cm up at mid-body, the eyes 4.4 cm up; crouched on its belly (2 mm clearance). length_m here is snout to vent; shoulder_or_wingspan_m is the back's height."
+  },
+  "source": {
+    "kind": "meshy",
+    "title": "Western toad, crouching",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/anaxyrus_boreas/01a1ae8d-0b79-7550-84cb-9b7d4e6f1127/model.glb (local; jobs/ meshes are not tracked)",
+    "original": "Meshy text-to-3D preview, ai_model meshy-6-lite, triangle remesh to 20,000 faces, untextured (a very good warty toad in a crouch)",
+    "prompt": "A western toad (Anaxyrus boreas), NOT a frog, NOT a cartoon. One adult sitting on the ground in a neutral crouch, side-on pose, the four legs folded under it, the front feet planted. Realistic proportions: 10 cm long, a squat broad warty body, a blunt rounded head with big oval parotoid glands behind the eyes, golden eyes with horizontal pupils, short thick legs. Olive-grey to greenish brown skin with dark warts ringed in rusty brown, a thin pale cream stripe down the middle of the back, a pale mottled belly. No base, no ground. Game-ready, clean closed mesh.",
+    "job_id": "01a1ae8d-0b79-7550-84cb-9b7d4e6f1127",
+    "job": "library/animals/jobs/anaxyrus_boreas/01a1ae8d-0b79-7550-84cb-9b7d4e6f1127/job.json",
+    "credits": 5,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_toad.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the built GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder, not CC BY-SA licensees).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" in the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 1200,
+    "lod1": 400,
+    "lod2": 120,
+    "file": "client/assets/western_toad.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT",
+      "_BLUE (0 everywhere: no blue patches; kept so the shader path is the lizard's)"
+    ],
+    "note": "The generated crouch kept; the warts found on the full mesh (each vertex's height over its neighbours' mean along the normal) and carried through the collapse in a vertex group: dark faces at the wart peaks (and a hashed few), rusty rings on their neighbours (fewer on lod1, none on lod2). The mid-dorsal stripe is a cream ribbon 2.8 mm wide laid 0.4 mm over the decimated back (26 stations on lod0, 10 on lod1, none on lod2), its stations cast onto each tier. lod0 = 1,134 body + 50 stripe + 16 pupils; lod1 = 382 + 18; lod2 = 120 (the collapse finished without symmetry; the legs fold into the body). GLB 227,108 bytes."
+  },
+  "rig": "reptile template (as tools/build_salamander.py; to be drawn with the salamanders' slow walk constants): BODY 0, LEG_A 1 (left fore, right hind) and LEG_B 2 (right fore, left hind), pivots on the body's side at the shoulder and the hip; the limbs are smooth-weighted regions of the crouch (the fore legs below and outside the chest and the fore feet planted ahead under the head; the folded hind legs outside the trunk's taper behind), so the small swing never tears the skin; HEAD 6 (pivot at the neck, behind the parotoids); a toad has no tail, so TAIL 3 and TAIL_TIP 8 are tiny stub regions at the vent (about 30 and 20 vertices on lod0; pivots at the vent and 1 mm behind it; lod2 keeps only the tip stub). extras.rig (kind 'reptile'): head, tail, tail_tip, fore, hind, legs (FL FR HL HR), snout_z 0.0585, vent_z -0.0415, tail_end_z -0.4415 (5 snout-vent lengths behind the snout, not the vent: the spine wave's envelope then stays near envS along the body, a sway of a few mm, no bend), belly_y, back_y, drop, blue_off and throat_off (the belly cream), length_m 0.10 (snout to vent). The lead may also set k.wave lower (e.g. 0.004) for the toad. No skin.",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Reads as a western toad: squat, broad and warty, crouched on its belly with the fore feet planted; olive-grey to greenish brown (two tones hashed), dark warts ringed rusty brown over the back, flanks and legs, the thin pale cream mid-dorsal stripe from behind the eyes to the vent, golden eyes with a dark horizontal pupil (lod0), a pale cream belly mottled grey. Still open: the warts on the decimated skin are faces, not bumps (the collapse smooths the generator's warts away), and the rusty rings are whole neighbouring faces; the parotoid glands are a slightly paler ellipsoid region but read weakly; the limbs are regions with pivots set by eye (no joint chain), so a long stride would smear the folded hind leg; lod2 (120 triangles) loses the legs into a squat lump. The walk will need a toad's slow crawl and hop, not the salamander's sprawl, eventually.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (Meshy job, build script, warts, stripe, recolour, rig, tiers, entry)"
+  ],
+  "sources": [
+    "Jones, Leonard & Olson (eds.), Amphibians of the Pacific Northwest (2005): western toad size, warts, the dorsal stripe, parotoids, belly mottling",
+    "Leonard, Brown, Jones, McAllister & Storm, Amphibians of Washington and Oregon (1993): field marks and habitat",
+    "AmphibiaWeb, Anaxyrus boreas account: size, colour, the Olympic Peninsula range",
+    "tools/build_salamander.py (the reptile template, _BLUE, extras.rig)"
+  ]
+}

@@ -80,6 +80,28 @@ const DRAWN = {
   ensatina_eschscholtzii: { file: 'ensatina.glb', loader: 'loadEnsatinaMesh' },
   ardea_herodias: { file: 'heron.glb', loader: 'loadHeronMesh' },
   mergus_merganser: { file: 'merganser.glb', loader: 'loadMerganserMesh' },
+  // the second batch (2026-11-06)
+  turdus_migratorius: { file: 'american_robin.glb', loader: 'loadRobinMesh' },
+  sturnus_vulgaris: { file: 'starling.glb', loader: 'loadStarlingMesh' },
+  ixoreus_naevius: { file: 'varied_thrush.glb', loader: 'loadVariedThrushMesh' },
+  junco_hyemalis: { file: 'junco.glb', loader: 'loadJuncoMesh' },
+  regulus_satrapa: { file: 'kinglet.glb', loader: 'loadKingletMesh' },
+  empidonax_difficilis: { file: 'flycatcher.glb', loader: 'loadFlycatcherMesh' },
+  megascops_kennicottii: { file: 'screech_owl.glb', loader: 'loadScreechOwlMesh' },
+  aegolius_acadicus: { file: 'saw_whet_owl.glb', loader: 'loadSawWhetOwlMesh' },
+  pandion_haliaetus: { file: 'osprey.glb', loader: 'loadOspreyMesh' },
+  accipiter_striatus: { file: 'sharp_shinned_hawk.glb', loader: 'loadSharpShinnedMesh' },
+  falco_columbarius: { file: 'merlin.glb', loader: 'loadMerlinMesh' },
+  larus_glaucescens: { file: 'glaucous_winged_gull.glb', loader: 'loadGlaucousGullMesh' },
+  larus_californicus: { file: 'california_gull.glb', loader: 'loadCaliforniaGullMesh' },
+  larus_occidentalis: { file: 'western_gull.glb', loader: 'loadWesternGullMesh' },
+  anas_platyrhynchos: { file: 'mallard.glb', loader: 'loadMallardMesh' },
+  dendragapus_fuliginosus: { file: 'sooty_grouse.glb', loader: 'loadGrouseMesh' },
+  marmota_olympus: { file: 'marmot.glb', loader: 'loadMarmotMesh' },
+  tamias_amoenus: { file: 'yellow_pine_chipmunk.glb', loader: 'loadYellowPineChipmunkMesh' },
+  sorex_monticolus: { file: 'montane_shrew.glb', loader: 'loadShrewMesh' },
+  anaxyrus_boreas: { file: 'western_toad.glb', loader: 'loadToadMesh' },
+  rana_cascadae: { file: 'cascades_frog.glb', loader: 'loadFrogMesh' },
 };
 // Procedural models (animals.js SPECIES, which is not exported): species -> animalModels.js builder.
 const PROC = {
@@ -89,7 +111,7 @@ const PROC = {
   urocyon_cinereoargenteus: 'buildFox', canis_latrans: 'buildCoyote', puma_concolor: 'buildCougar',
   sylvilagus_bachmani: 'buildRabbit', lepus_californicus: 'buildJackrabbit', microtus_californicus: 'buildVole', cyanocitta_stelleri: 'buildStellersJay',
   meleagris_gallopavo: 'buildTurkey', otospermophilus_beecheyi: 'buildGroundSquirrel', sceloporus_occidentalis: 'buildLizard',
-  ursus_americanus: 'buildBear', oreortyx_pictus: 'buildMountainQuail', ariolimax_columbianus: 'buildSlug',
+  ursus_americanus: 'buildBear', oreortyx_pictus: 'buildMountainQuail', ariolimax_columbianus: 'buildSlug', leuconotopicus_villosus: 'buildHairyWoodpecker',
 };
 // Body plan for the motion switch: quadruped, rodent (bounding pair, sits up), bird (ground bird: hops, flushes),
 // soarer (glides, flaps in bursts, perches), reptile (sprawling walk and sprint with the spine wave, basks, pushes up).
@@ -105,6 +127,7 @@ const PLAN = {
   troglodytes_pacificus: 'bird', perisoreus_canadensis: 'bird', poecile_rufescens: 'bird', strix_varia: 'bird', megaceryle_alcyon: 'bird',
   ardea_herodias: 'bird', mergus_merganser: 'bird', corvus_brachyrhynchos: 'bird', haliaeetus_leucocephalus: 'soarer',
   plethodon_vehiculum: 'reptile', ensatina_eschscholtzii: 'reptile', ariolimax_columbianus: 'rodent',
+  turdus_migratorius: 'bird', sturnus_vulgaris: 'bird', ixoreus_naevius: 'bird', junco_hyemalis: 'bird', regulus_satrapa: 'bird', empidonax_difficilis: 'bird', megascops_kennicottii: 'bird', aegolius_acadicus: 'bird', pandion_haliaetus: 'soarer', accipiter_striatus: 'soarer', falco_columbarius: 'soarer', larus_glaucescens: 'soarer', larus_californicus: 'soarer', larus_occidentalis: 'soarer', anas_platyrhynchos: 'bird', dendragapus_fuliginosus: 'bird', marmota_olympus: 'rodent', tamias_amoenus: 'rodent', sorex_monticolus: 'rodent', anaxyrus_boreas: 'reptile', rana_cascadae: 'reptile', leuconotopicus_villosus: 'bird',
 };
 // Cycle rates (Hz) from animals.js: deer walk speed / 1.5 m at 1.1 m/s, squirrel bound 3.5, quail whirr 19 and
 // walk speed / 0.14, jay rowing 11, woodpecker 13, raven 2.6, hawk 2.4; fox, coyote and lion walk (MAMMAL walk speed

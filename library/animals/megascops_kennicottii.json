@@ -1,0 +1,77 @@
+{
+  "id": "megascops_kennicottii",
+  "aliases": [
+    "western_screech_owl",
+    "screech_owl"
+  ],
+  "scientific": "Megascops kennicottii",
+  "common": "Western screech-owl",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Strigiformes",
+    "family": "Strigidae",
+    "genus": "Megascops"
+  },
+  "mass_kg": 0.15,
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.22,
+    "shoulder_or_wingspan_m": 0.56,
+    "note": "Length 19-25 cm, wingspan 55-62 cm, 88-305 g (northern birds larger, female larger). Built 0.225 m tall from the feet to the crown (0.22 m by height, plus the ear tufts), perched upright as the barred owl; bill tip to the neck to the rump 0.186 m plus a 0.070 m visible tail; wing cards 0.56 m across."
+  },
+  "source": {
+    "kind": "variant",
+    "title": "Western screech-owl (variant of the barred owl's Meshy mesh)",
+    "author": "variant of strix_varia by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/strix_varia/01a1ad38-4e76-7191-8ddc-c7409132af60/model.glb (local; jobs/ meshes are not tracked; generated with Meshy (meshy.ai))",
+    "original": "the barred owl's Meshy text-to-3D preview (task 01a1ad38-4e76-7191-8ddc-c7409132af60, meshy-6-lite, triangle mesh, 20,850 triangles, one piece, untextured)",
+    "prompt": "(the barred owl's) A barred owl (Strix varia), one adult perched upright, side-on pose, wings folded against the body. Realistic proportions: 50 cm long, a big round head with NO ear tufts, a pale grey-brown facial disc with concentric dark rings, large dark brown eyes, a small yellow hooked bill, a stocky body, a medium tail. Grey-brown plumage with white bars across the back and wings, horizontal brown bars across the upper breast and vertical brown streaks on the pale belly; feathered legs and feet with dark talons. No base, no perch, no branch. Game-ready, clean closed mesh.",
+    "job_id": "01a1ad38-4e76-7191-8ddc-c7409132af60",
+    "job": "library/animals/jobs/strix_varia/01a1ad38-4e76-7191-8ddc-c7409132af60/job.json",
+    "credits": 0,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_songbird.py --species megascops_kennicottii",
+    "build": "tools/build_songbird.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the adopted GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "A variant built from an earlier Meshy job: no new generation, no credits. Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 1199,
+    "lod1": 449,
+    "lod2": 140,
+    "file": "client/assets/screech_owl.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "lod_m": [
+      10,
+      30
+    ],
+    "note": "A variant of the barred owl's Meshy preview (no credits), scaled to 0.22 m tall, the head widened 1.05x (the barred owl's 1.15); two short ear tufts (four-sided horns, 1.5 cm) set into the crown at the top corners of the facial disc; yellow eyes with black pupils as forward discs; a small grey-black bill cone; feathered pale legs with dark talons; a 7 cm rounded tail barred pale (lod0), angled 34 degrees below level (raised from 55 to keep its tip off the ground). Colours: grey upperparts streaked black and finely cross-barred (face bands, lod0 and lod1); a grey facial disc with fine rings, pale brows running into the tufts and a dark rim; pale grey underparts streaked black and cross-barred; a row of white scapular spots along the top of the folded wing (whole faces); grey barred flight cards. Triangles: lod0 1,199 = 792 body + 407 legs, tail, cards, eyes and bill; lod1 449 = 306 body + 143 legs, tail, cards, eyes and bill; lod2 140 = 86 body + 54 legs, tail, cards, eyes and bill. GLB 245,964 bytes. lod_m is a suggestion."
+  },
+  "rig": "bird rig template of the Steller's jay (tools/build_stellersjay.py; drawn with client/src/animalModels.js RIG.stjay's constants): PART BODY 0, LEG_A 1 / LEG_B 2 procedural legs (pivot at the knee), TAIL 3 procedural tail (pivot at the rump), HEAD 6 (head and neck, pivot at the base of the neck), WING_L/R 4/5 and HAND_L/R 9/10 flight cards that collapse into the shoulder on pose; extras.rig {kind 'bird', wing (shoulder), tail (rump), head (neck base), length_m}; no skin",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Built 2026-11-05. Reads as a small grey eared owl: tufts, yellow eyes, dark-rimmed grey face, bark-grey streaked plumage. Still open: the streaks and cross-bars are per-face colour on ~800 body faces, so they read as mottling rather than fine bark pattern; the scapular spots are two or three large faces, not a neat row; the barred owl's body is a little long for this compact owl; the upright model flies 'standing up' under RIG.stjay unless the client pitches it (as the barred owl).",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (variant recipe, build script, rig, tiers, entry)"
+  ],
+  "sources": [
+    "The Sibley Guide to Birds, 2nd edition (D. A. Sibley, 2014): plumage, shape and posture",
+    "Cornell Lab of Ornithology, All About Birds and Birds of the World species accounts: size, mass, wingspan, plumage",
+    "docs/animal-library.md",
+    "library/animals/README.md",
+    "tools/build_songbird.py",
+    "tools/build_stellersjay.py"
+  ]
+}

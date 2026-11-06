@@ -1,0 +1,76 @@
+{
+  "id": "ixoreus_naevius",
+  "aliases": [
+    "varied_thrush"
+  ],
+  "scientific": "Ixoreus naevius",
+  "common": "Varied thrush",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Turdidae",
+    "genus": "Ixoreus"
+  },
+  "mass_kg": 0.078,
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.24,
+    "shoulder_or_wingspan_m": 0.38,
+    "note": "Length 20-26 cm, wingspan 34-42 cm, 65-100 g. Built 0.240 m bill to tail (0.155 m bill tip to the neck to the rump, plus a 0.085 m tail), 0.117 m tall; wing cards 0.38 m across."
+  },
+  "source": {
+    "kind": "variant",
+    "title": "Varied thrush (variant of the American robin's Meshy mesh)",
+    "author": "variant of turdus_migratorius by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/turdus_migratorius/01a1ae89-b054-70ad-a469-fe5fce865630/model.glb (local; jobs/ meshes are not tracked; generated with Meshy (meshy.ai))",
+    "original": "the American robin's Meshy text-to-3D preview (task 01a1ae89-b054-70ad-a469-fe5fce865630, meshy-6-lite, triangle mesh, 20,327 triangles, one piece, untextured)",
+    "prompt": "(the American robin's) An American robin (Turdus migratorius), one adult male standing on the ground, side-on pose, upright alert thrush posture, wings folded tight against the body. Realistic proportions: 25 cm long, a round chest, a medium-long tail, a straight yellow bill, long thin legs. Dark grey-brown back, wings and tail, a blackish head with a broken white eye ring, a white-streaked throat, a brick-red orange breast and belly, white under the tail. Three toes forward and one back. No base, no perch. Game-ready, clean closed mesh.",
+    "job_id": "01a1ae89-b054-70ad-a469-fe5fce865630",
+    "job": "library/animals/jobs/turdus_migratorius/01a1ae89-b054-70ad-a469-fe5fce865630/job.json",
+    "credits": 0,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_songbird.py --species ixoreus_naevius",
+    "build": "tools/build_songbird.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the adopted GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "A variant built from an earlier Meshy job: no new generation, no credits. Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 1000,
+    "lod1": 400,
+    "lod2": 120,
+    "file": "client/assets/varied_thrush.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "lod_m": [
+      8,
+      25
+    ],
+    "note": "A variant of the American robin's Meshy preview (no credits), scaled to 0.24 m, pitched 10 degrees nose-down (more level than the robin), a shorter 8.5 cm square tail. Colours (the male): slate blue-grey back, crown, wings and tail; an orange eyebrow over a black mask through the eye and cheek; orange throat and upper breast, a black breast band, orange lower breast and flanks (the flanks washed slate), grey-white belly scalloped grey on lod0, white undertail; two orange wing bars and an orange stripe on the folded wing (lod0 and lod1); orange bars on the flight cards and a buff-orange underwing stripe; dark bill, pinkish-brown legs. Triangles: lod0 1,000 = 815 body + 185 legs, tail, cards, eyes; lod1 400 = 311 body + 89 legs, tail, cards, eyes; lod2 120 = 93 body + 27 legs, tail, cards, eyes. GLB 172,432 bytes. lod_m is a suggestion."
+  },
+  "rig": "bird rig template of the Steller's jay (tools/build_stellersjay.py; drawn with client/src/animalModels.js RIG.stjay's constants): PART BODY 0, LEG_A 1 / LEG_B 2 procedural legs (pivot at the knee), TAIL 3 procedural tail (pivot at the rump), HEAD 6 (head and neck, pivot at the base of the neck), WING_L/R 4/5 and HAND_L/R 9/10 flight cards that collapse into the shoulder on pose; extras.rig {kind 'bird', wing (shoulder), tail (rump), head (neck base), length_m}; no skin",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Built 2026-11-05. Reads as a varied thrush: slate and orange, the black breast band and mask, the orange eyebrow. Still open: the folded wing's bars and stripe are only a few faces wide and break up; the robin's body is a little slim for this chunkier thrush; male only (no _COLORB for the browner female).",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (variant recipe, build script, rig, tiers, entry)"
+  ],
+  "sources": [
+    "The Sibley Guide to Birds, 2nd edition (D. A. Sibley, 2014): plumage, shape and posture",
+    "Cornell Lab of Ornithology, All About Birds and Birds of the World species accounts: size, mass, wingspan, plumage",
+    "docs/animal-library.md",
+    "library/animals/README.md",
+    "tools/build_songbird.py",
+    "tools/build_stellersjay.py"
+  ]
+}

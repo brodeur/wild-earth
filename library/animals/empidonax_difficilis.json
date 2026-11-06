@@ -1,0 +1,78 @@
+{
+  "id": "empidonax_difficilis",
+  "aliases": [
+    "pacific_slope_flycatcher",
+    "western_flycatcher",
+    "flycatcher"
+  ],
+  "scientific": "Empidonax difficilis",
+  "common": "Pacific-slope flycatcher",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Tyrannidae",
+    "genus": "Empidonax"
+  },
+  "mass_kg": 0.011,
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.14,
+    "shoulder_or_wingspan_m": 0.21,
+    "note": "Length 14-17 cm, wingspan about 22 cm, 8-11 g. Built 0.140 m bill to tail (0.080 m bill tip to the neck to the rump, plus a 0.060 m tail), 0.082 m tall; wing cards 0.21 m across."
+  },
+  "source": {
+    "kind": "variant",
+    "title": "Pacific-slope flycatcher (variant of the chestnut-backed chickadee's Meshy mesh)",
+    "author": "variant of poecile_rufescens by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/poecile_rufescens/01a1ad39-ae77-7764-bea5-e718f3527f65/model.glb (local; jobs/ meshes are not tracked; generated with Meshy (meshy.ai))",
+    "original": "the chestnut-backed chickadee's Meshy text-to-3D preview (task 01a1ad39-ae77-7764-bea5-e718f3527f65, meshy-6-lite, triangle mesh, 20,824 triangles, one piece, untextured)",
+    "prompt": "(the chestnut-backed chickadee's) A chestnut-backed chickadee (Poecile rufescens), a tiny songbird about 11 cm long, one adult perched with its wings folded tight against the body, side-on pose. A round fluffy body, a big round head, a tiny short black bill, a medium-long narrow tail. A sooty dark brown cap and a black bib, bright white cheeks, a rich chestnut back and flanks, grey wings and tail, a white belly. Thin dark legs, three toes forward and one back. No base, no perch. Game-ready, clean closed mesh.",
+    "job_id": "01a1ad39-ae77-7764-bea5-e718f3527f65",
+    "job": "library/animals/jobs/poecile_rufescens/01a1ad39-ae77-7764-bea5-e718f3527f65/job.json",
+    "credits": 0,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_songbird.py --species empidonax_difficilis",
+    "build": "tools/build_songbird.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the adopted GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "A variant built from an earlier Meshy job: no new generation, no credits. Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 999,
+    "lod1": 399,
+    "lod2": 119,
+    "file": "client/assets/flycatcher.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "lod_m": [
+      6,
+      20
+    ],
+    "note": "A variant of the chestnut-backed chickadee's Meshy preview (no credits), scaled to 0.14 m and pitched 30 degrees nose-up about the vent so it perches upright (the body about 45 degrees); the crown raised into a peak at the back and the bill broadened toward the tip (reshapes); a 6 cm square tail angled down as steeply as keeps its tip off the ground (raised from 62 to 19 degrees below level by the template's rule); a pale yellow eye ring behind each eye, set back so it reads as a teardrop. Colours: olive-green above, a pale yellowish throat, an olive breast, a yellow belly with olive-washed sides; dark wings with two buff wing bars (lod0 and lod1); the bill dark above and orange below; dark legs. Triangles: lod0 999 = 798 body + 201 legs, tail, cards, eyes; lod1 399 = 310 body + 89 legs, tail, cards, eyes; lod2 119 = 92 body + 27 legs, tail, cards, eyes. GLB 174,260 bytes. lod_m is a suggestion."
+  },
+  "rig": "bird rig template of the Steller's jay (tools/build_stellersjay.py; drawn with client/src/animalModels.js RIG.stjay's constants): PART BODY 0, LEG_A 1 / LEG_B 2 procedural legs (pivot at the knee), TAIL 3 procedural tail (pivot at the rump), HEAD 6 (head and neck, pivot at the base of the neck), WING_L/R 4/5 and HAND_L/R 9/10 flight cards that collapse into the shoulder on pose; extras.rig {kind 'bird', wing (shoulder), tail (rump), head (neck base), length_m}; no skin",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Built 2026-11-05. Reads as an Empidonax: upright, olive and yellow, peaked crown, eye ring, wing bars, two-toned bill. Still open: on the ground the tail cannot hang as it does from a twig (the template keeps its tip above the ground), so it sticks back at 19 degrees below level; the body is the chickadee's, a little plump for a flycatcher; the teardrop eye ring is one octahedron, so the point behind the eye is soft.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (variant recipe, build script, rig, tiers, entry)"
+  ],
+  "sources": [
+    "The Sibley Guide to Birds, 2nd edition (D. A. Sibley, 2014): plumage, shape and posture",
+    "Cornell Lab of Ornithology, All About Birds and Birds of the World species accounts: size, mass, wingspan, plumage",
+    "docs/animal-library.md",
+    "library/animals/README.md",
+    "tools/build_songbird.py",
+    "tools/build_stellersjay.py"
+  ]
+}

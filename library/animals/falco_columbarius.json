@@ -1,0 +1,76 @@
+{
+  "id": "falco_columbarius",
+  "aliases": [
+    "merlin",
+    "black_merlin",
+    "pigeon_hawk"
+  ],
+  "scientific": "Falco columbarius",
+  "common": "merlin",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Falconiformes",
+    "family": "Falconidae",
+    "genus": "Falco"
+  },
+  "mass_kg": 0.19,
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.27,
+    "shoulder_or_wingspan_m": 0.6,
+    "note": "Length 0.24-0.30 m, wingspan 0.53-0.68 m, 0.16-0.24 kg. Drawn as the dark Pacific 'black merlin' (subspecies suckleyi) of the Olympic Peninsula. The flight mesh is scaled to 0.273 m bill tip to tail tip and lofted to a 0.60 m span (tip to tip): head and bill project 0.058 m ahead of the wing's leading edge at the root, the tail 0.106 m behind its trailing edge; wing chord 0.106 m over the arm; the source body scaled 0.302 (and narrowed per recipe)."
+  },
+  "source": {
+    "kind": "variant",
+    "title": "Merlin, soaring (variant of the red-tailed hawk's Meshy flight mesh)",
+    "author": "variant of buteo_jamaicensis by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/buteo_jamaicensis/01a1719d-772f-76b4-9155-823815fec267/model.glb (main checkout, local, git-ignored; generated with Meshy (meshy.ai))",
+    "original": "the red-tailed hawk's Meshy text-to-3D preview, task 01a1719d-772f-76b4-9155-823815fec267, ai_model meshy-6-lite, triangle remesh to 20,000 faces, 20,779 triangles, untextured (2026-10-25); its body and head kept and reshaped, the wings, tail rebuilt",
+    "prompt": "(the red-tail's) A red-tailed hawk (Buteo jamaicensis), one adult bird soaring in mid-air, wings fully spread out flat to the sides and symmetrical, about 125 cm wingspan and 55 cm long, shaped to read from below and from above. Broad rounded wings with a straight leading edge and five separated, fingered primary feathers at each wingtip. Short, broad brick-red tail fanned wide into a rounded fan. Legs and feet tucked up under the body. Big rounded head and short hooked bill projecting ahead of the wings. Pale underwing with a dark leading-edge bar and a dark wrist mark, pale breast with a dark belly band. Not an eagle, not a falcon. Single bird, no base, no perch. Game-ready, clean closed mesh.",
+    "job_id": "01a1719d-772f-76b4-9155-823815fec267",
+    "job": "library/animals/jobs/buteo_jamaicensis/01a1719d-772f-76b4-9155-823815fec267/job.json (main checkout)",
+    "credits": 0,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_soarer.py --species falco_columbarius"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the built GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder, not CC BY-SA licensees).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "A variant built from an earlier Meshy job: no new generation was used. Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 2000,
+    "lod1": 800,
+    "lod2": 220,
+    "file": "client/assets/merlin.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "lod_m": [
+      40,
+      140
+    ],
+    "note": "Ambient flight mesh as the hawk's and the eagle's: body and head from the generated mesh (feet and tail deleted, head reshaped, pitched 12 degrees nose-down); pointed falcon wings, sharply tapered and swept back to a point with no separated fingers, a medium tail (0.125 m from its root); the wings, tail lofted per tier in rows and stations placed on the field marks (lod2 wings 2.5x thicker). Tier switches suggested at 40 and 140 m (not wired). GLB 316,948 bytes."
+  },
+  "rig": "bird rig template, flight mesh, exactly as client/assets/redtail.glb (the client draws the raptors with the hawk's soaring and the gulls with the vulture's circling glides): PART BODY 0, TAIL 3 (pivot at the tail root), HEAD 6 (head, neck, pivot at the neck's base), WING_L/R 4/5 (the arm, pivot at the shoulder, weight ramped in over the wing root), HAND_L/R 9/10 (pivot at the wrist, weight ramped over the hand); collapse 0 (the wings never fold). extras.rig keys as the hawk's: kind 'bird', wing (shoulder [0.035, 0.11, 0.02]), wrist [0.114, 0.113, 0.02], tail [0.0, 0.097, -0.021], head [0.0, 0.107, 0.073], span_m 0.6, dihedral_deg -1.5 (shoulder to wingtip). Origin 0.11 m below the shoulder line. No skin.",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Field marks: very dark slate-brown above; below heavily streaked dark brown on buff; the underwing dark with fine pale spots (lod0); the tail dark with faint narrow pale bands; a dark face and crown with an indistinct moustache and streaked buff throat; a dark bill and yellow cere. Reads as a small, very dark falcon: pointed swept wings and a dark body and wings from both sides, streaked underparts. Still open: the bill is the red-tail's hooked bill scaled (no falcon tooth, a little long); the moustache is barely separable from the dark face; the fine pale underwing spots survive on lod0 only; one size for both sexes; the paler taiga and prairie forms are not drawn.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (variant: build script recipe, plan outline, lofted wings and tail, recolour, rig, tiers)"
+  ],
+  "sources": [
+    "Sibley, D. A. (2014), The Sibley Guide to Birds, 2nd ed. (flight shapes, field marks) - from the agent's knowledge, not reopened for this entry",
+    "Liguori, J. (2005), Hawks from Every Angle (soaring silhouettes from below) - from the agent's knowledge",
+    "Wheeler, B. K. (2003), Raptors of Western North America (plumages, measurements) - from the agent's knowledge",
+    "Cornell Lab of Ornithology, All About Birds and Birds of the World species accounts (size, mass) - from the agent's knowledge",
+    "tools/build_bald_eagle.py, tools/build_redtail.py and library/animals/buteo_jamaicensis.json (template and source mesh)"
+  ]
+}

@@ -5326,3 +5326,24 @@ the aim, and are unchanged on the slopes the old dig could make.
 Aaron: "I don't see the trunks swaying in the breeze, still just the leaf cards - it doesn't look like the branches are moving either". The wind tiers of 2026-11-04 started the limbs at 4.5 m/s and the trunks at 9 m/s, each on a smoothstep, which is flat at its foot. So the 2-4 m/s breeze that the hourly weather usually gives moved only the cards: at 3 m/s the limbs and trunks were exactly still. Now `windLimbs()` ramps from 0.8 to 12 m/s and `windTrunks()` from 1.2 to 19 m/s, on ramps that rise from the foot (`windRamp`, exponents 0.65 and 0.75): 0.35 and 0.18 of full at 3 m/s, 0.53 and 0.31 at 5, and the full motion at 12 and 19 as before. The amplitudes (`CROWN_SWAY`, `CROWN_FLEX`, cut on 2026-10-29 for "the swaying is too intense") are unchanged, so a breeze gives a slow, gentle sway of the crowns and the whole tree rather than a fast one. The mid crowns and trunks, gated on `windTrunks() > 0`, now bow together in any breeze over 1.2 m/s.
 
 The measurement: on the Hoh at 3 m/s from the forest floor, with a fixed camera and frames 0.15 s apart for 4.5 s, the most any frame differs from the first went from 0.54 to 3.67 in the trunk area and from 2.95 to 5.93 in the crowns.
+
+## 2026-11-06: the rest of the Olympic animals; the rigger's short legs; upright birds fly level (branch hoh-birds-2)
+
+Aaron approved modelling the animals the Hoh and Mount Olympus still listed without a model: 22 species (the Hoh's 14,
+Olympus's 8 more), for 25 credits (670 -> 695 of 1,000): lite previews of the robin, starling, sooty grouse, Olympic
+marmot and western toad; every other one a variant (the varied thrush of the robin; the junco, kinglet and flycatcher of
+the chickadee; the two small owls of the barred owl; the osprey, sharp-shinned hawk, merlin and three gulls of the
+red-tail, one parameterised `tools/build_soarer.py`; the mallard of the merganser; the yellow-pine chipmunk of Townsend's;
+the montane shrew of the deer mouse; the Cascades frog of the toad), and the hairy woodpecker procedural as the acorn
+woodpecker is. Each runs a kin's behaviour as the first batch's do (`animals.js KIN`, `HOH`); the marmot gets the ground
+squirrel's colonies (`colonyUpdate` by `g.sp`), the woodpecker clings to the conifers' bark (`HOH.trunk`).
+
+Fauna and games rerun on both tiles: both queues empty, all 46 listed animals on each tile with a model at fidelity 3.
+The montane shrew and (on Olympus) the western gull stay absent by the presence rule (under 3 records near the tile).
+Verified on both tiles: the new slots spawn where their rules put them (the robins, juncos, thrushes, starlings, the
+woodpecker, toads and gulls on the Hoh's river flats; marmots and yellow-pine chipmunks on Olympus's talus at 1,500 m,
+sharp-shins and merlins over it), move and phase with no NaN, and play; animals.update 0.66 ms a frame with 236 animals.
+
+Two fixes asked for with it: `tools/rig_quadruped.py`'s leg bands widen instead of failing on a short decimated leg
+(`band_at`, a test), and the upright meshes (the owls, the kingfisher, the flycatcher) tip forward to fly level as the
+player (`flierControl.js` `upright`).

@@ -1,0 +1,66 @@
+{
+  "species": "turdus_migratorius",
+  "mode": "preview",
+  "kind": "text-to-3d",
+  "task_id": "01a1ae89-b054-70ad-a469-fe5fce865630",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "preview",
+    "prompt": "An American robin (Turdus migratorius), one adult male standing on the ground, side-on pose, upright alert thrush posture, wings folded tight against the body. Realistic proportions: 25 cm long, a round chest, a medium-long tail, a straight yellow bill, long thin legs. Dark grey-brown back, wings and tail, a blackish head with a broken white eye ring, a white-streaked throat, a brick-red orange breast and belly, white under the tail. Three toes forward and one back. No base, no perch. Game-ready, clean closed mesh.",
+    "ai_model": "meshy-6-lite",
+    "target_formats": [
+      "glb"
+    ],
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 20000,
+    "moderation": false
+  },
+  "prompt": "An American robin (Turdus migratorius), one adult male standing on the ground, side-on pose, upright alert thrush posture, wings folded tight against the body. Realistic proportions: 25 cm long, a round chest, a medium-long tail, a straight yellow bill, long thin legs. Dark grey-brown back, wings and tail, a blackish head with a broken white eye ring, a white-streaked throat, a brick-red orange breast and belly, white under the tail. Three toes forward and one back. No base, no perch. Game-ready, clean closed mesh.",
+  "image": null,
+  "preview_job": null,
+  "estimated_credits": 5,
+  "balance_before": 2382,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-06T01:47:01+00:00",
+    "created_at": "2026-11-06T01:47:03+00:00",
+    "started_at": "2026-11-06T01:47:03+00:00",
+    "finished_at": "2026-11-06T01:48:27+00:00",
+    "downloaded": "2026-11-06T01:48:41+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur",
+  "progress": 100,
+  "task": {
+    "id": "01a1ae89-b054-70ad-a469-fe5fce865630",
+    "type": "text-to-3d-preview",
+    "status": "SUCCEEDED",
+    "created_at": 1793929623131,
+    "started_at": 1793929623140,
+    "finished_at": 1793929707709,
+    "consumed_credits": 5,
+    "task_error": null
+  },
+  "credits_charged": 5,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 700068,
+      "sha256": "fa24d187d944f07cef550e99da2941055e9055e51cdcb6e6f23609908986c597",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1ae89-b054-70ad-a469-fe5fce865630/output/model.glb"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 38076,
+      "sha256": "75c0bca0cf419f4f7967197310bea40a6b7b1cd158bac80567d1e5d4bc6c5978",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1ae89-b054-70ad-a469-fe5fce865630/output/preview.png"
+    }
+  ],
+  "balance_after": 2377
+}

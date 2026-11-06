@@ -1,10 +1,13 @@
 # Build the Hoh rain forest's perching birds on the Steller's jay's bird template (tools/build_stellersjay.py), one
 # species per run, from Meshy text-to-3D previews: the Pacific wren, the Canada (gray) jay, the chestnut-backed
-# chickadee, the barred owl and the belted kingfisher.
+# chickadee, the barred owl and the belted kingfisher; then (second batch) the American robin and the European
+# starling from their own previews, and six free variants of those sources: the varied thrush (the robin's), the
+# dark-eyed junco, golden-crowned kinglet and Pacific-slope flycatcher (the chickadee's), and the western screech-owl
+# and northern saw-whet owl (the barred owl's).
 #
-# Sources: Meshy (meshy.ai) text-to-3D previews, ai_model meshy-6-lite, untextured triangle meshes (about 20,800
-#   triangles each, one piece), 2026-11-05 UTC, 5 credits each; job records in
-#   library/animals/jobs/<species>/<task>/job.json. Tasks and prompts:
+# Sources: Meshy (meshy.ai) text-to-3D previews, ai_model meshy-6-lite, untextured triangle meshes (about 20,300-20,850
+#   triangles each, one piece), 2026-11-05 UTC (the robin and starling 2026-11-06 01:47-01:49 UTC), 5 credits each; job
+#   records in library/animals/jobs/<species>/<task>/job.json. Tasks and prompts:
 #   troglodytes_pacificus 01a1ad36-efb8-739e-b621-93b82701cc36: "A Pacific wren (Troglodytes pacificus), a tiny round
 #     dark brown songbird about 10 cm long, NOT a sparrow, NOT a mouse. One adult standing on the ground, side-on pose,
 #     body round like a ball, a very short stubby tail cocked straight up, a thin short slightly downcurved bill, a short
@@ -34,6 +37,22 @@
 #     stocky body, a short square tail, tiny legs. Slate blue-grey head, back and wings and a blue-grey band across the
 #     breast, a white collar around the neck, a white spot in front of the eye, white underparts; small white spots on
 #     the dark wing tips. No base, no perch. Game-ready, clean closed mesh."
+#   turdus_migratorius 01a1ae89-b054-70ad-a469-fe5fce865630: "An American robin (Turdus migratorius), one adult male
+#     standing on the ground, side-on pose, upright alert thrush posture, wings folded tight against the body. Realistic
+#     proportions: 25 cm long, a round chest, a medium-long tail, a straight yellow bill, long thin legs. Dark grey-brown
+#     back, wings and tail, a blackish head with a broken white eye ring, a white-streaked throat, a brick-red orange
+#     breast and belly, white under the tail. Three toes forward and one back. No base, no perch. Game-ready, clean
+#     closed mesh."
+#   sturnus_vulgaris 01a1ae8b-3af1-7031-aa17-96a16473bf59: "A European starling (Sturnus vulgaris), one adult standing on
+#     the ground, side-on pose, wings folded tight. Realistic proportions: 21 cm long, a stocky body, a short square
+#     tail, a long pointed straight yellow bill, a flat head, pinkish legs. Glossy black plumage with a green and purple
+#     sheen, the body speckled with small white and buff spots, buff edges on the wing feathers. Three toes forward and
+#     one back. No base, no perch. Game-ready, clean closed mesh."
+#   Free variants (no credits; the same Meshy output, reshaped and recoloured, so the same ownership and licence):
+#   ixoreus_naevius from turdus_migratorius's task; junco_hyemalis, regulus_satrapa and empidonax_difficilis from
+#   poecile_rufescens's 01a1ad39-ae77-7764-bea5-e718f3527f65; megascops_kennicottii and aegolius_acadicus from
+#   strix_varia's 01a1ad38-4e76-7191-8ddc-c7409132af60. Their GLBs record extras.source.kind 'variant', variant_of,
+#   credits 0.
 # Licence: generated through the Meshy API on the account holder's paid plan, so the output is owned by the account
 #   holder (Meshy Terms of Use 3.2, https://www.meshy.ai/terms-of-use, last updated 2026-09-19) and released with the
 #   project's assets under CC BY-SA 4.0. Credit: "generated with Meshy (meshy.ai)". Terms 2.4: AI-identifying metadata
@@ -43,7 +62,11 @@
 #   /Applications/Blender.app/Contents/MacOS/Blender -b --factory-startup -P tools/build_songbird.py -- \
 #       library/animals/jobs/<species>/<task>/model.glb client/assets/<name>.glb --species <species> [--preview /tmp/p]
 #   troglodytes_pacificus -> pacific_wren.glb, perisoreus_canadensis -> gray_jay.glb, poecile_rufescens ->
-#   chickadee.glb, strix_varia -> barred_owl.glb, megaceryle_alcyon -> kingfisher.glb (the task folders are above).
+#   chickadee.glb, strix_varia -> barred_owl.glb, megaceryle_alcyon -> kingfisher.glb (the task folders are above);
+#   turdus_migratorius -> american_robin.glb, sturnus_vulgaris -> starling.glb, and with the source species' model.glb:
+#   ixoreus_naevius -> varied_thrush.glb (the robin's), junco_hyemalis -> junco.glb, regulus_satrapa -> kinglet.glb,
+#   empidonax_difficilis -> flycatcher.glb (the chickadee's), megascops_kennicottii -> screech_owl.glb,
+#   aegolius_acadicus -> saw_whet_owl.glb (the barred owl's).
 #
 # What it does, per species (the RECIPES below; raw coordinates are the source's, Blender axes, ~1.9 units long):
 # cuts the generated tail, legs (and the kingfisher's rock base) away and fills the holes; reshapes where the preview
@@ -56,13 +79,21 @@
 # barred per species) that collapse into the shoulder when the bird is perched or on the ground; recolours by region
 # from field-guide sRGB, with face bands for the barring on lod0 and a faint per-face grizzle. The kingfisher carries a
 # second colour set (_COLORB): the file's COLOR_0 is the female (a rufous belly band and flanks), _COLORB the male (white
-# there). Tiers lod0 ~1,000, lod1 ~400, lod2 ~120 triangles (the owl ~1,400 / 500 / 150), body decimated (the head kept back) with Blender
-# collapse, X symmetry. Rig: the Steller's jay's bird template (animalModels.js PART): BODY 0, LEG_A 1 / LEG_B 2
+# there). The second batch adds: the robin's _COLORB (COLOR_0 the male, _COLORB the paler female: a greyer head and
+# back, a paler orange breast), a pale eye ring behind the eye (the robin's broken ring; the flycatcher's teardrop, set
+# back), whole-face spots decided at the face centre and weakened on faces bigger than a spot (the starling's white and
+# buff speckle, the screech-owl's scapular row, the saw-whet's white spots), white outer tail feathers (the junco's), a
+# notched tail tip (the kinglet's), ear tufts (the screech-owl's, set into the crown), owl eyes as a yellow iris with a
+# black pupil, and reshapes (the flycatcher's crown peaked at the back and its bill broadened; the small owls' heads
+# widened 1.05 and 1.22). The flycatcher is pitched 30 degrees nose-up to its upright perch (about 45 degrees); the
+# robin, varied thrush and starling stand as ground foragers, near level. Tiers lod0 ~1,000, lod1 ~400, lod2 ~120
+# triangles (the barred owl ~1,400 / 500 / 150, the small owls ~1,200 / 450 / 140), body decimated (the head kept back)
+# with Blender collapse, X symmetry. Rig: the Steller's jay's bird template (animalModels.js PART): BODY 0, LEG_A 1 / LEG_B 2
 # (pivot at the knee), TAIL 3 (pivot at the rump), HEAD 6 (head and neck, pivot at the base of the neck), WING_L/R 4/5
 # and HAND_L/R 9/10 cards; extras.rig {kind 'bird', wing, tail, head, length_m} as the Steller's jay's. Origin on the
 # ground between the feet.
 # Output: one GLB with meshes lod0, lod1, lod2 (POSITION, COLOR_0 linear, _PART, _PARTW, _PIVOT, indices; the
-# kingfisher also _COLORB).
+# kingfisher and the robin also _COLORB).
 # --preview <prefix>: renders lod0 (side, front, top, three-quarter, head; workbench, vertex colour) into one PNG.
 import bpy, bmesh, sys, os, math, json, struct
 from mathutils import Vector, Matrix
@@ -319,8 +350,381 @@ def kingfisher():
         color=col, grizzle=0.05)
 
 
+# ---- the second batch: robin and starling from their own previews; the rest free variants of earlier sources ----
+ROBIN_JOB, CHICK_JOB, OWL_JOB = '01a1ae89-b054-70ad-a469-fe5fce865630', '01a1ad39-ae77-7764-bea5-e718f3527f65', '01a1ad38-4e76-7191-8ddc-c7409132af60'
+THRUSH_EYE = V3(0, -0.725, 0.603)          # the robin source's eye (no eye is modelled; placed behind the bill base)
+
+
+def thrush_lower(y): return 0.065 - 0.29 * (y + 0.36)      # the robin source's folded wing, lower edge
+
+
+def thrush_geom(**kw):
+    """The robin source's landmarks (raw), shared by the robin and the varied thrush."""
+    g = dict(cut=lambda p: p.y > 0.33 or p.z < -0.225, reshape=[],
+             hip=V3(0, -0.05, -0.08), pitch=6.0, belly=V3(0, -0.02, -0.215),
+             neck=V3(0, -0.58, 0.42), head_dir=V3(0, -0.6, 0.8), head_band=(-0.03, 0.07),
+             rump=V3(0, 0.29, -0.08), tail_dir=V3(0, 1, -0.25), eye=THRUSH_EYE,
+             shoulder=V3(0, -0.40, 0.27))
+    g.update(kw); return g
+
+
+def robin():
+    # (male, female): COLOR_0 the male, _COLORB the paler female (greyer head, paler orange breast)
+    HEADC, BACK, WING, EDGE = (0x24201e, 0x5c5650), (0x4a4440, 0x6a645d), (0x45403b, 0x655f58), (0x6c645c, 0x857d74)
+    BREAST, WHITE, STREAK = (0xa9461b, 0xc27f4c), 0xeeebe4, (0x24201e, 0x5c5650)
+    BILL, BILLT, TAILC, TAILU = 0xdcaa26, 0x5a4826, (0x2c2826, 0x4c4741), (0x3e3a37, 0x58534d)
+    E = THRUSH_EYE
+    def col(r, n, lv, hw):
+        if r.y < -0.80 and 0.53 < r.z < 0.63: return BILLT if r.y < -0.91 else BILL
+        if hw > 0.5:
+            if r.z < E.z - 0.075 and r.y < -0.62 and n.y < -0.15 and not side(n, 0.8):   # the throat, white streaked
+                return STREAK if lv == 0 and bars(r.x, 0.06, 0.45, 0.015) else WHITE
+            return HEADC
+        if r.y > -0.06 and n.z < -0.35: return WHITE                                       # lower belly, vent, undertail
+        if side(n) and -0.42 < r.y < 0.34 and r.z > thrush_lower(r.y) and n.z < 0.6:      # the folded wing, pale edges
+            return EDGE if lv == 0 and bars(r.y + 0.5 * r.z, 0.1, 0.22) else WING
+        if n.z > 0.25: return BACK
+        if r.y < -0.42 and r.z > 0.28 and n.y > -0.35: return BACK                        # hind neck
+        return BREAST
+    def tcol(t, lv): return TAILC, TAILU
+    def wcol(u, lv): return (EDGE if lv == 0 and bars(u, 0.25, 0.2, 0.15) else WING), (0xa0704c, 0xb48a66)   # rufous underwing
+    def hcol(v, lv): return WING, (0x7c7470, 0x8c847e)
+    return dict(
+        common='American robin', name='american_robin', job=ROBIN_JOB, variant='female in _COLORB',
+        length=0.25, tail_m=0.10, mass=0.077, tris=[1000, 400, 120],
+        **thrush_geom(), shoulder_x=0.022,
+        legs=dict(knee_h=0.046, belly_h=0.035, legx=0.014, u=0.85, col=0x4e4038),
+        eye_r=(0.0018, 0.0029, 0.0031), eye_ring=(0xf0ede6, (0.8, 1.55, 1.6), 0.0),
+        tail=dict(angle=-16.0, w0=0.011, w1=0.021, ridge=0.006, tip='square', n0=4, col=tcol),
+        wing=dict(span=0.37, chord=1.05, hand='round', arm=wcol, hand_col=hcol, top=WING, under=(0xa0704c, 0xb48a66)),
+        color=col, grizzle=0.06)
+
+
+def starling():
+    PURP, GREEN, WINGC, EDGE = 0x251e2b, 0x1b251f, 0x211d20, 0x6e5636
+    BUFF, WHITE, BILL, LEG = 0xd2bc8e, 0xe8e2d4, 0xdcb82c, 0xc48a7c
+    EYE = V3(0, -0.593, 0.60)
+    def lower(y): return 0.065 - 0.12 * (y + 0.45)
+    def wing(r, n): return side(n) and -0.50 < r.y < 0.45 and r.z > lower(r.y) and n.z < 0.6
+    def col(r, n, lv, hw):
+        if r.y < -0.76 and 0.50 < r.z < 0.63: return BILL
+        if hw > 0.5: return PURP
+        if wing(r, n): return EDGE if lv == 0 and bars(r.y + 0.6 * r.z, 0.1, 0.14) else WINGC   # folded wing, buff fringes
+        return mix(PURP, GREEN, smooth(-0.5, -0.1, r.y))                                    # purple neck, green body
+    def spots(r, n, lv, hw):   # small white and buff spots, one face each (fewer on the head, none on the bill or wing)
+        if lv == 2 or (r.y < -0.74 and 0.48 < r.z < 0.65) or wing(r, n): return None
+        h = A.hash01(abs(r.x) // 0.012, r.y // 0.012, r.z // 0.012)
+        if hw > 0.5: return BUFF if lv == 0 and n.z > 0.2 and h < 0.08 else None
+        if n.z > 0.25: return BUFF if h < 0.2 else None
+        return WHITE if h < 0.3 else None
+    def tcol(t, lv): return (EDGE if lv == 0 and t > 0.9 else WINGC), 0x302a2a
+    def wcol(u, lv): return (EDGE if lv == 0 and u > 0.875 else WINGC), 0x4a4440
+    def hcol(v, lv): return (EDGE if lv == 0 and v > 0.88 else WINGC), 0x4a4440
+    return dict(
+        common='European starling', name='starling', job='01a1ae8b-3af1-7031-aa17-96a16473bf59',
+        length=0.21, tail_m=0.06, mass=0.078, tris=[1000, 400, 120],
+        cut=lambda p: p.y > 0.42 or p.z < -0.27,
+        reshape=[],
+        hip=V3(0, 0.0, -0.10), pitch=4.0, belly=V3(0, 0.02, -0.27),
+        neck=V3(0, -0.48, 0.40), head_dir=V3(0, -0.6, 0.8), head_band=(-0.03, 0.07),
+        rump=V3(0, 0.34, -0.11), tail_dir=V3(0, 1, -0.15), eye=EYE, protect=0.3,
+        shoulder=V3(0, -0.40, 0.25), shoulder_x=0.02,
+        legs=dict(knee_h=0.036, belly_h=0.027, legx=0.013, u=0.75, col=LEG),
+        eye_r=(0.0016, 0.0025, 0.0027),
+        tail=dict(angle=-10.0, w0=0.011, w1=0.016, ridge=0.0045, tip='square', n0=4, col=tcol),
+        wing=dict(span=0.38, chord=0.95, hand='pointed', arm=wcol, hand_col=hcol, top=WINGC, under=0x4a4440),
+        color=col, spots=spots, spot_max=0.0045, grizzle=0.10)
+
+
+def varied_thrush():
+    SLATE, ORANGE, BLACK, BELLY, SCAL = 0x4b5866, 0xd2742a, 0x1e2124, 0xd9d8d2, 0x8e959c
+    WING, BILL, WHITE = 0x414c58, 0x2a2624, 0xeeece6
+    E = THRUSH_EYE
+    def col(r, n, lv, hw):
+        if r.y < -0.80 and 0.53 < r.z < 0.63: return BILL
+        if hw > 0.5:
+            if side(n, 0.45) and r.y > E.y - 0.05:
+                if E.z + 0.025 < r.z < E.z + 0.075: return ORANGE                                  # the eyebrow stripe
+                if E.z - 0.11 < r.z <= E.z + 0.025: return BLACK                                    # the mask, eye and cheek
+            if r.z < E.z - 0.06 and n.z < 0.3: return ORANGE                                         # throat
+            return SLATE
+        if r.y > -0.06 and n.z < -0.35: return WHITE                                                 # undertail
+        if side(n) and -0.42 < r.y < 0.34 and r.z > thrush_lower(r.y) and n.z < 0.6:                # the folded wing
+            v = r.z - thrush_lower(r.y)
+            if lv <= 1 and (-0.31 < r.y + 0.5 * v < -0.25 or -0.175 < r.y + 0.5 * v < -0.115): return ORANGE   # two wing bars
+            if lv <= 1 and r.y > -0.08 and 0.03 < v < 0.08: return ORANGE                           # the stripe on the folded wing
+            return WING
+        if n.z > 0.25 or (r.y < -0.42 and r.z > 0.28 and n.y > -0.35): return SLATE
+        if r.z > 0.36: return ORANGE                                                                 # upper breast
+        if r.z > 0.24: return BLACK                                                                  # the breast band
+        if r.z > -0.09 + 0.25 * max(0.0, r.y + 0.3): return ORANGE if not side(n, 0.75) else mix(ORANGE, SLATE, 0.45)   # lower breast, flanks
+        return (SCAL if lv == 0 and bars(r.y + 0.4 * abs(r.x), 0.08, 0.3) else BELLY)                # grey-white belly, scalloped
+    def tcol(t, lv): return SLATE, 0x5e6670
+    def wcol(u, lv): return (ORANGE if lv == 0 and 0.62 < u < 0.75 else WING), 0x7a8088
+    def hcol(v, lv): return (ORANGE if lv == 0 and 0.12 < v < 0.25 else WING), (0xd8a060 if lv == 0 and 0.1 < v < 0.3 else 0x7a8088)
+    return dict(
+        common='Varied thrush', name='varied_thrush', job=ROBIN_JOB, base='turdus_migratorius',
+        length=0.24, tail_m=0.085, mass=0.078, tris=[1000, 400, 120],
+        **thrush_geom(pitch=10.0), shoulder_x=0.022,
+        legs=dict(knee_h=0.042, belly_h=0.032, legx=0.014, u=0.8, col=0xb08a70),
+        eye_r=(0.0018, 0.0029, 0.0031),
+        tail=dict(angle=-14.0, w0=0.011, w1=0.02, ridge=0.006, tip='square', n0=4, col=tcol),
+        wing=dict(span=0.38, chord=1.05, hand='round', arm=wcol, hand_col=hcol, top=WING, under=0x7a8088),
+        color=col, grizzle=0.06)
+
+
+CHICK_EYE = V3(0, -0.755, 0.367)
+
+
+def chick_lower(y): return 0.06 - 0.1 * (y + 0.3)                          # the chickadee source's folded wing
+
+
+def chick_bill(r): return r.y < -0.83 and 0.27 < r.z < 0.38
+
+
+def chick_geom(**kw):
+    """The chickadee source's landmarks (raw), shared by the junco, kinglet and flycatcher."""
+    g = dict(cut=lambda p: p.y > 0.36 or p.z < -0.265, reshape=[],
+             hip=V3(0, -0.08, -0.10), pitch=0.0, belly=V3(0, -0.08, -0.265),
+             neck=V3(0, -0.55, 0.25), head_dir=V3(0, -0.75, 0.66), head_band=(-0.03, 0.07),
+             rump=V3(0, 0.33, 0.0), tail_dir=V3(0, 1, -0.3), eye=CHICK_EYE, shoulder=V3(0, -0.42, 0.22))
+    g.update(kw); return g
+
+
+def junco():
+    HOOD, BACK, RUMP, FLANK, BELLY = 0x1f1e20, 0x7a4c30, 0x66686c, 0xc49a80, 0xefebe5
+    WING, WEDGE, TAILC, BILL, LEG = 0x4e4a48, 0x7a5c48, 0x3a3a3e, 0xe6b6ae, 0xc89c90
+    def col(r, n, lv, hw):
+        if chick_bill(r): return BILL
+        if hw > 0.5: return HOOD
+        if r.y < -0.40 and r.z > 0.18 and n.z > -0.2: return HOOD                                    # the hood onto the nape
+        if r.y < -0.45 and r.z > 0.02 and n.y < -0.2 and not side(n, 0.85): return HOOD              # and the upper breast
+        if side(n) and -0.42 < r.y < 0.36 and r.z > chick_lower(r.y) and n.z < 0.6:                  # folded wing
+            return WEDGE if lv == 0 and (r.z < chick_lower(r.y) + 0.04 or bars(r.z, 0.09, 0.2)) else WING
+        if n.z > 0.2: return RUMP if r.y > 0.12 else BACK
+        if side(n, 0.3) and r.y > -0.5: return FLANK
+        return BELLY
+    def tcol(t, lv): return TAILC, 0x5a5a5e
+    def wcol(u, lv): return WING, 0x9a9a9c
+    def hcol(v, lv): return WING, 0x9a9a9c
+    return dict(
+        common='Dark-eyed junco', name='junco', job=CHICK_JOB, base='poecile_rufescens',
+        length=0.15, tail_m=0.065, mass=0.02, tris=[1000, 400, 120],
+        **chick_geom(), shoulder_x=0.012,
+        legs=dict(knee_h=0.024, belly_h=0.017, legx=0.009, u=0.55, col=LEG),
+        eye_r=(0.0012, 0.0019, 0.002),
+        tail=dict(angle=-12.0, w0=0.008, w1=0.013, ridge=0.003, tip='square', n0=4, col=tcol, edge=(0.32, BELLY, BELLY)),
+        wing=dict(span=0.23, chord=1.05, hand='round', arm=wcol, hand_col=hcol, top=WING, under=0x9a9a9c),
+        color=col, grizzle=0.06)
+
+
+def kinglet():
+    OLIVE, UNDER, FACE, BLACK, WHITE = 0x767a58, 0xd6d6c8, 0x8e9282, 0x161616, 0xeeeee8
+    YELLOW, ORANGE, WING, YEDGE, BILL = 0xf2cc1e, 0xf08018, 0x3c3e34, 0xc2bc3c, 0x1a1a1a
+    E = CHICK_EYE
+    def col(r, n, lv, hw):
+        if chick_bill(r): return BILL
+        ax = abs(r.x)
+        if hw > 0.5:
+            if r.z > 0.435 and r.y > -0.80:                                                           # the crown
+                if ax < 0.04: return ORANGE
+                if ax < 0.08: return YELLOW
+                if ax < 0.125: return BLACK
+            if side(n, 0.3) and r.y > E.y - 0.06:
+                if E.z + 0.022 < r.z <= 0.435: return WHITE                                           # the eyebrow
+                if E.z - 0.022 < r.z <= E.z + 0.022: return BLACK                                     # the eye line
+            if r.z < E.z - 0.05 and n.z < 0.2: return UNDER
+            return FACE
+        if r.y < -0.40 and r.z > 0.25 and n.z > 0: return OLIVE                                      # the nape
+        if side(n) and -0.42 < r.y < 0.36 and r.z > chick_lower(r.y) and n.z < 0.6:                  # folded wing
+            v = r.z - chick_lower(r.y)
+            if lv <= 1 and (-0.34 < r.y + 0.3 * v < -0.29 or -0.20 < r.y + 0.3 * v < -0.15): return WHITE   # two wing bars
+            return YEDGE if lv == 0 and r.y > -0.1 and bars(v, 0.06, 0.3) else WING                 # yellow feather edges
+        if n.z > 0.2: return OLIVE
+        if side(n, 0.45): return mix(UNDER, OLIVE, 0.35)
+        return UNDER
+    def tcol(t, lv): return mix(WING, YEDGE, 0.15), 0x8a8c80
+    def wcol(u, lv): return (WHITE if lv == 0 and (0.12 < u < 0.25 or 0.5 < u < 0.62) else WING), 0xb0b2a8
+    def hcol(v, lv): return (YEDGE if lv == 0 and 0.1 < v < 0.3 else WING), 0xb0b2a8
+    return dict(
+        common='Golden-crowned kinglet', name='kinglet', job=CHICK_JOB, base='poecile_rufescens',
+        length=0.09, tail_m=0.035, mass=0.006, tris=[1000, 400, 120],
+        **chick_geom(), shoulder_x=0.008,
+        legs=dict(knee_h=0.016, belly_h=0.011, legx=0.006, u=0.36, col=0x3a342a),
+        eye_r=(0.0009, 0.0014, 0.0015),
+        tail=dict(angle=-14.0, w0=0.005, w1=0.0075, ridge=0.0015, tip='notch', n0=3, col=tcol),
+        wing=dict(span=0.16, chord=1.1, hand='round', arm=wcol, hand_col=hcol, top=WING, under=0xb0b2a8),
+        color=col, grizzle=0.05)
+
+
+def fly_shape(p, sgn):
+    """The flycatcher's head on the chickadee: a crown peaked at the back (z raised by a bump) and a broad bill (x
+    widened toward the tip); y is unchanged, so the inverse solves z by a few fixed-point steps."""
+    k = 1 + 0.9 * smooth(0.80, 0.86, -p.y)
+    bump = lambda z: 0.085 * math.exp(-((p.y + 0.56) / 0.10) ** 2) * smooth(0.34, 0.47, z)
+    if sgn > 0: return V3(p.x * k, p.y, p.z + bump(p.z))
+    z = p.z
+    for _ in range(8): z = p.z - bump(z)
+    return V3(p.x / k, p.y, z)
+
+
+def flycatcher():
+    OLIVE, THROAT, BREAST, BELLY, WING = 0x75763f, 0xd8d27a, 0x9e9852, 0xe2d76a, 0x46463a
+    BAR, TAILC, BILLT, BILLB = 0xd0c08c, 0x55543e, 0x2a2622, 0xdc8a3a
+    E = CHICK_EYE
+    def col(r, n, lv, hw):
+        if chick_bill(r): return BILLT if n.z > 0.1 else BILLB
+        if hw > 0.5:
+            if r.z < E.z - 0.06 and n.z < 0.2 and not side(n, 0.85): return THROAT
+            return OLIVE
+        if side(n) and -0.42 < r.y < 0.36 and r.z > chick_lower(r.y) and n.z < 0.6:                  # folded wing, two bars
+            v = r.z - chick_lower(r.y)
+            if lv <= 1 and (-0.30 < r.y + 0.3 * v < -0.25 or -0.16 < r.y + 0.3 * v < -0.11): return BAR
+            return WING
+        if n.z > 0.2 or (r.y < -0.40 and r.z > 0.22 and n.z > 0): return OLIVE
+        if r.y < -0.42 and r.z > 0.0: return BREAST                                                   # olive breast
+        if side(n, 0.55): return mix(BELLY, OLIVE, 0.4)
+        return BELLY
+    def tcol(t, lv): return TAILC, 0x8a8660
+    def wcol(u, lv): return (BAR if lv == 0 and (0.12 < u < 0.25 or 0.5 < u < 0.62) else WING), 0xb4b08a
+    def hcol(v, lv): return WING, 0xa8a482
+    return dict(
+        common='Pacific-slope flycatcher', name='flycatcher', job=CHICK_JOB, base='poecile_rufescens',
+        length=0.14, tail_m=0.06, mass=0.011, tris=[1000, 400, 120],
+        **chick_geom(reshape=[(lambda p: fly_shape(p, 1), lambda p: fly_shape(p, -1))],
+                     hip=V3(0, 0.15, -0.15), pitch=-30.0, belly=V3(0, 0.12, -0.25)), shoulder_x=0.011,
+        legs=dict(knee_h=0.023, belly_h=0.017, legx=0.008, u=0.45, col=0x3a3a3c),
+        eye_r=(0.0012, 0.0019, 0.002), eye_ring=(0xe8e2a8, (0.8, 1.6, 1.55), 0.35),
+        tail=dict(angle=-62.0, w0=0.0065, w1=0.011, ridge=0.0025, tip='square', n0=4, col=tcol),
+        wing=dict(span=0.21, chord=1.05, hand='round', arm=wcol, hand_col=hcol, top=WING, under=0xb4b08a),
+        color=col, grizzle=0.05)
+
+
+OWL_EYES = [V3(0.13, -0.36, 0.744), V3(-0.13, -0.36, 0.744)]
+
+
+def owl_shape(kh):
+    """A head widened kh times above the neck (as owl_head), as a reshape pair."""
+    def f(p, sgn):
+        k = 1 + (kh - 1) * smooth(0.36, 0.50, p.z)
+        if sgn < 0: k = 1 / k
+        return V3(p.x * k, -0.05 + (p.y + 0.05) * k, p.z)
+    return [(lambda p: f(p, 1), lambda p: f(p, -1))]
+
+
+def owl_geom(**kw):
+    """The barred owl source's landmarks (raw), shared by the small owls."""
+    g = dict(cut=lambda p: p.z < -0.53, reshape=[],
+             hip=V3(0, 0.05, -0.30), pitch=10.0, belly=V3(0, 0.0, -0.53),
+             neck=V3(0, -0.05, 0.42), head_dir=V3(0, -0.2, 0.98), head_band=(-0.03, 0.06),
+             rump=V3(0, 0.32, -0.40), tail_dir=V3(0, 0.5, -0.85), eye=OWL_EYES[0], eye_front=True,
+             shoulder=V3(0, 0.06, 0.32))
+    g.update(kw); return g
+
+
+def owl_disc(r, n):
+    """(in the facial disc, distance to the nearer eye, that eye) for a raw point on the barred owl source's head."""
+    e = min(OWL_EYES, key=lambda e: math.hypot(r.x - e.x, r.z - e.z))
+    return n.y < -0.35 and r.y < -0.18 and r.z > 0.47, math.hypot(r.x - e.x, r.z - e.z), e
+
+
+def owl_rim(r, d): return abs(r.x) > 0.255 or r.z > 0.905 or d > 0.215
+
+
+def owl_billr(r): return abs(r.x) < 0.035 and 0.60 < r.z < 0.71
+
+
+def screech_owl():
+    GREY, DARK, PALE, DISC, RIM = 0x7a766e, 0x2a2826, 0xc6c2b8, 0x9e998f, 0x252321
+    WHITE, BROW, BILLC, LEG, TALON = 0xe8e4dc, 0xc9c5bb, 0x3a3a3a, 0xbab2a4, 0x2a2420
+    def col(r, n, lv, hw):
+        if hw > 0.5:
+            disc, d, e = owl_disc(r, n)
+            if disc:
+                if owl_billr(r): return BILLC
+                if owl_rim(r, d): return RIM                                                            # the dark rim
+                if r.z > e.z + 0.07 and abs(r.x) > 0.04: return BROW                                    # pale brows, into the tufts
+                if lv == 0 and bars(d, 0.05, 0.3, -0.02): return mix(DISC, DARK, 0.35)                  # fine rings
+                return DISC
+            if lv == 0 and bars(r.x + 0.3 * r.y, 0.07, 0.22): return DARK                               # crown, streaked
+            return GREY
+        sc = r.x if abs(n.x) < 0.5 else r.y
+        streak = lv <= 1 and bars(abs(sc), 0.13, 0.2, 0.03)                                              # black streaks
+        cross = lv == 0 and bars(r.z, 0.07, 0.25)                                                        # fine cross-bars
+        if n.y < -0.35 and r.y < -0.12 and abs(r.x) < 0.27:                                              # below: pale grey
+            return DARK if streak else (mix(PALE, GREY, 0.5) if cross else PALE)
+        if streak: return mix(GREY, DARK, 0.75)
+        if cross: return mix(GREY, DARK, 0.4)
+        return GREY
+    def spots(r, n, lv, hw):   # the row of white scapular spots along the top of the folded wing
+        if lv == 2 or hw > 0.3 or not side(n, 0.35) or n.y < -0.35: return None
+        if -0.24 < r.y < 0.22 and abs(r.z - (0.33 - 0.37 * r.y)) < 0.085:                             # along the wing's top edge
+            return WHITE if A.hash01(abs(r.x) // 0.03, r.y // 0.03, r.z // 0.03) < 0.6 else DARK
+        return None
+    def tcol(t, lv): return ((mix(GREY, PALE, 0.5), 0xd0ccc4) if lv == 0 and 0.08 < t < 0.97 and bars(t, 0.2, 0.35, 0.12) else (GREY, 0xaaa69e))
+    def wcol(u, lv):
+        dark = lv == 0 and bars(u, 0.2, 0.35, 0.05)
+        return (mix(GREY, PALE, 0.5) if dark else GREY), (0xa8a49c if dark else 0xd8d4cc)
+    def hcol(v, lv):
+        dark = lv == 0 and bars(v, 0.2, 0.35, 0.05)
+        return (mix(GREY, PALE, 0.5) if dark else mix(GREY, DARK, 0.25)), (0x9a968e if dark else 0xd8d4cc)
+    return dict(
+        common='Western screech-owl', name='screech_owl', job=OWL_JOB, base='strix_varia',
+        length=0.22, height=0.22, tail_m=0.07, mass=0.15, tris=[1200, 450, 140],
+        **owl_geom(reshape=owl_shape(1.05)), shoulder_x=0.03,
+        legs=dict(knee_h=0.028, belly_h=0.02, legx=0.016, u=0.75, col=LEG, toe=LEG, talon=TALON, feathered=True),
+        eye_r=(0.0078, 0.0018, 0.0078), eye_col=0xf0c41c, pupil=(0x0c0a0a, 0.5),
+        bill=dict(at=V3(0, -0.37, 0.66), dir=V3(0, -0.6, -0.8), length=0.009, radius=0.0027, col=BILLC),
+        tufts=dict(at=V3(0.155, -0.24, 0.92), dir=V3(0.35, 0.15, 1.0), length=0.015, radius=0.0068, col=mix(GREY, DARK, 0.45)),
+        tail=dict(angle=-55.0, w0=0.016, w1=0.022, ridge=0.0035, tip='round', n0=8, col=tcol),
+        wing=dict(span=0.56, chord=1.3, hand='broad', arm=wcol, hand_col=hcol, top=GREY, under=0xd8d4cc),
+        color=col, spots=spots, grizzle=0.06)
+
+
+def saw_whet_owl():
+    BROWN, WHITE, DISC, STREAK, RUST = 0x734b2d, 0xefe9de, 0xe4d9c8, 0x8a6244, 0x93532f
+    BILLC, LEG, TALON = 0x161414, 0xe2d6c0, 0x2a2420
+    def col(r, n, lv, hw):
+        if hw > 0.5:
+            disc, d, e = owl_disc(r, n)
+            if disc:
+                if owl_billr(r): return BILLC
+                if owl_rim(r, d): return (WHITE if lv == 0 and r.z > 0.84 and bars(r.x, 0.05, 0.3) else BROWN)   # the forehead, streaked
+                if abs(r.x) < 0.035: return WHITE                                                       # the Y's stem
+                if r.z > e.z + 0.045 and d < 0.14: return WHITE                                         # the Y's arms, over the eyes
+                if d < 0.05: return mix(DISC, BROWN, 0.45)
+                ang = math.atan2(r.z - e.z, r.x - e.x)
+                return STREAK if lv <= 1 and bars(ang, 2 * math.pi / 12, 0.35) else DISC                # radiating streaks
+            return BROWN
+        if n.y < -0.35 and r.y < -0.12 and abs(r.x) < 0.27:                                              # below: white streaked rust
+            return RUST if lv <= 1 and bars(abs(r.x), 0.15, 0.45, 0.025) else WHITE
+        return BROWN
+    def spots(r, n, lv, hw):   # white spots on the crown and back
+        if lv == 2: return None
+        if hw > 0.5 and owl_disc(r, n)[0]: return None
+        if n.y < -0.35 and r.y < -0.12 and abs(r.x) < 0.27: return None
+        h = A.hash01(abs(r.x) // 0.02, r.y // 0.02, r.z // 0.02)
+        return WHITE if h < (0.16 if hw > 0.5 else 0.2) else None
+    def tcol(t, lv): return ((WHITE, WHITE) if lv == 0 and 0.15 < t < 0.95 and bars(t, 0.28, 0.16, 0.1) else (BROWN, 0xc8b8a4))
+    def wcol(u, lv): return (mix(BROWN, WHITE, 0.55) if lv == 0 and int(u * 8) in (2, 5) else BROWN), 0xe0d4c4   # rows of white spots
+    def hcol(v, lv): return (mix(BROWN, WHITE, 0.5) if lv == 0 and int(v * 8) in (2, 5) else mix(BROWN, 0x3a2818, 0.25)), 0xd0c2b0
+    return dict(
+        common='Northern saw-whet owl', name='saw_whet_owl', job=OWL_JOB, base='strix_varia',
+        length=0.2, height=0.20, tail_m=0.06, mass=0.08, tris=[1200, 450, 140],
+        **owl_geom(reshape=owl_shape(1.22)), shoulder_x=0.03,
+        legs=dict(knee_h=0.025, belly_h=0.018, legx=0.015, u=0.7, col=LEG, toe=LEG, talon=TALON, feathered=True),
+        eye_r=(0.0082, 0.0018, 0.0082), eye_col=0xf0c01c, pupil=(0x0c0a0a, 0.5),
+        bill=dict(at=V3(0, -0.37, 0.66), dir=V3(0, -0.6, -0.8), length=0.008, radius=0.0025, col=BILLC),
+        tail=dict(angle=-55.0, w0=0.014, w1=0.02, ridge=0.003, tip='round', n0=8, col=tcol),
+        wing=dict(span=0.48, chord=1.3, hand='broad', arm=wcol, hand_col=hcol, top=BROWN, under=0xe0d4c4),
+        color=col, spots=spots, spot_max=0.009, grizzle=0.06)
+
+
 RECIPES = {'troglodytes_pacificus': wren, 'perisoreus_canadensis': grayjay, 'poecile_rufescens': chickadee,
-           'strix_varia': owl, 'megaceryle_alcyon': kingfisher}
+           'strix_varia': owl, 'megaceryle_alcyon': kingfisher,
+           'turdus_migratorius': robin, 'sturnus_vulgaris': starling, 'ixoreus_naevius': varied_thrush,
+           'junco_hyemalis': junco, 'regulus_satrapa': kinglet, 'empidonax_difficilis': flycatcher,
+           'megascops_kennicottii': screech_owl, 'aegolius_acadicus': saw_whet_owl}
 if SPECIES not in RECIPES: raise SystemExit('--species one of ' + ', '.join(RECIPES))
 R = RECIPES[SPECIES]()
 JOB = R['job']; LENGTH, TAIL_M = R['length'], R['tail_m']
@@ -452,6 +856,12 @@ def body_color(c, n, level, corners=()):
         a, b = pair(R['color'](r, rn, level, head_w(r)))
         la, lb = A.srgb2lin(a), A.srgb2lin(b)
         for i in range(3): sa[i] += la[i] / len(pts); sb[i] += lb[i] / len(pts)
+    if 'spots' in R:   # whole-face spots (the starling's, the owls'), decided at the face centre so they stay crisp
+        sp = R['spots'](r0, rn, level, head_w(r0))
+        if sp is not None:   # a face bigger than a spot takes it weaker (a speckled face, not a pale patch)
+            size = max((q - c).length for q in corners) if corners else 0.0
+            a, b = pair(sp); la, lb = A.srgb2lin(a), A.srgb2lin(b); f = min(1.0, R.get('spot_max', 1.0) / max(size, 1e-6)) ** 2.2   # (a linear mix: ~perceptual weight ** 2.2)
+            sa = [sa[i] + (la[i] - sa[i]) * f for i in range(3)]; sb = [sb[i] + (lb[i] - sb[i]) * f for i in range(3)]
     k = 1 + R['grizzle'] * (2 * A.hash01(abs(r0.x) // 0.04, r0.y // 0.04, r0.z // 0.04) - 1)
     return tuple(min(1.0, x * k) for x in sa), tuple(min(1.0, x * k) for x in sb)
 
@@ -513,7 +923,8 @@ def tail(ex, level):
     T = R['tail']; rig = (TAIL, 1.0, TAILP)
     a = math.radians(TAIL_ANGLE); d = Vector((0, math.cos(a), math.sin(a))); up = Vector((0, -math.sin(a), math.cos(a)))
     ov = 0.1 * TAIL_M; Lt = TAIL_M + ov; root = TAILP - d * ov
-    rnd = T['tip'] == 'round'
+    rnd = T['tip'] == 'round'; notch = T['tip'] == 'notch'
+    edge = T.get('edge') if level < 2 else None
     halfw = lambda t: (T['w0'] + (T['w1'] - T['w0']) * smooth(0, 0.4, t)) * (1 - (0.35 if rnd else 0.0) * smooth(0.85, 1, t) ** 2)
     ridge = lambda t: T['ridge'] * (1 - 0.6 * t)
     n = {0: T['n0'], 1: 4, 2: 2}[level]
@@ -532,13 +943,27 @@ def tail(ex, level):
         X = Vector((1, 0, 0))
         l0, r0, m0 = c0 + X * w0, c0 - X * w0, c0 + up * ridge(t0)
         l1, r1, m1 = c1 + X * w1, c1 - X * w1, c1 + up * ridge(min(t1, 1))
+        last = i == len(ts) - 2
         if tip:
             ex.quad([l0, m0, m1], top, rig, up, tri=True); ex.quad([m0, r0, m1], top, rig, up, tri=True)
             ex.quad([l0, r0, m1], under, rig, -up, tri=True)
+        elif notch and last:   # a notched end: the centre pulled back, a point at each corner
+            nb = d * (0.12 * Lt); m1n = m1 - nb; c1n = c1 - nb
+            ex.quad([l0, l1, m1n, m0], top, rig, up + X * 0.3); ex.quad([m0, m1n, r1, r0], top, rig, up - X * 0.3)
+            ex.quad([l0, l1, c1n, c0], under, rig, -up); ex.quad([c0, c1n, r1, r0], under, rig, -up)
+            ex.quad([l1, m1n, c1n], top, rig, d, tri=True); ex.quad([m1n, r1, c1n], top, rig, d, tri=True)
+        elif edge:             # the outer tail feathers in their own colour, above and below
+            f, et, eu = edge
+            a0, a1 = l0.lerp(m0, f), l1.lerp(m1, f); b0, b1 = r0.lerp(m0, f), r1.lerp(m1, f)
+            ex.quad([l0, l1, a1, a0], et, rig, up + X * 0.5); ex.quad([a0, a1, m1, m0], top, rig, up + X * 0.2)
+            ex.quad([m0, m1, b1, b0], top, rig, up - X * 0.2); ex.quad([b0, b1, r1, r0], et, rig, up - X * 0.5)
+            g0, g1 = l0.lerp(r0, f / 2), l1.lerp(r1, f / 2); h0, h1 = r0.lerp(l0, f / 2), r1.lerp(l1, f / 2)
+            ex.quad([l0, l1, g1, g0], eu, rig, -up); ex.quad([g0, g1, h1, h0], under, rig, -up); ex.quad([h0, h1, r1, r0], eu, rig, -up)
+            if last: ex.quad([l1, m1, r1], et, rig, d, tri=True)
         else:
             ex.quad([l0, l1, m1, m0], top, rig, up + X * 0.3); ex.quad([m0, m1, r1, r0], top, rig, up - X * 0.3)
             ex.quad([l0, l1, r1, r0], under, rig, -up)
-            if not rnd and i == len(ts) - 2:   # the square end: close the ridge
+            if not rnd and last:   # the square end: close the ridge
                 ex.quad([l1, m1, r1], top, rig, d, tri=True)
 
 
@@ -600,7 +1025,7 @@ def wings(ex, level):
             ex.slab([Pw(*q) for q in hand], Wg['top'], Wg['under'], hand_rig, thick)
 
 
-def eyes(ex):
+def eyes(ex, level=0):
     er = Vector(R['eye_r']); col = R.get('eye_col', 0x0a0a0c)
     for s in (1, -1):
         if R.get('eye_front'):   # an owl's forward eye: a shallow eight-sided cone standing just proud of the face disc
@@ -609,8 +1034,16 @@ def eyes(ex):
             ring = [c + (w * math.cos(2 * math.pi * k / 8) + u * math.sin(2 * math.pi * k / 8)) * er.x for k in range(8)]
             apex = c + nrm * er.y
             for k in range(8): ex.quad([ring[k], ring[(k + 1) % 8], apex], col, (HEAD, 1.0, NECK), nrm, tri=True)
+            if R.get('pupil') and level < 2:   # the pupil: the middle of the cone, raised a little, black
+                pc, fr = R['pupil']; lift = nrm * (0.25 * er.y)
+                pr = [c + nrm * (er.y * (1 - fr)) + lift + (w * math.cos(2 * math.pi * k / 8) + u * math.sin(2 * math.pi * k / 8)) * (er.x * fr) for k in range(8)]
+                for k in range(8): ex.quad([pr[k], pr[(k + 1) % 8], apex + lift], pc, (HEAD, 1.0, NECK), nrm, tri=True)
             continue
         c = Vector((s * (EYE_SURF.x - 0.4 * er.x), EYE_SURF.y, EYE_SURF.z))
+        if R.get('eye_ring'):    # a pale ring: a flatter, wider ellipsoid just behind the eye (set back for a teardrop)
+            rc, (kx, ky, kz), back = R['eye_ring']
+            ex.ellipsoid(Vector((s * (EYE_SURF.x - 0.55 * er.x), EYE_SURF.y + back * er.y, EYE_SURF.z)),
+                         Vector((er.x * kx, er.y * ky, er.z * kz)), rc, (HEAD, 1.0, NECK))
         ex.ellipsoid(c, er, col, (HEAD, 1.0, NECK))
 
 
@@ -623,11 +1056,23 @@ def bill(ex, level):
     ex.tube([base, base + d * B['length']], [B['radius'], 0], B['col'], (HEAD, 1.0, NECK), sides=4 if level < 2 else 3)
 
 
+def tufts(ex, level):
+    """Ear tufts: a short four-sided horn each side of the crown, set into the head (the raw point given for +x)."""
+    T = R.get('tufts')
+    if not T: return
+    for s in (1, -1):
+        at = M(lm(T['at'])); at.x *= s
+        hit = bvh.ray_cast(V3(at.x, at.y, at.z + 0.3), V3(0, 0, -1))[0]
+        if hit: at = hit
+        d = Vector((s * T['dir'].x, T['dir'].y, T['dir'].z)).normalized()
+        ex.tube([at - d * (0.6 * T['radius']), at + d * T['length']], [T['radius'], 0], T['col'], (HEAD, 1.0, NECK), sides=4 if level < 2 else 3)
+
+
 # ---- tiers ----
 def build(level, target):
     global V
-    ex = Extra(); legs(ex, level); tail(ex, level); wings(ex, level); bill(ex, level)
-    if level == 0 or R.get('eye_front'): eyes(ex)
+    ex = Extra(); legs(ex, level); tail(ex, level); wings(ex, level); bill(ex, level); tufts(ex, level)
+    if level == 0 or R.get('eye_front'): eyes(ex, level)
     o, n0 = A.tier_copy(ob, target - len(ex.tris), protect='protect' if level < 2 else None, protect_factor=(1.0, 0.6, 0)[level])
     V0 = V; V = o.data.vertices
     m = o.data
@@ -700,12 +1145,15 @@ print('LANDMARKS %s: bill to tail %.3f m (bill tip to the neck to the rump %.3f 
          *[tuple(round(c, 3) for c in p) for p in (BILL_TIP, EYE_SURF, NECK, TAILP, TAIL_TIP, SHOULDER, KNEE)], R['mass']))
 RIG = {'kind': 'bird', 'wing': list(A.to3(SHOULDER)), 'tail': list(A.to3(TAILP)), 'head': list(A.to3(NECK)), 'length_m': LENGTH}
 if VARIANT: RIG['variant'] = R['variant']
+BASE = R.get('base')      # a free variant: another species' Meshy source, reshaped and recoloured (no credits)
+SOURCE = {'kind': 'variant' if BASE else 'meshy', 'job_id': JOB, 'ai_model': 'meshy-6-lite', 'mode': 'text-to-3d preview',
+          'generator': 'Khronos glTF Blender I/O (Meshy export)', 'ai_generated': True,
+          'meshy_metadata': 'none embedded in the source GLB'}
+if BASE: SOURCE.update(variant_of=BASE, credits=0)
 write_glb(OUT, tiers, 'wild-earth tools/build_songbird.py (Blender)',
-          f"{R['common']}: generated with Meshy (meshy.ai), task {JOB}, owned by the account holder (Aaron Brodeur), CC BY-SA 4.0; rebuilt (tail and legs replaced, reshaped, recoloured, decimated, wing cards added) by wild-earth tools/build_songbird.py --species {SPECIES}",
-          extras={'species': SPECIES, 'rig': RIG,
-                  'source': {'kind': 'meshy', 'job_id': JOB, 'ai_model': 'meshy-6-lite', 'mode': 'text-to-3d preview',
-                             'generator': 'Khronos glTF Blender I/O (Meshy export)', 'ai_generated': True,
-                             'meshy_metadata': 'none embedded in the source GLB'}})
+          (f"{R['common']}: a variant of {BASE} built from its source, " if BASE else f"{R['common']}: ") +
+          f"generated with Meshy (meshy.ai), task {JOB}, owned by the account holder (Aaron Brodeur), CC BY-SA 4.0; rebuilt (tail and legs replaced, reshaped, recoloured, decimated, wing cards added) by wild-earth tools/build_songbird.py --species {SPECIES}",
+          extras={'species': SPECIES, 'rig': RIG, 'source': SOURCE})
 
 # ---- optional preview: lod0 with its vertex colours (workbench, orthographic), one PNG of six views ----
 if PREVIEW:

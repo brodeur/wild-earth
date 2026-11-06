@@ -1,0 +1,78 @@
+{
+  "id": "sturnus_vulgaris",
+  "aliases": [
+    "european_starling",
+    "starling",
+    "common_starling"
+  ],
+  "scientific": "Sturnus vulgaris",
+  "common": "European starling",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Sturnidae",
+    "genus": "Sturnus"
+  },
+  "mass_kg": 0.078,
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.21,
+    "shoulder_or_wingspan_m": 0.38,
+    "note": "Length 20-23 cm, wingspan 31-44 cm, 60-96 g. Built 0.210 m bill to tail (0.150 m bill tip to the neck to the rump, plus a 0.060 m tail), 0.119 m tall; wing cards 0.38 m across."
+  },
+  "source": {
+    "kind": "meshy",
+    "title": "European starling",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": null,
+    "file": "library/animals/jobs/sturnus_vulgaris/01a1ae8b-3af1-7031-aa17-96a16473bf59/model.glb (local; jobs/ meshes are not tracked)",
+    "original": "Meshy text-to-3D preview, meshy-6-lite, triangle mesh, 20,781 triangles, one piece, untextured",
+    "prompt": "A European starling (Sturnus vulgaris), one adult standing on the ground, side-on pose, wings folded tight. Realistic proportions: 21 cm long, a stocky body, a short square tail, a long pointed straight yellow bill, a flat head, pinkish legs. Glossy black plumage with a green and purple sheen, the body speckled with small white and buff spots, buff edges on the wing feathers. Three toes forward and one back. No base, no perch. Game-ready, clean closed mesh.",
+    "job_id": "01a1ae8b-3af1-7031-aa17-96a16473bf59",
+    "job": "library/animals/jobs/sturnus_vulgaris/01a1ae8b-3af1-7031-aa17-96a16473bf59/job.json",
+    "credits": 5,
+    "date": "2026-11-06 (UTC)",
+    "adopted_by": "tools/build_songbird.py --species sturnus_vulgaris",
+    "build": "tools/build_songbird.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the adopted GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" in README, the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 998,
+    "lod1": 400,
+    "lod2": 120,
+    "file": "client/assets/starling.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "lod_m": [
+      8,
+      25
+    ],
+    "note": "Scaled to 0.21 m bill to tail. The preview (a clean stocky starling: flat head, long pointed bill) kept and pitched 4 degrees nose-down to a near-level ground stance; the generated legs, long tail and wingtips cut and replaced by pinkish procedural legs and a short square tail of 6 cm 10 degrees below level; pointed flight cards. Colours: glossy black, purple-tinged on the head and neck shading to green-black on the body; white (below) and buff (above) spots as whole faces decided at each face centre and weakened on faces larger than a spot; blackish folded wings with buff fringes (lod0); buff tail tip and trailing edges on the cards; yellow bill. Triangles: lod0 998 = 833 body + 165 legs, tail, cards, eyes; lod1 400 = 315 body + 85 legs, tail, cards, eyes; lod2 120 = 93 body + 27 legs, tail, cards, eyes. GLB 177,264 bytes. lod_m is a suggestion."
+  },
+  "rig": "bird rig template of the Steller's jay (tools/build_stellersjay.py; drawn with client/src/animalModels.js RIG.stjay's constants): PART BODY 0, LEG_A 1 / LEG_B 2 procedural legs (pivot at the knee), TAIL 3 procedural tail (pivot at the rump), HEAD 6 (head and neck, pivot at the base of the neck), WING_L/R 4/5 and HAND_L/R 9/10 flight cards that collapse into the shoulder on pose; extras.rig {kind 'bird', wing (shoulder), tail (rump), head (neck base), length_m}; no skin",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Built 2026-11-06. Reads as a starling: dark, glossy, speckled, a long yellow bill and short tail. Still open: the body faces are larger than real spots, so the speckle on the breast is a sprinkle of pale faces rather than fine dots; the sheen is a fixed purple-to-green tint, not view-dependent; the tail is a flat plate, thin side-on.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (Meshy candidate, build script, rig, tiers, entry)"
+  ],
+  "sources": [
+    "The Sibley Guide to Birds, 2nd edition (D. A. Sibley, 2014): plumage, shape and posture",
+    "Cornell Lab of Ornithology, All About Birds and Birds of the World species accounts: size, mass, wingspan, plumage",
+    "docs/animal-library.md",
+    "library/animals/README.md",
+    "tools/build_songbird.py",
+    "tools/build_stellersjay.py"
+  ]
+}

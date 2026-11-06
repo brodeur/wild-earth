@@ -1,0 +1,66 @@
+{
+  "species": "anaxyrus_boreas",
+  "mode": "preview",
+  "kind": "text-to-3d",
+  "task_id": "01a1ae8d-0b79-7550-84cb-9b7d4e6f1127",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "preview",
+    "prompt": "A western toad (Anaxyrus boreas), NOT a frog, NOT a cartoon. One adult sitting on the ground in a neutral crouch, side-on pose, the four legs folded under it, the front feet planted. Realistic proportions: 10 cm long, a squat broad warty body, a blunt rounded head with big oval parotoid glands behind the eyes, golden eyes with horizontal pupils, short thick legs. Olive-grey to greenish brown skin with dark warts ringed in rusty brown, a thin pale cream stripe down the middle of the back, a pale mottled belly. No base, no ground. Game-ready, clean closed mesh.",
+    "ai_model": "meshy-6-lite",
+    "target_formats": [
+      "glb"
+    ],
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 20000,
+    "moderation": false
+  },
+  "prompt": "A western toad (Anaxyrus boreas), NOT a frog, NOT a cartoon. One adult sitting on the ground in a neutral crouch, side-on pose, the four legs folded under it, the front feet planted. Realistic proportions: 10 cm long, a squat broad warty body, a blunt rounded head with big oval parotoid glands behind the eyes, golden eyes with horizontal pupils, short thick legs. Olive-grey to greenish brown skin with dark warts ringed in rusty brown, a thin pale cream stripe down the middle of the back, a pale mottled belly. No base, no ground. Game-ready, clean closed mesh.",
+  "image": null,
+  "preview_job": null,
+  "estimated_credits": 5,
+  "balance_before": 2362,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-06T01:50:41+00:00",
+    "created_at": "2026-11-06T01:50:43+00:00",
+    "started_at": "2026-11-06T01:50:43+00:00",
+    "finished_at": "2026-11-06T01:51:11+00:00",
+    "downloaded": "2026-11-06T01:51:25+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur",
+  "progress": 100,
+  "task": {
+    "id": "01a1ae8d-0b79-7550-84cb-9b7d4e6f1127",
+    "type": "text-to-3d-preview",
+    "status": "SUCCEEDED",
+    "created_at": 1793929843041,
+    "started_at": 1793929843046,
+    "finished_at": 1793929871186,
+    "consumed_credits": 5,
+    "task_error": null
+  },
+  "credits_charged": 5,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 757684,
+      "sha256": "dd1dafb6deebcb9b383e2bffc8d73f9afce6f85d2a7773efb88beb9df618df70",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1ae8d-0b79-7550-84cb-9b7d4e6f1127/output/model.glb"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 86990,
+      "sha256": "d07581e52e985c2ba49baa3de58b60d8c6ce8a1e1954df16a1e39b6cdac37c35",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1ae8d-0b79-7550-84cb-9b7d4e6f1127/output/preview.png"
+    }
+  ],
+  "balance_after": 2357
+}

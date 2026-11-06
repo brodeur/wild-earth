@@ -1,0 +1,72 @@
+{
+  "id": "anas_platyrhynchos",
+  "aliases": [
+    "mallard",
+    "mallard_duck",
+    "wild_duck"
+  ],
+  "scientific": "Anas platyrhynchos",
+  "common": "mallard",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Anseriformes",
+    "family": "Anatidae",
+    "genus": "Anas"
+  },
+  "mass_kg": 1.1,
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.58,
+    "shoulder_or_wingspan_m": 0.9,
+    "note": "Length 0.50-0.65 m, wingspan 0.81-0.98 m, 0.7-1.6 kg (drakes heavier). The floating bird is scaled to 0.58 m bill tip to tail tip; the origin is at the WATERLINE: the flat underside 0.04 m below it, the back 0.10 m above it, the crown 0.22 m; the broad flat bill 0.052 m from its base, ~2.4 cm wide; the legs reach 0.084 m below the waterline; wing cards 0.90 m tip to tip. The drake (_COLORB) is drawn on the same mesh (the client may scale him about 1.05x)."
+  },
+  "source": {
+    "kind": "variant",
+    "title": "Mallard (variant of the common merganser's Meshy mesh)",
+    "author": "variant of mergus_merganser by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/mergus_merganser/01a1ad3c-fd50-7790-860b-de59283a3ab8/model.glb (local, git-ignored; generated with Meshy (meshy.ai))",
+    "original": "the common merganser's text-to-3D preview, ai_model meshy-6-lite, triangle remesh to 20,000 faces (20,919 triangles, untextured)",
+    "prompt": "(the merganser's) A common merganser (Mergus merganser), adult female, swimming low on the water, side-on pose, wings folded, NOT a mallard, NOT a duck with a broad flat bill. No water modelled: the bird alone with a flat waterline underside. Realistic proportions: 62 cm long, a long low streamlined body, a long thin straight red bill with a small hooked tip, a rusty chestnut head with a shaggy crest hanging back from the nape, a sharp line between the rusty neck and the white chin and breast, a grey back, flanks and tail. No base. Game-ready, clean closed mesh.",
+    "job_id": "01a1ad3c-fd50-7790-860b-de59283a3ab8",
+    "job": "library/animals/jobs/mergus_merganser/01a1ad3c-fd50-7790-860b-de59283a3ab8/job.json",
+    "credits": 0,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_mallard.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the built GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder, not CC BY-SA licensees).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "A variant built from an earlier Meshy job: no new generation, no credits. Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 1199,
+    "lod1": 449,
+    "lod2": 149,
+    "file": "client/assets/mallard.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear; hen)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT",
+      "_COLORB (linear; breeding drake)"
+    ],
+    "note": "The merganser's floating body made a dabbler: the neck shortened 55% over its middle and thickened 1.3x, the head 0.86x (rounder: 1.06x across) on it, the body 1.12x across, the wing tips and tail behind the rump shortened 0.7x and cocked up; the thin bill cut off and a broad flat spatulate bill built in its place (a five-sided tube of sections, 6 / 4 / 3 sections per tier); the drake's two small curled black central tail feathers (lod0, the hen's tail colour on her), a dark eye (lod0), orange legs with webbed feet, wing cards. Triangles: lod0 1,199 = 998 body + 201 bill, legs, cards, eyes and curls; lod1 449 = 358 + 91; lod2 149 = 88 + 61. GLB 303,504 bytes."
+  },
+  "rig": "bird rig template exactly as client/assets/merganser.glb (tools/build_merganser.py; a swimmer: y = 0 is the waterline), to be loaded with the merganser's constants: PART BODY 0, LEG_A 1 (left) / LEG_B 2 (right) short legs pivoting at the hip (under the water while it swims; for a walk on the bank the client raises the bird by extras.rig.feet_y_m = -0.084), TAIL 3 (tail, crossed wing tips and the drake's curls; pivot at the tail root), HEAD 6 = neck, head and bill pivoting at the neck's base (a dabble or an up-ending swings it down), WING_L/R 4/5 arm cards (pivot at the shoulder) and HAND_L/R 9/10 hand cards (pivot at the wrist) that collapse into the shoulder at rest (collapse 1). extras.rig keys (the merganser's): kind 'bird', wing [0.048, 0.088, 0.186], tail [0, 0.052, -0.118], head [0, 0.081, 0.272], hip [0.027, -0.005, 0], length_m 0.58, span_m 0.9, waterline_m 0, draft_m 0.04, feet_y_m -0.084, variant 'breeding drake in _COLORB (the hen in COLOR_0)'. No skin.",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Reads as a mallard pair at every tier. Hen (COLOR_0): mottled brown and buff all over (hashed dark centres and buff edges), a dark brown crown and a dark eye line, a paler buff face and throat, an orange bill with a dark saddle, the blue speculum bordered white on the folded wing and the cards, orange legs. Drake (_COLORB): glossy green head (two greens hashed), a white neck ring, chestnut breast, pale grey vermiculated flanks and back, black rump and undertail, the black curls, a yellow bill. Still open: the body is the merganser's and still a little long and low for a mallard (the fuller width helps from above, less from the side); the neck ring is jagged on lod0 (whole decimated faces) and may vanish on lod2; the hen's eye line and crown are coarse face patches; the drake's tail is black with a pale tip where a real drake shows whitish outer tail feathers; the curls are thin tubes on lod0 only; the bill is a separate tube pushed into the face (no seam blend), a touch long-looking from the side; the speculum on the folded wing is a painted band on the flank faces. A local birder should check the bill shape and the head size on the water.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (variant: build script, neck, head, bill, body and tail reshaping, curls, hen and drake colours, rig, tiers, entry)"
+  ],
+  "sources": [
+    "Sibley, D. A. (2014), The Sibley Guide to Birds, 2nd ed.: mallard (hen and drake field marks, speculum, bill colours) - from the agent's knowledge, not reopened for this entry",
+    "Drilling, N., R. Titman and F. McKinney (2002), Mallard (Anas platyrhynchos), The Birds of North America / Birds of the World (measurements, mass) - from the agent's knowledge",
+    "Cornell Lab of Ornithology, All About Birds: Mallard (size, shape, colour pattern) - from the agent's knowledge",
+    "tools/build_merganser.py and library/animals/mergus_merganser.json (template, waterline, cards)"
+  ]
+}
