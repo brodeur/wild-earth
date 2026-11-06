@@ -1,0 +1,92 @@
+{
+ "format": 1,
+ "code": "bucephala_islandica",
+ "scientific": "Bucephala islandica",
+ "common": "barrow's goldeneye",
+ "sex": "male",
+ "regions": {
+  "upperparts": {
+   "colours": [
+    "deep black"
+   ],
+   "markings": []
+  },
+  "flanks": {
+   "colours": [
+    "bright white",
+    "white"
+   ],
+   "markings": [
+    {
+     "pattern": "patches",
+     "colours": [
+      "white"
+     ]
+    }
+   ]
+  },
+  "underparts": {
+   "colours": [
+    "bright white"
+   ],
+   "markings": []
+  },
+  "head": {
+   "colours": [
+    "purplish",
+    "white",
+    "black",
+    "purplish-black"
+   ],
+   "markings": [
+    {
+     "pattern": "patches",
+     "colours": [
+      "white",
+      "greenish"
+     ]
+    },
+    {
+     "pattern": "patches",
+     "colours": [
+      "white"
+     ]
+    }
+   ]
+  },
+  "tail": {
+   "colours": [
+    "deep black"
+   ],
+   "markings": []
+  },
+  "wings": {
+   "colours": [
+    "deep black"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 17,
+ "dropped": {
+  "female": 3,
+  "age change": 1
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Barrow%27s_goldeneye",
+   "title": "Barrow's goldeneye",
+   "revision": 1362929364,
+   "facts": 5
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Bucephala_islandica/",
+   "title": "ADW: Bucephala islandica",
+   "facts": 12
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "back deep black; flanks bright white, white with white patches; belly and underparts bright white; head purplish, white, black, purplish-black with white, greenish patches; tail deep black; wings deep black"
+}

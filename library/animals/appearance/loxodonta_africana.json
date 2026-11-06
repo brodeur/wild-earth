@@ -1,0 +1,41 @@
+{
+ "format": 1,
+ "code": "loxodonta_africana",
+ "scientific": "Loxodonta africana",
+ "common": "african elephant",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "grey",
+    "gray",
+    "red",
+    "brown"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 5,
+ "dropped": {
+  "no body word": 1,
+  "regional": 2,
+  "not the body": 1
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/African_bush_elephant",
+   "title": "African bush elephant",
+   "revision": 1383559782,
+   "facts": 2
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Loxodonta_africana/",
+   "title": "ADW: Loxodonta africana",
+   "facts": 3
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body grey, gray, red, brown"
+}

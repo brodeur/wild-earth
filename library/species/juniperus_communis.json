@@ -166,30 +166,6 @@
    "note": "an old mat several metres across, the inner stems dead and silver, the edges rooting"
   }
  ],
- "snag": {
-  "fraction": 0.05,
-  "from": "mature",
-  "height_m": [
-   16,
-   30
-  ],
-  "limbs": 0.35,
-  "twigs": 0,
-  "levels": 1,
-  "broken_top": [
-   0.6,
-   0.9
-  ],
-  "shorten": [
-   0.3,
-   0.8
-  ],
-  "rgb": [
-   150,
-   128,
-   112
-  ]
- },
  "description": "On the windswept Lofoten heath the common juniper is a low, sprawling mat 20-70 cm tall and a few metres across, its stems hugging the rock under dense, prickly, awl-shaped needles in whorls of three, each with a white band on top that makes the plant look grey-green. The blue-black, bloomy 'berries' are cones that take two or three years to ripen, so a bush carries them all year.",
  "season_notes": {
   "winter": "Grey-green with a bronze tinge, often under snow; the old berries blue-black.",
@@ -343,7 +319,8 @@
    "upturn_deg": 34,
    "taper": 0.95,
    "radius_ratio": 0.3,
-   "segments": 3
+   "segments": 3,
+   "count_of": "plant"
   },
   {
    "count": 9,
@@ -512,7 +489,7 @@
  },
  "generated": {
   "by": "pipeline/plantgen.py",
-  "version": "2",
+  "version": "5",
   "card": "library/plant_cards/juniperus_communis.json",
   "card_sha256": "81bc56b7b515c1c1",
   "template": "juniperus_grandis",

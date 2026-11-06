@@ -1,263 +1,56 @@
 {
  "tile": "utm36s_698_9724",
- "started": "2026-11-06T12:07:41+00:00",
- "budget": 120,
- "reserve": 1600,
+ "kind": "recolour",
+ "started": "2026-11-06T12:53:41+00:00",
+ "budget": 10,
+ "reserve": 1450,
  "species": [
   {
-   "code": "crocodylus_niloticus",
-   "why": "reptile by records x sqrt(mass), one per archetype first",
-   "attempts": 1,
-   "credits": 30,
-   "jobs": [
-    {
-     "mode": "preview",
-     "dir": "library/animals/jobs/crocodylus_niloticus/01a1b0b5-7e2d-779d-ab35-f232aae70a79"
-    },
-    {
-     "mode": "refine",
-     "dir": "library/animals/jobs/crocodylus_niloticus/01a1b0be-0d2f-7559-a8d7-4fa1b54d7587"
-    }
-   ],
-   "ok": true,
-   "archetype": "sprawl",
-   "build_log": "INFO archetype sprawl voxel 0.0065 remeshed 49174 faces 49178 vertices\nINFO foot pieces (y, x, n): [(-0.551, 0.225, 8), (-0.548, 0.222, 818), (-0.548, -0.223, 813), (-0.044, -0.244, 1094), (-0.044, 0.243, 1088), (0.316, 0.082, 125)]\nINFO feet pieces 6 fore/hind gap 0.503 at y -0.296\nINFO legs {'HR': (2506, [-0.171, 0.004, 0.11]), 'HL': (2625, [0.158, 0.037, 0.099]), 'FL': (2294, [0.129, -0.439, 0.122]), 'FR': (2270, [-0.129, -0.438, 0.122])}\nINFO tail 14550 vertices from y 0.067\nINFO neck y -0.570, head 13.8% of the mesh, shoulders y -0.439, hips y 0.021\nLANDMARKS length 2.454 m, scale 1.2271 volume 0.05098 units mass 94.2 kg; svl 1.309 tail 1.392 belly 0.0131 back 0.3311 neck [0.0, -0.443, 0.23] pivots {'HR': [-0.21, 0.262, 0.135], 'HL': [0.194, 0.302, 0.122], 'FL': [0.158, -0.282, 0.15], 'FR': [-0.158, -0.281, 0.149]}\nINFO palette shares [0.154, 0.071, 0.095, 0.127, 0.056, 0.1, 0.068, 0.15, 0.063, 0.117] pattern 0.0751 -> tiers [('lod0', 4703), ('lod1', 1693), ('lod2', 470)]\nINFO tier lod0 from 98348 to 4702\nINFO tier lod1 from 98348 to 1692\nINFO tier lod2 from 98348 to 470\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/crocodylus_niloticus.glb 540912 bytes; lod0 4702 tris, lod1 1692 tris, lod2 470 tris",
-   "reused": "library/animals/jobs/crocodylus_niloticus/01a1b0be-0d2f-7559-a8d7-4fa1b54d7587"
-  },
-  {
    "code": "stigmochelys_pardalis",
-   "why": "reptile by records x sqrt(mass), one per archetype first",
-   "attempts": 1,
-   "credits": 30,
-   "jobs": [
-    {
-     "mode": "preview",
-     "dir": "library/animals/jobs/stigmochelys_pardalis/01a1b0b6-e5a5-712f-a3c3-2359f238ae3e"
+   "check": {
+    "ok": false,
+    "score": 0.427,
+    "fails": [
+     "flanks 38% matches",
+     "upperparts 26% matches",
+     "only 43% of the model in described colours"
+    ]
+   },
+   "texture_prompt": "Natural colours and markings of a wild adult Leopard tortoise (Stigmochelys pardalis) as seen in Serengeti, Mara Region, Tanzania: the shell's scutes, the skin of the head and legs, in their true colours. Coloured as the adult is described: shell and body yellow with black blotches; head yellow, tan, brown; legs yellow, tan, brown. Correct this: shell yellow, not cinnamon or orange; belly and underparts yellow, not cinnamon or orange. Realistic, evenly lit albedo with no baked shadows or highlights; eyes, beak and claws in their true colours.",
+   "recolour": {
+    "at": "2026-11-06T12:53:41+00:00",
+    "before": {
+     "ok": false,
+     "score": 0.427,
+     "fails": [
+      "flanks 38% matches",
+      "upperparts 26% matches",
+      "only 43% of the model in described colours"
+     ]
     },
-    {
-     "mode": "refine",
-     "dir": "library/animals/jobs/stigmochelys_pardalis/01a1b0c0-4888-7401-88fa-0e7be6ad0154"
-    }
-   ],
-   "ok": true,
-   "archetype": "tortoise",
-   "build_log": "INFO foot pieces (y, x, n): [(-0.57, 0.423, 460), (-0.569, -0.425, 457), (0.82, -0.416, 489), (0.821, 0.415, 489)]\nINFO feet pieces 4 fore/hind gap 1.390 at y 0.125\nINFO tortoise leg cut z 0.213\nINFO legs {'FL': (2079, [0.402, -0.525, 0.213]), 'FR': (2075, [-0.402, -0.525, 0.213]), 'HR': (2044, [-0.394, 0.777, 0.213]), 'HL': (2036, [0.394, 0.776, 0.213])}\nINFO tail none (a tortoise: the stub stays body)\nINFO neck y -0.630, head 12.9% of the mesh, shoulders y -0.525, hips y 0.776\nLANDMARKS length 0.562 m, scale 0.2809 volume 0.90280 units mass 20.0 kg; svl 0.499 tail 0.0 belly 0.0599 back 0.3305 neck [0.0, -0.212, 0.124] pivots {'FL': [0.113, -0.183, 0.06], 'FR': [-0.113, -0.183, 0.06], 'HR': [-0.111, 0.183, 0.06], 'HL': [0.111, 0.183, 0.06]}\nINFO palette shares [0.122, 0.077, 0.074, 0.059, 0.095, 0.122, 0.132, 0.132, 0.06, 0.127] pattern 0.0892 -> tiers [('lod0', 4529), ('lod1', 1630), ('lod2', 452)]\nINFO tier lod0 from 155136 to 4528\nINFO tier lod1 from 155136 to 1630\nINFO tier lod2 from 155136 to 452\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/stigmochelys_pardalis.glb 557140 bytes; lod0 4528 tris, lod1 1630 tris, lod2 452 tris",
-   "reused": "library/animals/jobs/stigmochelys_pardalis/01a1b0c0-4888-7401-88fa-0e7be6ad0154"
-  },
-  {
-   "code": "agama_mwanzae",
-   "why": "reptile by records x sqrt(mass), one per archetype first",
-   "attempts": 1,
-   "credits": 30,
-   "jobs": [
-    {
-     "mode": "preview",
-     "dir": "library/animals/jobs/agama_mwanzae/01a1b0b7-fcb0-72d5-a12c-ff05fc4c1d55"
+    "texture_prompt": "Natural colours and markings of a wild adult Leopard tortoise (Stigmochelys pardalis) as seen in Serengeti, Mara Region, Tanzania: the shell's scutes, the skin of the head and legs, in their true colours. Coloured as the adult is described: shell and body yellow with black blotches; head yellow, tan, brown; legs yellow, tan, brown. Correct this: shell yellow, not cinnamon or orange; belly and underparts yellow, not cinnamon or orange. Realistic, evenly lit albedo with no baked shadows or highlights; eyes, beak and claws in their true colours.",
+    "credits": 10,
+    "job": "library/animals/jobs/stigmochelys_pardalis/01a1b0ec-0d1f-718c-b98a-bbc2e6f285cf",
+    "after": {
+     "ok": false,
+     "score": 0.43,
+     "fails": [
+      "flanks 35% matches",
+      "upperparts 34% matches",
+      "only 43% of the model in described colours"
+     ],
+     "off": {
+      "flanks": "cinnamon",
+      "underparts": "golden",
+      "upperparts": "ginger"
+     }
     },
-    {
-     "mode": "refine",
-     "dir": "library/animals/jobs/agama_mwanzae/01a1b0c1-02f3-7233-94b5-04e29fb1103a"
-    }
-   ],
-   "ok": true,
-   "archetype": "sprawl",
-   "build_log": "INFO archetype sprawl voxel 0.0065 remeshed 53386 faces 53390 vertices\nINFO foot pieces (y, x, n): [(-0.592, -0.124, 1045), (-0.572, 0.158, 1147), (-0.137, -0.243, 1109), (-0.135, 0.244, 1107)]\nINFO feet pieces 4 fore/hind gap 0.435 at y -0.354\nINFO legs {'FL': (4704, [0.097, -0.504, 0.366]), 'HR': (4641, [-0.097, -0.086, 0.238]), 'HL': (4601, [0.098, -0.088, 0.237]), 'FR': (4268, [-0.096, -0.511, 0.352])}\nINFO tail 10770 vertices from y -0.056\nINFO neck y -0.570, head 18.0% of the mesh, shoulders y -0.507, hips y -0.087\nLANDMARKS length 0.256 m, scale 0.1282 volume 0.04742 units mass 0.1 kg; svl 0.121 tail 0.143 belly 0.0231 back 0.0691 neck [0.0, -0.035, 0.061] pivots {'FL': [0.012, -0.026, 0.047], 'HR': [-0.012, 0.027, 0.031], 'HL': [0.013, 0.027, 0.03], 'FR': [-0.012, -0.027, 0.045]}\nINFO palette shares [0.104, 0.091, 0.104, 0.166, 0.067, 0.028, 0.157, 0.043, 0.097, 0.142] pattern 0.0456 -> tiers [('lod0', 1200), ('lod1', 432), ('lod2', 120)]\nINFO tier lod0 from 106772 to 1200\nINFO tier lod1 from 106772 to 432\nINFO tier lod2 from 106772 to 120\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/agama_mwanzae.glb 114948 bytes; lod0 1200 tris, lod1 432 tris, lod2 120 tris",
-   "reused": "library/animals/jobs/agama_mwanzae/01a1b0c1-02f3-7233-94b5-04e29fb1103a"
-  },
-  {
-   "code": "varanus_niloticus",
-   "why": "reptile by records x sqrt(mass), one per archetype first",
-   "attempts": 1,
-   "credits": 30,
-   "jobs": [
-    {
-     "mode": "preview",
-     "dir": "library/animals/jobs/varanus_niloticus/01a1b0b6-31a2-777c-82da-3ae68d038d1a"
-    },
-    {
-     "mode": "refine",
-     "dir": "library/animals/jobs/varanus_niloticus/01a1b0bf-2b22-7473-8384-e7813b1d714e"
-    }
-   ],
-   "ok": true,
-   "archetype": "sprawl",
-   "build_log": "INFO archetype sprawl voxel 0.0066 remeshed 51516 faces 51516 vertices\nINFO foot pieces (y, x, n): [(-0.493, -0.21, 1184), (-0.459, 0.177, 1168), (0.0, 0.223, 1456), (0.103, -0.227, 1358)]\nINFO feet pieces 4 fore/hind gap 0.459 at y -0.229\nINFO legs {'HR': (4842, [-0.133, 0.083, 0.291]), 'HL': (4627, [0.137, 0.064, 0.279]), 'FR': (4070, [-0.114, -0.439, 0.326]), 'FL': (3739, [0.118, -0.414, 0.301])}\nINFO tail 9090 vertices from y 0.113\nINFO neck y -0.610, head 11.8% of the mesh, shoulders y -0.426, hips y 0.073\nLANDMARKS length 0.735 m, scale 0.3673 volume 0.05705 units mass 2.8267 kg; svl 0.409 tail 0.328 belly 0.0644 back 0.1879 neck [0.0, -0.159, 0.171] pivots {'HR': [-0.049, 0.095, 0.107], 'HL': [0.05, 0.088, 0.102], 'FR': [-0.042, -0.096, 0.12], 'FL': [0.043, -0.087, 0.111]}\nINFO palette shares [0.105, 0.129, 0.122, 0.071, 0.073, 0.091, 0.13, 0.142, 0.07, 0.066] pattern 0.0649 -> tiers [('lod0', 2801), ('lod1', 1008), ('lod2', 280)]\nINFO tier lod0 from 103032 to 2800\nINFO tier lod1 from 103032 to 1008\nINFO tier lod2 from 103032 to 280\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/varanus_niloticus.glb 304752 bytes; lod0 2800 tris, lod1 1008 tris, lod2 280 tris",
-   "reused": "library/animals/jobs/varanus_niloticus/01a1b0bf-2b22-7473-8384-e7813b1d714e"
+    "kept": "new"
+   }
   }
  ],
- "stand_ins": [
-  {
-   "code": "loxodonta_africana",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "hippopotamus_amphibius",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "damaliscus_korrigum",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "giraffa_tippelskirchi",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "aepyceros_melampus",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "panthera_leo",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "crocuta_crocuta",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "alcelaphus_buselaphus",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "syncerus_caffer",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "equus_quagga",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "connochaetes_taurinus",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "papio_anubis",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "phacochoerus_africanus",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "redunca_redunca",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "heterohyrax_brucei",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "eudorcas_thomsonii",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "panthera_pardus",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "acinonyx_jubatus",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "nanger_granti",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "chlorocebus_pygerythrus",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "procavia_capensis",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "mungos_mungo",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "leptailurus_serval",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "helogale_parvula",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "otocyon_megalotis",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "canis_aureus",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "canis_mesomelas",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "lycaon_pictus",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "genetta_genetta",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "struthio_camelus",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "lamprotornis_superbus",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "leptoptilos_crumenifer",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "alopochen_aegyptiaca",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "torgos_tracheliotos",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "vanellus_armatus",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "sagittarius_serpentarius",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "eurocephalus_ruppelli",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "gyps_africanus",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "trachyphonus_darnaudii",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "aquila_rapax",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "phrynobatrachus_mababiensis",
-   "why": "not in this run (--kind reptiles)"
-  },
-  {
-   "code": "trachylepis_striata",
-   "why": "over the budget or the count"
-  }
- ],
- "spent": 120,
- "balance_after": 1607,
- "modelled": 4,
+ "spent": 10,
+ "balance_after": 1547,
  "earlier": [
   {
    "tile": "utm36s_698_9724",
@@ -901,7 +694,451 @@
    "spent": 150,
    "balance_after": 1727,
    "modelled": 5
+  },
+  {
+   "tile": "utm36s_698_9724",
+   "started": "2026-11-06T12:07:41+00:00",
+   "budget": 120,
+   "reserve": 1600,
+   "species": [
+    {
+     "code": "crocodylus_niloticus",
+     "why": "reptile by records x sqrt(mass), one per archetype first",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/crocodylus_niloticus/01a1b0b5-7e2d-779d-ab35-f232aae70a79"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/crocodylus_niloticus/01a1b0be-0d2f-7559-a8d7-4fa1b54d7587"
+      }
+     ],
+     "ok": true,
+     "archetype": "sprawl",
+     "build_log": "INFO archetype sprawl voxel 0.0065 remeshed 49174 faces 49178 vertices\nINFO foot pieces (y, x, n): [(-0.551, 0.225, 8), (-0.548, 0.222, 818), (-0.548, -0.223, 813), (-0.044, -0.244, 1094), (-0.044, 0.243, 1088), (0.316, 0.082, 125)]\nINFO feet pieces 6 fore/hind gap 0.503 at y -0.296\nINFO legs {'HR': (2506, [-0.171, 0.004, 0.11]), 'HL': (2625, [0.158, 0.037, 0.099]), 'FL': (2294, [0.129, -0.439, 0.122]), 'FR': (2270, [-0.129, -0.438, 0.122])}\nINFO tail 14550 vertices from y 0.067\nINFO neck y -0.570, head 13.8% of the mesh, shoulders y -0.439, hips y 0.021\nLANDMARKS length 2.454 m, scale 1.2271 volume 0.05098 units mass 94.2 kg; svl 1.309 tail 1.392 belly 0.0131 back 0.3311 neck [0.0, -0.443, 0.23] pivots {'HR': [-0.21, 0.262, 0.135], 'HL': [0.194, 0.302, 0.122], 'FL': [0.158, -0.282, 0.15], 'FR': [-0.158, -0.281, 0.149]}\nINFO palette shares [0.154, 0.071, 0.095, 0.127, 0.056, 0.1, 0.068, 0.15, 0.063, 0.117] pattern 0.0751 -> tiers [('lod0', 4703), ('lod1', 1693), ('lod2', 470)]\nINFO tier lod0 from 98348 to 4702\nINFO tier lod1 from 98348 to 1692\nINFO tier lod2 from 98348 to 470\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/crocodylus_niloticus.glb 540912 bytes; lod0 4702 tris, lod1 1692 tris, lod2 470 tris",
+     "reused": "library/animals/jobs/crocodylus_niloticus/01a1b0be-0d2f-7559-a8d7-4fa1b54d7587"
+    },
+    {
+     "code": "stigmochelys_pardalis",
+     "why": "reptile by records x sqrt(mass), one per archetype first",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/stigmochelys_pardalis/01a1b0b6-e5a5-712f-a3c3-2359f238ae3e"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/stigmochelys_pardalis/01a1b0c0-4888-7401-88fa-0e7be6ad0154"
+      }
+     ],
+     "ok": true,
+     "archetype": "tortoise",
+     "build_log": "INFO foot pieces (y, x, n): [(-0.57, 0.423, 460), (-0.569, -0.425, 457), (0.82, -0.416, 489), (0.821, 0.415, 489)]\nINFO feet pieces 4 fore/hind gap 1.390 at y 0.125\nINFO tortoise leg cut z 0.213\nINFO legs {'FL': (2079, [0.402, -0.525, 0.213]), 'FR': (2075, [-0.402, -0.525, 0.213]), 'HR': (2044, [-0.394, 0.777, 0.213]), 'HL': (2036, [0.394, 0.776, 0.213])}\nINFO tail none (a tortoise: the stub stays body)\nINFO neck y -0.630, head 12.9% of the mesh, shoulders y -0.525, hips y 0.776\nLANDMARKS length 0.562 m, scale 0.2809 volume 0.90280 units mass 20.0 kg; svl 0.499 tail 0.0 belly 0.0599 back 0.3305 neck [0.0, -0.212, 0.124] pivots {'FL': [0.113, -0.183, 0.06], 'FR': [-0.113, -0.183, 0.06], 'HR': [-0.111, 0.183, 0.06], 'HL': [0.111, 0.183, 0.06]}\nINFO palette shares [0.122, 0.077, 0.074, 0.059, 0.095, 0.122, 0.132, 0.132, 0.06, 0.127] pattern 0.0892 -> tiers [('lod0', 4529), ('lod1', 1630), ('lod2', 452)]\nINFO tier lod0 from 155136 to 4528\nINFO tier lod1 from 155136 to 1630\nINFO tier lod2 from 155136 to 452\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/stigmochelys_pardalis.glb 557140 bytes; lod0 4528 tris, lod1 1630 tris, lod2 452 tris",
+     "reused": "library/animals/jobs/stigmochelys_pardalis/01a1b0c0-4888-7401-88fa-0e7be6ad0154"
+    },
+    {
+     "code": "agama_mwanzae",
+     "why": "reptile by records x sqrt(mass), one per archetype first",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/agama_mwanzae/01a1b0b7-fcb0-72d5-a12c-ff05fc4c1d55"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/agama_mwanzae/01a1b0c1-02f3-7233-94b5-04e29fb1103a"
+      }
+     ],
+     "ok": true,
+     "archetype": "sprawl",
+     "build_log": "INFO archetype sprawl voxel 0.0065 remeshed 53386 faces 53390 vertices\nINFO foot pieces (y, x, n): [(-0.592, -0.124, 1045), (-0.572, 0.158, 1147), (-0.137, -0.243, 1109), (-0.135, 0.244, 1107)]\nINFO feet pieces 4 fore/hind gap 0.435 at y -0.354\nINFO legs {'FL': (4704, [0.097, -0.504, 0.366]), 'HR': (4641, [-0.097, -0.086, 0.238]), 'HL': (4601, [0.098, -0.088, 0.237]), 'FR': (4268, [-0.096, -0.511, 0.352])}\nINFO tail 10770 vertices from y -0.056\nINFO neck y -0.570, head 18.0% of the mesh, shoulders y -0.507, hips y -0.087\nLANDMARKS length 0.256 m, scale 0.1282 volume 0.04742 units mass 0.1 kg; svl 0.121 tail 0.143 belly 0.0231 back 0.0691 neck [0.0, -0.035, 0.061] pivots {'FL': [0.012, -0.026, 0.047], 'HR': [-0.012, 0.027, 0.031], 'HL': [0.013, 0.027, 0.03], 'FR': [-0.012, -0.027, 0.045]}\nINFO palette shares [0.104, 0.091, 0.104, 0.166, 0.067, 0.028, 0.157, 0.043, 0.097, 0.142] pattern 0.0456 -> tiers [('lod0', 1200), ('lod1', 432), ('lod2', 120)]\nINFO tier lod0 from 106772 to 1200\nINFO tier lod1 from 106772 to 432\nINFO tier lod2 from 106772 to 120\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/agama_mwanzae.glb 114948 bytes; lod0 1200 tris, lod1 432 tris, lod2 120 tris",
+     "reused": "library/animals/jobs/agama_mwanzae/01a1b0c1-02f3-7233-94b5-04e29fb1103a"
+    },
+    {
+     "code": "varanus_niloticus",
+     "why": "reptile by records x sqrt(mass), one per archetype first",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/varanus_niloticus/01a1b0b6-31a2-777c-82da-3ae68d038d1a"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/varanus_niloticus/01a1b0bf-2b22-7473-8384-e7813b1d714e"
+      }
+     ],
+     "ok": true,
+     "archetype": "sprawl",
+     "build_log": "INFO archetype sprawl voxel 0.0066 remeshed 51516 faces 51516 vertices\nINFO foot pieces (y, x, n): [(-0.493, -0.21, 1184), (-0.459, 0.177, 1168), (0.0, 0.223, 1456), (0.103, -0.227, 1358)]\nINFO feet pieces 4 fore/hind gap 0.459 at y -0.229\nINFO legs {'HR': (4842, [-0.133, 0.083, 0.291]), 'HL': (4627, [0.137, 0.064, 0.279]), 'FR': (4070, [-0.114, -0.439, 0.326]), 'FL': (3739, [0.118, -0.414, 0.301])}\nINFO tail 9090 vertices from y 0.113\nINFO neck y -0.610, head 11.8% of the mesh, shoulders y -0.426, hips y 0.073\nLANDMARKS length 0.735 m, scale 0.3673 volume 0.05705 units mass 2.8267 kg; svl 0.409 tail 0.328 belly 0.0644 back 0.1879 neck [0.0, -0.159, 0.171] pivots {'HR': [-0.049, 0.095, 0.107], 'HL': [0.05, 0.088, 0.102], 'FR': [-0.042, -0.096, 0.12], 'FL': [0.043, -0.087, 0.111]}\nINFO palette shares [0.105, 0.129, 0.122, 0.071, 0.073, 0.091, 0.13, 0.142, 0.07, 0.066] pattern 0.0649 -> tiers [('lod0', 2801), ('lod1', 1008), ('lod2', 280)]\nINFO tier lod0 from 103032 to 2800\nINFO tier lod1 from 103032 to 1008\nINFO tier lod2 from 103032 to 280\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/varanus_niloticus.glb 304752 bytes; lod0 2800 tris, lod1 1008 tris, lod2 280 tris",
+     "reused": "library/animals/jobs/varanus_niloticus/01a1b0bf-2b22-7473-8384-e7813b1d714e"
+    }
+   ],
+   "stand_ins": [
+    {
+     "code": "loxodonta_africana",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "hippopotamus_amphibius",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "damaliscus_korrigum",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "giraffa_tippelskirchi",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "aepyceros_melampus",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "panthera_leo",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "crocuta_crocuta",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "alcelaphus_buselaphus",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "syncerus_caffer",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "equus_quagga",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "connochaetes_taurinus",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "papio_anubis",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "phacochoerus_africanus",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "redunca_redunca",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "heterohyrax_brucei",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "eudorcas_thomsonii",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "panthera_pardus",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "acinonyx_jubatus",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "nanger_granti",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "chlorocebus_pygerythrus",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "procavia_capensis",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "mungos_mungo",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "leptailurus_serval",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "helogale_parvula",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "otocyon_megalotis",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "canis_aureus",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "canis_mesomelas",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "lycaon_pictus",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "genetta_genetta",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "struthio_camelus",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "lamprotornis_superbus",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "leptoptilos_crumenifer",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "alopochen_aegyptiaca",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "torgos_tracheliotos",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "vanellus_armatus",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "sagittarius_serpentarius",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "eurocephalus_ruppelli",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "gyps_africanus",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "trachyphonus_darnaudii",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "aquila_rapax",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "phrynobatrachus_mababiensis",
+     "why": "not in this run (--kind reptiles)"
+    },
+    {
+     "code": "trachylepis_striata",
+     "why": "over the budget or the count"
+    }
+   ],
+   "spent": 120,
+   "balance_after": 1607,
+   "modelled": 4,
+   "note": "the four reptile previews and refines were run before this registration (120 credits; balance 1727 -> 1607); this run spent nothing"
+  },
+  {
+   "tile": "utm36s_698_9724",
+   "kind": "recolour",
+   "started": "2026-11-06T12:49:00+00:00",
+   "budget": 50,
+   "reserve": 1450,
+   "species": [
+    {
+     "code": "panthera_pardus",
+     "check": {
+      "ok": false,
+      "score": 0.795,
+      "fails": [
+       "legs 47% matches"
+      ]
+     },
+     "texture_prompt": "Natural coat colours and markings of a wild adult Leopard (Panthera pardus) as seen in Serengeti, Mara Region, Tanzania. Coloured as the adult is described: body pale yellowish, dark golden with dark spots; belly and underparts white with black spots; head black spots; legs black spots; tail white tip, white. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+     "recolour": {
+      "at": "2026-11-06T12:49:00+00:00",
+      "before": {
+       "ok": false,
+       "score": 0.795,
+       "fails": [
+        "legs 47% matches"
+       ]
+      },
+      "texture_prompt": "Natural coat colours and markings of a wild adult Leopard (Panthera pardus) as seen in Serengeti, Mara Region, Tanzania. Coloured as the adult is described: body pale yellowish, dark golden with dark spots; belly and underparts white with black spots; head black spots; legs black spots; tail white tip, white. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+      "credits": 10,
+      "job": "library/animals/jobs/panthera_pardus/01a1b0e7-c3bb-77b1-b707-7ab10b2bc0e2",
+      "after": {
+       "ok": true,
+       "score": 0.822,
+       "fails": []
+      },
+      "kept": "new"
+     }
+    },
+    {
+     "code": "vanellus_armatus",
+     "check": {
+      "ok": false,
+      "score": 0.925,
+      "fails": [
+       "legs 10% matches"
+      ]
+     },
+     "texture_prompt": "Natural plumage colours and markings of a wild adult Blacksmith lapwing (Vanellus armatus) as seen in Serengeti, Mara Region, Tanzania. Coloured as the adult is described: body black, grey, white; legs black, white-grey dappling. Realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin, legs and feet in their true colours.",
+     "recolour": {
+      "at": "2026-11-06T12:49:59+00:00",
+      "before": {
+       "ok": false,
+       "score": 0.925,
+       "fails": [
+        "legs 10% matches"
+       ]
+      },
+      "texture_prompt": "Natural plumage colours and markings of a wild adult Blacksmith lapwing (Vanellus armatus) as seen in Serengeti, Mara Region, Tanzania. Coloured as the adult is described: body black, grey, white; legs black, white-grey dappling. Realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin, legs and feet in their true colours.",
+      "credits": 10,
+      "job": "library/animals/jobs/vanellus_armatus/01a1b0e8-ab2f-76ec-ba8f-71ebde62b0ce",
+      "after": {
+       "ok": true,
+       "score": 1.0,
+       "fails": []
+      },
+      "kept": "new"
+     }
+    },
+    {
+     "code": "stigmochelys_pardalis",
+     "check": {
+      "ok": false,
+      "score": 0.427,
+      "fails": [
+       "flanks 38% matches",
+       "upperparts 26% matches",
+       "only 43% of the model in described colours"
+      ]
+     },
+     "texture_prompt": "Natural colours and markings of a wild adult Leopard tortoise (Stigmochelys pardalis) as seen in Serengeti, Mara Region, Tanzania: the shell's scutes, the skin of the head and legs, in their true colours. Coloured as the adult is described: shell and body yellow with black blotches; head yellow, tan, brown; legs yellow, tan, brown. Realistic, evenly lit albedo with no baked shadows or highlights; eyes, beak and claws in their true colours.",
+     "recolour": {
+      "at": "2026-11-06T12:50:37+00:00",
+      "before": {
+       "ok": false,
+       "score": 0.427,
+       "fails": [
+        "flanks 38% matches",
+        "upperparts 26% matches",
+        "only 43% of the model in described colours"
+       ]
+      },
+      "texture_prompt": "Natural colours and markings of a wild adult Leopard tortoise (Stigmochelys pardalis) as seen in Serengeti, Mara Region, Tanzania: the shell's scutes, the skin of the head and legs, in their true colours. Coloured as the adult is described: shell and body yellow with black blotches; head yellow, tan, brown; legs yellow, tan, brown. Realistic, evenly lit albedo with no baked shadows or highlights; eyes, beak and claws in their true colours.",
+      "credits": 10,
+      "job": "library/animals/jobs/stigmochelys_pardalis/01a1b0e9-3ccf-7317-9a6b-7a3be969b6e4",
+      "after": {
+       "ok": false,
+       "score": 0.263,
+       "fails": [
+        "flanks 9% matches",
+        "upperparts 10% matches",
+        "only 26% of the model in described colours"
+       ]
+      },
+      "kept": "old"
+     }
+    },
+    {
+     "code": "agama_mwanzae",
+     "check": {
+      "ok": false,
+      "score": 0.546,
+      "fails": [
+       "only 55% of the model in described colours"
+      ]
+     },
+     "texture_prompt": "Natural skin and scale colours and markings of a wild adult Mwanza flat-headed agama (Agama mwanzae) as seen in Serengeti, Mara Region, Tanzania. Coloured as the adult male is described: body dark blue; head bright red, violet; neck bright red, violet. Realistic, evenly lit albedo with no baked shadows or highlights; the back, flanks, belly, legs and tail in their true colours, eyes and claws in their true colours.",
+     "recolour": {
+      "at": "2026-11-06T12:51:30+00:00",
+      "before": {
+       "ok": false,
+       "score": 0.546,
+       "fails": [
+        "only 55% of the model in described colours"
+       ]
+      },
+      "texture_prompt": "Natural skin and scale colours and markings of a wild adult Mwanza flat-headed agama (Agama mwanzae) as seen in Serengeti, Mara Region, Tanzania. Coloured as the adult male is described: body dark blue; head bright red, violet; neck bright red, violet. Realistic, evenly lit albedo with no baked shadows or highlights; the back, flanks, belly, legs and tail in their true colours, eyes and claws in their true colours.",
+      "credits": 10,
+      "job": "library/animals/jobs/agama_mwanzae/01a1b0ea-0ec6-764d-94fb-19c11f1fab84",
+      "after": {
+       "ok": true,
+       "score": 0.943,
+       "fails": []
+      },
+      "kept": "new"
+     }
+    },
+    {
+     "code": "varanus_niloticus",
+     "check": {
+      "ok": false,
+      "score": 1.0,
+      "fails": [
+       "head: no yellowish-green spots (0.0%)",
+       "underparts: no blackish bands (0.2%)",
+       "upperparts: no greenish-yellow spots (0.7%)",
+       "upperparts: no yellowish spots (0.7%)",
+       "upperparts: no yellow spots (0.1%)"
+      ]
+     },
+     "texture_prompt": "Natural skin and scale colours and markings of a wild adult Nile monitor (Varanus niloticus) as seen in Serengeti, Mara Region, Tanzania. Coloured as the adult is described: body brownish, greenish-gray; back greyish-brown with greenish-yellow, blackish, yellowish spots with yellow lines; belly and underparts ochre-yellow, creamy-yellow, yellowish with blackish bands; head yellowish-green spots; neck ochre-yellow, creamy-yellow; legs yellowish spots; tail greenish-yellow bars with blackish spots. Realistic, evenly lit albedo with no baked shadows or highlights; the back, flanks, belly, legs and tail in their true colours, eyes and claws in their true colours.",
+     "recolour": {
+      "at": "2026-11-06T12:52:23+00:00",
+      "before": {
+       "ok": false,
+       "score": 1.0,
+       "fails": [
+        "head: no yellowish-green spots (0.0%)",
+        "underparts: no blackish bands (0.2%)",
+        "upperparts: no greenish-yellow spots (0.7%)",
+        "upperparts: no yellowish spots (0.7%)",
+        "upperparts: no yellow spots (0.1%)"
+       ]
+      },
+      "texture_prompt": "Natural skin and scale colours and markings of a wild adult Nile monitor (Varanus niloticus) as seen in Serengeti, Mara Region, Tanzania. Coloured as the adult is described: body brownish, greenish-gray; back greyish-brown with greenish-yellow, blackish, yellowish spots with yellow lines; belly and underparts ochre-yellow, creamy-yellow, yellowish with blackish bands; head yellowish-green spots; neck ochre-yellow, creamy-yellow; legs yellowish spots; tail greenish-yellow bars with blackish spots. Realistic, evenly lit albedo with no baked shadows or highlights; the back, flanks, belly, legs and tail in their true colours, eyes and claws in their true colours.",
+      "credits": 10,
+      "job": "library/animals/jobs/varanus_niloticus/01a1b0ea-dce8-726d-ac35-7b13d61abc7b",
+      "after": {
+       "ok": false,
+       "score": 1.0,
+       "fails": [
+        "head: no yellowish-green spots (0.0%)",
+        "legs: no yellowish spots (0.0%)",
+        "upperparts: no greenish-yellow spots (0.0%)",
+        "upperparts: no yellowish spots (0.0%)",
+        "upperparts: no yellow spots (0.0%)"
+       ]
+      },
+      "kept": "old"
+     }
+    }
+   ],
+   "spent": 50,
+   "balance_after": 1557
   }
- ],
- "note": "the four reptile previews and refines were run before this registration (120 credits; balance 1727 -> 1607); this run spent nothing"
+ ]
 }

@@ -1,0 +1,71 @@
+{
+  "species": "stigmochelys_pardalis",
+  "mode": "refine",
+  "kind": "text-to-3d",
+  "task_id": "01a1b0e9-3ccf-7317-9a6b-7a3be969b6e4",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "refine",
+    "preview_task_id": "01a1b0b6-e5a5-712f-a3c3-2359f238ae3e",
+    "texture_resolution": "2k",
+    "enable_pbr": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Natural colours and markings of a wild adult Leopard tortoise (Stigmochelys pardalis) as seen in Serengeti, Mara Region, Tanzania: the shell's scutes, the skin of the head and legs, in their true colours. Coloured as the adult is described: shell and body yellow with black blotches; head yellow, tan, brown; legs yellow, tan, brown. Realistic, evenly lit albedo with no baked shadows or highlights; eyes, beak and claws in their true colours.",
+    "moderation": false
+  },
+  "prompt": "Natural colours and markings of a wild adult Leopard tortoise (Stigmochelys pardalis) as seen in Serengeti, Mara Region, Tanzania: the shell's scutes, the skin of the head and legs, in their true colours. Coloured as the adult is described: shell and body yellow with black blotches; head yellow, tan, brown; legs yellow, tan, brown. Realistic, evenly lit albedo with no baked shadows or highlights; eyes, beak and claws in their true colours.",
+  "image": null,
+  "preview_job": "library/animals/jobs/stigmochelys_pardalis/01a1b0b6-e5a5-712f-a3c3-2359f238ae3e",
+  "estimated_credits": 10,
+  "balance_before": 1587,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-06T12:50:37+00:00",
+    "created_at": "2026-11-06T12:50:39+00:00",
+    "started_at": "2026-11-06T12:50:39+00:00",
+    "finished_at": "2026-11-06T12:51:13+00:00",
+    "downloaded": "2026-11-06T12:51:23+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur, world pipeline",
+  "progress": 100,
+  "task": {
+    "id": "01a1b0e9-3ccf-7317-9a6b-7a3be969b6e4",
+    "type": "text-to-3d-refine",
+    "status": "SUCCEEDED",
+    "created_at": 1793969439650,
+    "started_at": 1793969439659,
+    "finished_at": 1793969473040,
+    "consumed_credits": 10,
+    "task_error": null
+  },
+  "credits_charged": 10,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 5190120,
+      "sha256": "06add36da0c0909c56b3722e3b18d73a48abbf45634b264df5bfa69199b4a2a8",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b0e9-3ccf-7317-9a6b-7a3be969b6e4/output/model.glb"
+    },
+    {
+      "file": "texture_base_color.png",
+      "bytes": 6874579,
+      "sha256": "5f4288460b560580a06dc5373136d79adad403baad96a3f59bc672a70f220ef2",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b0e9-3ccf-7317-9a6b-7a3be969b6e4/output/texture_0.png"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 133066,
+      "sha256": "f20cc42f546243dc5cbfab7ecfe1e6b910da036fae2a8d4adc50fabd826908a7",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b0e9-3ccf-7317-9a6b-7a3be969b6e4/output/preview.png"
+    }
+  ],
+  "balance_after": 1577
+}

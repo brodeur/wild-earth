@@ -1,0 +1,71 @@
+{
+  "species": "stigmochelys_pardalis",
+  "mode": "refine",
+  "kind": "text-to-3d",
+  "task_id": "01a1b0ec-0d1f-718c-b98a-bbc2e6f285cf",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "refine",
+    "preview_task_id": "01a1b0b6-e5a5-712f-a3c3-2359f238ae3e",
+    "texture_resolution": "2k",
+    "enable_pbr": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Natural colours and markings of a wild adult Leopard tortoise (Stigmochelys pardalis) as seen in Serengeti, Mara Region, Tanzania: the shell's scutes, the skin of the head and legs, in their true colours. Coloured as the adult is described: shell and body yellow with black blotches; head yellow, tan, brown; legs yellow, tan, brown. Correct this: shell yellow, not cinnamon or orange; belly and underparts yellow, not cinnamon or orange. Realistic, evenly lit albedo with no baked shadows or highlights; eyes, beak and claws in their true colours.",
+    "moderation": false
+  },
+  "prompt": "Natural colours and markings of a wild adult Leopard tortoise (Stigmochelys pardalis) as seen in Serengeti, Mara Region, Tanzania: the shell's scutes, the skin of the head and legs, in their true colours. Coloured as the adult is described: shell and body yellow with black blotches; head yellow, tan, brown; legs yellow, tan, brown. Correct this: shell yellow, not cinnamon or orange; belly and underparts yellow, not cinnamon or orange. Realistic, evenly lit albedo with no baked shadows or highlights; eyes, beak and claws in their true colours.",
+  "image": null,
+  "preview_job": "library/animals/jobs/stigmochelys_pardalis/01a1b0b6-e5a5-712f-a3c3-2359f238ae3e",
+  "estimated_credits": 10,
+  "balance_before": 1557,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-06T12:53:42+00:00",
+    "created_at": "2026-11-06T12:53:44+00:00",
+    "started_at": "2026-11-06T12:53:44+00:00",
+    "finished_at": "2026-11-06T12:54:15+00:00",
+    "downloaded": "2026-11-06T12:54:28+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur, world pipeline",
+  "progress": 100,
+  "task": {
+    "id": "01a1b0ec-0d1f-718c-b98a-bbc2e6f285cf",
+    "type": "text-to-3d-refine",
+    "status": "SUCCEEDED",
+    "created_at": 1793969624262,
+    "started_at": 1793969624270,
+    "finished_at": 1793969655535,
+    "consumed_credits": 10,
+    "task_error": null
+  },
+  "credits_charged": 10,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 5229332,
+      "sha256": "a7517deadcab2dae530a88fa47bc325183e5eccfc8749bf00f1e9816ce2d466e",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b0ec-0d1f-718c-b98a-bbc2e6f285cf/output/model.glb"
+    },
+    {
+      "file": "texture_base_color.png",
+      "bytes": 6788041,
+      "sha256": "f0c7df9a6e60201d25e57424699b58b06d400b4a8fa1537146caf93172265af4",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b0ec-0d1f-718c-b98a-bbc2e6f285cf/output/texture_0.png"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 134357,
+      "sha256": "60aac74bda3a60b1b81cbf2d77bcde17875b1c33b8c2a5edeae83432547d55eb",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b0ec-0d1f-718c-b98a-bbc2e6f285cf/output/preview.png"
+    }
+  ],
+  "balance_after": 1547
+}

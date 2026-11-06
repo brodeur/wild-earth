@@ -32,7 +32,7 @@ MIN_RECORDS = 3
 # Serengeti probe listed hyraxes and mongooses and left out the wildebeest, zebra, giraffe, elephant and buffalo, which
 # ranked 11th-22nd among its mammals by records. A species needs MIN_RECORDS records to take a quota place.
 CLASS_QUOTA = {"bird": 25, "mammal": 25, "reptile": 5, "amphibian": 4, "fish": 2, "invertebrate": 2}
-DOMESTIC = {"Homo sapiens", "Felis catus", "Canis familiaris", "Canis lupus", "Bos taurus", "Equus caballus", "Ovis aries",
+DOMESTIC = {"Homo sapiens", "Felis catus", "Canis familiaris", "Bos taurus", "Equus caballus", "Ovis aries",
             "Capra hircus", "Gallus gallus", "Columba livia", "Anser anser", "Mus musculus", "Rattus rattus",
             "Rattus norvegicus", "Passer domesticus", "Sus scrofa", "Oncorhynchus mykiss"}
 SYNONYMS = {"Cervus canadensis": "Cervus elaphus"}   # GBIF's name -> EltonTraits' (MSW3 lumps elk with red deer)
@@ -171,8 +171,28 @@ def make_traits(row: dict) -> dict:
     return rec
 
 
+# The gray wolf and the dog share the binomial Canis lupus in GBIF (the dog is C. l. familiaris, key 6164210), and the wolf
+# was listed as domestic so dogs would not count: no tile ever listed a wolf, Yellowstone's Lamar Valley included
+# (2026-11-06). The species stays; its records lose the dog subspecies' records on the tile.
+DOG_SUBSPECIES_KEY = 6164210
+
+
+def _less_dogs(tile: Tile, rows: list[dict]) -> list[dict]:
+    from .fetch_species import _q
+    from .research import _bbox
+    out = []
+    for r in rows:
+        if " ".join(r["scientific"].split()[:2]) == "Canis lupus":
+            dogs = (_q(tile, "occurrence/search", {**_bbox(tile), "taxonKey": DOG_SUBSPECIES_KEY, "limit": 0}) or {}).get("count", 0)
+            r = {**r, "records": max(0, r["records"] - dogs), "dog_records_removed": dogs}
+            if r["records"] <= 0:
+                continue
+        out.append(r)
+    return out
+
+
 def animal_research(tile: Tile) -> dict:
-    rows = [r for r in animal_records(tile) if " ".join(r["scientific"].split()[:2]) not in DOMESTIC]
+    rows = _less_dogs(tile, [r for r in animal_records(tile) if " ".join(r["scientific"].split()[:2]) not in DOMESTIC])
     if _in_americas(tile):   # GBIF's lumped names (AMERICAS): the record as the American species
         for r in rows:
             b = " ".join(r["scientific"].split()[:2])

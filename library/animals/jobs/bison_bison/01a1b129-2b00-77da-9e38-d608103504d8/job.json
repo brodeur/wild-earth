@@ -1,0 +1,71 @@
+{
+  "species": "bison_bison",
+  "mode": "refine",
+  "kind": "text-to-3d",
+  "task_id": "01a1b129-2b00-77da-9e38-d608103504d8",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "refine",
+    "preview_task_id": "01a1b128-0f95-75cc-80f8-b33a517a8376",
+    "texture_resolution": "2k",
+    "enable_pbr": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Natural coat colours and markings of a wild adult American bison (Bison bison) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body dark-brown, brown; legs black. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+    "moderation": false
+  },
+  "prompt": "Natural coat colours and markings of a wild adult American bison (Bison bison) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body dark-brown, brown; legs black. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+  "image": null,
+  "preview_job": "library/animals/jobs/bison_bison/01a1b128-0f95-75cc-80f8-b33a517a8376",
+  "estimated_credits": 10,
+  "balance_before": 1467,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-06T14:00:27+00:00",
+    "created_at": "2026-11-06T14:00:29+00:00",
+    "started_at": "2026-11-06T14:00:29+00:00",
+    "finished_at": "2026-11-06T14:00:59+00:00",
+    "downloaded": "2026-11-06T14:01:13+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur, world pipeline",
+  "progress": 100,
+  "task": {
+    "id": "01a1b129-2b00-77da-9e38-d608103504d8",
+    "type": "text-to-3d-refine",
+    "status": "SUCCEEDED",
+    "created_at": 1793973629563,
+    "started_at": 1793973629571,
+    "finished_at": 1793973659143,
+    "consumed_credits": 10,
+    "task_error": null
+  },
+  "credits_charged": 10,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 5856860,
+      "sha256": "bdd90ba396924fd5e90c3c1a04ca297d660ea57090a78ca34b34db632d4d5885",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b129-2b00-77da-9e38-d608103504d8/output/model.glb"
+    },
+    {
+      "file": "texture_base_color.png",
+      "bytes": 6501168,
+      "sha256": "679399272320f45e97390a7337afd03905afde156f66ae1d6bf96caee3b9eeed",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b129-2b00-77da-9e38-d608103504d8/output/texture_0.png"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 85749,
+      "sha256": "a154abcd1a8805520aba14ac5b5e7fa1fc9d1292868cd926740cf513ee800e68",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b129-2b00-77da-9e38-d608103504d8/output/preview.png"
+    }
+  ],
+  "balance_after": 1457
+}

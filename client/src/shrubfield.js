@@ -808,10 +808,24 @@ function eNew(cov, cls, pm) {
 }
 export function ShrubField(tile, ground, uniforms) {
   const hab = tile.habitat, can = tile.canopy, W = hab.img.width, H = hab.img.height, res = hab.res;
-  const cover = new Float32Array(W * H);
+  const cover = new Float32Array(W * H), chapCover = new Float32Array(W * H);
+  // The chamise and manzanita of this field are California's chaparral: a tile built outside the regional tables
+  // (species_mix.json class_fallback false) draws them only where its own mix lists them (2026-11-06, iteration 6:
+  // Lofoten's heath, a shrubland, class 4, was covered in chamise and manzanita domes, the manzanita's red branching
+  // showing, over the heath's carpet). Its own shrubs (foothillShrubs) still take the class's shrub cover.
+  // On a regional-table tile a shrubland cell draws the chaparral only where its own row lists a chaparral species
+  // (2026-11-06: Yellowstone's Lamar Valley drew manzanita domes over its big sagebrush steppe); California's chaparral
+  // rows list them, so the home tiles are unchanged.
+  const CHAP_IDS = ['adenostoma_fasciculatum', 'chamise', 'arctostaphylos_viscida', 'arctostaphylos_manzanita', 'manzanita'];
+  const mix = tile.speciesMix, own = mix?.json?.class_fallback === false;
   for (let j = 0; j < H; j++) for (let i = 0; i < W; i++)
-    if (hab.channel(i, j, 0) === 4) cover[j * W + i] = Math.min(Math.max(can.channel(i, j, 1) / 100, 0.3), 0.85);
-  const cellCover = bilinear(cover, W, H, res, tile.size);
+    if (hab.channel(i, j, 0) === 4) {
+      const o = j * W + i, row = own ? mix.at(i, j) : null;
+      cover[o] = Math.min(Math.max(can.channel(i, j, 1) / 100, 0.3), 0.85);
+      const r2 = mix?.json ? mix.at(i, j) : null, chapShare = Math.min(1, CHAP_IDS.reduce((a, id) => a + (r2?.shrubs?.[id] || 0), 0));
+      chapCover[o] = own ? cover[o] * chapShare : !mix?.json || !r2 || !r2.shrubSum ? cover[o] : chapShare > 0 ? cover[o] : 0;
+    }
+  const cellCover = bilinear(chapCover, W, H, res, tile.size);
   // Openings: a stand is not a lawn. Rock outcrops, old burn patches and game trails leave gaps of
   // a few to ~15 m in about one tenth of the ground, more where the cover is thin.
   const coverAt = (x, n) => {
@@ -824,7 +838,7 @@ export function ShrubField(tile, ground, uniforms) {
   const field = new ClumpField(tile, ground, uniforms, {
     name: 'shrubfield', salt: 0x5eed, cap: 200000, roadsMax: 60, near: true,
     extraAny: fh.any, extra: fh.cell,   // the foothill shrubs, merged into the chaparral's cells and the woodland's
-    cellAny: anyAround(cover, W, H), coverAt, coverMax: 0.85,
+    cellAny: anyAround(chapCover, W, H), coverAt, coverMax: 0.85,
     meanArea: OLD_AREA / QMAX,   // candidates for the densest places; plant() thins them (see eOld)
     // Gone only right at the camera, at every height (the 3D shrubs are too few to carry the cover). The
     // chase camera trails the raven by 3-5 m, so a 3-8 m cut emptied the ring around the bird itself.
@@ -921,12 +935,16 @@ function foothillShrubs(tile, ground, chap) {
     return { cls: cls.length ? cls : [{ w: 1, h: spec.height_m }], wh: spec.targets?.crown_width_ratio ?? 1.2 };
   });
   const cover = new Float32Array(W * H), weights = new Array(W * H);
+  // A row's carpet (2026-11-06; species_mix.json density_bytes[2]: the dwarf shrubs' share of the community's shrub cover,
+  // which forbs.js lays as the heath's carpet) is not these shrubs' to fill: they take the rest of the cover. On Lofoten's
+  // heath (a shrubland, class 4) the junipers had filled the whole shrub cover as if it were chaparral, on top of the carpet.
+  const carpet = new Map(); for (const m of mix?.json?.mixes || []) { const c = (m.density_bytes?.[2] || 0) / 100; if (c > 0) carpet.set(m.index, Math.min(1, c)); }
   if (mix) for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
     const row = mix.at(i, j); if (!row || !row.shrubSum) continue;
     const w = FH.map((id, k) => sizes[k] ? row.shrubs[id] || 0 : 0), share = w.reduce((a, b) => a + b, 0);
     if (share <= 0) continue;
     const cls = hab.channel(i, j, 0), o = j * W + i, sd = Math.min(Math.max(mix.density(i, j, row)[1], 0.3), 1.5);
-    cover[o] = Math.min(FH_MAX, cls === 4 ? FH_CHAP * chap[o] * share : (FH_UNDER[cls] || 0) * share * sd / 0.6);
+    cover[o] = Math.min(FH_MAX, cls === 4 ? FH_CHAP * chap[o] * share : (FH_UNDER[cls] || 0) * share * sd / 0.6) * (1 - (carpet.get(row.index) || 0));
     weights[o] = w.map(v => v / share);
   }
   const coverAt = bilinear(cover, W, H, res, tile.size), any = anyAround(cover, W, H);

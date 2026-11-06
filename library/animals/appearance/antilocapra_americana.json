@@ -1,0 +1,57 @@
+{
+ "format": 1,
+ "code": "antilocapra_americana",
+ "scientific": "Antilocapra americana",
+ "common": "pronghorn",
+ "sex": "male",
+ "regions": {
+  "body": {
+   "colours": [
+    "white"
+   ],
+   "markings": [
+    {
+     "pattern": "patches",
+     "colours": [
+      "white"
+     ]
+    }
+   ]
+  },
+  "upperparts": {
+   "colours": [
+    "rufous brown"
+   ],
+   "markings": []
+  },
+  "neck": {
+   "colours": [
+    "creamy"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 4,
+ "dropped": {
+  "not the body": 2,
+  "female": 1,
+  "no body word": 1
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Pronghorn",
+   "title": "Pronghorn",
+   "revision": 1380732916,
+   "facts": 1
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Antilocapra_americana/",
+   "title": "ADW: Antilocapra americana",
+   "facts": 3
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body white with white patches; back rufous brown; neck creamy"
+}

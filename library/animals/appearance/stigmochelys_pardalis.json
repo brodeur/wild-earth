@@ -1,0 +1,54 @@
+{
+ "format": 1,
+ "code": "stigmochelys_pardalis",
+ "scientific": "Stigmochelys pardalis",
+ "common": "leopard tortoise",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "yellow"
+   ],
+   "markings": [
+    {
+     "pattern": "blotches",
+     "colours": [
+      "black"
+     ]
+    }
+   ]
+  },
+  "head": {
+   "colours": [
+    "yellow",
+    "tan",
+    "brown"
+   ],
+   "markings": []
+  },
+  "legs": {
+   "colours": [
+    "yellow",
+    "tan",
+    "brown"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 8,
+ "dropped": {
+  "age change": 1
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Leopard_tortoise",
+   "title": "Leopard tortoise",
+   "revision": 1374636048,
+   "facts": 8
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body yellow with black blotches; head yellow, tan, brown; legs yellow, tan, brown"
+}

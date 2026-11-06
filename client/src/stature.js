@@ -18,8 +18,9 @@
 //                       whose range holds the height, the old class for the top OLD_Q of the curve and every emergent;
 //                       a slot of that class by hash. Fills and returns one shared object (no allocation per tree).
 //   cellStature(...)    the cell's stature: where the tile has a measured canopy height (client/canopy_top.png,
-//                       pipeline/canopy_top.py: the mean p95 height of the cell's treed 10 m sub-cells, from the Meta /
-//                       WRI canopy height map or the lidar CHM) measured stature wins over the site factor (2026-11-06):
+//                       pipeline/canopy_top.py: the mean p95 height of the cell's treed 10 m sub-cells, from the lidar
+//                       CHM, else Meta / WRI's CHM v2 lifted to ETH's GEDI-calibrated level where v2 sees tall closed
+//                       forest, iteration 6) measured stature wins over the site factor (2026-11-06):
 //                       one factor f per cell, solved so that the stand the cell's tree mix draws has that top
 //                       (standTop: the mix's crowns by crown area), and each species scaled by speciesScale(f): a species whose card height is not sourced (the
 //                       template's) takes f; one whose card is sourced keeps its own curve while f is inside its

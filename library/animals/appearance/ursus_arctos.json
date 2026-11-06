@@ -1,0 +1,65 @@
+{
+ "format": 1,
+ "code": "ursus_arctos",
+ "scientific": "Ursus arctos",
+ "common": "brown bear",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "cream",
+    "reddish",
+    "dark brown",
+    "brown",
+    "almost black",
+    "almost white"
+   ],
+   "markings": []
+  },
+  "upperparts": {
+   "colours": [
+    "brownish-black",
+    "whitish-cream",
+    "white"
+   ],
+   "markings": []
+  },
+  "neck": {
+   "colours": [
+    "white"
+   ],
+   "markings": []
+  },
+  "legs": {
+   "colours": [
+    "yellowish-brown"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 16,
+ "dropped": {
+  "regional": 7,
+  "no body word": 1,
+  "not the body": 4,
+  "past": 1,
+  "other taxa": 1
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Brown_bear",
+   "title": "Brown bear",
+   "revision": 1382061005,
+   "facts": 11
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Ursus_arctos/",
+   "title": "ADW: Ursus arctos",
+   "facts": 5
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body cream, reddish, dark brown, brown; back brownish-black, whitish-cream, white; neck white; legs yellowish-brown"
+}

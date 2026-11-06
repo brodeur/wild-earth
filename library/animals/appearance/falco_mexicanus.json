@@ -1,0 +1,56 @@
+{
+ "format": 1,
+ "code": "falco_mexicanus",
+ "scientific": "Falco mexicanus",
+ "common": "prairie falcon",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "pale brown"
+   ],
+   "markings": []
+  },
+  "head": {
+   "colours": [
+    "black"
+   ],
+   "markings": [
+    {
+     "pattern": "patches",
+     "colours": [
+      "white"
+     ]
+    }
+   ]
+  },
+  "neck": {
+   "colours": [
+    "white"
+   ],
+   "markings": []
+  },
+  "legs": {
+   "colours": [
+    "yellow"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 5,
+ "dropped": {
+  "not the body": 1,
+  "other taxa": 1
+ },
+ "sources": [
+  {
+   "url": "https://animaldiversity.org/accounts/Falco_mexicanus/",
+   "title": "ADW: Falco mexicanus",
+   "facts": 5
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body pale brown; head black with white patches; neck white; legs yellow"
+}

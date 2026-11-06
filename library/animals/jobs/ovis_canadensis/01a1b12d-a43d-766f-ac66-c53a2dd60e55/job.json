@@ -1,0 +1,71 @@
+{
+  "species": "ovis_canadensis",
+  "mode": "refine",
+  "kind": "text-to-3d",
+  "task_id": "01a1b12d-a43d-766f-ac66-c53a2dd60e55",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "refine",
+    "preview_task_id": "01a1b12c-f22f-71d4-be7e-0446a517b879",
+    "texture_resolution": "2k",
+    "enable_pbr": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Natural coat colours and markings of a wild adult Bighorn sheep (Ovis canadensis) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body light brown, grayish, chocolate brown, grey; back white. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+    "moderation": false
+  },
+  "prompt": "Natural coat colours and markings of a wild adult Bighorn sheep (Ovis canadensis) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body light brown, grayish, chocolate brown, grey; back white. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+  "image": null,
+  "preview_job": "library/animals/jobs/ovis_canadensis/01a1b12c-f22f-71d4-be7e-0446a517b879",
+  "estimated_credits": 10,
+  "balance_before": 1377,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-06T14:05:20+00:00",
+    "created_at": "2026-11-06T14:05:23+00:00",
+    "started_at": "2026-11-06T14:05:23+00:00",
+    "finished_at": "2026-11-06T14:05:57+00:00",
+    "downloaded": "2026-11-06T14:06:07+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur, world pipeline",
+  "progress": 100,
+  "task": {
+    "id": "01a1b12d-a43d-766f-ac66-c53a2dd60e55",
+    "type": "text-to-3d-refine",
+    "status": "SUCCEEDED",
+    "created_at": 1793973923019,
+    "started_at": 1793973923026,
+    "finished_at": 1793973957257,
+    "consumed_credits": 10,
+    "task_error": null
+  },
+  "credits_charged": 10,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 5042848,
+      "sha256": "f25375e2d00b912b2af7d751a930bfbd58678657e07f69add7e10e2a869b1a63",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b12d-a43d-766f-ac66-c53a2dd60e55/output/model.glb"
+    },
+    {
+      "file": "texture_base_color.png",
+      "bytes": 6691036,
+      "sha256": "933a702bd4b9a1cbbb94f61b98beb9c7baa420be898b19d34d30045b069b0e4c",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b12d-a43d-766f-ac66-c53a2dd60e55/output/texture_0.png"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 101765,
+      "sha256": "afc71a9b7aaa4049ea63aa3b9d8ec432c0307899c86314518a7bdc9653ed78ca",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b12d-a43d-766f-ac66-c53a2dd60e55/output/preview.png"
+    }
+  ],
+  "balance_after": 1367
+}

@@ -1,0 +1,62 @@
+{
+ "format": 1,
+ "code": "fulica_americana",
+ "scientific": "Fulica americana",
+ "common": "american coot",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "dark grey"
+   ],
+   "markings": []
+  },
+  "head": {
+   "colours": [
+    "white",
+    "red"
+   ],
+   "markings": [
+    {
+     "pattern": "spots",
+     "colours": [
+      "reddish-brown"
+     ]
+    }
+   ]
+  },
+  "tail": {
+   "colours": [],
+   "markings": [
+    {
+     "pattern": "patches",
+     "colours": [
+      "white"
+     ]
+    }
+   ]
+  }
+ },
+ "facts": 7,
+ "dropped": {
+  "other taxa": 1,
+  "young": 1
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/American_coot",
+   "title": "American coot",
+   "revision": 1380651490,
+   "facts": 3
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Fulica_americana/",
+   "title": "ADW: Fulica americana",
+   "facts": 4
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body dark grey; head white, red with reddish-brown spots; tail white patches"
+}

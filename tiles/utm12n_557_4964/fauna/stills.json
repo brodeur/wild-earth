@@ -1,0 +1,221 @@
+{
+ "format": 1,
+ "generated": "2026-11-06T14:25:22Z",
+ "generator": "pipeline/stills.py",
+ "note": "Per fauna.json slot: the still its chip shows (client/assets/opening/<file>) and how it was made (model: its own model rendered; stand_in: its kin's still; tinted: its kin's body tinted; static: the client's own species; missing: none, the chip shows the kin's still or a glyph).",
+ "chips": {
+  "bison_bison": {
+   "file": "bison_bison.webp",
+   "how": "model"
+  },
+  "antilocapra_americana": {
+   "file": "antilocapra_americana.webp",
+   "how": "model"
+  },
+  "ursus_arctos": {
+   "file": "ursus_arctos.webp",
+   "how": "model"
+  },
+  "canis_lupus": {
+   "file": "canis_lupus.webp",
+   "how": "model"
+  },
+  "ovis_canadensis": {
+   "file": "ovis_canadensis.webp",
+   "how": "model"
+  },
+  "alces_alces": {
+   "file": "cervus_canadensis.webp",
+   "how": "stand_in",
+   "kin": "cervus_canadensis"
+  },
+  "taxidea_taxus": {
+   "file": "urocyon_cinereoargenteus.webp",
+   "how": "stand_in",
+   "kin": "urocyon_cinereoargenteus"
+  },
+  "urocitellus_armatus": {
+   "file": "sciurus_griseus.webp",
+   "how": "stand_in",
+   "kin": "sciurus_griseus"
+  },
+  "vulpes_vulpes": {
+   "file": "urocyon_cinereoargenteus.webp",
+   "how": "stand_in",
+   "kin": "urocyon_cinereoargenteus"
+  },
+  "oreamnos_americanus": {
+   "file": "odocoileus_hemionus.webp",
+   "how": "stand_in",
+   "kin": "odocoileus_hemionus"
+  },
+  "castor_canadensis": {
+   "file": "otospermophilus_beecheyi.webp",
+   "how": "stand_in",
+   "kin": "otospermophilus_beecheyi"
+  },
+  "marmota_flaviventris": {
+   "file": "otospermophilus_beecheyi.webp",
+   "how": "stand_in",
+   "kin": "otospermophilus_beecheyi"
+  },
+  "ondatra_zibethicus": {
+   "file": "peromyscus_maniculatus.webp",
+   "how": "stand_in",
+   "kin": "peromyscus_maniculatus"
+  },
+  "sylvilagus_nuttallii": {
+   "file": "sylvilagus_bachmani.webp",
+   "how": "stand_in",
+   "kin": "sylvilagus_bachmani"
+  },
+  "microtus_montanus": {
+   "file": "peromyscus_maniculatus.webp",
+   "how": "stand_in",
+   "kin": "peromyscus_maniculatus"
+  },
+  "tamias_minimus": {
+   "file": "sciurus_griseus.webp",
+   "how": "stand_in",
+   "kin": "sciurus_griseus"
+  },
+  "zapus_princeps": {
+   "file": "peromyscus_maniculatus.webp",
+   "how": "stand_in",
+   "kin": "peromyscus_maniculatus"
+  },
+  "microtus_pennsylvanicus": {
+   "file": "peromyscus_maniculatus.webp",
+   "how": "stand_in",
+   "kin": "peromyscus_maniculatus"
+  },
+  "branta_canadensis": {
+   "file": "mergus_merganser.webp",
+   "how": "stand_in",
+   "kin": "mergus_merganser"
+  },
+  "grus_canadensis": {
+   "file": "grus_canadensis.webp",
+   "how": "model"
+  },
+  "pica_hudsonia": {
+   "file": "corvus_corax.webp",
+   "how": "stand_in",
+   "kin": "corvus_corax"
+  },
+  "aquila_chrysaetos": {
+   "file": "aquila_chrysaetos.webp",
+   "how": "model"
+  },
+  "euphagus_cyanocephalus": {
+   "file": "callipepla_californica.webp",
+   "how": "stand_in",
+   "kin": "callipepla_californica"
+  },
+  "bucephala_islandica": {
+   "file": "mergus_merganser.webp",
+   "how": "stand_in",
+   "kin": "mergus_merganser"
+  },
+  "petrochelidon_pyrrhonota": {
+   "file": "cyanocitta_stelleri.webp",
+   "how": "stand_in",
+   "kin": "cyanocitta_stelleri"
+  },
+  "fulica_americana": {
+   "file": "mergus_merganser.webp",
+   "how": "stand_in",
+   "kin": "mergus_merganser"
+  },
+  "cinclus_mexicanus": {
+   "file": "cyanocitta_stelleri.webp",
+   "how": "stand_in",
+   "kin": "cyanocitta_stelleri"
+  },
+  "actitis_macularius": {
+   "file": "callipepla_californica.webp",
+   "how": "stand_in",
+   "kin": "callipepla_californica"
+  },
+  "falco_mexicanus": {
+   "file": "buteo_jamaicensis.webp",
+   "how": "stand_in",
+   "kin": "buteo_jamaicensis"
+  },
+  "sialia_currucoides": {
+   "file": "cyanocitta_stelleri.webp",
+   "how": "stand_in",
+   "kin": "cyanocitta_stelleri"
+  },
+  "sturnella_neglecta": {
+   "file": "callipepla_californica.webp",
+   "how": "stand_in",
+   "kin": "callipepla_californica"
+  },
+  "pelecanus_erythrorhynchos": {
+   "file": "pelecanus_erythrorhynchos.webp",
+   "how": "model"
+  },
+  "pooecetes_gramineus": {
+   "file": "cyanocitta_stelleri.webp",
+   "how": "stand_in",
+   "kin": "cyanocitta_stelleri"
+  },
+  "falco_sparverius": {
+   "file": "buteo_jamaicensis.webp",
+   "how": "stand_in",
+   "kin": "buteo_jamaicensis"
+  },
+  "nucifraga_columbiana": {
+   "file": "corvus_corax.webp",
+   "how": "stand_in",
+   "kin": "corvus_corax"
+  },
+  "agelaius_phoeniceus": {
+   "file": "cyanocitta_stelleri.webp",
+   "how": "stand_in",
+   "kin": "cyanocitta_stelleri"
+  },
+  "circus_cyaneus": {
+   "file": "buteo_jamaicensis.webp",
+   "how": "stand_in",
+   "kin": "buteo_jamaicensis"
+  },
+  "colaptes_auratus": {
+   "file": "leuconotopicus_villosus.webp",
+   "how": "stand_in",
+   "kin": "leuconotopicus_villosus"
+  },
+  "molothrus_ater": {
+   "file": "callipepla_californica.webp",
+   "how": "stand_in",
+   "kin": "callipepla_californica"
+  },
+  "buteo_swainsoni": {
+   "file": "buteo_jamaicensis.webp",
+   "how": "stand_in",
+   "kin": "buteo_jamaicensis"
+  },
+  "thamnophis_elegans": {
+   "file": "sceloporus_occidentalis.webp",
+   "how": "stand_in",
+   "kin": "sceloporus_occidentalis"
+  },
+  "rana_luteiventris": {
+   "file": "plethodon_vehiculum.webp",
+   "how": "stand_in",
+   "kin": "plethodon_vehiculum"
+  },
+  "ambystoma_mavortium": {
+   "file": "plethodon_vehiculum.webp",
+   "how": "stand_in",
+   "kin": "plethodon_vehiculum"
+  }
+ },
+ "rendered": [],
+ "failed": {},
+ "counts": {
+  "model": 8,
+  "stand_in": 35
+ }
+}

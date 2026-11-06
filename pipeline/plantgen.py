@@ -39,8 +39,9 @@ import pathlib
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 LIBRARY = ROOT / "library" / "species"
 CARDS = ROOT / "library" / "plant_cards"
-VERSION = "4"   # 2 (2026-11-04): leaf_on_by_month follows the card's deciduous; 3 (2026-11-06): a dwarf shrub's ground block;
-# 4 (2026-11-06): palms from PALM_TEMPLATE (Corner's model) and their card's palm block
+VERSION = "5"   # 2 (2026-11-04): leaf_on_by_month follows the card's deciduous; 3 (2026-11-06): a dwarf shrub's ground block;
+# 4 (2026-11-06): palms from PALM_TEMPLATE (Corner's model) and their card's palm block; 5 (2026-11-06): a shrub on a tree
+# template counts the template's level-1 branches per plant and has no snag (SHRUB_FORMS)
 
 # Keys of a template that describe the template species itself, not its architecture.
 TEMPLATE_OWN = ("id", "aliases", "scientific", "common", "stature", "growth", "description", "season_notes", "status",
@@ -95,6 +96,15 @@ GROUND_LEAF = {"lanceolate": "linear", "needle": "linear", "needle_cluster": "li
                "lobed": "lobed", "palmate": "palmate", "pinnate": "pinnate", "round_vertical": "round"}
 GROUND_FLOWER = {"candle": "spike", "spike": "spike", "raceme": "spike", "catkin": "spike", "umbel": "umbel", "cluster": "umbel",
                  "daisy": "daisy", "cup": "cup", "ball": "ball", "head": "ball", "pea": "pea"}
+
+
+# A shrub grown from a tree template (2026-11-06; common juniper from Sierra juniper): treegen reads a shrub's level-1
+# `count` per stem but a tree's per plant (shared among its trunks), so the template's 36 limbs became 36 on each of the
+# juniper's 3-8 stems (3,900-5,900 wood triangles against its 2,200 near budget, the foliage left 6-12 cards). The
+# template's level 1 keeps its meaning, the whole plant's, marked `count_of: "plant"`. Nor does it keep the tree's snag
+# (the juniper's was the template's 16-30 m dead tree, 2,100 wood triangles): no shrub in the library has one; its dead
+# wood is its dead stems (the deadwood block).
+SHRUB_FORMS = ("shrub", "multi_stem_shrub_tree")
 
 
 def is_dwarf_shrub(card: dict) -> bool:
@@ -254,6 +264,9 @@ def build(card: dict) -> dict:
     targets["from"] = (card.get("targets") or {}).get("from") or "the trait card's values (no photographs measured)"
     rec["targets"] = targets
 
+    if card.get("form") in SHRUB_FORMS and tpl.get("form", "tree") == "tree" and tid != PALM_ID and rec.get("levels"):
+        rec["levels"][0]["count_of"] = "plant"   # a shrub on a tree template: the tree's branches shared among its stems
+        rec.pop("snag", None)   # and no standing dead tree: a shrub's dead wood is its dead stems (deadwood), as the library's shrubs
     if tid == PALM_ID:   # a palm: the card's palm block over the architecture's defaults; drawn as a tree
         rec["palm"] = deep_merge(rec.get("palm") or {}, card.get("palm") or {})
         rec["form"] = "tree"

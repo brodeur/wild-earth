@@ -1,0 +1,136 @@
+{
+ "format": 1,
+ "code": "varanus_niloticus",
+ "scientific": "Varanus niloticus",
+ "common": "nile monitor",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "brownish",
+    "greenish-gray"
+   ],
+   "markings": []
+  },
+  "upperparts": {
+   "colours": [
+    "greyish-brown"
+   ],
+   "markings": [
+    {
+     "pattern": "spots",
+     "colours": [
+      "greenish-yellow"
+     ]
+    },
+    {
+     "pattern": "spots",
+     "colours": [
+      "blackish"
+     ]
+    },
+    {
+     "pattern": "spots",
+     "colours": [
+      "yellowish"
+     ]
+    },
+    {
+     "pattern": "lines",
+     "colours": [
+      "yellow"
+     ]
+    },
+    {
+     "pattern": "spots",
+     "colours": [
+      "yellow"
+     ]
+    }
+   ]
+  },
+  "underparts": {
+   "colours": [
+    "ochre-yellow",
+    "creamy-yellow",
+    "yellowish"
+   ],
+   "markings": [
+    {
+     "pattern": "bands",
+     "colours": [
+      "blackish"
+     ]
+    }
+   ]
+  },
+  "head": {
+   "colours": [],
+   "markings": [
+    {
+     "pattern": "spots",
+     "colours": [
+      "yellowish-green"
+     ]
+    }
+   ]
+  },
+  "neck": {
+   "colours": [
+    "ochre-yellow",
+    "creamy-yellow"
+   ],
+   "markings": []
+  },
+  "legs": {
+   "colours": [],
+   "markings": [
+    {
+     "pattern": "spots",
+     "colours": [
+      "yellowish"
+     ]
+    }
+   ]
+  },
+  "tail": {
+   "colours": [],
+   "markings": [
+    {
+     "pattern": "bars",
+     "colours": [
+      "greenish-yellow"
+     ]
+    },
+    {
+     "pattern": "spots",
+     "colours": [
+      "blackish"
+     ]
+    }
+   ]
+  }
+ },
+ "facts": 18,
+ "dropped": {
+  "morph": 1,
+  "young": 2
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Nile_monitor",
+   "title": "Nile monitor",
+   "revision": 1375950983,
+   "facts": 9
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Varanus_niloticus/",
+   "title": "ADW: Varanus niloticus",
+   "facts": 9
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body brownish, greenish-gray; back greyish-brown with greenish-yellow, blackish, yellowish spots with yellow lines; belly and underparts ochre-yellow, creamy-yellow, yellowish with blackish bands; head yellowish-green spots; neck ochre-yellow, creamy-yellow; legs yellowish spots; tail greenish-yellow bars with blackish spots"
+}

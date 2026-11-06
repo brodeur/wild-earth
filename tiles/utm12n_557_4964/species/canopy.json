@@ -1,0 +1,22 @@
+{
+ "tile": "utm12n_557_4964",
+ "version": "1",
+ "context": {
+  "centre": [
+   -110.2150509268848,
+   44.87170382948747
+  ],
+  "elevation_m": null,
+  "koppen": null,
+  "group": null,
+  "wcvp_area": null
+ },
+ "plots": [],
+ "rule": "pipeline/tree_cards.py choose(): plots, then named trees of open place descriptions, then the tile's most-recorded WCVP trees that reach the subcanopy; shares by tier (TIER_SHARE)",
+ "trees": [],
+ "queued": [],
+ "log": [
+  "plot vela_apaza_2024_los_amigos: not used (7556 km, 0 m apart, climate Am)"
+ ],
+ "cards_written": []
+}

@@ -656,6 +656,15 @@ const RP_LIE = 160, RP_WALK = 161, RP_FLOAT = 162, RP_SWIM = 163, RP_SINK = 164,
 // night; Downs et al. 2008); stride: a fraction of the body's length per leg cycle
 const RP = { croc: { walk: 0.35, dash: 1.8, swim: 0.3, flee: 7, bask: [[7, 11], [15, 18]], stride: 0.35 },
   tortoise: { walk: 0.07, flee: 2.5, stride: 0.25 } };
+// a tile's own snakes (snUpdate; fauna.json `reptile` 'snake'): basking stretched out or coiled, crawling, raised and
+// alert, fleeing into cover, hidden in it
+const SN_BASK = 170, SN_CRAWL = 171, SN_ALERT = 172, SN_FLEE = 173, SN_HIDE = 174;
+// crawl and dash (m/s) for a 0.4 kg snake, slower the heavier (times (0.4 kg / mass)^0.1, 0.5-1.1: a garter snake's
+// dash is about 1 m/s, a python's crawl a slow glide); flee (m, times the root of the body's length in m: a player within
+// it sends it to cover), alert (the same, times 1.8: it raises its head and watches first); hide (s in cover); bask and
+// crawl (s); range (m from its cover it wanders to bask); cool (C: under it a basking snake coils, over hot it stays in
+// cover)
+const SNK = { crawl: 0.12, dash: 0.9, flee: 2.2, alert: 1.8, hide: [25, 60], bask: [40, 150], crawl_s: [6, 20], range: 7, cool: 22 };
 const SL_CRAWL = 160, SL_REST = 161, SL_IN = 162;   // the banana slug (slUpdate)
 const LIZ = { flee: 2, dash: 2, hide: 30, push: [10, 30], bobs: [3, 8], bobHz: 2, stride: 0.1, warm: 15, hot: 34, resolves: 2 };
 // Air temperature (C) for the foothills at ~600 m (Placerville normals, rounded): the mean daily low and high by month,
@@ -888,6 +897,8 @@ function installFauna(fauna, owner) {
     if (INDEX[f.code] !== undefined) { if (GATE && INDEX[f.code] < STATIC_N) GATE.add(f.code); continue; }   // the client draws it already: allowed
     const K = INDEX[f.kin];
     if (K === undefined || K >= STATIC_N) { console.warn(`animals: fauna slot ${f.code}: no kin '${f.kin}' to stand in on`); continue; }
+    // a snake (fauna.json `reptile` 'snake') is drawn by its own model alone: the fence lizard's body is no snake's
+    if (f.reptile === 'snake' && !(f.model && typeof f.model === 'object' && f.model.kind === 'snake')) { console.info(`animals: fauna slot ${f.code}: a snake with no model of its own, not drawn`); continue; }
     const water = !!f.water && !WATER_IDS.has(ID[K]), I = water && WATER_TWIN[K] !== undefined ? WATER_TWIN[K] : K;   // I: the rules it runs
     const sK = SPECIES[K], sI = SPECIES[I], sc = Number.isFinite(f.scale) && f.scale > 0 ? clampN(f.scale, 0.05, 20) : 1;
     const d = SPECIES.length;
@@ -940,7 +951,7 @@ function installFauna(fauna, owner) {
     // its own body (fauna.json `model`): a drawn mesh like the static quadrupeds' (DRAWN), at its real size (the slot's
     // scale stays 1; the procedural fallback above keeps its baked scale), on its kin's template or one by what it is
     // (animalModels.js faunaTemplate), switched like the kin's (lod) times the size ratio
-    if (ID[I] === LZ && I < STATIC_N && (f.reptile === 'bask' || f.reptile === 'water' || f.reptile === 'walk')) {
+    if (ID[I] === LZ && I < STATIC_N && (f.reptile === 'bask' || f.reptile === 'water' || f.reptile === 'walk' || f.reptile === 'snake')) {
       REPT[d] = f.reptile; SZ[d] = sc;
       if (f.pushup === true) PUSHUP.add(d);
       if (sI.liveR) e.liveR = sI.liveR * Math.max(1, Math.sqrt(sc));   // a crocodile is seen farther than a fence lizard
@@ -948,7 +959,7 @@ function installFauna(fauna, owner) {
       TAG_DY[d] = (TAG_DY[K] ?? 0.5) * Math.sqrt(sc);   // a long, low body: its name a little over its back, not its length's height
     }
     const M = f.model, KD = DRAWN[K];
-    if (M && typeof M === 'object' && (M.kind === 'quadruped' || M.kind === 'bird' || M.kind === 'reptile') && typeof M.path === 'string' && !KD?.hybrid) {
+    if (M && typeof M === 'object' && (M.kind === 'quadruped' || M.kind === 'bird' || M.kind === 'reptile' || M.kind === 'snake') && typeof M.path === 'string' && !KD?.hybrid) {
       const tpl = faunaTemplate(KD?.load, f), skin = M.skin !== false, lod0 = (KD?.lod || [30, 90]).map(r => r * sc);
       const l0 = clampN(lod0[0], 4, 120), l1 = clampN(lod0[1], l0 * 1.5, 360);
       DRAWN[d] = { name: f.code, param: f.code, load: () => loadFaunaModel(M.path, tpl, { skin }), lod: [l0, l1], planar: !!(KD ? KD.planar : sK.planar), fauna: tpl };
@@ -1879,6 +1890,7 @@ export class Animals {
         else if (ID[s] === LZ) {
           if (REPT[s] === 'water') f *= 1;                                                 // a crocodilian: at its water (WATERY)
           else if (REPT[s] === 'walk') f *= 1 - 0.6 * Math.min(1, tree * 1.5);             // a tortoise: grass and open bush
+          else if (REPT[s] === 'snake') f *= (0.4 + 0.6 * Math.min(1, (t.outcrop ? t.outcrop.at(cx, cn) / 255 : 0) * 2.5 + edge)) * (1 - 0.5 * Math.min(1, tree));   // a snake: open ground with rocks or an edge for cover
           else {   // the basking lizards (the fence lizard's season is the Sierra's: a stand-in's warmth alone, lzUpdate)
             if (s < STATIC_N && !lzOn) continue;
             f *= 0.25 + 0.75 * Math.min(1, (t.outcrop ? t.outcrop.at(cx, cn) / 255 : 0) * 2.5 + tree * 1.2);
@@ -2203,6 +2215,7 @@ export class Animals {
         a.yaw = rnd() * TAU; a.size = 0.85 + rnd() * 0.25; a.state = G_FEED; a.t = rnd() * 3;
       }, keep);
     } else if (kn === LZ && (REPT[s] === 'water' || REPT[s] === 'walk')) this.rpSpawn(s, base, x, z, rnd, keep);   // a crocodilian at its water, a tortoise on the open ground
+    else if (kn === LZ && REPT[s] === 'snake') this.snSpawn(s, base, x, z, cx, cn, rnd, keep);   // a snake by its cover
     else if (kn === LZ) {   // fence lizards at the cell's rocks and trunks (a male at each, a female or two near); the salamanders on the floor beside them
       const amph = ID[s] !== LZ, sites = amph ? this.amphSites(x, z, rnd) : this.lzSites(x, z, cx, cn, rnd);
       for (let k = 0, m = 0; k < sites.length; k++) {
@@ -4948,6 +4961,7 @@ export class Animals {
   }
   lzUpdate(a, dt, px, py, pz) {
     if (REPT[a.sp] === 'water' || REPT[a.sp] === 'walk') return this.rpUpdate(a, dt, px, py, pz);
+    if (REPT[a.sp] === 'snake') return this.snUpdate(a, dt, px, py, pz);
     const r = a.rng, H = this.heights, amph = ID[a.sp] !== LZ, k = SZ[a.sp] || 1;   // amph: the salamanders (HOH): out in cool damp air, never basking, slow; k: a stand-in's size
     a.t -= dt;
     if (!(amph ? this.amOn : a.sp < STATIC_N ? this.lzOn : this.lzWarm)) { a.vis = a.vis < 0.03 ? 0 : damp(a.vis, 0, 10, dt); a.amp = 0; return; }   // cold, dark or out of season (the salamanders: freezing or hot and dry)
@@ -5156,6 +5170,84 @@ export class Animals {
     const ang = r() * TAU, d = 2 + r() * 6;
     a.tx = a.hx + Math.cos(ang) * d; a.tz = a.hz + Math.sin(ang) * d; a.t = 60 + r() * 60;
   }
+  // ---- a tile's own snakes (fauna.json `reptile` 'snake'; REPT) ---------------------------------------------------------
+  // Drawn on the snake template (animalModels.js SNAKE_BODY): the body bent along its centreline. Each has its cover (the
+  // fence lizard's sites: a rock of the cell's plan, the foot of an oak or a pine, else a patch of the cell's ground) and
+  // basks in the open within SNK.range m of it while it is warm (lzWarm, the basking lizards' rule): stretched out in a gentle S,
+  // or coiled flat when the air is under SNK.cool C; now and then it glides to another spot (the travelling wave: the
+  // phase advanced by the wave number times the distance, so the wave stands on the ground and the body slides along its
+  // own track, the head leading; a turn bends it in a C). A player within SNK.alert x the flight distance raises its head
+  // to watch; within the flight distance (SNK.flee m x the root of its length) it dashes to its cover and is gone (not
+  // drawn, not present) until the player is twice as far and a while has passed. Cold, dark or out of its hours: in cover.
+  // The body follows the ground: pitched along the chord between its ends, the middle raised or lowered by the ground's
+  // hump or hollow under it (aAnim2.z).
+  snSpawn(s, base, x, z, cx, cn, rnd, keep) {
+    const sites = this.lzSites(x, z, cx, cn, rnd), c = sites.find(q => q.kind !== 'ground') || sites[0] || { x, z };
+    const n = grpN(s, 1, rnd);
+    for (let m = 0; m < n; m++) this.add(`${base}:${m}`, s, rnd, a => {
+      const ang = rnd() * TAU, d = 1.5 + rnd() * 2;
+      a.cx = c.x + Math.cos(ang) * 0.6; a.cz = c.z + Math.sin(ang) * 0.6;   // its cover, beside the rock or the trunk
+      a.hx = c.x + Math.cos(ang) * d; a.hz = c.z + Math.sin(ang) * d;   // its basking spot
+      a.x = a.hx; a.z = a.hz; a.y = this.heights.atXZ(a.x, a.z); a.yaw = rnd() * TAU; a.size = 0.85 + rnd() * 0.3;
+      a.state = SN_BASK; a.t = rnd() * 40; a.coil = this.airT < SNK.cool ? 1 : 0; a.pose = a.coil; a.hand = rnd() < 0.5 ? -1 : 1;
+      a.vis = 1; a.male = 0; a.sag = 0; a.N ||= new THREE.Vector3(0, 1, 0); a.F ||= new THREE.Vector3();
+    }, keep);
+  }
+  snGo(a, tx, tz, state, t) { a.state = state; a.tx = tx; a.tz = tz; a.t = t; }
+  snUpdate(a, dt, px, py, pz) {
+    const r = a.rng, H = this.heights, L = this.rpLen(a) * a.size, mkg = SPECIES[a.sp].mass_kg || 0.4;
+    const fk = clampN((0.4 / Math.max(mkg, 0.02)) ** 0.1, 0.5, 1.1), N = this.drawn[a.sp]?.model?.rig?.k;
+    a.t -= dt; a.spd = 0;
+    const out = this.lzWarm;   // an ectotherm's day is its warmth (as the basking lizards'), not the slot's diet-guessed hours
+    const T = this.threat(a.sp, a, a.x, a.y, a.z, px, py, pz), near = Math.hypot(a.x - T.x, a.z - T.z), fleeD = SNK.flee * Math.sqrt(Math.max(0.2, L));
+    const shown = a.state !== SN_HIDE;
+    if (shown && a.state !== SN_FLEE && this.danger(a.sp, a, near, fleeD, T.n)) { this.snGo(a, a.cx, a.cz, SN_FLEE, 6); a.coil = 0; }
+    else if (shown && (a.state === SN_BASK || a.state === SN_CRAWL && !a.toCover) && near < fleeD * SNK.alert && T.n) { a.state = SN_ALERT; a.t = 3 + r() * 5; a.yaw += wrapAngle(Math.atan2(T.x - a.x, T.z - a.z) - a.yaw) * 0.3; }
+    if (!out && (a.state === SN_BASK || a.state === SN_ALERT || a.state === SN_CRAWL && !a.toCover)) { this.snGo(a, a.cx, a.cz, SN_CRAWL, 60); a.toCover = true; a.coil = 0; }
+    let speed = 0, gait = 0, pose = a.coil;
+    switch (a.state) {
+      case SN_BASK:   // lying still in the sun; a turn of the head now and then
+        if (r() < dt * 0.08) a.fl = (r() - 0.5) * 1.4;
+        if (a.t <= 0) {
+          if (r() < 0.6) { const ang = r() * TAU, d = 1 + r() * SNK.range; this.snGo(a, a.cx + Math.cos(ang) * d, a.cz + Math.sin(ang) * d, SN_CRAWL, SNK.crawl_s[0] + r() * (SNK.crawl_s[1] - SNK.crawl_s[0])); a.toCover = false; a.coil = 0; }
+          else { a.t = SNK.bask[0] + r() * (SNK.bask[1] - SNK.bask[0]); a.coil = this.airT < SNK.cool ? (r() < 0.75 ? 1 : 0) : (r() < 0.2 ? 1 : 0); }
+        }
+        break;
+      case SN_ALERT:   // the fore body raised, watching
+        pose = -0.8; if (r() < dt * 0.5) a.fl = (r() - 0.5) * 0.8;
+        if (a.t <= 0) { a.state = SN_BASK; a.t = 10 + r() * 30; }
+        break;
+      case SN_CRAWL: case SN_FLEE: {   // gliding to a spot, or dashing for cover
+        const flee = a.state === SN_FLEE; pose = 0; gait = flee ? 1 : 0.7; speed = (flee ? SNK.dash : SNK.crawl) * fk;
+        const there = this.rpSteer(a, a.tx, a.tz, speed, flee ? 3 : 1.2, dt);
+        if (there || a.t <= 0) {
+          if (flee || a.toCover) { a.state = SN_HIDE; a.t = SNK.hide[0] + r() * (SNK.hide[1] - SNK.hide[0]); a.toCover = false; }
+          else { a.state = SN_BASK; a.t = SNK.bask[0] + r() * (SNK.bask[1] - SNK.bask[0]); a.coil = this.airT < SNK.cool ? (r() < 0.75 ? 1 : 0) : (r() < 0.2 ? 1 : 0); }
+        }
+        break;
+      }
+      case SN_HIDE:   // in cover, out of sight
+        pose = 0;
+        if (a.t <= 0 && out && near > fleeD * 2) { const ang = r() * TAU, d = 1 + r() * SNK.range * 0.5; this.snGo(a, a.cx + Math.cos(ang) * d, a.cz + Math.sin(ang) * d, SN_CRAWL, 20); a.toCover = false; a.coil = 0; }
+        else if (a.t <= 0) a.t = 5 + r() * 10;
+        break;
+    }
+    if (speed === 0) a.bend = 0;
+    a.y = H.atXZ(a.x, a.z);
+    this.rpOrient(a, false);
+    // the body on the ground: pitched along the chord between its ends, its middle by the hump or hollow under it
+    const c = clamp01(a.pose), h2 = 0.5 * L * (1 - 0.75 * c), sy = Math.sin(a.yaw), cy = Math.cos(a.yaw);
+    const hf = H.atXZ(a.x + sy * h2, a.z + cy * h2), hb = H.atXZ(a.x - sy * h2, a.z - cy * h2), mid = (hf + hb) / 2;
+    a.pitch = -Math.atan2(hf - hb, 2 * h2);
+    a.sag = (a.y - mid) / Math.max(a.size, 1e-3) * (1 - c); a.y = mid + (a.y - mid) * c;
+    a.fl = (a.fl || 0) * Math.exp(-1.0 * dt);
+    a.flick = damp(a.flick, a.fl, 5, dt);
+    a.amp = damp(a.amp, gait, 3, dt);
+    const waves = N ? N.restN + (N.waveN - N.restN) * clamp01(a.amp) : 1;
+    a.phase += dt * TAU * waves * speed / Math.max(0.05, L);   // the wave stands on the ground as the body slides through it
+    a.pose = damp(a.pose, pose, a.state === SN_ALERT ? 4 : 0.8, dt);
+    a.vis = a.state === SN_HIDE ? (a.vis < 0.03 ? 0 : damp(a.vis, 0, 6, dt)) : damp(a.vis, 1, 3, dt);
+  }
   // ---- Pacific banana slug (HOH) ------------------------------------------------------------------
   // Crawls over the wet forest floor at a few millimetres a second, wandering in slow curves, and rests a while with its
   // eyestalks out and swaying; a body within half a metre (a touch) pulls the head in (pose -1) for half a minute. Out in
@@ -5195,6 +5287,9 @@ export class Animals {
     if (ID[a.sp] === GS) return s === G_SENTRY ? 'on guard at the burrow' : s === G_DIVE ? 'running for its burrow' : s === G_SIT || s === G_PEEK ? 'sitting up, looking round' : 'feeding near its burrow';
     if (REPT[a.sp] === 'water') return s === RP_LIE ? 'basking on the bank' : s === RP_WALK ? 'walking slowly' : s === RP_SINK ? 'sunk to its eyes, watching' : 'floating in the water';
     if (REPT[a.sp] === 'walk') return s === RP_WALK ? 'walking slowly' : s === RP_GRAZE ? 'grazing' : s === RP_HIDE ? 'keeping still, head drawn in' : 'resting';
+    if (REPT[a.sp] === 'snake') return s === SN_BASK ? (a.coil ? 'basking, coiled in the sun' : 'basking, stretched out in the sun')
+      : s === SN_CRAWL ? (a.toCover ? 'gliding off into cover' : 'gliding through the grass') : s === SN_ALERT ? 'head raised, watching you'
+      : s === SN_FLEE ? 'fleeing into cover' : 'hidden in cover';
     if (ID[a.sp] === LZ) return s === L_BASK ? 'basking in the sun' : s === L_PUSH ? 'doing push-ups (a male showing off)' : s === L_SPRINT ? 'dashing for cover' : 'watching';
     // the Hoh batch (HOH)
     const kn = KIN[a.sp];
@@ -5224,6 +5319,7 @@ export class Animals {
   // Is this one present (the HUD and the cards): not down a burrow, not hidden in a crack or a crown, not too cold.
   present(a) {
     if (REPT[a.sp] === 'water' || REPT[a.sp] === 'walk') return a.vis > 0.3;
+    if (REPT[a.sp] === 'snake') return a.vis > 0.3 && a.state !== SN_HIDE;
     if (ID[a.sp] === LZ) return (a.sp < STATIC_N ? this.lzOn : this.lzWarm) && a.state !== L_HIDE;
     if (KIN[a.sp] === LZ) return this.amOn && a.state !== L_HIDE;   // the salamanders
     if (ID[a.sp] === BS) return a.vis > 0.3;   // the slug: not under the litter
@@ -5855,6 +5951,7 @@ export class Animals {
       a.e0 = damp(a.e0, fly && a.amp < 0.5 ? 1 : 0, 5, dt);                          // wings set and bowed in the glide
       a.e1 = damp(a.e1, fly ? (a.u > 0.85 ? 1 : 0.3) : 0, 6, dt);                    // tail fanned to land
     } else if (kn === GS) { a.e0 = 0; a.e1 = damp(a.e1, a.flick, 5, dt); }       // the tail tip lags the flick
+    else if (kn === LZ && REPT[a.sp] === 'snake') { a.e0 = damp(a.e0, a.bend || 0, 4, dt); a.e1 = a.hand || 1; a.e2 = a.sag || 0; a.e3 = 0; }   // the turn's C, the coil's hand, the ground's sag (snUpdate)
     else if (kn === LZ && (REPT[a.sp] === 'water' || REPT[a.sp] === 'walk')) {   // the C-bend; a swimming crocodile's tail sculls
       a.e0 = a.bend || 0; a.e1 = damp(a.e1, a.state === RP_SWIM ? 0.8 * Math.sin(a.phase) : 0, 6, dt); a.e2 = 0; a.e3 = 0;
     }

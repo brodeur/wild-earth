@@ -644,14 +644,14 @@
   },
   "canopy_top": {
    "stage": "flora",
-   "started_at": "2026-11-06T11:27:59Z",
-   "ended_at": "2026-11-06T11:28:00Z",
-   "wall_s": 0.8,
-   "cpu_self_s": 2.4,
+   "started_at": "2026-11-06T12:52:12Z",
+   "ended_at": "2026-11-06T12:52:13Z",
+   "wall_s": 0.6,
+   "cpu_self_s": 1.9,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {},
-   "disk_bytes": 64649,
+   "disk_bytes": 2891362,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -674,14 +674,14 @@
    "meshy_queued_credits_est": 0
   },
   "flora": {
-   "started_at": "2026-11-06T11:28:30Z",
-   "ended_at": "2026-11-06T11:28:33Z",
-   "wall_s": 4.6,
-   "cpu_s": 7.4,
+   "started_at": "2026-11-06T12:52:12Z",
+   "ended_at": "2026-11-06T12:52:13Z",
+   "wall_s": 4.4,
+   "cpu_s": 6.9,
    "download_bytes": 0,
    "cache_hits": 159,
    "cache_misses": 0,
-   "disk_bytes": 1062724,
+   "disk_bytes": 3889437,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -1197,21 +1197,53 @@
    ],
    "ended_at": "2026-11-06T11:29:54Z",
    "failed": []
+  },
+  {
+   "started_at": "2026-11-06T12:43:52Z",
+   "stages": [
+    {
+     "stage": "flora",
+     "started_at": "2026-11-06T12:43:52Z",
+     "steps_run": [
+      "canopy_top"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T12:43:53Z"
+    }
+   ],
+   "ended_at": "2026-11-06T12:43:53Z",
+   "failed": []
+  },
+  {
+   "started_at": "2026-11-06T12:52:12Z",
+   "stages": [
+    {
+     "stage": "flora",
+     "started_at": "2026-11-06T12:52:12Z",
+     "steps_run": [
+      "canopy_top"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T12:52:13Z"
+    }
+   ],
+   "ended_at": "2026-11-06T12:52:13Z",
+   "failed": []
   }
  ],
  "totals": {
-  "wall_s": 678.3,
-  "cpu_s": 251.5,
+  "wall_s": 678.1,
+  "cpu_s": 251.0,
   "download_bytes": 5452184,
   "cache_hits": 946,
   "cache_misses": 8,
-  "disk_bytes": 125992018,
+  "disk_bytes": 128818731,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 1810
  },
- "updated_at": "2026-11-06T11:29:54Z",
+ "updated_at": "2026-11-06T12:52:13Z",
  "client": {
-  "bytes": 17447928,
+  "bytes": 17456755,
   "files": 48,
   "largest": {
    "client/season_rgb.png": 4326625,

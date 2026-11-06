@@ -5731,3 +5731,155 @@ traits, for every tile:
   the bank in the warm hours and float in the water otherwise, hurrying in when threatened; tortoises walk slowly and
   freeze; lizards bask on the fence lizard's machinery without its Sierra season. Reptiles get up to 6 slots beyond the 40
   (client cap 48). Snakes have no rig and are skipped with a reason.
+
+## 2026-11-06: phase 1, iteration 6 (branch claude/sweet-feistel-2054bb)
+
+- **A grass's shape through the year from its own record and the tile's measured season** (`grass.js` ownSeasonCurve):
+  on a tile outside the regional tables the sward's height, dead leaves, leaf length and heads no longer come from
+  California's season rows (half height, no heads and 35 % grey thatch in "winter", which drew the Serengeti's rainy
+  February as a short, dead sward). They come from the open grass's measured NDVI of each month (the manifest's
+  client.season_rgb classes, open_grass else grassland): the live share is the month's NDVI on the tile's own range (a
+  swing under 0.15 a year mutes it), and a small standing-grass cycle run to steady state turns it into the rest: what
+  dies back is this year's straw, a third of it weathers each month into last year's grey leaves, a fifth of all standing
+  dead goes each month (grazing, trampling, fire); the height follows the standing total, growing half the way a month
+  and dropping with it, above a base of 0.5 for a perennial tussock and 0.3 for an annual (the records' `lifespan`,
+  weighted by share of the sward); thatch = `cure` x grey share, leaf length 1 - 0.35 `cure` x dead share (the records'
+  `cure`, until now unused). Heads in each record's `heads.months` as calendar months at the tile, wrapping the year, to
+  four months past the last; the generic tufted grass's in the two months before the tile's greenest and in it (Lofoten:
+  June-August, its old months). `dry` stays the season's (the chaparral field reads its season from it). Serengeti
+  (red oat grass, cure 0.8, perennial): 15 Feb height 0.98 of full, thatch 0.13, no heads (was 0.5, 0.35); 20 Apr 0.99,
+  heads up (was 0.5, none); 15 Jul 0.98, cured, thatch 0.19 (was 0.9, 0); 15 Oct 0.80, half the leaves grey, shorter
+  curled leaves (was 0.8, 0). Lofoten 20 Jun: 0.77 still growing, thatch 0.10 (was 0.9 and summer-cured leaf 0.8).
+  Teton, California, the Hoh: the rows as before (uniforms identical). No record field added: `lifespan`, `cure` and
+  `heads.months` were enough. Open: a season picked without a date reads the north's mid-quarter month (seasonMonth),
+  not the tile's own; a record's months are taken as written for the tile, with no hemisphere shift for a record from
+  elsewhere.
+- **Canopy heights settled by a second and third map** (`pipeline/canopy_maps.py`, `pipeline/canopy_top.py`, the
+  `canopy_top` step v2). Two more open maps of each global tile's canopy, read by window over anonymous HTTP: Meta /
+  WRI's **CHM v2** (Brandt et al. 2026, arXiv:2603.06382; the same 1 m method retrained on far more airborne lidar; AWS
+  open data, CC BY 4.0 by Meta's registry entry, `forests/v2/global/dinov3_global_chm_v2_ml3`, zoom-10 quadkeys) and
+  **ETH Global Canopy Height 2020** (Lang et al. 2023, Nature Ecology & Evolution; 10 m from Sentinel-2, calibrated on
+  GEDI RH98; CC BY 4.0; the ETH library's public share over WebDAV, 3-degree COGs). Stand tops (the step's statistic,
+  30 m cells with trees, p50 / p90, m): Danum v1 21.6 / 30.0, v2 31.1 / 46.9, ETH 46.2 / 50.3; Manu 21.0 / 25.2, 26.7 /
+  33.0, 33.9 / 36.7; Corcovado 21.3 / 25.4, 26.8 / 33.1, 36.6 / 40.3; Serengeti 6.8 / 11.8, 6.0 / 9.1, 4.0 / 10.0;
+  Lofoten 5.2 / 8.1, 5.0 / 8.2, 6.0 / 9.0. The evidence: on held-out lidar v2's mean absolute error is 3.0 m against
+  v1's 4.3 and ETH's 8.4, its bias 0.0 m against v1's +2.6, much improved at 30 m and over but still short in the upper
+  tail (Brandt et al.); in Moudry et al. 2024 (Ecosphere 15:e70026) Meta's v1 underestimates canopies of every height and
+  ETH overestimates low canopies and underestimates tall ones. ETH has no crowns or gaps (r 0.1-0.45 with the 1 m maps
+  per 10 m cell, its own SD 7-12 m in the tropics), and at Danum it does not see the edge both Meta maps draw between the
+  tall primary forest (v2 40-45 m per km block) and the logged forest beside it (v2 20-28 m): it reads 43-49 m on both
+  sides. The rule: **CHM v2 is the stand** (v1 scaled to v2's level by their median ratio fills v2's masked holes: 5 % of
+  Danum); **where v2 itself sees tall closed forest, ETH sets the level**: per ~1 km block, ETH's closed-forest median
+  minus v2's is added to the treed cells, weighted from 0 at a v2 block median of 25 m to 1 at 35 m, never lowering, a
+  block without 100 closed cells not lifted. The lift keeps v2's own contrasts in metres (gaps, emergents); the species'
+  sourced heights then hold where they agree with the chosen top (`stature.js speciesScale`, unchanged). A lidar tile
+  keeps its point cloud's CHM. Result (p50 / p90 / p95): Danum 36.4 / 52.8 / 56.6 (the primary half ~47 m, the logged
+  half ~25 m), Manu 27.9 / 34.7 / 36.5, Corcovado 28.9 / 36.0 / 38.4, Serengeti 6.0 / 9.1 / 10.1 and Lofoten 5.0 / 8.2 /
+  9.8 (v2 as it is). The probes' fair judge (L_render vs L_fair, overlap_fair), before -> after: Danum 27.5 -> 25.7 vs
+  20.9, 0.067 -> 0.077; Manu 30.0 -> 28.3 vs 26.9, 0.119 -> 0.134; Corcovado 24.0 -> 23.1 vs 23.1, 0.134 -> 0.144;
+  Serengeti and Lofoten unchanged (38.2 / 0.387, 33.1 / 0.495). No independent site reference reached anonymously: GEDI
+  L2A needs an Earthdata login, ETH's filtered RH98 footprints on Zenodo are 29-40 GB archives (and ETH's own training
+  targets), Meta's lidar test chips miss all five tiles, and the site papers found (Taylor et al. 2015, Osa lidar tops to
+  67 m; Shenkin et al. 2019, Danum's 100.8 m Menara) give maxima, not stand-top distributions. Open: Manu and Corcovado
+  sit just under the gate (v2 closed medians 26.9 and 27.1 m: lifted 1.4 and 2.0 m on average where ETH says 7-10 m
+  more); a lidar or GEDI reference there would settle whether the gate should open lower.
+- **A model coloured as its species is described** (`pipeline/appearance.py`, `fauna_models.py`): the generic texture
+  prompt ("natural colours and markings of a wild adult ...") gave the leopard tortoise a brown and orange shell with no
+  blotches, the Mwanza agama the orange head of the red-headed rock agama, the Nile monitor no yellow spots, the
+  blacksmith lapwing red legs and the leopard grey-white legs. Now every species gets an appearance step, one rule for
+  all: its Wikipedia article (lead and description sections) and its Animal Diversity Web account (Physical
+  Description), plus the genus article when neither gives the body's colour (the Masai giraffe's article only describes
+  the spots' shape). Kept: sentences that name a colour and a body word. Dropped: the young, change with age ("fades to"),
+  morphs and captives, regional variants, other taxa, extinct forms, non-body matter, and female-only clauses when the
+  male is described. Each colour phrase is placed by rule: just before a pattern word it is a marking; just before a body
+  word, that region's; otherwise the colour of the clause's subject. Stored as facts only (colours and markings by
+  canonical region, source URLs, the Wikipedia revision) in `library/animals/appearance/<code>.json`, beside the trait
+  cards, not in them (fauna.py may rewrite a generated card). A summary built from those facts leads the refine's
+  texture prompt. After the build, a check compares the GLB's vertex colours by region (parts; the body split by normal
+  into back, flanks and belly) with the described colours: CIEDE2000 at kL 2 within 16, counting the colours between two
+  named chromatic ones. A described region passes when half of it matches and the whole model when 60% does, and each
+  described marking must cover 1.5% of its region. A failure is re-refined once from the same preview (10 credits; the
+  mesh is kept). That prompt carries a correction naming what the check found ("shell yellow, not cinnamon or orange").
+  The build with fewer failures, then the higher score, is kept. `--check` and `--recolour [--codes]` do this for the
+  library; `--rebuild` takes `--codes`. Of the 20 models, 5 failed. 60 credits were spent (balance 1,607 to 1,547):
+  agama 0.55 to 0.94, passes (red head, dark blue body); lapwing 0.93 to 1.0, passes (black legs); leopard 0.80 to 0.82,
+  passes, barely changed; tortoise twice, 0.43 to 0.43, now golden with black blotches but still failing, because
+  Meshy's albedo for "yellow" comes out amber or ginger (its thumbnail is lit and looks yellow); Nile monitor 1.0, the
+  re-refine came out grey and was rejected, still without its yellow spots. Open: a texture reference image for colours
+  Meshy will not take from words (the tortoise's straw yellow, the monitor's spots). The vulture's bare pink head and
+  the lapwing's grey wing coverts appear only in regional or comparative sentences that the rule drops, so the check
+  cannot see them.
+- **The heath as a carpet; the juniper built as a shrub** (`forbs.js`, `shrubfield.js`, `treegen.js`, `plantgen.py` v5).
+  Lofoten's probe pose (`b_heath_eye`) was mostly not the carpet: the shrub field's chaparral program draws chamise and
+  manzanita in every shrubland cell (class 4), so the heath was under California's domes (the manzanita's red
+  branching was the "striped" mats), and the foothill shrubs (the junipers) filled the whole shrub cover again as if it
+  were chaparral. Two rules: a tile outside the regional tables (`class_fallback` false) draws chamise and manzanita
+  only where its own mix lists them (California and Teton unchanged); and a row's carpet share (`density_bytes[2]`) is
+  the carpet's, so the shrub field takes the rest of the cover (the heath's junipers 0.4 -> 0.07). The carpet itself:
+  each mat a clone's patch, 1.8x the card's crown width at the card's height, a plateau with rounded shoulders
+  (side view and top quad: the ground quad is now a centre, two rings and the square, which keeps the herbs' pictures
+  exactly), growing across rather than up where it is closed or thinned; its places on the R2 sequence (every prefix
+  even) so closed patches close and the distance thinning thins evenly; drifts of old wood and fresh tips and of
+  heather's flowers inside a mat, a clone's own warmth; and a translucent skirt round each mat (its shade and litter)
+  shown only where the carpet closes, so the ground between overlapping mats takes the carpet's tone. Mats staged
+  19,000 -> 10,300 (4.51 -> 4.27 M triangles in the frame); the frame within the noise of a loaded machine (eye 14.4 /
+  15.3 vs 16.5 / 13.5 ms, 10 m up 12.8 / 13.2 vs 11.4 / 11.1). The juniper: treegen reads a shrub's level-1 `count`
+  per stem and a tree's per plant, so the Sierra juniper template's 36 limbs grew on each of 3-8 stems (3,900-5,900
+  wood triangles of its 2,200 budget, foliage left 6-12 cards). plantgen now marks a shrub on a tree template
+  `count_of: "plant"` (treegen shares it among the stems) and drops the tree's snag (a 16-30 m dead juniper; no
+  library shrub has one): its near tier 250-1,300 triangles, no warning. Only the juniper was a shrub on a tree
+  template. Still warning (not this rule): 28 classes of 22 records at 70-106% of their budget
+  (cornus sericea's old class 1,464 of 1,300, rubus parviflorus and spectabilis young 1,320 and 1,380 over), and the
+  generated trees' snags keep their templates' heights (birch 3-8 m with 10-18 m snags, vine maple 3-8 with 14-24).
+  Open: the heath's gaps are the photo alone (no moss or grass drawn where the herb cover is 0), so open ground with a
+  few small mats still reads as dots on a lawn from 10 m up.
+- **Snakes as a body plan** (`tools/build_snake.py`, `fauna_models.py --kind snakes`, `fauna_slots.py`, `animals.js`
+  snUpdate, `animalModels.js` SNAKE_BODY): a snake slot was skipped ("no snake rig"); now it is a slot on the fence
+  lizard's cells and sites with the way `snake`, drawn only by a model of its own (no stand-in body: a lizard is no
+  snake). One build for every snake: the Meshy mesh (asked for a snake lying stretched out in one gentle S, no coils,
+  nothing of the body touching another) is remeshed closed, its two ends found as the vertices farthest apart along the
+  surface, its centreline traced (each vertex projected onto the line within a window of its arc guess, so the inside of
+  a tight bend is never taken for the other arm; slices 0.6 of a radius thick, smoothed), the head the thicker end, then
+  straightened along +z on a rotation-minimising frame with each section's lowest point on the floor (a raised head laid
+  down), sized by mass at 1,000 kg/m3 (the volume before straightening), coloured by the palette vote, the neck at the
+  first narrowing behind the head. Gates: taller than 0.35 of its extent, in pieces, a jumping line, no taper, not
+  slender (under 10 diameters), standing up, something besides the body, over 0.2% of edges stretched 3 times. The
+  pipeline builds a snake's untextured preview first and pays the refine only if it passes; a paid preview no refine was
+  made from is tried before a new one. The template (`RIG.snake`, no per-species constant): each vertex's pivot is its
+  centreline point (z its arc); the shader draws the centreline again as headings integrated from the snout in 40 steps
+  with the mean point and heading taken out: lateral undulation (a wave standing in the ground's frame as the body
+  slides, the head steadier, 1.35 waves at 0.65 rad crawling, a 0.75-wave gentle S at rest), a turn's C, a flat spiral
+  coil (tail tip inside, the loops touching), the head rigid and turned about the neck, the fore body raised when
+  alert, the middle following the ground's hump or hollow under the chord. The machine: basks near its cover (a rock,
+  a trunk, else a patch of ground) while it is warm (the basking lizards' lzWarm, not the slot's diet-guessed hours:
+  EltonTraits has no reptiles and the default made a garter snake nocturnal), coiled under 22 C, stretched out above;
+  glides to another spot now and then (0.12 m/s at 0.4 kg, slower when heavier); raises its head at 1.8 times its
+  flight distance (2.2 m times the root of its length); dashes (0.9 m/s) into cover and is gone until the player is
+  twice as far. Snakes in the research: Lamar's terrestrial garter snake (28 records), Teton's, Corcovado's fer-de-lance,
+  the Amazon tree boa and Danum's pit viper; the Serengeti's rock python and puff adder have 3 records each, under the
+  threshold. Lamar's garter snake: 60 credits (a preview the gate refused: head reared, body crossing itself; a second
+  that passed, its refine, one re-refine for the colour check kept the first), 0.71 m, 1.6 cm radius at 0.4 kg (the
+  amniote database). Open: it is yellow all over: the appearance research reads Wikipedia's stripe colours as the body's
+  ("body yellow with yellow stripes") and the check passes it (0.996); a garter snake is dark with yellow stripes. The
+  appearance rule needs the ground colour of a striped snake, then a 10-credit re-refine. Also: `register` now merges
+  into a fresh read of the registry (a mammals run started earlier wrote its stale copy over the snake's entry).
+- **Wolves were never researched** (`fauna.py` DOMESTIC, `_less_dogs`): "Canis lupus" was on the domestic list so that
+  dogs (C. l. familiaris) would not count, which removed the gray wolf from every tile, Yellowstone included. The species
+  stays; the dog subspecies' records on the tile (GBIF key 6164210) are subtracted. Still on the list and wild in their
+  native ranges: Sus scrofa, Anser anser, Columba livia, Oncorhynchus mykiss (a range test is the fix).
+- **Chaparral only where a row lists it** (`shrubfield.js`): the shrub field drew California's chamise and manzanita in
+  every shrubland cell of a regional-table tile; Yellowstone's sagebrush steppe was covered in manzanita domes. A
+  shrubland cell now draws chaparral only where its own row lists a chaparral species (California's chaparral rows do).
+- **The judge rejects a model that fails its species** (`fauna_models.model_for`, `models.json` `judge`): a model whose
+  defining features are wrong is not drawn and the slot keeps its stand-in; the paid job stays for a retry from a
+  reference image. Rejected: the mountain goat (an ibex's long curved horns, brown patches), the American badger (a
+  raccoon's ringed tail), the terrestrial garter snake (all yellow: the colour research read the stripes as the body).
+- **canopy_top on a fresh lidar tile** (`steps._canopy_top`): the step read the lidar CHM's source from the manifest
+  before the lidar layer was recorded, took the global path and failed; it now also checks the lidar status.
+- **A second tile end to end: Yellowstone's Lamar Valley** (`utm12n_557_4964`, the US path with a 2.25 billion-point lidar
+  cloud): 13 models chosen by rule and generated for 400 credits (bison, wolf, grizzly, bighorn, pronghorn, mountain
+  goat, badger, golden eagle, white pelican, sandhill crane, the garter snake; the moose failed the leg gate twice, 60 of
+  them), 3 rejected by the judge; balance 1,087 (all of iteration 6: 520 credits). From the air it reads as the Lamar
+  Valley. At eye height it is not ready: the big sagebrush draws dark (the shrub field's own lighting darkens its grey-
+  green record) over bare ground (the steppe's rows list no grasses: the tile is in no natural-region table and the
+  library's grasses are California's). Next: a ground layer of the northern Rockies' bunchgrasses and silver shrubs.

@@ -1,0 +1,45 @@
+{
+ "format": 1,
+ "code": "vanellus_armatus",
+ "scientific": "Vanellus armatus",
+ "common": "blacksmith lapwing",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "black",
+    "grey",
+    "white"
+   ],
+   "markings": []
+  },
+  "legs": {
+   "colours": [],
+   "markings": [
+    {
+     "pattern": "dappling",
+     "colours": [
+      "black",
+      "white-grey"
+     ]
+    }
+   ]
+  }
+ },
+ "facts": 6,
+ "dropped": {
+  "young": 1
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Blacksmith_lapwing",
+   "title": "Blacksmith lapwing",
+   "revision": 1319053552,
+   "facts": 6
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body black, grey, white; legs black, white-grey dappling"
+}

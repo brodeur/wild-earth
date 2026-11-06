@@ -1,0 +1,935 @@
+{
+ "tile": "utm12n_557_4964",
+ "started": "2026-11-06T14:18:09+00:00",
+ "budget": 100,
+ "reserve": 300,
+ "species": [
+  {
+   "code": "aquila_chrysaetos",
+   "why": "scavenger or raptor",
+   "attempts": 1,
+   "credits": 30,
+   "jobs": [
+    {
+     "mode": "preview",
+     "dir": "library/animals/jobs/aquila_chrysaetos/01a1b139-64da-72a5-8808-bb8b7b5f1098"
+    },
+    {
+     "mode": "refine",
+     "dir": "library/animals/jobs/aquila_chrysaetos/01a1b13a-17a9-7623-a5c0-5c9d78386a29"
+    }
+   ],
+   "ok": true,
+   "archetype": "soar",
+   "prompt": "A wild Golden eagle (Aquila chrysaetos) of Park County, Wyoming, United States, one adult bird soaring in mid-air, realistic anatomy and proportions. Seen level, the body horizontal like an airplane: both wings fully spread flat and straight out to the sides, wingtips level with the body, the flight feathers spread, the tail spread, the head forward, the legs and feet tucked up under the body, nothing hanging below. Single bird, no base, no perch, no ground. Game-ready.",
+   "texture_prompt": "Natural plumage colours and markings of a wild adult Golden eagle (Aquila chrysaetos) as seen in Park County, Wyoming, United States, both the upper side and the underside of the wings and tail in their true colours. Coloured as the adult is described: body dark brown, golden-brown, black; flanks golden; belly and underparts brownish gray; head golden, blackish; neck golden; legs yellow; tail grey, white, grayish brown with white, black bands; wings grey, white, rusty brown, brownish gray. Realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin and feet in their true colours.",
+   "build_log": "INFO islands 2 dropped faces 40 kept 30557\nINFO colour from texture source faces 30557 archetype soar mass 4.248\nINFO remeshed 21840 faces\nINFO soar: wing root x 0.100, wrist x 0.480, semi-span 1.000, body height 0.140, tail root y -0.508, neck y -0.884, levelled 2.8 deg\nINFO size by mass at 250 kg/m3 over the body slab volume 0.0166 (body 0.0076) units, scale 1.3052 -> length 0.795 m, height 0.836 m, width 2.611 m\nINFO span 2.611 m (the span rule for a soarer, 1.4 M^0.39: 2.461 m)\nINFO palette shares [0.096, 0.128, 0.075, 0.097, 0.162, 0.068, 0.139, 0.136, 0.033, 0.065] pattern 0.0805 -> tiers [('lod0', 3455), ('lod1', 1243), ('lod2', 345)]\nINFO loose pieces 15 joined to their nearest part\nINFO tier lod0 from 43680 to 3454 triangles with the cards\nINFO tier lod1 from 43680 to 1242 triangles with the cards\nINFO tier lod2 from 43680 to 344 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/aquila_chrysaetos.glb 337444 bytes; lod0 3454 tris, lod1 1242 tris, lod2 344 tris",
+   "colour_check": {
+    "ok": true,
+    "score": 0.999,
+    "fails": []
+   }
+  },
+  {
+   "code": "pelecanus_erythrorhynchos",
+   "why": "bird by mass, one per archetype first",
+   "attempts": 1,
+   "credits": 30,
+   "jobs": [
+    {
+     "mode": "preview",
+     "dir": "library/animals/jobs/pelecanus_erythrorhynchos/01a1b13a-e342-747c-b0f6-5c28b8cfa30e"
+    },
+    {
+     "mode": "refine",
+     "dir": "library/animals/jobs/pelecanus_erythrorhynchos/01a1b13b-fc92-70ef-9065-539256035ec3"
+    }
+   ],
+   "ok": true,
+   "archetype": "water",
+   "prompt": "A wild American white pelican (Pelecanus erythrorhynchos) of Park County, Wyoming, United States, one adult bird, realistic anatomy and proportions. Standing still on the ground in a side-on neutral pose: the wings folded tight against the body, both legs straight and apart with a clear gap between them, both feet flat on the ground, the head up and looking forward, the bill closed, the tail held clear of the ground; nothing but the feet touches the ground. No base, no ground plane, no perch, no water, no props. Game-ready.",
+   "texture_prompt": "Natural plumage colours and markings of a wild adult American white pelican (Pelecanus erythrorhynchos) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body bright white, black, yellowish, blackish; back white; belly and underparts vivid orange; head grey; neck vivid orange; legs pale yellow, bright orange. Realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin, legs and feet in their true colours.",
+   "build_log": "INFO colour from texture source faces 30796 archetype water mass 5.6085\nINFO remeshed 148788 faces\nINFO legs: knees z 1.120 1.120, belly 1.266, feet y -0.238, split x -0.058 (gap 0.194), 13261 leg vertices\nINFO head: tip [-0.055, -0.99, 2.004], neck dip, base at 1.050 along (ring 0.318 of body 1.041), pivot [-0.071, -0.51, 2.539]\nINFO tail: root y 0.572 (depth; body depth 2.012), pivot [0.0, 0.572, 1.206]; head 9% of the bird\nINFO size by mass at 150 kg/m3 over the whole mesh volume 0.5102 (body 0.5102) units, scale 0.4185 -> length 0.836 m, height 1.403 m, width 0.988 m\nINFO cards: span 1.861 m (0.95 M^0.39), shoulder [0.03, -0.023, 0.151]\nINFO palette shares [0.031, 0.171, 0.106, 0.066, 0.229, 0.184, 0.102, 0.043, 0.034, 0.035] pattern 0.0699 -> tiers [('lod0', 3247), ('lod1', 1168), ('lod2', 324)]\nINFO tier lod0 from 297576 to 3278 triangles with the cards\nINFO tier lod1 from 297576 to 1200 triangles with the cards\nINFO tier lod2 from 297576 to 348 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/pelecanus_erythrorhynchos.glb 237896 bytes; lod0 3278 tris, lod1 1200 tris, lod2 348 tris",
+   "colour_check": {
+    "ok": true,
+    "score": 1.0,
+    "fails": []
+   }
+  },
+  {
+   "code": "grus_canadensis",
+   "why": "bird by mass, one per archetype first",
+   "attempts": 1,
+   "credits": 30,
+   "jobs": [
+    {
+     "mode": "preview",
+     "dir": "library/animals/jobs/grus_canadensis/01a1b13d-57ab-7204-b653-8cf84ff52e4f"
+    },
+    {
+     "mode": "refine",
+     "dir": "library/animals/jobs/grus_canadensis/01a1b13e-08de-73a4-87fd-c806668213e5"
+    }
+   ],
+   "ok": true,
+   "archetype": "wade",
+   "prompt": "A wild Sandhill crane (Grus canadensis) of Park County, Wyoming, United States, one adult bird, realistic anatomy and proportions. Standing still on the ground in a side-on neutral pose: the wings folded tight against the body, both legs straight and apart with a clear gap between them, both feet flat on the ground, the head up and looking forward, the bill closed, the tail held clear of the ground; nothing but the feet touches the ground. No base, no ground plane, no perch, no water, no props. Game-ready.",
+   "texture_prompt": "Natural plumage colours and markings of a wild adult Sandhill crane (Grus canadensis) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body red, grayish, brownish; head white, red. Realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin, legs and feet in their true colours.",
+   "build_log": "INFO remeshed 101756 faces\nINFO legs: knees z 2.060 2.040, belly 2.080, feet y -0.009, split x -0.012 (gap 0.204), 18015 leg vertices\nINFO head: tip [-0.009, -0.998, 4.019], neck dip, base at 1.670 along (ring 0.173 of body 0.408), pivot [-0.008, -0.372, 3.013]\nINFO tail: root y 0.851 (depth; body depth 0.914), pivot [0.0, 0.851, 2.101]; head 18% of the bird\nINFO size by mass at 150 kg/m3 over the whole mesh volume 0.5629 (body 0.5629) units, scale 0.3706 -> length 0.741 m, height 1.573 m, width 0.329 m\nINFO cards: span 2.295 m (1.3 M^0.39), shoulder [0.117, -0.044, 0.958]\nINFO palette shares [0.08, 0.044, 0.078, 0.116, 0.096, 0.113, 0.078, 0.13, 0.143, 0.121] pattern 0.0872 -> tiers [('lod0', 3672), ('lod1', 1321), ('lod2', 367)]\nINFO loose pieces 2 joined to their nearest part\nINFO tier lod0 from 203512 to 3708 triangles with the cards\nINFO tier lod1 from 203512 to 1356 triangles with the cards\nINFO tier lod2 from 203512 to 394 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/grus_canadensis.glb 322428 bytes; lod0 3708 tris, lod1 1356 tris, lod2 394 tris",
+   "colour_check": {
+    "ok": true,
+    "score": 0.991,
+    "fails": []
+   }
+  }
+ ],
+ "stand_ins": [
+  {
+   "code": "bison_bison",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "antilocapra_americana",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "ursus_arctos",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "canis_lupus",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "ovis_canadensis",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "alces_alces",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "taxidea_taxus",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "urocitellus_armatus",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "vulpes_vulpes",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "oreamnos_americanus",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "castor_canadensis",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "marmota_flaviventris",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "ondatra_zibethicus",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "sylvilagus_nuttallii",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "microtus_montanus",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "tamias_minimus",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "zapus_princeps",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "microtus_pennsylvanicus",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "pica_hudsonia",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "nucifraga_columbiana",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "thamnophis_elegans",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "rana_luteiventris",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "ambystoma_mavortium",
+   "why": "not in this run (--kind birds)"
+  },
+  {
+   "code": "colaptes_auratus",
+   "why": "over the budget or the count"
+  },
+  {
+   "code": "sturnella_neglecta",
+   "why": "over the budget or the count"
+  },
+  {
+   "code": "buteo_swainsoni",
+   "why": "over the budget or the count"
+  },
+  {
+   "code": "falco_mexicanus",
+   "why": "over the budget or the count"
+  },
+  {
+   "code": "circus_cyaneus",
+   "why": "over the budget or the count"
+  },
+  {
+   "code": "falco_sparverius",
+   "why": "over the budget or the count"
+  },
+  {
+   "code": "branta_canadensis",
+   "why": "over the budget or the count"
+  },
+  {
+   "code": "bucephala_islandica",
+   "why": "over the budget or the count"
+  },
+  {
+   "code": "fulica_americana",
+   "why": "over the budget or the count"
+  },
+  {
+   "code": "euphagus_cyanocephalus",
+   "why": "over the budget or the count"
+  },
+  {
+   "code": "cinclus_mexicanus",
+   "why": "over the budget or the count"
+  },
+  {
+   "code": "agelaius_phoeniceus",
+   "why": "over the budget or the count"
+  },
+  {
+   "code": "actitis_macularius",
+   "why": "over the budget or the count"
+  },
+  {
+   "code": "molothrus_ater",
+   "why": "over the budget or the count"
+  },
+  {
+   "code": "sialia_currucoides",
+   "why": "over the budget or the count"
+  },
+  {
+   "code": "pooecetes_gramineus",
+   "why": "over the budget or the count"
+  },
+  {
+   "code": "petrochelidon_pyrrhonota",
+   "why": "over the budget or the count"
+  }
+ ],
+ "spent": 90,
+ "balance_after": 1087,
+ "modelled": 3,
+ "earlier": [
+  {
+   "tile": "utm12n_557_4964",
+   "started": "2026-11-06T14:07:32+00:00",
+   "budget": 60,
+   "reserve": 1050,
+   "species": [
+    {
+     "code": "thamnophis_elegans",
+     "why": "snake by records x sqrt(mass)",
+     "attempts": 2,
+     "credits": 60,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/thamnophis_elegans/01a1b12f-ab22-723d-9bb2-0b2b1e654052"
+      },
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/thamnophis_elegans/01a1b130-c61a-758a-ad12-16a8090511ff"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/thamnophis_elegans/01a1b131-90b5-7024-abc6-8bac631eb794"
+      }
+     ],
+     "ok": true,
+     "archetype": "snake",
+     "prompt": "A wild Terrestrial garter snake (Thamnophis elegans) of Park County, Wyoming, United States, one adult snake, realistic anatomy and proportions. Lying flat on the ground, the whole body stretched out long in one gentle S-curve, no coils, no loops, no part of the body touching or crossing another, the head resting on the ground at one end looking forward along the body, mouth closed, no tongue, the tail tapering to a thin tip at the other end. No base, no ground plane, no rocks, no branches, no props. Game-ready.",
+     "texture_prompt": "Natural scale colours and markings of a wild adult Terrestrial garter snake (Thamnophis elegans) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body yellow with yellow stripes; back light orange, white, grayish-green, yellow with red, black, dark spots. Realistic, evenly lit albedo with no baked shadows or highlights; the back, flanks, belly, head and tail in their true colours, the stripes or blotches along the body as they run, eyes in their true colours.",
+     "gate": [
+      {
+       "preview": "library/animals/jobs/thamnophis_elegans/01a1b12f-ab22-723d-9bb2-0b2b1e654052",
+       "ok": false,
+       "log": [
+        "INFO islands 1 dropped faces 0 kept 31261",
+        "thamnophis_elegans: the mesh is 45% as tall as it is long: not a snake lying on the ground"
+       ]
+      },
+      {
+       "preview": "library/animals/jobs/thamnophis_elegans/01a1b130-c61a-758a-ad12-16a8090511ff",
+       "ok": true,
+       "log": [
+        "INFO tier lod1 from 113092 to 604",
+        "INFO tier lod2 from 113092 to 168",
+        "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/gate_thamnophis_elegans_2u15j7_r/thamnophis_elegans.glb 73912 bytes; lod0 1680 tris, lod1 604 tris, lod2 168 tris"
+       ]
+      }
+     ],
+     "build_log": "INFO colour from texture source faces 31192\nINFO voxel 0.0084 remeshed 56546 faces 56548 vertices\nINFO ends [-0.874, -0.344, 0.261] [-0.359, 0.197, 0.004] edge distance 4.560\nINFO length 5.082 units (edge distance 4.560), radius head 0.1060 tail 0.0432 (taper 0.41), max 0.1214, head at the first end\nINFO straightened: tear 0.1945%, height range -0.0020-0.2092\nINFO head widest at 6.5%, neck at 10.5% of the length (a dip)\nLANDMARKS length 0.783 m (centreline 0.782), scale 0.1539, volume 0.10971 units, mass 0.4 kg; radius max 0.0185 m, neck 0.082 m behind the snout ; trait card length (an allometric guess) 0.424 (ratio 1.85)\nINFO palette shares [0.103, 0.086, 0.089, 0.089, 0.185, 0.07, 0.084, 0.146, 0.142, 0.006] pattern 0.0195 -> tiers [('lod0', 1681), ('lod1', 605), ('lod2', 168)]\nINFO tier lod0 from 113092 to 1680\nINFO tier lod1 from 113092 to 604\nINFO tier lod2 from 113092 to 168\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/thamnophis_elegans.glb 148368 bytes; lod0 1680 tris, lod1 604 tris, lod2 168 tris",
+     "colour_check": {
+      "ok": false,
+      "score": 0.997,
+      "fails": [
+       "upperparts: no red/black spots (0.0%)",
+       "upperparts: no dark spots (0.0%)"
+      ]
+     },
+     "recolour": {
+      "at": "2026-11-06T14:10:32+00:00",
+      "before": {
+       "ok": false,
+       "score": 0.997,
+       "fails": [
+        "upperparts: no red/black spots (0.0%)",
+        "upperparts: no dark spots (0.0%)"
+       ]
+      },
+      "texture_prompt": "Natural scale colours and markings of a wild adult Terrestrial garter snake (Thamnophis elegans) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body yellow with yellow stripes; back light orange, white, grayish-green, yellow with red, black, dark spots. Realistic, evenly lit albedo with no baked shadows or highlights; the back, flanks, belly, head and tail in their true colours, the stripes or blotches along the body as they run, eyes in their true colours.",
+      "credits": 10,
+      "job": "library/animals/jobs/thamnophis_elegans/01a1b132-697b-71ec-83ce-4ad8d50c8a00",
+      "after": {
+       "ok": false,
+       "score": 0.988,
+       "fails": [
+        "upperparts: no red/black spots (0.0%)",
+        "upperparts: no dark spots (0.0%)"
+       ],
+       "off": {}
+      },
+      "kept": "old"
+     }
+    }
+   ],
+   "stand_ins": [
+    {
+     "code": "bison_bison",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "antilocapra_americana",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "ursus_arctos",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "ovis_canadensis",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "alces_alces",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "taxidea_taxus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "urocitellus_armatus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "vulpes_vulpes",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "oreamnos_americanus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "castor_canadensis",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "marmota_flaviventris",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "ondatra_zibethicus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "sylvilagus_nuttallii",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "microtus_montanus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "tamias_minimus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "zapus_princeps",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "microtus_pennsylvanicus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "myodes_gapperi",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "branta_canadensis",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "grus_canadensis",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "pica_hudsonia",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "aquila_chrysaetos",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "euphagus_cyanocephalus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "bucephala_islandica",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "petrochelidon_pyrrhonota",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "fulica_americana",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "cinclus_mexicanus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "actitis_macularius",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "falco_mexicanus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "sialia_currucoides",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "sturnella_neglecta",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "pelecanus_erythrorhynchos",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "pooecetes_gramineus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "falco_sparverius",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "nucifraga_columbiana",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "agelaius_phoeniceus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "circus_cyaneus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "colaptes_auratus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "molothrus_ater",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "buteo_swainsoni",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "rana_luteiventris",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "ambystoma_mavortium",
+     "why": "not in this run (--kind snakes)"
+    }
+   ],
+   "spent": 60,
+   "balance_after": 1237,
+   "modelled": 1
+  },
+  {
+   "tile": "utm12n_557_4964",
+   "started": "2026-11-06T13:54:03+00:00",
+   "budget": 250,
+   "reserve": 300,
+   "species": [
+    {
+     "code": "oreamnos_americanus",
+     "why": "biomass rank",
+     "attempts": 2,
+     "credits": 60,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/oreamnos_americanus/01a1b123-5108-76b3-8527-b7f74abcd82c"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/oreamnos_americanus/01a1b124-e090-77a7-b727-eb7d9e64cdeb"
+      },
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/oreamnos_americanus/01a1b125-c293-707a-98f3-eddc436f45f8"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/oreamnos_americanus/01a1b126-d360-73e5-98fa-ee8a093c18c9"
+      }
+     ],
+     "ok": true,
+     "prompt": "A wild Mountain goat (Oreamnos americanus) of Park County, Wyoming, United States, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+     "texture_prompt": "Natural coat colours and markings of a wild adult Mountain goat (Oreamnos americanus) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body white, brown. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+     "build_log": "INFO colour from texture source faces 31159\nINFO remeshed 77242 faces\nINFO tail cut y 0.900, 1952 vertices\nINFO feet y fore/hind -0.179 0.626, gap 0.539, leg cut z 0.600\nINFO size by mass mass 72.5003 volume 0.4571 units -> withers 0.764 m; card shoulder 0.931\nLANDMARKS withers 0.764 scale 0.5413 head-body 1.031 tail 0.204 nose [-0.057, -0.662, 0.631] neck base [0.0, -0.202, 0.546] pivots {'HR': [-0.081, 0.208, 0.325], 'FR': [-0.086, -0.2, 0.325], 'HL': [0.079, 0.258, 0.325], 'FL': [0.082, -0.199, 0.325]}\nINFO palette 10 colours, shares [0.112, 0.031, 0.136, 0.154, 0.09, 0.138, 0.052, 0.075, 0.044, 0.168]\nINFO pattern (mean neighbour lightness step) 0.0351 -> tiers [('lod0', 4000), ('lod1', 1500), ('lod2', 400)]\nINFO tier lod0 from 154484 to 4000\nINFO tier lod1 from 154484 to 1500\nINFO tier lod2 from 154484 to 400\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/oreamnos_americanus.glb 342068 bytes; lod0 4000 tris, lod1 1500 tris, lod2 400 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/oreamnos_americanus.glb: species oreamnos_americanus, posture digitigrade, withers 0.764 m, wrist 0.42 hock 0.5\nTIER lod0: 4520 -> 4685 vertices, 4246 triangles\nTIER lod1: 1791 -> 1879 vertices, 1644 triangles\nTIER lod2: 546 -> 586 vertices, 468 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/oreamnos_americanus.glb 502036 bytes\nINFO oreamnos_americanus.glb: oreamnos_americanus, no row: the body alone; walk 1.94 trot 4.33 m/s, stride 1.80 m at 2.41 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 23 frames, 0.751 s, stride 0.872 m at 1.16 m/s, duty 0.62, touchdown 0.2609\nCLIP Trot: 14 frames, 0.473 s, stride 1.534 m at 3.25 m/s, duty 0.50, touchdown 0.5\nCLIP Gallop: 12 frames, 0.387 s, stride 2.683 m at 6.93 m/s, duty 0.38, touchdown 0.5\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/oreamnos_americanus_clips.bin (24960 bytes, 60x52 rgba16f, values to 1.00) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/oreamnos_americanus_clips.json (6 clips)",
+     "colour_check": {
+      "ok": true,
+      "score": 1.0,
+      "fails": []
+     }
+    },
+    {
+     "code": "bison_bison",
+     "why": "biomass rank",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/bison_bison/01a1b128-0f95-75cc-80f8-b33a517a8376"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/bison_bison/01a1b129-2b00-77da-9e38-d608103504d8"
+      }
+     ],
+     "ok": true,
+     "prompt": "A wild American bison (Bison bison) of Park County, Wyoming, United States, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+     "texture_prompt": "Natural coat colours and markings of a wild adult American bison (Bison bison) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body dark-brown, brown; legs black. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+     "build_log": "INFO colour from texture source faces 31178\nINFO remeshed 84062 faces\nINFO tail cut y 0.870, 1452 vertices\nINFO feet y fore/hind -0.359 0.582, gap 0.508, leg cut z 0.421\nINFO size by mass mass 579.2553 volume 0.5691 units -> withers 1.353 m; card shoulder 1.861\nLANDMARKS withers 1.353 scale 1.0059 head-body 1.896 tail 0.611 nose [0.146, -1.117, 0.84] neck base [0.0, -0.443, 0.89] pivots {'FL': [0.174, -0.251, 0.423], 'FR': [-0.284, -0.346, 0.423], 'HR': [-0.174, 0.529, 0.423], 'HL': [0.103, 0.658, 0.423]}\nINFO palette 10 colours, shares [0.066, 0.051, 0.16, 0.142, 0.098, 0.2, 0.057, 0.12, 0.02, 0.085]\nINFO pattern (mean neighbour lightness step) 0.0222 -> tiers [('lod0', 4000), ('lod1', 1500), ('lod2', 400)]\nINFO tier lod0 from 168124 to 4000\nINFO tier lod1 from 168124 to 1500\nINFO tier lod2 from 168124 to 400\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/bison_bison.glb 305108 bytes; lod0 4000 tris, lod1 1500 tris, lod2 400 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/bison_bison.glb: species bison_bison, posture digitigrade, withers 1.353 m, wrist 0.42 hock 0.5\nTIER lod0: 3840 -> 4027 vertices, 4290 triangles\nTIER lod1: 1647 -> 1760 vertices, 1672 triangles\nTIER lod2: 530 -> 582 vertices, 478 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/bison_bison.glb 452528 bytes\nINFO bison_bison.glb: bison_bison, no row: the body alone; walk 2.58 trot 5.76 m/s, stride 3.09 m at 1.86 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 29 frames, 0.971 s, stride 1.500 m at 1.55 m/s, duty 0.62, touchdown 0.2414\nCLIP Trot: 18 frames, 0.611 s, stride 2.641 m at 4.32 m/s, duty 0.50, touchdown 0.5\nCLIP Gallop: 15 frames, 0.501 s, stride 4.617 m at 9.22 m/s, duty 0.38, touchdown 0.5333\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/bison_bison_clips.bin (31200 bytes, 60x65 rgba16f, values to 1.66) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/bison_bison_clips.json (6 clips)",
+     "colour_check": {
+      "ok": true,
+      "score": 0.879,
+      "fails": []
+     }
+    },
+    {
+     "code": "alces_alces",
+     "why": "biomass rank",
+     "attempts": 2,
+     "credits": 60,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/alces_alces/01a1b12a-08a4-7592-9784-89d0171a28af"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/alces_alces/01a1b12a-be84-7371-9376-f515c6ccb3fa"
+      },
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/alces_alces/01a1b12b-843e-70f2-890f-9a15c22393ed"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/alces_alces/01a1b12c-3122-71ab-bae6-1e6250ba60f5"
+      }
+     ],
+     "ok": false,
+     "prompt": "A wild Moose (Alces alces) of Park County, Wyoming, United States, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+     "texture_prompt": "Natural coat colours and markings of a wild adult Moose (Alces alces) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body black, brown, grayish brown. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+     "build_log": "INFO islands 1 dropped faces 0 kept 31245\nINFO colour from texture source faces 31245\nINFO remeshed 68832 faces\nINFO tail cut y 0.810, 5654 vertices\nINFO feet y fore/hind -0.305 0.484, gap 0.567, leg cut z 0.545\nalces_alces: found 3 leg columns below z 0.545, not 4 (not standing on four feet?)"
+    },
+    {
+     "code": "ovis_canadensis",
+     "why": "biomass rank",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/ovis_canadensis/01a1b12c-f22f-71d4-be7e-0446a517b879"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/ovis_canadensis/01a1b12d-a43d-766f-ac66-c53a2dd60e55"
+      }
+     ],
+     "ok": true,
+     "prompt": "A wild Bighorn sheep (Ovis canadensis) of Park County, Wyoming, United States, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+     "texture_prompt": "Natural coat colours and markings of a wild adult Bighorn sheep (Ovis canadensis) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body light brown, grayish, chocolate brown, grey; back white. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+     "build_log": "INFO colour from texture source faces 31090\nINFO remeshed 80890 faces\nINFO tail cut y 0.850, 3182 vertices\nINFO feet y fore/hind -0.317 0.649, gap 0.607, leg cut z 0.622\nINFO size by mass mass 74.6449 volume 0.4151 units -> withers 0.762 m; card shoulder 0.94\nLANDMARKS withers 0.762 scale 0.5644 head-body 1.048 tail 0.183 nose [0.065, -0.658, 0.731] neck base [0.0, -0.255, 0.575] pivots {'FR': [-0.126, -0.178, 0.351], 'HR': [-0.144, 0.28, 0.351], 'HL': [0.098, 0.307, 0.351], 'FL': [0.072, -0.216, 0.351]}\nINFO palette 10 colours, shares [0.112, 0.065, 0.059, 0.109, 0.133, 0.102, 0.14, 0.126, 0.067, 0.087]\nINFO pattern (mean neighbour lightness step) 0.0384 -> tiers [('lod0', 4000), ('lod1', 1500), ('lod2', 400)]\nINFO tier lod0 from 161780 to 3998\nINFO tier lod1 from 161780 to 1500\nINFO tier lod2 from 161780 to 400\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/ovis_canadensis.glb 336596 bytes; lod0 3998 tris, lod1 1500 tris, lod2 400 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/ovis_canadensis.glb: species ovis_canadensis, posture digitigrade, withers 0.762 m, wrist 0.42 hock 0.5\nTIER lod0: 4398 -> 4569 vertices, 4248 triangles\nTIER lod1: 1782 -> 1880 vertices, 1630 triangles\nTIER lod2: 553 -> 600 vertices, 458 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/ovis_canadensis.glb 495424 bytes\nINFO ovis_canadensis.glb: ovis_canadensis, no row: the body alone; walk 1.93 trot 4.32 m/s, stride 1.79 m at 2.41 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 22 frames, 0.750 s, stride 0.870 m at 1.16 m/s, duty 0.62, touchdown 0.2727\nCLIP Trot: 14 frames, 0.472 s, stride 1.531 m at 3.24 m/s, duty 0.50, touchdown 0.5\nCLIP Gallop: 12 frames, 0.387 s, stride 2.676 m at 6.92 m/s, duty 0.38, touchdown 0.5\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/ovis_canadensis_clips.bin (24480 bytes, 60x51 rgba16f, values to 1.00) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/ovis_canadensis_clips.json (6 clips)",
+     "colour_check": {
+      "ok": true,
+      "score": 1.0,
+      "fails": []
+     }
+    },
+    {
+     "code": "antilocapra_americana",
+     "why": "biomass rank",
+     "attempts": 1,
+     "credits": 40,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/antilocapra_americana/01a1b12e-82e1-7640-b34e-0e910f3fdef0"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/antilocapra_americana/01a1b12f-3ae5-736d-a0e4-f7e579f1dc67"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/antilocapra_americana/01a1b130-1b14-7175-aa07-5c55662144e4"
+      }
+     ],
+     "ok": true,
+     "prompt": "A wild Pronghorn (Antilocapra americana) of Park County, Wyoming, United States, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+     "texture_prompt": "Natural coat colours and markings of a wild adult Pronghorn (Antilocapra americana) as seen in Park County, Wyoming, United States. Coloured as the adult male is described: body white with white patches; back rufous brown; neck creamy. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+     "build_log": "INFO colour from texture source faces 31095\nINFO remeshed 76388 faces\nINFO tail none found\nINFO feet y fore/hind -0.274 0.672, gap 0.537, leg cut z 0.946\nINFO size by mass mass 46.0829 volume 0.3901 units -> withers 0.499 m; card shoulder 0.8\nLANDMARKS withers 0.499 scale 0.4907 head-body 0.981 tail 0.0 nose [0.125, -0.588, 0.895] neck base [0.0, -0.217, 0.643] pivots {'FR': [-0.092, -0.186, 0.464], 'HR': [-0.098, 0.219, 0.464], 'FL': [0.057, -0.191, 0.464], 'HL': [0.065, 0.187, 0.464]}\nINFO palette 10 colours, shares [0.164, 0.061, 0.083, 0.074, 0.059, 0.18, 0.121, 0.102, 0.08, 0.076]\nINFO pattern (mean neighbour lightness step) 0.0470 -> tiers [('lod0', 4000), ('lod1', 1500), ('lod2', 400)]\nINFO tier lod0 from 152776 to 4000\nINFO tier lod1 from 152776 to 1500\nINFO tier lod2 from 152776 to 400\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/antilocapra_americana.glb 319304 bytes; lod0 4000 tris, lod1 1500 tris, lod2 400 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/antilocapra_americana.glb: species antilocapra_americana, posture digitigrade, withers 0.499 m, wrist 0.42 hock 0.5\nTIER lod0: 4137 -> 4288 vertices, 4238 triangles\nTIER lod1: 1699 -> 1777 vertices, 1628 triangles\nTIER lod2: 505 -> 544 vertices, 474 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/antilocapra_americana.glb 467216 bytes\nINFO antilocapra_americana.glb: antilocapra_americana, no row: the body alone; walk 1.56 trot 3.50 m/s, stride 1.20 m at 2.92 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 19 frames, 0.620 s, stride 0.582 m at 0.94 m/s, duty 0.62, touchdown 0.2632\nCLIP Trot: 12 frames, 0.390 s, stride 1.024 m at 2.62 m/s, duty 0.50, touchdown 0.5\nCLIP Gallop: 10 frames, 0.320 s, stride 1.790 m at 5.60 m/s, duty 0.38, touchdown 0.5\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/antilocapra_americana_clips.bin (21120 bytes, 60x44 rgba16f, values to 1.00) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/antilocapra_americana_clips.json (6 clips)",
+     "colour_check": {
+      "ok": true,
+      "score": 0.61,
+      "fails": [],
+      "off": {
+       "head": "cinnamon",
+       "legs": "fawn"
+      }
+     },
+     "recolour": {
+      "at": "2026-11-06T14:08:01+00:00",
+      "before": {
+       "ok": false,
+       "score": 0.476,
+       "fails": [
+        "only 48% of the model in described colours"
+       ]
+      },
+      "texture_prompt": "Natural coat colours and markings of a wild adult Pronghorn (Antilocapra americana) as seen in Park County, Wyoming, United States. Coloured as the adult male is described: body white with white patches; back rufous brown; neck creamy. Correct this: head white, not chestnut; legs white, not cinnamon. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+      "credits": 10,
+      "job": "library/animals/jobs/antilocapra_americana/01a1b130-1b14-7175-aa07-5c55662144e4",
+      "after": {
+       "ok": true,
+       "score": 0.61,
+       "fails": [],
+       "off": {
+        "head": "cinnamon",
+        "legs": "fawn"
+       }
+      },
+      "kept": "new"
+     }
+    },
+    {
+     "code": "taxidea_taxus",
+     "why": "biomass rank",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/taxidea_taxus/01a1b130-f8b7-75c4-87d5-a5a80d06a89b"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/taxidea_taxus/01a1b132-88e7-7492-a87d-4d50af4d94a5"
+      }
+     ],
+     "ok": true,
+     "prompt": "A wild American badger (Taxidea taxus) of Park County, Wyoming, United States, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+     "texture_prompt": "Natural coat colours and markings of a wild adult American badger (Taxidea taxus) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body brown, black, white, brown-tan; back grayish, reddish, white; flanks grayish, reddish; head black, white, brown, blackish with white stripes with black patches; neck whitish. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+     "build_log": "INFO colour from texture source faces 31292\nINFO remeshed 57968 faces\nINFO tail cut y 0.750, 4897 vertices\nINFO feet y fore/hind -0.317 0.491, gap 0.454, leg cut z 0.301\nINFO size by mass mass 7.1075 volume 0.3622 units -> withers 0.248 m; card shoulder 0.429\nLANDMARKS withers 0.248 scale 0.2697 head-body 0.475 tail 0.149 nose [-0.001, -0.293, 0.212] neck base [0.0, -0.101, 0.167] pivots {'FR': [-0.03, -0.096, 0.081], 'HR': [-0.039, 0.128, 0.081], 'HL': [0.042, 0.112, 0.081], 'FL': [0.032, -0.059, 0.081]}\nINFO palette 10 colours, shares [0.104, 0.091, 0.05, 0.013, 0.15, 0.146, 0.05, 0.164, 0.068, 0.165]\nINFO pattern (mean neighbour lightness step) 0.0406 -> tiers [('lod0', 4000), ('lod1', 1500), ('lod2', 400)]\nINFO tier lod0 from 115936 to 4000\nINFO tier lod1 from 115936 to 1500\nINFO tier lod2 from 115936 to 400\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/taxidea_taxus.glb 339880 bytes; lod0 4000 tris, lod1 1500 tris, lod2 400 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/taxidea_taxus.glb: species taxidea_taxus, posture digitigrade, withers 0.248 m, wrist 0.42 hock 0.5\nTIER lod0: 4471 -> 4645 vertices, 4312 triangles\nTIER lod1: 1822 -> 1923 vertices, 1666 triangles\nTIER lod2: 514 -> 551 vertices, 454 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/taxidea_taxus.glb 500480 bytes\nINFO taxidea_taxus.glb: taxidea_taxus, no row: the body alone; walk 1.10 trot 2.47 m/s, stride 0.62 m at 4.00 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 14 frames, 0.452 s, stride 0.299 m at 0.66 m/s, duty 0.62, touchdown 0.2857\nCLIP Trot: 9 frames, 0.285 s, stride 0.527 m at 1.85 m/s, duty 0.50, touchdown 0.5556\nCLIP Gallop: 8 frames, 0.233 s, stride 0.921 m at 3.95 m/s, duty 0.38, touchdown 0.5\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/taxidea_taxus_clips.bin (16320 bytes, 60x34 rgba16f, values to 1.00) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/taxidea_taxus_clips.json (6 clips)",
+     "colour_check": {
+      "ok": true,
+      "score": 1.0,
+      "fails": []
+     }
+    },
+    {
+     "code": "vulpes_vulpes",
+     "why": "biomass rank",
+     "attempts": 0,
+     "credits": 0,
+     "jobs": [],
+     "ok": false,
+     "prompt": "A wild Red fox (Vulpes vulpes) of Park County, Wyoming, United States, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+     "texture_prompt": "Natural coat colours and markings of a wild adult Red fox (Vulpes vulpes) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body brown, reddish, straw, pale yellowish red with brown, reddish, chestnut stripes; back silvery with black stripes; belly and underparts white, ashy; head white, bright brownish-red, black, brownish-reddish; neck white, bright brownish-red; legs rusty red, black; tail brownish-reddish, pale grey, white, white tip. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+     "stopped": "balance 1237, spent 250: the next job would cross the reserve or the budget"
+    },
+    {
+     "code": "ursus_arctos",
+     "why": "biomass rank",
+     "attempts": 0,
+     "credits": 0,
+     "jobs": [],
+     "ok": false,
+     "prompt": "A wild Brown bear (Ursus arctos) of Park County, Wyoming, United States, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+     "texture_prompt": "Natural coat colours and markings of a wild adult Brown bear (Ursus arctos) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body cream, reddish, dark brown, brown; back brownish-black, whitish-cream, white; neck white; legs yellowish-brown. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+     "stopped": "balance 1237, spent 250: the next job would cross the reserve or the budget"
+    }
+   ],
+   "stand_ins": [
+    {
+     "code": "urocitellus_armatus",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "castor_canadensis",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "marmota_flaviventris",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "ondatra_zibethicus",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "sylvilagus_nuttallii",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "microtus_montanus",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "tamias_minimus",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "zapus_princeps",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "microtus_pennsylvanicus",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "myodes_gapperi",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "branta_canadensis",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "grus_canadensis",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "pica_hudsonia",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "aquila_chrysaetos",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "euphagus_cyanocephalus",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "bucephala_islandica",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "petrochelidon_pyrrhonota",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "fulica_americana",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "cinclus_mexicanus",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "actitis_macularius",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "falco_mexicanus",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "sialia_currucoides",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "sturnella_neglecta",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "pelecanus_erythrorhynchos",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "pooecetes_gramineus",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "falco_sparverius",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "nucifraga_columbiana",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "agelaius_phoeniceus",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "circus_cyaneus",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "colaptes_auratus",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "molothrus_ater",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "buteo_swainsoni",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "rana_luteiventris",
+     "why": "not in this run (--kind mammals)"
+    },
+    {
+     "code": "ambystoma_mavortium",
+     "why": "not in this run (--kind mammals)"
+    }
+   ],
+   "spent": 250,
+   "balance_after": 1237,
+   "modelled": 5
+  },
+  {
+   "tile": "utm12n_557_4964",
+   "started": "2026-11-06T14:12:04+00:00",
+   "budget": 60,
+   "reserve": 300,
+   "species": [
+    {
+     "code": "canis_lupus",
+     "why": "large predator",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/canis_lupus/01a1b133-db03-743b-912d-25420db9cc1a"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/canis_lupus/01a1b134-f172-71eb-8725-1ef02db4b9f9"
+      }
+     ],
+     "ok": true,
+     "prompt": "A wild Gray wolf (Canis lupus) of Park County, Wyoming, United States, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+     "texture_prompt": "Natural coat colours and markings of a wild adult Gray wolf (Canis lupus) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body white, black, gray, cinnamon; back black. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+     "build_log": "INFO colour from texture source faces 31225\nINFO remeshed 75856 faces\nINFO tail none found\nINFO feet y fore/hind -0.416 0.504, gap 0.629, leg cut z 0.633\nINFO size by mass mass 32.1833 volume 0.4078 units -> withers 0.574 m; card shoulder 0.71\nLANDMARKS withers 0.574 scale 0.4289 head-body 0.857 tail 0.0 nose [0.032, -0.447, 0.427] neck base [0.0, -0.184, 0.423] pivots {'HL': [0.119, 0.223, 0.271], 'FR': [-0.092, -0.126, 0.271], 'HR': [-0.036, 0.226, 0.271], 'FL': [0.023, -0.127, 0.271]}\nINFO palette 10 colours, shares [0.115, 0.079, 0.135, 0.055, 0.119, 0.14, 0.066, 0.11, 0.083, 0.096]\nINFO pattern (mean neighbour lightness step) 0.0542 -> tiers [('lod0', 4831), ('lod1', 1759), ('lod2', 400)]\nINFO tier lod0 from 151712 to 4830\nINFO tier lod1 from 151712 to 1758\nINFO tier lod2 from 151712 to 400\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/canis_lupus.glb 460684 bytes; lod0 4830 tris, lod1 1758 tris, lod2 400 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/canis_lupus.glb: species canis_lupus, posture digitigrade, withers 0.574 m, wrist 0.42 hock 0.5\nTIER lod0: 6303 -> 6508 vertices, 5092 triangles\nTIER lod1: 2503 -> 2621 vertices, 1912 triangles\nTIER lod2: 600 -> 641 vertices, 448 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/canis_lupus.glb 676184 bytes\nINFO canis_lupus.glb: canis_lupus, no row: the body alone; walk 1.68 trot 3.75 m/s, stride 1.37 m at 2.74 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 20 frames, 0.660 s, stride 0.664 m at 1.01 m/s, duty 0.62, touchdown 0.25\nCLIP Trot: 12 frames, 0.416 s, stride 1.169 m at 2.81 m/s, duty 0.50, touchdown 0.5\nCLIP Gallop: 10 frames, 0.341 s, stride 2.045 m at 6.00 m/s, duty 0.38, touchdown 0.5\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/canis_lupus_clips.bin (21600 bytes, 60x45 rgba16f, values to 1.00) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/canis_lupus_clips.json (6 clips)",
+     "colour_check": {
+      "ok": true,
+      "score": 1.0,
+      "fails": []
+     }
+    },
+    {
+     "code": "ursus_arctos",
+     "why": "biomass rank",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/ursus_arctos/01a1b135-d41a-703c-8c4b-9dd18014a9e9"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/ursus_arctos/01a1b137-d7b9-7439-8960-c72ea3293daa"
+      }
+     ],
+     "ok": true,
+     "prompt": "A wild Brown bear (Ursus arctos) of Park County, Wyoming, United States, one adult, realistic anatomy and proportions. Standing still in a side-on neutral pose, all four legs straight with clear gaps between them, all four feet flat on the ground, head level looking forward, mouth closed, tail hanging free clear of the legs; nothing but the four feet touches the ground. No base, no ground plane, no props, no rider. Game-ready.",
+     "texture_prompt": "Natural coat colours and markings of a wild adult Brown bear (Ursus arctos) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body cream, reddish, dark brown, brown; back brownish-black, whitish-cream, white; neck white; legs yellowish-brown. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+     "build_log": "INFO colour from texture source faces 30962\nINFO remeshed 99886 faces\nINFO tail none found\nINFO feet y fore/hind -0.346 0.556, gap 0.345, leg cut z 0.432\nINFO size by mass mass 180.5204 volume 0.7487 units -> withers 0.87 m; card shoulder 1.262\nLANDMARKS withers 0.87 scale 0.6224 head-body 1.244 tail 0.0 nose [0.034, -0.687, 0.483] neck base [0.0, -0.262, 0.656] pivots {'FR': [-0.15, -0.209, 0.269], 'HR': [-0.132, 0.314, 0.269], 'FL': [0.136, -0.114, 0.269], 'HL': [0.131, 0.366, 0.269]}\nINFO palette 10 colours, shares [0.105, 0.155, 0.055, 0.105, 0.101, 0.034, 0.131, 0.172, 0.051, 0.092]\nINFO pattern (mean neighbour lightness step) 0.0381 -> tiers [('lod0', 4000), ('lod1', 1500), ('lod2', 400)]\nINFO tier lod0 from 199772 to 4000\nINFO tier lod1 from 199772 to 1500\nINFO tier lod2 from 199772 to 400\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/ursus_arctos.glb 335708 bytes; lod0 4000 tris, lod1 1500 tris, lod2 400 tris\nINFO /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/ursus_arctos.glb: species ursus_arctos, posture digitigrade, withers 0.87 m, wrist 0.42 hock 0.5\nTIER lod0: 4400 -> 4643 vertices, 4352 triangles\nTIER lod1: 1772 -> 1917 vertices, 1694 triangles\nTIER lod2: 542 -> 599 vertices, 468 triangles\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/ursus_arctos.glb 503440 bytes\nINFO ursus_arctos.glb: ursus_arctos, no row: the body alone; walk 2.07 trot 4.62 m/s, stride 2.03 m at 2.27 Hz, digitigrade, trot, transverse gallop\nCLIP Walk: 24 frames, 0.796 s, stride 0.986 m at 1.24 m/s, duty 0.62, touchdown 0.25\nCLIP Trot: 15 frames, 0.501 s, stride 1.736 m at 3.46 m/s, duty 0.50, touchdown 0.5333\nCLIP Gallop: 12 frames, 0.411 s, stride 3.035 m at 7.39 m/s, duty 0.38, touchdown 0.5\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/ursus_arctos_clips.bin (25920 bytes, 60x54 rgba16f, values to 1.00) and /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/ursus_arctos_clips.json (6 clips)",
+     "colour_check": {
+      "ok": true,
+      "score": 1.0,
+      "fails": []
+     }
+    }
+   ],
+   "stand_ins": [],
+   "spent": 60,
+   "balance_after": 1177,
+   "modelled": 2
+  }
+ ]
+}

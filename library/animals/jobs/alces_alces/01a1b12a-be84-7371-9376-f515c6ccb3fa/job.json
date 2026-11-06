@@ -1,0 +1,71 @@
+{
+  "species": "alces_alces",
+  "mode": "refine",
+  "kind": "text-to-3d",
+  "task_id": "01a1b12a-be84-7371-9376-f515c6ccb3fa",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "refine",
+    "preview_task_id": "01a1b12a-08a4-7592-9784-89d0171a28af",
+    "texture_resolution": "2k",
+    "enable_pbr": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Natural coat colours and markings of a wild adult Moose (Alces alces) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body black, brown, grayish brown. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+    "moderation": false
+  },
+  "prompt": "Natural coat colours and markings of a wild adult Moose (Alces alces) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body black, brown, grayish brown. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+  "image": null,
+  "preview_job": "library/animals/jobs/alces_alces/01a1b12a-08a4-7592-9784-89d0171a28af",
+  "estimated_credits": 10,
+  "balance_before": 1437,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-06T14:02:10+00:00",
+    "created_at": "2026-11-06T14:02:13+00:00",
+    "started_at": "2026-11-06T14:02:13+00:00",
+    "finished_at": "2026-11-06T14:02:54+00:00",
+    "downloaded": "2026-11-06T14:02:57+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur, world pipeline",
+  "progress": 100,
+  "task": {
+    "id": "01a1b12a-be84-7371-9376-f515c6ccb3fa",
+    "type": "text-to-3d-refine",
+    "status": "SUCCEEDED",
+    "created_at": 1793973733151,
+    "started_at": 1793973733158,
+    "finished_at": 1793973774810,
+    "consumed_credits": 10,
+    "task_error": null
+  },
+  "credits_charged": 10,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 5134084,
+      "sha256": "d5f13a61cb5885f5ab90bbaf98cf73be9fbd8533ea4d55c112e2222f22b30607",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b12a-be84-7371-9376-f515c6ccb3fa/output/model.glb"
+    },
+    {
+      "file": "texture_base_color.png",
+      "bytes": 6435358,
+      "sha256": "08de7c04ff7e9242e9d76edbb0d5f83394a284bfc503382259c4f995b5484d2c",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b12a-be84-7371-9376-f515c6ccb3fa/output/texture_0.png"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 93224,
+      "sha256": "19f0d763c6b03da326f5ffd47445ed3112fad23b46302fb94a2d6bacfc3b7ca4",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b12a-be84-7371-9376-f515c6ccb3fa/output/preview.png"
+    }
+  ],
+  "balance_after": 1427
+}

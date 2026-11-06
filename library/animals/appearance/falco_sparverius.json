@@ -1,0 +1,113 @@
+{
+ "format": 1,
+ "code": "falco_sparverius",
+ "scientific": "Falco sparverius",
+ "common": "american kestrel",
+ "sex": "male",
+ "regions": {
+  "upperparts": {
+   "colours": [
+    "rufous"
+   ],
+   "markings": []
+  },
+  "flanks": {
+   "colours": [
+    "white"
+   ],
+   "markings": [
+    {
+     "pattern": "spots",
+     "colours": [
+      "black"
+     ]
+    }
+   ]
+  },
+  "underparts": {
+   "colours": [
+    "white"
+   ],
+   "markings": [
+    {
+     "pattern": "spots",
+     "colours": [
+      "black"
+     ]
+    },
+    {
+     "pattern": "bars",
+     "colours": [
+      "black"
+     ]
+    }
+   ]
+  },
+  "head": {
+   "colours": [
+    "white",
+    "bluish-gray",
+    "black"
+   ],
+   "markings": []
+  },
+  "neck": {
+   "colours": [
+    "white",
+    "orangish"
+   ],
+   "markings": [
+    {
+     "pattern": "spots",
+     "colours": [
+      "black"
+     ]
+    }
+   ]
+  },
+  "tail": {
+   "colours": [
+    "rufous",
+    "white tip",
+    "rufous tip",
+    "black"
+   ],
+   "markings": [
+    {
+     "pattern": "bars",
+     "colours": [
+      "dark black"
+     ]
+    }
+   ]
+  },
+  "wings": {
+   "colours": [
+    "blue-gray"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 25,
+ "dropped": {
+  "regional": 1,
+  "female": 3
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/American_kestrel",
+   "title": "American kestrel",
+   "revision": 1380713806,
+   "facts": 21
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Falco_sparverius/",
+   "title": "ADW: Falco sparverius",
+   "facts": 4
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "back rufous; flanks white with black spots; belly and underparts white with black spots with black bars; head white, bluish-gray, black; neck white, orangish with black spots; tail rufous, white tip, rufous tip, black with dark black bars; wings blue-gray"
+}

@@ -1,0 +1,115 @@
+{
+ "id": "bucephala_islandica",
+ "scientific": "Bucephala islandica",
+ "common": "barrow's goldeneye",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Anseriformes",
+  "family": "Anatidae",
+  "genus": "Bucephala"
+ },
+ "body_plan": "bird",
+ "mass_kg": 0.9212,
+ "size": {
+  "length_m": 0.35,
+  "shoulder_or_wingspan_m": 0.56
+ },
+ "diet": {
+  "role": [
+   "insectivore"
+  ],
+  "diet_tenths": {
+   "inv": 8.0,
+   "vend": 0.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 1.0,
+   "planto": 1.0
+  },
+  "vertebrate_share": 0.0,
+  "mass_kg": 0.9212,
+  "activity": [],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 491.9
+  },
+  "sound": {
+   "range_m": 245.9
+  },
+  "scent": {
+   "range_m": 19.7
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "bucephala_islandica",
+  "class": "Aves",
+  "order": "Anseriformes",
+  "family": "Anatidae",
+  "body_plan": "bird",
+  "mass_kg": 0.9212,
+  "length_m": 0.35,
+  "hip_m": 0.175,
+  "posture": "biped",
+  "gaits": {},
+  "walk_mps": 0.93,
+  "trot_mps": 2.07,
+  "cruise_mps": 3.14,
+  "top_mps": 5.24,
+  "stride_hz": 4.24,
+  "stride_m": 0.49,
+  "sprint_s": 3.7,
+  "recover_s": 12.9,
+  "turn_rad_s": 4.24,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.062,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T13:52:36Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

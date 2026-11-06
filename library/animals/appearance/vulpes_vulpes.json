@@ -1,0 +1,111 @@
+{
+ "format": 1,
+ "code": "vulpes_vulpes",
+ "scientific": "Vulpes vulpes",
+ "common": "red fox",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "brown",
+    "reddish",
+    "straw",
+    "pale yellowish red",
+    "deep reddish brown",
+    "white",
+    "reddish brown"
+   ],
+   "markings": [
+    {
+     "pattern": "stripes",
+     "colours": [
+      "brown",
+      "reddish",
+      "chestnut"
+     ]
+    }
+   ]
+  },
+  "upperparts": {
+   "colours": [
+    "silvery"
+   ],
+   "markings": [
+    {
+     "pattern": "stripes",
+     "colours": [
+      "black"
+     ]
+    }
+   ]
+  },
+  "underparts": {
+   "colours": [
+    "white",
+    "ashy"
+   ],
+   "markings": []
+  },
+  "head": {
+   "colours": [
+    "white",
+    "bright brownish-red",
+    "black",
+    "brownish-reddish",
+    "whitish"
+   ],
+   "markings": []
+  },
+  "neck": {
+   "colours": [
+    "white",
+    "bright brownish-red"
+   ],
+   "markings": []
+  },
+  "legs": {
+   "colours": [
+    "rusty red",
+    "black"
+   ],
+   "markings": []
+  },
+  "tail": {
+   "colours": [
+    "brownish-reddish",
+    "pale grey",
+    "white",
+    "white tip",
+    "black tip"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 30,
+ "dropped": {
+  "other taxa": 2,
+  "regional": 3,
+  "young": 2,
+  "morph": 6,
+  "age change": 1,
+  "not the body": 2,
+  "no body word": 4
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Red_fox",
+   "title": "Red fox",
+   "revision": 1383729922,
+   "facts": 21
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Vulpes_vulpes/",
+   "title": "ADW: Vulpes vulpes",
+   "facts": 9
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body brown, reddish, straw, pale yellowish red with brown, reddish, chestnut stripes; back silvery with black stripes; belly and underparts white, ashy; head white, bright brownish-red, black, brownish-reddish; neck white, bright brownish-red; legs rusty red, black; tail brownish-reddish, pale grey, white, white tip"
+}

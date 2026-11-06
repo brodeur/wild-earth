@@ -32,13 +32,40 @@
    "glb": "client/assets/fauna/panthera_pardus.glb",
    "jobs": [
     "library/animals/jobs/panthera_pardus/01a1afc2-f23a-7178-9340-a3a4958b5a67",
-    "library/animals/jobs/panthera_pardus/01a1afc3-a655-7458-a751-18ba3a79cc3a"
+    "library/animals/jobs/panthera_pardus/01a1afc3-a655-7458-a751-18ba3a79cc3a",
+    "library/animals/jobs/panthera_pardus/01a1b0e7-c3bb-77b1-b707-7ab10b2bc0e2"
    ],
-   "credits": 30,
+   "credits": 40,
    "attempts": 1,
-   "built": "2026-11-05",
+   "built": "2026-11-06",
    "build": "tools/build_quadruped.py",
-   "tile": "utm36s_698_9724"
+   "tile": "utm36s_698_9724",
+   "recolour": [
+    {
+     "at": "2026-11-06T12:49:00+00:00",
+     "job": "library/animals/jobs/panthera_pardus/01a1b0e7-c3bb-77b1-b707-7ab10b2bc0e2",
+     "credits": 10,
+     "before": {
+      "ok": false,
+      "score": 0.795,
+      "fails": [
+       "legs 47% matches"
+      ]
+     },
+     "after": {
+      "ok": true,
+      "score": 0.822,
+      "fails": []
+     },
+     "kept": "new",
+     "error": null
+    }
+   ],
+   "colour_check": {
+    "ok": true,
+    "score": 0.822,
+    "fails": []
+   }
   },
   "acinonyx_jubatus": {
    "kind": "quadruped",
@@ -211,14 +238,41 @@
    "glb": "client/assets/fauna/vanellus_armatus.glb",
    "jobs": [
     "library/animals/jobs/vanellus_armatus/01a1b050-207e-74af-9687-68e363ec0b9d",
-    "library/animals/jobs/vanellus_armatus/01a1b050-d4f9-761a-a518-57d0d141f289"
+    "library/animals/jobs/vanellus_armatus/01a1b050-d4f9-761a-a518-57d0d141f289",
+    "library/animals/jobs/vanellus_armatus/01a1b0e8-ab2f-76ec-ba8f-71ebde62b0ce"
    ],
-   "credits": 30,
+   "credits": 40,
    "attempts": 1,
    "built": "2026-11-06",
    "build": "tools/build_bird.py",
    "tile": "utm36s_698_9724",
-   "archetype": "perch"
+   "archetype": "perch",
+   "recolour": [
+    {
+     "at": "2026-11-06T12:49:59+00:00",
+     "job": "library/animals/jobs/vanellus_armatus/01a1b0e8-ab2f-76ec-ba8f-71ebde62b0ce",
+     "credits": 10,
+     "before": {
+      "ok": false,
+      "score": 0.925,
+      "fails": [
+       "legs 10% matches"
+      ]
+     },
+     "after": {
+      "ok": true,
+      "score": 1.0,
+      "fails": []
+     },
+     "kept": "new",
+     "error": null
+    }
+   ],
+   "colour_check": {
+    "ok": true,
+    "score": 1.0,
+    "fails": []
+   }
   },
   "crocodylus_niloticus": {
    "kind": "reptile",
@@ -240,30 +294,135 @@
    "glb": "client/assets/fauna/stigmochelys_pardalis.glb",
    "jobs": [
     "library/animals/jobs/stigmochelys_pardalis/01a1b0b6-e5a5-712f-a3c3-2359f238ae3e",
-    "library/animals/jobs/stigmochelys_pardalis/01a1b0c0-4888-7401-88fa-0e7be6ad0154"
+    "library/animals/jobs/stigmochelys_pardalis/01a1b0c0-4888-7401-88fa-0e7be6ad0154",
+    "library/animals/jobs/stigmochelys_pardalis/01a1b0ec-0d1f-718c-b98a-bbc2e6f285cf"
    ],
-   "credits": 30,
+   "credits": 50,
    "attempts": 1,
    "built": "2026-11-06",
    "build": "tools/build_reptile.py",
    "tile": "utm36s_698_9724",
    "archetype": "tortoise",
-   "note": "preview and refine run by hand (tools/meshy_generate.py, the prompts of pipeline/fauna_models.py), the build checked on the preview before the refine; then registered by fauna_models from the paid refine"
+   "note": "preview and refine run by hand (tools/meshy_generate.py, the prompts of pipeline/fauna_models.py), the build checked on the preview before the refine; then registered by fauna_models from the paid refine",
+   "recolour": [
+    {
+     "at": "2026-11-06T12:50:37+00:00",
+     "job": "library/animals/jobs/stigmochelys_pardalis/01a1b0e9-3ccf-7317-9a6b-7a3be969b6e4",
+     "credits": 10,
+     "before": {
+      "ok": false,
+      "score": 0.427,
+      "fails": [
+       "flanks 38% matches",
+       "upperparts 26% matches",
+       "only 43% of the model in described colours"
+      ]
+     },
+     "after": {
+      "ok": false,
+      "score": 0.263,
+      "fails": [
+       "flanks 9% matches",
+       "upperparts 10% matches",
+       "only 26% of the model in described colours"
+      ],
+      "off": {
+       "flanks": "orange",
+       "underparts": "orange",
+       "upperparts": "orange"
+      }
+     },
+     "kept": "old",
+     "error": null
+    },
+    {
+     "at": "2026-11-06T12:53:41+00:00",
+     "job": "library/animals/jobs/stigmochelys_pardalis/01a1b0ec-0d1f-718c-b98a-bbc2e6f285cf",
+     "credits": 10,
+     "before": {
+      "ok": false,
+      "score": 0.427,
+      "fails": [
+       "flanks 38% matches",
+       "upperparts 26% matches",
+       "only 43% of the model in described colours"
+      ]
+     },
+     "after": {
+      "ok": false,
+      "score": 0.43,
+      "fails": [
+       "flanks 35% matches",
+       "upperparts 34% matches",
+       "only 43% of the model in described colours"
+      ],
+      "off": {
+       "flanks": "cinnamon",
+       "underparts": "golden",
+       "upperparts": "ginger"
+      }
+     },
+     "kept": "new",
+     "error": null,
+     "texture_prompt": "Natural colours and markings of a wild adult Leopard tortoise (Stigmochelys pardalis) as seen in Serengeti, Mara Region, Tanzania: the shell's scutes, the skin of the head and legs, in their true colours. Coloured as the adult is described: shell and body yellow with black blotches; head yellow, tan, brown; legs yellow, tan, brown. Correct this: shell yellow, not cinnamon or orange; belly and underparts yellow, not cinnamon or orange. Realistic, evenly lit albedo with no baked shadows or highlights; eyes, beak and claws in their true colours."
+    }
+   ],
+   "colour_check": {
+    "ok": false,
+    "score": 0.43,
+    "fails": [
+     "flanks 35% matches",
+     "upperparts 34% matches",
+     "only 43% of the model in described colours"
+    ],
+    "off": {
+     "flanks": "cinnamon",
+     "underparts": "golden",
+     "upperparts": "ginger"
+    }
+   }
   },
   "agama_mwanzae": {
    "kind": "reptile",
    "glb": "client/assets/fauna/agama_mwanzae.glb",
    "jobs": [
     "library/animals/jobs/agama_mwanzae/01a1b0b7-fcb0-72d5-a12c-ff05fc4c1d55",
-    "library/animals/jobs/agama_mwanzae/01a1b0c1-02f3-7233-94b5-04e29fb1103a"
+    "library/animals/jobs/agama_mwanzae/01a1b0c1-02f3-7233-94b5-04e29fb1103a",
+    "library/animals/jobs/agama_mwanzae/01a1b0ea-0ec6-764d-94fb-19c11f1fab84"
    ],
-   "credits": 30,
+   "credits": 40,
    "attempts": 1,
    "built": "2026-11-06",
    "build": "tools/build_reptile.py",
    "tile": "utm36s_698_9724",
    "archetype": "sprawl",
-   "note": "preview and refine run by hand (tools/meshy_generate.py, the prompts of pipeline/fauna_models.py), the build checked on the preview before the refine; then registered by fauna_models from the paid refine"
+   "note": "preview and refine run by hand (tools/meshy_generate.py, the prompts of pipeline/fauna_models.py), the build checked on the preview before the refine; then registered by fauna_models from the paid refine",
+   "recolour": [
+    {
+     "at": "2026-11-06T12:51:30+00:00",
+     "job": "library/animals/jobs/agama_mwanzae/01a1b0ea-0ec6-764d-94fb-19c11f1fab84",
+     "credits": 10,
+     "before": {
+      "ok": false,
+      "score": 0.546,
+      "fails": [
+       "only 55% of the model in described colours"
+      ]
+     },
+     "after": {
+      "ok": true,
+      "score": 0.943,
+      "fails": []
+     },
+     "kept": "new",
+     "error": null
+    }
+   ],
+   "colour_check": {
+    "ok": true,
+    "score": 0.943,
+    "fails": []
+   }
   },
   "varanus_niloticus": {
    "kind": "reptile",
@@ -272,13 +431,313 @@
     "library/animals/jobs/varanus_niloticus/01a1b0b6-31a2-777c-82da-3ae68d038d1a",
     "library/animals/jobs/varanus_niloticus/01a1b0bf-2b22-7473-8384-e7813b1d714e"
    ],
-   "credits": 30,
+   "credits": 40,
    "attempts": 1,
    "built": "2026-11-06",
    "build": "tools/build_reptile.py",
    "tile": "utm36s_698_9724",
    "archetype": "sprawl",
-   "note": "preview and refine run by hand (tools/meshy_generate.py, the prompts of pipeline/fauna_models.py), the build checked on the preview before the refine; then registered by fauna_models from the paid refine"
+   "note": "preview and refine run by hand (tools/meshy_generate.py, the prompts of pipeline/fauna_models.py), the build checked on the preview before the refine; then registered by fauna_models from the paid refine",
+   "recolour": [
+    {
+     "at": "2026-11-06T12:52:23+00:00",
+     "job": "library/animals/jobs/varanus_niloticus/01a1b0ea-dce8-726d-ac35-7b13d61abc7b",
+     "credits": 10,
+     "before": {
+      "ok": false,
+      "score": 1.0,
+      "fails": [
+       "head: no yellowish-green spots (0.0%)",
+       "underparts: no blackish bands (0.2%)",
+       "upperparts: no greenish-yellow spots (0.7%)",
+       "upperparts: no yellowish spots (0.7%)",
+       "upperparts: no yellow spots (0.1%)"
+      ]
+     },
+     "after": {
+      "ok": false,
+      "score": 1.0,
+      "fails": [
+       "head: no yellowish-green spots (0.0%)",
+       "legs: no yellowish spots (0.0%)",
+       "upperparts: no greenish-yellow spots (0.0%)",
+       "upperparts: no yellowish spots (0.0%)",
+       "upperparts: no yellow spots (0.0%)"
+      ]
+     },
+     "kept": "old",
+     "error": null
+    }
+   ],
+   "colour_check": {
+    "ok": false,
+    "score": 1.0,
+    "fails": [
+     "head: no yellowish-green spots (0.0%)",
+     "underparts: no blackish bands (0.2%)",
+     "upperparts: no greenish-yellow spots (0.7%)",
+     "upperparts: no yellowish spots (0.7%)",
+     "upperparts: no yellow spots (0.1%)"
+    ]
+   }
+  },
+  "oreamnos_americanus": {
+   "kind": "quadruped",
+   "glb": "client/assets/fauna/oreamnos_americanus.glb",
+   "jobs": [
+    "library/animals/jobs/oreamnos_americanus/01a1b123-5108-76b3-8527-b7f74abcd82c",
+    "library/animals/jobs/oreamnos_americanus/01a1b124-e090-77a7-b727-eb7d9e64cdeb",
+    "library/animals/jobs/oreamnos_americanus/01a1b125-c293-707a-98f3-eddc436f45f8",
+    "library/animals/jobs/oreamnos_americanus/01a1b126-d360-73e5-98fa-ee8a093c18c9"
+   ],
+   "credits": 60,
+   "attempts": 2,
+   "built": "2026-11-06",
+   "build": "tools/build_quadruped.py",
+   "tile": "utm12n_557_4964",
+   "colour_check": {
+    "ok": true,
+    "score": 1.0,
+    "fails": []
+   },
+   "judge": {
+    "verdict": "rejected",
+    "why": "long curved ibex-like horns and brown patches; the mountain goat has short black horns and an all-white shaggy coat",
+    "by": "the judge (Claude, from the model's render against the species' description)",
+    "date": "2026-11-06"
+   }
+  },
+  "bison_bison": {
+   "kind": "quadruped",
+   "glb": "client/assets/fauna/bison_bison.glb",
+   "jobs": [
+    "library/animals/jobs/bison_bison/01a1b128-0f95-75cc-80f8-b33a517a8376",
+    "library/animals/jobs/bison_bison/01a1b129-2b00-77da-9e38-d608103504d8"
+   ],
+   "credits": 30,
+   "attempts": 1,
+   "built": "2026-11-06",
+   "build": "tools/build_quadruped.py",
+   "tile": "utm12n_557_4964",
+   "colour_check": {
+    "ok": true,
+    "score": 0.879,
+    "fails": []
+   }
+  },
+  "ovis_canadensis": {
+   "kind": "quadruped",
+   "glb": "client/assets/fauna/ovis_canadensis.glb",
+   "jobs": [
+    "library/animals/jobs/ovis_canadensis/01a1b12c-f22f-71d4-be7e-0446a517b879",
+    "library/animals/jobs/ovis_canadensis/01a1b12d-a43d-766f-ac66-c53a2dd60e55"
+   ],
+   "credits": 30,
+   "attempts": 1,
+   "built": "2026-11-06",
+   "build": "tools/build_quadruped.py",
+   "tile": "utm12n_557_4964",
+   "colour_check": {
+    "ok": true,
+    "score": 1.0,
+    "fails": []
+   }
+  },
+  "antilocapra_americana": {
+   "kind": "quadruped",
+   "glb": "client/assets/fauna/antilocapra_americana.glb",
+   "jobs": [
+    "library/animals/jobs/antilocapra_americana/01a1b12e-82e1-7640-b34e-0e910f3fdef0",
+    "library/animals/jobs/antilocapra_americana/01a1b12f-3ae5-736d-a0e4-f7e579f1dc67",
+    "library/animals/jobs/antilocapra_americana/01a1b130-1b14-7175-aa07-5c55662144e4"
+   ],
+   "credits": 40,
+   "attempts": 1,
+   "built": "2026-11-06",
+   "build": "tools/build_quadruped.py",
+   "tile": "utm12n_557_4964",
+   "colour_check": {
+    "ok": true,
+    "score": 0.61,
+    "fails": [],
+    "off": {
+     "head": "cinnamon",
+     "legs": "fawn"
+    }
+   }
+  },
+  "taxidea_taxus": {
+   "kind": "quadruped",
+   "glb": "client/assets/fauna/taxidea_taxus.glb",
+   "jobs": [
+    "library/animals/jobs/taxidea_taxus/01a1b130-f8b7-75c4-87d5-a5a80d06a89b",
+    "library/animals/jobs/taxidea_taxus/01a1b132-88e7-7492-a87d-4d50af4d94a5"
+   ],
+   "credits": 30,
+   "attempts": 1,
+   "built": "2026-11-06",
+   "build": "tools/build_quadruped.py",
+   "tile": "utm12n_557_4964",
+   "colour_check": {
+    "ok": true,
+    "score": 1.0,
+    "fails": []
+   },
+   "judge": {
+    "verdict": "rejected",
+    "why": "a raccoon's ringed tail and masked face; the American badger has a short tail, a flat body and a white stripe from the nose over the head",
+    "by": "the judge (Claude, from the model's render against the species' description)",
+    "date": "2026-11-06"
+   }
+  },
+  "thamnophis_elegans": {
+   "kind": "snake",
+   "glb": "client/assets/fauna/thamnophis_elegans.glb",
+   "jobs": [
+    "library/animals/jobs/thamnophis_elegans/01a1b12f-ab22-723d-9bb2-0b2b1e654052",
+    "library/animals/jobs/thamnophis_elegans/01a1b130-c61a-758a-ad12-16a8090511ff",
+    "library/animals/jobs/thamnophis_elegans/01a1b131-90b5-7024-abc6-8bac631eb794"
+   ],
+   "credits": 60,
+   "attempts": 2,
+   "built": "2026-11-06",
+   "build": "tools/build_snake.py",
+   "tile": "utm12n_557_4964",
+   "archetype": "snake",
+   "colour_check": {
+    "ok": false,
+    "score": 0.997,
+    "fails": [
+     "upperparts: no red/black spots (0.0%)",
+     "upperparts: no dark spots (0.0%)"
+    ]
+   },
+   "recolour": [
+    {
+     "at": "2026-11-06T14:10:32+00:00",
+     "job": "library/animals/jobs/thamnophis_elegans/01a1b132-697b-71ec-83ce-4ad8d50c8a00",
+     "credits": 10,
+     "before": {
+      "ok": false,
+      "score": 0.997,
+      "fails": [
+       "upperparts: no red/black spots (0.0%)",
+       "upperparts: no dark spots (0.0%)"
+      ]
+     },
+     "after": {
+      "ok": false,
+      "score": 0.988,
+      "fails": [
+       "upperparts: no red/black spots (0.0%)",
+       "upperparts: no dark spots (0.0%)"
+      ],
+      "off": {}
+     },
+     "kept": "old",
+     "error": null,
+     "texture_prompt": "Natural scale colours and markings of a wild adult Terrestrial garter snake (Thamnophis elegans) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body yellow with yellow stripes; back light orange, white, grayish-green, yellow with red, black, dark spots. Realistic, evenly lit albedo with no baked shadows or highlights; the back, flanks, belly, head and tail in their true colours, the stripes or blotches along the body as they run, eyes in their true colours."
+    }
+   ],
+   "judge": {
+    "verdict": "rejected",
+    "why": "yellow all over; the terrestrial garter snake is dark with three yellow stripes (the colour research read the stripe colour as the body's)",
+    "by": "the judge (Claude, from the model's render against the species' description)",
+    "date": "2026-11-06"
+   }
+  },
+  "canis_lupus": {
+   "kind": "quadruped",
+   "glb": "client/assets/fauna/canis_lupus.glb",
+   "jobs": [
+    "library/animals/jobs/canis_lupus/01a1b133-db03-743b-912d-25420db9cc1a",
+    "library/animals/jobs/canis_lupus/01a1b134-f172-71eb-8725-1ef02db4b9f9"
+   ],
+   "credits": 30,
+   "attempts": 1,
+   "built": "2026-11-06",
+   "build": "tools/build_quadruped.py",
+   "tile": "utm12n_557_4964",
+   "colour_check": {
+    "ok": true,
+    "score": 1.0,
+    "fails": []
+   }
+  },
+  "ursus_arctos": {
+   "kind": "quadruped",
+   "glb": "client/assets/fauna/ursus_arctos.glb",
+   "jobs": [
+    "library/animals/jobs/ursus_arctos/01a1b135-d41a-703c-8c4b-9dd18014a9e9",
+    "library/animals/jobs/ursus_arctos/01a1b137-d7b9-7439-8960-c72ea3293daa"
+   ],
+   "credits": 30,
+   "attempts": 1,
+   "built": "2026-11-06",
+   "build": "tools/build_quadruped.py",
+   "tile": "utm12n_557_4964",
+   "colour_check": {
+    "ok": true,
+    "score": 1.0,
+    "fails": []
+   }
+  },
+  "aquila_chrysaetos": {
+   "kind": "bird",
+   "glb": "client/assets/fauna/aquila_chrysaetos.glb",
+   "jobs": [
+    "library/animals/jobs/aquila_chrysaetos/01a1b139-64da-72a5-8808-bb8b7b5f1098",
+    "library/animals/jobs/aquila_chrysaetos/01a1b13a-17a9-7623-a5c0-5c9d78386a29"
+   ],
+   "credits": 30,
+   "attempts": 1,
+   "built": "2026-11-06",
+   "build": "tools/build_bird.py",
+   "tile": "utm12n_557_4964",
+   "archetype": "soar",
+   "colour_check": {
+    "ok": true,
+    "score": 0.999,
+    "fails": []
+   }
+  },
+  "pelecanus_erythrorhynchos": {
+   "kind": "bird",
+   "glb": "client/assets/fauna/pelecanus_erythrorhynchos.glb",
+   "jobs": [
+    "library/animals/jobs/pelecanus_erythrorhynchos/01a1b13a-e342-747c-b0f6-5c28b8cfa30e",
+    "library/animals/jobs/pelecanus_erythrorhynchos/01a1b13b-fc92-70ef-9065-539256035ec3"
+   ],
+   "credits": 30,
+   "attempts": 1,
+   "built": "2026-11-06",
+   "build": "tools/build_bird.py",
+   "tile": "utm12n_557_4964",
+   "archetype": "water",
+   "colour_check": {
+    "ok": true,
+    "score": 1.0,
+    "fails": []
+   }
+  },
+  "grus_canadensis": {
+   "kind": "bird",
+   "glb": "client/assets/fauna/grus_canadensis.glb",
+   "jobs": [
+    "library/animals/jobs/grus_canadensis/01a1b13d-57ab-7204-b653-8cf84ff52e4f",
+    "library/animals/jobs/grus_canadensis/01a1b13e-08de-73a4-87fd-c806668213e5"
+   ],
+   "credits": 30,
+   "attempts": 1,
+   "built": "2026-11-06",
+   "build": "tools/build_bird.py",
+   "tile": "utm12n_557_4964",
+   "archetype": "wade",
+   "colour_check": {
+    "ok": true,
+    "score": 0.991,
+    "fails": []
+   }
   }
  }
 }
