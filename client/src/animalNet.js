@@ -182,6 +182,8 @@ export class AnimalNet {
         pitch: r2(a.pitch0 || 0), roll: r2(a.roll || 0), amp: r2(a.amp0 || 0), pose: r2(a.pose0 || 0), flick: r2(a.flick0 || 0), lr: a.lieRoll || 1 });
     } else if (type === 'gone') this.event({ k: 'gone', n: this.numberOf(e.animal) });
     else if (type === 'miss') this.event({ k: 'miss', to: e.aid, n: this.numberOf(e.animal) });
+    else if (type === 'hp') this.event({ k: 'hp', n: this.numberOf(e.animal), hp: r2(e.hp), max: r2(e.max), by: e.aid || 0, mv: e.move || null });   // a strike's hit (animals.js hurt): everyone's bar
+    else if (type === 'kick') this.event({ k: 'kick', to: e.aid || 0, n: this.numberOf(e.animal) });   // big prey fighting back at the striker
   }
   groupNumber(g) {
     let r = this.groups.get(g);

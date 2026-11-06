@@ -186,6 +186,30 @@
     background:radial-gradient(closest-side, color-mix(in srgb, var(--soul, #fff) 70%, #fff) 0%, var(--soul, #fff) 35%, transparent 100%); }
   .nb-img { position:relative; display:block; width:auto; height:auto; max-height:40px; max-width:54px; object-fit:contain; margin-bottom:6px; filter:drop-shadow(0 1px 1px #0008); }
   .nb-n { position:absolute; left:3px; bottom:0; min-width:8px; padding:0 5px; border-radius:9px; background:color-mix(in srgb, color-mix(in srgb, var(--soul, #c98a4e) 42%, #fff) 80%, transparent); color:#141a16; font-size:11px; font-weight:600; line-height:16px; text-align:center; font-variant-numeric:tabular-nums; }   /* the count: bottom left of the slot, a white tinted with the species' soul colour (nearBar.js --soul), at .8 */
+  /* the hunt (2026-11-06): chips are buttons; the selection's chip marked; the strike slots' out-of-reach grey and cooldown clock (abilities.js); the Embody slot's still */
+  .nb-slot { pointer-events:auto; cursor:pointer; }
+  .nb-slot.sel .nb-disc { opacity:1; box-shadow:0 0 0 2px var(--soul, #fff); }
+  .nb-slot:hover .nb-img { transform:translateY(-2px); }
+  .ab { position:relative; overflow:hidden; }
+  .ab.oor { filter:grayscale(1); opacity:.5; }
+  .ab.oor .ab-name { color:#e2836f; }
+  .ab .ab-cd { position:absolute; inset:0; border-radius:inherit; pointer-events:none; display:flex; align-items:center; justify-content:center; font:700 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; color:#fff; text-shadow:0 1px 2px #000; font-style:normal; }
+  .ab .ab-cd[hidden] { display:none; }
+  .ab.icon { min-width:96px; padding-right:42px; }
+  .ab .ab-icon { position:absolute; right:4px; top:3px; height:30px; max-width:36px; object-fit:contain; filter:drop-shadow(0 1px 1px #0008); pointer-events:none; }
+  /* the target frame (combat.js): name and health bar, top centre; a small bar over the animal */
+  #targetFrame { position:fixed; left:50%; top:14px; transform:translateX(-50%); z-index:6; min-width:240px; padding:6px 10px 7px; border-radius:8px; background:#0f1512d8; border:1px solid color-mix(in srgb, var(--soul, #bcd98a) 55%, #263128); color:#e6ede7; font:600 12px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; pointer-events:none; }
+  #targetFrame[hidden] { display:none; }
+  #targetFrame .tf-name { display:block; margin-bottom:4px; letter-spacing:.02em; }
+  #targetFrame .tf-bar { position:relative; height:14px; border-radius:4px; background:#1b231e; overflow:hidden; border:1px solid #0008; }
+  #targetFrame .tf-fill { position:absolute; left:0; top:0; bottom:0; background:linear-gradient(#5fc35a, #2f8a2c); transition:width .25s ease-out; }
+  #targetFrame.low .tf-fill { background:linear-gradient(#e0583f, #a33322); }
+  #targetFrame .tf-num { position:absolute; inset:0; text-align:center; font-size:10.5px; line-height:14px; color:#fff; text-shadow:0 1px 1px #000; font-variant-numeric:tabular-nums; }
+  #targetBar { position:fixed; z-index:5; width:46px; height:5px; margin-left:-23px; margin-top:-10px; border-radius:3px; background:#0009; border:1px solid #000a; pointer-events:none; }
+  #targetBar[hidden] { display:none; }
+  #targetBar > b { display:block; height:100%; border-radius:2px; background:var(--soul, #5fc35a); transition:width .25s ease-out; }
+  #targetBar .tb-float { position:absolute; left:50%; top:0; color:#ffd36b; font:700 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; text-shadow:0 1px 2px #000; white-space:nowrap; }
+  html.opening #targetFrame, html.opening #targetBar, html.opening #nearBar { display:none; }
   #help kbd { background:#1f2a23; border:1px solid #263128; border-radius:4px; padding:0 5px; color:#e6ede7; font:inherit; }
   #status { position:fixed; left:50%; top:45%; transform:translate(-50%,-50%); background:#0f1512dd; padding:14px 18px; border-radius:10px; font-size:14px; }
   #status.hidden { display:none; }
@@ -360,6 +384,8 @@
   <div class="muted" id="gameHint"></div>
 </div>
 <div id="nearBar" hidden></div>
+<div id="targetFrame" hidden><span class="tf-name"></span><div class="tf-bar"><div class="tf-fill"></div><span class="tf-num"></span></div></div>
+<div id="targetBar" hidden><b></b></div>
 <div id="herdMarks" aria-hidden="true"></div>
 <div id="soundCues" aria-hidden="true"></div>
 <div id="scentLabels" aria-hidden="true"></div>

@@ -223,7 +223,9 @@ export class FlierControl {
   // body pitches up and the wings and tail flare (the brake: draw) as the feet come forward; the strike within reach
   // kills (animals.js catchNear) and the hawk comes down on the kill at once, mantling over it (wings half spread and
   // drooped round it, the tail fanned, the head down) until it hops or takes off.
+  // The dive (dive.js, 2026-11-06): its steering runs before the flight moves, and the wings are drawn tucked while it is on.
   update(dt) {
+    if (this.on) this.dive?.steer(dt);
     const f = this.flight, r = f.update(dt), hawk = this.S?.short === 'hawk';
     if (this.on && this.animals?.catchNear && (this.catchT = (this.catchT || 0) - dt) <= 0) {   // a hunter's strike: prey within reach in flight (animals.js CARRION)
       this.catchT = 0.1; const P = f.pos;
@@ -251,15 +253,15 @@ export class FlierControl {
     const m = b.mesh, G = f.gnd, landed = f.landed;
     m.visible = f.view === 'chase';
     // wings: working (beats at the species' rate), else set (the phase eased to level); folded or swept on a perch
-    const work = !landed && f.flapping, flare = this.flare > 0, mantle = !!this.mantle && landed;
-    const stoop = S.short === 'hawk' && !landed && f.pitch < -0.5 && f.speed > 20 && !flare;
+    const diving = !landed && !!this.dive?.active, work = !landed && f.flapping && !diving, flare = this.flare > 0, mantle = !!this.mantle && landed;
+    const stoop = !landed && !flare && (diving || (S.short === 'hawk' && f.pitch < -0.5 && f.speed > 20));   // a dive's tuck (any flier), or the hawk's own steep fast dive
     if (landed) { ps.phase = G.phase; ps.amp = G.amp * 0.6; }
     else {
       ps.amp = damp(ps.amp, work ? 1 : 0, 6, dt);
       if (work) ps.phase += dt * TAU * S.beat * (f.flap > 0.5 ? 1.25 : 1);
       else ps.phase = damp(ps.phase, Math.round(ps.phase / Math.PI) * Math.PI, 3, dt);
     }
-    ps.pose = damp(ps.pose, mantle ? 0.45 : landed ? 1 : flare ? 0 : stoop ? 0.75 : 0, mantle ? 6 : landed ? 8 : flare ? 14 : 4, dt);
+    ps.pose = damp(ps.pose, mantle ? 0.45 : landed ? 1 : flare ? 0 : stoop ? (S.jay ? 1 : 0.75) : 0, mantle ? 6 : landed ? 8 : flare ? 14 : diving ? 7 : 4, dt);   // a jay's dive: its wings folded as on a perch
     ps.flick = landed && G.peck > 0 ? 2 * Math.sin(Math.PI * (1 - G.peck)) : mantle ? damp(ps.flick, 1.7 + 0.3 * Math.sin(performance.now() * 0.0035), 6, dt)   // a peck, the mantle's bites: the bill to the food on the ground (animals.js EAT_PECK)
       : damp(ps.flick, landed ? -Math.max(-1, Math.min(0.6, f.pitch)) * 0.5 : 0, 6, dt);
     if (S.jay) {

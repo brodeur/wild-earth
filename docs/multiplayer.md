@@ -576,7 +576,19 @@ mirrored animals. A mirror's catch (`catchNear`) asks the host instead of killin
 striker's and within its reach of the point struck (a metre's slack and 0.3 s of the prey's speed for the stream's
 lag) and orders the kill, which everyone sees, the striker as its own catch (fed, "caught a brush rabbit", the hunt
 panel's count); a refused one comes back as "the catch misses". The controls hold their own "misses" while the host's
-answer is on its way.
+answer is on its way. Since 2026-11-06 a kill for this page on a body already dead still counts as its catch: the
+carcass's own message on the dig channel (carrion.js `adopt`) often came first and killed the mirror's copy as
+'shared', and the animal channel's kill was then dropped, so the striker was never fed (the hunt panel's kill count still
+misses those). A hawk's dive from a mirror (dive.js) strikes through the same `catch` request; the prey's seeing it
+coming is a `startle` request (`areq {k: 'startle', n, x, y, z, sp}`): the host alarms the prey, with the remote diver as a
+stand-in hunter at the point it gave, within 600 m of the prey. Seen 2026-11-06 with two headless Chromes on the home
+tile: the mirror's red-tail stooped at a brush rabbit, the host killed it, the mirror was fed and mantled; a vole the
+mirror's dive startled was alarmed on the host with the diver as its threat; a gray squirrel startled from the mirror ran
+up its oak on the host. The strikes (2026-11-06, decisions "the hunt's strikes") follow the same road: a mirror's strike is a
+`hit` request the host checks (the family's move, its prey, the move's reach with the stream's slack, its cooldown) and
+deals; everyone's bar comes from the host's `hp` event (the regeneration is worked out when read, so it needs no
+stream); a big prey's fight-back is a `kick` event to the striker; the kill is the kill event. Two players striking one
+deer saw the same numbers on both pages.
 
 **Seen** (2026-11-02, two pages on the home tile against the worktree's server, the pane hidden so the frames came
 from a timer at 13 to 16 a second): both pages listed the same 327 animals with the same ids, and the deer herds at
