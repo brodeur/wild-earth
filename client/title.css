@@ -13,20 +13,55 @@
 .tt-wrap.phase-lit.overdot { cursor:pointer; }
 .tt-wrap.dragging { cursor:grabbing !important; }
 
-/* the title: fades in from black over the stars, fades out as the earth rises */
-.tt-title { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:22px; pointer-events:none;
-  opacity:0; transition:opacity 1.6s ease; }
-.tt-title.on { opacity:1; }
-.tt-wrap:not(.phase-title) .tt-title { opacity:0; transition:opacity .9s ease; }
-.tt-title h1 { margin:0; font-family:'Syncopate', 'Michroma', 'Avenir Next', 'Futura', sans-serif; font-weight:400; text-transform:uppercase;
-  font-size:clamp(26px, 5vw, 68px); letter-spacing:.45em; text-indent:.45em; line-height:1; color:#f3f6f1; text-shadow:0 0 24px #ffffff22; white-space:nowrap; }
-.tt-load { margin:0; font-size:12.5px; letter-spacing:.1em; color:#8fa094; min-height:1.4em; }
+/* the title (Aaron, 2026-11-06: "Wild earth should fade in. When the world is ready to enter, animate in and up into
+   the center and its final position before showing either side panel"): fades in over the stars in the middle with the
+   loading's line under it (.on, title.js frame); when the earth is ready it rises and shrinks to its place at the top
+   centre (.risen, title.js rise; --tt-top and --tt-s), where it stays while the place is chosen, and goes with the
+   screen at Start. Under reduced motion it fades out in the middle and in at its place. */
+.tt-title { position:absolute; inset:0; z-index:2; pointer-events:none; transition:opacity .6s ease; --tt-fs:clamp(26px, 5vw, 68px); --tt-top:40px; --tt-s:.42; }
+.tt-title h1 { position:absolute; left:50%; top:50%; margin:0; transform:translate(-50%, -50%); opacity:0; transition:opacity 1.4s ease;
+  font-family:'Syncopate', 'Michroma', 'Avenir Next', 'Futura', sans-serif; font-weight:400; text-transform:uppercase;
+  font-size:var(--tt-fs); letter-spacing:.45em; text-indent:.45em; line-height:1; color:#f3f6f1; text-shadow:0 0 24px #ffffff22; white-space:nowrap; }
+.tt-title.on h1 { opacity:1; }
+.tt-title.risen h1 { top:var(--tt-top); transform:translate(-50%, -50%) scale(var(--tt-s)); text-shadow:0 0 18px #ffffff1a, 0 1px 6px #000c;
+  transition:opacity 1.4s ease, top 1.4s cubic-bezier(.65, 0, .25, 1), transform 1.4s cubic-bezier(.65, 0, .25, 1), text-shadow 1.4s ease; }
+.tt-load { position:absolute; left:0; right:0; top:calc(50% + var(--tt-fs) / 2 + 22px); margin:0; text-align:center; font-size:12.5px; letter-spacing:.1em; color:#8fa094; min-height:1.4em;
+  opacity:0; transition:opacity 1s ease .4s; }
+.tt-title.on .tt-load { opacity:1; }
+.tt-title.risen .tt-load { opacity:0; transition:opacity .4s ease; }
+.tt-wrap.zooming .tt-title, .tt-wrap.leaving .tt-title { opacity:0; }
+@media (prefers-reduced-motion: reduce) {
+  .tt-title.risen h1 { transition:none; animation:tt-refade 1s ease both; }
+}
+@keyframes tt-refade {
+  0%, 42% { opacity:1; top:50%; transform:translate(-50%, -50%); }
+  44% { opacity:0; top:50%; transform:translate(-50%, -50%); }
+  56% { opacity:0; top:var(--tt-top); transform:translate(-50%, -50%) scale(var(--tt-s)); }
+  100% { opacity:1; top:var(--tt-top); transform:translate(-50%, -50%) scale(var(--tt-s)); }
+}
+
+/* The side panels (title.js panelsIn: html.tt-panels once the title has landed) fade and slide in from their sides: the
+   sign-in and Explore from the right (.tt-gate), the places from the left (.tt-places, .listed), and the social column
+   and the chat (social.css, made on sign-in or kept from the world by Exit) from the right; until then they are not
+   shown. Under reduced motion they only fade. */
+html.opening:not(.tt-panels) #social, html.opening:not(.tt-panels) #chat { opacity:0; visibility:hidden; pointer-events:none; }
+html.opening.tt-panels #social, html.opening.tt-panels #chat { animation:tt-from-right .9s cubic-bezier(.2, .8, .25, 1) backwards; }
+html.opening.tt-panels #chat { animation-delay:.15s; }
+@keyframes tt-from-right { from { opacity:0; transform:translateX(56px); } }
+@keyframes tt-fade-in { from { opacity:0; } }
+.tt-gate .ac-modal { transform:translateX(56px); transition:opacity .8s ease, transform .9s cubic-bezier(.2, .8, .25, 1); }
+.tt-gate .ac-modal.done { transform:translateX(24px); }
+@media (prefers-reduced-motion: reduce) {
+  html.opening.tt-panels #social, html.opening.tt-panels #chat { animation-name:tt-fade-in; }
+  .tt-gate .ac-modal, .tt-gate .ac-modal.done, .tt-explore, .tt-places { transform:none !important; }
+}
 
 /* the gate: the sign-in modal (account.js) on the right, where the social panel stands once signed in; Explore with no hub */
 .tt-gate { position:absolute; right:var(--side); top:50%; transform:translateY(-50%); display:flex; flex-direction:column; align-items:flex-end; gap:12px; }
 .tt-explore { padding:11px 30px; border:1px solid #d3ddd5a8; border-radius:999px; background:#0b0f0d99; color:#f3f6f1; font:500 14px/1 'DM Sans', system-ui, sans-serif;
-  letter-spacing:.14em; text-transform:uppercase; cursor:pointer; opacity:0; transition:opacity .7s ease, background .25s ease, border-color .25s ease; backdrop-filter:blur(4px); }
-.tt-explore.on { opacity:1; }
+  letter-spacing:.14em; text-transform:uppercase; cursor:pointer; opacity:0; transform:translateX(56px);
+  transition:opacity .8s ease, transform .9s cubic-bezier(.2, .8, .25, 1), background .25s ease, border-color .25s ease; backdrop-filter:blur(4px); }
+.tt-explore.on { opacity:1; transform:none; }
 .tt-explore:hover, .tt-explore:focus-visible { background:#1a241ecc; border-color:#f3f6f1; outline:none; }
 .tt-gate-note { margin:0; font-size:12px; color:#8fa094; letter-spacing:.04em; }
 .tt-wrap.phase-lit .tt-gate { opacity:0; pointer-events:none; transition:opacity .5s ease; }
@@ -50,7 +85,7 @@
 
 /* the places, on the left: the search box, the heading with the sort's mode, the rows */
 .tt-places { position:absolute; left:var(--side); top:18px; bottom:118px; width:var(--listw); display:flex; flex-direction:column; gap:8px;
-  opacity:0; transform:translateX(-24px); transition:opacity 1s ease, transform 1s cubic-bezier(.2, .8, .25, 1); pointer-events:none; cursor:default; }
+  opacity:0; transform:translateX(-56px); transition:opacity .9s ease, transform 1s cubic-bezier(.2, .8, .25, 1); pointer-events:none; cursor:default; }
 .tt-wrap.listed .tt-places { opacity:1; transform:none; pointer-events:auto; }
 .tt-wrap.leaving .tt-places, .tt-wrap.zooming .tt-places { opacity:0; pointer-events:none; }
 .tt-search { position:relative; display:flex; align-items:center; flex:none; }
@@ -168,6 +203,10 @@
 
 @media (max-width: 720px) {
   .tt-wrap { --listw:min(260px, 46vw); --side:12px; }
+  /* the title keeps a row of its own at the top: the places and the social column start under it */
+  .tt-title { --tt-top:22px; }
+  .tt-places { top:42px; }
+  :root.opening #social { top:42px; }
   .tt-rname { font-size:15px; }
   .tt-acts button { min-width:100px; padding:11px 16px; }
 }

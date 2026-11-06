@@ -6560,3 +6560,44 @@ directly to/into the target animal".
   woodpecker controls have no strikes; ground squirrels, tree squirrels and quail still cannot be killed, so no strike or
   dive is offered at them; the fight-back has no health of the player's to take (it staggers); the swipe has no paw of its
   own on the part rig (the leg engine's foreleg reach stands in).
+
+## 2026-11-06: the startup sequence (branch claude/startup-sequence)
+
+Aaron: "On first load on the web there is a dark green background - nothing happens. We should add a little loader on
+that first screen. It should fade to black when stars are ready to render. Stars should twinkle in. Wild earth should
+fade in. When the world is ready to enter, animate in and up into the center and its final position before showing
+either side panel. Side panels fade and slide in from the sides."
+
+- **The boot screen** (index.html `#boot`, inline CSS): the opening's dark green, with a small dot orbiting a faint ring in
+  the middle, from the first paint (before any module has loaded) until the title screen draws its first frame. The
+  loader fades in after 0.35 s, so a warm load never flashes it. Only on the opening paths (html.opening); `?skip=1` and
+  `?game=1` never show it, and the card screen (`?cards=1`) removes it at once because it has its own dark start. If main()
+  throws before the title is up, the boot screen shows the error where the loader was (the opening hides `#status`).
+- **To black, then the stars** (title.js firstDrawn, STAR_VERT): on the first frame drawn (the stars' shader compiled) the
+  green fades to black over 0.9 s. Each star has its own delay (`aDelay`, the brightest first, as at dusk, with some
+  scatter; all are in about 2 s after the first frame) and comes in with a quick rise and a glint that settles
+  (`uGlint`). Under reduced motion it is a plain fade.
+- **The title** fades in 0.7 s after the first frame, with the loading line under it. "When the world is ready to enter"
+  is read as the moment the home screen's own loading is done (the hub's config and session, the earth texture, the
+  places' names, at least TITLE_MIN_MS 2.4 s): the title rises from the middle and shrinks to its place at the top centre
+  (`.risen`, 1.4 s; `--tt-top` 40 px, scale 0.42), while the earth's crescent rises under it. It stays there while a
+  place is chosen and goes with the screen at Start (zooming). Before, it faded out as the earth rose.
+- **The side panels after it lands** (title.js panelsIn, `html.tt-panels`): the sign-in modal and Explore slide in from the
+  right, the places list from the left (56 px), and the social column and the chat from the right as a CSS animation, so
+  they slide in whether they are made on sign-in or kept from the world by Exit to main screen. None of them shows
+  before the title has landed. A sign-in before the crescent is up ends the crescent tween (endTween), so the two rises
+  never pull the earth at once.
+- **Not slower than before:** the sign-in used to come 2.2 s + 3.3 s (the crescent's full rise) after the loading
+  started; it now comes after the title lands, 2.4 s + 1.4 s. A known session goes on to the lit earth 0.4 s later, as
+  before.
+- **Reduced motion** (`prefers-reduced-motion: reduce`): the loader pulses in place of orbiting, the stars only fade, the
+  title fades out in the middle and in at its place (tt-refade keyframes: it moves only while invisible, 1 s), and the
+  panels only fade. The earth's own camera moves are unchanged.
+- **Phone width** (720 px and under): the title's place is 22 px from the top, and the places list and the social column
+  start at 42 px, under it.
+- Verified in the browser pane on the local viewer (800x600 and 375x812, `?hub=stub` and the real local hub): the
+  boot screen, the fade, the twinkle, the title's rise, the sign-in sliding in, the list after sign-in, choose, Begin, x
+  skipping the arrival, Exit to main screen running the sequence again (the panels slide in once more), `?cards=1` (no
+  boot screen), `?skip=1` (no boot screen, straight in). The reduced-motion cross-fade was checked by applying its CSS rule
+  directly (the pane cannot emulate the media query); it moves only while invisible. A cold load over the network was not
+  measured: the local server answers in milliseconds. Debugging fields: `__weTitle.bornMs` and `drawnMs`.

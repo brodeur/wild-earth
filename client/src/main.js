@@ -406,6 +406,7 @@ async function main() {
     // for the cards; both answer the same calls (onSelect, setPrep, setReady, readyIds, point, close). ?hub=stub answers
     // as the hub would (hubStub.js).
     const Screen = params.get('cards') === '1' ? OpeningScreen : TitleScreen;
+    if (Screen !== TitleScreen) $('boot')?.remove();   // the card screen has its own dark start (arrival.js .boot); the title fades the boot screen out itself
     // Lanes 3 and 4 (multiplayer.js): the page's hub, the sign-in modal at the title's gate, the friends, the chat and
     // the toggles, mounted on sign-in and kept into the world's HUD; the group's invites, and the tile's room joined at
     // the world's entry (enterWorld) and left on a switch (switchWorld); a Join from a world is a switch with the picker.
@@ -1014,4 +1015,8 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   requestAnimationFrame(frame);
 }
 
-main().catch(e => { console.error(e); $('status').textContent = 'error: ' + e.message; $('status').classList.remove('hidden'); });
+main().catch(e => {
+  console.error(e); $('status').textContent = 'error: ' + e.message; $('status').classList.remove('hidden');
+  const boot = $('boot');   // the opening hides the status: the boot screen says it in place of its loader
+  if (boot && !boot.classList.contains('out')) { const p = document.createElement('p'); p.textContent = `could not start: ${e.message}`; boot.replaceChildren(p); }
+});
