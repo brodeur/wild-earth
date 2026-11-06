@@ -6233,6 +6233,20 @@ so every client fell back to last year's day. The Dockerfile now installs reques
   - Open: the Hoh's fit rests on river bars; shrubs and sage now stand out paler against the darker ground (Lamar); the
     emergents' atlas is decoded twice (`pow(t.rgb, 2.2)` on an sRGB texture, the bug forbs.js fixed): the cattails are
     drawn too dark. 155 tests pass (3 new: tests/test_ground_albedo.py).
+- **Physical ground by default, with today's hue: the luminance factor** (Aaron, 2026-11-06, "Go ahead" on the
+  brief's recommendation of the luminance-only factor; atmosphere.js `GROUND_HUE`). The per-channel factor turned the
+  home foothills red-brown in May (Sentinel-2's red / green 1.28 against NAIP's 0.99), which read as wrong. The default is
+  now the factor's luminance on every channel: the ground takes its measured brightness and keeps the photo's hue.
+  `?ground=physical` shows the per-channel factor and `?ground=display` the old look, for comparison; `?gexp=` as before.
+  - *The judge, re-run* (tools/probes/run.sh, all eight; L_render vs L_fair, overlap_fair; per-channel and display in
+    brackets): Serengeti 44.6 vs 47.2, 0.630 (per-channel 0.841, display 0.387); Lamar 46.5 vs 48.3, 0.395 (0.597,
+    0.360); Lofoten 40.5 vs 41.6, 0.655 (0.662, 0.495); Teton 34.5 vs 35.5, 0.492 (0.459, 0.514); Danum 31.8 vs 27.9,
+    0.046 (0.047, 0.078); Corcovado 28.3 vs 30.4, 0.112 (0.112, 0.145); Manu 30.5 vs 34.7, 0.149 (0.138, 0.135); Grand
+    Canyon 53.3 vs 64.3, 0.220 (0.391, 0.212). The brightness is the per-channel run's to within 0.1 L* on every probe
+    (open ground 1-3 L* under its reflectance, the forests within 2-4, the Grand Canyon 11 under). The colour overlap
+    falls back toward the display run's where the photo's hue and Sentinel-2's differ most (Serengeti, Lamar, Grand
+    Canyon) and stays above it everywhere but Teton and the forests; Lamar's ground is still too saturated (chroma 21.3
+    against a fair 14.6). The first Lofoten capture lost its light record (the placeholder sun) and was re-run.
 - **The drawn river where the imagery shows water: the reverse test, the large rivers moved onto it**
   (`pipeline/water_imagery.py`, a new base step `water_imagery` after `reroute`, `seasons` and `water_seasons`, before
   `water`; evidence in hydro/water_imagery.json and the layer `hydro.water_imagery`; the DEM's lines kept as
