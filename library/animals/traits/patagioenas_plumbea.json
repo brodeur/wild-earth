@@ -1,0 +1,115 @@
+{
+ "id": "patagioenas_plumbea",
+ "scientific": "Patagioenas plumbea",
+ "common": "plumbeous pigeon",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Columbiformes",
+  "family": "Columbidae",
+  "genus": "Patagioenas"
+ },
+ "body_plan": "bird",
+ "mass_kg": 0.1788,
+ "size": {
+  "length_m": 0.203,
+  "shoulder_or_wingspan_m": 0.325
+ },
+ "diet": {
+  "role": [
+   "herbivore"
+  ],
+  "diet_tenths": {
+   "inv": 0.0,
+   "vend": 0.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 5.0,
+   "nect": 0.0,
+   "seed": 5.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.0,
+  "mass_kg": 0.1788,
+  "activity": [],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 354.4
+  },
+  "sound": {
+   "range_m": 177.2
+  },
+  "scent": {
+   "range_m": 14.2
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "patagioenas_plumbea",
+  "class": "Aves",
+  "order": "Columbiformes",
+  "family": "Columbidae",
+  "body_plan": "bird",
+  "mass_kg": 0.1788,
+  "length_m": 0.203,
+  "hip_m": 0.102,
+  "posture": "biped",
+  "gaits": {},
+  "walk_mps": 0.71,
+  "trot_mps": 1.58,
+  "cruise_mps": 2.39,
+  "top_mps": 3.99,
+  "stride_hz": 5.42,
+  "stride_m": 0.29,
+  "sprint_s": 2.4,
+  "recover_s": 8.6,
+  "turn_rad_s": 5.57,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.047,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T05:27:07Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

@@ -1,0 +1,116 @@
+{
+ "id": "caracara_plancus",
+ "scientific": "Caracara plancus",
+ "common": "southern caracara",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Falconiformes",
+  "family": "Falconidae",
+  "genus": "Caracara"
+ },
+ "body_plan": "bird",
+ "mass_kg": 1.0786,
+ "size": {
+  "length_m": 0.369,
+  "shoulder_or_wingspan_m": 0.59
+ },
+ "diet": {
+  "role": [
+   "omnivore",
+   "scavenger"
+  ],
+  "diet_tenths": {
+   "inv": 2.0,
+   "vend": 0.0,
+   "vect": 2.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 6.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.2,
+  "mass_kg": 1.0786,
+  "activity": [],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 507.6
+  },
+  "sound": {
+   "range_m": 253.8
+  },
+  "scent": {
+   "range_m": 20.3
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "caracara_plancus",
+  "class": "Aves",
+  "order": "Falconiformes",
+  "family": "Falconidae",
+  "body_plan": "bird",
+  "mass_kg": 1.0786,
+  "length_m": 0.369,
+  "hip_m": 0.184,
+  "posture": "biped",
+  "gaits": {},
+  "walk_mps": 0.95,
+  "trot_mps": 2.13,
+  "cruise_mps": 3.23,
+  "top_mps": 5.38,
+  "stride_hz": 4.14,
+  "stride_m": 0.51,
+  "sprint_s": 3.8,
+  "recover_s": 13.4,
+  "turn_rad_s": 4.13,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.064,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T05:33:35Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

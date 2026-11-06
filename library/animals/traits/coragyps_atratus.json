@@ -1,0 +1,118 @@
+{
+ "id": "coragyps_atratus",
+ "scientific": "Coragyps atratus",
+ "common": "black vulture",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Accipitriformes",
+  "family": "Cathartidae",
+  "genus": "Coragyps"
+ },
+ "body_plan": "bird",
+ "mass_kg": 1.8817,
+ "size": {
+  "length_m": 0.444,
+  "shoulder_or_wingspan_m": 0.71
+ },
+ "diet": {
+  "role": [
+   "omnivore",
+   "scavenger"
+  ],
+  "diet_tenths": {
+   "inv": 0.0,
+   "vend": 1.0,
+   "vect": 1.0,
+   "vfish": 1.0,
+   "vunk": 0.0,
+   "scav": 7.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.3,
+  "mass_kg": 1.8817,
+  "activity": [],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 567.4
+  },
+  "sound": {
+   "range_m": 283.7
+  },
+  "scent": {
+   "range_m": 22.7
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "coragyps_atratus",
+  "class": "Aves",
+  "order": "Accipitriformes",
+  "family": "Cathartidae",
+  "body_plan": "bird",
+  "mass_kg": 1.8817,
+  "length_m": 0.444,
+  "hip_m": 0.222,
+  "posture": "biped",
+  "gaits": {
+   "flight": "soar"
+  },
+  "walk_mps": 1.04,
+  "trot_mps": 2.33,
+  "cruise_mps": 3.54,
+  "top_mps": 5.9,
+  "stride_hz": 3.81,
+  "stride_m": 0.61,
+  "sprint_s": 2.2,
+  "recover_s": 13.2,
+  "turn_rad_s": 3.76,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.07,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": true
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T05:27:07Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

@@ -1,0 +1,119 @@
+{
+ "id": "ramphastos_tucanus",
+ "scientific": "Ramphastos tucanus",
+ "common": "white-throated toucan",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Piciformes",
+  "family": "Ramphastidae",
+  "genus": "Ramphastos"
+ },
+ "body_plan": "bird",
+ "mass_kg": 0.6596,
+ "size": {
+  "length_m": 0.313,
+  "shoulder_or_wingspan_m": 0.501
+ },
+ "diet": {
+  "role": [
+   "herbivore"
+  ],
+  "diet_tenths": {
+   "inv": 1.0,
+   "vend": 1.0,
+   "vect": 1.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 5.0,
+   "nect": 1.0,
+   "seed": 0.0,
+   "planto": 1.0
+  },
+  "vertebrate_share": 0.2,
+  "mass_kg": 0.6596,
+  "activity": [],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 460.1
+  },
+  "sound": {
+   "range_m": 230.0
+  },
+  "scent": {
+   "range_m": 18.4
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "ramphastos_tucanus",
+  "class": "Aves",
+  "order": "Piciformes",
+  "family": "Ramphastidae",
+  "body_plan": "bird",
+  "mass_kg": 0.6596,
+  "length_m": 0.313,
+  "hip_m": 0.157,
+  "posture": "biped",
+  "gaits": {
+   "flight": "undulate",
+   "ground": "hop"
+  },
+  "walk_mps": 0.88,
+  "trot_mps": 1.96,
+  "cruise_mps": 2.97,
+  "top_mps": 4.96,
+  "stride_hz": 4.46,
+  "stride_m": 0.44,
+  "sprint_s": 3.4,
+  "recover_s": 11.9,
+  "turn_rad_s": 4.48,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.059,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true,
+   "cling": true
+  },
+  "flier": true
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T05:27:07Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

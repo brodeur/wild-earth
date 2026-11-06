@@ -1,0 +1,119 @@
+{
+ "id": "noctilio_leporinus",
+ "scientific": "Noctilio leporinus",
+ "common": "greater bulldog bat",
+ "kind": "mammal",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Mammalia",
+  "order": "Chiroptera",
+  "family": "Noctilionidae",
+  "genus": "Noctilio"
+ },
+ "body_plan": "quadruped",
+ "mass_kg": 0.0583,
+ "size": {
+  "length_m": 0.14,
+  "shoulder_or_wingspan_m": 0.087
+ },
+ "diet": {
+  "role": [
+   "predator"
+  ],
+  "diet_tenths": {
+   "inv": 5.0,
+   "vend": 0.0,
+   "vect": 0.0,
+   "vfish": 5.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.5,
+  "mass_kg": 0.0583,
+  "activity": [
+   "nocturnal"
+  ],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 141.6
+  },
+  "sound": {
+   "range_m": 198.2
+  },
+  "scent": {
+   "range_m": 283.2
+  }
+ },
+ "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+ "locomotion": {
+  "code": "noctilio_leporinus",
+  "class": "Mammalia",
+  "order": "Chiroptera",
+  "family": "Noctilionidae",
+  "body_plan": "quadruped",
+  "mass_kg": 0.0583,
+  "length_m": 0.14,
+  "hip_m": 0.087,
+  "posture": "parasagittal",
+  "gaits": {
+   "walk": "froude 0.5",
+   "trot": "froude 2.5",
+   "gallop": "beyond"
+  },
+  "walk_mps": 0.65,
+  "trot_mps": 1.46,
+  "cruise_mps": 1.93,
+  "top_mps": 3.21,
+  "stride_hz": 6.42,
+  "stride_m": 0.23,
+  "sprint_s": 1.8,
+  "recover_s": 6.5,
+  "turn_rad_s": 6.7,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.049,
+   "max_rad": 0.44,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {},
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T05:33:35Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

@@ -1,0 +1,118 @@
+{
+ "id": "sitta_carolinensis",
+ "scientific": "Sitta carolinensis",
+ "common": "white-breasted nuthatch",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Passeriformes",
+  "family": "Sittidae",
+  "genus": "Sitta"
+ },
+ "body_plan": "bird",
+ "mass_kg": 0.021,
+ "size": {
+  "length_m": 0.099,
+  "shoulder_or_wingspan_m": 0.158
+ },
+ "diet": {
+  "role": [
+   "omnivore"
+  ],
+  "diet_tenths": {
+   "inv": 5.0,
+   "vend": 0.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 5.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.0,
+  "mass_kg": 0.021,
+  "activity": [],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 230.9
+  },
+  "sound": {
+   "range_m": 115.4
+  },
+  "scent": {
+   "range_m": 9.2
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "sitta_carolinensis",
+  "class": "Aves",
+  "order": "Passeriformes",
+  "family": "Sittidae",
+  "body_plan": "bird",
+  "mass_kg": 0.021,
+  "length_m": 0.099,
+  "hip_m": 0.05,
+  "posture": "biped",
+  "gaits": {
+   "ground": "hop",
+   "flight": "flap-glide"
+  },
+  "walk_mps": 0.49,
+  "trot_mps": 1.1,
+  "cruise_mps": 1.23,
+  "top_mps": 2.05,
+  "stride_hz": 7.48,
+  "stride_m": 0.15,
+  "sprint_s": 1.4,
+  "recover_s": 5.0,
+  "turn_rad_s": 7.97,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.033,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": true
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T06:05:40Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

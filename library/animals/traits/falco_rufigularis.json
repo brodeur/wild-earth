@@ -1,0 +1,115 @@
+{
+ "id": "falco_rufigularis",
+ "scientific": "Falco rufigularis",
+ "common": "bat falcon",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Falconiformes",
+  "family": "Falconidae",
+  "genus": "Falco"
+ },
+ "body_plan": "bird",
+ "mass_kg": 0.1636,
+ "size": {
+  "length_m": 0.197,
+  "shoulder_or_wingspan_m": 0.315
+ },
+ "diet": {
+  "role": [
+   "predator"
+  ],
+  "diet_tenths": {
+   "inv": 3.0,
+   "vend": 7.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.7,
+  "mass_kg": 0.1636,
+  "activity": [],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 348.1
+  },
+  "sound": {
+   "range_m": 174.1
+  },
+  "scent": {
+   "range_m": 13.9
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "falco_rufigularis",
+  "class": "Aves",
+  "order": "Falconiformes",
+  "family": "Falconidae",
+  "body_plan": "bird",
+  "mass_kg": 0.1636,
+  "length_m": 0.197,
+  "hip_m": 0.099,
+  "posture": "biped",
+  "gaits": {},
+  "walk_mps": 0.7,
+  "trot_mps": 1.55,
+  "cruise_mps": 2.36,
+  "top_mps": 3.93,
+  "stride_hz": 5.5,
+  "stride_m": 0.28,
+  "sprint_s": 2.4,
+  "recover_s": 8.4,
+  "turn_rad_s": 5.65,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.047,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T05:27:07Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

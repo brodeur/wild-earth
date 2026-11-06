@@ -1,0 +1,130 @@
+{
+ "id": "aphelocoma_woodhouseii",
+ "scientific": "Aphelocoma woodhouseii",
+ "common": "woodhouse's scrub-jay",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Passeriformes",
+  "family": "Corvidae",
+  "genus": "Aphelocoma"
+ },
+ "body_plan": "bird",
+ "mass_kg": 0.1032,
+ "size": {
+  "length_m": 0.169,
+  "shoulder_or_wingspan_m": 0.27
+ },
+ "diet": {
+  "role": [
+   "omnivore"
+  ],
+  "diet_tenths": {
+   "inv": 3.4,
+   "vend": 1.0,
+   "vect": 1.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.6,
+   "fruit": 1.4,
+   "nect": 0.4,
+   "seed": 2.2,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.2,
+  "mass_kg": 0.1032,
+  "activity": [],
+  "source": "eltontraits (genus)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 317.5
+  },
+  "sound": {
+   "range_m": 158.7
+  },
+  "scent": {
+   "range_m": 12.7
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "aphelocoma_woodhouseii",
+  "class": "Aves",
+  "order": "Passeriformes",
+  "family": "Corvidae",
+  "body_plan": "bird",
+  "mass_kg": 0.1032,
+  "length_m": 0.169,
+  "hip_m": 0.085,
+  "posture": "biped",
+  "gaits": {
+   "ground": "walk-hop",
+   "flight": "flap-glide"
+  },
+  "walk_mps": 0.64,
+  "trot_mps": 1.44,
+  "cruise_mps": 2.19,
+  "top_mps": 3.64,
+  "stride_hz": 5.89,
+  "stride_m": 0.24,
+  "sprint_s": 2.1,
+  "recover_s": 7.5,
+  "turn_rad_s": 6.1,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.043,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": true,
+  "catch": {
+   "move": "stab",
+   "name": "the bill stab",
+   "reach_m": 0.9,
+   "stabs": 3,
+   "stab_s": 0.2,
+   "feed": {
+    "pose": "stabs with pauses",
+    "burst_s": 0.75,
+    "hz": 4
+   }
+  }
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T06:05:40Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (genus)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}
