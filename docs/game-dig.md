@@ -19,9 +19,10 @@ browser harness used to verify it: `scratch/dig_harness.js`.
 **As the vole.** Hold **Q** (or **E** when there is nothing to eat under the nose) standing on open ground: the vole
 starts a hole at its nose and digs down into it. From then it is in the tunnel. Held, the dig drives the face on at
 (2026-11-04: four times faster, 5.1 cm/s for the vole, 10.2 for the brush rabbit, 5.1 cm a second deeper for the coyote's pit, 3.2 for the jackrabbit's form; Aaron: "lets increase the dig speed of all animals, and make it continuous rather than chunks". Below, the first pace.) **0.5 inch a second (1.27 cm/s)**: a metre takes 80 seconds, a slow and deliberate act; the body is in the digging
-pose (nose into the face, the fore feet scrabbling, dirt thrown back). The face goes the way the vole faces and looks:
-the drag's pitch tilts it down or up (within about 34 degrees); from the surface it goes steeply in until it is a
-tunnel's width under; as deep as a vole goes (50 cm) it will only go level or up. While digging it turns no tighter
+pose (nose into the face, the fore feet scrabbling, dirt thrown back). The face goes the way the camera looks (2026-11-05, see "Steering
+by the camera" below): drag the view up over the vole and it digs down, to nearly straight down; drag it low and it
+digs up; swing it round and the dig curves after it. With no drag it digs level, as it always did; from the surface it
+goes steeply in (or steeper, if the view is up over it) until it is a tunnel's width under; as deep as a vole goes (50 cm) it will only go level or up. While digging it turns no tighter
 than a 7 cm curve (the turn waits on the face). Dig round in a small circle and when the face comes back to an older
 part of its own tunnel (within 13 cm, more than 30 cm back along it) the loop becomes a **chamber**: one room of
 6-10 cm radius, big enough for several voles. Dig up and the face **breaks out** as a second hole (let the key go
@@ -520,3 +521,53 @@ decay. No player's id is attached. Grasses, shrubs and trees are not pulled (a g
 - roots do not stop a tunnel (the face digs through them) and an eaten grass or woody root is not used up;
 - a thick root's ends can stand a little out of a narrow bore's wall in the underground view; the AI voles do not eat
   roots or pull plants.
+
+## Steering by the camera (2026-11-05)
+
+Aaron: "Can you make the orbit controls work for digging - so that it's easy to dig down."
+
+Since the orbit camera (2026-11-02) a drag on the ground swings the camera round the body and no longer tilts the
+body's look, so the dig's "the way it looks" had nothing behind it: the flight's pitch stayed 0, and once a tunnel was
+three radii under, it could only dig level. Now the orbit is the dig's aim (`dig.js` aimPitch, aimDot, digDir, digFrom,
+tunnelStep; `flight.js` easeOrbit holdPitch; `groundControl.js` updateCamera):
+- **Down and up.** The orbit's pitch off the camera's set-up is the dig's slope. Swinging the camera up over the body
+  (looking down) digs down: steeper the higher it goes, to 83 degrees down (DOWN_MAX 1.45 rad) at 0.9 rad of orbit,
+  which is a short drag. Swinging it low (looking up) digs up, to 57 degrees (UP_MAX 1.0) at the orbit's lowest.
+  Within 0.04 rad of the set-up the dig is level, so the keyboard-only dig is unchanged. Before this, the slope was
+  limited to 34 degrees.
+- **Held.** Underground and while digging, the orbit's pitch no longer eases back behind when the keys move the body
+  (the yaw still does). A steep dig stays steep while Q, W and A/D are held, and walking keeps the aim.
+- **Steering.** While digging, a camera swung round (within 100 degrees of behind) turns the body toward the camera's
+  heading. It turns only as fast as the face can carry a curve (a 7 cm curve for the vole, scaled up for the rabbit),
+  and the orbit gives up whatever the body turns, so the view holds still while the tunnel bends toward it. A and D
+  still turn the body as before. A camera swung round to look at the animal's face doesn't steer.
+- **Curving.** The face's slope turns toward the aim at the same rate, so a dig turned from straight down to up bends
+  round a curve instead of kinking.
+- **The floor.** A dig nearing the digger's depth limit (the vole's 50 cm, the brush rabbit's 32) levels off over its
+  last 2.5 radii instead of zigzagging against it.
+- **Walking.** Shafts are walked by looking. The direction W takes along a segment, and the branch chosen at a
+  junction, now weigh the segment's slope by the aim: looking down takes the way down, looking up the way up. On a
+  slope up to the old 34 degrees with a level view, the old heading test is unchanged. In a near-vertical shaft with a
+  level view, the body keeps the direction it last walked.
+- **Hints.** Starting a dig says "swing the view up over you to dig down", and the dig slot's tooltip says the same.
+
+**Verified** (home tile, port 8786, the underground view, both at the real rate and at 4x):
+- **Vole, straight down.** A simulated pointer drag (20 moves, 400 px down the screen) set the orbit to 1.0. Q dug
+  straight down at 5 cm/s (34 cm of depth for 4 cm across), levelled off at 50 cm, and the aim held through a W.
+- **Vole, back up.** With the view dragged low, the face climbed at 57 degrees from 44 cm and broke out as a new hole.
+  An orbit yaw of 0.8 was taken into the body's heading while digging.
+- **Vole, walking the shaft.** Looking down, W walked down a shaft entered from its hole. At the bottom, turned round
+  and looking up, W climbed the shaft and out onto the surface. S backed as before.
+- **Inside a tunnel.** From a level tunnel, the view swung up dug down at 83 degrees to the floor.
+- **Keyboard only.** With no drag, the dig went in at the start pitch and then level, and A turned it.
+- **Brush rabbit.** It dug from the surface steeply to 18 cm, levelled at its 32 cm floor, then (view dragged low)
+  curved up and broke out 64 cm away: a U-shaped burrow with roots hanging along it.
+- No console errors. All 61 server tests pass (one skipped).
+
+**Not verified**:
+- **Touch.** A touch drag on a phone or tablet: it goes through the same pointer events.
+- **Players watching.** A second player watching a steep dig: it is the same events, so other pages see it in 2 cm
+  steps as before.
+- **Unchanged.** The coyote's pit and the jackrabbit's form already go straight down; the AI diggers keep their own
+  slopes, except that an AI rabbit's last few centimetres to its depth are gentler under the new depth rule.
+
