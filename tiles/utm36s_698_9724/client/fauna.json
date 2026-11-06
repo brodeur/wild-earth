@@ -1736,8 +1736,24 @@
     "herbivore"
    ],
    "known": [
-    "a giant flightless bird on the turkey's body"
+    "a giant flightless bird on the turkey's flock machine"
    ],
+   "flightless": true,
+   "lifestyle": "Terrestrial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 0.1,
+   "habitat": "Shrubland",
+   "habitat_density": 3,
+   "gait": {
+    "walk_mps": 2.06,
+    "cruise_mps": 6.99,
+    "top_mps": 11.65,
+    "stride_m": 2.23,
+    "sprint_s": 12.2,
+    "speed_k": 1.256,
+    "stride_k": 1.939,
+    "source": "trait card locomotion over meleagris_gallopavo's (pipeline/locomotion.py)"
+   },
    "model": {
     "path": "fauna/struthio_camelus.glb",
     "kind": "bird",
@@ -1781,15 +1797,15 @@
    "common": "Superb starling",
    "one": "superb starling",
    "many": "superb starlings",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.815,
+   "kin": "callipepla_californica",
+   "archetype": "ground bird",
+   "scale": 0.712,
    "tint": null,
    "mass_kg": 0.065,
    "density_km2": 44.7913,
    "group": [
-    1,
-    6
+    3,
+    12
    ],
    "bird": true,
    "night": false,
@@ -1798,6 +1814,22 @@
     "predator"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Terrestrial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 28.4,
+   "habitat": "Shrubland",
+   "habitat_density": 2,
+   "gait": {
+    "walk_mps": 0.6,
+    "cruise_mps": 2.02,
+    "top_mps": 3.36,
+    "stride_m": 0.21,
+    "sprint_s": 1.9,
+    "speed_k": 0.769,
+    "stride_k": 0.656,
+    "source": "trait card locomotion over callipepla_californica's (pipeline/locomotion.py)"
+   },
    "active_hours": [
     0,
     1,
@@ -1853,6 +1885,12 @@
     "scavenger"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Terrestrial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 42.0,
+   "habitat": "Grassland",
+   "habitat_density": 3,
    "model": {
     "path": "fauna/leptoptilos_crumenifer.glb",
     "kind": "bird",
@@ -1913,6 +1951,12 @@
     "herbivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Generalist",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 38.0,
+   "habitat": "Wetland",
+   "habitat_density": 3,
    "model": {
     "path": "fauna/alopochen_aegyptiaca.glb",
     "kind": "bird",
@@ -1974,6 +2018,12 @@
     "scavenger"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Terrestrial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 39.1,
+   "habitat": "Grassland",
+   "habitat_density": 3,
    "model": {
     "path": "fauna/torgos_tracheliotos.glb",
     "kind": "bird",
@@ -2017,15 +2067,15 @@
    "common": "Blacksmith lapwing",
    "one": "blacksmith lapwing",
    "many": "blacksmith lapwings",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 1.091,
+   "kin": "callipepla_californica",
+   "archetype": "ground bird",
+   "scale": 0.953,
    "tint": null,
    "mass_kg": 0.156,
    "density_km2": 31.5385,
    "group": [
-    1,
-    6
+    3,
+    12
    ],
    "bird": true,
    "night": false,
@@ -2034,6 +2084,22 @@
     "insectivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Terrestrial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 40.4,
+   "habitat": "Wetland",
+   "habitat_density": 3,
+   "gait": {
+    "walk_mps": 0.69,
+    "cruise_mps": 2.34,
+    "top_mps": 3.9,
+    "stride_m": 0.28,
+    "sprint_s": 2.4,
+    "speed_k": 0.885,
+    "stride_k": 0.875,
+    "source": "trait card locomotion over callipepla_californica's (pipeline/locomotion.py)"
+   },
    "model": {
     "path": "fauna/vanellus_armatus.glb",
     "kind": "bird",
@@ -2094,6 +2160,12 @@
     "insectivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Terrestrial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 40.6,
+   "habitat": "Grassland",
+   "habitat_density": 3,
    "active_hours": [
     0,
     0,
@@ -2148,6 +2220,12 @@
     "insectivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 24.3,
+   "habitat": "Woodland",
+   "habitat_density": 2,
    "active_hours": [
     0,
     0,
@@ -2203,6 +2281,12 @@
     "scavenger"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Terrestrial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 39.2,
+   "habitat": "Shrubland",
+   "habitat_density": 2,
    "active_hours": [
     0,
     1,
@@ -2259,6 +2343,12 @@
    "known": [
     "a parrot, toucan or hornbill on a jay's body"
    ],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 11.5,
+   "habitat": "Grassland",
+   "habitat_density": 2,
    "active_hours": [
     0,
     0,
@@ -2314,6 +2404,12 @@
     "scavenger"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Generalist",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 38.7,
+   "habitat": "Shrubland",
+   "habitat_density": 2,
    "active_hours": [
     0,
     1,
@@ -2339,6 +2435,362 @@
     1,
     1,
     1
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "crocodylus_niloticus",
+   "scientific": "Crocodylus niloticus",
+   "common": "Nile crocodile",
+   "one": "nile crocodile",
+   "many": "nile crocodiles",
+   "kin": "sceloporus_occidentalis",
+   "archetype": "crocodilian",
+   "scale": 18.45,
+   "tint": null,
+   "mass_kg": 94.2,
+   "density_km2": 0.9922,
+   "group": [
+    1,
+    5
+   ],
+   "bird": false,
+   "night": false,
+   "water": true,
+   "role": [],
+   "known": [
+    "a crocodilian on the fence lizard's machine: at the water's edge and in the water (way 'water')"
+   ],
+   "reptile": "water",
+   "records": 151,
+   "mass_source": "amniote life-history database (species)",
+   "model": {
+    "path": "fauna/crocodylus_niloticus.glb",
+    "kind": "reptile",
+    "archetype": "sprawl",
+    "skin": false
+   },
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "agama_mwanzae",
+   "scientific": "Agama mwanzae",
+   "common": "Mwanza flat-headed agama",
+   "one": "mwanza flat-headed agama",
+   "many": "mwanza flat-headed agamas",
+   "kin": "sceloporus_occidentalis",
+   "archetype": "basking lizard",
+   "scale": 1.882,
+   "tint": null,
+   "mass_kg": 0.1,
+   "density_km2": 168.7024,
+   "group": [
+    1,
+    3
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [],
+   "known": [],
+   "reptile": "bask",
+   "records": 63,
+   "pushup": true,
+   "mass_source": "amniote life-history database (species)",
+   "model": {
+    "path": "fauna/agama_mwanzae.glb",
+    "kind": "reptile",
+    "archetype": "sprawl",
+    "skin": false
+   },
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "stigmochelys_pardalis",
+   "scientific": "Stigmochelys pardalis",
+   "common": "Leopard tortoise",
+   "one": "leopard tortoise",
+   "many": "leopard tortoises",
+   "kin": "sceloporus_occidentalis",
+   "archetype": "tortoise",
+   "scale": 11.006,
+   "tint": null,
+   "mass_kg": 20.0,
+   "density_km2": 3.1721,
+   "group": [
+    1,
+    2
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [],
+   "known": [
+    "a tortoise on the fence lizard's machine: a slow walker on the ground (way 'walk')"
+   ],
+   "reptile": "walk",
+   "records": 14,
+   "mass_source": "amniote life-history database (species)",
+   "model": {
+    "path": "fauna/stigmochelys_pardalis.glb",
+    "kind": "reptile",
+    "archetype": "tortoise",
+    "skin": false
+   },
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "varanus_niloticus",
+   "scientific": "Varanus niloticus",
+   "common": "Nile monitor",
+   "one": "nile monitor",
+   "many": "nile monitors",
+   "kin": "sceloporus_occidentalis",
+   "archetype": "monitor lizard",
+   "scale": 5.733,
+   "tint": null,
+   "mass_kg": 2.827,
+   "density_km2": 13.7614,
+   "group": [
+    1,
+    1
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [],
+   "known": [],
+   "reptile": "bask",
+   "records": 10,
+   "mass_source": "amniote life-history database (species)",
+   "model": {
+    "path": "fauna/varanus_niloticus.glb",
+    "kind": "reptile",
+    "archetype": "sprawl",
+    "skin": false
+   },
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "trachylepis_striata",
+   "scientific": "Trachylepis striata",
+   "common": "African striped mabuya",
+   "one": "african striped mabuya",
+   "many": "african striped mabuyas",
+   "kin": "sceloporus_occidentalis",
+   "archetype": "basking lizard",
+   "scale": 0.977,
+   "tint": null,
+   "mass_kg": 0.014,
+   "density_km2": 737.098,
+   "group": [
+    1,
+    3
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [],
+   "known": [],
+   "reptile": "bask",
+   "records": 10,
+   "mass_source": "amniote life-history database (species)",
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "phrynobatrachus_mababiensis",
+   "scientific": "Phrynobatrachus mababiensis",
+   "common": "Mababi puddle frog",
+   "one": "mababi puddle frog",
+   "many": "mababi puddle frogs",
+   "kin": "plethodon_vehiculum",
+   "archetype": "amphibian",
+   "scale": 1.882,
+   "tint": null,
+   "mass_kg": 0.02,
+   "density_km2": 50.0,
+   "group": [
+    1,
+    3
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [],
+   "known": [],
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
    ],
    "rest": "lie",
    "behaviour_sources": [
@@ -2502,12 +2954,8 @@
   {
    "id": "onychognathus_morio",
    "why": "over the 40-slot cap"
-  },
-  {
-   "id": "phrynobatrachus_mababiensis",
-   "why": "over the 40-slot cap"
   }
  ],
- "rules": "pipeline/fauna_slots.py: kin by taxonomy, diet and mass; scale = (mass / kin mass)^(1/3), 0.25-4; density Damuth 1981 (herbivores; large ones times HERBIVORE_PRODUCTIVITY of the tile's ecosystem), 30 / mass kg (carnivores), birds 15 m^-0.4 (cap 70) or 0.5 m^-0.75 (raptors), or PanTHERIA's measured density; behaviour() for the hours about, rest posture and group",
+ "rules": "pipeline/fauna_slots.py: kin by taxonomy, diet and mass (a bird's by AVONET's lifestyle and flightlessness); scale = (mass / kin mass)^(1/3), 0.25-4; density Damuth 1981 (herbivores; large ones times HERBIVORE_PRODUCTIVITY of the tile's ecosystem), 30 / mass kg (carnivores), birds 15 m^-0.4 (cap 70) or 0.5 m^-0.75 (raptors), or PanTHERIA's measured density; behaviour() for the hours about, rest posture and group",
  "ecosystem": "T4.1"
 }

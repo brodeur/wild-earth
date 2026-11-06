@@ -25,6 +25,16 @@ export function registerStandIns(list) {
     const tw = OWN_TWIN[kin], T = GROUND[kin] ? GROUND : FLIERS[kin] ? FLIERS : tw ? (tw[0] === 'ground' ? GROUND : FLIERS) : null;
     const base = T ? T[kin] || T[tw?.[1]] : null; if (!base) continue;
     T[code] = { ...base, short: code, common: o.common || o.one || code, ...(o.drawn ? { model: o.drawn } : {}) };   // drawn: its own model (animals.playerModel)
+    // a ground bird's own gait (fauna.json gait over the kin's; animals.js BGAIT): the walk and stride scaled, the run its
+    // top speed; a flightless one (fauna.json flightless) has no flush: from a run it runs on
+    const G = o.gait;
+    if (T === GROUND && G && Number.isFinite(G.speed) && Number.isFinite(G.stride)) {
+      const e = T[code];
+      e.walk = base.walk * G.speed; e.run = Number.isFinite(G.top) && G.top > 0 ? G.top : base.run * G.speed;
+      if (Number.isFinite(base.stride)) e.stride = base.stride * G.stride;
+      if (Number.isFinite(base.step)) e.step = base.step * G.stride;
+    }
+    if (T === GROUND && o.flightless) T[code].flush = null;
     SHORT[code] = code; standIns.push(code);
   }
 }

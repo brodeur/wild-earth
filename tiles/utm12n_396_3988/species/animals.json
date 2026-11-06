@@ -1,11 +1,12 @@
 {
  "tile": "utm12n_396_3988",
- "at": "2026-11-06T09:32:31Z",
+ "at": "2026-11-06T11:29:50Z",
  "target": 22,
- "listed": 89,
+ "listed": 94,
  "by_kind": {
   "bird": 58,
   "mammal": 25,
+  "reptile": 5,
   "amphibian": 4,
   "invertebrate": 2
  },
@@ -794,6 +795,81 @@
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
+   "id": "sceloporus_tristichus",
+   "scientific": "Sceloporus tristichus",
+   "common": "plateau fence lizard",
+   "kind": "reptile",
+   "records": 482,
+   "why": [
+    "most recorded: 1 of its class (25% of the class's records)"
+   ],
+   "body_plan": "reptile",
+   "rig": "reptile part rig template",
+   "estimate_credits": 25,
+   "stand_in": "sceloporus_occidentalis",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "uta_stansburiana",
+   "scientific": "Uta stansburiana",
+   "common": "side-blotched lizard",
+   "kind": "reptile",
+   "records": 418,
+   "why": [
+    "most recorded: 2 of its class (22% of the class's records)"
+   ],
+   "body_plan": "reptile",
+   "rig": "reptile part rig template",
+   "estimate_credits": 25,
+   "stand_in": "sceloporus_occidentalis",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "sceloporus_magister",
+   "scientific": "Sceloporus magister",
+   "common": "desert spiny lizard",
+   "kind": "reptile",
+   "records": 285,
+   "why": [
+    "most recorded: 3 of its class (15% of the class's records)"
+   ],
+   "body_plan": "reptile",
+   "rig": "reptile part rig template",
+   "estimate_credits": 25,
+   "stand_in": "sceloporus_occidentalis",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "urosaurus_ornatus",
+   "scientific": "Urosaurus ornatus",
+   "common": "ornate tree lizard",
+   "kind": "reptile",
+   "records": 282,
+   "why": [
+    "most recorded: 4 of its class (15% of the class's records)"
+   ],
+   "body_plan": "reptile",
+   "rig": "reptile part rig template",
+   "estimate_credits": 25,
+   "stand_in": "sceloporus_occidentalis",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "aspidoscelis_tigris",
+   "scientific": "Aspidoscelis tigris",
+   "common": "tiger whiptail",
+   "kind": "reptile",
+   "records": 134,
+   "why": [
+    "most recorded: 5 of its class (7% of the class's records)"
+   ],
+   "body_plan": "reptile",
+   "rig": "reptile part rig template",
+   "estimate_credits": 25,
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
    "id": "dryophytes_arenicolor",
    "scientific": "Dryophytes arenicolor",
    "common": "canyon treefrog",
@@ -884,7 +960,7 @@
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   }
  ],
- "queued_credits": 1570,
+ "queued_credits": 1695,
  "animals": [
   {
    "gbif_key": 2482492,
@@ -2961,6 +3037,126 @@
    "mass_kg": 0.7551,
    "why": [
     "most recorded: 27 of its class (0% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 4287358,
+   "scientific": "Sceloporus tristichus",
+   "common": "plateau fence lizard",
+   "records": 482,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Squamata",
+    "order": null,
+    "family": "Phrynosomatidae",
+    "genus": "Sceloporus"
+   },
+   "kind": "reptile",
+   "rank_in_class": 1,
+   "share_of_class": 0.2538,
+   "id": "sceloporus_tristichus",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 1 of its class (25% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2451029,
+   "scientific": "Uta stansburiana",
+   "common": "side-blotched lizard",
+   "records": 418,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Squamata",
+    "order": null,
+    "family": "Phrynosomatidae",
+    "genus": "Uta"
+   },
+   "kind": "reptile",
+   "rank_in_class": 2,
+   "share_of_class": 0.2201,
+   "id": "uta_stansburiana",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 2 of its class (22% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2451393,
+   "scientific": "Sceloporus magister",
+   "common": "desert spiny lizard",
+   "records": 285,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Squamata",
+    "order": null,
+    "family": "Phrynosomatidae",
+    "genus": "Sceloporus"
+   },
+   "kind": "reptile",
+   "rank_in_class": 3,
+   "share_of_class": 0.1501,
+   "id": "sceloporus_magister",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 3 of its class (15% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 8538855,
+   "scientific": "Urosaurus ornatus",
+   "common": "ornate tree lizard",
+   "records": 282,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Squamata",
+    "order": null,
+    "family": "Phrynosomatidae",
+    "genus": "Urosaurus"
+   },
+   "kind": "reptile",
+   "rank_in_class": 4,
+   "share_of_class": 0.1485,
+   "id": "urosaurus_ornatus",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 4 of its class (15% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 8913064,
+   "scientific": "Aspidoscelis tigris",
+   "common": "tiger whiptail",
+   "records": 134,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Squamata",
+    "order": null,
+    "family": "Teiidae",
+    "genus": "Aspidoscelis"
+   },
+   "kind": "reptile",
+   "rank_in_class": 5,
+   "share_of_class": 0.0706,
+   "id": "aspidoscelis_tigris",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 5 of its class (7% of the class's records)"
    ],
    "listed": true
   },
@@ -5697,6 +5893,336 @@
    "listed": false
   },
   {
+   "id": "sceloporus_tristichus",
+   "scientific": "Sceloporus tristichus",
+   "common": "plateau fence lizard",
+   "kind": "reptile",
+   "records": 482,
+   "rank_in_class": 1,
+   "share_of_class": 0.2538,
+   "role": [],
+   "listed": true
+  },
+  {
+   "id": "uta_stansburiana",
+   "scientific": "Uta stansburiana",
+   "common": "side-blotched lizard",
+   "kind": "reptile",
+   "records": 418,
+   "rank_in_class": 2,
+   "share_of_class": 0.2201,
+   "role": [],
+   "listed": true
+  },
+  {
+   "id": "sceloporus_magister",
+   "scientific": "Sceloporus magister",
+   "common": "desert spiny lizard",
+   "kind": "reptile",
+   "records": 285,
+   "rank_in_class": 3,
+   "share_of_class": 0.1501,
+   "role": [],
+   "listed": true
+  },
+  {
+   "id": "urosaurus_ornatus",
+   "scientific": "Urosaurus ornatus",
+   "common": "ornate tree lizard",
+   "kind": "reptile",
+   "records": 282,
+   "rank_in_class": 4,
+   "share_of_class": 0.1485,
+   "role": [],
+   "listed": true
+  },
+  {
+   "id": "aspidoscelis_tigris",
+   "scientific": "Aspidoscelis tigris",
+   "common": "tiger whiptail",
+   "kind": "reptile",
+   "records": 134,
+   "rank_in_class": 5,
+   "share_of_class": 0.0706,
+   "role": [],
+   "listed": true
+  },
+  {
+   "id": "crotalus_oreganus",
+   "scientific": "Crotalus oreganus",
+   "common": "abyssus",
+   "kind": "reptile",
+   "records": 50,
+   "rank_in_class": 6,
+   "share_of_class": 0.0263,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "phrynosoma_hernandesi",
+   "scientific": "Phrynosoma hernandesi",
+   "common": "greater short-horned lizard",
+   "kind": "reptile",
+   "records": 43,
+   "rank_in_class": 7,
+   "share_of_class": 0.0226,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "pituophis_catenifer",
+   "scientific": "Pituophis catenifer",
+   "common": "bullsnake",
+   "kind": "reptile",
+   "records": 36,
+   "rank_in_class": 8,
+   "share_of_class": 0.019,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "crotaphytus_bicinctores",
+   "scientific": "Crotaphytus bicinctores",
+   "common": "mojave black-collared lizard",
+   "kind": "reptile",
+   "records": 33,
+   "rank_in_class": 9,
+   "share_of_class": 0.0174,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "sceloporus_undulatus",
+   "scientific": "Sceloporus undulatus",
+   "common": "eastern fence lizard",
+   "kind": "reptile",
+   "records": 29,
+   "rank_in_class": 10,
+   "share_of_class": 0.0153,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "sceloporus_graciosus",
+   "scientific": "Sceloporus graciosus",
+   "common": "sagebrush lizard",
+   "kind": "reptile",
+   "records": 23,
+   "rank_in_class": 11,
+   "share_of_class": 0.0121,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "sauromalus_ater",
+   "scientific": "Sauromalus ater",
+   "common": "northern chuckwalla",
+   "kind": "reptile",
+   "records": 22,
+   "rank_in_class": 12,
+   "share_of_class": 0.0116,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "sonora_semiannulata",
+   "scientific": "Sonora semiannulata",
+   "common": "ground snake",
+   "kind": "reptile",
+   "records": 12,
+   "rank_in_class": 13,
+   "share_of_class": 0.0063,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "lampropeltis_californiae",
+   "scientific": "Lampropeltis californiae",
+   "common": "california kingsnake",
+   "kind": "reptile",
+   "records": 11,
+   "rank_in_class": 14,
+   "share_of_class": 0.0058,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "masticophis_taeniatus",
+   "scientific": "Masticophis taeniatus",
+   "common": "striped whipsnake",
+   "kind": "reptile",
+   "records": 7,
+   "rank_in_class": 15,
+   "share_of_class": 0.0037,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "thamnophis_elegans",
+   "scientific": "Thamnophis elegans",
+   "common": "terrestrial garter snake",
+   "kind": "reptile",
+   "records": 5,
+   "rank_in_class": 16,
+   "share_of_class": 0.0026,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "crotaphytus_collaris",
+   "scientific": "Crotaphytus collaris",
+   "common": "collared lizard",
+   "kind": "reptile",
+   "records": 4,
+   "rank_in_class": 17,
+   "share_of_class": 0.0021,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "coleonyx_variegatus",
+   "scientific": "Coleonyx variegatus",
+   "common": "western banded gecko",
+   "kind": "reptile",
+   "records": 3,
+   "rank_in_class": 18,
+   "share_of_class": 0.0016,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "phrynosoma_douglasii",
+   "scientific": "Phrynosoma douglasii",
+   "common": "short-horned lizard",
+   "kind": "reptile",
+   "records": 3,
+   "rank_in_class": 19,
+   "share_of_class": 0.0016,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "phrynosoma_platyrhinos",
+   "scientific": "Phrynosoma platyrhinos",
+   "common": "desert horned lizard",
+   "kind": "reptile",
+   "records": 3,
+   "rank_in_class": 20,
+   "share_of_class": 0.0016,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "salvadora_hexalepis",
+   "scientific": "Salvadora hexalepis",
+   "common": "western patch-nosed snake",
+   "kind": "reptile",
+   "records": 2,
+   "rank_in_class": 21,
+   "share_of_class": 0.0011,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "hypsiglena_chlorophaea",
+   "scientific": "Hypsiglena chlorophaea",
+   "common": "desert nightsnake",
+   "kind": "reptile",
+   "records": 2,
+   "rank_in_class": 22,
+   "share_of_class": 0.0011,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "crotalus_viridis",
+   "scientific": "Crotalus viridis",
+   "common": "prairie rattlesnake",
+   "kind": "reptile",
+   "records": 2,
+   "rank_in_class": 23,
+   "share_of_class": 0.0011,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "lampropeltis_getula",
+   "scientific": "Lampropeltis getula",
+   "common": "common kingsnake",
+   "kind": "reptile",
+   "records": 2,
+   "rank_in_class": 24,
+   "share_of_class": 0.0011,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "sceloporus_clarkii",
+   "scientific": "Sceloporus clarkii",
+   "common": "clark's spiny lizard",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 25,
+   "share_of_class": 0.0005,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "crotaphytus_insularis",
+   "scientific": "Crotaphytus insularis",
+   "common": "black-collared lizard",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 26,
+   "share_of_class": 0.0005,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "aspidoscelis_velox",
+   "scientific": "Aspidoscelis velox",
+   "common": "plateau striped whiptail",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 27,
+   "share_of_class": 0.0005,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "rena_humilis",
+   "scientific": "Rena humilis",
+   "common": "western threadsnake",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 28,
+   "share_of_class": 0.0005,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "plestiodon_skiltonianus",
+   "scientific": "Plestiodon skiltonianus",
+   "common": "western skink",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 29,
+   "share_of_class": 0.0005,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "plestiodon_multivirgatus",
+   "scientific": "Plestiodon multivirgatus",
+   "common": "many-lined skink",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 30,
+   "share_of_class": 0.0005,
+   "role": [],
+   "listed": false
+  },
+  {
    "id": "dryophytes_arenicolor",
    "scientific": "Dryophytes arenicolor",
    "common": "canyon treefrog",
@@ -6001,7 +6527,7 @@
  "classes": {
   "bird": 150,
   "mammal": 80,
-  "reptile": 30,
+  "reptile": 5,
   "amphibian": 30,
   "fish": 30,
   "invertebrate": 20

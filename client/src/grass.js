@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
-import { SEASON_LOOK } from './season.js';
+import { SEASON_LOOK, seasonOfDate } from './season.js';
 import { buildAnnualClump, buildBunchClump, buildTussockClump, buildOatClump, buildSwardClump } from './grassBlades.js';
 import { windUniforms, WIND_GLSL } from './wind.js';
 import { groundUniforms, GROUND_GLSL, seasonState } from './terrain.js';
@@ -175,11 +175,32 @@ const THATCH = [0.58, 0.54, 0.45];   // last year's grey dead leaves, in among t
 // and the needlegrass carry the former palettes).
 const GS_MAX = 12;
 const CLASS_NAME = { 1: 'oak_woodland', 2: 'conifer_forest', 3: 'mixed_forest', 4: 'chaparral', 5: 'grassland', 6: 'riparian' };
-export const GRASS_SPECIES = SPECIES_IDS.filter(id => SPECIES[id].form === 'grass').slice(0, GS_MAX).map((id, k) => {
+// The generic grass (2026-11-06): a tile outside the regional tables (species_mix.json class_fallback false) whose mix
+// lists no grass of its own never borrows California's grasses (their class weights) any more, as its trees, shrubs
+// and forbs already don't. It draws this instead: a fine-leaved perennial tussock grass, the structure the grasses of
+// the open ground share wherever no annual grassland is recorded (the hair-grasses, fescues, mat-grass and sweet
+// vernal grass of an Atlantic heath and its grasslands; the bunchgrasses of tundra, steppe and savanna), green while
+// it grows and straw-tipped as it cures, its colour by date from the tile's own measured season like every grass.
+// Not a species: registered in SPECIES (here, not in the library, so nothing else draws it) so the field guide can
+// name it, with no habitat classes (never drawn from the class weights).
+const GENERIC_GRASS = {
+  id: 'tufted_grass', scientific: 'Poaceae', common: 'grass (species not yet recorded)', form: 'grass', lifespan: 'perennial', generic: true,
+  description: "A fine-leaved perennial bunchgrass standing in for this place's own grasses, which have no record in the library yet: a tuft of narrow leaves 20-50 cm tall, green while it grows, its tips and flowering stems curing to straw.",
+  ground: { type: 'bunch', height: 0.75, width: 0.8, cure: 0.4, heads: { months: [6, 8] },
+    palette: {   // sRGB 0-255; the measured season (seasonState) scales the whole by date
+      winter: { root: [92, 88, 66], tip: [176, 160, 120], head: [170, 156, 124], awn: [176, 164, 132] },
+      spring: { root: [62, 88, 48], tip: [118, 156, 74], head: [126, 132, 92], awn: [132, 136, 100] },
+      summer: { root: [60, 86, 50], tip: [128, 152, 84], head: [168, 160, 118], awn: [178, 168, 128] },
+      fall: { root: [80, 86, 58], tip: [170, 152, 102], head: [184, 170, 132], awn: [190, 176, 140] } } },
+  habitat: { classes: {} },
+};
+if (!SPECIES[GENERIC_GRASS.id]) SPECIES[GENERIC_GRASS.id] = GENERIC_GRASS;
+export const GRASS_SPECIES = [...SPECIES_IDS.filter(id => SPECIES[id].form === 'grass').slice(0, GS_MAX - 1), GENERIC_GRASS.id].map((id, k) => {
   const s = SPECIES[id], g = s.ground || {};
   return { id, k, type: g.type === 'bunch' ? 1 : 0, height: g.height ?? 1, width: g.width ?? 1, palette: g.palette || null,
-    heads: g.heads?.months || null, cure: g.cure ?? 1, classes: s.habitat?.classes || {}, common: s.common };
+    heads: g.heads?.months || null, cure: g.cure ?? 1, classes: s.habitat?.classes || {}, common: s.common, generic: !!s.generic };
 });
+const GS_GENERIC = GRASS_SPECIES.length - 1;
 const GS_FALLBACK = [GRASS_SPECIES.find(s => s.type === 0)?.k ?? 0, GRASS_SPECIES.find(s => s.type === 1)?.k ?? 0];
 const GS_OAT = GRASS_SPECIES.find(s => s.id === 'avena_fatua' || (SPECIES[s.id].aliases || []).includes('wild_oats'))?.k ?? GS_FALLBACK[0];
 const spDraw = seed => (seed * 7919.17) % 1;   // a second uniform from a plant's seed, for its species
@@ -682,6 +703,9 @@ const smooth = (a, b, x) => { const t = Math.min(Math.max((x - a) / (b - a), 0),
 // bunchgrass share at a point is the habitat's, times this factor (mean 1).
 const driftRaw = (x, n) => 0.25 + 1.5 * smooth(0.3, 0.75, 0.7 * vnoise(x / 18, n / 18, 51) + 0.3 * vnoise(x / 6, n / 6, 52));
 const DRIFT_MEAN = (() => { let s = 0; for (let j = 0; j < 120; j++) for (let i = 0; i < 120; i++) s += driftRaw(i * 13.7, j * 13.7); return s / 14400; })();
+// The chance a plant at (x, n) is the bunch type, for the cell's annual share: the share and the drifts; a mix with no
+// annual grass at all (annualAt 0, only on a tile that borrows nothing) is all bunchgrass.
+const bunchP = (share, x, n) => share <= 0 ? 1 : Math.min((1 - share) * driftRaw(x, n) / DRIFT_MEAN, 0.95);
 // Wild oat stands, 10-30 m across where the annuals are thickest, plus a thin scatter: cover 0.01-0.37.
 const oatStand = (x, n) => 0.01 + 0.36 * smooth(0.52, 0.72, 0.7 * vnoise(x / 22, n / 22, 41) + 0.3 * vnoise(x / 7, n / 7, 42));
 // Candidate k of cell (i, j): ten uniforms, a pure function of (i, j, k) (mulberry32 steps from a
@@ -765,6 +789,9 @@ export class Grass {
     this.buildDensityGrid();
     this._p = { ux: 0, uy: 0, px: 0, pn: 0, yaw: 0, sxz: 0, sy: 0, seed: 0, type: 0, role: 0, sp: 0 };
     this.mixCache = new Map();   // species mix row (or -habitat class) -> the cell's grass species by type (speciesMix)
+    // a tile outside the regional tables (species_mix.json class_fallback false) borrows no grass: its own (the mix's
+    // grasses), else the generic tufted grass (GENERIC_GRASS); and the annual share is its own grasses' (annualAt)
+    this.noFallback = tile.speciesMix?.json?.class_fallback === false;
     const col = () => new THREE.Color();
     this.uniforms = {
       ...windUniforms, ...groundUniforms, groundK: { value: 1.12 }, matchOn: { value: 1 }, tiltOn: { value: 1 }, widenOn: { value: 1 },
@@ -1027,14 +1054,14 @@ export class Grass {
     const herb = this.sample(this.herb, px, pn), bare = bareField(px, pn), thr = 0.28 + 0.14 * (1 - herb);
     const open = smooth(thr - 0.06, thr + 0.06, bare);
     if (keep >= dens * (0.4 + 0.6 * open)) return false;
-    const type = U[6] < Math.min((1 - annualShare) * driftRaw(px, pn) / DRIFT_MEAN, 0.95) ? 1 : 0;
+    const type = U[6] < bunchP(annualShare, px, pn) ? 1 : 0;
     const s = (0.75 + 0.5 * U[4]) * (0.7 + 0.45 * herb) * (0.6 + 0.4 * smooth(thr, thr + 0.15, bare));
     // The card: tussocks and oats thin out toward a creek (75% and 85% gone at the centreline).
     const r = (k + 0.5) / N; let role = ROLE.none;
     if (keep < dens * open) {
       if (type === 1) { if (r < R_TUS && U[9] >= 0.75 * wv / 200) role = ROLE.tussock; }
       else if (r < R_TUFT) role = ROLE.tuft;
-      else if (r < R_TUFT + OAT_K * oatStand(px, pn) && rw <= 120 && U[9] >= 0.85 * wv / 200) role = ROLE.oat;
+      else if (r < R_TUFT + OAT_K * oatStand(px, pn) && rw <= 120 && U[9] >= 0.85 * wv / 200 && this.oatsIn(mix || this.speciesMix(i, j))) role = ROLE.oat;
     }
     // A needlegrass with a card is a mature tussock, a little larger than the young bunches around it.
     const big = role === ROLE.tussock ? 1.2 : 1;
@@ -1046,10 +1073,16 @@ export class Grass {
   }
   // A former reservoir or stock-pond bed (species mix row rewilded_meadow) is a wet meadow: perennial
   // bunchgrass more than annuals.
+  // On a tile that borrows nothing (noFallback) the annual share is its own grasses': the annual-type share of the
+  // cell's mix (0 for the generic tufted grass, the Serengeti's red oat grass, any perennial bunchgrass).
   annualAt(i, j) {
+    if (this.noFallback) return this.speciesMix(i, j).annual;
     if (this.tile.rewild && this.tile.speciesMix?.at(i, j)?.rule === 'rewilded_meadow') return WET_MEADOW_ANNUAL;
     const hb = HABITAT[this.tile.habitat.channel(i, j, 0)]; return hb ? hb.annual : 0.6;
   }
+  // Wild oat stands (ROLE.oat) only where the cell's mix holds the wild oat, on a tile that borrows nothing; elsewhere
+  // as before (the class weights hold it in every class with grass).
+  oatsIn(m) { return !this.noFallback || m.w[GS_OAT] > 0; }
   // The grass species of cell (i, j) by type (GRASS_SPECIES): { w: weight per species, cum: [[k, cumulative]] per type },
   // from the cell's species mix row (its ground weights, the grasses among them), else the records' own habitat class
   // weights (GS_DEFAULT); cached per row.
@@ -1057,19 +1090,28 @@ export class Grass {
     const row = this.tile.speciesMix?.at(i, j), key = row ? row.index : -this.tile.habitat.channel(i, j, 0);
     let m = this.mixCache.get(key); if (m) return m;
     const w = new Float64Array(GRASS_SPECIES.length), cls = CLASS_NAME[this.tile.habitat.channel(i, j, 0)];
-    for (const s of GRASS_SPECIES) w[s.k] = row?.groundSum && Object.keys(row.ground).some(id => SPECIES[id]?.form === 'grass') ? row.ground[s.id] || 0 : s.classes[cls] || 0;
+    const own = row?.groundSum && Object.keys(row.ground).some(id => SPECIES[id]?.form === 'grass');
+    for (const s of GRASS_SPECIES) w[s.k] = own ? row.ground[s.id] || 0 : this.noFallback ? 0 : s.classes[cls] || 0;
+    if (this.noFallback && !own) w[GS_GENERIC] = 1;   // no grass of its own: the generic tufted grass, not California's
     const cum = [[], []];
     for (const s of GRASS_SPECIES) if (w[s.k] > 0) cum[s.type].push([s.k, w[s.k]]);
+    const tot = cum.map(c => c.reduce((a, e) => a + e[1], 0));
     for (const c of cum) { const t = c.reduce((a, e) => a + e[1], 0) || 1; let acc = 0; for (const e of c) { acc += e[1] / t; e[1] = acc; } }
-    m = { w, cum }; this.mixCache.set(key, m); return m;
+    m = { w, cum, annual: tot[0] + tot[1] > 0 ? tot[0] / (tot[0] + tot[1]) : 0 }; this.mixCache.set(key, m); return m;
   }
-  pickSpecies(m, type, r) { const c = m.cum[type]; for (let q = 0; q < c.length; q++) if (r <= c[q][1]) return c[q][0]; return c.length ? c[c.length - 1][0] : GS_FALLBACK[type]; }
+  // A type the cell's mix has no species of: on a tile that borrows nothing, its other type's species (annualAt gives
+  // it none of that type, so this is only the body tier's and the cards' edge cases); else the library's first of the type.
+  pickSpecies(m, type, r) {
+    let c = m.cum[type]; if (!c.length && this.noFallback) c = m.cum[1 - type];
+    for (let q = 0; q < c.length; q++) if (r <= c[q][1]) return c[q][0];
+    return c.length ? c[c.length - 1][0] : this.noFallback ? GS_GENERIC : GS_FALLBACK[type];
+  }
   // The grass at a point, for the field guide and the needs (identify.js, needs.js): the leading species of the type the
   // drifts give there, and every species the cell's mix holds; null where no grass grows.
   speciesAt(x, north) {
     const hab = this.tile.habitat, [i, j] = hab.cellOf(x, north);
     if (i < 0 || j < 0 || i >= this.W || j >= this.Hh || !this.cellAny(i, j) || this.sample(this.dens, x, north) <= 0) return null;
-    const share = this.annualAt(i, j), bunch = Math.min((1 - share) * driftRaw(x, north) / DRIFT_MEAN, 0.95), type = bunch > 0.5 ? 1 : 0, m = this.speciesMix(i, j);
+    const share = this.annualAt(i, j), bunch = bunchP(share, x, north), type = bunch > 0.5 ? 1 : 0, m = this.speciesMix(i, j);
     let best = -1, bw = 0; for (const s of GRASS_SPECIES) if (s.type === type && m.w[s.k] > bw) { bw = m.w[s.k]; best = s.k; }
     if (best < 0) for (const s of GRASS_SPECIES) if (m.w[s.k] > bw) { bw = m.w[s.k]; best = s.k; }
     if (best < 0) return null;
@@ -1149,7 +1191,7 @@ export class Grass {
         const wet = wm && waterAt(wm, x, n) === 255;
         kf[o] = dens <= 0 || wet || rw > 140 ? 0 : dens * (rw > 0 ? 0.5 : 1) * (0.2 + 0.8 * smooth(thr - 0.06, thr + 0.06, bare));
         sz[o] = (0.7 + 0.45 * herb) * (0.6 + 0.4 * smooth(thr, thr + 0.15, bare));
-        bt[o] = Math.min((1 - share) * driftRaw(x, n) / DRIFT_MEAN, 0.95);
+        bt[o] = bunchP(share, x, n);
         any = Math.max(any, kf[o]);
       }
       if (any > 0) {
@@ -1434,9 +1476,17 @@ export class Grass {
     // awns), and its mean leaf colour is set, in linear light, to the summer palette's (made for the July
     // photo) times the open grass's measured ratio for the date over July, so the blades are the colour of
     // the ground they stand on.
+    // A tile that borrows nothing (2026-11-06) draws its own grasses' palettes, each authored for the tile's own seasons
+    // (season.js setSeasonMonths: the Serengeti's 'winter' is December-February after the short rains, its record's
+    // fresh green tussocks), so the California normalisation is not for it: that set every season's mean to the
+    // California annuals' cured gold of July times the measured ratio, and turned the Serengeti's green February
+    // straw-red. There the measured ratio (date over July) scales only the palette of July's own season (Lofoten's
+    // summer: as before); in its other seasons the records' palettes stand as written.
     let kl = null;
     const g = seasonState.grass;
-    if (g) {
+    if (g && this.noFallback) {
+      if (season === seasonOfDate(new Date(2001, 6, 15))) kl = g.map(v => Math.min(Math.max(v, 0.4), 2.5));
+    } else if (g) {
       const lin = v => v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
       const mean = p => p.root.map((r, i) => lin(r + 0.6 * (p.tip[i] - r)));
       const ms = mean(PALETTE.summer.annual), mp = mean(P.annual);
@@ -1445,13 +1495,17 @@ export class Grass {
     const set = kl   // uni: a uniform, or a Color of the species arrays
       ? (uni, rgb) => { const c = uni.value || uni; c.setRGB(rgb[0], rgb[1], rgb[2], THREE.SRGBColorSpace); c.r *= kl[0]; c.g *= kl[1]; c.b *= kl[2]; }
       : (uni, rgb) => (uni.value || uni).setRGB(rgb[0] * k[0], rgb[1] * k[1], rgb[2] * k[2], THREE.SRGBColorSpace);
-    set(u.aRoot, P.annual.root); set(u.aTip, P.annual.tip); set(u.aHead, P.annual.head); set(u.aAwn, P.annual.awn);
-    set(u.bRoot, P.bunch.root); set(u.bTip, P.bunch.tip); set(u.bHead, P.bunch.head); set(u.bAwn, P.bunch.awn);
+    // The type palettes (the sward sheets, the ground's sward paint, the far colour match): California's annual sward and
+    // needlegrass, or on a tile that borrows nothing its own grasses' (ownTypes: the Serengeti's red oat grass, the
+    // generic tufted grass at Lofoten).
+    const TP = this.noFallback ? this.ownTypes(season, P) : P;
+    set(u.aRoot, TP.annual.root); set(u.aTip, TP.annual.tip); set(u.aHead, TP.annual.head); set(u.aAwn, TP.annual.awn);
+    set(u.bRoot, TP.bunch.root); set(u.bTip, TP.bunch.tip); set(u.bHead, TP.bunch.head); set(u.bAwn, TP.bunch.awn);
     // The sward painted on the ground (terrain.js swardPaint) takes the annual palette's root and tip: the photo is of the annual sward.
     u.swardRoot.value.copy(u.aRoot.value); u.swardTip.value.copy(u.aTip.value);
     // Each species' palette for the season (its record's sRGB 0-255, scaled as the type palettes are), and whether its
     // seed heads show this month; a species without a palette takes its type's.
-    const month = seasonMonth(season), s255 = rgb => rgb.map(v => v / 255);
+    const month = seasonMonth(season, seasonState.date || undefined), s255 = rgb => rgb.map(v => v / 255);   // the day shown (a fixed date), else today
     for (let k = 0; k < GS_MAX; k++) {
       const G = GRASS_SPECIES[k], T = G && G.type ? P.bunch : P.annual, pal = G?.palette?.[season];
       set(u.spRoot.value[k], pal ? s255(pal.root) : T.root); set(u.spTip.value[k], pal ? s255(pal.tip) : T.tip);
@@ -1462,6 +1516,29 @@ export class Grass {
     }
     u.heightScale.value = P.height; u.heads.value = P.heads; u.thatch.value = P.thatch; u.leafScale.value = P.leaf; u.dry.value = P.dry;
     this.season = season;
+  }
+
+  // The type palettes of a tile that borrows nothing, for the season: by type (annual, bunch), the mean of its own grasses'
+  // palettes weighted by their share of its cells (species_mix.json ground_bytes x cells; a row with no grass counts as
+  // the generic tufted grass); a type it has none of takes the other's. Palette values sRGB 0-1, as PALETTE's.
+  ownTypes(season, P) {
+    if (!this.ownW) {
+      const w = this.ownW = new Float64Array(GRASS_SPECIES.length), byId = new Map(GRASS_SPECIES.map(s => [s.id, s.k]));
+      for (const m of this.tile.speciesMix?.json?.mixes || []) {
+        let any = false;
+        for (const [id, b] of m.ground_bytes || []) { const k = byId.get(SPECIES[id]?.id || id); if (k !== undefined) { w[k] += b * (m.cells || 1); any = true; } }
+        if (!any) w[GS_GENERIC] += 255 * (m.cells || 1);
+      }
+      if (!w.some(v => v > 0)) w[GS_GENERIC] = 1;
+    }
+    const parts = ['root', 'tip', 'head', 'awn'], acc = [null, null];
+    for (const G of GRASS_SPECIES) {
+      const wt = this.ownW[G.k]; if (!(wt > 0)) continue;
+      const pal = G.palette?.[season], T = G.type ? P.bunch : P.annual, a = acc[G.type] || (acc[G.type] = { w: 0, root: [0, 0, 0], tip: [0, 0, 0], head: [0, 0, 0], awn: [0, 0, 0] });
+      a.w += wt; for (const q of parts) for (let c = 0; c < 3; c++) a[q][c] += wt * (pal ? pal[q][c] / 255 : T[q][c]);
+    }
+    const out = t => { const a = acc[t] || acc[1 - t]; const o = {}; for (const q of parts) o[q] = a[q].map(v => v / a.w); return o; };
+    return { annual: out(0), bunch: out(1) };
   }
 
   // x, z (the flight position) are kept for the caller's signature; the camera position is used.

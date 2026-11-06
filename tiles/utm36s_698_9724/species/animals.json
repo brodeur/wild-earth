@@ -1,11 +1,12 @@
 {
  "tile": "utm36s_698_9724",
- "at": "2026-11-06T10:49:13Z",
+ "at": "2026-11-06T12:08:18Z",
  "target": 22,
- "listed": 81,
+ "listed": 86,
  "by_kind": {
   "bird": 51,
   "mammal": 29,
+  "reptile": 5,
   "amphibian": 1
  },
  "meets_target": true,
@@ -1264,6 +1265,81 @@
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
+   "id": "crocodylus_niloticus",
+   "scientific": "Crocodylus niloticus",
+   "common": "nile crocodile",
+   "kind": "reptile",
+   "records": 151,
+   "why": [
+    "most recorded: 1 of its class (52% of the class's records)"
+   ],
+   "body_plan": "reptile",
+   "rig": "reptile part rig template",
+   "estimate_credits": 25,
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "agama_mwanzae",
+   "scientific": "Agama mwanzae",
+   "common": "mwanza flat-headed agama",
+   "kind": "reptile",
+   "records": 63,
+   "why": [
+    "most recorded: 2 of its class (22% of the class's records)"
+   ],
+   "body_plan": "reptile",
+   "rig": "reptile part rig template",
+   "estimate_credits": 25,
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "stigmochelys_pardalis",
+   "scientific": "Stigmochelys pardalis",
+   "common": "leopard tortoise",
+   "kind": "reptile",
+   "records": 14,
+   "why": [
+    "most recorded: 3 of its class (5% of the class's records)"
+   ],
+   "body_plan": "reptile",
+   "rig": "reptile part rig template",
+   "estimate_credits": 25,
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "varanus_niloticus",
+   "scientific": "Varanus niloticus",
+   "common": "nile monitor",
+   "kind": "reptile",
+   "records": 10,
+   "why": [
+    "most recorded: 4 of its class (3% of the class's records)"
+   ],
+   "body_plan": "reptile",
+   "rig": "reptile part rig template",
+   "estimate_credits": 25,
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "trachylepis_striata",
+   "scientific": "Trachylepis striata",
+   "common": "african striped mabuya",
+   "kind": "reptile",
+   "records": 10,
+   "why": [
+    "most recorded: 5 of its class (3% of the class's records)"
+   ],
+   "body_plan": "reptile",
+   "rig": "reptile part rig template",
+   "estimate_credits": 25,
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
    "id": "phrynobatrachus_mababiensis",
    "scientific": "Phrynobatrachus mababiensis",
    "common": "mababi puddle frog",
@@ -1279,7 +1355,7 @@
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   }
  ],
- "queued_credits": 2395,
+ "queued_credits": 2520,
  "animals": [
   {
    "gbif_key": 2489075,
@@ -3362,6 +3438,126 @@
    "mass_kg": 22.0501,
    "why": [
     "predator"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2441341,
+   "scientific": "Crocodylus niloticus",
+   "common": "nile crocodile",
+   "records": 151,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Crocodylia",
+    "order": null,
+    "family": "Crocodylidae",
+    "genus": "Crocodylus"
+   },
+   "kind": "reptile",
+   "rank_in_class": 1,
+   "share_of_class": 0.5207,
+   "id": "crocodylus_niloticus",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 1 of its class (52% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 5226250,
+   "scientific": "Agama mwanzae",
+   "common": "mwanza flat-headed agama",
+   "records": 63,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Squamata",
+    "order": null,
+    "family": "Agamidae",
+    "genus": "Agama"
+   },
+   "kind": "reptile",
+   "rank_in_class": 2,
+   "share_of_class": 0.2172,
+   "id": "agama_mwanzae",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 2 of its class (22% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2441757,
+   "scientific": "Stigmochelys pardalis",
+   "common": "leopard tortoise",
+   "records": 14,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Testudines",
+    "order": null,
+    "family": "Testudinidae",
+    "genus": "Stigmochelys"
+   },
+   "kind": "reptile",
+   "rank_in_class": 3,
+   "share_of_class": 0.0483,
+   "id": "stigmochelys_pardalis",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 3 of its class (5% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2470656,
+   "scientific": "Varanus niloticus",
+   "common": "nile monitor",
+   "records": 10,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Squamata",
+    "order": null,
+    "family": "Varanidae",
+    "genus": "Varanus"
+   },
+   "kind": "reptile",
+   "rank_in_class": 4,
+   "share_of_class": 0.0345,
+   "id": "varanus_niloticus",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 4 of its class (3% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 5225433,
+   "scientific": "Trachylepis striata",
+   "common": "african striped mabuya",
+   "records": 10,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Squamata",
+    "order": null,
+    "family": "Scincidae",
+    "genus": "Trachylepis"
+   },
+   "kind": "reptile",
+   "rank_in_class": 5,
+   "share_of_class": 0.0345,
+   "id": "trachylepis_striata",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 5 of its class (3% of the class's records)"
    ],
    "listed": true
   },
@@ -6141,6 +6337,292 @@
    "listed": false
   },
   {
+   "id": "crocodylus_niloticus",
+   "scientific": "Crocodylus niloticus",
+   "common": "nile crocodile",
+   "kind": "reptile",
+   "records": 151,
+   "rank_in_class": 1,
+   "share_of_class": 0.5207,
+   "role": [],
+   "listed": true
+  },
+  {
+   "id": "agama_mwanzae",
+   "scientific": "Agama mwanzae",
+   "common": "mwanza flat-headed agama",
+   "kind": "reptile",
+   "records": 63,
+   "rank_in_class": 2,
+   "share_of_class": 0.2172,
+   "role": [],
+   "listed": true
+  },
+  {
+   "id": "stigmochelys_pardalis",
+   "scientific": "Stigmochelys pardalis",
+   "common": "leopard tortoise",
+   "kind": "reptile",
+   "records": 14,
+   "rank_in_class": 3,
+   "share_of_class": 0.0483,
+   "role": [],
+   "listed": true
+  },
+  {
+   "id": "varanus_niloticus",
+   "scientific": "Varanus niloticus",
+   "common": "nile monitor",
+   "kind": "reptile",
+   "records": 10,
+   "rank_in_class": 4,
+   "share_of_class": 0.0345,
+   "role": [],
+   "listed": true
+  },
+  {
+   "id": "trachylepis_striata",
+   "scientific": "Trachylepis striata",
+   "common": "african striped mabuya",
+   "kind": "reptile",
+   "records": 10,
+   "rank_in_class": 5,
+   "share_of_class": 0.0345,
+   "role": [],
+   "listed": true
+  },
+  {
+   "id": "chamaeleo_dilepis",
+   "scientific": "Chamaeleo dilepis",
+   "common": "flapneck chameleon",
+   "kind": "reptile",
+   "records": 9,
+   "rank_in_class": 6,
+   "share_of_class": 0.031,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "hemidactylus_mabouia",
+   "scientific": "Hemidactylus mabouia",
+   "common": "cosmopolitan house gecko",
+   "kind": "reptile",
+   "records": 4,
+   "rank_in_class": 7,
+   "share_of_class": 0.0138,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "python_natalensis",
+   "scientific": "Python natalensis",
+   "common": "lesser african python",
+   "kind": "reptile",
+   "records": 3,
+   "rank_in_class": 8,
+   "share_of_class": 0.0103,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "agama_agama",
+   "scientific": "Agama agama",
+   "common": "common agama",
+   "kind": "reptile",
+   "records": 3,
+   "rank_in_class": 9,
+   "share_of_class": 0.0103,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "bitis_arietans",
+   "scientific": "Bitis arietans",
+   "common": "puff adder",
+   "kind": "reptile",
+   "records": 3,
+   "rank_in_class": 10,
+   "share_of_class": 0.0103,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "acanthocercus_gregorii",
+   "scientific": "Acanthocercus gregorii",
+   "common": "black-necked (ridgeback) agama",
+   "kind": "reptile",
+   "records": 2,
+   "rank_in_class": 11,
+   "share_of_class": 0.0069,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "chamaeleo_africanus",
+   "scientific": "Chamaeleo africanus",
+   "common": "african chameleon",
+   "kind": "reptile",
+   "records": 2,
+   "rank_in_class": 12,
+   "share_of_class": 0.0069,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "agama_lionotus",
+   "scientific": "Agama lionotus",
+   "common": "kenyan rock agama",
+   "kind": "reptile",
+   "records": 2,
+   "rank_in_class": 13,
+   "share_of_class": 0.0069,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "psammophis_mossambicus",
+   "scientific": "Psammophis mossambicus",
+   "common": "olive whip snake",
+   "kind": "reptile",
+   "records": 2,
+   "rank_in_class": 14,
+   "share_of_class": 0.0069,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "lygodactylus_capensis",
+   "scientific": "Lygodactylus capensis",
+   "common": "cape dwarf gecko",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 15,
+   "share_of_class": 0.0034,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "philothamnus_semivariegatus",
+   "scientific": "Philothamnus semivariegatus",
+   "common": "spotted bush snake",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 16,
+   "share_of_class": 0.0034,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "dasypeltis_scabra",
+   "scientific": "Dasypeltis scabra",
+   "common": "common egg eater",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 17,
+   "share_of_class": 0.0034,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "nucras_boulengeri",
+   "scientific": "Nucras boulengeri",
+   "common": "boulenger's scrub lizard",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 18,
+   "share_of_class": 0.0034,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "amblyodipsas_polylepis",
+   "scientific": "Amblyodipsas polylepis",
+   "common": "common purple-glossed snake",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 19,
+   "share_of_class": 0.0034,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "mochlus_sundevallii",
+   "scientific": "Mochlus sundevallii",
+   "common": "peters' eyelid skink",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 20,
+   "share_of_class": 0.0034,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "trachylepis_megalura",
+   "scientific": "Trachylepis megalura",
+   "common": "grass skink",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 21,
+   "share_of_class": 0.0034,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "agama_planiceps",
+   "scientific": "Agama planiceps",
+   "common": "namib rock agama",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 22,
+   "share_of_class": 0.0034,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "psammophis_sudanensis",
+   "scientific": "Psammophis sudanensis",
+   "common": "northern stripe-bellied sand snake",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 23,
+   "share_of_class": 0.0034,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "naja_nigricollis",
+   "scientific": "Naja nigricollis",
+   "common": "black-necked spitting cobra",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 24,
+   "share_of_class": 0.0034,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "elapsoidea_loveridgei",
+   "scientific": "Elapsoidea loveridgei",
+   "common": "east african garter snake",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 25,
+   "share_of_class": 0.0034,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "pelomedusa_subrufa",
+   "scientific": "Pelomedusa subrufa",
+   "common": "african helmeted terrapin",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 26,
+   "share_of_class": 0.0034,
+   "role": [],
+   "listed": false
+  },
+  {
    "id": "phrynobatrachus_mababiensis",
    "scientific": "Phrynobatrachus mababiensis",
    "common": "mababi puddle frog",
@@ -6214,7 +6696,7 @@
  "classes": {
   "bird": 150,
   "mammal": 80,
-  "reptile": 30,
+  "reptile": 5,
   "amphibian": 30,
   "fish": 30,
   "invertebrate": 20

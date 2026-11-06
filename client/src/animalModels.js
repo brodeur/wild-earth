@@ -622,6 +622,18 @@ const RIG = {
   lizard: { amp: [0.8, 0.35, 0.4, 0], pose: [1, 0, 0, 0],
     k: { wave: 0.024, waveK: 5.03, envS: 0.2, pushPitch: 0.35, baskAbduct: 0.5, squash: 0.25, legLift: 0.4, hindK: 1.3, bend: 0.05,
       flickYaw: 0.5, tipLag: 0.6 } },
+  // A tile's own reptiles (tools/build_reptile.py; loadFaunaModel): the reptile template on two archetypes, written for a
+  // 0.18 m body as the fence lizard's (the lengths, wave and bend, are scaled to the model's own length_m at load).
+  // sprawler: the crocodilians and the large lizards, a slower, heavier sprawl than the fence lizard's, the wave
+  //           mostly in the tail (envS low), a little squash basking flat; push-ups as the fence lizard's (an agama bobs;
+  //           animals.js drives one only for the iguanians, fauna.json `pushup`)
+  // tortoise: a rigid shell (no wave, no bend, no squash), short leg swings with a high lift, the head turning
+  sprawler: { amp: [0.6, 0.3, 0.35, 0], pose: [1, 0, 0, 0],
+    k: { wave: 0.02, waveK: 4.0, envS: 0.1, pushPitch: 0.3, baskAbduct: 0.35, squash: 0.12, legLift: 0.35, hindK: 1.2, bend: 0.04,
+      flickYaw: 0.45, tipLag: 0.5 } },
+  tortoise: { amp: [0.45, 0, 0.3, 0], pose: [1, 0, 0, 0],
+    k: { wave: 0, waveK: 0, envS: 0, pushPitch: 0, baskAbduct: 0.15, squash: 0, legLift: 0.45, hindK: 1.0, bend: 0,
+      flickYaw: 0.5, tipLag: 0 } },
   // ---- the Hoh rain forest batch (2026-11-05; docs/animal-library.md "The Hoh rain forest batch"). Each is drawn with its
   // template's constants (its build script keeps that template's parts, pivots and extras.rig keys).
   // Roosevelt elk, bull and cow (tools/build_elk.py): skinned on the leg engine (tools/rig_quadruped.py, unguligrade); the
@@ -758,8 +770,11 @@ function rigLoader(name, opts) { return Object.assign(() => rigModel(name, opts)
 // hawk's, eagle's, gulls'), a standing bird's on one whose flight cards fold into the shoulder (collapse 1): the kin's
 // own template when it is such a bird template (the kin's behaviour machine is tuned to it), else by the archetype.
 const BIRD_TEMPLATE = { soar: 'hawk', perch: 'stjay', ground: 'turkey', wade: 'heron', water: 'merganser' };
+// A reptile (model.kind 'reptile', tools/build_reptile.py: the reptile part rig, no skin) on the reptile template of its
+// build: a tortoise's shell on 'tortoise', a sprawler (the crocodilians, the lizards) on 'sprawler'.
 export function faunaTemplate(kinLoad, { role, archetype, mass_kg, model } = {}) {
   const t = kinLoad?.rig;
+  if (model?.kind === 'reptile') return model.archetype === 'tortoise' ? 'tortoise' : 'sprawler';
   if (model?.kind === 'bird') {
     const a = BIRD_TEMPLATE[model.archetype] ? model.archetype : 'perch', k = RIG[t]?.k;
     if (k && k.handLag !== undefined && !k.ground && (k.collapse === 0) === (a === 'soar')) return t;
@@ -776,6 +791,7 @@ export function faunaTemplate(kinLoad, { role, archetype, mass_kg, model } = {})
 // no leg skeleton) is the file's own: its fore leg pivot's height times the template's leg squash (pose.x), as the hand-
 // built ones' (the cougar's 0.29 m x (1 - 0.35)); a skinned model drops nothing (the clips and the engine bed it).
 const FAUNA_PATH = /^[A-Za-z0-9_\-/]+\.glb$/;
+export const REPTILE_REF_M = 0.18;   // the reptile templates' body length (the fence lizard's, snout to tail tip)
 export function loadFaunaModel(path, template = 'lion', { skin = true } = {}) {
   if (typeof path !== 'string' || !FAUNA_PATH.test(path) || path.split('/').some(p => !p || p === '.' || p === '..'))
     return Promise.reject(new Error(`fauna model: bad path '${path}'`));
@@ -783,6 +799,9 @@ export function loadFaunaModel(path, template = 'lion', { skin = true } = {}) {
   return rigModel(name, { skin }, new URL('../assets/' + path, import.meta.url), `${name}|${path}`).then(m => {
     const fore = m.rig.piv?.fore;
     if (!m.skin && Array.isArray(fore) && Number.isFinite(fore[1])) m.drop = Math.max(0, fore[1] * (1 - (m.pose?.[0] || 0)));
+    // a reptile template's lengths (the wave's and the C-bend's metres at the tail tip) are a 0.18 m body's: the model's own
+    const L = m.rig.piv?.length_m;
+    if (m.rig.kind === 'reptile' && Number.isFinite(L) && L > 0) { const r = L / REPTILE_REF_M; m.rig.k.wave *= r; m.rig.k.bend *= r; }
     return m;
   });
 }

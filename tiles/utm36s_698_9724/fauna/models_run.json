@@ -1,260 +1,263 @@
 {
  "tile": "utm36s_698_9724",
- "started": "2026-11-06T09:54:57+00:00",
- "budget": 170,
- "reserve": 1700,
+ "started": "2026-11-06T12:07:41+00:00",
+ "budget": 120,
+ "reserve": 1600,
  "species": [
   {
-   "code": "torgos_tracheliotos",
-   "why": "scavenger or raptor",
+   "code": "crocodylus_niloticus",
+   "why": "reptile by records x sqrt(mass), one per archetype first",
    "attempts": 1,
    "credits": 30,
    "jobs": [
     {
      "mode": "preview",
-     "dir": "library/animals/jobs/torgos_tracheliotos/01a1b048-6b98-76b5-b585-c185c0cafb5e"
+     "dir": "library/animals/jobs/crocodylus_niloticus/01a1b0b5-7e2d-779d-ab35-f232aae70a79"
     },
     {
      "mode": "refine",
-     "dir": "library/animals/jobs/torgos_tracheliotos/01a1b049-1d29-7795-a0d6-4bc059962d66"
+     "dir": "library/animals/jobs/crocodylus_niloticus/01a1b0be-0d2f-7559-a8d7-4fa1b54d7587"
     }
    ],
    "ok": true,
-   "archetype": "soar",
-   "prompt": "A wild Lappet-faced vulture (Torgos tracheliotos) of Serengeti, Mara Region, Tanzania, one adult bird soaring in mid-air, realistic anatomy and proportions. Seen level, the body horizontal like an airplane: both wings fully spread flat and straight out to the sides, wingtips level with the body, the flight feathers spread, the tail spread, the head forward, the legs and feet tucked up under the body, nothing hanging below. Single bird, no base, no perch, no ground. Game-ready.",
-   "texture_prompt": "Natural plumage colours and markings of a wild adult Lappet-faced vulture (Torgos tracheliotos) as seen in Serengeti, Mara Region, Tanzania, both the upper side and the underside of the wings and tail in their true colours; realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin and feet in their true colours.",
-   "build_log": "INFO islands 1 dropped faces 0 kept 30777\nINFO colour from texture source faces 30777 archetype soar mass 6.969\nINFO remeshed 35956 faces\nINFO soar: wing root x 0.120, wrist x 0.494, semi-span 1.000, body height 0.238, tail root y -0.152, neck y -0.714\nINFO size by mass at 250 kg/m3 over the body slab volume 0.0388 (body 0.0220) units, scale 1.0827 -> length 1.073 m, height 0.866 m, width 2.162 m\nINFO span 2.162 m (the span rule for a soarer, 1.4 M^0.39: 2.985 m)\nINFO palette shares [0.097, 0.06, 0.103, 0.142, 0.13, 0.121, 0.024, 0.121, 0.091, 0.111] pattern 0.0621 -> tiers [('lod0', 3079), ('lod1', 1108), ('lod2', 307)]\nINFO tier lod0 from 71912 to 3078 triangles with the cards\nINFO tier lod1 from 71912 to 1108 triangles with the cards\nINFO tier lod2 from 71912 to 306 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/torgos_tracheliotos.glb 328484 bytes; lod0 3078 tris, lod1 1108 tris, lod2 306 tris"
+   "archetype": "sprawl",
+   "build_log": "INFO archetype sprawl voxel 0.0065 remeshed 49174 faces 49178 vertices\nINFO foot pieces (y, x, n): [(-0.551, 0.225, 8), (-0.548, 0.222, 818), (-0.548, -0.223, 813), (-0.044, -0.244, 1094), (-0.044, 0.243, 1088), (0.316, 0.082, 125)]\nINFO feet pieces 6 fore/hind gap 0.503 at y -0.296\nINFO legs {'HR': (2506, [-0.171, 0.004, 0.11]), 'HL': (2625, [0.158, 0.037, 0.099]), 'FL': (2294, [0.129, -0.439, 0.122]), 'FR': (2270, [-0.129, -0.438, 0.122])}\nINFO tail 14550 vertices from y 0.067\nINFO neck y -0.570, head 13.8% of the mesh, shoulders y -0.439, hips y 0.021\nLANDMARKS length 2.454 m, scale 1.2271 volume 0.05098 units mass 94.2 kg; svl 1.309 tail 1.392 belly 0.0131 back 0.3311 neck [0.0, -0.443, 0.23] pivots {'HR': [-0.21, 0.262, 0.135], 'HL': [0.194, 0.302, 0.122], 'FL': [0.158, -0.282, 0.15], 'FR': [-0.158, -0.281, 0.149]}\nINFO palette shares [0.154, 0.071, 0.095, 0.127, 0.056, 0.1, 0.068, 0.15, 0.063, 0.117] pattern 0.0751 -> tiers [('lod0', 4703), ('lod1', 1693), ('lod2', 470)]\nINFO tier lod0 from 98348 to 4702\nINFO tier lod1 from 98348 to 1692\nINFO tier lod2 from 98348 to 470\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/crocodylus_niloticus.glb 540912 bytes; lod0 4702 tris, lod1 1692 tris, lod2 470 tris",
+   "reused": "library/animals/jobs/crocodylus_niloticus/01a1b0be-0d2f-7559-a8d7-4fa1b54d7587"
   },
   {
-   "code": "leptoptilos_crumenifer",
-   "why": "scavenger or raptor",
+   "code": "stigmochelys_pardalis",
+   "why": "reptile by records x sqrt(mass), one per archetype first",
    "attempts": 1,
    "credits": 30,
    "jobs": [
     {
      "mode": "preview",
-     "dir": "library/animals/jobs/leptoptilos_crumenifer/01a1b049-fff2-7433-be39-e833e823d777"
+     "dir": "library/animals/jobs/stigmochelys_pardalis/01a1b0b6-e5a5-712f-a3c3-2359f238ae3e"
     },
     {
      "mode": "refine",
-     "dir": "library/animals/jobs/leptoptilos_crumenifer/01a1b04a-b2d1-719b-bfb6-6b5229ef55ea"
+     "dir": "library/animals/jobs/stigmochelys_pardalis/01a1b0c0-4888-7401-88fa-0e7be6ad0154"
     }
    ],
    "ok": true,
-   "archetype": "wade",
-   "prompt": "A wild Marabou stork (Leptoptilos crumenifer) of Serengeti, Mara Region, Tanzania, one adult bird, realistic anatomy and proportions. Standing still on the ground in a side-on neutral pose: the wings folded tight against the body, both legs straight and apart with a clear gap between them, both feet flat on the ground, the head up and looking forward, the bill closed, the tail held clear of the ground; nothing but the feet touches the ground. No base, no ground plane, no perch, no water, no props. Game-ready.",
-   "texture_prompt": "Natural plumage colours and markings of a wild adult Marabou stork (Leptoptilos crumenifer) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin, legs and feet in their true colours.",
-   "build_log": "INFO remeshed 138168 faces\nINFO legs: cut z 1.960, feet y -0.293, split x 0.001 (gap 0.101), 67161 leg vertices\nINFO head: tip [-0.0, -1.0, 2.955], neck none, base at 1.230 along (ring 0.260 of body 0.416), pivot [0.001, -0.258, 3.516]\nINFO tail: root y -0.003 (depth; body depth 1.891), pivot [0.0, -0.003, 2.78]; head 14% of the bird\nINFO size by mass at 150 kg/m3 over the whole mesh volume 0.7378 (body 0.7378) units, scale 0.3615 -> length 0.723 m, height 1.406 m, width 0.454 m\nINFO cards: span 2.478 m (1.3 M^0.39), shoulder [0.027, 0.031, 1.218]\nINFO palette shares [0.151, 0.063, 0.048, 0.147, 0.084, 0.138, 0.172, 0.111, 0.042, 0.044] pattern 0.0542 -> tiers [('lod0', 2710), ('lod1', 975), ('lod2', 271)]\nINFO loose pieces 13 joined to their nearest part\nINFO tier lod0 from 276336 to 2746 triangles with the cards\nINFO tier lod1 from 276336 to 1010 triangles with the cards\nINFO tier lod2 from 276336 to 298 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/leptoptilos_crumenifer.glb 235308 bytes; lod0 2746 tris, lod1 1010 tris, lod2 298 tris"
+   "archetype": "tortoise",
+   "build_log": "INFO foot pieces (y, x, n): [(-0.57, 0.423, 460), (-0.569, -0.425, 457), (0.82, -0.416, 489), (0.821, 0.415, 489)]\nINFO feet pieces 4 fore/hind gap 1.390 at y 0.125\nINFO tortoise leg cut z 0.213\nINFO legs {'FL': (2079, [0.402, -0.525, 0.213]), 'FR': (2075, [-0.402, -0.525, 0.213]), 'HR': (2044, [-0.394, 0.777, 0.213]), 'HL': (2036, [0.394, 0.776, 0.213])}\nINFO tail none (a tortoise: the stub stays body)\nINFO neck y -0.630, head 12.9% of the mesh, shoulders y -0.525, hips y 0.776\nLANDMARKS length 0.562 m, scale 0.2809 volume 0.90280 units mass 20.0 kg; svl 0.499 tail 0.0 belly 0.0599 back 0.3305 neck [0.0, -0.212, 0.124] pivots {'FL': [0.113, -0.183, 0.06], 'FR': [-0.113, -0.183, 0.06], 'HR': [-0.111, 0.183, 0.06], 'HL': [0.111, 0.183, 0.06]}\nINFO palette shares [0.122, 0.077, 0.074, 0.059, 0.095, 0.122, 0.132, 0.132, 0.06, 0.127] pattern 0.0892 -> tiers [('lod0', 4529), ('lod1', 1630), ('lod2', 452)]\nINFO tier lod0 from 155136 to 4528\nINFO tier lod1 from 155136 to 1630\nINFO tier lod2 from 155136 to 452\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/stigmochelys_pardalis.glb 557140 bytes; lod0 4528 tris, lod1 1630 tris, lod2 452 tris",
+   "reused": "library/animals/jobs/stigmochelys_pardalis/01a1b0c0-4888-7401-88fa-0e7be6ad0154"
   },
   {
-   "code": "struthio_camelus",
-   "why": "bird by mass, one per archetype first",
+   "code": "agama_mwanzae",
+   "why": "reptile by records x sqrt(mass), one per archetype first",
    "attempts": 1,
    "credits": 30,
    "jobs": [
     {
      "mode": "preview",
-     "dir": "library/animals/jobs/struthio_camelus/01a1b04b-9b4e-7547-bb00-f5b9165cbfaa"
+     "dir": "library/animals/jobs/agama_mwanzae/01a1b0b7-fcb0-72d5-a12c-ff05fc4c1d55"
     },
     {
      "mode": "refine",
-     "dir": "library/animals/jobs/struthio_camelus/01a1b04d-2769-77eb-8bee-f804e419abaf"
+     "dir": "library/animals/jobs/agama_mwanzae/01a1b0c1-02f3-7233-94b5-04e29fb1103a"
     }
    ],
    "ok": true,
-   "archetype": "ground",
-   "prompt": "A wild Common ostrich (Struthio camelus) of Serengeti, Mara Region, Tanzania, one adult bird, realistic anatomy and proportions. Standing still on the ground in a side-on neutral pose: the wings folded tight against the body, both legs straight and apart with a clear gap between them, both feet flat on the ground, the head up and looking forward, the bill closed, the tail held clear of the ground; nothing but the feet touches the ground. No base, no ground plane, no perch, no water, no props. Game-ready.",
-   "texture_prompt": "Natural plumage colours and markings of a wild adult Common ostrich (Struthio camelus) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin, legs and feet in their true colours.",
-   "build_log": "INFO remeshed 168134 faces\nINFO legs: cut z 1.236, feet y -0.261, split x -0.000 (gap 0.439), 18776 leg vertices\nINFO head: tip [-0.005, -0.892, 3.114], neck dip, base at 1.590 along (ring 0.276 of body 0.552), pivot [-0.001, -0.72, 2.008]\nINFO tail: root y 0.999 (depth; body depth 1.139), pivot [0.0, 0.999, 1.146]; head 13% of the bird\nINFO size by mass at 150 kg/m3 over the whole mesh volume 1.2167 (body 1.2167) units, scale 0.8473 -> length 1.688 m, height 2.779 m, width 1.034 m\nINFO cards: span 0.000 m (flightless), shoulder [0.348, -0.098, 1.555]\nINFO palette shares [0.049, 0.064, 0.047, 0.065, 0.068, 0.129, 0.417, 0.054, 0.046, 0.06] pattern 0.0798 -> tiers [('lod0', 4805), ('lod1', 1729), ('lod2', 480)]\nINFO loose pieces 93 joined to their nearest part\nINFO tier lod0 from 336268 to 4804 triangles with the cards\nINFO tier lod1 from 336268 to 1728 triangles with the cards\nINFO tier lod2 from 336268 to 480 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/struthio_camelus.glb 380748 bytes; lod0 4804 tris, lod1 1728 tris, lod2 480 tris"
+   "archetype": "sprawl",
+   "build_log": "INFO archetype sprawl voxel 0.0065 remeshed 53386 faces 53390 vertices\nINFO foot pieces (y, x, n): [(-0.592, -0.124, 1045), (-0.572, 0.158, 1147), (-0.137, -0.243, 1109), (-0.135, 0.244, 1107)]\nINFO feet pieces 4 fore/hind gap 0.435 at y -0.354\nINFO legs {'FL': (4704, [0.097, -0.504, 0.366]), 'HR': (4641, [-0.097, -0.086, 0.238]), 'HL': (4601, [0.098, -0.088, 0.237]), 'FR': (4268, [-0.096, -0.511, 0.352])}\nINFO tail 10770 vertices from y -0.056\nINFO neck y -0.570, head 18.0% of the mesh, shoulders y -0.507, hips y -0.087\nLANDMARKS length 0.256 m, scale 0.1282 volume 0.04742 units mass 0.1 kg; svl 0.121 tail 0.143 belly 0.0231 back 0.0691 neck [0.0, -0.035, 0.061] pivots {'FL': [0.012, -0.026, 0.047], 'HR': [-0.012, 0.027, 0.031], 'HL': [0.013, 0.027, 0.03], 'FR': [-0.012, -0.027, 0.045]}\nINFO palette shares [0.104, 0.091, 0.104, 0.166, 0.067, 0.028, 0.157, 0.043, 0.097, 0.142] pattern 0.0456 -> tiers [('lod0', 1200), ('lod1', 432), ('lod2', 120)]\nINFO tier lod0 from 106772 to 1200\nINFO tier lod1 from 106772 to 432\nINFO tier lod2 from 106772 to 120\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/agama_mwanzae.glb 114948 bytes; lod0 1200 tris, lod1 432 tris, lod2 120 tris",
+   "reused": "library/animals/jobs/agama_mwanzae/01a1b0c1-02f3-7233-94b5-04e29fb1103a"
   },
   {
-   "code": "alopochen_aegyptiaca",
-   "why": "bird by mass, one per archetype first",
+   "code": "varanus_niloticus",
+   "why": "reptile by records x sqrt(mass), one per archetype first",
    "attempts": 1,
    "credits": 30,
    "jobs": [
     {
      "mode": "preview",
-     "dir": "library/animals/jobs/alopochen_aegyptiaca/01a1b04e-2346-72ad-88b8-1fd14c504ab9"
+     "dir": "library/animals/jobs/varanus_niloticus/01a1b0b6-31a2-777c-82da-3ae68d038d1a"
     },
     {
      "mode": "refine",
-     "dir": "library/animals/jobs/alopochen_aegyptiaca/01a1b04f-3812-7354-b582-2b3339b6a64c"
+     "dir": "library/animals/jobs/varanus_niloticus/01a1b0bf-2b22-7473-8384-e7813b1d714e"
     }
    ],
    "ok": true,
-   "archetype": "water",
-   "prompt": "A wild Egyptian goose (Alopochen aegyptiaca) of Serengeti, Mara Region, Tanzania, one adult bird, realistic anatomy and proportions. Standing still on the ground in a side-on neutral pose: the wings folded tight against the body, both legs straight and apart with a clear gap between them, both feet flat on the ground, the head up and looking forward, the bill closed, the tail held clear of the ground; nothing but the feet touches the ground. No base, no ground plane, no perch, no water, no props. Game-ready.",
-   "texture_prompt": "Natural plumage colours and markings of a wild adult Egyptian goose (Alopochen aegyptiaca) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin, legs and feet in their true colours.",
-   "build_log": "INFO remeshed 89058 faces\nINFO legs: knees z 1.000 1.080, belly 1.116, feet y -0.337, split x 0.184 (gap 0.020), 8327 leg vertices\nINFO head: tip [-0.004, -0.997, 2.374], neck dip, base at 1.350 along (ring 0.336 of body 0.663), pivot [-0.001, -0.483, 1.581]\nINFO tail: root y -0.512 (rings; body depth 0.027), pivot [0.0, -0.512, 1.217]; head 22% of the bird\nINFO size by mass at 150 kg/m3 over the whole mesh volume 0.4779 (body 0.4779) units, scale 0.2967 -> length 0.593 m, height 0.772 m, width 0.235 m\nINFO cards: span 1.213 m (0.95 M^0.39), shoulder [0.076, -0.045, 0.053]\nINFO palette shares [0.07, 0.264, 0.038, 0.113, 0.109, 0.052, 0.093, 0.145, 0.034, 0.082] pattern 0.0431 -> tiers [('lod0', 2218), ('lod1', 798), ('lod2', 221)]\nINFO loose pieces 8 joined to their nearest part\nINFO tier lod0 from 178116 to 2250 triangles with the cards\nINFO tier lod1 from 178116 to 830 triangles with the cards\nINFO tier lod2 from 178116 to 244 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/alopochen_aegyptiaca.glb 177936 bytes; lod0 2250 tris, lod1 830 tris, lod2 244 tris"
-  },
-  {
-   "code": "vanellus_armatus",
-   "why": "bird by mass, one per archetype first",
-   "attempts": 1,
-   "credits": 30,
-   "jobs": [
-    {
-     "mode": "preview",
-     "dir": "library/animals/jobs/vanellus_armatus/01a1b050-207e-74af-9687-68e363ec0b9d"
-    },
-    {
-     "mode": "refine",
-     "dir": "library/animals/jobs/vanellus_armatus/01a1b050-d4f9-761a-a518-57d0d141f289"
-    }
-   ],
-   "ok": true,
-   "archetype": "perch",
-   "prompt": "A wild Blacksmith lapwing (Vanellus armatus) of Serengeti, Mara Region, Tanzania, one adult bird, realistic anatomy and proportions. Standing still on the ground in a side-on neutral pose: the wings folded tight against the body, both legs straight and apart with a clear gap between them, both feet flat on the ground, the head up and looking forward, the bill closed, the tail held clear of the ground; nothing but the feet touches the ground. No base, no ground plane, no perch, no water, no props. Game-ready.",
-   "texture_prompt": "Natural plumage colours and markings of a wild adult Blacksmith lapwing (Vanellus armatus) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin, legs and feet in their true colours.",
-   "build_log": "INFO remeshed 60556 faces\nINFO legs: knees z 0.860 0.860, belly 0.872, feet y -0.325, split x -0.000 (gap 0.210), 8395 leg vertices\nINFO head: tip [-0.002, -1.0, 2.012], neck dip, base at 0.930 along (ring 0.231 of body 0.347), pivot [0.002, -0.554, 1.447]\nINFO tail: root y 0.355 (depth; body depth 0.697), pivot [0.0, 0.355, 1.095]; head 19% of the bird\nINFO size by mass at 150 kg/m3 over the whole mesh volume 0.3228 (body 0.3228) units, scale 0.1477 -> length 0.295 m, height 0.318 m, width 0.109 m\nINFO cards: span 0.485 m (1.0 M^0.39), shoulder [0.039, -0.007, 0.203]\nINFO palette shares [0.085, 0.123, 0.073, 0.076, 0.185, 0.044, 0.026, 0.183, 0.144, 0.061] pattern 0.0426 -> tiers [('lod0', 1354), ('lod1', 487), ('lod2', 135)]\nINFO loose pieces 3 joined to their nearest part\nINFO tier lod0 from 121112 to 1390 triangles with the cards\nINFO tier lod1 from 121112 to 522 triangles with the cards\nINFO tier lod2 from 121112 to 162 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/vanellus_armatus.glb 126312 bytes; lod0 1390 tris, lod1 522 tris, lod2 162 tris"
+   "archetype": "sprawl",
+   "build_log": "INFO archetype sprawl voxel 0.0066 remeshed 51516 faces 51516 vertices\nINFO foot pieces (y, x, n): [(-0.493, -0.21, 1184), (-0.459, 0.177, 1168), (0.0, 0.223, 1456), (0.103, -0.227, 1358)]\nINFO feet pieces 4 fore/hind gap 0.459 at y -0.229\nINFO legs {'HR': (4842, [-0.133, 0.083, 0.291]), 'HL': (4627, [0.137, 0.064, 0.279]), 'FR': (4070, [-0.114, -0.439, 0.326]), 'FL': (3739, [0.118, -0.414, 0.301])}\nINFO tail 9090 vertices from y 0.113\nINFO neck y -0.610, head 11.8% of the mesh, shoulders y -0.426, hips y 0.073\nLANDMARKS length 0.735 m, scale 0.3673 volume 0.05705 units mass 2.8267 kg; svl 0.409 tail 0.328 belly 0.0644 back 0.1879 neck [0.0, -0.159, 0.171] pivots {'HR': [-0.049, 0.095, 0.107], 'HL': [0.05, 0.088, 0.102], 'FR': [-0.042, -0.096, 0.12], 'FL': [0.043, -0.087, 0.111]}\nINFO palette shares [0.105, 0.129, 0.122, 0.071, 0.073, 0.091, 0.13, 0.142, 0.07, 0.066] pattern 0.0649 -> tiers [('lod0', 2801), ('lod1', 1008), ('lod2', 280)]\nINFO tier lod0 from 103032 to 2800\nINFO tier lod1 from 103032 to 1008\nINFO tier lod2 from 103032 to 280\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/varanus_niloticus.glb 304752 bytes; lod0 2800 tris, lod1 1008 tris, lod2 280 tris",
+   "reused": "library/animals/jobs/varanus_niloticus/01a1b0bf-2b22-7473-8384-e7813b1d714e"
   }
  ],
  "stand_ins": [
   {
    "code": "loxodonta_africana",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "hippopotamus_amphibius",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "damaliscus_korrigum",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "giraffa_tippelskirchi",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "aepyceros_melampus",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "panthera_leo",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "crocuta_crocuta",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "alcelaphus_buselaphus",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "syncerus_caffer",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "equus_quagga",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "connochaetes_taurinus",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "papio_anubis",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "phacochoerus_africanus",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "redunca_redunca",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "heterohyrax_brucei",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "eudorcas_thomsonii",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "panthera_pardus",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "acinonyx_jubatus",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "nanger_granti",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "chlorocebus_pygerythrus",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "procavia_capensis",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "mungos_mungo",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "leptailurus_serval",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "helogale_parvula",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "otocyon_megalotis",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "canis_aureus",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "canis_mesomelas",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "lycaon_pictus",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "genetta_genetta",
-   "why": "not in this run (--kind birds)"
+   "why": "not in this run (--kind reptiles)"
   },
   {
-   "code": "gyps_africanus",
-   "why": "over the budget or the count"
-  },
-  {
-   "code": "sagittarius_serpentarius",
-   "why": "over the budget or the count"
-  },
-  {
-   "code": "aquila_rapax",
-   "why": "over the budget or the count"
+   "code": "struthio_camelus",
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "lamprotornis_superbus",
-   "why": "over the budget or the count"
+   "why": "not in this run (--kind reptiles)"
+  },
+  {
+   "code": "leptoptilos_crumenifer",
+   "why": "not in this run (--kind reptiles)"
+  },
+  {
+   "code": "alopochen_aegyptiaca",
+   "why": "not in this run (--kind reptiles)"
+  },
+  {
+   "code": "torgos_tracheliotos",
+   "why": "not in this run (--kind reptiles)"
+  },
+  {
+   "code": "vanellus_armatus",
+   "why": "not in this run (--kind reptiles)"
+  },
+  {
+   "code": "sagittarius_serpentarius",
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "eurocephalus_ruppelli",
-   "why": "over the budget or the count"
+   "why": "not in this run (--kind reptiles)"
+  },
+  {
+   "code": "gyps_africanus",
+   "why": "not in this run (--kind reptiles)"
   },
   {
    "code": "trachyphonus_darnaudii",
+   "why": "not in this run (--kind reptiles)"
+  },
+  {
+   "code": "aquila_rapax",
+   "why": "not in this run (--kind reptiles)"
+  },
+  {
+   "code": "phrynobatrachus_mababiensis",
+   "why": "not in this run (--kind reptiles)"
+  },
+  {
+   "code": "trachylepis_striata",
    "why": "over the budget or the count"
   }
  ],
- "spent": 150,
- "balance_after": 1727,
- "modelled": 5,
+ "spent": 120,
+ "balance_after": 1607,
+ "modelled": 4,
  "earlier": [
   {
    "tile": "utm36s_698_9724",
@@ -640,6 +643,265 @@
    "spent": 450,
    "balance_after": 1877,
    "modelled": 11
+  },
+  {
+   "tile": "utm36s_698_9724",
+   "started": "2026-11-06T09:54:57+00:00",
+   "budget": 170,
+   "reserve": 1700,
+   "species": [
+    {
+     "code": "torgos_tracheliotos",
+     "why": "scavenger or raptor",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/torgos_tracheliotos/01a1b048-6b98-76b5-b585-c185c0cafb5e"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/torgos_tracheliotos/01a1b049-1d29-7795-a0d6-4bc059962d66"
+      }
+     ],
+     "ok": true,
+     "archetype": "soar",
+     "prompt": "A wild Lappet-faced vulture (Torgos tracheliotos) of Serengeti, Mara Region, Tanzania, one adult bird soaring in mid-air, realistic anatomy and proportions. Seen level, the body horizontal like an airplane: both wings fully spread flat and straight out to the sides, wingtips level with the body, the flight feathers spread, the tail spread, the head forward, the legs and feet tucked up under the body, nothing hanging below. Single bird, no base, no perch, no ground. Game-ready.",
+     "texture_prompt": "Natural plumage colours and markings of a wild adult Lappet-faced vulture (Torgos tracheliotos) as seen in Serengeti, Mara Region, Tanzania, both the upper side and the underside of the wings and tail in their true colours; realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin and feet in their true colours.",
+     "build_log": "INFO islands 1 dropped faces 0 kept 30777\nINFO colour from texture source faces 30777 archetype soar mass 6.969\nINFO remeshed 35956 faces\nINFO soar: wing root x 0.120, wrist x 0.494, semi-span 1.000, body height 0.238, tail root y -0.152, neck y -0.714\nINFO size by mass at 250 kg/m3 over the body slab volume 0.0388 (body 0.0220) units, scale 1.0827 -> length 1.073 m, height 0.866 m, width 2.162 m\nINFO span 2.162 m (the span rule for a soarer, 1.4 M^0.39: 2.985 m)\nINFO palette shares [0.097, 0.06, 0.103, 0.142, 0.13, 0.121, 0.024, 0.121, 0.091, 0.111] pattern 0.0621 -> tiers [('lod0', 3079), ('lod1', 1108), ('lod2', 307)]\nINFO tier lod0 from 71912 to 3078 triangles with the cards\nINFO tier lod1 from 71912 to 1108 triangles with the cards\nINFO tier lod2 from 71912 to 306 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/torgos_tracheliotos.glb 328484 bytes; lod0 3078 tris, lod1 1108 tris, lod2 306 tris"
+    },
+    {
+     "code": "leptoptilos_crumenifer",
+     "why": "scavenger or raptor",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/leptoptilos_crumenifer/01a1b049-fff2-7433-be39-e833e823d777"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/leptoptilos_crumenifer/01a1b04a-b2d1-719b-bfb6-6b5229ef55ea"
+      }
+     ],
+     "ok": true,
+     "archetype": "wade",
+     "prompt": "A wild Marabou stork (Leptoptilos crumenifer) of Serengeti, Mara Region, Tanzania, one adult bird, realistic anatomy and proportions. Standing still on the ground in a side-on neutral pose: the wings folded tight against the body, both legs straight and apart with a clear gap between them, both feet flat on the ground, the head up and looking forward, the bill closed, the tail held clear of the ground; nothing but the feet touches the ground. No base, no ground plane, no perch, no water, no props. Game-ready.",
+     "texture_prompt": "Natural plumage colours and markings of a wild adult Marabou stork (Leptoptilos crumenifer) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin, legs and feet in their true colours.",
+     "build_log": "INFO remeshed 138168 faces\nINFO legs: cut z 1.960, feet y -0.293, split x 0.001 (gap 0.101), 67161 leg vertices\nINFO head: tip [-0.0, -1.0, 2.955], neck none, base at 1.230 along (ring 0.260 of body 0.416), pivot [0.001, -0.258, 3.516]\nINFO tail: root y -0.003 (depth; body depth 1.891), pivot [0.0, -0.003, 2.78]; head 14% of the bird\nINFO size by mass at 150 kg/m3 over the whole mesh volume 0.7378 (body 0.7378) units, scale 0.3615 -> length 0.723 m, height 1.406 m, width 0.454 m\nINFO cards: span 2.478 m (1.3 M^0.39), shoulder [0.027, 0.031, 1.218]\nINFO palette shares [0.151, 0.063, 0.048, 0.147, 0.084, 0.138, 0.172, 0.111, 0.042, 0.044] pattern 0.0542 -> tiers [('lod0', 2710), ('lod1', 975), ('lod2', 271)]\nINFO loose pieces 13 joined to their nearest part\nINFO tier lod0 from 276336 to 2746 triangles with the cards\nINFO tier lod1 from 276336 to 1010 triangles with the cards\nINFO tier lod2 from 276336 to 298 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/leptoptilos_crumenifer.glb 235308 bytes; lod0 2746 tris, lod1 1010 tris, lod2 298 tris"
+    },
+    {
+     "code": "struthio_camelus",
+     "why": "bird by mass, one per archetype first",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/struthio_camelus/01a1b04b-9b4e-7547-bb00-f5b9165cbfaa"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/struthio_camelus/01a1b04d-2769-77eb-8bee-f804e419abaf"
+      }
+     ],
+     "ok": true,
+     "archetype": "ground",
+     "prompt": "A wild Common ostrich (Struthio camelus) of Serengeti, Mara Region, Tanzania, one adult bird, realistic anatomy and proportions. Standing still on the ground in a side-on neutral pose: the wings folded tight against the body, both legs straight and apart with a clear gap between them, both feet flat on the ground, the head up and looking forward, the bill closed, the tail held clear of the ground; nothing but the feet touches the ground. No base, no ground plane, no perch, no water, no props. Game-ready.",
+     "texture_prompt": "Natural plumage colours and markings of a wild adult Common ostrich (Struthio camelus) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin, legs and feet in their true colours.",
+     "build_log": "INFO remeshed 168134 faces\nINFO legs: cut z 1.236, feet y -0.261, split x -0.000 (gap 0.439), 18776 leg vertices\nINFO head: tip [-0.005, -0.892, 3.114], neck dip, base at 1.590 along (ring 0.276 of body 0.552), pivot [-0.001, -0.72, 2.008]\nINFO tail: root y 0.999 (depth; body depth 1.139), pivot [0.0, 0.999, 1.146]; head 13% of the bird\nINFO size by mass at 150 kg/m3 over the whole mesh volume 1.2167 (body 1.2167) units, scale 0.8473 -> length 1.688 m, height 2.779 m, width 1.034 m\nINFO cards: span 0.000 m (flightless), shoulder [0.348, -0.098, 1.555]\nINFO palette shares [0.049, 0.064, 0.047, 0.065, 0.068, 0.129, 0.417, 0.054, 0.046, 0.06] pattern 0.0798 -> tiers [('lod0', 4805), ('lod1', 1729), ('lod2', 480)]\nINFO loose pieces 93 joined to their nearest part\nINFO tier lod0 from 336268 to 4804 triangles with the cards\nINFO tier lod1 from 336268 to 1728 triangles with the cards\nINFO tier lod2 from 336268 to 480 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/struthio_camelus.glb 380748 bytes; lod0 4804 tris, lod1 1728 tris, lod2 480 tris"
+    },
+    {
+     "code": "alopochen_aegyptiaca",
+     "why": "bird by mass, one per archetype first",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/alopochen_aegyptiaca/01a1b04e-2346-72ad-88b8-1fd14c504ab9"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/alopochen_aegyptiaca/01a1b04f-3812-7354-b582-2b3339b6a64c"
+      }
+     ],
+     "ok": true,
+     "archetype": "water",
+     "prompt": "A wild Egyptian goose (Alopochen aegyptiaca) of Serengeti, Mara Region, Tanzania, one adult bird, realistic anatomy and proportions. Standing still on the ground in a side-on neutral pose: the wings folded tight against the body, both legs straight and apart with a clear gap between them, both feet flat on the ground, the head up and looking forward, the bill closed, the tail held clear of the ground; nothing but the feet touches the ground. No base, no ground plane, no perch, no water, no props. Game-ready.",
+     "texture_prompt": "Natural plumage colours and markings of a wild adult Egyptian goose (Alopochen aegyptiaca) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin, legs and feet in their true colours.",
+     "build_log": "INFO remeshed 89058 faces\nINFO legs: knees z 1.000 1.080, belly 1.116, feet y -0.337, split x 0.184 (gap 0.020), 8327 leg vertices\nINFO head: tip [-0.004, -0.997, 2.374], neck dip, base at 1.350 along (ring 0.336 of body 0.663), pivot [-0.001, -0.483, 1.581]\nINFO tail: root y -0.512 (rings; body depth 0.027), pivot [0.0, -0.512, 1.217]; head 22% of the bird\nINFO size by mass at 150 kg/m3 over the whole mesh volume 0.4779 (body 0.4779) units, scale 0.2967 -> length 0.593 m, height 0.772 m, width 0.235 m\nINFO cards: span 1.213 m (0.95 M^0.39), shoulder [0.076, -0.045, 0.053]\nINFO palette shares [0.07, 0.264, 0.038, 0.113, 0.109, 0.052, 0.093, 0.145, 0.034, 0.082] pattern 0.0431 -> tiers [('lod0', 2218), ('lod1', 798), ('lod2', 221)]\nINFO loose pieces 8 joined to their nearest part\nINFO tier lod0 from 178116 to 2250 triangles with the cards\nINFO tier lod1 from 178116 to 830 triangles with the cards\nINFO tier lod2 from 178116 to 244 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/alopochen_aegyptiaca.glb 177936 bytes; lod0 2250 tris, lod1 830 tris, lod2 244 tris"
+    },
+    {
+     "code": "vanellus_armatus",
+     "why": "bird by mass, one per archetype first",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/vanellus_armatus/01a1b050-207e-74af-9687-68e363ec0b9d"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/vanellus_armatus/01a1b050-d4f9-761a-a518-57d0d141f289"
+      }
+     ],
+     "ok": true,
+     "archetype": "perch",
+     "prompt": "A wild Blacksmith lapwing (Vanellus armatus) of Serengeti, Mara Region, Tanzania, one adult bird, realistic anatomy and proportions. Standing still on the ground in a side-on neutral pose: the wings folded tight against the body, both legs straight and apart with a clear gap between them, both feet flat on the ground, the head up and looking forward, the bill closed, the tail held clear of the ground; nothing but the feet touches the ground. No base, no ground plane, no perch, no water, no props. Game-ready.",
+     "texture_prompt": "Natural plumage colours and markings of a wild adult Blacksmith lapwing (Vanellus armatus) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin, legs and feet in their true colours.",
+     "build_log": "INFO remeshed 60556 faces\nINFO legs: knees z 0.860 0.860, belly 0.872, feet y -0.325, split x -0.000 (gap 0.210), 8395 leg vertices\nINFO head: tip [-0.002, -1.0, 2.012], neck dip, base at 0.930 along (ring 0.231 of body 0.347), pivot [0.002, -0.554, 1.447]\nINFO tail: root y 0.355 (depth; body depth 0.697), pivot [0.0, 0.355, 1.095]; head 19% of the bird\nINFO size by mass at 150 kg/m3 over the whole mesh volume 0.3228 (body 0.3228) units, scale 0.1477 -> length 0.295 m, height 0.318 m, width 0.109 m\nINFO cards: span 0.485 m (1.0 M^0.39), shoulder [0.039, -0.007, 0.203]\nINFO palette shares [0.085, 0.123, 0.073, 0.076, 0.185, 0.044, 0.026, 0.183, 0.144, 0.061] pattern 0.0426 -> tiers [('lod0', 1354), ('lod1', 487), ('lod2', 135)]\nINFO loose pieces 3 joined to their nearest part\nINFO tier lod0 from 121112 to 1390 triangles with the cards\nINFO tier lod1 from 121112 to 522 triangles with the cards\nINFO tier lod2 from 121112 to 162 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/vanellus_armatus.glb 126312 bytes; lod0 1390 tris, lod1 522 tris, lod2 162 tris"
+    }
+   ],
+   "stand_ins": [
+    {
+     "code": "loxodonta_africana",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "hippopotamus_amphibius",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "damaliscus_korrigum",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "giraffa_tippelskirchi",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "aepyceros_melampus",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "panthera_leo",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "crocuta_crocuta",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "alcelaphus_buselaphus",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "syncerus_caffer",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "equus_quagga",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "connochaetes_taurinus",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "papio_anubis",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "phacochoerus_africanus",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "redunca_redunca",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "heterohyrax_brucei",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "eudorcas_thomsonii",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "panthera_pardus",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "acinonyx_jubatus",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "nanger_granti",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "chlorocebus_pygerythrus",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "procavia_capensis",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "mungos_mungo",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "leptailurus_serval",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "helogale_parvula",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "otocyon_megalotis",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "canis_aureus",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "canis_mesomelas",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "lycaon_pictus",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "genetta_genetta",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "gyps_africanus",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "sagittarius_serpentarius",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "aquila_rapax",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "lamprotornis_superbus",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "eurocephalus_ruppelli",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "trachyphonus_darnaudii",
+     "why": "over the budget or the count"
+    }
+   ],
+   "spent": 150,
+   "balance_after": 1727,
+   "modelled": 5
   }
- ]
+ ],
+ "note": "the four reptile previews and refines were run before this registration (120 credits; balance 1727 -> 1607); this run spent nothing"
 }

@@ -648,6 +648,14 @@ const GSQ = { raptor: 25, player: 10, run: 3.6, feed: [0.3, 0.7], down: [20, 40]
 // Western fence lizard (lzUpdate): states; the flight distance (m), dash speed (m/s), how long it stays hidden (s), the
 // push-up bouts (males: one every 10-30 s, 3-8 bobs at 2 Hz), the stride (m), and the air temperature it needs (C).
 const L_BASK = 150, L_ALERT = 151, L_PUSH = 152, L_TURN = 153, L_SPRINT = 154, L_HIDE = 155, L_MOVE = 156;
+// a tile's own large reptiles (rpUpdate): on the bank, walking, in the water (floating, swimming, sunk to the eyes); a
+// tortoise grazing, resting, still with its head drawn in
+const RP_LIE = 160, RP_WALK = 161, RP_FLOAT = 162, RP_SWIM = 163, RP_SINK = 164, RP_GRAZE = 165, RP_REST = 166, RP_HIDE = 167;
+// walk, dash (to the water), swim (m/s); flee: a player within it sends it off (m); bask: the hours a crocodile lies out
+// on the bank (Nile crocodiles bask through the morning and late afternoon, in the water in the midday heat and the
+// night; Downs et al. 2008); stride: a fraction of the body's length per leg cycle
+const RP = { croc: { walk: 0.35, dash: 1.8, swim: 0.3, flee: 7, bask: [[7, 11], [15, 18]], stride: 0.35 },
+  tortoise: { walk: 0.07, flee: 2.5, stride: 0.25 } };
 const SL_CRAWL = 160, SL_REST = 161, SL_IN = 162;   // the banana slug (slUpdate)
 const LIZ = { flee: 2, dash: 2, hide: 30, push: [10, 30], bobs: [3, 8], bobHz: 2, stride: 0.1, warm: 15, hot: 34, resolves: 2 };
 // Air temperature (C) for the foothills at ~600 m (Placerville normals, rounded): the mean daily low and high by month,
@@ -835,8 +843,24 @@ const WATERY = new Set();              // stand-ins kept to water with no water 
 // A slot's own day and rest (client/fauna.json active_hours, rest; pipeline/fauna_slots.py behaviour(): EltonTraits and
 // PanTHERIA): ACT[slot] the 24 hours, 1 = about (the kin's clock where absent); REST_STAND the slots that rest on their feet
 const ACT = {}, REST_STAND = new Set();
+// A ground bird's way of life (fauna.json flightless, gait, habitat_density; pipeline/fauna_slots.py bird_life and gait:
+// AVONET and the trait card's locomotion row), read by the turkey's and the quail's machines (tkUpdate, flockUpdate,
+// tkFlush; coveyUpdate, flushCovey, quUpdate): FLIGHTLESS the slots that never take off (the flush becomes a run on the
+// ground at the bird's cruise to where the flight would have gone; no roost in a tree: the night on the ground);
+// BGAIT[slot] { speed, stride } the slot's walk and stride over its kin's (the kin's speeds and leg cycles times them),
+// cruise (m/s) its run, flushR its flush distance over the kin's (the body's length ratio: a bigger bird flushes
+// farther; Blumstein 2006, flight initiation distance rises with body size), open: a bird of open country (AVONET
+// habitat density 3) picks its feeding patches by the least canopy, not the turkey's open oak woodland.
+const FLIGHTLESS = new Set(), BGAIT = {};
+const BG1 = { speed: 1, stride: 1, cruise: 0, flushR: 1, open: false };
+const bg = s => BGAIT[s] || BG1;
 const actAt = (s, h) => ACT[s][(((h | 0) % 24) + 24) % 24] === 1;
-const STAND_IN_MAX = 40;               // the pipeline sends at most 40; each is one instanced draw (and a planar shadow for the big)
+const STAND_IN_MAX = 48;               // the pipeline sends at most 40 mammals and birds and 6 reptiles and amphibians; each is one instanced draw (and a planar shadow for the big)
+// A reptile's way on the fence lizard's machine (fauna.json `reptile`: pipeline/fauna_slots.py reptile_way): REPT[slot]
+// 'bask' (the lizard's own: rocks, trunks, the ground beside them), 'water' (a crocodilian) or 'walk' (a tortoise), the
+// last two run by rpUpdate; PUSHUP the slots whose males bob (fauna.json `pushup`: the iguanians, an agama); SZ[slot] the
+// stand-in's scale (fauna.json `scale`: its body over the fence lizard's), for the lizard's metres (stride, flee).
+const REPT = {}, PUSHUP = new Set(), SZ = {};
 const WATER_IDS = new Set([KF, OT, GH, CM, MA]);
 const WATER_TWIN = { [QU]: MA, [MQ]: MA, [SG]: MA, [FX]: OT, [CY]: OT, [BC]: OT, [ST]: KF, [SJ]: KF };
 const NIGHT_PERCH = { n: [1, 1], h: [0.2, 0.2], beat: 6, move: [80, 200], ground: 0.05, flush: 12, hop: 0, night: true };   // a night bird on a jay's machine (the owls')
@@ -891,6 +915,14 @@ function installFauna(fauna, owner) {
     if (CULL[I]) CULL[d] = CULL[I] * Math.max(1, Math.sqrt(sc));
     if (Array.isArray(f.active_hours) && f.active_hours.length === 24) ACT[d] = Uint8Array.from(f.active_hours, v => (v ? 1 : 0));
     if (f.rest === 'stand') REST_STAND.add(d);
+    if (f.bird ?? sK.bird) {
+      const G = f.gait && typeof f.gait === 'object' ? f.gait : {}, num = (v, lo, hi, dflt) => Number.isFinite(v) && v > 0 ? clampN(v, lo, hi) : dflt;
+      BGAIT[d] = { speed: num(G.speed_k, 0.2, 6, 1), stride: num(G.stride_k, 0.2, 6, 1), cruise: num(G.cruise_mps, 0.5, 25, 0),
+        flushR: clampN(sc, 0.5, 4), open: f.habitat_density === 3 };
+      if (f.flightless === true) FLIGHTLESS.add(d);
+      e.standIn.flightless = f.flightless === true;
+      if (f.gait) e.standIn.gait = { speed: BGAIT[d].speed, stride: BGAIT[d].stride, cruise: BGAIT[d].cruise, top: num(G.top_mps, 0.5, 30, 0) };
+    }
     if (MAMMAL[I]) MAMMAL[d] = ACT[d] ? { ...MAMMAL[I], active: h => actAt(d, h) } : f.night === true ? { ...MAMMAL[I], active: h => h < 8 || h > 17.5 } : MAMMAL[I];
     if (HOH[I]) HOH[d] = { ...HOH[I] };
     if (f.night === true && (KIN[I] === ST || KIN[I] === SJ)) HOH[d] = { ...(HOH[d] || NIGHT_PERCH), night: true };
@@ -908,8 +940,15 @@ function installFauna(fauna, owner) {
     // its own body (fauna.json `model`): a drawn mesh like the static quadrupeds' (DRAWN), at its real size (the slot's
     // scale stays 1; the procedural fallback above keeps its baked scale), on its kin's template or one by what it is
     // (animalModels.js faunaTemplate), switched like the kin's (lod) times the size ratio
+    if (ID[I] === LZ && I < STATIC_N && (f.reptile === 'bask' || f.reptile === 'water' || f.reptile === 'walk')) {
+      REPT[d] = f.reptile; SZ[d] = sc;
+      if (f.pushup === true) PUSHUP.add(d);
+      if (sI.liveR) e.liveR = sI.liveR * Math.max(1, Math.sqrt(sc));   // a crocodile is seen farther than a fence lizard
+      if (Number.isFinite(f.mass_kg) && f.mass_kg > 1) KILLABLE.delete(d);   // no hawk's or bobcat's prey
+      TAG_DY[d] = (TAG_DY[K] ?? 0.5) * Math.sqrt(sc);   // a long, low body: its name a little over its back, not its length's height
+    }
     const M = f.model, KD = DRAWN[K];
-    if (M && typeof M === 'object' && (M.kind === 'quadruped' || M.kind === 'bird') && typeof M.path === 'string' && !KD?.hybrid) {
+    if (M && typeof M === 'object' && (M.kind === 'quadruped' || M.kind === 'bird' || M.kind === 'reptile') && typeof M.path === 'string' && !KD?.hybrid) {
       const tpl = faunaTemplate(KD?.load, f), skin = M.skin !== false, lod0 = (KD?.lod || [30, 90]).map(r => r * sc);
       const l0 = clampN(lod0[0], 4, 120), l1 = clampN(lod0[1], l0 * 1.5, 360);
       DRAWN[d] = { name: f.code, param: f.code, load: () => loadFaunaModel(M.path, tpl, { skin }), lod: [l0, l1], planar: !!(KD ? KD.planar : sK.planar), fauna: tpl };
@@ -929,7 +968,7 @@ function restoreFauna(owner) {
   for (const c of FAUNA.codes) { delete INDEX[c]; delete SUIT[c]; delete SEASON[c]; }
   for (const A of [SPECIES, KIN, BASE, BODY_Y, ID]) A.length = STATIC_N;
   TAG_DY.length = STATIC_TAG; PLAYABLE.length = STATIC_PLAYABLE; CONIFER_USERS.length = STATIC_CONIFER;
-  WATERY.clear(); REST_STAND.clear(); for (const k of Object.keys(ACT)) delete ACT[k]; FAUNA.codes = []; FAUNA.owner = null; GATE = null;
+  WATERY.clear(); REST_STAND.clear(); FLIGHTLESS.clear(); PUSHUP.clear(); for (const k of Object.keys(REPT)) { delete REPT[k]; delete SZ[k]; } for (const k of Object.keys(ACT)) delete ACT[k]; for (const k of Object.keys(BGAIT)) delete BGAIT[k]; FAUNA.codes = []; FAUNA.owner = null; GATE = null;
 }
 // The slots running slot k's identity rules (k and the stand-ins on it): the group and territory spawns, the coveys.
 const slotsOf = (...ks) => { const out = []; for (let s = 0; s < SPECIES.length; s++) if (ks.includes(ID[s])) out.push(s); return out; };
@@ -1417,7 +1456,7 @@ export class Animals {
       case RB: return b.state !== B_FORM && b.state !== B_BOLT && !b.buried;
       case JR: return b.state !== JK_BOLT;
       case GS: return b.state !== G_DOWN && b.state !== G_DIVE && b.group?.state === C_OK;
-      case LZ: return b.state !== L_HIDE && !!b.home && b.vis > 0.5 && b.site?.kind !== 'trunk';   // not one up a trunk
+      case LZ: return !REPT[b.sp] && b.state !== L_HIDE && !!b.home && b.vis > 0.5 && b.site?.kind !== 'trunk';   // not one up a trunk; no tile's own reptile (a crocodile is no hawk's prey)
     }
     return true;
   }
@@ -1837,7 +1876,14 @@ export class Animals {
         else if (ID[s] === JR) f *= 1 - 0.9 * Math.min(1, tree * 1.6);                    // open: grass, savanna, pasture
         else if (ID[s] === TK) f *= (0.3 + 0.7 * Math.min(1, tree * 2.5)) * (1 - 0.5 * Math.max(0, tree - 0.6));   // oaks with openings
         else if (ID[s] === GS) f *= 1 - 0.9 * Math.min(1, tree * 1.8);                    // open grass, low shrubs
-        else if (ID[s] === LZ) { if (!lzOn) continue; f *= 0.25 + 0.75 * Math.min(1, (t.outcrop ? t.outcrop.at(cx, cn) / 255 : 0) * 2.5 + tree * 1.2); }
+        else if (ID[s] === LZ) {
+          if (REPT[s] === 'water') f *= 1;                                                 // a crocodilian: at its water (WATERY)
+          else if (REPT[s] === 'walk') f *= 1 - 0.6 * Math.min(1, tree * 1.5);             // a tortoise: grass and open bush
+          else {   // the basking lizards (the fence lizard's season is the Sierra's: a stand-in's warmth alone, lzUpdate)
+            if (s < STATIC_N && !lzOn) continue;
+            f *= 0.25 + 0.75 * Math.min(1, (t.outcrop ? t.outcrop.at(cx, cn) / 255 : 0) * 2.5 + tree * 1.2);
+          }
+        }
         else if (ID[s] >= EL) {   // the Hoh batch (HOH)
           if (ID[s] === EL) {   // the river flats and meadows; the valley floor in winter, up to the subalpine meadows in summer
             const e = band ? t.heights.at(cx, cn) : 300, top = this.season === 'winter' ? 700 : this.season === 'summer' ? 1700 : 1200;
@@ -2134,7 +2180,7 @@ export class Animals {
       const g = { fsp: s, x, z, hx: x, hz: z, tx: x, tz: z, state: TF_FORAGE, t: 5 + rnd() * 30, cool: 0, n, leader: null, tree: null, roost: false, ft: 0 };
       for (let m = 0; m < n; m++) this.add(`${base}:${m}`, s, rnd, a => {
         a.group = g; a.rank = m; if (!m) g.leader = a;
-        const ang = rnd() * TAU, d = Math.sqrt(rnd()) * TURKEY.spread;
+        const ang = rnd() * TAU, d = Math.sqrt(rnd()) * TURKEY.spread * Math.max(1, bg(s).stride);   // (a bigger bird: a wider flock)
         a.ox = Math.cos(ang) * d; a.oz = Math.sin(ang) * d;
         a.x = x + a.ox; a.z = z + a.oz; a.y = this.heights.atXZ(a.x, a.z); a.yaw = rnd() * TAU;
         a.variant = (seedOf(a.id, 0x7e4) % 100) < TURKEY.hen * 100 ? 1 : 0;   // hen
@@ -2156,12 +2202,13 @@ export class Animals {
         a.hb = b; a.x = b.x + Math.cos(ang) * d; a.z = b.z + Math.sin(ang) * d; a.y = this.heights.atXZ(a.x, a.z);
         a.yaw = rnd() * TAU; a.size = 0.85 + rnd() * 0.25; a.state = G_FEED; a.t = rnd() * 3;
       }, keep);
-    } else if (kn === LZ) {   // fence lizards at the cell's rocks and trunks (a male at each, a female or two near); the salamanders on the floor beside them
+    } else if (kn === LZ && (REPT[s] === 'water' || REPT[s] === 'walk')) this.rpSpawn(s, base, x, z, rnd, keep);   // a crocodilian at its water, a tortoise on the open ground
+    else if (kn === LZ) {   // fence lizards at the cell's rocks and trunks (a male at each, a female or two near); the salamanders on the floor beside them
       const amph = ID[s] !== LZ, sites = amph ? this.amphSites(x, z, rnd) : this.lzSites(x, z, cx, cn, rnd);
       for (let k = 0, m = 0; k < sites.length; k++) {
         const site = sites[k], nf = rnd() < 0.5 ? 0 : 1 + (rnd() < 0.3 ? 1 : 0);
         for (let f = 0; f <= nf; f++, m++) this.add(`${base}:${m}`, s, rnd, a => {
-          a.site = site; a.male = f === 0 && !amph ? 1 : 0; a.home = null; a.tries = 0; a.vis = 0;
+          a.site = site; a.male = f === 0 && !amph && (s < STATIC_N || PUSHUP.has(s)) ? 1 : 0; a.home = null; a.tries = 0; a.vis = 0;
           a.size = (a.male ? 1 : 0.85) * (0.9 + 0.2 * rnd()); a.x = site.x; a.z = site.z; a.y = this.heights.atXZ(site.x, site.z);
           a.state = L_BASK; a.t = rnd() * 2; a.next = LIZ.push[0] + rnd() * (LIZ.push[1] - LIZ.push[0]);
         }, keep);
@@ -3325,21 +3372,21 @@ export class Animals {
   coveyUpdate(g, dt, px, py, pz) {
     const s = g.sp ?? QU;   // California or mountain quail (the same machinery); HOH: the heron and the mergansers on the water (W)
     const r = this.groupRng(g, this.bySpecies[s]); if (!r) return;
-    const H = this.heights, W = HOH[s]?.water ? HOH[s] : null;
+    const H = this.heights, W = HOH[s]?.water ? HOH[s] : null, G = bg(s);
     g.t -= dt; g.cool -= dt;
     if (g.state !== G_SETTLE && (g.cool <= 0 || this.alarmed(g))) {   // an alarm call sends a settled covey to cover again
       // the player's low pass (48 m), or an AI hunter of quail on the ground within HUNT.quail m (threat())
       const gy = H.atXZ(g.x, g.z), T = this.threat(s, g, g.x, gy, g.z, px, py, pz), ai = T.who;
       const dx = T.x - g.x, dz = T.z - g.z;
       const d = Math.hypot(dx, dz), al = this.alarmed(g);
-      if (!g.pilot && ((d < Math.min(ai ? HUNT.quail : W ? W.flush : 48, T.n) && T.y - gy < 42) || (al && d < ALARM_REACT_R))) {
+      if (!g.pilot && ((d < Math.min((ai ? HUNT.quail : W ? W.flush : 48) * G.flushR, T.n) && T.y - gy < 42) || (al && d < ALARM_REACT_R))) {
         this.flushCovey(g, T.x, T.z, al ? 'alarm' : !ai ? 'raven' : ID[ai.sp] === HK ? 'hawk' : ID[ai.sp] === RV ? 'raven' : 'hunter'); return;
       }
       if (g.cool <= 0 && r() < dt / 160) { const ang = r() * TAU; this.flushCovey(g, g.x + Math.cos(ang) * 30, g.z + Math.sin(ang) * 30, 'self'); return; }
     }
     if (g.pilot && g.state !== G_SETTLE) {   // piloted: the knot runs to the player's point and forages there (pilot above)
       const ex = g.pilot.x - g.x, ez = g.pilot.z - g.z, d = Math.hypot(ex, ez);
-      if (d > 2.5) { g.tx = g.pilot.x; g.tz = g.pilot.z; g.dx = ex / d; g.dz = ez / d; g.speed = Math.min(3.6, 1.4 + d * 0.3); g.state = G_RUN; }
+      if (d > 2.5) { g.tx = g.pilot.x; g.tz = g.pilot.z; g.dx = ex / d; g.dz = ez / d; g.speed = Math.min(3.6, 1.4 + d * 0.3) * G.speed; g.state = G_RUN; }
       else if (g.state === G_RUN) { g.state = G_FORAGE; g.t = 8 + r() * 10; }
     }
     if (g.state === G_FORAGE) {
@@ -3353,7 +3400,7 @@ export class Animals {
         let ang = r() * TAU; if (hd > 45) ang = Math.atan2(hz, hx) + (r() - 0.5);
         const d = 15 + r() * 25;
         g.tx = g.x + Math.cos(ang) * d; g.tz = g.z + Math.sin(ang) * d; g.dx = Math.cos(ang); g.dz = Math.sin(ang);
-        g.speed = 2.4 + r() * 1.2; g.state = G_RUN;
+        g.speed = (2.4 + r() * 1.2) * G.speed; g.state = G_RUN;
       }
     } else if (g.state === G_RUN) {
       const ex = g.tx - g.x, ez = g.tz - g.z, d = Math.hypot(ex, ez), step = g.speed * dt;
@@ -3366,7 +3413,7 @@ export class Animals {
     const s = g.sp ?? QU, list = this.bySpecies[s];
     const r = this.groupRng(g, list); if (!r) return;
     let n = 0; for (const a of list) if (a.group === g) n++;
-    if (n) this.emit(HOH[s] ? 'waterFlush' : 'flush', { group: ID[s] === QU ? g : null, covey: g, species: SPECIES[s].code, x: g.x, y: this.heights.atXZ(g.x, g.z), z: g.z, n, cause });   // (the water birds: no quail whirr in sound.js)
+    if (n && !FLIGHTLESS.has(s)) this.emit(HOH[s] ? 'waterFlush' : 'flush', { group: ID[s] === QU ? g : null, covey: g, species: SPECIES[s].code, x: g.x, y: this.heights.atXZ(g.x, g.z), z: g.z, n, cause });   // (the water birds: no quail whirr in sound.js)
     let ang = Math.atan2(g.z - fz, g.x - fx) + (r() - 0.5) * 0.8;   // away from the threat
     const W = HOH[s]?.water ? HOH[s] : null, d = W ? W.fly[0] + r() * (W.fly[1] - W.fly[0]) : 35 + r() * 40;
     let lx = g.x + Math.cos(ang) * d, lz = g.z + Math.sin(ang) * d;
@@ -3387,6 +3434,11 @@ export class Animals {
         if (sc > best) { best = sc; lx = x2; lz = z2; }
       }
     } else { const o = this.nearestOak(lx, lz, 30); if (o) { lx = o.x + (lx - o.x) * 0.3; lz = o.z + (lz - o.z) * 0.3; } }   // into cover
+    if (FLIGHTLESS.has(s)) {   // flightless (FLIGHTLESS): the covey runs there on the ground at its cruise, in a stream, and soon runs on if still pressed
+      const ex = lx - g.x, ez = lz - g.z, L = Math.hypot(ex, ez) || 1, G = bg(s);
+      g.tx = lx; g.tz = lz; g.dx = ex / L; g.dz = ez / L; g.speed = G.cruise || 3.6 * G.speed; g.state = G_RUN; g.cool = 3 + r() * 3;
+      return;
+    }
     g.x = lx; g.z = lz; g.state = G_SETTLE; g.t = 9; g.cool = 40 + r() * 40;
     for (const a of list) if (a.group === g) {
       a.state = Q_WAIT; a.wait = a.rank * 0.04 + r() * 0.45;
@@ -3430,11 +3482,13 @@ export class Animals {
       }
       return;
     }
-    // Q_FORAGE: keep to a slot around the covey centre (or a place in the stream while it runs)
+    // Q_FORAGE: keep to a slot around the covey centre (or a place in the stream while it runs); a stand-in's speeds and
+    // leg cycles by its gait over the kin's (BGAIT)
     a.air = 0;
+    const G = bg(a.sp);
     let tx, tz;
     if (g.state === G_RUN) {
-      const back = a.rank * 0.75, side = a.oz * 0.35;
+      const back = a.rank * 0.75 * Math.max(1, G.stride), side = a.oz * 0.35;
       tx = g.x - g.dx * back - g.dz * side; tz = g.z - g.dz * back + g.dx * side;
     } else {
       if (g.state === G_FORAGE) { const k = Math.min(1, dt * 0.15); a.ox -= a.ox * k * (Math.abs(a.ox) > 3 ? 1 : 0); a.oz -= a.oz * k * (Math.abs(a.oz) > 3 ? 1 : 0); }
@@ -3446,13 +3500,13 @@ export class Animals {
     const BT = PART_TURN.bird;
     if (d > 0.25) {   // turned at the small bodies' rates (PART_TURN.bird), on the spot first when well off its way
       const fast = g.state === G_RUN;
-      speed = Math.min(g.state === G_RUN ? 4.5 : 3, d * 2.5) * this.drSteer(a, Math.atan2(ex, ez), 10, dt, fast, fast ? BT.fast : BT.w);
+      speed = Math.min(g.state === G_RUN ? (BGAIT[a.sp] ? Math.max(4.5 * G.speed, g.speed * 1.3) : 4.5) : 3 * G.speed, d * 2.5) * this.drSteer(a, Math.atan2(ex, ez), 10, dt, fast, fast ? BT.fast : BT.w);
       a.x += ex / d * speed * dt; a.z += ez / d * speed * dt;
     } else if (W?.dive && r() < dt * 0.06) { a.state = Q_DIVE; a.t = 8 + r() * 14; return; }   // a merganser dives
     else if (r() < dt * (W?.edge ? 0.12 : W ? 0.5 : 1.5)) { a.flickV = 1; a.eatK = EAT_PECK; }   // peck: the bill to the seed on the ground (the heron's strike, rarer; a merganser's dip)
     // standing and turning: walking in place in short steps, the head leading the turn (PART_TURN.bird; aAnim2.z)
-    const tA = this.turnStep(a, dt, BT, speed < 0.05, (ID[a.sp] === MQ ? 0.11 : W?.edge ? 0.3 : W ? 0.18 : 0.1) * a.size, W?.edge ? 0.5 : 0.14);
-    if (!tA) { a.amp = damp(a.amp, speed > 0.1 ? 1 : 0, 12, dt); a.phase += dt * TAU * speed / (W?.edge ? 0.5 : W ? 0.25 : 0.14); }
+    const tA = this.turnStep(a, dt, BT, speed < 0.05, (ID[a.sp] === MQ ? 0.11 : W?.edge ? 0.3 : W ? 0.18 : 0.1) * a.size * G.stride, (W?.edge ? 0.5 : 0.14) * G.stride);
+    if (!tA) { a.amp = damp(a.amp, speed > 0.1 ? 1 : 0, 12, dt); a.phase += dt * TAU * speed / ((W?.edge ? 0.5 : W ? 0.25 : 0.14) * G.stride); }
     a.pose = damp(a.pose, 1, 10, dt);
     a.e2 = damp(a.e2 || 0, Math.max(-BT.leadMax, Math.min(BT.leadMax, a.wr * BT.lead)), 10, dt);
     a.spd = speed;
@@ -4464,10 +4518,12 @@ export class Animals {
   // the player's species) and comes down after 25-60 s, and flies up to roost in a tall oak at dusk, down at dawn.
   tkFlushR() { return TURKEY.flush[this.observer] ?? TURKEY.flushOther; }
   flockUpdate(g, dt, px, pz) {
-    const r = this.groupRng(g, this.bySpecies[g.fsp ?? TK]); if (!r) return;
+    const S = g.fsp ?? TK, r = this.groupRng(g, this.bySpecies[S]); if (!r) return;
     g.t -= dt; g.cool -= dt;
-    const sun = atmo.sunDir.value.y;
-    if (sun < 0.04 && g.state !== TF_ROOST) {   // dusk: up to roost (a flushed flock already up stays in its tree)
+    const sun = atmo.sunDir.value.y, G = bg(S), walker = FLIGHTLESS.has(S);
+    // a flightless flock (FLIGHTLESS) has no tree: the night on the ground where it is, standing still (it still runs from a threat)
+    if (walker) { g.sleep = sun < 0.04 && !g.pilot; if (g.state === TF_TREE || g.state === TF_ROOST) { g.state = TF_FORAGE; g.t = 0; } }
+    else if (sun < 0.04 && g.state !== TF_ROOST) {   // dusk: up to roost (a flushed flock already up stays in its tree)
       if (g.state === TF_TREE) g.state = TF_ROOST; else this.tkToTree(g, null, true);
       return;
     }
@@ -4477,11 +4533,12 @@ export class Animals {
     if (near && g.cool <= 0 && !g.pilot) { this.tkFlush(g, g.nx ?? px, g.nz ?? pz); return; }   // away from the threat that was near
     if (g.pilot && (g.state === TF_FORAGE || g.state === TF_WALK)) {   // piloted: to the player's point, then forage there (pilot above)
       const ex = g.pilot.x - g.x, ez = g.pilot.z - g.z, d = Math.hypot(ex, ez);
-      if (d > 2.5) { g.tx = g.pilot.x; g.tz = g.pilot.z; g.state = TF_WALK; g.speed = Math.min(2.6, 0.6 + d * 0.2); }
-      else if (g.state === TF_WALK) { g.state = TF_FORAGE; g.t = 20 + r() * 40; g.speed = TURKEY.move[0]; }
+      if (d > 2.5) { g.tx = g.pilot.x; g.tz = g.pilot.z; g.state = TF_WALK; g.speed = Math.min(2.6, 0.6 + d * 0.2) * G.speed; }
+      else if (g.state === TF_WALK) { g.state = TF_FORAGE; g.t = 20 + r() * 40; g.speed = TURKEY.move[0] * G.speed; }
     }
     if (g.state === TF_FORAGE) {
-      if (g.t <= 0) {   // walk on 15-40 m to the best of a few spots among the oaks (open woodland), back toward home when strayed
+      if (g.sleep) g.t = Math.max(g.t, 2);   // asleep: it stays where it is
+      else if (g.t <= 0) {   // walk on 15-40 m to the best of a few spots among the oaks (open woodland), back toward home when strayed
         let best = -Infinity;
         for (let k = 0; k < 5; k++) {
           const ang = r() * TAU, d = 15 + r() * 25;
@@ -4489,22 +4546,29 @@ export class Animals {
           const hx = x - g.hx, hz = z - g.hz, hd = Math.hypot(hx, hz);
           if (hd > TURKEY.range) { x = g.hx + hx / hd * TURKEY.range; z = g.hz + hz / hd * TURKEY.range; }
           if (!this.landOK(x, z) || this.openness(x, z) < 0) continue;
-          const can = this.tile.canopy.at(x, -z) / 100, sc = Math.min(1, can * 3) - Math.max(0, can - 0.7) * 2 + r() * 0.5;
+          const can = this.tile.canopy.at(x, -z) / 100, sc = (G.open ? 1 - can * 3 : Math.min(1, can * 3) - Math.max(0, can - 0.7) * 2) + r() * 0.5;   // (a bird of open country: the least canopy)
           if (sc > best) { best = sc; g.tx = x; g.tz = z; }
         }
-        if (best > -Infinity) { g.state = TF_WALK; g.speed = TURKEY.move[0] + r() * (TURKEY.move[1] - TURKEY.move[0]); }
+        if (best > -Infinity) { g.state = TF_WALK; g.run = false; g.speed = (TURKEY.move[0] + r() * (TURKEY.move[1] - TURKEY.move[0])) * G.speed; }
         else g.t = 10 + r() * 20;
       }
     } else if (g.state === TF_WALK) {
       const ex = g.tx - g.x, ez = g.tz - g.z, d = Math.hypot(ex, ez), step = g.speed * dt;
-      if (d <= step) { g.state = TF_FORAGE; g.t = 20 + r() * 40; g.speed = TURKEY.move[0]; }
+      if (d <= step) { g.state = TF_FORAGE; g.t = 20 + r() * 40; g.speed = TURKEY.move[0] * G.speed; g.run = false; }
       else { g.x += ex / d * step; g.z += ez / d * step; g.dx = ex / d; g.dz = ez / d; }
     }
   }
   // Flushed: up into the oak 12-70 m off that lies most nearly away from the threat; with none, the flock runs off.
   tkFlush(g, px, pz) {
-    const r = this.groupRng(g, this.bySpecies[g.fsp ?? TK]);
+    const S = g.fsp ?? TK, r = this.groupRng(g, this.bySpecies[S]);
     const ax = g.x - px, az = g.z - pz, al = Math.hypot(ax, az) || 1;
+    if (FLIGHTLESS.has(S)) {   // a flightless flock runs: away at its cruise for 8-16 s of running (40-250 m), on land
+      const G = bg(S), v = G.cruise || 2.2 * G.speed, L = clampN(v * (8 + 8 * r()), 40, 250);
+      let ux = ax / al, uz = az / al;
+      for (let k = 0; k < 6 && !this.landOK(g.x + ux * L, g.z + uz * L); k++) { const a2 = Math.atan2(uz, ux) + (k % 2 ? 1 : -1) * 0.5 * Math.ceil((k + 1) / 2); ux = Math.cos(a2); uz = Math.sin(a2); }
+      g.tx = g.x + ux * L; g.tz = g.z + uz * L; g.dx = ux; g.dz = uz; g.state = TF_WALK; g.speed = v; g.run = true; g.cool = 3 + r() * 3;   // (still pressed after a few seconds: it runs on)
+      return;
+    }
     let best = null, bs = -Infinity;
     for (let k = 0; k < 6; k++) {
       const o = this.ringOak(g.x, g.z, 12, 70, r); if (!o || treeHeight(o) < 6) continue;
@@ -4568,9 +4632,9 @@ export class Animals {
     const r = a.rng, g = a.group, H = this.heights;
     a.t -= dt;
     if (a.state === T_FORAGE || a.state === T_SCRATCH) {   // the player (or an AI hunter, threat()) close to a bird on the ground: the flock flushes
-      const T = this.threat(TK, g, a.x, a.y, a.z, px, py, pz);
-      const dx = a.x - T.x, dy = a.y - T.y, dz = a.z - T.z, R = T.who ? TURKEY.flushOther : this.tkFlushR();
-      if (this.danger(TK, g, Math.sqrt(dx * dx + dy * dy + dz * dz), R, T.n)) { g.near = true; g.nx = T.x; g.nz = T.z; }
+      const T = this.threat(a.sp, g, a.x, a.y, a.z, px, py, pz);   // (by its own slot: a stand-in notices and is hunted as itself)
+      const dx = a.x - T.x, dy = a.y - T.y, dz = a.z - T.z, R = (T.who ? TURKEY.flushOther : this.tkFlushR()) * bg(a.sp).flushR;
+      if (this.danger(a.sp, g, Math.sqrt(dx * dx + dy * dy + dz * dz), R, T.n)) { g.near = true; g.nx = T.x; g.nz = T.z; }
     }
     if (a.state === T_WAIT || a.state === T_FLY || a.state === T_PERCH) { a.turnC = null; a.yP = a.yaw; a.tq = 0; a.wr = 0; a.e2 = damp(a.e2 || 0, 0, 8, dt); }   // off the ground: no stepping turn
     if (a.state === T_WAIT) {   // a crouch (or a few seconds on the limb at dawn), then off
@@ -4608,14 +4672,16 @@ export class Animals {
       return this.tkVis(a, dt);
     }
     // on the ground: a slot round the flock's centre (strung out behind it on a walk); pecks and scratches
+    // (a stand-in's speeds and leg cycles by its own gait over the kin's, BGAIT; a sleeping flightless flock stands)
+    const G = bg(a.sp), K = Math.max(1, G.stride);
     let tx, tz;
     if (g.state === TF_WALK) {
-      const back = (a.rank % 5) * 1.6 + Math.floor(a.rank / 5) * 1.1, side = a.oz * 0.4;
+      const back = ((a.rank % 5) * 1.6 + Math.floor(a.rank / 5) * 1.1) * K, side = a.oz * 0.4;
       tx = g.x - g.dx * back - g.dz * side; tz = g.z - g.dz * back + g.dx * side;
     } else {
-      if (a.t <= 0) {
-        a.t = 2 + r() * 5; a.ox += (r() - 0.5) * 2; a.oz += (r() - 0.5) * 2;
-        const od = Math.hypot(a.ox, a.oz); if (od > TURKEY.spread) { a.ox *= TURKEY.spread / od; a.oz *= TURKEY.spread / od; }
+      if (a.t <= 0 && !g.sleep) {
+        a.t = 2 + r() * 5; a.ox += (r() - 0.5) * 2 * K; a.oz += (r() - 0.5) * 2 * K;
+        const sp = TURKEY.spread * K, od = Math.hypot(a.ox, a.oz); if (od > sp) { a.ox *= sp / od; a.oz *= sp / od; }
       }
       tx = g.x + a.ox; tz = g.z + a.oz;
     }
@@ -4624,15 +4690,16 @@ export class Animals {
     if (a.state === T_SCRATCH) {   // two or three kicks back through the litter, then a look at what turned up
       a.scr -= dt; a.phase += dt * TAU * 2.4; a.amp = damp(a.amp, 0.8, 10, dt);
       if (a.scr <= 0 || d > 2) { a.state = T_FORAGE; a.flickV = 1; a.eatK = EAT_PECK; }
-    } else if (d > 0.3) {   // turned at the deer's rates (PART_TURN.turkey), on the spot first when well off its way
-      const BT = PART_TURN.turkey, fast = g.speed > 2;
-      speed = Math.min(g.state === TF_WALK ? g.speed * 1.4 : TURKEY.walk, d * 0.8) * this.drSteer(a, Math.atan2(ex, ez), 3, dt, fast, fast ? BT.fast : BT.w);
+    } else if (d > 0.3 * K) {   // turned at the deer's rates (PART_TURN.turkey), on the spot first when well off its way
+      const BT = PART_TURN.turkey, fast = g.speed > 2 * G.speed;
+      speed = Math.min(g.state === TF_WALK ? g.speed * 1.4 : TURKEY.walk * G.speed, d * (g.run ? 2 : 0.8)) * this.drSteer(a, Math.atan2(ex, ez), 3, dt, fast, fast ? BT.fast : BT.w);
       a.x += ex / d * speed * dt; a.z += ez / d * speed * dt;
-    } else if (r() < dt * 0.9) { a.flickV = 1; a.eatK = EAT_PECK; }   // peck
+    } else if (g.sleep) { /* asleep on its feet */ }
+    else if (r() < dt * 0.9) { a.flickV = 1; a.eatK = EAT_PECK; }   // peck
     else if (r() < dt * 0.25) { a.state = T_SCRATCH; a.scr = 0.7 + r() * 0.8; }
     // standing and turning: walking in place in short steps, the head leading the turn (PART_TURN.turkey; aAnim2.z)
-    const BT = PART_TURN.turkey, tA = this.turnStep(a, dt, BT, speed < 0.05 && a.state !== T_SCRATCH, 0.3 * a.size, TURKEY.stride);
-    if (a.state !== T_SCRATCH && !tA) { a.amp = damp(a.amp, speed > 0.05 ? Math.min(1, 0.45 + speed * 0.6) : 0, 6, dt); a.phase += dt * TAU * speed / TURKEY.stride; }
+    const BT = PART_TURN.turkey, tA = this.turnStep(a, dt, BT, speed < 0.05 && a.state !== T_SCRATCH, 0.3 * a.size * G.stride, TURKEY.stride * G.stride);
+    if (a.state !== T_SCRATCH && !tA) { a.amp = damp(a.amp, speed > 0.05 ? Math.min(1, 0.45 + speed / G.speed * 0.6) : 0, 6, dt); a.phase += dt * TAU * speed / (TURKEY.stride * G.stride); }
     a.e2 = damp(a.e2 || 0, Math.max(-BT.leadMax, Math.min(BT.leadMax, a.wr * BT.lead)), 10, dt);
     a.spd = speed;
     a.pose = damp(a.pose, 1, 6, dt); a.pitch = damp(a.pitch, 0, 6, dt);
@@ -4880,9 +4947,10 @@ export class Animals {
     a.state = L_SPRINT; a.u = 0; a.dur = 0.25 + r() * 0.3; a.flick = 0; a.fl = 0;
   }
   lzUpdate(a, dt, px, py, pz) {
-    const r = a.rng, H = this.heights, amph = ID[a.sp] !== LZ;   // amph: the salamanders (HOH): out in cool damp air, never basking, slow
+    if (REPT[a.sp] === 'water' || REPT[a.sp] === 'walk') return this.rpUpdate(a, dt, px, py, pz);
+    const r = a.rng, H = this.heights, amph = ID[a.sp] !== LZ, k = SZ[a.sp] || 1;   // amph: the salamanders (HOH): out in cool damp air, never basking, slow; k: a stand-in's size
     a.t -= dt;
-    if (!(amph ? this.amOn : this.lzOn)) { a.vis = a.vis < 0.03 ? 0 : damp(a.vis, 0, 10, dt); a.amp = 0; return; }   // cold, dark or out of season (the salamanders: freezing or hot and dry)
+    if (!(amph ? this.amOn : a.sp < STATIC_N ? this.lzOn : this.lzWarm)) { a.vis = a.vis < 0.03 ? 0 : damp(a.vis, 0, 10, dt); a.amp = 0; return; }   // cold, dark or out of season (the salamanders: freezing or hot and dry)
     if (!a.home) {   // placed the first time it is near the eye (a budget per frame; retried while the rock or wood is not drawn)
       if (a.tries > 0) { a.tries -= dt; return; }
       if (this.lzBudget <= 0) return;
@@ -4896,11 +4964,11 @@ export class Animals {
     }
     const T = this.threat(a.sp, a, a.x, a.y, a.z, px, py, pz), tn = T.n; px = T.x; py = T.y; pz = T.z;   // the player or an AI hunter
     const dx = a.x - px, dy = a.y - py, dz = a.z - pz, near = Math.sqrt(dx * dx + dy * dy + dz * dz);
-    if (this.danger(a.sp, a, near, amph ? 1.2 : LIZ.flee, tn) && a.state !== L_SPRINT && a.state !== L_HIDE) this.lzSprint(a, px, py, pz);
+    if (this.danger(a.sp, a, near, amph ? 1.2 : LIZ.flee * Math.sqrt(k), tn) && a.state !== L_SPRINT && a.state !== L_HIDE) this.lzSprint(a, px, py, pz);
     let speed = 0, pose = 0, bend = 0, turnW = 0;
     switch (a.state) {
       case L_HIDE:
-        if (a.t <= 0 && near > LIZ.flee + 1.5) { this.lzHome(a); a.state = L_ALERT; a.t = 3 + r() * 5; }
+        if (a.t <= 0 && near > LIZ.flee * Math.sqrt(k) + 1.5) { this.lzHome(a); a.state = L_ALERT; a.t = 3 + r() * 5; }
         break;
       case L_BASK: pose = amph ? -0.3 : this.airT < 27 ? -0.95 : -0.6; if (r() < dt * 0.15) a.fl = (r() - 0.5) * 1.2; if (a.t <= 0) this.lzNext(a); break;
       case L_ALERT: if (r() < dt * 0.9) a.fl = (r() - 0.5) * 2; if (a.t <= 0) this.lzNext(a); break;
@@ -4950,9 +5018,143 @@ export class Animals {
       a.phase += dt * TAU * Math.min(T.hz[1], Math.max(T.hz[0], aw * 0.04 * a.size / (tAmp * LIZ.stride)));
     } else {
       a.amp = damp(a.amp, speed > 0.05 ? Math.min(1, speed / LIZ.dash + 0.3) : 0, 20, dt);
-      a.phase += dt * TAU * Math.min(12, speed / LIZ.stride);
+      a.phase += dt * TAU * Math.min(12, speed / (LIZ.stride * k));
     }
     a.pose = a.state === L_PUSH ? pose : damp(a.pose, pose, 4, dt);
+  }
+  // ---- a tile's own large reptiles (fauna.json `reptile` 'water' or 'walk'; REPT) -----------------------------------------
+  // The fence lizard's machine places them (its cells: a crocodilian's kept to water, WATERY) and this runs them, drawn on
+  // the reptile template (animalModels.js 'sprawler', 'tortoise'):
+  //   water  a crocodilian: its home a spot on the bank beside water at least 0.3 m deep within 40 m of the cell's point
+  //          (waterSpot; the bank the nearest dry ground to it), lying flat on its belly (pose -0.95, the bask) facing
+  //          the water in the basking hours (RP.croc.bask), in the water the rest of the day and the night: floating with
+  //          its back awash (pose -0.95, legs out), now and then swimming slowly to another spot near home (the tail
+  //          sculling, aAnim2.y), walking out to bask at a slow high walk. A player within RP.croc.flee m of one on the
+  //          bank sends it into the water at RP.croc.dash m/s, where it sinks to its eyes until the player is gone.
+  //   walk   a tortoise: wanders the open ground near its home at RP.tortoise.walk m/s, stops to graze (the head down),
+  //          rests long spells (out of its hours, ACT, and the midday heat); a player within RP.tortoise.flee m stops it
+  //          still, the head down, until the player is twice as far.
+  // A body's length (for the stride and its draft) is the drawn model's (extras.rig.length_m), else the stand-in's.
+  rpLen(a) { return this.drawn[a.sp]?.model?.rig?.piv?.length_m || 0.18 * (SZ[a.sp] || 1); }
+  rpSpawn(s, base, x, z, rnd, keep) {
+    const croc = REPT[s] === 'water';
+    if (croc) {
+      const w = this.waterSpot(x, z, 0, 40, 0.3, 50, rnd, 24) || (this._near ? { x, z, d: 0 } : null);
+      if (!w) return;
+      const bank = this.rpBank(w.x, w.z, rnd) || (this._near ? { x: w.x, z: w.z } : null);
+      if (!bank) return;
+      const n = grpN(s, 1 + (rnd() < 0.3 ? 1 : 0), rnd);
+      for (let m = 0; m < n; m++) this.add(`${base}:${m}`, s, rnd, a => {
+        const ang = Math.atan2(w.x - bank.x, w.z - bank.z), side = (m - (n - 1) / 2) * 3;
+        a.hx = bank.x + Math.cos(ang) * side; a.hz = bank.z - Math.sin(ang) * side; a.wx = w.x; a.wz = w.z; a.face = ang;
+        a.size = 0.8 + rnd() * 0.35; a.vis = 1; a.male = 0; a.state = RP_LIE; a.t = rnd() * 20;
+        a.x = a.hx; a.z = a.hz; a.y = this.heights.atXZ(a.x, a.z); a.yaw = ang + (rnd() - 0.5) * 0.6; a.pose = -0.95; a.N ||= new THREE.Vector3(0, 1, 0); a.F ||= new THREE.Vector3();
+      }, keep);
+    } else {
+      const n = grpN(s, 1, rnd);
+      for (let m = 0; m < n; m++) this.add(`${base}:${m}`, s, rnd, a => {
+        a.hx = x + (rnd() - 0.5) * 10; a.hz = z + (rnd() - 0.5) * 10; a.size = 0.85 + rnd() * 0.3; a.vis = 1; a.male = 0;
+        a.x = a.hx; a.z = a.hz; a.y = this.heights.atXZ(a.x, a.z); a.yaw = rnd() * TAU; a.state = RP_GRAZE; a.t = rnd() * 10; a.pose = 0;
+        a.N ||= new THREE.Vector3(0, 1, 0); a.F ||= new THREE.Vector3();
+      }, keep);
+    }
+  }
+  // The nearest dry ground to a point in the water (x, z scene axes), out to 12 m, or null.
+  rpBank(x, z, rnd) {
+    const a0 = rnd() * TAU;
+    for (let d = 1; d <= 12; d += 1) for (let k = 0; k < 12; k++) {
+      const a = a0 + k * TAU / 12, bx = x + Math.cos(a) * d, bz = z + Math.sin(a) * d;
+      if (waterDepthAt(bx, -bz) <= 0) { const ex = bx + Math.cos(a) * 0.5 * d, ez = bz + Math.sin(a) * 0.5 * d; return { x: (bx + ex) / 2, z: (bz + ez) / 2 }; }   // a little up the bank
+    }
+    return null;
+  }
+  // Toward (tx, tz) at speed v (m/s), turning at most w rad/s: the yaw, the C-bend by the turn, the position. True when there.
+  rpSteer(a, tx, tz, v, w, dt) {
+    const dx = tx - a.x, dz = tz - a.z, d = Math.hypot(dx, dz);
+    if (d < Math.max(0.3, v * dt * 1.5)) { a.bend = 0; return true; }
+    const want = Math.atan2(dx, dz), turn = wrapAngle(want - a.yaw), step = Math.max(-w * dt, Math.min(w * dt, turn));
+    a.yaw += step; a.bend = Math.max(-0.8, Math.min(0.8, step / Math.max(dt, 1e-3) * 0.3));
+    const go = v * Math.max(0, Math.cos(turn)) * dt; a.x += Math.sin(a.yaw) * go; a.z += Math.cos(a.yaw) * go; a.spd = go / Math.max(dt, 1e-3);
+    return false;
+  }
+  // The body's attitude on the ground (the slope under it) or level in the water
+  rpOrient(a, wet) {
+    if (wet) { a.pitch = 0; a.roll = 0; return; }
+    a.N ||= new THREE.Vector3(); a.F ||= new THREE.Vector3();
+    this.groundNormal(a.x, a.z, this._gn ||= {}); a.N.set(this._gn.nx, this._gn.ny, this._gn.nz); a.F.set(Math.sin(a.yaw), 0, Math.cos(a.yaw));
+    this.lzOrient(a);
+  }
+  rpUpdate(a, dt, px, py, pz) {
+    const r = a.rng, H = this.heights, croc = REPT[a.sp] === 'water', C = croc ? RP.croc : RP.tortoise, L = this.rpLen(a) * a.size;
+    a.t -= dt; a.spd = 0;
+    const T = this.threat(a.sp, a, a.x, a.y, a.z, px, py, pz), near = Math.hypot(a.x - T.x, a.z - T.z);
+    const scared = this.danger(a.sp, a, near, C.flee, T.n);
+    let speed = 0, pose = 0, wet = false;
+    if (croc) {
+      const hr = this.hour, bask = C.bask.some(([h0, h1]) => hr >= h0 && hr < h1);
+      const depth = waterDepthAt(a.x, -a.z);
+      if (scared && (a.state === RP_LIE || a.state === RP_WALK) && !a.toWater) { a.state = RP_WALK; a.toWater = true; a.tx = a.wx; a.tz = a.wz; a.dash = true; }
+      switch (a.state) {
+        case RP_LIE:   // flat on the bank, the head to the water; now and then a turn of the head
+          pose = -0.95; if (r() < dt * 0.05) a.fl = (r() - 0.5) * 0.8;
+          if (a.t <= 0) { if (!bask) { a.state = RP_WALK; a.toWater = true; a.tx = a.wx; a.tz = a.wz; a.dash = false; } else a.t = 10 + r() * 30; }
+          break;
+        case RP_WALK: {   // a slow high walk, to the water or out onto the bank
+          speed = a.dash ? C.dash : C.walk;
+          if (this.rpSteer(a, a.tx, a.tz, speed, a.dash ? 2 : 0.7, dt) || (a.toWater && depth > 0.25)) {
+            if (a.toWater) { a.state = a.dash ? RP_SINK : RP_FLOAT; a.t = a.dash ? 30 + r() * 30 : 20 + r() * 40; a.toWater = false; a.dash = false; }
+            else { a.state = RP_LIE; a.t = 20 + r() * 60; a.yaw = Math.atan2(a.wx - a.x, a.wz - a.z); }
+          }
+          break;
+        }
+        case RP_FLOAT: case RP_SINK:   // awash at the surface, or sunk to the eyes after a fright
+          pose = -0.95; wet = true; if (r() < dt * 0.04) a.fl = (r() - 0.5) * 0.6;
+          if (a.t <= 0) {
+            if (a.state === RP_SINK && near < C.flee * 2) { a.t = 10; break; }
+            if (bask && near > C.flee * 2) { a.state = RP_WALK; a.toWater = false; a.dash = false; a.tx = a.hx; a.tz = a.hz; }
+            else {
+              const w = this.waterSpot(a.wx, a.wz, 2, 20, 0.3, 50, r, 10);
+              if (w) { a.state = RP_SWIM; a.tx = w.x; a.tz = w.z; } else { a.state = RP_FLOAT; a.t = 20 + r() * 40; }
+            }
+          }
+          break;
+        case RP_SWIM:   // a slow swim to another spot near home, the tail sculling
+          pose = -0.95; wet = true; speed = C.swim;
+          if (this.rpSteer(a, a.tx, a.tz, speed, 0.5, dt) || waterDepthAt(a.x, -a.z) < 0.15) { a.state = RP_FLOAT; a.t = 20 + r() * 60; }
+          break;
+      }
+      const surf = this.surfAt(a.x, a.z), g = H.atXZ(a.x, a.z), back = (this.drawn[a.sp]?.model?.rig?.piv?.back_y || 0.13 * this.rpLen(a)) * a.size;
+      wet = wet || (a.state === RP_WALK && waterDepthAt(a.x, -a.z) > 0.25);
+      // in the water: the back awash (floating) or only the eyes above it (sunk); never below the bed
+      a.y = wet ? Math.max(g, surf - back * (a.state === RP_SINK ? 0.95 : 0.75)) : g;
+    } else {
+      const act = ACT[a.sp] ? actAt(a.sp, this.hour) : true;
+      if (scared && a.state !== RP_HIDE) { a.state = RP_HIDE; a.t = 5; }
+      switch (a.state) {
+        case RP_HIDE: pose = -0.4; if (a.t <= 0 && near > C.flee * 2) { a.state = RP_REST; a.t = 3 + r() * 5; } break;
+        case RP_REST: pose = -0.2; if (a.t <= 0) { if (act) { a.state = RP_WALK; this.rpWander(a, r); } else a.t = 30 + r() * 60; } break;
+        case RP_GRAZE:   // the head low, turning from one bite to the next
+          pose = -0.25; if (r() < dt * 0.6) a.fl = (r() - 0.5) * 1.2;
+          if (a.t <= 0) { if (!act || r() < 0.2) { a.state = RP_REST; a.t = 30 + r() * 90; } else { a.state = RP_WALK; this.rpWander(a, r); } }
+          break;
+        case RP_WALK:
+          speed = C.walk;
+          if (this.rpSteer(a, a.tx, a.tz, speed, 0.4, dt) || a.t <= 0) { a.state = RP_GRAZE; a.t = 5 + r() * 20; }
+          break;
+      }
+      a.y = H.atXZ(a.x, a.z);
+    }
+    this.rpOrient(a, wet);
+    a.fl = (a.fl || 0) * Math.exp(-1.0 * dt);
+    a.flick = damp(a.flick, a.fl, 6, dt);
+    a.amp = damp(a.amp, speed > 0.02 ? (wet ? 0.25 : croc ? (a.dash ? 0.9 : 0.5) : 0.6) : 0, 6, dt);
+    a.phase += dt * TAU * speed / Math.max(0.02, C.stride * L);
+    a.pose = damp(a.pose, pose, 3, dt);
+    a.vis = damp(a.vis, 1, 4, dt);
+  }
+  rpWander(a, r) {
+    const ang = r() * TAU, d = 2 + r() * 6;
+    a.tx = a.hx + Math.cos(ang) * d; a.tz = a.hz + Math.sin(ang) * d; a.t = 60 + r() * 60;
   }
   // ---- Pacific banana slug (HOH) ------------------------------------------------------------------
   // Crawls over the wet forest floor at a few millimetres a second, wandering in slow curves, and rests a while with its
@@ -4991,6 +5193,8 @@ export class Animals {
       return a.group.state === TF_WALK ? 'walking with its flock' : 'pecking for seeds and insects with its flock';
     }
     if (ID[a.sp] === GS) return s === G_SENTRY ? 'on guard at the burrow' : s === G_DIVE ? 'running for its burrow' : s === G_SIT || s === G_PEEK ? 'sitting up, looking round' : 'feeding near its burrow';
+    if (REPT[a.sp] === 'water') return s === RP_LIE ? 'basking on the bank' : s === RP_WALK ? 'walking slowly' : s === RP_SINK ? 'sunk to its eyes, watching' : 'floating in the water';
+    if (REPT[a.sp] === 'walk') return s === RP_WALK ? 'walking slowly' : s === RP_GRAZE ? 'grazing' : s === RP_HIDE ? 'keeping still, head drawn in' : 'resting';
     if (ID[a.sp] === LZ) return s === L_BASK ? 'basking in the sun' : s === L_PUSH ? 'doing push-ups (a male showing off)' : s === L_SPRINT ? 'dashing for cover' : 'watching';
     // the Hoh batch (HOH)
     const kn = KIN[a.sp];
@@ -5019,7 +5223,8 @@ export class Animals {
   shown(a) { return this.meshes[a.sp].visible && !a.culled && a.vis > 0.3 && this.present(a); }
   // Is this one present (the HUD and the cards): not down a burrow, not hidden in a crack or a crown, not too cold.
   present(a) {
-    if (ID[a.sp] === LZ) return this.lzOn && a.state !== L_HIDE;
+    if (REPT[a.sp] === 'water' || REPT[a.sp] === 'walk') return a.vis > 0.3;
+    if (ID[a.sp] === LZ) return (a.sp < STATIC_N ? this.lzOn : this.lzWarm) && a.state !== L_HIDE;
     if (KIN[a.sp] === LZ) return this.amOn && a.state !== L_HIDE;   // the salamanders
     if (ID[a.sp] === BS) return a.vis > 0.3;   // the slug: not under the litter
     if (ID[a.sp] === CM) return a.state !== Q_DIVE;   // a merganser under the water
@@ -5480,7 +5685,8 @@ export class Animals {
       : season === seasonOfDate() ? monthOf(new Date()) : SEASON_MONTH[season] ?? 10.5);
     if (this.lzMonth() !== this.lzMonthWas) { this.lzMonthWas = this.lzMonth(); this.dirty = true; }
     this.airT = this.weatherTemp?.() ?? airTemp(this.month, hour);   // the day's measured air (main.js: weather.js), else the normals
-    this.lzOn = this.lzMonth() && atmo.sunDir.value.y > 0.1 && this.airT >= LIZ.warm && this.airT <= LIZ.hot; this.lzBudget = LIZ.resolves;
+    this.lzWarm = atmo.sunDir.value.y > 0.1 && this.airT >= LIZ.warm && this.airT <= LIZ.hot;   // a tile's own basking lizards: any month warm enough
+    this.lzOn = this.lzMonth() && this.lzWarm; this.lzBudget = LIZ.resolves;
     this.amOn = this.airT >= 3 && this.airT <= 24;   // the salamanders (HOH): any hour above freezing, under the logs on a hot dry day
     let fresh = false;   // slots were reassigned: every animal writes its matrix this frame
     const mirror = this.mirror;
@@ -5649,6 +5855,9 @@ export class Animals {
       a.e0 = damp(a.e0, fly && a.amp < 0.5 ? 1 : 0, 5, dt);                          // wings set and bowed in the glide
       a.e1 = damp(a.e1, fly ? (a.u > 0.85 ? 1 : 0.3) : 0, 6, dt);                    // tail fanned to land
     } else if (kn === GS) { a.e0 = 0; a.e1 = damp(a.e1, a.flick, 5, dt); }       // the tail tip lags the flick
+    else if (kn === LZ && (REPT[a.sp] === 'water' || REPT[a.sp] === 'walk')) {   // the C-bend; a swimming crocodile's tail sculls
+      a.e0 = a.bend || 0; a.e1 = damp(a.e1, a.state === RP_SWIM ? 0.8 * Math.sin(a.phase) : 0, 6, dt); a.e2 = 0; a.e3 = 0;
+    }
     else if (kn === LZ) {   // C-bend, tail-tip whip, blue flash, male
       a.e0 = a.bend || 0;
       a.e1 = damp(a.e1, a.state === L_SPRINT ? Math.sin(a.phase * 0.5) : a.state === L_PUSH ? 0.3 * Math.sin(a.u * 9) : 0, 10, dt);

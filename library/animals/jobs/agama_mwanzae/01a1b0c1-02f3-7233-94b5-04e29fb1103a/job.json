@@ -1,0 +1,71 @@
+{
+  "species": "agama_mwanzae",
+  "mode": "refine",
+  "kind": "text-to-3d",
+  "task_id": "01a1b0c1-02f3-7233-94b5-04e29fb1103a",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "refine",
+    "preview_task_id": "01a1b0b7-fcb0-72d5-a12c-ff05fc4c1d55",
+    "texture_resolution": "2k",
+    "enable_pbr": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Natural skin and scale colours and markings of a wild adult Mwanza flat-headed agama (Agama mwanzae) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights; the back, flanks, belly, legs and tail in their true colours, eyes and claws in their true colours.",
+    "moderation": false
+  },
+  "prompt": "Natural skin and scale colours and markings of a wild adult Mwanza flat-headed agama (Agama mwanzae) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights; the back, flanks, belly, legs and tail in their true colours, eyes and claws in their true colours.",
+  "image": null,
+  "preview_job": "library/animals/jobs/agama_mwanzae/01a1b0b7-fcb0-72d5-a12c-ff05fc4c1d55",
+  "estimated_credits": 10,
+  "balance_before": 1617,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-06T12:06:41+00:00",
+    "created_at": "2026-11-06T12:06:44+00:00",
+    "started_at": "2026-11-06T12:06:44+00:00",
+    "finished_at": "2026-11-06T12:07:10+00:00",
+    "downloaded": "2026-11-06T12:07:28+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur, world pipeline",
+  "progress": 100,
+  "task": {
+    "id": "01a1b0c1-02f3-7233-94b5-04e29fb1103a",
+    "type": "text-to-3d-refine",
+    "status": "SUCCEEDED",
+    "created_at": 1793966804520,
+    "started_at": 1793966804529,
+    "finished_at": 1793966830324,
+    "consumed_credits": 10,
+    "task_error": null
+  },
+  "credits_charged": 10,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 6013460,
+      "sha256": "8882361e7f6c4cdc47fb4d9aa7e65a76b5300db4ce8a0b712e6d3269efb27047",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b0c1-02f3-7233-94b5-04e29fb1103a/output/model.glb"
+    },
+    {
+      "file": "texture_base_color.png",
+      "bytes": 7474536,
+      "sha256": "dd6a23c3d331c178cc8175e89a74f141c3d24b7df984df4095d13f8130079cb5",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b0c1-02f3-7233-94b5-04e29fb1103a/output/texture_0.png"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 36779,
+      "sha256": "7588147b22c0501832a5cc4ebc23bfbe97ded7871fd746f78f7bcd7d54d5b164",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b0c1-02f3-7233-94b5-04e29fb1103a/output/preview.png"
+    }
+  ],
+  "balance_after": 1607
+}

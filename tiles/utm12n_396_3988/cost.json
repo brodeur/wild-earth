@@ -495,15 +495,15 @@
   },
   "animals": {
    "stage": "fauna",
-   "started_at": "2026-11-06T09:32:31Z",
-   "ended_at": "2026-11-06T09:32:31Z",
-   "wall_s": 0.6,
-   "cpu_self_s": 0.5,
+   "started_at": "2026-11-06T11:29:50Z",
+   "ended_at": "2026-11-06T11:29:51Z",
+   "wall_s": 0.7,
+   "cpu_self_s": 0.7,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {
     "gbif": {
-     "hits": 230,
+     "hits": 262,
      "misses": 0
     },
     "eltontraits": {
@@ -511,11 +511,11 @@
      "misses": 0
     },
     "ndownloader.figshare.com": {
-     "hits": 1,
+     "hits": 2,
      "misses": 0
     }
    },
-   "disk_bytes": 166059,
+   "disk_bytes": 183196,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -640,14 +640,14 @@
    "meshy_queued_credits_est": 0
   },
   "fauna": {
-   "started_at": "2026-11-06T09:32:31Z",
-   "ended_at": "2026-11-06T09:32:31Z",
-   "wall_s": 419.5,
-   "cpu_s": 20.9,
+   "started_at": "2026-11-06T11:29:50Z",
+   "ended_at": "2026-11-06T11:29:51Z",
+   "wall_s": 419.6,
+   "cpu_s": 21.1,
    "download_bytes": 89708535,
-   "cache_hits": 433,
+   "cache_hits": 466,
    "cache_misses": 181,
-   "disk_bytes": 8244316,
+   "disk_bytes": 8261453,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -919,21 +919,53 @@
    ],
    "ended_at": "2026-11-06T09:50:51Z",
    "failed": []
+  },
+  {
+   "started_at": "2026-11-06T11:11:12Z",
+   "stages": [
+    {
+     "stage": "fauna",
+     "started_at": "2026-11-06T11:11:12Z",
+     "steps_run": [
+      "animals"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T11:11:40Z"
+    }
+   ],
+   "ended_at": "2026-11-06T11:11:40Z",
+   "failed": []
+  },
+  {
+   "started_at": "2026-11-06T11:29:50Z",
+   "stages": [
+    {
+     "stage": "fauna",
+     "started_at": "2026-11-06T11:29:50Z",
+     "steps_run": [
+      "animals"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T11:29:51Z"
+    }
+   ],
+   "ended_at": "2026-11-06T11:29:51Z",
+   "failed": []
   }
  ],
  "totals": {
-  "wall_s": 3013.6,
-  "cpu_s": 492.8,
+  "wall_s": 3013.7,
+  "cpu_s": 493.0,
   "download_bytes": 122090859,
-  "cache_hits": 470,
+  "cache_hits": 503,
   "cache_misses": 817,
-  "disk_bytes": 468479883,
+  "disk_bytes": 468497020,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 1570
  },
- "updated_at": "2026-11-06T09:50:51Z",
+ "updated_at": "2026-11-06T11:29:51Z",
  "client": {
-  "bytes": 49275017,
+  "bytes": 49280009,
   "files": 47,
   "largest": {
    "client/terrain_detail.png": 12710190,

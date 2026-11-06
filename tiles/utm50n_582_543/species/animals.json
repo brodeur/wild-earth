@@ -1,11 +1,12 @@
 {
  "tile": "utm50n_582_543",
- "at": "2026-11-06T10:44:49Z",
+ "at": "2026-11-06T11:29:49Z",
  "target": 22,
- "listed": 64,
+ "listed": 69,
  "by_kind": {
   "bird": 32,
   "mammal": 26,
+  "reptile": 5,
   "amphibian": 4,
   "invertebrate": 2
  },
@@ -903,6 +904,81 @@
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
+   "id": "gonocephalus_bornensis",
+   "scientific": "Gonocephalus bornensis",
+   "common": "borneo forest dragon",
+   "kind": "reptile",
+   "records": 94,
+   "why": [
+    "most recorded: 1 of its class (17% of the class's records)"
+   ],
+   "body_plan": "reptile",
+   "rig": "reptile part rig template",
+   "estimate_credits": 25,
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "tropidolaemus_subannulatus",
+   "scientific": "Tropidolaemus subannulatus",
+   "common": "north philippine temple pitviper",
+   "kind": "reptile",
+   "records": 79,
+   "why": [
+    "most recorded: 2 of its class (14% of the class's records)"
+   ],
+   "body_plan": "snake",
+   "rig": "none yet: a spine-wave rig",
+   "estimate_credits": 25,
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "varanus_salvator",
+   "scientific": "Varanus salvator",
+   "common": "common water monitor",
+   "kind": "reptile",
+   "records": 71,
+   "why": [
+    "most recorded: 3 of its class (12% of the class's records)"
+   ],
+   "body_plan": "reptile",
+   "rig": "reptile part rig template",
+   "estimate_credits": 25,
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "hemidactylus_platyurus",
+   "scientific": "Hemidactylus platyurus",
+   "common": "asian flat-tailed house gecko",
+   "kind": "reptile",
+   "records": 58,
+   "why": [
+    "most recorded: 4 of its class (10% of the class's records)"
+   ],
+   "body_plan": "reptile",
+   "rig": "reptile part rig template",
+   "estimate_credits": 25,
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "gekko_monarchus",
+   "scientific": "Gekko monarchus",
+   "common": "double-spotted gecko",
+   "kind": "reptile",
+   "records": 34,
+   "why": [
+    "most recorded: 5 of its class (6% of the class's records)"
+   ],
+   "body_plan": "reptile",
+   "rig": "reptile part rig template",
+   "estimate_credits": 25,
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
    "id": "polypedates_otilophus",
    "scientific": "Polypedates otilophus",
    "common": "file-eared tree frog",
@@ -993,7 +1069,7 @@
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   }
  ],
- "queued_credits": 1840,
+ "queued_credits": 1965,
  "animals": [
   {
    "gbif_key": 10332233,
@@ -2506,6 +2582,126 @@
    "mass_kg": 0.957,
    "why": [
     "predator"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 9706731,
+   "scientific": "Gonocephalus bornensis",
+   "common": "borneo forest dragon",
+   "records": 94,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Squamata",
+    "order": null,
+    "family": "Agamidae",
+    "genus": "Gonocephalus"
+   },
+   "kind": "reptile",
+   "rank_in_class": 1,
+   "share_of_class": 0.1655,
+   "id": "gonocephalus_bornensis",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 1 of its class (17% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2443729,
+   "scientific": "Tropidolaemus subannulatus",
+   "common": "north philippine temple pitviper",
+   "records": 79,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Squamata",
+    "order": null,
+    "family": "Viperidae",
+    "genus": "Tropidolaemus"
+   },
+   "kind": "reptile",
+   "rank_in_class": 2,
+   "share_of_class": 0.1391,
+   "id": "tropidolaemus_subannulatus",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 2 of its class (14% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2470685,
+   "scientific": "Varanus salvator",
+   "common": "common water monitor",
+   "records": 71,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Squamata",
+    "order": null,
+    "family": "Varanidae",
+    "genus": "Varanus"
+   },
+   "kind": "reptile",
+   "rank_in_class": 3,
+   "share_of_class": 0.125,
+   "id": "varanus_salvator",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 3 of its class (12% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 5816059,
+   "scientific": "Hemidactylus platyurus",
+   "common": "asian flat-tailed house gecko",
+   "records": 58,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Squamata",
+    "order": null,
+    "family": "Gekkonidae",
+    "genus": "Hemidactylus"
+   },
+   "kind": "reptile",
+   "rank_in_class": 4,
+   "share_of_class": 0.1021,
+   "id": "hemidactylus_platyurus",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 4 of its class (10% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2447302,
+   "scientific": "Gekko monarchus",
+   "common": "double-spotted gecko",
+   "records": 34,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Squamata",
+    "order": null,
+    "family": "Gekkonidae",
+    "genus": "Gekko"
+   },
+   "kind": "reptile",
+   "rank_in_class": 5,
+   "share_of_class": 0.0599,
+   "id": "gekko_monarchus",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 5 of its class (6% of the class's records)"
    ],
    "listed": true
   },
@@ -5530,6 +5726,358 @@
    "listed": false
   },
   {
+   "id": "gonocephalus_bornensis",
+   "scientific": "Gonocephalus bornensis",
+   "common": "borneo forest dragon",
+   "kind": "reptile",
+   "records": 94,
+   "rank_in_class": 1,
+   "share_of_class": 0.1655,
+   "role": [],
+   "listed": true
+  },
+  {
+   "id": "tropidolaemus_subannulatus",
+   "scientific": "Tropidolaemus subannulatus",
+   "common": "north philippine temple pitviper",
+   "kind": "reptile",
+   "records": 79,
+   "rank_in_class": 2,
+   "share_of_class": 0.1391,
+   "role": [],
+   "listed": true
+  },
+  {
+   "id": "varanus_salvator",
+   "scientific": "Varanus salvator",
+   "common": "common water monitor",
+   "kind": "reptile",
+   "records": 71,
+   "rank_in_class": 3,
+   "share_of_class": 0.125,
+   "role": [],
+   "listed": true
+  },
+  {
+   "id": "hemidactylus_platyurus",
+   "scientific": "Hemidactylus platyurus",
+   "common": "asian flat-tailed house gecko",
+   "kind": "reptile",
+   "records": 58,
+   "rank_in_class": 4,
+   "share_of_class": 0.1021,
+   "role": [],
+   "listed": true
+  },
+  {
+   "id": "gekko_monarchus",
+   "scientific": "Gekko monarchus",
+   "common": "double-spotted gecko",
+   "kind": "reptile",
+   "records": 34,
+   "rank_in_class": 5,
+   "share_of_class": 0.0599,
+   "role": [],
+   "listed": true
+  },
+  {
+   "id": "hemidactylus_frenatus",
+   "scientific": "Hemidactylus frenatus",
+   "common": "common house gecko",
+   "kind": "reptile",
+   "records": 31,
+   "rank_in_class": 6,
+   "share_of_class": 0.0546,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "dendrelaphis_caudolineatus",
+   "scientific": "Dendrelaphis caudolineatus",
+   "common": "striped bronzeback",
+   "kind": "reptile",
+   "records": 20,
+   "rank_in_class": 7,
+   "share_of_class": 0.0352,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "gekko_horsfieldii",
+   "scientific": "Gekko horsfieldii",
+   "common": "horsfield's flying gecko",
+   "kind": "reptile",
+   "records": 12,
+   "rank_in_class": 8,
+   "share_of_class": 0.0211,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "gekko_albofasciolatus",
+   "scientific": "Gekko albofasciolatus",
+   "common": null,
+   "kind": "reptile",
+   "records": 12,
+   "rank_in_class": 9,
+   "share_of_class": 0.0211,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "chrysopelea_paradisi",
+   "scientific": "Chrysopelea paradisi",
+   "common": "paradise tree snake",
+   "kind": "reptile",
+   "records": 11,
+   "rank_in_class": 10,
+   "share_of_class": 0.0194,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "eutropis_rudis",
+   "scientific": "Eutropis rudis",
+   "common": "rough mabuya",
+   "kind": "reptile",
+   "records": 11,
+   "rank_in_class": 11,
+   "share_of_class": 0.0194,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "aphaniotis_ornata",
+   "scientific": "Aphaniotis ornata",
+   "common": "ornate earless agama",
+   "kind": "reptile",
+   "records": 10,
+   "rank_in_class": 12,
+   "share_of_class": 0.0176,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "malayopython_reticulatus",
+   "scientific": "Malayopython reticulatus",
+   "common": "reticulated python",
+   "kind": "reptile",
+   "records": 10,
+   "rank_in_class": 13,
+   "share_of_class": 0.0176,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "gehyra_mutilata",
+   "scientific": "Gehyra mutilata",
+   "common": "stump-toed gecko",
+   "kind": "reptile",
+   "records": 9,
+   "rank_in_class": 14,
+   "share_of_class": 0.0158,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "sphenomorphus_sabanus",
+   "scientific": "Sphenomorphus sabanus",
+   "common": "sabah slender skink",
+   "kind": "reptile",
+   "records": 9,
+   "rank_in_class": 15,
+   "share_of_class": 0.0158,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "calamaria_grabowskyi",
+   "scientific": "Calamaria grabowskyi",
+   "common": "grabowsky's reed snake",
+   "kind": "reptile",
+   "records": 9,
+   "rank_in_class": 16,
+   "share_of_class": 0.0158,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "dasia_vittata",
+   "scientific": "Dasia vittata",
+   "common": "borneo skink",
+   "kind": "reptile",
+   "records": 9,
+   "rank_in_class": 17,
+   "share_of_class": 0.0158,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "chrysopelea_pelias",
+   "scientific": "Chrysopelea pelias",
+   "common": "twin-barred tree snake",
+   "kind": "reptile",
+   "records": 8,
+   "rank_in_class": 18,
+   "share_of_class": 0.0141,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "psammodynastes_pulverulentus",
+   "scientific": "Psammodynastes pulverulentus",
+   "common": "common mock viper",
+   "kind": "reptile",
+   "records": 7,
+   "rank_in_class": 19,
+   "share_of_class": 0.0123,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "dendrelaphis_formosus",
+   "scientific": "Dendrelaphis formosus",
+   "common": "elegant bronzeback",
+   "kind": "reptile",
+   "records": 7,
+   "rank_in_class": 20,
+   "share_of_class": 0.0123,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "xenochrophis_trianguligerus",
+   "scientific": "Xenochrophis trianguligerus",
+   "common": "triangle keelback",
+   "kind": "reptile",
+   "records": 6,
+   "rank_in_class": 21,
+   "share_of_class": 0.0106,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "aplopeltura_boa",
+   "scientific": "Aplopeltura boa",
+   "common": "blunt-headed slug snake",
+   "kind": "reptile",
+   "records": 6,
+   "rank_in_class": 22,
+   "share_of_class": 0.0106,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "boiga_cynodon",
+   "scientific": "Boiga cynodon",
+   "common": "dog-toothed cat snake",
+   "kind": "reptile",
+   "records": 6,
+   "rank_in_class": 23,
+   "share_of_class": 0.0106,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "boiga_nigriceps",
+   "scientific": "Boiga nigriceps",
+   "common": "black-headed cat snake",
+   "kind": "reptile",
+   "records": 6,
+   "rank_in_class": 24,
+   "share_of_class": 0.0106,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "ptyas_fusca",
+   "scientific": "Ptyas fusca",
+   "common": "white-bellied rat snake",
+   "kind": "reptile",
+   "records": 6,
+   "rank_in_class": 25,
+   "share_of_class": 0.0106,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "hemiphyllodactylus_typus",
+   "scientific": "Hemiphyllodactylus typus",
+   "common": "slender tree gecko",
+   "kind": "reptile",
+   "records": 5,
+   "rank_in_class": 26,
+   "share_of_class": 0.0088,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "ahaetulla_prasina",
+   "scientific": "Ahaetulla prasina",
+   "common": "oriental whip snake",
+   "kind": "reptile",
+   "records": 5,
+   "rank_in_class": 27,
+   "share_of_class": 0.0088,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "gonyosoma_oxycephalum",
+   "scientific": "Gonyosoma oxycephalum",
+   "common": "red-tailed racer",
+   "kind": "reptile",
+   "records": 5,
+   "rank_in_class": 28,
+   "share_of_class": 0.0088,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "draco_cornutus",
+   "scientific": "Draco cornutus",
+   "common": "bartlett\u2019s flying dragon",
+   "kind": "reptile",
+   "records": 5,
+   "rank_in_class": 29,
+   "share_of_class": 0.0088,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "boiga_jaspidea",
+   "scientific": "Boiga jaspidea",
+   "common": "jasper\ufffds cat snake",
+   "kind": "reptile",
+   "records": 4,
+   "rank_in_class": 30,
+   "share_of_class": 0.007,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "dogania_subplana",
+   "scientific": "Dogania subplana",
+   "common": "malayan softshell",
+   "kind": "reptile",
+   "records": 2,
+   "rank_in_class": 31,
+   "share_of_class": 0.0035,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "crocodylus_porosus",
+   "scientific": "Crocodylus porosus",
+   "common": "saltwater crocodile",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 32,
+   "share_of_class": 0.0018,
+   "role": [],
+   "listed": false
+  },
+  {
    "id": "polypedates_otilophus",
    "scientific": "Polypedates otilophus",
    "common": "file-eared tree frog",
@@ -5944,7 +6492,7 @@
  "classes": {
   "bird": 150,
   "mammal": 80,
-  "reptile": 30,
+  "reptile": 5,
   "amphibian": 30,
   "fish": 30,
   "invertebrate": 20

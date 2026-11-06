@@ -15,7 +15,7 @@
   -2.4052817272586062
  ],
  "size_m": 10000,
- "generated_at": "2026-11-06T10:49:27Z",
+ "generated_at": "2026-11-06T12:08:18Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -3134,14 +3134,14 @@
     "gbif",
     "eltontraits"
    ],
-   "listed": 81,
+   "listed": 86,
    "predators": 33,
    "scavengers": 17,
    "generated_traits": 0,
-   "queued": 80,
-   "queued_credits": 2395,
-   "sha256": "b0b0006ff2b4bc8b4b25f1f48bbe033a78cdc9ca91f85a55d46ae9d5c5a18300",
-   "bytes": 138875
+   "queued": 85,
+   "queued_credits": 2520,
+   "sha256": "1da44c218bd7adbfe5303ab99c6a9ba98e73aa7773c674e44bcd1f8e1f1e1030",
+   "bytes": 150090
   },
   "resources": {
    "path": "resources/resources.json",
@@ -3305,8 +3305,8 @@
     "species.presence"
    ],
    "allow": 1,
-   "slots": 40,
-   "skipped": 40,
+   "slots": 46,
+   "skipped": 39,
    "stand_ins": {
     "loxodonta_africana": "cervus_canadensis",
     "hippopotamus_amphibius": "cervus_canadensis",
@@ -3321,8 +3321,8 @@
     "connochaetes_taurinus": "cervus_canadensis",
     "papio_anubis": "ursus_americanus"
    },
-   "sha256": "d01a32600d68267e118c6530b7bf3c56e0b00a48b99f90a8f6dc78fd18abea55",
-   "bytes": 38068
+   "sha256": "d239483c1eef15ca8221dbb1157e3e03c33757f285ea7078d06ad87dab2394f3",
+   "bytes": 46345
   },
   "client.texture_ground": {
    "path": "client/texture_ground.jpg",
@@ -3390,6 +3390,41 @@
    "cards_written": [],
    "sha256": "9439c6b03cd0e2e5cc9b0a7c5b9a1bbbdaed7c16004d739d761b5b510d6334fd",
    "bytes": 2079
+  },
+  "fauna.stills": {
+   "path": "fauna/stills.json",
+   "counts": {
+    "model": 16,
+    "stand_in": 24
+   },
+   "rendered": 0,
+   "failed": 0,
+   "sha256": "f4770c1719d5c906ad60be13dbab4217ea4d2b87710ec03c86b8dfa47f322025",
+   "bytes": 4782
+  },
+  "client.canopy_top": {
+   "path": "client/canopy_top.png",
+   "kind": "raster",
+   "crs": "EPSG:32736",
+   "bounds": [
+    698000,
+    9724000,
+    708000,
+    9734000
+   ],
+   "pixels": 333,
+   "resolution_m": 30.03003003003003,
+   "encoding": "R = the stand's top height in 0.5 m steps (0 none): the mean p95 height of the cell's 10 m sub-cells with tree cover >= 12 %, where 1 or more of them do; else the mean of the measured cells within 2 cells",
+   "derived_from": [
+    "vegetation.canopy_height_10m"
+   ],
+   "stats": {
+    "cells": 50372,
+    "median_m": 7.0,
+    "p90_m": 11.1
+   },
+   "sha256": "bf6041035015ef6ae90ce92bee8c3f2329b7cc491aed7a0d0c3526a95c64218a",
+   "bytes": 26224
   }
  },
  "sources": {
@@ -4130,6 +4165,72 @@
    "step": "audit",
    "at": "2026-11-06T10:49:27Z",
    "seconds": 0.0,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T11:10:17Z",
+   "seconds": 0.8,
+   "ok": true
+  },
+  {
+   "step": "stills",
+   "at": "2026-11-06T11:12:25Z",
+   "seconds": 0.2,
+   "ok": true
+  },
+  {
+   "step": "canopy_top",
+   "at": "2026-11-06T11:15:48Z",
+   "seconds": 0.3,
+   "ok": true
+  },
+  {
+   "step": "canopy_top",
+   "at": "2026-11-06T11:28:02Z",
+   "seconds": 0.5,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T11:29:48Z",
+   "seconds": 0.8,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T11:52:35Z",
+   "seconds": 0.8,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T11:52:49Z",
+   "seconds": 0.8,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T11:52:57Z",
+   "seconds": 0.7,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T11:53:45Z",
+   "seconds": 0.7,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T12:07:15Z",
+   "seconds": 0.8,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T12:08:18Z",
+   "seconds": 0.7,
    "ok": true
   }
  ],
@@ -5290,15 +5391,15 @@
    "seconds": 0.3
   },
   "animals": {
-   "version": "4",
-   "code": "a8eed9ca07495d82",
+   "version": "5",
+   "code": "06d2fd463014783f",
    "params": {
     "tile": "utm36s_698_9724"
    },
-   "fingerprint": "a40b248c0f35ae37",
+   "fingerprint": "4f470fb7775604a4",
    "parts": {
-    "version": "4",
-    "code": "a8eed9ca07495d82",
+    "version": "5",
+    "code": "06d2fd463014783f",
     "params": {
      "tile": "utm36s_698_9724"
     },
@@ -5307,11 +5408,11 @@
      "plants": "31a07b126d9892e5"
     },
     "library": {
-     "library/animals": "522e5b0ee36723ba",
+     "library/animals": "5299186393941ce0",
      "data/eltontraits": "e3b0c44298fc1c14"
     }
    },
-   "ran_at": "2026-11-06T10:49:13Z",
+   "ran_at": "2026-11-06T12:08:18Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -5319,10 +5420,10 @@
     "species.animals"
    ],
    "outputs": {
-    "client/fauna.json": "d01a32600d68267e",
-    "species/animals.json": "b0b0006ff2b4bc8b"
+    "client/fauna.json": "d239483c1eef15ca",
+    "species/animals.json": "1da44c218bd7adbf"
    },
-   "out_hash": "6baaf2e9543a2702",
+   "out_hash": "a8f2790e63b8b6f0",
    "sources": {
     "gbif": "2026-11-06",
     "eltontraits": "2026-11-06"
@@ -5331,9 +5432,9 @@
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 226
+    "cache": 255
    },
-   "seconds": 0.3
+   "seconds": 0.7
   },
   "resources": {
    "version": "1",
@@ -5561,6 +5662,85 @@
     "cache": 0
    },
    "seconds": 0.0
+  },
+  "stills": {
+   "version": "1",
+   "code": "96c9145d6cbab797",
+   "params": {
+    "tile": "utm36s_698_9724"
+   },
+   "fingerprint": "e6f4033b7cfd1197",
+   "parts": {
+    "version": "1",
+    "code": "96c9145d6cbab797",
+    "params": {
+     "tile": "utm36s_698_9724"
+    },
+    "deps": {
+     "animals": "06d36d1aadaf1f47"
+    },
+    "library": {
+     "library/animals": "522e5b0ee36723ba",
+     "client/assets/opening": "4a17c5bd393c1e80"
+    }
+   },
+   "ran_at": "2026-11-06T11:12:25Z",
+   "owner": null,
+   "status": "ok",
+   "layers": [
+    "fauna.stills"
+   ],
+   "outputs": {
+    "fauna/stills.json": "f4770c1719d5c906"
+   },
+   "out_hash": "b77e2135a3aa0c67",
+   "sources": {},
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 0
+   },
+   "seconds": 0.2
+  },
+  "canopy_top": {
+   "version": "1",
+   "code": "831bae93c94ee135",
+   "params": {
+    "tile": "utm36s_698_9724"
+   },
+   "fingerprint": "76933e1a452e8616",
+   "parts": {
+    "version": "1",
+    "code": "831bae93c94ee135",
+    "params": {
+     "tile": "utm36s_698_9724"
+    },
+    "deps": {
+     "landcover": "9fa56e22f73a078d",
+     "lidar": "35a6a2ce16d0808d",
+     "terrain": "42ff736e2ed42288"
+    },
+    "library": {}
+   },
+   "ran_at": "2026-11-06T11:28:01Z",
+   "owner": null,
+   "status": "ok",
+   "layers": [
+    "client.canopy_top"
+   ],
+   "outputs": {
+    "client/canopy_top.png": "bf6041035015ef6a"
+   },
+   "out_hash": "dd469bed4b020267",
+   "sources": {},
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 0
+   },
+   "seconds": 0.5
   }
  },
  "seams": {

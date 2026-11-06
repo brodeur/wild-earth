@@ -317,6 +317,12 @@
     "scavenger"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Terrestrial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 52.3,
+   "habitat": "Coastal",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -371,6 +377,12 @@
     "predator"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Aerial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 59.4,
+   "habitat": "Marine",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -426,6 +438,12 @@
     "scavenger"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Aerial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 38.0,
+   "habitat": "Rock",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -481,6 +499,12 @@
     "scavenger"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Generalist",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 53.4,
+   "habitat": "Coastal",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -535,6 +559,12 @@
     "insectivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Aquatic",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 44.9,
+   "habitat": "Marine",
+   "habitat_density": 3,
    "active_hours": [
     0,
     0,
@@ -590,6 +620,12 @@
     "scavenger"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Terrestrial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 58.6,
+   "habitat": "Coastal",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -645,6 +681,10 @@
     "scavenger"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Terrestrial",
+   "kin_source": "avonet (genus)",
+   "hand_wing_index": 35.8,
    "active_hours": [
     0,
     1,
@@ -682,15 +722,15 @@
    "common": "Eurasian oystercatcher",
    "one": "eurasian oystercatcher",
    "many": "eurasian oystercatchers",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 1.637,
+   "kin": "callipepla_californica",
+   "archetype": "ground bird",
+   "scale": 1.43,
    "tint": null,
    "mass_kg": 0.526,
    "density_km2": 19.3953,
    "group": [
-    1,
-    6
+    3,
+    12
    ],
    "bird": true,
    "night": false,
@@ -699,6 +739,22 @@
     "insectivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Terrestrial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 51.2,
+   "habitat": "Coastal",
+   "habitat_density": 3,
+   "gait": {
+    "walk_mps": 0.84,
+    "cruise_mps": 2.87,
+    "top_mps": 4.78,
+    "stride_m": 0.41,
+    "sprint_s": 3.2,
+    "speed_k": 1.077,
+    "stride_k": 1.281,
+    "source": "trait card locomotion over callipepla_californica's (pipeline/locomotion.py)"
+   },
    "active_hours": [
     0,
     0,
@@ -736,15 +792,15 @@
    "common": "Black guillemot",
    "one": "black guillemot",
    "many": "black guillemots",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 1.466,
+   "kin": "mergus_merganser",
+   "archetype": "waterbird",
+   "scale": 0.632,
    "tint": null,
    "mass_kg": 0.378,
    "density_km2": 1.0372,
    "group": [
-    1,
-    6
+    2,
+    10
    ],
    "bird": true,
    "night": false,
@@ -753,6 +809,12 @@
     "predator"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Aquatic",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 43.1,
+   "habitat": "Marine",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -807,6 +869,12 @@
     "predator"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Aquatic",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 37.1,
+   "habitat": "Wetland",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -861,6 +929,12 @@
     "omnivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 32.3,
+   "habitat": "Forest",
+   "habitat_density": 1,
    "active_hours": [
     0,
     0,
@@ -915,6 +989,12 @@
     "predator"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Terrestrial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 34.6,
+   "habitat": "Wetland",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -952,15 +1032,15 @@
    "common": "White wagtail",
    "one": "white wagtail",
    "many": "white wagtails",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.584,
+   "kin": "callipepla_californica",
+   "archetype": "ground bird",
+   "scale": 0.51,
    "tint": null,
    "mass_kg": 0.024,
    "density_km2": 66.7932,
    "group": [
-    1,
-    6
+    3,
+    12
    ],
    "bird": true,
    "night": false,
@@ -969,6 +1049,22 @@
     "insectivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Terrestrial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 31.4,
+   "habitat": "Human Modified",
+   "habitat_density": 3,
+   "gait": {
+    "walk_mps": 0.51,
+    "cruise_mps": 1.31,
+    "top_mps": 2.18,
+    "stride_m": 0.15,
+    "sprint_s": 1.5,
+    "speed_k": 0.654,
+    "stride_k": 0.469,
+    "source": "trait card locomotion over callipepla_californica's (pipeline/locomotion.py)"
+   },
    "active_hours": [
     0,
     0,
@@ -1023,6 +1119,12 @@
     "predator"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Aquatic",
+   "kin_source": "avonet (crosswalk)",
+   "hand_wing_index": 33.2,
+   "habitat": "Marine",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -1077,6 +1179,12 @@
     "insectivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Generalist",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 33.3,
+   "habitat": "Forest",
+   "habitat_density": 1,
    "active_hours": [
     0,
     0,
@@ -1132,6 +1240,12 @@
     "scavenger"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Generalist",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 57.4,
+   "habitat": "Coastal",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -1187,6 +1301,12 @@
     "scavenger"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Terrestrial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 22.9,
+   "habitat": "Human Modified",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -1242,6 +1362,12 @@
     "scavenger"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 18.7,
+   "habitat": "Woodland",
+   "habitat_density": 2,
    "active_hours": [
     0,
     1,
@@ -1279,9 +1405,9 @@
    "common": "Northern gannet",
    "one": "northern gannet",
    "many": "northern gannets",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 2.924,
+   "kin": "larus_glaucescens",
+   "archetype": "gull",
+   "scale": 1.397,
    "tint": null,
    "mass_kg": 2.999,
    "density_km2": 0.2194,
@@ -1296,7 +1422,15 @@
     "predator",
     "scavenger"
    ],
-   "known": [],
+   "known": [
+    "a seabird on the gull's machine"
+   ],
+   "flightless": false,
+   "lifestyle": "Aerial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 62.1,
+   "habitat": "Marine",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -1351,6 +1485,12 @@
     "insectivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 18.4,
+   "habitat": "Forest",
+   "habitat_density": 1,
    "active_hours": [
     0,
     0,
@@ -1405,6 +1545,22 @@
     "herbivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Terrestrial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 39.0,
+   "habitat": "Grassland",
+   "habitat_density": 3,
+   "gait": {
+    "walk_mps": 0.85,
+    "cruise_mps": 3.14,
+    "top_mps": 4.84,
+    "stride_m": 0.42,
+    "sprint_s": 3.3,
+    "speed_k": 1.09,
+    "stride_k": 1.312,
+    "source": "trait card locomotion over callipepla_californica's (pipeline/locomotion.py)"
+   },
    "active_hours": [
     0,
     0,
@@ -1459,6 +1615,12 @@
     "insectivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Insessorial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 25.9,
+   "habitat": "Forest",
+   "habitat_density": 1,
    "active_hours": [
     0,
     0,
@@ -1513,6 +1675,12 @@
     "predator"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Aquatic",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 49.3,
+   "habitat": "Wetland",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -1567,6 +1735,12 @@
     "herbivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Generalist",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 32.5,
+   "habitat": "Woodland",
+   "habitat_density": 2,
    "active_hours": [
     0,
     0,
@@ -1622,6 +1796,12 @@
     "scavenger"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Aerial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 36.7,
+   "habitat": "Grassland",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -1659,15 +1839,15 @@
    "common": "Red-throated loon",
    "one": "red-throated loon",
    "many": "red-throated loons",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 2.314,
+   "kin": "mergus_merganser",
+   "archetype": "waterbird",
+   "scale": 0.997,
    "tint": null,
    "mass_kg": 1.486,
    "density_km2": 0.3715,
    "group": [
-    1,
-    6
+    2,
+    10
    ],
    "bird": true,
    "night": false,
@@ -1676,6 +1856,12 @@
     "predator"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Aquatic",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 47.6,
+   "habitat": "Wetland",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -1731,6 +1917,12 @@
     "scavenger"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Aerial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 67.3,
+   "habitat": "Marine",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -1768,15 +1960,15 @@
    "common": "Meadow pipit",
    "one": "meadow pipit",
    "many": "meadow pipits",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 0.535,
+   "kin": "callipepla_californica",
+   "archetype": "ground bird",
+   "scale": 0.468,
    "tint": null,
    "mass_kg": 0.018,
    "density_km2": 70.0,
    "group": [
-    1,
-    6
+    3,
+    12
    ],
    "bird": true,
    "night": false,
@@ -1785,6 +1977,22 @@
     "insectivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Terrestrial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 24.3,
+   "habitat": "Grassland",
+   "habitat_density": 3,
+   "gait": {
+    "walk_mps": 0.48,
+    "cruise_mps": 1.16,
+    "top_mps": 1.93,
+    "stride_m": 0.14,
+    "sprint_s": 1.4,
+    "speed_k": 0.615,
+    "stride_k": 0.438,
+    "source": "trait card locomotion over callipepla_californica's (pipeline/locomotion.py)"
+   },
    "active_hours": [
     0,
     0,
@@ -1840,6 +2048,12 @@
     "scavenger"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Generalist",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 51.8,
+   "habitat": "Coastal",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -1894,6 +2108,12 @@
     "herbivore"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Generalist",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 33.1,
+   "habitat": "Forest",
+   "habitat_density": 1,
    "active_hours": [
     0,
     0,
@@ -1931,9 +2151,9 @@
    "common": "Parasitic jaeger",
    "one": "parasitic jaeger",
    "many": "parasitic jaegers",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 1.547,
+   "kin": "larus_glaucescens",
+   "archetype": "gull",
+   "scale": 0.739,
    "tint": null,
    "mass_kg": 0.444,
    "density_km2": 0.9188,
@@ -1947,7 +2167,15 @@
    "role": [
     "predator"
    ],
-   "known": [],
+   "known": [
+    "a seabird on the gull's machine"
+   ],
+   "flightless": false,
+   "lifestyle": "Aerial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 60.2,
+   "habitat": "Marine",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -2002,6 +2230,12 @@
     "predator"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Generalist",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 54.9,
+   "habitat": "Coastal",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -2057,6 +2291,12 @@
     "scavenger"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Aerial",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 69.1,
+   "habitat": "Coastal",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -2094,15 +2334,15 @@
    "common": "Atlantic puffin",
    "one": "atlantic puffin",
    "many": "atlantic puffins",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 1.703,
+   "kin": "mergus_merganser",
+   "archetype": "waterbird",
+   "scale": 0.734,
    "tint": null,
    "mass_kg": 0.593,
    "density_km2": 0.7399,
    "group": [
-    1,
-    6
+    2,
+    10
    ],
    "bird": true,
    "night": false,
@@ -2111,6 +2351,12 @@
     "predator"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Aquatic",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 51.6,
+   "habitat": "Marine",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -2148,15 +2394,15 @@
    "common": "Razorbill",
    "one": "razorbill",
    "many": "razorbills",
-   "kin": "cyanocitta_stelleri",
-   "archetype": "perching bird",
-   "scale": 1.822,
+   "kin": "mergus_merganser",
+   "archetype": "waterbird",
+   "scale": 0.785,
    "tint": null,
    "mass_kg": 0.726,
    "density_km2": 0.6357,
    "group": [
-    1,
-    6
+    2,
+    10
    ],
    "bird": true,
    "night": false,
@@ -2165,6 +2411,12 @@
     "predator"
    ],
    "known": [],
+   "flightless": false,
+   "lifestyle": "Aquatic",
+   "kin_source": "avonet (species)",
+   "hand_wing_index": 56.8,
+   "habitat": "Marine",
+   "habitat_density": 3,
    "active_hours": [
     0,
     1,
@@ -2295,6 +2547,6 @@
    "why": "over the 40-slot cap"
   }
  ],
- "rules": "pipeline/fauna_slots.py: kin by taxonomy, diet and mass; scale = (mass / kin mass)^(1/3), 0.25-4; density Damuth 1981 (herbivores; large ones times HERBIVORE_PRODUCTIVITY of the tile's ecosystem), 30 / mass kg (carnivores), birds 15 m^-0.4 (cap 70) or 0.5 m^-0.75 (raptors), or PanTHERIA's measured density; behaviour() for the hours about, rest posture and group",
+ "rules": "pipeline/fauna_slots.py: kin by taxonomy, diet and mass (a bird's by AVONET's lifestyle and flightlessness); scale = (mass / kin mass)^(1/3), 0.25-4; density Damuth 1981 (herbivores; large ones times HERBIVORE_PRODUCTIVITY of the tile's ecosystem), 30 / mass kg (carnivores), birds 15 m^-0.4 (cap 70) or 0.5 m^-0.75 (raptors), or PanTHERIA's measured density; behaviour() for the hours about, rest posture and group",
  "ecosystem": "M1"
 }

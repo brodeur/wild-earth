@@ -17,7 +17,7 @@
  "family": "Arecaceae",
  "form": "tree",
  "deciduous": false,
- "template": "juglans_hindsii",
+ "template": "palm",
  "regions": [
   "neotropics"
  ],
@@ -115,7 +115,7 @@
    1.0
   ],
   "leaf_size_m": 0.6,
-  "leaf_shape": "pinnate_compound",
+  "leaf_shape": "palm_pinnate",
   "flowers": null,
   "berries": null
  },
@@ -129,16 +129,20 @@
    138,
    128
   ],
-  "bark_pattern": "smooth_grey",
+  "bark_pattern": "palm_ringed",
   "split_prob": 0.0,
-  "length_ratio": 1.0,
-  "bole_ratio": 0.892,
-  "base_size": 0.872,
-  "taper": 0.3,
-  "curve_deg": 2,
-  "lean_deg": 3,
-  "flare": 1.15,
-  "roots": false
+  "flare": 1.0,
+  "roots": false,
+  "bark": {
+   "tile_m": [
+    0.5,
+    0.9
+   ],
+   "ring_m": 0.15,
+   "relief": 0.9,
+   "lichen": 0.15,
+   "contrast": 0.55
+  }
  },
  "targets": {
   "crown_width_ratio": 0.2,
@@ -187,8 +191,7 @@
   ],
   "where": "Nicaragua south to Bolivia and east through Venezuela, the Guianas and Brazil"
  },
- "stand_in": "juglans_hindsii",
- "notes": "Template juglans_hindsii: a palm: treegen has no palm architecture (Corner's model: one unbranched stem, a crown of fronds); California black walnut is the nearest by leaf (pinnate). Crown width: twice the frond length, the fronds arching (no source gives the crown's width). Leaf size clamped to 0.6 m (the source's 65 cm is past what a leaf card carries). Palm stand-in: the bole runs clear and unforked to the crown (split_prob 0, bole and base_size at the crown's base) and a compact crown of pinnate leaf sprays stands for the fronds; the walnut's branching still makes short limbs inside that crown, which a palm does not have. Stilt roots ([1, 2] m) are not drawn: treegen has no stilt-root primitive. NOT SOURCED (the template's or a default value): leaf colour (a tropical evergreen's mid green). Research notes: Height: Wikipedia typically 15-20, to 25 m; Henderson to 20 m, usually less; UTP 8-25 m. Stem diameter: Wikipedia typically about 12, to 16 cm. Leaves: UTP about 7, 1.5-2 m long; leaf.length_cm is the rachis (Henderson 1.4-2.8 m), and the petiole adds 15-40 cm. Pinnae: Henderson to 90 x 20 cm, Mori to 100 x 30 cm; 40 cm is the proximal pinna. 'secondary/gaps' comes from UTP ('common in non-flooded fields and fallows'), and evergreen is assumed for a palm, not stated. Mori: on all soil and drainage types in French Guiana, never dense. Phenology: Wikipedia says flowering is mostly in the dry season (no region given); Mori: flowers and fruits year-round (French Guiana). No Madre de Dios or Osa months found. Fruit is yellow and edible (Wikipedia). White-lipped peccaries eat many seeds (Wikipedia); collared peccaries damage stilt-root tips (Spanish Wikipedia). The Napo camera-trap study covered Socratea spp. only. Palmweb blocked automated fetches. The walnut's first-order limbs stand in for the 6 fronds (2.1 m, arching), leafy along their length; a pinnate leaf card stands for the leaflets.",
+ "notes": "Template palm: a palm: Corner's model (one unbranched stem, a crown of large leaves at its top), the palm block from the research's. Crown width: twice the frond length, the fronds arching (no source gives the crown's width). Leaf size clamped to 0.6 m (the source's 65 cm is past what a leaf card carries). NOT SOURCED (the template's or a default value): leaf colour (a tropical evergreen's mid green); the pinnae's hang (a little: droop 0.15); leaf-scar ring spacing (15 cm). Research notes: Height: Wikipedia typically 15-20, to 25 m; Henderson to 20 m, usually less; UTP 8-25 m. Stem diameter: Wikipedia typically about 12, to 16 cm. Leaves: UTP about 7, 1.5-2 m long; leaf.length_cm is the rachis (Henderson 1.4-2.8 m), and the petiole adds 15-40 cm. Pinnae: Henderson to 90 x 20 cm, Mori to 100 x 30 cm; 40 cm is the proximal pinna. 'secondary/gaps' comes from UTP ('common in non-flooded fields and fallows'), and evergreen is assumed for a palm, not stated. Mori: on all soil and drainage types in French Guiana, never dense. Phenology: Wikipedia says flowering is mostly in the dry season (no region given); Mori: flowers and fruits year-round (French Guiana). No Madre de Dios or Osa months found. Fruit is yellow and edible (Wikipedia). White-lipped peccaries eat many seeds (Wikipedia); collared peccaries damage stilt-root tips (Spanish Wikipedia). The Napo camera-trap study covered Socratea spp. only. Palmweb blocked automated fetches.",
  "sources": [
   "Henderson, A. 1990. Arecaceae Part I: Introduction and the Iriarteinae. Flora Neotropica Monogr. 53 (NYBG World Flora monograph record: Socratea exorrhiza), https://sweetgum.nybg.org/science/world-flora/monographs-details/?irn=19093 (unknown (NYBG Terms & Conditions linked, no licence stated)), read 2026-11-06",
   "Mori, S. A. et al. 1997. Guide to the vascular plants of central French Guiana, Part 1. Mem. New York Bot. Gard. 76 (NYBG monograph record: Socratea exorrhiza), https://sweetgum.nybg.org/science/vh/monographs-details/?irn=30382 (unknown (NYBG Terms & Conditions linked, no licence stated)), read 2026-11-06",
@@ -204,66 +207,75 @@
   "by": "pipeline/tree_cards.py",
   "version": "1"
  },
- "patch": {
-  "foliage": {
-   "flowers": null,
-   "berries": null,
-   "start": 0.0,
-   "parent_start": 0.05,
-   "cards_per_m2": 1.2,
-   "density": 14,
-   "winter_twigs": 0.0,
-   "leaf_on_var": 0.0
-  },
-  "levels": [
-   {
-    "count": 6,
-    "down_angle_deg": 55,
-    "down_angle_tip_deg": 20,
-    "down_angle_var_deg": 15,
-    "rotation_deg": 140,
-    "rotation_var_deg": 30,
-    "length_ratio": 0.156,
-    "length_var": 0.15,
-    "curve_deg": 0,
-    "curve_var_deg": 18,
-    "zigzag_deg": 4,
-    "tropism": 0.0,
-    "droop_deg": 35,
-    "taper": 0.9,
-    "radius_ratio": 0.25,
-    "segments": 4
-   },
-   {
-    "count": 9,
-    "start": 0.05,
-    "down_angle_deg": 70,
-    "down_angle_var_deg": 15,
-    "rotation_deg": 140,
-    "rotation_var_deg": 30,
-    "length_ratio": 0.35,
-    "length_var": 0.2,
-    "curve_deg": 0,
-    "curve_var_deg": 18,
-    "zigzag_deg": 6,
-    "tropism": 0.04,
-    "taper": 1.0,
-    "radius_ratio": 0.45,
-    "segments": 2
-   }
+ "palm": {
+  "leaf": "pinnate",
+  "leaves": [
+   5,
+   8
   ],
-  "snag": {
-   "fraction": 0.0
-  }
- },
- "variant_patches": {
-  "young": {
-   "set": {
-    "trunk": {
-     "split_prob": 0.0
-    }
-   },
-   "note": "a young palm: a rosette of fronds near the ground before the stem rises"
-  }
+  "leaf_length_m": [
+   1.55,
+   3.2
+  ],
+  "petiole_m": [
+   0.15,
+   0.4
+  ],
+  "leaflet_length_m": [
+   0.4,
+   0.9
+  ],
+  "leaflet_width_m": [
+   0.12,
+   0.2
+  ],
+  "leaflets_per_side": [
+   15,
+   25
+  ],
+  "pinna_shape": "wedge",
+  "plumose": 0.6,
+  "droop": 0.15,
+  "posture_deg": [
+   20,
+   100
+  ],
+  "arch": 0.6,
+  "stem_diameter_m": [
+   0.155,
+   0.128,
+   0.1
+  ],
+  "rings_m": 0.15,
+  "crownshaft": {
+   "length_m": 1.2,
+   "rgb": [
+    111,
+    122,
+    92
+   ],
+   "swell": 1.06
+  },
+  "stilt_roots": {
+   "count": [
+    15,
+    25
+   ],
+   "length_m": [
+    1.0,
+    2.0
+   ],
+   "radius_m": 0.036,
+   "angle_deg": 35,
+   "rgb": [
+    116,
+    94,
+    76
+   ]
+  },
+  "stems": [
+   1,
+   1
+  ]
  }
 }

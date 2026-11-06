@@ -4,7 +4,7 @@ import { SPECIES, SPECIES_IDS, mulberry32, resolveSpecies } from './trees.js';
 import { VARIANTS, pick, hash, variantSeed, handover, cellPlan, placementSkip, placePlant, monthFor, crownPlan, rareSpecies, drawnSeed, tileSpecies, zoneSpecies, riparianExtra } from './vegetation.js';
 import { variantSlots, leafOnAt, treeWood, leafTransmit } from './treegen.js';
 import { hasCrowns, crownCell, SCALE } from './crowns.js';
-import { stature, siteFactor, emergentOf, drawTree } from './stature.js';
+import { stature, cellStature, emergentOf, drawTree, shrubSlot } from './stature.js';
 import { bakeSteps, VIEWS, SIDE_VIEWS, ALPHA_REF } from './impostorBake.js';
 import { drain } from './slice.js';
 import { uploadDataSteps, canBand } from './gpuUpload.js';
@@ -490,7 +490,7 @@ export class Impostors {
       const cc = crownCell(tile, crowns, i, j);   // as Vegetation.update: crowns where the point cloud reaches, the mix beyond
       const { rnd, nTrees, nShrubs, treeMix, shrubMix } = plan, nRip = riparianExtra(tile, i, j, cc);
       const kE = cc ? -1 : emergentOf(i, j, nTrees + nRip);   // the cell's emergent (stature.js), as in Vegetation.update
-      let site = -1;
+      let site = null;   // the cell's stature (stature.js cellStature), once a canopy tree needs it
       for (let k = 0; k < nTrees + nShrubs + nRip; k++) {
         const isTree = k < nTrees || k >= nTrees + nShrubs, rip = k >= nTrees + nShrubs;
         if (!(isTree ? treeMix : shrubMix)) continue;   // a tile with no class fallback (species_mix class_fallback false): no mix, no plant (the riparian extras too)
@@ -505,6 +505,7 @@ export class Impostors {
           if (!crownPlan) { const sid = resolveSpecies(name), c = spCount[sid] || (spCount[sid] = { tree: 0, shrub: 0 }); c.tree++; }
           continue;
         }
+        variant = shrubSlot(resolveSpecies(name), variant, q => slotH(resolveSpecies(name), q));   // a shrub's slot at its own record's size, as the near forest's
         // Same placement as the near forest (vegetation.js placePlant): skips, and willow and alder pulled
         // to the bank, so a tree stands in one place on both sides of the hand-over. No draws from rnd.
         const at = placePlant(tile, i, j, k, name, px, pn, isTree); if (!at) continue;
@@ -518,14 +519,14 @@ export class Impostors {
         // target height (negative) like a crown's, and its class's slot; mapRecords scales the baked tree to it.
         // A young tree or a snag keeps its uniform scale on its slot's own tree; its record carries that height too, so
         // the baked tree that stands in for it (the atlas bakes one or two a species) is drawn the near tree's height.
-        let sc = s; const st = isTree ? stature(sid) : null;
+        let sc = s, wide = 1; const st = isTree ? stature(sid) : null;
         if (st && st.canopy[variant]) {
-          if (site < 0) site = siteFactor(tile, i, j);
+          if (!site) site = cellStature(tile, i, j, treeMix);
           const T = drawTree(st, i, j, k, us, site, (rip ? k - nShrubs : k) === kE);
-          variant = T.v; sc = -T.h;
+          variant = T.v; sc = -T.h; wide = T.w;   // a measured cell's lowered tree keeps its crown's width, as the near tree
         } else if (isTree) sc = -s * slotH(sid, variant);
         rec[o + 4] = sc; rec[o + 5] = libIdx[sid] * VARIANTS + variant;   // species and slot; the constructor swaps in the baked tree
-        rec[o + 6] = own(); rec[o + 7] = 1;
+        rec[o + 6] = own(); rec[o + 7] = wide;
         chunkOf[n] = Math.min(NC - 1, Math.floor(ax / CHUNK)) + NC * Math.min(NC - 1, Math.floor(an / CHUNK));
         n++;
       }

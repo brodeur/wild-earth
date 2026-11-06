@@ -1,11 +1,11 @@
 import * as THREE from 'three';
+import { loadStills, stillsReady, setStill } from './stills.js';
 
 // Off-screen herd members (owner, 2026-10-27): in a herd, covey or flock (groundControl.js herd), each member that is
-// not on screen is shown as a small avatar in a circle at the edge of the screen nearest to it (the start screen's
-// still of the species, assets/opening), so the player always knows where the group is. Members on screen have no
+// not on screen is shown as a small avatar in a circle at the edge of the screen nearest to it (the species' still,
+// stills.js stillOf: never empty), so the player always knows where the group is. Members on screen have no
 // marker. The markers are elements in #herdMarks (index.html), one per member, placed every frame from the camera's
 // projection; a member behind the camera is marked on the edge toward where it would be if the view turned round.
-const STILLS = new URL('../assets/opening/', import.meta.url);
 const INSET = 26;   // px from the screen's edge to the circle's centre
 const _v = new THREE.Vector3(), _c = new THREE.Vector3(), _edge = { x: 0, y: 0 };
 let _insetB = INSET;   // the bottom edge's inset: over the HUD's bottom rows (setEdgeBottom; players.js measures them)
@@ -33,13 +33,13 @@ export function edgePlace(camera, x, y, z, W = innerWidth, H = innerHeight) {
 
 export class HerdMarks {
   constructor({ el, camera, animals }) {
-    this.el = el; this.camera = camera; this.animals = animals; this.marks = new Map(); this.index = null;
-    fetch(new URL('index.json', STILLS)).then(r => r.json()).then(j => { this.index = j.species || {}; }).catch(() => { this.index = {}; });
+    this.el = el; this.camera = camera; this.animals = animals; this.marks = new Map();
+    loadStills();
   }
   // group: the player's group (null: none); me: the player's own animal (skipped); h: the body's height (the marker aims at its middle)
   update(group, me, h = 0.5) {
     const keep = new Set();
-    if (group && this.index && this.el) {
+    if (group && stillsReady() && this.el) {
       const cam = this.camera, W = innerWidth, H = innerHeight;
       for (const a of this.animals.list) {
         if (a.group !== group || a === me || a.culled) continue;
@@ -54,10 +54,10 @@ export class HerdMarks {
     for (const [id, m] of this.marks) if (!keep.has(id)) { m.remove(); this.marks.delete(id); }
   }
   make(a) {
-    const sp = this.animals.speciesList()[a.sp], st = this.index[sp.code] || this.index[sp.code.split(':')[0]];
+    const sp = this.animals.speciesList()[a.sp];
     const m = document.createElement('div'); m.className = 'hm'; m.title = sp.common || sp.one;
     const img = document.createElement('img'); img.alt = sp.one; img.decoding = 'async';
-    if (st) img.src = new URL(st.file, STILLS).href;
+    setStill(img, sp);
     m.append(img); this.el.append(m);
     return m;
   }

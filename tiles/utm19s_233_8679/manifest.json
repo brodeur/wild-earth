@@ -15,7 +15,7 @@
   -11.848733996771625
  ],
  "size_m": 10000,
- "generated_at": "2026-11-06T10:35:39Z",
+ "generated_at": "2026-11-06T11:29:54Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -3552,14 +3552,14 @@
     "gbif",
     "eltontraits"
    ],
-   "listed": 63,
+   "listed": 68,
    "predators": 20,
    "scavengers": 3,
    "generated_traits": 0,
-   "queued": 61,
-   "queued_credits": 1810,
-   "sha256": "8af46c0212e68bfac51561b38fd1f2806795c417ad4736a34d0826d63ca6065e",
-   "bytes": 126577
+   "queued": 66,
+   "queued_credits": 1940,
+   "sha256": "de233a22885a35606b56c2c16d3c2ef902f7f22fe1cfbfdc4ab1a49d4b1330a6",
+   "bytes": 140196
   },
   "resources": {
    "path": "resources/resources.json",
@@ -3724,7 +3724,7 @@
    ],
    "allow": 2,
    "slots": 40,
-   "skipped": 21,
+   "skipped": 26,
    "stand_ins": {
     "pteronura_brasiliensis": "lontra_canadensis",
     "alouatta_seniculus": "sciurus_griseus",
@@ -3739,8 +3739,8 @@
     "leontocebus_weddelli": "sciurus_griseus",
     "ramphastos_tucanus": "cyanocitta_stelleri"
    },
-   "sha256": "ddc3c821c4c2d4fce58f7b846b902d7bb3ded5c6de4dc3faff5c4cdda75036f6",
-   "bytes": 33247
+   "sha256": "bc0f59a1e2a2bf82d449166e2a873a2b63753e4e9dc9107b1c430ec8bc00468e",
+   "bytes": 39380
   },
   "client.texture_ground": {
    "path": "client/texture_ground.jpg",
@@ -3793,9 +3793,13 @@
    "trees": 10,
    "with_card": 10,
    "queued": 0,
-   "cards_written": [],
-   "sha256": "377f7f700624426bd1370e1a2f4d0ddfcf8dbbcc8e47d06f4691b3bf19e2a1f5",
-   "bytes": 4329
+   "cards_written": [
+    "euterpe_precatoria",
+    "iriartea_deltoidea",
+    "socratea_exorrhiza"
+   ],
+   "sha256": "756a22f580c51e3c08f5e8e9e054735092a712c7a3ed64c102d9ce39e306ec39",
+   "bytes": 4402
   },
   "geology.strata": {
    "path": "geology/strata.json",
@@ -3808,6 +3812,30 @@
    "reason": "1 bedrock unit(s) large enough: no column",
    "sha256": "28422ac54c9237695ebf452832c89ab5905b8e6afe4b0e585bd616ef7fd96d70",
    "bytes": 950
+  },
+  "client.canopy_top": {
+   "path": "client/canopy_top.png",
+   "kind": "raster",
+   "crs": "EPSG:32719",
+   "bounds": [
+    233000,
+    8679000,
+    243000,
+    8689000
+   ],
+   "pixels": 333,
+   "resolution_m": 30.03003003003003,
+   "encoding": "R = the stand's top height in 0.5 m steps (0 none): the mean p95 height of the cell's 10 m sub-cells with tree cover >= 12 %, where 1 or more of them do; else the mean of the measured cells within 2 cells",
+   "derived_from": [
+    "vegetation.canopy_height_10m"
+   ],
+   "stats": {
+    "cells": 110472,
+    "median_m": 20.8,
+    "p90_m": 25.1
+   },
+   "sha256": "8517956c3f06b3dbaecac3d953a49fbbf945b4946a6888bb3516713ea1716e5c",
+   "bytes": 64649
   }
  },
  "sources": {
@@ -4499,6 +4527,54 @@
    "step": "audit",
    "at": "2026-11-06T10:35:39Z",
    "seconds": 0.0,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T11:12:50Z",
+   "seconds": 29.6,
+   "ok": true
+  },
+  {
+   "step": "canopy_top",
+   "at": "2026-11-06T11:15:47Z",
+   "seconds": 0.4,
+   "ok": true
+  },
+  {
+   "step": "canopy_top",
+   "at": "2026-11-06T11:28:00Z",
+   "seconds": 0.8,
+   "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-06T11:28:05Z",
+   "seconds": 1.7,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-06T11:28:06Z",
+   "seconds": 0.9,
+   "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-06T11:28:32Z",
+   "seconds": 1.8,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-06T11:28:33Z",
+   "seconds": 1.1,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T11:29:54Z",
+   "seconds": 0.7,
    "ok": true
   }
  ],
@@ -5437,15 +5513,15 @@
    "seconds": 0.0
   },
   "plants": {
-   "version": "2",
-   "code": "39cb23c36c783bb4",
+   "version": "3",
+   "code": "2d1ad5009738fa78",
    "params": {
     "tile": "utm19s_233_8679"
    },
-   "fingerprint": "892a037d37b9f5d0",
+   "fingerprint": "4ea3ffc8dc6634be",
    "parts": {
-    "version": "2",
-    "code": "39cb23c36c783bb4",
+    "version": "3",
+    "code": "2d1ad5009738fa78",
     "params": {
      "tile": "utm19s_233_8679"
     },
@@ -5454,11 +5530,11 @@
      "ice": "461c48b3080815c0"
     },
     "library": {
-     "library/plant_cards": "4abde1c743a6da1d",
-     "library/plant_cards/_research": "637526a3f77e3385"
+     "library/plant_cards": "0fad403eb036ceb1",
+     "library/plant_cards/_research": "76160f150981cd69"
     }
    },
-   "ran_at": "2026-11-06T10:29:27Z",
+   "ran_at": "2026-11-06T11:28:30Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -5466,10 +5542,10 @@
     "species.plant_needs"
    ],
    "outputs": {
-    "species/canopy.json": "377f7f700624426b",
+    "species/canopy.json": "756a22f580c51e3c",
     "species/plant_needs.json": "264a1dbb60793e19"
    },
-   "out_hash": "afa334f118ad82d1",
+   "out_hash": "e1a333aea6613b5f",
    "sources": {
     "wcvp": "2026-11-06",
     "canopy_plots": "2026-11-06",
@@ -5482,7 +5558,7 @@
     "network": 0,
     "cache": 159
    },
-   "seconds": 1.3
+   "seconds": 1.8
   },
   "species_mix": {
    "version": "2",
@@ -5490,7 +5566,7 @@
    "params": {
     "tile": "utm19s_233_8679"
    },
-   "fingerprint": "0491b3acdbda2fc4",
+   "fingerprint": "5c341efef1ca137a",
    "parts": {
     "version": "2",
     "code": "f86907582f657365",
@@ -5502,13 +5578,13 @@
      "landcover": "bcc032a9c0e0a6d7",
      "water": "ea2a63d990777c36",
      "ice": "461c48b3080815c0",
-     "plants": "afa334f118ad82d1"
+     "plants": "e1a333aea6613b5f"
     },
     "library": {
-     "library/species": "33f9e4c9f7acb46a"
+     "library/species": "d4a2da98159ff26b"
     }
    },
-   "ran_at": "2026-11-06T10:35:24Z",
+   "ran_at": "2026-11-06T11:28:32Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -5527,7 +5603,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 0.6
+   "seconds": 1.1
   },
   "crowns": {
    "version": "1",
@@ -5663,28 +5739,28 @@
    "seconds": 0.4
   },
   "animals": {
-   "version": "4",
-   "code": "a8eed9ca07495d82",
+   "version": "5",
+   "code": "9ede32ed0ac306d7",
    "params": {
     "tile": "utm19s_233_8679"
    },
-   "fingerprint": "b460a62e0c20e412",
+   "fingerprint": "53a19067a14fabe9",
    "parts": {
-    "version": "4",
-    "code": "a8eed9ca07495d82",
+    "version": "5",
+    "code": "9ede32ed0ac306d7",
     "params": {
      "tile": "utm19s_233_8679"
     },
     "deps": {
      "species": "eac88f9c9ceab614",
-     "plants": "afa334f118ad82d1"
+     "plants": "e1a333aea6613b5f"
     },
     "library": {
      "library/animals": "522e5b0ee36723ba",
      "data/eltontraits": "e3b0c44298fc1c14"
     }
    },
-   "ran_at": "2026-11-06T10:35:26Z",
+   "ran_at": "2026-11-06T11:29:53Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -5692,10 +5768,10 @@
     "species.animals"
    ],
    "outputs": {
-    "client/fauna.json": "ddc3c821c4c2d4fc",
-    "species/animals.json": "8af46c0212e68bfa"
+    "client/fauna.json": "bc0f59a1e2a2bf82",
+    "species/animals.json": "de233a22885a3560"
    },
-   "out_hash": "8c33b4dc1c6ade73",
+   "out_hash": "4c436753adc60905",
    "sources": {
     "gbif": "2026-11-06",
     "eltontraits": "2026-11-06"
@@ -5704,9 +5780,9 @@
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 255
+    "cache": 294
    },
-   "seconds": 0.4
+   "seconds": 0.7
   },
   "resources": {
    "version": "1",
@@ -5934,6 +6010,45 @@
     "cache": 0
    },
    "seconds": 0.0
+  },
+  "canopy_top": {
+   "version": "1",
+   "code": "831bae93c94ee135",
+   "params": {
+    "tile": "utm19s_233_8679"
+   },
+   "fingerprint": "f902f92dfe17992d",
+   "parts": {
+    "version": "1",
+    "code": "831bae93c94ee135",
+    "params": {
+     "tile": "utm19s_233_8679"
+    },
+    "deps": {
+     "landcover": "bcc032a9c0e0a6d7",
+     "lidar": "35a6a2ce16d0808d",
+     "terrain": "948a1891a3d35f67"
+    },
+    "library": {}
+   },
+   "ran_at": "2026-11-06T11:27:59Z",
+   "owner": null,
+   "status": "ok",
+   "layers": [
+    "client.canopy_top"
+   ],
+   "outputs": {
+    "client/canopy_top.png": "8517956c3f06b3db"
+   },
+   "out_hash": "8bb7b143c48c38ec",
+   "sources": {},
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 0
+   },
+   "seconds": 0.8
   }
  },
  "seams": {

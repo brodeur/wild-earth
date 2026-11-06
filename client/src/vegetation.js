@@ -5,7 +5,7 @@ import { bodyScale, onBodyScale } from './bodyScale.js';
 import { SEASON_LOOK } from './season.js';
 import { rockKeep } from './tilepackage.js';
 import { hasCrowns, crownCell, loadCrowns, planCrownsSteps, oldClassOf, crownId, crownOf, SCALE, ASPECT } from './crowns.js';
-import { stature, siteFactor, emergentOf, drawTree } from './stature.js';
+import { stature, cellStature, emergentOf, drawTree, shrubSlot } from './stature.js';
 import { runSliced, drain } from './slice.js';
 import { releaseGeometry } from './gpuRelease.js';
 
@@ -613,7 +613,7 @@ export class Vegetation {
       const cc = crownCell(tile, crowns, i, j);   // this cell's trees are the lidar's crowns (a part-lidar tile: not beyond the point cloud)
       const { rnd, nTrees, nShrubs, treeMix, shrubMix } = plan, nRip = riparianExtra(tile, i, j, cc);
       const kE = cc ? -1 : emergentOf(i, j, nTrees + nRip);   // the cell's emergent, as an index among its trees (stature.js)
-      let site = -1;   // the cell's site factor (stature.js), once a canopy tree needs it
+      let site = null;   // the cell's stature (stature.js: the measured stand height, else the site factor), once a canopy tree needs it
       for (let k = 0; k < nTrees + nShrubs + nRip; k++) {
         const isTree = k < nTrees || k >= nTrees + nShrubs, rip = k >= nTrees + nShrubs;
         if (!(isTree ? treeMix : shrubMix)) continue;   // a tile with no class fallback (species_mix class_fallback false): no mix, no plant (the riparian extras too)
@@ -626,12 +626,15 @@ export class Vegetation {
         name = zoneSpecies(tile, i, j, k, isTree, name, px, pn);   // a bank, terrace or pond-shore plant takes its zone's species
         const sid = resolveSpecies(name), variants = this.slots[sid]; if (!variants) continue;
         let v = Math.floor(vdraw * variants.length);   // slot draw as before: VARIANTS slots, weighted by class
+        v = shrubSlot(sid, v, q => variants[q].height);   // a shrub's slot at its own record's size (stature.js)
         if (isTree && cc) continue;   // after the draws, so the shrubs stand where they always did
         const st = isTree ? stature(sid) : null;
+        let wide = 1;
         if (st && st.canopy[v]) {   // a canopy tree: its height from the curve, its class (and so its slot) from the height
-          if (site < 0) site = siteFactor(tile, i, j);
+          if (!site) site = cellStature(tile, i, j, treeMix);
           const T = drawTree(st, i, j, k, us, site, (rip ? k - nShrubs : k) === kE);
           v = T.v; s = Math.min(SCALE[1], Math.max(SCALE[0], T.h / variants[v].height));   // as the far record's (impostors.js mapRecords)
+          wide = T.w;   // a measured cell's lowered tree keeps its crown's width (stature.js OUT.w)
         }
         const e = variants[v], m = e.mid;
         if (m.n >= m.cap) continue;   // after the draws: a full model slot must not shift the rest of the cell (impostors use the same sequence)
@@ -641,7 +644,7 @@ export class Vegetation {
         const at = placePlant(tile, i, j, k, name, px, pn, isTree); if (!at) continue;
         const ax = at.x, an = at.n;
         this.tmp.position.set(ax, heights.at(ax, an) - 0.3, -an);
-        this.tmp.rotation.set(0, rot, 0); this.tmp.scale.setScalar(s); this.tmp.updateMatrix();
+        this.tmp.rotation.set(0, rot, 0); this.tmp.scale.set(s * wide, s, s * wide); this.tmp.updateMatrix();
         m.trunk.setMatrixAt(m.n, this.tmp.matrix); m.ids[m.n] = hash(i, j, k + 101);
         m.seat.array[m.n] = this.drape ? heights.coarse(ax, an) - this.tmp.position.y - 0.3 : 0;
         groundLean(heights, ax, an, m.lean, m.n * 2);

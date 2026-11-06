@@ -15,7 +15,7 @@
   36.12213224148818
  ],
  "size_m": 10000,
- "generated_at": "2026-11-06T09:50:51Z",
+ "generated_at": "2026-11-06T11:29:51Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -3989,14 +3989,14 @@
     "gbif",
     "eltontraits"
    ],
-   "listed": 89,
+   "listed": 94,
    "predators": 22,
    "scavengers": 16,
    "generated_traits": 0,
-   "queued": 55,
-   "queued_credits": 1570,
-   "sha256": "dccdda6c6dda1a5f16ae0f926545250808764dfce57535f4f17eb4fed3132cdf",
-   "bytes": 132142
+   "queued": 60,
+   "queued_credits": 1695,
+   "sha256": "16e45f6e90b7c13e10b2f1bf8dbeef2ee245f39e6197d3d90126b0520356bebd",
+   "bytes": 144482
   },
   "resources": {
    "path": "resources/resources.json",
@@ -4161,7 +4161,7 @@
    ],
    "allow": 34,
    "slots": 40,
-   "skipped": 15,
+   "skipped": 20,
    "stand_ins": {
     "otospermophilus_variegatus": "otospermophilus_beecheyi",
     "ovis_canadensis": "odocoileus_hemionus",
@@ -4176,8 +4176,8 @@
     "microtus_mexicanus": "peromyscus_maniculatus",
     "sylvilagus_nuttallii": "sylvilagus_bachmani"
    },
-   "sha256": "dff9d266d9c48b28b333d06b469858a675feab2eefbcd02f6545cf2603668727",
-   "bytes": 33917
+   "sha256": "442a0a769a2f3424ce275bb838f216bd329cb242227c723ad1841f5d8c897d95",
+   "bytes": 38714
   },
   "geology.strata": {
    "path": "geology/strata.json",
@@ -4697,6 +4697,18 @@
    "step": "substrate",
    "at": "2026-11-06T09:50:51Z",
    "seconds": 6.6,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T11:11:39Z",
+   "seconds": 27.6,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T11:29:51Z",
+   "seconds": 0.7,
    "ok": true
   }
  ],
@@ -5854,15 +5866,15 @@
    "seconds": 407.8
   },
   "animals": {
-   "version": "4",
-   "code": "2e6da1fc957a6827",
+   "version": "5",
+   "code": "9ede32ed0ac306d7",
    "params": {
     "tile": "utm12n_396_3988"
    },
-   "fingerprint": "b7b7473069ae0d1e",
+   "fingerprint": "8d0781970b16e93e",
    "parts": {
-    "version": "4",
-    "code": "2e6da1fc957a6827",
+    "version": "5",
+    "code": "9ede32ed0ac306d7",
     "params": {
      "tile": "utm12n_396_3988"
     },
@@ -5871,11 +5883,11 @@
      "plants": "d9ee722e4126db83"
     },
     "library": {
-     "library/animals": "9b343de56ec44a44",
+     "library/animals": "522e5b0ee36723ba",
      "data/eltontraits": "e3b0c44298fc1c14"
     }
    },
-   "ran_at": "2026-11-06T09:32:31Z",
+   "ran_at": "2026-11-06T11:29:50Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -5883,10 +5895,10 @@
     "species.animals"
    ],
    "outputs": {
-    "client/fauna.json": "dff9d266d9c48b28",
-    "species/animals.json": "dccdda6c6dda1a5f"
+    "client/fauna.json": "442a0a769a2f3424",
+    "species/animals.json": "16e45f6e90b7c13e"
    },
-   "out_hash": "b6c741eb0fc73784",
+   "out_hash": "260bba5bc8b446a6",
    "sources": {
     "gbif": "2026-11-06",
     "eltontraits": "2026-11-06"
@@ -5895,9 +5907,9 @@
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 234
+    "cache": 267
    },
-   "seconds": 0.6
+   "seconds": 0.7
   },
   "resources": {
    "version": "1",

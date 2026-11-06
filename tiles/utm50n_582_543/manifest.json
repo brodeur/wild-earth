@@ -15,7 +15,7 @@
   5.002619399566649
  ],
  "size_m": 10000,
- "generated_at": "2026-11-06T10:45:00Z",
+ "generated_at": "2026-11-06T11:29:50Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -2628,14 +2628,14 @@
     "gbif",
     "eltontraits"
    ],
-   "listed": 64,
+   "listed": 69,
    "predators": 10,
    "scavengers": 2,
    "generated_traits": 0,
-   "queued": 64,
-   "queued_credits": 1840,
-   "sha256": "da281784e24cf81a521de9db581fc435b1ea3b017890f8a73954dce20efc5749",
-   "bytes": 134768
+   "queued": 69,
+   "queued_credits": 1965,
+   "sha256": "f8e7861517ff589a8f7e9b9ce8b3a2d22d785e16c86d3e7cb9aab8ba6f9aba35",
+   "bytes": 147568
   },
   "resources": {
    "path": "resources/resources.json",
@@ -2800,7 +2800,7 @@
    ],
    "allow": 0,
    "slots": 40,
-   "skipped": 24,
+   "skipped": 29,
    "stand_ins": {
     "rusa_unicolor": "cervus_canadensis",
     "presbytis_rubicunda": "sciurus_griseus",
@@ -2815,8 +2815,8 @@
     "tragulus_napu": "odocoileus_hemionus",
     "callosciurus_prevostii": "sciurus_griseus"
    },
-   "sha256": "daf48d2d07abd24f045e9a1e994334731cf48b6e761e1b2cffe0d6ef2d4f4ad2",
-   "bytes": 34137
+   "sha256": "9f15e60b978b0c62a9be505b63958ed2240b13d7b3576f5cd6795886c893213a",
+   "bytes": 38223
   },
   "client.texture_ground": {
    "path": "client/texture_ground.jpg",
@@ -2884,6 +2884,30 @@
    "cards_written": [],
    "sha256": "240baf2184819cd77c5c198abfe67bcbf581db66936741b422b6b0fe36bd6441",
    "bytes": 5584
+  },
+  "client.canopy_top": {
+   "path": "client/canopy_top.png",
+   "kind": "raster",
+   "crs": "EPSG:32650",
+   "bounds": [
+    582000,
+    543000,
+    592000,
+    553000
+   ],
+   "pixels": 333,
+   "resolution_m": 30.03003003003003,
+   "encoding": "R = the stand's top height in 0.5 m steps (0 none): the mean p95 height of the cell's 10 m sub-cells with tree cover >= 12 %, where 1 or more of them do; else the mean of the measured cells within 2 cells",
+   "derived_from": [
+    "vegetation.canopy_height_10m"
+   ],
+   "stats": {
+    "cells": 108651,
+    "median_m": 21.2,
+    "p90_m": 29.9
+   },
+   "sha256": "81fa0d43b8b32ddca309cebe9778852d1b2476117d8543a5e1cfdbd07850e411",
+   "bytes": 69083
   }
  },
  "sources": {
@@ -3594,6 +3618,36 @@
    "step": "audit",
    "at": "2026-11-06T10:45:00Z",
    "seconds": 0.0,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T11:11:12Z",
+   "seconds": 27.5,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T11:13:18Z",
+   "seconds": 0.7,
+   "ok": true
+  },
+  {
+   "step": "canopy_top",
+   "at": "2026-11-06T11:15:47Z",
+   "seconds": 0.3,
+   "ok": true
+  },
+  {
+   "step": "canopy_top",
+   "at": "2026-11-06T11:28:00Z",
+   "seconds": 0.6,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-06T11:29:50Z",
+   "seconds": 0.7,
    "ok": true
   }
  ],
@@ -4758,15 +4812,15 @@
    "seconds": 0.3
   },
   "animals": {
-   "version": "4",
-   "code": "a8eed9ca07495d82",
+   "version": "5",
+   "code": "9ede32ed0ac306d7",
    "params": {
     "tile": "utm50n_582_543"
    },
-   "fingerprint": "abb3cfb572581d00",
+   "fingerprint": "62630bc4d78b7a7f",
    "parts": {
-    "version": "4",
-    "code": "a8eed9ca07495d82",
+    "version": "5",
+    "code": "9ede32ed0ac306d7",
     "params": {
      "tile": "utm50n_582_543"
     },
@@ -4779,7 +4833,7 @@
      "data/eltontraits": "e3b0c44298fc1c14"
     }
    },
-   "ran_at": "2026-11-06T10:44:48Z",
+   "ran_at": "2026-11-06T11:29:49Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -4787,10 +4841,10 @@
     "species.animals"
    ],
    "outputs": {
-    "client/fauna.json": "daf48d2d07abd24f",
-    "species/animals.json": "da281784e24cf81a"
+    "client/fauna.json": "9f15e60b978b0c62",
+    "species/animals.json": "f8e7861517ff589a"
    },
-   "out_hash": "e17735bd7f64c879",
+   "out_hash": "01db5b1d006b606c",
    "sources": {
     "gbif": "2026-11-06",
     "eltontraits": "2026-11-06"
@@ -4799,9 +4853,9 @@
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 268
+    "cache": 303
    },
-   "seconds": 0.5
+   "seconds": 0.7
   },
   "resources": {
    "version": "1",
@@ -5029,6 +5083,45 @@
     "cache": 0
    },
    "seconds": 0.0
+  },
+  "canopy_top": {
+   "version": "1",
+   "code": "831bae93c94ee135",
+   "params": {
+    "tile": "utm50n_582_543"
+   },
+   "fingerprint": "548ae9571d4e487e",
+   "parts": {
+    "version": "1",
+    "code": "831bae93c94ee135",
+    "params": {
+     "tile": "utm50n_582_543"
+    },
+    "deps": {
+     "landcover": "99cb3c99df53409c",
+     "lidar": "35a6a2ce16d0808d",
+     "terrain": "45336e3927639d18"
+    },
+    "library": {}
+   },
+   "ran_at": "2026-11-06T11:28:00Z",
+   "owner": null,
+   "status": "ok",
+   "layers": [
+    "client.canopy_top"
+   ],
+   "outputs": {
+    "client/canopy_top.png": "81fa0d43b8b32ddc"
+   },
+   "out_hash": "5e336f8813cfb5f5",
+   "sources": {},
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 0
+   },
+   "seconds": 0.6
   }
  },
  "seams": {

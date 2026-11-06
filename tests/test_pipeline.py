@@ -91,8 +91,10 @@ class TestGenerators(unittest.TestCase):
             self.assertTrue(c["sources"], p.stem)
             rec = build(c)
             self.assertGreater(rec["height_m"][1], rec["height_m"][0], p.stem)
-            if (json.loads(p.read_text()).get("habit") or "").startswith("palm"):
-                self.assertIn("no palm architecture", c["notes"], p.stem)
+            if (json.loads(p.read_text()).get("habit") or "").startswith("palm"):   # Corner's model, not a stand-in
+                self.assertEqual(rec["architectural_model"], "Corner", p.stem)
+                self.assertEqual(rec["palm"]["leaves"], c["palm"]["leaves"], p.stem)
+                self.assertFalse(rec.get("levels"), p.stem)
 
     def test_the_olympic_species_have_cards(self):
         from pipeline.plantgen import card_path
@@ -117,6 +119,75 @@ class TestGenerators(unittest.TestCase):
         slug = fauna.make_traits({"scientific": "Ariolimax columbianus", "common": None, "kind": "invertebrate",
                                   "taxonomy": {"class": "Gastropoda", "family": "Ariolimacidae", "genus": "Ariolimax"}})
         self.assertLess(slug["locomotion"]["top_mps"], 0.01)
+
+
+class TestBirdKin(unittest.TestCase):
+    """A bird's kin by its way of life (pipeline/fauna_slots.py bird_life: AVONET lifestyle and flightlessness)."""
+
+    def setUp(self):
+        from pipeline import avonet
+        if not (avonet.DIR / "ELEData.zip").exists():
+            self.skipTest("AVONET not downloaded (pipeline/_cache/avonet)")
+
+    def kin(self, sci, order, family, kg, role=("herbivore",)):
+        from pipeline.fauna_slots import bird_life, kin_for
+        a = {"scientific": sci, "kind": "bird", "mass_kg": kg, "role": list(role),
+             "taxonomy": {"class": "Aves", "order": order, "family": family}}
+        k, arch, _ = kin_for(a, {})
+        return k, arch, bird_life(a, {})["flightless"]
+
+    def test_ground_and_flightless(self):
+        self.assertEqual(self.kin("Struthio camelus", "Struthioniformes", "Struthionidae", 111),
+                         ("meleagris_gallopavo", "ground bird", True))
+        self.assertEqual(self.kin("Vanellus armatus", "Charadriiformes", "Charadriidae", 0.156, ("insectivore",)),
+                         ("callipepla_californica", "ground bird", False))
+
+    def test_perching_aquatic_and_guilds_kept(self):
+        self.assertEqual(self.kin("Cyanocitta stelleri", "Passeriformes", "Corvidae", 0.12, ("omnivore",))[0], "corvus_corax")
+        self.assertEqual(self.kin("Parus major", "Passeriformes", "Paridae", 0.018, ("insectivore",))[0], "cyanocitta_stelleri")
+        self.assertEqual(self.kin("Fratercula arctica", "Charadriiformes", "Alcidae", 0.4, ("predator",))[0], "mergus_merganser")
+        self.assertEqual(self.kin("Sagittarius serpentarius", "Accipitriformes", "Sagittariidae", 4, ("predator",))[0], "buteo_jamaicensis")
+
+
+class TestReptiles(unittest.TestCase):
+    """A reptile's kin, way and build (pipeline/fauna_slots.py reptile_group, pipeline/fauna_models.py REPTILE_BUILD):
+    GBIF's reptile classes are Squamata, Testudines and Crocodylia, with no order."""
+
+    def slot(self, cls, fam, kg):
+        from pipeline.fauna_slots import kin_for, reptile_way
+        a = {"scientific": "X y", "kind": "reptile", "mass_kg": kg, "taxonomy": {"class": cls, "order": None, "family": fam}}
+        k, arch, _ = kin_for(a, {})
+        return k, arch, reptile_way(arch) if k else None
+
+    def test_groups_and_ways(self):
+        self.assertEqual(self.slot("Crocodylia", "Crocodylidae", 94), ("sceloporus_occidentalis", "crocodilian", "water"))
+        self.assertEqual(self.slot("Testudines", "Testudinidae", 20), ("sceloporus_occidentalis", "tortoise", "walk"))
+        self.assertEqual(self.slot("Squamata", "Varanidae", 2.8), ("sceloporus_occidentalis", "monitor lizard", "bask"))
+        self.assertEqual(self.slot("Squamata", "Agamidae", 0.1), ("sceloporus_occidentalis", "basking lizard", "bask"))
+        k, why, _ = self.slot("Squamata", "Viperidae", 2.4)
+        self.assertIsNone(k)
+        self.assertIn("snake", why)
+
+    def test_density_falls_with_mass(self):
+        from pipeline.fauna_slots import density_km2
+        d = [density_km2({"mass_kg": m, "taxonomy": {"class": "Squamata"}}, "sceloporus_occidentalis", "basking lizard") for m in (0.014, 0.1, 2.8)]
+        self.assertTrue(d[0] > d[1] > d[2])
+        self.assertLess(density_km2({"mass_kg": 94, "taxonomy": {"class": "Crocodylia"}}, "sceloporus_occidentalis", "crocodilian"), 2)
+
+    def test_choose_and_prompts(self):
+        from pipeline import fauna_models as F
+        fauna = {"slots": [
+            {"code": "a_croc", "archetype": "crocodilian", "reptile": "water", "mass_kg": 94, "records": 151},
+            {"code": "a_agama", "archetype": "basking lizard", "reptile": "bask", "mass_kg": 0.1, "records": 63},
+            {"code": "a_tort", "archetype": "tortoise", "reptile": "walk", "mass_kg": 20, "records": 14},
+            {"code": "a_monitor", "archetype": "monitor lizard", "reptile": "bask", "mass_kg": 2.8, "records": 10}]}
+        pick, _ = F.choose(fauna, 120, kind="reptiles")
+        # the most visible (records x sqrt(mass)) first, one per build archetype (a sprawler, a tortoise) before any second
+        self.assertEqual([s["code"] for s in pick], ["a_croc", "a_tort", "a_agama", "a_monitor"])
+        mesh, tex = F.prompts(fauna["slots"][0], "the Serengeti")
+        self.assertIn("splayed", mesh)
+        mesh, tex = F.prompts(fauna["slots"][2], "the Serengeti")
+        self.assertIn("under the rim", mesh)
 
 
 if __name__ == "__main__":
