@@ -2087,6 +2087,820 @@
      ]
     }
    ]
+  },
+  "turdus_migratorius": {
+   "winter": [
+    {
+     "activity": "forage",
+     "resources": [
+      "insects"
+     ],
+     "goal": "worms and berries on the meadows and bars"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "nest",
+     "resources": [
+      "cover"
+     ],
+     "goal": "a mud cup in a young conifer"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "forage",
+     "resources": [
+      "insects",
+      "browse"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "insects"
+     ]
+    }
+   ]
+  },
+  "sturnus_vulgaris": {
+   "winter": [
+    {
+     "activity": "forage",
+     "resources": [
+      "insects"
+     ],
+     "goal": "probing the grass in flocks"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "nest",
+     "resources": [
+      "cavity"
+     ],
+     "goal": "an old woodpecker hole"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "forage",
+     "resources": [
+      "insects",
+      "grass_forbs"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "insects"
+     ]
+    }
+   ]
+  },
+  "ixoreus_naevius": {
+   "winter": [
+    {
+     "activity": "forage",
+     "resources": [
+      "insects"
+     ],
+     "goal": "turning the litter on the dark forest floor"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "nest",
+     "resources": [
+      "cover"
+     ],
+     "goal": "a cup in a small conifer"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "forage",
+     "resources": [
+      "insects",
+      "browse"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "insects"
+     ]
+    }
+   ]
+  },
+  "junco_hyemalis": {
+   "winter": [
+    {
+     "activity": "forage",
+     "resources": [
+      "grass_forbs"
+     ],
+     "goal": "seeds on the ground in flocks"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "nest",
+     "resources": [
+      "cover"
+     ],
+     "goal": "a ground nest under a bank or root"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "forage",
+     "resources": [
+      "grass_forbs",
+      "insects"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "grass_forbs"
+     ]
+    }
+   ]
+  },
+  "regulus_satrapa": {
+   "winter": [
+    {
+     "activity": "forage",
+     "resources": [
+      "insects"
+     ],
+     "goal": "gleaning the conifer needles high up"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "nest",
+     "resources": [
+      "cover"
+     ],
+     "goal": "a hanging moss nest high in a conifer"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "forage",
+     "resources": [
+      "insects",
+      "insects"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "insects"
+     ]
+    }
+   ]
+  },
+  "empidonax_difficilis": {
+   "winter": [
+    {
+     "activity": "hunt",
+     "resources": [
+      "insects"
+     ],
+     "goal": "sallies from a shaded perch after flying insects"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "nest",
+     "resources": [
+      "cover"
+     ],
+     "goal": "a moss cup on a stump or root wad"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "hunt",
+     "resources": [
+      "insects",
+      "insects"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "hunt",
+     "resources": [
+      "insects"
+     ]
+    }
+   ]
+  },
+  "megascops_kennicottii": {
+   "winter": [
+    {
+     "activity": "hunt",
+     "resources": [
+      "peromyscus_maniculatus"
+     ],
+     "goal": "mice and big insects from a low perch at night"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "nest",
+     "resources": [
+      "cavity"
+     ],
+     "goal": "a hole in a broadleaf tree"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "hunt",
+     "resources": [
+      "peromyscus_maniculatus",
+      "insects"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "hunt",
+     "resources": [
+      "peromyscus_maniculatus"
+     ]
+    }
+   ]
+  },
+  "aegolius_acadicus": {
+   "winter": [
+    {
+     "activity": "hunt",
+     "resources": [
+      "peromyscus_maniculatus"
+     ],
+     "goal": "mice and shrews at night"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "nest",
+     "resources": [
+      "cavity"
+     ],
+     "goal": "an old woodpecker hole"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "hunt",
+     "resources": [
+      "peromyscus_maniculatus",
+      "sorex_monticolus"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "hunt",
+     "resources": [
+      "peromyscus_maniculatus"
+     ]
+    }
+   ]
+  },
+  "leuconotopicus_villosus": {
+   "winter": [
+    {
+     "activity": "forage",
+     "resources": [
+      "insects"
+     ],
+     "goal": "chisels beetle larvae from the bark"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "nest",
+     "resources": [
+      "cavity"
+     ],
+     "goal": "excavates a cavity in a snag"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "forage",
+     "resources": [
+      "insects",
+      "cavity"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "insects"
+     ]
+    }
+   ]
+  },
+  "pandion_haliaetus": {
+   "winter": [
+    {
+     "activity": "hunt",
+     "resources": [
+      "water"
+     ],
+     "goal": "plunges feet first for fish"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "nest",
+     "resources": [
+      "cliff_or_snag"
+     ],
+     "goal": "a stick nest on a broken-top snag"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "hunt",
+     "resources": [
+      "water",
+      "water"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "hunt",
+     "resources": [
+      "water"
+     ]
+    }
+   ]
+  },
+  "accipiter_striatus": {
+   "winter": [
+    {
+     "activity": "hunt",
+     "resources": [
+      "troglodytes_pacificus"
+     ],
+     "goal": "ambushes small birds in the forest"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "nest",
+     "resources": [
+      "cover"
+     ],
+     "goal": "a nest in a dense young conifer"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "hunt",
+     "resources": [
+      "troglodytes_pacificus",
+      "junco_hyemalis"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "hunt",
+     "resources": [
+      "troglodytes_pacificus"
+     ]
+    }
+   ]
+  },
+  "falco_columbarius": {
+   "winter": [
+    {
+     "activity": "hunt",
+     "resources": [
+      "junco_hyemalis"
+     ],
+     "goal": "chases small birds in fast low flight"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "nest",
+     "resources": [
+      "cliff_or_snag"
+     ],
+     "goal": "an old crow nest"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "hunt",
+     "resources": [
+      "junco_hyemalis",
+      "sturnus_vulgaris"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "hunt",
+     "resources": [
+      "junco_hyemalis"
+     ]
+    }
+   ]
+  },
+  "larus_glaucescens": {
+   "winter": [
+    {
+     "activity": "forage",
+     "resources": [
+      "carrion"
+     ],
+     "goal": "salmon carcasses on the river bars"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "shelter",
+     "resources": [
+      "cliff_or_snag"
+     ],
+     "goal": "roosts on the gravel bars"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "forage",
+     "resources": [
+      "carrion",
+      "water"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "carrion"
+     ]
+    }
+   ]
+  },
+  "larus_californicus": {
+   "winter": [
+    {
+     "activity": "forage",
+     "resources": [
+      "carrion"
+     ],
+     "goal": "along the river in fall and winter"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "shelter",
+     "resources": [
+      "cliff_or_snag"
+     ],
+     "goal": "roosts on the gravel bars"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "forage",
+     "resources": [
+      "carrion",
+      "insects"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "carrion"
+     ]
+    }
+   ]
+  },
+  "larus_occidentalis": {
+   "winter": [
+    {
+     "activity": "forage",
+     "resources": [
+      "carrion"
+     ],
+     "goal": "up the river from the coast"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "shelter",
+     "resources": [
+      "cliff_or_snag"
+     ],
+     "goal": "roosts on the gravel bars"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "forage",
+     "resources": [
+      "carrion",
+      "water"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "carrion"
+     ]
+    }
+   ]
+  },
+  "anas_platyrhynchos": {
+   "winter": [
+    {
+     "activity": "forage",
+     "resources": [
+      "grass_forbs"
+     ],
+     "goal": "dabbling in quiet water"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "nest",
+     "resources": [
+      "cover"
+     ],
+     "goal": "a ground nest in tall grass near water"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "forage",
+     "resources": [
+      "grass_forbs",
+      "water"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "grass_forbs"
+     ]
+    }
+   ]
+  },
+  "dendragapus_fuliginosus": {
+   "winter": [
+    {
+     "activity": "forage",
+     "resources": [
+      "browse"
+     ],
+     "goal": "conifer needles in winter, berries and leaves in summer"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "court",
+     "resources": [
+      "cover"
+     ],
+     "goal": "the male hoots from a tall conifer"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "forage",
+     "resources": [
+      "browse",
+      "grass_forbs"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "browse"
+     ]
+    }
+   ]
+  },
+  "marmota_olympus": {
+   "winter": [
+    {
+     "activity": "forage",
+     "resources": [
+      "grass_forbs"
+     ],
+     "goal": "grazes the subalpine meadow flowers"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "shelter",
+     "resources": [
+      "burrow"
+     ],
+     "goal": "hibernates in the colony burrow October to May"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "forage",
+     "resources": [
+      "grass_forbs",
+      "grass_forbs"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "grass_forbs"
+     ]
+    }
+   ]
+  },
+  "tamias_amoenus": {
+   "winter": [
+    {
+     "activity": "forage",
+     "resources": [
+      "grass_forbs"
+     ],
+     "goal": "seeds, berries and fungi in the open subalpine forest"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "cache",
+     "resources": [
+      "burrow"
+     ],
+     "goal": "a larder of seeds in its burrow"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "forage",
+     "resources": [
+      "grass_forbs",
+      "browse"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "grass_forbs"
+     ]
+    }
+   ]
+  },
+  "sorex_monticolus": {
+   "winter": [
+    {
+     "activity": "hunt",
+     "resources": [
+      "insects"
+     ],
+     "goal": "insects and spiders in the litter, day and night"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "shelter",
+     "resources": [
+      "burrow"
+     ],
+     "goal": "runways under the litter and snow"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "hunt",
+     "resources": [
+      "insects",
+      "insects"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "hunt",
+     "resources": [
+      "insects"
+     ]
+    }
+   ]
+  },
+  "anaxyrus_boreas": {
+   "winter": [
+    {
+     "activity": "forage",
+     "resources": [
+      "insects"
+     ],
+     "goal": "walks the meadows at dusk eating insects"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "rear",
+     "resources": [
+      "water"
+     ],
+     "goal": "eggs in strings in shallow ponds"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "forage",
+     "resources": [
+      "insects",
+      "insects"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "insects"
+     ]
+    }
+   ]
+  },
+  "rana_cascadae": {
+   "winter": [
+    {
+     "activity": "forage",
+     "resources": [
+      "insects"
+     ],
+     "goal": "at the edges of the subalpine ponds"
+    }
+   ],
+   "spring": [
+    {
+     "activity": "rear",
+     "resources": [
+      "water"
+     ],
+     "goal": "eggs in the ponds as the snow melts"
+    }
+   ],
+   "summer": [
+    {
+     "activity": "forage",
+     "resources": [
+      "insects",
+      "insects"
+     ]
+    }
+   ],
+   "fall": [
+    {
+     "activity": "forage",
+     "resources": [
+      "insects"
+     ]
+    }
+   ]
   }
  }
 }

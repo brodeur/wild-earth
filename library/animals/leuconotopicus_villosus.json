@@ -1,0 +1,54 @@
+{
+  "id": "leuconotopicus_villosus",
+  "aliases": [
+    "hairy_woodpecker",
+    "picoides_villosus",
+    "dryobates_villosus"
+  ],
+  "scientific": "Leuconotopicus villosus",
+  "common": "hairy woodpecker",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Piciformes",
+    "family": "Picidae",
+    "genus": "Leuconotopicus"
+  },
+  "mass_kg": 0.07,
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.23,
+    "shoulder_or_wingspan_m": 0.38,
+    "note": "18-26 cm, the Pacific form dark with fewer wing spots; the procedural body is 0.23 m bill to tail with 0.38 m wing slabs."
+  },
+  "source": {
+    "kind": "procedural",
+    "title": "Hairy woodpecker (procedural)",
+    "author": "agent (Claude) for Aaron Brodeur",
+    "file": "client/src/animalModels.js buildHairyWoodpecker",
+    "original": "the acorn woodpecker's procedural body (buildWoodpecker: its five Meshy candidates never read as a clinging woodpecker) a size up, recoloured black and white",
+    "credits": 0,
+    "date": "2026-11-06 (UTC)",
+    "adopted_by": "client/src/animalModels.js buildHairyWoodpecker"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Written for Wild Earth; released with the project's assets under CC BY-SA 4.0.",
+    "redistribute_under_cc_by_sa": true
+  },
+  "tiers": {
+    "file": null,
+    "note": "procedural: one model, no tiers (about 400 triangles)"
+  },
+  "rig": "procedural (animalModels.js buildHairyWoodpecker, the plain part path as buildWoodpecker): BODY, HEAD (the chisel bill), TAIL, WING_L/R slabs folding on pose. Moved by animals.js on the Steller's jay's machine with HOH `trunk`: it clings to a conifer's bark (pitched up the trunk, facing it, tapping), hops up the trunk, and flies tree to tree.",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Reads as a black-and-white woodpecker with the white back stripe, the striped face and the male's red nape; primitive shapes (spheres and boxes), no stiff tail feathers braced on the bark, no undulating flight path (the jay machine's flight), no drumming sound.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (procedural model and behaviour)"
+  ],
+  "sources": [
+    "Sibley Guide to Birds, 2nd ed. (field marks)",
+    "docs/animal-library.md"
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "id": "regulus_satrapa",
+  "aliases": [
+    "golden_crowned_kinglet",
+    "kinglet"
+  ],
+  "scientific": "Regulus satrapa",
+  "common": "Golden-crowned kinglet",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Regulidae",
+    "genus": "Regulus"
+  },
+  "mass_kg": 0.006,
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.09,
+    "shoulder_or_wingspan_m": 0.16,
+    "note": "Length 8-11 cm, wingspan 14-18 cm, 4-8 g. Built 0.090 m bill to tail (0.055 m bill tip to the neck to the rump, plus a 0.035 m tail), 0.043 m tall; wing cards 0.16 m across."
+  },
+  "source": {
+    "kind": "variant",
+    "title": "Golden-crowned kinglet (variant of the chestnut-backed chickadee's Meshy mesh)",
+    "author": "variant of poecile_rufescens by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/poecile_rufescens/01a1ad39-ae77-7764-bea5-e718f3527f65/model.glb (local; jobs/ meshes are not tracked; generated with Meshy (meshy.ai))",
+    "original": "the chestnut-backed chickadee's Meshy text-to-3D preview (task 01a1ad39-ae77-7764-bea5-e718f3527f65, meshy-6-lite, triangle mesh, 20,824 triangles, one piece, untextured)",
+    "prompt": "(the chestnut-backed chickadee's) A chestnut-backed chickadee (Poecile rufescens), a tiny songbird about 11 cm long, one adult perched with its wings folded tight against the body, side-on pose. A round fluffy body, a big round head, a tiny short black bill, a medium-long narrow tail. A sooty dark brown cap and a black bib, bright white cheeks, a rich chestnut back and flanks, grey wings and tail, a white belly. Thin dark legs, three toes forward and one back. No base, no perch. Game-ready, clean closed mesh.",
+    "job_id": "01a1ad39-ae77-7764-bea5-e718f3527f65",
+    "job": "library/animals/jobs/poecile_rufescens/01a1ad39-ae77-7764-bea5-e718f3527f65/job.json",
+    "credits": 0,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_songbird.py --species regulus_satrapa",
+    "build": "tools/build_songbird.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the adopted GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "A variant built from an earlier Meshy job: no new generation, no credits. Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 1000,
+    "lod1": 400,
+    "lod2": 120,
+    "file": "client/assets/kinglet.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "lod_m": [
+      5,
+      15
+    ],
+    "note": "A variant of the chestnut-backed chickadee's Meshy preview (no credits), scaled to 0.09 m (the round body and tiny thin bill suit it), a short notched tail of 3.5 cm (the centre pulled back, a point at each corner). Colours (the male): olive-grey back, nape and rump, paler grey-white below with olive-washed sides; the crown an orange centre stripe in a yellow stripe bordered black each side; a white eyebrow over a black eye line; grey face, pale throat; dark wings with two white wing bars (lod0 and lod1) and yellow feather edges (lod0); dark olive tail; black bill, dark legs. Triangles: lod0 1,000 = 802 body + 198 legs, tail, cards, eyes; lod1 400 = 308 body + 92 legs, tail, cards, eyes; lod2 120 = 90 body + 30 legs, tail, cards, eyes. GLB 187,336 bytes. lod_m is a suggestion."
+  },
+  "rig": "bird rig template of the Steller's jay (tools/build_stellersjay.py; drawn with client/src/animalModels.js RIG.stjay's constants): PART BODY 0, LEG_A 1 / LEG_B 2 procedural legs (pivot at the knee), TAIL 3 procedural tail (pivot at the rump), HEAD 6 (head and neck, pivot at the base of the neck), WING_L/R 4/5 and HAND_L/R 9/10 flight cards that collapse into the shoulder on pose; extras.rig {kind 'bird', wing (shoulder), tail (rump), head (neck base), length_m}; no skin",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Built 2026-11-05. Reads as a golden-crowned kinglet: tiny, round, the striped orange-yellow-black crown and white eyebrow. Still open: the notch is small and only shows from above; the folded-wing bars are a few faces; male only (the female's crown is all yellow).",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (variant recipe, build script, rig, tiers, entry)"
+  ],
+  "sources": [
+    "The Sibley Guide to Birds, 2nd edition (D. A. Sibley, 2014): plumage, shape and posture",
+    "Cornell Lab of Ornithology, All About Birds and Birds of the World species accounts: size, mass, wingspan, plumage",
+    "docs/animal-library.md",
+    "library/animals/README.md",
+    "tools/build_songbird.py",
+    "tools/build_stellersjay.py"
+  ]
+}

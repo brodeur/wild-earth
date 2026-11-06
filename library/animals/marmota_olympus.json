@@ -1,0 +1,70 @@
+{
+  "id": "marmota_olympus",
+  "aliases": [
+    "olympic_marmot",
+    "marmot"
+  ],
+  "scientific": "Marmota olympus",
+  "common": "Olympic marmot",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Mammalia",
+    "order": "Rodentia",
+    "family": "Sciuridae",
+    "genus": "Marmota"
+  },
+  "mass_kg": 6.0,
+  "body_plan": "rodent",
+  "size": {
+    "length_m": 0.7,
+    "shoulder_or_wingspan_m": 0.31,
+    "note": "Total length 0.67-0.75 m (tail 0.18-0.24 m), 3-11 kg through the year (heaviest before hibernation); endemic to the Olympic Mountains' subalpine meadows. Built at 0.50 m head and body (nose to rump) and a 0.20 m bushy tail held out behind and curving gently down (0.694 m nose to tail tip along the bounding box); 0.31 m at the shoulder (the fur hump), 0.33 m at the top; the belly 0.019 m off the ground (a heavy body on short legs); 0.31 m across at the hips."
+  },
+  "source": {
+    "kind": "meshy",
+    "title": "Olympic marmot, standing",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/marmota_olympus/01a1ae8c-9bb0-776b-bbdb-68618e5863e6/model.glb (local; jobs/ meshes are not tracked)",
+    "original": "Meshy text-to-3D preview, ai_model meshy-6-lite, triangle remesh to 20,000 faces, untextured (a good heavy marmot; whisker strands and a tail hanging to the ground)",
+    "prompt": "An Olympic marmot (Marmota olympus), a large heavy ground squirrel, NOT a beaver, NOT a groundhog cartoon. One adult standing on all four short legs, side-on neutral pose, legs with clear gaps, head level. Realistic proportions: 70 cm long including a bushy 20 cm tail held out behind, a broad heavy body, a broad blunt head with small round ears, short strong legs with dark claws. Brown fur grizzled with pale tips, a white muzzle and a white band in front of the eyes, a darker crown. No base, no ground. Game-ready, clean closed mesh.",
+    "job_id": "01a1ae8c-9bb0-776b-bbdb-68618e5863e6",
+    "job": "library/animals/jobs/marmota_olympus/01a1ae8c-9bb0-776b-bbdb-68618e5863e6/job.json",
+    "credits": 5,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_marmot.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the built GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder, not CC BY-SA licensees).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" in the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 1800,
+    "lod1": 600,
+    "lod2": 180,
+    "file": "client/assets/marmot.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "note": "Whisker strands and cheek tufts dropped (inward ray cast, the ears kept); the hanging tail removed and a bushy one lofted from its root. lod0 = body 1,544 + tail (10 sides x 12 rings, 240) + eyes (16); lod1 = 516 + tail (6 x 7, 84); lod2 = 148 + tail (4 x 4, 32). GLB 181,404 bytes."
+  },
+  "rig": "Rodent template, exactly as client/assets/ground_squirrel.glb (tools/build_ground_squirrel.py, the sentinel sit-up) and to be loaded with its constants and its colony behaviour: BODY 0 (hindquarters), CHEST 7 (pivot at the lumbar: flexes with the bound, rises to sit up), HEAD 6 (pivot at the base of the neck) and LEG_A 1 (fore pair, elbows) children of the chest, LEG_B 2 (hind pair, stifles), TAIL 3 and TAIL_TIP 8 (child of the tail). The legs are the parts below the elbow / stifle height outside the belly's middle (the belly nearly touches the ground). extras.rig keys: kind 'rodent', chest [0, 0.175, -0.072], tail [0, 0.174, -0.227], tail_tip [0, 0.164, -0.318], head [0, 0.212, 0.150], fore [0.100, 0.072, 0.074], hind [0.107, 0.072, -0.093], length_m 0.7. The ground squirrel's drop (0.016 m) and sit angle were set for a 0.26 m animal; the lead may want drop ~0.03 and a lower sit for this heavy body. No skin.",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Reads as a big heavy marmot: a broad body on short legs, a broad blunt head with small round ears, a white muzzle and chin and a white band in front of the eyes under a darker brown crown and face, grizzled brown fur with pale buff tips (hashed), a pale buff-brown belly, dark feet, a bushy brown tail with a darker tip. Still open: the grizzle is face-sized patches (coarse up close); the white band and muzzle are region cuts on decimated faces, a little blocky; the eyes are small octahedra on lod0 only (one dark face on lod1); the tail is a lofted tube, less bushy than life; the body is the generator's (perhaps a touch tall in the hump). The sentinel sit-up was tuned for the ground squirrel and has not been looked at on this body.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (Meshy job, build script, tail, recolour, rig, tiers, entry)"
+  ],
+  "sources": [
+    "Edelman, A. J. (2003), Marmota olympus, Mammalian Species 736 (size, mass, pelage)",
+    "Barash, D. P. (1989), Marmots: Social Behavior and Ecology (Olympic marmot colonies, posture)",
+    "Olympic National Park (NPS), Olympic marmot pages (description, range) - read, not copied; from the agent's knowledge",
+    "tools/build_ground_squirrel.py and library/animals/otospermophilus_beecheyi.json (template)"
+  ]
+}

@@ -62,7 +62,7 @@ export const CAM_RAISE = 1.3, FRAME_Y = -0.45, CAM_PLUS = { back: 0.5, up: 0.2 }
 // and the player's body walks with it as a member (herdDrive: keys synthesized toward its slot, behind the leader in
 // file or round the centre) until any key, which takes the reins back. The HUD's where line says which.
 const HERD_WORD = { odocoileus_hemionus: 'herd', callipepla_californica: 'covey', oreortyx_pictus: 'covey', meleagris_gallopavo: 'flock',
-  cervus_canadensis: 'herd', mergus_merganser: 'flock' };
+  cervus_canadensis: 'herd', mergus_merganser: 'flock', anas_platyrhynchos: 'flock' };
 const HERD_LEAD = 5, HERD_IDLE = 6;
 // The catch (2026-10-30, docs/movement.md "The catch"): a hunter's catch move is its family's (S.catch). 'leap' (Felidae): the
 // rush's last bound within d m of prey ahead is a leap of dur s and peak m that homes on the prey and lands with the
@@ -230,6 +230,47 @@ export const GROUND = {
     flush: { from: 1.5, v: 14, T: 4, peak: 2, beat: 8, up: 0.5 },
     cam: { back: 1.7, up: 0.65, look: 1.3, aimUp: 0.25, side: 0.4, clear: 0.15, near: 0.08 },
     act: { peck: true, t: 1, word: 'dipping its head for fish' }, alert: { flick: -0.4 }, rest: null },
+  // ---- the second batch (2026-11-06) ----
+  anas_platyrhynchos: { short: 'mallard', common: 'mallard', model: 'mallard', rig: 'bird',
+    walk: 0.6, run: 3, back: 0.3, ramp: 1, accel: 4, stop: 6, turn: 3, jumpH: 0.15, jumpL: 0.3, step: 0.15, wade: 9,
+    half: 0.2, rad: 0.1, shoulder: 0.2, stride: 0.25,
+    flush: { from: 1.5, v: 15, T: 4, peak: 3, beat: 9, up: 0.6 },
+    cam: { back: 1.6, up: 0.6, look: 1.2, aimUp: 0.25, side: 0.4, clear: 0.15, near: 0.08 },
+    act: { peck: true, t: 1, word: 'dabbling' }, alert: { flick: -0.4 }, rest: null },
+  dendragapus_fuliginosus: { short: 'grouse', common: 'sooty grouse', model: 'sooty-grouse', rig: 'bird',
+    walk: 0.7, run: 5, back: 0.4, ramp: 1, accel: 5, stop: 8, turn: 3, jumpH: 0.2, jumpL: 0.4, step: 0.2, wade: 0.08,
+    half: 0.2, rad: 0.1, shoulder: 0.25, stride: 0.22,
+    flush: { from: 2, v: 12, T: 3, peak: 4, beat: 12, up: 0.6 },
+    cam: { back: 1.4, up: 0.55, look: 1.1, aimUp: 0.2, side: 0.4, clear: 0.15, near: 0.08 },
+    act: { peck: true, t: 1.2, word: 'picking at needles and berries' }, alert: { flick: -0.4 }, rest: null },
+  marmota_olympus: { short: 'marmot', common: 'Olympic marmot', model: 'marmot', rig: 'rodent',
+    walk: 0.6, run: 4, back: 0.4, ramp: 0.8, accel: 5, stop: 8, turn: 3, jumpH: 0.25, jumpL: 0.6, step: 0.2, wade: 0.06,
+    half: 0.25, rad: 0.15, shoulder: 0.3,
+    bound: v => v > 2 ? 0.6 : 0.25, lift: v => v > 2 ? 0.05 : 0.02, rock: 0.08,
+    cam: { back: 1.6, up: 0.5, look: 1.2, aimUp: 0.2, side: 0.4, clear: 0.15, near: 0.08 },
+    act: { nibble: true, t: 3, word: 'grazing the meadow' }, alert: { pose: 1 }, rest: null },
+  tamias_amoenus: { short: 'ypchipmunk', common: 'yellow-pine chipmunk', model: 'yellow-pine-chipmunk', rig: 'rodent',
+    walk: 0.5, run: 4, back: 0.4, ramp: 0.6, accel: 7, stop: 10, turn: 4, jumpH: 0.15, jumpL: 0.35, step: 0.1, wade: 0.015,
+    half: 0.06, rad: 0.03, shoulder: 0.05,
+    bound: v => v > 2 ? 0.28 : 0.13, lift: v => v > 2 ? 0.025 : 0.01, rock: 0.1,
+    cam: { back: 0.42, up: 0.13, look: 0.38, aimUp: 0.06, side: 0.4, clear: 0.05, near: 0.03 },
+    act: { nibble: true, t: 3, word: 'filling its cheeks' }, alert: { pose: 1 }, rest: null },
+  sorex_monticolus: { short: 'shrew', common: 'montane shrew', model: 'shrew', rig: 'rodent',
+    walk: 0.5, run: 2, back: 0.3, ramp: 0.4, accel: 9, stop: 12, turn: 5, jumpH: 0.05, jumpL: 0.1, step: 0.03, wade: 0.01,
+    half: 0.035, rad: 0.015, shoulder: 0.025,
+    bound: () => 0.07, lift: () => 0.004, rock: 0,
+    cam: { back: 0.18, up: 0.06, look: 0.2, aimUp: 0.02, side: 0.35, clear: 0.03, near: 0.015 },
+    act: { nibble: true, t: 2, word: 'nosing for insects' }, alert: { pose: 1 }, rest: null },
+  anaxyrus_boreas: { short: 'toad', common: 'western toad', model: 'toad', rig: 'lizard',
+    walk: 0.08, run: 0.4, back: 0.04, ramp: 0.5, accel: 6, stop: 10, turn: 2, jumpH: 0.03, jumpL: 0.1, step: 0.6, wade: 0.05,
+    half: 0.05, rad: 0.03, shoulder: 0.04,
+    cam: { back: 0.35, up: 0.1, look: 0.3, aimUp: 0.02, side: 0.35, clear: 0.03, near: 0.015 },
+    act: { headFlick: true, t: 0.8, word: 'snapping at insects' }, alert: { flick: -0.2 }, rest: 'bask' },
+  rana_cascadae: { short: 'frog', common: 'Cascades frog', model: 'frog', rig: 'lizard',
+    walk: 0.1, run: 0.6, back: 0.05, ramp: 0.4, accel: 8, stop: 10, turn: 2.5, jumpH: 0.08, jumpL: 0.35, step: 0.6, wade: 0.1,
+    half: 0.035, rad: 0.02, shoulder: 0.025,
+    cam: { back: 0.28, up: 0.08, look: 0.25, aimUp: 0.02, side: 0.35, clear: 0.025, near: 0.012 },
+    act: { headFlick: true, t: 0.8, word: 'snapping at insects' }, alert: { flick: -0.2 }, rest: 'bask' },
 };
 // The legs (owner, 2026-10-29: "All animals should have a top speed that is not their top speed - and a sprint button
 // (shift) with a sprint meter that is appropriate for their species"): per species [cruise, sprint, recover]. cruise is
@@ -245,6 +286,8 @@ const LEGS = {
   cervus_canadensis: [8, 10, 40], lynx_rufus: [5, 3, 25], lontra_canadensis: [3.5, 4, 20], lepus_americanus: [6, 6, 30],
   tamiasciurus_douglasii: [3, 4, 20], tamias_townsendii: [2.5, 4, 20], peromyscus_maniculatus: [1.4, 3, 15],
   plethodon_vehiculum: [0.12, 2, 25], ensatina_eschscholtzii: [0.12, 2, 25], ardea_herodias: [1.5, 3, 25], mergus_merganser: [1.5, 3, 25],
+  anas_platyrhynchos: [1.5, 3, 25], dendragapus_fuliginosus: [3, 3, 20], marmota_olympus: [2.5, 4, 25], tamias_amoenus: [2.5, 4, 20],
+  sorex_monticolus: [1.2, 3, 15], anaxyrus_boreas: [0.2, 2, 25], rana_cascadae: [0.3, 2, 20],
 };
 for (const [code, [cruise, sprint, recover]] of Object.entries(LEGS)) Object.assign(GROUND[code], { cruise, sprint, recover });
 

@@ -680,6 +680,42 @@ const RIG = {
   ensatina: { amp: [0.7, 0.3, 0.3, 0], pose: [1, 0, 0, 0],
     k: { wave: 0.012, waveK: 5.03, envS: 0.25, pushPitch: 0.2, baskAbduct: 0.35, squash: 0.15, legLift: 0.4, hindK: 1.2, bend: 0.03,
       flickYaw: 0.4, tipLag: 0.5 } },
+  // ---- the second Hoh batch (2026-11-06): the same templates. The perching birds (tools/build_songbird.py): the Steller's
+  // jay's; the thrushes and the starling run and peck on the ground (a deeper peck), the owls sit still
+  robin: { amp: [0.4, 0.35, 0.5, 1.0], pose: [1, 0.15, 0, 0.2], k: { handLag: 0.7, handAmp: 0.8, bow: 0.25, spread: 0.5, collapse: 1, bob: 0.04 } },
+  starling: { amp: [0.45, 0.3, 0.5, 1.0], pose: [1, 0.1, 0, 0.2], k: { handLag: 0.7, handAmp: 0.8, bow: 0.25, spread: 0.5, collapse: 1, bob: 0.04 } },
+  vthrush: { amp: [0.4, 0.35, 0.5, 1.0], pose: [1, 0.15, 0, 0.2], k: { handLag: 0.7, handAmp: 0.8, bow: 0.25, spread: 0.5, collapse: 1, bob: 0.04 } },
+  junco: { amp: [0.35, 0.4, 0.45, 1.0], pose: [1, 0.2, 0, 0.2], k: { handLag: 0.7, handAmp: 0.8, bow: 0.25, spread: 0.5, collapse: 1, bob: 0.04 } },
+  kinglet: { amp: [0.35, 0.35, 0.45, 1.0], pose: [1, 0.15, 0, 0.2], k: { handLag: 0.7, handAmp: 0.8, bow: 0.25, spread: 0.5, collapse: 1, bob: 0.04 } },
+  flycatcher: { amp: [0.3, 0.3, 0.4, 1.0], pose: [1, 0.15, 0, 0.2], k: { handLag: 0.7, handAmp: 0.8, bow: 0.25, spread: 0.5, collapse: 1, bob: 0.04 } },
+  screechowl: { amp: [0.2, 0.2, 0.5, 0.9], pose: [1, 0.1, 0, 0.2], k: { handLag: 0.6, handAmp: 0.9, bow: 0.4, spread: 0.5, collapse: 1, bob: 0 } },
+  sawwhet: { amp: [0.2, 0.2, 0.5, 0.9], pose: [1, 0.1, 0, 0.2], k: { handLag: 0.6, handAmp: 0.9, bow: 0.4, spread: 0.5, collapse: 1, bob: 0 } },
+  // the flight meshes (tools/build_soarer.py): the osprey and the small raptors on the hawk's constants, the gulls on the vulture's
+  osprey: { amp: [0, 0.15, 0.3, 0.65], pose: [1, -0.2, 0, 1.4], k: { handLag: 0.5, handAmp: 1.15, bow: 0.5, spread: 0.6, collapse: 0, bob: 0 } },
+  sharpie: { amp: [0, 0.2, 0.3, 0.75], pose: [1, -0.2, 0, 1.4], k: { handLag: 0.45, handAmp: 1.1, bow: 0.4, spread: 0.7, collapse: 0, bob: 0 } },
+  merlin: { amp: [0, 0.15, 0.3, 0.75], pose: [1, -0.2, 0, 1.4], k: { handLag: 0.4, handAmp: 1.05, bow: 0.4, spread: 0.5, collapse: 0, bob: 0 } },
+  gwgull: { amp: [0, 0.15, 0.25, 0.55], pose: [1, 0, 0, 1.3], k: { handLag: 0.5, handAmp: 1.1, bow: 0.35, spread: 0.4, collapse: 0, bob: 0 } },
+  cagull: { amp: [0, 0.15, 0.25, 0.55], pose: [1, 0, 0, 1.3], k: { handLag: 0.5, handAmp: 1.1, bow: 0.35, spread: 0.4, collapse: 0, bob: 0 } },
+  wegull: { amp: [0, 0.15, 0.25, 0.55], pose: [1, 0, 0, 1.3], k: { handLag: 0.5, handAmp: 1.1, bow: 0.35, spread: 0.4, collapse: 0, bob: 0 } },
+  // the mallard (tools/build_mallard.py) as the merganser; the sooty grouse (tools/build_grouse.py) on the turkey's template
+  mallard: { amp: [0.5, 0.3, 0.6, 1.0], pose: [1, 0, 0, 0.2],
+    k: { handLag: 0.5, handAmp: 0.6, bow: 0.25, spread: 0.4, collapse: 1, bob: 0.05, turnHead: 1 } },
+  grouse: { amp: [0.6, 0.25, 0.7, 1.0], pose: [1, 0, 0, 0.2],
+    k: { handLag: 0.6, handAmp: 0.7, bow: 0.35, spread: 0.5, collapse: 1, bob: 0.1, turnHead: 1 } },
+  // the Olympic marmot (tools/build_marmot.py) on the ground squirrel's sit-up, heavier and lower; the yellow-pine chipmunk as
+  // Townsend's; the shrew as the deer mouse; the toad and the frog as the salamanders with the wave nearly off
+  marmot: { amp: [0.7, 0.35, 0.35, 0], pose: [0.4, -0.3, 0.9, 0], drop: 0.03,
+    k: { spine: 0.12, spinePhase: 1.2, sit: 1.0, foreFold: 1.6, tipLag: 0.5, tipWave: 0.2, tipCurl: 0.15, abduct: 0, turnFore: 1 } },
+  ypchipmunk: { amp: [0.9, 0.5, 0.35, 0], pose: [0.4, -0.3, 0.9, 0], drop: 0.01,
+    k: { spine: 0.2, spinePhase: 1.2, sit: 1.0, foreFold: 1.8, tipLag: 0.6, tipWave: 0.3, tipCurl: 0.3, abduct: 0, turnFore: 1 } },
+  shrew: { amp: [1.0, 0.3, 0.4, 0], pose: [1, 0.1, 0.3, 0],
+    k: { spine: 0.15, spinePhase: 1.2, sit: 0.3, foreFold: 0.5, tipLag: 0, tipWave: 0, tipCurl: 0, abduct: 0, turnFore: 1 } },
+  toad: { amp: [0.5, 0.1, 0.25, 0], pose: [1, 0, 0, 0],
+    k: { wave: 0.004, waveK: 2.5, envS: 0.6, pushPitch: 0.15, baskAbduct: 0.2, squash: 0.1, legLift: 0.45, hindK: 1.1, bend: 0.01,
+      flickYaw: 0.3, tipLag: 0 } },
+  frog: { amp: [0.6, 0.1, 0.25, 0], pose: [1, 0, 0, 0],
+    k: { wave: 0.005, waveK: 2.5, envS: 0.6, pushPitch: 0.15, baskAbduct: 0.2, squash: 0.1, legLift: 0.5, hindK: 1.3, bend: 0.01,
+      flickYaw: 0.3, tipLag: 0 } },
 };
 const urls = { jay: '../assets/scrubjay.glb', quail: '../assets/quail.glb', squirrel: '../assets/squirrel.glb',
   stjay: '../assets/stellersjay.glb', hawk: '../assets/redtail.glb', vulture: '../assets/vulture.glb',
@@ -691,7 +727,13 @@ const urls = { jay: '../assets/scrubjay.glb', quail: '../assets/quail.glb', squi
   deermouse: '../assets/deer_mouse.glb', wren: '../assets/pacific_wren.glb', grayjay: '../assets/gray_jay.glb',
   chickadee: '../assets/chickadee.glb', owl: '../assets/barred_owl.glb', kingfisher: '../assets/kingfisher.glb',
   eagle: '../assets/bald_eagle.glb', crowGround: '../assets/crow_ground.glb', heron: '../assets/heron.glb',
-  merganser: '../assets/merganser.glb', salamander: '../assets/salamander.glb', ensatina: '../assets/ensatina.glb' };
+  merganser: '../assets/merganser.glb', salamander: '../assets/salamander.glb', ensatina: '../assets/ensatina.glb',
+  robin: '../assets/american_robin.glb', starling: '../assets/starling.glb', vthrush: '../assets/varied_thrush.glb', junco: '../assets/junco.glb',
+  kinglet: '../assets/kinglet.glb', flycatcher: '../assets/flycatcher.glb', screechowl: '../assets/screech_owl.glb', sawwhet: '../assets/saw_whet_owl.glb',
+  osprey: '../assets/osprey.glb', sharpie: '../assets/sharp_shinned_hawk.glb', merlin: '../assets/merlin.glb',
+  gwgull: '../assets/glaucous_winged_gull.glb', cagull: '../assets/california_gull.glb', wegull: '../assets/western_gull.glb',
+  mallard: '../assets/mallard.glb', grouse: '../assets/sooty_grouse.glb', marmot: '../assets/marmot.glb',
+  ypchipmunk: '../assets/yellow_pine_chipmunk.glb', shrew: '../assets/montane_shrew.glb', toad: '../assets/western_toad.glb', frog: '../assets/cascades_frog.glb' };
 function rigModel(name, opts) {
   const r = RIG[name];
   return loadTiers(new URL(urls[name], import.meta.url), { amp: r.amp, pose: r.pose, drop: r.drop || 0, poseMax: r.poseMax || 1, gait: !!r.gait, rig: { name, k: { ...r.k } } }, opts)
@@ -798,6 +840,28 @@ export const loadHeronMesh = () => rigModel('heron');
 export const loadMerganserMesh = () => rigModel('merganser');
 export const loadSalamanderMesh = () => rigModel('salamander');
 export const loadEnsatinaMesh = () => rigModel('ensatina');
+// the second Hoh batch (2026-11-06)
+export const loadRobinMesh = () => rigModel('robin');
+export const loadStarlingMesh = () => rigModel('starling');
+export const loadVariedThrushMesh = () => rigModel('vthrush');
+export const loadJuncoMesh = () => rigModel('junco');
+export const loadKingletMesh = () => rigModel('kinglet');
+export const loadFlycatcherMesh = () => rigModel('flycatcher');
+export const loadScreechOwlMesh = () => rigModel('screechowl');
+export const loadSawWhetOwlMesh = () => rigModel('sawwhet');
+export const loadOspreyMesh = () => rigModel('osprey');
+export const loadSharpShinnedMesh = () => rigModel('sharpie');
+export const loadMerlinMesh = () => rigModel('merlin');
+export const loadGlaucousGullMesh = () => rigModel('gwgull');
+export const loadCaliforniaGullMesh = () => rigModel('cagull');
+export const loadWesternGullMesh = () => rigModel('wegull');
+export const loadMallardMesh = () => rigModel('mallard');
+export const loadGrouseMesh = () => rigModel('grouse');
+export const loadMarmotMesh = () => rigModel('marmot');
+export const loadYellowPineChipmunkMesh = () => rigModel('ypchipmunk');
+export const loadShrewMesh = () => rigModel('shrew');
+export const loadToadMesh = () => rigModel('toad');
+export const loadFrogMesh = () => rigModel('frog');
 
 // A procedural model at another size: its geometry and pivots scaled by s (the fallback a species shows while its drawn
 // mesh loads; the flying crow is the procedural raven at 0.72).
@@ -807,6 +871,32 @@ export function scaledModel(m, s) {
   const pv = g.getAttribute('aPivot'); if (pv) pv.array.forEach((v, i, a) => { a[i] = v * s; });
   g.computeBoundingSphere(); g.computeBoundingBox();
   return { ...m, geometry: g, drop: (m.drop || 0) * s };
+}
+
+// Hairy woodpecker (Leuconotopicus villosus), ~0.23 m, procedural as the acorn woodpecker is (its five Meshy candidates never
+// read; buildWoodpecker's proportions a size up): black and white, a broad white stripe down the black back, white below, the
+// black wings spotted white, a black-and-white striped face (a white eyebrow and moustache stripe), the long chisel bill, the
+// male's small red nape patch. Clings to the conifers' bark (animals.js HOH: the Steller's jay's machine with `trunk`).
+export function buildHairyWoodpecker() {
+  const black = 0x141418, white = 0xf1f0ea, red = 0xc4122c, bill = 0x2a2a2e;
+  const head = { part: PART.HEAD, pivot: [0, 0.066, 0.053] };
+  const p = [
+    ball({ color: black, pos: [0, 0.048, 0], scale: [0.036, 0.038, 0.08] }, 7, 5),
+    ball({ color: white, pos: [0, 0.032, 0.006], scale: [0.031, 0.03, 0.064] }, 7, 4),            // the white underparts
+    ball({ color: white, pos: [0, 0.083, -0.01], scale: [0.011, 0.006, 0.05] }, 6, 3),             // the white back stripe
+    ...mirror(s => ball({ color: white, pos: [s * 0.03, 0.06, -0.02], scale: [0.006, 0.006, 0.008] }, 4, 3)),   // wing spots
+    ...mirror(s => ball({ color: white, pos: [s * 0.031, 0.056, -0.045], scale: [0.006, 0.006, 0.008] }, 4, 3)),
+    ball({ color: black, ...head, pos: [0, 0.08, 0.072], scale: [0.029, 0.031, 0.034] }, 9, 7),
+    ...mirror(s => ball({ color: white, ...head, pos: [s * 0.022, 0.088, 0.07], rot: [0, 0, s * 0.2], scale: [0.007, 0.006, 0.022] }, 5, 3)),   // eyebrow
+    ...mirror(s => ball({ color: white, ...head, pos: [s * 0.021, 0.07, 0.08], rot: [0, 0, s * 0.2], scale: [0.007, 0.006, 0.02] }, 5, 3)),    // moustache
+    ball({ color: red, ...head, pos: [0, 0.092, 0.045], scale: [0.016, 0.01, 0.01] }, 6, 3),         // the male's red nape
+    ...mirror(s => ball({ color: 0x0b0b0e, ...head, pos: [s * 0.026, 0.082, 0.082], scale: [0.004, 0.004, 0.004] }, 5, 3)),
+    cone({ color: bill, ...head, pos: [0, 0.076, 0.121], rot: FWD, scale: [0.0065, 0.036, 0.006] }),
+    box({ color: black, part: PART.TAIL, pivot: [0, 0.042, -0.064], pos: [0, 0.035, -0.105], rot: [0.25, 0, 0], scale: [0.032, 0.006, 0.08] }),
+    ...mirror(s => box({ color: black, part: s > 0 ? PART.WING_L : PART.WING_R, pivot: [s * 0.032, 0.064, 0], pos: [s * 0.12, 0.064, 0], scale: [0.18, 0.006, 0.065] })),
+    ...mirror(s => box({ color: white, part: s > 0 ? PART.WING_L : PART.WING_R, pivot: [s * 0.032, 0.064, 0], pos: [s * 0.13, 0.065, -0.012], scale: [0.12, 0.0068, 0.012] })),
+  ];
+  return finish(p, { amp: [0, 0.25, 0.45, 1.1], pose: [1, 0, 0, 1.5] });
 }
 
 // Pacific banana slug (Ariolimax columbianus), procedural (no mesh needed; docs/pipeline.md "gastropod"): 0.18 m long,

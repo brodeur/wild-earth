@@ -1,0 +1,72 @@
+{
+  "id": "dendragapus_fuliginosus",
+  "aliases": [
+    "sooty_grouse",
+    "blue_grouse",
+    "hooter"
+  ],
+  "scientific": "Dendragapus fuliginosus",
+  "common": "sooty grouse",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Galliformes",
+    "family": "Phasianidae",
+    "genus": "Dendragapus"
+  },
+  "mass_kg": 1.0,
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.5,
+    "shoulder_or_wingspan_m": 0.75,
+    "note": "Length 0.47-0.57 m, wingspan ~0.64-0.71 m (short rounded wings), males ~1.1-1.3 kg, females ~0.75 kg. Built at 0.50 m bill tip to tail tip (a 0.17 m squared tail, 0.13 m across its tip), the belly 0.055 m off the ground on short feathered legs, the back 0.23 m and the crown 0.28 m up, the body 0.18 m across; a short stout bill 2.3 cm; wing cards 0.75 m tip to tip (the brief's; a little long for the species). The female (_COLORB) is drawn on the same mesh (the client may scale her about 0.85x)."
+  },
+  "source": {
+    "kind": "meshy",
+    "title": "Sooty grouse (male), standing",
+    "author": "generated with Meshy (meshy.ai) by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/dendragapus_fuliginosus/01a1ae8b-eb2c-73d6-867c-037ab6578488/model.glb (local; jobs/ meshes are not tracked)",
+    "original": "Meshy text-to-3D preview, ai_model meshy-6-lite, triangle remesh to 20,000 faces, untextured (came back pigeon-like: a slim head high on a long neck, a long thin bill, bare thin legs, a blade tail)",
+    "prompt": "A sooty grouse (Dendragapus fuliginosus), a large forest grouse like a chicken, NOT a turkey, NOT a quail, no crest. One adult male standing on the ground, side-on pose, body level, wings folded. Realistic proportions: 50 cm long, a plump round body, a short neck, a small head with a short stout bill, a long squared dark tail with a pale grey band at its tip, feathered legs. Dusky slate-grey plumage finely mottled, a yellow-orange comb above the eye, a white-edged patch on the neck side. No base. Game-ready, clean closed mesh.",
+    "job_id": "01a1ae8b-eb2c-73d6-867c-037ab6578488",
+    "job": "library/animals/jobs/dendragapus_fuliginosus/01a1ae8b-eb2c-73d6-867c-037ab6578488/job.json",
+    "credits": 5,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_grouse.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the built GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder, not CC BY-SA licensees).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "Credit \"generated with Meshy (meshy.ai)\" in the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 1200,
+    "lod1": 450,
+    "lod2": 150,
+    "file": "client/assets/sooty_grouse.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear; male)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT",
+      "_COLORB (linear; female)"
+    ],
+    "note": "The preview made a grouse: the neck squeezed over its middle (the head 5 cm lower on the shoulders) and thickened 1.3x; the bill 0.5x as long, 1.7x as wide and 1.35x as deep; the whole bird 0.74x across and 0.8x as deep (a pigeon's ball body made a chicken's); the thin legs cut at the belly and short feathered legs added (a thick tarsus in the body colour, grey toes); the blade tail cut off and a squared tail wedge added (TAIL); a dark eye (lod0); short rounded wing cards. Triangles: lod0 1,200 = 998 body + 202 legs, tail, cards and eyes; lod1 450 = 348 + 102; lod2 150 = 74 + 76. GLB 303,016 bytes."
+  },
+  "rig": "bird rig template as tools/build_turkey.py / tools/build_mountain_quail.py build it (to wire: client/src/animalModels.js, e.g. the turkey's or the quail's constants): PART BODY 0, LEG_A 1 (left) / LEG_B 2 (right) pivoting at the hip, TAIL 3 (the tail wedge and the rump behind its root; pivot at the tail root), HEAD 6 = neck, head and bill pivoting at the neck's base, WING_L/R 4/5 arm cards (pivot at the shoulder) and HAND_L/R 9/10 hand cards (pivot at the wrist) that collapse into the shoulder on the ground (collapse 1); the flush is a burst of short rounded wingbeats and a glide. extras.rig keys (the turkey's): kind 'bird', wing [0.069, 0.197, 0.056], tail [0, 0.126, -0.136], head [0, 0.193, 0.099], hip [0.041, 0.08, 0], length_m 0.5, height_m 0.283, variant 'female in _COLORB'. No skin.",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Reads as a dark forest grouse: a plump body on short feathered legs, a small head low on a short thick neck, a short dark bill, a long squared blackish tail with a pale grey terminal band (the male), short rounded wings. Male (COLOR_0): dusky slate-grey finely mottled darker and paler, browner on the back and folded wings, white-tipped flank feathers (hashed faces), a yellow-orange comb over the eye, a small white-edged neck patch (a yellowish centre) each side. Female (_COLORB): mottled brown barred buff and black, a paler belly, the tail barred with the grey band. Still open: the head and eye are the generator's pigeon head made smaller only by the squash (a grouse's crown is flatter); the comb and neck patch are a few decimated faces (the neck patch is a hint, not the display rosette); the tail is a solid wedge (not a fan of feathers) and its grey band is plain; the female's barring is a hashed pattern, coarse on lod1/lod2; the legs' feathering is a plain thick tube; the 0.75 m card span (the brief's) is a little long for the species' ~0.7 m. A local birder should check the posture (head height) and the male's tail band.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (Meshy job, build script, neck, bill, body, legs and tail rebuilt, male and female colours, rig, tiers, entry)"
+  ],
+  "sources": [
+    "Sibley, D. A. (2014), The Sibley Guide to Birds, 2nd ed.: sooty grouse (male and female field marks, the tail band of the coastal birds, the comb and neck patch) - from the agent's knowledge, not reopened for this entry",
+    "Zwickel, F. C. and J. F. Bendell (2004), Blue Grouse: Their Biology and Natural History (size, mass, plumage) - from the agent's knowledge",
+    "Cornell Lab of Ornithology, All About Birds: Sooty Grouse (size, shape, habitat in the Olympics) - from the agent's knowledge",
+    "tools/build_turkey.py, tools/build_mountain_quail.py and tools/build_merganser.py (template, cards, legs)"
+  ]
+}

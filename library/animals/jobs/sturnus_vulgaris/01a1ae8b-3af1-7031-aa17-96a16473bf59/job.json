@@ -1,0 +1,66 @@
+{
+  "species": "sturnus_vulgaris",
+  "mode": "preview",
+  "kind": "text-to-3d",
+  "task_id": "01a1ae8b-3af1-7031-aa17-96a16473bf59",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "preview",
+    "prompt": "A European starling (Sturnus vulgaris), one adult standing on the ground, side-on pose, wings folded tight. Realistic proportions: 21 cm long, a stocky body, a short square tail, a long pointed straight yellow bill, a flat head, pinkish legs. Glossy black plumage with a green and purple sheen, the body speckled with small white and buff spots, buff edges on the wing feathers. Three toes forward and one back. No base, no perch. Game-ready, clean closed mesh.",
+    "ai_model": "meshy-6-lite",
+    "target_formats": [
+      "glb"
+    ],
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 20000,
+    "moderation": false
+  },
+  "prompt": "A European starling (Sturnus vulgaris), one adult standing on the ground, side-on pose, wings folded tight. Realistic proportions: 21 cm long, a stocky body, a short square tail, a long pointed straight yellow bill, a flat head, pinkish legs. Glossy black plumage with a green and purple sheen, the body speckled with small white and buff spots, buff edges on the wing feathers. Three toes forward and one back. No base, no perch. Game-ready, clean closed mesh.",
+  "image": null,
+  "preview_job": null,
+  "estimated_credits": 5,
+  "balance_before": 2377,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-06T01:48:42+00:00",
+    "created_at": "2026-11-06T01:48:44+00:00",
+    "started_at": "2026-11-06T01:48:44+00:00",
+    "finished_at": "2026-11-06T01:49:13+00:00",
+    "downloaded": "2026-11-06T01:49:26+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur",
+  "progress": 100,
+  "task": {
+    "id": "01a1ae8b-3af1-7031-aa17-96a16473bf59",
+    "type": "text-to-3d-preview",
+    "status": "SUCCEEDED",
+    "created_at": 1793929724114,
+    "started_at": 1793929724120,
+    "finished_at": 1793929753746,
+    "consumed_credits": 5,
+    "task_error": null
+  },
+  "credits_charged": 5,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 743660,
+      "sha256": "2c6bf5acdb3f72d35e96fff73f1618eb1ff6d1eb5b62c793c5eb1f5b8a175c95",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1ae8b-3af1-7031-aa17-96a16473bf59/output/model.glb"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 41578,
+      "sha256": "346492e7e8c089f93ddaf3e5d6dac2c99e5ec9f8bd8a3f070831f1e4ef5d1973",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1ae8b-3af1-7031-aa17-96a16473bf59/output/preview.png"
+    }
+  ],
+  "balance_after": 2372
+}

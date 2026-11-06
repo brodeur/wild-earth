@@ -1,0 +1,78 @@
+{
+  "id": "junco_hyemalis",
+  "aliases": [
+    "dark_eyed_junco",
+    "junco",
+    "oregon_junco"
+  ],
+  "scientific": "Junco hyemalis",
+  "common": "Dark-eyed junco",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Passerellidae",
+    "genus": "Junco"
+  },
+  "mass_kg": 0.02,
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.15,
+    "shoulder_or_wingspan_m": 0.23,
+    "note": "Length 14-16 cm, wingspan 18-25 cm, 18-30 g. The Oregon form. Built 0.150 m bill to tail (0.085 m bill tip to the neck to the rump, plus a 0.065 m tail), 0.067 m tall; wing cards 0.23 m across."
+  },
+  "source": {
+    "kind": "variant",
+    "title": "Dark-eyed junco (variant of the chestnut-backed chickadee's Meshy mesh)",
+    "author": "variant of poecile_rufescens by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/poecile_rufescens/01a1ad39-ae77-7764-bea5-e718f3527f65/model.glb (local; jobs/ meshes are not tracked; generated with Meshy (meshy.ai))",
+    "original": "the chestnut-backed chickadee's Meshy text-to-3D preview (task 01a1ad39-ae77-7764-bea5-e718f3527f65, meshy-6-lite, triangle mesh, 20,824 triangles, one piece, untextured)",
+    "prompt": "(the chestnut-backed chickadee's) A chestnut-backed chickadee (Poecile rufescens), a tiny songbird about 11 cm long, one adult perched with its wings folded tight against the body, side-on pose. A round fluffy body, a big round head, a tiny short black bill, a medium-long narrow tail. A sooty dark brown cap and a black bib, bright white cheeks, a rich chestnut back and flanks, grey wings and tail, a white belly. Thin dark legs, three toes forward and one back. No base, no perch. Game-ready, clean closed mesh.",
+    "job_id": "01a1ad39-ae77-7764-bea5-e718f3527f65",
+    "job": "library/animals/jobs/poecile_rufescens/01a1ad39-ae77-7764-bea5-e718f3527f65/job.json",
+    "credits": 0,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_songbird.py --species junco_hyemalis",
+    "build": "tools/build_songbird.py"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the adopted GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "A variant built from an earlier Meshy job: no new generation, no credits. Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 999,
+    "lod1": 399,
+    "lod2": 119,
+    "file": "client/assets/junco.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "lod_m": [
+      6,
+      20
+    ],
+    "note": "A variant of the chestnut-backed chickadee's Meshy preview (no credits), scaled to 0.15 m, the chickadee's tail replaced by a square 6.5 cm tail 12 degrees below level with white outer tail feathers (an outer strip each side, above and below, lod0 and lod1). Colours (Oregon male): black hood over the head, nape, throat and upper breast; rusty-brown back, grey rump; pinkish-buff flanks; white belly; dark grey-brown wings with brown edges (lod0); dark grey tail; pale pink bill (the chickadee's short conical bill), pinkish legs. Triangles: lod0 999 = 814 body + 185 legs, tail, cards, eyes; lod1 399 = 278 body + 121 legs, tail, cards, eyes; lod2 119 = 92 body + 27 legs, tail, cards, eyes. GLB 172,924 bytes. lod_m is a suggestion."
+  },
+  "rig": "bird rig template of the Steller's jay (tools/build_stellersjay.py; drawn with client/src/animalModels.js RIG.stjay's constants): PART BODY 0, LEG_A 1 / LEG_B 2 procedural legs (pivot at the knee), TAIL 3 procedural tail (pivot at the rump), HEAD 6 (head and neck, pivot at the base of the neck), WING_L/R 4/5 and HAND_L/R 9/10 flight cards that collapse into the shoulder on pose; extras.rig {kind 'bird', wing (shoulder), tail (rump), head (neck base), length_m}; no skin",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Built 2026-11-05. Reads as an Oregon junco: black hood, rusty back, pink flanks, pink bill, white tail edges. Still open: the bill is the chickadee's, a touch thin for a junco's cone; the eye is lost in the black hood (as on the real bird at distance); the tail is a flat plate, thin side-on.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (variant recipe, build script, rig, tiers, entry)"
+  ],
+  "sources": [
+    "The Sibley Guide to Birds, 2nd edition (D. A. Sibley, 2014): plumage, shape and posture",
+    "Cornell Lab of Ornithology, All About Birds and Birds of the World species accounts: size, mass, wingspan, plumage",
+    "docs/animal-library.md",
+    "library/animals/README.md",
+    "tools/build_songbird.py",
+    "tools/build_stellersjay.py"
+  ]
+}

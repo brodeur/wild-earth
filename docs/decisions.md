@@ -5295,3 +5295,24 @@ eight mergansers (one diving), banana slugs; all moving and phasing, no NaN in 2
 the eagle, the chickadee, the bobcat, the otter, the salamander, the merganser and the Douglas squirrel from the spirit.
 The lineup page drew all twenty models at their brief's sizes. Tests pass. Fauna and games rerun on both Hoh tiles: all
 nineteen present by their records, each at registry fidelity 3.
+
+## 2026-11-06: the rest of the Olympic animals; the rigger's short legs; upright birds fly level (branch hoh-birds-2)
+
+Aaron approved modelling the animals the Hoh and Mount Olympus still listed without a model: 22 species (the Hoh's 14,
+Olympus's 8 more), for 25 credits (670 -> 695 of 1,000): lite previews of the robin, starling, sooty grouse, Olympic
+marmot and western toad; every other one a variant (the varied thrush of the robin; the junco, kinglet and flycatcher of
+the chickadee; the two small owls of the barred owl; the osprey, sharp-shinned hawk, merlin and three gulls of the
+red-tail, one parameterised `tools/build_soarer.py`; the mallard of the merganser; the yellow-pine chipmunk of Townsend's;
+the montane shrew of the deer mouse; the Cascades frog of the toad), and the hairy woodpecker procedural as the acorn
+woodpecker is. Each runs a kin's behaviour as the first batch's do (`animals.js KIN`, `HOH`); the marmot gets the ground
+squirrel's colonies (`colonyUpdate` by `g.sp`), the woodpecker clings to the conifers' bark (`HOH.trunk`).
+
+Fauna and games rerun on both tiles: both queues empty, all 46 listed animals on each tile with a model at fidelity 3.
+The montane shrew and (on Olympus) the western gull stay absent by the presence rule (under 3 records near the tile).
+Verified on both tiles: the new slots spawn where their rules put them (the robins, juncos, thrushes, starlings, the
+woodpecker, toads and gulls on the Hoh's river flats; marmots and yellow-pine chipmunks on Olympus's talus at 1,500 m,
+sharp-shins and merlins over it), move and phase with no NaN, and play; animals.update 0.66 ms a frame with 236 animals.
+
+Two fixes asked for with it: `tools/rig_quadruped.py`'s leg bands widen instead of failing on a short decimated leg
+(`band_at`, a test), and the upright meshes (the owls, the kingfisher, the flycatcher) tip forward to fly level as the
+player (`flierControl.js` `upright`).

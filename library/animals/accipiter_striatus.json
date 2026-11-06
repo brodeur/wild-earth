@@ -1,0 +1,76 @@
+{
+  "id": "accipiter_striatus",
+  "aliases": [
+    "sharp_shinned_hawk",
+    "sharpie",
+    "sharp-shinned_hawk"
+  ],
+  "scientific": "Accipiter striatus",
+  "common": "sharp-shinned hawk",
+  "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Accipitriformes",
+    "family": "Accipitridae",
+    "genus": "Accipiter"
+  },
+  "mass_kg": 0.14,
+  "body_plan": "bird",
+  "size": {
+    "length_m": 0.29,
+    "shoulder_or_wingspan_m": 0.58,
+    "note": "Length 0.24-0.34 m, wingspan 0.53-0.65 m, 0.087-0.22 kg (females much larger than males: the mesh is between). The flight mesh is scaled to 0.290 m bill tip to tail tip and lofted to a 0.58 m span (0.584 m measured over the finger tips): head and bill project 0.050 m ahead of the wing's leading edge at the root, the tail 0.130 m behind its trailing edge; wing chord 0.110 m over the arm; the source body scaled 0.308 (and narrowed per recipe)."
+  },
+  "source": {
+    "kind": "variant",
+    "title": "Sharp-shinned hawk, soaring (variant of the red-tailed hawk's Meshy flight mesh)",
+    "author": "variant of buteo_jamaicensis by agent (Claude) for Aaron Brodeur",
+    "url": "https://www.meshy.ai",
+    "file": "library/animals/jobs/buteo_jamaicensis/01a1719d-772f-76b4-9155-823815fec267/model.glb (main checkout, local, git-ignored; generated with Meshy (meshy.ai))",
+    "original": "the red-tailed hawk's Meshy text-to-3D preview, task 01a1719d-772f-76b4-9155-823815fec267, ai_model meshy-6-lite, triangle remesh to 20,000 faces, 20,779 triangles, untextured (2026-10-25); its body and head kept and reshaped, the wings, tail rebuilt",
+    "prompt": "(the red-tail's) A red-tailed hawk (Buteo jamaicensis), one adult bird soaring in mid-air, wings fully spread out flat to the sides and symmetrical, about 125 cm wingspan and 55 cm long, shaped to read from below and from above. Broad rounded wings with a straight leading edge and five separated, fingered primary feathers at each wingtip. Short, broad brick-red tail fanned wide into a rounded fan. Legs and feet tucked up under the body. Big rounded head and short hooked bill projecting ahead of the wings. Pale underwing with a dark leading-edge bar and a dark wrist mark, pale breast with a dark belly band. Not an eagle, not a falcon. Single bird, no base, no perch. Game-ready, clean closed mesh.",
+    "job_id": "01a1719d-772f-76b4-9155-823815fec267",
+    "job": "library/animals/jobs/buteo_jamaicensis/01a1719d-772f-76b4-9155-823815fec267/job.json (main checkout)",
+    "credits": 0,
+    "date": "2026-11-05 (UTC)",
+    "adopted_by": "tools/build_soarer.py --species accipiter_striatus"
+  },
+  "license": "CC BY-SA 4.0",
+  "license_detail": {
+    "source_terms": "Meshy Terms of Use 3.2 (https://www.meshy.ai/terms-of-use, last updated 2026-09-19): API output on a paid plan is owned by the account holder, who releases it with the project's assets under CC BY-SA 4.0. Terms 2.4: AI-identifying metadata Meshy embeds is carried over (the source GLB carried none; the built GLB records the source in extras.source). Terms 2.6(xi): not for training models that compete with Meshy (binds the account holder, not CC BY-SA licensees).",
+    "redistribute_under_cc_by_sa": true,
+    "note": "A variant built from an earlier Meshy job: no new generation was used. Credit \"generated with Meshy (meshy.ai)\" is kept in the build script header and the GLB asset.copyright. AI-generated output may carry little or no copyright in some jurisdictions; the licence covers what rights exist."
+  },
+  "tiers": {
+    "lod0": 2000,
+    "lod1": 800,
+    "lod2": 220,
+    "file": "client/assets/sharp_shinned_hawk.glb",
+    "attributes": [
+      "POSITION",
+      "COLOR_0 (linear)",
+      "_PART",
+      "_PARTW",
+      "_PIVOT"
+    ],
+    "lod_m": [
+      40,
+      140
+    ],
+    "note": "Ambient flight mesh as the hawk's and the eagle's: body and head from the generated mesh (feet and tail deleted, head reshaped, pitched 12 degrees nose-down); short rounded wings with the wrists pushed forward and five short slotted primaries, a long narrow square-tipped tail (0.15 m from its root, 0.13 m behind the wing, about the wing's 0.11 m chord), a small head that barely projects; the wings, tail lofted per tier in rows and stations placed on the field marks (lod2 wings 2.5x thicker). Tier switches suggested at 40 and 140 m (not wired). GLB 344,244 bytes."
+  },
+  "rig": "bird rig template, flight mesh, exactly as client/assets/redtail.glb (the client draws the raptors with the hawk's soaring and the gulls with the vulture's circling glides): PART BODY 0, TAIL 3 (pivot at the tail root), HEAD 6 (head, neck, pivot at the neck's base), WING_L/R 4/5 (the arm, pivot at the shoulder, weight ramped in over the wing root), HAND_L/R 9/10 (pivot at the wrist, weight ramped over the hand; the primaries fully HAND); collapse 0 (the wings never fold). extras.rig keys as the hawk's: kind 'bird', wing (shoulder [0.034, 0.11, 0.02]), wrist [0.122, 0.116, 0.02], tail [0.0, 0.097, -0.022], head [0.0, 0.107, 0.073], span_m 0.58, dihedral_deg 1.4 (shoulder to wingtip). Origin 0.11 m below the shoulder line. No skin.",
+  "status": "agent draft, needs local sign-off",
+  "accuracy_notes": "Field marks: slate blue-grey above, the tail grey with four broad dark bands and a pale tip; below barred rusty-orange on white with white undertail coverts, the underwing white barred grey (coverts faintly buff); a dark cap, rufous cheeks, a red-orange eye (lod0), yellow cere and dark bill. Reads as a small accipiter: short round wings, long banded tail, small head, rusty underparts and barred underwing from below, slate above. Still open: the underparts' fine barring is drawn as alternating bands on decimated faces, so it reads as jagged rusty triangles rather than fine bars; the far tiers lose the tail bands (lod1 keeps them; lod2 plain grey); the head is the red-tail's shrunk 0.84x, a little large-billed; one size for both sexes; the line between a sharp-shinned and a Cooper's hawk (head projection, tail tip shape) is fine and only roughly honoured.",
+  "authors": [
+    "agent (Claude) for Aaron Brodeur (variant: build script recipe, plan outline, lofted wings and tail, recolour, rig, tiers)"
+  ],
+  "sources": [
+    "Sibley, D. A. (2014), The Sibley Guide to Birds, 2nd ed. (flight shapes, field marks) - from the agent's knowledge, not reopened for this entry",
+    "Liguori, J. (2005), Hawks from Every Angle (soaring silhouettes from below) - from the agent's knowledge",
+    "Wheeler, B. K. (2003), Raptors of Western North America (plumages, measurements) - from the agent's knowledge",
+    "Cornell Lab of Ornithology, All About Birds and Birds of the World species accounts (size, mass) - from the agent's knowledge",
+    "tools/build_bald_eagle.py, tools/build_redtail.py and library/animals/buteo_jamaicensis.json (template and source mesh)"
+  ]
+}

@@ -135,6 +135,16 @@ def arc_fraction(P, idx, members, roots):
     return {v: dist.get(rep[v], dmax) / dmax for v in members}, dmax
 
 # ---- the skeleton from one tier's geometry ------------------------------------------------------------------------
+def band_at(L, y, h, n=3):
+    """The leg's vertices within h of height y, the band widened (x2, x4) until it holds n; else the n nearest in height.
+    A short leg decimated to a few rings has none near a given height (the otter's, the bobcat's: the old fixed bands came
+    back empty and np.ptp failed)."""
+    for k in (1, 2, 4):
+        b = L[np.abs(L[:, 1] - y) < h * k]
+        if len(b) >= n: return b
+    return L[np.argsort(np.abs(L[:, 1] - y))[:max(n, 1)]]
+
+
 def skeleton(P, part, pw, piv, idx, rig, posture, wrist_k, hock_k, withers):
     part = part.astype(int)
     H = withers
@@ -146,17 +156,17 @@ def skeleton(P, part, pw, piv, idx, rig, posture, wrist_k, hock_k, withers):
         if s.sum() < 6: raise SystemExit(f'leg {name}: only {s.sum()} vertices')
         L = P[s]; pv = piv[s][0].copy()
         elbow = pv.copy()                      # the part pivot: the elbow or stifle at the belly line
-        low = L[L[:, 1] < 0.08 * elbow[1]]
+        low = band_at(L, 0.0, 0.08 * elbow[1])
         toe = np.array([low[:, 0].mean(), 0.0, low[:, 2].mean()])
         k = wrist_k if fore else hock_k
         wy = k * elbow[1]
-        band = L[np.abs(L[:, 1] - wy) < 0.12 * elbow[1]]
-        if len(band) < 3: band = L[np.abs(L[:, 1] - wy) < 0.25 * elbow[1]]
+        band = band_at(L, wy, 0.12 * elbow[1])
         wrist = np.array([band[:, 0].mean(), wy, band[:, 2].mean()])
         if posture == 'plantigrade':   # the foot lies flat: its ankle is above the heel, behind the toe
             foot_len = (0.16 if fore else 0.24) * H
             wrist[2] = toe[2] - foot_len * 0.8
-        r = max(float(np.ptp(L[np.abs(L[:, 1] - elbow[1] * 0.85) < 0.1 * elbow[1]][:, 0])), float(np.ptp(L[np.abs(L[:, 1] - elbow[1] * 0.85) < 0.1 * elbow[1]][:, 2])), 0.02) / 2
+        ring = band_at(L, elbow[1] * 0.85, 0.1 * elbow[1])
+        r = max(float(np.ptp(ring[:, 0])), float(np.ptp(ring[:, 2])), 0.02) / 2
         if fore:
             rise = H - elbow[1]
             top = np.array([elbow[0] * 0.85, elbow[1] + 0.55 * rise, elbow[2] + 0.22 * rise])   # the shoulder joint

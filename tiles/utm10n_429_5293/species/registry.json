@@ -1,6 +1,6 @@
 {
  "tile": "utm10n_429_5293",
- "at": "2026-11-05T21:14:40Z",
+ "at": "2026-11-06T02:59:14Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -12,7 +12,7 @@
   "by_level": {
    "0": {
     "plants": 30,
-    "animals": 14
+    "animals": 0
    },
    "1": {
     "plants": 0,
@@ -24,7 +24,7 @@
    },
    "3": {
     "plants": 3,
-    "animals": 21
+    "animals": 42
    },
    "4": {
     "plants": 17,
@@ -32,9 +32,9 @@
    }
   },
   "plants": 69,
-  "animals_present": 39,
-  "animals_queued": 14,
-  "meshy_credits_queued": 420,
+  "animals_present": 46,
+  "animals_queued": 0,
+  "meshy_credits_queued": 0,
   "cards_queued": 30,
   "stand_ins": {
    "struthiopteris_spicant": null,
@@ -83,16 +83,15 @@
    },
    "animal": {
     "target": 22,
-    "have": 39,
-    "with_model": 25
+    "have": 46,
+    "with_model": 46
    }
   },
   "hands": {
-   "count": 46,
+   "count": 32,
    "by_what": {
     "a trait card": 30,
-    "a lexicon phrase or a species-mix rule": 2,
-    "a mesh": 14
+    "a lexicon phrase or a species-mix rule": 2
    }
   }
  },
@@ -1159,216 +1158,191 @@
   {
    "id": "turdus_migratorius",
    "scientific": "Turdus migratorius",
-   "common": "american robin",
+   "common": "American robin",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
-   "why": [
-    "most recorded: 3 of its class (6% of the class's records)"
-   ],
-   "role": [
-    "omnivore"
-   ],
-   "traits": null
+   "evidence": "1688 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "sturnus_vulgaris",
+   "scientific": "Sturnus vulgaris",
+   "common": "European starling",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "51 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "ixoreus_naevius",
+   "scientific": "Ixoreus naevius",
+   "common": "varied thrush",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "836 records within 10 km in 2011-2026 (>= 3)"
   },
   {
    "id": "junco_hyemalis",
    "scientific": "Junco hyemalis",
    "common": "dark-eyed junco",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
-   "why": [
-    "most recorded: 4 of its class (5% of the class's records)"
-   ],
-   "role": [
-    "herbivore"
-   ],
-   "traits": null
+   "evidence": "1586 records within 10 km in 2011-2026 (>= 3)"
   },
   {
    "id": "regulus_satrapa",
    "scientific": "Regulus satrapa",
    "common": "golden-crowned kinglet",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
-   "why": [
-    "most recorded: 6 of its class (4% of the class's records)"
-   ],
-   "role": [
-    "insectivore"
-   ],
-   "traits": null
+   "evidence": "1240 records within 10 km in 2011-2026 (>= 3)"
   },
   {
-   "id": "anas_platyrhynchos",
-   "scientific": "Anas platyrhynchos",
-   "common": "mallard",
+   "id": "empidonax_difficilis",
+   "scientific": "Empidonax difficilis",
+   "common": "Pacific-slope flycatcher",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
-   "why": [
-    "most recorded: 9 of its class (4% of the class's records)"
-   ],
-   "role": [
-    "omnivore"
-   ],
-   "traits": null
-  },
-  {
-   "id": "leuconotopicus_villosus",
-   "scientific": "Leuconotopicus villosus",
-   "common": "hairy woodpecker",
-   "kind": "bird",
-   "fidelity": 0,
-   "present": "records",
-   "why": [
-    "most recorded: 10 of its class (3% of the class's records)"
-   ],
-   "role": [
-    "insectivore"
-   ],
-   "traits": null
-  },
-  {
-   "id": "pandion_haliaetus",
-   "scientific": "Pandion haliaetus",
-   "common": "osprey",
-   "kind": "bird",
-   "fidelity": 0,
-   "present": "records",
-   "why": [
-    "predator"
-   ],
-   "role": [
-    "predator"
-   ],
-   "traits": null
-  },
-  {
-   "id": "sturnus_vulgaris",
-   "scientific": "Sturnus vulgaris",
-   "common": "european starling",
-   "kind": "bird",
-   "fidelity": 0,
-   "present": "records",
-   "why": [
-    "scavenger"
-   ],
-   "role": [
-    "omnivore",
-    "scavenger"
-   ],
-   "traits": null
-  },
-  {
-   "id": "accipiter_striatus",
-   "scientific": "Accipiter striatus",
-   "common": "sharp-shinned hawk",
-   "kind": "bird",
-   "fidelity": 0,
-   "present": "records",
-   "why": [
-    "predator"
-   ],
-   "role": [
-    "predator"
-   ],
-   "traits": null
+   "evidence": "853 records within 10 km in 2011-2026 (>= 3)"
   },
   {
    "id": "megascops_kennicottii",
    "scientific": "Megascops kennicottii",
    "common": "western screech-owl",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
-   "why": [
-    "predator"
-   ],
-   "role": [
-    "predator"
-   ],
-   "traits": null
-  },
-  {
-   "id": "falco_columbarius",
-   "scientific": "Falco columbarius",
-   "common": "merlin",
-   "kind": "bird",
-   "fidelity": 0,
-   "present": "records",
-   "why": [
-    "predator"
-   ],
-   "role": [
-    "predator"
-   ],
-   "traits": null
-  },
-  {
-   "id": "larus_glaucescens",
-   "scientific": "Larus glaucescens",
-   "common": "glaucous-winged gull",
-   "kind": "bird",
-   "fidelity": 0,
-   "present": "records",
-   "why": [
-    "predator and scavenger"
-   ],
-   "role": [
-    "predator",
-    "scavenger"
-   ],
-   "traits": null
-  },
-  {
-   "id": "larus_californicus",
-   "scientific": "Larus californicus",
-   "common": "california gull",
-   "kind": "bird",
-   "fidelity": 0,
-   "present": "records",
-   "why": [
-    "scavenger"
-   ],
-   "role": [
-    "omnivore",
-    "scavenger"
-   ],
-   "traits": null
+   "evidence": "8 records within 10 km in 2011-2026 (>= 3)"
   },
   {
    "id": "aegolius_acadicus",
    "scientific": "Aegolius acadicus",
    "common": "northern saw-whet owl",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
-   "why": [
-    "predator"
-   ],
-   "role": [
-    "predator"
-   ],
-   "traits": null
+   "evidence": "4 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "leuconotopicus_villosus",
+   "scientific": "Leuconotopicus villosus",
+   "common": "hairy woodpecker",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "785 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "pandion_haliaetus",
+   "scientific": "Pandion haliaetus",
+   "common": "osprey",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "77 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "accipiter_striatus",
+   "scientific": "Accipiter striatus",
+   "common": "sharp-shinned hawk",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "17 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "falco_columbarius",
+   "scientific": "Falco columbarius",
+   "common": "merlin",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "15 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "larus_glaucescens",
+   "scientific": "Larus glaucescens",
+   "common": "glaucous-winged gull",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "7 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "larus_californicus",
+   "scientific": "Larus californicus",
+   "common": "California gull",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "3 records within 10 km in 2011-2026 (>= 3)"
   },
   {
    "id": "larus_occidentalis",
    "scientific": "Larus occidentalis",
    "common": "western gull",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
-   "why": [
-    "predator and scavenger"
-   ],
-   "role": [
-    "predator",
-    "scavenger"
-   ],
-   "traits": null
+   "evidence": "3 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "anas_platyrhynchos",
+   "scientific": "Anas platyrhynchos",
+   "common": "mallard",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "919 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "dendragapus_fuliginosus",
+   "scientific": "Dendragapus fuliginosus",
+   "common": "sooty grouse",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "305 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "marmota_olympus",
+   "scientific": "Marmota olympus",
+   "common": "Olympic marmot",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "23 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "tamias_amoenus",
+   "scientific": "Tamias amoenus",
+   "common": "yellow-pine chipmunk",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "6 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "anaxyrus_boreas",
+   "scientific": "Anaxyrus boreas",
+   "common": "western toad",
+   "kind": "amphibian",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "81 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "rana_cascadae",
+   "scientific": "Rana cascadae",
+   "common": "Cascades frog",
+   "kind": "amphibian",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "28 records within 10 km in 2011-2026 (>= 3)"
   }
  ],
  "queue": {
@@ -1614,218 +1588,7 @@
     ]
    }
   ],
-  "meshy": [
-   {
-    "id": "turdus_migratorius",
-    "scientific": "Turdus migratorius",
-    "common": "american robin",
-    "kind": "bird",
-    "records": 1427,
-    "why": [
-     "most recorded: 3 of its class (6% of the class's records)"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "aphelocoma_californica",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "junco_hyemalis",
-    "scientific": "Junco hyemalis",
-    "common": "dark-eyed junco",
-    "kind": "bird",
-    "records": 1311,
-    "why": [
-     "most recorded: 4 of its class (5% of the class's records)"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "aphelocoma_californica",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "regulus_satrapa",
-    "scientific": "Regulus satrapa",
-    "common": "golden-crowned kinglet",
-    "kind": "bird",
-    "records": 1049,
-    "why": [
-     "most recorded: 6 of its class (4% of the class's records)"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "aphelocoma_californica",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "anas_platyrhynchos",
-    "scientific": "Anas platyrhynchos",
-    "common": "mallard",
-    "kind": "bird",
-    "records": 919,
-    "why": [
-     "most recorded: 9 of its class (4% of the class's records)"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "mergus_merganser",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "leuconotopicus_villosus",
-    "scientific": "Leuconotopicus villosus",
-    "common": "hairy woodpecker",
-    "kind": "bird",
-    "records": 707,
-    "why": [
-     "most recorded: 10 of its class (3% of the class's records)"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "melanerpes_formicivorus",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "pandion_haliaetus",
-    "scientific": "Pandion haliaetus",
-    "common": "osprey",
-    "kind": "bird",
-    "records": 77,
-    "why": [
-     "predator"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "buteo_jamaicensis",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "sturnus_vulgaris",
-    "scientific": "Sturnus vulgaris",
-    "common": "european starling",
-    "kind": "bird",
-    "records": 55,
-    "why": [
-     "scavenger"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "aphelocoma_californica",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "accipiter_striatus",
-    "scientific": "Accipiter striatus",
-    "common": "sharp-shinned hawk",
-    "kind": "bird",
-    "records": 14,
-    "why": [
-     "predator"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "buteo_jamaicensis",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "megascops_kennicottii",
-    "scientific": "Megascops kennicottii",
-    "common": "western screech-owl",
-    "kind": "bird",
-    "records": 8,
-    "why": [
-     "predator"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "strix_varia",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "falco_columbarius",
-    "scientific": "Falco columbarius",
-    "common": "merlin",
-    "kind": "bird",
-    "records": 8,
-    "why": [
-     "predator"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": null,
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "larus_glaucescens",
-    "scientific": "Larus glaucescens",
-    "common": "glaucous-winged gull",
-    "kind": "bird",
-    "records": 6,
-    "why": [
-     "predator and scavenger"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": null,
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "larus_californicus",
-    "scientific": "Larus californicus",
-    "common": "california gull",
-    "kind": "bird",
-    "records": 4,
-    "why": [
-     "scavenger"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": null,
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "aegolius_acadicus",
-    "scientific": "Aegolius acadicus",
-    "common": "northern saw-whet owl",
-    "kind": "bird",
-    "records": 3,
-    "why": [
-     "predator"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": "strix_varia",
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   },
-   {
-    "id": "larus_occidentalis",
-    "scientific": "Larus occidentalis",
-    "common": "western gull",
-    "kind": "bird",
-    "records": 3,
-    "why": [
-     "predator and scavenger"
-    ],
-    "body_plan": "bird",
-    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-    "estimate_credits": 30,
-    "stand_in": null,
-    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-   }
-  ]
+  "meshy": []
  },
  "hands": [
   {
@@ -2082,118 +1845,6 @@
    "what": "a lexicon phrase or a species-mix rule",
    "why": [
     "22 cells"
-   ]
-  },
-  {
-   "id": "turdus_migratorius",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "most recorded: 3 of its class (6% of the class's records)"
-   ]
-  },
-  {
-   "id": "junco_hyemalis",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "most recorded: 4 of its class (5% of the class's records)"
-   ]
-  },
-  {
-   "id": "regulus_satrapa",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "most recorded: 6 of its class (4% of the class's records)"
-   ]
-  },
-  {
-   "id": "anas_platyrhynchos",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "most recorded: 9 of its class (4% of the class's records)"
-   ]
-  },
-  {
-   "id": "leuconotopicus_villosus",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "most recorded: 10 of its class (3% of the class's records)"
-   ]
-  },
-  {
-   "id": "pandion_haliaetus",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "predator"
-   ]
-  },
-  {
-   "id": "sturnus_vulgaris",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "scavenger"
-   ]
-  },
-  {
-   "id": "accipiter_striatus",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "predator"
-   ]
-  },
-  {
-   "id": "megascops_kennicottii",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "predator"
-   ]
-  },
-  {
-   "id": "falco_columbarius",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "predator"
-   ]
-  },
-  {
-   "id": "larus_glaucescens",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "predator and scavenger"
-   ]
-  },
-  {
-   "id": "larus_californicus",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "scavenger"
-   ]
-  },
-  {
-   "id": "aegolius_acadicus",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "predator"
-   ]
-  },
-  {
-   "id": "larus_occidentalis",
-   "kind": "bird",
-   "what": "a mesh (Meshy ~30 credits) and its review",
-   "why": [
-    "predator and scavenger"
    ]
   }
  ]

@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-05T21:21:21.853Z",
+ "generated": "2026-11-06T02:57:59.957Z",
  "generator": "client/tools/opening_sprites.html (three.js) + tools/sprite_receiver.py (PIL WebP q90)",
  "note": "Pre-rendered for the opening screen (client/src/arrival.js), which plays them with CSS only.",
  "credits": "Derived renders of the client's animal models (client/assets/*.glb, built by tools/build_*.py, and the procedural models in client/src/animalModels.js) and of the spirit's wisp (client/src/spirit.js). The models' sources, authors and licences are in docs/animal-library.md and in each tile manifest's sources; these renders carry the same credits.",
@@ -414,7 +414,227 @@
    "foot_px": 126,
    "pose": "soaring, wings flat",
    "bytes": 4626
+  },
+  "turdus_migratorius": {
+   "file": "turdus_migratorius.webp",
+   "width": 68,
+   "height": 38,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 33,
+   "pose": "standing",
+   "bytes": 654
+  },
+  "sturnus_vulgaris": {
+   "file": "sturnus_vulgaris.webp",
+   "width": 58,
+   "height": 37,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 32,
+   "pose": "standing",
+   "bytes": 784
+  },
+  "ixoreus_naevius": {
+   "file": "ixoreus_naevius.webp",
+   "width": 67,
+   "height": 36,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 32,
+   "pose": "standing",
+   "bytes": 846
+  },
+  "junco_hyemalis": {
+   "file": "junco_hyemalis.webp",
+   "width": 46,
+   "height": 24,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 21,
+   "pose": "standing",
+   "bytes": 494
+  },
+  "regulus_satrapa": {
+   "file": "regulus_satrapa.webp",
+   "width": 27,
+   "height": 25,
+   "px_per_m": 268,
+   "kind": "bird",
+   "foot_px": 22,
+   "pose": "flying, wings up-stroke",
+   "bytes": 512
+  },
+  "empidonax_difficilis": {
+   "file": "empidonax_difficilis.webp",
+   "width": 35,
+   "height": 35,
+   "px_per_m": 268,
+   "kind": "bird",
+   "foot_px": 32,
+   "pose": "flying, wings up-stroke",
+   "bytes": 544
+  },
+  "megascops_kennicottii": {
+   "file": "megascops_kennicottii.webp",
+   "width": 88,
+   "height": 87,
+   "px_per_m": 268,
+   "kind": "bird",
+   "foot_px": 82,
+   "pose": "flying, wings up-stroke",
+   "bytes": 1932
+  },
+  "aegolius_acadicus": {
+   "file": "aegolius_acadicus.webp",
+   "width": 76,
+   "height": 77,
+   "px_per_m": 268,
+   "kind": "bird",
+   "foot_px": 72,
+   "pose": "flying, wings up-stroke",
+   "bytes": 2096
+  },
+  "leuconotopicus_villosus": {
+   "file": "leuconotopicus_villosus.webp",
+   "width": 73,
+   "height": 67,
+   "px_per_m": 268,
+   "kind": "bird",
+   "foot_px": 64,
+   "pose": "flying, wings up-stroke",
+   "bytes": 1144
+  },
+  "pandion_haliaetus": {
+   "file": "pandion_haliaetus.webp",
+   "width": 224,
+   "height": 170,
+   "px_per_m": 268,
+   "kind": "bird",
+   "foot_px": 88,
+   "pose": "soaring, wings flat",
+   "bytes": 3094
+  },
+  "accipiter_striatus": {
+   "file": "accipiter_striatus.webp",
+   "width": 95,
+   "height": 65,
+   "px_per_m": 268,
+   "kind": "bird",
+   "foot_px": 56,
+   "pose": "soaring, wings flat",
+   "bytes": 1254
+  },
+  "falco_columbarius": {
+   "file": "falco_columbarius.webp",
+   "width": 79,
+   "height": 67,
+   "px_per_m": 268,
+   "kind": "bird",
+   "foot_px": 54,
+   "pose": "soaring, wings flat",
+   "bytes": 804
+  },
+  "larus_glaucescens": {
+   "file": "larus_glaucescens.webp",
+   "width": 177,
+   "height": 148,
+   "px_per_m": 268,
+   "kind": "bird",
+   "foot_px": 86,
+   "pose": "soaring, wings flat",
+   "bytes": 2606
+  },
+  "larus_californicus": {
+   "file": "larus_californicus.webp",
+   "width": 160,
+   "height": 138,
+   "px_per_m": 268,
+   "kind": "bird",
+   "foot_px": 82,
+   "pose": "soaring, wings flat",
+   "bytes": 2408
+  },
+  "larus_occidentalis": {
+   "file": "larus_occidentalis.webp",
+   "width": 175,
+   "height": 148,
+   "px_per_m": 268,
+   "kind": "bird",
+   "foot_px": 86,
+   "pose": "soaring, wings flat",
+   "bytes": 2826
+  },
+  "anas_platyrhynchos": {
+   "file": "anas_platyrhynchos.webp",
+   "width": 159,
+   "height": 81,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 53,
+   "pose": "standing",
+   "bytes": 3496
+  },
+  "dendragapus_fuliginosus": {
+   "file": "dendragapus_fuliginosus.webp",
+   "width": 138,
+   "height": 81,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 75,
+   "pose": "standing",
+   "bytes": 2088
+  },
+  "marmota_olympus": {
+   "file": "marmota_olympus.webp",
+   "width": 174,
+   "height": 102,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 91,
+   "pose": "standing",
+   "bytes": 3554
+  },
+  "tamias_amoenus": {
+   "file": "tamias_amoenus.webp",
+   "width": 54,
+   "height": 26,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 22,
+   "pose": "standing",
+   "bytes": 844
+  },
+  "sorex_monticolus": {
+   "file": "sorex_monticolus.webp",
+   "width": 31,
+   "height": 12,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 9,
+   "pose": "standing",
+   "bytes": 276
+  },
+  "anaxyrus_boreas": {
+   "file": "anaxyrus_boreas.webp",
+   "width": 31,
+   "height": 19,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 14,
+   "pose": "standing",
+   "bytes": 450
+  },
+  "rana_cascadae": {
+   "file": "rana_cascadae.webp",
+   "width": 21,
+   "height": 13,
+   "px_per_m": 268,
+   "kind": "ground",
+   "foot_px": 8,
+   "pose": "standing",
+   "bytes": 344
   }
  },
- "total_bytes": 997016
+ "total_bytes": 1030066
 }
