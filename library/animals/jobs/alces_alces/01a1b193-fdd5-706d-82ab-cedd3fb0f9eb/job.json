@@ -1,0 +1,76 @@
+{
+  "species": "alces_alces",
+  "mode": "image",
+  "kind": "image-to-3d",
+  "task_id": "01a1b193-fdd5-706d-82ab-cedd3fb0f9eb",
+  "endpoint": "https://api.meshy.ai/openapi/v1/image-to-3d",
+  "request": {
+    "image_url": "(local file reference.png, sent as a data URI)",
+    "ai_model": "latest",
+    "should_texture": true,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_resolution": "2k",
+    "enable_pbr": false,
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 30000,
+    "moderation": false
+  },
+  "prompt": null,
+  "image": "/Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/pipeline/_cache/references/alces_alces/inat_299039100_crop/reference.png",
+  "preview_job": null,
+  "estimated_credits": 30,
+  "balance_before": 857,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-06T15:57:08+00:00",
+    "created_at": "2026-11-06T15:57:10+00:00",
+    "started_at": "2026-11-06T15:57:10+00:00",
+    "finished_at": "2026-11-06T15:58:00+00:00",
+    "expires_at": "2026-11-09T15:58:00+00:00",
+    "downloaded": "2026-11-06T15:58:19+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur, world pipeline",
+  "progress": 100,
+  "task": {
+    "id": "01a1b193-fdd5-706d-82ab-cedd3fb0f9eb",
+    "type": "image-to-3d",
+    "status": "SUCCEEDED",
+    "created_at": 1793980630115,
+    "started_at": 1793980630120,
+    "finished_at": 1793980680481,
+    "expires_at": 1794239880481,
+    "consumed_credits": 30,
+    "task_error": null
+  },
+  "credits_charged": 30,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 4322720,
+      "sha256": "5f8b8e1fecfa255876c794c9dfb83e956be91b4592ff73c4b03d593f93223b31",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b193-fdd5-706d-82ab-cedd3fb0f9eb/output/model.glb"
+    },
+    {
+      "file": "texture_base_color.png",
+      "bytes": 6265302,
+      "sha256": "8922f5dff0f811ce815b75c8f3e9f6d70b26052cf237afddaa4cf190353bf755",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b193-fdd5-706d-82ab-cedd3fb0f9eb/output/texture_0.png"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 96848,
+      "sha256": "4e840d36b118198cbdce12d7661371361955814e1e08b9ec0358bcb71e00b7d7",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b193-fdd5-706d-82ab-cedd3fb0f9eb/output/preview.png"
+    }
+  ],
+  "balance_after": 827
+}

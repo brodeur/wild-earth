@@ -46,10 +46,15 @@ const FH_LOOK = {   // [lobe, open, vase, fine]
   cercocarpus_betuloides: [0.3, 0.45, 0.25, 0], diplacus_aurantiacus: [0.2, 0.5, 0.0, 1], rosa_californica: [0.28, 0.5, 0.05, 0],
   symphoricarpos_albus: [0.22, 0.4, 0.1, 1], ribes_roezlii: [0.26, 0.5, 0.05, 0], ribes_malvaceum: [0.22, 0.5, 0.15, 0] };
 const FH_DEFAULT = [0.25, 0.5, 0.05, 0];
+// A shrub not in the table (2026-11-06): the defaults, its leaves fine where its record's leaves are as small as the
+// table's fine-leaved shrubs' (coyote brush, buckbrush, snowberry, monkeyflower: 12-25 mm; its broad-leaved ones 40 mm
+// and over), so big sagebrush's small grey leaves take chamise's fine picture, not manzanita's broad leaves.
+const FH_FINE_LEAF_M = 0.025;
+const fhLook = id => FH_LOOK[id] || [...FH_DEFAULT.slice(0, 3), (SPECIES[id]?.foliage?.leaf_size_m ?? 1) <= FH_FINE_LEAF_M ? 1 : 0];
 export const FH = SPECIES_IDS.filter(id => SPECIES[id].shrubLike && id !== 'arctostaphylos_viscida' && id !== 'adenostoma_fasciculatum').slice(0, FH_SLOTS);   // exported for forage.js (the glow weights by index)
 FH.forEach((id, k) => { for (const a of SPECIES[id].aliases || []) if (KIND[a] === undefined) KIND[a] = -1 - k; });
 const FH_N = FH.length;
-const fhArr = i => `float[${FH_N}](${FH.map(id => (FH_LOOK[id] || FH_DEFAULT)[i].toFixed(2)).join(', ')})`;
+const fhArr = i => `float[${FH_N}](${FH.map(id => fhLook(id)[i].toFixed(2)).join(', ')})`;
 // The foothill shrubs take negative kinds: shadows.js casts every kind over 1.5 as grass (its season height and a
 // grass blade's sway, 0.35 H), which swung a toyon's shadow metres across its neighbours in the wind.
 // Seed layout: integer part random, fractional part the silhouette variant (variant + 0.5) / 4.
@@ -139,7 +144,8 @@ const VERT = /* glsl */`
     a *= (manz || fh) ? mix(vec3(0.94, 1.0, 1.1), vec3(1.06, 1.03, 0.9), v1) : mix(vec3(0.9, 1.0, 1.04), vec3(1.1, 1.03, 0.86), v1);
     a *= mix(vec3(1.05, 1.0, 0.9), vec3(0.94, 1.0, 1.06), stand) * (0.78 + 0.44 * v2);
     float al = dot(a, G_LUMA);
-    a = mix(a, gc * al / max(gl, 1e-3), 0.2) * mix(1.0, clamp(gl / 0.075, 0.8, 1.25), 0.5);
+    // the chaparral domes are pulled toward the photo under them; a foothill shrub keeps its record's colour (fhSeason)
+    if (!fh) a = mix(a, gc * al / max(gl, 1e-3), 0.2) * mix(1.0, clamp(gl / 0.075, 0.8, 1.25), 0.5);
     vAlbedo = a;
     vSun = sunLight * cloudShadow(C); vAmb = ambientGround * occ; vAmbUp = ambientSky * occ;
     vIn = atmosphereApply(vec3(0.0), C, cameraPosition);
@@ -909,10 +915,9 @@ export function ShrubField(tile, ground, uniforms) {
 // weights) and crown_width_ratio, as the 3D shrubs.
 // FH (the list of ids, kinds -1..-FH_N) and FH_LOOK are declared with KIND above.
 const FH_UNDER = { 1: 0.14, 2: 0.08, 3: 0.12, 5: 0.03, 6: 0.18 }, FH_CHAP = 0.8, FH_AREA = 3, FH_MAX = 0.4;
-// Albedo from a species file's sRGB colour (linear, scaled to the chaparral shrubs' level: chamise's summer
-// colour comes out within a few per cent of its own albedo here).
-const FH_K = [0.6, 0.6, 0.48];
-const linK = c => c.map((v, i) => Math.pow(v / 255, 2.2) * FH_K[i]);
+// Albedo from a species file's sRGB colour: linear, times FH_GAIN, the same for every channel (2026-11-06).
+const FH_GAIN = 1.3;
+const linK = c => c.map(v => Math.pow(v / 255, 2.2) * FH_GAIN);
 const seasonOfDry = d => d < 0.05 ? 'winter' : d < 0.5 ? 'spring' : d < 0.93 ? 'fall' : 'summer';   // as FRAG reads it
 function fhSeason(u, season) {
   const month = seasonMonth(season);

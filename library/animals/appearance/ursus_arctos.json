@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "ursus_arctos",
  "scientific": "Ursus arctos",
  "common": "brown bear",
@@ -61,5 +61,28 @@
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "body cream, reddish, dark brown, brown; back brownish-black, whitish-cream, white; neck white; legs yellowish-brown"
+ "summary": "body cream, reddish, dark brown, brown; back brownish-black, whitish-cream, white; neck white; legs yellowish-brown",
+ "features": {
+  "horns": {
+   "described": false,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [
+    "long"
+   ],
+   "length_m": [
+    0.065,
+    0.21
+   ]
+  },
+  "shoulder_m": [
+   0.9,
+   1.5
+  ],
+  "head_body_m": null,
+  "total_m": null
+ }
 }

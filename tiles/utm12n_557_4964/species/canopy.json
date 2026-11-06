@@ -13,8 +13,90 @@
  },
  "plots": [],
  "rule": "pipeline/tree_cards.py choose(): plots, then named trees of open place descriptions, then the tile's most-recorded WCVP trees that reach the subcanopy; shares by tier (TIER_SHARE)",
- "trees": [],
- "queued": [],
+ "trees": [
+  {
+   "id": "artemisia_tridentata",
+   "scientific": "Artemisia tridentata",
+   "family": "Asteraceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 32.0,
+   "evidence": [
+    "GBIF: 32 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.8205,
+   "research": false,
+   "card": true
+  },
+  {
+   "id": "populus_tremuloides",
+   "scientific": "Populus tremuloides",
+   "family": "Salicaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 3.0,
+   "evidence": [
+    "GBIF: 3 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0769,
+   "research": false,
+   "card": true
+  },
+  {
+   "id": "amelanchier_alnifolia",
+   "scientific": "Amelanchier alnifolia",
+   "family": "Rosaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 2.0,
+   "evidence": [
+    "GBIF: 2 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0513,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "ficus_densifolia",
+   "scientific": "Ficus densifolia",
+   "family": "Moraceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 2.0,
+   "evidence": [
+    "GBIF: 2 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0513,
+   "research": false,
+   "card": false
+  }
+ ],
+ "queued": [
+  {
+   "id": "artemisia_tridentata",
+   "scientific": "Artemisia tridentata",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "populus_tremuloides",
+   "scientific": "Populus tremuloides",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "amelanchier_alnifolia",
+   "scientific": "Amelanchier alnifolia",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "ficus_densifolia",
+   "scientific": "Ficus densifolia",
+   "why": "needs a research record (its height decides whether it stays)"
+  }
+ ],
  "log": [
   "plot vela_apaza_2024_los_amigos: not used (7556 km, 0 m apart, climate Am)"
  ],

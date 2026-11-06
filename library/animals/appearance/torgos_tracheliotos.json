@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "torgos_tracheliotos",
  "scientific": "Torgos tracheliotos",
  "common": "lappet-faced vulture",
@@ -36,5 +36,26 @@
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "back blackish; belly and underparts white, pure white, buff-brown"
+ "summary": "back blackish; belly and underparts white, pure white, buff-brown",
+ "features": {
+  "horns": {
+   "described": false,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [],
+   "length_m": [
+    0.33,
+    0.36
+   ]
+  },
+  "shoulder_m": null,
+  "head_body_m": [
+   0.95,
+   1.15
+  ],
+  "total_m": null
+ }
 }

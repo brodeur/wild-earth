@@ -41,8 +41,10 @@
 #   - colour: as build_reptile.py: each source face reads the texture (sRGB decoded to linear), the colours clustered into
 #     the skin's palette (k-means, 10), each face of each tier the commonest palette colour under it (the source faces
 #     carried through the same straightening); no texture: the vertex colours, else a neutral olive-brown;
-#   - decimates (collapse, X symmetry) by the reptile build's rule (lod0 1,200 + 800 log10(mass / 0.1 kg), 1,000-5,000,
-#     times 1-1.5 by how patterned the skin is; lod1 0.36, lod2 0.1 of it, at least 120).
+#   - the tiers by the reptile build's budget (lod0 1,200 + 800 log10(mass / 0.1 kg), 1,000-5,000, times 1-1.5 by how
+#     patterned the skin is; lod1 0.36, lod2 0.1 of it, at least 120), each rebuilt as a structured tube (rings of 16,
+#     10 or 6 points cast from the centreline to the surface; 2026-11-06: a collapse decimation lost a garter snake's
+#     stripes), not decimated.
 # The gates (SystemExit, so pipeline/fauna_models.py counts a failed attempt, before the refine is paid when it builds the
 # preview first): a mesh taller than 0.35 of its extent (not lying on the ground); the body in pieces (the largest under
 # 85% of the remeshed vertices); a line that jumps (a bin's centroid more than 6 median steps from the last: the body
@@ -320,16 +322,53 @@ L0 = int(min(5000, max(1000, 1200 + 800 * math.log10(MASS / 0.1))) * (1 + 0.5 * 
 TIERS = [('lod0', int(opt('--lod0') or L0)), ('lod1', max(120, int(0.36 * L0))), ('lod2', max(120, int(0.1 * L0)))]
 print('INFO palette shares', [round(float((lab == k).mean()), 3) for k in range(len(cent))], 'pattern %.4f -> tiers %s' % (PATTERN, TIERS))
 def face_color(p):
-    c = p.center; rad = max(0.004 * Lm, math.sqrt(max(p.area, 1e-12)) * 0.75)
+    c = p.center; rad = max(0.004 * Lm, math.sqrt(max(p.area, 1e-12)) * 1.5)
     hits = kd.find_range(c, rad)
     if len(hits) < 3: hits = kd.find_n(c, 6)
     votes = {}
     for _, i, d in hits: votes[LAB[i]] = votes.get(LAB[i], 0.0) + 1.0 / (0.0005 * Lm + d)
     return PAL[max(votes, key=votes.get)]
 
+# ---- the tiers as a structured tube (2026-11-06, iteration 7) ----
+# A collapse decimation of a tube leaves long triangles across it, and a striped snake's stripes, which run along the
+# body, were lost in the vote (the terrestrial garter snake's three pale stripes came out as grey flecks). Each tier is
+# instead rebuilt as rings along the straightened centreline: every ring AROUND[tier] points round, each cast from the
+# centreline out to the surface (a BVH ray), the rings spaced evenly to the tier's triangle budget, both ends closed by a
+# fan to the snout's and the tail tip's points; so a stripe has faces running with it. The palette vote is unchanged.
+if os.environ.get('SNAKE_DUMP'):   # debugging: the carried source colours in the straightened frame
+    np.save(os.environ['SNAKE_DUMP'], np.concatenate([CNEW, np.array(cols)], axis=1))
+from mathutils.bvhtree import BVHTree
+BVH = BVHTree.FromObject(ob, bpy.context.evaluated_depsgraph_get())
+AROUND = {'lod0': 16, 'lod1': 10, 'lod2': 6}
+def tube_tier(name, target):
+    na = AROUND[name]; nr = max(8, int(target / (2 * na)))
+    y0, y1 = snout_y, tail_y
+    verts, faces = [], []
+    ys = [y0 + (y1 - y0) * (k + 0.5) / nr for k in range(nr)]
+    for y in ys:
+        c = Vector((0.0, y, hc_m(min(max(y + Lm / 2, 0.0), Lm))))
+        for j in range(na):
+            th = 2 * math.pi * j / na
+            d = Vector((math.cos(th), 0.0, math.sin(th)))
+            hit = BVH.ray_cast(c, d, 0.5)
+            r = (hit[0] - c).length if hit[0] is not None else 0.2 * RMAX * SC
+            verts.append(c + d * r)
+    for k in range(nr - 1):
+        for j in range(na):
+            a, b = k * na + j, k * na + (j + 1) % na
+            faces += [(a, b + na, b), (a, a + na, b + na)]
+    sn = len(verts); verts.append(Vector((0.0, y0, hc_m(0.0))))
+    tl = len(verts); verts.append(Vector((0.0, y1, hc_m(Lm))))
+    for j in range(na):
+        faces.append((sn, j, (j + 1) % na))
+        o_ = (nr - 1) * na; faces.append((tl, o_ + (j + 1) % na, o_ + j))
+    me2 = bpy.data.meshes.new(name); me2.from_pydata([tuple(v) for v in verts], [], faces); me2.update()
+    o2 = bpy.data.objects.new(name, me2); bpy.context.scene.collection.objects.link(o2)
+    return o2, len(faces)
+
 tiers = []
 for name, target in TIERS:
-    o, n0 = A.tier_copy(ob, target, symmetry=True)
+    o, n0 = tube_tier(name, target)
     m = o.data
     R_ = {v.index: rig_at(v.co) for v in m.vertices}
     t = A.emit(m, face_color, lambda i: R_[i])

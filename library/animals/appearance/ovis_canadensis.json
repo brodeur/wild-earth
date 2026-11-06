@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "ovis_canadensis",
  "scientific": "Ovis canadensis",
  "common": "bighorn sheep",
@@ -41,5 +41,29 @@
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "body light brown, grayish, chocolate brown, grey; back white"
+ "summary": "body light brown, grayish, chocolate brown, grey; back white",
+ "features": {
+  "horns": {
+   "described": true,
+   "words": [
+    "long",
+    "curved"
+   ],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [],
+   "length_m": null
+  },
+  "shoulder_m": [
+   0.9,
+   1.05
+  ],
+  "head_body_m": null,
+  "total_m": [
+   1.6,
+   1.85
+  ]
+ }
 }

@@ -4,13 +4,15 @@
 # this one reads everything from the mesh, its texture and the species' trait card.
 #
 #   /Applications/Blender.app/Contents/MacOS/Blender -b --factory-startup -P tools/build_quadruped.py -- \
-#       <job dir or model.glb> <out.glb> --species <code> [--withers <m>] [--flip] [--meshy-task <id>]
+#       <job dir or model.glb> <out.glb> --species <code> [--withers <m>] [--flip] [--align] [--meshy-task <id>]
 #   then, as for the hand builds:
 #   arch -arm64 .venv/bin/python tools/rig_quadruped.py <out.glb>
 #   ~/.nvm/versions/node/v24.13.0/bin/node tools/bake_gait.mjs <out.glb> --tile <tile>
 #
 # Source: a Meshy text-to-3D job directory (tools/meshy_generate.py: model.glb, and texture_base_color.png after a refine)
-# or a GLB. Meshy's convention: the animal faces glTF +z (Blender -y), feet on the floor; --flip turns it round.
+# or a GLB. Meshy's convention: the animal faces glTF +z (Blender -y), feet on the floor; --flip turns it round. An
+# image-to-3D job (job.json kind 'image-to-3d', or --align) is set square to its photo's camera: it is turned about the
+# vertical onto its long axis (snapped to the quarter turn) and its head end found by rule (see ALIGN below).
 #
 # What it does:
 #   - imports the mesh (one welded object, loose shards under 2% of the faces dropped) and normalises it to 2.0 units
@@ -54,6 +56,7 @@ job = {}
 try: job = json.load(open(os.path.join(JOB, 'job.json')))
 except (OSError, ValueError): pass
 TASK = opt('--meshy-task') or job.get('task_id') or job.get('id') or os.path.basename(JOB.rstrip('/'))
+ALIGN = '--align' in argv or job.get('kind') == 'image-to-3d'
 traits = {}
 for d in (('traits',), ()):   # the generated trait card, else the library record
     try: traits = json.load(open(os.path.join(ROOT, 'library', 'animals', *d, f'{SPECIES}.json'))); break
@@ -78,6 +81,31 @@ ob = A.import_glb_mesh(GLB)
 me = ob.data; V = me.vertices
 if FLIP:
     for v in V: v.co.x, v.co.y = -v.co.x, -v.co.y
+# an image-to-3D mesh (the second rung, from a reference photo: pipeline/fauna_models.py) faces the camera that took the
+# photo, so a side-on photo gives an animal lying along x, head left or right: turn it about the vertical so its long
+# horizontal axis (the principal axis of its footprint) runs along y, then the head to -y: the end with more of the body
+# beyond the outermost foot (a head and neck outweigh a tail)
+if ALIGN:
+    import numpy as _np
+    # the whole body's principal horizontal axis, snapped to the nearest quarter turn when within 20 degrees of one (Meshy
+    # sets a model square to the photo's camera; a turned head, a curled tail or a stance with one foot forward tilts the
+    # principal axis by up to ~15 degrees, and the feet's footprint is sheared by the stance)
+    xy = _np.array([(v.co.x, v.co.y) for v in V]); xy0 = xy.mean(0)
+    w_, vec = _np.linalg.eigh(_np.cov((xy - xy0).T)); ax = vec[:, int(_np.argmax(w_))]
+    ang = math.atan2(ax[0], ax[1])   # rotate by -ang about z: the axis onto +y
+    q = round(ang / (math.pi / 2)) * (math.pi / 2)
+    if abs(ang - q) < math.radians(20): ang = q
+    ca, sa = math.cos(-ang), math.sin(-ang)
+    for v in V:
+        x, y = v.co.x - xy0[0], v.co.y - xy0[1]
+        v.co.x, v.co.y = ca * x - sa * y, sa * x + ca * y
+    zmin = min(v.co.z for v in V); zmax = max(v.co.z for v in V)
+    feet = [v.co.y for v in V if v.co.z < zmin + 0.03 * (zmax - zmin)]
+    fy0, fy1 = min(feet), max(feet)
+    n_lo = sum(1 for v in V if v.co.y < fy0); n_hi = sum(1 for v in V if v.co.y > fy1)
+    if n_hi > n_lo:
+        for v in V: v.co.x, v.co.y = -v.co.x, -v.co.y
+    print('INFO aligned: turned %.1f deg about z; beyond the feet %d (head end) vs %d' % (math.degrees(ang), max(n_lo, n_hi), min(n_lo, n_hi)))
 # normalise: 2.0 units along y, feet on z = 0, centred in x
 y0, y1 = min(v.co.y for v in V), max(v.co.y for v in V)
 x0, x1 = min(v.co.x for v in V), max(v.co.x for v in V)
@@ -136,12 +164,16 @@ ymax = max(v.co.y for v in V)
 far = max(V, key=lambda v: v.co.y).index
 # a tail is narrower than the body: under 4% of the length from the midline, or under 45% of the body's half-width (a
 # squirrel's or a wildebeest's bushy tail)
-xs = sorted(abs(v.co.x) for v in V); TAIL_W = max(0.08, 0.45 * xs[int(0.97 * (len(xs) - 1))])
+# (the body's width from its rear half: a moose's antlers doubled it, and the hindquarters passed for a tail)
+xs = sorted(abs(v.co.x) for v in V if v.co.y > 0); TAIL_W = max(0.08, 0.45 * xs[int(0.97 * (len(xs) - 1))])
 tail, yc = [], 0.3
 while yc < 0.95:
     comps = A.components(adj, [v.index for v in V if v.co.y > yc])
     c = next(c for c in comps if far in c)
-    if max(abs(V[i].co.x) for i in c) < TAIL_W and len(c) < 0.2 * len(V): tail = c; break
+    # and not standing on the floor: a hind leg stepped back behind the rump (a moose, 2026-11-06) reaches it; the
+    # library's tails end 0.15 or more above it
+    foot = min(V[i].co.z for i in c) < 0.03
+    if max(abs(V[i].co.x) for i in c) < TAIL_W and len(c) < 0.2 * len(V) and not foot: tail = c; break
     yc += 0.01
 tailset = set(tail)
 TA, tfrac = ([], {})
@@ -150,6 +182,9 @@ if tail:
     if roots: TA, tfrac = A.tube_axis(me, adj, tail, roots)
     if len(TA) < 3 or not roots: tail, tailset, TA, tfrac = [], set(), [], {}
 print('INFO tail', 'cut y %.3f, %d vertices' % (yc, len(tail)) if tail else 'none found')
+if tail and '--debug-tail' in argv:
+    _zs = [V[i].co.z for i in tail]; _xs = [V[i].co.x for i in tail]
+    print('DEBUG tail z %.3f-%.3f x %.3f-%.3f mean x %.3f far z %.3f TAIL_W %.3f' % (min(_zs), max(_zs), min(_xs), max(_xs), sum(_xs) / len(_xs), V[far].co.z, TAIL_W))
 
 # ---- feet, legs ----
 low = [v for v in V if v.co.z < 0.03 and v.index not in tailset]
@@ -168,14 +203,20 @@ def belly_at(y):
 bz = [b for b in (belly_at(yff + (yfh - yff) * t) for t in (0.35, 0.5, 0.65)) if b is not None]
 zcut = min(bz) - 0.03 if bz else 0.5 * max(v.co.z for v in V if abs(v.co.y - yff) < 0.05)
 print('INFO feet y fore/hind %.3f %.3f, gap %.3f, leg cut z %.3f' % (yff, yfh, gap, zcut))
+# what touches the floor must split into fore and hind feet with clear floor between them: a body lying on the floor (a
+# badger from a photo of one lying in grass, 2026-11-06: floor contact all along, the largest gap 0.009) is not standing
+if gap < 0.1: raise SystemExit(f'{SPECIES}: no clear gap between fore and hind feet on the floor (largest {gap:.3f} of 2.0): lying down?')
 # a leg is a piece below the cut that stands on the floor; a piece that hangs below it without reaching the floor (an
 # elephant's trunk, a long mane or tail tuft) is not
 LEGV = set()
 for c in A.components(adj, [v.index for v in V if v.index not in tailset and v.co.z < zcut]):
     if any(V[i].co.z < 0.03 for i in c): LEGV.update(c)
+# left from right by the legs' own middle, not the bounding box's: a moose's antlers spread further to one side than the
+# other, and the box's centre put both forelegs on one side ("found 3 leg columns", 2026-11-06)
+_lx = sorted(V[i].co.x for i in LEGV); XL = _lx[len(_lx) // 2] if _lx else 0.0
 legs = {}
 for i in LEGV:
-    v = V[i]; legs.setdefault((v.co.y < ymid, v.co.x > 0), []).append(i)
+    v = V[i]; legs.setdefault((v.co.y < ymid, v.co.x > XL), []).append(i)
 if len(legs) < 4: raise SystemExit(f'{SPECIES}: found {len(legs)} leg columns below z {zcut:.3f}, not 4 (not standing on four feet?)')
 # each quadrant's leg stands on the floor there: a walking pose (a hind foot stepped under the body) fails here, not in the game
 for k, vs in legs.items():
@@ -259,13 +300,14 @@ print('INFO pattern (mean neighbour lightness step) %.4f -> tiers %s' % (PATTERN
 
 # ---- per-vertex part on the full mesh (decimation keeps vertex groups) ----
 ymid_s = (pivots[(True, True)].y + pivots[(False, True)].y) / 2
+XLs = XL * S
 def rig_full(i):
     p = V[i].co
     if i in tailset:
         t = tfrac.get(i, 0.0)
         if t >= 0.5: return dict(part=8, partw=A.smooth(0.5, 0.62, t), pivot=TIP)
         return dict(part=3, partw=A.smooth(0.0, 0.12, t), pivot=TA[0])
-    k = (p.y < ymid_s, p.x > 0); pv = pivots[k]; r = pivots[k + ('r',)] * 1.25
+    k = (p.y < ymid_s, p.x > XLs); pv = pivots[k]; r = pivots[k + ('r',)] * 1.25
     dxy = ((p.x - pv.x) ** 2 + (p.y - pv.y) ** 2) ** 0.5
     bl = 0.03 * S
     # below the cut only the pieces standing on the floor are leg (an elephant's trunk goes to the head below)
@@ -300,7 +342,7 @@ for name, target in TIERS:
         pid = max((k for k in ('p1', 'p2', 'p3', 'p6', 'p8') if k in w), key=lambda k: w[k], default=None)
         if pid is None: R[v.index] = dict(part=0, partw=0.0, pivot=Vector()); continue
         part = int(pid[1:]); co = v.co
-        piv = TA[0] if part == 3 else TIP if part == 8 else NB if part == 6 else pivots[(co.y < ymid_s, co.x > 0)]
+        piv = TA[0] if part == 3 else TIP if part == 8 else NB if part == 6 else pivots[(co.y < ymid_s, co.x > XLs)]
         R[v.index] = dict(part=part, partw=min(1.0, w[pid]), pivot=piv)
     t = A.emit(m, face_color, lambda i: R[i])
     bpy.data.objects.remove(o)

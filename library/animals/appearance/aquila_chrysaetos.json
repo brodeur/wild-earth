@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "aquila_chrysaetos",
  "scientific": "Aquila chrysaetos",
  "common": "golden eagle",
@@ -80,6 +80,7 @@
  "dropped": {
   "regional": 4,
   "young": 8,
+  "morph": 1,
   "no body word": 1,
   "other taxa": 1,
   "not the body": 1
@@ -100,5 +101,20 @@
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "body dark brown, golden-brown, black; flanks golden; belly and underparts brownish gray; head golden, blackish; neck golden; legs yellow; tail grey, white, grayish brown with white, black bands; wings grey, white, rusty brown, brownish gray"
+ "summary": "body dark brown, golden-brown, black; flanks golden; belly and underparts brownish gray; head golden, blackish; neck golden; legs yellow; tail grey, white, grayish brown with white, black bands; wings grey, white, rusty brown, brownish gray",
+ "features": {
+  "horns": {
+   "described": true,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [],
+   "length_m": null
+  },
+  "shoulder_m": null,
+  "head_body_m": null,
+  "total_m": null
+ }
 }

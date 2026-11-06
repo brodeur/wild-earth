@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "crocuta_crocuta",
  "scientific": "Crocuta crocuta",
  "common": "spotted hyaena",
@@ -99,5 +99,26 @@
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "body pale greyish-brown, sandy, yellowish, gray with reddish, deep brown, almost blackish spots; back yellowish-grey, reddish-brown, blackish with white bands; head brownish, blackish with white bands; legs light brown with blackish spots; tail black tip"
+ "summary": "body pale greyish-brown, sandy, yellowish, gray with reddish, deep brown, almost blackish spots; back yellowish-grey, reddish-brown, blackish with white bands; head brownish, blackish with white bands; legs light brown with blackish spots; tail black tip",
+ "features": {
+  "horns": {
+   "described": false,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [],
+   "length_m": [
+    0.3,
+    0.36
+   ]
+  },
+  "shoulder_m": [
+   0.85,
+   1.175
+  ],
+  "head_body_m": null,
+  "total_m": null
+ }
 }

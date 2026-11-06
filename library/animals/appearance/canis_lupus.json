@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "canis_lupus",
  "scientific": "Canis lupus",
  "common": "gray wolf",
@@ -40,5 +40,26 @@
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "body white, black, gray, cinnamon; back black"
+ "summary": "body white, black, gray, cinnamon; back black",
+ "features": {
+  "horns": {
+   "described": false,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [],
+   "length_m": [
+    0.35,
+    0.52
+   ]
+  },
+  "shoulder_m": [
+   0.7,
+   0.875
+  ],
+  "head_body_m": null,
+  "total_m": null
+ }
 }

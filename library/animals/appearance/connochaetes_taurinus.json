@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "connochaetes_taurinus",
  "scientific": "Connochaetes taurinus",
  "common": "blue wildebeest",
@@ -76,5 +76,31 @@
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "body deep slate, bluish-gray, light gray, grayish-brown; back dark stripes; neck black, white with dark brown, dark stripes; tail black"
+ "summary": "body deep slate, bluish-gray, light gray, grayish-brown; back dark stripes; neck black, white with dark brown, dark stripes; tail black",
+ "features": {
+  "horns": {
+   "described": true,
+   "words": [
+    "long",
+    "curved"
+   ],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [
+    "long"
+   ],
+   "length_m": [
+    0.6,
+    1.0
+   ]
+  },
+  "shoulder_m": null,
+  "head_body_m": [
+   1.7,
+   2.4
+  ],
+  "total_m": null
+ }
 }

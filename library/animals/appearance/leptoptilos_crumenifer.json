@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "leptoptilos_crumenifer",
  "scientific": "Leptoptilos crumenifer",
  "common": "marabou stork",
@@ -36,18 +36,38 @@
    "markings": []
   }
  },
- "facts": 7,
- "dropped": {},
+ "facts": 5,
+ "dropped": {
+  "morph": 1
+ },
  "sources": [
   {
    "url": "https://en.wikipedia.org/wiki/Marabou_stork",
    "title": "Marabou stork",
    "revision": 1381410972,
-   "facts": 7
+   "facts": 5
   }
  ],
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "back black; belly and underparts white; neck pink; legs white; wings black"
+ "summary": "back black; belly and underparts white; neck pink; legs white; wings black",
+ "features": {
+  "horns": {
+   "described": false,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [],
+   "length_m": [
+    1.2,
+    1.3
+   ]
+  },
+  "shoulder_m": null,
+  "head_body_m": null,
+  "total_m": null
+ }
 }

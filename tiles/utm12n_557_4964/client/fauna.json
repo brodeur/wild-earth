@@ -367,6 +367,11 @@
     "herbivore"
    ],
    "known": [],
+   "model": {
+    "path": "fauna/alces_alces.glb",
+    "kind": "quadruped",
+    "skin": true
+   },
    "active_hours": [
     1,
     1,
@@ -591,6 +596,11 @@
     "herbivore"
    ],
    "known": [],
+   "model": {
+    "path": "fauna/oreamnos_americanus.glb",
+    "kind": "quadruped",
+    "skin": true
+   },
    "active_hours": [
     0,
     0,
@@ -2488,6 +2498,12 @@
    "reptile": "snake",
    "records": 28,
    "mass_source": "amniote life-history database (species)",
+   "model": {
+    "path": "fauna/thamnophis_elegans.glb",
+    "kind": "snake",
+    "archetype": "snake",
+    "skin": false
+   },
    "active_hours": [
     0,
     0,

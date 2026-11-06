@@ -1,253 +1,66 @@
 {
  "tile": "utm12n_557_4964",
- "started": "2026-11-06T14:18:09+00:00",
- "budget": 100,
- "reserve": 300,
+ "kind": "redo",
+ "started": "2026-11-06T15:55:50+00:00",
+ "budget": 60,
+ "reserve": 737,
  "species": [
   {
-   "code": "aquila_chrysaetos",
-   "why": "scavenger or raptor",
-   "attempts": 1,
-   "credits": 30,
-   "jobs": [
-    {
-     "mode": "preview",
-     "dir": "library/animals/jobs/aquila_chrysaetos/01a1b139-64da-72a5-8808-bb8b7b5f1098"
-    },
-    {
-     "mode": "refine",
-     "dir": "library/animals/jobs/aquila_chrysaetos/01a1b13a-17a9-7623-a5c0-5c9d78386a29"
-    }
-   ],
-   "ok": true,
-   "archetype": "soar",
-   "prompt": "A wild Golden eagle (Aquila chrysaetos) of Park County, Wyoming, United States, one adult bird soaring in mid-air, realistic anatomy and proportions. Seen level, the body horizontal like an airplane: both wings fully spread flat and straight out to the sides, wingtips level with the body, the flight feathers spread, the tail spread, the head forward, the legs and feet tucked up under the body, nothing hanging below. Single bird, no base, no perch, no ground. Game-ready.",
-   "texture_prompt": "Natural plumage colours and markings of a wild adult Golden eagle (Aquila chrysaetos) as seen in Park County, Wyoming, United States, both the upper side and the underside of the wings and tail in their true colours. Coloured as the adult is described: body dark brown, golden-brown, black; flanks golden; belly and underparts brownish gray; head golden, blackish; neck golden; legs yellow; tail grey, white, grayish brown with white, black bands; wings grey, white, rusty brown, brownish gray. Realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin and feet in their true colours.",
-   "build_log": "INFO islands 2 dropped faces 40 kept 30557\nINFO colour from texture source faces 30557 archetype soar mass 4.248\nINFO remeshed 21840 faces\nINFO soar: wing root x 0.100, wrist x 0.480, semi-span 1.000, body height 0.140, tail root y -0.508, neck y -0.884, levelled 2.8 deg\nINFO size by mass at 250 kg/m3 over the body slab volume 0.0166 (body 0.0076) units, scale 1.3052 -> length 0.795 m, height 0.836 m, width 2.611 m\nINFO span 2.611 m (the span rule for a soarer, 1.4 M^0.39: 2.461 m)\nINFO palette shares [0.096, 0.128, 0.075, 0.097, 0.162, 0.068, 0.139, 0.136, 0.033, 0.065] pattern 0.0805 -> tiers [('lod0', 3455), ('lod1', 1243), ('lod2', 345)]\nINFO loose pieces 15 joined to their nearest part\nINFO tier lod0 from 43680 to 3454 triangles with the cards\nINFO tier lod1 from 43680 to 1242 triangles with the cards\nINFO tier lod2 from 43680 to 344 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/aquila_chrysaetos.glb 337444 bytes; lod0 3454 tris, lod1 1242 tris, lod2 344 tris",
-   "colour_check": {
-    "ok": true,
-    "score": 0.999,
-    "fails": []
-   }
-  },
-  {
-   "code": "pelecanus_erythrorhynchos",
-   "why": "bird by mass, one per archetype first",
-   "attempts": 1,
-   "credits": 30,
-   "jobs": [
-    {
-     "mode": "preview",
-     "dir": "library/animals/jobs/pelecanus_erythrorhynchos/01a1b13a-e342-747c-b0f6-5c28b8cfa30e"
-    },
-    {
-     "mode": "refine",
-     "dir": "library/animals/jobs/pelecanus_erythrorhynchos/01a1b13b-fc92-70ef-9065-539256035ec3"
-    }
-   ],
-   "ok": true,
-   "archetype": "water",
-   "prompt": "A wild American white pelican (Pelecanus erythrorhynchos) of Park County, Wyoming, United States, one adult bird, realistic anatomy and proportions. Standing still on the ground in a side-on neutral pose: the wings folded tight against the body, both legs straight and apart with a clear gap between them, both feet flat on the ground, the head up and looking forward, the bill closed, the tail held clear of the ground; nothing but the feet touches the ground. No base, no ground plane, no perch, no water, no props. Game-ready.",
-   "texture_prompt": "Natural plumage colours and markings of a wild adult American white pelican (Pelecanus erythrorhynchos) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body bright white, black, yellowish, blackish; back white; belly and underparts vivid orange; head grey; neck vivid orange; legs pale yellow, bright orange. Realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin, legs and feet in their true colours.",
-   "build_log": "INFO colour from texture source faces 30796 archetype water mass 5.6085\nINFO remeshed 148788 faces\nINFO legs: knees z 1.120 1.120, belly 1.266, feet y -0.238, split x -0.058 (gap 0.194), 13261 leg vertices\nINFO head: tip [-0.055, -0.99, 2.004], neck dip, base at 1.050 along (ring 0.318 of body 1.041), pivot [-0.071, -0.51, 2.539]\nINFO tail: root y 0.572 (depth; body depth 2.012), pivot [0.0, 0.572, 1.206]; head 9% of the bird\nINFO size by mass at 150 kg/m3 over the whole mesh volume 0.5102 (body 0.5102) units, scale 0.4185 -> length 0.836 m, height 1.403 m, width 0.988 m\nINFO cards: span 1.861 m (0.95 M^0.39), shoulder [0.03, -0.023, 0.151]\nINFO palette shares [0.031, 0.171, 0.106, 0.066, 0.229, 0.184, 0.102, 0.043, 0.034, 0.035] pattern 0.0699 -> tiers [('lod0', 3247), ('lod1', 1168), ('lod2', 324)]\nINFO tier lod0 from 297576 to 3278 triangles with the cards\nINFO tier lod1 from 297576 to 1200 triangles with the cards\nINFO tier lod2 from 297576 to 348 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/pelecanus_erythrorhynchos.glb 237896 bytes; lod0 3278 tris, lod1 1200 tris, lod2 348 tris",
-   "colour_check": {
-    "ok": true,
-    "score": 1.0,
-    "fails": []
-   }
-  },
-  {
-   "code": "grus_canadensis",
-   "why": "bird by mass, one per archetype first",
-   "attempts": 1,
-   "credits": 30,
-   "jobs": [
-    {
-     "mode": "preview",
-     "dir": "library/animals/jobs/grus_canadensis/01a1b13d-57ab-7204-b653-8cf84ff52e4f"
-    },
-    {
-     "mode": "refine",
-     "dir": "library/animals/jobs/grus_canadensis/01a1b13e-08de-73a4-87fd-c806668213e5"
-    }
-   ],
-   "ok": true,
-   "archetype": "wade",
-   "prompt": "A wild Sandhill crane (Grus canadensis) of Park County, Wyoming, United States, one adult bird, realistic anatomy and proportions. Standing still on the ground in a side-on neutral pose: the wings folded tight against the body, both legs straight and apart with a clear gap between them, both feet flat on the ground, the head up and looking forward, the bill closed, the tail held clear of the ground; nothing but the feet touches the ground. No base, no ground plane, no perch, no water, no props. Game-ready.",
-   "texture_prompt": "Natural plumage colours and markings of a wild adult Sandhill crane (Grus canadensis) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body red, grayish, brownish; head white, red. Realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin, legs and feet in their true colours.",
-   "build_log": "INFO remeshed 101756 faces\nINFO legs: knees z 2.060 2.040, belly 2.080, feet y -0.009, split x -0.012 (gap 0.204), 18015 leg vertices\nINFO head: tip [-0.009, -0.998, 4.019], neck dip, base at 1.670 along (ring 0.173 of body 0.408), pivot [-0.008, -0.372, 3.013]\nINFO tail: root y 0.851 (depth; body depth 0.914), pivot [0.0, 0.851, 2.101]; head 18% of the bird\nINFO size by mass at 150 kg/m3 over the whole mesh volume 0.5629 (body 0.5629) units, scale 0.3706 -> length 0.741 m, height 1.573 m, width 0.329 m\nINFO cards: span 2.295 m (1.3 M^0.39), shoulder [0.117, -0.044, 0.958]\nINFO palette shares [0.08, 0.044, 0.078, 0.116, 0.096, 0.113, 0.078, 0.13, 0.143, 0.121] pattern 0.0872 -> tiers [('lod0', 3672), ('lod1', 1321), ('lod2', 367)]\nINFO loose pieces 2 joined to their nearest part\nINFO tier lod0 from 203512 to 3708 triangles with the cards\nINFO tier lod1 from 203512 to 1356 triangles with the cards\nINFO tier lod2 from 203512 to 394 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/grus_canadensis.glb 322428 bytes; lod0 3708 tris, lod1 1356 tris, lod2 394 tris",
-   "colour_check": {
-    "ok": true,
-    "score": 0.991,
-    "fails": []
-   }
-  }
- ],
- "stand_ins": [
-  {
-   "code": "bison_bison",
-   "why": "not in this run (--kind birds)"
-  },
-  {
-   "code": "antilocapra_americana",
-   "why": "not in this run (--kind birds)"
-  },
-  {
-   "code": "ursus_arctos",
-   "why": "not in this run (--kind birds)"
-  },
-  {
-   "code": "canis_lupus",
-   "why": "not in this run (--kind birds)"
-  },
-  {
-   "code": "ovis_canadensis",
-   "why": "not in this run (--kind birds)"
-  },
-  {
    "code": "alces_alces",
-   "why": "not in this run (--kind birds)"
-  },
-  {
-   "code": "taxidea_taxus",
-   "why": "not in this run (--kind birds)"
-  },
-  {
-   "code": "urocitellus_armatus",
-   "why": "not in this run (--kind birds)"
-  },
-  {
-   "code": "vulpes_vulpes",
-   "why": "not in this run (--kind birds)"
-  },
-  {
-   "code": "oreamnos_americanus",
-   "why": "not in this run (--kind birds)"
-  },
-  {
-   "code": "castor_canadensis",
-   "why": "not in this run (--kind birds)"
-  },
-  {
-   "code": "marmota_flaviventris",
-   "why": "not in this run (--kind birds)"
-  },
-  {
-   "code": "ondatra_zibethicus",
-   "why": "not in this run (--kind birds)"
-  },
-  {
-   "code": "sylvilagus_nuttallii",
-   "why": "not in this run (--kind birds)"
-  },
-  {
-   "code": "microtus_montanus",
-   "why": "not in this run (--kind birds)"
-  },
-  {
-   "code": "tamias_minimus",
-   "why": "not in this run (--kind birds)"
-  },
-  {
-   "code": "zapus_princeps",
-   "why": "not in this run (--kind birds)"
-  },
-  {
-   "code": "microtus_pennsylvanicus",
-   "why": "not in this run (--kind birds)"
-  },
-  {
-   "code": "pica_hudsonia",
-   "why": "not in this run (--kind birds)"
-  },
-  {
-   "code": "nucifraga_columbiana",
-   "why": "not in this run (--kind birds)"
-  },
-  {
-   "code": "thamnophis_elegans",
-   "why": "not in this run (--kind birds)"
-  },
-  {
-   "code": "rana_luteiventris",
-   "why": "not in this run (--kind birds)"
-  },
-  {
-   "code": "ambystoma_mavortium",
-   "why": "not in this run (--kind birds)"
-  },
-  {
-   "code": "colaptes_auratus",
-   "why": "over the budget or the count"
-  },
-  {
-   "code": "sturnella_neglecta",
-   "why": "over the budget or the count"
-  },
-  {
-   "code": "buteo_swainsoni",
-   "why": "over the budget or the count"
-  },
-  {
-   "code": "falco_mexicanus",
-   "why": "over the budget or the count"
-  },
-  {
-   "code": "circus_cyaneus",
-   "why": "over the budget or the count"
-  },
-  {
-   "code": "falco_sparverius",
-   "why": "over the budget or the count"
-  },
-  {
-   "code": "branta_canadensis",
-   "why": "over the budget or the count"
-  },
-  {
-   "code": "bucephala_islandica",
-   "why": "over the budget or the count"
-  },
-  {
-   "code": "fulica_americana",
-   "why": "over the budget or the count"
-  },
-  {
-   "code": "euphagus_cyanocephalus",
-   "why": "over the budget or the count"
-  },
-  {
-   "code": "cinclus_mexicanus",
-   "why": "over the budget or the count"
-  },
-  {
-   "code": "agelaius_phoeniceus",
-   "why": "over the budget or the count"
-  },
-  {
-   "code": "actitis_macularius",
-   "why": "over the budget or the count"
-  },
-  {
-   "code": "molothrus_ater",
-   "why": "over the budget or the count"
-  },
-  {
-   "code": "sialia_currucoides",
-   "why": "over the budget or the count"
-  },
-  {
-   "code": "pooecetes_gramineus",
-   "why": "over the budget or the count"
-  },
-  {
-   "code": "petrochelidon_pyrrhonota",
-   "why": "over the budget or the count"
+   "need": "image",
+   "why": "no model (the build's gate refused the text previews)",
+   "steps": [
+    {
+     "step": "photo",
+     "mode": "image",
+     "job": "library/animals/jobs/alces_alces/01a1b192-d11a-731b-a1a7-bb9da5131bed",
+     "credits": 30,
+     "before": {
+      "ok": false,
+      "score": null,
+      "fails": [
+       "no model"
+      ]
+     },
+     "after": {
+      "ok": false,
+      "score": null,
+      "fails": [
+       "build failed: alces_alces: found 3 leg columns below z 0.787, not 4 (not standing on four feet?)"
+      ],
+      "features": null
+     },
+     "kept": "old",
+     "error": null
+    },
+    {
+     "step": "photo",
+     "mode": "image",
+     "job": "library/animals/jobs/alces_alces/01a1b193-fdd5-706d-82ab-cedd3fb0f9eb",
+     "credits": 30,
+     "before": {
+      "ok": false,
+      "score": null,
+      "fails": [
+       "no model"
+      ]
+     },
+     "after": {
+      "ok": false,
+      "score": null,
+      "fails": [
+       "build failed: alces_alces: found 2 leg columns below z 0.602, not 4 (not standing on four feet?)"
+      ],
+      "features": null
+     },
+     "kept": "old",
+     "error": null
+    }
+   ]
   }
  ],
- "spent": 90,
- "balance_after": 1087,
- "modelled": 3,
+ "spent": 60,
+ "balance_after": 827,
  "earlier": [
   {
    "tile": "utm12n_557_4964",
@@ -930,6 +743,615 @@
    "spent": 60,
    "balance_after": 1177,
    "modelled": 2
+  },
+  {
+   "tile": "utm12n_557_4964",
+   "started": "2026-11-06T14:18:09+00:00",
+   "budget": 100,
+   "reserve": 300,
+   "species": [
+    {
+     "code": "aquila_chrysaetos",
+     "why": "scavenger or raptor",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/aquila_chrysaetos/01a1b139-64da-72a5-8808-bb8b7b5f1098"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/aquila_chrysaetos/01a1b13a-17a9-7623-a5c0-5c9d78386a29"
+      }
+     ],
+     "ok": true,
+     "archetype": "soar",
+     "prompt": "A wild Golden eagle (Aquila chrysaetos) of Park County, Wyoming, United States, one adult bird soaring in mid-air, realistic anatomy and proportions. Seen level, the body horizontal like an airplane: both wings fully spread flat and straight out to the sides, wingtips level with the body, the flight feathers spread, the tail spread, the head forward, the legs and feet tucked up under the body, nothing hanging below. Single bird, no base, no perch, no ground. Game-ready.",
+     "texture_prompt": "Natural plumage colours and markings of a wild adult Golden eagle (Aquila chrysaetos) as seen in Park County, Wyoming, United States, both the upper side and the underside of the wings and tail in their true colours. Coloured as the adult is described: body dark brown, golden-brown, black; flanks golden; belly and underparts brownish gray; head golden, blackish; neck golden; legs yellow; tail grey, white, grayish brown with white, black bands; wings grey, white, rusty brown, brownish gray. Realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin and feet in their true colours.",
+     "build_log": "INFO islands 2 dropped faces 40 kept 30557\nINFO colour from texture source faces 30557 archetype soar mass 4.248\nINFO remeshed 21840 faces\nINFO soar: wing root x 0.100, wrist x 0.480, semi-span 1.000, body height 0.140, tail root y -0.508, neck y -0.884, levelled 2.8 deg\nINFO size by mass at 250 kg/m3 over the body slab volume 0.0166 (body 0.0076) units, scale 1.3052 -> length 0.795 m, height 0.836 m, width 2.611 m\nINFO span 2.611 m (the span rule for a soarer, 1.4 M^0.39: 2.461 m)\nINFO palette shares [0.096, 0.128, 0.075, 0.097, 0.162, 0.068, 0.139, 0.136, 0.033, 0.065] pattern 0.0805 -> tiers [('lod0', 3455), ('lod1', 1243), ('lod2', 345)]\nINFO loose pieces 15 joined to their nearest part\nINFO tier lod0 from 43680 to 3454 triangles with the cards\nINFO tier lod1 from 43680 to 1242 triangles with the cards\nINFO tier lod2 from 43680 to 344 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/aquila_chrysaetos.glb 337444 bytes; lod0 3454 tris, lod1 1242 tris, lod2 344 tris",
+     "colour_check": {
+      "ok": true,
+      "score": 0.999,
+      "fails": []
+     }
+    },
+    {
+     "code": "pelecanus_erythrorhynchos",
+     "why": "bird by mass, one per archetype first",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/pelecanus_erythrorhynchos/01a1b13a-e342-747c-b0f6-5c28b8cfa30e"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/pelecanus_erythrorhynchos/01a1b13b-fc92-70ef-9065-539256035ec3"
+      }
+     ],
+     "ok": true,
+     "archetype": "water",
+     "prompt": "A wild American white pelican (Pelecanus erythrorhynchos) of Park County, Wyoming, United States, one adult bird, realistic anatomy and proportions. Standing still on the ground in a side-on neutral pose: the wings folded tight against the body, both legs straight and apart with a clear gap between them, both feet flat on the ground, the head up and looking forward, the bill closed, the tail held clear of the ground; nothing but the feet touches the ground. No base, no ground plane, no perch, no water, no props. Game-ready.",
+     "texture_prompt": "Natural plumage colours and markings of a wild adult American white pelican (Pelecanus erythrorhynchos) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body bright white, black, yellowish, blackish; back white; belly and underparts vivid orange; head grey; neck vivid orange; legs pale yellow, bright orange. Realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin, legs and feet in their true colours.",
+     "build_log": "INFO colour from texture source faces 30796 archetype water mass 5.6085\nINFO remeshed 148788 faces\nINFO legs: knees z 1.120 1.120, belly 1.266, feet y -0.238, split x -0.058 (gap 0.194), 13261 leg vertices\nINFO head: tip [-0.055, -0.99, 2.004], neck dip, base at 1.050 along (ring 0.318 of body 1.041), pivot [-0.071, -0.51, 2.539]\nINFO tail: root y 0.572 (depth; body depth 2.012), pivot [0.0, 0.572, 1.206]; head 9% of the bird\nINFO size by mass at 150 kg/m3 over the whole mesh volume 0.5102 (body 0.5102) units, scale 0.4185 -> length 0.836 m, height 1.403 m, width 0.988 m\nINFO cards: span 1.861 m (0.95 M^0.39), shoulder [0.03, -0.023, 0.151]\nINFO palette shares [0.031, 0.171, 0.106, 0.066, 0.229, 0.184, 0.102, 0.043, 0.034, 0.035] pattern 0.0699 -> tiers [('lod0', 3247), ('lod1', 1168), ('lod2', 324)]\nINFO tier lod0 from 297576 to 3278 triangles with the cards\nINFO tier lod1 from 297576 to 1200 triangles with the cards\nINFO tier lod2 from 297576 to 348 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/pelecanus_erythrorhynchos.glb 237896 bytes; lod0 3278 tris, lod1 1200 tris, lod2 348 tris",
+     "colour_check": {
+      "ok": true,
+      "score": 1.0,
+      "fails": []
+     }
+    },
+    {
+     "code": "grus_canadensis",
+     "why": "bird by mass, one per archetype first",
+     "attempts": 1,
+     "credits": 30,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/grus_canadensis/01a1b13d-57ab-7204-b653-8cf84ff52e4f"
+      },
+      {
+       "mode": "refine",
+       "dir": "library/animals/jobs/grus_canadensis/01a1b13e-08de-73a4-87fd-c806668213e5"
+      }
+     ],
+     "ok": true,
+     "archetype": "wade",
+     "prompt": "A wild Sandhill crane (Grus canadensis) of Park County, Wyoming, United States, one adult bird, realistic anatomy and proportions. Standing still on the ground in a side-on neutral pose: the wings folded tight against the body, both legs straight and apart with a clear gap between them, both feet flat on the ground, the head up and looking forward, the bill closed, the tail held clear of the ground; nothing but the feet touches the ground. No base, no ground plane, no perch, no water, no props. Game-ready.",
+     "texture_prompt": "Natural plumage colours and markings of a wild adult Sandhill crane (Grus canadensis) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body red, grayish, brownish; head white, red. Realistic, evenly lit albedo with no baked shadows or highlights; bill, eyes, bare skin, legs and feet in their true colours.",
+     "build_log": "INFO remeshed 101756 faces\nINFO legs: knees z 2.060 2.040, belly 2.080, feet y -0.009, split x -0.012 (gap 0.204), 18015 leg vertices\nINFO head: tip [-0.009, -0.998, 4.019], neck dip, base at 1.670 along (ring 0.173 of body 0.408), pivot [-0.008, -0.372, 3.013]\nINFO tail: root y 0.851 (depth; body depth 0.914), pivot [0.0, 0.851, 2.101]; head 18% of the bird\nINFO size by mass at 150 kg/m3 over the whole mesh volume 0.5629 (body 0.5629) units, scale 0.3706 -> length 0.741 m, height 1.573 m, width 0.329 m\nINFO cards: span 2.295 m (1.3 M^0.39), shoulder [0.117, -0.044, 0.958]\nINFO palette shares [0.08, 0.044, 0.078, 0.116, 0.096, 0.113, 0.078, 0.13, 0.143, 0.121] pattern 0.0872 -> tiers [('lod0', 3672), ('lod1', 1321), ('lod2', 367)]\nINFO loose pieces 2 joined to their nearest part\nINFO tier lod0 from 203512 to 3708 triangles with the cards\nINFO tier lod1 from 203512 to 1356 triangles with the cards\nINFO tier lod2 from 203512 to 394 triangles with the cards\nWROTE /Users/aaronbrodeur/Sites/wild-earth/.claude/worktrees/sweet-feistel-2054bb/client/assets/fauna/grus_canadensis.glb 322428 bytes; lod0 3708 tris, lod1 1356 tris, lod2 394 tris",
+     "colour_check": {
+      "ok": true,
+      "score": 0.991,
+      "fails": []
+     }
+    }
+   ],
+   "stand_ins": [
+    {
+     "code": "bison_bison",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "antilocapra_americana",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "ursus_arctos",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "canis_lupus",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "ovis_canadensis",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "alces_alces",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "taxidea_taxus",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "urocitellus_armatus",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "vulpes_vulpes",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "oreamnos_americanus",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "castor_canadensis",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "marmota_flaviventris",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "ondatra_zibethicus",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "sylvilagus_nuttallii",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "microtus_montanus",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "tamias_minimus",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "zapus_princeps",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "microtus_pennsylvanicus",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "pica_hudsonia",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "nucifraga_columbiana",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "thamnophis_elegans",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "rana_luteiventris",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "ambystoma_mavortium",
+     "why": "not in this run (--kind birds)"
+    },
+    {
+     "code": "colaptes_auratus",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "sturnella_neglecta",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "buteo_swainsoni",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "falco_mexicanus",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "circus_cyaneus",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "falco_sparverius",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "branta_canadensis",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "bucephala_islandica",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "fulica_americana",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "euphagus_cyanocephalus",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "cinclus_mexicanus",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "agelaius_phoeniceus",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "actitis_macularius",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "molothrus_ater",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "sialia_currucoides",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "pooecetes_gramineus",
+     "why": "over the budget or the count"
+    },
+    {
+     "code": "petrochelidon_pyrrhonota",
+     "why": "over the budget or the count"
+    }
+   ],
+   "spent": 90,
+   "balance_after": 1087,
+   "modelled": 3
+  },
+  {
+   "tile": "utm12n_557_4964",
+   "kind": "redo",
+   "started": "2026-11-06T15:08:10+00:00",
+   "budget": 350,
+   "reserve": 737,
+   "species": [
+    {
+     "code": "oreamnos_americanus",
+     "need": "image",
+     "why": "horns too long: 0.45 of the withers, described 0.23 m at a 1.00 m shoulder (0.23)",
+     "steps": [
+      {
+       "step": "photo",
+       "mode": "image",
+       "job": "library/animals/jobs/oreamnos_americanus/01a1b167-39b4-7238-9075-485093cce771",
+       "credits": 30,
+       "before": {
+        "ok": false,
+        "score": 1.0,
+        "fails": [
+         "horns too long: 0.45 of the withers, described 0.23 m at a 1.00 m shoulder (0.23)"
+        ]
+       },
+       "after": {
+        "ok": false,
+        "score": null,
+        "fails": [
+         "build failed: oreamnos_americanus: found 2 leg columns below z 0.550, not 4 (not standing on four feet?)"
+        ],
+        "features": null
+       },
+       "kept": "old",
+       "error": null
+      }
+     ]
+    }
+   ],
+   "spent": 30,
+   "balance_after": 1057
+  },
+  {
+   "tile": "utm12n_557_4964",
+   "kind": "redo",
+   "started": "2026-11-06T15:14:06+00:00",
+   "budget": 320,
+   "reserve": 737,
+   "species": [
+    {
+     "code": "oreamnos_americanus",
+     "need": "image",
+     "why": "horns too long: 0.45 of the withers, described 0.23 m at a 1.00 m shoulder (0.23)",
+     "steps": [
+      {
+       "step": "photo",
+       "mode": "image",
+       "job": "library/animals/jobs/oreamnos_americanus/01a1b16c-a85c-7658-a55b-a6e1ebe96d70",
+       "credits": 30,
+       "before": {
+        "ok": false,
+        "score": 1.0,
+        "fails": [
+         "horns too long: 0.45 of the withers, described 0.23 m at a 1.00 m shoulder (0.23)"
+        ]
+       },
+       "after": {
+        "ok": false,
+        "score": 1.0,
+        "fails": [
+         "horns missing or stubs: 0.01 of the withers, described 0.23"
+        ],
+        "features": {
+         "horns": {
+          "len_m": 0.006,
+          "of_withers": 0.008
+         },
+         "tail": {
+          "len_m": 0.047,
+          "head_body_m": 0.954,
+          "flips": 0,
+          "of_head_body": 0.049
+         },
+         "coat_patch": 0.0,
+         "coat_main": "ash"
+        }
+       },
+       "kept": "new",
+       "error": null
+      }
+     ]
+    }
+   ],
+   "spent": 30,
+   "balance_after": 1027
+  },
+  {
+   "tile": "utm12n_557_4964",
+   "kind": "redo",
+   "started": "2026-11-06T15:20:43+00:00",
+   "budget": 290,
+   "reserve": 737,
+   "species": [
+    {
+     "code": "taxidea_taxus",
+     "need": "image",
+     "why": "the judge: a raccoon's ringed tail and masked face; the American badger has a short tail, a flat body and a white stripe from the nose over the head",
+     "steps": [
+      {
+       "step": "photo",
+       "mode": "image",
+       "job": "library/animals/jobs/taxidea_taxus/01a1b172-ad5d-7408-ac88-154a2e1707a6",
+       "credits": 30,
+       "before": {
+        "ok": false,
+        "score": 1.0,
+        "fails": [
+         "upperparts: no white stripes (0.0%)",
+         "tail ringed (2 alternations), described without rings"
+        ]
+       },
+       "after": {
+        "ok": false,
+        "score": null,
+        "fails": [
+         "build failed: taxidea_taxus: found 3 leg columns below z 0.288, not 4 (not standing on four feet?)"
+        ],
+        "features": null
+       },
+       "kept": "old",
+       "error": null
+      },
+      {
+       "step": "photo",
+       "mode": "image",
+       "job": "library/animals/jobs/taxidea_taxus/01a1b174-5505-73f2-b788-cf2fa3ecdeb2",
+       "credits": 30,
+       "before": {
+        "ok": false,
+        "score": 1.0,
+        "fails": [
+         "upperparts: no white stripes (0.0%)",
+         "tail ringed (2 alternations), described without rings"
+        ]
+       },
+       "after": {
+        "ok": true,
+        "score": 1.0,
+        "fails": [],
+        "features": {
+         "tail": {
+          "len_m": 0.058,
+          "head_body_m": 0.52,
+          "flips": 0,
+          "of_head_body": 0.112
+         }
+        }
+       },
+       "kept": "new",
+       "error": null
+      }
+     ]
+    }
+   ],
+   "spent": 60,
+   "balance_after": 967
+  },
+  {
+   "tile": "utm12n_557_4964",
+   "kind": "redo",
+   "started": "2026-11-06T15:25:09+00:00",
+   "budget": 230,
+   "reserve": 737,
+   "species": [
+    {
+     "code": "thamnophis_elegans",
+     "need": "texture",
+     "why": "yellow all over; the terrestrial garter snake is dark with three yellow stripes (the colour research read the stripe colour as the body's)",
+     "steps": [
+      {
+       "step": "text",
+       "mode": null,
+       "job": "library/animals/jobs/thamnophis_elegans/01a1b176-bc6d-7564-af55-013cfa82e8c8",
+       "credits": 10,
+       "before": {
+        "ok": false,
+        "score": 0.996,
+        "fails": [
+         "upperparts: only 0% in its ground colours, the rest in its markings' colours"
+        ]
+       },
+       "after": {
+        "ok": false,
+        "score": 0.776,
+        "fails": [
+         "upperparts: only 0% in its ground colours, the rest in its markings' colours"
+        ],
+        "off": {}
+       },
+       "kept": "old",
+       "error": null
+      },
+      {
+       "step": "photo",
+       "mode": "texture",
+       "job": "library/animals/jobs/thamnophis_elegans/01a1b177-4d95-769b-b83a-55153cbe9787",
+       "credits": 10,
+       "before": {
+        "ok": false,
+        "score": 0.996,
+        "fails": [
+         "upperparts: only 0% in its ground colours, the rest in its markings' colours"
+        ]
+       },
+       "after": {
+        "ok": false,
+        "score": 0.386,
+        "fails": [
+         "flanks: no yellow stripes (0.0%)",
+         "underparts 0% matches",
+         "upperparts: only 0% in its ground colours, the rest in its markings' colours",
+         "upperparts: no yellow stripes (0.0%)",
+         "only 39% of the model in described colours"
+        ],
+        "features": {}
+       },
+       "kept": "new",
+       "error": null
+      }
+     ]
+    }
+   ],
+   "spent": 20,
+   "balance_after": 947
+  },
+  {
+   "tile": "utm12n_557_4964",
+   "kind": "redo",
+   "started": "2026-11-06T15:48:24+00:00",
+   "budget": 60,
+   "reserve": 737,
+   "species": [
+    {
+     "code": "antilocapra_americana",
+     "need": "image",
+     "why": "horns too long: 0.93 of the withers, described 0.25 m at a 0.87 m shoulder (0.29)",
+     "steps": [
+      {
+       "step": "photo",
+       "mode": "image",
+       "job": "library/animals/jobs/antilocapra_americana/01a1b18c-1540-70c3-9fd1-f535a7626d97",
+       "credits": 30,
+       "before": {
+        "ok": false,
+        "score": 0.61,
+        "fails": [
+         "horns too long: 0.93 of the withers, described 0.25 m at a 0.87 m shoulder (0.29)"
+        ]
+       },
+       "after": {
+        "ok": false,
+        "score": 0.669,
+        "fails": [
+         "horns too long: 0.52 of the withers, described 0.25 m at a 0.87 m shoulder (0.29)"
+        ],
+        "features": {
+         "horns": {
+          "len_m": 0.321,
+          "of_withers": 0.518,
+          "by": "coloured piece"
+         },
+         "tail": {
+          "len_m": 0.0,
+          "head_body_m": 0.988,
+          "flips": 0,
+          "of_head_body": 0.0
+         }
+        }
+       },
+       "kept": "new",
+       "error": null
+      }
+     ]
+    }
+   ],
+   "spent": 30,
+   "balance_after": 907
+  },
+  {
+   "tile": "utm12n_557_4964",
+   "kind": "redo",
+   "started": "2026-11-06T15:51:34+00:00",
+   "budget": 20,
+   "reserve": 737,
+   "species": [
+    {
+     "code": "ursus_arctos",
+     "need": "texture",
+     "why": "a large pale patch on the coat (6% of the back and flanks), described without patches",
+     "steps": [
+      {
+       "step": "text",
+       "mode": null,
+       "job": "library/animals/jobs/ursus_arctos/01a1b18e-e9c7-7475-ba08-6a1dfede66a2",
+       "credits": 10,
+       "before": {
+        "ok": false,
+        "score": 1.0,
+        "fails": [
+         "a large pale patch on the coat (6% of the back and flanks), described without patches"
+        ]
+       },
+       "after": {
+        "ok": false,
+        "score": 1.0,
+        "fails": [
+         "a large pale patch on the coat (8% of the back and flanks), described without patches"
+        ],
+        "off": {}
+       },
+       "kept": "old",
+       "error": null
+      },
+      {
+       "step": "photo",
+       "mode": "texture",
+       "job": "library/animals/jobs/ursus_arctos/01a1b190-3a85-7581-98c4-955a1db6d7ad",
+       "credits": 10,
+       "before": {
+        "ok": false,
+        "score": 1.0,
+        "fails": [
+         "a large pale patch on the coat (6% of the back and flanks), described without patches"
+        ]
+       },
+       "after": {
+        "ok": true,
+        "score": 1.0,
+        "fails": [],
+        "features": {
+         "tail": {
+          "len_m": 0.0,
+          "head_body_m": 1.245,
+          "flips": 0,
+          "of_head_body": 0.0
+         },
+         "coat_patch": 0.011,
+         "coat_main": "charcoal"
+        }
+       },
+       "kept": "new",
+       "error": null
+      }
+     ]
+    }
+   ],
+   "spent": 20,
+   "balance_after": 887
   }
  ]
 }

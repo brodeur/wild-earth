@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "grus_canadensis",
  "scientific": "Grus canadensis",
  "common": "sandhill crane",
@@ -42,5 +42,23 @@
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "body red, grayish, brownish; head white, red"
+ "summary": "body red, grayish, brownish; head white, red",
+ "features": {
+  "horns": {
+   "described": false,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [],
+   "length_m": [
+    0.1,
+    0.264
+   ]
+  },
+  "shoulder_m": null,
+  "head_body_m": null,
+  "total_m": null
+ }
 }

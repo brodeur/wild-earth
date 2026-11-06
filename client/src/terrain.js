@@ -27,7 +27,7 @@ export const groundUniforms = {
   grassTint: { value: new THREE.Color(0.8, 0.68, 0.36) }, oakTint: { value: new THREE.Color(0.55, 0.45, 0.22) }, oakMix: { value: 0 },
   groundFx: { value: 1 },   // 0 turns off the sward grain, gust sheen and chaparral mottle (A/B timing)
   imagery: { value: 0 }, grassRef: { value: new THREE.Vector3(0.49, 0.47, 0.38) }, oakRef: { value: new THREE.Vector3(0.27, 0.34, 0.27) },
-  canopyMap: { value: null },   // tile canopy raster: r = tree cover %, g = shrub cover % (8-bit percent)
+  canopyMap: { value: null },   // the cover texture (coverTexture): r tree, g shrub, b herb cover % (8-bit percent), a the riparian weight
   contactAO: { value: null },   // shadows.js: top-down sky occlusion under each near tree (r = 0 open .. 1 at the trunk)
   contactAOMatrix: { value: new THREE.Matrix4().set(0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 1) },   // world -> its uv
   // Measured season (season.js SeasonColour): the ground texture times seasonMap's multiplier (stored as
@@ -53,12 +53,12 @@ export const groundUniforms = {
 // flat-ground ratio for the date over July, linear) when it is set; `version` bumps on each change.
 export const seasonState = { grass: null, date: null, version: 0 };
 // Riparian floor (habitat 6), terrain shader only: the class has no channel in masks.png, so the
-// client builds its weight from the habitat grid (ripMask, bilinear across the 30 m cells exactly as
-// masks.png is). ripRef is the current texture's own linear mean over interior riparian cells, so one
+// client builds its weight from the habitat grid (the cover texture's A, bilinear across the 30 m cells
+// exactly as masks.png is; coverTexture). ripRef is the current texture's own linear mean over interior riparian cells, so one
 // palette fits the summer photo and the habitat texture alike; ripOn is 0 for any other texture (the
 // present-day peek shows the photo as it is).
 const ripUniforms = {
-  ripMask: { value: null }, ripRef: { value: new THREE.Vector3(0.1, 0.12, 0.08) }, ripOn: { value: 0 },
+  ripRef: { value: new THREE.Vector3(0.1, 0.12, 0.08) }, ripOn: { value: 0 },
   ripTint: { value: new THREE.Color(0.25, 0.18, 0.05) }, ripDark: { value: 1 }, ripMix: { value: 0 },
 };
 // The faces' rock, by lithology (2026-11-03, the substrate pass; docs/decisions.md "cliffs from the substrate"). Each
@@ -555,7 +555,7 @@ const FRAG = /* glsl */`
   }
   ${DETAIL_GLSL}
   ${CLIFF_GLSL}
-  uniform sampler2D ripMask; uniform vec3 ripRef; uniform float ripOn; uniform vec3 ripTint; uniform float ripDark; uniform float ripMix;
+  uniform vec3 ripRef; uniform float ripOn; uniform vec3 ripTint; uniform float ripDark; uniform float ripMix;
   uniform float geoSlope;   // 1 on a tile with the lidar residual: the rock rule takes the mesh's own slope too
   uniform vec4 digCuts[8]; uniform int digCutN;   // the Dig game's holes and pits (groundUniforms.digCuts)
   void main(){
@@ -567,13 +567,14 @@ const FRAG = /* glsl */`
     vec3 c = groundRecolour(photo, w, vUv, smoothstep(0.55, 0.75, road));
     // Riparian floor by season: the texture's riparian mean is pulled to the season's hue (the ratio
     // normalised to unit luminance, so the photo's own light and dark survive) and brightness.
-    float wRip = texture2D(ripMask, vUv).r * (1.0 - smoothstep(0.55, 0.75, road));
+    vec4 coverTex = texture2D(canopyMap, vUv);          // tree, shrub, herb cover (rgb, percent) and the riparian weight (a)
+    float wRip = coverTex.a * (1.0 - smoothstep(0.55, 0.75, road));
     if (wRip * ripOn * ripMix > 0.0) {
       vec3 rr = ripTint / max(ripRef, vec3(0.01)); rr /= max(dot(rr, G_LUMA), 0.05);
       c = mix(c, c * rr * ripDark, wRip * ripMix);
     }
     c = groundWater(c, vUv);   // the water system's wet margins and mud (groundUniforms.waterMap)
-    vec3 cov3 = texture2D(canopyMap, vUv).rgb * 2.55;   // tree, shrub, herb cover 0..1 (sky occlusion, litter, the sward)
+    vec3 cov3 = coverTex.rgb * 2.55;                    // tree, shrub, herb cover 0..1 (sky occlusion, litter, the sward)
     vec2 cov = cov3.rg;
     float dist = distance(vPosW, cameraPosition);
     vec3 dpx = dFdx(vPosW), dpy = dFdy(vPosW);          // outside every branch: the detail fetches use them
@@ -778,13 +779,27 @@ const FRAG = /* glsl */`
     #include <colorspace_fragment>
   }`;
 
-// Riparian weight (habitat class 6) on the habitat grid, one byte per 30 m cell, rows south to north
-// (a DataTexture is not flipped on upload), sampled bilinearly like masks.png.
-function riparianMask(tile) {
-  const g = tile.habitat.img, W = g.width, H = g.height, a = new Uint8Array(W * H);
-  for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) a[(H - 1 - j) * W + i] = g.data[(j * W + i) * 4] === 6 ? 255 : 0;
-  const t = new THREE.DataTexture(a, W, H, THREE.RedFormat, THREE.UnsignedByteType);
-  t.unpackAlignment = 1; t.magFilter = THREE.LinearFilter; t.minFilter = THREE.LinearMipmapLinearFilter; t.generateMipmaps = true;
+// The cover texture (canopyMap, 2026-11-06): the canopy raster's tree, shrub and herb cover in RGB (client/canopy.png,
+// as the plain canopy texture had it) and the riparian weight (habitat class 6: 255, else 0) in A, one texel per 30 m
+// habitat cell, rows south to north (a DataTexture is not flipped on upload), bilinear with mips like masks.png. The
+// riparian weight had a sampler of its own (ripMask), the 17th of the micro patch's program (its vertex shader's
+// mcDisp on top of the terrain fragment shader's 16) where the GPU has 16 units; canopy.png is on the habitat's grid
+// and its alpha was unused, so the two share one. A canopy raster on another grid keeps its own and takes the riparian
+// weight at its nearest habitat cell; a tile without one has zero cover, as the 1 x 1 stand-in had.
+function coverTexture(tile) {
+  const g = tile.habitat.img, c = tile.canopy?.img?.data ? tile.canopy.img : null;
+  const W = c ? c.width : g.width, H = c ? c.height : g.height, a = new Uint8Array(W * H * 4);
+  const sx = g.width / W, sy = g.height / H;
+  for (let j = 0; j < H; j++) {
+    const gj = Math.min(Math.floor((j + 0.5) * sy), g.height - 1);
+    for (let i = 0; i < W; i++) {
+      const k = (j * W + i) * 4, o = ((H - 1 - j) * W + i) * 4, gi = Math.min(Math.floor((i + 0.5) * sx), g.width - 1);
+      if (c) { a[o] = c.data[k]; a[o + 1] = c.data[k + 1]; a[o + 2] = c.data[k + 2]; }
+      a[o + 3] = g.data[(gj * g.width + gi) * 4] === 6 ? 255 : 0;
+    }
+  }
+  const t = new THREE.DataTexture(a, W, H, THREE.RGBAFormat, THREE.UnsignedByteType);
+  t.colorSpace = THREE.NoColorSpace; t.magFilter = THREE.LinearFilter; t.minFilter = THREE.LinearMipmapLinearFilter; t.generateMipmaps = true;
   t.needsUpdate = true;
   return releaseTexture(t);   // its bytes go once uploaded (gpuRelease.js)
 }
@@ -849,11 +864,7 @@ export class Terrain {
     setLithologies(tile.substrateInfo);
     setStrata(tile.strata, tile.substrateInfo);
     G.masks.value = masks; G.roads.value = roads; G.tileSize.value = tile.size;
-    if (tile.canopy?.img?.image) {   // same orientation as the masks (image rows north to south, flipY)
-      const canopy = new THREE.Texture(tile.canopy.img.image); canopy.needsUpdate = true;
-      canopy.colorSpace = THREE.NoColorSpace; canopy.generateMipmaps = true; canopy.minFilter = THREE.LinearMipmapLinearFilter;
-      G.canopyMap.value = canopy;
-    } else { G.canopyMap.value = new THREE.DataTexture(new Uint8Array(4), 1, 1); G.canopyMap.value.needsUpdate = true; }
+    G.canopyMap.value = coverTexture(tile);   // the canopy's cover and the riparian weight, same orientation as the masks
     // Measured season colour (tile-spec "Seasonal colour", season.js): a 20 m multiplier texture, rebuilt on
     // the CPU when the date changes (setDate). Until then, and on a tile without the layers, it is 1.
     yield 'textures';
@@ -866,8 +877,6 @@ export class Terrain {
     // Near-ground detail materials and their per-tile masks (groundDetail.js); textures stream in after.
     this.detail = new GroundDetail(tile, { mask: yield* buildDetailMaskSteps(tile) });
     yield 'GroundDetail';
-    ripUniforms.ripMask.value = riparianMask(tile);
-    yield 'riparianMask';
     if (tile.water && tile.waterImage) {   // the water system's zones (nearest-filtered: the shader blends the tints, not the codes)
       const wt = new THREE.Texture(tile.waterImage); wt.colorSpace = THREE.NoColorSpace; wt.generateMipmaps = false;
       wt.minFilter = THREE.NearestFilter; wt.magFilter = THREE.NearestFilter; wt.needsUpdate = true;
@@ -953,7 +962,6 @@ export class Terrain {
     this.unScale?.(); this.unScale = null;   // the body-scale listener, and the micro patch's mesh, texture and arrays
     this.micro?.dispose(); this.micro = null; this.material.onBeforeRender = () => {}; if (this.materialNoCliff) this.materialNoCliff.onBeforeRender = () => {};
     if (this.tile.heights) this.tile.heights.micro = null;
-    ripUniforms.ripMask.value = null;
     this.waterTexture?.dispose(); if (groundUniforms.waterMap.value === this.waterTexture) { groundUniforms.waterMap.value = null; groundUniforms.waterOn.value = 0; }
     resetDetailUniforms();
     seasonState.grass = null; seasonState.date = null; seasonState.version++;

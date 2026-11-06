@@ -116,6 +116,59 @@ class Check(unittest.TestCase):
         self.assertTrue(ap.check(Path("/nonexistent.glb"), {"regions": {}})["ok"])
 
 
+
+class StripedSnake(unittest.TestCase):
+    def test_a_dorsal_stripe_colour_is_the_stripe_not_the_back(self):
+        f = facts("Most have a yellow, light orange, or white dorsal stripe, accompanied by two stripes of the same color.")
+        self.assertIn(("upperparts", "yellow", "stripes"), f)
+        self.assertNotIn(("body", "yellow", None), f)
+        self.assertNotIn(("upperparts", "yellow", None), f)
+
+    def test_bellies(self):
+        self.assertIn(("underparts", "yellow", None), facts("They generally have grayish-green backs and yellow bellies."))
+
+    def test_markings_cannot_be_the_whole_region(self):
+        app = {"regions": {"upperparts": {"colours": ["grayish-green"], "markings": [{"pattern": "stripes", "colours": ["yellow"]}]}}}
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "m.glb"
+            _glb(p, [(0, lin("d8c048"))] * 10)   # yellow all over: the stripes' colour
+            c = ap.check(p, app)
+            self.assertFalse(c["ok"])
+            self.assertTrue(any("ground colours" in f for f in c["fails"]), c["fails"])
+            _glb(p, [(0, lin("6c7a5c"))] * 7 + [(0, lin("d8c048"))] * 3)   # greyish-green with yellow stripes
+            self.assertTrue(ap.check(p, app)["ok"])
+
+
+class Features(unittest.TestCase):
+    def feats(self, text):
+        return ap.features_from([{"sections": [("lead", text)]}], "Testus testus", ["test animal"])
+
+    def test_horns_and_shoulder(self):
+        f = self.feats("The pure black horns are about 200 to 300 mm long, rather thin. A male stands about 1 m (3.3 ft) "
+                       "at the shoulder to the waist.")
+        self.assertEqual(f["horns"]["length_m"], [0.2, 0.3])
+        self.assertIn("black", f["horns"]["colours"][0])
+        self.assertEqual(f["shoulder_m"], [1.0, 1.0])
+
+    def test_tail_against_total(self):
+        f = self.feats("Badgers measure 520 to 875 mm from head to tail, with the tail making up only 100 to 155 mm of this length.")
+        self.assertEqual(f["total_m"], [0.52, 0.875])
+        self.assertEqual(f["tail_m"] if "tail_m" in f else f["tail"]["length_m"], [0.1, 0.155])
+
+    def test_a_horn_span_is_no_length_and_females_are_dropped(self):
+        f = self.feats("The horn span is wide and can reach 130 cm. Female horns average about 120 mm.")
+        self.assertIsNone(f["horns"]["length_m"])
+
+    def test_conversions_in_brackets(self):
+        f = self.feats("Adult males are 4.3–4.9 ft (1.3–1.5 m) long from nose to tail, stand 2.7–3.4 ft (82–104 cm) high at the shoulder.")
+        self.assertAlmostEqual(f["shoulder_m"][0], 0.823, places=2)
+        self.assertAlmostEqual(f["total_m"][1], 1.494, places=2)
+
+    def test_feature_lead(self):
+        app = {"features": {"horns": {"described": True, "words": ["long", "curved"], "colours": ["black"], "length_m": [0.15, 0.28]},
+                            "tail": {"words": [], "length_m": [0.1, 0.2]}, "shoulder_m": [1.0, 1.0], "head_body_m": [1.2, 1.8]}}
+        self.assertEqual(ap.feature_lead(app), "Horns short, curved, black, about 22 cm long. Tail short, about 15 cm.")
+
 class Prompt(unittest.TestCase):
     def test_lead_inserted_and_kept_under_800(self):
         tex = "Natural coat colours of a wild adult x (X y) as seen in z; realistic, evenly lit albedo with no baked shadows."

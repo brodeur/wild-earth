@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "pelecanus_erythrorhynchos",
  "scientific": "Pelecanus erythrorhynchos",
  "common": "american white pelican",
@@ -73,5 +73,20 @@
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "body bright white, black, yellowish, blackish; back white; belly and underparts vivid orange; head grey; neck vivid orange; legs pale yellow, bright orange"
+ "summary": "body bright white, black, yellowish, blackish; back white; belly and underparts vivid orange; head grey; neck vivid orange; legs pale yellow, bright orange",
+ "features": {
+  "horns": {
+   "described": true,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [],
+   "length_m": null
+  },
+  "shoulder_m": null,
+  "head_body_m": null,
+  "total_m": null
+ }
 }

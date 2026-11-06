@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "syncerus_caffer",
  "scientific": "Syncerus caffer",
  "common": "african buffalo",
@@ -43,5 +43,30 @@
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "body rusty, black, dark brown, red; tail black, dark tuft"
+ "summary": "body rusty, black, dark brown, red; tail black, dark tuft",
+ "features": {
+  "horns": {
+   "described": true,
+   "words": [
+    "long",
+    "short",
+    "straight",
+    "curved"
+   ],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [
+    "long"
+   ],
+   "length_m": null
+  },
+  "shoulder_m": [
+   1.05,
+   1.05
+  ],
+  "head_body_m": null,
+  "total_m": null
+ }
 }

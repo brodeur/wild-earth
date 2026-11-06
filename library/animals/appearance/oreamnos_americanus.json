@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "oreamnos_americanus",
  "scientific": "Oreamnos americanus",
  "common": "mountain goat",
@@ -29,5 +29,43 @@
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "body white, brown"
+ "summary": "body white, brown",
+ "features": {
+  "horns": {
+   "described": true,
+   "words": [
+    "short",
+    "long",
+    "thin",
+    "curved"
+   ],
+   "colours": [
+    "black",
+    "pure black"
+   ],
+   "length_m": [
+    0.175,
+    0.29
+   ]
+  },
+  "tail": {
+   "words": [
+    "short",
+    "long"
+   ],
+   "length_m": [
+    0.1,
+    0.2
+   ]
+  },
+  "shoulder_m": [
+   1.0,
+   1.0
+  ],
+  "head_body_m": [
+   1.2,
+   1.79
+  ],
+  "total_m": null
+ }
 }

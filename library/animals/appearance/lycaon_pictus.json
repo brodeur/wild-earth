@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "lycaon_pictus",
  "scientific": "Lycaon pictus",
  "common": "african wild dog",
@@ -11,13 +11,6 @@
     "brown",
     "red",
     "yellow",
-    "white",
-    "blackish"
-   ],
-   "markings": []
-  },
-  "underparts": {
-   "colours": [
     "white"
    ],
    "markings": []
@@ -41,23 +34,9 @@
   "neck": {
    "colours": [
     "brown",
-    "yellow",
-    "white"
+    "yellow"
    ],
    "markings": []
-  },
-  "legs": {
-   "colours": [
-    "white"
-   ],
-   "markings": [
-    {
-     "pattern": "patches",
-     "colours": [
-      "white"
-     ]
-    }
-   ]
   },
   "tail": {
    "colours": [
@@ -69,26 +48,53 @@
    "markings": []
   }
  },
- "facts": 25,
+ "facts": 20,
  "dropped": {
   "no body word": 2,
-  "regional": 1
+  "regional": 1,
+  "morph": 2
  },
  "sources": [
   {
    "url": "https://en.wikipedia.org/wiki/African_wild_dog",
    "title": "African wild dog",
    "revision": 1382180694,
-   "facts": 18
+   "facts": 14
   },
   {
    "url": "https://animaldiversity.org/accounts/Lycaon_pictus/",
    "title": "ADW: Lycaon pictus",
-   "facts": 7
+   "facts": 6
   }
  ],
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "body black, brown, red, yellow; belly and underparts white; head black, brown, blackish-brown, yellow with black lines; neck brown, yellow, white; legs white with white patches; tail white, black tip, brown tip, white tip"
+ "summary": "body black, brown, red, yellow; head black, brown, blackish-brown, yellow with black lines; neck brown, yellow; tail white, black tip, brown tip, white tip",
+ "features": {
+  "horns": {
+   "described": false,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [
+    "bushy"
+   ],
+   "length_m": [
+    0.295,
+    0.405
+   ]
+  },
+  "shoulder_m": [
+   0.6,
+   0.75
+  ],
+  "head_body_m": [
+   0.73,
+   1.11
+  ],
+  "total_m": null
+ }
 }

@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "bison_bison",
  "scientific": "Bison bison",
  "common": "american bison",
@@ -40,5 +40,35 @@
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "body dark-brown, brown; legs black"
+ "summary": "body dark-brown, brown; legs black",
+ "features": {
+  "horns": {
+   "described": true,
+   "words": [
+    "long",
+    "short",
+    "curved"
+   ],
+   "colours": [],
+   "length_m": [
+    0.6,
+    0.6
+   ]
+  },
+  "tail": {
+   "words": [
+    "long"
+   ],
+   "length_m": [
+    0.3,
+    0.95
+   ]
+  },
+  "shoulder_m": [
+   1.765,
+   1.935
+  ],
+  "head_body_m": null,
+  "total_m": null
+ }
 }

@@ -1,0 +1,224 @@
+{
+ "tile": "utm12n_514_4838",
+ "version": "1",
+ "context": {
+  "centre": [
+   -110.76399804169893,
+   43.739776767354925
+  ],
+  "elevation_m": null,
+  "koppen": null,
+  "group": null,
+  "wcvp_area": null
+ },
+ "plots": [],
+ "rule": "pipeline/tree_cards.py choose(): plots, then named trees of open place descriptions, then the tile's most-recorded WCVP trees that reach the subcanopy; shares by tier (TIER_SHARE)",
+ "trees": [
+  {
+   "id": "pinus_contorta",
+   "scientific": "Pinus contorta",
+   "family": "Pinaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 155.0,
+   "evidence": [
+    "GBIF: 155 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.2623,
+   "research": false,
+   "card": true
+  },
+  {
+   "id": "sorbus_scopulina",
+   "scientific": "Sorbus scopulina",
+   "family": "Rosaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 106.0,
+   "evidence": [
+    "GBIF: 106 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.1794,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "populus_tremuloides",
+   "scientific": "Populus tremuloides",
+   "family": "Salicaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 100.0,
+   "evidence": [
+    "GBIF: 100 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.1692,
+   "research": false,
+   "card": true
+  },
+  {
+   "id": "abies_lasiocarpa",
+   "scientific": "Abies lasiocarpa",
+   "family": "Pinaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 74.0,
+   "evidence": [
+    "GBIF: 74 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.1252,
+   "research": false,
+   "card": true
+  },
+  {
+   "id": "acer_glabrum",
+   "scientific": "Acer glabrum",
+   "family": "Sapindaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 41.0,
+   "evidence": [
+    "GBIF: 41 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0694,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "amelanchier_alnifolia",
+   "scientific": "Amelanchier alnifolia",
+   "family": "Rosaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 40.0,
+   "evidence": [
+    "GBIF: 40 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0677,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "pseudotsuga_menziesii",
+   "scientific": "Pseudotsuga menziesii",
+   "family": "Pinaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 23.0,
+   "evidence": [
+    "GBIF: 23 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0389,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "artemisia_tridentata",
+   "scientific": "Artemisia tridentata",
+   "family": "Asteraceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 23.0,
+   "evidence": [
+    "GBIF: 23 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0389,
+   "research": false,
+   "card": true
+  },
+  {
+   "id": "prunus_virginiana",
+   "scientific": "Prunus virginiana",
+   "family": "Rosaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 19.0,
+   "evidence": [
+    "GBIF: 19 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0321,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "picea_engelmannii",
+   "scientific": "Picea engelmannii",
+   "family": "Pinaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 10.0,
+   "evidence": [
+    "GBIF: 10 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0169,
+   "research": false,
+   "card": false
+  }
+ ],
+ "queued": [
+  {
+   "id": "pinus_contorta",
+   "scientific": "Pinus contorta",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "sorbus_scopulina",
+   "scientific": "Sorbus scopulina",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "populus_tremuloides",
+   "scientific": "Populus tremuloides",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "abies_lasiocarpa",
+   "scientific": "Abies lasiocarpa",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "acer_glabrum",
+   "scientific": "Acer glabrum",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "amelanchier_alnifolia",
+   "scientific": "Amelanchier alnifolia",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "pseudotsuga_menziesii",
+   "scientific": "Pseudotsuga menziesii",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "artemisia_tridentata",
+   "scientific": "Artemisia tridentata",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "prunus_virginiana",
+   "scientific": "Prunus virginiana",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "picea_engelmannii",
+   "scientific": "Picea engelmannii",
+   "why": "needs a research record (its height decides whether it stays)"
+  }
+ ],
+ "log": [
+  "plot vela_apaza_2024_los_amigos: not used (7494 km, 0 m apart, climate Am)"
+ ],
+ "cards_written": []
+}

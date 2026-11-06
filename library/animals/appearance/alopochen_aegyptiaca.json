@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "alopochen_aegyptiaca",
  "scientific": "Alopochen aegyptiaca",
  "common": "egyptian goose",
@@ -55,5 +55,20 @@
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "body light brown; head pink, brown; legs pink; wings white, brown, green"
+ "summary": "body light brown; head pink, brown; legs pink; wings white, brown, green",
+ "features": {
+  "horns": {
+   "described": false,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [],
+   "length_m": null
+  },
+  "shoulder_m": null,
+  "head_body_m": null,
+  "total_m": null
+ }
 }

@@ -1,0 +1,71 @@
+{
+  "species": "thamnophis_elegans",
+  "mode": "refine",
+  "kind": "text-to-3d",
+  "task_id": "01a1b177-4d95-769b-b83a-55153cbe9787",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "refine",
+    "preview_task_id": "01a1b130-c61a-758a-ad12-16a8090511ff",
+    "texture_resolution": "2k",
+    "enable_pbr": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_image_url": "(local file reference.png, sent as a data URI)",
+    "moderation": false
+  },
+  "prompt": null,
+  "image": null,
+  "preview_job": "library/animals/jobs/thamnophis_elegans/01a1b130-c61a-758a-ad12-16a8090511ff",
+  "estimated_credits": 10,
+  "balance_before": 957,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-06T15:25:47+00:00",
+    "created_at": "2026-11-06T15:25:50+00:00",
+    "started_at": "2026-11-06T15:25:50+00:00",
+    "finished_at": "2026-11-06T15:26:06+00:00",
+    "downloaded": "2026-11-06T15:26:17+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur, world pipeline",
+  "progress": 100,
+  "task": {
+    "id": "01a1b177-4d95-769b-b83a-55153cbe9787",
+    "type": "text-to-3d-refine",
+    "status": "SUCCEEDED",
+    "created_at": 1793978750738,
+    "started_at": 1793978750743,
+    "finished_at": 1793978766016,
+    "consumed_credits": 10,
+    "task_error": null
+  },
+  "credits_charged": 10,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 5496688,
+      "sha256": "26ffb95747769d38e59091005a5d77dd6bc822fc3944b7e9a4bbb3a50bbe4c67",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b177-4d95-769b-b83a-55153cbe9787/output/model.glb"
+    },
+    {
+      "file": "texture_base_color.png",
+      "bytes": 7211568,
+      "sha256": "d62150cfd958da93a45750d703142c8e3e886f01e1321fb9092cf8a982105e3d",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b177-4d95-769b-b83a-55153cbe9787/output/texture_0.png"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 74742,
+      "sha256": "ce244dc114365d5116bdd1a046909b2e88c2e9af6ed68721f42636f76ff1bacd",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b177-4d95-769b-b83a-55153cbe9787/output/preview.png"
+    }
+  ],
+  "balance_after": 947
+}

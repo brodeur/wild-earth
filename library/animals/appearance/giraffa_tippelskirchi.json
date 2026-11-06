@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "giraffa_tippelskirchi",
  "scientific": "Giraffa tippelskirchi",
  "common": "masai giraffe",
@@ -46,5 +46,20 @@
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "body gray, tan, white, cream with dark, orange, chestnut blotches; tail dark tuft"
+ "summary": "body gray, tan, white, cream with dark, orange, chestnut blotches; tail dark tuft",
+ "features": {
+  "horns": {
+   "described": false,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [],
+   "length_m": null
+  },
+  "shoulder_m": null,
+  "head_body_m": null,
+  "total_m": null
+ }
 }

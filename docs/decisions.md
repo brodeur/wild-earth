@@ -5892,3 +5892,139 @@ from the job records. The server and client read none of it; what the client dra
 `client/assets/fauna`. `.dockerignore` now leaves `library/animals/jobs` out. The job records stay in git and the raw
 files stay on disk in the main checkout. A job is copied into its own task folder only, never one level up, or the
 ledger counts it twice.
+
+## 2026-11-06: phase 1, iteration 7 (branch claude/sweet-feistel-2054bb)
+
+- **The riparian weight rides in the cover texture's alpha; the micro patch's program fits in 16 texture units**
+  (`terrain.js` coverTexture): since the micro patch (2026-10-28) its program sampled 17 textures where the GPU has 16
+  (MAX_TEXTURE_IMAGE_UNITS): the terrain fragment shader's 16 (cloudMap, csmMap0-2, map, masks, roads, canopyMap,
+  contactAO, seasonMap, waterMap, detailAlbedo, detailNormal, detailMask, ripMask, mcNrm) plus mcDisp in its vertex
+  shader. three warned "Trying to use 17 texture units" on every frame the patch was drawn (the camera within ~4 m of
+  the ground, on every tile, not Lofoten alone: all five logged it at eye height, none from 150 m up). The riparian
+  weight (ripMask, an R8 texture on the 333 px habitat grid) now rides in the alpha of canopyMap, whose canopy.png is on
+  the same grid and whose alpha was unused: one RGBA DataTexture, the same texels, filters and GPU mips, so the ground
+  is unchanged to the bit. Checked by rendering the same frozen frame with the old program and textures restored in
+  the page and with the new: 0 pixels differ at 20 poses on Lofoten, the Serengeti, the Grand Canyon, Lamar and the
+  home tile, also with the riparian tint forced on (which moves up to 490,000 pixels by up to 59 levels, so the test
+  sees it); no tile logs the warning now. The terrain program is at 14 units, the micro patch's at 16: a new sampler
+  for the ground must replace one (pack it into a free channel), not add one.
+- **A tile's own ground layer outside the regional tables; sagebrush in its record's colour** (`pipeline/ground_cards.py`,
+  the `plants` step v4, `species_mix` v3; `grass.js` grassSet / ownGround, `forbs.js`, `shrubfield.js`). Yellowstone's
+  Lamar Valley and Grand Teton are LANDFIRE tiles in no natural-region table, so their rows listed no ground species
+  (the library's grasses are California's) and the sagebrush steppe drew dark green domes over bare ground. Choosing the
+  species, one rule for every such tile: each EVT and BpS community gets its **LANDFIRE BpS model description** (public
+  domain, USFS / DOI / USGS / TNC; the docx named by bps.csv BPS_MODEL, fetched from landfirereview.org's document
+  zipper, read as zip + XML, cached in `pipeline/_cache/landfire_bps/`). A BpS row has its own model. An EVT row takes
+  the same system's model in the tile's map zone, else the BpS under most of its cells (a ruderal grassland on a
+  sagebrush site takes the steppe's grasses). From it: the Dominant and Indicator Species table (weight 1.0), then the
+  binomials of the Vegetation Description (0.5). Names are resolved by the **USDA PLANTS Database** (public domain; old
+  names followed), and "Genus spp." becomes the tile's most-recorded native congener. Kept: grasses (PLANTS growth
+  habit Graminoid) and forbs (Forb/herb), native in the lower 48, with a GBIF record within 0.5 deg; up to 6 + 6 per
+  community and 11 grasses / 16 forbs per tile (the grass layer's slots), by cells x weight. NatureServe Explorer was
+  not used (its terms are not CC). Lamar's montane sagebrush steppe (BpS 11260_21) gets bluebunch wheatgrass, Idaho
+  fescue and Sandberg bluegrass from the table; squirreltail, slender wheatgrass and needle-and-thread from the text;
+  and sulphur buckwheat, arrowleaf balsamroot, silvery lupine, low larkspur, Cusick's paintbrush and sticky geranium.
+  Prairie junegrass is named too but is the seventh grass. Spruce-fir and lodgepole rows get elk sedge, Ross' sedge
+  and heartleaf arnica; aspen rows get bluejoint. The **cards are written by rule from PLANTS characteristics**
+  (a species without its own takes its nominate infraspecific taxon's): height (Height, Mature), live leaf colour
+  (Foliage Color lexicon), the seasons from Active Growth Period (live, curing, cured straw, weathered grey, a calendar
+  quarter each), flowering months (Bloom Period), flower colour, cure (0.8 spring-only growth, 0.6 into summer, 0.4
+  evergreen), shade; a Triticeae grass heads in a spike, others in a panicle; a forb's flower and leaf shape by family.
+  36 cards (Lamar 27, Teton adds 9; region tag `landfire_mz21`, not a natural region), grown by plantgen. Their records
+  have **no habitat-class weights**, so they are drawn only where a description names them, never from a regional
+  tile's class fallback (the home tile and the Hoh draw exactly what they drew). species_mix writes `natural_regions`;
+  where it is empty, grass.js and forbs.js borrow nothing (`ownGround`, as for class_fallback false). The grass layer's
+  species are now chosen per tile (`grassSet`: a tile's own grasses by cells; a regional tile's, the library grasses of
+  its regions; an older mix, the library-wide set as before). A shrubland cell whose own row lists grasses gets grass
+  at 0.8 of grassland density, with the herb floor 0.6 under a shrub canopy (LANDFIRE's EVC gives such a cell herb 0;
+  the steppe's description says 40-85 % herb cover). **The sagebrush's colour**: the shrub field turned a record's
+  sRGB into albedo with a per-channel factor fitted to chamise alone, `[0.6, 0.6, 0.48]`. That darkened every foothill
+  shrub by 40 % and cut its blue by half, so grey-green 134,138,120 drew dark olive. It also pulled 20 % toward the
+  ground photo's hue. Now the albedo is linear x 1.3 on every channel. The 1.3 was measured so that the impostor matches
+  the same species drawn by treegen at the same light (big sagebrush 1.44, coyote brush about 1.2). There is no ground
+  pull for a foothill shrub (the chaparral domes keep theirs). A shrub missing from the look table takes chamise's fine
+  picture when its record's leaves are 25 mm or under. On Lamar the impostor now renders at about the treegen sage's
+  luminance, linear G 0.100 vs 0.103 (was 0.047). Side effects of the same rule: the home tile's foothill shrubs (toyon,
+  coyote brush and the others) draw about twice as bright in linear, the chaparral is unchanged; red huckleberry on the
+  Hoh and Lofoten's junipers take the fine picture. Open: from 10 m the sage reads as smooth grey stones (the far
+  impostor's dome shading); the steppe's sage cover still looks closed near the camera; the grassland rows' pooled
+  dwarf shrubs are California's Brewer's mountain heather (communities.LEXICON's "alpine dwarf-shrubland"), 16-24 % of
+  the ground weights; bloom months are PLANTS' range-wide ones, uncorrected for elevation; the bedrock-and-scree EVT
+  takes the subalpine woodland's sedges at 0.2 density.
+- **A second rung from a reference photo; a feature check; Lamar's rejected animals redone** (`pipeline/reference_photos.py`,
+  `pipeline/appearance.py` features and checks, `pipeline/fauna_models.py` --redo / --judge, `tools/build_quadruped.py`,
+  `tools/build_snake.py`). Iteration 6's judge kept three of Lamar's models off the tile (the mountain goat's ibex horns,
+  the badger's raccoon tail and mask, the garter snake yellow all over), the moose failed the leg gate twice, and the
+  pronghorn's impala horns and the grizzly's pale blotch were drawn. Sized at 140 credits (160 at most) before spending;
+  spent 290 of the 350 allowed (balance 1,087 to 797), every job folder copied to the main checkout's
+  library/animals/jobs/<code>/<task_id>/.
+  - **Reference photos, one rule for every species**: iNaturalist research-grade observations whose photos carry CC0,
+    CC BY or CC BY-SA (each photo's own licence checked), those within 300 km of the tile first (a photo from elsewhere
+    scores 0.75 of a local one: the first garter snake photo was a coastal red-spotted form), adults first; and Wikimedia
+    Commons files in the species' category whose licence is CC0, CC BY or CC BY-SA. 36 + 24 candidates per species, each
+    fetched into its own folder in the git-ignored cache and read as image data. Scored by rule after a GrabCut cut:
+    whole (not cut by the frame), side-on (wider than tall), size, one animal, legs clear, standing square, plain
+    background, the described colours. The store, `library/animals/references/<code>.json`, keeps every candidate's
+    licence, author, attribution line and page; the job that uses a photo carries it (`reference.png`, `reference.json`)
+    and models.json records the chosen photo's attribution. GrabCut without a learned model takes rocks and hillsides for
+    the animal on busy photos, so the scores make a shortlist and the judge picks from its contact sheet against the same
+    criteria (`--pick`, recorded with the rule's rank and the reason: the rule's first was kept for the pronghorn; for the
+    others a lying badger, a range map and tall grass hiding the legs ranked first). A second photo comes from the judge's
+    shortlist only (the rule's order once gave the badger a photo of it lying down).
+  - **The feature check** (`appearance.feature_check`, part of the check): the same sources are read for what the colour
+    facts leave out: each measurement (number and unit, a range) given to the subject named nearest before it in its
+    clause or to the phrase after it ("at the shoulder", "from nose to tail"), bracketed conversions and horn spans
+    dropped, the median of the figures kept; the horns' words and colour. On a quadruped's GLB: the horns are the thin
+    pieces standing out above the skull (the head part voxelised and opened by a ball of half the skull's thickness), in
+    the described horn colour, else the head's pieces in that colour; their length over the withers against the described
+    horn length over the shoulder height, allowed 1.6 times; the tail (its parts' reach from the root) over the head and
+    body; a tail ringed (lightness alternating along it) where the description gives no rings; a pale patch over 5% of
+    the back and flanks on a coat described with no markings. A failed horn or tail length needs a new mesh, a ring or
+    patch a new texture. The old pronghorn (horns 0.66 of the withers against the described 0.29) and goat (0.45 against
+    0.23) and the grizzly's blotch (6%) fail; the library's other models pass, except the elephant (a 28% dusty pale
+    back). The mesh prompt now carries the described horns and tail ("Horns short, thin, curved, black, about 23 cm long.
+    Tail short, about 15 cm."). The colour check gains **a marking is a marking**: where markings are described, the
+    region's ground colours must hold 12% of it (the yellow snake matched its stripes' yellow and passed).
+  - **The striped snake's research**: "a yellow, light orange, or white dorsal stripe" gave the back yellow (the region
+    word "dorsal" stood between the colour and "stripe"); a region word before a pattern word is now the marking's place,
+    modifiers are skipped in colour lists, "bellies" is a region, and "some varieties / occasionally" sentences go. The
+    garter snake: back greyish-green with yellow, light orange or white stripes, belly yellow, yellow side stripes.
+  - **The second rung** (`--redo`, and run() after a gate failure or a geometry failure): a geometry failure, a judge's
+    rejection or no model is tried with Meshy image-to-3D from the photo cropped to the animal (30 credits; the quadruped
+    build turns it side-on, snapped to the quarter turn, head end by rule), a second photo when the first one's mesh
+    fails the gate; a texture failure is first re-refined from the text with the check's correction, then once with the
+    photo as the refine's texture reference (10). A snake's rung is always the texture reference. Image-to-3D copies the
+    photo's pose: two goat, two badger and both moose photos walked or turned their heads, and the gate refused them.
+  - **Build fixes found on the way** (`build_quadruped.py`): left and right legs split at the legs' own median x, not
+    the bounding box's centre (a moose's lopsided antlers had put both forelegs on one side: iteration 6's "3 leg
+    columns"); a tail piece may not stand on the floor and the tail's width test uses the body's rear half (the moose's
+    hind leg and hindquarters were taken for its tail); floor contact must split into fore and hind feet with a gap (a
+    badger lying down passed as standing). Rebuilt to scratch, the library's other quadrupeds find the same tails and legs as before (the lion's tail cut 1% further back). And
+    `build_snake.py` builds each tier as a structured tube cast from the centreline (16 points a ring at lod0) instead of
+    a collapse decimation, which lost a garter snake's stripes in long cross-body triangles.
+  - **Results** (the judge's verdicts in models.json, each from a render against the description):
+    mountain goat, 60 credits, two photos (the first a stride the gate refused): white shaggy coat, short black horns
+    (0.32 of the withers against 0.23), **accepted**. American badger, 90 credits, three photos, none usable (two walking
+    with a forefoot lifted, one lying down): **rejected**, the slot keeps its stand-in. Garter snake, 30 credits (the text
+    re-refine came out ochre with faint stripes; the coastal photo's texture red-spotted; a dark striped snake's photo):
+    black-brown with a pale dorsal stripe and pale side stripes, **accepted**; the colour check still fails (cream stripes
+    for ADW's yellow, a black back for its greyish-green, a grey belly for its yellow). Pronghorn, 30 credits, one photo:
+    short black pronged horns, black face mask, white belly and rump, **accepted**. Grizzly, 20 credits: the photo's
+    texture came out near black (an American black bear's look, which the colour check passes because the description
+    names "almost black" in the coat's range); the text re-refine with the correction "the coat evenly chestnut, no pale
+    patches" is brown with darker legs and a paler frosted band over the shoulders (ADW: Rocky Mountain grizzlies' long
+    shoulder and back hairs frosted with white), **accepted** and drawn; the patch rule still flags it (8%): it cannot
+    tell a frosting from a blotch. Moose, 60 credits for two photos that failed the gate, then **accepted** at no cost
+    from iteration 6's second paid refine once the leg split was fixed: a dark brown bull, pale palmate antlers, dewlap (the patch rule flags 5% pale on it, borderline). Lamar re-linked (animals, stills: 5 chips rendered, 11 modelled slots, the badger's a stand-in); in the world (headless, mirror false) the goat, pronghorn, grizzly, moose and snake draw their own models, no shader errors.
+  - Open: a photo's pose binds image-to-3D, so a standing-square photo is the hard part (the stance score does not see a
+    lifted foot in GrabCut's mask); the badger needs one, or text-to-3D with the feature lead. A learned segmenter would
+    let the rule pick without the judge. The pale-patch rule needs the description's frostings and saddles as markings.
+- **California's lexicon stays in California** (`species_mix.named_rule`): a tile outside every natural-region table
+  read community names with California's lexicon, so "alpine" put Brewer's mountain heather (a California endemic) in
+  Yellowstone's grassland rows as a carpet. There a named species is now kept only where GBIF records it within 0.5
+  degrees of the tile: big sagebrush stays, the heather goes.
+- **Lamar at eye height, where it stands**: silver sagebrush with bunchgrass and the steppe's forbs; the rejected
+  models redrawn from reference photos (mountain goat, pronghorn, grizzly, moose, garter snake; the badger still a
+  stand-in). Not yet holding: the sage draws as tall smooth domes (the shrub field's dome shape and size, closed near the
+  camera), bare ground between the tufts, and an OSM water polygon by the river that the imagery shows as dry ground
+  (a rule to test mapped water against the imagery is next).

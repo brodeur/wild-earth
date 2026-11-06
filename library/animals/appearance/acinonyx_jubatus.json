@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "acinonyx_jubatus",
  "scientific": "Acinonyx jubatus",
  "common": "cheetah",
@@ -50,11 +50,18 @@
   },
   "head": {
    "colours": [
-    "black",
     "white",
-    "tawny"
+    "tawny",
+    "black"
    ],
-   "markings": []
+   "markings": [
+    {
+     "pattern": "streaks",
+     "colours": [
+      "black"
+     ]
+    }
+   ]
   },
   "neck": {
    "colours": [
@@ -112,5 +119,32 @@
  "retrieved": "2026-11-06",
  "by": "pipeline/appearance.py",
  "licence": "facts (colours by body region) read from the sources listed; no text copied",
- "summary": "body tawny, creamy white, pale buff, pale yellow with black spots with black marks; back fawn with black patches; belly and underparts white, light tan; head black, white, tawny; neck white; legs white; tail white tuft, white tip with dark, black rings"
+ "summary": "body tawny, creamy white, pale buff, pale yellow with black spots with black marks; back fawn with black patches; belly and underparts white, light tan; head white, tawny, black with black streaks; neck white; legs white; tail white tuft, white tip with dark, black rings",
+ "features": {
+  "horns": {
+   "described": false,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [
+    "long",
+    "bushy"
+   ],
+   "length_m": [
+    0.6,
+    0.8
+   ]
+  },
+  "shoulder_m": [
+   0.67,
+   0.94
+  ],
+  "head_body_m": [
+   1.1,
+   1.5
+  ],
+  "total_m": null
+ }
 }

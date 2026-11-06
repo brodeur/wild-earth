@@ -1015,17 +1015,17 @@
   },
   "antilocapra_americana": {
    "file": "antilocapra_americana.webp",
-   "width": 267,
-   "height": 333,
+   "width": 250,
+   "height": 229,
    "px_per_m": 268,
    "kind": "ground",
-   "foot_px": 320,
+   "foot_px": 216,
    "pose": "standing",
    "template": "elkCow",
-   "bytes": 10082,
+   "bytes": 8882,
    "source": {
     "model": "fauna/antilocapra_americana.glb",
-    "sha": "f0f1339984393aea",
+    "sha": "69d96077dafd7469",
     "v": "1"
    },
    "generator": "pipeline/stills.py",
@@ -1069,17 +1069,17 @@
   },
   "oreamnos_americanus": {
    "file": "oreamnos_americanus.webp",
-   "width": 261,
-   "height": 268,
+   "width": 249,
+   "height": 215,
    "px_per_m": 268,
    "kind": "ground",
-   "foot_px": 254,
+   "foot_px": 199,
    "pose": "standing",
    "template": "elkCow",
-   "bytes": 9746,
+   "bytes": 8376,
    "source": {
     "model": "fauna/oreamnos_americanus.glb",
-    "sha": "31e3fc02efae5bc0",
+    "sha": "09b53c0c0a0480ea",
     "v": "1"
    },
    "generator": "pipeline/stills.py",
@@ -1094,10 +1094,10 @@
    "foot_px": 14,
    "pose": "standing",
    "template": "snake",
-   "bytes": 1240,
+   "bytes": 1352,
    "source": {
     "model": "fauna/thamnophis_elegans.glb",
-    "sha": "a8cbf8fab73c91aa",
+    "sha": "d46b0841f59e3bd1",
     "v": "1"
    },
    "generator": "pipeline/stills.py",
@@ -1106,16 +1106,16 @@
   "ursus_arctos": {
    "file": "ursus_arctos.webp",
    "width": 314,
-   "height": 255,
+   "height": 253,
    "px_per_m": 268,
    "kind": "ground",
    "foot_px": 224,
    "pose": "standing",
    "template": "bear",
-   "bytes": 11046,
+   "bytes": 10700,
    "source": {
     "model": "fauna/ursus_arctos.glb",
-    "sha": "1ff0f6da88f35768",
+    "sha": "85db0833033478df",
     "v": "1"
    },
    "generator": "pipeline/stills.py",
@@ -1192,9 +1192,27 @@
    },
    "generator": "pipeline/stills.py",
    "fauna": true
+  },
+  "alces_alces": {
+   "file": "alces_alces.webp",
+   "width": 308,
+   "height": 300,
+   "px_per_m": 160.368,
+   "kind": "ground",
+   "foot_px": 280,
+   "pose": "standing",
+   "template": "elkCow",
+   "bytes": 12692,
+   "source": {
+    "model": "fauna/alces_alces.glb",
+    "sha": "a01deddd47afb11f",
+    "v": "1"
+   },
+   "generator": "pipeline/stills.py",
+   "fauna": true
   }
  },
- "total_bytes": 1297052,
+ "total_bytes": 1306940,
  "stand_ins": {
   "acanthis_flammea": {
    "file": "cyanocitta_stelleri.webp",
@@ -1294,17 +1312,6 @@
    "height": 473,
    "foot_px": 450,
    "px_per_m": 323.281
-  },
-  "alces_alces": {
-   "file": "cervus_canadensis.webp",
-   "kin": "cervus_canadensis",
-   "scale": 1.06,
-   "kind": "ground",
-   "pose": "standing",
-   "width": 448,
-   "height": 473,
-   "foot_px": 450,
-   "px_per_m": 252.83
   },
   "alces_americanus": {
    "file": "cervus_canadensis.webp",
@@ -4082,6 +4089,6 @@
  "stills_pipeline": {
   "generator": "pipeline/stills.py + client/tools/opening_sprites.html (?job=, headless Chrome)",
   "render_version": "1",
-  "updated": "2026-11-06T14:24:58Z"
+  "updated": "2026-11-06T16:25:53Z"
  }
 }
