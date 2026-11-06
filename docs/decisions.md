@@ -5320,3 +5320,9 @@ Considered:
 Walking a shaft by looking up or down came with it: the walk direction and the branch choice weigh a segment's slope by
 the aim, and are unchanged on the slopes the old dig could make.
 
+
+## 2026-11-05: limbs and trunks sway in a breeze, not only in a strong wind
+
+Aaron: "I don't see the trunks swaying in the breeze, still just the leaf cards - it doesn't look like the branches are moving either". The wind tiers of 2026-11-04 started the limbs at 4.5 m/s and the trunks at 9 m/s, each on a smoothstep, which is flat at its foot. So the 2-4 m/s breeze that the hourly weather usually gives moved only the cards: at 3 m/s the limbs and trunks were exactly still. Now `windLimbs()` ramps from 0.8 to 12 m/s and `windTrunks()` from 1.2 to 19 m/s, on ramps that rise from the foot (`windRamp`, exponents 0.65 and 0.75): 0.35 and 0.18 of full at 3 m/s, 0.53 and 0.31 at 5, and the full motion at 12 and 19 as before. The amplitudes (`CROWN_SWAY`, `CROWN_FLEX`, cut on 2026-10-29 for "the swaying is too intense") are unchanged, so a breeze gives a slow, gentle sway of the crowns and the whole tree rather than a fast one. The mid crowns and trunks, gated on `windTrunks() > 0`, now bow together in any breeze over 1.2 m/s.
+
+The measurement: on the Hoh at 3 m/s from the forest floor, with a fixed camera and frames 0.15 s apart for 4.5 s, the most any frame differs from the first went from 0.54 to 3.67 in the trunk area and from 2.95 to 5.93 in the crowns.
