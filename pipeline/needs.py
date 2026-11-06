@@ -25,6 +25,7 @@ from .research import id_of
 from .config import Tile, read_json, write_json
 
 MIN_RECORDS = 10        # GBIF records on the tile that make a library-known plant a need
+MIN_RECORDS_KNOWN = 2   # a species with a record or card already needs fewer (sparse tiles: the Serengeti's 459 plant records)
 MIN_CELLS = 10          # 30 m cells of a community before its species count (a stray pixel is not a forest)
 
 
@@ -105,8 +106,11 @@ def plant_needs(tile: Tile, generate=False) -> dict:
     for c in comms:
         if c["cells"] < MIN_CELLS or "glacier" in (c["name"] or "").lower():
             continue
-        rule = match(c["name"], regions)
-        named = named_species(c["name"], regions)
+        synthetic = (c.get("name") or "")[:1] in ("T", "F", "M") and (c.get("name") or "")[1:2].isdigit()   # an ecosystem group
+        rule = None if synthetic else match(c["name"], regions)
+        named = [] if synthetic else named_species(c["name"], regions)   # the lexicon is LANDFIRE's names, not the groups'
+        if synthetic:
+            continue
         c["rule"] = rule["id"] if rule else (named_rule(c["name"], 0) or {}).get("id")
         c["named"] = [sid for sid, _ in named]
         share = c["cells"] / total_cells
@@ -130,11 +134,13 @@ def plant_needs(tile: Tile, generate=False) -> dict:
         kind = kind_of(sid, fam)
         known = has_record(sid) or plantgen.card_path(sid).exists()
         gbif.append({"id": sid, "scientific": row["scientific"], "family": fam, "kind": kind, "records": row["records"], "known": known})
+    from .regions import covers
+    sparse = not covers("landfire", tile)   # outside the US tables a known species needs fewer records (MIN_RECORDS_KNOWN)
     # fill each kind to the density target (research.TARGET) from the top of GBIF's list, known species first
     have = {k: sum(1 for r in needs.values() if LAYER.get(r["kind"]) == k) for k in ("tree", "shrub", "ground")}
     for g in sorted(gbif, key=lambda g: (not g["known"], -g["records"])):
         layer = LAYER.get(g["kind"], "ground")
-        if g["records"] < MIN_RECORDS:
+        if g["records"] < (MIN_RECORDS_KNOWN if g["known"] and sparse else MIN_RECORDS):
             continue
         if g["id"] in needs:
             needs[g["id"]]["records"] = g["records"]
@@ -143,6 +149,21 @@ def plant_needs(tile: Tile, generate=False) -> dict:
             need(g["id"], g["kind"], f"GBIF: {g['records']} records on the tile", records=g["records"])
             needs[g["id"]]["scientific"] = g["scientific"]
             have[layer] += 1
+
+    # the library's species of the tile's natural regions (their cards' `regions`) that the records missed: a canopy
+    # dipterocarp is rarely collected, an orchid often (world pipeline probes, 2026-11-05)
+    if regions:
+        from .communities import regions_of
+        for rec in sorted(plantgen.LIBRARY.glob("*.json")):
+            sid = rec.stem
+            if sid in needs or sid == "index":
+                continue
+            try:
+                d = json.loads(rec.read_text())
+            except ValueError:
+                continue
+            if any(r in regions for r in (regions_of(sid, d) or [])) and not set(regions_of(sid, d)) & {"california", "pacific_northwest"}:
+                need(sid, FORM_KIND.get(d.get("form"), "forb"), f"regional: a library species of {', '.join(regions)}")
 
     localized = write_localized(tile)
     for sid, loc in localized.items():

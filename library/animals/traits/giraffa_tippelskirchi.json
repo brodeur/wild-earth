@@ -1,0 +1,117 @@
+{
+ "id": "giraffa_tippelskirchi",
+ "scientific": "Giraffa tippelskirchi",
+ "common": "masai giraffe",
+ "kind": "mammal",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Mammalia",
+  "order": "Artiodactyla",
+  "family": "Giraffidae",
+  "genus": "Giraffa"
+ },
+ "body_plan": "quadruped",
+ "mass_kg": 899.9948,
+ "size": {
+  "length_m": 3.476,
+  "shoulder_or_wingspan_m": 2.155
+ },
+ "diet": {
+  "role": [
+   "herbivore"
+  ],
+  "diet_tenths": {
+   "inv": 0.0,
+   "vend": 0.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 10.0
+  },
+  "vertebrate_share": 0.0,
+  "mass_kg": 899.9948,
+  "activity": [],
+  "source": "eltontraits (genus)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 974.5
+  },
+  "sound": {
+   "range_m": 1364.3
+  },
+  "scent": {
+   "range_m": 1949.0
+  }
+ },
+ "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+ "locomotion": {
+  "code": "giraffa_tippelskirchi",
+  "class": "Mammalia",
+  "order": "Artiodactyla",
+  "family": "Giraffidae",
+  "body_plan": "quadruped",
+  "mass_kg": 899.9948,
+  "length_m": 3.476,
+  "hip_m": 2.155,
+  "posture": "unguligrade",
+  "gaits": {
+   "walk": "froude 0.5",
+   "trot": "froude 2.5",
+   "gallop": "beyond"
+  },
+  "walk_mps": 3.25,
+  "trot_mps": 7.27,
+  "cruise_mps": 8.34,
+  "top_mps": 13.9,
+  "stride_hz": 1.51,
+  "stride_m": 4.81,
+  "sprint_s": 20.6,
+  "recover_s": 72.1,
+  "turn_rad_s": 1.35,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.245,
+   "max_rad": 0.44,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {},
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T06:19:53Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (genus)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

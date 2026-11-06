@@ -1,0 +1,71 @@
+{
+  "species": "crocuta_crocuta",
+  "mode": "refine",
+  "kind": "text-to-3d",
+  "task_id": "01a1afc1-aabb-77ff-a76a-e1ad3680bc8e",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "refine",
+    "preview_task_id": "01a1afc0-f8d7-715e-a352-483f96c04a09",
+    "texture_resolution": "2k",
+    "enable_pbr": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Natural coat colours and markings of a wild adult Spotted hyaena (Crocuta crocuta) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+    "moderation": false
+  },
+  "prompt": "Natural coat colours and markings of a wild adult Spotted hyaena (Crocuta crocuta) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+  "image": null,
+  "preview_job": "library/animals/jobs/crocuta_crocuta/01a1afc0-f8d7-715e-a352-483f96c04a09",
+  "estimated_credits": 10,
+  "balance_before": 2307,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-06T07:27:47+00:00",
+    "created_at": "2026-11-06T07:27:49+00:00",
+    "started_at": "2026-11-06T07:27:49+00:00",
+    "finished_at": "2026-11-06T07:28:38+00:00",
+    "downloaded": "2026-11-06T07:29:00+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur, world pipeline",
+  "progress": 100,
+  "task": {
+    "id": "01a1afc1-aabb-77ff-a76a-e1ad3680bc8e",
+    "type": "text-to-3d-refine",
+    "status": "SUCCEEDED",
+    "created_at": 1793950069252,
+    "started_at": 1793950069258,
+    "finished_at": 1793950118284,
+    "consumed_credits": 10,
+    "task_error": null
+  },
+  "credits_charged": 10,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 6015336,
+      "sha256": "2607b2a18920849cf38986f311f80834b3aabc9f985a361e21d0d9198a9efcb4",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1afc1-aabb-77ff-a76a-e1ad3680bc8e/output/model.glb"
+    },
+    {
+      "file": "texture_base_color.png",
+      "bytes": 6986556,
+      "sha256": "cc47644836e11c48cf9289761822273a279c309f0846e6e57f96f0e44b6da1cd",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1afc1-aabb-77ff-a76a-e1ad3680bc8e/output/texture_0.png"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 87384,
+      "sha256": "79e0dd115cd3d5612664ae5464711eff2792f23414a0c7bd59a7b021934dbe81",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1afc1-aabb-77ff-a76a-e1ad3680bc8e/output/preview.png"
+    }
+  ],
+  "balance_after": 2297
+}

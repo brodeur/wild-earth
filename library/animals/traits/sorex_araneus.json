@@ -1,0 +1,122 @@
+{
+ "id": "sorex_araneus",
+ "scientific": "Sorex araneus",
+ "common": "common shrew",
+ "kind": "mammal",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Mammalia",
+  "order": "Soricomorpha",
+  "family": "Soricidae",
+  "genus": "Sorex"
+ },
+ "body_plan": "rodent",
+ "mass_kg": 0.01,
+ "size": {
+  "length_m": 0.078,
+  "shoulder_or_wingspan_m": 0.023
+ },
+ "diet": {
+  "role": [
+   "insectivore",
+   "scavenger"
+  ],
+  "diet_tenths": {
+   "inv": 7.0,
+   "vend": 0.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 3.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.0,
+  "mass_kg": 0.01,
+  "activity": [
+   "nocturnal",
+   "crepuscular",
+   "diurnal"
+  ],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 99.5
+  },
+  "sound": {
+   "range_m": 139.3
+  },
+  "scent": {
+   "range_m": 199.1
+  }
+ },
+ "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+ "locomotion": {
+  "code": "sorex_araneus",
+  "class": "Mammalia",
+  "order": "Soricomorpha",
+  "family": "Soricidae",
+  "body_plan": "rodent",
+  "mass_kg": 0.01,
+  "length_m": 0.078,
+  "hip_m": 0.023,
+  "posture": "parasagittal",
+  "gaits": {
+   "walk": "froude 0.5",
+   "trot": "froude 2.5",
+   "gallop": "beyond"
+  },
+  "walk_mps": 0.34,
+  "trot_mps": 0.75,
+  "cruise_mps": 0.86,
+  "top_mps": 1.43,
+  "stride_hz": 8.36,
+  "stride_m": 0.09,
+  "sprint_s": 1.2,
+  "recover_s": 5.0,
+  "turn_rad_s": 8.0,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.037,
+   "max_rad": 0.44,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {},
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T04:05:07Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

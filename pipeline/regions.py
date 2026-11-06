@@ -29,6 +29,10 @@ NATURAL = {
     "california": [(-124.5, 32.4, -114.1, 42.0)],
     "pacific_northwest": [(-125.0, 42.0, -116.0, 49.5), (-128.5, 48.2, -122.5, 51.5)],
     "great_basin": [(-120.0, 35.5, -110.5, 43.0)],
+    # the world pipeline's probes (2026-11-05): boxes for the regions their trait cards are tagged with
+    "east_africa": [(28.0, -12.0, 42.0, 5.0)],
+    "scandinavia": [(4.0, 54.5, 32.0, 71.5)],
+    "borneo": [(108.5, -4.5, 119.5, 7.5)],
 }
 
 
@@ -45,8 +49,9 @@ def in_region(tile, region: str | None) -> bool:
 # implemented where they are CC0, CC BY or CC BY-SA (or public domain).
 COVERAGE = {
     "usgs_3dep": {"regions": US, "what": "bare-earth DEM, 1 m lidar where flown",
-                  "fallback": "pc_3dep_seamless", "global": "nasadem",
-                  "next": "copernicus_dem_glo30 (30 m; its own licence, not CC: credit required, redistribution allowed)"},
+                  "fallback": "pc_3dep_seamless", "global": "copernicus_dem_glo30"},
+    "copernicus_dem_glo30": {"regions": ("global",), "what": "Copernicus DEM GLO-30, a 30 m surface model (licence: free and "
+                             "open with its notice)", "implemented": True},
     "pc_3dep_seamless": {"regions": US, "what": "3DEP seamless 10 m DEM (Planetary Computer)", "global": "nasadem"},
     "nasadem": {"regions": ("nasadem",), "what": "NASADEM 1 arc-second (~30 m) DEM, 60 N to 56 S; public domain (NASA)",
                 "implemented": True},

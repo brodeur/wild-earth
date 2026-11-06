@@ -1,0 +1,146 @@
+{
+  "schema": "wild-earth/setting@1",
+  "id": "pnw_valley_rainforest",
+  "name": "Valley-floor temperate rain forest (Sitka spruce, western hemlock, bigleaf maple groves)",
+  "region": "pacific_northwest",
+  "status": "prototype 2026-11-05: written by hand from the sources below to show the schema; the paragon step's agent writes these",
+  "trait_form": "{v: typical, range: [lo, hi], unit, src: [source ids], conf: high|med|low, check: lidar|photos|literature|climate|none, drives: [look.json paths]}",
+  "match": {
+    "evt": [7036, 7178, 7039, 7156],
+    "bps": [10360],
+    "nature_serve": ["CES204.841 North Pacific Seasonal Sitka Spruce Forest", "CES204.842 North Pacific Hypermaritime Western Red-cedar-Western Hemlock Forest"],
+    "landform": { "height_above_stream_m": [2, 25], "slope_deg": [0, 12] },
+    "elevation_m": [0, 450],
+    "rain_mm_yr": [2500, 5000],
+    "note": "valley floors and river terraces of the Olympic west-side rivers (Hoh, Queets, Quinault, Bogachiel); the young alder flats and bars are pnw_braided_gravel_bar"
+  },
+  "narrative": "Huge, widely spaced Sitka spruce and western hemlock over a floor that is mostly moss: moss on the ground, on every log, on the feet of the trunks, and on the maples so thickly that the limbs are fat green arms hung with streamers of clubmoss. Most young trees stand on logs, so living trees grow in rows and on stilts where an old log has rotted away. Elk keep it open: sword fern, oxalis and grass under the giants, few shrubs, sight lines between trunks. The light is soft and green, the air wet, summers foggy at dawn.",
+  "structure": {
+    "canopy_top_m": { "v": 78, "range": [75, 85], "unit": "m", "src": ["mckee1982"], "conf": "high", "check": "lidar", "drives": ["trees.height_scale"] },
+    "middle_layer_m": { "v": 50, "range": [45, 55], "unit": "m", "src": ["mckee1982"], "conf": "high", "check": "lidar" },
+    "stems_per_ha_over_5cm": { "v": 100, "range": [64, 142], "unit": "stems/ha", "src": ["mckee1982"], "conf": "high", "check": "lidar", "drives": ["trees.density"] },
+    "basal_area_m2_ha": { "v": 74, "range": [66, 82], "unit": "m2/ha", "src": ["mckee1982"], "conf": "high", "check": "none" },
+    "dbh_spruce_cm": { "v": 104, "range": [90, 118], "unit": "cm", "src": ["mckee1982"], "conf": "high", "check": "none", "drives": ["trees.age_mix"] },
+    "dbh_hemlock_cm": { "v": 55, "range": [46, 65], "unit": "cm", "src": ["mckee1982"], "conf": "high", "check": "none" },
+    "openness": { "v": "park-like: widely spaced stems, openings up to several hectares", "src": ["mckee1982"], "conf": "high", "check": "lidar" },
+    "canopy_cover_densiometer": { "v": 0.93, "range": [0.75, 1.0], "unit": "fraction", "src": ["woods2021"], "conf": "med", "check": "lidar" },
+    "maple_groves_trees_per_ha": { "v": 188, "range": [185, 191], "unit": "trees/ha", "src": ["nadkarni1984"], "conf": "high", "check": "none", "drives": ["species_mix.groves.acer_macrophyllum"] },
+    "maple_height_m": { "v": 24, "range": [21, 28], "unit": "m", "src": ["nadkarni1984"], "conf": "high", "check": "none" }
+  },
+  "understory": {
+    "shrub_cover": { "v": 0.2, "range": [0.15, 0.31], "unit": "fraction", "src": ["mckee1982"], "conf": "high", "check": "lidar", "drives": ["species_mix.shrub_density"] },
+    "vine_maple_cover_grazed_terrace": { "v": 0.28, "unit": "fraction", "src": ["mckee1982"], "conf": "high", "check": "photos" },
+    "fern_cover": { "v": 0.1, "range": [0.07, 0.14], "unit": "fraction", "src": ["mckee1982"], "conf": "med", "check": "photos", "drives": ["species_mix.ground.polystichum_munitum"] },
+    "forb_cover": { "v": 0.33, "range": [0.3, 0.37], "unit": "fraction", "src": ["mckee1982"], "conf": "high", "check": "photos", "drives": ["species_mix.ground"] },
+    "grass_cover_grazed": { "v": 0.15, "range": [0.05, 0.25], "unit": "fraction", "src": ["mckee1982"], "conf": "med", "check": "photos" },
+    "dominant_herb": { "v": "oxalis_oregana", "src": ["woodward2021"], "conf": "high", "check": "photos" },
+    "browse_pressure": { "v": 0.8, "range": [0.6, 1.0], "unit": "0-1 (1 = shrubs held at a fifth of their unbrowsed cover)", "src": ["woodward2021", "houston1987"], "conf": "med", "check": "literature", "drives": ["species_mix.browse", "treegen.shrub.browse_line"] },
+    "browse_effect": { "v": "after 36 years without elk: shrubs 5-6 fold, ferns +5-7 % cover, herbs -15-20 %, grasses under 1.5 %, salmonberry 0.2 -> 12 %", "src": ["woodward2021"], "conf": "high", "check": "literature" },
+    "browse_line_m": { "v": 1.8, "range": [1.5, 2.2], "unit": "m", "src": ["judgement: a Roosevelt elk's reach"], "conf": "low", "check": "photos", "drives": ["treegen.shrub.browse_line"] },
+    "species_weights": { "polystichum_munitum": 0.3, "oxalis_oregana": 0.25, "acer_circinatum": 0.15, "vaccinium_parvifolium": 0.08, "rubus_spectabilis": 0.04, "tiarella_trifoliata": 0.06, "maianthemum_dilatatum": 0.05, "struthiopteris_spicant": 0.04, "grasses": 0.03, "src": ["mckee1982", "woodward2021", "gbif_tile"], "conf": "med" }
+  },
+  "bryophytes": {
+    "cover": {
+      "soil": { "v": 0.53, "range": [0.42, 0.64], "src": ["mckee1982"], "conf": "high", "check": "photos", "drives": ["ground.materials.moss", "moss.png"] },
+      "log": { "v": 0.88, "range": [0.85, 0.9], "src": ["harmon1989a"], "conf": "high", "check": "photos", "drives": ["deadwood.moss"] },
+      "rock": { "v": 0.7, "range": [0.5, 0.9], "src": ["judgement"], "conf": "low", "check": "photos", "drives": ["rocks.moss"] },
+      "root_and_trunk_base": { "v": 0.8, "range": [0.6, 0.95], "src": ["photos"], "conf": "low", "check": "photos", "drives": ["treegen.bark.moss.base"] },
+      "trunk_mid": { "v": 0.35, "range": [0.2, 0.6], "src": ["photos"], "conf": "low", "check": "photos", "drives": ["treegen.bark.moss.mid"] },
+      "limb_upper_face": { "v": 0.75, "range": [0.5, 0.95], "src": ["nadkarni1984", "photos"], "conf": "med", "check": "photos", "drives": ["treegen.limb_moss"] }
+    },
+    "mat_depth_cm": { "v": 6, "range": [0, 20], "unit": "cm", "src": ["woods2021"], "conf": "high", "check": "none", "drives": ["litter.moss_cushion.height"] },
+    "log_mats": { "v": "thin (under 5 cm) on 59 % of a log, thick on 25 %", "src": ["harmon1989b"], "conf": "high" },
+    "ground_species": ["hylocomium_splendens", "rhytidiadelphus_loreus", "eurhynchium_oreganum"],
+    "log_species": ["antitrichia_curtipendula", "hylocomium_splendens"],
+    "green_by_month": { "v": [1, 1, 1, 1, 0.95, 0.85, 0.75, 0.75, 0.8, 0.9, 1, 1], "unit": "0-1, January first", "src": ["nps_fog", "wp_hoh_climate"], "conf": "med", "check": "climate", "drives": ["weather.moss_green"], "note": "July has 66 mm of rain but dawn fog and drip; the moss dulls a little, never browns (the foothills' table goes to 0.1)" },
+    "colour_lab": { "v": [[56.5, -9.1, 20.1], [58.8, -25.2, 46.3], [33.6, -10.5, 27.4]], "unit": "CIELAB, the photo palette's three moss greens", "src": ["photo_stats"], "conf": "high", "check": "photos", "drives": ["moss.colour"] }
+  },
+  "epiphytes": {
+    "by_host": {
+      "acer_macrophyllum": {
+        "load": { "v": 1.0, "unit": "0-1 (1 = the heaviest in the region)", "src": ["nadkarni1984"], "conf": "high", "check": "photos", "drives": ["epiphytes.acer_macrophyllum.load"] },
+        "mass_kg_dry_per_tree": { "v": 35.5, "range": [32.8, 38.2], "unit": "kg", "src": ["nadkarni1984"], "conf": "high" },
+        "living_vs_own_foliage": { "v": 4, "unit": "ratio", "src": ["nadkarni1984"], "conf": "med", "note": "the foliage mass is from Oregon maples" },
+        "kinds": { "moss_mats": 0.6, "clubmoss_curtains": 0.3, "licorice_fern": 0.05, "liverworts": 0.05, "src": ["nadkarni1984"], "conf": "med" },
+        "curtain_length_m": { "v": 0.4, "range": [0.15, 1.0], "unit": "m", "src": ["photos"], "conf": "low", "check": "photos", "drives": ["epiphytes.curtain.length"] },
+        "species": ["selaginella_oregana", "isothecium_myosuroides", "porella_navicularis", "rhytidiadelphus_loreus", "polypodium_glycyrrhiza"]
+      },
+      "acer_circinatum": { "load": { "v": 0.8, "src": ["photos"], "conf": "low", "check": "photos" }, "kinds": { "moss_mats": 0.7, "clubmoss_curtains": 0.3 } },
+      "alnus_rubra": { "load": { "v": 0.35, "src": ["wp_alnus"], "conf": "low", "check": "photos" }, "kinds": { "crustose_lichen": 0.6, "moss_mats": 0.4 }, "note": "ash-grey bark with white lichen patches" },
+      "populus_trichocarpa": { "load": { "v": 0.5, "src": ["wp_selaginella"], "conf": "low", "check": "photos" }, "kinds": { "moss_mats": 0.6, "clubmoss_curtains": 0.4 } },
+      "picea_sitchensis": { "load": { "v": 0.3, "src": ["photos"], "conf": "low", "check": "photos" }, "kinds": { "moss_mats": 0.8, "lichen": 0.2 }, "note": "moss on the lower limbs and buttresses; the crown stays dark blue-green" },
+      "tsuga_heterophylla": { "load": { "v": 0.35, "src": ["photos"], "conf": "low", "check": "photos" }, "kinds": { "moss_mats": 0.7, "hanging_moss": 0.3 } }
+    }
+  },
+  "deadwood": {
+    "dead_bole_mass_t_ha": { "v": 140, "range": [120, 161], "unit": "t/ha", "src": ["graham1982"], "conf": "high", "check": "lidar", "drives": ["deadwood.volume"] },
+    "log_cover": { "v": 0.1, "range": [0.06, 0.25], "unit": "fraction of the ground", "src": ["harmon1989b", "harmon1989a"], "conf": "high", "check": "lidar", "drives": ["deadwood.cover"] },
+    "regeneration_on_logs": { "v": 0.94, "range": [0.88, 0.97], "unit": "fraction", "src": ["mckee1982"], "conf": "high", "check": "photos", "drives": ["deadwood.nurse.seedlings"] },
+    "seedlings_per_m2_log_vs_floor": { "v": [20.1, 4.5], "unit": "/m2", "src": ["woods2021"], "conf": "high", "drives": ["deadwood.nurse.seedling_density"] },
+    "best_nurse_decay_class": { "v": 3, "unit": "decay class 1-5", "src": ["mckee1982"], "conf": "high" },
+    "bark_loss_years": { "v": 60, "unit": "yr (spruce, hemlock; Douglas-fir 190)", "src": ["harmon1989a"], "conf": "high", "drives": ["deadwood.decay_mix"] },
+    "decay_mix": { "v": { "1": 0.1, "2": 0.2, "3": 0.3, "4": 0.25, "5": 0.15 }, "src": ["judgement from harmon1989a"], "conf": "low", "check": "photos", "drives": ["deadwood.decay_mix"] },
+    "mortality": { "v": "hemlock falls (windthrow); spruce dies standing, then falls", "src": ["graham1982"], "conf": "high", "drives": ["deadwood.snag_species"] },
+    "colonnades_per_ha": { "v": 2, "range": [0.5, 5], "unit": "/ha", "src": ["judgement: conspicuous (nps_trf, harmon1989a), never counted"], "conf": "low", "check": "photos", "drives": ["deadwood.colonnades"] },
+    "stilt_roots": { "v": "conspicuous on trees born on logs: roots arch 0.5-2 m over the vanished log", "src": ["nps_trf", "harmon1989a"], "conf": "med", "check": "photos", "drives": ["treegen.roots.stilt"] }
+  },
+  "ground": {
+    "materials": { "moss": 0.55, "needle_duff": 0.15, "rotten_wood": 0.1, "oxalis_and_herbs": 0.15, "bare_soil": 0.05, "src": ["mckee1982", "photo_stats"], "conf": "med", "check": "photos", "drives": ["ground.materials"] },
+    "litter_mix": { "tsuga_heterophylla_needles": 0.35, "picea_sitchensis_needles": 0.25, "acer_macrophyllum_leaves": 0.2, "moss_fragments": 0.1, "fern_fronds": 0.05, "cones": 0.05, "src": ["judgement"], "conf": "low", "check": "photos", "drives": ["litter.mix"] }
+  },
+  "light": {
+    "understory_open_sky": { "v": 0.13, "range": [0.08, 0.19], "unit": "fraction", "src": ["vanpelt2000 (proxy: other tall old growth)"], "conf": "low", "check": "photos", "drives": ["atmosphere.canopy_transmittance"] },
+    "quality": { "v": "soft, diffuse, green-filtered; sun flecks rare; no hard shadows on overcast days (most days)", "src": ["nps_hoh", "photo_stats"], "conf": "med", "check": "photos" },
+    "lightness_median_Lstar": { "v": 39, "range": [32, 48], "unit": "CIELAB L*", "src": ["photo_stats"], "conf": "high", "check": "photos", "drives": ["grade.exposure", "atmosphere.sky_light"] }
+  },
+  "air": {
+    "rain_mm_yr": { "v": 3400, "range": [3300, 3550], "unit": "mm/yr", "src": ["wp_hoh_climate", "nps_hoh", "harmon1989a"], "conf": "high", "check": "climate" },
+    "wet_season": { "v": "75-80 % of the rain November to April; July 66 mm", "src": ["woodward2021", "wp_hoh_climate"], "conf": "high", "check": "climate" },
+    "fog_drip_mm_yr": { "v": 760, "unit": "mm/yr", "src": ["nps_fog"], "conf": "low", "note": "read only as a search snippet" },
+    "fog": { "v": "rolls in after sunset, lingers to late morning; summer", "src": ["nps_fog"], "conf": "med", "check": "climate", "drives": ["weather.fog_baseline", "atmosphere.valley_haze"] },
+    "temp_c": { "v": { "jan": [0.8, 4.9], "jul": [10.4, 22.0] }, "unit": "deg C, mean daily min and max", "src": ["wp_hoh_climate"], "conf": "high" }
+  },
+  "wet": {
+    "baseline_by_month": { "v": [0.9, 0.9, 0.85, 0.75, 0.6, 0.5, 0.4, 0.4, 0.5, 0.75, 0.9, 0.9], "unit": "0-1 surface wetness without rain, January first", "src": ["climate", "judgement"], "conf": "low", "check": "photos", "drives": ["weather.wet_baseline"] }
+  },
+  "palette": {
+    "from": "photo_stats, 56 forest-interior photos, 2026-11-05",
+    "swatches": [
+      { "hex": "#5d5b4e", "w": 0.26, "what": "trunks and shade" },
+      { "hex": "#2b281e", "w": 0.24, "what": "deep shade" },
+      { "hex": "#858b64", "w": 0.16, "what": "lit moss and fern, grey-green" },
+      { "hex": "#4c5322", "w": 0.15, "what": "moss in shade" },
+      { "hex": "#7a9837", "w": 0.1, "what": "lit moss, yellow-green" },
+      { "hex": "#a3a7a4", "w": 0.09, "what": "sky and mist through the canopy" }
+    ],
+    "green_hue_deg": { "v": 117, "unit": "CIELAB hue angle of the green pixels, median", "check": "photos", "drives": ["grade", "moss.colour"] },
+    "moss_green_share": { "v": 0.32, "unit": "fraction of pixels with hue 95-125 deg and chroma over 14", "check": "photos" },
+    "near_black_share": { "v": 0.16, "unit": "fraction of pixels L* under 20", "check": "photos" }
+  },
+  "fauna": {
+    "cervus_canadensis": { "density_per_km2": { "v": 12, "range": [8, 16], "src": ["houston1987", "woodward2021"], "conf": "high" }, "group": { "v": 20, "range": [5, 30], "what": "cow herds with calves; bulls alone or in small groups; rut in September", "src": ["nps_elk"], "conf": "high" }, "drives": ["animals.cervus_canadensis"] }
+  },
+  "sources": {
+    "mckee1982": "McKee, LaRoi & Franklin 1982. Structure, composition and reproductive behavior of terrace forests, South Fork Hoh River. https://andrewsforest.oregonstate.edu/pubs/pdf/pub131.pdf",
+    "nadkarni1984": "Nadkarni 1984. Biomass and mineral capital of epiphytes in an Acer macrophyllum community, Olympic Peninsula. Can. J. Bot. 62:2223-2228",
+    "harmon1989a": "Harmon & Franklin 1989 (Am. Midl. Nat. 121:112-124), plant succession on logs, Hoh. https://andrewsforest.oregonstate.edu/sites/default/files/lter/pubs/pdf/pub959.pdf",
+    "harmon1989b": "Harmon 1989, Can. J. Bot. 67:1833-1837, seed retention and log cover. http://andrewsforest.oregonstate.edu/pubs/pdf/pub960.pdf",
+    "woodward2021": "Woodward, Jenkins & Harmon 2021, Ecosphere 12(12):e03889, 36-year elk exclosures, South Fork Hoh. https://andrewsforest.oregonstate.edu/pubs/pdf/pub5220.pdf",
+    "woods2021": "Woods, Maleta & Ortmann 2021, Ecology and Evolution 11:9631-9641, nurse logs in the Hoh. https://pmc.ncbi.nlm.nih.gov/articles/PMC8293789/",
+    "graham1982": "Graham & Cromack 1982, Can. J. For. Res. 12:511-521, dead boles in Olympic rain forests (abstract). https://digitalcommons.usu.edu/barkbeetles/168",
+    "houston1987": "Houston, Moorhead & Olson 1987, Roosevelt elk density in old-growth forests of Olympic National Park. https://www.usgs.gov/publications/roosevelt-elk-density-old-growth-forests-olympic-national-park",
+    "vanpelt2000": "Van Pelt & Franklin 2000, Can. J. For. Res. 30:1231 (proxy: no Olympic site)",
+    "landfire_bps_10360": "LANDFIRE BpS 10360 North Pacific Hypermaritime Sitka Spruce Forest (public domain). https://research.fs.usda.gov/sites/default/files/feis/bps/10360_1_2.pdf",
+    "nps_trf": "NPS, Temperate Rain Forests (public domain). https://www.nps.gov/olym/learn/nature/temperate-rain-forests.htm",
+    "nps_hoh": "NPS, Visiting the Hoh. https://www.nps.gov/olym/planyourvisit/visiting-the-hoh.htm",
+    "nps_elk": "NPS, Roosevelt elk. https://www.nps.gov/olym/learn/nature/roosevelt-elk.htm",
+    "nps_fog": "NPS Olympic weather handout, 2008 (read as a search snippet only)",
+    "wp_hoh_climate": "Wikipedia, Hoh Rainforest, climate table for the Hoh Ranger Station (CC BY-SA). https://en.wikipedia.org/wiki/Hoh_Rainforest",
+    "wp_alnus": "Wikipedia, Alnus rubra (CC BY-SA)",
+    "wp_selaginella": "Wikipedia, Selaginella oregana (CC BY-SA)",
+    "photo_stats": "tiles/utm10n_429_5293/place/photos.json, the forest-interior set (Wikimedia Commons, openly licensed)",
+    "gbif_tile": "GBIF facet counts on utm10n_429_5293 (species/plant_needs.json)",
+    "photos": "judged from the classified photos; to be measured by the photo-grounding pass",
+    "judgement": "the author's estimate, no source; conf low"
+  }
+}

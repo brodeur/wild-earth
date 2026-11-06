@@ -1,0 +1,118 @@
+{
+ "id": "sialia_currucoides",
+ "scientific": "Sialia currucoides",
+ "common": "mountain bluebird",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Passeriformes",
+  "family": "Turdidae",
+  "genus": "Sialia"
+ },
+ "body_plan": "bird",
+ "mass_kg": 0.0296,
+ "size": {
+  "length_m": 0.111,
+  "shoulder_or_wingspan_m": 0.178
+ },
+ "diet": {
+  "role": [
+   "insectivore"
+  ],
+  "diet_tenths": {
+   "inv": 6.0,
+   "vend": 0.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 3.0,
+   "nect": 0.0,
+   "seed": 1.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.0,
+  "mass_kg": 0.0296,
+  "activity": [],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 247.3
+  },
+  "sound": {
+   "range_m": 123.7
+  },
+  "scent": {
+   "range_m": 9.9
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "sialia_currucoides",
+  "class": "Aves",
+  "order": "Passeriformes",
+  "family": "Turdidae",
+  "body_plan": "bird",
+  "mass_kg": 0.0296,
+  "length_m": 0.111,
+  "hip_m": 0.056,
+  "posture": "biped",
+  "gaits": {
+   "ground": "hop",
+   "flight": "flap-glide"
+  },
+  "walk_mps": 0.52,
+  "trot_mps": 1.17,
+  "cruise_mps": 1.44,
+  "top_mps": 2.4,
+  "stride_hz": 7.1,
+  "stride_m": 0.16,
+  "sprint_s": 1.6,
+  "recover_s": 5.5,
+  "turn_rad_s": 7.53,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.035,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": true
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T06:19:56Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

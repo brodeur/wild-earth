@@ -5296,6 +5296,86 @@ the eagle, the chickadee, the bobcat, the otter, the salamander, the merganser a
 The lineup page drew all twenty models at their brief's sizes. Tests pass. Fauna and games rerun on both Hoh tiles: all
 nineteen present by their records, each at registry fidelity 3.
 
+## 2026-11-05: the gestalt pipeline: a paragon per tile, carried into every generator and judged against photos (design; branch claude/sweet-feistel-2054bb)
+
+Aaron: "Research the square, understand the major animals and plant and tree species, what is the 'vibe' or gestalt of
+that area. Collect reference photos ... and what the inter-species dynamics are (for games)", and "a pipeline that
+produces something that feels like the place, by producing each object in such a way that it contains the vibe of the
+paragon." A design for review, `docs/gestalt-pipeline.md`; the published page: https://claude.ai/artifact/CRXGhhEe16r6njnDD8dKvU.
+Nothing in the step graph or the client changed.
+
+- **Chosen: two new stages around the existing four**, `place` after base (settings_map, structure, sources, photos,
+  photo_stats, paragon, paragon_check) and `judge` last (poses, render, judge), plus `deadwood` and `look` in flora and
+  `interactions` in fauna. Place reads only base, so flora can read it; judge needs the finished tile. Rejected: a
+  separate tool outside `build_tile` (it would lose `--plan`, `--status`, the fingerprints and `cost.json`).
+- **Chosen: settings, not one description per tile.** A setting (valley-floor rain forest, braided gravel bar, montane
+  silver fir, subalpine) is a card in `library/settings/` keyed by EVT, landform and region and reused by neighbours; the
+  tile's paragon names its settings, shares, ranked signature features, views and interactions. Rejected: a single
+  per-tile gestalt (the Hoh tile is 75 % valley wall; an average would lose the valley floor's look).
+- **Chosen: every number is a sourced, checked trait** with a range and the look parameters it drives. Source order:
+  this tile's measurement, then classification text (LANDFIRE BpS, NatureServe), then literature, then judgement marked
+  low. The check fails on a schema error or a contradicted measurement and warns on the rest.
+- **Chosen: the agent writes files, the pipeline stays deterministic.** The paragon step is a trait card's pattern: an
+  agent (`claude -p`, fixed prompt) writes the setting cards and the paragon; the step records its inputs' hashes and is
+  stale, not re-run, when they change, unless `--research`.
+- **Chosen: photos are measured and judged, never shipped.** CC0, PDM, US Government, CC BY and CC BY-SA only, filtered
+  per photo; licence and author kept per photo; the client gets numbers only.
+- **Chosen: a judge with four parts**: image statistics (30), a vision rubric (40), the signature checklist (20) and a
+  blind place test (10). Tuning is bounded to each trait's sourced range, so the loop cannot paint renders to match
+  photos the paragon does not support; structural gaps become registry hand edits.
+- **Measured today, the prototype**: 234 openly licensed Commons photos geotagged in the Hoh tile (75 public domain,
+  mostly NPS); 56 forest interiors against the current render in CIELAB: median lightness 39 against 20, green hue 117°
+  against 145°, moss-green pixels 32 % against 0.03 %, a*b* overlap 0.18 (two photo sets of the place: 0.82). Lidar
+  against the literature: canopy p99 82 m on the floor's Sitka spruce cells against McKee's 75-85 m (pass); 74 % cover
+  over 5 m in the 1 m CHM against Woods' 93 % densiometer (warn: different instruments).
+- **Prototype files**: `library/settings/pnw_valley_rainforest.json`, `library/settings/pnw_braided_gravel_bar.json`,
+  `tiles/utm10n_429_5293/place/paragon.json`, `tiles/utm10n_429_5293/place/photos.json`. The scripts, contact sheets,
+  the source-licence survey and the Hoh fact sheet are in the shared notes folder.
+- **Cost**: per new place $5-12 of Claude, under 100 MB, 40-70 min on top of the four stages; to implement $225-355, no
+  Meshy credits.
+- **First new place, recommended: Lamar Valley, Yellowstone** (`utm12n_558_4964`): unlike both the foothills and the Hoh,
+  the hardest test of the interactions and games, and mostly existing archetypes (4-6 Meshy jobs, about 150 credits).
+  Then Saguaro West (`utm12n_479_3565`, the generator stress test), then the Smokies' Greenbrier (`utm17n_279_3949`).
+  Not run; that waits for Aaron's review.
+
+## 2026-11-05 (later): the world pipeline: measure everywhere, generalise by ecosystem, research only the signature, judge everything (design; branch claude/sweet-feistel-2054bb)
+
+Aaron widened the brief: "don't anchor too heavily on my insights or ideas - anchor on the goal: A pipeline that can
+generate a tile anywhere on earth. Paragon may not be the right approach - it's just an idea. Think about the problem
+strategically, and design a pipeline from land generation, to the ecosystem through the seasons, the animal behaviors
+and the games." Design: `docs/world-pipeline.md`; the same page, republished:
+https://claude.ai/artifact/CRXGhhEe16r6njnDD8dKvU. Nothing built.
+
+- **The problem, ordered by what the eye reads first**: layout, structure, light and colour, time, signature, life,
+  relationships (scene gist: Oliva and Torralba 2001; Greene and Oliva 2009). The pipeline is strongest at layout and
+  species and weakest at structure below the canopy, light and the season's state; the Hoh measurement shows it (colour
+  overlap 0.18 with photos where two photo sets of the place share 0.82).
+- **Evidence varies by three orders of magnitude** and not with how remarkable a place is: plant records on seven
+  candidate tiles run from 37 (Pantanal) and 459 (Serengeti) to 76,136 (Białowieża).
+- **Chosen: measure, generalise, specialise, judge.** Layers a dataset measures come from it at the best resolution the
+  tile has; what space cannot see comes from ecosystem cards keyed on the IUCN Global Ecosystem Typology and from
+  trait-driven animal rules (density from body mass, Damuth 1981; carnivores from prey biomass, Carbone and Gittleman
+  2002; behaviour from about fifteen archetypes generalised from the kin machines); an agent researches only the
+  signature layer where evidence exists; a judge scores every layer (a top-down render against Sentinel-2 by month
+  everywhere, photos and a vision rubric where they exist, an AI-only season simulation, people) into a fidelity report.
+- **Rejected as the core**: per-place research for everything (the paragon as first designed: cost per tile, and it fails
+  where literature is thin, which is most of Earth); biome templates alone (every savanna alike); fitting to imagery
+  alone (photos are thin, colour can be fitted while structure stays wrong); generative models (not grounded, inconsistent
+  across tiles and seasons, unclear provenance; at most a texture source).
+- **Stages**: land (base, global: GLO-30 corrected for canopy, national lidar, GEBCO and the shore, MERIT Hydro and JRC
+  water, SoilGrids, ERA5), ecosystem (the EFG map, measured structure, plants by records then checklists then functional
+  types, look, signature), seasons (new: monthly state and the tile's own calendar, resources derived), animals, games
+  (the classifier on global inputs, the interaction web, signature games, balance by simulation), judge (new).
+- **The paragon** is kept as the signature layer; its general content moves to ecosystem and setting cards and its
+  checks to the judge.
+- **Cost**: a tile $3-6 of Claude once its cards exist (1-1.5 h with lidar, 40-60 min without); an EFG card $5-10 (about
+  25 cover most land); implementing in three phases, $800-1,250 of Claude plus Meshy per species; phase 1 alone builds
+  any land tile at fidelity 2 or better.
+- **First run**: three probes after phase 1 (Seronera, Serengeti `utm36s_698_9724`; Moskenesøya, Lofoten
+  `utm33n_412_7531`; Danum Valley, Borneo `utm50n_582_543`), about $50-80 and no credits; then the Serengeti taken deep
+  (about 8 Meshy models, 200-240 credits, $60-100). Lamar Valley stays the lower-risk US alternative. Not run; waits for
+  Aaron's review.
+
 ## 2026-11-05: the dig goes the way the orbit camera looks (docs/game-dig.md "Steering by the camera")
 
 Aaron: "Can you make the orbit controls work for digging - so that it's easy to dig down."
@@ -5347,3 +5427,162 @@ sharp-shins and merlins over it), move and phase with no NaN, and play; animals.
 Two fixes asked for with it: `tools/rig_quadruped.py`'s leg bands widen instead of failing on a short decimated leg
 (`band_at`, a test), and the upright meshes (the owls, the kingfisher, the flycatcher) tip forward to fly level as the
 player (`flierControl.js` `upright`).
+
+## 2026-11-05 (night): the probes first; geology and soil, niches, the sea and tile requests in the design (branch claude/sweet-feistel-2054bb)
+
+Aaron, after reviewing the world pipeline: geology and soil must be first-class; "Probes first - figure out if the
+primitives are correct"; ecosystems from the species research ("grows on the shady side of mountains", "in riparian
+zones") with IUCN as a possible base; the sea and waterways designed for, with "license for creativity" under water;
+players request tiles now, judge later, pay later. Phase 1 was stopped at a clean commit (564adc6: the global readers and
+the ecosystem classifier) and the probes run instead.
+
+- **The probes ran** (`docs/probes-2026-11.md`): Seronera (`utm36s_698_9724`), Moskenesoya (`utm33n_412_7531`) and Danum
+  Valley (`utm50n_582_543`) through all four stages with only what a tile needs outside the US, each recorded as a
+  fallback: Copernicus GLO-30 for the DEM (NASADEM stops at 60 N), a Sentinel-2 composite for NAIP, OSM for NHD (with the
+  osm step's curl-capable Overpass reader), WorldCover, Meta canopy height, ERA5 and SoilGrids written as LANDFIRE-shaped
+  rasters (`pipeline/landcover_global.py`) plus the IUCN GET ecosystem map, SoilGrids in SSURGO's encoding
+  (`pipeline/soils_global.py`), communities composed from the tile's own researched species (`species_mix.research_rule`),
+  and 14 trait cards for the probes' dominants. About 27 min each, no Meshy credits. Captured at fixed poses and compared
+  with Sentinel-2 by hand.
+- **Found**: terrain, routing, land cover, canopy, geology, soil, the species research and the step graph carry over. What
+  fails is where a place's life is decided: composition (no niches; records taken for abundance; growth form guessed from
+  a temperate family list, so Danum's research had no trees), the ground (the foothills' materials and grasses
+  everywhere), the animals (the client draws a fixed North American cast by habitat: about 190 in Borneo), the seasons
+  (northern quarters everywhere), water permanence (NHD codes: Danum's big river is dry), and colour (satellite overlap
+  0.00-0.15, lighter and half the chroma). Global geology is coarse where the signature is rock (no kopjes), and
+  Macrostrat's per-source licences are not filtered.
+- **Phase 1 reordered by the findings**: composition by niche; animals from the tile's own list; ground and palette;
+  water permanence and the sea surface; seasons from the tile's climate; national lidar and canopy-corrected GLO-30;
+  geology licence filter and finer maps; the satellite judge automated. $275-425 of Claude, estimated.
+- **Design, revision 2** (`docs/world-pipeline.md`, the page republished as v3): geology and soil as land-stage layers and
+  what rock drives; the niche layer composing species per cell over the IUCN base layer; the sea and waterways with a
+  labelled licence to invent under water (plausible for the place, never over a measurement, labelled `invented`,
+  deterministic, reviewed); the request queue (ask by cell id only, preflight, queue, build, publish; paid later).
+- **Fixes the probes forced**: a treegen guard for a reference tree without a crown envelope; `write_json` is atomic and
+  the tile index skips a manifest mid-write (parallel builds); the hydro OSM fallback uses the osm step's reader; the
+  ecosystem layer's source registered (the audit refused it until then). Two semi-deciduous cards (desert date, sausage
+  tree) corrected after the card test caught them.
+- **Regression**: the Hoh (`utm10n_429_5293`) rebuilt with this branch's code in a scratch copy: the steps whose code
+  changed re-ran, 173 files byte-identical, the 7 that differ are timestamps or the 2 forage rows the new library species
+  add; audit passes, seams unchanged; the viewer loads it with no console error. All 63 tests pass.
+
+## 2026-11-05 (late night): a cost ceiling and pricing, bark from research, the sea floor by physics, four more probes (branch claude/sweet-feistel-2054bb)
+
+Aaron: "For Meshy at scale, I want to find out what the ceiling is for a fresh tile in a fresh region - I need to figure
+out pricing. For generative textures, there should be a research step to find descriptions of the bark and generate based
+on the description. For underwater topography... large portions will be sandy or muddy at the outflow of a river... the
+pipeline should invent rich ecosystems even if there isn't data to support that." Then: "We should also run something
+within the US. Maybe Grand Canyon, Wyoming. I'm also curious about Costa Rica or somewhere dramatic in the Amazon."
+
+- **The ceiling** (`docs/world-pipeline.md` 6b): a fresh tile in a fresh region costs about $640-700 of Claude and $46-74
+  of Meshy at worst (all 46 animals modelled fresh at 80 credits, four new body plans), about $250-260 and $10-15 typically
+  (the 22 of the density target), and $20-40 once a region's library has grown. Claude's agent time dominates, not the
+  credits: Meshy is $0.0125-0.020 a credit (meshy.ai/pricing, read 2026-11-05: Pro $20 for 1,000, Ultra $100 for 8,000).
+  Pricing: a fixed neighbour price, a founder's price for a region's first tile, payments pooled per region; the queue
+  models each shared species once, ordered by how many pending tiles need it.
+- **Bark from research** (3e): a per-species research step writes a structured bark block (colour by age, pattern,
+  furrows, plates, lenticels, peeling, age transitions, sources and licences); most of it maps onto treegen's bark
+  parameters, a procedural recipe (CC0 by construction) fills what they cannot draw, a generative model only where its
+  licence lets the output ship; checked against openly licensed bark photos.
+- **The sea floor** (3c): sediment placed by physics (fans and deltas off river mouths by sediment supply, mud below the
+  wave base and in sheltered bays, rippled sand on the exposed shelf, rock on steep and hard-rock ground), then life
+  invented on it by substrate, light, temperature and latitude (kelp, reef, seagrass, mangrove, walls, burrowed mud), the
+  species from OBIS by marine ecoregion and depth, labelled invented.
+- **Four more probes** (`docs/probes-2026-11.md`): the Grand Canyon (`utm12n_396_3988`), Grand Teton (`utm12n_514_4838`,
+  chosen over Lamar Valley for testing more at once), Corcovado (`utm17n_210_932`) and Manu (`utm19s_233_8679`). The US
+  path works on new land and the Tetons read as the place (imagery overlap 0.52); Macrostrat gives the Canyon's real
+  formations but the client draws three rock classes; on the tropical tiles an empty species mix lets the client's
+  California fallback draw pines, and the humid haze washes the scene out. Phase 1 gains a ninth item ($25-40): no other
+  region's species as a fallback, formation colours from the geology, humid haze. Revised phase 1: $300-465.
+- Fixed on the way: the dem step's Planetary Computer fallback wrote the open dataset into the manifest (a shadowed
+  variable, reached when USGS answered 502); Macrostrat's coverage test failed every coastal tile. The US point clouds were
+  skipped with the lidar step's DEM-only mode (4-5 h each; crowns proven elsewhere). The later captures used a headless
+  Chrome over the DevTools protocol, the pane being hidden.
+
+## 2026-11-06: phase 1, iteration 1: every fix a rule for every tile (branch claude/sweet-feistel-2054bb)
+
+Aaron: "implement as many as you can on your own before showing me something you all are proud of that is the result of
+the pipeline not fiddling with individual species." The seven probes are the regression set (tools/probes: fixed poses,
+a headless Chrome over CDP, the sheet and the satellite statistics); each change below is a rule, a generator or a data
+source that holds on every tile, and is judged by re-running the set.
+
+- **The tile's own animals** (`pipeline/fauna_slots.py`, the `animals` step; the client side in `animals.js`): the
+  client spawned a fixed North American cast by habitat (about 190 in Borneo). Now every tile writes `client/fauna.json`:
+  which curated species may spawn there (those the tile's research or records list; the rest are gated off) and up to
+  40 stand-in slots for its own researched species, each an existing species' body and behaviour (its kin) chosen by rules
+  over taxonomy, diet and mass, scaled by the mass ratio's cube root, at a density from body mass (Damuth 1981 for
+  herbivores, 30 / mass kg for carnivores, a softer law for birds), with group size by guild and hours and water from
+  the traits. Known errors are listed per slot (a giraffe on a deer's proportions). A tile without the layer is unchanged.
+- **The research lists the animals that matter** (`fauna.py` CLASS_QUOTA): the quota of 8 mammals by records left out
+  the Serengeti's wildebeest, zebra, giraffe, elephant and buffalo (11th-22nd by records); it is now 25 mammals, 25 birds
+  (5 reptiles, 4 amphibians), each needing 3 records, and the client slots order mammals by records x sqrt(mass).
+- **Composition by the records' own niches** (`species_mix.research_rule`, `terrain_weights`): a researched species is
+  weighted by its card's habitat class weights (the riparian sausage tree is no longer the commonest tree on the open
+  plains: weight 31 -> 1.5) and, where no regional table has a row, by its own floor / mid / steep / north factors.
+- **No other climate's plants** (`species_mix` class_fallback, `vegetation.js cellPlan`): a cell whose row had no
+  trees borrowed the client's California class mix (the pines in Manu and Corcovado). Outside LANDFIRE's reach the
+  client no longer borrows it, and a tile whose research has no tree on record gets functional stand-ins from the
+  library's trees of its own climate group only (REGION_CLIMATE), labelled as stand-ins.
+- **Rivers run where the climate says** (`channels.perennial_area_km2`): outside NHD, OSM gives no permanence and the
+  area rule made a rainforest's river intermittent (Danum's drawn dry). Now the aridity index (ERA5 precipitation over
+  potential evapotranspiration) sets the drainage area above which a stream is perennial (humid 0.5 km2, sub-humid 10,
+  semi-arid 300, arid none). The Serengeti's Seronera stays seasonal.
+- **A forest floor under the canopy without a point cloud** (`inpaint_crowns.litter_under_canopy`): the base texture on a
+  global tile is a satellite composite, so a closed canopy's floor showed the crowns' green from above (the "lawn"). The
+  imagery is now blended toward leaf litter by the canopy map's tree cover.
+- **The tile's own seasons** (`fetch_global.season_months`, in `climate.normals`): the season-keyed tables were written
+  for a Mediterranean north; a seasonally dry tropics now maps them onto its own rainfall (the Serengeti: spring
+  November-January, summer June-August), a temperate south shifts six months.
+- **The judge compares like with like** (`tools/probes`): the top-down render is drawn without haze (Sentinel-2 L2A is
+  corrected for the atmosphere) and compared with the Sentinel-2 composite of the capture's own month.
+
+## 2026-11-06: phase 1, iteration 2: the tile's own animals get bodies of their own (branch claude/sweet-feistel-2054bb)
+
+Aaron: "the Serengeti deep pass waits until phase 1 spawns a tile's own animals (archetype plus stand-in body)... Build
+that first, then model", and "the result of the pipeline not fiddling with individual species". Every hand build before
+this one (build_cougar.py, build_elk.py ...) carried its species' palette, landmarks and reshapes in code. This
+iteration replaces that, for four-legged mammals, with one path that reads everything from data.
+
+- **One build for every quadruped** (`tools/build_quadruped.py`): parts from the geometry (the tail behind a cut at the
+  rump, narrower than the body; the feet on the floor split fore and hind at the widest gap; the legs below the belly
+  line; the head ahead of a plane at the neck base), colour from the Meshy refine's texture (each face of each tier the
+  mean of the nearest source faces' texture colour), size from the body mass, then the existing `rig_quadruped.py` and
+  `bake_gait.mjs`. Tried without credits on the ground squirrel, cougar and bear jobs already in the library.
+- **Meshy meshes are not manifold** (a refine had 627 edges on three or more faces), and the collapse decimation stalls
+  on them (3,821 triangles whatever the ratio). The build voxel-remeshes at 1/200 of the length after reading the
+  colour (colour goes by position, so the UVs are no longer needed).
+- **Size from mass, not the trait card's shoulder height**: the cards' shoulder heights are allometric guesses from mass
+  that ignore build (a hippo 2.5 m at the shoulder, a zebra 1.65 m). The build sizes the closed mesh so its volume at
+  1,000 kg/m3 holds the card's mass (EltonTraits / PanTHERIA): the cougar comes out 0.70 m at the withers (hand build
+  0.72), the lion 1.0 m. The prompts carry no dimensions.
+- **Which species get a model** (`pipeline/fauna_models.py`, run by hand with a credit budget, never by a tile build):
+  every predator over 15 kg (largest first), then the four-legged mammals by biomass (density x mass), until the budget;
+  a model the library already has costs nothing on any tile. The prompts come from the card and the place (OpenStreetMap
+  reverse geocoding: "Serengeti, Mara Region, Tanzania") with a fixed pose the build needs (side-on, four feet flat,
+  nothing else on the ground). A build that cannot find four legs earns one more preview, then the slot stays a stand-in.
+  The ledger per run: tiles/<tile>/fauna/models_run.json; the library's models: library/animals/models.json; the tile's
+  fauna.json slot carries `model` when the library has one (`fauna_slots.py`).
+- **The coat's contrast** (found in the Serengeti pass): a face coloured by the mean texture under it turned the zebra
+  grey and the leopard plain. Each face now takes the commonest of the coat's own palette colours under it (k-means, 10
+  colours), and a patterned coat (the mean lightness step between neighbouring source faces: plain coats 0.024-0.058,
+  the zebra, giraffe, cheetah and leopard 0.089-0.125) gets up to 12,000 triangles at the near tier (4,000 for a plain
+  one).
+- **Legs that stand on the floor**: an elephant's trunk hanging below the leg cut was taken for a foreleg, a narrow
+  antelope's close-set legs for its belly, and a walking pose passed with a hind leg missed. A leg is now a piece below
+  the cut that reaches the floor; the belly is the torso's down-facing underside; every quadrant must have a foot on the
+  floor or the attempt fails (and the slot gets its one retry, then stays a stand-in: the hartebeest).
+- **Paid jobs first**: before buying a species, the step rebuilds its existing refine jobs with today's build;
+  `--rebuild` rebuilds every library model from its job (all eleven were, after each rule above).
+- **No California forbs outside the regional tables** (`forbs.js`): iteration 1 stopped the class mix for trees and
+  shrubs; the forbs still took their class weights (filaree rosettes lying flat on the Serengeti and at Lofoten, the
+  "floating leaf cards"). A tile with `class_fallback` false now draws only its own rows' forbs.
+- **The measured ceiling** (docs/probes-2026-11.md): twelve signature species of the Serengeti, 480 credits; 11
+  modelled, the hartebeest a stand-in; 30 credits a species when the first preview stands square, 60 when it takes two.
+- **A client that draws a slot's own model** (`animalModels.js loadFaunaModel`, `animals.js installFauna`): a slot with
+  `model` gets a drawn mesh on the skinned path, real size, with the template of its kin; the procedural stand-in stays
+  the fallback.
+- **Fixes the regression set found**: Manu's page hung for ten minutes building the water grid (a 1,624-vertex OSM river
+  polygon over the whole tile, tested whole at each of 4 million pixels): rings are now indexed by 30 m band of north
+  (`tilepackage.js ringBands`). Then it, and Corcovado, threw: a cell with no tree mix (iteration 1's no-fallback rule)
+  still drew its riparian extras from the null mix (`vegetation.js`, `impostors.js`). The capture script now gives up on
+  a page that never becomes ready and the run goes on to the next probe.

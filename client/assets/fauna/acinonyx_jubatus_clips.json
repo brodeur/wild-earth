@@ -1,0 +1,238 @@
+{
+ "rate": 30,
+ "width": 60,
+ "height": 48,
+ "format": "rgba16f",
+ "texels": "row f = frame f; texels j*3..j*3+2 = rows 0..2 of joint j's 3x4 matrix (adopted frame)",
+ "joints": [
+  "Hips",
+  "Spine",
+  "Chest",
+  "Neck",
+  "Head",
+  "Tail1",
+  "Tail2",
+  "Tail3",
+  "UpperLeg.FL",
+  "LowerLeg.FL",
+  "Foot.FL",
+  "UpperLeg.FR",
+  "LowerLeg.FR",
+  "Foot.FR",
+  "UpperLeg.HL",
+  "LowerLeg.HL",
+  "Foot.HL",
+  "UpperLeg.HR",
+  "LowerLeg.HR",
+  "Foot.HR"
+ ],
+ "joint_rest": [
+  [
+   0,
+   0.4953,
+   -0.3327
+  ],
+  [
+   0,
+   0.5088,
+   -0.0031
+  ],
+  [
+   0,
+   0.5224,
+   0.3264
+  ],
+  [
+   0,
+   0.5225,
+   0.3069
+  ],
+  [
+   0,
+   0.5925,
+   0.484
+  ],
+  [
+   -0.0014,
+   0.4926,
+   -0.3484
+  ],
+  [
+   0.0005,
+   0.3279,
+   -0.3951
+  ],
+  [
+   -0.0016,
+   0.1981,
+   -0.4687
+  ],
+  [
+   0.0713,
+   0.5091,
+   0.2684
+  ],
+  [
+   0.0838,
+   0.3198,
+   0.1926
+  ],
+  [
+   0.068,
+   0.1343,
+   0.1418
+  ],
+  [
+   -0.0783,
+   0.5091,
+   0.3845
+  ],
+  [
+   -0.0921,
+   0.3198,
+   0.3088
+  ],
+  [
+   -0.0792,
+   0.1343,
+   0.3805
+  ],
+  [
+   0.069,
+   0.471,
+   -0.3183
+  ],
+  [
+   0.0812,
+   0.3198,
+   -0.2427
+  ],
+  [
+   0.0573,
+   0.1599,
+   -0.344
+  ],
+  [
+   -0.0669,
+   0.4664,
+   -0.347
+  ],
+  [
+   -0.0787,
+   0.3198,
+   -0.2737
+  ],
+  [
+   -0.0693,
+   0.1599,
+   -0.4003
+  ]
+ ],
+ "scale": 1,
+ "offset": [
+  0,
+  0,
+  0
+ ],
+ "source": {
+  "file": "acinonyx_jubatus.glb",
+  "engine": "client/src/gait.js (tools/bake_gait.mjs)",
+  "species": "acinonyx_jubatus",
+  "tile": null,
+  "params": {
+   "vw": 1.804693879858853,
+   "vt": 4.035418193942234,
+   "ft": 2.565086475403574,
+   "Lt": 1.5732094152137026,
+   "posture": "digitigrade",
+   "pace": false,
+   "gallop": "transverse"
+  }
+ },
+ "clips": {
+  "Idle": {
+   "first": 0,
+   "count": 1,
+   "loop": false,
+   "duration": 0,
+   "root_motion": [
+    0,
+    0,
+    0
+   ]
+  },
+  "Walk": {
+   "first": 1,
+   "count": 21,
+   "loop": true,
+   "duration": 0.7047,
+   "root_motion": [
+    0,
+    0,
+    0
+   ],
+   "stride_m": 0.763,
+   "touchdown": 0.2381,
+   "speed_mps": 1.083,
+   "cadence_hz": 1.419,
+   "duty": 0.618,
+   "gait": 0
+  },
+  "Trot": {
+   "first": 22,
+   "count": 13,
+   "loop": true,
+   "duration": 0.4437,
+   "root_motion": [
+    0,
+    0,
+    0
+   ],
+   "stride_m": 1.343,
+   "touchdown": 0.5385,
+   "speed_mps": 3.027,
+   "cadence_hz": 2.254,
+   "duty": 0.5,
+   "gait": 1
+  },
+  "Gallop": {
+   "first": 35,
+   "count": 11,
+   "loop": true,
+   "duration": 0.3637,
+   "root_motion": [
+    0,
+    0,
+    0
+   ],
+   "stride_m": 2.3481,
+   "touchdown": 0.5455,
+   "speed_mps": 6.457,
+   "cadence_hz": 2.75,
+   "duty": 0.378,
+   "gait": 2
+  },
+  "Bed": {
+   "first": 46,
+   "count": 1,
+   "loop": false,
+   "duration": 0,
+   "root_motion": [
+    0,
+    0,
+    0
+   ]
+  },
+  "Eat": {
+   "first": 47,
+   "count": 1,
+   "loop": false,
+   "duration": 0,
+   "root_motion": [
+    0,
+    0,
+    0
+   ]
+  }
+ }
+}

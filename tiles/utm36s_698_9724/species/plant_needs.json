@@ -1,0 +1,1387 @@
+{
+ "tile": "utm36s_698_9724",
+ "regions": [
+  "east_africa"
+ ],
+ "communities": [
+  {
+   "source": "evt",
+   "code": 9012,
+   "name": "T4.1 Trophic savannas",
+   "cells": 110432
+  },
+  {
+   "source": "evt",
+   "code": 9013,
+   "name": "T4.2 Pyric tussock savannas",
+   "cells": 287
+  },
+  {
+   "source": "bps",
+   "code": 9012,
+   "name": "T4.1 Trophic savannas",
+   "cells": 133
+  },
+  {
+   "source": "evt",
+   "code": 9020,
+   "name": "T6.2 Polar/alpine cliffs, screes, outcrops and lava flows",
+   "cells": 26
+  },
+  {
+   "source": "evt",
+   "code": 9002,
+   "name": "T1.2 Tropical/subtropical dry forests and thickets",
+   "cells": 11
+  }
+ ],
+ "unread": [],
+ "needs": [
+  {
+   "id": "kigelia_africana",
+   "kind": "tree",
+   "why": [
+    "GBIF: 31 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 31,
+   "scientific": "Kigelia africana",
+   "record": true,
+   "card": true,
+   "drawn_as": "kigelia_africana",
+   "rank": 1
+  },
+  {
+   "id": "euphorbia_ingens",
+   "kind": "forb",
+   "why": [
+    "GBIF: 16 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 16,
+   "scientific": "Euphorbia ingens",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 2
+  },
+  {
+   "id": "phoenix_reclinata",
+   "kind": "forb",
+   "why": [
+    "GBIF: 11 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 11,
+   "scientific": "Phoenix reclinata",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 3
+  },
+  {
+   "id": "vachellia_tortilis",
+   "kind": "tree",
+   "why": [
+    "GBIF: 9 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 9,
+   "scientific": "Vachellia tortilis",
+   "record": true,
+   "card": true,
+   "drawn_as": "vachellia_tortilis",
+   "rank": 4
+  },
+  {
+   "id": "balanites_aegyptiaca",
+   "kind": "tree",
+   "why": [
+    "regional: a library species of east_africa"
+   ],
+   "cover": 0.0,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "balanites_aegyptiaca",
+   "rank": 5
+  },
+  {
+   "id": "themeda_triandra",
+   "kind": "grass",
+   "why": [
+    "regional: a library species of east_africa"
+   ],
+   "cover": 0.0,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "themeda_triandra",
+   "rank": 6
+  },
+  {
+   "id": "vachellia_drepanolobium",
+   "kind": "shrub",
+   "why": [
+    "regional: a library species of east_africa"
+   ],
+   "cover": 0.0,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "vachellia_drepanolobium",
+   "rank": 7
+  }
+ ],
+ "gbif_plants": [
+  {
+   "id": "kigelia_africana",
+   "scientific": "Kigelia africana",
+   "family": "Bignoniaceae",
+   "kind": "tree",
+   "records": 31,
+   "known": true
+  },
+  {
+   "id": "euphorbia_ingens",
+   "scientific": "Euphorbia ingens",
+   "family": "Euphorbiaceae",
+   "kind": "forb",
+   "records": 16,
+   "known": false
+  },
+  {
+   "id": "phoenix_reclinata",
+   "scientific": "Phoenix reclinata",
+   "family": "Arecaceae",
+   "kind": "forb",
+   "records": 11,
+   "known": false
+  },
+  {
+   "id": "vachellia_tortilis",
+   "scientific": "Vachellia tortilis",
+   "family": "Fabaceae",
+   "kind": "tree",
+   "records": 9,
+   "known": true
+  },
+  {
+   "id": "cenchrus_ciliaris",
+   "scientific": "Cenchrus ciliaris",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 9,
+   "known": false
+  },
+  {
+   "id": "aristida_kenyensis",
+   "scientific": "Aristida kenyensis",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 9,
+   "known": false
+  },
+  {
+   "id": "panicum_poioides",
+   "scientific": "Panicum poioides",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 8,
+   "known": false
+  },
+  {
+   "id": "aristida_adoensis",
+   "scientific": "Aristida adoensis",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 8,
+   "known": false
+  },
+  {
+   "id": "megathyrsus_maximus",
+   "scientific": "Megathyrsus maximus",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 7,
+   "known": false
+  },
+  {
+   "id": "vachellia_xanthophloea",
+   "scientific": "Vachellia xanthophloea",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 7,
+   "known": false
+  },
+  {
+   "id": "tetrapogon_roxburghiana",
+   "scientific": "Tetrapogon roxburghiana",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 7,
+   "known": false
+  },
+  {
+   "id": "solanum_campylacanthum",
+   "scientific": "Solanum campylacanthum",
+   "family": "Solanaceae",
+   "kind": "forb",
+   "records": 6,
+   "known": false
+  },
+  {
+   "id": "bothriochloa_radicans",
+   "scientific": "Bothriochloa radicans",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 6,
+   "known": false
+  },
+  {
+   "id": "panicum_coloratum",
+   "scientific": "Panicum coloratum",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 5,
+   "known": false
+  },
+  {
+   "id": "achyranthes_aspera",
+   "scientific": "Achyranthes aspera",
+   "family": "Amaranthaceae",
+   "kind": "forb",
+   "records": 5,
+   "known": false
+  },
+  {
+   "id": "setaria_sphacelata",
+   "scientific": "Setaria sphacelata",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 5,
+   "known": false
+  },
+  {
+   "id": "echinochloa_colonum",
+   "scientific": "Echinochloa colonum",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 5,
+   "known": false
+  },
+  {
+   "id": "bothriochloa_insculpta",
+   "scientific": "Bothriochloa insculpta",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "datura_stramonium",
+   "scientific": "Datura stramonium",
+   "family": "Solanaceae",
+   "kind": "forb",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "gynandropsis_gynandra",
+   "scientific": "Gynandropsis gynandra",
+   "family": "Cleomaceae",
+   "kind": "forb",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "euphorbia_prostrata",
+   "scientific": "Euphorbia prostrata",
+   "family": "Euphorbiaceae",
+   "kind": "forb",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "chloris_gayana",
+   "scientific": "Chloris gayana",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "chloris_virgata",
+   "scientific": "Chloris virgata",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "cynodon_plectostachyus",
+   "scientific": "Cynodon plectostachyus",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "chloris_pycnothrix",
+   "scientific": "Chloris pycnothrix",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 4,
+   "known": false
+  },
+  {
+   "id": "sporobolus_fimbriatus",
+   "scientific": "Sporobolus fimbriatus",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "eragrostis_tenuifolia",
+   "scientific": "Eragrostis tenuifolia",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "eragrostis_pilosa",
+   "scientific": "Eragrostis pilosa",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "dactyloctenium_aegyptium",
+   "scientific": "Dactyloctenium aegyptium",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "commelina_benghalensis",
+   "scientific": "Commelina benghalensis",
+   "family": "Commelinaceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "ipomoea_cairica",
+   "scientific": "Ipomoea cairica",
+   "family": "Convolvulaceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "alternanthera_pungens",
+   "scientific": "Alternanthera pungens",
+   "family": "Amaranthaceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "hoslundia_opposita",
+   "scientific": "Hoslundia opposita",
+   "family": "Lamiaceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "hibiscus_aponeurus",
+   "scientific": "Hibiscus aponeurus",
+   "family": "Malvaceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "sporobolus_pyramidalis",
+   "scientific": "Sporobolus pyramidalis",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "eriochloa_meyeriana",
+   "scientific": "Eriochloa meyeriana",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "panicum_deustum",
+   "scientific": "Panicum deustum",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "sporobolus_ioclados",
+   "scientific": "Sporobolus ioclados",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "urochloa_xantholeuca",
+   "scientific": "Urochloa xantholeuca",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "eragrostis_aspera",
+   "scientific": "Eragrostis aspera",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "moorochloa_eruciformis",
+   "scientific": "Moorochloa eruciformis",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "hibiscus_flavifolius",
+   "scientific": "Hibiscus flavifolius",
+   "family": "Malvaceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "enteropogon_macrostachyus",
+   "scientific": "Enteropogon macrostachyus",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "cenchrus_mezianus",
+   "scientific": "Cenchrus mezianus",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "cenchrus_stramineus",
+   "scientific": "Cenchrus stramineus",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "cissus_quadrangularis",
+   "scientific": "Cissus quadrangularis",
+   "family": "Vitaceae",
+   "kind": "forb",
+   "records": 3,
+   "known": false
+  },
+  {
+   "id": "microchloa_kunthii",
+   "scientific": "Microchloa kunthii",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "eragrostis_cilianensis",
+   "scientific": "Eragrostis cilianensis",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "cyperus_cyperoides",
+   "scientific": "Cyperus cyperoides",
+   "family": "Cyperaceae",
+   "kind": "emergent",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "aloe_volkensii",
+   "scientific": "Aloe volkensii",
+   "family": "Asphodelaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "solanum_setaceum",
+   "scientific": "Solanum setaceum",
+   "family": "Solanaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "alysicarpus_glumaceus",
+   "scientific": "Alysicarpus glumaceus",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "sesbania_sesban",
+   "scientific": "Sesbania sesban",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "vigna_friesiorum",
+   "scientific": "Vigna friesiorum",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "vigna_unguiculata",
+   "scientific": "Vigna unguiculata",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "erigeron_bonariensis",
+   "scientific": "Erigeron bonariensis",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "tridax_procumbens",
+   "scientific": "Tridax procumbens",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "malvastrum_coromandelianum",
+   "scientific": "Malvastrum coromandelianum",
+   "family": "Malvaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "hibiscus_calyphyllus",
+   "scientific": "Hibiscus calyphyllus",
+   "family": "Malvaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "gomphocarpus_kaessneri",
+   "scientific": "Gomphocarpus kaessneri",
+   "family": "Apocynaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "crossandra_subacaulis",
+   "scientific": "Crossandra subacaulis",
+   "family": "Acanthaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "vachellia_gerrardii",
+   "scientific": "Vachellia gerrardii",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "panicum_hygrocharis",
+   "scientific": "Panicum hygrocharis",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "eleusine_multiflora",
+   "scientific": "Eleusine multiflora",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "sporobolus_festivus",
+   "scientific": "Sporobolus festivus",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "urochloa_dictyoneura",
+   "scientific": "Urochloa dictyoneura",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "urochloa_brachyura",
+   "scientific": "Urochloa brachyura",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "leonotis_nepetifolia",
+   "scientific": "Leonotis nepetifolia",
+   "family": "Lamiaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "panicum_poaeoides",
+   "scientific": "Panicum poaeoides",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "setaria_pumila",
+   "scientific": "Setaria pumila",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "cynodon_nlemfuensis",
+   "scientific": "Cynodon nlemfuensis",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "digitaria_velutina",
+   "scientific": "Digitaria velutina",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "setaria_kagerensis",
+   "scientific": "Setaria kagerensis",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "chrysochloa_orientalis",
+   "scientific": "Chrysochloa orientalis",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "cycnium_tubulosum",
+   "scientific": "Cycnium tubulosum",
+   "family": "Orobanchaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "turraea_mombassana",
+   "scientific": "Turraea mombassana",
+   "family": "Meliaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "abutilon_angulatum",
+   "scientific": "Abutilon angulatum",
+   "family": "Malvaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "leucas_martinicensis",
+   "scientific": "Leucas martinicensis",
+   "family": "Lamiaceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "schkuhria_pinnata",
+   "scientific": "Schkuhria pinnata",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 2,
+   "known": false
+  },
+  {
+   "id": "equilabium_agnewii",
+   "scientific": "Equilabium agnewii",
+   "family": "Lamiaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "tripogonella_minima",
+   "scientific": "Tripogonella minima",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "dracaena_perrotii",
+   "scientific": "Dracaena perrotii",
+   "family": "Asparagaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "melinis_repens",
+   "scientific": "Melinis repens",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "echinochloa_haploclada",
+   "scientific": "Echinochloa haploclada",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "hyparrhenia_filipendula",
+   "scientific": "Hyparrhenia filipendula",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "themeda_triandra",
+   "scientific": "Themeda triandra",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": true
+  },
+  {
+   "id": "bothriochloa_pertusa",
+   "scientific": "Bothriochloa pertusa",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "cymbopogon_nardus",
+   "scientific": "Cymbopogon nardus",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "gloriosa_superba",
+   "scientific": "Gloriosa superba",
+   "family": "Colchicaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "commelina_reptans",
+   "scientific": "Commelina reptans",
+   "family": "Commelinaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "agave_angustifolia",
+   "scientific": "Agave angustifolia",
+   "family": "Asparagaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "aloe_lateritia",
+   "scientific": "Aloe lateritia",
+   "family": "Asphodelaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "scadoxus_multiflorus",
+   "scientific": "Scadoxus multiflorus",
+   "family": "Amaryllidaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "oldenlandia_wiedemannii",
+   "scientific": "Oldenlandia wiedemannii",
+   "family": "Rubiaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "ocimum_basilicum",
+   "scientific": "Ocimum basilicum",
+   "family": "Lamiaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "crotalaria_pycnostachya",
+   "scientific": "Crotalaria pycnostachya",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "aeschynomene_indica",
+   "scientific": "Aeschynomene indica",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "senna_didymobotrya",
+   "scientific": "Senna didymobotrya",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "indigofera_basiflora",
+   "scientific": "Indigofera basiflora",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "dichrostachys_cinerea",
+   "scientific": "Dichrostachys cinerea",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "vigna_vexillata",
+   "scientific": "Vigna vexillata",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "cissus_rotundifolia",
+   "scientific": "Cissus rotundifolia",
+   "family": "Vitaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "gomphrena_celosioides",
+   "scientific": "Gomphrena celosioides",
+   "family": "Amaranthaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "guilleminea_densa",
+   "scientific": "Guilleminea densa",
+   "family": "Amaranthaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "boerhavia_diffusa",
+   "scientific": "Boerhavia diffusa",
+   "family": "Nyctaginaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "tagetes_minuta",
+   "scientific": "Tagetes minuta",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "enicostema_axillare",
+   "scientific": "Enicostema axillare",
+   "family": "Gentianaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "gomphocarpus_semilunatus",
+   "scientific": "Gomphocarpus semilunatus",
+   "family": "Apocynaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "cucumis_aculeatus",
+   "scientific": "Cucumis aculeatus",
+   "family": "Cucurbitaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "celosia_leptostachya",
+   "scientific": "Celosia leptostachya",
+   "family": "Amaranthaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "crossandra_mucronata",
+   "scientific": "Crossandra mucronata",
+   "family": "Acanthaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "clerodendrum_rotundifolium",
+   "scientific": "Clerodendrum rotundifolium",
+   "family": "Lamiaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "vachellia_drepanolobium",
+   "scientific": "Vachellia drepanolobium",
+   "family": "Fabaceae",
+   "kind": "shrub",
+   "records": 1,
+   "known": true
+  },
+  {
+   "id": "commiphora_schimperi",
+   "scientific": "Commiphora schimperi",
+   "family": "Burseraceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "oncocalyx_fischeri",
+   "scientific": "Oncocalyx fischeri",
+   "family": "Loranthaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "sorghum_arundinaceum",
+   "scientific": "Sorghum arundinaceum",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "echinochloa_ugandensis",
+   "scientific": "Echinochloa ugandensis",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "harpachne_schimperi",
+   "scientific": "Harpachne schimperi",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "diheteropogon_amplectens",
+   "scientific": "Diheteropogon amplectens",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "aristida_mutabilis",
+   "scientific": "Aristida mutabilis",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "leptochloa_caudata",
+   "scientific": "Leptochloa caudata",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "eragrostis_heteromera",
+   "scientific": "Eragrostis heteromera",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "oropetium_capense",
+   "scientific": "Oropetium capense",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "eragrostis_exasperata",
+   "scientific": "Eragrostis exasperata",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "sporobolus_spicatus",
+   "scientific": "Sporobolus spicatus",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "andropogon_greenwayi",
+   "scientific": "Andropogon greenwayi",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "sporobolus_pellucidus",
+   "scientific": "Sporobolus pellucidus",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "urochloa_leersioides",
+   "scientific": "Urochloa leersioides",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "eragrostis_aethiopica",
+   "scientific": "Eragrostis aethiopica",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "sporobolus_cordofanus",
+   "scientific": "Sporobolus cordofanus",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "sporobolus_consimilis",
+   "scientific": "Sporobolus consimilis",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "cymbopogon_caesius",
+   "scientific": "Cymbopogon caesius",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "enneapogon_persicus",
+   "scientific": "Enneapogon persicus",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "ipomoea_sinensis",
+   "scientific": "Ipomoea sinensis",
+   "family": "Convolvulaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "setaria_verticillata",
+   "scientific": "Setaria verticillata",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "tragus_berteronianus",
+   "scientific": "Tragus berteronianus",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "heteropogon_contortus",
+   "scientific": "Heteropogon contortus",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "ammocharis_tinneana",
+   "scientific": "Ammocharis tinneana",
+   "family": "Amaryllidaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "gardenia_ternifolia",
+   "scientific": "Gardenia ternifolia",
+   "family": "Rubiaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "gardenia_volkensii",
+   "scientific": "Gardenia volkensii",
+   "family": "Rubiaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "rhynchosia_minima",
+   "scientific": "Rhynchosia minima",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "phyllanthus_maderaspatensis",
+   "scientific": "Phyllanthus maderaspatensis",
+   "family": "Phyllanthaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "opuntia_monacantha",
+   "scientific": "Opuntia monacantha",
+   "family": "Cactaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "bidens_schimperi",
+   "scientific": "Bidens schimperi",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "bidens_pilosa",
+   "scientific": "Bidens pilosa",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "synedrella_nodiflora",
+   "scientific": "Synedrella nodiflora",
+   "family": "Asteraceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "balanites_aegyptiaca",
+   "scientific": "Balanites aegyptiaca",
+   "family": "Zygophyllaceae",
+   "kind": "tree",
+   "records": 1,
+   "known": true
+  },
+  {
+   "id": "blepharis_panduriformis",
+   "scientific": "Blepharis panduriformis",
+   "family": "Acanthaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "leucas_usagarensis",
+   "scientific": "Leucas usagarensis",
+   "family": "Lamiaceae",
+   "kind": "forb",
+   "records": 1,
+   "known": false
+  },
+  {
+   "id": "digitaria_macroblephara",
+   "scientific": "Digitaria macroblephara",
+   "family": "Poaceae",
+   "kind": "grass",
+   "records": 1,
+   "known": false
+  }
+ ],
+ "generated": [],
+ "target": {
+  "tree": 21,
+  "shrub": 23,
+  "ground": 26
+ },
+ "by_layer": {
+  "tree": 3,
+  "shrub": 1,
+  "ground": 3
+ },
+ "hands": [
+  {
+   "id": "euphorbia_ingens",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 16 records on the tile"
+   ]
+  },
+  {
+   "id": "phoenix_reclinata",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 11 records on the tile"
+   ]
+  }
+ ],
+ "summary": {
+  "needed": 7,
+  "with_record": 5,
+  "generated_now": 0,
+  "queued": 2,
+  "unread_communities": 0,
+  "by_layer": {
+   "tree": 3,
+   "shrub": 1,
+   "ground": 3
+  },
+  "meets_target": {
+   "tree": false,
+   "shrub": false,
+   "ground": false
+  },
+  "hands": 2
+ }
+}

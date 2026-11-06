@@ -322,7 +322,11 @@ def _animals(tile, m, force):
     # scavenger; traits for those with no species_data entry (EltonTraits diet and mass, taxon defaults, locomotion);
     # the Meshy queue with its estimate and the stand-in drawn meanwhile.
     from .fauna import animal_research
+    from .fauna_slots import fauna_slots
     add_layer(m, tile, "species.animals", animal_research(tile), fetched=False)
+    # the tile's own animals for the client (world pipeline phase 1): which curated species may spawn here, and a stand-in
+    # slot per researched species (pipeline/fauna_slots.py)
+    add_layer(m, tile, "client.fauna", fauna_slots(tile), fetched=False)
 
 
 def _game_seeds(tile, m, force):
@@ -330,6 +334,16 @@ def _game_seeds(tile, m, force):
     # hotspots, so a world started anywhere on the tile is the same for every node.
     from .games import game_seeds
     add_layer(m, tile, "games.seeds", game_seeds(tile), fetched=False)
+
+
+def _has_canopy(tile, m):
+    """inpaint applies with the lidar CHM, or (no point cloud) with the global canopy map of the world pipeline's landcover."""
+    if tile.path("vegetation/chm_1m.tif").exists():
+        return None
+    from . import regions
+    if not regions.covers("usgs_3dep_lidar", tile) and tile.path("vegetation/canopy_height_10m.tif").exists():
+        return None
+    return _has_chm(tile, m)
 
 
 def _has_chm(tile, m):
@@ -355,9 +369,14 @@ def _erase(tile, m, force):
 
 def _inpaint(tile, m, force):
     # The ground-only base texture: tree crowns (lidar CHM 3 m and taller) and their shadows synthesized from clean
-    # ground of the same class (pipeline/inpaint_crowns.py); needs erase and lidar.
-    from .inpaint_crowns import inpaint_crowns
-    info = inpaint_crowns(tile)
+    # ground of the same class (pipeline/inpaint_crowns.py); needs erase and lidar. Without a point cloud but with the
+    # global canopy map (world pipeline): the imagery blended toward leaf litter under the canopy.
+    from .inpaint_crowns import inpaint_crowns, litter_under_canopy
+    if tile.path("vegetation/chm_1m.tif").exists():
+        info = inpaint_crowns(tile)
+    else:
+        runlog.fallback("no point cloud: the floor under the canopy map's tree cover blended toward leaf litter", product="litter_blend")
+        info = litter_under_canopy(tile)
     for k in ("client.texture_ground", "client.texture_ground_mask"):
         add_layer(m, tile, k, info[k], fetched=False)
     m["status"]["crowns_inpainted"] = True
@@ -425,19 +444,20 @@ B, F, A, G = STAGES
 
 STEPS: dict[str, Step] = {s.name: s for s in [
     # ---------------------------------------------------------------- base
-    Step("dem", "1", ["fetch_dem", "arcgis"], [], _dem, ["terrain.dem"], ["usgs_3dep", "pc_3dep_seamless", "nasadem"],
+    Step("dem", "1", ["fetch_dem", "arcgis", "fetch_global"], [], _dem, ["terrain.dem"], ["usgs_3dep", "pc_3dep_seamless", "nasadem", "copernicus_dem_glo30"],
          doc="the 5 m bare-earth DEM", stage=B),
-    Step("naip", "1", ["fetch_naip", "arcgis"], [], _naip, ["imagery.naip"], ["pc_naip", "usgs_naip"],
+    Step("naip", "1", ["fetch_naip", "arcgis", "fetch_global"], [], _naip, ["imagery.naip"], ["pc_naip", "usgs_naip", "sentinel2_l2a"],
          doc="present-day imagery at 2.5 m", stage=B),
     Step("osm", "1", ["fetch_osm"], [], _osm, ["footprint.mask"], ["osm"], doc="the human footprint: buildings, roads, dams", stage=B),
     Step("hydro", "1", ["fetch_hydro"], [], _hydro, ["hydro.flowlines", "hydro.waterbodies"], ["nhdplus_hr", "osm"],
          owner="water lane", doc="NHD streams and waterbodies (OSM fallback)", stage=B),
-    Step("channels", "1", ["channels"], ["dem", "hydro"], _channels, ["hydro.channels", "client.channel_depth"],
+    Step("channels", "1", ["channels", "fetch_global"], ["dem", "hydro"], _channels, ["hydro.channels", "client.channel_depth"],
          owner="water lane", doc="every stream routed by gravity on the DEM; NHD gives names and permanence", stage=B),
     Step("rewild_hydro", "1", ["rewild_hydro", "channels"], ["dem", "channels", "hydro", "osm"], _rewild_hydro,
          ["hydro.human_water", "terrain.dem_rewilded", "client.channel_profile"], ["osm", "native_land"],
          owner="water lane", doc="dams breached, reservoirs drained, channels re-routed, pool-riffle profile", stage=B),
-    Step("landcover", "1", ["fetch_vegetation", "habitat"], ["rewild_hydro"], _veg, ["vegetation."], ["landfire"],
+    Step("landcover", "1", ["fetch_vegetation", "habitat", "landcover_global", "ecosystem", "fetch_global"], ["rewild_hydro"], _veg,
+         ["vegetation.", "climate."], ["landfire", "esa_worldcover", "meta_canopy_height", "open_meteo", "soilgrids", "iucn_get"],
          doc="LANDFIRE EVT/EVC/EVH/BpS and the habitat classes, human cells backfilled from BpS: what covers the ground, "
              "which the base layer's erasure, substrate and textures need; the flora stage reads it for its species", stage=B),
     Step("ice", "1", ["ice"], ["dem", "landcover"], _ice, ["terrain.ice"], ["osm"],
@@ -453,9 +473,9 @@ STEPS: dict[str, Step] = {s.name: s for s in [
     Step("water", "1", ["water", "water_seams"], ["dem", "rewild_hydro", "reroute", "hydro", "lidar"], _water,
          ["terrain.dem_banked", "client.heights", "client.water", "hydro.water_reaches"], [], owner="water lane",
          doc="banks, beds, levels and riparian zones", stage=B),
-    Step("ground", "1", ["ground", "fetch_soils", "fetch_geology"], ["dem", "landcover", "lidar"], _ground,
+    Step("ground", "1", ["ground", "fetch_soils", "fetch_geology", "soils_global", "fetch_global"], ["dem", "landcover", "lidar"], _ground,
          ["geology.", "soils.", "client.geology", "client.soils", "client.outcrop", "client.ground_classes"],
-         ["macrostrat", "usda_sda"], doc="geology and soils, outcrop likelihood, ground classes", stage=B),
+         ["macrostrat", "usda_sda", "soilgrids"], doc="geology and soils, outcrop likelihood, ground classes", stage=B),
     Step("terrain", "1", ["derive", "urban", "habitat", "fetch_places", "fetch_territories"],
          ["dem", "naip", "osm", "hydro", "channels", "rewild_hydro", "water", "landcover", "ice"], _terrain,
          ["terrain.hillshade", "terrain.terrain_rgb", "footprint.mask_raster", "imagery.naip_png", "vegetation.habitat_png",
@@ -485,14 +505,14 @@ STEPS: dict[str, Step] = {s.name: s for s in [
          ["client.trees_lidar"], applies=_has_chm, doc="the lidar crowns, with the buildings, the rewilded classes and the urban mask",
          stage=F),
     Step("inpaint", "1", ["inpaint_crowns"], ["erase", "lidar", "crowns", "terrain"], _inpaint,
-         ["client.texture_ground", "client.texture_ground_mask"], applies=_has_chm,
+         ["client.texture_ground", "client.texture_ground_mask"], applies=_has_canopy,
          doc="the ground-only base texture with the crowns inpainted", stage=F),
     # ---------------------------------------------------------------- fauna
     Step("species", "1", ["fetch_species", "species_data", "locomotion", "regions"], ["dem", "landcover"], _species,
          ["species.list", "species.occurrences", "species.seasonal", "species.inventory", "perception", "calendar",
           "locomotion", "client.species_prior"], ["gbif"], library=["library/animals"],
          doc="GBIF presence, perception, calendar, locomotion, the client's density prior", stage=A),
-    Step("animals", "1", ["fauna", "research", "locomotion"], ["species", "plants"], _animals, ["species.animals"], ["gbif"],
+    Step("animals", "2", ["fauna", "fauna_slots", "fauna_models", "research", "locomotion"], ["species", "plants"], _animals, ["species.animals", "client.fauna"], ["gbif"],
          library=["library/animals", "data/eltontraits"],
          doc="every animal recorded on the tile, ranked; predators and scavengers; traits for those without; the Meshy queue",
          stage=A),

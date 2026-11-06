@@ -95,7 +95,10 @@ def save(tile: Tile, m: dict) -> None:
 def update_index() -> None:
     tiles = []
     for p in sorted(TILES_DIR.glob("*/manifest.json")):
-        m = read_json(p)
+        try:
+            m = read_json(p)
+        except ValueError:   # another build is writing that manifest this instant (parallel builds): skip it this time
+            continue
         tiles.append({"tile_id": m["tile_id"], "bounds_wgs84": m["bounds_wgs84"],
                       "generated_at": m["generated_at"], "layers": sorted(m["layers"])})
     write_json(TILES_DIR / "index.json", {"spec_version": SPEC_VERSION, "tiles": tiles})

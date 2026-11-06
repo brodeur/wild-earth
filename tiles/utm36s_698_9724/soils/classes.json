@@ -1,0 +1,77 @@
+{
+ "encoding": "client/soils.png R = index here, G = rock_fragments_pct, B = depth_to_bedrock_cm / 10 (255 = none/unknown)",
+ "source": "soilgrids",
+ "rules": {
+  "texture": "USDA triangle from SoilGrids 2.0 sand and clay, 0-5 cm mean",
+  "modifier": "SoilGrids cfvo: gravelly >= 15 %, very gravelly >= 35 %, extremely >= 60 %",
+  "rock": "WorldCover bare / sparse (60) cells are rock outcrop, 100 % fragments, bedrock at 0",
+  "depth_to_bedrock": "unknown elsewhere (not in SoilGrids)"
+ },
+ "mapunits": {
+  "1": {
+   "muname": "sandy clay loam",
+   "texture_class": "sandy clay loam",
+   "texture_modifier": "none",
+   "source": "soilgrids",
+   "rock_land": false,
+   "rock_fragments_pct": 6.2,
+   "depth_to_bedrock_cm": null,
+   "bedrock_restriction": false,
+   "ph": 7.68,
+   "soc_g_kg": 24.8,
+   "fraction": 0.5473
+  },
+  "2": {
+   "muname": "clay loam",
+   "texture_class": "clay loam",
+   "texture_modifier": "none",
+   "source": "soilgrids",
+   "rock_land": false,
+   "rock_fragments_pct": 4.6,
+   "depth_to_bedrock_cm": null,
+   "bedrock_restriction": false,
+   "ph": 7.7,
+   "soc_g_kg": 25.1,
+   "fraction": 0.3828
+  },
+  "3": {
+   "muname": "sandy clay",
+   "texture_class": "sandy clay",
+   "texture_modifier": "none",
+   "source": "soilgrids",
+   "rock_land": false,
+   "rock_fragments_pct": 5.5,
+   "depth_to_bedrock_cm": null,
+   "bedrock_restriction": false,
+   "ph": 7.72,
+   "soc_g_kg": 26.2,
+   "fraction": 0.0524
+  },
+  "4": {
+   "muname": "clay",
+   "texture_class": "clay",
+   "texture_modifier": "none",
+   "source": "soilgrids",
+   "rock_land": false,
+   "rock_fragments_pct": 4.1,
+   "depth_to_bedrock_cm": null,
+   "bedrock_restriction": false,
+   "ph": 7.8,
+   "soc_g_kg": 24.0,
+   "fraction": 0.0172
+  },
+  "5": {
+   "muname": "rock outcrop",
+   "texture_class": "rock outcrop",
+   "texture_modifier": "none",
+   "source": "soilgrids",
+   "rock_land": true,
+   "rock_fragments_pct": 5.4,
+   "depth_to_bedrock_cm": 0,
+   "bedrock_restriction": true,
+   "ph": 7.58,
+   "soc_g_kg": 25.3,
+   "fraction": 0.0002
+  }
+ }
+}

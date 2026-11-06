@@ -1,0 +1,246 @@
+{
+ "id": "empetrum_nigrum",
+ "scientific": "Empetrum nigrum",
+ "common": "crowberry",
+ "aliases": [
+  "crowberry",
+  "black_crowberry",
+  "krekling",
+  "empetrum_hermaphroditum"
+ ],
+ "family": "Ericaceae",
+ "form": "shrub",
+ "deciduous": false,
+ "template": "phyllodoce_empetriformis",
+ "regions": [
+  "scandinavia"
+ ],
+ "height_m": [
+  0.05,
+  0.25
+ ],
+ "stature": {
+  "typical_m": 0.15,
+  "tall_m": 0.35,
+  "record_m": null,
+  "source": "the drafter's estimate for subsp. hermaphroditum on the Lofoten heath; read 2026-11-05"
+ },
+ "variants_height_m": {
+  "young": [
+   0.03,
+   0.08
+  ],
+  "old": [
+   0.15,
+   0.3
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    1.4
+   ],
+   [
+    0.3,
+    1.7
+   ],
+   [
+    0.6,
+    1.6
+   ],
+   [
+    0.85,
+    1.2
+   ],
+   [
+    1.0,
+    0.5
+   ]
+  ],
+  "lobes": 7,
+  "lobe_depth": 0.15,
+  "asymmetry": 0.25,
+  "fill": 0.75,
+  "edge": 1.04
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    70,
+    60,
+    44
+   ],
+   "spring": [
+    52,
+    72,
+    46
+   ],
+   "summer": [
+    44,
+    70,
+    44
+   ],
+   "fall": [
+    54,
+    64,
+    44
+   ]
+  },
+  "leaf_size_m": 0.005,
+  "leaf_shape": "lanceolate",
+  "flowers": {
+   "season": "spring",
+   "months": [
+    5,
+    6
+   ],
+   "form": "bud",
+   "rgb": [
+    130,
+    50,
+    70
+   ],
+   "size_m": 0.004,
+   "density": 0.5,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": [
+    "summer",
+    "fall",
+    "winter",
+    "spring"
+   ],
+   "months": [
+    8,
+    5
+   ],
+   "form": "bud",
+   "rgb": [
+    26,
+    24,
+    32
+   ],
+   "size_m": 0.007,
+   "density": 0.45
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   92,
+   58,
+   46
+  ],
+  "bark_pattern": "smooth",
+  "stems": [
+   8,
+   16
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 3.4,
+  "crown_base_ratio": 0.0,
+  "porosity": 0.08,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-05), no photographs measured; to be replaced by photo measurements: a flat, dense mat of trailing red-brown stems and tiny glossy dark-green needle-like leaves, black berries in it from August, brownish in winter"
+ },
+ "variant_patches": {
+  "young": {
+   "note": "a small patch spreading by its trailing stems"
+  },
+  "old": {
+   "set": {
+    "trunk": {
+     "stems": [
+      10,
+      18
+     ]
+    }
+   },
+   "note": "a wide old mat over rock and peat"
+  }
+ },
+ "description": "A creeping evergreen dwarf shrub 5-25 cm tall that mats the heath, the boulders and the birch-wood floor, with tiny glossy, rolled, needle-like leaves crowded on trailing red-brown stems. Its shiny black berries ripen in August and stay on through the winter, food for ptarmigan, thrushes, ravens and foxes.",
+ "season_notes": {
+  "winter": "Dark olive to brownish, the old black berries still on the mats where the snow blows off.",
+  "spring": "Tiny purple-red flowers in May and June, easily missed.",
+  "summer": "Fresh shoots; green berries turning glossy black from August.",
+  "fall": "Ripe berries everywhere on the heath; birds and foxes eat them, and people pick them."
+ },
+ "habitat": {
+  "classes": {
+   "chaparral": 1.0,
+   "barren": 0.8,
+   "grassland": 0.6,
+   "conifer_forest": 0.5,
+   "mixed_forest": 0.4
+  },
+  "floor": 0.9,
+  "mid": 1.0,
+  "steep": 1.1,
+  "north": 1.1,
+  "shade": 0.3,
+  "disturbed": 0.6
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "lagopus_lagopus",
+    "part": "berries",
+    "seasons": [
+     "fall",
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "lagopus_muta",
+    "part": "berries",
+    "seasons": [
+     "fall",
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "turdus_pilaris",
+    "part": "berries",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "corvus_corax",
+    "part": "berries",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   },
+   {
+    "animal": "vulpes_vulpes",
+    "part": "berries",
+    "seasons": [
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": []
+ },
+ "range": {
+  "elev_m": [
+   0,
+   900
+  ],
+  "where": "circumboreal and arctic-alpine; on Moskenesoya from the shore heath to the summit fell-field, and as the ground layer of the birch woods"
+ },
+ "stand_in": "phyllodoce_empetriformis",
+ "notes": "Grown from pink mountain heather (Phyllodoce empetriformis, named for its crowberry-like leaves), the library's Ericaceae with needle-like rolled leaves, as a flatter, wider mat (crown radius 1.7 of the height). COMPROMISES: the plant is a trailing, rooting mat; the generator grows a separate dome per plant from upright stems splayed from one base, so a carpet of crowberry is many low domes (a ground-layer or shrubfield form would suit it better); the revolute needle leaves are 5 mm 'lanceolate' leaves; the berries are single black 'bud' berries kept on from August to May. Heights, colours, phenology and the animals are the drafter's knowledge (no source read beyond the GBIF name check). The raven is in the animal library; the ptarmigan, fieldfare and red fox are GBIF ids not yet there. Lofoten's calendar: polar night in December and early January, birch bare from about October to the end of May, leaf-out in late May and June, autumn yellow in September; the climate is oceanic, winters mild for the latitude, the treeline low (a few hundred metres) under salt wind. Region tag scandinavia is not yet a natural region in pipeline/regions.py.",
+ "sources": [
+  "GBIF species match, Empetrum nigrum: ACCEPTED, https://api.gbif.org/v1/species/match?name=Empetrum%20nigrum, read 2026-11-05"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-05); needs local sign-off"
+ ]
+}

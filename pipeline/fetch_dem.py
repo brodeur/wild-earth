@@ -85,8 +85,8 @@ def _from_planetary_computer(tile: Tile, collection="3dep-seamless") -> tuple[np
     with rasterio.Env(GDAL_DISABLE_READDIR_ON_OPEN="EMPTY_DIR", GDAL_HTTP_USERAGENT=USER_AGENT):
         for it in items:
             href = it["assets"][asset]["href"] + "?" + token
-            with rasterio.open(href) as src, WarpedVRT(
-                    src, crs=tile.crs, transform=transform, width=n, height=n,
+            with rasterio.open(href) as ds, WarpedVRT(   # not `src`: that names the source returned below (it was
+                    ds, crs=tile.crs, transform=transform, width=n, height=n,   # the dataset in the manifest, 2026-11-05)
                     resampling=Resampling.bilinear, nodata=NODATA) as vrt:
                 data = vrt.read(1)
             take = (data != NODATA) & np.isfinite(data) & (out == NODATA)
@@ -100,8 +100,18 @@ def fetch_dem(tile: Tile, force=False) -> dict:
     x0, y0, x1, y1 = tile.bounds
     from . import regions, runlog
     if not regions.covers("usgs_3dep", tile):
-        runlog.fallback(f"outside 3DEP ({', '.join(regions.region_of(tile))}): NASADEM 30 m, the global fallback", source="nasadem")
-        data, n, meta = _from_planetary_computer(tile, "nasadem")
+        # world pipeline (2026-11-05): Copernicus GLO-30 is global (NASADEM stops at 60 N). It is a surface model: under
+        # forest it carries part of the canopy (the probes record what that does); NASADEM if it fails.
+        from . import fetch_global
+        try:
+            runlog.fallback(f"outside 3DEP ({', '.join(regions.region_of(tile))}): Copernicus DEM GLO-30, the global "
+                            "surface model (canopy not removed)", source="copernicus_dem_glo30")
+            data = fetch_global.copernicus_dem(tile, tile.dem_res_m)
+            n = data.shape[0]
+            meta = {"source": "copernicus_dem_glo30", "source_resolution_m": 30.0, "surface_model": True}
+        except Exception as e:  # noqa: BLE001
+            runlog.fallback(f"Copernicus GLO-30 failed ({str(e)[:160]}); NASADEM 30 m", source="nasadem")
+            data, n, meta = _from_planetary_computer(tile, "nasadem")
     else:
         try:
             data, n, meta = _from_usgs(tile, force)

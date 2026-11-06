@@ -1,0 +1,62 @@
+{
+  "schema": "wild-earth/setting@1",
+  "id": "pnw_braided_gravel_bar",
+  "name": "Braided glacial river: gravel bars, alder flats and log jams",
+  "region": "pacific_northwest",
+  "status": "prototype 2026-11-05: written by hand to show the schema; the paragon step's agent writes these",
+  "match": {
+    "evt": [7156, 7157, 7292],
+    "landform": { "height_above_stream_m": [0, 3], "water": "the water step's bars, dry beds and margins of order 4+ reaches" },
+    "note": "the active channel belt; the older alder flats grade into pnw_valley_rainforest"
+  },
+  "narrative": "A wide belt of grey cobble and gravel with the river split into several milky slate-blue channels that move from year to year. Whole trees lie on the bars with their root wads still on, piled into jams at the heads of islands. Young red alder and willow stand in even rows on the older bars, then alder flats, then the spruce and maple terraces behind. The view opens here: the valley walls and the cloud on them.",
+  "structure": {
+    "succession": { "v": "fresh bar -> red alder and Scouler willow -> alder flat (80-100 yr) -> spruce, bigleaf maple, cottonwood terrace (about 400 yr) -> spruce and hemlock (about 750 yr)", "src": ["fonda1974"], "conf": "med", "check": "lidar", "drives": ["species_mix.riparian.by_bar_age"] },
+    "alder_height_m": { "v": 25, "range": [20, 30], "unit": "m", "src": ["wp_alnus"], "conf": "med", "check": "lidar" },
+    "channel_belt": { "v": "braided from about river mile 48; braiding increasing with glacial retreat", "src": ["wp_hoh_river", "east2017"], "conf": "high", "check": "lidar" },
+    "forest_holds_banks": { "v": "bank erosion 1.57 ha/km inside the park against 5.84 outside; migration lower where trees exceed 53 cm", "src": ["abbe2003"], "conf": "med" }
+  },
+  "ground": {
+    "materials": { "cobble": 0.45, "gravel": 0.35, "sand_and_silt": 0.1, "wood": 0.05, "moss_and_herbs_on_old_bars": 0.05, "src": ["photo_stats", "judgement"], "conf": "low", "check": "photos", "drives": ["ground.materials", "rocks.bar_mix"] },
+    "stone_colour": { "v": "pale to mid grey, wet darker; little lichen on the active bar", "src": ["photo_stats"], "conf": "med", "check": "photos" }
+  },
+  "deadwood": {
+    "jams": { "v": "common at the heads of islands and bars; whole trees with root wads", "src": ["wp_hoh_river"], "conf": "med", "check": "photos", "drives": ["deadwood.jams"] },
+    "jam_density": { "v": null, "note": "not found for the Hoh; to be measured from the lidar (long low objects on the bars)", "check": "lidar" },
+    "moss": { "v": 0.1, "range": [0, 0.3], "unit": "cover on bar logs (sun-bleached, grey)", "src": ["photos"], "conf": "low", "check": "photos", "drives": ["deadwood.moss"] }
+  },
+  "river": {
+    "colour": { "v": "milky slate blue; strongest in summer melt", "src": ["wp_hoh_river"], "conf": "high", "check": "photos", "drives": ["water.colour", "water.turbidity"] },
+    "colour_lab": { "v": [48.0, -4.0, -8.0], "unit": "CIELAB, estimated from the river photos' water pixels", "src": ["photo_stats"], "conf": "low", "check": "photos", "drives": ["water.colour"] },
+    "discharge_m3_s": { "v": 71.9, "range": [7.1, 1100], "unit": "m3/s near Forks, mean (min, max)", "src": ["wp_hoh_river"], "conf": "high" },
+    "source": "Hoh, Blue and White glaciers on Mount Olympus (the neighbouring tile's meltwater)"
+  },
+  "palette": {
+    "from": "photo_stats, 7 river and bar photos, 2026-11-05 (too few: pool with the Queets and Quinault when those tiles exist)",
+    "swatches": [
+      { "hex": "#939293", "w": 0.28, "what": "cobble" },
+      { "hex": "#d2d2d9", "w": 0.21, "what": "overcast sky" },
+      { "hex": "#222221", "w": 0.17, "what": "forest edge in shade" },
+      { "hex": "#485863", "w": 0.15, "what": "water and wet stone" },
+      { "hex": "#4b473a", "w": 0.14, "what": "drift logs and far slopes" },
+      { "hex": "#7b714d", "w": 0.06, "what": "dry grass and alder litter" }
+    ],
+    "lightness_median_Lstar": { "v": 49, "check": "photos" }
+  },
+  "fauna": {
+    "uses": "elk cross and graze the bars; river otters, mergansers, kingfisher, heron, bald eagle and bears at the salmon runs; the bars are where carcasses wash up",
+    "src": ["cederholm1989", "nps_elk"]
+  },
+  "sources": {
+    "fonda1974": "Fonda 1974, Ecology 55:927, forest succession on the Hoh River terraces (abstract)",
+    "wp_hoh_river": "Wikipedia, Hoh River (CC BY-SA). https://en.wikipedia.org/wiki/Hoh_River",
+    "wp_alnus": "Wikipedia, Alnus rubra (CC BY-SA)",
+    "east2017": "East et al. 2017, Earth Surface Processes and Landforms, channel planform of four Olympic rivers. https://www.usgs.gov/publications/channel-planform-evolution-four-rivers-olympic-national-park-washington-usa",
+    "abbe2003": "Abbe et al. 2003, GSA abstract, forest and channel migration. https://gsa.confex.com/gsa/2003AM/webprogram/Paper64592.html",
+    "cederholm1989": "Cederholm et al. 1989, Can. J. Fish. Aquat. Sci. 46:1347, coho carcasses and 22 species that ate them",
+    "nps_elk": "NPS, Roosevelt elk. https://www.nps.gov/olym/learn/nature/roosevelt-elk.htm",
+    "photo_stats": "tiles/utm10n_429_5293/place/photos.json, the river set",
+    "photos": "judged from the classified photos",
+    "judgement": "the author's estimate, no source; conf low"
+  }
+}

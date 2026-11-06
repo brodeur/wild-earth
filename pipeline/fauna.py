@@ -28,7 +28,10 @@ from .research import ANIMAL_CLASSES, TARGET, animal_records, id_of, trophic
 LIB = REPO_ROOT / "library" / "animals"
 TRAITS = LIB / "traits"
 MIN_RECORDS = 3
-CLASS_QUOTA = {"bird": 10, "mammal": 8, "reptile": 2, "amphibian": 2, "fish": 1, "invertebrate": 1}
+# 2026-11-06 (world pipeline phase 1): raised from bird 10, mammal 8, reptile 2, amphibian 2, fish 1, invertebrate 1. The
+# Serengeti probe listed hyraxes and mongooses and left out the wildebeest, zebra, giraffe, elephant and buffalo, which
+# ranked 11th-22nd among its mammals by records. A species needs MIN_RECORDS records to take a quota place.
+CLASS_QUOTA = {"bird": 25, "mammal": 25, "reptile": 5, "amphibian": 4, "fish": 2, "invertebrate": 2}
 DOMESTIC = {"Homo sapiens", "Felis catus", "Canis familiaris", "Canis lupus", "Bos taurus", "Equus caballus", "Ovis aries",
             "Capra hircus", "Gallus gallus", "Columba livia", "Anser anser", "Mus musculus", "Rattus rattus",
             "Rattus norvegicus", "Passer domesticus", "Sus scrofa", "Oncorhynchus mykiss"}
@@ -165,7 +168,7 @@ def animal_research(tile: Tile) -> dict:
         why = []
         if any(x in role for x in ("predator", "scavenger")) and r["records"] >= MIN_RECORDS:
             why.append(" and ".join(x for x in role if x in ("predator", "scavenger")))
-        if quota.get(r["kind"], 0) > 0:
+        if quota.get(r["kind"], 0) > 0 and r["records"] >= MIN_RECORDS:
             why.append(f"most recorded: {r['rank_in_class']} of its class ({r['share_of_class']:.0%} of the class's records)")
             quota[r["kind"]] -= 1
         if sid in present:

@@ -1,0 +1,223 @@
+{
+ "id": "themeda_triandra",
+ "aliases": [
+  "red_oat_grass",
+  "red_grass",
+  "kangaroo_grass",
+  "rooigras"
+ ],
+ "scientific": "Themeda triandra",
+ "common": "red oat grass",
+ "form": "grass",
+ "regions": [
+  "east_africa"
+ ],
+ "deciduous": false,
+ "height_m": [
+  0.4,
+  1.2
+ ],
+ "description": "The tall tussock grass of the Serengeti's woodlands and long-grass plains, 0.4-1.2 m in flower, in dense tufts of folded blades that are green in the rains and cure a rusty red-brown in the dry season. Its drooping heads of clustered spikelets carry long, dark, twisted awns that drill the seed into the ground.",
+ "season_notes": {
+  "winter": "December to February, after the short rains: fresh green tussocks, the plains green to the horizon.",
+  "spring": "March to May, the long rains: tall and green, the red-brown heads coming up toward the end.",
+  "summer": "June to August, the dry season: cured rusty red to straw, the heads shattering; fires sweep the long grass and the wildebeest have moved north-west.",
+  "fall": "September to November: dry straw and black burns, then a green flush through the ash with the short rains."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "grassland": 1.0,
+   "oak_woodland": 0.8,
+   "chaparral": 0.4,
+   "mixed_forest": 0.15,
+   "riparian": 0.2
+  },
+  "floor": 1.0,
+  "mid": 1.0,
+  "steep": 0.9,
+  "north": 1.0,
+  "shade": 0.15,
+  "disturbed": 0.5
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "connochaetes_taurinus",
+    "part": "leaves",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "equus_quagga",
+    "part": "leaves",
+    "seasons": [
+     "winter",
+     "spring",
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "syncerus_caffer",
+    "part": "leaves",
+    "seasons": [
+     "winter",
+     "spring",
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "kobus_ellipsiprymnus",
+    "part": "leaves",
+    "seasons": [
+     "winter",
+     "spring",
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "eudorcas_thomsonii",
+    "part": "leaves",
+    "seasons": [
+     "winter",
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "panthera_leo",
+   "leptailurus_serval"
+  ]
+ },
+ "targets": {
+  "from": "the trait card's values (no photographs measured)"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "2",
+  "card": "library/plant_cards/themeda_triandra.json",
+  "card_sha256": "6e42e4939a72ef1f",
+  "template": "stipa_pulchra",
+  "template_common": "purple needlegrass",
+  "height_scale": 1.143
+ },
+ "notes": "Drawn from purple needlegrass as a taller (ground height 1.4, about 0.85 m), wider bunch whose summer and fall palettes cure red-brown rather than gold. COMPROMISES: grass.js has only two clump types (annual and bunch), so the dense, outward-bending tussock (to 1.5 m tall and 0.5 m wide, Wikipedia) is the bunch clump scaled; the inflorescence (spatheate clusters of spikelets with long twisted awns) has no head shape of its own and uses 'raceme', the needlegrass's loose awned head. The client's grass season curve (the foothills' calendar, curing in summer) happens to match the Serengeti's June-October dry season, but not the November-December short rains' green-up or the dry-season fires. Wikipedia: grey-green leaves turning red-brown, red-brown seed heads, benefits from occasional fire, young growth palatable. Grazers (wildebeest, zebra, buffalo, waterbuck, Thomson's gazelle on the young regrowth) and lions and servals lying up in the long grass are the drafter's knowledge; none is in the animal library yet. The client's seasons are calendar quarters (winter Dec-Feb, spring Mar-May, summer Jun-Aug, fall Sep-Nov) whatever the hemisphere or climate; the colours and leaf-on here are given for those months at the tile, not for a temperate winter. Region tag east_africa is not yet a natural region in pipeline/regions.py.",
+ "sources": [
+  "GBIF species match, Themeda triandra: ACCEPTED, https://api.gbif.org/v1/species/match?name=Themeda%20triandra, read 2026-11-05",
+  "https://en.wikipedia.org/wiki/Themeda_triandra, read 2026-11-05"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-05); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0",
+ "lifespan": "perennial",
+ "native": true,
+ "ground": {
+  "type": "bunch",
+  "height": 1.4,
+  "width": 1.1,
+  "palette": {
+   "winter": {
+    "root": [
+     70,
+     96,
+     56
+    ],
+    "tip": [
+     118,
+     148,
+     80
+    ],
+    "head": [
+     132,
+     118,
+     88
+    ],
+    "awn": [
+     118,
+     98,
+     78
+    ]
+   },
+   "spring": {
+    "root": [
+     72,
+     100,
+     58
+    ],
+    "tip": [
+     124,
+     150,
+     82
+    ],
+    "head": [
+     150,
+     96,
+     64
+    ],
+    "awn": [
+     116,
+     82,
+     60
+    ]
+   },
+   "summer": {
+    "root": [
+     118,
+     96,
+     70
+    ],
+    "tip": [
+     176,
+     124,
+     80
+    ],
+    "head": [
+     158,
+     88,
+     58
+    ],
+    "awn": [
+     128,
+     88,
+     64
+    ]
+   },
+   "fall": {
+    "root": [
+     116,
+     100,
+     74
+    ],
+    "tip": [
+     186,
+     150,
+     104
+    ],
+    "head": [
+     168,
+     118,
+     80
+    ],
+    "awn": [
+     138,
+     102,
+     76
+    ]
+   }
+  },
+  "heads": {
+   "shape": "raceme",
+   "months": [
+    4,
+    7
+   ]
+  },
+  "cure": 0.8
+ }
+}

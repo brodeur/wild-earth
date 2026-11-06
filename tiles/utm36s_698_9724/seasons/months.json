@@ -1,0 +1,496 @@
+{
+ "source": "copernicus_sentinel2_l2a",
+ "years": [
+  2019,
+  2026
+ ],
+ "stretch": 0.35,
+ "ndvi_range": [
+  -0.2,
+  0.9
+ ],
+ "min_looks": 3,
+ "naip_reference": null,
+ "months": [
+  {
+   "month": 1,
+   "looks_dates": 34,
+   "looks_median": 29,
+   "looks_min": 17,
+   "looks_p05": 26,
+   "refused": false,
+   "filled_fraction": 0.0,
+   "filled_pixels": 0,
+   "classes": {
+    "grassland": {
+     "srgb": [
+      0.469,
+      0.496,
+      0.3972
+     ],
+     "reflectance": [
+      0.0653,
+      0.0736,
+      0.0458
+     ],
+     "ndvi": 0.587,
+     "cells": 249652
+    },
+    "open_grass": {
+     "srgb": [
+      0.4695,
+      0.4964,
+      0.3975
+     ],
+     "reflectance": [
+      0.0654,
+      0.0737,
+      0.0459
+     ],
+     "ndvi": 0.586,
+     "cells": 244534
+    }
+   }
+  },
+  {
+   "month": 2,
+   "looks_dates": 29,
+   "looks_median": 22,
+   "looks_min": 14,
+   "looks_p05": 18,
+   "refused": false,
+   "filled_fraction": 0.0,
+   "filled_pixels": 0,
+   "classes": {
+    "grassland": {
+     "srgb": [
+      0.4976,
+      0.5045,
+      0.3991
+     ],
+     "reflectance": [
+      0.0741,
+      0.0764,
+      0.0463
+     ],
+     "ndvi": 0.547,
+     "cells": 249652
+    },
+    "open_grass": {
+     "srgb": [
+      0.4982,
+      0.5049,
+      0.3995
+     ],
+     "reflectance": [
+      0.0743,
+      0.0765,
+      0.0464
+     ],
+     "ndvi": 0.546,
+     "cells": 244534
+    }
+   }
+  },
+  {
+   "month": 3,
+   "looks_dates": 35,
+   "looks_median": 26,
+   "looks_min": 17,
+   "looks_p05": 23,
+   "refused": false,
+   "filled_fraction": 0.0,
+   "filled_pixels": 0,
+   "classes": {
+    "grassland": {
+     "srgb": [
+      0.503,
+      0.508,
+      0.4079
+     ],
+     "reflectance": [
+      0.0759,
+      0.0775,
+      0.0485
+     ],
+     "ndvi": 0.544,
+     "cells": 249652
+    },
+    "open_grass": {
+     "srgb": [
+      0.5037,
+      0.5084,
+      0.4083
+     ],
+     "reflectance": [
+      0.0761,
+      0.0777,
+      0.0486
+     ],
+     "ndvi": 0.542,
+     "cells": 244534
+    }
+   }
+  },
+  {
+   "month": 4,
+   "looks_dates": 31,
+   "looks_median": 21,
+   "looks_min": 10,
+   "looks_p05": 14,
+   "refused": false,
+   "filled_fraction": 0.0,
+   "filled_pixels": 0,
+   "classes": {
+    "grassland": {
+     "srgb": [
+      0.5124,
+      0.5159,
+      0.4099
+     ],
+     "reflectance": [
+      0.079,
+      0.0802,
+      0.049
+     ],
+     "ndvi": 0.532,
+     "cells": 249652
+    },
+    "open_grass": {
+     "srgb": [
+      0.5131,
+      0.5163,
+      0.4104
+     ],
+     "reflectance": [
+      0.0792,
+      0.0803,
+      0.0491
+     ],
+     "ndvi": 0.531,
+     "cells": 244534
+    }
+   }
+  },
+  {
+   "month": 5,
+   "looks_dates": 48,
+   "looks_median": 33,
+   "looks_min": 18,
+   "looks_p05": 26,
+   "refused": false,
+   "filled_fraction": 0.0,
+   "filled_pixels": 0,
+   "classes": {
+    "grassland": {
+     "srgb": [
+      0.5033,
+      0.5086,
+      0.4027
+     ],
+     "reflectance": [
+      0.076,
+      0.0777,
+      0.0472
+     ],
+     "ndvi": 0.556,
+     "cells": 249652
+    },
+    "open_grass": {
+     "srgb": [
+      0.5041,
+      0.509,
+      0.4032
+     ],
+     "reflectance": [
+      0.0763,
+      0.0779,
+      0.0473
+     ],
+     "ndvi": 0.555,
+     "cells": 244534
+    }
+   }
+  },
+  {
+   "month": 6,
+   "looks_dates": 48,
+   "looks_median": 39,
+   "looks_min": 27,
+   "looks_p05": 35,
+   "refused": false,
+   "filled_fraction": 0.0,
+   "filled_pixels": 0,
+   "classes": {
+    "grassland": {
+     "srgb": [
+      0.5685,
+      0.5208,
+      0.4275
+     ],
+     "reflectance": [
+      0.099,
+      0.0818,
+      0.0535
+     ],
+     "ndvi": 0.399,
+     "cells": 249652
+    },
+    "open_grass": {
+     "srgb": [
+      0.5693,
+      0.5213,
+      0.428
+     ],
+     "reflectance": [
+      0.0994,
+      0.082,
+      0.0537
+     ],
+     "ndvi": 0.398,
+     "cells": 244534
+    }
+   }
+  },
+  {
+   "month": 7,
+   "looks_dates": 51,
+   "looks_median": 45,
+   "looks_min": 31,
+   "looks_p05": 40,
+   "refused": false,
+   "filled_fraction": 0.0,
+   "filled_pixels": 0,
+   "classes": {
+    "grassland": {
+     "srgb": [
+      0.6112,
+      0.5382,
+      0.4657
+     ],
+     "reflectance": [
+      0.1161,
+      0.0879,
+      0.0643
+     ],
+     "ndvi": 0.277,
+     "cells": 249652
+    },
+    "open_grass": {
+     "srgb": [
+      0.6119,
+      0.5387,
+      0.4661
+     ],
+     "reflectance": [
+      0.1164,
+      0.0881,
+      0.0644
+     ],
+     "ndvi": 0.276,
+     "cells": 244534
+    }
+   }
+  },
+  {
+   "month": 8,
+   "looks_dates": 45,
+   "looks_median": 40,
+   "looks_min": 31,
+   "looks_p05": 37,
+   "refused": false,
+   "filled_fraction": 0.0,
+   "filled_pixels": 0,
+   "classes": {
+    "grassland": {
+     "srgb": [
+      0.6256,
+      0.5469,
+      0.4801
+     ],
+     "reflectance": [
+      0.1222,
+      0.091,
+      0.0686
+     ],
+     "ndvi": 0.228,
+     "cells": 249652
+    },
+    "open_grass": {
+     "srgb": [
+      0.6262,
+      0.5472,
+      0.4805
+     ],
+     "reflectance": [
+      0.1225,
+      0.0911,
+      0.0687
+     ],
+     "ndvi": 0.227,
+     "cells": 244534
+    }
+   }
+  },
+  {
+   "month": 9,
+   "looks_dates": 50,
+   "looks_median": 43,
+   "looks_min": 31,
+   "looks_p05": 39,
+   "refused": false,
+   "filled_fraction": 0.0,
+   "filled_pixels": 0,
+   "classes": {
+    "grassland": {
+     "srgb": [
+      0.6148,
+      0.5511,
+      0.4848
+     ],
+     "reflectance": [
+      0.1176,
+      0.0926,
+      0.0701
+     ],
+     "ndvi": 0.257,
+     "cells": 249652
+    },
+    "open_grass": {
+     "srgb": [
+      0.6155,
+      0.5515,
+      0.4852
+     ],
+     "reflectance": [
+      0.1179,
+      0.0927,
+      0.0702
+     ],
+     "ndvi": 0.256,
+     "cells": 244534
+    }
+   }
+  },
+  {
+   "month": 10,
+   "looks_dates": 38,
+   "looks_median": 30,
+   "looks_min": 21,
+   "looks_p05": 25,
+   "refused": false,
+   "filled_fraction": 0.0,
+   "filled_pixels": 0,
+   "classes": {
+    "grassland": {
+     "srgb": [
+      0.6127,
+      0.5482,
+      0.4847
+     ],
+     "reflectance": [
+      0.1168,
+      0.0915,
+      0.0701
+     ],
+     "ndvi": 0.252,
+     "cells": 249652
+    },
+    "open_grass": {
+     "srgb": [
+      0.6134,
+      0.5486,
+      0.4852
+     ],
+     "reflectance": [
+      0.1171,
+      0.0916,
+      0.0702
+     ],
+     "ndvi": 0.251,
+     "cells": 244534
+    }
+   }
+  },
+  {
+   "month": 11,
+   "looks_dates": 28,
+   "looks_median": 18,
+   "looks_min": 8,
+   "looks_p05": 11,
+   "refused": false,
+   "filled_fraction": 0.0,
+   "filled_pixels": 0,
+   "classes": {
+    "grassland": {
+     "srgb": [
+      0.5965,
+      0.5509,
+      0.4856
+     ],
+     "reflectance": [
+      0.1101,
+      0.0925,
+      0.0703
+     ],
+     "ndvi": 0.3,
+     "cells": 249652
+    },
+    "open_grass": {
+     "srgb": [
+      0.5972,
+      0.5513,
+      0.4861
+     ],
+     "reflectance": [
+      0.1104,
+      0.0926,
+      0.0705
+     ],
+     "ndvi": 0.299,
+     "cells": 244534
+    }
+   }
+  },
+  {
+   "month": 12,
+   "looks_dates": 30,
+   "looks_median": 21,
+   "looks_min": 14,
+   "looks_p05": 18,
+   "refused": false,
+   "filled_fraction": 0.0,
+   "filled_pixels": 0,
+   "classes": {
+    "grassland": {
+     "srgb": [
+      0.5152,
+      0.5126,
+      0.4324
+     ],
+     "reflectance": [
+      0.0799,
+      0.0791,
+      0.0549
+     ],
+     "ndvi": 0.5,
+     "cells": 249652
+    },
+    "open_grass": {
+     "srgb": [
+      0.5157,
+      0.513,
+      0.4329
+     ],
+     "reflectance": [
+      0.0801,
+      0.0792,
+      0.055
+     ],
+     "ndvi": 0.5,
+     "cells": 244534
+    }
+   }
+  }
+ ]
+}

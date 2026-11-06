@@ -1,0 +1,227 @@
+{
+ "id": "macaranga_gigantea",
+ "scientific": "Macaranga gigantea",
+ "common": "giant mahang",
+ "aliases": [
+  "giant_mahang",
+  "mahang",
+  "macaranga"
+ ],
+ "family": "Euphorbiaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "acer_macrophyllum",
+ "regions": [
+  "borneo"
+ ],
+ "height_m": [
+  10,
+  20
+ ],
+ "stature": {
+  "typical_m": 15,
+  "tall_m": 25,
+  "record_m": 30,
+  "source": "typical: Wikipedia, up to about 15 m; tall: Wikipedia, rarely 25 m; record: Useful Tropical Plants, up to 30 m; read 2026-11-05"
+ },
+ "variants_height_m": {
+  "young": [
+   2,
+   8
+  ],
+  "veteran": [
+   18,
+   25
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.35,
+    0.2
+   ],
+   [
+    0.5,
+    0.36
+   ],
+   [
+    0.65,
+    0.43
+   ],
+   [
+    0.8,
+    0.41
+   ],
+   [
+    0.92,
+    0.28
+   ],
+   [
+    1.0,
+    0.08
+   ]
+  ],
+  "lobes": 4,
+  "lobe_depth": 0.3,
+  "asymmetry": 0.3,
+  "fill": 0.3,
+  "edge": 1.15
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    96,
+    124,
+    66
+   ],
+   "spring": [
+    98,
+    126,
+    68
+   ],
+   "summer": [
+    96,
+    124,
+    66
+   ],
+   "fall": [
+    96,
+    124,
+    66
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "leaf_size_m": 0.45,
+  "leaf_shape": "lobed_large",
+  "lobe_style": "palmate",
+  "flowers": null,
+  "berries": null
+ },
+ "trunk": {
+  "bark_rgb": [
+   176,
+   172,
+   160
+  ],
+  "bark_pattern": "smooth_grey",
+  "stems": [
+   1,
+   1
+  ],
+  "split_prob": 0.3,
+  "lean_deg": 6,
+  "twig_rgb": [
+   150,
+   150,
+   130
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 0.85,
+  "crown_base_ratio": 0.35,
+  "porosity": 0.45,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-05), no photographs measured; to be replaced by photo measurements: a straight pale grey stem, a few thick, upswept branches, and an open, layered crown of enormous round three-pointed leaves on long stalks, bright mid-green, in gaps and on old logging roads"
+ },
+ "variant_patches": {
+  "young": {
+   "set": {
+    "trunk": {
+     "length_ratio": 0.8,
+     "split_prob": 0.0
+    }
+   },
+   "note": "a fast sapling in a new gap, a single stem with a rosette of leaves up to a metre across"
+  },
+  "veteran": {
+   "set": {
+    "trunk": {
+     "split_prob": 0.5
+    }
+   },
+   "note": "a tall, short-lived pioneer, the canopy closing over it"
+  }
+ },
+ "description": "A fast pioneer tree of gaps, landslips and logged forest, 10-20 m tall, with a straight pale grey stem, few thick branches and an open crown of huge, round, shallowly three-pointed leaves up to 60 cm across on stalks as long, attached near the middle of the blade. Saplings carry leaves a metre long; it dominates regrowth for a decade or two, then the forest closes over it.",
+ "season_notes": {
+  "winter": "Evergreen; the huge leaves glossy after the monsoon rains.",
+  "spring": "Evergreen; flowering and fruiting through the year.",
+  "summer": "Evergreen.",
+  "fall": "Evergreen."
+ },
+ "habitat": {
+  "classes": {
+   "mixed_forest": 1.0,
+   "riparian": 0.5
+  },
+  "floor": 1.1,
+  "mid": 1.0,
+  "steep": 1.0,
+  "north": 1.0,
+  "shade": 0.05,
+  "disturbed": 2.0,
+  "riparian": {
+   "zones": {
+    "bank": 0.8,
+    "terrace": 1.0
+   },
+   "orders": [
+    2,
+    6
+   ],
+   "permanence": "any",
+   "water": "Not a water plant: it takes the light along river banks and landslips."
+  }
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "elephas_maximus",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring",
+     "summer",
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": []
+ },
+ "range": {
+  "elev_m": [
+   0,
+   1000
+  ],
+  "where": "southern Myanmar to Sumatra and Sulawesi (Wikipedia), lowland and swampy to 800-1000 m (UTP); at Danum in tree-fall gaps, landslips, river banks and the logged forest around the reserve"
+ },
+ "stand_in": "acer_macrophyllum",
+ "notes": "Grown from big-leaf maple, the library's tree with the largest palmately lobed leaves, as an evergreen pioneer with a more open crown. COMPROMISES: the leaves are peltate (the stalk joins the blade inside the margin) and shallowly three-pointed (tricuspidate, Wikipedia), up to 60 cm, on stalks as long; the generator draws a maple-like palmately lobed leaf at 45 cm on a card, so the outline is too deeply lobed and the stalk is not shown. Leaves this large push the leaf-card primitive: the lineup must check that the cards are not a few giant sprites. The sapling leaves (to about 1 m, UTP) are not modelled. The maple template's spring flowers are removed. Many Macaranga species are ant-plants (Fiala, 'Ants benefit pioneer trees'); whether M. gigantea hosts ants was not checked and nothing is drawn. Heights from Wikipedia (up to about 15 m, rarely 25) and UTP (to 30 m, straight bole to 50 cm, one of the earliest colonists of degraded land, dominant in 10-20 year regrowth). Bark and crown are the drafter's knowledge. Bornean elephants browsing pioneer trees in logged forest is the drafter's knowledge (they do range through Danum); the small fruits' birds are not named. Danum is aseasonal: evergreen, no leaf-off, colours constant through the four calendar seasons except for small flushes of new red-bronze leaves. Region tag borneo is not yet a natural region in pipeline/regions.py.",
+ "sources": [
+  "GBIF species match, Macaranga gigantea: ACCEPTED, https://api.gbif.org/v1/species/match?name=Macaranga%20gigantea, read 2026-11-05",
+  "https://en.wikipedia.org/wiki/Macaranga_gigantea, read 2026-11-05",
+  "Useful Tropical Plants, Macaranga gigantea, https://tropical.theferns.info/viewtropical.php?id=Macaranga+gigantea, read 2026-11-05"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-05); needs local sign-off"
+ ]
+}

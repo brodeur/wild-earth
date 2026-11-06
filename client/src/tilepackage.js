@@ -458,7 +458,7 @@ export class WaterMask {
       const ring = w.ring; if (!ring || ring.length < 3 || w.rewilded) continue;
       let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
       for (const [x, y] of ring) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
-      const r = { ring, bbox: [x0, y0, x1, y1], fcode: w.fcode, area: Math.abs(ringArea(ring)) };
+      const r = { ring, bbox: [x0, y0, x1, y1], fcode: w.fcode, area: Math.abs(ringArea(ring)), bands: ringBands(ring, this.B, this.nb) };
       this.rings.push(r); add(x0, y0, x1, y1, r);
     }
     for (const st of features?.streams || []) {
@@ -479,7 +479,7 @@ export class WaterMask {
     return this.buckets.get(Math.floor(north / this.B) * this.nb + Math.floor(x / this.B)) || null;
   }
   inPond(x, north, b = this.bucket(x, north)) {
-    if (b) for (const r of b.rings) { const q = r.bbox; if (x >= q[0] && x <= q[2] && north >= q[1] && north <= q[3] && inRing(x, north, r.ring)) return true; }
+    if (b) for (const r of b.rings) { const q = r.bbox; if (x >= q[0] && x <= q[2] && north >= q[1] && north <= q[3] && inBands(x, north, r.bands[Math.floor(north / this.B)])) return true; }
     return false;
   }
   inWater(x, north) {
@@ -532,10 +532,22 @@ function segDist2(x, y, s) {
   const ex = s[0] + dx * t - x, ey = s[1] + dy * t - y;
   return ex * ex + ey * ey;
 }
-function inRing(x, y, ring) {
-  let inside = false;
+// A ring's edges by 30 m band of north (the buckets' rows): the even-odd test at a point then reads only the edges that
+// cross its band, not the whole ring. A river's OSM polygon (Manu, 2026-11-06: 1,624 vertices across the whole tile, so
+// in every bucket) made the 2000 px grid's build ~6.5e9 edge tests (minutes, the page hung); banded, a few dozen a point.
+function ringBands(ring, B, nb) {
+  const bands = Array.from({ length: nb }, () => []);
   for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-    const [xi, yi] = ring[i], [xj, yj] = ring[j];
+    const [xi, yi] = ring[i], [xj, yj] = ring[j]; if (yi === yj) continue;
+    const b0 = Math.max(0, Math.floor(Math.min(yi, yj) / B)), b1 = Math.min(nb - 1, Math.floor(Math.max(yi, yj) / B));
+    for (let b = b0; b <= b1; b++) bands[b].push(xi, yi, xj, yj);
+  }
+  return bands;
+}
+function inBands(x, y, e) {
+  let inside = false;
+  if (e) for (let k = 0; k < e.length; k += 4) {
+    const xi = e[k], yi = e[k + 1], xj = e[k + 2], yj = e[k + 3];
     if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) inside = !inside;
   }
   return inside;
@@ -569,7 +581,7 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
   for (const k of ['client.heights', 'client.texture', 'client.habitat', 'client.canopy', 'client.masks'])
     if (!L[k]) throw new Error(`tile ${id} lacks ${k}; run the derive step`);
   const MX = L['client.species_mix'], mixFiles = MX?.files || {};
-  const [heights, texture, habitat, canopy, masks, species, perception, calendar, games, locomotion, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior, detail, canopyHeight, groundTexture, seasonImage, lidarMicro, waterImg, waterWidthImg, substrate, substrateInfo, lidarCover] = await Promise.all([
+  const [heights, texture, habitat, canopy, masks, species, perception, calendar, games, locomotion, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior, detail, canopyHeight, groundTexture, seasonImage, lidarMicro, waterImg, waterWidthImg, substrate, substrateInfo, lidarCover, fauna] = await Promise.all([
     loadImageData(dir + L['client.heights'].path, signal), loadImageData(dir + L['client.texture'].path, signal),
     loadImageData(dir + L['client.habitat'].path, signal), loadImageData(dir + L['client.canopy'].path, signal),
     loadImageData(dir + L['client.masks'].path, signal),
@@ -625,6 +637,9 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
     // where the point cloud reaches (tile-spec "Lidar", 2026-11-04): 255 on the habitat grid where the lidar's crowns
     // stand; optional (absent: every cell of a crown tile is covered, as before)
     L['client.lidar_cover'] ? loadImageData(dir + L['client.lidar_cover'].path, signal).catch(() => null) : null,
+    // the tile's own fauna (pipeline: the species the client draws here; animals.js installFauna): a gate on the static
+    // cast and the tile's stand-in slots; optional (absent: every static species, as before)
+    L['client.fauna'] ? fetch(dir + L['client.fauna'].path, { signal }).then(r => r.ok ? r.json() : null).catch(() => null) : null,
   ]);
   if (signal?.aborted) throw aborted(signal);
   if (features) markRewilded(features, m);
@@ -665,6 +680,7 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
     // the imagery without trees (client.texture_ground), and the season_rgb sheet (an Image; season.js reads its frames)
     groundTextureImage: groundTexture, seasonImage,
     species, perception, calendar, games, locomotion, imagery, features, speciesPrior,
+    fauna: fauna && fauna.format === 1 ? fauna : null,   // client/fauna.json (animals.js installFauna), or null
     latitude: (m.bounds_wgs84[1] + m.bounds_wgs84[3]) / 2,
   };
 }

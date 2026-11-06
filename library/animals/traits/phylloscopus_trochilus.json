@@ -1,0 +1,118 @@
+{
+ "id": "phylloscopus_trochilus",
+ "scientific": "Phylloscopus trochilus",
+ "common": "willow warbler",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Passeriformes",
+  "family": "Phylloscopidae",
+  "genus": "Phylloscopus"
+ },
+ "body_plan": "bird",
+ "mass_kg": 0.0087,
+ "size": {
+  "length_m": 0.074,
+  "shoulder_or_wingspan_m": 0.118
+ },
+ "diet": {
+  "role": [
+   "insectivore"
+  ],
+  "diet_tenths": {
+   "inv": 8.0,
+   "vend": 0.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 1.0,
+   "nect": 0.0,
+   "seed": 1.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.0,
+  "mass_kg": 0.0087,
+  "activity": [],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 193.6
+  },
+  "sound": {
+   "range_m": 96.8
+  },
+  "scent": {
+   "range_m": 7.7
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "phylloscopus_trochilus",
+  "class": "Aves",
+  "order": "Passeriformes",
+  "family": "Phylloscopidae",
+  "body_plan": "bird",
+  "mass_kg": 0.0087,
+  "length_m": 0.074,
+  "hip_m": 0.037,
+  "posture": "biped",
+  "gaits": {
+   "ground": "hop",
+   "flight": "flap-glide"
+  },
+  "walk_mps": 0.43,
+  "trot_mps": 0.95,
+  "cruise_mps": 0.8,
+  "top_mps": 1.33,
+  "stride_hz": 8.54,
+  "stride_m": 0.11,
+  "sprint_s": 1.1,
+  "recover_s": 5.0,
+  "turn_rad_s": 8.0,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.029,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": true
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T06:19:54Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

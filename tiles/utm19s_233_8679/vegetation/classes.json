@@ -1,0 +1,771 @@
+{
+ "habitat": {
+  "1": {
+   "name": "oak_woodland",
+   "color": [
+    171,
+    150,
+    72
+   ]
+  },
+  "2": {
+   "name": "conifer_forest",
+   "color": [
+    34,
+    94,
+    58
+   ]
+  },
+  "3": {
+   "name": "mixed_forest",
+   "color": [
+    88,
+    122,
+    60
+   ]
+  },
+  "4": {
+   "name": "chaparral",
+   "color": [
+    134,
+    110,
+    92
+   ]
+  },
+  "5": {
+   "name": "grassland",
+   "color": [
+    214,
+    196,
+    120
+   ]
+  },
+  "6": {
+   "name": "riparian",
+   "color": [
+    74,
+    142,
+    118
+   ]
+  },
+  "7": {
+   "name": "water",
+   "color": [
+    70,
+    130,
+    220
+   ]
+  },
+  "8": {
+   "name": "barren",
+   "color": [
+    190,
+    185,
+    175
+   ]
+  },
+  "9": {
+   "name": "human",
+   "color": [
+    220,
+    60,
+    60
+   ]
+  }
+ },
+ "source": "world pipeline: ESA WorldCover, Meta canopy height, ERA5, SoilGrids (pipeline/landcover_global.py)",
+ "evt": {
+  "9001": {
+   "name": "T1.1 Tropical/subtropical lowland rainforests",
+   "phys": "Hardwood",
+   "group": "T1.1",
+   "habitat": "mixed_forest",
+   "color": [
+    88,
+    122,
+    60
+   ],
+   "pixels": 105896,
+   "synthetic": true
+  },
+  "9012": {
+   "name": "T4.1 Trophic savannas",
+   "phys": "Grassland",
+   "group": "T4.1",
+   "habitat": "grassland",
+   "color": [
+    214,
+    196,
+    120
+   ],
+   "pixels": 68,
+   "synthetic": true
+  },
+  "9013": {
+   "name": "T4.2 Pyric tussock savannas",
+   "phys": "Grassland",
+   "group": "T4.2",
+   "habitat": "grassland",
+   "color": [
+    214,
+    196,
+    120
+   ],
+   "pixels": 465,
+   "synthetic": true
+  },
+  "9020": {
+   "name": "T6.2 Polar/alpine cliffs, screes, outcrops and lava flows",
+   "phys": "Sparsely Vegetated",
+   "group": "T6.2",
+   "habitat": "barren",
+   "color": [
+    190,
+    185,
+    175
+   ],
+   "pixels": 46,
+   "synthetic": true
+  },
+  "9024": {
+   "name": "TF1.3 Permanent marshes",
+   "phys": "Riparian",
+   "group": "TF1.3",
+   "habitat": "riparian",
+   "color": [
+    74,
+    142,
+    118
+   ],
+   "pixels": 8,
+   "synthetic": true
+  },
+  "9028": {
+   "name": "F1 Rivers and streams",
+   "phys": "Open Water",
+   "group": "F1",
+   "habitat": "water",
+   "color": [
+    70,
+    130,
+    220
+   ],
+   "pixels": 4136,
+   "synthetic": true
+  },
+  "9029": {
+   "name": "F2 Lakes",
+   "phys": "Open Water",
+   "group": "F2",
+   "habitat": "water",
+   "color": [
+    70,
+    130,
+    220
+   ],
+   "pixels": 269,
+   "synthetic": true
+  },
+  "9101": {
+   "name": "Cropland (ESA WorldCover; rewilded)",
+   "phys": "Agricultural",
+   "group": "Human",
+   "habitat": "human",
+   "color": [
+    220,
+    60,
+    60
+   ],
+   "pixels": 1,
+   "synthetic": true
+  }
+ },
+ "bps": {
+  "9001": {
+   "name": "T1.1 Tropical/subtropical lowland rainforests",
+   "group": "Hardwood",
+   "habitat": "mixed_forest",
+   "pixels": 105897,
+   "synthetic": true
+  },
+  "9012": {
+   "name": "T4.1 Trophic savannas",
+   "group": "Grassland",
+   "habitat": "grassland",
+   "pixels": 68,
+   "synthetic": true
+  },
+  "9013": {
+   "name": "T4.2 Pyric tussock savannas",
+   "group": "Grassland",
+   "habitat": "grassland",
+   "pixels": 465,
+   "synthetic": true
+  },
+  "9020": {
+   "name": "T6.2 Polar/alpine cliffs, screes, outcrops and lava flows",
+   "group": "Sparse",
+   "habitat": "barren",
+   "pixels": 46,
+   "synthetic": true
+  },
+  "9024": {
+   "name": "TF1.3 Permanent marshes",
+   "group": "Riparian",
+   "habitat": "riparian",
+   "pixels": 8,
+   "synthetic": true
+  },
+  "9028": {
+   "name": "F1 Rivers and streams",
+   "group": "Open Water",
+   "habitat": "water",
+   "pixels": 4136,
+   "synthetic": true
+  },
+  "9029": {
+   "name": "F2 Lakes",
+   "group": "Open Water",
+   "habitat": "water",
+   "pixels": 269,
+   "synthetic": true
+  }
+ },
+ "evc": {
+  "11": {
+   "name": "Open Water",
+   "pixels": 4405
+  },
+  "31": {
+   "name": "Barren",
+   "pixels": 1696
+  },
+  "110": {
+   "name": "Tree Cover = 10%",
+   "pixels": 639
+  },
+  "111": {
+   "name": "Tree Cover = 11%",
+   "pixels": 77
+  },
+  "112": {
+   "name": "Tree Cover = 12%",
+   "pixels": 99
+  },
+  "113": {
+   "name": "Tree Cover = 13%",
+   "pixels": 44
+  },
+  "114": {
+   "name": "Tree Cover = 14%",
+   "pixels": 58
+  },
+  "115": {
+   "name": "Tree Cover = 15%",
+   "pixels": 66
+  },
+  "116": {
+   "name": "Tree Cover = 16%",
+   "pixels": 97
+  },
+  "117": {
+   "name": "Tree Cover = 17%",
+   "pixels": 62
+  },
+  "118": {
+   "name": "Tree Cover = 18%",
+   "pixels": 66
+  },
+  "119": {
+   "name": "Tree Cover = 19%",
+   "pixels": 58
+  },
+  "120": {
+   "name": "Tree Cover = 20%",
+   "pixels": 78
+  },
+  "121": {
+   "name": "Tree Cover = 21%",
+   "pixels": 52
+  },
+  "122": {
+   "name": "Tree Cover = 22%",
+   "pixels": 58
+  },
+  "123": {
+   "name": "Tree Cover = 23%",
+   "pixels": 61
+  },
+  "124": {
+   "name": "Tree Cover = 24%",
+   "pixels": 79
+  },
+  "125": {
+   "name": "Tree Cover = 25%",
+   "pixels": 60
+  },
+  "126": {
+   "name": "Tree Cover = 26%",
+   "pixels": 42
+  },
+  "127": {
+   "name": "Tree Cover = 27%",
+   "pixels": 58
+  },
+  "128": {
+   "name": "Tree Cover = 28%",
+   "pixels": 82
+  },
+  "129": {
+   "name": "Tree Cover = 29%",
+   "pixels": 47
+  },
+  "130": {
+   "name": "Tree Cover = 30%",
+   "pixels": 47
+  },
+  "131": {
+   "name": "Tree Cover = 31%",
+   "pixels": 40
+  },
+  "132": {
+   "name": "Tree Cover = 32%",
+   "pixels": 77
+  },
+  "133": {
+   "name": "Tree Cover = 33%",
+   "pixels": 47
+  },
+  "134": {
+   "name": "Tree Cover = 34%",
+   "pixels": 47
+  },
+  "135": {
+   "name": "Tree Cover = 35%",
+   "pixels": 43
+  },
+  "136": {
+   "name": "Tree Cover = 36%",
+   "pixels": 90
+  },
+  "137": {
+   "name": "Tree Cover = 37%",
+   "pixels": 54
+  },
+  "138": {
+   "name": "Tree Cover = 38%",
+   "pixels": 46
+  },
+  "139": {
+   "name": "Tree Cover = 39%",
+   "pixels": 65
+  },
+  "140": {
+   "name": "Tree Cover = 40%",
+   "pixels": 85
+  },
+  "141": {
+   "name": "Tree Cover = 41%",
+   "pixels": 52
+  },
+  "142": {
+   "name": "Tree Cover = 42%",
+   "pixels": 45
+  },
+  "143": {
+   "name": "Tree Cover = 43%",
+   "pixels": 59
+  },
+  "144": {
+   "name": "Tree Cover = 44%",
+   "pixels": 80
+  },
+  "145": {
+   "name": "Tree Cover = 45%",
+   "pixels": 52
+  },
+  "146": {
+   "name": "Tree Cover = 46%",
+   "pixels": 54
+  },
+  "147": {
+   "name": "Tree Cover = 47%",
+   "pixels": 71
+  },
+  "148": {
+   "name": "Tree Cover = 48%",
+   "pixels": 80
+  },
+  "149": {
+   "name": "Tree Cover = 49%",
+   "pixels": 46
+  },
+  "150": {
+   "name": "Tree Cover = 50%",
+   "pixels": 43
+  },
+  "151": {
+   "name": "Tree Cover = 51%",
+   "pixels": 56
+  },
+  "152": {
+   "name": "Tree Cover = 52%",
+   "pixels": 78
+  },
+  "153": {
+   "name": "Tree Cover = 53%",
+   "pixels": 68
+  },
+  "154": {
+   "name": "Tree Cover = 54%",
+   "pixels": 54
+  },
+  "155": {
+   "name": "Tree Cover = 55%",
+   "pixels": 48
+  },
+  "156": {
+   "name": "Tree Cover = 56%",
+   "pixels": 95
+  },
+  "157": {
+   "name": "Tree Cover = 57%",
+   "pixels": 61
+  },
+  "158": {
+   "name": "Tree Cover = 58%",
+   "pixels": 58
+  },
+  "159": {
+   "name": "Tree Cover = 59%",
+   "pixels": 54
+  },
+  "160": {
+   "name": "Tree Cover = 60%",
+   "pixels": 108
+  },
+  "161": {
+   "name": "Tree Cover = 61%",
+   "pixels": 76
+  },
+  "162": {
+   "name": "Tree Cover = 62%",
+   "pixels": 63
+  },
+  "163": {
+   "name": "Tree Cover = 63%",
+   "pixels": 58
+  },
+  "164": {
+   "name": "Tree Cover = 64%",
+   "pixels": 102
+  },
+  "165": {
+   "name": "Tree Cover = 65%",
+   "pixels": 62
+  },
+  "166": {
+   "name": "Tree Cover = 66%",
+   "pixels": 59
+  },
+  "167": {
+   "name": "Tree Cover = 67%",
+   "pixels": 60
+  },
+  "168": {
+   "name": "Tree Cover = 68%",
+   "pixels": 93
+  },
+  "169": {
+   "name": "Tree Cover = 69%",
+   "pixels": 62
+  },
+  "170": {
+   "name": "Tree Cover = 70%",
+   "pixels": 83
+  },
+  "171": {
+   "name": "Tree Cover = 71%",
+   "pixels": 82
+  },
+  "172": {
+   "name": "Tree Cover = 72%",
+   "pixels": 101
+  },
+  "173": {
+   "name": "Tree Cover = 73%",
+   "pixels": 84
+  },
+  "174": {
+   "name": "Tree Cover = 74%",
+   "pixels": 83
+  },
+  "175": {
+   "name": "Tree Cover = 75%",
+   "pixels": 82
+  },
+  "176": {
+   "name": "Tree Cover = 76%",
+   "pixels": 130
+  },
+  "177": {
+   "name": "Tree Cover = 77%",
+   "pixels": 110
+  },
+  "178": {
+   "name": "Tree Cover = 78%",
+   "pixels": 91
+  },
+  "179": {
+   "name": "Tree Cover = 79%",
+   "pixels": 84
+  },
+  "180": {
+   "name": "Tree Cover = 80%",
+   "pixels": 152
+  },
+  "181": {
+   "name": "Tree Cover = 81%",
+   "pixels": 113
+  },
+  "182": {
+   "name": "Tree Cover = 82%",
+   "pixels": 120
+  },
+  "183": {
+   "name": "Tree Cover = 83%",
+   "pixels": 107
+  },
+  "184": {
+   "name": "Tree Cover = 84%",
+   "pixels": 170
+  },
+  "185": {
+   "name": "Tree Cover = 85%",
+   "pixels": 96
+  },
+  "186": {
+   "name": "Tree Cover = 86%",
+   "pixels": 129
+  },
+  "187": {
+   "name": "Tree Cover = 87%",
+   "pixels": 132
+  },
+  "188": {
+   "name": "Tree Cover = 88%",
+   "pixels": 238
+  },
+  "189": {
+   "name": "Tree Cover = 89%",
+   "pixels": 135
+  },
+  "190": {
+   "name": "Tree Cover = 90%",
+   "pixels": 169
+  },
+  "191": {
+   "name": "Tree Cover = 91%",
+   "pixels": 170
+  },
+  "192": {
+   "name": "Tree Cover = 92%",
+   "pixels": 274
+  },
+  "193": {
+   "name": "Tree Cover = 93%",
+   "pixels": 216
+  },
+  "194": {
+   "name": "Tree Cover = 94%",
+   "pixels": 208
+  },
+  "195": {
+   "name": "Tree Cover = 95%",
+   "pixels": 299
+  },
+  "196": {
+   "name": "Tree Cover = 96%",
+   "pixels": 519
+  },
+  "197": {
+   "name": "Tree Cover = 97%",
+   "pixels": 437
+  },
+  "198": {
+   "name": "Tree Cover = 98%",
+   "pixels": 556
+  },
+  "199": {
+   "name": "Tree Cover >= 99%",
+   "pixels": 94669
+  },
+  "370": {
+   "name": "Herb Cover = 70%",
+   "pixels": 528
+  }
+ },
+ "evh": {
+  "11": {
+   "name": "Open Water",
+   "pixels": 4405
+  },
+  "31": {
+   "name": "Barren",
+   "pixels": 1696
+  },
+  "101": {
+   "name": "Tree Height = 1 meter",
+   "pixels": 118
+  },
+  "102": {
+   "name": "Tree Height = 2 meters",
+   "pixels": 172
+  },
+  "103": {
+   "name": "Tree Height = 3 meters",
+   "pixels": 307
+  },
+  "104": {
+   "name": "Tree Height = 4 meters",
+   "pixels": 392
+  },
+  "105": {
+   "name": "Tree Height = 5 meters",
+   "pixels": 382
+  },
+  "106": {
+   "name": "Tree Height = 6 meters",
+   "pixels": 427
+  },
+  "107": {
+   "name": "Tree Height = 7 meters",
+   "pixels": 491
+  },
+  "108": {
+   "name": "Tree Height = 8 meters",
+   "pixels": 511
+  },
+  "109": {
+   "name": "Tree Height = 9 meters",
+   "pixels": 572
+  },
+  "110": {
+   "name": "Tree Height = 10 meters",
+   "pixels": 634
+  },
+  "111": {
+   "name": "Tree Height = 11 meters",
+   "pixels": 717
+  },
+  "112": {
+   "name": "Tree Height = 12 meters",
+   "pixels": 969
+  },
+  "113": {
+   "name": "Tree Height = 13 meters",
+   "pixels": 1159
+  },
+  "114": {
+   "name": "Tree Height = 14 meters",
+   "pixels": 1399
+  },
+  "115": {
+   "name": "Tree Height = 15 meters",
+   "pixels": 1678
+  },
+  "116": {
+   "name": "Tree Height = 16 meters",
+   "pixels": 2320
+  },
+  "117": {
+   "name": "Tree Height = 17 meters",
+   "pixels": 3043
+  },
+  "118": {
+   "name": "Tree Height = 18 meters",
+   "pixels": 3930
+  },
+  "119": {
+   "name": "Tree Height = 19 meters",
+   "pixels": 5194
+  },
+  "120": {
+   "name": "Tree Height = 20 meters",
+   "pixels": 6566
+  },
+  "121": {
+   "name": "Tree Height = 21 meters",
+   "pixels": 7877
+  },
+  "122": {
+   "name": "Tree Height = 22 meters",
+   "pixels": 9227
+  },
+  "123": {
+   "name": "Tree Height = 23 meters",
+   "pixels": 10206
+  },
+  "124": {
+   "name": "Tree Height = 24 meters",
+   "pixels": 10808
+  },
+  "125": {
+   "name": "Tree Height = 25 meters",
+   "pixels": 10530
+  },
+  "126": {
+   "name": "Tree Height = 26 meters",
+   "pixels": 8890
+  },
+  "127": {
+   "name": "Tree Height = 27 meters",
+   "pixels": 6867
+  },
+  "128": {
+   "name": "Tree Height = 28 meters",
+   "pixels": 4451
+  },
+  "129": {
+   "name": "Tree Height = 29 meters",
+   "pixels": 2466
+  },
+  "130": {
+   "name": "Tree Height = 30 meters",
+   "pixels": 1171
+  },
+  "131": {
+   "name": "Tree Height = 31 meters",
+   "pixels": 476
+  },
+  "132": {
+   "name": "Tree Height = 32 meters",
+   "pixels": 188
+  },
+  "133": {
+   "name": "Tree Height = 33 meters",
+   "pixels": 80
+  },
+  "134": {
+   "name": "Tree Height = 34 meters",
+   "pixels": 30
+  },
+  "135": {
+   "name": "Tree Height = 35 meters",
+   "pixels": 7
+  },
+  "136": {
+   "name": "Tree Height = 36 meters",
+   "pixels": 3
+  },
+  "137": {
+   "name": "Tree Height = 37 meters",
+   "pixels": 2
+  },
+  "305": {
+   "name": "Herb Height = 0.5 meter",
+   "pixels": 528
+  }
+ },
+ "evc_note": "tree cover from the canopy map; shrub (45 %) and herb (70 %) cover are typical values for the WorldCover class, not measured"
+}

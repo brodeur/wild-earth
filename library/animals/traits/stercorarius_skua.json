@@ -1,0 +1,115 @@
+{
+ "id": "stercorarius_skua",
+ "scientific": "Stercorarius skua",
+ "common": "great skua",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Charadriiformes",
+  "family": "Stercorariidae",
+  "genus": "Stercorarius"
+ },
+ "body_plan": "bird",
+ "mass_kg": 0.4749,
+ "size": {
+  "length_m": 0.281,
+  "shoulder_or_wingspan_m": 0.45
+ },
+ "diet": {
+  "role": [
+   "predator"
+  ],
+  "diet_tenths": {
+   "inv": 1.7,
+   "vend": 5.0,
+   "vect": 0.0,
+   "vfish": 1.7,
+   "vunk": 0.0,
+   "scav": 0.7,
+   "fruit": 1.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.67,
+  "mass_kg": 0.4749,
+  "activity": [],
+  "source": "eltontraits (genus)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 430.8
+  },
+  "sound": {
+   "range_m": 215.4
+  },
+  "scent": {
+   "range_m": 17.2
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "stercorarius_skua",
+  "class": "Aves",
+  "order": "Charadriiformes",
+  "family": "Stercorariidae",
+  "body_plan": "bird",
+  "mass_kg": 0.4749,
+  "length_m": 0.281,
+  "hip_m": 0.141,
+  "posture": "biped",
+  "gaits": {},
+  "walk_mps": 0.83,
+  "trot_mps": 1.86,
+  "cruise_mps": 2.82,
+  "top_mps": 4.7,
+  "stride_hz": 4.69,
+  "stride_m": 0.4,
+  "sprint_s": 3.1,
+  "recover_s": 10.9,
+  "turn_rad_s": 4.73,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.056,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T04:05:07Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (genus)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

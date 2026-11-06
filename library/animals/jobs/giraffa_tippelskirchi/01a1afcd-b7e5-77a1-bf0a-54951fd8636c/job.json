@@ -1,0 +1,71 @@
+{
+  "species": "giraffa_tippelskirchi",
+  "mode": "refine",
+  "kind": "text-to-3d",
+  "task_id": "01a1afcd-b7e5-77a1-bf0a-54951fd8636c",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "refine",
+    "preview_task_id": "01a1afcd-02de-746a-9245-73a5e1dcabf4",
+    "texture_resolution": "2k",
+    "enable_pbr": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Natural coat colours and markings of a wild adult Masai giraffe (Giraffa tippelskirchi) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+    "moderation": false
+  },
+  "prompt": "Natural coat colours and markings of a wild adult Masai giraffe (Giraffa tippelskirchi) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+  "image": null,
+  "preview_job": "library/animals/jobs/giraffa_tippelskirchi/01a1afcd-02de-746a-9245-73a5e1dcabf4",
+  "estimated_credits": 10,
+  "balance_before": 2097,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-06T07:40:56+00:00",
+    "created_at": "2026-11-06T07:40:58+00:00",
+    "started_at": "2026-11-06T07:40:58+00:00",
+    "finished_at": "2026-11-06T07:41:30+00:00",
+    "downloaded": "2026-11-06T07:41:43+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur, world pipeline",
+  "progress": 100,
+  "task": {
+    "id": "01a1afcd-b7e5-77a1-bf0a-54951fd8636c",
+    "type": "text-to-3d-refine",
+    "status": "SUCCEEDED",
+    "created_at": 1793950858962,
+    "started_at": 1793950858968,
+    "finished_at": 1793950890178,
+    "consumed_credits": 10,
+    "task_error": null
+  },
+  "credits_charged": 10,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 5398196,
+      "sha256": "00c9c8e3a2e7eec866f6523e787746e4ca35856737d3f28ae396544e3c7a3719",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1afcd-b7e5-77a1-bf0a-54951fd8636c/output/model.glb"
+    },
+    {
+      "file": "texture_base_color.png",
+      "bytes": 6792184,
+      "sha256": "4a9a87d2cacb90ca56ec73716e58c6d960a500d71218b41864f7f9cd9e697c73",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1afcd-b7e5-77a1-bf0a-54951fd8636c/output/texture_0.png"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 70969,
+      "sha256": "d3bb5b25e616d416121c6a872edb5612a779a4ea0e78f83b51048699e7371764",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1afcd-b7e5-77a1-bf0a-54951fd8636c/output/preview.png"
+    }
+  ],
+  "balance_after": 2087
+}

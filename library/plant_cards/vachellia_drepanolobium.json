@@ -1,0 +1,246 @@
+{
+ "id": "vachellia_drepanolobium",
+ "scientific": "Vachellia drepanolobium",
+ "common": "whistling thorn",
+ "aliases": [
+  "whistling_thorn",
+  "ant_galled_acacia",
+  "acacia_drepanolobium",
+  "black_galled_acacia"
+ ],
+ "family": "Fabaceae",
+ "form": "multi_stem_shrub_tree",
+ "deciduous": true,
+ "template": "cercis_occidentalis",
+ "regions": [
+  "east_africa"
+ ],
+ "height_m": [
+  1.5,
+  4
+ ],
+ "stature": {
+  "typical_m": 3,
+  "tall_m": 6,
+  "record_m": null,
+  "source": "tall: Wikipedia, up to 6 m; typical: the drafter's estimate for the black-cotton plains, where most stands are 1-4 m; no record read; read 2026-11-05"
+ },
+ "variants_height_m": {
+  "young": [
+   0.5,
+   1.5
+  ],
+  "old": [
+   3.5,
+   6
+  ]
+ },
+ "crown": {
+  "shape": "inverse_conical",
+  "profile": [
+   [
+    0.15,
+    0.12
+   ],
+   [
+    0.35,
+    0.26
+   ],
+   [
+    0.55,
+    0.36
+   ],
+   [
+    0.75,
+    0.38
+   ],
+   [
+    0.9,
+    0.3
+   ],
+   [
+    1.0,
+    0.1
+   ]
+  ],
+  "lobes": 4,
+  "lobe_depth": 0.22,
+  "asymmetry": 0.25,
+  "fill": 0.3,
+  "edge": 1.12
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    82,
+    106,
+    60
+   ],
+   "spring": [
+    80,
+    104,
+    58
+   ],
+   "summer": [
+    100,
+    108,
+    70
+   ],
+   "fall": [
+    108,
+    110,
+    76
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 0.7,
+   "fall": 0.55
+  },
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   0.95,
+   0.85,
+   0.7,
+   0.6,
+   0.5,
+   0.55,
+   0.8,
+   1.0
+  ],
+  "leaf_size_m": 0.03,
+  "leaf_shape": "pinnate_compound",
+  "leaflets": [
+   9,
+   13
+  ],
+  "flowers": {
+   "season": "winter",
+   "months": [
+    1,
+    3
+   ],
+   "form": "cluster",
+   "rgb": [
+    244,
+    238,
+    216
+   ],
+   "size_m": 0.025,
+   "density": 0.35,
+   "before_leaves": false
+  },
+  "berries": null
+ },
+ "trunk": {
+  "bark_rgb": [
+   52,
+   48,
+   46
+  ],
+  "bark_pattern": "smooth",
+  "stems": [
+   2,
+   5
+  ],
+  "stem_spread_deg": 20,
+  "twig_rgb": [
+   70,
+   60,
+   56
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 0.8,
+  "crown_base_ratio": 0.15,
+  "porosity": 0.55,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-05), no photographs measured; to be replaced by photo measurements: a thin, open, irregular small tree of a few black stems, bristling with long white thorns and dark round galls, more twig than leaf, in near-pure stands on dark clay plains"
+ },
+ "variant_patches": {
+  "young": {
+   "set": {
+    "trunk": {
+     "stems": [
+      1,
+      3
+     ]
+    }
+   },
+   "note": "a knee-high resprout after fire, a few black wands"
+  },
+  "old": {
+   "set": {
+    "trunk": {
+     "stems": [
+      2,
+      4
+     ]
+    }
+   },
+   "note": "an old tree of a few black stems with a ragged open crown"
+  }
+ },
+ "description": "A small, open, often several-stemmed thorn tree 1.5-4 m tall that forms near-pure stands on the dark clay 'black cotton' plains. Its paired white thorns swell at the base into round, hollow galls the size of a walnut, black when old, that house fierce acacia ants and whistle in the wind.",
+ "season_notes": {
+  "winter": "December to February: in leaf; creamy ball flowers early in the year.",
+  "spring": "March to May, the long rains: in full leaf; the clay plains around it waterlogged.",
+  "summer": "June to August: the leaves thin; the black galls and white thorns stand out on the bare twigs.",
+  "fall": "September to November: the barest and most skeletal, the cracked clay underneath; new leaves with the short rains."
+ },
+ "habitat": {
+  "classes": {
+   "grassland": 1.0,
+   "chaparral": 0.5,
+   "oak_woodland": 0.4
+  },
+  "floor": 1.7,
+  "mid": 0.7,
+  "steep": 0.2,
+  "north": 1.0,
+  "shade": 0.0,
+  "disturbed": 0.9
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "giraffa_camelopardalis",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring",
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "loxodonta_africana",
+    "part": "browse",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": []
+ },
+ "range": {
+  "elev_m": [
+   600,
+   2400
+  ],
+  "where": "the black cotton (vertisol) plains of the East African uplands, Kenya, Tanzania, Uganda; in the Serengeti the poorly drained clay flats and drainage-line margins of the centre and west"
+ },
+ "stand_in": "cercis_occidentalis",
+ "notes": "Grown from western redbud as a few-stemmed small tree with a sparse, open crown. COMPROMISES: the swollen thorn galls, the defining feature, cannot be drawn (no spine or gall primitive; drawing them as berries would make them food in fruit.js, so they are left out), and neither can the long white thorns; the bipinnate leaves are tiny pinnate leaves; the black bark is the generator's 'smooth' pattern darkened. On the tile the habitat weight puts it on valley floors (floor 1.7) and keeps it off slopes, as a stand-in for the vertisols the habitat classes cannot see: a soil-aware rule (SoilGrids clay, poor drainage) would place it properly. Wikipedia: up to 6 m, often dominant in a nearly monoculture woodland, fire-adapted and resprouting, on black cotton soils; giraffes and elephants browse it but the Crematogaster ants deter them (so its browse value is lower than umbrella thorn's). Flowering months are the drafter's knowledge. The client's seasons are calendar quarters (winter Dec-Feb, spring Mar-May, summer Jun-Aug, fall Sep-Nov) whatever the hemisphere or climate; the colours and leaf-on here are given for those months at the tile, not for a temperate winter. Animals are GBIF ids not yet in the library. Region tag east_africa is not yet a natural region in pipeline/regions.py.",
+ "sources": [
+  "GBIF species match, Vachellia drepanolobium: ACCEPTED, https://api.gbif.org/v1/species/match?name=Vachellia%20drepanolobium, read 2026-11-05",
+  "https://en.wikipedia.org/wiki/Vachellia_drepanolobium, read 2026-11-05"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-05); needs local sign-off"
+ ]
+}

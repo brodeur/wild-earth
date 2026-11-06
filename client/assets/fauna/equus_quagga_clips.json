@@ -1,0 +1,238 @@
+{
+ "rate": 30,
+ "width": 60,
+ "height": 68,
+ "format": "rgba16f",
+ "texels": "row f = frame f; texels j*3..j*3+2 = rows 0..2 of joint j's 3x4 matrix (adopted frame)",
+ "joints": [
+  "Hips",
+  "Spine",
+  "Chest",
+  "Neck",
+  "Head",
+  "Tail1",
+  "Tail2",
+  "Tail3",
+  "UpperLeg.FL",
+  "LowerLeg.FL",
+  "Foot.FL",
+  "UpperLeg.FR",
+  "LowerLeg.FR",
+  "Foot.FR",
+  "UpperLeg.HL",
+  "LowerLeg.HL",
+  "Foot.HL",
+  "UpperLeg.HR",
+  "LowerLeg.HR",
+  "Foot.HR"
+ ],
+ "joint_rest": [
+  [
+   0,
+   1.0927,
+   -0.7313
+  ],
+  [
+   0,
+   1.1181,
+   -0.0887
+  ],
+  [
+   0,
+   1.1436,
+   0.5539
+  ],
+  [
+   0,
+   1.0885,
+   0.4197
+  ],
+  [
+   0,
+   1.1876,
+   0.8081
+  ],
+  [
+   -0.028,
+   1.1768,
+   -0.7891
+  ],
+  [
+   -0.0388,
+   0.9585,
+   -0.8154
+  ],
+  [
+   -0.034,
+   0.8777,
+   -0.8297
+  ],
+  [
+   0.0905,
+   1.1141,
+   0.5938
+  ],
+  [
+   0.1064,
+   0.6755,
+   0.4183
+  ],
+  [
+   0.0901,
+   0.2837,
+   0.491
+  ],
+  [
+   -0.1353,
+   1.1141,
+   0.5141
+  ],
+  [
+   -0.1592,
+   0.6755,
+   0.3386
+  ],
+  [
+   -0.1544,
+   0.2837,
+   0.2452
+  ],
+  [
+   0.0752,
+   1.03,
+   -0.7629
+  ],
+  [
+   0.0885,
+   0.6755,
+   -0.5857
+  ],
+  [
+   0.0598,
+   0.3377,
+   -0.6807
+  ],
+  [
+   -0.1348,
+   1.0375,
+   -0.6996
+  ],
+  [
+   -0.1586,
+   0.6755,
+   -0.5186
+  ],
+  [
+   -0.1407,
+   0.3377,
+   -0.5
+  ]
+ ],
+ "scale": 1,
+ "offset": [
+  0,
+  0,
+  0
+ ],
+ "source": {
+  "file": "equus_quagga.glb",
+  "engine": "client/src/gait.js (tools/bake_gait.mjs)",
+  "species": "equus_quagga",
+  "tile": null,
+  "params": {
+   "vw": 2.68794810217757,
+   "vt": 6.010434676460597,
+   "ft": 1.792199742013371,
+   "Lt": 3.35366339786905,
+   "posture": "digitigrade",
+   "pace": false,
+   "gallop": "transverse"
+  }
+ },
+ "clips": {
+  "Idle": {
+   "first": 0,
+   "count": 1,
+   "loop": false,
+   "duration": 0,
+   "root_motion": [
+    0,
+    0,
+    0
+   ]
+  },
+  "Walk": {
+   "first": 1,
+   "count": 30,
+   "loop": true,
+   "duration": 1.0086,
+   "root_motion": [
+    0,
+    0,
+    0
+   ],
+   "stride_m": 1.6266,
+   "touchdown": 0.2667,
+   "speed_mps": 1.613,
+   "cadence_hz": 0.991,
+   "duty": 0.618,
+   "gait": 0
+  },
+  "Trot": {
+   "first": 31,
+   "count": 19,
+   "loop": true,
+   "duration": 0.6351,
+   "root_motion": [
+    0,
+    0,
+    0
+   ],
+   "stride_m": 2.8629,
+   "touchdown": 0.5263,
+   "speed_mps": 4.508,
+   "cadence_hz": 1.575,
+   "duty": 0.5,
+   "gait": 1
+  },
+  "Gallop": {
+   "first": 50,
+   "count": 16,
+   "loop": true,
+   "duration": 0.5205,
+   "root_motion": [
+    0,
+    0,
+    0
+   ],
+   "stride_m": 5.0055,
+   "touchdown": 0.5,
+   "speed_mps": 9.617,
+   "cadence_hz": 1.921,
+   "duty": 0.378,
+   "gait": 2
+  },
+  "Bed": {
+   "first": 66,
+   "count": 1,
+   "loop": false,
+   "duration": 0,
+   "root_motion": [
+    0,
+    0,
+    0
+   ]
+  },
+  "Eat": {
+   "first": 67,
+   "count": 1,
+   "loop": false,
+   "duration": 0,
+   "root_motion": [
+    0,
+    0,
+    0
+   ]
+  }
+ }
+}

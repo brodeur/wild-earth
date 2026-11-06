@@ -1,0 +1,1760 @@
+{
+ "habitat": {
+  "1": {
+   "name": "oak_woodland",
+   "color": [
+    171,
+    150,
+    72
+   ]
+  },
+  "2": {
+   "name": "conifer_forest",
+   "color": [
+    34,
+    94,
+    58
+   ]
+  },
+  "3": {
+   "name": "mixed_forest",
+   "color": [
+    88,
+    122,
+    60
+   ]
+  },
+  "4": {
+   "name": "chaparral",
+   "color": [
+    134,
+    110,
+    92
+   ]
+  },
+  "5": {
+   "name": "grassland",
+   "color": [
+    214,
+    196,
+    120
+   ]
+  },
+  "6": {
+   "name": "riparian",
+   "color": [
+    74,
+    142,
+    118
+   ]
+  },
+  "7": {
+   "name": "water",
+   "color": [
+    70,
+    130,
+    220
+   ]
+  },
+  "8": {
+   "name": "barren",
+   "color": [
+    190,
+    185,
+    175
+   ]
+  },
+  "9": {
+   "name": "human",
+   "color": [
+    220,
+    60,
+    60
+   ]
+  }
+ },
+ "evt": {
+  "7011": {
+   "name": "Rocky Mountain Aspen Forest and Woodland",
+   "phys": "Hardwood",
+   "group": "Aspen Forest, Woodland, and Parkland",
+   "habitat": "mixed_forest",
+   "color": [
+    192,
+    255,
+    138
+   ],
+   "pixels": 461
+  },
+  "7046": {
+   "name": "Northern Rocky Mountain Subalpine Woodland and Parkland",
+   "phys": "Conifer",
+   "group": "Subalpine Woodland and Parkland",
+   "habitat": "conifer_forest",
+   "color": [
+    191,
+    255,
+    233
+   ],
+   "pixels": 2953
+  },
+  "7049": {
+   "name": "Rocky Mountain Foothill Limber Pine-Juniper Woodland",
+   "phys": "Conifer",
+   "group": "Limber Pine Woodland",
+   "habitat": "conifer_forest",
+   "color": [
+    174,
+    245,
+    224
+   ],
+   "pixels": 19
+  },
+  "7050": {
+   "name": "Rocky Mountain Lodgepole Pine Forest",
+   "phys": "Conifer",
+   "group": "Lodgepole Pine Forest and Woodland",
+   "habitat": "conifer_forest",
+   "color": [
+    163,
+    240,
+    219
+   ],
+   "pixels": 9076
+  },
+  "7055": {
+   "name": "Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland",
+   "phys": "Conifer",
+   "group": "Spruce-Fir Forest and Woodland",
+   "habitat": "conifer_forest",
+   "color": [
+    236,
+    252,
+    204
+   ],
+   "pixels": 5844
+  },
+  "7056": {
+   "name": "Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland",
+   "phys": "Conifer",
+   "group": "Spruce-Fir Forest and Woodland",
+   "habitat": "conifer_forest",
+   "color": [
+    236,
+    252,
+    204
+   ],
+   "pixels": 3470
+  },
+  "7057": {
+   "name": "Rocky Mountain Subalpine-Montane Limber-Bristlecone Pine Woodland",
+   "phys": "Conifer",
+   "group": "Limber Pine Woodland",
+   "habitat": "conifer_forest",
+   "color": [
+    63,
+    255,
+    46
+   ],
+   "pixels": 30
+  },
+  "7061": {
+   "name": "Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland",
+   "phys": "Conifer-Hardwood",
+   "group": "Aspen-Mixed Conifer Forest and Woodland",
+   "habitat": "mixed_forest",
+   "color": [
+    192,
+    255,
+    138
+   ],
+   "pixels": 10
+  },
+  "7070": {
+   "name": "Rocky Mountain Alpine Dwarf-Shrubland",
+   "phys": "Shrubland",
+   "group": "Alpine Dwarf-Shrubland, Fell-field and Meadow",
+   "habitat": "chaparral",
+   "color": [
+    171,
+    145,
+    106
+   ],
+   "pixels": 272
+  },
+  "7106": {
+   "name": "Northern Rocky Mountain Montane-Foothill Deciduous Shrubland",
+   "phys": "Shrubland",
+   "group": "Deciduous Shrubland",
+   "habitat": "chaparral",
+   "color": [
+    117,
+    87,
+    61
+   ],
+   "pixels": 1181
+  },
+  "7126": {
+   "name": "Inter-Mountain Basins Montane Sagebrush Steppe",
+   "phys": "Shrubland",
+   "group": "Big Sagebrush Shrubland and Steppe",
+   "habitat": "chaparral",
+   "color": [
+    219,
+    140,
+    37
+   ],
+   "pixels": 26281
+  },
+  "7139": {
+   "name": "Northern Rocky Mountain Lower Montane-Foothill-Valley Grassland",
+   "phys": "Grassland",
+   "group": "Grassland",
+   "habitat": "grassland",
+   "color": [
+    255,
+    191,
+    102
+   ],
+   "pixels": 127
+  },
+  "7140": {
+   "name": "Northern Rocky Mountain Subalpine-Upper Montane Grassland",
+   "phys": "Grassland",
+   "group": "Grassland",
+   "habitat": "grassland",
+   "color": [
+    255,
+    184,
+    97
+   ],
+   "pixels": 246
+  },
+  "7143": {
+   "name": "Rocky Mountain Alpine Fell-Field",
+   "phys": "Grassland",
+   "group": "Alpine Dwarf-Shrubland, Fell-field and Meadow",
+   "habitat": "grassland",
+   "color": [
+    171,
+    145,
+    106
+   ],
+   "pixels": 254
+  },
+  "7144": {
+   "name": "Rocky Mountain Alpine Turf",
+   "phys": "Grassland",
+   "group": "Dry Tundra",
+   "habitat": "grassland",
+   "color": [
+    171,
+    145,
+    106
+   ],
+   "pixels": 1532
+  },
+  "7145": {
+   "name": "Rocky Mountain Subalpine-Montane Mesic Meadow",
+   "phys": "Grassland",
+   "group": "Alpine Dwarf-Shrubland, Fell-field and Meadow",
+   "habitat": "grassland",
+   "color": [
+    255,
+    163,
+    82
+   ],
+   "pixels": 3345
+  },
+  "7166": {
+   "name": "Middle Rocky Mountain Montane Douglas-fir Forest and Woodland",
+   "phys": "Conifer",
+   "group": "Douglas-fir Forest and Woodland",
+   "habitat": "conifer_forest",
+   "color": [
+    0,
+    51,
+    0
+   ],
+   "pixels": 6244
+  },
+  "7169": {
+   "name": "Northern Rocky Mountain Subalpine Deciduous Shrubland",
+   "phys": "Shrubland",
+   "group": "Deciduous Shrubland",
+   "habitat": "chaparral",
+   "color": [
+    128,
+    97,
+    69
+   ],
+   "pixels": 235
+  },
+  "7292": {
+   "name": "Open Water",
+   "phys": "Open Water",
+   "group": "Open Water",
+   "habitat": "water",
+   "color": [
+    0,
+    0,
+    255
+   ],
+   "pixels": 7370
+  },
+  "7296": {
+   "name": "Developed-Low Intensity",
+   "phys": "Developed-Low Intensity",
+   "group": "Developed-Low Intensity",
+   "habitat": "human",
+   "color": [
+    255,
+    122,
+    143
+   ],
+   "pixels": 7
+  },
+  "7297": {
+   "name": "Developed-Medium Intensity",
+   "phys": "Developed-Medium Intensity",
+   "group": "Developed-Medium Intensity",
+   "habitat": "human",
+   "color": [
+    253,
+    44,
+    79
+   ],
+   "pixels": 8
+  },
+  "7298": {
+   "name": "Developed-High Intensity",
+   "phys": "Developed-High Intensity",
+   "group": "Developed-High Intensity",
+   "habitat": "human",
+   "color": [
+    173,
+    0,
+    28
+   ],
+   "pixels": 4
+  },
+  "7299": {
+   "name": "Developed-Roads",
+   "phys": "Developed-Roads",
+   "group": "Developed-Roads",
+   "habitat": "human",
+   "color": [
+    1,
+    1,
+    1
+   ],
+   "pixels": 892
+  },
+  "7735": {
+   "name": "North American Glacier and Ice Field",
+   "phys": "Snow-Ice",
+   "group": "Snow-Ice",
+   "habitat": "barren",
+   "color": [
+    159,
+    161,
+    240
+   ],
+   "pixels": 870
+  },
+  "7901": {
+   "name": "Western Cool Temperate Urban Evergreen Forest",
+   "phys": "Developed",
+   "group": "Developed-Upland Evergreen Forest",
+   "habitat": "human",
+   "color": [
+    170,
+    102,
+    205
+   ],
+   "pixels": 8
+  },
+  "7902": {
+   "name": "Western Cool Temperate Urban Mixed Forest",
+   "phys": "Developed",
+   "group": "Developed-Upland Mixed Forest",
+   "habitat": "human",
+   "color": [
+    194,
+    158,
+    215
+   ],
+   "pixels": 6
+  },
+  "7903": {
+   "name": "Western Cool Temperate Urban Herbaceous",
+   "phys": "Developed",
+   "group": "Developed-Upland Herbaceous",
+   "habitat": "human",
+   "color": [
+    202,
+    122,
+    245
+   ],
+   "pixels": 6
+  },
+  "7904": {
+   "name": "Western Cool Temperate Urban Shrubland",
+   "phys": "Developed",
+   "group": "Developed-Upland Shrubland",
+   "habitat": "human",
+   "color": [
+    207,
+    171,
+    215
+   ],
+   "pixels": 34
+  },
+  "7921": {
+   "name": "Western Cool Temperate Developed Evergreen Forest",
+   "phys": "Developed",
+   "group": "Developed-Upland Evergreen Forest",
+   "habitat": "human",
+   "color": [
+    102,
+    119,
+    205
+   ],
+   "pixels": 8
+  },
+  "7922": {
+   "name": "Western Cool Temperate Developed Mixed Forest",
+   "phys": "Developed",
+   "group": "Developed-Upland Mixed Forest",
+   "habitat": "human",
+   "color": [
+    68,
+    79,
+    137
+   ],
+   "pixels": 7
+  },
+  "7923": {
+   "name": "Western Cool Temperate Developed Shrubland",
+   "phys": "Developed",
+   "group": "Developed-Upland Shrubland",
+   "habitat": "human",
+   "color": [
+    122,
+    142,
+    245
+   ],
+   "pixels": 21
+  },
+  "7924": {
+   "name": "Western Cool Temperate Developed Herbaceous",
+   "phys": "Developed",
+   "group": "Developed-Upland Herbaceous",
+   "habitat": "human",
+   "color": [
+    158,
+    170,
+    215
+   ],
+   "pixels": 4
+  },
+  "7967": {
+   "name": "Western Cool Temperate Pasture and Hayland",
+   "phys": "Agricultural",
+   "group": "Agricultural-Pasture and Hayland",
+   "habitat": "human",
+   "color": [
+    227,
+    212,
+    28
+   ],
+   "pixels": 4
+  },
+  "9011": {
+   "name": "North American Arid West Emergent Marsh",
+   "phys": "Riparian",
+   "group": "Freshwater Marsh",
+   "habitat": "riparian",
+   "color": [
+    250,
+    100,
+    56
+   ],
+   "pixels": 2
+  },
+  "9016": {
+   "name": "Rocky Mountain Alpine Bedrock and Scree",
+   "phys": "Sparsely Vegetated",
+   "group": "Sparse Vegetation",
+   "habitat": "barren",
+   "color": [
+    100,
+    100,
+    100
+   ],
+   "pixels": 31668
+  },
+  "9017": {
+   "name": "Rocky Mountain Alpine-Montane Wet Meadow",
+   "phys": "Riparian",
+   "group": "Western Herbaceous Wetland",
+   "habitat": "riparian",
+   "color": [
+    184,
+    96,
+    24
+   ],
+   "pixels": 404
+  },
+  "9018": {
+   "name": "Rocky Mountain Cliff Canyon and Massive Bedrock",
+   "phys": "Sparsely Vegetated",
+   "group": "Sparse Vegetation",
+   "habitat": "barren",
+   "color": [
+    100,
+    100,
+    100
+   ],
+   "pixels": 5611
+  },
+  "9019": {
+   "name": "Rocky Mountain Lower Montane-Foothill Riparian Woodland",
+   "phys": "Riparian",
+   "group": "Western Riparian Woodland and Shrubland",
+   "habitat": "riparian",
+   "color": [
+    73,
+    171,
+    186
+   ],
+   "pixels": 1315
+  },
+  "9021": {
+   "name": "Rocky Mountain Subalpine-Montane Riparian Shrubland",
+   "phys": "Riparian",
+   "group": "Western Riparian Woodland and Shrubland",
+   "habitat": "riparian",
+   "color": [
+    184,
+    96,
+    24
+   ],
+   "pixels": 60
+  },
+  "9022": {
+   "name": "Rocky Mountain Subalpine-Montane Riparian Woodland",
+   "phys": "Riparian",
+   "group": "Western Riparian Woodland and Shrubland",
+   "habitat": "riparian",
+   "color": [
+    184,
+    96,
+    24
+   ],
+   "pixels": 416
+  },
+  "9519": {
+   "name": "Rocky Mountain Lower Montane-Foothill Riparian Shrubland",
+   "phys": "Riparian",
+   "group": "Western Riparian Woodland and Shrubland",
+   "habitat": "riparian",
+   "color": [
+    73,
+    171,
+    186
+   ],
+   "pixels": 489
+  },
+  "9828": {
+   "name": "Interior Western North American Temperate Ruderal Grassland",
+   "phys": "Exotic Herbaceous",
+   "group": "Introduced Perennial Grassland and Forbland",
+   "habitat": "grassland",
+   "color": [
+    255,
+    105,
+    46
+   ],
+   "pixels": 93
+  },
+  "9829": {
+   "name": "Western North American Ruderal Wet Meadow & Marsh",
+   "phys": "Riparian",
+   "group": "Introduced Herbaceous Wetland Vegetation",
+   "habitat": "riparian",
+   "color": [
+    255,
+    105,
+    46
+   ],
+   "pixels": 2
+  }
+ },
+ "evc": {
+  "11": {
+   "name": "Open Water",
+   "pixels": 7370
+  },
+  "12": {
+   "name": "Snow/Ice",
+   "pixels": 870
+  },
+  "14": {
+   "name": "Developed-Upland Evergreen Forest",
+   "pixels": 8
+  },
+  "15": {
+   "name": "Developed-Upland Mixed Forest",
+   "pixels": 6
+  },
+  "16": {
+   "name": "Developed-Upland Herbaceous",
+   "pixels": 6
+  },
+  "17": {
+   "name": "Developed-Upland Shrubland",
+   "pixels": 34
+  },
+  "22": {
+   "name": "Developed-Low Intensity",
+   "pixels": 7
+  },
+  "23": {
+   "name": "Developed-Medium Intensity",
+   "pixels": 8
+  },
+  "24": {
+   "name": "Developed-High Intensity",
+   "pixels": 4
+  },
+  "25": {
+   "name": "Developed-Roads",
+   "pixels": 892
+  },
+  "31": {
+   "name": "Barren",
+   "pixels": 12807
+  },
+  "100": {
+   "name": "Sparse Vegetation Canopy",
+   "pixels": 24472
+  },
+  "110": {
+   "name": "Tree Cover = 10%",
+   "pixels": 1262
+  },
+  "111": {
+   "name": "Tree Cover = 11%",
+   "pixels": 191
+  },
+  "112": {
+   "name": "Tree Cover = 12%",
+   "pixels": 232
+  },
+  "113": {
+   "name": "Tree Cover = 13%",
+   "pixels": 257
+  },
+  "114": {
+   "name": "Tree Cover = 14%",
+   "pixels": 250
+  },
+  "115": {
+   "name": "Tree Cover = 15%",
+   "pixels": 322
+  },
+  "116": {
+   "name": "Tree Cover = 16%",
+   "pixels": 294
+  },
+  "117": {
+   "name": "Tree Cover = 17%",
+   "pixels": 328
+  },
+  "118": {
+   "name": "Tree Cover = 18%",
+   "pixels": 335
+  },
+  "119": {
+   "name": "Tree Cover = 19%",
+   "pixels": 388
+  },
+  "120": {
+   "name": "Tree Cover = 20%",
+   "pixels": 430
+  },
+  "121": {
+   "name": "Tree Cover = 21%",
+   "pixels": 413
+  },
+  "122": {
+   "name": "Tree Cover = 22%",
+   "pixels": 429
+  },
+  "123": {
+   "name": "Tree Cover = 23%",
+   "pixels": 474
+  },
+  "124": {
+   "name": "Tree Cover = 24%",
+   "pixels": 494
+  },
+  "125": {
+   "name": "Tree Cover = 25%",
+   "pixels": 511
+  },
+  "126": {
+   "name": "Tree Cover = 26%",
+   "pixels": 522
+  },
+  "127": {
+   "name": "Tree Cover = 27%",
+   "pixels": 558
+  },
+  "128": {
+   "name": "Tree Cover = 28%",
+   "pixels": 564
+  },
+  "129": {
+   "name": "Tree Cover = 29%",
+   "pixels": 579
+  },
+  "130": {
+   "name": "Tree Cover = 30%",
+   "pixels": 576
+  },
+  "131": {
+   "name": "Tree Cover = 31%",
+   "pixels": 601
+  },
+  "132": {
+   "name": "Tree Cover = 32%",
+   "pixels": 589
+  },
+  "133": {
+   "name": "Tree Cover = 33%",
+   "pixels": 621
+  },
+  "134": {
+   "name": "Tree Cover = 34%",
+   "pixels": 606
+  },
+  "135": {
+   "name": "Tree Cover = 35%",
+   "pixels": 614
+  },
+  "136": {
+   "name": "Tree Cover = 36%",
+   "pixels": 592
+  },
+  "137": {
+   "name": "Tree Cover = 37%",
+   "pixels": 683
+  },
+  "138": {
+   "name": "Tree Cover = 38%",
+   "pixels": 677
+  },
+  "139": {
+   "name": "Tree Cover = 39%",
+   "pixels": 699
+  },
+  "140": {
+   "name": "Tree Cover = 40%",
+   "pixels": 664
+  },
+  "141": {
+   "name": "Tree Cover = 41%",
+   "pixels": 749
+  },
+  "142": {
+   "name": "Tree Cover = 42%",
+   "pixels": 738
+  },
+  "143": {
+   "name": "Tree Cover = 43%",
+   "pixels": 788
+  },
+  "144": {
+   "name": "Tree Cover = 44%",
+   "pixels": 864
+  },
+  "145": {
+   "name": "Tree Cover = 45%",
+   "pixels": 835
+  },
+  "146": {
+   "name": "Tree Cover = 46%",
+   "pixels": 843
+  },
+  "147": {
+   "name": "Tree Cover = 47%",
+   "pixels": 822
+  },
+  "148": {
+   "name": "Tree Cover = 48%",
+   "pixels": 937
+  },
+  "149": {
+   "name": "Tree Cover = 49%",
+   "pixels": 976
+  },
+  "150": {
+   "name": "Tree Cover = 50%",
+   "pixels": 929
+  },
+  "151": {
+   "name": "Tree Cover = 51%",
+   "pixels": 984
+  },
+  "152": {
+   "name": "Tree Cover = 52%",
+   "pixels": 1042
+  },
+  "153": {
+   "name": "Tree Cover = 53%",
+   "pixels": 804
+  },
+  "154": {
+   "name": "Tree Cover = 54%",
+   "pixels": 699
+  },
+  "155": {
+   "name": "Tree Cover = 55%",
+   "pixels": 586
+  },
+  "156": {
+   "name": "Tree Cover = 56%",
+   "pixels": 444
+  },
+  "157": {
+   "name": "Tree Cover = 57%",
+   "pixels": 330
+  },
+  "158": {
+   "name": "Tree Cover = 58%",
+   "pixels": 250
+  },
+  "159": {
+   "name": "Tree Cover = 59%",
+   "pixels": 170
+  },
+  "160": {
+   "name": "Tree Cover = 60%",
+   "pixels": 102
+  },
+  "161": {
+   "name": "Tree Cover = 61%",
+   "pixels": 49
+  },
+  "162": {
+   "name": "Tree Cover = 62%",
+   "pixels": 66
+  },
+  "163": {
+   "name": "Tree Cover = 63%",
+   "pixels": 15
+  },
+  "164": {
+   "name": "Tree Cover = 64%",
+   "pixels": 25
+  },
+  "165": {
+   "name": "Tree Cover = 65%",
+   "pixels": 12
+  },
+  "166": {
+   "name": "Tree Cover = 66%",
+   "pixels": 25
+  },
+  "167": {
+   "name": "Tree Cover = 67%",
+   "pixels": 1
+  },
+  "168": {
+   "name": "Tree Cover = 68%",
+   "pixels": 2
+  },
+  "170": {
+   "name": "Tree Cover = 70%",
+   "pixels": 11
+  },
+  "210": {
+   "name": "Shrub Cover = 10%",
+   "pixels": 8
+  },
+  "211": {
+   "name": "Shrub Cover = 11%",
+   "pixels": 2
+  },
+  "212": {
+   "name": "Shrub Cover = 12%",
+   "pixels": 6
+  },
+  "213": {
+   "name": "Shrub Cover = 13%",
+   "pixels": 8
+  },
+  "214": {
+   "name": "Shrub Cover = 14%",
+   "pixels": 15
+  },
+  "216": {
+   "name": "Shrub Cover = 16%",
+   "pixels": 33
+  },
+  "217": {
+   "name": "Shrub Cover = 17%",
+   "pixels": 40
+  },
+  "218": {
+   "name": "Shrub Cover = 18%",
+   "pixels": 74
+  },
+  "219": {
+   "name": "Shrub Cover = 19%",
+   "pixels": 106
+  },
+  "220": {
+   "name": "Shrub Cover = 20%",
+   "pixels": 185
+  },
+  "221": {
+   "name": "Shrub Cover = 21%",
+   "pixels": 2
+  },
+  "222": {
+   "name": "Shrub Cover = 22%",
+   "pixels": 265
+  },
+  "223": {
+   "name": "Shrub Cover = 23%",
+   "pixels": 529
+  },
+  "224": {
+   "name": "Shrub Cover = 24%",
+   "pixels": 1136
+  },
+  "225": {
+   "name": "Shrub Cover = 25%",
+   "pixels": 2362
+  },
+  "226": {
+   "name": "Shrub Cover = 26%",
+   "pixels": 3975
+  },
+  "227": {
+   "name": "Shrub Cover = 27%",
+   "pixels": 73
+  },
+  "228": {
+   "name": "Shrub Cover = 28%",
+   "pixels": 4808
+  },
+  "229": {
+   "name": "Shrub Cover = 29%",
+   "pixels": 4105
+  },
+  "230": {
+   "name": "Shrub Cover = 30%",
+   "pixels": 2763
+  },
+  "231": {
+   "name": "Shrub Cover = 31%",
+   "pixels": 1941
+  },
+  "232": {
+   "name": "Shrub Cover = 32%",
+   "pixels": 1522
+  },
+  "233": {
+   "name": "Shrub Cover = 33%",
+   "pixels": 9
+  },
+  "234": {
+   "name": "Shrub Cover = 34%",
+   "pixels": 1265
+  },
+  "235": {
+   "name": "Shrub Cover = 35%",
+   "pixels": 992
+  },
+  "236": {
+   "name": "Shrub Cover = 36%",
+   "pixels": 699
+  },
+  "237": {
+   "name": "Shrub Cover = 37%",
+   "pixels": 510
+  },
+  "238": {
+   "name": "Shrub Cover = 38%",
+   "pixels": 361
+  },
+  "240": {
+   "name": "Shrub Cover = 40%",
+   "pixels": 259
+  },
+  "241": {
+   "name": "Shrub Cover = 41%",
+   "pixels": 182
+  },
+  "242": {
+   "name": "Shrub Cover = 42%",
+   "pixels": 103
+  },
+  "243": {
+   "name": "Shrub Cover = 43%",
+   "pixels": 121
+  },
+  "244": {
+   "name": "Shrub Cover = 44%",
+   "pixels": 37
+  },
+  "246": {
+   "name": "Shrub Cover = 46%",
+   "pixels": 33
+  },
+  "247": {
+   "name": "Shrub Cover = 47%",
+   "pixels": 2
+  },
+  "248": {
+   "name": "Shrub Cover = 48%",
+   "pixels": 2
+  },
+  "249": {
+   "name": "Shrub Cover = 49%",
+   "pixels": 6
+  },
+  "310": {
+   "name": "Herb Cover = 10%",
+   "pixels": 113
+  },
+  "311": {
+   "name": "Herb Cover = 11%",
+   "pixels": 149
+  },
+  "312": {
+   "name": "Herb Cover = 12%",
+   "pixels": 391
+  },
+  "313": {
+   "name": "Herb Cover = 13%",
+   "pixels": 149
+  },
+  "314": {
+   "name": "Herb Cover = 14%",
+   "pixels": 194
+  },
+  "315": {
+   "name": "Herb Cover = 15%",
+   "pixels": 185
+  },
+  "316": {
+   "name": "Herb Cover = 16%",
+   "pixels": 156
+  },
+  "317": {
+   "name": "Herb Cover = 17%",
+   "pixels": 145
+  },
+  "318": {
+   "name": "Herb Cover = 18%",
+   "pixels": 144
+  },
+  "319": {
+   "name": "Herb Cover = 19%",
+   "pixels": 129
+  },
+  "320": {
+   "name": "Herb Cover = 20%",
+   "pixels": 155
+  },
+  "321": {
+   "name": "Herb Cover = 21%",
+   "pixels": 108
+  },
+  "322": {
+   "name": "Herb Cover = 22%",
+   "pixels": 118
+  },
+  "323": {
+   "name": "Herb Cover = 23%",
+   "pixels": 122
+  },
+  "324": {
+   "name": "Herb Cover = 24%",
+   "pixels": 125
+  },
+  "325": {
+   "name": "Herb Cover = 25%",
+   "pixels": 116
+  },
+  "326": {
+   "name": "Herb Cover = 26%",
+   "pixels": 106
+  },
+  "327": {
+   "name": "Herb Cover = 27%",
+   "pixels": 121
+  },
+  "328": {
+   "name": "Herb Cover = 28%",
+   "pixels": 105
+  },
+  "329": {
+   "name": "Herb Cover = 29%",
+   "pixels": 115
+  },
+  "330": {
+   "name": "Herb Cover = 30%",
+   "pixels": 117
+  },
+  "331": {
+   "name": "Herb Cover = 31%",
+   "pixels": 121
+  },
+  "332": {
+   "name": "Herb Cover = 32%",
+   "pixels": 127
+  },
+  "333": {
+   "name": "Herb Cover = 33%",
+   "pixels": 104
+  },
+  "334": {
+   "name": "Herb Cover = 34%",
+   "pixels": 100
+  },
+  "335": {
+   "name": "Herb Cover = 35%",
+   "pixels": 121
+  },
+  "336": {
+   "name": "Herb Cover = 36%",
+   "pixels": 106
+  },
+  "337": {
+   "name": "Herb Cover = 37%",
+   "pixels": 131
+  },
+  "338": {
+   "name": "Herb Cover = 38%",
+   "pixels": 112
+  },
+  "339": {
+   "name": "Herb Cover = 39%",
+   "pixels": 114
+  },
+  "340": {
+   "name": "Herb Cover = 40%",
+   "pixels": 136
+  },
+  "341": {
+   "name": "Herb Cover = 41%",
+   "pixels": 144
+  },
+  "342": {
+   "name": "Herb Cover = 42%",
+   "pixels": 114
+  },
+  "343": {
+   "name": "Herb Cover = 43%",
+   "pixels": 131
+  },
+  "344": {
+   "name": "Herb Cover = 44%",
+   "pixels": 122
+  },
+  "345": {
+   "name": "Herb Cover = 45%",
+   "pixels": 116
+  },
+  "346": {
+   "name": "Herb Cover = 46%",
+   "pixels": 128
+  },
+  "347": {
+   "name": "Herb Cover = 47%",
+   "pixels": 114
+  },
+  "348": {
+   "name": "Herb Cover = 48%",
+   "pixels": 89
+  },
+  "349": {
+   "name": "Herb Cover = 49%",
+   "pixels": 97
+  },
+  "350": {
+   "name": "Herb Cover = 50%",
+   "pixels": 82
+  },
+  "351": {
+   "name": "Herb Cover = 51%",
+   "pixels": 78
+  },
+  "352": {
+   "name": "Herb Cover = 52%",
+   "pixels": 79
+  },
+  "353": {
+   "name": "Herb Cover = 53%",
+   "pixels": 76
+  },
+  "354": {
+   "name": "Herb Cover = 54%",
+   "pixels": 82
+  },
+  "355": {
+   "name": "Herb Cover = 55%",
+   "pixels": 33
+  },
+  "356": {
+   "name": "Herb Cover = 56%",
+   "pixels": 35
+  },
+  "357": {
+   "name": "Herb Cover = 57%",
+   "pixels": 32
+  },
+  "358": {
+   "name": "Herb Cover = 58%",
+   "pixels": 33
+  },
+  "359": {
+   "name": "Herb Cover = 59%",
+   "pixels": 19
+  },
+  "360": {
+   "name": "Herb Cover = 60%",
+   "pixels": 15
+  },
+  "361": {
+   "name": "Herb Cover = 61%",
+   "pixels": 69
+  },
+  "362": {
+   "name": "Herb Cover = 62%",
+   "pixels": 16
+  },
+  "363": {
+   "name": "Herb Cover = 63%",
+   "pixels": 12
+  },
+  "364": {
+   "name": "Herb Cover = 64%",
+   "pixels": 10
+  },
+  "365": {
+   "name": "Herb Cover = 65%",
+   "pixels": 11
+  },
+  "366": {
+   "name": "Herb Cover = 66%",
+   "pixels": 7
+  },
+  "367": {
+   "name": "Herb Cover = 67%",
+   "pixels": 5
+  },
+  "368": {
+   "name": "Herb Cover = 68%",
+   "pixels": 7
+  },
+  "369": {
+   "name": "Herb Cover = 69%",
+   "pixels": 5
+  },
+  "370": {
+   "name": "Herb Cover = 70%",
+   "pixels": 7
+  },
+  "371": {
+   "name": "Herb Cover = 71%",
+   "pixels": 10
+  }
+ },
+ "evh": {
+  "11": {
+   "name": "Open Water",
+   "pixels": 7370
+  },
+  "12": {
+   "name": "Snow/Ice",
+   "pixels": 870
+  },
+  "14": {
+   "name": "Developed-Upland Evergreen Forest",
+   "pixels": 8
+  },
+  "15": {
+   "name": "Developed-Upland Mixed Forest",
+   "pixels": 6
+  },
+  "16": {
+   "name": "Developed-Upland Herbaceous",
+   "pixels": 6
+  },
+  "17": {
+   "name": "Developed-Upland Shrubland",
+   "pixels": 34
+  },
+  "22": {
+   "name": "Developed - Low Intensity",
+   "pixels": 7
+  },
+  "23": {
+   "name": "Developed - Medium Intensity",
+   "pixels": 8
+  },
+  "24": {
+   "name": "Developed - High Intensity",
+   "pixels": 4
+  },
+  "25": {
+   "name": "Developed-Roads",
+   "pixels": 892
+  },
+  "31": {
+   "name": "Barren",
+   "pixels": 12807
+  },
+  "100": {
+   "name": "Sparse Vegetation Canopy",
+   "pixels": 24472
+  },
+  "101": {
+   "name": "Tree Height = 1 meter",
+   "pixels": 1
+  },
+  "102": {
+   "name": "Tree Height = 2 meters",
+   "pixels": 10
+  },
+  "103": {
+   "name": "Tree Height = 3 meters",
+   "pixels": 30
+  },
+  "104": {
+   "name": "Tree Height = 4 meters",
+   "pixels": 73
+  },
+  "105": {
+   "name": "Tree Height = 5 meters",
+   "pixels": 121
+  },
+  "106": {
+   "name": "Tree Height = 6 meters",
+   "pixels": 181
+  },
+  "107": {
+   "name": "Tree Height = 7 meters",
+   "pixels": 271
+  },
+  "108": {
+   "name": "Tree Height = 8 meters",
+   "pixels": 432
+  },
+  "109": {
+   "name": "Tree Height = 9 meters",
+   "pixels": 485
+  },
+  "110": {
+   "name": "Tree Height = 10 meters",
+   "pixels": 645
+  },
+  "111": {
+   "name": "Tree Height = 11 meters",
+   "pixels": 904
+  },
+  "112": {
+   "name": "Tree Height = 12 meters",
+   "pixels": 1342
+  },
+  "113": {
+   "name": "Tree Height = 13 meters",
+   "pixels": 1879
+  },
+  "114": {
+   "name": "Tree Height = 14 meters",
+   "pixels": 2453
+  },
+  "115": {
+   "name": "Tree Height = 15 meters",
+   "pixels": 3013
+  },
+  "116": {
+   "name": "Tree Height = 16 meters",
+   "pixels": 3490
+  },
+  "117": {
+   "name": "Tree Height = 17 meters",
+   "pixels": 3351
+  },
+  "118": {
+   "name": "Tree Height = 18 meters",
+   "pixels": 3272
+  },
+  "119": {
+   "name": "Tree Height = 19 meters",
+   "pixels": 2657
+  },
+  "120": {
+   "name": "Tree Height = 20 meters",
+   "pixels": 2040
+  },
+  "121": {
+   "name": "Tree Height = 21 meters",
+   "pixels": 1292
+  },
+  "122": {
+   "name": "Tree Height = 22 meters",
+   "pixels": 1090
+  },
+  "123": {
+   "name": "Tree Height = 23 meters",
+   "pixels": 629
+  },
+  "124": {
+   "name": "Tree Height = 24 meters",
+   "pixels": 109
+  },
+  "125": {
+   "name": "Tree Height = 25 meters",
+   "pixels": 83
+  },
+  "201": {
+   "name": "Shrub Height = 0.1 meter",
+   "pixels": 15
+  },
+  "202": {
+   "name": "Shrub Height = 0.2 meter",
+   "pixels": 30
+  },
+  "203": {
+   "name": "Shrub Height = 0.3 meter",
+   "pixels": 60
+  },
+  "204": {
+   "name": "Shrub Height = 0.4 meter",
+   "pixels": 188
+  },
+  "205": {
+   "name": "Shrub Height = 0.5 meter",
+   "pixels": 685
+  },
+  "206": {
+   "name": "Shrub Height = 0.6 meter",
+   "pixels": 3479
+  },
+  "207": {
+   "name": "Shrub Height = 0.7 meter",
+   "pixels": 11356
+  },
+  "208": {
+   "name": "Shrub Height = 0.8 meter",
+   "pixels": 8423
+  },
+  "209": {
+   "name": "Shrub Height = 0.9 meter",
+   "pixels": 2232
+  },
+  "210": {
+   "name": "Shrub Height = 1 meter",
+   "pixels": 1172
+  },
+  "211": {
+   "name": "Shrub Height = 1.1 meters",
+   "pixels": 567
+  },
+  "212": {
+   "name": "Shrub Height = 1.2 meters",
+   "pixels": 148
+  },
+  "213": {
+   "name": "Shrub Height = 1.3 meters",
+   "pixels": 75
+  },
+  "214": {
+   "name": "Shrub Height = 1.4 meters",
+   "pixels": 52
+  },
+  "215": {
+   "name": "Shrub Height = 1.5 meters",
+   "pixels": 43
+  },
+  "216": {
+   "name": "Shrub Height = 1.6 meters",
+   "pixels": 4
+  },
+  "217": {
+   "name": "Shrub Height = 1.7 meters",
+   "pixels": 10
+  },
+  "301": {
+   "name": "Herb Height = 0.1 meter",
+   "pixels": 29
+  },
+  "302": {
+   "name": "Herb Height = 0.2 meter",
+   "pixels": 295
+  },
+  "303": {
+   "name": "Herb Height = 0.3 meter",
+   "pixels": 4281
+  },
+  "304": {
+   "name": "Herb Height = 0.4 meter",
+   "pixels": 805
+  },
+  "305": {
+   "name": "Herb Height = 0.5 meter",
+   "pixels": 215
+  },
+  "306": {
+   "name": "Herb Height = 0.6 meter",
+   "pixels": 199
+  },
+  "307": {
+   "name": "Herb Height = 0.7 meter",
+   "pixels": 188
+  },
+  "308": {
+   "name": "Herb Height = 0.8 meter",
+   "pixels": 1
+  }
+ },
+ "bps": {
+  "11": {
+   "name": "Open Water",
+   "group": "Open Water",
+   "habitat": "water",
+   "fire_return_interval_yr": {
+    "replacement": "-9999",
+    "mixed": "-9999",
+    "surface": "-9999",
+    "all": "-9999"
+   },
+   "pixels": 7370
+  },
+  "12": {
+   "name": "Perennial Ice/Snow",
+   "group": "Perennial Ice/Snow",
+   "habitat": "barren",
+   "fire_return_interval_yr": {
+    "replacement": "-9999",
+    "mixed": "-9999",
+    "surface": "-9999",
+    "all": "-9999"
+   },
+   "pixels": 870
+  },
+  "31": {
+   "name": "Barren-Rock/Sand/Clay",
+   "group": "Barren-Rock/Sand/Clay",
+   "habitat": "barren",
+   "fire_return_interval_yr": {
+    "replacement": "-9999",
+    "mixed": "-9999",
+    "surface": "-9999",
+    "all": "-9999"
+   },
+   "pixels": 12807
+  },
+  "410": {
+   "name": "Inter-Mountain Basins Sparsely Vegetated Systems",
+   "group": "Sparse",
+   "habitat": "barren",
+   "fire_return_interval_yr": {
+    "replacement": "-9999",
+    "mixed": "-9999",
+    "surface": "-9999",
+    "all": "-9999"
+   },
+   "pixels": 179
+  },
+  "411": {
+   "name": "Rocky Mountain Alpine/Montane Sparsely Vegetated Systems",
+   "group": "Sparse",
+   "habitat": "barren",
+   "fire_return_interval_yr": {
+    "replacement": "-9999",
+    "mixed": "-9999",
+    "surface": "-9999",
+    "all": "-9999"
+   },
+   "pixels": 16670
+  },
+  "686": {
+   "name": "Rocky Mountain Aspen Forest and Woodland",
+   "group": "Hardwood",
+   "habitat": "mixed_forest",
+   "fire_return_interval_yr": {
+    "replacement": "110",
+    "mixed": "-9999",
+    "surface": "-9999",
+    "all": "110"
+   },
+   "pixels": 6890
+  },
+  "689": {
+   "name": "Northern Rocky Mountain Subalpine Woodland and Parkland",
+   "group": "Conifer",
+   "habitat": "conifer_forest",
+   "fire_return_interval_yr": {
+    "replacement": "515",
+    "mixed": "324",
+    "surface": "-9999",
+    "all": "199"
+   },
+   "pixels": 7889
+  },
+  "690": {
+   "name": "Rocky Mountain Foothill Limber Pine-Juniper Woodland",
+   "group": "Conifer",
+   "habitat": "conifer_forest",
+   "fire_return_interval_yr": {
+    "replacement": "385",
+    "mixed": "-9999",
+    "surface": "-9999",
+    "all": "385"
+   },
+   "pixels": 90
+  },
+  "693": {
+   "name": "Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland",
+   "group": "Conifer",
+   "habitat": "conifer_forest",
+   "fire_return_interval_yr": {
+    "replacement": "333",
+    "mixed": "-9999",
+    "surface": "-9999",
+    "all": "333"
+   },
+   "pixels": 5403
+  },
+  "694": {
+   "name": "Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland",
+   "group": "Conifer",
+   "habitat": "conifer_forest",
+   "fire_return_interval_yr": {
+    "replacement": "432",
+    "mixed": "895",
+    "surface": "-9999",
+    "all": "291"
+   },
+   "pixels": 26830
+  },
+  "696": {
+   "name": "Rocky Mountain Alpine Dwarf-Shrubland",
+   "group": "Shrubland",
+   "habitat": "chaparral",
+   "fire_return_interval_yr": {
+    "replacement": "566",
+    "mixed": "-9999",
+    "surface": "-9999",
+    "all": "566"
+   },
+   "pixels": 428
+  },
+  "704": {
+   "name": "Inter-Mountain Basins Montane Sagebrush Steppe",
+   "group": "Shrubland",
+   "habitat": "chaparral",
+   "fire_return_interval_yr": {
+    "replacement": "50",
+    "mixed": "-9999",
+    "surface": "-9999",
+    "all": "50"
+   },
+   "pixels": 19850
+  },
+  "709": {
+   "name": "Rocky Mountain Alpine Turf",
+   "group": "Grassland",
+   "habitat": "grassland",
+   "fire_return_interval_yr": {
+    "replacement": "515",
+    "mixed": "-9999",
+    "surface": "-9999",
+    "all": "515"
+   },
+   "pixels": 170
+  },
+  "710": {
+   "name": "Rocky Mountain Subalpine-Montane Mesic Meadow",
+   "group": "Grassland",
+   "habitat": "grassland",
+   "fire_return_interval_yr": {
+    "replacement": "40",
+    "mixed": "-9999",
+    "surface": "-9999",
+    "all": "40"
+   },
+   "pixels": 935
+  },
+  "712": {
+   "name": "Rocky Mountain Montane Riparian Systems",
+   "group": "Riparian",
+   "habitat": "riparian",
+   "fire_return_interval_yr": {
+    "replacement": "180",
+    "mixed": "-9999",
+    "surface": "-9999",
+    "all": "180"
+   },
+   "pixels": 984
+  },
+  "713": {
+   "name": "Rocky Mountain Subalpine/Upper Montane Riparian Systems",
+   "group": "Riparian",
+   "habitat": "riparian",
+   "fire_return_interval_yr": {
+    "replacement": "335",
+    "mixed": "2775",
+    "surface": "-9999",
+    "all": "299"
+   },
+   "pixels": 778
+  },
+  "714": {
+   "name": "Northern Rocky Mountain Conifer Swamp",
+   "group": "Conifer",
+   "habitat": "conifer_forest",
+   "fire_return_interval_yr": {
+    "replacement": "401",
+    "mixed": "-9999",
+    "surface": "-9999",
+    "all": "401"
+   },
+   "pixels": 147
+  },
+  "715": {
+   "name": "Middle Rocky Mountain Montane Douglas-fir Forest and Woodland",
+   "group": "Conifer",
+   "habitat": "conifer_forest",
+   "fire_return_interval_yr": {
+    "replacement": "296",
+    "mixed": "46",
+    "surface": "-9999",
+    "all": "40"
+   },
+   "pixels": 2596
+  },
+  "716": {
+   "name": "Rocky Mountain Poor-Site Lodgepole Pine Forest",
+   "group": "Conifer",
+   "habitat": "conifer_forest",
+   "fire_return_interval_yr": {
+    "replacement": "324",
+    "mixed": "551",
+    "surface": "-9999",
+    "all": "204"
+   },
+   "pixels": 3
+  }
+ }
+}

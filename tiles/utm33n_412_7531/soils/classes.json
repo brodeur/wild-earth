@@ -1,0 +1,103 @@
+{
+ "encoding": "client/soils.png R = index here, G = rock_fragments_pct, B = depth_to_bedrock_cm / 10 (255 = none/unknown)",
+ "source": "soilgrids",
+ "rules": {
+  "texture": "USDA triangle from SoilGrids 2.0 sand and clay, 0-5 cm mean",
+  "modifier": "SoilGrids cfvo: gravelly >= 15 %, very gravelly >= 35 %, extremely >= 60 %",
+  "rock": "WorldCover bare / sparse (60) cells are rock outcrop, 100 % fragments, bedrock at 0",
+  "depth_to_bedrock": "unknown elsewhere (not in SoilGrids)"
+ },
+ "mapunits": {
+  "1": {
+   "muname": "Water",
+   "texture_class": "water",
+   "texture_modifier": "none",
+   "source": "soilgrids",
+   "rock_land": false,
+   "rock_fragments_pct": 0.0,
+   "depth_to_bedrock_cm": null,
+   "bedrock_restriction": false,
+   "ph": 4.93,
+   "soc_g_kg": 223.1,
+   "fraction": 0.4029
+  },
+  "2": {
+   "muname": "gravelly sandy loam",
+   "texture_class": "sandy loam",
+   "texture_modifier": "gravelly",
+   "source": "soilgrids",
+   "rock_land": false,
+   "rock_fragments_pct": 17.2,
+   "depth_to_bedrock_cm": null,
+   "bedrock_restriction": false,
+   "ph": 4.93,
+   "soc_g_kg": 222.4,
+   "fraction": 0.3506
+  },
+  "3": {
+   "muname": "unknown",
+   "texture_class": "unknown",
+   "texture_modifier": "none",
+   "source": "soilgrids",
+   "rock_land": false,
+   "rock_fragments_pct": 0.0,
+   "depth_to_bedrock_cm": null,
+   "bedrock_restriction": false,
+   "ph": null,
+   "soc_g_kg": null,
+   "fraction": 0.1739
+  },
+  "4": {
+   "muname": "Water",
+   "texture_class": "water",
+   "texture_modifier": "gravelly",
+   "source": "soilgrids",
+   "rock_land": false,
+   "rock_fragments_pct": 17.3,
+   "depth_to_bedrock_cm": null,
+   "bedrock_restriction": false,
+   "ph": 4.98,
+   "soc_g_kg": 219.2,
+   "fraction": 0.048
+  },
+  "5": {
+   "muname": "gravelly rock outcrop",
+   "texture_class": "rock outcrop",
+   "texture_modifier": "gravelly",
+   "source": "soilgrids",
+   "rock_land": true,
+   "rock_fragments_pct": 17.4,
+   "depth_to_bedrock_cm": 0,
+   "bedrock_restriction": true,
+   "ph": 4.96,
+   "soc_g_kg": 218.7,
+   "fraction": 0.0185
+  },
+  "6": {
+   "muname": "rock outcrop",
+   "texture_class": "rock outcrop",
+   "texture_modifier": "none",
+   "source": "soilgrids",
+   "rock_land": true,
+   "rock_fragments_pct": 0.0,
+   "depth_to_bedrock_cm": 0,
+   "bedrock_restriction": true,
+   "ph": null,
+   "soc_g_kg": null,
+   "fraction": 0.0037
+  },
+  "7": {
+   "muname": "sandy loam",
+   "texture_class": "sandy loam",
+   "texture_modifier": "none",
+   "source": "soilgrids",
+   "rock_land": false,
+   "rock_fragments_pct": 14.8,
+   "depth_to_bedrock_cm": null,
+   "bedrock_restriction": false,
+   "ph": 4.97,
+   "soc_g_kg": 221.7,
+   "fraction": 0.0024
+  }
+ }
+}

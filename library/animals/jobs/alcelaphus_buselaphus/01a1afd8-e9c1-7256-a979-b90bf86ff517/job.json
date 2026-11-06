@@ -1,0 +1,71 @@
+{
+  "species": "alcelaphus_buselaphus",
+  "mode": "refine",
+  "kind": "text-to-3d",
+  "task_id": "01a1afd8-e9c1-7256-a979-b90bf86ff517",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "refine",
+    "preview_task_id": "01a1afd7-d25a-75ae-af68-66e839d54bf8",
+    "texture_resolution": "2k",
+    "enable_pbr": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Natural coat colours and markings of a wild adult Hartebeest (Alcelaphus buselaphus) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+    "moderation": false
+  },
+  "prompt": "Natural coat colours and markings of a wild adult Hartebeest (Alcelaphus buselaphus) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+  "image": null,
+  "preview_job": "library/animals/jobs/alcelaphus_buselaphus/01a1afd7-d25a-75ae-af68-66e839d54bf8",
+  "estimated_credits": 10,
+  "balance_before": 1917,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-06T07:53:10+00:00",
+    "created_at": "2026-11-06T07:53:13+00:00",
+    "started_at": "2026-11-06T07:53:13+00:00",
+    "finished_at": "2026-11-06T07:53:49+00:00",
+    "downloaded": "2026-11-06T07:53:57+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur, world pipeline",
+  "progress": 100,
+  "task": {
+    "id": "01a1afd8-e9c1-7256-a979-b90bf86ff517",
+    "type": "text-to-3d-refine",
+    "status": "SUCCEEDED",
+    "created_at": 1793951593390,
+    "started_at": 1793951593398,
+    "finished_at": 1793951629577,
+    "consumed_credits": 10,
+    "task_error": null
+  },
+  "credits_charged": 10,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 5144964,
+      "sha256": "e96ae5dced780a610d617c85963ad57f7d333ad8e49c07668789417f7aa36cd2",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1afd8-e9c1-7256-a979-b90bf86ff517/output/model.glb"
+    },
+    {
+      "file": "texture_base_color.png",
+      "bytes": 5109476,
+      "sha256": "955cd73a3fbd63b9b49ad479da0f98973a5d53fe705001ad7898a1cf2fa7f5b2",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1afd8-e9c1-7256-a979-b90bf86ff517/output/texture_0.png"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 73539,
+      "sha256": "ef5c0018bb04ff0bd4a2d6b953c13ec1707dc31db9810e4527d468293208ea28",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1afd8-e9c1-7256-a979-b90bf86ff517/output/preview.png"
+    }
+  ],
+  "balance_after": 1907
+}

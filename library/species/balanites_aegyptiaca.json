@@ -1,0 +1,458 @@
+{
+ "id": "balanites_aegyptiaca",
+ "aliases": [
+  "desert_date",
+  "soapberry_tree",
+  "thorn_tree",
+  "lalob"
+ ],
+ "scientific": "Balanites aegyptiaca",
+ "common": "desert date",
+ "form": "tree",
+ "regions": [
+  "east_africa"
+ ],
+ "architectural_model": "Rauh",
+ "deciduous": true,
+ "height_m": [
+  5,
+  10
+ ],
+ "stature": {
+  "typical_m": 7,
+  "tall_m": 12,
+  "record_m": null,
+  "source": "tall: Wikipedia, about 10 m; typical: the drafter's estimate for the Serengeti; read 2026-11-05"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    1.5,
+    4
+   ],
+   "trunk_radius": 0.7,
+   "crown_scale": 0.9,
+   "branches": 0.85,
+   "set": {
+    "trunk": {
+     "stems": [
+      1,
+      3
+     ]
+    }
+   },
+   "note": "a spiny green bush, the twigs themselves green and photosynthetic"
+  },
+  {
+   "name": "mature",
+   "weight": 0.55,
+   "seeds": 2,
+   "note": "(from the interior live oak template) the file as written"
+  },
+  {
+   "name": "veteran",
+   "weight": 0.2,
+   "height_m": [
+    9,
+    12
+   ],
+   "trunk_radius": 1.25,
+   "crown_scale": 1.08,
+   "gnarl": 1.15,
+   "deadwood": {
+    "fraction": 0.12,
+    "levels": [
+     1,
+     2
+    ],
+    "where": "inner",
+    "rgb": [
+     118,
+     112,
+     104
+    ]
+   },
+   "set": {
+    "trunk": {
+     "stems": [
+      1,
+      2
+     ]
+    },
+    "lod": {
+     "near_tris_budget": 2800
+    }
+   },
+   "note": "an old tree with a deeply fluted trunk and ragged bark showing yellow-green patches"
+  }
+ ],
+ "description": "A spiny, evergreen savanna tree 5-10 m tall with a fluted trunk, ragged grey-brown bark and a dense, rounded crown of tangled green twigs armed with long straight spines, each carrying a pair of small grey-green leaflets. Its olive-sized fruits, the 'desert dates', ripen yellow-brown and are taken by elephants, baboons and antelope.",
+ "season_notes": {
+  "winter": "December to February: in leaf; the fruit ripening yellow-brown.",
+  "spring": "March to May: in leaf; fallen fruit under the tree.",
+  "summer": "June to August, the dry season: it keeps most of its leaves when the acacias thin; small greenish-yellow flowers.",
+  "fall": "September to November: the greenest tree on the dry plains; new fruit set."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "grassland": 0.6,
+   "chaparral": 0.7,
+   "oak_woodland": 0.6,
+   "riparian": 0.4
+  },
+  "floor": 1.3,
+  "mid": 1.0,
+  "steep": 0.6,
+  "north": 1.0,
+  "shade": 0.1,
+  "disturbed": 1.1
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "loxodonta_africana",
+    "part": "berries",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "papio_anubis",
+    "part": "berries",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "chlorocebus_pygerythrus",
+    "part": "berries",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "giraffa_camelopardalis",
+    "part": "browse",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "aepyceros_melampus",
+    "part": "berries",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   }
+  ],
+  "cover_for": []
+ },
+ "trunk": {
+  "length_ratio": 0.42,
+  "radius_ratio": 0.05,
+  "taper": 0.6,
+  "flare": 1.35,
+  "bole_ratio": 0.3,
+  "base_size": 0.2,
+  "curve_deg": 18,
+  "curve_var_deg": 15,
+  "segments": 5,
+  "lean_deg": 8,
+  "stems": [
+   1,
+   2
+  ],
+  "stem_spread_deg": 22,
+  "split_prob": 0.5,
+  "split_count": 2,
+  "split_angle_deg": 30,
+  "bark_rgb": [
+   112,
+   104,
+   90
+  ],
+  "bark_pattern": "furrowed",
+  "twig_rgb": [
+   98,
+   120,
+   70
+  ],
+  "bark": {
+   "tile_m": [
+    0.3,
+    0.6
+   ],
+   "ridge_m": 0.03,
+   "block_m": 0.06,
+   "fissure": 0.3,
+   "contrast": 0.7,
+   "lichen": 0.4,
+   "relief": 0.8
+  }
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "envelope": {
+   "profile": [
+    [
+     0.2,
+     0.25
+    ],
+    [
+     0.35,
+     0.38
+    ],
+    [
+     0.55,
+     0.45
+    ],
+    [
+     0.72,
+     0.42
+    ],
+    [
+     0.86,
+     0.3
+    ],
+    [
+     1.0,
+     0.08
+    ]
+   ],
+   "lobes": 5,
+   "lobe_depth": 0.18,
+   "asymmetry": 0.25,
+   "fill": 0.55,
+   "edge": 1.08
+  }
+ },
+ "levels": [
+  {
+   "count": 11,
+   "down_angle_deg": 64,
+   "down_angle_var_deg": 15,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 1.9,
+   "length_var": 0.2,
+   "curve_deg": 15,
+   "curve_var_deg": 15,
+   "tropism": 0.04,
+   "taper": 0.9,
+   "radius_ratio": 0.45,
+   "segments": 4,
+   "down_angle_tip_deg": 36,
+   "droop_deg": 10,
+   "zigzag_deg": 6
+  },
+  {
+   "count": 7,
+   "start": 0.15,
+   "down_angle_deg": 50,
+   "down_angle_var_deg": 15,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.5,
+   "length_var": 0.25,
+   "curve_deg": 20,
+   "curve_var_deg": 15,
+   "tropism": 0.04,
+   "taper": 1.0,
+   "radius_ratio": 0.45,
+   "segments": 2,
+   "zigzag_deg": 10
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.04,
+  "leaf_shape": "oval",
+  "cluster_m": 1.4,
+  "density": 20,
+  "start": 0.0,
+  "parent_start": 0.4,
+  "orientation": "outward",
+  "colors": {
+   "winter": [
+    96,
+    112,
+    72
+   ],
+   "spring": [
+    94,
+    110,
+    70
+   ],
+   "summer": [
+    104,
+    114,
+    78
+   ],
+   "fall": [
+    106,
+    114,
+    80
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 0.9,
+   "fall": 0.85
+  },
+  "clumps": {
+   "radius_m": 1.1,
+   "cards_per_clump": 12,
+   "shell": 0.2,
+   "flatten": 0.8,
+   "tip_bias": 1.3
+  },
+  "palette": [
+   [
+    0.85,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.1,
+    [
+     1.35,
+     1.25,
+     0.7
+    ]
+   ],
+   [
+    0.05,
+    [
+     1.3,
+     1.0,
+     0.6
+    ]
+   ]
+  ],
+  "ao_min": 0.72,
+  "color_var": [
+   0.08,
+   0.03
+  ],
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   0.95,
+   0.9,
+   0.85,
+   0.8,
+   0.85,
+   0.95,
+   1.0
+  ],
+  "flowers": {
+   "season": "summer",
+   "months": [
+    7,
+    9
+   ],
+   "form": "cluster",
+   "rgb": [
+    206,
+    210,
+    140
+   ],
+   "size_m": 0.03,
+   "density": 0.3,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": [
+    "winter",
+    "spring"
+   ],
+   "months": [
+    12,
+    4
+   ],
+   "form": "bud",
+   "rgb": [
+    190,
+    150,
+    80
+   ],
+   "size_m": 0.035,
+   "density": 0.3
+  }
+ },
+ "twigs": {
+  "count": [
+   3,
+   4
+  ],
+  "length": 0.5,
+  "down_deg": 55,
+  "down_var_deg": 20,
+  "curve_var_deg": 20,
+  "segments": 1,
+  "radius_m": 0.005,
+  "fan_deg": 60,
+  "jitter": 0.28
+ },
+ "lod": {
+  "near_tris_budget": 2000,
+  "near_sides": [
+   6,
+   4,
+   0
+  ],
+  "mid_blobs": 5,
+  "mid_branches": 2,
+  "mid_sides": [
+   3,
+   3
+  ],
+  "mid_segments": [
+   2,
+   1
+  ],
+  "mid_blob_scale": 0.95,
+  "close_factor": 2
+ },
+ "targets": {
+  "crown_width_ratio": 0.9,
+  "crown_base_ratio": 0.2,
+  "porosity": 0.3,
+  "foliage_rg": 0.82,
+  "foliage_bg": 0.45,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-05), no photographs measured; to be replaced by photo measurements: a fluted grey-brown trunk and a dense, rounded to irregular crown of tangled, spiny, green twigs with small grey-green leaves, darker and denser than the acacias around it"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "2",
+  "card": "library/plant_cards/balanites_aegyptiaca.json",
+  "card_sha256": "223cc9f334e9bcba",
+  "template": "quercus_wislizeni",
+  "template_common": "interior live oak",
+  "height_scale": 0.652
+ },
+ "notes": "No relative in the library (Zygophyllaceae); grown from interior live oak, an evergreen tree with a dense rounded crown of small leaves, which is the closest architecture. COMPROMISES: the long green spines and green photosynthetic twigs are not drawn (no spine primitive; twig_rgb is green as a nod to them); the leaves are bifoliolate (two leaflets 2.5-6 cm) and are drawn as single small ovals; the fluted trunk is round (the generator has no fluting) with 'furrowed' bark standing in for ragged, shedding bark. Wikipedia: about 10 m, generally narrow form, fluted trunk, grey-brown ragged bark shedding to yellow-green patches, long straight green spines, greenish-yellow flowers, ellipsoid fruit under 4 cm ripening brown to pale brown, elephants eat the fruit, tolerant of flooding, fire and livestock. Phenology and the fruit and flower months are the drafter's judgement (it fruits even in dry times); the fruit is a single 'bud' berry. The client's seasons are calendar quarters (winter Dec-Feb, spring Mar-May, summer Jun-Aug, fall Sep-Nov) whatever the hemisphere or climate; the colours and leaf-on here are given for those months at the tile, not for a temperate winter. Animals are GBIF ids not yet in the library. Region tag east_africa is not yet a natural region in pipeline/regions.py. Marked deciduous (2026-11-05): facultatively so, it sheds part of its leaves late in the dry season (leaf_on_by_month to 0.8), so it is not an evergreen in the schema's sense.",
+ "sources": [
+  "GBIF species match, Balanites aegyptiaca: ACCEPTED, https://api.gbif.org/v1/species/match?name=Balanites%20aegyptiaca, read 2026-11-05",
+  "https://en.wikipedia.org/wiki/Balanites_aegyptiaca, read 2026-11-05"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-05); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

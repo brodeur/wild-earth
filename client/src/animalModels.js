@@ -734,10 +734,43 @@ const urls = { jay: '../assets/scrubjay.glb', quail: '../assets/quail.glb', squi
   gwgull: '../assets/glaucous_winged_gull.glb', cagull: '../assets/california_gull.glb', wegull: '../assets/western_gull.glb',
   mallard: '../assets/mallard.glb', grouse: '../assets/sooty_grouse.glb', marmot: '../assets/marmot.glb',
   ypchipmunk: '../assets/yellow_pine_chipmunk.glb', shrew: '../assets/montane_shrew.glb', toad: '../assets/western_toad.glb', frog: '../assets/cascades_frog.glb' };
-function rigModel(name, opts) {
+// url: another file drawn with RIG[name]'s constants (loadFaunaModel); rigName: the program's name for it (the part rig's
+// pivots are baked into the program, so a different mesh on the same constants needs its own)
+function rigModel(name, opts, url = new URL(urls[name], import.meta.url), rigName = name) {
   const r = RIG[name];
-  return loadTiers(new URL(urls[name], import.meta.url), { amp: r.amp, pose: r.pose, drop: r.drop || 0, poseMax: r.poseMax || 1, gait: !!r.gait, rig: { name, k: { ...r.k } } }, opts)
+  return loadTiers(url, { amp: r.amp, pose: r.pose, drop: r.drop || 0, poseMax: r.poseMax || 1, gait: !!r.gait, rig: { name: rigName, template: name, k: { ...r.k } } }, opts)
     .then(m => { m.rig.piv = m.extras.rig || {}; m.rig.kind = m.rig.piv.kind; m.variant = m.tiers[0].hasAttribute('aColorB'); eatReach(m); return m; });
+}
+// A loader on RIG[name], tagged with it (faunaTemplate reads the tag: the template a kin is drawn with)
+function rigLoader(name, opts) { return Object.assign(() => rigModel(name, opts), { rig: name, skin: !!opts?.skin }); }
+
+// ---- a tile's own modelled animals (fauna.json slot `model`; animals.js installFauna) ---------------------------------
+// A slot of the tile's fauna may carry its own body: model = { path, kind: 'quadruped', skin } with path under client/assets
+// (fauna/<code>.glb, tools/build_quadruped.py at its real size, skinned by tools/rig_quadruped.py, its gait clips beside it
+// as <code>_clips.json/.bin, tools/bake_gait.mjs): the same file shape as the skinned quadrupeds above, so it loads the
+// same way, on the constants of a template (RIG) for the part rig's fallback and the program's tables.
+// The template: the kin's own when the kin is drawn by a skinned quadruped template (a rigLoader with skin on a RIG entry
+// with the part rig's gait: the lion, bear, bobcat, elk, otter); else by what the slot is: a carnivore (its role or
+// archetype a predator's) on a cat's (the bobcat's under 25 kg, else the lion's), anything else on the elk cow's.
+export function faunaTemplate(kinLoad, { role, archetype, mass_kg } = {}) {
+  const t = kinLoad?.rig; if (t && kinLoad.skin && RIG[t]?.gait) return t;
+  const words = [...(Array.isArray(role) ? role : [role]), archetype].filter(w => typeof w === 'string').join(' ');
+  if (/predat|carniv|hunt|ambush|pursuit/i.test(words)) return Number.isFinite(mass_kg) && mass_kg > 0 && mass_kg < 25 ? 'bobcat' : 'lion';
+  return 'elkCow';
+}
+// Load a fauna model (path relative to client/assets) on RIG[template]. The drop on the part rig's fallback (no clip set,
+// no leg skeleton) is the file's own: its fore leg pivot's height times the template's leg squash (pose.x), as the hand-
+// built ones' (the cougar's 0.29 m x (1 - 0.35)); a skinned model drops nothing (the clips and the engine bed it).
+const FAUNA_PATH = /^[A-Za-z0-9_\-/]+\.glb$/;
+export function loadFaunaModel(path, template = 'lion', { skin = true } = {}) {
+  if (typeof path !== 'string' || !FAUNA_PATH.test(path) || path.split('/').some(p => !p || p === '.' || p === '..'))
+    return Promise.reject(new Error(`fauna model: bad path '${path}'`));
+  const name = RIG[template] ? template : 'lion';
+  return rigModel(name, { skin }, new URL('../assets/' + path, import.meta.url), `${name}|${path}`).then(m => {
+    const fore = m.rig.piv?.fore;
+    if (!m.skin && Array.isArray(fore) && Number.isFinite(fore[1])) m.drop = Math.max(0, fore[1] * (1 - (m.pose?.[0] || 0)));
+    return m;
+  });
 }
 // The eat's reach (Aaron, 2026-11-03: "a more dramatic eating/gathering animation - for instance a quail's head should
 // lower all the way to the ground"), solved once per model from its own geometry, so no species needs a hand number: a
@@ -794,21 +827,21 @@ export function eatTurn(model, flick, pose = 0) {
   if (!k || k.eatHead === undefined) return { head: flick * (model?.amp?.[2] ?? 0), tip: 0, drop: 0, hip: null };
   return { head: Math.min(flick, 1) * model.amp[2] + e * (1 - sit) * (k.eatHead - model.amp[2]), tip: e * (k.eatTip || 0), drop: e * (k.eatDrop || 0), hip: model.rig.eatHip || null };
 }
-export const loadJayMesh = () => rigModel('jay');
-export const loadQuailMesh = () => rigModel('quail');
-export const loadMountainQuailMesh = () => rigModel('mquail');
-export const loadSquirrelMesh = () => rigModel('squirrel');
-export const loadStellersJayMesh = () => rigModel('stjay');
-export const loadRedtailMesh = () => rigModel('hawk');
-export const loadVultureMesh = () => rigModel('vulture');
-export const loadCougarMesh = () => rigModel('lion', { skin: true });   // skinned, the leg engine (gait.js); the rig path's constants for the fallback
-export const loadBearMesh = () => rigModel('bear', { skin: true });
-export const loadRabbitMesh = () => rigModel('rabbit', { skin: true });   // skinned, the leg engine's hop (gait.js hopStep); the rig path's constants for the fallback
-export const loadJackrabbitMesh = () => rigModel('jackrabbit', { skin: true });
-export const loadVoleMesh = () => rigModel('vole');
-export const loadTurkeyMesh = () => rigModel('turkey');
-export const loadGroundSquirrelMesh = () => rigModel('groundSquirrel');
-export const loadLizardMesh = () => rigModel('lizard');
+export const loadJayMesh = rigLoader('jay');
+export const loadQuailMesh = rigLoader('quail');
+export const loadMountainQuailMesh = rigLoader('mquail');
+export const loadSquirrelMesh = rigLoader('squirrel');
+export const loadStellersJayMesh = rigLoader('stjay');
+export const loadRedtailMesh = rigLoader('hawk');
+export const loadVultureMesh = rigLoader('vulture');
+export const loadCougarMesh = rigLoader('lion', { skin: true });   // skinned, the leg engine (gait.js); the rig path's constants for the fallback
+export const loadBearMesh = rigLoader('bear', { skin: true });
+export const loadRabbitMesh = rigLoader('rabbit', { skin: true });   // skinned, the leg engine's hop (gait.js hopStep); the rig path's constants for the fallback
+export const loadJackrabbitMesh = rigLoader('jackrabbit', { skin: true });
+export const loadVoleMesh = rigLoader('vole');
+export const loadTurkeyMesh = rigLoader('turkey');
+export const loadGroundSquirrelMesh = rigLoader('groundSquirrel');
+export const loadLizardMesh = rigLoader('lizard');
 // The common raven on the ground (client/assets/raven_ground.glb, tools/build_raven_ground.py; generated with Meshy,
 // meshy.ai, CC BY-SA 4.0): 0.62 m, origin on the ground between the feet, bill toward +z; lod0 1,496 triangles drawn
 // with its 1K texture (vertex colours off, the file's smooth normals), lod1 496 and lod2 150 with vertex colours. One
@@ -819,49 +852,49 @@ export const loadLizardMesh = () => rigModel('lizard');
 let ravenGround = null;
 export const loadRavenGroundMesh = () => ravenGround ||= rigModel('ravenGround', { keepNormals: true });
 // The Hoh rain forest batch (2026-11-05): the skinned quadrupeds on the leg engine, the rest on their template's part rig.
-export const loadElkBullMesh = () => rigModel('elkBull', { skin: true });
-export const loadElkCowMesh = () => rigModel('elkCow', { skin: true });
-export const loadBobcatMesh = () => rigModel('bobcat', { skin: true });
-export const loadOtterMesh = () => rigModel('otter', { skin: true });
-export const loadHareMesh = () => rigModel('hare', { skin: true });
-export const loadDouglasSquirrelMesh = () => rigModel('dsquirrel');
-export const loadChipmunkMesh = () => rigModel('chipmunk');
-export const loadDeerMouseMesh = () => rigModel('deermouse');
-export const loadWrenMesh = () => rigModel('wren');
-export const loadGrayJayMesh = () => rigModel('grayjay');
-export const loadChickadeeMesh = () => rigModel('chickadee');
-export const loadOwlMesh = () => rigModel('owl');
-export const loadKingfisherMesh = () => rigModel('kingfisher');
-export const loadEagleMesh = () => rigModel('eagle');
+export const loadElkBullMesh = rigLoader('elkBull', { skin: true });
+export const loadElkCowMesh = rigLoader('elkCow', { skin: true });
+export const loadBobcatMesh = rigLoader('bobcat', { skin: true });
+export const loadOtterMesh = rigLoader('otter', { skin: true });
+export const loadHareMesh = rigLoader('hare', { skin: true });
+export const loadDouglasSquirrelMesh = rigLoader('dsquirrel');
+export const loadChipmunkMesh = rigLoader('chipmunk');
+export const loadDeerMouseMesh = rigLoader('deermouse');
+export const loadWrenMesh = rigLoader('wren');
+export const loadGrayJayMesh = rigLoader('grayjay');
+export const loadChickadeeMesh = rigLoader('chickadee');
+export const loadOwlMesh = rigLoader('owl');
+export const loadKingfisherMesh = rigLoader('kingfisher');
+export const loadEagleMesh = rigLoader('eagle');
 // the crow on the ground: the ground raven's model, smaller (0.44 m), its body 0.157 m above the feet (extras.ground)
 export const loadCrowGroundMesh = () => rigModel('crowGround', { keepNormals: true });
 export const CROW_GROUND = { bodyY: 0.157, head: [0, 0.178, 0.1195], bill: [0, 0.1861, 0.2237] };
-export const loadHeronMesh = () => rigModel('heron');
-export const loadMerganserMesh = () => rigModel('merganser');
-export const loadSalamanderMesh = () => rigModel('salamander');
-export const loadEnsatinaMesh = () => rigModel('ensatina');
+export const loadHeronMesh = rigLoader('heron');
+export const loadMerganserMesh = rigLoader('merganser');
+export const loadSalamanderMesh = rigLoader('salamander');
+export const loadEnsatinaMesh = rigLoader('ensatina');
 // the second Hoh batch (2026-11-06)
-export const loadRobinMesh = () => rigModel('robin');
-export const loadStarlingMesh = () => rigModel('starling');
-export const loadVariedThrushMesh = () => rigModel('vthrush');
-export const loadJuncoMesh = () => rigModel('junco');
-export const loadKingletMesh = () => rigModel('kinglet');
-export const loadFlycatcherMesh = () => rigModel('flycatcher');
-export const loadScreechOwlMesh = () => rigModel('screechowl');
-export const loadSawWhetOwlMesh = () => rigModel('sawwhet');
-export const loadOspreyMesh = () => rigModel('osprey');
-export const loadSharpShinnedMesh = () => rigModel('sharpie');
-export const loadMerlinMesh = () => rigModel('merlin');
-export const loadGlaucousGullMesh = () => rigModel('gwgull');
-export const loadCaliforniaGullMesh = () => rigModel('cagull');
-export const loadWesternGullMesh = () => rigModel('wegull');
-export const loadMallardMesh = () => rigModel('mallard');
-export const loadGrouseMesh = () => rigModel('grouse');
-export const loadMarmotMesh = () => rigModel('marmot');
-export const loadYellowPineChipmunkMesh = () => rigModel('ypchipmunk');
-export const loadShrewMesh = () => rigModel('shrew');
-export const loadToadMesh = () => rigModel('toad');
-export const loadFrogMesh = () => rigModel('frog');
+export const loadRobinMesh = rigLoader('robin');
+export const loadStarlingMesh = rigLoader('starling');
+export const loadVariedThrushMesh = rigLoader('vthrush');
+export const loadJuncoMesh = rigLoader('junco');
+export const loadKingletMesh = rigLoader('kinglet');
+export const loadFlycatcherMesh = rigLoader('flycatcher');
+export const loadScreechOwlMesh = rigLoader('screechowl');
+export const loadSawWhetOwlMesh = rigLoader('sawwhet');
+export const loadOspreyMesh = rigLoader('osprey');
+export const loadSharpShinnedMesh = rigLoader('sharpie');
+export const loadMerlinMesh = rigLoader('merlin');
+export const loadGlaucousGullMesh = rigLoader('gwgull');
+export const loadCaliforniaGullMesh = rigLoader('cagull');
+export const loadWesternGullMesh = rigLoader('wegull');
+export const loadMallardMesh = rigLoader('mallard');
+export const loadGrouseMesh = rigLoader('grouse');
+export const loadMarmotMesh = rigLoader('marmot');
+export const loadYellowPineChipmunkMesh = rigLoader('ypchipmunk');
+export const loadShrewMesh = rigLoader('shrew');
+export const loadToadMesh = rigLoader('toad');
+export const loadFrogMesh = rigLoader('frog');
 
 // A procedural model at another size: its geometry and pivots scaled by s (the fallback a species shows while its drawn
 // mesh loads; the flying crow is the procedural raven at 0.72).

@@ -1,0 +1,1089 @@
+{
+ "format": 1,
+ "gate": true,
+ "allow": [
+  "anas_platyrhynchos",
+  "corvus_corax",
+  "falco_columbarius",
+  "mergus_merganser",
+  "sturnus_vulgaris"
+ ],
+ "slots": [
+  {
+   "code": "lepus_timidus",
+   "scientific": "Lepus timidus",
+   "common": "Mountain hare",
+   "one": "mountain hare",
+   "many": "mountain hares",
+   "kin": "lepus_californicus",
+   "archetype": "hopper",
+   "scale": 1.068,
+   "tint": null,
+   "mass_kg": 3.048,
+   "density_km2": 41.3989,
+   "group": [
+    1,
+    3
+   ],
+   "bird": false,
+   "night": true,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "lutra_lutra",
+   "scientific": "Lutra lutra",
+   "common": "European otter",
+   "one": "european otter",
+   "many": "european otters",
+   "kin": "lontra_canadensis",
+   "archetype": "swimmer (otter)",
+   "scale": 0.992,
+   "tint": null,
+   "mass_kg": 8.785,
+   "density_km2": 3.4149,
+   "group": [
+    1,
+    3
+   ],
+   "bird": false,
+   "night": false,
+   "water": true,
+   "role": [
+    "predator"
+   ],
+   "known": []
+  },
+  {
+   "code": "mustela_vison",
+   "scientific": "Mustela vison",
+   "common": "Mink",
+   "one": "mink",
+   "many": "minks",
+   "kin": "urocyon_cinereoargenteus",
+   "archetype": "small carnivore",
+   "scale": 0.508,
+   "tint": null,
+   "mass_kg": 0.524,
+   "density_km2": 57.2628,
+   "group": [
+    1,
+    3
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [
+    "predator"
+   ],
+   "known": []
+  },
+  {
+   "code": "sorex_araneus",
+   "scientific": "Sorex araneus",
+   "common": "Common shrew",
+   "one": "common shrew",
+   "many": "common shrews",
+   "kin": "microtus_californicus",
+   "archetype": "small ground mammal",
+   "scale": 0.63,
+   "tint": null,
+   "mass_kg": 0.01,
+   "density_km2": 2000.0,
+   "group": [
+    1,
+    3
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [
+    "insectivore",
+    "scavenger"
+   ],
+   "known": [
+    "an anteater, armadillo or shrew on a fox's or vole's body"
+   ]
+  },
+  {
+   "code": "myodes_rutilus",
+   "scientific": "Myodes rutilus",
+   "common": "Northern red-backed mouse",
+   "one": "northern red-backed mouse",
+   "many": "northern red-backed mouses",
+   "kin": "peromyscus_maniculatus",
+   "archetype": "small rodent",
+   "scale": 0.998,
+   "tint": null,
+   "mass_kg": 0.02,
+   "density_km2": 1802.4374,
+   "group": [
+    1,
+    3
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "rissa_tridactyla",
+   "scientific": "Rissa tridactyla",
+   "common": "Black-legged kittiwake",
+   "one": "black-legged kittiwake",
+   "many": "black-legged kittiwakes",
+   "kin": "larus_glaucescens",
+   "archetype": "gull",
+   "scale": 0.723,
+   "tint": null,
+   "mass_kg": 0.416,
+   "density_km2": 0.9653,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "predator"
+   ],
+   "known": []
+  },
+  {
+   "code": "larus_marinus",
+   "scientific": "Larus marinus",
+   "common": "Great black-backed gull",
+   "one": "great black-backed gull",
+   "many": "great black-backed gulls",
+   "kin": "larus_glaucescens",
+   "archetype": "gull",
+   "scale": 1.145,
+   "tint": null,
+   "mass_kg": 1.65,
+   "density_km2": 12.278,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "omnivore",
+    "scavenger"
+   ],
+   "known": []
+  },
+  {
+   "code": "larus_argentatus",
+   "scientific": "Larus argentatus",
+   "common": "Herring gull",
+   "one": "herring gull",
+   "many": "herring gulls",
+   "kin": "larus_glaucescens",
+   "archetype": "gull",
+   "scale": 0.997,
+   "tint": null,
+   "mass_kg": 1.091,
+   "density_km2": 0.4684,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "predator",
+    "scavenger"
+   ],
+   "known": []
+  },
+  {
+   "code": "larus_canus",
+   "scientific": "Larus canus",
+   "common": "Mew gull",
+   "one": "mew gull",
+   "many": "mew gulls",
+   "kin": "larus_glaucescens",
+   "archetype": "gull",
+   "scale": 0.721,
+   "tint": null,
+   "mass_kg": 0.412,
+   "density_km2": 21.3758,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "omnivore",
+    "scavenger"
+   ],
+   "known": []
+  },
+  {
+   "code": "corvus_cornix",
+   "scientific": "Corvus cornix",
+   "common": "Hooded crow",
+   "one": "hooded crow",
+   "many": "hooded crows",
+   "kin": "corvus_corax",
+   "archetype": "corvid",
+   "scale": 0.737,
+   "tint": null,
+   "mass_kg": 0.48,
+   "density_km2": 20.1201,
+   "group": [
+    1,
+    3
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "omnivore",
+    "scavenger"
+   ],
+   "known": []
+  },
+  {
+   "code": "somateria_mollissima",
+   "scientific": "Somateria mollissima",
+   "common": "Common eider",
+   "one": "common eider",
+   "many": "common eiders",
+   "kin": "mergus_merganser",
+   "archetype": "waterbird",
+   "scale": 1.112,
+   "tint": null,
+   "mass_kg": 2.061,
+   "density_km2": 11.2323,
+   "group": [
+    2,
+    10
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "insectivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "haematopus_ostralegus",
+   "scientific": "Haematopus ostralegus",
+   "common": "Eurasian oystercatcher",
+   "one": "eurasian oystercatcher",
+   "many": "eurasian oystercatchers",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 1.637,
+   "tint": null,
+   "mass_kg": 0.526,
+   "density_km2": 19.3953,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "insectivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "cepphus_grylle",
+   "scientific": "Cepphus grylle",
+   "common": "Black guillemot",
+   "one": "black guillemot",
+   "many": "black guillemots",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 1.466,
+   "tint": null,
+   "mass_kg": 0.378,
+   "density_km2": 1.0372,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "predator"
+   ],
+   "known": []
+  },
+  {
+   "code": "turdus_iliacus",
+   "scientific": "Turdus iliacus",
+   "common": "Redwing",
+   "one": "redwing",
+   "many": "redwings",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 0.799,
+   "tint": null,
+   "mass_kg": 0.061,
+   "density_km2": 45.8554,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "omnivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "motacilla_alba",
+   "scientific": "Motacilla alba",
+   "common": "White wagtail",
+   "one": "white wagtail",
+   "many": "white wagtails",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 0.584,
+   "tint": null,
+   "mass_kg": 0.024,
+   "density_km2": 66.7932,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "insectivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "haliaeetus_albicilla",
+   "scientific": "Haliaeetus albicilla",
+   "common": "White-tailed eagle",
+   "one": "white-tailed eagle",
+   "many": "white-tailed eagles",
+   "kin": "cathartes_aura",
+   "archetype": "soaring scavenger",
+   "scale": 1.435,
+   "tint": null,
+   "mass_kg": 4.729,
+   "density_km2": 0.1559,
+   "group": [
+    1,
+    8
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "predator",
+    "scavenger"
+   ],
+   "known": []
+  },
+  {
+   "code": "turdus_pilaris",
+   "scientific": "Turdus pilaris",
+   "common": "Fieldfare",
+   "one": "fieldfare",
+   "many": "fieldfares",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 0.959,
+   "tint": null,
+   "mass_kg": 0.106,
+   "density_km2": 36.8103,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "insectivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "pica_pica",
+   "scientific": "Pica pica",
+   "common": "Eurasian magpie",
+   "one": "eurasian magpie",
+   "many": "eurasian magpies",
+   "kin": "corvus_corax",
+   "archetype": "corvid",
+   "scale": 0.566,
+   "tint": null,
+   "mass_kg": 0.217,
+   "density_km2": 27.6126,
+   "group": [
+    1,
+    3
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "omnivore",
+    "scavenger"
+   ],
+   "known": []
+  },
+  {
+   "code": "parus_major",
+   "scientific": "Parus major",
+   "common": "Great tit",
+   "one": "great tit",
+   "many": "great tits",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 0.514,
+   "tint": null,
+   "mass_kg": 0.016,
+   "density_km2": 70.0,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "omnivore",
+    "scavenger"
+   ],
+   "known": []
+  },
+  {
+   "code": "phylloscopus_collybita",
+   "scientific": "Phylloscopus collybita",
+   "common": "Common chiffchaff",
+   "one": "common chiffchaff",
+   "many": "common chiffchaffs",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 0.41,
+   "tint": null,
+   "mass_kg": 0.008,
+   "density_km2": 70.0,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "insectivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "phylloscopus_trochilus",
+   "scientific": "Phylloscopus trochilus",
+   "common": "Willow warbler",
+   "one": "willow warbler",
+   "many": "willow warblers",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 0.417,
+   "tint": null,
+   "mass_kg": 0.009,
+   "density_km2": 70.0,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "insectivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "chloris_chloris",
+   "scientific": "Chloris chloris",
+   "common": "European greenfinch",
+   "one": "european greenfinch",
+   "many": "european greenfinchs",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 0.578,
+   "tint": null,
+   "mass_kg": 0.023,
+   "density_km2": 67.5921,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "larus_fuscus",
+   "scientific": "Larus fuscus",
+   "common": "Lesser black-backed gull",
+   "one": "lesser black-backed gull",
+   "many": "lesser black-backed gulls",
+   "kin": "larus_glaucescens",
+   "archetype": "gull",
+   "scale": 0.885,
+   "tint": null,
+   "mass_kg": 0.762,
+   "density_km2": 0.6128,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "predator",
+    "scavenger"
+   ],
+   "known": []
+  },
+  {
+   "code": "ardea_cinerea",
+   "scientific": "Ardea cinerea",
+   "common": "Gray/purple heron",
+   "one": "gray/purple heron",
+   "many": "gray/purple herons",
+   "kin": "ardea_herodias",
+   "archetype": "wading bird",
+   "scale": 0.869,
+   "tint": null,
+   "mass_kg": 1.443,
+   "density_km2": 0.3798,
+   "group": [
+    1,
+    3
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "predator"
+   ],
+   "known": []
+  },
+  {
+   "code": "sterna_hirundo",
+   "scientific": "Sterna hirundo",
+   "common": "Common tern",
+   "one": "common tern",
+   "many": "common terns",
+   "kin": "larus_glaucescens",
+   "archetype": "gull",
+   "scale": 0.49,
+   "tint": null,
+   "mass_kg": 0.129,
+   "density_km2": 34.0084,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "predator",
+    "scavenger"
+   ],
+   "known": []
+  },
+  {
+   "code": "anthus_pratensis",
+   "scientific": "Anthus pratensis",
+   "common": "Meadow pipit",
+   "one": "meadow pipit",
+   "many": "meadow pipits",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 0.535,
+   "tint": null,
+   "mass_kg": 0.018,
+   "density_km2": 70.0,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "insectivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "acanthis_flammea",
+   "scientific": "Acanthis flammea",
+   "common": "Common redpoll",
+   "one": "common redpoll",
+   "many": "common redpolls",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 0.578,
+   "tint": null,
+   "mass_kg": 0.023,
+   "density_km2": 67.5921,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "phalacrocorax_carbo",
+   "scientific": "Phalacrocorax carbo",
+   "common": "Great cormorant/european shag",
+   "one": "great cormorant/european shag",
+   "many": "great cormorant/european shags",
+   "kin": "mergus_merganser",
+   "archetype": "waterbird",
+   "scale": 1.19,
+   "tint": null,
+   "mass_kg": 2.529,
+   "density_km2": 0.2493,
+   "group": [
+    2,
+    10
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "predator"
+   ],
+   "known": []
+  },
+  {
+   "code": "lagopus_lagopus",
+   "scientific": "Lagopus lagopus",
+   "common": "Willow ptarmigan",
+   "one": "willow ptarmigan",
+   "many": "willow ptarmigans",
+   "kin": "callipepla_californica",
+   "archetype": "ground bird",
+   "scale": 1.466,
+   "tint": null,
+   "mass_kg": 0.567,
+   "density_km2": 18.823,
+   "group": [
+    3,
+    12
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "herbivore"
+   ],
+   "known": []
+  },
+  {
+   "code": "phalacrocorax_aristotelis",
+   "scientific": "Phalacrocorax aristotelis",
+   "common": "European shag",
+   "one": "european shag",
+   "many": "european shags",
+   "kin": "mergus_merganser",
+   "archetype": "waterbird",
+   "scale": 1.056,
+   "tint": null,
+   "mass_kg": 1.764,
+   "density_km2": 0.3266,
+   "group": [
+    2,
+    10
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "predator"
+   ],
+   "known": []
+  },
+  {
+   "code": "sterna_paradisaea",
+   "scientific": "Sterna paradisaea",
+   "common": "Arctic tern",
+   "one": "arctic tern",
+   "many": "arctic terns",
+   "kin": "larus_glaucescens",
+   "archetype": "gull",
+   "scale": 0.464,
+   "tint": null,
+   "mass_kg": 0.11,
+   "density_km2": 36.2689,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "predator",
+    "scavenger"
+   ],
+   "known": []
+  },
+  {
+   "code": "mergus_serrator",
+   "scientific": "Mergus serrator",
+   "common": "Red-breasted merganser",
+   "one": "red-breasted merganser",
+   "many": "red-breasted mergansers",
+   "kin": "mergus_merganser",
+   "archetype": "waterbird",
+   "scale": 0.878,
+   "tint": null,
+   "mass_kg": 1.015,
+   "density_km2": 0.4944,
+   "group": [
+    2,
+    10
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "predator"
+   ],
+   "known": []
+  },
+  {
+   "code": "stercorarius_parasiticus",
+   "scientific": "Stercorarius parasiticus",
+   "common": "Parasitic jaeger",
+   "one": "parasitic jaeger",
+   "many": "parasitic jaegers",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 1.547,
+   "tint": null,
+   "mass_kg": 0.444,
+   "density_km2": 0.9188,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "predator"
+   ],
+   "known": []
+  },
+  {
+   "code": "gavia_stellata",
+   "scientific": "Gavia stellata",
+   "common": "Red-throated loon",
+   "one": "red-throated loon",
+   "many": "red-throated loons",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 2.314,
+   "tint": null,
+   "mass_kg": 1.486,
+   "density_km2": 0.3715,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "predator"
+   ],
+   "known": []
+  },
+  {
+   "code": "morus_bassanus",
+   "scientific": "Morus bassanus",
+   "common": "Northern gannet",
+   "one": "northern gannet",
+   "many": "northern gannets",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 2.924,
+   "tint": null,
+   "mass_kg": 2.999,
+   "density_km2": 0.2194,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "predator",
+    "scavenger"
+   ],
+   "known": []
+  },
+  {
+   "code": "larus_glaucoides",
+   "scientific": "Larus glaucoides",
+   "common": "Iceland gull",
+   "one": "iceland gull",
+   "many": "iceland gulls",
+   "kin": "larus_glaucescens",
+   "archetype": "gull",
+   "scale": 0.857,
+   "tint": null,
+   "mass_kg": 0.693,
+   "density_km2": 0.6581,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "predator"
+   ],
+   "known": []
+  },
+  {
+   "code": "larus_hyperboreus",
+   "scientific": "Larus hyperboreus",
+   "common": "Glaucous gull",
+   "one": "glaucous gull",
+   "many": "glaucous gulls",
+   "kin": "larus_glaucescens",
+   "archetype": "gull",
+   "scale": 1.116,
+   "tint": null,
+   "mass_kg": 1.529,
+   "density_km2": 0.3636,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": true,
+   "role": [
+    "predator",
+    "scavenger"
+   ],
+   "known": []
+  },
+  {
+   "code": "fratercula_arctica",
+   "scientific": "Fratercula arctica",
+   "common": "Atlantic puffin",
+   "one": "atlantic puffin",
+   "many": "atlantic puffins",
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 1.703,
+   "tint": null,
+   "mass_kg": 0.593,
+   "density_km2": 0.7399,
+   "group": [
+    1,
+    6
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "predator"
+   ],
+   "known": []
+  },
+  {
+   "code": "falco_tinnunculus",
+   "scientific": "Falco tinnunculus",
+   "common": "Eurasian kestrel",
+   "one": "eurasian kestrel",
+   "many": "eurasian kestrels",
+   "kin": "buteo_jamaicensis",
+   "archetype": "soaring raptor",
+   "scale": 0.55,
+   "tint": null,
+   "mass_kg": 0.183,
+   "density_km2": 29.5747,
+   "group": [
+    1,
+    3
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "predator"
+   ],
+   "known": []
+  },
+  {
+   "code": "aquila_chrysaetos",
+   "scientific": "Aquila chrysaetos",
+   "common": "Golden eagle",
+   "one": "golden eagle",
+   "many": "golden eagles",
+   "kin": "cathartes_aura",
+   "archetype": "soaring scavenger",
+   "scale": 1.385,
+   "tint": null,
+   "mass_kg": 4.248,
+   "density_km2": 0.169,
+   "group": [
+    1,
+    8
+   ],
+   "bird": true,
+   "night": false,
+   "water": false,
+   "role": [
+    "predator",
+    "scavenger"
+   ],
+   "known": []
+  }
+ ],
+ "skipped": [
+  {
+   "id": "orcinus_orca",
+   "why": "no rig for Cetacea"
+  },
+  {
+   "id": "megaptera_novaeangliae",
+   "why": "no rig for Cetacea"
+  },
+  {
+   "id": "balaenoptera_acutorostrata",
+   "why": "no rig for Cetacea"
+  },
+  {
+   "id": "phocoena_phocoena",
+   "why": "no rig for Cetacea"
+  },
+  {
+   "id": "erithacus_rubecula",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "alca_torda",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "chroicocephalus_ridibundus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "accipiter_nisus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "dendrocopos_major",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "fulmarus_glacialis",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "aythya_fuligula",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "accipiter_gentilis",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "uria_aalge",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "corvus_corone",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "gavia_arctica",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "asio_flammeus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "surnia_ulula",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "buteo_lagopus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "stercorarius_skua",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "falco_peregrinus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "stercorarius_longicaudus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "asio_otus",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "arion_ater",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "patella_vulgata",
+   "why": "over the 40-slot cap"
+  }
+ ],
+ "rules": "pipeline/fauna_slots.py: kin by taxonomy, diet and mass; scale = (mass / kin mass)^(1/3), 0.25-4; density Damuth 1981 (herbivores; large ones times HERBIVORE_PRODUCTIVITY of the tile's ecosystem), 30 / mass kg (carnivores), birds 15 m^-0.4 (cap 70) or 0.5 m^-0.75 (raptors)",
+ "ecosystem": "M1"
+}

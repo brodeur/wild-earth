@@ -1,0 +1,510 @@
+{
+ "id": "parashorea_malaanonan",
+ "aliases": [
+  "white_seraya",
+  "urat_mata",
+  "bagtikan"
+ ],
+ "scientific": "Parashorea malaanonan",
+ "common": "white seraya",
+ "form": "tree",
+ "regions": [
+  "borneo"
+ ],
+ "architectural_model": "Rauh",
+ "deciduous": false,
+ "height_m": [
+  45,
+  60
+ ],
+ "stature": {
+  "typical_m": 50,
+  "tall_m": 60,
+  "record_m": null,
+  "source": "Useful Tropical Plants: up to 60 m (its table 50 m), bole clear to 30 m, diameter to 200 cm; Wikipedia: emergent to 60 m; read 2026-11-05"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    8,
+    25
+   ],
+   "trunk_radius": 0.65,
+   "crown_scale": 0.8,
+   "branches": 0.8,
+   "set": {
+    "trunk": {
+     "length_ratio": 0.7,
+     "split_prob": 0.05,
+     "bark_rgb": [
+      178,
+      168,
+      138
+     ],
+     "bark_pattern": "smooth_grey",
+     "flare": 1.4,
+     "base_size": 0.3,
+     "bole_ratio": 0.4
+    },
+    "foliage": {
+     "clumps": {
+      "radius_m": 0.8
+     }
+    },
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.25,
+        0.1
+       ],
+       [
+        0.4,
+        0.16
+       ],
+       [
+        0.6,
+        0.17
+       ],
+       [
+        0.8,
+        0.13
+       ],
+       [
+        0.93,
+        0.07
+       ],
+       [
+        1.0,
+        0.02
+       ]
+      ]
+     }
+    }
+   },
+   "note": "a pole in the understorey or a gap: a straight slender stem with a narrow, monopodial crown of tiers of horizontal branches (Roux's model), waiting for light"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 2,
+   "note": "(from the black cottonwood template) (from the Fremont cottonwood template) the file as written"
+  },
+  {
+   "name": "veteran",
+   "weight": 0.17,
+   "height_m": [
+    55,
+    65
+   ],
+   "trunk_radius": 1.3,
+   "crown_scale": 1.15,
+   "gnarl": 1.3,
+   "deadwood": {
+    "fraction": 0.22,
+    "levels": [
+     1,
+     2
+    ],
+    "where": "inner"
+   },
+   "set": {
+    "trunk": {
+     "split_prob": 0.8,
+     "split_count": 3,
+     "lean_deg": 4,
+     "flare": 2.8
+    }
+   },
+   "note": "an emergent giant: a huge pale bole with towering plank buttresses, the crown a few massive limbs bearing cauliflower clumps of leaves high above the canopy"
+  }
+ ],
+ "snag": {
+  "fraction": 0.08,
+  "from": "veteran",
+  "height_m": [
+   14,
+   24
+  ],
+  "limbs": 0.5,
+  "twigs": 0.2,
+  "levels": 1,
+  "shorten": [
+   0.4,
+   0.9
+  ],
+  "rgb": [
+   172,
+   166,
+   156
+  ]
+ },
+ "description": "One of the emergent giants of Danum's valley floors and lower slopes, 45-60 m tall, with a straight, cylindrical, pale grey bole clear of branches for up to 30 m above large plank buttresses, and a dense, dome-shaped crown above the canopy. In a mast year it rains five-winged fruits that spin down like shuttlecocks.",
+ "season_notes": {
+  "winter": "Evergreen; the wettest months, December to February, the northeast monsoon.",
+  "spring": "Evergreen; in a mast year (after an El Nino dry spell) flowering high in the crown.",
+  "summer": "Evergreen; in a mast year the winged fruit spinning down, and bearded pigs gathering for the seed.",
+  "fall": "Evergreen, unchanged."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "mixed_forest": 1.0,
+   "riparian": 0.5
+  },
+  "floor": 1.4,
+  "mid": 1.0,
+  "steep": 0.6,
+  "north": 1.0,
+  "shade": 0.5,
+  "disturbed": 0.4,
+  "riparian": {
+   "zones": {
+    "terrace": 1.0,
+    "pond_terrace": 0.3
+   },
+   "orders": [
+    2,
+    6
+   ],
+   "permanence": "any",
+   "water": "Not tied to water, but common on the alluvial terraces and lower slopes along the Segama and its tributaries."
+  }
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "sus_barbatus",
+    "part": "seeds",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   },
+   {
+    "animal": "presbytis_rubicunda",
+    "part": "seeds",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   },
+   {
+    "animal": "ratufa_affinis",
+    "part": "seeds",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": [
+   "buceros_rhinoceros",
+   "pongo_pygmaeus"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 0.62,
+  "radius_ratio": 0.03,
+  "taper": 0.75,
+  "flare": 2.4,
+  "bole_ratio": 0.8,
+  "base_size": 0.82,
+  "curve_deg": 3,
+  "curve_var_deg": 5,
+  "segments": 6,
+  "lean_deg": 3,
+  "stems": [
+   1,
+   1
+  ],
+  "stem_spread_deg": 0,
+  "split_prob": 0.6,
+  "split_count": 3,
+  "split_angle_deg": 28,
+  "bark_rgb": [
+   150,
+   138,
+   116
+  ],
+  "bark_pattern": "mottled",
+  "twig_rgb": [
+   120,
+   104,
+   84
+  ],
+  "bark": {
+   "tile_m": [
+    0.4,
+    0.8
+   ],
+   "ridge_m": 0.05,
+   "block_m": 0.14,
+   "fissure": 0.55,
+   "contrast": 1.1,
+   "lichen": 0.2,
+   "relief": 1.4
+  },
+  "roots": {
+   "buttress": 0.95,
+   "buttresses": [
+    3,
+    6
+   ],
+   "height": 2.2,
+   "roots": [
+    0,
+    2
+   ],
+   "note": "plank buttresses a few metres up the bole, running out as surface roots"
+  },
+  "split_height": 0.86
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "envelope": {
+   "profile": [
+    [
+     0.55,
+     0.12
+    ],
+    [
+     0.62,
+     0.22
+    ],
+    [
+     0.72,
+     0.27
+    ],
+    [
+     0.82,
+     0.27
+    ],
+    [
+     0.92,
+     0.2
+    ],
+    [
+     1.0,
+     0.06
+    ]
+   ],
+   "lobes": 6,
+   "lobe_depth": 0.22,
+   "asymmetry": 0.2,
+   "fill": 0.5,
+   "edge": 1.1
+  }
+ },
+ "levels": [
+  {
+   "count": 9,
+   "down_angle_deg": 42,
+   "down_angle_tip_deg": 28,
+   "down_angle_var_deg": 14,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 1.0,
+   "length_var": 0.25,
+   "curve_deg": 8,
+   "curve_var_deg": 20,
+   "zigzag_deg": 6,
+   "tropism": 0.02,
+   "droop_deg": 4,
+   "taper": 0.9,
+   "radius_ratio": 0.6,
+   "segments": 3,
+   "sinuous_deg": 5
+  },
+  {
+   "count": 11,
+   "start": 0.1,
+   "down_angle_deg": 50,
+   "down_angle_var_deg": 15,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.5,
+   "length_var": 0.3,
+   "curve_deg": 0,
+   "curve_var_deg": 20,
+   "zigzag_deg": 8,
+   "tropism": 0.04,
+   "taper": 1.0,
+   "radius_ratio": 0.45,
+   "segments": 2
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.12,
+  "leaf_shape": "elliptic_glossy",
+  "cluster_m": 1.9,
+  "density": 14,
+  "leaf_fill": 3.6,
+  "start": 0.05,
+  "parent_start": 0.35,
+  "orientation": "outward",
+  "roll_deg": 70,
+  "colors": {
+   "winter": [
+    70,
+    94,
+    54
+   ],
+   "spring": [
+    72,
+    96,
+    56
+   ],
+   "summer": [
+    70,
+    94,
+    54
+   ],
+   "fall": [
+    70,
+    94,
+    54
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "clumps": {
+   "radius_m": 1.5,
+   "cards_per_clump": 10,
+   "shell": 0.1,
+   "flatten": 0.7,
+   "tip_bias": 1.4
+  },
+  "palette": [
+   [
+    0.7,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.2,
+    [
+     1.18,
+     1.2,
+     1.08
+    ]
+   ],
+   [
+    0.1,
+    [
+     0.8,
+     0.84,
+     0.8
+    ]
+   ]
+  ],
+  "winter_twigs": 0.45,
+  "ao_min": 0.66,
+  "color_var": [
+   0.07,
+   0.05
+  ],
+  "leaf_on_var": 0.5,
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "flowers": null,
+  "berries": null
+ },
+ "deadwood": {
+  "fraction": 0.08,
+  "where": "inner",
+  "levels": [
+   1,
+   2
+  ],
+  "shorten": 0.6,
+  "rgb": [
+   160,
+   154,
+   144
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "length": 0.6,
+  "down_deg": 45,
+  "down_var_deg": 18,
+  "curve_var_deg": 22,
+  "segments": 2,
+  "radius_m": 0.011,
+  "taper": 0.6,
+  "zigzag_deg": 14,
+  "fan_deg": 50,
+  "jitter": 0.2
+ },
+ "lod": {
+  "near_tris_budget": 2200,
+  "near_sides": [
+   7,
+   3,
+   0
+  ],
+  "mid_blobs": 5,
+  "mid_branches": 4,
+  "mid_segments": [
+   3,
+   2
+  ],
+  "mid_blob_scale": 0.9,
+  "close_factor": 2
+ },
+ "targets": {
+  "crown_width_ratio": 0.5,
+  "crown_base_ratio": 0.55,
+  "porosity": 0.25,
+  "foliage_rg": 0.55,
+  "foliage_bg": 0.33,
+  "fall_rg": 1.41,
+  "fall_bg": 0.43,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-05), no photographs measured; to be replaced by photo measurements: a straight, pale grey to yellowish bole clear for 30 m above plank buttresses, a dense dome-shaped emergent crown standing above the canopy"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "2",
+  "card": "library/plant_cards/parashorea_malaanonan.json",
+  "card_sha256": "046fd99709e56773",
+  "template": "populus_trichocarpa",
+  "template_common": "black cottonwood",
+  "height_scale": 1.4
+ },
+ "notes": "COMPROMISES: there is no dipterocarp, no tropical tree and no tree over 45 m with a broadleaf crown in the library; black cottonwood is the template for its tall straight bole only. The trunk patch makes the bole run clear to about 0.55 of the height, then fork into three limbs under a flat, wide, 'cauliflower' crown envelope, and the buttresses are the root-flare primitive (trunk.flare 2.4, roots.buttress 0.95, 3-6 buttresses, 2.2 times the default flare height): real plank buttresses run 2-4 m up the bole and several metres out, thin and steep-sided, which the flare's rounded fins approximate only in the near tier (the mid tier draws one ring, the far impostors none). The crown's clumped, 'broccoli' sub-crowns of reiterated limbs are the template's clumps, not a modelled reiteration. Under a 60 m tree the scale of everything (bark tiles, leaf cards, LOD budgets) is the cottonwood's at 1.6 times, untested in the lineup. Heights, bole, buttresses (plank-like, up to 4 m high, spreading over 2.5 m) and the dense dome-shaped crown from Useful Tropical Plants; mixed dipterocarp forest on deep crumbly clay (Wikipedia). Bark (pale grey to yellowish-brown, flaky) and leaf (elliptic, about 8-15 cm, leathery) are the drafter's knowledge, the bark drawn with the sycamore's flaking 'mottled' pattern. Parashorea fruit have five subequal wings (drafter's knowledge). Danum is aseasonal: evergreen, no leaf-off, colours constant through the four calendar seasons except for small flushes of new red-bronze leaves. Dipterocarps flower and fruit together in irregular mast years every two to ten years, after an El Nino dry spell; the game's seasons cannot express a mast year, so no flowers or fruit are drawn and the seed entries in eaten_by are marked as mast-year food. Bearded pig, maroon langur and giant squirrel eating dipterocarp seed in mast years, rhinoceros hornbills nesting in cavities of emergents and orangutans nesting in big crowns are the drafter's knowledge; none of these animals is in the library. Region tag borneo is not yet a natural region in pipeline/regions.py.",
+ "sources": [
+  "GBIF species match, Parashorea malaanonan: ACCEPTED, https://api.gbif.org/v1/species/match?name=Parashorea%20malaanonan, read 2026-11-05",
+  "https://en.wikipedia.org/wiki/Parashorea_malaanonan, read 2026-11-05",
+  "Useful Tropical Plants, Parashorea malaanonan, https://tropical.theferns.info/viewtropical.php?id=Parashorea+malaanonan, read 2026-11-05"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-05); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

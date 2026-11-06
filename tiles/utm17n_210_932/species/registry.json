@@ -1,0 +1,4060 @@
+{
+ "tile": "utm17n_210_932",
+ "at": "2026-11-06T06:49:53Z",
+ "levels": {
+  "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
+  "1": "stand-in look: another species' model with its own size and colour",
+  "2": "its own model: own crown, branching and foliage (plants) or own mesh (animals), not animated",
+  "3": "rigged and animated (animals); grown: three or more age classes and four seasons' colours (plants)",
+  "4": "full: behaviour, sound and seasonal states (animals); the ecology, habitat and relations (plants)"
+ },
+ "summary": {
+  "by_level": {
+   "0": {
+    "plants": 32,
+    "animals": 77
+   },
+   "1": {
+    "plants": 0,
+    "animals": 0
+   },
+   "2": {
+    "plants": 4,
+    "animals": 0
+   },
+   "3": {
+    "plants": 0,
+    "animals": 5
+   },
+   "4": {
+    "plants": 0,
+    "animals": 1
+   }
+  },
+  "plants": 36,
+  "animals_present": 83,
+  "animals_queued": 77,
+  "meshy_credits_queued": 2230,
+  "cards_queued": 32,
+  "stand_ins": {
+   "aechmea_magdalenae": null,
+   "hyperbaena_leptobotryosa": null,
+   "damburneya_umbrosa": null,
+   "palicourea_hoffmannseggiana": null,
+   "aspasia_epidendroides": null,
+   "trichilia_tuberculata": null,
+   "chomelia_microloba": null,
+   "crossopetalum_parviflorum": null,
+   "anthurium_eximium": null,
+   "heisteria_acuminata": null,
+   "pouteria_subrotata": null,
+   "hamelia_axillaris": null,
+   "croton_schiedeanus": null,
+   "goeppertia_marantifolia": null,
+   "guatteria_amplifolia": null,
+   "hieronyma_alchorneoides": null,
+   "palicourea_racemosa": null,
+   "callicarpa_acuminata": null,
+   "ficus_zarzalensis": null,
+   "passiflora_vitifolia": null,
+   "anacardium_excelsum": null,
+   "miconia_aguilarii": null,
+   "stigmaphyllon_ellipticum": null,
+   "dalbergia_brownei": null,
+   "faramea_occidentalis": null,
+   "guarea_glabra": null,
+   "guettarda_foliacea": null,
+   "pterygota_excelsa": null,
+   "tetrathylacium_macrophyllum": null,
+   "ocotea_insularis": null,
+   "nectandra_hihua": null,
+   "paullinia_bracteosa": null
+  },
+  "density": {
+   "tree": {
+    "target": 21,
+    "have": 4
+   },
+   "shrub": {
+    "target": 23,
+    "have": 0
+   },
+   "ground": {
+    "target": 26,
+    "have": 0
+   },
+   "animal": {
+    "target": 22,
+    "have": 83,
+    "with_model": 6
+   }
+  },
+  "hands": {
+   "count": 110,
+   "by_what": {
+    "a trait card": 32,
+    "a lexicon phrase or a species-mix rule": 3,
+    "a mesh": 75
+   }
+  }
+ },
+ "plants": [
+  {
+   "id": "dryobalanops_lanceolata",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "kapur paji",
+   "drawn_as": "dryobalanops_lanceolata",
+   "share": 0.2747,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "macaranga_gigantea",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "giant mahang",
+   "drawn_as": "macaranga_gigantea",
+   "share": 0.2665,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "shorea_leprosula",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "light red meranti",
+   "drawn_as": "shorea_leprosula",
+   "share": 0.2489,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "parashorea_malaanonan",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "white seraya",
+   "drawn_as": "parashorea_malaanonan",
+   "share": 0.2099,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "aechmea_magdalenae",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 67 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "anacardium_excelsum",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 31 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "anthurium_eximium",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 37 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "aspasia_epidendroides",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 39 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "callicarpa_acuminata",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 32 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "chomelia_microloba",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 38 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "crossopetalum_parviflorum",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 38 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "croton_schiedeanus",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 34 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "dalbergia_brownei",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 30 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "damburneya_umbrosa",
+   "kind": "tree",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 44 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "faramea_occidentalis",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 30 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "ficus_zarzalensis",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 32 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "goeppertia_marantifolia",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 33 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "guarea_glabra",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 30 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "guatteria_amplifolia",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 33 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "guettarda_foliacea",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 30 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "hamelia_axillaris",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 35 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "heisteria_acuminata",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 37 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "hieronyma_alchorneoides",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 33 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "hyperbaena_leptobotryosa",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 67 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "miconia_aguilarii",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 31 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "nectandra_hihua",
+   "kind": "tree",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 21 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "ocotea_insularis",
+   "kind": "tree",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 22 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "palicourea_hoffmannseggiana",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 43 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "palicourea_racemosa",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 33 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "passiflora_vitifolia",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 32 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "paullinia_bracteosa",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 20 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "pouteria_subrotata",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 36 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "pterygota_excelsa",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 30 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "stigmaphyllon_ellipticum",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 31 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "tetrathylacium_macrophyllum",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 24 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "trichilia_tuberculata",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 39 records on the tile"
+   ],
+   "stand_in": null
+  }
+ ],
+ "animals": [
+  {
+   "id": "cathartes_aura",
+   "scientific": "Cathartes aura",
+   "common": "turkey vulture",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "1790 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "puma_concolor",
+   "scientific": "Puma concolor",
+   "common": "mountain lion",
+   "kind": "mammal",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "32 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "megaceryle_alcyon",
+   "scientific": "Megaceryle alcyon",
+   "common": "belted kingfisher",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "60 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "ardea_herodias",
+   "scientific": "Ardea herodias",
+   "common": "great blue heron",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "419 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "pandion_haliaetus",
+   "scientific": "Pandion haliaetus",
+   "common": "osprey",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "693 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "accipiter_striatus",
+   "scientific": "Accipiter striatus",
+   "common": "sharp-shinned hawk",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "6 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "crax_rubra",
+   "scientific": "Crax rubra",
+   "common": "great curassow",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 1 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "tinamus_major",
+   "scientific": "Tinamus major",
+   "common": "great tinamou",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 2 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "trogon_rufus",
+   "scientific": "Trogon rufus",
+   "common": "black-throated trogon",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 3 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "buteogallus_anthracinus",
+   "scientific": "Buteogallus anthracinus",
+   "common": "common black hawk",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator",
+    "most recorded: 4 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "ramphastos_ambiguus",
+   "scientific": "Ramphastos ambiguus",
+   "common": "yellow-throated toucan",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 5 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "omnivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "thamnophilus_bridgesi",
+   "scientific": "Thamnophilus bridgesi",
+   "common": "black-hooded antshrike",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 6 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "myrmeciza_exsul",
+   "scientific": "Myrmeciza exsul",
+   "common": "chestnut-backed antbird",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 7 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "cantorchilus_semibadius",
+   "scientific": "Cantorchilus semibadius",
+   "common": "riverside wren",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 8 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "coragyps_atratus",
+   "scientific": "Coragyps atratus",
+   "common": "black vulture",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "scavenger",
+    "most recorded: 9 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "omnivore",
+    "scavenger"
+   ],
+   "traits": null
+  },
+  {
+   "id": "ara_macao",
+   "scientific": "Ara macao",
+   "common": "scarlet macaw",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 10 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "actitis_macularius",
+   "scientific": "Actitis macularius",
+   "common": "spotted sandpiper",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 11 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "egretta_caerulea",
+   "scientific": "Egretta caerulea",
+   "common": "little blue heron",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 12 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "penelope_purpurascens",
+   "scientific": "Penelope purpurascens",
+   "common": "crested guan",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 13 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "campephilus_guatemalensis",
+   "scientific": "Campephilus guatemalensis",
+   "common": "pale-billed woodpecker",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 14 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "tigrisoma_mexicanum",
+   "scientific": "Tigrisoma mexicanum",
+   "common": "bare-throated tiger-heron",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator",
+    "most recorded: 15 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "pelecanus_occidentalis",
+   "scientific": "Pelecanus occidentalis",
+   "common": "brown pelican",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator and scavenger",
+    "most recorded: 16 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "predator",
+    "scavenger"
+   ],
+   "traits": null
+  },
+  {
+   "id": "egretta_thula",
+   "scientific": "Egretta thula",
+   "common": "snowy egret",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator",
+    "most recorded: 17 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "lipaugus_unirufus",
+   "scientific": "Lipaugus unirufus",
+   "common": "rufous piha",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 18 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "omnivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "platyrinchus_coronatus",
+   "scientific": "Platyrinchus coronatus",
+   "common": "golden-crowned spadebill",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 19 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "cacicus_uropygialis",
+   "scientific": "Cacicus uropygialis",
+   "common": "scarlet-rumped cacique",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 20 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "patagioenas_nigrirostris",
+   "scientific": "Patagioenas nigrirostris",
+   "common": "short-billed pigeon",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 21 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "xiphorhynchus_susurrans",
+   "scientific": "Xiphorhynchus susurrans",
+   "common": "cocoa woodcreeper",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 22 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "trogon_massena",
+   "scientific": "Trogon massena",
+   "common": "slaty-tailed trogon",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 23 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "fregata_magnificens",
+   "scientific": "Fregata magnificens",
+   "common": "magnificent frigatebird",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator and scavenger",
+    "most recorded: 24 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "predator",
+    "scavenger"
+   ],
+   "traits": null
+  },
+  {
+   "id": "rupornis_magnirostris",
+   "scientific": "Rupornis magnirostris",
+   "common": "roadside hawk",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "eudocimus_albus",
+   "scientific": "Eudocimus albus",
+   "common": "white ibis",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "egretta_tricolor",
+   "scientific": "Egretta tricolor",
+   "common": "tricolored heron",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "chloroceryle_americana",
+   "scientific": "Chloroceryle americana",
+   "common": "green kingfisher",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "caracara_plancus",
+   "scientific": "Caracara plancus",
+   "common": "southern caracara",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "scavenger"
+   ],
+   "role": [
+    "omnivore",
+    "scavenger"
+   ],
+   "traits": null
+  },
+  {
+   "id": "nyctanassa_violacea",
+   "scientific": "Nyctanassa violacea",
+   "common": "yellow-crowned night-heron",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "megaceryle_torquata",
+   "scientific": "Megaceryle torquata",
+   "common": "ringed kingfisher",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "sarcoramphus_papa",
+   "scientific": "Sarcoramphus papa",
+   "common": "king vulture",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "scavenger"
+   ],
+   "role": [
+    "omnivore",
+    "scavenger"
+   ],
+   "traits": null
+  },
+  {
+   "id": "thalasseus_maximus",
+   "scientific": "Thalasseus maximus",
+   "common": "royal tern",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "chloroceryle_amazona",
+   "scientific": "Chloroceryle amazona",
+   "common": "amazon kingfisher",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "bubulcus_ibis",
+   "scientific": "Bubulcus ibis",
+   "common": "cattle egret",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "scavenger"
+   ],
+   "role": [
+    "insectivore",
+    "scavenger"
+   ],
+   "traits": null
+  },
+  {
+   "id": "butorides_virescens",
+   "scientific": "Butorides virescens",
+   "common": "green/striated heron",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "micrastur_semitorquatus",
+   "scientific": "Micrastur semitorquatus",
+   "common": "collared forest-falcon",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "ardea_alba",
+   "scientific": "Ardea alba",
+   "common": "great egret",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "herpetotheres_cachinnans",
+   "scientific": "Herpetotheres cachinnans",
+   "common": "laughing falcon",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "leucophaeus_atricilla",
+   "scientific": "Leucophaeus atricilla",
+   "common": "laughing gull",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "scavenger"
+   ],
+   "role": [
+    "omnivore",
+    "scavenger"
+   ],
+   "traits": null
+  },
+  {
+   "id": "thalasseus_sandvicensis",
+   "scientific": "Thalasseus sandvicensis",
+   "common": "sandwich tern",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "platalea_ajaja",
+   "scientific": "Platalea ajaja",
+   "common": "roseate spoonbill",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "egretta_rufescens",
+   "scientific": "Egretta rufescens",
+   "common": "reddish egret",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "geranospiza_caerulescens",
+   "scientific": "Geranospiza caerulescens",
+   "common": "crane hawk",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "nasua_narica",
+   "scientific": "Nasua narica",
+   "common": "white-nosed coati",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 1 of its class (16% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "pecari_tajacu",
+   "scientific": "Pecari tajacu",
+   "common": "collared peccary",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 2 of its class (12% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "tamandua_mexicana",
+   "scientific": "Tamandua mexicana",
+   "common": "northern tamandua",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 3 of its class (12% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "alouatta_palliata",
+   "scientific": "Alouatta palliata",
+   "common": "mantled howler",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 4 of its class (10% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "bradypus_variegatus",
+   "scientific": "Bradypus variegatus",
+   "common": "brown-throated three-toed sloth",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 5 of its class (7% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "saimiri_oerstedii",
+   "scientific": "Saimiri oerstedii",
+   "common": "central american squirrel monkey",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 6 of its class (6% of the class's records)"
+   ],
+   "role": [
+    "omnivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "ateles_geoffroyi",
+   "scientific": "Ateles geoffroyi",
+   "common": "black-handed spider monkey",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 7 of its class (5% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "dasyprocta_punctata",
+   "scientific": "Dasyprocta punctata",
+   "common": "central american agouti",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 8 of its class (5% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "tapirella_bairdii",
+   "scientific": "Tapirella bairdii",
+   "common": "baird's tapir",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 9 of its class (4% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "cebus_imitator",
+   "scientific": "Cebus imitator",
+   "common": "panamanian white faced capuchin",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 10 of its class (3% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "artibeus_watsoni",
+   "scientific": "Artibeus watsoni",
+   "common": "thomas's fruit-eating bat",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 11 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "mazama_temama",
+   "scientific": "Mazama temama",
+   "common": "central american red brocket",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 12 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "sciurus_granatensis",
+   "scientific": "Sciurus granatensis",
+   "common": "red-tailed squirrel",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 13 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "thyroptera_tricolor",
+   "scientific": "Thyroptera tricolor",
+   "common": "spix's disk-winged bat",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 15 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "carollia_castanea",
+   "scientific": "Carollia castanea",
+   "common": "chestnut short-tailed bat",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 16 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "choloepus_hoffmanni",
+   "scientific": "Choloepus hoffmanni",
+   "common": "hoffmann's two-toed sloth",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 17 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "myotis_albescens",
+   "scientific": "Myotis albescens",
+   "common": "silver-tipped myotis",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 18 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "centronycteris_centralis",
+   "scientific": "Centronycteris centralis",
+   "common": "thomas's shaggy bat",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 19 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "artibeus_lituratus",
+   "scientific": "Artibeus lituratus",
+   "common": "great fruit-eating bat",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 20 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "trachops_cirrhosus",
+   "scientific": "Trachops cirrhosus",
+   "common": "fringe-lipped bat",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 21 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "omnivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "lophostoma_silvicola",
+   "scientific": "Lophostoma silvicola",
+   "common": "white-throated round-eared bat",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 22 of its class (0% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "noctilio_leporinus",
+   "scientific": "Noctilio leporinus",
+   "common": "greater bulldog bat",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator",
+    "most recorded: 23 of its class (0% of the class's records)"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "leopardus_pardalis",
+   "scientific": "Leopardus pardalis",
+   "common": "ocelot",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator",
+    "most recorded: 24 of its class (0% of the class's records)"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "saccopteryx_bilineata",
+   "scientific": "Saccopteryx bilineata",
+   "common": "greater sac-winged bat",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 25 of its class (0% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "desmodus_rotundus",
+   "scientific": "Desmodus rotundus",
+   "common": "common vampire bat",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "eira_barbara",
+   "scientific": "Eira barbara",
+   "common": "tayra",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "tursiops_truncatus",
+   "scientific": "Tursiops truncatus",
+   "common": "common bottlenose dolphin",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "leptodactylus_savagei",
+   "scientific": "Leptodactylus savagei",
+   "common": "central american bullfrog",
+   "kind": "amphibian",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 1 of its class (10% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "oophaga_granulifera",
+   "scientific": "Oophaga granulifera",
+   "common": "granular poison dart frog",
+   "kind": "amphibian",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 2 of its class (9% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "rhinella_horribilis",
+   "scientific": "Rhinella horribilis",
+   "common": "mesoamerican cane toad",
+   "kind": "amphibian",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 3 of its class (8% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "boana_rosenbergi",
+   "scientific": "Boana rosenbergi",
+   "common": "gladiator tree frog",
+   "kind": "amphibian",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 4 of its class (8% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "beckianum_beckianum",
+   "scientific": "Beckianum beckianum",
+   "common": "beck's awlsnail",
+   "kind": "invertebrate",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 1 of its class (17% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "nerita_spec",
+   "scientific": "Nerita spec",
+   "common": null,
+   "kind": "invertebrate",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 2 of its class (12% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  }
+ ],
+ "queue": {
+  "cards": [
+   {
+    "id": "aechmea_magdalenae",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 67 records on the tile"
+    ]
+   },
+   {
+    "id": "hyperbaena_leptobotryosa",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 67 records on the tile"
+    ]
+   },
+   {
+    "id": "damburneya_umbrosa",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "GBIF: 44 records on the tile"
+    ]
+   },
+   {
+    "id": "palicourea_hoffmannseggiana",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 43 records on the tile"
+    ]
+   },
+   {
+    "id": "aspasia_epidendroides",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 39 records on the tile"
+    ]
+   },
+   {
+    "id": "trichilia_tuberculata",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 39 records on the tile"
+    ]
+   },
+   {
+    "id": "chomelia_microloba",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 38 records on the tile"
+    ]
+   },
+   {
+    "id": "crossopetalum_parviflorum",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 38 records on the tile"
+    ]
+   },
+   {
+    "id": "anthurium_eximium",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 37 records on the tile"
+    ]
+   },
+   {
+    "id": "heisteria_acuminata",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 37 records on the tile"
+    ]
+   },
+   {
+    "id": "pouteria_subrotata",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 36 records on the tile"
+    ]
+   },
+   {
+    "id": "hamelia_axillaris",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 35 records on the tile"
+    ]
+   },
+   {
+    "id": "croton_schiedeanus",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 34 records on the tile"
+    ]
+   },
+   {
+    "id": "goeppertia_marantifolia",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 33 records on the tile"
+    ]
+   },
+   {
+    "id": "guatteria_amplifolia",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 33 records on the tile"
+    ]
+   },
+   {
+    "id": "hieronyma_alchorneoides",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 33 records on the tile"
+    ]
+   },
+   {
+    "id": "palicourea_racemosa",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 33 records on the tile"
+    ]
+   },
+   {
+    "id": "callicarpa_acuminata",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 32 records on the tile"
+    ]
+   },
+   {
+    "id": "ficus_zarzalensis",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 32 records on the tile"
+    ]
+   },
+   {
+    "id": "passiflora_vitifolia",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 32 records on the tile"
+    ]
+   },
+   {
+    "id": "anacardium_excelsum",
+    "kind": "shrub",
+    "stand_in": null,
+    "why": [
+     "GBIF: 31 records on the tile"
+    ]
+   },
+   {
+    "id": "miconia_aguilarii",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 31 records on the tile"
+    ]
+   },
+   {
+    "id": "stigmaphyllon_ellipticum",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 31 records on the tile"
+    ]
+   },
+   {
+    "id": "dalbergia_brownei",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 30 records on the tile"
+    ]
+   },
+   {
+    "id": "faramea_occidentalis",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 30 records on the tile"
+    ]
+   },
+   {
+    "id": "guarea_glabra",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 30 records on the tile"
+    ]
+   },
+   {
+    "id": "guettarda_foliacea",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 30 records on the tile"
+    ]
+   },
+   {
+    "id": "pterygota_excelsa",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 30 records on the tile"
+    ]
+   },
+   {
+    "id": "tetrathylacium_macrophyllum",
+    "kind": "shrub",
+    "stand_in": null,
+    "why": [
+     "GBIF: 24 records on the tile"
+    ]
+   },
+   {
+    "id": "ocotea_insularis",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "GBIF: 22 records on the tile"
+    ]
+   },
+   {
+    "id": "nectandra_hihua",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "GBIF: 21 records on the tile"
+    ]
+   },
+   {
+    "id": "paullinia_bracteosa",
+    "kind": "shrub",
+    "stand_in": null,
+    "why": [
+     "GBIF: 20 records on the tile"
+    ]
+   }
+  ],
+  "meshy": [
+   {
+    "id": "crax_rubra",
+    "scientific": "Crax rubra",
+    "common": "great curassow",
+    "kind": "bird",
+    "records": 2248,
+    "why": [
+     "most recorded: 1 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "callipepla_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "tinamus_major",
+    "scientific": "Tinamus major",
+    "common": "great tinamou",
+    "kind": "bird",
+    "records": 2113,
+    "why": [
+     "most recorded: 2 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "trogon_rufus",
+    "scientific": "Trogon rufus",
+    "common": "black-throated trogon",
+    "kind": "bird",
+    "records": 2110,
+    "why": [
+     "most recorded: 3 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "buteogallus_anthracinus",
+    "scientific": "Buteogallus anthracinus",
+    "common": "common black hawk",
+    "kind": "bird",
+    "records": 2088,
+    "why": [
+     "predator",
+     "most recorded: 4 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "buteo_jamaicensis",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "ramphastos_ambiguus",
+    "scientific": "Ramphastos ambiguus",
+    "common": "yellow-throated toucan",
+    "kind": "bird",
+    "records": 2008,
+    "why": [
+     "most recorded: 5 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "melanerpes_formicivorus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "thamnophilus_bridgesi",
+    "scientific": "Thamnophilus bridgesi",
+    "common": "black-hooded antshrike",
+    "kind": "bird",
+    "records": 1988,
+    "why": [
+     "most recorded: 6 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "myrmeciza_exsul",
+    "scientific": "Myrmeciza exsul",
+    "common": "chestnut-backed antbird",
+    "kind": "bird",
+    "records": 1908,
+    "why": [
+     "most recorded: 7 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "cantorchilus_semibadius",
+    "scientific": "Cantorchilus semibadius",
+    "common": "riverside wren",
+    "kind": "bird",
+    "records": 1813,
+    "why": [
+     "most recorded: 8 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "troglodytes_pacificus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "coragyps_atratus",
+    "scientific": "Coragyps atratus",
+    "common": "black vulture",
+    "kind": "bird",
+    "records": 1770,
+    "why": [
+     "scavenger",
+     "most recorded: 9 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "cathartes_aura",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "ara_macao",
+    "scientific": "Ara macao",
+    "common": "scarlet macaw",
+    "kind": "bird",
+    "records": 1728,
+    "why": [
+     "most recorded: 10 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "actitis_macularius",
+    "scientific": "Actitis macularius",
+    "common": "spotted sandpiper",
+    "kind": "bird",
+    "records": 1599,
+    "why": [
+     "most recorded: 11 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "larus_glaucescens",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "egretta_caerulea",
+    "scientific": "Egretta caerulea",
+    "common": "little blue heron",
+    "kind": "bird",
+    "records": 1550,
+    "why": [
+     "most recorded: 12 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "ardea_herodias",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "penelope_purpurascens",
+    "scientific": "Penelope purpurascens",
+    "common": "crested guan",
+    "kind": "bird",
+    "records": 1550,
+    "why": [
+     "most recorded: 13 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "callipepla_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "campephilus_guatemalensis",
+    "scientific": "Campephilus guatemalensis",
+    "common": "pale-billed woodpecker",
+    "kind": "bird",
+    "records": 1488,
+    "why": [
+     "most recorded: 14 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "melanerpes_formicivorus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "tigrisoma_mexicanum",
+    "scientific": "Tigrisoma mexicanum",
+    "common": "bare-throated tiger-heron",
+    "kind": "bird",
+    "records": 1464,
+    "why": [
+     "predator",
+     "most recorded: 15 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "ardea_herodias",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "pelecanus_occidentalis",
+    "scientific": "Pelecanus occidentalis",
+    "common": "brown pelican",
+    "kind": "bird",
+    "records": 1455,
+    "why": [
+     "predator and scavenger",
+     "most recorded: 16 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "ardea_herodias",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "egretta_thula",
+    "scientific": "Egretta thula",
+    "common": "snowy egret",
+    "kind": "bird",
+    "records": 1448,
+    "why": [
+     "predator",
+     "most recorded: 17 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "ardea_herodias",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "lipaugus_unirufus",
+    "scientific": "Lipaugus unirufus",
+    "common": "rufous piha",
+    "kind": "bird",
+    "records": 1432,
+    "why": [
+     "most recorded: 18 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "platyrinchus_coronatus",
+    "scientific": "Platyrinchus coronatus",
+    "common": "golden-crowned spadebill",
+    "kind": "bird",
+    "records": 1338,
+    "why": [
+     "most recorded: 19 of its class (1% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "empidonax_difficilis",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "cacicus_uropygialis",
+    "scientific": "Cacicus uropygialis",
+    "common": "scarlet-rumped cacique",
+    "kind": "bird",
+    "records": 1315,
+    "why": [
+     "most recorded: 20 of its class (1% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "patagioenas_nigrirostris",
+    "scientific": "Patagioenas nigrirostris",
+    "common": "short-billed pigeon",
+    "kind": "bird",
+    "records": 1276,
+    "why": [
+     "most recorded: 21 of its class (1% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "xiphorhynchus_susurrans",
+    "scientific": "Xiphorhynchus susurrans",
+    "common": "cocoa woodcreeper",
+    "kind": "bird",
+    "records": 1265,
+    "why": [
+     "most recorded: 22 of its class (1% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "trogon_massena",
+    "scientific": "Trogon massena",
+    "common": "slaty-tailed trogon",
+    "kind": "bird",
+    "records": 1256,
+    "why": [
+     "most recorded: 23 of its class (1% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "fregata_magnificens",
+    "scientific": "Fregata magnificens",
+    "common": "magnificent frigatebird",
+    "kind": "bird",
+    "records": 1199,
+    "why": [
+     "predator and scavenger",
+     "most recorded: 24 of its class (1% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "rupornis_magnirostris",
+    "scientific": "Rupornis magnirostris",
+    "common": "roadside hawk",
+    "kind": "bird",
+    "records": 1175,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "buteo_jamaicensis",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "eudocimus_albus",
+    "scientific": "Eudocimus albus",
+    "common": "white ibis",
+    "kind": "bird",
+    "records": 1084,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "ardea_herodias",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "egretta_tricolor",
+    "scientific": "Egretta tricolor",
+    "common": "tricolored heron",
+    "kind": "bird",
+    "records": 1046,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "ardea_herodias",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "chloroceryle_americana",
+    "scientific": "Chloroceryle americana",
+    "common": "green kingfisher",
+    "kind": "bird",
+    "records": 951,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "megaceryle_alcyon",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "caracara_plancus",
+    "scientific": "Caracara plancus",
+    "common": "southern caracara",
+    "kind": "bird",
+    "records": 602,
+    "why": [
+     "scavenger"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "falco_columbarius",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "nyctanassa_violacea",
+    "scientific": "Nyctanassa violacea",
+    "common": "yellow-crowned night-heron",
+    "kind": "bird",
+    "records": 435,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "ardea_herodias",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "megaceryle_torquata",
+    "scientific": "Megaceryle torquata",
+    "common": "ringed kingfisher",
+    "kind": "bird",
+    "records": 404,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "megaceryle_alcyon",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "sarcoramphus_papa",
+    "scientific": "Sarcoramphus papa",
+    "common": "king vulture",
+    "kind": "bird",
+    "records": 329,
+    "why": [
+     "scavenger"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "cathartes_aura",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "thalasseus_maximus",
+    "scientific": "Thalasseus maximus",
+    "common": "royal tern",
+    "kind": "bird",
+    "records": 301,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "larus_glaucescens",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "nasua_narica",
+    "scientific": "Nasua narica",
+    "common": "white-nosed coati",
+    "kind": "mammal",
+    "records": 290,
+    "why": [
+     "most recorded: 1 of its class (16% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": "canis_latrans",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "chloroceryle_amazona",
+    "scientific": "Chloroceryle amazona",
+    "common": "amazon kingfisher",
+    "kind": "bird",
+    "records": 259,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "megaceryle_alcyon",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "bubulcus_ibis",
+    "scientific": "Bubulcus ibis",
+    "common": "cattle egret",
+    "kind": "bird",
+    "records": 254,
+    "why": [
+     "scavenger"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "ardea_herodias",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "pecari_tajacu",
+    "scientific": "Pecari tajacu",
+    "common": "collared peccary",
+    "kind": "mammal",
+    "records": 225,
+    "why": [
+     "most recorded: 2 of its class (12% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": "odocoileus_hemionus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "tamandua_mexicana",
+    "scientific": "Tamandua mexicana",
+    "common": "northern tamandua",
+    "kind": "mammal",
+    "records": 224,
+    "why": [
+     "most recorded: 3 of its class (12% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "butorides_virescens",
+    "scientific": "Butorides virescens",
+    "common": "green/striated heron",
+    "kind": "bird",
+    "records": 217,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "ardea_herodias",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "micrastur_semitorquatus",
+    "scientific": "Micrastur semitorquatus",
+    "common": "collared forest-falcon",
+    "kind": "bird",
+    "records": 200,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "falco_columbarius",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "alouatta_palliata",
+    "scientific": "Alouatta palliata",
+    "common": "mantled howler",
+    "kind": "mammal",
+    "records": 195,
+    "why": [
+     "most recorded: 4 of its class (10% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "ardea_alba",
+    "scientific": "Ardea alba",
+    "common": "great egret",
+    "kind": "bird",
+    "records": 191,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "ardea_herodias",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "herpetotheres_cachinnans",
+    "scientific": "Herpetotheres cachinnans",
+    "common": "laughing falcon",
+    "kind": "bird",
+    "records": 189,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "falco_columbarius",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "leucophaeus_atricilla",
+    "scientific": "Leucophaeus atricilla",
+    "common": "laughing gull",
+    "kind": "bird",
+    "records": 179,
+    "why": [
+     "scavenger"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "larus_glaucescens",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "thalasseus_sandvicensis",
+    "scientific": "Thalasseus sandvicensis",
+    "common": "sandwich tern",
+    "kind": "bird",
+    "records": 166,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "larus_glaucescens",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "platalea_ajaja",
+    "scientific": "Platalea ajaja",
+    "common": "roseate spoonbill",
+    "kind": "bird",
+    "records": 163,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "ardea_herodias",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "egretta_rufescens",
+    "scientific": "Egretta rufescens",
+    "common": "reddish egret",
+    "kind": "bird",
+    "records": 149,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "ardea_herodias",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "geranospiza_caerulescens",
+    "scientific": "Geranospiza caerulescens",
+    "common": "crane hawk",
+    "kind": "bird",
+    "records": 142,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "buteo_jamaicensis",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "bradypus_variegatus",
+    "scientific": "Bradypus variegatus",
+    "common": "brown-throated three-toed sloth",
+    "kind": "mammal",
+    "records": 128,
+    "why": [
+     "most recorded: 5 of its class (7% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "saimiri_oerstedii",
+    "scientific": "Saimiri oerstedii",
+    "common": "central american squirrel monkey",
+    "kind": "mammal",
+    "records": 109,
+    "why": [
+     "most recorded: 6 of its class (6% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "ateles_geoffroyi",
+    "scientific": "Ateles geoffroyi",
+    "common": "black-handed spider monkey",
+    "kind": "mammal",
+    "records": 102,
+    "why": [
+     "most recorded: 7 of its class (5% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "dasyprocta_punctata",
+    "scientific": "Dasyprocta punctata",
+    "common": "central american agouti",
+    "kind": "mammal",
+    "records": 97,
+    "why": [
+     "most recorded: 8 of its class (5% of the class's records)"
+    ],
+    "body_plan": "rodent",
+    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+    "estimate_credits": 30,
+    "stand_in": "microtus_californicus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "tapirella_bairdii",
+    "scientific": "Tapirella bairdii",
+    "common": "baird's tapir",
+    "kind": "mammal",
+    "records": 84,
+    "why": [
+     "most recorded: 9 of its class (4% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "cebus_imitator",
+    "scientific": "Cebus imitator",
+    "common": "panamanian white faced capuchin",
+    "kind": "mammal",
+    "records": 56,
+    "why": [
+     "most recorded: 10 of its class (3% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "beckianum_beckianum",
+    "scientific": "Beckianum beckianum",
+    "common": "beck's awlsnail",
+    "kind": "invertebrate",
+    "records": 42,
+    "why": [
+     "most recorded: 1 of its class (17% of the class's records)"
+    ],
+    "body_plan": "gastropod",
+    "rig": "none: procedural (a body of rings and a foot wave); no Meshy needed",
+    "estimate_credits": 0,
+    "stand_in": "ariolimax_columbianus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "artibeus_watsoni",
+    "scientific": "Artibeus watsoni",
+    "common": "thomas's fruit-eating bat",
+    "kind": "mammal",
+    "records": 35,
+    "why": [
+     "most recorded: 11 of its class (2% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "mazama_temama",
+    "scientific": "Mazama temama",
+    "common": "central american red brocket",
+    "kind": "mammal",
+    "records": 31,
+    "why": [
+     "most recorded: 12 of its class (2% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": "odocoileus_hemionus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "nerita_spec",
+    "scientific": "Nerita spec",
+    "common": null,
+    "kind": "invertebrate",
+    "records": 29,
+    "why": [
+     "most recorded: 2 of its class (12% of the class's records)"
+    ],
+    "body_plan": "gastropod",
+    "rig": "none: procedural (a body of rings and a foot wave); no Meshy needed",
+    "estimate_credits": 0,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "leptodactylus_savagei",
+    "scientific": "Leptodactylus savagei",
+    "common": "central american bullfrog",
+    "kind": "amphibian",
+    "records": 27,
+    "why": [
+     "most recorded: 1 of its class (10% of the class's records)"
+    ],
+    "body_plan": "amphibian",
+    "rig": "none yet: the reptile template, hopping",
+    "estimate_credits": 25,
+    "stand_in": "anaxyrus_boreas",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "oophaga_granulifera",
+    "scientific": "Oophaga granulifera",
+    "common": "granular poison dart frog",
+    "kind": "amphibian",
+    "records": 24,
+    "why": [
+     "most recorded: 2 of its class (9% of the class's records)"
+    ],
+    "body_plan": "amphibian",
+    "rig": "none yet: the reptile template, hopping",
+    "estimate_credits": 25,
+    "stand_in": "anaxyrus_boreas",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "rhinella_horribilis",
+    "scientific": "Rhinella horribilis",
+    "common": "mesoamerican cane toad",
+    "kind": "amphibian",
+    "records": 23,
+    "why": [
+     "most recorded: 3 of its class (8% of the class's records)"
+    ],
+    "body_plan": "amphibian",
+    "rig": "none yet: the reptile template, hopping",
+    "estimate_credits": 25,
+    "stand_in": "anaxyrus_boreas",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "sciurus_granatensis",
+    "scientific": "Sciurus granatensis",
+    "common": "red-tailed squirrel",
+    "kind": "mammal",
+    "records": 22,
+    "why": [
+     "most recorded: 13 of its class (1% of the class's records)"
+    ],
+    "body_plan": "rodent",
+    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+    "estimate_credits": 30,
+    "stand_in": "sciurus_griseus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "boana_rosenbergi",
+    "scientific": "Boana rosenbergi",
+    "common": "gladiator tree frog",
+    "kind": "amphibian",
+    "records": 22,
+    "why": [
+     "most recorded: 4 of its class (8% of the class's records)"
+    ],
+    "body_plan": "amphibian",
+    "rig": "none yet: the reptile template, hopping",
+    "estimate_credits": 25,
+    "stand_in": "anaxyrus_boreas",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "thyroptera_tricolor",
+    "scientific": "Thyroptera tricolor",
+    "common": "spix's disk-winged bat",
+    "kind": "mammal",
+    "records": 18,
+    "why": [
+     "most recorded: 15 of its class (1% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "carollia_castanea",
+    "scientific": "Carollia castanea",
+    "common": "chestnut short-tailed bat",
+    "kind": "mammal",
+    "records": 15,
+    "why": [
+     "most recorded: 16 of its class (1% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "choloepus_hoffmanni",
+    "scientific": "Choloepus hoffmanni",
+    "common": "hoffmann's two-toed sloth",
+    "kind": "mammal",
+    "records": 15,
+    "why": [
+     "most recorded: 17 of its class (1% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "myotis_albescens",
+    "scientific": "Myotis albescens",
+    "common": "silver-tipped myotis",
+    "kind": "mammal",
+    "records": 12,
+    "why": [
+     "most recorded: 18 of its class (1% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "centronycteris_centralis",
+    "scientific": "Centronycteris centralis",
+    "common": "thomas's shaggy bat",
+    "kind": "mammal",
+    "records": 11,
+    "why": [
+     "most recorded: 19 of its class (1% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "artibeus_lituratus",
+    "scientific": "Artibeus lituratus",
+    "common": "great fruit-eating bat",
+    "kind": "mammal",
+    "records": 10,
+    "why": [
+     "most recorded: 20 of its class (1% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "trachops_cirrhosus",
+    "scientific": "Trachops cirrhosus",
+    "common": "fringe-lipped bat",
+    "kind": "mammal",
+    "records": 10,
+    "why": [
+     "most recorded: 21 of its class (1% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "lophostoma_silvicola",
+    "scientific": "Lophostoma silvicola",
+    "common": "white-throated round-eared bat",
+    "kind": "mammal",
+    "records": 9,
+    "why": [
+     "most recorded: 22 of its class (0% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "noctilio_leporinus",
+    "scientific": "Noctilio leporinus",
+    "common": "greater bulldog bat",
+    "kind": "mammal",
+    "records": 8,
+    "why": [
+     "predator",
+     "most recorded: 23 of its class (0% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "leopardus_pardalis",
+    "scientific": "Leopardus pardalis",
+    "common": "ocelot",
+    "kind": "mammal",
+    "records": 8,
+    "why": [
+     "predator",
+     "most recorded: 24 of its class (0% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": "puma_concolor",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "saccopteryx_bilineata",
+    "scientific": "Saccopteryx bilineata",
+    "common": "greater sac-winged bat",
+    "kind": "mammal",
+    "records": 8,
+    "why": [
+     "most recorded: 25 of its class (0% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "desmodus_rotundus",
+    "scientific": "Desmodus rotundus",
+    "common": "common vampire bat",
+    "kind": "mammal",
+    "records": 3,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "eira_barbara",
+    "scientific": "Eira barbara",
+    "common": "tayra",
+    "kind": "mammal",
+    "records": 3,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": "lontra_canadensis",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "tursiops_truncatus",
+    "scientific": "Tursiops truncatus",
+    "common": "common bottlenose dolphin",
+    "kind": "mammal",
+    "records": 3,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   }
+  ]
+ },
+ "hands": [
+  {
+   "id": "aechmea_magdalenae",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 67 records on the tile"
+   ]
+  },
+  {
+   "id": "hyperbaena_leptobotryosa",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 67 records on the tile"
+   ]
+  },
+  {
+   "id": "damburneya_umbrosa",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 44 records on the tile"
+   ]
+  },
+  {
+   "id": "palicourea_hoffmannseggiana",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 43 records on the tile"
+   ]
+  },
+  {
+   "id": "aspasia_epidendroides",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 39 records on the tile"
+   ]
+  },
+  {
+   "id": "trichilia_tuberculata",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 39 records on the tile"
+   ]
+  },
+  {
+   "id": "chomelia_microloba",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 38 records on the tile"
+   ]
+  },
+  {
+   "id": "crossopetalum_parviflorum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 38 records on the tile"
+   ]
+  },
+  {
+   "id": "anthurium_eximium",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 37 records on the tile"
+   ]
+  },
+  {
+   "id": "heisteria_acuminata",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 37 records on the tile"
+   ]
+  },
+  {
+   "id": "pouteria_subrotata",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 36 records on the tile"
+   ]
+  },
+  {
+   "id": "hamelia_axillaris",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 35 records on the tile"
+   ]
+  },
+  {
+   "id": "croton_schiedeanus",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 34 records on the tile"
+   ]
+  },
+  {
+   "id": "goeppertia_marantifolia",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 33 records on the tile"
+   ]
+  },
+  {
+   "id": "guatteria_amplifolia",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 33 records on the tile"
+   ]
+  },
+  {
+   "id": "hieronyma_alchorneoides",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 33 records on the tile"
+   ]
+  },
+  {
+   "id": "palicourea_racemosa",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 33 records on the tile"
+   ]
+  },
+  {
+   "id": "callicarpa_acuminata",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 32 records on the tile"
+   ]
+  },
+  {
+   "id": "ficus_zarzalensis",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 32 records on the tile"
+   ]
+  },
+  {
+   "id": "passiflora_vitifolia",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 32 records on the tile"
+   ]
+  },
+  {
+   "id": "anacardium_excelsum",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 31 records on the tile"
+   ]
+  },
+  {
+   "id": "miconia_aguilarii",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 31 records on the tile"
+   ]
+  },
+  {
+   "id": "stigmaphyllon_ellipticum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 31 records on the tile"
+   ]
+  },
+  {
+   "id": "dalbergia_brownei",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 30 records on the tile"
+   ]
+  },
+  {
+   "id": "faramea_occidentalis",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 30 records on the tile"
+   ]
+  },
+  {
+   "id": "guarea_glabra",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 30 records on the tile"
+   ]
+  },
+  {
+   "id": "guettarda_foliacea",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 30 records on the tile"
+   ]
+  },
+  {
+   "id": "pterygota_excelsa",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 30 records on the tile"
+   ]
+  },
+  {
+   "id": "tetrathylacium_macrophyllum",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 24 records on the tile"
+   ]
+  },
+  {
+   "id": "ocotea_insularis",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 22 records on the tile"
+   ]
+  },
+  {
+   "id": "nectandra_hihua",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 21 records on the tile"
+   ]
+  },
+  {
+   "id": "paullinia_bracteosa",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 20 records on the tile"
+   ]
+  },
+  {
+   "id": "TF1.3 Permanent marshes",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "76 cells"
+   ]
+  },
+  {
+   "id": "MT1.1 Rocky shorelines",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "30 cells"
+   ]
+  },
+  {
+   "id": "MT1.3 Sandy shorelines",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "20 cells"
+   ]
+  },
+  {
+   "id": "crax_rubra",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 1 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "tinamus_major",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 2 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "trogon_rufus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 3 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "buteogallus_anthracinus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator",
+    "most recorded: 4 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "ramphastos_ambiguus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 5 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "thamnophilus_bridgesi",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 6 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "myrmeciza_exsul",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 7 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "cantorchilus_semibadius",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 8 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "coragyps_atratus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "scavenger",
+    "most recorded: 9 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "ara_macao",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 10 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "actitis_macularius",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 11 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "egretta_caerulea",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 12 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "penelope_purpurascens",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 13 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "campephilus_guatemalensis",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 14 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "tigrisoma_mexicanum",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator",
+    "most recorded: 15 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "pelecanus_occidentalis",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator and scavenger",
+    "most recorded: 16 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "egretta_thula",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator",
+    "most recorded: 17 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "lipaugus_unirufus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 18 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "platyrinchus_coronatus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 19 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "cacicus_uropygialis",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 20 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "patagioenas_nigrirostris",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 21 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "xiphorhynchus_susurrans",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 22 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "trogon_massena",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 23 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "fregata_magnificens",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator and scavenger",
+    "most recorded: 24 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "rupornis_magnirostris",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "eudocimus_albus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "egretta_tricolor",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "chloroceryle_americana",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "caracara_plancus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "scavenger"
+   ]
+  },
+  {
+   "id": "nyctanassa_violacea",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "megaceryle_torquata",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "sarcoramphus_papa",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "scavenger"
+   ]
+  },
+  {
+   "id": "thalasseus_maximus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "nasua_narica",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 1 of its class (16% of the class's records)"
+   ]
+  },
+  {
+   "id": "chloroceryle_amazona",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "bubulcus_ibis",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "scavenger"
+   ]
+  },
+  {
+   "id": "pecari_tajacu",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 2 of its class (12% of the class's records)"
+   ]
+  },
+  {
+   "id": "tamandua_mexicana",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 3 of its class (12% of the class's records)"
+   ]
+  },
+  {
+   "id": "butorides_virescens",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "micrastur_semitorquatus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "alouatta_palliata",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 4 of its class (10% of the class's records)"
+   ]
+  },
+  {
+   "id": "ardea_alba",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "herpetotheres_cachinnans",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "leucophaeus_atricilla",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "scavenger"
+   ]
+  },
+  {
+   "id": "thalasseus_sandvicensis",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "platalea_ajaja",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "egretta_rufescens",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "geranospiza_caerulescens",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "bradypus_variegatus",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 5 of its class (7% of the class's records)"
+   ]
+  },
+  {
+   "id": "saimiri_oerstedii",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 6 of its class (6% of the class's records)"
+   ]
+  },
+  {
+   "id": "ateles_geoffroyi",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 7 of its class (5% of the class's records)"
+   ]
+  },
+  {
+   "id": "dasyprocta_punctata",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 8 of its class (5% of the class's records)"
+   ]
+  },
+  {
+   "id": "tapirella_bairdii",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 9 of its class (4% of the class's records)"
+   ]
+  },
+  {
+   "id": "cebus_imitator",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 10 of its class (3% of the class's records)"
+   ]
+  },
+  {
+   "id": "artibeus_watsoni",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 11 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "mazama_temama",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 12 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "leptodactylus_savagei",
+   "kind": "amphibian",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 1 of its class (10% of the class's records)"
+   ]
+  },
+  {
+   "id": "oophaga_granulifera",
+   "kind": "amphibian",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 2 of its class (9% of the class's records)"
+   ]
+  },
+  {
+   "id": "rhinella_horribilis",
+   "kind": "amphibian",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 3 of its class (8% of the class's records)"
+   ]
+  },
+  {
+   "id": "sciurus_granatensis",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 13 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "boana_rosenbergi",
+   "kind": "amphibian",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 4 of its class (8% of the class's records)"
+   ]
+  },
+  {
+   "id": "thyroptera_tricolor",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 15 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "carollia_castanea",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 16 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "choloepus_hoffmanni",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 17 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "myotis_albescens",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 18 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "centronycteris_centralis",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 19 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "artibeus_lituratus",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 20 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "trachops_cirrhosus",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 21 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "lophostoma_silvicola",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 22 of its class (0% of the class's records)"
+   ]
+  },
+  {
+   "id": "noctilio_leporinus",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator",
+    "most recorded: 23 of its class (0% of the class's records)"
+   ]
+  },
+  {
+   "id": "leopardus_pardalis",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator",
+    "most recorded: 24 of its class (0% of the class's records)"
+   ]
+  },
+  {
+   "id": "saccopteryx_bilineata",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 25 of its class (0% of the class's records)"
+   ]
+  },
+  {
+   "id": "desmodus_rotundus",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "eira_barbara",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "tursiops_truncatus",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  }
+ ]
+}

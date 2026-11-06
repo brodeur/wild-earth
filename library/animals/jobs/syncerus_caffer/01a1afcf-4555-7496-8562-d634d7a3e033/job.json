@@ -1,0 +1,71 @@
+{
+  "species": "syncerus_caffer",
+  "mode": "refine",
+  "kind": "text-to-3d",
+  "task_id": "01a1afcf-4555-7496-8562-d634d7a3e033",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "refine",
+    "preview_task_id": "01a1afce-9344-75f5-99f4-a1e8c16a21a2",
+    "texture_resolution": "2k",
+    "enable_pbr": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Natural coat colours and markings of a wild adult African buffalo (Syncerus caffer) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+    "moderation": false
+  },
+  "prompt": "Natural coat colours and markings of a wild adult African buffalo (Syncerus caffer) as seen in Serengeti, Mara Region, Tanzania; realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours.",
+  "image": null,
+  "preview_job": "library/animals/jobs/syncerus_caffer/01a1afce-9344-75f5-99f4-a1e8c16a21a2",
+  "estimated_credits": 10,
+  "balance_before": 2067,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-06T07:42:38+00:00",
+    "created_at": "2026-11-06T07:42:40+00:00",
+    "started_at": "2026-11-06T07:42:40+00:00",
+    "finished_at": "2026-11-06T07:43:22+00:00",
+    "downloaded": "2026-11-06T07:43:50+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur, world pipeline",
+  "progress": 100,
+  "task": {
+    "id": "01a1afcf-4555-7496-8562-d634d7a3e033",
+    "type": "text-to-3d-refine",
+    "status": "SUCCEEDED",
+    "created_at": 1793950960858,
+    "started_at": 1793950960863,
+    "finished_at": 1793951002990,
+    "consumed_credits": 10,
+    "task_error": null
+  },
+  "credits_charged": 10,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 4943764,
+      "sha256": "bc1248f40818da68a1c3f303dbd931f930c6da1a3870ededb78323cae5cc63ac",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1afcf-4555-7496-8562-d634d7a3e033/output/model.glb"
+    },
+    {
+      "file": "texture_base_color.png",
+      "bytes": 6104596,
+      "sha256": "0afb79c44e55c918c4e91a5e6207ecf175c4ca89fecf73d20f7f269a877c235c",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1afcf-4555-7496-8562-d634d7a3e033/output/texture_0.png"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 64291,
+      "sha256": "d37f741c1f82c5303b296b583f9f440f8d74c0fdd77259ef78f84e9679ea2e20",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1afcf-4555-7496-8562-d634d7a3e033/output/preview.png"
+    }
+  ],
+  "balance_after": 2057
+}

@@ -1,0 +1,119 @@
+{
+ "id": "trachops_cirrhosus",
+ "scientific": "Trachops cirrhosus",
+ "common": "fringe-lipped bat",
+ "kind": "mammal",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Mammalia",
+  "order": "Chiroptera",
+  "family": "Phyllostomidae",
+  "genus": "Trachops"
+ },
+ "body_plan": "quadruped",
+ "mass_kg": 0.0377,
+ "size": {
+  "length_m": 0.121,
+  "shoulder_or_wingspan_m": 0.075
+ },
+ "diet": {
+  "role": [
+   "omnivore"
+  ],
+  "diet_tenths": {
+   "inv": 5.0,
+   "vend": 0.0,
+   "vect": 4.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 1.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.4,
+  "mass_kg": 0.0377,
+  "activity": [
+   "nocturnal"
+  ],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 129.8
+  },
+  "sound": {
+   "range_m": 181.7
+  },
+  "scent": {
+   "range_m": 259.6
+  }
+ },
+ "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+ "locomotion": {
+  "code": "trachops_cirrhosus",
+  "class": "Mammalia",
+  "order": "Chiroptera",
+  "family": "Phyllostomidae",
+  "body_plan": "quadruped",
+  "mass_kg": 0.0377,
+  "length_m": 0.121,
+  "hip_m": 0.075,
+  "posture": "parasagittal",
+  "gaits": {
+   "walk": "froude 0.5",
+   "trot": "froude 2.5",
+   "gallop": "beyond"
+  },
+  "walk_mps": 0.61,
+  "trot_mps": 1.36,
+  "cruise_mps": 1.6,
+  "top_mps": 2.67,
+  "stride_hz": 6.85,
+  "stride_m": 0.2,
+  "sprint_s": 1.7,
+  "recover_s": 5.8,
+  "turn_rad_s": 7.21,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.046,
+   "max_rad": 0.44,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {},
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T06:19:57Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

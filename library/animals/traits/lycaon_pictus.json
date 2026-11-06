@@ -1,0 +1,141 @@
+{
+ "id": "lycaon_pictus",
+ "scientific": "Lycaon pictus",
+ "common": "african wild dog",
+ "kind": "mammal",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Mammalia",
+  "order": "Carnivora",
+  "family": "Canidae",
+  "genus": "Lycaon"
+ },
+ "body_plan": "quadruped",
+ "mass_kg": 22.0501,
+ "size": {
+  "length_m": 1.009,
+  "shoulder_or_wingspan_m": 0.626
+ },
+ "diet": {
+  "role": [
+   "predator"
+  ],
+  "diet_tenths": {
+   "inv": 0.0,
+   "vend": 10.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 1.0,
+  "mass_kg": 22.0501,
+  "activity": [
+   "crepuscular",
+   "diurnal"
+  ],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 464.1
+  },
+  "sound": {
+   "range_m": 649.8
+  },
+  "scent": {
+   "range_m": 928.2
+  }
+ },
+ "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+ "locomotion": {
+  "code": "lycaon_pictus",
+  "class": "Mammalia",
+  "order": "Carnivora",
+  "family": "Canidae",
+  "body_plan": "quadruped",
+  "mass_kg": 22.0501,
+  "length_m": 1.009,
+  "hip_m": 0.626,
+  "posture": "digitigrade",
+  "gaits": {
+   "walk": "froude 0.5",
+   "trot": "froude 2.5",
+   "gallop": "beyond"
+  },
+  "walk_mps": 1.75,
+  "trot_mps": 3.92,
+  "cruise_mps": 9.34,
+  "top_mps": 14.36,
+  "stride_hz": 2.63,
+  "stride_m": 1.49,
+  "sprint_s": 7.8,
+  "recover_s": 27.4,
+  "turn_rad_s": 2.5,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.132,
+   "max_rad": 0.44,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {},
+  "flier": false,
+  "catch": {
+   "move": "pounce",
+   "name": "the mousing pounce",
+   "reach_m": 1.6,
+   "from_m": 2.4,
+   "fix_s": [
+    0.45,
+    0.8
+   ],
+   "duration_s": 0.55,
+   "height_m": 0.75,
+   "miss": {
+    "move": "paw strikes",
+    "hz": 4,
+    "s": 0.75
+   },
+   "feed": {
+    "pose": "the kill tossed in the jaws, then the nose down at it",
+    "toss_s": 0.3
+   }
+  }
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T04:09:49Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

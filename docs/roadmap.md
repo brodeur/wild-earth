@@ -250,6 +250,33 @@ sequenced; Parked is in the brief but deliberately not started.
 9. The San Francisco cells' lidar re-streamed (`--force lidar`): their products predate multi_1m and lidar_micro, so
    their crowns step fails loudly until then.
 
+## Next: the world pipeline, after Aaron's review (designed 2026-11-05; `docs/world-pipeline.md` supersedes the order below)
+
+Phase 1, the global floor (global land sources, the ecosystem map and cards, the monthly state, behaviour from traits, the
+satellite judge); phase 2, places feel true (the list below); phase 3, the rest of Earth (sea surface and shore, tropical,
+polar and arid forms, swim and snake rigs). First run: probes on the Serengeti, Lofoten and Danum Valley after phase 1,
+then the Serengeti deep.
+
+Where it stands (2026-11-06): phase 1 iterations 1 and 2 are on branch claude/sweet-feistel-2054bb, with the seven probes as
+the regression set (docs/probes-2026-11.md). The Serengeti deep pass ran: 11 signature species modelled by the pipeline for
+480 Meshy credits (`pipeline/fauna_models.py`, `tools/build_quadruped.py`). Next, in order: behaviour from traits (rest,
+activity, group size, the pull of water) instead of the kin's table; dark closed canopies from above; trait cards for a
+tropical tile's own trees; the heath and tundra ground layer; strata colours from geology; generic builds for birds.
+
+The earlier gestalt order, now phase 2:
+
+`docs/gestalt-pipeline.md`; page: https://claude.ai/artifact/CRXGhhEe16r6njnDD8dKvU. In this order:
+
+1. The place stage (settings_map, structure, sources, photos, photo_stats, the paragon agent, paragon_check) and the
+   judge stage (poses, headless render, statistics, rubric, score): the Hoh gets a score before any generator changes.
+2. look.json plumbing (bark moss season, fog, animals' numbers), the moss ground layer and the ground colour from the
+   palette, a bounded colour grade, wet sheen.
+3. New generators: epiphytes (limb moss, clubmoss curtains, licorice fern), deadwood (logs by decay class, nurse logs,
+   colonnades, jams), a fern habit.
+4. The interactions step (GloBI, EltonTraits, the paragon's links) and the games that read it (browse pressure,
+   cavities, cone caches).
+5. The first new place: Lamar Valley, Yellowstone (`utm12n_558_4964`), then Saguaro West, then the Smokies.
+
 ## Next: the visual pass, in order of effect per hour
 
 1. ~~Horizon~~ done 2026-10-23: two crossed-quad impostors with a canopy cap per

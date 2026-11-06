@@ -1,0 +1,89 @@
+{
+ "koppen_at_point": "Am",
+ "groups": [
+  {
+   "code": "T1.1",
+   "name": "Tropical/subtropical lowland rainforests",
+   "share": 0.955,
+   "card": "missing"
+  },
+  {
+   "code": "F1",
+   "name": "Rivers and streams",
+   "share": 0.0373,
+   "card": "missing"
+  },
+  {
+   "code": "T4.2",
+   "name": "Pyric tussock savannas",
+   "share": 0.0042,
+   "card": "missing"
+  },
+  {
+   "code": "F2",
+   "name": "Lakes",
+   "share": 0.0024,
+   "card": "missing"
+  },
+  {
+   "code": "T4.1",
+   "name": "Trophic savannas",
+   "share": 0.0006,
+   "card": "missing"
+  },
+  {
+   "code": "T6.2",
+   "name": "Polar/alpine cliffs, screes, outcrops and lava flows",
+   "share": 0.0004,
+   "card": "missing"
+  },
+  {
+   "code": "TF1.3",
+   "name": "Permanent marshes",
+   "share": 0.0001,
+   "card": "missing"
+  }
+ ],
+ "legend": {
+  "1": "T1.1",
+  "2": "T1.2",
+  "3": "T1.3",
+  "4": "T2.1",
+  "5": "T2.2",
+  "6": "T2.3",
+  "7": "T2.4",
+  "8": "T2.6",
+  "9": "T3.1",
+  "10": "T3.2",
+  "11": "T3.3",
+  "12": "T4.1",
+  "13": "T4.2",
+  "14": "T4.4",
+  "15": "T4.5",
+  "16": "T5.1",
+  "17": "T5.3",
+  "18": "T5.4",
+  "19": "T6.1",
+  "20": "T6.2",
+  "21": "T6.3",
+  "22": "T6.4",
+  "23": "T6.5",
+  "24": "TF1.3",
+  "25": "MFT1.2",
+  "26": "MT1.1",
+  "27": "MT1.3",
+  "28": "F1",
+  "29": "F2",
+  "30": "M1"
+ },
+ "rules": {
+  "water, long and thin -> F1": 4136,
+  "water, compact -> F2": 269,
+  "herbaceous wetland -> TF1.3": 8,
+  "bare rock and scree -> T6.2": 46,
+  "tree, tropical wet, lowland -> T1.1": 105896,
+  "open, tropical, fertile soil -> T4.1": 68,
+  "open, tropical -> T4.2": 465,
+  "human land, rewilded to its neighbours": 1
+ }
+}

@@ -1,0 +1,118 @@
+{
+ "id": "erythropitta_ussheri",
+ "scientific": "Erythropitta ussheri",
+ "common": "black-crowned pitta",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Passeriformes",
+  "family": "Pittidae",
+  "genus": "Erythropitta"
+ },
+ "body_plan": "bird",
+ "mass_kg": 0.0913,
+ "size": {
+  "length_m": 0.162,
+  "shoulder_or_wingspan_m": 0.259
+ },
+ "diet": {
+  "role": [
+   "insectivore"
+  ],
+  "diet_tenths": {
+   "inv": 9.5,
+   "vend": 0.0,
+   "vect": 0.2,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 0.1,
+   "nect": 0.0,
+   "seed": 0.1,
+   "planto": 0.1
+  },
+  "vertebrate_share": 0.02,
+  "mass_kg": 0.0913,
+  "activity": [],
+  "source": "eltontraits (family)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 309.8
+  },
+  "sound": {
+   "range_m": 154.9
+  },
+  "scent": {
+   "range_m": 12.4
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "erythropitta_ussheri",
+  "class": "Aves",
+  "order": "Passeriformes",
+  "family": "Pittidae",
+  "body_plan": "bird",
+  "mass_kg": 0.0913,
+  "length_m": 0.162,
+  "hip_m": 0.081,
+  "posture": "biped",
+  "gaits": {
+   "ground": "hop",
+   "flight": "flap-glide"
+  },
+  "walk_mps": 0.63,
+  "trot_mps": 1.41,
+  "cruise_mps": 2.14,
+  "top_mps": 3.57,
+  "stride_hz": 6.0,
+  "stride_m": 0.23,
+  "sprint_s": 2.1,
+  "recover_s": 7.2,
+  "turn_rad_s": 6.23,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.042,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": true
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T06:19:55Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (family)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

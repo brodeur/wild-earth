@@ -1,0 +1,120 @@
+{
+ "id": "phacochoerus_africanus",
+ "scientific": "Phacochoerus africanus",
+ "common": "common warthog",
+ "kind": "mammal",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Mammalia",
+  "order": "Artiodactyla",
+  "family": "Suidae",
+  "genus": "Phacochoerus"
+ },
+ "body_plan": "quadruped",
+ "mass_kg": 82.5,
+ "size": {
+  "length_m": 1.567,
+  "shoulder_or_wingspan_m": 0.972
+ },
+ "diet": {
+  "role": [
+   "herbivore",
+   "scavenger"
+  ],
+  "diet_tenths": {
+   "inv": 0.0,
+   "vend": 0.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 1.0,
+   "fruit": 1.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 8.0
+  },
+  "vertebrate_share": 0.0,
+  "mass_kg": 82.5,
+  "activity": [
+   "nocturnal"
+  ],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 604.3
+  },
+  "sound": {
+   "range_m": 846.0
+  },
+  "scent": {
+   "range_m": 1208.5
+  }
+ },
+ "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+ "locomotion": {
+  "code": "phacochoerus_africanus",
+  "class": "Mammalia",
+  "order": "Artiodactyla",
+  "family": "Suidae",
+  "body_plan": "quadruped",
+  "mass_kg": 82.5,
+  "length_m": 1.567,
+  "hip_m": 0.972,
+  "posture": "unguligrade",
+  "gaits": {
+   "walk": "froude 0.5",
+   "trot": "froude 2.5",
+   "gallop": "beyond"
+  },
+  "walk_mps": 2.18,
+  "trot_mps": 4.88,
+  "cruise_mps": 9.28,
+  "top_mps": 15.46,
+  "stride_hz": 2.16,
+  "stride_m": 2.26,
+  "sprint_s": 11.3,
+  "recover_s": 39.7,
+  "turn_rad_s": 2.0,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.165,
+   "max_rad": 0.44,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {},
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T04:09:49Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

@@ -1,0 +1,664 @@
+{
+ "source": "copernicus_sentinel2_l2a",
+ "years": [
+  2019,
+  2026
+ ],
+ "stretch": 0.35,
+ "ndvi_range": [
+  -0.2,
+  0.9
+ ],
+ "min_looks": 3,
+ "naip_reference": null,
+ "months": [
+  {
+   "month": 1,
+   "looks_dates": 0,
+   "looks_median": 0,
+   "looks_min": 0,
+   "looks_p05": 0,
+   "refused": true,
+   "filled_fraction": 1.0,
+   "filled_pixels": 249999,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.3105,
+      0.4171,
+      0.3162
+     ],
+     "reflectance": [
+      0.0275,
+      0.0508,
+      0.0285
+     ],
+     "ndvi": 0.852,
+     "cells": 238779
+    },
+    "grassland": {
+     "srgb": [
+      0.4702,
+      0.5023,
+      0.398
+     ],
+     "reflectance": [
+      0.0656,
+      0.0757,
+      0.046
+     ],
+     "ndvi": 0.581,
+     "cells": 1174
+    },
+    "open_grass": {
+     "srgb": [
+      0.4749,
+      0.5047,
+      0.4007
+     ],
+     "reflectance": [
+      0.067,
+      0.0764,
+      0.0467
+     ],
+     "ndvi": 0.57,
+     "cells": 1102
+    }
+   }
+  },
+  {
+   "month": 2,
+   "looks_dates": 4,
+   "looks_median": 3,
+   "looks_min": 0,
+   "looks_p05": 1,
+   "refused": false,
+   "filled_fraction": 0.3576,
+   "filled_pixels": 89404,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.316,
+      0.4153,
+      0.3226
+     ],
+     "reflectance": [
+      0.0285,
+      0.0504,
+      0.0297
+     ],
+     "ndvi": 0.843,
+     "cells": 238779
+    },
+    "grassland": {
+     "srgb": [
+      0.4699,
+      0.5032,
+      0.4001
+     ],
+     "reflectance": [
+      0.0655,
+      0.0759,
+      0.0465
+     ],
+     "ndvi": 0.578,
+     "cells": 1174
+    },
+    "open_grass": {
+     "srgb": [
+      0.4744,
+      0.5055,
+      0.4026
+     ],
+     "reflectance": [
+      0.0669,
+      0.0767,
+      0.0471
+     ],
+     "ndvi": 0.567,
+     "cells": 1102
+    }
+   }
+  },
+  {
+   "month": 3,
+   "looks_dates": 6,
+   "looks_median": 3,
+   "looks_min": 0,
+   "looks_p05": 1,
+   "refused": false,
+   "filled_fraction": 0.3264,
+   "filled_pixels": 81599,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.3415,
+      0.43,
+      0.3672
+     ],
+     "reflectance": [
+      0.0334,
+      0.0542,
+      0.0389
+     ],
+     "ndvi": 0.809,
+     "cells": 238779
+    },
+    "grassland": {
+     "srgb": [
+      0.4718,
+      0.5046,
+      0.4048
+     ],
+     "reflectance": [
+      0.0661,
+      0.0764,
+      0.0477
+     ],
+     "ndvi": 0.572,
+     "cells": 1174
+    },
+    "open_grass": {
+     "srgb": [
+      0.4769,
+      0.5075,
+      0.4081
+     ],
+     "reflectance": [
+      0.0676,
+      0.0774,
+      0.0485
+     ],
+     "ndvi": 0.56,
+     "cells": 1102
+    }
+   }
+  },
+  {
+   "month": 4,
+   "looks_dates": 6,
+   "looks_median": 4,
+   "looks_min": 0,
+   "looks_p05": 3,
+   "refused": false,
+   "filled_fraction": 0.029,
+   "filled_pixels": 7242,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.2722,
+      0.3706,
+      0.2774
+     ],
+     "reflectance": [
+      0.0211,
+      0.0396,
+      0.0219
+     ],
+     "ndvi": 0.871,
+     "cells": 238779
+    },
+    "grassland": {
+     "srgb": [
+      0.4369,
+      0.4756,
+      0.3691
+     ],
+     "reflectance": [
+      0.0561,
+      0.0673,
+      0.0393
+     ],
+     "ndvi": 0.61,
+     "cells": 1174
+    },
+    "open_grass": {
+     "srgb": [
+      0.4418,
+      0.4785,
+      0.3726
+     ],
+     "reflectance": [
+      0.0574,
+      0.0681,
+      0.0401
+     ],
+     "ndvi": 0.599,
+     "cells": 1102
+    }
+   }
+  },
+  {
+   "month": 5,
+   "looks_dates": 9,
+   "looks_median": 7,
+   "looks_min": 0,
+   "looks_p05": 5,
+   "refused": false,
+   "filled_fraction": 0.0006,
+   "filled_pixels": 142,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.2546,
+      0.35,
+      0.2527
+     ],
+     "reflectance": [
+      0.0185,
+      0.0352,
+      0.0182
+     ],
+     "ndvi": 0.879,
+     "cells": 238779
+    },
+    "grassland": {
+     "srgb": [
+      0.428,
+      0.4689,
+      0.3562
+     ],
+     "reflectance": [
+      0.0537,
+      0.0652,
+      0.0365
+     ],
+     "ndvi": 0.637,
+     "cells": 1174
+    },
+    "open_grass": {
+     "srgb": [
+      0.4328,
+      0.4719,
+      0.3594
+     ],
+     "reflectance": [
+      0.055,
+      0.0661,
+      0.0372
+     ],
+     "ndvi": 0.627,
+     "cells": 1102
+    }
+   }
+  },
+  {
+   "month": 6,
+   "looks_dates": 16,
+   "looks_median": 14,
+   "looks_min": 0,
+   "looks_p05": 11,
+   "refused": false,
+   "filled_fraction": 0.0002,
+   "filled_pixels": 53,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.2552,
+      0.3466,
+      0.2533
+     ],
+     "reflectance": [
+      0.0185,
+      0.0345,
+      0.0183
+     ],
+     "ndvi": 0.875,
+     "cells": 238779
+    },
+    "grassland": {
+     "srgb": [
+      0.4541,
+      0.4776,
+      0.3697
+     ],
+     "reflectance": [
+      0.0609,
+      0.0679,
+      0.0394
+     ],
+     "ndvi": 0.609,
+     "cells": 1174
+    },
+    "open_grass": {
+     "srgb": [
+      0.4592,
+      0.4807,
+      0.3733
+     ],
+     "reflectance": [
+      0.0624,
+      0.0688,
+      0.0402
+     ],
+     "ndvi": 0.6,
+     "cells": 1102
+    }
+   }
+  },
+  {
+   "month": 7,
+   "looks_dates": 20,
+   "looks_median": 15,
+   "looks_min": 0,
+   "looks_p05": 12,
+   "refused": false,
+   "filled_fraction": 0.0001,
+   "filled_pixels": 30,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.2629,
+      0.3492,
+      0.2541
+     ],
+     "reflectance": [
+      0.0197,
+      0.035,
+      0.0184
+     ],
+     "ndvi": 0.867,
+     "cells": 238779
+    },
+    "grassland": {
+     "srgb": [
+      0.4662,
+      0.488,
+      0.3733
+     ],
+     "reflectance": [
+      0.0644,
+      0.0711,
+      0.0402
+     ],
+     "ndvi": 0.604,
+     "cells": 1174
+    },
+    "open_grass": {
+     "srgb": [
+      0.4713,
+      0.4914,
+      0.3769
+     ],
+     "reflectance": [
+      0.066,
+      0.0722,
+      0.041
+     ],
+     "ndvi": 0.595,
+     "cells": 1102
+    }
+   }
+  },
+  {
+   "month": 8,
+   "looks_dates": 32,
+   "looks_median": 25,
+   "looks_min": 0,
+   "looks_p05": 22,
+   "refused": false,
+   "filled_fraction": 0.0003,
+   "filled_pixels": 64,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.292,
+      0.3726,
+      0.2892
+     ],
+     "reflectance": [
+      0.0243,
+      0.0401,
+      0.0238
+     ],
+     "ndvi": 0.842,
+     "cells": 238779
+    },
+    "grassland": {
+     "srgb": [
+      0.4923,
+      0.5056,
+      0.4007
+     ],
+     "reflectance": [
+      0.0724,
+      0.0767,
+      0.0467
+     ],
+     "ndvi": 0.567,
+     "cells": 1174
+    },
+    "open_grass": {
+     "srgb": [
+      0.4974,
+      0.509,
+      0.4042
+     ],
+     "reflectance": [
+      0.0741,
+      0.0779,
+      0.0475
+     ],
+     "ndvi": 0.558,
+     "cells": 1102
+    }
+   }
+  },
+  {
+   "month": 9,
+   "looks_dates": 27,
+   "looks_median": 23,
+   "looks_min": 1,
+   "looks_p05": 20,
+   "refused": false,
+   "filled_fraction": 0.0001,
+   "filled_pixels": 16,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.3385,
+      0.4206,
+      0.3528
+     ],
+     "reflectance": [
+      0.0328,
+      0.0517,
+      0.0358
+     ],
+     "ndvi": 0.805,
+     "cells": 238779
+    },
+    "grassland": {
+     "srgb": [
+      0.5156,
+      0.5304,
+      0.4386
+     ],
+     "reflectance": [
+      0.0801,
+      0.0852,
+      0.0565
+     ],
+     "ndvi": 0.544,
+     "cells": 1174
+    },
+    "open_grass": {
+     "srgb": [
+      0.5203,
+      0.5333,
+      0.4415
+     ],
+     "reflectance": [
+      0.0817,
+      0.0862,
+      0.0573
+     ],
+     "ndvi": 0.535,
+     "cells": 1102
+    }
+   }
+  },
+  {
+   "month": 10,
+   "looks_dates": 16,
+   "looks_median": 11,
+   "looks_min": 1,
+   "looks_p05": 8,
+   "refused": false,
+   "filled_fraction": 0.0004,
+   "filled_pixels": 94,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.3328,
+      0.4336,
+      0.3408
+     ],
+     "reflectance": [
+      0.0317,
+      0.0552,
+      0.0333
+     ],
+     "ndvi": 0.828,
+     "cells": 238779
+    },
+    "grassland": {
+     "srgb": [
+      0.5199,
+      0.5369,
+      0.4374
+     ],
+     "reflectance": [
+      0.0815,
+      0.0874,
+      0.0562
+     ],
+     "ndvi": 0.552,
+     "cells": 1174
+    },
+    "open_grass": {
+     "srgb": [
+      0.5252,
+      0.5397,
+      0.4405
+     ],
+     "reflectance": [
+      0.0833,
+      0.0884,
+      0.0571
+     ],
+     "ndvi": 0.541,
+     "cells": 1102
+    }
+   }
+  },
+  {
+   "month": 11,
+   "looks_dates": 7,
+   "looks_median": 6,
+   "looks_min": 0,
+   "looks_p05": 4,
+   "refused": false,
+   "filled_fraction": 0.0014,
+   "filled_pixels": 348,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.2998,
+      0.419,
+      0.3004
+     ],
+     "reflectance": [
+      0.0256,
+      0.0513,
+      0.0257
+     ],
+     "ndvi": 0.868,
+     "cells": 238779
+    },
+    "grassland": {
+     "srgb": [
+      0.4854,
+      0.5117,
+      0.4052
+     ],
+     "reflectance": [
+      0.0703,
+      0.0787,
+      0.0478
+     ],
+     "ndvi": 0.577,
+     "cells": 1174
+    },
+    "open_grass": {
+     "srgb": [
+      0.4902,
+      0.514,
+      0.4082
+     ],
+     "reflectance": [
+      0.0718,
+      0.0795,
+      0.0485
+     ],
+     "ndvi": 0.566,
+     "cells": 1102
+    }
+   }
+  },
+  {
+   "month": 12,
+   "looks_dates": 3,
+   "looks_median": 2,
+   "looks_min": 0,
+   "looks_p05": 1,
+   "refused": true,
+   "filled_fraction": 1.0,
+   "filled_pixels": 250000,
+   "classes": {
+    "mixed_forest": {
+     "srgb": [
+      0.3105,
+      0.4171,
+      0.3162
+     ],
+     "reflectance": [
+      0.0275,
+      0.0508,
+      0.0285
+     ],
+     "ndvi": 0.852,
+     "cells": 238779
+    },
+    "grassland": {
+     "srgb": [
+      0.4703,
+      0.5023,
+      0.398
+     ],
+     "reflectance": [
+      0.0656,
+      0.0757,
+      0.046
+     ],
+     "ndvi": 0.581,
+     "cells": 1174
+    },
+    "open_grass": {
+     "srgb": [
+      0.4749,
+      0.5047,
+      0.4008
+     ],
+     "reflectance": [
+      0.067,
+      0.0764,
+      0.0467
+     ],
+     "ndvi": 0.57,
+     "cells": 1102
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,377 @@
+{
+ "rock_classes": [
+  "greenstone_metavolcanic",
+  "serpentinite",
+  "slate_phyllite",
+  "schist",
+  "granitic",
+  "volcanic",
+  "sandstone_conglomerate",
+  "limestone_marble",
+  "alluvium",
+  "other"
+ ],
+ "resistance": {
+  "greenstone_metavolcanic": 0.9,
+  "granitic": 0.8,
+  "serpentinite": 0.8,
+  "schist": 0.6,
+  "slate_phyllite": 0.6,
+  "volcanic": 0.7,
+  "sandstone_conglomerate": 0.4,
+  "limestone_marble": 0.7,
+  "alluvium": 0.0,
+  "other": 0.4
+ },
+ "units": {
+  "1": {
+   "name": "Kaibab Formation",
+   "lithology": "",
+   "age": "Early Permian",
+   "age_bottom_ma": 298.9,
+   "age_top_ma": 272.95,
+   "rock_class": "limestone_marble",
+   "rock_class_index": 8,
+   "water": false,
+   "description": "Includes, in descending order, Harrisburg and Fossil Mountain Members, undivided, as defined by Sorauf and Billingsley (1991). Harrisburg Member\u2014Reddish-gray and brownish-gray, slope-forming gypsum, siltstone, sandstone, and limestone. Informally subdivided, in descending order, into three units forming an upper slope, middle cliff, and lower slope. Upper slope unit is interbedded red and gray gypsum, sandstone, and siltstone, and yellowish-gray fossiliferous sandy limestone. Middle cliff unit is gray, thin-bedded, fossiliferous cherty limestone and sandy limestone. Lower slope unit is (1) yellowish-gray to pale-red gypsifereous siltstone and calcareous sandstone, (2) gray, thin-bedded sandy limestone, and (3) gray to white, thick-bedded gypsum. Upper, middle, and lower units become inseparable on the Kaibab Plateau, northeastern quarter of map area. Solution weathering within gypsum beds of lower slope unit has resulted in warping and bending of limestone of middle cliff unit, especially in or near local drainages on Kanab and Coconino Plateaus where middle cliff unit forms surface bedrock. Gypsum solutioning is responsible for several sinkhole depressions within Harrisburg Member. Contact with underlying Fossil Mountain Member is gradational and arbitrarily marked at top of cherty limestone cliff of the Fossil Mountain. About 260 ft (80 m) thick in western half of map area, thinning eastward to about 120 ft (36 m) in northeastern quarter of map area. Average thickness about 165 ft (50 m) Fossil Mountain Member\u2014Light-gray, cliff-forming, fine- to medium-grained, thin- to medium-bedded [1\u20136 ft (0.3\u20132 m)], fossiliferous, sandy, cherty limestone. In general, unit weathers dark gray. Unit characterized by gray to white fossiliferous chert nodules and white chert lenses parallel to bedding; chert weathers dark gray to black. Some chert nodules contain concentric black and white bands. Includes brecciated chert beds 4\u201310 ft (1\u20133 m) thick in upper part at contact of thin limestone or gypsifereous siltstone of Harrisburg Member. Chert in central and western parts of map area makes up about 20 percent of unit; unit becomes sandy in northeastern quarter of map area. Generally forms cliff at rim of the Grand Canyon. Weathers into pinnacles or \u201cpillars\u201d detached from cliff in western half of map area. Unconformable contact with underlying Woods Ranch Member of Toroweap Formation (Pt) attributed to solution erosion and channel erosion; average relief about 10 ft (3 m). Some channels have eroded as much as 150 ft (45 m) into the Woods Ranch in western half of map area. Erosion channels were filled with sandy cherty limestone typical of the Fossil Mountain, providing an extra thickness of the Fossil Mountain. Thickness about 230\u2013350 ft (70\u2013107 m)",
+   "reference": null,
+   "color": "#EE5845",
+   "fraction": 0.2575
+  },
+  "2": {
+   "name": "Coconino Sandstone",
+   "lithology": "",
+   "age": "Early Permian",
+   "age_bottom_ma": 298.9,
+   "age_top_ma": 272.95,
+   "rock_class": "sandstone_conglomerate",
+   "rock_class_index": 7,
+   "water": false,
+   "description": "Tan to white, cliff-forming, fine-grained, well-sorted, cross-bedded quartz sandstone. Contains large-scale, high-angle, planar cross-bedded sandstone sets that average about 35 ft (11 m) thick. Locally includes poorly preserved fossil tracks and low-relief wind ripple marks on cross-bedded planar sandstone surfaces. Lower 5\u201320 ft (2\u20136 m) is intertongued, thin-bedded, partly calcareous, flat-bedded sandstone of Seligman Member of Toroweap Formation (Pt). Unconformable contact with underlying Hermit Formation (Ph) is sharp planar, with relief generally less than 3 ft (1 m) but locally as much as 8 ft (2.5 m). Desiccation cracks in the Hermit, as much as 2 ft (0.05 m) wide and 12 ft (4 m) deep, are filled with tan sandstone of the Toroweap or Coconino, mainly in eastern third of map area. Thickness of the Coconino decreases east to west, whereas Brady Canyon and Seligman Members of Toroweap Formation increase proportionally in thickness. Forms a 500-ft (154m) thick cliff in southeast corner of map area, thinning northward to about 350 ft (122 m) and westward to about 150 ft (45 m) at western edge of map area",
+   "reference": null,
+   "color": "#EE5845",
+   "fraction": 0.0033
+  },
+  "3": {
+   "name": "Wescogame Formation, Manakacha Formation, Watahomigi Formation",
+   "lithology": "",
+   "age": "Late Mississippian to Late Pennsylvanian",
+   "age_bottom_ma": 313.75,
+   "age_top_ma": 282,
+   "rock_class": "limestone_marble",
+   "rock_class_index": 8,
+   "water": false,
+   "description": "Wescogame Formation\u2014Light-red, pale-yellow, and light-gray upper slope unit and lower cliff unit. Upper slope unit consists mainly of dark-red, fine-grained siltstone and mudstone interbedded with light-red, coarse-grained, calcareous sandstone and dolomitic sandstone, siltstone, mudstone, and conglomerate. Lower cliff unit consists mainly of light-red to gray, high-angle, large- and medium-scale, tabular-planar, cross-bedded sandstone and calcareous sandstone sets as much as 40 ft (12 m) thick. Includes interbedded dark-red, thin-bedded siltstone in upper part of cliff. Cross-bed sets contain large footprints of four-footed vertebrate animals in eastern part of map area. Unconformable contact with underlying Manakacha Formation marked by unconformity of erosion channels as much as 80 ft (24 m) deep in western part of map area, and less than 30 ft (10 m) deep in eastern part of map area. Channels commonly filled with limestone/chert conglomerate. The Wescogame thickens slightly from west to east, averaging about 130 ft (40 m) in western part of map area and about 150 ft (45 m) in eastern part Manakacha Formation\u2014Light-red, white, and gray upper slope unit and lower cliff unit of sandstone, calcareous sandstone, dark-red siltstone, and gray limestone. Upper slope unit consists mainly of shaley siltstone and mudstone with minor interbedded, thin-bedded limestone and sandstone. Carbonate content of upper slope unit increases westward to form numerous ledge-forming, thin- and medium-bedded limestone beds. Upper slope unit is about 100 ft (30 m) thick in eastern half of map area, decreasing to less than 60 ft (18 m) thick in western half. Lower cliff unit is dominated by grayish-red, medium- to thick-bedded, cross-bedded calcareous sandstone, dolomite, and sandy limestone. Lower cliff unit is about 60 ft (18 m) thick in eastern part of map area, thickening to about 100 ft (30 m) in western part. Carbonate content of lower cliff unit increases westward across map area, forming numerous gray limestone ledges. Unconformable erosional contact between the Manakacha and underlying Watahomigi Formation approximately marked at base of lower sandstone cliff of the Manakacha; erosional relief generally less than 3 ft (1 m) and wavy unconformable surface. Overall thickness averages about 200 ft (60 m) throughout map area Watahomigi Formation\u2014Gray and purplish-red, slope-forming limestone, siltstone, mudstone, and conglomerate. Forms an upper ledge/slope unit and a lower slope unit. Upper ledge/slope unit consists of alternating gray, thin-bedded cherty limestone ledges interbedded with purplish-gray siltstone and mudstone; limestone beds contain Lower Pennsylvanian conodont fossils (Martin and Barrick, 1999); red chert lenses and nodules common. Includes limestone chert-pebble conglomerate at base, locally containing Lower Pennsylvanian fossils. Upper ledge/slope unit averages about 70 ft (21 m) thick throughout map area. Lower slope unit consists mainly of purplish-red mudstone and siltstone, interbedded with thin-bedded, aphanitic to granular limestone in upper part with red chert veins and nodules. Conodonts in lower thin limestone beds are Upper Mississippian (Martin and Barrick, 1999). Unit includes purple siltstone and gray limestone interbedded with conglomerate that fill small erosion channels cut into either Surprise Canyon Formation (Ms) or Redwall Limestone (Mr). Purple shale and mudstone of lower slope unit unconformably overlies the gray Redwall in majority of map area. Contact with the Surprise Canyon is often based on color change from purple mudstone of the Watahomigi to dark-red mudstone of the Surprise Canyon. Unit averages about 100 ft (30 m) thick along eastern edge of map area, thickening to about 200 ft (60 m) along western edge",
+   "reference": null,
+   "color": "#C5816F",
+   "fraction": 0.0765
+  },
+  "4": {
+   "name": "Toroweap Formation",
+   "lithology": "",
+   "age": "Early Permian",
+   "age_bottom_ma": 298.9,
+   "age_top_ma": 272.95,
+   "rock_class": "limestone_marble",
+   "rock_class_index": 8,
+   "water": false,
+   "description": "Includes, in descending order, Woods Ranch, Brady Canyon, and Seligman Members, undivided, as defined by Sorauf and Billingsley (1991) Woods Ranch Member\u2014Gray and light-red, slope-forming gypsifereous siltstone and silty sandstone, interbedded with white laminated gypsum and gray thin- bedded limestone. Gypsum beds are as much as 10 ft (3 m) thick. Unit as a whole weathers reddish gray. Bedding locally distorted due to solutioning of gypsum. Contact with underlying Brady Canyon Member is gradational and arbitrarily marked at top of cliff-forming limestone of the Brady Canyon. Variable thickness owing to solution of gypsum and channel erosion in upper part; averages about 65 ft (20 m) thick in southeastern quarter of map area, thickening to as much as 200 ft (60 m) in northwestern half of map area Brady Canyon Member\u2014Gray, cliff-forming, thin- to medium-bedded [1\u20135 ft (0.05\u2013 1.4 m)], fine- to coarse-grained, fetid, fossiliferous limestone. Weathers dark gray. Includes thin-bedded dolomite in upper and lower parts. Contains white and gray chert nodules that make up less than 8 percent of unit. Contact with underlying Seligman Member is gradational and arbitrarily placed at base of cliff-forming limestone of the Brady Canyon. Thickness about 40 ft (12 m) at eastern edge of map area, increasing to about 130 ft (40 m) at western edge of map area Seligman Member\u2014Gray, light-purple, and yellowish-red, slope-forming, thin-bedded dolomite, sandstone, and gypsum above intertongued Coconino Sandstone, and yellowish-tan, flat-bedded, thin-bedded sandstone below the Coconino. In eastern two-thirds of map area, unit is mostly a purplish to light-red, flat-bedded calcareous sandstone interbedded with gray, thin-bedded limestone. In western third of map area, unit is gray-white gypsum and light-red to yellowish-red, thin-bedded calcareous sandstone and gray dolomite. Forms slope or recess between overlying cliff-forming Brady Canyon Member and underlying cliff-forming Coconino Sandstone (Pc) in southeastern two-thirds of map area; forms a gypsifereous slope similar to that of Woods Ranch Member in northwestern third of map area. Sharp gradational contact with the interbedded Coconino where cross-bedded sand dunes of the Coconino were beveled off and sand was redistributed as flat-bedded sandstone. The Coconino intertongues with lower part of the Seligman in western third of map area (Fisher, 1961; Schleh, 1966; Rawson and Turner, 1974; and Billingsley and Workman, 2000). Thickness about 30 ft (9 m) in eastern half of map area, increasing to about 55 ft (17 m) in western half",
+   "reference": null,
+   "color": "#EE5845",
+   "fraction": 0.0064
+  },
+  "5": {
+   "name": "Redwall Limestone",
+   "lithology": "",
+   "age": "Mississippian",
+   "age_bottom_ma": 358.9,
+   "age_top_ma": 323.2,
+   "rock_class": "limestone_marble",
+   "rock_class_index": 8,
+   "water": false,
+   "description": "Horseshoe Mesa Member\u2014Light-olive-gray, ledge- and cliff-forming, thin-bedded, fine-grained limestone. Weathers to receding ledges. Gradational and disconformable contact with underlying massive-bedded limestone of Mooney Falls Member marked by thin-bedded, platy limestone beds of the Horseshoe Mesa that form recess about 3\u20139 ft (1\u20133 m) thick near top of cliff formed by the Mooney Falls. Fossils are locally common. Includes distinctive ripple-laminated limestone and oolitic limestone beds and some chert lenses. Member thickens slightly from east to west across map area; locally absent where removed by Late Mississippian paleovalley erosion. Thickness 50\u2013100 ft (15\u201330 m) Mooney Falls Member\u2014Light-gray, cliff-forming, fine- to coarse-grained, thick-bedded to very thick bedded [4\u201320 ft (1\u20136 m)], fossiliferous limestone. Limestone weathers dark gray; chert beds weather black. Includes dark-gray dolomite beds in lower part in western quarter of map area; oolitic limestone and chert beds restricted to upper part throughout map area. Contains large-scale, tabular and planar, low-angle cross-stratified limestone beds in upper third of unit in western half of map area. Disconformable contact with the underlying Thunder Springs distinguished by lithology; massive-bedded, gray limestone of the Mooney Falls overlies thin-bedded, dark-gray to brown dolomite and white chert beds of the Thunder Springs. Member thickens from about 250 ft (75 m) in southeast quarter of map area to about 400 ft (122 m) in northwest quarter Thunder Springs Member\u2014About half of member is gray, cliff-forming, fossiliferous, thin-bedded limestone and about half is brownish-gray, cliff-forming, thin-bedded [1\u20135 in. (2\u201312 cm)], finely crystalline dolomite and fine- to coarse-grained limestone interbedded with white beds of chert lenses. Limestone is common in northern half of map area, dolomite is more common in southern half. Weathers into distinctive prominent band of black and light-brown bands on cliff face. Locally includes large-scale cross-bedding and irregularly folded beds in northern half of map area. Fossil content increases from east to west across map area. Disconformable planar contact with underlying Whitmore Wash Member distinguished by distinct lack of chert in the Whitmore Wash. Member is about 100 ft (30 m) thick in south half of map area, increasing to about 150 ft (45 m) thick in north half Whitmore Wash Member\u2014Yellowish-gray and brownish-gray, cliff-forming, thick- bedded, fine-grained dolomite. Weathers dark gray. Fossiliferous in northwestern quarter of map area. Unit is mostly limestone in western and northern part of map area. Unconformable contact with underlying Temple Butte Formation (Dtb) marked by erosion channels of low relief about 5\u201310 ft (2\u20133 m) in depth. Contact generally recognized where major cliff of the Redwall overlies stair-step ledges of the Temple Butte. Uniform thickness throughout map area, about 80 ft (25 m)",
+   "reference": null,
+   "color": "#678F66",
+   "fraction": 0.0318
+  },
+  "6": {
+   "name": "Bright Angel Shale",
+   "lithology": "",
+   "age": "Middle Cambrian",
+   "age_bottom_ma": 511,
+   "age_top_ma": 501,
+   "rock_class": "sandstone_conglomerate",
+   "rock_class_index": 7,
+   "water": false,
+   "description": "Green and purple-red, slope-forming siltstone and shale, and interbeds of red-brown to brown sandstone of Tapeats Sandstone lithology. Includes ledge-forming red-brown sandstone member of McKee and Resser (1945). Consists of green and purple-red, fine-grained, micaceous, ripple-laminated, fossiliferous siltstone and shale; dark-green, medium- to coarse-grained, thin-bedded, glauconitic sandstone; and interbedded purplish-red and brown, thin-bedded, fine- to coarse-grained, ripple-laminated sandstone. Includes gray, thin-bedded, fine-grained, micaceous silty dolomite in upper part of unit in western quarter of map area. Intertonguing and facies change relationships with the underlying Tapeats produce variable thickness trends. Contact with the Tapeats is arbitrarily marked at lithologic vertical and lateral transition from predominantly green siltstone and shale to predominantly brown sandstone in slope above the Tapeats cliff. Thickness is about 350 ft (107 m) in eastern quarter of map area, thickening to about 500 ft (150 m) in western quarter",
+   "reference": null,
+   "color": "#BFD99D",
+   "fraction": 0.1622
+  },
+  "7": {
+   "name": "Young granite and pegmatite",
+   "lithology": "",
+   "age": "Calymmian",
+   "age_bottom_ma": 1600,
+   "age_top_ma": 1400,
+   "rock_class": "granitic",
+   "rock_class_index": 5,
+   "water": false,
+   "description": "Granite plutons, stocks, dikes, and pegmatite. About 1.4 Ga (billion years old)",
+   "reference": null,
+   "color": "#FF8BC5",
+   "fraction": 0.0086
+  },
+  "8": {
+   "name": "Brahma Schist",
+   "lithology": "",
+   "age": "Statherian",
+   "age_bottom_ma": 1800,
+   "age_top_ma": 1600,
+   "rock_class": "schist",
+   "rock_class_index": 4,
+   "water": false,
+   "description": "Consists of amphibolite, hornblende-biotite-plagioclase schist, biotite-\nplagioclase schist, orthoamphibole-bearing schist and gneiss, and metamorphosed sulfide deposits. Mafic to intermediate-composition metavolcanic rocks. About 1.75 Ga. Locally interlayered with Rama Schist (Xr) and Vishnu Schist (Xv)",
+   "reference": null,
+   "color": "#EE93C1",
+   "fraction": 0.0192
+  },
+  "9": {
+   "name": "Landslide deposits",
+   "lithology": "",
+   "age": "Pleistocene to Holocene",
+   "age_bottom_ma": 2.588,
+   "age_top_ma": 0,
+   "rock_class": "alluvium",
+   "rock_class_index": 9,
+   "water": false,
+   "description": "Unconsolidated to partly consoli-\ndated masses of unsorted rock debris. Includes detached blocks that have rotated backward and slid downslope as loose incoherent masses of broken rock and deformed strata, partly surrounded by talus (talus not shown). Includes local talus, rock glaciers, and rock-fall debris. Landslide blocks may be associated with earthquake activity. Some landslide blocks may become unstable in very wet conditions. Only large landslide blocks shown (fig. 5). Many small landslide masses are commonly found below cliffs of Kaibab Formation (Pk), Coconino Sandstone (Pc), Redwall Limestone (Mr), and Tapeats Sandstone ( t). Variable thickness 10\u2013200 ft (3\u201360 m)",
+   "reference": null,
+   "color": "#F9F97F",
+   "fraction": 0.0008
+  },
+  "10": {
+   "name": "Tapeats Sandstone",
+   "lithology": "",
+   "age": "Early Cambrian to Middle Cambrian",
+   "age_bottom_ma": 541,
+   "age_top_ma": 501,
+   "rock_class": "sandstone_conglomerate",
+   "rock_class_index": 7,
+   "water": false,
+   "description": "Brown and red-brown, cliff-forming sandstone and conglomerate. Includes an upper slope-forming transition zone of nearly equal distribution of brown sandstone of Tapeats Sandstone lithology and green siltstone and shale of Bright Angel Shale lithology, and a lower unit of cliff-forming sandstone and conglomeratic sandstone. Lower cliff unit consists mainly of medium- to coarse-grained, thin-bedded, low-angle planar and trough cross-bedded sandstone and conglomeratic sandstone; sandstone beds 6\u201324 in. (15\u201360 cm) thick. Unconformable contact with underlying Middle and Late Proterozoic surface that forms the Great Unconformity. The Tapeats fills in lowland areas and thins across or pinches out against young Proterozoic highlands. Variable thickness 0\u2013400 ft (0\u2013122 m)",
+   "reference": null,
+   "color": "#7FA056",
+   "fraction": 0.0594
+  },
+  "11": {
+   "name": "Muav Limestone",
+   "lithology": "",
+   "age": "Middle Cambrian",
+   "age_bottom_ma": 511,
+   "age_top_ma": 501,
+   "rock_class": "limestone_marble",
+   "rock_class_index": 8,
+   "water": false,
+   "description": "Dark-gray, light-gray, brown, and orange-red, cliff-forming limestone, dolomite, and calcareous mudstone. Includes, in descending order, unclassified dolomites, and Havasu, Gateway Canyon, Kanab Canyon, Peach Springs, Spencer Canyon, and Rampart Cave Members of McKee and Resser (1945). These members consist of fine- to medium-grained, thin- to thick-bedded, mottled, fossiliferous, silty limestone, limestone, and dolomite. Three unnamed slope-forming siltstone and shale units of Bright Angel Shale ( ba) lithology are intertongued between cliff-forming members of Muav Limestone. These unnamed siltstone and shale units are green and purplish-red, micaceous siltstone, mudstone, and shale, and thin brown sandstone. Contact with the underlying Bright Angel is gradational and lithology dependent. Contact is arbitrarily marked at base of lowest prominent cliff-forming limestone of Rampart Cave Member of the Muav in western half of map area, and of Peach Springs\u2013 Kanab Canyon Members of the Muav in eastern half of map area. All members of the Muav thicken from east to west across map area. However, the Peach Springs, Spencer Canyon, and Rampart Cave change to purple-red and green siltstone/shale facies of the Bright Angel in eastern half of map area, where they are included as part of the Bright Angel . Intertonguing and facies change relationships between the Muav and Bright Angel produce variable thickness trends. Overall, the Muav thickens from about 350 ft (107 m) in eastern part of map area to about 600 ft (183 m) in western part",
+   "reference": null,
+   "color": "#BFD99D",
+   "fraction": 0.0659
+  },
+  "12": {
+   "name": "Granite, granitic pegmatite, and aplite",
+   "lithology": "",
+   "age": "Statherian",
+   "age_bottom_ma": 1800,
+   "age_top_ma": 1600,
+   "rock_class": "granitic",
+   "rock_class_index": 5,
+   "water": false,
+   "description": "Granite plutons, stocks, and pegmatite and aplite dikes emplaced synchronously with peak metamorphism. About 1.7\u20131.66 Ga",
+   "reference": null,
+   "color": "#EE93C1",
+   "fraction": 0.0111
+  },
+  "13": {
+   "name": "Rama Schist",
+   "lithology": "",
+   "age": "Statherian",
+   "age_bottom_ma": 1800,
+   "age_top_ma": 1600,
+   "rock_class": "schist",
+   "rock_class_index": 4,
+   "water": false,
+   "description": "Massive, fine-grained quartzofeldspathic schist and gneiss of probable felsic metavolcanic rocks. About 1.75 Ga. Locally interlayered with Brahma (Xbr) and Vishnu (Xv)",
+   "reference": null,
+   "color": "#EE93C1",
+   "fraction": 0.0112
+  },
+  "14": {
+   "name": "Vishnu Schist",
+   "lithology": "",
+   "age": "Statherian",
+   "age_bottom_ma": 1800,
+   "age_top_ma": 1600,
+   "rock_class": "schist",
+   "rock_class_index": 4,
+   "water": false,
+   "description": "Quartz-mica schist, pelitic schist, and meta-arenites of metamorphosed, arc-basin, submarine sedimentary rocks. About 1.75 Ga. Locally inter-layered with Brahma (Xbr) and Rama (Xr)",
+   "reference": null,
+   "color": "#EE93C1",
+   "fraction": 0.0051
+  },
+  "15": {
+   "name": "water",
+   "lithology": "",
+   "age": null,
+   "age_bottom_ma": null,
+   "age_top_ma": null,
+   "rock_class": "other",
+   "rock_class_index": 10,
+   "water": true,
+   "description": null,
+   "reference": null,
+   "color": "",
+   "fraction": 0.0041
+  },
+  "16": {
+   "name": "Hakatai Shale",
+   "lithology": "",
+   "age": "Mesoproterozoic",
+   "age_bottom_ma": 1600,
+   "age_top_ma": 1000,
+   "rock_class": "sandstone_conglomerate",
+   "rock_class_index": 7,
+   "water": false,
+   "description": "Orange-red, purple, and red mudstone, shale, and sandstone.\nForms an upper cliff unit, a middle slope unit, and a lower slope unit. Upper cliff unit consists of pale-purple or lavender, fine- to coarse-grained, thin- to medium-bedded, cross-bedded sandstone. Forms gradational contact with underlying middle slope unit at distinct color change from purple to bright red. Middle slope unit is the most distinctive red-bed unit in the Grand Canyon, consisting of reddish-orange, thin-bedded, fine-grained mudstone, siltstone and sandy siltstone; includes nonred, spherical reduction spots (\u201cfreckles\u201d) less than 10 cm in diameter. Gradational contact with underlying lower slope unit arbitrarily placed at red to purple color change. Lower slope unit consists of purple to reddish-purple, thin-bedded to laminated, fine-grained mudstone, siltstone, and sandy siltstone. Mudcracks, ripple marks, and tabular-planar cross-bedding are common in all units. Gradational contact with underlying Bass Formation in eastern part of map area; sharp but conformable contact in central part of map area. Overall thickness varies from about 445 ft (135 m) in eastern part of map area to nearly 985 ft (300 m) in Hakatai Canyon, central part of map area",
+   "reference": null,
+   "color": "#FF7EBF",
+   "fraction": 0.0163
+  },
+  "17": {
+   "name": "Bass Formation",
+   "lithology": "",
+   "age": "Mesoproterozoic",
+   "age_bottom_ma": 1600,
+   "age_top_ma": 1000,
+   "rock_class": "schist",
+   "rock_class_index": 4,
+   "water": false,
+   "description": "Red-brown and reddish-gray, ledge-forming dolomite, silty sandstone, and conglomerate. Includes basal Hotauta Conglomerate Member as defined by Dalton (1972). Consists of fine- to coarse-grained, thin- to medium-bedded dolomite, fine- to coarse-grained, thin-bedded sandstone, silty sandstone, conglomerate, and breccia. Dolomite is most common lithology in Shinumo Creek area (central part of map area), becoming mostly sandstone, siltstone, and conglomerate in Bright Angel Canyon and eastern part of map area. Dolomite beds contain biscuit-shaped biohermal stromatolite fossils and red chert; sandstone beds contain ripple marks, desiccation cracks, and intraformational breccia and conglomerate. The Hotauta is considered part of the Bass in most map areas because of its lensing characteristics. The Bass, including the Hotauta, gradually thickens from southeast to northwest across map area from about 260 to 300 ft (80 to 91 m). Hotauta Conglomerate Member\u2014Red-brown and gray conglomerate of well-rounded to subangular pebbles and boulders of granite, gneiss, and schist derived from underlying Early Proterozoic igneous and metamorphic rocks. Clasts are cemented in red-brown, coarse-grained, gravelly sandstone matrix. Unconformable contact with underlying Early Proterozoic rocks called the \u201cGreatest Angular Unconformity\u201d (Noble, 1922), a hiatus lasting about 450 million years (Hendricks and Stevenson, 1990). Unit does not include diabase sills. Variable thickness 0\u201330 ft (0\u201310 m)",
+   "reference": null,
+   "color": "#FF7EBF",
+   "fraction": 0.0027
+  },
+  "18": {
+   "name": "Hermit Formation",
+   "lithology": "",
+   "age": "Early Permian",
+   "age_bottom_ma": 298.9,
+   "age_top_ma": 272.95,
+   "rock_class": "alluvium",
+   "rock_class_index": 9,
+   "water": false,
+   "description": "Red, slope-forming, fine-grained, thin-bedded siltstone and sandstone. Upper part contains red and white, massive, low-angle cross-bedded calcareous sandstone and siltstone beds in western one-quarter of map area. Siltstone beds are dark red and crumbly, and fill shallow erosion channels that are widespread. Siltstone beds form recesses between thicker sandstone beds; locally contains poorly preserved plant fossils in channel fills in lower part of formation. Sandstone beds thicken and thin laterally either as channel fill or low sand dune accumulations. Sandstone bleaches to yellow-white color in vicinity of breccia pipes throughout map area, and at upper contact with Coconino Sandstone (Pc) or Toroweap Formation (Pt) in western half of map area. Unconformably overlies Esplanade Sandstone (Pe). Dark-red, platy, thin-bedded siltstone of Hermit Formation fills channels as much as 60 ft (16 m) deep eroded into the underlying Esplanade in eastern part of map area, and as much as 130 ft (40 m) deep in Havasu Canyon area, south-central part of map area. Erosional relief is generally less than 10 ft (3 m) in northeastern part of map area. About 260 ft (80 m) thick along eastern edge of map area, increasing to about 850 ft (260 m) at western edge of map area",
+   "reference": null,
+   "color": "#EE5845",
+   "fraction": 0.0154
+  },
+  "19": {
+   "name": "Shinumo Quartzite",
+   "lithology": "",
+   "age": "Mesoproterozoic",
+   "age_bottom_ma": 1600,
+   "age_top_ma": 1000,
+   "rock_class": "schist",
+   "rock_class_index": 4,
+   "water": false,
+   "description": "Red-brown, purple, and gray, cliff-forming sandstone. Includes four undivided informal members as defined by Daneker (1975). In descending order, they are upper, upper middle, lower middle, and lower sandstone members. Upper member consists of red-brown and purple, fine- to coarse-grained, well-sorted, highly contorted, gnarly bedded sandstone capped by nondisrupted, flat-bedded, gray sandstone. Upper middle member consists of rusty-red, fine- to coarse-grained, highly contorted, gnarly bedded sandstone. Lower middle member consists of purple \u201cfreckled\u201d (reduction spots), fine-grained, well-sorted, low-angle cross-bedded sandstone with local contorted beds in upper part. Lower member consists of purplish-red, coarse-grained, flat-bedded, arkosic conglomeratic sandstone. All members cemented with silica, making sandstone as hard as metamorphic quartzite, but unit is not metamorphosed. Angular unconformity separates cliff of red-brown Shinumo Quartzite from underlying slope of red Hakatai Shale, marked at truncated beds of the Hakatai. The Shinumo increases in thickness from 1,132 ft (345 m) at eastern edge of map area to 1,540 ft (470 m) at Shinumo Creek, central part of map area",
+   "reference": null,
+   "color": "#FF7EBF",
+   "fraction": 0.0027
+  },
+  "20": {
+   "name": "Ultramafic rocks",
+   "lithology": "",
+   "age": "Paleoproterozoic",
+   "age_bottom_ma": 2500,
+   "age_top_ma": 1600,
+   "rock_class": "serpentinite",
+   "rock_class_index": 2,
+   "water": false,
+   "description": "Probable cumulate origin as supracrustal rocks",
+   "reference": null,
+   "color": "#F74370",
+   "fraction": 0.0006
+  },
+  "21": {
+   "name": "Surprise Canyon Formation",
+   "lithology": "",
+   "age": "Late Mississippian",
+   "age_bottom_ma": 330.9,
+   "age_top_ma": 323.2,
+   "rock_class": "limestone_marble",
+   "rock_class_index": 8,
+   "water": false,
+   "description": "Dark-reddish-brown siltstone and sandstone, gray limestone and dolomite, and grayish-white chert conglomerate in dark-red or black sandstone matrix. Formation locally absent throughout map area; present only in paleovalleys and karst caves eroded into top half of Redwall Limestone (Mr). Consists of an upper slope unit, a middle cliff unit, and a lower slope unit in western half of map area; forms slope in eastern half of map area. Upper slope unit consists of red-brown, thin-bedded siltstone, calcareous sandstone, and reddish-gray, thin-bedded sandy limestone. Contains numerous ripple marks and marine fossils. Thickness ranges from about 50 to 75 ft (15 to 23 m). Middle cliff unit consists of a reddish-gray, thin-bedded, coarse-grained silty and sandy limestone containing numerous marine fossils. Average thickness about 50 ft (15 m) in western third of map area, thinning and pinching out eastward in eastern two-thirds of map area. Lower slope unit consists of dark-red-brown to black, iron-stained, thin-bedded, coarse- to medium-grained siltstone, sandstone, limestone, and conglomerate. Sandstone and siltstone beds contain numerous plant fossils, bone fossils, mudcracks, and ripplemarks. Sandstone is coarse grained and thin bedded with some low-angle, cross-beds. Conglomerate beds consists of white and gray chert clasts supported in dark-red to black, coarse-grained chert sandstone or gravel matrix, all derived from the Redwall. Thickness of lower unit about 3\u201360 ft (1\u201318 m), averaging about 25 ft (8 m). In eastern half of map area, the Surprise Canyon consists mainly of dark-red-brown, slope-forming, massive to thin-bedded, poorly sorted siltstone and sandstone, containing localized plant fossils. The Surprise Canyon is the most fossiliferous rock unit in the Grand Canyon. Overall, thickness averages about 145 ft (45 m) in western half of map area, thinning to less than 50 ft (15 m) in eastern half",
+   "reference": null,
+   "color": "#BFC26B",
+   "fraction": 0.0009
+  }
+ },
+ "rules": [
+  [
+   "serpentinite",
+   "serpentin|ultramafic|peridotit|dunite|harzburgite|pyroxenite"
+  ],
+  [
+   "greenstone_metavolcanic",
+   "greenstone|meta-?volcanic|metabasalt|meta-?andesite|amphibolite|spilite"
+  ],
+  [
+   "slate_phyllite",
+   "slate|phyllite|argillite"
+  ],
+  [
+   "schist",
+   "schist|gneiss|hornfels|quartzite|metasediment"
+  ],
+  [
+   "limestone_marble",
+   "limestone|marble|dolomite|dolostone|carbonate"
+  ],
+  [
+   "granitic",
+   "granit|granodiorit|tonalit|diorit|monzonit|syenit|gabbro|trondhjemit|plutonic|intrusive|pegmatit|aplite"
+  ],
+  [
+   "volcanic",
+   "volcanic|andesit|basalt|rhyolit|dacit|tuff|pyroclastic|lahar|mudflow|latite"
+  ],
+  [
+   "alluvium",
+   "alluvi|terrace|alluvial fan|unconsolidated|colluvi|landslide|surficial|\\bgravels?\\b|\\bsands?\\b"
+  ],
+  [
+   "sandstone_conglomerate",
+   "sandstone|conglomerate|gr[ae]ywacke|siltstone|mudstone|shale|breccia|clastic|sedimentary"
+  ]
+ ],
+ "rule_notes": "first match over major lithologies, then name, then description; volcanic with bottom age >= 145.0 Ma -> greenstone_metavolcanic; clastic sedimentary with bottom age <= 2.58 Ma -> alluvium; 'water' -> other",
+ "source": {
+  "source": "macrostrat",
+  "endpoint": "https://macrostrat.org/api/v2/geologic_units/map",
+  "scale": "large",
+  "macrostrat_source_id": 34,
+  "scale_coverage_of_sample_points": {
+   "large": 25,
+   "medium": 25,
+   "small": 25,
+   "tiny": 25
+  },
+  "sample_points": 25,
+  "requests": 105,
+  "uncovered_pieces": 0,
+  "fallback_errors": []
+ }
+}

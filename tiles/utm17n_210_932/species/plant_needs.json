@@ -1,0 +1,2075 @@
+{
+ "tile": "utm17n_210_932",
+ "regions": [],
+ "communities": [
+  {
+   "source": "evt",
+   "code": 9030,
+   "name": "M1 Marine shelf",
+   "cells": 56766
+  },
+  {
+   "source": "evt",
+   "code": 9001,
+   "name": "T1.1 Tropical/subtropical lowland rainforests",
+   "cells": 53837
+  },
+  {
+   "source": "evt",
+   "code": 9024,
+   "name": "TF1.3 Permanent marshes",
+   "cells": 76,
+   "rule": null,
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 9029,
+   "name": "F2 Lakes",
+   "cells": 68
+  },
+  {
+   "source": "evt",
+   "code": 9012,
+   "name": "T4.1 Trophic savannas",
+   "cells": 50
+  },
+  {
+   "source": "evt",
+   "code": 9013,
+   "name": "T4.2 Pyric tussock savannas",
+   "cells": 37
+  },
+  {
+   "source": "evt",
+   "code": 9026,
+   "name": "MT1.1 Rocky shorelines",
+   "cells": 30,
+   "rule": null,
+   "named": []
+  },
+  {
+   "source": "evt",
+   "code": 9027,
+   "name": "MT1.3 Sandy shorelines",
+   "cells": 20,
+   "rule": null,
+   "named": []
+  }
+ ],
+ "unread": [
+  {
+   "source": "evt",
+   "code": 9024,
+   "name": "TF1.3 Permanent marshes",
+   "cells": 76
+  },
+  {
+   "source": "evt",
+   "code": 9026,
+   "name": "MT1.1 Rocky shorelines",
+   "cells": 30
+  },
+  {
+   "source": "evt",
+   "code": 9027,
+   "name": "MT1.3 Sandy shorelines",
+   "cells": 20
+  }
+ ],
+ "needs": [
+  {
+   "id": "aechmea_magdalenae",
+   "kind": "forb",
+   "why": [
+    "GBIF: 67 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 67,
+   "scientific": "Aechmea magdalenae",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 1
+  },
+  {
+   "id": "hyperbaena_leptobotryosa",
+   "kind": "forb",
+   "why": [
+    "GBIF: 67 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 67,
+   "scientific": "Hyperbaena leptobotryosa",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 2
+  },
+  {
+   "id": "damburneya_umbrosa",
+   "kind": "tree",
+   "why": [
+    "GBIF: 44 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 44,
+   "scientific": "Damburneya umbrosa",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 3
+  },
+  {
+   "id": "palicourea_hoffmannseggiana",
+   "kind": "forb",
+   "why": [
+    "GBIF: 43 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 43,
+   "scientific": "Palicourea hoffmannseggiana",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 4
+  },
+  {
+   "id": "aspasia_epidendroides",
+   "kind": "forb",
+   "why": [
+    "GBIF: 39 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 39,
+   "scientific": "Aspasia epidendroides",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 5
+  },
+  {
+   "id": "trichilia_tuberculata",
+   "kind": "forb",
+   "why": [
+    "GBIF: 39 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 39,
+   "scientific": "Trichilia tuberculata",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 6
+  },
+  {
+   "id": "chomelia_microloba",
+   "kind": "forb",
+   "why": [
+    "GBIF: 38 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 38,
+   "scientific": "Chomelia microloba",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 7
+  },
+  {
+   "id": "crossopetalum_parviflorum",
+   "kind": "forb",
+   "why": [
+    "GBIF: 38 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 38,
+   "scientific": "Crossopetalum parviflorum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 8
+  },
+  {
+   "id": "anthurium_eximium",
+   "kind": "forb",
+   "why": [
+    "GBIF: 37 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 37,
+   "scientific": "Anthurium eximium",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 9
+  },
+  {
+   "id": "heisteria_acuminata",
+   "kind": "forb",
+   "why": [
+    "GBIF: 37 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 37,
+   "scientific": "Heisteria acuminata",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 10
+  },
+  {
+   "id": "pouteria_subrotata",
+   "kind": "forb",
+   "why": [
+    "GBIF: 36 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 36,
+   "scientific": "Pouteria subrotata",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 11
+  },
+  {
+   "id": "hamelia_axillaris",
+   "kind": "forb",
+   "why": [
+    "GBIF: 35 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 35,
+   "scientific": "Hamelia axillaris",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 12
+  },
+  {
+   "id": "croton_schiedeanus",
+   "kind": "forb",
+   "why": [
+    "GBIF: 34 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 34,
+   "scientific": "Croton schiedeanus",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 13
+  },
+  {
+   "id": "goeppertia_marantifolia",
+   "kind": "forb",
+   "why": [
+    "GBIF: 33 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 33,
+   "scientific": "Goeppertia marantifolia",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 14
+  },
+  {
+   "id": "guatteria_amplifolia",
+   "kind": "forb",
+   "why": [
+    "GBIF: 33 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 33,
+   "scientific": "Guatteria amplifolia",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 15
+  },
+  {
+   "id": "hieronyma_alchorneoides",
+   "kind": "forb",
+   "why": [
+    "GBIF: 33 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 33,
+   "scientific": "Hieronyma alchorneoides",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 16
+  },
+  {
+   "id": "palicourea_racemosa",
+   "kind": "forb",
+   "why": [
+    "GBIF: 33 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 33,
+   "scientific": "Palicourea racemosa",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 17
+  },
+  {
+   "id": "callicarpa_acuminata",
+   "kind": "forb",
+   "why": [
+    "GBIF: 32 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 32,
+   "scientific": "Callicarpa acuminata",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 18
+  },
+  {
+   "id": "ficus_zarzalensis",
+   "kind": "forb",
+   "why": [
+    "GBIF: 32 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 32,
+   "scientific": "Ficus zarzalensis",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 19
+  },
+  {
+   "id": "passiflora_vitifolia",
+   "kind": "forb",
+   "why": [
+    "GBIF: 32 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 32,
+   "scientific": "Passiflora vitifolia",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 20
+  },
+  {
+   "id": "anacardium_excelsum",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 31 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 31,
+   "scientific": "Anacardium excelsum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 21
+  },
+  {
+   "id": "miconia_aguilarii",
+   "kind": "forb",
+   "why": [
+    "GBIF: 31 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 31,
+   "scientific": "Miconia aguilarii",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 22
+  },
+  {
+   "id": "stigmaphyllon_ellipticum",
+   "kind": "forb",
+   "why": [
+    "GBIF: 31 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 31,
+   "scientific": "Stigmaphyllon ellipticum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 23
+  },
+  {
+   "id": "dalbergia_brownei",
+   "kind": "forb",
+   "why": [
+    "GBIF: 30 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 30,
+   "scientific": "Dalbergia brownei",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 24
+  },
+  {
+   "id": "faramea_occidentalis",
+   "kind": "forb",
+   "why": [
+    "GBIF: 30 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 30,
+   "scientific": "Faramea occidentalis",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 25
+  },
+  {
+   "id": "guarea_glabra",
+   "kind": "forb",
+   "why": [
+    "GBIF: 30 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 30,
+   "scientific": "Guarea glabra",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 26
+  },
+  {
+   "id": "guettarda_foliacea",
+   "kind": "forb",
+   "why": [
+    "GBIF: 30 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 30,
+   "scientific": "Guettarda foliacea",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 27
+  },
+  {
+   "id": "pterygota_excelsa",
+   "kind": "forb",
+   "why": [
+    "GBIF: 30 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 30,
+   "scientific": "Pterygota excelsa",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 28
+  },
+  {
+   "id": "tetrathylacium_macrophyllum",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 24 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 24,
+   "scientific": "Tetrathylacium macrophyllum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 29
+  },
+  {
+   "id": "ocotea_insularis",
+   "kind": "tree",
+   "why": [
+    "GBIF: 22 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 22,
+   "scientific": "Ocotea insularis",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 30
+  },
+  {
+   "id": "nectandra_hihua",
+   "kind": "tree",
+   "why": [
+    "GBIF: 21 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 21,
+   "scientific": "Nectandra hihua",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 31
+  },
+  {
+   "id": "paullinia_bracteosa",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 20 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 20,
+   "scientific": "Paullinia bracteosa",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 32
+  }
+ ],
+ "gbif_plants": [
+  {
+   "id": "aechmea_magdalenae",
+   "scientific": "Aechmea magdalenae",
+   "family": "Bromeliaceae",
+   "kind": "forb",
+   "records": 67,
+   "known": false
+  },
+  {
+   "id": "hyperbaena_leptobotryosa",
+   "scientific": "Hyperbaena leptobotryosa",
+   "family": "Menispermaceae",
+   "kind": "forb",
+   "records": 67,
+   "known": false
+  },
+  {
+   "id": "damburneya_umbrosa",
+   "scientific": "Damburneya umbrosa",
+   "family": "Lauraceae",
+   "kind": "tree",
+   "records": 44,
+   "known": false
+  },
+  {
+   "id": "palicourea_hoffmannseggiana",
+   "scientific": "Palicourea hoffmannseggiana",
+   "family": "Rubiaceae",
+   "kind": "forb",
+   "records": 43,
+   "known": false
+  },
+  {
+   "id": "trichilia_tuberculata",
+   "scientific": "Trichilia tuberculata",
+   "family": "Meliaceae",
+   "kind": "forb",
+   "records": 39,
+   "known": false
+  },
+  {
+   "id": "aspasia_epidendroides",
+   "scientific": "Aspasia epidendroides",
+   "family": "Orchidaceae",
+   "kind": "forb",
+   "records": 39,
+   "known": false
+  },
+  {
+   "id": "chomelia_microloba",
+   "scientific": "Chomelia microloba",
+   "family": "Rubiaceae",
+   "kind": "forb",
+   "records": 38,
+   "known": false
+  },
+  {
+   "id": "crossopetalum_parviflorum",
+   "scientific": "Crossopetalum parviflorum",
+   "family": "Celastraceae",
+   "kind": "forb",
+   "records": 38,
+   "known": false
+  },
+  {
+   "id": "anthurium_eximium",
+   "scientific": "Anthurium eximium",
+   "family": "Araceae",
+   "kind": "forb",
+   "records": 37,
+   "known": false
+  },
+  {
+   "id": "heisteria_acuminata",
+   "scientific": "Heisteria acuminata",
+   "family": "Erythropalaceae",
+   "kind": "forb",
+   "records": 37,
+   "known": false
+  },
+  {
+   "id": "pouteria_subrotata",
+   "scientific": "Pouteria subrotata",
+   "family": "Sapotaceae",
+   "kind": "forb",
+   "records": 36,
+   "known": false
+  },
+  {
+   "id": "hamelia_axillaris",
+   "scientific": "Hamelia axillaris",
+   "family": "Rubiaceae",
+   "kind": "forb",
+   "records": 35,
+   "known": false
+  },
+  {
+   "id": "croton_schiedeanus",
+   "scientific": "Croton schiedeanus",
+   "family": "Euphorbiaceae",
+   "kind": "forb",
+   "records": 34,
+   "known": false
+  },
+  {
+   "id": "palicourea_racemosa",
+   "scientific": "Palicourea racemosa",
+   "family": "Rubiaceae",
+   "kind": "forb",
+   "records": 33,
+   "known": false
+  },
+  {
+   "id": "hieronyma_alchorneoides",
+   "scientific": "Hieronyma alchorneoides",
+   "family": "Phyllanthaceae",
+   "kind": "forb",
+   "records": 33,
+   "known": false
+  },
+  {
+   "id": "guatteria_amplifolia",
+   "scientific": "Guatteria amplifolia",
+   "family": "Annonaceae",
+   "kind": "forb",
+   "records": 33,
+   "known": false
+  },
+  {
+   "id": "goeppertia_marantifolia",
+   "scientific": "Goeppertia marantifolia",
+   "family": "Marantaceae",
+   "kind": "forb",
+   "records": 33,
+   "known": false
+  },
+  {
+   "id": "passiflora_vitifolia",
+   "scientific": "Passiflora vitifolia",
+   "family": "Passifloraceae",
+   "kind": "forb",
+   "records": 32,
+   "known": false
+  },
+  {
+   "id": "ficus_zarzalensis",
+   "scientific": "Ficus zarzalensis",
+   "family": "Moraceae",
+   "kind": "forb",
+   "records": 32,
+   "known": false
+  },
+  {
+   "id": "callicarpa_acuminata",
+   "scientific": "Callicarpa acuminata",
+   "family": "Lamiaceae",
+   "kind": "forb",
+   "records": 32,
+   "known": false
+  },
+  {
+   "id": "anacardium_excelsum",
+   "scientific": "Anacardium excelsum",
+   "family": "Anacardiaceae",
+   "kind": "shrub",
+   "records": 31,
+   "known": false
+  },
+  {
+   "id": "stigmaphyllon_ellipticum",
+   "scientific": "Stigmaphyllon ellipticum",
+   "family": "Malpighiaceae",
+   "kind": "forb",
+   "records": 31,
+   "known": false
+  },
+  {
+   "id": "miconia_aguilarii",
+   "scientific": "Miconia aguilarii",
+   "family": "Melastomataceae",
+   "kind": "forb",
+   "records": 31,
+   "known": false
+  },
+  {
+   "id": "dalbergia_brownei",
+   "scientific": "Dalbergia brownei",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 30,
+   "known": false
+  },
+  {
+   "id": "guettarda_foliacea",
+   "scientific": "Guettarda foliacea",
+   "family": "Rubiaceae",
+   "kind": "forb",
+   "records": 30,
+   "known": false
+  },
+  {
+   "id": "faramea_occidentalis",
+   "scientific": "Faramea occidentalis",
+   "family": "Rubiaceae",
+   "kind": "forb",
+   "records": 30,
+   "known": false
+  },
+  {
+   "id": "guarea_glabra",
+   "scientific": "Guarea glabra",
+   "family": "Meliaceae",
+   "kind": "forb",
+   "records": 30,
+   "known": false
+  },
+  {
+   "id": "pterygota_excelsa",
+   "scientific": "Pterygota excelsa",
+   "family": "Malvaceae",
+   "kind": "forb",
+   "records": 30,
+   "known": false
+  },
+  {
+   "id": "geonoma_cuneata",
+   "scientific": "Geonoma cuneata",
+   "family": "Arecaceae",
+   "kind": "forb",
+   "records": 29,
+   "known": false
+  },
+  {
+   "id": "cissus_biformifolia",
+   "scientific": "Cissus biformifolia",
+   "family": "Vitaceae",
+   "kind": "forb",
+   "records": 29,
+   "known": false
+  },
+  {
+   "id": "anthurium_pentaphyllum",
+   "scientific": "Anthurium pentaphyllum",
+   "family": "Araceae",
+   "kind": "forb",
+   "records": 28,
+   "known": false
+  },
+  {
+   "id": "desmodium_axillare",
+   "scientific": "Desmodium axillare",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 28,
+   "known": false
+  },
+  {
+   "id": "apeiba_tibourbou",
+   "scientific": "Apeiba tibourbou",
+   "family": "Malvaceae",
+   "kind": "forb",
+   "records": 28,
+   "known": false
+  },
+  {
+   "id": "bunchosia_nitida",
+   "scientific": "Bunchosia nitida",
+   "family": "Malpighiaceae",
+   "kind": "forb",
+   "records": 28,
+   "known": false
+  },
+  {
+   "id": "sapium_glandulosum",
+   "scientific": "Sapium glandulosum",
+   "family": "Euphorbiaceae",
+   "kind": "forb",
+   "records": 28,
+   "known": false
+  },
+  {
+   "id": "clarisia_racemosa",
+   "scientific": "Clarisia racemosa",
+   "family": "Moraceae",
+   "kind": "forb",
+   "records": 28,
+   "known": false
+  },
+  {
+   "id": "palicourea_acuminata",
+   "scientific": "Palicourea acuminata",
+   "family": "Rubiaceae",
+   "kind": "forb",
+   "records": 28,
+   "known": false
+  },
+  {
+   "id": "ronabea_emetica",
+   "scientific": "Ronabea emetica",
+   "family": "Rubiaceae",
+   "kind": "forb",
+   "records": 27,
+   "known": false
+  },
+  {
+   "id": "crateva_tapia",
+   "scientific": "Crateva tapia",
+   "family": "Capparaceae",
+   "kind": "forb",
+   "records": 27,
+   "known": false
+  },
+  {
+   "id": "hippocratea_volubilis",
+   "scientific": "Hippocratea volubilis",
+   "family": "Celastraceae",
+   "kind": "forb",
+   "records": 27,
+   "known": false
+  },
+  {
+   "id": "microgramma_percussa",
+   "scientific": "Microgramma percussa",
+   "family": "Polypodiaceae",
+   "kind": "fern",
+   "records": 27,
+   "known": false
+  },
+  {
+   "id": "piper_playa_blancanum",
+   "scientific": "Piper playa-blancanum",
+   "family": "Piperaceae",
+   "kind": "forb",
+   "records": 27,
+   "known": false
+  },
+  {
+   "id": "quadrella_isthmensis",
+   "scientific": "Quadrella isthmensis",
+   "family": "Capparaceae",
+   "kind": "forb",
+   "records": 27,
+   "known": false
+  },
+  {
+   "id": "sorocea_pubivena",
+   "scientific": "Sorocea pubivena",
+   "family": "Moraceae",
+   "kind": "forb",
+   "records": 27,
+   "known": false
+  },
+  {
+   "id": "sloanea_picapica",
+   "scientific": "Sloanea picapica",
+   "family": "Elaeocarpaceae",
+   "kind": "forb",
+   "records": 27,
+   "known": false
+  },
+  {
+   "id": "palicourea_solitudinum",
+   "scientific": "Palicourea solitudinum",
+   "family": "Rubiaceae",
+   "kind": "forb",
+   "records": 26,
+   "known": false
+  },
+  {
+   "id": "palicourea_guianensis",
+   "scientific": "Palicourea guianensis",
+   "family": "Rubiaceae",
+   "kind": "forb",
+   "records": 26,
+   "known": false
+  },
+  {
+   "id": "pseudolmedia_spuria",
+   "scientific": "Pseudolmedia spuria",
+   "family": "Moraceae",
+   "kind": "forb",
+   "records": 26,
+   "known": false
+  },
+  {
+   "id": "brosimum_alicastrum",
+   "scientific": "Brosimum alicastrum",
+   "family": "Moraceae",
+   "kind": "forb",
+   "records": 26,
+   "known": false
+  },
+  {
+   "id": "cissus_verticillata",
+   "scientific": "Cissus verticillata",
+   "family": "Vitaceae",
+   "kind": "forb",
+   "records": 26,
+   "known": false
+  },
+  {
+   "id": "alchornea_costaricensis",
+   "scientific": "Alchornea costaricensis",
+   "family": "Euphorbiaceae",
+   "kind": "forb",
+   "records": 26,
+   "known": false
+  },
+  {
+   "id": "miconia_cinnamomea",
+   "scientific": "Miconia cinnamomea",
+   "family": "Melastomataceae",
+   "kind": "forb",
+   "records": 26,
+   "known": false
+  },
+  {
+   "id": "piper_nudifolium",
+   "scientific": "Piper nudifolium",
+   "family": "Piperaceae",
+   "kind": "forb",
+   "records": 26,
+   "known": false
+  },
+  {
+   "id": "ficus_maxima",
+   "scientific": "Ficus maxima",
+   "family": "Moraceae",
+   "kind": "forb",
+   "records": 26,
+   "known": false
+  },
+  {
+   "id": "asterogyne_martiana",
+   "scientific": "Asterogyne martiana",
+   "family": "Arecaceae",
+   "kind": "forb",
+   "records": 26,
+   "known": false
+  },
+  {
+   "id": "talipariti_pernambucense",
+   "scientific": "Talipariti pernambucense",
+   "family": "Malvaceae",
+   "kind": "forb",
+   "records": 26,
+   "known": false
+  },
+  {
+   "id": "anthurium_hacumense",
+   "scientific": "Anthurium hacumense",
+   "family": "Araceae",
+   "kind": "forb",
+   "records": 25,
+   "known": false
+  },
+  {
+   "id": "psychotria_horizontalis",
+   "scientific": "Psychotria horizontalis",
+   "family": "Rubiaceae",
+   "kind": "forb",
+   "records": 25,
+   "known": false
+  },
+  {
+   "id": "cynometra_hemitomophylla",
+   "scientific": "Cynometra hemitomophylla",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 25,
+   "known": false
+  },
+  {
+   "id": "inga_multijuga",
+   "scientific": "Inga multijuga",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 25,
+   "known": false
+  },
+  {
+   "id": "malpighia_albiflora",
+   "scientific": "Malpighia albiflora",
+   "family": "Malpighiaceae",
+   "kind": "forb",
+   "records": 25,
+   "known": false
+  },
+  {
+   "id": "stylogyne_turbacensis",
+   "scientific": "Stylogyne turbacensis",
+   "family": "Primulaceae",
+   "kind": "forb",
+   "records": 25,
+   "known": false
+  },
+  {
+   "id": "ardisia_opegrapha",
+   "scientific": "Ardisia opegrapha",
+   "family": "Primulaceae",
+   "kind": "forb",
+   "records": 25,
+   "known": false
+  },
+  {
+   "id": "philodendron_sagittifolium",
+   "scientific": "Philodendron sagittifolium",
+   "family": "Araceae",
+   "kind": "forb",
+   "records": 24,
+   "known": false
+  },
+  {
+   "id": "ixora_nicaraguensis",
+   "scientific": "Ixora nicaraguensis",
+   "family": "Rubiaceae",
+   "kind": "forb",
+   "records": 24,
+   "known": false
+  },
+  {
+   "id": "unonopsis_pittieri",
+   "scientific": "Unonopsis pittieri",
+   "family": "Annonaceae",
+   "kind": "forb",
+   "records": 24,
+   "known": false
+  },
+  {
+   "id": "guarea_kunthiana",
+   "scientific": "Guarea kunthiana",
+   "family": "Meliaceae",
+   "kind": "forb",
+   "records": 24,
+   "known": false
+  },
+  {
+   "id": "protium_confusum",
+   "scientific": "Protium confusum",
+   "family": "Burseraceae",
+   "kind": "forb",
+   "records": 24,
+   "known": false
+  },
+  {
+   "id": "anthurium_bakeri",
+   "scientific": "Anthurium bakeri",
+   "family": "Araceae",
+   "kind": "forb",
+   "records": 24,
+   "known": false
+  },
+  {
+   "id": "tetrathylacium_macrophyllum",
+   "scientific": "Tetrathylacium macrophyllum",
+   "family": "Salicaceae",
+   "kind": "shrub",
+   "records": 24,
+   "known": false
+  },
+  {
+   "id": "palicourea_tetragona",
+   "scientific": "Palicourea tetragona",
+   "family": "Rubiaceae",
+   "kind": "forb",
+   "records": 24,
+   "known": false
+  },
+  {
+   "id": "tabernaemontana_donnell_smithii",
+   "scientific": "Tabernaemontana donnell-smithii",
+   "family": "Apocynaceae",
+   "kind": "forb",
+   "records": 24,
+   "known": false
+  },
+  {
+   "id": "solanum_splendens",
+   "scientific": "Solanum splendens",
+   "family": "Solanaceae",
+   "kind": "forb",
+   "records": 24,
+   "known": false
+  },
+  {
+   "id": "aechmea_pubescens",
+   "scientific": "Aechmea pubescens",
+   "family": "Bromeliaceae",
+   "kind": "forb",
+   "records": 23,
+   "known": false
+  },
+  {
+   "id": "monstera_adansonii",
+   "scientific": "Monstera adansonii",
+   "family": "Araceae",
+   "kind": "forb",
+   "records": 23,
+   "known": false
+  },
+  {
+   "id": "stenospermation_angustifolium",
+   "scientific": "Stenospermation angustifolium",
+   "family": "Araceae",
+   "kind": "forb",
+   "records": 23,
+   "known": false
+  },
+  {
+   "id": "philodendron_tripartitum",
+   "scientific": "Philodendron tripartitum",
+   "family": "Araceae",
+   "kind": "forb",
+   "records": 23,
+   "known": false
+  },
+  {
+   "id": "anthurium_ravenii",
+   "scientific": "Anthurium ravenii",
+   "family": "Araceae",
+   "kind": "forb",
+   "records": 23,
+   "known": false
+  },
+  {
+   "id": "solanum_aturense",
+   "scientific": "Solanum aturense",
+   "family": "Solanaceae",
+   "kind": "forb",
+   "records": 23,
+   "known": false
+  },
+  {
+   "id": "otoba_novogranatensis",
+   "scientific": "Otoba novogranatensis",
+   "family": "Myristicaceae",
+   "kind": "forb",
+   "records": 23,
+   "known": false
+  },
+  {
+   "id": "chrysochlamys_glauca",
+   "scientific": "Chrysochlamys glauca",
+   "family": "Clusiaceae",
+   "kind": "forb",
+   "records": 23,
+   "known": false
+  },
+  {
+   "id": "monteverdia_guyanensis",
+   "scientific": "Monteverdia guyanensis",
+   "family": "Celastraceae",
+   "kind": "forb",
+   "records": 22,
+   "known": false
+  },
+  {
+   "id": "passiflora_quadrangularis",
+   "scientific": "Passiflora quadrangularis",
+   "family": "Passifloraceae",
+   "kind": "forb",
+   "records": 22,
+   "known": false
+  },
+  {
+   "id": "pouteria_chiricana",
+   "scientific": "Pouteria chiricana",
+   "family": "Sapotaceae",
+   "kind": "forb",
+   "records": 22,
+   "known": false
+  },
+  {
+   "id": "posoqueria_latifolia",
+   "scientific": "Posoqueria latifolia",
+   "family": "Rubiaceae",
+   "kind": "forb",
+   "records": 22,
+   "known": false
+  },
+  {
+   "id": "andira_inermis",
+   "scientific": "Andira inermis",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 22,
+   "known": false
+  },
+  {
+   "id": "ocotea_insularis",
+   "scientific": "Ocotea insularis",
+   "family": "Lauraceae",
+   "kind": "tree",
+   "records": 22,
+   "known": false
+  },
+  {
+   "id": "compsoneura_excelsa",
+   "scientific": "Compsoneura excelsa",
+   "family": "Myristicaceae",
+   "kind": "forb",
+   "records": 22,
+   "known": false
+  },
+  {
+   "id": "adelonema_wendlandii",
+   "scientific": "Adelonema wendlandii",
+   "family": "Araceae",
+   "kind": "forb",
+   "records": 22,
+   "known": false
+  },
+  {
+   "id": "lonchocarpus_heptaphyllus",
+   "scientific": "Lonchocarpus heptaphyllus",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 21,
+   "known": false
+  },
+  {
+   "id": "omphalea_diandra",
+   "scientific": "Omphalea diandra",
+   "family": "Euphorbiaceae",
+   "kind": "forb",
+   "records": 21,
+   "known": false
+  },
+  {
+   "id": "amphitecna_latifolia",
+   "scientific": "Amphitecna latifolia",
+   "family": "Bignoniaceae",
+   "kind": "forb",
+   "records": 21,
+   "known": false
+  },
+  {
+   "id": "picramnia_latifolia",
+   "scientific": "Picramnia latifolia",
+   "family": "Picramniaceae",
+   "kind": "forb",
+   "records": 21,
+   "known": false
+  },
+  {
+   "id": "maquira_guianensis",
+   "scientific": "Maquira guianensis",
+   "family": "Moraceae",
+   "kind": "forb",
+   "records": 21,
+   "known": false
+  },
+  {
+   "id": "mortoniodendron_anisophyllum",
+   "scientific": "Mortoniodendron anisophyllum",
+   "family": "Malvaceae",
+   "kind": "forb",
+   "records": 21,
+   "known": false
+  },
+  {
+   "id": "inga_sapindoides",
+   "scientific": "Inga sapindoides",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 21,
+   "known": false
+  },
+  {
+   "id": "nectandra_hihua",
+   "scientific": "Nectandra hihua",
+   "family": "Lauraceae",
+   "kind": "tree",
+   "records": 21,
+   "known": false
+  },
+  {
+   "id": "pleopeltis_polypodioides",
+   "scientific": "Pleopeltis polypodioides",
+   "family": "Polypodiaceae",
+   "kind": "fern",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "chamaedorea_macrospadix",
+   "scientific": "Chamaedorea macrospadix",
+   "family": "Arecaceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "dieffenbachia_concinna",
+   "scientific": "Dieffenbachia concinna",
+   "family": "Araceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "spathiphyllum_phryniifolium",
+   "scientific": "Spathiphyllum phryniifolium",
+   "family": "Araceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "guapira_costaricana",
+   "scientific": "Guapira costaricana",
+   "family": "Nyctaginaceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "paullinia_bracteosa",
+   "scientific": "Paullinia bracteosa",
+   "family": "Sapindaceae",
+   "kind": "shrub",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "caryocar_costaricense",
+   "scientific": "Caryocar costaricense",
+   "family": "Caryocaraceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "mayna_odorata",
+   "scientific": "Mayna odorata",
+   "family": "Achariaceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "gloeospermum_boreale",
+   "scientific": "Gloeospermum boreale",
+   "family": "Violaceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "citharexylum_cooperi",
+   "scientific": "Citharexylum cooperi",
+   "family": "Verbenaceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "randia_armata",
+   "scientific": "Randia armata",
+   "family": "Rubiaceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "swartzia_simplex",
+   "scientific": "Swartzia simplex",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "inga_ruiziana",
+   "scientific": "Inga ruiziana",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "ficus_americana",
+   "scientific": "Ficus americana",
+   "family": "Moraceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "margaritaria_nobilis",
+   "scientific": "Margaritaria nobilis",
+   "family": "Phyllanthaceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "maripa_nicaraguensis",
+   "scientific": "Maripa nicaraguensis",
+   "family": "Convolvulaceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "talipariti_tiliaceum",
+   "scientific": "Talipariti tiliaceum",
+   "family": "Malvaceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "coussapoa_villosa",
+   "scientific": "Coussapoa villosa",
+   "family": "Urticaceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "dichorisandra_hexandra",
+   "scientific": "Dichorisandra hexandra",
+   "family": "Commelinaceae",
+   "kind": "forb",
+   "records": 20,
+   "known": false
+  },
+  {
+   "id": "ananthacorus_angustifolius",
+   "scientific": "Ananthacorus angustifolius",
+   "family": "Pteridaceae",
+   "kind": "fern",
+   "records": 19,
+   "known": false
+  },
+  {
+   "id": "asplenium_serratum",
+   "scientific": "Asplenium serratum",
+   "family": "Aspleniaceae",
+   "kind": "fern",
+   "records": 19,
+   "known": false
+  },
+  {
+   "id": "heliconia_latispatha",
+   "scientific": "Heliconia latispatha",
+   "family": "Heliconiaceae",
+   "kind": "forb",
+   "records": 19,
+   "known": false
+  },
+  {
+   "id": "monstera_membranacea",
+   "scientific": "Monstera membranacea",
+   "family": "Araceae",
+   "kind": "forb",
+   "records": 19,
+   "known": false
+  },
+  {
+   "id": "lonchocarpus_macrophyllus",
+   "scientific": "Lonchocarpus macrophyllus",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 19,
+   "known": false
+  },
+  {
+   "id": "lacistema_aggregatum",
+   "scientific": "Lacistema aggregatum",
+   "family": "Lacistemataceae",
+   "kind": "forb",
+   "records": 19,
+   "known": false
+  },
+  {
+   "id": "guatteria_lucens",
+   "scientific": "Guatteria lucens",
+   "family": "Annonaceae",
+   "kind": "forb",
+   "records": 19,
+   "known": false
+  },
+  {
+   "id": "clavija_costaricana",
+   "scientific": "Clavija costaricana",
+   "family": "Primulaceae",
+   "kind": "forb",
+   "records": 19,
+   "known": false
+  },
+  {
+   "id": "ouratea_osaensis",
+   "scientific": "Ouratea osaensis",
+   "family": "Ochnaceae",
+   "kind": "forb",
+   "records": 19,
+   "known": false
+  },
+  {
+   "id": "ficus_tonduzii",
+   "scientific": "Ficus tonduzii",
+   "family": "Moraceae",
+   "kind": "forb",
+   "records": 19,
+   "known": false
+  },
+  {
+   "id": "clarisia_biflora",
+   "scientific": "Clarisia biflora",
+   "family": "Moraceae",
+   "kind": "forb",
+   "records": 19,
+   "known": false
+  },
+  {
+   "id": "jacaratia_spinosa",
+   "scientific": "Jacaratia spinosa",
+   "family": "Caricaceae",
+   "kind": "forb",
+   "records": 19,
+   "known": false
+  },
+  {
+   "id": "clusia_peninsulae",
+   "scientific": "Clusia peninsulae",
+   "family": "Clusiaceae",
+   "kind": "forb",
+   "records": 19,
+   "known": false
+  },
+  {
+   "id": "geonoma_interrupta",
+   "scientific": "Geonoma interrupta",
+   "family": "Arecaceae",
+   "kind": "forb",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "spathiphyllum_wendlandii",
+   "scientific": "Spathiphyllum wendlandii",
+   "family": "Araceae",
+   "kind": "forb",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "philodendron_auriculatum",
+   "scientific": "Philodendron auriculatum",
+   "family": "Araceae",
+   "kind": "forb",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "psychotria_marginata",
+   "scientific": "Psychotria marginata",
+   "family": "Rubiaceae",
+   "kind": "forb",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "portulaca_oleracea",
+   "scientific": "Portulaca oleracea",
+   "family": "Portulacaceae",
+   "kind": "forb",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "brosimum_costaricanum",
+   "scientific": "Brosimum costaricanum",
+   "family": "Moraceae",
+   "kind": "forb",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "batocarpus_costaricensis",
+   "scientific": "Batocarpus costaricensis",
+   "family": "Moraceae",
+   "kind": "forb",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "mortoniodendron_cauliflorum",
+   "scientific": "Mortoniodendron cauliflorum",
+   "family": "Malvaceae",
+   "kind": "forb",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "inga_marginata",
+   "scientific": "Inga marginata",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "catopsis_sessiliflora",
+   "scientific": "Catopsis sessiliflora",
+   "family": "Bromeliaceae",
+   "kind": "forb",
+   "records": 18,
+   "known": false
+  },
+  {
+   "id": "costus_scaber",
+   "scientific": "Costus scaber",
+   "family": "Costaceae",
+   "kind": "forb",
+   "records": 17,
+   "known": false
+  },
+  {
+   "id": "evodianthus_funifer",
+   "scientific": "Evodianthus funifer",
+   "family": "Cyclanthaceae",
+   "kind": "forb",
+   "records": 17,
+   "known": false
+  },
+  {
+   "id": "monstera_pinnatipartita",
+   "scientific": "Monstera pinnatipartita",
+   "family": "Araceae",
+   "kind": "forb",
+   "records": 17,
+   "known": false
+  },
+  {
+   "id": "philodendron_pterotum",
+   "scientific": "Philodendron pterotum",
+   "family": "Araceae",
+   "kind": "forb",
+   "records": 17,
+   "known": false
+  },
+  {
+   "id": "cojoba_sophorocarpa",
+   "scientific": "Cojoba sophorocarpa",
+   "family": "Fabaceae",
+   "kind": "forb",
+   "records": 17,
+   "known": false
+  },
+  {
+   "id": "doliocarpus_major",
+   "scientific": "Doliocarpus major",
+   "family": "Dilleniaceae",
+   "kind": "forb",
+   "records": 17,
+   "known": false
+  },
+  {
+   "id": "chamissoa_altissima",
+   "scientific": "Chamissoa altissima",
+   "family": "Amaranthaceae",
+   "kind": "forb",
+   "records": 17,
+   "known": false
+  },
+  {
+   "id": "bursera_simaruba",
+   "scientific": "Bursera simaruba",
+   "family": "Burseraceae",
+   "kind": "forb",
+   "records": 17,
+   "known": false
+  },
+  {
+   "id": "aphelandra_lingua_bovis",
+   "scientific": "Aphelandra lingua-bovis",
+   "family": "Acanthaceae",
+   "kind": "forb",
+   "records": 17,
+   "known": false
+  },
+  {
+   "id": "lycianthes_synanthera",
+   "scientific": "Lycianthes synanthera",
+   "family": "Solanaceae",
+   "kind": "forb",
+   "records": 17,
+   "known": false
+  },
+  {
+   "id": "miconia_hondurensis",
+   "scientific": "Miconia hondurensis",
+   "family": "Melastomataceae",
+   "kind": "forb",
+   "records": 17,
+   "known": false
+  }
+ ],
+ "generated": [],
+ "target": {
+  "tree": 21,
+  "shrub": 23,
+  "ground": 26
+ },
+ "by_layer": {
+  "tree": 3,
+  "shrub": 3,
+  "ground": 26
+ },
+ "hands": [
+  {
+   "id": "aechmea_magdalenae",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 67 records on the tile"
+   ]
+  },
+  {
+   "id": "hyperbaena_leptobotryosa",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 67 records on the tile"
+   ]
+  },
+  {
+   "id": "damburneya_umbrosa",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 44 records on the tile"
+   ]
+  },
+  {
+   "id": "palicourea_hoffmannseggiana",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 43 records on the tile"
+   ]
+  },
+  {
+   "id": "aspasia_epidendroides",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 39 records on the tile"
+   ]
+  },
+  {
+   "id": "trichilia_tuberculata",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 39 records on the tile"
+   ]
+  },
+  {
+   "id": "chomelia_microloba",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 38 records on the tile"
+   ]
+  },
+  {
+   "id": "crossopetalum_parviflorum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 38 records on the tile"
+   ]
+  },
+  {
+   "id": "anthurium_eximium",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 37 records on the tile"
+   ]
+  },
+  {
+   "id": "heisteria_acuminata",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 37 records on the tile"
+   ]
+  },
+  {
+   "id": "pouteria_subrotata",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 36 records on the tile"
+   ]
+  },
+  {
+   "id": "hamelia_axillaris",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 35 records on the tile"
+   ]
+  },
+  {
+   "id": "croton_schiedeanus",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 34 records on the tile"
+   ]
+  },
+  {
+   "id": "goeppertia_marantifolia",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 33 records on the tile"
+   ]
+  },
+  {
+   "id": "guatteria_amplifolia",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 33 records on the tile"
+   ]
+  },
+  {
+   "id": "hieronyma_alchorneoides",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 33 records on the tile"
+   ]
+  },
+  {
+   "id": "palicourea_racemosa",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 33 records on the tile"
+   ]
+  },
+  {
+   "id": "callicarpa_acuminata",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 32 records on the tile"
+   ]
+  },
+  {
+   "id": "ficus_zarzalensis",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 32 records on the tile"
+   ]
+  },
+  {
+   "id": "passiflora_vitifolia",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 32 records on the tile"
+   ]
+  },
+  {
+   "id": "anacardium_excelsum",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 31 records on the tile"
+   ]
+  },
+  {
+   "id": "miconia_aguilarii",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 31 records on the tile"
+   ]
+  },
+  {
+   "id": "stigmaphyllon_ellipticum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 31 records on the tile"
+   ]
+  },
+  {
+   "id": "dalbergia_brownei",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 30 records on the tile"
+   ]
+  },
+  {
+   "id": "faramea_occidentalis",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 30 records on the tile"
+   ]
+  },
+  {
+   "id": "guarea_glabra",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 30 records on the tile"
+   ]
+  },
+  {
+   "id": "guettarda_foliacea",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 30 records on the tile"
+   ]
+  },
+  {
+   "id": "pterygota_excelsa",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 30 records on the tile"
+   ]
+  },
+  {
+   "id": "tetrathylacium_macrophyllum",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 24 records on the tile"
+   ]
+  },
+  {
+   "id": "ocotea_insularis",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 22 records on the tile"
+   ]
+  },
+  {
+   "id": "nectandra_hihua",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 21 records on the tile"
+   ]
+  },
+  {
+   "id": "paullinia_bracteosa",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 20 records on the tile"
+   ]
+  },
+  {
+   "id": "TF1.3 Permanent marshes",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "76 cells"
+   ]
+  },
+  {
+   "id": "MT1.1 Rocky shorelines",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "30 cells"
+   ]
+  },
+  {
+   "id": "MT1.3 Sandy shorelines",
+   "kind": "community",
+   "what": "a lexicon phrase or a species-mix rule",
+   "why": [
+    "20 cells"
+   ]
+  }
+ ],
+ "summary": {
+  "needed": 32,
+  "with_record": 0,
+  "generated_now": 0,
+  "queued": 32,
+  "unread_communities": 3,
+  "by_layer": {
+   "tree": 3,
+   "shrub": 3,
+   "ground": 26
+  },
+  "meets_target": {
+   "tree": false,
+   "shrub": false,
+   "ground": true
+  },
+  "hands": 35
+ }
+}

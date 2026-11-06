@@ -122,10 +122,13 @@ def _finite(v):
 
 
 def write_json(path: Path, data) -> None:
+    """Written to a temporary file and renamed into place, so a reader (another build's index) never sees half a file."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    with open(path, "w") as f:
+    tmp = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    with open(tmp, "w") as f:
         json.dump(_finite(data), f, indent=1, allow_nan=False)
         f.write("\n")
+    os.replace(tmp, path)
 
 
 def read_json(path: Path):
@@ -204,7 +207,7 @@ def all_sources() -> dict:
     sources cannot be in a tile built without it."""
     import importlib
     for mod in ("fetch_dem", "fetch_naip", "fetch_vegetation", "fetch_geology", "fetch_soils", "fetch_lidar",
-                "fetch_sentinel", "research"):
+                "fetch_sentinel", "research", "fetch_global"):
         try:
             importlib.import_module(f".{mod}", __package__)
         except ImportError:

@@ -27,7 +27,7 @@ import { SoundCues } from './soundCues.js';
 import { OpeningScreen, Arrival, lastTile, rememberTile } from './arrival.js';
 import { TitleScreen } from './title.js';
 import { Multiplayer } from './multiplayer.js';
-import { SEASON_LOOK, seasonOfDate, sunDirection, dateForSeason, parseDate } from './season.js';
+import { SEASON_LOOK, seasonOfDate, sunDirection, dateForSeason, parseDate, setSeasonMonths } from './season.js';
 import { AcornGame } from './acorns.js';
 import { Identify } from './identify.js';
 import { PlaceNames } from './placenames.js';
@@ -44,7 +44,7 @@ import { AnimalNet, PG } from './animalNet.js';
 import { bodySample } from './bodySample.js';
 import { GroundControl } from './groundControl.js';
 import { FlierControl } from './flierControl.js';
-import { SHORT, playAs } from './playable.js';
+import { SHORT, playAs, registerStandIns } from './playable.js';
 import { setupCredits } from './credits.js';
 import { Weather } from './weather.js';
 import { fieldGuide } from './fieldguide.js';
@@ -205,6 +205,7 @@ async function disposeWorld(w, renderer) {
   m.spirit?.dispose?.();   // the souls' columns and the leaving wisps (spirit.js, 2026-11-01)
   m.carrion?.dispose?.();   // Scavenge: the carcasses' records, bones and halos (carrion.js; before the dig, whose socket it rides)
   m.dig?.dispose?.();   // the Dig game's tunnels, its socket and the terrain's cut discs (dig.js)
+  if (m.animals) { m.animals.releaseFauna(); registerStandIns({}); }   // the tile's own fauna out of animals.js's module tables (installFauna) and its bodies (playable.js): the static cast as it was
   m.water?.dispose?.(); m.shadows?.dispose?.(); m.terrain?.dispose?.(); m.litter?.dispose?.(); m.life?.dispose?.(); m.scent?.dispose?.(); m.forage?.dispose?.(); m.fruit?.dispose?.(); m.sight?.dispose?.(); m.cues?.dispose?.(); m.grass?.dispose?.(); m.forbs?.dispose?.(); m.emergents?.dispose?.(); m.veg?.dispose?.(); forgetQueuedCasters();
   // then its listeners and the elements it put into the page; the HUD's own words back as the page had them
   w.record(w.observer.takeRecords());
@@ -439,6 +440,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   };
   phase('loadTile');
   const tile = w.tile = await w.wait(loadTile(w.tileId, undefined, { signal: w.abort.signal }));
+  setSeasonMonths(tile.manifest?.layers?.['climate.normals']?.season_months ?? null);   // the tile's own seasons (season.js)
   w.tileId = tile.id;   // the loader's choice when none was named (the direct paths without ?tile=)
   phase('afterTile');
   const arrivePoint = arrive?.xy ?? (arrive?.point ? localXY(tile, arrive.point.lat, arrive.point.lon) : null);   // a switch's arrival; null: the centre
@@ -601,7 +603,8 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   // Ambient animals (animals.js): squirrels, acorn woodpeckers, other ravens, deer, filtered by perception.
   // During an acorn game the woodpeckers, squirrels and ravens gather from the game's acorns (game: acorns).
   await w.next('animals');
-  const animals = new Animals({ tile, scene, flight, veg, atmosphere, camera, identify, game: acorns });
+  const animals = w.m.animals = new Animals({ tile, scene, flight, veg, atmosphere, camera, identify, game: acorns });   // (w.m: disposeWorld takes the tile's stand-in slots out again)
+  registerStandIns(animals.standIns);   // the tile's stand-ins (client/fauna.json) take their kin's walker or flier body (playable.js)
   // The shared animals (animalNet.js, docs/multiplayer.md "Shared animals"): the game socket's animals channel, joined for
   // the tile and season; one page in the world runs the animals for everyone and the rest mirror it. The three channels
   // of the page (the acorn game's, the dig's, this) carry one page id (PG), so the server names one page the AI host of all.

@@ -1,0 +1,126 @@
+{
+ "id": "sylvilagus_audubonii",
+ "scientific": "Sylvilagus audubonii",
+ "common": "desert cottontail",
+ "kind": "mammal",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Mammalia",
+  "order": "Lagomorpha",
+  "family": "Leporidae",
+  "genus": "Sylvilagus"
+ },
+ "body_plan": "lagomorph",
+ "mass_kg": 0.8896,
+ "size": {
+  "length_m": 0.346,
+  "shoulder_or_wingspan_m": 0.156
+ },
+ "diet": {
+  "role": [
+   "herbivore"
+  ],
+  "diet_tenths": {
+   "inv": 0.0,
+   "vend": 0.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 10.0
+  },
+  "vertebrate_share": 0.0,
+  "mass_kg": 0.8896,
+  "activity": [
+   "nocturnal",
+   "crepuscular"
+  ],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 244.2
+  },
+  "sound": {
+   "range_m": 341.9
+  },
+  "scent": {
+   "range_m": 488.4
+  }
+ },
+ "rig": "tools/rig_quadruped.py lagomorph path, gait.js hopStep",
+ "locomotion": {
+  "code": "sylvilagus_audubonii",
+  "class": "Mammalia",
+  "order": "Lagomorpha",
+  "family": "Leporidae",
+  "body_plan": "lagomorph",
+  "mass_kg": 0.8896,
+  "length_m": 0.346,
+  "hip_m": 0.156,
+  "posture": "parasagittal",
+  "gaits": {
+   "walk": "froude 0.5",
+   "trot": "froude 2.5",
+   "gallop": "beyond",
+   "run": "hop"
+  },
+  "walk_mps": 0.87,
+  "trot_mps": 1.96,
+  "cruise_mps": 4.86,
+  "top_mps": 8.1,
+  "stride_hz": 4.26,
+  "stride_m": 0.46,
+  "sprint_s": 3.7,
+  "recover_s": 12.8,
+  "turn_rad_s": 4.26,
+  "turn": {
+   "on": 0.6,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    1.2,
+    3.5
+   ]
+  },
+  "lag": {
+   "s": 0.052,
+   "max_rad": 0.3,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {},
+  "flier": false,
+  "hop": {
+   "set": "half-bound",
+   "shuffle_froude": 1.0,
+   "flex_rad": 0.28
+  }
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T06:05:40Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

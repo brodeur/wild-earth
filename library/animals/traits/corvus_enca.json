@@ -1,0 +1,131 @@
+{
+ "id": "corvus_enca",
+ "scientific": "Corvus enca",
+ "common": "slender-billed crow",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Passeriformes",
+  "family": "Corvidae",
+  "genus": "Corvus"
+ },
+ "body_plan": "bird",
+ "mass_kg": 0.251,
+ "size": {
+  "length_m": 0.227,
+  "shoulder_or_wingspan_m": 0.363
+ },
+ "diet": {
+  "role": [
+   "omnivore",
+   "scavenger"
+  ],
+  "diet_tenths": {
+   "inv": 3.0,
+   "vend": 0.0,
+   "vect": 1.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 1.0,
+   "fruit": 5.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.1,
+  "mass_kg": 0.251,
+  "activity": [],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 379.2
+  },
+  "sound": {
+   "range_m": 189.6
+  },
+  "scent": {
+   "range_m": 15.2
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "corvus_enca",
+  "class": "Aves",
+  "order": "Passeriformes",
+  "family": "Corvidae",
+  "body_plan": "bird",
+  "mass_kg": 0.251,
+  "length_m": 0.227,
+  "hip_m": 0.114,
+  "posture": "biped",
+  "gaits": {
+   "ground": "walk-hop",
+   "flight": "flap-glide"
+  },
+  "walk_mps": 0.75,
+  "trot_mps": 1.67,
+  "cruise_mps": 2.53,
+  "top_mps": 4.22,
+  "stride_hz": 5.16,
+  "stride_m": 0.32,
+  "sprint_s": 2.7,
+  "recover_s": 9.3,
+  "turn_rad_s": 5.26,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.05,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": true,
+  "catch": {
+   "move": "stab",
+   "name": "the bill stab",
+   "reach_m": 0.9,
+   "stabs": 3,
+   "stab_s": 0.2,
+   "feed": {
+    "pose": "stabs with pauses",
+    "burst_s": 0.75,
+    "hz": 4
+   }
+  }
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T04:06:18Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

@@ -1,0 +1,118 @@
+{
+ "id": "argusianus_argus",
+ "scientific": "Argusianus argus",
+ "common": "great argus",
+ "kind": "bird",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Aves",
+  "order": "Galliformes",
+  "family": "Phasianidae",
+  "genus": "Argusianus"
+ },
+ "body_plan": "bird",
+ "mass_kg": 1.9599,
+ "size": {
+  "length_m": 0.451,
+  "shoulder_or_wingspan_m": 0.722
+ },
+ "diet": {
+  "role": [
+   "herbivore"
+  ],
+  "diet_tenths": {
+   "inv": 2.0,
+   "vend": 0.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 6.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 2.0
+  },
+  "vertebrate_share": 0.0,
+  "mass_kg": 1.9599,
+  "activity": [],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 572.0
+  },
+  "sound": {
+   "range_m": 286.0
+  },
+  "scent": {
+   "range_m": 22.9
+  }
+ },
+ "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+ "locomotion": {
+  "code": "argusianus_argus",
+  "class": "Aves",
+  "order": "Galliformes",
+  "family": "Phasianidae",
+  "body_plan": "bird",
+  "mass_kg": 1.9599,
+  "length_m": 0.451,
+  "hip_m": 0.226,
+  "posture": "biped",
+  "gaits": {
+   "ground": "walk-run",
+   "flight": "flush"
+  },
+  "walk_mps": 1.05,
+  "trot_mps": 2.35,
+  "cruise_mps": 3.87,
+  "top_mps": 5.95,
+  "stride_hz": 3.79,
+  "stride_m": 0.62,
+  "sprint_s": 4.4,
+  "recover_s": 15.6,
+  "turn_rad_s": 3.74,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.071,
+   "max_rad": 0.35,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "head_lead": true
+  },
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T06:19:55Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

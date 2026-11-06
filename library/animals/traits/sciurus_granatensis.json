@@ -1,0 +1,123 @@
+{
+ "id": "sciurus_granatensis",
+ "scientific": "Sciurus granatensis",
+ "common": "red-tailed squirrel",
+ "kind": "mammal",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Mammalia",
+  "order": "Rodentia",
+  "family": "Sciuridae",
+  "genus": "Sciurus"
+ },
+ "body_plan": "rodent",
+ "mass_kg": 0.25,
+ "size": {
+  "length_m": 0.227,
+  "shoulder_or_wingspan_m": 0.068
+ },
+ "diet": {
+  "role": [
+   "herbivore"
+  ],
+  "diet_tenths": {
+   "inv": 0.0,
+   "vend": 0.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 2.0,
+   "nect": 0.0,
+   "seed": 5.0,
+   "planto": 3.0
+  },
+  "vertebrate_share": 0.0,
+  "mass_kg": 0.25,
+  "activity": [
+   "diurnal"
+  ],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 189.5
+  },
+  "sound": {
+   "range_m": 265.3
+  },
+  "scent": {
+   "range_m": 378.9
+  }
+ },
+ "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+ "locomotion": {
+  "code": "sciurus_granatensis",
+  "class": "Mammalia",
+  "order": "Rodentia",
+  "family": "Sciuridae",
+  "body_plan": "rodent",
+  "mass_kg": 0.25,
+  "length_m": 0.227,
+  "hip_m": 0.068,
+  "posture": "parasagittal",
+  "gaits": {
+   "walk": "froude 0.5",
+   "trot": "froude 2.5",
+   "gallop": "beyond",
+   "run": "bound"
+  },
+  "walk_mps": 0.58,
+  "trot_mps": 1.29,
+  "cruise_mps": 3.6,
+  "top_mps": 5.54,
+  "stride_hz": 5.16,
+  "stride_m": 0.25,
+  "sprint_s": 2.7,
+  "recover_s": 9.3,
+  "turn_rad_s": 5.26,
+  "turn": {
+   "on": 0.6,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    1.2,
+    4.0
+   ]
+  },
+  "lag": {
+   "s": 0.042,
+   "max_rad": 0.3,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "sit_up": true,
+   "tail_flag": true
+  },
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-06T06:19:57Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}
