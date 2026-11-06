@@ -6028,3 +6028,160 @@ ledger counts it twice.
   stand-in). Not yet holding: the sage draws as tall smooth domes (the shrub field's dome shape and size, closed near the
   camera), bare ground between the tufts, and an OSM water polygon by the river that the imagery shows as dry ground
   (a rule to test mapped water against the imagery is next).
+
+
+## 2026-11-06: phase 1, iteration 8 (branch claude/sweet-feistel-2054bb)
+
+- **Mapped water against the imagery** (`pipeline/water_seasons.py`, a new base step `water_seasons` after `seasons`
+  and before `water`; docs/tile-spec.md "Mapped water against the imagery"). The dark polygon by the Lamar River was
+  not OSM: it is NHD waterbody 120047263, FCode 46600 (Swamp/Marsh), 6.3 ha, on a meadow; the water step drew every
+  NHD and OSM polygon as open water, marshes included (13 of Lamar's 20). Now every polygon is tested against the
+  tile's monthly Sentinel-2 composites, which carry red, green, blue and NDVI but no SWIR, so NIR is recovered as
+  red (1 + NDVI) / (1 - NDVI): over the pixels wholly inside the polygon (inset 10 m), water is NDWI > 0 or NIR < 0.04
+  (a dark algal pond has NDWI near 0); bright pixels (ice, snow, cloud) leave the count so a frozen lake is not dry;
+  a month is wet at >= 25% open water. Wet in no observed month: dry (no surface, basin or pond zone; the streams
+  through it drawn; `dry_waterbodies` in features.json with its bed, meadow or bare); wet in >= 75% of them:
+  permanent; else seasonal (water.js's intermittent ponds). Under two core pixels or three observed months the tags
+  decide (NHD intermittent FCodes and 46600, OSM intermittent/seasonal/wetland: seasonal). The evidence per polygon
+  (class, basis, core pixels, water fraction per month) is in hydro/waterbody_seasons.json and the manifest layer
+  `hydro.waterbody_seasons`; resources' water score skips the dry ones and counts the seasonal with the intermittent
+  streams. Results: Lamar 5 permanent, 3 seasonal, 12 dry (108 ha, every marsh; the 44 ha marsh over the braided
+  river among them; the lake at 8.7 km east kept); Teton 32 / 1 / 13 (Jenny, String, Taggart, Bradley open in every
+  month; 11 marshes and 2 small ponds dry); home 36 / 5 / 8 (the dry ones grassed-over stock ponds and Depot Lake,
+  most already rewilded); Lofoten 109 / 1 / 5 (every named lake permanent; dry are two slivers cut across land where
+  the OSM fallback closed a multipolygon's member ways one by one); Manu 4 / 0 / 1 (the river and both oxbow lakes
+  kept; a 35 ha "lagoon" under closed forest, NDVI 0.8, dry); Serengeti 7 / 0 / 1 (one 1.2 ha river pool dry, the
+  rest too small to judge); Danum has no waterbodies.
+- **The water step's riparian splice ate the home tile's species mix**: `_water` replaced the first `"riparian":` in
+  client/species_mix.json, which on the home tile is a community's share inside `context`; the file was cut short.
+  It now replaces the top-level key, checks the result parses back to the rows, and re-serialises otherwise; the home
+  tile's file was restored from git and re-spliced (its riparian rows now carry red alder, as riparian_rows gives
+  today). The home tile had no step records and was adopted (`--adopt`) to run its steps.
+- Open: the Lamar `c_river` pose is not in a mapped polygon; it stands in the Lamar River's channel as NAIP shot it in
+  July 2022 (a month after the flood) and as Sentinel-2 sees it, while the drawn river follows the DEM's thalweg 20-30 m
+  away, so the photo's water is painted as dark ground (the reverse test, water in the imagery with none drawn, is
+  next). Lofoten's Trolldalsvatnet (73 ha) and Ågvatnet rings self-intersect for the same multipolygon reason and
+  water.js skips them: real lakes with no surface, before and after (fetch_hydro's OSM fallback should assemble a
+  relation's outer ways into rings). A permanent pond's basin is mostly drawdown margin (Lamar's lake reads as mud
+  with a small pool) where the imagery shows water to the shore all year.
+- **Reference photos chosen by the rule alone; the check fitted to the judge's verdicts** (`pipeline/reference_photos.py`
+  mask, pose, usable; `pipeline/appearance.py` colour_stats, colour_fails, described_pale, fit_check, `--fit`;
+  `library/animals/models.json` `verdicts`, `library/animals/check_fit.json`). Iteration 7 left two steps to the agent's
+  judgement: picking the photo from a contact sheet (4 of 5 species) and accepting three models the check flagged. No
+  Meshy credits spent.
+  - **The subject mask** is learned now: U-2-Net (Qin et al. 2020) and IS-Net / DIS (Qin et al. 2022), class-agnostic
+    salient-object segmenters, Apache-2.0 code and weights, in rembg's ONNX exports (MIT), fetched once each into its
+    own folder in the git-ignored cache, pinned by SHA-256, run as data by OpenCV's DNN module (no torch, no model
+    code); the mask is the mean of their two maps, cached per photo. GrabCut's rocks and hillsides are gone (the
+    badger's rock is cut as a rock, and refused for having no legs).
+  - **The pose filter**, from the silhouette: whole (pixels on the frame's edge), size, one animal, clearly seen (the
+    width of the segmenters' uncertain band at the outline: twigs, tall grass, blur), a body (the mask's share of its
+    convex hull: a museum skeleton of a pronghorn ranked second before), side-on (aspect, and light under the belly
+    between fore and hind legs), the head toward an end of the box, legs (the leg zone between belly and ground over
+    0.12 of the height, two or more leg pieces) and standing square: each leg piece's lean (the slope of its midline
+    in the lower 65% of the leg zone); a stride opens fore and hind legs into a V, so the spread of the leans over 18
+    degrees costs the stance (0 at 38), all legs leaning together over 15, and a leg ending 0.06 of the height above
+    the ground line (perspective lifts the far feet a little). The photo's colours are counted within the check's own
+    tolerance (16, not 32: at 32 every candidate scored 1.0). A photo is usable only when whole, size, side-on, legs,
+    stance (0.6), body and clarity pass (`USABLE`; a snake's photo is a texture reference and may lose its tail to the
+    frame); none usable, no reference (the photo rung then has nothing to try).
+  - **Agreement on iteration 7's cached candidates** (rescored, no downloads but the chosen photos' full size): the
+    mountain goat takes the agent's pick (commons_9825969); every photo whose mesh failed the build's gate is refused:
+    the goat's stride (lean spread 67 deg), the badger's two walks (44, 95 deg) and its lying photo (no legs), and the
+    two moose photos the agent picked (37, 40 deg); also the badger's rock and the moose's three tall-grass photos the
+    agent passed over. The badger has no usable photo (the judge rejected all three meshes). The grizzly takes
+    inat_469943715, the agent's second (its first, a walking bear, spread 28 deg, is refused; it was only a texture
+    reference and that texture was rejected). The moose takes commons_540185, a bull side-on in shallow water. The
+    garter snake takes inat_124247019, a local striped snake laid out on gravel; the agent's Commons photo is usable at
+    rank 5 (a non-local photo scores 0.75, and its tail leaves the frame); the coastal red-spotted form ranks third.
+    Disagreement: the pronghorn takes inat_717073114, side-on with four legs clear but grazing head-down; the agent's
+    pick (inat_250877072, whose mesh passed) is refused because grass hides the legs (leg zone 0.15 of the height),
+    the same reason the judge gave for passing over the moose's grass photos. A judge's earlier pick stays in each
+    store as `judged`; `--pick` remains only as a recorded override.
+  - **The check, fitted**: the known verdicts are each species' current model (its judge's verdict, else drawn and
+    accepted) and the judged jobs, now recorded in models.json `verdicts` and built again into the cache: the
+    iteration-6 goat (ibex horns), the yellow, ochre and coastal red-spotted garter snakes, iteration 6's pronghorn
+    (impala horns), the grizzly's cream-blotched and near-black refines, and the leopard tortoise and Nile monitor,
+    whose colours iteration 5 recorded as still wrong (labels for the fit, not a judge's rejection: both are drawn).
+    39 models, 10 rejected. Rule changes first, each for a reason: grey before a hue names a low chroma (ISCC-NBS
+    "grayish", chroma x 0.4: "grayish-green" was a fresh green at chroma 29); one marking per pattern on the body,
+    whatever colour each source gives it, looked for on the back and flanks together (ADW's yellow stripes and
+    Wikipedia's "yellow, light orange or white" are the same stripes); a snake's underside lies on the ground, unseen,
+    and is not judged; a pale patch in a colour the description gives the coat is described, not a blotch (the
+    grizzly's frosted shoulders are ADW's "whitish-cream" on the back, the moose's brown and the elephant's dusty red
+    and brown are in their coats' colours; the ends of a range, "almost white", do not count). Then a grid over the
+    thresholds (match tolerance, the lightness weight of a phrase naming its lightness, region and model pass shares,
+    ground share, marking share, patch share), balanced accuracy, ties toward iteration 7's values: the fit kept every
+    threshold but the region pass (0.5 to 0.3) and the model pass (0.6 to 0.4), both for the snake's black back against
+    its described greyish-green (34% and 44%); a phrase's own lightness (kL 1 for "light brown") was not taken (it
+    fails the Egyptian goose). Confusion on the 39 (rejected flagged / rejected passed / accepted passed / accepted
+    flagged): iteration 7 9 / 1 / 25 / 4 (the elephant, snake, grizzly and moose flagged); fitted 8 / 2 / 29 / 0;
+    leave-one-out 8 / 2 / 28 / 1 (the snake: no other model supports the lower pass shares). Lost: the grizzly's stark
+    cream blotch now passes (its band is over the shoulders in a described colour, like the accepted one's: the two
+    differ in starkness, which no rule here measures); still passed: the near-black grizzly (its coat is
+    "brownish-black", a described colour; the judge saw a black bear's look). No species-specific exception.
+    models.json's stored colour checks refreshed: the snake, grizzly and moose pass, the badger's stand-in text model
+    fails (no white stripes, a ringed tail).
+  - Open: a grazing or head-turned pose is not measured (the pronghorn's pick); the standing test reads leans from a
+    silhouette, so near and far legs overlapping in one piece count as one leg; a colour's starkness against its
+    surround (a blotch against a frosting) and species identity beyond colour words (a black bear's look) are not in
+    the check; the pronghorn and moose now have rule-chosen photos no mesh has been made from.
+- **Lamar's sagebrush steppe at eye height: shrubs at the stand's measured height and cover, a grassland between them**
+  (`client/src/shrubfield.js`, `grass.js`, `forbs.js`; `pipeline/species_mix.py` stand_structure). Rules, for every tile:
+  - *The stand's structure per mix row* (species_mix.json `mixes[].shrub_h_m`, `herb_cover`): LANDFIRE EVH's shrub
+    height (codes 201-299, 0.1 m steps) as the median over the row's cells where at least half of them have one
+    (none on a synthetic EVH: Serengeti, Lofoten); the herbaceous cover range its community's BpS model description
+    gives ("Herbaceous cover is moderate to abundant, ranging from 40-85%": only 11260 of the cached models words it
+    so). `python -m pipeline.species_mix --structure <tile>` adds both to a built tile in place (done for Lamar and
+    Teton; the rows, index and other keys unchanged); a new build writes them.
+  - *A shrub's size*: every foothill-field plant's height comes from its record's age classes; a record's stand height
+    is its crown-area-weighted mean height (sum w E[H^3] / sum w E[H^2]); in a row with EVH and no chaparral, every
+    plant is scaled by EVH over the row's stand height (within 0.5-2). Big sagebrush's classes run to 2.0 m (stand
+    height 1.39 m), EVH 0.8 m, so k 0.57. *The count follows the drawn crowns*: a cell's candidates are its cover's disc
+    density over its mix's mean visible crown area at that scale, so the drawn cover is the cell's cover at any size
+    (the fixed 3 m^2 per plant drew sagebrush at about 0.4 of its cover, and the understory's 1.6x patches made it look
+    closed in places). *A shrubland row without chaparral is a stand*: its shrubs take the cell's whole shrub cover with
+    the chaparral's openings, not 0.8 of it in understory patches. *The LOD from the layer's crowns*: D0 and KMIN scale
+    with the layer's cover-weighted crown width against the chaparral's 2.2 m (Lamar 0.72 m: D0 38 m, KMIN 0.048; home
+    1.94 m: D0 101, KMIN 0.34, was 115 / 0.44), so a far impostor stands for several small shrubs at about the
+    chaparral's cost per screen.
+  - *Its look from its record* (a shrub not in FH_LOOK): lobes from the envelope's lobe_depth, the fringe from the
+    porosity (0.95 - 1.5 p, fitted to the table's shrubs), a vase from the envelope profile; for every foothill shrub
+    the porosity and a leaf-sized picture tile. Fine-leaved shrubs (leaf <= 25 mm: sagebrush, coyote brush, buckbrush,
+    snowberry) drew chamise's wand picture up close, long dark stripes down each crown: they now have their own
+    picture ('sprig': small leaves in tufts on short crooked twigs, 66 % coverage, its tile from the leaf size), seen
+    through between tufts toward the outline by the porosity (whole gaps, by the crown's octave: a fractional coverage
+    dithered into a screen door), the outline broken deeper and the light bent tuft by tuft by the porosity; the near
+    gain measured against the far program (leafGainF 3.4 / 1.2: near/far mean sRGB 108/104 on Lamar).
+  - *The herb layer between shrubs* (grass.js, forbs.js; a tile that borrows nothing, shrubland cells whose row lists
+    grasses): its herb cover is the description's (the range's middle, else 0.6) over the ground the shrubs leave open
+    (1 - canopy.png's shrub cover), at a grassland's density: Lamar 0.625 / 0.65 = 0.96, so the sward density goes
+    0.67 -> 0.95, the bare patches 15.7 % -> 8.5 % of the ground (the same bareField threshold rule), the forbs
+    (where the description gives a cover) 0.23 -> 0.98, a grassland's.
+  - Measured on Lamar (`b_valley_eye`, every instance of the cells within 15 m of the camera; LANDFIRE: EVC 35 %, EVH
+    0.8 m): shrub cover (union of the crowns' discs) 17 % -> 33 %; plants 0.17 -> 1.02 per m^2; heights p10 / p50 / p90 /
+    max 0.32 / 1.0 / 1.67 / 1.87 m -> 0.19 / 0.60 / 0.98 / 1.14 m; the field's instances in view 9.2 k -> 22 k. GPU frame
+    (timer query, the least of 10 x 8 renders, a GPU shared with other headless Chromes: two "before" runs differ by up
+    to 1.7 ms): eye 8.9-10.2 -> 10.6 ms, a second eye-height pose 8.8-10.8 -> 10.1, 10 m up 7.0-8.7 -> 8.6, 50 m up
+    5.8-7.0 -> 6.0. Teton's sagebrush (EVH 0.7 m, D0 34 m) is an even stand at the cell's cover where the understory's
+    patches left it bare by the camera; the home tile's chaparral, Serengeti and Lofoten draw as before (the home
+    tile's foothill shrubs stand elsewhere in their cells: the count rule changed their random stream; its LOD floor
+    went 0.44 -> 0.34 with its 1.94 m layer width). 146 tests pass (4 new: tests/test_species_mix_structure.py).
+  - Open: the probe pose itself stands in one of the bare patches (bareField 0.25, the 5th percentile); the near crowns
+    are still rounded masses (an impostor dome with sprays), not yet gnarled and flat-topped; the treegen sagebrush
+    in vegetation.js is drawn at 25 % of its count (shrubScale reads the lidar's 0.5-4 m shrub cover, 2.6 % where EVC
+    says 34 %: the lidar misses knee-high sage) and its close tier reads as a dithered haze; the chaparral program's
+    chamise and manzanita keep their table sizes where EVH says 1.8 m (home); lidar.py reads EVH 2xx as 0.5 m steps
+    (they are 0.1 m).
+- **The porous crowns' black holes** (`shrubfield.js` FRAG, near program): every foothill shrub out of flower drew black
+  patches through its near crown (sagebrush, coyote brush, buckbrush; there before this iteration as well, the chamise
+  picture's gaps then). The flower-tip choice was `step(rnd, tipShare)` and a foothill shrub's tipShare is 0: in the leaf
+  picture's gaps the per-leaf random is 0, `step(0, 0)` is 1, and the tip colour (its flowers', black when none show)
+  filled the gap at alpha 1 (found by drawing the near program in flat magenta, then alpha / body / colour: the blotches
+  were its own fragments, opaque, colour 0). Now strictly under the share. With it, a porous crown's gaps by rule: a share
+  of them are holes through the crown, porosity x (1.2 at the centre to 2.5 at the outline), chosen whole by the crown's
+  fine octave; the rest show its far side, the picture again offset and scaled at 0.55 of its shade. Lamar's sage at
+  eye height now reads grey with soil, grass and stems seen through it at every distance; the home tile's coyote brush
+  and buckbrush have no holes either. The probe pose stands in a bare patch (bareField 0.25, sward 0.27 at its foot);
+  three positions 15-20 m off (bareField 0.51-0.72) have a full sward at the foot (1.0) with bunchgrass and forbs
+  between the sage.

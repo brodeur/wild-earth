@@ -6,7 +6,7 @@ and riparian systems; water systems are first class citizens like animals." Unti
 on the terrain at the ground's own height: the 5 m DEM is hydro-flattened at the water surface, so an animal met a
 flat shore and the water sat on top of it. This step reads the routed channels (hydro/channels.geojson), their
 depth and riffle-pool profile (client/channel_profile.png), the kept ponds (hydro/waterbodies.geojson minus
-hydro/human_water.geojson's rewilded ones) and the DEM, and writes:
+hydro/human_water.geojson's rewilded ones and the ones hydro/waterbody_seasons.json found dry) and the DEM, and writes:
 
   terrain/dem_banked.tif    the 5 m DEM with every channel and pond basin carved to a graded cross-section (below)
   client/heights.png        rebuilt from it (derive.client_rasters's encoding), so the terrain mesh carries the banks
@@ -67,6 +67,7 @@ from shapely.geometry import LineString, shape
 
 from .config import TILE_SIZE_M, Tile, sha256, write_json
 from .rewild_hydro import _Ctx
+from .water_seasons import body_id, load_classes
 
 SAMPLE_M = 2.5                    # centreline sample spacing
 DEM_PREFERRED_M = 15.0            # an NHD-sourced stretch within this of a DEM reach is a duplicate (water.js)
@@ -313,17 +314,23 @@ def carve_streams(z: np.ndarray, res: float, samples: dict, near: np.ndarray, d:
 # ---------------------------------------------------------------------------
 
 def kept_ponds(ctx: _Ctx) -> list[dict]:
-    """The waterbodies drawn as ponds: every NHD ring not rewilded (hydro/human_water.geojson), with its level."""
+    """The waterbodies drawn as ponds: every NHD or OSM ring not rewilded (hydro/human_water.geojson) and not dry in the
+    imagery (hydro/waterbody_seasons.json, pipeline/water_seasons.py), with its permanence: the imagery's class where
+    the step judged it (seasonal = intermittent), else the NHD FCode."""
     human = ctx.load("hydro/human_water.geojson")
     rewilded = []
     for f in human:
         if f["properties"].get("rewilded"):
             g = ctx.local(shape(f["geometry"]))
             rewilded.append(g.bounds)
+    classes = load_classes(ctx.tile) or {}
     out = []
-    for f in ctx.load("hydro/waterbodies.geojson"):
+    for i, f in enumerate(ctx.load("hydro/waterbodies.geojson")):
         pr = f["properties"]
         if str(pr.get("ftype")) == "378":   # NHD Ice Mass: a glacier, not a pond (pipeline/water_seams.py: its streams)
+            continue
+        c = classes.get(body_id(pr, i))
+        if c and c["class"] == "dry":       # mapped water the imagery shows dry in every month: its bed, not a pond
             continue
         g = ctx.local(shape(f["geometry"]))
         if g.is_empty or g.area < 4:
@@ -332,7 +339,8 @@ def kept_ponds(ctx: _Ctx) -> list[dict]:
         if any(_iou(b, rb) > 0.6 for rb in rewilded):
             continue
         out.append({"geom": g, "fcode": pr.get("fcode"), "name": pr.get("gnis_name"), "area": float(g.area),
-                    "intermittent": pr.get("fcode") in POND_INTERMITTENT, "id": pr.get("permanent_identifier")})
+                    "intermittent": (c["class"] == "seasonal") if c else pr.get("fcode") in POND_INTERMITTENT,
+                    "id": pr.get("permanent_identifier") or pr.get("osm_id"), "water": c["class"] if c else None})
     return out
 
 
@@ -617,7 +625,9 @@ def build_water(tile: Tile, force: bool = False) -> dict:
         "cut": {"cells": int(cut_cells.sum()), "mean_m": round(float(cut[cut_cells].mean()), 3) if cut_cells.any() else 0,
                 "p95_m": round(float(np.percentile(cut[cut_cells], 95)), 3) if cut_cells.any() else 0,
                 "max_m": round(float(cut.max()), 2)},
-        "ponds": {"kept": len(ponds), "intermittent": sum(1 for p in ponds if p["intermittent"]), "basins": pond_stats},
+        "ponds": {"kept": len(ponds), "intermittent": sum(1 for p in ponds if p["intermittent"]), "basins": pond_stats,
+                  "by_imagery": {k: sum(1 for p in ponds if p.get("water") == k) for k in ("permanent", "seasonal")},
+                  "dry_dropped": sum(1 for b in (load_classes(tile) or {}).values() if b["class"] == "dry")},
         "bank_params": {o: BANK[o] for o in range(1, 6)},
         "by_order": {int(o): int((S["order"] == o).sum()) for o in np.unique(S["order"])},
         "species_mix": mix_note,

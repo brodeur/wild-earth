@@ -477,9 +477,14 @@ export class Forbs {
   buildDensity() {
     const hab = this.tile.habitat, can = this.tile.canopy, W = hab.img.width, H = hab.img.height;
     this.W = W; this.Hh = H; this.dens = new Float32Array(W * H); this.cover = new Float32Array(W * H); this.shrub = new Float32Array(W * H);
+    // A shrubland whose community description gives its herb cover (species_mix.json mixes[].herb_cover, 2026-11-06, iteration
+    // 8): its herbs grow on the ground the shrubs leave open at that cover over the open share, as grass.js takes it, so the
+    // forbs between the shrubs are a grassland's (Lamar's montane sagebrush steppe: 0.98, was 0.35 x 0.65).
+    const SM = this.tile.speciesMix, mixRows = new Map((SM?.json?.mixes || []).map(m => [m.index, m]));
     for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
-      const k = j * W + i, h = Math.min(Math.max(can.channel(i, j, 2) / 100, 0.3), 1), hb = HABITAT[hab.channel(i, j, 0)] || 0;
-      this.dens[k] = hb * (0.5 + 0.5 * h); this.cover[k] = can.channel(i, j, 0) / 100; this.shrub[k] = can.channel(i, j, 1) / 100;
+      const cls = hab.channel(i, j, 0), hc = cls === 4 ? mixRows.get(SM?.at(i, j)?.index)?.herb_cover : null, s = can.channel(i, j, 1) / 100;
+      const k = j * W + i, h = hc ? Math.min(1, (hc[0] + hc[1]) / 2 / Math.max(0.15, 1 - s)) : Math.min(Math.max(can.channel(i, j, 2) / 100, 0.3), 1), hb = (hc ? HABITAT[5] : HABITAT[cls]) || 0;
+      this.dens[k] = hb * (0.5 + 0.5 * h); this.cover[k] = can.channel(i, j, 0) / 100; this.shrub[k] = s;
     }
   }
   sample(grid, x, north) {

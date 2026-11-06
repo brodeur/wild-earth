@@ -1,0 +1,393 @@
+{
+ "date": "2026-11-06",
+ "by": "pipeline/appearance.py fit_check",
+ "models": 39,
+ "rejected": 10,
+ "accepted": 29,
+ "grid": {
+  "match_de": [
+   12.0,
+   14.0,
+   16.0,
+   18.0,
+   20.0,
+   22.0,
+   24.0
+  ],
+  "kl_named": [
+   1.0,
+   1.5,
+   2.0
+  ],
+  "region_pass": [
+   0.3,
+   0.4,
+   0.5,
+   0.6
+  ],
+  "score_pass": [
+   0.4,
+   0.5,
+   0.6,
+   0.7
+  ],
+  "ground_min": [
+   0.06,
+   0.12,
+   0.2
+  ],
+  "mark_share": [
+   0.005,
+   0.015,
+   0.03
+  ],
+  "patch_share": [
+   0.03,
+   0.05,
+   0.08,
+   0.12
+  ]
+ },
+ "params": {
+  "match_de": 16.0,
+  "kl_named": 2.0,
+  "region_pass": 0.3,
+  "score_pass": 0.4,
+  "ground_min": 0.12,
+  "mark_share": 0.015,
+  "patch_share": 0.05
+ },
+ "balanced_accuracy": 0.9,
+ "confusion": {
+  "rejected_flagged": 8,
+  "rejected_passed": 2,
+  "accepted_passed": 29,
+  "accepted_flagged": 0
+ },
+ "loo": {
+  "rejected_flagged": 8,
+  "rejected_passed": 2,
+  "accepted_passed": 28,
+  "accepted_flagged": 1
+ },
+ "iteration7_thresholds_new_rules": {
+  "rejected_flagged": 8,
+  "rejected_passed": 2,
+  "accepted_passed": 28,
+  "accepted_flagged": 1
+ },
+ "per_model": [
+  {
+   "code": "panthera_leo",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "crocuta_crocuta",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "panthera_pardus",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "acinonyx_jubatus",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "lycaon_pictus",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "loxodonta_africana",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "hippopotamus_amphibius",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "giraffa_tippelskirchi",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "syncerus_caffer",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "equus_quagga",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "connochaetes_taurinus",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "torgos_tracheliotos",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "leptoptilos_crumenifer",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "struthio_camelus",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "alopochen_aegyptiaca",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "vanellus_armatus",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "crocodylus_niloticus",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "stigmochelys_pardalis",
+   "model": "current",
+   "verdict": "rejected",
+   "by": "iteration 5 record",
+   "flagged": true,
+   "flagged_loo": true
+  },
+  {
+   "code": "agama_mwanzae",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "varanus_niloticus",
+   "model": "current",
+   "verdict": "rejected",
+   "by": "iteration 5 record",
+   "flagged": true,
+   "flagged_loo": true
+  },
+  {
+   "code": "oreamnos_americanus",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "the judge (Claude, from the model's render against the species' description)",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "oreamnos_americanus",
+   "model": "library/animals/jobs/oreamnos_americanus/01a1b126-d360-73e5-98fa-ee8a093c18c9",
+   "verdict": "rejected",
+   "by": "the judge, iteration 6",
+   "flagged": true,
+   "flagged_loo": true
+  },
+  {
+   "code": "bison_bison",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "ovis_canadensis",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "antilocapra_americana",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "the judge (Claude, from the model's render against the species' description)",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "antilocapra_americana",
+   "model": "library/animals/jobs/antilocapra_americana/01a1b130-1b14-7175-aa07-5c55662144e4",
+   "verdict": "rejected",
+   "by": "iteration 7 record (docs/decisions.md)",
+   "flagged": true,
+   "flagged_loo": true
+  },
+  {
+   "code": "taxidea_taxus",
+   "model": "current",
+   "verdict": "rejected",
+   "by": "the judge (Claude, from the model's render against the species' description)",
+   "flagged": true,
+   "flagged_loo": true
+  },
+  {
+   "code": "thamnophis_elegans",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "the judge (Claude, from the model's render against the species' description)",
+   "flagged": false,
+   "flagged_loo": true
+  },
+  {
+   "code": "thamnophis_elegans",
+   "model": "library/animals/jobs/thamnophis_elegans/01a1b131-90b5-7024-abc6-8bac631eb794",
+   "verdict": "rejected",
+   "by": "the judge, iteration 6",
+   "flagged": true,
+   "flagged_loo": true
+  },
+  {
+   "code": "thamnophis_elegans",
+   "model": "library/animals/jobs/thamnophis_elegans/01a1b176-bc6d-7564-af55-013cfa82e8c8",
+   "verdict": "rejected",
+   "by": "the judge, iteration 7",
+   "flagged": true,
+   "flagged_loo": true
+  },
+  {
+   "code": "thamnophis_elegans",
+   "model": "library/animals/jobs/thamnophis_elegans/01a1b177-4d95-769b-b83a-55153cbe9787",
+   "verdict": "rejected",
+   "by": "the judge, iteration 7",
+   "flagged": true,
+   "flagged_loo": true
+  },
+  {
+   "code": "canis_lupus",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "ursus_arctos",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "the judge (Claude, from the model's render against the species' description)",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "ursus_arctos",
+   "model": "library/animals/jobs/ursus_arctos/01a1b137-d7b9-7439-8960-c72ea3293daa",
+   "verdict": "rejected",
+   "by": "the judge, iteration 7",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "ursus_arctos",
+   "model": "library/animals/jobs/ursus_arctos/01a1b190-3a85-7581-98c4-955a1db6d7ad",
+   "verdict": "rejected",
+   "by": "the judge, iteration 7",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "aquila_chrysaetos",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "pelecanus_erythrorhynchos",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "grus_canadensis",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "drawn, no rejection recorded",
+   "flagged": false,
+   "flagged_loo": false
+  },
+  {
+   "code": "alces_alces",
+   "model": "current",
+   "verdict": "accepted",
+   "by": "the judge (Claude, from the model's render against the species' description)",
+   "flagged": false,
+   "flagged_loo": false
+  }
+ ]
+}

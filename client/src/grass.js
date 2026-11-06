@@ -125,6 +125,11 @@ const WET_MEADOW_ANNUAL = 0.4;
 // A tile that borrows nothing (ownGround): the grass density of a class HABITAT gives none, where the cell's own mix
 // lists grasses: a steppe's shrubland (the montane sagebrush steppe's herb layer is 40-85 % cover between the shrubs,
 // LANDFIRE BpS 11260), the forests' and the barren ground's sparse grass.
+// A shrubland's (2026-11-06, iteration 8): its herb cover from its community's LANDFIRE description where it gives one
+// (species_mix.json mixes[].herb_cover, the range's middle: the montane sagebrush steppe's 40-85 %), else OWN_HERB; the
+// herbs grow on the ground the shrubs leave open (canopy.png's shrub cover), so between the shrubs the sward is that cover
+// over the open share, at a grassland's density (Lamar: 0.625 / 0.65 = 0.96 of a grassland's, was 0.8 x 0.6 with more and
+// larger bare patches). Forests and barren ground keep OWN_DENS.
 const OWN_DENS = { 4: 0.8, 2: 0.2, 3: 0.3, 8: 0.2 }, OWN_HERB = 0.6;   // annual share on a rewilded lakebed or stock-pond floor (annualAt)
 // per instance: x, y, z, yaw | scale xz, scale y, seed, type + 2 * tier + 8 * role
 // (type 0 annual, 1 bunch; tier 0 main, 1 close, 2 ground; role ROLE)
@@ -934,6 +939,7 @@ export class Grass {
     yield 'sets';
     shrubLeaves(true); yield 'shrub leaves (manzanita)';
     shrubLeaves(false); yield 'shrub leaves (chamise)';
+    shrubLeaves('sprig'); yield 'shrub leaves (fine-leaved shrubs)';
     // Chaparral's closed shrub canopy (shrubfield.js).
     this.shrubs = ShrubField(tile, this.ground, this.uniforms);
     yield 'ShrubField';
@@ -1082,6 +1088,7 @@ export class Grass {
   buildDensityGrid() {
     const hab = this.tile.habitat, can = this.tile.canopy, W = hab.img.width, Hh = hab.img.height;
     this.W = W; this.Hh = Hh; this.dens = new Float32Array(W * Hh); this.herb = new Float32Array(W * Hh);
+    const mixRows = new Map((this.tile.speciesMix?.json?.mixes || []).map(m => [m.index, m]));
     for (let j = 0; j < Hh; j++) for (let i = 0; i < W; i++) {
       // herb floored at 0.3 as before: a 0 is more often a data gap (or an oak's shade) than bare dirt
       const k = j * W + i, cls = hab.channel(i, j, 0), hb = HABITAT[cls];
@@ -1091,7 +1098,14 @@ export class Grass {
       // the classes HABITAT has keep their density. Under a shrub canopy the herb cover is not measured (LANDFIRE's EVC
       // gives a shrub-dominated cell its shrub cover, herb 0), so the floor there is OWN_HERB, not the 0.3 that opened
       // the steppe into bare patches (its description: 40-85 % herb cover between the shrubs).
-      if (this.noFallback && OWN_DENS[cls] > d && this.ownGrassAt(i, j)) { d = OWN_DENS[cls]; if (cls === 4) h = Math.max(h, OWN_HERB); }
+      if (this.noFallback && OWN_DENS[cls] > d && this.ownGrassAt(i, j)) {
+        d = OWN_DENS[cls];
+        if (cls === 4) {
+          const hc = mixRows.get(this.tile.speciesMix.at(i, j)?.index)?.herb_cover, s = can.channel(i, j, 1) / 100;
+          h = Math.min(1, Math.max(h, hc ? (hc[0] + hc[1]) / 2 : OWN_HERB) / Math.max(0.15, 1 - s));
+          d = h;
+        }
+      }
       this.herb[k] = h; this.dens[k] = d ? d * (0.6 + 0.4 * h) : 0;
     }
   }

@@ -50,7 +50,20 @@ const FH_DEFAULT = [0.25, 0.5, 0.05, 0];
 // table's fine-leaved shrubs' (coyote brush, buckbrush, snowberry, monkeyflower: 12-25 mm; its broad-leaved ones 40 mm
 // and over), so big sagebrush's small grey leaves take chamise's fine picture, not manzanita's broad leaves.
 const FH_FINE_LEAF_M = 0.025;
-const fhLook = id => FH_LOOK[id] || [...FH_DEFAULT.slice(0, 3), (SPECIES[id]?.foliage?.leaf_size_m ?? 1) <= FH_FINE_LEAF_M ? 1 : 0];
+// A shrub not in the table takes its look from its record (2026-11-06, iteration 8; the table's values were fitted to
+// these same fields of its shrubs): lobe depth 1.5 x the crown envelope's lobe_depth; how far the fringe breaks up from
+// the crown's porosity (targets.porosity: 0.95 - 1.5 p, so coyote brush's 0.2 is the table's 0.65-0.7 and poison oak's
+// 0.35 its 0.38-0.43); a narrow base from the envelope profile (the base's width under half the widest: redbud's vase).
+// Two more for every shrub: the porosity itself, which opens a fine-leaved crown up close (see FRAG, picF), and the
+// leaf picture's tile from the leaf size (0.8 m for a 2 cm leaf: the picture's leaves at the record's size).
+const fhLook = id => {
+  const spec = SPECIES[id], env = spec?.crown?.envelope, prof = env?.profile, leaf = spec?.foliage?.leaf_size_m ?? 1;
+  const por = Math.min(0.6, Math.max(0.05, spec?.targets?.porosity ?? 0.2));
+  const wmax = prof?.length ? Math.max(...prof.map(q => q[1])) : 0;
+  const own = [Math.min(0.4, Math.max(0.1, 1.5 * (env?.lobe_depth ?? 0.16))), Math.min(0.75, Math.max(0.3, 0.95 - 1.5 * por)),
+    wmax > 0 ? Math.max(0, 0.9 * (0.5 - prof[0][1] / wmax)) : FH_DEFAULT[2], leaf <= FH_FINE_LEAF_M ? 1 : 0];
+  return [...(FH_LOOK[id] || own), por, Math.min(1.2, Math.max(0.4, 0.8 * leaf / 0.02))];
+};
 export const FH = SPECIES_IDS.filter(id => SPECIES[id].shrubLike && id !== 'arctostaphylos_viscida' && id !== 'adenostoma_fasciculatum').slice(0, FH_SLOTS);   // exported for forage.js (the glow weights by index)
 FH.forEach((id, k) => { for (const a of SPECIES[id].aliases || []) if (KIND[a] === undefined) KIND[a] = -1 - k; });
 const FH_N = FH.length;
@@ -155,7 +168,7 @@ const VERT = /* glsl */`
 
 const FRAG = /* glsl */`
   uniform vec3 sunDir; uniform float heads; uniform float dry;   // dry: the season (grass.js's palette value)
-  uniform sampler2D leafM; uniform sampler2D leafC; uniform vec4 leafGain;   // leaf pictures (bakeLeaves); their gain in sun (manzanita, chamise) and in shade (same)
+  uniform sampler2D leafM; uniform sampler2D leafC; uniform vec4 leafGain; uniform vec2 leafGainF;   // leaf pictures (bakeLeaves); their gain in sun (manzanita, chamise) and in shade (same)
   // The foothill shrubs (FH: kinds -1 to -6, index -1 - kind), this season (fhSeason): leaf-on (0 bare .. 1), the bark
   // and bare-twig albedo, and the flowers or berries showing (albedo, share of the outer crown they cover).
   uniform float fhLeaf[${FH_N}]; uniform vec3 fhBark[${FH_N}]; uniform vec4 fhDeco[${FH_N}];
@@ -167,6 +180,9 @@ const FRAG = /* glsl */`
   const float FH_OPEN[${FH_N}] = ${fhArr(1)};
   const float FH_VASE[${FH_N}] = ${fhArr(2)};
   const float FH_FINE[${FH_N}] = ${fhArr(3)};
+  const float FH_POR[${FH_N}] = ${fhArr(4)};   // the record's crown porosity
+  const float FH_T[${FH_N}] = ${fhArr(5)};     // the fine picture's tile (m), from the record's leaf size
+  uniform sampler2D leafF;   // the fine-leaved shrubs' picture (bakeLeaves 'sprig'): sprigs of small leaves on crooked twigs
   varying vec2 vQ; varying vec3 vRight; varying vec3 vUp; varying vec3 vView;
   varying vec3 vAlbedo; varying vec3 vSun; varying vec3 vAmb; varying vec3 vAmbUp; varying vec3 vT; varying vec3 vIn;
   varying float vSeed; varying float vKind; varying float vLobes; varying float vYS; varying float vVar; varying float vDry; varying float vFade;
@@ -210,6 +226,7 @@ const FRAG = /* glsl */`
     int fk = fh ? int(-kind - 0.5) : 0;
     bool manz = kind > 0.5, broad = manz || fh, fine = fh && FH_FINE[fk] > 0.5;   // fine: small-leaved shrubs (coyote brush, buckbrush) take chamise's picture
     bool picM = broad && !fine;   // up close: the round-leaf picture (manzanita's) or the fine one (chamise's)
+    bool picF = fine;             // a fine-leaved foothill shrub: its own sprig picture, not chamise's wands (2026-11-06)
     vec2 q0 = vQ, q = q0;
     float sc = 0.8, kSub = 0.0, seam = 1.0;
     {
@@ -288,7 +305,8 @@ const FRAG = /* glsl */`
       float baseH = 2.0 * Hh * (broad ? 0.17 : 0.13) * (0.55 + 0.9 * lobe) * side;
       // Up close the outline breaks into sprays (manzanita: rounded leaf masses; chamise: upright tufts).
       spray = broad ? twig : streak;   // (the crown's own octaves: a further noise here cost 0.75 ms at 3 m)
-      float rbN = rb + (broad ? 0.34 * (twig - 0.5) : 0.45 * (streak - 0.5) + 0.12 * (twig - 0.5)) * smoothstep(-0.5, 0.2, nW.y);
+      // (a porous fine-leaved crown's outline breaks deeper, by its porosity: sagebrush's tufts stand apart at its edge)
+      float rbN = rb + (broad ? (0.34 + (picF ? FH_POR[fk] : 0.0)) * (twig - 0.5) : 0.45 * (streak - 0.5) + 0.12 * (twig - 0.5)) * smoothstep(-0.5, 0.2, nW.y);
       float dEdge = min((broad ? rbN : rbN * 0.93) - rr, (hgt - baseH) / max(vDim.y * sc, 0.1));   // > 0 inside the foliage
       // Leaves (manzanita: round, 2.5-5 cm, in sprays, a red twig in the gaps) and needle tufts on wands
       // (chamise), from a baked picture of each (bakeLeaves) wrapped round the crown by azimuth and height
@@ -297,7 +315,7 @@ const FRAG = /* glsl */`
       // outward and only the leaves' cores are kept, so the edge is single leaves and tufts, thinning out.
       vec3 s3 = vRight * q.x + vUp * q.y + vView * z;
       vec3 P = s3 * vec3(Rm, Hh, Rm) * sc;
-      float T = picM ? 1.0 : 0.8, Nu = max(1.0, floor(6.2832 * Rm * sc / T + 0.5)) / 6.2832;
+      float T = picM ? 1.0 : picF ? FH_T[fk] : 0.8, Nu = max(1.0, floor(6.2832 * Rm * sc / T + 0.5)) / 6.2832;
       float az = atan(s3.z, s3.x);
       vec2 hx = dFdx(s3.xz), hy = dFdy(s3.xz);   // the azimuth's gradient, worked out (no jump at its cut)
       vec2 gA = vec2(s3.x * hx.y - s3.z * hx.x, s3.x * hy.y - s3.z * hy.x) / max(dot(s3.xz, s3.xz), 1e-4) * Nu;
@@ -309,12 +327,21 @@ const FRAG = /* glsl */`
       ddx = vec2(gA.x + dFdx(P.y) / T * shear, dFdx(P.y) / T), ddy = vec2(gA.y + dFdy(P.y) / T * shear, dFdy(P.y) / T);
       vec2 uvT = P.xz / T + off.yx, dxT = dFdx(P.xz) / T, dyT = dFdy(P.xz) / T;
       float wc = smoothstep(0.45, 0.7, s3.y / max(length(s3), 1e-3));   // the cap
-      tex = picM ? textureGrad(leafM, uv, ddx, ddy) : textureGrad(leafC, uv, ddx, ddy);
-      if (wc > 0.0) tex = mix(tex, picM ? textureGrad(leafM, uvT, dxT, dyT) : textureGrad(leafC, uvT, dxT, dyT), wc);
+      tex = picM ? textureGrad(leafM, uv, ddx, ddy) : picF ? textureGrad(leafF, uv, ddx, ddy) : textureGrad(leafC, uv, ddx, ddy);
+      if (wc > 0.0) tex = mix(tex, picM ? textureGrad(leafM, uvT, dxT, dyT) : picF ? textureGrad(leafF, uvT, dxT, dyT) : textureGrad(leafC, uvT, dxT, dyT), wc);
+      // A porous crown (the record's porosity) is seen through between its tufts: a share of its gaps are holes through the
+      // crown, most toward the outline, where a line of sight crosses the least foliage (whole gaps at a time, chosen by the
+      // crown's fine octave: a fractional coverage dithered into a screen door). Its other gaps show its far side: the
+      // picture again, offset and scaled, its tufts in the crown's shade.
+      float see = picF ? step(twig, clamp(FH_POR[fk] * (1.2 + 1.3 * smoothstep(0.25, 0.9, rr / max(rbN, 0.3))), 0.0, 1.0)) : 0.0;
+      if (picF && see < 0.5 && tex.g < 0.45) {
+        vec4 t2 = textureGrad(leafF, uv * 0.79 + vec2(0.37, 0.61), ddx * 0.79, ddy * 0.79);
+        tex = vec4(mix(tex.r, t2.r * 0.55, step(0.45, t2.g)), max(tex.g, t2.g), t2.b, t2.a * step(0.45, t2.g));
+      }
       lres = 1.0 - smoothstep(3.0, 9.0, 512.0 * max(max(length(ddx), length(ddy)), wc * max(length(dxT), length(dyT))));
       rim = smoothstep(0.22, 0.0, dEdge);
       float outer = clamp(-dEdge / 0.2, 0.0, 1.0), thr = mix(0.5, 0.93, outer), gw = 0.5 * fwidth(tex.g) + 0.02;
-      body = mix(alpha, mix(1.0, smoothstep(thr - gw, thr + gw, tex.g), rim) * step(-0.2, dEdge), lres);   // foliage coverage
+      body = mix(alpha, mix(1.0, smoothstep(thr - gw, thr + gw, tex.g), max(rim, see)) * step(-0.2, dEdge), lres);   // foliage coverage
       if (fh && fhLeaf[fk] < 0.999) body *= max(step(fract(tex.b * 5.31), fhLeaf[fk]), fdk);   // a leafing-out or dropping crown: that share of its leaves (and its flowers)
       // Wood is drawn only where it can show: where the foliage does not cover the pixel, or through a
       // gap in the picture in the lower crown (most of a crown's face skips it).
@@ -395,7 +422,8 @@ const FRAG = /* glsl */`
     #else
     float lc = n3(nW * 4.0 * vLobes + vSeed * 5.0) * 0.6 + twig * 0.4;
     #endif
-    vec3 N = normalize(nW + (vec3(lobe, 0.5, twig) - 0.5) * 0.9);
+    // (a porous crown is lit tuft by tuft more than as one dome: its normal bent further by the crown's octaves)
+    vec3 N = normalize(nW + (vec3(lobe, 0.5, twig) - 0.5) * (fine ? 0.9 + 2.0 * FH_POR[fk] : 0.9));
     float diff = max(dot(N, sunDir), 0.0);
     float ao = mix(0.6, 1.0, smoothstep(-0.7, 0.6, nW.y)) * mix(0.75, 1.0, lc);
     vec3 amb = mix(vAmb, vAmbUp, 0.5 + 0.5 * N.y);
@@ -474,14 +502,16 @@ const FRAG = /* glsl */`
       } else colF = fol * mix(0.8, 1.2, lv) * vec3(0.92, 1.0, 1.04);   // (the brown wands in the picture warm the mean)
       if (fh) colF = mix(colF, fhDeco[fk].rgb * mix(0.9, 1.15, lv), fdk);
       // (Tips carry the leaves' sun gain too, so chamise's are taken down by its larger gain.)
-      colF = mix(colF, fol * tipRel * (broad ? 1.0 : 0.6), step(rnd, tipShare * smoothstep(broad ? 0.0 : 0.1, 0.6, nW.y)) * lres);
+      // (strictly under the share: in the picture's gaps the per-leaf random is 0, and step(0, 0) is 1, which drew a foothill
+      // shrub out of flower, whose tip colour is its flowers' (none: black), as black holes all through its crown)
+      colF = mix(colF, fol * tipRel * (broad ? 1.0 : 0.6), float(rnd < tipShare * smoothstep(broad ? 0.0 : 0.1, 0.6, nW.y)) * lres);
       vec3 barkC = fh ? fhBark[fk] : manz ? vec3(0.12, 0.042, 0.038) : vec3(0.15, 0.11, 0.08), deadC = broad ? vec3(0.24, 0.23, 0.2) : vec3(0.24, 0.225, 0.2);
       float woodCov = broad ? stemCov : wandCov;
       vec3 woodLit = mix(barkC, deadC, broad ? stemDead : wandDead) * (sunL * 0.4 + amb * 1.1);
       vec3 texWood = mix(barkC, deadC, step(0.5, rnd)) * 0.8;
       if (!broad) woodLit = mix(woodLit, mix(fol, fol * tipRel * 0.6, wandTip * step(0.001, tipShare)) * cl * (sunL * 0.8 + ambL), wandLeaf);
       vec3 base = mix(colF, texWood, woodF);
-      vec2 gn = picM ? leafGain.xz : leafGain.yw;
+      vec2 gn = picM ? leafGain.xz : picF ? leafGainF : leafGain.yw;
       vec3 folLit = base * cl * (sunL * leafSun * shade * gn.x + ambL * (0.5 + 0.5 * shade) * gn.y);
       // The geometric stems and wands show through the picture's gaps in the lower crown and the holes.
       float show = max(rim, smoothstep(Hh * 0.75, Hh * 0.45, hgt));
@@ -712,12 +742,17 @@ function mergeByRank(a, b) {
 // alive), a wood. Manzanita (1 m tile): stiff round leaves 2.5-5 cm in sprays, each upright at its own
 // azimuth (round face-on, a sliver edge-on), red twigs in the gaps. Chamise (0.8 m): upright wands, a few
 // dead, with tufts of needles along them.
-// Baked once per page (shrubLeaves; grass.js asks for both while the world builds, a task each, so ShrubField finds them).
-const leafPictures = new Map();
-export function shrubLeaves(manz) { let t = leafPictures.get(manz); if (!t) leafPictures.set(manz, t = bakeLeaves(manz)); return t; }
-function bakeLeaves(manz) {
-  const S = 512, rnd = mulberry32(manz ? 0x1eaf5 : 0xc4a35);
-  const ch = [0, 1, 2, 3].map(k => { const c = document.createElement('canvas'); c.width = c.height = S; const g = c.getContext('2d'); g.fillStyle = k ? '#000' : '#333'; g.fillRect(0, 0, S, S); return g; });
+// Baked once per page (shrubLeaves; grass.js asks for each while the world builds, a task each, so ShrubField finds them).
+// kind: true manzanita, false chamise, 'sprig' the fine-leaved foothill shrubs (2026-11-06, iteration 8: big sagebrush,
+// coyote brush, buckbrush, snowberry drew chamise's wands, long dark stripes down a sagebrush; the sprig picture is small
+// leaves in tufts at the ends of short crooked twigs, the gaps between tufts open, sized by the record's leaf: FH_T).
+const leafPictures = new Map(), leafCoverage = new Map();
+export { leafCoverage };
+export function shrubLeaves(kind) { let t = leafPictures.get(kind); if (!t) leafPictures.set(kind, t = bakeLeaves(kind)); return t; }
+function bakeLeaves(kind) {
+  const manz = kind === true, sprig = kind === 'sprig';
+  const S = 512, rnd = mulberry32(manz ? 0x1eaf5 : sprig ? 0x5b41c : 0xc4a35);
+  const ch = [0, 1, 2, 3].map(k => { const c = document.createElement('canvas'); c.width = c.height = S; const g = c.getContext('2d'); g.fillStyle = k ? '#000' : sprig ? '#555' : '#333'; g.fillRect(0, 0, S, S); return g; });   // (the sprig's ground lighter: a porous crown's inside is lit twigs and leaves, not a dark hole)
   const grey = v => { const k = Math.round(Math.min(Math.max(v, 0), 1) * 255); return `rgb(${k},${k},${k})`; };
   const wrap = (x, y, r, f) => { for (let dx = -S; dx <= S; dx += S) for (let dy = -S; dy <= S; dy += S) if (x + dx > -r && x + dx < S + r && y + dy > -r && y + dy < S + r) f(x + dx, y + dy); };
   const leaf = (x, y, rx, ry, rot, v) => wrap(x, y, Math.max(rx, ry) + 2, (X, Y) => {
@@ -737,7 +772,30 @@ function bakeLeaves(manz) {
       }
     });
   };
-  if (manz) {
+  if (sprig) {
+    // Crooked twigs, forking, mostly upward (a gnarled shrub's last two orders of branching), each segment ending in a tuft
+    // of small leaves fanning up and out; the back tufts in half shade, the front ones lit from above by their place on the
+    // twig. The picture's tile is the record's (FH_T: 0.8 m for a 2 cm leaf, so a leaf here is ~13 px long).
+    const twigs = [];
+    for (let k = 0; k < 125; k++) {
+      let x = rnd() * S, y = rnd() * S, a = -Math.PI / 2 + (rnd() - 0.5) * 1.5; const pts = [[x, y]];
+      for (let j = 0, m = 3 + Math.floor(rnd() * 3); j < m; j++) {
+        a += (j % 2 ? 1 : -1) * (0.3 + 0.35 * rnd()); const L = 12 + 12 * rnd();
+        x += Math.cos(a) * L; y += Math.sin(a) * L; pts.push([x, y]);
+        if (rnd() < 0.35) { const b = a + (rnd() < 0.5 ? -1 : 1) * (0.6 + 0.4 * rnd()), L2 = 10 + 10 * rnd(); twigs.push([x, y, b, 1]); stroke([[x, y], [x + Math.cos(b) * L2, y + Math.sin(b) * L2]], 1.6, [0.3, 0.75, rnd() < 0.15 ? 1 : 0, 1]); twigs.push([x + Math.cos(b) * L2, y + Math.sin(b) * L2, b, 1]); }
+        twigs.push([x, y, a, j / m]);
+      }
+      stroke(pts, 2.0 + 1.2 * rnd(), [0.28, 0.75, rnd() < 0.15 ? 1 : 0, 1]);
+    }
+    const tuft = (x, y, a, front, t) => {
+      const sh = (front ? 0.66 + 0.34 * rnd() : 0.4 + 0.18 * rnd()) * (0.8 + 0.25 * t);
+      for (let j = 0, m = 11 + Math.floor(rnd() * 7); j < m; j++) {
+        const b = a + (rnd() - 0.5) * 2.6, L = 5 + 3 * rnd(), d = 1 + 8 * rnd();
+        leaf(x + Math.cos(b) * (d + L), y + Math.sin(b) * (d + L), 2 + rnd(), L, b + Math.PI / 2, [sh * (0.9 + 0.2 * rnd()), front ? 1.0 : 0.85, rnd(), 0]);
+      }
+    };
+    for (const front of [0, 1]) for (const [x, y, a, t] of twigs) if (rnd() < (front ? 0.62 : 0.8)) tuft(x + (rnd() - 0.5) * 6, y + (rnd() - 0.5) * 6, a, front, t);
+  } else if (manz) {
     for (let k = 0; k < 32; k++) {   // crooked red twigs, seen in the gaps
       let x = rnd() * S, y = rnd() * S, a = -Math.PI / 2 + (rnd() - 0.5) * 1.6; const pts = [[x, y]];
       for (let j = 0; j < 5; j++) { a += (j % 2 ? 1 : -1) * (0.25 + 0.3 * rnd()); x += Math.cos(a) * (14 + 10 * rnd()); y += Math.sin(a) * (14 + 10 * rnd()); pts.push([x, y]); }
@@ -773,7 +831,9 @@ function bakeLeaves(manz) {
     wands(40, 0); wands(28, 1);
   }
   const img = ch.map(g => g.getImageData(0, 0, S, S).data), data = new Uint8Array(S * S * 4);
-  for (let i = 0; i < S * S; i++) for (let c = 0; c < 4; c++) data[i * 4 + c] = img[c][i * 4];
+  let cov = 0;
+  for (let i = 0; i < S * S; i++) { for (let c = 0; c < 4; c++) data[i * 4 + c] = img[c][i * 4]; if (img[1][i * 4] > 115) cov++; }
+  leafCoverage.set(kind, cov / (S * S));   // the share the near crown keeps (g over 0.45), for inspection
   const t = new THREE.DataTexture(data, S, S, THREE.RGBAFormat);
   t.wrapS = t.wrapT = THREE.RepeatWrapping; t.magFilter = THREE.LinearFilter; t.minFilter = THREE.LinearMipmapLinearFilter;
   t.generateMipmaps = true; t.anisotropy = 4; t.needsUpdate = true;
@@ -789,6 +849,7 @@ function bakeLeaves(manz) {
 // and VIS_W x R across (measured side on: 1.85 R near, 1.6 R at 40 m), so R = width / VIS_W.
 const SHRUB_H = { chamise: [[0.6, 1.3], [1.2, 2.4], [1.5, 2.6]], manzanita: [[0.7, 1.5], [1.5, 3.5], [2.0, 3.5]] };
 const VIS_W = 1.75;
+const CHAP_W = 2.2, GROW_W = 3.3, KMIN_LO = 0.04;   // the chaparral's typical visible crown width (m); a far impostor's widest; the LOD's lowest floor
 // Ground cover as before the sizes followed the species: the old rule grew crowns with the cover and the
 // stand age (size 1.15 (0.62 + 0.62 cover) (0.8 + 0.4 age), with the meanArea below), so a dense or old
 // stand was more closed than its cover %, a thin one more open. Each place keeps the crown area per m^2 it
@@ -822,7 +883,6 @@ export function ShrubField(tile, ground, uniforms) {
   // On a regional-table tile a shrubland cell draws the chaparral only where its own row lists a chaparral species
   // (2026-11-06: Yellowstone's Lamar Valley drew manzanita domes over its big sagebrush steppe); California's chaparral
   // rows list them, so the home tiles are unchanged.
-  const CHAP_IDS = ['adenostoma_fasciculatum', 'chamise', 'arctostaphylos_viscida', 'arctostaphylos_manzanita', 'manzanita'];
   const mix = tile.speciesMix, own = mix?.json?.class_fallback === false;
   for (let j = 0; j < H; j++) for (let i = 0; i < W; i++)
     if (hab.channel(i, j, 0) === 4) {
@@ -841,6 +901,14 @@ export function ShrubField(tile, ground, uniforms) {
     return c * smooth(t - 0.06, t + 0.06, g) * rockKeep(tile, x, n);   // and the outcrops of rocks.js open the stand
   };
   const fh = foothillShrubs(tile, ground, cover);
+  // The density LOD from the layer's crowns (2026-11-06, iteration 8): full density to D0, where the chaparral's typical
+  // 2.2 m crown spans what it did at 115 m (D0 in proportion to the layer's crown width), then a far survivor grows by
+  // 1 / sqrt(keep) to stand for the plants dropped around it, up to GROW_W across (1.5x the chaparral's crown, the rule
+  // before): a layer of small crowns (Lamar's sagebrush, 0.7 m: D0 38 m) costs about what the chaparral's does per screen.
+  let cw = 0, cs = 0;
+  for (let o = 0; o < W * H; o++) { if (chapCover[o] > 0) { cw += chapCover[o] * CHAP_W; cs += chapCover[o]; } if (fh.cover[o] > 0) { cs += fh.cover[o]; cw += fh.cover[o] * (fh.cellWidth(o) || CHAP_W); } }
+  const layerW = cs > 0 ? cw / cs : CHAP_W, KMIN = Math.min(1 / 1.5 ** 2, Math.max(KMIN_LO, (layerW / GROW_W) ** 2));
+  const D0 = Math.min(115, Math.max(30, 115 * layerW / CHAP_W));
   const field = new ClumpField(tile, ground, uniforms, {
     name: 'shrubfield', salt: 0x5eed, cap: 200000, roadsMax: 60, near: true,
     extraAny: fh.any, extra: fh.cell,   // the foothill shrubs, merged into the chaparral's cells and the woodland's
@@ -850,7 +918,7 @@ export function ShrubField(tile, ground, uniforms) {
     // chase camera trails the raven by 3-5 m, so a 3-8 m cut emptied the ring around the bird itself.
     // KMIN 1 / 1.5^2: a far survivor grows by 1 / sqrt(keep), so it is never more than 1.5x its own width
     // (1.22x its height); past ~170 m the field keeps 44% of its plants instead of thinning further.
-    D0: 115, KMIN: 1 / 1.5 ** 2, band: [1.2, 3.5, 370, 430], now: 140,
+    D0, KMIN, band: [1.2, 3.5, 370, 430], now: 140,
     plant(px, pn, rnd, cov) {
       // Stands: manzanita and chamise clump into patches tens of metres across (~40% manzanita).
       const pm = 0.1 + 0.75 * smooth(0.35, 0.75, vnoise(px / 45, pn / 45, 9));
@@ -883,8 +951,9 @@ export function ShrubField(tile, ground, uniforms) {
   });
   // Near detail (leaves, wands, stems): full to 14 m, handed to the far program by 26 m.
   field.uniforms.nearBand = { value: new THREE.Vector2(14, 26) };
-  field.uniforms.leafM = { value: shrubLeaves(true) }; field.uniforms.leafC = { value: shrubLeaves(false) };
+  field.uniforms.leafM = { value: shrubLeaves(true) }; field.uniforms.leafC = { value: shrubLeaves(false) }; field.uniforms.leafF = { value: shrubLeaves('sprig') };
   field.uniforms.leafGain = { value: new THREE.Vector4(2.5, 4.0, 1.25, 1.4) };   // the near look matched to the far one in mean (measured on screen)
+  field.uniforms.leafGainF = { value: new THREE.Vector2(3.4, 1.2) };   // the sprig picture's (sun, shade), measured the same way (Lamar's sagebrush, 2026-11-06)
   // The foothill shrubs' season (fhSeason), set from the field's season (grass.js's `dry`) when it changes.
   Object.assign(field.uniforms, {
     fhCol: { value: FH.map(() => new THREE.Vector3()) }, fhBark: { value: FH.map(() => new THREE.Vector3()) },
@@ -897,7 +966,7 @@ export function ShrubField(tile, ground, uniforms) {
     if (key !== fhKey) { fhKey = key; fhSeason(field.uniforms, season); }
     update(camera, on, band);
   };
-  field.foothill = fh;
+  field.foothill = fh; field.layerWidth = layerW;
   return field;
 }
 
@@ -915,6 +984,8 @@ export function ShrubField(tile, ground, uniforms) {
 // weights) and crown_width_ratio, as the 3D shrubs.
 // FH (the list of ids, kinds -1..-FH_N) and FH_LOOK are declared with KIND above.
 const FH_UNDER = { 1: 0.14, 2: 0.08, 3: 0.12, 5: 0.03, 6: 0.18 }, FH_CHAP = 0.8, FH_AREA = 3, FH_MAX = 0.4;
+// The chaparral program's species (ShrubField): a row listing any of them is California's chaparral.
+const CHAP_IDS = ['adenostoma_fasciculatum', 'chamise', 'arctostaphylos_viscida', 'arctostaphylos_manzanita', 'manzanita'];
 // Albedo from a species file's sRGB colour: linear, times FH_GAIN, the same for every channel (2026-11-06).
 const FH_GAIN = 1.3;
 const linK = c => c.map(v => Math.pow(v / 255, 2.2) * FH_GAIN);
@@ -932,35 +1003,89 @@ function fhSeason(u, season) {
     if (D) u.fhDeco.value[k].set(...linK(D.rgb), Math.min(0.6, (D.density ?? 0.4) * 0.5)); else u.fhDeco.value[k].set(0, 0, 0, 0);
   });
 }
+// The size of a shrub follows its record and its stand (2026-11-06, phase 1 iteration 8). Each record's age classes
+// (variants' height_m and weights) give the plants' heights, drawn mid-range in each class; the stand height of a record
+// is its crown-area-weighted mean height (sum w E[H^3] / sum w E[H^2]: the height the crowns that cover the ground
+// have). Where a cell's row carries LANDFIRE EVH's shrub height (species_mix.json mixes[].shrub_h_m: the mean height of
+// the dominant shrubs) and no chaparral, every plant's height is scaled by EVH over the row's stand height (the shrubs'
+// own, weighted by the row), within STAND_K: Lamar's big sagebrush, whose record classes run to 2 m (a stand height of
+// 1.36 m), stands at LANDFIRE's 0.8 m, knee to waist high. The plant count then follows the drawn crowns: a cell's
+// candidates are its cover's disc density over the mean visible crown area of its mix at that scale (sizeStats), so the
+// drawn cover is the cell's cover at any size (before, a fixed 3 m^2 per plant drew small-crowned shrubs at 0.4 of
+// their cover and the patches at 1.6x it).
+const STAND_K = [0.5, 2];
+function sizeStats(sz) {
+  const tot = sz.cls.reduce((s, c) => s + c.w, 0) || 1, G = 6, WV = [0.91, 0.97, 1.03, 1.09];
+  let h2 = 0, h3 = 0;
+  const each = f => { for (const c of sz.cls) { const [h0, h1] = c.h; for (let a = 0; a < G; a++) for (let b = 0; b < G; b++) f(c.w / tot / (G * G), h0 + (h1 - h0) * 0.5 * ((a + 0.5) / G + (b + 0.5) / G)); } };
+  each((w, H) => { h2 += w * H * H; h3 += w * H * H * H; });
+  const memo = new Map();
+  // mean visible crown area (pi (VIS_W R / 2)^2) per candidate at height scale k, after the size thinning in cell()
+  const area = k => {
+    const key = Math.round(k * 100); let A = memo.get(key);
+    if (A === undefined) {
+      A = 0;
+      each((w, H) => { for (const wv of WV) { const R = sz.wh * wv * k * H / VIS_W, a = Math.PI * R * R; A += w / WV.length * Math.PI * (VIS_W * R / 2) ** 2 * Math.min(1, FH_AREA * 1.5 / a); } });
+      memo.set(key, A);
+    }
+    return A;
+  };
+  return { Hs: h2 > 0 ? h3 / h2 : 1, area };
+}
 function foothillShrubs(tile, ground, chap) {
   const hab = tile.habitat, W = hab.img.width, H = hab.img.height, res = hab.res, mix = tile.speciesMix;
   const sizes = FH.map(id => {
     const spec = SPECIES[id]; if (!spec) return null;
     const cls = (spec.variants || []).map(v => ({ w: v.weight ?? 0, h: v.height_m || spec.height_m }));
-    return { cls: cls.length ? cls : [{ w: 1, h: spec.height_m }], wh: spec.targets?.crown_width_ratio ?? 1.2 };
+    const sz = { cls: cls.length ? cls : [{ w: 1, h: spec.height_m }], wh: spec.targets?.crown_width_ratio ?? 1.2 };
+    return Object.assign(sz, sizeStats(sz));
   });
   const cover = new Float32Array(W * H), weights = new Array(W * H);
+  const kOf = new Float32Array(W * H).fill(1), areaOf = new Float32Array(W * H), stand = new Uint8Array(W * H);
   // A row's carpet (2026-11-06; species_mix.json density_bytes[2]: the dwarf shrubs' share of the community's shrub cover,
   // which forbs.js lays as the heath's carpet) is not these shrubs' to fill: they take the rest of the cover. On Lofoten's
   // heath (a shrubland, class 4) the junipers had filled the whole shrub cover as if it were chaparral, on top of the carpet.
   const carpet = new Map(); for (const m of mix?.json?.mixes || []) { const c = (m.density_bytes?.[2] || 0) / 100; if (c > 0) carpet.set(m.index, Math.min(1, c)); }
+  const rowJson = new Map((mix?.json?.mixes || []).map(m => [m.index, m]));
+  const rowK = new Map();   // row index -> its height scale (EVH over the row's stand height), cached
   if (mix) for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
     const row = mix.at(i, j); if (!row || !row.shrubSum) continue;
     const w = FH.map((id, k) => sizes[k] ? row.shrubs[id] || 0 : 0), share = w.reduce((a, b) => a + b, 0);
     if (share <= 0) continue;
     const cls = hab.channel(i, j, 0), o = j * W + i, sd = Math.min(Math.max(mix.density(i, j, row)[1], 0.3), 1.5);
-    cover[o] = Math.min(FH_MAX, cls === 4 ? FH_CHAP * chap[o] * share : (FH_UNDER[cls] || 0) * share * sd / 0.6) * (1 - (carpet.get(row.index) || 0));
+    const chapShare = CHAP_IDS.reduce((a, id) => a + (row.shrubs[id] || 0), 0);
+    // A shrubland row without chaparral: these shrubs are its shrub layer, a stand at the cell's own cover (openings as
+    // the chaparral's, standOpen below), not an understory on top of the chaparral (FH_CHAP) or in patches.
+    stand[o] = cls === 4 && chapShare <= 0 ? 1 : 0;
+    cover[o] = (stand[o] ? Math.min(0.85, chap[o] * share) : Math.min(FH_MAX, cls === 4 ? FH_CHAP * chap[o] * share : (FH_UNDER[cls] || 0) * share * sd / 0.6))
+      * (1 - (carpet.get(row.index) || 0));
     weights[o] = w.map(v => v / share);
+    let k = rowK.get(row.index);
+    if (k === undefined) {
+      const hEvh = rowJson.get(row.index)?.shrub_h_m;
+      k = 1;
+      if (hEvh > 0 && chapShare <= 0) { let hs = 0; w.forEach((v, q) => { if (v > 0) hs += v / share * sizes[q].Hs; }); if (hs > 0) k = Math.min(STAND_K[1], Math.max(STAND_K[0], hEvh / hs)); }
+      rowK.set(row.index, k);
+    }
+    kOf[o] = k;
+    let A = 0; weights[o].forEach((v, q) => { if (v > 0) A += v * sizes[q].area(k); });
+    areaOf[o] = A;
   }
   const coverAt = bilinear(cover, W, H, res, tile.size), any = anyAround(cover, W, H);
-  const lamMax = lam(FH_MAX * 1.6);
+  // the most cover a candidate of the cell can be given (bilinear between its neighbours; an understory's patches 1.6x)
+  const cmax = c => Math.min(0.9, c);
+  const cellMax = (i, j) => { let m = 0; for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) { const a = i + di, b = j + dj; if (a >= 0 && b >= 0 && a < W && b < H) m = Math.max(m, cover[b * W + a]); } return m; };
+  // A stand's openings (as the chaparral's coverAt: rock, old burns, trails in about a tenth of the ground; the cover lifted
+  // by as much, so the cell's mean is its cover).
+  const standOpen = (x, n, c) => { const g = 0.65 * vnoise(x / 17, n / 17, 31) + 0.35 * vnoise(x / 6, n / 6, 32), t = 0.25 + 0.1 * (0.85 - c); return smooth(t - 0.06, t + 0.06, g) * 1.12; };
   const cell = (i, j) => {
     const out = [], { size, roads, waterMask: wm } = tile, rnd = mulberry32((i * 73856093) ^ (j * 19349663) ^ 0xf007);
-    const n = Math.round(lamMax * res * res / FH_AREA);
+    const o0 = j * W + i, A = areaOf[o0] || FH_AREA, lamMax = lam(cmax(cellMax(i, j) * (stand[o0] ? 1.12 : 1.6)));
+    const n = Math.min(6000, Math.round(lamMax * res * res / A));
     for (let k = 0; k < n; k++) {
       const px = (i + rnd()) * res, pn = size - (j + rnd()) * res, keep = rnd(), u = rnd(), v = rnd(), w = rnd(), z = rnd();
-      // patches tens of metres across: the understory clumps (mean 1 over the ground)
-      const c = coverAt(px, pn) * 1.6 * smooth(0.28, 0.62, vnoise(px / 23, pn / 23, 47));
+      // a stand: the cell's cover with openings; an understory: patches tens of metres across (mean 1 over the ground)
+      const c0 = coverAt(px, pn), c = Math.min(0.9, stand[o0] ? c0 * standOpen(px, pn, c0) : c0 * 1.6 * smooth(0.28, 0.62, vnoise(px / 23, pn / 23, 47)));
       if (c <= 0 || keep * lamMax >= lam(c)) continue;
       if (roads && roads.at(px, pn) > 60) continue;
       if (waterAt(wm, px, pn) === 255 || rockKeep(tile, px, pn) < u * 0.999) continue;
@@ -980,7 +1105,7 @@ function foothillShrubs(tile, ground, chap) {
       const sz = sizes[sp]; if (!sz) continue;
       let ci2 = 0, a2 = sz.cls[0].w, tot = sz.cls.reduce((s2, q) => s2 + q.w, 0) || 1;
       while (ci2 < sz.cls.length - 1 && w * tot > a2) a2 += sz.cls[++ci2].w;
-      const [h0, h1] = sz.cls[ci2].h, Hh = h0 + (h1 - h0) * 0.5 * (z + rnd());
+      const [h0, h1] = sz.cls[ci2].h, Hh = (h0 + (h1 - h0) * 0.5 * (z + rnd())) * kOf[cj * W + ci];
       const R = sz.wh * (0.88 + 0.24 * rnd()) * Hh / VIS_W;
       if (rnd() * Math.PI * R * R > FH_AREA * 1.5) continue;   // the larger crowns fewer, so the cover holds
       const variant = ci2 === sz.cls.length - 1 && sz.cls.length > 2 ? 2 : rnd() < 0.5 ? 0 : 1;   // 2: the old class (dead stems)
@@ -990,7 +1115,9 @@ function foothillShrubs(tile, ground, chap) {
     for (let k = 0; k < m; k++) out[k * STRIDE + 7] = (k + 0.5) / m;
     return out;
   };
-  return { any, cell, cover, coverAt };
+  // a cell's typical visible crown width (m), from its mix's mean crown area, for the field's density LOD (ShrubField)
+  const cellWidth = o => areaOf[o] > 0 ? Math.sqrt(areaOf[o] * 4 / Math.PI) : 0;
+  return { any, cell, cover, coverAt, cellWidth, kOf };
 }
 
 function anyAround(grid, W, H) {

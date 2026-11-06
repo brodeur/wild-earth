@@ -236,14 +236,14 @@
   },
   "water": {
    "stage": "base",
-   "started_at": "2026-11-06T13:35:28Z",
-   "ended_at": "2026-11-06T13:35:43Z",
-   "wall_s": 15.1,
-   "cpu_self_s": 15.0,
+   "started_at": "2026-11-06T17:03:48Z",
+   "ended_at": "2026-11-06T17:04:04Z",
+   "wall_s": 15.8,
+   "cpu_self_s": 17.4,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {},
-   "disk_bytes": 20128861,
+   "disk_bytes": 20282653,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -279,10 +279,10 @@
   },
   "terrain": {
    "stage": "base",
-   "started_at": "2026-11-06T13:36:27Z",
-   "ended_at": "2026-11-06T13:36:48Z",
-   "wall_s": 21.5,
-   "cpu_self_s": 21.5,
+   "started_at": "2026-11-06T17:04:04Z",
+   "ended_at": "2026-11-06T17:04:26Z",
+   "wall_s": 22.0,
+   "cpu_self_s": 21.8,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {
@@ -291,7 +291,7 @@
      "misses": 0
     }
    },
-   "disk_bytes": 32725494,
+   "disk_bytes": 32712059,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -591,10 +591,10 @@
   },
   "resources": {
    "stage": "fauna",
-   "started_at": "2026-11-06T13:52:37Z",
-   "ended_at": "2026-11-06T13:52:48Z",
-   "wall_s": 11.7,
-   "cpu_self_s": 11.7,
+   "started_at": "2026-11-06T17:04:26Z",
+   "ended_at": "2026-11-06T17:04:38Z",
+   "wall_s": 11.8,
+   "cpu_self_s": 11.8,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {
@@ -678,18 +678,35 @@
     "queued_credits_est": 0
    },
    "status": "ok"
+  },
+  "water_seasons": {
+   "stage": "base",
+   "started_at": "2026-11-06T17:03:48Z",
+   "ended_at": "2026-11-06T17:03:48Z",
+   "wall_s": 0.4,
+   "cpu_self_s": 0.4,
+   "cpu_children_s": 0.0,
+   "downloads": {},
+   "cache": {},
+   "disk_bytes": 10330,
+   "meshy": {
+    "spent": 0,
+    "queued": 0,
+    "queued_credits_est": 0
+   },
+   "status": "ok"
   }
  },
  "stages": {
   "base": {
-   "started_at": "2026-11-06T12:29:27Z",
-   "ended_at": "2026-11-06T13:43:57Z",
-   "wall_s": 4470.0,
-   "cpu_s": 2714.3,
+   "started_at": "2026-11-06T17:03:48Z",
+   "ended_at": "2026-11-06T17:04:26Z",
+   "wall_s": 4471.6,
+   "cpu_s": 2717.4,
    "download_bytes": 15318805971,
    "cache_hits": 1,
    "cache_misses": 502,
-   "disk_bytes": 687847869,
+   "disk_bytes": 687998556,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -706,10 +723,10 @@
    "meshy_queued_credits_est": 0
   },
   "fauna": {
-   "started_at": "2026-11-06T16:25:49Z",
-   "ended_at": "2026-11-06T16:25:53Z",
-   "wall_s": 16.6,
-   "cpu_s": 14.9,
+   "started_at": "2026-11-06T17:04:26Z",
+   "ended_at": "2026-11-06T17:04:38Z",
+   "wall_s": 16.7,
+   "cpu_s": 15.0,
    "download_bytes": 0,
    "cache_hits": 549,
    "cache_misses": 0,
@@ -1009,32 +1026,59 @@
    ],
    "ended_at": "2026-11-06T16:41:09Z",
    "failed": []
+  },
+  {
+   "started_at": "2026-11-06T17:03:48Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-06T17:03:48Z",
+     "steps_run": [
+      "water_seasons",
+      "water",
+      "terrain"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T17:04:26Z"
+    },
+    {
+     "stage": "fauna",
+     "started_at": "2026-11-06T17:04:26Z",
+     "steps_run": [
+      "resources"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T17:04:38Z"
+    }
+   ],
+   "ended_at": "2026-11-06T17:04:38Z",
+   "failed": []
   }
  ],
  "totals": {
-  "wall_s": 4670.7,
-  "cpu_s": 2900.6,
+  "wall_s": 4672.4,
+  "cpu_s": 2903.8,
   "download_bytes": 15318814509,
   "cache_hits": 2626,
   "cache_misses": 534,
-  "disk_bytes": 698578895,
+  "disk_bytes": 698729582,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 1515
  },
- "updated_at": "2026-11-06T16:41:09Z",
+ "updated_at": "2026-11-06T17:04:38Z",
  "client": {
-  "bytes": 58857445,
+  "bytes": 58859112,
   "files": 54,
   "largest": {
    "client/lidar_micro.png": 12621596,
-   "client/terrain_detail.png": 10128279,
+   "client/terrain_detail.png": 10135109,
    "client/season_rgb.png": 4713471,
    "client/texture_imagery.jpg": 4281049,
    "client/texture_present.jpg": 4280350,
-   "client/texture.png": 3600034,
+   "client/texture.png": 3596585,
    "client/texture_ground.jpg": 2955645,
    "client/trees_lidar.bin": 2905044,
-   "client/heights.png": 2241539,
+   "client/heights.png": 2241158,
    "client/imagery.png": 2072763,
    "client/season_ndvi.png": 1740093,
    "client/canopy_height.png": 1363785

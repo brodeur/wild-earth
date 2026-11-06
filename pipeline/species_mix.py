@@ -984,6 +984,97 @@ def _is_human(e: dict) -> bool:
     return (e.get("phys") or "").startswith(HUMAN_PHYS_PREFIXES) or e.get("habitat") == "human"
 
 
+# The stand's structure per row (2026-11-06, phase 1 iteration 8), for the client's shrub field and grass layer:
+#   shrub_h_m   LANDFIRE EVH's shrub height (codes 201-299, 0.1 m steps: the mean height of the dominant shrubs) as the
+#               median over the row's cells, where shrub-height cells are at least half of them; a tile whose EVH is
+#               synthetic (pipeline/landcover_global.py: one typical value per WorldCover class) gets none
+#   herb_cover  [low, high] fraction: the herbaceous cover its community's LANDFIRE BpS model description gives
+#               ("Herbaceous cover is moderate to abundant, ranging from 40-85%"), on a tile with its own ground layer
+#               (ground_cards); none where the description gives no range
+SHRUB_H_MIN_SHARE = 0.5
+HERB_COVER_RE = r"herbaceous (?:canopy |layer |plant )?cover[^.%]{0,80}?(\d{1,3})\s*(?:-|–|to)\s*(\d{1,3})\s*%"
+
+
+def herb_cover_of(text: str) -> list[float] | None:
+    """[low, high] from a description's first 'herbaceous cover ... a-b %' range, or None."""
+    import re
+    m = re.search(HERB_COVER_RE, text or "", re.I)
+    if not m:
+        return None
+    lo, hi = int(m.group(1)), int(m.group(2))
+    if not 0 <= lo <= hi <= 100:
+        return None
+    return [lo / 100, hi / 100]
+
+
+def stand_structure(tile: Tile, index: np.ndarray, table: list[dict], classes: dict) -> dict:
+    """Adds shrub_h_m and herb_cover to the rows of `table` (index: the cells' rows) in place; a summary."""
+    synthetic = any(e.get("synthetic") for e in (classes.get("evt") or {}).values())
+    n_h = n_c = 0
+    if not synthetic and tile.path("vegetation/evh.tif").exists():
+        with rasterio.open(tile.path("vegetation/evh.tif")) as src:
+            evh = src.read(1)
+        if evh.shape == index.shape:
+            flat_i, flat_h = index.ravel(), evh.ravel()
+            order = np.argsort(flat_i, kind="stable")
+            si, sh = flat_i[order], flat_h[order]
+            starts = np.searchsorted(si, [r["index"] for r in table])
+            ends = np.searchsorted(si, [r["index"] for r in table], side="right")
+            for r, a, b in zip(table, starts, ends):
+                v = sh[a:b]
+                s = v[(v >= 201) & (v <= 299)]
+                if b > a and s.size >= SHRUB_H_MIN_SHARE * (b - a):
+                    r["shrub_h_m"] = round(float(np.median(s - 200)) / 10, 2)
+                    n_h += 1
+    from . import ground_cards
+    if tile.path("vegetation/bps.tif").exists() and ground_cards.applies(tile):
+        models, _, _ = ground_cards.community_models(tile)
+        by_key = {(c["source"], int(c["code"])): c["model"] for c in models}
+        cover: dict = {}
+        for r in table:
+            model = by_key.get((r["source"], int(r["code"])))
+            if not model:
+                continue
+            if model not in cover:
+                doc = ground_cards.fetch_doc(model)
+                cover[model] = herb_cover_of(ground_cards.parse_doc(doc)["vegetation"]) if doc else None
+            if cover[model]:
+                r["herb_cover"] = cover[model]
+                n_c += 1
+    return {"rows_with_shrub_height": n_h, "rows_with_herb_cover": n_c, "evh_synthetic": synthetic}
+
+
+def patch_structure(tile: Tile) -> dict:
+    """Adds the stand structure (stand_structure) to a built tile's client/species_mix.json in place, as the water step
+    rewrites its riparian rows: the rows, the index and every other key are left as they are."""
+    p = tile.path("client/species_mix.json")
+    doc = json.loads(p.read_text())
+    img = np.array(Image.open(tile.path("client/species_mix_index.png")))
+    index = (img[..., 0].astype("int64") + 256 * img[..., 1].astype("int64")) if img.ndim == 3 else img.astype("int64")
+    classes = json.loads(tile.path("vegetation/classes.json").read_text())
+    for r in doc["mixes"]:
+        r.pop("shrub_h_m", None); r.pop("herb_cover", None)
+    summary = stand_structure(tile, index, doc["mixes"], classes)
+    doc["encoding"]["structure"] = STRUCTURE_ENCODING
+    _write_doc(p, doc)
+    return summary
+
+
+STRUCTURE_ENCODING = ("mixes[].shrub_h_m: LANDFIRE EVH's shrub height (m), the median over the row's cells where at least "
+                      "half of them have one (absent: none, or a synthetic EVH); mixes[].herb_cover: [low, high] herbaceous "
+                      "cover fraction from the community's LANDFIRE BpS model description (absent: none given)")
+
+
+def _write_doc(p, doc: dict) -> None:
+    # One row (and one community) per line: several hundred rows indented one value per line ran to 600 KB.
+    table, communities = doc["mixes"], doc.get("communities", [])
+    text = json.dumps({**doc, "mixes": "@MIXES@", "communities": "@COMMUNITIES@", "riparian": "@RIP@"}, indent=1)
+    for k, rows_ in (("@MIXES@", table), ("@COMMUNITIES@", communities)):
+        text = text.replace(f'"{k}"', "[\n" + ",\n".join("  " + json.dumps(r, separators=(",", ":")) for r in rows_) + "\n ]")
+    text = text.replace('"@RIP@"', json.dumps(doc.get("riparian"), separators=(",", ":")))
+    p.write_text(text)
+
+
 def species_mix(tile: Tile) -> dict:
     classes = json.loads(tile.path("vegetation/classes.json").read_text())
     evt_tab, bps_tab = classes.get("evt", {}), classes.get("bps", {})
@@ -1175,6 +1266,7 @@ def species_mix(tile: Tile) -> dict:
         r["ground_bytes"] = [[k, b] for k, b in zip(ground_cols, gb) if b]
         r["density_bytes"] = [td, sd, cd] if cd else [td, sd]   # [2]: the dwarf-shrub carpet (split_dwarf_shrubs)
         del r["tree_density"], r["shrub_density"], r["carpet_density"]
+    structure = stand_structure(tile, index, table, classes)
     # The communities as written (one per source and code, before the terrain factors), for people.
     communities = [{"community": b["index"], "source": b["source"], "code": b["code"], "name": b["name"], "rule": b["rule"],
                     "trees": b["trees"], "shrubs": b["shrubs"], "ground": {k: round(v, 3) for k, v in b["ground"].items()}, "tree_density": b["tree_density"],
@@ -1258,6 +1350,7 @@ def species_mix(tile: Tile) -> dict:
                        "weights and densities as written, and a note) has one row per distinct terrain response "
                        "(pipeline species_mix.py TERRAIN), and mixes[].community names it. The bytes are after the "
                        "terrain factors",
+            "structure": STRUCTURE_ENCODING,
         },
         "mixes": table,
         "communities": communities,
@@ -1269,19 +1362,22 @@ def species_mix(tile: Tile) -> dict:
         "context": {"coast": CONTEXT["coast"], "coast_share": round(coast_cells / tot, 4), "bands_m": list(ELEV_BANDS),
                     "groves": int((tcls >= NTC).sum())},
     }
-    # One row (and one community) per line: several hundred rows indented one value per line ran to 600 KB.
-    text = json.dumps({**doc, "mixes": "@MIXES@", "communities": "@COMMUNITIES@", "riparian": "@RIP@"}, indent=1)
-    for k, rows_ in (("@MIXES@", table), ("@COMMUNITIES@", communities)):
-        text = text.replace(f'"{k}"', "[\n" + ",\n".join("  " + json.dumps(r, separators=(",", ":")) for r in rows_) + "\n ]")
-    text = text.replace('"@RIP@"', json.dumps(doc["riparian"], separators=(",", ":")))
-    tile.path("client/species_mix.json").write_text(text)
+    _write_doc(tile.path("client/species_mix.json"), doc)
     files = ["client/species_mix_index.png", "client/species_mix_density.png"]
     return {"path": "client/species_mix.json", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
             "pixels": int(index.shape[0]), "resolution_m": res, "format": FORMAT,
             "files": {f: {"sha256": sha256(tile.path(f)), "bytes": tile.path(f).stat().st_size} for f in files},
             "derived_from": ["vegetation.evt", "vegetation.bps", "vegetation.classes", "vegetation.habitat", "vegetation.evc",
-                             "terrain.dem"],
+                             "vegetation.evh", "terrain.dem"],
             "encoding": "format 2: species_mix_index L = row in mixes; species_mix_density RGB = tree_density, shrub_density "
                         "(byte/100); per-row weights as mixes[].tree_bytes / shrub_bytes over species.trees / species.shrubs",
             "species": {"trees": trees_cols, "shrubs": shrub_cols, "ground": ground_cols},
-            "mixes": len(table), "unmatched": len(unmatched), "fractions": fractions}
+            "mixes": len(table), "unmatched": len(unmatched), "fractions": fractions, "structure": structure}
+
+
+if __name__ == "__main__":   # python -m pipeline.species_mix --structure <tile id>: add the stand structure to a built tile
+    import argparse
+    ap = argparse.ArgumentParser(description="species mix helpers")
+    ap.add_argument("--structure", metavar="TILE", required=True)
+    a = ap.parse_args()
+    print(json.dumps(patch_structure(Tile.from_id(a.structure))))

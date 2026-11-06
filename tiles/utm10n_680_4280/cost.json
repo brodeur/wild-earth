@@ -1,0 +1,200 @@
+{
+ "tile": "utm10n_680_4280",
+ "steps": {
+  "water_seasons": {
+   "stage": "base",
+   "started_at": "2026-11-06T17:08:56Z",
+   "ended_at": "2026-11-06T17:08:57Z",
+   "wall_s": 1.0,
+   "cpu_self_s": 0.6,
+   "cpu_children_s": 0.0,
+   "downloads": {},
+   "cache": {},
+   "disk_bytes": 24712,
+   "meshy": {
+    "spent": 0,
+    "queued": 0,
+    "queued_credits_est": 0
+   },
+   "status": "ok"
+  },
+  "water": {
+   "stage": "base",
+   "started_at": "2026-11-06T17:12:20Z",
+   "ended_at": "2026-11-06T17:12:53Z",
+   "wall_s": 32.2,
+   "cpu_self_s": 23.6,
+   "cpu_children_s": 0.0,
+   "downloads": {},
+   "cache": {},
+   "disk_bytes": 22568424,
+   "meshy": {
+    "spent": 0,
+    "queued": 0,
+    "queued_credits_est": 0
+   },
+   "status": "ok"
+  },
+  "terrain": {
+   "stage": "base",
+   "started_at": "2026-11-06T17:09:31Z",
+   "ended_at": "2026-11-06T17:10:46Z",
+   "wall_s": 74.5,
+   "cpu_self_s": 27.2,
+   "cpu_children_s": 0.0,
+   "downloads": {},
+   "cache": {
+    "osm": {
+     "hits": 0,
+     "misses": 1
+    }
+   },
+   "disk_bytes": 44565311,
+   "meshy": {
+    "spent": 0,
+    "queued": 0,
+    "queued_credits_est": 0
+   },
+   "status": "ok"
+  },
+  "resources": {
+   "stage": "fauna",
+   "started_at": "2026-11-06T17:10:46Z",
+   "ended_at": "2026-11-06T17:11:10Z",
+   "wall_s": 24.7,
+   "cpu_self_s": 16.4,
+   "cpu_children_s": 0.0,
+   "downloads": {},
+   "cache": {
+    "osm": {
+     "hits": 1,
+     "misses": 0
+    }
+   },
+   "disk_bytes": 49966,
+   "meshy": {
+    "spent": 0,
+    "queued": 0,
+    "queued_credits_est": 0
+   },
+   "status": "ok"
+  }
+ },
+ "stages": {
+  "base": {
+   "started_at": "2026-11-06T17:12:20Z",
+   "ended_at": "2026-11-06T17:12:53Z",
+   "wall_s": 107.7,
+   "cpu_s": 51.4,
+   "download_bytes": 0,
+   "cache_hits": 0,
+   "cache_misses": 1,
+   "disk_bytes": 67158447,
+   "meshy_spent": 0,
+   "meshy_queued_credits_est": 0
+  },
+  "fauna": {
+   "started_at": "2026-11-06T17:10:46Z",
+   "ended_at": "2026-11-06T17:11:10Z",
+   "wall_s": 24.7,
+   "cpu_s": 16.4,
+   "download_bytes": 0,
+   "cache_hits": 1,
+   "cache_misses": 0,
+   "disk_bytes": 49966,
+   "meshy_spent": 0,
+   "meshy_queued_credits_est": 0
+  }
+ },
+ "runs": [
+  {
+   "started_at": "2026-11-06T17:05:32Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-06T17:05:32Z",
+     "steps_run": [],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T17:05:32Z"
+    }
+   ],
+   "ended_at": "2026-11-06T17:05:32Z",
+   "failed": [
+    "water_seasons"
+   ]
+  },
+  {
+   "started_at": "2026-11-06T17:08:56Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-06T17:08:56Z",
+     "steps_run": [
+      "water_seasons",
+      "water",
+      "terrain"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T17:10:46Z"
+    },
+    {
+     "stage": "fauna",
+     "started_at": "2026-11-06T17:10:46Z",
+     "steps_run": [
+      "resources"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T17:11:10Z"
+    }
+   ],
+   "ended_at": "2026-11-06T17:11:10Z",
+   "failed": []
+  },
+  {
+   "started_at": "2026-11-06T17:12:20Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-06T17:12:20Z",
+     "steps_run": [
+      "water"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-06T17:12:53Z"
+    }
+   ],
+   "ended_at": "2026-11-06T17:12:53Z",
+   "failed": []
+  }
+ ],
+ "client": {
+  "bytes": 71286789,
+  "files": 49,
+  "largest": {
+   "client/lidar_micro.png": 12956377,
+   "client/terrain_detail.png": 9292444,
+   "client/season_rgb.png": 6715778,
+   "client/texture.png": 5959974,
+   "client/texture_present.jpg": 5403589,
+   "client/texture_imagery.jpg": 5289557,
+   "client/trees_lidar.bin": 3202884,
+   "client/texture_ground.jpg": 3021752,
+   "client/heights.png": 2783813,
+   "client/masks.png": 2711747,
+   "client/season_ndvi.png": 2466805,
+   "client/imagery.png": 2362864
+  },
+  "note": "every file under client/ and the tables the viewer fetches; an upper bound (the present-day texture is fetched only on request)"
+ },
+ "totals": {
+  "wall_s": 132.4,
+  "cpu_s": 67.8,
+  "download_bytes": 0,
+  "cache_hits": 1,
+  "cache_misses": 1,
+  "disk_bytes": 67208413,
+  "meshy_spent": 0,
+  "meshy_queued_credits_est": 0
+ },
+ "updated_at": "2026-11-06T17:12:53Z"
+}

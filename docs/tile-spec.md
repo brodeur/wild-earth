@@ -51,6 +51,7 @@ tiles/<tile_id>/
   hydro/osm_water.geojson       derived   OSM water polygons, dams and NID dam points (Overpass cache for the rewild step)
   terrain/dem_rewilded.tif      derived   dem.tif with the restored thalwegs carved through rewilded beds (routing only; dem.tif untouched)
   terrain/dem_banked.tif        derived   dem.tif with every channel's bed and wet margin and every kept pond's basin carved (see Water and riparian); the client's heights come from it
+  hydro/waterbody_seasons.json  derived   every mapped waterbody against the monthly Sentinel-2: class (permanent, seasonal, dry), basis (imagery or tags), core pixels, water fraction per month, a dry one's bed (see Water and riparian, Mapped water against the imagery)
   hydro/water_reaches.json      derived   the reaches the water step drew (id, name, order, area, width, class, samples, length) and the ponds' basins (level, depth)
   client/water.png              derived   RGB on the DEM grid: R riparian zone | order << 4 | 128 perennial, G bed material | 8 bar, B water level (see Water and riparian)
   client/water_width.png        derived   8-bit grey on the DEM grid: the channel's water half width at the nearest centreline sample, 0.1 m
@@ -535,6 +536,20 @@ material, the water level, and the riparian zones around it with their species, 
 carved channel and places the riparian plants by zone and every animal can use it. `status.water_banked` is true
 once it has run. Aaron (2026-10-29): "banks have a transition 'down' into the body; the bottoms of waterways should
 have lots of rocks when the waterway dries; water systems are first class citizens like animals."
+
+Mapped water against the imagery. Build step `water_seasons` (`pipeline/water_seasons.py`, after `seasons`, before
+`water`) tests every polygon of `hydro/waterbodies.geojson` (NHD lakes, ponds, marshes, reservoirs; OSM natural=water
+of every kind, river polygons included) against the monthly composites `seasons/s2_MM.tif`. They carry red, green,
+blue and NDVI (no SWIR), so the near infrared is recovered as red (1 + NDVI) / (1 - NDVI). Per month, over the pixels
+wholly inside the polygon (inset 10 m): a pixel is water where NDWI = (green - NIR) / (green + NIR) > 0 or NIR < 0.04;
+bright pixels (green >= 0.2, or NDVI < 0.1 with blue >= 0.12: ice, snow, cloud) leave the count; the month's water
+fraction is water over the clear pixels, observed when they cover half the core, wet when the fraction is >= 0.25.
+Wet in no month of three or more observed: dry (not a pond, no basin, no pond zone, the streams through it drawn as
+streams; listed under `dry_waterbodies` in `client/features.json` with its bed, meadow at a greenest-month NDVI >= 0.3
+else bare); wet in >= 75% of the observed months: permanent; else seasonal (water.js's intermittent ponds). Under two
+core pixels or three observed months the tags decide (NHD intermittent FCodes and Swamp/Marsh 46600, OSM
+intermittent=yes, seasonal=*, natural=wetland: seasonal; the rest permanent). `client/features.json` waterbodies carry
+`water` and `wet_months`; the manifest layer `hydro.waterbody_seasons` carries the rule and every polygon's evidence.
 
 Reaches. Every drawn reach of `hydro/channels.geojson` (canals 33600 left out, pieces inside a kept pond and
 NHD-sourced stretches within 15 m of a DEM reach left out as the client leaves them) is sampled every 2.5 m with its

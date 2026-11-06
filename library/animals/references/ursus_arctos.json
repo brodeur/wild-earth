@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "ursus_arctos",
  "scientific": "Ursus arctos",
  "plan": "quadruped",
@@ -14,7 +14,7 @@
  },
  "by": "pipeline/reference_photos.py",
  "licences": "CC0, CC BY or CC BY-SA only, each photo's own",
- "chosen": "inat_381298732",
+ "chosen": "inat_469943715",
  "candidates": [
   {
    "source": "inaturalist",
@@ -30,22 +30,42 @@
    "local": true,
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_469943715/photo.jpg",
    "score": {
-    "total": 0.629,
+    "total": 0.218,
     "whole": 1.0,
-    "side": 1.0,
+    "single": 1.0,
+    "aspect": 1.555,
+    "band_px": 3.61,
+    "clear": 1.0,
     "size": 1.0,
-    "single": 0.993,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
     "legs": 1.0,
-    "stance": 1.0,
-    "plain": 0.264,
-    "colour": 1.0,
-    "aspect": 1.63,
-    "box": [
-     0.09,
-     0.261,
-     0.68,
-     0.805
+    "stance": 0.7,
+    "spread": 13.2,
+    "lean": 1.6,
+    "belly_gap": 0.727,
+    "leg_zone": 0.366,
+    "leans": [
+     7.6,
+     -1.6,
+     -5.6
     ],
+    "lifts": [
+     0.084,
+     0.0,
+     0.01
+    ],
+    "plain": 0.267,
+    "colour": 0.975,
+    "box": [
+     0.088,
+     0.258,
+     0.682,
+     0.832
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true,
     "local": 1.0
    },
    "file_large": "pipeline/_cache/references/ursus_arctos/inat_469943715_large/photo.jpg",
@@ -65,26 +85,108 @@
    "local": true,
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_381298732/photo.jpg",
    "score": {
-    "total": 0.614,
+    "total": 0.114,
     "whole": 1.0,
-    "side": 1.0,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 1.0,
-    "stance": 1.0,
+    "aspect": 1.5,
+    "band_px": 2.39,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.758,
+    "stance": 0.468,
+    "spread": 27.9,
+    "lean": 16.1,
+    "belly_gap": 0.426,
+    "leg_zone": 0.211,
+    "leans": [
+     -28.3,
+     -20.9,
+     -11.3,
+     -0.4
+    ],
+    "lifts": [
+     0.02,
+     0.007,
+     0.013,
+     0.0
+    ],
     "plain": 0.228,
-    "colour": 1.0,
-    "aspect": 1.503,
+    "colour": 0.939,
     "box": [
-     0.398,
-     0.424,
+     0.396,
+     0.421,
      0.852,
      0.827
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 1.0
    },
    "file_large": "pipeline/_cache/references/ursus_arctos/inat_381298732_large/photo.jpg",
    "file_crop": "pipeline/_cache/references/ursus_arctos/inat_381298732_crop/reference.png"
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_96565270",
+   "licence": "CC BY 4.0",
+   "author": "Cody Stricker",
+   "attribution": "(c) Cody Stricker, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/60391797",
+   "photo_page": "https://www.inaturalist.org/photos/96565270",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/96565270/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/96565270/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/ursus_arctos/inat_96565270/photo.jpg",
+   "score": {
+    "total": 0.083,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.769,
+    "band_px": 3.6,
+    "clear": 1.0,
+    "size": 0.488,
+    "solid": 1.0,
+    "head_end": 0.272,
+    "side": 1.0,
+    "legs": 0.742,
+    "stance": 0.55,
+    "spread": 26.1,
+    "lean": 2.1,
+    "belly_gap": 0.633,
+    "leg_zone": 0.209,
+    "leans": [
+     -26.4,
+     -0.3,
+     -2.1
+    ],
+    "lifts": [
+     0.0,
+     0.066,
+     0.0
+    ],
+    "plain": 0.189,
+    "colour": 0.998,
+    "box": [
+     0.362,
+     0.328,
+     0.684,
+     0.589
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ],
+    "local": 1.0
+   }
   },
   {
    "source": "inaturalist",
@@ -100,21 +202,476 @@
    "local": true,
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_752640130/photo.jpg",
    "score": {
-    "total": 0.351,
-    "whole": 0.828,
-    "side": 1.0,
-    "size": 1.0,
+    "total": 0.073,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 0.5,
+    "aspect": 1.33,
+    "band_px": 3.16,
+    "clear": 1.0,
+    "size": 0.26,
+    "solid": 1.0,
+    "head_end": 0.188,
+    "side": 1.0,
+    "legs": 1.0,
     "stance": 1.0,
-    "plain": 0.304,
-    "colour": 1.0,
-    "aspect": 2.145,
-    "box": [
+    "spread": 16.4,
+    "lean": 8.5,
+    "belly_gap": 0.681,
+    "leg_zone": 0.381,
+    "leans": [
+     14.8,
+     8.5,
+     -1.6
+    ],
+    "lifts": [
      0.04,
-     0.166,
-     0.752,
-     0.666
+     0.04,
+     0.006
+    ],
+    "plain": 0.279,
+    "colour": 0.621,
+    "box": [
+     0.32,
+     0.413,
+     0.554,
+     0.678
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_149761466",
+   "licence": "CC BY 4.0",
+   "author": "Jay Brasher",
+   "attribution": "(c) Jay Brasher, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/90604246",
+   "photo_page": "https://www.inaturalist.org/photos/149761466",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/149761466/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/149761466/large.jpg",
+   "adult": false,
+   "local": true,
+   "file_small": "pipeline/_cache/references/ursus_arctos/inat_149761466/photo.jpg",
+   "score": {
+    "total": 0.049,
+    "whole": 1.0,
+    "single": 0.885,
+    "aspect": 1.122,
+    "band_px": 2.74,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.174,
+    "spread": 28.7,
+    "lean": 8.6,
+    "belly_gap": 0.537,
+    "leg_zone": 0.32,
+    "leans": [
+     8.6,
+     14.2,
+     -14.5
+    ],
+    "lifts": [
+     0.11,
+     0.05,
+     0.0
+    ],
+    "plain": 0.202,
+    "colour": 0.997,
+    "box": [
+     0.402,
+     0.297,
+     0.808,
+     0.841
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_20438776",
+   "licence": "CC BY-SA 3.0",
+   "author": "kallerna",
+   "attribution": "kallerna, CC BY-SA 3.0, via Wikimedia Commons (File:\u00c4ht\u00e4rin karhut 8.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:%C3%84ht%C3%A4rin_karhut_8.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/%C3%84ht%C3%A4rin_karhut_8.jpg/500px-%C3%84ht%C3%A4rin_karhut_8.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/%C3%84ht%C3%A4rin_karhut_8.jpg/1280px-%C3%84ht%C3%A4rin_karhut_8.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/ursus_arctos/commons_20438776/photo.jpg",
+   "score": {
+    "total": 0.042,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.895,
+    "band_px": 4.37,
+    "clear": 0.969,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.353,
+    "legs": 0.358,
+    "stance": 1.0,
+    "spread": 4.1,
+    "lean": 12.2,
+    "belly_gap": 0.245,
+    "leg_zone": 0.163,
+    "leans": [
+     10.2,
+     14.3
+    ],
+    "lifts": [
+     0.0,
+     0.043
+    ],
+    "plain": 0.186,
+    "colour": 0.998,
+    "box": [
+     0.12,
+     0.135,
+     0.58,
+     0.907
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_20438779",
+   "licence": "CC BY-SA 3.0",
+   "author": "kallerna",
+   "attribution": "kallerna, CC BY-SA 3.0, via Wikimedia Commons (File:\u00c4ht\u00e4rin karhut 11.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:%C3%84ht%C3%A4rin_karhut_11.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/%C3%84ht%C3%A4rin_karhut_11.jpg/500px-%C3%84ht%C3%A4rin_karhut_11.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/%C3%84ht%C3%A4rin_karhut_11.jpg/1280px-%C3%84ht%C3%A4rin_karhut_11.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/ursus_arctos/commons_20438779/photo.jpg",
+   "score": {
+    "total": 0.023,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.071,
+    "band_px": 3.44,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.498,
+    "side": 0.926,
+    "legs": 0.7,
+    "stance": 0.095,
+    "spread": 36.1,
+    "lean": 3.5,
+    "belly_gap": 0.482,
+    "leg_zone": 0.204,
+    "leans": [
+     3.5,
+     1.5,
+     37.6
+    ],
+    "lifts": [
+     0.02,
+     0.0,
+     0.016
+    ],
+    "plain": 0.208,
+    "colour": 0.995,
+    "box": [
+     0.12,
+     0.141,
+     0.666,
+     0.907
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_20438775",
+   "licence": "CC BY-SA 3.0",
+   "author": "kallerna",
+   "attribution": "kallerna, CC BY-SA 3.0, via Wikimedia Commons (File:\u00c4ht\u00e4rin karhut 7.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:%C3%84ht%C3%A4rin_karhut_7.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b5/%C3%84ht%C3%A4rin_karhut_7.jpg/500px-%C3%84ht%C3%A4rin_karhut_7.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b5/%C3%84ht%C3%A4rin_karhut_7.jpg/1280px-%C3%84ht%C3%A4rin_karhut_7.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/ursus_arctos/commons_20438775/photo.jpg",
+   "score": {
+    "total": 0.011,
+    "whole": 1.0,
+    "single": 0.972,
+    "aspect": 1.03,
+    "band_px": 3.83,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.825,
+    "legs": 1.0,
+    "stance": 0.065,
+    "spread": 29.3,
+    "lean": 27.8,
+    "belly_gap": 0.385,
+    "leg_zone": 0.269,
+    "leans": [
+     -13.1,
+     -42.4
+    ],
+    "lifts": [
+     0.0,
+     0.056
+    ],
+    "plain": 0.172,
+    "colour": 0.997,
+    "box": [
+     0.326,
+     0.216,
+     0.808,
+     0.919
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_31499930",
+   "licence": "CC BY 4.0",
+   "author": "Ron M",
+   "attribution": "(c) Ron M, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/20400163",
+   "photo_page": "https://www.inaturalist.org/photos/31499930",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/31499930/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/31499930/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/ursus_arctos/inat_31499930/photo.jpg",
+   "score": {
+    "total": 0.007,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.65,
+    "band_px": 5.92,
+    "clear": 0.84,
+    "size": 0.56,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.292,
+    "stance": 0.102,
+    "spread": 34.4,
+    "lean": 17.2,
+    "belly_gap": 0.39,
+    "leg_zone": 0.155,
+    "leans": [
+     -34.4,
+     0.0
+    ],
+    "lifts": [
+     0.009,
+     0.087
+    ],
+    "plain": 0.194,
+    "colour": 1.0,
+    "box": [
+     0.142,
+     0.272,
+     0.482,
+     0.56
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_110260266",
+   "licence": "CC BY 2.0",
+   "author": "Frank Vassen from Brussels, Belgium",
+   "attribution": "Frank Vassen from Brussels, Belgium, CC BY 2.0, via Wikimedia Commons (File:Brown bear (Ursus arctos), Viiksimo, Kainuu region, Finland (29058988558).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Brown_bear_(Ursus_arctos),_Viiksimo,_Kainuu_region,_Finland_(29058988558).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/14/Brown_bear_%28Ursus_arctos%29%2C_Viiksimo%2C_Kainuu_region%2C_Finland_%2829058988558%29.jpg/500px-Brown_bear_%28Ursus_arctos%29%2C_Viiksimo%2C_Kainuu_region%2C_Finland_%2829058988558%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/14/Brown_bear_%28Ursus_arctos%29%2C_Viiksimo%2C_Kainuu_region%2C_Finland_%2829058988558%29.jpg/1280px-Brown_bear_%28Ursus_arctos%29%2C_Viiksimo%2C_Kainuu_region%2C_Finland_%2829058988558%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/ursus_arctos/commons_110260266/photo.jpg",
+   "score": {
+    "total": 0.005,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.032,
+    "band_px": 2.92,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.258,
+    "legs": 0.342,
+    "stance": 0.139,
+    "spread": 33.3,
+    "lean": 16.0,
+    "belly_gap": 0.162,
+    "leg_zone": 0.161,
+    "leans": [
+     -23.0,
+     -0.0,
+     -9.0,
+     -33.3
+    ],
+    "lifts": [
+     0.018,
+     0.0,
+     0.069,
+     0.083
+    ],
+    "plain": 0.217,
+    "colour": 0.933,
+    "box": [
+     0.234,
+     0.181,
+     0.682,
+     0.805
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_2271990",
+   "licence": "CC BY-SA 3.0",
+   "author": "Brocken Inaglory",
+   "attribution": "Brocken Inaglory, CC BY-SA 3.0, via Wikimedia Commons (File:Play fight IMG 3018.JPG)",
+   "page": "https://commons.wikimedia.org/wiki/File:Play_fight_IMG_3018.JPG",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/84/Play_fight_IMG_3018.JPG/500px-Play_fight_IMG_3018.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/84/Play_fight_IMG_3018.JPG/1280px-Play_fight_IMG_3018.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/ursus_arctos/commons_2271990/photo.jpg",
+   "score": {
+    "total": 0.005,
+    "whole": 0.757,
+    "single": 1.0,
+    "aspect": 1.779,
+    "band_px": 8.65,
+    "clear": 0.613,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.65,
+    "stance": 0.073,
+    "spread": 4.6,
+    "lean": 28.0,
+    "belly_gap": 0.57,
+    "leg_zone": 0.198,
+    "leans": [
+     -30.3,
+     -25.7
+    ],
+    "lifts": [
+     0.096,
+     0.0
+    ],
+    "plain": 0.13,
+    "colour": 0.99,
+    "box": [
+     0.0,
+     0.106,
+     1.0,
+     0.984
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_752640182",
+   "licence": "CC BY 4.0",
+   "author": "Jay Brasher",
+   "attribution": "(c) Jay Brasher, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/409350630",
+   "photo_page": "https://www.inaturalist.org/photos/752640182",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/752640182/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/752640182/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/ursus_arctos/inat_752640182/photo.jpg",
+   "score": {
+    "total": 0.002,
+    "whole": 1.0,
+    "single": 0.676,
+    "aspect": 1.364,
+    "band_px": 2.85,
+    "clear": 1.0,
+    "size": 0.128,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.717,
+    "stance": 0.224,
+    "spread": 31.0,
+    "lean": 7.8,
+    "belly_gap": 0.798,
+    "leg_zone": 0.206,
+    "leans": [
+     -19.7,
+     11.3,
+     7.8
+    ],
+    "lifts": [
+     0.076,
+     0.076,
+     0.011
+    ],
+    "plain": 0.274,
+    "colour": 0.098,
+    "box": [
+     0.632,
+     0.482,
+     0.842,
+     0.714
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
     ],
     "local": 1.0
    }
@@ -133,21 +690,45 @@
    "local": true,
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_251500058/photo.jpg",
    "score": {
-    "total": 0.336,
-    "whole": 0.839,
-    "side": 1.0,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 0.5,
-    "stance": 1.0,
-    "plain": 0.232,
-    "colour": 1.0,
-    "aspect": 3.793,
+    "aspect": 1.536,
+    "band_px": 2.0,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 45.9,
+    "lean": 0.0,
+    "belly_gap": 0.588,
+    "leg_zone": 0.286,
+    "leans": [
+     -29.0,
+     -0.0,
+     16.9
+    ],
+    "lifts": [
+     0.0,
+     0.071,
+     0.0
+    ],
+    "plain": 0.184,
+    "colour": 0.999,
     "box": [
-     0.04,
-     0.635,
-     0.958,
-     0.957
+     0.48,
+     0.451,
+     0.566,
+     0.525
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
     ],
     "local": 1.0
    }
@@ -163,21 +744,42 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/%C3%84ht%C3%A4rin_karhut_16.jpg/1280px-%C3%84ht%C3%A4rin_karhut_16.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/ursus_arctos/commons_20438786/photo.jpg",
    "score": {
-    "total": 0.298,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 0.5,
-    "stance": 1.0,
-    "plain": 0.222,
-    "colour": 1.0,
-    "aspect": 1.645,
+    "aspect": 1.659,
+    "band_px": 2.79,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.983,
+    "stance": 0.0,
+    "spread": 15.9,
+    "lean": 47.5,
+    "belly_gap": 0.651,
+    "leg_zone": 0.238,
+    "leans": [
+     -55.5,
+     -39.6
+    ],
+    "lifts": [
+     0.033,
+     0.0
+    ],
+    "plain": 0.219,
+    "colour": 0.999,
     "box": [
-     0.212,
-     0.174,
-     0.926,
-     0.826
+     0.21,
+     0.18,
+     0.92,
+     0.823
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 0.75
    }
@@ -196,21 +798,47 @@
    "local": true,
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_293132859/photo.jpg",
    "score": {
-    "total": 0.279,
-    "whole": 0.925,
-    "side": 1.0,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 0.25,
-    "stance": 1.0,
-    "plain": 0.267,
-    "colour": 1.0,
-    "aspect": 2.192,
+    "aspect": 1.541,
+    "band_px": 2.12,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.875,
+    "stance": 0.067,
+    "spread": 36.5,
+    "lean": 4.7,
+    "belly_gap": 0.347,
+    "leg_zone": 0.225,
+    "leans": [
+     -20.9,
+     -7.3,
+     15.6,
+     -2.1
+    ],
+    "lifts": [
+     0.036,
+     0.069,
+     0.036,
+     0.003
+    ],
+    "plain": 0.275,
+    "colour": 0.992,
     "box": [
-     0.092,
+     0.518,
      0.379,
-     0.96,
-     0.907
+     0.706,
+     0.541
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
     ],
     "local": 1.0
    }
@@ -229,21 +857,44 @@
    "local": true,
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_42910945/photo.jpg",
    "score": {
-    "total": 0.258,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.748,
-    "size": 0.76,
     "single": 1.0,
-    "legs": 1.0,
-    "stance": 0.667,
+    "aspect": 1.364,
+    "band_px": 3.02,
+    "clear": 1.0,
+    "size": 0.88,
+    "solid": 1.0,
+    "head_end": 0.486,
+    "side": 1.0,
+    "legs": 0.733,
+    "stance": 0.0,
+    "spread": 40.2,
+    "lean": 25.9,
+    "belly_gap": 0.601,
+    "leg_zone": 0.208,
+    "leans": [
+     -10.4,
+     25.9,
+     29.8
+    ],
+    "lifts": [
+     0.084,
+     0.039,
+     0.0
+    ],
     "plain": 0.236,
-    "colour": 1.0,
-    "aspect": 1.349,
+    "colour": 0.993,
     "box": [
-     0.384,
-     0.369,
+     0.366,
+     0.367,
      0.786,
-     0.731
+     0.74
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 1.0
    }
@@ -262,54 +913,42 @@
    "local": true,
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_221707512/photo.jpg",
    "score": {
-    "total": 0.241,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 0.5,
-    "stance": 0.5,
-    "plain": 0.235,
-    "colour": 1.0,
-    "aspect": 1.627,
-    "box": [
-     0.32,
-     0.405,
-     0.87,
-     0.915
+    "aspect": 1.319,
+    "band_px": 2.19,
+    "clear": 1.0,
+    "size": 0.336,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.915,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 15.2,
+    "belly_gap": 0.283,
+    "leg_zone": 0.335,
+    "leans": [
+     -15.2
     ],
-    "local": 1.0
-   }
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_31499930",
-   "licence": "CC BY 4.0",
-   "author": "Ron M",
-   "attribution": "(c) Ron M, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/20400163",
-   "photo_page": "https://www.inaturalist.org/photos/31499930",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/31499930/medium.jpg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/31499930/large.jpg",
-   "adult": true,
-   "local": true,
-   "file_small": "pipeline/_cache/references/ursus_arctos/inat_31499930/photo.jpg",
-   "score": {
-    "total": 0.217,
-    "whole": 0.546,
-    "side": 1.0,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.5,
-    "stance": 1.0,
+    "lifts": [
+     0.0
+    ],
     "plain": 0.224,
-    "colour": 1.0,
-    "aspect": 1.812,
+    "colour": 0.914,
     "box": [
-     0.072,
-     0.275,
-     0.96,
-     0.961
+     0.332,
+     0.474,
+     0.58,
+     0.758
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -325,21 +964,44 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/06/Bern_B%C3%A4renpark_B%C3%A4r-20120807-RM-190637.jpg/1280px-Bern_B%C3%A4renpark_B%C3%A4r-20120807-RM-190637.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/ursus_arctos/commons_141093795/photo.jpg",
    "score": {
-    "total": 0.203,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.957,
-    "size": 1.0,
     "single": 1.0,
+    "aspect": 1.498,
+    "band_px": 2.31,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
     "legs": 1.0,
-    "stance": 0.333,
-    "plain": 0.215,
+    "stance": 0.0,
+    "spread": 72.9,
+    "lean": 14.9,
+    "belly_gap": 0.609,
+    "leg_zone": 0.28,
+    "leans": [
+     7.5,
+     -14.9,
+     -65.4
+    ],
+    "lifts": [
+     0.038,
+     0.0,
+     0.128
+    ],
+    "plain": 0.212,
     "colour": 1.0,
-    "aspect": 1.474,
     "box": [
-     0.144,
+     0.14,
      0.283,
      0.772,
-     0.851
+     0.845
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 0.75
    }
@@ -358,21 +1020,44 @@
    "local": true,
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_469942324/photo.jpg",
    "score": {
-    "total": 0.193,
-    "whole": 0.789,
-    "side": 1.0,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 0.5,
-    "stance": 0.5,
-    "plain": 0.255,
-    "colour": 1.0,
-    "aspect": 2.845,
+    "aspect": 0.456,
+    "band_px": 13.5,
+    "clear": 0.209,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.004,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 20.4,
+    "belly_gap": 0.143,
+    "leg_zone": 0.123,
+    "leans": [
+     20.4
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.25,
+    "colour": 0.999,
     "box": [
-     0.044,
-     0.096,
-     0.96,
-     0.58
+     0.206,
+     0.384,
+     0.258,
+     0.556
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance",
+     "clear"
     ],
     "local": 1.0
    }
@@ -391,21 +1076,44 @@
    "local": true,
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_469943720/photo.jpg",
    "score": {
-    "total": 0.189,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
+    "single": 1.0,
+    "aspect": 1.58,
+    "band_px": 3.36,
+    "clear": 1.0,
     "size": 1.0,
-    "single": 0.996,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.262,
-    "colour": 1.0,
-    "aspect": 1.64,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 40.5,
+    "lean": 3.6,
+    "belly_gap": 0.758,
+    "leg_zone": 0.274,
+    "leans": [
+     -22.5,
+     -3.6,
+     18.0
+    ],
+    "lifts": [
+     0.119,
+     0.005,
+     0.01
+    ],
+    "plain": 0.264,
+    "colour": 0.979,
     "box": [
      0.108,
      0.261,
      0.718,
-     0.82
+     0.841
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 1.0
    }
@@ -424,21 +1132,39 @@
    "local": true,
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_10363663/photo.jpg",
    "score": {
-    "total": 0.18,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
-    "size": 1.0,
     "single": 1.0,
+    "aspect": 1.2,
+    "band_px": 3.82,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.109,
+    "side": 0.0,
     "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.198,
-    "colour": 1.0,
-    "aspect": 2.239,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.199,
+    "colour": 0.917,
     "box": [
-     0.136,
-     0.379,
-     0.866,
-     0.813
+     0.498,
+     0.48,
+     0.522,
+     0.507
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -454,21 +1180,41 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7c/%C3%84ht%C3%A4rin_karhut_3.jpg/1280px-%C3%84ht%C3%A4rin_karhut_3.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/ursus_arctos/commons_20438771/photo.jpg",
    "score": {
-    "total": 0.169,
-    "whole": 0.971,
-    "side": 1.0,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 0.5,
-    "stance": 0.5,
-    "plain": 0.187,
-    "colour": 1.0,
-    "aspect": 1.708,
+    "aspect": 1.614,
+    "band_px": 5.66,
+    "clear": 0.861,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.019,
+    "side": 1.0,
+    "legs": 0.051,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 52.3,
+    "belly_gap": 0.663,
+    "leg_zone": 0.161,
+    "leans": [
+     -52.3
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.184,
+    "colour": 0.998,
     "box": [
-     0.042,
-     0.147,
-     0.954,
-     0.946
+     0.078,
+     0.144,
+     0.94,
+     0.943
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -484,21 +1230,44 @@
    "url_large": "https://upload.wikimedia.org/wikipedia/commons/7/7d/Brown_bear.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
    "file_small": "pipeline/_cache/references/ursus_arctos/commons_7080486/photo.jpg",
    "score": {
-    "total": 0.137,
-    "whole": 0.703,
-    "side": 0.44,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 1.0,
-    "stance": 1.0,
-    "plain": 0.179,
-    "colour": 1.0,
-    "aspect": 1.164,
+    "aspect": 1.152,
+    "band_px": 4.22,
+    "clear": 0.982,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.9,
+    "stance": 0.0,
+    "spread": 49.5,
+    "lean": 7.3,
+    "belly_gap": 0.369,
+    "leg_zone": 0.228,
+    "leans": [
+     -7.3,
+     20.2,
+     -29.3
+    ],
+    "lifts": [
+     0.0,
+     0.0,
+     0.003
+    ],
+    "plain": 0.173,
+    "colour": 0.993,
     "box": [
-     0.064,
-     0.038,
-     0.916,
-     0.955
+     0.072,
+     0.02,
+     0.92,
+     0.942
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 0.75
    }
@@ -514,21 +1283,38 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a0/%C3%84ht%C3%A4rin_karhut_6.jpg/1280px-%C3%84ht%C3%A4rin_karhut_6.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/ursus_arctos/commons_20438774/photo.jpg",
    "score": {
-    "total": 0.134,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
-    "size": 1.0,
     "single": 1.0,
+    "aspect": 0.711,
+    "band_px": 2.31,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.358,
+    "side": 0.0,
     "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.193,
-    "colour": 1.0,
-    "aspect": 1.533,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.186,
+    "colour": 0.997,
     "box": [
-     0.106,
-     0.174,
-     0.808,
-     0.862
+     0.112,
+     0.168,
+     0.436,
+     0.853
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -544,21 +1330,42 @@
    "url_large": "https://upload.wikimedia.org/wikipedia/commons/d/da/Bj%C3%B6rnen_och_kr%C3%A5kan.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
    "file_small": "pipeline/_cache/references/ursus_arctos/commons_121108085/photo.jpg",
    "score": {
-    "total": 0.124,
-    "whole": 0.629,
-    "side": 0.948,
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.011,
+    "band_px": 23.87,
+    "clear": 0.0,
     "size": 1.0,
-    "single": 0.985,
-    "legs": 1.0,
-    "stance": 0.333,
-    "plain": 0.198,
-    "colour": 1.0,
-    "aspect": 1.469,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.777,
+    "legs": 0.119,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 37.6,
+    "belly_gap": 0.59,
+    "leg_zone": 0.215,
+    "leans": [
+     -37.6
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.192,
+    "colour": 0.978,
     "box": [
-     0.04,
-     0.144,
-     0.704,
-     0.77
+     0.146,
+     0.091,
+     0.7,
+     0.85
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance",
+     "clear"
     ],
     "local": 0.75
    }
@@ -574,51 +1381,42 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5d/Kamchatka_Brown_Bear_near_Dvuhyurtochnoe_on_2015-07-23.jpg/1280px-Kamchatka_Brown_Bear_near_Dvuhyurtochnoe_on_2015-07-23.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/ursus_arctos/commons_46854733/photo.jpg",
    "score": {
-    "total": 0.106,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.816,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.15,
-    "colour": 1.0,
-    "aspect": 1.39,
-    "box": [
-     0.076,
-     0.165,
-     0.896,
-     0.952
+    "aspect": 1.356,
+    "band_px": 3.06,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 43.7,
+    "lean": 9.9,
+    "belly_gap": 0.471,
+    "leg_zone": 0.39,
+    "leans": [
+     11.9,
+     -31.8
     ],
-    "local": 0.75
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_20438779",
-   "licence": "CC BY-SA 3.0",
-   "author": "kallerna",
-   "attribution": "kallerna, CC BY-SA 3.0, via Wikimedia Commons (File:\u00c4ht\u00e4rin karhut 11.jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:%C3%84ht%C3%A4rin_karhut_11.jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/%C3%84ht%C3%A4rin_karhut_11.jpg/500px-%C3%84ht%C3%A4rin_karhut_11.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/%C3%84ht%C3%A4rin_karhut_11.jpg/1280px-%C3%84ht%C3%A4rin_karhut_11.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "file_small": "pipeline/_cache/references/ursus_arctos/commons_20438779/photo.jpg",
-   "score": {
-    "total": 0.086,
-    "whole": 1.0,
-    "side": 0.291,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.5,
-    "stance": 1.0,
-    "plain": 0.209,
-    "colour": 1.0,
-    "aspect": 1.075,
+    "lifts": [
+     0.0,
+     0.0
+    ],
+    "plain": 0.148,
+    "colour": 0.991,
     "box": [
-     0.12,
-     0.144,
-     0.666,
-     0.907
+     0.216,
+     0.165,
+     0.894,
+     0.832
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 0.75
    }
@@ -634,21 +1432,41 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Bern_B%C3%A4renpark_B%C3%A4r-20120807-RM-191003.jpg/1280px-Bern_B%C3%A4renpark_B%C3%A4r-20120807-RM-191003.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/ursus_arctos/commons_141093789/photo.jpg",
    "score": {
-    "total": 0.074,
-    "whole": 0.873,
-    "side": 0.661,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.137,
+    "aspect": 1.475,
+    "band_px": 3.62,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 15.5,
+    "belly_gap": 0.91,
+    "leg_zone": 0.352,
+    "leans": [
+     15.5
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.128,
     "colour": 1.0,
-    "aspect": 1.297,
     "box": [
-     0.128,
-     0.205,
-     0.862,
-     0.96
+     0.106,
+     0.24,
+     0.802,
+     0.869
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -664,51 +1482,42 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Brown_Bear_imported_from_iNaturalist_photo_306356259_on_31_December_2023.jpg/1280px-Brown_Bear_imported_from_iNaturalist_photo_306356259_on_31_December_2023.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/ursus_arctos/commons_143300475/photo.jpg",
    "score": {
-    "total": 0.055,
-    "whole": 0.745,
-    "side": 0.568,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 0.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.15,
-    "colour": 1.0,
-    "aspect": 1.241,
-    "box": [
-     0.042,
-     0.126,
-     0.96,
-     0.962
+    "aspect": 1.126,
+    "band_px": 4.9,
+    "clear": 0.925,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.65,
+    "legs": 0.059,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 1.4,
+    "belly_gap": 0.23,
+    "leg_zone": 0.167,
+    "leans": [
+     1.4
     ],
-    "local": 0.75
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_110260266",
-   "licence": "CC BY 2.0",
-   "author": "Frank Vassen from Brussels, Belgium",
-   "attribution": "Frank Vassen from Brussels, Belgium, CC BY 2.0, via Wikimedia Commons (File:Brown bear (Ursus arctos), Viiksimo, Kainuu region, Finland (29058988558).jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:Brown_bear_(Ursus_arctos),_Viiksimo,_Kainuu_region,_Finland_(29058988558).jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/14/Brown_bear_%28Ursus_arctos%29%2C_Viiksimo%2C_Kainuu_region%2C_Finland_%2829058988558%29.jpg/500px-Brown_bear_%28Ursus_arctos%29%2C_Viiksimo%2C_Kainuu_region%2C_Finland_%2829058988558%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/14/Brown_bear_%28Ursus_arctos%29%2C_Viiksimo%2C_Kainuu_region%2C_Finland_%2829058988558%29.jpg/1280px-Brown_bear_%28Ursus_arctos%29%2C_Viiksimo%2C_Kainuu_region%2C_Finland_%2829058988558%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "file_small": "pipeline/_cache/references/ursus_arctos/commons_110260266/photo.jpg",
-   "score": {
-    "total": 0.053,
-    "whole": 1.0,
-    "side": 0.292,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.5,
-    "stance": 0.5,
-    "plain": 0.22,
-    "colour": 1.0,
-    "aspect": 1.075,
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.822,
+    "colour": 0.98,
     "box": [
-     0.112,
-     0.052,
-     0.682,
-     0.813
+     0.002,
+     0.0,
+     1.0,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -724,56 +1533,48 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/%C3%84ht%C3%A4rin_karhut_24.jpg/1280px-%C3%84ht%C3%A4rin_karhut_24.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/ursus_arctos/commons_20438795/photo.jpg",
    "score": {
-    "total": 0.048,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.35,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
+    "aspect": 0.934,
+    "band_px": 2.43,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.585,
+    "legs": 0.933,
+    "stance": 0.0,
+    "spread": 60.7,
+    "lean": 9.6,
+    "belly_gap": 0.425,
+    "leg_zone": 0.232,
+    "leans": [
+     -15.7,
+     -9.4,
+     45.0,
+     28.6
+    ],
+    "lifts": [
+     0.113,
+     0.104,
+     0.018,
+     0.001
+    ],
     "plain": 0.22,
-    "colour": 1.0,
-    "aspect": 1.11,
+    "colour": 0.998,
     "box": [
      0.178,
-     0.233,
-     0.704,
-     0.875
+     0.195,
+     0.63,
+     0.851
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 0.75
-   }
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_149761466",
-   "licence": "CC BY 4.0",
-   "author": "Jay Brasher",
-   "attribution": "(c) Jay Brasher, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/90604246",
-   "photo_page": "https://www.inaturalist.org/photos/149761466",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/149761466/medium.jpg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/149761466/large.jpg",
-   "adult": false,
-   "local": true,
-   "file_small": "pipeline/_cache/references/ursus_arctos/inat_149761466/photo.jpg",
-   "score": {
-    "total": 0.046,
-    "whole": 1.0,
-    "side": 0.362,
-    "size": 0.75,
-    "single": 0.887,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.202,
-    "colour": 1.0,
-    "aspect": 1.117,
-    "box": [
-     0.402,
-     0.303,
-     0.802,
-     0.841
-    ],
-    "local": 1.0
    }
   },
   {
@@ -787,86 +1588,45 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/20/Bear_Sanctuary_Prishtina_Bear_3_%28OSCAL19_trip%29.jpg/1280px-Bear_Sanctuary_Prishtina_Bear_3_%28OSCAL19_trip%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/ursus_arctos/commons_79770414/photo.jpg",
    "score": {
-    "total": 0.045,
-    "whole": 0.373,
-    "side": 0.921,
-    "size": 1.0,
-    "single": 0.964,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.188,
-    "colour": 1.0,
-    "aspect": 1.452,
-    "box": [
-     0.228,
-     0.202,
-     0.96,
-     0.961
-    ],
-    "local": 0.75
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_20438775",
-   "licence": "CC BY-SA 3.0",
-   "author": "kallerna",
-   "attribution": "kallerna, CC BY-SA 3.0, via Wikimedia Commons (File:\u00c4ht\u00e4rin karhut 7.jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:%C3%84ht%C3%A4rin_karhut_7.jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b5/%C3%84ht%C3%A4rin_karhut_7.jpg/500px-%C3%84ht%C3%A4rin_karhut_7.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b5/%C3%84ht%C3%A4rin_karhut_7.jpg/1280px-%C3%84ht%C3%A4rin_karhut_7.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "file_small": "pipeline/_cache/references/ursus_arctos/commons_20438775/photo.jpg",
-   "score": {
-    "total": 0.038,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.131,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 0.5,
+    "aspect": 0.584,
+    "band_px": 1.94,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.158,
     "stance": 1.0,
-    "plain": 0.173,
+    "spread": 2.6,
+    "lean": 2.3,
+    "belly_gap": 0.487,
+    "leg_zone": 0.139,
+    "leans": [
+     1.0,
+     3.6
+    ],
+    "lifts": [
+     0.058,
+     0.0
+    ],
+    "plain": 0.155,
     "colour": 1.0,
-    "aspect": 0.979,
     "box": [
-     0.344,
-     0.216,
-     0.802,
-     0.919
+     0.362,
+     0.202,
+     0.564,
+     0.723
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs"
     ],
     "local": 0.75
-   }
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_96565270",
-   "licence": "CC BY 4.0",
-   "author": "Cody Stricker",
-   "attribution": "(c) Cody Stricker, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/60391797",
-   "photo_page": "https://www.inaturalist.org/photos/96565270",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/96565270/medium.jpeg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/96565270/large.jpeg",
-   "adult": true,
-   "local": true,
-   "file_small": "pipeline/_cache/references/ursus_arctos/inat_96565270/photo.jpg",
-   "score": {
-    "total": 0.025,
-    "whole": 0.146,
-    "side": 0.953,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.216,
-    "colour": 1.0,
-    "aspect": 1.472,
-    "box": [
-     0.04,
-     0.037,
-     0.72,
-     0.701
-    ],
-    "local": 1.0
    }
   },
   {
@@ -883,21 +1643,44 @@
    "local": true,
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_459439861/photo.jpg",
    "score": {
-    "total": 0.014,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
-    "size": 0.11,
-    "single": 0.471,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.224,
-    "colour": 1.0,
-    "aspect": 17.0,
+    "single": 0.639,
+    "aspect": 0.992,
+    "band_px": 14.05,
+    "clear": 0.163,
+    "size": 0.192,
+    "solid": 0.95,
+    "head_end": 1.0,
+    "side": 0.73,
+    "legs": 0.7,
+    "stance": 0.0,
+    "spread": 50.4,
+    "lean": 2.0,
+    "belly_gap": 0.633,
+    "leg_zone": 0.204,
+    "leans": [
+     23.2,
+     -27.2
+    ],
+    "lifts": [
+     0.003,
+     0.003
+    ],
+    "plain": 0.226,
+    "colour": 0.857,
     "box": [
-     0.282,
-     0.32,
-     0.554,
-     0.336
+     0.016,
+     0.46,
+     0.262,
+     0.708
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance",
+     "clear"
     ],
     "local": 1.0
    }
@@ -916,21 +1699,43 @@
    "local": true,
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_182132483/photo.jpg",
    "score": {
-    "total": 0.006,
-    "whole": 0.739,
-    "side": 0.062,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 0.5,
-    "plain": 0.51,
-    "colour": 1.0,
-    "aspect": 0.937,
+    "aspect": 0.667,
+    "band_px": 12.33,
+    "clear": 0.306,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 21.4,
+    "belly_gap": 0.556,
+    "leg_zone": 0.353,
+    "leans": [
+     21.4
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.367,
+    "colour": 0.992,
     "box": [
-     0.084,
-     0.04,
-     0.946,
-     0.96
+     0.81,
+     0.602,
+     0.878,
+     0.704
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -946,21 +1751,39 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/K%C3%B6lner_Zoo_Braunb%C3%A4r-20110912-RM-142316.jpg/1280px-K%C3%B6lner_Zoo_Braunb%C3%A4r-20110912-RM-142316.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/ursus_arctos/commons_112870981/photo.jpg",
    "score": {
-    "total": 0.005,
-    "whole": 0.083,
-    "side": 0.421,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 0.0,
     "single": 1.0,
+    "aspect": 1.018,
+    "band_px": 3.31,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.359,
+    "side": 0.0,
     "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.111,
-    "colour": 1.0,
-    "aspect": 1.153,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.033,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.11,
+    "colour": 0.981,
     "box": [
-     0.204,
-     0.104,
-     0.944,
-     0.96
+     0.26,
+     0.096,
+     0.95,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -979,83 +1802,41 @@
    "local": true,
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_96571417/photo.jpg",
    "score": {
-    "total": 0.001,
-    "whole": 0.002,
-    "side": 1.0,
-    "size": 1.0,
-    "single": 0.966,
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.556,
+    "band_px": 2.4,
+    "clear": 1.0,
+    "size": 0.096,
+    "solid": 1.0,
+    "head_end": 0.512,
+    "side": 0.0,
     "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.484,
-    "colour": 1.0,
-    "aspect": 1.825,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.034,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.28,
+    "colour": 0.991,
     "box": [
-     0.04,
-     0.04,
-     0.96,
-     0.67
+     0.338,
+     0.333,
+     0.562,
+     0.512
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 1.0
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_20438776",
-   "licence": "CC BY-SA 3.0",
-   "author": "kallerna",
-   "attribution": "kallerna, CC BY-SA 3.0, via Wikimedia Commons (File:\u00c4ht\u00e4rin karhut 8.jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:%C3%84ht%C3%A4rin_karhut_8.jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/%C3%84ht%C3%A4rin_karhut_8.jpg/500px-%C3%84ht%C3%A4rin_karhut_8.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/%C3%84ht%C3%A4rin_karhut_8.jpg/1280px-%C3%84ht%C3%A4rin_karhut_8.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "file_small": "pipeline/_cache/references/ursus_arctos/commons_20438776/photo.jpg",
-   "score": {
-    "total": 0.001,
-    "whole": 1.0,
-    "side": 0.004,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.187,
-    "colour": 1.0,
-    "aspect": 0.902,
-    "box": [
-     0.118,
-     0.141,
-     0.58,
-     0.91
-    ],
-    "local": 0.75
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_2271990",
-   "licence": "CC BY-SA 3.0",
-   "author": "Brocken Inaglory",
-   "attribution": "Brocken Inaglory, CC BY-SA 3.0, via Wikimedia Commons (File:Play fight IMG 3018.JPG)",
-   "page": "https://commons.wikimedia.org/wiki/File:Play_fight_IMG_3018.JPG",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/84/Play_fight_IMG_3018.JPG/500px-Play_fight_IMG_3018.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/84/Play_fight_IMG_3018.JPG/1280px-Play_fight_IMG_3018.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "file_small": "pipeline/_cache/references/ursus_arctos/commons_2271990/photo.jpg",
-   "score": {
-    "total": 0.0,
-    "whole": 0.0,
-    "side": 1.0,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.5,
-    "stance": 0.5,
-    "plain": 0.131,
-    "colour": 1.0,
-    "aspect": 1.575,
-    "box": [
-     0.04,
-     0.05,
-     0.96,
-     0.963
-    ],
-    "local": 0.75
    }
   },
   {
@@ -1071,19 +1852,37 @@
    "score": {
     "total": 0.0,
     "whole": 0.0,
-    "side": 0.824,
-    "size": 1.0,
     "single": 1.0,
+    "aspect": 1.444,
+    "band_px": 1.84,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
     "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.452,
-    "colour": 1.0,
-    "aspect": 1.394,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.652,
+    "colour": 0.983,
     "box": [
-     0.04,
-     0.071,
-     0.804,
-     0.961
+     0.0,
+     0.065,
+     0.832,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -1103,20 +1902,43 @@
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_39004409/photo.jpg",
    "score": {
     "total": 0.0,
-    "whole": 0.0,
-    "side": 0.111,
-    "size": 1.0,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.244,
-    "colour": 1.0,
-    "aspect": 0.966,
+    "aspect": 1.467,
+    "band_px": 14.93,
+    "clear": 0.089,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.087,
+    "spread": 3.1,
+    "lean": 1.6,
+    "belly_gap": 0.771,
+    "leg_zone": 0.267,
+    "leans": [
+     -3.1,
+     0.0
+    ],
+    "lifts": [
+     0.0,
+     0.133
+    ],
+    "plain": 0.101,
+    "colour": 0.996,
     "box": [
-     0.04,
-     0.152,
-     0.96,
-     0.866
+     0.512,
+     0.398,
+     0.629,
+     0.458
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance",
+     "clear"
     ],
     "local": 1.0
    }
@@ -1136,20 +1958,42 @@
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_328337329/photo.jpg",
    "score": {
     "total": 0.0,
-    "whole": 0.0,
-    "side": 0.0,
-    "size": 1.0,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.601,
+    "aspect": 1.059,
+    "band_px": 13.34,
+    "clear": 0.221,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.897,
+    "legs": 0.061,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 35.6,
+    "belly_gap": 0.351,
+    "leg_zone": 0.169,
+    "leans": [
+     35.6
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.66,
     "colour": 1.0,
-    "aspect": 0.816,
     "box": [
-     0.227,
-     0.184,
-     0.96,
-     0.858
+     0.496,
+     0.602,
+     0.688,
+     0.738
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance",
+     "clear"
     ],
     "local": 1.0
    }
@@ -1169,6 +2013,42 @@
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_31499932/photo.jpg",
    "score": {
     "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.088,
+    "band_px": 5.05,
+    "clear": 0.913,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.204,
+    "side": 0.969,
+    "legs": 0.114,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 18.9,
+    "belly_gap": 0.347,
+    "leg_zone": 0.211,
+    "leans": [
+     18.9
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.174,
+    "colour": 1.0,
+    "box": [
+     0.204,
+     0.325,
+     0.328,
+     0.485
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ],
     "local": 1.0
    }
   },
@@ -1187,6 +2067,44 @@
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_552992744/photo.jpg",
    "score": {
     "total": 0.0,
+    "whole": 0.268,
+    "single": 0.55,
+    "aspect": 0.323,
+    "band_px": 10.11,
+    "clear": 0.491,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.093,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 5.7,
+    "belly_gap": 0.75,
+    "leg_zone": 0.194,
+    "leans": [
+     5.7
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.122,
+    "colour": 0.71,
+    "box": [
+     0.612,
+     0.907,
+     0.632,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "size",
+     "side",
+     "legs",
+     "stance"
+    ],
     "local": 1.0
    }
   },
@@ -1205,20 +2123,41 @@
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_39004417/photo.jpg",
    "score": {
     "total": 0.0,
-    "whole": 0.0,
-    "side": 0.0,
-    "size": 1.0,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.245,
+    "aspect": 1.857,
+    "band_px": 6.15,
+    "clear": 0.821,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.235,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 52.3,
+    "belly_gap": 0.5,
+    "leg_zone": 0.343,
+    "leans": [
+     52.3
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.175,
     "colour": 1.0,
-    "aspect": 0.615,
     "box": [
-     0.211,
-     0.04,
-     0.96,
-     0.954
+     0.411,
+     0.394,
+     0.584,
+     0.464
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -1238,6 +2177,42 @@
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_469941386/photo.jpg",
    "score": {
     "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.429,
+    "band_px": 2.95,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.029,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.5,
+    "leg_zone": 0.143,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.267,
+    "colour": 1.0,
+    "box": [
+     0.654,
+     0.468,
+     0.674,
+     0.489
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ],
     "local": 1.0
    }
   },
@@ -1256,53 +2231,9 @@
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_459439831/photo.jpg",
    "score": {
     "total": 0.0,
-    "whole": 1.0,
-    "side": 1.0,
-    "size": 0.0,
-    "single": 0.516,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.225,
-    "colour": 1.0,
-    "aspect": 9.75,
-    "box": [
-     0.288,
-     0.344,
-     0.366,
-     0.352
-    ],
-    "local": 1.0
-   }
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_752640182",
-   "licence": "CC BY 4.0",
-   "author": "Jay Brasher",
-   "attribution": "(c) Jay Brasher, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/409350630",
-   "photo_page": "https://www.inaturalist.org/photos/752640182",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/752640182/medium.jpg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/752640182/large.jpg",
-   "adult": true,
-   "local": true,
-   "file_small": "pipeline/_cache/references/ursus_arctos/inat_752640182/photo.jpg",
-   "score": {
-    "total": 0.0,
-    "whole": 1.0,
-    "side": 0.825,
-    "size": 0.0,
-    "single": 0.637,
-    "legs": 0.25,
-    "stance": 1.0,
-    "plain": 0.274,
-    "colour": 1.0,
-    "aspect": 1.395,
-    "box": [
-     0.63,
-     0.485,
-     0.842,
-     0.714
+    "usable": false,
+    "why_not": [
+     "no subject"
     ],
     "local": 1.0
    }
@@ -1323,19 +2254,40 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 0.621,
-    "size": 0.0,
     "single": 1.0,
-    "legs": 0.5,
-    "stance": 1.0,
+    "aspect": 1.409,
+    "band_px": 1.62,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.408,
+    "side": 1.0,
+    "legs": 0.049,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.333,
+    "leg_zone": 0.159,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.0
+    ],
     "plain": 0.244,
-    "colour": 1.0,
-    "aspect": 1.273,
+    "colour": 0.985,
     "box": [
      0.402,
      0.556,
-     0.458,
+     0.464,
      0.622
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -1356,19 +2308,37 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 0.167,
+    "single": 1.0,
+    "aspect": 1.882,
+    "band_px": 3.28,
+    "clear": 1.0,
     "size": 0.0,
-    "single": 0.824,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
     "legs": 0.0,
-    "stance": 1.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
     "plain": 0.185,
-    "colour": 1.0,
-    "aspect": 1.0,
+    "colour": 0.921,
     "box": [
-     0.11,
-     0.804,
-     0.135,
-     0.818
+     0.456,
+     0.472,
+     0.569,
+     0.506
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -1388,6 +2358,45 @@
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_251500034/photo.jpg",
    "score": {
     "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.621,
+    "band_px": 5.9,
+    "clear": 0.842,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.725,
+    "stance": 0.0,
+    "spread": 40.6,
+    "lean": 8.5,
+    "belly_gap": 0.684,
+    "leg_zone": 0.207,
+    "leans": [
+     -14.0,
+     -8.5,
+     26.6
+    ],
+    "lifts": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "plain": 0.188,
+    "colour": 1.0,
+    "box": [
+     0.506,
+     0.413,
+     0.6,
+     0.491
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ],
     "local": 1.0
    }
   },
@@ -1407,19 +2416,40 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 0.0,
-    "size": 0.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.225,
-    "colour": 1.0,
-    "aspect": 0.337,
+    "aspect": 0.314,
+    "band_px": 3.45,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.3,
+    "belly_gap": 0.078,
+    "leg_zone": 0.76,
+    "leans": [
+     0.3
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.224,
+    "colour": 0.424,
     "box": [
-     0.085,
+     0.107,
      0.222,
-     0.32,
-     0.744
+     0.323,
+     0.738
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -1439,20 +2469,43 @@
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_508500945/photo.jpg",
    "score": {
     "total": 0.0,
-    "whole": 0.799,
-    "side": 0.0,
-    "size": 0.0,
+    "whole": 0.03,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.198,
-    "colour": 1.0,
-    "aspect": 0.423,
+    "aspect": 0.51,
+    "band_px": 7.26,
+    "clear": 0.728,
+    "size": 0.456,
+    "solid": 1.0,
+    "head_end": 0.106,
+    "side": 0.0,
+    "legs": 0.129,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 7.0,
+    "belly_gap": 0.641,
+    "leg_zone": 0.223,
+    "leans": [
+     -7.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.199,
+    "colour": 0.807,
     "box": [
-     0.805,
-     0.494,
-     0.96,
-     0.768
+     0.787,
+     0.466,
+     1.0,
+     0.78
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "size",
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -1472,6 +2525,42 @@
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_469939064/photo.jpg",
    "score": {
     "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.833,
+    "band_px": 5.56,
+    "clear": 0.87,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.675,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.235,
+    "leg_zone": 0.292,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.294,
+    "colour": 1.0,
+    "box": [
+     0.348,
+     0.471,
+     0.392,
+     0.508
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ],
     "local": 1.0
    }
   },
@@ -1491,19 +2580,42 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 0.0,
-    "size": 0.15,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.251,
-    "colour": 1.0,
-    "aspect": 0.897,
+    "aspect": 0.854,
+    "band_px": 2.7,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.386,
+    "legs": 0.425,
+    "stance": 0.0,
+    "spread": 6.9,
+    "lean": 39.8,
+    "belly_gap": 0.315,
+    "leg_zone": 0.171,
+    "leans": [
+     36.3,
+     43.2
+    ],
+    "lifts": [
+     0.076,
+     0.0
+    ],
+    "plain": 0.25,
+    "colour": 0.998,
     "box": [
-     0.322,
-     0.258,
-     0.602,
-     0.727
+     0.324,
+     0.249,
+     0.594,
+     0.724
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -1524,19 +2636,36 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.605,
+    "band_px": 2.52,
+    "clear": 1.0,
+    "size": 0.75,
+    "solid": 1.0,
+    "head_end": 0.0,
     "side": 0.0,
-    "size": 0.0,
-    "single": 0.939,
-    "legs": 0.5,
-    "stance": 1.0,
-    "plain": 0.455,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.016,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.456,
     "colour": 1.0,
-    "aspect": 0.606,
     "box": [
-     0.414,
-     0.426,
+     0.412,
+     0.423,
      0.568,
-     0.808
+     0.811
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -1557,19 +2686,40 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 0.0,
-    "size": 0.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
+    "aspect": 1.981,
+    "band_px": 3.43,
+    "clear": 1.0,
+    "size": 0.04,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.417,
+    "leg_zone": 0.34,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.0
+    ],
     "plain": 0.203,
-    "colour": 1.0,
-    "aspect": 0.235,
+    "colour": 0.215,
     "box": [
-     0.68,
-     0.883,
-     0.688,
-     0.934
+     0.398,
+     0.408,
+     0.608,
+     0.568
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -1589,6 +2739,40 @@
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_539161128/photo.jpg",
    "score": {
     "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.0,
+    "band_px": 76.75,
+    "clear": 0.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.333,
+    "side": 0.0,
+    "legs": 0.0,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 90.0,
+    "belly_gap": 0.0,
+    "leg_zone": 0.0,
+    "leans": [],
+    "lifts": [],
+    "plain": 0.217,
+    "colour": 1.0,
+    "box": [
+     0.57,
+     0.498,
+     0.576,
+     0.508
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "legs",
+     "stance",
+     "clear"
+    ],
     "local": 1.0
    }
   },
@@ -1608,19 +2792,40 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 0.42,
-    "size": 0.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
+    "aspect": 1.196,
+    "band_px": 1.89,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.007,
+    "side": 0.975,
+    "legs": 0.121,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 57.0,
+    "belly_gap": 0.295,
+    "leg_zone": 0.217,
+    "leans": [
+     -57.0
+    ],
+    "lifts": [
+     0.0
+    ],
     "plain": 0.248,
-    "colour": 1.0,
-    "aspect": 1.152,
+    "colour": 0.998,
     "box": [
      0.467,
      0.452,
-     0.608,
+     0.613,
      0.544
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -1640,6 +2845,44 @@
    "file_small": "pipeline/_cache/references/ursus_arctos/inat_508822409/photo.jpg",
    "score": {
     "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.654,
+    "band_px": 14.36,
+    "clear": 0.137,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 47.8,
+    "lean": 2.7,
+    "belly_gap": 0.824,
+    "leg_zone": 0.385,
+    "leans": [
+     -26.6,
+     21.2
+    ],
+    "lifts": [
+     0.115,
+     0.0
+    ],
+    "plain": 0.21,
+    "colour": 0.996,
+    "box": [
+     0.476,
+     0.333,
+     0.562,
+     0.403
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance",
+     "clear"
+    ],
     "local": 1.0
    }
   },
@@ -1655,20 +2898,44 @@
    "file_small": "pipeline/_cache/references/ursus_arctos/commons_149023694/photo.jpg",
    "score": {
     "total": 0.0,
-    "whole": 0.0,
-    "side": 1.0,
-    "size": 1.0,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.128,
-    "colour": 1.0,
-    "aspect": 2.13,
+    "aspect": 1.616,
+    "band_px": 2.29,
+    "clear": 1.0,
+    "size": 0.144,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 53.7,
+    "lean": 7.3,
+    "belly_gap": 0.747,
+    "leg_zone": 0.342,
+    "leans": [
+     -29.4,
+     7.3,
+     24.3
+    ],
+    "lifts": [
+     0.0,
+     0.0,
+     0.027
+    ],
+    "plain": 0.12,
+    "colour": 0.994,
     "box": [
-     0.04,
-     0.039,
-     0.96,
-     0.686
+     0.39,
+     0.377,
+     0.626,
+     0.596
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
     ],
     "local": 0.75
    }
@@ -1686,19 +2953,42 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 0.0,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 0.5,
-    "stance": 1.0,
+    "aspect": 0.415,
+    "band_px": 2.16,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.2,
+    "stance": 0.0,
+    "spread": 41.1,
+    "lean": 18.4,
+    "belly_gap": 0.469,
+    "leg_zone": 0.144,
+    "leans": [
+     -2.1,
+     39.0
+    ],
+    "lifts": [
+     0.0,
+     0.031
+    ],
     "plain": 0.208,
-    "colour": 1.0,
-    "aspect": 0.42,
+    "colour": 0.997,
     "box": [
-     0.358,
-     0.178,
-     0.83,
+     0.355,
+     0.168,
+     0.827,
      0.926
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -1716,19 +3006,42 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 0.0,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.216,
-    "colour": 1.0,
-    "aspect": 0.457,
+    "aspect": 0.441,
+    "band_px": 2.59,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 0.183,
+    "stance": 0.0,
+    "spread": 38.9,
+    "lean": 9.4,
+    "belly_gap": 0.463,
+    "leg_zone": 0.142,
+    "leans": [
+     -10.1,
+     28.8
+    ],
+    "lifts": [
+     0.0,
+     0.041
+    ],
+    "plain": 0.215,
+    "colour": 0.996,
     "box": [
-     0.196,
-     0.074,
+     0.191,
+     0.035,
      0.792,
-     0.941
+     0.943
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -1746,19 +3059,42 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 0.0,
-    "size": 0.77,
     "single": 1.0,
-    "legs": 0.5,
-    "stance": 0.5,
+    "aspect": 0.729,
+    "band_px": 2.11,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.065,
+    "legs": 0.175,
+    "stance": 0.0,
+    "spread": 47.1,
+    "lean": 1.1,
+    "belly_gap": 0.282,
+    "leg_zone": 0.141,
+    "leans": [
+     -24.6,
+     22.5
+    ],
+    "lifts": [
+     0.046,
+     0.0
+    ],
     "plain": 0.187,
     "colour": 1.0,
-    "aspect": 0.724,
     "box": [
      0.134,
      0.069,
-     0.538,
-     0.907
+     0.542,
+     0.91
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -1776,19 +3112,40 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 0.722,
-    "size": 0.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.172,
+    "aspect": 1.165,
+    "band_px": 5.83,
+    "clear": 0.847,
+    "size": 0.149,
+    "solid": 1.0,
+    "head_end": 0.316,
+    "side": 1.0,
+    "legs": 0.135,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 50.8,
+    "belly_gap": 0.397,
+    "leg_zone": 0.228,
+    "leans": [
+     50.8
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.171,
     "colour": 1.0,
-    "aspect": 1.333,
     "box": [
-     0.784,
-     0.348,
-     0.792,
-     0.357
+     0.232,
+     0.502,
+     0.416,
+     0.739
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -1806,29 +3163,53 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 0.0,
+    "single": 0.998,
+    "aspect": 0.874,
+    "band_px": 2.93,
+    "clear": 1.0,
     "size": 1.0,
-    "single": 1.0,
-    "legs": 0.5,
-    "stance": 1.0,
-    "plain": 0.22,
+    "solid": 1.0,
+    "head_end": 0.156,
+    "side": 0.435,
+    "legs": 0.292,
+    "stance": 0.0,
+    "spread": 66.6,
+    "lean": 1.9,
+    "belly_gap": 0.32,
+    "leg_zone": 0.155,
+    "leans": [
+     -35.2,
+     31.4
+    ],
+    "lifts": [
+     0.0,
+     0.036
+    ],
+    "plain": 0.221,
     "colour": 1.0,
-    "aspect": 0.848,
     "box": [
      0.218,
-     0.102,
-     0.688,
-     0.937
+     0.09,
+     0.704,
+     0.928
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
   }
  ],
- "shortlist": [
-  "inat_381298732",
-  "inat_469943715"
- ],
- "chosen_by": {
+ "judged": {
+  "chosen": "inat_381298732",
+  "shortlist": [
+   "inat_381298732",
+   "inat_469943715"
+  ],
   "by": "the judge (Claude, from the contact sheet of the rule's top candidates)",
   "rule_rank": [
    2,

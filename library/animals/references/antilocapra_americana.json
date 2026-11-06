@@ -1,5 +1,5 @@
 {
- "format": 1,
+ "format": 2,
  "code": "antilocapra_americana",
  "scientific": "Antilocapra americana",
  "plan": "quadruped",
@@ -14,136 +14,259 @@
  },
  "by": "pipeline/reference_photos.py",
  "licences": "CC0, CC BY or CC BY-SA only, each photo's own",
- "chosen": "inat_250877072",
+ "chosen": "inat_717073114",
  "candidates": [
   {
    "source": "inaturalist",
-   "id": "inat_250877072",
+   "id": "inat_717073114",
    "licence": "CC BY 4.0",
-   "author": "Doug Brush",
-   "attribution": "(c) Doug Brush, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/145984899",
-   "photo_page": "https://www.inaturalist.org/photos/250877072",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/250877072/medium.jpeg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/250877072/large.jpeg",
+   "author": "Daughter Dad",
+   "attribution": "(c) Daughter Dad, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/391455454",
+   "photo_page": "https://www.inaturalist.org/photos/717073114",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/717073114/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/717073114/large.jpg",
    "adult": true,
    "local": true,
-   "file_small": "pipeline/_cache/references/antilocapra_americana/inat_250877072/photo.jpg",
+   "file_small": "pipeline/_cache/references/antilocapra_americana/inat_717073114/photo.jpg",
    "score": {
-    "total": 0.513,
+    "total": 0.361,
     "whole": 1.0,
-    "side": 0.784,
+    "single": 1.0,
+    "aspect": 1.717,
+    "band_px": 1.95,
+    "clear": 1.0,
     "size": 1.0,
-    "single": 0.999,
+    "solid": 1.0,
+    "head_end": 0.49,
+    "side": 1.0,
     "legs": 1.0,
     "stance": 1.0,
-    "plain": 0.31,
-    "colour": 1.0,
-    "aspect": 1.37,
-    "box": [
-     0.332,
-     0.248,
-     0.85,
-     0.752
+    "spread": 15.4,
+    "lean": 4.4,
+    "belly_gap": 0.832,
+    "leg_zone": 0.421,
+    "leans": [
+     -3.3,
+     -18.7,
+     -4.4
     ],
+    "lifts": [
+     0.0,
+     0.0,
+     0.039
+    ],
+    "plain": 0.246,
+    "colour": 0.684,
+    "box": [
+     0.388,
+     0.259,
+     0.91,
+     0.732
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true,
     "local": 1.0
    },
-   "file_large": "pipeline/_cache/references/antilocapra_americana/inat_250877072_large/photo.jpg",
-   "file_crop": "pipeline/_cache/references/antilocapra_americana/inat_250877072_crop/reference.png"
+   "file_large": "pipeline/_cache/references/antilocapra_americana/inat_717073114_large/photo.jpg",
+   "file_crop": "pipeline/_cache/references/antilocapra_americana/inat_717073114_crop/reference.png"
   },
   {
-   "source": "inaturalist",
-   "id": "inat_746616313",
-   "licence": "CC BY 4.0",
-   "author": "Eresus",
-   "attribution": "(c) Eresus, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/406386907",
-   "photo_page": "https://www.inaturalist.org/photos/746616313",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/746616313/medium.jpg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/746616313/large.jpg",
-   "adult": true,
-   "local": true,
-   "file_small": "pipeline/_cache/references/antilocapra_americana/inat_746616313/photo.jpg",
+   "source": "wikimedia commons",
+   "id": "commons_129641387",
+   "licence": "CC BY-SA 4.0",
+   "author": "Michael Barera",
+   "attribution": "Michael Barera, CC BY-SA 4.0, via Wikimedia Commons (File:Milwaukee Public Museum November 2022 076 (The Great Plains, Wyoming- Pronghorn Antelope).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Milwaukee_Public_Museum_November_2022_076_(The_Great_Plains,_Wyoming-_Pronghorn_Antelope).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/21/Milwaukee_Public_Museum_November_2022_076_%28The_Great_Plains%2C_Wyoming-_Pronghorn_Antelope%29.jpg/500px-Milwaukee_Public_Museum_November_2022_076_%28The_Great_Plains%2C_Wyoming-_Pronghorn_Antelope%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/21/Milwaukee_Public_Museum_November_2022_076_%28The_Great_Plains%2C_Wyoming-_Pronghorn_Antelope%29.jpg/1280px-Milwaukee_Public_Museum_November_2022_076_%28The_Great_Plains%2C_Wyoming-_Pronghorn_Antelope%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_129641387/photo.jpg",
    "score": {
-    "total": 0.452,
+    "total": 0.339,
     "whole": 1.0,
-    "side": 1.0,
+    "single": 0.998,
+    "aspect": 1.191,
+    "band_px": 4.88,
+    "clear": 0.927,
     "size": 1.0,
-    "single": 1.0,
-    "legs": 0.5,
+    "solid": 1.0,
+    "head_end": 0.873,
+    "side": 1.0,
+    "legs": 1.0,
     "stance": 1.0,
-    "plain": 0.39,
-    "colour": 1.0,
-    "aspect": 1.807,
-    "box": [
-     0.244,
-     0.333,
-     0.786,
-     0.733
+    "spread": 16.0,
+    "lean": 4.6,
+    "belly_gap": 0.856,
+    "leg_zone": 0.292,
+    "leans": [
+     12.6,
+     -3.4
     ],
-    "local": 1.0
+    "lifts": [
+     0.001,
+     0.019
+    ],
+    "plain": 0.131,
+    "colour": 0.889,
+    "box": [
+     0.24,
+     0.168,
+     0.764,
+     0.829
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true,
+    "local": 0.75
    }
   },
   {
    "source": "inaturalist",
-   "id": "inat_157471146",
-   "licence": "CC BY 4.0",
-   "author": "John Rosford",
-   "attribution": "(c) John Rosford, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/94895053",
-   "photo_page": "https://www.inaturalist.org/photos/157471146",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/157471146/medium.jpg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/157471146/large.jpg",
+   "id": "inat_7633044",
+   "licence": "CC0 1.0",
+   "author": "Henggang Cui",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/6101440",
+   "photo_page": "https://www.inaturalist.org/photos/7633044",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/7633044/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/7633044/large.jpeg",
    "adult": true,
    "local": true,
-   "file_small": "pipeline/_cache/references/antilocapra_americana/inat_157471146/photo.jpg",
+   "file_small": "pipeline/_cache/references/antilocapra_americana/inat_7633044/photo.jpg",
    "score": {
-    "total": 0.377,
+    "total": 0.311,
     "whole": 1.0,
-    "side": 0.589,
+    "single": 1.0,
+    "aspect": 1.319,
+    "band_px": 2.54,
+    "clear": 1.0,
     "size": 1.0,
-    "single": 0.976,
+    "solid": 0.981,
+    "head_end": 0.584,
+    "side": 1.0,
     "legs": 1.0,
-    "stance": 1.0,
-    "plain": 0.3,
-    "colour": 1.0,
-    "aspect": 1.254,
-    "box": [
-     0.338,
-     0.151,
-     0.872,
-     0.781
+    "stance": 0.785,
+    "spread": 22.3,
+    "lean": 7.2,
+    "belly_gap": 0.808,
+    "leg_zone": 0.485,
+    "leans": [
+     7.6,
+     11.4,
+     -10.9,
+     6.9
     ],
+    "lifts": [
+     0.025,
+     0.037,
+     0.0,
+     0.0
+    ],
+    "plain": 0.25,
+    "colour": 0.738,
+    "box": [
+     0.234,
+     0.328,
+     0.664,
+     0.819
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true,
     "local": 1.0
    }
   },
   {
    "source": "wikimedia commons",
-   "id": "commons_149883455",
-   "licence": "CC BY 4.0",
-   "author": "Spencer Hurt",
-   "attribution": "Spencer Hurt, CC BY 4.0, via Wikimedia Commons (File:Antilocapra americana 394450308.jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:Antilocapra_americana_394450308.jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Antilocapra_americana_394450308.jpg/500px-Antilocapra_americana_394450308.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Antilocapra_americana_394450308.jpg/1280px-Antilocapra_americana_394450308.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_149883455/photo.jpg",
+   "id": "commons_60382089",
+   "licence": "CC BY-SA 3.0",
+   "author": "Thomas Wolf, www.foto-tw.de",
+   "attribution": "Thomas Wolf, www.foto-tw.de, CC BY-SA 3.0, via Wikimedia Commons (File:Pronghorn Yellowstone.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Pronghorn_Yellowstone.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Pronghorn_Yellowstone.jpg/500px-Pronghorn_Yellowstone.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Pronghorn_Yellowstone.jpg/1280px-Pronghorn_Yellowstone.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_60382089/photo.jpg",
    "score": {
-    "total": 0.362,
+    "total": 0.198,
     "whole": 1.0,
-    "side": 1.0,
+    "single": 1.0,
+    "aspect": 0.934,
+    "band_px": 2.03,
+    "clear": 1.0,
     "size": 1.0,
-    "single": 0.999,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.586,
     "legs": 1.0,
-    "stance": 0.667,
-    "plain": 0.318,
-    "colour": 1.0,
-    "aspect": 1.547,
-    "box": [
-     0.104,
-     0.128,
-     0.862,
-     0.781
+    "stance": 0.712,
+    "spread": 2.8,
+    "lean": 4.1,
+    "belly_gap": 0.798,
+    "leg_zone": 0.337,
+    "leans": [
+     5.5,
+     2.7
     ],
+    "lifts": [
+     0.083,
+     0.001
+    ],
+    "plain": 0.359,
+    "colour": 0.899,
+    "box": [
+     0.218,
+     0.174,
+     0.674,
+     0.881
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true,
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_148054916",
+   "licence": "CC BY 4.0",
+   "author": "Daniela G\u00e1mez",
+   "attribution": "Daniela G\u00e1mez, CC BY 4.0, via Wikimedia Commons (File:Antilocapra americana peninsularis 60153372.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Antilocapra_americana_peninsularis_60153372.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4a/Antilocapra_americana_peninsularis_60153372.jpg/500px-Antilocapra_americana_peninsularis_60153372.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4a/Antilocapra_americana_peninsularis_60153372.jpg/1280px-Antilocapra_americana_peninsularis_60153372.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_148054916/photo.jpg",
+   "score": {
+    "total": 0.103,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.917,
+    "band_px": 2.5,
+    "clear": 1.0,
+    "size": 0.864,
+    "solid": 0.707,
+    "head_end": 1.0,
+    "side": 0.542,
+    "legs": 1.0,
+    "stance": 1.0,
+    "spread": 11.7,
+    "lean": 5.0,
+    "belly_gap": 0.807,
+    "leg_zone": 0.434,
+    "leans": [
+     -10.8,
+     0.9
+    ],
+    "lifts": [
+     0.005,
+     0.03
+    ],
+    "plain": 0.116,
+    "colour": 0.63,
+    "box": [
+     0.352,
+     0.227,
+     0.638,
+     0.643
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": true,
     "local": 0.75
    }
   },
@@ -161,23 +284,1075 @@
    "local": true,
    "file_small": "pipeline/_cache/references/antilocapra_americana/inat_469941773/photo.jpg",
    "score": {
-    "total": 0.318,
+    "total": 0.262,
     "whole": 1.0,
-    "side": 0.513,
+    "single": 1.0,
+    "aspect": 1.39,
+    "band_px": 2.0,
+    "clear": 1.0,
     "size": 1.0,
-    "single": 0.992,
+    "solid": 1.0,
+    "head_end": 0.69,
+    "side": 1.0,
     "legs": 1.0,
-    "stance": 0.8,
-    "plain": 0.48,
-    "colour": 1.0,
-    "aspect": 1.208,
+    "stance": 0.435,
+    "spread": 29.3,
+    "lean": 3.9,
+    "belly_gap": 0.673,
+    "leg_zone": 0.309,
+    "leans": [
+     3.3,
+     -14.8,
+     14.5,
+     -13.4,
+     -3.9
+    ],
+    "lifts": [
+     0.007,
+     0.024,
+     0.002,
+     0.002,
+     0.042
+    ],
+    "plain": 0.492,
+    "colour": 0.937,
     "box": [
-     0.306,
+     0.218,
      0.144,
      0.852,
-     0.866
+     0.872
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_250877072",
+   "licence": "CC BY 4.0",
+   "author": "Doug Brush",
+   "attribution": "(c) Doug Brush, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/145984899",
+   "photo_page": "https://www.inaturalist.org/photos/250877072",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/250877072/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/250877072/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/antilocapra_americana/inat_250877072/photo.jpg",
+   "score": {
+    "total": 0.255,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.273,
+    "band_px": 3.28,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.267,
+    "stance": 0.815,
+    "spread": 21.7,
+    "lean": 5.7,
+    "belly_gap": 0.644,
+    "leg_zone": 0.152,
+    "leans": [
+     -5.2,
+     16.5
+    ],
+    "lifts": [
+     0.001,
+     0.006
+    ],
+    "plain": 0.31,
+    "colour": 0.974,
+    "box": [
+     0.33,
+     0.24,
+     0.852,
+     0.787
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs"
+    ],
+    "local": 1.0
+   },
+   "file_large": "pipeline/_cache/references/antilocapra_americana/inat_250877072_large/photo.jpg",
+   "file_crop": "pipeline/_cache/references/antilocapra_americana/inat_250877072_crop/reference.png"
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_24551363",
+   "licence": "CC BY-SA 3.0",
+   "author": "Yathin S Krishnappa",
+   "attribution": "Yathin S Krishnappa, CC BY-SA 3.0, via Wikimedia Commons (File:Antilocapra americana female (Wyoming, 2012).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Antilocapra_americana_female_(Wyoming,_2012).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/10/Antilocapra_americana_female_%28Wyoming%2C_2012%29.jpg/500px-Antilocapra_americana_female_%28Wyoming%2C_2012%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/10/Antilocapra_americana_female_%28Wyoming%2C_2012%29.jpg/1280px-Antilocapra_americana_female_%28Wyoming%2C_2012%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_24551363/photo.jpg",
+   "score": {
+    "total": 0.143,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.896,
+    "band_px": 2.92,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.49,
+    "legs": 1.0,
+    "stance": 0.54,
+    "spread": 27.2,
+    "lean": 7.1,
+    "belly_gap": 0.796,
+    "leg_zone": 0.354,
+    "leans": [
+     20.7,
+     -6.5
+    ],
+    "lifts": [
+     0.0,
+     0.008
+    ],
+    "plain": 0.598,
+    "colour": 0.855,
+    "box": [
+     0.198,
+     0.087,
+     0.664,
+     0.868
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_157471146",
+   "licence": "CC BY 4.0",
+   "author": "John Rosford",
+   "attribution": "(c) John Rosford, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/94895053",
+   "photo_page": "https://www.inaturalist.org/photos/157471146",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/157471146/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/157471146/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/antilocapra_americana/inat_157471146/photo.jpg",
+   "score": {
+    "total": 0.136,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.856,
+    "band_px": 5.73,
+    "clear": 0.855,
+    "size": 0.845,
+    "solid": 1.0,
+    "head_end": 0.625,
+    "side": 0.39,
+    "legs": 0.95,
+    "stance": 1.0,
+    "spread": 13.7,
+    "lean": 4.8,
+    "belly_gap": 0.323,
+    "leg_zone": 0.234,
+    "leans": [
+     2.0,
+     -11.7
+    ],
+    "lifts": [
+     0.003,
+     0.032
+    ],
+    "plain": 0.29,
+    "colour": 0.934,
+    "box": [
+     0.588,
+     0.151,
+     0.826,
+     0.562
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_202189064",
+   "licence": "CC0",
+   "author": "Salwa Farwaneh Dameh",
+   "attribution": "Salwa Farwaneh Dameh, CC0, via Wikimedia Commons (File:Pronghorn diorama at the Canadian Museum of Nature.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Pronghorn_diorama_at_the_Canadian_Museum_of_Nature.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/00/Pronghorn_diorama_at_the_Canadian_Museum_of_Nature.jpg/500px-Pronghorn_diorama_at_the_Canadian_Museum_of_Nature.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/00/Pronghorn_diorama_at_the_Canadian_Museum_of_Nature.jpg/1280px-Pronghorn_diorama_at_the_Canadian_Museum_of_Nature.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_202189064/photo.jpg",
+   "score": {
+    "total": 0.118,
+    "whole": 1.0,
+    "single": 0.51,
+    "aspect": 1.124,
+    "band_px": 4.98,
+    "clear": 0.918,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.614,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.558,
+    "spread": 0.3,
+    "lean": 20.1,
+    "belly_gap": 0.837,
+    "leg_zone": 0.26,
+    "leans": [
+     -20.3,
+     -20.0
+    ],
+    "lifts": [
+     0.003,
+     0.072
+    ],
+    "plain": 0.125,
+    "colour": 0.944,
+    "box": [
+     0.018,
+     0.379,
+     0.508,
+     0.96
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_421085124",
+   "licence": "CC BY 4.0",
+   "author": "Daughter Dad",
+   "attribution": "(c) Daughter Dad, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/236807598",
+   "photo_page": "https://www.inaturalist.org/photos/421085124",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/421085124/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/421085124/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/antilocapra_americana/inat_421085124/photo.jpg",
+   "score": {
+    "total": 0.117,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.081,
+    "band_px": 2.53,
+    "clear": 1.0,
+    "size": 0.389,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.952,
+    "legs": 1.0,
+    "stance": 1.0,
+    "spread": 13.0,
+    "lean": 7.6,
+    "belly_gap": 0.802,
+    "leg_zone": 0.321,
+    "leans": [
+     -1.1,
+     -14.1
+    ],
+    "lifts": [
+     0.028,
+     0.008
+    ],
+    "plain": 0.262,
+    "colour": 0.289,
+    "box": [
+     0.444,
+     0.18,
+     0.658,
+     0.477
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_996377",
+   "licence": "CC BY-SA 3.0",
+   "author": "www.naturespicsonline.com",
+   "attribution": "www.naturespicsonline.com, CC BY-SA 3.0, via Wikimedia Commons (File:Antilocapra americana.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Antilocapra_americana.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Antilocapra_americana.jpg/500px-Antilocapra_americana.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/a/a3/Antilocapra_americana.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_996377/photo.jpg",
+   "score": {
+    "total": 0.112,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.879,
+    "band_px": 2.04,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.449,
+    "legs": 1.0,
+    "stance": 0.65,
+    "spread": 10.0,
+    "lean": 3.9,
+    "belly_gap": 0.809,
+    "leg_zone": 0.279,
+    "leans": [
+     -8.9,
+     1.1
+    ],
+    "lifts": [
+     0.088,
+     0.0
+    ],
+    "plain": 0.224,
+    "colour": 0.764,
+    "box": [
+     0.226,
+     0.064,
+     0.868,
+     0.936
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_149276455",
+   "licence": "CC BY 4.0",
+   "author": "Qwexcxewq",
+   "attribution": "Qwexcxewq, CC BY 4.0, via Wikimedia Commons (File:Pronghorn near Wild Horse.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Pronghorn_near_Wild_Horse.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/Pronghorn_near_Wild_Horse.jpg/500px-Pronghorn_near_Wild_Horse.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://upload.wikimedia.org/wikipedia/commons/1/1c/Pronghorn_near_Wild_Horse.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_149276455/photo.jpg",
+   "score": {
+    "total": 0.097,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.887,
+    "band_px": 2.05,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 0.902,
+    "head_end": 1.0,
+    "side": 0.468,
+    "legs": 1.0,
+    "stance": 1.0,
+    "spread": 15.6,
+    "lean": 5.7,
+    "belly_gap": 0.871,
+    "leg_zone": 0.312,
+    "leans": [
+     -2.1,
+     13.5
+    ],
+    "lifts": [
+     0.0,
+     0.0
+    ],
+    "plain": 0.265,
+    "colour": 0.261,
+    "box": [
+     0.306,
+     0.195,
+     0.636,
+     0.754
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_440146556",
+   "licence": "CC0 1.0",
+   "author": "margohj",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/246538681",
+   "photo_page": "https://www.inaturalist.org/photos/440146556",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/440146556/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/440146556/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/antilocapra_americana/inat_440146556/photo.jpg",
+   "score": {
+    "total": 0.094,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.78,
+    "band_px": 2.86,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.819,
+    "side": 0.199,
+    "legs": 0.975,
+    "stance": 1.0,
+    "spread": 16.5,
+    "lean": 5.2,
+    "belly_gap": 0.844,
+    "leg_zone": 0.237,
+    "leans": [
+     3.1,
+     -13.4
+    ],
+    "lifts": [
+     0.049,
+     0.002
+    ],
+    "plain": 0.229,
+    "colour": 0.801,
+    "box": [
+     0.204,
+     0.31,
+     0.672,
+     0.864
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_149883367",
+   "licence": "CC0",
+   "author": "Mr. Satterly",
+   "attribution": "Mr. Satterly, CC0, via Wikimedia Commons (File:Antilocapra americana 400471931.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Antilocapra_americana_400471931.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/Antilocapra_americana_400471931.jpg/500px-Antilocapra_americana_400471931.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/Antilocapra_americana_400471931.jpg/1280px-Antilocapra_americana_400471931.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_149883367/photo.jpg",
+   "score": {
+    "total": 0.088,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.876,
+    "band_px": 2.08,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 0.998,
+    "head_end": 1.0,
+    "side": 0.44,
+    "legs": 1.0,
+    "stance": 0.46,
+    "spread": 28.8,
+    "lean": 0.9,
+    "belly_gap": 0.751,
+    "leg_zone": 0.388,
+    "leans": [
+     13.5,
+     -15.3
+    ],
+    "lifts": [
+     0.0,
+     0.0
+    ],
+    "plain": 0.3,
+    "colour": 0.847,
+    "box": [
+     0.274,
+     0.108,
+     0.726,
+     0.88
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_293132667",
+   "licence": "CC BY 4.0",
+   "author": "datadan",
+   "attribution": "(c) datadan, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/169101455",
+   "photo_page": "https://www.inaturalist.org/photos/293132667",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/293132667/medium.jpeg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/293132667/large.jpeg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/antilocapra_americana/inat_293132667/photo.jpg",
+   "score": {
+    "total": 0.079,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.276,
+    "band_px": 6.85,
+    "clear": 0.763,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.216,
+    "spread": 21.9,
+    "lean": 23.1,
+    "belly_gap": 0.596,
+    "leg_zone": 0.253,
+    "leans": [
+     12.2,
+     34.1
+    ],
+    "lifts": [
+     0.093,
+     0.002
+    ],
+    "plain": 0.287,
+    "colour": 0.643,
+    "box": [
+     0.122,
+     0.115,
+     0.824,
+     0.848
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_130994920",
+   "licence": "CC BY-SA 4.0",
+   "author": "Michael Barera",
+   "attribution": "Michael Barera, CC BY-SA 4.0, via Wikimedia Commons (File:Milwaukee Public Museum March 2023 37 (The Great Plains, Wyoming, Pronghorn Antelope).jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Milwaukee_Public_Museum_March_2023_37_(The_Great_Plains,_Wyoming,_Pronghorn_Antelope).jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/Milwaukee_Public_Museum_March_2023_37_%28The_Great_Plains%2C_Wyoming%2C_Pronghorn_Antelope%29.jpg/500px-Milwaukee_Public_Museum_March_2023_37_%28The_Great_Plains%2C_Wyoming%2C_Pronghorn_Antelope%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/Milwaukee_Public_Museum_March_2023_37_%28The_Great_Plains%2C_Wyoming%2C_Pronghorn_Antelope%29.jpg/1280px-Milwaukee_Public_Museum_March_2023_37_%28The_Great_Plains%2C_Wyoming%2C_Pronghorn_Antelope%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_130994920/photo.jpg",
+   "score": {
+    "total": 0.059,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.316,
+    "band_px": 4.13,
+    "clear": 0.989,
+    "size": 1.0,
+    "solid": 0.985,
+    "head_end": 0.679,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.162,
+    "spread": 8.2,
+    "lean": 2.9,
+    "belly_gap": 0.758,
+    "leg_zone": 0.299,
+    "leans": [
+     0.0,
+     5.3,
+     0.4,
+     8.2
+    ],
+    "lifts": [
+     0.0,
+     0.127,
+     0.012,
+     0.033
+    ],
+    "plain": 0.233,
+    "colour": 0.955,
+    "box": [
+     0.176,
+     0.093,
+     0.818,
+     0.826
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_270943452",
+   "licence": "CC0 1.0",
+   "author": "Paul",
+   "attribution": "no rights reserved",
+   "page": "https://www.inaturalist.org/observations/156674510",
+   "photo_page": "https://www.inaturalist.org/photos/270943452",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/270943452/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/270943452/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/antilocapra_americana/inat_270943452/photo.jpg",
+   "score": {
+    "total": 0.037,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.938,
+    "band_px": 2.16,
+    "clear": 1.0,
+    "size": 0.224,
+    "solid": 1.0,
+    "head_end": 0.876,
+    "side": 0.594,
+    "legs": 1.0,
+    "stance": 0.537,
+    "spread": 6.5,
+    "lean": 3.3,
+    "belly_gap": 0.75,
+    "leg_zone": 0.331,
+    "leans": [
+     -0.9,
+     5.6,
+     3.3
+    ],
+    "lifts": [
+     0.097,
+     0.003,
+     0.014
+    ],
+    "plain": 0.275,
+    "colour": 0.793,
+    "box": [
+     0.458,
+     0.528,
+     0.638,
+     0.784
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_149883402",
+   "licence": "CC BY 4.0",
+   "author": "Melanie Davis",
+   "attribution": "Melanie Davis, CC BY 4.0, via Wikimedia Commons (File:Antilocapra americana 396694238.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Antilocapra_americana_396694238.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/Antilocapra_americana_396694238.jpg/500px-Antilocapra_americana_396694238.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/Antilocapra_americana_396694238.jpg/1280px-Antilocapra_americana_396694238.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_149883402/photo.jpg",
+   "score": {
+    "total": 0.026,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.66,
+    "band_px": 3.46,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 0.935,
+    "head_end": 0.587,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.08,
+    "spread": 11.6,
+    "lean": 28.8,
+    "belly_gap": 0.734,
+    "leg_zone": 0.288,
+    "leans": [
+     23.0,
+     34.6
+    ],
+    "lifts": [
+     0.001,
+     0.011
+    ],
+    "plain": 0.27,
+    "colour": 0.909,
+    "box": [
+     0.124,
+     0.267,
+     0.838,
+     0.84
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_165492140",
+   "licence": "CC BY 4.0",
+   "author": "Vicpeters",
+   "attribution": "Vicpeters, CC BY 4.0, via Wikimedia Commons (File:Bison and Pronghorn diorama at American Museum of Natural History.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Bison_and_Pronghorn_diorama_at_American_Museum_of_Natural_History.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/Bison_and_Pronghorn_diorama_at_American_Museum_of_Natural_History.jpg/500px-Bison_and_Pronghorn_diorama_at_American_Museum_of_Natural_History.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/Bison_and_Pronghorn_diorama_at_American_Museum_of_Natural_History.jpg/1280px-Bison_and_Pronghorn_diorama_at_American_Museum_of_Natural_History.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_165492140/photo.jpg",
+   "score": {
+    "total": 0.023,
+    "whole": 1.0,
+    "single": 0.984,
+    "aspect": 1.5,
+    "band_px": 5.3,
+    "clear": 0.892,
+    "size": 0.424,
+    "solid": 1.0,
+    "head_end": 0.959,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.2,
+    "spread": 33.5,
+    "lean": 2.2,
+    "belly_gap": 0.721,
+    "leg_zone": 0.255,
+    "leans": [
+     2.6,
+     10.6,
+     -7.1,
+     -22.9,
+     7.5,
+     -21.4
+    ],
+    "lifts": [
+     0.029,
+     0.039,
+     0.029,
+     0.069,
+     0.01,
+     0.0
+    ],
+    "plain": 0.087,
+    "colour": 0.666,
+    "box": [
+     0.604,
+     0.341,
+     0.91,
+     0.613
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_73576835",
+   "licence": "CC BY-SA 4.0",
+   "author": "Acroterion",
+   "attribution": "Acroterion, CC BY-SA 4.0, via Wikimedia Commons (File:Pronghorn Theodore Roosevelt NP ND1.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Pronghorn_Theodore_Roosevelt_NP_ND1.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/Pronghorn_Theodore_Roosevelt_NP_ND1.jpg/500px-Pronghorn_Theodore_Roosevelt_NP_ND1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/Pronghorn_Theodore_Roosevelt_NP_ND1.jpg/1280px-Pronghorn_Theodore_Roosevelt_NP_ND1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_73576835/photo.jpg",
+   "score": {
+    "total": 0.01,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 0.8,
+    "band_px": 6.06,
+    "clear": 0.829,
+    "size": 0.77,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.25,
+    "legs": 0.342,
+    "stance": 0.505,
+    "spread": 27.9,
+    "lean": 7.8,
+    "belly_gap": 0.43,
+    "leg_zone": 0.161,
+    "leans": [
+     7.8,
+     -6.0,
+     21.9
+    ],
+    "lifts": [
+     0.0,
+     0.005,
+     0.0
+    ],
+    "plain": 0.275,
+    "colour": 0.925,
+    "box": [
+     0.318,
+     0.229,
+     0.622,
+     0.622
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "legs",
+     "stance"
+    ],
+    "local": 0.75
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_717073113",
+   "licence": "CC BY 4.0",
+   "author": "Daughter Dad",
+   "attribution": "(c) Daughter Dad, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/391455454",
+   "photo_page": "https://www.inaturalist.org/photos/717073113",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/717073113/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/717073113/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/antilocapra_americana/inat_717073113/photo.jpg",
+   "score": {
+    "total": 0.004,
+    "whole": 1.0,
+    "single": 0.969,
+    "aspect": 1.1,
+    "band_px": 3.36,
+    "clear": 1.0,
+    "size": 0.072,
+    "solid": 1.0,
+    "head_end": 0.566,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.152,
+    "spread": 28.0,
+    "lean": 20.4,
+    "belly_gap": 0.952,
+    "leg_zone": 0.302,
+    "leans": [
+     34.4,
+     6.4
+    ],
+    "lifts": [
+     0.102,
+     0.002
+    ],
+    "plain": 0.249,
+    "colour": 0.594,
+    "box": [
+     0.592,
+     0.414,
+     0.746,
+     0.632
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_735087065",
+   "licence": "CC BY 4.0",
+   "author": "Aleya Stotesbery",
+   "attribution": "(c) Aleya Stotesbery, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/400562774",
+   "photo_page": "https://www.inaturalist.org/photos/735087065",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/735087065/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/735087065/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/antilocapra_americana/inat_735087065/photo.jpg",
+   "score": {
+    "total": 0.001,
+    "whole": 1.0,
+    "single": 0.612,
+    "aspect": 1.162,
+    "band_px": 2.28,
+    "clear": 1.0,
+    "size": 0.017,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.084,
+    "spread": 16.7,
+    "lean": 1.6,
+    "belly_gap": 0.844,
+    "leg_zone": 0.323,
+    "leans": [
+     0.0,
+     3.1,
+     -1.3,
+     15.4
+    ],
+    "lifts": [
+     0.132,
+     0.073,
+     0.014,
+     0.044
+    ],
+    "plain": 0.267,
+    "colour": 0.999,
+    "box": [
+     0.352,
+     0.532,
+     0.51,
+     0.736
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "inaturalist",
+   "id": "inat_746616313",
+   "licence": "CC BY 4.0",
+   "author": "Eresus",
+   "attribution": "(c) Eresus, some rights reserved (CC BY)",
+   "page": "https://www.inaturalist.org/observations/406386907",
+   "photo_page": "https://www.inaturalist.org/photos/746616313",
+   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/746616313/medium.jpg",
+   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/746616313/large.jpg",
+   "adult": true,
+   "local": true,
+   "file_small": "pipeline/_cache/references/antilocapra_americana/inat_746616313/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.824,
+    "band_px": 2.85,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.59,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 64.4,
+    "belly_gap": 0.218,
+    "leg_zone": 0.358,
+    "leans": [
+     64.4
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.385,
+    "colour": 0.98,
+    "box": [
+     0.244,
+     0.333,
+     0.784,
+     0.728
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
+    ],
+    "local": 1.0
+   }
+  },
+  {
+   "source": "wikimedia commons",
+   "id": "commons_149883455",
+   "licence": "CC BY 4.0",
+   "author": "Spencer Hurt",
+   "attribution": "Spencer Hurt, CC BY 4.0, via Wikimedia Commons (File:Antilocapra americana 394450308.jpg)",
+   "page": "https://commons.wikimedia.org/wiki/File:Antilocapra_americana_394450308.jpg",
+   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Antilocapra_americana_394450308.jpg/500px-Antilocapra_americana_394450308.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Antilocapra_americana_394450308.jpg/1280px-Antilocapra_americana_394450308.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_149883455/photo.jpg",
+   "score": {
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.398,
+    "band_px": 8.45,
+    "clear": 0.629,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.011,
+    "side": 1.0,
+    "legs": 0.717,
+    "stance": 0.0,
+    "spread": 39.7,
+    "lean": 7.0,
+    "belly_gap": 0.378,
+    "leg_zone": 0.206,
+    "leans": [
+     26.8,
+     -12.9
+    ],
+    "lifts": [
+     0.004,
+     0.007
+    ],
+    "plain": 0.32,
+    "colour": 0.981,
+    "box": [
+     0.106,
+     0.125,
+     0.844,
+     0.829
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
+    ],
+    "local": 0.75
    }
   },
   {
@@ -191,56 +1366,43 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Antilocapra_americana_394450237.jpg/1280px-Antilocapra_americana_394450237.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/antilocapra_americana/commons_149883467/photo.jpg",
    "score": {
-    "total": 0.295,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
+    "single": 1.0,
+    "aspect": 1.769,
+    "band_px": 7.05,
+    "clear": 0.746,
     "size": 1.0,
-    "single": 0.999,
-    "legs": 1.0,
-    "stance": 0.5,
-    "plain": 0.31,
-    "colour": 1.0,
-    "aspect": 1.778,
+    "solid": 1.0,
+    "head_end": 0.525,
+    "side": 0.585,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 12.0,
+    "belly_gap": 0.217,
+    "leg_zone": 0.364,
+    "leans": [
+     12.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.313,
+    "colour": 0.978,
     "box": [
-     0.208,
-     0.283,
-     0.752,
-     0.691
+     0.212,
+     0.267,
+     0.81,
+     0.717
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
     ],
     "local": 0.75
-   }
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_717073114",
-   "licence": "CC BY 4.0",
-   "author": "Daughter Dad",
-   "attribution": "(c) Daughter Dad, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/391455454",
-   "photo_page": "https://www.inaturalist.org/photos/717073114",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/717073114/medium.jpg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/717073114/large.jpg",
-   "adult": true,
-   "local": true,
-   "file_small": "pipeline/_cache/references/antilocapra_americana/inat_717073114/photo.jpg",
-   "score": {
-    "total": 0.29,
-    "whole": 1.0,
-    "side": 1.0,
-    "size": 1.0,
-    "single": 0.998,
-    "legs": 1.0,
-    "stance": 0.333,
-    "plain": 0.245,
-    "colour": 1.0,
-    "aspect": 2.0,
-    "box": [
-     0.422,
-     0.255,
-     0.906,
-     0.632
-    ],
-    "local": 1.0
    }
   },
   {
@@ -257,21 +1419,46 @@
    "local": true,
    "file_small": "pipeline/_cache/references/antilocapra_americana/inat_545684145/photo.jpg",
    "score": {
-    "total": 0.239,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.987,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.611,
-    "colour": 1.0,
-    "aspect": 1.492,
+    "aspect": 1.679,
+    "band_px": 2.93,
+    "clear": 1.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.911,
+    "side": 0.75,
+    "legs": 0.492,
+    "stance": 0.0,
+    "spread": 71.2,
+    "lean": 33.7,
+    "belly_gap": 0.25,
+    "leg_zone": 0.179,
+    "leans": [
+     71.2,
+     33.7,
+     0.0
+    ],
+    "lifts": [
+     0.038,
+     0.0,
+     0.0
+    ],
+    "plain": 0.485,
+    "colour": 0.915,
     "box": [
-     0.062,
-     0.256,
-     0.832,
-     0.944
+     0.4,
+     0.456,
+     0.578,
+     0.597
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -290,53 +1477,44 @@
    "local": true,
    "file_small": "pipeline/_cache/references/antilocapra_americana/inat_731855607/photo.jpg",
    "score": {
-    "total": 0.184,
-    "whole": 0.666,
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.595,
+    "aspect": 1.6,
+    "band_px": 6.36,
+    "clear": 0.804,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 1.0,
     "side": 1.0,
-    "size": 1.0,
-    "single": 0.991,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.85,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.769,
+    "leg_zone": 0.4,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.835,
     "colour": 1.0,
-    "aspect": 2.222,
     "box": [
-     0.04,
-     0.117,
-     0.96,
-     0.739
+     0.692,
+     0.438,
+     0.724,
+     0.468
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
     ],
     "local": 1.0
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_149883402",
-   "licence": "CC BY 4.0",
-   "author": "Melanie Davis",
-   "attribution": "Melanie Davis, CC BY 4.0, via Wikimedia Commons (File:Antilocapra americana 396694238.jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:Antilocapra_americana_396694238.jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/Antilocapra_americana_396694238.jpg/500px-Antilocapra_americana_396694238.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/Antilocapra_americana_396694238.jpg/1280px-Antilocapra_americana_396694238.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_149883402/photo.jpg",
-   "score": {
-    "total": 0.182,
-    "whole": 1.0,
-    "side": 1.0,
-    "size": 1.0,
-    "single": 0.981,
-    "legs": 0.5,
-    "stance": 0.5,
-    "plain": 0.262,
-    "colour": 1.0,
-    "aspect": 1.859,
-    "box": [
-     0.27,
-     0.371,
-     0.824,
-     0.768
-    ],
-    "local": 0.75
    }
   },
   {
@@ -353,21 +1531,43 @@
    "local": true,
    "file_small": "pipeline/_cache/references/antilocapra_americana/inat_396600740/photo.jpg",
    "score": {
-    "total": 0.172,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.146,
-    "colour": 1.0,
-    "aspect": 1.672,
+    "aspect": 1.866,
+    "band_px": 14.24,
+    "clear": 0.147,
+    "size": 0.648,
+    "solid": 1.0,
+    "head_end": 0.343,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 45.7,
+    "lean": 6.2,
+    "belly_gap": 0.965,
+    "leg_zone": 0.392,
+    "leans": [
+     -16.7,
+     29.0
+    ],
+    "lifts": [
+     0.0,
+     0.01
+    ],
+    "plain": 0.148,
+    "colour": 0.691,
     "box": [
-     0.214,
-     0.18,
+     0.474,
+     0.434,
      0.836,
-     0.737
+     0.725
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance",
+     "clear"
     ],
     "local": 1.0
    }
@@ -386,21 +1586,10 @@
    "local": true,
    "file_small": "pipeline/_cache/references/antilocapra_americana/inat_260675390/photo.jpg",
    "score": {
-    "total": 0.164,
-    "whole": 0.909,
-    "side": 1.0,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.225,
-    "colour": 0.973,
-    "aspect": 2.557,
-    "box": [
-     0.04,
-     0.054,
-     0.848,
-     0.527
+    "total": 0.0,
+    "usable": false,
+    "why_not": [
+     "no subject"
     ],
     "local": 1.0
    }
@@ -416,21 +1605,47 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/ff/Antilocapra_americana_394450205.jpg/1280px-Antilocapra_americana_394450205.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/antilocapra_americana/commons_149883474/photo.jpg",
    "score": {
-    "total": 0.149,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.527,
-    "size": 0.89,
     "single": 1.0,
-    "legs": 0.5,
-    "stance": 1.0,
-    "plain": 0.301,
-    "colour": 1.0,
-    "aspect": 1.216,
+    "aspect": 0.953,
+    "band_px": 2.9,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 0.451,
+    "head_end": 1.0,
+    "side": 0.634,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 60.1,
+    "lean": 3.9,
+    "belly_gap": 0.797,
+    "leg_zone": 0.301,
+    "leans": [
+     -18.8,
+     28.6,
+     -31.5,
+     11.1
+    ],
+    "lifts": [
+     0.003,
+     0.072,
+     0.068,
+     0.092
+    ],
+    "plain": 0.302,
+    "colour": 0.994,
     "box": [
-     0.28,
-     0.205,
-     0.708,
-     0.675
+     0.218,
+     0.16,
+     0.71,
+     0.848
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance",
+     "solid"
     ],
     "local": 0.75
    }
@@ -446,21 +1661,42 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/Adults_pronghorn%2C_a_male_and_a_female%2C_Antilocapra_americana%2C_on_August_18_2014_at_11h45_AM%2C_near_the_Soda_Butte_Campground%2C_Lamar_Valley%2C_Yellowstone_National_Park_%28copy_of_original_with_added_copyright_watermark%29.jpg/1280px-thumbnail.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/antilocapra_americana/commons_129765085/photo.jpg",
    "score": {
-    "total": 0.132,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.912,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.284,
-    "colour": 1.0,
-    "aspect": 1.447,
+    "aspect": 1.525,
+    "band_px": 7.01,
+    "clear": 0.749,
+    "size": 0.432,
+    "solid": 1.0,
+    "head_end": 0.151,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 49.3,
+    "belly_gap": 0.512,
+    "leg_zone": 0.297,
+    "leans": [
+     -49.3
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.269,
+    "colour": 0.843,
     "box": [
      0.428,
-     0.408,
-     0.946,
-     0.946
+     0.357,
+     0.736,
+     0.661
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -479,21 +1715,10 @@
    "local": true,
    "file_small": "pipeline/_cache/references/antilocapra_americana/inat_396600847/photo.jpg",
    "score": {
-    "total": 0.124,
-    "whole": 0.531,
-    "side": 1.0,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.556,
-    "colour": 1.0,
-    "aspect": 2.508,
-    "box": [
-     0.04,
-     0.207,
-     0.958,
-     0.754
+    "total": 0.0,
+    "usable": false,
+    "why_not": [
+     "no subject"
     ],
     "local": 1.0
    }
@@ -512,54 +1737,10 @@
    "local": true,
    "file_small": "pipeline/_cache/references/antilocapra_americana/inat_396600808/photo.jpg",
    "score": {
-    "total": 0.124,
-    "whole": 0.531,
-    "side": 1.0,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.556,
-    "colour": 1.0,
-    "aspect": 2.508,
-    "box": [
-     0.04,
-     0.207,
-     0.958,
-     0.754
-    ],
-    "local": 1.0
-   }
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_7633044",
-   "licence": "CC0 1.0",
-   "author": "Henggang Cui",
-   "attribution": "no rights reserved",
-   "page": "https://www.inaturalist.org/observations/6101440",
-   "photo_page": "https://www.inaturalist.org/photos/7633044",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/7633044/medium.jpeg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/7633044/large.jpeg",
-   "adult": true,
-   "local": true,
-   "file_small": "pipeline/_cache/references/antilocapra_americana/inat_7633044/photo.jpg",
-   "score": {
-    "total": 0.112,
-    "whole": 1.0,
-    "side": 0.678,
-    "size": 0.88,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.249,
-    "colour": 1.0,
-    "aspect": 1.307,
-    "box": [
-     0.236,
-     0.325,
-     0.662,
-     0.816
+    "total": 0.0,
+    "usable": false,
+    "why_not": [
+     "no subject"
     ],
     "local": 1.0
    }
@@ -578,59 +1759,51 @@
    "local": true,
    "file_small": "pipeline/_cache/references/antilocapra_americana/inat_705175653/photo.jpg",
    "score": {
-    "total": 0.109,
+    "total": 0.0,
     "whole": 1.0,
+    "single": 1.0,
+    "aspect": 1.244,
+    "band_px": 1.75,
+    "clear": 1.0,
+    "size": 0.882,
+    "solid": 0.634,
+    "head_end": 1.0,
     "side": 1.0,
-    "size": 0.37,
-    "single": 0.982,
     "legs": 1.0,
-    "stance": 0.333,
+    "stance": 0.0,
+    "spread": 40.1,
+    "lean": 3.7,
+    "belly_gap": 0.837,
+    "leg_zone": 0.378,
+    "leans": [
+     -26.1,
+     14.0,
+     -16.7,
+     9.3
+    ],
+    "lifts": [
+     0.059,
+     0.037,
+     0.015,
+     0.007
+    ],
     "plain": 0.28,
-    "colour": 1.0,
-    "aspect": 1.705,
+    "colour": 0.886,
     "box": [
      0.464,
-     0.333,
-     0.788,
-     0.629
+     0.296,
+     0.8,
+     0.717
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 1.0
    },
    "file_large": "pipeline/_cache/references/antilocapra_americana/inat_705175653_large/photo.jpg",
    "file_crop": "pipeline/_cache/references/antilocapra_americana/inat_705175653_crop/reference.png"
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_293132667",
-   "licence": "CC BY 4.0",
-   "author": "datadan",
-   "attribution": "(c) datadan, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/169101455",
-   "photo_page": "https://www.inaturalist.org/photos/293132667",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/293132667/medium.jpeg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/293132667/large.jpeg",
-   "adult": true,
-   "local": true,
-   "file_small": "pipeline/_cache/references/antilocapra_americana/inat_293132667/photo.jpg",
-   "score": {
-    "total": 0.108,
-    "whole": 1.0,
-    "side": 0.562,
-    "size": 1.0,
-    "single": 0.999,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.285,
-    "colour": 1.0,
-    "aspect": 1.237,
-    "box": [
-     0.122,
-     0.136,
-     0.79,
-     0.856
-    ],
-    "local": 1.0
-   }
   },
   {
    "source": "wikimedia commons",
@@ -643,21 +1816,46 @@
    "url_large": "https://upload.wikimedia.org/wikipedia/commons/6/66/Antilocapra_di_Tiziano_Lombardi.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
    "file_small": "pipeline/_cache/references/antilocapra_americana/commons_90986549/photo.jpg",
    "score": {
-    "total": 0.098,
-    "whole": 1.0,
-    "side": 0.657,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 0.949,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.323,
-    "colour": 1.0,
-    "aspect": 1.294,
+    "aspect": 0.916,
+    "band_px": 3.55,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 0.999,
+    "head_end": 0.0,
+    "side": 0.54,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 16.4,
+    "lean": 0.7,
+    "belly_gap": 0.819,
+    "leg_zone": 0.539,
+    "leans": [
+     0.2,
+     8.1,
+     -8.3,
+     -1.5
+    ],
+    "lifts": [
+     0.0,
+     0.242,
+     0.232,
+     0.258
+    ],
+    "plain": 0.321,
+    "colour": 0.478,
     "box": [
-     0.092,
+     0.292,
      0.088,
-     0.814,
-     0.909
+     0.86,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 0.75
    }
@@ -676,83 +1874,12 @@
    "local": true,
    "file_small": "pipeline/_cache/references/antilocapra_americana/inat_260675387/photo.jpg",
    "score": {
-    "total": 0.093,
-    "whole": 0.492,
-    "side": 1.0,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.268,
-    "colour": 0.993,
-    "aspect": 2.014,
-    "box": [
-     0.04,
-     0.039,
-     0.624,
-     0.473
+    "total": 0.0,
+    "usable": false,
+    "why_not": [
+     "no subject"
     ],
     "local": 1.0
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_130994920",
-   "licence": "CC BY-SA 4.0",
-   "author": "Michael Barera",
-   "attribution": "Michael Barera, CC BY-SA 4.0, via Wikimedia Commons (File:Milwaukee Public Museum March 2023 37 (The Great Plains, Wyoming, Pronghorn Antelope).jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:Milwaukee_Public_Museum_March_2023_37_(The_Great_Plains,_Wyoming,_Pronghorn_Antelope).jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/Milwaukee_Public_Museum_March_2023_37_%28The_Great_Plains%2C_Wyoming%2C_Pronghorn_Antelope%29.jpg/500px-Milwaukee_Public_Museum_March_2023_37_%28The_Great_Plains%2C_Wyoming%2C_Pronghorn_Antelope%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/Milwaukee_Public_Museum_March_2023_37_%28The_Great_Plains%2C_Wyoming%2C_Pronghorn_Antelope%29.jpg/1280px-Milwaukee_Public_Museum_March_2023_37_%28The_Great_Plains%2C_Wyoming%2C_Pronghorn_Antelope%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_130994920/photo.jpg",
-   "score": {
-    "total": 0.09,
-    "whole": 0.945,
-    "side": 0.663,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.279,
-    "colour": 1.0,
-    "aspect": 1.298,
-    "box": [
-     0.058,
-     0.093,
-     0.808,
-     0.961
-    ],
-    "local": 0.75
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_129641387",
-   "licence": "CC BY-SA 4.0",
-   "author": "Michael Barera",
-   "attribution": "Michael Barera, CC BY-SA 4.0, via Wikimedia Commons (File:Milwaukee Public Museum November 2022 076 (The Great Plains, Wyoming- Pronghorn Antelope).jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:Milwaukee_Public_Museum_November_2022_076_(The_Great_Plains,_Wyoming-_Pronghorn_Antelope).jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/21/Milwaukee_Public_Museum_November_2022_076_%28The_Great_Plains%2C_Wyoming-_Pronghorn_Antelope%29.jpg/500px-Milwaukee_Public_Museum_November_2022_076_%28The_Great_Plains%2C_Wyoming-_Pronghorn_Antelope%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/21/Milwaukee_Public_Museum_November_2022_076_%28The_Great_Plains%2C_Wyoming-_Pronghorn_Antelope%29.jpg/1280px-Milwaukee_Public_Museum_November_2022_076_%28The_Great_Plains%2C_Wyoming-_Pronghorn_Antelope%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_129641387/photo.jpg",
-   "score": {
-    "total": 0.084,
-    "whole": 0.674,
-    "side": 1.0,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.104,
-    "colour": 1.0,
-    "aspect": 1.786,
-    "box": [
-     0.042,
-     0.168,
-     0.96,
-     0.94
-    ],
-    "local": 0.75
    }
   },
   {
@@ -769,113 +1896,45 @@
    "local": true,
    "file_small": "pipeline/_cache/references/antilocapra_americana/inat_507578662/photo.jpg",
    "score": {
-    "total": 0.064,
-    "whole": 0.356,
-    "side": 1.0,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.189,
-    "colour": 1.0,
-    "aspect": 1.631,
+    "total": 0.0,
+    "whole": 1.0,
+    "single": 0.449,
+    "aspect": 1.0,
+    "band_px": 21.07,
+    "clear": 0.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.637,
+    "side": 0.75,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 2.4,
+    "belly_gap": 0.438,
+    "leg_zone": 0.55,
+    "leans": [
+     -2.4
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.207,
+    "colour": 0.784,
     "box": [
-     0.04,
-     0.104,
-     0.96,
-     0.739
+     0.732,
+     0.392,
+     0.772,
+     0.437
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance",
+     "clear"
     ],
     "local": 1.0
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_165492140",
-   "licence": "CC BY 4.0",
-   "author": "Vicpeters",
-   "attribution": "Vicpeters, CC BY 4.0, via Wikimedia Commons (File:Bison and Pronghorn diorama at American Museum of Natural History.jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:Bison_and_Pronghorn_diorama_at_American_Museum_of_Natural_History.jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/Bison_and_Pronghorn_diorama_at_American_Museum_of_Natural_History.jpg/500px-Bison_and_Pronghorn_diorama_at_American_Museum_of_Natural_History.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/Bison_and_Pronghorn_diorama_at_American_Museum_of_Natural_History.jpg/1280px-Bison_and_Pronghorn_diorama_at_American_Museum_of_Natural_History.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_165492140/photo.jpg",
-   "score": {
-    "total": 0.056,
-    "whole": 0.431,
-    "side": 1.0,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.16,
-    "colour": 1.0,
-    "aspect": 2.107,
-    "box": [
-     0.04,
-     0.344,
-     0.942,
-     0.915
-    ],
-    "local": 0.75
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_60382089",
-   "licence": "CC BY-SA 3.0",
-   "author": "Thomas Wolf, www.foto-tw.de",
-   "attribution": "Thomas Wolf, www.foto-tw.de, CC BY-SA 3.0, via Wikimedia Commons (File:Pronghorn Yellowstone.jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:Pronghorn_Yellowstone.jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Pronghorn_Yellowstone.jpg/500px-Pronghorn_Yellowstone.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Pronghorn_Yellowstone.jpg/1280px-Pronghorn_Yellowstone.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_60382089/photo.jpg",
-   "score": {
-    "total": 0.027,
-    "whole": 1.0,
-    "side": 0.11,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.5,
-    "stance": 0.667,
-    "plain": 0.36,
-    "colour": 1.0,
-    "aspect": 0.966,
-    "box": [
-     0.218,
-     0.197,
-     0.672,
-     0.878
-    ],
-    "local": 0.75
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_24551363",
-   "licence": "CC BY-SA 3.0",
-   "author": "Yathin S Krishnappa",
-   "attribution": "Yathin S Krishnappa, CC BY-SA 3.0, via Wikimedia Commons (File:Antilocapra americana female (Wyoming, 2012).jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:Antilocapra_americana_female_(Wyoming,_2012).jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/10/Antilocapra_americana_female_%28Wyoming%2C_2012%29.jpg/500px-Antilocapra_americana_female_%28Wyoming%2C_2012%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/10/Antilocapra_americana_female_%28Wyoming%2C_2012%29.jpg/1280px-Antilocapra_americana_female_%28Wyoming%2C_2012%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_24551363/photo.jpg",
-   "score": {
-    "total": 0.025,
-    "whole": 1.0,
-    "side": 0.144,
-    "size": 0.96,
-    "single": 0.999,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.58,
-    "colour": 1.0,
-    "aspect": 0.987,
-    "box": [
-     0.2,
-     0.168,
-     0.642,
-     0.841
-    ],
-    "local": 0.75
    }
   },
   {
@@ -892,21 +1951,42 @@
    "local": true,
    "file_small": "pipeline/_cache/references/antilocapra_americana/inat_469941770/photo.jpg",
    "score": {
-    "total": 0.023,
-    "whole": 1.0,
-    "side": 0.123,
+    "total": 0.0,
+    "whole": 0.0,
+    "single": 1.0,
+    "aspect": 1.118,
+    "band_px": 2.74,
+    "clear": 1.0,
     "size": 1.0,
-    "single": 0.992,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.234,
-    "colour": 1.0,
-    "aspect": 0.974,
+    "solid": 1.0,
+    "head_end": 0.784,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 2.6,
+    "belly_gap": 0.766,
+    "leg_zone": 0.376,
+    "leans": [
+     -2.6
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.246,
+    "colour": 0.686,
     "box": [
-     0.332,
-     0.111,
+     0.17,
+     0.0,
      0.854,
-     0.916
+     0.919
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -925,83 +2005,49 @@
    "local": true,
    "file_small": "pipeline/_cache/references/antilocapra_americana/inat_645478823/photo.jpg",
    "score": {
-    "total": 0.023,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.431,
-    "size": 0.31,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
+    "aspect": 1.146,
+    "band_px": 2.11,
+    "clear": 1.0,
+    "size": 0.459,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 38.7,
+    "lean": 9.9,
+    "belly_gap": 0.832,
+    "leg_zone": 0.417,
+    "leans": [
+     -13.1,
+     12.7,
+     -26.0,
+     -6.8
+    ],
+    "lifts": [
+     0.126,
+     0.107,
+     0.0,
+     0.0
+    ],
     "plain": 0.165,
-    "colour": 1.0,
-    "aspect": 1.158,
+    "colour": 0.947,
     "box": [
-     0.347,
-     0.632,
+     0.344,
+     0.626,
      0.659,
-     0.834
+     0.832
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
     ],
     "local": 1.0
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_996377",
-   "licence": "CC BY-SA 3.0",
-   "author": "www.naturespicsonline.com",
-   "attribution": "www.naturespicsonline.com, CC BY-SA 3.0, via Wikimedia Commons (File:Antilocapra americana.jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:Antilocapra_americana.jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Antilocapra_americana.jpg/500px-Antilocapra_americana.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://upload.wikimedia.org/wikipedia/commons/a/a3/Antilocapra_americana.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_996377/photo.jpg",
-   "score": {
-    "total": 0.011,
-    "whole": 1.0,
-    "side": 0.128,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 0.5,
-    "plain": 0.221,
-    "colour": 1.0,
-    "aspect": 0.977,
-    "box": [
-     0.226,
-     0.22,
-     0.82,
-     0.945
-    ],
-    "local": 0.75
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_202189064",
-   "licence": "CC0",
-   "author": "Salwa Farwaneh Dameh",
-   "attribution": "Salwa Farwaneh Dameh, CC0, via Wikimedia Commons (File:Pronghorn diorama at the Canadian Museum of Nature.jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:Pronghorn_diorama_at_the_Canadian_Museum_of_Nature.jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/00/Pronghorn_diorama_at_the_Canadian_Museum_of_Nature.jpg/500px-Pronghorn_diorama_at_the_Canadian_Museum_of_Nature.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/00/Pronghorn_diorama_at_the_Canadian_Museum_of_Nature.jpg/1280px-Pronghorn_diorama_at_the_Canadian_Museum_of_Nature.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_202189064/photo.jpg",
-   "score": {
-    "total": 0.009,
-    "whole": 0.178,
-    "side": 0.413,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.11,
-    "colour": 1.0,
-    "aspect": 1.148,
-    "box": [
-     0.04,
-     0.072,
-     0.802,
-     0.957
-    ],
-    "local": 0.75
    }
   },
   {
@@ -1015,21 +2061,42 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c2/Pronghorn_near_fence.jpg/1280px-Pronghorn_near_fence.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/antilocapra_americana/commons_155716190/photo.jpg",
    "score": {
-    "total": 0.006,
-    "whole": 0.314,
-    "side": 0.118,
-    "size": 1.0,
+    "total": 0.0,
+    "whole": 0.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.377,
-    "colour": 0.998,
-    "aspect": 0.971,
+    "aspect": 1.0,
+    "band_px": 1.64,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.75,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 37.4,
+    "belly_gap": 0.639,
+    "leg_zone": 0.279,
+    "leans": [
+     -37.4
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.382,
+    "colour": 0.83,
     "box": [
-     0.04,
+     0.0,
      0.138,
-     0.572,
-     0.961
+     0.574,
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -1045,21 +2112,46 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Antilocapra_americana_400471915.jpg/1280px-Antilocapra_americana_400471915.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/antilocapra_americana/commons_149883387/photo.jpg",
    "score": {
-    "total": 0.005,
+    "total": 0.0,
     "whole": 1.0,
-    "side": 0.024,
-    "size": 0.99,
     "single": 1.0,
-    "legs": 0.5,
-    "stance": 0.5,
-    "plain": 0.31,
-    "colour": 1.0,
-    "aspect": 0.914,
+    "aspect": 0.907,
+    "band_px": 2.1,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 0.562,
+    "head_end": 1.0,
+    "side": 0.517,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 55.4,
+    "lean": 1.9,
+    "belly_gap": 0.86,
+    "leg_zone": 0.281,
+    "leans": [
+     -22.9,
+     6.1,
+     -2.2,
+     32.5
+    ],
+    "lifts": [
+     0.001,
+     0.005,
+     0.03,
+     0.074
+    ],
+    "plain": 0.303,
+    "colour": 0.809,
     "box": [
-     0.27,
-     0.126,
-     0.718,
-     0.859
+     0.268,
+     0.123,
+     0.716,
+     0.862
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 0.75
    }
@@ -1075,21 +2167,43 @@
    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Pronghorn_near_fence_turned_away.jpg/1280px-Pronghorn_near_fence_turned_away.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
    "file_small": "pipeline/_cache/references/antilocapra_americana/commons_155716193/photo.jpg",
    "score": {
-    "total": 0.001,
-    "whole": 0.481,
-    "side": 0.007,
-    "size": 0.82,
+    "total": 0.0,
+    "whole": 0.0,
     "single": 1.0,
-    "legs": 0.5,
-    "stance": 1.0,
+    "aspect": 0.852,
+    "band_px": 1.81,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.38,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 3.8,
+    "belly_gap": 0.392,
+    "leg_zone": 0.313,
+    "leans": [
+     3.8
+    ],
+    "lifts": [
+     0.0
+    ],
     "plain": 0.265,
-    "colour": 1.0,
-    "aspect": 0.904,
+    "colour": 0.46,
     "box": [
      0.406,
-     0.273,
+     0.27,
      0.82,
-     0.961
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -1109,53 +2223,42 @@
    "file_small": "pipeline/_cache/references/antilocapra_americana/inat_7991623/photo.jpg",
    "score": {
     "total": 0.0,
-    "whole": 0.0,
-    "side": 1.0,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.5,
-    "stance": 1.0,
-    "plain": 0.393,
-    "colour": 1.0,
-    "aspect": 2.009,
-    "box": [
-     0.04,
-     0.208,
-     0.96,
-     0.833
-    ],
-    "local": 1.0
-   }
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_440146556",
-   "licence": "CC0 1.0",
-   "author": "margohj",
-   "attribution": "no rights reserved",
-   "page": "https://www.inaturalist.org/observations/246538681",
-   "photo_page": "https://www.inaturalist.org/photos/440146556",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/440146556/medium.jpeg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/440146556/large.jpeg",
-   "adult": true,
-   "local": true,
-   "file_small": "pipeline/_cache/references/antilocapra_americana/inat_440146556/photo.jpg",
-   "score": {
-    "total": 0.0,
     "whole": 1.0,
-    "side": 0.0,
-    "size": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.234,
+    "aspect": 1.25,
+    "band_px": 28.61,
+    "clear": 0.0,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.75,
+    "side": 1.0,
+    "legs": 0.006,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.375,
+    "leg_zone": 0.125,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.351,
     "colour": 1.0,
-    "aspect": 0.595,
     "box": [
-     0.204,
-     0.066,
-     0.672,
-     0.792
+     0.84,
+     0.645,
+     0.86,
+     0.667
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance",
+     "clear"
     ],
     "local": 1.0
    }
@@ -1176,19 +2279,42 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 0.0,
+    "single": 0.569,
+    "aspect": 1.47,
+    "band_px": 5.58,
+    "clear": 0.868,
     "size": 0.0,
-    "single": 0.475,
-    "legs": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
     "stance": 1.0,
-    "plain": 0.355,
-    "colour": 1.0,
-    "aspect": 0.808,
+    "spread": 16.6,
+    "lean": 6.6,
+    "belly_gap": 0.846,
+    "leg_zone": 0.35,
+    "leans": [
+     -6.6,
+     -11.1,
+     5.5
+    ],
+    "lifts": [
+     0.002,
+     0.002,
+     0.002
+    ],
+    "plain": 0.349,
+    "colour": 0.158,
     "box": [
-     0.12,
-     0.587,
-     0.162,
-     0.665
+     0.122,
+     0.569,
+     0.316,
+     0.766
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size"
     ],
     "local": 1.0
    }
@@ -1209,19 +2335,40 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
+    "single": 0.994,
+    "aspect": 0.477,
+    "band_px": 2.22,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.073,
     "side": 0.0,
-    "size": 0.0,
-    "single": 0.998,
-    "legs": 0.0,
+    "legs": 1.0,
     "stance": 1.0,
+    "spread": 17.5,
+    "lean": 0.2,
+    "belly_gap": 0.712,
+    "leg_zone": 0.384,
+    "leans": [
+     -9.0,
+     8.5
+    ],
+    "lifts": [
+     0.006,
+     0.0
+    ],
     "plain": 0.298,
-    "colour": 1.0,
-    "aspect": 0.49,
+    "colour": 0.775,
     "box": [
      0.284,
-     0.312,
-     0.43,
-     0.776
+     0.296,
+     0.432,
+     0.779
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side"
     ],
     "local": 1.0
    }
@@ -1242,19 +2389,40 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 0.38,
+    "single": 1.0,
+    "aspect": 1.048,
+    "band_px": 3.93,
+    "clear": 1.0,
     "size": 0.0,
-    "single": 0.411,
-    "legs": 0.0,
-    "stance": 1.0,
+    "solid": 1.0,
+    "head_end": 0.215,
+    "side": 0.869,
+    "legs": 0.117,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 9.1,
+    "belly_gap": 0.714,
+    "leg_zone": 0.214,
+    "leans": [
+     9.1
+    ],
+    "lifts": [
+     0.0
+    ],
     "plain": 0.818,
-    "colour": 1.0,
-    "aspect": 1.128,
+    "colour": 0.637,
     "box": [
      0.452,
-     0.465,
+     0.453,
      0.54,
-     0.583
+     0.58
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -1275,19 +2443,40 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
-    "size": 0.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
+    "aspect": 1.816,
+    "band_px": 4.51,
+    "clear": 0.958,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 6.7,
+    "belly_gap": 0.306,
+    "leg_zone": 0.408,
+    "leans": [
+     -6.7
+    ],
+    "lifts": [
+     0.0
+    ],
     "plain": 0.252,
-    "colour": 1.0,
-    "aspect": 1.977,
+    "colour": 0.872,
     "box": [
      0.276,
-     0.362,
-     0.45,
-     0.512
+     0.348,
+     0.454,
+     0.515
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -1308,19 +2497,40 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 0.141,
-    "size": 0.0,
     "single": 1.0,
-    "legs": 0.0,
+    "aspect": 0.6,
+    "band_px": 3.02,
+    "clear": 1.0,
+    "size": 0.822,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 1.0,
     "stance": 1.0,
+    "spread": 3.7,
+    "lean": 5.8,
+    "belly_gap": 0.719,
+    "leg_zone": 0.585,
+    "leans": [
+     7.6,
+     3.9
+    ],
+    "lifts": [
+     0.022,
+     0.0
+    ],
     "plain": 0.24,
-    "colour": 1.0,
-    "aspect": 0.985,
+    "colour": 0.83,
     "box": [
-     0.262,
-     0.309,
-     0.39,
-     0.505
+     0.234,
+     0.303,
+     0.396,
+     0.709
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side"
     ],
     "local": 1.0
    }
@@ -1341,19 +2551,41 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 1.0,
+    "single": 0.704,
+    "aspect": 1.633,
+    "band_px": 2.85,
+    "clear": 1.0,
     "size": 0.0,
-    "single": 0.685,
-    "legs": 0.5,
-    "stance": 1.0,
+    "solid": 1.0,
+    "head_end": 0.365,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.5,
+    "spread": 1.0,
+    "lean": 0.5,
+    "belly_gap": 0.85,
+    "leg_zone": 0.267,
+    "leans": [
+     -1.0,
+     0.0
+    ],
+    "lifts": [
+     0.0,
+     0.1
+    ],
     "plain": 0.695,
-    "colour": 1.0,
-    "aspect": 1.769,
+    "colour": 0.865,
     "box": [
-     0.606,
-     0.459,
+     0.6,
+     0.45,
      0.698,
-     0.538
+     0.541
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "stance"
     ],
     "local": 1.0
    }
@@ -1373,6 +2605,42 @@
    "file_small": "pipeline/_cache/references/antilocapra_americana/inat_645478451/photo.jpg",
    "score": {
     "total": 0.0,
+    "whole": 1.0,
+    "single": 0.976,
+    "aspect": 1.778,
+    "band_px": 6.29,
+    "clear": 0.809,
+    "size": 0.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.792,
+    "leg_zone": 0.397,
+    "leans": [
+     -0.0
+    ],
+    "lifts": [
+     0.008
+    ],
+    "plain": 0.134,
+    "colour": 0.227,
+    "box": [
+     0.242,
+     0.467,
+     0.434,
+     0.611
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "legs",
+     "stance"
+    ],
     "local": 1.0
    }
   },
@@ -1391,38 +2659,9 @@
    "file_small": "pipeline/_cache/references/antilocapra_americana/inat_458934701/photo.jpg",
    "score": {
     "total": 0.0,
-    "local": 1.0
-   }
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_421085124",
-   "licence": "CC BY 4.0",
-   "author": "Daughter Dad",
-   "attribution": "(c) Daughter Dad, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/236807598",
-   "photo_page": "https://www.inaturalist.org/photos/421085124",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/421085124/medium.jpeg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/421085124/large.jpeg",
-   "adult": true,
-   "local": true,
-   "file_small": "pipeline/_cache/references/antilocapra_americana/inat_421085124/photo.jpg",
-   "score": {
-    "total": 0.0,
-    "whole": 1.0,
-    "side": 0.337,
-    "size": 0.0,
-    "single": 0.916,
-    "legs": 0.5,
-    "stance": 0.5,
-    "plain": 0.262,
-    "colour": 1.0,
-    "aspect": 1.102,
-    "box": [
-     0.448,
-     0.201,
-     0.642,
-     0.465
+    "usable": false,
+    "why_not": [
+     "no subject"
     ],
     "local": 1.0
    }
@@ -1443,19 +2682,44 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 0.508,
-    "size": 0.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 0.5,
+    "single": 0.983,
+    "aspect": 0.788,
+    "band_px": 2.93,
+    "clear": 1.0,
+    "size": 0.14,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.22,
+    "legs": 1.0,
+    "stance": 0.014,
+    "spread": 24.6,
+    "lean": 4.7,
+    "belly_gap": 0.854,
+    "leg_zone": 0.409,
+    "leans": [
+     -6.6,
+     18.0,
+     4.7
+    ],
+    "lifts": [
+     0.106,
+     0.136,
+     0.0
+    ],
     "plain": 0.264,
-    "colour": 1.0,
-    "aspect": 1.205,
+    "colour": 0.872,
     "box": [
      0.282,
-     0.445,
-     0.388,
-     0.601
+     0.448,
+     0.386,
+     0.683
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "stance"
     ],
     "local": 1.0
    }
@@ -1476,52 +2740,43 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 0.0,
-    "size": 0.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
+    "aspect": 0.6,
+    "band_px": 1.97,
+    "clear": 1.0,
+    "size": 0.882,
+    "solid": 1.0,
+    "head_end": 0.802,
+    "side": 0.0,
+    "legs": 1.0,
+    "stance": 0.57,
+    "spread": 26.6,
+    "lean": 7.4,
+    "belly_gap": 0.657,
+    "leg_zone": 0.35,
+    "leans": [
+     -10.7,
+     15.9,
+     -7.4
+    ],
+    "lifts": [
+     0.0,
+     0.007,
+     0.014
+    ],
     "plain": 0.265,
-    "colour": 1.0,
-    "aspect": 0.61,
+    "colour": 0.768,
     "box": [
      0.3,
-     0.273,
-     0.466,
-     0.682
+     0.27,
+     0.468,
+     0.691
     ],
-    "local": 1.0
-   }
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_717073113",
-   "licence": "CC BY 4.0",
-   "author": "Daughter Dad",
-   "attribution": "(c) Daughter Dad, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/391455454",
-   "photo_page": "https://www.inaturalist.org/photos/717073113",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/717073113/medium.jpg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/717073113/large.jpg",
-   "adult": true,
-   "local": true,
-   "file_small": "pipeline/_cache/references/antilocapra_americana/inat_717073113/photo.jpg",
-   "score": {
-    "total": 0.0,
-    "whole": 1.0,
-    "side": 1.0,
-    "size": 0.0,
-    "single": 0.98,
-    "legs": 1.0,
-    "stance": 0.25,
-    "plain": 0.248,
-    "colour": 1.0,
-    "aspect": 1.51,
-    "box": [
-     0.598,
-     0.421,
-     0.746,
-     0.573
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "side",
+     "stance"
     ],
     "local": 1.0
    }
@@ -1542,19 +2797,42 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 0.722,
-    "size": 0.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.27,
-    "colour": 1.0,
-    "aspect": 1.333,
+    "single": 0.663,
+    "aspect": 0.588,
+    "band_px": 3.05,
+    "clear": 1.0,
+    "size": 0.017,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 1.9,
+    "lean": 0.9,
+    "belly_gap": 0.875,
+    "leg_zone": 0.456,
+    "leans": [
+     1.9,
+     0.0
+    ],
+    "lifts": [
+     0.0,
+     0.221
+    ],
+    "plain": 0.271,
+    "colour": 0.829,
     "box": [
-     0.364,
-     0.105,
-     0.38,
-     0.123
+     0.312,
+     0.345,
+     0.392,
+     0.55
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "size",
+     "side",
+     "stance"
     ],
     "local": 1.0
    }
@@ -1575,85 +2853,39 @@
    "score": {
     "total": 0.0,
     "whole": 1.0,
-    "side": 0.0,
+    "single": 1.0,
+    "aspect": 0.993,
+    "band_px": 3.33,
+    "clear": 1.0,
     "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.391,
-    "colour": 1.0,
-    "aspect": 0.847,
-    "box": [
-     0.168,
-     0.158,
-     0.924,
-     0.954
+    "solid": 1.0,
+    "head_end": 0.935,
+    "side": 0.733,
+    "legs": 0.143,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.883,
+    "leg_zone": 0.234,
+    "leans": [
+     -0.0
     ],
-    "local": 1.0
-   }
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_735087065",
-   "licence": "CC BY 4.0",
-   "author": "Aleya Stotesbery",
-   "attribution": "(c) Aleya Stotesbery, some rights reserved (CC BY)",
-   "page": "https://www.inaturalist.org/observations/400562774",
-   "photo_page": "https://www.inaturalist.org/photos/735087065",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/735087065/medium.jpg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/735087065/large.jpg",
-   "adult": true,
-   "local": true,
-   "file_small": "pipeline/_cache/references/antilocapra_americana/inat_735087065/photo.jpg",
-   "score": {
-    "total": 0.0,
-    "whole": 1.0,
-    "side": 0.028,
-    "size": 0.0,
-    "single": 0.678,
-    "legs": 0.5,
-    "stance": 1.0,
-    "plain": 0.266,
-    "colour": 1.0,
-    "aspect": 0.917,
-    "box": [
-     0.444,
-     0.619,
-     0.51,
-     0.727
+    "lifts": [
+     0.0
     ],
-    "local": 1.0
-   }
-  },
-  {
-   "source": "inaturalist",
-   "id": "inat_270943452",
-   "licence": "CC0 1.0",
-   "author": "Paul",
-   "attribution": "no rights reserved",
-   "page": "https://www.inaturalist.org/observations/156674510",
-   "photo_page": "https://www.inaturalist.org/photos/270943452",
-   "url_small": "https://inaturalist-open-data.s3.amazonaws.com/photos/270943452/medium.jpg",
-   "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/270943452/large.jpg",
-   "adult": true,
-   "local": true,
-   "file_small": "pipeline/_cache/references/antilocapra_americana/inat_270943452/photo.jpg",
-   "score": {
-    "total": 0.0,
-    "whole": 1.0,
-    "side": 0.453,
-    "size": 0.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.275,
-    "colour": 1.0,
-    "aspect": 1.172,
+    "plain": 0.36,
+    "colour": 0.44,
     "box": [
-     0.466,
-     0.539,
-     0.616,
-     0.709
+     0.17,
+     0.154,
+     0.845,
+     0.76
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
     ],
     "local": 1.0
    }
@@ -1670,20 +2902,42 @@
    "file_small": "pipeline/_cache/references/antilocapra_americana/commons_155716195/photo.jpg",
    "score": {
     "total": 0.0,
-    "whole": 0.593,
-    "side": 0.0,
-    "size": 0.62,
+    "whole": 0.0,
     "single": 1.0,
-    "legs": 0.5,
-    "stance": 1.0,
+    "aspect": 0.783,
+    "band_px": 1.79,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 1.0,
+    "side": 0.208,
+    "legs": 0.15,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 0.0,
+    "belly_gap": 0.331,
+    "leg_zone": 0.265,
+    "leans": [
+     0.0
+    ],
+    "lifts": [
+     0.0
+    ],
     "plain": 0.255,
-    "colour": 0.999,
-    "aspect": 0.824,
+    "colour": 0.485,
     "box": [
-     0.396,
+     0.394,
      0.279,
      0.77,
-     0.961
+     1.0
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "whole",
+     "side",
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -1700,50 +2954,45 @@
    "file_small": "pipeline/_cache/references/antilocapra_americana/commons_144338982/photo.jpg",
    "score": {
     "total": 0.0,
-    "local": 0.75
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_148054916",
-   "licence": "CC BY 4.0",
-   "author": "Daniela G\u00e1mez",
-   "attribution": "Daniela G\u00e1mez, CC BY 4.0, via Wikimedia Commons (File:Antilocapra americana peninsularis 60153372.jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:Antilocapra_americana_peninsularis_60153372.jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4a/Antilocapra_americana_peninsularis_60153372.jpg/500px-Antilocapra_americana_peninsularis_60153372.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4a/Antilocapra_americana_peninsularis_60153372.jpg/1280px-Antilocapra_americana_peninsularis_60153372.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_148054916/photo.jpg",
-   "score": {
-    "total": 0.0,
-    "local": 0.75
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_73576835",
-   "licence": "CC BY-SA 4.0",
-   "author": "Acroterion",
-   "attribution": "Acroterion, CC BY-SA 4.0, via Wikimedia Commons (File:Pronghorn Theodore Roosevelt NP ND1.jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:Pronghorn_Theodore_Roosevelt_NP_ND1.jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/Pronghorn_Theodore_Roosevelt_NP_ND1.jpg/500px-Pronghorn_Theodore_Roosevelt_NP_ND1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/Pronghorn_Theodore_Roosevelt_NP_ND1.jpg/1280px-Pronghorn_Theodore_Roosevelt_NP_ND1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_73576835/photo.jpg",
-   "score": {
-    "total": 0.0,
     "whole": 1.0,
-    "side": 0.0,
-    "size": 0.25,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.275,
-    "colour": 1.0,
-    "aspect": 0.838,
+    "aspect": 1.535,
+    "band_px": 2.39,
+    "clear": 1.0,
+    "size": 0.76,
+    "solid": 0.747,
+    "head_end": 0.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.0,
+    "spread": 45.6,
+    "lean": 7.0,
+    "belly_gap": 0.769,
+    "leg_zone": 0.528,
+    "leans": [
+     -12.0,
+     29.3,
+     -2.0,
+     -16.3
+    ],
+    "lifts": [
+     0.024,
+     0.0,
+     0.024,
+     0.055
+    ],
+    "plain": 0.119,
+    "colour": 0.843,
     "box": [
-     0.316,
-     0.238,
-     0.616,
-     0.607
+     0.348,
+     0.312,
+     0.738,
+     0.651
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "stance"
     ],
     "local": 0.75
    }
@@ -1760,50 +3009,40 @@
    "file_small": "pipeline/_cache/references/antilocapra_americana/commons_127986686/photo.jpg",
    "score": {
     "total": 0.0,
-    "whole": 0.843,
-    "side": 0.0,
-    "size": 1.0,
+    "whole": 1.0,
     "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.963,
-    "colour": 1.0,
-    "aspect": 0.889,
+    "aspect": 0.927,
+    "band_px": 1.98,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 1.0,
+    "head_end": 0.0,
+    "side": 0.566,
+    "legs": 0.054,
+    "stance": 0.0,
+    "spread": 90.0,
+    "lean": 17.8,
+    "belly_gap": 0.418,
+    "leg_zone": 0.163,
+    "leans": [
+     17.8
+    ],
+    "lifts": [
+     0.0
+    ],
+    "plain": 0.945,
+    "colour": 0.929,
     "box": [
      0.14,
      0.066,
-     0.844,
-     0.962
+     0.846,
+     0.928
     ],
-    "local": 0.75
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_149883367",
-   "licence": "CC0",
-   "author": "Mr. Satterly",
-   "attribution": "Mr. Satterly, CC0, via Wikimedia Commons (File:Antilocapra americana 400471931.jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:Antilocapra_americana_400471931.jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/Antilocapra_americana_400471931.jpg/500px-Antilocapra_americana_400471931.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/Antilocapra_americana_400471931.jpg/1280px-Antilocapra_americana_400471931.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_149883367/photo.jpg",
-   "score": {
-    "total": 0.0,
-    "whole": 1.0,
-    "side": 0.0,
-    "size": 1.0,
-    "single": 1.0,
-    "legs": 0.0,
-    "stance": 1.0,
-    "plain": 0.306,
-    "colour": 1.0,
-    "aspect": 0.862,
-    "box": [
-     0.276,
-     0.111,
-     0.726,
-     0.892
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "legs",
+     "stance"
     ],
     "local": 0.75
    }
@@ -1820,45 +3059,52 @@
    "file_small": "pipeline/_cache/references/antilocapra_americana/commons_70072340/photo.jpg",
    "score": {
     "total": 0.0,
-    "local": 0.75
-   }
-  },
-  {
-   "source": "wikimedia commons",
-   "id": "commons_149276455",
-   "licence": "CC BY 4.0",
-   "author": "Qwexcxewq",
-   "attribution": "Qwexcxewq, CC BY 4.0, via Wikimedia Commons (File:Pronghorn near Wild Horse.jpg)",
-   "page": "https://commons.wikimedia.org/wiki/File:Pronghorn_near_Wild_Horse.jpg",
-   "url_small": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/Pronghorn_near_Wild_Horse.jpg/500px-Pronghorn_near_Wild_Horse.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-   "url_large": "https://upload.wikimedia.org/wikipedia/commons/1/1c/Pronghorn_near_Wild_Horse.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-   "file_small": "pipeline/_cache/references/antilocapra_americana/commons_149276455/photo.jpg",
-   "score": {
-    "total": 0.0,
     "whole": 1.0,
-    "side": 0.0,
-    "size": 0.38,
-    "single": 1.0,
-    "legs": 0.5,
-    "stance": 1.0,
-    "plain": 0.267,
-    "colour": 1.0,
-    "aspect": 0.891,
+    "single": 0.974,
+    "aspect": 1.166,
+    "band_px": 3.59,
+    "clear": 1.0,
+    "size": 1.0,
+    "solid": 0.0,
+    "head_end": 1.0,
+    "side": 1.0,
+    "legs": 1.0,
+    "stance": 0.825,
+    "spread": 17.3,
+    "lean": 7.5,
+    "belly_gap": 0.892,
+    "leg_zone": 0.517,
+    "leans": [
+     -16.2,
+     1.1
+    ],
+    "lifts": [
+     0.001,
+     0.074
+    ],
+    "plain": 0.869,
+    "colour": 0.89,
     "box": [
-     0.306,
-     0.207,
-     0.632,
-     0.757
+     0.082,
+     0.15,
+     0.94,
+     0.886
+    ],
+    "mask": "subject (U-2-Net + IS-Net)",
+    "usable": false,
+    "why_not": [
+     "solid"
     ],
     "local": 0.75
    }
   }
  ],
- "shortlist": [
-  "inat_250877072",
-  "inat_705175653"
- ],
- "chosen_by": {
+ "judged": {
+  "chosen": "inat_250877072",
+  "shortlist": [
+   "inat_250877072",
+   "inat_705175653"
+  ],
   "by": "the judge (Claude, from the contact sheet of the rule's top candidates)",
   "rule_rank": [
    1,

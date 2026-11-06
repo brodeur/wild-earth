@@ -478,16 +478,27 @@ def client_features(tile: Tile) -> dict | None:
                     streams.append({"name": pr.get("gnis_name") or pr.get("name"), "fcode": pr.get("fcode"),
                                     "order": pr.get("streamorde"), "source": "nhd", "path": local(line)})
     feats = load("hydro/waterbodies.geojson")
+    # the imagery's verdict per waterbody (pipeline/water_seasons.py): `water` permanent | seasonal (water.js draws a
+    # seasonal one as its intermittent ponds), the months it holds open water; the ones dry in every month are listed
+    # apart under dry_waterbodies (no surface, no water mask, no pond on the mini-map), with their bed
+    from .water_seasons import body_id, load_classes
+    classes = load_classes(tile) or {}
+    dry_waterbodies = []
     if feats is not None:
         found = True
-        for ft in feats:
+        for i, ft in enumerate(feats):
             pr = ft.get("properties") or {}
             ice_mass = str(pr.get("ftype")) == "378"   # NHD Ice Mass: a glacier, listed apart (not water for the client)
+            c = classes.get(body_id(pr, i))
             for ring in _rings(ft.get("geometry") or {}):
                 if len(ring) >= 3 and ice_mass:
                     glaciers.append({"name": pr.get("gnis_name") or pr.get("name"), "ring": local(ring)})
+                elif len(ring) >= 3 and c and c["class"] == "dry":
+                    dry_waterbodies.append({"name": pr.get("gnis_name") or pr.get("name"), "fcode": pr.get("fcode"),
+                                            "bed": c.get("bed"), "ring": local(ring)})
                 elif len(ring) >= 3:
                     waterbodies.append({"name": pr.get("gnis_name") or pr.get("name"), "fcode": pr.get("fcode"),
+                                        **({"water": c["class"], "wet_months": c["wet_months"]} if c else {}),
                                         "ring": local(ring)})
     if not found:
         return None
@@ -501,14 +512,17 @@ def client_features(tile: Tile) -> dict | None:
     terr, terr_note = territories_or_none(tile)
     path = tile.path("client/features.json")
     with open(path, "w") as f:
-        json.dump({"roads": roads, "streams": streams, "waterbodies": waterbodies, "glaciers": glaciers, "places": places,
+        json.dump({"roads": roads, "streams": streams, "waterbodies": waterbodies, "dry_waterbodies": dry_waterbodies,
+                   "glaciers": glaciers, "places": places,
                    "places_source": places_note, "territories": terr, "territories_source": terr_note, "size_m": TILE_SIZE_M}, f, separators=(",", ":"))
     return {"path": "client/features.json", "kind": "vector", "crs": tile.crs, "bounds": list(tile.bounds),
             "encoding": "tile-local metres [x east, north from south edge]",
-            "counts": {"roads": len(roads), "streams": len(streams), "waterbodies": len(waterbodies), "glaciers": len(glaciers), "places": len(places), "territories": len(terr)},
+            "counts": {"roads": len(roads), "streams": len(streams), "waterbodies": len(waterbodies),
+                       "dry_waterbodies": len(dry_waterbodies), "glaciers": len(glaciers), "places": len(places), "territories": len(terr)},
             **({"sources_used": ["native_land"]} if terr else {}),
             "streams_from": stream_source, **({"places_from": "osm"} if places_note else {}),
-            "derived_from": ["footprint.mask", stream_source, "hydro.waterbodies"] + (["osm"] if places_note else [])}
+            "derived_from": ["footprint.mask", stream_source, "hydro.waterbodies"] + (["hydro.waterbody_seasons"] if classes else [])
+                            + (["osm"] if places_note else [])}
 
 
 # ---- species density prior for game clients -----------------------------------------------------

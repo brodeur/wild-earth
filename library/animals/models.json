@@ -371,16 +371,18 @@
     "ok": false,
     "score": 0.43,
     "fails": [
-     "flanks 35% matches",
-     "upperparts 34% matches",
-     "only 43% of the model in described colours"
-    ],
-    "off": {
-     "flanks": "cinnamon",
-     "underparts": "golden",
-     "upperparts": "ginger"
+     "upperparts: only 9% in its ground colours, the rest in its markings' colours"
+    ]
+   },
+   "verdicts": [
+    {
+     "model": "current",
+     "verdict": "rejected",
+     "by": "iteration 5 record",
+     "why": "the shell amber and ginger where straw yellow with black blotches is described; kept after the re-refine because no better came (docs/decisions.md 2026-11-06 iteration 5)",
+     "note": "a label for fitting the check (pipeline/appearance.py fit_check), not a judge's rejection: the model is still drawn"
     }
-   }
+   ]
   },
   "agama_mwanzae": {
    "kind": "reptile",
@@ -474,12 +476,18 @@
     "score": 1.0,
     "fails": [
      "head: no yellowish-green spots (0.0%)",
-     "underparts: no blackish bands (0.2%)",
-     "upperparts: no greenish-yellow spots (0.7%)",
-     "upperparts: no yellowish spots (0.7%)",
-     "upperparts: no yellow spots (0.1%)"
+     "underparts: no blackish bands (0.2%)"
     ]
-   }
+   },
+   "verdicts": [
+    {
+     "model": "current",
+     "verdict": "rejected",
+     "by": "iteration 5 record",
+     "why": "no yellow spots, which the description gives; the re-refine came out grey and was not kept (docs/decisions.md 2026-11-06 iteration 5)",
+     "note": "a label for fitting the check (pipeline/appearance.py fit_check), not a judge's rejection: the model is still drawn"
+    }
+   ]
   },
   "oreamnos_americanus": {
    "kind": "quadruped",
@@ -607,6 +615,14 @@
      "date": "2026-11-06",
      "stale": "the model was rebuilt from library/animals/jobs/oreamnos_americanus/01a1b16c-a85c-7658-a55b-a6e1ebe96d70 on 2026-11-06; the judge has not looked again"
     }
+   ],
+   "verdicts": [
+    {
+     "model": "library/animals/jobs/oreamnos_americanus/01a1b126-d360-73e5-98fa-ee8a093c18c9",
+     "verdict": "rejected",
+     "by": "the judge, iteration 6",
+     "why": "long curved ibex-like horns and brown patches (models.json judge_history)"
+    }
    ]
   },
   "bison_bison": {
@@ -727,7 +743,15 @@
     "by": "the judge (Claude, from the model's render against the species' description)",
     "date": "2026-11-06",
     "model": "library/animals/jobs/antilocapra_americana/01a1b18c-1540-70c3-9fd1-f535a7626d97"
-   }
+   },
+   "verdicts": [
+    {
+     "model": "library/animals/jobs/antilocapra_americana/01a1b130-1b14-7175-aa07-5c55662144e4",
+     "verdict": "rejected",
+     "by": "iteration 7 record (docs/decisions.md)",
+     "why": "iteration 6's model: an impala's horns, 0.65 of the withers against the described 0.29"
+    }
+   ]
   },
   "taxidea_taxus": {
    "kind": "quadruped",
@@ -743,9 +767,12 @@
    "build": "tools/build_quadruped.py",
    "tile": "utm12n_557_4964",
    "colour_check": {
-    "ok": true,
+    "ok": false,
     "score": 1.0,
-    "fails": []
+    "fails": [
+     "body: no white stripes (0.2%)",
+     "tail ringed (2 alternations), described without rings"
+    ]
    },
    "judge": {
     "verdict": "rejected",
@@ -888,17 +915,9 @@
    "tile": "utm12n_557_4964",
    "archetype": "snake",
    "colour_check": {
-    "ok": false,
-    "score": 0.249,
-    "fails": [
-     "flanks: only 1% in its ground colours, the rest in its markings' colours",
-     "flanks: no yellow stripes (0.0%)",
-     "underparts 0% matches",
-     "upperparts: only 0% in its ground colours, the rest in its markings' colours",
-     "upperparts 31% matches",
-     "upperparts: no yellow stripes (0.0%)",
-     "only 25% of the model in described colours"
-    ]
+    "ok": true,
+    "score": 0.441,
+    "fails": []
    },
    "recolour": [
     {
@@ -1057,6 +1076,26 @@
      "date": "2026-11-06",
      "stale": "the model was rebuilt from library/animals/jobs/thamnophis_elegans/01a1b180-979d-7275-ad65-e47f11ac6169 on 2026-11-06; the judge has not looked again"
     }
+   ],
+   "verdicts": [
+    {
+     "model": "library/animals/jobs/thamnophis_elegans/01a1b131-90b5-7024-abc6-8bac631eb794",
+     "verdict": "rejected",
+     "by": "the judge, iteration 6",
+     "why": "yellow all over (models.json judge_history)"
+    },
+    {
+     "model": "library/animals/jobs/thamnophis_elegans/01a1b176-bc6d-7564-af55-013cfa82e8c8",
+     "verdict": "rejected",
+     "by": "the judge, iteration 7",
+     "why": "the text re-refine: ochre-brown, faint stripes (judge.why)"
+    },
+    {
+     "model": "library/animals/jobs/thamnophis_elegans/01a1b177-4d95-769b-b83a-55153cbe9787",
+     "verdict": "rejected",
+     "by": "the judge, iteration 7",
+     "why": "the first photo's coastal red-spotted form (judge.why)"
+    }
    ]
   },
   "canis_lupus": {
@@ -1092,11 +1131,9 @@
    "build": "tools/build_quadruped.py",
    "tile": "utm12n_557_4964",
    "colour_check": {
-    "ok": false,
+    "ok": true,
     "score": 1.0,
-    "fails": [
-     "a large pale patch on the coat (8% of the back and flanks), described without patches"
-    ]
+    "fails": []
    },
    "recolour": [
     {
@@ -1182,7 +1219,21 @@
     "by": "the judge (Claude, from the model's render against the species' description)",
     "date": "2026-11-06",
     "model": "library/animals/jobs/ursus_arctos/01a1b18e-e9c7-7475-ba08-6a1dfede66a2"
-   }
+   },
+   "verdicts": [
+    {
+     "model": "library/animals/jobs/ursus_arctos/01a1b137-d7b9-7439-8960-c72ea3293daa",
+     "verdict": "rejected",
+     "by": "the judge, iteration 7",
+     "why": "the first refine's stark cream blotch (judge.why)"
+    },
+    {
+     "model": "library/animals/jobs/ursus_arctos/01a1b190-3a85-7581-98c4-955a1db6d7ad",
+     "verdict": "rejected",
+     "by": "the judge, iteration 7",
+     "why": "the photo-textured refine: near black, an American black bear's look (judge.why, note)"
+    }
+   ]
   },
   "aquila_chrysaetos": {
    "kind": "bird",
@@ -1321,11 +1372,9 @@
     }
    ],
    "colour_check": {
-    "ok": false,
-    "score": 1.0,
-    "fails": [
-     "a large pale patch on the coat (5% of the back and flanks), described without patches"
-    ]
+    "ok": true,
+    "score": 0.941,
+    "fails": []
    },
    "note": "built at no cost from iteration 6's second paid refine once the build centred the body on its feet instead of its bounding box (the antlers' spread had put both forelegs in one quadrant); the two image-to-3D meshes from photos failed the leg gate (the head turned to the camera, the forelegs together)",
    "judge": {
