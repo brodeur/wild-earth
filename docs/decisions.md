@@ -5337,3 +5337,41 @@ Nothing in the step graph or the client changed.
   the hardest test of the interactions and games, and mostly existing archetypes (4-6 Meshy jobs, about 150 credits).
   Then Saguaro West (`utm12n_479_3565`, the generator stress test), then the Smokies' Greenbrier (`utm17n_279_3949`).
   Not run; that waits for Aaron's review.
+
+## 2026-11-05 (later): the world pipeline: measure everywhere, generalise by ecosystem, research only the signature, judge everything (design; branch claude/sweet-feistel-2054bb)
+
+Aaron widened the brief: "don't anchor too heavily on my insights or ideas - anchor on the goal: A pipeline that can
+generate a tile anywhere on earth. Paragon may not be the right approach - it's just an idea. Think about the problem
+strategically, and design a pipeline from land generation, to the ecosystem through the seasons, the animal behaviors
+and the games." Design: `docs/world-pipeline.md`; the same page, republished:
+https://claude.ai/artifact/CRXGhhEe16r6njnDD8dKvU. Nothing built.
+
+- **The problem, ordered by what the eye reads first**: layout, structure, light and colour, time, signature, life,
+  relationships (scene gist: Oliva and Torralba 2001; Greene and Oliva 2009). The pipeline is strongest at layout and
+  species and weakest at structure below the canopy, light and the season's state; the Hoh measurement shows it (colour
+  overlap 0.18 with photos where two photo sets of the place share 0.82).
+- **Evidence varies by three orders of magnitude** and not with how remarkable a place is: plant records on seven
+  candidate tiles run from 37 (Pantanal) and 459 (Serengeti) to 76,136 (Białowieża).
+- **Chosen: measure, generalise, specialise, judge.** Layers a dataset measures come from it at the best resolution the
+  tile has; what space cannot see comes from ecosystem cards keyed on the IUCN Global Ecosystem Typology and from
+  trait-driven animal rules (density from body mass, Damuth 1981; carnivores from prey biomass, Carbone and Gittleman
+  2002; behaviour from about fifteen archetypes generalised from the kin machines); an agent researches only the
+  signature layer where evidence exists; a judge scores every layer (a top-down render against Sentinel-2 by month
+  everywhere, photos and a vision rubric where they exist, an AI-only season simulation, people) into a fidelity report.
+- **Rejected as the core**: per-place research for everything (the paragon as first designed: cost per tile, and it fails
+  where literature is thin, which is most of Earth); biome templates alone (every savanna alike); fitting to imagery
+  alone (photos are thin, colour can be fitted while structure stays wrong); generative models (not grounded, inconsistent
+  across tiles and seasons, unclear provenance; at most a texture source).
+- **Stages**: land (base, global: GLO-30 corrected for canopy, national lidar, GEBCO and the shore, MERIT Hydro and JRC
+  water, SoilGrids, ERA5), ecosystem (the EFG map, measured structure, plants by records then checklists then functional
+  types, look, signature), seasons (new: monthly state and the tile's own calendar, resources derived), animals, games
+  (the classifier on global inputs, the interaction web, signature games, balance by simulation), judge (new).
+- **The paragon** is kept as the signature layer; its general content moves to ecosystem and setting cards and its
+  checks to the judge.
+- **Cost**: a tile $3-6 of Claude once its cards exist (1-1.5 h with lidar, 40-60 min without); an EFG card $5-10 (about
+  25 cover most land); implementing in three phases, $800-1,250 of Claude plus Meshy per species; phase 1 alone builds
+  any land tile at fidelity 2 or better.
+- **First run**: three probes after phase 1 (Seronera, Serengeti `utm36s_698_9724`; Moskenesøya, Lofoten
+  `utm33n_412_7531`; Danum Valley, Borneo `utm50n_582_543`), about $50-80 and no credits; then the Serengeti taken deep
+  (about 8 Meshy models, 200-240 credits, $60-100). Lamar Valley stays the lower-risk US alternative. Not run; waits for
+  Aaron's review.

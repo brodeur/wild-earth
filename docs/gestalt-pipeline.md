@@ -1,6 +1,9 @@
 # The gestalt pipeline: making a tile feel like the place
 
-A design, written 2026-11-05, for review before anything is built. It extends the four-stage tile pipeline
+A design, written 2026-11-05, for review before anything is built. **Widened the same day into `docs/world-pipeline.md`**
+(Aaron: anchor on the goal, a tile anywhere on Earth, not on the paragon). There the paragon becomes the small signature
+layer, the setting cards sit under global ecosystem cards, and the checks below become the judge's. This file stays as
+the detail of the signature layer and of the Hoh prototype. It extends the four-stage tile pipeline
 (`docs/pipeline.md`); it does not replace it. The published version with diagrams:
 https://claude.ai/artifact/CRXGhhEe16r6njnDD8dKvU (2026-11-05 decision entry).
 

@@ -250,7 +250,14 @@ sequenced; Parked is in the brief but deliberately not started.
 9. The San Francisco cells' lidar re-streamed (`--force lidar`): their products predate multi_1m and lidar_micro, so
    their crowns step fails loudly until then.
 
-## Next: the gestalt pipeline, after Aaron's review (designed 2026-11-05)
+## Next: the world pipeline, after Aaron's review (designed 2026-11-05; `docs/world-pipeline.md` supersedes the order below)
+
+Phase 1, the global floor (global land sources, the ecosystem map and cards, the monthly state, behaviour from traits, the
+satellite judge); phase 2, places feel true (the list below); phase 3, the rest of Earth (sea surface and shore, tropical,
+polar and arid forms, swim and snake rigs). First run: probes on the Serengeti, Lofoten and Danum Valley after phase 1,
+then the Serengeti deep.
+
+The earlier gestalt order, now phase 2:
 
 `docs/gestalt-pipeline.md`; page: https://claude.ai/artifact/CRXGhhEe16r6njnDD8dKvU. In this order:
 
