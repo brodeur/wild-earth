@@ -6760,6 +6760,31 @@ season".
   at their next Start, and their invitation carries it.
 
 
+## 2026-11-06: a chosen place fills the centre, not the screen (branch claude/home-tile-framing)
+
+Aaron: "Right now clicking on a tile zooms to have the tile fill the whole screen. It should just fill the center of the
+screen." The chosen pose was a fixed 10,000 ft (3.05 km) south of the tile looking north at the full tilt, framed for
+the whole viewport, so the tile ran under the places list and the social column.
+
+- **The focus area** (title.js focusArea): the free centre the earth lands in (freeArea: right of the places column, left
+  of the social column when there is a hub), under the title and the card over the tile, above Invite, Start and the
+  loading line, less a margin (40 px; 16 px at a phone's width).
+- **The pose** (chosenPose): the camera looks at the tile's centre from the distance at which the whole tile, as the
+  camera sees it there (its tilt and lens change with the height: tiltFor, fovFor), just fits the focus area. Found by
+  bisection on the distance against the tile's edges projected through a camera built as frame() builds it. At 1440x900
+  a 10 km tile is seen from about 18.5 km, so the tilt is shallower than before.
+- **Centred in the area, both ways**: the view's offset already put the looked-at point in the free space's horizontal
+  middle (offX); a vertical offset (offY) now puts it at the focus area's vertical middle while a place is chosen,
+  eased like offX.
+- **Phone**: Invite and Start centre on the screen, not in the narrow strip beside the places (they ran off its edge).
+
+Verified in the browser pane on the local viewer by projecting the chosen tile's edges after the flight: at 1440x900
+Upper Hoh Road spans x 364 to 996, the area's full width (width is the limit there), its centre at (680, 458) against the
+area's (680, 459); Yosemite the same within a pixel; at 375x812 the tile fills the 158 px strip beside the places (x 201
+to 359), centred to a pixel. Backing out: the wheel zooms out from the chosen view as before (to about 23,000 km); a
+flight from one chosen place to another arcs out and comes down to the new fit; choosing the place again flies back to
+the same fit. While a place stays chosen and the player zooms out, the vertical offset stays (8 px at 1440x900).
+
 ## 2026-11-06: the species library arrives in one response
 
 On the hosted site (v43) a headless load of the title screen warned for 20 species "signal is aborted without
@@ -6783,3 +6808,99 @@ there. Every grazer (the rabbits, the deer, the bison, the elk) stands in its fo
 read as a light under the body wherever it went. That halo is gone; the food herbs' and shrub impostors' glow, the
 pools under near 3D food shrubs and the sward's scent strand stay. Checked as a brush rabbit on the home tile in
 October: three food grasses, the forage glow on, no halo drawn.
+
+## 2026-11-06: the zoom to a place is slow and keeps pace with its world's loading (branch claude/home-tile-framing)
+
+Aaron: "zooming to the location should be slow enough so that the world has a chance to render. While it is a slow
+zoom, begin loading world assets right away so that by the time they arrive at the tile, it's mostly loaded."
+
+- **Loading at once was already so**: choosing a place calls main.js `select`, which starts building its world behind
+  the earth on the click (`replaceWorld`: the tile package, rasters, the forest, models, shaders); Start enters that
+  world when it is ready (`world.enter`), and a second choice abandons the first build (`disposeWorld`). Unchanged.
+- **The slow zoom** (title.js flyToPlace): the flight to a chosen place takes PLACE_SLOW (1.8) times the free flight's
+  time, within 5 to 8 s, and its clock is paced by the loading bar's eased progress (`this.shown`, continuous, so the
+  pace never jumps): to pass raw progress u the build must be about smooth(0.55, 1, u) along; ahead of that the clock
+  slows smoothly to PACE_MIN (0.04 of its speed), so the camera eases into a slow drift a few times the final height above
+  the tile and comes the rest of the way as the build does. A world already built (choosing the place again) flies at
+  the natural pace. The search's flights are not paced. The fit is the centre framing above (focusArea, chosenPose).
+
+Measured in headless Chrome over CDP (`Network.emulateNetworkConditions` 20 Mbit/s each way and 60 ms latency, the cache
+disabled, `?hub=stub`, Upper Hoh Road, Start pressed as soon as both the zoom and the world are done; before = main
+96ff697, after = this branch; the machine's load average 8 to 20, so a few seconds is noise):
+
+| run | zoom ends | world ready | waiting at the tile | world shown | arrival done |
+|---|---|---|---|---|---|
+| before, 1440x900 | 3.9 s | 45.5 s | 41.6 s | 47.3 s | 59.5 s |
+| before, 1440x900 | 3.5 s | 38.7 s | 35.2 s | 40.5 s | 53.2 s |
+| after, 1440x900 | 37.3 s | 37.3 s | 0 | 39.1 s | 52.1 s |
+| after, 1440x900 | 38.8 s | 38.8 s | 0 | 40.7 s | 53.4 s |
+| before, 375x812 | 3.6 s | 39.1 s | 35.5 s | 40.9 s | 53.1 s |
+| after, 375x812 | 37.9 s | 37.9 s | 0 | 39.7 s | 52.2 s |
+
+The click-to-playable time is the same (the world's build is the limit, and it already started on the click); what
+changes is that the player rides the zoom down instead of waiting at the tile for half a minute. The altitude trace of an
+after run: 15,880 km at the click, 72 km by 3.7 s, a drift from 57 to 25 km over the next 20 s while the build loads, and
+the 18.5 km fit as the world becomes ready. Two things seen in both: the loading bar reports nothing for the first ~22 s
+under this throttle (the tile package's download comes before the first build step), and the page's main thread is held
+for ~13 s once by the build (nothing animates then, before or after).
+
+Abandoning: choosing Yosemite mid-flight while Upper Hoh Road was 57% built tore Upper Hoh Road down (`__weDisposed`, 7 to
+9 ms) and Yosemite was ready 20 s later. Five choices in a row, 7 s apart, alternating the two, showed the renderer's
+geometry count climbing by about 75 to 100 per abandoned build (textures and programs do not climb), on main as on this
+branch: an older leak in the teardown of an abandoned build, not touched here and noted as a follow-up.
+
+## 2026-11-06: the panels' items fade in up, staggered; visitors browse the places (branch claude/home-tile-framing)
+
+Aaron: "instead of sliding in left and right the elements should fade in up, staggered from top to bottom ... and the
+interval between fadeInUps should decrease." And: "For not logged in users, show all locations and let them navigate to
+them but not start them. Start button should be grayed out - when hovered a tooltip should appear saying 'Log in or sign
+up to start'".
+
+**The entrance** (title.js sideIn, staggerIn): no slides. Once the title and the earth have landed, the panels become
+visible and their items (the search box, the heading, each place's row, Layers and the credits; the account card, the
+social panel's frame, the find box, the tabs, each group card or friend row; the sign-in card and each of its rows; the
+phone's pill and row) each fade in rising 10 px over 520 ms with one easing, ordered by their top on screen across both
+columns, items within 6 px of each other together. The gaps between starts are 120 ms, then 0.8 of the one before, down to
+25 ms. Below the window's bottom an item just shows. Reduced motion: the same order, fades only. The same sequence runs
+after the landing, after a visitor signs in (the social column alone), after Exit to main screen, for the signed-out
+sign-in card and for the no-hub Explore button. A row added later by the list's own re-sort also fades in up (tt-in).
+Start times at 1440x900 signed in (`staggerLog`):
+
+| ms | top px | item |
+|---|---|---|
+| 0 | 24 | `tt-search` × |
+| 0 | 24 | `so-card` aaron@aaron_t · sharin |
+| 120 | 84 | `tt-head` Most activeeverywhere |
+| 216 | 95 | `so-aside` GroupsFriendsRequests1 |
+| 216 | 96 | `so-find`  |
+| 293 | 128 | `tt-row` ArnoldHighway 4, Big T |
+| 354 | 152 | `so-tabs` GroupsFriendsRequests1 |
+| 403 | 221 | `so-gcard` Explorersquiet |
+| 443 | 231 | `tt-row` Daly CityJohn F Foran  |
+| 474 | 313 | `so-gcard` Sunday flightquiet |
+| 499 | 334 | `tt-row` El DoradoRoute 50, Mot |
+| 524 | 405 | `so-new` New group |
+| 549 | 437 | `tt-row` Fossil ForestNortheast |
+| 574 | 540 | `tt-row` Grand Canyon VillageEa |
+| 599 | 643 | `tt-row` MoskenesMoskenesveien, |
+| 624 | 746 | `tt-row` NashvilleSand Ridge Ro |
+| 649 | 823 | `tt-layers` Layers |
+| 674 | 849 | `tt-row` PlacervilleRoute 50, P |
+| 699 | 857 | `tt-attrib` Map OpenFreeMap · © Op |
+**Visitors** (title.js browse): signed out, with a hub, the earth is lit as for a player and the places list, the dots
+and the labels come in with the sign-in card. Any place can be chosen and flown to with the slow centre-framed zoom
+(paced at its own speed: nothing loads) and backed out of; the hub is not asked for anything more. No world is built
+for a visitor (choose skips onSelect), since they cannot enter it. Start is greyed with `aria-disabled="true"` (not
+`disabled`, which takes no hover) and does nothing when pressed; its tooltip, "Log in or sign up to start", is the home
+screen's own (`.tt-tip`, role tooltip, `aria-describedby`), shown on hover and keyboard focus, and for 2.6 s after a
+tap on a touch screen. Invite, the loading line, the friends' faces and the social column are not shown. On a phone the
+sign-in folds behind a "Log in or sign up" pill at the top right so the places can be browsed. Signing in while a place
+is chosen takes Start's greying off, builds that place's world at once and staggers the social column in. A page with
+no hub (Explore) and `?hub=stub` are unchanged; `?skip=1` has no home screen.
+
+Verified in headless Chrome on the local hub (127.0.0.1, test accounts): signed out at 1440x900 and 375x812 (20 and 22
+items staggered; Start `aria-disabled`, not disabled; Invite hidden; no world building; the tooltip shown on hover and
+on a touch tap, no page errors), signed in at both widths (19 and 14 items), reduced motion (the same order, no rise),
+signing in while Upper Hoh Road was chosen (Start live, the world at 20% 2.5 s later, the social column's 7 items
+staggered, Start enabled when ready), `?hub=stub`, a static host with no hub (Explore staggered in, then the places),
+and `?skip=1`. Frames were captured every ~100 to 250 ms (headless screenshots are slow); the start times are exact.

@@ -55,7 +55,12 @@ const DEG = Math.PI / 180, R_KM = 6371;
 const FOV_FAR = 38, FOV_NEAR = 55, TILT_MAX = 54 * DEG;    // the lens and the tilt from space, and at a few kilometres
 const TILT_ALT = [0.03, 0.0009];                           // the altitudes (earth radii) between which they change
 const ALT0 = 2.5, ALT_MIN = 0.6 / R_KM, ALT_MAX = 3.6;      // the camera's distance from the point it looks at
-const CHOSEN_H_KM = 3.05;                                  // a chosen place is seen from 10,000 ft
+// Flying to a chosen place is slow (Aaron, 2026-11-06: "slow enough so that the world has a chance to render ... by the
+// time they arrive at the tile, it's mostly loaded"): PLACE_SLOW times the free flight's time, within PLACE_MS; its last
+// stretch is paced by the world's build (flyToPlace: the flight's clock runs slower as it gets ahead of the loading bar,
+// down to PACE_MIN, so it eases into a hold a few times the final height above the tile and goes on as the build does).
+const PLACE_SLOW = 1.8, PLACE_MS = [5000, 8000], PACE_FROM = 0.55, PACE_SLACK = 0.12, PACE_MIN = 0.04;
+const FOCUS_MARGIN = [40, 16];                             // px around a chosen tile inside the free centre (desktop, phone)
 const Y_BELOW = -2.7;                                      // where the earth's centre sits before it lands: off screen, below
 const SUN_CRESCENT = [152 * DEG, 26 * DEG], SUN_LIT = [30 * DEG, 14 * DEG];   // [azimuth about Y from the camera's side, elevation]
 const PITCH_MAX = 85 * DEG;
@@ -69,6 +74,13 @@ const TITLE_MIN_MS = 2400, LOAD_MAX_MS = 12000;            // the title is seen 
 // at the same time, and when complete, the side panels should slide in from their respective sides simultaneously").
 // The earth is centred in the space the panels will leave free from the start (freeArea), so it never moves for them.
 const STARS_IN_S = 2.6, TITLE_IN_S = 0.7, LAND_MS = 2200, REFADE_MS = 1200, SIDE_AFTER_SIGNIN_MS = 450;
+// The panels' items come in one by one (Aaron, 2026-11-06: "the elements should fade in up, staggered from top to bottom
+// ... and the interval between fadeInUps should decrease"): ordered by their top on screen across both columns, items
+// within STAGGER_SAME_PX of each other together; the gaps STAGGER_FIRST ms, then each STAGGER_DECAY of the one before,
+// down to STAGGER_MIN; each item rises STAGGER_RISE px as it fades in over STAGGER_MS (only fades under reduced motion).
+const STAGGER_FIRST = 120, STAGGER_DECAY = 0.8, STAGGER_MIN = 25, STAGGER_SAME_PX = 6, STAGGER_MS = 520, STAGGER_RISE = 10;
+const STAGGER_EASE = 'cubic-bezier(.2, .8, .25, 1)';
+const GUEST_TIP = 'Log in or sign up to start';
 const reducedMotion = () => !!globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 const DOT_LIFT = 0.004;                                    // the dots stand off the surface from space, on it up close
 const HOVER_PX = 16;
@@ -289,6 +301,7 @@ export class TitleScreen {
       <div class="tt-wrap phase-title">
         <div class="tt-title" aria-live="polite"><h1>Wild Earth</h1><p class="tt-load">loading…</p></div>
         <div class="tt-gate"><button class="tt-explore" type="button" hidden>Explore</button><p class="tt-gate-note" hidden></p></div>
+        <button type="button" class="tt-loginpill" aria-expanded="false" hidden>Log in or sign up</button>
         <div class="tt-labels" aria-hidden="true"></div>
         <div class="tt-dotname" hidden></div>
         <div class="tt-pin" hidden>${PIN_ICON}<span></span></div>
@@ -305,7 +318,7 @@ export class TitleScreen {
           <div class="pc-list" role="list" hidden></div>
         </div>
         <div class="tt-bar" aria-live="polite">
-          <div class="tt-acts"><button type="button" class="tt-invite">Invite</button><button type="button" class="tt-start" disabled>Start</button></div>
+          <div class="tt-acts"><button type="button" class="tt-invite">Invite</button><span class="tt-startwrap"><button type="button" class="tt-start" disabled aria-describedby="ttStartTip">Start</button><span class="tt-tip" id="ttStartTip" role="tooltip" hidden>${GUEST_TIP}</span></span></div>
           <div class="tt-bline"><span class="tt-bstatus"></span><span class="tt-bpct"></span></div>
           <div class="tt-progress" role="progressbar" aria-label="loading the place" aria-valuemin="0" aria-valuemax="100"><i></i></div>
         </div>
@@ -328,7 +341,16 @@ export class TitleScreen {
         box.onchange = () => { this.layers[box.dataset.layer] = box.checked; saveLayers(this.layers); this.map?.restyle(this.layers); };
       }
     }
-    this.$('.tt-start').onclick = () => this.begin();
+    {   // Start; signed out it is greyed (aria-disabled, so it still takes hover and focus for its tooltip) and a tap shows the tip
+      const start = this.$('.tt-start'), tip = this.$('.tt-tip');
+      start.onclick = () => { if (this.guest) this.showTip(); else this.begin(); };
+      start.addEventListener('pointerdown', e => { if (this.guest && e.pointerType === 'touch') this.tipTouch = true; });
+      this.showTip = () => { if (!this.tipTouch) return; this.tipTouch = false; tip.classList.add('tap'); clearTimeout(this.tipT); this.tipT = setTimeout(() => tip.classList.remove('tap'), 2600); };
+    }
+    {   // a phone's signed-out view: the sign-in folds behind a pill at the top right, so the places can be browsed
+      const pill = this.$('.tt-loginpill');
+      pill.onclick = () => { const on = !this.wrap.classList.contains('gate-open'); this.wrap.classList.toggle('gate-open', on); pill.setAttribute('aria-expanded', String(on)); if (on) this.$('.tt-gate input')?.focus({ preventScroll: true }); };
+    }
     this.$('.tt-invite').onclick = e => { if (this.sel && this.onInvite) this.onInvite(this.sel, e.currentTarget); };
     this.$('.tt-modebtn').onclick = () => this.setMode(this.mode === 'global' ? 'visible' : 'global');
     const people = this.$('.pc-people');
@@ -546,13 +568,15 @@ export class TitleScreen {
     this.reserveRight = !!this.config || this.hubParam === 'stub';   // a hub: the sign-in, then the social column, stand on the right
     this.setPhase('crescent');
     if (this.user) this.onSignedIn(this.user, true);   // the stub, or a session the hub already knows: lit while it lands
+    else if (this.config && this.onGate) this.browse();  // signed out with a hub: the places can be browsed, not started
     await this.land();   // the title and the earth to their places together
     if (this.closed) return;
     this.panelsIn();
-    if (this.phase === 'lit') this.sideIn();                                              // the places and the social column, together
+    if (this.guest) { this.onGate(this); this.sideIn(); }                                 // the sign-in, the places, staggered together
+    else if (this.phase === 'lit') this.sideIn();                                         // the places and the social column, staggered together
     else {
       this.setPhase('gate');
-      if (this.onGate) this.onGate(this);                                                 // the modal (account.js; it handles no hub too)
+      if (this.onGate) { this.onGate(this); this.staggerIn([...this.root.querySelectorAll('.tt-gate .ac-modal, .tt-gate .ac-modal > :not(form), .tt-gate .ac-form > *')]); }   // the modal (account.js; it handles no hub too)
       else this.showExplore(this.config ? 'the sign-in is not built yet' : 'no hub here: explore alone');
     }
   }
@@ -592,14 +616,41 @@ export class TitleScreen {
     h1.style.top = h1.style.transform = h1.style.opacity = h1.style.transition = ''; this.earthU.fade.value = 1; this.earth.position.y = 0;
     this.landed = true;
   }
-  // The gate's panels may come in now (the sign-in and Explore, from the right); taken off when the screen closes.
+  // The gate's panels may come in now (the sign-in and Explore); taken off when the screen closes.
   panelsIn() { if (!this.closed) document.documentElement.classList.add('tt-panels'); }
-  // The side panels, all at once (title.css: the places from the left, html.tt-side the social column from the right,
-  // the same duration and easing), once the title and the earth have landed and the player is signed in or exploring.
+  // The side panels' items, staggered in (staggerIn), once the title and the earth have landed: the places, and the
+  // social column when signed in (html.tt-side), or the sign-in when signed out; again for the social column alone when a
+  // visitor signs in. Each part only once.
   sideIn() {
-    if (this.closed || this.sided) return;
-    this.sided = true;
-    document.documentElement.classList.add('tt-side'); this.wrap.classList.add('listed');
+    if (this.closed) return;
+    const html = document.documentElement, items = [];
+    if (!this.wrap.classList.contains('listed')) {
+      this.wrap.classList.add('listed');
+      this.syncPlaces(innerWidth, innerHeight, 0);   // the rows in their order before they are measured
+      items.push(...this.root.querySelectorAll('.tt-search, .tt-head, .tt-rows > .tt-row, .tt-layers, .tt-attrib'));
+    }
+    if (this.guest) items.push(...this.root.querySelectorAll('.tt-loginpill:not([hidden]), .tt-gate .ac-modal, .tt-gate .ac-modal > :not(form), .tt-gate .ac-form > *'));
+    else if (!html.classList.contains('tt-side')) {
+      html.classList.add('tt-side');
+      const soc = document.getElementById('social');
+      if (soc) items.push(...soc.querySelectorAll('.so-bar, .so-panel:not([hidden]) .so-card, .so-panel:not([hidden]) .so-aside, .so-panel:not([hidden]) .so-find, .so-panel:not([hidden]) .so-tabs, .so-panel:not([hidden]) .so-body > *, .so-panel:not([hidden]) .so-chead, .so-panel:not([hidden]) .so-line'));
+    }
+    this.staggerIn(items);
+  }
+  // Fade each item in rising a little, the topmost first, items at the same height together, the gaps between starts
+  // shrinking (STAGGER_*). Below the window's bottom an item just shows. The starts are kept in staggerLog for debugging.
+  staggerIn(els) {
+    const rm = reducedMotion(), H = innerHeight;
+    const items = [...new Set(els)].filter(e => e?.isConnected && e.getClientRects().length).map(e => ({ e, top: e.getBoundingClientRect().top })).filter(i => i.top < H).sort((a, b) => a.top - b.top);
+    const frames = rm ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 0, transform: `translateY(${STAGGER_RISE}px)` }, { opacity: 1, transform: 'translateY(0)' }];
+    let t = 0, k = 0, at = null;
+    this.staggerLog = [];
+    for (const it of items) {
+      if (at !== null && it.top - at > STAGGER_SAME_PX) { t += Math.max(STAGGER_MIN, STAGGER_FIRST * STAGGER_DECAY ** k); k++; }
+      if (at === null || it.top - at > STAGGER_SAME_PX) at = it.top;
+      it.e.animate(frames, { duration: STAGGER_MS, delay: t, easing: STAGGER_EASE, fill: 'backwards' });
+      this.staggerLog.push({ ms: Math.round(t), top: Math.round(it.top), item: (it.e.className && typeof it.e.className === 'string' ? it.e.className.split(' ')[0] : it.e.tagName.toLowerCase()) + (it.e.textContent ? `: ${it.e.textContent.trim().slice(0, 24)}` : '') });
+    }
   }
   setPhase(ph) {
     this.wrap.classList.remove(`phase-${this.phase}`); this.phase = ph; this.wrap.classList.add(`phase-${ph}`);
@@ -607,16 +658,46 @@ export class TitleScreen {
   showExplore(note = '') {
     if (this.closed || this.phase === 'lit') return;
     const b = this.$('.tt-explore'), p = this.$('.tt-gate-note');
-    b.hidden = false; requestAnimationFrame(() => b.classList.add('on'));
+    b.hidden = false; b.classList.add('on');
     if (note) { p.textContent = note; p.hidden = false; }
+    this.staggerIn([b, p]);
     b.focus({ preventScroll: true });
+  }
+  // Signed out, with a hub: the earth is lit as for a player (the sun round, the map, the dots, the places) and every
+  // place can be chosen and flown to, but none started (Aaron, 2026-11-06: "show all locations and let them navigate
+  // to them but not start them"): no world is built for a visitor (choose skips onSelect), Start is greyed with its
+  // tooltip, and Invite, the friends' faces and the social column wait for the sign-in (onSignedIn), which builds the
+  // chosen place's world then.
+  browse() {
+    if (this.closed || this.phase === 'lit') return;
+    this.guest = true; this.wrap.classList.add('guest');
+    this.$('.tt-loginpill').hidden = false;
+    this.setPhase('lit');
+    const s0 = [...this.sun];
+    this.tween(LAND_MS + 400, u => { this.sun[0] = lerp(s0[0], SUN_LIT[0], u); this.sun[1] = lerp(s0[1], SUN_LIT[1], u); }, easeInOut);
+    this.tween(2200, u => { this.mapFade = u; }, easeInOut, LAND_MS * 0.55);
+    this.face(this.faceId, LAND_MS);
+    this.dots.visible = true;
+    this.tween(1400, u => { this.dotU.uFade.value = u; }, easeInOut, LAND_MS);
+    this.renderBar();
   }
   // Signed in (the hub's `you`, or null exploring alone): the sun swings round to the facing side, the earth turns to
   // face the place, the map and the dots come in; the earth's place does not change (it landed there, or is landing:
   // `landing`, a session already known, lit over the landing's time). Then the side panels come in together: at the
   // landing's end (run), or once the sign-in has faded (SIDE_AFTER_SIGNIN_MS).
   onSignedIn(user, landing = false) {
-    if (this.closed || this.phase === 'lit') return;
+    if (this.closed) return;
+    if (this.guest) {   // a visitor signed in while browsing: Start, Invite and the social column; the chosen place's world builds now
+      if (!user) return;
+      this.guest = false; this.user = user; this.wrap.classList.remove('guest', 'gate-open'); this.$('.tt-loginpill').hidden = true;
+      this.hub.watch?.(true);
+      this.onLit?.(this.user);
+      if (this.sel) this.onSelect?.(this.sel);
+      this.renderBar(); if (this.sel) this.renderPeople();
+      setTimeout(() => this.sideIn(), SIDE_AFTER_SIGNIN_MS);
+      return;
+    }
+    if (this.phase === 'lit') return;
     this.user = user || null;
     this.setPhase('lit');
     this.hub.watch?.(true);
@@ -640,19 +721,21 @@ export class TitleScreen {
   }
   // Fly to look at lat, lon from alt earth radii away: over the earth in an arc whose height grows with the distance
   // flown, the camera tilting and the lens widening as it comes down (tiltFor, fovFor).
-  flyTo(lat, lon, alt, ms = null) {
+  // pace(u): the flight's clock rate at raw progress u (flyToPlace), for a flight timed by something else.
+  flyTo(lat, lon, alt, ms = null, pace = null) {
     this.vyaw = this.vpitch = 0; this.stopFlight(); this.anchor = null;
     const y0 = this.yaw, p0 = this.pitch, a0 = this.alt, dy = wrapPi(yawOfLon(lon) - y0), pT = clamp(lat * DEG, -PITCH_MAX, PITCH_MAX);
     const ang = Math.acos(clamp(latLonToXYZ(lat, lon).dot(latLonToXYZ(p0 / DEG, lonOfYaw(y0))), -1, 1));
     const peak = Math.max(a0, alt, Math.min(2.4, ang * 1.1)), la0 = Math.log(a0), la1 = Math.log(alt), bump = Math.log(peak) - Math.max(la0, la1);
-    ms ??= clamp(1400 + 900 * Math.sqrt(ang) + 250 * Math.abs(la1 - la0), 1400, 4200);
+    const free = clamp(1400 + 900 * Math.sqrt(ang) + 250 * Math.abs(la1 - la0), 1400, 4200);
+    ms ??= pace ? clamp(free * PLACE_SLOW, PLACE_MS[0], PLACE_MS[1]) : free;
     this.altGoal = alt;
     const t = this.flying = this.tween(ms, u => {
       const e = easeInOut(u);
       this.yaw = y0 + dy * e; this.pitch = lerp(p0, pT, e);
       this.alt = this.altGoal = Math.exp(lerp(la0, la1, easeInOut(u)) + Math.max(0, bump) * 4 * u * (1 - u));
     }, u => u);
-    t.view = true;
+    t.view = true; t.rate = pace;
     return t.p;
   }
   stopFlight() {
@@ -660,17 +743,54 @@ export class TitleScreen {
     const t = this.flying; this.flying = null;
     const i = this.tweens.indexOf(t); if (i >= 0) { this.tweens.splice(i, 1); t.done(); }
   }
-  // The pose that shows a place: 10,000 ft over the ground south of the tile, looking north across it at the full tilt,
-  // the tile's south edge just above the bar at the bottom of the view, its north edge high in the view under the card.
+  // Where a chosen tile is framed (Aaron, 2026-11-06: "It should just fill the center of the screen"): the free centre
+  // between the side panels (freeArea, the layout the earth lands in), under the title and the card over the tile, above
+  // Invite, Start and the loading line, less a margin. In CSS pixels: { l, r, t, b }.
+  focusArea(W, H) {
+    const phone = matchMedia('(max-width: 720px)').matches, m = FOCUS_MARGIN[phone ? 1 : 0], [fl, fr] = this.freeArea(W);
+    const title = parseFloat(getComputedStyle(this.$('.tt-title')).getPropertyValue('--tt-top')) || 36;
+    const card = this.card && !this.card.hidden ? this.card.offsetHeight || 96 : 96;
+    const bar = (this.$('.tt-acts')?.offsetHeight || 40) + 64;   // the buttons, the status line, the progress bar and their gaps
+    return { l: fl + m, r: fr - m, t: title + 12 + card + 18, b: H - bar - m };
+  }
+  // The pose that shows a place: the camera looks at the tile's centre from the distance at which the whole tile, as the
+  // camera sees it there (tilted toward the north's horizon as it comes down: tiltFor, fovFor), just fits the focus area;
+  // the view's offset (frame: offX, offY) puts the tile's centre at the area's centre. Found by bisection on the distance.
   chosenPose(id) {
-    const p = this.byId[id], [w, s, e] = p.bounds, h = CHOSEN_H_KM / R_KM;
-    const A = h / Math.cos(TILT_MAX), ahead = A * Math.sin(TILT_MAX), below = h * Math.tan(TILT_MAX - FOV_NEAR / 2 * DEG + 6 * DEG);   // the south edge clear of the bar
-    return { lat: s + (ahead - below) / DEG, lon: (w + e) / 2, alt: A };
+    const p = this.byId[id], [w, s, e, n] = p.bounds, lat = (s + n) / 2, lon = (w + e) / 2;
+    const size = this.renderer.getSize(this._size), W = size.x || innerWidth, H = size.y || innerHeight, a = this.focusArea(W, H);
+    const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(lat * DEG, yawOfLon(lon), 0, 'XYZ'));
+    const pts = [];
+    for (let i = 0; i <= 4; i++) { const u = i / 4; for (const [la, lo] of [[s, w + (e - w) * u], [n, w + (e - w) * u], [s + (n - s) * u, w], [s + (n - s) * u, e]]) pts.push(latLonToXYZ(la, lo).applyQuaternion(q)); }
+    const cam = new THREE.PerspectiveCamera(FOV_FAR, W / H, 1e-5, 80), v = new THREE.Vector3();
+    const offX = (a.l + a.r) / 2 - W / 2, offY = (a.t + a.b) / 2 - H / 2;
+    const fits = A => {
+      const t = tiltFor(A);
+      cam.fov = fovFor(A); cam.near = Math.max(2e-5, A * Math.cos(t) * 0.3);
+      cam.position.set(0, -A * Math.sin(t), 1 + A * Math.cos(t)); cam.up.set(0, 1, 0); cam.lookAt(0, 0, 1);
+      cam.setViewOffset(W, H, -offX, -offY, W, H); cam.updateProjectionMatrix(); cam.updateMatrixWorld();
+      for (const p0 of pts) {
+        v.copy(p0).project(cam);
+        const x = (v.x + 1) / 2 * W, y = (1 - v.y) / 2 * H;
+        if (v.z >= 1 || x < a.l || x > a.r || y < a.t || y > a.b) return false;
+      }
+      return true;
+    };
+    let lo = Math.log(ALT_MIN), hi = Math.log(0.2);
+    if (a.r - a.l < 40 || a.b - a.t < 40 || !fits(Math.exp(hi))) return { lat, lon, alt: 0.01 };   // no room to speak of: a regional view
+    for (let i = 0; i < 40; i++) { const mid = (lo + hi) / 2; if (fits(Math.exp(mid))) hi = mid; else lo = mid; }
+    return { lat, lon, alt: Math.exp(hi) };
   }
   flyToPlace(id) {
     const c = this.chosenPose(id);
     this.card.classList.remove('on');
-    return this.flyTo(c.lat, c.lon, c.alt).then(() => { if (this.sel === id && !this.closed) this.card.classList.add('on'); });
+    // the last stretch keeps behind the loading bar (this.shown, eased and continuous, so the pace never jumps): to pass
+    // raw progress u the build must be about smooth(PACE_FROM, 1, u) along; ahead of that the clock slows smoothly
+    const pace = u => {
+      const load = this.readyIds.has(id) || this.sel !== id || this.guest ? 1 : (this.shown || 0);   // a visitor's: nothing loads, the slow pace alone
+      return clamp(1 - (smooth(PACE_FROM, 1, u) - load) / PACE_SLACK, PACE_MIN, 1);
+    };
+    return this.flyTo(c.lat, c.lon, c.alt, null, pace).then(() => { if (this.sel === id && !this.closed) this.card.classList.add('on'); });
   }
   // A tween run by frame(): fn(eased 0..1) over ms after delay; .p resolves when done (or stopped); .view marks one a drag cancels.
   endTween(t) { const i = t ? this.tweens.indexOf(t) : -1; if (i < 0) return; this.tweens.splice(i, 1); if (this.flying === t) this.flying = null; t.done(); }
@@ -720,7 +840,7 @@ export class TitleScreen {
     this.wrap.classList.add('chosen');
     this.flyToPlace(id);
     this.relief?.show(id);
-    this.onSelect?.(id);
+    if (!this.guest) this.onSelect?.(id);   // a visitor's choice builds nothing (they cannot start it)
   }
   // The card over the place: its name, its region line, the avatars of its players and how many, which opens the list.
   renderCard() {
@@ -775,11 +895,15 @@ export class TitleScreen {
   renderBar() {
     const id = this.sel, ready = !!id && this.readyIds.has(id);
     this.bar.classList.toggle('on', !!id && this.phase === 'lit'); this.bar.classList.toggle('ready', ready);
-    const start = this.$('.tt-start'), inv = this.$('.tt-invite');
-    start.disabled = !ready || this.begun;
+    const start = this.$('.tt-start'), inv = this.$('.tt-invite'), g = !!this.guest;
+    this.bar.classList.toggle('guest', g);
+    start.disabled = !g && (!ready || this.begun);   // greyed, not disabled, for a visitor: it keeps hover and focus for the tooltip
+    start.toggleAttribute('aria-disabled', g); if (g) start.setAttribute('aria-disabled', 'true');
+    this.$('.tt-tip').hidden = !g;
+    inv.hidden = g;
     inv.disabled = !id || this.begun || !this.onInvite;
     inv.title = this.onInvite ? 'invite a group or friends to this place' : 'sign in to invite friends';
-    this.$('.tt-bstatus').textContent = !id ? '' : ready ? `${this.byId[id].name} is ready` : (this.status[id] || 'loading…');
+    this.$('.tt-bstatus').textContent = !id || g ? '' : ready ? `${this.byId[id].name} is ready` : (this.status[id] || 'loading…');
     if (ready && !this.begun && document.activeElement?.closest?.('.tt-places, .tt-search') == null) start.focus({ preventScroll: true });
   }
   // main.js reports "preparing <tileId>: <status>" while a world builds, each step's name (setProgress), and setReady.
@@ -802,7 +926,7 @@ export class TitleScreen {
   // Start: the camera sinks toward the place while the screen fades to black; then onBegin enters the world through
   // main.js's enterWorld, whose own fade (.out) brings the spirit world in from the black.
   begin() {
-    if (this.begun || !this.ready) return;
+    if (this.begun || !this.ready || this.guest) return;
     this.begun = true;
     this.renderBar();
     this.hub.watch?.(false);
@@ -842,7 +966,7 @@ export class TitleScreen {
     this.raf = requestAnimationFrame(this.frameFn);
     const dt = Math.min(0.1, (now - this.last) / 1000); this.last = now; this.time += dt;
     for (const t of this.tweens.slice()) {
-      t.t += dt * 1000; if (t.t < 0) continue;
+      t.t += dt * 1000 * (t.rate && t.t > 0 ? t.rate(Math.min(1, t.t / t.ms)) : 1); if (t.t < 0) continue;
       const u = Math.min(1, t.t / t.ms); t.fn(t.ease(u));
       if (u >= 1) { const i = this.tweens.indexOf(t); if (i >= 0) this.tweens.splice(i, 1); if (this.flying === t) this.flying = null; t.done(); }
     }
@@ -864,10 +988,13 @@ export class TitleScreen {
     cam.up.set(0, 1, 0); cam.lookAt(0, 0, 1);
     cam.near = Math.max(2e-5, A * Math.cos(t) * 0.3); cam.far = 70;
     const [fl, fr] = this.freeArea(W), off = (fl + fr) / 2 - W / 2;
+    // a chosen tile's centre at the focus area's centre (chosenPose), up or down as well as across
+    let offY = 0; if (this.sel && this.phase === 'lit') { const a = this.focusArea(W, H); offY = (a.t + a.b) / 2 - H / 2; }
+    this.offY = this.offY == null ? offY : this.offY + (offY - this.offY) * (1 - Math.exp(-dt * 6));
     const flr = `${Math.round(fl)}px|${Math.round(W - fr)}px`;   // the free space's edges for the CSS: the bar's buttons and the toast centre in it
     if (flr !== this.flr) { this.flr = flr; const [l, rr] = flr.split('|'); document.documentElement.style.setProperty('--we-fl', l); document.documentElement.style.setProperty('--we-fr', rr); }
     this.offX = this.offX == null ? off : this.offX + (off - this.offX) * (1 - Math.exp(-dt * 6));   // set at once on the first frame
-    if (Math.abs(this.offX) > 0.5) cam.setViewOffset(W, H, -this.offX, 0, W, H); else cam.clearViewOffset();
+    if (Math.abs(this.offX) > 0.5 || Math.abs(this.offY) > 0.5) cam.setViewOffset(W, H, -this.offX, -this.offY, W, H); else cam.clearViewOffset();
     cam.updateProjectionMatrix(); cam.updateMatrixWorld();
     // the wheel's zoom keeps the point under the pointer under it (the looked-at point moved by its offset, each frame)
     if (this.anchor && !this.drag) {
