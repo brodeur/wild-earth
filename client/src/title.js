@@ -55,7 +55,7 @@ const DEG = Math.PI / 180, R_KM = 6371;
 const FOV_FAR = 38, FOV_NEAR = 55, TILT_MAX = 54 * DEG;    // the lens and the tilt from space, and at a few kilometres
 const TILT_ALT = [0.03, 0.0009];                           // the altitudes (earth radii) between which they change
 const ALT0 = 2.5, ALT_MIN = 0.6 / R_KM, ALT_MAX = 3.6;      // the camera's distance from the point it looks at
-const CHOSEN_H_KM = 3.05;                                  // a chosen place is seen from 10,000 ft
+const FOCUS_MARGIN = [40, 16];                             // px around a chosen tile inside the free centre (desktop, phone)
 const Y_BELOW = -2.7;                                      // where the earth's centre sits before it lands: off screen, below
 const SUN_CRESCENT = [152 * DEG, 26 * DEG], SUN_LIT = [30 * DEG, 14 * DEG];   // [azimuth about Y from the camera's side, elevation]
 const PITCH_MAX = 85 * DEG;
@@ -660,12 +660,43 @@ export class TitleScreen {
     const t = this.flying; this.flying = null;
     const i = this.tweens.indexOf(t); if (i >= 0) { this.tweens.splice(i, 1); t.done(); }
   }
-  // The pose that shows a place: 10,000 ft over the ground south of the tile, looking north across it at the full tilt,
-  // the tile's south edge just above the bar at the bottom of the view, its north edge high in the view under the card.
+  // Where a chosen tile is framed (Aaron, 2026-11-06: "It should just fill the center of the screen"): the free centre
+  // between the side panels (freeArea, the layout the earth lands in), under the title and the card over the tile, above
+  // Invite, Start and the loading line, less a margin. In CSS pixels: { l, r, t, b }.
+  focusArea(W, H) {
+    const phone = matchMedia('(max-width: 720px)').matches, m = FOCUS_MARGIN[phone ? 1 : 0], [fl, fr] = this.freeArea(W);
+    const title = parseFloat(getComputedStyle(this.$('.tt-title')).getPropertyValue('--tt-top')) || 36;
+    const card = this.card && !this.card.hidden ? this.card.offsetHeight || 96 : 96;
+    const bar = (this.$('.tt-acts')?.offsetHeight || 40) + 64;   // the buttons, the status line, the progress bar and their gaps
+    return { l: fl + m, r: fr - m, t: title + 12 + card + 18, b: H - bar - m };
+  }
+  // The pose that shows a place: the camera looks at the tile's centre from the distance at which the whole tile, as the
+  // camera sees it there (tilted toward the north's horizon as it comes down: tiltFor, fovFor), just fits the focus area;
+  // the view's offset (frame: offX, offY) puts the tile's centre at the area's centre. Found by bisection on the distance.
   chosenPose(id) {
-    const p = this.byId[id], [w, s, e] = p.bounds, h = CHOSEN_H_KM / R_KM;
-    const A = h / Math.cos(TILT_MAX), ahead = A * Math.sin(TILT_MAX), below = h * Math.tan(TILT_MAX - FOV_NEAR / 2 * DEG + 6 * DEG);   // the south edge clear of the bar
-    return { lat: s + (ahead - below) / DEG, lon: (w + e) / 2, alt: A };
+    const p = this.byId[id], [w, s, e, n] = p.bounds, lat = (s + n) / 2, lon = (w + e) / 2;
+    const size = this.renderer.getSize(this._size), W = size.x || innerWidth, H = size.y || innerHeight, a = this.focusArea(W, H);
+    const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(lat * DEG, yawOfLon(lon), 0, 'XYZ'));
+    const pts = [];
+    for (let i = 0; i <= 4; i++) { const u = i / 4; for (const [la, lo] of [[s, w + (e - w) * u], [n, w + (e - w) * u], [s + (n - s) * u, w], [s + (n - s) * u, e]]) pts.push(latLonToXYZ(la, lo).applyQuaternion(q)); }
+    const cam = new THREE.PerspectiveCamera(FOV_FAR, W / H, 1e-5, 80), v = new THREE.Vector3();
+    const offX = (a.l + a.r) / 2 - W / 2, offY = (a.t + a.b) / 2 - H / 2;
+    const fits = A => {
+      const t = tiltFor(A);
+      cam.fov = fovFor(A); cam.near = Math.max(2e-5, A * Math.cos(t) * 0.3);
+      cam.position.set(0, -A * Math.sin(t), 1 + A * Math.cos(t)); cam.up.set(0, 1, 0); cam.lookAt(0, 0, 1);
+      cam.setViewOffset(W, H, -offX, -offY, W, H); cam.updateProjectionMatrix(); cam.updateMatrixWorld();
+      for (const p0 of pts) {
+        v.copy(p0).project(cam);
+        const x = (v.x + 1) / 2 * W, y = (1 - v.y) / 2 * H;
+        if (v.z >= 1 || x < a.l || x > a.r || y < a.t || y > a.b) return false;
+      }
+      return true;
+    };
+    let lo = Math.log(ALT_MIN), hi = Math.log(0.2);
+    if (a.r - a.l < 40 || a.b - a.t < 40 || !fits(Math.exp(hi))) return { lat, lon, alt: 0.01 };   // no room to speak of: a regional view
+    for (let i = 0; i < 40; i++) { const mid = (lo + hi) / 2; if (fits(Math.exp(mid))) hi = mid; else lo = mid; }
+    return { lat, lon, alt: Math.exp(hi) };
   }
   flyToPlace(id) {
     const c = this.chosenPose(id);
@@ -864,10 +895,13 @@ export class TitleScreen {
     cam.up.set(0, 1, 0); cam.lookAt(0, 0, 1);
     cam.near = Math.max(2e-5, A * Math.cos(t) * 0.3); cam.far = 70;
     const [fl, fr] = this.freeArea(W), off = (fl + fr) / 2 - W / 2;
+    // a chosen tile's centre at the focus area's centre (chosenPose), up or down as well as across
+    let offY = 0; if (this.sel && this.phase === 'lit') { const a = this.focusArea(W, H); offY = (a.t + a.b) / 2 - H / 2; }
+    this.offY = this.offY == null ? offY : this.offY + (offY - this.offY) * (1 - Math.exp(-dt * 6));
     const flr = `${Math.round(fl)}px|${Math.round(W - fr)}px`;   // the free space's edges for the CSS: the bar's buttons and the toast centre in it
     if (flr !== this.flr) { this.flr = flr; const [l, rr] = flr.split('|'); document.documentElement.style.setProperty('--we-fl', l); document.documentElement.style.setProperty('--we-fr', rr); }
     this.offX = this.offX == null ? off : this.offX + (off - this.offX) * (1 - Math.exp(-dt * 6));   // set at once on the first frame
-    if (Math.abs(this.offX) > 0.5) cam.setViewOffset(W, H, -this.offX, 0, W, H); else cam.clearViewOffset();
+    if (Math.abs(this.offX) > 0.5 || Math.abs(this.offY) > 0.5) cam.setViewOffset(W, H, -this.offX, -this.offY, W, H); else cam.clearViewOffset();
     cam.updateProjectionMatrix(); cam.updateMatrixWorld();
     // the wheel's zoom keeps the point under the pointer under it (the looked-at point moved by its offset, each frame)
     if (this.anchor && !this.drag) {

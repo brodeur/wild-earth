@@ -218,4 +218,7 @@ html.opening.tt-side .so-card, html.opening.tt-side .so-aside, html.opening.tt-s
   .tt-gate { right:12px; width:calc(100vw - 24px); }
   .tt-rname { font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .tt-acts button { min-width:100px; padding:11px 16px; }
+  /* the free centre is a narrow strip beside the places here: Invite and Start centre on the screen instead */
+  .tt-bar { padding:0; }
+  .tt-progress { margin:0; }
 }

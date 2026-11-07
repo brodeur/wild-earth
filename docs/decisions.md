@@ -6759,3 +6759,28 @@ season".
 - **Elsewhere, kept for the next Start**: a member on another tile or the main screen is told and goes into that season
   at their next Start, and their invitation carries it.
 
+
+## 2026-11-06: a chosen place fills the centre, not the screen (branch claude/home-tile-framing)
+
+Aaron: "Right now clicking on a tile zooms to have the tile fill the whole screen. It should just fill the center of the
+screen." The chosen pose was a fixed 10,000 ft (3.05 km) south of the tile looking north at the full tilt, framed for
+the whole viewport, so the tile ran under the places list and the social column.
+
+- **The focus area** (title.js focusArea): the free centre the earth lands in (freeArea: right of the places column, left
+  of the social column when there is a hub), under the title and the card over the tile, above Invite, Start and the
+  loading line, less a margin (40 px; 16 px at a phone's width).
+- **The pose** (chosenPose): the camera looks at the tile's centre from the distance at which the whole tile, as the
+  camera sees it there (its tilt and lens change with the height: tiltFor, fovFor), just fits the focus area. Found by
+  bisection on the distance against the tile's edges projected through a camera built as frame() builds it. At 1440x900
+  a 10 km tile is seen from about 18.5 km, so the tilt is shallower than before.
+- **Centred in the area, both ways**: the view's offset already put the looked-at point in the free space's horizontal
+  middle (offX); a vertical offset (offY) now puts it at the focus area's vertical middle while a place is chosen,
+  eased like offX.
+- **Phone**: Invite and Start centre on the screen, not in the narrow strip beside the places (they ran off its edge).
+
+Verified in the browser pane on the local viewer by projecting the chosen tile's edges after the flight: at 1440x900
+Upper Hoh Road spans x 364 to 996, the area's full width (width is the limit there), its centre at (680, 458) against the
+area's (680, 459); Yosemite the same within a pixel; at 375x812 the tile fills the 158 px strip beside the places (x 201
+to 359), centred to a pixel. Backing out: the wheel zooms out from the chosen view as before (to about 23,000 km); a
+flight from one chosen place to another arcs out and comes down to the new fit; choosing the place again flies back to
+the same fit. While a place stays chosen and the player zooms out, the vertical offset stays (8 px at 1440x900).
