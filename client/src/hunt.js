@@ -70,7 +70,7 @@ export class Hunt {
     const P = this.flight.pos, A = this.animals;
     this.pickT -= dt;
     if (this.pickT <= 0 || (this.target && (!A.alive?.(this.target) || this.target.dead))) { this.pickT = 0.25; this.target = this.pick(P.x, P.z); }
-    if (this.quarry?.target) this.target = this.quarry.target;   // the selected prey (quarry.js: Tab or a click) is the goal
+    if (this.quarry?.target && !this.quarry.target.plant) this.target = this.quarry.target;   // the selected prey (quarry.js: Tab or a click) is the goal
     const t = this.target, E = this.els;
     if (t) {
       const dx = t.x - P.x, dz = t.z - P.z, d = Math.hypot(dx, dz);

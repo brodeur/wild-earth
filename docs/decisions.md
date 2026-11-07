@@ -6805,3 +6805,30 @@ Seen on the home tile (headless Chrome over CDP): a deer 151 m off, contact at 5
 ("the deer died"), Escape at 1.5 s, W at 1.5 s ("embody called off", target kept): no embody; on a mirror page a deer 100 m
 off embodied at 6.1 s while the host held it for that page. Before the line test moved to the spirit's place and split
 ground from leaves, two galloping deer were dropped at 37-39 m as "lost sight" under the oaks.
+
+## 2026-11-06: plant eaters target their food plants, and eat within reach (branch claude/embody-enter)
+
+Aaron: "Herbivores also can target plants, and must be close enough to the target to eat".
+
+- **Who:** any body that eats plants this season (forage.js on: games.json relations.forage). A predator with no food
+  plants (the puma) keeps animal targets only; an omnivore (the bear, the fox) gets both. Tab cycles the food plants on the
+  screen within 40 m with a line of sight, together with the animals (prey for a hunter, any animal for the rest), out from
+  the centre as prey always cycled; a click on one takes it.
+- **The candidates** are forage.js's own sources, now one target per plant rather than one per species (`candidates`): the
+  staged herbs (forbs.js), the near 3D food shrubs and the impostor field's cached shrubs, and a sward patch at each sample
+  of the scent's rings where the grass there is food.
+- **A plant target** shows its common name and the part this body eats in the target frame ("blue wildrye · leaves",
+  "buckbrush · browse"), no health bar, and a warm ring (gold, not a species' soul colour) at its foot over the general
+  forage glow.
+- **One reach rule** (quarry.js `eatReach`, `canEat`): 0.6 of the body's length (locomotion.json, times its size, as the
+  strikes scale) plus the plant's own reach: a deer 0.9 m plus the plant's (1.85 m at a sward patch, 2.4 m at a buckbrush),
+  a brush rabbit 0.2 m plus the plant's. needs.js feeds only through it (with
+  a plant targeted the act feeds within reach, as a good cell, and names that plant; out of reach it feeds nothing),
+  abilities.js greys the act slot out of reach with the title "get closer to the <plant> (E walks you there)" and lights
+  "ready" in it, and groundControl.js's E out of reach walks the body there (turning on the spot first, a trot far off, a
+  walk in), stops, and eats. Any key takes the body back. With no plant targeted, eating is as before: any food within
+  reach of the body.
+- Seen as a deer on the home tile (headless Chrome): Tab to buckbrush 24.5 m off, the slot greyed "get closer"; E walked it
+  in and it grazed; in the open, Tab to a blue wildrye sward 22 m off, E: in reach at 5.3 s, food from 34% to 57% in
+  4 s of grazing. The first try stopped at the plant without grazing: the walker clears the act while the body still moves
+  faster than 0.5 m/s, so the approach now stops first, then eats.
