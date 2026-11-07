@@ -6826,3 +6826,12 @@ library, none built-in, also under a throttled 4 Mbps / 150 ms network (title up
     head-down grazer). The moose is not due. 797 credits left, 300 in reserve.
   - **Photo choice:** a head-down pose is not separable from the mask's silhouette (two measures, four labelled
     head-down photos inside the head-up range): not adopted.
+- **The due texture jobs, judged by the acceptance rule** (30 credits, approved; balance 797 -> 767; jobs in
+  library/animals/jobs). Each ran the rule's order for a texture fix (the check's correction as a text re-refine,
+  then a photo texture only if that fails; 10 credits a species allowed). *Badger* (Lamar): the new texture has the
+  white stripes; the tail still reads ringed (3 alternations), so the rule still rejects it and the slot keeps its
+  stand-in, as before. *Leopard tortoise*: the re-refine was no better (flanks 8 % in the shell's ground colours), the
+  old model kept and still drawn by its override. *Nile monitor*: the new texture is better (the blackish underside
+  bands now present; the yellowish-green head spots still missing), kept; the recorded override named the old job, so
+  it was carried to the new one with the same reason (otherwise the slot would have fallen to the fence lizard). Next
+  for both reptiles: a free photo search, then a photo texture (10 each).
