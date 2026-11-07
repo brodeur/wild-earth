@@ -549,7 +549,8 @@ tunnelStep; `flight.js` easeOrbit holdPitch; `groundControl.js` updateCamera):
   junction, now weigh the segment's slope by the aim: looking down takes the way down, looking up the way up. On a
   slope up to the old 34 degrees with a level view, the old heading test is unchanged. In a near-vertical shaft with a
   level view, the body keeps the direction it last walked.
-- **Hints.** Starting a dig says "swing the view up over you to dig down", and the dig slot's tooltip says the same.
+- **Hints.** Starting a dig says "swing the view up over you to dig down", and the dig slot's tooltip says the same
+  (since 2026-11-06 the tooltip leads with the arrows: see below).
 
 **Verified** (home tile, port 8786, the underground view, both at the real rate and at 4x):
 - **Vole, straight down.** A simulated pointer drag (20 moves, 400 px down the screen) set the orbit to 1.0. Q dug
@@ -570,4 +571,45 @@ tunnelStep; `flight.js` easeOrbit holdPitch; `groundControl.js` updateCamera):
   steps as before.
 - **Unchanged.** The coyote's pit and the jackrabbit's form already go straight down; the AI diggers keep their own
   slopes, except that an AI rabbit's last few centimetres to its depth are gentler under the new depth rule.
+
+## The arrows steer the dig (2026-11-06)
+
+Aaron: "While digging, the purpose of the arrow keys changes upArrow begins to dig up, downarrow begins to dig down"
+
+With the dig key held (Q, or the vole's E with nothing to eat), the arrow keys stop walking and steer the dig's slope
+instead (`dig.js` digFrom, aimPitch, keyAim; `groundControl.js` input and updateCamera):
+- **↓ and ↑.** ↓ starts angling the face down and ↑ up, from the slope the face has now. Held, it keeps turning, at
+  the same rate the face can curve (about 0.7 rad a second for the vole and the brush rabbit, so level to near straight
+  down takes about 2 s), to the dig's limits: 83 degrees down, 57 up. The depth floor still levels a dig off near the
+  digger's deepest (the vole's 50 cm, the rabbit's 32).
+- **Released.** The slope holds where it was let go, through more digging, a short let-go of Q, and walking.
+- **Left and right.** A and D, or a horizontal mouse drag (the camera's heading), still steer.
+- **The camera.** It stays as a second way to aim, but yields to the keys. Once an arrow has set the slope, the
+  orbit's pitch no longer moves it. A drag that swings the camera 0.08 rad (about 30 px) up or down hands the aim back
+  to the camera; small vertical wobble in a steering drag doesn't. Leaving the tunnel, or starting a new dig from the
+  surface, clears the arrows' slope.
+- **Nothing else fires.** While the dig key is held, the arrows don't walk (no forward or back in `input()`) and don't
+  ease the camera's orbit back behind. Without the dig key they mean what they always did: ↑ walks, ↓ backs, in a
+  tunnel and on the surface.
+- **Taught.** The keys strip shows `Q ↑ ↓ dig up · down` for the vole and the brush rabbit, and their dig slot's
+  tooltip leads with the arrows.
+
+**Verified** (home tile, port 8786, the brush rabbit at its real rate, real keyboard events; the frame strip is
+`docs/dig-arrows-strip.jpg`, seen from a fixed side camera in the underground view):
+- **Down.** Q dug in at the start pitch (-32 degrees at 15 cm). ↓ held turned the face to -72 degrees within 1 s, and
+  the face levelled off at the rabbit's 32 cm floor. After ↓ was released, the held slope stayed down with the floor
+  holding it level.
+- **Level.** A 0.25 s tap of ↑ turned the face from level to 12 degrees up. It held there over the next 2.4 s.
+- **Up and out.** ↑ held turned the face to 57 degrees up and it broke the surface 1.9 m from the first hole.
+- **No walking.** The body stayed at the face all the while: the arrows never walked it.
+- **The camera takes it back.** A camera swing of 0.5 rad returned the aim to the camera.
+- **Without Q.** In the tunnel ↓ backed the rabbit 23 cm, and on the surface ↑ walked it 1.2 m.
+- **Taught.** The strip and the tooltip read as above.
+- All server tests pass.
+
+**Not verified**:
+- **The vole.** It runs the same code at its own rate, and isn't checked on its own.
+- **The gray squirrel.** The brief named it, but it isn't a digger in the game: only the vole, the brush rabbit, the
+  jackrabbit (its form) and the coyote (its pit) dig. The form and the pit go straight down, so the arrows do nothing
+  for them beyond not walking while Q is held.
 

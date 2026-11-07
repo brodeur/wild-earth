@@ -29,7 +29,8 @@ import { Roots } from './digRoots.js';
 // Controls. The vole (groundControl.js, mode 'tunnel'): Q held, or E held with nothing to eat under the nose, digs
 // from the nose at RATE m/s the way the orbit camera looks (aimPitch: the camera swung up over the body digs down, to
 // near straight down; swung low digs up; the camera's heading steers; see DOWN_MAX; from the surface it starts at
-// START_PITCH or steeper until it is under), turning as it turns (A / D or the camera); a dig that brings the face within
+// START_PITCH or steeper until it is under; ↑ / ↓ with the key held turn it up or down: see KEY_DRAG), turning as it
+// turns (A / D or the camera); a dig that brings the face within
 // CHAMBER_NEAR of another node of the system joins them and widens the nodes round into a chamber (up to R_CHAMBER);
 // a face that reaches the surface breaks out as a hole. W walks the tunnel along its centreline (the branch nearest
 // the way it faces at a junction), S backs, W at a hole with no tunnel ahead climbs out; a vole on the surface walking
@@ -73,7 +74,13 @@ const JOIN_PATH = 0.3, R_TURN = 0.07;   // m along the tunnel within which a nod
 // STEER_MAX of behind it) as fast as the face can carry the curve, and the orbit gives up what the body turns, so the
 // view stays still. The face's slope turns at the same rate (D.pitch, aimed by digFrom). A dig nearing the digger's
 // depthMax levels off within 2.5 radii of it (digDir).
-const DOWN_MAX = 1.45, UP_MAX = 1.0, AIM_DZ = 0.04, AIM_DOWN = 0.9, AIM_UP = 0.45, STEER_MAX = 1.75;
+// The arrows (Aaron, 2026-11-06: "While digging, the purpose of the arrow keys changes upArrow begins to dig up,
+// downarrow begins to dig down"): with the dig key held, ↑ turns the face's slope up and ↓ down, from the slope the face
+// has, as fast as the face can carry the curve, to UP_MAX or DOWN_MAX; let go, the slope holds (keyAim). The camera's
+// aim yields to the keys: once an arrow has set the slope, the orbit's pitch no longer moves it until a drag swings the
+// camera KEY_DRAG rad up or down, which hands the aim back to the camera; leaving the tunnel or a new dig from the
+// surface clears it. While the dig key is held the arrows do nothing else (groundControl input: not the walk).
+const DOWN_MAX = 1.45, UP_MAX = 1.0, AIM_DZ = 0.04, AIM_DOWN = 0.9, AIM_UP = 0.45, STEER_MAX = 1.75, KEY_DRAG = 0.08;
 const START_PITCH = -0.55, STEP = 0.02, BEND = 0.2, SEG_MAX = 0.35;
 const PIT_R0 = 0.1, PIT_RK = 0.45, PIT_MAX = 0.6, PIT_STEP = 0.01, PAW_AHEAD = 1.1;   // PAW_AHEAD: body half-lengths ahead of the centre
 const COLLAR_UP = 0.45;    // where the light down a hole comes from: radii over the ground
@@ -562,7 +569,7 @@ export class Dig {
       const gy = this.groundY(nx, nz), id = this.newId();
       if (this.nearestNode(nx, gy - r, nz, CHAMBER_NEAR + r - R_TUBE)) { gc.say('a tunnel runs just here'); return false; }
       if (!this.dispatch({ type: 'hole', id, x: nx, y: gy - r, z: nz, r })) return false;
-      const n = this.node(id); this.tun = { a: n.id, b: n.id, t: 1, prev: -1 }; this.pd.face = 0; this.pd.startDown = true;
+      const n = this.node(id); this.tun = { a: n.id, b: n.id, t: 1, prev: -1 }; this.pd.face = 0; this.pd.startDown = true; this.keyAim = null;
       gc.mode = 'tunnel'; gc.v = 0; gc.sit = 0; gc.resting = false; gc.actT = 0; this.soilAt(nx, -nz);
       gc.say(spec.nest ? 'digging a burrow: swing the view up over you to dig down' : 'digging in: swing the view up over you to dig down');
       return true;
@@ -625,7 +632,7 @@ export class Dig {
     const gc = this.gc, f = gc.flight; if (h.r < (DIGGERS[gc.code]?.fit ?? 0)) return;   // too narrow for this body
     // on the first segment down, facing along it, carrying some of the run in (a walk in the tunnel at most 1.5 m/s)
     const s = h.segs.length ? this.node(this.otherEnd(h.segs[0], h)) : null;
-    this.tun = s ? { a: h.id, b: s.id, t: 0, prev: -1 } : { a: h.id, b: h.id, t: 1, prev: -1 }; this.pd.face = 0; this.pd.startDown = false;
+    this.tun = s ? { a: h.id, b: s.id, t: 0, prev: -1 } : { a: h.id, b: h.id, t: 1, prev: -1 }; this.pd.face = 0; this.pd.startDown = false; this.keyAim = null;
     if (s) f.yaw = Math.atan2(-(s.x - h.x), -(s.z - h.z));
     const en = this.enter ||= { from: new THREE.Vector3(), k: 1, left: 0 };
     en.from.copy(f.pos); en.k = 0; en.left = s ? ENTER_WALK * gc.S.half * gc.size : 0;
@@ -768,9 +775,11 @@ export class Dig {
     const dx = B.x - A.x, dz = B.z - A.z, l2 = dx * dx + dz * dz, t = l2 > 1e-8 ? clamp(((x - A.x) * dx + (z - A.z) * dz) / l2, -1, 2) : 0, tr = clamp(t, 0, 1);
     return A.y + (B.y - A.y) * (l2 > 1e-8 ? t : 0) - (A.r + (B.r - A.r) * tr) * 0.85;
   }
-  // the player's aim pitch (see DOWN_MAX): the orbit camera's pitch off its set-up, as a slope; + the flight's own pitch
+  // the player's aim pitch (see DOWN_MAX): the arrows' slope while it holds (keyAim), else the orbit camera's pitch off
+  // its set-up, as a slope; + the flight's own pitch
   aimPitch() {
     const f = this.gc.flight, op = f.orbitPitch || 0;
+    if (this.keyAim != null) { if (Math.abs(op - this.keyOp) < KEY_DRAG) return this.keyAim; this.keyAim = null; }   // the arrows' slope, until a drag takes the aim back
     const a = op > AIM_DZ ? -Math.min(1, (op - AIM_DZ) / (AIM_DOWN - AIM_DZ)) * DOWN_MAX : op < -AIM_DZ ? Math.min(1, (-op - AIM_DZ) / (AIM_UP - AIM_DZ)) * UP_MAX : 0;
     return clamp(a + (f.pitch || 0), -DOWN_MAX, UP_MAX);
   }
@@ -863,12 +872,18 @@ export class Dig {
     const gc = this.gc, f = gc.flight, T = this.tun, D = this.pd, spec = DIGGERS[gc.code] || DIGGERS.microtus_californicus;
     D.r = spec.r !== R_TUBE ? spec.r : undefined; D.rate = spec.rate; D.depthMax = spec.depth; D.nest = spec.nest;
     if (!this.wantNewDig(n, f)) { this.digging = 0; gc.digging = 0; return; }
+    const wP = spec.rate * this.mult / (R_TURN * spec.r / R_TUBE) * dt;   // the most the face's slope turns this frame
+    const K = f.keys, ka = (K.has('ArrowUp') ? 1 : 0) - (K.has('ArrowDown') ? 1 : 0);   // the arrows (see KEY_DRAG)
+    if (ka) {
+      if (!this.kaWas || this.keyAim == null) { this.keyAim = this.digging && D.d ? D.d.phi : this.aimPitch(); D.pitch = this.keyAim; }   // from the slope the face has
+      this.keyAim = clamp(this.keyAim + ka * wP, -DOWN_MAX, UP_MAX); this.keyOp = f.orbitPitch || 0;
+    }
+    this.kaWas = !!ka;
     const aim = this.aimPitch();
     if (n.hole && n.segs.length && this.digDir(n, f.yaw, aim, D).y > -0.15) {   // at a hole the way up is the open air: W climbs out
       this.digging = 0; gc.digging = 0; if (!this.toldOut) { this.toldOut = true; gc.say('at the surface: W climbs out'); } return;
     }
     // the face's slope toward the aim, turning as fast as the face can carry the curve (a fresh dig takes it at once)
-    const wP = spec.rate * this.mult / (R_TURN * spec.r / R_TUBE) * dt;
     D.pitch = this.digging && Number.isFinite(D.pitch) ? D.pitch + clamp(aim - D.pitch, -wP, wP) : aim;
     this.toldOut = false; this.digging = 1; gc.digging = 1; gc.actT = 0;
     const d = this.digDir(n, f.yaw, D.pitch, D);
@@ -884,7 +899,7 @@ export class Dig {
   }
   leaveHole(n) {
     const gc = this.gc, P = gc.flight.pos, gy = n.y + n.r;
-    gc.mode = 'ground'; P.set(n.x, gy, n.z); gc.v = 0.2; gc.digging = 0; this.digging = 0; this.tun = null; gc.last.copy(P);   // the camera was above all along: no cut
+    this.keyAim = null; gc.mode = 'ground'; P.set(n.x, gy, n.z); gc.v = 0.2; gc.digging = 0; this.digging = 0; this.tun = null; gc.last.copy(P);   // the camera was above all along: no cut
     this.outOf = n;   // not straight back down it: ignored until the body is off it
     gc.say('up on the surface');
   }

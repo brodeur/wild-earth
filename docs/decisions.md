@@ -6774,3 +6774,25 @@ changes. The client asks for it first (15 s), and a host without the endpoint (a
 one as before, now 8 s each. Measured on the local server with the cache off: one request, 193 species from the
 library, none built-in, also under a throttled 4 Mbps / 150 ms network (title up at 12.9 s there).
 `tests/test_species_bundle.py` covers the bundle (every listed id, the files unchanged, gzip, plain, 304).
+
+## 2026-11-06: while digging, ↑ and ↓ steer the dig's slope; the camera yields to them (docs/game-dig.md "The arrows steer the dig")
+
+Aaron: "While digging, the purpose of the arrow keys changes upArrow begins to dig up, downarrow begins to dig down"
+
+With the dig key held:
+- **The arrows turn the face's slope.** ↑ turns it up and ↓ down, from the slope the face has now, at the rate the face
+  can curve.
+- **Released, it holds.** Let go and the slope stays where it was.
+- **No walking.** The arrows don't walk while Q is held.
+
+The camera's pitch steering stays, but the last input wins. An arrow takes the aim from the camera and keeps it until a
+deliberate vertical drag (0.08 rad of orbit, about 30 px) hands it back.
+
+Considered:
+- **The camera only adds to the arrows.** Rejected: the camera's tilt is held underground, so a view left up over the
+  body would keep pulling the slope down against the keys.
+- **The keys win only while held.** Rejected: releasing would snap the slope back to the camera's, which breaks
+  "releasing holds the current angle".
+- **The arrows set a target that runs ahead of the face.** Rejected: on release the face would keep turning. The arrows
+  instead turn the slope at the face's own curve rate, so what the player sees is what holds.
+

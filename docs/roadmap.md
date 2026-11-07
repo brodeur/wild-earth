@@ -421,7 +421,7 @@ browser stays the renderer.
   meet join, the caps raised to 5,000 nodes. Roots hang from the ceilings under the grass, the herbs (soap plant's
   bulb, blue dicks' corm), the shrubs and the oaks; E eats them, F pulls a herb down (the `pull` event, per tile and
   season). The dig goes the way the orbit camera looks (2026-11-05): the view up over the body digs down, to nearly
-  straight down, low digs up, round steers. Next: the AI voles eating roots and pulling plants; roots that slow a dig; the vole's body lit by the dirt; the animals and bodies shared so another player's
+  straight down, low digs up, round steers; with Q held ↑ / ↓ angle it up or down (2026-11-06). Next: the AI voles eating roots and pulling plants; roots that slow a dig; the vole's body lit by the dirt; the animals and bodies shared so another player's
   vole is seen in the tunnel; a server check that a dig is near its digger.
 - Multiplayer, designed 2026-11-01 (`docs/multiplayer.md`, from Aaron's spec): the title on stars, the earth
   rising as a crescent, the sign-in (username and password, Discord; Google and Apple greyed until their
