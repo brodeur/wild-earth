@@ -3,6 +3,7 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { uniforms as atmo } from './atmosphere.js';
 import { skeletonOf } from './gait.js';
+import { segmentWings, scaleWing, wingDecl, WING_BODY, HWI, MASS, FAMILY } from './birdWing.js';
 
 // Procedural low-poly animals for the ambient population (animals.js). Each species is one merged,
 // non-indexed geometry built from scaled spheres, boxes and cones, flat shaded, coloured per vertex.
@@ -52,7 +53,7 @@ import { skeletonOf } from './gait.js';
 // gait, pose, flick; aAnim2.w the gait selector) are turned into clips by driveClips below, on the CPU, so animals.js
 // and groundControl.js change nothing in how they think; the model's drop is 0 (the bedded clip carries its own).
 
-export const PART = { BODY: 0, LEG_A: 1, LEG_B: 2, TAIL: 3, WING_L: 4, WING_R: 5, HEAD: 6, CHEST: 7, TAIL_TIP: 8, HAND_L: 9, HAND_R: 10 };
+export const PART = { BODY: 0, LEG_A: 1, LEG_B: 2, TAIL: 3, WING_L: 4, WING_R: 5, HEAD: 6, CHEST: 7, TAIL_TIP: 8, HAND_L: 9, HAND_R: 10, TIP_L: 11, TIP_R: 12 };
 
 const _m = new THREE.Matrix4(), _q = new THREE.Quaternion(), _e = new THREE.Euler(), _v = new THREE.Vector3(), _s = new THREE.Vector3();
 
@@ -83,6 +84,10 @@ function finish(pieces, anim) {
   return { geometry, tris: geometry.attributes.position.count / 3, ...anim };
 }
 const mirror = (fn) => [fn(1), fn(-1)];   // left (+x) and right (-x) copies
+// A procedural bird's wings: its slabs (wingSlab, or the woodpeckers' and the raven's boxes) give the span, chord and
+// colours; birdWing.js makes them the segmented wing on the shared wing rig (the species' Hand-Wing Index and mass from
+// AVONET). mode 'fold' a bird that perches (pose folds the wing against the body), 'stoop' a soarer (pose sweeps it back).
+const winged = (m, code, mode = 'fold') => segmentWings(m, { hwi: HWI[code], mass: MASS[code], family: FAMILY[code], mode, poseW: m.pose[3] });
 
 // Western gray squirrel, ~0.5 m nose to tail tip: grey back, white belly, a long plume of a tail that
 // streams behind when running and curls up over the back when sitting (pose). Bounding gait: front
@@ -149,7 +154,7 @@ export function buildWoodpecker(female = false) {
     ...mirror(s => box({ color: sheen, part: s > 0 ? PART.WING_L : PART.WING_R, pivot: [s * 0.03, 0.06, 0], pos: [s * 0.115, 0.06, 0], scale: [0.17, 0.006, 0.06] })),
     ...mirror(s => box({ color: white, part: s > 0 ? PART.WING_L : PART.WING_R, pivot: [s * 0.03, 0.06, 0], pos: [s * 0.15, 0.06, 0.002], scale: [0.04, 0.0085, 0.045] })),
   ];
-  return finish(p, { amp: [0, 0.25, 0.45, 1.1], pose: [1, 0, 0, 1.5] });
+  return winged(finish(p, { amp: [0, 0.25, 0.45, 1.1], pose: [1, 0, 0, 1.5] }), 'melanerpes_formicivorus');
 }
 
 // Common raven, ~0.6 m, 1.25 m span: black throughout, heavy beak, wedge tail, long fingered wings
@@ -167,7 +172,7 @@ export function buildRaven() {
     ...mirror(s => box({ color: black, ...wing(s), pos: [s * 0.48, 0.1, -0.025], scale: [0.29, 0.01, 0.17] })),
     ...mirror(s => box({ color: 0x202024, pos: [s * 0.03, 0.02, 0.02], scale: [0.014, 0.05, 0.014] })),
   ];
-  return finish(p, { amp: [0, 0.2, 0.4, 0.75], pose: [1, -0.25, 0, 1.45] });
+  return winged(finish(p, { amp: [0, 0.2, 0.4, 0.75], pose: [1, -0.25, 0, 1.45] }), 'corvus_corax');
 }
 
 // Black-tailed deer, ~1 m at the shoulder: tan-grey coat, paler belly and rump, the black tail that
@@ -346,7 +351,7 @@ export function buildTurkey() {
     ...mirror(s => wingSlab(s, wp(s), { dx: 0.32, len: 0.55, chord: 0.3, thick: 0.02, dihedral: 0.05, color: sheen, under: bar })).flat(),
   ];
   // wings fold hard on the ground (pose 1.5); the head dips far to peck (amp.z) on the long neck
-  return finish(p, { amp: [0.55, 0.25, 0.9, 1.0], pose: [1, 0, 0, 1.5] });
+  return winged(finish(p, { amp: [0.55, 0.25, 0.9, 1.0], pose: [1, 0, 0, 1.5] }), 'meleagris_gallopavo');
 }
 // California ground squirrel, the fallback for ground_squirrel.glb (?gsquirrel=proc): 0.26 m head and body on short
 // legs, mottled grey-brown with a pale mantle and a buff belly, a flattened tail two thirds of the body held out
@@ -760,7 +765,26 @@ const urls = { jay: '../assets/scrubjay.glb', quail: '../assets/quail.glb', squi
 function rigModel(name, opts, url = new URL(urls[name], import.meta.url), rigName = name) {
   const r = RIG[name];
   return loadTiers(url, { amp: r.amp, pose: r.pose, drop: r.drop || 0, poseMax: r.poseMax || 1, gait: !!r.gait, rig: { name: rigName, template: name, k: { ...r.k } } }, opts)
-    .then(m => { m.rig.piv = m.extras.rig || {}; m.rig.kind = m.rig.piv.kind; m.variant = m.tiers[0].hasAttribute('aColorB'); eatReach(m); return m; });
+    .then(m => { m.rig.piv = m.extras.rig || {}; m.rig.kind = m.rig.piv.kind; m.variant = m.tiers[0].hasAttribute('aColorB'); birdWings(m, name, opts); eatReach(m); return m; });
+}
+// The species of a hand-built bird's file that carries none in its extras (for its Hand-Wing Index and mass: birdWing.js)
+const RIG_CODE = { jay: 'aphelocoma_californica', quail: 'callipepla_californica', mquail: 'oreortyx_pictus', stjay: 'cyanocitta_stelleri',
+  hawk: 'buteo_jamaicensis', vulture: 'cathartes_aura', turkey: 'meleagris_gallopavo', wren: 'troglodytes_pacificus', grayjay: 'perisoreus_canadensis',
+  chickadee: 'poecile_rufescens', owl: 'strix_varia', kingfisher: 'megaceryle_alcyon', eagle: 'haliaeetus_leucocephalus', heron: 'ardea_herodias',
+  merganser: 'mergus_merganser', robin: 'turdus_migratorius', starling: 'sturnus_vulgaris', vthrush: 'ixoreus_naevius', junco: 'junco_hyemalis',
+  kinglet: 'regulus_satrapa', flycatcher: 'empidonax_difficilis', screechowl: 'megascops_kennicottii', sawwhet: 'aegolius_acadicus',
+  osprey: 'pandion_haliaetus', sharpie: 'accipiter_striatus', merlin: 'falco_columbarius', gwgull: 'larus_glaucescens', cagull: 'larus_californicus',
+  wegull: 'larus_occidentalis', mallard: 'anas_platyrhynchos', grouse: 'dendragapus_fuliginosus' };
+// A drawn bird on the shared wing rig (birdWing.js): a standing mesh's flight cards (collapse 1) made the segmented wing,
+// folding against the body and tucked inside it (the mesh's own folded wing shows); a flight mesh (collapse 0: the
+// soarers) keeps its own wings, on the rig with its file's shoulder and wrist. The ground raven's and crow's folded wings
+// (RIG_GROUND) are mesh and stay as they are. opts.hwi: a fauna slot's own index (loadFaunaModel).
+function birdWings(m, name, opts) {
+  const r = m.rig, piv = r.piv;
+  if (r.kind !== 'bird' || r.k.ground || !Array.isArray(piv.wing) || r.k.handLag === undefined) return;
+  const code = m.extras.species || RIG_CODE[name];
+  if (r.k.collapse === 0) segmentWings(m, { sh: piv.wing, wristAt: piv.wrist, mode: 'stoop', keep: true, poseW: m.pose[3] });
+  else segmentWings(m, { sh: piv.wing, hwi: Number.isFinite(opts?.hwi) ? opts.hwi : HWI[code], mass: m.extras.mass_kg ?? MASS[code], family: opts?.family ?? FAMILY[code], ownFold: true });
 }
 // A loader on RIG[name], tagged with it (faunaTemplate reads the tag: the template a kin is drawn with)
 function rigLoader(name, opts) { return Object.assign(() => rigModel(name, opts), { rig: name, skin: !!opts?.skin }); }
@@ -803,11 +827,11 @@ export function faunaTemplate(kinLoad, { role, archetype, mass_kg, model } = {})
 // built ones' (the cougar's 0.29 m x (1 - 0.35)); a skinned model drops nothing (the clips and the engine bed it).
 const FAUNA_PATH = /^[A-Za-z0-9_\-/]+\.glb$/;
 export const REPTILE_REF_M = 0.18;   // the reptile templates' body length (the fence lizard's, snout to tail tip)
-export function loadFaunaModel(path, template = 'lion', { skin = true } = {}) {
+export function loadFaunaModel(path, template = 'lion', { skin = true, hwi = null, family = null } = {}) {
   if (typeof path !== 'string' || !FAUNA_PATH.test(path) || path.split('/').some(p => !p || p === '.' || p === '..'))
     return Promise.reject(new Error(`fauna model: bad path '${path}'`));
   const name = RIG[template] ? template : 'lion';
-  return rigModel(name, { skin }, new URL('../assets/' + path, import.meta.url), `${name}|${path}`).then(m => {
+  return rigModel(name, { skin, hwi, family }, new URL('../assets/' + path, import.meta.url), `${name}|${path}`).then(m => {
     const fore = m.rig.piv?.fore;
     if (!m.skin && Array.isArray(fore) && Number.isFinite(fore[1])) m.drop = Math.max(0, fore[1] * (1 - (m.pose?.[0] || 0)));
     // a reptile template's lengths (the wave's and the C-bend's metres at the tail tip) are a 0.18 m body's: the model's own
@@ -947,7 +971,9 @@ export function scaledModel(m, s) {
   g.attributes.position.array.forEach((v, i, a) => { a[i] = v * s; });
   const pv = g.getAttribute('aPivot'); if (pv) pv.array.forEach((v, i, a) => { a[i] = v * s; });
   g.computeBoundingSphere(); g.computeBoundingBox();
-  return { ...m, geometry: g, drop: (m.drop || 0) * s };
+  const out = { ...m, geometry: g, drop: (m.drop || 0) * s };
+  scaleWing(out, s);
+  return out;
 }
 
 // Hairy woodpecker (Leuconotopicus villosus), ~0.23 m, procedural as the acorn woodpecker is (its five Meshy candidates never
@@ -973,7 +999,7 @@ export function buildHairyWoodpecker() {
     ...mirror(s => box({ color: black, part: s > 0 ? PART.WING_L : PART.WING_R, pivot: [s * 0.032, 0.064, 0], pos: [s * 0.12, 0.064, 0], scale: [0.18, 0.006, 0.065] })),
     ...mirror(s => box({ color: white, part: s > 0 ? PART.WING_L : PART.WING_R, pivot: [s * 0.032, 0.064, 0], pos: [s * 0.13, 0.065, -0.012], scale: [0.12, 0.0068, 0.012] })),
   ];
-  return finish(p, { amp: [0, 0.25, 0.45, 1.1], pose: [1, 0, 0, 1.5] });
+  return winged(finish(p, { amp: [0, 0.25, 0.45, 1.1], pose: [1, 0, 0, 1.5] }), 'leuconotopicus_villosus');
 }
 
 // Pacific banana slug (Ariolimax columbianus), procedural (no mesh needed; docs/pipeline.md "gastropod"): 0.18 m long,
@@ -1035,7 +1061,7 @@ export function buildQuail() {
     ...mirror(s => wingSlab(s, wp(s), { dx: 0.085, len: 0.17, chord: 0.085, thick: 0.008, dihedral: 0.05, color: wingc, under: 0xb7a58b })).flat(),
   ];
   // wings fold hard (pose 1.5) on the ground, where they read as part of the body
-  return finish(p, { amp: [0.9, 0.25, 0.5, 1.0], pose: [0.5, 0, 0, 1.5] });
+  return winged(finish(p, { amp: [0.9, 0.25, 0.5, 1.0], pose: [0.5, 0, 0, 1.5] }), 'callipepla_californica');
 }
 
 // Mountain quail, ~0.27 m: the California quail's body a little larger and longer, slate blue-grey head and breast, a
@@ -1061,7 +1087,7 @@ export function buildMountainQuail() {
     ...mirror(s => box({ color: 0x7a7672, part: s > 0 ? PART.LEG_A : PART.LEG_B, pivot: [s * 0.022, 0.05, 0.005], pos: [s * 0.022, 0.025, 0.005], scale: [0.011, 0.05, 0.012] })),
     ...mirror(s => wingSlab(s, wp(s), { dx: 0.075, len: 0.15, chord: 0.088, thick: 0.008, dihedral: 0.05, color: back, under: 0xa89878 })).flat(),
   ];
-  return finish(p, { amp: [0.9, 0.25, 0.5, 1.0], pose: [0.5, 0, 0, 1.5] });
+  return winged(finish(p, { amp: [0.9, 0.25, 0.5, 1.0], pose: [0.5, 0, 0, 1.5] }), 'oreortyx_pictus');
 }
 
 // California scrub-jay, ~0.29 m: blue head, wings and long tail, grey-brown back, whitish below.
@@ -1079,7 +1105,7 @@ export function buildJay() {
     ...mirror(s => box({ color: 0x2b2b2e, part: s > 0 ? PART.LEG_A : PART.LEG_B, pivot: [s * 0.016, 0.03, 0], pos: [s * 0.016, 0.015, 0], scale: [0.007, 0.03, 0.008] })),
     ...mirror(s => wingSlab(s, wp(s), { dx: 0.08, len: 0.16, chord: 0.075, thick: 0.007, dihedral: 0.04, color: blue, under: 0x8a8f99 })).flat(),
   ];
-  return finish(p, { amp: [0.5, 0.35, 0.4, 1.0], pose: [0.6, 0.15, 0, 1.45] });
+  return winged(finish(p, { amp: [0.5, 0.35, 0.4, 1.0], pose: [0.6, 0.15, 0, 1.45] }), 'aphelocoma_californica');
 }
 
 // Steller's jay, ~0.31 m: the fallback for the drawn mesh (tools/build_stellersjay.py), buildJay a size up with
@@ -1099,7 +1125,7 @@ export function buildStellersJay() {
     ...mirror(s => box({ color: 0x141416, part: s > 0 ? PART.LEG_A : PART.LEG_B, pivot: [s * 0.017, 0.033, 0], pos: [s * 0.017, 0.016, 0], scale: [0.007, 0.033, 0.008] })),
     ...mirror(s => wingSlab(s, wp(s), { dx: 0.09, len: 0.18, chord: 0.08, thick: 0.007, dihedral: 0.04, color: blue, under: 0x4a5f80 })).flat(),
   ];
-  return finish(p, { amp: [0.5, 0.35, 0.4, 1.0], pose: [0.6, 0.15, 0, 1.45] });
+  return winged(finish(p, { amp: [0.5, 0.35, 0.4, 1.0], pose: [0.6, 0.15, 0, 1.45] }), 'cyanocitta_stelleri');
 }
 
 // Red-tailed hawk, ~0.55 m, 1.25 m span: dark brown above with paler mottled scapulars and the
@@ -1120,7 +1146,7 @@ export function buildHawk() {
     ...mirror(s => wingSlab(s, wp(s), { dx: 0.47, dz: -0.01, len: 0.32, chord: 0.24, thick: 0.012, dihedral: 0.07, color: brown, under: 0xd8ccb6 })).flat(),
     ...mirror(s => box({ color: 0xc9b25a, pos: [s * 0.035, 0.03, 0.02], scale: [0.016, 0.05, 0.016] })),
   ];
-  return finish(p, { amp: [0, 0.15, 0.3, 0.6], pose: [1, -0.2, 0, 1.4] });
+  return winged(finish(p, { amp: [0, 0.15, 0.3, 0.6], pose: [1, -0.2, 0, 1.4] }), 'buteo_jamaicensis', 'stoop');
 }
 
 // Turkey vulture, ~0.7 m, 1.75 m span: blackish-brown above with browner flight feathers, the
@@ -1142,7 +1168,7 @@ export function buildVulture() {
     ...mirror(s => wingSlab(s, wp(s), { dx: 0.56, dz: -0.02, len: 0.38, chord: 0.26, thick: 0.012, dihedral: D, color: flight, under: silver })).flat(),
     ...mirror(s => wingSlab(s, wp(s), { dx: 0.82, dz: -0.04, len: 0.16, chord: 0.15, thick: 0.01, dihedral: D + 0.08, color: black, under: 0x8d8d88 })).flat(),
   ];
-  return finish(p, { amp: [0, 0.15, 0.25, 0.45], pose: [1, 0, 0, 1.3] });
+  return winged(finish(p, { amp: [0, 0.15, 0.25, 0.45], pose: [1, 0, 0, 1.3] }), 'cathartes_aura', 'stoop');
 }
 
 // Lambert, flat shaded, vertex coloured, patched by the atmosphere (sun, sky, cloud shadow, haze)
@@ -1268,6 +1294,7 @@ vec3 transformed = animR * animP + aPivot;
 #ifdef ANIM_WEIGHTED
   transformed = mix(animPos, transformed, aPartW);
 #endif
+${WING_BODY}
 #ifdef ANIM_RIG
   // one-level parent chain: the child's own pose first (above), then its parent's rotation about the parent's pivot
   #ifdef RIG_CHEST
@@ -1660,7 +1687,7 @@ function antlerDecl(model) {
 function extraDecl(model) {
   let d = hasAnim2(model) && !model.rig ? 'attribute vec4 aAnim2;\n' : '';
   if (model.gait) d += '#define ANIM_GAIT\n';
-  return d + antlerDecl(model) + rigDecl(model);
+  return d + antlerDecl(model) + rigDecl(model) + wingDecl(model, { bow: !!model.rig });
 }
 function rigDecl(model) {
   const r = model.rig; if (!r) return '';
@@ -1671,7 +1698,7 @@ function rigDecl(model) {
   for (const k of RIG_KEYS) d += `const float rig_${k} = ${f(r.k[k])};\n`;
   if (piv.chest) d += `#define RIG_CHEST\nconst vec3 rig_pivChest = ${v3(piv.chest)};\n`;
   if (piv.tail_tip) d += `#define RIG_TAILTIP\nconst vec3 rig_pivTail = ${v3(piv.tail)};\n`;
-  if (piv.wing) d += `#define RIG_WING\nconst vec3 rig_pivWing = ${v3(piv.wing)};\n`;
+  if (piv.wing && !model.wing) d += `#define RIG_WING\nconst vec3 rig_pivWing = ${v3(piv.wing)};\n`;
   if (r.k.eatTip > 0 && r.eatHip) d += `#define RIG_EATTIP\nconst vec3 rig_pivHip = ${v3(r.eatHip)};\n`;
   if (model.variant) d += '#define ANIM_VARIANT\nattribute vec3 aColorB;\n';
   if (r.kind === 'reptile') {   // the reptile template's spine and patches (extras.rig; see REPTILE_BODY)
@@ -1693,7 +1720,7 @@ function rigDecl(model) {
 // (the skin path declares aAnim too, for the decay: the deer's twelve attribute slots, the buck's fifteen, under Metal's sixteen)
 const animDecl = model => (model.skin ? 'attribute vec4 aAnim;\n' + (model.antler ? 'attribute vec4 aAnim2;\n' : '') + antlerDecl(model) + skinDecl(model)
   : (model.weighted ? '#define ANIM_WEIGHTED\nattribute float aPartW;' : '') + ANIM_DECL_BASE + '\n' + extraDecl(model)) + decayConsts(model).decl;
-const programKey = model => `${model.amp.join(',')}|${model.pose.join(',')}|${model.weighted ? 'w' : ''}|${model.rig ? model.rig.name : ''}|${model.gait ? 'g' : ''}|${model.antler ? 'a' : ''}|${model.skin ? `s${model.skin.ratio.toFixed(4)}:${model.skin.key}${model.live ? ':live' : ''}` : ''}|${decayConsts(model).key}`;
+const programKey = model => `${model.amp.join(',')}|${model.pose.join(',')}|${model.weighted ? 'w' : ''}|${model.rig ? model.rig.name : ''}|${model.gait ? 'g' : ''}|${model.antler ? 'a' : ''}|${model.skin ? `s${model.skin.ratio.toFixed(4)}:${model.skin.key}${model.live ? ':live' : ''}` : ''}|${decayConsts(model).key}${model.wing ? '|' + model.wing.key : ''}`;
 export { hasAnim2 };
 // The snake template's centreline on the CPU (SNAKE_DECL's snTheta and snCurve, line for line, without SN_PATH): for a
 // snake model (model.rig.kind 'snake') posed by (phase, gait, pose, flick) and (bend, hand), the SN_N + 1 nodes from the
@@ -1749,14 +1776,14 @@ function underwingSpec(model) {
   let lead = -Infinity, trail = Infinity;
   if (pa) for (let i = 0; i < pa.count; i++) { const p = Math.round(pa.getX(i)); if (p === PART.WING_L || p === PART.WING_R) { const z = pos.getZ(i); if (z > lead) lead = z; if (z < trail) trail = z; } }
   if (!(lead > trail)) { lead = 0.1; trail = -0.1; }
-  return { lead, inv: 1 / (lead - trail), perch: !(r && r.k.collapse === 0) };
+  return { lead, inv: 1 / (lead - trail), perch: model.wing ? model.wing.mode === 'fold' : !(r && r.k.collapse === 0) };
 }
 const UNDERWING_VERT = `
 #ifdef ANIM_UNDERWING
 {
   int uwPart = int(aPart + 0.5);
   float uwChord = clamp((uw_lead - position.z) * uw_invChord, 0.0, 1.0);   // 0 the leading edge, 1 the trailing edge
-  float uwThin = (uwPart == 9 || uwPart == 10) ? mix(0.8, 1.0, uwChord)
+  float uwThin = (uwPart >= 9 && uwPart <= 12) ? mix(0.8, 1.0, uwChord)
     : (uwPart == 4 || uwPart == 5) ? mix(0.35, 1.0, uwChord * uwChord)
     : uwPart == 3 ? 0.7 : 0.08;
   vUnderwing = uwThin * smoothstep(0.02, 0.45, dot(vColor.rgb, vec3(0.2126, 0.7152, 0.0722)));

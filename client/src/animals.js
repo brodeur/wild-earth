@@ -23,6 +23,7 @@ import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buil
   loadGrouseMesh, loadMarmotMesh, loadYellowPineChipmunkMesh, loadShrewMesh, loadToadMesh, loadFrogMesh, buildHairyWoodpecker,
   loadFaunaModel, faunaTemplate } from './animalModels.js';
 import { depthAt as waterDepthAt } from './water.js';
+import { segmentWings } from './birdWing.js';   // the stand-in birds' own wings (ownWings)
 import { ACT as ACTIVITY, parseDoing, say, familyOf, STATIC_ARCHETYPE, BIRD_FAMILIES } from './activities.js';   // what an animal is doing: one vocabulary (doing, activity)
 
 // Ambient animals: the first step toward "many of each species always present" (docs/brief.md,
@@ -922,6 +923,11 @@ function tintedModel(m, rgb) {
   return m;
 }
 const clampN = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+// A bird stand-in's wing re-made for its own species (birdWing.js): the kin's segmented wing at the slot's scale, shaped by
+// the slot's Hand-Wing Index (fauna.json hand_wing_index, AVONET) and mass, so a falcon on the hawk's body gets a falcon's
+// pointed wing and a harrier a slotted one
+const ownWings = (m, f) => (m.wing && m.wingPlan && (Number.isFinite(f.hand_wing_index) || Number.isFinite(f.mass_kg))
+  ? segmentWings(m, { hwi: f.hand_wing_index, mass: f.mass_kg, family: f.family }) : m);
 // Put the tile's fauna in (owner: the Animals it belongs to); restores the static cast first.
 function installFauna(fauna, owner) {
   restoreFauna(null);
@@ -946,7 +952,7 @@ function installFauna(fauna, owner) {
     const e0 = expectedPerKm2(I), ratio = Number.isFinite(f.density_km2) && f.density_km2 > 0 && e0 > 0 ? f.density_km2 / e0 * (GROUP[I] || 1) / GROUP[d] : 1;
     const e = { code: f.code, one: f.one || f.common || f.code, many: f.many || f.one || f.common || f.code, common: f.common || f.one || f.code,
       salt: 20000 + seedOf(f.code, 0xfa) % 60000, cap: clampN(Math.max(Math.round(sI.cap * clampN(ratio, 0.5, 2)), 2 * (grp?.[1] || 2)), 4, 160), scale: 1,
-      build: () => tintedModel(scaledModel(sK.build(), sc), f.tint), standIn: { kin: sK.code, rules: sI.code, scale: sc, ...(f.reptile ? { reptile: f.reptile } : {}), ...(f.family ? { family: f.family } : {}), ...(typeof f.swims === 'boolean' ? { swims: f.swims } : {}), ...(Number.isFinite(f.mass_kg) ? { mass_kg: f.mass_kg } : {}) } };   // reptile, family, swims, mass: a snake's body for the player (playable.js snakeEntry)
+      build: () => tintedModel(ownWings(scaledModel(sK.build(), sc), f), f.tint), standIn: { kin: sK.code, rules: sI.code, scale: sc, ...(f.reptile ? { reptile: f.reptile } : {}), ...(f.family ? { family: f.family } : {}), ...(typeof f.swims === 'boolean' ? { swims: f.swims } : {}), ...(Number.isFinite(f.mass_kg) ? { mass_kg: f.mass_kg } : {}) } };   // reptile, family, swims, mass: a snake's body for the player (playable.js snakeEntry)
     if (sK.planar || sI.planar) e.planar = true;
     if (sI.liveR) e.liveR = sI.liveR;
     if (f.bird ?? sK.bird) e.bird = true;
@@ -998,7 +1004,7 @@ function installFauna(fauna, owner) {
     if (M && typeof M === 'object' && (M.kind === 'quadruped' || M.kind === 'bird' || M.kind === 'reptile' || M.kind === 'snake') && typeof M.path === 'string' && !KD?.hybrid) {
       const tpl = faunaTemplate(KD?.load, f), skin = M.skin !== false, lod0 = (KD?.lod || [30, 90]).map(r => r * sc);
       const l0 = clampN(lod0[0], 4, 120), l1 = clampN(lod0[1], l0 * 1.5, 360);
-      DRAWN[d] = { name: f.code, param: f.code, load: () => loadFaunaModel(M.path, tpl, { skin }), lod: [l0, l1], planar: !!(KD ? KD.planar : sK.planar), fauna: tpl };
+      DRAWN[d] = { name: f.code, param: f.code, load: () => loadFaunaModel(M.path, tpl, { skin, hwi: f.hand_wing_index, family: f.family }), lod: [l0, l1], planar: !!(KD ? KD.planar : sK.planar), fauna: tpl };
       e.standIn.model = M.path;
     }
     INDEX[f.code] = d; SUIT[f.code] = SUIT[sI.code]; SEASON[f.code] = FLAT_SEASON;
