@@ -1294,9 +1294,16 @@ ITERATION7 = {"match_de": 16.0, "kl_named": 2.0, "region_pass": 0.5, "score_pass
               "mark_share": 0.015, "patch_share": 0.05}
 
 
+def rule_served(e: dict) -> bool:
+    """Whether a species' current model is drawn on the acceptance rule's decision alone (fauna_models.procedural_snake:
+    `served_by` 'rule'; the procedural snakes' build), so it carries no recorded verdict (2026-11-07)."""
+    return e.get("served_by") == "rule" or e.get("build") == "tools/build_snake_proc.py"
+
+
 def known_verdicts() -> list[dict]:
     """The library's models whose verdicts are known: every species' current model (its judge's verdict; else a
-    'current' entry of its `verdicts`; else accepted: drawn, no rejection recorded) and every judged job in `verdicts`."""
+    'current' entry of its `verdicts`; else accepted: drawn, no rejection recorded; but not a model the rule alone
+    served, rule_served, unless someone has judged it) and every judged job in `verdicts`."""
     reg = json.loads((ROOT / "library" / "animals" / "models.json").read_text())["species"]
     out = []
     for code, e in reg.items():
@@ -1306,9 +1313,12 @@ def known_verdicts() -> list[dict]:
             verdict, by = e["judge"]["verdict"], e["judge"].get("by", "the judge")
         elif cur:
             verdict, by = cur["verdict"], cur["by"]
+        elif rule_served(e):
+            verdict = None   # served by the rule's own decision (a procedural snake): no one has judged it, and the rule is not fitted on itself
         else:
             verdict, by = "accepted", "drawn, no rejection recorded"
-        out.append({"code": code, "model": "current", "glb": ROOT / e["glb"], "verdict": verdict, "by": by, "entry": e})
+        if verdict is not None and e.get("glb"):
+            out.append({"code": code, "model": "current", "glb": ROOT / e["glb"], "verdict": verdict, "by": by, "entry": e})
         for v in vs:
             if v["model"] != "current":
                 out.append({"code": code, "model": v["model"], "job": ROOT / v["model"], "verdict": v["verdict"], "by": v["by"],

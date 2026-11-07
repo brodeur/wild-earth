@@ -162,7 +162,7 @@ class Library(unittest.TestCase):
 
 
 class Fit(unittest.TestCase):
-    """The rule against the 39 recorded verdicts (iteration 8's models, rebuilt into the git-ignored cache)."""
+    """The rule against the recorded verdicts (39 at iteration 8; the models rebuilt into the git-ignored cache)."""
 
     def test_confusion_on_the_recorded_verdicts(self):
         from pipeline import appearance as ap
@@ -170,7 +170,14 @@ class Fit(unittest.TestCase):
         if not all(k["glb"].exists() for k in known):
             self.skipTest("the judged jobs are not built (pipeline/_cache/verdict_builds)")
         r = fm.fit_acceptance(log=lambda *_: None)
-        self.assertEqual(r["models"], 39)
+        # every verdict the rule is fitted on is a person's (a judge's, a recorded one, or a drawn model no one rejected),
+        # never the rule's own decision on a model it served (a procedural snake: appearance.rule_served)
+        reg = json.loads((Path(__file__).resolve().parent.parent / "library" / "animals" / "models.json").read_text())["species"]
+        rule_made = {c for c, e in reg.items() if ap.rule_served(e) and not e.get("judge") and not any(v.get("model") == "current" for v in e.get("verdicts") or [])}
+        self.assertFalse({k["code"] for k in known if k["model"] == "current"} & rule_made)
+        human = sum(1 for c, e in reg.items() if e.get("glb") and c not in rule_made) + sum(1 for e in reg.values() for v in e.get("verdicts") or [] if v.get("model") != "current")
+        self.assertEqual(r["models"], human)
+        self.assertGreaterEqual(r["models"], 39)                    # iteration 8's 39 at least
         self.assertEqual(r["rule"]["accepted_flagged"], 0)          # no accepted model refused by the rule
         self.assertGreaterEqual(r["rule"]["rejected_flagged"], 8)   # every rejected model but the two grizzly refines
         self.assertLessEqual(r["loo"]["accepted_flagged"], 1)

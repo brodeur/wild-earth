@@ -7377,6 +7377,12 @@ snake inside the walkers' control. docs/movement.md "The snake" and docs/games.m
     with its stripes blurred. A general condition was added rather than a per-species verdict: a procedural model
     replaces a served one only if it keeps 0.8 of its pattern contrast (lightness spread over the back and flanks;
     13.5 against 29.2 here). So the Meshy garter snake stays.
+  - **A model the rule served is not one of the rule's verdicts.** `appearance.known_verdicts` took every drawn model
+    with no rejection as "accepted", so the procedural terciopelo, served by the rule, came into the rule's own fit:
+    40 verdicts, not 39. The fix is at the source. procedural_snake marks its entry `served_by: rule`, and
+    `known_verdicts` leaves out such a model (`rule_served`) unless someone judges it. The fit test now checks that
+    every counted verdict is a person's, with 39 as a floor rather than a constant. It ran here with the main checkout's
+    git-ignored job files linked in; a fresh worktree skips it.
   - The first procedural build wound its triangles inward. three.js culls back faces, so the game showed the inside
     of the belly from above, and the appearance check read the regions upside down. A test now checks the faces face
     outward.
