@@ -30,6 +30,14 @@ from the photo, or the photo as the texture reference of a refine. This step fin
             The first usable one is the reference, and its full-size rendition is fetched (into its own folder) and
             cropped to the animal with a margin; when none is usable the species has no reference photo (the badger,
             2026-11-06: its photos walk, lie down or are a rock).
+  use       a photo serves image-to-3D only when it passes USABLE; as a refine's texture reference only whole, size,
+            clearly seen and a body are asked (usable_for): its pose binds nothing. pipeline/fauna_models.py acceptance
+            records which photo a served model came from and whether today's rule still takes it for that use.
+            Measured and not adopted (2026-11-06, iteration 10): a grazing or head-down pose from the silhouette (the
+            outer columns' top against the back line, and the head end's protrusion beyond the torso against the back
+            and belly): on the 30 top candidates of the five Lamar quadrupeds, the four head-down photos (two pronghorn,
+            a moose, a goat) fall inside the head-up ones' range on both measures (a moose grazing reads +0.19, a
+            pronghorn head-up +1.55), so no threshold separates them; a head detector is needed, not the mask.
   judge     none since iteration 8: the rule chooses alone (validated on iteration 7's picks and the photos whose meshes
             failed the gate, docs/decisions.md 2026-11-06 iteration 8). --pick stays as a recorded manual override, and a
             judge's earlier pick is kept in the store as "judged".
@@ -379,6 +387,15 @@ def usable(s: dict, plan: str) -> list[str]:
     return [k for k, v in lim.items() if s.get(k, 0.0) < v]
 
 
+def usable_for(s: dict, plan: str, use: str) -> list[str]:
+    """What keeps a scored photo from serving one use (empty when it can): 'image' (image-to-3D, which copies the photo's
+    pose: every USABLE score) or 'texture' (a refine's texture reference: the colours and pattern of the whole animal,
+    clearly seen, large enough; its pose binds nothing, so side-on, legs and stance are not asked; a snake's as before)."""
+    if use == "image" or plan == "snake":
+        return usable(s, plan)
+    return [k for k, v in USABLE["other"].items() if s.get(k, 0.0) < v]
+
+
 def score(img: np.ndarray, plan: str = "quadruped", described: np.ndarray | None = None, prob: np.ndarray | None = None) -> dict:
     """The rule's scores (module docstring) of one photo, and the animal's box (fractions of the frame). prob: the
     subject mask (subject_mask), computed when not given."""
@@ -588,17 +605,21 @@ def judge_pick(code: str, photo_ids: str, why: str) -> dict:
     return c
 
 
-def ranked(code: str, skip: set | None = None, n: int = 2) -> list[dict]:
-    """The best n usable candidates not in skip (photo ids already used), each prepared (full size, cropped): the chosen
-    one first, then the rule's order (a judge's shortlist, where one was given with --pick, instead)."""
+def ranked(code: str, skip: set | None = None, n: int = 2, use: str = "image") -> list[dict]:
+    """The best n candidates usable for the use ('image': image-to-3D, every USABLE score; 'texture': a refine's texture
+    reference, usable_for) not in skip (photo ids already used), each prepared (full size, cropped): the chosen one first,
+    then the rule's order (a judge's shortlist, where one was given with --pick, instead)."""
     d = find(code, log=lambda *_: None)
     out = []
-    order = [c for c in d.get("candidates", []) if c["score"].get("usable", d.get("format", 1) < 2)]
+    plan = d.get("plan", "quadruped")
+    ok = (lambda c: c["score"].get("usable", d.get("format", 1) < 2)) if use == "image" else \
+         (lambda c: "total" in c["score"] and not c["score"].get("error") and not usable_for(c["score"], plan, use))
+    order = [c for c in d.get("candidates", []) if ok(c)]
     if d.get("shortlist"):
         order = [next(c for c in d["candidates"] if c["id"] == i) for i in d["shortlist"]]
     for c in sorted(order, key=lambda c: c["id"] != d.get("chosen")):
-        if len(out) >= n or c["score"].get("total", 0) <= 0:
-            break
+        if len(out) >= n or (use == "image" and c["score"].get("total", 0) <= 0):
+            break   # (a texture reference's total carries the pose scores it does not need)
         if skip and c["id"] in skip:
             continue
         if _prepare(code, c):
