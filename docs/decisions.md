@@ -6835,3 +6835,22 @@ library, none built-in, also under a throttled 4 Mbps / 150 ms network (title up
   bands now present; the yellowish-green head spots still missing), kept; the recorded override named the old job, so
   it was carried to the new one with the same reason (otherwise the slot would have fallen to the fence lizard). Next
   for both reptiles: a free photo search, then a photo texture (10 each).
+- **Twig shrubs up close: big sagebrush as a branching shrub, not a pale dome** (`client/src/shrubfield.js`
+  TwigShrubs; `treegen.js` shrubFrame, read-only). A foothill shrub whose record gives small leaves
+  (`foliage.leaf_size_m` <= 0.025), an open crown (`targets.porosity` >= 0.25) and a low height (`height_m[1]` <=
+  1.6 m) is a twig shrub: big sagebrush, snowberry, Sierra gooseberry (mountain mahogany and red huckleberry are too
+  tall: mahogany as a few tufts on long bare stems read worse than its dome; coyote brush, buckbrush and the chaparral
+  are not open enough). Within a per-plant radius of 9-13 m (the impostor's own hashed hand-over, so each plant is
+  drawn once) it is its treegen skeleton: a short trunk splitting into crooked stems, branches and twigs in the
+  record's bark colours, a leaf tuft at each twig end, enough tufts for the record's porosity; each leaf lit at its
+  own angle, the light inside the crown falling off with depth by Beer's law from the porosity, the sky partly
+  blocked; twigs drawn within 3.5 m, the trunk and stems beyond; seasons, flowers, bare winter crowns, wind and the
+  forager's glow as the impostor's. Past the hand-over the impostor is dimmed to the 3D crowns' measured mean (sun
+  x0.58, sky x0.68), a little smaller. The record's colour (linear 0.24 / 0.26 / 0.19) is already sage's measured
+  0.2-0.3 reflectance: the near-white came from the impostor lighting the whole crown as one sunlit surface. No
+  species data changed. Cost at Lamar's eye pose about +3.8 ms (25.4 -> 29.2 ms, interleaved A/B under heavy load;
+  the shrub field 2 -> 5.2 ms). Notes lamar-sage/ (Lamar, Teton, home before/after; home unchanged but snowberry
+  and gooseberry domes a little darker). Open: sunlit tufts facing the sun still pale silver; crowns a little
+  top-heavy; past 13 m still a dome, the porous-to-smooth hand-over visible from above; the ground keeps the
+  impostor's solid shadow (shadows.js); every twig shrub takes sage's three-toothed leaf (the record's `leaf_shape`
+  says oval, from its coyote-brush template).
