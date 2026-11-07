@@ -5560,9 +5560,10 @@ export class Animals {
         const tr = oak(o.tree);
         a.tree = tr; a.face = o.face; a.h = Math.max(0.3, o.h); a.state = W_CLING; a.t = 3 + r() * 6; a.yaw = a.face + Math.PI; a.pitch = CLING_PITCH; a.pose = 1;
       } else if (o.where === 'top') { a.state = W_TOP; a.t = 2 + r() * 6; a.pose = 1; a.tree = this.nearestOak(o.x, o.z, 15) || a.anchor; }
-      else {   // off to an oak near home
+      else {   // off to an oak near home (a mirror's record has no home of its own: the nearest oak; the host runs it on)
         if (o.where === 'ground') a.y = g;
-        this.wpFly(a, this.randomOak(a.anchor.x, a.anchor.z, 45, r, null) || a.anchor, false);
+        const home = a.anchor || this.nearestOak(o.x, o.z, 80);
+        if (home) this.wpFly(a, this.randomOak(home.x, home.z, 45, r, null) || home, false);
       }
     }
     this.byId.set(id, a); this.freed.add(id); this.dirty = true;
@@ -5841,6 +5842,22 @@ export class Animals {
     return a;
   }
   tagHeight(a) { return TAG_DY[a.sp] * (a.size || 1); }   // m over the feet: a name tag's height (players.js)
+  // A group member is seen in any form (docs/multiplayer.md "Who sees whom"), but a species this observer does not
+  // perceive is hidden whole (setObserver): such a species with a remote body in it is drawn with only its remote bodies,
+  // which layoutSlots puts in its first slots, so the count stops after them. Every frame while any remote body exists
+  // (and once after, to put the counts back).
+  showRemoteBodies() {
+    const rk = this._rk ||= new Int16Array(SPECIES.length); rk.fill(0);
+    for (const a of this.remotes.values()) if (a.slot >= 0) rk[a.sp]++;
+    let any = false;
+    for (let k = 0; k < SPECIES.length; k++) {
+      if (this.perceived?.has(SPECIES[k].code)) continue;
+      const m = this.meshes[k], r = rk[k];
+      if (r) { m.visible = true; m.count = r; any = true; }
+      else if (m.visible) { m.visible = false; m.count = this.bySpecies[k].length; }
+    }
+    this.remoteOnly = any;
+  }
   remoteDrop(user) {
     const a = this.remotes.get(user); if (!a) return;
     this.remotes.delete(user); this.byId.delete(a.id);
@@ -6003,6 +6020,7 @@ export class Animals {
       }
       G.carryEnd();
     }
+    if (this.remotes.size || this.remoteOnly) this.showRemoteBodies();
     for (let k = 0; k < this.meshes.length; k++) {
       const mesh = this.meshes[k], n = mesh.count; if (!n) continue;
       mesh.instanceMatrix.clearUpdateRanges(); mesh.instanceMatrix.addUpdateRange(0, n * 16); mesh.instanceMatrix.needsUpdate = true;
