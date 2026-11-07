@@ -282,6 +282,10 @@
    0.08,
    0.05
   ],
+  "albedo_calibration": {
+   "k": 0.8,
+   "from": "2026-11-06, calibration step (client/src/shrubfield.js fhSeason; Lamar utm12n_557_4964, June 10:00): the judged colours scaled so that, through the viewer's light, exposure and ACES (the probe judge's fair transform inverted), a full-sage canopy seen from above (a 30 m nadir view over a block of 35 % sage cover; the crowns' contribution over the block's own ground, divided by the cover) is Sentinel-2's: L2A June regressed on canopy.png shrub cover over 64k open 30 m cells gives 0.088/0.080/0.061 at full cover (grass 0.076/0.081/0.054); the twig crowns render 0.086/0.087/0.066 at k 1 and 0.080/0.081/0.061 at k 0.8 (luminance 0.0805 against 0.0803). One factor for all three channels: the satellite's redder full-cover pixel holds the bark, dead wood and litter under the crowns, not only the leaves. The eye-height check against a photograph of sunlit sage is still to be measured."
+  },
   "flowers": {
    "season": [
     "summer",

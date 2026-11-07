@@ -116,6 +116,7 @@ const VERT = /* glsl */`
   const float FH_TWIG[${FH_N}] = ${twigArr};
   const vec2 TW_LIGHT = vec2(0.58, 0.68);   // (sun, sky) for a twig shrub past its hand-over (below)
   uniform float twBase[${FH_N}];   // a twig species' first picture (TwigShrubs.bake), -1 before
+  uniform vec2 twEl;   // the pictures whole below x degrees over the plant, the dome from y (TW_EL_LO, TW_EL_HI)
   #ifndef NEAR
   varying vec4 vTw;   // a twig shrub's pictures: its first tile, the view's azimuth and elevation in tiles, the pictures' share
   #endif
@@ -164,7 +165,7 @@ const VERT = /* glsl */`
     // by its domes, as before; the coordinator, 2026-11-06, after the 3D crowns from 15-30 m up measured half the domes'
     // contrast); above it the plant is the impostor's as before, the NEAR program's within nearBand
     bool twP = kind < -0.5 && FH_TWIG[fki] > 0.5 && twBase[fki] >= 0.0
-            && normalize(cameraPosition - iPos.xyz - vec3(0.0, 0.5 * H, 0.0)).y < ${Math.sin(TW_EL_HI * Math.PI / 180).toFixed(4)};
+            && normalize(cameraPosition - iPos.xyz - vec3(0.0, 0.5 * H, 0.0)).y < sin(radians(twEl.y));
     if (twP) nearK = 0.0;
     #ifdef NEAR
     if (nearK <= 0.0) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
@@ -266,7 +267,7 @@ const FRAG = /* glsl */`
   // A twig shrub past its hand-over: its pictures (TwigShrubs.bake), each texel lit as the close tier (TWIG_VERT) lights that
   // leaf or that piece of wood. Returns the coverage and the light leaving it (before the air); 0 where nothing is drawn.
   uniform sampler2D twA; uniform sampler2D twB; uniform vec2 twSize; uniform vec3 fhCol[${FH_N}];
-  uniform vec3 twBark[${FH_N}]; uniform vec3 twDead[${FH_N}]; varying vec4 vTw;
+  uniform vec3 twBark[${FH_N}]; uniform vec3 twDead[${FH_N}]; varying vec4 vTw; uniform vec2 twEl;
   const vec2 TW_LIGHT_F = vec2(0.58, 0.68);   // VERT's TW_LIGHT, which dims the dome's light: undone for the pictures
   #endif
   varying vec2 vQ; varying vec3 vRight; varying vec3 vUp; varying vec3 vView;
@@ -305,7 +306,7 @@ const FRAG = /* glsl */`
     vec2 uq = u;
     // the pictures' share: whole up to TW_EL_LO above the horizontal, the dome's from TW_EL_HI; and a far plant the density
     // LOD has grown to stand for several goes back to the dome as it grows (1.1x to 1.5x)
-    pk = (1.0 - smoothstep(${TW_EL_LO.toFixed(1)}, ${TW_EL_HI.toFixed(1)}, vTw.z * 30.0)) * (1.0 - smoothstep(1.1, 1.5, g));
+    pk = (1.0 - smoothstep(twEl.x, twEl.y, vTw.z * 30.0)) * (1.0 - smoothstep(1.1, 1.5, g));
     if (pk <= 0.0) return 0.0;
     vec2 uv = uq / 2.4 + 0.5, gx = dFdx(u) / 2.4 / twSize, gy = dFdy(u) / 2.4 / twSize;
     // (no coarser than the 8 px mip of a tile: the tiles' margins hold 5 px, so a coarser one would mix in the next)
@@ -348,7 +349,7 @@ const FRAG = /* glsl */`
     vec3 Nf = normalize(vRight * n2.x + vUp * n2.y + vView * sqrt(max(1.0 - dot(n2, n2), 0.0)));
     float sf = dot(Nf, sunDir), r = length(qv), hf = 0.5 + 0.5 * qv.y;
     vec3 N = leaf ? normalize(normalize(qv / Rc) + vec3(0.0, 0.35, 0.0)) : Nf;
-    float diff = leaf ? (sf > 0.0 ? sf : -0.2 * sf) * B.g : 0.25 + 0.75 * max(sf, 0.0);
+    float diff = leaf ? (sf > 0.0 ? sf : -0.2 * sf) : 0.25 + 0.75 * max(sf, 0.0);   // (no second tilt factor: TWIG_FRAG)
     float ao = mix(0.4, 1.0, smoothstep(0.15, 1.0, r)) * mix(0.65, 1.0, clamp(hf * 1.4, 0.0, 1.0));
     vec3 amb = mix(vAmb, vAmbUp, 0.5 + 0.5 * N.y) * (ao / TW_LIGHT_F.y);
     vec3 alb = leaf ? mix(fhCol[fk] * mix(0.86, 1.14, fract(rnd * 5.3)), fhDeco[fk].rgb, deco) : type < 1.5 ? twBark[fk] : type < 2.5 ? fhBark[fk] : twDead[fk];
@@ -1176,7 +1177,7 @@ export function ShrubField(tile, ground, uniforms) {
   Object.assign(field.uniforms, {
     twBark: { value: FH.map(id => new THREE.Vector3(...lin(SPECIES[id]?.trunk?.bark_rgb || [110, 100, 90]))) },
     twDead: { value: FH.map(id => new THREE.Vector3(...lin(SPECIES[id]?.deadwood?.rgb || [140, 134, 124]))) },
-    twA: { value: null }, twB: { value: null },  twSize: { value: new THREE.Vector2(1, 1) }, twBase: { value: new Float32Array(FH_N).fill(-1) } });
+    twA: { value: null }, twB: { value: null }, twEl: { value: new THREE.Vector2(TW_EL_LO, TW_EL_HI) },  twSize: { value: new THREE.Vector2(1, 1) }, twBase: { value: new Float32Array(FH_N).fill(-1) } });
   const twigs = FH_TWIG.some(Boolean) ? new TwigShrubs(field) : null;
   if (twigs) { field.mesh.add(twigs.group); field.mesh.onBeforeRender = r => { twigs.renderer = r; }; }
   const update = field.update.bind(field);
@@ -1354,7 +1355,10 @@ const TWIG_FRAG = /* glsl */`
   void main() {
     float a = 1.0, sh = 1.0, tl = 1.0;
     if (vLeaf > 0.5) { a = tuft(vUv, vRnd, sh, tl); if (a < 0.02) discard; }
-    vec3 c = (vCol + vSunC * tl) * sh;
+    // (the leaf's own tilt, the picture's b, is not taken again: vSunC already holds the sun at the tuft's own face, a
+    // random way across its shoot, which is the leaf's turn; a second factor of 0.25-1 (mean 0.6) put the crown's sunlit
+    // leaves at 0.6 of an isotropic canopy's light. 2026-11-06, calibration step.)
+    vec3 c = (vCol + vSunC) * sh;
     if (vGlow > 0.0) c += glowCol * vGlow * dot(sunLight * 0.5 + ambientSky * 1.5, vec3(0.3333)) * 0.3183099 * 0.25;
     gl_FragColor = vec4(c * vT + vIn, a);
     #include <tonemapping_fragment>
@@ -1775,7 +1779,9 @@ function fhSeason(u, season) {
   FH.forEach((id, k) => {
     const spec = SPECIES[id]; if (!spec) return;
     const F = spec.foliage;
-    u.fhCol.value[k].set(...linK(F.colors[season] || F.colors.summer));
+    // (a recorded per-species calibration of the leaf albedo, foliage.albedo_calibration.k with its reason: big sagebrush's
+    // judged colour against Sentinel-2 from above and its sunlit leaves at eye height; 1 where none)
+    u.fhCol.value[k].set(...linK(F.colors[season] || F.colors.summer).map(v => v * (F.albedo_calibration?.k ?? 1)));
     u.fhBark.value[k].set(...linK(spec.trunk.twig_rgb || spec.trunk.bark_rgb || [110, 100, 90]));
     u.fhLeaf.value[k] = Math.min(1, Math.max(0, leafOnAt(spec, season, month)));
     // flowers or berries showing this month (berries first when both do): their colour and a share of the crown

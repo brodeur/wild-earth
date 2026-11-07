@@ -7366,6 +7366,19 @@ glottal stop is itself drawn like a question mark without its dot, so at 12 px i
   ground as litter, hiding the bare share); patches 3-15 cm. From the air ΔE 0.001; cost within noise (paired median
   -0.8 ms, spread -3.0..+2.6, on ~35 ms frames). Open: Teton's litter and soil patches read reddish-brown against the
   green-grey herbs; Lamar's wet-meadow bare soil (~4 %) is as dark as its litter.
+- **Twig crowns lit once by the sun, and sage's leaf colour calibrated to Sentinel-2 as a recorded per-species
+  factor** (shrubfield.js TWIG_FRAG, twigPicture, fhSeason; library/species/artemisia_tridentata.json
+  `foliage.albedo_calibration`). The tufts took the sun as `vSunC * tl`, where `vSunC` is already the sun at the tuft's
+  own random face and `tl` the picture's per-leaf tilt (0.25-1, mean ~0.62): the random face already gives the
+  isotropic canopy's mean incidence, so the tilt lit sunlit leaves at ~0.6 of their due; removed (near tier and
+  pictures). The colour: one factor k on the judged record colours, fitted by inverting the judge's fair transform on a
+  30 m nadir view over a 35 % sage block: full-cover canopy at k 1 0.086/0.087/0.066, at k 0.8 0.080/0.081/0.061,
+  Sentinel-2 June 0.088/0.080/0.061 (luminance 0.0805 vs 0.0803). One factor, not per channel: the satellite's red holds
+  bark and litter under the crowns. Domes and pictures now agree within ±5 % at eye level. Contrast from above against
+  95a9185: domes 0.78-0.79 (the old domes were brighter than the satellite sees), pictures 0.64-0.69, so the 8-12°
+  rule stays. Top-down ΔE 0.000 Lamar, 0.013 Teton; cost nil (A/B). Open: the eye-level check against a photo of sunlit
+  sage; a sage block renders at 0.74 of a grass block because the ground under sage cells is 0.68 as bright as the
+  grass block's ground.
 
 ## 2026-11-06: snakes are playable; the body follows the head's path (branch claude/snake-play)
 
