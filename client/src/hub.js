@@ -4,10 +4,11 @@
 //   const you = await Hub.me();                // null: not signed in
 //   const hub = new Hub(); hub.on('counts', d => ...); hub.connect();
 // Events: every message the hub sends, by its t (welcome, found, err, presence, friends, groups, chat,
-// invite, pos, gone, counts, me, placed, answer, rtc), each with the message; plus 'open', 'close' and 'signedout'
+// invite, pos, gone, counts, me, placed, answer, rtc, body), each with the message; plus 'open', 'close' and 'signedout'
 // (the session is gone: no reconnect). The hub's state as last told is kept on the instance: you, friends,
 // requests, blocked (the people this user blocked: Blocked people), groups, online (user id -> {state, tile?}), counts (tile id -> players), ice (the ICE servers for voice and
-// video, voice.js: public STUN, and TURN when the hub has it; from the welcome, never kept past the page). The room and the watch
+// video, voice.js: public STUN, and TURN when the hub has it; from the welcome, never kept past the page), bodies (user id -> {tile,
+// code, here}: the group's bodies chosen or worn, the home screen's rings). The room, the watch and the player's own body
 // are re-sent after a reconnect. The session is the HttpOnly we_session cookie: nothing here touches it, and
 // nothing is kept in localStorage.
 
@@ -111,6 +112,8 @@ export class Hub {
         this.connected = true; this.retry = 0;
         this.you = d.you; this.friends = d.friends; this.requests = d.requests; this.blocked = d.blocked || []; this.groups = d.groups; this.ice = Array.isArray(d.ice) ? d.ice : null;
         this.online = new Map(d.online.map(o => [o.user, { state: o.state, tile: o.tile }]));
+        this.bodies = new Map((d.bodies || []).map(b => [b.user, { tile: b.tile, code: b.code, here: !!b.here }]));
+        if (this.myBody) this.send({ t: 'body', ...this.myBody });
         if (this.room) this.send({ t: 'room', op: 'join', tile: this.room, ...(this.roomSeason ? { season: this.roomSeason } : {}) });
         if (this.watching) this.send({ t: 'watch', on: true });
         this.emit('open', d);
@@ -126,6 +129,10 @@ export class Hub {
       case 'groups': this.groups = d.groups; break;
       case 'counts': this.counts = d.tiles; break;
       case 'me': this.you = d.you; break;
+      case 'body':
+        if (!d.tile) this.bodies?.delete(d.user);
+        else (this.bodies ||= new Map()).set(d.user, { tile: d.tile, code: d.code, here: !!d.here });
+        break;
     }
     this.emit(d.t, d);
   }
@@ -170,6 +177,14 @@ export class Hub {
   // WebRTC signalling to a group member in the same room (voice.js): {to, tc?, k: 'sdp'|'ice'|'state'|'bye', ...}. Relayed
   // by the hub to that member's connection only, never kept.
   rtc(m) { return this.room ? this.send({ t: 'rtc', ...m }) : false; }
+  // The body this player chose for a tile on the home screen ('spirit' for none), or wears there (here: in its world):
+  // relayed to the online members of their groups (title.js rings). tile null takes it back. Kept for a reconnect only.
+  body(tile, code = 'spirit', here = false) {
+    const m = tile ? { tile, code: code || 'spirit', here: !!here } : { tile: null };
+    if (this.myBody?.tile === m.tile && this.myBody?.code === m.code && this.myBody?.here === m.here) return true;
+    this.myBody = tile ? m : null;
+    return this.send({ t: 'body', ...m });
+  }
   watch(on) { this.watching = !!on; return this.send({ t: 'watch', on: !!on }); }
   setMe(fields) { return this.send({ t: 'me', ...fields }); }   // {display?, findable?, presence?: 'tile'|'online'|'hidden'}
 }

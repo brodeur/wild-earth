@@ -818,10 +818,17 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
         addEventListener('pointerdown', kick, true); addEventListener('keydown', kick, true);
       }
     }
-    arrival.onDone = () => { html.classList.remove('arriving'); };
-    // follow: { x, y, z, yaw, ground } the inviter's pose (arrival.js plan's follow), or null for behind the planned point
-    const place = follow => { arrival.plan(follow ? null : c.point, follow, !follow); arrival.start(null); arrival.finish(true); };
-    if (c.follow) place(null);
+    // c.body: the body chosen on the home screen (title.js, the rings): taken once the spirit has arrived (takeBody), beside
+    // the group member gone with (c.lead: their last relayed pose), else under the arrival's end
+    const wantBody = c.body && bodyKind(c.body) ? c.body : null;
+    arrival.onDone = () => { html.classList.remove('arriving'); if (wantBody && !c.follow) takeBody(wantBody, c.lead ? mp?.poses?.get(c.lead) : null); };
+    // follow: { x, y, z, yaw, ground } the inviter's pose (arrival.js plan's follow), or null for behind the planned point;
+    // first: the spirit put there before the inviter's pose has come (the body waits for the pose, or the wait's end)
+    const place = (follow, first = false) => {
+      arrival.plan(follow ? null : c.point, follow, !follow); arrival.start(null); arrival.finish(true);
+      if (wantBody && !first) takeBody(wantBody, follow);
+    };
+    if (c.follow) place(null, true);
     else {
       arrival.plan(c.point, null, !!c.lead);   // the wisp flies the arrival as the raven did; a joiner's ends behind and above the one who asked (multiplayer.js turns it to follow them)
       arrival.start(c.caption || captionFor(c.point, seasonNow()));
@@ -834,6 +841,47 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     mp?.entered(tile.id, { flight, arrival, players, sound: () => w.m.sound, lead: c.lead || null, follow: !!c.follow, place, kind: bodyKind, season: seasonCtl, form: () => w.handle?.playerSpecies || 'spirit', body: (out, cst) => bodySample(w.handle, out, cst),
       caption: p => { const cap = $('caption'); if (cap && !cap.hidden) cap.querySelector('.cap-text').textContent = captionFor(p, seasonNow()); } });
   };
+  // Into a body the home screen chose (Aaron, 2026-11-07, the rings: "Any other group member can click on that same animal
+  // and join the tile in that body, right next to their friend"): an animal of that species summoned there and entered as
+  // the spirit enters any body (spirit.enter: the camera's blend, the wisp diving in), put exactly: beside `near` (a
+  // group member's relayed pose: 2.5 to 6 m off them on the clearest side, facing their way; in the air beside them when
+  // both fly, else on the ground), or, alone, a flier where the spirit is (on the wing) and a walker on the ground 25 m ahead
+  // of the arrival's end. Resolves to the animal's id, or null (no such species here, or already in a body).
+  const takeBody = (code, near = null) => {
+    if (!code || spirit.body || !bodyKind(code)) return null;
+    const f = flight, air = bodyKind(code) !== 'ground' && bodyKind(code) !== 'squirrel';
+    let x, z, yaw, y = null, where = 'ground';
+    if (near) {
+      yaw = near.yaw || 0;
+      const fx = -Math.sin(yaw), fz = -Math.cos(yaw), rx = Math.cos(yaw), rz = -Math.sin(yaw);
+      // a clear spot beside them, so the body and its camera do not start inside a bush or a trunk: the near plants' crowns
+      // (veg.nearPlants, as forage.js reads them) kept 1.2 m off where it can be, right of them first, then left, behind,
+      // and a little further out; the nearer and the righter as clear
+      const plants = veg.nearPlants || [];
+      const room = (px, pz) => { let m = 4; for (const q of plants) { const d = Math.hypot(px - q.x, pz - q.z) - Math.max(0.4, q.crownR || q.height * 0.35); if (d < m) m = d; } return m; };
+      let best = -Infinity;
+      for (const r of [2.5, 4, 6]) for (const [s, b] of [[1, 0.4], [-1, 0.4], [0.7, -0.7], [-0.7, -0.7], [0, -1], [0.7, 0.7], [-0.7, 0.7]]) {
+        const px = near.x + (rx * s - fx * b) * r, pz = near.z + (rz * s - fz * b) * r;
+        const sc = Math.min(room(px, pz), 1.2) * 10 - r * 0.4 - (s < 0 ? 0.3 : 0);
+        if (sc > best) { best = sc; x = px; z = pz; }
+      }
+      const g = tile.heights.atXZ(x, z);
+      if (air && near.y - tile.heights.atXZ(near.x, near.z) > 3) { y = Math.max(near.y, g + 4); where = 'air'; }
+    } else {
+      yaw = f.yaw;
+      if (air) { x = f.pos.x; z = f.pos.z; y = f.pos.y; where = 'air'; }
+      else { x = f.pos.x - Math.sin(yaw) * 25; z = f.pos.z - Math.cos(yaw) * 25; }
+    }
+    const S = tile.size, M = 30; x = Math.min(S - M, Math.max(M, x)); z = Math.max(-(S - M), Math.min(-M, z));
+    const fresh = animals.summon(code, 0, { x, z }) || [];
+    let best = null, bd = Infinity;
+    for (const a of fresh) { if (animals.codeOf(a) !== code) continue; const dd = (a.x - x) ** 2 + (a.z - z) ** 2; if (dd < bd) { bd = dd; best = a; } }
+    if (!best) { console.warn(`takeBody: no ${code} could be summoned`); return null; }
+    const at = { x, z, yaw, where, y: y ?? tile.heights.atXZ(x, z) };
+    if (where === 'air') Object.assign(at, { speed: 8, pitch: 0 });
+    return spirit.enter(best.id, at) ? best.id : null;
+  };
+  window.__weTakeBody = takeBody;   // debugging
   const known = new WeakSet(), used = new WeakSet(), drawable = o => o.isMesh || o.isPoints || o.isLine || o.isSprite;   // meshes compiled ahead (below)
   // The rock plans around the bird (rocks.js warm), made in slices so the first frame's rock fill only places them.
   await w.next('rocks.warm');
