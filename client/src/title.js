@@ -18,9 +18,11 @@ export { latLonToXYZ };
 // enters, close() takes the screen down.
 //
 // What happens: WILD EARTH over the stars while the page loads what the screen needs (the boot screen's green faded to
-// black and the stars twinkled in first: firstDrawn); then the title rises to its place at the top, the earth rises as a
-// crescent, and the sign-in (account.js, through onGate; Explore when there is no hub) stands on the right, where the
-// social panel will be. Signed in, the earth rises the rest of the way, the sun swings round, the map comes up over the
+// black and the stars twinkled in first: firstDrawn); then the title and the earth move to their final places together
+// (land: the title to the top, the earth from below to the middle of the space the side panels leave), and only then do
+// the panels slide in, all at once: the sign-in (account.js, through onGate; Explore when there is no hub) on the right,
+// where the social panel will be, the earth a crescent behind it; signed in (or a session already known), the places
+// from the left and the social column from the right together (sideIn). Signed in, the sun swings round, the map comes up over the
 // earth (mapGlobe.js: OpenStreetMap's map from OpenFreeMap's vector tiles, draped on the globe, a globe from space and a
 // map at a few kilometres), a dot marks each built tile, and the places are listed on the left with a search box at the
 // top: first every place, the most active first ("Most active", "everywhere"); once the player drags or zooms the earth,
@@ -54,16 +56,19 @@ const FOV_FAR = 38, FOV_NEAR = 55, TILT_MAX = 54 * DEG;    // the lens and the t
 const TILT_ALT = [0.03, 0.0009];                           // the altitudes (earth radii) between which they change
 const ALT0 = 2.5, ALT_MIN = 0.6 / R_KM, ALT_MAX = 3.6;      // the camera's distance from the point it looks at
 const CHOSEN_H_KM = 3.05;                                  // a chosen place is seen from 10,000 ft
-const Y_BELOW = -2.7, Y_CRESCENT = -1.12;                  // where the earth's centre sits before it is lit: off screen, the crescent
+const Y_BELOW = -2.7;                                      // where the earth's centre sits before it lands: off screen, below
 const SUN_CRESCENT = [152 * DEG, 26 * DEG], SUN_LIT = [30 * DEG, 14 * DEG];   // [azimuth about Y from the camera's side, elevation]
 const PITCH_MAX = 85 * DEG;
 const STAR_N = 1500, STAR_R = 40;
 const TITLE_MIN_MS = 2400, LOAD_MAX_MS = 12000;            // the title is seen at least this long; the loading waits at most this long
 // The start (Aaron, 2026-11-06): the boot screen's green fades to black on the first frame drawn, the stars twinkle in
 // one by one (the brightest first) over STARS_IN_S, the title fades in from TITLE_IN_S, and when the earth is ready the
-// title rises from the middle to its place at the top (RISE_MS; a cross-fade under reduced motion) before the side
-// panels slide in (html.tt-panels: the sign-in, the places, the social column).
-const STARS_IN_S = 2.6, TITLE_IN_S = 0.7, RISE_MS = 1400, REFADE_MS = 1000;
+// title and the earth move to their final places together (land: one eased motion of LAND_MS drives both; a cross-fade
+// of REFADE_MS under reduced motion), and only then do the side panels slide in, all at once (Aaron, 2026-11-06: "The
+// logo and the earth should smoothly animate to their final destinations - they should arrive at their final destinations
+// at the same time, and when complete, the side panels should slide in from their respective sides simultaneously").
+// The earth is centred in the space the panels will leave free from the start (freeArea), so it never moves for them.
+const STARS_IN_S = 2.6, TITLE_IN_S = 0.7, LAND_MS = 2200, REFADE_MS = 1200, SIDE_AFTER_SIGNIN_MS = 450;
 const reducedMotion = () => !!globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 const DOT_LIFT = 0.004;                                    // the dots stand off the surface from space, on it up close
 const HOVER_PX = 16;
@@ -82,7 +87,6 @@ const getJSON = url => fetch(url).then(r => r.ok ? r.json() : null).catch(() => 
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, u) => a + (b - a) * u;
 const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
-const easeOut = u => 1 - (1 - u) ** 3;
 const easeInOut = u => u < 0.5 ? 4 * u * u * u : 1 - (-2 * u + 2) ** 3 / 2;
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const wrapPi = a => Math.atan2(Math.sin(a), Math.cos(a));
@@ -123,13 +127,14 @@ const EARTH_VERT = /* glsl */`
 // in the spirit view's palette (spirit.js SpiritLook: the sun's tint LOOK_SUN_TINT, the sky light LOOK_AMB, and its post
 // pass, which pulls the warm hues to grey-blue-green by their distance from the blue-green axis and takes contrast off),
 // dimmer overall, so the bright dots at the built tiles stand out; the night side a faint blue (no city lights: the earth
-// with no humans); a thin haze-coloured rim inside the limb, stronger where the sun reaches. The map is drawn over it.
+// with no humans). No atmosphere (Aaron, 2026-11-06: "The globe doesn't need an atmosphere"): no shell, no haze rim.
+// fade takes it in from black under reduced motion (land). The map is drawn over it.
 const EARTH_FRAG = /* glsl */`
-  uniform sampler2D map; uniform vec3 sunDir; uniform float exposure;
+  uniform sampler2D map; uniform vec3 sunDir; uniform float exposure; uniform float fade;
   varying vec3 vN; varying vec2 vUv; varying vec3 vW;
-  const vec3 SUN_TINT = vec3(0.4, 0.66, 1.0), AMB = vec3(0.3, 0.82, 0.95), HAZE = vec3(0.5, 0.85, 0.9);
+  const vec3 SUN_TINT = vec3(0.4, 0.66, 1.0), AMB = vec3(0.3, 0.82, 0.95);
   void main() {
-    vec3 n = normalize(vN), v = normalize(cameraPosition - vW);
+    vec3 n = normalize(vN);
     float ndl = dot(n, sunDir);
     float day = smoothstep(-0.05, 0.28, ndl);
     vec3 c = texture2D(map, vUv).rgb;
@@ -144,22 +149,7 @@ const EARTH_FRAG = /* glsl */`
     float l = dot(c, vec3(0.2126, 0.7152, 0.0722));
     vec3 albedo = mix(c, l * vec3(0.86, 1.02, 1.04), pull);
     albedo = (albedo - 0.42) * 0.85 + 0.42;
-    vec3 col = albedo * (0.02 * AMB + exposure * day * (0.45 * AMB + 0.55 * SUN_TINT * max(ndl, 0.0)));
-    float rim = pow(1.0 - max(dot(n, v), 0.0), 3.5);
-    col += HAZE * rim * (0.06 + 0.9 * smoothstep(-0.15, 0.35, ndl)) * 0.55;
-    gl_FragColor = vec4(col, 1.0);
-    #include <tonemapping_fragment>
-    #include <colorspace_fragment>
-  }`;
-const ATMO_FRAG = /* glsl */`
-  uniform vec3 sunDir; uniform float shell;
-  varying vec3 vN; varying vec2 vUv; varying vec3 vW;
-  void main() {
-    vec3 n = normalize(vN), v = normalize(cameraPosition - vW);
-    float edge = sqrt(1.0 - 1.0 / (shell * shell));
-    float band = clamp(-dot(n, v) / edge, 0.0, 1.0);
-    float lit = smoothstep(-0.3, 0.35, dot(n, sunDir));
-    vec3 col = vec3(0.5, 0.85, 0.9) * pow(band, 1.7) * (0.04 + 0.96 * lit) * 0.55;   // the spirit view's haze colour (spirit.js LOOK_HAZE)
+    vec3 col = albedo * (0.02 * AMB + exposure * day * (0.45 * AMB + 0.55 * SUN_TINT * max(ndl, 0.0))) * fade;
     gl_FragColor = vec4(col, 1.0);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
@@ -268,7 +258,7 @@ export class TitleScreen {
     this.yaw -= 0.6;             // the crescent shows a little east of the facing; the sign-in swings it round
     this.vyaw = 0; this.vpitch = 0; this.drag = null; this.hover = null; this.anchor = null;
     this.alt = ALT0; this.altGoal = ALT0; this.flying = null;
-    this.sun = [...SUN_CRESCENT]; this.mapFade = 0; this.offX = 0;
+    this.sun = [...SUN_CRESCENT]; this.mapFade = 0; this.offX = null; this.landed = false; this.reserveRight = true;
     this.tweens = []; this.time = 0; this.last = this.bornMs = performance.now();
     this.px = -1; this.py = -1; this.listKey = '';
     this._v = new THREE.Vector3(); this._w = new THREE.Vector3(); this._q = new THREE.Quaternion(); this._size = new THREE.Vector2(); this._cc = new THREE.Color(); this._e = new THREE.Euler();
@@ -445,7 +435,7 @@ export class TitleScreen {
     const w = this.wrap;
     w.addEventListener('pointerdown', e => {
       if (e.button || e.target.closest('button, input, a, .tt-places, .tt-gate, .tt-pcard, .tt-bar')) return;
-      if (this.phase !== 'lit' || this.begun) return;
+      if (this.phase !== 'lit' || this.begun || !this.landed) return;
       this.drag = { id: e.pointerId, x: e.clientX, y: e.clientY, moved: 0, t: performance.now() };
       w.setPointerCapture(e.pointerId); this.vyaw = this.vpitch = 0; this.stopFlight(); this.anchor = null;
       e.preventDefault();
@@ -471,7 +461,7 @@ export class TitleScreen {
     w.addEventListener('wheel', e => {
       if (e.target.closest('.tt-places, .tt-gate, .tt-pcard, .tt-bar')) return;
       e.preventDefault();
-      if (this.phase !== 'lit' || this.begun) return;
+      if (this.phase !== 'lit' || this.begun || !this.landed) return;
       this.stopFlight();
       const k = Math.exp(e.deltaY * (e.deltaMode === 1 ? 0.05 : 0.0022));
       this.altGoal = clamp(this.altGoal * k, ALT_MIN, ALT_MAX);
@@ -517,13 +507,10 @@ export class TitleScreen {
     this.stars = new THREE.Points(sg, new THREE.ShaderMaterial({ uniforms: this.starU, vertexShader: STAR_VERT, fragmentShader: STAR_FRAG, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false }));
     this.stars.rotation.z = 0.3; this.stars.renderOrder = -1; scene.add(this.stars);
     const earth = this.earth = new THREE.Group(); earth.position.set(0, Y_BELOW, 0); scene.add(earth);
-    this.earthU = { map: { value: null }, sunDir: { value: sunDir }, exposure: { value: 0.95 } };
+    this.earthU = { map: { value: null }, sunDir: { value: sunDir }, exposure: { value: 0.95 }, fade: { value: 1 } };
     // a little inside the unit sphere, so the map's tiles (on it) always cover it where they are drawn
     this.globe = new THREE.Mesh(new THREE.SphereGeometry(0.996, 128, 80), new THREE.ShaderMaterial({ uniforms: this.earthU, vertexShader: EARTH_VERT, fragmentShader: EARTH_FRAG }));
     earth.add(this.globe);
-    this.atmoU = { sunDir: { value: sunDir }, shell: { value: 1.035 } };
-    this.atmo = new THREE.Mesh(new THREE.SphereGeometry(1.035, 96, 64), new THREE.ShaderMaterial({ uniforms: this.atmoU, vertexShader: EARTH_VERT, fragmentShader: ATMO_FRAG, side: THREE.BackSide, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
-    this.atmo.renderOrder = 2; earth.add(this.atmo);
     this.map = new MapGlobe({ group: earth, renderer: this.renderer, sunDir });
     this.map.restyle(this.layers);
     this.relief = new Relief(earth, sunDir);   // the chosen place as an exaggerated relief model (relief.js)
@@ -556,15 +543,18 @@ export class TitleScreen {
     await Promise.race([Promise.all([hubP, tex, names]), wait(LOAD_MAX_MS)]);
     await wait(Math.max(0, TITLE_MIN_MS - (performance.now() - t0)));
     if (this.closed) return;
+    this.reserveRight = !!this.config || this.hubParam === 'stub';   // a hub: the sign-in, then the social column, stand on the right
     this.setPhase('crescent');
-    this.crescentT = this.tween(2800, u => { this.earth.position.y = lerp(Y_BELOW, Y_CRESCENT, u); }, easeOut, 200);
-    await this.rise();   // the title up to its place; the earth rises under it
+    if (this.user) this.onSignedIn(this.user, true);   // the stub, or a session the hub already knows: lit while it lands
+    await this.land();   // the title and the earth to their places together
     if (this.closed) return;
     this.panelsIn();
-    this.setPhase('gate');
-    if (this.user) { await wait(400); if (!this.closed) this.onSignedIn(this.user); }   // the stub, or a session the hub already knows
-    else if (this.onGate) this.onGate(this);                                              // the modal (account.js; it handles no hub too)
-    else this.showExplore(this.config ? 'the sign-in is not built yet' : 'no hub here: explore alone');
+    if (this.phase === 'lit') this.sideIn();                                              // the places and the social column, together
+    else {
+      this.setPhase('gate');
+      if (this.onGate) this.onGate(this);                                                 // the modal (account.js; it handles no hub too)
+      else this.showExplore(this.config ? 'the sign-in is not built yet' : 'no hub here: explore alone');
+    }
   }
   // Every place's name and region line from its features.json: the tile's locality, else its roads, else its id; the
   // Indigenous territories after.
@@ -580,19 +570,37 @@ export class TitleScreen {
       say(`loading the places… ${++n} / ${this.places.length}`);
     }));
   }
-  // The title from the middle up to its place at the top (title.css .risen), with the earth rising under it; under
-  // reduced motion it fades out in the middle and in at its place. Resolves when it has landed.
-  async rise() {
-    const t = this.$('.tt-title'); if (!t) return;
+  // The title from the middle to its place at the top and the earth from below to its place in the middle of the free
+  // space, as one motion: the same eased u moves both each frame, so they arrive together (the title's own CSS only
+  // holds where it lands: .risen, --tt-top, --tt-s). Under reduced motion neither moves: the title fades out in the middle
+  // and in at its place while the earth, already in its place, fades in from black. Resolves when both have landed.
+  async land() {
+    const t = this.$('.tt-title'), h1 = t?.querySelector('h1'); if (!t) return;
     t.classList.add('on');   // in already, unless the loading was quicker than its fade
-    const fs = parseFloat(getComputedStyle(t.querySelector('h1')).fontSize) || 60;
-    t.style.setProperty('--tt-s', String(Math.min(1, TITLE_PX / fs)));   // risen, the title is TITLE_PX high at any width
-    t.classList.add('risen');
-    await wait(reducedMotion() ? REFADE_MS : RISE_MS);
+    const fs = parseFloat(getComputedStyle(h1).fontSize) || 60, s1 = Math.min(1, TITLE_PX / fs);
+    t.style.setProperty('--tt-s', String(s1));   // risen, the title is TITLE_PX high at any width
+    const top1 = parseFloat(getComputedStyle(t).getPropertyValue('--tt-top')) || 36, top0 = t.clientHeight / 2 || innerHeight / 2;
+    const rm = reducedMotion(), y0 = this.earth.position.y, place = (top, sc) => { h1.style.top = `${top}px`; h1.style.transform = `translate(-50%, -50%) scale(${sc})`; };
+    place(top0, 1); t.classList.add('risen');   // the colour and shadow of its place; the inline top and scale move it
+    if (rm) { this.earth.position.y = 0; this.earthU.fade.value = 0; h1.style.transition = 'none'; }   // the cross-fade is the tween's own
+    await this.tween(rm ? REFADE_MS : LAND_MS, u => {
+      if (!rm) { this.earth.position.y = lerp(y0, 0, u); place(lerp(top0, top1, u), lerp(1, s1, u)); return; }
+      const out = clamp((u - 0.3) / 0.15, 0, 1), back = clamp((u - 0.5) / 0.5, 0, 1);
+      if (u < 0.5) { h1.style.opacity = String(1 - out); } else { place(top1, s1); h1.style.opacity = String(back); }
+      this.earthU.fade.value = back;
+    }, rm ? (u => u) : easeInOut).p;
+    h1.style.top = h1.style.transform = h1.style.opacity = h1.style.transition = ''; this.earthU.fade.value = 1; this.earth.position.y = 0;
+    this.landed = true;
   }
-  // The side panels may come in now (title.css: the sign-in and Explore from the right, the places from the left, the
-  // social column and the chat from the right); taken off when the screen closes.
+  // The gate's panels may come in now (the sign-in and Explore, from the right); taken off when the screen closes.
   panelsIn() { if (!this.closed) document.documentElement.classList.add('tt-panels'); }
+  // The side panels, all at once (title.css: the places from the left, html.tt-side the social column from the right,
+  // the same duration and easing), once the title and the earth have landed and the player is signed in or exploring.
+  sideIn() {
+    if (this.closed || this.sided) return;
+    this.sided = true;
+    document.documentElement.classList.add('tt-side'); this.wrap.classList.add('listed');
+  }
   setPhase(ph) {
     this.wrap.classList.remove(`phase-${this.phase}`); this.phase = ph; this.wrap.classList.add(`phase-${ph}`);
   }
@@ -603,24 +611,22 @@ export class TitleScreen {
     if (note) { p.textContent = note; p.hidden = false; }
     b.focus({ preventScroll: true });
   }
-  // Signed in (the hub's `you`, or null exploring alone): the earth rises to the middle, the sun swings round to the
-  // facing side, the map, the dots and the list come in.
-  onSignedIn(user) {
+  // Signed in (the hub's `you`, or null exploring alone): the sun swings round to the facing side, the earth turns to
+  // face the place, the map and the dots come in; the earth's place does not change (it landed there, or is landing:
+  // `landing`, a session already known, lit over the landing's time). Then the side panels come in together: at the
+  // landing's end (run), or once the sign-in has faded (SIDE_AFTER_SIGNIN_MS).
+  onSignedIn(user, landing = false) {
     if (this.closed || this.phase === 'lit') return;
     this.user = user || null;
     this.setPhase('lit');
     this.hub.watch?.(true);
-    this.panelsIn();
-    this.endTween(this.crescentT); this.crescentT = null;   // a sign-in before the crescent is up takes the earth on from where it is
-    const y0 = this.earth.position.y, s0 = [...this.sun];
-    this.rising = true;
-    this.tween(2400, u => { this.earth.position.y = lerp(y0, 0, u); }, easeInOut, 100).p.then(() => { this.rising = false; });
-    this.tween(3000, u => { this.sun[0] = lerp(s0[0], SUN_LIT[0], u); this.sun[1] = lerp(s0[1], SUN_LIT[1], u); }, easeInOut, 300);
-    this.tween(2600, u => { this.mapFade = u; }, easeInOut, 1200);
-    this.face(this.faceId, 2600, 200);
+    const s0 = [...this.sun], T = landing ? LAND_MS : 2600;
+    this.tween(T + 400, u => { this.sun[0] = lerp(s0[0], SUN_LIT[0], u); this.sun[1] = lerp(s0[1], SUN_LIT[1], u); }, easeInOut);
+    this.tween(2200, u => { this.mapFade = u; }, easeInOut, landing ? LAND_MS * 0.55 : 500);
+    this.face(this.faceId, T);
     this.dots.visible = true;
-    this.tween(1400, u => { this.dotU.uFade.value = u; }, easeInOut, 1500);
-    setTimeout(() => { if (!this.closed) this.wrap.classList.add('listed'); }, 1900);
+    this.tween(1400, u => { this.dotU.uFade.value = u; }, easeInOut, landing ? LAND_MS : 900);
+    if (!landing && this.landed) setTimeout(() => this.sideIn(), SIDE_AFTER_SIGNIN_MS);
     this.onLit?.(this.user);
     this.renderBar();
   }
@@ -822,12 +828,13 @@ export class TitleScreen {
 
   // ---- every frame --------------------------------------------------------------------------------------------------
   // The space the earth's point of interest is centred in: between the list (left) and the social panel (right).
+  // The panels' final layout, whether they are in yet or not, so the earth is centred once and stays: the places' column
+  // on the left (its laid-out box: offsetLeft and offsetWidth ignore the slide's transform), the gate's on the right
+  // where the sign-in and then the social column stand (when there is a hub; at a phone's width the column is a
+  // toggle at the top and leaves the width free).
   freeArea(W) {
-    let left = 0, right = W;
-    if (this.wrap.classList.contains('listed')) { const r = this.list.getBoundingClientRect(); if (r.width) left = r.right; }
-    const soc = document.getElementById('social'), panel = soc?.querySelector('.so-panel');
-    const rr = (panel && !panel.hidden && panel.getBoundingClientRect().width ? panel : this.$('.tt-gate'))?.getBoundingClientRect();
-    if (rr?.width && rr.left > W / 2 && (this.phase === 'lit' || this.phase === 'gate')) right = rr.left;
+    const left = this.list.offsetWidth ? this.list.offsetLeft + this.list.offsetWidth : 0, gate = this.$('.tt-gate');
+    const right = this.reserveRight && gate?.offsetWidth && !matchMedia('(max-width: 720px)').matches ? Math.min(W, gate.offsetLeft) : W;
     return [left, right];
   }
   frame(now) {
@@ -859,7 +866,7 @@ export class TitleScreen {
     const [fl, fr] = this.freeArea(W), off = (fl + fr) / 2 - W / 2;
     const flr = `${Math.round(fl)}px|${Math.round(W - fr)}px`;   // the free space's edges for the CSS: the bar's buttons and the toast centre in it
     if (flr !== this.flr) { this.flr = flr; const [l, rr] = flr.split('|'); document.documentElement.style.setProperty('--we-fl', l); document.documentElement.style.setProperty('--we-fr', rr); }
-    this.offX += (off - this.offX) * (1 - Math.exp(-dt * 6));
+    this.offX = this.offX == null ? off : this.offX + (off - this.offX) * (1 - Math.exp(-dt * 6));   // set at once on the first frame
     if (Math.abs(this.offX) > 0.5) cam.setViewOffset(W, H, -this.offX, 0, W, H); else cam.clearViewOffset();
     cam.updateProjectionMatrix(); cam.updateMatrixWorld();
     // the wheel's zoom keeps the point under the pointer under it (the looked-at point moved by its offset, each frame)
@@ -996,7 +1003,7 @@ export class TitleScreen {
     if (this.closed) return;
     this.closed = true; this.ownsCanvas = false;
     cancelAnimationFrame(this.raf);
-    document.documentElement.classList.remove('tt-panels');
+    document.documentElement.classList.remove('tt-panels', 'tt-side');
     document.documentElement.style.removeProperty('--we-fl'); document.documentElement.style.removeProperty('--we-fr');
     this.geo.cancel();
     for (const ev of ['keydown', 'keyup']) removeEventListener(ev, this.guard, true);
@@ -1004,7 +1011,7 @@ export class TitleScreen {
     if (this.hubParam && typeof this.hubParam === 'object') this.hub.watch?.(false); else this.hub?.close?.();   // a hub given from outside (multiplayer.js) lives on into the world
     this.map.dispose(); this.relief?.dispose();
     for (const p of this.places) p.outline.dispose();
-    for (const o of [this.globe, this.atmo, this.dots, this.stars]) { o.geometry.dispose(); o.material.dispose(); }
+    for (const o of [this.globe, this.dots, this.stars]) { o.geometry.dispose(); o.material.dispose(); }
     this.tex?.dispose(); this.earthU.map.value = null;
     this.scene.clear(); this.scene = null;
     if (window.__weTitle === this) delete window.__weTitle;

@@ -6665,3 +6665,45 @@ presence hidden and back, display name, Join choosing the friend's place, Invite
 signed-out gate and signing in through it, Start into the world with the panel as a dropdown, Exit to main screen,
 `?cards=1`, `?skip=1`, and 375x812. Side by side with the design rendered from its own source at 1440x900. Not checked:
 the reduced-motion media query itself (the pane cannot emulate it), touch, Safari, two real browsers.
+
+## 2026-11-06: the title and the earth land together, then the panels; no atmosphere (branch claude/home-social)
+
+Aaron, on v42's startup: the earth came up, slowed, moved left, then up, then right, because the side panels arrived at
+different times and the earth re-centred in the space left each time. His words: "The logo and the earth should smoothly
+animate to their final destinations - they should arrive at their final destinations at the same time, and when complete,
+the side panels should slide in from their respective sides simultaneously." And: "The globe doesn't need an atmosphere,
+I don't think it's adding anything."
+
+- **One landing** (title.js land): after the loading, one tween of LAND_MS (2.2 s, ease in-out) moves the earth from
+  below to its final place and the title from the middle to its place at the top, from the same eased value each frame,
+  so they arrive together. The title's movement is driven from JS (inline top and scale); its CSS only holds where it
+  lands (`.risen`, `--tt-top`, `--tt-s`). The earth now lands at its final place in every path: there is no separate
+  crescent rise and no second rise after sign-in. Before sign-in it sits there lit as a crescent; signing in swings the
+  sun round, turns it to face the place and brings the map up, without moving it. A session already known is lit over
+  the landing's own time.
+- **The final layout is reserved from the start** (freeArea): the free space is the places column's laid-out box
+  (offsetLeft and offsetWidth, which ignore the slide's transform) on the left and the gate's column on the right, where
+  the sign-in and then the social column stand, whether or not they are in yet. The right column is reserved only when
+  there is a hub (with none, the Explore button stands over the earth's space), and at a phone's width the column is a
+  toggle at the top, so only the places are reserved. The view offset is set on the first frame instead of easing in.
+- **The panels after the landing, together** (sideIn, `html.tt-side` and `.listed` on the same frame): the places from
+  the left and the social column from the right, each 56 px over 0.9 s with one easing (cubic-bezier(.2, .8, .25, 1)), no
+  stagger. Signed out, the sign-in slides in from the right with the same slide when the landing ends; after signing in
+  the places and the social column come in together 0.45 s later, as the sign-in fades. The map's labels fade in with
+  the panels. The earth cannot be dragged or zoomed until it has landed.
+- **Reduced motion**: neither moves while visible. The earth is put in its place faded to black; the title fades out in
+  the middle and in at its place while the earth fades in (REFADE_MS 1.2 s, one tween); then the panels fade in together.
+- **No atmosphere**: the haze shell (a back-faced sphere at 1.035 with its own shader) and the haze rim inside the earth's
+  limb are gone. The earth's day side, terminator and night side are lit as before.
+
+Verified in the browser pane by tracing the earth's projected centre and radius, the title's box and the panel classes
+every frame through the startup (scratch trace, before and after): before, the earth's centre moved x 720 to 518 and back
+to 652 (a reversal) and the panels came at 3.9 s and 6.2 s; after, at 1440x900 signed in, the centre's x stays 680 (the
+middle of the space between the 324 px places column and the column at 1036 px), y goes 1457 to 450 in one move, the title
+goes from 68 to 15 px high and from the middle to 36 px over the same 2.53 to 4.5 s, and the gate, the places and the
+social column switch on together at 4.62 s; signed out, the sign-in comes at 4.63 s and the places and column together at
+7.21 s after signing in, with the earth not moving after it landed; at 375x812 the same, the centre's x fixed at 280;
+with the reduced-motion path forced (the pane cannot emulate the media query, so matchMedia was stubbed), the earth's
+place never changes while it is visible. Also checked: `?hub=stub`, Start, x skipping the arrival, and Exit to main
+screen replaying the sequence. Not checked: a page with no hub (the Explore path), and the CSS fades' timing in a real
+browser (the pane's hidden page does not advance CSS transitions).
