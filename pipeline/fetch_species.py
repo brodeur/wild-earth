@@ -9,6 +9,11 @@ and jackrabbits. A species is present on a tile if
            (species_data.RANGE; the tile's DEM and rewilded habitat raster), which keeps the species GBIF misses (the
            brush rabbit has no record within 10 km of the home tile since 2011, the mountain lion two around Yosemite
            Valley) where it can live.
+The search scales with the animal's home range (2026-11-07): GBIF's records of a wide-ranging, cryptic carnivore are
+sparse at a 10 km cell's scale (two records of the cougar within 10 km of the Hoh since 2011, though Olympic National Park
+documents it), so a mammal with a PanTHERIA home range searches a box around the tile that holds HOME_RANGES of them
+(home_range_buffer_m): the cougar's 130 km2 ranges take some 24 km round the tile (12 records on the Hoh), a black bear's
+31 km2 or an elk's 30 still the 10 km; capped at PRESENCE_BUFFER_MAX_M.
 Each entry of species.json carries `present`, `rule` (records, range or absent), `records_buffer`, `range_share` and
 `evidence` (one line). The buffered counts are cached per tile under _cache/gbif/ and not asked again.
 """
@@ -32,6 +37,8 @@ CLASS_KEYS = {"bird": 212, "mammal": 359}
 PLANT_KEYS = {"plant": ("phylumKey", 7707728)}
 PLANT_LIMIT = 120
 PRESENCE_BUFFER_M = 10_000   # records this far around the tile count for its presence
+HOME_RANGES = 25             # ... or farther: the search box holds this many of the animal's home ranges (a population)
+PRESENCE_BUFFER_MAX_M = 50_000
 PRESENCE_YEARS = 15          # ... over the last this many calendar years, this one included
 MIN_RECORDS = 3              # records that make a species present
 MIN_RANGE_SHARE = 0.05       # share of the tile in the species' elevation band and habitats that makes it present
@@ -111,12 +118,28 @@ def _buffer_bbox(tile: Tile, buf_m: float) -> tuple[float, float, float, float]:
     return min(lons), min(lats), max(lons), max(lats)
 
 
-def records_near(tile: Tile, key: int, years: tuple[int, int], force=False) -> int:
-    """GBIF records of taxon `key` within PRESENCE_BUFFER_M of the tile in `years` (inclusive); cached per tile."""
-    cache = tile.path(f"_cache/gbif/near_{key}_{PRESENCE_BUFFER_M // 1000}km_{years[0]}-{years[1]}.json")
+def home_range_buffer_m(tile: Tile, scientific: str) -> int:
+    """The presence search's buffer for a species: PRESENCE_BUFFER_M, or wider so that the tile and its buffer hold
+    HOME_RANGES of the animal's home ranges (PanTHERIA, mammals), to PRESENCE_BUFFER_MAX_M; whole km."""
+    from . import pantheria
+    try:
+        hr = (pantheria.lookup(scientific) or {}).get("home_range_km2")
+    except Exception:   # noqa: BLE001 (no PanTHERIA: the cell-scale search)
+        hr = None
+    if not hr:
+        return PRESENCE_BUFFER_M
+    side_m = (HOME_RANGES * float(hr)) ** 0.5 * 1000
+    tile_m = max(tile.bounds[2] - tile.bounds[0], tile.bounds[3] - tile.bounds[1])
+    b = (side_m - tile_m) / 2
+    return int(min(PRESENCE_BUFFER_MAX_M, max(PRESENCE_BUFFER_M, round(b / 1000) * 1000)))
+
+
+def records_near(tile: Tile, key: int, years: tuple[int, int], force=False, buf_m: int = PRESENCE_BUFFER_M) -> int:
+    """GBIF records of taxon `key` within buf_m of the tile in `years` (inclusive); cached per tile."""
+    cache = tile.path(f"_cache/gbif/near_{key}_{buf_m // 1000}km_{years[0]}-{years[1]}.json")
     if cache.exists() and not force:
         return int(json.loads(cache.read_text())["count"])
-    w, s, e, n = _buffer_bbox(tile, PRESENCE_BUFFER_M)
+    w, s, e, n = _buffer_bbox(tile, buf_m)
     params = {"decimalLatitude": f"{s},{n}", "decimalLongitude": f"{w},{e}", "hasCoordinate": "true",
               "hasGeospatialIssue": "false", "taxonKey": key, "year": f"{years[0]},{years[1]}", "limit": 0}
     count = int(get(f"{GBIF}/occurrence/search", params).json()["count"])
@@ -149,7 +172,7 @@ def range_shares(tile: Tile) -> dict[str, float] | None:
     return out
 
 
-def presence(tile: Tile, keys: dict[str, int | None], force=False) -> dict[str, dict]:
+def presence(tile: Tile, keys: dict[str, int | None], force=False, scientific: dict[str, str] | None = None) -> dict[str, dict]:
     """Per species code: present, rule, records_buffer, range_share, evidence (see the module docstring)."""
     y1 = date.today().year
     years = (y1 - PRESENCE_YEARS, y1)
@@ -159,11 +182,13 @@ def presence(tile: Tile, keys: dict[str, int | None], force=False) -> dict[str, 
     shares = range_shares(tile) if "california" in natural_regions(tile) else None
     out = {}
     for code, key in keys.items():
-        n = records_near(tile, key, years, force) if key else 0
+        buf = home_range_buffer_m(tile, (scientific or {}).get(code) or "") if key else PRESENCE_BUFFER_M
+        n = records_near(tile, key, years, force, buf) if key else 0
         share = shares.get(code) if shares else None
         r = RANGE.get(code)
         band = f"{r['elev_m'][0]}-{r['elev_m'][1]} m on {', '.join(h.replace('_', ' ') for h in r['habitats'])}" if r else "no range"
-        rec = f"{n} record{'s' if n != 1 else ''} within {PRESENCE_BUFFER_M // 1000} km in {years[0]}-{years[1]}"
+        rec = f"{n} record{'s' if n != 1 else ''} within {buf // 1000} km in {years[0]}-{years[1]}" + \
+            (" (the search widened to hold its home ranges)" if buf > PRESENCE_BUFFER_M else "")
         rng = f"{share:.0%} of the tile in its range ({band})" if share is not None else "no range test (no DEM or habitat raster)"
         if n >= MIN_RECORDS:
             rule, ev = "records", f"{rec} (>= {MIN_RECORDS})"
@@ -171,7 +196,7 @@ def presence(tile: Tile, keys: dict[str, int | None], force=False) -> dict[str, 
             rule, ev = "range", f"{rng} (>= {MIN_RANGE_SHARE:.0%}); {rec} (< {MIN_RECORDS})"
         else:
             rule, ev = "absent", f"{rec} (< {MIN_RECORDS}); {rng} (< {MIN_RANGE_SHARE:.0%})"
-        out[code] = {"present": rule != "absent", "rule": rule, "records_buffer": n, "range_share": share, "evidence": ev}
+        out[code] = {"present": rule != "absent", "rule": rule, "records_buffer": n, "buffer_m": buf, "range_share": share, "evidence": ev}
     return out
 
 
@@ -195,7 +220,7 @@ def fetch_species(tile: Tile, force=False) -> dict:
             entry["occurrence_count"] = len(occ)
             seasonal[sp["code"]] = monthly_counts(tile, key)
         species.append(entry)
-    pres = presence(tile, {e["code"]: e["gbif_key"] for e in species}, force)
+    pres = presence(tile, {e["code"]: e["gbif_key"] for e in species}, force, {e["code"]: e["scientific"] for e in species})
     for e in species:
         e.update(pres[e["code"]])
     write_json(tile.path("species/species.json"), species)

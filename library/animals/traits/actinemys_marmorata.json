@@ -1,0 +1,93 @@
+{
+ "id": "actinemys_marmorata",
+ "scientific": "Actinemys marmorata",
+ "common": "western pond turtle",
+ "kind": "reptile",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Testudines",
+  "order": null,
+  "family": "Emydidae",
+  "genus": "Actinemys"
+ },
+ "body_plan": "reptile",
+ "mass_kg": 0.282,
+ "size": {
+  "length_m": 0.236,
+  "shoulder_or_wingspan_m": 0.028
+ },
+ "diet": null,
+ "senses": {
+  "sight": {
+   "range_m": 194.1
+  },
+  "sound": {
+   "range_m": 271.7
+  },
+  "scent": {
+   "range_m": 388.2
+  }
+ },
+ "rig": "reptile part rig template",
+ "locomotion": {
+  "code": "actinemys_marmorata",
+  "class": "Testudines",
+  "order": null,
+  "family": "Emydidae",
+  "body_plan": "reptile",
+  "mass_kg": 0.282,
+  "length_m": 0.236,
+  "hip_m": 0.028,
+  "posture": null,
+  "gaits": {},
+  "walk_mps": 0.37,
+  "trot_mps": 0.83,
+  "cruise_mps": 1.26,
+  "top_mps": 2.1,
+  "stride_hz": 5.07,
+  "stride_m": 0.16,
+  "sprint_s": 2.7,
+  "recover_s": 9.6,
+  "turn_rad_s": 5.16,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.064,
+   "max_rad": 0.44,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {},
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-07T16:23:06Z",
+  "from": [
+   "gbif taxonomy",
+   "amniote life-history database (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

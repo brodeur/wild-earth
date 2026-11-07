@@ -143,24 +143,138 @@ class TestBirdKin(unittest.TestCase):
         if not (avonet.DIR / "ELEData.zip").exists():
             self.skipTest("AVONET not downloaded (pipeline/_cache/avonet)")
 
-    def kin(self, sci, order, family, kg, role=("herbivore",)):
+    def kin(self, sci, order, family, kg, role=("herbivore",), diet=None):
         from pipeline.fauna_slots import bird_life, kin_for
         a = {"scientific": sci, "kind": "bird", "mass_kg": kg, "role": list(role),
-             "taxonomy": {"class": "Aves", "order": order, "family": family}}
-        k, arch, _ = kin_for(a, {})
-        return k, arch, bird_life(a, {})["flightless"]
+             "taxonomy": {"class": "Aves", "order": order, "family": family, "genus": sci.split()[0]}}
+        t = {"diet": {"diet_tenths": diet}} if diet else {}
+        k, arch, _ = kin_for(a, t)
+        return k, arch, bird_life(a, t)["flightless"]
 
     def test_ground_and_flightless(self):
         self.assertEqual(self.kin("Struthio camelus", "Struthioniformes", "Struthionidae", 111),
                          ("meleagris_gallopavo", "ground bird", True))
-        self.assertEqual(self.kin("Vanellus armatus", "Charadriiformes", "Charadriidae", 0.156, ("insectivore",)),
+        # a lapwing of open short grass stays a ground bird; one of the wetland edge is a shorebird (2026-11-07)
+        self.assertEqual(self.kin("Vanellus coronatus", "Charadriiformes", "Charadriidae", 0.17, ("insectivore",)),
                          ("callipepla_californica", "ground bird", False))
+        self.assertEqual(self.kin("Vanellus armatus", "Charadriiformes", "Charadriidae", 0.156, ("insectivore",)),
+                         ("ardea_herodias", "shorebird", False))
+
+    def test_shorebirds(self):
+        # the spotted sandpiper was a seed-scratching ground bird: AVONET Terrestrial, Wetland
+        self.assertEqual(self.kin("Actitis macularius", "Charadriiformes", "Scolopacidae", 0.04, ("insectivore",))[:2],
+                         ("ardea_herodias", "shorebird"))
+        self.assertEqual(self.kin("Haematopus ostralegus", "Charadriiformes", "Haematopodidae", 0.5, ("insectivore",))[:2],
+                         ("ardea_herodias", "shorebird"))
+        # a woodcock of the forest floor is no shorebird
+        self.assertEqual(self.kin("Scolopax minor", "Charadriiformes", "Scolopacidae", 0.2, ("insectivore",))[1], "ground bird")
+
+    def test_raptors_and_scavengers(self):
+        # the golden eagle kills nine tenths of what it eats: a raptor, whatever its scavenger role (2026-11-07)
+        self.assertEqual(self.kin("Aquila chrysaetos", "Accipitriformes", "Accipitridae", 4.2, ("predator", "scavenger"),
+                                  {"vend": 8, "vect": 1, "scav": 1})[:2], ("buteo_jamaicensis", "soaring raptor"))
+        self.assertEqual(self.kin("Haliaeetus albicilla", "Accipitriformes", "Accipitridae", 4.7, ("predator", "scavenger"),
+                                  {"vend": 3, "vfish": 4, "scav": 3})[:2], ("buteo_jamaicensis", "soaring raptor"))
+        # the vultures by taxon (Cathartidae; Aegypiinae and Gypaetinae by genus), with or without diet data
+        self.assertEqual(self.kin("Gyps africanus", "Accipitriformes", "Accipitridae", 5.4, ("omnivore", "scavenger"),
+                                  {"scav": 10})[:2], ("cathartes_aura", "soaring scavenger"))
+        self.assertEqual(self.kin("Neophron percnopterus", "Accipitriformes", "Accipitridae", 2.1)[:2], ("cathartes_aura", "soaring scavenger"))
+        self.assertEqual(self.kin("Coragyps atratus", "Cathartiformes", "Cathartidae", 1.9)[:2], ("cathartes_aura", "soaring scavenger"))
+        # by diet: a (hypothetical: none in EltonTraits) eagle-sized corvid that lives mainly on carrion
+        self.assertEqual(self.kin("Corvus fictus", "Passeriformes", "Corvidae", 1.3, ("omnivore", "scavenger"),
+                                  {"scav": 6, "vend": 1, "inv": 3})[:2], ("cathartes_aura", "soaring scavenger"))
+
+    def test_corvids(self):
+        # the raven's aerial play for the ravens; crows and magpies walk; the jays and nutcrackers perch (2026-11-07)
+        self.assertEqual(self.kin("Corvus corax", "Passeriformes", "Corvidae", 1.2, ("omnivore", "scavenger"))[:2], ("corvus_corax", "corvid"))
+        self.assertEqual(self.kin("Corvus brachyrhynchos", "Passeriformes", "Corvidae", 0.45, ("omnivore", "scavenger"))[:2],
+                         ("corvus_corax", "walking corvid"))
+        self.assertEqual(self.kin("Pica hudsonia", "Passeriformes", "Corvidae", 0.177, ("omnivore", "scavenger"))[:2],
+                         ("corvus_corax", "walking corvid"))
+        self.assertEqual(self.kin("Nucifraga columbiana", "Passeriformes", "Corvidae", 0.13, ("omnivore", "scavenger"))[:2],
+                         ("cyanocitta_stelleri", "perching bird"))
+        self.assertEqual(self.kin("Garrulus glandarius", "Passeriformes", "Corvidae", 0.16, ("omnivore",))[:2],
+                         ("cyanocitta_stelleri", "perching bird"))
 
     def test_perching_aquatic_and_guilds_kept(self):
-        self.assertEqual(self.kin("Cyanocitta stelleri", "Passeriformes", "Corvidae", 0.12, ("omnivore",))[0], "corvus_corax")
+        self.assertEqual(self.kin("Cyanocitta stelleri", "Passeriformes", "Corvidae", 0.12, ("omnivore",))[0], "cyanocitta_stelleri")
         self.assertEqual(self.kin("Parus major", "Passeriformes", "Paridae", 0.018, ("insectivore",))[0], "cyanocitta_stelleri")
         self.assertEqual(self.kin("Fratercula arctica", "Charadriiformes", "Alcidae", 0.4, ("predator",))[0], "mergus_merganser")
         self.assertEqual(self.kin("Sagittarius serpentarius", "Accipitriformes", "Sagittariidae", 4, ("predator",))[0], "buteo_jamaicensis")
+
+
+class TestSquirrels(unittest.TestCase):
+    """A squirrel's kin by its genus (pipeline/fauna_slots.py GROUND_SQUIRREL_GENERA, CHIPMUNK_GENERA): the Uinta ground
+    squirrel ran the tree squirrel's machine while the rule read a substring of the code (2026-11-07)."""
+
+    def kin(self, sci, kg=0.6):
+        from pipeline.fauna_slots import kin_for
+        a = {"id": sci.lower().replace(" ", "_"), "scientific": sci, "kind": "mammal", "mass_kg": kg, "role": ["herbivore"],
+             "taxonomy": {"class": "Mammalia", "order": "Rodentia", "family": "Sciuridae", "genus": sci.split()[0]}}
+        return kin_for(a, {})[:2]
+
+    def test_ground_colonies(self):
+        for sci in ("Urocitellus armatus", "Spermophilus citellus", "Ictidomys tridecemlineatus", "Callospermophilus lateralis",
+                    "Otospermophilus variegatus", "Xerospermophilus tereticaudus", "Cynomys ludovicianus", "Marmota flaviventris",
+                    "Xerus inauris"):
+            self.assertEqual(self.kin(sci), ("otospermophilus_beecheyi", "ground colony"), sci)
+
+    def test_trees_and_chipmunks(self):
+        self.assertEqual(self.kin("Sciurus aberti"), ("sciurus_griseus", "tree squirrel"))
+        self.assertEqual(self.kin("Tamiasciurus hudsonicus", 0.2), ("sciurus_griseus", "tree squirrel"))
+        self.assertEqual(self.kin("Tamias minimus", 0.05), ("microtus_californicus", "small rodent"))
+
+    def test_genus_from_the_name(self):   # a record without a genus: the binomial's first word
+        from pipeline.fauna_slots import kin_for
+        a = {"id": "urocitellus_armatus", "scientific": "Urocitellus armatus", "kind": "mammal", "mass_kg": 0.6,
+             "taxonomy": {"class": "Mammalia", "order": "Rodentia", "family": "Sciuridae"}}
+        self.assertEqual(kin_for(a, {})[1], "ground colony")
+
+
+class TestMarineMammals(unittest.TestCase):
+    """The seals, sea lions, sea otter and whales take no land slot (pipeline/fauna_slots.py MARINE_*, 2026-11-07): they
+    stay in fauna.json's skipped list, named, with the reason "no stand-in: marine"."""
+
+    def kin(self, sci, order, family):
+        from pipeline.fauna_slots import kin_for
+        a = {"id": sci.lower().replace(" ", "_"), "scientific": sci, "kind": "mammal", "mass_kg": 100, "role": ["predator"],
+             "taxonomy": {"class": "Mammalia", "order": order, "family": family, "genus": sci.split()[0]}}
+        return kin_for(a, {})[:2]
+
+    def test_no_stand_in(self):
+        for sci, order, fam in (("Zalophus californianus", "Carnivora", "Otariidae"), ("Phoca vitulina", "Carnivora", "Phocidae"),
+                                ("Odobenus rosmarus", "Carnivora", "Odobenidae"), ("Enhydra lutris", "Carnivora", "Mustelidae"),
+                                ("Orcinus orca", "Cetacea", "Delphinidae"), ("Megaptera novaeangliae", "Artiodactyla", "Balaenopteridae")):
+            self.assertEqual(self.kin(sci, order, fam), (None, "no stand-in: marine"), sci)
+        # the river otter keeps its slot
+        self.assertEqual(self.kin("Lontra canadensis", "Carnivora", "Mustelidae")[0], "lontra_canadensis")
+
+
+class TestPresenceBuffer(unittest.TestCase):
+    """The presence search widens with the home range (pipeline/fetch_species.py home_range_buffer_m, 2026-11-07)."""
+
+    def test_scales_with_home_range(self):
+        from pipeline import fetch_species as F
+        from pipeline.config import Tile
+        t = Tile.from_id("utm10n_429_5293")
+        orig = __import__("pipeline.pantheria", fromlist=["lookup"]).lookup
+        import pipeline.pantheria as P
+        try:
+            P.lookup = lambda s: {"home_range_km2": {"Puma concolor": 129.89, "Ursus americanus": 31.25, "Ursus arctos": 2000}.get(s)}
+            self.assertEqual(F.home_range_buffer_m(t, "Puma concolor"), 23_000)     # 25 home ranges: some 57 km square
+            self.assertEqual(F.home_range_buffer_m(t, "Ursus americanus"), F.PRESENCE_BUFFER_M)
+            self.assertEqual(F.home_range_buffer_m(t, "Ursus arctos"), F.PRESENCE_BUFFER_MAX_M)
+            self.assertEqual(F.home_range_buffer_m(t, "Corvus corax"), F.PRESENCE_BUFFER_M)   # no home range: the cell scale
+        finally:
+            P.lookup = orig
+
+    def test_california_bands_only(self):
+        # the range test is California's: the Olympic bands kept out of it (the banana slug was put on the foothills)
+        from pipeline.species_data import RANGE, RANGE_OLYMPIC
+        self.assertNotIn("ariolimax_columbianus", RANGE)
+        self.assertNotIn("plethodon_vehiculum", RANGE)
+        self.assertIn("sylvilagus_bachmani", RANGE)
+        self.assertFalse(set(RANGE) & set(RANGE_OLYMPIC))
 
 
 class TestReptiles(unittest.TestCase):

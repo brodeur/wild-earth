@@ -497,24 +497,28 @@
   },
   "species": {
    "stage": "fauna",
-   "started_at": "2026-11-06T02:50:20Z",
-   "ended_at": "2026-11-06T02:51:36Z",
-   "wall_s": 75.5,
-   "cpu_self_s": 1.8,
+   "started_at": "2026-11-07T16:21:41Z",
+   "ended_at": "2026-11-07T16:21:42Z",
+   "wall_s": 1.8,
+   "cpu_self_s": 0.7,
    "cpu_children_s": 0.0,
    "downloads": {
     "gbif": {
-     "bytes": 969611,
-     "requests": 66
+     "bytes": 78,
+     "requests": 1
     }
    },
    "cache": {
     "gbif": {
-     "hits": 267,
-     "misses": 44
+     "hits": 311,
+     "misses": 0
+    },
+    "eltontraits": {
+     "hits": 1,
+     "misses": 0
     }
    },
-   "disk_bytes": 966123,
+   "disk_bytes": 968642,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -524,23 +528,27 @@
   },
   "animals": {
    "stage": "fauna",
-   "started_at": "2026-11-06T02:51:36Z",
-   "ended_at": "2026-11-06T02:51:36Z",
-   "wall_s": 0.2,
-   "cpu_self_s": 0.2,
+   "started_at": "2026-11-07T16:21:42Z",
+   "ended_at": "2026-11-07T16:21:43Z",
+   "wall_s": 0.4,
+   "cpu_self_s": 0.4,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {
     "gbif": {
-     "hits": 103,
+     "hits": 107,
      "misses": 0
     },
     "eltontraits": {
      "hits": 2,
      "misses": 0
+    },
+    "ndownloader.figshare.com": {
+     "hits": 1,
+     "misses": 0
     }
    },
-   "disk_bytes": 47725,
+   "disk_bytes": 79965,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -682,14 +690,14 @@
    "meshy_queued_credits_est": 0
   },
   "fauna": {
-   "started_at": "2026-11-06T02:50:20Z",
-   "ended_at": "2026-11-06T02:51:47Z",
-   "wall_s": 86.7,
-   "cpu_s": 12.5,
-   "download_bytes": 969611,
-   "cache_hits": 373,
-   "cache_misses": 44,
-   "disk_bytes": 1025782,
+   "started_at": "2026-11-07T16:21:41Z",
+   "ended_at": "2026-11-07T16:21:43Z",
+   "wall_s": 13.2,
+   "cpu_s": 11.6,
+   "download_bytes": 78,
+   "cache_hits": 423,
+   "cache_misses": 0,
+   "disk_bytes": 1060541,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -1099,35 +1107,71 @@
    "ended_at": "2026-11-07T01:43:18Z",
    "failed": [],
    "refused": []
+  },
+  {
+   "started_at": "2026-11-07T15:45:08Z",
+   "stages": [
+    {
+     "stage": "fauna",
+     "started_at": "2026-11-07T15:45:08Z",
+     "steps_run": [
+      "species",
+      "animals"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T15:47:29Z"
+    }
+   ],
+   "ended_at": "2026-11-07T15:47:29Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T16:21:41Z",
+   "stages": [
+    {
+     "stage": "fauna",
+     "started_at": "2026-11-07T16:21:41Z",
+     "steps_run": [
+      "species",
+      "animals"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T16:21:43Z"
+    }
+   ],
+   "ended_at": "2026-11-07T16:21:43Z",
+   "failed": [],
+   "refused": []
   }
  ],
  "totals": {
-  "wall_s": 1474.3,
-  "cpu_s": 311.1,
-  "download_bytes": 71119382,
-  "cache_hits": 457,
-  "cache_misses": 610,
-  "disk_bytes": 352175904,
+  "wall_s": 1400.8,
+  "cpu_s": 310.2,
+  "download_bytes": 70149849,
+  "cache_hits": 507,
+  "cache_misses": 566,
+  "disk_bytes": 352210663,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 0
  },
- "updated_at": "2026-11-07T01:43:18Z",
+ "updated_at": "2026-11-07T16:21:43Z",
  "client": {
-  "bytes": 3291186,
-  "files": 13,
+  "bytes": 3313334,
+  "files": 15,
   "largest": {
    "games.json": 937658,
    "client/weather.json": 709359,
    "client/species_prior.json": 469442,
    "client/features.json": 452483,
    "client/species_mix.json": 220035,
-   "perception.json": 167869,
-   "manifest.json": 166372,
+   "manifest.json": 169363,
+   "perception.json": 169109,
    "locomotion.json": 57462,
    "calendar.json": 45635,
-   "species/species.json": 41024,
-   "client/substrate.json": 11969,
-   "client/ground_classes.json": 10974
+   "species/species.json": 42303,
+   "client/fauna.json": 15678,
+   "client/substrate.json": 11969
   },
   "note": "every file under client/ and the tables the viewer fetches; an upper bound (the present-day texture is fetched only on request)"
  }

@@ -23,7 +23,7 @@ FAUNA_SLOTS = ROOT / "pipeline" / "fauna_slots.py"
 
 def pipeline_archetypes() -> set[str]:
     src = FAUNA_SLOTS.read_text()
-    found = set(re.findall(r'return [^\n]*?, "([^"]+)", (?:known|\[)', src))   # kin_for's (kin, archetype, known) returns
+    found = set(re.findall(r'return (?!None)[^\n]*?, "([^"]+)", (?:known|\[)', src))   # kin_for's (kin, archetype, known) returns (not a no-kin reason)
     import pipeline.fauna_slots as fs
     found |= set(fs.REPTILE_ARCHETYPE.values()) | set(fs.GROUP)
     return found
@@ -67,6 +67,12 @@ out.samples = {{
   wolfTrot: say('travel', '', {{ code: 'canis_lupus', archetype: 'coursing predator', machine: 'mm', groupN: 4, mass: 40 }}),
   foxTrot: say('travel', '', {{ code: 'vulpes_vulpes', archetype: 'coursing predator', machine: 'mm', groupN: 3, mass: 5 }}),
   bisonSage: say('forage', 'graze', {{ code: 'bison_bison', archetype: 'grazing or browsing herd', machine: 'dr', habitat: 4, groupN: 9 }}),
+  ravenSoar: say('fly', 'soar', {{ code: 'corvus_corax', archetype: 'corvid', machine: 'rv' }}),
+  magpieSoar: say('fly', 'soar', {{ code: 'pica_hudsonia', archetype: 'walking corvid', machine: 'rv' }}),
+  crowWalk: say('forage', 'walk', {{ code: 'corvus_brachyrhynchos', archetype: STATIC_ARCHETYPE.corvus_brachyrhynchos, machine: 'rv' }}),
+  sandpiperStalk: say('hunt', 'stalk', {{ code: 'actitis_macularius', archetype: 'shorebird', machine: 'qu', habitat: 7 }}),
+  sandpiperFlush: say('fly', 'flush', {{ code: 'actitis_macularius', archetype: 'shorebird', machine: 'qu' }}),
+  heronStalk: say('hunt', 'stalk', {{ code: 'ardea_herodias', archetype: 'wading bird', machine: 'qu' }}),
 }};
 console.log(JSON.stringify(out));
 """
@@ -99,6 +105,13 @@ console.log(JSON.stringify(out));
         self.assertEqual(s["wolfTrot"], "trotting along with its pack")
         self.assertEqual(s["foxTrot"], "trotting along with its family")
         self.assertEqual(s["bisonSage"], "feeding between the shrubs with its herd")
+        # the raven alone tumbles; a walking corvid flaps; a shorebird works the edge, apart from the heron (2026-11-07)
+        self.assertEqual(s["ravenSoar"], "soaring and tumbling on the wind")
+        self.assertEqual(s["magpieSoar"], "flying over on steady wingbeats")
+        self.assertEqual(s["crowWalk"], "walking about on the ground, looking for food")
+        self.assertEqual(s["sandpiperStalk"], "running along the water's edge, picking at food")
+        self.assertEqual(s["sandpiperFlush"], "flushed, flying off low over the water")
+        self.assertEqual(s["heronStalk"], "stalking slowly through the shallows")
 
 
 if __name__ == "__main__":

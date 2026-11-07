@@ -1,0 +1,121 @@
+{
+ "id": "scapanus_latimanus",
+ "scientific": "Scapanus latimanus",
+ "common": "broad-footed mole",
+ "kind": "mammal",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Mammalia",
+  "order": "Soricomorpha",
+  "family": "Talpidae",
+  "genus": "Scapanus"
+ },
+ "body_plan": "rodent",
+ "mass_kg": 0.055,
+ "size": {
+  "length_m": 0.137,
+  "shoulder_or_wingspan_m": 0.041
+ },
+ "diet": {
+  "role": [
+   "insectivore"
+  ],
+  "diet_tenths": {
+   "inv": 10.0,
+   "vend": 0.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.0,
+  "mass_kg": 0.055,
+  "activity": [
+   "nocturnal",
+   "crepuscular",
+   "diurnal"
+  ],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 140.0
+  },
+  "sound": {
+   "range_m": 195.9
+  },
+  "scent": {
+   "range_m": 279.9
+  }
+ },
+ "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+ "locomotion": {
+  "code": "scapanus_latimanus",
+  "class": "Mammalia",
+  "order": "Soricomorpha",
+  "family": "Talpidae",
+  "body_plan": "rodent",
+  "mass_kg": 0.055,
+  "length_m": 0.137,
+  "hip_m": 0.041,
+  "posture": "parasagittal",
+  "gaits": {
+   "walk": "froude 0.5",
+   "trot": "froude 2.5",
+   "gallop": "beyond"
+  },
+  "walk_mps": 0.45,
+  "trot_mps": 1.0,
+  "cruise_mps": 1.88,
+  "top_mps": 3.14,
+  "stride_hz": 6.47,
+  "stride_m": 0.15,
+  "sprint_s": 1.8,
+  "recover_s": 6.4,
+  "turn_rad_s": 6.78,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.049,
+   "max_rad": 0.44,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {},
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-07T15:53:58Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

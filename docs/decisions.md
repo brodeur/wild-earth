@@ -7739,3 +7739,76 @@ nothing). Now every animal has one shared vocabulary and every slot on every til
   machine (kin_for's ground-squirrel test looks for "spermophil", not Urocitellus), and the golden eagle the vulture's
   ("soaring scavenger": the scavenger role over 1 kg in Accipitridae). Both read correctly for their machine and wrong for
   the animal; the fix is in the pipeline's rules.
+
+## 2026-11-07: three fauna classes by rule: ground squirrels by tribe, raptors by diet, corvids and shorebirds split (pipeline/fauna_slots.py, client/src/activities.js)
+
+The behaviour vocabulary's sample of every slot's identify line (2026-11-07, "one vocabulary for what an animal is
+doing") showed three of `kin_for`'s rules reading the wrong thing. Each is now a rule over the record's taxonomy, diet
+or AVONET row, not a per-species patch.
+
+- **Ground squirrels by tribe.** The Uinta ground squirrel (*Urocitellus*) ran the tree squirrel's machine because
+  the test looked for "spermophil" in the species code. GBIF's records carry family and genus but no tribe, so the
+  tribes are genus sets (`GROUND_SQUIRREL_GENERA`):
+  - Marmotini's ground-dwelling genera, after Helgen et al. 2009's split of *Spermophilus*: *Urocitellus,
+    Spermophilus, Ictidomys, Callospermophilus, Otospermophilus, Xerospermophilus, Poliocitellus, Notocitellus,
+    Ammospermophilus*, the prairie dogs (*Cynomys*) and the marmots (*Marmota*).
+  - Xerini: *Xerus, Euxerus, Atlantoxerus, Spermophilopsis*.
+  - All of these are a 'ground colony' on the California ground squirrel's machine. The genus is read from the
+    binomial when the record has none.
+  - The chipmunks (*Tamias, Neotamias, Eutamias*, also Marmotini) are a 'small rodent' on the vole's runways, as the
+    client's own chipmunks are. Before, they had been tree squirrels.
+- **Raptors by diet.** The golden eagle was a 'soaring scavenger' on the vulture's machine because its record has a
+  scavenger role (EltonTraits: one tenth carrion against nine tenths vertebrates it kills).
+  - 'Soaring scavenger' is now the New World vultures (Cathartidae), the Old World vultures (Aegypiinae and
+    Gypaetinae, by genus: `OLD_WORLD_VULTURE_GENERA`), and a hawk or corvid of 1 kg or more that lives mainly on
+    carrion (`lives_on_carrion`: carrion at least half the diet and more than the vertebrates it kills).
+  - Every other hawk, eagle, falcon, osprey and secretarybird is a 'soaring raptor'. That includes the golden,
+    tawny and white-tailed eagles. The crested caracara (six tenths carrion, Falconidae) stays a raptor.
+- **Corvids split.** Every corvid ran the raven and read "soaring and tumbling on the wind". Now:
+  - A raven-sized corvid (`RAVEN_KG` 0.7 and up) keeps 'corvid' and the raven's aerial play.
+  - A jay-sized corvid (under `JAY_KG` 0.15), or one AVONET calls Insessorial (jays, nutcrackers, treepies), is a
+    'perching bird' on the Steller's jay, as the client's own jays are.
+  - The rest (crows, magpies, choughs, jackdaws) are a 'walking corvid' on the raven's machine. They get their own
+    phrase family (`crow`: "flying over on steady wingbeats", "walking about on the ground, looking for food").
+  - The client's American crow moves from 'corvid' to 'walking corvid'.
+  - Known miss: the Chihuahuan raven (0.53 kg) walks as a crow.
+- **Shorebirds split.** The spotted sandpiper scratched for seeds as a quail. A Charadriiform that AVONET calls
+  Terrestrial in a Wetland, Coastal or Riverine habitat (sandpipers, plovers, stilts, oystercatchers, the blacksmith
+  lapwing) is now a 'shorebird' on the heron's water-edge machine.
+  - It has its own phrases ("running along the water's edge, picking at food", "flushed, flying off low over the
+    water") and builds on the heron's template (`fauna_models.BIRD_BUILD` 'wade').
+  - Its `known` notes that it keeps the heron's slow walk and wingbeat.
+  - A grassland or forest Charadriiform (a crowned lapwing, a curlew, a woodcock) stays a ground bird.
+- **Marine mammals take no land slot.** San Francisco's sea lions, fur seals, harbor and elephant seals and its sea
+  otter were 'small carnivore' slots walking the gray fox's machine.
+  - Pinnipedia (Otariidae, Phocidae, Odobenidae), *Enhydra*, the cetaceans (order Cetacea, or their families under
+    Artiodactyla) and the sea cows now return no kin.
+  - They stay in fauna.json's `skipped` list, named (scientific and common), with the reason "no stand-in: marine",
+    and no longer use up the cap's slots.
+- **Presence searches scale with the home range.** The cougar was dropped from the Hoh: 2 GBIF records within the
+  10 km search since 2011, though Olympic National Park documents it.
+  - A mammal with a PanTHERIA home range now searches a box that holds `HOME_RANGES` (25) of them, capped at 50 km
+    (`fetch_species.home_range_buffer_m`).
+  - The cougar's 130 km² ranges take 23 km: 9 records on the Hoh and on Mount Olympus, 7 to 71 elsewhere, so it is
+    present on every tile run.
+  - A black bear's 31 km², an elk's 30 and a bobcat's 31 keep the 10 km search.
+  - `species.json` now records each species' `buffer_m`.
+- **The range test is California's.** The Hoh batch's Olympic elevation bands sat in `species_data.RANGE`, so on
+  California tiles the range test put the banana slug, the red-backed salamander, the gray jay, the snowshoe hare and
+  the Roosevelt elk on the foothills and San Francisco.
+  - They now live apart in `RANGE_OLYMPIC`, used by no test. Outside California, presence is still by records alone.
+- **Every built tile's fauna list.** The Hoh had no `client/fauna.json`, so nothing gated its species and summoning
+  put Placerville's cast on it. Nothing in the code skipped it: its animals step had last run at version 1, before
+  `fauna_slots` joined the step, and was never re-run, although `--plan` showed it as changed.
+  - Cosumnes and Placerville had never run on the step graph (species blocked on dem and landcover). They were
+    adopted (`--adopt`).
+  - Species and animals then ran on the Hoh, Mount Olympus, both San Francisco cells, Calaveras, both Yosemite tiles,
+    Cosumnes and Placerville. Each is now gated.
+  - The Hoh keeps 47 of the 61 of the fixed cast, cougar included, and drops the 14 foothill species.
+  - Lamar and home follow after the road lane's rebuild.
+- **Seen on the way (not changed).** The brown pelican is a gull, and the American white pelican a waterbird with no
+  `water` flag (Pelecanidae is not in `WATER_FAMILIES`).
+- **Checked.** `tests/test_pipeline.py` (TestBirdKin: raptors and scavengers, corvids, shorebirds; TestSquirrels;
+  TestMarineMammals; TestPresenceBuffer, the home-range buffer and the California-only bands) and
+  `tests/test_activities.py` (the new families' lines). In a dry run over every tile with a fauna list, only the
+  intended slots changed.

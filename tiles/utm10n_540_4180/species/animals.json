@@ -1,14 +1,14 @@
 {
  "tile": "utm10n_540_4180",
- "at": "2026-11-05T07:00:04Z",
+ "at": "2026-11-07T16:25:21Z",
  "target": 22,
- "listed": 87,
+ "listed": 120,
  "by_kind": {
-  "bird": 54,
-  "mammal": 29,
-  "amphibian": 2,
-  "invertebrate": 1,
-  "reptile": 1
+  "bird": 72,
+  "mammal": 37,
+  "reptile": 5,
+  "amphibian": 4,
+  "invertebrate": 2
  },
  "meets_target": true,
  "predators": [
@@ -82,13 +82,7 @@
   "sorex_vagrans",
   "sturnus_vulgaris"
  ],
- "generated_traits": [
-  "mergus_serrator",
-  "buteo_platypterus",
-  "taxidea_taxus",
-  "vulpes_vulpes",
-  "uncia_uncia"
- ],
+ "generated_traits": [],
  "queue": [
   {
    "id": "calypte_anna",
@@ -117,7 +111,7 @@
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
-   "stand_in": "aphelocoma_californica",
+   "stand_in": "junco_hyemalis",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -132,7 +126,7 @@
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
-   "stand_in": "aphelocoma_californica",
+   "stand_in": "junco_hyemalis",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -147,53 +141,7 @@
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
-   "stand_in": "aphelocoma_californica",
-   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-  },
-  {
-   "id": "larus_occidentalis",
-   "scientific": "Larus occidentalis",
-   "common": "western gull",
-   "kind": "bird",
-   "records": 49977,
-   "why": [
-    "predator and scavenger",
-    "most recorded: 6 of its class (2% of the class's records)"
-   ],
-   "body_plan": "bird",
-   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-   "estimate_credits": 30,
-   "stand_in": null,
-   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-  },
-  {
-   "id": "junco_hyemalis",
-   "scientific": "Junco hyemalis",
-   "common": "dark-eyed junco",
-   "kind": "bird",
-   "records": 48507,
-   "why": [
-    "most recorded: 7 of its class (2% of the class's records)"
-   ],
-   "body_plan": "bird",
-   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-   "estimate_credits": 30,
-   "stand_in": "aphelocoma_californica",
-   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-  },
-  {
-   "id": "turdus_migratorius",
-   "scientific": "Turdus migratorius",
-   "common": "american robin",
-   "kind": "bird",
-   "records": 47156,
-   "why": [
-    "most recorded: 8 of its class (2% of the class's records)"
-   ],
-   "body_plan": "bird",
-   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-   "estimate_credits": 30,
-   "stand_in": "aphelocoma_californica",
+   "stand_in": "empidonax_difficilis",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -212,18 +160,48 @@
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
-   "id": "corvus_brachyrhynchos",
-   "scientific": "Corvus brachyrhynchos",
-   "common": "american crow",
+   "id": "melozone_crissalis",
+   "scientific": "Melozone crissalis",
+   "common": "california towhee",
    "kind": "bird",
-   "records": 38940,
+   "records": 39705,
    "why": [
-    "scavenger"
+    "most recorded: 13 of its class (2% of the class's records)"
    ],
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
-   "stand_in": "corvus_corax",
+   "stand_in": "junco_hyemalis",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "sitta_pygmaea",
+   "scientific": "Sitta pygmaea",
+   "common": "pygmy nuthatch",
+   "kind": "bird",
+   "records": 38660,
+   "why": [
+    "most recorded: 15 of its class (2% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": "aphelocoma_californica",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "setophaga_coronata",
+   "scientific": "Setophaga coronata",
+   "common": "yellow-rumped warbler",
+   "kind": "bird",
+   "records": 31622,
+   "why": [
+    "most recorded: 18 of its class (2% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": "aphelocoma_californica",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -233,7 +211,8 @@
    "kind": "bird",
    "records": 30774,
    "why": [
-    "predator"
+    "predator",
+    "most recorded: 19 of its class (2% of the class's records)"
    ],
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
@@ -248,7 +227,8 @@
    "kind": "bird",
    "records": 29446,
    "why": [
-    "predator"
+    "predator",
+    "most recorded: 20 of its class (1% of the class's records)"
    ],
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
@@ -257,18 +237,33 @@
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
-   "id": "ardea_herodias",
-   "scientific": "Ardea herodias",
-   "common": "great blue/cocoi heron",
+   "id": "fulica_americana",
+   "scientific": "Fulica americana",
+   "common": "american coot",
    "kind": "bird",
-   "records": 27329,
+   "records": 28085,
    "why": [
-    "predator"
+    "most recorded: 21 of its class (1% of the class's records)"
    ],
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
    "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "setophaga_townsendi",
+   "scientific": "Setophaga townsendi",
+   "common": "townsend's warbler",
+   "kind": "bird",
+   "records": 27717,
+   "why": [
+    "most recorded: 22 of its class (1% of the class's records)"
+   ],
+   "body_plan": "bird",
+   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+   "estimate_credits": 30,
+   "stand_in": "aphelocoma_californica",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -278,42 +273,28 @@
    "kind": "bird",
    "records": 26869,
    "why": [
-    "predator and scavenger"
+    "predator and scavenger",
+    "most recorded: 24 of its class (1% of the class's records)"
    ],
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
-   "stand_in": null,
+   "stand_in": "ardea_herodias",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
-   "id": "sturnus_vulgaris",
-   "scientific": "Sturnus vulgaris",
-   "common": "european starling",
+   "id": "psaltriparus_minimus",
+   "scientific": "Psaltriparus minimus",
+   "common": "bushtit",
    "kind": "bird",
-   "records": 22650,
+   "records": 25036,
    "why": [
-    "scavenger"
+    "most recorded: 25 of its class (1% of the class's records)"
    ],
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
    "stand_in": "aphelocoma_californica",
-   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-  },
-  {
-   "id": "larus_californicus",
-   "scientific": "Larus californicus",
-   "common": "california gull",
-   "kind": "bird",
-   "records": 18782,
-   "why": [
-    "scavenger"
-   ],
-   "body_plan": "bird",
-   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-   "estimate_credits": 30,
-   "stand_in": null,
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -343,7 +324,7 @@
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
-   "stand_in": null,
+   "stand_in": "ardea_herodias",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -358,7 +339,7 @@
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
-   "stand_in": null,
+   "stand_in": "ardea_herodias",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -373,7 +354,7 @@
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
-   "stand_in": null,
+   "stand_in": "ardea_herodias",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -403,7 +384,7 @@
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
-   "stand_in": null,
+   "stand_in": "larus_glaucescens",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -418,7 +399,7 @@
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
-   "stand_in": null,
+   "stand_in": "larus_glaucescens",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -433,22 +414,7 @@
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
-   "stand_in": null,
-   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-  },
-  {
-   "id": "larus_glaucescens",
-   "scientific": "Larus glaucescens",
-   "common": "glaucous-winged gull",
-   "kind": "bird",
-   "records": 8645,
-   "why": [
-    "predator and scavenger"
-   ],
-   "body_plan": "bird",
-   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-   "estimate_credits": 30,
-   "stand_in": null,
+   "stand_in": "larus_glaucescens",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -457,36 +423,6 @@
    "common": "pelagic cormorant",
    "kind": "bird",
    "records": 8011,
-   "why": [
-    "predator"
-   ],
-   "body_plan": "bird",
-   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-   "estimate_credits": 30,
-   "stand_in": null,
-   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-  },
-  {
-   "id": "accipiter_striatus",
-   "scientific": "Accipiter striatus",
-   "common": "sharp-shinned hawk",
-   "kind": "bird",
-   "records": 7606,
-   "why": [
-    "predator"
-   ],
-   "body_plan": "bird",
-   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-   "estimate_credits": 30,
-   "stand_in": "buteo_jamaicensis",
-   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-  },
-  {
-   "id": "megaceryle_alcyon",
-   "scientific": "Megaceryle alcyon",
-   "common": "belted kingfisher",
-   "kind": "bird",
-   "records": 6993,
    "why": [
     "predator"
    ],
@@ -508,7 +444,7 @@
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
-   "stand_in": null,
+   "stand_in": "larus_glaucescens",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -523,7 +459,7 @@
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
-   "stand_in": null,
+   "stand_in": "larus_glaucescens",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -553,7 +489,7 @@
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
-   "stand_in": null,
+   "stand_in": "larus_glaucescens",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -568,7 +504,7 @@
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
-   "stand_in": null,
+   "stand_in": "larus_glaucescens",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -598,7 +534,7 @@
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
-   "stand_in": null,
+   "stand_in": "strix_varia",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -628,7 +564,7 @@
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
-   "stand_in": null,
+   "stand_in": "falco_columbarius",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -643,7 +579,7 @@
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
-   "stand_in": null,
+   "stand_in": "mergus_merganser",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -658,37 +594,7 @@
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
-   "stand_in": null,
-   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-  },
-  {
-   "id": "falco_columbarius",
-   "scientific": "Falco columbarius",
-   "common": "merlin",
-   "kind": "bird",
-   "records": 3308,
-   "why": [
-    "predator"
-   ],
-   "body_plan": "bird",
-   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-   "estimate_credits": 30,
-   "stand_in": null,
-   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-  },
-  {
-   "id": "pandion_haliaetus",
-   "scientific": "Pandion haliaetus",
-   "common": "osprey",
-   "kind": "bird",
-   "records": 3155,
-   "why": [
-    "predator"
-   ],
-   "body_plan": "bird",
-   "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
-   "estimate_credits": 30,
-   "stand_in": "buteo_jamaicensis",
+   "stand_in": "larus_glaucescens",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -718,7 +624,7 @@
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
-   "stand_in": null,
+   "stand_in": "larus_glaucescens",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -748,7 +654,7 @@
    "body_plan": "bird",
    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
    "estimate_credits": 30,
-   "stand_in": null,
+   "stand_in": "larus_glaucescens",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -865,7 +771,8 @@
    "kind": "mammal",
    "records": 159,
    "why": [
-    "predator"
+    "predator",
+    "most recorded: 9 of its class (2% of the class's records)"
    ],
    "body_plan": "quadruped",
    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
@@ -874,18 +781,33 @@
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
-   "id": "lynx_rufus",
-   "scientific": "Lynx rufus",
-   "common": "bobcat",
+   "id": "scapanus_latimanus",
+   "scientific": "Scapanus latimanus",
+   "common": "broad-footed mole",
    "kind": "mammal",
-   "records": 109,
+   "records": 131,
    "why": [
-    "predator"
+    "most recorded: 10 of its class (2% of the class's records)"
    ],
-   "body_plan": "quadruped",
-   "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+   "body_plan": "rodent",
+   "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
    "estimate_credits": 30,
-   "stand_in": "puma_concolor",
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "thomomys_bottae",
+   "scientific": "Thomomys bottae",
+   "common": "botta's pocket gopher",
+   "kind": "mammal",
+   "records": 125,
+   "why": [
+    "most recorded: 11 of its class (2% of the class's records)"
+   ],
+   "body_plan": "rodent",
+   "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+   "estimate_credits": 30,
+   "stand_in": "microtus_californicus",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -895,7 +817,38 @@
    "kind": "mammal",
    "records": 98,
    "why": [
-    "predator"
+    "predator",
+    "most recorded: 13 of its class (1% of the class's records)"
+   ],
+   "body_plan": "quadruped",
+   "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+   "estimate_credits": 30,
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "sciurus_niger",
+   "scientific": "Sciurus niger",
+   "common": "fox squirrel",
+   "kind": "mammal",
+   "records": 92,
+   "why": [
+    "most recorded: 14 of its class (1% of the class's records)"
+   ],
+   "body_plan": "rodent",
+   "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+   "estimate_credits": 30,
+   "stand_in": "sciurus_griseus",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "eschrichtius_robustus",
+   "scientific": "Eschrichtius robustus",
+   "common": "gray whale",
+   "kind": "mammal",
+   "records": 91,
+   "why": [
+    "most recorded: 15 of its class (1% of the class's records)"
    ],
    "body_plan": "quadruped",
    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
@@ -910,42 +863,28 @@
    "kind": "mammal",
    "records": 86,
    "why": [
-    "scavenger"
+    "scavenger",
+    "most recorded: 16 of its class (1% of the class's records)"
    ],
    "body_plan": "rodent",
    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
    "estimate_credits": 30,
-   "stand_in": null,
+   "stand_in": "sorex_monticolus",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
-   "id": "lontra_canadensis",
-   "scientific": "Lontra canadensis",
-   "common": "north american river otter",
+   "id": "tadarida_brasiliensis",
+   "scientific": "Tadarida brasiliensis",
+   "common": "mexican free-tailed bat",
    "kind": "mammal",
-   "records": 83,
+   "records": 72,
    "why": [
-    "predator"
+    "most recorded: 18 of its class (1% of the class's records)"
    ],
    "body_plan": "quadruped",
    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
    "estimate_credits": 30,
-   "stand_in": "canis_latrans",
-   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
-  },
-  {
-   "id": "peromyscus_maniculatus",
-   "scientific": "Peromyscus maniculatus",
-   "common": "deer mouse",
-   "kind": "mammal",
-   "records": 59,
-   "why": [
-    "scavenger"
-   ],
-   "body_plan": "rodent",
-   "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
-   "estimate_credits": 30,
-   "stand_in": "microtus_californicus",
+   "stand_in": null,
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -955,7 +894,53 @@
    "kind": "mammal",
    "records": 51,
    "why": [
-    "scavenger"
+    "scavenger",
+    "most recorded: 21 of its class (1% of the class's records)"
+   ],
+   "body_plan": "rodent",
+   "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+   "estimate_credits": 30,
+   "stand_in": "sorex_monticolus",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "reithrodontomys_megalotis",
+   "scientific": "Reithrodontomys megalotis",
+   "common": "western harvest mouse",
+   "kind": "mammal",
+   "records": 38,
+   "why": [
+    "most recorded: 22 of its class (1% of the class's records)"
+   ],
+   "body_plan": "rodent",
+   "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+   "estimate_credits": 30,
+   "stand_in": "microtus_californicus",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "mephitis_mephitis",
+   "scientific": "Mephitis mephitis",
+   "common": "striped skunk",
+   "kind": "mammal",
+   "records": 36,
+   "why": [
+    "most recorded: 23 of its class (1% of the class's records)"
+   ],
+   "body_plan": "quadruped",
+   "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+   "estimate_credits": 30,
+   "stand_in": "canis_latrans",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "neurotrichus_gibbsii",
+   "scientific": "Neurotrichus gibbsii",
+   "common": "shrew mole",
+   "kind": "mammal",
+   "records": 32,
+   "why": [
+    "most recorded: 24 of its class (0% of the class's records)"
    ],
    "body_plan": "rodent",
    "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
@@ -990,7 +975,7 @@
    "body_plan": "quadruped",
    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
    "estimate_credits": 30,
-   "stand_in": "canis_latrans",
+   "stand_in": "lontra_canadensis",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -1035,7 +1020,7 @@
    "body_plan": "quadruped",
    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
    "estimate_credits": 30,
-   "stand_in": "canis_latrans",
+   "stand_in": "lontra_canadensis",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -1084,6 +1069,66 @@
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
+   "id": "trachemys_scripta",
+   "scientific": "Trachemys scripta",
+   "common": "slider",
+   "kind": "reptile",
+   "records": 1018,
+   "why": [
+    "most recorded: 1 of its class (35% of the class's records)"
+   ],
+   "body_plan": "reptile",
+   "rig": "reptile part rig template",
+   "estimate_credits": 25,
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "thamnophis_elegans",
+   "scientific": "Thamnophis elegans",
+   "common": "terrestrial garter snake",
+   "kind": "reptile",
+   "records": 334,
+   "why": [
+    "most recorded: 3 of its class (12% of the class's records)"
+   ],
+   "body_plan": "snake",
+   "rig": "none yet: a spine-wave rig",
+   "estimate_credits": 25,
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "elgaria_coerulea",
+   "scientific": "Elgaria coerulea",
+   "common": "northern alligator lizard",
+   "kind": "reptile",
+   "records": 262,
+   "why": [
+    "most recorded: 4 of its class (9% of the class's records)"
+   ],
+   "body_plan": "reptile",
+   "rig": "reptile part rig template",
+   "estimate_credits": 25,
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "thamnophis_atratus",
+   "scientific": "Thamnophis atratus",
+   "common": "aquatic garter snake",
+   "kind": "reptile",
+   "records": 116,
+   "why": [
+    "most recorded: 5 of its class (4% of the class's records)"
+   ],
+   "body_plan": "snake",
+   "rig": "none yet: a spine-wave rig",
+   "estimate_credits": 25,
+   "stand_in": null,
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
    "id": "batrachoseps_attenuatus",
    "scientific": "Batrachoseps attenuatus",
    "common": "california slender salamander",
@@ -1095,7 +1140,7 @@
    "body_plan": "amphibian",
    "rig": "none yet: the reptile template, hopping",
    "estimate_credits": 25,
-   "stand_in": null,
+   "stand_in": "plethodon_vehiculum",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -1110,7 +1155,22 @@
    "body_plan": "amphibian",
    "rig": "none yet: the reptile template, hopping",
    "estimate_credits": 25,
-   "stand_in": null,
+   "stand_in": "anaxyrus_boreas",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "aneides_lugubris",
+   "scientific": "Aneides lugubris",
+   "common": "arboreal salamander",
+   "kind": "amphibian",
+   "records": 135,
+   "why": [
+    "most recorded: 3 of its class (7% of the class's records)"
+   ],
+   "body_plan": "amphibian",
+   "rig": "none yet: the reptile template, hopping",
+   "estimate_credits": 25,
+   "stand_in": "plethodon_vehiculum",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
@@ -1125,11 +1185,26 @@
    "body_plan": "gastropod",
    "rig": "none: procedural (a body of rings and a foot wave); no Meshy needed",
    "estimate_credits": 0,
-   "stand_in": null,
+   "stand_in": "ariolimax_columbianus",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
+   "id": "helminthoglypta_nickliniana",
+   "scientific": "Helminthoglypta nickliniana",
+   "common": "coast range shoulderband",
+   "kind": "invertebrate",
+   "records": 153,
+   "why": [
+    "most recorded: 2 of its class (8% of the class's records)"
+   ],
+   "body_plan": "gastropod",
+   "rig": "none: procedural (a body of rings and a foot wave); no Meshy needed",
+   "estimate_credits": 0,
+   "stand_in": "ariolimax_columbianus",
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   }
  ],
- "queued_credits": 2030,
+ "queued_credits": 2125,
  "animals": [
   {
    "gbif_key": 2476674,
@@ -1288,14 +1363,15 @@
    "mass_kg": 0.9228,
    "why": [
     "predator and scavenger",
-    "most recorded: 6 of its class (2% of the class's records)"
+    "most recorded: 6 of its class (2% of the class's records)",
+    "curated and present"
    ],
    "listed": true
   },
   {
    "gbif_key": 9362842,
    "scientific": "Junco hyemalis",
-   "common": "dark-eyed junco",
+   "common": "Dark-eyed junco",
    "records": 48507,
    "taxonomy": {
     "kingdom": "Animalia",
@@ -1314,14 +1390,15 @@
    ],
    "mass_kg": 0.0195,
    "why": [
-    "most recorded: 7 of its class (2% of the class's records)"
+    "most recorded: 7 of its class (2% of the class's records)",
+    "curated and present"
    ],
    "listed": true
   },
   {
    "gbif_key": 9510564,
    "scientific": "Turdus migratorius",
-   "common": "american robin",
+   "common": "American robin",
    "records": 47156,
    "taxonomy": {
     "kingdom": "Animalia",
@@ -1340,7 +1417,8 @@
    ],
    "mass_kg": 0.0785,
    "why": [
-    "most recorded: 8 of its class (2% of the class's records)"
+    "most recorded: 8 of its class (2% of the class's records)",
+    "curated and present"
    ],
    "listed": true
   },
@@ -1399,9 +1477,89 @@
    "listed": true
   },
   {
+   "gbif_key": 9761484,
+   "scientific": "Anas platyrhynchos",
+   "common": "mallard",
+   "records": 42702,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Anseriformes",
+    "family": "Anatidae",
+    "genus": "Anas"
+   },
+   "kind": "bird",
+   "rank_in_class": 11,
+   "share_of_class": 0.0208,
+   "id": "anas_platyrhynchos",
+   "role": [
+    "omnivore"
+   ],
+   "mass_kg": 0.8434,
+   "why": [
+    "most recorded: 11 of its class (2% of the class's records)",
+    "curated and present"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2487783,
+   "scientific": "Poecile rufescens",
+   "common": "Chestnut-backed chickadee",
+   "records": 41837,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Paridae",
+    "genus": "Poecile"
+   },
+   "kind": "bird",
+   "rank_in_class": 12,
+   "share_of_class": 0.0204,
+   "id": "poecile_rufescens",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.0153,
+   "why": [
+    "most recorded: 12 of its class (2% of the class's records)",
+    "curated and present"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 7341600,
+   "scientific": "Melozone crissalis",
+   "common": "california towhee",
+   "records": 39705,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Passerellidae",
+    "genus": "Melozone"
+   },
+   "kind": "bird",
+   "rank_in_class": 13,
+   "share_of_class": 0.0194,
+   "id": "melozone_crissalis",
+   "role": [
+    "omnivore"
+   ],
+   "mass_kg": 0.0343,
+   "why": [
+    "most recorded: 13 of its class (2% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
    "gbif_key": 2482507,
    "scientific": "Corvus brachyrhynchos",
-   "common": "american crow",
+   "common": "American crow",
    "records": 38940,
    "taxonomy": {
     "kingdom": "Animalia",
@@ -1421,14 +1579,42 @@
    ],
    "mass_kg": 0.4488,
    "why": [
-    "scavenger"
+    "scavenger",
+    "most recorded: 14 of its class (2% of the class's records)",
+    "curated and present"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2484907,
+   "scientific": "Sitta pygmaea",
+   "common": "pygmy nuthatch",
+   "records": 38660,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Sittidae",
+    "genus": "Sitta"
+   },
+   "kind": "bird",
+   "rank_in_class": 15,
+   "share_of_class": 0.0189,
+   "id": "sitta_pygmaea",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.0106,
+   "why": [
+    "most recorded: 15 of its class (2% of the class's records)"
    ],
    "listed": true
   },
   {
    "gbif_key": 2482414,
    "scientific": "Aphelocoma californica",
-   "common": "california/woodhouse's scrub-jay",
+   "common": "California scrub-jay",
    "records": 33762,
    "taxonomy": {
     "kingdom": "Animalia",
@@ -1449,6 +1635,7 @@
    "mass_kg": 0.0857,
    "why": [
     "scavenger",
+    "most recorded: 16 of its class (2% of the class's records)",
     "curated and present"
    ],
    "listed": true
@@ -1456,7 +1643,7 @@
   {
    "gbif_key": 2482598,
    "scientific": "Cyanocitta stelleri",
-   "common": "steller's jay",
+   "common": "Steller's jay",
    "records": 32224,
    "taxonomy": {
     "kingdom": "Animalia",
@@ -1475,7 +1662,34 @@
    ],
    "mass_kg": 0.128,
    "why": [
+    "most recorded: 17 of its class (2% of the class's records)",
     "curated and present"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 7341805,
+   "scientific": "Setophaga coronata",
+   "common": "yellow-rumped warbler",
+   "records": 31622,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Parulidae",
+    "genus": "Setophaga"
+   },
+   "kind": "bird",
+   "rank_in_class": 18,
+   "share_of_class": 0.0154,
+   "id": "setophaga_coronata",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.0082,
+   "why": [
+    "most recorded: 18 of its class (2% of the class's records)"
    ],
    "listed": true
   },
@@ -1501,7 +1715,8 @@
    ],
    "mass_kg": 1.8065,
    "why": [
-    "predator"
+    "predator",
+    "most recorded: 19 of its class (2% of the class's records)"
    ],
    "listed": true
   },
@@ -1527,14 +1742,67 @@
    ],
    "mass_kg": 0.6037,
    "why": [
-    "predator"
+    "predator",
+    "most recorded: 20 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2474393,
+   "scientific": "Fulica americana",
+   "common": "american coot",
+   "records": 28085,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Gruiformes",
+    "family": "Rallidae",
+    "genus": "Fulica"
+   },
+   "kind": "bird",
+   "rank_in_class": 21,
+   "share_of_class": 0.0137,
+   "id": "fulica_americana",
+   "role": [
+    "herbivore"
+   ],
+   "mass_kg": 0.6367,
+   "why": [
+    "most recorded: 21 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 6092651,
+   "scientific": "Setophaga townsendi",
+   "common": "townsend's warbler",
+   "records": 27717,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Parulidae",
+    "genus": "Setophaga"
+   },
+   "kind": "bird",
+   "rank_in_class": 22,
+   "share_of_class": 0.0135,
+   "id": "setophaga_townsendi",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.0082,
+   "why": [
+    "most recorded: 22 of its class (1% of the class's records)"
    ],
    "listed": true
   },
   {
    "gbif_key": 9630752,
    "scientific": "Ardea herodias",
-   "common": "great blue/cocoi heron",
+   "common": "great blue heron",
    "records": 27329,
    "taxonomy": {
     "kingdom": "Animalia",
@@ -1553,7 +1821,9 @@
    ],
    "mass_kg": 2.5234,
    "why": [
-    "predator"
+    "predator",
+    "most recorded: 23 of its class (1% of the class's records)",
+    "curated and present"
    ],
    "listed": true
   },
@@ -1580,14 +1850,41 @@
    ],
    "mass_kg": 3.4278,
    "why": [
-    "predator and scavenger"
+    "predator and scavenger",
+    "most recorded: 24 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2494988,
+   "scientific": "Psaltriparus minimus",
+   "common": "bushtit",
+   "records": 25036,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Aegithalidae",
+    "genus": "Psaltriparus"
+   },
+   "kind": "bird",
+   "rank_in_class": 25,
+   "share_of_class": 0.0122,
+   "id": "psaltriparus_minimus",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.0053,
+   "why": [
+    "most recorded: 25 of its class (1% of the class's records)"
    ],
    "listed": true
   },
   {
    "gbif_key": 9809229,
    "scientific": "Sturnus vulgaris",
-   "common": "european starling",
+   "common": "European starling",
    "records": 22650,
    "taxonomy": {
     "kingdom": "Animalia",
@@ -1607,7 +1904,8 @@
    ],
    "mass_kg": 0.0771,
    "why": [
-    "scavenger"
+    "scavenger",
+    "curated and present"
    ],
    "listed": true
   },
@@ -1642,7 +1940,7 @@
   {
    "gbif_key": 2481146,
    "scientific": "Larus californicus",
-   "common": "california gull",
+   "common": "California gull",
    "records": 18782,
    "taxonomy": {
     "kingdom": "Animalia",
@@ -1662,7 +1960,8 @@
    ],
    "mass_kg": 0.6834,
    "why": [
-    "scavenger"
+    "scavenger",
+    "curated and present"
    ],
    "listed": true
   },
@@ -1715,6 +2014,32 @@
    "mass_kg": 0.371,
    "why": [
     "predator"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 9533566,
+   "scientific": "Troglodytes pacificus",
+   "common": "Pacific wren",
+   "records": 12983,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Troglodytidae",
+    "genus": "Troglodytes"
+   },
+   "kind": "bird",
+   "rank_in_class": 51,
+   "share_of_class": 0.0063,
+   "id": "troglodytes_pacificus",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.0115,
+   "why": [
+    "curated and present"
    ],
    "listed": true
   },
@@ -1876,6 +2201,32 @@
    "listed": true
   },
   {
+   "gbif_key": 9192501,
+   "scientific": "Leuconotopicus villosus",
+   "common": "hairy woodpecker",
+   "records": 8651,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Piciformes",
+    "family": "Picidae",
+    "genus": "Leuconotopicus"
+   },
+   "kind": "bird",
+   "rank_in_class": 73,
+   "share_of_class": 0.0042,
+   "id": "leuconotopicus_villosus",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.081,
+   "why": [
+    "curated and present"
+   ],
+   "listed": true
+  },
+  {
    "gbif_key": 2481196,
    "scientific": "Larus glaucescens",
    "common": "glaucous-winged gull",
@@ -1898,7 +2249,8 @@
    ],
    "mass_kg": 1.0565,
    "why": [
-    "predator and scavenger"
+    "predator and scavenger",
+    "curated and present"
    ],
    "listed": true
   },
@@ -1929,6 +2281,32 @@
    "listed": true
   },
   {
+   "gbif_key": 9568685,
+   "scientific": "Empidonax difficilis",
+   "common": "Pacific-slope flycatcher",
+   "records": 7793,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Tyrannidae",
+    "genus": "Empidonax"
+   },
+   "kind": "bird",
+   "rank_in_class": 77,
+   "share_of_class": 0.0038,
+   "id": "empidonax_difficilis",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.0107,
+   "why": [
+    "curated and present"
+   ],
+   "listed": true
+  },
+  {
    "gbif_key": 9740253,
    "scientific": "Accipiter striatus",
    "common": "sharp-shinned hawk",
@@ -1950,14 +2328,15 @@
    ],
    "mass_kg": 0.1306,
    "why": [
-    "predator"
+    "predator",
+    "curated and present"
    ],
    "listed": true
   },
   {
    "gbif_key": 2475472,
    "scientific": "Megaceryle alcyon",
-   "common": "belted kingfisher",
+   "common": "Belted kingfisher",
    "records": 6993,
    "taxonomy": {
     "kingdom": "Animalia",
@@ -1976,7 +2355,8 @@
    ],
    "mass_kg": 0.148,
    "why": [
-    "predator"
+    "predator",
+    "curated and present"
    ],
    "listed": true
   },
@@ -2061,7 +2441,7 @@
   {
    "gbif_key": 5228080,
    "scientific": "Callipepla californica",
-   "common": "california quail",
+   "common": "California quail",
    "records": 6169,
    "taxonomy": {
     "kingdom": "Animalia",
@@ -2266,8 +2646,7 @@
    "why": [
     "predator"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/mergus_serrator.json"
+   "listed": true
   },
   {
    "gbif_key": 4848480,
@@ -2318,7 +2697,8 @@
    ],
    "mass_kg": 0.1885,
    "why": [
-    "predator"
+    "predator",
+    "curated and present"
    ],
    "listed": true
   },
@@ -2344,7 +2724,60 @@
    ],
    "mass_kg": 1.4832,
    "why": [
-    "predator"
+    "predator",
+    "curated and present"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2490926,
+   "scientific": "Ixoreus naevius",
+   "common": "Varied thrush",
+   "records": 2805,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Turdidae",
+    "genus": "Ixoreus"
+   },
+   "kind": "bird",
+   "rank_in_class": 121,
+   "share_of_class": 0.0014,
+   "id": "ixoreus_naevius",
+   "role": [
+    "omnivore"
+   ],
+   "mass_kg": 0.0682,
+   "why": [
+    "curated and present"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2484591,
+   "scientific": "Regulus satrapa",
+   "common": "Golden-crowned kinglet",
+   "records": 2669,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Aves",
+    "order": "Passeriformes",
+    "family": "Regulidae",
+    "genus": "Regulus"
+   },
+   "kind": "bird",
+   "rank_in_class": 122,
+   "share_of_class": 0.0013,
+   "id": "regulus_satrapa",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.0062,
+   "why": [
+    "curated and present"
    ],
    "listed": true
   },
@@ -2477,8 +2910,7 @@
    "why": [
     "predator"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/buteo_platypterus.json"
+   "listed": true
   },
   {
    "gbif_key": 2480367,
@@ -2670,7 +3102,7 @@
   {
    "gbif_key": 2440974,
    "scientific": "Odocoileus hemionus",
-   "common": "mule deer",
+   "common": "black-tailed deer",
    "records": 199,
    "taxonomy": {
     "kingdom": "Animalia",
@@ -2697,7 +3129,7 @@
   {
    "gbif_key": 2438603,
    "scientific": "Microtus californicus",
-   "common": "california vole",
+   "common": "California vole",
    "records": 166,
    "taxonomy": {
     "kingdom": "Animalia",
@@ -2743,7 +3175,60 @@
    ],
    "mass_kg": 175.0,
    "why": [
-    "predator"
+    "predator",
+    "most recorded: 9 of its class (2% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2436194,
+   "scientific": "Scapanus latimanus",
+   "common": "broad-footed mole",
+   "records": 131,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Mammalia",
+    "order": "Soricomorpha",
+    "family": "Talpidae",
+    "genus": "Scapanus"
+   },
+   "kind": "mammal",
+   "rank_in_class": 10,
+   "share_of_class": 0.0185,
+   "id": "scapanus_latimanus",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.055,
+   "why": [
+    "most recorded: 10 of its class (2% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2439385,
+   "scientific": "Thomomys bottae",
+   "common": "botta's pocket gopher",
+   "records": 125,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Mammalia",
+    "order": "Rodentia",
+    "family": "Geomyidae",
+    "genus": "Thomomys"
+   },
+   "kind": "mammal",
+   "rank_in_class": 11,
+   "share_of_class": 0.0177,
+   "id": "thomomys_bottae",
+   "role": [
+    "herbivore"
+   ],
+   "mass_kg": 0.1148,
+   "why": [
+    "most recorded: 11 of its class (2% of the class's records)"
    ],
    "listed": true
   },
@@ -2769,7 +3254,9 @@
    ],
    "mass_kg": 8.9041,
    "why": [
-    "predator"
+    "predator",
+    "most recorded: 12 of its class (2% of the class's records)",
+    "curated and present"
    ],
    "listed": true
   },
@@ -2795,7 +3282,60 @@
    ],
    "mass_kg": 52.5,
    "why": [
-    "predator"
+    "predator",
+    "most recorded: 13 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 5219683,
+   "scientific": "Sciurus niger",
+   "common": "fox squirrel",
+   "records": 92,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Mammalia",
+    "order": "Rodentia",
+    "family": "Sciuridae",
+    "genus": "Sciurus"
+   },
+   "kind": "mammal",
+   "rank_in_class": 14,
+   "share_of_class": 0.013,
+   "id": "sciurus_niger",
+   "role": [
+    "herbivore"
+   ],
+   "mass_kg": 0.7619,
+   "why": [
+    "most recorded: 14 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2440704,
+   "scientific": "Eschrichtius robustus",
+   "common": "gray whale",
+   "records": 91,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Mammalia",
+    "order": "Cetacea",
+    "family": "Eschrichtiidae",
+    "genus": "Eschrichtius"
+   },
+   "kind": "mammal",
+   "rank_in_class": 15,
+   "share_of_class": 0.0129,
+   "id": "eschrichtius_robustus",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 28500.0,
+   "why": [
+    "most recorded: 15 of its class (1% of the class's records)"
    ],
    "listed": true
   },
@@ -2822,14 +3362,15 @@
    ],
    "mass_kg": 0.0038,
    "why": [
-    "scavenger"
+    "scavenger",
+    "most recorded: 16 of its class (1% of the class's records)"
    ],
    "listed": true
   },
   {
    "gbif_key": 2433727,
    "scientific": "Lontra canadensis",
-   "common": "north american river otter",
+   "common": "North American river otter",
    "records": 83,
    "taxonomy": {
     "kingdom": "Animalia",
@@ -2848,7 +3389,35 @@
    ],
    "mass_kg": 8.0874,
    "why": [
-    "predator"
+    "predator",
+    "most recorded: 17 of its class (1% of the class's records)",
+    "curated and present"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2433011,
+   "scientific": "Tadarida brasiliensis",
+   "common": "mexican free-tailed bat",
+   "records": 72,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Mammalia",
+    "order": "Chiroptera",
+    "family": "Molossidae",
+    "genus": "Tadarida"
+   },
+   "kind": "mammal",
+   "rank_in_class": 18,
+   "share_of_class": 0.0102,
+   "id": "tadarida_brasiliensis",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.0125,
+   "why": [
+    "most recorded: 18 of its class (1% of the class's records)"
    ],
    "listed": true
   },
@@ -2874,6 +3443,7 @@
    ],
    "mass_kg": 0.6432,
    "why": [
+    "most recorded: 19 of its class (1% of the class's records)",
     "curated and present"
    ],
    "listed": true
@@ -2881,7 +3451,7 @@
   {
    "gbif_key": 2437967,
    "scientific": "Peromyscus maniculatus",
-   "common": "deer mouse",
+   "common": "Deer mouse",
    "records": 59,
    "taxonomy": {
     "kingdom": "Animalia",
@@ -2901,7 +3471,9 @@
    ],
    "mass_kg": 0.0213,
    "why": [
-    "scavenger"
+    "scavenger",
+    "most recorded: 20 of its class (1% of the class's records)",
+    "curated and present"
    ],
    "listed": true
   },
@@ -2928,7 +3500,86 @@
    ],
    "mass_kg": 0.0059,
    "why": [
-    "scavenger"
+    "scavenger",
+    "most recorded: 21 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2437874,
+   "scientific": "Reithrodontomys megalotis",
+   "common": "western harvest mouse",
+   "records": 38,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Mammalia",
+    "order": "Rodentia",
+    "family": "Cricetidae",
+    "genus": "Reithrodontomys"
+   },
+   "kind": "mammal",
+   "rank_in_class": 22,
+   "share_of_class": 0.0054,
+   "id": "reithrodontomys_megalotis",
+   "role": [
+    "herbivore"
+   ],
+   "mass_kg": 0.0094,
+   "why": [
+    "most recorded: 22 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 5219380,
+   "scientific": "Mephitis mephitis",
+   "common": "striped skunk",
+   "records": 36,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Mammalia",
+    "order": "Carnivora",
+    "family": "Mephitidae",
+    "genus": "Mephitis"
+   },
+   "kind": "mammal",
+   "rank_in_class": 23,
+   "share_of_class": 0.0051,
+   "id": "mephitis_mephitis",
+   "role": [
+    "omnivore"
+   ],
+   "mass_kg": 2.085,
+   "why": [
+    "most recorded: 23 of its class (1% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2436208,
+   "scientific": "Neurotrichus gibbsii",
+   "common": "shrew mole",
+   "records": 32,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Mammalia",
+    "order": "Soricomorpha",
+    "family": "Talpidae",
+    "genus": "Neurotrichus"
+   },
+   "kind": "mammal",
+   "rank_in_class": 24,
+   "share_of_class": 0.0045,
+   "id": "neurotrichus_gibbsii",
+   "role": [
+    "insectivore"
+   ],
+   "mass_kg": 0.0089,
+   "why": [
+    "most recorded: 24 of its class (0% of the class's records)"
    ],
    "listed": true
   },
@@ -2954,6 +3605,7 @@
    ],
    "mass_kg": 3.8337,
    "why": [
+    "most recorded: 26 of its class (0% of the class's records)",
     "curated and present"
    ],
    "listed": true
@@ -2961,7 +3613,7 @@
   {
    "gbif_key": 8080937,
    "scientific": "Otospermophilus beecheyi",
-   "common": "california ground squirrel",
+   "common": "California ground squirrel",
    "records": 17,
    "taxonomy": {
     "kingdom": "Animalia",
@@ -3139,8 +3791,7 @@
    "why": [
     "predator"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/taxidea_taxus.json"
+   "listed": true
   },
   {
    "gbif_key": 5219243,
@@ -3166,8 +3817,7 @@
    "why": [
     "predator"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/vulpes_vulpes.json"
+   "listed": true
   },
   {
    "gbif_key": 2433487,
@@ -3219,8 +3869,7 @@
    "why": [
     "predator"
    ],
-   "listed": true,
-   "traits": "library/animals/traits/uncia_uncia.json"
+   "listed": true
   },
   {
    "gbif_key": 5219672,
@@ -3251,7 +3900,7 @@
   {
    "gbif_key": 2435099,
    "scientific": "Puma concolor",
-   "common": "puma",
+   "common": "mountain lion",
    "records": 1,
    "taxonomy": {
     "kingdom": "Animalia",
@@ -3271,6 +3920,127 @@
    "mass_kg": 51.6,
    "why": [
     "curated and present"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2443002,
+   "scientific": "Trachemys scripta",
+   "common": "slider",
+   "records": 1018,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Testudines",
+    "order": null,
+    "family": "Emydidae",
+    "genus": "Trachemys"
+   },
+   "kind": "reptile",
+   "rank_in_class": 1,
+   "share_of_class": 0.3527,
+   "id": "trachemys_scripta",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 1 of its class (35% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2451234,
+   "scientific": "Sceloporus occidentalis",
+   "common": "western fence lizard",
+   "records": 855,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Squamata",
+    "order": null,
+    "family": "Phrynosomatidae",
+    "genus": "Sceloporus"
+   },
+   "kind": "reptile",
+   "rank_in_class": 2,
+   "share_of_class": 0.2963,
+   "id": "sceloporus_occidentalis",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 2 of its class (30% of the class's records)",
+    "curated and present"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2457545,
+   "scientific": "Thamnophis elegans",
+   "common": "terrestrial garter snake",
+   "records": 334,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Squamata",
+    "order": null,
+    "family": "Colubridae",
+    "genus": "Thamnophis"
+   },
+   "kind": "reptile",
+   "rank_in_class": 3,
+   "share_of_class": 0.1157,
+   "id": "thamnophis_elegans",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 3 of its class (12% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2468254,
+   "scientific": "Elgaria coerulea",
+   "common": "northern alligator lizard",
+   "records": 262,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Squamata",
+    "order": null,
+    "family": "Anguidae",
+    "genus": "Elgaria"
+   },
+   "kind": "reptile",
+   "rank_in_class": 4,
+   "share_of_class": 0.0908,
+   "id": "elgaria_coerulea",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 4 of its class (9% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2457647,
+   "scientific": "Thamnophis atratus",
+   "common": "aquatic garter snake",
+   "records": 116,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Squamata",
+    "order": null,
+    "family": "Colubridae",
+    "genus": "Thamnophis"
+   },
+   "kind": "reptile",
+   "rank_in_class": 5,
+   "share_of_class": 0.0402,
+   "id": "thamnophis_atratus",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 5 of its class (4% of the class's records)"
    ],
    "listed": true
   },
@@ -3323,6 +4093,55 @@
    "listed": true
   },
   {
+   "gbif_key": 2431711,
+   "scientific": "Aneides lugubris",
+   "common": "arboreal salamander",
+   "records": 135,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Amphibia",
+    "order": "Caudata",
+    "family": "Plethodontidae",
+    "genus": "Aneides"
+   },
+   "kind": "amphibian",
+   "rank_in_class": 3,
+   "share_of_class": 0.0705,
+   "id": "aneides_lugubris",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 3 of its class (7% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2431643,
+   "scientific": "Ensatina eschscholtzii",
+   "common": "ensatina (Oregon ensatina, E. e. oregonensis)",
+   "records": 127,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Amphibia",
+    "order": "Caudata",
+    "family": "Plethodontidae",
+    "genus": "Ensatina"
+   },
+   "kind": "amphibian",
+   "rank_in_class": 4,
+   "share_of_class": 0.0663,
+   "id": "ensatina_eschscholtzii",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 4 of its class (7% of the class's records)",
+    "curated and present"
+   ],
+   "listed": true
+  },
+  {
    "gbif_key": 5858758,
    "scientific": "Cornu aspersum",
    "common": "garden snail",
@@ -3343,6 +4162,30 @@
    "mass_kg": null,
    "why": [
     "most recorded: 1 of its class (29% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 2296150,
+   "scientific": "Helminthoglypta nickliniana",
+   "common": "coast range shoulderband",
+   "records": 153,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Mollusca",
+    "class": "Gastropoda",
+    "order": "Stylommatophora",
+    "family": "Xanthonychidae",
+    "genus": "Helminthoglypta"
+   },
+   "kind": "invertebrate",
+   "rank_in_class": 2,
+   "share_of_class": 0.0821,
+   "id": "helminthoglypta_nickliniana",
+   "role": [],
+   "mass_kg": null,
+   "why": [
+    "most recorded: 2 of its class (8% of the class's records)"
    ],
    "listed": true
   },
@@ -3371,11 +4214,59 @@
    "role": []
   },
   {
-   "id": "sceloporus_occidentalis",
-   "scientific": "Sceloporus occidentalis",
-   "common": "western fence lizard",
-   "kind": "reptile",
-   "records": 2838,
+   "id": "strix_varia",
+   "scientific": "Strix varia",
+   "common": "barred owl",
+   "kind": "bird",
+   "records": 79,
+   "why": [
+    "curated and present"
+   ],
+   "taxonomy": {},
+   "role": []
+  },
+  {
+   "id": "haliaeetus_leucocephalus",
+   "scientific": "Haliaeetus leucocephalus",
+   "common": "bald eagle",
+   "kind": "bird",
+   "records": 1401,
+   "why": [
+    "curated and present"
+   ],
+   "taxonomy": {},
+   "role": []
+  },
+  {
+   "id": "mergus_merganser",
+   "scientific": "Mergus merganser",
+   "common": "common merganser",
+   "kind": "bird",
+   "records": 1413,
+   "why": [
+    "curated and present"
+   ],
+   "taxonomy": {},
+   "role": []
+  },
+  {
+   "id": "megascops_kennicottii",
+   "scientific": "Megascops kennicottii",
+   "common": "western screech-owl",
+   "kind": "bird",
+   "records": 114,
+   "why": [
+    "curated and present"
+   ],
+   "taxonomy": {},
+   "role": []
+  },
+  {
+   "id": "aegolius_acadicus",
+   "scientific": "Aegolius acadicus",
+   "common": "northern saw-whet owl",
+   "kind": "bird",
+   "records": 269,
    "why": [
     "curated and present"
    ],
@@ -3467,7 +4358,7 @@
   {
    "id": "junco_hyemalis",
    "scientific": "Junco hyemalis",
-   "common": "dark-eyed junco",
+   "common": "Dark-eyed junco",
    "kind": "bird",
    "records": 48507,
    "rank_in_class": 7,
@@ -3480,7 +4371,7 @@
   {
    "id": "turdus_migratorius",
    "scientific": "Turdus migratorius",
-   "common": "american robin",
+   "common": "American robin",
    "kind": "bird",
    "records": 47156,
    "rank_in_class": 8,
@@ -3527,12 +4418,12 @@
    "role": [
     "omnivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "poecile_rufescens",
    "scientific": "Poecile rufescens",
-   "common": "chestnut-backed chickadee",
+   "common": "Chestnut-backed chickadee",
    "kind": "bird",
    "records": 41837,
    "rank_in_class": 12,
@@ -3540,7 +4431,7 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "melozone_crissalis",
@@ -3553,12 +4444,12 @@
    "role": [
     "omnivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "corvus_brachyrhynchos",
    "scientific": "Corvus brachyrhynchos",
-   "common": "american crow",
+   "common": "American crow",
    "kind": "bird",
    "records": 38940,
    "rank_in_class": 14,
@@ -3580,12 +4471,12 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "aphelocoma_californica",
    "scientific": "Aphelocoma californica",
-   "common": "california/woodhouse's scrub-jay",
+   "common": "California scrub-jay",
    "kind": "bird",
    "records": 33762,
    "rank_in_class": 16,
@@ -3599,7 +4490,7 @@
   {
    "id": "cyanocitta_stelleri",
    "scientific": "Cyanocitta stelleri",
-   "common": "steller's jay",
+   "common": "Steller's jay",
    "kind": "bird",
    "records": 32224,
    "rank_in_class": 17,
@@ -3620,7 +4511,7 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "phalacrocorax_auritus",
@@ -3659,7 +4550,7 @@
    "role": [
     "herbivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "setophaga_townsendi",
@@ -3672,12 +4563,12 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "ardea_herodias",
    "scientific": "Ardea herodias",
-   "common": "great blue/cocoi heron",
+   "common": "great blue heron",
    "kind": "bird",
    "records": 27329,
    "rank_in_class": 23,
@@ -3712,7 +4603,7 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "zonotrichia_atricapilla",
@@ -3769,7 +4660,7 @@
   {
    "id": "sturnus_vulgaris",
    "scientific": "Sturnus vulgaris",
-   "common": "european starling",
+   "common": "European starling",
    "kind": "bird",
    "records": 22650,
    "rank_in_class": 30,
@@ -3823,7 +4714,7 @@
   {
    "id": "larus_californicus",
    "scientific": "Larus californicus",
-   "common": "california gull",
+   "common": "California gull",
    "kind": "bird",
    "records": 18782,
    "rank_in_class": 35,
@@ -4032,7 +4923,7 @@
   {
    "id": "troglodytes_pacificus",
    "scientific": "Troglodytes pacificus",
-   "common": "pacific wren",
+   "common": "Pacific wren",
    "kind": "bird",
    "records": 12983,
    "rank_in_class": 51,
@@ -4040,7 +4931,7 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "leiothlypis_celata",
@@ -4327,7 +5218,7 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "larus_glaucescens",
@@ -4372,7 +5263,7 @@
   {
    "id": "empidonax_difficilis",
    "scientific": "Empidonax difficilis",
-   "common": "pacific-slope flycatcher",
+   "common": "Pacific-slope flycatcher",
    "kind": "bird",
    "records": 7793,
    "rank_in_class": 77,
@@ -4380,7 +5271,7 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "tachycineta_thalassina",
@@ -4450,7 +5341,7 @@
   {
    "id": "megaceryle_alcyon",
    "scientific": "Megaceryle alcyon",
-   "common": "belted kingfisher",
+   "common": "Belted kingfisher",
    "kind": "bird",
    "records": 6993,
    "rank_in_class": 83,
@@ -4528,7 +5419,7 @@
   {
    "id": "callipepla_californica",
    "scientific": "Callipepla californica",
-   "common": "california quail",
+   "common": "California quail",
    "kind": "bird",
    "records": 6169,
    "rank_in_class": 89,
@@ -4934,7 +5825,7 @@
   {
    "id": "ixoreus_naevius",
    "scientific": "Ixoreus naevius",
-   "common": "varied thrush",
+   "common": "Varied thrush",
    "kind": "bird",
    "records": 2805,
    "rank_in_class": 121,
@@ -4942,12 +5833,12 @@
    "role": [
     "omnivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "regulus_satrapa",
    "scientific": "Regulus satrapa",
-   "common": "golden-crowned kinglet",
+   "common": "Golden-crowned kinglet",
    "kind": "bird",
    "records": 2669,
    "rank_in_class": 122,
@@ -4955,7 +5846,7 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "aechmophorus_clarkii",
@@ -5404,7 +6295,7 @@
   {
    "id": "odocoileus_hemionus",
    "scientific": "Odocoileus hemionus",
-   "common": "mule deer",
+   "common": "black-tailed deer",
    "kind": "mammal",
    "records": 199,
    "rank_in_class": 7,
@@ -5417,7 +6308,7 @@
   {
    "id": "microtus_californicus",
    "scientific": "Microtus californicus",
-   "common": "california vole",
+   "common": "California vole",
    "kind": "mammal",
    "records": 166,
    "rank_in_class": 8,
@@ -5451,7 +6342,7 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "thomomys_bottae",
@@ -5464,7 +6355,7 @@
    "role": [
     "herbivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "lynx_rufus",
@@ -5503,7 +6394,7 @@
    "role": [
     "herbivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "eschrichtius_robustus",
@@ -5516,7 +6407,7 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "sorex_trowbridgii",
@@ -5535,7 +6426,7 @@
   {
    "id": "lontra_canadensis",
    "scientific": "Lontra canadensis",
-   "common": "north american river otter",
+   "common": "North American river otter",
    "kind": "mammal",
    "records": 83,
    "rank_in_class": 17,
@@ -5556,7 +6447,7 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "sylvilagus_bachmani",
@@ -5574,7 +6465,7 @@
   {
    "id": "peromyscus_maniculatus",
    "scientific": "Peromyscus maniculatus",
-   "common": "deer mouse",
+   "common": "Deer mouse",
    "kind": "mammal",
    "records": 59,
    "rank_in_class": 20,
@@ -5610,7 +6501,7 @@
    "role": [
     "herbivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "mephitis_mephitis",
@@ -5623,7 +6514,7 @@
    "role": [
     "omnivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "neurotrichus_gibbsii",
@@ -5636,7 +6527,7 @@
    "role": [
     "insectivore"
    ],
-   "listed": false
+   "listed": true
   },
   {
    "id": "urocyon_cinereoargenteus",
@@ -5654,7 +6545,7 @@
   {
    "id": "otospermophilus_beecheyi",
    "scientific": "Otospermophilus beecheyi",
-   "common": "california ground squirrel",
+   "common": "California ground squirrel",
    "kind": "mammal",
    "records": 17,
    "rank_in_class": 30,
@@ -6085,7 +6976,7 @@
   {
    "id": "puma_concolor",
    "scientific": "Puma concolor",
-   "common": "puma",
+   "common": "mountain lion",
    "kind": "mammal",
    "records": 1,
    "rank_in_class": 63,
@@ -6190,9 +7081,9 @@
    "listed": false
   },
   {
-   "id": "cervus_elaphus",
-   "scientific": "Cervus elaphus",
-   "common": "red deer",
+   "id": "cervus_canadensis",
+   "scientific": "Cervus canadensis",
+   "common": "Roosevelt elk",
    "kind": "mammal",
    "records": 1,
    "rank_in_class": 71,
@@ -6242,6 +7133,314 @@
    "listed": false
   },
   {
+   "id": "trachemys_scripta",
+   "scientific": "Trachemys scripta",
+   "common": "slider",
+   "kind": "reptile",
+   "records": 1018,
+   "rank_in_class": 1,
+   "share_of_class": 0.3527,
+   "role": [],
+   "listed": true
+  },
+  {
+   "id": "sceloporus_occidentalis",
+   "scientific": "Sceloporus occidentalis",
+   "common": "western fence lizard",
+   "kind": "reptile",
+   "records": 855,
+   "rank_in_class": 2,
+   "share_of_class": 0.2963,
+   "role": [],
+   "listed": true
+  },
+  {
+   "id": "thamnophis_elegans",
+   "scientific": "Thamnophis elegans",
+   "common": "terrestrial garter snake",
+   "kind": "reptile",
+   "records": 334,
+   "rank_in_class": 3,
+   "share_of_class": 0.1157,
+   "role": [],
+   "listed": true
+  },
+  {
+   "id": "elgaria_coerulea",
+   "scientific": "Elgaria coerulea",
+   "common": "northern alligator lizard",
+   "kind": "reptile",
+   "records": 262,
+   "rank_in_class": 4,
+   "share_of_class": 0.0908,
+   "role": [],
+   "listed": true
+  },
+  {
+   "id": "thamnophis_atratus",
+   "scientific": "Thamnophis atratus",
+   "common": "aquatic garter snake",
+   "kind": "reptile",
+   "records": 116,
+   "rank_in_class": 5,
+   "share_of_class": 0.0402,
+   "role": [],
+   "listed": true
+  },
+  {
+   "id": "pituophis_catenifer",
+   "scientific": "Pituophis catenifer",
+   "common": "bullsnake",
+   "kind": "reptile",
+   "records": 65,
+   "rank_in_class": 6,
+   "share_of_class": 0.0225,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "actinemys_marmorata",
+   "scientific": "Actinemys marmorata",
+   "common": "western pond turtle",
+   "kind": "reptile",
+   "records": 57,
+   "rank_in_class": 7,
+   "share_of_class": 0.0198,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "apalone_spinifera",
+   "scientific": "Apalone spinifera",
+   "common": "spiny softshell turtle",
+   "kind": "reptile",
+   "records": 51,
+   "rank_in_class": 8,
+   "share_of_class": 0.0177,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "charina_bottae",
+   "scientific": "Charina bottae",
+   "common": "northern rubber boa",
+   "kind": "reptile",
+   "records": 36,
+   "rank_in_class": 9,
+   "share_of_class": 0.0125,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "coluber_constrictor",
+   "scientific": "Coluber constrictor",
+   "common": "black racer",
+   "kind": "reptile",
+   "records": 36,
+   "rank_in_class": 10,
+   "share_of_class": 0.0125,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "crotalus_oreganus",
+   "scientific": "Crotalus oreganus",
+   "common": "abyssus",
+   "kind": "reptile",
+   "records": 17,
+   "rank_in_class": 11,
+   "share_of_class": 0.0059,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "elgaria_multicarinata",
+   "scientific": "Elgaria multicarinata",
+   "common": "southern alligator lizard",
+   "kind": "reptile",
+   "records": 10,
+   "rank_in_class": 12,
+   "share_of_class": 0.0035,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "pseudemys_nelsoni",
+   "scientific": "Pseudemys nelsoni",
+   "common": "florida red-bellied turtle",
+   "kind": "reptile",
+   "records": 7,
+   "rank_in_class": 13,
+   "share_of_class": 0.0024,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "thamnophis_sirtalis",
+   "scientific": "Thamnophis sirtalis",
+   "common": "common garter snake",
+   "kind": "reptile",
+   "records": 4,
+   "rank_in_class": 14,
+   "share_of_class": 0.0014,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "diadophis_punctatus",
+   "scientific": "Diadophis punctatus",
+   "common": "ring-necked snake",
+   "kind": "reptile",
+   "records": 3,
+   "rank_in_class": 15,
+   "share_of_class": 0.001,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "chelydra_serpentina",
+   "scientific": "Chelydra serpentina",
+   "common": "common snapping turtle",
+   "kind": "reptile",
+   "records": 2,
+   "rank_in_class": 16,
+   "share_of_class": 0.0007,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "chrysemys_picta",
+   "scientific": "Chrysemys picta",
+   "common": "painted turtle",
+   "kind": "reptile",
+   "records": 2,
+   "rank_in_class": 17,
+   "share_of_class": 0.0007,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "shinisaurus_crocodilurus",
+   "scientific": "Shinisaurus crocodilurus",
+   "common": "chinese crocodile lizard",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 18,
+   "share_of_class": 0.0003,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "thamnophis_couchii",
+   "scientific": "Thamnophis couchii",
+   "common": "couch's garter snake",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 19,
+   "share_of_class": 0.0003,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "heloderma_suspectum",
+   "scientific": "Heloderma suspectum",
+   "common": "gila monster",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 20,
+   "share_of_class": 0.0003,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "heloderma_horridum",
+   "scientific": "Heloderma horridum",
+   "common": "beaded lizard",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 21,
+   "share_of_class": 0.0003,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "plestiodon_skiltonianus",
+   "scientific": "Plestiodon skiltonianus",
+   "common": "western skink",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 22,
+   "share_of_class": 0.0003,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "lampropeltis_californiae",
+   "scientific": "Lampropeltis californiae",
+   "common": "california kingsnake",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 23,
+   "share_of_class": 0.0003,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "crotalus_viridis",
+   "scientific": "Crotalus viridis",
+   "common": "prairie rattlesnake",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 24,
+   "share_of_class": 0.0003,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "testudo_kleinmanni",
+   "scientific": "Testudo kleinmanni",
+   "common": "egyptian tortoise",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 25,
+   "share_of_class": 0.0003,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "apalone_ferox",
+   "scientific": "Apalone ferox",
+   "common": "florida softshell turtle",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 26,
+   "share_of_class": 0.0003,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "graptemys_ouachitensis",
+   "scientific": "Graptemys ouachitensis",
+   "common": "ouachita map turtle",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 27,
+   "share_of_class": 0.0003,
+   "role": [],
+   "listed": false
+  },
+  {
+   "id": "malaclemys_terrapin",
+   "scientific": "Malaclemys terrapin",
+   "common": "diamondback terrapin",
+   "kind": "reptile",
+   "records": 1,
+   "rank_in_class": 28,
+   "share_of_class": 0.0003,
+   "role": [],
+   "listed": false
+  },
+  {
    "id": "batrachoseps_attenuatus",
    "scientific": "Batrachoseps attenuatus",
    "common": "california slender salamander",
@@ -6272,18 +7471,18 @@
    "rank_in_class": 3,
    "share_of_class": 0.0705,
    "role": [],
-   "listed": false
+   "listed": true
   },
   {
    "id": "ensatina_eschscholtzii",
    "scientific": "Ensatina eschscholtzii",
-   "common": "ensatina",
+   "common": "ensatina (Oregon ensatina, E. e. oregonensis)",
    "kind": "amphibian",
    "records": 127,
    "rank_in_class": 4,
    "share_of_class": 0.0663,
    "role": [],
-   "listed": false
+   "listed": true
   },
   {
    "id": "taricha_torosa",
@@ -6393,7 +7592,7 @@
    "rank_in_class": 2,
    "share_of_class": 0.0821,
    "role": [],
-   "listed": false
+   "listed": true
   },
   {
    "id": "ariolimax_buttoni",
@@ -6601,7 +7800,7 @@
  "classes": {
   "bird": 150,
   "mammal": 80,
-  "reptile": 30,
+  "reptile": 5,
   "amphibian": 30,
   "fish": 30,
   "invertebrate": 20

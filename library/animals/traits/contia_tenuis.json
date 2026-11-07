@@ -1,0 +1,98 @@
+{
+ "id": "contia_tenuis",
+ "scientific": "Contia tenuis",
+ "common": "common sharp-tailed snake",
+ "kind": "reptile",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Squamata",
+  "order": null,
+  "family": "Colubridae",
+  "genus": "Contia"
+ },
+ "body_plan": "snake",
+ "mass_kg": 0.034,
+ "size": {
+  "length_m": 0.187,
+  "shoulder_or_wingspan_m": 0.006
+ },
+ "diet": null,
+ "senses": {
+  "sight": {
+   "range_m": 127.1
+  },
+  "sound": {
+   "range_m": 178.0
+  },
+  "scent": {
+   "range_m": 254.3
+  }
+ },
+ "rig": "none yet: a spine-wave rig",
+ "locomotion": {
+  "code": "contia_tenuis",
+  "class": "Squamata",
+  "order": null,
+  "family": "Colubridae",
+  "body_plan": "snake",
+  "mass_kg": 0.034,
+  "length_m": 0.187,
+  "hip_m": 0.056,
+  "posture": "sprawling",
+  "gaits": {
+   "walk": "sprawl",
+   "run": "sprawl-undulate"
+  },
+  "walk_mps": 0.52,
+  "trot_mps": 1.17,
+  "cruise_mps": 1.53,
+  "top_mps": 2.55,
+  "stride_hz": 6.96,
+  "stride_m": 0.17,
+  "sprint_s": 1.6,
+  "recover_s": 5.7,
+  "turn_rad_s": 5.8,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.019,
+   "max_rad": 0.2,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "turn_bend": true
+  },
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-07T16:04:46Z",
+  "from": [
+   "gbif taxonomy",
+   "amniote life-history database (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

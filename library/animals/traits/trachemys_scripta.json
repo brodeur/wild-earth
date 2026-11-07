@@ -1,0 +1,93 @@
+{
+ "id": "trachemys_scripta",
+ "scientific": "Trachemys scripta",
+ "common": "slider",
+ "kind": "reptile",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Testudines",
+  "order": null,
+  "family": "Emydidae",
+  "genus": "Trachemys"
+ },
+ "body_plan": "reptile",
+ "mass_kg": 1.854,
+ "size": {
+  "length_m": 0.442,
+  "shoulder_or_wingspan_m": 0.053
+ },
+ "diet": null,
+ "senses": {
+  "sight": {
+   "range_m": 282.9
+  },
+  "sound": {
+   "range_m": 396.0
+  },
+  "scent": {
+   "range_m": 565.7
+  }
+ },
+ "rig": "reptile part rig template",
+ "locomotion": {
+  "code": "trachemys_scripta",
+  "class": "Testudines",
+  "order": null,
+  "family": "Emydidae",
+  "body_plan": "reptile",
+  "mass_kg": 1.854,
+  "length_m": 0.442,
+  "hip_m": 0.053,
+  "posture": null,
+  "gaits": {},
+  "walk_mps": 0.51,
+  "trot_mps": 1.14,
+  "cruise_mps": 1.73,
+  "top_mps": 2.88,
+  "stride_hz": 3.82,
+  "stride_m": 0.3,
+  "sprint_s": 4.4,
+  "recover_s": 15.4,
+  "turn_rad_s": 3.77,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.087,
+   "max_rad": 0.44,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {},
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-07T15:53:59Z",
+  "from": [
+   "gbif taxonomy",
+   "amniote life-history database (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

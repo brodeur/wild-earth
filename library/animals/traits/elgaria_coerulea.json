@@ -1,0 +1,98 @@
+{
+ "id": "elgaria_coerulea",
+ "scientific": "Elgaria coerulea",
+ "common": "northern alligator lizard",
+ "kind": "reptile",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Squamata",
+  "order": null,
+  "family": "Anguidae",
+  "genus": "Elgaria"
+ },
+ "body_plan": "reptile",
+ "mass_kg": 0.0251,
+ "size": {
+  "length_m": 0.105,
+  "shoulder_or_wingspan_m": 0.013
+ },
+ "diet": null,
+ "senses": {
+  "sight": {
+   "range_m": 119.6
+  },
+  "sound": {
+   "range_m": 167.5
+  },
+  "scent": {
+   "range_m": 239.3
+  }
+ },
+ "rig": "reptile part rig template",
+ "locomotion": {
+  "code": "elgaria_coerulea",
+  "class": "Squamata",
+  "order": null,
+  "family": "Anguidae",
+  "body_plan": "reptile",
+  "mass_kg": 0.0251,
+  "length_m": 0.105,
+  "hip_m": 0.032,
+  "posture": "sprawling",
+  "gaits": {
+   "walk": "sprawl",
+   "run": "sprawl-undulate"
+  },
+  "walk_mps": 0.39,
+  "trot_mps": 0.88,
+  "cruise_mps": 1.33,
+  "top_mps": 2.22,
+  "stride_hz": 7.28,
+  "stride_m": 0.12,
+  "sprint_s": 1.5,
+  "recover_s": 5.2,
+  "turn_rad_s": 7.74,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.014,
+   "max_rad": 0.2,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "turn_bend": true
+  },
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-07T15:53:59Z",
+  "from": [
+   "gbif taxonomy",
+   "amniote life-history database (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

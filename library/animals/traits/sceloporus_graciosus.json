@@ -1,0 +1,98 @@
+{
+ "id": "sceloporus_graciosus",
+ "scientific": "Sceloporus graciosus",
+ "common": "sagebrush lizard",
+ "kind": "reptile",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Squamata",
+  "order": null,
+  "family": "Phrynosomatidae",
+  "genus": "Sceloporus"
+ },
+ "body_plan": "reptile",
+ "mass_kg": 0.0069,
+ "size": {
+  "length_m": 0.069,
+  "shoulder_or_wingspan_m": 0.008
+ },
+ "diet": null,
+ "senses": {
+  "sight": {
+   "range_m": 92.4
+  },
+  "sound": {
+   "range_m": 129.4
+  },
+  "scent": {
+   "range_m": 184.8
+  }
+ },
+ "rig": "reptile part rig template",
+ "locomotion": {
+  "code": "sceloporus_graciosus",
+  "class": "Squamata",
+  "order": null,
+  "family": "Phrynosomatidae",
+  "body_plan": "reptile",
+  "mass_kg": 0.0069,
+  "length_m": 0.069,
+  "hip_m": 0.021,
+  "posture": "sprawling",
+  "gaits": {
+   "walk": "sprawl",
+   "run": "sprawl-undulate"
+  },
+  "walk_mps": 0.32,
+  "trot_mps": 0.71,
+  "cruise_mps": 0.71,
+  "top_mps": 1.18,
+  "stride_hz": 8.84,
+  "stride_m": 0.08,
+  "sprint_s": 1.1,
+  "recover_s": 5.0,
+  "turn_rad_s": 8.0,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.012,
+   "max_rad": 0.2,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "turn_bend": true
+  },
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-07T16:04:46Z",
+  "from": [
+   "gbif taxonomy",
+   "amniote life-history database (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

@@ -1,0 +1,98 @@
+{
+ "id": "crotalus_oreganus",
+ "scientific": "Crotalus oreganus",
+ "common": "abyssus",
+ "kind": "reptile",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Squamata",
+  "order": null,
+  "family": "Viperidae",
+  "genus": "Crotalus"
+ },
+ "body_plan": "snake",
+ "mass_kg": 1.647,
+ "size": {
+  "length_m": 0.68,
+  "shoulder_or_wingspan_m": 0.02
+ },
+ "diet": null,
+ "senses": {
+  "sight": {
+   "range_m": 276.2
+  },
+  "sound": {
+   "range_m": 386.7
+  },
+  "scent": {
+   "range_m": 552.5
+  }
+ },
+ "rig": "none yet: a spine-wave rig",
+ "locomotion": {
+  "code": "crotalus_oreganus",
+  "class": "Squamata",
+  "order": null,
+  "family": "Viperidae",
+  "body_plan": "snake",
+  "mass_kg": 1.647,
+  "length_m": 0.68,
+  "hip_m": 0.204,
+  "posture": "sprawling",
+  "gaits": {
+   "walk": "sprawl",
+   "run": "sprawl-undulate"
+  },
+  "walk_mps": 1.0,
+  "trot_mps": 2.24,
+  "cruise_mps": 3.4,
+  "top_mps": 5.66,
+  "stride_hz": 3.89,
+  "stride_m": 0.58,
+  "sprint_s": 4.3,
+  "recover_s": 14.9,
+  "turn_rad_s": 3.04,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.036,
+   "max_rad": 0.2,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "turn_bend": true
+  },
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-07T16:09:19Z",
+  "from": [
+   "gbif taxonomy",
+   "amniote life-history database (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}
