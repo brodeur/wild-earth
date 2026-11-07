@@ -1,6 +1,9 @@
 // The probe poses chosen by rule from the loaded tile's own data (tools/probes/probes.json `_notes` in an entry).
 // Load into a page with the world ready, then:
 //   await __poseRule.eye(x, north, [tx, tn, th])    -> { pose, ... }  an eye-height pose that shows its cell type
+//   await __poseRule.eye(x, north, [tx, tn, th], { community: 'Sagebrush' })  -> the same, in the nearest row whose
+//                                                     community names that (the probe's intent, when the old pose's row
+//                                                     has changed under it: Teton's sage pose stood in forest after a rebuild)
 //   await __poseRule.river(x, north, [tx, tn, th])  -> { pose, ... }  on the bank, looking at the drawn river
 // Both start from the old pose and move it as little as the rule allows; the view keeps the old bearing.
 (() => {
@@ -14,12 +17,22 @@
   // the cell's shrub %) with the row's median sward or more at the foot and in the foreground, nowhere under 0.75 of it (the grass the clump placement draws, as grass.js's swardDensity
   // gives it: bare patches, roads, channels and outcrops thin it), away from roads and the water system.
   const EYE = { R_MAX: 300, STEP: 2, FOOT_R: 6, FOOT_MIN: 0.75, SHRUB_TOL: 0.2, SHRUB_TOL_MIN: 3, ROAD_R: 20, WATER_R: 30 };
-  async function eye(x0, n0, target) {
+  async function eye(x0, n0, target, opts = {}) {
     const we = W(), tile = we.tile, mix = tile.speciesMix, can = tile.canopy, grass = we.grass, res = tile.habitat.res, size = tile.size;
     const cell = (x, n) => [Math.floor(x / res), Math.floor((size - n) / res)];
     const rowAt = (x, n) => { const [i, j] = cell(x, n); return mix.at(i, j)?.index ?? null; };
-    const row0 = rowAt(x0, n0);
     const N = Math.round(size / res);
+    let row0 = rowAt(x0, n0), fromRow = null;
+    if (opts.community) {   // the nearest cell whose row's community names it; the most-cells such row on a tie
+      const want = opts.community.toLowerCase(), [i0, j0] = cell(x0, n0);
+      let best = null;
+      for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+        const m = mix.at(i, j); if (!m || !(m.name || '').toLowerCase().includes(want)) continue;
+        const d = Math.hypot(i - i0, j - j0); if (!best || d < best.d) best = { d, row: m.index, name: m.name };
+      }
+      if (!best) return { error: `no row names '${opts.community}'` };
+      fromRow = row0; row0 = best.row;
+    }
     const S = [], G = [];
     for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
       if ((mix.at(i, j)?.index ?? null) !== row0) continue;
@@ -39,7 +52,7 @@
     };
     const clear = (x, n, r, f) => [[x, n], ...ring(x, n, r), ...ring(x, n, r / 2)].every(([a, b]) => f(a, b));
     let best = null;
-    for (const [dx, dn, d] of offsets(EYE.R_MAX, EYE.STEP)) {
+    for (const [dx, dn, d] of offsets(opts.community ? 3 * EYE.R_MAX : EYE.R_MAX, opts.community ? 4 : EYE.STEP)) {
       if (best) break;
       const x = x0 + dx, n = n0 + dn;
       if (rowAt(x, n) !== row0) continue;
@@ -53,7 +66,7 @@
     const [tx, tn, th] = target;
     const pose = [Math.round(best.x), Math.round(best.n), 1.6, Math.round(best.x + tx - x0), Math.round(best.n + tn - n0), th];
     const oldFoot = foot(x0, n0), [oi, oj] = cell(x0, n0);
-    return { pose, row: row0, rowCells: S.length, shrubMedian: sMed, swardMedian: +gMed.toFixed(3), moved_m: +best.d.toFixed(1),
+    return { pose, row: row0, ...(fromRow !== null ? { oldRow: fromRow, community: opts.community } : {}), rowCells: S.length, shrubMedian: sMed, swardMedian: +gMed.toFixed(3), moved_m: +best.d.toFixed(1),
              at: { shrub: best.shrub, foot: +best.foot.toFixed(3), footMin: +best.footMin.toFixed(3) },
              old: { shrub: can.channel(oi, oj, 1), foot: +oldFoot[0].toFixed(3), footMin: +oldFoot[1].toFixed(3) } };
   }

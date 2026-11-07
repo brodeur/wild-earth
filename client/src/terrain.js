@@ -30,6 +30,11 @@ export const groundUniforms = {
   imagery: { value: 0 }, grassRef: { value: new THREE.Vector3(0.49, 0.47, 0.38) }, oakRef: { value: new THREE.Vector3(0.27, 0.34, 0.27) },
   canopyMap: { value: null },   // the cover texture (coverTexture): r tree, g shrub, b herb cover % (8-bit percent; on a tile with tufts the tufts' cover), a the riparian weight
   tuftGround: { value: 0 },     // 1 on a tile whose own bunchgrasses are drawn as tufts (coverTexture, grass.js TUFT): the ground between them
+  // That ground's surface near the camera (Terrain.updateGap, from the soil surface step's client/soil_surface.json, its
+  // ecological sites' reference sheets): gapSoil rgb the dry surface soil's reflectance, a the plant canopy's share of the
+  // surface (< 0: no data, the photo unmixed as before); gapLitter rgb the litter's, a its share; gapCrust rgb the
+  // biological crust's, a its share (the bare ground the rest)
+  gapSoil: { value: new THREE.Vector4(0, 0, 0, -1) }, gapLitter: { value: new THREE.Vector4() }, gapCrust: { value: new THREE.Vector4() },
   contactAO: { value: null },   // shadows.js: top-down sky occlusion under each near tree (r = 0 open .. 1 at the trunk)
   contactAOMatrix: { value: new THREE.Matrix4().set(0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 1) },   // world -> its uv
   // Measured season (season.js SeasonColour): the ground texture times seasonMap's multiplier (stored as
@@ -60,6 +65,10 @@ export const groundUniforms = {
 // The measured season for the CPU side: grass.js takes its blades' tint from `grass` (the open grass's
 // flat-ground ratio for the date over July, linear) when it is set; `version` bumps on each change.
 export const seasonState = { grass: null, date: null, version: 0 };
+// The litter between a steppe's tufts (updateGap): litter.js sets these (linear, display-referred as its palettes): the lying
+// grass stems' weathered grey and the old fallen leaves' greyest. Filled when litter.js loads (it imports this module, so not
+// the reverse).
+export const gapLitterPalette = { stem: null, leaf: null };
 // Riparian floor (habitat 6), terrain shader only: the class has no channel in masks.png, so the
 // client builds its weight from the habitat grid (the cover texture's A, bilinear across the 30 m cells
 // exactly as masks.png is; coverTexture). ripRef is the current texture's own linear mean over interior riparian cells, so one
@@ -525,7 +534,9 @@ const FRAG = /* glsl */`
   // fade out by pixel footprint as the blade tiers fade theirs, over a shade floor; the photo keeps the metre-scale hue
   // and brightness (patches, swales, the season). It thins exactly where the plants thin: gBare is grass.js's bareField
   // (its hash2 and vnoise in uint arithmetic, which matches the JS 32-bit imul), so a bare patch is the same patch.
-  uniform vec3 swardRoot; uniform vec3 swardTip; uniform float swardOn; uniform float tuftGround;
+  uniform vec3 swardRoot; uniform vec3 swardTip; uniform float swardOn; uniform float tuftGround; uniform vec4 gapSoil; uniform vec4 gapLitter; uniform vec4 gapCrust;
+  // the normal quantile (Tukey's lambda), for the share thresholds of a near-normal noise (gap ground)
+  float gapQ(float p) { p = clamp(p, 0.001, 0.999); return 0.5 + 0.158 * 4.91 * (pow(p, 0.14) - pow(1.0 - p, 0.14)); }
   float gHash2(vec2 ij, uint s) { uint h = uint(int(ij.x)) * 374761393u + uint(int(ij.y)) * 668265263u + s * 982451653u;
     h = (h ^ (h >> 13)) * 1274126177u; return float(h ^ (h >> 16)) * (1.0 / 4294967296.0); }
   float gVnoise(vec2 p, uint s) { vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
@@ -588,6 +599,7 @@ const FRAG = /* glsl */`
       c = mix(c, c * rr * ripDark, wRip * ripMix);
     }
     c = groundWater(c, vUv);   // the water system's wet margins and mud (groundUniforms.waterMap)
+    vec3 cPre = c;   // the photo's colour before the grain and the detail scans (the gap ground below keeps only their relief)
     vec3 cov3 = coverTex.rgb * 2.55;                    // tree, shrub, herb cover 0..1 (sky occlusion, litter, the sward)
     vec2 cov = cov3.rg;
     float dist = distance(vPosW, cameraPosition);
@@ -756,10 +768,42 @@ const FRAG = /* glsl */`
     // 12 m, all the ground's by 45 m), the texel shows that ground: (c - k G) / (1 - k), k the tufts' cover (B), G their
     // palette's mean (the type palette, swardRoot / swardTip), at least 0.3 of c. Past 45 m the tufts take the photo's colour
     // and the texel is the photo again, so from the air nothing changes.
+    // The ground's surface (2026-11-06, eye level; the soil surface step, client/soil_surface.json): with its data (gapSoil.a
+    // >= 0) the ground between the drawn tufts is the ecological site sheet's whole surface, not the photo unmixed. The
+    // sheet gives the surface as plant canopy P, litter L, bare ground B and crust C (shares of one). Of the ground the
+    // terrain shows (1 - T, T the drawn tufts' cover, canopyMap B), the drawn shrubs' cover S lies under their crowns as
+    // litter; the herbs the tufts do not account for, R = max(P - T - S, 0), are short low cover in the photo's own colour
+    // unmixed of the tufts (the grass palette at its curing drew saturated green blobs: the photo's ground is mostly that
+    // living cover, seen with its shade and dead leaves); the rest is L, C and B by the sheet's proportions. The
+    // four are patches of 5-25 cm of one noise (near normal, mean 0.5, SD 0.158: gapQ gives each share's threshold), herbs
+    // at its lows, bare soil at its highs. Their colours: the photo unmixed, the litter's (gapLitter), the crust's dry
+    // grey-green, the dry soil's Munsell colour (gapSoil). The photo sets the mean: the herbs are the photo unmixed of the
+    // tufts U (as before), and the litter, crust and soil patches' expected colour M is brought to U by its luminance ratio
+    // (clamped 0.5-2) and then the difference added, so the whole meets the photo it fades into at 12-45 m while the data
+    // give what lies where and their contrasts (a ratio channel by channel, or the offset laid on the herbs too, drew the
+    // herbs saturated green: the litter-weighted M is browner than the photo). The detail scans' relief (their luminance over the photo's) on the bare soil, half of it
+    // on the covered ground (all of it read as cracked mud under the litter; a third left it flat). Lit as the ground below.
     if (tuftGround > 0.5 && dist < 45.0) {
-      float k = clamp(cov3.b, 0.0, 0.85);
-      vec3 G = mix(swardRoot, swardTip, 0.6), soil = max((c - k * G) / (1.0 - k), 0.3 * c);
-      c = mix(c, soil, 1.0 - smoothstep(12.0, 45.0, dist));
+      float near = 1.0 - smoothstep(12.0, 45.0, dist);
+      if (gapSoil.a >= 0.0) {
+        float T = clamp(cov3.b, 0.0, 0.85), A = 1.0 - T, S = min(clamp(cov3.g, 0.0, 1.0), A);
+        float R = min(max(gapSoil.a - T - S, 0.0), A - S), rest = max(A - S - R, 0.0), g3 = max(gapLitter.a + gapCrust.a + max(1.0 - gapSoil.a - gapLitter.a - gapCrust.a, 0.0), 1e-3);
+        float h = R / A, l = (S + rest * gapLitter.a / g3) / A, cr = rest * gapCrust.a / g3 / A, b = max(1.0 - h - l - cr, 0.0);
+        vec2 xn = vec2(vPosW.x, -vPosW.z);
+        float n = 0.65 * rnoise(xn, 0.9, 0.24) + 0.35 * rnoise(xn + 3.1, 2.2, 0.09);
+        float s1 = smoothstep(-0.03, 0.03, n - gapQ(h)), s2 = smoothstep(-0.03, 0.03, n - gapQ(h + l)), s3 = smoothstep(-0.03, 0.03, n - gapQ(h + l + cr));
+        vec3 cP = groundRefl(cPre), U = max((cP - T * mix(swardRoot, swardTip, 0.6)) / A, 0.3 * cP), herb = U * (0.8 + 0.4 * n);
+        vec3 bare3 = gapLitter.rgb * (s1 - s2) + gapCrust.rgb * (s2 - s3) + gapSoil.rgb * s3;   // the uncovered ground's patches
+        vec3 M = (l * gapLitter.rgb + cr * gapCrust.rgb + b * gapSoil.rgb) / max(1.0 - h, 1e-3);   // their expected colour
+        float dR = clamp(dot(c, G_LUMA) / max(dot(cP, G_LUMA), 1e-4), 0.7, 1.35);
+        float k = clamp(dot(U, G_LUMA) / max(dot(M, G_LUMA), 1e-4), 0.5, 2.0), sh = s1;
+        vec3 gap = herb * (1.0 - s1) + max(bare3 * k + sh * (U - M * k), 0.25 * bare3 * k);
+        c = mix(c, gap * mix(1.0 + 0.5 * (dR - 1.0), dR, s3), near);
+      } else {
+        float k = clamp(cov3.b, 0.0, 0.85);
+        vec3 G = mix(swardRoot, swardTip, 0.6), soil = max((c - k * G) / (1.0 - k), 0.3 * c);
+        c = mix(c, soil, near);
+      }
     }
     // Cliffs at any distance (CLIFF_GLSL cliffShade): past ~40 degrees the photo is a smear stretched down the face,
     // so the face takes the cliff material in its place, at every distance, as its lithology breaks (where: cliff, above).
@@ -919,6 +963,8 @@ export class Terrain {
     setStrata(tile.strata, tile.substrateInfo);
     G.masks.value = masks; G.roads.value = roads; G.tileSize.value = tile.size;
     G.canopyMap.value = coverTexture(tile);   // the canopy's cover and the riparian weight, same orientation as the masks
+    G.gapSoil.value.set(0, 0, 0, -1); this.gap = null; this.gapLast = null;
+    if (G.tuftGround.value > 0.5) this.loadGap();   // the ground between the tufts: its soil and litter (updateGap)
     // Measured season colour (tile-spec "Seasonal colour", season.js): a 20 m multiplier texture, rebuilt on
     // the CPU when the date changes (setDate). Until then, and on a tile without the layers, it is 1.
     yield 'textures';
@@ -1023,7 +1069,48 @@ export class Terrain {
   }
   // Each frame, with the player's position: keeps the fine mesh and the micro patch centred on them (a step at a time,
   // built over a few frames and swapped in whole).
-  update(x, z) { if (this.fine) this.fine.update(x, -z); if (this.micro) this.micro.update(x, -z); }
+  update(x, z) { if (this.fine) this.fine.update(x, -z); if (this.micro) this.micro.update(x, -z); if (this.gap) this.updateGap(x, -z); }
+  // The ground between a steppe's tufts (FRAG, the tuft rule's gap ground, 2026-11-06): the soil surface step's table
+  // (client/soil_surface.json: per soil map unit of client/soils.png, the dry surface soil's linear colour and the litter's
+  // share of the ground between the plants), loaded once; none on a tile without it (the photo unmixed, as before).
+  async loadGap() {
+    const tile = this.tile, L = tile.manifest?.layers?.['client.soil_surface'];
+    if (!L || !tile.soils) return;
+    try { const r = await fetch(`../tiles/${tile.id}/${L.path}`); if (r.ok) { this.gap = await r.json(); this.gapLast = null; } } catch { /* no table: as before */ }
+  }
+  // Near the camera only (the gap is drawn within 45 m), so three uniforms rather than a texture (the 16 units are full): the
+  // soil colour and the sheets' surface (plant, litter, crust; bare the rest) averaged over the soil map units within ~45 m
+  // (Gaussian, sigma 25 m, on a 15 m lattice), the crust's chip from the table, the
+  // litter's colour the grass stems' and the fallen leaves' by the shrubs' share of the plant cover there (canopy G, over
+  // that and the herb cover: the community's from its LANDFIRE description, species_mix.json herb_cover, else canopy B), at
+  // the ground's reflectance as the palettes are (groundGain, groundSat). Again once moved 10 m.
+  updateGap(x, north) {
+    if (this.gapLast && Math.hypot(x - this.gapLast[0], north - this.gapLast[1]) < 10) return;
+    this.gapLast = [x, north];
+    const J = this.gap, S = this.tile.soils, C = this.tile.canopy?.at ? this.tile.canopy : null, P = gapLitterPalette, M = this.tile.speciesMix, hab = this.tile.habitat;
+    if (!this.gapHerb) this.gapHerb = new Map((M?.json?.mixes || []).filter(m => m.herb_cover).map(m => [m.index, (m.herb_cover[0] + m.herb_cover[1]) / 2]));
+    let w = 0, r = 0, g = 0, b = 0, pl = 0, li = 0, cr = 0, shrub = 0, sw = 0;
+    for (let dj = -3; dj <= 3; dj++) for (let di = -3; di <= 3; di++) {
+      const px = x + 15 * di, pn = north + 15 * dj, k = Math.exp(-(di * di + dj * dj) * 225 / (2 * 25 * 25));
+      const e = J.mapunits?.[S.at(px, pn, 0)] || J.default;
+      if (!e?.rgb) continue;
+      const gr = e.ground || J.default?.ground || { plant: 0.7, litter: 0.2, bare: 0.08, crust: 0.02 };
+      w += k; r += k * e.rgb[0]; g += k * e.rgb[1]; b += k * e.rgb[2]; pl += k * gr.plant; li += k * gr.litter; cr += k * gr.crust;
+      if (C) {
+        const [ci, cj] = hab.cellOf(px, pn), row = M?.at?.(ci, cj), gs = C.at(px, pn, 1) / 100, hb = this.gapHerb.get(row?.index) ?? C.at(px, pn, 2) / 100;
+        if (gs + hb > 0) { shrub += k * gs / (gs + hb); sw += k; }
+      }
+    }
+    const G = groundUniforms;
+    if (!(w > 0) || !P.stem) { G.gapSoil.value.set(0, 0, 0, -1); return; }
+    G.gapSoil.value.set(r / w, g / w, b / w, pl / w);
+    const crust = J.crust?.rgb || [0.064, 0.065, 0.052];
+    G.gapCrust.value.set(crust[0], crust[1], crust[2], cr / w);
+    const f = sw ? shrub / sw : 0, gg = G.groundGain.value, gs = G.groundSat?.value ?? 1;
+    const lit = [0, 1, 2].map(i => (P.stem[i] + (P.leaf[i] - P.stem[i]) * f) * [gg.x, gg.y, gg.z][i]);
+    const y = 0.299 * lit[0] + 0.587 * lit[1] + 0.114 * lit[2];
+    G.gapLitter.value.set(...lit.map(v => Math.max(0, y + gs * (v - y))), li / w);
+  }
   // A/B switch (timing, comparisons): off drops the fine mesh and closes the coarse hole; footing follows.
   setFine(on) { if (this.fine) this.fine.setEnabled(on); }
   // A/B switch: off hides the micro patch and the third octave; footing follows (Heightfield.micro null).

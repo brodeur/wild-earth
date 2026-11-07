@@ -207,7 +207,7 @@ def all_sources() -> dict:
     sources cannot be in a tile built without it."""
     import importlib
     for mod in ("fetch_dem", "fetch_naip", "fetch_vegetation", "fetch_geology", "fetch_soils", "fetch_lidar",
-                "fetch_sentinel", "research", "fetch_global", "tree_cards"):
+                "fetch_sentinel", "research", "fetch_global", "tree_cards", "soil_surface"):
         try:
             importlib.import_module(f".{mod}", __package__)
         except ImportError:

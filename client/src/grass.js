@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { SEASON_LOOK, seasonOfDate } from './season.js';
-import { buildAnnualClump, buildBunchClump, buildTussockClump, buildOatClump, buildSwardClump, buildTuftClump } from './grassBlades.js';
+import { buildAnnualClump, buildBunchClump, buildTussockClump, buildOatClump, buildSwardClump, buildTuftClump, tuftEnvelope } from './grassBlades.js';
 import { windUniforms, WIND_GLSL } from './wind.js';
 import { groundUniforms, GROUND_GLSL, seasonState } from './terrain.js';
 import { ShrubField, ClumpField, KIND, waterAt, shrubLeaves } from './shrubfield.js';
@@ -121,6 +121,32 @@ const ROLE = { none: 0, tuft: 1, tussock: 2, oat: 3 };
 // by blade), so a 0.14 m Sandberg tuft goes at 4-8 m, not at 6-12. The sward sheets (SHEET, a continuous sward of strips)
 // stand only for a cell's grasses without a tuft (kept at that share): a steppe's tufts are its cards beyond the blades.
 const TUFT_F = 1.25, TUFT_REF_R = 0.17, TUFT_MIN = 0.7;
+// ---- a tuft up close (2026-11-06, eye level): plant-to-plant variation from data, light through a porous volume ----------
+// At 1-4 m the tufts read dark and spiky: the palettes' root (the record's live colour x ROOT_K, pipeline/ground_cards.py:
+// the shaded base of a continuous sward) and grassShade's terms for a sward (light falling off toward the root by t, the
+// ambient ground-weighted at the root) darkened their lower half twice over. A tuft is a dense mass of fine leaves: the
+// light reaches its outside and falls off inward. So a tuft's leaf is its own colour along its length (the tip's, the
+// sheath a little toward straw), and it is lit as a porous volume (tuftLight): sun and sky reach a leaf through the leaves
+// between it and the tuft's envelope by Beer's law, exp(-k s), k from the drawn clump's own leaf area and envelope
+// (grassBlades.js tuftEnvelope). Its dead leaves of past years (standing litter, grey straw) are its lowest age ranks, at
+// the rim and the base (buildTuftClump), as many as the plant's dead share.
+// Each plant differs from the next, by rules from data (none per species):
+//   size   lognormal about the record's tuft (ground.tuft width_m): w = w_rec exp(sigma z - sigma^2), so the mean area,
+//          hence the cover the tufts per m^2 were counted for, is the record's; sigma = ln(25 / 15) / 2 = 0.255, FEIS's
+//          range for Idaho fescue's tuft (15-25 cm, Zouhar 2000) read as +-1 SD. Height as w^0.5 (a big old tuft spreads
+//          more than it rises: a stated choice).
+//   curing a plant's phenology runs up to PHENO_DAYS ahead of or behind its species' (uniform, SD 7 days: a stated spread,
+//          a population's flowering lasting two to three weeks); its cured share is the species' curve at the date
+//          shifted by that (speciesPal at month +- PHENO_DAYS), so the spread is wide where the species is drying fast
+//          (Sandberg bluegrass dries over 1.5 months, so +-12 days spans 0.27 of its curing) and nil where it is all green
+//          or all straw.
+//   dead   the plant's share of dead leaves: the tile's tuft dead share (ownSeasonCurve thatchTuft) x (w / w_rec)^1.5 x
+//          (0.6 .. 1.4): older tufts are bigger and hold more dead leaves (FEIS: old Idaho fescue plants die out in the
+//          centre); the exponent and the +-40 % own spread are stated choices.
+//   colour grassAlbedo's per-plant hue and brightness (+-13 %) as before.
+const TUFT_SIGMA = 0.255, PHENO_DAYS = 12, DEAD_SIZE_EXP = 1.5;
+// z from a uniform (Tukey's lambda approximation of the normal quantile, within 0.01 over 0.001-0.999)
+const normalZ = u => { u = Math.min(Math.max(u, 1e-4), 1 - 1e-4); return 4.91 * (u ** 0.14 - (1 - u) ** 0.14); };
 // A card's quad is its clump's full reach (bake box R, H); the instance carries the dense leaf mass,
 // CARD_RK and CARD_HK of that, which shadows.js casts its contact-shadow ellipse from.
 const CARD_RK = 0.5, CARD_HK = 0.65;
@@ -284,7 +310,13 @@ const spDraw = seed => (seed * 7919.17) % 1;   // a second uniform from a plant'
 //     months at the tile (wrapping the year), from the first until four months after the last. The generic tufted grass
 //     has no months of its own: its heads come the two months before the tile's greenest month and in it.
 // The regional tiles (California, Teton, the Hoh) keep PALETTE's rows exactly. Returns null without a measured year.
-const OWN = { SWING: 0.15, GROW: 0.5, WEATHER: 1 / 3, LOSS: 0.2, H_PERENNIAL: 0.5, H_ANNUAL: 0.3, LEAF: 0.35 };
+const OWN = { SWING: 0.15, GROW: 0.5, WEATHER: 1 / 3, LOSS: 0.2, H_PERENNIAL: 0.5, H_ANNUAL: 0.3, LEAF: 0.35, LOSS_TUFT: 1 / 12 };
+// A bunchgrass's tuft holds its dead leaves (2026-11-06, eye level): the sward's 0.2 a month (grazing, trampling, decay and
+// fire take a fifth of the standing dead each month) is for loose leaves in a sward; a tuft's last-year leaves stand in it,
+// matted at its base and rim, until they weather off, so its standing dead goes at LOSS_TUFT, a year's mean residence (FEIS,
+// Zouhar 2000, Festuca idahoensis: the bunch accumulates fine dead material, which is why a fire burns down into its crown;
+// a stated value, no measured residence time was found). The curve's `thatchTuft` is the dead share of a tuft's standing
+// leaves by month, as `thatch` is the sward's.
 function ownSeasonCurve(tile, w, gs) {
   const months = tile.manifest?.layers?.['client.season_rgb']?.months;
   if (!Array.isArray(months) || months.length !== 12) return null;
@@ -297,16 +329,18 @@ function ownSeasonCurve(tile, w, gs) {
   cure = wt ? cure / wt : 1; ann = wt ? ann / wt : 0;
   const hMin = OWN.H_PERENNIAL + (OWN.H_ANNUAL - OWN.H_PERENNIAL) * ann;
   const height = new Array(12), thatch = new Array(12), leaf = new Array(12);
-  let F = 0, O = 0, h = 0.5, prev = g[11];
+  const thatchTuft = new Array(12);
+  let F = 0, O = 0, Ot = 0, h = 0.5, prev = g[11];
   for (let yr = 0; yr < 6; yr++) for (let m = 0; m < 12; m++) {   // six years from bare: the cycle has settled
     const L = g[m], died = Math.max(prev - L, 0); prev = L;
-    O = (O + OWN.WEATHER * F) * (1 - OWN.LOSS); F = F * (1 - OWN.WEATHER) * (1 - OWN.LOSS) + died;
+    O = (O + OWN.WEATHER * F) * (1 - OWN.LOSS); Ot = (Ot + OWN.WEATHER * F) * (1 - OWN.LOSS_TUFT); F = F * (1 - OWN.WEATHER) * (1 - OWN.LOSS) + died;
     const S = L + F + O, top = Math.min(S, 1);
     h = top > h ? h + OWN.GROW * (top - h) : top;
+    const St = L + F + Ot; thatchTuft[m] = St > 0 ? cure * Ot / St : 0;
     height[m] = hMin + (1 - hMin) * h; thatch[m] = S > 0 ? cure * O / S : 0; leaf[m] = S > 0 ? 1 - OWN.LEAF * cure * (F + O) / S : 1;
   }
   const peak = g.indexOf(1) + 1;
-  return { ndvi: nd, g, height, thatch, leaf, cure, hMin, heads: [((peak + 9) % 12) + 1, peak] };
+  return { ndvi: nd, g, height, thatch, thatchTuft, leaf, cure, hMin, heads: [((peak + 9) % 12) + 1, peak] };
 }
 // A month-by-month value (12, January first, each the middle of its month) at a fractional month (1 = 1 January), round the year.
 function atMonth(v, month) {
@@ -314,6 +348,19 @@ function atMonth(v, month) {
   return v[a] * (1 - f) + v[(a + 1) % 12] * f;
 }
 
+// The per-species curing spread and the tuft's volume (TUFT_SIGMA's block), declared in the vertex shaders and the cards' fragment
+// shader alike. spCure: the species' cured share for the date (x), at the date less and plus PHENO_DAYS (y, z), its record's
+// tuft width in m (w; 0 without one); spD*: its cured palette less its live one, as the shaders' colours (0 for a species with
+// no live and cured palettes, so it never varies); tuftVol: the envelope's radius and height (unit tuft), k per unit length,
+// and the tile's tuft dead share for the date (0 off: no tufts).
+const SP_CURE_GLSL = /* glsl */`
+  uniform vec4 spCure[${GS_MAX}]; uniform vec3 spDRoot[${GS_MAX}]; uniform vec3 spDTip[${GS_MAX}]; uniform vec3 spDHead[${GS_MAX}]; uniform vec3 spDAwn[${GS_MAX}];
+  uniform vec4 tuftVol;
+  float plantCure(int sp, float seed) { vec4 c = spCure[sp]; float u = fract(sin(seed * 61.7 + 0.29) * 43758.5453123) * 2.0 - 1.0; return u < 0.0 ? mix(c.x, c.y, -u) : mix(c.x, c.z, u); }
+  float tuftDead(int sp, float sxz, float seed) {
+    return clamp(tuftVol.w * pow(clamp(sxz / max(spCure[sp].w, 1e-3), 0.3, 3.0), ${DEAD_SIZE_EXP.toFixed(2)}) * (0.6 + 0.8 * fract(sin(seed * 13.9 + 0.61) * 43758.5453123)), 0.0, 0.9);
+  }
+`;
 // ---- GLSL shared by both LODs ---------------------------------------------------------------
 const COMMON_VERT = /* glsl */`
   ${WIND_GLSL}
@@ -327,6 +374,7 @@ const COMMON_VERT = /* glsl */`
   uniform vec3 aRoot; uniform vec3 aTip; uniform vec3 aHead; uniform vec3 aAwn;
   uniform vec3 bRoot; uniform vec3 bTip; uniform vec3 bHead; uniform vec3 bAwn; uniform vec3 thatchCol;
   uniform vec3 spRoot[${GS_MAX}]; uniform vec3 spTip[${GS_MAX}]; uniform vec3 spHead[${GS_MAX}]; uniform vec3 spAwn[${GS_MAX}]; uniform float spHeads[${GS_MAX}];   // per species (the tile's set, grassSet)
+  ${SP_CURE_GLSL}
   attribute vec4 iPos; attribute vec4 iVar;   // blades: x y z yaw | scale xz, scale y, seed, code (+ 64 species); cards: see IMP_VERT
   float h11(float n) { return fract(sin(n) * 43758.5453123); }
   float h21(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
@@ -342,10 +390,21 @@ const COMMON_VERT = /* glsl */`
   vec2 yawRot(vec2 v, float a) { float c = cos(a), s = sin(a); return vec2(c * v.x + s * v.y, -s * v.x + c * v.y); }
   // Albedo (linear): root-to-tip gradient per type, culms grading to the head colour, last year's
   // thatch in the green seasons, per-blade and per-clump hue/brightness, and field-scale patches.
-  vec3 grassAlbedo(int sp, float t, float part, float br, float seed, vec2 wxz) {
-    vec3 root = spRoot[sp], tip = spTip[sp], head = spHead[sp], awn = spAwn[sp];
+  // dead: a tuft's share of dead leaves (tuftDead; its blades below that age rank are dead), or < 0 for any other plant.
+  // Each plant takes its own place on its species' curing curve (plantCure: dc, along the live-to-cured palette's delta).
+  vec3 grassAlbedo(int sp, float t, float part, float br, float seed, vec2 wxz, float dead) {
+    float dc = plantCure(sp, seed) - spCure[sp].x;
+    vec3 root = spRoot[sp] + dc * spDRoot[sp], tip = spTip[sp] + dc * spDTip[sp], head = spHead[sp] + dc * spDHead[sp], awn = spAwn[sp] + dc * spDAwn[sp];
     vec3 c;
-    if (part < 0.5) {
+    if (dead >= 0.0) {   // a tuft (TUFT_SIGMA's block): no shaded root in its colour, tuftLight shades it; the sheath a little toward straw
+      vec3 straw = tip + (1.0 - spCure[sp].x - dc) * spDTip[sp];
+      root = mix(tip, straw, 0.3);
+      if (part < 0.5) {
+        if (br < dead) c = thatchCol * mix(0.8, 1.0, t) * (0.88 + 0.24 * h11(br * 37.1 + seed * 5.3));   // last years' leaves, grey straw
+        else c = mix(tip, straw, 0.25 * (1.0 - smoothstep(0.0, 0.35, t))) * (0.9 + 0.2 * h11(br * 91.7 + seed * 13.1));
+      } else if (part < 1.5) c = mix(root, mix(tip, head, 0.6), smoothstep(0.1, 1.0, t));
+      else c = part < 2.5 ? head : awn;
+    } else if (part < 0.5) {
       c = mix(root, tip, smoothstep(0.0, 0.9, t));
       if (h11(br * 17.3 + seed * 3.7) < thatch) c = thatchCol * mix(0.75, 1.05, t);
       else c *= 0.88 + 0.24 * h11(br * 91.7 + seed * 13.1);
@@ -417,6 +476,41 @@ const SHADE_VERT = /* glsl */`
     vec3 c = (albedo * (sunLight * diff * sh + amb) + trans * sunLight * back * sh) * 0.3183099;
     return atmosphereApply(c, posW, cameraPosition);
   }
+  // A tuft as a porous volume (TUFT_SIGMA's block): at p (unit tuft, world-aligned axes) of a tuft sx across and sy tall per
+  // unit, the share of the sun that reaches it through the leaves on its way out of the envelope (a cylinder tuftVol.x
+  // round, tuftVol.y tall), exp(-k s) with s the path in the unit tuft (the sun's direction taken into it), and of the sky:
+  // half through the side (the depth from the rim), half through the top. x sun, y sky.
+  float tuftPath(vec3 p, vec3 d) {
+    float R = tuftVol.x, a = dot(d.xz, d.xz), b = dot(p.xz, d.xz), c = dot(p.xz, p.xz) - R * R;
+    float lh = c >= 0.0 ? 0.0 : a > 1e-6 ? (-b + sqrt(max(b * b - a * c, 0.0))) / a : 1e3;
+    float lt = d.y > 1e-3 ? max(tuftVol.y - p.y, 0.0) / d.y : 1e3;
+    return min(lh, lt);
+  }
+  vec2 tuftLight(vec3 p, float sx, float sy) {
+    vec3 su = normalize(vec3(sunDir.x / sx, sunDir.y / sy, sunDir.z / sx));
+    float k = tuftVol.z, ds = max(tuftVol.x - length(p.xz), 0.0), dt = max(tuftVol.y - p.y, 0.0);
+    return vec2(exp(-k * tuftPath(p, su)), 0.5 * (exp(-k * ds) + exp(-k * dt)));
+  }
+  // grassShade for a tuft's blade: the volume's light (T: tuftLight) in place of the sward's root-to-tip falloff; h the height
+  // in the tuft (0..1), for the ambient's ground-to-sky weight; ao the ground's own sky occlusion at its root.
+  vec3 tuftShade(vec3 albedo, vec3 N, vec3 posW, vec2 T, float h, float ao, float glow) {
+    albedo = mix(albedo, vec3(0.7, 0.73, 0.78), wxGround.z * mix(1.0, 0.55, h));
+    vec3 V = normalize(cameraPosition - posW);
+    N = normalize(N); if (dot(N, V) < 0.0) N = -N;
+    vec3 Nl = normalize(N + vec3(0.0, 1.0, 0.0));
+    float sh = cloudShadow(posW) * T.x, sunUp = smoothstep(-0.03, 0.08, sunDir.y);
+    float diff = max(dot(Nl, sunDir), 0.0);
+    float back = (max(-dot(N, sunDir), 0.0) * 0.3 + pow(max(dot(-V, sunDir), 0.0), 5.0) * 0.55) * glow * sunUp;
+    vec3 trans = albedo * normalize(albedo + 1e-4) * 1.7;
+    vec3 amb = mix(ambientGround, ambientSky, 0.4 + 0.5 * h) * ao * T.y;
+    // the leaves' cuticle (a dielectric, n about 1.5: 0.04 at normal incidence) reflects the sky and, as a broad lobe for a
+    // waxy leaf, the sun, unsaturated: the grey sheen of a tuft of fine leaves, most where they are seen edge-on (rising to
+    // 0.34 there, not Schlick's 1: a leaf is rough, and a full mirror at grazing drew white streaks)
+    float F = 0.04 + 0.3 * pow(1.0 - abs(dot(N, V)), 4.0);
+    vec3 sheen = F * (ambientSky * ao * T.y + sunLight * sh * pow(max(dot(N, normalize(sunDir + V)), 0.0), 6.0));
+    vec3 c = (albedo * (sunLight * diff * sh + amb) + trans * sunLight * back * sh + sheen) * 0.3183099;
+    return atmosphereApply(c, posW, cameraPosition);
+  }
 `;
 
 const NEAR_VERT = /* glsl */`
@@ -428,6 +522,7 @@ const NEAR_VERT = /* glsl */`
     float t = aBlade.x, br = aBlade.y, part = aBlade.z, seed = iVar.z;
     float spf = floor(iVar.w / 64.0 + 0.01), rest = iVar.w - 64.0 * spf; int sp = int(spf);   // the species (the tile's set, grassSet)
     float role = floor(rest / 8.0 + 0.01), code = rest - 8.0 * role, type = mod(code, 2.0);
+    bool tuft = role > 1.5 && role < 2.5 && tuftVol.z > 0.0;   // a tile's own bunchgrass drawn as a tuft (TUFT)
     float d = distance(cameraPosition, iPos.xyz);
     // Hand-over: the clump thins blade by blade over dOut +/- w (a stable threshold per blade), at
     // full height; no fragment discard, so the opaque blades keep their hidden-surface removal. A plant
@@ -492,7 +587,13 @@ const NEAR_VERT = /* glsl */`
     // brightness far off: through the green mean's ratios it turned rust-red.
     float m = smoothstep(12.0, 45.0, d), th = part < 0.5 && h11(br * 17.3 + seed * 3.7) < thatch ? m : 0.0;
     vec3 G = groundMatch(vec3(1.0), type, iPos.xyz, m);
-    vec3 alb = grassAlbedo(sp, t, part, br, seed, iPos.xz) * mix(G, vec3(dot(G, G_LUMA)), th);
+    vec3 alb = grassAlbedo(sp, t, part, br, seed, iPos.xz, tuft ? tuftDead(sp, iVar.x, seed) : -1.0) * mix(G, vec3(dot(G, G_LUMA)), th);
+    if (tuft) {
+      // the tuft's light (tuftLight) at this vertex: its place in the unit tuft, turned with the plant, the culms above the leaves in full light
+      vec3 pu = vec3(yawRot(position.xz, iPos.w), position.y).xzy;
+      vec2 T = tuftLight(pu, iVar.x * mix(0.8, 1.0, heightScale), max(H, 0.02));
+      vColor = tuftShade(alb, n, wp, T, clamp(pu.y / tuftVol.y, 0.0, 1.0), skyOcc(iPos.xyz), part > 1.5 ? 1.6 : 1.0);
+    } else
     vColor = grassShade(alb, n, wp, t, mix(0.35, 1.0, smoothstep(0.0, 0.7, t)) * skyOcc(iPos.xyz), part > 1.5 ? 1.6 : 1.0);
     gl_Position = projectionMatrix * viewMatrix * vec4(wp, 1.0);
   }`;
@@ -543,7 +644,7 @@ const BODY_VERT = /* glsl */`
     if (dot(n, cameraPosition - wp) < 0.0) n = -n;
     n = normalize(n + 0.6 * aBlade.w * sd);
     vec3 G = groundMatch(vec3(1.0), type, iPos.xyz, 0.0);
-    vec3 alb = grassAlbedo(sp, t, 0.0, br, seed, iPos.xz) * G;
+    vec3 alb = grassAlbedo(sp, t, 0.0, br, seed, iPos.xz, -1.0) * G;
     if (h11(br * 29.1 + seed * 5.9) < 0.1 + 0.5 * thatch) alb = thatchCol * mix(0.65, 1.0, t) * dot(G, G_LUMA);
     alb *= mix(vec3(1.0), vec3(1.12, 1.06, 0.84), 0.6 * smoothstep(0.7, 1.0, t) * hb);
     vColor = grassShade(alb, n, wp, t, mix(0.3, 1.0, smoothstep(0.0, 0.75, t)) * skyOcc(iPos.xyz), 1.0);
@@ -563,9 +664,11 @@ const IMP_VERT = /* glsl */`
   ${COMMON_VERT}
   ${SHADE_VERT}
   uniform vec2 kParams; uniform vec4 cardBand; uniform float bandW; uniform vec2 impKind;   // atlas kind, grass type
+  uniform vec2 tuftBox;   // the tuft clump's bake box (R, H) at unit scale (TUFT_SIGMA's block)
   // (the field's own band uniform is what shadows.js casts with: see update)
   varying vec2 vQ; varying vec4 vTile; varying vec2 vSV; varying float vWe; varying vec3 vF; varying vec3 vFth; varying vec3 vSun; varying float vDiff;
   varying vec2 vBack; varying vec3 vAmbG; varying vec3 vAmbS; varying vec3 vT; varying vec3 vIn; varying float vFade; varying float vSp;
+  varying float vDc; varying float vDead; varying vec4 vTL;   // the plant's own curing, a tuft's dead share (< 0: not a tuft) and its light (sun low, top; sky low, top)
   void main() {
     float R = iPos.w * ${(1 / CARD_RK).toFixed(5)}, H = iVar.x * ${(1 / CARD_HK).toFixed(5)}, seed = iVar.y, rank = iVar.w, yaw = fract(iVar.z) * ${(2 * Math.PI / 0.999).toFixed(6)};
     vSp = floor(iVar.z / 8.0 + 0.001);   // the species: kind + 8 species in the integer part
@@ -579,6 +682,19 @@ const IMP_VERT = /* glsl */`
     float wo = max(0.12 * (band.w - band.z), 0.4);
     float s = clamp((keep - rank) / 0.05, 0.0, 1.0) * smoothstep(din - bw, din + bw, d) * (1.0 - smoothstep(dout - wo, dout + wo, d));
     float grow = inversesqrt(keep);
+    int spI = int(vSp + 0.5);
+    vDc = plantCure(spI, seed) - spCure[spI].x; vDead = -1.0; vTL = vec4(1.0);
+    if (impKind.x < 0.5 && tuftVol.z > 0.0) {
+      // a tuft's card (TUFT_SIGMA's block): the light on the leaves the eye meets, half a free path (1 / 2k) in from the
+      // envelope on the camera's side, low (a quarter up) and high (0.8 up), interpolated by the atlas's height t
+      float sx = R / tuftBox.x, sy = H / tuftBox.y;
+      vDead = tuftDead(spI, sx, seed);
+      vec2 vh = normalize(cameraPosition.xz - iPos.xz + vec2(1e-4, 0.0));
+      float rr = tuftVol.x - min(0.5 / tuftVol.z, tuftVol.x);
+      vec2 lo = tuftLight(vec3(vh.x * rr, 0.25 * tuftVol.y, vh.y * rr), sx * mix(0.8, 1.0, heightScale), sy * heightScale);
+      vec2 hi = tuftLight(vec3(vh.x * rr, 0.8 * tuftVol.y, vh.y * rr), sx * mix(0.8, 1.0, heightScale), sy * heightScale);
+      vTL = vec4(lo.x, hi.x, lo.y, hi.y);
+    }
     R *= mix(0.8, 1.0, heightScale) * grow; H *= heightScale * sqrt(grow);
     if (s < 0.01 || offscreen(iPos.xyz, 0.6 * max(R, H))) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
     vFade = s;
@@ -629,8 +745,10 @@ const IMP_FRAG = /* glsl */`
   uniform vec3 aRoot; uniform vec3 aTip; uniform vec3 aHead; uniform vec3 aAwn;
   uniform vec3 bRoot; uniform vec3 bTip; uniform vec3 bHead; uniform vec3 bAwn; uniform vec3 thatchCol;
   uniform vec3 spRoot[${GS_MAX}]; uniform vec3 spTip[${GS_MAX}]; uniform vec3 spHead[${GS_MAX}]; uniform vec3 spAwn[${GS_MAX}];
+  ${SP_CURE_GLSL}
   varying vec2 vQ; varying vec4 vTile; varying vec2 vSV; varying float vWe; varying vec3 vF; varying vec3 vFth; varying vec3 vSun; varying float vDiff;
   varying vec2 vBack; varying vec3 vAmbG; varying vec3 vAmbS; varying vec3 vT; varying vec3 vIn; varying float vFade; varying float vSp;
+  varying float vDc; varying float vDead; varying vec4 vTL;
   vec4 tap(float col, float row, vec2 uv) { return texture(impAtlas, (vec2(col, row) + clamp(uv, 0.0, 1.0)) * vec2(${(1 / IMP.TX).toFixed(6)}, ${(1 / IMP.TY).toFixed(6)})); }
   void main() {
     // Distance fades: screen-space dither (the interleaved gradient noise the tree tiers use).
@@ -649,16 +767,26 @@ const IMP_FRAG = /* glsl */`
     float cov = 1.0 - pow(1.0 - clamp(g.g, 0.0, 1.0), 1.0 + 2.0 * clamp(mip - 0.7, 0.0, 3.0));
     if (cov < 0.04) discard;
     float gc = max(g.g, 1e-4), t = clamp(g.b / gc, 0.0, 1.0), part = clamp(g.a / gc * 3.0, 0.0, 3.0), th = clamp(g.r / gc, 0.0, 1.0);
-    int sp = int(vSp + 0.5);   // the plant's species palette (the tile's set, grassSet)
-    vec3 root = spRoot[sp], tip = spTip[sp], head = spHead[sp], awn = spAwn[sp];
-    vec3 leafC = mix(mix(root, tip, smoothstep(0.0, 0.9, t)) * vF, thatchCol * mix(0.75, 1.05, t) * vFth, th);
+    int sp = int(vSp + 0.5);   // the plant's species palette (the tile's set, grassSet), at the plant's own curing (vDc)
+    vec3 root = spRoot[sp] + vDc * spDRoot[sp], tip = spTip[sp] + vDc * spDTip[sp], head = spHead[sp] + vDc * spDHead[sp], awn = spAwn[sp] + vDc * spDAwn[sp];
+    bool tuft = vDead >= 0.0;
+    vec3 leafC;
+    if (tuft) {   // as grassAlbedo's tuft: no shaded root; the atlas's r is the leaves' age rank, below the plant's dead share a dead leaf
+      vec3 straw = tip + (1.0 - spCure[sp].x - vDc) * spDTip[sp];
+      root = mix(tip, straw, 0.3);
+      th = 1.0 - smoothstep(vDead - 0.04, vDead + 0.04, th);
+      leafC = mix(mix(tip, straw, 0.25 * (1.0 - smoothstep(0.0, 0.35, t))) * vF, thatchCol * mix(0.8, 1.0, t) * vFth, th);
+    } else leafC = mix(mix(root, tip, smoothstep(0.0, 0.9, t)) * vF, thatchCol * mix(0.75, 1.05, t) * vFth, th);
     vec3 culmC = mix(root, mix(tip, head, 0.6), smoothstep(0.1, 1.0, t)) * vF;
     vec3 c = part < 1.0 ? mix(leafC, culmC, part) : part < 2.0 ? mix(culmC, head * vF, part - 1.0) : mix(head, awn, part - 2.0) * vF;
     c = mix(c, vec3(0.7, 0.73, 0.78), wxGround.z * mix(1.0, 0.55, t));   // lying snow, as grassShade
     float glow = mix(1.0, 1.6, clamp(part - 1.0, 0.0, 1.0));
     vec3 trans = c * normalize(c + 1e-4) * 1.7;
-    vec3 amb = mix(vAmbG, vAmbS, 0.3 + 0.6 * t) * mix(0.35, 1.0, smoothstep(0.0, 0.7, t));
-    vec3 col = (c * (vSun * vDiff * mix(0.45, 1.0, t) + amb) + trans * vSun * (vBack.x + vBack.y * t) * glow) * 0.3183099;
+    float sT = tuft ? mix(vTL.x, vTL.y, t) : mix(0.45, 1.0, t);   // a tuft: tuftLight on the leaves the eye meets (vTL)
+    vec3 amb = tuft ? mix(vAmbG, vAmbS, 0.4 + 0.5 * t) * mix(vTL.z, vTL.w, t) : mix(vAmbG, vAmbS, 0.3 + 0.6 * t) * mix(0.35, 1.0, smoothstep(0.0, 0.7, t));
+    vec3 col = (c * (vSun * vDiff * sT + amb) + trans * vSun * (vBack.x + vBack.y * t) * glow * (tuft ? sT : 1.0)) * 0.3183099;
+    // a tuft's cuticle sheen (tuftShade), at its mean over leaves at all angles: F 0.06, the sun's lobe 1 / 7
+    if (tuft) col += 0.06 * (vAmbS * mix(vTL.z, vTL.w, t) + vSun * sT * 0.14) * 0.3183099;
     gl_FragColor = vec4(col * vT + vIn, cov);   // coverage drives MSAA alpha-to-coverage
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
@@ -669,7 +797,7 @@ const IMP_FRAG = /* glsl */`
 // mips, so the card divides by g).
 const BAKE_VERT = /* glsl */`
   uniform float bSeed; uniform float bType; uniform vec2 bView; uniform vec3 bBox;   // R, H, tile column
-  uniform float heads; uniform float thatch; uniform float leafScale;
+  uniform float heads; uniform float thatch; uniform float leafScale; uniform float bTuft;   // bTuft 1: the tuft clump (r carries the leaves' age rank)
   attribute vec4 aBlade;
   varying vec2 vXY; varying float vT; varying float vPart; varying float vTh;
   float h11(float n) { return fract(sin(n) * 43758.5453123); }
@@ -681,7 +809,7 @@ const BAKE_VERT = /* glsl */`
     p.y *= (0.75 + 0.5 * h11(seed * 13.7 + br * 57.1)) * (part < 0.5 ? leafScale : 1.0);
     float la = h11(seed * 3.1 + br * 7.9) * 6.2832;
     p.xz += vec2(cos(la), sin(la)) * t * t * 0.07;
-    vTh = part < 0.5 && h11(br * 17.3 + seed * 3.7) < thatch ? 1.0 : 0.0;
+    vTh = bTuft > 0.5 ? (part < 0.5 ? br : 1.0) : part < 0.5 && h11(br * 17.3 + seed * 3.7) < thatch ? 1.0 : 0.0;
     vT = t; vPart = part;
     float e = bView.x, a = bView.y;
     vec3 V = vec3(cos(e) * cos(a), sin(e), cos(e) * sin(a));
@@ -920,6 +1048,10 @@ export class Grass {
       spRoot: { value: Array.from({ length: GS_MAX }, col) }, spTip: { value: Array.from({ length: GS_MAX }, col) },
       spHead: { value: Array.from({ length: GS_MAX }, col) }, spAwn: { value: Array.from({ length: GS_MAX }, col) },
       spHeads: { value: new Float32Array(GS_MAX).fill(1) },   // per species (the tile's set, grassSet): this season's palette and whether its heads show
+      // the per-plant curing spread and the tuft's volume (SP_CURE_GLSL); all zero (no variation, no tuft) until applyLook
+      spCure: { value: Array.from({ length: GS_MAX }, () => new THREE.Vector4()) }, spDRoot: { value: Array.from({ length: GS_MAX }, col) },
+      spDTip: { value: Array.from({ length: GS_MAX }, col) }, spDHead: { value: Array.from({ length: GS_MAX }, col) }, spDAwn: { value: Array.from({ length: GS_MAX }, col) },
+      tuftVol: { value: new THREE.Vector4() }, tuftBox: { value: new THREE.Vector2(1, 1) },
       ...atmo,
     };
     const nearMat = new THREE.ShaderMaterial({ vertexShader: NEAR_VERT, fragmentShader: NEAR_FRAG, uniforms: this.uniforms, side: THREE.DoubleSide });
@@ -976,6 +1108,12 @@ export class Grass {
     // as the old fields: tufts thin from ~120 m to 40%, tussocks and oats past 30-34 m (survivors grow).
     this.box = this.geos.map(clumpBox);
     if (this.tuftOn) this.uniforms.tuftHand.value.set(CARD_RK * this.box[0].R / TUFT_REF_R, 1 / TUFT_REF_R);
+    // the tuft as a porous volume (TUFT_SIGMA's block): its envelope and extinction from the clump; w (its dead share) by date
+    if (this.tuftOn) {
+      this.tuftEnv = tuftEnvelope(tussockGeo);
+      this.uniforms.tuftVol.value.set(this.tuftEnv.R, this.tuftEnv.H, this.tuftEnv.k, this.uniforms.tuftVol.value.w);
+      this.uniforms.tuftBox.value.set(this.box[0].R, this.box[0].H);
+    }
     this.impKinds = [];
     const card = (role, kind, type, cfg) => {
       const f = new ClumpField(tile, this.ground, this.uniforms, {
@@ -1039,7 +1177,7 @@ export class Grass {
       this.bakeMeshes.forEach((m, c) => {
         const mu = m.material.uniforms, v = Math.floor(c / IMP.AZ);
         m.geometry = this.geos[kind];
-        mu.bSeed.value = v === 0 ? 0.25 : 0.75; mu.bType.value = kind === 0 ? 1 : 0;
+        mu.bSeed.value = v === 0 ? 0.25 : 0.75; mu.bType.value = kind === 0 ? 1 : 0; mu.bTuft.value = kind === 0 && this.tuftOn ? 1 : 0;
         mu.bView.value.set(r * IMP.EL_STEP, (c % IMP.AZ) * Math.PI / 4); mu.bBox.value.set(box.R, box.H, c);
       });
       renderer.autoClear = true; renderer.setRenderTarget(this.strip); renderer.render(this.bakeScene, this.bakeCam);
@@ -1066,7 +1204,7 @@ export class Grass {
     this.bakeScene = new THREE.Scene(); this.bakeMeshes = [];
     for (let c = 0; c < IMP.TX; c++) {
       const m = new THREE.Mesh(this.geos[0], new THREE.ShaderMaterial({ vertexShader: BAKE_VERT, fragmentShader: BAKE_FRAG, side: THREE.DoubleSide,
-        uniforms: { bSeed: { value: 0 }, bType: { value: 0 }, bView: { value: new THREE.Vector2() }, bBox: { value: new THREE.Vector3() },
+        uniforms: { bSeed: { value: 0 }, bType: { value: 0 }, bTuft: { value: 0 }, bView: { value: new THREE.Vector2() }, bBox: { value: new THREE.Vector3() },
           heads: u.heads, thatch: u.thatch, leafScale: u.leafScale } }));
       m.frustumCulled = false; this.bakeScene.add(m); this.bakeMeshes.push(m);
     }
@@ -1211,8 +1349,9 @@ export class Grass {
       if (m.tuftN > 0 && r < m.tuftN * (m.herbMid ?? herb) / (P_TOTAL * TUFT_F * Math.max(d0, 0.05))) {
         if (keep >= dens * open || U[9] < 0.75 * wv / 200) return false;
         const sp = this.pickTuft(m, spDraw(U[7])), T = this.gs[sp].tuft;
-        const f = (0.8 + 0.4 * U[4]) * (0.75 + 0.25 * smooth(thr, thr + 0.15, bare));
-        P.ux = ux; P.uy = uy; P.px = px; P.pn = pn; P.yaw = U[3] * Math.PI * 2; P.sxz = T.w * f * (0.9 + 0.2 * U[5]); P.sy = T.h * f;
+        // its size: lognormal about the record's, the mean area kept (TUFT_SIGMA's block), smaller toward a bare patch
+        const ln = Math.exp(TUFT_SIGMA * normalZ(U[4]) - TUFT_SIGMA * TUFT_SIGMA), f = 0.75 + 0.25 * smooth(thr, thr + 0.15, bare);
+        P.ux = ux; P.uy = uy; P.px = px; P.pn = pn; P.yaw = U[3] * Math.PI * 2; P.sxz = T.w * ln * f * (0.95 + 0.1 * U[5]); P.sy = T.h * Math.sqrt(ln) * f;
         P.seed = U[7]; P.type = 1; P.role = ROLE.tussock; P.sp = sp;
         return true;
       }
@@ -1721,9 +1860,18 @@ export class Grass {
     // seed heads show this month; a species without a palette takes its type's.
     const month = seasonMonth(season, seasonState.date || undefined), s255 = rgb => rgb.map(v => v / 255);   // the day shown (a fixed date), else today
     const own = this.ownCurve();   // the tile's own shape through the year (outside the regional tables), else PALETTE's
+    const dPh = PHENO_DAYS / 30.44, cL = new THREE.Color(), cC = new THREE.Color();
     for (let k = 0; k < GS_MAX; k++) {
       const G = this.gs[k], T = G && G.type ? P.bunch : P.annual;
       const pal = G && this.speciesPal(G, season);
+      // the per-plant curing spread (TUFT_SIGMA's block): the species' cured share at the date and PHENO_DAYS either side, and
+      // its cured palette less its live one, both through the same scaling as the palette (set is linear but for a clamp)
+      const cu = u.spCure.value[k], dpal = [u.spDRoot, u.spDTip, u.spDHead, u.spDAwn];
+      cu.set(0, 0, 0, G?.tuft ? G.tuft.w : 0); for (const d of dpal) d.value[k].setRGB(0, 0, 0);
+      if (G && own && G.months) {
+        cu.x = this.cureAt(G, month); cu.y = this.cureAt(G, month - dPh); cu.z = this.cureAt(G, month + dPh);
+        ['root', 'tip', 'head', 'awn'].forEach((q, i) => { set(cL, s255(G.months.live[q])); set(cC, s255(G.months.cured[q])); dpal[i].value[k].setRGB(cC.r - cL.r, cC.g - cL.g, cC.b - cL.b); });
+      }
       set(u.spRoot.value[k], pal ? s255(pal.root) : T.root); set(u.spTip.value[k], pal ? s255(pal.tip) : T.tip);
       set(u.spHead.value[k], pal ? s255(pal.head) : T.head); set(u.spAwn.value[k], pal ? s255(pal.awn) : T.awn);
       // the heads stand from the species' first flowering month until four months after its last (the dry culms and
@@ -1742,6 +1890,7 @@ export class Grass {
       u.heightScale.value = atMonth(own.height, month); u.heads.value = 1;
       u.thatch.value = atMonth(own.thatch, month); u.leafScale.value = atMonth(own.leaf, month);
     }
+    u.tuftVol.value.w = own && this.tuftOn ? atMonth(own.thatchTuft, month) : 0;   // a tuft's dead share for the date (TUFT_SIGMA's block)
     this.season = season;
   }
 
@@ -1759,6 +1908,15 @@ export class Grass {
     const own = this.ownCurve();
     if (!own || !G.months) return G.palette?.[season] || null;
     const month = seasonMonth(season, seasonState.date || undefined);
+    const c = this.cureAt(G, month), L = G.months.live, C = G.months.cured, mx = (a, b) => a.map((v, i) => v + (b[i] - v) * c);
+    G.curedNow = c;
+    return { root: mx(L.root, C.root), tip: mx(L.tip, C.tip), head: mx(L.head, C.head), awn: mx(L.awn, C.awn) };
+  }
+  // The share of a grass with live and cured palettes that is cured at a (fractional) month, on a tile with its own season
+  // (speciesPal's rule); 0 without one.
+  cureAt(G, month) {
+    const own = this.ownCurve();
+    if (!own || !G.months) return 0;
     if (this.bloomShift === undefined) {
       const w = this.ownWeights(); let a = 0, b = 0;
       for (const S of this.gs) if (S.months && S.heads && w[S.k] > 0) { a += w[S.k] * ((S.heads[0] + S.heads[1]) / 2 + 0.5); b += w[S.k]; }
@@ -1766,9 +1924,7 @@ export class Grass {
     }
     let e = 0;
     if (G.months.cures === 'after_flowering' && G.heads) { const dm = ((month - (G.heads[0] + 0.5 + this.bloomShift)) % 12 + 12) % 12; e = dm < 8 ? smooth(0, 1.5, dm) : 0; }
-    const c = 1 - atMonth(own.g, month) * (1 - e), L = G.months.live, C = G.months.cured, mx = (a, b) => a.map((v, i) => v + (b[i] - v) * c);
-    G.curedNow = c;
-    return { root: mx(L.root, C.root), tip: mx(L.tip, C.tip), head: mx(L.head, C.head), awn: mx(L.awn, C.awn) };
+    return 1 - atMonth(own.g, month) * (1 - e);
   }
   // A tile that borrows nothing: its grasses' weights (their share of its cells, species_mix.json ground_bytes x cells; a
   // row with no grass counts as the generic tufted grass), and its own season curve from them (null where unmeasured).

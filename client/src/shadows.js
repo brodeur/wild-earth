@@ -136,11 +136,20 @@ const DEPTH_FRAG = /* glsl */`
 
 // Clump fields: the impostor's own size, density LOD and wind lean (shrubfield.js VERT), but the
 // quad faces the sun and the LOD distance is from the eye, not the shadow camera.
-const CLUMP_VERT = /* glsl */`
+// An open crown (a shrub's record porosity, shrubfield.js clumpPor) casts a dappled shadow (2026-11-06): through each point
+// of its sun-facing ellipse the sun crosses the crown along a chord, and passes exp(-kd chord) of it (Beer's law, kd from
+// the porosity across the crown's mean diameter, as the twig shrubs light their own crowns: TwigShrubs). That share of
+// the ellipse is gaps, cells of CP_CELL m chosen by a hash of the plant and the cell (stable as the map re-renders), most
+// of them toward the rim where the chord is short. A crown of porosity 0.3 lets 0.3 through its middle and 0.47 over its
+// whole shadow. Grass (porosity 0 here) casts as before. The field hands over its kinds' porosities (field.clumpPorGLSL: not
+// imported, shrubfield.js is in an import cycle with terrain.js through this module); a field without them casts solid.
+const CLUMP_POR_NONE = 'float clumpPor(float kind) { return 0.0; }';
+const CLUMP_VERT = por => /* glsl */`
   ${WIND_GLSL}
+  ${por || CLUMP_POR_NONE}
   uniform vec2 kParams; uniform vec4 band; uniform float heightScale; uniform vec3 viewEye; uniform vec3 sunDir;
   attribute vec4 iPos; attribute vec4 iVar;
-  varying vec2 vQ;
+  varying vec2 vQ; varying vec4 vP;   // the quad's half extents (m), the optical depth through the crown's middle, a seed
   void main() {
     float R = iPos.w, H = iVar.x, kind = iVar.z, rank = iVar.w;
     bool grass = kind > 1.5;
@@ -158,12 +167,25 @@ const CLUMP_VERT = /* glsl */`
     float ce = up.y, se = sqrt(max(1.0 - ce * ce, 0.0));
     float ev = sqrt(H * H * 0.25 * ce * ce + R * R * se * se);
     vQ = position.xy;
+    float por = clumpPor(kind);
+    vec3 Rc = vec3(R, 0.5 * H, R);
+    vP = vec4(0.9 * R, 0.9 * ev, por > 0.0 ? -log(por) / max(dot(Rc, vec3(0.3333)), 0.01) / max(length(sunDir / Rc), 1e-3) : 0.0, fract(iVar.y * 0.6180339) * 977.0);
     vec3 p = C + (right * position.x * R + up * position.y * ev) * 0.9;   // a little inside the lobed outline
     gl_Position = projectionMatrix * viewMatrix * vec4(p, 1.0);
   }`;
 const CLUMP_FRAG = /* glsl */`
-  varying vec2 vQ;
-  void main() { if (dot(vQ, vQ) > 1.0) discard; gl_FragColor = vec4(1.0); }`;
+  varying vec2 vQ; varying vec4 vP;
+  const float CP_CELL = 0.1;
+  void main() {
+    float r2 = dot(vQ, vQ);
+    if (r2 > 1.0) discard;
+    if (vP.z > 0.0) {   // (vP.z: kd x the chord through the middle; the chord here is that x sqrt(1 - r2))
+      uvec2 c = uvec2(ivec2(floor(vQ * vP.xy / CP_CELL + vP.w)) + 65536);
+      uint h = (c.x * 1597334677u) ^ (c.y * 3812015801u); h = (h ^ (h >> 15)) * 2246822519u; h ^= h >> 13;
+      if (float(h) * (1.0 / 4294967296.0) < exp(-vP.z * sqrt(1.0 - r2))) discard;
+    }
+    gl_FragColor = vec4(1.0);
+  }`;
 
 // Unit octahedron (32 triangles) scaled to a crown's bounds, plus a 0.5 m post from the ground to
 // the crown base when that is more than a metre up. Positions only: the depth pass needs nothing else.
@@ -192,8 +214,30 @@ const AO_FRAG = /* glsl */`
   varying vec2 vQ;
   void main() {
     float d = length(vQ);
-    gl_FragColor = vec4(aoStrength * pow(max(1.0 - d, 0.0), 1.6), 0.0, 0.0, 1.0);   // darkest at the trunk, gone at the crown edge
+    float a = aoStrength * pow(max(1.0 - d, 0.0), 1.6);
+    gl_FragColor = vec4(a, a, 0.0, 1.0);   // darkest at the trunk, gone at the crown edge (r everything, g the trees only)
   }`;
+// The shrub field's crowns in the contact AO map (2026-11-06): the ground under an open crown sees the sky through it only as
+// far as its porosity lets it (1 - porosity of the sky at the stem, none at the crown's edge), into r only, so the ground,
+// grass and herbs under a sage are in its shade while the shrubs themselves read g, the trees' (shrubfield.js treeAO).
+// Without it the ground showing through a porous crown from above was as bright as the open ground and the crowns read as a
+// dark even fuzz from 15-30 m up. The density LOD as the casters take it (a grown plant, a grown disc).
+const SHRUB_AO_VERT = por => /* glsl */`
+  ${por || CLUMP_POR_NONE}
+  uniform vec2 kParams; uniform vec3 viewEye;
+  attribute vec4 iPos; attribute vec4 iVar;
+  varying vec2 vQ; varying float vS;
+  void main() {
+    float R = iPos.w, kind = iVar.z, rank = iVar.w, por = clumpPor(kind);
+    float d = distance(viewEye, iPos.xyz), keep = clamp(kParams.x * kParams.x / max(d * d, 1.0), kParams.y, 1.0);
+    if (por <= 0.0 || rank > keep) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
+    R *= inversesqrt(keep) * ${(1.75 / 2).toFixed(3)} * 1.1;   // the visible crown (shrubfield.js VIS_W), a little past it
+    vQ = position.xy; vS = 1.0 - por;
+    gl_Position = projectionMatrix * viewMatrix * vec4(iPos.xyz + vec3(position.x * R, 0.0, -position.y * R), 1.0);
+  }`;
+const SHRUB_AO_FRAG = /* glsl */`
+  varying vec2 vQ; varying float vS;
+  void main() { float d = length(vQ); if (d > 1.0) discard; gl_FragColor = vec4(vS * pow(1.0 - d, 1.2), 0.0, 0.0, 1.0); }`;
 const AO_RANGE = 128, AO_SIZE = 512, AO_MOVE = 48;
 
 let current = null;            // the live Shadows, for the module-level addCaster / removeCaster
@@ -290,14 +334,14 @@ export class Shadows {
     this.clumpProxies = [];
     for (const f of [grass?.shrubs, grass?.clumps]) {
       if (!f?.mesh) continue;
-      const m = new THREE.ShaderMaterial({ vertexShader: CLUMP_VERT, fragmentShader: CLUMP_FRAG, colorWrite: false, side: THREE.DoubleSide,
+      const m = new THREE.ShaderMaterial({ vertexShader: CLUMP_VERT(f.clumpPorGLSL), fragmentShader: CLUMP_FRAG, colorWrite: false, side: THREE.DoubleSide,
         uniforms: { ...f.uniforms, sunDir: atmo.sunDir, viewEye: this.viewEye } });
       const p = this.add(new THREE.Mesh(f.mesh.geometry, m), f.mesh, L0 | L1);
       this.clumpProxies.push(p);
     }
     // Contact AO map (see AO_VERT): every near trunk instance, a disc of its variant's crown radius.
     this.ao = {
-      rt: new THREE.WebGLRenderTarget(AO_SIZE, AO_SIZE, { format: THREE.RedFormat, depthBuffer: false, generateMipmaps: false }),
+      rt: new THREE.WebGLRenderTarget(AO_SIZE, AO_SIZE, { format: THREE.RGFormat, depthBuffer: false, generateMipmaps: false }),
       cam: new THREE.OrthographicCamera(-AO_RANGE, AO_RANGE, AO_RANGE, -AO_RANGE, -5000, 5000),
       scene: new THREE.Scene(), proxies: [], centre: null, version: -1,
     };
@@ -314,6 +358,17 @@ export class Shadows {
       p.instanceMatrix = e.near.trunk.instanceMatrix; p.frustumCulled = false; p.matrixAutoUpdate = false;
       p.userData.src = e.near.trunk;
       this.ao.scene.add(p); this.ao.proxies.push(p);
+    }
+    // the shrub field's crowns (SHRUB_AO_VERT), sharing its instances
+    const sf = grass?.shrubs;
+    if (sf?.mesh && sf.clumpPorGLSL) {
+      const m = new THREE.ShaderMaterial({ vertexShader: SHRUB_AO_VERT(sf.clumpPorGLSL), fragmentShader: SHRUB_AO_FRAG,
+        uniforms: { kParams: sf.uniforms.kParams, viewEye: this.viewEye },
+        blending: THREE.CustomBlending, blendEquation: THREE.MaxEquation, blendSrc: THREE.OneFactor, blendDst: THREE.OneFactor, depthTest: false, depthWrite: false });
+      const p = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), m);
+      p.geometry = sf.mesh.geometry;   // (the field's instanced quad: position xy -1..1, iPos, iVar)
+      p.frustumCulled = false; p.matrixAutoUpdate = false; p.userData.shrubs = sf;
+      this.ao.scene.add(p); this.ao.shrubs = p;
     }
     renderer.setRenderTarget(this.ao.rt); renderer.clear(true, false, false); renderer.setRenderTarget(prev);
     groundUniforms.contactAO.value = this.ao.rt.texture;
@@ -438,7 +493,9 @@ export class Shadows {
   updateAO(camera) {
     const ao = this.ao, cp = camera.position, vegOn = this.veg.group.visible;
     const moved = !ao.centre || Math.hypot(cp.x - ao.centre.x, cp.z - ao.centre.z) > AO_MOVE;
-    const sig = vegOn ? this.veg.nearVersion : -1;
+    // (the shrubs' instances change as the field fills its cells: their signature joins the trees')
+    const sf = ao.shrubs?.userData.shrubs, sig = `${vegOn ? this.veg.nearVersion : -1}|${sf && sf.mesh.visible ? sf.sig : ''}`;
+    if (ao.shrubs) { ao.shrubs.visible = !!sf?.mesh.visible && sf.mesh.geometry.instanceCount > 0; if (moved || sig !== ao.version) this.viewEye.value.copy(cp); }
     if (!moved && sig === ao.version) return;
     ao.version = sig;
     if (moved) ao.centre = new THREE.Vector3(cp.x, 0, cp.z);

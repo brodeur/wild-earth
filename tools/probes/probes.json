@@ -190,11 +190,11 @@
     0
    ],
    "b_sage_eye": [
-    8500,
-    2000,
-    1.7,
-    9000,
-    2600,
+    8816,
+    1880,
+    1.6,
+    9316,
+    2480,
     0.5
    ],
    "c_lake": [
@@ -213,6 +213,9 @@
     4008,
     0
    ]
+  },
+  "_notes": {
+   "b_sage_eye": "By rule (tools/probes/pose_rule.js eye() with community 'Sagebrush', 2026-11-06): the old pose [8500, 2000] now stands in 'Rocky Mountain Lodgepole Pine Forest' (shrub 0 %, sward 0.16) after the rebuilds; the rule starts from the nearest cell whose species-mix row names Sagebrush (row 50, 'Inter-Mountain Basins Montane Sagebrush Steppe', 26,281 cells) and takes the nearest position (4 m grid, within 900 m) in that row whose shrub cover is within max(3, 20 %) of the row's median (28 %), whose sward averages at least the row's median (0.817) and nowhere falls under 0.75 of it, with no road within 20 m and no water within 30 m; the view keeps the old bearing. New pose 338 m off: shrub 32 %, sward 0.87 mean, 0.62 min."
   }
  },
  "corcovado": {

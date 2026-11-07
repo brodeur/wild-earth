@@ -1,0 +1,413 @@
+{
+ "encoding": "mapunits keyed by client/soils.png R (soils/classes.json); rgb: the dry surface soil's linear sRGB reflectance; litter_share: litter / (litter + bare ground) between the plants",
+ "default": {
+  "dry": "10YR 5/3",
+  "rgb": [
+   0.2637,
+   0.1799,
+   0.1105
+  ],
+  "litter_share": 0.683,
+  "ground": {
+   "plant": 0.6962,
+   "litter": 0.1954,
+   "bare": 0.0946,
+   "crust": 0.0138
+  }
+ },
+ "crust": {
+  "dry": "5GY 3/1",
+  "rgb": [
+   0.0641,
+   0.0651,
+   0.0517
+  ]
+ },
+ "version": "1",
+ "rules": {
+  "colour": "the first mineral horizon of the largest non-miscellaneous component's Official Series Description (dry), else its soil order's typical surface (DEFAULT_BY_ORDER), else SoilGrids organic carbon (dry value 6.5 - 1.6 log2(1 + SOC %), 10YR, chroma 3)",
+  "munsell": "ASTM D1535 value, chroma x (3.8 + 0.4 value) in CIELAB, hue by the renotation's angles at value 5; Lab D65 to linear sRGB",
+  "litter_share": "litter / (litter + bare ground), the middles of the component's NRCS ecological site reference sheet ranges (EDIT); else the tile's sheet-weighted mean",
+  "ground": "the surface by the sheets (plant canopy, litter, bare ground, crust: range middles, as shares of their sum), weighted by component share; units without a sheet the tile's area-weighted mean",
+  "crust": "biological crust and moss, dry: a stated dark grey-green chip (CRUST_COLOUR)"
+ },
+ "mapunits": {
+  "1": {
+   "dry": "10YR 5/2",
+   "moist": "10YR 3/2",
+   "colour_from": "osd TEEWINOT A",
+   "crust": "Cryptogamic crusts are present, but only cover 1-2% of the soil surface.",
+   "litter_share": 0.655,
+   "litter_from": "esd R043BY160WY Teewinot 20 %: litter 15-20, bare 0-25; R043BY108WY Moran 15 %: litter 5-40, bare 0-15",
+   "ground": {
+    "plant": 0.6847,
+    "litter": 0.1949,
+    "bare": 0.1055,
+    "crust": 0.0151
+   },
+   "rgb": [
+    0.2412,
+    0.1841,
+    0.1351
+   ]
+  },
+  "2": {
+   "dry": "10YR 5/3",
+   "colour_from": "default",
+   "rgb": [
+    0.2637,
+    0.1799,
+    0.1105
+   ],
+   "ground": {
+    "plant": 0.6962,
+    "litter": 0.1954,
+    "bare": 0.0946,
+    "crust": 0.0138
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.683,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "3": {
+   "dry": "7.5YR 5/3",
+   "moist": "7.5YR 3/3",
+   "colour_from": "osd TINEMAN A",
+   "crust": "Cryptogamic crusts are present, but only cover 1-2% of the soil surface.",
+   "litter_share": 0.617,
+   "litter_from": "esd R043BY222WY Tineman 41 %: litter 5-40, bare 0-20; R043BY212WY Bearmouth 39 %: litter 15-20, bare 0-30",
+   "ground": {
+    "plant": 0.672,
+    "litter": 0.1918,
+    "bare": 0.1217,
+    "crust": 0.0145
+   },
+   "rgb": [
+    0.278,
+    0.1752,
+    0.1151
+   ]
+  },
+  "4": {
+   "dry": "10YR 5/3",
+   "moist": "10YR 3/3",
+   "colour_from": "osd WALCOTT A",
+   "crust": "Cryptogamic crusts are present, but only cover 1-2% of the soil surface.",
+   "litter_share": 0.75,
+   "litter_from": "esd R043BY108WY Walcott 15 %: litter 5-40, bare 0-15",
+   "ground": {
+    "plant": 0.711,
+    "litter": 0.2064,
+    "bare": 0.0688,
+    "crust": 0.0138
+   },
+   "rgb": [
+    0.2637,
+    0.1799,
+    0.1105
+   ]
+  },
+  "5": {
+   "dry": "10YR 3/2",
+   "moist": "10YR 2/2",
+   "colour_from": "osd SEBUD A1",
+   "crust": "Cryptogamic crusts are present, but only cover 1-2% of the soil surface.",
+   "litter_share": 0.692,
+   "litter_from": "esd R043BY208WY Sebud 15 %: litter 5-40, bare 0-20",
+   "ground": {
+    "plant": 0.6951,
+    "litter": 0.2018,
+    "bare": 0.0897,
+    "crust": 0.0135
+   },
+   "rgb": [
+    0.0837,
+    0.0604,
+    0.0407
+   ]
+  },
+  "6": {
+   "dry": "7.5YR 5/2",
+   "moist": "7.5YR 3/2",
+   "colour_from": "osd MIDFORK A1",
+   "rgb": [
+    0.2505,
+    0.181,
+    0.1384
+   ],
+   "ground": {
+    "plant": 0.6962,
+    "litter": 0.1954,
+    "bare": 0.0946,
+    "crust": 0.0138
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.683,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "7": {
+   "dry": "10YR 5/3",
+   "moist": "10YR 3/3",
+   "colour_from": "osd WALCOTT A",
+   "crust": "Cryptogamic crusts are present, but only cover 1-2% of the soil surface.",
+   "litter_share": 0.75,
+   "litter_from": "esd R043BY108WY Walcott 20 %: litter 5-40, bare 0-15; R043BY108WY Leighcan 20 %: litter 5-40, bare 0-15",
+   "ground": {
+    "plant": 0.711,
+    "litter": 0.2064,
+    "bare": 0.0688,
+    "crust": 0.0138
+   },
+   "rgb": [
+    0.2637,
+    0.1799,
+    0.1105
+   ]
+  },
+  "8": {
+   "dry": "10YR 5/3",
+   "colour_from": "default",
+   "rgb": [
+    0.2637,
+    0.1799,
+    0.1105
+   ],
+   "ground": {
+    "plant": 0.6962,
+    "litter": 0.1954,
+    "bare": 0.0946,
+    "crust": 0.0138
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.683,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "9": {
+   "dry": "10YR 4/1",
+   "moist": "10YR 2/2",
+   "colour_from": "osd BEARMOUTH A",
+   "crust": "Cryptogamic crusts are present, but only cover 1-2% of the soil surface.",
+   "litter_share": 0.538,
+   "litter_from": "esd R043BY212WY Bearmouth 90 %: litter 15-20, bare 0-30",
+   "ground": {
+    "plant": 0.6477,
+    "litter": 0.1813,
+    "bare": 0.1554,
+    "crust": 0.0155
+   },
+   "rgb": [
+    0.1336,
+    0.1141,
+    0.0969
+   ]
+  },
+  "10": {
+   "dry": "10YR 3/2",
+   "moist": "10YR 2/2",
+   "colour_from": "osd SEBUD A1",
+   "crust": "Cryptogamic crusts are present, but only cover 1-2% of the soil surface.",
+   "litter_share": 0.692,
+   "litter_from": "esd R043BY208WY Sebud 20 %: litter 5-40, bare 0-20",
+   "ground": {
+    "plant": 0.6951,
+    "litter": 0.2018,
+    "bare": 0.0897,
+    "crust": 0.0135
+   },
+   "rgb": [
+    0.0837,
+    0.0604,
+    0.0407
+   ]
+  },
+  "11": {
+   "dry": "10YR 5/3",
+   "moist": "10YR 3/3",
+   "colour_from": "osd MORAN A",
+   "crust": "Cryptogamic crusts are present, but only cover 1-2% of the soil surface.",
+   "litter_share": 0.75,
+   "litter_from": "esd R043BY108WY Moran 20 %: litter 5-40, bare 0-15; R043BY108WY Walcott 20 %: litter 5-40, bare 0-15",
+   "ground": {
+    "plant": 0.711,
+    "litter": 0.2064,
+    "bare": 0.0688,
+    "crust": 0.0138
+   },
+   "rgb": [
+    0.2637,
+    0.1799,
+    0.1105
+   ]
+  },
+  "12": {
+   "dry": "10YR 5/2",
+   "moist": "10YR 4/2",
+   "colour_from": "osd TURNERVILLE E1",
+   "rgb": [
+    0.2412,
+    0.1841,
+    0.1351
+   ],
+   "ground": {
+    "plant": 0.6962,
+    "litter": 0.1954,
+    "bare": 0.0946,
+    "crust": 0.0138
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.683,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "13": {
+   "dry": "10YR 5/2",
+   "moist": "10YR 3/2",
+   "colour_from": "osd TETONVILLE Ap",
+   "crust": "Chemical and physical crusts are rare to non-existent.",
+   "litter_share": 0.833,
+   "litter_from": "esd R043BY274WY Tetonville 60 %: litter 0-25, bare 0-5; R043BY274WY Tetonville 30 %: litter 0-25, bare 0-5",
+   "ground": {
+    "plant": 0.8537,
+    "litter": 0.122,
+    "bare": 0.0244,
+    "crust": 0.0
+   },
+   "rgb": [
+    0.2412,
+    0.1841,
+    0.1351
+   ]
+  },
+  "14": {
+   "dry": "7.5YR 5/3",
+   "moist": "7.5YR 3/3",
+   "colour_from": "osd TINEMAN A",
+   "crust": "Chemical and physical crusts are rare to non-existent.",
+   "litter_share": 0.833,
+   "litter_from": "esd R043BY274WY Tineman 80 %: litter 0-25, bare 0-5",
+   "ground": {
+    "plant": 0.8537,
+    "litter": 0.122,
+    "bare": 0.0244,
+    "crust": 0.0
+   },
+   "rgb": [
+    0.278,
+    0.1752,
+    0.1151
+   ]
+  },
+  "15": {
+   "dry": "10YR 4/2",
+   "colour_from": "order Mollisols",
+   "crust": "Chemical and physical crusts are rare to non-existent.",
+   "litter_share": 0.833,
+   "litter_from": "esd R043BY278WY Cryaquolls 65 %: litter 0-5, bare 0-1; R043BY278WY Cryofibrists 35 %: litter 0-5, bare 0-1",
+   "ground": {
+    "plant": 0.9701,
+    "litter": 0.0249,
+    "bare": 0.005,
+    "crust": 0.0
+   },
+   "rgb": [
+    0.1492,
+    0.1113,
+    0.0789
+   ]
+  },
+  "16": {
+   "dry": "10YR 5/2",
+   "moist": "10YR 4/2",
+   "colour_from": "osd TURNERVILLE E1",
+   "crust": "Cryptogamic crusts are present, but only cover 1-2% of the soil surface.",
+   "litter_share": 0.692,
+   "litter_from": "esd R043BY222WY Turnerville 80 %: litter 5-40, bare 0-20",
+   "ground": {
+    "plant": 0.6951,
+    "litter": 0.2018,
+    "bare": 0.0897,
+    "crust": 0.0135
+   },
+   "rgb": [
+    0.2412,
+    0.1841,
+    0.1351
+   ]
+  },
+  "17": {
+   "dry": "7.5YR 5/3",
+   "moist": "7.5YR 3/3",
+   "colour_from": "osd TINEMAN A",
+   "crust": "Cryptogamic crusts are present, but only cover 1-2% of the soil surface.",
+   "litter_share": 0.747,
+   "litter_from": "esd R043BY222WY Tineman 40 %: litter 5-40, bare 0-20; R043BY274WY Tineman 25 %: litter 0-25, bare 0-5",
+   "ground": {
+    "plant": 0.7561,
+    "litter": 0.1711,
+    "bare": 0.0646,
+    "crust": 0.0083
+   },
+   "rgb": [
+    0.278,
+    0.1752,
+    0.1151
+   ]
+  },
+  "18": {
+   "dry": "10YR 5/2",
+   "moist": "10YR 3/2",
+   "colour_from": "osd TETONVILLE Ap",
+   "crust": "Chemical and physical crusts are rare to non-existent.",
+   "litter_share": 0.833,
+   "litter_from": "esd R043BY274WY Tetonville 41 %: litter 0-25, bare 0-5; R043BY274WY Wilsonville 39 %: litter 0-25, bare 0-5",
+   "ground": {
+    "plant": 0.8537,
+    "litter": 0.122,
+    "bare": 0.0244,
+    "crust": 0.0
+   },
+   "rgb": [
+    0.2412,
+    0.1841,
+    0.1351
+   ]
+  },
+  "19": {
+   "dry": "10YR 6/2",
+   "moist": "10YR 4/2",
+   "colour_from": "osd STARMAN A",
+   "crust": "Cryptogamic crusts are present, but only cover 1-2% of the soil surface.",
+   "litter_share": 0.655,
+   "litter_from": "esd R043BY162WY Starman 20 %: litter 15-20, bare 0-25; R043BY108WY Midfork 15 %: litter 5-40, bare 0-15",
+   "ground": {
+    "plant": 0.6847,
+    "litter": 0.1949,
+    "bare": 0.1055,
+    "crust": 0.0151
+   },
+   "rgb": [
+    0.3618,
+    0.2809,
+    0.211
+   ]
+  },
+  "20": {
+   "dry": "10YR 4/1",
+   "moist": "10YR 2/1",
+   "colour_from": "osd SLOCUM A",
+   "crust": "Chemical and physical crusts are rare to non-existent.",
+   "litter_share": 0.833,
+   "litter_from": "esd R043BY274WY Slocum 36 %: litter 0-25, bare 0-5; R043BY274WY Silas 34 %: litter 0-25, bare 0-5",
+   "ground": {
+    "plant": 0.8537,
+    "litter": 0.122,
+    "bare": 0.0244,
+    "crust": 0.0
+   },
+   "rgb": [
+    0.1336,
+    0.1141,
+    0.0969
+   ]
+  }
+ }
+}

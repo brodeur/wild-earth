@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { mulberry32 } from './trees.js';
 import { chainShader, LIBRARY } from './treegen.js';
 import { rockKeep } from './tilepackage.js';
-import { groundUniforms, GROUND_GLSL, seasonState } from './terrain.js';
+import { groundUniforms, GROUND_GLSL, seasonState, gapLitterPalette } from './terrain.js';
 import { buildDetailMaskSteps } from './groundDetail.js';
 import { releaseTexture } from './gpuRelease.js';
 import { bodyScale, onBodyScale } from './bodyScale.js';
@@ -503,6 +503,12 @@ const LEAF_OLD = [linRGB(0.56, 0.52, 0.46), linRGB(0.48, 0.41, 0.33), linRGB(0.3
 const TWIG_COL = [linRGB(0.38, 0.32, 0.27), linRGB(0.53, 0.5, 0.46), linRGB(0.3, 0.25, 0.21)];
 const STEM_COL = [linRGB(0.74, 0.66, 0.5), linRGB(0.6, 0.56, 0.49), linRGB(0.68, 0.6, 0.45)];
 const pick = (arr, u) => arr[Math.min(arr.length - 1, Math.floor(u * arr.length))];
+// The litter between a steppe's bunchgrass tufts (terrain.js updateGap, the gap ground near the camera), from these palettes
+// (linear, display-referred: the terrain takes them to the ground's reflectance as it takes its palettes): the lying grass
+// stems' weathered grey (STEM_COL's second, the colour of grass.js's THATCH and the pipeline's WEATHERED: the litter between
+// bunchgrasses is mostly past years' leaves, 5-15 mm deep on Lamar's sites' reference sheets) and the old fallen leaves'
+// greyest (OLD_LEAF's first: a shrub's leaves weathered on the ground)
+gapLitterPalette.stem = STEM_COL[1]; gapLitterPalette.leaf = LEAF_OLD[0];
 
 // Leaf fall by month (0 = January): the blue oaks' in autumn, the live oaks' in spring, the summer floor thinnest.
 const LEAF_SEASON = [0.8, 0.8, 0.8, 0.65, 0.65, 0.45, 0.45, 0.45, 0.55, 1, 1, 1];

@@ -79,10 +79,20 @@ const fhArr = i => `float[${FH_N}](${FH.map(id => fhLook(id)[i].toFixed(2)).join
 // gooseberry qualify; mountain mahogany and red huckleberry (too tall), coyote brush (porosity 0.2), buckbrush and the
 // chaparral do not. The tuft is TWIG_TUFT_K leaf lengths across (a fascicle of leaves on a short shoot at the twig's end).
 const TWIG_POR = 0.25, TWIG_TUFT_K = 3.5, TWIG_HMAX = 1.6;
+// the close tier's skeletons per record class (TwigShrubs), and the pictures of them past the hand-over (TwigShrubs.bake, TB_T below)
+const VIS_W = 1.75;   // a crown's visible width over the card's R (see SHRUB_H below)
+const TW_EL_LO = 8, TW_EL_HI = 12;   // the pictures whole below TW_EL_LO degrees over the plant, the dome above TW_EL_HI (VERT twP)
+const TWIG_COPIES = 3, TB_T = 64, TB_AZ = 6, TB_EL = 4, TB_COLS = 32, TB_EL_DEG = [0, 30, 60, 89.5];
 const isTwig = id => { const s = SPECIES[id]; return !!s && (s.foliage?.leaf_size_m ?? 1) <= FH_FINE_LEAF_M && (s.targets?.porosity ?? 0) >= TWIG_POR
   && (s.height_m?.[1] ?? 9) <= TWIG_HMAX && !s.palm; };
 const FH_TWIG = FH.map(isTwig);
 const twigArr = `float[${FH_N}](${FH_TWIG.map(t => (t ? 1 : 0).toFixed(1)).join(', ')})`;
+// The crown porosity of each kind of this field (the record's targets.porosity, as fhLook clamps it; chamise and manzanita
+// from theirs; 0 for grass.js's kinds), for shadows.js: an open crown's cast shadow lets the sun through (2026-11-06).
+const porOf = id => Math.min(0.6, Math.max(0.05, SPECIES[id]?.targets?.porosity ?? 0.2));
+const CLUMP_POR_GLSL = /* glsl */`
+  const float CP_FH[${FH_N}] = ${fhArr(4)};
+  float clumpPor(float kind) { return kind < -0.5 ? CP_FH[int(-kind - 0.5)] : kind < 0.5 ? ${porOf('adenostoma_fasciculatum').toFixed(3)} : kind < 1.5 ? ${porOf('arctostaphylos_viscida').toFixed(3)} : 0.0; }`;
 // The foothill shrubs take negative kinds: shadows.js casts every kind over 1.5 as grass (its season height and a
 // grass blade's sway, 0.35 H), which swung a toyon's shadow metres across its neighbours in the wind.
 // Seed layout: integer part random, fractional part the silhouette variant (variant + 0.5) / 4.
@@ -92,6 +102,12 @@ const VERT = /* glsl */`
   ${ATMOSPHERE_GLSL}
   ${GROUND_GLSL}
   ${WIND_GLSL}
+  // the trees' contact AO only (shadows.js: its g; r carries the shrubs' own crowns too, for the ground under them)
+  float treeAO(vec3 p) {
+    vec2 uv = (contactAOMatrix * vec4(p, 1.0)).xy, e = abs(uv - 0.5) * 2.0;
+    if (max(e.x, e.y) >= 1.0) return 1.0;
+    return 1.0 - texture(contactAO, uv).g * (1.0 - smoothstep(0.8, 1.0, max(e.x, e.y)));
+  }
   uniform vec2 kParams;   // D0, KMIN
   uniform vec4 band;      // fade in from x to y, out from z to w (distance to camera)
   uniform float heightScale; uniform float dry;   // dry: 0 green season .. 1 cured summer sward
@@ -99,6 +115,10 @@ const VERT = /* glsl */`
   uniform vec2 twigBand;  // the twig shrubs' hand-over to TwigShrubs (m, horizontal, a radius per plant between x and y)
   const float FH_TWIG[${FH_N}] = ${twigArr};
   const vec2 TW_LIGHT = vec2(0.58, 0.68);   // (sun, sky) for a twig shrub past its hand-over (below)
+  uniform float twBase[${FH_N}];   // a twig species' first picture (TwigShrubs.bake), -1 before
+  #ifndef NEAR
+  varying vec4 vTw;   // a twig shrub's pictures: its first tile, the view's azimuth and elevation in tiles, the pictures' share
+  #endif
   uniform vec3 fhCol[${FH_N}];  // the foothill shrubs (FH, kind -1 - index): this season's leaf albedo, from the species files (fhSeason)
   uniform vec4 glow; uniform float glowFh[${FH_N}]; uniform vec2 glowKind;   // the forager's food (forage.js): the body x z, its radius, the gain; each foothill shrub's weight this season; chamise's and manzanita's
   attribute vec4 iPos; attribute vec4 iVar;   // root x y z, crown radius | height, seed, kind, rank
@@ -138,6 +158,14 @@ const VERT = /* glsl */`
     // its pixels: the two programs light a foothill shrub alike (FRAG), and a per-pixel split read as a coarse screen
     // door over every crown 14-26 m off (2026-11-06, iteration 8; Aaron on Teton's sage).
     float nearK = d < mix(nearBand.x, nearBand.y, ph(iPos.xz, 3u)) ? 1.0 : 0.0;
+    // a twig shrub with its pictures baked is the far program's from its hand-over on (twigPicture in FRAG)
+    int fki = kind < -0.5 ? int(-kind - 0.5) : 0;
+    // ... and only seen within TW_EL_HI of the horizontal (the pictures are an eye-height look: from above a sage stand reads
+    // by its domes, as before; the coordinator, 2026-11-06, after the 3D crowns from 15-30 m up measured half the domes'
+    // contrast); above it the plant is the impostor's as before, the NEAR program's within nearBand
+    bool twP = kind < -0.5 && FH_TWIG[fki] > 0.5 && twBase[fki] >= 0.0
+            && normalize(cameraPosition - iPos.xyz - vec3(0.0, 0.5 * H, 0.0)).y < ${Math.sin(TW_EL_HI * Math.PI / 180).toFixed(4)};
+    if (twP) nearK = 0.0;
     #ifdef NEAR
     if (nearK <= 0.0) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
     #else
@@ -174,7 +202,7 @@ const VERT = /* glsl */`
     // the contact AO blob under near trees. A shrub crown is itself the shrub layer, so it takes only
     // the tree cover's share.
     vec2 guv = groundUv(iPos.xyz);
-    float occ = (1.0 - 0.35 * clamp(texture(canopyMap, guv).r * 2.55, 0.0, 1.0)) * groundContactAO(iPos.xyz);
+    float occ = (1.0 - 0.35 * clamp(texture(canopyMap, guv).r * 2.55, 0.0, 1.0)) * treeAO(iPos.xyz);
     // Species colour, varied per shrub and by stand (a warm, olive palette: chamise dark olive-green,
     // whiteleaf manzanita paler, grey-green to glaucous), pulled toward the photo.
     bool fh = kind < -0.5;   // a foothill shrub (FH, kinds -1 to -6): its colour from its species file, this season
@@ -202,6 +230,17 @@ const VERT = /* glsl */`
     if (kind < -0.5 && FH_TWIG[int(-kind - 0.5)] > 0.5) { vSun *= TW_LIGHT.x; vAmb *= TW_LIGHT.y; vAmbUp *= TW_LIGHT.y; }
     vIn = atmosphereApply(vec3(0.0), C, cameraPosition);
     vT = atmosphereApply(vec3(1.0), C, cameraPosition) - vIn;
+    #ifndef NEAR
+    vTw = vec4(0.0);
+    if (twP) {
+      // the view in the plant's own frame (TwigShrubs turns it by ph salt 6), in tiles of azimuth and elevation
+      float rot = ph(iPos.xz, 6u) * 6.2831853, cr = cos(rot), sr = sin(rot);
+      float az = atan(cr * V.x + sr * V.z, -sr * V.x + cr * V.z);
+      float cls = min(floor(seed / 100.0), 7.0), copy = floor(ph(iPos.xz, 5u) * ${TWIG_COPIES}.0);
+      vTw = vec4(twBase[fki] + cls * ${TWIG_COPIES * TB_EL * TB_AZ}.0 + copy * 0.25, fract(az / 6.2831853 + 1.0) * ${TB_AZ}.0,
+                 clamp(asin(clamp(V.y, -1.0, 1.0)) * 57.29578 / 30.0, 0.0, ${TB_EL - 1}.0), grow);
+    }
+    #endif
     gl_Position = projectionMatrix * viewMatrix * vec4(p, 1.0);
   }`;
 
@@ -223,6 +262,13 @@ const FRAG = /* glsl */`
   const float FH_T[${FH_N}] = ${fhArr(5)};     // the fine picture's tile (m), from the record's leaf size
   const float FH_TWIG_F[${FH_N}] = ${twigArr};   // a twig shrub (FH_TWIG)
   uniform sampler2D leafF;   // the fine-leaved shrubs' picture (bakeLeaves 'sprig'): sprigs of small leaves on crooked twigs
+  #ifndef NEAR
+  // A twig shrub past its hand-over: its pictures (TwigShrubs.bake), each texel lit as the close tier (TWIG_VERT) lights that
+  // leaf or that piece of wood. Returns the coverage and the light leaving it (before the air); 0 where nothing is drawn.
+  uniform sampler2D twA; uniform sampler2D twB; uniform vec2 twSize; uniform vec3 fhCol[${FH_N}];
+  uniform vec3 twBark[${FH_N}]; uniform vec3 twDead[${FH_N}]; varying vec4 vTw;
+  const vec2 TW_LIGHT_F = vec2(0.58, 0.68);   // VERT's TW_LIGHT, which dims the dome's light: undone for the pictures
+  #endif
   varying vec2 vQ; varying vec3 vRight; varying vec3 vUp; varying vec3 vView;
   varying vec3 vAlbedo; varying vec3 vSun; varying vec3 vAmb; varying vec3 vAmbUp; varying vec3 vT; varying vec3 vIn;
   varying float vSeed; varying float vKind; varying float vLobes; varying float vYS; varying float vVar; varying float vDry; varying float vFade;
@@ -246,6 +292,71 @@ const FRAG = /* glsl */`
     q = (q.x ^ q.y ^ q.z) * uvec3(1597334673u, 3812015801u, 2798796415u);
     return vec3(q) * (1.0 / 4294967296.0);
   }
+  #ifndef NEAR
+  vec2 twCell(float t) { return vec2(mod(t, ${TB_COLS}.0), floor(t / ${TB_COLS}.0)); }
+  // pk: the pictures' share against the dome (below). A grown plant's picture is the plant at its own size at the card's
+  // centre, faded to the dome as it grows.
+  float twigPicture(int fk, out vec3 col, out float pk) {
+    col = vec3(0.0); pk = 0.0;
+    float g = vTw.w, R1 = vDim.x / g, H1 = vDim.z * inversesqrt(g), ce = vUp.y, se = sqrt(max(1.0 - ce * ce, 0.0));
+    float ev1 = sqrt(H1 * H1 * ce * ce + R1 * R1 * se * se);
+    vec2 u = vec2(vQ.x * g, vQ.y * vDim.y / ev1);   // the card in the plant's own radii (x) and half extents (y)
+    float base = floor(vTw.x), copy = fract(vTw.x) * 4.0;
+    vec2 uq = u;
+    // the pictures' share: whole up to TW_EL_LO above the horizontal, the dome's from TW_EL_HI; and a far plant the density
+    // LOD has grown to stand for several goes back to the dome as it grows (1.1x to 1.5x)
+    pk = (1.0 - smoothstep(${TW_EL_LO.toFixed(1)}, ${TW_EL_HI.toFixed(1)}, vTw.z * 30.0)) * (1.0 - smoothstep(1.1, 1.5, g));
+    if (pk <= 0.0) return 0.0;
+    vec2 uv = uq / 2.4 + 0.5, gx = dFdx(u) / 2.4 / twSize, gy = dFdy(u) / 2.4 / twSize;
+    // (no coarser than the 8 px mip of a tile: the tiles' margins hold 5 px, so a coarser one would mix in the next)
+    float gm = max(length(gx * twSize), length(gy * twSize)) * ${TB_T}.0, gm0 = gm;   // texels per pixel
+    if (gm > 8.0) { gx *= 8.0 / gm; gy *= 8.0 / gm; }
+    float a0 = floor(vTw.y), wa = smoothstep(0.3, 0.7, vTw.y - a0);
+    float e0 = min(floor(vTw.z), ${TB_EL - 2}.0), we = smoothstep(0.3, 0.7, vTw.z - e0);
+    float tA = base + copy * ${TB_EL * TB_AZ}.0 + e0 * ${TB_AZ}.0, tB = tA + ${TB_AZ}.0;
+    float c0 = mod(a0, ${TB_AZ}.0), c1 = mod(a0 + 1.0, ${TB_AZ}.0);
+    float w[4]; float t[4];
+    t[0] = tA + c0; t[1] = tA + c1; t[2] = tB + c0; t[3] = tB + c1;
+    w[0] = (1.0 - wa) * (1.0 - we); w[1] = wa * (1.0 - we); w[2] = (1.0 - wa) * we; w[3] = wa * we;
+    float alpha = 0.0, best = -1.0, tb = t[0]; vec4 A = vec4(0.0);
+    for (int i = 0; i < 4; i++) {
+      if (w[i] <= 0.0) continue;
+      vec4 s = textureGrad(twA, (twCell(t[i]) + uv) / twSize, gx, gy);
+      alpha += w[i] * s.a;
+      if (w[i] * s.a > best) { best = w[i] * s.a; A = s; tb = t[i]; }
+    }
+    // the alpha sharpened about 0.5 where the tiles are magnified or near full size (its mips keep the covered share over
+    // 0.5: twigMips): a crown's tufts and gaps crisp there; minified, alpha to coverage takes the mips' alpha as it is, so a
+    // crown of a few pixels is a soft blob of its coverage, not a speckle of single pixels
+    alpha = mix(clamp((alpha - 0.5) / max(fwidth(alpha), 0.05) + 0.5, 0.0, 1.0), alpha, smoothstep(1.0, 3.0, gm0));
+    if (alpha < 0.02 || A.a < 0.004) return 0.0;
+    vec4 B = textureGrad(twB, (twCell(tb) + uv) / twSize, gx, gy) / A.a;
+    A.rgb /= A.a;
+    float type = B.a * 3.0, rnd = B.b;
+    bool leaf = type < 0.5;
+    float deco = leaf ? step(1.0 - fhDeco[fk].a, fract(rnd * 7.31)) : 0.0;
+    if (leaf && rnd >= fhLeaf[fk] && deco < 0.5) return 0.0;   // a leafing-out or dropping crown: that share of its tufts
+    // the texel's place in its crown: on the card, and its depth along the view
+    vec3 Rc = vec3(${(VIS_W / 2).toFixed(3)} * R1, H1, ${(VIS_W / 2).toFixed(3)} * R1);
+    vec3 qv = (vRight * (uq.x * R1) + vUp * (uq.y * ev1) + vView * ((A.r * 2.0 - 1.0) * 1.3 * max(Rc.x, H1))) / Rc;
+    // the sun through the crown from there to its sunward surface: the record's porosity across a diameter (Beer's law)
+    vec3 Ls = sunDir / Rc;
+    float qa = dot(Ls, Ls), qb = dot(qv, Ls), qc = dot(qv, qv) - 1.0;
+    float tx = max((-qb + sqrt(max(qb * qb - qa * qc, 0.0))) / qa, 0.0);
+    float trans = exp(log(max(FH_POR[fk], 0.05)) / (2.0 * dot(Rc, vec3(0.3333))) * tx);
+    vec2 n2 = A.gb * 2.0 - 1.0;
+    vec3 Nf = normalize(vRight * n2.x + vUp * n2.y + vView * sqrt(max(1.0 - dot(n2, n2), 0.0)));
+    float sf = dot(Nf, sunDir), r = length(qv), hf = 0.5 + 0.5 * qv.y;
+    vec3 N = leaf ? normalize(normalize(qv / Rc) + vec3(0.0, 0.35, 0.0)) : Nf;
+    float diff = leaf ? (sf > 0.0 ? sf : -0.2 * sf) * B.g : 0.25 + 0.75 * max(sf, 0.0);
+    float ao = mix(0.4, 1.0, smoothstep(0.15, 1.0, r)) * mix(0.65, 1.0, clamp(hf * 1.4, 0.0, 1.0));
+    vec3 amb = mix(vAmb, vAmbUp, 0.5 + 0.5 * N.y) * (ao / TW_LIGHT_F.y);
+    vec3 alb = leaf ? mix(fhCol[fk] * mix(0.86, 1.14, fract(rnd * 5.3)), fhDeco[fk].rgb, deco) : type < 1.5 ? twBark[fk] : type < 2.5 ? fhBark[fk] : twDead[fk];
+    col = alb * (amb + vSun * (trans * diff / TW_LIGHT_F.x)) * (leaf ? B.r * 1.25 : 1.0) * 0.3183099;
+    if (vGlow > 0.0) col += glowCol * vGlow * dot(vSun * 0.5 + vAmb * 1.5, vec3(0.3333)) * 0.3183099 * (leaf ? 0.25 : 0.08);
+    return alpha;
+  }
+  #endif
   void main() {
     // Distance fades: screen-space dither (the interleaved gradient noise the tree tiers hand over
     // with), never a size change.
@@ -260,6 +371,21 @@ const FRAG = /* glsl */`
     float kind = vKind, vv = vVar;
     bool fh = kind < -0.5;           // a foothill shrub: drawn as manzanita is (leaf masses, stems), with its own look
     int fk = fh ? int(-kind - 0.5) : 0;
+    // A twig shrub past its hand-over: its pictures (twigPicture), the dome only for a plant grown to stand for several
+    // (blended by vTw.w as it grows, the pictures' coverage and light against the dome's)
+    float aP = 0.0, pk = 0.0; vec3 cP = vec3(0.0);
+    #ifndef NEAR
+    if (vTw.w > 0.0) {
+      aP = twigPicture(fk, cP, pk);
+      if (pk >= 0.999) {
+        if (aP < 0.02) discard;
+        gl_FragColor = vec4(cP * vT + vIn, aP);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+        return;
+      }
+    }
+    #endif
     bool manz = kind > 0.5, broad = manz || fh, fine = fh && FH_FINE[fk] > 0.5;   // fine: small-leaved shrubs (coyote brush, buckbrush) take chamise's picture
     bool picM = broad && !fine;   // up close: the round-leaf picture (manzanita's) or the fine one (chamise's)
     bool picF = fine;             // a fine-leaved foothill shrub: its own sprig picture, not chamise's wands (2026-11-06)
@@ -283,7 +409,7 @@ const FRAG = /* glsl */`
       // Outside every crown's widest possible outline (lobes, spikes, dead stems; up close the wands and
       // stems reach a little further): nothing to shade. Most of the quad around a cluster ends here,
       // before any noise is evaluated.
-      if (dot(q, q) > (near > 0.0 && !broad ? 2.2 : 1.9)) discard;
+      if (dot(q, q) > (near > 0.0 && !broad ? 2.2 : 1.9) && aP < 0.02) discard;
     }
     float r2 = dot(q, q);
     float z = sqrt(max(1.0 - min(r2, 1.0), 0.0));
@@ -293,7 +419,17 @@ const FRAG = /* glsl */`
     // A foothill shrub's flowers or berries this season: clusters over the outer, upper crown, a hash of the crown
     // normal (stable on the plant as the view turns), the share fhDeco.a of them; they stay on a bare crown
     // (redbud's magenta on bare twigs in March).
-    float fdk = fh ? step(1.0 - fhDeco[fk].a, h3(floor(nW * 13.0 * vLobes + vSeed * 13.0))) * smoothstep(-0.45, 0.25, nW.y) : 0.0;
+    // The clusters are the peaks of two octaves of the crown-normal noise above the level that leaves the share uncovered
+    // (FDK_Q: the noise's measured quantiles), irregular spots of several sizes: whole cells of the normal's 3D grid (a hash
+    // per cell, as before) cut the dome into squares and triangles, a white or magenta checkerboard over a buckbrush or
+    // redbud in bloom (2026-11-06, home).
+    float fdk = 0.0;
+    if (fh && fhDeco[fk].a > 0.0) {
+      vec3 fcl = nW * 13.0 * vLobes + vSeed * 13.0;
+      float s = fhDeco[fk].a, thr = s < 0.05 ? mix(0.8035, 0.7245, (s - 0.01) / 0.04) : s < 0.15 ? mix(0.7245, 0.646, (s - 0.05) / 0.1)
+                                 : s < 0.3 ? mix(0.646, 0.5756, (s - 0.15) / 0.15) : mix(0.5756, 0.4635, (s - 0.3) / 0.3);
+      fdk = smoothstep(thr - 0.012, thr + 0.012, 0.65 * n3(fcl) + 0.35 * n3(fcl * 2.3 + 17.0)) * smoothstep(-0.45, 0.25, nW.y);
+    }
     float rr = sqrt(r2), aa = fwidth(rr) + 1e-3;
     float rb, alpha, fringe, dead = 0.0;
     // Shrub crown. Variants (vv): chamise 0 rounded, 1 ragged vase, 2 vase with grey dead stems;
@@ -368,6 +504,8 @@ const FRAG = /* glsl */`
       float wc = smoothstep(0.45, 0.7, s3.y / max(length(s3), 1e-3));   // the cap
       tex = picM ? textureGrad(leafM, uv, ddx, ddy) : picF ? textureGrad(leafF, uv, ddx, ddy) : textureGrad(leafC, uv, ddx, ddy);
       if (wc > 0.0) tex = mix(tex, picM ? textureGrad(leafM, uvT, dxT, dyT) : picF ? textureGrad(leafF, uvT, dxT, dyT) : textureGrad(leafC, uvT, dxT, dyT), wc);
+      // where resolved, a flower cluster is florets: most of the picture's leaves in the spot, the gaps between them leaves
+      if (fdk > 0.0) fdk *= mix(1.0, step(fract(tex.b * 3.71), 0.8) * smoothstep(0.4, 0.55, tex.g), lres);
       // A porous crown (the record's porosity) is seen through between its tufts: a share of its gaps are holes through the
       // crown, most toward the outline, where a line of sight crosses the least foliage (whole gaps at a time, chosen by the
       // crown's fine octave: a fractional coverage dithered into a screen door). Its other gaps show its far side: the
@@ -445,7 +583,7 @@ const FRAG = /* glsl */`
       alpha = alphaN;
     }
     float gref = dot(vSun * 0.5 + vAmb * 1.5, vec3(0.3333)) * 0.3183099;   // the glow's level against the light of the hour
-    if (alpha < 0.05) {
+    if (alpha < 0.05 && aP < 0.02) {
       // outside the crown: a soft skirt of the glow past its outline (forage.js), else nothing
       float hal = vGlow * (1.0 - smoothstep(rb, rb + 0.25, rr)) * 0.22;
       if (hal < 0.02) discard;
@@ -576,6 +714,11 @@ const FRAG = /* glsl */`
     }
     vec3 outC = (near > 0.0 ? outN : outH) * 0.3183099;
     if (vGlow > 0.0) outC += glowCol * vGlow * gref * (0.12 + 0.38 * (1.0 - z * z));   // the glow: most at the rim of the dome
+    if (pk > 0.0) {   // between the pictures and the dome (a growing far plant)
+      float aD = alpha < 0.05 ? 0.0 : alpha, a2 = mix(aD, aP, pk);
+      if (a2 < 0.02) discard;
+      outC = (outC * aD * (1.0 - pk) + cP * aP * pk) / a2; alpha = a2;
+    }
     gl_FragColor = vec4(outC * vT + vIn, alpha);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
@@ -912,7 +1055,6 @@ function bakeLeaves(kind) {
 // visible crown (the cluster of stems' crowns with its outline) is about H tall (0.9 H past the near band)
 // and VIS_W x R across (measured side on: 1.85 R near, 1.6 R at 40 m), so R = width / VIS_W.
 const SHRUB_H = { chamise: [[0.6, 1.3], [1.2, 2.4], [1.5, 2.6]], manzanita: [[0.7, 1.5], [1.5, 3.5], [2.0, 3.5]] };
-const VIS_W = 1.75;
 const CHAP_W = 2.2, GROW_W = 3.3, KMIN_LO = 0.04;   // the chaparral's typical visible crown width (m); a far impostor's widest; the LOD's lowest floor
 // Ground cover as before the sizes followed the species: the old rule grew crowns with the cover and the
 // stand age (size 1.15 (0.62 + 0.62 cover) (0.8 + 0.4 age), with the meanArea below), so a dense or old
@@ -1028,17 +1170,24 @@ export function ShrubField(tile, ground, uniforms) {
     glow: { value: new THREE.Vector4(0, 0, 1, 0) }, glowFh: { value: new Float32Array(FH_N) }, glowKind: { value: new THREE.Vector2() }, glowCol: { value: new THREE.Color(1, 0.76, 0.34) } });   // the forager's food (forage.js writes them)
   // The twig shrubs up close (TwigShrubs): whole, each at its own radius between 9 and 13 m (horizontal).
   field.uniforms.twigBand = { value: new THREE.Vector2(9, 13) };
+  // their wood's colours (the close tier's and the pictures'), and the pictures past the hand-over (TwigShrubs.bake): the two
+  // atlases, their size in tiles, each species' first tile (-1 until baked: the dome is drawn)
+  const lin = c => c.map(v => Math.pow(v / 255, 2.2) * (groundLook.physical ? 1.0 : 1.3));
+  Object.assign(field.uniforms, {
+    twBark: { value: FH.map(id => new THREE.Vector3(...lin(SPECIES[id]?.trunk?.bark_rgb || [110, 100, 90]))) },
+    twDead: { value: FH.map(id => new THREE.Vector3(...lin(SPECIES[id]?.deadwood?.rgb || [140, 134, 124]))) },
+    twA: { value: null }, twB: { value: null },  twSize: { value: new THREE.Vector2(1, 1) }, twBase: { value: new Float32Array(FH_N).fill(-1) } });
   const twigs = FH_TWIG.some(Boolean) ? new TwigShrubs(field) : null;
-  if (twigs) field.mesh.add(twigs.group);
+  if (twigs) { field.mesh.add(twigs.group); field.mesh.onBeforeRender = r => { twigs.renderer = r; }; }
   const update = field.update.bind(field);
   let fhKey = null;
   field.update = (camera, on = true, band = null) => {
     const season = seasonOfDry(field.uniforms.dry.value), key = `${season}:${seasonMonth(season).toFixed(1)}`;
     if (key !== fhKey) { fhKey = key; fhSeason(field.uniforms, season); }
     update(camera, on, band);
-    if (twigs && field.mesh.visible) twigs.update(camera);
+    if (twigs && field.mesh.visible) { twigs.bakeNew(); twigs.update(camera); }
   };
-  field.foothill = fh; field.layerWidth = layerW; field.twigs = twigs;
+  field.foothill = fh; field.layerWidth = layerW; field.twigs = twigs; field.clumpPorGLSL = CLUMP_POR_GLSL;
   return field;
 }
 
@@ -1053,12 +1202,18 @@ export function ShrubField(tile, ground, uniforms) {
 // crown's sunward surface), the cast shadow of everything else tested just outside that surface, the sky occluded inside
 // the crown, the air applied per vertex. The season as the impostor's: leaf-on share (a bare deciduous crown is its twigs),
 // flowers or berries on a share of the tufts, the forager's glow.
-const TWIG_COPIES = 3, TWIG_CAP0 = 512, TWIG_MARGIN = 1, TWIG_LITE = 3.5;
+const TWIG_CAP0 = 512, TWIG_MARGIN = 1, TWIG_LITE = 3.5;
 const tuftOf = id => Math.min(0.25, Math.max(0.05, TWIG_TUFT_K * (SPECIES[id]?.foliage?.leaf_size_m ?? 0.02)));
 const TWIG_VERT = /* glsl */`
   ${ATMOSPHERE_GLSL}
   ${GROUND_GLSL}
   ${WIND_GLSL}
+  // the trees' contact AO only (shadows.js: its g; r carries the shrubs' own crowns too, for the ground under them)
+  float treeAO(vec3 p) {
+    vec2 uv = (contactAOMatrix * vec4(p, 1.0)).xy, e = abs(uv - 0.5) * 2.0;
+    if (max(e.x, e.y) >= 1.0) return 1.0;
+    return 1.0 - texture(contactAO, uv).g * (1.0 - smoothstep(0.8, 1.0, max(e.x, e.y)));
+  }
   uniform vec2 twigBand;
   uniform vec3 fhCol[${FH_N}]; uniform vec3 fhBark[${FH_N}]; uniform float fhLeaf[${FH_N}]; uniform vec4 fhDeco[${FH_N}];
   uniform vec3 twBark[${FH_N}]; uniform vec3 twDead[${FH_N}];
@@ -1088,10 +1243,15 @@ const TWIG_VERT = /* glsl */`
     vec3 nrm = vec3(c * normal.x - s * normal.z, normal.y, s * normal.x + c * normal.z);
     vec3 Nf = nrm;
     if (leaf) {
-      // the tuft's quad about its shoot (nrm), facing the eye; its leaves' faces (aOff) turned to the eye (two-sided)
-      vec3 V = normalize(cameraPosition - (iP.xyz + rp)), side = cross(nrm, V);
-      side = dot(side, side) > 1e-6 ? normalize(side) : vec3(1.0, 0.0, 0.0);
-      rp += (side * uv.x * 0.5 + nrm * (uv.y - 0.15)) * TW_TUFT[fk];
+      // the tuft's quad facing the eye; its leaves' faces (aOff) turned to the eye (two-sided)
+      // The tuft faces the eye, the shoot as seen as its up: a fascicle seen down its shoot is a rosette of about the same
+      // size. (It turned only about its shoot, so it went edge-on to a view along it, and the shoots point up: from above
+      // the crowns lost their leaves and read as dark sparse twigs, a dark even fuzz from 15-30 m up; 2026-11-06.)
+      vec3 V = normalize(cameraPosition - (iP.xyz + rp)), up2 = nrm - V * dot(nrm, V);
+      float l2 = dot(up2, up2);
+      up2 = l2 > 1e-4 ? up2 * inversesqrt(l2) : normalize(cross(V, abs(V.y) < 0.9 ? vec3(0.0, 1.0, 0.0) : vec3(1.0, 0.0, 0.0)));
+      vec3 side = cross(up2, V);
+      rp += (side * uv.x * 0.5 + up2 * (uv.y - 0.15)) * TW_TUFT[fk];
       Nf = vec3(c * aOff.x - s * aOff.z, aOff.y, s * aOff.x + c * aOff.z);
       Nf = dot(Nf, V) < 0.0 ? -Nf : Nf;
     }
@@ -1118,7 +1278,7 @@ const TWIG_VERT = /* glsl */`
     float diff = leaf ? (sf > 0.0 ? sf : -TW_THRU * sf) : 0.25 + 0.75 * max(dot(N, sunDir), 0.0);
     // sky light: the canopy's share and the contact AO as the impostor takes them, less inside the crown and low in it
     vec2 guv = groundUv(iP.xyz);
-    float occ = (1.0 - 0.35 * clamp(texture(canopyMap, guv).r * 2.55, 0.0, 1.0)) * groundContactAO(iP.xyz);
+    float occ = (1.0 - 0.35 * clamp(texture(canopyMap, guv).r * 2.55, 0.0, 1.0)) * treeAO(iP.xyz);
     float ao = mix(0.4, 1.0, smoothstep(0.15, 1.0, r)) * mix(0.65, 1.0, clamp(hf * 1.4, 0.0, 1.0));
     vec3 amb = mix(ambientGround, ambientSky, 0.5 + 0.5 * N.y) * occ * ao;
     vec3 alb = leaf ? mix(fhCol[fk] * mix(0.86, 1.14, fract(aT.z * 5.3)), fhDeco[fk].rgb, deco)
@@ -1169,9 +1329,7 @@ function bakeTuft() {
   t.magFilter = THREE.LinearFilter; t.minFilter = THREE.LinearMipmapLinearFilter; t.generateMipmaps = true; t.needsUpdate = true;
   return releaseTexture(t);
 }
-const TWIG_FRAG = /* glsl */`
-  uniform vec3 glowCol; uniform vec3 sunLight; uniform vec3 ambientSky; uniform sampler2D tuftMap;
-  varying vec2 vUv; varying vec3 vCol; varying vec3 vSunC; varying vec3 vT; varying vec3 vIn; varying float vLeaf; varying float vRnd; varying float vGlow;
+const TUFT_GLSL = /* glsl */`
   // A tuft from the picture (bakeTuft): uv x across (-1..1 is the tuft's width), y along the shoot (0..1). Returns the
   // coverage (sharpened to the pixel), sets the shade and the leaf's own sun.
   float tuft(vec2 uv, float seed, out float shade, out float tilt) {
@@ -1188,6 +1346,11 @@ const TWIG_FRAG = /* glsl */`
     if (blob > cov) { shade = 0.9; tilt = 0.6; }
     return mix(cov, blob, blur);
   }
+`;
+const TWIG_FRAG = /* glsl */`
+  uniform vec3 glowCol; uniform vec3 sunLight; uniform vec3 ambientSky; uniform sampler2D tuftMap;
+  varying vec2 vUv; varying vec3 vCol; varying vec3 vSunC; varying vec3 vT; varying vec3 vIn; varying float vLeaf; varying float vRnd; varying float vGlow;
+  ${TUFT_GLSL}
   void main() {
     float a = 1.0, sh = 1.0, tl = 1.0;
     if (vLeaf > 0.5) { a = tuft(vUv, vRnd, sh, tl); if (a < 0.02) discard; }
@@ -1242,9 +1405,32 @@ function twigGeometry(frame, seed, por, tuftM, scRef, lite = false) {
   const need = Math.min(TUFT_MAX, Math.ceil(-Math.log(Math.max(por, 0.05)) * 0.86 * (H * scRef) ** 2 / (TUFT_EFF * tuftM * tuftM)));
   const tips = frame.tips.slice();
   for (let i = tips.length - 1; i > 0; i--) { const k = Math.floor(trnd() * (i + 1)); [tips[i], tips[k]] = [tips[k], tips[i]]; }
+  // The tufts past the twig ends spread along the crown's outer branches and twigs (by length, where they lie in the outer
+  // part of the crown envelope, past 0.45 of its radii), each a shoot along its branch. (They were heaped around the twig
+  // ends, up to five a tip on a mature plant: the crown was a few puffs on bare sticks, half see-through from above and a
+  // dark fuzz from 15-30 m up, though its tufts are enough to close it to its porosity; 2026-11-06.)
+  const segs = []; let segL = 0;
+  { const C = frame.centre, Rr = frame.radii.map(r => Math.max(r, 1e-3));
+    for (const st of [...frame.twigs, ...frame.stems.filter(q => q.level >= 1 && !q.dead)]) {
+      const P = st.pts, n = P.length / 3;
+      for (let k = 0; k + 1 < n; k++) {
+        const ax = P[k * 3], ay = P[k * 3 + 1], az = P[k * 3 + 2], bx = P[k * 3 + 3], by = P[k * 3 + 4], bz = P[k * 3 + 5];
+        const r = Math.hypot(((ax + bx) / 2 - C[0]) / Rr[0], ((ay + by) / 2 - C[1]) / Rr[1], ((az + bz) / 2 - C[2]) / Rr[2]);
+        const L = Math.hypot(bx - ax, by - ay, bz - az);
+        if (r < 0.45 || L <= 0) continue;
+        segs.push([ax, ay, az, bx, by, bz, L, segL]); segL += L;
+      }
+    } }
   const use = tips.length ? Array.from({ length: need }, (_, i) => {
     const t = tips[i % tips.length];
     if (i < tips.length) return t;
+    if (segs.length) {
+      const u = trnd() * segL; let lo = 0, hi = segs.length - 1;
+      while (lo < hi) { const m = (lo + hi + 1) >> 1; if (segs[m][7] <= u) lo = m; else hi = m - 1; }
+      const g = segs[lo], f = Math.min(1, Math.max(0, (u - g[7]) / g[6])), j = [trnd() - 0.5, trnd() - 0.5, trnd() - 0.5];
+      const dd = new THREE.Vector3(g[3] - g[0], g[4] - g[1], g[5] - g[2]).normalize().add(new THREE.Vector3(trnd() - 0.5, trnd() - 0.5, trnd() - 0.5).multiplyScalar(0.8)).normalize();
+      return { c: [g[0] + f * (g[3] - g[0]) + j[0] * S, g[1] + f * (g[4] - g[1]) + j[1] * S, g[2] + f * (g[5] - g[2]) + j[2] * S], d: dd.toArray() };
+    }
     const j = [trnd() - 0.5, trnd() - 0.5, trnd() - 0.5], dd = new THREE.Vector3(...t.d).add(new THREE.Vector3(trnd() - 0.5, trnd() - 0.5, trnd() - 0.5).multiplyScalar(1.2)).normalize();
     return { c: [t.c[0] + j[0] * S * 2.5, t.c[1] + j[1] * S * 1.5, t.c[2] + j[2] * S * 2.5], d: dd.toArray() };
   }) : [];
@@ -1253,7 +1439,7 @@ function twigGeometry(frame, seed, por, tuftM, scRef, lite = false) {
     const d = new THREE.Vector3(...tip.d).normalize(), c = tip.c, r1 = trnd() * scRef * scRef, r2 = trnd();
     // a shoot points up and out: the card's direction pulled halfway to the vertical
     d.lerp(up.set(0, 1, 0), 0.5).normalize();
-    // one quad per tuft, turned about its shoot to face the eye (TWIG_VERT); its leaves' faces (aOff) a random way across
+    // one quad per tuft, facing the eye with its shoot as seen as its up (TWIG_VERT); its leaves' faces (aOff) a random way across
     // the shoot, lighting it as if it did not turn
     a.set(trnd() - 0.5, trnd() - 0.5, trnd() - 0.5).cross(d).normalize(); qn.crossVectors(a, d).normalize();
     const base = pos.length / 3;
@@ -1277,16 +1463,111 @@ function phJS(x, z, salt) {
   h = Math.imul(h ^ (h >>> 15), 2246822519 | 0) >>> 0; h = (h ^ (h >>> 13)) >>> 0;
   return h / 4294967296;
 }
+// ---- Twig shrubs past the hand-over (2026-11-06, Lamar's sage from 13 m out and from the air): the impostor draws pictures
+// of the very skeletons TwigShrubs draws up close (TwigShrubs.bake), not a dome. Each species' TWIG_COPIES skeletons of each
+// record class are rendered once, as the close tier draws them at the field's median plant of that class (their tufts as the
+// close tier's far-off blobs, the stems, twigs and dead wood), from TB_AZ azimuths and TB_EL elevations (0, 30, 60, 90
+// degrees), into TB_T px tiles of two atlases (constants with TWIG_POR above): A the depth along the view, the leaf's (or the wood's) face normal and the
+// coverage; B the leaf's shade, its own sun, its random (colour, leaf-on, flowers) and the part (leaf, stem, twig, dead).
+// The impostor lights each texel as the close tier lights that leaf (FRAG twigPicture): the sun through the crown by
+// Beer's law from the texel's own place in it, the leaf's face to the sun, the sky by its place. A plant takes the tile
+// of its own class, copy and turn nearest the view (crossfaded across the tile boundaries), so at the hand-over the picture
+// is the plant it replaces, seen from within half a tile's angle. A far plant that the density LOD has grown to stand for
+// several goes back to the dome as it grows (1.1x to 1.5x), which keeps the stand's colour from the air as it was. The
+// pictures are an eye-height look only: whole within TW_EL_LO (8) degrees of the horizontal over the plant, the dome from
+// TW_EL_HI (12) up, as before. From 15-30 m up the 3D crowns measured half the domes' contrast (a crown's mean about the
+// grass's, as Sentinel-2 has it, the tufts lit at ~0.3 of the sun): until the crowns' light is calibrated, a stand seen
+// from above stays the domes (the coordinator, 2026-11-06). The elevations 30-90 stay baked for that calibration.
+const BAKE_VERT = /* glsl */`
+  attribute vec3 aOff; attribute vec4 aT;
+  uniform vec3 bV; uniform vec3 bRight; uniform vec3 bUp; uniform vec4 bFrame; uniform vec3 bScale; uniform float bKeep;
+  varying vec2 vUv; varying vec3 vN; varying float vDepth; varying float vType; varying float vRnd;
+  void main() {
+    float type = aT.x; bool leaf = type > 2.5;
+    if (leaf && aT.y > bKeep) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }   // (the close tier's thinning, at this size)
+    vec3 lp = position * vec3(bScale.y, 1.0, bScale.y) * bScale.x, Nf = normal;
+    if (leaf) {   // the tuft's quad facing the view, the shoot as seen as its up; its leaves lit by their own face (aOff), as TWIG_VERT
+      vec3 up2 = normal - bV * dot(normal, bV); float l2 = dot(up2, up2);
+      up2 = l2 > 1e-4 ? up2 * inversesqrt(l2) : normalize(cross(bV, abs(bV.y) < 0.9 ? vec3(0.0, 1.0, 0.0) : vec3(1.0, 0.0, 0.0)));
+      lp += (cross(up2, bV) * uv.x * 0.5 + up2 * (uv.y - 0.15)) * bScale.z;
+      Nf = aOff;
+    }
+    Nf = dot(Nf, bV) < 0.0 ? -Nf : Nf;
+    vec3 rel = lp - vec3(0.0, 0.5 * bFrame.w, 0.0);
+    float dz = dot(rel, bV) / bFrame.z;
+    vN = vec3(dot(Nf, bRight), dot(Nf, bUp), dot(Nf, bV));
+    vDepth = clamp(0.5 + 0.5 * dz, 0.0, 1.0); vType = leaf ? 0.0 : type + 1.0; vRnd = aT.z; vUv = uv;
+    gl_Position = vec4(dot(rel, bRight) / bFrame.x, dot(rel, bUp) / bFrame.y, -dz, 1.0);
+  }`;
+const BAKE_FRAG = /* glsl */`
+  uniform sampler2D tuftMap; uniform float bPass;
+  varying vec2 vUv; varying vec3 vN; varying float vDepth; varying float vType; varying float vRnd;
+  ${TUFT_GLSL}
+  void main() {
+    float a = 1.0, sh = 1.0, tl = 1.0;
+    if (vType < 0.5) a = tuft(vUv, vRnd, sh, tl);
+    if (a < 0.5) discard;
+    vec3 n = normalize(vN);
+    gl_FragColor = bPass < 0.5 ? vec4(vDepth, n.xy * 0.5 + 0.5, 1.0) : vec4(clamp(sh / 1.25, 0.0, 1.0), clamp(tl, 0.0, 1.0), vRnd, vType / 3.0);
+  }`;
+// The pictures' mipmaps, coverage-preserving (2026-11-06): a porous crown's 64 px tile averaged down has its alpha spread
+// thin (a 2x2 box of tufts and gaps is 0.4, a 4x4 0.4 everywhere), and the impostor, which sharpens the alpha about 0.5
+// (twigPicture), would draw the crown as a translucent veil or not at all from 15-30 m up (the coordinator's "dark even
+// fuzz"). So in each tile at each level the alpha is scaled so that the share of texels over 0.5 is the share of covered
+// texels at full size (the classic alpha-test fix), and the premultiplied channels with it (their values kept). The crown
+// keeps its silhouette and its gaps, and its share of the ground, at every size. Two DataTextures with their mip chains.
+function twigMips(px, W, H) {
+  const levels = [], T0 = TB_T;
+  let w = W, h = H, A = px[0], B = px[1];
+  const cov0 = new Float32Array(Math.ceil(W / T0) * Math.ceil(H / T0));   // each tile's covered share at level 0
+  for (let ty = 0; ty < H / T0; ty++) for (let tx = 0; tx < W / T0; tx++) {
+    let n = 0; for (let y = 0; y < T0; y++) for (let x = 0; x < T0; x++) if (A[((ty * T0 + y) * W + tx * T0 + x) * 4 + 3] >= 128) n++;
+    cov0[ty * (W / T0) + tx] = n / (T0 * T0);
+  }
+  levels.push([A, B, w, h]);
+  let rawA = new Float32Array(w * h * 4), rawB = new Float32Array(w * h * 4);   // the unscaled averages, premultiplied
+  for (let i = 0; i < w * h * 4; i++) { rawA[i] = A[i]; rawB[i] = B[i]; }
+  for (let k = 1; w > 1 || h > 1; k++) {
+    const w2 = Math.max(1, w >> 1), h2 = Math.max(1, h >> 1), nA = new Float32Array(w2 * h2 * 4), nB = new Float32Array(w2 * h2 * 4);
+    for (let y = 0; y < h2; y++) for (let x = 0; x < w2; x++) for (let c = 0; c < 4; c++) {
+      let sa = 0, sb = 0, n = 0;
+      for (let dy = 0; dy < 2; dy++) for (let dx = 0; dx < 2; dx++) { const xx = Math.min(2 * x + dx, w - 1), yy = Math.min(2 * y + dy, h - 1), i = (yy * w + xx) * 4 + c; sa += rawA[i]; sb += rawB[i]; n++; }
+      nA[(y * w2 + x) * 4 + c] = sa / n; nB[(y * w2 + x) * 4 + c] = sb / n;
+    }
+    rawA = nA; rawB = nB; w = w2; h = h2;
+    const oA = new Uint8Array(w * h * 4), oB = new Uint8Array(w * h * 4), T = T0 >> k;
+    const scale = new Float32Array(w * h).fill(1);
+    if (T >= 1) for (let ty = 0; ty < Math.floor(h / T); ty++) for (let tx = 0; tx < Math.floor(w / T); tx++) {
+      const c0 = cov0[ty * (W / T0) + tx]; if (!(c0 > 0)) continue;
+      const v = []; for (let y = 0; y < T; y++) for (let x = 0; x < T; x++) v.push(rawA[((ty * T + y) * w + tx * T + x) * 4 + 3]);
+      v.sort((a, b) => b - a);
+      const at = v[Math.min(v.length - 1, Math.max(0, Math.round(c0 * v.length) - 1))];
+      const sc = at > 0 ? Math.min(8, Math.max(0.5, 128 / at)) : 1;
+      for (let y = 0; y < T; y++) for (let x = 0; x < T; x++) scale[(ty * T + y) * w + tx * T + x] = sc;
+    }
+    for (let i = 0; i < w * h; i++) {
+      const a = rawA[i * 4 + 3], a2 = Math.min(255, a * scale[i]), r = a > 0 ? a2 / a : 0;
+      for (let c = 0; c < 3; c++) oA[i * 4 + c] = Math.min(255, Math.round(rawA[i * 4 + c] * r));
+      for (let c = 0; c < 4; c++) oB[i * 4 + c] = Math.min(255, Math.round(rawB[i * 4 + c] * r));
+      oA[i * 4 + 3] = Math.round(a2);
+    }
+    levels.push([oA, oB, w, h]);
+  }
+  return [0, 1].map(j => {
+    const t = new THREE.DataTexture(levels[0][j], W, H, THREE.RGBAFormat);
+    t.mipmaps = levels.map(L => ({ data: L[j], width: L[2], height: L[3] }));
+    t.generateMipmaps = false; t.minFilter = THREE.LinearMipmapLinearFilter; t.magFilter = THREE.LinearFilter; t.needsUpdate = true;
+    return releaseTexture(t);
+  });
+}
 class TwigShrubs {
   constructor(field) {
     this.field = field; this.group = new THREE.Group(); this.group.name = 'twigshrubs';
     this.kinds = new Map();   // fk -> { variants: [{ mesh, iP, iS, n, frame }], slots, old }
     this.last = null; this.sig = NaN; this.count = 0;
-    const u = field.uniforms, lin = c => c.map(v => Math.pow(v / 255, 2.2) * (groundLook.physical ? 1.0 : 1.3));
     this.material = new THREE.ShaderMaterial({
       vertexShader: TWIG_VERT, fragmentShader: TWIG_FRAG, side: THREE.DoubleSide, alphaToCoverage: true,
-      uniforms: { ...u, twBark: { value: FH.map(id => new THREE.Vector3(...lin(SPECIES[id]?.trunk?.bark_rgb || [110, 100, 90]))) },
-        twDead: { value: FH.map(id => new THREE.Vector3(...lin(SPECIES[id]?.deadwood?.rgb || [140, 134, 124]))) }, tuftMap: { value: bakeTuft() } } });
+      uniforms: { ...field.uniforms, tuftMap: { value: bakeTuft() } } });
   }
   // the species' skeletons: TWIG_COPIES of each age class (treegen variantSlots' class seeds), built when first needed
   kind(fk) {
@@ -1307,8 +1588,9 @@ class TwigShrubs {
       list.hMean = list.reduce((a, v) => a + v.H, 0) / Math.max(1, list.length);
       byCls.set(cls, list);
     }
-    const old = classes.length > 2 ? classes[classes.length - 1] : null;
-    K = { variants, slots: slots.filter(s => !s.snag && s.cls !== old && byCls.get(s.cls)?.length), byCls, old };
+    const names = SPECIES[id]?.classes?.map(c => c.name) || classes;
+    const byIdx = names.map((n, i) => { if (byCls.get(n)?.length) return byCls.get(n); for (let d = 1; d < names.length; d++) for (const j of [i - d, i + d]) if (byCls.get(names[j])?.length) return byCls.get(names[j]); return null; });
+    K = { variants, byCls, byIdx };
     this.kinds.set(fk, K);
     return K;
   }
@@ -1327,13 +1609,98 @@ class TwigShrubs {
     }
     v.scRef = scRef;
   }
+  // The pictures past the hand-over (see TB_T above): every twig species found in the field's cells, baked when it is first
+  // seen (the atlases re-made with it, the species before it baked again: a few tens of ms). Needs the main renderer
+  // (this.renderer, recorded as the field draws).
+  bakeNew() {
+    const f = this.field, r = this.renderer; if (!r) return;
+    this.scanned ||= new WeakSet(); this.samples ||= new Map();   // fk -> { H: [[...] per class], R: [...] }
+    let fresh = false;
+    for (const [, i, j] of f.cells) {
+      const c = f.cache.get(j * f.W + i); if (!c || this.scanned.has(c)) continue;
+      this.scanned.add(c);
+      const D = c.data;
+      for (let o = 0; o < c.n * STRIDE; o += STRIDE) {
+        const kind = D[o + 6]; if (kind > -0.5) continue;
+        const fk = Math.round(-kind - 1); if (!FH_TWIG[fk]) continue;
+        let S = this.samples.get(fk);
+        if (!S) { this.samples.set(fk, S = { H: [], R: [], baked: false }); }
+        if (!S.baked) fresh = true;
+        if (S.R.length < 4000) { const ci = Math.floor(D[o + 5] / 100); (S.H[ci] ||= []).push(D[o + 4]); S.R.push(D[o + 3] / D[o + 4]); }
+      }
+    }
+    if (fresh) this.bake(r);
+  }
+  bake(renderer) {
+    const f = this.field, u = f.uniforms, med = a => { const b = a.slice().sort((x, y) => x - y); return b[b.length >> 1]; };
+    const list = [...this.samples.keys()].sort((a, b) => a - b), plan = [];
+    let tiles = 0;
+    for (const fk of list) {
+      const K = this.kind(fk), S = this.samples.get(fk), nCls = K.byIdx.length;
+      const all = S.H.flat(), Hs = med(all), RH = med(S.R), hMid = SPECIES[FH[fk]]?.classes?.map(c => { const h = c.spec?.height_m || SPECIES[FH[fk]].height_m; return (h[0] + h[1]) / 2; });
+      const hAll = hMid ? hMid.reduce((a, b) => a + b, 0) / hMid.length : 1;
+      plan.push({ fk, K, base: tiles, H: Array.from({ length: nCls }, (_, ci) => S.H[ci]?.length >= 5 ? med(S.H[ci]) : Hs * (hMid ? hMid[ci] / hAll : 1)), RH });
+      tiles += nCls * TWIG_COPIES * TB_EL * TB_AZ;
+    }
+    const W = TB_COLS * TB_T, Hpx = Math.ceil(tiles / TB_COLS) * TB_T;
+    const target = () => new THREE.WebGLRenderTarget(W, Hpx, { depthBuffer: true, generateMipmaps: false, minFilter: THREE.LinearMipmapLinearFilter, magFilter: THREE.LinearFilter });
+    const old = this.atlas; this.atlas = [target(), target()];
+    const mat = new THREE.ShaderMaterial({ vertexShader: BAKE_VERT, fragmentShader: BAKE_FRAG, side: THREE.DoubleSide,
+      uniforms: { bV: { value: new THREE.Vector3() }, bRight: { value: new THREE.Vector3() }, bUp: { value: new THREE.Vector3() }, bFrame: { value: new THREE.Vector4() },
+        bScale: { value: new THREE.Vector3() }, bKeep: { value: 1 }, bPass: { value: 0 }, tuftMap: this.material.uniforms.tuftMap } });
+    const scene = new THREE.Scene(), cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1), mesh = new THREE.Mesh(undefined, mat);
+    mesh.frustumCulled = false; scene.add(mesh);
+    const prevRT = renderer.getRenderTarget(), prevAuto = renderer.autoClear, prevCol = renderer.getClearColor(new THREE.Color()), prevA = renderer.getClearAlpha();
+    renderer.setClearColor(0x000000, 0); renderer.autoClear = false;
+    for (const rt of this.atlas) { rt.viewport.set(0, 0, W, Hpx); rt.scissorTest = false; renderer.setRenderTarget(rt); renderer.clear(true, true, false); }
+    const mu = mat.uniforms, Vv = new THREE.Vector3(), up = new THREE.Vector3(0, 1, 0);
+    for (const P of plan) {
+      const spec = SPECIES[FH[P.fk]], wh = spec?.targets?.crown_width_ratio ?? 1.2;
+      P.H.forEach((Ht, ci) => {
+        const L = P.K.byIdx[ci]; if (!L?.length) return;
+        const Rt = Ht * (P.RH || wh / VIS_W);
+        for (let j = 0; j < TWIG_COPIES; j++) {
+          const v = L[j % L.length], sc = Ht / v.H;
+          if (!v.mesh) this.build(v, sc);
+          const st = Math.min(1.35, Math.max(0.75, VIS_W * Rt / (v.w * sc)));
+          // (the copy the close tier draws past TWIG_LITE: the trunk and first branches with every tuft; the full copy's
+          // twigs, a few mm thick, came out as broken pixel-wide lines and drew each crown as a dark spiky skeleton from above)
+          const g = (v.lite?.mesh || v.mesh).geometry, n0 = g.instanceCount; g.instanceCount = 1; mesh.geometry = g;
+          mu.bScale.value.set(sc, st, tuftOf(v.id)); mu.bKeep.value = sc * sc;
+          for (let e = 0; e < TB_EL; e++) for (let a = 0; a < TB_AZ; a++) {
+            const el = TB_EL_DEG[e] * Math.PI / 180, az = a * 2 * Math.PI / TB_AZ;
+            Vv.set(Math.cos(el) * Math.sin(az), Math.sin(el), Math.cos(el) * Math.cos(az));
+            mu.bV.value.copy(Vv); mu.bRight.value.crossVectors(up, Vv).add({ x: 1e-4, y: 0, z: 0 }).normalize(); mu.bUp.value.crossVectors(Vv, mu.bRight.value);
+            const ce = mu.bUp.value.y, se = Math.sqrt(Math.max(1 - ce * ce, 0)), ev = Math.sqrt(Ht * Ht * 0.25 * ce * ce + Rt * Rt * se * se);
+            mu.bFrame.value.set(1.2 * Rt, 1.2 * ev, 1.3 * Math.max(VIS_W * Rt / 2, Ht / 2), Ht);
+            const t = P.base + ((ci * TWIG_COPIES + j) * TB_EL + e) * TB_AZ + a, x = (t % TB_COLS) * TB_T, y = Math.floor(t / TB_COLS) * TB_T;
+            this.atlas.forEach((rt, pass) => {
+              mu.bPass.value = pass; rt.viewport.set(x, y, TB_T, TB_T); rt.scissor.set(x, y, TB_T, TB_T); rt.scissorTest = true;
+              renderer.setRenderTarget(rt); renderer.render(scene, cam);
+            });
+          }
+          g.instanceCount = n0;
+        }
+      });
+      this.samples.get(P.fk).baked = true;
+      u.twBase.value[P.fk] = P.base;
+    }
+    const px = this.atlas.map(rt => { const b = new Uint8Array(W * Hpx * 4); rt.viewport.set(0, 0, W, Hpx); rt.scissorTest = false; renderer.readRenderTargetPixels(rt, 0, 0, W, Hpx, b); return b; });
+    renderer.setRenderTarget(prevRT); renderer.autoClear = prevAuto; renderer.setClearColor(prevCol, prevA);
+    mat.dispose();
+    for (const rt of this.atlas) rt.dispose();
+    const tex = twigMips(px, W, Hpx);
+    this.atlas = tex;
+    u.twA.value = tex[0]; u.twB.value = tex[1]; u.twSize.value.set(TB_COLS, Hpx / TB_T);
+    if (old) for (const t of old) t.dispose();
+  }
   update(camera, again = true) {
     const cp = camera.position, f = this.field, b = f.uniforms.twigBand.value, R = b.y + TWIG_MARGIN, R2 = R * R;
     if (again && this.last && Math.hypot(cp.x - this.last[0], cp.z - this.last[1]) < 0.5 && this.sig === f.sig) return;
     this.last = [cp.x, cp.z]; this.sig = f.sig;
     const fresh = [];   // variants seen for the first time: built for the median scale of their plants here, then this again
     for (const K of this.kinds.values()) for (const v of K.variants) { v.n = 0; if (v.lite) v.lite.n = 0; }
-    const res = f.tile.habitat.res, size = f.tile.size, kOf = f.foothill?.kOf;
+    const res = f.tile.habitat.res;
     let count = 0;
     for (const [d, i, j] of f.cells) {
       if (d > R + res * 0.71) break;
@@ -1344,26 +1711,18 @@ class TwigShrubs {
         const fk = Math.round(-kind - 1); if (!FH_TWIG[fk]) continue;
         const dx = D[o] - cp.x, dz = D[o + 2] - cp.z, d2 = dx * dx + dz * dz; if (d2 > R2) continue;
         const thr = b.x + (b.y - b.x) * phJS(D[o], D[o + 2], 4) + TWIG_MARGIN; if (d2 > thr * thr) continue;   // (TWIG_VERT decides exactly)
-        const K = this.kind(fk), seed = D[o + 5], h = hash2(Math.floor(D[o] * 64), Math.floor(D[o + 2] * 64), 77), h2 = hash2(Math.floor(D[o] * 64), Math.floor(D[o + 2] * 64), 78);
-        // the field's old class (variant 2) takes the record's last age class; the rest the class whose skeletons' height is
-        // nearest the plant's own before its stand's height scale (foothillShrubs kOf: the plant was drawn in that class)
-        const variant = Math.floor((seed - Math.floor(seed)) * 4);
-        let list = null;
-        if (variant === 2 && K.old) list = K.byCls.get(K.old);
-        else {
-          const ci = Math.min(Math.max(Math.floor(D[o] / res), 0), f.W - 1), cj = Math.min(Math.max(Math.floor((size + D[o + 2]) / res), 0), f.H - 1);
-          const Hn = D[o + 4] / (kOf ? kOf[cj * f.W + ci] || 1 : 1);
-          let best = Infinity;
-          for (const [cls, L] of K.byCls) { if (cls === K.old || !L.length) continue; const e = Math.abs(Math.log(Hn / L.hMean)); if (e < best) { best = e; list = L; } }
-        }
+        // the record class the plant was drawn in (foothillShrubs: its seed / 100), one of its TWIG_COPIES skeletons and its turn
+        // by hashes of its root (VERT's ph, salts 5 and 6), so the impostor past the hand-over shows pictures of the same
+        // skeleton turned the same way (bake)
+        const K = this.kind(fk), list = K.byIdx[Math.min(Math.floor(D[o + 5] / 100), K.byIdx.length - 1)];
         if (!list?.length) continue;
-        const v = list[Math.floor(h2 * list.length)];
+        const v = list[Math.floor(phJS(D[o], D[o + 2], 5) * TWIG_COPIES) % list.length];
         const Hh = D[o + 4], sc = Hh / v.H;
         if (!v.mesh) { if (!v.samples) { v.samples = []; fresh.push(v); } v.samples.push(sc); continue; }
         const t = d2 < TWIG_LITE * TWIG_LITE ? v : v.lite;
         if (t.n >= t.cap) this.grow(t);
         const st = Math.min(1.35, Math.max(0.75, VIS_W * D[o + 3] / (v.w * sc)));
-        t.iP.array.set([D[o], D[o + 1], D[o + 2], h * 6.2832 * 7 % 6.2832], t.n * 4);
+        t.iP.array.set([D[o], D[o + 1], D[o + 2], phJS(D[o], D[o + 2], 6) * 6.2831853], t.n * 4);
         t.iS.array.set([sc, st, Hh, fk], t.n * 4);
         t.n++; count++;
       }
@@ -1530,7 +1889,9 @@ function foothillShrubs(tile, ground, chap) {
       const R = sz.wh * (0.88 + 0.24 * rnd()) * Hh / VIS_W;
       if (rnd() * Math.PI * R * R > FH_AREA * 1.5) continue;   // the larger crowns fewer, so the cover holds
       const variant = ci2 === sz.cls.length - 1 && sz.cls.length > 2 ? 2 : rnd() < 0.5 ? 0 : 1;   // 2: the old class (dead stems)
-      out.push(px, ground(px, pn), -pn, R, Hh, Math.floor(rnd() * 100) + (variant + 0.5) / 4, KIND.toyon - sp, 0);
+      // (a twig shrub's seed carries the record class it was drawn in, x 100: TwigShrubs draws that class's skeletons, and the
+      // impostor its pictures of them)
+      out.push(px, ground(px, pn), -pn, R, Hh, (FH_TWIG[sp] ? ci2 * 100 : 0) + Math.floor(rnd() * 100) + (variant + 0.5) / 4, KIND.toyon - sp, 0);
     }
     const m = out.length / STRIDE;
     for (let k = 0; k < m; k++) out[k * STRIDE + 7] = (k + 0.5) / m;

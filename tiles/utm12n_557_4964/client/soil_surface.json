@@ -1,0 +1,471 @@
+{
+ "encoding": "mapunits keyed by client/soils.png R (soils/classes.json); rgb: the dry surface soil's linear sRGB reflectance; litter_share: litter / (litter + bare ground) between the plants",
+ "default": {
+  "dry": "10YR 5/3",
+  "rgb": [
+   0.2637,
+   0.1799,
+   0.1105
+  ],
+  "litter_share": 0.723,
+  "ground": {
+   "plant": 0.7466,
+   "litter": 0.1685,
+   "bare": 0.0739,
+   "crust": 0.0111
+  }
+ },
+ "crust": {
+  "dry": "5GY 3/1",
+  "rgb": [
+   0.0641,
+   0.0651,
+   0.0517
+  ]
+ },
+ "version": "1",
+ "rules": {
+  "colour": "the first mineral horizon of the largest non-miscellaneous component's Official Series Description (dry), else its soil order's typical surface (DEFAULT_BY_ORDER), else SoilGrids organic carbon (dry value 6.5 - 1.6 log2(1 + SOC %), 10YR, chroma 3)",
+  "munsell": "ASTM D1535 value, chroma x (3.8 + 0.4 value) in CIELAB, hue by the renotation's angles at value 5; Lab D65 to linear sRGB",
+  "litter_share": "litter / (litter + bare ground), the middles of the component's NRCS ecological site reference sheet ranges (EDIT); else the tile's sheet-weighted mean",
+  "ground": "the surface by the sheets (plant canopy, litter, bare ground, crust: range middles, as shares of their sum), weighted by component share; units without a sheet the tile's area-weighted mean",
+  "crust": "biological crust and moss, dry: a stated dark grey-green chip (CRUST_COLOUR)"
+ },
+ "mapunits": {
+  "1": {
+   "dry": "10YR 4/2",
+   "moist": "10YR 3/2",
+   "colour_from": "osd ARROWPEAK A",
+   "crust": "Cryptogamic crusts are present, but only cover 1-2% of the soil surface.",
+   "litter_share": 0.66,
+   "litter_from": "esd R043BY162WY Arrowpeak 35 %: litter 15-20, bare 0-25; R043BY108WY Hobacker 30 %: litter 5-40, bare 0-15",
+   "ground": {
+    "plant": 0.6862,
+    "litter": 0.1955,
+    "bare": 0.1034,
+    "crust": 0.015
+   },
+   "rgb": [
+    0.1492,
+    0.1113,
+    0.0789
+   ]
+  },
+  "2": {
+   "dry": "7.5YR 5/2",
+   "moist": "7.5YR 3/2",
+   "colour_from": "osd MIDFORK A1",
+   "rgb": [
+    0.2505,
+    0.181,
+    0.1384
+   ],
+   "ground": {
+    "plant": 0.7466,
+    "litter": 0.1685,
+    "bare": 0.0739,
+    "crust": 0.0111
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.723,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "3": {
+   "dry": "10YR 4/1",
+   "moist": "10YR 2/1",
+   "colour_from": "osd IDMONTON A1",
+   "crust": "Chemical and physical crusts are rare to non-existent.",
+   "litter_share": 0.801,
+   "litter_from": "esd R043BY174WY Idmonton 40 %: litter 0-25, bare 0-5; R043BY108WY Ledgefork 35 %: litter 5-40, bare 0-15; R043BY178WY Typic Cryaquolls 15 %: litter 0-5, bare 0-1",
+   "ground": {
+    "plant": 0.8176,
+    "litter": 0.1386,
+    "bare": 0.0384,
+    "crust": 0.0054
+   },
+   "rgb": [
+    0.1336,
+    0.1141,
+    0.0969
+   ]
+  },
+  "4": {
+   "dry": "10YR 5/2",
+   "moist": "10YR 3/2",
+   "colour_from": "osd HOBACKER A",
+   "crust": "Cryptogamic crusts are present, but only cover 1-2% of the soil surface.",
+   "litter_share": 0.692,
+   "litter_from": "esd R043BY208WY Hobacker 35 %: litter 5-40, bare 0-20; R043BY208WY Libeg 30 %: litter 5-40, bare 0-20; R043BY208WY Greyback 25 %: litter 5-40, bare 0-20",
+   "ground": {
+    "plant": 0.6951,
+    "litter": 0.2018,
+    "bare": 0.0897,
+    "crust": 0.0135
+   },
+   "rgb": [
+    0.2412,
+    0.1841,
+    0.1351
+   ]
+  },
+  "5": {
+   "dry": "10YR 4/2",
+   "moist": "10YR 3/2",
+   "colour_from": "osd ARROWPEAK A",
+   "crust": "Cryptogamic crusts are present, but only cover 1-2% of the soil surface.",
+   "litter_share": 0.712,
+   "litter_from": "esd R043BY162WY Arrowpeak 35 %: litter 15-20, bare 0-25; R043BY122WY Lionhead 20 %: litter 5-40, bare 0-10; R043BY108WY Midfork 20 %: litter 5-40, bare 0-15; R043BY122WY Leavittville 15 %: litter 5-40, bare 0-10",
+   "ground": {
+    "plant": 0.6996,
+    "litter": 0.2005,
+    "bare": 0.0852,
+    "crust": 0.0148
+   },
+   "rgb": [
+    0.1492,
+    0.1113,
+    0.0789
+   ]
+  },
+  "6": {
+   "dry": "10YR 5/2",
+   "moist": "10YR 3/2",
+   "colour_from": "osd HOBACKER A",
+   "crust": "Cryptogamic crusts are present, but only cover 1-2% of the soil surface.",
+   "litter_share": 0.684,
+   "litter_from": "esd R043BY222WY Hobacker 40 %: litter 5-40, bare 0-20; R043BY204WY Teedown 30 %: litter 5-35, bare 0-20; R043BY222WY Pineisle 20 %: litter 5-40, bare 0-20",
+   "ground": {
+    "plant": 0.7004,
+    "litter": 0.1957,
+    "bare": 0.0904,
+    "crust": 0.0136
+   },
+   "rgb": [
+    0.2412,
+    0.1841,
+    0.1351
+   ]
+  },
+  "7": {
+   "dry": "10YR 4/2",
+   "colour_from": "order Mollisols",
+   "crust": "Chemical and physical crusts are rare to non-existent.",
+   "litter_share": 0.833,
+   "litter_from": "esd R043BY178WY Typic Cryaquolls 10 %: litter 0-5, bare 0-1",
+   "ground": {
+    "plant": 0.9701,
+    "litter": 0.0249,
+    "bare": 0.005,
+    "crust": 0.0
+   },
+   "rgb": [
+    0.1492,
+    0.1113,
+    0.0789
+   ]
+  },
+  "8": {
+   "dry": "7.5YR 5/2",
+   "moist": "7.5YR 3/2",
+   "colour_from": "osd MIDFORK A1",
+   "rgb": [
+    0.2505,
+    0.181,
+    0.1384
+   ],
+   "ground": {
+    "plant": 0.7466,
+    "litter": 0.1685,
+    "bare": 0.0739,
+    "crust": 0.0111
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.723,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "9": {
+   "dry": "7.5YR 5/2",
+   "moist": "7.5YR 3/2",
+   "colour_from": "osd MIDFORK A1",
+   "rgb": [
+    0.2505,
+    0.181,
+    0.1384
+   ],
+   "ground": {
+    "plant": 0.7466,
+    "litter": 0.1685,
+    "bare": 0.0739,
+    "crust": 0.0111
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.723,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "10": {
+   "dry": "10YR 5/2",
+   "moist": "10YR 3/2",
+   "colour_from": "osd HOBACKER A",
+   "crust": "Cryptogamic crusts are present, but only cover 1-2% of the soil surface.",
+   "litter_share": 0.714,
+   "litter_from": "esd R043BY108WY Hobacker 35 %: litter 5-40, bare 0-15; R043BY122WY Adel 30 %: litter 5-40, bare 0-10; R043BY212WY Bearmouth 25 %: litter 15-20, bare 0-30",
+   "ground": {
+    "plant": 0.699,
+    "litter": 0.2011,
+    "bare": 0.0856,
+    "crust": 0.0144
+   },
+   "rgb": [
+    0.2412,
+    0.1841,
+    0.1351
+   ]
+  },
+  "11": {
+   "dry": "10YR 3/2",
+   "moist": "10YR 2/1",
+   "colour_from": "osd SHOOK A",
+   "crust": "Cryptogamic crusts are present, but only cover 1-2% of the soil surface.",
+   "litter_share": 0.692,
+   "litter_from": "esd R043BY222WY Shook 45 %: litter 5-40, bare 0-20; R043BY222WY Passcreek 15 %: litter 5-40, bare 0-20",
+   "ground": {
+    "plant": 0.6951,
+    "litter": 0.2018,
+    "bare": 0.0897,
+    "crust": 0.0135
+   },
+   "rgb": [
+    0.0837,
+    0.0604,
+    0.0407
+   ]
+  },
+  "12": {
+   "dry": "10YR 4/1",
+   "moist": "10YR 2/1",
+   "colour_from": "osd PIEGAN A1",
+   "rgb": [
+    0.1336,
+    0.1141,
+    0.0969
+   ],
+   "ground": {
+    "plant": 0.7466,
+    "litter": 0.1685,
+    "bare": 0.0739,
+    "crust": 0.0111
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.723,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "13": {
+   "dry": "10YR 5/2",
+   "moist": "10YR 3/2",
+   "colour_from": "osd HOBACKER A",
+   "rgb": [
+    0.2412,
+    0.1841,
+    0.1351
+   ],
+   "ground": {
+    "plant": 0.7466,
+    "litter": 0.1685,
+    "bare": 0.0739,
+    "crust": 0.0111
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.723,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "14": {
+   "dry": "10YR 5/2",
+   "moist": "10YR 3/2",
+   "colour_from": "osd HOBACKER A",
+   "rgb": [
+    0.2412,
+    0.1841,
+    0.1351
+   ],
+   "ground": {
+    "plant": 0.7466,
+    "litter": 0.1685,
+    "bare": 0.0739,
+    "crust": 0.0111
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.723,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "15": {
+   "dry": "10YR 3/1",
+   "moist": "10YR 2/1",
+   "colour_from": "osd GALLATIN A1",
+   "crust": "Chemical and physical crusts are rare to non-existent.",
+   "litter_share": 0.833,
+   "litter_from": "esd R043BY174WY Gallatin 45 %: litter 0-25, bare 0-5; R043BY178WY Typic Cryaquolls 40 %: litter 0-5, bare 0-1; R043BY178WY Grayslake 10 %: litter 0-5, bare 0-1",
+   "ground": {
+    "plant": 0.915,
+    "litter": 0.0709,
+    "bare": 0.0142,
+    "crust": 0.0
+   },
+   "rgb": [
+    0.0741,
+    0.0621,
+    0.0516
+   ]
+  },
+  "16": {
+   "dry": "10YR 4/2",
+   "moist": "10YR 2/2",
+   "colour_from": "osd DUCKTAIL A1",
+   "crust": "Cryptogamic crusts are present, but only cover 1-2% of the soil surface.",
+   "litter_share": 0.818,
+   "litter_from": "esd R043BY122WY Ducktail 60 %: litter 5-40, bare 0-10; R043BY122WY Ripple 30 %: litter 5-40, bare 0-10",
+   "ground": {
+    "plant": 0.7277,
+    "litter": 0.2113,
+    "bare": 0.0469,
+    "crust": 0.0141
+   },
+   "rgb": [
+    0.1492,
+    0.1113,
+    0.0789
+   ]
+  },
+  "17": {
+   "dry": "10YR 5/2",
+   "moist": "10YR 3/2",
+   "colour_from": "osd HOBACKER A",
+   "crust": "Cryptogamic crusts are present, but only cover 1-2% of the soil surface.",
+   "litter_share": 0.679,
+   "litter_from": "esd R043BY108WY Hobacker 20 %: litter 5-40, bare 0-15; R043BY162WY Arrowpeak 15 %: litter 15-20, bare 0-25",
+   "ground": {
+    "plant": 0.6912,
+    "litter": 0.1977,
+    "bare": 0.0963,
+    "crust": 0.0147
+   },
+   "rgb": [
+    0.2412,
+    0.1841,
+    0.1351
+   ]
+  },
+  "18": {
+   "dry": "10YR 4/2",
+   "moist": "10YR 3/2",
+   "colour_from": "osd ARROWPEAK A",
+   "crust": "Cryptogamic crusts are present, but only cover 1-2% of the soil surface.",
+   "litter_share": 0.538,
+   "litter_from": "esd R043BY262WY Arrowpeak 10 %: litter 15-20, bare 0-30",
+   "ground": {
+    "plant": 0.6477,
+    "litter": 0.1813,
+    "bare": 0.1554,
+    "crust": 0.0155
+   },
+   "rgb": [
+    0.1492,
+    0.1113,
+    0.0789
+   ]
+  },
+  "19": {
+   "dry": "10YR 4/2",
+   "moist": "10YR 2/2",
+   "colour_from": "osd DUCKTAIL A1",
+   "rgb": [
+    0.1492,
+    0.1113,
+    0.0789
+   ],
+   "ground": {
+    "plant": 0.7466,
+    "litter": 0.1685,
+    "bare": 0.0739,
+    "crust": 0.0111
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.723,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "20": {
+   "dry": "7.5YR 5/2",
+   "moist": "7.5YR 3/2",
+   "colour_from": "osd MIDFORK A1",
+   "rgb": [
+    0.2505,
+    0.181,
+    0.1384
+   ],
+   "ground": {
+    "plant": 0.7466,
+    "litter": 0.1685,
+    "bare": 0.0739,
+    "crust": 0.0111
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.723,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "21": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Entisols",
+   "crust": "Cryptogamic crusts are present, but only cover 1-2% of the soil surface.",
+   "litter_share": 0.623,
+   "litter_from": "esd R043BY260WY Typic Udorthents 15 %: litter 15-20, bare 0-30; R043BY274WY Typic Cryaquents 10 %: litter 0-25, bare 0-5; R043BY260WY Typic Dystrudepts 10 %: litter 15-20, bare 0-30",
+   "ground": {
+    "plant": 0.7066,
+    "litter": 0.1644,
+    "bare": 0.118,
+    "crust": 0.0111
+   },
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ]
+  },
+  "22": {
+   "dry": "10YR 4/2",
+   "moist": "10YR 3/2",
+   "colour_from": "osd ARROWPEAK A",
+   "crust": "Cryptogamic crusts are present, but only cover 1-2% of the soil surface.",
+   "litter_share": 0.583,
+   "litter_from": "esd R043BY162WY Arrowpeak 25 %: litter 15-20, bare 0-25",
+   "ground": {
+    "plant": 0.6649,
+    "litter": 0.1862,
+    "bare": 0.133,
+    "crust": 0.016
+   },
+   "rgb": [
+    0.1492,
+    0.1113,
+    0.0789
+   ]
+  },
+  "23": {
+   "dry": "10YR 4/2",
+   "moist": "10YR 3/2",
+   "colour_from": "osd KEGSPRINGS A",
+   "rgb": [
+    0.1492,
+    0.1113,
+    0.0789
+   ],
+   "ground": {
+    "plant": 0.7466,
+    "litter": 0.1685,
+    "bare": 0.0739,
+    "crust": 0.0111
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.723,
+   "litter_from": "the tile's sheet-weighted mean"
+  }
+ }
+}
