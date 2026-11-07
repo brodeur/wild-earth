@@ -6611,3 +6611,109 @@ the mini-map, in the menu's own card style; it wraps to two lines at 1280 px wid
 under it while the menu is open (`--abMoreH`, measured when the strip is built). On a phone the top holds the menu list
 and the map, so there it sits at the bottom over the nearby-animals row instead. The slots themselves stay where they
 were, bottom right, and always show.
+
+## 2026-11-06: the home screen's social panel, after Aaron's design (branch claude/home-social)
+
+Aaron: "Lets redesign the home screen to look and work like this", pointing at his Design canvas "Wild Earth — start
+screen social panel" (artboard "Start screen — social panel v1", 1440x900). The design keeps the home screen's places on
+the left and the earth in the middle and redesigns the right: an account card over a social panel. Built to match it:
+
+- **The account card** (social.js renderCard): the player's wisp ringed green while friends can see them, grey while
+  appearing offline; the display name; "@handle · sharing your place" (or "online", "appearing offline"); the `…` menu:
+  "Friends see" as a three-way switch (My place, Just online, Nothing), Change display name, Blocked people, Sign out.
+  The display name and Blocked people open sheets in the panel (no more `prompt()`).
+- **The social panel**: "Find people by name" (three characters or more; results drop down with Add friend, Asked,
+  Friend, Accept or Unblock; "No one named …"), then the tabs Groups, Friends (count online), Requests (count, in the
+  accent colour #c98a4e). Groups: a card per group (up to four wisps, offline ones dim; the name; "2 in Upper Hoh Road",
+  "1 online" or "quiet"; the last line) and a dashed New group. A card opens **the group's chat inside the panel**: back,
+  the name and who is in it, the info button, "Join Maya and Juno in <place>" (accent) when members share a place, the
+  lines and the message box. Friends: online first with a green dot and their place, Join when they share a place,
+  Invite when not; "Offline · N" folds the rest. Requests: Accept and Ignore; the requests sent are listed under Asked
+  with Cancel. New group and Edit group rise from the panel's bottom as sheets (name, Bring along / Members with Remove
+  for the creator, Add friends, Save, Leave group).
+- **The left list and the map labels** name the friends at each place with their wisps ("Juno and Maya here", and
+  "· 3 more" for the strangers counted), from the presence the hub already sends (title.js renderWho, multiplayer.js
+  friendsAt). The heading is "Most active" with the list's mode as a quiet text button ("everywhere" / "in view").
+- **The title** rises to 15 px high at any width (the design's size; rise() computes the scale from the font size).
+- **Layout**: 24 px gutters, the places 300 px wide on the left, the social column 380 px on the right from top to bottom;
+  Invite, Start and the toast centre in the space between them (title.js sets `--we-fl` and `--we-fr` each frame from
+  freeArea). The sign-in modal stands where the column will be. In the world the same panel drops from the friends row
+  beside the menu button, as before; at a phone's width (720 px and under) the home screen shows the row and its toggle
+  at the top right and the panel drops as a sheet over a dimmed screen.
+- **The startup sequence** is kept: the account card and the social panel slide in from the right a beat apart once the
+  title has landed (`html.tt-panels`), the places from the left; under reduced motion they fade, and the sheets, menu and
+  toast fade without moving.
+
+Decisions where the design and the client differ:
+
+- **The hub's two additions.** "Friends see: Nothing" is a new presence value `hidden`: friends and group members hear
+  offline, and a welcome leaves the user out of `online` (hub.py presence, online_for, m_me). Blocked people needs the
+  list: the `friends` message and the welcome carry `blocked` (id, name, display of those this user blocked; never who
+  blocked them). Tests in test_friends_blocks_and_search.
+- **"Messages aren't kept"** in the design is not true of the hub (it keeps a group's lines 7 days, MESSAGE_DAYS), so the
+  chat says "Messages go after 7 days".
+- **Where a line was sent from** (the design's "Maya · Upper Hoh Road"): the hub does not record it, so a line that comes
+  while the page is open shows its sender's shared place at that moment (or the player's own world), and older lines
+  show when they were sent ("8 min ago"). Nothing new is sent or kept.
+- **Not built, needing the hub:** the animal a friend is playing ("as a raven"), "last on 2 days ago", and "friend of
+  Maya" on a request. A friend online without a shared place reads "online".
+- **The design dims the places list** (a design tweak, on by default) to point at the panel; the built list is not
+  dimmed, since it is the way to choose a place.
+- **The toast's Undo** in the design only closes the toast; the built toast has no button.
+- **More on a friend** (Remove friend, Block) is a `…` on the row, shown on hover or focus: the design has no way to
+  remove or block, and blocking must stay reachable.
+- **Leave group** asks once inline ("Leave Explorers? Press again"), since leaving as the last member deletes the group.
+- **On the home screen the chat pane is not shown** (the group's chat is in the panel); the invite answers and the
+  hub's place errors become toasts there. In the world the chat pane is as it was.
+- **Exit to main screen** used to leave the panel kept from the world closed and Invite unhooked (signedIn returned
+  early when the panel existed); it now re-hooks the home screen (multiplayer.js homeHooks).
+
+Verified in the browser pane against a local viewer and hub on 127.0.0.1 with test accounts and a scripted second set of
+players (friends, two groups, lines, a request, two friends in a world): every press above round-trips through the hub
+(rename and add on Save, create opening the new group's chat, two-press leave, accept, add friend, block and unblock,
+presence hidden and back, display name, Join choosing the friend's place, Invite with and without a place chosen), the
+signed-out gate and signing in through it, Start into the world with the panel as a dropdown, Exit to main screen,
+`?cards=1`, `?skip=1`, and 375x812. Side by side with the design rendered from its own source at 1440x900. Not checked:
+the reduced-motion media query itself (the pane cannot emulate it), touch, Safari, two real browsers.
+
+## 2026-11-06: the title and the earth land together, then the panels; no atmosphere (branch claude/home-social)
+
+Aaron, on v42's startup: the earth came up, slowed, moved left, then up, then right, because the side panels arrived at
+different times and the earth re-centred in the space left each time. His words: "The logo and the earth should smoothly
+animate to their final destinations - they should arrive at their final destinations at the same time, and when complete,
+the side panels should slide in from their respective sides simultaneously." And: "The globe doesn't need an atmosphere,
+I don't think it's adding anything."
+
+- **One landing** (title.js land): after the loading, one tween of LAND_MS (2.2 s, ease in-out) moves the earth from
+  below to its final place and the title from the middle to its place at the top, from the same eased value each frame,
+  so they arrive together. The title's movement is driven from JS (inline top and scale); its CSS only holds where it
+  lands (`.risen`, `--tt-top`, `--tt-s`). The earth now lands at its final place in every path: there is no separate
+  crescent rise and no second rise after sign-in. Before sign-in it sits there lit as a crescent; signing in swings the
+  sun round, turns it to face the place and brings the map up, without moving it. A session already known is lit over
+  the landing's own time.
+- **The final layout is reserved from the start** (freeArea): the free space is the places column's laid-out box
+  (offsetLeft and offsetWidth, which ignore the slide's transform) on the left and the gate's column on the right, where
+  the sign-in and then the social column stand, whether or not they are in yet. The right column is reserved only when
+  there is a hub (with none, the Explore button stands over the earth's space), and at a phone's width the column is a
+  toggle at the top, so only the places are reserved. The view offset is set on the first frame instead of easing in.
+- **The panels after the landing, together** (sideIn, `html.tt-side` and `.listed` on the same frame): the places from
+  the left and the social column from the right, each 56 px over 0.9 s with one easing (cubic-bezier(.2, .8, .25, 1)), no
+  stagger. Signed out, the sign-in slides in from the right with the same slide when the landing ends; after signing in
+  the places and the social column come in together 0.45 s later, as the sign-in fades. The map's labels fade in with
+  the panels. The earth cannot be dragged or zoomed until it has landed.
+- **Reduced motion**: neither moves while visible. The earth is put in its place faded to black; the title fades out in
+  the middle and in at its place while the earth fades in (REFADE_MS 1.2 s, one tween); then the panels fade in together.
+- **No atmosphere**: the haze shell (a back-faced sphere at 1.035 with its own shader) and the haze rim inside the earth's
+  limb are gone. The earth's day side, terminator and night side are lit as before.
+
+Verified in the browser pane by tracing the earth's projected centre and radius, the title's box and the panel classes
+every frame through the startup (scratch trace, before and after): before, the earth's centre moved x 720 to 518 and back
+to 652 (a reversal) and the panels came at 3.9 s and 6.2 s; after, at 1440x900 signed in, the centre's x stays 680 (the
+middle of the space between the 324 px places column and the column at 1036 px), y goes 1457 to 450 in one move, the title
+goes from 68 to 15 px high and from the middle to 36 px over the same 2.53 to 4.5 s, and the gate, the places and the
+social column switch on together at 4.62 s; signed out, the sign-in comes at 4.63 s and the places and column together at
+7.21 s after signing in, with the earth not moving after it landed; at 375x812 the same, the centre's x fixed at 280;
+with the reduced-motion path forced (the pane cannot emulate the media query, so matchMedia was stubbed), the earth's
+place never changes while it is visible. Also checked: `?hub=stub`, Start, x skipping the arrival, and Exit to main
+screen replaying the sequence. Not checked: a page with no hub (the Explore path), and the CSS fades' timing in a real
+browser (the pane's hidden page does not advance CSS transitions).

@@ -541,6 +541,8 @@ class Hub:
             return {"t": "presence", "user": uid, "state": "offline"}
         rooms = sorted((c for c in cs if c.room), key=lambda c: c.room_t)
         r = self.user(uid)
+        if r and r["presence"] == "hidden":     # "Friends see: nothing" (the home screen's account menu): appears offline
+            return {"t": "presence", "user": uid, "state": "offline"}
         if rooms and r and r["presence"] == "tile":
             return {"t": "presence", "user": uid, "state": "tile", "tile": rooms[-1].room}
         return {"t": "presence", "user": uid, "state": "online"}
@@ -556,8 +558,8 @@ class Hub:
             self.to_user(u, p)
 
     def online_for(self, uid: str) -> list:
-        return [{k: v for k, v in self.presence(u).items() if k != "t"}
-                for u in sorted(self.audience(uid)) if self.conns.get(u)]
+        out = [{k: v for k, v in self.presence(u).items() if k != "t"} for u in sorted(self.audience(uid)) if self.conns.get(u)]
+        return [p for p in out if p["state"] != "offline"]     # a user appearing offline ('hidden') is left out
 
     def to_user(self, uid: str, msg: dict) -> None:
         for c in list(self.conns.get(uid, ())):
@@ -573,7 +575,9 @@ class Hub:
                 friends.append(self.pub(r))
             else:
                 requests.append({**self.pub(r), "dir": "out" if r["a"] == uid else "in"})
-        return {"t": "friends", "friends": friends, "requests": requests}
+        blocked = [self.pub(r) for r in self.q("SELECT u.id, u.name, u.display FROM blocks b JOIN users u ON u.id = b.blocked_id "
+                                               "WHERE b.user_id = ? ORDER BY u.name_fold", (uid,))]
+        return {"t": "friends", "friends": friends, "requests": requests, "blocked": blocked}
 
     def groups_list(self, uid: str, messages: bool = False) -> list:
         out = []
@@ -722,11 +726,12 @@ class HubConn(WsConn):
         h = self.hub
         f = h.friends_msg(self.uid)
         self.send({"t": "welcome", "you": h.you(self.uid), "friends": f["friends"], "requests": f["requests"],
-                   "groups": h.groups_list(self.uid, messages=True), "online": h.online_for(self.uid),
+                   "blocked": f["blocked"], "groups": h.groups_list(self.uid, messages=True), "online": h.online_for(self.uid),
                    "providers": h.providers(), "ice": ice_servers()})
 
     def m_me(self, m: dict) -> None:
-        """Added to the doc's protocol: {display?, findable?, presence?: 'tile'|'online'} -> me {you}."""
+        """Added to the doc's protocol: {display?, findable?, presence?: 'tile'|'online'|'hidden'} -> me {you}.
+        'hidden' (2026-11-06, the home screen's "Friends see: nothing"): friends and group members hear offline."""
         h, sets = self.hub, []
         if "display" in m:
             d = _clean_text(m["display"], DISPLAY_MAX)
@@ -736,8 +741,8 @@ class HubConn(WsConn):
         if "findable" in m:
             sets.append(("findable", 1 if m["findable"] else 0))
         if "presence" in m:
-            if m["presence"] not in ("tile", "online"):
-                raise HubError(400, "presence must be tile or online", "presence")
+            if m["presence"] not in ("tile", "online", "hidden"):
+                raise HubError(400, "presence must be tile, online or hidden", "presence")
             sets.append(("presence", m["presence"]))
         for k, v in sets:
             h.w(f"UPDATE users SET {k} = ? WHERE id = ?", (v, self.uid))

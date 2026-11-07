@@ -6,7 +6,7 @@
 // Events: every message the hub sends, by its t (welcome, found, err, presence, friends, groups, chat,
 // invite, pos, counts, me, placed, answer, rtc), each with the message; plus 'open', 'close' and 'signedout'
 // (the session is gone: no reconnect). The hub's state as last told is kept on the instance: you, friends,
-// requests, groups, online (user id -> {state, tile?}), counts (tile id -> players), ice (the ICE servers for voice and
+// requests, blocked (the people this user blocked: Blocked people), groups, online (user id -> {state, tile?}), counts (tile id -> players), ice (the ICE servers for voice and
 // video, voice.js: public STUN, and TURN when the hub has it; from the welcome, never kept past the page). The room and the watch
 // are re-sent after a reconnect. The session is the HttpOnly we_session cookie: nothing here touches it, and
 // nothing is kept in localStorage.
@@ -53,7 +53,7 @@ export class Hub {
   constructor() {
     this.ws = null; this.want = false; this.connected = false; this.retry = 0; this.timer = null;
     this.handlers = new Map();
-    this.you = null; this.friends = []; this.requests = []; this.groups = []; this.online = new Map(); this.counts = {}; this.ice = null;
+    this.you = null; this.friends = []; this.requests = []; this.blocked = []; this.groups = []; this.online = new Map(); this.counts = {}; this.ice = null;
     this.room = null; this.watching = false;
   }
 
@@ -109,7 +109,7 @@ export class Hub {
     switch (d.t) {
       case 'welcome':
         this.connected = true; this.retry = 0;
-        this.you = d.you; this.friends = d.friends; this.requests = d.requests; this.groups = d.groups; this.ice = Array.isArray(d.ice) ? d.ice : null;
+        this.you = d.you; this.friends = d.friends; this.requests = d.requests; this.blocked = d.blocked || []; this.groups = d.groups; this.ice = Array.isArray(d.ice) ? d.ice : null;
         this.online = new Map(d.online.map(o => [o.user, { state: o.state, tile: o.tile }]));
         if (this.room) this.send({ t: 'room', op: 'join', tile: this.room });
         if (this.watching) this.send({ t: 'watch', on: true });
@@ -122,7 +122,7 @@ export class Hub {
         if (d.state === 'offline') this.online.delete(d.user);
         else this.online.set(d.user, { state: d.state, tile: d.tile });
         break;
-      case 'friends': this.friends = d.friends; this.requests = d.requests; break;
+      case 'friends': this.friends = d.friends; this.requests = d.requests; this.blocked = d.blocked || []; break;
       case 'groups': this.groups = d.groups; break;
       case 'counts': this.counts = d.tiles; break;
       case 'me': this.you = d.you; break;
@@ -162,5 +162,5 @@ export class Hub {
   // by the hub to that member's connection only, never kept.
   rtc(m) { return this.room ? this.send({ t: 'rtc', ...m }) : false; }
   watch(on) { this.watching = !!on; return this.send({ t: 'watch', on: !!on }); }
-  setMe(fields) { return this.send({ t: 'me', ...fields }); }   // {display?, findable?, presence?: 'tile'|'online'}
+  setMe(fields) { return this.send({ t: 'me', ...fields }); }   // {display?, findable?, presence?: 'tile'|'online'|'hidden'}
 }

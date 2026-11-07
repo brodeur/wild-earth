@@ -1,8 +1,10 @@
-/* The social screen (docs/multiplayer.md lane 3): the sign-in modal (src/account.js, in the title screen's gate), the
-   friends row and list top left (src/social.js, #social) and the chat bottom left (src/chat.js, #chat); the microphone
-   and camera are in the controls row beside the menu button (index.html #ctlRow, src/voice.js). The two fixed elements
-   stand over the title screen (#opening is z 20) and stay in the world's HUD: right of the controls row once
-   html.opening is gone (multiplayer.js layout), hidden with the HUD while arriving or switching. The type is the title screen's: DM Sans (title.css loads it). */
+/* The social screen (docs/multiplayer.md lane 3; the panel redesigned 2026-11-06 after Aaron's design, docs/decisions.md
+   "the home screen's social panel"): the sign-in modal (src/account.js, in the title screen's gate), the account card and
+   the social panel (src/social.js, #social: the right column on the home screen, a dropdown from the friends row in the
+   world), the toast (#soToast) and the chat pane bottom left in the world (src/chat.js, #chat); the microphone and camera
+   are in the controls row beside the menu button (index.html #ctlRow, src/voice.js). The fixed elements stand over the
+   title screen (#opening is z 20) and stay in the world's HUD (multiplayer.js layout), hidden with the HUD while arriving
+   or switching. The type is the title screen's: DM Sans (title.css loads it). */
 
 /* ---- the sign-in modal ---- */
 .ac-modal { width:min(360px, calc(100vw - 32px)); box-sizing:border-box; padding:22px 24px 18px; border-radius:14px; background:#0b0f0dcc; border:1px solid #d3ddd52a;
@@ -51,83 +53,211 @@
 /* ---- shared ---- */
 #social, #chat { position:fixed; z-index:21; font:13px/1.4 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; color:#d3ddd5; transition:opacity .5s ease; }
 html.arriving #social, html.arriving #chat, html.switching #social, html.switching #chat { opacity:0; pointer-events:none; }
-#social button, #chat button, .so-dialog button { font:inherit; }
-.so-avatar { display:block; border-radius:50%; }
+#social button, #chat button { font:inherit; color:inherit; }
+#social button:not(:disabled) { cursor:pointer; }
+#social input { font:inherit; }
+#social button:focus-visible, #social input:focus-visible { outline:2px solid #f3f6f1aa; outline-offset:2px; }
+.so-avatar { display:block; border-radius:50%; flex:none; }
+.so-avatar.dim { opacity:.4; }
 
-/* ---- friends, top left ---- */
+/* ---- the row of the friends online and the toggle: the world's HUD (top left, beside the menu button) and a phone's
+   home screen ---- */
 #social { left:14px; top:12px; }
 html:not(.opening) #social { left:98px; }   /* right of the controls row (index.html #ctlRow, at 58 px beside the menu button); multiplayer.js layout sets it as the row grows */
 .so-bar { display:flex; align-items:center; gap:6px; }
 .so-avatars { display:flex; align-items:center; gap:4px; }
-.so-chip { padding:0; border:0; background:none; cursor:pointer; border-radius:50%; line-height:0; }
+.so-chip { padding:0; border:0; background:none; border-radius:50%; line-height:0; }
 .so-chip .so-avatar { box-shadow:0 0 0 2px hsla(var(--hue), 70%, 60%, .7), 0 1px 4px #0008; }
 .so-chip:hover .so-avatar { box-shadow:0 0 0 2px hsl(var(--hue), 80%, 70%), 0 0 10px hsla(var(--hue), 80%, 60%, .6); }
 .so-more { font-size:11px; color:#b7c4ba; padding:0 4px; }
-.so-toggle { position:relative; width:34px; height:34px; padding:0; border:0; border-radius:8px; background:#0f1512bb; backdrop-filter:blur(4px); cursor:pointer; color:#e6ede7; display:flex; align-items:center; justify-content:center; }
+.so-toggle { position:relative; width:34px; height:34px; padding:0; border:0; border-radius:8px; background:#0f1512bb; backdrop-filter:blur(4px); color:#e6ede7; display:flex; align-items:center; justify-content:center; }
 .so-toggle:hover, #social.open .so-toggle { background:#1a241ecc; }
 .so-toggle svg { width:19px; height:19px; }
 .so-toggle .so-n { position:absolute; right:-4px; top:-4px; min-width:16px; height:16px; padding:0 4px; box-sizing:border-box; border-radius:8px; background:#a9d8a4; color:#0b0f0d; font-size:10px; font-weight:600; line-height:16px; text-align:center; }
-.so-toggle.pending::before { content:''; position:absolute; left:-3px; top:-3px; width:9px; height:9px; border-radius:50%; background:#ffd08a; box-shadow:0 0 6px #ffd08a; }
+.so-toggle.pending::before { content:''; position:absolute; left:-3px; top:-3px; width:9px; height:9px; border-radius:50%; background:#c98a4e; box-shadow:0 0 6px #c98a4e; }
 #social.offline .so-toggle { color:#8fa094; }
-.so-panel { position:absolute; left:0; top:42px; width:320px; max-width:calc(100vw - 28px); max-height:calc(100vh - 70px); overflow-y:auto; overscroll-behavior:contain; box-sizing:border-box; padding:12px 14px 14px; border-radius:10px;
-  background:#0f1512e0; border:1px solid #263128; backdrop-filter:blur(8px); transition:left .25s ease; }
+
+/* ---- the panel (Aaron's design, 2026-11-06): the account card, then the social panel. In the world it drops from the
+   row; on the home screen it is the right column (below) ---- */
+.so-panel { position:absolute; left:0; top:42px; width:380px; max-width:calc(100vw - 28px); height:min(680px, calc(100vh - 66px)); box-sizing:border-box;
+  display:flex; flex-direction:column; gap:12px; transition:left .25s ease; font-size:14px; }
 .so-panel[hidden] { display:none; }
-.so-panel h3 { margin:14px 0 6px; font-size:10.5px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#8fa094; display:flex; align-items:baseline; gap:8px; }
-.so-panel h3 small { font-weight:400; letter-spacing:.02em; text-transform:none; color:#6f8075; }
-.so-note { margin:4px 0; font-size:12px; color:#8fa094; }
-.so-err { margin:8px 0 0; font-size:12px; color:#ffb3a3; }
-.so-me { display:flex; align-items:center; gap:10px; padding-bottom:12px; border-bottom:1px solid #263128; }
-.so-mecol { flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; }
-.so-display { padding:0; border:0; background:none; color:#f3f6f1; font-size:14px; font-weight:600; text-align:left; cursor:pointer; border-bottom:1px dashed transparent; align-self:flex-start; }
-.so-display:hover { border-bottom-color:#d3ddd580; }
-.so-handle { font-size:11px; color:#8fa094; }
-.so-presence { display:flex; align-items:center; gap:6px; margin-top:4px; font-size:11px; color:#8fa094; white-space:nowrap; }
-.so-presence select, .so-gadd select { background:#0d1310; color:#d3ddd5; border:1px solid #263128; border-radius:6px; padding:2px 4px; font:inherit; font-size:11px; max-width:170px; }
-.so-signout { align-self:flex-start; padding:4px 9px; border:1px solid #263128; border-radius:6px; background:#1f2a23; color:#b7c4ba; font-size:11px; cursor:pointer; }
-.so-signout:hover { color:#e6ede7; border-color:#3d5244; }
-.so-top { margin-top:12px; }
-.so-create { width:100%; padding:7px 10px; border:1px solid #3d5244; border-radius:8px; background:#1f2a23; color:#e6ede7; font-weight:500; cursor:pointer; }
-.so-create:hover { background:#27352c; }
-.so-search { margin-top:10px; }
-.so-search input { box-sizing:border-box; width:100%; padding:7px 10px; border:1px solid #263128; border-radius:8px; background:#0d1310; color:#e6ede7; font:inherit; outline:none; }
-.so-search input:focus { border-color:#3d5244; }
-.so-results { display:flex; flex-direction:column; gap:2px; margin-top:4px; }
-.so-lists { display:flex; flex-direction:column; }
-.so-row { display:flex; align-items:center; gap:8px; padding:5px 6px; border-radius:8px; min-height:30px; }
-.so-row:hover { background:#ffffff0a; }
-.so-who { display:flex; align-items:center; gap:8px; min-width:0; flex:1; }
-.so-names { display:flex; flex-direction:column; min-width:0; line-height:1.2; }
-.so-names b { font-weight:500; color:#e6ede7; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.so-names small { font-size:10.5px; color:#6f8075; }
-.so-row.off .so-avatar { filter:saturate(.3) brightness(.7); }
-.so-state { font-size:11px; color:#8fa094; white-space:nowrap; }
-.so-row.on .so-state { color:#a9d8a4; }
-.so-acts { display:flex; gap:4px; opacity:0; transition:opacity .15s ease; }
-.so-row:hover .so-acts, .so-row:focus-within .so-acts, .so-ghead .so-acts, .so-results .so-acts { opacity:1; }
-.so-acts button, .so-dbtns button { padding:3px 8px; border:1px solid #263128; border-radius:6px; background:#1f2a23; color:#d3ddd5; font-size:11px; cursor:pointer; white-space:nowrap; }
-.so-acts button:hover { background:#27352c; color:#fff; }
-.so-acts button.warn:hover { background:#3a2420; border-color:#6b3a30; color:#ffb3a3; }
-.so-group { margin:4px 0 8px; padding:6px 0 4px; border-top:1px solid #1d2620; }
-.so-ghead { display:flex; align-items:center; gap:8px; padding:2px 6px; }
-.so-gname { flex:1; padding:0; border:0; background:none; color:#e6ede7; font-size:13px; font-weight:600; text-align:left; cursor:pointer; border-bottom:1px dashed transparent; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.so-gname:hover { border-bottom-color:#d3ddd580; }
-.so-gn { font-size:11px; color:#8fa094; }
-.so-members { padding-left:8px; }
-.so-member { min-height:26px; padding:3px 6px; }
-.so-gadd { display:block; padding:2px 6px 0 14px; }
-.so-dialog { position:absolute; left:0; top:42px; width:320px; max-width:calc(100vw - 28px); box-sizing:border-box; padding:14px; border-radius:10px; background:#0f1512f4; border:1px solid #3d5244; backdrop-filter:blur(8px); z-index:1; }
-.so-dialog[hidden] { display:none; }
-.so-dialog h3 { margin:0 0 10px; font-size:10.5px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#8fa094; }
-.so-dialog label { display:flex; flex-direction:column; gap:4px; font-size:11px; color:#8fa094; }
-.so-dialog label small { color:#6f8075; }
-.so-dialog input[name=name] { box-sizing:border-box; width:100%; padding:7px 10px; border:1px solid #263128; border-radius:8px; background:#0d1310; color:#e6ede7; font:inherit; outline:none; }
-.so-pick { display:flex; flex-direction:column; gap:2px; margin:10px 0; max-height:40vh; overflow-y:auto; }
-.so-pickrow { flex-direction:row !important; align-items:center; gap:8px !important; padding:4px 6px; border-radius:8px; cursor:pointer; font-size:13px !important; color:#d3ddd5 !important; }
-.so-pickrow:hover { background:#ffffff0a; }
-.so-pickrow input { accent-color:#a9d8a4; }
-.so-dbtns { display:flex; justify-content:flex-end; gap:8px; }
-.so-dbtns .so-ok { background:#f3f6f1; color:#0b0f0d; border-color:#f3f6f1; font-weight:600; }
-#social.dialog .so-panel { visibility:hidden; }
+.so-note { margin:8px 2px; font-size:13px; line-height:1.45; color:#8fa094; }
+.so-note b { color:#f3f6f1; font-weight:500; }
+.so-cap, .so-cap2 { font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:#8fa094; }
+.so-cap2 { font-size:12.5px; letter-spacing:0; text-transform:none; }
+.so-sub { margin:14px 0 4px; }
+.so-names { flex:1; min-width:0; display:flex; flex-direction:column; line-height:1.3; }
+.so-names b { font-weight:400; color:#f3f6f1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.so-names small { font-size:12.5px; color:#8fa094; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.so-state { font-size:12.5px; color:#8fa094; white-space:nowrap; }
+.so-scroll { scrollbar-width:thin; scrollbar-color:#d3ddd522 transparent; }
+.so-scroll::-webkit-scrollbar { width:8px; }
+.so-scroll::-webkit-scrollbar-thumb { background:#d3ddd522; border-radius:8px; }
+/* the buttons: a quiet square or round ghost, a pill outline, the solid light one, the big one in the sheets */
+.so-ghost { flex:none; display:flex; align-items:center; justify-content:center; padding:0; border:1px solid #d3ddd52a; background:transparent; color:#d3ddd5; transition:background .2s ease, border-color .2s ease; }
+.so-ghost:hover { background:#ffffff14; border-color:#d3ddd566; }
+.so-ghost svg { width:18px; height:18px; }
+.so-round { width:32px; height:32px; border-radius:50%; border-color:#d3ddd533; }
+.so-round svg { width:14px; height:14px; }
+.so-sq { width:36px; height:36px; border-radius:10px; border-color:transparent; color:#f3f6f1; }
+.so-pill { flex:none; padding:6px 12px; border-radius:999px; border:1px solid #d3ddd544; background:transparent; font-size:12.5px; white-space:nowrap; transition:background .2s ease, border-color .2s ease; }
+.so-pill:hover:not(:disabled) { background:#ffffff14; border-color:#d3ddd566; }
+.so-pill:disabled { color:#8fa094; border-color:#d3ddd522; }
+.so-pill.warn { color:#ffb3a3; border-color:#ffb3a344; }
+.so-solid { flex:none; padding:7px 14px; border-radius:999px; border:0; background:#f3f6f1; color:#0b0f0d !important; font-weight:600; font-size:12.5px; }
+.so-solid:hover { background:#fff; }
+.so-big { min-height:44px; border-radius:999px; border:0; background:#f3f6f1; color:#0b0f0d !important; font-weight:600; }
+.so-big:hover { background:#fff; }
+
+/* the account card, its own container; the menu drops under it */
+.so-card { position:relative; z-index:10; flex:none; display:flex; align-items:center; gap:12px; min-height:58px; box-sizing:border-box; padding:10px 10px 10px 12px;
+  border:1px solid #d3ddd52a; border-radius:16px; background:#0b0f0de6; backdrop-filter:blur(8px); }
+.so-me { flex:none; width:36px; height:36px; border-radius:50%; box-shadow:0 0 0 2px #5b665f; transition:box-shadow .3s ease; }
+.so-me.lit { box-shadow:0 0 0 2px #7fd19b; }
+.so-mecol { flex:1; min-width:0; display:flex; flex-direction:column; line-height:1.35; }
+.so-myname { font-size:15px; font-weight:600; color:#f3f6f1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.so-mecol small { font-size:12.5px; color:#8fa094; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.so-menubtn { width:36px; height:36px; border-radius:10px; }
+.so-menu { position:absolute; right:0; top:calc(100% + 8px); width:100%; box-sizing:border-box; padding:12px; border-radius:14px; background:#111815; border:1px solid #d3ddd533;
+  box-shadow:0 18px 44px rgba(0, 0, 0, .55); display:flex; flex-direction:column; gap:6px; animation:so-pop .18s ease both; }
+@keyframes so-pop { from { opacity:0; transform:translateY(-4px); } }
+.so-seg-wrap { display:flex; flex-direction:column; gap:6px; padding:4px 4px 10px; margin-bottom:4px; border-bottom:1px solid #d3ddd51c; }
+.so-seg { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:4px; padding:3px; border-radius:11px; background:#ffffff0a; }
+.so-seg button { min-height:34px; border:0; border-radius:8px; background:transparent; color:#b7c4ba !important; font-size:13px; }
+.so-seg button[aria-checked=true] { background:#f3f6f1; color:#0b0f0d !important; font-weight:600; }
+.so-seg button[aria-checked=false]:hover { color:#f3f6f1 !important; }
+.so-mi { text-align:left; border:0; background:transparent; padding:9px 10px; border-radius:8px; }
+.so-mi:hover { background:#ffffff08; }
+.so-mi.warn { color:#ffb3a3 !important; }
+.so-card .so-note { margin:0 4px; }
+
+/* the social panel */
+.so-aside { position:relative; flex:1; min-height:0; display:flex; flex-direction:column; border:1px solid #d3ddd52a; border-radius:18px; background:#0b0f0de6; backdrop-filter:blur(8px); overflow:hidden; }
+.so-list, .so-chat { flex:1; min-height:0; display:flex; flex-direction:column; }
+.so-list[hidden], .so-chat[hidden] { display:none; }
+.so-find { position:relative; padding:14px 18px 0; }
+.so-findbox { display:flex; align-items:center; gap:8px; height:40px; padding:0 12px; border:1px solid #d3ddd52e; border-radius:10px; background:#050807; }
+.so-findbox:focus-within { border-color:#d3ddd5a0; }
+.so-findbox svg { width:15px; height:15px; flex:none; color:#8fa094; }
+.so-findbox input { flex:1; min-width:0; background:transparent; border:0; outline:none !important; color:#f3f6f1; font-size:14px; user-select:text; -webkit-user-select:text; }
+.so-findbox input::placeholder { color:#7d8d82; }
+.so-findbox input::-webkit-search-cancel-button { filter:invert(.7); }
+.so-results { position:absolute; left:18px; right:18px; top:58px; z-index:5; padding:6px; border-radius:12px; background:#111815; border:1px solid #d3ddd533; box-shadow:0 16px 40px rgba(0, 0, 0, .5);
+  display:flex; flex-direction:column; gap:2px; max-height:300px; overflow-y:auto; }
+.so-results[hidden] { display:none; }
+.so-results .so-note { margin:6px 8px; }
+.so-rrow { display:flex; align-items:center; gap:10px; padding:8px; border-radius:8px; }
+.so-rrow:hover { background:#ffffff08; }
+.so-tabs { display:flex; gap:18px; padding:14px 18px 0; border-bottom:1px solid #d3ddd51c; }
+.so-tab { display:flex; align-items:center; gap:6px; padding:8px 0 10px; border:0; border-bottom:2px solid transparent; background:transparent; color:#8fa094 !important; font-weight:500; font-size:14px; }
+.so-tab:hover { color:#f3f6f1 !important; }
+.so-tab[aria-selected=true] { color:#f3f6f1 !important; border-bottom-color:#f3f6f1; }
+.so-badge { min-width:18px; height:18px; padding:0 5px; box-sizing:border-box; border-radius:9px; font-size:11px; display:inline-flex; align-items:center; justify-content:center; background:#ffffff1a; color:#d3ddd5; }
+.so-badge.hot { background:#c98a4e; color:#0b0f0d; }
+.so-body { flex:1; min-height:0; overflow-y:auto; overscroll-behavior:contain; padding:14px 18px 18px; display:flex; flex-direction:column; gap:10px; }
+/* Groups */
+.so-gcard { text-align:left; display:flex; flex-direction:column; gap:10px; padding:14px; border-radius:14px; border:1px solid #d3ddd52a; background:#ffffff06; transition:background .2s ease; }
+.so-gcard:hover { background:#ffffff0d; }
+.so-ghead { display:flex; align-items:center; gap:10px; width:100%; }
+.so-faces { display:flex; flex:none; }
+.so-faces .so-avatar { margin-right:-8px; box-shadow:0 0 0 2px #0e1311; }
+.so-gname { flex:1; min-width:0; margin-left:8px; font-size:15.5px; font-weight:600; color:#f3f6f1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.so-where { font-size:12px; color:#8fa094; white-space:nowrap; }
+.so-where.live { color:#b7c4ba; }
+.so-last { font-size:13px; color:#b7c4ba; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%; }
+.so-last b { color:#f3f6f1; font-weight:500; }
+.so-new { flex:none; min-height:56px; border-radius:14px; border:1px dashed #d3ddd544; background:transparent; color:#b7c4ba !important; display:flex; align-items:center; justify-content:center; gap:8px; font-size:14px; transition:background .2s ease, border-color .2s ease; }
+.so-new:hover { background:#ffffff14; border-color:#d3ddd566; }
+.so-new svg { width:16px; height:16px; }
+/* Friends */
+.so-body:has(.so-frow) { gap:4px; }
+.so-frow { display:flex; align-items:center; gap:12px; padding:10px 8px; border-radius:12px; }
+.so-frow:hover { background:#ffffff08; }
+.so-frow.off { padding:8px; }
+.so-frow.off .so-avatar { opacity:.45; filter:grayscale(.6); }
+.so-frow.off .so-names b { color:#b7c4ba; }
+.so-frow .so-names small { color:#b7c4ba; }
+.so-frow.off .so-names small { color:#8fa094; }
+.so-avw { position:relative; flex:none; line-height:0; }
+.so-dot { position:absolute; right:-1px; bottom:-1px; width:10px; height:10px; border-radius:50%; background:#7fd19b; box-shadow:0 0 0 2px #0b0f0d; }
+.so-morebtn { opacity:0; width:28px; height:28px; border-color:transparent; }
+.so-frow:hover .so-morebtn, .so-morebtn:focus-visible, .so-morebtn[aria-expanded=true] { opacity:1; }
+.so-morerow { display:flex; gap:8px; justify-content:flex-end; padding:0 8px 6px; }
+.so-fold { display:flex; align-items:center; gap:8px; margin-top:8px; padding:8px; border:0; background:transparent; color:#8fa094 !important; font-size:12.5px; letter-spacing:.1em; text-transform:uppercase; border-radius:8px; }
+.so-fold:hover { background:#ffffff08; }
+.so-fold svg { width:12px; height:12px; transition:transform .2s ease; }
+.so-fold[aria-expanded=true] svg { transform:rotate(90deg); }
+/* Requests */
+.so-body:has(.so-req) { gap:6px; }
+.so-req { display:flex; align-items:center; gap:12px; padding:12px; border-radius:12px; background:#ffffff06; border:1px solid #d3ddd51c; }
+.so-req.out { padding:8px 12px; background:transparent; }
+
+/* the group's chat */
+.so-chead { flex:none; display:flex; align-items:center; gap:8px; padding:12px 12px 12px 8px; border-bottom:1px solid #d3ddd51c; }
+.so-ctitle { flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; }
+.so-ctitle b { font-size:16px; font-weight:600; color:#f3f6f1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.so-ctitle small { font-size:12px; color:#8fa094; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.so-infobtn { width:36px; height:36px; border-color:#d3ddd52a; }
+.so-infobtn svg { width:18px; height:18px; }
+.so-cta { flex:none; display:flex; width:calc(100% - 36px); margin:12px 18px 0; min-height:40px; border-radius:999px; border:0; background:#c98a4e; color:#0b0f0d !important; font-weight:600; font-size:13.5px;
+  align-items:center; justify-content:center; gap:8px; padding:0 14px; transition:filter .2s ease; }
+.so-cta:hover { filter:brightness(1.08); }
+.so-cta svg { width:15px; height:15px; flex:none; }
+.so-cta-slot:empty { display:none; }
+.so-lines { flex:1; min-height:0; overflow-y:auto; overscroll-behavior:contain; padding:16px 18px; display:flex; flex-direction:column; gap:12px; }
+.so-lines > :first-child { margin-top:auto; }
+.so-kept { align-self:center; font-size:11.5px; color:#8fa094; letter-spacing:.08em; }
+.so-line { display:flex; gap:10px; align-items:flex-start; animation:ch-in .35s ease both; }
+.so-line .so-avatar { margin-top:2px; }
+.so-lbody { display:flex; flex-direction:column; gap:2px; min-width:0; }
+.so-lwho { font-size:12.5px; color:#8fa094; }
+.so-lwho b { color:#f3f6f1; font-weight:500; }
+.so-ltext { color:#d3ddd5; line-height:1.45; overflow-wrap:anywhere; user-select:text; -webkit-user-select:text; }
+.so-empty { align-self:center; text-align:center; margin:0; }
+.so-send { flex:none; display:flex; gap:8px; margin:0; padding:12px 18px 16px; border-top:1px solid #d3ddd51c; }
+.so-draft { flex:1; min-width:0; height:42px; box-sizing:border-box; padding:0 14px; border-radius:999px; border:1px solid #d3ddd52e; background:#050807; color:#f3f6f1; outline:none !important; font-size:14px; user-select:text; -webkit-user-select:text; }
+.so-draft:focus { border-color:#d3ddd5a0; }
+.so-draft::placeholder { color:#7d8d82; }
+.so-sendbtn { flex:none; width:42px; height:42px; border-radius:50%; border:0; background:#f3f6f1; color:#0b0f0d !important; display:flex; align-items:center; justify-content:center; padding:0; }
+.so-sendbtn svg { width:16px; height:16px; }
+
+/* the sheets (New group, Edit group, Display name, Blocked people): rise from the panel's bottom over a dimmed panel */
+.so-sheetwrap { position:absolute; inset:0; z-index:6; background:#050807cc; display:flex; align-items:flex-end; opacity:0; transition:opacity .2s ease; }
+.so-sheetwrap.on { opacity:1; }
+.so-sheetwrap[hidden] { display:none; }
+.so-sheet { width:100%; max-height:92%; overflow-y:auto; padding:20px 18px 18px; box-sizing:border-box; border-radius:18px 18px 0 0; background:#0f1512; border-top:1px solid #d3ddd533;
+  display:flex; flex-direction:column; gap:16px; transform:translateY(24px); transition:transform .28s cubic-bezier(.2, .8, .25, 1); }
+.so-sheetwrap.on .so-sheet { transform:none; }
+.so-shead { display:flex; align-items:center; justify-content:space-between; }
+.so-stitle { font-size:13px; letter-spacing:.16em; text-transform:uppercase; color:#f3f6f1; }
+.so-field { display:flex; flex-direction:column; gap:6px; font-size:12.5px; color:#8fa094; }
+.so-field input { height:40px; box-sizing:border-box; padding:0 12px; border-radius:10px; border:1px solid #d3ddd52e; background:#050807; color:#f3f6f1; outline:none !important; font-size:14px; user-select:text; -webkit-user-select:text; }
+.so-field input:focus { border-color:#d3ddd5a0; }
+.so-field input::placeholder { color:#6f8075; }
+.so-fieldset { display:flex; flex-direction:column; gap:2px; }
+.so-fieldset .so-cap2 { margin-bottom:2px; }
+.so-mrow { display:flex; align-items:center; gap:10px; padding:7px 0; }
+.so-mrow .so-names small { font-size:12px; }
+.so-check { display:flex; align-items:center; gap:10px; padding:8px; border:0; border-radius:10px; background:transparent; text-align:left; }
+.so-check:hover { background:#ffffff08; }
+.so-cname { flex:1; color:#f3f6f1; }
+.so-box { flex:none; width:20px; height:20px; box-sizing:border-box; border-radius:6px; border:1.5px solid #d3ddd566; display:flex; align-items:center; justify-content:center; color:#0b0f0d; }
+.so-box.on { border-color:#f3f6f1; background:#f3f6f1; }
+.so-box svg { width:12px; height:12px; }
+.so-leave { min-height:40px; border-radius:999px; border:1px solid #ffb3a344; background:transparent; color:#ffb3a3 !important; transition:background .2s ease; }
+.so-leave:hover { background:#ffb3a314; }
+.so-err { position:absolute; left:18px; right:18px; bottom:72px; z-index:7; margin:0; padding:8px 12px; border-radius:10px; background:#2a1a17f0; border:1px solid #6b3a30; font-size:12.5px; color:#ffb3a3; }
+.so-err[hidden] { display:none; }
+
+/* the toast: what a press did, at the bottom of the earth's free space (title.js sets --we-fl and --we-fr) */
+#soToast { position:fixed; z-index:24; left:calc((var(--we-fl, 0px) + 100vw - var(--we-fr, 0px)) / 2); bottom:24px; max-width:min(520px, calc(100vw - 32px)); box-sizing:border-box;
+  padding:12px 18px; border-radius:999px; background:#f3f6f1; color:#0b0f0d; font:500 14px/1.3 'DM Sans', system-ui, sans-serif; text-align:center; box-shadow:0 8px 28px #0008;
+  transform:translate(-50%, 12px); opacity:0; transition:opacity .3s ease, transform .3s cubic-bezier(.2, .8, .25, 1); pointer-events:none; }
+#soToast.on { opacity:1; transform:translate(-50%, 0); }
+#soToast[hidden] { display:none; }
+html.opening:has(.tt-wrap.chosen) #soToast { bottom:118px; }   /* above Invite and Start */
+html:not(.opening) #soToast { left:50%; bottom:auto; top:64px; }
 
 /* ---- the chat, bottom left ---- */
 #chat { left:14px; bottom:12px; width:min(380px, calc(100vw - 28px)); display:flex; flex-direction:column; gap:6px; transition:opacity .5s ease, bottom .25s ease; }
@@ -172,11 +302,21 @@ html:not(.opening) #social { left:98px; }   /* right of the controls row (index.
 .iv-btns .iv-join { background:#f3f6f1; color:#0b0f0d; border-color:#f3f6f1; font-weight:600; }
 .iv-btns .iv-join:hover { background:#fff; color:#0b0f0d; }
 
-/* ---- on the home screen (title.js, redesigned 2026-11-04): the social panel is the right column, open on sign-in; the
-   chat bottom right; the places are listed on the left ---- */
-html.opening #social { left:auto; right:max(20px, 2.4vw); top:18px; }
-html.opening .so-panel, html.opening .so-dialog { left:auto; right:0; max-height:calc(100vh - 230px); }
-html.opening #chat { left:auto; right:max(20px, 2.4vw); bottom:16px; width:min(340px, calc(100vw - 28px)); }
+/* ---- on the home screen (Aaron's design, 2026-11-06): the panel is the right column, open on sign-in, the account card
+   over the social panel, top to bottom; the group chat is in the panel, so the chat pane is not shown here. At a
+   phone's width the column folds behind the row's toggle (multiplayer.js homeHooks) and drops as a sheet. ---- */
+html.opening #social { left:auto; right:24px; top:24px; bottom:24px; width:min(380px, calc(100vw - 48px)); pointer-events:none; }
+html.opening #social > * { pointer-events:auto; }
+html.opening .so-bar { display:none; }
+html.opening .so-panel { position:static; width:100%; height:100%; max-width:none; }
+html.opening #chat { display:none; }
+@media (max-width: 720px) {
+  html.opening #social { left:12px; right:12px; top:42px; bottom:auto; width:auto; }
+  html.opening .so-bar { display:flex; justify-content:flex-end; pointer-events:none; }
+  html.opening .so-bar > * { pointer-events:auto; }
+  html.opening .so-panel { position:absolute; left:0; right:0; top:42px; width:auto; height:calc(100dvh - 96px); }
+  html.opening #social.open::before { content:''; position:fixed; inset:0; z-index:-1; background:#050807b8; pointer-events:none; }
+}
 
 /* ---- the home screen's invite picker (src/multiplayer.js openPick): over the Invite button ---- */
 #invitePick { position:fixed; left:50%; bottom:120px; z-index:23; width:320px; max-width:calc(100vw - 28px); max-height:min(60vh, 520px); overflow-y:auto; box-sizing:border-box;
@@ -205,8 +345,10 @@ html.opening #chat { left:auto; right:max(20px, 2.4vw); bottom:16px; width:min(3
 .ip-btns button:hover:not(:disabled) { background:#27352c; color:#fff; }
 .ip-btns .ip-send { background:#f3f6f1; color:#0b0f0d; border-color:#f3f6f1; font-weight:600; }
 .ip-btns .ip-send:disabled { opacity:.45; cursor:default; }
-/* a row's actions over its right end on hover (they took their width while hidden and squeezed the name to nothing) */
-.so-row { position:relative; }
-.so-row .so-acts { position:absolute; right:4px; top:50%; transform:translateY(-50%); padding-left:16px; background:linear-gradient(90deg, #0f151200, #0f1512 14px); pointer-events:none; }
-.so-row:hover .so-acts, .so-row:focus-within .so-acts { pointer-events:auto; }
-.so-results .so-acts, .so-ghead .so-acts { position:static; transform:none; padding:0; background:none; pointer-events:auto; }
+
+/* reduced motion: the sheets, the menu, the toast and the lines fade without moving */
+@media (prefers-reduced-motion: reduce) {
+  .so-sheet, .so-sheetwrap.on .so-sheet { transform:none; transition:none; }
+  #soToast, #soToast.on { transform:translate(-50%, 0); transition:opacity .3s ease; }
+  .so-menu, .so-line { animation:none; }
+}

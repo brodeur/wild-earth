@@ -2,13 +2,13 @@
 /* The home screen (src/title.js, TitleScreen; docs/multiplayer.md lane 1, redesigned 2026-11-04): its own stylesheet.
    The screen fills #opening over the page's canvas, where the shared renderer draws the stars, the earth and its map;
    so the root is transparent and only the words, the list, the labels, the card and the bar are DOM. Phases on .tt-wrap:
-   phase-title (WILD EARTH over the stars while the page loads), phase-crescent (the earth rising), phase-gate (the
+   phase-title (WILD EARTH over the stars while the page loads), phase-crescent (the title and the earth landing), phase-gate (the
    sign-in on the right, where the social panel will be), phase-lit (the map, the dots, the list on the left; .listed
    once it is to come in), .chosen (a place chosen: the card and the bar), .zooming and .leaving (Start, to black before
    the world's first frame). The body text is DM Sans; the title Syncopate, wide and geometric. */
 #opening.we-title { background:transparent; }
 .tt-wrap { position:absolute; inset:0; overflow:hidden; color:#d3ddd5; font-family:'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  user-select:none; -webkit-user-select:none; touch-action:none; cursor:default; --side:max(20px, 2.4vw); --listw:min(330px, 30vw); }
+  user-select:none; -webkit-user-select:none; touch-action:none; cursor:default; --side:24px; --listw:min(300px, 28vw); }
 .tt-wrap.phase-lit { cursor:grab; }
 .tt-wrap.phase-lit.overdot { cursor:pointer; }
 .tt-wrap.dragging { cursor:grabbing !important; }
@@ -18,62 +18,58 @@
    loading's line under it (.on, title.js frame); when the earth is ready it rises and shrinks to its place at the top
    centre (.risen, title.js rise; --tt-top and --tt-s), where it stays while the place is chosen, and goes with the
    screen at Start. Under reduced motion it fades out in the middle and in at its place. */
-.tt-title { position:absolute; inset:0; z-index:2; pointer-events:none; transition:opacity .6s ease; --tt-fs:clamp(26px, 5vw, 68px); --tt-top:40px; --tt-s:.42; }
+.tt-title { position:absolute; inset:0; z-index:2; pointer-events:none; transition:opacity .6s ease; --tt-fs:clamp(26px, 5vw, 68px); --tt-top:36px; --tt-s:.22; }
 .tt-title h1 { position:absolute; left:50%; top:50%; margin:0; transform:translate(-50%, -50%); opacity:0; transition:opacity 1.4s ease;
   font-family:'Syncopate', 'Michroma', 'Avenir Next', 'Futura', sans-serif; font-weight:400; text-transform:uppercase;
   font-size:var(--tt-fs); letter-spacing:.45em; text-indent:.45em; line-height:1; color:#f3f6f1; text-shadow:0 0 24px #ffffff22; white-space:nowrap; }
 .tt-title.on h1 { opacity:1; }
-.tt-title.risen h1 { top:var(--tt-top); transform:translate(-50%, -50%) scale(var(--tt-s)); text-shadow:0 0 18px #ffffff1a, 0 1px 6px #000c;
-  transition:opacity 1.4s ease, top 1.4s cubic-bezier(.65, 0, .25, 1), transform 1.4s cubic-bezier(.65, 0, .25, 1), text-shadow 1.4s ease; }
+.tt-title.risen h1 { top:var(--tt-top); transform:translate(-50%, -50%) scale(var(--tt-s)); color:#f3f6f1cc; text-shadow:0 0 18px #ffffff1a, 0 1px 6px #000c;
+  transition:opacity 1.4s ease, color 2s ease, text-shadow 2s ease; }   /* title.js land moves it (inline top and scale, with the earth) */
 .tt-load { position:absolute; left:0; right:0; top:calc(50% + var(--tt-fs) / 2 + 22px); margin:0; text-align:center; font-size:12.5px; letter-spacing:.1em; color:#8fa094; min-height:1.4em;
   opacity:0; transition:opacity 1s ease .4s; }
 .tt-title.on .tt-load { opacity:1; }
 .tt-title.risen .tt-load { opacity:0; transition:opacity .4s ease; }
 .tt-wrap.zooming .tt-title, .tt-wrap.leaving .tt-title { opacity:0; }
-@media (prefers-reduced-motion: reduce) {
-  .tt-title.risen h1 { transition:none; animation:tt-refade 1s ease both; }
-}
-@keyframes tt-refade {
-  0%, 42% { opacity:1; top:50%; transform:translate(-50%, -50%); }
-  44% { opacity:0; top:50%; transform:translate(-50%, -50%); }
-  56% { opacity:0; top:var(--tt-top); transform:translate(-50%, -50%) scale(var(--tt-s)); }
-  100% { opacity:1; top:var(--tt-top); transform:translate(-50%, -50%) scale(var(--tt-s)); }
-}
-
-/* The side panels (title.js panelsIn: html.tt-panels once the title has landed) fade and slide in from their sides: the
-   sign-in and Explore from the right (.tt-gate), the places from the left (.tt-places, .listed), and the social column
-   and the chat (social.css, made on sign-in or kept from the world by Exit) from the right; until then they are not
-   shown. Under reduced motion they only fade. */
-html.opening:not(.tt-panels) #social, html.opening:not(.tt-panels) #chat { opacity:0; visibility:hidden; pointer-events:none; }
-html.opening.tt-panels #social, html.opening.tt-panels #chat { animation:tt-from-right .9s cubic-bezier(.2, .8, .25, 1) backwards; }
-html.opening.tt-panels #chat { animation-delay:.15s; }
+/* The side panels come in once the title and the earth have landed (title.js land), each from its own side, all with
+   the same slide (56 px, .9 s, one easing) and nothing moving after: the sign-in and Explore from the right (.tt-gate,
+   html.tt-panels); signed in, the places from the left (.tt-places, .listed) and the social column from the right
+   (social.css, made on sign-in or kept from the world by Exit; html.tt-side), on the same frame (title.js sideIn). The
+   earth does not move for them: it is centred in the space they leave from the start (title.js freeArea). Until then
+   they are not shown. Under reduced motion they only fade. */
+html.opening:not(.tt-side) #social { opacity:0; visibility:hidden; pointer-events:none; }
+html.opening.tt-side .so-card, html.opening.tt-side .so-aside, html.opening.tt-side .so-bar { animation:tt-from-right .9s cubic-bezier(.2, .8, .25, 1) backwards; }
 @keyframes tt-from-right { from { opacity:0; transform:translateX(56px); } }
 @keyframes tt-fade-in { from { opacity:0; } }
-.tt-gate .ac-modal { transform:translateX(56px); transition:opacity .8s ease, transform .9s cubic-bezier(.2, .8, .25, 1); }
+.tt-gate .ac-modal { transform:translateX(56px); transition:opacity .9s cubic-bezier(.2, .8, .25, 1), transform .9s cubic-bezier(.2, .8, .25, 1); }
 .tt-gate .ac-modal.done { transform:translateX(24px); }
 @media (prefers-reduced-motion: reduce) {
-  html.opening.tt-panels #social, html.opening.tt-panels #chat { animation-name:tt-fade-in; }
+  html.opening.tt-side .so-card, html.opening.tt-side .so-aside, html.opening.tt-side .so-bar { animation-name:tt-fade-in; }
   .tt-gate .ac-modal, .tt-gate .ac-modal.done, .tt-explore, .tt-places { transform:none !important; }
 }
 
 /* the gate: the sign-in modal (account.js) on the right, where the social panel stands once signed in; Explore with no hub */
-.tt-gate { position:absolute; right:var(--side); top:50%; transform:translateY(-50%); display:flex; flex-direction:column; align-items:flex-end; gap:12px; }
+.tt-gate { position:absolute; right:24px; width:min(380px, calc(100vw - 48px)); top:50%; transform:translateY(-50%); display:flex; flex-direction:column; align-items:flex-end; gap:12px; }
 .tt-explore { padding:11px 30px; border:1px solid #d3ddd5a8; border-radius:999px; background:#0b0f0d99; color:#f3f6f1; font:500 14px/1 'DM Sans', system-ui, sans-serif;
   letter-spacing:.14em; text-transform:uppercase; cursor:pointer; opacity:0; transform:translateX(56px);
-  transition:opacity .8s ease, transform .9s cubic-bezier(.2, .8, .25, 1), background .25s ease, border-color .25s ease; backdrop-filter:blur(4px); }
+  transition:opacity .9s cubic-bezier(.2, .8, .25, 1), transform .9s cubic-bezier(.2, .8, .25, 1), background .25s ease, border-color .25s ease; backdrop-filter:blur(4px); }
 .tt-explore.on { opacity:1; transform:none; }
 .tt-explore:hover, .tt-explore:focus-visible { background:#1a241ecc; border-color:#f3f6f1; outline:none; }
 .tt-gate-note { margin:0; font-size:12px; color:#8fa094; letter-spacing:.04em; }
 .tt-wrap.phase-lit .tt-gate { opacity:0; pointer-events:none; transition:opacity .5s ease; }
 
 /* the names on the map: a label beside each place's dot (the busiest first, none over another), and the hovered name */
-.tt-labels { position:absolute; inset:0; pointer-events:none; }
-.tt-label { position:absolute; left:0; top:0; margin:-11px 0 0 10px; padding:2px 8px; height:22px; box-sizing:border-box; border:0; border-radius:999px; background:#0b0f0db8;
-  color:#f3f6f1; font:500 12.5px/18px 'DM Sans', system-ui, sans-serif; white-space:nowrap; cursor:pointer; pointer-events:auto; opacity:0; visibility:hidden;
+.tt-labels { position:absolute; inset:0; pointer-events:none; transition:opacity .9s ease; }
+.tt-wrap:not(.listed) .tt-labels { opacity:0; }
+.tt-label { position:absolute; left:0; top:0; display:flex; align-items:center; gap:6px; margin:-13px 0 0 10px; padding:4px 10px; height:26px; box-sizing:border-box; border:0; border-radius:8px; background:#0b0f0dcc;
+  color:#f3f6f1; font:400 13px/18px 'DM Sans', system-ui, sans-serif; white-space:nowrap; cursor:pointer; pointer-events:auto; opacity:0; visibility:hidden;
   transition:opacity .3s ease, background .2s ease, visibility 0s .3s; box-shadow:0 1px 6px #0007; }
 .tt-label.on { opacity:1; visibility:visible; transition:opacity .3s ease, background .2s ease; }
 .tt-label:hover, .tt-label.hot { background:#1f2a23f0; }
 .tt-label.sel { background:#f3f6f1; color:#0b0f0d; }
+.tt-faces { display:flex; align-items:center; flex:none; }
+.tt-faces:empty { display:none; }
+.tt-label .tt-faces .so-avatar { margin-left:-2px; box-shadow:0 0 0 1.5px #0b0f0d; }
+.tt-label.sel .tt-faces .so-avatar { box-shadow:0 0 0 1.5px #f3f6f1; }
 .tt-wrap:not(.listed) .tt-label, .tt-wrap.dragging .tt-label { pointer-events:none; }
 .tt-dotname { position:absolute; left:0; top:0; pointer-events:none; padding:0 0 0 14px; font-size:13.5px; color:#f3f6f1; text-shadow:0 1px 3px #000c, 0 0 8px #0008; white-space:nowrap; margin-top:-.7em; }
 .tt-dotname[hidden] { display:none; }
@@ -84,41 +80,44 @@ html.opening.tt-panels #chat { animation-delay:.15s; }
 .tt-pin[hidden] { display:none; }
 
 /* the places, on the left: the search box, the heading with the sort's mode, the rows */
-.tt-places { position:absolute; left:var(--side); top:18px; bottom:118px; width:var(--listw); display:flex; flex-direction:column; gap:8px;
-  opacity:0; transform:translateX(-56px); transition:opacity .9s ease, transform 1s cubic-bezier(.2, .8, .25, 1); pointer-events:none; cursor:default; }
+.tt-places { position:absolute; left:var(--side); top:24px; bottom:92px; width:var(--listw); display:flex; flex-direction:column; gap:14px;
+  opacity:0; transform:translateX(-56px); transition:opacity .9s cubic-bezier(.2, .8, .25, 1), transform .9s cubic-bezier(.2, .8, .25, 1); pointer-events:none; cursor:default; }
 .tt-wrap.listed .tt-places { opacity:1; transform:none; pointer-events:auto; }
 .tt-wrap.leaving .tt-places, .tt-wrap.zooming .tt-places { opacity:0; pointer-events:none; }
 .tt-search { position:relative; display:flex; align-items:center; flex:none; }
-.tt-search svg { position:absolute; left:13px; z-index:1; width:16px; height:16px; color:#8fa094; pointer-events:none; }
-.tt-search input { width:100%; box-sizing:border-box; padding:10px 34px 10px 36px; border:1px solid #d3ddd52e; border-radius:999px; background:#0b0f0dcc; color:#f3f6f1;
-  font:inherit; font-size:14px; outline:none; backdrop-filter:blur(6px); transition:border-color .2s ease, background .2s ease; user-select:text; -webkit-user-select:text; }
+.tt-search svg { position:absolute; left:16px; z-index:1; width:16px; height:16px; color:#8fa094; pointer-events:none; }
+.tt-search input { width:100%; height:46px; box-sizing:border-box; padding:0 36px 0 42px; border:1px solid #d3ddd52e; border-radius:999px; background:#0b0f0dcc; color:#f3f6f1;
+  font:inherit; font-size:15px; outline:none; backdrop-filter:blur(6px); transition:border-color .2s ease, background .2s ease; user-select:text; -webkit-user-select:text; }
 .tt-search input::placeholder { color:#7d8d82; }
 .tt-search input:focus { border-color:#d3ddd5a0; background:#0b0f0df0; }
 .tt-search input::-webkit-search-cancel-button { display:none; }
 .tt-sclear { position:absolute; right:8px; width:22px; height:22px; padding:0; border:0; border-radius:50%; background:#ffffff14; color:#d3ddd5; font:16px/22px 'DM Sans', sans-serif; cursor:pointer; }
 .tt-sclear:hover { background:#ffffff2a; }
 .tt-sclear[hidden] { display:none; }
-.tt-head { display:flex; align-items:baseline; justify-content:space-between; gap:8px; padding:6px 14px 0; flex:none; }
+.tt-head { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:6px 4px 0; flex:none; }
 .tt-head[hidden] { display:none; }
-.tt-mode { margin:0; font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#b7c4ba; }
-.tt-mode span { color:#e8dcc0; font-weight:500; letter-spacing:.08em; }
-.tt-modebtn { padding:2px 9px; border:1px solid #d3ddd52e; border-radius:999px; background:transparent; color:#8fa094; font:500 11px/1.4 'DM Sans', sans-serif; cursor:pointer; }
-.tt-modebtn:hover { color:#f3f6f1; border-color:#d3ddd5a0; }
-.tt-rows, .tt-found { display:flex; flex-direction:column; gap:3px; overflow-y:auto; scrollbar-width:none; min-height:0; padding:2px; }
+.tt-mode { margin:0; font-size:12px; font-weight:400; letter-spacing:.16em; text-transform:uppercase; color:#b7c4ba; }
+.tt-modebtn { padding:2px 0; border:0; background:transparent; color:#8fa094; font:400 12px/1.4 'DM Sans', sans-serif; cursor:pointer; border-bottom:1px solid transparent; }
+.tt-modebtn:hover, .tt-modebtn:focus-visible { color:#f3f6f1; border-bottom-color:#d3ddd566; outline:none; }
+.tt-rows, .tt-found { display:flex; flex-direction:column; gap:8px; overflow-y:auto; scrollbar-width:none; min-height:0; padding:2px; }
 .tt-rows::-webkit-scrollbar, .tt-found::-webkit-scrollbar { display:none; }
 .tt-rows[hidden], .tt-found[hidden] { display:none; }
-.tt-row, .tt-frow { position:relative; display:block; flex:none; padding:9px 14px; border-radius:10px; cursor:pointer; outline:none; background:#0b0f0d73; backdrop-filter:blur(4px);
+.tt-row, .tt-frow { position:relative; display:block; flex:none; padding:14px 16px; border-radius:12px; border:1px solid #d3ddd514; cursor:pointer; outline:none; background:#0b0f0d99; backdrop-filter:blur(4px);
   transition:transform .55s cubic-bezier(.2, .8, .25, 1), background .25s ease, box-shadow .25s ease, opacity .5s ease; }
 .tt-row.in { animation:tt-in .5s ease both; }
 @keyframes tt-in { from { opacity:0; transform:translateX(-16px); } to { opacity:1; transform:none; } }
-.tt-row:hover, .tt-row.hot, .tt-frow:hover { background:#1a241ed9; }
+.tt-row:hover, .tt-row.hot, .tt-frow:hover { background:#141b17d9; }
 .tt-row:focus-visible, .tt-frow:focus-visible { box-shadow:0 0 0 1px #f3f6f1 inset; }
 .tt-row.sel { background:#24302ae6; box-shadow:0 0 0 1px #ffffff55 inset; }
-.tt-rname { display:block; font-size:16px; font-weight:400; line-height:1.2; color:#f3f6f1; }
-.tt-rregion { display:block; font-size:12px; line-height:1.35; color:#d3ddd5a8; margin-top:1px; }
+.tt-rname { display:block; font-size:17px; font-weight:400; line-height:1.25; color:#f3f6f1; }
+.tt-rregion { display:block; font-size:12.5px; line-height:1.4; color:#8fa094; margin-top:3px; }
 .tt-rregion:empty { display:none; }
-.tt-rcount { display:block; font-size:12px; line-height:1.3; color:#e8dcc0d8; margin-top:4px; letter-spacing:.02em; }
-.tt-fhead { margin:8px 14px 2px; font-size:10.5px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#8fa094; }
+.tt-rcount { display:flex; align-items:center; gap:6px; font-size:12.5px; line-height:1.3; color:#8fa094; margin-top:7px; }
+.tt-rcount.friends { color:#f3f6f1; }
+.tt-rcount .tt-faces { margin-right:3px; }
+.tt-rcount .tt-faces .so-avatar { margin-right:-9px; box-shadow:0 0 0 2px #0b0f0d; }
+.tt-rcount .tt-faces .so-avatar:last-child { margin-right:0; }
+.tt-fhead { margin:8px 4px 2px; font-size:10.5px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#8fa094; }
 .tt-fhead:first-child { margin-top:2px; }
 .tt-frow.wild .tt-rname::before { content:''; display:inline-block; width:7px; height:7px; margin:0 8px 1px 0; border-radius:50%; background:#ffd9a8; box-shadow:0 0 6px #ffd9a8; }
 .tt-fnote, .tt-empty { margin:4px 14px; font-size:12.5px; color:#8fa094; }
@@ -159,7 +158,7 @@ html.opening.tt-panels #chat { animation-delay:.15s; }
 .pc-others { margin:4px 2px 0; font-size:12px; color:#8fa094; }
 
 /* the bar at the bottom: Invite and Start over the loading line, with the build's step and how far */
-.tt-bar { position:absolute; left:0; right:0; bottom:0; display:flex; flex-direction:column; align-items:center; gap:8px; padding-bottom:0; pointer-events:none;
+.tt-bar { position:absolute; left:0; right:0; bottom:0; display:flex; flex-direction:column; align-items:center; gap:8px; padding:0 var(--we-fr, 0px) 0 var(--we-fl, 0px); pointer-events:none;
   opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s cubic-bezier(.2, .8, .25, 1); }
 .tt-bar.on { opacity:1; transform:none; }
 .tt-bar.on .tt-acts { pointer-events:auto; }
@@ -176,17 +175,17 @@ html.opening.tt-panels #chat { animation-delay:.15s; }
 @keyframes tt-grow { from { transform:scale(.88); } }
 .tt-bline { display:flex; gap:10px; align-items:baseline; font-size:12px; color:#b7c4ba; letter-spacing:.03em; min-height:1.3em; text-shadow:0 1px 3px #000c; }
 .tt-bpct { color:#e8dcc0; font-variant-numeric:tabular-nums; }
-.tt-progress { align-self:stretch; height:4px; background:#ffffff14; overflow:hidden; }
+.tt-progress { align-self:stretch; margin:0 calc(-1 * var(--we-fr, 0px)) 0 calc(-1 * var(--we-fl, 0px)); height:4px; background:#ffffff14; overflow:hidden; }
 .tt-progress i { display:block; height:100%; background:linear-gradient(90deg, #a9d8a4, #ffe2b0); transform-origin:0 50%; transform:scaleX(0); }
 .tt-bar.ready .tt-progress i { background:#ffe2b0; box-shadow:0 0 10px #ffe2b0; }
 
 /* the map's credits, small, bottom left over the bar */
-.tt-attrib { position:absolute; left:var(--side); bottom:12px; margin:0; font-size:10.5px; color:#8fa094b0; letter-spacing:.02em; opacity:0; transition:opacity 1s ease; pointer-events:none; }
+.tt-attrib { position:absolute; left:var(--side); bottom:14px; max-width:var(--listw); margin:0; font-size:10.5px; color:#8fa094b0; letter-spacing:.02em; opacity:0; transition:opacity 1s ease; pointer-events:none; }
 .tt-attrib a { color:inherit; text-decoration:none; border-bottom:1px solid #8fa09444; }
 .tt-attrib a:hover { color:#d3ddd5; }
 .tt-wrap.listed .tt-attrib { opacity:1; pointer-events:auto; }
 /* the Layers menu (title.js): above the attribution, under the places list; its list opens upward */
-.tt-layers { position:absolute; left:var(--side); bottom:40px; z-index:3; opacity:0; pointer-events:none; transition:opacity 1s ease; font-size:12px; }
+.tt-layers { position:absolute; left:var(--side); bottom:48px; z-index:3; opacity:0; pointer-events:none; transition:opacity 1s ease; font-size:12px; }
 .tt-wrap.listed .tt-layers { opacity:1; pointer-events:auto; }
 .tt-wrap.leaving .tt-layers { opacity:0; pointer-events:none; }
 .tt-layersbtn { font:inherit; color:#d3ddd5; background:#0f1512cc; border:1px solid #2a352e; border-radius:7px; padding:5px 11px; cursor:pointer; backdrop-filter:blur(4px); }
@@ -205,8 +204,18 @@ html.opening.tt-panels #chat { animation-delay:.15s; }
   .tt-wrap { --listw:min(260px, 46vw); --side:12px; }
   /* the title keeps a row of its own at the top: the places and the social column start under it */
   .tt-title { --tt-top:22px; }
-  .tt-places { top:42px; }
-  :root.opening #social { top:42px; }
-  .tt-rname { font-size:15px; }
+  .tt-places { top:42px; bottom:96px; gap:10px; }
+  .tt-search input { height:40px; padding:0 30px 0 36px; font-size:14px; }
+  .tt-search svg { left:13px; }
+  .tt-mode { letter-spacing:.1em; font-size:11px; white-space:nowrap; }
+  .tt-modebtn { font-size:11px; }
+  .tt-rows { gap:6px; }
+  .tt-row { padding:9px 12px; border-radius:10px; }
+  .tt-rregion { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:12px; }
+  .tt-rcount { margin-top:5px; font-size:12px; }
+  .tt-attrib { max-width:calc(100vw - 24px); bottom:10px; font-size:10px; }
+  .tt-layers { bottom:34px; }
+  .tt-gate { right:12px; width:calc(100vw - 24px); }
+  .tt-rname { font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .tt-acts button { min-width:100px; padding:11px 16px; }
 }
