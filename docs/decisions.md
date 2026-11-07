@@ -7322,8 +7322,14 @@ snake inside the walkers' control. docs/movement.md "The snake" and docs/games.m
 - **The snakes' prey by rule in the games step.** The rule is gape-limited by family over the tile's amphibians,
   rodents, shrews and lizards. Lamar's, Teton's and Corcovado's `games.json` were re-run in place, which also gave
   them the desirability.
-- **Corcovado's terciopelo is a stand-in.** It had been skipped over the 40-slot cap and has no model, and a model
-  needs Meshy credits. Its slot is added by hand, drawn with the garter snake's model at its mass, with family
-  Viperidae. Its rule species (the fence lizard's sites) finds no cells under the rain forest's canopy, so none spawn
-  on their own: the tests summoned one. This sits in its own commit so it can be dropped, or replaced by a pipeline
-  rule that keeps a playable snake above the cap and a model of its own.
+- **A tile keeps a slot for each class of body the caps would leave out** (`pipeline/fauna_slots.py RESERVE_MAX`, the
+  `animals` step version 6). Corcovado's terciopelo had been skipped over the cap. On the brief's direction the fix is a
+  rule rather than a hand-added slot: above both caps (40 mammals and birds, 6 reptiles and amphibians), each class of
+  body that has a model or a buildable template and no slot yet gets one, the first by the caps' own ranking, up to 2.
+  The classes are a snake, a sprawling lizard or crocodilian, a tortoise, each bird template, a quadruped, or a
+  species' own model's kind (`body_class`). The client's limit, `animals.js STAND_IN_MAX`, is 48 = 40 + 6 + 2.
+  Re-running the step on Corcovado brought the terciopelo in under the existing reptile cap: the tile's file predated
+  that cap. The rule's own test is `tests/test_pipeline.py TestFaunaReserve`, the only snake behind six lizards and
+  frogs. The re-run also gave the reptiles their amniote-database masses: the terciopelo is 1.04 kg, not the 0.5 kg
+  class default. The hand-added stand-in slot was reverted. The scaled garter snake served only for local tests of the
+  strike and the venom.

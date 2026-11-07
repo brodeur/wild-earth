@@ -224,8 +224,9 @@ diet have no bodies here. `relations.snake_prey_basis` records the rule.
 - **Lamar** (`utm12n_557_4964`): the garter snake takes the tiger salamander, the western toad, the Columbia spotted
   frog, the montane and meadow voles, the western jumping mouse and the yellow-pine chipmunk.
 - **Teton** (`utm12n_514_4838`): the western toad, the spotted frog, the deer mouse and two chipmunks.
-- **Corcovado** (`utm17n_210_932`): the terciopelo takes the red-tailed squirrel. Corcovado's `games.json` gained the
-  desirability with this run; Lamar's and Teton's gained it too, since their `games.json` predates that step.
+- **Corcovado** (`utm17n_210_932`): the terciopelo (1.04 kg, a viper's gape) takes the common basilisk, Savage's thin-toed
+  frog and the red-tailed squirrel. Lamar's, Teton's and Corcovado's `games.json` gained the desirability with this
+  run, since they predated that step.
 
 The client reads these rows as any others (`animals.js buildHunts`: the strike, the sniff's wave, desirability). The
 small ones are now killable: the yellow-pine chipmunk, the shrew, the salamanders, the toad and the frog
@@ -237,10 +238,8 @@ bite's share over 8 s after the strike (`animals.js venomTick`, on the host; eve
 prey runs off with it. A kill by the venom, wherever the prey has run, is the striker's catch (`combat.js` takes the
 `kill` event marked `venom`). A garter snake's bite has no venom.
 
-**Open.** The trait cards carry no diet for the snakes, so the rule stands in for one. Corcovado has almost nothing a
-0.5 kg terciopelo can swallow that the client can kill: its only rodent under the gape is a tree squirrel, and tree
-squirrels are not killable. The trait card's 0.5 kg is light for *Bothrops asper*, whose adults weigh 1 to 6 kg. Its
-rodents, frogs and lizards were cut by the 40-slot cap.
+**Open.** The trait cards carry no diet for the snakes, so the rule stands in for one. Tree squirrels are not killable
+yet, so the terciopelo's squirrel row waits on that. Corcovado's small rodents were cut by the slot caps.
 
 ## Next
 

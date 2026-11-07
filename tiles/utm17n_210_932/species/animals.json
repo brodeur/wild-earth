@@ -1,6 +1,6 @@
 {
  "tile": "utm17n_210_932",
- "at": "2026-11-06T11:29:52Z",
+ "at": "2026-11-07T04:40:19Z",
  "target": 22,
  "listed": 88,
  "by_kind": {
@@ -52,7 +52,13 @@
   "pelecanus_occidentalis",
   "sarcoramphus_papa"
  ],
- "generated_traits": [],
+ "generated_traits": [
+  "anolis_polylepis",
+  "basiliscus_basiliscus",
+  "caiman_crocodilus",
+  "ctenosaura_similis",
+  "bothrops_asper"
+ ],
  "queue": [
   {
    "id": "crax_rubra",
@@ -1166,9 +1172,9 @@
    "why": [
     "most recorded: 3 of its class (10% of the class's records)"
    ],
-   "body_plan": "quadruped",
-   "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
-   "estimate_credits": 30,
+   "body_plan": "reptile",
+   "rig": "reptile part rig template",
+   "estimate_credits": 25,
    "stand_in": null,
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
@@ -1293,7 +1299,7 @@
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   }
  ],
- "queued_credits": 2360,
+ "queued_credits": 2355,
  "animals": [
   {
    "gbif_key": 2482168,
@@ -3289,7 +3295,8 @@
    "why": [
     "most recorded: 1 of its class (21% of the class's records)"
    ],
-   "listed": true
+   "listed": true,
+   "traits": "library/animals/traits/anolis_polylepis.json"
   },
   {
    "gbif_key": 5221813,
@@ -3313,7 +3320,8 @@
    "why": [
     "most recorded: 2 of its class (14% of the class's records)"
    ],
-   "listed": true
+   "listed": true,
+   "traits": "library/animals/traits/basiliscus_basiliscus.json"
   },
   {
    "gbif_key": 8953936,
@@ -3337,7 +3345,8 @@
    "why": [
     "most recorded: 3 of its class (10% of the class's records)"
    ],
-   "listed": true
+   "listed": true,
+   "traits": "library/animals/traits/caiman_crocodilus.json"
   },
   {
    "gbif_key": 2459603,
@@ -3361,7 +3370,8 @@
    "why": [
     "most recorded: 4 of its class (8% of the class's records)"
    ],
-   "listed": true
+   "listed": true,
+   "traits": "library/animals/traits/ctenosaura_similis.json"
   },
   {
    "gbif_key": 5220796,
@@ -3385,7 +3395,8 @@
    "why": [
     "most recorded: 5 of its class (6% of the class's records)"
    ],
-   "listed": true
+   "listed": true,
+   "traits": "library/animals/traits/bothrops_asper.json"
   },
   {
    "gbif_key": 5217534,

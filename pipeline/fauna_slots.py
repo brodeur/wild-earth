@@ -27,6 +27,12 @@ MAX_SLOTS = 40
 # the reptiles and amphibians come after the mammals and birds and found the 40 taken (the Serengeti's crocodile, 151
 # records, behind its fortieth bird): up to MAX_OTHER more slots are theirs, after the cap (animals.js STAND_IN_MAX 48)
 MAX_OTHER = 6
+# The classes of body the caps would leave out (2026-11-06, the snake lane: Corcovado's only snake, the terciopelo, was
+# behind six lizards and frogs, so no snake could be played there): above both caps a tile keeps one slot more for each
+# class of body that has a model or a buildable template and no slot yet (body_class: a snake, a sprawling lizard or
+# crocodilian, a tortoise, each bird template, a quadruped; a species with a model of its own counts by its model's kind),
+# the first of each by the caps' own ranking, up to RESERVE_MAX (animals.js STAND_IN_MAX 48 = 40 + 6 + 2).
+RESERVE_MAX = 2
 TRAITS = REPO_ROOT / "library" / "animals" / "traits"
 ANIMALS_JS = REPO_ROOT / "client" / "src" / "animals.js"
 
@@ -98,6 +104,25 @@ def reptile_way(archetype: str) -> str:
 
 
 from .fauna_models import model_for   # noqa: E402
+
+
+def body_class(code: str, archetype: str | None, reptile, bird, t: dict | None = None) -> str | None:
+    """The class of body a slot is drawn with when it has a model of its own or a template to build one (RESERVE_MAX):
+    'snake', 'reptile:sprawl' or 'reptile:tortoise' (pipeline/fauna_models.py REPTILE_BUILD), 'bird:<build>' (BIRD_BUILD),
+    'quadruped' (a mammal on four legs); a species whose model the library has, by its model's kind; else None."""
+    from .fauna_models import REPTILE_BUILD, BIRD_BUILD
+    mdl = model_for(code)
+    if archetype == "snake":
+        return "snake"
+    if reptile and archetype in REPTILE_BUILD:
+        return f"reptile:{REPTILE_BUILD[archetype]}"
+    if bird and archetype in BIRD_BUILD:
+        return f"bird:{BIRD_BUILD[archetype]}"
+    t = t if t is not None else _traits(code)
+    plan = (t.get("body_plan") or (t.get("locomotion") or {}).get("body_plan") or "").lower()
+    if not bird and not reptile and plan == "quadruped":
+        return "quadruped"
+    return f"model:{mdl.get('kind')}" if mdl else None
 
 
 def static_codes() -> list[str]:
@@ -408,22 +433,7 @@ def fauna_slots(tile: Tile) -> dict:
         sorted((a for a in rest_ if a.get("kind") not in ("mammal", "bird")), key=lambda a: -visible(a))
     eco = tile.path("vegetation/ecosystem.json")
     efg = (json.loads(eco.read_text()).get("groups") or [{}])[0].get("code") if eco.exists() else None
-    slots, skipped = [], []
-    n_main = n_other = 0
-    for a in order:
-        other = a.get("kind") not in ("mammal", "bird")
-        if (n_other >= MAX_OTHER) if other else (n_main >= MAX_SLOTS):
-            skipped.append({"id": a["id"], "why": f"over the {MAX_OTHER if other else MAX_SLOTS}-slot cap"})
-            continue
-        t = _traits(a["id"])
-        kin, archetype, known = kin_for(a, t)
-        if not kin:
-            skipped.append({"id": a["id"], "why": archetype})
-            continue
-        if other:
-            n_other += 1
-        else:
-            n_main += 1
+    def make(a, t, kin, archetype, known):
         m = float(a.get("mass_kg") or t.get("mass_kg") or KIN_MASS[kin])
         # (to 20: a Nile crocodile is 18 fence lizards long; the client clamps at 20 too)
         scale = round(min(max((m / KIN_MASS[kin]) ** (1 / 3), 0.25), 20.0), 3)
@@ -461,6 +471,36 @@ def fauna_slots(tile: Tile) -> dict:
             slots[-1]["model"] = mdl
         slots[-1]["density_km2"] = density_km2({**a, "mass_kg": m}, kin, archetype, efg)
         slots[-1].update(behaviour(a, t, m, archetype))   # its own day, rest, group and (measured) density
+        return slots[-1]
+
+    slots, skipped, capped = [], [], []
+    n_main = n_other = 0
+    for a in order:
+        other = a.get("kind") not in ("mammal", "bird")
+        if (n_other >= MAX_OTHER) if other else (n_main >= MAX_SLOTS):
+            capped.append((a, other))
+            continue
+        t = _traits(a["id"])
+        kin, archetype, known = kin_for(a, t)
+        if not kin:
+            skipped.append({"id": a["id"], "why": archetype})
+            continue
+        if other:
+            n_other += 1
+        else:
+            n_main += 1
+        make(a, t, kin, archetype, known)
+    # the classes of body the caps left out (RESERVE_MAX above them): the first of each, by the same ranking
+    covered = {body_class(s["code"], s.get("archetype"), s.get("reptile"), s.get("bird")) for s in slots} - {None}
+    for a, other in capped:
+        t = _traits(a["id"])
+        kin, archetype, known = kin_for(a, t)
+        cls = body_class(a["id"], archetype, (a.get("taxonomy") or {}).get("class") in REPTILE_CLASSES, a.get("kind") == "bird", t) if kin else None
+        if cls and cls not in covered and sum(1 for s in slots if s.get("reserved")) < RESERVE_MAX:
+            covered.add(cls)
+            make(a, t, kin, archetype, known)["reserved"] = f"the first {cls} over the cap (RESERVE_MAX)"
+            continue
+        skipped.append({"id": a["id"], "why": f"over the {MAX_OTHER if other else MAX_SLOTS}-slot cap"})
     out = {"format": 1, "gate": True, "allow": allow, "slots": slots, "skipped": skipped,
            "rules": "pipeline/fauna_slots.py: kin by taxonomy, diet and mass (a bird's by AVONET's lifestyle and flightlessness); scale = (mass / kin mass)^(1/3), 0.25-4; density "
                     "Damuth 1981 (herbivores; large ones times HERBIVORE_PRODUCTIVITY of the tile's ecosystem), 30 / mass kg "

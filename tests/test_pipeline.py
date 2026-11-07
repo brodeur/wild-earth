@@ -277,3 +277,38 @@ class TestSnakePrey(unittest.TestCase):
     def test_no_snake_no_pairs(self):
         from pipeline.games import snake_predation
         self.assertEqual(snake_predation([{"code": "microtus_montanus", "mass_kg": 0.0363}], [], {}), [])
+
+
+class TestFaunaReserve(unittest.TestCase):
+    """pipeline/fauna_slots.py RESERVE_MAX: a class of body with a template the caps left out keeps one slot (2026-11-06)."""
+    def test_the_only_snake_behind_six_lizards_and_frogs(self):
+        import tempfile
+        from pipeline import fauna_slots as fs
+
+        class FakeTile:
+            def __init__(self, d): self.d = pathlib.Path(d)
+            def path(self, rel): return self.d / rel
+
+        lizard = {"class": "Squamata", "order": None, "family": "Phrynosomatidae"}
+        frog = {"class": "Amphibia", "order": "Anura", "family": "Ranidae"}
+        animals = [{"id": f"test_lizard_{i}", "scientific": f"Test lizard {i}", "common": f"lizard {i}", "kind": "reptile",
+                    "records": 200 - i, "mass_kg": 0.02, "taxonomy": lizard} for i in range(4)]
+        animals += [{"id": f"test_frog_{i}", "scientific": f"Test frog {i}", "common": f"frog {i}", "kind": "amphibian",
+                     "records": 150 - i, "mass_kg": 0.02, "taxonomy": frog} for i in range(3)]
+        animals += [{"id": "test_viper", "scientific": "Test viper", "common": "viper", "kind": "reptile", "records": 20,
+                     "mass_kg": 0.5, "taxonomy": {"class": "Squamata", "order": None, "family": "Viperidae"}},
+                    {"id": "test_gecko", "scientific": "Test gecko", "common": "gecko", "kind": "reptile", "records": 10,
+                     "mass_kg": 0.01, "taxonomy": {"class": "Squamata", "order": None, "family": "Gekkonidae"}}]
+        with tempfile.TemporaryDirectory() as d:
+            (pathlib.Path(d) / "species").mkdir(); (pathlib.Path(d) / "client").mkdir()
+            (pathlib.Path(d) / "species" / "animals.json").write_text(json.dumps({"animals": animals}))
+            fs.fauna_slots(FakeTile(d))
+            out = json.loads((pathlib.Path(d) / "client" / "fauna.json").read_text())
+        codes = [s["code"] for s in out["slots"]]
+        self.assertEqual(len([c for c in codes if not c.startswith("test_viper")]), fs.MAX_OTHER)   # the cap as before
+        viper = next(s for s in out["slots"] if s["code"] == "test_viper")
+        self.assertEqual(viper["reptile"], "snake")
+        self.assertIn("snake", viper["reserved"])
+        # a second lizard (a class already in a slot) stays over the cap
+        self.assertNotIn("test_gecko", codes)
+        self.assertIn({"id": "test_gecko", "why": f"over the {fs.MAX_OTHER}-slot cap"}, out["skipped"])
