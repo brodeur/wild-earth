@@ -6774,3 +6774,12 @@ changes. The client asks for it first (15 s), and a host without the endpoint (a
 one as before, now 8 s each. Measured on the local server with the cache off: one request, 193 species from the
 library, none built-in, also under a throttled 4 Mbps / 150 ms network (title up at 12.9 s there).
 `tests/test_species_bundle.py` covers the bundle (every listed id, the files unchanged, gzip, plain, 304).
+
+## 2026-11-06: no pool of light under a grazer
+
+Aaron: "There is a faint glow below the player no matter what animal - lets remove that." It was forage.js's sward
+halo: when the grass just ahead of the body's nose was one of its foods, one soft additive disc lay on the ground
+there. Every grazer (the rabbits, the deer, the bison, the elk) stands in its food grass nearly all the time, so it
+read as a light under the body wherever it went. That halo is gone; the food herbs' and shrub impostors' glow, the
+pools under near 3D food shrubs and the sward's scent strand stay. Checked as a brush rabbit on the home tile in
+October: three food grasses, the forage glow on, no halo drawn.

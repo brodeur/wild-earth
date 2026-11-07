@@ -22,8 +22,8 @@ import { FH } from './shrubfield.js';
 // past its outline). The near 3D shrubs (vegetation.js's near set, treegen's materials: the tree lane's files, untouched) and
 // the sward where the grass itself is food (grass.js: thousands of clumps, the sward lane's file) take a halo from this
 // module's one instanced draw instead (HALO_CAP soft additive discs lying on the ground: a pool of light under each
-// 3D food shrub, 0.7 of its height across, and one under the body's nose when the leading grass of the sward there is
-// food; a billboard behind the crown was tried first and read as a yellow cutout over the shrub). Nothing glows for a body with no forage rows this
+// 3D food shrub, 0.7 of its height across; until 2026-11-06 also one under the body's nose when the leading grass of the
+// sward there was food, removed because it read as a glow under every grazer; a billboard behind the crown was tried first and read as a yellow cutout over the shrub). Nothing glows for a body with no forage rows this
 // season (the lion, the lizard: its insects are not plants) or for the spirit or a flier.
 //
 // 2. They can smell nearby plants. sources(x, z, reach, cb) hands scent.js (its `plants` provider) one source per food
@@ -147,8 +147,9 @@ export class Forage {
     this.haloT -= dt; if (this.haloT <= 0) { this.haloT = HALO_T; this.placeHalos(P); }
     this.ms += (performance.now() - t0 - this.ms) * 0.05;
   }
-  // the halos (the header): a pool of light on the ground under each near 3D food shrub within R, and on the sward
-  // under the nose where its grass is food
+  // the halos (the header): a pool of light on the ground under each near 3D food shrub within R. The pool on the sward
+  // under the nose where its grass is food is gone (Aaron, 2026-11-06: "There is a faint glow below the player no matter
+  // what animal - lets remove that"): every grazer stood in it all the time, so it read as a light under the body.
   placeHalos(P) {
     const pos = this.hPos, R = this.R, R2 = R * R; let n = 0;
     if (this.shrubIds.size) for (const q of this.veg.nearPlants || []) {
@@ -157,14 +158,6 @@ export class Forage {
       const dx = q.x - P.x, dz = q.z - P.z; if (dx * dx + dz * dz > R2) continue;
       const h = q.height || 1, o = n * 4;
       pos[o] = q.x; pos[o + 1] = q.y + 0.05; pos[o + 2] = q.z; pos[o + 3] = Math.max(0.6, h * 0.7); n++;
-    }
-    if (n < HALO_CAP && this.grassFood.size) {   // the sward under the nose
-      const G = this.ground, S = G?.on ? G.S : null, yaw = this.flight.yaw, ahead = S ? (S.half || 0) * (G.size || 1) : 0.15;
-      const nx = P.x - Math.sin(yaw) * ahead, nz = P.z - Math.cos(yaw) * ahead, g = this.grass.speciesAt(nx, -nz);
-      if (g && (this.grassFood.has(g.id) || g.ids.some(id => this.grassFood.has(id)))) {
-        const o = n * 4, size = Math.max(0.25, Math.min(2.2, 1.6 * Math.sqrt(S ? (S.shoulder || 0.3) * (G.size || 1) / 0.95 : 0.1)));
-        pos[o] = nx; pos[o + 1] = this.grass.ground(nx, -nz) + 0.04; pos[o + 2] = nz; pos[o + 3] = size; n++;
-      }
     }
     this.nHalo = n; this.halos.geometry.instanceCount = n; this.halos.visible = n > 0;
     if (n) { this.aPos.clearUpdateRanges(); this.aPos.addUpdateRange(0, n * 4); this.aPos.needsUpdate = true; }
