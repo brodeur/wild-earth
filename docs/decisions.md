@@ -7438,6 +7438,19 @@ glottal stop is itself drawn like a question mark without its dot, so at 12 px i
   at the Lamar eye pose (4 interleaved pairs, quiet GPU, 19.2 -> 21.4 ms; 150 leaves cost +5.5 ms and were cut). Open:
   steppe mottling busy at 1-3 m; the detail relief reads as cobbles up close; lamar_steppe's pale crazy-paving ground
   (present before this round).
+- **Lamar's river bank from the bed material, not the photo's dark river pixels; bare interspace half litter; calmer
+  near relief** (terrain.js bed, rocks.js bed stones). The bank's near-black slab was the aerial photo's river pixels
+  drawn on channel and bank cells at eye height. Within 60 m (fading by 90 m) the terrain now draws the bed from the
+  water data's bed material (silt, sand, gravel, cobble, boulder) on channel and wet-margin cells and on bank cells of
+  order ≥ 4 rivers (the bar's gravel at half weight over the bank's ground): stones sized by material in a sand or silt
+  fill, coloured like the rocks module's alluvium, lit from the sun's side, wet darkening 0.55 channel / 0.75 margin /
+  0.9 bank (stated), blended across 5 m cells with a ragged edge. Bed stones sink 35 % of their height (was 15 %) and are
+  darkened wet in the channel. lamar_steppe's pale crazy-paving was bare soil (Hobacker 10YR 5/2, 2.2 x the litter's
+  brightness) under the slope's full scan relief: a Munsell colour is a dry crushed sample, so bare interspace is now
+  half dry-soil colour, half fine litter. Scan relief on gap ground a quarter on covered ground, half on bare; its bump
+  on the light 40 % near the eye. ΔE from the air ≤ 0.003; cost: Lamar eye +0.3 ms (noise), river +0.7 ms. Open: the
+  bank's sand uniform between stones at 3-8 m; steppe ground paler than the grass slopes beyond; the far bank's bed is
+  the photo past 90 m; lamar_close's ground smooth.
 
 ## 2026-11-06: snakes are playable; the body follows the head's path (branch claude/snake-play)
 
