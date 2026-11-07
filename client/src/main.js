@@ -27,6 +27,7 @@ import { Quarry } from './quarry.js';
 import { Dive } from './dive.js';
 import { Combat } from './combat.js';
 import { Pilot } from './pilot.js';
+import { SniffWave } from './sniffWave.js';
 import { SoundCues } from './soundCues.js';
 import { OpeningScreen, Arrival, lastTile, rememberTile } from './arrival.js';
 import { TitleScreen } from './title.js';
@@ -211,7 +212,7 @@ async function disposeWorld(w, renderer) {
   m.carrion?.dispose?.();   // Scavenge: the carcasses' records, bones and halos (carrion.js; before the dig, whose socket it rides)
   m.dig?.dispose?.();   // the Dig game's tunnels, its socket and the terrain's cut discs (dig.js)
   if (m.animals) { m.animals.releaseFauna(); registerStandIns({}); }   // the tile's own fauna out of animals.js's module tables (installFauna) and its bodies (playable.js): the static cast as it was
-  m.water?.dispose?.(); m.shadows?.dispose?.(); m.terrain?.dispose?.(); m.litter?.dispose?.(); m.life?.dispose?.(); m.scent?.dispose?.(); m.forage?.dispose?.(); m.fruit?.dispose?.(); m.sight?.dispose?.(); m.quarry?.dispose?.(); m.dive?.dispose?.(); m.combat?.dispose?.(); m.pilot?.dispose?.(); m.cues?.dispose?.(); m.grass?.dispose?.(); m.forbs?.dispose?.(); m.emergents?.dispose?.(); m.veg?.dispose?.(); forgetQueuedCasters();
+  m.water?.dispose?.(); m.shadows?.dispose?.(); m.terrain?.dispose?.(); m.litter?.dispose?.(); m.life?.dispose?.(); m.scent?.dispose?.(); m.forage?.dispose?.(); m.fruit?.dispose?.(); m.sight?.dispose?.(); m.sniffWave?.dispose?.(); m.quarry?.dispose?.(); m.dive?.dispose?.(); m.combat?.dispose?.(); m.pilot?.dispose?.(); m.cues?.dispose?.(); m.grass?.dispose?.(); m.forbs?.dispose?.(); m.emergents?.dispose?.(); m.veg?.dispose?.(); forgetQueuedCasters();
   // then its listeners and the elements it put into the page; the HUD's own words back as the page had them
   w.record(w.observer.takeRecords());
   w.observer.disconnect();
@@ -678,6 +679,8 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   hunt.scent = scent;   // the hunt panel's "scented" state (hunt.js)
   const forage = w.m.forage = new Forage({ tile, needs, forbs, shrubs: grass.shrubs, veg, grass, scene, flight, ground, squirrel, season: seasonNow });   // a forager's food plants glow and give a scent (forage.js)
   scent.plants = forage;
+  // the sniff's shockwave: everything edible pulses as a ring runs out from the body, by how much this body wants it (sniffWave.js)
+  const sniffWave = w.m.sniffWave = new SniffWave({ tile, scene, camera, animals, forage, scent, flight, season: seasonNow });
   // the fruit on the plants near the body, glowing, for a body that eats it this season (fruit.js)
   const fruit = w.m.fruit = new Fruit({ tile, scene, flight, veg, shrubs: grass.shrubs, ground, season: seasonNow });
   // Scavenge (carrion.js, docs/game-scavenge.md): every kill's carcass decays over a day in stages drawn on the body, smells
@@ -689,7 +692,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const cues = w.m.cues = new SoundCues({ tile, animals, flight, camera, el: $('soundCues') });   // ring waves on the screen where a predator or prey is heard (soundCues.js)
   hunt.sight = sight;   // the hunt panel's "spotted" and "it sees you" (hunt.js)
   // a predator's selected prey (quarry.js: Tab or a click on one in sight, a ring under it) and a hunting bird's dive at it (dive.js)
-  const quarry = w.m.quarry = new Quarry({ animals, sight, camera, scene, dom: renderer.domElement });
+  const quarry = w.m.quarry = ground.quarry = new Quarry({ animals, sight, camera, scene, dom: renderer.domElement, forage, flight });   // (forage: a plant eater's plant targets)
   const dive = w.m.dive = quarry.dive = flier.dive = new Dive({ animals, flight, flier, sight, quarry, say: s => ground.say(s) });
   hunt.quarry = quarry; identify.claim = (x, y) => quarry.claim(x, y);
   nearBar.onPick = k => quarry.pickSpecies(k);   // a chip: the nearest of that species (and the spirit flies there)
@@ -786,7 +789,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const setFov = deg => { const v = Math.min(LENS_RANGE[1], Math.max(LENS_RANGE[0], +deg || LENS_DEFAULT)); camera.fov = v; camera.updateProjectionMatrix(); return v; };
   const setHour = h => { state.hour = +h; $('time').value = state.hour; return state.hour; };
   animals.weatherTemp = () => (weather.day ? weather.fx.temp : null);   // the lizards' air (animals.js airT)
-  w.handle = window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, forbs, emergents, roads, scene, renderer, minimap, atmosphere, sky, acorns, life, identify, places, peek, setPeek, sound, animals, anet, arrival, rocks, water, waterfalls: water.waterfalls, squirrel, woodpecker, ground, flier, spirit, players, credits, sight, quarry, dive, combat, pilot, nearBar, cues, forage, fruit, needs, dig, carrion };   // debugging handle
+  w.handle = window.__we = { setDate, setFov, setHour, weather, tile, flight, raven, camera, veg, terrain, far, grass, forbs, emergents, roads, scene, renderer, minimap, atmosphere, sky, acorns, life, identify, places, peek, setPeek, sound, animals, anet, arrival, rocks, water, waterfalls: water.waterfalls, squirrel, woodpecker, ground, flier, spirit, players, credits, sight, quarry, dive, combat, pilot, nearBar, sniffWave, cues, forage, fruit, needs, dig, carrion };   // debugging handle
   const as = direct ? params.get('as') : null;
   if (!['raven', 'squirrel', 'woodpecker'].includes(as)) toSpirit();   // a spirit from the start (behind the opening screen too)
   if (!screenOpen) makeSound();
@@ -977,10 +980,11 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     flight.ridden = squirrel.on || woodpecker.on || ground.on;   // a drag orbits for these, steers a flight (flight.js steering)
     if (spirit.on && !arrival.active && !screenOpen) pilot.step(dt);   // the spirit's autopilot to a chip's animal or into the Embody target (pilot.js)
     const f = screenOpen ? arrival.hold() : squirrel.on ? squirrel.update(dt) : woodpecker.on ? woodpecker.update(dt) : ground.on ? ground.update(dt) : flier.on ? flier.update(dt) : arrival.active ? arrival.update(dt) : spirit.on ? spirit.update(dt) : flight.update(dt);
-    if (ground.on || flier.on) { needs.update(dt, { x: flight.pos.x, north: -flight.pos.z, acting: ground.on && ground.actT > 0, wet: ground.on && !!ground.wet, under: ground.on && ground.mode === 'tunnel' ? dig.underFood() : null }); hunt.update(dt); scent.update(dt); }   // the games of life (needs.js, hunt.js); the smell sense (scent.js)
+    if (ground.on || flier.on) { needs.update(dt, { x: flight.pos.x, north: -flight.pos.z, acting: ground.on && ground.actT > 0, wet: ground.on && !!ground.wet, under: ground.on && ground.mode === 'tunnel' ? dig.underFood() : null, target: quarry.target?.plant ? quarry.target : null, reach: quarry.canEat() }); hunt.update(dt); scent.update(dt); }   // the plant target and its reach (quarry.js canEat); the games of life (needs.js, hunt.js); the smell sense (scent.js)
     else if (squirrel.on && !arrival.active) scent.update(dt);   // the gray squirrel's own control smells too (its game is the acorns, not the needs)
     fruit.update(dt); if (peek.shown) fruit.group.visible = false;   // the fruit near the body (fruit.js)
     forage.update(dt);   // the forager's food plants lit and their halos (forage.js; off in any other body)
+    sniffWave.update(dt, ground.on || flier.on || squirrel.on);   // the sniff's shockwave (sniffWave.js)
     dig.update(dt);   // the Dig game's world, its openings in the ground, its glow (dig.js)
     if (s !== anet.season) { anet.season = s; anet.join(tile.id, s); }   // the season's animals channel (animalNet.js)
     carrion.update(dt);   // Scavenge: the carcasses' stages, bodies, bones and glow (carrion.js)
@@ -1037,7 +1041,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
       const wd = weather.describe(), wb = $('weatherNow');
       if (wd) { const i = document.createElement('i'); i.textContent = ` · ${wd.note}`; wb.replaceChildren(wd.text, i); } else wb.textContent = '–';
       $('animalsNear').textContent = animals.describe(now);
-      nearBar.update(animals.counts, !screenOpen, quarry.target ? quarry.target.sp : -1);   // in a body too (2026-11-06: a chip selects)
+      nearBar.update(animals.counts, !screenOpen, quarry.target?.sp ?? -1);   // in a body too (2026-11-06: a chip selects)
       $('over').textContent = where.text; minimap.place = where.place;
       layoutHud();
       const h = Math.floor(state.hour), mnt = Math.round((state.hour - h) * 60); $('timeLabel').textContent = `${h}:${String(mnt).padStart(2, '0')} · sun ${(sun.elevation * 180 / Math.PI).toFixed(0)}°`;

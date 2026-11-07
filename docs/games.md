@@ -139,6 +139,17 @@ Struck prey runs its own escape, or, much the bigger, now and then fights back. 
 (click, Tab), the chips fly the spirit to the nearest of a species, and the one action, Embody, flies into the target
 and becomes it.
 
+Plant targets (2026-11-06, decisions "plant eaters target their food plants"): a body with food plants this season can
+target them as it targets animals (Tab, a click): the frame names the plant and the part it eats, a warm ring marks it,
+and with one targeted the act feeds only within the body's reach of it (E out of reach walks there, then eats). The same
+forage relation that lights the food plants and gives their scents decides which plants are targets.
+
+Desirability and the sniff (2026-11-06, decisions "the sniff's shockwave"): the games step scores each eater's foods per
+season from the relations themselves (the part eaten's energy, a seasonal pulse; the prey's mass against the optimal prey
+size and the diet's order) into `relations.desirability`, 0..1. A sniff sends a ring out from the body to its smell reach
+and every food it passes pulses once, nearest first, as a soul does in the spirit's sight: the most wanted as the mountain
+lion's, the least as the vole's.
+
 ## What it finds on the home tile
 
 Eighteen species, 275 games, 146 of them collective, 29 predator-prey pairs, 5 scavenging links

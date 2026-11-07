@@ -88,7 +88,10 @@ function groundMoves(S) {
 // X: lie down, hunch, freeze (the brush rabbit) or bask (S.rest), else grey (a bird's roost, a rodent's rest)
 const restOf = S => { const r = { bed: 'lie down', hunch: 'hunch', bask: 'bask', freeze: 'freeze' }[S.rest]; return r ? on(r, 'X', c => !!c.ground.resting) : no(S.rig === 'bird' ? 'roost' : 'rest', 'X'); };
 // the act's slot is "ready" (a warm edge) while a named food plant is within reach of a hungry body (needs.js plant: the glowing one under the nose, forage.js)
-const actOf = (name, title) => on(name, 'E', c => c.ground.actT > 0 || E(c), { ready: c => !!c.needs?.plant && c.needs.hunger < 0.98, ...(title ? { title } : {}) });
+// with a plant targeted (quarry.js) the act needs its reach (canEat, the one rule): out of it the slot is greyed, "get closer"
+// (E walks the body there, then eats: groundControl approach); in it, "ready" while hungry
+const actOf = (name, title) => on(name, 'E', c => c.ground.actT > 0 || E(c) || !!c.ground.approach, { ready: c => !!c.needs?.plant && c.needs.hunger < 0.98 && (c.quarry?.canEat?.() ?? true),
+  oor: c => !!c.quarry?.target?.plant && !c.quarry.canEat(), oorTitle: c => `get closer to the ${c.quarry.target.name} (E walks you there)`, ...(title ? { title } : {}) });
 
 // Per species: the walker's act word (E) and its verbs, built then not yet. Order on the bar: the moves, act, rest, verbs.
 const SPECIES = {
@@ -135,7 +138,7 @@ const strikeSlot = (m, i) => on(m.name, String(i + 1), c => c.ground.strike?.kin
     press: (c, down) => { if (down) c.combat.use(m.key); }, title: `${i + 1}: ${m.title} (its own cooldown ${m.cd} s)` });
 // The spirit's one action while it holds a target (owner, 2026-11-06: "there is only one "action" [ Embody ] with the model
 // of the animal as the icon"): the spirit flies itself into that animal and becomes it (pilot.js embody).
-const EMBODY = on('embody', '1', c => !!c.pilot?.embodying, { show: c => !!c.quarry?.target, icon: c => c.quarry.target ? c.quarry.animals.speciesList()[c.quarry.target.sp] : null,
+const EMBODY = on('embody', '1', c => !!c.pilot?.embodying, { show: c => !!c.quarry?.target, oor: c => !c.pilot?.embodying && c.quarry.animals.playable?.(c.quarry.target) === false, icon: c => c.quarry.target ? c.quarry.animals.speciesList()[c.quarry.target.sp] : null,
   press: (c, down) => { if (down) c.pilot?.embody(); }, title: '1 (or E): fly into this animal and become it' });
 // The fliers' moves (flight.js on flierControl's numbers, and the raven's own): aloft, and on its feet.
 const aloft = c => !c.flight.landed, afoot = c => !!c.flight.landed;
@@ -266,7 +269,10 @@ export class Abilities {
       if (tired !== s.tired) { s.tired = tired; s.el.classList.toggle('tired', tired); }
       if (ready !== s.ready) { s.ready = ready; s.el.classList.toggle('ready', ready); }
       if (!shown) continue;
-      if (e.oor) { const o = !!e.oor(c) && !lit; if (o !== s.oor) { s.oor = o; s.el.classList.toggle('oor', o); } }
+      if (e.oor) {
+        const o = !!e.oor(c) && !lit; if (o !== s.oor) { s.oor = o; s.el.classList.toggle('oor', o); }
+        if (e.oorTitle) { const tt = o ? e.oorTitle(c) : (e.title || e.name); if (s.el.title !== tt) s.el.title = tt; }   // (names the present target)
+      }
       if (s.cd) {   // WoW's clock: the dark part is what is left, cleared clockwise from twelve; the seconds over 1.5
         const f = Math.max(0, Math.min(1, e.cd(c))), q = Math.round(f * 120) / 120;
         if (q !== s.cdf) {

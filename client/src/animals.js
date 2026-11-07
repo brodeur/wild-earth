@@ -5514,6 +5514,8 @@ export class Animals {
   }
   // A held or living animal's info by id (the spirit's flash closes on it), or null.
   peek(id) { const a = this.byId.get(id); return a ? this.info(a) : null; }
+  // whether the spirit could become this animal (take's own test: a species with a body to play, not another player's, not dead)
+  playable(a) { return !!a && !a.remote && !a.dead && this.byId.get(a.id) === a && PLAYABLE.includes(a.sp); }
   // Lift a playable animal out of the population (the player is in it now); returns its info, or null.
   take(id) {
     const a = this.byId.get(id); if (!a || a.remote || !PLAYABLE.includes(a.sp)) return null;
