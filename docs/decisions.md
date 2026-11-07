@@ -7696,3 +7696,46 @@ should have more elevation between them. Ground animals should have drop shadows
   how high the tier is.
 - **Fixed on the way.** A tile's own bird stand-ins on the walkers' ring (Corcovado's storks and ibises) stood with their
   wings spread: they now fold them, as the client's ground birds do.
+
+## 2026-11-07: one vocabulary for what an animal is doing (client/src/activities.js)
+
+The identify card's "now" line was a per-species if-chain in `animals.js activity()`: some 25 species had hand-written
+lines and every other slot, the demo cast included, returned nothing (the bison on Lamar ran the elk's machine and said
+nothing). Now every animal has one shared vocabulary and every slot on every tile gets a line by rule.
+
+- **The vocabulary.** `activities.js ACT`: rest, forage, hunt, travel, flee, alert, perch, bask, court, young (with and
+  caring for its young), hide, nest (digging a burrow, building a nest), swim, fly. A manner word rides on it where the
+  machine knows one ('forage:graze', 'hunt:stalk', 'forage:carcass', 'hide:burrow'). Nest was added to the list asked for:
+  the rabbits and voles dig burrows in the Dig game, and the brief's verbs include nest and den.
+- **Every machine's states mapped.** `animals.js DOING`, one row per state of each of the 18 machines (squirrel, woodpecker,
+  raven, deer, the fox's, rabbit, jackrabbit, vole, turkey, ground squirrel, lizard, large reptile, snake, slug, quail,
+  jays, hawk, vulture), keyed by the machine a slot runs (`machineOf`, the same dispatch as `update()`), so the colliding
+  state numbers (the slug's and the reptiles' share 160-162) never mix. `doingOf` refines by what the machine already
+  knows: the group's state (the turkey flock walking or roosting, the covey running, the herd fleeing), the water birds'
+  rules (the heron stalks or waits, the divers swim, the dabblers dabble), a carcass (`feedOn`, `carr`), a hunt's target, a
+  cached acorn, the otter in the water, the bear's stare, a night bird by day (roosting) and a day bird perched in the dark
+  (roosting), a lion or bear mother with her cubs (young). A new state gets a row; a new machine gets a map.
+- **Exposed.** `animals.doing(a)` is the act (`'rest'`, `'hunt'`, ...) for the sniff, the hunt, cards and the shared
+  animals (a mirror's streamed state reads the same); `doingDetail(a)` adds the manner.
+- **Words by rule.** `say(act, how, ctx)` picks a phrase by the slot's archetype (a fauna slot's own, the pipeline's
+  `fauna_slots.py kin_for` name; the static cast's in `STATIC_ARCHETYPE`), reduced to a family (herd, raptor, canid,
+  colony, songbird, ...), and fills it from the moment: the habitat class under the animal ("grazing on the river flat",
+  "bedded down in the long grass", "browsing in a forest clearing"), its group ("with its herd", a canid of 15 kg or more
+  "with its pack", else "with its family"), a mother's cubs, the prey's name ("stalking an elk"). A stand-in reads as what
+  it is, not as its kin: the bison is "grazing on the open grass with its herd", not the elk's line. Between shrubs (Lamar's
+  sage is habitat class 4) a herd is "feeding", since the archetype does not say grazer or browser.
+- **The hand-written lines kept** as `PHRASES`, keyed by species code (a recorded fine-tune stage): the turkey's, the
+  ground squirrel's, the marmot's, the fence lizard's, the salamanders', the elk's, the kingfisher's, the mergansers', the
+  mallard's, the grouse's, the bear's and the quails'. The ones that named one place's ground became placeholders: the
+  elk's "in the ferns" and "on the river flat" are now `{cover}` and `{open}`, so the Hoh still reads "grazing on the river
+  flat" there and the elk on Lamar does not bed in ferns. The owls', heron's, otter's, woodpecker's, reptiles' and slug's
+  lines became their family's, so every owl, wader or crocodilian anywhere gets them.
+- **Checked.** `tests/test_activities.py` (under node): every archetype `fauna_slots.py` can write has a family, every
+  drawn species an archetype, every machine row a known act, and every family a filled, non-empty line for every act and
+  manner in every habitat. Headless on Lamar `utm12n_557_4964`, the Hoh `utm10n_429_5293` and the home tile
+  `utm10n_680_4280`: every live animal, every summoned slot and every slot driven through each of its machine's states
+  returned a non-empty line.
+- **Seen on the way (not changed here).** The Idaho ground squirrel (`urocitellus_armatus`) runs the tree squirrel's
+  machine (kin_for's ground-squirrel test looks for "spermophil", not Urocitellus), and the golden eagle the vulture's
+  ("soaring scavenger": the scavenger role over 1 kg in Accipitridae). Both read correctly for their machine and wrong for
+  the animal; the fix is in the pipeline's rules.

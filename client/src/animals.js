@@ -23,6 +23,7 @@ import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buil
   loadGrouseMesh, loadMarmotMesh, loadYellowPineChipmunkMesh, loadShrewMesh, loadToadMesh, loadFrogMesh, buildHairyWoodpecker,
   loadFaunaModel, faunaTemplate } from './animalModels.js';
 import { depthAt as waterDepthAt } from './water.js';
+import { ACT as ACTIVITY, parseDoing, say, familyOf, STATIC_ARCHETYPE, BIRD_FAMILIES } from './activities.js';   // what an animal is doing: one vocabulary (doing, activity)
 
 // Ambient animals: the first step toward "many of each species always present" (docs/brief.md,
 // Direction; roadmap visual pass step 6 "Life"). Western gray squirrels, acorn woodpeckers, other
@@ -712,6 +713,38 @@ const DEFEND_R = 20, RAID_GUARD_R = 8, FLEE_R = 20, DRIVEN_T = 25;   // m, m, m 
 const GUARD = { notice: 20, chase: 5 };                      // m: a squirrel notices a dig of its cache; chases a thief this close
 const RAID_ODDS = { sq: { fall: 0.05, winter: 0.04 }, jay: { fall: 0.012, winter: 0.008 } };   // per squirrel pause; per jay-second perched
 const SEARCHES = 2;
+// What each machine's states mean in the shared vocabulary (activities.js ACT; animals.doing): 'act' or 'act:how'. A new
+// state gets its row here; doingOf refines a few by context (the group's state, the water, the hour, a carcass, a task,
+// a hunt). The machines by the kin they run (machineOf): sq the gray squirrel's, wp the woodpecker's, rv the raven's, dr
+// the deer's, mm the fox's (coyote, lion, bear), rb the brush rabbit's, jk the jackrabbit's, vo the vole's, tk the
+// turkey's, gs the ground squirrel's, lz the fence lizard's (rp a large reptile's, sn a snake's), sl the slug's, qu the
+// quail's (the water birds' coveys too), sj the jays', hk the hawk's, tv the vulture's.
+const DOING = {
+  sq: { [S_PAUSE]: 'forage', [S_RUN]: 'travel', [S_CLIMB]: 'travel:climb', [S_DOWN]: 'travel:climb', [S_OUT]: 'travel:limb', [S_IN]: 'travel:limb',
+    [S_SIT]: 'perch:limb', [S_WORK]: 'forage:cache', [S_EAT]: 'forage:eat', [S_RAIDP]: 'forage:raid' },
+  wp: { [W_CLING]: 'forage:bark', [W_TOP]: 'perch:top', [W_FLY]: 'fly', [W_PICK]: 'forage:acorn', [W_MOB]: 'alert:mob', [S_RAIDP]: 'forage:bark' },
+  rv: { [R_SOAR]: 'fly:soar', [R_GLIDE]: 'fly:glide', [R_CLIMB]: 'fly:climb', [R_PERCH]: 'perch', [R_GROUND]: 'forage:ground', [R_WALK]: 'forage:walk' },
+  dr: { [D_WALK]: 'travel', [D_GRAZE]: 'forage:graze', [D_BED]: 'rest:bed' },
+  mm: { [M_BED]: 'rest:bed', [M_STAND]: 'alert', [M_MOVE]: 'travel', [M_SNIFF]: 'forage:sniff', [M_POUNCE]: 'hunt:pounce', [M_FLEE]: 'flee', [M_CLIMB]: 'flee:tree',
+    [M_TREE]: 'perch:limb', [M_DOWN]: 'travel:climb', [M_STALK]: 'hunt:stalk', [M_CROUCH]: 'hunt:crouch', [M_RUSH]: 'hunt:rush', [M_CHARGE]: 'alert:charge',
+    [M_LEAP]: 'hunt:pounce', [M_FEED]: 'forage:kill', [M_FIX]: 'hunt:fix', [M_PAW]: 'hunt:pounce', [M_TOSS]: 'forage:kill', [M_DIGP]: 'hunt:dig' },
+  rb: { [B_FORM]: 'rest:form', [B_FORAGE]: 'forage', [B_HOP]: 'travel', [B_SIT]: 'alert:sit', [B_FREEZE]: 'hide:freeze', [B_BOLT]: 'flee', [B_TOHOLE]: 'travel:home',
+    [B_BURROW]: 'hide:burrow', [B_DIG]: 'nest:dig' },
+  jk: { [JK_FORM]: 'rest:form', [JK_FEED]: 'forage', [JK_HOP]: 'travel', [JK_SIT]: 'alert:sit', [JK_FREEZE]: 'hide:freeze', [JK_BOLT]: 'flee' },
+  vo: { [VL_RUN]: 'travel:runway', [VL_PAUSE]: 'forage', [VL_SIT]: 'alert:sit', [VL_HIDE]: 'hide', [VL_TOHOLE]: 'travel:home', [VL_TUN]: 'hide:burrow', [VL_DIG]: 'nest:dig' },
+  tk: { [T_FORAGE]: 'forage', [T_SCRATCH]: 'forage:scratch', [T_WAIT]: 'forage', [T_FLY]: 'fly:up', [T_PERCH]: 'perch', [T_DOWN]: 'fly:down' },
+  gs: { [G_FEED]: 'forage', [G_HOP]: 'forage', [G_SIT]: 'alert:sit', [G_SENTRY]: 'alert:sentry', [G_DIVE]: 'flee:burrow', [G_DOWN]: 'hide:burrow', [G_PEEK]: 'alert:peek' },
+  lz: { [L_BASK]: 'bask', [L_ALERT]: 'alert', [L_PUSH]: 'court:pushup', [L_TURN]: 'alert', [L_SPRINT]: 'flee:cover', [L_HIDE]: 'hide', [L_MOVE]: 'travel' },
+  rp: { [RP_LIE]: 'bask', [RP_WALK]: 'travel', [RP_FLOAT]: 'swim:float', [RP_SWIM]: 'swim', [RP_SINK]: 'hide:sink', [RP_GRAZE]: 'forage:graze', [RP_REST]: 'rest',
+    [RP_HIDE]: 'hide:withdraw' },
+  sn: { [SN_BASK]: 'bask', [SN_CRAWL]: 'travel', [SN_ALERT]: 'alert', [SN_FLEE]: 'flee:cover', [SN_HIDE]: 'hide' },
+  sl: { [SL_CRAWL]: 'travel', [SL_REST]: 'rest', [SL_IN]: 'hide:withdraw' },
+  qu: { [Q_FORAGE]: 'forage', [Q_WAIT]: 'alert:crouch', [Q_FLY]: 'fly:flush', [Q_DIVE]: 'swim:dive' },
+  sj: { [J_PERCH]: 'perch', [J_GROUND]: 'forage:ground', [J_FLY]: 'fly', [J_RAID]: 'forage:raid' },
+  hk: { [H_SOAR]: 'fly:soar', [H_STOOP]: 'hunt:stoop', [H_PULL]: 'fly:climb', [H_MANTLE]: 'forage:kill' },
+  tv: { [V_SOAR]: 'fly:soar', [V_GLIDE]: 'fly:glide' },
+};
+export const MACHINE_DOING = DOING;   // (read only: the tests and debugging list each machine's states)
 const FORAGE = {
   [WP]: { fall: 0.55, winter: 0.3, spring: 0.12, summer: 0.12 },
   [SQ]: { fall: 0.2, winter: 0.12, spring: 0.05, summer: 0.05 },
@@ -5402,43 +5435,101 @@ export class Animals {
     a.y = (hf + hb) * 0.5;
     a.vis = this.amOn ? damp(a.vis, 1, 2, dt) : (a.vis < 0.03 ? 0 : damp(a.vis, 0, 2, dt));
   }
-  // What an animal is doing, in a few words (identify.js species cards).
-  activity(a) {
-    const s = a.state;
-    if (ID[a.sp] === TK) {
-      if (s === T_FLY) return a.down ? 'flying down from the tree' : 'flying up into a tree';
-      if (s === T_PERCH || s === T_WAIT && !a.down && a.group.state !== TF_FORAGE) return a.group.state === TF_ROOST ? 'roosting for the night' : 'up in a tree, watching';
-      if (s === T_SCRATCH) return 'scratching the leaves for food';
-      return a.group.state === TF_WALK ? 'walking with its flock' : 'pecking for seeds and insects with its flock';
-    }
-    if (ID[a.sp] === GS) return s === G_SENTRY ? 'on guard at the burrow' : s === G_DIVE ? 'running for its burrow' : s === G_SIT || s === G_PEEK ? 'sitting up, looking round' : 'feeding near its burrow';
-    if (REPT[a.sp] === 'water') return s === RP_LIE ? 'basking on the bank' : s === RP_WALK ? 'walking slowly' : s === RP_SINK ? 'sunk to its eyes, watching' : 'floating in the water';
-    if (REPT[a.sp] === 'walk') return s === RP_WALK ? 'walking slowly' : s === RP_GRAZE ? 'grazing' : s === RP_HIDE ? 'keeping still, head drawn in' : 'resting';
-    if (REPT[a.sp] === 'snake') return s === SN_BASK ? (a.coil ? 'basking, coiled in the sun' : 'basking, stretched out in the sun')
-      : s === SN_CRAWL ? (a.toCover ? 'gliding off into cover' : 'gliding through the grass') : s === SN_ALERT ? 'head raised, watching you'
-      : s === SN_FLEE ? 'fleeing into cover' : 'hidden in cover';
-    if (ID[a.sp] === LZ) return s === L_BASK ? 'basking in the sun' : s === L_PUSH ? 'doing push-ups (a male showing off)' : s === L_SPRINT ? 'dashing for cover' : 'watching';
-    // the Hoh batch (HOH)
-    const kn = KIN[a.sp];
-    if (kn === LZ) return s === L_SPRINT ? 'wriggling away under the litter' : s === L_MOVE ? 'walking slowly over the damp moss' : 'resting on the damp forest floor';
-    if (ID[a.sp] === BS) return s === SL_IN ? 'pulled in, its eyestalks withdrawn' : s === SL_CRAWL ? 'gliding over the forest floor on its slime' : 'resting, eyestalks out';
-    if (ID[a.sp] === EL || ID[a.sp] === EB) return s === D_BED ? 'bedded down in the ferns' : s === D_WALK ? (a.group?.fleeT > 0 ? 'moving off with the herd' : 'walking with its herd') : 'grazing on the river flat';
-    if (ID[a.sp] === OT) return a.swim > 0.5 ? 'swimming in the river' : s === M_BED ? 'curled up in its den by the bank' : 'on the bank, nosing about';
-    if (ID[a.sp] === BO) return s === J_FLY ? 'flying silently between the trees' : atmo.sunDir.value.y > 0.05 ? 'roosting through the day' : 'watching and listening from its perch';
-    if (ID[a.sp] === KF) return s === J_FLY ? 'flying low over the water, rattling' : s === J_GROUND ? 'diving for a fish' : 'watching the water from its perch';
-    if (ID[a.sp] === GH) return s === Q_FLY ? 'flying off on slow deep wingbeats' : a.group?.state === G_RUN ? 'stalking slowly through the shallows' : 'standing still in the shallows, watching for fish';
-    if (ID[a.sp] === CM) return s === Q_FLY ? 'flying fast and low up the river' : s === Q_DIVE ? 'diving for fish' : 'swimming on the river';
-    if (ID[a.sp] === MA) return s === Q_FLY ? 'flying off, quacking' : 'dabbling at the water\'s edge';
-    if (ID[a.sp] === SG) return s === Q_FLY ? 'flushed, whirring off into the trees' : 'walking the forest floor, picking at needles and berries';
-    if (ID[a.sp] === HW) return s === J_FLY ? 'flying in deep undulations to the next trunk' : 'clinging to the bark, tapping for insects';
-    if (ID[a.sp] === SO || ID[a.sp] === SW) return s === J_FLY ? 'flying silently between the trees' : atmo.sunDir.value.y > 0.05 ? 'roosting through the day' : 'watching and listening from its perch';
-    if (ID[a.sp] === MO) return s === G_SENTRY ? 'sitting up at its burrow, keeping watch' : s === G_DIVE ? 'running for its burrow' : 'grazing the meadow near its burrow';
-    if (kn === ST && (s === J_GROUND)) return 'hopping on the ground, foraging';
-    if (ID[a.sp] === BE) return s === M_BED ? 'bedded down at the foot of a tree' : s === M_CHARGE ? 'bluff-charging' : s === M_SNIFF ? 'nosing and digging for food'
-      : s === M_MOVE ? 'ambling along' : a.watch > 0 ? 'standing its ground, watching you' : 'standing, testing the air';
-    if (ID[a.sp] === MQ) return s === Q_FLY ? 'flushed, whirring off downhill into the brush' : s === Q_WAIT ? 'crouched, about to flush'
-      : a.group?.state === G_RUN ? 'running in single file with its covey' : 'scratching for seeds and berries with its covey';
+  // ---- what an animal is doing (activities.js: one vocabulary for every machine) ------------------------------------------
+  // The machine slot s runs (update()'s dispatch by KIN, a reptile's way by REPT): a key of DOING.
+  machineOf(s) {
+    const k = KIN[s];
+    if (k === SQ) return 'sq';
+    if (k === WP || k === WF) return 'wp';
+    if (k === RV) return 'rv';
+    if (k === DR || k === BK) return 'dr';
+    if (k === FX || k === CY || k === ML || k === BE) return 'mm';
+    if (k === RB) return 'rb';
+    if (k === JR) return 'jk';
+    if (k === VO) return 'vo';
+    if (k === TK) return 'tk';
+    if (k === GS) return 'gs';
+    if (k === LZ) return REPT[s] === 'water' || REPT[s] === 'walk' ? 'rp' : REPT[s] === 'snake' ? 'sn' : 'lz';
+    if (k === QU || k === MQ) return 'qu';
+    if (k === SJ || k === ST) return 'sj';
+    if (k === HK) return 'hk';
+    if (k === BS) return 'sl';
+    return 'tv';
+  }
+  // A slot's archetype: the fauna slot's own (fauna.json), else the static cast's (activities.js STATIC_ARCHETYPE).
+  archetypeOf(s) { const sp = SPECIES[s]; return sp?.archetype || STATIC_ARCHETYPE[sp?.code] || ''; }
+  // A lion's or a bear's family (the static spawns: a mother and her young; a stand-in's group is grown, GRP): 'mother'
+  // (the leader with young beside her), 'cub', or ''.
+  youngOf(a) {
+    const g = a.group; if (!g || GRP[a.sp] || (ID[a.sp] !== ML && ID[a.sp] !== BE)) return '';
+    if (g.leader !== a) return 'cub';
+    for (const b of this.list) if (b !== a && b.group === g && !b.dead) return 'mother';
     return '';
+  }
+  // 'act' or 'act:how' (activities.js ACT): the state's row in DOING, refined by context.
+  doingOf(a) {
+    if (a.dead) return 'rest:dead';
+    const s = a.sp, m = this.machineOf(s), st = a.state, g = a.group, J = HOH[s], day = atmo.sunDir.value.y > 0.05;
+    let d = DOING[m]?.[st] || 'rest';
+    switch (m) {
+      case 'sq': if (a.scared) d = st === S_SIT ? 'hide:freeze' : st === S_RUN ? 'flee' : st === S_CLIMB ? 'flee:tree' : d; break;
+      case 'wp': if (st === W_CLING && a.task === T_STORE && a.carry && a.tree === a.anchor) d = 'forage:cache'; break;
+      case 'rv':
+        if (st === R_GROUND) d = a.feedOn ? 'forage:carcass' : a.task === T_STORE ? 'forage:cache' : d;
+        else if (st === R_SOAR && a.carr) d = 'forage:circle';
+        else if (st === R_PERCH && a.perchY == null) d = 'perch:ground';
+        break;
+      case 'dr': if (st === D_WALK && g?.fleeT > 0) d = 'flee:group'; break;
+      case 'mm':
+        if (a.swim > 0.5) { d = 'swim'; break; }   // the otter in the water
+        if (st === M_MOVE && a.hunt) d = 'hunt:approach';
+        else if (st === M_MOVE && a.carr) d = 'travel:carcass';
+        else if (st === M_SNIFF && a.carr) d = 'forage:carcass';
+        else if (st === M_STAND && a.watch > 0) d = 'alert:stare';
+        if (d !== 'alert:stare' && (st === M_BED || st === M_STAND) && this.youngOf(a) === 'mother') d = st === M_BED ? 'young:bed' : 'young:guard';
+        break;
+      case 'tk': {
+        const fs = g?.state;
+        if (st === T_FLY) d = a.down ? 'fly:down' : 'fly:up';
+        else if (st === T_PERCH || st === T_WAIT && !a.down && fs !== TF_FORAGE) d = fs === TF_ROOST ? 'rest:roost' : 'perch';
+        else if (st !== T_SCRATCH) d = fs === TF_WALK ? 'travel' : 'forage';
+        break;
+      }
+      case 'qu': {   // the coveys; the water birds' (HOH water): the heron stalks or waits, the divers swim, the dabblers dabble
+        const W = J?.water ? J : null;
+        if (st === Q_FORAGE) d = W ? (W.edge ? (g?.state === G_RUN ? 'hunt:stalk' : 'hunt:watch') : W.dive ? 'swim' : 'forage:dabble') : g?.state === G_RUN ? 'travel' : 'forage';
+        else if (st === Q_FLY && FLIGHTLESS.has(s)) d = 'flee';
+        break;
+      }
+      case 'sj':   // the trunk birds probe the bark; the kingfisher watches the water and dives; a night bird roosts by day, hunts by night
+        if (st === J_PERCH) d = J?.trunk ? 'forage:bark' : J?.water ? 'hunt:perch' : J?.night ? (day ? 'rest:roost' : 'hunt:perch') : d;
+        else if (st === J_GROUND && J?.water) d = 'hunt:dive';
+        break;
+      case 'tv': if (a.carr) d = 'forage:circle'; break;
+      case 'lz': if (ID[s] !== LZ && d === 'bask') d = 'rest'; break;   // the amphibians never bask
+      case 'sn': if (st === SN_BASK && a.coil) d = 'bask:coil'; else if (st === SN_CRAWL && a.toCover) d = 'travel:cover'; break;
+    }
+    // the hour: a day bird perched in the dark is roosting
+    if (d.startsWith('perch') && atmo.sunDir.value.y < -0.05 && !J?.night) {
+      const fam = familyOf(this.archetypeOf(s), m);
+      if (BIRD_FAMILIES.has(fam) && fam !== 'owl') d = 'rest:roost';
+    }
+    return d;
+  }
+  // What it is doing, as one of activities.js ACT ('rest', 'forage', 'hunt', ...): for the sniff, the hunt, the identify
+  // cards and the shared animals (a mirror's state is the host's).
+  doing(a) { return parseDoing(this.doingOf(a)).act; }
+  // { act, how }: the act and its manner ('graze', 'stalk', 'carcass', ...).
+  doingDetail(a) { return parseDoing(this.doingOf(a)); }
+  get acts() { return ACTIVITY; }   // the vocabulary (activities.js ACT), for a caller without the import: animals.doing(a) === animals.acts.HUNT
+  // What an animal is doing, in a few words (identify.js species cards): activities.js say() from the act, the archetype
+  // and the moment (the habitat under it, its group, a mother's young, its prey); a species' own lines first (PHRASES).
+  activity(a) {
+    const { act, how } = this.doingDetail(a), s = a.sp, m = this.machineOf(s), sp = SPECIES[s], prey = a.hunt || a.prey;
+    let n = 1;
+    if (a.group) for (const b of this.list) if (b !== a && b.group === a.group && BASE[b.sp] === BASE[s] && !b.dead) n++;
+    return say(act, how, { code: sp.code, archetype: this.archetypeOf(s), machine: m, habitat: this.tile?.habitat?.at?.(a.x, -a.z) | 0, groupN: n,
+      young: m === 'mm' ? this.youngOf(a) : '', mass: sp.mass_kg || 0, prey: prey && !prey.dead && SPECIES[prey.sp] ? SPECIES[prey.sp].one : '' });
   }
   codeOf(a) { return SPECIES[a.sp].code; }
   // Drawn and in view now (identify.js picks only these).
