@@ -39,12 +39,12 @@
   "by": "pipeline/plantgen.py",
   "version": "5",
   "card": "library/plant_cards/carex_geyeri.json",
-  "card_sha256": "a7988f554db711f5",
+  "card_sha256": "991c208a66b3967d",
   "template": "stipa_pulchra",
   "template_common": "purple needlegrass",
   "height_scale": 0.493
  },
- "notes": "Written by rule from the USDA PLANTS Database's characteristics (pipeline/ground_cards.py). COMPROMISE: PLANTS growth form 'Rhizomatous', drawn as grass.js's bunch clump (it has two: annual and bunch). PLANTS characteristics used (CAGE2): Height, Mature (feet) = 1.5, Foliage Color = Green, Fruit/Seed Color = Brown, Active Growth Period = Spring and Summer, Bloom Period = Late Spring, Leaf Retention = No, Growth Form = Rhizomatous. The client's seasons are calendar quarters; PLANTS' bloom periods are the species' over its US range, not corrected for this tile's elevation. Region tag landfire_mz21 (the LANDFIRE map zone whose descriptions named it) is not a natural region in pipeline/regions.py: no regional table draws it.",
+ "notes": "Written by rule from the USDA PLANTS Database's characteristics (pipeline/ground_cards.py). COMPROMISE: PLANTS growth form 'Rhizomatous', drawn as grass.js's bunch clump (it has two: annual and bunch). PLANTS characteristics used (CAGE2): Height, Mature (feet) = 1.5, Foliage Color = Green, Fruit/Seed Color = Brown, Active Growth Period = Spring and Summer, Bloom Period = Late Spring, Leaf Retention = No, Growth Form = Rhizomatous, Drought Tolerance = High, Foliage Texture = Medium. The client's seasons are calendar quarters; PLANTS' bloom periods are the species' over its US range, not corrected for this tile's elevation. Region tag landfire_mz21 (the LANDFIRE map zone whose descriptions named it) is not a natural region in pipeline/regions.py: no regional table draws it.",
  "sources": [
   "USDA PLANTS profile CAGE2: https://plantsservices.sc.egov.usda.gov/api/PlantProfile?symbol=CAGE2, read 2026-11-06",
   "USDA PLANTS characteristics (CAGE2): https://plantsservices.sc.egov.usda.gov/api/PlantCharacteristics/<id>, read 2026-11-06",
@@ -204,6 +204,7 @@
     ]
    },
    "cures": "with_the_season"
-  }
+  },
+  "leaf_width_m": 0.0035
  }
 }

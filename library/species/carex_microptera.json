@@ -37,12 +37,12 @@
   "by": "pipeline/plantgen.py",
   "version": "5",
   "card": "library/plant_cards/carex_microptera.json",
-  "card_sha256": "ba3b4e77a6531f89",
+  "card_sha256": "bc8b6ecc7fad288e",
   "template": "stipa_pulchra",
   "template_common": "purple needlegrass",
   "height_scale": 0.65
  },
- "notes": "Written by rule from the USDA PLANTS Database's characteristics (pipeline/ground_cards.py). PLANTS characteristics used (CAMI7): Height, Mature (feet) = 2.0, Foliage Color = Green, Fruit/Seed Color = Brown, Active Growth Period = Spring and Summer, Bloom Period = Late Spring, Leaf Retention = No, Growth Form = Bunch, Drought Tolerance = None. The client's seasons are calendar quarters; PLANTS' bloom periods are the species' over its US range, not corrected for this tile's elevation. Region tag landfire_mz21 (the LANDFIRE map zone whose descriptions named it) is not a natural region in pipeline/regions.py: no regional table draws it.",
+ "notes": "Written by rule from the USDA PLANTS Database's characteristics (pipeline/ground_cards.py). PLANTS characteristics used (CAMI7): Height, Mature (feet) = 2.0, Foliage Color = Green, Fruit/Seed Color = Brown, Active Growth Period = Spring and Summer, Bloom Period = Late Spring, Leaf Retention = No, Growth Form = Bunch, Drought Tolerance = None, Foliage Texture = Fine. The client's seasons are calendar quarters; PLANTS' bloom periods are the species' over its US range, not corrected for this tile's elevation. Region tag landfire_mz21 (the LANDFIRE map zone whose descriptions named it) is not a natural region in pipeline/regions.py: no regional table draws it.",
  "sources": [
   "USDA PLANTS profile CAMI7: https://plantsservices.sc.egov.usda.gov/api/PlantProfile?symbol=CAMI7, read 2026-11-06",
   "USDA PLANTS characteristics (CAMI7): https://plantsservices.sc.egov.usda.gov/api/PlantCharacteristics/<id>, read 2026-11-06",
@@ -207,6 +207,7 @@
     ]
    },
    "cures": "with_the_season"
-  }
+  },
+  "leaf_width_m": 0.0015
  }
 }

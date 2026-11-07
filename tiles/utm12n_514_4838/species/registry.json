@@ -1,6 +1,6 @@
 {
  "tile": "utm12n_514_4838",
- "at": "2026-11-07T06:24:23Z",
+ "at": "2026-11-07T07:23:45Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -11,7 +11,7 @@
  "summary": {
   "by_level": {
    "0": {
-    "plants": 36,
+    "plants": 35,
     "animals": 44
    },
    "1": {
@@ -23,7 +23,7 @@
     "animals": 1
    },
    "3": {
-    "plants": 32,
+    "plants": 36,
     "animals": 37
    },
    "4": {
@@ -31,11 +31,11 @@
     "animals": 7
    }
   },
-  "plants": 81,
+  "plants": 84,
   "animals_present": 89,
   "animals_queued": 53,
   "meshy_credits_queued": 1580,
-  "cards_queued": 36,
+  "cards_queued": 35,
   "stand_ins": {
    "sorbus_scopulina": null,
    "acer_glabrum": null,
@@ -63,7 +63,6 @@
    "maianthemum_racemosum": null,
    "heracleum_maximum": null,
    "clematis_occidentalis": null,
-   "hydrophyllum_capitatum": null,
    "lonicera_involucrata": null,
    "vaccinium_membranaceum": null,
    "vaccinium_scoparium": null,
@@ -85,7 +84,7 @@
    },
    "ground": {
     "target": 26,
-    "have": 29
+    "have": 33
    },
    "animal": {
     "target": 22,
@@ -94,9 +93,9 @@
    }
   },
   "hands": {
-   "count": 105,
+   "count": 104,
    "by_what": {
-    "a trait card": 36,
+    "a trait card": 35,
     "a lexicon phrase or a species-mix rule": 16,
     "a mesh": 53
    }
@@ -159,7 +158,7 @@
    "fidelity": 3,
    "common": "Geyer's sedge",
    "drawn_as": "carex_geyeri",
-   "share": 0.1034,
+   "share": 0.099,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -170,7 +169,7 @@
    "fidelity": 3,
    "common": "Idaho fescue",
    "drawn_as": "festuca_idahoensis",
-   "share": 0.0952,
+   "share": 0.0957,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -181,7 +180,7 @@
    "fidelity": 3,
    "common": "silvery lupine",
    "drawn_as": "lupinus_argenteus",
-   "share": 0.0862,
+   "share": 0.0912,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -192,7 +191,7 @@
    "fidelity": 3,
    "common": "slender wheatgrass",
    "drawn_as": "elymus_trachycaulus",
-   "share": 0.0644,
+   "share": 0.0695,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -203,7 +202,7 @@
    "fidelity": 3,
    "common": "Ross' sedge",
    "drawn_as": "carex_rossii",
-   "share": 0.0582,
+   "share": 0.0583,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -214,7 +213,7 @@
    "fidelity": 3,
    "common": "heartleaf arnica",
    "drawn_as": "arnica_cordifolia",
-   "share": 0.0559,
+   "share": 0.0533,
    "why_needed": [
     "GBIF: 27 records on the tile"
    ]
@@ -225,29 +224,7 @@
    "fidelity": 3,
    "common": "California brome",
    "drawn_as": "bromus_carinatus",
-   "share": 0.044,
-   "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
-   ]
-  },
-  {
-   "id": "pseudoroegneria_spicata",
-   "kind": "grass",
-   "fidelity": 3,
-   "common": "bluebunch wheatgrass",
-   "drawn_as": "pseudoroegneria_spicata",
-   "share": 0.0434,
-   "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
-   ]
-  },
-  {
-   "id": "poa_secunda",
-   "kind": "grass",
-   "fidelity": 3,
-   "common": "Sandberg bluegrass",
-   "drawn_as": "poa_secunda",
-   "share": 0.0431,
+   "share": 0.0481,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -258,20 +235,31 @@
    "fidelity": 3,
    "common": "spike trisetum",
    "drawn_as": "trisetum_spicatum",
-   "share": 0.0426,
+   "share": 0.0467,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
-   "id": "erythronium_grandiflorum",
-   "kind": "forb",
+   "id": "pseudoroegneria_spicata",
+   "kind": "grass",
    "fidelity": 3,
-   "common": "yellow avalanche-lily",
-   "drawn_as": "erythronium_grandiflorum",
-   "share": 0.0341,
+   "common": "bluebunch wheatgrass",
+   "drawn_as": "pseudoroegneria_spicata",
+   "share": 0.0455,
    "why_needed": [
-    "GBIF: 13 records on the tile"
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "poa_secunda",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "Sandberg bluegrass",
+   "drawn_as": "poa_secunda",
+   "share": 0.0453,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
@@ -280,7 +268,7 @@
    "fidelity": 3,
    "common": "bluejoint",
    "drawn_as": "calamagrostis_canadensis",
-   "share": 0.0331,
+   "share": 0.033,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -291,7 +279,7 @@
    "fidelity": 3,
    "common": "twolobe larkspur",
    "drawn_as": "delphinium_nuttallianum",
-   "share": 0.0268,
+   "share": 0.0279,
    "why_needed": [
     "GBIF: 10 records on the tile"
    ]
@@ -302,7 +290,7 @@
    "fidelity": 3,
    "common": "western showy aster",
    "drawn_as": "eurybia_conspicua",
-   "share": 0.0262,
+   "share": 0.0261,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -313,7 +301,7 @@
    "fidelity": 3,
    "common": "red baneberry",
    "drawn_as": "actaea_rubra",
-   "share": 0.0256,
+   "share": 0.0255,
    "why_needed": [
     "GBIF: 86 records on the tile"
    ]
@@ -324,7 +312,7 @@
    "fidelity": 3,
    "common": "Engelmann's fleabane",
    "drawn_as": "erigeron_engelmannii",
-   "share": 0.0256,
+   "share": 0.0255,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -335,7 +323,7 @@
    "fidelity": 3,
    "common": "starry false lily of the valley",
    "drawn_as": "maianthemum_stellatum",
-   "share": 0.0256,
+   "share": 0.0255,
    "why_needed": [
     "GBIF: 10 records on the tile"
    ]
@@ -346,7 +334,7 @@
    "fidelity": 3,
    "common": "yellowdot saxifrage",
    "drawn_as": "saxifraga_bronchialis",
-   "share": 0.0256,
+   "share": 0.0255,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -357,7 +345,7 @@
    "fidelity": 3,
    "common": "squirreltail",
    "drawn_as": "elymus_elymoides",
-   "share": 0.0208,
+   "share": 0.023,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -368,7 +356,7 @@
    "fidelity": 3,
    "common": "needle and thread",
    "drawn_as": "hesperostipa_comata",
-   "share": 0.0208,
+   "share": 0.0219,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -379,20 +367,9 @@
    "fidelity": 3,
    "common": "sticky purple geranium",
    "drawn_as": "geranium_viscosissimum",
-   "share": 0.0184,
+   "share": 0.0195,
    "why_needed": [
     "GBIF: 61 records on the tile"
-   ]
-  },
-  {
-   "id": "castilleja_miniata",
-   "kind": "forb",
-   "fidelity": 3,
-   "common": "giant red Indian paintbrush",
-   "drawn_as": "castilleja_miniata",
-   "share": 0.0183,
-   "why_needed": [
-    "GBIF: 44 records on the tile"
    ]
   },
   {
@@ -401,20 +378,20 @@
    "fidelity": 3,
    "common": "sulphur-flower buckwheat",
    "drawn_as": "eriogonum_umbellatum",
-   "share": 0.0181,
+   "share": 0.0191,
    "why_needed": [
     "GBIF: 69 records on the tile"
    ]
   },
   {
-   "id": "balsamorhiza_sagittata",
+   "id": "castilleja_miniata",
    "kind": "forb",
    "fidelity": 3,
-   "common": "arrowleaf balsamroot",
-   "drawn_as": "balsamorhiza_sagittata",
-   "share": 0.0176,
+   "common": "giant red Indian paintbrush",
+   "drawn_as": "castilleja_miniata",
+   "share": 0.0188,
    "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+    "GBIF: 44 records on the tile"
    ]
   },
   {
@@ -431,14 +408,36 @@
    ]
   },
   {
+   "id": "carex_hoodii",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "Hood's sedge",
+   "drawn_as": "carex_hoodii",
+   "share": 0.0117,
+   "why_needed": [
+    "GBIF: 12 records on the tile"
+   ]
+  },
+  {
    "id": "erigeron_compositus",
    "kind": "forb",
    "fidelity": 3,
    "common": "cutleaf daisy",
    "drawn_as": "erigeron_compositus",
-   "share": 0.0109,
+   "share": 0.0097,
    "why_needed": [
     "GBIF: 10 records on the tile"
+   ]
+  },
+  {
+   "id": "poa_wheeleri",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "Wheeler's bluegrass",
+   "drawn_as": "poa_wheeleri",
+   "share": 0.0093,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
@@ -447,9 +446,31 @@
    "fidelity": 3,
    "common": "tall fringed bluebells",
    "drawn_as": "mertensia_ciliata",
-   "share": 0.0099,
+   "share": 0.0091,
    "why_needed": [
     "GBIF: 13 records on the tile"
+   ]
+  },
+  {
+   "id": "festuca_brachyphylla",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "alpine fescue",
+   "drawn_as": "festuca_brachyphylla",
+   "share": 0.0066,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "deschampsia_cespitosa",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "tufted hairgrass",
+   "drawn_as": "deschampsia_cespitosa",
+   "share": 0.0056,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
@@ -458,7 +479,18 @@
    "fidelity": 3,
    "common": "cushion phlox",
    "drawn_as": "phlox_pulvinata",
-   "share": 0.0066,
+   "share": 0.002,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "dryas_octopetala",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "eightpetal mountain-avens",
+   "drawn_as": "dryas_octopetala",
+   "share": 0.0019,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -472,6 +504,17 @@
    "share": 0.001,
    "why_needed": [
     "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)"
+   ]
+  },
+  {
+   "id": "equisetum_arvense",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "field horsetail",
+   "drawn_as": "equisetum_arvense",
+   "share": 0.0005,
+   "why_needed": [
+    "GBIF: 17 records on the tile"
    ]
   },
   {
@@ -591,17 +634,6 @@
    "stand_in": null
   },
   {
-   "id": "carex_hoodii",
-   "kind": "grass",
-   "fidelity": 3,
-   "common": "Hood's sedge",
-   "drawn_as": "carex_hoodii",
-   "share": 0,
-   "why_needed": [
-    "GBIF: 12 records on the tile"
-   ]
-  },
-  {
    "id": "ceanothus_velutinus",
    "kind": "shrub",
    "fidelity": 0,
@@ -662,6 +694,17 @@
    "stand_in": null
   },
   {
+   "id": "erythronium_grandiflorum",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "yellow avalanche-lily",
+   "drawn_as": "erythronium_grandiflorum",
+   "share": 0,
+   "why_needed": [
+    "GBIF: 13 records on the tile"
+   ]
+  },
+  {
    "id": "heracleum_maximum",
    "kind": "forb",
    "fidelity": 0,
@@ -670,18 +713,6 @@
    "share": 0,
    "why_needed": [
     "GBIF: 58 records on the tile"
-   ],
-   "stand_in": null
-  },
-  {
-   "id": "hydrophyllum_capitatum",
-   "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "GBIF: 51 records on the tile"
    ],
    "stand_in": null
   },
@@ -2388,14 +2419,6 @@
     ]
    },
    {
-    "id": "hydrophyllum_capitatum",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 51 records on the tile"
-    ]
-   },
-   {
     "id": "lonicera_involucrata",
     "kind": "shrub",
     "stand_in": null,
@@ -3477,14 +3500,6 @@
    "what": "a trait card",
    "why": [
     "GBIF: 55 records on the tile"
-   ]
-  },
-  {
-   "id": "hydrophyllum_capitatum",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 51 records on the tile"
    ]
   },
   {

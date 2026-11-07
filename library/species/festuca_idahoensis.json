@@ -40,12 +40,12 @@
   "by": "pipeline/plantgen.py",
   "version": "5",
   "card": "library/plant_cards/festuca_idahoensis.json",
-  "card_sha256": "bdc082b2f8e6bca7",
+  "card_sha256": "947ab1d485e0c373",
   "template": "stipa_pulchra",
   "template_common": "purple needlegrass",
   "height_scale": 0.65
  },
- "notes": "Written by rule from the USDA PLANTS Database's characteristics (pipeline/ground_cards.py). PLANTS characteristics used (FEID): Height, Mature (feet) = 2.0, Foliage Color = Gray-Green, Fruit/Seed Color = Brown, Active Growth Period = Spring, Bloom Period = Early Summer, Leaf Retention = No, Growth Form = Bunch, Drought Tolerance = Low. The client's seasons are calendar quarters; PLANTS' bloom periods are the species' over its US range, not corrected for this tile's elevation. Region tag landfire_mz21 (the LANDFIRE map zone whose descriptions named it) is not a natural region in pipeline/regions.py: no regional table draws it.",
+ "notes": "Written by rule from the USDA PLANTS Database's characteristics (pipeline/ground_cards.py). PLANTS characteristics used (FEID): Height, Mature (feet) = 2.0, Foliage Color = Gray-Green, Fruit/Seed Color = Brown, Active Growth Period = Spring, Bloom Period = Early Summer, Leaf Retention = No, Growth Form = Bunch, Drought Tolerance = Low, Foliage Texture = Fine. The client's seasons are calendar quarters; PLANTS' bloom periods are the species' over its US range, not corrected for this tile's elevation. Region tag landfire_mz21 (the LANDFIRE map zone whose descriptions named it) is not a natural region in pipeline/regions.py: no regional table draws it.",
  "sources": [
   "USDA PLANTS profile FEID: https://plantsservices.sc.egov.usda.gov/api/PlantProfile?symbol=FEID, read 2026-11-06",
   "USDA PLANTS characteristics (FEID): https://plantsservices.sc.egov.usda.gov/api/PlantCharacteristics/<id>, read 2026-11-06",
@@ -210,6 +210,7 @@
     ]
    },
    "cures": "with_the_season"
-  }
+  },
+  "leaf_width_m": 0.0015
  }
 }

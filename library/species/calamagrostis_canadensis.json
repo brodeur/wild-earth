@@ -38,12 +38,12 @@
   "by": "pipeline/plantgen.py",
   "version": "5",
   "card": "library/plant_cards/calamagrostis_canadensis.json",
-  "card_sha256": "3a61ba238341c2f2",
+  "card_sha256": "181fadb827c50170",
   "template": "stipa_pulchra",
   "template_common": "purple needlegrass",
   "height_scale": 1.593
  },
- "notes": "Written by rule from the USDA PLANTS Database's characteristics (pipeline/ground_cards.py). COMPROMISE: PLANTS growth form 'Rhizomatous', drawn as grass.js's bunch clump (it has two: annual and bunch). PLANTS characteristics used (CACA4): Height, Mature (feet) = 4.9, Foliage Color = Green, Fruit/Seed Color = Yellow, Active Growth Period = Spring, Bloom Period = Late Spring, Leaf Retention = No, Growth Form = Rhizomatous, Drought Tolerance = Low. The client's seasons are calendar quarters; PLANTS' bloom periods are the species' over its US range, not corrected for this tile's elevation. Region tag landfire_mz21 (the LANDFIRE map zone whose descriptions named it) is not a natural region in pipeline/regions.py: no regional table draws it.",
+ "notes": "Written by rule from the USDA PLANTS Database's characteristics (pipeline/ground_cards.py). COMPROMISE: PLANTS growth form 'Rhizomatous', drawn as grass.js's bunch clump (it has two: annual and bunch). PLANTS characteristics used (CACA4): Height, Mature (feet) = 4.9, Foliage Color = Green, Fruit/Seed Color = Yellow, Active Growth Period = Spring, Bloom Period = Late Spring, Leaf Retention = No, Growth Form = Rhizomatous, Drought Tolerance = Low, Foliage Texture = Medium. The client's seasons are calendar quarters; PLANTS' bloom periods are the species' over its US range, not corrected for this tile's elevation. Region tag landfire_mz21 (the LANDFIRE map zone whose descriptions named it) is not a natural region in pipeline/regions.py: no regional table draws it.",
  "sources": [
   "USDA PLANTS profile CACA4: https://plantsservices.sc.egov.usda.gov/api/PlantProfile?symbol=CACA4, read 2026-11-06",
   "USDA PLANTS characteristics (CACA4): https://plantsservices.sc.egov.usda.gov/api/PlantCharacteristics/<id>, read 2026-11-06",
@@ -203,6 +203,7 @@
     ]
    },
    "cures": "with_the_season"
-  }
+  },
+  "leaf_width_m": 0.0035
  }
 }

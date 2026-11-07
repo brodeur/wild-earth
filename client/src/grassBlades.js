@@ -211,12 +211,15 @@ export function buildTussockClump(seed = 23) {
 // is its age rank: the rim ring's arching leaves are the oldest (0 .. 0.29), the upright inner ones the youngest, so
 // grass.js draws a plant's share of dead leaves (last years', standing in the tuft) as its lowest ranks: at the rim and the
 // base first, where a bunchgrass holds them (tuftEnvelope gives the light model its leaf area and envelope).
-export const TUFT_RIM = 26, TUFT_INNER = 64;
+// Round 5 (fine leaves): 120 leaves at 0.75 of the width (2.0-2.9 % of the tuft: 4.5 mm on a 0.19 m fescue), the same leaf
+// area, so grass.js can narrow them toward the species' own width (ground.leaf_width_m) near the camera without the tuft
+// going thin; the rim ring keeps its share (35 of 120). (150 at 0.6 cost about 5.5 ms at Lamar's eye pose.)
+export const TUFT_RIM = 35, TUFT_INNER = 85;
 export function buildTuftClump(seed = 29) {
   const rnd = mulberry32(seed), B = new ClumpBuilder(), leaves = [];
   const add = (opts, rim) => { const v0 = B.p.length / 3; leaf(B, rnd, opts); leaves.push([v0, B.p.length / 3, rim]); };
-  for (let i = 0; i < TUFT_INNER; i++) add({ spread: 0.18, theta: [0.05, 0.4], droop: [0.35, 1.0], len: [0.8, 1.15], width: [0.026, 0.038], segs: 3 }, false);
-  for (let i = 0; i < TUFT_RIM; i++) add({ spread: 0.24, theta: [0.45, 0.85], droop: [0.7, 1.4], len: [0.55, 0.85], width: [0.026, 0.038], segs: 3 }, true);
+  for (let i = 0; i < TUFT_INNER; i++) add({ spread: 0.18, theta: [0.05, 0.4], droop: [0.35, 1.0], len: [0.8, 1.15], width: [0.0195, 0.0285], segs: 3 }, false);
+  for (let i = 0; i < TUFT_RIM; i++) add({ spread: 0.24, theta: [0.45, 0.85], droop: [0.7, 1.4], len: [0.55, 0.85], width: [0.0195, 0.0285], segs: 3 }, true);
   // age ranks: a shuffled order within each group, the rim's below the inner leaves'
   const order = g => { const ix = leaves.map((l, i) => i).filter(i => leaves[i][2] === g); for (let i = ix.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [ix[i], ix[j]] = [ix[j], ix[i]]; } return ix; };
   const rim = order(true), inner = order(false), n = leaves.length;

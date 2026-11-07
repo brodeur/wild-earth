@@ -229,7 +229,7 @@ const THATCH = [0.58, 0.54, 0.45];   // last year's grey dead leaves, in among t
 // the needlegrass share and its drifts, so the sward's pattern is unchanged, and the wild oat stands (ROLE.oat)
 // are the wild oat. The old two-palette sward is exactly the first annual and the first bunch species (the wild oat
 // and the needlegrass carry the former palettes).
-const GS_MAX = 12;
+const GS_MAX = 16;   // 16 (2026-11-06, round 5; was 12): room for a tile's small riparian and alpine communities' own graminoids beside the steppe's
 const CLASS_NAME = { 1: 'oak_woodland', 2: 'conifer_forest', 3: 'mixed_forest', 4: 'chaparral', 5: 'grassland', 6: 'riparian' };
 // The generic grass (2026-11-06): a tile outside the regional tables (species_mix.json class_fallback false) whose mix
 // lists no grass of its own never borrows California's grasses (their class weights) any more, as its trees, shrubs
@@ -255,7 +255,8 @@ const grassEntry = (id, k) => {
   const s = SPECIES[id], g = s.ground || {};
   return { id, k, type: g.type === 'bunch' ? 1 : 0, height: g.height ?? 1, width: g.width ?? 1, palette: g.palette || null,
     heads: g.heads?.months || null, cure: g.cure ?? 1, annual: s.lifespan === 'annual', classes: s.habitat?.classes || {}, common: s.common, generic: !!s.generic,
-    tuft: g.tuft?.width_m > 0 && g.tuft?.height_m > 0 ? { w: g.tuft.width_m, h: g.tuft.height_m } : null, months: g.months?.live && g.months?.cured ? g.months : null };
+    tuft: g.tuft?.width_m > 0 && g.tuft?.height_m > 0 ? { w: g.tuft.width_m, h: g.tuft.height_m } : null, months: g.months?.live && g.months?.cured ? g.months : null,
+    leafW: g.leaf_width_m > 0 ? g.leaf_width_m : 0 };
 };
 const LIB_GRASSES = SPECIES_IDS.filter(id => SPECIES[id].form === 'grass');
 // The library-wide set (the only one before 2026-11-06, iteration 7): the first GS_MAX - 1 grasses and the generic one.
@@ -356,6 +357,8 @@ function atMonth(v, month) {
 const SP_CURE_GLSL = /* glsl */`
   uniform vec4 spCure[${GS_MAX}]; uniform vec3 spDRoot[${GS_MAX}]; uniform vec3 spDTip[${GS_MAX}]; uniform vec3 spDHead[${GS_MAX}]; uniform vec3 spDAwn[${GS_MAX}];
   uniform vec4 tuftVol;
+  uniform float spLeaf[${GS_MAX}];   // round 5: each species' leaf width (m, ground.leaf_width_m; 0 none) for a tuft's near leaves
+  uniform float tuftPx;              // pixels per metre at 1 m from the camera (the drawing buffer's height x P11 / 2)
   float plantCure(int sp, float seed) { vec4 c = spCure[sp]; float u = fract(sin(seed * 61.7 + 0.29) * 43758.5453123) * 2.0 - 1.0; return u < 0.0 ? mix(c.x, c.y, -u) : mix(c.x, c.z, u); }
   float tuftDead(int sp, float sxz, float seed) {
     // the size ratio against the record's tuft; 1 for a grass with none (the generic tufted grass, a riparian row's stand-in:
@@ -579,6 +582,14 @@ const NEAR_VERT = /* glsl */`
     vec2 off = (windDir * b + vec2(-windDir.y, windDir.x) * fl) * t * t * max(H, 0.2);
     w3.xz += off; w3.y -= 0.5 * dot(off, off) / max(H, 0.2) * t;   // roughly keep the blade's length
     vec3 wp = iPos.xyz + w3;
+    // A tuft's leaves at their species' own width (round 5): the drawn leaf (buildTuftClump: 2.4 % of the tuft on average)
+    // narrowed in view space toward ground.leaf_width_m (Idaho fescue 1.5 mm), never under 1.2 px across (pxm: a pixel's size
+    // here), so near a fescue is fine-leaved and from a few metres out its leaves keep the clump's cover without aliasing
+    if (tuft && part < 0.5 && spLeaf[sp] > 0.0) {
+      float tp = 1.0 - 0.85 * pow(t, 1.8), hw = 0.012 * tp * iVar.x * mix(0.8, 1.0, heightScale), pxm = d / max(tuftPx, 1.0);
+      float r = clamp(max(0.5 * spLeaf[sp] * tp, 0.6 * pxm) / max(hw, 1e-5), 0.15, 1.0);
+      wp += vec3(viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]) * (aBlade.w * hw * (r - 1.0));
+    }
     // the widening: the vertex is pushed out on its side of the blade along the camera's right, by the extra half width
     // (the blade's own half width by part and taper, times wf - 1), so an edge-on blade never collapses to a sliver either
     if (wf > 1.001) {
@@ -1055,6 +1066,7 @@ export class Grass {
       spCure: { value: Array.from({ length: GS_MAX }, () => new THREE.Vector4()) }, spDRoot: { value: Array.from({ length: GS_MAX }, col) },
       spDTip: { value: Array.from({ length: GS_MAX }, col) }, spDHead: { value: Array.from({ length: GS_MAX }, col) }, spDAwn: { value: Array.from({ length: GS_MAX }, col) },
       tuftVol: { value: new THREE.Vector4() }, tuftBox: { value: new THREE.Vector2(1, 1) },
+      spLeaf: { value: new Float32Array(GS_MAX) }, tuftPx: { value: 800 },
       ...atmo,
     };
     const nearMat = new THREE.ShaderMaterial({ vertexShader: NEAR_VERT, fragmentShader: NEAR_FRAG, uniforms: this.uniforms, side: THREE.DoubleSide });
@@ -1871,6 +1883,7 @@ export class Grass {
       // its cured palette less its live one, both through the same scaling as the palette (set is linear but for a clamp)
       const cu = u.spCure.value[k], dpal = [u.spDRoot, u.spDTip, u.spDHead, u.spDAwn];
       cu.set(0, 0, 0, G?.tuft ? G.tuft.w : 0); for (const d of dpal) d.value[k].setRGB(0, 0, 0);
+      u.spLeaf.value[k] = G?.leafW || 0;
       if (G && own && G.months) {
         cu.x = this.cureAt(G, month); cu.y = this.cureAt(G, month - dPh); cu.z = this.cureAt(G, month + dPh);
         ['root', 'tip', 'head', 'awn'].forEach((q, i) => { set(cL, s255(G.months.live[q])); set(cC, s255(G.months.cured[q])); dpal[i].value[k].setRGB(cC.r - cL.r, cC.g - cL.g, cC.b - cL.b); });
@@ -1973,6 +1986,7 @@ export class Grass {
   // x, z (the flight position) are kept for the caller's signature; the camera position is used.
   update(x, z, dt, camera, look) {
     this.uniforms.time.value += dt;
+    if (this.renderer) this.uniforms.tuftPx.value = this.renderer.domElement.height * camera.projectionMatrix.elements[5] / 2;   // a tuft leaf's pixel floor (round 5)
     const key = look.grass.join(',') + (look === SEASON_LOOK[this.season] ? '' : '?') + seasonState.version;
     if (key !== this.lookKey) { this.lookKey = key; this.applyLook(look); }
     const cp = camera.position, north = -cp.z, agl = cp.y - this.ground(cp.x, north);
