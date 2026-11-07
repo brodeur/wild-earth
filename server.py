@@ -1408,6 +1408,27 @@ def static_allowed(path: str, dev: bool = False) -> bool:
     return True
 
 
+
+SPECIES_DIR = REPO_ROOT / "library" / "species"
+_SPECIES = {"key": None, "body": None}
+_SPECIES_LOCK = threading.Lock()
+
+
+def species_bundle():
+    """((raw, gzipped), etag) for the species files index.json lists, cached until any of them changes."""
+    import gzip
+    index = SPECIES_DIR / "index.json"
+    ids = [str(i) for i in read_json(index).get("species", [])]
+    files = [SPECIES_DIR / f"{i}.json" for i in ids if re.fullmatch(r"[a-z0-9_]+", i)]
+    key = (index.stat().st_mtime_ns, tuple((f.name, f.stat().st_mtime_ns) for f in files if f.exists()))
+    with _SPECIES_LOCK:
+        if _SPECIES["key"] != key:
+            bundle = {f.stem: json.loads(f.read_text()) for f in files if f.exists()}
+            raw = json.dumps(bundle, separators=(",", ":")).encode()
+            _SPECIES["body"] = ((raw, gzip.compress(raw, 6)), '"' + hashlib.sha1(raw).hexdigest()[:20] + '"')
+            _SPECIES["key"] = key
+        return _SPECIES["body"]
+
 class Handler(SimpleHTTPRequestHandler):
     dev_files = False   # main() sets it when bound to loopback
 
@@ -1481,11 +1502,37 @@ class Handler(SimpleHTTPRequestHandler):
             raise ValueError("lon/lat out of range (UTM covers lat -80..84)")
         return Tile.from_anchor(lon, lat)   # the point itself goes no further
 
+    def send_species_library(self):
+        """The species library in one response (2026-11-06): the client fetched index.json and then 193 files in
+        parallel at module load, each with a 2.5 s timeout, and over the network on the hosted single small machine
+        a score of them timed out and fell back to the built-in shapes (or none). One gzipped body of {id: file}
+        for the ids index.json lists, rebuilt when any file changes."""
+        body, etag = species_bundle()
+        if self.headers.get("If-None-Match") == etag:
+            self.send_response(304)
+            self.send_header("ETag", etag)
+            self.end_headers()
+            return
+        gz = "gzip" in (self.headers.get("Accept-Encoding") or "")
+        data = body[1] if gz else body[0]
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        if gz:
+            self.send_header("Content-Encoding", "gzip")
+        self.send_header("Vary", "Accept-Encoding")
+        self.send_header("ETag", etag)
+        self.send_header("Cache-Control", "no-cache")
+        self.send_header("Content-Length", str(len(data)))
+        self.end_headers()
+        self.wfile.write(data)
+
     # -- routes
     def do_GET(self):
         u = urlsplit(self.path)
         if hub.handle(self, "GET", u.path, u.query):
             return
+        if u.path == "/api/species-library":
+            return self.send_species_library()
         if u.path == "/api/tiles":
             if not (TILES_DIR / "index.json").exists():
                 if not BUILDS:

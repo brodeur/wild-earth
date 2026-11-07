@@ -6759,3 +6759,18 @@ season".
 - **Elsewhere, kept for the next Start**: a member on another tile or the main screen is told and goes into that season
   at their next Start, and their invitation carries it.
 
+
+## 2026-11-06: the species library arrives in one response
+
+On the hosted site (v43) a headless load of the title screen warned for 20 species "signal is aborted without
+reason; using the built-in parameters". `treegen.js` blocks module load on the species library: index.json, then all
+193 files fetched in parallel, each given 2.5 s. On the single small Fly machine, alongside the earth textures, a score
+of them missed that and fell back to the built-in shapes (and a species with no built-in set has no shape at all), so
+players over a real connection could get generic trees. This went back to the species library's first version.
+
+Now `server.py` answers `GET /api/species-library` with every file index.json lists as one JSON object
+`{id: file}`, gzipped (1.16 MB to 250 KB), with an ETag (304 on a match) and rebuilt whenever a file or the index
+changes. The client asks for it first (15 s), and a host without the endpoint (a static copy) gets the files one by
+one as before, now 8 s each. Measured on the local server with the cache off: one request, 193 species from the
+library, none built-in, also under a throttled 4 Mbps / 150 ms network (title up at 12.9 s there).
+`tests/test_species_bundle.py` covers the bundle (every listed id, the files unchanged, gzip, plain, 304).
