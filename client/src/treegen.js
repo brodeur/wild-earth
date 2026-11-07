@@ -479,9 +479,23 @@ async function getJSON(url, ms) {
   finally { clearTimeout(t); }
 }
 
-export async function loadLibrary(base = LIB_URL, ms = 2500) {
+// The server's one-response bundle of the library (server.py /api/species-library, gzipped, 2026-11-06): 193 files
+// fetched in parallel at 2.5 s each timed out by the score on the hosted machine and fell back to the built-in shapes.
+// A host without that endpoint (a static copy) gets the files one by one, each with a longer wait than before.
+const BUNDLE_URL = new URL('../../api/species-library', import.meta.url);
+
+export async function loadLibrary(base = LIB_URL, ms = 8000) {
   const species = {}, source = {}, raw = {};
   for (const [id, r] of Object.entries(BUILTIN)) { species[id] = normalizeSpecies(r); source[id] = 'built-in'; }
+  if (base === LIB_URL) {
+    try {
+      const all = await getJSON(BUNDLE_URL, 15000);
+      if (all && typeof all === 'object' && Object.keys(all).length) {
+        for (const r of Object.values(all)) if (r?.id) { species[r.id] = normalizeSpecies(r); source[r.id] = 'library'; raw[r.id] = r; }
+        return { species, source, raw };
+      }
+    } catch (e) { /* no bundle on this host: the files one by one below */ }
+  }
   try {
     const index = await getJSON(new URL('index.json', base), ms);
     const files = await Promise.all(index.species.map(id => getJSON(new URL(`${id}.json`, base), ms)
