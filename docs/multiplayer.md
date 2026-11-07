@@ -107,11 +107,12 @@ are in), tile rooms, tile counts and the tile chat are in memory only.
 The rule until now was "never store a player id beside a position". Groups need live positions shared and
 the places list needs to say how many players are at Placerville, so the rule becomes:
 
-- A position is relayed, never persisted. It goes to the members of the player's group who are in the same
-  tile, at 5 Hz, and to no one else in the first lanes (a later step may show every player on a tile as
-  their animal, relaying to the tile's room; that is the same rule). It is not written to disk, not logged,
-  not kept after the connection closes. The connection holds its last one in memory so that a group member
-  who enters the room after it is told where the player is (lane 4); it goes with the room or the connection.
+- A position is relayed, never persisted. It goes only to players in the same world (the same tile's room and the
+  same season), at 5 Hz: to the members of the player's group in any form, and to everyone else there only while the
+  player is a spirit (2026-11-06, "Who sees whom" below; until then the group alone). A body's pose never goes outside
+  the group. It is not written to disk, not logged, not kept after the connection closes. The connection holds its
+  last one in memory so that a player who enters the world after it is told where the player is (lane 4), under the
+  same rule; it goes with the room or the connection.
 - The places list needs only a count per tile: the number of distinct users with a connection in that
   tile's room. Counts are what the hub sends to the earth; never who.
 - Presence tells friends and group members that a user is online and, when they are in a world, which tile
@@ -151,8 +152,10 @@ season    {season, date?}                     (the sender changed the season: 's
                                               -> season {from, season, date?, tile?} to every online member of their groups,
                                               seasoned {season, to} back; group season)
 answer    {invite, join: true|false}
-room      {op: 'join'|'leave', tile}          (the client joins its tile's room when a world is entered)
-pos       {x, y, z, yaw, form}                (5 Hz, only while in a room and in a group)
+room      {op: 'join'|'leave', tile, season?} (the client joins its tile's room when a world is entered, with the season
+                                              the world is in, and again when the season changes in place; absent: the
+                                              tile's by the calendar. Who sees whom)
+pos       {x, y, z, yaw, form, b?, c?}        (5 Hz while in a room; relayed under the rule in "Who sees whom")
 watch     {on: true|false}                    (on the earth: receive tile counts)
 rtc       {to, tc?, k: 'sdp'|'ice'|'state'|'bye', sdp?: {type, sdp}, ice?: {candidate, sdpMid, sdpMLineIndex}|null,
            mic?, cam?}                        (WebRTC signalling to a group member in the same room; lane 5)
@@ -168,10 +171,13 @@ groups    {groups[]}                          (after any change; each with its m
 chat      {scope, from, text, at}
 invite    {id, from, tile, season, date?, group?, point?, follow?}
 season    {from, season, date?, tile?}        (a group member changed the season; tile: theirs, when in a world)
-pos       {user, x, y, z, yaw, form}          (from a group member in the same room; on entering a room, the
-                                              last one from each group member already in it; lane 4)
+pos       {user, name, x, y, z, yaw, form, b?, c?}  (name: their display name; from a group member in the same world in any form, or anyone in it while a
+                                              spirit; on entering a world, the last one of each player already in it that
+                                              may be seen; lane 4, Who sees whom)
+gone      {user}                              (someone who was seen may no longer be: they left the world, or a stranger's
+                                              spirit went into a body)
 counts    {tiles: {tile_id: n}}               (every 2 s to watchers, only when changed)
-rtc       {from, fc, k, ...}                  (relayed from a group member in the same room, fc their connection's id;
+rtc       {from, fc, k, ...}                  (relayed from a group member in the same world, fc their connection's id;
                                               k 'bye' also comes from the hub when they leave the room or close; lane 5)
 ```
 
@@ -750,7 +756,8 @@ groupSeason, Start into it), `client/src/main.js` (the select's relay, `seasonCt
 - **No confirmation step**, as asked, and on purpose: the hub's room, the position relay, the wisps and voice are per
   tile, not per season, so a member who stayed behind would still see the group's wisps and hear them while standing in
   another season's forest with another season's animals (their own animal host and channel). Following keeps the
-  group in one world; anyone can change it back, and everyone is told who did.
+  group in one world; anyone can change it back, and everyone is told who did. (Since 2026-11-06 seeing and voice are
+  per world, the tile and the season, so a member left in another season is no longer seen at all: "Who sees whom".)
 - **Verified** with the two headless Chromes against the real hub: both in Placerville in fall (follow_a hosting the
   animals, follow_b mirroring); follow_a picks winter in the select: follow_b's veil, then winter on the same day (02-16),
   the select on winter, the animal channel winter with follow_a still the host, follow_b at the same spot (5000, 764,
@@ -764,6 +771,112 @@ groupSeason, Start into it), `client/src/main.js` (the select's relay, `seasonCt
 - **Open.** The acorn game and the dig keep the season they were built with after any season change, the player's own
   included (as before); a change made while signed out of the hub or with no group stays the player's own.
 
+## Who sees whom
+
+Aaron, 2026-11-06: "Players should be able to see other players in spirit mode. When in a group, users can see eachother
+regardless of form. Each user sees the other in the form that they are currently inhabiting."
+
+**The rule.** A player's world is a tile and a season (the game server already keeps one animal, acorn and dig world per
+tile and season). Within a world:
+
+1. **Spirits are public.** A player in spirit form is seen by everyone in the same world, group or not, whatever form the
+   viewer is in.
+2. **The group sees each other in any form**: spirit, any ground animal, any flier, the raven, the squirrel, the
+   woodpecker, and the change from one to the other.
+3. **Each is drawn in their current form**: a spirit as the wisp in their avatar's colours, a body as that species' own
+   model at its size in the species' pool, its gait or wings driven by the relayed motion (players.js, "Players as their
+   animals" above).
+4. **Strangers in a body are not shown as players.** Their position does not leave the hub while they are in a body.
+
+Nothing crosses worlds: two players in one tile in different seasons stand in different forests with different animals,
+and do not see each other (nor hear each other: the voice signalling keeps to the same world too). The tile chat stays the
+tile's, and counts and presence stay per tile.
+
+**The hub** (`hub.py` `HubConn.viewers`, `m_pos`, `m_room`, `leave_world`, `tell_gone`). The room join carries the season
+(`room {op: 'join', tile, season}`; an older client without it is put in the tile's calendar season). A position goes to
+every other user's connection in the same world where neither blocks the other and either they share a group or the
+sender is a spirit; a body's pose (`b`, `c`) therefore only ever goes to the group. It carries the sender's display name
+(`name`), which a stranger's page has no other way to know and the tile chat already shows. `gone {user}` goes to those who could
+see the sender and no longer may: when the sender leaves the room, closes, switches tile, or changes season (a join in the
+same tile with another season moves the connection between the two worlds), and, to the strangers alone, when the
+sender's form goes from spirit to a body. A joiner is sent the last position of each player already in the world that it
+may see (a group member's in any form, anyone's while a spirit). WebRTC signalling and its `bye` keep to group members in
+the same world. Positions stay in memory only (the connection's last one, gone with the room), are never logged, and only
+tile ids go anywhere else, as before.
+
+**The client.** `hub.js` `enter(tile, season)` (and the reconnect's re-join) sends the season; `pos()` now goes whenever
+the player is in a room (the hub decides who gets it, so a body with no group goes nowhere). `multiplayer.js` joins the
+room with the world's season (`seasonCtl.now()`), re-joins when the season changes in place (checked on each 5 Hz send:
+the select, or the group's season), clearing the old world's players; `gone` takes a player off; voice counts only group
+members as present (`isMate`). `players.js` draws what comes:
+- a group member as before (the wisp or their animal, the name within 60 m, the avatar at the screen's edge with the
+  distance, the dot on the mini-map);
+- anyone else, only ever as a spirit: the wisp in their avatar's colours and **their name within 30 m**, smaller and paler
+  than a group member's. Why a label at all: the tile's chat already shows a speaker's display name to everyone in the
+  tile, so a name over a wisp tells no one anything new, and it gives a wisp drifting by a name to greet in that chat
+  (Aaron's aim of bringing people closer to each other). Why nearer and with nothing more: the edge avatar, the distance
+  and the map dot exist to find friends across the tile; for a stranger they would track them. Never a location, only
+  the account's display name;
+- twelve slots (six before), the one longest unheard from reused.
+
+**Two fixes the audit turned up** (both seen with the test below):
+- **A group member's body in a species the viewer does not perceive was never drawn.** `animals.js` hides a species'
+  whole pool when the player's own species does not perceive it (`setObserver`, perception.json), so a member in the
+  woodpecker's body was invisible to a member in a deer's (the record was there, its pool hidden). Now a species with a
+  remote body in it is drawn with only its remote bodies (`showRemoteBodies`: they hold its first slots, so the pool's
+  count stops after them); its AI animals stay unseen, as the perception says.
+- **Leaving a woodpecker in flight on a mirror page threw** (`animals.release` read the AI record's home oak, which a
+  mirrored record does not have), leaving the player in no body and no spirit, every control off. It now flies to the
+  oak nearest where it was left (the host runs it on from there).
+
+**The transitions.** Going into a body in view of the group, the wisp dives into the animal's chest over 0.7 s, shrinking
+and flaring, and the body is then the member (the AI's animal is taken out of the shared animals as before). Leaving a
+body, the wisp grows out of where the animal stands with a burst of motes (`Wisp.burst`, the player's own exit) while the
+animal goes back to the AI there. A stranger's spirit going into a body, or anyone leaving the world, shrinks away where it
+was over 0.6 s (`gone`). Seen again later (out of the body, back in the world), it forms anew.
+
+**A stranger's body as an ordinary animal: not yet, and it should be.** Today when a stranger embodies an animal the
+host takes that animal out of everyone's world (`areq` take), so the strangers around them see a deer vanish and nothing
+where the player walks. It should go on being drawn as an ordinary animal: no name, no wisp, no mark, no link to the
+account, so the herd stays whole. The shared-animals channel is the place for it, not the hub (it is already anonymous and
+per world): the embodied page would send its body's pose (the bodySample fields, 4 Hz) on the animals channel to the
+host only (as `apos` goes), the host would keep the record in its stream marked held by that member instead of dropping
+it, skip its AI, and stream its row like any animal's (under the cap); the host's own body would be streamed the same way.
+A hand-over keeps it, since the new host rebuilds from its mirror and the held record carries the member number. The
+group would draw both the named body (the hub) and the anonymous one (the stream): the hub's `c` would carry the body's
+stream number so a group member's page hides the anonymous copy. Not built in this lane.
+
+**Verified** (2026-11-06) with `tools/mp/visibility.mjs` on the home tile against a local hub: three headless Chromes
+signed in as three test users, A and B in a group and C a stranger, each entering El Dorado from the main screen (A's
+Start sent B the follow invitation). Every case was checked from both sides, from the page's own state: the slot in
+players.js and, for a body, its record in the species' pool and its instance drawn. Each viewer's side was also
+screenshotted with a camera aimed at the other player. **35 of 35 checks passed**:
+- C's spirit and A's spirit see each other, and B sees C's. A has no edge avatar or map dot for C, and C's label reads
+  C's name from the hub.
+- A in a deer sees C's spirit. C does not see A.
+- C in a deer is hidden from A and B. From the deer, C sees B's spirit.
+- B's spirit and A's deer see each other.
+- A's deer and B see each other as each of B's bodies: the raven, the western gray squirrel, the acorn woodpecker and
+  the red-tailed hawk. The woodpecker failed before the perception fix and the release crash fix above.
+- A leaves the deer and is seen by B and C as a spirit (frames from B's side show the wisp grow out of the deer).
+  A goes into a deer again: B sees the deer, C sees nothing.
+- C changes the season to winter: B and C no longer see each other. Back in fall, they see each other again.
+- C and B go to the main screen: gone for A within a second.
+
+Before the rule, the same pages audited what was there: sign-in, friends and the group, Start with the follow
+invitation and Join, the group's positions and wisps, group and tile chat, the shared animals (one host, the others
+mirroring, a hand-over when the acorn host moved) and voice. Voice was A's microphone on (a fake device) and A and B's
+peer connection `connected`, with the stranger getting no peer. All of it worked.
+
+Not verified: real browsers by real people; more than three pages (Chromium's WebGL context limit and this machine's
+load, 20 to 400, during the run); a stranger's label and the embody frames by eye at play speed (the pages ran at a few
+frames a second). The fliers' shots are from a moving camera behind a fast bird, so the state checks are the evidence
+there.
+
+**Open.** A player removed from a group while in a body fades from the former member's view after the 4.5 s silence rather
+than at once (no `gone` on a group change). Two tabs of one user in one world both send positions (as before). Strangers'
+bodies as ordinary animals (above).
+
 ## Open
 
 - Federation of accounts: a user is a row on one hub. A handle of the form name@hub and signing in to
@@ -772,7 +885,7 @@ groupSeason, Start into it), `client/src/main.js` (the select's relay, `seasonCt
 - Seeing the other players on a tile as their animals, with their names over them for friends: the next
   step after group travel, under the same privacy rule (relay to the room, persist nothing). The group's members
   are drawn as their animals since 2026-11-02 ("Shared animals" above, "Players as their animals"); the players
-  on the tile outside the group are still unseen.
+  on the tile outside the group are seen as spirits since 2026-11-06 ("Who sees whom" above), and not in their bodies.
 
   **Built (2026-11-02, the group's players seen; the bodies are still open).** Aaron, after testing with two
   browsers: "I can't see the other player's spirit. The players should show up on the map and just like if I'm in a

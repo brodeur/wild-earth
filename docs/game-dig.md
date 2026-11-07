@@ -549,7 +549,8 @@ tunnelStep; `flight.js` easeOrbit holdPitch; `groundControl.js` updateCamera):
   junction, now weigh the segment's slope by the aim: looking down takes the way down, looking up the way up. On a
   slope up to the old 34 degrees with a level view, the old heading test is unchanged. In a near-vertical shaft with a
   level view, the body keeps the direction it last walked.
-- **Hints.** Starting a dig says "swing the view up over you to dig down", and the dig slot's tooltip says the same.
+- **Hints.** Starting a dig says "swing the view up over you to dig down", and the dig slot's tooltip says the same
+  (since 2026-11-06 the tooltip leads with the arrows: see below).
 
 **Verified** (home tile, port 8786, the underground view, both at the real rate and at 4x):
 - **Vole, straight down.** A simulated pointer drag (20 moves, 400 px down the screen) set the orbit to 1.0. Q dug
@@ -570,4 +571,126 @@ tunnelStep; `flight.js` easeOrbit holdPitch; `groundControl.js` updateCamera):
   steps as before.
 - **Unchanged.** The coyote's pit and the jackrabbit's form already go straight down; the AI diggers keep their own
   slopes, except that an AI rabbit's last few centimetres to its depth are gentler under the new depth rule.
+
+## The arrows steer the dig (2026-11-06)
+
+Aaron: "While digging, the purpose of the arrow keys changes upArrow begins to dig up, downarrow begins to dig down"
+
+With the dig key held (Q, or the vole's E with nothing to eat), the arrow keys stop walking and steer the dig's slope
+instead (`dig.js` digFrom, aimPitch, keyAim; `groundControl.js` input and updateCamera):
+- **↓ and ↑.** ↓ starts angling the face down and ↑ up, from the slope the face has now. Held, it keeps turning, at
+  the same rate the face can curve (about 0.7 rad a second for the vole and the brush rabbit, so level to near straight
+  down takes about 2 s), to the dig's limits: 83 degrees down, 57 up. The depth floor still levels a dig off near the
+  digger's deepest (the vole's 50 cm, the rabbit's 32).
+- **Released.** The slope holds where it was let go, through more digging, a short let-go of Q, and walking.
+- **Left and right.** A and D, or a horizontal mouse drag (the camera's heading), still steer.
+- **The camera.** It stays as a second way to aim, but yields to the keys. Once an arrow has set the slope, the
+  orbit's pitch no longer moves it. A drag that swings the camera 0.08 rad (about 30 px) up or down hands the aim back
+  to the camera; small vertical wobble in a steering drag doesn't. Leaving the tunnel, or starting a new dig from the
+  surface, clears the arrows' slope.
+- **Nothing else fires.** While the dig key is held, the arrows don't walk (no forward or back in `input()`) and don't
+  ease the camera's orbit back behind. Without the dig key they mean what they always did: ↑ walks, ↓ backs, in a
+  tunnel and on the surface.
+- **Taught.** The keys strip shows `Q ↑ ↓ dig up · down` for the vole and the brush rabbit, and their dig slot's
+  tooltip leads with the arrows.
+
+**Verified** (home tile, port 8786, the brush rabbit at its real rate, real keyboard events; the frame strip is
+`docs/dig-arrows-strip.jpg`, seen from a fixed side camera in the underground view):
+- **Down.** Q dug in at the start pitch (-32 degrees at 15 cm). ↓ held turned the face to -72 degrees within 1 s, and
+  the face levelled off at the rabbit's 32 cm floor. After ↓ was released, the held slope stayed down with the floor
+  holding it level.
+- **Level.** A 0.25 s tap of ↑ turned the face from level to 12 degrees up. It held there over the next 2.4 s.
+- **Up and out.** ↑ held turned the face to 57 degrees up and it broke the surface 1.9 m from the first hole.
+- **No walking.** The body stayed at the face all the while: the arrows never walked it.
+- **The camera takes it back.** A camera swing of 0.5 rad returned the aim to the camera.
+- **Without Q.** In the tunnel ↓ backed the rabbit 23 cm, and on the surface ↑ walked it 1.2 m.
+- **Taught.** The strip and the tooltip read as above.
+- All server tests pass.
+
+**Not verified**:
+- **The vole.** It runs the same code at its own rate, and isn't checked on its own.
+- **The gray squirrel.** The brief named it, but it isn't a digger in the game: only the vole, the brush rabbit, the
+  jackrabbit (its form) and the coyote (its pit) dig. The form and the pit go straight down, so the arrows do nothing
+  for them beyond not walking while Q is held.
+
+## Dens (2026-11-06)
+
+Aaron: "For diggers, once they are underground a new control appears. The 1 key "dig den" which makes a large area.
+Dens that overlap should have empty space. When you click build den, the den shape appears in a green silhouette,
+attached to the mouse, its location fixed below the surface, but tracking the mouse. You can place the den anywhere
+connected to a tunnel. Digging the den is a process that can be interrupted, and returned to/completed."
+
+**A den is a room node** (`client/src/digDen.js`; `dig.js` applyEvent `den`, `denk`, denPlace; `digworld.py` the
+same). The tunnels already had rooms: a chamber is one node drawn as an ellipsoid (r, 0.8r, r) carved into the soil,
+with every tunnel entering it at its own bore. A den is the same thing, bigger, and dug over time:
+- **The plan.** The `den` event names the den, a segment, and the tunnel node `at` it opens off. It carries where it
+  starts (`at`'s place and bore: ax, ay, az, ar) and its planned centre and radius (x, y, z, r).
+- **The growth.** The den's node stands at the plan's progress k: its centre moves from `at` toward the planned
+  centre and its radius grows from the bore to the plan's as k goes from 0 to 1. So the cavity grows out of the
+  tunnel and is joined to it from the first moment. Its top climbs linearly from the tunnel's to the plan's, so it
+  never breaks the surface on the way.
+- **Progress.** `denk` { id, k } only rises. The player sends it in 2% steps (50 events a den). Every page sees the
+  cavity grow, and a late joiner gets the den as far as it was dug (`dn` [ax, ay, az, ar, x, y, z, r, k] on the node in
+  the shared shape).
+- **Limits.** A den is never absorbed into a chamber or widened, and decays with its system like any tunnel. Its
+  radius is 8-40 cm, its centre within 70 cm of where it starts, and `at` must stand where the plan says (within
+  5 cm). A tile and season hold at most 200 dens.
+- **Size and depth.** Per species (`DIGGERS` den): the vole's den is 16 cm in radius (32 cm across) with its centre
+  28 cm down, so its roof is 15 cm under the ground. The brush rabbit's is 30 cm in radius (60 cm across, about five
+  times its bore) with its centre 42 cm down, its roof 18 cm under. Digging one out takes 40 s for the vole and 45 s for
+  the rabbit.
+
+**Overlapping dens are one cavity.** The carving is a union of the carved air, so two dens that overlap leave no wall
+between them. A den placed over a finished den opens off it, so the two are joined by a segment and walked between.
+When a den is finished, it is also joined to every other finished den it overlaps.
+
+**The controls** (the vole and the brush rabbit, underground only):
+- **Placing.** 1, or the "dig den" slot (shown only underground), takes out the silhouette: a green ellipsoid of the
+  den's size at the species' depth under the ground the mouse points at, following the mouse. It turns red where it
+  would join no tunnel. It joins the dug space it overlaps most: a tunnel's node within its radius plus 12 cm, or a room
+  or finished den it overlaps, but never a den still being dug. A click places it. Esc, a right click, or 1 again puts
+  it away. While placing, the click goes neither to the camera's orbit nor to identifying a tree, and 1 isn't a strike.
+- **Digging.** A den placed where the body is starts digging at once, with the body in the digging pose and the dirt
+  thrown back. One placed elsewhere along the tunnels waits with its outline drawn: walk to it and press 1, or hold Q
+  at it.
+- **Interrupting.** Any move key, A or D, E, F, X or Space stops the digging, as do leaving the tunnel, leaving the
+  body, or a coyote's pit opening the system from above.
+- **Resuming.** 1 or Q back at the outline carries on from the progress stored, on any page and after a reload.
+- **Progress.** Shown by the slot's sweep (the dark part is what is left) and the HUD ("digging the den · 45% · 23 cm
+  down").
+- **Taught.** The keys strip shows `1 dig den (underground)`. The slot's tooltip says how to place, cancel, interrupt
+  and resume, and that overlapping dens are one room.
+
+**Where this departs from the brief:**
+- **Who digs dens.** Only the tunnellers dig dens (the vole and the brush rabbit). The jackrabbit and the coyote never
+  go underground: they scrape a form and dig a pit from the surface.
+- **The gray squirrel.** It isn't a digger in the game.
+- **Interrupting.** "Being attacked" maps to a coyote's pit opening the den's system. The player's body underground
+  has no health to lose, and nothing else attacks it there.
+- **Getting to a distant plan.** A plan placed far along the tunnels is not walked to automatically. The player walks
+  there and presses 1, as with resuming.
+
+**Verified** (home tile, port 8786, real key and pointer events, the dig rate at 4x; the frame strips are
+`docs/dig-den-strip.jpg` and `docs/dig-den-overlap-strip.jpg`):
+- **The slot.** As a brush rabbit, the "dig den" slot appeared once underground.
+- **Placing.** 1 showed the silhouette at 42 cm down. It was red 1.6 m off the tunnel and green over its end, and a
+  click placed it there without moving the camera. Esc, a right click, 1 again and the slot all worked.
+- **Interrupting.** It dug at once (the HUD counted 2% to 50%). W stopped it at 52%, and the server held 52%.
+- **Leaving and coming back.** The rabbit went back out of the hole and 2.4 m away. Back down the hole and along the
+  tunnel to the outline, 1 resumed it, and it finished.
+- **After a reload.** The finished den was still there and the rabbit walked into it.
+- **Overlapping.** A second den, placed over the first and dug out, made one cavity with no wall left, and the rabbit
+  walked from the tunnel through the first den into the second.
+- **The vole.** A den 16 cm in radius, 28 cm down, dug out.
+- **Tests.** `tests/test_dig.py` test_den: plan and progress relayed with no player id; a late joiner gets a half-dug
+  den and finishes it; the refusals; two finished overlapping dens joined; a den decays with its system. All server
+  tests pass.
+
+**Not verified, and open:**
+- **A lost WebGL context.** One happened while the second den was dug at 4x in the browser pane, and the page rebuilt
+  its world. Both dens were already stored. It did not recur over a further vole den, the walks and the captures, and
+  I haven't found the cause; this project has hit Chromium's context limit before (the memory notes).
+- **Other players.** A second player watching a den grow live.
+- **The AI.** AI voles and rabbits don't dig dens.
+- **Touch.** Placing on a touch screen: a tap places it, but there is no hover to aim the silhouette first.
 

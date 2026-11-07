@@ -15,7 +15,7 @@
   43.78492414769734
  ],
  "size_m": 10000,
- "generated_at": "2026-11-07T03:34:34Z",
+ "generated_at": "2026-11-07T03:38:57Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -8173,6 +8173,17 @@
    "failed": 0,
    "sha256": "13a23af0eb3e5e088eb8754446037c63ec1bf301596e67d348d76e2f7e6c91e1",
    "bytes": 5301
+  },
+  "client.territories": {
+   "path": "client/territories.json",
+   "kind": "json",
+   "source": "native_land",
+   "counts": {
+    "territories": 3
+   },
+   "retrieved": "2026-11-07",
+   "sha256": "04eaad33b41515dfd3d3f7b14bcc805748c174589810959d7efc22d4d009f7fa",
+   "bytes": 1061
   }
  },
  "sources": {
@@ -8359,6 +8370,16 @@
    "attribution_url": "https://plants.usda.gov",
    "attribution_required": false,
    "retrieved": "2026-11-06"
+  },
+  "native_land": {
+   "name": "Native Land Digital territories map",
+   "url": "https://native-land.ca",
+   "license": "Native Land Digital API terms (free account; see their data sovereignty treaty)",
+   "license_url": "https://api-docs.native-land.ca",
+   "attribution": "Indigenous territories: Native Land Digital (native-land.ca). Their map does not represent or intend to represent official or legal boundaries of any Indigenous nation.",
+   "attribution_url": "https://native-land.ca",
+   "attribution_required": true,
+   "retrieved": "2026-11-07"
   }
  },
  "edits": [],
@@ -9242,6 +9263,12 @@
    "step": "audit",
    "at": "2026-11-07T03:34:34Z",
    "seconds": 0.0,
+   "ok": true
+  },
+  {
+   "step": "territories",
+   "at": "2026-11-07T03:38:57Z",
+   "seconds": 1.9,
    "ok": true
   }
  ],
@@ -10902,6 +10929,43 @@
     "cache": 0
    },
    "seconds": 0.0
+  },
+  "territories": {
+   "version": "1",
+   "code": "924db782b66110af",
+   "params": {
+    "tile": "utm12n_514_4838"
+   },
+   "fingerprint": "e4f2abf82e41449e",
+   "parts": {
+    "version": "1",
+    "code": "924db782b66110af",
+    "params": {
+     "tile": "utm12n_514_4838"
+    },
+    "deps": {},
+    "library": {}
+   },
+   "ran_at": "2026-11-07T03:38:55Z",
+   "owner": null,
+   "status": "ok",
+   "layers": [
+    "client.territories"
+   ],
+   "outputs": {
+    "client/territories.json": "04eaad33b41515df"
+   },
+   "out_hash": "d335aff27e707bbe",
+   "sources": {
+    "native_land": "2026-11-07"
+   },
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 0
+   },
+   "seconds": 1.9
   }
  },
  "seams": {

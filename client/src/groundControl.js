@@ -472,9 +472,9 @@ export class GroundControl {
 
   // ---- the frame -----------------------------------------------------------------------------------
   input() {
-    const k = this.flight.keys;
+    const k = this.flight.keys, digK = (k.has('ArrowUp') || k.has('ArrowDown')) && !!this.dig?.wantDig(this);
     return {
-      fwd: (k.has('KeyW') || k.has('ArrowUp') ? 1 : 0) - (k.has('KeyS') || k.has('ArrowDown') ? 1 : 0),
+      fwd: (k.has('KeyW') || k.has('ArrowUp') && !digK ? 1 : 0) - (k.has('KeyS') || k.has('ArrowDown') && !digK ? 1 : 0),   // with the dig key held the arrows steer the dig's slope (dig.js KEY_DRAG), not the walk
       turn: (k.has('KeyA') || k.has('ArrowLeft') ? 1 : 0) - (k.has('KeyD') || k.has('ArrowRight') ? 1 : 0),
       shift: k.has('ShiftLeft') || k.has('ShiftRight'),
       alt: k.has('AltLeft') || k.has('AltRight'),   // a walk (the lion's stalk) under W
@@ -522,6 +522,8 @@ export class GroundControl {
       this.cover = cell ? Math.min(1, (can.channel(cell[0], cell[1], 0) + can.channel(cell[0], cell[1], 1)) / 100) : 0;   // tree and shrub cover here
       this.animals.setStalk((this.sit > 0.5 ? 0.4 : v < 0.9 ? 0.55 : v < 2.4 ? 1 : 1.3) * (1 - 0.65 * this.cover));
     }
+    // a plant target out of reach (quarry.js eatReach, the one rule): E walks the body to it, then eats (approach below)
+    if (act && this.quarry?.target?.plant && !this.quarry.canEat()) { this.approach = { key: this.quarry.target.key }; act = false; this.resting = false; }
     if (act) { this.actT = S.act.t; this.resting = false; if (S.act.headFlick) ps.fl = (Math.random() < 0.5 ? -1 : 1) * (0.6 + Math.random() * 0.6); if (S.act.scratch) this.scratch = Math.random() < 0.4; }
     const fights = !!this.combat?.active;   // a hunter with strikes (combat.js): E is its bite, the rush no longer kills on its own
     if (act && fights && this.combat.useNear('bite')) { this.actT = 0; return; }
@@ -573,6 +575,19 @@ export class GroundControl {
       }
     }
     if (this.feeding) target = 0;
+    if (this.approach) {   // walking to the plant target: any key takes the body back; within reach it eats (the act)
+      const t = this.quarry?.target;
+      if (k.fwd || k.turn || jump || !t || !t.plant || t.key !== this.approach.key) this.approach = null;
+      else if (this.quarry.canEat() || this.approach.there) {   // in reach: stop, then eat (the act is cleared while the body still moves)
+        this.approach.there = true; target = 0;
+        if (Math.abs(this.v) < 0.4) { this.approach = null; this.v = 0; this.actT = S.act.t; }
+      }
+      else {
+        const want = Math.atan2(-(t.x - P.x), -(t.z - P.z)), dy = Math.atan2(Math.sin(want - f.yaw), Math.cos(want - f.yaw)), d = Math.hypot(t.x - P.x, t.z - P.z);
+        f.yaw += Math.max(-1, Math.min(1, dy / 0.3)) * S.turn * dt;
+        target = Math.abs(dy) > 1.2 ? 0 : d > 6 ? (S.cruise ?? S.run * 0.65) : Math.max(S.walk * 0.6, Math.min(S.walk, d));   // turn on the spot first; a trot far off, a walk in
+      }
+    }
     this.v = damp(this.v, target, Math.abs(target) < Math.abs(this.v) ? S.stop : S.accel, dt);
     if (Math.abs(this.v) < 0.01 && !target) this.v = 0;
     if (!this.resting) f.yaw += k.turn * S.turn * (1 - 0.45 * Math.min(1, Math.abs(this.v) / S.run)) * dt;
@@ -966,7 +981,8 @@ export class GroundControl {
   updateCamera(dt) {
     const f = this.flight, cam = this.camera, C = this.S.cam, off = this._v, aim = this._w;
     const P = this.mode === 'tunnel' ? (this._pu ||= new THREE.Vector3()).set(f.pos.x, Math.max(f.pos.y, this.heights.atXZ(f.pos.x, f.pos.z)), f.pos.z) : f.pos;   // underground: framed from the ground over the body (dig.js xray)
-    f.easeOrbit(dt, f.moving(), this.mode === 'tunnel' || !!this.digging);   // the drag's orbit round the body (flight.js), back behind once the keys move it; underground and digging its pitch held (the dig's aim, dig.js aimPitch)
+    const kk = f.keys, steerOnly = !!this.digging && !['KeyW', 'KeyS', 'KeyA', 'KeyD', 'ArrowLeft', 'ArrowRight', 'Space'].some(c => kk.has(c));   // digging, ↑ ↓ steer the slope: not a move that brings the orbit back
+    f.easeOrbit(dt, f.moving() && !steerOnly, this.mode === 'tunnel' || !!this.digging);   // the drag's orbit round the body (flight.js), back behind once the keys move it; underground and digging its pitch held (the dig's aim, dig.js aimPitch)
     const rate = wrap(f.yaw - (this.camYaw ?? f.yaw)) / Math.max(dt, 1e-3); this.camYaw = f.yaw;
     if (Math.abs(rate) > 0.3) this.camSide = damp(this.camSide, -Math.sign(rate) * C.side, 1.6, dt);
     const low = this.resting ? 0.7 : 1, fly = this.mode === 'fly' ? 1.4 : 1;

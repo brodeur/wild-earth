@@ -37,15 +37,28 @@ import { NF } from './animalNet.js';
 // souls (SpiritLook.render draws that layer after the spirit's post pass, in any form, so the colours stand), and reused;
 // nothing is allocated per frame or per sample. Positions live only here and in multiplayer.js's `poses`, in memory,
 // cleared when the room is left; nothing is written or logged.
-// A member online in another tile or not in a world sends no `pos` here (the hub relays within a room) and is not drawn;
-// nor is a player in the same tile who is not in the group (the rule).
+// Who is drawn (docs/multiplayer.md "Who sees whom", Aaron 2026-11-06: "Players should be able to see other players in
+// spirit mode. When in a group, users can see eachother regardless of form. Each user sees the other in the form that they
+// are currently inhabiting"): the hub relays a player's `pos` within their world (the tile's room in the same season) to
+// their group in any form and to everyone else while they are a spirit, so what comes here is what may be drawn:
+//   - a group member (isMate), in any form, as above: the wisp or the animal, the name within NAME_M, the edge avatar
+//     and the map's dot.
+//   - anyone else, only ever as a spirit: the wisp in their avatar's colours, the name within STRANGER_NAME_M (smaller and
+//     paler: the tile's chat already shows a speaker's name to everyone in the tile, so the label tells nothing more, and
+//     it gives a wisp drifting by a name to greet), and no edge avatar, distance or map dot (those find friends across the
+//     tile; for a stranger they would track them).
+// The forms change in view: going into a body, the wisp dives into the animal over TR_IN and is gone in it; leaving a body,
+// the wisp grows out of it with a burst of motes (Wisp.burst). `gone {user}` from the hub (they left the world, or a
+// stranger's spirit went into a body the player is not shown) shrinks the wisp away over TR_OUT where it was.
 
-const SLOTS = 6, LAYER = 2;
+const SLOTS = 12, LAYER = 2;
 const RUN_MIN = 0.1, RUN_MAX = 0.5;        // s: a run from one sample to the next (the spacing measured, clamped)
 const EXTRA_S = 0.4;                       // s: carried on past a run's end at its speed, waiting for the next sample
 const STALE_S = 3, FADE_S = 1.5;           // s: with no sample, when the fade starts and how long it takes
 const GROW_S = 0.6;                        // s: a new wisp forms
-const NAME_M = 60;                         // m: the name is drawn within this
+const NAME_M = 60;                         // m: a group member's name is drawn within this
+const STRANGER_NAME_M = 30;                // m: a stranger's (a spirit not of the group) within this
+const TR_IN = 0.7, TR_OUT = 0.6;           // s: the wisp diving into a body; shrinking away when gone
 const FAR = [8, 300, 8];                   // grown x1 within FAR[0] m to x FAR[2] at FAR[1] m and beyond (the souls' rule, from nearer)
 const SCALE_SPIRIT = 0.62, SCALE_BODY = 0.34, BODY_UP = 0.7, LUM = 0.9;   // a little over the player's own resting wisp (REST_SCALE 0.5, REST_LUM 0.6): seen from further
 const LABEL_UP = 0.6;                      // m over the wisp for the name
@@ -62,9 +75,10 @@ export class RemotePlayers {
   // marks: the #herdMarks element (the circles share its layer and style); labels: #playerLabels; minimap: MiniMap
   // (its `others`); maps: the player's wisp's textures (spirit.wisp.maps); nameOf(id): the display name (set by
   // multiplayer.js once signed in; 'someone' until then).
-  constructor({ scene, renderer, camera, flight, animals = null, minimap = null, maps = null, marks = null, labels = null, nameOf = null }) {
+  // isMate(id): whether the player shares a group with them (multiplayer.js; a group member until it is set).
+  constructor({ scene, renderer, camera, flight, animals = null, minimap = null, maps = null, marks = null, labels = null, nameOf = null, isMate = null }) {
     this.camera = camera; this.flight = flight; this.animals = animals; this.minimap = minimap; this.marksEl = marks; this.labelsEl = labels;
-    this.nameOf = nameOf || (() => 'someone');
+    this.nameOf = nameOf || (() => 'someone'); this.isMate = isMate || (() => true);
     this.n = 0;   // live slots (SpiritLook.render draws the layer while > 0)
     this.slots = [];
     for (let i = 0; i < SLOTS; i++) {
@@ -73,7 +87,8 @@ export class RemotePlayers {
       this.slots.push({ i, id: null, wisp: w, name: '', hue: 0, form: 'spirit', at: 0, t: 0, dur: 0, age: 0, n: 0, rec: null, tagH: 0,
         p0: new THREE.Vector3(), p1: new THREE.Vector3(), v: new THREE.Vector3(), P: new THREE.Vector3(), yaw0: 0, yaw1: 0, yaw: 0,
         held: 0, label: null, mark: null, markD: null, dText: '', shown: false, labelOn: false, markOn: false, markUp: false,
-        D: new THREE.Vector3(), drawn: false, vid: null, vidEl: null, markVid: null, vidOn: false, stream: null, speaking: false });
+        D: new THREE.Vector3(), drawn: false, vid: null, vidEl: null, markVid: null, vidOn: false, stream: null, speaking: false,
+        mate: true, tr: null, trT: 0, trFrom: new THREE.Vector3(), burst: false });
     }
     this.others = Array.from({ length: SLOTS }, () => ({ on: false, x: 0, north: 0, hue: 0, name: '' }));   // the map's view of them (minimap.js)
     if (minimap) minimap.others = this.others;
@@ -101,17 +116,15 @@ export class RemotePlayers {
       for (const o of this.slots) if (!o.id && (!s || o.at > s.at)) s = o;                   // a free slot
       if (!s) for (const o of this.slots) if (!s || o.at > s.at) s = o;                      // else the one longest unheard from
       this.free(s);
-      s.id = d.user; s.name = this.nameOf(d.user) || 'someone'; s.age = 0; s.n = 0; s.at = 0; s.held = 0; s.dText = '';
+      s.id = d.user; s.name = this.who(d); s.age = 0; s.n = 0; s.at = 0; s.held = 0; s.dText = '';
       const seed = avatarSeed(d.user); s.hue = seed.hue;
       const w = s.wisp; w.warm.setHSL(seed.hue / 360, 0.85, 0.68); w.cool.setHSL(seed.hue2 / 360, 0.85, 0.52); w.white.copy(w.warm).lerp(WHITE, 0.6);
       s.P.set(d.x, d.y, d.z); s.p0.copy(s.P); s.p1.copy(s.P); s.v.set(0, 0, 0); s.yaw = s.yaw0 = s.yaw1 = +d.yaw || 0; s.dur = 0; s.t = 0;
       if (this.labelsEl) { const l = s.label = document.createElement('div'); l.className = 'pl'; l.style.setProperty('--hue', String(seed.hue)); l.textContent = s.name; l.hidden = true; this.labelsEl.append(l); }
-      if (this.marksEl) {
-        const m = s.mark = document.createElement('div'); m.className = 'hm pm'; m.style.setProperty('--hue', String(seed.hue)); m.title = s.name; m.hidden = true;
-        m.append(avatarFor(d.user, 26)); s.markD = document.createElement('b'); m.append(s.markD); this.marksEl.append(m);
-      }
+      s.mate = null;   // set below: the mark is made for a group member only
       const o = this.others[s.i]; o.hue = seed.hue; o.name = s.name;
     } else {
+      if (s.tr === 'out') { s.tr = null; s.age = 0; }   // seen again after a gone (back in the world, or out of the body): formed anew
       // the next run: from where the wisp is drawn now to the sample, over the samples' spacing
       s.p0.copy(s.P); s.yaw0 = s.yaw;
       s.p1.set(d.x, d.y, d.z); s.yaw1 = +d.yaw || 0;
@@ -120,25 +133,49 @@ export class RemotePlayers {
       if (s.v.lengthSq() > 300 * 300) { s.P.copy(s.p1); s.p0.copy(s.p1); s.v.set(0, 0, 0); s.yaw = s.yaw0 = s.yaw1; }   // teleported (a jump, a reset): no run
       s.at = 0;
     }
+    const mate = !!this.isMate(d.user);
+    if (mate !== s.mate) this.setMate(s, mate);
+    if (s.name === 'someone' && d.name) { s.name = this.who(d); if (s.label) s.label.textContent = s.name; if (s.mark) s.mark.title = s.name; this.others[s.i].name = s.name; }
     s.form = typeof d.form === 'string' ? d.form : 'spirit';
     // in a body: the member's animal (animals.js remoteSample), drawn in its species' pool; back to spirit form: gone
-    const A = this.animals, body = s.form !== 'spirit' && Array.isArray(d.b) && d.b.length >= NF && A?.remoteSample;
+    const A = this.animals, body = s.form !== 'spirit' && Array.isArray(d.b) && d.b.length >= NF && A?.remoteSample, had = !!s.rec;
     if (body) {
       const c = Array.isArray(d.c) ? d.c : null, k = c && Number.isInteger(c[7]) ? c[7] : -1;
       const cst = this._c2 ||= { size: 1, variant: 0, male: 0, young: 0, u1: 0.5, u2: 0.5, u3: 0.5, slot: -1 };
       if (c) { cst.size = +c[0] || 1; cst.variant = +c[1] || 0; cst.male = +c[2] || 0; cst.young = +c[3] || 0; cst.u1 = +c[4]; cst.u2 = +c[5]; cst.u3 = +c[6]; cst.slot = k; }
       s.rec = A.remoteSample(d.user, s.form, d.b, c ? cst : null, performance.now());
       if (s.rec) s.tagH = A.tagHeight?.(s.rec) ?? 1;
-    } else if (s.rec) { A?.remoteDrop(d.user); s.rec = null; }
+      if (s.rec && !had && s.shown && s.n) { s.tr = 'in'; s.trT = 0; s.trFrom.copy(s.P); }   // went into the body in view: the wisp dives into it
+    } else if (s.rec) {   // out of the body: the wisp grows out of where the animal stands, with a burst of motes
+      A?.remoteDrop(d.user); s.rec = null; s.tr = null; s.age = 0; s.burst = true;
+    }
     s.n++;
+  }
+  // The name over them: the social list's (friends, the group), else the display name the hub relays with the position.
+  who(d) { const n = this.nameOf(d.user); return n && n !== 'someone' ? n : typeof d.name === 'string' && d.name ? d.name.slice(0, 32) : 'someone'; }
+  // A group member's edge avatar (and map dot) exist; a stranger's spirit has neither, and a smaller, paler name.
+  setMate(s, mate) {
+    s.mate = mate;
+    s.label?.classList.toggle('stranger', !mate);
+    if (mate && !s.mark && this.marksEl) {
+      const m = s.mark = document.createElement('div'); m.className = 'hm pm'; m.style.setProperty('--hue', String(s.hue)); m.title = s.name; m.hidden = true;
+      m.append(avatarFor(s.id, 26)); s.markD = document.createElement('b'); m.append(s.markD); this.marksEl.append(m); s.markOn = false; s.dText = '';
+      if (s.stream) { const st = s.stream; s.stream = null; this.video(s, st); }
+    } else if (!mate && s.mark) { this.video(s, null); s.mark.remove(); s.mark = s.markD = null; s.markOn = false; this.others[s.i].on = false; }
   }
   // A member known to be gone (offline, or in another tile): off at once.
   drop(id) { const s = this.slotOf(id); if (s) this.free(s); }
+  // The hub's `gone`: they left the world, or a stranger's spirit went into a body: the wisp shrinks away where it is.
+  gone(id) {
+    const s = this.slotOf(id); if (!s) return;
+    if (!s.shown || s.rec) { this.free(s); return; }
+    s.tr = 'out'; s.trT = 0; s.trFrom.copy(s.P);
+  }
   clear() { for (const s of this.slots) this.free(s); }
   free(s) {
     if (!s.id) return;
     if (s.rec) { this.animals?.remoteDrop(s.id); s.rec = null; }
-    s.id = null; s.at = Infinity; s.n = 0;
+    s.id = null; s.at = Infinity; s.n = 0; s.tr = null; s.burst = false;
     if (s.shown) { s.wisp.update(0, s.P, 0, false, 1, 1); s.shown = false; }
     s.label?.remove(); s.mark?.remove(); s.label = s.mark = s.markD = null; s.labelOn = s.markOn = false;
     this.video(s, null); s.drawn = false; s.speaking = false;
@@ -154,6 +191,8 @@ export class RemotePlayers {
       if (!s.id) continue;
       s.at += dt; s.age += dt; s.held += dt;
       if (s.at > STALE_S + FADE_S) { this.free(s); continue; }
+      let tu = 0;   // the transition's progress, 0..1
+      if (s.tr) { s.trT += dt; tu = Math.min(1, s.trT / (s.tr === 'in' ? TR_IN : TR_OUT)); if (tu >= 1 && s.tr === 'out') { this.free(s); continue; } }
       // the run
       if (s.dur > 0) {
         s.t += dt;
@@ -164,23 +203,31 @@ export class RemotePlayers {
       const body = s.form !== 'spirit', rec = s.rec;
       if (rec) { p.set(rec.x, rec.y + s.tagH - LABEL_UP, rec.z); s.P.set(rec.x, rec.y, rec.z); }   // drawn as their animal (animals.js): the name over it
       else { p.copy(s.P); if (body) p.y += BODY_UP; }
+      if (s.tr === 'out') p.copy(s.trFrom).y -= 0.6 * smooth(tu);
       s.D.copy(p); s.drawn = true;
       const md = this.media.get(s.id) || null;
       if ((md?.video || null) !== s.stream) this.video(s, md?.video || null);
       const speaking = !!md?.speaking;
       if (speaking !== s.speaking) { s.speaking = speaking; s.label?.classList.toggle('speaking', speaking); s.mark?.classList.toggle('speaking', speaking); s.vid?.classList.toggle('speaking', speaking); }
       const dc = p.distanceTo(camP), far = 1 + (FAR[2] - 1) * Math.min(1, Math.max(0, (dc - FAR[0]) / (FAR[1] - FAR[0])));
-      const fade = s.at > STALE_S ? 1 - (s.at - STALE_S) / FADE_S : 1, grow = smooth(Math.min(1, s.age / GROW_S));
-      if (rec) { if (s.shown) { s.wisp.update(0, p, 0, false, 1, 1); s.shown = false; } }
+      let fade = s.at > STALE_S ? 1 - (s.at - STALE_S) / FADE_S : 1, grow = smooth(Math.min(1, s.age / GROW_S));
+      if (s.tr === 'out') { grow *= 1 - smooth(tu); fade *= 1 - tu; }
+      if (rec && s.tr === 'in') {   // diving into the body: from where the wisp was to the animal's chest, shrinking, a flare at the end
+        const k = smooth(tu), q = this._q || (this._q = new THREE.Vector3());
+        q.set(rec.x, rec.y + s.tagH * 0.45, rec.z); q.lerpVectors(s.trFrom, q, k);
+        s.wisp.update(dt, q, s.yaw, true, 1 - 0.85 * k, 1, SCALE_SPIRIT * far, LUM * (1 + 0.8 * Math.sin(Math.PI * k)), 1 + 2 * k); s.shown = true; n++;
+        if (tu >= 1) { s.tr = null; s.wisp.update(0, q, 0, false, 1, 1); s.shown = false; }
+      } else if (rec) { if (s.shown) { s.wisp.update(0, p, 0, false, 1, 1); s.shown = false; } }
       else {
-        if (dc <= HALF_M || (fr + s.i) % 2 === 0 || !s.shown) { s.wisp.update(s.held, p, s.yaw, true, grow, 1, (body ? SCALE_BODY : SCALE_SPIRIT) * far, LUM * fade, 1); s.held = 0; }
+        if (dc <= HALF_M || (fr + s.i) % 2 === 0 || !s.shown || s.tr) { s.wisp.update(s.held, p, s.yaw, true, grow, 1, (body ? SCALE_BODY : SCALE_SPIRIT) * far, LUM * fade, 1); s.held = 0; }
         s.shown = true; n++;
+        if (s.burst) { s.burst = false; s.wisp.burst(p); }
       }
       // the name, while near and on screen; else the mark at the edge
       const edge = edgePlace(cam, p.x, p.y, p.z, W, H);
       const vidOn = !!s.vid && !edge && dc <= VIDEO_M;
       if (s.label) {
-        const on = !edge && (dc <= NAME_M || ((s.speaking || vidOn) && dc <= VIDEO_M));
+        const on = !edge && s.tr !== 'in' && (dc <= (s.mate ? NAME_M : STRANGER_NAME_M) || ((s.speaking || vidOn) && dc <= VIDEO_M));
         if (on || vidOn) {
           p.y += LABEL_UP; p.project(cam);
           const x = (p.x + 1) * W / 2, y = (1 - p.y) * H / 2;
@@ -205,7 +252,7 @@ export class RemotePlayers {
         }
         if (on !== s.markOn) { s.markOn = on; s.mark.hidden = !on; }
       }
-      const o = this.others[s.i]; o.on = true; o.x = s.P.x; o.north = -s.P.z;
+      const o = this.others[s.i]; o.on = s.mate; o.x = s.P.x; o.north = -s.P.z;
     }
     this.n = n;
   }

@@ -6760,6 +6760,31 @@ season".
   at their next Start, and their invitation carries it.
 
 
+## 2026-11-06: a chosen place fills the centre, not the screen (branch claude/home-tile-framing)
+
+Aaron: "Right now clicking on a tile zooms to have the tile fill the whole screen. It should just fill the center of the
+screen." The chosen pose was a fixed 10,000 ft (3.05 km) south of the tile looking north at the full tilt, framed for
+the whole viewport, so the tile ran under the places list and the social column.
+
+- **The focus area** (title.js focusArea): the free centre the earth lands in (freeArea: right of the places column, left
+  of the social column when there is a hub), under the title and the card over the tile, above Invite, Start and the
+  loading line, less a margin (40 px; 16 px at a phone's width).
+- **The pose** (chosenPose): the camera looks at the tile's centre from the distance at which the whole tile, as the
+  camera sees it there (its tilt and lens change with the height: tiltFor, fovFor), just fits the focus area. Found by
+  bisection on the distance against the tile's edges projected through a camera built as frame() builds it. At 1440x900
+  a 10 km tile is seen from about 18.5 km, so the tilt is shallower than before.
+- **Centred in the area, both ways**: the view's offset already put the looked-at point in the free space's horizontal
+  middle (offX); a vertical offset (offY) now puts it at the focus area's vertical middle while a place is chosen,
+  eased like offX.
+- **Phone**: Invite and Start centre on the screen, not in the narrow strip beside the places (they ran off its edge).
+
+Verified in the browser pane on the local viewer by projecting the chosen tile's edges after the flight: at 1440x900
+Upper Hoh Road spans x 364 to 996, the area's full width (width is the limit there), its centre at (680, 458) against the
+area's (680, 459); Yosemite the same within a pixel; at 375x812 the tile fills the 158 px strip beside the places (x 201
+to 359), centred to a pixel. Backing out: the wheel zooms out from the chosen view as before (to about 23,000 km); a
+flight from one chosen place to another arcs out and comes down to the new fit; choosing the place again flies back to
+the same fit. While a place stays chosen and the player zooms out, the vertical offset stays (8 px at 1440x900).
+
 ## 2026-11-06: the species library arrives in one response
 
 On the hosted site (v43) a headless load of the title screen warned for 20 species "signal is aborted without
@@ -6774,6 +6799,229 @@ changes. The client asks for it first (15 s), and a host without the endpoint (a
 one as before, now 8 s each. Measured on the local server with the cache off: one request, 193 species from the
 library, none built-in, also under a throttled 4 Mbps / 150 ms network (title up at 12.9 s there).
 `tests/test_species_bundle.py` covers the bundle (every listed id, the files unchanged, gzip, plain, 304).
+
+## 2026-11-06: no pool of light under a grazer
+
+Aaron: "There is a faint glow below the player no matter what animal - lets remove that." It was forage.js's sward
+halo: when the grass just ahead of the body's nose was one of its foods, one soft additive disc lay on the ground
+there. Every grazer (the rabbits, the deer, the bison, the elk) stands in its food grass nearly all the time, so it
+read as a light under the body wherever it went. That halo is gone; the food herbs' and shrub impostors' glow, the
+pools under near 3D food shrubs and the sward's scent strand stay. Checked as a brush rabbit on the home tile in
+October: three food grasses, the forage glow on, no halo drawn.
+
+## 2026-11-06: the zoom to a place is slow and keeps pace with its world's loading (branch claude/home-tile-framing)
+
+Aaron: "zooming to the location should be slow enough so that the world has a chance to render. While it is a slow
+zoom, begin loading world assets right away so that by the time they arrive at the tile, it's mostly loaded."
+
+- **Loading at once was already so**: choosing a place calls main.js `select`, which starts building its world behind
+  the earth on the click (`replaceWorld`: the tile package, rasters, the forest, models, shaders); Start enters that
+  world when it is ready (`world.enter`), and a second choice abandons the first build (`disposeWorld`). Unchanged.
+- **The slow zoom** (title.js flyToPlace): the flight to a chosen place takes PLACE_SLOW (1.8) times the free flight's
+  time, within 5 to 8 s, and its clock is paced by the loading bar's eased progress (`this.shown`, continuous, so the
+  pace never jumps): to pass raw progress u the build must be about smooth(0.55, 1, u) along; ahead of that the clock
+  slows smoothly to PACE_MIN (0.04 of its speed), so the camera eases into a slow drift a few times the final height above
+  the tile and comes the rest of the way as the build does. A world already built (choosing the place again) flies at
+  the natural pace. The search's flights are not paced. The fit is the centre framing above (focusArea, chosenPose).
+
+Measured in headless Chrome over CDP (`Network.emulateNetworkConditions` 20 Mbit/s each way and 60 ms latency, the cache
+disabled, `?hub=stub`, Upper Hoh Road, Start pressed as soon as both the zoom and the world are done; before = main
+96ff697, after = this branch; the machine's load average 8 to 20, so a few seconds is noise):
+
+| run | zoom ends | world ready | waiting at the tile | world shown | arrival done |
+|---|---|---|---|---|---|
+| before, 1440x900 | 3.9 s | 45.5 s | 41.6 s | 47.3 s | 59.5 s |
+| before, 1440x900 | 3.5 s | 38.7 s | 35.2 s | 40.5 s | 53.2 s |
+| after, 1440x900 | 37.3 s | 37.3 s | 0 | 39.1 s | 52.1 s |
+| after, 1440x900 | 38.8 s | 38.8 s | 0 | 40.7 s | 53.4 s |
+| before, 375x812 | 3.6 s | 39.1 s | 35.5 s | 40.9 s | 53.1 s |
+| after, 375x812 | 37.9 s | 37.9 s | 0 | 39.7 s | 52.2 s |
+
+The click-to-playable time is the same (the world's build is the limit, and it already started on the click); what
+changes is that the player rides the zoom down instead of waiting at the tile for half a minute. The altitude trace of an
+after run: 15,880 km at the click, 72 km by 3.7 s, a drift from 57 to 25 km over the next 20 s while the build loads, and
+the 18.5 km fit as the world becomes ready. Two things seen in both: the loading bar reports nothing for the first ~22 s
+under this throttle (the tile package's download comes before the first build step), and the page's main thread is held
+for ~13 s once by the build (nothing animates then, before or after).
+
+Abandoning: choosing Yosemite mid-flight while Upper Hoh Road was 57% built tore Upper Hoh Road down (`__weDisposed`, 7 to
+9 ms) and Yosemite was ready 20 s later. Five choices in a row, 7 s apart, alternating the two, showed the renderer's
+geometry count climbing by about 75 to 100 per abandoned build (textures and programs do not climb), on main as on this
+branch: an older leak in the teardown of an abandoned build, not touched here and noted as a follow-up.
+
+## 2026-11-06: the panels' items fade in up, staggered; visitors browse the places (branch claude/home-tile-framing)
+
+Aaron: "instead of sliding in left and right the elements should fade in up, staggered from top to bottom ... and the
+interval between fadeInUps should decrease." And: "For not logged in users, show all locations and let them navigate to
+them but not start them. Start button should be grayed out - when hovered a tooltip should appear saying 'Log in or sign
+up to start'".
+
+**The entrance** (title.js sideIn, staggerIn): no slides. Once the title and the earth have landed, the panels become
+visible and their items (the search box, the heading, each place's row, Layers and the credits; the account card, the
+social panel's frame, the find box, the tabs, each group card or friend row; the sign-in card and each of its rows; the
+phone's pill and row) each fade in rising 10 px over 520 ms with one easing, ordered by their top on screen across both
+columns, items within 6 px of each other together. The gaps between starts are 120 ms, then 0.8 of the one before, down to
+25 ms. Below the window's bottom an item just shows. Reduced motion: the same order, fades only. The same sequence runs
+after the landing, after a visitor signs in (the social column alone), after Exit to main screen, for the signed-out
+sign-in card and for the no-hub Explore button. A row added later by the list's own re-sort also fades in up (tt-in).
+Start times at 1440x900 signed in (`staggerLog`):
+
+| ms | top px | item |
+|---|---|---|
+| 0 | 24 | `tt-search` × |
+| 0 | 24 | `so-card` aaron@aaron_t · sharin |
+| 120 | 84 | `tt-head` Most activeeverywhere |
+| 216 | 95 | `so-aside` GroupsFriendsRequests1 |
+| 216 | 96 | `so-find`  |
+| 293 | 128 | `tt-row` ArnoldHighway 4, Big T |
+| 354 | 152 | `so-tabs` GroupsFriendsRequests1 |
+| 403 | 221 | `so-gcard` Explorersquiet |
+| 443 | 231 | `tt-row` Daly CityJohn F Foran  |
+| 474 | 313 | `so-gcard` Sunday flightquiet |
+| 499 | 334 | `tt-row` El DoradoRoute 50, Mot |
+| 524 | 405 | `so-new` New group |
+| 549 | 437 | `tt-row` Fossil ForestNortheast |
+| 574 | 540 | `tt-row` Grand Canyon VillageEa |
+| 599 | 643 | `tt-row` MoskenesMoskenesveien, |
+| 624 | 746 | `tt-row` NashvilleSand Ridge Ro |
+| 649 | 823 | `tt-layers` Layers |
+| 674 | 849 | `tt-row` PlacervilleRoute 50, P |
+| 699 | 857 | `tt-attrib` Map OpenFreeMap · © Op |
+**Visitors** (title.js browse): signed out, with a hub, the earth is lit as for a player and the places list, the dots
+and the labels come in with the sign-in card. Any place can be chosen and flown to with the slow centre-framed zoom
+(paced at its own speed: nothing loads) and backed out of; the hub is not asked for anything more. No world is built
+for a visitor (choose skips onSelect), since they cannot enter it. Start is greyed with `aria-disabled="true"` (not
+`disabled`, which takes no hover) and does nothing when pressed; its tooltip, "Log in or sign up to start", is the home
+screen's own (`.tt-tip`, role tooltip, `aria-describedby`), shown on hover and keyboard focus, and for 2.6 s after a
+tap on a touch screen. Invite, the loading line, the friends' faces and the social column are not shown. On a phone the
+sign-in folds behind a "Log in or sign up" pill at the top right so the places can be browsed. Signing in while a place
+is chosen takes Start's greying off, builds that place's world at once and staggers the social column in. A page with
+no hub (Explore) and `?hub=stub` are unchanged; `?skip=1` has no home screen.
+
+Verified in headless Chrome on the local hub (127.0.0.1, test accounts): signed out at 1440x900 and 375x812 (20 and 22
+items staggered; Start `aria-disabled`, not disabled; Invite hidden; no world building; the tooltip shown on hover and
+on a touch tap, no page errors), signed in at both widths (19 and 14 items), reduced motion (the same order, no rise),
+signing in while Upper Hoh Road was chosen (Start live, the world at 20% 2.5 s later, the social column's 7 items
+staggered, Start enabled when ready), `?hub=stub`, a static host with no hub (Explore staggered in, then the places),
+and `?skip=1`. Frames were captured every ~100 to 250 ms (headless screenshots are slow); the start times are exact.
+
+## 2026-11-06: place cards name, count and territories; the territories a step of the build (branch claude/place-cards-territories)
+
+Aaron: "As part of the pipeline make sure we are listing the indigenous human territory name. Current PlaceName on its
+own row, below it the indigenous territory. Instead of 'No one here' have a pill with a user icon and a number after
+the placename".
+
+**The cards** (title.js, the places list and the card over a chosen place; arrival.js for `?cards=1`):
+- Row 1: the place's name and a pill, a user icon and how many players are there now. Zero is shown, dimmed: a
+  place with no one there yet reads as a place, and every row keeps the same shape.
+- Row 2: the Indigenous territories over the tile, names joined with " · ", each a link to its Native Land page (a
+  click on a link opens Native Land in a new tab and does not choose the place). No territories: no row.
+- The friends there (their wisps and "Juno and Maya here") stay under them, only when there are any. The card over a
+  chosen place shows its players' wisps only when someone is there.
+- No roads: the road subtitle is gone, and a tile with no OSM locality is named for its main natural feature
+  (arrival.js natureName): its largest named glacier, else its named stream with the largest drainage area, else a
+  named lake (Upper Hoh: Hoh River; Mount Olympus: Blue Glacier; the Tetons: Teton Glacier; Manu; Sungai Segama). A
+  glacier first because a big river runs through more than one tile (the Hoh drains both Olympic tiles).
+- Signed out, the counts come from a new anonymous `GET /api/hub/counts` ({tiles: {tile_id: players}}, the numbers the
+  socket's `watch` already sends every signed-in player; no one named), asked every 20 s; signed in, from the socket.
+- The Native Land disclaimer stays in the credits (config.SOURCES native_land).
+
+**The territories step** (pipeline/steps.py `territories`, version 1, no upstream step, base stage; pipeline/fetch_territories.py
+step_output): writes client/territories.json { territories, source } (layer client.territories), fingerprinted on the
+fetcher's code like every step. The client reads it, falling back to features.json `territories` for a tile built before.
+derive no longer writes territories into features.json (one owner), so the terrain step's code changed: the next `--all`
+re-runs terrain on every tile. Without a NATIVE_LAND_KEY the step is `refused` ("no NATIVE_LAND_KEY: ..."): never current,
+listed in `--status` and failed by the build audit (refusals), so a tile cannot pass with its territories silently
+missing; a tile that never ran it shows `territories never missing client.territories`. The key is read from the
+environment, this checkout's .env, or, from a git worktree, the main checkout's .env (env_files); it is never printed.
+`python -m pipeline.fetch_territories <tile> [--force]` now runs that step on a built tile through the graph.
+
+**The names** (2026-11-06, after Aaron added his key as NATIVE_LAND_API_KEY: either name is read, NATIVE_LAND_KEY
+first, from the environment or a .env): fetched for all 18 tiles through the step (`python -m pipeline.fetch_territories
+<tile> --force`, the key from the main checkout's .env, never printed; a failed request now says only its HTTP status
+or its kind, since requests' own messages quote the URL with the key). What came back, checked against each place:
+
+| tile | territories |
+|---|---|
+| Hoh River (Upper Hoh) | ChalAt'i'lo t'sikAti (Chalat', the Hoh) · Quileute |
+| Blue Glacier (Mount Olympus) | Chalat' · Quileute · Queets |
+| Daly City | Muwekma · Ohlone · Ramaytush |
+| Richmond District | Muwekma · Ohlone · Graton Rancheria · Me-Wuk (Coast Miwok) · Miwok · Ramaytush |
+| Nashville | Nisenan · Me-Wuk (Northern Sierra Miwok) · Miwok |
+| El Dorado, Placerville | Nisenan |
+| Arnold | Miwok · Me-Wuk (Central Sierra Miwok) · Wašišiw Ɂítdeʔ (Washoe) |
+| Yosemite Village (both tiles) | Miwok · Nüümü (Northern Paiute) · Me-Wuk (Southern Sierra Miwok) · Me-Wuk (Central Sierra Miwok) |
+| Grand Canyon Village | Pueblos · Havasu Baaja (Havasupai) · Hopitutskwa · Hualapai · Nuwuvi (Southern Paiute) |
+| Teton Glacier | Newe Sogobia (Eastern Shoshone) · Shoshone-Bannock · Cheyenne |
+| Fossil Forest (Lamar) | Apsáalooke (Crow) · Cheyenne · Očhéthi Šakówiŋ |
+| Sirena | Buglé and Ngäbé |
+| Manu | Arawak · Matsigenka · Yine |
+| Moskenes | Sápmi (Sámi) |
+| Seronera, Sungai Segama | none: Native Land's map does not cover them |
+
+One entry was left out everywhere: "Cayuse, Umatilla and Walla Walla" came back for the Olympic, foothill, Teton and
+Lamar tiles; the polygon the API returns for it spans 124.8 W to 104.6 W and 38.6 N to 50.1 N, most of the American
+West, far past those nations' homelands on the Columbia Plateau. A drawing error in Native Land's data, not a territory
+of these places: fetch_territories.EXCLUDED leaves it out by slug and each tile's source note says so (`excluded`, with
+the reason). Worth reporting to Native Land. Lamar has no Shoshone entry on their map (the Tetons do).
+The territories step needs no other step (it reads only the tile's bounds), so the two tiles built before the graph
+(Nashville, Placerville) are not blocked by their missing terrain record.
+
+Verified in headless Chrome on the local hub at 1440x900 and 375x812, signed in and signed out: the pill (2 at the Hoh
+River with two test players in its room, 0 dimmed elsewhere), the territory row and its links from a test fixture
+(clearly labelled, never committed, removed), the card over the chosen place, no road names anywhere, no page errors.
+Tests: tests/test_territories_step.py (the step in the graph after terrain, refused without a key, the refusal a build
+audit problem, the key never printed) and the counts endpoint in tests/test_hub.py.
+
+## 2026-11-06: while digging, ↑ and ↓ steer the dig's slope; the camera yields to them (docs/game-dig.md "The arrows steer the dig")
+
+Aaron: "While digging, the purpose of the arrow keys changes upArrow begins to dig up, downarrow begins to dig down"
+
+With the dig key held:
+- **The arrows turn the face's slope.** ↑ turns it up and ↓ down, from the slope the face has now, at the rate the face
+  can curve.
+- **Released, it holds.** Let go and the slope stays where it was.
+- **No walking.** The arrows don't walk while Q is held.
+
+The camera's pitch steering stays, but the last input wins. An arrow takes the aim from the camera and keeps it until a
+deliberate vertical drag (0.08 rad of orbit, about 30 px) hands it back.
+
+Considered:
+- **The camera only adds to the arrows.** Rejected: the camera's tilt is held underground, so a view left up over the
+  body would keep pulling the slope down against the keys.
+- **The keys win only while held.** Rejected: releasing would snap the slope back to the camera's, which breaks
+  "releasing holds the current angle".
+- **The arrows set a target that runs ahead of the face.** Rejected: on release the face would keep turning. The arrows
+  instead turn the slope at the face's own curve rate, so what the player sees is what holds.
+
+## 2026-11-06: a den is a room node that grows out of the tunnel as it is dug (docs/game-dig.md "Dens", client/src/digDen.js)
+
+Aaron: "The 1 key "dig den" which makes a large area. Dens that overlap should have empty space ... Digging the den is a
+process that can be interrupted, and returned to/completed."
+
+The tunnels already had the right kind of thing: a chamber is one room node, carved as an ellipsoid into the same soil
+field, with tunnels entering at their bore. A den is a room node planned off the tunnel node it overlaps:
+- **The plan.** The `den` event carries where the den starts (that node's place and bore) and its planned centre and
+  radius.
+- **The progress.** The `denk` event carries its progress k, which only rises. The node always stands at the plan's
+  k, so the cavity grows from the tunnel toward its centre, joined from the start and never breaking the surface.
+
+Overlap needs nothing of its own, because the carved air is a union. The plan persists like any tunnel (in
+`digworld.py`'s state, per tile and season, anonymous), so an interrupted den is resumed from what was stored, by
+anyone. Progress goes out in 2% steps, 50 events a den.
+
+Considered:
+- **A den as its own kind of shape** (a separate list beside the nodes). Rejected: it would need its own carving,
+  walking, joining and decay, all of which rooms already have.
+- **Showing a full-size den at once and filling it in.** Rejected: the cavity has to be the dug space for walking and
+  for the meshes, so growing the room is what "the cavity grows" means.
+- **A den centred where it was placed, growing outward.** Rejected: early on it would float unconnected in the soil.
+- **Walking to a distant plan automatically.** Left out: the player walks there.
+
+Where the brief met the game:
+- **Diggers.** Only the tunnellers (the vole and the brush rabbit) dig dens; the others never go underground.
+- **"Attacked".** Read as a coyote opening the system from above, since nothing else reaches a body underground.
+
 
 ## 2026-11-06: phase 1, iteration 9 (world pipeline lane restarted on its queue)
 
@@ -6891,3 +7139,161 @@ library, none built-in, also under a throttled 4 Mbps / 150 ms network (title up
     rebuild (11 reaches perennial by flow). The fair judge on Lamar, Teton, the Serengeti and Lofoten is unchanged to
     0.001 (the herb layer from the air is the photo's by construction). Teton's b_sage_eye pose now stands in forest:
     to re-pick by the eye rule.
+
+## 2026-11-06: Embody ends in the body (branch claude/embody-enter)
+
+Aaron: "When in spirit form when I click on a target and then press embody, the spirit should travel all the way to the
+body as it does, but then enter the body - switch the avatar to the animal." The autopilot flew to the animal and hung
+there: close in it held the spirit at least 3 m over the ground (the viewing flight's floor) while the become waited for
+it to come within two body radii, which only a big deer's bounding sphere allowed; and it eased its speed to the distance,
+so it could never close on an animal that ran. pilot.js now:
+
+- **Flies into it**: close in the height it wants is the body's own (the spirit's floor, 0.8 m, holds it over the
+  ground), and contact is a touch's (spirit.js: TOUCH_R 2.5 m of the body, TOUCH_AIR 4 m of one in the air, plus half the
+  body's size). Contact ends exactly as a touch does, in `spirit.enter` for that individual: the take (on a mirror page
+  the host's handshake: animals.take asks the host, which takes it out of everyone's world and holds it for that page),
+  the camera's blend, the wisp diving in, then the player is that animal.
+- **Homes until contact**: the animal's speed is measured frame to frame and the spirit flies 6 m/s faster than it (up to
+  65 m/s) and turns twice as hard while chasing.
+- **That one, or none**: the fallback to the nearest of the species is gone (the target is the animal the player chose);
+  if that one cannot be taken, a word says so. Embody is greyed for an animal with no body to play (`animals.playable`,
+  take's own test).
+- **Stops cleanly**: "the deer died" when it dies on the way (a carcass stays in the world, so it was flown to before),
+  "has gone" when it despawns, "lost sight of the deer" when the spirit has had no line to it from its own place (not the
+  chase camera's, which runs through the crowns the spirit dives into) for 2.5 s with the ground between, or 6 s with only
+  leaves between (a deer running under the oaks is seen in glimpses); within 25 m the line is not judged, and an animal
+  never yet seen on this flight (a chip's pick behind a ridge) cannot be lost. Steering cancels ("embody called off") and
+  keeps the target; Escape lets go of the target and ends the flight. Neither embodies anything.
+
+Seen on the home tile (headless Chrome over CDP): a deer 151 m off, contact at 5.4 s, playing as that deer (its id) from
+6.5 s; a deer startled to a gallop (8.5 to 12 m/s) as Embody began, caught at 4.4 s and played; the target killed at 1.5 s
+("the deer died"), Escape at 1.5 s, W at 1.5 s ("embody called off", target kept): no embody; on a mirror page a deer 100 m
+off embodied at 6.1 s while the host held it for that page. Before the line test moved to the spirit's place and split
+ground from leaves, two galloping deer were dropped at 37-39 m as "lost sight" under the oaks.
+
+## 2026-11-06: plant eaters target their food plants, and eat within reach (branch claude/embody-enter)
+
+Aaron: "Herbivores also can target plants, and must be close enough to the target to eat".
+
+- **Who:** any body that eats plants this season (forage.js on: games.json relations.forage). A predator with no food
+  plants (the puma) keeps animal targets only; an omnivore (the bear, the fox) gets both. Tab cycles the food plants on the
+  screen within 40 m with a line of sight, together with the animals (prey for a hunter, any animal for the rest), out from
+  the centre as prey always cycled; a click on one takes it.
+- **The candidates** are forage.js's own sources, now one target per plant rather than one per species (`candidates`): the
+  staged herbs (forbs.js), the near 3D food shrubs and the impostor field's cached shrubs, and a sward patch at each sample
+  of the scent's rings where the grass there is food.
+- **A plant target** shows its common name and the part this body eats in the target frame ("blue wildrye · leaves",
+  "buckbrush · browse"), no health bar, and a warm ring (gold, not a species' soul colour) at its foot over the general
+  forage glow.
+- **One reach rule** (quarry.js `eatReach`, `canEat`): 0.6 of the body's length (locomotion.json, times its size, as the
+  strikes scale) plus the plant's own reach: a deer 0.9 m plus the plant's (1.85 m at a sward patch, 2.4 m at a buckbrush),
+  a brush rabbit 0.2 m plus the plant's. needs.js feeds only through it (with
+  a plant targeted the act feeds within reach, as a good cell, and names that plant; out of reach it feeds nothing),
+  abilities.js greys the act slot out of reach with the title "get closer to the <plant> (E walks you there)" and lights
+  "ready" in it, and groundControl.js's E out of reach walks the body there (turning on the spot first, a trot far off, a
+  walk in), stops, and eats. Any key takes the body back. With no plant targeted, eating is as before: any food within
+  reach of the body.
+- Seen as a deer on the home tile (headless Chrome): Tab to buckbrush 24.5 m off, the slot greyed "get closer"; E walked it
+  in and it grazed; in the open, Tab to a blue wildrye sward 22 m off, E: in reach at 5.3 s, food from 34% to 57% in
+  4 s of grazing. The first try stopped at the plant without grazing: the walker clears the act while the body still moves
+  faster than 0.5 m/s, so the approach now stops first, then eats.
+
+## 2026-11-06: the sniff's shockwave, and a desirability scale for every eater's foods (branch claude/embody-enter)
+
+Aaron: "When an animal sniffs the air, everything around it that is edible glows briefly in a shockwave out from the
+player. The closest things pulse first, then the more distant things and so on... Plants should also have a
+"desirability" scale - how much does each animal prefer each plant/animal. The most preferable stuff pulses the same way a
+mountain lion would while in spirit mode, the least preferable pulses like a common vole."
+
+- **Desirability is a pipeline output** (pipeline/games.py `desirability`, games step version 2, written as
+  games.json `relations.desirability` = {eater: {food: [winter, spring, summer, fall]}} with `desirability_seasons` and
+  `desirability_basis`; tests/test_pipeline.py TestDesirability). Nothing per species: a plant scores by the energy of the
+  part eaten (PART_ENERGY: acorns and nuts 1.0, seeds 0.9, fruit 0.8, bulbs 0.7, flowers 0.55, leaves 0.4, woody browse
+  0.3), raised up to 20% for a food eaten in fewer seasons (a seasonal pulse); prey by how near its mass is to the
+  predator's optimal prey size (Carbone et al. 1999: over 21.5 kg, prey near 45% of the predator's mass; under, a tenth),
+  a log-normal of the ratio (sigma 1.3) blended 60/40 with its place in the diet table (primary prey first). Each eater's
+  plants and prey are scaled to 0..1 separately and season by season, half by the score's place between the season's
+  best and worst and half by its rank among the distinct scores (min-max alone pressed everything but a deer's acorns to
+  the bottom; a year-wide scale put the deer's spring favourites at 0.66 because acorns, eaten only in fall, set the top).
+  The home tile's games.json carries it (written in place: `python -m pipeline.games tiles/<id>/games.json`); other tiles
+  get it at their next games run (the version bump marks the step stale).
+- **What it says on the home tile** (fall unless noted): deer: valley oak (acorns) 1.0, blue wildrye 0.41, poison oak and
+  snowberry 0.18, buckbrush, coffeeberry and mountain mahogany 0 (spring: mule's ears, clover, blue dicks and buckbrush's
+  blossom 1.0, toyon and coffeeberry 0); mountain lion: deer 1.0, coyote 0.78, turkey 0.54, jackrabbit 0.37, brush rabbit
+  0.14, ground squirrel 0; black bear: valley oak 1.0, wild grape and coffeeberry 0.54, elderberry and the manzanitas
+  0.31, soap plant 0; red-tailed hawk: vole 1.0, California quail 0.83, mountain quail 0.69, ground squirrel 0.54, gray
+  squirrel 0.26, fence lizard 0.16, jackrabbit 0 (twice the hawk's weight); brush rabbit, spring: vetch, clover, barley,
+  filaree 1.0, the woody shrubs 0.
+- **The shockwave** (client/src/sniffWave.js): when the sniff starts (scent.js: L, its slot, the canids' and the lion's E),
+  a faint ring on the ground runs out from the body over 2.2 s to its smell reach (scent.js REACH, at most 160 m), and
+  every edible thing pulses once (0.7 s) as the ring reaches it: the near set's food trees (an oak's acorns under it),
+  forage.js's herbs, shrubs and sward, and for a hunter its prey animals (the pulse follows an animal that moves). The
+  pulses are smelled, not seen: drawn over the scene, so a rabbit under a shrub shows.
+- **The pulse is a soul** (spirit.js exports `soulLook`): the same quad, core and bubble and growth with distance; a food
+  of desirability 0 takes the tile's vole soul (its rarity colour, brightness 0.55 + 0.85 x its rarity, size 1 + 0.6 x its rarity), 1 the mountain lion's (its
+  rarity colour and the beacon's brightness 2.4 and size 5), between them the rarity is mixed for the colour and the
+  brightness and size are mixed. A food the tile gives no desirability takes 0.5.
+- **Tab leans to desire** (quarry.js): when ordering targets out from the screen's centre, the least desirable food counts
+  0.15 (squared screen units) further out, and a target that is no food of this body further still.
+- Seen (headless Chrome, home tile, fall): as a deer, 384 pulses (the cap) out to 160 m at 73 m/s, the valley oaks big and
+  gold, buckbrush and coffeeberry small and purple, wildrye green; as a mountain lion near a herd, 21 prey pulses: 2 deer
+  (1.0), a coyote (0.78), 6 jackrabbits (0.37), 12 brush rabbits (0.14). The rabbits were hidden until the pulses stopped
+  depth-testing. The ground ring is faint by design and hardly reads in a montage.
+
+## 2026-11-06: spirits are public within a world; the group sees each other in any form (docs/multiplayer.md "Who sees whom")
+
+Aaron: "Players should be able to see other players in spirit mode. When in a group, users can see eachother regardless of
+form. Each user sees the other in the form that they are currently inhabiting."
+
+Until now the hub relayed a position only to the sender's group members in the same tile's room, so a stranger was never
+seen. The rule is now:
+- **A world is a tile and a season**, for seeing as for the animals. The room join carries the season, and the relay,
+  the positions a joiner is sent and the voice signalling keep to one world. Two players in one tile in two seasons do not
+  see each other, because each stands in a different forest with different animals.
+- **A spirit's position goes to everyone in its world.** The group gets every position, in any form, with the body's pose.
+  Anyone else gets it only while the sender is a spirit, and never a body's pose.
+- **`gone {user}`** tells those who could see a player that they no longer may. It is sent when the player leaves the
+  world (the room left, a tile switch, a season change, the connection closed) and, to strangers only, when a spirit goes
+  into a body. Without it a vanished player would hang for the 4.5 s silence fade.
+- **Privacy is unchanged otherwise.** Positions are live, in memory only and never logged, blocks cut both ways, and
+  only tile ids leave the world. The new exposure is deliberate and small: anyone in the same world sees where a spirit
+  is, as they would see any animal there.
+
+**Strangers' spirits carry their name**, nearer (30 m against the group's 60 m) and paler. The tile chat already shows a
+speaker's name to the whole tile, so the label reveals nothing new, and a name is what lets two strangers greet each
+other there. The relayed `pos` carries the display name, since a stranger's page has no other way to know it. They get no edge avatar, distance or map dot, because those find friends across a tile and for a stranger
+they would track them.
+
+**The forms change in view.** Going into a body, the wisp dives into the animal. Leaving it, the wisp grows out with a
+burst of motes. A spirit that goes or leaves shrinks away where it was.
+
+Considered:
+- **Rooms keyed by tile and season**, renaming the room. Rejected: counts, presence and the tile chat are about the place,
+  so the season is a second key on the connection, used only where seeing is decided.
+- **Sending a stranger's spirit to the whole tile regardless of season.** Rejected: the viewer would see a wisp over a
+  forest that is not the one the stranger is in.
+- **The client deciding who to draw from everything in the room.** Rejected: a body's position would then leave the hub
+  for people who are not meant to have it.
+- **Fixed on the way.** A member's body in a species the viewer does not perceive is now drawn alone in its otherwise
+  hidden pool (a deer did not see a woodpecker member at all). Leaving a woodpecker in flight on a mirror page no longer
+  throws.
+- **A stranger's body drawn as an ordinary animal.** Recommended, not built here. It belongs on the anonymous
+  shared-animals channel: the host keeps the body in its stream, driven by the embodied page's pose. It does not belong
+  on the hub. The design is in the doc.
+
+## 2026-11-07: a font for every territory name (branch claude/territory-font)
+
+The place cards' territory row is DM Sans, which lacks the IPA letters some names are written with: the Washoe name
+Wašišiw Ɂítdeʔ uses the glottal stops U+0241 and U+0294, and the Cheyenne name uses ȧ (U+0227). On this Mac, Chrome drew
+those from system fonts (.SF NS, Helvetica); a system without such fonts (Linux, many Android builds) shows boxes. The
+glottal stop is itself drawn like a question mark without its dot, so at 12 px it can read as "?" even when right.
+
+- **Noto Sans backs DM Sans** for the names: `--tt-names: 'DM Sans', 'Noto Sans', system-ui, ...` on the territory row,
+  the chosen place's card and the search results' region line (title.css), and the `?cards=1` screen's territory line
+  (opening.css). Noto Sans is loaded from Google Fonts with the page's other families; Google serves it in subsets by
+  unicode-range, so a browser fetches only the subset holding a character DM Sans lacks (latin-ext, which covers
+  U+0100-02BA: Latin Extended-A and -B and the IPA block), and nothing at all for names DM Sans covers.
+- **Checked**: all 15 non-ASCII characters in the 18 tiles' territory names (á ä é í ó ü č ė ŋ Š š ȧ Ɂ ʔ ’), every name
+  rendered in the card's own style in headless Chrome, and CDP `CSS.getPlatformFontsForNode` asked which fonts drew each:
+  every name now draws only from DM Sans and Noto Sans (Noto for Ɂ and ʔ in the Washoe name and ȧ in the Cheyenne
+  name), with no system fallback; with DM Sans alone the same three came from .SF NS and Helvetica.

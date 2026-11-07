@@ -22,8 +22,8 @@ import { FH } from './shrubfield.js';
 // past its outline). The near 3D shrubs (vegetation.js's near set, treegen's materials: the tree lane's files, untouched) and
 // the sward where the grass itself is food (grass.js: thousands of clumps, the sward lane's file) take a halo from this
 // module's one instanced draw instead (HALO_CAP soft additive discs lying on the ground: a pool of light under each
-// 3D food shrub, 0.7 of its height across, and one under the body's nose when the leading grass of the sward there is
-// food; a billboard behind the crown was tried first and read as a yellow cutout over the shrub). Nothing glows for a body with no forage rows this
+// 3D food shrub, 0.7 of its height across; until 2026-11-06 also one under the body's nose when the leading grass of the
+// sward there was food, removed because it read as a glow under every grazer; a billboard behind the crown was tried first and read as a yellow cutout over the shrub). Nothing glows for a body with no forage rows this
 // season (the lion, the lizard: its insects are not plants) or for the spirit or a flier.
 //
 // 2. They can smell nearby plants. sources(x, z, reach, cb) hands scent.js (its `plants` provider) one source per food
@@ -46,7 +46,7 @@ const PULSE_HZ = 0.45, PULSE = 0.15, GAIN_FED = 0.3, HUNGER_POW = 0.7, NO_NEEDS_
 const PART = { leaves: 1, browse: 1, bulbs: 0.8, flowers: [1.35, 0.4], seeds: [1.2, 0.45], berries: [1.3, 0.45], acorns: 0 };   // [in season, out]; a tree's acorns are not drawn here
 const MASK_T = 0.5, HALO_T = 0.12, HALO_CAP = 48, SHRUB_H = 6;   // s between mask refreshes; between halo refreshes; halos at most; a near plant under this height is a shrub
 const PLANT_K = 0.35, SWARD_RINGS = [0.25, 0.55, 1.0], SWARD_BEARINGS = 8;   // the scent: the share of the species' reach; the rings sampled for a sward's scent
-const SHRUB_STRIDE = 8;   // shrubfield.js STRIDE: x y z R | H seed kind rank
+const SHRUB_STRIDE = 8, CAND_MAX = 48;   // shrubfield.js STRIDE: x y z R | H seed kind rank
 const CHAP = ['adenostoma_fasciculatum', 'arctostaphylos_viscida'];   // the chaparral kinds 0 and 1
 const TAU = Math.PI * 2;
 
@@ -147,8 +147,9 @@ export class Forage {
     this.haloT -= dt; if (this.haloT <= 0) { this.haloT = HALO_T; this.placeHalos(P); }
     this.ms += (performance.now() - t0 - this.ms) * 0.05;
   }
-  // the halos (the header): a pool of light on the ground under each near 3D food shrub within R, and on the sward
-  // under the nose where its grass is food
+  // the halos (the header): a pool of light on the ground under each near 3D food shrub within R. The pool on the sward
+  // under the nose where its grass is food is gone (Aaron, 2026-11-06: "There is a faint glow below the player no matter
+  // what animal - lets remove that"): every grazer stood in it all the time, so it read as a light under the body.
   placeHalos(P) {
     const pos = this.hPos, R = this.R, R2 = R * R; let n = 0;
     if (this.shrubIds.size) for (const q of this.veg.nearPlants || []) {
@@ -157,14 +158,6 @@ export class Forage {
       const dx = q.x - P.x, dz = q.z - P.z; if (dx * dx + dz * dz > R2) continue;
       const h = q.height || 1, o = n * 4;
       pos[o] = q.x; pos[o + 1] = q.y + 0.05; pos[o + 2] = q.z; pos[o + 3] = Math.max(0.6, h * 0.7); n++;
-    }
-    if (n < HALO_CAP && this.grassFood.size) {   // the sward under the nose
-      const G = this.ground, S = G?.on ? G.S : null, yaw = this.flight.yaw, ahead = S ? (S.half || 0) * (G.size || 1) : 0.15;
-      const nx = P.x - Math.sin(yaw) * ahead, nz = P.z - Math.cos(yaw) * ahead, g = this.grass.speciesAt(nx, -nz);
-      if (g && (this.grassFood.has(g.id) || g.ids.some(id => this.grassFood.has(id)))) {
-        const o = n * 4, size = Math.max(0.25, Math.min(2.2, 1.6 * Math.sqrt(S ? (S.shoulder || 0.3) * (G.size || 1) / 0.95 : 0.1)));
-        pos[o] = nx; pos[o + 1] = this.grass.ground(nx, -nz) + 0.04; pos[o + 2] = nz; pos[o + 3] = size; n++;
-      }
     }
     this.nHalo = n; this.halos.geometry.instanceCount = n; this.halos.visible = n > 0;
     if (n) { this.aPos.clearUpdateRanges(); this.aPos.addUpdateRange(0, n * 4); this.aPos.needsUpdate = true; }
@@ -225,6 +218,46 @@ export class Forage {
       }
     }
   }
+  // ---- plant targets (quarry.js, 2026-11-06: "Herbivores also can target plants, and must be close enough to the target
+  // to eat") ----------------------------------------------------------------------------------------------------
+  // Every food plant within R m of (x, z), from the same sources as the glow and the scent, one target each (not one per
+  // species): the staged herbs (forbs.js), the near 3D food shrubs and the impostor field's cached shrubs, and the sward
+  // where its grass is food, as a patch at each sample of SWARD_RINGS x SWARD_BEARINGS rings of R. A target is
+  // { plant: true, key, species, name, part, x, y, z, r (m: how far its foliage reaches from its centre) }; nearest first,
+  // at most max (CAND_MAX by default; the sniff's wave, sniffWave.js, asks for more).
+  candidates(x, z, R, max = CAND_MAX) {
+    const out = []; if (!this.on || !(R > 0)) return out;
+    const r2 = R * R, push = (key, species, px, py, pz, r) => { const dx = px - x, dz = pz - z, d2 = dx * dx + dz * dz; if (d2 <= r2) out.push({ plant: true, key, species, name: SPECIES[species]?.common || species, part: this.partOf(species), x: px, y: py, z: pz, r, d2 }); };
+    const F = this.forbs, buf = F.buf.array;
+    for (let q = 0, n = F.n; q < n; q++) {
+      const o = q * 8, sp = buf[o + 4] | 0; if (!(this.forbW[sp] > 0)) continue;
+      push(`forb:${buf[o].toFixed(2)},${buf[o + 2].toFixed(2)}`, F.species[sp].id, buf[o], buf[o + 1], buf[o + 2], Math.max(0.15, 0.3 * (buf[o + 3] || 1)));
+    }
+    if (this.shrubIds.size) {
+      for (const q of this.veg.nearPlants || []) if (this.shrubIds.has(q.species) && q.height < SHRUB_H) push(`shrub:${q.id}`, q.species, q.x, q.y, q.z, Math.max(0.4, q.crownR || q.height * 0.35));
+      const SF = this.shrubs, res = this.tile.habitat.res;
+      for (const [d, i, j] of SF.cells || []) {
+        if (d > R + res) break;
+        const c = SF.cache.get(j * SF.W + i); if (!c || !c.n) continue;
+        const a = c.data;
+        for (let q = 0, o = 0; q < c.n; q++, o += SHRUB_STRIDE) {
+          const kind = a[o + 6], id = kind < -0.5 ? FH[-1 - Math.round(kind)] : kind < 1.5 ? CHAP[Math.round(kind)] : null;
+          if (id && this.shrubIds.has(id)) push(`imp:${i},${j},${q}`, id, a[o], a[o + 1], a[o + 2], Math.max(0.4, a[o + 3] || 0.6));
+        }
+      }
+    }
+    if (this.grassFood.size) {   // the sward: a patch at each ring sample where its grass is food
+      const foodOf = g => g ? (this.grassFood.has(g.id) ? g.id : g.ids.find(q => this.grassFood.has(q)) || null) : null;
+      for (const f of SWARD_RINGS) for (let b = 0; b < SWARD_BEARINGS; b++) {
+        const ang = (b + (f > 0.3 ? 0.5 : 0)) * TAU / SWARD_BEARINGS, px = x + Math.sin(ang) * f * R, pz = z - Math.cos(ang) * f * R;
+        const id = foodOf(this.grass.speciesAt(px, -pz)); if (id) push(`sward:${Math.round(px)},${Math.round(pz)}`, id, px, this.grass.ground(px, -pz), pz, 0.9);
+      }
+    }
+    out.sort((p, q) => p.d2 - q.d2); if (out.length > max) out.length = max;
+    return out;
+  }
+  // the parts of plant `id` this body eats this season, as words ("seeds", "leaves and flowers")
+  partOf(id) { const p = [...(this.parts.get(id) || [])].map(w => String(w).replace(/_/g, ' ')); return p.length > 1 ? `${p.slice(0, -1).join(', ')} and ${p.at(-1)}` : p[0] || 'food'; }
   dispose() {
     this.halos.removeFromParent(); this.halos.geometry.dispose(); this.mat.dispose();
     for (const u of this.targets) u.glow.value.w = 0;

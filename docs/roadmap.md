@@ -421,7 +421,7 @@ browser stays the renderer.
   meet join, the caps raised to 5,000 nodes. Roots hang from the ceilings under the grass, the herbs (soap plant's
   bulb, blue dicks' corm), the shrubs and the oaks; E eats them, F pulls a herb down (the `pull` event, per tile and
   season). The dig goes the way the orbit camera looks (2026-11-05): the view up over the body digs down, to nearly
-  straight down, low digs up, round steers. Next: the AI voles eating roots and pulling plants; roots that slow a dig; the vole's body lit by the dirt; the animals and bodies shared so another player's
+  straight down, low digs up, round steers; with Q held ↑ / ↓ angle it up or down (2026-11-06); dens on 1 underground, dug over time, overlapping ones one room (2026-11-06). Next: the AI digging dens; the AI voles eating roots and pulling plants; roots that slow a dig; the vole's body lit by the dirt; the animals and bodies shared so another player's
   vole is seen in the tunnel; a server check that a dig is near its digger.
 - Multiplayer, designed 2026-11-01 (`docs/multiplayer.md`, from Aaron's spec): the title on stars, the earth
   rising as a crescent, the sign-in (username and password, Discord; Google and Apple greyed until their
@@ -469,8 +469,11 @@ browser stays the renderer.
   `docs/multiplayer.md`). The menu under the X (2026-11-04, the same branch): Settings (the old right-hand panel, Perceives
   removed) and Exit to main screen (back to the earth, signed in still); the data panel on the right under the
   mini-map in smaller type. Next: TURN set up on the public hub (some NATs fail without it); MediaPipe cut-out figures in
-  place of the tiles; an SFU (LiveKit) past about six; a push-to-talk key; the players on
-  a tile outside the group (unseen by the privacy rule until Aaron widens it); the stream's rate under many players
+  place of the tiles; an SFU (LiveKit) past about six; a push-to-talk key. Who sees whom (2026-11-06, Aaron widened
+  the rule; `docs/multiplayer.md` "Who sees whom"): a world is a tile and a season; spirits are public within it (a
+  stranger's wisp with their name within 30 m), the group sees each other in any form with the embody and leave seen,
+  strangers in a body stay unseen; `tools/mp/visibility.mjs` checks every case both ways with three headless pages.
+  Next there: a stranger's body drawn as an ordinary animal through the shared-animals stream; the stream's rate under many players
   and the far fliers' detail; Discord needs Aaron's application registered; Google and Apple their keys.
 
 ## Then

@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { rarityColor } from './animals.js';
+import { desireOf } from './desire.js';
 
 // The quarry (owner, 2026-11-06: "The user can press "tab" or click on a prey species to "select" them. This creates a
 // glowing ring on the ground below the prey if on the ground or just below if flying."). A predator's prey lit in its
@@ -26,12 +27,23 @@ import { rarityColor } from './animals.js';
 // autopilot then flies there (pilot.js), in a body only one the camera can see is taken. Where sight.js is not testing the
 // selection (the spirit; a species the body does not hunt) this module tests its line itself every OWN_T s.
 const SPIRIT_R = 450, OWN_T = 0.2, TAB_ROUND = 4;
+// Plant targets (owner, 2026-11-06: "Herbivores also can target plants, and must be close enough to the target to eat").
+// A body that eats plants this season (forage.js on: games.json relations.forage) can target its food plants as well as
+// animals: Tab cycles the food plants on the screen within PLANT_R m (forage.js candidates: the herbs, the shrubs, the
+// sward where its grass is food) with the animals, out from the centre; a click takes one. A plant target shows its name
+// and the part in season in the target frame (combat.js), no health, and a warm ring (PLANT_COL) at its foot. Eating
+// with a plant targeted needs reach (eatReach: EAT_K of the body's length, scaled by its size as the strikes are, plus the
+// plant's own reach): the one rule needs.js (feeding), abilities.js (the act slot greyed "get closer", lit "ready") and
+// groundControl.js (E out of reach walks the body there, then eats) all read through canEat(). With no plant targeted,
+// eating is as before: any food within reach of the body. A predator with no food plants keeps animal targets only.
+const PLANT_R = 40, EAT_K = 0.6, PLANT_LOSE = 60;   // m: plant targets on the screen this near; the reach's share of the body length; a plant target farther than this is let go
+const PLANT_COL = new THREE.Color(1.0, 0.82, 0.45), DESIRE_TAB = 0.15;   // (DESIRE_TAB: in squared screen units, a sixth of the way to the frame's edge)
 const LOSE_T = 3, PICK_PX = 30, RING_PX = 0.032, RING_W = 1.5, AIR_DROP = 0.6;   // s; px; the ring's radius per m of distance; over the body's radius; m under a flier, per body radius
 const PULSE_HZ = 1.2, DIM = 0.35, SEEN_VIS = 0.3;   // sight.js SEEN_VIS
 
 export class Quarry {
-  constructor({ animals, sight, camera, scene, dom, dive = null }) {
-    Object.assign(this, { animals, sight, camera, dom, dive });
+  constructor({ animals, sight, camera, scene, dom, dive = null, forage = null, flight = null }) {
+    Object.assign(this, { animals, sight, camera, dom, dive, forage, flight });
     this.mode = null; this.ownLos = 0; this.ownT = 0; this.pilot = null;
     this.target = null; this.lostT = 0; this.on = false; this.t = 0; this.radii = new Map();
     const mat = new THREE.ShaderMaterial({
@@ -54,13 +66,14 @@ void main() {
     const typing = e => e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement || e.target instanceof HTMLTextAreaElement;
     this.onKey = e => {
       if (typing(e) || e.metaKey || e.ctrlKey || e.altKey) return;
-      if (e.code === 'Tab' && (this.on || this.mode === 'spirit')) { e.preventDefault(); if (!e.repeat) this.cycle(); }
+      if (e.code === 'Tab' && (this.on || this.mode === 'spirit' || this.eatsPlants())) { e.preventDefault(); if (!e.repeat) this.cycle(); }
       else if (e.code === 'Escape' && this.target && !e.repeat) { this.select(null); e.quarryCleared = true; }
     };
     addEventListener('keydown', this.onKey, true);   // before the spirit's Escape (which would leave the body) and the page's Tab focus
   }
   // the body's radius (m): its mesh's bounding sphere times its size, per species once
   radius(a) {
+    if (a.plant) return a.r;
     let r = this.radii.get(a.sp);
     if (r === undefined) { const g = this.animals.meshes[a.sp]?.geometry; if (g && !g.boundingSphere) g.computeBoundingSphere(); r = Math.max(0.08, g?.boundingSphere?.radius || 0.3); this.radii.set(a.sp, r); }
     return r * (a.size || 1);
@@ -74,7 +87,31 @@ void main() {
   // the selection's line of sight from the camera: sight.js's for a hunted species in a hunting body, else this module's own
   los(a) { return this.mode === 'hunt' && this.sight.prey?.has(a.sp) ? this.sight.losOf(a) : this.ownLos; }
   // an animal's body centre, and its line from the camera (sight.js visibility; no shrub cover for the spirit's view)
-  aimY(a) { return this.animals.scentHeight(a) + (a.air ? 0 : 0.6 * this.radius(a)); }
+  aimY(a) { return a.plant ? a.y + Math.min(0.6, a.r * 0.6) : this.animals.scentHeight(a) + (a.air ? 0 : 0.6 * this.radius(a)); }
+  // ---- plant targets (see the header) ----
+  eatsPlants() { return (this.mode === 'hunt' || this.mode === 'body') && !!this.forage?.on && this.forage.ids.size > 0; }
+  // the food plants on the screen with a line of sight to them (entries as onScreen's)
+  plantsOnScreen() {
+    if (!this.eatsPlants() || !this.flight) return [];
+    const P = this.flight.pos, v = this._v, out = [], E = this.camera.position;
+    this.sight.indexTrees?.();
+    for (const a of this.forage.candidates(P.x, P.z, PLANT_R)) {
+      v.set(a.x, this.aimY(a), a.z).project(this.camera);
+      if (!(v.z < 1) || Math.abs(v.x) > 1 || Math.abs(v.y) > 1) continue;
+      if (this.sight.visibility(E.x, E.y, E.z, a.x, this.aimY(a), a.z, false) < SEEN_VIS) continue;
+      out.push({ a, sx: v.x, sy: v.y, d: Math.sqrt(a.d2) });
+    }
+    return out;
+  }
+  // how far from the body's centre it eats a plant: EAT_K of its length (times its size) and the plant's own reach
+  eatReach(a) {
+    const A = this.animals, k = A.speciesList().findIndex(sp => sp.code === A.observer);
+    return (k >= 0 ? EAT_K * A.bodyK(k).len * (A.playerSize || 1) : 0.5) + (a.r || 0.5);
+  }
+  inEatReach(a = this.target) { return !!a?.plant && !!this.flight && Math.hypot(a.x - this.flight.pos.x, a.z - this.flight.pos.z) <= this.eatReach(a); }
+  // the one rule: may the body eat now? (no plant targeted: as before, any food in reach; else within the target's reach)
+  canEat() { return !this.target?.plant || this.inEatReach(); }
+  keyOf(a) { return a ? (a.plant ? a.key : a.id) : null; }
   visibleFrom(a) { const E = this.camera.position; return this.sight.visibility(E.x, E.y, E.z, a.x, this.aimY(a), a.z, !a.air); }
   // the animals on the screen (NDC sx, sy) within SPIRIT_R m: any species (the spirit), or one species
   onScreen(sp = -1, needLos = true) {
@@ -92,27 +129,33 @@ void main() {
   // Tab: the lit prey (a hunting body) or every animal in view (the spirit) ordered out from the screen's centre; the
   // next after the present selection, else the first
   cycle() {
-    const lit = this.mode === 'spirit' ? this.onScreen() : this.sight.litPrey(); if (!lit.length) return null;
-    lit.sort((p, q) => (p.sx * p.sx + p.sy * p.sy) - (q.sx * q.sx + q.sy * q.sy));
+    const lit = this.mode === 'spirit' ? this.onScreen() : this.mode === 'hunt' ? [...this.sight.litPrey(), ...this.plantsOnScreen()] : [...this.onScreen(), ...this.plantsOnScreen()];
+    if (!lit.length) return null;
+    // out from the centre, leaning to the more desirable food (desire.js) when two are about as central: the least wanted
+    // food counts as DESIRE_TAB further out, a target that is no food of this body further still
+    const want = e => { const A = this.animals, food = e.a.plant ? e.a.species : A.speciesList()[e.a.sp]?.code; const d = food ? desireOf(A.tile, A.observer, food, this.forage?.season?.() || 'fall') : null; return d ?? (e.a.plant ? 0.5 : 0); };
+    for (const e of lit) e.key = e.sx * e.sx + e.sy * e.sy + DESIRE_TAB * (1 - want(e));
+    lit.sort((p, q) => p.key - q.key);
     // the most central one not yet visited this round (a round ends after TAB_ROUND s without Tab, or when all were seen),
     // so Tab walks every target even as the list shifts under it (a bird flying out of the line, one stepping behind a tree)
     if (this.t - (this.tabT ?? -1e9) > TAB_ROUND) this.tabbed = new Set();
     this.tabT = this.t; this.tabbed ||= new Set();
-    let e = lit.find(e => !this.tabbed.has(e.a) && e.a !== this.target);
-    if (!e) { this.tabbed.clear(); e = lit.find(e => e.a !== this.target) || lit[0]; }
-    if (this.target) this.tabbed.add(this.target);
-    this.tabbed.add(e.a); this.select(e.a);
+    const cur = this.keyOf(this.target);   // (by key: a plant target is made afresh each time it is listed)
+    let e = lit.find(e => !this.tabbed.has(this.keyOf(e.a)) && this.keyOf(e.a) !== cur);
+    if (!e) { this.tabbed.clear(); e = lit.find(e => this.keyOf(e.a) !== cur) || lit[0]; }
+    if (cur) this.tabbed.add(cur);
+    this.tabbed.add(this.keyOf(e.a)); this.select(e.a);
     return e.a;
   }
   // a click (identify.js, before its own pick): the lit prey animal nearest the click on the screen within PICK_PX; true when taken
   claim(cx, cy) {
-    if (!this.on && this.mode !== 'spirit') return false;
+    if (!this.on && this.mode !== 'spirit' && !this.eatsPlants()) return false;
     const r = this.dom.getBoundingClientRect(); let best = null, bd = PICK_PX * PICK_PX;
-    for (const e of this.mode === 'spirit' ? this.onScreen(-1, false) : this.sight.litPrey()) {
+    for (const e of this.mode === 'spirit' ? this.onScreen(-1, false) : [...(this.on ? this.sight.litPrey() : []), ...this.plantsOnScreen()]) {
       const x = r.left + (e.sx + 1) / 2 * r.width, y = r.top + (1 - e.sy) / 2 * r.height, d2 = (x - cx) ** 2 + (y - cy) ** 2;
       if (d2 < bd) { bd = d2; best = e.a; }
     }
-    if (best && this.mode === 'spirit' && this.visibleFrom(best) < SEEN_VIS) best = null;   // the one at the pointer, if the spirit can see it
+    if (best && !best.plant && this.mode === 'spirit' && this.visibleFrom(best) < SEEN_VIS) best = null;   // the one at the pointer, if the spirit can see it
     if (best) this.select(best);
     return !!best;
   }
@@ -133,6 +176,11 @@ void main() {
     if (mode !== this.mode && this.target) this.select(null);   // a new body or form: a fresh start
     this.mode = mode || null; this.on = mode === 'hunt' && this.sight.hunts; this.t += dt;
     const a = this.target;
+    if (a?.plant) {   // a plant target: while the body eats plants and is within PLANT_LOSE m of it
+      if (!this.eatsPlants() || !this.flight || Math.hypot(a.x - this.flight.pos.x, a.z - this.flight.pos.z) > PLANT_LOSE) this.select(null);
+      else if ((this.ownT -= dt) <= 0) { this.ownT = OWN_T; this.ownLos = this.visibleFrom(a); }
+      this.place(); return;
+    }
     if (a && (!this.mode || a.dead || a.gone || a.culled || !this.animals.alive(a))) this.select(null);
     else if (a) {
       if (!(this.mode === 'hunt' && this.sight.prey?.has(a.sp)) && (this.ownT -= dt) <= 0) { this.ownT = OWN_T; this.ownLos = this.visibleFrom(a); }
@@ -147,7 +195,7 @@ void main() {
     const a = this.target, R = this.ring;
     if (!a) { R.visible = false; return; }
     const A = this.animals, H = A.heights, E = this.camera.position, br = this.radius(a), air = !!a.air;
-    const y = air ? a.y - br * AIR_DROP : H.atXZ(a.x, a.z), d = Math.hypot(a.x - E.x, y - E.y, a.z - E.z);
+    const y = a.plant ? a.y : air ? a.y - br * AIR_DROP : H.atXZ(a.x, a.z), d = Math.hypot(a.x - E.x, y - E.y, a.z - E.z);
     const rad = Math.max(br * RING_W, d * RING_PX);
     R.position.set(a.x, y + (air ? 0 : 0.03 + d * 0.0015), a.z);
     if (air) R.quaternion.identity();
@@ -156,7 +204,7 @@ void main() {
       R.quaternion.setFromUnitVectors(this._up, this._n.set(-gx, 1, -gz).normalize());
     }
     R.scale.setScalar(rad); R.visible = true;
-    const u = R.material.uniforms; rarityColor(A.rarity[a.sp], u.uCol.value);
+    const u = R.material.uniforms; if (a.plant) u.uCol.value.copy(PLANT_COL); else rarityColor(A.rarity[a.sp], u.uCol.value);
     u.uK.value = this.los(a) >= SEEN_VIS || this.dive?.active || this.pilot?.on ? 1 : DIM; u.uT.value = this.t * PULSE_HZ;
   }
   clear() { if (this.target) this.select(null); this.on = false; this.ring.visible = false; }

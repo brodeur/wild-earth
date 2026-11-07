@@ -4,7 +4,7 @@
 //   const you = await Hub.me();                // null: not signed in
 //   const hub = new Hub(); hub.on('counts', d => ...); hub.connect();
 // Events: every message the hub sends, by its t (welcome, found, err, presence, friends, groups, chat,
-// invite, pos, counts, me, placed, answer, rtc), each with the message; plus 'open', 'close' and 'signedout'
+// invite, pos, gone, counts, me, placed, answer, rtc), each with the message; plus 'open', 'close' and 'signedout'
 // (the session is gone: no reconnect). The hub's state as last told is kept on the instance: you, friends,
 // requests, blocked (the people this user blocked: Blocked people), groups, online (user id -> {state, tile?}), counts (tile id -> players), ice (the ICE servers for voice and
 // video, voice.js: public STUN, and TURN when the hub has it; from the welcome, never kept past the page). The room and the watch
@@ -111,7 +111,7 @@ export class Hub {
         this.connected = true; this.retry = 0;
         this.you = d.you; this.friends = d.friends; this.requests = d.requests; this.blocked = d.blocked || []; this.groups = d.groups; this.ice = Array.isArray(d.ice) ? d.ice : null;
         this.online = new Map(d.online.map(o => [o.user, { state: o.state, tile: o.tile }]));
-        if (this.room) this.send({ t: 'room', op: 'join', tile: this.room });
+        if (this.room) this.send({ t: 'room', op: 'join', tile: this.room, ...(this.roomSeason ? { season: this.roomSeason } : {}) });
         if (this.watching) this.send({ t: 'watch', on: true });
         this.emit('open', d);
         break;
@@ -154,14 +154,17 @@ export class Hub {
   // The player changed the season (group season): 'spring' .. 'winter' with the day picked ('MM-DD'), or 'auto' (today's).
   season(season, date = null) { return this.send(date && season !== 'auto' ? { t: 'season', season, date } : { t: 'season', season }); }
   answer(invite, join) { return this.send({ t: 'answer', invite, join: !!join }); }
-  // The tile's room: joined when a world is entered (null leaves). Kept, and re-joined after a reconnect.
-  enter(tile) {
-    this.room = tile || null;
-    return this.send(tile ? { t: 'room', op: 'join', tile } : { t: 'room', op: 'leave' });
+  // The tile's room, in the season the world is in (the world is the tile and the season: docs/multiplayer.md "Who sees
+  // whom"): joined when a world is entered and again when its season changes in place (null leaves). Kept, and re-joined
+  // after a reconnect.
+  enter(tile, season = null) {
+    this.room = tile || null; this.roomSeason = tile ? season || null : null;
+    return this.send(tile ? { t: 'room', op: 'join', tile, ...(season ? { season } : {}) } : { t: 'room', op: 'leave' });
   }
-  // {x, y, z, yaw, form}: at 5 Hz while in a room and in a group (the caller paces it). Relayed, never kept.
+  // {x, y, z, yaw, form}: at 5 Hz while in a room (the caller paces it). The hub relays it under the rule: to the group in
+  // any form, to everyone else in the world while a spirit; a body's pose with no group goes nowhere. Never kept.
   pos(p) {
-    if (!this.room || !this.groups.length) return false;
+    if (!this.room) return false;
     return this.send({ t: 'pos', x: p.x, y: p.y, z: p.z, yaw: p.yaw, form: p.form, ...(p.b ? { b: p.b, c: p.c } : {}) });   // b, c: the body's pose (bodySample.js)
   }
   // WebRTC signalling to a group member in the same room (voice.js): {to, tc?, k: 'sdp'|'ice'|'state'|'bye', ...}. Relayed

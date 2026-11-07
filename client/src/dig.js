@@ -4,6 +4,7 @@ import { groundUniforms } from './terrain.js';
 import { GLOW_COL } from './forage.js';
 import { Carve, holeCut } from './digCarve.js';
 import { Roots } from './digRoots.js';
+import { Dens } from './digDen.js';
 
 // Dig: a game for the vole and the coyote (Aaron, 2026-11-02: "a new game for voles and coyotes. Dig! Voles may dig
 // tunnels at a rate of .5"/s. They can create tunnel systems, big chambers etc. coyotes may dig down at a rate of .5"/s
@@ -29,7 +30,8 @@ import { Roots } from './digRoots.js';
 // Controls. The vole (groundControl.js, mode 'tunnel'): Q held, or E held with nothing to eat under the nose, digs
 // from the nose at RATE m/s the way the orbit camera looks (aimPitch: the camera swung up over the body digs down, to
 // near straight down; swung low digs up; the camera's heading steers; see DOWN_MAX; from the surface it starts at
-// START_PITCH or steeper until it is under), turning as it turns (A / D or the camera); a dig that brings the face within
+// START_PITCH or steeper until it is under; ↑ / ↓ with the key held turn it up or down: see KEY_DRAG), turning as it
+// turns (A / D or the camera); a dig that brings the face within
 // CHAMBER_NEAR of another node of the system joins them and widens the nodes round into a chamber (up to R_CHAMBER);
 // a face that reaches the surface breaks out as a hole. W walks the tunnel along its centreline (the branch nearest
 // the way it faces at a junction), S backs, W at a hole with no tunnel ahead climbs out; a vole on the surface walking
@@ -73,7 +75,13 @@ const JOIN_PATH = 0.3, R_TURN = 0.07;   // m along the tunnel within which a nod
 // STEER_MAX of behind it) as fast as the face can carry the curve, and the orbit gives up what the body turns, so the
 // view stays still. The face's slope turns at the same rate (D.pitch, aimed by digFrom). A dig nearing the digger's
 // depthMax levels off within 2.5 radii of it (digDir).
-const DOWN_MAX = 1.45, UP_MAX = 1.0, AIM_DZ = 0.04, AIM_DOWN = 0.9, AIM_UP = 0.45, STEER_MAX = 1.75;
+// The arrows (Aaron, 2026-11-06: "While digging, the purpose of the arrow keys changes upArrow begins to dig up,
+// downarrow begins to dig down"): with the dig key held, ↑ turns the face's slope up and ↓ down, from the slope the face
+// has, as fast as the face can carry the curve, to UP_MAX or DOWN_MAX; let go, the slope holds (keyAim). The camera's
+// aim yields to the keys: once an arrow has set the slope, the orbit's pitch no longer moves it until a drag swings the
+// camera KEY_DRAG rad up or down, which hands the aim back to the camera; leaving the tunnel or a new dig from the
+// surface clears it. While the dig key is held the arrows do nothing else (groundControl input: not the walk).
+const DOWN_MAX = 1.45, UP_MAX = 1.0, AIM_DZ = 0.04, AIM_DOWN = 0.9, AIM_UP = 0.45, STEER_MAX = 1.75, KEY_DRAG = 0.08;
 const START_PITCH = -0.55, STEP = 0.02, BEND = 0.2, SEG_MAX = 0.35;
 const PIT_R0 = 0.1, PIT_RK = 0.45, PIT_MAX = 0.6, PIT_STEP = 0.01, PAW_AHEAD = 1.1;   // PAW_AHEAD: body half-lengths ahead of the centre
 const COLLAR_UP = 0.45;    // where the light down a hole comes from: radii over the ground
@@ -93,8 +101,8 @@ const MAX_S = 5000, MAX_N = 5000, MAX_P = 120;   // segments, nodes, pits (digwo
 // coyote's. The brush rabbit's burrow goes beyond the biology (it uses others' burrows and digs none: Chapman 1990; Aaron
 // asked for it): a short one, 6.5 cm in radius (the body is about 10 cm wide), 20-30 cm down, an inch a second.
 export const DIGGERS = {
-  microtus_californicus: { kind: 'tunnel', r: R_TUBE, rate: RATE, depth: 0.5, fit: 0.025, crawl: [0.04, 0.058] },
-  sylvilagus_bachmani: { kind: 'tunnel', r: 0.065, rate: 2 * RATE, depth: 0.32, nest: 0.11, fit: 0.055, crawl: [0.137, 0.137] },
+  microtus_californicus: { kind: 'tunnel', r: R_TUBE, rate: RATE, depth: 0.5, fit: 0.025, crawl: [0.04, 0.058], den: { r: 0.16, depth: 0.28, s: 40 } },
+  sylvilagus_bachmani: { kind: 'tunnel', r: 0.065, rate: 2 * RATE, depth: 0.32, nest: 0.11, fit: 0.055, crawl: [0.137, 0.137], den: { r: 0.3, depth: 0.42, s: 45 } },
   lepus_californicus: { kind: 'form', r: 0.15, r0: 0.08, depth: 0.07, rate: 0.008 * DIG_SPEED },
   canis_latrans: { kind: 'pit' },
 };
@@ -113,7 +121,12 @@ const SOIL_DEFAULT = [0.34, 0.24, 0.14];
 // ground; sys the id of the hole the system began at); seg: { id, a, b }; pit: { id, x, z, y0, r, depth, hx, hz,
 // open: [segId], k } (k 'form': a jackrabbit's scrape, else a coyote's pit). Ids are strings, `<tag>.<n>`: a tag of this page's and its own counter, so two players never make
 // the same id (the server refuses one it already has). Every event is anonymous.
-export const STEP_MAX = 0.6, ROOM_REACH = 0.45, PULL_MAX = 3000;   // m: the longest step a dig event may make from its node (digworld.py STEP_MAX)
+export const STEP_MAX = 0.6, ROOM_REACH = 0.45, PULL_MAX = 3000;
+// a den (digDen.js; digworld.py the same): a room node planned off node `at`, its plan in node.den { ax, ay, az, ar (where
+// it starts: at's place and bore), x, y, z, r (its centre and radius), k (dug, 0..1, only rising) }; the node stands at
+// the plan's k (denPlace), so the cavity grows out of the tunnel toward its centre as it is dug
+export const DEN_R_MIN = 0.08, DEN_R_MAX = 0.4, DEN_REACH = 0.7, DEN_MAX = 200, DEN_AT = 0.05;
+export function denPlace(n) { const D = n.den, k = D.k; n.x = D.ax + (D.x - D.ax) * k; n.y = D.ay + (D.y - D.ay) * k; n.z = D.az + (D.z - D.az) * k; n.r = D.ar + (D.r - D.ar) * k; n.gy = undefined; return n; }   // m: the longest step a dig event may make from its node (digworld.py STEP_MAX)
 export function newWorld(tile) { return { v: 1, tile, nodes: [], segs: [], pits: [], byId: new Map(), pulls: new Map() }; }
 const d3 = (a, b) => Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z);
 export function applyEvent(w, e) {
@@ -144,12 +157,12 @@ export function applyEvent(w, e) {
       return true;
     }
     case 'widen': {   // nodes grown toward a chamber
-      let ok = false; for (const id of e.ids) { const n = get(id); if (!n?.segs) continue; const r = Math.min(R_MAX, Math.max(n.r, e.r)); if (r !== n.r) { n.r = r; ok = true; } }
+      let ok = false; for (const id of e.ids) { const n = get(id); if (!n?.segs || n.den) continue; const r = Math.min(R_MAX, Math.max(n.r, e.r)); if (r !== n.r) { n.r = r; ok = true; } }
       return ok;
     }
     case 'room': {   // a chamber: one node (a sphere of radius r) in place of the nodes round it (digworld.py, the same rule)
       if (taken(e.id)) return false;
-      const ab = e.absorb.map(get); if (ab.some(n => !n?.segs || n.hole)) return false;
+      const ab = e.absorb.map(get); if (ab.some(n => !n?.segs || n.hole || n.den)) return false;   // (a den is never absorbed)
       const sys = ab[0].sys; if (ab.some(n => n.sys !== sys || d3(n, e) > ROOM_REACH)) return false;
       const gone = new Set(e.absorb), room = { id: e.id, x: e.x, y: e.y, z: e.z, r: e.r, hole: false, sys, open: ab.some(n => n.open), segs: [], room: true, i: 0 };
       const ids = [...new Set(ab.flatMap(n => n.segs))].sort(), dropped = new Set(), outside = new Set();
@@ -187,6 +200,20 @@ export function applyEvent(w, e) {
       if (left >= u.left) return false;
       u.left = left; return true;
     }
+    case 'den': {   // a den planned off node `at` (digDen.js): a room node where `at` stands, grown toward its centre as it is dug
+      const a = get(e.at); if (!a?.segs || (a.den && a.den.k < 1) || taken(e.id) || taken(e.seg) || e.id === e.seg) return false;
+      if (!(e.r >= DEN_R_MIN && e.r <= DEN_R_MAX) || Math.hypot(a.x - e.ax, a.y - e.ay, a.z - e.az) > DEN_AT || Math.hypot(e.x - e.ax, e.y - e.ay, e.z - e.az) > DEN_REACH) return false;
+      let dens = 0; for (const o of w.nodes) if (o.den) dens++; if (dens >= DEN_MAX) return false;
+      const n = denPlace({ id: e.id, x: 0, y: 0, z: 0, r: 0, hole: false, sys: a.sys, open: false, segs: [], room: true, i: w.nodes.length,
+        den: { ax: e.ax, ay: e.ay, az: e.az, ar: e.ar, x: e.x, y: e.y, z: e.z, r: e.r, k: 0 } });
+      const s = { id: e.seg, a: a.id, b: n.id, i: w.segs.length };
+      w.nodes.push(n); w.segs.push(s); w.byId.set(n.id, n); w.byId.set(s.id, s); a.segs.push(s.id); n.segs.push(s.id);
+      return true;
+    }
+    case 'denk': {   // a den dug further (its progress only rises)
+      const n = get(e.id), k = clamp(+e.k || 0, 0, 1); if (!n?.den || !(k > n.den.k)) return false;
+      n.den.k = k; denPlace(n); return true;
+    }
     case 'visit': return true;   // the server's clock of the last animal inside (the decay); nothing drawn changes
     case 'decay': {   // the server removed a system or a pit no animal entered for a week
       const gone = new Set([...(e.nodes || []), ...(e.segs || []), ...(e.pits || [])]); if (!gone.size) return false;
@@ -202,7 +229,7 @@ export function applyEvent(w, e) {
 // the server's shape (digworld.py) and back: the welcome, the offline copy in localStorage, a clone
 export function toShared(w) {
   const nodes = {}, segs = {}, pits = {};
-  for (const n of w.nodes) nodes[n.id] = { x: n.x, y: n.y, z: n.z, r: n.r, h: n.hole ? 1 : 0, sys: n.sys, o: n.open ? 1 : 0, ...(n.room ? { k: 1 } : {}) };
+  for (const n of w.nodes) { const D = n.den; nodes[n.id] = { x: n.x, y: n.y, z: n.z, r: n.r, h: n.hole ? 1 : 0, sys: n.sys, o: n.open ? 1 : 0, ...(n.room ? { k: 1 } : {}), ...(D ? { dn: [D.ax, D.ay, D.az, D.ar, D.x, D.y, D.z, D.r, D.k] } : {}) }; }
   for (const s of w.segs) segs[s.id] = [s.a, s.b];
   for (const p of w.pits) pits[p.id] = { x: p.x, z: p.z, y0: p.y0, r: p.r, d: p.depth, hx: p.hx, hz: p.hz, o: [...p.open], ...(p.k ? { k: p.k } : {}) };
   const pulls = {}; for (const u of w.pulls.values()) pulls[u.id] = { x: u.x, y: u.y, z: u.z, sp: u.sp, l: u.left };
@@ -210,7 +237,11 @@ export function toShared(w) {
 }
 export function fromShared(tile, d) {
   const w = newWorld(tile); if (!d) return w;
-  for (const [id, n] of Object.entries(d.nodes || {})) { const o = { id, x: n.x, y: n.y, z: n.z, r: n.r, hole: !!n.h, sys: n.sys, open: !!n.o, segs: [], ...(n.k ? { room: true } : {}) }; w.nodes.push(o); w.byId.set(id, o); }
+  for (const [id, n] of Object.entries(d.nodes || {})) {
+    const o = { id, x: n.x, y: n.y, z: n.z, r: n.r, hole: !!n.h, sys: n.sys, open: !!n.o, segs: [], ...(n.k ? { room: true } : {}) };
+    if (Array.isArray(n.dn) && n.dn.length === 9) { const [ax, ay, az, ar, x, y, z, r, k] = n.dn; o.den = { ax, ay, az, ar, x, y, z, r, k }; denPlace(o); }
+    w.nodes.push(o); w.byId.set(id, o);
+  }
   for (const [id, [a, b]] of Object.entries(d.segs || {})) { const A = w.byId.get(a), B = w.byId.get(b); if (!A || !B) continue; const s = { id, a, b }; w.segs.push(s); w.byId.set(id, s); A.segs.push(id); B.segs.push(id); }
   for (const [id, u] of Object.entries(d.pulls || {})) w.pulls.set(id, { id, x: u.x, y: u.y, z: u.z, sp: u.sp, left: u.l });
   for (const [id, p] of Object.entries(d.pits || {})) { const o = { id, x: p.x, z: p.z, y0: p.y0, r: p.r, depth: p.d, hx: p.hx, hz: p.hz, open: (p.o || []).filter(s => w.byId.has(s)), pit: true, k: p.k === 'form' ? 'form' : undefined }; w.pits.push(o); w.byId.set(id, o); }
@@ -320,6 +351,7 @@ export class Dig {
     this.soil = new THREE.Color(...SOIL_DEFAULT);
     this.build();
     this.roots = new Roots(this, { forbs, veg, grass });   // the roots hanging from the ceilings (digRoots.js)
+    this.DIGGERS = DIGGERS; this.dens = new Dens(this);   // the player's dens: key 1 underground (digDen.js)
     this.eatT = 0; this.pullT = 0; this.rootNow = null;
     if (forbs) forbs.gone = { has: id => this.world.pulls.has(id) };   // a plant pulled down is not drawn on the surface
     this.net = new DigNet(this);
@@ -473,10 +505,12 @@ export class Dig {
       case 'join': C.touchNode(e.a); C.touchNode(e.b); break;
       case 'widen': for (const id of e.ids) C.touchNode(id); break;
       case 'pit': C.touchPit(e.id); break;
-      case 'open': { this.glowT = 0; const s0 = this.node(e.segs[0]); if (s0?.a) this.flee(this.node(s0.a).sys, this.node(s0.a)); break; }   // the voles of that system run
+      case 'open': { this.glowT = 0; const s0 = this.node(e.segs[0]); if (s0?.a) { this.flee(this.node(s0.a).sys, this.node(s0.a)); this.dens?.opened(this.node(s0.a).sys); } break; }   // the voles of that system run
       case 'room': this.remap(e); C.syncAll(); this.checkTun(); break;
       case 'decay': C.syncAll(); this.checkTun(); break;
       case 'pull': this.forbs?.forget(e.id); break;
+      case 'den': C.touchNode(e.at); C.touchNode(e.id); this.roots.dirty = true; break;
+      case 'denk': C.touchNode(e.id); this.roots.dirty = true; break;
     }
     if (e.type !== 'visit' && e.type !== 'open' && this.roots) this.roots.dirty = true;
   }
@@ -562,7 +596,7 @@ export class Dig {
       const gy = this.groundY(nx, nz), id = this.newId();
       if (this.nearestNode(nx, gy - r, nz, CHAMBER_NEAR + r - R_TUBE)) { gc.say('a tunnel runs just here'); return false; }
       if (!this.dispatch({ type: 'hole', id, x: nx, y: gy - r, z: nz, r })) return false;
-      const n = this.node(id); this.tun = { a: n.id, b: n.id, t: 1, prev: -1 }; this.pd.face = 0; this.pd.startDown = true;
+      const n = this.node(id); this.tun = { a: n.id, b: n.id, t: 1, prev: -1 }; this.pd.face = 0; this.pd.startDown = true; this.keyAim = null;
       gc.mode = 'tunnel'; gc.v = 0; gc.sit = 0; gc.resting = false; gc.actT = 0; this.soilAt(nx, -nz);
       gc.say(spec.nest ? 'digging a burrow: swing the view up over you to dig down' : 'digging in: swing the view up over you to dig down');
       return true;
@@ -625,7 +659,7 @@ export class Dig {
     const gc = this.gc, f = gc.flight; if (h.r < (DIGGERS[gc.code]?.fit ?? 0)) return;   // too narrow for this body
     // on the first segment down, facing along it, carrying some of the run in (a walk in the tunnel at most 1.5 m/s)
     const s = h.segs.length ? this.node(this.otherEnd(h.segs[0], h)) : null;
-    this.tun = s ? { a: h.id, b: s.id, t: 0, prev: -1 } : { a: h.id, b: h.id, t: 1, prev: -1 }; this.pd.face = 0; this.pd.startDown = false;
+    this.tun = s ? { a: h.id, b: s.id, t: 0, prev: -1 } : { a: h.id, b: h.id, t: 1, prev: -1 }; this.pd.face = 0; this.pd.startDown = false; this.keyAim = null;
     if (s) f.yaw = Math.atan2(-(s.x - h.x), -(s.z - h.z));
     const en = this.enter ||= { from: new THREE.Vector3(), k: 1, left: 0 };
     en.from.copy(f.pos); en.k = 0; en.left = s ? ENTER_WALK * gc.S.half * gc.size : 0;
@@ -656,7 +690,8 @@ export class Dig {
     const held = this.wantDig(gc); if (!held) this.broke = false;
     const en = this.enter;   // walking in from the hole: forward on its own until the steps are walked, a back key or the dig key
     if (en && en.left > 0) { if (k.fwd < 0 || held) en.left = 0; else { const kk = this._kEnter ||= {}; Object.assign(kk, k); kk.fwd = 1; k = kk; en.left -= Math.max(Math.abs(gc.v), 0.1) * dt; } }
-    const dig = held && !this.broke;   // after a break-out the key must be let go before the next dig
+    const denOn = this.dens.step(dt, k, held);   // a den being dug (digDen.js): the body at work on it, no tunnel dug
+    const dig = held && !this.broke && !denOn;   // after a break-out the key must be let go before the next dig
     if (k.fwd || dig) gc.resting = false;
     const wDig = Math.min(S.turn, spec.rate * this.mult / (R_TURN * spec.r / R_TUBE));
     f.yaw += k.turn * (this.digging ? wDig : S.turn) * dt;   // digging, the body turns only as the face can carry a curve
@@ -691,7 +726,9 @@ export class Dig {
     }
     // the dig: from the node the body stands at, the way it faces, down the slope it looks along
     const at = T.t >= 1 ? B : T.t <= 0 ? A : null;
-    if (dig && at && (at === B || T.a === T.b || k.fwd <= 0)) this.digFrom(at, dt); else { this.digging = 0; gc.digging = 0; if (this.ahead) this.faceAhead(null, this.pd); }
+    this.denOn = denOn;
+    if (denOn) { this.digging = 1; gc.digging = 1; gc.actT = 0; if (this.ahead) this.faceAhead(null, this.pd); }
+    else if (dig && at && (at === B || T.a === T.b || k.fwd <= 0)) this.digFrom(at, dt); else { this.digging = 0; gc.digging = 0; if (this.ahead) this.faceAhead(null, this.pd); }
     if (rest) this.restAt(at, spec);
     this.rootStep(dt, k);
     // the body on the tunnel's floor, pitched with the slope; its camera on the centreline behind (camera())
@@ -709,7 +746,8 @@ export class Dig {
     const pitch = dh > 1e-6 ? -Math.atan2(dy, dh) : 0, fwd2 = Math.cos(wrap(f.yaw - (dh > 1e-6 ? Math.atan2(-(B2.x - A2.x), -(B2.z - A2.z)) : f.yaw))) >= 0;
     ps.pitch = damp(ps.pitch, (fwd2 ? pitch : -pitch) * 0.9, 10, dt);
     if (this.digging) {   // the dig's pose: nose down into the face, the fore feet scrabbling fast and low, the dirt back
-      ps.pitch = damp(ps.pitch, clamp(0.35 - 0.8 * (this.pd.d?.phi || 0), 0, 1.45) + 0.08 * Math.sin(this.time * 40), 14, dt);   // nose into the face, down a steep dig ps.amp = 0.45; ps.phase += dt * TAU * 9; ps.lift = 0.002 * Math.max(0, Math.sin(ps.phase * 2));
+      // nose into the face (down a steep dig), the fore feet scrabbling
+      ps.pitch = damp(ps.pitch, clamp(0.35 - 0.8 * (this.denOn ? 0 : this.pd.d?.phi || 0), 0, 1.45) + 0.08 * Math.sin(this.time * 40), 14, dt); ps.amp = 0.45; ps.phase += dt * TAU * 9; ps.lift = 0.002 * Math.max(0, Math.sin(ps.phase * 2));
       ps.flick = damp(ps.flick, 0.6 + 0.3 * Math.sin(this.time * 31), 12, dt);
     }
     gc.spd = Math.abs(gc.v); gc.inAir = false;
@@ -768,9 +806,11 @@ export class Dig {
     const dx = B.x - A.x, dz = B.z - A.z, l2 = dx * dx + dz * dz, t = l2 > 1e-8 ? clamp(((x - A.x) * dx + (z - A.z) * dz) / l2, -1, 2) : 0, tr = clamp(t, 0, 1);
     return A.y + (B.y - A.y) * (l2 > 1e-8 ? t : 0) - (A.r + (B.r - A.r) * tr) * 0.85;
   }
-  // the player's aim pitch (see DOWN_MAX): the orbit camera's pitch off its set-up, as a slope; + the flight's own pitch
+  // the player's aim pitch (see DOWN_MAX): the arrows' slope while it holds (keyAim), else the orbit camera's pitch off
+  // its set-up, as a slope; + the flight's own pitch
   aimPitch() {
     const f = this.gc.flight, op = f.orbitPitch || 0;
+    if (this.keyAim != null) { if (Math.abs(op - this.keyOp) < KEY_DRAG) return this.keyAim; this.keyAim = null; }   // the arrows' slope, until a drag takes the aim back
     const a = op > AIM_DZ ? -Math.min(1, (op - AIM_DZ) / (AIM_DOWN - AIM_DZ)) * DOWN_MAX : op < -AIM_DZ ? Math.min(1, (-op - AIM_DZ) / (AIM_UP - AIM_DZ)) * UP_MAX : 0;
     return clamp(a + (f.pitch || 0), -DOWN_MAX, UP_MAX);
   }
@@ -821,7 +861,7 @@ export class Dig {
       }
       if (near && near.sys === n.sys && !this.within(n, JOIN_PATH * kR).has(near)) {   // the loop closed round: the nodes round the face become one room
         const ids = []; let mx = 0, my = 0, mz = 0;
-        for (const o of w.nodes) if (o.sys === n.sys && !o.hole && ids.length < 64 && (o.x - cx) ** 2 + (o.y - cy) ** 2 + (o.z - cz) ** 2 < (2 * CHAMBER_NEAR * kR) ** 2) { ids.push(o.id); mx += o.x; my += o.y; mz += o.z; }
+        for (const o of w.nodes) if (o.sys === n.sys && !o.hole && !o.den && ids.length < 64 && (o.x - cx) ** 2 + (o.y - cy) ** 2 + (o.z - cz) ** 2 < (2 * CHAMBER_NEAR * kR) ** 2) { ids.push(o.id); mx += o.x; my += o.y; mz += o.z; }
         if (ids.length >= 2) {
           mx /= ids.length; my /= ids.length; mz /= ids.length; let far = 0;
           for (const id of ids) { const o = this.node(id); far = Math.max(far, Math.hypot(o.x - mx, o.y - my, o.z - mz) + o.r); }
@@ -863,12 +903,18 @@ export class Dig {
     const gc = this.gc, f = gc.flight, T = this.tun, D = this.pd, spec = DIGGERS[gc.code] || DIGGERS.microtus_californicus;
     D.r = spec.r !== R_TUBE ? spec.r : undefined; D.rate = spec.rate; D.depthMax = spec.depth; D.nest = spec.nest;
     if (!this.wantNewDig(n, f)) { this.digging = 0; gc.digging = 0; return; }
+    const wP = spec.rate * this.mult / (R_TURN * spec.r / R_TUBE) * dt;   // the most the face's slope turns this frame
+    const K = f.keys, ka = (K.has('ArrowUp') ? 1 : 0) - (K.has('ArrowDown') ? 1 : 0);   // the arrows (see KEY_DRAG)
+    if (ka) {
+      if (!this.kaWas || this.keyAim == null) { this.keyAim = this.digging && D.d ? D.d.phi : this.aimPitch(); D.pitch = this.keyAim; }   // from the slope the face has
+      this.keyAim = clamp(this.keyAim + ka * wP, -DOWN_MAX, UP_MAX); this.keyOp = f.orbitPitch || 0;
+    }
+    this.kaWas = !!ka;
     const aim = this.aimPitch();
     if (n.hole && n.segs.length && this.digDir(n, f.yaw, aim, D).y > -0.15) {   // at a hole the way up is the open air: W climbs out
       this.digging = 0; gc.digging = 0; if (!this.toldOut) { this.toldOut = true; gc.say('at the surface: W climbs out'); } return;
     }
     // the face's slope toward the aim, turning as fast as the face can carry the curve (a fresh dig takes it at once)
-    const wP = spec.rate * this.mult / (R_TURN * spec.r / R_TUBE) * dt;
     D.pitch = this.digging && Number.isFinite(D.pitch) ? D.pitch + clamp(aim - D.pitch, -wP, wP) : aim;
     this.toldOut = false; this.digging = 1; gc.digging = 1; gc.actT = 0;
     const d = this.digDir(n, f.yaw, D.pitch, D);
@@ -884,7 +930,7 @@ export class Dig {
   }
   leaveHole(n) {
     const gc = this.gc, P = gc.flight.pos, gy = n.y + n.r;
-    gc.mode = 'ground'; P.set(n.x, gy, n.z); gc.v = 0.2; gc.digging = 0; this.digging = 0; this.tun = null; gc.last.copy(P);   // the camera was above all along: no cut
+    this.keyAim = null; gc.mode = 'ground'; P.set(n.x, gy, n.z); gc.v = 0.2; gc.digging = 0; this.digging = 0; this.tun = null; gc.last.copy(P);   // the camera was above all along: no cut
     this.outOf = n;   // not straight back down it: ignored until the body is off it
     gc.say('up on the surface');
   }
@@ -904,6 +950,8 @@ export class Dig {
     const T = this.tun; if (!T) return '';
     const Q = this.axisAt(T, this._ax ||= new THREE.Vector4()), depth = this.groundY(Q.x, Q.z) - Q.y;
     const d = `${Math.max(0, Math.round(depth * 100))} cm down`;
+    const dk = this.denOn ? this.dens.progress() : null;
+    if (dk !== null) return `digging the den · ${Math.floor(dk * 100)}% · ${d}`;
     if (this.pullT > 0 && this.rootNow) return `pulling the ${this.rootNow.label.replace(/ (roots|bulb|corm)$/, '')} down · ${d}`;
     if (this.digging) { const phi = this.pd.d?.phi || 0; return `digging, ${Math.abs(phi) < 0.08 ? 'level' : (phi < 0 ? 'down ' : 'up ') + Math.round(Math.abs(phi) * 180 / Math.PI) + '°'} · ${d}`; }
     const rabbit = this.gc.code === 'sylvilagus_bachmani';
@@ -1214,6 +1262,7 @@ export class Dig {
       this.glowPass(); this.visPass(); this.xrPass();
     }
     this.xrBlobs();
+    this.dens.update();
     this.carve.update();
     if (this.world.nodes.length) this.roots.update(dt);
     if (this.saveT >= 0 && (this.saveT -= dt) <= 0) this.save();
@@ -1222,7 +1271,7 @@ export class Dig {
   dispose(all = true) {
     if (all) { this.save(); this.net.leave(); removeEventListener('pagehide', this.onHide); if (window.__weDig === this) delete window.__weDig; groundUniforms.digCutN.value = 0; }
     for (const m of [this.specks, this.trail, this.fade, this.blobs]) { if (!m) continue; this.scene.remove(m); m.geometry.dispose(); m.material.dispose(); }
-    this.carve?.dispose(); this.roots?.dispose();
+    this.carve?.dispose(); this.roots?.dispose(); this.dens?.dispose();
     if (this.forbs?.gone) this.forbs.gone = null;
     this.xrMesh?.layers.disable(XR);
     for (const a of this.aiIn) { a.tun = null; a.buried = false; } this.aiIn.clear();

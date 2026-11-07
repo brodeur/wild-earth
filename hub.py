@@ -9,6 +9,8 @@ POST /api/hub/recover  {name, code, password}      -> {you, left} + cookie (the 
                                                       session of the user ended, the new password set)
 GET  /api/hub/me                                   -> {you} or 401
 GET  /api/hub/config                               -> {hub, providers: ['discord', ...]} (keys present only)
+GET  /api/hub/counts                               -> {tiles: {tile_id: players}}: the same anonymous per-tile counts the
+                                                      socket's `watch` sends, for a signed-out visitor's place cards
 GET  /api/hub/oauth/discord                        -> 302 to Discord (scope identify); Discord sends the
                                                       browser back to this same path with ?code&state
 GET  /api/hub/ws                                   WebSocket, authenticated by the we_session cookie at
@@ -16,16 +18,18 @@ GET  /api/hub/ws                                   WebSocket, authenticated by t
 
 Privacy (the doc's "Privacy"): the tables hold accounts, friendships, blocks, groups and group chat (kept 7
 days), nothing that is a position, a tile or a time of play (a session's last_seen is kept to the day).
-Presence, rooms, counts, the tile chat, invites and positions are in memory only; a position goes to the
-sender's group members in the same room and nowhere else; the connection keeps its last one so that a group
-member who enters the room after it is told where the sender is, and it goes with the room or the connection
-(lane 4). An invite's point (the picker's planned arrival, tile-local) is relayed the same way and not kept. Nothing a
+Presence, rooms, counts, the tile chat, invites and positions are in memory only. A position goes only to players in
+the sender's world (the same tile's room and the same season): to the sender's group members in any form, and to
+everyone else there only while the sender is a spirit (docs/multiplayer.md "Who sees whom", 2026-11-06); a viewer who
+may no longer see it (the sender left the world, or a stranger's spirit went into a body) gets `gone {user}`. The
+connection keeps its last one so that a player who enters the world after it is told where the sender is, under the
+same rule, and it goes with the room or the connection (lane 4). An invite's point (the picker's planned arrival, tile-local) is relayed the same way and not kept. Nothing a
 player sends is printed: the log is the request line (server.py's), and counts. No email address is asked
 for. The Discord keys are read from the environment or .env and never printed.
 
 Voice and video (lane 5): the media goes peer to peer (WebRTC), never through the hub. The hub only relays the
-signalling, `rtc` {to, tc?, k: 'sdp'|'ice'|'state'|'bye', ...}, from a connection in a room to the addressed group
-member's connection in the same room (the rule positions follow), stamped with the sender's user and connection id;
+signalling, `rtc` {to, tc?, k: 'sdp'|'ice'|'state'|'bye', ...}, from a connection in a world to the addressed group
+member's connection in the same world (the rule group members' positions follow), stamped with the sender's user and connection id;
 nothing of it is kept or printed. The ICE servers go to each signed-in client in `welcome`: public STUN, and TURN
 when TURN_URL (and TURN_USERNAME and TURN_CREDENTIAL, or TURN_SECRET for coturn's time-limited ones) are set.
 """
@@ -640,7 +644,7 @@ class Hub:
             cs.discard(c)
             if not cs:
                 del self.conns[c.uid]
-            c.rtc_bye()
+            c.leave_world()
             c.room, c.watch = None, False
             self.tell_presence(c.uid)
             self.log_online()
@@ -701,6 +705,7 @@ class HubConn(WsConn):
     def __init__(self, sock, rfile, hub: Hub, uid: str | None, th: str | None):
         self.hub, self.uid, self.th = hub, uid, th
         self.room, self.room_t, self.watch = None, 0.0, False
+        self.season = None                     # the room's season: the player's world is (room, season)
         self.last_pos = None                   # the last position relayed, memory only (gone with the room or the connection)
         self.cid = secrets.token_hex(4)        # the connection's id in rtc (a user may have two tabs), memory only
         self.rtc_tokens, self.rtc_t = RTC_BURST, time.monotonic()
@@ -1022,36 +1027,85 @@ class HubConn(WsConn):
         h.to_user(inv["from"], {"t": "answer", "invite": m["invite"], "from": me, "join": bool(m.get("join"))})
 
     def m_room(self, m: dict) -> None:
-        h = self.hub
+        """{op: 'join', tile, season?} | {op: 'leave'}: the tile's room, in the season the player's world is in (the
+        game's worlds are a tile and a season: two players in one tile in different seasons are in different worlds and
+        do not see each other). A join in the same tile with another season (the season changed in place) moves the
+        player between the two worlds. season absent (an older client): the tile's by the calendar."""
+        h, me = self.hub, self.uid
         op = m.get("op")
         if op == "join":
-            if not tile_built(m.get("tile")):
+            tile, season = m.get("tile"), m.get("season")
+            if not tile_built(tile):
                 raise HubError(404, "no such tile", "tile")
-            if self.room != m["tile"]:
-                self.rtc_bye()
-                self.last_pos = None
-            self.room, self.room_t = m["tile"], time.monotonic()
-            # where the group members already in this room are (their last relayed positions), so a joiner arriving
-            # behind the one who picked the place has it at once (lane 4)
-            for u in h.comembers(self.uid):
-                if h.blocked(self.uid, u):
+            if season is None:
+                season = season_now(tile)
+            elif season not in SEASONS:
+                raise HubError(400, "season must be spring, summer, fall or winter", "season")
+            if (self.room, self.season) != (tile, season):
+                self.leave_world()
+            self.room, self.season, self.room_t = tile, season, time.monotonic()
+            # where those this player may see in this world are (their last relayed positions, under the rule), so a
+            # joiner arriving behind the one who picked the place has it at once (lane 4) and a spirit standing still
+            # is seen at once
+            mates = h.comembers(me)
+            for u, cs in list(h.conns.items()):
+                if u == me or h.blocked(me, u):
                     continue
-                for c in list(h.conns.get(u, ())):
-                    if c.room == self.room and c.last_pos:
+                for c in list(cs):
+                    if self.same_world(c) and c.last_pos and (u in mates or c.last_pos["form"] == "spirit"):
                         self.send(c.last_pos)
         elif op == "leave":
-            self.rtc_bye()
-            self.room, self.last_pos = None, None
+            self.leave_world()
+            self.room, self.season = None, None
         else:
             raise HubError(400, "op must be join or leave", "op")
-        h.tell_presence(self.uid)
+        h.tell_presence(me)
+
+    # -- who sees whom (docs/multiplayer.md "Who sees whom")
+    def same_world(self, c) -> bool:
+        return c is not self and c.room is not None and c.room == self.room and c.season == self.season
+
+    def viewers(self, form: str) -> list:
+        """The connections this one's position goes to while its player is in `form`: other users' connections in the
+        same world (tile and season) where neither blocks the other, that share a group with the player, or, while the
+        player is a spirit, all of them. Spirits are public within a world; a body is seen by the group alone."""
+        h, me = self.hub, self.uid
+        if not self.room:
+            return []
+        mates = None if form == "spirit" else h.comembers(me)
+        out = []
+        for u, cs in list(h.conns.items()):
+            if u == me or (mates is not None and u not in mates) or h.blocked(me, u):
+                continue
+            out += [c for c in cs if self.same_world(c)]
+        return out
+
+    def tell_gone(self, conns) -> None:
+        """Those who saw this player and may no longer: off at once (players.js), not after the silence's fade. Not sent
+        where another connection of the same user is still seen in that world (a second tab)."""
+        me = self.uid
+        mine = [o for o in self.hub.conns.get(me, ()) if o is not self and o.room and o.last_pos]
+        for c in conns:
+            if not any(o.room == c.room and o.season == c.season for o in mine):
+                c.send({"t": "gone", "user": me})
+
+    def leave_world(self) -> None:
+        """Out of the world (the room left, another tile or season, the connection closed): the voice peers close, those
+        who saw the player are told, the last position goes."""
+        if not self.room:
+            return
+        self.rtc_bye()
+        if self.last_pos:
+            self.tell_gone(self.viewers(self.last_pos["form"]))
+        self.last_pos = None
 
     def m_pos(self, m: dict) -> None:
-        """Relayed to the sender's group members in the same room, and to no one else. Never kept."""
+        """Relayed under the rule (viewers): to the sender's group members in the same world in any form, to everyone else
+        in it while the sender is a spirit, and to no one else. Never kept past the room or the connection."""
         h, me = self.hub, self.uid
         if not self.room:
             return
-        out = {"t": "pos", "user": me}
+        out = {"t": "pos", "user": me, "name": h.user(me)["display"]}   # the display name (a stranger's label: the tile chat shows it too)
         for k in ("x", "y", "z", "yaw"):
             out[k] = _coord(m.get(k), k)
         form = m.get("form")
@@ -1064,13 +1118,14 @@ class HubConn(WsConn):
                 v = m.get(k)
                 if isinstance(v, list) and len(v) <= n and all(_num(x) and abs(x) <= 1e6 for x in v):
                     out[k] = [round(float(x), 3) for x in v]
-        self.last_pos = out
-        for u in h.comembers(me):
-            if h.blocked(me, u):
-                continue
-            for c in list(h.conns.get(u, ())):
-                if c.room == self.room:
-                    c.send(out)
+        prev, self.last_pos = self.last_pos, out
+        to = self.viewers(out["form"])
+        for c in to:
+            c.send(out)
+        if prev and prev["form"] == "spirit" and out["form"] != "spirit":
+            # the spirit went into a body: those who saw it only as a spirit (not the group) see it go, and nothing more
+            sent = set(map(id, to))
+            self.tell_gone([c for c in self.viewers("spirit") if id(c) not in sent])
 
     # -- voice and video: the signalling relay (lane 5)
     def rtc_allow(self) -> bool:
@@ -1089,13 +1144,13 @@ class HubConn(WsConn):
         h, me = self.hub, self.uid
         if not self.room or to == me or to not in h.comembers(me) or h.blocked(me, to):
             return []
-        cs = [c for c in h.conns.get(to, ()) if c.room == self.room]
+        cs = [c for c in h.conns.get(to, ()) if self.same_world(c)]
         if tc is not None:
             return [c for c in cs if c.cid == tc]
         return sorted(cs, key=lambda c: c.room_t)[-1:]
 
     def rtc_bye(self) -> None:
-        """Leaving the room (or the connection closing): the group members in it are told, so their peers close now."""
+        """Leaving the world (or the connection closing): the group members in it are told, so their peers close now."""
         if not self.room:
             return
         h, me = self.hub, self.uid
@@ -1103,7 +1158,7 @@ class HubConn(WsConn):
             if h.blocked(me, u):
                 continue
             for c in list(h.conns.get(u, ())):
-                if c.room == self.room:
+                if self.same_world(c):
                     c.send({"t": "rtc", "from": me, "fc": self.cid, "k": "bye"})
 
     def m_rtc(self, m: dict) -> None:
@@ -1254,6 +1309,10 @@ def handle(h, method: str, path: str, query: str = "") -> bool:
             raise HubError(403, "cross-origin request")
         if method == "GET" and path == "/api/hub/config":
             return _send(h, {"hub": env_key("HUB_NAME") or "Wild Earth", "providers": hub.providers()}) or True
+        if method == "GET" and path == "/api/hub/counts":   # anonymous: how many players per tile, no one named (2026-11-06)
+            with hub.lock:
+                tiles = hub.counts()
+            return _send(h, {"tiles": tiles}) or True
         if method == "GET" and path == "/api/hub/me":
             uid, slid = hub.session(token)
             if not uid:

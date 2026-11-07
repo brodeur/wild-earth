@@ -68,10 +68,15 @@ const POUNCE = no('pounce', 'F'), CARRY = no('carry', 'F'), DIG = no('dig', 'Q')
 const DEN = no('den', 'J'), BURROW = no('burrow', 'J'), SWIM = no('swim', 'W', { title: 'not yet: wading is built, deep water stops the body' });
 const CLIMB = no('climb', 'W'), CALL = no('call', 'C'), EAT = no('eat', 'E', { title: 'not yet: eating at the kill (the catch fills the belly at once)' });
 // the Dig game (dig.js, docs/game-dig.md): the vole's tunnels and the coyote's pit, Q held (or E held with nothing else for E to do)
-const DIG_VOLE = on('dig', 'Q', c => !!c.ground.digging, { title: 'Q held (or E with nothing to eat under the nose): a tunnel from the nose at 5 cm/s the way the camera looks: drag the view up over the body to dig down, low to dig up, round to steer; dig round in a small circle for a chamber; up to the surface for a second hole' });
+const DIG_VOLE = on('dig', 'Q', c => !!c.ground.digging, { title: 'Q held (or E with nothing to eat under the nose): a tunnel from the nose at 5 cm/s; with Q held ↓ angles it down and ↑ up (let go and it holds the slope), A D or the mouse steer; or drag the view up over the body to dig down, low to dig up; dig round in a small circle for a chamber; up to the surface for a second hole' });
 const BURROW_IN = on('burrow', '', c => c.ground.mode === 'tunnel', { title: 'walk onto a hole to go down it; underground W follows the tunnel, W at a hole comes up' });
 const PULL = on('pull', 'F', c => !!c.ground.dig?.pullT, { show: c => c.ground.mode === 'tunnel', title: 'F held with the nose at a herb\'s roots underground: pull the plant down into the tunnel (gone from the surface for everyone this season; it lies here as food). E eats any root at the nose: a bulb, a corm, grass roots, an oak\'s' });
-const DIG_BURROW = on('dig', 'Q', c => !!c.ground.digging, { title: 'Q held: a burrow of your own from the nose at 10 cm/s the way the camera looks: drag the view up over the body to dig down, low to dig up, round to steer; X at its end digs out a nest; brush rabbits dig none of their own in life (docs/game-dig.md)' });
+const DIG_BURROW = on('dig', 'Q', c => !!c.ground.digging, { title: 'Q held: a burrow of your own from the nose at 10 cm/s; with Q held ↓ angles it down and ↑ up (let go and it holds the slope), A D or the mouse steer; or drag the view up over the body to dig down, low to dig up; X at its end digs out a nest; brush rabbits dig none of their own in life (docs/game-dig.md)' });
+// the den (digDen.js, 2026-11-06): only underground; lit while it is dug or placed; the sweep the part left to dig
+const DIG_DEN = on('dig den', '1', c => !!(c.ground.dig?.denOn || c.ground.dig?.dens?.placing), { show: c => c.ground.mode === 'tunnel',
+  cd: c => { const k = c.ground.dig?.dens?.progress?.(); return k === null || k === undefined ? 0 : 1 - k; },
+  press: (c, down) => { if (down) c.ground.dig?.dens?.press(); },
+  title: '1 underground: a den, a big room off your tunnel. Its green outline follows the mouse at your depth (red where it would not join a tunnel); click to place it, Esc or right click to put it away. Digging it takes a while: any move stops it, and 1 or Q back at its outline goes on. Dens that overlap are one room' });
 const DIG_FORM = on('dig', 'Q', c => !!c.ground.digging, { title: 'Q held: scrape a shallow form under the chest (30 cm across, 7 cm deep); X hunches in it' });
 const DIG_PIT = on('dig', 'Q', c => !!c.ground.digging, { title: 'Q held (or E with no prey within reach): a pit at the paws at 1.27 cm/s; a vole tunnel it meets opens and glows toward the voles in it' });
 
@@ -83,7 +88,10 @@ function groundMoves(S) {
 // X: lie down, hunch, freeze (the brush rabbit) or bask (S.rest), else grey (a bird's roost, a rodent's rest)
 const restOf = S => { const r = { bed: 'lie down', hunch: 'hunch', bask: 'bask', freeze: 'freeze' }[S.rest]; return r ? on(r, 'X', c => !!c.ground.resting) : no(S.rig === 'bird' ? 'roost' : 'rest', 'X'); };
 // the act's slot is "ready" (a warm edge) while a named food plant is within reach of a hungry body (needs.js plant: the glowing one under the nose, forage.js)
-const actOf = (name, title) => on(name, 'E', c => c.ground.actT > 0 || E(c), { ready: c => !!c.needs?.plant && c.needs.hunger < 0.98, ...(title ? { title } : {}) });
+// with a plant targeted (quarry.js) the act needs its reach (canEat, the one rule): out of it the slot is greyed, "get closer"
+// (E walks the body there, then eats: groundControl approach); in it, "ready" while hungry
+const actOf = (name, title) => on(name, 'E', c => c.ground.actT > 0 || E(c) || !!c.ground.approach, { ready: c => !!c.needs?.plant && c.needs.hunger < 0.98 && (c.quarry?.canEat?.() ?? true),
+  oor: c => !!c.quarry?.target?.plant && !c.quarry.canEat(), oorTitle: c => `get closer to the ${c.quarry.target.name} (E walks you there)`, ...(title ? { title } : {}) });
 
 // Per species: the walker's act word (E) and its verbs, built then not yet. Order on the bar: the moves, act, rest, verbs.
 const SPECIES = {
@@ -92,9 +100,9 @@ const SPECIES = {
   canis_latrans: { act: 'sniff', verbs: [FEED, DRINK, SMELL, DIG_PIT, DEN, MARK, SWIM, CALL] },
   puma_concolor: { act: 'sniff', verbs: [on('feed', 'E', c => !!c.ground.feeding, { ready: carcassNear, title: 'crouched over the kill after a catch, or E beside one' }), DRINK, SMELL, DEN, MARK, SWIM] },
   ursus_americanus: { act: 'dig', verbs: [FEED, DRINK, SMELL, CARRY, CLIMB, DEN, MARK, SWIM] },
-  sylvilagus_bachmani: { act: 'nibble', verbs: [DRINK, SMELL, DIG_BURROW, BURROW_IN, PULL, SWIM] },
+  sylvilagus_bachmani: { act: 'nibble', verbs: [DRINK, SMELL, DIG_BURROW, DIG_DEN, BURROW_IN, PULL, SWIM] },
   lepus_californicus: { act: 'nibble', verbs: [DRINK, SMELL, DIG_FORM, SWIM] },
-  microtus_californicus: { act: 'nibble', verbs: [DRINK, SMELL, DIG_VOLE, BURROW_IN, PULL] },
+  microtus_californicus: { act: 'nibble', verbs: [DRINK, SMELL, DIG_VOLE, DIG_DEN, BURROW_IN, PULL] },
   otospermophilus_beecheyi: { act: 'pick seeds', verbs: [DRINK, SMELL, DIG, BURROW, SWIM, CALL] },
   sceloporus_occidentalis: { act: 'head flick', verbs: [DRINK, no('climb', 'W', { title: 'not yet: up a trunk or a fence (rocks it steps onto)' }), no('hide', 'J')] },
   meleagris_gallopavo: { act: 'peck · scratch', verbs: [DRINK, no('strut', 'F'), CALL] },
@@ -130,7 +138,7 @@ const strikeSlot = (m, i) => on(m.name, String(i + 1), c => c.ground.strike?.kin
     press: (c, down) => { if (down) c.combat.use(m.key); }, title: `${i + 1}: ${m.title} (its own cooldown ${m.cd} s)` });
 // The spirit's one action while it holds a target (owner, 2026-11-06: "there is only one "action" [ Embody ] with the model
 // of the animal as the icon"): the spirit flies itself into that animal and becomes it (pilot.js embody).
-const EMBODY = on('embody', '1', c => !!c.pilot?.embodying, { show: c => !!c.quarry?.target, icon: c => c.quarry.target ? c.quarry.animals.speciesList()[c.quarry.target.sp] : null,
+const EMBODY = on('embody', '1', c => !!c.pilot?.embodying, { show: c => !!c.quarry?.target, oor: c => !c.pilot?.embodying && c.quarry.animals.playable?.(c.quarry.target) === false, icon: c => c.quarry.target ? c.quarry.animals.speciesList()[c.quarry.target.sp] : null,
   press: (c, down) => { if (down) c.pilot?.embody(); }, title: '1 (or E): fly into this animal and become it' });
 // The fliers' moves (flight.js on flierControl's numbers, and the raven's own): aloft, and on its feet.
 const aloft = c => !c.flight.landed, afoot = c => !!c.flight.landed;
@@ -168,6 +176,7 @@ const MOVE_KEYS = {
   spirit: [['W S', 'fly'], ['A D', 'turn'], ['↑ ↓', 'pitch'], ['shift', 'rush'], ['X Z', 'rise · sink'], ['H', 'hover'], ['tab', 'target']],
 };
 const HUNT_KEYS = [['tab', 'target prey'], ['esc', 'clear']];
+const DIG_KEYS = [['Q ↑ ↓', 'dig up · down'], ['1', 'dig den (underground)']];   // the tunnel diggers (dig.js KEY_DRAG): with Q held the arrows steer the dig's slope
 const MORE = {
   ground: [['M', 'map'], ['G', 'roads'], ['P', 'present day'], ['T', 'tags'], ['N', 'mute'], ['B', 'spirit form']],
   flier: [['V', 'view'], ['M', 'map'], ['P', 'present day'], ['T', 'tags'], ['N', 'mute'], ['B', 'spirit form']],
@@ -239,7 +248,7 @@ export class Abilities {
       return { entry, el: d, img, cd, iconSp: null, cdf: -1, lit: false, tired: false, ready: false, oor: false, shown: true };
     });
     const more = document.createElement('div'); more.className = 'ab-more';
-    for (const [key, word] of [...(MOVE_KEYS[kind] || []), ...(strikes?.length || kind === 'flier' ? HUNT_KEYS : []), ...(MORE[kind] || [])]) { const s = document.createElement('span'), b = document.createElement('kbd'); b.textContent = key; s.append(b, ` ${word}`); more.append(s); }
+    for (const [key, word] of [...(MOVE_KEYS[kind] || []), ...(kind === 'ground' && (code === 'microtus_californicus' || code === 'sylvilagus_bachmani') ? DIG_KEYS : []), ...(strikes?.length || kind === 'flier' ? HUNT_KEYS : []), ...(MORE[kind] || [])]) { const s = document.createElement('span'), b = document.createElement('kbd'); b.textContent = key; s.append(b, ` ${word}`); more.append(s); }
     const m = document.createElement('span'); m.textContent = kind === 'spirit' ? MOUSE_SPIRIT : kind === 'raven' || kind === 'flier' ? MOUSE_AIR : MOUSE; more.append(m);
     this.el.replaceChildren(more, row);
     requestAnimationFrame(() => document.documentElement.style.setProperty('--abMoreH', `${more.offsetHeight || 30}px`));   // the target frame steps under the strip while the menu is open (index.html)
@@ -260,7 +269,10 @@ export class Abilities {
       if (tired !== s.tired) { s.tired = tired; s.el.classList.toggle('tired', tired); }
       if (ready !== s.ready) { s.ready = ready; s.el.classList.toggle('ready', ready); }
       if (!shown) continue;
-      if (e.oor) { const o = !!e.oor(c) && !lit; if (o !== s.oor) { s.oor = o; s.el.classList.toggle('oor', o); } }
+      if (e.oor) {
+        const o = !!e.oor(c) && !lit; if (o !== s.oor) { s.oor = o; s.el.classList.toggle('oor', o); }
+        if (e.oorTitle) { const tt = o ? e.oorTitle(c) : (e.title || e.name); if (s.el.title !== tt) s.el.title = tt; }   // (names the present target)
+      }
       if (s.cd) {   // WoW's clock: the dark part is what is left, cleared clockwise from twelve; the seconds over 1.5
         const f = Math.max(0, Math.min(1, e.cd(c))), q = Math.round(f * 120) / 120;
         if (q !== s.cdf) {

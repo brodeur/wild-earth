@@ -1,4 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=DM+Sans:opsz,wght@9..40,300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=DM+Sans:opsz,wght@9..40,300..700&family=Noto+Sans:wght@400;500&display=swap');
+/* Noto Sans backs DM Sans in the Indigenous territories' names (--tt-names): DM Sans lacks the IPA letters some of them
+   are written with (the Washoe glottal stops U+0241 and U+0294). Google serves it in subsets by unicode-range, so a page
+   fetches only the subset holding a character DM Sans lacks (latin-ext), and nothing for names DM Sans covers. */
+:root { --tt-names:'DM Sans', 'Noto Sans', system-ui, -apple-system, 'Segoe UI', sans-serif; }
 /* The home screen (src/title.js, TitleScreen; docs/multiplayer.md lane 1, redesigned 2026-11-04): its own stylesheet.
    The screen fills #opening over the page's canvas, where the shared renderer draws the stars, the earth and its map;
    so the root is transparent and only the words, the list, the labels, the card and the bar are DOM. Phases on .tt-wrap:
@@ -30,32 +34,28 @@
 .tt-title.on .tt-load { opacity:1; }
 .tt-title.risen .tt-load { opacity:0; transition:opacity .4s ease; }
 .tt-wrap.zooming .tt-title, .tt-wrap.leaving .tt-title { opacity:0; }
-/* The side panels come in once the title and the earth have landed (title.js land), each from its own side, all with
-   the same slide (56 px, .9 s, one easing) and nothing moving after: the sign-in and Explore from the right (.tt-gate,
-   html.tt-panels); signed in, the places from the left (.tt-places, .listed) and the social column from the right
-   (social.css, made on sign-in or kept from the world by Exit; html.tt-side), on the same frame (title.js sideIn). The
-   earth does not move for them: it is centred in the space they leave from the start (title.js freeArea). Until then
-   they are not shown. Under reduced motion they only fade. */
+/* The side panels' items come in once the title and the earth have landed (title.js land, sideIn, staggerIn): each
+   fades in rising 10 px, the topmost on screen first across both columns, the gaps between starts shrinking (120 ms,
+   then 0.8 of the one before, down to 25 ms); only fades under reduced motion. The panels themselves just become
+   visible here (no slide): the places with .listed, the social column with html.tt-side, the sign-in when it is made.
+   The earth does not move for them: it is centred in the space they leave from the start (title.js freeArea). */
 html.opening:not(.tt-side) #social { opacity:0; visibility:hidden; pointer-events:none; }
-html.opening.tt-side .so-card, html.opening.tt-side .so-aside, html.opening.tt-side .so-bar { animation:tt-from-right .9s cubic-bezier(.2, .8, .25, 1) backwards; }
-@keyframes tt-from-right { from { opacity:0; transform:translateX(56px); } }
-@keyframes tt-fade-in { from { opacity:0; } }
-.tt-gate .ac-modal { transform:translateX(56px); transition:opacity .9s cubic-bezier(.2, .8, .25, 1), transform .9s cubic-bezier(.2, .8, .25, 1); }
-.tt-gate .ac-modal.done { transform:translateX(24px); }
-@media (prefers-reduced-motion: reduce) {
-  html.opening.tt-side .so-card, html.opening.tt-side .so-aside, html.opening.tt-side .so-bar { animation-name:tt-fade-in; }
-  .tt-gate .ac-modal, .tt-gate .ac-modal.done, .tt-explore, .tt-places { transform:none !important; }
-}
+.tt-wrap .tt-gate .ac-modal { opacity:1; transform:none; transition:opacity .5s ease; }
+.tt-wrap .tt-gate .ac-modal.done { opacity:0; pointer-events:none; }
 
 /* the gate: the sign-in modal (account.js) on the right, where the social panel stands once signed in; Explore with no hub */
-.tt-gate { position:absolute; right:24px; width:min(380px, calc(100vw - 48px)); top:50%; transform:translateY(-50%); display:flex; flex-direction:column; align-items:flex-end; gap:12px; }
+.tt-gate { position:absolute; z-index:4; right:24px; width:min(380px, calc(100vw - 48px)); top:50%; transform:translateY(-50%); display:flex; flex-direction:column; align-items:flex-end; gap:12px; }
 .tt-explore { padding:11px 30px; border:1px solid #d3ddd5a8; border-radius:999px; background:#0b0f0d99; color:#f3f6f1; font:500 14px/1 'DM Sans', system-ui, sans-serif;
-  letter-spacing:.14em; text-transform:uppercase; cursor:pointer; opacity:0; transform:translateX(56px);
-  transition:opacity .9s cubic-bezier(.2, .8, .25, 1), transform .9s cubic-bezier(.2, .8, .25, 1), background .25s ease, border-color .25s ease; backdrop-filter:blur(4px); }
-.tt-explore.on { opacity:1; transform:none; }
+  letter-spacing:.14em; text-transform:uppercase; cursor:pointer; opacity:0; transition:background .25s ease, border-color .25s ease; backdrop-filter:blur(4px); }
+.tt-explore.on { opacity:1; }
 .tt-explore:hover, .tt-explore:focus-visible { background:#1a241ecc; border-color:#f3f6f1; outline:none; }
 .tt-gate-note { margin:0; font-size:12px; color:#8fa094; letter-spacing:.04em; }
-.tt-wrap.phase-lit .tt-gate { opacity:0; pointer-events:none; transition:opacity .5s ease; }
+.tt-wrap.phase-lit:not(.guest) .tt-gate { opacity:0; pointer-events:none; transition:opacity .5s ease; }
+/* signed out (title.js browse): the sign-in stays in the right column while the places are browsed; on a phone it folds
+   behind the pill at the top right (.gate-open shows it) */
+.tt-loginpill { position:absolute; right:12px; top:42px; z-index:4; display:none; padding:9px 16px; border:1px solid #d3ddd566; border-radius:999px; background:#0b0f0de6;
+  color:#f3f6f1; font:500 13px/1 'DM Sans', system-ui, sans-serif; cursor:pointer; backdrop-filter:blur(6px); }
+.tt-loginpill:hover, .tt-loginpill[aria-expanded=true] { background:#1a241ef0; border-color:#f3f6f1; }
 
 /* the names on the map: a label beside each place's dot (the busiest first, none over another), and the hovered name */
 .tt-labels { position:absolute; inset:0; pointer-events:none; transition:opacity .9s ease; }
@@ -81,8 +81,8 @@ html.opening.tt-side .so-card, html.opening.tt-side .so-aside, html.opening.tt-s
 
 /* the places, on the left: the search box, the heading with the sort's mode, the rows */
 .tt-places { position:absolute; left:var(--side); top:24px; bottom:92px; width:var(--listw); display:flex; flex-direction:column; gap:14px;
-  opacity:0; transform:translateX(-56px); transition:opacity .9s cubic-bezier(.2, .8, .25, 1), transform .9s cubic-bezier(.2, .8, .25, 1); pointer-events:none; cursor:default; }
-.tt-wrap.listed .tt-places { opacity:1; transform:none; pointer-events:auto; }
+  opacity:0; pointer-events:none; cursor:default; }
+.tt-wrap.listed .tt-places { opacity:1; pointer-events:auto; }
 .tt-wrap.leaving .tt-places, .tt-wrap.zooming .tt-places { opacity:0; pointer-events:none; }
 .tt-search { position:relative; display:flex; align-items:center; flex:none; }
 .tt-search svg { position:absolute; left:16px; z-index:1; width:16px; height:16px; color:#8fa094; pointer-events:none; }
@@ -105,13 +105,27 @@ html.opening.tt-side .so-card, html.opening.tt-side .so-aside, html.opening.tt-s
 .tt-row, .tt-frow { position:relative; display:block; flex:none; padding:14px 16px; border-radius:12px; border:1px solid #d3ddd514; cursor:pointer; outline:none; background:#0b0f0d99; backdrop-filter:blur(4px);
   transition:transform .55s cubic-bezier(.2, .8, .25, 1), background .25s ease, box-shadow .25s ease, opacity .5s ease; }
 .tt-row.in { animation:tt-in .5s ease both; }
-@keyframes tt-in { from { opacity:0; transform:translateX(-16px); } to { opacity:1; transform:none; } }
+@keyframes tt-in { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
 .tt-row:hover, .tt-row.hot, .tt-frow:hover { background:#141b17d9; }
 .tt-row:focus-visible, .tt-frow:focus-visible { box-shadow:0 0 0 1px #f3f6f1 inset; }
 .tt-row.sel { background:#24302ae6; box-shadow:0 0 0 1px #ffffff55 inset; }
 .tt-rname { display:block; font-size:17px; font-weight:400; line-height:1.25; color:#f3f6f1; }
-.tt-rregion { display:block; font-size:12.5px; line-height:1.4; color:#8fa094; margin-top:3px; }
+.tt-rregion { display:block; font-family:var(--tt-names); font-size:12.5px; line-height:1.4; color:#8fa094; margin-top:3px; }
 .tt-rregion:empty { display:none; }
+/* a place's card (2026-11-06): the name and the pill of its players, then its Indigenous territories (links to Native
+   Land), the friends there under them when there are any */
+.tt-rtop, .pc-top { display:flex; align-items:center; gap:8px; min-width:0; }
+.tt-rtop .tt-rname { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.tt-pill { flex:none; display:inline-flex; align-items:center; gap:4px; height:20px; padding:0 8px 0 6px; box-sizing:border-box; border-radius:999px;
+  background:#ffffff14; border:1px solid #d3ddd52a; color:#f3f6f1; font:600 11.5px/1 'DM Sans', system-ui, sans-serif; font-variant-numeric:tabular-nums; }
+.tt-pill svg { width:12px; height:12px; }
+.tt-pill.zero { color:#8fa094; background:#ffffff08; border-color:#d3ddd51a; }
+.tt-rterr { display:block; margin-top:4px; font-family:var(--tt-names); font-size:12.5px; line-height:1.4; color:#b7c4ba; }
+.tt-rterr:empty, .pc-region:empty { display:none; }
+.tt-rterr a, .pc-region a { color:inherit; text-decoration:none; border-bottom:1px solid #d3ddd544; }
+.tt-rterr a:hover, .pc-region a:hover, .tt-rterr a:focus-visible, .pc-region a:focus-visible { color:#f3f6f1; border-bottom-color:#f3f6f1aa; outline:none; }
+.pc-people[hidden] { display:none; }
+.tt-rcount:not(.friends) { display:none; }
 .tt-rcount { display:flex; align-items:center; gap:6px; font-size:12.5px; line-height:1.3; color:#8fa094; margin-top:7px; }
 .tt-rcount.friends { color:#f3f6f1; }
 .tt-rcount .tt-faces { margin-right:3px; }
@@ -132,7 +146,7 @@ html.opening.tt-side .so-card, html.opening.tt-side .so-aside, html.opening.tt-s
 .tt-pcard.behind, .tt-wrap.zooming .tt-pcard { opacity:0; pointer-events:none; }
 .tt-pcard[hidden] { display:none; }
 .pc-name { font-size:18px; font-weight:500; color:#f3f6f1; line-height:1.2; }
-.pc-region { font-size:12px; color:#d3ddd5a8; line-height:1.35; }
+.pc-region { margin-top:3px; font-family:var(--tt-names); font-size:12px; color:#b7c4ba; line-height:1.35; }
 .pc-region:empty { display:none; }
 .pc-people { display:flex; align-items:center; gap:10px; margin-top:8px; padding:4px 8px 4px 4px; border:1px solid transparent; border-radius:999px; background:#ffffff0c; color:#e8dcc0;
   font:500 12.5px/1.2 'DM Sans', sans-serif; cursor:pointer; text-align:left; align-self:flex-start; }
@@ -171,6 +185,17 @@ html.opening.tt-side .so-card, html.opening.tt-side .so-aside, html.opening.tt-s
 .tt-start { border:1px solid #f3f6f1cc; background:#f3f6f1; color:#0b0f0d; }
 .tt-start:hover:not(:disabled), .tt-start:focus-visible { background:#fff; transform:scale(1.03); outline:none; }
 .tt-acts button:disabled { opacity:.45; cursor:default; }
+/* signed out: Start greyed (aria-disabled, not disabled, so it takes hover and focus) with its tooltip above it */
+.tt-acts button[aria-disabled=true] { opacity:.45; cursor:not-allowed; transform:none !important; }
+.tt-acts button[aria-disabled=true]:focus-visible { outline:2px solid #f3f6f1aa; outline-offset:2px; }
+.tt-startwrap { position:relative; display:inline-flex; }
+.tt-tip { position:absolute; left:50%; bottom:calc(100% + 10px); transform:translate(-50%, 4px); padding:8px 12px; border-radius:10px; background:#111815; border:1px solid #d3ddd533;
+  box-shadow:0 10px 28px rgba(0, 0, 0, .5); color:#f3f6f1; font:500 13px/1.3 'DM Sans', system-ui, sans-serif; letter-spacing:0; white-space:nowrap; pointer-events:none;
+  opacity:0; transition:opacity .18s ease, transform .18s ease; }
+.tt-tip::after { content:''; position:absolute; left:50%; top:100%; width:10px; height:10px; margin:-5px 0 0 -5px; transform:rotate(45deg); background:#111815; border-right:1px solid #d3ddd533; border-bottom:1px solid #d3ddd533; }
+.tt-tip[hidden] { display:none; }
+.tt-start[aria-disabled=true]:hover + .tt-tip, .tt-start[aria-disabled=true]:focus-visible + .tt-tip, .tt-tip.tap { opacity:1; transform:translate(-50%, 0); }
+.tt-bar.guest .tt-bline, .tt-bar.guest .tt-progress { visibility:hidden; }
 .tt-bar.ready .tt-start { animation:tt-grow .45s ease both; box-shadow:0 0 22px #ffe2b066; }
 @keyframes tt-grow { from { transform:scale(.88); } }
 .tt-bline { display:flex; gap:10px; align-items:baseline; font-size:12px; color:#b7c4ba; letter-spacing:.03em; min-height:1.3em; text-shadow:0 1px 3px #000c; }
@@ -180,12 +205,12 @@ html.opening.tt-side .so-card, html.opening.tt-side .so-aside, html.opening.tt-s
 .tt-bar.ready .tt-progress i { background:#ffe2b0; box-shadow:0 0 10px #ffe2b0; }
 
 /* the map's credits, small, bottom left over the bar */
-.tt-attrib { position:absolute; left:var(--side); bottom:14px; max-width:var(--listw); margin:0; font-size:10.5px; color:#8fa094b0; letter-spacing:.02em; opacity:0; transition:opacity 1s ease; pointer-events:none; }
+.tt-attrib { position:absolute; left:var(--side); bottom:14px; max-width:var(--listw); margin:0; font-size:10.5px; color:#8fa094b0; letter-spacing:.02em; opacity:0; pointer-events:none; }
 .tt-attrib a { color:inherit; text-decoration:none; border-bottom:1px solid #8fa09444; }
 .tt-attrib a:hover { color:#d3ddd5; }
 .tt-wrap.listed .tt-attrib { opacity:1; pointer-events:auto; }
 /* the Layers menu (title.js): above the attribution, under the places list; its list opens upward */
-.tt-layers { position:absolute; left:var(--side); bottom:48px; z-index:3; opacity:0; pointer-events:none; transition:opacity 1s ease; font-size:12px; }
+.tt-layers { position:absolute; left:var(--side); bottom:48px; z-index:3; opacity:0; pointer-events:none; font-size:12px; }
 .tt-wrap.listed .tt-layers { opacity:1; pointer-events:auto; }
 .tt-wrap.leaving .tt-layers { opacity:0; pointer-events:none; }
 .tt-layersbtn { font:inherit; color:#d3ddd5; background:#0f1512cc; border:1px solid #2a352e; border-radius:7px; padding:5px 11px; cursor:pointer; backdrop-filter:blur(4px); }
@@ -216,6 +241,15 @@ html.opening.tt-side .so-card, html.opening.tt-side .so-aside, html.opening.tt-s
   .tt-attrib { max-width:calc(100vw - 24px); bottom:10px; font-size:10px; }
   .tt-layers { bottom:34px; }
   .tt-gate { right:12px; width:calc(100vw - 24px); }
+  .tt-wrap.guest .tt-loginpill:not([hidden]) { display:block; }
+  .tt-wrap.guest:not(.gate-open) .tt-gate { opacity:0; visibility:hidden; pointer-events:none; }
+  .tt-wrap.guest.gate-open .tt-gate { top:88px; transform:none; z-index:5; }
+  .tt-tip { left:auto; right:0; transform:translate(0, 4px); }
+  .tt-tip::after { left:auto; right:24px; }
+  .tt-start[aria-disabled=true]:hover + .tt-tip, .tt-start[aria-disabled=true]:focus-visible + .tt-tip, .tt-tip.tap { transform:translate(0, 0); }
   .tt-rname { font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .tt-acts button { min-width:100px; padding:11px 16px; }
+  /* the free centre is a narrow strip beside the places here: Invite and Start centre on the screen instead */
+  .tt-bar { padding:0; }
+  .tt-progress { margin:0; }
 }
