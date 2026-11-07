@@ -66,6 +66,8 @@ SESSION_DAYS = 30
 DAY = 86400
 MESSAGE_DAYS = 7
 WELCOME_MESSAGES = 50
+SEASONS = ("spring", "summer", "fall", "winter")
+DATE_RE = re.compile(r"^(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$")   # a day of the year, MM-DD (the client's ?date=)
 INVITE_S = 90                           # the client's dialog lasts a minute; a late answer still lands
 COUNTS_S, PING_S, IDLE_S, PRUNE_S = 2.0, 20.0, 60.0, 3600.0
 FAIL_WINDOW_S = 15 * 60                 # sign-in and recovery failures counted over this window
@@ -137,6 +139,19 @@ def env_key(name: str) -> str | None:
                     if val:
                         return val
     return None
+
+
+def _season_date(m: dict, auto: bool = False) -> tuple:
+    """A message's season ('spring' .. 'winter', or 'auto' when allowed) and date ('MM-DD' or None), checked: a bad one is
+    an error naming the field; an absent one is (None, None)."""
+    season, date = m.get("season"), m.get("date")
+    if season is None and date is None:
+        return None, None
+    if season not in SEASONS and not (auto and season == "auto"):
+        raise HubError(400, "season must be spring, summer, fall or winter", "season")
+    if date is not None and (season == "auto" or not isinstance(date, str) or not DATE_RE.match(date)):
+        raise HubError(400, "date must be MM-DD", "date")
+    return season, date
 
 
 def season_now(tile: str) -> str:
@@ -926,8 +941,12 @@ class HubConn(WsConn):
             raise HubError(400, "scope must be group or tile", "scope")
 
     def m_place(self, m: dict) -> None:
-        """{tile, group?, to?, point?}: the invite goes to a group's members, to named people (`to`: friends or
-        fellow group members, the home screen's Invite), or both; with neither, to the sender's one group."""
+        """{tile, group?, to?, point?, follow?, season?, date?}: the invite goes to a group's members, to named people
+        (`to`: friends or fellow group members, the home screen's Invite), or both; with neither, to the sender's one
+        group. follow: the sender pressed Start and is going in now (group follow): the invite says so and goes only to
+        those online, since a joiner enters behind the sender at once; `placed` counts only them. season and date: the
+        world the sender goes into when it is not the calendar's (the group's season, set by `season`), relayed so a
+        joiner enters the same one; otherwise the invite's season is the tile's by the calendar."""
         h, me = self.hub, self.uid
         tile = m.get("tile")
         if not tile_built(tile):
@@ -954,19 +973,45 @@ class HubConn(WsConn):
                 gid = gs[0]
             self._group(gid)
             to |= {u for u in h.comembers(me, gid) if not h.blocked(me, u)}
+        follow = m.get("follow") is True
+        if follow:
+            to = {u for u in to if h.conns.get(u)}
         iid = secrets.token_hex(8)
-        season = season_now(tile)
+        season, date = _season_date(m)
+        season = season or season_now(tile)
         h.invites[iid] = {"from": me, "to": to, "at": time.time()}   # memory only, and no tile kept
         msg = {"t": "invite", "id": iid, "from": me, "tile": tile, "season": season}
         if gid is not None:
             msg["group"] = gid
+        if follow:
+            msg["follow"] = True
+        if date:
+            msg["date"] = date
         point = m.get("point")   # the picker's planned arrival, tile-local {x, north}: relayed to the joiners, never kept
         if isinstance(point, dict):
             msg["point"] = {k: _coord(point.get(k), k) for k in ("x", "north")}
         for u in to:
             h.to_user(u, msg)
         self.send({"t": "placed", "id": iid, "tile": tile, "season": season, "to": len(to),
-                   **({"point": msg["point"]} if "point" in msg else {})})
+                   **({"point": msg["point"]} if "point" in msg else {}), **({"follow": True} if follow else {})})
+
+    def m_season(self, m: dict) -> None:
+        """{season, date?}: the sender changed the season (group season, docs/multiplayer.md): relayed to every member of
+        the sender's groups who is online, wherever they are: those in the sender's tile go to that season with them, the
+        rest carry it into their next Start. season 'auto' is the calendar's again (date then absent). Never kept."""
+        h, me = self.hub, self.uid
+        season, date = _season_date(m, auto=True)
+        if not season:
+            raise HubError(400, "season must be spring, summer, fall, winter or auto", "season")
+        out = {"t": "season", "from": me, "season": season, **({"date": date} if date else {})}
+        if self.room:
+            out["tile"] = self.room
+        n = 0
+        for u in h.comembers(me):
+            if not h.blocked(me, u) and h.conns.get(u):
+                h.to_user(u, out)
+                n += 1
+        self.send({"t": "seasoned", "season": season, "to": n})
 
     def m_answer(self, m: dict) -> None:
         h, me = self.hub, self.uid

@@ -48,7 +48,7 @@ import { AnimalNet, PG } from './animalNet.js';
 import { bodySample } from './bodySample.js';
 import { GroundControl } from './groundControl.js';
 import { FlierControl } from './flierControl.js';
-import { SHORT, playAs, registerStandIns } from './playable.js';
+import { SHORT, playAs, registerStandIns, bodyKind } from './playable.js';
 import { setupCredits } from './credits.js';
 import { Weather } from './weather.js';
 import { fieldGuide } from './fieldguide.js';
@@ -145,10 +145,11 @@ function createWorld(tileId) {
   const w = { tileId, dead: false, ready: false, committed: false, abort: new AbortController(), listeners: [], nodes: new Set(), m: {},
     scene: null, tile: null, enter: null, handle: null, onPoint: null };
   const root = $('opening');
-  w.record = recs => {   // the screen's own nodes are never the world's (a title made again over it by Exit, too)
+  w.record = recs => {   // the screen's own nodes are never the world's (a title made again over it by Exit, too), nor
+    // a node marked data-we-page (the page's own overlays: a group follow's veil, which stands across the switch)
     for (const r of recs) {
       if (root && (r.target === root || root.contains(r.target))) continue;
-      for (const n of r.addedNodes) if (n.nodeType === 1 && n !== root) w.nodes.add(n);
+      for (const n of r.addedNodes) if (n.nodeType === 1 && n !== root && !n.hasAttribute('data-we-page')) w.nodes.add(n);
       for (const n of r.removedNodes) w.nodes.delete(n);
     }
   };
@@ -164,7 +165,7 @@ function createWorld(tileId) {
     scope = w;
     return v;
   };
-  w.next = async name => { phase(name); if (screenOpen && !w.dead) screen?.setProgress?.(w.tileId, name); await w.wait(yieldToMain()); };   // the home screen's bar follows the steps (title.js)
+  w.next = async name => { phase(name); if (screenOpen && !w.dead) screen?.setProgress?.(w.tileId, name); if (!w.dead) mp?.step?.(w.tileId, name); await w.wait(yieldToMain()); };   // the home screen's bar follows the steps (title.js), and a follow Join's veil (multiplayer.js)
   w.sliced = (gen, label) => w.wait(runSliced(gen, label, { signal: w.abort.signal }));
   // played: the recording goes on (the listeners and elements the game adds while it is played go with it when the
   // page switches tiles), so the world's code is the scope from here on
@@ -286,8 +287,9 @@ async function replaceWorld(id, opts) {
 // carried over: no reload, no URL change.
 // xy: a tile-local { x, north } to arrive at instead (the world built again after a lost context, where the player was).
 // extra: { lead } the picker's user id when the switch answers a group's invite (the arrival ends behind them,
-// multiplayer.js), or { quiet } for a build that asks no group along (the world built again after a lost context).
-// The hub's room is left here and joined again at the new world's entry (enterWorld).
+// multiplayer.js), with { follow } for a group follow's Join (no arrival flight: put behind them, multiplayer.js), or
+// { quiet } for a build that asks no group along (the world built again after a lost context).
+// The hub's room is left here and joined again at the new world's entry (enterWorld). Resolves to the world, or null.
 async function switchWorld(id, point, params, xy = null, extra = {}) {
   const carry = world?.carry?.() || world?.arrive || {};   // the world's season and day; a build's, before it has them
   html.classList.add('switching'); html.classList.remove('arriving');
@@ -295,8 +297,9 @@ async function switchWorld(id, point, params, xy = null, extra = {}) {
   mp?.left();
   let w = null;
   try { w = await replaceWorld(id, { params, pending: point, arrive: { season: carry.season, date: carry.date, point, xy, ...extra } }); }
-  catch (e) { console.error(e); $('status').textContent = `error: ${e.message}`; $('status').classList.remove('hidden'); goto.say(`could not load ${id}`, true); return; }
+  catch (e) { console.error(e); $('status').textContent = `error: ${e.message}`; $('status').classList.remove('hidden'); goto.say(`could not load ${id}`, true); return null; }
   if (w) goto.say('');   // it entered itself (buildSteps, arrive)
+  return w;
 }
 // Exit to main screen (the menu under the X): the hub's room is left as a switch leaves it, the world is torn down as a
 // second choice on the earth tears one down (disposeWorld), and the title screen is made again over it (openTitle,
@@ -412,6 +415,14 @@ async function main() {
     // the world's entry (enterWorld) and left on a switch (switchWorld); a Join from a world is a switch with the picker.
     mp = Screen === TitleScreen ? new Multiplayer({ hubParam: params.get('hub') }) : null;
     if (mp) mp.switchTile = (id, xy, lead) => { switchWorld(id, null, params, xy, { lead }); };
+    // a group follow's Join (multiplayer.js follow): from the home screen too, which closes (its world, building or
+    // ready, is abandoned as a second choice abandons it), and the tile is built and entered as a switch does
+    // world: { season, date } the inviter's (the invitation's), entered in place of the joiner's own
+    if (mp) mp.followTile = (id, xy, lead, world = {}) => {
+      if (screenOpen) closeScreen();
+      const extra = { lead, follow: true }; if (world.season) { extra.season = world.season; extra.date = world.date || null; extra.pick = !!world.date; }
+      return switchWorld(id, null, params, xy, extra);
+    };
     // made again by Exit to main screen (exitToTitle): the same screen, facing the tile last played, signed in still
     openTitle = (first = false) => {
       choice = null;
@@ -440,6 +451,7 @@ async function buildWorld(w, opts) {
 async function buildSteps(w, { params, pending, direct = false, arrive = null }) {
   const status = t => {
     if (w.dead) return;
+    mp?.buildStatus?.(w.tileId, t);
     if (screenOpen) { screen.setPrep(w.tileId, t ? `preparing ${w.tileId}: ${t}` : ''); $('status').classList.add('hidden'); return; }
     $('status').textContent = t; $('status').classList.toggle('hidden', !t);
   };
@@ -552,9 +564,21 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const SEASON_MONTHS = { winter: [12, 1, 2], spring: [3, 4, 5], summer: [6, 7, 8], fall: [9, 10, 11] };
   $('season').onchange = e => {
     const v = e.target.value, ms = SEASON_MONTHS[v];
-    if (!ms) { setDate(''); return; }
+    if (!ms) { setDate(''); mp?.seasonChanged?.('auto'); return; }
     const m = ms[Math.floor(Math.random() * 3)], d = 1 + Math.floor(Math.random() * [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][m - 1]);
-    setDate(`${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`); $('season').value = v;
+    const day = `${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    setDate(day); $('season').value = v;
+    mp?.seasonChanged?.(v, day);   // the group goes with them (multiplayer.js, group season)
+  };
+  // A group member's season (multiplayer.js gotSeason, or a follow invitation's): the same day, so the same weather, as the
+  // select would set it, with no relay of its own. now(): the season shown, the day fixed (or null) and whether it is today's.
+  const seasonCtl = {
+    now: () => ({ season: seasonNow(), date: fixedDateStr || null, auto: state.season === 'auto' && !fixedDateStr }),
+    set: (season, date = null) => {
+      if (season === 'auto' || !season) { setDate(''); return; }
+      if (date && parseDate(date)) { setDate(date); $('season').value = season; return; }
+      state.season = season; $('season').value = season; applySeason();
+    },
   };
   $('time').oninput = e => { state.hour = +e.target.value; };
   // The day's weather and the time slider: pre-dawn..post-dusk of the day, starting now (today) or at a random hour.
@@ -775,10 +799,12 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   // c: the opening screen's { tileId, season, date ('MM-DD', or null for today), point, caption }, or a tile switch's
   // arrival { season, date, point }. Older fields (species, sex) are ignored: everyone arrives as the spirit. c.lead is
   // the picker's user id when the entry answers a group's invite (multiplayer.js): the arrival turns to end behind them.
+  // c.follow: a group follow's Join (multiplayer.js): no arrival flight; the spirit is put at once behind the inviter's
+  // planned arrival, and again behind the inviter when their position comes (place, through mp.entered), under the veil.
   const enterWorld = (c, gesture) => {   // armed as w.enter once the world is ready (below), not while it compiles
     w.commit();   // from here this world is the page's: its listeners and HUD nodes stay
     rememberTile(tile.id);
-    if (c.date && parseDate(c.date)) setDate(c.date);   // that day's look, the season tracking it
+    if (c.date && parseDate(c.date)) { setDate(c.date); if (c.pick && c.season) $('season').value = c.season; }   // that day's look, the season tracking it (pick: a group's chosen season, shown in the select as its own choice is)
     else if (c.season) { state.season = c.season === seasonOfDate() ? 'auto' : c.season; $('season').value = state.season; applySeason(); }
     toSpirit();
     const snd = makeSound();
@@ -789,14 +815,20 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
         addEventListener('pointerdown', kick, true); addEventListener('keydown', kick, true);
       }
     }
-    arrival.plan(c.point, null, !!c.lead);   // the wisp flies the arrival as the raven did; a joiner's ends behind and above the one who asked (multiplayer.js turns it to follow them)
     arrival.onDone = () => { html.classList.remove('arriving'); };
-    arrival.start(c.caption || captionFor(c.point, seasonNow()));
-    html.classList.add('arriving'); html.classList.remove('opening'); html.classList.remove('switching');
+    // follow: { x, y, z, yaw, ground } the inviter's pose (arrival.js plan's follow), or null for behind the planned point
+    const place = follow => { arrival.plan(follow ? null : c.point, follow, !follow); arrival.start(null); arrival.finish(true); };
+    if (c.follow) place(null);
+    else {
+      arrival.plan(c.point, null, !!c.lead);   // the wisp flies the arrival as the raven did; a joiner's ends behind and above the one who asked (multiplayer.js turns it to follow them)
+      arrival.start(c.caption || captionFor(c.point, seasonNow()));
+      html.classList.add('arriving');
+    }
+    html.classList.remove('opening'); html.classList.remove('switching');
     closeScreen();
     // the hub's room is this tile from here (the tile chat, the group's positions; multiplayer.js): the spirit's position
     // goes to the group at 5 Hz, and a joiner's arrival follows the picker's
-    mp?.entered(tile.id, { flight, arrival, players, sound: () => w.m.sound, lead: c.lead || null, form: () => w.handle?.playerSpecies || 'spirit', body: (out, cst) => bodySample(w.handle, out, cst),
+    mp?.entered(tile.id, { flight, arrival, players, sound: () => w.m.sound, lead: c.lead || null, follow: !!c.follow, place, kind: bodyKind, season: seasonCtl, form: () => w.handle?.playerSpecies || 'spirit', body: (out, cst) => bodySample(w.handle, out, cst),
       caption: p => { const cap = $('caption'); if (cap && !cap.hidden) cap.querySelector('.cap-text').textContent = captionFor(p, seasonNow()); } });
   };
   const known = new WeakSet(), used = new WeakSet(), drawable = o => o.isMesh || o.isPoints || o.isLine || o.isSprite;   // meshes compiled ahead (below)
@@ -903,7 +935,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     playAs(as, { animals, spirit, x: p?.x ?? tile.size / 2, z: -(p?.north ?? tile.size / 2) });
   }
   else if (direct) { const p = pending ? localXY(tile, pending.lat, pending.lon) : null; if (p) flight.reset(p.x, -p.north, 150); }   // a spirit, flying, at ?lat=&lon= or the centre
-  else if (arrive) enterWorld({ season: arrive.season, date: arrive.date, point: arrivePoint, lead: arrive.lead || null }, false);
+  else if (arrive) enterWorld({ season: arrive.season, date: arrive.date, point: arrivePoint, lead: arrive.lead || null, follow: !!arrive.follow, pick: !!arrive.pick }, !!arrive.follow);   // a follow's Join was a press: its sound may start
 
   let last = performance.now(), hudT = 0, heldAt = 0;
   // Behind the opening screen, meshes that appear after the build (the rock sets of the first fill, animal models as

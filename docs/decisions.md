@@ -6717,3 +6717,45 @@ with the reduced-motion path forced (the pane cannot emulate the media query, so
 place never changes while it is visible. Also checked: `?hub=stub`, Start, x skipping the arrival, and Exit to main
 screen replaying the sequence. Not checked: a page with no hub (the Explore path), and the CSS fades' timing in a real
 browser (the pane's hidden page does not advance CSS transitions).
+
+## 2026-11-06: group follow (branch claude/group-follow)
+
+Aaron: "When a player in a group is in a tile with another player, and one of them leaves to go to the main screen - when
+that person presses "START" the other people in the group receive an invitation to join them which they can decline.
+Their screen fades to black and a loading bar begins and then they should enter the tile where the person who originated
+the invitation is, above and behind them." Details in docs/multiplayer.md "Group follow".
+- **Built on lane 4's `place` / `invite` / `answer`, not a new channel.** `place` gains `follow: true`; the hub sends that
+  invite only to members online and marks it, so the client shows the follow toast instead of the plan dialog. The
+  inviter's position comes from the room join's last `pos` (the existing relay), so nothing new is kept anywhere.
+- **Every Start from the main screen asks the group**, not only one after Exit to main screen: the moment is the same
+  ("I am going in here now"), and the first Start of a session is where a group most often wants to go in together. A
+  joiner's own Start from the older Invite flow asks no one.
+- **The group asked** is the chat's group when it has anyone else in it, else the first group that does (the rule `chose`
+  already used).
+- **No arrival flight for a joiner**: the veil covers the build and the joiner is put at Arrival's follow end pose at once
+  (6 m up, 10 m back, the inviter's yaw), since Aaron asked for a fade, a bar, then being there. Behind a ground animal
+  the end is on the ground 6 m back at the spirit's 2 m climb-out height rather than in the air.
+- **Expiry 60 s** with a visible line running down, the same life as the existing invite dialog; an expiry answers
+  nothing (it is not a decline).
+- **Files kept apart from the home screen's rewrite**: the toast and the veil are `follow.js` and `follow.css` (linked from
+  the module), and the bar's step weights are a copy of title.js STEPS, so title.js, title.css and index.html are not
+  touched.
+- **Page nodes across a switch**: main.js records every node added to the page while a world is played and removes them
+  with it; a node marked `data-we-page` is now left out, so the veil stands across a world-to-world switch.
+
+## 2026-11-06: group season (branch claude/group-follow)
+
+Aaron: "If one player changes the season, it changes for everyone in the group." Details in docs/multiplayer.md "Group
+season".
+- **The same channel as the follow invitation**: a hub `season` message relayed to the online members of the sender's
+  groups (memory only), and `place` carrying the sender's season and day into the follow invitation.
+- **It follows, with no confirmation**: the room, positions, wisps and voice are per tile, not per season, so a member
+  left in another season would share the group's company but not its forest or animals. The veil and the chat notice
+  ("<name> changed the season to winter") say who changed it.
+- **The same day, not only the same season**: the select picks a random day in the season and the weather is that day's,
+  so the day is relayed too and the group shares the weather.
+- **In place, not rebuilt**: a season change never rebuilt the world (it re-colours and moves the animals' channel), so a
+  member in the tile stays where they are; the veil covers the change for a moment rather than a build.
+- **Elsewhere, kept for the next Start**: a member on another tile or the main screen is told and goes into that season
+  at their next Start, and their invitation carries it.
+

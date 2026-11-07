@@ -42,7 +42,9 @@ plan is at the end; each lane is held to this document and reports back against 
    dialog: *Aaron wants to go to Placerville. Join · Not now*. Those who join have their world built for
    that tile and arrive in spirit form above and behind the one who picked it (6 m up, 10 m back along the
    picker's heading), then are free. A member who joins later arrives behind the picker wherever they are
-   by then. Not now leaves that member where they are.
+   by then. Not now leaves that member where they are. **Group follow** (2026-11-06, below): a member who presses
+   Start on the main screen asks the group's online members along at once; a Join fades to black, loads with a bar and
+   puts them behind the one who asked.
 10. **The season** is the real one at the tile, by the calendar, as the brief says. The season slider of
     today's opening screen does not come to the earth; the HUD panel's season control stays for play.
 
@@ -140,8 +142,14 @@ search    {q}                                 -> found {users[]}
 friend    {op: 'request'|'accept'|'remove'|'block'|'unblock', user}
 group     {op: 'create', name, users[]} | {op: 'add'|'remove', group, user} | {op: 'leave'|'name', group, name?}
 chat      {scope: 'group'|'tile', text}       (text <= 500 chars)
-place     {tile, group?, to?, point?}         -> the group's members and the people in `to` get invite {from, tile, season, group?, point?}
-                                              (point: the picker's planned arrival, tile-local {x, north}; lane 4)
+place     {tile, group?, to?, point?, follow?, season?, date?}
+                                              -> the group's members and the people in `to` get invite {from, tile, season, date?, group?, point?, follow?}
+                                              (point: the picker's planned arrival, tile-local {x, north}; lane 4. follow: Start
+                                              was pressed, group follow: only online members are asked, `placed` counts them.
+                                              season, date: the world the sender goes into when not the calendar's, group season)
+season    {season, date?}                     (the sender changed the season: 'spring'..'winter' with the day 'MM-DD', or 'auto';
+                                              -> season {from, season, date?, tile?} to every online member of their groups,
+                                              seasoned {season, to} back; group season)
 answer    {invite, join: true|false}
 room      {op: 'join'|'leave', tile}          (the client joins its tile's room when a world is entered)
 pos       {x, y, z, yaw, form}                (5 Hz, only while in a room and in a group)
@@ -158,7 +166,8 @@ presence  {user, state: 'online'|'offline'|'tile', tile?}
 friends   {friends[], requests[]}             (after any change)
 groups    {groups[]}                          (after any change; each with its members)
 chat      {scope, from, text, at}
-invite    {id, from, tile, season}
+invite    {id, from, tile, season, date?, group?, point?, follow?}
+season    {from, season, date?, tile?}        (a group member changed the season; tile: theirs, when in a world)
 pos       {user, x, y, z, yaw, form}          (from a group member in the same room; on entering a room, the
                                               last one from each group member already in it; lane 4)
 counts    {tiles: {tile_id: n}}               (every 2 s to watchers, only when changed)
@@ -641,6 +650,119 @@ ten players together share 24 KB/s of rows (more animals, the same bytes: the fa
 copies each message to every mirror (no fan-out cost measured past two pages). A host on a slow machine is everyone's
 animals; there is no choice of host by capability. The host's own frame does the work for every player's
 surroundings (two players 600 m apart: about 330 animals instead of 230).
+
+## Group follow
+
+Aaron, 2026-11-06: "When a player in a group is in a tile with another player, and one of them leaves to go to the main
+screen - when that person presses "START" the other people in the group receive an invitation to join them which they
+can decline. Their screen fades to black and a loading bar begins and then they should enter the tile where the person
+who originated the invitation is, above and behind them."
+
+**Built (2026-11-06, branch `claude/group-follow`).** `client/src/follow.js` and `client/follow.css` (the invitation and
+the veil, linked from the module so `index.html` and the title screen's files are untouched), `client/src/multiplayer.js`
+(askFollow, showFollow, follow, awaitLead, placeBehind), `client/src/main.js` (followTile, the build's steps to the veil,
+enterWorld's follow entry, the page-node opt-out in the world's recorder), `client/src/arrival.js` (plan's
+`follow.ground`), `client/src/hub.js` (`place(..., follow)`), `hub.py` (`m_place` follow), `tests/test_hub.py`
+(`test_follow_invite`).
+
+- **Start asks the group.** The title's `onBegin` (wrapped in `multiplayer.js attach`) sends `place` with `follow: true`
+  for the group: the chat's group when it has anyone else in it, else the first such group; a joiner's own Start (the old
+  Invite flow's) sends none. Every Start on the main screen does this, the first of a session too, since it is the same
+  moment ("I am going in here"); Exit to main screen then Start is the case Aaron named. The hub sends the invite only to
+  members with a connection (a follow means "now"), marks it `follow`, and answers `placed {to, follow}` with that count.
+  The inviter's chat says "asked N people in your group to join you at <place>", then who joined or declined.
+- **The invitation** (FollowToast, top middle on the main screen and over the HUD): the inviter's avatar, "<name> started
+  at <place>", "Join them there?", Join and Decline, and a thin line along the bottom that runs down to its expiry
+  (`followMs`, 60 s; the hub keeps the invite 90 s). Decline (or Escape) answers `join: false`; the expiry answers
+  nothing. A newer invite replaces an unanswered one; none shows while a Join is loading.
+- **Join** answers `join: true`, then the veil (FollowVeil, z 200 over everything) fades to black in 0.6 s: "joining
+  <name>", the place, a bar and the build's words under it. Then `main.js followTile` builds the tile in place: from the
+  main screen the screen closes first (its own world, building or ready, is abandoned as a second choice abandons it);
+  from a world it is a tile switch (the world torn down, the hub's room left). The bar follows `buildSteps`' `w.next`
+  steps with the home screen's weights (a copy of title.js STEPS, so that file is untouched) up to 94 %; the rest is the
+  inviter's position and the first frames. The veil is marked `data-we-page` so the world being torn down does not take
+  it (main.js `w.record` records every node added while a world is played; the first world-to-world test lost the veil
+  that way).
+- **The entry** (enterWorld with `c.follow`): no arrival flight. The spirit is put at once behind the inviter's planned
+  arrival (the invite's point, `Arrival.plan(point, null, true)` finished at its end), and `mp.entered` waits for the
+  inviter's position: the hub's room join sends the last `pos` of each group member in the room, so over localhost it
+  comes a few ms later. `placeBehind` puts the joiner at Arrival's follow end pose (`plan(null, follow)`, `start`,
+  `finish(true)`): **in the air 6 m above and 10 m behind** along the inviter's yaw, facing the same way and hovering,
+  when the inviter is the spirit or a flier; **on the ground 6 m behind, 2 m up** (the spirit's climb-out height) when the
+  inviter's form is a ground animal (`bodyKind(form) === 'ground'`, playable.js). With no position within 6 s
+  (LEAD_WAIT_MS) the planned-point pose stands. A few frames later (at least 0.7 s) the bar fills and the veil fades out.
+  A joiner already in the inviter's tile is only moved: veil, the inviter's last relayed pose, veil out.
+- **Privacy** as before: the position is the room's relay, used once and kept nowhere; the invite record holds no tile
+  or point; nothing is logged.
+- **Debugging** (`window.__weMp`): `placed` (the inviter's pose used, ground or air, and where the joiner was put),
+  `toast`, `veil`, `followMs` (shorten it to see the expiry), `askFollow(tile, point)`.
+- **Verified** against the real hub on a worktree server (127.0.0.1:8812, its own `data/hub.sqlite`), two local test
+  accounts (follow_a, follow_b: friends, one group), each in its own headless Chrome (own profile, so own cookie) over
+  CDP, because the browser pane had no window and drew no frames: Start from the main screen sent `placed {to: 1,
+  follow}`; the toast on follow_b's main screen; Decline (follow_a told `join: false`, the chat "follow_b declined",
+  follow_b left on the earth); the expiry (`followMs` 8 s: gone, nothing answered); Join from the main screen (veil, bar
+  0 -> 20 -> 84 -> 96, entry, veil out; placed at x 5000, y 763.83, z -4992.79 behind follow_a at 5000, 757.83,
+  -5002.79, yaw 0: 6.00 up, 10.00 back); Join while already in the tile with follow_a a mule deer at yaw -2.48 (6.00 m
+  behind along the heading, 2.00 m over the ground, same yaw); Join from a world on another tile (Placerville to El
+  Dorado: the switch, the veil kept across it, 6 up and 10 back); the reverse direction (follow_b's Start invited
+  follow_a). The first run showed follow_b 525 m behind: follow_a's own arrival ends at cruise speed and it had flown
+  on after the joiner was placed behind it, which is right (the joiner stands where the inviter was); later runs held
+  the inviter still. Frames: the side-session notes folder, group-follow-captures/. Not verified: touch and narrow
+  screens, two joiners at once, a slow network (the room join's position one round trip later; the 6 s fallback was
+  read in code, not forced), sound on entry from the main screen (headless Chrome has no audio output to check).
+- **Open.** The joiner's chase camera, behind and above its own wisp, puts the inviter low in the frame (6 m below, 10 m
+  ahead); a wider first view or a short camera ease toward them may read better. An invite that times out tells the
+  inviter nothing. A joiner's Join lands behind the inviter even if the inviter has gone back to the main screen since
+  (the planned-point fallback); cancelling the invite when the inviter leaves the tile is not done.
+
+## Group season
+
+Aaron, 2026-11-06: "If one player changes the season, it changes for everyone in the group."
+
+**How a season change worked before (checked first).** The Settings card's season select (`main.js`, `#season`) picks a
+random day in the season and calls `setDate('MM-DD')` (the select then shows the season; "tracks today's date" is
+`setDate('')`): `applySeason` re-colours the ground for the date, swaps the leaf look and the far impostors, and picks
+that day's weather (last year's at the tile, `weather.js`). Nothing is rebuilt: the world, the position and the hub's
+room (per tile, not per season) stay. The frame loop then moves the shared animals to the new season's channel
+(`anet.join(tile, season)`: the server keeps one animal world, one acorn-game world and one dig world per tile and season;
+the first page in a (tile, season) channel hosts its animals). The acorn game and the dig keep the season they were built
+with until the next build. Nothing synced the season between players: a group could fly together in two seasons, each
+drawing the other's wisp over a different forest with different animals.
+
+**Built (2026-11-06, branch `claude/group-follow`).** `hub.py` (`m_season`, `_season_date`, `place` season and date),
+`client/src/hub.js` (`season()`, `place(..., world)`), `client/src/multiplayer.js` (seasonChanged, gotSeason, toSeason,
+groupSeason, Start into it), `client/src/main.js` (the select's relay, `seasonCtl` for the room, `pick`),
+`client/src/follow.js` (the veil's heading and the toast's season), `tests/test_hub.py` (`test_group_season`).
+- **The change goes out** only from the player's own use of the select (`mp.seasonChanged(season, day)`), so a change
+  applied from the group never echoes. The hub checks it (`season` one of the four or `auto`, `date` MM-DD and only with
+  a season) and relays `season {from, season, date, tile}` to every online member of the sender's groups, as `pos` goes
+  to comembers, but wherever they are; nothing is kept or logged.
+- **A member in the same tile follows at once**, with no question: the veil ("FOLLOW_A changed the season", the season)
+  fades to black, the season is set in place as the select would set it, on the same day (so the same weather; `seasonCtl.set`
+  calls `setDate(day)` without relaying), the bar runs to the end and the veil fades out after a few frames. The member
+  stays where they are. A member already in that season and day sees only the notice.
+- **The notice** is a line in the chat for every member: "<name> changed the season to winter", or "<name> set the season
+  back to today's".
+- **A member elsewhere** (another tile, the main screen, a world building) keeps it (`groupSeason`, memory only). Their
+  next Start goes into that season and day (`c.season`, `c.date`) and the follow invitation carries them (`place` season
+  and date); a joiner's world is entered with the invitation's season and day (`followTile` world), and one already in
+  the tile is set to it. The toast shows the season ("Join them there? · spring").
+- **No confirmation step**, as asked, and on purpose: the hub's room, the position relay, the wisps and voice are per
+  tile, not per season, so a member who stayed behind would still see the group's wisps and hear them while standing in
+  another season's forest with another season's animals (their own animal host and channel). Following keeps the
+  group in one world; anyone can change it back, and everyone is told who did.
+- **Verified** with the two headless Chromes against the real hub: both in Placerville in fall (follow_a hosting the
+  animals, follow_b mirroring); follow_a picks winter in the select: follow_b's veil, then winter on the same day (02-16),
+  the select on winter, the animal channel winter with follow_a still the host, follow_b at the same spot (5000, 764,
+  -4992 before and after), the notice in its chat; follow_b on the main screen when follow_a picks spring: the notice and
+  `groupSeason {spring, 04-03}`, follow_b's Start goes into spring on 04-03 and follow_a's invitation says `season:
+  spring, date: 04-03` ("· spring" on the toast); follow_a's Start into its own spring, follow_b joining from the main
+  screen entered spring on 04-03 (select on spring) behind follow_a; follow_a back to today's: follow_b back to fall
+  (auto), the notice "follow_a set the season back to today's". Frames: group-follow-captures/group_season_winter.gif in
+  the side-session notes. Not verified: two changes in quick succession (the second applies under the first's veil),
+  a change while a member's follow Join is loading (it enters the invitation's season, which may be the older one).
+- **Open.** The acorn game and the dig keep the season they were built with after any season change, the player's own
+  included (as before); a change made while signed out of the hub or with no group stays the player's own.
 
 ## Open
 
