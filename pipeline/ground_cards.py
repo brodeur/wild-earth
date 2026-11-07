@@ -41,6 +41,14 @@ whose own row has none takes its first infraspecific taxon's, named in the card)
              other grass a panicle; the forb's flower shape by family (FLOWER_BY_FAMILY)
   cure       how fully a grass dries to straw: 0.8 when it grows in spring only, 0.6 when it keeps growing into summer, 0.4
              when it keeps its leaves (Leaf Retention, or year-round growth)
+  tuft       (v2) a perennial of Growth Form Bunch (or none given): its tuft, the basal leaf mass grass.js draws as whole
+             bunches, TUFT_H x the mature height tall and TUFT_W x that across (constants from FEIS: Idaho fescue, Sandberg
+             bluegrass); none for a rhizomatous, sod- or thicket-forming grass (drawn as before)
+  months     (v2) the live palette (Foliage Color) and the cured one (straw), and when it cures: "after_flowering" for a
+             grass that grows in spring only (cure 0.8; it dries from its Bloom Period's first month) and tolerates
+             drought (Drought Tolerance not Low: Sandberg bluegrass, squirreltail, needle-and-thread go summer-dormant), else
+             "with_the_season" (the tile's measured season: a spring grower of low drought tolerance, Idaho fescue or the
+             wet meadows' bluejoint, stays green while the ground holds water); grass.js colours it by date between the two
   habitat    no class weights (drawn only where a community's description names it, never from a tile's class fallback);
              the classes of the communities that named it as named_in_classes; shade from Shade Tolerance
 Values no characteristic gives are the template's or a rule's default; the card's notes say which.
@@ -69,7 +77,16 @@ BPS_DIR = CACHE / "landfire_bps"      # downloaded description documents: read a
 PLANTS_DIR = CACHE / "usda_plants"
 BPS_DOC_URL = "https://landfirereview.org/zipper.php"
 PLANTS_API = "https://plantsservices.sc.egov.usda.gov/api"
-VERSION = "1"
+VERSION = "2"
+# A bunchgrass's tuft (v2, 2026-11-06): the basal leaf mass's height over PLANTS' mature (culm) height, and its width over its
+# height. Idaho fescue (FEIS, Zouhar 2000): culms 0.3-1 m, "densely tufted in large bunches, with tuft 6 to 10 inches (15-25 cm)
+# high", a "4-inch (10 cm) diameter plant" at the base; PLANTS' mature height 0.61 m, so 0.2 / 0.61 = 0.33; the leaves arch out
+# over about twice the base. Sandberg bluegrass (FEIS, Howard 1997): "small tufts" to "large tussocks up to 1 foot (0.3 m) in
+# diameter". 0.35 x 0.61 = 0.21 m tall, 0.9 x that = 0.19 m across for Idaho fescue.
+TUFT_H, TUFT_W = 0.35, 0.9
+TUFT_SOURCES = ["the tuft rule's constants (TUFT_H, TUFT_W): Zouhar, K. 2000. Festuca idahoensis. Fire Effects Information System, "
+                "USDA Forest Service: https://www.fs.usda.gov/database/feis/plants/graminoid/fesida/all.html; Howard, J. L. 1997. Poa secunda. "
+                "FEIS: https://www.fs.usda.gov/database/feis/plants/graminoid/poasec/all.html, read 2026-11-06"]
 
 TABLE_W, TEXT_W = 1.0, 0.5
 NEAR_DEG = 0.5
@@ -596,8 +613,21 @@ def grass_card(s: dict, prof: dict, ch: dict, chsym: str) -> tuple[dict, list[st
     gf = (ch.get("Growth Form") or "").lower()
     if gf and gf != "bunch" and not annual:
         notes.append(f"COMPROMISE: PLANTS growth form '{ch.get('Growth Form')}', drawn as grass.js's bunch clump (it has two: annual and bunch)")
+    # The tuft (v2): a perennial bunchgrass (PLANTS Growth Form Bunch, or none given) is drawn as whole tufts of its own size,
+    # as many as its share of the herb cover needs (grass.js tuft rule); the leaf mass's height and width from its mature height
+    if not annual and gf in ("bunch", ""):
+        th = round(TUFT_H * h, 2)
+        ground["tuft"] = {"height_m": th, "width_m": round(TUFT_W * th, 2)}
+        if not gf:
+            notes.append("tuft: no Growth Form in PLANTS, taken as a bunchgrass (a perennial grass is a bunch clump)")
+    # Its colour by month (v2): the live and the cured palette, and when it cures: a grass that grows in spring only dries
+    # from its flowering (Sandberg bluegrass: drying in late May, dry by early July, FEIS), any other with the tile's season
+    live_pal = {"root": [round(c * k) for c, k in zip(live, ROOT_K)], "tip": list(live), "head": _mix(live, seed, 0.5), "awn": _mix(_mix(live, seed, 0.5), live, 0.3)}
+    cured_root = _mix(live_pal["root"], [round(c * 0.62) for c in STRAW], 0.85)
+    ground["months"] = {"live": live_pal, "cured": {"root": cured_root, "tip": list(STRAW), "head": _mix(STRAW, seed, 0.3), "awn": _mix(_mix(STRAW, seed, 0.3), STRAW, 0.3)},
+                        "cures": "after_flowering" if cure == 0.8 and (ch.get("Drought Tolerance") or "").lower() != "low" else "with_the_season"}
     used += [k for k in ("Height, Mature (feet)", "Foliage Color", "Fruit/Seed Color", "Active Growth Period", "Bloom Period",
-                         "Leaf Retention", "Growth Form") if ch.get(k)]
+                         "Leaf Retention", "Growth Form", "Drought Tolerance") if ch.get(k)]
     return {"template": tid, "height_m": height_m, "lifespan": "annual" if annual else "perennial", "ground": ground}, notes + [f"PLANTS characteristics used ({chsym}): " + ", ".join(f"{k} = {ch[k]}" for k in used)]
 
 
@@ -677,7 +707,8 @@ def card(s: dict, zone: int | None) -> dict:
                  "a natural region in pipeline/regions.py: no regional table draws it.",
         "sources": [f"USDA PLANTS profile {prof.get('Symbol')}: {PLANTS_API}/PlantProfile?symbol={prof.get('Symbol')}, read {today}",
                     *([f"USDA PLANTS characteristics ({chsym}): {PLANTS_API}/PlantCharacteristics/<id>, read {today}"] if ch else []),
-                    "LANDFIRE BpS descriptions naming it: species/ground.json (" + "; ".join(s["communities"][:6]) + f"), read {today}"],
+                    "LANDFIRE BpS descriptions naming it: species/ground.json (" + "; ".join(s["communities"][:6]) + f"), read {today}",
+                    *(TUFT_SOURCES if body["ground"].get("tuft") else [])],
         "authors": AUTHORS, "generated_by": f"pipeline/ground_cards.py v{VERSION}",
     }
 

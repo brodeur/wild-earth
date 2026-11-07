@@ -657,6 +657,15 @@ export class ClumpField {
     this._frustum = new THREE.Frustum(); this._m = new THREE.Matrix4(); this._sph = new THREE.Sphere();
   }
   get count() { return this.n; }
+  // A larger instance buffer (grass.js, a tile with tufts: a denser field); before the first update.
+  setCap(cap) {
+    if (cap <= this.cfg.cap) return;
+    this.cfg.cap = cap; const g = this.mesh.geometry;
+    this.buf = new THREE.InstancedInterleavedBuffer(new Float32Array(cap * STRIDE), STRIDE, 1).setUsage(THREE.DynamicDrawUsage);
+    g.setAttribute('iPos', new THREE.InterleavedBufferAttribute(this.buf, 4, 0));
+    g.setAttribute('iVar', new THREE.InterleavedBufferAttribute(this.buf, 4, 4));
+    this.sig = NaN;
+  }
 
   // Clumps of one cell in random order (any prefix is an even subsample), with a bounding sphere.
   cellData(i, j) {

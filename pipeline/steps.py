@@ -631,7 +631,7 @@ STEPS: dict[str, Step] = {s.name: s for s in [
     Step("seams", "1", ["seams"], ["dem", "channels", "water"], _seams, [],
          doc="the DEM and streams agree with every built neighbour along the shared edge", stage=B),
     # ---------------------------------------------------------------- flora
-    Step("plants", "4", ["needs", "plantgen", "communities", "research", "tree_cards", "ground_cards"], ["landcover", "ice"], _plants,
+    Step("plants", "5", ["needs", "plantgen", "communities", "research", "tree_cards", "ground_cards"], ["landcover", "ice"], _plants,
          ["species.canopy", "species.plant_needs", "species.ground"], ["gbif", "wcvp", "canopy_plots", "landfire_bps", "usda_plants"],
          library=["library/plant_cards", "library/plant_cards/_research"],
          doc="the tile's canopy trees and their cards; outside the regional tables its own grasses and forbs and their cards "

@@ -7,6 +7,7 @@ import { windUniforms, WIND_GLSL } from './wind.js';
 import { GroundDetail, detailUniforms, DETAIL_GLSL, CELL_LAYER, CELL_N, DETAIL_PX, buildDetailMaskSteps, resetDetailUniforms, detailWeightsAt, setDetailOrigin } from './groundDetail.js';
 import { SeasonColour, LITTER } from './season.js';
 import { bodyScale, onBodyScale } from './bodyScale.js';
+import { SPECIES } from './trees.js';
 
 // The ground, at every distance. Far: a 10 m mesh of the tile in 100 chunks (Terrain). Near, on a tile with the lidar
 // residual: a 2 m square FINE_HALF m either side of the player (FineTerrain), the 1 m ground. Under the body: the micro
@@ -27,7 +28,8 @@ export const groundUniforms = {
   grassTint: { value: new THREE.Color(0.8, 0.68, 0.36) }, oakTint: { value: new THREE.Color(0.55, 0.45, 0.22) }, oakMix: { value: 0 },
   groundFx: { value: 1 },   // 0 turns off the sward grain, gust sheen and chaparral mottle (A/B timing)
   imagery: { value: 0 }, grassRef: { value: new THREE.Vector3(0.49, 0.47, 0.38) }, oakRef: { value: new THREE.Vector3(0.27, 0.34, 0.27) },
-  canopyMap: { value: null },   // the cover texture (coverTexture): r tree, g shrub, b herb cover % (8-bit percent), a the riparian weight
+  canopyMap: { value: null },   // the cover texture (coverTexture): r tree, g shrub, b herb cover % (8-bit percent; on a tile with tufts the tufts' cover), a the riparian weight
+  tuftGround: { value: 0 },     // 1 on a tile whose own bunchgrasses are drawn as tufts (coverTexture, grass.js TUFT): the ground between them
   contactAO: { value: null },   // shadows.js: top-down sky occlusion under each near tree (r = 0 open .. 1 at the trunk)
   contactAOMatrix: { value: new THREE.Matrix4().set(0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 1) },   // world -> its uv
   // Measured season (season.js SeasonColour): the ground texture times seasonMap's multiplier (stored as
@@ -523,7 +525,7 @@ const FRAG = /* glsl */`
   // fade out by pixel footprint as the blade tiers fade theirs, over a shade floor; the photo keeps the metre-scale hue
   // and brightness (patches, swales, the season). It thins exactly where the plants thin: gBare is grass.js's bareField
   // (its hash2 and vnoise in uint arithmetic, which matches the JS 32-bit imul), so a bare patch is the same patch.
-  uniform vec3 swardRoot; uniform vec3 swardTip; uniform float swardOn;
+  uniform vec3 swardRoot; uniform vec3 swardTip; uniform float swardOn; uniform float tuftGround;
   float gHash2(vec2 ij, uint s) { uint h = uint(int(ij.x)) * 374761393u + uint(int(ij.y)) * 668265263u + s * 982451653u;
     h = (h ^ (h >> 13)) * 1274126177u; return float(h ^ (h >> 16)) * (1.0 / 4294967296.0); }
   float gVnoise(vec2 p, uint s) { vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
@@ -665,9 +667,10 @@ const FRAG = /* glsl */`
       // plants are (the same bare-patch field and rule as grass.js plantAt: 40% kept in a patch), none on rock or the
       // photo's own bare ground, less under tree cover, out to 160 m.
       if (swardOn > 0.5 && dist < 160.0) {
-        float herb = clamp(max(cov3.b, 0.3), 0.0, 1.0), thr = 0.28 + 0.14 * (1.0 - herb);
+        float herb = tuftGround > 0.5 ? 0.6 : clamp(max(cov3.b, 0.3), 0.0, 1.0), thr = 0.28 + 0.14 * (1.0 - herb);   // B is the tufts' cover on a tile with tufts
         float open = smoothstep(thr - 0.06, thr + 0.06, gBare(vec2(vPosW.x, -vPosW.z)));
         float swW = smoothstep(0.05, 0.4, w.r + 0.5 * w.g) * (1.0 - 0.6 * tree) * (1.0 - rock) * (1.0 - smoothstep(0.25, 0.6, bare)) * (1.0 - smoothstep(110.0, 160.0, dist));
+        if (tuftGround > 0.5) swW *= 1.0 - smoothstep(0.02, 0.15, cov3.b);   // no sward strokes where tufts stand: the ground between them (below)
         if (swW > 0.01) { float cv; vec3 sc = swardPaint(c, vPosW.xz, foot, 0.4 + 0.6 * open, cv); c = mix(c, sc, swW); swCov = swW * cv; }
       }
       // Chaparral: dark gaps of shade and litter between ~2.5 m crowns, so the ground beyond the
@@ -748,6 +751,16 @@ const FRAG = /* glsl */`
     // The ground at its reflectance (groundGain): everything above is the photo's display colour and the palettes and
     // tints tuned against it; the cliff rock and the snow below are their own albedo.
     c = groundRefl(c);
+    // The ground between the tufts (2026-11-06, grass.js's tuft rule): the photo's texel is the mean of the tufts and the
+    // ground between them, so near the camera, where the tufts are drawn in their own palette (groundMatch's m = 0 up to
+    // 12 m, all the ground's by 45 m), the texel shows that ground: (c - k G) / (1 - k), k the tufts' cover (B), G their
+    // palette's mean (the type palette, swardRoot / swardTip), at least 0.3 of c. Past 45 m the tufts take the photo's colour
+    // and the texel is the photo again, so from the air nothing changes.
+    if (tuftGround > 0.5 && dist < 45.0) {
+      float k = clamp(cov3.b, 0.0, 0.85);
+      vec3 G = mix(swardRoot, swardTip, 0.6), soil = max((c - k * G) / (1.0 - k), 0.3 * c);
+      c = mix(c, soil, 1.0 - smoothstep(12.0, 45.0, dist));
+    }
     // Cliffs at any distance (CLIFF_GLSL cliffShade): past ~40 degrees the photo is a smear stretched down the face,
     // so the face takes the cliff material in its place, at every distance, as its lithology breaks (where: cliff, above).
     float cliffW = 0.0;   // the face's rock: the canopy's 30 m sky occlusion is not laid on it (below)
@@ -801,8 +814,12 @@ const FRAG = /* glsl */`
 // mcDisp on top of the terrain fragment shader's 16) where the GPU has 16 units; canopy.png is on the habitat's grid
 // and its alpha was unused, so the two share one. A canopy raster on another grid keeps its own and takes the riparian
 // weight at its nearest habitat cell; a tile without one has zero cover, as the 1 x 1 stand-in had.
+// On a tile whose own bunchgrasses are drawn as tufts (grass.js, the tuft rule: a tile that borrows nothing, grasses whose
+// records give ground.tuft), B carries the tufts' cover instead (tuftCover; 0 where none grow) and tuftGround is set: the
+// terrain shows the ground between them (FRAG, after groundRefl).
 function coverTexture(tile) {
-  const g = tile.habitat.img, c = tile.canopy?.img?.data ? tile.canopy.img : null;
+  const g = tile.habitat.img, c = tile.canopy?.img?.data ? tile.canopy.img : null, tc = tuftCover(tile);
+  groundUniforms.tuftGround.value = tc ? 1 : 0;
   const W = c ? c.width : g.width, H = c ? c.height : g.height, a = new Uint8Array(W * H * 4);
   const sx = g.width / W, sy = g.height / H;
   for (let j = 0; j < H; j++) {
@@ -810,6 +827,7 @@ function coverTexture(tile) {
     for (let i = 0; i < W; i++) {
       const k = (j * W + i) * 4, o = ((H - 1 - j) * W + i) * 4, gi = Math.min(Math.floor((i + 0.5) * sx), g.width - 1);
       if (c) { a[o] = c.data[k]; a[o + 1] = c.data[k + 1]; a[o + 2] = c.data[k + 2]; }
+      if (tc) a[o + 2] = Math.round(100 * tc[gj * g.width + gi]);
       a[o + 3] = g.data[(gj * g.width + gi) * 4] === 6 ? 255 : 0;
     }
   }
@@ -817,6 +835,27 @@ function coverTexture(tile) {
   t.colorSpace = THREE.NoColorSpace; t.magFilter = THREE.LinearFilter; t.minFilter = THREE.LinearMipmapLinearFilter; t.generateMipmaps = true;
   t.needsUpdate = true;
   return releaseTexture(t);   // its bytes go once uploaded (gpuRelease.js)
+}
+
+// The tufts' cover per habitat cell (grass.js, the tuft rule), or null on a tile without tufts: on a tile that borrows nothing
+// (species_mix.json class_fallback false, or natural_regions empty), the row's herb cover (herb_cover's middle, else the
+// cell's canopy herb cover) times the ground-layer share of its grasses whose records give a tuft. The cover the tufts are
+// drawn at, before the bare patches thin them.
+function tuftCover(tile) {
+  const json = tile.speciesMix?.json, mix = tile.speciesMix;
+  if (!mix || !(json?.class_fallback === false || (Array.isArray(json?.natural_regions) && json.natural_regions.length === 0))) return null;
+  const hc = new Map((json.mixes || []).map(m => [m.index, m.herb_cover])), share = new Map();
+  const tufted = id => { const s = SPECIES[id]; return s?.form === 'grass' && s.lifespan !== 'annual' && s.ground?.tuft?.width_m > 0 && s.ground?.tuft?.height_m > 0; };
+  const g = tile.habitat.img, can = tile.canopy, out = new Float32Array(g.width * g.height); let any = false;
+  for (let j = 0; j < g.height; j++) for (let i = 0; i < g.width; i++) {
+    const row = mix.at(i, j); if (!row?.groundSum) continue;
+    let sh = share.get(row.index);
+    if (sh === undefined) { sh = 0; for (const [id, v] of Object.entries(row.ground)) if (tufted(id)) sh += v; share.set(row.index, sh); }
+    if (!(sh > 0)) continue;
+    const h = hc.get(row.index), herb = h ? (h[0] + h[1]) / 2 : Math.min(Math.max((can?.channel ? can.channel(i, j, 2) : 30) / 100, 0.3), 1);
+    out[j * g.width + i] = Math.min(herb * sh, 0.9); any = true;
+  }
+  return any ? out : null;
 }
 
 // The ground data (2026-11-03): the `roads` sampler's texture on a tile with the substrate step, so the terrain's

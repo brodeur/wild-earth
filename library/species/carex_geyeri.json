@@ -39,7 +39,7 @@
   "by": "pipeline/plantgen.py",
   "version": "5",
   "card": "library/plant_cards/carex_geyeri.json",
-  "card_sha256": "ec7ac272366522d7",
+  "card_sha256": "a7988f554db711f5",
   "template": "stipa_pulchra",
   "template_common": "purple needlegrass",
   "height_scale": 0.493
@@ -157,6 +157,53 @@
     5
    ]
   },
-  "cure": 0.6
+  "cure": 0.6,
+  "months": {
+   "live": {
+    "root": [
+     62,
+     80,
+     57
+    ],
+    "tip": [
+     104,
+     140,
+     76
+    ],
+    "head": [
+     127,
+     130,
+     81
+    ],
+    "awn": [
+     120,
+     133,
+     80
+    ]
+   },
+   "cured": {
+    "root": [
+     113,
+     106,
+     79
+    ],
+    "tip": [
+     196,
+     178,
+     134
+    ],
+    "head": [
+     182,
+     161,
+     120
+    ],
+    "awn": [
+     186,
+     166,
+     124
+    ]
+   },
+   "cures": "with_the_season"
+  }
  }
 }

@@ -7118,6 +7118,28 @@ Where the brief met the game:
   (fair 12.2), 0.655 -> 0.666; the rest within 0.01. Lamar's overlap slips a little as its chroma closes: what is left
   is the hue (the photo greener than the composite's olive), which the luminance factor keeps by choice.
 
+- **Bunchgrass as tufts of measured size and number** (`pipeline/ground_cards.py` v2, the `plants` step v5;
+  `grass.js` TUFT; `grassBlades.js` buildTuftClump; `terrain.js` tuftCover / tuftGround; `shrubfield.js` setCap).
+  On a tile outside the regional tables, a perennial bunchgrass (PLANTS Growth Form Bunch) has a tuft in its
+  record: 0.35 x its mature height tall and 0.9 x that across (FEIS: Idaho fescue's 15-25 cm tuft under 0.3-1 m
+  culms; Sandberg bluegrass to 0.3 m across). Every plant of it is a whole tuft of that size, and the number
+  follows from cover: herb_cover x the species' share of the ground layer / its tuft's area. Lamar's steppe draws
+  13.9 per m^2 at a cover of 0.39, against a 0.40 target. Each grass is coloured by date between its live and
+  cured palette. A spring-only grower dries over 1.5 months from flowering; PLANTS' bloom months are shifted so
+  the tile's mean flowering falls a month before its greenest. The type palettes follow the same dates. Near the
+  camera (to 12-45 m) the terrain shows the ground between tufts: the texel less the tufts' cover x their palette.
+  canopyMap B carries the tufts' cover there, so no sampler is added. From the air nothing changes: top-down and
+  overview colours are within dE 0.02. Cost is +1.7 ms at Lamar's eye pose. The regional tiles, the Serengeti and
+  Lofoten are unchanged (their grasses have no tuft records). Open: near tufts dark; gap ground is photo-unmixed,
+  not litter; PLANTS phenology cures bluejoint at Teton by mid-July.
+  - *Curing guarded by drought tolerance* (after the first Teton run): a spring-only grower cures after flowering only
+    when PLANTS gives its Drought Tolerance as not Low (Sandberg bluegrass, squirreltail, needle-and-thread go
+    summer-dormant); Idaho fescue and the wet meadows' bluejoint (Low) colour with the tile's season. Bluejoint had
+    drawn 71 % cured in mid-July at Teton's probe; it is green again. Teton also took the flow-continuity rule on this
+    rebuild (11 reaches perennial by flow). The fair judge on Lamar, Teton, the Serengeti and Lofoten is unchanged to
+    0.001 (the herb layer from the air is the photo's by construction). Teton's b_sage_eye pose now stands in forest:
+    to re-pick by the eye rule.
+
 ## 2026-11-06: Embody ends in the body (branch claude/embody-enter)
 
 Aaron: "When in spirit form when I click on a target and then press embody, the spirit should travel all the way to the

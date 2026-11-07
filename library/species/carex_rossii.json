@@ -39,7 +39,7 @@
   "by": "pipeline/plantgen.py",
   "version": "5",
   "card": "library/plant_cards/carex_rossii.json",
-  "card_sha256": "1d545ecc9f78e30d",
+  "card_sha256": "096c9a9700fdf1a6",
   "template": "stipa_pulchra",
   "template_common": "purple needlegrass",
   "height_scale": 0.321
@@ -157,6 +157,53 @@
     4
    ]
   },
-  "cure": 0.6
+  "cure": 0.6,
+  "months": {
+   "live": {
+    "root": [
+     62,
+     80,
+     57
+    ],
+    "tip": [
+     104,
+     140,
+     76
+    ],
+    "head": [
+     127,
+     130,
+     81
+    ],
+    "awn": [
+     120,
+     133,
+     80
+    ]
+   },
+   "cured": {
+    "root": [
+     113,
+     106,
+     79
+    ],
+    "tip": [
+     196,
+     178,
+     134
+    ],
+    "head": [
+     182,
+     161,
+     120
+    ],
+    "awn": [
+     186,
+     166,
+     124
+    ]
+   },
+   "cures": "with_the_season"
+  }
  }
 }

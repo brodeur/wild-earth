@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { uniforms as atmo, ATMOSPHERE_GLSL } from './atmosphere.js';
 import { SEASON_LOOK, seasonOfDate } from './season.js';
-import { buildAnnualClump, buildBunchClump, buildTussockClump, buildOatClump, buildSwardClump } from './grassBlades.js';
+import { buildAnnualClump, buildBunchClump, buildTussockClump, buildOatClump, buildSwardClump, buildTuftClump } from './grassBlades.js';
 import { windUniforms, WIND_GLSL } from './wind.js';
 import { groundUniforms, GROUND_GLSL, seasonState } from './terrain.js';
 import { ShrubField, ClumpField, KIND, waterAt, shrubLeaves } from './shrubfield.js';
@@ -100,6 +100,27 @@ const R_TUFT = MID_PER_M2 / 0.75 / P_TOTAL;                    // ~0.25 tufts / 
 const R_TUS = 1.15 * 0.6 / (Math.PI * 0.27 ** 2) / P_TOTAL;
 const OAT_K = 1.15 / (Math.PI * 0.32 ** 2) / P_TOTAL, R_OAT_END = R_TUFT + OAT_K * 0.37;
 const ROLE = { none: 0, tuft: 1, tussock: 2, oat: 3 };
+// ---- the tuft rule (2026-11-06): a tile's own perennial bunchgrasses as whole tufts, as many as their cover needs --------
+// On a tile that borrows nothing, a grass whose record gives a tuft (library/species ground.tuft: height_m, width_m, written by
+// pipeline/ground_cards.py from PLANTS' mature height for a Growth Form Bunch perennial) is no longer a sprinkle of 9-leaf
+// wisps with a fifth of them grown into tussocks: every plant of it is a tuft of its own size (buildTuftClump at height_m x
+// width_m), and their number follows from the cover. In a cell, species s of the ground layer (its share g_s of the row's
+// ground weights, grasses and forbs together) covers herb x g_s, herb the row's herb cover (species_mix.json herb_cover, the
+// middle of its community's LANDFIRE range: the montane sagebrush steppe's 40-85 %), else the cell's own (canopy.png B);
+// so its tufts per m^2 are herb x g_s / (pi width_m^2 / 4), and the cell's sum n is drawn: candidate k (rank r) is a tuft
+// where r < n / (P_TOTAL x TUFT_F x density) (density: the cell's, which the candidate must also pass, so n per m^2 comes
+// out wherever grass grows at all), and not in a bare patch (its open share). The species of a tuft is drawn by g_s / area,
+// so each species' cover is its share. The forbs are the herb cover's other part (forbs.js). Lamar's steppe: 0.625 x
+// 22.2 = 13.9 tufts per m^2 (Sandberg bluegrass 5.9, Idaho fescue 3.2, squirreltail 2.9, bluebunch wheatgrass 1.4,
+// slender wheatgrass 0.55), grass cover 0.40. A grass with no tuft (a rhizomatous one, the generic tufted grass, every
+// regional tile) is drawn as before, its plants thinned to its share of the cell's grasses.
+// A tile with tufts reads TUFT_F x the candidates per cell (the tufts' ranks run past the close tier's into the ground
+// tier's: groundT draws those), the plants without a tuft thinned by 1 / TUFT_F, so their density is unchanged.
+// Each tuft's blades hand over to its card at a distance in proportion to its width (TUFT_REF: the needlegrass tussock's
+// leaf mass, for which IMP_IN was tuned; never under 0.7 of it: nearer, a camera a metre up saw its tufts thinning blade
+// by blade), so a 0.14 m Sandberg tuft goes at 4-8 m, not at 6-12. The sward sheets (SHEET, a continuous sward of strips)
+// stand only for a cell's grasses without a tuft (kept at that share): a steppe's tufts are its cards beyond the blades.
+const TUFT_F = 1.25, TUFT_REF_R = 0.17, TUFT_MIN = 0.7;
 // A card's quad is its clump's full reach (bake box R, H); the instance carries the dense leaf mass,
 // CARD_RK and CARD_HK of that, which shadows.js casts its contact-shadow ellipse from.
 const CARD_RK = 0.5, CARD_HK = 0.65;
@@ -117,7 +138,7 @@ const LAYERS = [
 // `rebuild` metres from where it last filled, out to `place`.
 const POOLS = {
   near: { layers: [0, 1], sets: ['annual', 'bunch', 'tussock', 'oat'], rebuild: NEAR_REBUILD, place: NEAR_PLACE },
-  ground: { layers: [2], sets: ['groundA', 'groundB'], rebuild: GROUND_REBUILD, place: GROUND_PLACE },
+  ground: { layers: [2], sets: ['groundA', 'groundB', 'groundT'], rebuild: GROUND_REBUILD, place: GROUND_PLACE },   // groundT: tufts ranked in the ground tier (TUFT)
 };
 // Habitat class -> relative density and the annual share (the rest is needlegrass).
 const HABITAT = { 5: { dens: 1.0, annual: 0.75 }, 1: { dens: 0.5, annual: 0.55 }, 6: { dens: 0.12, annual: 0.5 } };
@@ -207,7 +228,8 @@ if (!SPECIES[GENERIC_GRASS.id]) SPECIES[GENERIC_GRASS.id] = GENERIC_GRASS;
 const grassEntry = (id, k) => {
   const s = SPECIES[id], g = s.ground || {};
   return { id, k, type: g.type === 'bunch' ? 1 : 0, height: g.height ?? 1, width: g.width ?? 1, palette: g.palette || null,
-    heads: g.heads?.months || null, cure: g.cure ?? 1, annual: s.lifespan === 'annual', classes: s.habitat?.classes || {}, common: s.common, generic: !!s.generic };
+    heads: g.heads?.months || null, cure: g.cure ?? 1, annual: s.lifespan === 'annual', classes: s.habitat?.classes || {}, common: s.common, generic: !!s.generic,
+    tuft: g.tuft?.width_m > 0 && g.tuft?.height_m > 0 ? { w: g.tuft.width_m, h: g.tuft.height_m } : null, months: g.months?.live && g.months?.cured ? g.months : null };
 };
 const LIB_GRASSES = SPECIES_IDS.filter(id => SPECIES[id].form === 'grass');
 // The library-wide set (the only one before 2026-11-06, iteration 7): the first GS_MAX - 1 grasses and the generic one.
@@ -300,6 +322,7 @@ const COMMON_VERT = /* glsl */`
   bool inDig(vec3 p) { for (int i = 0; i < 8; i++) { if (i >= digCutN) break; vec2 dc = p.xz - digCuts[i].xy; float r = digCuts[i].z + 0.04; if (dot(dc, dc) < r * r) return true; } return false; }
   uniform vec2 nearFade; uniform vec2 closeFade; uniform vec2 groundFade; uniform vec2 midIn; uniform vec2 impIn; uniform float impW;
   uniform float groundK; uniform float matchOn; uniform float tiltOn; uniform float widenOn;
+  uniform vec2 tuftHand;   // the tuft rule (TUFT): a tuft's hand-over scales with its leaf mass's radius (x: per unit sxz, y: per metre); 0 off
   uniform float heightScale; uniform float heads; uniform float thatch; uniform float leafScale; uniform float dry;
   uniform vec3 aRoot; uniform vec3 aTip; uniform vec3 aHead; uniform vec3 aAwn;
   uniform vec3 bRoot; uniform vec3 bTip; uniform vec3 bHead; uniform vec3 bAwn; uniform vec3 thatchCol;
@@ -414,6 +437,7 @@ const NEAR_VERT = /* glsl */`
     float w = 3.0;
     bool hand = role > 0.5;
     if (hand) { band = role < 1.5 ? midIn : impIn; w = role < 1.5 ? ${TUFT_W.toFixed(1)} : impW; }
+    if (hand && role > 1.5 && role < 2.5 && tuftHand.y > 0.0) { float hs = clamp(iVar.x * tuftHand.x, ${TUFT_MIN.toFixed(2)}, 1.0); band *= hs; w *= hs; }
     float dOut = mix(band.x, band.y, h11(seed * 517.3 + 0.37));   // this clump's own hand-over distance
     // A plant with a card comes in one of the atlas's two geometry variants (its blade heights, leans
     // and which culms flower), so blades and card are the same clump; the rest vary freely.
@@ -549,10 +573,11 @@ const IMP_VERT = /* glsl */`
     float keep = clamp(kParams.x * kParams.x / max(d * d, 1.0), kParams.y, 1.0);
     // In at the plant's own hand-over distance (the hash its blade clump uses), out past band.zw; both
     // dithered (vFade), never a size change. The density LOD's rank cut is dithered the same way.
-    vec4 band = cardBand;
+    vec4 band = cardBand; float bw = bandW;
+    if (impKind.x < 0.5 && tuftHand.y > 0.0) { float hs = clamp(iPos.w * tuftHand.y, ${TUFT_MIN.toFixed(2)}, 1.0); band.xy *= hs; bw *= hs; }   // a tuft's own hand-over (TUFT)
     float din = mix(band.x, band.y, h11(seed * 517.3 + 0.37)), dout = mix(band.z, band.w, h11(seed * 91.3 + 0.71));
     float wo = max(0.12 * (band.w - band.z), 0.4);
-    float s = clamp((keep - rank) / 0.05, 0.0, 1.0) * smoothstep(din - bandW, din + bandW, d) * (1.0 - smoothstep(dout - wo, dout + wo, d));
+    float s = clamp((keep - rank) / 0.05, 0.0, 1.0) * smoothstep(din - bw, din + bw, d) * (1.0 - smoothstep(dout - wo, dout + wo, d));
     float grow = inversesqrt(keep);
     R *= mix(0.8, 1.0, heightScale) * grow; H *= heightScale * sqrt(grow);
     if (s < 0.01 || offscreen(iPos.xyz, 0.6 * max(R, H))) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
@@ -878,6 +903,7 @@ export class Grass {
     // grasses), else the generic tufted grass (GENERIC_GRASS); and the annual share is its own grasses' (annualAt)
     this.noFallback = ownGround(tile.speciesMix?.json);
     this.gs = grassSet(tile);   // the tile's grass species (grassSet): the shaders' per-species arrays are indexed by its k
+    this.tuftOn = this.noFallback && this.gs.some(s => s.tuft);   // the tuft rule (TUFT)
     this.mixCache = new Map();   // species mix row (or -habitat class) -> the cell's grass species by type (speciesMix)
     this.buildDensityGrid();
     this._p = { ux: 0, uy: 0, px: 0, pn: 0, yaw: 0, sxz: 0, sy: 0, seed: 0, type: 0, role: 0, sp: 0 };
@@ -887,7 +913,7 @@ export class Grass {
       nearFade: { value: new THREE.Vector2(...NEAR_FADE) }, closeFade: { value: new THREE.Vector2(...CLOSE_FADE) },
       groundFade: { value: new THREE.Vector2(...GROUND_FADE) }, midIn: { value: new THREE.Vector2(...MID_IN) },
       impIn: { value: new THREE.Vector2(...IMP_IN) }, impW: { value: IMP_W }, bodyFade: { value: new THREE.Vector2(2, 3) }, sheetFade: { value: 1 },
-      heightScale: { value: 1 }, heads: { value: 1 }, thatch: { value: 0 }, leafScale: { value: 1 }, dry: { value: 1 },
+      heightScale: { value: 1 }, heads: { value: 1 }, thatch: { value: 0 }, leafScale: { value: 1 }, dry: { value: 1 }, tuftHand: { value: new THREE.Vector2(0, 0) },
       aRoot: { value: col() }, aTip: { value: col() }, aHead: { value: col() }, aAwn: { value: col() },
       bRoot: { value: col() }, bTip: { value: col() }, bHead: { value: col() }, bAwn: { value: col() },
       thatchCol: { value: col().setRGB(...THATCH, THREE.SRGBColorSpace) },
@@ -901,7 +927,8 @@ export class Grass {
     const nearBands = [[0, NEAR_FADE[1] + 3], [0, CLOSE_FADE[1] + 3]], groundBands = [null, null, [0, GROUND_FADE[1] + 3]];
     this._frustum = new THREE.Frustum(); this._m = new THREE.Matrix4(); this._inv = new THREE.Matrix4(); this._sphere = new THREE.Sphere(); this._pick = [];
     yield 'setup';
-    const annualGeo = buildAnnualClump(), bunchGeo = buildBunchClump(), tussockGeo = buildTussockClump(), oatGeo = buildOatClump();
+    // a tile with tufts (TUFT) draws them in the tussock's place (its meshes and card kind); every other tile the needlegrass tussock
+    const annualGeo = buildAnnualClump(), bunchGeo = buildBunchClump(), tussockGeo = this.tuftOn ? buildTuftClump() : buildTussockClump(), oatGeo = buildOatClump();
     yield 'clumps';
     this.geos = [tussockGeo, annualGeo, oatGeo];   // by atlas kind
     // The tussock and wild oat plants (the ones with those cards) have their own clumps and meshes,
@@ -914,6 +941,7 @@ export class Grass {
       oat: this.makeSet(oatGeo, nearMat, 30000, cardBands()),
       groundA: this.makeSet(annualGeo, nearMat, this.groundCap, groundBands),
       groundB: this.makeSet(bunchGeo, nearMat, this.groundCap, groundBands),
+      groundT: this.makeSet(tussockGeo, nearMat, this.tuftOn ? 30000 : 16, [null, null, [0, IMP_IN[1] + IMP_W + 2]]),   // tufts of ground-tier rank (TUFT)
     };
     // The body tier's two meshes (annual and needlegrass sward clumps), off until a small body is taken. Its
     // band (indexed by tier) is set with the ring's radius; the listener holds this world only weakly, so a world
@@ -947,6 +975,7 @@ export class Grass {
     // unit plant scale, from its clump's geometry: a plant's card is this box times its own scale. LOD
     // as the old fields: tufts thin from ~120 m to 40%, tussocks and oats past 30-34 m (survivors grow).
     this.box = this.geos.map(clumpBox);
+    if (this.tuftOn) this.uniforms.tuftHand.value.set(CARD_RK * this.box[0].R / TUFT_REF_R, 1 / TUFT_REF_R);
     this.impKinds = [];
     const card = (role, kind, type, cfg) => {
       const f = new ClumpField(tile, this.ground, this.uniforms, {
@@ -959,6 +988,16 @@ export class Grass {
     };
     this.tufts = card(ROLE.tuft, 1, 0, { name: 'grasstufts', cap: 40000, D0: 120, KMIN: 0.4, band: [...MID_IN, MID_END - 35, MID_END] }); yield 'tufts';
     this.clumps = card(ROLE.tussock, 0, 1, { name: 'grassclumps', cap: 60000, D0: 34, KMIN: 0.14, band: [...IMP_IN, 185, 225] }); yield 'clumpField';
+    // A tile with tufts (TUFT): its cards' density LOD floor in proportion to the tufts per m^2 against the tussocks' this LOD
+    // was tuned for (R_TUS x P_TOTAL, 3 per m^2): KMIN x q, not under 0.08 (a far survivor grows at most 3.5x; at 0.03 the far
+    // tufts on a slope read as straw bales); D0 stays 34 m (scaled down too, the grown cards showed from 20 m on).
+    if (this.tuftOn) {
+      const q = Math.min(1, R_TUS * P_TOTAL / this.tuftDensity()), cf = this.clumps.cfg;
+      cf.KMIN = Math.max(0.14 * q, 0.08); this.clumps.uniforms.kParams.value.set(cf.D0, cf.KMIN);
+      // and its cap by 1 / q (at most 3x): ClumpField keeps a whole 30 m cell at its nearest point's density, so the cells
+      // around the camera hold 1 / q times the cards they did and filled the cap within ~45 m, dropping every card beyond
+      this.clumps.setCap(Math.round(60000 * Math.min(3, 1 / q)));
+    }
     this.stalks = card(ROLE.oat, 2, 0, { name: 'grassstalks', cap: 30000, D0: 30, KMIN: 0.14, band: [...IMP_IN, 200, 240] }); yield 'stalks';
     this.group.add(this.shrubs.mesh, this.tufts.mesh, this.clumps.mesh, this.stalks.mesh);
     // The atlas is baked with the main renderer, which this class is not handed: a never-drawn mesh
@@ -978,9 +1017,9 @@ export class Grass {
   // Instances placed (staged) and drawn this frame, per LOD.
   get counts() {
     const s = this.sets;
-    return { nearPlaced: s.annual.staged + s.bunch.staged + s.tussock.staged + s.oat.staged + s.groundA.staged + s.groundB.staged,
-      nearDrawn: s.annual.n + s.bunch.n + s.tussock.n + s.oat.n + s.groundA.n + s.groundB.n,
-      annualDrawn: s.annual.n + s.oat.n + s.groundA.n, bunchDrawn: s.bunch.n + s.tussock.n + s.groundB.n, cardBladesDrawn: s.tussock.n + s.oat.n,
+    return { nearPlaced: s.annual.staged + s.bunch.staged + s.tussock.staged + s.oat.staged + s.groundA.staged + s.groundB.staged + s.groundT.staged,
+      nearDrawn: s.annual.n + s.bunch.n + s.tussock.n + s.oat.n + s.groundA.n + s.groundB.n + s.groundT.n,
+      annualDrawn: s.annual.n + s.oat.n + s.groundA.n, bunchDrawn: s.bunch.n + s.tussock.n + s.groundB.n + s.groundT.n, cardBladesDrawn: s.tussock.n + s.oat.n + s.groundT.n,
       groundDrawn: s.groundA.n + s.groundB.n, bodyPlaced: s.bodyA.staged + s.bodyB.staged, bodyDrawn: s.bodyA.n + s.bodyB.n,
       bodyR: this.body?.active ? this.body.R : 0, midDrawn: this.tufts.n, tussockDrawn: this.clumps.n, oatDrawn: this.stalks.n };
   }
@@ -1088,7 +1127,7 @@ export class Grass {
   buildDensityGrid() {
     const hab = this.tile.habitat, can = this.tile.canopy, W = hab.img.width, Hh = hab.img.height;
     this.W = W; this.Hh = Hh; this.dens = new Float32Array(W * Hh); this.herb = new Float32Array(W * Hh);
-    const mixRows = new Map((this.tile.speciesMix?.json?.mixes || []).map(m => [m.index, m]));
+    const mixRows = this.mixRows = new Map((this.tile.speciesMix?.json?.mixes || []).map(m => [m.index, m]));
     for (let j = 0; j < Hh; j++) for (let i = 0; i < W; i++) {
       // herb floored at 0.3 as before: a 0 is more often a data gap (or an oak's shade) than bare dirt
       const k = j * W + i, cls = hab.channel(i, j, 0), hb = HABITAT[cls];
@@ -1139,7 +1178,7 @@ export class Grass {
     }
     return false;
   }
-  candidates() { const res = this.tile.habitat.res; return Math.round(res * res * P_TOTAL); }
+  candidates() { const res = this.tile.habitat.res; return Math.round(res * res * P_TOTAL * (this.tuftOn ? TUFT_F : 1)); }
 
   // Candidate k of N in cell (i, j): the plant, or false where none grows (density, outcrops, roads,
   // water, bare patches). Fills this._p. A pure function of (i, j, k), so every tier that reads this
@@ -1148,7 +1187,7 @@ export class Grass {
     draw(i, j, k);
     const { habitat: hab, size, roads, waterMask: wm } = this.tile, res = hab.res, P = this._p;
     const ux = U[0], uy = U[1], keep = U[2], px = (i + ux) * res, pn = size - (j + uy) * res;
-    const dens = this.sample(this.dens, px, pn) * rockKeep(this.tile, px, pn) * zoneGrass(this.tile, px, pn);   // thin on outcrops, the dry beds and the mud too
+    const d0 = this.sample(this.dens, px, pn), dens = d0 * rockKeep(this.tile, px, pn) * zoneGrass(this.tile, px, pn);   // thin on outcrops, the dry beds and the mud too
     if (keep >= dens) return false;
     // Decayed roads: no grass on the pavement, half density across the verge.
     const rw = roads ? roads.at(px, pn) : 0;
@@ -1163,6 +1202,23 @@ export class Grass {
     // still show open from the air (as the shells leave them).
     const herb = this.sample(this.herb, px, pn), bare = bareField(px, pn), thr = 0.28 + 0.14 * (1 - herb);
     const open = smooth(thr - 0.06, thr + 0.06, bare);
+    // The tuft rule (TUFT): a tuft where the rank is under the cell's tuft share, at its record's size; nothing else in
+    // that slot. The rest are the cell's grasses without a tuft, thinned to their share.
+    let m = null;
+    if (this.tuftOn) {
+      m = mix || this.speciesMix(i, j);
+      const r = (k + 0.5) / N;
+      if (m.tuftN > 0 && r < m.tuftN * (m.herbMid ?? herb) / (P_TOTAL * TUFT_F * Math.max(d0, 0.05))) {
+        if (keep >= dens * open || U[9] < 0.75 * wv / 200) return false;
+        const sp = this.pickTuft(m, spDraw(U[7])), T = this.gs[sp].tuft;
+        const f = (0.8 + 0.4 * U[4]) * (0.75 + 0.25 * smooth(thr, thr + 0.15, bare));
+        P.ux = ux; P.uy = uy; P.px = px; P.pn = pn; P.yaw = U[3] * Math.PI * 2; P.sxz = T.w * f * (0.9 + 0.2 * U[5]); P.sy = T.h * f;
+        P.seed = U[7]; P.type = 1; P.role = ROLE.tussock; P.sp = sp;
+        return true;
+      }
+      if (((U[3] * 7717.31) % 1) >= (1 - m.tuftFrac) / TUFT_F) return false;
+      if (m.tuftN > 0) annualShare = m.annualN;
+    }
     if (keep >= dens * (0.4 + 0.6 * open)) return false;
     const type = U[6] < bunchP(annualShare, px, pn) ? 1 : 0;
     const s = (0.75 + 0.5 * U[4]) * (0.7 + 0.45 * herb) * (0.6 + 0.4 * smooth(thr, thr + 0.15, bare));
@@ -1176,7 +1232,7 @@ export class Grass {
     // A needlegrass with a card is a mature tussock, a little larger than the young bunches around it.
     const big = role === ROLE.tussock ? 1.2 : 1;
     // The species: the wild oat for an oat stand, else drawn from the cell's mix of this type (this.gs), at its own size.
-    const sp = role === ROLE.oat ? this.gs.oat : this.pickSpecies(mix || this.speciesMix(i, j), type, spDraw(U[7])), G = this.gs[sp];
+    const sp = role === ROLE.oat ? this.gs.oat : this.pickSpecies(mix || this.speciesMix(i, j), type, spDraw(U[7]), m?.tuftN > 0), G = this.gs[sp];
     P.ux = ux; P.uy = uy; P.px = px; P.pn = pn; P.yaw = U[3] * Math.PI * 2; P.sxz = s * (0.85 + 0.3 * U[5]) * big * (G ? G.width : 1); P.sy = s * big * (G ? G.height : 1);
     P.seed = U[7]; P.type = type; P.role = role; P.sp = sp;
     return true;
@@ -1206,15 +1262,49 @@ export class Grass {
     const cum = [[], []];
     for (const s of GS) if (w[s.k] > 0) cum[s.type].push([s.k, w[s.k]]);
     const tot = cum.map(c => c.reduce((a, e) => a + e[1], 0));
-    for (const c of cum) { const t = c.reduce((a, e) => a + e[1], 0) || 1; let acc = 0; for (const e of c) { acc += e[1] / t; e[1] = acc; } }
-    m = { w, cum, annual: tot[0] + tot[1] > 0 ? tot[0] / (tot[0] + tot[1]) : 0 }; this.mixCache.set(key, m); return m;
+    // the tuft rule (TUFT): the tufts per m^2 per unit herb cover (each tufted species' share of the ground layer over its
+    // tuft's area), the tufts' species by that, the tufted share of the cell's grasses, and the rest's own cum and annual share
+    let tuftN = 0, tuftCum = [], tuftW = 0, gW = 0, cumN = [[], []];
+    if (own && this.tuftOn) {
+      for (const s of GS) {
+        const x = w[s.k]; if (!(x > 0)) continue; gW += x;
+        if (s.tuft) { const per = x / (Math.PI * s.tuft.w * s.tuft.w / 4); tuftN += per; tuftCum.push([s.k, per]); tuftW += x; }
+        else cumN[s.type].push([s.k, x]);
+      }
+      let acc = 0; for (const e of tuftCum) { acc += e[1] / (tuftN || 1); e[1] = acc; }
+    }
+    const totN = cumN.map(c => c.reduce((a, e) => a + e[1], 0));
+    for (const c of [...cum, ...cumN]) { const t = c.reduce((a, e) => a + e[1], 0) || 1; let acc = 0; for (const e of c) { acc += e[1] / t; e[1] = acc; } }
+    const hc = row && this.mixRows?.get(row.index)?.herb_cover;
+    m = { w, cum, annual: tot[0] + tot[1] > 0 ? tot[0] / (tot[0] + tot[1]) : 0,
+      tuftN, tuftCum, tuftFrac: gW ? tuftW / gW : 0, herbMid: hc ? (hc[0] + hc[1]) / 2 : null, cumN, annualN: totN[0] + totN[1] > 0 ? totN[0] / (totN[0] + totN[1]) : 0 };
+    this.mixCache.set(key, m); return m;
   }
   // A type the cell's mix has no species of: on a tile that borrows nothing, its other type's species (annualAt gives
   // it none of that type, so this is only the body tier's and the cards' edge cases); else the library's first of the type.
-  pickSpecies(m, type, r) {
-    let c = m.cum[type]; if (!c.length && this.noFallback) c = m.cum[1 - type];
+  pickSpecies(m, type, r, untufted = false) {
+    const cs = untufted && (m.cumN[0].length || m.cumN[1].length) ? m.cumN : m.cum;   // a tuft tile's plants without a tuft: those species only
+    let c = cs[type]; if (!c.length && this.noFallback) c = cs[1 - type];
     for (let q = 0; q < c.length; q++) if (r <= c[q][1]) return c[q][0];
     return c.length ? c[c.length - 1][0] : this.noFallback ? this.gs.generic : this.gs.fallback[type];
+  }
+  // The tile's tufts per m^2 where they grow (TUFT): the mean over its rows with tufts, by cells, of herb x the tufted species'
+  // share / area (speciesMix's tuftN at the row's herb cover, else OWN_HERB).
+  tuftDensity() {
+    const sm = this.tile.speciesMix; let n = 0, c = 0;
+    for (const mx of sm?.json?.mixes || []) {
+      const row = sm.rows?.[mx.index]; if (!row?.groundSum) continue;
+      let per = 0; for (const s of this.gs) if (s.tuft && row.ground[s.id] > 0) per += row.ground[s.id] / (Math.PI * s.tuft.w * s.tuft.w / 4);
+      if (!(per > 0)) continue;
+      const h = mx.herb_cover ? (mx.herb_cover[0] + mx.herb_cover[1]) / 2 : OWN_HERB, w = mx.cells || 1;
+      n += w * h * per; c += w;
+    }
+    return c ? n / c : 1;
+  }
+  // A tuft's species (TUFT): drawn by each tufted species' share over its tuft's area, so each covers its share.
+  pickTuft(m, r) {
+    const c = m.tuftCum; for (let q = 0; q < c.length; q++) if (r <= c[q][1]) return c[q][0];
+    return c[c.length - 1][0];
   }
   // The grass at a point, for the field guide and the needs (identify.js, needs.js): the leading species of the type the
   // drifts give there, and every species the cell's mix holds; null where no grass grows.
@@ -1268,7 +1358,14 @@ export class Grass {
     const out = [];
     if (!this.cellAny(i, j)) return out;
     const N = this.candidates(), share = this.annualAt(i, j), P = this._p, box = this.box[kind], code = [0, KIND.annual, KIND.bunch, KIND.stalk][role], mix = this.speciesMix(i, j);
-    const k0 = role === ROLE.oat ? Math.floor(N * R_TUFT) : 0, k1 = Math.ceil(N * (role === ROLE.tussock ? R_TUS : role === ROLE.tuft ? R_TUFT : R_OAT_END));
+    let k1 = Math.ceil(N * (role === ROLE.tussock ? R_TUS : role === ROLE.tuft ? R_TUFT : R_OAT_END));
+    // a tile with tufts (TUFT): the cell's tufts run to its tuft rank (at the lowest density in the cell's neighbourhood)
+    if (role === ROLE.tussock && this.tuftOn && mix.tuftN > 0) {
+      let dmin = Infinity; for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) { const a = Math.min(Math.max(i + di, 0), this.W - 1), b = Math.min(Math.max(j + dj, 0), this.Hh - 1); if (this.dens[b * this.W + a] > 0) dmin = Math.min(dmin, this.dens[b * this.W + a]); }
+      const herbMax = mix.herbMid ?? 1;
+      k1 = Math.max(k1, Math.ceil(N * Math.min(1, mix.tuftN * herbMax / (P_TOTAL * TUFT_F * Math.max(dmin, 0.05)))));
+    }
+    const k0 = role === ROLE.oat ? Math.floor(N * R_TUFT) : 0;
     for (let k = k0; k < k1; k++) {
       if (!this.plantAt(i, j, k, N, share, mix) || P.role !== role) continue;
       out.push(P.px, this.ground(P.px, P.pn), -P.pn, CARD_RK * box.R * P.sxz, CARD_HK * box.H * P.sy, P.seed, code + 8 * P.sp + 0.999 * P.yaw / (Math.PI * 2), 0);
@@ -1474,6 +1571,7 @@ export class Grass {
       const px = (gi + 0.1 + 0.8 * hash2(gi, gj, 71)) * S.SPACING, pn = (gj + 0.1 + 0.8 * hash2(gi, gj, 72)) * S.SPACING;
       if (px < 1 || pn < 1 || px > size - 1 || pn > size - 1) continue;
       const dens = this.swardDensity(px, pn); if (dens < 0.15) continue;
+      if (this.tuftOn) { const [ci, cj] = this.tile.habitat.cellOf(px, pn), m = this.speciesMix(ci, cj); if (m.tuftN > 0 && hash2(gi, gj, 75) >= 1 - m.tuftFrac) continue; }   // the tuft rule: sheets for the untufted share only
       const y = this.ground(px, pn), gx = (this.ground(px + 1, pn) - this.ground(px - 1, pn)) / 2, gn = (this.ground(px, pn + 1) - this.ground(px, pn - 1)) / 2;
       y0 = Math.min(y0, y); y1 = Math.max(y1, y);
       a.push(px, y, -pn, hash2(gi, gj, 73), dens, gx, -gn, hash2(gi, gj, 74));
@@ -1624,7 +1722,8 @@ export class Grass {
     const month = seasonMonth(season, seasonState.date || undefined), s255 = rgb => rgb.map(v => v / 255);   // the day shown (a fixed date), else today
     const own = this.ownCurve();   // the tile's own shape through the year (outside the regional tables), else PALETTE's
     for (let k = 0; k < GS_MAX; k++) {
-      const G = this.gs[k], T = G && G.type ? P.bunch : P.annual, pal = G?.palette?.[season];
+      const G = this.gs[k], T = G && G.type ? P.bunch : P.annual;
+      const pal = G && this.speciesPal(G, season);
       set(u.spRoot.value[k], pal ? s255(pal.root) : T.root); set(u.spTip.value[k], pal ? s255(pal.tip) : T.tip);
       set(u.spHead.value[k], pal ? s255(pal.head) : T.head); set(u.spAwn.value[k], pal ? s255(pal.awn) : T.awn);
       // the heads stand from the species' first flowering month until four months after its last (the dry culms and
@@ -1646,6 +1745,31 @@ export class Grass {
     this.season = season;
   }
 
+  // A grass's palette for the season shown (sRGB 0-255), or null. Its colour by date (2026-11-06), on a tile with its own
+  // measured season, for a record with a live and a cured palette (ground.months, pipeline/ground_cards.py): the share cured
+  // = 1 - g (1 - e), g the open grass's live share for the date (ownSeasonCurve) and e, for a grass that grows in spring only
+  // ("after_flowering"), its drying from the middle of its first flowering month, complete 1.5 months on (Sandberg bluegrass:
+  // drying 23 May, dry 9 July on the upper Snake River Plain, FEIS); a grass that keeps growing ("with_the_season") cures with
+  // the tile. (The record's quarter palettes put Idaho fescue's mid June in its curing summer.) Else the record's quarter.
+  // PLANTS' bloom months are the species' over its US range, not this tile's (a grass of 2,000 m flowers weeks after the
+  // range's): they are shifted together so that the tile's grasses' mean flowering (by their share of its cells) falls the
+  // month before its greenest month, as the generic grass's heads come (ownSeasonCurve): Lamar +0.55 months, so Sandberg
+  // bluegrass (PLANTS: late spring) dries from early June.
+  speciesPal(G, season) {
+    const own = this.ownCurve();
+    if (!own || !G.months) return G.palette?.[season] || null;
+    const month = seasonMonth(season, seasonState.date || undefined);
+    if (this.bloomShift === undefined) {
+      const w = this.ownWeights(); let a = 0, b = 0;
+      for (const S of this.gs) if (S.months && S.heads && w[S.k] > 0) { a += w[S.k] * ((S.heads[0] + S.heads[1]) / 2 + 0.5); b += w[S.k]; }
+      this.bloomShift = b ? (((own.heads[1] - 0.5) - a / b) % 12 + 18) % 12 - 6 : 0;   // own.heads[1]: the greenest month; the middle of the month before it
+    }
+    let e = 0;
+    if (G.months.cures === 'after_flowering' && G.heads) { const dm = ((month - (G.heads[0] + 0.5 + this.bloomShift)) % 12 + 12) % 12; e = dm < 8 ? smooth(0, 1.5, dm) : 0; }
+    const c = 1 - atMonth(own.g, month) * (1 - e), L = G.months.live, C = G.months.cured, mx = (a, b) => a.map((v, i) => v + (b[i] - v) * c);
+    G.curedNow = c;
+    return { root: mx(L.root, C.root), tip: mx(L.tip, C.tip), head: mx(L.head, C.head), awn: mx(L.awn, C.awn) };
+  }
   // A tile that borrows nothing: its grasses' weights (their share of its cells, species_mix.json ground_bytes x cells; a
   // row with no grass counts as the generic tufted grass), and its own season curve from them (null where unmeasured).
   ownWeights() {
@@ -1673,7 +1797,7 @@ export class Grass {
     const parts = ['root', 'tip', 'head', 'awn'], acc = [null, null];
     for (const G of this.gs) {
       const wt = this.ownW[G.k]; if (!(wt > 0)) continue;
-      const pal = G.palette?.[season], T = G.type ? P.bunch : P.annual, a = acc[G.type] || (acc[G.type] = { w: 0, root: [0, 0, 0], tip: [0, 0, 0], head: [0, 0, 0], awn: [0, 0, 0] });
+      const pal = this.speciesPal(G, season), T = G.type ? P.bunch : P.annual, a = acc[G.type] || (acc[G.type] = { w: 0, root: [0, 0, 0], tip: [0, 0, 0], head: [0, 0, 0], awn: [0, 0, 0] });
       a.w += wt; for (const q of parts) for (let c = 0; c < 3; c++) a[q][c] += wt * (pal ? pal[q][c] / 255 : T[q][c]);
     }
     const out = t => { const a = acc[t] || acc[1 - t]; const o = {}; for (const q of parts) o[q] = a[q].map(v => v / a.w); return o; };
