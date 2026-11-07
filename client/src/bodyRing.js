@@ -22,11 +22,15 @@ import { avatarFor } from './social.js';
 // Reduced motion: no turning and no swing, only fades. Sizes: a compressed true scale (a metre's share falls with size,
 // so the vole is still seen beside the elk), no larger than the ring's spacing allows.
 //
-// Units: the walkers' ring has radius 1; the fliers' is wider and higher. layout(box) fits the whole within a screen box
-// (CSS px), the walkers' ring centred on box.cx and the front of it at box.b; groundEllipse() says where that ring falls
-// on screen (title.js frames the tile under it).
+// Pinned to the tile (Aaron, 2026-11-07: "lets have the avatar selector pinned to the tile ... The circle of animals
+// should be "inside" the boundary of the tile"): the rings live in the tile's own frame (its centre on the earth, x east,
+// y up, z south), drawn through the earth camera expressed in that frame (pin), so they stay registered to the tile as
+// the view zooms, drifts or resizes. Units: the walkers' ring has radius 1 = RING_HW of the tile's half-width, the
+// fliers' is a little wider and higher, both inside the tile's square as the camera sees it.
 //
 //   new BodyRing({ renderer, box, onPick, guest })   box: an element over the canvas for the faces and the hover name
+//   pin({ cam, earth, p0, hw })   each frame: the earth camera, the earth group, the tile's centre (unit vector, the
+//                     earth's frame) and its half-width (earth radii); null: nothing drawn
 //   show(tileId)      the tile's animals teleport in (a previous tile's go first); resolves when the list is known
 //   clear()           every animal goes (beamed out)
 //   select(code)      'spirit' or a species code: the ring swings that animal to the front
@@ -37,9 +41,12 @@ import { avatarFor } from './social.js';
 //   dispose()         everything off the GPU and out of the DOM
 
 const DEG = Math.PI / 180, TAU = Math.PI * 2;
-const ELEV = 34 * DEG, FOV = 18;                     // the rings' camera: looking down 34 degrees (near the earth's own view of the tile), a long lens
-const R_AIR = 1.12, Y_AIR = 0.58;                    // the fliers' ring: its radius and height over the walkers'
-const D_MAX = 0.3, D_SPIRIT = 0.42, M_REF = 2.2;     // an animal's largest side (ring radii) at most, for M_REF m and over; the spirit's
+const RING_HW = 0.64;                                 // the walkers' ring's radius, of the tile's half-width (the fliers' 1.1 times that)
+const R_AIR = 0.95, Y_AIR = 0.38;                    // the fliers' ring: its radius and height over the walkers' (the back ones inside the tile's far edge as seen)
+const D_MAX = 0.44, D_SPIRIT = 0.3, M_REF = 2.2;     // an animal's largest side (ring radii) at most, for M_REF m and over; the spirit's halo
+const D_EXP = 0.3, D_FLOOR = 0.56, A_MIN = 0.16;      // A_MIN: a walker's least visible size (its height or plan), ring radii: about 40% of the deer's                    // the size's compression (m^0.3) and its floor: the smallest at about half the largest
+const ROWS2 = 14;                                     // a ring of more than this many stands in two staggered rows (outer, inner)
+const ROW_R = [[1.16, 0.8], [1.06, 0.8]], ROW_Y = [[0, 0], [-0.06, 0.06]];   // the rows' radii and heights (of each ring's own), walkers and fliers
 const SPACING = 0.86;                                // of the ring's spacing an animal may fill
 const SPIN = [0.075, -0.055];                        // rad/s: the walkers' ring and the fliers' (the other way)
 const SPIN_IN_S = 2.5;                               // the turn's ease in, from the first arrival
@@ -49,9 +56,9 @@ const FACE_TURN = 0.45;                              // the chosen animal turns 
 const LOADS = 4;                                     // models loading at once
 const BEAT = 2.4;                                    // Hz: the fliers' wingbeat, slowed for the screen
 const MARK_PX = 22;
-const WISP_R = 0.45, WISP_LAP = 1.2;                 // m, s: the wisp's circle, chasing its tail (as the opening's sprite: compact)
+const WISP_R = 0.4, WISP_LAP = 1.2;                 // m, s: the wisp's circle, chasing its tail (as the opening's sprite: compact)
 const W_REST = [0.5, 0.6];                           // the wisp unchosen: its size and brightness (spirit.js REST_SCALE, REST_LUM)
-const U = 2.3;                                       // metres per ring radius: the scene's scale, against which the wisp has its own size
+const U = 2.2;                                       // metres per ring radius: the scene's scale, against which the wisp has its own size
 const reducedMotion = () => !!globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const wrapPi = a => Math.atan2(Math.sin(a), Math.cos(a));
@@ -156,27 +163,13 @@ void main() {
   gl_FragColor = vec4(uCol * a, 1.0);
 }`;
 
-// The rings' fit in a screen box { l, r, t, b } (CSS px): px per ring radius and where the walkers' ring's centre falls
-export function ringFit(box) {
-  if (!box) return null;
-  const sE = Math.sin(ELEV), cE = Math.cos(ELEV);
-  const top = Math.max(sE + D_MAX * cE, Y_AIR * cE + R_AIR * sE + D_MAX * 0.6, D_SPIRIT + 0.3 * cE), bot = sE + 0.06, half = R_AIR + D_MAX * 0.5;
-  const ppu = Math.max(20, Math.min((box.r - box.l) / (2 * half), (box.b - box.t) / (top + bot)));
-  const spare = Math.max(0, box.b - box.t - (top + bot) * ppu);   // a narrow box (a phone): the room left over, a little more of it above
-  return { ppu, cx: (box.l + box.r) / 2, cy: box.b - bot * ppu - spare * 0.42 };
-}
-// The walkers' ring on screen, { cx, cy, rx, ry } (CSS px): title.js frames the chosen tile under it
-export function ringEllipse(box) {
-  const f = ringFit(box);
-  return f && { cx: f.cx, cy: f.cy, rx: f.ppu, ry: f.ppu * Math.sin(ELEV) };
-}
-
 export class BodyRing {
   constructor({ renderer, box = null, onPick = null, guest = false }) {
     this.renderer = renderer; this.box = box; this.onPick = onPick; this.guest = guest;
     this.reduced = reducedMotion();
     this.scene = new THREE.Scene();
-    this.cam = new THREE.PerspectiveCamera(FOV, 1, 0.1, 200);
+    this.cam = new THREE.PerspectiveCamera(30, 1, 0.1, 200);
+    this.pinTo = null; this._e = new THREE.Vector3(); this._n = new THREE.Vector3(); this._u = new THREE.Vector3(); this._m4 = new THREE.Matrix4(); this._q = new THREE.Quaternion();
     this.scene.add(new THREE.HemisphereLight(0xe4ecff, 0x40372a, 2.2));
     const sun = new THREE.DirectionalLight(0xfff1dc, 2.4); sun.position.set(-0.5, 1, 0.9); this.scene.add(sun);
     this.world = new THREE.Group(); this.world.scale.setScalar(U); this.scene.add(this.world);   // the rings, in ring radii
@@ -193,7 +186,7 @@ export class BodyRing {
     this.wispP = new THREE.Vector3(); this.wispT = 0; this.wispIn = 0;
     this.items = new Map(); this.sel = 'spirit'; this.tile = null; this.gen = 0; this.marks = [];
     this.rarity = rarityByCode();
-    this.layoutBox = null; this.ppu = 100; this.cx = 0; this.cy = 0; this.time = 0; this.popAt = 0;
+    this.ppu = 100; this.shown = false; this.time = 0; this.popAt = 0;
     this._v = new THREE.Vector3(); this._c = new THREE.Color();
     this.markEls = new Map(); this.hoverCode = null;
     if (box) {
@@ -227,10 +220,13 @@ export class BodyRing {
     by.forEach((arr, ri) => {
       const ring = this.rings[ri], n = arr.length;
       ring.items = []; ring.target = null; ring.spinAt = null; ring.vel = 0;
+      const two = n > ROWS2, rows = two ? 2 : 1, rMean = two ? ring.R * (ROW_R[ri][0] + ROW_R[ri][1]) / 2 : ring.R;
+      const dmax = Math.min(D_MAX, SPACING * TAU * rMean / Math.max(1, n / rows));   // each row holds half, staggered
       arr.forEach((b, k) => {
-        const it = { ...b, ring, a: n ? (k / n) * TAU : 0, dmax: Math.min(D_MAX, SPACING * TAU * ring.R / Math.max(1, n)), state: 'loading', t: 0, scale: 0, flash: 0, alpha: 1,
+        const row = two ? k % 2 : 0, r = two ? ring.R * ROW_R[ri][row] : ring.R, y = two ? ROW_Y[ri][row] : 0;
+        const it = { ...b, ring, a: n ? (k / n) * TAU : 0, r, y, dmax, state: 'loading', t: 0, scale: 0, flash: 0, alpha: 1,
           holder: new THREE.Group(), mesh: null, model: null, beam: null, phase: Math.random() * TAU, size: 0, h: 0 };
-        it.holder.position.set(Math.sin(it.a) * ring.R, 0, Math.cos(it.a) * ring.R);
+        it.holder.position.set(Math.sin(it.a) * r, y, Math.cos(it.a) * r);
         it.holder.visible = false;
         ring.group.add(it.holder); ring.items.push(it); this.items.set(b.code, it);
       });
@@ -263,9 +259,15 @@ export class BodyRing {
     const bb = geo.boundingBox, ext = bb.getSize(this._v);
     const m = Math.max(ext.x, ext.y, ext.z) * (it.scale || 1) || 1;
     const along = Math.max(ext.z, air ? 0 : ext.x * 0.4) * (it.scale || 1) || m;   // its length along the ring
-    let D = D_MAX * Math.min(1, m / M_REF) ** 0.4;          // a compressed true scale: the deer near the most, the vole a third
+    let D = D_MAX * Math.max(D_FLOOR, Math.min(1, m / M_REF) ** D_EXP);   // compressed: the deer near the most, a squirrel or a jay about half
     D = Math.min(D, it.dmax * m / Math.max(along, 1e-3));   // its length within the spacing
-    const s = D / (m / (it.scale || 1));
+    let s = D / (m / (it.scale || 1));
+    // the small walkers seen from above (a vole, a lizard, a snake): their height or their plan at least A_MIN, as far as the
+    // spacing lets their length grow (Aaron, 2026-11-07: "The smallest animals should have their size increased more")
+    if (!air) {
+      const a = Math.max(bb.max.y, Math.sqrt(ext.x * ext.z) * 0.7) * s;
+      if (a < A_MIN) { const g = Math.max(1, Math.min(A_MIN / a, 2.5, it.dmax / Math.max(1e-4, ext.z * s))); s *= g; D *= g; }
+    }
     mesh.scale.setScalar(s);
     mesh.position.y = air ? -((bb.min.y + bb.max.y) / 2) * s : 0;   // a flier by its middle; a walker on its feet (the model's origin)
     it.size = D; it.h = (air ? ext.y / 2 : bb.max.y) * s;
@@ -332,6 +334,12 @@ export class BodyRing {
       let goal = -it.a; goal = r.rot + wrapPi(goal - r.rot);   // the nearest way round to the front
       r.target = goal;
       if (this.reduced) { r.rot = goal; r.vel = 0; }
+      const air = this.rings[1], n = air.items.length;   // a walker chosen: the fliers' ring holds with a gap at the front, so no bird stands over it
+      if (r.i === 0 && n) {
+        const step = TAU / n, k = Math.round(-air.rot / step - 0.5);
+        air.target = air.rot + wrapPi(-(k + 0.5) * step - air.rot);
+        if (this.reduced) { air.rot = air.target; air.vel = 0; }
+      }
     }
     if (!quiet) this.onPick?.(code, this.picked);
     return true;
@@ -339,18 +347,36 @@ export class BodyRing {
   setMarks(list) { this.marks = Array.isArray(list) ? list.filter(m => m && m.user && m.code) : []; }
 
   // ---- the frame ---------------------------------------------------------------------------------------------------------
-  // box: the screen space the rings may fill { l, r, t, b } (CSS px); the walkers' ring's front stands at the bottom.
-  layout(box) { this.layoutBox = box; }
+  pin(p) { this.pinTo = p; }
+  // The earth camera in the tile's frame (scene units: metres, U to a ring radius): false when the tile is out of sight
+  // (the earth's far side) or too small on screen to choose from
+  frameCam(W, H) {
+    const P = this.pinTo; if (!P?.cam || !P.earth || !P.p0) return false;
+    const gc = P.cam, q = P.earth.quaternion, up = this._u.copy(P.p0).normalize();
+    const east = this._e.set(up.z, 0, -up.x).normalize(), north = this._n.crossVectors(up, east);
+    east.applyQuaternion(q); north.applyQuaternion(q); up.applyQuaternion(q);
+    const k = P.hw * RING_HW / U;   // earth radii per scene unit
+    const O = this._v.copy(up).add(P.earth.position);   // the tile's centre on the sphere
+    const south = north.negate();
+    this._m4.makeBasis(east, up, south);   // the tile's frame's axes in the earth scene
+    const rel = gc.position.clone().sub(O);
+    if (rel.dot(up) <= 0) return false;   // under the horizon of the tile: the far side
+    const cam = this.cam;
+    cam.position.set(rel.dot(east), rel.dot(up), rel.dot(south)).divideScalar(k);
+    cam.quaternion.setFromRotationMatrix(this._m4).invert().multiply(gc.quaternion);
+    cam.fov = gc.fov; cam.aspect = gc.aspect; cam.near = gc.near / k; cam.far = gc.far / k;
+    if (gc.view?.enabled) cam.setViewOffset(gc.view.fullWidth, gc.view.fullHeight, gc.view.offsetX, gc.view.offsetY, gc.view.width, gc.view.height); else cam.clearViewOffset();
+    cam.updateProjectionMatrix(); cam.updateMatrixWorld();
+    this.ppu = H / (2 * Math.tan(cam.fov / 2 * DEG)) / (cam.position.length() / U);   // px per ring radius at the tile's centre
+    return this.ppu > 30;
+  }
 
   render(dt, W, H) {
-    const box = this.layoutBox; if (!box || !this.renderer) return;
+    if (!this.renderer) return;
     this.time += dt;
-    const f = ringFit(box); this.ppu = f.ppu; this.cx = f.cx; this.cy = f.cy;
-    const cam = this.cam, d = U * H / (2 * Math.tan(FOV / 2 * DEG) * f.ppu);
-    cam.aspect = W / H; cam.near = Math.max(0.05, d - 6 * U); cam.far = d + 6 * U;
-    cam.position.set(0, Math.sin(ELEV) * d, Math.cos(ELEV) * d); cam.up.set(0, 1, 0); cam.lookAt(0, 0, 0);
-    cam.setViewOffset(W, H, -(f.cx - W / 2), -(f.cy - H / 2), W, H);
-    cam.updateProjectionMatrix(); cam.updateMatrixWorld();
+    this.shown = this.frameCam(W, H);
+    if (this.box) this.box.style.visibility = this.shown ? '' : 'hidden';
+    const cam = this.cam;
     // the rings: a slow turn once the first arrive, or the swing to the chosen one
     for (const r of this.rings) {
       if (r.target != null) {
@@ -388,6 +414,7 @@ export class BodyRing {
       this.wisp.update(dt, this._v.copy(this.wispP).multiplyScalar(U), this.wispT * ww, true, Math.max(0.01, grow), 1, W_REST[0] + (1 - W_REST[0]) * k, lum, 1 + 0.7 * k);
     } else if (this.wisp.shown) this.wisp.update(dt, this._v.copy(this.wispP).multiplyScalar(U), 0, false, 1, 1);
     // drawn over the earth: the depth cleared, the renderer left as it was
+    if (!this.shown) return;
     const r = this.renderer, ac = r.autoClear;
     r.autoClear = false; r.clearDepth();
     r.render(this.scene, cam);
@@ -427,7 +454,7 @@ export class BodyRing {
     const dir = SPIN[it.ring.i] >= 0 ? 1 : -1, path = it.a + dir * Math.PI / 2;
     it.holder.rotation.y = path + wrapPi(it.a - path) * FACE_TURN * it.pick;
     if (it.kind === 'air') {
-      it.holder.position.y = Math.sin(this.time * 0.8 + it.phase) * 0.02;
+      it.holder.position.y = it.y + Math.sin(this.time * 0.8 + it.phase) * 0.02;
       it.inner.rotation.z = -dir * 0.16 * (1 - it.pick);   // banked into the turn
       if (it.flap) { it.anim.array[0] = (it.anim.array[0] + dt * TAU * BEAT) % TAU; it.anim.needsUpdate = true; }
     }
@@ -486,7 +513,7 @@ export class BodyRing {
   }
   // The code under a screen point (the nearest within its size, the nearer to the camera first), or null
   hit(x, y) {
-    if (!this.layoutBox) return null;
+    if (!this.shown) return null;
     let best = null, bd = Infinity;
     for (const code of ['spirit', ...this.items.keys()]) {
       const p = this.screenOf(code, true); if (!p) continue;

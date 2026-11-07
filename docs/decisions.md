@@ -7480,3 +7480,58 @@ beside them in it. docs/multiplayer.md "Bodies" has the whole of it.
   first that leaves 1.2 m clear of every crown. Checked: the joiner then stood in the open beside the friend.
 - **Phones.** The places list took half of a phone's width and the stage was a strip beside it: a chosen place now folds
   the list behind an All places button, and the rings and the title take the width.
+
+## 2026-11-07: the rings pinned to the tile, inside it (branch claude/rings-on-tile)
+
+Aaron, from El Dorado on v47: "lets have the avatar selector pinned to the tile. Relative to the tile in the attached view,
+the spirit avatar should be about half as big. The circle of animals should be "inside" the boundary of the tile. The
+smallest animals should have their size increased more". The rings had their own camera (34 degrees down, fitted to the
+stage) with the tile framed under them, so they spilled past the tile's orange square, did not move with it, and the
+spirit's glow covered much of it.
+
+- **The tile's frame, the earth's camera.** The rings now live in the tile's own frame (its centre on the unit sphere, x
+  east, y up, z south) and are drawn through the earth camera re-expressed in that frame (`frameCam`: its position and
+  rotation in the tile's basis, scaled to the rings' units; the same lens and view offset). Nothing about the rings is
+  placed in screen space any more, so they are registered to the tile through the zoom, a drag, a resize and the
+  sun's turn, and are not drawn when the tile is over the horizon or under 30 px a ring radius. Considered: adding the
+  rings to the earth's own scene. Rejected: at earth-radius units an animal is 1e-4 across and its detail falls below
+  float precision; the separate scene keeps the numbers near one.
+- **Inside the boundary.** The walkers' ring is 0.64 of the tile's half-width, the fliers' 0.95 of that and raised 0.38
+  of it, which keeps the back fliers inside the tile's far edge at the chosen view (about 49 degrees down); the tile is
+  framed in the whole stage, a little kept clear above for the back animals' heads.
+- **The spirit half as big** against the tile: the wisp is drawn at its own size in metres, so the rings' scale went to
+  2.2 m a ring radius on the smaller ring; its glow is now about a fifth of the tile across (it was nearly half).
+- **Two rows on a busy tile.** Inside the tile a single ring of 25 to 30 (Lamar, Corcovado) left each animal a sliver
+  of the circle, and the spacing cap shrank them to specks. A ring of more than 14 now stands in two staggered rows
+  (walkers at 1.16 and 0.8 of the ring's radius, fliers at 1.06 and 0.8 with the inner row a little higher), which
+  doubles each one's room; the choice still swings its ring to bring it to the front, and a walker's choice turns the
+  fliers' ring so a gap between two birds stands over it (a bird hid Corcovado's fer-de-lance at the front).
+- **The small ones bigger.** The largest side is `0.44 * max(0.56, (m / 2.2)^0.3)` ring radii, and a walker's visible size
+  (its height, or its plan for the flat ones seen from above: a vole, a lizard, a snake) is raised to 0.16, about 40% of
+  the deer's, as far as the ring's spacing lets its length grow.
+- **Checked** on El Dorado, Lamar and Corcovado (with its fer-de-lance, the snake on its own model) at 1440 x 900 and
+  390 x 844, against v47 (before/after in animal-rings-captures/ in the side-session notes): every ring inside the
+  tile's square, no errors, each place's models freed when it goes. Pinning, measured: the rings' origin and the tile's
+  centre on screen agree to the pixel after landing (680, 381), after a drift and a 1.6x zoom out (786, 440) and after
+  a resize to 1100 x 760 (600, 356). The rings' frame cost is unchanged (24 draw calls, 34,000 triangles, 0.6 ms of CPU
+  on El Dorado).
+
+## 2026-11-07: zooming away deselects the place (branch claude/rings-on-tile)
+
+Aaron: "If I zoom too far away from the selected tile, the tile becomes deselected and the button and animals and title
+fade away". Before this, nothing but another choice deselected a place: zoomed out to the whole earth, the rings, the
+title and Start stayed up for a tile a few pixels wide.
+
+- **When.** The chosen tile's drawn width (its two side midpoints on screen) under 14% of the free centre's width, held
+  350 ms. It counts only once the tile has been framed (30% or more: armed at landing), so the flight in from far away
+  never deselects, and hovering near the line cannot flicker: the deselect is one way. On El Dorado, framed at 18.7 km,
+  it falls between 125 and 175 km at 1440 x 900 and near 280 km on a phone (framed there at 30 km).
+- **What goes.** `unchoose()`: the rings beam out (fade out under reduced motion) and the spirit with them, the bar fades
+  with the place's title, Invite and Start in it (its `.on` goes, the CSS transition), the tile's outline, row and label go
+  back to ordinary places, the relief model fades, a phone's folded list comes back, the group is told no body is chosen
+  (`body {tile: null}`), and the world built behind the screen is let go (main.js `onDeselect` -> `dropWorld`, the same
+  teardown a second choice does). Zooming back in chooses nothing; the row, label or dot chooses it again, flight and
+  rings and world as before.
+- **Checked** in headless Chrome on El Dorado at 1440 x 900, at 390 x 844 and under reduced motion: deselected on the way
+  out with no errors, the world gone (`__weWorld()` null), nothing chosen after zooming back in to 29 km, chosen again from
+  its row (rings, title and world back). Not checked: a signed-in group member watching the body mark go.

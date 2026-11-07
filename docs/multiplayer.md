@@ -796,8 +796,9 @@ that needs no question, Start beside a member), `client/src/main.js` (`takeBody`
 at)`), `client/src/animals.js` (`summon(..., at)`), `tests/test_hub.py` (`test_bodies`).
 
 - **The layout.** The chosen place's card over its north edge and its label on the map are gone. The stage is the free
-  centre between the panels, under the risen title and above the bar; the rings fill it and the tile is framed inside
-  the walkers' ring (`focusArea` from `ringEllipse`), so the animals stand round its edges and the fliers turn over it.
+  centre between the panels, under the risen title and above the bar; the tile is framed in it, a little kept clear
+  above for the back animals (`focusArea`), and the rings stand inside the tile (below; "pinned to the tile" since
+  2026-11-07, Aaron: "lets have the avatar selector pinned to the tile").
   The bar now opens with the place's title: the name (30 px) and its players' pill, the Indigenous territories, "As the
   spirit" / "As a black-tailed deer · beside Juno", and the players there and coming (their list opens upward). Map
   labels are kept out of the rings' space and out from under the stage. At a phone's width a chosen place takes the
@@ -807,11 +808,21 @@ at)`), `client/src/animals.js` (`summon(..., at)`), `tests/test_hub.py` (`test_b
   slots on a kin with a body, their own model when they have one): the walkers on one ring, the fliers on a wider one
   above it, the spirit (the live wisp, chasing its tail) in the middle, bigger, chosen at first. Each animal is the
   client's own model drawn live with the opening stills' pose and light (walkers standing, fliers on the wing, beating),
-  on a compressed true scale (the largest side `0.3 * min(1, m / 2.2)^0.4` ring radii, within the ring's spacing). The
+  on a compressed scale (the largest side `0.44 * max(0.56, min(1, m / 2.2)^0.3)` ring radii, and a walker's height or
+  plan at least 0.16, about 40% of the deer's, as far as the ring's spacing lets it grow: a squirrel or a jay about half
+  a deer). **Pinned to the tile**: the rings live in the tile's own frame (its centre on the earth, east, up, south) and
+  are drawn through the earth camera expressed in that frame, so they stay registered to the tile through the zoom, a
+  drag and a resize, and vanish with it over the horizon. The walkers' ring is 0.64 of the tile's half-width, the
+  fliers' 0.95 of that and raised 0.38, so both stand inside the tile's square as the camera sees it (a ring of more
+  than 14 stands in two staggered rows, so the busy tiles' animals keep their size); the spirit is
+  about a fifth of the tile across (half its share before). The
   models load during the flight to the place, behind the world's heavy steps (four at once; each compiled with `compileAsync` before it is drawn) and pop
   in when it lands, in a random order a short gap apart, with the old lineup's arrival in 3D: a beam of the species' soul
   colour, a white flash and a spring to full size; a new place beams the old ones out. The rings then turn slowly, the
   walkers one way and the fliers the other.
+- **Zooming away deselects** (2026-11-07): the chosen tile drawn under 14% of the free centre's width (once framed, held
+  350 ms) unchooses the place: the rings, the spirit, the title, Invite and Start fade together, the tile is an ordinary
+  place again, its world is let go and the group hears `body {tile: null}`. Zooming back in chooses nothing.
 - **Choosing.** A click on an animal (or the spirit) chooses it: its ring swings it to the front on a critically damped
   spring and holds it there, turned partly toward the camera, a halo under it; the other ring keeps turning. Hovering
   names the animal. Signed out the rings show but nothing is chosen: hovering or tapping an animal shows "Log in or sign
