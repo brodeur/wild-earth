@@ -7379,6 +7379,14 @@ glottal stop is itself drawn like a question mark without its dot, so at 12 px i
   rule stays. Top-down ΔE 0.000 Lamar, 0.013 Teton; cost nil (A/B). Open: the eye-level check against a photo of sunlit
   sage; a sage block renders at 0.74 of a grass block because the ground under sage cells is 0.68 as bright as the
   grass block's ground.
+- **Sage's eye-level colour checked against a photograph: no change** (library/species/artemisia_tridentata.json
+  `albedo_calibration.from`). Reference: "2014-06-28 11 25 56 Big sagebrush ... near Elko, Nevada.JPG", Famartin, CC BY-SA
+  3.0 (Wikimedia Commons; direct midday sun; downloaded on Aaron's approval, git-ignored cache, not served). Sunlit
+  leaves (top 10 % of foliage) chromaticity r,g 0.347-0.354, 0.370-0.372 in the photo against 0.344-0.350, 0.380-0.386
+  rendered at k 0.8 (five poses, sage pixels only); sunlit/shaded ratio 4.1-6.4 photo, 3.6-4.2 render. The silver is
+  real: sunlit big sage is pale silvery grey-green; the silver-white earlier was the doubled sun term. No sheen in the
+  photo or the model. The render's lower contrast is left (likely a denser real crown than the judged porosity 0.3, or the
+  phone's tone curve). The second photo (Mono Lake, CC BY-SA 4.0) was overcast with old flower stalks; not used.
 
 ## 2026-11-06: snakes are playable; the body follows the head's path (branch claude/snake-play)
 
