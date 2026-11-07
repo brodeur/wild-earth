@@ -15,7 +15,7 @@
   44.9171452371748
  ],
  "size_m": 10000,
- "generated_at": "2026-11-07T17:20:52Z",
+ "generated_at": "2026-11-07T17:38:08Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -5458,7 +5458,7 @@
    "kind": "table",
    "source": "gbif",
    "count": 61,
-   "present": 30,
+   "present": 31,
    "absent": [
     "urocyon_cinereoargenteus",
     "sciurus_griseus",
@@ -5469,7 +5469,6 @@
     "sylvilagus_bachmani",
     "lepus_californicus",
     "microtus_californicus",
-    "puma_concolor",
     "otospermophilus_beecheyi",
     "sceloporus_occidentalis",
     "tamiasciurus_douglasii",
@@ -5492,8 +5491,8 @@
     "sorex_monticolus",
     "rana_cascadae"
    ],
-   "sha256": "848e86dc977e99564ff071081d9a00b352eeb8c88c74dc015f5437895690b85b",
-   "bytes": 41730
+   "sha256": "2eed330855ecd391ce00636460fc7ce06f370e5a178671e7623aa02882751a09",
+   "bytes": 43009
   },
   "species.occurrences": {
    "path": "species/occurrences.geojson",
@@ -5523,8 +5522,8 @@
   "perception": {
    "path": "perception.json",
    "kind": "table",
-   "sha256": "6aaa66ac256504dae0e98cdae19626de0632481cef18854401178add089ce5db",
-   "bytes": 140619
+   "sha256": "046ec09de01dd039cbbe1e3e5007d98cac3c5ec713ee28547e6e29e6d4967055",
+   "bytes": 141541
   },
   "calendar": {
    "path": "calendar.json",
@@ -5610,14 +5609,14 @@
     "gbif",
     "eltontraits"
    ],
-   "listed": 82,
+   "listed": 83,
    "predators": 25,
    "scavengers": 12,
    "generated_traits": 0,
    "queued": 51,
    "queued_credits": 1515,
-   "sha256": "1d9d0631630bbe3bc4c6a775f2cf3a51bcc5e3b5b617b34808316ae4a86d66b5",
-   "bytes": 117701
+   "sha256": "89f451183effbe0020988910a6853547c9c0cf25e7fc7fb9b3906de943971b0c",
+   "bytes": 117915
   },
   "client.fauna": {
    "path": "client/fauna.json",
@@ -5626,7 +5625,7 @@
     "species.animals",
     "species.presence"
    ],
-   "allow": 31,
+   "allow": 32,
    "slots": 43,
    "skipped": 8,
    "stand_ins": {
@@ -5637,14 +5636,14 @@
     "ovis_canadensis": "odocoileus_hemionus",
     "alces_alces": "cervus_canadensis",
     "taxidea_taxus": "urocyon_cinereoargenteus",
-    "urocitellus_armatus": "sciurus_griseus",
+    "urocitellus_armatus": "otospermophilus_beecheyi",
     "vulpes_vulpes": "urocyon_cinereoargenteus",
     "oreamnos_americanus": "odocoileus_hemionus",
     "castor_canadensis": "otospermophilus_beecheyi",
     "marmota_flaviventris": "otospermophilus_beecheyi"
    },
-   "sha256": "e9474b5c30bf9a9b543f17d64f7e0a65c19420762f731be864aba76730a56a42",
-   "bytes": 41679
+   "sha256": "cfa953d8850e3c369fcf6994a6e1ec1ddea2e5e268169e6d630382c91e1ec30a",
+   "bytes": 42772
   },
   "fauna.stills": {
    "path": "fauna/stills.json",
@@ -8223,6 +8222,24 @@
    "at": "2026-11-07T17:20:52Z",
    "seconds": 91.0,
    "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-07T17:34:32Z",
+   "seconds": 0.8,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-11-07T17:38:07Z",
+   "seconds": 2.3,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-07T17:38:08Z",
+   "seconds": 0.6,
+   "ok": true
   }
  ],
  "steps": {
@@ -9444,26 +9461,26 @@
   },
   "species": {
    "version": "1",
-   "code": "b194b5a517c90dcd",
+   "code": "348c8d8fad9668bb",
    "params": {
     "tile": "utm12n_557_4964"
    },
-   "fingerprint": "396778f0ac0b659e",
+   "fingerprint": "1c6e08977741305d",
    "parts": {
     "version": "1",
-    "code": "b194b5a517c90dcd",
+    "code": "348c8d8fad9668bb",
     "params": {
      "tile": "utm12n_557_4964"
     },
     "deps": {
-     "dem": "d46850cecda382ba",
+     "dem": "ef8c2547cea938fb",
      "landcover": "4ac33fbbad12a935"
     },
     "library": {
-     "library/animals": "da8a23e64dd70994"
+     "library/animals": "997e0be94296d338"
     }
    },
-   "ran_at": "2026-11-07T03:14:20Z",
+   "ran_at": "2026-11-07T17:38:05Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -9480,13 +9497,13 @@
     "calendar.json": "ca0a24deb25829d0",
     "client/species_prior.json": "c637de5ac9aa9d4d",
     "locomotion.json": "4dc58f00c0726431",
-    "perception.json": "6aaa66ac256504da",
+    "perception.json": "046ec09de01dd039",
     "species/inventory.json": "9ebd3a24fdf3e14a",
-    "species/species.json": "848e86dc977e9956",
+    "species/species.json": "2eed330855ecd391",
     "species/occurrences.geojson": "11bf55fb4b3a5de3",
     "species/seasonal.json": "126cc75bfd7814fd"
    },
-   "out_hash": "a3d86215f02a443f",
+   "out_hash": "4df349998621b6ac",
    "sources": {
     "gbif": "2026-11-07"
    },
@@ -9494,33 +9511,33 @@
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 346
+    "cache": 347
    },
-   "seconds": 1.1
+   "seconds": 2.3
   },
   "animals": {
-   "version": "5",
-   "code": "25f101a831ba9e37",
+   "version": "6",
+   "code": "44d9ac426df2f7b6",
    "params": {
     "tile": "utm12n_557_4964"
    },
-   "fingerprint": "8a5bd76614ee9fae",
+   "fingerprint": "a8d5f672e5fdaae7",
    "parts": {
-    "version": "5",
-    "code": "25f101a831ba9e37",
+    "version": "6",
+    "code": "44d9ac426df2f7b6",
     "params": {
      "tile": "utm12n_557_4964"
     },
     "deps": {
-     "species": "a3d86215f02a443f",
-     "plants": "0fda20dcb2899461"
+     "species": "4df349998621b6ac",
+     "plants": "69b6f49c83c118ca"
     },
     "library": {
-     "library/animals": "da8a23e64dd70994",
+     "library/animals": "997e0be94296d338",
      "data/eltontraits": "e3b0c44298fc1c14"
     }
    },
-   "ran_at": "2026-11-07T03:32:05Z",
+   "ran_at": "2026-11-07T17:38:07Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -9528,10 +9545,10 @@
     "species.animals"
    ],
    "outputs": {
-    "client/fauna.json": "e9474b5c30bf9a9b",
-    "species/animals.json": "1d9d0631630bbe3b"
+    "client/fauna.json": "cfa953d8850e3c36",
+    "species/animals.json": "89f451183effbe00"
    },
-   "out_hash": "e085c7a03a236b3e",
+   "out_hash": "033cec71bbcf9e4f",
    "sources": {
     "gbif": "2026-11-07",
     "eltontraits": "2026-11-06"
@@ -9540,9 +9557,9 @@
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 202
+    "cache": 203
    },
-   "seconds": 0.7
+   "seconds": 0.6
   },
   "stills": {
    "version": "1",

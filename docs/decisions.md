@@ -7805,7 +7805,24 @@ or AVONET row, not a per-species patch.
   - Species and animals then ran on the Hoh, Mount Olympus, both San Francisco cells, Calaveras, both Yosemite tiles,
     Cosumnes and Placerville. Each is now gated.
   - The Hoh keeps 47 of the 61 of the fixed cast, cougar included, and drops the 14 foothill species.
-  - Lamar and home follow after the road lane's rebuild.
+  - Lamar and home, after the road lane's rebuild:
+    - Lamar `utm12n_557_4964`: species and animals. Six slots change and the other 37 stay as they were:
+      - the Uinta ground squirrel to a ground colony;
+      - the least chipmunk to a small rodent;
+      - the black-billed magpie to a walking corvid;
+      - the golden eagle to a soaring raptor;
+      - the spotted sandpiper to a shorebird;
+      - Clark's nutcracker to a perching bird on the Steller's jay.
+    - The widened search puts the cougar on Lamar (3 records within 23 km, against 1 within 10 km), so it keeps 32 of
+      the fixed cast.
+    - Home `utm10n_680_4280`: species and animals, its first fauna list. It keeps 46 of the fixed cast: the foothill
+      cast, the cougar (27 records within 23 km) and the black bear.
+    - It drops 15: the Hoh's and the high country's species (elk, Douglas squirrel, gray jay, barred owl, snowshoe
+      hare, the chipmunks, the salamander, the banana slug, the grouse, the marmot, two gulls, the shrew, the Cascades
+      frog).
+    - It gains 40 slots, among them a fox squirrel, a skunk, Heermann's kangaroo rat, five raptors (the golden eagle a
+      raptor), three herons and egrets, the yellow-billed magpie (walking corvid), and three amphibians and three
+      reptiles.
 - **Seen on the way (not changed).** The brown pelican is a gull, and the American white pelican a waterbird with no
   `water` flag (Pelecanidae is not in `WATER_FAMILIES`).
 - **Checked.** `tests/test_pipeline.py` (TestBirdKin: raptors and scavengers, corvids, shorebirds; TestSquirrels;

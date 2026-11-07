@@ -485,19 +485,28 @@
   },
   "species": {
    "stage": "fauna",
-   "started_at": "2026-11-07T03:14:20Z",
-   "ended_at": "2026-11-07T03:14:21Z",
-   "wall_s": 1.1,
-   "cpu_self_s": 1.0,
+   "started_at": "2026-11-07T17:38:05Z",
+   "ended_at": "2026-11-07T17:38:07Z",
+   "wall_s": 2.3,
+   "cpu_self_s": 1.2,
    "cpu_children_s": 0.0,
-   "downloads": {},
+   "downloads": {
+    "gbif": {
+     "bytes": 78,
+     "requests": 1
+    }
+   },
    "cache": {
     "gbif": {
      "hits": 346,
      "misses": 0
+    },
+    "eltontraits": {
+     "hits": 1,
+     "misses": 0
     }
    },
-   "disk_bytes": 3510264,
+   "disk_bytes": 3512465,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -507,19 +516,19 @@
   },
   "animals": {
    "stage": "fauna",
-   "started_at": "2026-11-07T03:32:05Z",
-   "ended_at": "2026-11-07T03:32:05Z",
-   "wall_s": 0.7,
-   "cpu_self_s": 0.7,
+   "started_at": "2026-11-07T17:38:07Z",
+   "ended_at": "2026-11-07T17:38:08Z",
+   "wall_s": 0.6,
+   "cpu_self_s": 0.6,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {
     "gbif": {
-     "hits": 197,
+     "hits": 199,
      "misses": 0
     },
     "eltontraits": {
-     "hits": 3,
+     "hits": 2,
      "misses": 0
     },
     "ndownloader.figshare.com": {
@@ -527,7 +536,7 @@
      "misses": 0
     }
    },
-   "disk_bytes": 159380,
+   "disk_bytes": 160687,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -768,14 +777,14 @@
    "meshy_queued_credits_est": 0
   },
   "fauna": {
-   "started_at": "2026-11-07T07:23:20Z",
-   "ended_at": "2026-11-07T07:23:31Z",
-   "wall_s": 13.6,
-   "cpu_s": 13.4,
-   "download_bytes": 0,
-   "cache_hits": 549,
+   "started_at": "2026-11-07T17:38:05Z",
+   "ended_at": "2026-11-07T17:38:08Z",
+   "wall_s": 14.7,
+   "cpu_s": 13.5,
+   "download_bytes": 78,
+   "cache_hits": 551,
    "cache_misses": 0,
-   "disk_bytes": 3695097,
+   "disk_bytes": 3698605,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -793,95 +802,6 @@
   }
  },
  "runs": [
-  {
-   "started_at": "2026-11-06T13:46:03Z",
-   "stages": [
-    {
-     "stage": "base",
-     "started_at": "2026-11-06T13:46:03Z",
-     "steps_run": [],
-     "steps_skipped": [
-      "dem",
-      "naip",
-      "osm",
-      "hydro",
-      "channels",
-      "rewild_hydro",
-      "landcover",
-      "ice",
-      "lidar",
-      "reroute",
-      "water",
-      "ground",
-      "terrain",
-      "erase",
-      "substrate",
-      "seasons",
-      "weather",
-      "unreal",
-      "seams"
-     ],
-     "ended_at": "2026-11-06T13:46:03Z"
-    },
-    {
-     "stage": "flora",
-     "started_at": "2026-11-06T13:46:03Z",
-     "steps_run": [
-      "crowns",
-      "inpaint"
-     ],
-     "steps_skipped": [
-      "plants",
-      "species_mix",
-      "canopy_top"
-     ],
-     "ended_at": "2026-11-06T13:48:30Z"
-    },
-    {
-     "stage": "fauna",
-     "started_at": "2026-11-06T13:48:30Z",
-     "steps_run": [
-      "species",
-      "animals",
-      "stills",
-      "resources"
-     ],
-     "steps_skipped": [],
-     "ended_at": "2026-11-06T13:52:48Z"
-    },
-    {
-     "stage": "games",
-     "started_at": "2026-11-06T13:52:48Z",
-     "steps_run": [
-      "games",
-      "game_seeds",
-      "registry",
-      "audit"
-     ],
-     "steps_skipped": [],
-     "ended_at": "2026-11-06T13:52:49Z"
-    }
-   ],
-   "ended_at": "2026-11-06T13:52:49Z",
-   "failed": []
-  },
-  {
-   "started_at": "2026-11-06T14:11:53Z",
-   "stages": [
-    {
-     "stage": "fauna",
-     "started_at": "2026-11-06T14:11:53Z",
-     "steps_run": [
-      "species",
-      "animals"
-     ],
-     "steps_skipped": [],
-     "ended_at": "2026-11-06T14:11:58Z"
-    }
-   ],
-   "ended_at": "2026-11-06T14:11:58Z",
-   "failed": []
-  },
   {
    "started_at": "2026-11-06T14:24:54Z",
    "stages": [
@@ -2305,21 +2225,56 @@
    "ended_at": "2026-11-07T17:20:52Z",
    "failed": [],
    "refused": []
+  },
+  {
+   "started_at": "2026-11-07T17:34:31Z",
+   "stages": [
+    {
+     "stage": "fauna",
+     "started_at": "2026-11-07T17:34:31Z",
+     "steps_run": [
+      "animals"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T17:34:32Z"
+    }
+   ],
+   "ended_at": "2026-11-07T17:34:32Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T17:38:05Z",
+   "stages": [
+    {
+     "stage": "fauna",
+     "started_at": "2026-11-07T17:38:05Z",
+     "steps_run": [
+      "species",
+      "animals"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T17:38:08Z"
+    }
+   ],
+   "ended_at": "2026-11-07T17:38:08Z",
+   "failed": [],
+   "refused": []
   }
  ],
  "totals": {
-  "wall_s": 751.8,
-  "cpu_s": 408.2,
-  "download_bytes": 10501309,
-  "cache_hits": 3517,
+  "wall_s": 752.9,
+  "cpu_s": 408.3,
+  "download_bytes": 10501387,
+  "cache_hits": 3519,
   "cache_misses": 2,
-  "disk_bytes": 940531483,
+  "disk_bytes": 940534991,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 1515
  },
- "updated_at": "2026-11-07T17:20:52Z",
+ "updated_at": "2026-11-07T17:38:08Z",
  "client": {
-  "bytes": 60284340,
+  "bytes": 60287913,
   "files": 57,
   "largest": {
    "client/lidar_micro.png": 12621596,
