@@ -921,8 +921,10 @@ class HubConn(WsConn):
             raise HubError(400, "scope must be group or tile", "scope")
 
     def m_place(self, m: dict) -> None:
-        """{tile, group?, to?, point?}: the invite goes to a group's members, to named people (`to`: friends or
-        fellow group members, the home screen's Invite), or both; with neither, to the sender's one group."""
+        """{tile, group?, to?, point?, follow?}: the invite goes to a group's members, to named people (`to`: friends or
+        fellow group members, the home screen's Invite), or both; with neither, to the sender's one group. follow: the
+        sender pressed Start and is going in now (group follow): the invite says so and goes only to those online, since
+        a joiner enters behind the sender at once; `placed` counts only them."""
         h, me = self.hub, self.uid
         tile = m.get("tile")
         if not tile_built(tile):
@@ -949,19 +951,24 @@ class HubConn(WsConn):
                 gid = gs[0]
             self._group(gid)
             to |= {u for u in h.comembers(me, gid) if not h.blocked(me, u)}
+        follow = m.get("follow") is True
+        if follow:
+            to = {u for u in to if h.conns.get(u)}
         iid = secrets.token_hex(8)
         season = season_now(tile)
         h.invites[iid] = {"from": me, "to": to, "at": time.time()}   # memory only, and no tile kept
         msg = {"t": "invite", "id": iid, "from": me, "tile": tile, "season": season}
         if gid is not None:
             msg["group"] = gid
+        if follow:
+            msg["follow"] = True
         point = m.get("point")   # the picker's planned arrival, tile-local {x, north}: relayed to the joiners, never kept
         if isinstance(point, dict):
             msg["point"] = {k: _coord(point.get(k), k) for k in ("x", "north")}
         for u in to:
             h.to_user(u, msg)
         self.send({"t": "placed", "id": iid, "tile": tile, "season": season, "to": len(to),
-                   **({"point": msg["point"]} if "point" in msg else {})})
+                   **({"point": msg["point"]} if "point" in msg else {}), **({"follow": True} if follow else {})})
 
     def m_answer(self, m: dict) -> None:
         h, me = self.hub, self.uid

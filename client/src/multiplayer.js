@@ -4,6 +4,7 @@ import { Social, avatarFor } from './social.js';
 import { Chat } from './chat.js';
 import { NF } from './animalNet.js';
 import { Voice } from './voice.js';
+import { FollowToast, FollowVeil } from './follow.js';
 
 // The social screen's hookup (docs/multiplayer.md, lanes 3 and 4): one object main.js makes beside the title screen. It
 // owns the page's Hub (hub.js) for the page's life, gives the title screen the hub to ask for config, me and the counts
@@ -39,8 +40,20 @@ import { Voice } from './voice.js';
 // With ?hub=stub (the title screen's own verification) nothing here is mounted: the title makes the stub itself and
 // signs in by itself. The dev paths (?skip=1, ?game=1, ?as=) never make this object.
 //
+// Group follow (Aaron, 2026-11-06; docs/multiplayer.md "Group follow"; the toast and the veil are follow.js): a player in
+// a group who presses Start on the home screen asks the group's online members to join them (`place` with follow; not a
+// joiner's own Start). Each gets the invitation (FollowToast: Join, Decline, gone after followMs). Join fades the screen
+// to black (FollowVeil), the inviter's tile is built in place of whatever the joiner has (main.js followTile: the home
+// screen closed, or the world played torn down, as a tile switch does), the bar following the build's steps (step());
+// the world is entered with no arrival flight, and the hub's room join brings the inviter's last relayed position, from
+// which the joiner is put behind them facing the same way (main.js place, arrival.js plan's follow): 6 m above and 10 m
+// back when the inviter is a spirit or a flier, on the ground 6 m back when a ground animal. With no position within
+// LEAD_WAIT_MS, behind the inviter's planned arrival. Then the veil fades out. A joiner already in the inviter's tile is
+// only moved. Nothing is kept: the position is the relay's, used once.
+//
 // Debugging, on window.__weMp: showInvite({id, from, tile, point}) shows the dialog as the hub's invite would;
-// answer(true | false) presses Join or Not now; invite is the one showing; chose(tileId, point) asks the group along;
+// answer(true | false) presses Join or Not now; placed is the last group follow's placement (the inviter's pose, ground or
+// air, and where the joiner was put); toast and veil are the follow invitation and the Join's veil (follow.js); invite is the one showing; chose(tileId, point) asks the group along;
 // poses holds the last position relayed per member; room the world entered (its lead and follow while arriving);
 // fake(id, {x, y, z, yaw, form}) feeds a position as the hub's relay would (a test user drawn in the world, on the map
 // and at the edge); fakes(n, r) runs n fake members circling the player at r m at 5 Hz (fakes(0) stops them), for the
@@ -49,6 +62,7 @@ import { Voice } from './voice.js';
 const html = document.documentElement;
 const POS_MS = 200;             // the position relay: 5 Hz, the doc's rate
 const INVITE_MS = 60000;        // the dialog's life (the hub keeps the invite a little longer, so a late Join lands)
+const LEAD_WAIT_MS = 6000;       // group follow: how long the veil waits for the inviter's position before the planned point
 const FOLLOW_WINDOW_S = 2.5;    // a joiner's arrival turns to follow the picker when the picker's position comes within this long of its start
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 const r2 = v => Math.round(v * 100) / 100, r3 = v => Math.round(v * 1000) / 1000;
@@ -72,6 +86,11 @@ export class Multiplayer {
     this.unseen = false;     // an answer came while the chat was hidden (arriving or switching): the pane is shown again after
     this.asked = new Map();  // tile id -> Map(user id -> 'asked' | 'join' | 'no'): whom this player invited there (this page only)
     this.pickEl = null;      // the invite picker (the home screen's Invite)
+    this.followMs = INVITE_MS;   // group follow: the invitation's life
+    this.toast = null;       // the follow invitation showing (follow.js FollowToast), with .inv the hub's invite
+    this.veil = null;        // the black veil and loading bar of a Join (follow.js FollowVeil)
+    this.following = null;   // { from, tile, point, name } from a follow Join until its world is entered
+    this.followTile = null;  // main.js: (tileId, xy, lead) builds the tile in place of the home screen or the world, entered as a follow
     // the way back from Discord (hub.py sends the browser to /client/?signin=discord or ?signin=failed): remembered for
     // the modal and taken off the URL, signed in or not
     const u = new URL(location.href); this.back = u.searchParams.get('signin');
@@ -95,6 +114,7 @@ export class Multiplayer {
     title.onBegin = c => {
       const j = this.joining;
       if (j && c.tileId === j.tile) { c.point = j.point || c.point; c.lead = j.from; }   // the arrival behind the picker (main.js enterWorld)
+      else this.askFollow(c.tileId, c.point || null);   // Start: the group is asked to follow (group follow)
       this.joining = null;
       onBegin?.(c);
     };
@@ -119,8 +139,11 @@ export class Multiplayer {
     const $ = id => document.getElementById(id);
     this.voice = new Voice({ hub: this.hub, row: { mic: $('micBtn'), cam: $('camBtn'), self: $('selfView') }, onRow: this.layoutFn });
     const hub = this.hub;
-    hub.on('invite', d => this.showInvite(d));
-    hub.on('placed', d => this.chat?.system(d.to ? `asked ${d.to} ${d.to === 1 ? 'person' : 'people'} to come to ${placeName(d.tile) || d.tile}` : 'no one else to ask along'));
+    hub.on('invite', d => (d.follow ? this.showFollow(d) : this.showInvite(d)));
+    hub.on('placed', d => {
+      if (d.follow) { if (d.to) { this.chat?.system(`asked ${d.to} ${d.to === 1 ? 'person' : 'people'} in your group to join you at ${placeName(d.tile) || d.tile}`); this.unseen = true; } return; }
+      this.chat?.system(d.to ? `asked ${d.to} ${d.to === 1 ? 'person' : 'people'} to come to ${placeName(d.tile) || d.tile}` : 'no one else to ask along');
+    });
     hub.on('answer', d => {
       this.chat?.system(`${this.social.nameOf(d.from)} ${d.join ? 'joined' : 'declined'}`); this.unseen = true;
       for (const m of this.asked.values()) if (m.has(d.from)) m.set(d.from, d.join ? 'join' : 'no');
@@ -176,6 +199,7 @@ export class Multiplayer {
     this.layout();
   }
   closeInvite() {
+    this.toast?.close(); this.toast = null;
     clearTimeout(this.inviteT); this.inviteT = null;
     const el = this.inviteEl; this.inviteEl = null; this.invite = null;
     if (el) { el.classList.remove('on'); setTimeout(() => el.remove(), 400); }
@@ -198,6 +222,81 @@ export class Multiplayer {
       title.refreshPeople?.();
     } else if (this.switchTile) this.switchTile(inv.tile, inv.point, inv.from);
     return true;
+  }
+
+  // ---- group follow ----------------------------------------------------------------------------------------------------
+  // Start pressed on the home screen: the group (the chat's, else the first with anyone else in it) is asked to follow.
+  askFollow(tileId, point = null) {
+    const hub = this.hub, me = hub?.you?.id; if (!hub || !tileId) return false;
+    const others = g => g?.members?.some(m => m.id !== me);
+    const cur = this.chat?.currentGroup(), group = others(hub.groups.find(g => g.id === cur)) ? cur : hub.groups.find(others)?.id;
+    return group ? hub.place(tileId, group, point, null, true) : false;
+  }
+  // The hub's invite with follow: the toast. A newer one replaces an older unanswered one; none while a Join is loading.
+  showFollow(d) {
+    if (!this.social || !d?.tile || d.from === this.hub?.you?.id || this.veil?.active) return;
+    this.closeInvite();
+    const name = this.social.nameOf(d.from), place = this.placeName(d.tile) || d.tile;
+    const inv = { id: d.id, from: d.from, group: d.group || null, tile: d.tile, point: d.point || null, name, place };
+    const t = this.toast = new FollowToast({ from: d.from, name, place, ms: this.followMs,
+      onJoin: () => { this.toast = null; this.hub?.answer(inv.id, true); this.follow(inv); },
+      onDecline: () => { this.toast = null; this.hub?.answer(inv.id, false); },
+      onExpire: () => { if (this.toast === t) this.toast = null; } });
+    t.inv = inv;
+    this.layout();
+  }
+  // Join: to black, build the inviter's tile (or, already there, only move), then behind the inviter (entered, gotPos).
+  async follow(inv) {
+    const veil = this.veil ||= new FollowVeil();
+    this.closePick();
+    const f = this.following = { from: inv.from, tile: inv.tile, point: inv.point, name: inv.name };
+    await veil.show(inv.name, inv.place);
+    if (this.following !== f) return;
+    if (this.room?.tileId === inv.tile && this.room.place) {   // already in the inviter's tile: no build, only the move
+      this.following = null; veil.ready();
+      this.awaitLead(f.from, this.poses.get(f.from));
+      return;
+    }
+    if (!this.followTile) { this.following = null; veil.fail('could not load the place'); return; }
+    veil.step('loadTile'); veil.status('loading the place');
+    let w = null;
+    try { w = await this.followTile(inv.tile, inv.point, inv.from); } catch (e) { console.error(e); }
+    if (this.following === f) { this.following = null; veil.fail(`could not load ${inv.place}`); }   // overtaken or failed: never entered
+    return w;
+  }
+  // main.js buildSteps: the build's steps and words, for the veil's bar while a Join loads.
+  step(tileId, name) { if (this.following && this.veil?.active) this.veil.step(name); }
+  buildStatus(tileId, text) { if (this.following && this.veil?.active && text) this.veil.status(text.replace(/…$/, '')); }
+  // Entered (or already in the tile): wait for the inviter's position, put the joiner behind them, lift the veil.
+  awaitLead(lead, pose = null) {
+    const r = this.room; if (!r?.place) { this.veil?.done(0); return; }
+    clearTimeout(r.leadT);
+    r.waitLead = lead;
+    if (pose) { this.placeBehind(pose); return; }
+    this.veil?.status(`finding ${this.social?.nameOf(lead) || 'them'}`);
+    r.leadT = setTimeout(() => {
+      if (this.room !== r || r.waitLead !== lead) return;
+      r.waitLead = null; r.place(null);   // no position: behind the inviter's planned arrival
+      this.liftVeil();
+    }, LEAD_WAIT_MS);
+  }
+  placeBehind(d) {
+    const r = this.room; if (!r?.place) return;
+    clearTimeout(r.leadT); r.waitLead = null;
+    const ground = !!d.form && d.form !== 'spirit' && r.kind?.(d.form) === 'ground';
+    r.place({ x: d.x, y: d.y, z: d.z, yaw: d.yaw || 0, ground });
+    const P = r.flight?.pos;   // debugging: the inviter's pose used and where the joiner was put
+    this.placed = { lead: { x: d.x, y: d.y, z: d.z, yaw: d.yaw || 0, form: d.form || 'spirit' }, ground, me: P ? { x: r2(P.x), y: r2(P.y), z: r2(P.z), yaw: r2(r.flight.yaw) } : null };
+    this.liftVeil();
+  }
+  // a few frames drawn behind the black (the ground around the new place streams in) before the veil fades
+  liftVeil() {
+    const veil = this.veil; if (!veil?.active) return;
+    veil.status('');
+    let n = 0; const t0 = performance.now();
+    const go = () => { if (++n >= 3 && performance.now() - t0 > 700) { veil.done(); return; } setTimeout(go, 120); };
+    requestAnimationFrame(() => setTimeout(go, 120));
+    setTimeout(() => { if (veil.active && !veil.el?.classList.contains('out')) veil.done(0); }, 4000);   // a hidden page draws no frames
   }
 
   // ---- the home screen's Invite ----------------------------------------------------------------------------------------
@@ -282,14 +381,18 @@ export class Multiplayer {
     this.chat?.setRoom();
     this.closePick();
     if (!this.entered1) { this.entered1 = true; this.social?.setOpen(false); }   // the home screen's open panel closes in the world
-    this.room = { tileId, flight: world?.flight || null, arrival: world?.arrival || null, form: world?.form || null, body: world?.body || null, caption: world?.caption || null, lead: world?.lead || null, follow: null, players: world?.players || null };
+    this.room = { tileId, flight: world?.flight || null, arrival: world?.arrival || null, form: world?.form || null, body: world?.body || null, caption: world?.caption || null, lead: world?.lead || null, follow: null, players: world?.players || null,
+      place: world?.place || null, kind: world?.kind || null, waitLead: null, leadT: 0 };
     if (this.room.players && this.social) this.room.players.nameOf = id => this.social.nameOf(id);
     this.voice?.setRoom({ players: this.room.players, sound: world?.sound || null });
     if (this.room.flight) this.posTimer = setInterval(() => this.sendPos(), POS_MS);
+    const f = this.following;   // a follow Join's world: behind the inviter once their position comes (the room join brings it)
+    if (f && f.tile === tileId && world?.follow) { this.following = null; this.room.lead = null; this.veil?.ready(); this.awaitLead(f.from); }
   }
   // The world is left (a tile switch): out of the room until the next world's entry; the positions held go.
   left(tell = true) {
     clearInterval(this.posTimer); this.posTimer = null; this.fakes(0);
+    clearTimeout(this.room?.leadT);
     this.room?.players?.clear();
     this.voice?.setRoom(null);
     this.room = null; this.poses.clear();
@@ -308,6 +411,7 @@ export class Multiplayer {
     const r = this.room; if (!r) return;
     this.voice?.seen(d.user);
     r.players?.sample(d);
+    if (r.waitLead && d.user === r.waitLead) { this.placeBehind(d); return; }   // group follow: behind the inviter
     if (!r.lead || d.user !== r.lead) return;
     const a = r.arrival; if (!a) { r.lead = null; return; }
     if (!a.active) { r.lead = null; r.follow = null; return; }   // arrived: free
@@ -369,11 +473,12 @@ export class Multiplayer {
     const game = document.getElementById('game');
     if (inWorld && game && !game.classList.contains('hidden')) top = Math.round(game.getBoundingClientRect().bottom + 8);
     if (this.inviteEl) this.inviteEl.style.top = `${top + 44}px`;   // where it stood under the old top-middle toggles
+    if (this.toast?.el) this.toast.el.style.top = `${top + 44}px`;
   }
 
   dispose() {
     this.left(false);
-    this.closeInvite(); this.closePick();
+    this.closeInvite(); this.closePick(); this.veil?.remove();
     this.observer?.disconnect(); this.barObserver?.disconnect(); removeEventListener('resize', this.layoutFn);
     this.modal?.close(); this.social?.dispose(); this.chat?.dispose(); this.voice?.dispose();
     this.hub?.close();

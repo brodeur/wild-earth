@@ -143,8 +143,10 @@ export class Hub {
   }
   // point: the picker's planned arrival, tile-local { x, north } (relayed in the invite, never kept); group when in several;
   // to: user ids asked by name (friends or fellow group members: the home screen's Invite), with or without a group.
-  place(tile, group, point = null, to = null) {
+  // follow: the player pressed Start and goes in now (group follow): the group's online members are asked to join them.
+  place(tile, group, point = null, to = null, follow = false) {
     const m = { t: 'place', tile }; if (group) m.group = group; if (to?.length) m.to = [...to]; if (point) m.point = { x: point.x, north: point.north };
+    if (follow) m.follow = true;
     return this.send(m);
   }
   answer(invite, join) { return this.send({ t: 'answer', invite, join: !!join }); }

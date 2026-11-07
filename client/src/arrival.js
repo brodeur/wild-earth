@@ -590,6 +590,7 @@ export class CardLineup {
 // The altitude profile is precomputed and lifted where the straight descent would clip a ridge.
 const T = 12, START_AGL = 400, END_AGL = 120, RUN = 1500, CRUISE = 12, CLEAR = 60;
 const FOLLOW_UP = 6, FOLLOW_BACK = 10, FOLLOW_RUN_MIN = 150, FOLLOW_END = 0.15;   // behind another player (plan's follow): the offset, the least run, the share of the path where the clearance gives way to the end pose
+const FOLLOW_GROUND_BACK = 6, FOLLOW_GROUND_UP = 2;   // behind a ground animal (follow.ground, group follow): on the ground behind them, the spirit at its climb-out height
 const PITCH0 = -0.42, PITCH1 = -0.06;
 const smooth = (a, b, u) => { const t = Math.min(1, Math.max(0, (u - a) / (b - a))); return t * t * (3 - 2 * t); };
 
@@ -607,7 +608,8 @@ export class Arrival {
   // heading and ends 6 m above and 10 m behind them, slowing to a hover. The object is read every frame, so a lead who
   // moves on is followed (the whole path slides with them; the heading stays the plan's). behind: the point is where
   // someone else is arriving (a joiner's, before the one who asked has a position): the flight ends 6 m above and 10 m
-  // behind the end of that one's arrival, as if following them there.
+  // behind the end of that one's arrival, as if following them there. follow.ground: the lead is a ground animal (group
+  // follow): the end is on the ground 6 m behind them (2 m up, the spirit's height off the ground), not in the air.
   plan(point, follow = null, behind = false) {
     if (behind && !follow) {
       this.plan(point);
@@ -621,8 +623,9 @@ export class Arrival {
       const yaw = follow.yaw || 0;
       hx = -Math.sin(yaw); hn = Math.cos(yaw);   // the lead's forward, in (x, north)
       this.at = { x: follow.x, y: follow.y, z: follow.z };   // where the lead was when planned: the end slides with them
-      ex = clamp(follow.x - hx * FOLLOW_BACK, M, S - M); en = clamp(-follow.z - hn * FOLLOW_BACK, M, S - M);
-      yEnd = follow.y + FOLLOW_UP;
+      const back = follow.ground ? FOLLOW_GROUND_BACK : FOLLOW_BACK;
+      ex = clamp(follow.x - hx * back, M, S - M); en = clamp(-follow.z - hn * back, M, S - M);
+      yEnd = follow.ground ? this.heights.at(ex, en) + FOLLOW_GROUND_UP : follow.y + FOLLOW_UP;
       run = RUN;   // the run back from the end, cut where it would leave the tile
       for (const [e, h] of [[ex, hx], [en, hn]]) if (Math.abs(h) > 1e-6) run = Math.min(run, Math.max(0, h > 0 ? (e - M) / h : (e - (S - M)) / h));
       run = Math.max(FOLLOW_RUN_MIN, run);

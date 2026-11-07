@@ -6601,3 +6601,29 @@ either side panel. Side panels fade and slide in from the sides."
   boot screen), `?skip=1` (no boot screen, straight in). The reduced-motion cross-fade was checked by applying its CSS rule
   directly (the pane cannot emulate the media query); it moves only while invisible. A cold load over the network was not
   measured: the local server answers in milliseconds. Debugging fields: `__weTitle.bornMs` and `drawnMs`.
+
+## 2026-11-06: group follow (branch claude/group-follow)
+
+Aaron: "When a player in a group is in a tile with another player, and one of them leaves to go to the main screen - when
+that person presses "START" the other people in the group receive an invitation to join them which they can decline.
+Their screen fades to black and a loading bar begins and then they should enter the tile where the person who originated
+the invitation is, above and behind them." Details in docs/multiplayer.md "Group follow".
+- **Built on lane 4's `place` / `invite` / `answer`, not a new channel.** `place` gains `follow: true`; the hub sends that
+  invite only to members online and marks it, so the client shows the follow toast instead of the plan dialog. The
+  inviter's position comes from the room join's last `pos` (the existing relay), so nothing new is kept anywhere.
+- **Every Start from the main screen asks the group**, not only one after Exit to main screen: the moment is the same
+  ("I am going in here now"), and the first Start of a session is where a group most often wants to go in together. A
+  joiner's own Start from the older Invite flow asks no one.
+- **The group asked** is the chat's group when it has anyone else in it, else the first group that does (the rule `chose`
+  already used).
+- **No arrival flight for a joiner**: the veil covers the build and the joiner is put at Arrival's follow end pose at once
+  (6 m up, 10 m back, the inviter's yaw), since Aaron asked for a fade, a bar, then being there. Behind a ground animal
+  the end is on the ground 6 m back at the spirit's 2 m climb-out height rather than in the air.
+- **Expiry 60 s** with a visible line running down, the same life as the existing invite dialog; an expiry answers
+  nothing (it is not a decline).
+- **Files kept apart from the home screen's rewrite**: the toast and the veil are `follow.js` and `follow.css` (linked from
+  the module), and the bar's step weights are a copy of title.js STEPS, so title.js, title.css and index.html are not
+  touched.
+- **Page nodes across a switch**: main.js records every node added to the page while a world is played and removes them
+  with it; a node marked `data-we-page` is now left out, so the veil stands across a world-to-world switch.
+

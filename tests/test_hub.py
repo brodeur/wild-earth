@@ -458,6 +458,51 @@ class HubTest(unittest.TestCase):
         for p in (a, b, c):
             p[2].close()
 
+    def test_follow_invite(self):
+        """Group follow: a member presses Start and `place` carries follow; the invite says follow and goes only to
+        the group's members who are online; `placed` counts them; a Decline reaches the sender; a joiner entering the
+        room has the sender's last position at once, to stand behind them."""
+        a, b, c = (self.player(n) for n in ("Wolf_a", "Wolf_b", "Wolf_c"))
+        self.befriend(a, b)
+        self.befriend(a, c)
+        a[2].send({"t": "group", "op": "create", "name": "Pack", "users": [b[0], c[0]]})
+        g = b[2].wait("groups")["groups"][0]
+        c[2].wait("groups")
+        a[2].drain()
+        c[2].close()                                                # c is offline
+        time.sleep(0.3)
+        point = {"x": POS["x"], "north": -POS["z"]}
+        a[2].send({"t": "place", "tile": T2, "group": g["id"], "point": point, "follow": True})
+        inv = b[2].wait("invite")
+        self.assertEqual((inv["from"], inv["tile"], inv["group"], inv.get("follow")), (a[0], T2, g["id"], True))
+        placed = a[2].wait("placed")
+        self.assertEqual((placed["to"], placed.get("follow")), (1, True))   # b alone: c is offline
+        self.assertNotIn("follow", self.hub_invite(inv["id"]))
+        # a plain place still asks every member, online or not, and carries no follow
+        a[2].send({"t": "place", "tile": T2, "group": g["id"]})
+        self.assertNotIn("follow", b[2].wait("invite"))
+        self.assertEqual(a[2].wait("placed")["to"], 2)
+        # Decline: the sender is told
+        b[2].send({"t": "answer", "invite": inv["id"], "join": False})
+        ans = a[2].wait("answer")
+        self.assertEqual((ans["from"], ans["join"]), (b[0], False))
+        # a second follow invite, joined: the sender is in the room; the joiner's room join brings the sender's pose
+        a[2].send({"t": "room", "op": "join", "tile": T2})
+        a[2].send({"t": "pos", **POS, "form": "odocoileus_hemionus"})
+        a[2].send({"t": "place", "tile": T2, "group": g["id"], "follow": True})
+        inv2 = b[2].wait("invite", where=lambda m: m.get("follow"))
+        b[2].send({"t": "answer", "invite": inv2["id"], "join": True})
+        self.assertTrue(a[2].wait("answer")["join"])
+        b[2].drain()
+        b[2].send({"t": "room", "op": "join", "tile": T2})
+        got = b[2].wait("pos", timeout=2)
+        self.assertEqual((got["user"], got["form"], got["yaw"]), (a[0], "odocoileus_hemionus", round(POS["yaw"], 2)))
+        for p in (a, b):
+            p[2].close()
+
+    def hub_invite(self, iid: str) -> dict:
+        return hub.get().invites.get(iid, {})
+
     def test_invite_people(self):
         """The home screen's Invite: place with `to` asks friends or fellow group members by name, with or without a
         group, each once; a stranger or a blocked user cannot be asked; the answer reaches the inviter."""
