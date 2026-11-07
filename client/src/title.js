@@ -55,6 +55,11 @@ const DEG = Math.PI / 180, R_KM = 6371;
 const FOV_FAR = 38, FOV_NEAR = 55, TILT_MAX = 54 * DEG;    // the lens and the tilt from space, and at a few kilometres
 const TILT_ALT = [0.03, 0.0009];                           // the altitudes (earth radii) between which they change
 const ALT0 = 2.5, ALT_MIN = 0.6 / R_KM, ALT_MAX = 3.6;      // the camera's distance from the point it looks at
+// Flying to a chosen place is slow (Aaron, 2026-11-06: "slow enough so that the world has a chance to render ... by the
+// time they arrive at the tile, it's mostly loaded"): PLACE_SLOW times the free flight's time, within PLACE_MS; its last
+// stretch is paced by the world's build (flyToPlace: the flight's clock runs slower as it gets ahead of the loading bar,
+// down to PACE_MIN, so it eases into a hold a few times the final height above the tile and goes on as the build does).
+const PLACE_SLOW = 1.8, PLACE_MS = [5000, 8000], PACE_FROM = 0.55, PACE_SLACK = 0.12, PACE_MIN = 0.04;
 const FOCUS_MARGIN = [40, 16];                             // px around a chosen tile inside the free centre (desktop, phone)
 const Y_BELOW = -2.7;                                      // where the earth's centre sits before it lands: off screen, below
 const SUN_CRESCENT = [152 * DEG, 26 * DEG], SUN_LIT = [30 * DEG, 14 * DEG];   // [azimuth about Y from the camera's side, elevation]
@@ -640,19 +645,21 @@ export class TitleScreen {
   }
   // Fly to look at lat, lon from alt earth radii away: over the earth in an arc whose height grows with the distance
   // flown, the camera tilting and the lens widening as it comes down (tiltFor, fovFor).
-  flyTo(lat, lon, alt, ms = null) {
+  // pace(u): the flight's clock rate at raw progress u (flyToPlace), for a flight timed by something else.
+  flyTo(lat, lon, alt, ms = null, pace = null) {
     this.vyaw = this.vpitch = 0; this.stopFlight(); this.anchor = null;
     const y0 = this.yaw, p0 = this.pitch, a0 = this.alt, dy = wrapPi(yawOfLon(lon) - y0), pT = clamp(lat * DEG, -PITCH_MAX, PITCH_MAX);
     const ang = Math.acos(clamp(latLonToXYZ(lat, lon).dot(latLonToXYZ(p0 / DEG, lonOfYaw(y0))), -1, 1));
     const peak = Math.max(a0, alt, Math.min(2.4, ang * 1.1)), la0 = Math.log(a0), la1 = Math.log(alt), bump = Math.log(peak) - Math.max(la0, la1);
-    ms ??= clamp(1400 + 900 * Math.sqrt(ang) + 250 * Math.abs(la1 - la0), 1400, 4200);
+    const free = clamp(1400 + 900 * Math.sqrt(ang) + 250 * Math.abs(la1 - la0), 1400, 4200);
+    ms ??= pace ? clamp(free * PLACE_SLOW, PLACE_MS[0], PLACE_MS[1]) : free;
     this.altGoal = alt;
     const t = this.flying = this.tween(ms, u => {
       const e = easeInOut(u);
       this.yaw = y0 + dy * e; this.pitch = lerp(p0, pT, e);
       this.alt = this.altGoal = Math.exp(lerp(la0, la1, easeInOut(u)) + Math.max(0, bump) * 4 * u * (1 - u));
     }, u => u);
-    t.view = true;
+    t.view = true; t.rate = pace;
     return t.p;
   }
   stopFlight() {
@@ -701,7 +708,13 @@ export class TitleScreen {
   flyToPlace(id) {
     const c = this.chosenPose(id);
     this.card.classList.remove('on');
-    return this.flyTo(c.lat, c.lon, c.alt).then(() => { if (this.sel === id && !this.closed) this.card.classList.add('on'); });
+    // the last stretch keeps behind the loading bar (this.shown, eased and continuous, so the pace never jumps): to pass
+    // raw progress u the build must be about smooth(PACE_FROM, 1, u) along; ahead of that the clock slows smoothly
+    const pace = u => {
+      const load = this.readyIds.has(id) || this.sel !== id ? 1 : (this.shown || 0);
+      return clamp(1 - (smooth(PACE_FROM, 1, u) - load) / PACE_SLACK, PACE_MIN, 1);
+    };
+    return this.flyTo(c.lat, c.lon, c.alt, null, pace).then(() => { if (this.sel === id && !this.closed) this.card.classList.add('on'); });
   }
   // A tween run by frame(): fn(eased 0..1) over ms after delay; .p resolves when done (or stopped); .view marks one a drag cancels.
   endTween(t) { const i = t ? this.tweens.indexOf(t) : -1; if (i < 0) return; this.tweens.splice(i, 1); if (this.flying === t) this.flying = null; t.done(); }
@@ -873,7 +886,7 @@ export class TitleScreen {
     this.raf = requestAnimationFrame(this.frameFn);
     const dt = Math.min(0.1, (now - this.last) / 1000); this.last = now; this.time += dt;
     for (const t of this.tweens.slice()) {
-      t.t += dt * 1000; if (t.t < 0) continue;
+      t.t += dt * 1000 * (t.rate && t.t > 0 ? t.rate(Math.min(1, t.t / t.ms)) : 1); if (t.t < 0) continue;
       const u = Math.min(1, t.t / t.ms); t.fn(t.ease(u));
       if (u >= 1) { const i = this.tweens.indexOf(t); if (i >= 0) this.tweens.splice(i, 1); if (this.flying === t) this.flying = null; t.done(); }
     }

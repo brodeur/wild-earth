@@ -6799,3 +6799,43 @@ changes. The client asks for it first (15 s), and a host without the endpoint (a
 one as before, now 8 s each. Measured on the local server with the cache off: one request, 193 species from the
 library, none built-in, also under a throttled 4 Mbps / 150 ms network (title up at 12.9 s there).
 `tests/test_species_bundle.py` covers the bundle (every listed id, the files unchanged, gzip, plain, 304).
+
+## 2026-11-06: the zoom to a place is slow and keeps pace with its world's loading (branch claude/home-tile-framing)
+
+Aaron: "zooming to the location should be slow enough so that the world has a chance to render. While it is a slow
+zoom, begin loading world assets right away so that by the time they arrive at the tile, it's mostly loaded."
+
+- **Loading at once was already so**: choosing a place calls main.js `select`, which starts building its world behind
+  the earth on the click (`replaceWorld`: the tile package, rasters, the forest, models, shaders); Start enters that
+  world when it is ready (`world.enter`), and a second choice abandons the first build (`disposeWorld`). Unchanged.
+- **The slow zoom** (title.js flyToPlace): the flight to a chosen place takes PLACE_SLOW (1.8) times the free flight's
+  time, within 5 to 8 s, and its clock is paced by the loading bar's eased progress (`this.shown`, continuous, so the
+  pace never jumps): to pass raw progress u the build must be about smooth(0.55, 1, u) along; ahead of that the clock
+  slows smoothly to PACE_MIN (0.04 of its speed), so the camera eases into a slow drift a few times the final height above
+  the tile and comes the rest of the way as the build does. A world already built (choosing the place again) flies at
+  the natural pace. The search's flights are not paced. The fit is the centre framing above (focusArea, chosenPose).
+
+Measured in headless Chrome over CDP (`Network.emulateNetworkConditions` 20 Mbit/s each way and 60 ms latency, the cache
+disabled, `?hub=stub`, Upper Hoh Road, Start pressed as soon as both the zoom and the world are done; before = main
+96ff697, after = this branch; the machine's load average 8 to 20, so a few seconds is noise):
+
+| run | zoom ends | world ready | waiting at the tile | world shown | arrival done |
+|---|---|---|---|---|---|
+| before, 1440x900 | 3.9 s | 45.5 s | 41.6 s | 47.3 s | 59.5 s |
+| before, 1440x900 | 3.5 s | 38.7 s | 35.2 s | 40.5 s | 53.2 s |
+| after, 1440x900 | 37.3 s | 37.3 s | 0 | 39.1 s | 52.1 s |
+| after, 1440x900 | 38.8 s | 38.8 s | 0 | 40.7 s | 53.4 s |
+| before, 375x812 | 3.6 s | 39.1 s | 35.5 s | 40.9 s | 53.1 s |
+| after, 375x812 | 37.9 s | 37.9 s | 0 | 39.7 s | 52.2 s |
+
+The click-to-playable time is the same (the world's build is the limit, and it already started on the click); what
+changes is that the player rides the zoom down instead of waiting at the tile for half a minute. The altitude trace of an
+after run: 15,880 km at the click, 72 km by 3.7 s, a drift from 57 to 25 km over the next 20 s while the build loads, and
+the 18.5 km fit as the world becomes ready. Two things seen in both: the loading bar reports nothing for the first ~22 s
+under this throttle (the tile package's download comes before the first build step), and the page's main thread is held
+for ~13 s once by the build (nothing animates then, before or after).
+
+Abandoning: choosing Yosemite mid-flight while Upper Hoh Road was 57% built tore Upper Hoh Road down (`__weDisposed`, 7 to
+9 ms) and Yosemite was ready 20 s later. Five choices in a row, 7 s apart, alternating the two, showed the renderer's
+geometry count climbing by about 75 to 100 per abandoned build (textures and programs do not climb), on main as on this
+branch: an older leak in the teardown of an abandoned build, not touched here and noted as a follow-up.
