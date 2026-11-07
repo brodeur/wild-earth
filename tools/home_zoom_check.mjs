@@ -2,7 +2,8 @@
 // card, the view should zoom to this zoom level. Right now the view zooms to somewhere not the tile"). Every entry point
 // (the place's row in the list, its label on the map, its dot) from several starting views (far out, near another place,
 // the tile near the earth's limb, after a deselect): when the flight ends, the tile's centre on screen must be within 3%
-// of the focus area's centre and the tile 35-50% of the window's width (at a phone's width, 70-100% of the free centre's).
+// of the focus area's centre and the tile's middle 70-100% of the free centre's width (its near edge fills the focus area;
+// a share of the window's width depended on the window, the list taking more of a narrower one).
 // Then, on a cold and throttled load where the flight waits for the world, the tile must stay centred and on screen all
 // the while it waits (the bug: the wait began with the travel 60% done, the tile off screen for as long as the build took).
 //
@@ -67,7 +68,7 @@ for (const [view, set] of Object.entries(views)) for (const [how, go] of Object.
   if (!pressed) { report(`${view} ${how}`, false, { why: 'nothing chosen' }); continue; }
   await settle();
   const m = await ev(MEASURE);
-  const sized = phone ? m.ofFree >= 0.7 && m.ofFree <= 1 : m.ofWindow >= 0.35 && m.ofWindow <= 0.5;
+  const sized = m.ofFree >= 0.7 && m.ofFree <= 1;
   report(`${view} ${how}`, m.sel === TILE && Math.abs(m.dx) <= 0.03 && Math.abs(m.dy) <= 0.03 && sized, m);
 }
 // the wait for a cold, throttled world: the tile centred and on screen throughout

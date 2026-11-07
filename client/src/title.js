@@ -60,8 +60,9 @@ const FOV_FAR = 38, FOV_NEAR = 55;                         // the lens from spac
 const TILT_ALT = [0.03, 0.0009];                           // the altitudes (earth radii) between which the lens changes
 // The tilt from straight down: none from space, steepening back as the view zooms out, and low over a chosen tile (Aaron,
 // 2026-11-07: the tile view was about 52 degrees above the horizon; "lower that angle by half when zoomed in. Zooming out
-// can steepen the angle"): about 26 degrees above the horizon at a tile's framing distance (some 20 km)
-const TILT_MAX = 66 * DEG, TILT_AT = [0.03, 0.0025];
+// can steepen the angle"; then "make the angle a little bit flatter"): about 20 degrees above the horizon at a tile's
+// framing distance, the lens narrowed there so no sky shows over it (lensFor)
+const TILT_MAX = 78.5 * DEG, TILT_AT = [0.03, 0.0025];
 const ALT0 = 2.5, ALT_MIN = 0.6 / R_KM, ALT_MAX = 3.6;      // the camera's distance from the point it looks at
 // Flying to a chosen place is slow (Aaron, 2026-11-06: "slow enough so that the world has a chance to render ... by the
 // time they arrive at the tile, it's mostly loaded"): PLACE_SLOW times the free flight's time, within PLACE_MS; its last
@@ -133,6 +134,16 @@ const yawOfLon = lon => (90 - (lon + 180)) * DEG;
 const nearness = alt => smooth(Math.log(TILT_ALT[0]), Math.log(TILT_ALT[1]), Math.log(alt));
 const tiltFor = alt => TILT_MAX * smooth(Math.log(TILT_AT[0]), Math.log(TILT_AT[1]), Math.log(alt));
 const fovFor = alt => lerp(FOV_FAR, FOV_NEAR, nearness(alt));
+// The lens low over the land: narrowed so the view's top edge stays HORIZON_CLEAR under the horizon (no sky over a chosen
+// tile however flat the tilt); offFrac: the view's offset down (frame: offY) over the height, which lifts the top edge
+const HORIZON_CLEAR = 4 * DEG;
+const lensFor = (alt, offFrac = 0) => {
+  const fov = fovFor(alt) * DEG, t = tiltFor(alt), dip = Math.acos(1 / (1 + alt * Math.cos(t)));
+  const room = Math.PI / 2 + dip - HORIZON_CLEAR - t;   // from the view's axis up to the line just under the horizon
+  if (room >= Math.PI / 2 - 1e-3) return fov / DEG;   // looking down enough that no lens reaches the horizon
+  const k = 1 + 2 * Math.max(0, offFrac), half = room > 0 ? Math.atan(Math.tan(room) / k) : 0.05;
+  return Math.max(12 * DEG, Math.min(fov, 2 * half)) / DEG;
+};
 // How much of the map is over the earth's own picture: some from space (the spirit earth shows through), all of it near.
 const mapMixFor = alt => lerp(0.5, 1, smooth(1.4, 0.06, alt));
 
@@ -491,8 +502,15 @@ export class TitleScreen {
     w.addEventListener('pointerdown', e => {
       if (e.button || e.target.closest('button, input, a, .tt-places, .tt-gate, .tt-pcard, .tt-bar')) return;
       if (this.phase !== 'lit' || this.begun || !this.landed) return;
-      const body = this.sel && this.ring ? this.ring.hit(e.clientX, e.clientY) : null;   // an animal in the rings (or the spirit): chosen, no drag
-      if (body) { e.preventDefault(); this.chooseBody(body, e.pointerType === 'touch'); return; }
+      // an animal in the rings (or the spirit): a still click chooses it; a drag turns its ring (the inner and outer walkers'
+      // and the fliers' each on its own), the fling easing back into the ring's own turn
+      const body = this.sel && this.ring ? this.ring.hit(e.clientX, e.clientY) : null;
+      if (body) {
+        e.preventDefault();
+        this.bodyDrag = { id: e.pointerId, code: body, ring: this.ring.grab(body), x: e.clientX, y: e.clientY, moved: 0, t: performance.now(), v: 0, touch: e.pointerType === 'touch' };
+        w.setPointerCapture(e.pointerId);
+        return;
+      }
       this.drag = { id: e.pointerId, x: e.clientX, y: e.clientY, moved: 0, t: performance.now() };
       w.setPointerCapture(e.pointerId); this.vyaw = this.vpitch = 0; this.stopFlight(); this.anchor = null;
       e.preventDefault();
@@ -503,6 +521,13 @@ export class TitleScreen {
         const over = this.sel && !this.begun && !e.target.closest('button, input, a, .tt-places, .tt-gate, .tt-bar') ? this.ring.hit(e.clientX, e.clientY) : null;
         this.ring.hover(over); this.wrap.classList.toggle('overbody', !!over);
       }
+      const b = this.bodyDrag;
+      if (b && b.id === e.pointerId) {
+        const dx = e.clientX - b.x, now = performance.now(), dt = Math.max(4, now - b.t) / 1000;
+        b.moved += Math.hypot(dx, e.clientY - b.y); b.x = e.clientX; b.y = e.clientY; b.t = now;
+        if (b.moved > 4 && b.ring) { this.ring.turn(b.ring, dx); b.v = lerp(b.v, dx / dt, 0.4); w.classList.add('dragging'); }
+        return;
+      }
       const d = this.drag; if (!d || d.id !== e.pointerId) return;
       const dx = e.clientX - d.x, dy = e.clientY - d.y, now = performance.now(), dt = Math.max(4, now - d.t) / 1000;
       const [ky, kp] = this.dragRates();
@@ -512,6 +537,14 @@ export class TitleScreen {
       if (d.moved > 4) { w.classList.add('dragging'); this.setMode('visible'); }
     });
     const up = e => {
+      const b = this.bodyDrag;
+      if (b && b.id === e.pointerId) {
+        this.bodyDrag = null; w.classList.remove('dragging');
+        const still = b.moved <= 4;
+        this.ring?.letGo(b.ring, still || performance.now() - b.t > 90 || e.type === 'pointercancel' ? 0 : b.v);   // held still before the release: no fling
+        if (still && e.type === 'pointerup') this.chooseBody(b.code, b.touch);
+        return;
+      }
       const d = this.drag; if (!d || d.id !== e.pointerId) return;
       this.drag = null; w.classList.remove('dragging');
       if (d.moved <= 4) { this.vyaw = this.vpitch = 0; if (this.hover && this.phase === 'lit') this.choose(this.hover); }
@@ -821,7 +854,7 @@ export class TitleScreen {
     const offX = (a.l + a.r) / 2 - W / 2, offY = (a.t + a.b) / 2 - H / 2;
     const fits = A => {
       const t = tiltFor(A);
-      cam.fov = fovFor(A); cam.near = Math.max(2e-5, A * Math.cos(t) * 0.3);
+      cam.fov = lensFor(A, offY / H); cam.near = Math.max(2e-5, A * Math.cos(t) * 0.3);
       cam.position.set(0, -A * Math.sin(t), 1 + A * Math.cos(t)); cam.up.set(0, 1, 0); cam.lookAt(0, 0, 1);
       cam.setViewOffset(W, H, -offX, -offY, W, H); cam.updateProjectionMatrix(); cam.updateMatrixWorld();
       for (const p0 of pts) {
@@ -1137,7 +1170,7 @@ export class TitleScreen {
     if (!this.flying) this.alt = Math.exp(lerp(Math.log(this.alt), Math.log(this.altGoal), 1 - Math.exp(-dt * 7)));
     const r = this.renderer, size = r.getSize(this._size), W = size.x || innerWidth, H = size.y || innerHeight, cam = this.cam;
     this.tilt = tiltFor(this.alt);
-    const fov = fovFor(this.alt);
+    const fov = lensFor(this.alt, (this.offY || 0) / H);
     if (Math.abs(cam.fov - fov) > 1e-3 || Math.abs(cam.aspect - W / H) > 1e-4) { cam.fov = fov; cam.aspect = W / H; }
     // the camera: alt from the looked-at point (on +Z of the earth's centre), tilted toward the north's horizon
     const e = this.earth.position, A = this.alt, t = this.tilt;
