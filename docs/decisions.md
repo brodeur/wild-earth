@@ -7354,6 +7354,63 @@ glottal stop is itself drawn like a question mark without its dot, so at 12 px i
     30 m up 18.8 -> 19.2 ms. Open: silver tufts unchanged (no lighting bug; sage's record colour is a judgement value,
     and the tuft's tilt term looks like a second sun-angle factor: calibrate leaf colour and crown light together);
     snowberry and gooseberry use sage's leaf.
+- **River-bank tufts green again; the gap ground unmixes the tufts as seen from above and carries a fine blade
+  texture** (grass.js tuftDead, gapTuft; terrain.js gap cover). Lamar's bank tufts read rust-brown on 15 June: the
+  riparian shrubland row lists no grass, so the bank draws the generic tuft, which has no tuft record (width 0); the
+  dead share's size ratio hit its clamp and nine leaves in ten were dead. A grass without a tuft record now takes ratio 1.
+  (Open: the riparian row should list its own grasses and sedges; a species-mix change.) Teton's gap read as a dark slab
+  because the unmixing over-subtracted the tufts: it now removes them as seen from above (the palette mean with the dead
+  share as thatch, cover 0.76 of the footprint from the tufts' own leaf-density model); near ground L 36.2 -> 36.4,
+  a* -4.2 -> -6.1. The herb cover gets one octave of the sward paint's strokes (3.5 cm, no sampler; two octaves cost
+  ~3 ms and were cut); cover shares count only the ground visible between drawn plants (round 2 counted under-crown
+  ground as litter, hiding the bare share); patches 3-15 cm. From the air ΔE 0.001; cost within noise (paired median
+  -0.8 ms, spread -3.0..+2.6, on ~35 ms frames). Open: Teton's litter and soil patches read reddish-brown against the
+  green-grey herbs; Lamar's wet-meadow bare soil (~4 %) is as dark as its litter.
+- **Twig crowns lit once by the sun, and sage's leaf colour calibrated to Sentinel-2 as a recorded per-species
+  factor** (shrubfield.js TWIG_FRAG, twigPicture, fhSeason; library/species/artemisia_tridentata.json
+  `foliage.albedo_calibration`). The tufts took the sun as `vSunC * tl`, where `vSunC` is already the sun at the tuft's
+  own random face and `tl` the picture's per-leaf tilt (0.25-1, mean ~0.62): the random face already gives the
+  isotropic canopy's mean incidence, so the tilt lit sunlit leaves at ~0.6 of their due; removed (near tier and
+  pictures). The colour: one factor k on the judged record colours, fitted by inverting the judge's fair transform on a
+  30 m nadir view over a 35 % sage block: full-cover canopy at k 1 0.086/0.087/0.066, at k 0.8 0.080/0.081/0.061,
+  Sentinel-2 June 0.088/0.080/0.061 (luminance 0.0805 vs 0.0803). One factor, not per channel: the satellite's red holds
+  bark and litter under the crowns. Domes and pictures now agree within ±5 % at eye level. Contrast from above against
+  95a9185: domes 0.78-0.79 (the old domes were brighter than the satellite sees), pictures 0.64-0.69, so the 8-12°
+  rule stays. Top-down ΔE 0.000 Lamar, 0.013 Teton; cost nil (A/B). Open: the eye-level check against a photo of sunlit
+  sage; a sage block renders at 0.74 of a grass block because the ground under sage cells is 0.68 as bright as the
+  grass block's ground.
+- **Sage's eye-level colour checked against a photograph: no change** (library/species/artemisia_tridentata.json
+  `albedo_calibration.from`). Reference: "2014-06-28 11 25 56 Big sagebrush ... near Elko, Nevada.JPG", Famartin, CC BY-SA
+  3.0 (Wikimedia Commons; direct midday sun; downloaded on Aaron's approval, git-ignored cache, not served). Sunlit
+  leaves (top 10 % of foliage) chromaticity r,g 0.347-0.354, 0.370-0.372 in the photo against 0.344-0.350, 0.380-0.386
+  rendered at k 0.8 (five poses, sage pixels only); sunlit/shaded ratio 4.1-6.4 photo, 3.6-4.2 render. The silver is
+  real: sunlit big sage is pale silvery grey-green; the silver-white earlier was the doubled sun term. No sheen in the
+  photo or the model. The render's lower contrast is left (likely a denser real crown than the judged porosity 0.3, or the
+  phone's tone curve). The second photo (Mono Lake, CC BY-SA 4.0) was overcast with old flower stalks; not used.
+- **Teton's maroon was the gap ground's colour match; riparian rows draw their own sedges; the terrain's shrub shade
+  no longer counts the crowns twice** (terrain.js; pipeline/ground_cards.py; five new library records). The patch
+  colour match pulled each patch's mean to the photo by luminance ratio plus the colour difference; where the photo is
+  dark (Teton) that left a saturated soil-minus-litter colour at low light: maroon (the soils are 10YR-7.5YR, no red
+  source). Litter, crust and soil now take the photo's colour at their own relative brightness plus 30 % of their own
+  hue (stated). Ground cards: a LANDFIRE row naming only a genus ("CAREX") takes the tile's most-recorded native species
+  of it (it took PLANTS' alphabetically first, a Quebec hybrid); "C. hoodii" expands to the last genus with that
+  initial; common-name lists resolve by PLANTS' exact match; a community that lost all its grasses to the 11-grass cap
+  takes one back if its area is ≥ 0.25 of the dropped species' score. Lamar's riparian and wet-meadow rows now draw
+  Carex microptera and C. hoodii (green in June); Teton's riparian rows (44-60 cells) stay under the threshold. Sage
+  vs grass blocks from 30 m (8 + 8 blocks of 90 m against Sentinel-2 through the fair transform): the drawn sage and the
+  photo are not the cause; the shrub contact AO counts crowns the photo already holds (median ratio 0.951 with it, 0.989
+  without), and the terrain's own shrub shade term was the same double count (~1 %, removed); the rest is hillshade
+  counted twice (the photo holds its own), a general issue. Top-down ΔE 0.106 (sage areas ~0.1 L brighter, toward the
+  fair L), overview 0.03.
+- **Shrub contact shade no longer darkens the stand's mean; the built-in species copy refreshed** (shadows.js contact
+  AO; treegen.js built-in block via library/embed_builtin.py). The photo-derived ground already holds the crowns'
+  average shading, so each crown now adds only what the photo can't hold: it still darkens the ground under it by up to
+  1 - porosity, and lightens a ring out to twice its radius by the same total (the AO target half float, shrub discs
+  summed; trees keep the max blend). Sage/grass from 30 m nadir (8 + 8 blocks against Sentinel-2 through the fair
+  transform, this lane's method): HEAD 1.041, new 1.055, no shrub AO 1.052, so the AO now costs nothing at block scale
+  (the grass lane's method reads 0.04-0.06 lower on all three; only the difference is compared). Dappled cast shadows
+  kept (without them 1.095). Contact shade under near shrubs survives at eye level, no visible rings. ΔE top-down 0.000,
+  30 m nadir 0.48, 15 m 0.23.
 
 ## 2026-11-06: snakes are playable; the body follows the head's path (branch claude/snake-play)
 

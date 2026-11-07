@@ -222,6 +222,12 @@ const AO_FRAG = /* glsl */`
 // grass and herbs under a sage are in its shade while the shrubs themselves read g, the trees' (shrubfield.js treeAO).
 // Without it the ground showing through a porous crown from above was as bright as the open ground and the crowns read as a
 // dark even fuzz from 15-30 m up. The density LOD as the casters take it (a grown plant, a grown disc).
+// Zero in the mean (2026-11-06, the grass lane's block measurement): the ground is the photo's, which already holds the
+// crowns' shade at its own resolution (the blocks of 90 m from 30 m up, sage over grass against Sentinel-2: 0.951 with the
+// shade added on top, 0.989 without). So each crown adds only what the photo cannot hold, the shade's place within a metre:
+// darker under the crown (as before) and lighter by as much in a ring out to twice its radius (SHRUB_AO_RING, the core's
+// integral spread over the ring), summed into a half-float r that may go below zero; the mean over a photo texel stays the
+// photo's, the contact shade at eye height stays.
 const SHRUB_AO_VERT = por => /* glsl */`
   ${por || CLUMP_POR_NONE}
   uniform vec2 kParams; uniform vec3 viewEye;
@@ -232,12 +238,18 @@ const SHRUB_AO_VERT = por => /* glsl */`
     float d = distance(viewEye, iPos.xyz), keep = clamp(kParams.x * kParams.x / max(d * d, 1.0), kParams.y, 1.0);
     if (por <= 0.0 || rank > keep) { gl_Position = vec4(0.0, 0.0, 2.0, 1.0); return; }
     R *= inversesqrt(keep) * ${(1.75 / 2).toFixed(3)} * 1.1;   // the visible crown (shrubfield.js VIS_W), a little past it
-    vQ = position.xy; vS = 1.0 - por;
-    gl_Position = projectionMatrix * viewMatrix * vec4(iPos.xyz + vec3(position.x * R, 0.0, -position.y * R), 1.0);
+    vQ = position.xy * 2.0; vS = 1.0 - por;   // (the quad out to twice the crown's radius, for the ring)
+    gl_Position = projectionMatrix * viewMatrix * vec4(iPos.xyz + vec3(position.x * R * 2.0, 0.0, -position.y * R * 2.0), 1.0);
   }`;
+// the ring's level: the core's integral, 2 pi int_0^1 (1 - d)^1.2 d dd = 2 pi B(2, 2.2) = 0.8925, over the ring's area, 3 pi
+const SHRUB_AO_RING = (2 * Math.PI * 0.14205) / (3 * Math.PI);
 const SHRUB_AO_FRAG = /* glsl */`
   varying vec2 vQ; varying float vS;
-  void main() { float d = length(vQ); if (d > 1.0) discard; gl_FragColor = vec4(vS * pow(1.0 - d, 1.2), 0.0, 0.0, 1.0); }`;
+  void main() {
+    float d = length(vQ);
+    if (d > 2.0) discard;
+    gl_FragColor = vec4(vS * (d < 1.0 ? pow(1.0 - d, 1.2) : -${SHRUB_AO_RING.toFixed(5)}), 0.0, 0.0, 1.0);
+  }`;
 const AO_RANGE = 128, AO_SIZE = 512, AO_MOVE = 48;
 
 let current = null;            // the live Shadows, for the module-level addCaster / removeCaster
@@ -341,7 +353,7 @@ export class Shadows {
     }
     // Contact AO map (see AO_VERT): every near trunk instance, a disc of its variant's crown radius.
     this.ao = {
-      rt: new THREE.WebGLRenderTarget(AO_SIZE, AO_SIZE, { format: THREE.RGFormat, depthBuffer: false, generateMipmaps: false }),
+      rt: new THREE.WebGLRenderTarget(AO_SIZE, AO_SIZE, { format: THREE.RGFormat, type: THREE.HalfFloatType, depthBuffer: false, generateMipmaps: false }),   // (half float: the shrubs' rings go below zero)
       cam: new THREE.OrthographicCamera(-AO_RANGE, AO_RANGE, AO_RANGE, -AO_RANGE, -5000, 5000),
       scene: new THREE.Scene(), proxies: [], centre: null, version: -1,
     };
@@ -364,10 +376,10 @@ export class Shadows {
     if (sf?.mesh && sf.clumpPorGLSL) {
       const m = new THREE.ShaderMaterial({ vertexShader: SHRUB_AO_VERT(sf.clumpPorGLSL), fragmentShader: SHRUB_AO_FRAG,
         uniforms: { kParams: sf.uniforms.kParams, viewEye: this.viewEye },
-        blending: THREE.CustomBlending, blendEquation: THREE.MaxEquation, blendSrc: THREE.OneFactor, blendDst: THREE.OneFactor, depthTest: false, depthWrite: false });
+        blending: THREE.CustomBlending, blendEquation: THREE.AddEquation, blendSrc: THREE.OneFactor, blendDst: THREE.OneFactor, depthTest: false, depthWrite: false });   // (summed: core and ring)
       const p = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), m);
       p.geometry = sf.mesh.geometry;   // (the field's instanced quad: position xy -1..1, iPos, iVar)
-      p.frustumCulled = false; p.matrixAutoUpdate = false; p.userData.shrubs = sf;
+      p.frustumCulled = false; p.matrixAutoUpdate = false; p.userData.shrubs = sf; p.renderOrder = 1;   // after the trees' max
       this.ao.scene.add(p); this.ao.shrubs = p;
     }
     renderer.setRenderTarget(this.ao.rt); renderer.clear(true, false, false); renderer.setRenderTarget(prev);

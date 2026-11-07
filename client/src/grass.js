@@ -358,7 +358,10 @@ const SP_CURE_GLSL = /* glsl */`
   uniform vec4 tuftVol;
   float plantCure(int sp, float seed) { vec4 c = spCure[sp]; float u = fract(sin(seed * 61.7 + 0.29) * 43758.5453123) * 2.0 - 1.0; return u < 0.0 ? mix(c.x, c.y, -u) : mix(c.x, c.z, u); }
   float tuftDead(int sp, float sxz, float seed) {
-    return clamp(tuftVol.w * pow(clamp(sxz / max(spCure[sp].w, 1e-3), 0.3, 3.0), ${DEAD_SIZE_EXP.toFixed(2)}) * (0.6 + 0.8 * fract(sin(seed * 13.9 + 0.61) * 43758.5453123)), 0.0, 0.9);
+    // the size ratio against the record's tuft; 1 for a grass with none (the generic tufted grass, a riparian row's stand-in:
+    // its w is 0, and sxz / 0.001 clamped to 3 gave it a dead share of 0.9, rust-brown tufts on Lamar's river bank)
+    float ratio = spCure[sp].w > 0.0 ? clamp(sxz / spCure[sp].w, 0.3, 3.0) : 1.0;
+    return clamp(tuftVol.w * pow(ratio, ${DEAD_SIZE_EXP.toFixed(2)}) * (0.6 + 0.8 * fract(sin(seed * 13.9 + 0.61) * 43758.5453123)), 0.0, 0.9);
   }
 `;
 // ---- GLSL shared by both LODs ---------------------------------------------------------------
@@ -1891,6 +1894,13 @@ export class Grass {
       u.thatch.value = atMonth(own.thatch, month); u.leafScale.value = atMonth(own.leaf, month);
     }
     u.tuftVol.value.w = own && this.tuftOn ? atMonth(own.thatchTuft, month) : 0;   // a tuft's dead share for the date (TUFT_SIGMA's block)
+    // the tufts as the photo sees them from above, for the terrain's unmixing of the ground between them (terrain.js gapTuft):
+    // the sward palette's mean with their dead share in grey thatch, over the share of a footprint the leaves hide from above,
+    // 1 - exp(-k H) by the tuft light's envelope (Lamar: 0.76)
+    if (this.tuftOn && u.gapTuft) {
+      const d = u.tuftVol.value.w, sr = u.swardRoot.value, st = u.swardTip.value, th = u.thatchCol.value, m = (a, b) => a + 0.6 * (b - a);
+      u.gapTuft.value.set(m(sr.r, st.r) * (1 - d) + th.r * d, m(sr.g, st.g) * (1 - d) + th.g * d, m(sr.b, st.b) * (1 - d) + th.b * d, 1 - Math.exp(-this.tuftEnv.k * this.tuftEnv.H));
+    }
     this.season = season;
   }
 

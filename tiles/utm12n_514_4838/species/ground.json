@@ -34,14 +34,6 @@
    "how": "its own model (bps.csv BPS_MODEL)",
    "species": [
     {
-     "id": "potentilla_gracilis",
-     "scientific": "Potentilla gracilis",
-     "symbol": "POGR9",
-     "form": "forb",
-     "weight": 0.5,
-     "evidence": "10110_21 Vegetation Description: named as Potentilla gracilis; 56 GBIF records within 0.5 deg"
-    },
-    {
      "id": "calamagrostis_canadensis",
      "scientific": "Calamagrostis canadensis",
      "symbol": "CACA4",
@@ -370,6 +362,14 @@
    "how": "its own model (bps.csv BPS_MODEL)",
    "species": [
     {
+     "id": "erigeron_compositus",
+     "scientific": "Erigeron compositus",
+     "symbol": "ERCO4",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "10700_21 Dominant and Indicator Species (ERIGE2): 'Erigeron spp.': the tile's most-recorded native congener Erigeron compositus (10 GBIF records); 37 GBIF records within 0.5 deg"
+    },
+    {
      "id": "castilleja_miniata",
      "scientific": "Castilleja miniata",
      "symbol": "CAMI12",
@@ -512,6 +512,14 @@
      "form": "grass",
      "weight": 0.5,
      "evidence": "11440_21_22 Vegetation Description: named as Festuca idahoensis; 34 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "phlox_pulvinata",
+     "scientific": "Phlox pulvinata",
+     "symbol": "PHPU5",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11440_21_22 Vegetation Description: named as Phlox pulvinata; 10 GBIF records within 0.5 deg"
     }
    ],
    "doc": {
@@ -530,20 +538,36 @@
    "how": "its own model (bps.csv BPS_MODEL)",
    "species": [
     {
-     "id": "campanula_rotundifolia",
-     "scientific": "Campanula rotundifolia",
-     "symbol": "CARO2",
+     "id": "erigeron_compositus",
+     "scientific": "Erigeron compositus",
+     "symbol": "ERCO4",
      "form": "forb",
      "weight": 1.0,
-     "evidence": "11450_21 Dominant and Indicator Species (CAMPA): named as Campanula (PLANTS: Campanula rotundifolia); 72 GBIF records within 0.5 deg"
+     "evidence": "11450_21 Dominant and Indicator Species (ERIGE2): 'Erigeron spp.': the tile's most-recorded native congener Erigeron compositus (10 GBIF records); 37 GBIF records within 0.5 deg"
     },
     {
-     "id": "delphinium_burkei",
-     "scientific": "Delphinium burkei",
-     "symbol": "DEBU",
+     "id": "mertensia_ciliata",
+     "scientific": "Mertensia ciliata",
+     "symbol": "MECI3",
      "form": "forb",
      "weight": 1.0,
-     "evidence": "11450_21 Dominant and Indicator Species (DELPH): named as Delphinium (PLANTS: Delphinium \u00d7burkei); 5 GBIF records within 0.5 deg"
+     "evidence": "11450_21 Dominant and Indicator Species (MERTE): 'Mertensia spp.': the tile's most-recorded native congener Mertensia ciliata (13 GBIF records); 94 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "lupinus_argenteus",
+     "scientific": "Lupinus argenteus",
+     "symbol": "LUAR3",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "11450_21 Dominant and Indicator Species (LUPIN): 'Lupinus spp.': the tile's most-recorded native congener Lupinus argenteus (7 GBIF records); 183 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "delphinium_nuttallianum",
+     "scientific": "Delphinium nuttallianum",
+     "symbol": "DENU2",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "11450_21 Dominant and Indicator Species (DELPH): 'Delphinium spp.': the tile's most-recorded native congener Delphinium nuttallianum (10 GBIF records); 77 GBIF records within 0.5 deg"
     }
    ],
    "doc": {
@@ -575,7 +599,16 @@
    "cells": 778,
    "model": "11600_21",
    "how": "its own model (bps.csv BPS_MODEL)",
-   "species": [],
+   "species": [
+    {
+     "id": "mertensia_ciliata",
+     "scientific": "Mertensia ciliata",
+     "symbol": "MECI3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11600_21 Vegetation Description: named as Mertensia ciliata; 94 GBIF records within 0.5 deg"
+    }
+   ],
    "doc": {
     "model": "11600_21",
     "title": "Rocky Mountain Subalpine/Upper Montane Riparian Systems",
@@ -670,14 +703,6 @@
    "model": "10110_21",
    "how": "the same system's model in map zone 21",
    "species": [
-    {
-     "id": "potentilla_gracilis",
-     "scientific": "Potentilla gracilis",
-     "symbol": "POGR9",
-     "form": "forb",
-     "weight": 0.5,
-     "evidence": "10110_21 Vegetation Description: named as Potentilla gracilis; 56 GBIF records within 0.5 deg"
-    },
     {
      "id": "calamagrostis_canadensis",
      "scientific": "Calamagrostis canadensis",
@@ -1279,6 +1304,14 @@
    "how": "the same system's model in map zone 21",
    "species": [
     {
+     "id": "erigeron_compositus",
+     "scientific": "Erigeron compositus",
+     "symbol": "ERCO4",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "10700_21 Dominant and Indicator Species (ERIGE2): 'Erigeron spp.': the tile's most-recorded native congener Erigeron compositus (10 GBIF records); 37 GBIF records within 0.5 deg"
+    },
+    {
      "id": "castilleja_miniata",
      "scientific": "Castilleja miniata",
      "symbol": "CAMI12",
@@ -1446,6 +1479,14 @@
      "evidence": "11390_21 Dominant and Indicator Species (FEID): named as Festuca idahoensis; 34 GBIF records within 0.5 deg"
     },
     {
+     "id": "eriogonum_umbellatum",
+     "scientific": "Eriogonum umbellatum",
+     "symbol": "ERUM",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "11390_21 Dominant and Indicator Species (ERIOG): 'Eriogonum spp.': the tile's most-recorded native congener Eriogonum umbellatum (69 GBIF records); 468 GBIF records within 0.5 deg"
+    },
+    {
      "id": "elymus_trachycaulus",
      "scientific": "Elymus trachycaulus",
      "symbol": "ELTR7",
@@ -1460,14 +1501,6 @@
      "form": "forb",
      "weight": 1.0,
      "evidence": "11390_21 Dominant and Indicator Species (GEVI2): named as Geranium viscosissimum; 848 GBIF records within 0.5 deg"
-    },
-    {
-     "id": "eriogonum_umbellatum",
-     "scientific": "Eriogonum umbellatum",
-     "symbol": "ERUM",
-     "form": "forb",
-     "weight": 0.5,
-     "evidence": "11390_21 Vegetation Description: 'Eriogonum spp.': the tile's most-recorded native congener Eriogonum umbellatum (69 GBIF records); 468 GBIF records within 0.5 deg"
     }
    ],
    "doc": {
@@ -1498,8 +1531,8 @@
      "scientific": "Eriogonum umbellatum",
      "symbol": "ERUM",
      "form": "forb",
-     "weight": 0.5,
-     "evidence": "11400_21 Vegetation Description: 'Eriogonum spp.': the tile's most-recorded native congener Eriogonum umbellatum (69 GBIF records); 468 GBIF records within 0.5 deg"
+     "weight": 1.0,
+     "evidence": "11400_21 Dominant and Indicator Species (ERIOG): 'Eriogonum spp.': the tile's most-recorded native congener Eriogonum umbellatum (69 GBIF records); 468 GBIF records within 0.5 deg"
     },
     {
      "id": "lupinus_argenteus",
@@ -1579,6 +1612,14 @@
      "form": "grass",
      "weight": 0.5,
      "evidence": "11440_21_22 Vegetation Description: named as Festuca idahoensis; 34 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "phlox_pulvinata",
+     "scientific": "Phlox pulvinata",
+     "symbol": "PHPU5",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11440_21_22 Vegetation Description: named as Phlox pulvinata; 10 GBIF records within 0.5 deg"
     }
    ],
    "doc": {
@@ -1597,20 +1638,36 @@
    "how": "the same system's model in map zone 21",
    "species": [
     {
-     "id": "campanula_rotundifolia",
-     "scientific": "Campanula rotundifolia",
-     "symbol": "CARO2",
+     "id": "erigeron_compositus",
+     "scientific": "Erigeron compositus",
+     "symbol": "ERCO4",
      "form": "forb",
      "weight": 1.0,
-     "evidence": "11450_21 Dominant and Indicator Species (CAMPA): named as Campanula (PLANTS: Campanula rotundifolia); 72 GBIF records within 0.5 deg"
+     "evidence": "11450_21 Dominant and Indicator Species (ERIGE2): 'Erigeron spp.': the tile's most-recorded native congener Erigeron compositus (10 GBIF records); 37 GBIF records within 0.5 deg"
     },
     {
-     "id": "delphinium_burkei",
-     "scientific": "Delphinium burkei",
-     "symbol": "DEBU",
+     "id": "mertensia_ciliata",
+     "scientific": "Mertensia ciliata",
+     "symbol": "MECI3",
      "form": "forb",
      "weight": 1.0,
-     "evidence": "11450_21 Dominant and Indicator Species (DELPH): named as Delphinium (PLANTS: Delphinium \u00d7burkei); 5 GBIF records within 0.5 deg"
+     "evidence": "11450_21 Dominant and Indicator Species (MERTE): 'Mertensia spp.': the tile's most-recorded native congener Mertensia ciliata (13 GBIF records); 94 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "lupinus_argenteus",
+     "scientific": "Lupinus argenteus",
+     "symbol": "LUAR3",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "11450_21 Dominant and Indicator Species (LUPIN): 'Lupinus spp.': the tile's most-recorded native congener Lupinus argenteus (7 GBIF records); 183 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "delphinium_nuttallianum",
+     "scientific": "Delphinium nuttallianum",
+     "symbol": "DENU2",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "11450_21 Dominant and Indicator Species (DELPH): 'Delphinium spp.': the tile's most-recorded native congener Delphinium nuttallianum (10 GBIF records); 77 GBIF records within 0.5 deg"
     }
    ],
    "doc": {
@@ -2138,7 +2195,16 @@
    "cells": 60,
    "model": "11600_21",
    "how": "the BpS under most of its cells on the tile (28 of 60: Rocky Mountain Subalpine/Upper Montane Riparian Systems)",
-   "species": [],
+   "species": [
+    {
+     "id": "mertensia_ciliata",
+     "scientific": "Mertensia ciliata",
+     "symbol": "MECI3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11600_21 Vegetation Description: named as Mertensia ciliata; 94 GBIF records within 0.5 deg"
+    }
+   ],
    "doc": {
     "model": "11600_21",
     "title": "Rocky Mountain Subalpine/Upper Montane Riparian Systems",
@@ -2606,12 +2672,12 @@
    "form": "forb",
    "common": "silvery lupine",
    "family": "Fabaceae",
-   "score": 68435.0,
+   "score": 72715.0,
    "classes": {
     "conifer_forest": 0.5,
     "chaparral": 0.5,
+    "grassland": 1.0,
     "mixed_forest": 0.5,
-    "grassland": 0.5,
     "riparian": 0.5,
     "barren": 0.5
    },
@@ -2619,6 +2685,7 @@
     "bps 689",
     "bps 694",
     "bps 704",
+    "bps 710",
     "evt 7046",
     "evt 7050",
     "evt 7056",
@@ -2626,6 +2693,7 @@
     "evt 7061",
     "evt 7126",
     "evt 7140",
+    "evt 7145",
     "evt 7169",
     "evt 9011",
     "evt 9016",
@@ -2790,6 +2858,34 @@
    "record": "card"
   },
   {
+   "id": "delphinium_nuttallianum",
+   "scientific": "Delphinium nuttallianum",
+   "symbol": "DENU2",
+   "form": "forb",
+   "common": "twolobe larkspur",
+   "family": "Ranunculaceae",
+   "score": 31318.0,
+   "classes": {
+    "mixed_forest": 0.5,
+    "chaparral": 0.5,
+    "grassland": 1.0,
+    "riparian": 0.5
+   },
+   "communities": [
+    "bps 686",
+    "bps 704",
+    "bps 710",
+    "evt 7011",
+    "evt 7061",
+    "evt 7126",
+    "evt 7145",
+    "evt 9519",
+    "evt 9828",
+    "evt 9829"
+   ],
+   "record": "card"
+  },
+  {
    "id": "carex_rossii",
    "scientific": "Carex rossii",
    "symbol": "CARO5",
@@ -2904,25 +3000,25 @@
    "record": "card"
   },
   {
-   "id": "delphinium_nuttallianum",
-   "scientific": "Delphinium nuttallianum",
-   "symbol": "DENU2",
+   "id": "eriogonum_umbellatum",
+   "scientific": "Eriogonum umbellatum",
+   "symbol": "ERUM",
    "form": "forb",
-   "common": "twolobe larkspur",
-   "family": "Ranunculaceae",
-   "score": 27038.0,
+   "common": "sulphur-flower buckwheat",
+   "family": "Polygonaceae",
+   "score": 23735.5,
    "classes": {
-    "mixed_forest": 0.5,
     "chaparral": 0.5,
-    "riparian": 0.5,
-    "grassland": 0.5
+    "mixed_forest": 0.5,
+    "grassland": 1.0,
+    "riparian": 0.5
    },
    "communities": [
-    "bps 686",
     "bps 704",
-    "evt 7011",
     "evt 7061",
     "evt 7126",
+    "evt 7139",
+    "evt 7140",
     "evt 9519",
     "evt 9828",
     "evt 9829"
@@ -3057,32 +3153,6 @@
     "evt 9018",
     "evt 9019",
     "evt 9022"
-   ],
-   "record": "card"
-  },
-  {
-   "id": "eriogonum_umbellatum",
-   "scientific": "Eriogonum umbellatum",
-   "symbol": "ERUM",
-   "form": "forb",
-   "common": "sulphur-flower buckwheat",
-   "family": "Polygonaceae",
-   "score": 23549.0,
-   "classes": {
-    "chaparral": 0.5,
-    "mixed_forest": 0.5,
-    "grassland": 0.5,
-    "riparian": 0.5
-   },
-   "communities": [
-    "bps 704",
-    "evt 7061",
-    "evt 7126",
-    "evt 7139",
-    "evt 7140",
-    "evt 9519",
-    "evt 9828",
-    "evt 9829"
    ],
    "record": "card"
   },
@@ -3226,53 +3296,59 @@
    "record": "card"
   },
   {
-   "id": "campanula_rotundifolia",
-   "scientific": "Campanula rotundifolia",
-   "symbol": "CARO2",
+   "id": "erigeron_compositus",
+   "scientific": "Erigeron compositus",
+   "symbol": "ERCO4",
    "form": "forb",
-   "common": "bluebell bellflower",
-   "family": "Campanulaceae",
-   "score": 4280.0,
+   "common": "cutleaf daisy",
+   "family": "Asteraceae",
+   "score": 4980.0,
    "classes": {
+    "chaparral": 1.0,
     "grassland": 1.0
    },
    "communities": [
+    "bps 696",
     "bps 710",
+    "evt 7070",
     "evt 7145"
    ],
    "record": "card"
   },
   {
-   "id": "delphinium_burkei",
-   "scientific": "Delphinium burkei",
-   "symbol": "DEBU",
+   "id": "mertensia_ciliata",
+   "scientific": "Mertensia ciliata",
+   "symbol": "MECI3",
    "form": "forb",
-   "common": "larkspur",
-   "family": "Ranunculaceae",
-   "score": 4280.0,
+   "common": "tall fringed bluebells",
+   "family": "Boraginaceae",
+   "score": 4699.0,
    "classes": {
-    "grassland": 1.0
+    "grassland": 1.0,
+    "riparian": 0.5
    },
    "communities": [
     "bps 710",
-    "evt 7145"
+    "bps 713",
+    "evt 7145",
+    "evt 9021"
    ],
    "record": "card"
   },
   {
-   "id": "potentilla_gracilis",
-   "scientific": "Potentilla gracilis",
-   "symbol": "POGR9",
+   "id": "phlox_pulvinata",
+   "scientific": "Phlox pulvinata",
+   "symbol": "PHPU5",
    "form": "forb",
-   "common": "slender cinquefoil",
-   "family": "Rosaceae",
-   "score": 3675.5,
+   "common": "cushion phlox",
+   "family": "Polemoniaceae",
+   "score": 851.0,
    "classes": {
-    "mixed_forest": 0.5
+    "grassland": 0.5
    },
    "communities": [
-    "bps 686",
-    "evt 7011"
+    "bps 709",
+    "evt 7144"
    ],
    "record": "card"
   }
@@ -3285,6 +3361,8 @@
   "Thalictrum occidentalie dropped: not in the PLANTS Database",
   "'Vaccinium spp.' dropped: no native ground congener in the tile's GBIF records",
   "Claytonia lanccolata dropped: not in the PLANTS Database",
+  "'prairie smoke' dropped: no PLANTS species of that common name",
+  "'mountain dandelion' dropped: no PLANTS species of that common name",
   "bps 690: Bouteloua gracilis skipped (no GBIF record within 0.5 deg)",
   "bps 690: Bouteloua gracilis skipped (no GBIF record within 0.5 deg)",
   "Vaccinium spp dropped: not in the PLANTS Database",
@@ -3295,7 +3373,7 @@
   "bps 694: Cornus canadensis skipped (no GBIF record within 0.5 deg)",
   "Carex generii dropped: not in the PLANTS Database",
   "bps 696: Dryas integrifolia skipped (no GBIF record within 0.5 deg)",
-  "bps 696: Erigeron arthurii skipped (no GBIF record within 0.5 deg)",
+  "'Vaccinium spp.' dropped: no native ground congener in the tile's GBIF records",
   "bps 696: Dryas integrifolia skipped (no GBIF record within 0.5 deg)",
   "'Vaccinium spp.' dropped: no native ground congener in the tile's GBIF records",
   "bps 696: Antennaria lanata skipped (no GBIF record within 0.5 deg)",
@@ -3312,21 +3390,20 @@
   "bps 709: Carex rupestris skipped (no GBIF record within 0.5 deg)",
   "Geum rosii dropped: not in the PLANTS Database",
   "bps 709: Trifolium dasyphyllum skipped (no GBIF record within 0.5 deg)",
-  "bps 710: Erigeron arthurii skipped (no GBIF record within 0.5 deg)",
-  "bps 710: Mertensia paniculata skipped (no GBIF record within 0.5 deg)",
-  "bps 710: Penstemon crideri skipped (no GBIF record within 0.5 deg)",
-  "bps 710: Lupinus alpestris skipped (no GBIF record within 0.5 deg)",
-  "bps 710: Solidago asperula skipped (no GBIF record within 0.5 deg)",
+  "'Solidago spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Koeleria spp.' dropped: no native ground congener in the tile's GBIF records",
   "'Helianthella spp.' dropped: no native ground congener in the tile's GBIF records",
   "'Solidago spp.' dropped: no native ground congener in the tile's GBIF records",
   "'Ligusticum spp.' dropped: no native ground congener in the tile's GBIF records",
   "'Osmorhiza spp.' dropped: no native ground congener in the tile's GBIF records",
   "'Valeriana spp.' dropped: no native ground congener in the tile's GBIF records",
   "'Veratrum spp.' dropped: no native ground congener in the tile's GBIF records",
-  "bps 712: Carex abitibiana skipped (no GBIF record within 0.5 deg)",
+  "'Populus spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Salix spp.' dropped: no native ground congener in the tile's GBIF records",
   "Carex aaquatilis dropped: not in the PLANTS Database",
   "Mertensia ciliatus dropped: not in the PLANTS Database",
-  "bps 713: Carex abitibiana skipped (no GBIF record within 0.5 deg)",
+  "'Salix spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Salix drummondii dropped: not in the PLANTS Database",
   "Carex brunnscens dropped: not in the PLANTS Database",
   "Epilobium angustifoilium dropped: not in the PLANTS Database",
   "bps 715: Begonia reniformis skipped (no GBIF record within 0.5 deg)",
@@ -3337,6 +3414,8 @@
   "Thalictrum occidentalie dropped: not in the PLANTS Database",
   "'Vaccinium spp.' dropped: no native ground congener in the tile's GBIF records",
   "Claytonia lanccolata dropped: not in the PLANTS Database",
+  "'prairie smoke' dropped: no PLANTS species of that common name",
+  "'mountain dandelion' dropped: no PLANTS species of that common name",
   "evt 7049: Bouteloua gracilis skipped (no GBIF record within 0.5 deg)",
   "evt 7049: Bouteloua gracilis skipped (no GBIF record within 0.5 deg)",
   "evt 7050: Cornus canadensis skipped (no GBIF record within 0.5 deg)",
@@ -3354,23 +3433,26 @@
   "Agropyron spicata dropped: not in the PLANTS Database",
   "Antennaria microphyla dropped: not in the PLANTS Database",
   "evt 7070: Dryas integrifolia skipped (no GBIF record within 0.5 deg)",
-  "evt 7070: Erigeron arthurii skipped (no GBIF record within 0.5 deg)",
+  "'Vaccinium spp.' dropped: no native ground congener in the tile's GBIF records",
   "evt 7070: Dryas integrifolia skipped (no GBIF record within 0.5 deg)",
   "'Vaccinium spp.' dropped: no native ground congener in the tile's GBIF records",
   "evt 7070: Antennaria lanata skipped (no GBIF record within 0.5 deg)",
   "evt 7070: Carex spectabilis skipped (no GBIF record within 0.5 deg)",
   "Pinus ablicaulis dropped: not in the PLANTS Database",
   "Ribes montigenus dropped: not in the PLANTS Database",
+  "'Amelanchier spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Purshia spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Symphoricarpos spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Prunus spp.' dropped: no native ground congener in the tile's GBIF records",
   "'Prunus spp.' dropped: no native ground congener in the tile's GBIF records",
   "'Symphoricarpos spp.' dropped: no native ground congener in the tile's GBIF records",
   "Agropyron spicata dropped: not in the PLANTS Database",
   "Antennaria microphyla dropped: not in the PLANTS Database",
-  "evt 7139: Phlox glutinosa skipped (no GBIF record within 0.5 deg)",
   "Achnatherum letermanii dropped: not in the PLANTS Database",
   "Trisetum spicata dropped: not in the PLANTS Database",
-  "evt 7140: Symphyotrichum amethystinum skipped (no GBIF record within 0.5 deg)",
-  "evt 7140: Bromus pectinatus skipped (no GBIF record within 0.5 deg)",
-  "evt 7140: Danthonia compressa skipped (no GBIF record within 0.5 deg)",
+  "'Aster spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Bromus spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Danthonia spp.' dropped: no native ground congener in the tile's GBIF records",
   "'Aster spp.' dropped: no native ground congener in the tile's GBIF records",
   "'Danthonia spp.' dropped: no native ground congener in the tile's GBIF records",
   "'Potentilla spp.' dropped: no native ground congener in the tile's GBIF records",
@@ -3382,11 +3464,8 @@
   "evt 7144: Carex rupestris skipped (no GBIF record within 0.5 deg)",
   "Geum rosii dropped: not in the PLANTS Database",
   "evt 7144: Trifolium dasyphyllum skipped (no GBIF record within 0.5 deg)",
-  "evt 7145: Erigeron arthurii skipped (no GBIF record within 0.5 deg)",
-  "evt 7145: Mertensia paniculata skipped (no GBIF record within 0.5 deg)",
-  "evt 7145: Penstemon crideri skipped (no GBIF record within 0.5 deg)",
-  "evt 7145: Lupinus alpestris skipped (no GBIF record within 0.5 deg)",
-  "evt 7145: Solidago asperula skipped (no GBIF record within 0.5 deg)",
+  "'Solidago spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Koeleria spp.' dropped: no native ground congener in the tile's GBIF records",
   "'Helianthella spp.' dropped: no native ground congener in the tile's GBIF records",
   "'Solidago spp.' dropped: no native ground congener in the tile's GBIF records",
   "'Ligusticum spp.' dropped: no native ground congener in the tile's GBIF records",
@@ -3399,17 +3478,22 @@
   "Picea engelmanii dropped: not in the PLANTS Database",
   "'Vaccinium spp.' dropped: no native ground congener in the tile's GBIF records",
   "Claytonia lanccolata dropped: not in the PLANTS Database",
+  "'prairie smoke' dropped: no PLANTS species of that common name",
+  "'mountain dandelion' dropped: no PLANTS species of that common name",
   "evt 9011: Cornus canadensis skipped (no GBIF record within 0.5 deg)",
   "Carex generii dropped: not in the PLANTS Database",
   "'Vaccinium spp.' dropped: no native ground congener in the tile's GBIF records",
   "Claytonia lanccolata dropped: not in the PLANTS Database",
+  "'prairie smoke' dropped: no PLANTS species of that common name",
+  "'mountain dandelion' dropped: no PLANTS species of that common name",
   "evt 9017: Cornus canadensis skipped (no GBIF record within 0.5 deg)",
   "Carex generii dropped: not in the PLANTS Database",
   "evt 9018: Cornus canadensis skipped (no GBIF record within 0.5 deg)",
   "Carex generii dropped: not in the PLANTS Database",
   "evt 9019: Cornus canadensis skipped (no GBIF record within 0.5 deg)",
   "Carex generii dropped: not in the PLANTS Database",
-  "evt 9021: Carex abitibiana skipped (no GBIF record within 0.5 deg)",
+  "'Salix spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Salix drummondii dropped: not in the PLANTS Database",
   "Carex brunnscens dropped: not in the PLANTS Database",
   "evt 9022: Cornus canadensis skipped (no GBIF record within 0.5 deg)",
   "Carex generii dropped: not in the PLANTS Database",
@@ -3424,35 +3508,36 @@
   "Antennaria microphyla dropped: not in the PLANTS Database",
   "carex_hoodii: dropped (the tile's 11 grass slots are taken by better-represented species)",
   "poa_wheeleri: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "koeleria_macrantha: dropped (the tile's 11 grass slots are taken by better-represented species)",
   "elymus_glaucus: dropped (the tile's 11 grass slots are taken by better-represented species)",
   "deschampsia_cespitosa: dropped (the tile's 11 grass slots are taken by better-represented species)",
   "festuca_brachyphylla: dropped (the tile's 11 grass slots are taken by better-represented species)",
   "carex_elynoides: dropped (the tile's 11 grass slots are taken by better-represented species)",
   "carex_scirpoidea: dropped (the tile's 11 grass slots are taken by better-represented species)",
   "carex_nardina: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "carex_nigricans: dropped (the tile's 11 grass slots are taken by better-represented species)",
   "carex_utriculata: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "carex_canescens: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "carex_aurea: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "carex_illota: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "carex_luzulina: dropped (the tile's 11 grass slots are taken by better-represented species)",
   "juncus_parryi: dropped (the tile's 11 grass slots are taken by better-represented species)",
   "luzula_piperi: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "carex_nigricans: dropped (the tile's 11 grass slots are taken by better-represented species)",
   "achnatherum_nelsonii: dropped (the tile's 11 grass slots are taken by better-represented species)",
   "achnatherum_lettermanii: dropped (the tile's 11 grass slots are taken by better-represented species)",
   "phleum_alpinum: dropped (the tile's 11 grass slots are taken by better-represented species)",
   "bromus_marginatus: dropped (the tile's 11 grass slots are taken by better-represented species)",
   "leucopoa_kingii: dropped (the tile's 11 grass slots are taken by better-represented species)",
   "elymus_lanceolatus: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "koeleria_macrantha: dropped (the tile's 11 grass slots are taken by better-represented species)",
   "calamagrostis_rubescens: dropped (the tile's 11 grass slots are taken by better-represented species)",
+  "campanula_rotundifolia: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "potentilla_gracilis: dropped (the tile's 16 forb slots are taken by better-represented species)",
   "taraxacum_officinale: dropped (the tile's 16 forb slots are taken by better-represented species)",
   "achillea_millefolium: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "erigeron_compositus: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "agastache_urticifolia: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "chamerion_angustifolium: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "senecio_integerrimus: dropped (the tile's 16 forb slots are taken by better-represented species)",
   "equisetum_arvense: dropped (the tile's 16 forb slots are taken by better-represented species)",
   "dryas_octopetala: dropped (the tile's 16 forb slots are taken by better-represented species)",
   "phlox_pulvinata: dropped (the tile's 16 forb slots are taken by better-represented species)",
   "geum_macrophyllum: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "mertensia_ciliata: dropped (the tile's 16 forb slots are taken by better-represented species)",
   "saxifraga_odontoloma: dropped (the tile's 16 forb slots are taken by better-represented species)",
   "oreostemma_alpigenum: dropped (the tile's 16 forb slots are taken by better-represented species)",
   "pedicularis_bracteosa: dropped (the tile's 16 forb slots are taken by better-represented species)",
@@ -3461,9 +3546,11 @@
   "phlox_condensata: dropped (the tile's 16 forb slots are taken by better-represented species)",
   "claytonia_megarhiza: dropped (the tile's 16 forb slots are taken by better-represented species)",
   "antennaria_racemosa: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "phlox_longifolia: dropped (the tile's 16 forb slots are taken by better-represented species)",
   "helianthella_uniflora: dropped (the tile's 16 forb slots are taken by better-represented species)",
   "senecio_triangularis: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "streptopus_amplexifolius: dropped (the tile's 16 forb slots are taken by better-represented species)"
+  "streptopus_amplexifolius: dropped (the tile's 16 forb slots are taken by better-represented species)",
+  "phlox_pulvinata: kept for evt 7144 (Rocky Mountain Alpine Turf), its best forb, in place of penstemon_deustus"
  ],
  "cards_written": []
 }
