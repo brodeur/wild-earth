@@ -7297,3 +7297,10 @@ glottal stop is itself drawn like a question mark without its dot, so at 12 px i
   rendered in the card's own style in headless Chrome, and CDP `CSS.getPlatformFontsForNode` asked which fonts drew each:
   every name now draws only from DM Sans and Noto Sans (Noto for Ɂ and ʔ in the Washoe name and ȧ in the Cheyenne
   name), with no system fallback; with DM Sans alone the same three came from .SF NS and Helvetica.
+
+## 2026-11-06: phase 1, iteration 10 (the eye-level queue)
+
+- **Teton's sage probe stands in sage again** (tools/probes/pose_rule.js eye(): an optional `community`, the probe's
+  intent, used when the old pose's row has changed under it). Teton's b_sage_eye [8500, 2000] stood in lodgepole forest
+  after the rebuilds; the rule starts from the nearest row naming Sagebrush (row 50, montane sagebrush steppe) and
+  applies the same shrub-cover, sward, road and water tests: [8816, 1880], 338 m off, shrub 32 % (row median 28 %).
