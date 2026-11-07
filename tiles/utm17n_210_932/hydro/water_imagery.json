@@ -1,0 +1,188 @@
+{
+ "rule": {
+  "water_pixel": "seasons/s2_MM.tif: NDWI (NIR from red and NDVI) > 0 or NIR < 0.04, not bright (water_seasons.py)",
+  "water": "per 20 m pixel max(frequency, fraction): frequency = wet months / observed (>= 3); fraction = its NDWI's 75th percentile over the clear months unmixed between the never-wet land within 300 m and the tile's always-wet water (median NDWI; 0.3 with under 10 such pixels); DEM slope < 0.2, DEM > 0.5 m; bilinear onto the 5 m grid, water at >= 0.5",
+  "naip": "imagery/naip.tif is RGB (no NIR band): not used",
+  "reach": "on: water within max(w/2, 10 m); near: within max(60 m, 2 w); every 10 m; on water >= 0.6, off water: near >= 0.5, else no water seen",
+  "move": "stems of DEM reaches with width >= 10 m not on water: least-cost path on the 5 m grid within 600 m of the drawn stem on ground <= 10 m over its nearest DEM line cell (water 1 + 2 exp(-d_in/6 m), land 12 x (0.4 + 0.6 min(1, d_dem/30 m))), edge ends fixed, interior ends snapped to water within 60 m, a junction on a moved stem taken as moved, smoothed 10 m; kept when on >= 0.5 and >= the old line's + 0.2; the reaches meeting a moved node bent to it over 2 |shift| + 20 m (shift <= 30 m) or extended straight to it (one per node)",
+  "nhd_dropped": "NHD-sourced stretches with width >= 10 m, no water seen, within 600 m of a moved stem's old or new line, off the tile edge: the map's pieces of a river where the imagery shows none",
+  "width": "a moved reach takes the water's median cross-section when >= 40 m and wider than drawn",
+  "side_channels": "the river's water within 250 m, off the moved ribbon (w/2 + 10 m), its skeleton's longest path >= 150 m: a reach at its measured width (source imagery)",
+  "undrawn": "water patches >= 1600 m2 beyond w/2 + 20 m of every reach and 20 m of every kept pond"
+ },
+ "stats": {
+  "months_used": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "water_cells_5m": 4503,
+  "reaches_tested": 200,
+  "verdicts_before": {
+   "no water seen": 200
+  },
+  "verdicts_after": {
+   "no water seen": 200
+  },
+  "stems": 0,
+  "stems_moved": 0,
+  "reaches_moved": 0,
+  "reaches_bent": 0,
+  "reaches_extended": 0,
+  "nhd_dropped": 0,
+  "side_channels": 0,
+  "undrawn_patches": 11,
+  "undrawn_m2": 52025,
+  "undrawn_by_map": {
+   "unmapped": 52025
+  },
+  "seconds": 8.7
+ },
+ "stems": [],
+ "reaches": [],
+ "side_channels": [],
+ "nhd_dropped": [],
+ "undrawn": [
+  {
+   "at": [
+    4539,
+    4913
+   ],
+   "area_m2": 15000,
+   "freq_mean": 0.64,
+   "nearest_reach": null,
+   "nearest_width": 6.12,
+   "nearest_m": 256,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    4777,
+    4481
+   ],
+   "area_m2": 10800,
+   "freq_mean": 0.7,
+   "nearest_reach": null,
+   "nearest_width": 1.0,
+   "nearest_m": 147,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    1658,
+    8445
+   ],
+   "area_m2": 4275,
+   "freq_mean": 0.61,
+   "nearest_reach": null,
+   "nearest_width": 1.18,
+   "nearest_m": 117,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    3854,
+    6464
+   ],
+   "area_m2": 4000,
+   "freq_mean": 0.56,
+   "nearest_reach": null,
+   "nearest_width": 2.88,
+   "nearest_m": 178,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    3946,
+    6340
+   ],
+   "area_m2": 3350,
+   "freq_mean": 0.6,
+   "nearest_reach": null,
+   "nearest_width": 2.88,
+   "nearest_m": 66,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    3710,
+    6707
+   ],
+   "area_m2": 3200,
+   "freq_mean": 0.59,
+   "nearest_reach": null,
+   "nearest_width": 2.88,
+   "nearest_m": 247,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    2791,
+    7647
+   ],
+   "area_m2": 2600,
+   "freq_mean": 0.62,
+   "nearest_reach": null,
+   "nearest_width": 2.79,
+   "nearest_m": 154,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    2976,
+    7491
+   ],
+   "area_m2": 2575,
+   "freq_mean": 0.59,
+   "nearest_reach": null,
+   "nearest_width": 2.79,
+   "nearest_m": 396,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    2435,
+    7929
+   ],
+   "area_m2": 2300,
+   "freq_mean": 0.58,
+   "nearest_reach": null,
+   "nearest_width": 2.79,
+   "nearest_m": 296,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    2233,
+    8062
+   ],
+   "area_m2": 2050,
+   "freq_mean": 0.68,
+   "nearest_reach": null,
+   "nearest_width": 1.18,
+   "nearest_m": 308,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    3979,
+    6168
+   ],
+   "area_m2": 1875,
+   "freq_mean": 0.61,
+   "nearest_reach": null,
+   "nearest_width": 2.88,
+   "nearest_m": 101,
+   "map": "unmapped"
+  }
+ ]
+}

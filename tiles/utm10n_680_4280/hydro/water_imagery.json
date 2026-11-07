@@ -25,17 +25,15 @@
    11,
    12
   ],
-  "water_cells_5m": 14899,
-  "reaches_tested": 376,
+  "water_cells_5m": 14904,
+  "reaches_tested": 368,
   "verdicts_before": {
-   "no water seen": 369,
-   "on water": 6,
-   "off water": 1
+   "no water seen": 363,
+   "on water": 5
   },
   "verdicts_after": {
-   "no water seen": 369,
-   "on water": 6,
-   "off water": 1
+   "no water seen": 363,
+   "on water": 5
   },
   "stems": 2,
   "stems_moved": 0,
@@ -44,13 +42,13 @@
   "reaches_extended": 0,
   "nhd_dropped": 0,
   "side_channels": 0,
-  "undrawn_patches": 17,
-  "undrawn_m2": 209250,
+  "undrawn_patches": 18,
+  "undrawn_m2": 209325,
   "undrawn_by_map": {
-   "a rewilded reservoir or pond (human water, not drawn by the rule)": 204850,
-   "unmapped": 4400
+   "a rewilded reservoir or pond (human water, not drawn by the rule)": 205375,
+   "unmapped": 3950
   },
-  "seconds": 11.6
+  "seconds": 8.9
  },
  "stems": [
   {
@@ -58,29 +56,29 @@
    "names": [
     "Weber Creek"
    ],
-   "length_m": 406,
+   "length_m": 488,
    "area_km2": 129.8,
    "width": 14.33,
    "before": {
     "on": 0.0,
     "near": 0.0,
-    "samples": 42
+    "samples": 50
    },
    "verdict": "no water seen (kept: the trace is not on the imagery's water)",
    "after": {
     "on": 0.0,
     "near": 0.0,
-    "samples": 41
+    "samples": 50
    }
   },
   {
-   "reaches": 10,
+   "reaches": 9,
    "names": [
     "Weber Creek"
    ],
-   "length_m": 6956,
+   "length_m": 6954,
    "area_km2": 86.3,
-   "width": 13.78,
+   "width": 13.83,
    "before": {
     "on": 0.0,
     "near": 0.0,
@@ -96,26 +94,7 @@
  ],
  "reaches": [
   {
-   "k": 0,
-   "name": "Weber Creek",
-   "width": 14.29,
-   "length_m": 23,
-   "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 4
-   },
-   "after": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 4
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "no water seen",
-   "moved": null
-  },
-  {
-   "k": 3,
+   "k": 2,
    "name": "Weber Creek",
    "width": 14.32,
    "length_m": 219,
@@ -134,142 +113,123 @@
    "moved": null
   },
   {
-   "k": 4,
+   "k": 3,
    "name": "Weber Creek",
    "width": 14.33,
-   "length_m": 164,
+   "length_m": 197,
    "before": {
     "on": 0.0,
     "near": 0.0,
-    "samples": 18
+    "samples": 21
    },
    "after": {
     "on": 0.0,
     "near": 0.0,
-    "samples": 18
+    "samples": 21
    },
    "verdict_before": "no water seen",
    "verdict_after": "no water seen",
    "moved": null
   },
   {
-   "k": 8,
+   "k": 6,
    "name": "Weber Creek",
-   "width": 13.78,
-   "length_m": 370,
+   "width": 13.83,
+   "length_m": 373,
    "before": {
     "on": 0.0,
     "near": 0.0,
-    "samples": 38
+    "samples": 39
    },
    "after": {
     "on": 0.0,
     "near": 0.0,
-    "samples": 38
+    "samples": 39
    },
    "verdict_before": "no water seen",
    "verdict_after": "no water seen",
    "moved": null
   },
   {
-   "k": 27,
-   "name": "Weber Creek",
-   "width": 12.47,
-   "length_m": 1050,
-   "before": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 106
-   },
-   "after": {
-    "on": 0.0,
-    "near": 0.0,
-    "samples": 106
-   },
-   "verdict_before": "no water seen",
-   "verdict_after": "no water seen",
-   "moved": null
-  },
-  {
-   "k": 41,
+   "k": 39,
    "name": "Indian Creek",
-   "width": 5.8,
-   "length_m": 86,
+   "width": 5.79,
+   "length_m": 78,
    "before": {
-    "on": 0.7,
-    "near": 0.7,
-    "samples": 10
+    "on": 0.667,
+    "near": 0.667,
+    "samples": 9
    },
    "after": {
-    "on": 0.7,
-    "near": 0.7,
-    "samples": 10
+    "on": 0.667,
+    "near": 0.667,
+    "samples": 9
    },
    "verdict_before": "on water",
    "verdict_after": "on water",
    "moved": null
   },
   {
-   "k": 45,
+   "k": 43,
    "name": null,
-   "width": 5.75,
-   "length_m": 482,
+   "width": 5.74,
+   "length_m": 476,
    "before": {
-    "on": 0.8,
-    "near": 0.88,
-    "samples": 50
+    "on": 0.816,
+    "near": 0.898,
+    "samples": 49
    },
    "after": {
-    "on": 0.8,
-    "near": 0.88,
-    "samples": 50
+    "on": 0.816,
+    "near": 0.898,
+    "samples": 49
    },
    "verdict_before": "on water",
    "verdict_after": "on water",
    "moved": null
   },
   {
-   "k": 52,
+   "k": 49,
    "name": "Weber Creek",
-   "width": 12.43,
-   "length_m": 1796,
+   "width": 12.45,
+   "length_m": 2847,
    "before": {
     "on": 0.0,
     "near": 0.0,
-    "samples": 181
+    "samples": 286
    },
    "after": {
     "on": 0.0,
     "near": 0.0,
-    "samples": 181
+    "samples": 286
    },
    "verdict_before": "no water seen",
    "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 54,
+   "name": null,
+   "width": 1.01,
+   "length_m": 558,
+   "before": {
+    "on": 0.719,
+    "near": 0.719,
+    "samples": 57
+   },
+   "after": {
+    "on": 0.719,
+    "near": 0.719,
+    "samples": 57
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
    "moved": null
   },
   {
    "k": 56,
-   "name": null,
-   "width": 1.0,
-   "length_m": 535,
-   "before": {
-    "on": 0.745,
-    "near": 0.745,
-    "samples": 55
-   },
-   "after": {
-    "on": 0.745,
-    "near": 0.745,
-    "samples": 55
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": null
-  },
-  {
-   "k": 60,
    "name": "Weber Creek",
-   "width": 12.33,
+   "width": 12.31,
    "length_m": 714,
    "before": {
     "on": 0.0,
@@ -286,9 +246,9 @@
    "moved": null
   },
   {
-   "k": 80,
+   "k": 78,
    "name": "Weber Creek",
-   "width": 12.3,
+   "width": 12.27,
    "length_m": 797,
    "before": {
     "on": 0.0,
@@ -305,10 +265,10 @@
    "moved": null
   },
   {
-   "k": 88,
+   "k": 86,
    "name": "Weber Creek",
-   "width": 12.19,
-   "length_m": 878,
+   "width": 12.17,
+   "length_m": 873,
    "before": {
     "on": 0.0,
     "near": 0.0,
@@ -324,29 +284,29 @@
    "moved": null
   },
   {
-   "k": 95,
+   "k": 91,
    "name": "Weber Creek",
    "width": 12.11,
-   "length_m": 372,
+   "length_m": 366,
    "before": {
     "on": 0.0,
     "near": 0.0,
-    "samples": 39
+    "samples": 38
    },
    "after": {
     "on": 0.0,
     "near": 0.0,
-    "samples": 39
+    "samples": 38
    },
    "verdict_before": "no water seen",
    "verdict_after": "no water seen",
    "moved": null
   },
   {
-   "k": 97,
+   "k": 93,
    "name": "Weber Creek",
-   "width": 12.08,
-   "length_m": 292,
+   "width": 12.09,
+   "length_m": 299,
    "before": {
     "on": 0.0,
     "near": 0.0,
@@ -362,7 +322,7 @@
    "moved": null
   },
   {
-   "k": 106,
+   "k": 103,
    "name": "Weber Creek",
    "width": 11.99,
    "length_m": 451,
@@ -381,7 +341,7 @@
    "moved": null
   },
   {
-   "k": 109,
+   "k": 105,
    "name": "Weber Creek",
    "width": 11.9,
    "length_m": 236,
@@ -400,95 +360,76 @@
    "moved": null
   },
   {
-   "k": 129,
-   "name": null,
-   "width": 3.25,
-   "length_m": 21,
-   "before": {
-    "on": 0.75,
-    "near": 1.0,
-    "samples": 4
-   },
-   "after": {
-    "on": 0.75,
-    "near": 1.0,
-    "samples": 4
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": null
-  },
-  {
-   "k": 130,
-   "name": null,
-   "width": 3.25,
-   "length_m": 183,
-   "before": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 20
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 20
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": null
-  },
-  {
    "k": 195,
    "name": null,
-   "width": 1.06,
-   "length_m": 320,
+   "width": 1.87,
+   "length_m": 609,
    "before": {
-    "on": 0.5,
-    "near": 0.559,
-    "samples": 34
+    "on": 0.79,
+    "near": 0.903,
+    "samples": 62
    },
    "after": {
-    "on": 0.5,
-    "near": 0.559,
-    "samples": 34
-   },
-   "verdict_before": "off water",
-   "verdict_after": "off water",
-   "moved": null
-  },
-  {
-   "k": 208,
-   "name": null,
-   "width": 1.9,
-   "length_m": 615,
-   "before": {
-    "on": 0.794,
-    "near": 0.905,
-    "samples": 63
-   },
-   "after": {
-    "on": 0.794,
-    "near": 0.905,
-    "samples": 63
+    "on": 0.79,
+    "near": 0.903,
+    "samples": 62
    },
    "verdict_before": "on water",
    "verdict_after": "on water",
    "moved": null
   },
   {
-   "k": 389,
+   "k": 293,
+   "name": "Sawmill Creek",
+   "width": 1.99,
+   "length_m": 113,
+   "before": {
+    "on": 0.769,
+    "near": 0.846,
+    "samples": 13
+   },
+   "after": {
+    "on": 0.769,
+    "near": 0.846,
+    "samples": 13
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 359,
    "name": "Weber Creek",
-   "width": 11.89,
-   "length_m": 50,
+   "width": 14.29,
+   "length_m": 73,
    "before": {
     "on": 0.0,
     "near": 0.0,
-    "samples": 6
+    "samples": 9
    },
    "after": {
     "on": 0.0,
     "near": 0.0,
-    "samples": 6
+    "samples": 9
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 375,
+   "name": "Weber Creek",
+   "width": 11.89,
+   "length_m": 51,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 7
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 7
    },
    "verdict_before": "no water seen",
    "verdict_after": "no water seen",
@@ -503,10 +444,10 @@
     8686,
     4021
    ],
-   "area_m2": 50300,
+   "area_m2": 50325,
    "freq_mean": 0.92,
    "nearest_reach": null,
-   "nearest_width": 1.9,
+   "nearest_width": 1.87,
    "nearest_m": 95,
    "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
   },
@@ -518,31 +459,31 @@
    "area_m2": 36825,
    "freq_mean": 0.91,
    "nearest_reach": null,
-   "nearest_width": 5.75,
+   "nearest_width": 5.74,
    "nearest_m": 86,
    "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
   },
   {
    "at": [
     724,
-    8384
+    8383
    ],
-   "area_m2": 27225,
+   "area_m2": 27375,
    "freq_mean": 0.93,
    "nearest_reach": null,
-   "nearest_width": 1.0,
+   "nearest_width": 1.01,
    "nearest_m": 77,
    "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
   },
   {
    "at": [
-    1522,
-    1377
+    1521,
+    1378
    ],
-   "area_m2": 25600,
+   "area_m2": 26200,
    "freq_mean": 0.89,
    "nearest_reach": "Sawmill Creek",
-   "nearest_width": 2.37,
+   "nearest_width": 2.33,
    "nearest_m": 60,
    "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
   },
@@ -551,23 +492,11 @@
     4737,
     6925
    ],
-   "area_m2": 14225,
+   "area_m2": 14275,
    "freq_mean": 0.88,
-   "nearest_reach": null,
-   "nearest_width": 3.25,
+   "nearest_reach": "Indian Creek",
+   "nearest_width": 3.18,
    "nearest_m": 113,
-   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
-  },
-  {
-   "at": [
-    8913,
-    4098
-   ],
-   "area_m2": 9275,
-   "freq_mean": 0.84,
-   "nearest_reach": null,
-   "nearest_width": 1.9,
-   "nearest_m": 28,
    "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
   },
   {
@@ -578,32 +507,44 @@
    "area_m2": 9025,
    "freq_mean": 0.83,
    "nearest_reach": null,
-   "nearest_width": 1.03,
+   "nearest_width": 1.02,
    "nearest_m": 85,
    "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
   },
   {
    "at": [
-    3088,
+    1394,
+    1378
+   ],
+   "area_m2": 6675,
+   "freq_mean": 0.83,
+   "nearest_reach": "Sawmill Creek",
+   "nearest_width": 2.33,
+   "nearest_m": 67,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  },
+  {
+   "at": [
+    3087,
     2752
    ],
-   "area_m2": 6650,
-   "freq_mean": 0.88,
+   "area_m2": 6625,
+   "freq_mean": 0.87,
    "nearest_reach": null,
-   "nearest_width": 1.71,
+   "nearest_width": 1.72,
    "nearest_m": 41,
    "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
   },
   {
    "at": [
-    1393,
-    1377
+    8951,
+    4159
    ],
-   "area_m2": 6625,
-   "freq_mean": 0.83,
-   "nearest_reach": "Sawmill Creek",
-   "nearest_width": 2.37,
-   "nearest_m": 66,
+   "area_m2": 5500,
+   "freq_mean": 0.84,
+   "nearest_reach": null,
+   "nearest_width": 1.87,
+   "nearest_m": 40,
    "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
   },
   {
@@ -614,7 +555,7 @@
    "area_m2": 5225,
    "freq_mean": 0.85,
    "nearest_reach": null,
-   "nearest_width": 1.71,
+   "nearest_width": 1.72,
    "nearest_m": 31,
    "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
   },
@@ -624,10 +565,22 @@
     8575
    ],
    "area_m2": 3750,
-   "freq_mean": 0.74,
+   "freq_mean": 0.75,
    "nearest_reach": null,
-   "nearest_width": 1.1,
+   "nearest_width": 1.11,
    "nearest_m": 42,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  },
+  {
+   "at": [
+    8855,
+    4009
+   ],
+   "area_m2": 3650,
+   "freq_mean": 0.83,
+   "nearest_reach": null,
+   "nearest_width": 1.87,
+   "nearest_m": 33,
    "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
   },
   {
@@ -638,32 +591,20 @@
    "area_m2": 2675,
    "freq_mean": 0.83,
    "nearest_reach": "Sawmill Creek",
-   "nearest_width": 2.37,
+   "nearest_width": 2.33,
    "nearest_m": 31,
    "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
   },
   {
    "at": [
-    953,
+    952,
     8474
    ],
    "area_m2": 2650,
-   "freq_mean": 0.67,
+   "freq_mean": 0.68,
    "nearest_reach": null,
-   "nearest_width": 5.75,
+   "nearest_width": 5.74,
    "nearest_m": 31,
-   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
-  },
-  {
-   "at": [
-    8771,
-    3882
-   ],
-   "area_m2": 2400,
-   "freq_mean": 0.87,
-   "nearest_reach": null,
-   "nearest_width": 1.9,
-   "nearest_m": 29,
    "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
   },
   {
@@ -671,20 +612,20 @@
     587,
     6046
    ],
-   "area_m2": 2400,
+   "area_m2": 2425,
    "freq_mean": 0.79,
    "nearest_reach": null,
-   "nearest_width": 2.02,
+   "nearest_width": 2.03,
    "nearest_m": 34,
    "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
   },
   {
    "at": [
-    232,
-    9984
+    233,
+    9981
    ],
-   "area_m2": 2275,
-   "freq_mean": 0.81,
+   "area_m2": 2225,
+   "freq_mean": 0.77,
    "nearest_reach": null,
    "nearest_width": 1.0,
    "nearest_m": 93,
@@ -692,14 +633,26 @@
   },
   {
    "at": [
-    135,
-    9936
+    8771,
+    3879
    ],
-   "area_m2": 2125,
-   "freq_mean": 0.71,
+   "area_m2": 2175,
+   "freq_mean": 0.86,
+   "nearest_reach": null,
+   "nearest_width": 1.87,
+   "nearest_m": 30,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  },
+  {
+   "at": [
+    137,
+    9928
+   ],
+   "area_m2": 1725,
+   "freq_mean": 0.74,
    "nearest_reach": null,
    "nearest_width": 1.0,
-   "nearest_m": 76,
+   "nearest_m": 74,
    "map": "unmapped"
   }
  ]

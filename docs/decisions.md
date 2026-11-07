@@ -7812,3 +7812,34 @@ or AVONET row, not a per-species patch.
   TestMarineMammals; TestPresenceBuffer, the home-range buffer and the California-only bands) and
   `tests/test_activities.py` (the new families' lines). In a dry run over every tile with a fauna list, only the
   intended slots changed.
+
+## 2026-11-07: roads removed by rule on every tile (pipeline/unroad.py, erase_imagery.py; branch claude/sweet-feistel-2054bb)
+
+- **Roads removed by rule, every tile (2026-11-07, Aaron: "Yes, remove road").** Roads are part of the present day, not of the rewilded world, so the pipeline takes them out at build time instead of decaying them.
+  - **Ortho.** Pavement and verge, freeways included, join the erase mask, read from `footprint/roads.png` (all OSM roads; paths and footways excluded).
+    - A strip with nothing else erased around it is mirrored from the ground on either side (`erase_imagery._reflect_fill`).
+    - The ridge where the two mirrors meet is softened.
+    - Within a strip half-width of the ridge the broad tone replaces the mid-band, so banks of different tone fade into each other.
+    - On imagery coarser than its grid (Sentinel-2) the mask grows by one native pixel.
+    - No bleached grey. A road OSM doesn't map stays, for example Serengeti's main pale road.
+  - **Trees and cover.**
+    - On a lidar tile the crown finder runs on the CHM with each road's erase strip mirrored from beside it, the same mirror as the imagery (crowns v2, `unroad.mirror_canopy`). Without this, US-50 at home read from 150 m as a treeless band.
+    - In `client/canopy.png`, a cell crossed by pavement whose LANDFIRE cover isn't vegetation takes the cover of the vegetated cells around it. That is 17,625 cells at home and 493 on Lamar.
+  - **Ground.** `client/roads.png` is all zero, so the client draws no pavement and leaves no plant gaps. LANDFIRE's Developed-Roads cells are already backfilled from BpS.
+  - **Height.** `pipeline/unroad.py` runs on the 1 m ground, or on the drawn 5 m DEM when that comes from a product of 10 m or finer. It never runs on GLO-30, which resolves no road at all. It is applied once, so the drawn DEM and the water routing read the same ground.
+    - **Corridor.** Each road's corridor is its paved half-width × 3 + 4 m.
+    - **What is replaced.** The ground is replaced where it departs from the harmonic surface spanned from the corridor's edges:
+      - the road's own prism always;
+      - elsewhere past 0.1 m, fully past 0.4 m.
+    - **Blending.** The replacement eases in over 4 m and carries noise at the surrounding ground's grain.
+    - **What stays.**
+      - Bridges are not corridors.
+      - Within 40 m of a stream line the rule only removes ground and never raises it, so an untagged bridge or a channel beside a road stays open. Before this rule, 23 crossings on Lamar had their beds raised by up to 2.4 m.
+      - Natural benches stay.
+    - **Original kept.** The fetched product is kept as `*_roaded.tif` and keyed in `*_unroad.json`.
+  - **Reroute.** Reroute (v2) cuts no culverts once a tile is unroaded. It used to read `client/roads.png`, which the terrain step writes later, so on a first rebuild it still saw the old roads: 700 crossings cut up to 12.5 m deep on home, 262 up to 11 m on Grand Canyon.
+  - **Step versions.** dem 3 (after osm and hydro), lidar 2, reroute 2, water 3, terrain 3, erase 2, crowns 2.
+  - **Stats.** Lamar: 5 roads, 0.5 % of the tile in corridors, 0.35 km² changed, 0.24 M m³ moved. Home: 3,943 roads, 18 % in corridors, 14.4 km² changed, 9.7 M m³ moved; US-50's 15 m fills are gone.
+  - **The `G` overlay stays.** OSM ghost roads remain as a present-day overlay.
+- **A reach's water outline no longer depends on its place in the file (water step 3).** The width wander (0.55–1.4 × width/2, periods 41 and 17 m) was phased by the reach's index in channels.geojson. Removing roads changed two reaches elsewhere on Lamar, and the main stem at the river probe went from index 219 to 217. Its water then spread over the near gravel bar even though that reach's line, ground, levels and profile were unchanged. The phase now comes from the reach's start point.
+  - **Still open.** The wander is decoration, not data. At the probe the photo shows water up to the south bank's grass with the bar across on the north side, which neither the old outline nor the new one draws. Fitting big rivers' width to the imagery's water is the follow-up.

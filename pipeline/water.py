@@ -30,7 +30,7 @@ The cross-section (per centreline sample, every SAMPLE_M along each reach; o = d
   water level L     the DEM along the reach made non-increasing downstream and smoothed over max(7.5 m, 2.5 w)
   channel bed       o < wh: L - D (1 - (o / wh)^2), D the thalweg depth from channel_profile.png R (pools deeper,
                     riffles shallower), wh the half water width: w / 2 x (1 + 0.15 t) x a slow wander along the
-                    reach (periods 41 and 17 m), t the riffle-pool index. The client draws the water at L and
+                    reach (periods 41 and 17 m, phased by where the reach starts), t the riffle-pool index. The client draws the water at L and
                     its depthAt() uses the same parabola, so a wading animal's feet meet the carved bed.
   wet margin        wh <= o < wh + m: rises from L to L + hm (flooded in winter, mud and sedges in summer)
   bank              to wb = wh + m + b: the real ground (a zone, not carved: the lidar resolves the banks, and a
@@ -221,7 +221,10 @@ def stream_samples(ctx: _Ctx, pond_mask: np.ndarray, profile: np.ndarray | None,
             D = np.full(len(pts), 0.10 * max(area, 0.01) ** 0.32)
             t = np.zeros(len(pts))
         D = np.maximum(D, MIN_DEPTH_M)
-        ph = (rid * 0.618034) % 1.0 * 100
+        # the wander's phase from where the reach starts (continuous in it), not its place in the file: a reach
+        # another reach's change renumbers keeps its outline (Lamar's main stem moved 2 places when a culvert
+        # elsewhere was opened, and its water spread over the gravel bar at the river probe)
+        ph = (float(pts[0, 0]) / 97.0 + float(pts[0, 1]) / 89.0) % (2 * np.pi)
         wander = np.clip(1 + 0.2 * np.sin(ds / 41 + ph) + 0.1 * np.sin(ds / 17 + 2.1 * ph), 0.55, 1.4)
         wh = width / 2 * (1 + 0.15 * t) * wander
         sel = keep

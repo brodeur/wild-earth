@@ -8,7 +8,7 @@
     "p5": 2071.1,
     "p25": 2106.4,
     "median": 2138.4,
-    "p75": 2177.0,
+    "p75": 2176.9,
     "p95": 2215.2
    },
    "candidate": true
@@ -96,7 +96,7 @@
    "lithology": "schist",
    "cells": 160874,
    "elevation_m": {
-    "p5": 756.8,
+    "p5": 756.7,
     "p25": 852.3,
     "median": 934.0,
     "p75": 1008.4,
@@ -149,7 +149,7 @@
    "lithology": "granitic",
    "cells": 151901,
    "elevation_m": {
-    "p5": 759.0,
+    "p5": 759.1,
     "p25": 837.2,
     "median": 920.8,
     "p75": 1013.5,
@@ -297,7 +297,7 @@
     "p25": 738.6,
     "median": 741.1,
     "p75": 744.6,
-    "p95": 749.3
+    "p95": 749.4
    },
    "candidate": false,
    "why_not": "surficial deposit"
@@ -396,7 +396,7 @@
   {
    "upper": "Brahma Schist",
    "lower": "Granite, granitic pegmatite, and aplite",
-   "contact_cells": 5014,
+   "contact_cells": 5011,
    "upper_on_top": 0.482
   },
   {
@@ -426,8 +426,8 @@
   {
    "upper": "Granite, granitic pegmatite, and aplite",
    "lower": "Rama Schist",
-   "contact_cells": 2948,
-   "upper_on_top": 0.547
+   "contact_cells": 2947,
+   "upper_on_top": 0.548
   },
   {
    "upper": "Tapeats Sandstone",
@@ -669,7 +669,7 @@
   "map_tol_m": 20.0,
   "dip_deg": 0.66,
   "dip_azimuth_deg": 236.8,
-  "steep_cells_in_column": 1414929,
+  "steep_cells_in_column": 1414855,
   "bands": 10,
   "median_contact_sigma_m": 37.6,
   "superposed_pairs": 0.667

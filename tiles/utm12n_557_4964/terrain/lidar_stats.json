@@ -45,14 +45,14 @@
   "filled_from_landfire_share": 0.0034
  },
  "crowns": {
-  "maxima": 371360,
+  "maxima": 371357,
   "dropped_on_osm_buildings": 1,
-  "dropped_low_multi_return": 133,
+  "dropped_low_multi_return": 134,
   "dropped_pole_like": 9490,
-  "dropped_shrub_in_shrub_canopy": 3610,
+  "dropped_shrub_in_shrub_canopy": 3608,
   "dropped_on_bridges": 0,
   "dropped_urban": 0,
-  "crowns": 358126,
+  "crowns": 358124,
   "confidence_terms_median": {
    "prominence": 0.959,
    "width": 0.864,
@@ -64,16 +64,16 @@
    0.901,
    0.983
   ],
-  "bytes": 2905044,
+  "bytes": 2905028,
   "crowns_per_ha": 35.8,
   "max_per_index_cell": 156,
   "height_histogram_m": {
-   "4-6": 14780,
-   "6-8": 39856,
+   "4-6": 14771,
+   "6-8": 39857,
    "8-12": 51484,
-   "12-16": 41929,
+   "12-16": 41933,
    "16-20": 55405,
-   "20-25": 84842,
+   "20-25": 84844,
    "25-30": 52925,
    "30-35": 14981,
    "35-40": 1835,
@@ -89,7 +89,11 @@
    "p95": 6.38
   },
   "confidence_median": 0.901,
-  "seconds": 58.5
+  "seconds": 60.6,
+  "roads_mirrored": {
+   "mirrored_m2": 395408,
+   "road_m2": 395631
+  }
  },
  "lidar_micro": {
   "intensity": {

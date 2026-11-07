@@ -1,25 +1,27 @@
 """Erase humans from the NAIP imagery: the client's "Imagery" base texture.
 
 Present-day NAIP is real and beautiful but full of buildings, lots, lawns, fields and a
-quarry. The premise is the world with no humans, with roads kept as decayed pavement, so:
+quarry. The premise is the world with no humans, roads included (2026-11-07, Aaron: "Yes, remove road"; they were
+kept as decayed pavement before), so:
 
 1. Erase mask = OSM footprint features of every class but `road` (buffered by buffer_m, plus
    12 m around buildings for yards, driveways and lots) united with LANDFIRE human cells
-   (lawns and lots OSM lacks), minus road pavement. Only the densely built and farmed
+   (lawns and lots OSM lacks) and every road's pavement and verge (footprint/roads.png, the derive step's record of
+   where the roads were, weight over ROAD_ERASE; freeways too). Only the densely built and farmed
    cells (medium and high intensity, agriculture, quarries) are erased whole. The rest of
    LANDFIRE's "human" cells (low intensity, Developed-Roads, and developed or urban forest,
    shrubland and herbaceous) are mostly real oaks and dry grass at 2.5 m, so there only the
    pixels that look built (grey roofs, concrete, gravel, pools, watered lawn) are erased.
    Inside the dense-urban mask (footprint/urban.tif, pipeline/urban.py) every pixel is erased,
-   streets included (derive gives them no pavement there; only freeways stay pavement), so a
+   streets included, so a
    city's blocks are rewilded whole from the backfilled habitat class instead of leaving each
    block's lawns and street trees between the erased roofs.
 2. Small or thin mask components are inpainted from their surroundings (cv2 Telea). Large
    ones are synthesized by image quilting: 32 px patches copied out of clean imagery of the same
    backfilled habitat class elsewhere in the tile, each patch's mean colour matched to the
    clean pixels around it so the new woodland takes on the local brightness.
-3. Pavement is bleached toward sun-bleached grey and desaturated (decayed asphalt). Inside the
-   urban mask there is none but the freeways', so the street grid leaves no trace.
+3. (No pavement is left to bleach: a road is filled like any other mask component, a narrow one inpainted with the
+   synthesized grain, a wide one quilted from its backfilled class.)
 
 Everything runs on the NAIP grid (2.5 m, 4000 px) and is vectorised per patch.
 """
@@ -59,7 +61,10 @@ URBAN_GRID = 8                # ... computed on a grid this many NAIP pixels to 
 CANDIDATES = 32               # random source windows considered per patch
 BAND = 0.05                   # ... drawn from this share of the class's windows nearest the local brightness
 GRAIN_SIGMA_PX = 3.0          # inpainted fills get the synthesized texture's detail finer than this
-PAVEMENT = 140                # roads.png weight above which a pixel is pavement
+PAVEMENT = 140                # roads weight above which a pixel is pavement
+NATIVE_RES_M = {"sentinel2_l2a": 10.0}   # the imagery's own resolution where it is coarser than the tile's grid
+ROAD_ERASE = 16               # roads weight above which a pixel is erased: the pavement and the verge out to ~2.9x the
+                              # paved half-width (footprint/roads.png's verge falls to 0 at 3x)
 # LANDFIRE EVT physiognomies whose 30 m cells are erased whole. Every other "human" EVT
 # (Developed-Low Intensity, Developed-Roads, and phys "Developed": developed and urban forest,
 # shrubland, herbaceous) is erased only where the photo looks built. Those cells are 31% of
@@ -68,7 +73,6 @@ PAVEMENT = 140                # roads.png weight above which a pixel is pavement
 FULL_ERASE_PHYS = ("Developed-Medium Intensity", "Developed-High Intensity", "Agricultural", "Quarries")
 BUILT_SAT = 0.13              # saturation under which a not-dark pixel is roof, concrete, asphalt or gravel
 BUILT_MIN_LUM = 70            # ... darker neutral pixels are shade under canopy
-DECAYED_GREY = np.float32([170, 164, 154])
 # Rewilded water beds (client/channel_profile.png B: 255 bed, 160 riparian corridor; rewild_hydro).
 BED_GROW_M = 5.0              # the bed mask grown past the NHD ring over the photo's mudline
 BED_RADII_M = (250.0, 900.0)  # brightness reference radii for bed patches (clean pixels of the same class only)
@@ -98,8 +102,8 @@ def _footprint_mask(tile: Tile, shape_, tr) -> np.ndarray:
     for feat in fc["features"]:
         pr = feat.get("properties") or {}
         klass = pr.get("class")
-        # Roads are decayed, not erased; bridge outlines (man_made=bridge) are there for the lidar crown
-        # finder, and their decks are the roads'.
+        # Roads are erased from footprint/roads.png (their pavement and verge, see the module doc); bridge outlines
+        # (man_made=bridge) are there for the lidar crown finder, and their decks go with their roads.
         if klass == "road" or pr.get("man_made") == "bridge":
             continue
         g = shp_transform(to_tile, shape(feat["geometry"]))
@@ -168,6 +172,40 @@ def _rewilded_beds(tile: Tile, n: int) -> tuple[np.ndarray, np.ndarray] | None:
     g = max(1, int(round(BED_GROW_M / (TILE_SIZE_M / n))))
     bed = cv2.dilate((up > 0).astype("uint8"), cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * g + 1, 2 * g + 1))).astype(bool)
     return bed, up == 160
+
+
+def _reflect_fill(img: np.ndarray, fill: np.ndarray, avoid: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """img with the `fill` pixels mirrored from beyond their nearest clean edge (nothing of `fill` or `avoid`), and the
+    pixels so filled. The ridge where the mirrors of two edges meet is blended over ~5 px."""
+    from scipy.ndimage import distance_transform_edt, maximum_filter
+    if not fill.any():
+        return img, np.zeros_like(fill)
+    n0, n1 = fill.shape
+    blocked = fill | avoid
+    d, (iy, ix) = distance_transform_edt(blocked, return_indices=True)
+    ys, xs = np.nonzero(fill)
+    ey, ex = iy[ys, xs], ix[ys, xs]
+    sy, sx = 2 * ey - ys, 2 * ex - xs
+    ok = (sy >= 0) & (sy < n0) & (sx >= 0) & (sx < n1)
+    sy, sx = np.clip(sy, 0, n0 - 1), np.clip(sx, 0, n1 - 1)
+    ok &= ~blocked[sy, sx]
+    out = img.copy()
+    out[ys[ok], xs[ok]] = img[sy[ok], sx[ok]]
+    done = np.zeros_like(fill)
+    done[ys[ok], xs[ok]] = True
+    ridge = done & (d >= maximum_filter(d, size=7) - 1.5)
+    if ridge.any():
+        soft = cv2.GaussianBlur(out.astype("float32"), (0, 0), 2.5)
+        w = np.clip(cv2.GaussianBlur(ridge.astype("float32"), (0, 0), 2.0) * 2.0, 0, 1)[..., None] * done[..., None]
+        out = (out * (1 - w) + soft * w).clip(0, 255).astype(img.dtype)
+        # The two banks' tones (a track is often where the grazing or the burn changes) fade into each other across the
+        # strip: within a strip half-width of the ridge the broad tone takes the place of the mid-band, the grain stays
+        t = max(3.0, 2.0 * float(np.median(d[ridge])))
+        f = out.astype("float32")
+        tone = cv2.GaussianBlur(f, (0, 0), t) - cv2.GaussianBlur(f, (0, 0), t / 3)
+        wt = np.clip(cv2.GaussianBlur(ridge.astype("float32"), (0, 0), t) * 2.5 * t, 0, 1)[..., None] * done[..., None]
+        out = (f + wt * tone).clip(0, 255).astype(img.dtype)
+    return out, done
 
 
 def _upsample_nearest(arr: np.ndarray, n: int) -> np.ndarray:
@@ -383,53 +421,6 @@ def _edge_alpha(m: np.ndarray, grow: int) -> tuple[np.ndarray, np.ndarray]:
     return region.astype(bool), np.clip(d / (2 * grow), 0, 1)
 
 
-KEPT_ROADS = ("motorway", "trunk", "primary", "secondary", "tertiary")   # still pavement after ten years
-MINOR_FADE = 0.7              # how far minor pavement is blended toward the surrounding ground
-
-
-def _kept_pavement(tile: Tile, shape_, tr) -> np.ndarray:
-    """Pavement of roads that survive as roads (highways and county roads), on the NAIP grid."""
-    from .derive import DECAY_HALF_WIDTH
-    p = tile.dir / "footprint/mask.geojson"
-    if not p.exists():
-        return np.zeros(shape_, bool)
-    with open(p) as f:
-        fc = json.load(f)
-    to_tile = Transformer.from_crs("EPSG:4326", tile.crs, always_xy=True).transform
-    shapes = []
-    for feat in fc["features"]:
-        pr = feat.get("properties") or {}
-        hw = (pr.get("highway") or "").removesuffix("_link")
-        if pr.get("class") != "road" or hw not in KEPT_ROADS:
-            continue
-        g = shp_transform(to_tile, shape(feat["geometry"]))
-        if not g.is_empty:
-            shapes.append((g.buffer(DECAY_HALF_WIDTH.get(pr.get("highway"), 4)), 1))
-    if not shapes:
-        return np.zeros(shape_, bool)
-    return rasterize(shapes, out_shape=shape_, transform=tr, fill=0, dtype="uint8").astype(bool)
-
-
-def _bleach_roads(img: np.ndarray, pave: np.ndarray, kept: np.ndarray, clean: np.ndarray, res: float) -> np.ndarray:
-    """Decayed asphalt. Highways and county roads keep their pavement: desaturated and blended
-    50% toward sun-bleached grey. Residential streets, service roads and tracks are mostly gone
-    under grass: blended toward the surrounding ground, with a faint trace left."""
-    out = img.astype("float32")
-    px = out[pave]
-    lum = px @ np.float32([0.299, 0.587, 0.114])
-    bleached = (px * 0.4 + lum[:, None] * 0.6) * 0.5 + DECAYED_GREY * 0.5
-    out[pave] = bleached
-    minor = pave & ~kept
-    if minor.any():
-        r = max(3, int(round(40.0 / res)))
-        w = clean.astype("float32")
-        num = cv2.blur(img.astype("float32") * w[..., None], (2 * r + 1, 2 * r + 1))
-        den = cv2.blur(w, (2 * r + 1, 2 * r + 1))[..., None]
-        ground = np.where(den > 1e-3, num / np.maximum(den, 1e-3), out)
-        out[minor] = out[minor] * (1 - MINOR_FADE) + ground[minor] * MINOR_FADE
-    return out.clip(0, 255).astype("uint8")
-
-
 def _comparison(before: np.ndarray, after: np.ndarray, tile: Tile, lon: float, lat: float, path, size_m=1600.0,
                 label="NAIP"):
     """Side-by-side crop at full resolution: NAIP left, erased right. The window is kept inside the tile."""
@@ -489,17 +480,35 @@ def erase_imagery(tile: Tile) -> dict:
     human_built = _upsample_nearest(partial_cells, n).astype(bool) & _built_pixels(naip)
     human = human_whole | human_built
     urban = _urban(tile, n)
-    roads = np.asarray(Image.open(tile.path("client/roads.png")).convert("L").resize((n, n), Image.BILINEAR))
+    # where the roads were (derive: footprint/roads.png; a tile built before it has the old client/roads.png)
+    rp = tile.path("footprint/roads.png") if tile.path("footprint/roads.png").exists() else tile.path("client/roads.png")
+    roads = np.asarray(Image.open(rp).convert("L").resize((n, n), Image.BILINEAR))
     pave = roads > PAVEMENT
+    road_mask = roads > ROAD_ERASE
+    # On imagery coarser than its grid (Sentinel-2's 10 m resampled to 2.5 m) a track is blurred a native pixel past
+    # its line: the mask grows by that much, or the mirror copies the blurred track's edge back in (Serengeti's tracks)
+    grow = int(round(NATIVE_RES_M.get(naip_source, 0.0) / res))
+    if grow > 0:
+        from scipy.ndimage import binary_dilation
+        road_mask = binary_dilation(road_mask, np.ones((3, 3), bool), iterations=grow)
 
     # a. Erase mask. Rewilded beds are left out of the human pass and synthesized on their own after
-    # it (meadow, then the riparian corridor), but no bed pixel may serve as a source. In the urban
-    # mask the only pavement left is a freeway's, so the streets are erased with their blocks.
-    mask = (_footprint_mask(tile, (n, n), tr) | human | urban) & ~pave
+    # it (meadow, then the riparian corridor), but no bed pixel may serve as a source. Every road goes with its verge.
+    other = _footprint_mask(tile, (n, n), tr) | human | urban
+    mask = other | road_mask
     beds = _rewilded_beds(tile, n)
     if beds is not None:
         mask &= ~beds[0]
     mask_fraction = float(mask.mean())
+    # A road's strip (where nothing else is erased) is first mirrored from the ground beside it: each pixel takes the pixel
+    # as far beyond its nearest clean edge as it is inside it, so the strip carries its own banks' colour, grain and light
+    # and meets them without a seam; the line where the two banks' mirrors meet is softened. Quilting from the class's
+    # windows elsewhere put riparian shrubs and bare patches into a sage flat (Lamar, 2026-11-07). What cannot be mirrored
+    # (its mirror lands on other erased ground or off the tile) stays in the mask.
+    naip0 = naip
+    road_only = road_mask & ~other & (~beds[0] if beds is not None else True)
+    naip, reflected = _reflect_fill(naip, road_only, mask & ~road_only | (beds[0] if beds is not None else False))
+    mask &= ~reflected
 
     # b. Components: small or thin ones are inpainted, large ones synthesized.
     count, labels, stats, _ = cv2.connectedComponentsWithStats(mask.astype("uint8"), connectivity=8)
@@ -538,7 +547,6 @@ def erase_imagery(tile: Tile) -> dict:
     bed_info = None
     if beds is not None:
         bed, corr = beds
-        bed &= ~pave
         brng = np.random.default_rng(seed + 1)
         meadow_t = np.where(bed, CODES["grassland"], target).astype("uint8")
         region, alpha = _edge_alpha(bed, grow)
@@ -571,10 +579,6 @@ def erase_imagery(tile: Tile) -> dict:
         a = small_alpha[..., None] * small_region[..., None]
         out = (out.astype("float32") * (1 - a) + filled * a).clip(0, 255).astype("uint8")
 
-    # c. Decayed pavement
-    kept = _kept_pavement(tile, (n, n), tr)
-    out = _bleach_roads(out, pave, kept, clean, res)
-
     # d. Season reference colours: the imagery's own summer grass and oak, from clean pixels.
     def class_mean(code):
         sel = clean & (target == code)
@@ -588,7 +592,7 @@ def erase_imagery(tile: Tile) -> dict:
     # f. Comparison crops for the docs
     comps = []
     for lon, lat, name in COMPARISONS.get(tile.tile_id, []):
-        comps.append(_comparison(naip, out, tile, lon, lat, REPO_ROOT / "docs" / name, label=naip_label))
+        comps.append(_comparison(naip0, out, tile, lon, lat, REPO_ROOT / "docs" / name, label=naip_label))
     for c in comps:
         print(f"  comparison {c['path']} window {c['window_px']} shifted {c['shifted_m']} m", flush=True)
 
@@ -596,10 +600,14 @@ def erase_imagery(tile: Tile) -> dict:
         "path": "client/texture_imagery.jpg", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
         "pixels": n, "resolution_m": res, "source": naip_source,
         "derived_from": ["imagery.naip", "footprint.mask", "footprint.urban", "vegetation.habitat_present",
-                         "vegetation.habitat", "vegetation.evt", "client.roads", "client.channel_profile"],
+                         "vegetation.habitat", "vegetation.evt", "footprint.roads", "client.channel_profile"],
         "mask_fraction": round(mask_fraction, 4),
         "urban": {"fraction": round(float(urban.mean()), 4), "erased_fraction": round(float((urban & mask).mean()), 4),
-                  "kept_pavement_fraction": round(float((urban & pave).mean()), 4)},
+                  "kept_pavement_fraction": 0.0},
+        "roads": {"erased_fraction": round(float(road_mask.mean()), 4), "pavement_fraction": round(float(pave.mean()), 4),
+                  "mirrored_fraction": round(float(reflected.mean()), 4),
+                  "rule": "every road's pavement and verge erased (footprint.roads > ROAD_ERASE): mirrored from the ground "
+                          "beside it where nothing else is erased, else filled like the rest"},
         "human_cells": {"whole_fraction": round(float(whole_cells.mean()), 4),
                         "partial_fraction": round(float(partial_cells.mean()), 4),
                         "partial_erased_fraction": round(float(human_built.mean()), 4)},
@@ -608,7 +616,7 @@ def erase_imagery(tile: Tile) -> dict:
         "components": {"inpainted": int((~is_big[1:]).sum()), "synthesized": int(is_big[1:].sum()), "patches": patches},
         "source_windows": {str(k): int(len(v)) for k, v in windows.items()},
         "grass_mean": grass_mean, "oak_mean": oak_mean, "rewilded_beds": bed_info,
-        "encoding": f"{naip_label} RGB with human footprint inpainted or synthesized, pavement bleached; JPEG q88",
+        "encoding": f"{naip_label} RGB with the human footprint, roads included, inpainted or synthesized; JPEG q88",
     }
     print(f"  mask {mask_fraction:.3f}  inpainted {info['inpainted_fraction']:.3f}  "
           f"synthesized {info['synthesized_fraction']:.3f}  patches {patches}  grass {grass_mean}  oak {oak_mean}", flush=True)

@@ -34,7 +34,7 @@ map to `landcover` and `terrain`).
 
 | stage | steps, in order | what it makes |
 |---|---|---|
-| **base** | dem, naip, osm, hydro*, channels*, rewild_hydro*, landcover, ice, lidar, water*, ground, terrain, erase, substrate, seasons, weather, unreal, seams | the ground: elevation (5 m, 1 m where flown), imagery and its erasure, the built footprint, the hydrology rewilded and banked, permanent snow and ice, soils, geology and exposed rock, the client's terrain rasters, place names, Sentinel-2 seasons, weather; the seams with built neighbours |
+| **base** | naip, osm, hydro*, dem, channels*, rewild_hydro*, landcover, ice, lidar, water*, ground, terrain, erase, substrate, seasons, weather, unreal, seams | the ground: elevation (5 m, 1 m where flown), imagery and its erasure, the built footprint, the hydrology rewilded and banked, permanent snow and ice, soils, geology and exposed rock, the client's terrain rasters, place names, Sentinel-2 seasons, weather; the seams with built neighbours |
 | **flora** | plants, species_mix, crowns, inpaint | the plant research (cover, records, the density target), missing species grown from their trait cards, the mix per 30 m cell (trees, shrubs, ground layer, riparian zones), the lidar crowns and the ground texture under them |
 | **fauna** | species, animals, resources | GBIF presence, perception, calendar, locomotion and the density prior for the curated animals; the animal research (every animal recorded, ranked, every predator and scavenger, traits for those without, the Meshy queue); food, water and cover by season |
 | **games** | games, game_seeds, registry, audit | each species' games; each shared game's world seed (acorn, dig, carrion); the species registry report and the licence audit that close every build |
@@ -51,16 +51,16 @@ flora's, as are the crowns and their inpainting.
 
 | step | after | writes | sources (licence) | reach / fallback |
 |---|---|---|---|---|
-| dem | | terrain.dem (5 m) | USGS 3DEP (PD) | US; Planetary Computer 3DEP 10 m; **NASADEM 30 m (NASA, no restrictions), global, implemented** |
+| dem | osm, hydro | terrain.dem (5 m; the roads' cut and fill rewilded, pipeline/unroad.py: on the 1 m ground it is drawn from, else on the 5 m) | USGS 3DEP (PD) | US; Planetary Computer 3DEP 10 m; **NASADEM 30 m (NASA, no restrictions), global, implemented** |
 | naip | | imagery.naip | Planetary Computer / USGS NAIP (PD) | CONUS; elsewhere fails loudly (next: Sentinel-2 true colour) |
 | osm | | footprint.mask | Overpass (ODbL) | global |
 | hydro, channels, rewild_hydro, water | (water lane) | streams, beds, banks, riparian zones | NHDPlus HR (PD), OSM | NHD US; OSM fallback; routing on the DEM global |
 | landcover | rewild_hydro | vegetation.* (EVT, EVC, EVH, BpS, habitat) | LANDFIRE (PD) | CONUS; elsewhere fails loudly (next: WorldCover + RESOLVE ecoregions, CC BY 4.0) |
 | ice | dem, landcover | terrain.ice (+ client/ice.png, terrain/ice.json) | LANDFIRE Snow-Ice, OSM natural=glacier | global (OSM), US (LANDFIRE) |
-| lidar | dem, osm, landcover | 1 m DEM, CHM, roughness, terrain detail, micro, lidar_cover | 3DEP 1 m DEM and point clouds (PD); TNM LPC search | US where flown; missing 1 m cells filled from the 5 m DEM and corrected by the point cloud's ground; the point cloud where it reaches (`client/lidar_cover.png`), LANDFIRE's canopy and the mix's trees beyond; DEM-only without a point; not applicable outside the US |
+| lidar | dem, osm, hydro, landcover | 1 m DEM (the roads' cut and fill rewilded: pipeline/unroad.py), CHM, roughness, terrain detail, micro, lidar_cover | 3DEP 1 m DEM and point clouds (PD); TNM LPC search | US where flown; missing 1 m cells filled from the 5 m DEM and corrected by the point cloud's ground; the point cloud where it reaches (`client/lidar_cover.png`), LANDFIRE's canopy and the mix's trees beyond; DEM-only without a point; not applicable outside the US |
 | ground | dem, landcover, lidar | geology, soils, outcrop, ground classes | Macrostrat (CC BY 4.0), SGMC, SSURGO (PD) | geology global; soils US (next: SoilGrids, CC BY 4.0) |
-| terrain | dem ... water, landcover, ice | hillshade, heights, habitat, canopy, roads, textures, masks, features | Overpass places, Native Land | |
-| erase | naip, osm, landcover, terrain, rewild_hydro | client.texture_imagery | | |
+| terrain | dem ... water, landcover, ice | hillshade, heights, habitat, canopy, roads (0 everywhere: rewilded; footprint/roads.png where they were), textures, masks, features | Overpass places, Native Land | |
+| erase | naip, osm, landcover, terrain, rewild_hydro | client.texture_imagery (the footprint and every road with its verge filled) | | |
 | substrate | ground, water, lidar, erase, terrain, ice | client.substrate | | |
 | seasons | landcover, lidar, naip | Sentinel-2 monthly colour | Sentinel-2 L2A (Copernicus terms, credit) | global |
 | weather | | client.weather | Open-Meteo (CC BY 4.0) | global |
@@ -73,7 +73,7 @@ flora's, as are the crowns and their inpainting.
 |---|---|---|
 | plants | landcover, ice | species/plant_needs.json (the ranked plant list, the density target, the hand edits), species/localized.json (groves), library records grown from cards |
 | species_mix | dem, landcover, water, ice, plants | client/species_mix.json + index and density PNGs: trees, shrubs, ground layer and riparian rows per cell |
-| crowns | lidar, osm, landcover, terrain, species_mix | client.trees_lidar (not applicable without a point cloud) |
+| crowns | lidar, osm, landcover, terrain, species_mix | client.trees_lidar (not applicable without a point cloud; the canopy over each erased road mirrored from beside it first, unroad.mirror_canopy) |
 | inpaint | erase, lidar, crowns, terrain | the ground texture under the crowns (not applicable without a point cloud) |
 
 ### Fauna

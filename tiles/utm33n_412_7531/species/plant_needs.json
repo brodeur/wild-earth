@@ -347,10 +347,9 @@
    "cover": 0.0,
    "records": 41,
    "scientific": "Deschampsia cespitosa",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "record": true,
+   "card": true,
+   "drawn_as": "deschampsia_cespitosa",
    "rank": 16
   },
   {
@@ -421,10 +420,9 @@
    "cover": 0.0,
    "records": 36,
    "scientific": "Campanula rotundifolia",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "record": true,
+   "card": true,
+   "drawn_as": "campanula_rotundifolia",
    "rank": 21
   },
   {
@@ -578,36 +576,6 @@
    "rank": 31
   },
   {
-   "id": "solidago_virgaurea",
-   "kind": "forb",
-   "why": [
-    "GBIF: 27 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 27,
-   "scientific": "Solidago virgaurea",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 32
-  },
-  {
-   "id": "alchemilla_alpina",
-   "kind": "forb",
-   "why": [
-    "GBIF: 26 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 26,
-   "scientific": "Alchemilla alpina",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 33
-  },
-  {
    "id": "andromeda_polifolia",
    "kind": "shrub",
    "why": [
@@ -620,7 +588,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 34
+   "rank": 32
   },
   {
    "id": "juniperus_communis",
@@ -634,7 +602,7 @@
    "record": true,
    "card": true,
    "drawn_as": "juniperus_communis",
-   "rank": 35
+   "rank": 33
   },
   {
    "id": "arctostaphylos_alpinus",
@@ -649,7 +617,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 36
+   "rank": 34
   },
   {
    "id": "acer_pseudoplatanus",
@@ -664,7 +632,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 37
+   "rank": 35
   },
   {
    "id": "achillea_millefolium",
@@ -678,7 +646,7 @@
    "record": true,
    "card": false,
    "drawn_as": "achillea_millefolium",
-   "rank": 38
+   "rank": 36
   },
   {
    "id": "valeriana_excelsa",
@@ -693,7 +661,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 39
+   "rank": 37
   },
   {
    "id": "empetrum_hermaphroditum",
@@ -708,7 +676,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 40
+   "rank": 38
   },
   {
    "id": "kalmia_procumbens",
@@ -723,6 +691,34 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 39
+  },
+  {
+   "id": "dryas_octopetala",
+   "kind": "forb",
+   "why": [
+    "GBIF: 10 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 10,
+   "scientific": "Dryas octopetala",
+   "record": true,
+   "card": true,
+   "drawn_as": "dryas_octopetala",
+   "rank": 40
+  },
+  {
+   "id": "equisetum_arvense",
+   "kind": "forb",
+   "why": [
+    "GBIF: 10 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 10,
+   "scientific": "Equisetum arvense",
+   "record": true,
+   "card": true,
+   "drawn_as": "equisetum_arvense",
    "rank": 41
   },
   {
@@ -895,7 +891,7 @@
    "family": "Poaceae",
    "kind": "grass",
    "records": 41,
-   "known": false
+   "known": true
   },
   {
    "id": "trichophorum_cespitosum",
@@ -951,7 +947,7 @@
    "family": "Campanulaceae",
    "kind": "forb",
    "records": 36,
-   "known": false
+   "known": true
   },
   {
    "id": "narthecium_ossifragum",
@@ -1591,7 +1587,7 @@
    "family": "Rosaceae",
    "kind": "forb",
    "records": 10,
-   "known": false
+   "known": true
   },
   {
    "id": "polypodium_vulgare",
@@ -1645,9 +1641,9 @@
    "id": "equisetum_arvense",
    "scientific": "Equisetum arvense",
    "family": "Equisetaceae",
-   "kind": "fern",
+   "kind": "forb",
    "records": 10,
-   "known": false
+   "known": true
   },
   {
    "id": "asplenium_trichomanes",
@@ -2095,14 +2091,6 @@
    ]
   },
   {
-   "id": "deschampsia_cespitosa",
-   "kind": "grass",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 41 records on the tile"
-   ]
-  },
-  {
    "id": "carex_nigra",
    "kind": "emergent",
    "what": "a trait card",
@@ -2124,14 +2112,6 @@
    "what": "a trait card",
    "why": [
     "GBIF: 37 records on the tile"
-   ]
-  },
-  {
-   "id": "campanula_rotundifolia",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 36 records on the tile"
    ]
   },
   {
@@ -2212,22 +2192,6 @@
    "what": "a trait card",
    "why": [
     "GBIF: 27 records on the tile"
-   ]
-  },
-  {
-   "id": "solidago_virgaurea",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 27 records on the tile"
-   ]
-  },
-  {
-   "id": "alchemilla_alpina",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 26 records on the tile"
    ]
   },
   {
@@ -2321,9 +2285,9 @@
  ],
  "summary": {
   "needed": 45,
-  "with_record": 8,
+  "with_record": 12,
   "generated_now": 0,
-  "queued": 37,
+  "queued": 33,
   "unread_communities": 3,
   "by_layer": {
    "tree": 3,
@@ -2335,6 +2299,6 @@
    "shrub": false,
    "ground": true
   },
-  "hands": 40
+  "hands": 36
  }
 }
