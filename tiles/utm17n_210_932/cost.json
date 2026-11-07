@@ -495,15 +495,15 @@
   },
   "animals": {
    "stage": "fauna",
-   "started_at": "2026-11-06T11:29:52Z",
-   "ended_at": "2026-11-06T11:29:53Z",
-   "wall_s": 0.7,
-   "cpu_self_s": 0.7,
+   "started_at": "2026-11-07T05:15:40Z",
+   "ended_at": "2026-11-07T05:15:41Z",
+   "wall_s": 1.0,
+   "cpu_self_s": 0.9,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {
     "gbif": {
-     "hits": 308,
+     "hits": 310,
      "misses": 0
     },
     "eltontraits": {
@@ -515,7 +515,7 @@
      "misses": 0
     }
    },
-   "disk_bytes": 205289,
+   "disk_bytes": 211339,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -691,14 +691,14 @@
    "meshy_queued_credits_est": 0
   },
   "fauna": {
-   "started_at": "2026-11-06T11:29:52Z",
-   "ended_at": "2026-11-06T11:29:53Z",
-   "wall_s": 10.6,
-   "cpu_s": 10.5,
+   "started_at": "2026-11-07T05:15:40Z",
+   "ended_at": "2026-11-07T05:15:42Z",
+   "wall_s": 10.9,
+   "cpu_s": 10.7,
    "download_bytes": 0,
-   "cache_hits": 659,
+   "cache_hits": 661,
    "cache_misses": 0,
-   "disk_bytes": 1607568,
+   "disk_bytes": 1613618,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -1447,22 +1447,73 @@
    "ended_at": "2026-11-07T01:43:42Z",
    "failed": [],
    "refused": []
+  },
+  {
+   "started_at": "2026-11-07T04:36:00Z",
+   "stages": [
+    {
+     "stage": "fauna",
+     "started_at": "2026-11-07T04:36:00Z",
+     "steps_run": [
+      "animals"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T04:40:28Z"
+    }
+   ],
+   "ended_at": "2026-11-07T04:40:28Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T04:52:41Z",
+   "stages": [
+    {
+     "stage": "fauna",
+     "started_at": "2026-11-07T04:52:41Z",
+     "steps_run": [
+      "animals"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T04:52:43Z"
+    }
+   ],
+   "ended_at": "2026-11-07T04:52:43Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T05:15:40Z",
+   "stages": [
+    {
+     "stage": "fauna",
+     "started_at": "2026-11-07T05:15:40Z",
+     "steps_run": [
+      "animals"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T05:15:42Z"
+    }
+   ],
+   "ended_at": "2026-11-07T05:15:42Z",
+   "failed": [],
+   "refused": []
   }
  ],
  "totals": {
-  "wall_s": 547.6,
-  "cpu_s": 118.6,
+  "wall_s": 547.9,
+  "cpu_s": 118.8,
   "download_bytes": 8041303,
-  "cache_hits": 1069,
+  "cache_hits": 1071,
   "cache_misses": 8,
-  "disk_bytes": 109170950,
+  "disk_bytes": 109177000,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 2230
  },
- "updated_at": "2026-11-07T01:43:42Z",
+ "updated_at": "2026-11-07T05:15:42Z",
  "client": {
-  "bytes": 16219388,
-  "files": 49,
+  "bytes": 16228764,
+  "files": 50,
   "largest": {
    "client/season_rgb.png": 4369035,
    "client/texture.png": 2118608,

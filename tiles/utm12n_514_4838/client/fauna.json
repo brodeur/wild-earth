@@ -63,6 +63,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Cervidae",
    "model": {
     "path": "fauna/alces_alces.glb",
     "kind": "quadruped",
@@ -125,6 +126,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Cervidae",
    "active_hours": [
     1,
     1,
@@ -181,6 +183,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Sciuridae",
    "active_hours": [
     0,
     0,
@@ -238,6 +241,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Antilocapridae",
    "model": {
     "path": "fauna/antilocapra_americana.glb",
     "kind": "quadruped",
@@ -300,6 +304,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Bovidae",
    "model": {
     "path": "fauna/bison_bison.glb",
     "kind": "quadruped",
@@ -362,6 +367,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Sciuridae",
    "active_hours": [
     0,
     0,
@@ -417,6 +423,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Ursidae",
    "model": {
     "path": "fauna/ursus_arctos.glb",
     "kind": "quadruped",
@@ -478,6 +485,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Canidae",
    "active_hours": [
     0,
     0,
@@ -536,6 +544,7 @@
    "known": [
     "a large rodent on a ground squirrel's body"
    ],
+   "family": "Castoridae",
    "active_hours": [
     0,
     1,
@@ -593,6 +602,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Ochotonidae",
    "active_hours": [
     0,
     0,
@@ -650,6 +660,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Sciuridae",
    "active_hours": [
     0,
     0,
@@ -707,6 +718,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Sciuridae",
    "active_hours": [
     0,
     0,
@@ -762,6 +774,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Bovidae",
    "model": {
     "path": "fauna/ovis_canadensis.glb",
     "kind": "quadruped",
@@ -824,6 +837,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Mustelidae",
    "active_hours": [
     0,
     0,
@@ -879,6 +893,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Canidae",
    "model": {
     "path": "fauna/canis_lupus.glb",
     "kind": "quadruped",
@@ -941,6 +956,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Sciuridae",
    "active_hours": [
     0,
     0,
@@ -1000,6 +1016,7 @@
    "known": [
     "a large rodent on a ground squirrel's body"
    ],
+   "family": "Erethizontidae",
    "active_hours": [
     1,
     1,
@@ -1056,6 +1073,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Sciuridae",
    "active_hours": [
     0,
     0,
@@ -1113,6 +1131,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Mustelidae",
    "active_hours": [
     1,
     1,
@@ -1169,6 +1188,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Pelecanidae",
    "flightless": false,
    "lifestyle": "Aquatic",
    "kin_source": "avonet (species)",
@@ -1235,6 +1255,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Parulidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -1295,6 +1316,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Picidae",
    "flightless": false,
    "lifestyle": "Generalist",
    "kin_source": "avonet (species)",
@@ -1355,6 +1377,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Paridae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -1416,6 +1439,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Corvidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -1476,6 +1500,7 @@
     "omnivore"
    ],
    "known": [],
+   "family": "Passerellidae",
    "flightless": false,
    "lifestyle": "Generalist",
    "kin_source": "avonet (species)",
@@ -1536,6 +1561,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Cardinalidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -1596,6 +1622,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Regulidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -1656,6 +1683,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Parulidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (genus)",
@@ -1714,6 +1742,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Fringillidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -1774,6 +1803,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Passerellidae",
    "flightless": false,
    "lifestyle": "Generalist",
    "kin_source": "avonet (species)",
@@ -1834,6 +1864,7 @@
     "omnivore"
    ],
    "known": [],
+   "family": "Sittidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -1894,6 +1925,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Turdidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -1954,6 +1986,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Hirundinidae",
    "flightless": false,
    "lifestyle": "Aerial",
    "kin_source": "avonet (species)",
@@ -2015,6 +2048,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Accipitridae",
    "flightless": false,
    "lifestyle": "Aerial",
    "kin_source": "avonet (species)",
@@ -2081,6 +2115,7 @@
     "omnivore"
    ],
    "known": [],
+   "family": "Icteridae",
    "flightless": false,
    "lifestyle": "Terrestrial",
    "kin_source": "avonet (species)",
@@ -2151,6 +2186,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Vireonidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -2211,6 +2247,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Cinclidae",
    "flightless": false,
    "lifestyle": "Generalist",
    "kin_source": "avonet (species)",
@@ -2271,6 +2308,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Hirundinidae",
    "flightless": false,
    "lifestyle": "Aerial",
    "kin_source": "avonet (species)",
@@ -2332,6 +2370,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Corvidae",
    "flightless": false,
    "lifestyle": "Terrestrial",
    "kin_source": "avonet (species)",
@@ -2392,6 +2431,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Parulidae",
    "flightless": false,
    "lifestyle": "Generalist",
    "kin_source": "avonet (species)",
@@ -2452,7 +2492,20 @@
    "known": [
     "a snake on the fence lizard's cells, the snake machine (way 'snake'); not drawn without a model of its own (no stand-in body)"
    ],
+   "family": "Colubridae",
    "reptile": "snake",
+   "habitat_affinity": {
+    "classes": {
+     "2": 0.847,
+     "3": 0.053,
+     "4": 0.245,
+     "5": 0.053,
+     "6": 1.0,
+     "8": 0.053
+    },
+    "records": 11,
+    "basis": "the species' CC0 and CC BY records on the tile over client/habitat.png: share of records / share of land"
+   },
    "records": 69,
    "mass_source": "amniote life-history database (species)",
    "model": {
@@ -2513,6 +2566,7 @@
    "water": false,
    "role": [],
    "known": [],
+   "family": "Ranidae",
    "active_hours": [
     0,
     0,

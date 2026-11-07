@@ -349,6 +349,68 @@ What is open: the hawk's feet (leg parts in the red-tail builder), the bear's sw
 not drawn), the jay carrying its take off, and the prey's own part in the hold (a deer that kicks, a rabbit that
 screams and twists).
 
+## The snake (2026-11-06): the body along the head's path
+
+Aaron, 2026-11-06: "Are there any tiles where we can be a snake". Snakes lived on Lamar and Teton (the western
+terrestrial garter snake, `thamnophis_elegans`) as AI animals on the snake template (`animalModels.js SNAKE_BODY`,
+`tools/build_snake.py`, `animals.js snUpdate`), but no control drove one. `client/src/snake.js` does, inside the walkers'
+control (`groundControl.js` hands a body whose entry has rig `snake` to it; `playable.js` gives every stand-in slot
+whose `fauna.json` `reptile` is `snake` and that has a model of its own a `snakeEntry`).
+
+**Lateral undulation, as a path.** A snake does not turn its body; the body follows the head. `flight.pos` is the steered
+point, moving along `flight.yaw`; the head (the snout's tip) swings to either side of it in a sine of the *distance*
+crawled. The wavelength is the template's crawl (L / `waveN`), and the swing is the one whose heading reaches the
+template's `waveA` at a full crawl (0.7 of it at a crawl, all of it at a dash, a quarter more swimming). Every 1/120 of
+the body's length the head travels goes into a trail (a ring of 512 points). The body is drawn along that trail. The
+shader's `SN_PATH` mode replaces the wave and the coil with a uniform of the 40 steps' headings and the 41 nodes'
+heights (`uSnPath`), and does not re-centre the curve, so the snout stays on the instance where the control puts it.
+So the wave stands on the ground and the body slides through it, a turn is a curve the body follows rather than a
+rigid swing, and the body lies over whatever the head crossed: the slope, a rock, the water. The depth material
+(the shadow) gets the same uniform.
+
+**Speeds from the AI.** W is the AI's crawl (`SNK.crawl` 0.12 m/s for 0.4 kg, times (0.4 kg / mass)^0.1, as
+`snUpdate`), building over 1.5 s to a cruise 0.4 of the way to the dash. Shift W is the dash (`SNK.dash` 0.9 m/s), which
+lasts 4 s before the body tires (a snake's muscles are anaerobic at speed). S stops: a snake does not crawl backwards. A
+or D alone creeps round at the crawl. The curve is never tighter than 0.45 of the body's length in radius under way,
+or 0.2 creeping round. It cannot jump. A rise over a quarter of its length is a wall, and it slides down any drop.
+
+**Water.** A snake swims unless its slot says otherwise (`fauna.json` `swims: false`): garter snakes are semi-aquatic and
+the terciopelo swims well. It swims where the water is deeper than its body and its surface is over the drawn ground.
+A creek's depth runs under its draped banks, so the depth alone put the first test's snake inside the bank. Swimming,
+the head rides the surface and the body lies along it.
+
+**Acts.** X coils. The step headings blend over 1.6 s onto the template's own coil (`snakeLine`, the shader's coil on
+the CPU), turned so the snout keeps its heading, the loops on the ground under them. X again crawls out of the coil a
+body length and lies there basking, stretched out. Any move gets up. Leaving a coil, the trail is first replaced by
+the body as drawn, so a coiled snake crawls out of its coil. Shift held still raises the fore body (the AI's alert
+pose). E flicks the forked tongue (a small line mesh at the snout, three flicks): that is the sniff (`scent.js` takes
+`act.sniff` as the fox's sniff, so the scents and the sniff's wave run). E with prey in reach is the strike.
+
+**The strike** (`strikes.js` `strike`, the snakes' one move, by family). The fore body is drawn back 0.12 of the length up
+its path and raised (0.1 s), then the head is thrown straight out at the prey, up to 0.45 of the length (the body
+sliding up its own path behind it). The hit lands at 0.15 s, the head is held a moment, then it comes back. The reach is
+0.33 of the length plus half the prey's, measured from the head, where a snake's position is. A viper's or an elapid's
+strike carries venom (see games.md "The snakes' prey").
+
+**Where the AI snakes live** (2026-11-06): the habitat by the species' own CC0 and CC BY records on the tile, where it
+has 5 or more (`fauna.json habitat_affinity`; else the fence lizard's table), and within a cell the better of open ground
+with rocks or an edge and the shaded floor under the canopy. A garter snake keeps to its rocks and edges, and a forest
+viper lies in the litter under the trees. The cover it flees to is the same site rule as before (`lzSites`: rocks,
+trunks, the ground beside them).
+
+**Entering.** Touching a snake, or Embody, seeds the trail with that animal's own centreline (`animalModels.js
+snakeLine`: its wave phase, gait, turn and coil, on the CPU, line for line with the shader). The body taken is the one
+seen, coiled if it was coiled, and the snake keeps its size. Leaving, the AI takes it back at the body's mean point
+and heading, coiled or stretched out (`animals.js` release has a snake branch: it was getting the fence lizard's states).
+
+**The camera** sits round the body's middle, not the head, behind and over the tail: 0.5 of the length back and 0.28 up
+(times `CAM_RAISE`), plus its own 0.15 and 0.08 of the length in place of `CAM_PLUS`. It frames the body at 0.2 below the
+middle of the view, looking down on it between the grass.
+
+**For the group.** A member's page draws the player's snake as its AI snakes are drawn. `snake.js sample` sends the
+body's mean point and mean heading (where the AI's draw centres a snake), the wave's phase advanced as `snUpdate`
+advances it, the gait, the turn's C, the coil and the raised head (`bodySample.js`).
+
 ## Open
 
 - The part rig's spine bend and head lead (the chest and head parts turning about the vertical by the lag): done for
@@ -363,3 +425,6 @@ screams and twists).
   squirrel (Rodentia's bound) on the same hop set or their own.
 - The tree's numbers for the birds' ground speeds (Garland's fit is for mammals; capped at 4 sqrt(g h) for now).
 - The catch (above): the hawk's feet, the bear's swat, the AI corvid hunt, the jay's carry, the prey's struggle.
+- The snake (above): no climbing (into a shrub or up a trunk) and no hiding in cover. The coil is a flat spiral, not
+  stacked loops, and basking does not flatten the body. Concertina and sidewinding are not done. A swallow after the
+  kill is not drawn (the belly fills at once). The terciopelo has no model of its own: two text-to-3D previews failed the snake gate (decisions, 2026-11-06).

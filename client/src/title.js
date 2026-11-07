@@ -7,6 +7,7 @@ import { MapGlobe, TileOutline, latLonToXYZ, xyzToLatLon } from './mapGlobe.js';
 import { Relief } from './relief.js';
 import { Geocoder, MIN_CHARS } from './geocode.js';
 import { avatarFor } from './social.js';
+import { BodyRing, ringEllipse } from './bodyRing.js';
 export { latLonToXYZ };
 
 // The home screen: the title, the earth as a map, the places, and going there together (docs/multiplayer.md lanes 1
@@ -37,9 +38,12 @@ export { latLonToXYZ };
 // pointer.
 //
 // Choosing a place (a row, a label on the map or a dot) flies to it: 10,000 ft above the ground south of the tile looking
-// north across it, the tile's square outlined on the ground, a card above it (the place's name, its players' avatars and
-// how many, which opens the list of them). The tile starts building at once (main.js, onSelect) and the bar at the bottom
-// shows how far; Invite (above the bar) asks groups or friends along (multiplayer.js, onInvite), and Start, once built,
+// north across it, the tile's square outlined on the ground and framed in the stage (stageArea: the free centre, under the
+// title, above the bar), the place's title over the buttons (its name and players' pill, its territories, the body Start
+// arrives in, its players' avatars, which open the list of them), and once it has landed its animals teleport in over the
+// tile as two rings, walkers and fliers, the spirit in the middle and chosen (bodyRing.js; 2026-11-07): a click chooses a
+// body, the group sees each member's choice, and choosing a member's animal goes in beside them (docs/multiplayer.md
+// "Bodies"). The tile starts building at once (main.js, onSelect) and the bar at the bottom shows how far; Invite (above the bar) asks groups or friends along (multiplayer.js, onInvite), and Start, once built,
 // goes in: the camera sinks toward the place while the screen fades to black, then onBegin enters the world through
 // main.js's enterWorld. Each player starts on their own; one who joined an invite arrives behind and above the one who
 // asked (multiplayer.js and arrival.js). choose(id) is the one function group travel wraps.
@@ -60,7 +64,8 @@ const ALT0 = 2.5, ALT_MIN = 0.6 / R_KM, ALT_MAX = 3.6;      // the camera's dist
 // stretch is paced by the world's build (flyToPlace: the flight's clock runs slower as it gets ahead of the loading bar,
 // down to PACE_MIN, so it eases into a hold a few times the final height above the tile and goes on as the build does).
 const PLACE_SLOW = 1.8, PLACE_MS = [5000, 8000], PACE_FROM = 0.55, PACE_SLACK = 0.12, PACE_MIN = 0.04;
-const FOCUS_MARGIN = [40, 16];                             // px around a chosen tile inside the free centre (desktop, phone)
+const FOCUS_MARGIN = [40, 16];                             // px around the stage inside the free centre (desktop, phone)
+const TILE_RX = 0.84, TILE_RY = 1.3;                       // the chosen tile's frame: within the rings' walkers' ellipse, this much of its radii
 const Y_BELOW = -2.7;                                      // where the earth's centre sits before it lands: off screen, below
 const SUN_CRESCENT = [152 * DEG, 26 * DEG], SUN_LIT = [30 * DEG, 14 * DEG];   // [azimuth about Y from the camera's side, elevation]
 const PITCH_MAX = 85 * DEG;
@@ -254,6 +259,9 @@ export class TitleScreen {
     this.onInvite = null;        // multiplayer.js: (tileId, button) opens the invite picker; unset, Invite says to sign in
     this.peopleAt = null;        // multiplayer.js: tileId -> [{ id, name, state }] the players known to be there or coming
     this.friendsAt = null;       // multiplayer.js: tileId -> [{ id, name }] the friends and group members sharing that they are there
+    this.bodiesAt = null;        // multiplayer.js: tileId -> [{ user, name, code, here }] the group's bodies chosen (or in) there
+    this.onBody = null;          // multiplayer.js: (tileId, code) the player chose a body there ('spirit' for none)
+    this.body = 'spirit'; this.joinWith = null;   // the body Start arrives in (the rings, bodyRing.js), and the member it goes beside
     this.user = null; this.config = null;
     this.hubParam = hub;
     this.layers = loadLayers();   // the Layers menu: which names the map draws (per viewer, localStorage)
@@ -310,21 +318,24 @@ export class TitleScreen {
         <div class="tt-gate"><button class="tt-explore" type="button" hidden>Explore</button><p class="tt-gate-note" hidden></p></div>
         <button type="button" class="tt-loginpill" aria-expanded="false" hidden>Log in or sign up</button>
         <div class="tt-labels" aria-hidden="true"></div>
+        <div class="tt-ring"></div>
         <div class="tt-dotname" hidden></div>
         <div class="tt-pin" hidden>${PIN_ICON}<span></span></div>
         <aside class="tt-places" aria-label="places">
           <label class="tt-search">${SEARCH_ICON}<input type="search" placeholder="Search any place on earth" autocomplete="off" spellcheck="false" maxlength="120" aria-label="search any place on earth"><button type="button" class="tt-sclear" aria-label="clear the search" hidden>×</button></label>
+          <button type="button" class="tt-listbtn" aria-expanded="false">All places</button>
           <div class="tt-head"><h2 class="tt-mode">Most active</h2><button type="button" class="tt-modebtn"></button></div>
           <div class="tt-rows" role="list"></div>
           <div class="tt-found" role="list" hidden></div>
           <p class="tt-empty" hidden></p>
         </aside>
-        <div class="tt-pcard" role="group" aria-label="the place chosen" hidden>
-          <span class="pc-top"><b class="pc-name"></b><span class="pc-pill"></span></span><span class="pc-region"></span>
-          <button type="button" class="pc-people" aria-expanded="false"><span class="pc-avs"></span><span class="pc-n"></span></button>
-          <div class="pc-list" role="list" hidden></div>
-        </div>
         <div class="tt-bar" aria-live="polite">
+          <div class="tt-pcard" role="group" aria-label="the place chosen" hidden>
+            <div class="pc-top"><h2 class="pc-name"></h2><span class="pc-pill"></span></div><p class="pc-region"></p>
+            <p class="pc-body"><span class="pc-as"></span><span class="pc-with"></span></p>
+            <div class="pc-peoplewrap"><button type="button" class="pc-people" aria-expanded="false"><span class="pc-avs"></span><span class="pc-n"></span></button>
+            <div class="pc-list" role="list" hidden></div></div>
+          </div>
           <div class="tt-acts"><button type="button" class="tt-invite">Invite</button><span class="tt-startwrap"><button type="button" class="tt-start" disabled aria-describedby="ttStartTip">Start</button><span class="tt-tip" id="ttStartTip" role="tooltip" hidden>${GUEST_TIP}</span></span></div>
           <div class="tt-bline"><span class="tt-bstatus"></span><span class="tt-bpct"></span></div>
           <div class="tt-progress" role="progressbar" aria-label="loading the place" aria-valuemin="0" aria-valuemax="100"><i></i></div>
@@ -360,6 +371,8 @@ export class TitleScreen {
     }
     this.$('.tt-invite').onclick = e => { if (this.sel && this.onInvite) this.onInvite(this.sel, e.currentTarget); };
     this.$('.tt-modebtn').onclick = () => this.setMode(this.mode === 'global' ? 'visible' : 'global');
+    // a phone's chosen place takes the width: the list folds behind this button (title.css), which opens it over the stage
+    this.$('.tt-listbtn').onclick = e => { const on = !this.wrap.classList.contains('listopen'); this.wrap.classList.toggle('listopen', on); e.currentTarget.setAttribute('aria-expanded', String(on)); };
     const people = this.$('.pc-people');
     people.onclick = () => { const l = this.$('.pc-list'), on = l.hidden; l.hidden = !on; people.setAttribute('aria-expanded', String(on)); };
     for (const p of this.places) {
@@ -467,12 +480,18 @@ export class TitleScreen {
     w.addEventListener('pointerdown', e => {
       if (e.button || e.target.closest('button, input, a, .tt-places, .tt-gate, .tt-pcard, .tt-bar')) return;
       if (this.phase !== 'lit' || this.begun || !this.landed) return;
+      const body = this.sel && this.ring ? this.ring.hit(e.clientX, e.clientY) : null;   // an animal in the rings (or the spirit): chosen, no drag
+      if (body) { e.preventDefault(); this.chooseBody(body, e.pointerType === 'touch'); return; }
       this.drag = { id: e.pointerId, x: e.clientX, y: e.clientY, moved: 0, t: performance.now() };
       w.setPointerCapture(e.pointerId); this.vyaw = this.vpitch = 0; this.stopFlight(); this.anchor = null;
       e.preventDefault();
     });
     w.addEventListener('pointermove', e => {
       this.px = e.clientX; this.py = e.clientY;
+      if (!this.drag && this.ring && e.pointerType !== 'touch') {
+        const over = this.sel && !this.begun && !e.target.closest('button, input, a, .tt-places, .tt-gate, .tt-bar') ? this.ring.hit(e.clientX, e.clientY) : null;
+        this.ring.hover(over); this.wrap.classList.toggle('overbody', !!over);
+      }
       const d = this.drag; if (!d || d.id !== e.pointerId) return;
       const dx = e.clientX - d.x, dy = e.clientY - d.y, now = performance.now(), dt = Math.max(4, now - d.t) / 1000;
       const [ky, kp] = this.dragRates();
@@ -488,7 +507,7 @@ export class TitleScreen {
       else if (performance.now() - d.t > 90) { this.vyaw = this.vpitch = 0; }   // held still before the release: no fling
     };
     w.addEventListener('pointerup', up); w.addEventListener('pointercancel', up);
-    w.addEventListener('pointerleave', () => { this.px = this.py = -1; });
+    w.addEventListener('pointerleave', () => { this.px = this.py = -1; this.ring?.hover(null); this.wrap.classList.remove('overbody'); });
     w.addEventListener('wheel', e => {
       if (e.target.closest('.tt-places, .tt-gate, .tt-pcard, .tt-bar')) return;
       e.preventDefault();
@@ -702,7 +721,7 @@ export class TitleScreen {
     if (this.closed) return;
     if (this.guest) {   // a visitor signed in while browsing: Start, Invite and the social column; the chosen place's world builds now
       if (!user) return;
-      this.guest = false; this.user = user; this.wrap.classList.remove('guest', 'gate-open'); this.$('.tt-loginpill').hidden = true; clearInterval(this.countsT);
+      this.guest = false; this.user = user; this.wrap.classList.remove('guest', 'gate-open'); if (this.ring) this.ring.guest = false; this.$('.tt-loginpill').hidden = true; clearInterval(this.countsT);
       this.hub.watch?.(true);
       this.onLit?.(this.user);
       if (this.sel) this.onSelect?.(this.sel);
@@ -756,15 +775,24 @@ export class TitleScreen {
     const t = this.flying; this.flying = null;
     const i = this.tweens.indexOf(t); if (i >= 0) { this.tweens.splice(i, 1); t.done(); }
   }
-  // Where a chosen tile is framed (Aaron, 2026-11-06: "It should just fill the center of the screen"): the free centre
-  // between the side panels (freeArea, the layout the earth lands in), under the title and the card over the tile, above
-  // Invite, Start and the loading line, less a margin. In CSS pixels: { l, r, t, b }.
-  focusArea(W, H) {
+  // The stage (Aaron, 2026-11-07: "center the tile on the screen in its final position so that there is space on the
+  // bottom for a proper Title above the Invite/start buttons"): the free centre between the side panels (freeArea, the
+  // layout the earth lands in), under the risen title, above the bar (the place's title block, Invite and Start, the
+  // loading line), less a margin. The rings of bodies fill it (bodyRing.js). In CSS pixels: { l, r, t, b }.
+  stageArea(W, H) {
     const phone = matchMedia('(max-width: 720px)').matches, m = FOCUS_MARGIN[phone ? 1 : 0], [fl, fr] = this.freeArea(W);
     const title = parseFloat(getComputedStyle(this.$('.tt-title')).getPropertyValue('--tt-top')) || 36;
-    const card = this.card && !this.card.hidden ? this.card.offsetHeight || 96 : 96;
-    const bar = (this.$('.tt-acts')?.offsetHeight || 40) + 64;   // the buttons, the status line, the progress bar and their gaps
-    return { l: fl + m, r: fr - m, t: title + 12 + card + 18, b: H - bar - m };
+    const bar = this.bar.offsetHeight || 200, lb = phone && this.sel ? this.$('.tt-listbtn') : null;
+    const top = lb?.offsetHeight ? this.list.offsetTop + lb.offsetTop + lb.offsetHeight + 10 : title + (phone ? 40 : 22);   // under the search and the list's button
+    return { l: fl + m, r: fr - m, t: top, b: H - bar - m * 0.5 };
+  }
+  // Where a chosen tile is framed: under the rings' walkers' ring (bodyRing.js ringEllipse), so the animals stand
+  // round it and the fliers' ring turns over it.
+  focusArea(W, H) {
+    const st = this.stageArea(W, H), e = ringEllipse(st);
+    if (!e) return st;
+    const hh = Math.max(20, Math.min(e.ry * TILE_RY, st.b - e.cy));   // never under the place's title
+    return { l: e.cx - e.rx * TILE_RX, r: e.cx + e.rx * TILE_RX, t: e.cy - hh, b: e.cy + hh };
   }
   // The pose that shows a place: the camera looks at the tile's centre from the distance at which the whole tile, as the
   // camera sees it there (tilted toward the north's horizon as it comes down: tiltFor, fovFor), just fits the focus area;
@@ -803,7 +831,11 @@ export class TitleScreen {
       const load = this.readyIds.has(id) || this.sel !== id || this.guest ? 1 : (this.shown || 0);   // a visitor's: nothing loads, the slow pace alone
       return clamp(1 - (smooth(PACE_FROM, 1, u) - load) / PACE_SLACK, PACE_MIN, 1);
     };
-    return this.flyTo(c.lat, c.lon, c.alt, null, pace).then(() => { if (this.sel === id && !this.closed) this.card.classList.add('on'); });
+    return this.flyTo(c.lat, c.lon, c.alt, null, pace).then(() => {
+      if (this.sel !== id || this.closed) return;
+      this.card.classList.add('on');
+      this.ringFor = null; this.ring?.show(id).then(list => { if (list && this.sel === id && !this.closed) this.renderBody(); });   // the bodies teleport in once it has landed (loaded during the flight, or now)
+    });
   }
   // A tween run by frame(): fn(eased 0..1) over ms after delay; .p resolves when done (or stopped); .view marks one a drag cancels.
   endTween(t) { const i = t ? this.tweens.indexOf(t) : -1; if (i < 0) return; this.tweens.splice(i, 1); if (this.flying === t) this.flying = null; t.done(); }
@@ -849,8 +881,15 @@ export class TitleScreen {
     this.sel = id; this.tileId = id; this.pin = null;
     this.byId[id].el.classList.add('sel'); this.byId[id].label.classList.add('sel');
     this.progress[id] = this.readyIds.has(id) ? 1 : (this.progress[id] || 0); this.shown = this.progress[id];
+    if (!this.ring) this.ring = new BodyRing({ renderer: this.renderer, box: this.$('.tt-ring'), guest: !!this.guest, onPick: code => this.pickedBody(code) });
+    if (this.ring.tile && this.ring.tile !== id) this.ring.clear();   // the last place's bodies go while the earth flies on
+    // its bodies load during the flight, but behind the world's heavy steps (terrain, vegetation...) so they do not slow
+    // the paced zoom: once the build is past its animals step (ringLoad, from setProgress), at once when nothing builds
+    this.ringFor = id;
+    if (this.guest || this.readyIds.has(id)) this.ringLoad(id);
+    this.body = 'spirit'; this.joinWith = null; this.autoStart = null;
     this.renderCard(); this.renderBar();
-    this.wrap.classList.add('chosen');
+    this.wrap.classList.add('chosen'); this.wrap.classList.remove('listopen'); this.$('.tt-listbtn').setAttribute('aria-expanded', 'false');
     this.flyToPlace(id);
     this.relief?.show(id);
     if (!this.guest) this.onSelect?.(id);   // a visitor's choice builds nothing (they cannot start it)
@@ -862,7 +901,38 @@ export class TitleScreen {
     this.card.querySelector('.pc-name').textContent = p.name;
     this.card.querySelector('.pc-region').innerHTML = terrHTML(p.terr);
     this.$('.pc-list').hidden = true; this.$('.pc-people').setAttribute('aria-expanded', 'false');
-    this.renderPeople();
+    this.renderPeople(); this.renderBody();
+  }
+  // ---- the bodies (bodyRing.js) ------------------------------------------------------------------------------------------
+  // A body chosen in the rings (a click, or the ring's own clear back to the spirit): the title names it, the group is
+  // told (multiplayer.js onBody, through the hub: the tile and the species, nothing else), and Start arrives in it.
+  pickedBody(code) {
+    this.body = code || 'spirit';
+    this.renderBody();
+    if (!this.guest && this.sel) this.onBody?.(this.sel, this.body);
+  }
+  // A click on an animal (or the spirit): chosen, its ring swinging it to the front; a visitor's shows the tip instead
+  chooseBody(code, touch = false) {
+    if (this.begun || !this.ring) return;
+    if (this.guest) { this.ring.hover(code); if (touch) { clearTimeout(this.bodyTipT); this.bodyTipT = setTimeout(() => this.ring?.hover(null), 2600); } return; }
+    if (code === this.body) return;
+    this.ring.select(code);
+  }
+  // The body line under the place's name, and the group's picks there (multiplayer.js bodiesAt: [{ user, name, code,
+  // here }]) as their faces over the animals; a pick of the same animal as a member's is going with them (joinWith: Start
+  // arrives beside them, the one in the body there first).
+  refreshBodies() { if (!this.closed && this.sel) this.renderBody(); }
+  renderBody() {
+    const el = this.$('.pc-body'); if (!el || !this.sel) return;
+    const marks = (this.bodiesAt?.(this.sel) || []).filter(m => m && m.user && m.code);
+    this.ring?.setMarks(marks);
+    const b = this.body !== 'spirit' ? this.ring?.picked : null;
+    if (this.body !== 'spirit' && !b) this.body = 'spirit';
+    const mates = b ? marks.filter(m => m.code === this.body) : [];
+    this.joinWith = (mates.find(m => m.here) || mates[0])?.user || null;
+    const name = b ? b.name : '', art = /^[aeiou]/i.test(name) ? 'an' : 'a';
+    el.querySelector('.pc-as').innerHTML = b ? `As ${art} <b>${esc(name)}</b>` : 'As <b>the spirit</b>';
+    el.querySelector('.pc-with').textContent = mates.length ? ` · beside ${andList(mates.slice(0, 3).map(m => m.name || 'a friend'))}` : '';
   }
   // Called by multiplayer.js when who is there or coming changes. Known players (friends and group members the hub
   // says are in the tile, and the people invited) are named; the others the hub counts are anonymous wisps: a stranger's
@@ -919,7 +989,7 @@ export class TitleScreen {
     inv.hidden = g;
     inv.disabled = !id || this.begun || !this.onInvite;
     inv.title = this.onInvite ? 'invite a group or friends to this place' : 'sign in to invite friends';
-    this.$('.tt-bstatus').textContent = !id || g ? '' : ready ? `${this.byId[id].name} is ready` : (this.status[id] || 'loading…');
+    this.$('.tt-bstatus').textContent = !id || g ? '' : this.autoStart && !this.begun ? `Going with ${this.autoStart}${ready ? '' : `: ${this.status[id] || 'loading…'}`}` : ready ? `${this.byId[id].name} is ready` : (this.status[id] || 'loading…');
     if (ready && !this.begun && document.activeElement?.closest?.('.tt-places, .tt-search') == null) start.focus({ preventScroll: true });
   }
   // main.js reports "preparing <tileId>: <status>" while a world builds, each step's name (setProgress), and setReady.
@@ -933,11 +1003,26 @@ export class TitleScreen {
   setProgress(id, step) {
     const at = STEP_AT[step]; if (!id || !at || this.readyIds.has(id)) return;
     this.progress[id] = Math.max(at[0], this.progress[id] || 0); this.stepEnd = at[1]; this.stepAt = performance.now();
+    if (at[0] >= STEP_AT.animals[1]) this.ringLoad(id);
+  }
+  // The chosen place's bodies start loading (bodyRing.js show, held until the flight lands), once per choice
+  ringLoad(id) {
+    if (this.ringFor !== id || this.sel !== id || !this.ring || this.closed) return;
+    this.ringFor = null;
+    this.ring.show(id, { hold: true }).then(list => { if (list && this.sel === id && !this.closed) this.renderBody(); });
   }
   setReady(id = this.tileId) {
     if (!id) return;
     this.readyIds.add(id); this.progress[id] = 1;
-    if (id === this.sel) this.renderBar();
+    this.ringLoad(id);
+    if (id === this.sel) { this.renderBar(); if (this.autoStart) this.begin(); }
+  }
+  // Start with a group member who just started here (multiplayer.js: the same body chosen at this place in the rings):
+  // at once if the world is built, else as soon as it is.
+  startWith(lead, name = '') {
+    if (this.begun || this.guest || !this.sel) return;
+    this.joinWith = lead; this.autoStart = name || 'them';
+    if (this.ready) this.begin(); else this.renderBar();
   }
   // Start: the camera sinks toward the place while the screen fades to black; then onBegin enters the world through
   // main.js's enterWorld, whose own fade (.out) brings the spirit world in from the black.
@@ -954,7 +1039,7 @@ export class TitleScreen {
     setTimeout(() => { if (!this.closed) this.wrap.classList.add('leaving'); }, 600);
     setTimeout(() => {
       if (this.closed) return;
-      this.onBegin({ tileId: this.sel, season: this.season, date: null, point: this.points[this.sel] || null });
+      this.onBegin({ tileId: this.sel, season: this.season, date: null, point: this.points[this.sel] || null, body: this.body && this.body !== 'spirit' ? this.body : null, join: this.joinWith || null });
     }, 1500);
   }
 
@@ -973,8 +1058,9 @@ export class TitleScreen {
   // where the sign-in and then the social column stand (when there is a hub; at a phone's width the column is a
   // toggle at the top and leaves the width free).
   freeArea(W) {
-    const left = this.list.offsetWidth ? this.list.offsetLeft + this.list.offsetWidth : 0, gate = this.$('.tt-gate');
-    const right = this.reserveRight && gate?.offsetWidth && !matchMedia('(max-width: 720px)').matches ? Math.min(W, gate.offsetLeft) : W;
+    const phone = matchMedia('(max-width: 720px)').matches, folded = phone && this.sel && this.phase === 'lit';   // a phone's chosen place: the list folds away
+    const left = this.list.offsetWidth && !folded ? this.list.offsetLeft + this.list.offsetWidth : 0, gate = this.$('.tt-gate');
+    const right = this.reserveRight && gate?.offsetWidth && !phone ? Math.min(W, gate.offsetLeft) : W;
     return [left, right];
   }
   frame(now) {
@@ -1005,6 +1091,7 @@ export class TitleScreen {
     cam.near = Math.max(2e-5, A * Math.cos(t) * 0.3); cam.far = 70;
     const [fl, fr] = this.freeArea(W), off = (fl + fr) / 2 - W / 2;
     // a chosen tile's centre at the focus area's centre (chosenPose), up or down as well as across
+    this.stage = this.stageArea(W, H);
     let offY = 0; if (this.sel && this.phase === 'lit') { const a = this.focusArea(W, H); offY = (a.t + a.b) / 2 - H / 2; }
     this.offY = this.offY == null ? offY : this.offY + (offY - this.offY) * (1 - Math.exp(-dt * 6));
     const flr = `${Math.round(fl)}px|${Math.round(W - fr)}px`;   // the free space's edges for the CSS: the bar's buttons and the toast centre in it
@@ -1055,6 +1142,7 @@ export class TitleScreen {
     const ac = r.autoClear, ca = r.getClearAlpha(); r.getClearColor(this._cc);
     r.setRenderTarget(null); r.setScissorTest(false); r.setViewport(0, 0, size.x, size.y); r.autoClear = true; r.setClearColor(0x000000, 1);
     r.render(this.scene, cam);
+    if (this.ring) { this.ring.layout(this.stage); this.ring.render(dt, W, H); }   // the rings of bodies over the chosen tile (bodyRing.js)
     r.setClearColor(this._cc, ca); r.autoClear = ac;
     if (this.drawnAt == null) this.firstDrawn();
     if (this.phase === 'lit') this.syncPlaces(W, H, dt);
@@ -1086,7 +1174,9 @@ export class TitleScreen {
     }
     this.hover = hover;
     // the labels on the map: the chosen and the busiest first, none over another; none during Start's dive
-    const boxes = [], order = this.places.filter(p => p.onScreen).sort((a, b) => (b.id === this.sel) - (a.id === this.sel) || b.count - a.count || a.name.localeCompare(b.name));
+    // with a place chosen, none in the rings' space or under the stage (the place's title and the buttons are there)
+    const st = this.sel && this.stage, e = st && ringEllipse(st), clear = p => !st || (p.sy < st.b - 6 && (p.sx < e.cx - e.rx * 1.25 || p.sx > e.cx + e.rx * 1.25));
+    const boxes = [], order = this.places.filter(p => p.onScreen && p.id !== this.sel && clear(p)).sort((a, b) => (b.id === this.sel) - (a.id === this.sel) || b.count - a.count || a.name.localeCompare(b.name));
     const shown = new Set();
     if (!this.begun) for (const p of order) {
       if (shown.size >= LABEL_MAX) break;
@@ -1105,14 +1195,8 @@ export class TitleScreen {
     const pin = this.$('.tt-pin');
     if (this.pin && !this.begun) { const [x, y, near] = project(this.pin.p, 1); pin.hidden = !near; pin.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`; }
     else pin.hidden = true;
-    // the card over the chosen place: above the middle of the tile's north edge, kept on screen
+    // the chosen place (its name over the buttons now: renderCard; the label on the map is left out above)
     if (this.sel) {
-      const p = this.byId[this.sel], [w, , e, n] = p.bounds;
-      const [x, y, near] = project(latLonToXYZ(n, (w + e) / 2), 1);
-      const ch = this.card.offsetHeight || 90, cw = this.card.offsetWidth || 240, [fl, fr] = this.freeArea(W);
-      const cx = clamp(x, fl + cw / 2 + 12, fr - cw / 2 - 12), cy = clamp(y - 14, ch + 16, H - 150);
-      this.card.style.transform = `translate(${cx.toFixed(1)}px, ${cy.toFixed(1)}px) translate(-50%, -100%)`;
-      this.card.classList.toggle('behind', !near);
       // the bar: toward the step's end while it runs (never past it), all of it when ready
       const goal = this.readyIds.has(this.sel) ? 1 : lerp(this.progress[this.sel] || 0, this.stepEnd ?? 0, 0.85 * (1 - Math.exp(-(performance.now() - (this.stepAt || 0)) / 6000)));
       this.shown = Math.max(this.shown || 0, Math.min(1, lerp(this.shown || 0, Math.max(goal, this.progress[this.sel] || 0), 1 - Math.exp(-dt * 5))));
@@ -1152,7 +1236,7 @@ export class TitleScreen {
     for (const ev of ['keydown', 'keyup']) removeEventListener(ev, this.guard, true);
     document.activeElement?.blur?.();
     if (this.hubParam && typeof this.hubParam === 'object') this.hub.watch?.(false); else this.hub?.close?.();   // a hub given from outside (multiplayer.js) lives on into the world
-    this.map.dispose(); this.relief?.dispose();
+    this.map.dispose(); this.relief?.dispose(); this.ring?.dispose(); this.ring = null;
     for (const p of this.places) p.outline.dispose();
     for (const o of [this.globe, this.dots, this.stars]) { o.geometry.dispose(); o.material.dispose(); }
     this.tex?.dispose(); this.earthU.map.value = null;

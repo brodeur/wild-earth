@@ -216,7 +216,7 @@ class TestReptiles(unittest.TestCase):
         self.assertEqual([s["code"] for s in pick], ["a_croc"])   # a snake is not a reptile build's
         self.assertIsNone(F.reptile_build(fauna["slots"][1]))
         mesh, _ = F._prompts(fauna["slots"][1], "Yellowstone")
-        self.assertIn("gentle S-curve", mesh)
+        self.assertIn("open S-curve", mesh); self.assertIn("fifteen times as long as it is thick", mesh)
         self.assertIn("no coils", mesh)
 
 
@@ -255,3 +255,121 @@ class TestDesirability(unittest.TestCase):
         self.assertEqual(max(d["vole"][0], d["quail"][0]), 1.0)          # the best prey is 1 ...
         self.assertEqual(d["berry"][0], 1.0)                            # ... and so is the best plant
         self.assertEqual(steps.STEPS["games"].version, "2")             # the games step's version bumped with it
+
+
+class TestSnakePrey(unittest.TestCase):
+    """pipeline/games.py snake_predation: a tile's own snake takes what it can swallow (2026-11-06)."""
+    def test_gape_and_kinds(self):
+        from pipeline.games import snake_predation
+        slots = [{"code": "thamnophis_elegans", "reptile": "snake", "mass_kg": 0.4},
+                 {"code": "microtus_montanus", "mass_kg": 0.0363}, {"code": "rana_luteiventris", "mass_kg": 0.02},
+                 {"code": "tamias_minimus", "mass_kg": 0.1353},                  # a rodent over a colubrid's gape (0.25 of 0.4 kg)
+                 {"code": "pica_hudsonia", "mass_kg": 0.177, "bird": True},     # a bird: never
+                 {"code": "bison_bison", "mass_kg": 579}]
+        pairs = snake_predation(slots, [], {})
+        self.assertIn(["thamnophis_elegans", "microtus_montanus"], pairs)
+        self.assertIn(["thamnophis_elegans", "rana_luteiventris"], pairs)
+        prey = {q for _, q in pairs}
+        self.assertNotIn("tamias_minimus", prey)
+        self.assertNotIn("pica_hudsonia", prey)
+        self.assertNotIn("bison_bison", prey)
+
+    def test_no_snake_no_pairs(self):
+        from pipeline.games import snake_predation
+        self.assertEqual(snake_predation([{"code": "microtus_montanus", "mass_kg": 0.0363}], [], {}), [])
+
+
+class TestFaunaReserve(unittest.TestCase):
+    """pipeline/fauna_slots.py RESERVE_MAX: a class of body with a template the caps left out keeps one slot (2026-11-06)."""
+    def test_the_only_snake_behind_six_lizards_and_frogs(self):
+        import tempfile
+        from pipeline import fauna_slots as fs
+
+        class FakeTile:
+            def __init__(self, d): self.d = pathlib.Path(d)
+            def path(self, rel): return self.d / rel
+
+        lizard = {"class": "Squamata", "order": None, "family": "Phrynosomatidae"}
+        frog = {"class": "Amphibia", "order": "Anura", "family": "Ranidae"}
+        animals = [{"id": f"test_lizard_{i}", "scientific": f"Test lizard {i}", "common": f"lizard {i}", "kind": "reptile",
+                    "records": 200 - i, "mass_kg": 0.02, "taxonomy": lizard} for i in range(4)]
+        animals += [{"id": f"test_frog_{i}", "scientific": f"Test frog {i}", "common": f"frog {i}", "kind": "amphibian",
+                     "records": 150 - i, "mass_kg": 0.02, "taxonomy": frog} for i in range(3)]
+        animals += [{"id": "test_viper", "scientific": "Test viper", "common": "viper", "kind": "reptile", "records": 20,
+                     "mass_kg": 0.5, "taxonomy": {"class": "Squamata", "order": None, "family": "Viperidae"}},
+                    {"id": "test_gecko", "scientific": "Test gecko", "common": "gecko", "kind": "reptile", "records": 10,
+                     "mass_kg": 0.01, "taxonomy": {"class": "Squamata", "order": None, "family": "Gekkonidae"}}]
+        with tempfile.TemporaryDirectory() as d:
+            (pathlib.Path(d) / "species").mkdir(); (pathlib.Path(d) / "client").mkdir()
+            (pathlib.Path(d) / "species" / "animals.json").write_text(json.dumps({"animals": animals}))
+            fs.fauna_slots(FakeTile(d))
+            out = json.loads((pathlib.Path(d) / "client" / "fauna.json").read_text())
+        codes = [s["code"] for s in out["slots"]]
+        self.assertEqual(len([c for c in codes if not c.startswith("test_viper")]), fs.MAX_OTHER)   # the cap as before
+        viper = next(s for s in out["slots"] if s["code"] == "test_viper")
+        self.assertEqual(viper["reptile"], "snake")
+        self.assertIn("snake", viper["reserved"])
+        # a second lizard (a class already in a slot) stays over the cap
+        self.assertNotIn("test_gecko", codes)
+        self.assertIn({"id": "test_gecko", "why": f"over the {fs.MAX_OTHER}-slot cap"}, out["skipped"])
+
+
+class TestSnakePhotoUse(unittest.TestCase):
+    """pipeline/reference_photos.py usable_for: a snake photo for image-to-3D must hold the whole body (2026-11-06)."""
+    def test_whole_body_for_image(self):
+        from pipeline.reference_photos import usable_for
+        s = {"whole": 0.72, "size": 1.0, "side": 1.0, "clear": 1.0}
+        self.assertEqual(usable_for(s, "snake", "texture"), [])        # a texture reference may lose its tail to the frame
+        self.assertEqual(usable_for(s, "snake", "image"), ["whole"])   # image-to-3D copies the pose: the whole body
+        self.assertEqual(usable_for({**s, "whole": 0.95}, "snake", "image"), [])
+
+
+class TestProceduralSnake(unittest.TestCase):
+    """tools/build_snake_proc.py: a snake built from its traits and a photo, in build_snake.py's GLB form (2026-11-07)."""
+    def _tool(self):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("build_snake_proc", pathlib.Path(__file__).resolve().parent.parent / "tools" / "build_snake_proc.py")
+        m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+        return m
+
+    def test_shapes_by_family(self):
+        import numpy as np
+        T = self._tool()
+        V, C = T.FAMILY["viper"], T.FAMILY["colubrid"]
+        for F in (V, C):
+            w = lambda u: float(T.width_profile(np.array([u]), F)[0])
+            self.assertGreater(w(F["head"] * F["apex"]), w(F["head"]))   # the head wider than the neck
+            self.assertLess(w(0.995), 0.15)                               # the tail tapers to a tip
+            self.assertAlmostEqual(max(float(x) for x in T.width_profile(np.linspace(0, 1, 501), F)), max(1.0, F["head_w"]), places=1)
+        self.assertLess(V["slender"], C["slender"])                       # a viper is stouter
+        # a viper's head stands out from its neck more than a colubrid's
+        self.assertGreater(V["head_w"] / V["neck"], C["head_w"] / C["neck"])
+
+    def test_build_from_a_striped_photo(self):
+        import tempfile
+        import numpy as np
+        from PIL import Image, ImageDraw
+        from pipeline import reference_photos as rp
+        from pipeline.appearance import read_glb
+        if not rp.segmenters_ready():
+            self.skipTest("the segmenters are not in pipeline/_cache/segmentation")
+        T = self._tool()
+        with tempfile.TemporaryDirectory() as d:
+            im = Image.new("RGB", (900, 400), (205, 196, 170)); dr = ImageDraw.Draw(im)
+            pts = [(80 + 7 * i, 200 + 70 * np.sin(i / 18)) for i in range(110)]
+            for k, (w, col) in enumerate([(26, (60, 64, 48)), (6, (225, 210, 120))]):   # a dark body with a pale mid-back stripe
+                dr.line(pts, fill=col, width=w, joint="curve")
+            photo = pathlib.Path(d) / "photo.png"; im.save(photo)
+            out = pathlib.Path(d) / "s.glb"
+            x = T.build("thamnophis_elegans", out, photo=photo)
+            raw = out.read_bytes(); n = int.from_bytes(raw[12:16], "little"); g = json.loads(raw[20:20 + n])
+            self.assertEqual([m["name"] for m in g["meshes"]], ["lod0", "lod1", "lod2"])
+            self.assertEqual(set(g["meshes"][0]["primitives"][0]["attributes"]), {"POSITION", "COLOR_0", "_PART", "_PARTW", "_PIVOT"})
+            rig = g["extras"]["rig"]
+            self.assertEqual(rig["kind"], "snake"); self.assertGreater(rig["snout_z"], rig["neck_z"]); self.assertLess(rig["tail_end_z"], 0)
+            P, C, R, I = read_glb(out)
+            t = P[I]; nrm = np.cross(t[:, 1] - t[:, 0], t[:, 2] - t[:, 0]); c = t.mean(1)
+            axis = np.stack([np.zeros(len(c)), np.full(len(c), np.median(P[:, 1])), c[:, 2]], 1)
+            self.assertGreater(float(((nrm * (c - axis)).sum(1) > 0).mean()), 0.9)   # the faces look outward (three.js culls the back)
+            vol = abs(float(np.einsum("ij,ij->i", t[:, 0], np.cross(t[:, 1], t[:, 2])).sum()) / 6)
+            self.assertAlmostEqual(vol * 1000 / x["mass_kg"], 1.0, delta=0.2)          # sized by its mass at 1,000 kg/m3

@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-07T03:34:33Z",
+ "generated": "2026-11-07T05:48:37Z",
  "tile_id": "utm12n_514_4838",
  "archetypes": {
   "gather": "find the resource's hotspots, feed, keep an eye out: the predators listed hunt here; the competitors eat the same cells",
@@ -440,6 +440,26 @@
    [
     "falco_columbarius",
     "turdus_migratorius"
+   ],
+   [
+    "thamnophis_elegans",
+    "anaxyrus_boreas"
+   ],
+   [
+    "thamnophis_elegans",
+    "peromyscus_maniculatus"
+   ],
+   [
+    "thamnophis_elegans",
+    "rana_luteiventris"
+   ],
+   [
+    "thamnophis_elegans",
+    "tamias_amoenus"
+   ],
+   [
+    "thamnophis_elegans",
+    "tamias_umbrinus"
    ]
   ],
   "competition": {
@@ -3105,7 +3125,1273 @@
     "ursus_americanus",
     "abies_lasiocarpa"
    ]
-  ]
+  ],
+  "snake_prey_basis": "a snake takes ground-living amphibians, rodents, shrews and lizards from 0.005 of its mass up to its gape: Viperidae 0.6, Boidae 1, Pythonidae 1, else 0.25 of its mass (pipeline/games.py)",
+  "desirability": {
+   "ursus_americanus": {
+    "arctostaphylos_viscida": [
+     null,
+     null,
+     0.0,
+     0.26
+    ],
+    "quercus_lobata": [
+     null,
+     null,
+     null,
+     1.0
+    ],
+    "heteromeles_arbutifolia": [
+     1.0,
+     null,
+     null,
+     0.26
+    ],
+    "sambucus_nigra_caerulea": [
+     null,
+     null,
+     0.0,
+     0.26
+    ],
+    "frangula_californica": [
+     null,
+     null,
+     null,
+     0.45
+    ],
+    "arctostaphylos_manzanita": [
+     null,
+     null,
+     0.0,
+     0.26
+    ],
+    "rosa_californica": [
+     1.0,
+     null,
+     null,
+     0.26
+    ],
+    "ribes_roezlii": [
+     null,
+     null,
+     1.0,
+     null
+    ],
+    "ribes_malvaceum": [
+     null,
+     1.0,
+     0.0,
+     null
+    ],
+    "chlorogalum_pomeridianum": [
+     null,
+     0.53,
+     null,
+     0.0
+    ],
+    "dipterostemon_capitatus": [
+     null,
+     0.76,
+     null,
+     null
+    ],
+    "cornus_sericea": [
+     null,
+     null,
+     0.0,
+     0.26
+    ],
+    "rubus_ursinus": [
+     null,
+     null,
+     1.0,
+     null
+    ],
+    "vitis_californica": [
+     null,
+     null,
+     null,
+     0.45
+    ],
+    "arctostaphylos_patula": [
+     null,
+     null,
+     0.0,
+     0.26
+    ],
+    "gaultheria_shallon": [
+     null,
+     null,
+     0.0,
+     0.26
+    ],
+    "notholithocarpus_densiflorus": [
+     null,
+     null,
+     null,
+     1.0
+    ],
+    "pinus_albicaulis": [
+     null,
+     null,
+     null,
+     0.73
+    ],
+    "pinus_jeffreyi": [
+     null,
+     null,
+     null,
+     0.73
+    ],
+    "pinus_lambertiana": [
+     null,
+     null,
+     null,
+     0.73
+    ],
+    "populus_tremuloides": [
+     null,
+     0.0,
+     null,
+     null
+    ],
+    "quercus_agrifolia": [
+     null,
+     null,
+     null,
+     1.0
+    ],
+    "quercus_vacciniifolia": [
+     null,
+     null,
+     null,
+     1.0
+    ],
+    "vaccinium_ovatum": [
+     null,
+     null,
+     0.0,
+     0.26
+    ],
+    "rubus_parviflorus": [
+     null,
+     null,
+     1.0,
+     null
+    ],
+    "vaccinium_parvifolium": [
+     null,
+     null,
+     1.0,
+     null
+    ],
+    "oplopanax_horridus": [
+     null,
+     null,
+     0.0,
+     0.26
+    ],
+    "rubus_spectabilis": [
+     null,
+     null,
+     1.0,
+     null
+    ]
+   },
+   "canis_latrans": {
+    "arctostaphylos_viscida": [
+     null,
+     null,
+     0.0,
+     0.0
+    ],
+    "heteromeles_arbutifolia": [
+     1.0,
+     null,
+     null,
+     0.0
+    ],
+    "sambucus_nigra_caerulea": [
+     null,
+     null,
+     0.0,
+     0.0
+    ],
+    "frangula_californica": [
+     null,
+     null,
+     null,
+     1.0
+    ],
+    "arctostaphylos_manzanita": [
+     null,
+     null,
+     0.0,
+     0.0
+    ],
+    "rosa_californica": [
+     1.0,
+     null,
+     null,
+     0.0
+    ],
+    "ribes_roezlii": [
+     null,
+     null,
+     1.0,
+     null
+    ],
+    "ribes_malvaceum": [
+     null,
+     1.0,
+     0.0,
+     null
+    ],
+    "rubus_ursinus": [
+     null,
+     null,
+     1.0,
+     null
+    ],
+    "vitis_californica": [
+     null,
+     null,
+     null,
+     1.0
+    ],
+    "arctostaphylos_patula": [
+     null,
+     null,
+     null,
+     1.0
+    ],
+    "gaultheria_shallon": [
+     null,
+     null,
+     null,
+     1.0
+    ],
+    "juniperus_grandis": [
+     1.0,
+     null,
+     null,
+     0.0
+    ],
+    "vaccinium_ovatum": [
+     null,
+     null,
+     null,
+     1.0
+    ],
+    "rubus_parviflorus": [
+     null,
+     null,
+     1.0,
+     null
+    ],
+    "vaccinium_parvifolium": [
+     null,
+     null,
+     1.0,
+     null
+    ],
+    "rubus_spectabilis": [
+     null,
+     null,
+     1.0,
+     null
+    ],
+    "odocoileus_hemionus": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "meleagris_gallopavo": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "odocoileus_hemionus": {
+    "adenostoma_fasciculatum": [
+     0.17,
+     0.18,
+     null,
+     null
+    ],
+    "salix_lasiolepis": [
+     null,
+     0.18,
+     0.2,
+     null
+    ],
+    "alnus_rhombifolia": [
+     null,
+     0.18,
+     0.2,
+     null
+    ],
+    "populus_fremontii": [
+     null,
+     0.18,
+     0.2,
+     null
+    ],
+    "quercus_lobata": [
+     1.0,
+     null,
+     null,
+     0.89
+    ],
+    "umbellularia_californica": [
+     0.17,
+     0.18,
+     null,
+     null
+    ],
+    "acer_macrophyllum": [
+     null,
+     0.18,
+     0.2,
+     null
+    ],
+    "fraxinus_latifolia": [
+     null,
+     0.18,
+     0.2,
+     null
+    ],
+    "heteromeles_arbutifolia": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "cercis_occidentalis": [
+     null,
+     0.18,
+     0.2,
+     null
+    ],
+    "toxicodendron_diversilobum": [
+     null,
+     0.09,
+     0.1,
+     0.08
+    ],
+    "baccharis_pilularis": [
+     0.25,
+     null,
+     null,
+     null
+    ],
+    "sambucus_nigra_caerulea": [
+     null,
+     0.18,
+     0.2,
+     null
+    ],
+    "frangula_californica": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "arctostaphylos_manzanita": [
+     0.17,
+     0.18,
+     null,
+     null
+    ],
+    "ceanothus_cuneatus": [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ],
+    "ceanothus_integerrimus": [
+     null,
+     0.89,
+     1.0,
+     0.08
+    ],
+    "cercocarpus_betuloides": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "diplacus_aurantiacus": [
+     null,
+     0.18,
+     0.2,
+     null
+    ],
+    "rosa_californica": [
+     null,
+     0.18,
+     0.2,
+     null
+    ],
+    "symphoricarpos_albus": [
+     null,
+     0.09,
+     0.1,
+     0.08
+    ],
+    "ribes_malvaceum": [
+     0.17,
+     0.18,
+     null,
+     null
+    ],
+    "stipa_pulchra": [
+     0.45,
+     0.53,
+     null,
+     null
+    ],
+    "elymus_glaucus": [
+     0.36,
+     0.43,
+     null,
+     0.28
+    ],
+    "danthonia_californica": [
+     0.45,
+     0.53,
+     null,
+     null
+    ],
+    "avena_fatua": [
+     0.45,
+     0.53,
+     null,
+     null
+    ],
+    "bromus_hordeaceus": [
+     0.45,
+     0.53,
+     null,
+     null
+    ],
+    "bromus_diandrus": [
+     0.45,
+     0.53,
+     null,
+     null
+    ],
+    "hordeum_murinum": [
+     0.54,
+     null,
+     null,
+     null
+    ],
+    "eschscholzia_californica": [
+     null,
+     0.62,
+     null,
+     null
+    ],
+    "lupinus_bicolor": [
+     null,
+     0.62,
+     null,
+     null
+    ],
+    "claytonia_perfoliata": [
+     0.45,
+     0.53,
+     null,
+     null
+    ],
+    "trifolium_willdenovii": [
+     0.45,
+     1.0,
+     null,
+     null
+    ],
+    "chlorogalum_pomeridianum": [
+     0.45,
+     0.53,
+     null,
+     null
+    ],
+    "achillea_millefolium": [
+     null,
+     0.53,
+     0.59,
+     null
+    ],
+    "wyethia_helenioides": [
+     null,
+     1.0,
+     null,
+     null
+    ],
+    "dipterostemon_capitatus": [
+     null,
+     1.0,
+     null,
+     null
+    ],
+    "erodium_cicutarium": [
+     0.45,
+     0.53,
+     null,
+     null
+    ],
+    "vicia_villosa": [
+     null,
+     0.62,
+     null,
+     null
+    ],
+    "salix_laevigata": [
+     null,
+     0.18,
+     0.2,
+     null
+    ],
+    "salix_lasiandra": [
+     null,
+     0.18,
+     0.2,
+     null
+    ],
+    "platanus_racemosa": [
+     null,
+     0.27,
+     null,
+     null
+    ],
+    "salix_exigua": [
+     null,
+     0.18,
+     0.2,
+     null
+    ],
+    "cephalanthus_occidentalis": [
+     null,
+     null,
+     0.31,
+     null
+    ],
+    "cornus_sericea": [
+     null,
+     0.09,
+     0.1,
+     0.08
+    ],
+    "rubus_ursinus": [
+     0.08,
+     0.09,
+     0.1,
+     null
+    ],
+    "vitis_californica": [
+     null,
+     0.18,
+     0.2,
+     null
+    ],
+    "carex_barbarae": [
+     0.45,
+     0.53,
+     null,
+     null
+    ],
+    "carex_nudata": [
+     null,
+     null,
+     0.71,
+     null
+    ],
+    "artemisia_douglasiana": [
+     null,
+     0.62,
+     null,
+     null
+    ],
+    "urtica_dioica": [
+     null,
+     0.62,
+     null,
+     null
+    ],
+    "erythranthe_guttata": [
+     null,
+     0.53,
+     0.59,
+     null
+    ],
+    "nasturtium_officinale": [
+     0.36,
+     0.43,
+     0.48,
+     null
+    ],
+    "abies_concolor": [
+     null,
+     0.18,
+     0.2,
+     null
+    ],
+    "abies_magnifica": [
+     null,
+     null,
+     0.31,
+     null
+    ],
+    "arctostaphylos_patula": [
+     0.17,
+     0.18,
+     null,
+     null
+    ],
+    "artemisia_californica": [
+     0.17,
+     0.18,
+     null,
+     null
+    ],
+    "artemisia_tridentata": [
+     0.17,
+     null,
+     null,
+     0.17
+    ],
+    "ceanothus_cordulatus": [
+     null,
+     0.09,
+     0.1,
+     0.08
+    ],
+    "cercocarpus_ledifolius": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "chamaebatia_foliolosa": [
+     0.25,
+     null,
+     null,
+     null
+    ],
+    "gaultheria_shallon": [
+     0.17,
+     null,
+     null,
+     0.17
+    ],
+    "lupinus_arboreus": [
+     null,
+     0.27,
+     null,
+     null
+    ],
+    "notholithocarpus_densiflorus": [
+     null,
+     0.18,
+     0.2,
+     1.0
+    ],
+    "pinus_contorta": [
+     null,
+     null,
+     0.31,
+     null
+    ],
+    "pinus_radiata": [
+     null,
+     0.27,
+     null,
+     null
+    ],
+    "populus_tremuloides": [
+     null,
+     0.09,
+     0.59,
+     0.37
+    ],
+    "quercus_agrifolia": [
+     null,
+     0.18,
+     0.2,
+     1.0
+    ],
+    "quercus_vacciniifolia": [
+     null,
+     0.18,
+     0.2,
+     1.0
+    ],
+    "sequoia_sempervirens": [
+     null,
+     0.27,
+     null,
+     null
+    ],
+    "sequoiadendron_giganteum": [
+     null,
+     0.18,
+     0.2,
+     null
+    ],
+    "tsuga_mertensiana": [
+     null,
+     null,
+     0.31,
+     null
+    ],
+    "vaccinium_ovatum": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rubus_parviflorus": [
+     null,
+     0.18,
+     0.2,
+     null
+    ],
+    "populus_trichocarpa": [
+     null,
+     0.18,
+     0.2,
+     null
+    ],
+    "acer_circinatum": [
+     0.08,
+     0.09,
+     0.1,
+     null
+    ],
+    "polystichum_munitum": [
+     0.45,
+     0.53,
+     null,
+     null
+    ],
+    "abies_amabilis": [
+     0.25,
+     null,
+     null,
+     null
+    ],
+    "tsuga_heterophylla": [
+     0.17,
+     0.18,
+     null,
+     null
+    ],
+    "thuja_plicata": [
+     0.25,
+     null,
+     null,
+     null
+    ],
+    "vaccinium_parvifolium": [
+     0.17,
+     null,
+     null,
+     0.17
+    ],
+    "mahonia_nervosa": [
+     0.25,
+     null,
+     null,
+     0.72
+    ],
+    "oplopanax_horridus": [
+     null,
+     0.18,
+     0.2,
+     null
+    ],
+    "alnus_rubra": [
+     0.08,
+     0.09,
+     null,
+     0.08
+    ],
+    "rubus_spectabilis": [
+     null,
+     0.18,
+     0.2,
+     null
+    ],
+    "picea_sitchensis": [
+     null,
+     0.27,
+     null,
+     null
+    ],
+    "abies_lasiocarpa": [
+     null,
+     null,
+     0.31,
+     null
+    ],
+    "oxalis_oregana": [
+     null,
+     0.43,
+     0.48,
+     0.28
+    ]
+   },
+   "meleagris_gallopavo": {
+    "quercus_lobata": [
+     1.0,
+     null,
+     null,
+     1.0
+    ],
+    "toxicodendron_diversilobum": [
+     0.5,
+     null,
+     null,
+     0.0
+    ],
+    "sambucus_nigra_caerulea": [
+     null,
+     null,
+     0.0,
+     0.0
+    ],
+    "frangula_californica": [
+     null,
+     null,
+     null,
+     0.28
+    ],
+    "rosa_californica": [
+     0.5,
+     null,
+     null,
+     0.0
+    ],
+    "symphoricarpos_albus": [
+     0.71,
+     null,
+     null,
+     null
+    ],
+    "stipa_pulchra": [
+     0.71,
+     null,
+     0.32,
+     0.28
+    ],
+    "elymus_glaucus": [
+     null,
+     null,
+     0.66,
+     0.58
+    ],
+    "avena_fatua": [
+     0.71,
+     null,
+     0.32,
+     0.28
+    ],
+    "bromus_hordeaceus": [
+     0.71,
+     null,
+     0.32,
+     0.28
+    ],
+    "erodium_cicutarium": [
+     0.0,
+     1.0,
+     null,
+     null
+    ],
+    "vicia_villosa": [
+     null,
+     null,
+     1.0,
+     null
+    ],
+    "cornus_sericea": [
+     null,
+     null,
+     0.0,
+     0.0
+    ],
+    "rubus_ursinus": [
+     null,
+     null,
+     0.32,
+     null
+    ],
+    "vitis_californica": [
+     null,
+     null,
+     null,
+     0.28
+    ],
+    "arctostaphylos_patula": [
+     null,
+     null,
+     null,
+     0.28
+    ],
+    "quercus_agrifolia": [
+     1.0,
+     null,
+     null,
+     1.0
+    ]
+   },
+   "cyanocitta_stelleri": {
+    "rosa_californica": [
+     0.0,
+     null,
+     null,
+     0.0
+    ],
+    "ribes_roezlii": [
+     null,
+     null,
+     0.49,
+     null
+    ],
+    "cornus_sericea": [
+     null,
+     null,
+     0.0,
+     0.0
+    ],
+    "rubus_ursinus": [
+     null,
+     null,
+     0.49,
+     null
+    ],
+    "vitis_californica": [
+     null,
+     null,
+     null,
+     0.19
+    ],
+    "abies_concolor": [
+     null,
+     null,
+     null,
+     0.6
+    ],
+    "abies_magnifica": [
+     null,
+     null,
+     null,
+     0.6
+    ],
+    "chrysolepis_sempervirens": [
+     null,
+     null,
+     null,
+     0.6
+    ],
+    "gaultheria_shallon": [
+     null,
+     null,
+     null,
+     0.19
+    ],
+    "juniperus_grandis": [
+     0.0,
+     null,
+     null,
+     0.0
+    ],
+    "notholithocarpus_densiflorus": [
+     1.0,
+     null,
+     null,
+     0.79
+    ],
+    "pinus_albicaulis": [
+     null,
+     null,
+     1.0,
+     0.39
+    ],
+    "pinus_contorta": [
+     null,
+     null,
+     null,
+     0.6
+    ],
+    "pinus_jeffreyi": [
+     null,
+     null,
+     null,
+     0.6
+    ],
+    "pinus_lambertiana": [
+     null,
+     null,
+     null,
+     0.6
+    ],
+    "pinus_monticola": [
+     null,
+     null,
+     null,
+     0.6
+    ],
+    "pinus_radiata": [
+     0.5,
+     null,
+     null,
+     0.39
+    ],
+    "quercus_vacciniifolia": [
+     null,
+     null,
+     null,
+     1.0
+    ],
+    "vaccinium_ovatum": [
+     null,
+     null,
+     0.0,
+     0.0
+    ],
+    "rubus_parviflorus": [
+     null,
+     null,
+     0.49,
+     null
+    ],
+    "acer_circinatum": [
+     null,
+     null,
+     null,
+     0.6
+    ],
+    "abies_amabilis": [
+     null,
+     null,
+     null,
+     0.6
+    ],
+    "tsuga_heterophylla": [
+     null,
+     null,
+     null,
+     0.6
+    ],
+    "vaccinium_parvifolium": [
+     null,
+     null,
+     0.49,
+     null
+    ],
+    "mahonia_nervosa": [
+     null,
+     null,
+     null,
+     0.19
+    ],
+    "rubus_spectabilis": [
+     null,
+     null,
+     0.49,
+     null
+    ],
+    "picea_sitchensis": [
+     null,
+     null,
+     null,
+     0.6
+    ],
+    "abies_lasiocarpa": [
+     null,
+     null,
+     null,
+     0.6
+    ]
+   },
+   "sturnus_vulgaris": {
+    "sorbus_aucuparia": [
+     null,
+     null,
+     1.0,
+     1.0
+    ]
+   },
+   "corvus_corax": {
+    "empetrum_nigrum": [
+     1.0,
+     null,
+     null,
+     1.0
+    ]
+   },
+   "puma_concolor": {
+    "odocoileus_hemionus": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "meleagris_gallopavo": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "canis_latrans": [
+     0.51,
+     0.51,
+     0.51,
+     0.51
+    ]
+   },
+   "strix_varia": {
+    "peromyscus_maniculatus": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "troglodytes_pacificus": [
+     0.4,
+     0.4,
+     0.4,
+     0.4
+    ],
+    "lepus_americanus": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "haliaeetus_leucocephalus": {
+    "mergus_merganser": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "corvus_brachyrhynchos": {
+    "peromyscus_maniculatus": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "ardea_herodias": {
+    "peromyscus_maniculatus": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "aegolius_acadicus": {
+    "peromyscus_maniculatus": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "accipiter_striatus": {
+    "troglodytes_pacificus": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "junco_hyemalis": [
+     0.8,
+     0.8,
+     0.8,
+     0.8
+    ],
+    "regulus_satrapa": [
+     0.44,
+     0.44,
+     0.44,
+     0.44
+    ],
+    "turdus_migratorius": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "falco_columbarius": {
+    "junco_hyemalis": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "sturnus_vulgaris": [
+     0.33,
+     0.33,
+     0.33,
+     0.33
+    ],
+    "turdus_migratorius": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "thamnophis_elegans": {
+    "anaxyrus_boreas": [
+     0.69,
+     0.69,
+     0.69,
+     0.69
+    ],
+    "peromyscus_maniculatus": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rana_luteiventris": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "tamias_amoenus": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "tamias_umbrinus": [
+     0.48,
+     0.48,
+     0.48,
+     0.48
+    ]
+   }
+  },
+  "desirability_seasons": [
+   "winter",
+   "spring",
+   "summer",
+   "fall"
+  ],
+  "desirability_basis": "plants: the eaten part's energy (PART_ENERGY), raised for a seasonal pulse; prey: the mass ratio to the predator's optimal prey size (Carbone 1999) blended with the diet's order; each eater's plants and prey scaled 0..1"
  },
  "resources": {
   "acorn_mast": {

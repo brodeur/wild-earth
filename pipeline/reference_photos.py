@@ -267,6 +267,10 @@ SOLID = 0.35           # a mask filling under this share of its convex hull is a
 USABLE = {"quadruped": {"whole": 0.5, "size": 0.5, "side": 0.5, "legs": 0.5, "stance": 0.6, "solid": 0.5, "clear": 0.3},
           # a snake's photo is a texture reference (its pattern), not image-to-3D's pose: its tail may leave the frame
           "snake": {"whole": 0.3, "size": 0.5, "side": 0.5, "clear": 0.3},
+          # (2026-11-06) a snake photo for image-to-3D, which keeps the photo's pose, must hold the whole body, tail and all
+          # (the build traces one tube from end to end). Loops are not measured: the segmenters fill the background a loop
+          # encloses (a terciopelo coiled on a couch read as a solid shape), so a loop shows only in the build's gate
+          "snake_image": {"whole": 0.8, "size": 0.5, "side": 0.5, "clear": 0.3},
           "other": {"whole": 0.5, "size": 0.5, "solid": 0.5, "clear": 0.3}}
 
 
@@ -391,6 +395,8 @@ def usable_for(s: dict, plan: str, use: str) -> list[str]:
     """What keeps a scored photo from serving one use (empty when it can): 'image' (image-to-3D, which copies the photo's
     pose: every USABLE score) or 'texture' (a refine's texture reference: the colours and pattern of the whole animal,
     clearly seen, large enough; its pose binds nothing, so side-on, legs and stance are not asked; a snake's as before)."""
+    if plan == "snake" and use == "image":
+        return usable(s, "snake_image")
     if use == "image" or plan == "snake":
         return usable(s, plan)
     return [k for k, v in USABLE["other"].items() if s.get(k, 0.0) < v]
@@ -612,7 +618,7 @@ def ranked(code: str, skip: set | None = None, n: int = 2, use: str = "image") -
     d = find(code, log=lambda *_: None)
     out = []
     plan = d.get("plan", "quadruped")
-    ok = (lambda c: c["score"].get("usable", d.get("format", 1) < 2)) if use == "image" else \
+    ok = (lambda c: c["score"].get("usable", d.get("format", 1) < 2) and (plan != "snake" or not usable_for(c["score"], plan, "image"))) if use == "image" else \
          (lambda c: "total" in c["score"] and not c["score"].get("error") and not usable_for(c["score"], plan, use))
     order = [c for c in d.get("candidates", []) if ok(c)]
     if d.get("shortlist"):

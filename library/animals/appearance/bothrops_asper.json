@@ -1,0 +1,87 @@
+{
+ "format": 2,
+ "code": "bothrops_asper",
+ "scientific": "Bothrops asper",
+ "common": "terciopelo",
+ "sex": "male",
+ "regions": {
+  "body": {
+   "colours": [
+    "dark brown",
+    "yellowish",
+    "gray",
+    "yellow",
+    "dark gray"
+   ],
+   "markings": []
+  },
+  "underparts": {
+   "colours": [
+    "pale yellow",
+    "yellow",
+    "cream",
+    "whitish gray"
+   ],
+   "markings": [
+    {
+     "pattern": "blotches",
+     "colours": [
+      "dark"
+     ]
+    }
+   ]
+  },
+  "head": {
+   "colours": [
+    "dark brown",
+    "black"
+   ],
+   "markings": []
+  },
+  "tail": {
+   "colours": [
+    "yellow tip"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 21,
+ "dropped": {
+  "no body word": 2,
+  "morph": 1,
+  "other taxa": 2,
+  "young": 1
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Bothrops_asper",
+   "title": "Bothrops asper",
+   "revision": 1376157472,
+   "facts": 11
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Bothrops_asper/",
+   "title": "ADW: Bothrops asper",
+   "facts": 10
+  }
+ ],
+ "retrieved": "2026-11-06",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body dark brown, yellowish, gray, yellow; belly and underparts pale yellow, yellow, cream, whitish gray with dark blotches; head dark brown, black; tail yellow tip",
+ "features": {
+  "horns": {
+   "described": false,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [],
+   "length_m": null
+  },
+  "shoulder_m": null,
+  "head_body_m": null,
+  "total_m": null
+ }
+}

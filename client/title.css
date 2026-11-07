@@ -95,6 +95,9 @@ html.opening:not(.tt-side) #social { opacity:0; visibility:hidden; pointer-event
 .tt-sclear:hover { background:#ffffff2a; }
 .tt-sclear[hidden] { display:none; }
 .tt-head { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:6px 4px 0; flex:none; }
+.tt-listbtn { display:none; align-self:flex-start; padding:7px 13px; border-radius:999px; border:1px solid #d3ddd53a; background:#0b0f0dcc; color:#e6ede7; font:500 12.5px/1 'DM Sans', system-ui, sans-serif;
+  backdrop-filter:blur(6px); cursor:pointer; }
+.tt-listbtn[aria-expanded=true] { background:#1f2a23f0; border-color:#d3ddd56a; }
 .tt-head[hidden] { display:none; }
 .tt-mode { margin:0; font-size:12px; font-weight:400; letter-spacing:.16em; text-transform:uppercase; color:#b7c4ba; }
 .tt-modebtn { padding:2px 0; border:0; background:transparent; color:#8fa094; font:400 12px/1.4 'DM Sans', sans-serif; cursor:pointer; border-bottom:1px solid transparent; }
@@ -137,20 +140,24 @@ html.opening:not(.tt-side) #social { opacity:0; visibility:hidden; pointer-event
 .tt-fnote, .tt-empty { margin:4px 14px; font-size:12.5px; color:#8fa094; }
 .tt-empty[hidden] { display:none; }
 
-/* the card over the chosen place (title.js renderCard, placed each frame above the tile's north edge) */
-.tt-pcard { position:absolute; left:0; top:0; z-index:3; min-width:200px; max-width:300px; padding:12px 14px 12px; box-sizing:border-box; border-radius:12px; background:#0b0f0de6;
-  border:1px solid #d3ddd53a; backdrop-filter:blur(8px); box-shadow:0 8px 28px #000a; display:flex; flex-direction:column; gap:2px; cursor:default;
-  opacity:0; pointer-events:none; transition:opacity .45s ease; }
-.tt-pcard::after { content:''; position:absolute; left:50%; bottom:-7px; width:12px; height:12px; margin-left:-6px; transform:rotate(45deg); background:#0b0f0de6; border-right:1px solid #d3ddd53a; border-bottom:1px solid #d3ddd53a; }
-.tt-pcard.on { opacity:1; pointer-events:auto; }
-.tt-pcard.behind, .tt-wrap.zooming .tt-pcard { opacity:0; pointer-events:none; }
+/* the chosen place's title (Aaron, 2026-11-07: "a proper Title above the Invite/start buttons"; title.js renderCard): the
+   name and the pill of its players, its Indigenous territories, the body Start arrives in (the rings, bodyRing.js), the
+   players there and coming, whose list opens upward */
+.tt-pcard { display:flex; flex-direction:column; align-items:center; gap:0; max-width:min(620px, calc(100% - 24px)); min-width:0; text-align:center; pointer-events:auto; cursor:default; }
 .tt-pcard[hidden] { display:none; }
-.pc-name { font-size:18px; font-weight:500; color:#f3f6f1; line-height:1.2; }
-.pc-region { margin-top:3px; font-family:var(--tt-names); font-size:12px; color:#b7c4ba; line-height:1.35; }
+.tt-pcard .pc-top { justify-content:center; gap:10px; max-width:100%; }
+.pc-name { margin:0; min-width:0; font:500 30px/1.15 'DM Sans', system-ui, sans-serif; letter-spacing:.005em; color:#f3f6f1; text-shadow:0 2px 14px #000d, 0 0 2px #000a;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pc-top .tt-pill { height:22px; }
+.pc-region { margin:5px 0 0; font-family:var(--tt-names); font-size:13px; color:#c3cfc6; line-height:1.4; text-shadow:0 1px 6px #000c; }
 .pc-region:empty { display:none; }
-.pc-people { display:flex; align-items:center; gap:10px; margin-top:8px; padding:4px 8px 4px 4px; border:1px solid transparent; border-radius:999px; background:#ffffff0c; color:#e8dcc0;
-  font:500 12.5px/1.2 'DM Sans', sans-serif; cursor:pointer; text-align:left; align-self:flex-start; }
-.pc-people:hover:not(:disabled), .pc-people[aria-expanded=true] { border-color:#d3ddd54a; background:#ffffff16; }
+.pc-body { margin:9px 0 0; font-size:13.5px; line-height:1.35; color:#e8dcc0; text-shadow:0 1px 6px #000c; min-height:1.35em; }
+.pc-as b { font-weight:600; color:#ffe2b0; }
+.pc-with { color:#cfe6cb; }
+.pc-peoplewrap { position:relative; display:flex; justify-content:center; }
+.pc-people { display:flex; align-items:center; gap:10px; margin-top:8px; padding:4px 10px 4px 4px; border:1px solid transparent; border-radius:999px; background:#0b0f0daa; color:#e8dcc0;
+  font:500 12.5px/1.2 'DM Sans', sans-serif; cursor:pointer; text-align:left; backdrop-filter:blur(6px); }
+.pc-people:hover:not(:disabled), .pc-people[aria-expanded=true] { border-color:#d3ddd54a; background:#16201be6; }
 .pc-people:disabled { cursor:default; }
 .pc-avs { display:flex; align-items:center; }
 .pc-avs:empty { display:none; }
@@ -161,7 +168,8 @@ html.opening:not(.tt-side) #social { opacity:0; visibility:hidden; pointer-event
 .pc-avs .so-avatar[data-state=coming] { animation:pc-coming 1.6s ease-in-out infinite; }
 @keyframes pc-coming { 50% { box-shadow:0 0 0 2px #0b0f0d, 0 0 0 3px hsl(var(--hue), 80%, 70%), 0 0 12px hsla(var(--hue), 80%, 60%, .8); } }
 .pc-more { margin-left:6px; font-size:11px; color:#b7c4ba; }
-.pc-list { display:flex; flex-direction:column; gap:2px; margin-top:8px; padding-top:8px; border-top:1px solid #d3ddd522; max-height:220px; overflow-y:auto; }
+.pc-list { position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); z-index:4; display:flex; flex-direction:column; gap:2px; min-width:220px; padding:8px 10px;
+  border-radius:12px; background:#0b0f0de6; border:1px solid #d3ddd53a; backdrop-filter:blur(8px); box-shadow:0 8px 28px #000a; max-height:220px; overflow-y:auto; text-align:left; }
 .pc-list[hidden] { display:none; }
 .pc-row { display:flex; align-items:center; gap:8px; padding:3px 2px; }
 .pc-who { display:flex; flex-direction:column; line-height:1.2; min-width:0; }
@@ -171,11 +179,31 @@ html.opening:not(.tt-side) #social { opacity:0; visibility:hidden; pointer-event
 .pc-row.declined { opacity:.55; }
 .pc-others { margin:4px 2px 0; font-size:12px; color:#8fa094; }
 
+/* the rings of bodies over the chosen tile (bodyRing.js, drawn on the canvas): the group's faces over their animals and
+   the hovered animal's name, placed each frame */
+.tt-ring { position:absolute; inset:0; pointer-events:none; z-index:2; }
+.tt-wrap.zooming .tt-ring, .tt-wrap.leaving .tt-ring { opacity:0; transition:opacity .4s ease; }
+.tt-wrap.overbody { cursor:pointer; }
+.tt-wrap.guest.overbody { cursor:not-allowed; }
+.br-marks { position:absolute; inset:0; }
+.br-mark { position:absolute; left:0; top:0; display:flex; flex-direction:column; align-items:center; gap:2px; font:600 11px/1.1 'DM Sans', system-ui, sans-serif; color:#f3f6f1;
+  text-shadow:0 1px 4px #000; white-space:nowrap; opacity:.8; transition:opacity .3s ease; }
+.br-mark.front { opacity:1; }
+.br-mark .so-avatar { box-shadow:0 0 0 2px #0b0f0d, 0 0 0 3.5px hsla(var(--hue), 75%, 62%, .9), 0 0 12px hsla(var(--hue), 80%, 60%, .6); }
+.br-mark.here .so-avatar { box-shadow:0 0 0 2px #0b0f0d, 0 0 0 3.5px #ffe2b0, 0 0 14px #ffe2b0aa; }
+.br-mark span { padding:1px 6px; border-radius:6px; background:#0b0f0dc0; }
+.br-name { position:absolute; left:0; top:0; padding:4px 9px; border-radius:8px; background:#0b0f0de0; border:1px solid #d3ddd52e; color:#f3f6f1; font:500 12px/1.2 'DM Sans', system-ui, sans-serif;
+  white-space:nowrap; text-transform:none; }
+.br-name.guest { background:#111815; border-color:#d3ddd533; }
+.br-name[hidden] { display:none; }
+
 /* the bar at the bottom: Invite and Start over the loading line, with the build's step and how far */
 .tt-bar { position:absolute; left:0; right:0; bottom:0; display:flex; flex-direction:column; align-items:center; gap:8px; padding:0 var(--we-fr, 0px) 0 var(--we-fl, 0px); pointer-events:none;
   opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s cubic-bezier(.2, .8, .25, 1); }
 .tt-bar.on { opacity:1; transform:none; }
 .tt-bar.on .tt-acts { pointer-events:auto; }
+.tt-bar:not(.on) .tt-pcard { pointer-events:none; }
+.tt-bar .tt-pcard + .tt-acts { margin-top:6px; }
 .tt-wrap.leaving .tt-bar { opacity:0; }
 .tt-acts { display:flex; gap:12px; }
 .tt-acts button { min-width:132px; padding:12px 26px; border-radius:999px; font:600 13px/1 'DM Sans', system-ui, sans-serif; letter-spacing:.14em; text-transform:uppercase; cursor:pointer;
@@ -252,4 +280,13 @@ html.opening:not(.tt-side) #social { opacity:0; visibility:hidden; pointer-event
   /* the free centre is a narrow strip beside the places here: Invite and Start centre on the screen instead */
   .tt-bar { padding:0; }
   .tt-progress { margin:0; }
+  /* a chosen place takes the whole width (title.js freeArea): the list folds behind All places, which opens it over the
+     stage (the place's title steps aside meanwhile, the buttons stay) */
+  .tt-wrap.chosen .tt-listbtn { display:block; }
+  .tt-wrap.chosen:not(.listopen) .tt-places > :not(.tt-search):not(.tt-listbtn) { display:none; }
+  .tt-wrap.chosen:not(.listopen) .tt-places { bottom:auto; }
+  .tt-wrap.chosen.listopen .tt-pcard { visibility:hidden; }
+  .tt-wrap.chosen.listopen .tt-ring { opacity:0; }
+  .pc-name { font-size:24px; }
+  .pc-body { margin-top:6px; }
 }

@@ -61,7 +61,7 @@ const FEED = on('feed', 'E', E, { ready: carcassNear, title: 'E beside a carcass
 // the canids' mousing pounce (groundControl.js CATCH.pounce): E within 2.6 m of prey ahead, or a run that reaches it
 const POUNCE_AT = on('pounce', 'E', c => c.ground.mode === 'pounce', { title: 'E within 2.6 m of prey ahead: the fix, the spring, the kill at the landing (a run onto it springs at once)' });
 // the sniff: its own slot (L) unless the body's act (E) is already a sniff (the fox, the coyote, the lion: groundControl S.act), which sniffs too
-const SMELL = on('sniff', 'L', c => !!c.scent?.sniffing, { press: (c, down) => c.scent?.sniff?.(down), show: c => !(c.ground?.on && /sniff/.test(c.ground.S?.act?.word || '')), title: 'L, or hold this: every scent on the air, each with its name; a new scent flickers in on its own (scent.js)' });
+const SMELL = on('sniff', 'L', c => !!c.scent?.sniffing, { press: (c, down) => c.scent?.sniff?.(down), show: c => !(c.ground?.on && (/sniff/.test(c.ground.S?.act?.word || '') || c.ground.S?.act?.sniff)), title: 'L, or hold this: every scent on the air, each with its name; a new scent flickers in on its own (scent.js)' });
 const DRINK = on('drink', 'E', c => !!c.needs?.atWater && E(c), { show: c => !!c.needs && c.needs.rhythm !== 'none', title: 'E at water' });
 const DRINK_NO = no('drink', 'E');
 const POUNCE = no('pounce', 'F'), CARRY = no('carry', 'F'), DIG = no('dig', 'Q'), CACHE = no('cache', 'Q'), MARK = no('mark', 'K');
@@ -82,11 +82,13 @@ const DIG_PIT = on('dig', 'Q', c => !!c.ground.digging, { title: 'Q held (or E w
 
 // The walkers' moves, from groundControl's species entry S.
 function groundMoves(S) {
+  if (S.rig === 'snake') return [on('raise head', 'shift', c => c.ground.sit > 0.5, { title: 'Shift held still: the fore body raised, watching' })];
   const alert = S.alert?.pushups ? 'push-ups' : S.alert?.pose ? 'sit up' : 'alert';
   return [on(alert, 'shift', c => c.ground.sit > 0.5, { title: 'Shift held still' })];   // (the moves themselves are keys only, 2026-11-06: the strip over the slots names them)
 }
 // X: lie down, hunch, freeze (the brush rabbit) or bask (S.rest), else grey (a bird's roost, a rodent's rest)
-const restOf = S => { const r = { bed: 'lie down', hunch: 'hunch', bask: 'bask', freeze: 'freeze' }[S.rest]; return r ? on(r, 'X', c => !!c.ground.resting) : no(S.rig === 'bird' ? 'roost' : 'rest', 'X'); };
+const restOf = S => { if (S.rest === 'coil') return on('coil · bask', 'X', c => !!c.ground.resting || !!c.ground.sn?.basking, { title: 'X: coil; X again: crawl out of the coil a body length and bask there, stretched out; any move gets up' });
+  const r = { bed: 'lie down', hunch: 'hunch', bask: 'bask', freeze: 'freeze' }[S.rest]; return r ? on(r, 'X', c => !!c.ground.resting) : no(S.rig === 'bird' ? 'roost' : 'rest', 'X'); };
 // the act's slot is "ready" (a warm edge) while a named food plant is within reach of a hungry body (needs.js plant: the glowing one under the nose, forage.js)
 // with a plant targeted (quarry.js) the act needs its reach (canEat, the one rule): out of it the slot is greyed, "get closer"
 // (E walks the body there, then eats: groundControl approach); in it, "ready" while hungry
@@ -125,6 +127,8 @@ const RIG = {
   rodent: { verbs: [DRINK, SMELL, BURROW] },
   bird: { verbs: [DRINK, CALL] },
   lizard: { verbs: [DRINK, no('hide', 'J')] },
+  // a snake (snake.js): E's tongue flicks are its sniff (the scents and the sniff's wave); it swims (W into deep water)
+  snake: { act: 'tongue flick', verbs: [on('swim', 'W', c => !!c.ground.wet, { show: c => c.ground.S?.swims !== false, title: 'W into deep water: it swims, the body riding the surface' }), DRINK, no('climb', 'W', { title: 'not yet: up a trunk or into a shrub' }), no('hide', 'J')] },
 };
 
 // The hunt's actions (owner, 2026-11-06: "For all hunters When a prey is targeted, the controls for the hunt appear"): shown
@@ -169,6 +173,7 @@ const SPIRIT = [
 // the movement keys (2026-11-06: the slots for them are gone; this strip is where the keys are taught)
 const MOVE_KEYS = {
   ground: [['W S', 'move'], ['A D', 'turn'], ['shift W', 'sprint'], ['alt W', 'walk'], ['space', 'jump']],
+  snake: [['W', 'crawl'], ['shift W', 'dash'], ['A D', 'steer'], ['S', 'stop'], ['E', 'tongue · strike'], ['X', 'coil · bask']],
   flier: [['↑ ↓', 'pitch'], ['A D', 'turn'], ['W S', 'speed'], ['shift', 'sprint'], ['space', 'flap'], ['X Z', 'climb · descend'], ['H', 'soar or hover']],
   raven: [['↑ ↓', 'pitch'], ['A D', 'turn'], ['W S', 'speed'], ['shift', 'sprint'], ['space', 'flap'], ['X Z', 'climb · descend'], ['H', 'hover']],
   squirrel: [['W S', 'run'], ['A D', 'turn'], ['shift W', 'sprint'], ['space', 'jump · leap']],
@@ -248,7 +253,7 @@ export class Abilities {
       return { entry, el: d, img, cd, iconSp: null, cdf: -1, lit: false, tired: false, ready: false, oor: false, shown: true };
     });
     const more = document.createElement('div'); more.className = 'ab-more';
-    for (const [key, word] of [...(MOVE_KEYS[kind] || []), ...(kind === 'ground' && (code === 'microtus_californicus' || code === 'sylvilagus_bachmani') ? DIG_KEYS : []), ...(strikes?.length || kind === 'flier' ? HUNT_KEYS : []), ...(MORE[kind] || [])]) { const s = document.createElement('span'), b = document.createElement('kbd'); b.textContent = key; s.append(b, ` ${word}`); more.append(s); }
+    for (const [key, word] of [...(MOVE_KEYS[kind === 'ground' && S?.rig === 'snake' ? 'snake' : kind] || []), ...(kind === 'ground' && (code === 'microtus_californicus' || code === 'sylvilagus_bachmani') ? DIG_KEYS : []), ...(strikes?.length || kind === 'flier' ? HUNT_KEYS : []), ...(MORE[kind] || [])]) { const s = document.createElement('span'), b = document.createElement('kbd'); b.textContent = key; s.append(b, ` ${word}`); more.append(s); }
     const m = document.createElement('span'); m.textContent = kind === 'spirit' ? MOUSE_SPIRIT : kind === 'raven' || kind === 'flier' ? MOUSE_AIR : MOUSE; more.append(m);
     this.el.replaceChildren(more, row);
     requestAnimationFrame(() => document.documentElement.style.setProperty('--abMoreH', `${more.offsetHeight || 30}px`));   // the target frame steps under the strip while the menu is open (index.html)

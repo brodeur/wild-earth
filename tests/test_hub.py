@@ -644,6 +644,63 @@ class HubTest(unittest.TestCase):
         for p in (a, b, c, d):
             p[2].close()
 
+    def test_bodies(self):
+        """The home screen's rings: `body` (a tile and a species code, or the body worn there) goes to the online members
+        of the sender's groups and to no one else (not a friend outside the group, not a blocked member), is checked,
+        held for a member who connects later (welcome's bodies), cleared by {tile: null} or the connection closing, and
+        not told while the sender hides their place; nothing else rides on it."""
+        a, b, c, d = (self.player(n) for n in ("Elk_a", "Elk_b", "Elk_c", "Elk_d"))
+        self.befriend(a, b)
+        self.befriend(a, c)
+        self.befriend(a, d)                                         # d is a friend, not in the group
+        a[2].send({"t": "group", "op": "create", "name": "Elks", "users": [b[0], c[0]]})
+        b[2].wait("groups")
+        c[2].wait("groups")
+        for p in (a, b, c, d):
+            p[2].drain()
+        a[2].send({"t": "body", "tile": T1, "code": "odocoileus_hemionus", "x": 1.5, "secret": "no"})
+        for p in (b, c):
+            self.assertEqual(p[2].wait("body"), {"t": "body", "user": a[0], "tile": T1, "code": "odocoileus_hemionus", "here": False})
+        d[2].none("body")
+        a[2].none("body")                                           # not echoed
+        a[2].send({"t": "body", "tile": T1, "code": "odocoileus_hemionus"})
+        b[2].none("body")                                           # unchanged: not told again
+        # the body worn in that tile's world
+        a[2].send({"t": "body", "tile": T1, "code": "spirit", "here": True})
+        self.assertEqual(b[2].wait("body")["here"], True)
+        c[2].wait("body")
+        for bad, field in (({"tile": "utm10n_1_1", "code": "spirit"}, "tile"), ({"tile": T1, "code": "Deer!"}, "code"),
+                           ({"tile": T1}, "code"), ({"tile": T1, "code": "x" * 60}, "code")):
+            a[2].send({"t": "body", **bad})
+            self.assertEqual(a[2].wait("err")["field"], field, bad)
+        b[2].none("body")
+        # a member connecting later is given it in the welcome
+        b2 = self.ws(b[1])
+        self.assertEqual(b2.welcome["bodies"], [{"user": a[0], "tile": T1, "code": "spirit", "here": True}])
+        self.assertEqual(self.ws(d[1]).welcome["bodies"], [])
+        # hidden place: the group is told it is gone, and a later welcome has none
+        a[2].send({"t": "me", "presence": "online"})
+        self.assertEqual(b[2].wait("body", where=lambda m: m["user"] == a[0]), {"t": "body", "user": a[0], "tile": None})
+        self.assertEqual(self.ws(c[1]).welcome["bodies"], [])
+        a[2].send({"t": "me", "presence": "tile"})
+        self.assertEqual(b[2].wait("body", where=lambda m: m["user"] == a[0])["code"], "spirit")
+        # blocked: not told
+        c[2].send({"t": "friend", "op": "block", "user": a[0]})
+        c[2].drain()
+        a[2].send({"t": "body", "tile": T2, "code": "ursus_americanus"})
+        self.assertEqual(b[2].wait("body")["tile"], T2)
+        c[2].none("body")
+        # taken back, and gone with the connection that told it
+        a[2].send({"t": "body", "tile": None})
+        self.assertEqual(b[2].wait("body")["tile"], None)
+        a[2].send({"t": "body", "tile": T1, "code": "canis_latrans"})
+        b[2].wait("body")
+        a[2].close()
+        self.assertEqual(b[2].wait("body", where=lambda m: m["user"] == a[0]), {"t": "body", "user": a[0], "tile": None})
+        self.assertNotIn(a[0], hub.get().bodies)
+        for p in (b, c, d):
+            p[2].close()
+
     def hub_invite(self, iid: str) -> dict:
         return hub.get().invites.get(iid, {})
 
