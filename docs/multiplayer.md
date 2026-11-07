@@ -142,9 +142,14 @@ search    {q}                                 -> found {users[]}
 friend    {op: 'request'|'accept'|'remove'|'block'|'unblock', user}
 group     {op: 'create', name, users[]} | {op: 'add'|'remove', group, user} | {op: 'leave'|'name', group, name?}
 chat      {scope: 'group'|'tile', text}       (text <= 500 chars)
-place     {tile, group?, to?, point?, follow?} -> the group's members and the people in `to` get invite {from, tile, season, group?, point?, follow?}
+place     {tile, group?, to?, point?, follow?, season?, date?}
+                                              -> the group's members and the people in `to` get invite {from, tile, season, date?, group?, point?, follow?}
                                               (point: the picker's planned arrival, tile-local {x, north}; lane 4. follow: Start
-                                              was pressed, group follow: only online members are asked, `placed` counts them)
+                                              was pressed, group follow: only online members are asked, `placed` counts them.
+                                              season, date: the world the sender goes into when not the calendar's, group season)
+season    {season, date?}                     (the sender changed the season: 'spring'..'winter' with the day 'MM-DD', or 'auto';
+                                              -> season {from, season, date?, tile?} to every online member of their groups,
+                                              seasoned {season, to} back; group season)
 answer    {invite, join: true|false}
 room      {op: 'join'|'leave', tile}          (the client joins its tile's room when a world is entered)
 pos       {x, y, z, yaw, form}                (5 Hz, only while in a room and in a group)
@@ -161,7 +166,8 @@ presence  {user, state: 'online'|'offline'|'tile', tile?}
 friends   {friends[], requests[]}             (after any change)
 groups    {groups[]}                          (after any change; each with its members)
 chat      {scope, from, text, at}
-invite    {id, from, tile, season, group?, point?, follow?}
+invite    {id, from, tile, season, date?, group?, point?, follow?}
+season    {from, season, date?, tile?}        (a group member changed the season; tile: theirs, when in a world)
 pos       {user, x, y, z, yaw, form}          (from a group member in the same room; on entering a room, the
                                               last one from each group member already in it; lane 4)
 counts    {tiles: {tile_id: n}}               (every 2 s to watchers, only when changed)
@@ -708,6 +714,55 @@ enterWorld's follow entry, the page-node opt-out in the world's recorder), `clie
   ahead); a wider first view or a short camera ease toward them may read better. An invite that times out tells the
   inviter nothing. A joiner's Join lands behind the inviter even if the inviter has gone back to the main screen since
   (the planned-point fallback); cancelling the invite when the inviter leaves the tile is not done.
+
+## Group season
+
+Aaron, 2026-11-06: "If one player changes the season, it changes for everyone in the group."
+
+**How a season change worked before (checked first).** The Settings card's season select (`main.js`, `#season`) picks a
+random day in the season and calls `setDate('MM-DD')` (the select then shows the season; "tracks today's date" is
+`setDate('')`): `applySeason` re-colours the ground for the date, swaps the leaf look and the far impostors, and picks
+that day's weather (last year's at the tile, `weather.js`). Nothing is rebuilt: the world, the position and the hub's
+room (per tile, not per season) stay. The frame loop then moves the shared animals to the new season's channel
+(`anet.join(tile, season)`: the server keeps one animal world, one acorn-game world and one dig world per tile and season;
+the first page in a (tile, season) channel hosts its animals). The acorn game and the dig keep the season they were built
+with until the next build. Nothing synced the season between players: a group could fly together in two seasons, each
+drawing the other's wisp over a different forest with different animals.
+
+**Built (2026-11-06, branch `claude/group-follow`).** `hub.py` (`m_season`, `_season_date`, `place` season and date),
+`client/src/hub.js` (`season()`, `place(..., world)`), `client/src/multiplayer.js` (seasonChanged, gotSeason, toSeason,
+groupSeason, Start into it), `client/src/main.js` (the select's relay, `seasonCtl` for the room, `pick`),
+`client/src/follow.js` (the veil's heading and the toast's season), `tests/test_hub.py` (`test_group_season`).
+- **The change goes out** only from the player's own use of the select (`mp.seasonChanged(season, day)`), so a change
+  applied from the group never echoes. The hub checks it (`season` one of the four or `auto`, `date` MM-DD and only with
+  a season) and relays `season {from, season, date, tile}` to every online member of the sender's groups, as `pos` goes
+  to comembers, but wherever they are; nothing is kept or logged.
+- **A member in the same tile follows at once**, with no question: the veil ("FOLLOW_A changed the season", the season)
+  fades to black, the season is set in place as the select would set it, on the same day (so the same weather; `seasonCtl.set`
+  calls `setDate(day)` without relaying), the bar runs to the end and the veil fades out after a few frames. The member
+  stays where they are. A member already in that season and day sees only the notice.
+- **The notice** is a line in the chat for every member: "<name> changed the season to winter", or "<name> set the season
+  back to today's".
+- **A member elsewhere** (another tile, the main screen, a world building) keeps it (`groupSeason`, memory only). Their
+  next Start goes into that season and day (`c.season`, `c.date`) and the follow invitation carries them (`place` season
+  and date); a joiner's world is entered with the invitation's season and day (`followTile` world), and one already in
+  the tile is set to it. The toast shows the season ("Join them there? · spring").
+- **No confirmation step**, as asked, and on purpose: the hub's room, the position relay, the wisps and voice are per
+  tile, not per season, so a member who stayed behind would still see the group's wisps and hear them while standing in
+  another season's forest with another season's animals (their own animal host and channel). Following keeps the
+  group in one world; anyone can change it back, and everyone is told who did.
+- **Verified** with the two headless Chromes against the real hub: both in Placerville in fall (follow_a hosting the
+  animals, follow_b mirroring); follow_a picks winter in the select: follow_b's veil, then winter on the same day (02-16),
+  the select on winter, the animal channel winter with follow_a still the host, follow_b at the same spot (5000, 764,
+  -4992 before and after), the notice in its chat; follow_b on the main screen when follow_a picks spring: the notice and
+  `groupSeason {spring, 04-03}`, follow_b's Start goes into spring on 04-03 and follow_a's invitation says `season:
+  spring, date: 04-03` ("· spring" on the toast); follow_a's Start into its own spring, follow_b joining from the main
+  screen entered spring on 04-03 (select on spring) behind follow_a; follow_a back to today's: follow_b back to fall
+  (auto), the notice "follow_a set the season back to today's". Frames: group-follow-captures/group_season_winter.gif in
+  the side-session notes. Not verified: two changes in quick succession (the second applies under the first's veil),
+  a change while a member's follow Join is loading (it enters the invitation's season, which may be the older one).
+- **Open.** The acorn game and the dig keep the season they were built with after any season change, the player's own
+  included (as before); a change made while signed out of the hub or with no group stays the player's own.
 
 ## Open
 

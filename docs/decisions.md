@@ -6627,3 +6627,19 @@ the invitation is, above and behind them." Details in docs/multiplayer.md "Group
 - **Page nodes across a switch**: main.js records every node added to the page while a world is played and removes them
   with it; a node marked `data-we-page` is now left out, so the veil stands across a world-to-world switch.
 
+## 2026-11-06: group season (branch claude/group-follow)
+
+Aaron: "If one player changes the season, it changes for everyone in the group." Details in docs/multiplayer.md "Group
+season".
+- **The same channel as the follow invitation**: a hub `season` message relayed to the online members of the sender's
+  groups (memory only), and `place` carrying the sender's season and day into the follow invitation.
+- **It follows, with no confirmation**: the room, positions, wisps and voice are per tile, not per season, so a member
+  left in another season would share the group's company but not its forest or animals. The veil and the chat notice
+  ("<name> changed the season to winter") say who changed it.
+- **The same day, not only the same season**: the select picks a random day in the season and the weather is that day's,
+  so the day is relayed too and the group shares the weather.
+- **In place, not rebuilt**: a season change never rebuilt the world (it re-colours and moves the animals' channel), so a
+  member in the tile stays where they are; the veil covers the change for a moment rather than a build.
+- **Elsewhere, kept for the next Start**: a member on another tile or the main screen is told and goes into that season
+  at their next Start, and their invitation carries it.
+

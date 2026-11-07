@@ -144,11 +144,15 @@ export class Hub {
   // point: the picker's planned arrival, tile-local { x, north } (relayed in the invite, never kept); group when in several;
   // to: user ids asked by name (friends or fellow group members: the home screen's Invite), with or without a group.
   // follow: the player pressed Start and goes in now (group follow): the group's online members are asked to join them.
-  place(tile, group, point = null, to = null, follow = false) {
+  // world: { season, date } the season and day they go into when not the calendar's (the group's season), relayed.
+  place(tile, group, point = null, to = null, follow = false, world = null) {
     const m = { t: 'place', tile }; if (group) m.group = group; if (to?.length) m.to = [...to]; if (point) m.point = { x: point.x, north: point.north };
     if (follow) m.follow = true;
+    if (world?.season && world.season !== 'auto') { m.season = world.season; if (world.date) m.date = world.date; }
     return this.send(m);
   }
+  // The player changed the season (group season): 'spring' .. 'winter' with the day picked ('MM-DD'), or 'auto' (today's).
+  season(season, date = null) { return this.send(date && season !== 'auto' ? { t: 'season', season, date } : { t: 'season', season }); }
   answer(invite, join) { return this.send({ t: 'answer', invite, join: !!join }); }
   // The tile's room: joined when a world is entered (null leaves). Kept, and re-joined after a reconnect.
   enter(tile) {

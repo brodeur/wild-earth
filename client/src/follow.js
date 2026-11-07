@@ -9,6 +9,7 @@ import { avatarFor } from './social.js';
 // home screen and over the HUD alike: the inviter's avatar, "<name> started at <place>", Join and Decline, and a line
 // that runs down to its expiry) and the veil a Join brings up (FollowVeil: the screen fades to black, "joining <name>"
 // over the place's name, and a loading bar that follows the world's build step by step, main.js buildSteps' w.next).
+// The same veil covers a group season change (multiplayer.js gotSeason): "<name> changed the season" over the season.
 // multiplayer.js decides when each shows; this module only draws them. The styles are follow.css, linked from here.
 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
@@ -34,11 +35,11 @@ function linkStyles() {
 // The invitation. show({ from, name, place, ms }) -> the element; onJoin / onDecline are called once, by a button or
 // Escape (decline); onExpire when the line has run out. close() takes it down (fading).
 export class FollowToast {
-  constructor({ from, name, place, ms, onJoin, onDecline, onExpire }) {
+  constructor({ from, name, place, season = null, ms, onJoin, onDecline, onExpire }) {
     linkStyles();
     const el = this.el = document.createElement('div'); el.id = 'followInvite'; el.dataset.wePage = '';   // the page's, not a world's (main.js w.record) el.setAttribute('role', 'alertdialog'); el.setAttribute('aria-live', 'assertive');
     el.setAttribute('aria-label', `${name} started at ${place}`);
-    el.innerHTML = `<div class="fi-row"><span class="fi-av"></span><span class="fi-text"><span class="fi-line"><b>${esc(name)}</b> started at <b>${esc(place)}</b></span><small>Join them there?</small></span>
+    el.innerHTML = `<div class="fi-row"><span class="fi-av"></span><span class="fi-text"><span class="fi-line"><b>${esc(name)}</b> started at <b>${esc(place)}</b></span><small>Join them there?${season ? ` · ${esc(season)}` : ''}</small></span>
       <span class="fi-btns"><button type="button" class="fi-join">Join</button><button type="button" class="fi-no">Decline</button></span></div>
       <i class="fi-time" style="animation-duration:${Math.round(ms)}ms"></i>`;
     el.querySelector('.fi-av').replaceWith(avatarFor(from, 34));
@@ -58,7 +59,7 @@ export class FollowToast {
   }
 }
 
-// The veil: show(name, place) fades to black (resolves when black), step(name) moves the bar with the build, status(text)
+// The veil: show(name, place, lead, tail) fades to black (resolves when black) over "<lead> <name> <tail>" and the place, step(name) moves the bar with the build, status(text)
 // says what is going on under it, done() fills the bar and fades back in, fail(text) says why and fades back after a
 // moment.
 export class FollowVeil {
@@ -67,10 +68,10 @@ export class FollowVeil {
     this.el = null; this.p = 0; this.shown = 0; this.goal = 0; this.stepEnd = 0; this.stepAt = 0; this.raf = 0;
   }
   get active() { return !!this.el; }
-  show(name, place) {
+  show(name, place, lead = 'joining', tail = '') {
     this.remove();
     const el = this.el = document.createElement('div'); el.id = 'followVeil'; el.dataset.wePage = '';   // stands across the switch: never a world's node (main.js w.record) el.setAttribute('role', 'status'); el.setAttribute('aria-live', 'polite');
-    el.innerHTML = `<div class="fv-mid"><p class="fv-who">joining <b>${esc(name)}</b></p><p class="fv-place">${esc(place)}</p>
+    el.innerHTML = `<div class="fv-mid"><p class="fv-who">${esc(lead)} <b>${esc(name)}</b> ${esc(tail)}</p><p class="fv-place">${esc(place)}</p>
       <div class="fv-bar" role="progressbar" aria-label="loading ${esc(place)}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div>
       <p class="fv-status">&nbsp;</p></div>`;
     document.body.append(el);

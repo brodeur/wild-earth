@@ -51,6 +51,16 @@ import { FollowToast, FollowVeil } from './follow.js';
 // LEAD_WAIT_MS, behind the inviter's planned arrival. Then the veil fades out. A joiner already in the inviter's tile is
 // only moved. Nothing is kept: the position is the relay's, used once.
 //
+// Group season (Aaron, 2026-11-06: "If one player changes the season, it changes for everyone in the group."; docs/
+// multiplayer.md "Group season"): the player's own change of the season select (main.js, seasonChanged) goes to the hub
+// (`season {season, date}`), which relays it to every online member of their groups. A member in the same tile goes to
+// that season with them at once, no question asked (gotSeason): the veil ("<name> changed the season", the season), the
+// season applied in place where they are (main.js season.set: the same day, so the same weather; the shared animals'
+// channel follows the season), the veil lifted. Everyone gets the notice in the chat ("<name> changed the season to
+// winter"). A member elsewhere (another tile, the main screen, building) keeps it (groupSeason) and their next Start goes
+// into that season and day, which the follow invitation carries to the joiners (`place` season, date; the joiner's world
+// is entered with them).
+//
 // Debugging, on window.__weMp: showInvite({id, from, tile, point}) shows the dialog as the hub's invite would;
 // answer(true | false) presses Join or Not now; placed is the last group follow's placement (the inviter's pose, ground or
 // air, and where the joiner was put); toast and veil are the follow invitation and the Join's veil (follow.js); invite is the one showing; chose(tileId, point) asks the group along;
@@ -90,7 +100,8 @@ export class Multiplayer {
     this.toast = null;       // the follow invitation showing (follow.js FollowToast), with .inv the hub's invite
     this.veil = null;        // the black veil and loading bar of a Join (follow.js FollowVeil)
     this.following = null;   // { from, tile, point, name } from a follow Join until its world is entered
-    this.followTile = null;  // main.js: (tileId, xy, lead) builds the tile in place of the home screen or the world, entered as a follow
+    this.followTile = null;  // main.js: (tileId, xy, lead, world) builds the tile in place of the home screen or the world, entered as a follow
+    this.groupSeason = null; // { season, date, from }: the group's last season change (memory only); a Start goes into it
     // the way back from Discord (hub.py sends the browser to /client/?signin=discord or ?signin=failed): remembered for
     // the modal and taken off the URL, signed in or not
     const u = new URL(location.href); this.back = u.searchParams.get('signin');
@@ -114,7 +125,11 @@ export class Multiplayer {
     title.onBegin = c => {
       const j = this.joining;
       if (j && c.tileId === j.tile) { c.point = j.point || c.point; c.lead = j.from; }   // the arrival behind the picker (main.js enterWorld)
-      else this.askFollow(c.tileId, c.point || null);   // Start: the group is asked to follow (group follow)
+      else {   // Start: into the group's season, if one was set, and the group is asked to follow (group follow)
+        const gs = this.inGroup() ? this.groupSeason : null;
+        if (gs && gs.season !== 'auto') { c.season = gs.season; c.date = gs.date || null; c.pick = true; }
+        this.askFollow(c.tileId, c.point || null, gs && gs.season !== 'auto' ? { season: gs.season, date: gs.date || null } : null);
+      }
       this.joining = null;
       onBegin?.(c);
     };
@@ -152,6 +167,7 @@ export class Multiplayer {
     for (const t of ['presence', 'groups', 'friends', 'open']) hub.on(t, () => this.title?.refreshPeople?.());
     hub.on('err', d => { if ((d.re === 'place' || d.re === 'answer') && d.why) this.chat?.system(d.why); });
     hub.on('pos', d => this.gotPos(d));
+    hub.on('season', d => this.gotSeason(d));
     hub.on('presence', d => {   // a member gone offline or to another tile is no longer seen here (players.js)
       if (d.state === 'offline' || (d.state === 'tile' && d.tile && this.room && d.tile !== this.room.tileId)) { this.poses.delete(d.user); this.room?.players?.drop(d.user); this.voice?.gone(d.user); }
     });
@@ -226,20 +242,57 @@ export class Multiplayer {
 
   // ---- group follow ----------------------------------------------------------------------------------------------------
   // Start pressed on the home screen: the group (the chat's, else the first with anyone else in it) is asked to follow.
-  askFollow(tileId, point = null) {
+  askFollow(tileId, point = null, world = null) {
     const hub = this.hub, me = hub?.you?.id; if (!hub || !tileId) return false;
     const others = g => g?.members?.some(m => m.id !== me);
     const cur = this.chat?.currentGroup(), group = others(hub.groups.find(g => g.id === cur)) ? cur : hub.groups.find(others)?.id;
-    return group ? hub.place(tileId, group, point, null, true) : false;
+    return group ? hub.place(tileId, group, point, null, true, world) : false;
+  }
+  inGroup() { const me = this.hub?.you?.id; return !!this.hub?.groups?.some(g => g.members?.some(m => m.id !== me)); }
+
+  // ---- group season ------------------------------------------------------------------------------------------------------
+  // The player changed the season (main.js, the season select): the group goes with them. season 'auto' is today's again.
+  seasonChanged(season, date = null) {
+    if (!this.hub || !this.inGroup()) return false;
+    this.groupSeason = { season, date: date || null, from: this.hub.you?.id };
+    return this.hub.season(season, date);
+  }
+  seasonText(d) { const n = this.social?.nameOf(d.from) || 'someone'; return d.season === 'auto' ? `${n} set the season back to today's` : `${n} changed the season to ${d.season}`; }
+  // A member changed it: the notice for everyone; in their tile, to that season at once under the veil, where one stands.
+  gotSeason(d) {
+    if (!d?.season || d.from === this.hub?.you?.id) return;
+    this.groupSeason = { season: d.season, date: d.date || null, from: d.from };
+    this.chat?.system(this.seasonText(d)); this.chat?.hideSoon?.();
+    const r = this.room;
+    if (!r?.season || !d.tile || d.tile !== r.tileId) return;   // elsewhere: carried into the next Start
+    if (this.following) return;                                 // a Join under way enters the invitation's season
+    this.toSeason(d);
+  }
+  // Apply { season, date, from } to the world entered, under the veil unless it is already that season and day.
+  async toSeason(d) {
+    const r = this.room, now = r?.season?.now(); if (!now) return;
+    const same = d.season === 'auto' ? now.auto : (now.season === d.season && (d.date || null) === now.date);
+    if (same) return;
+    const veil = this.veil ||= new FollowVeil();
+    if (veil.active) { r.season.set(d.season, d.date || null); return; }   // under a veil already: only the change
+    const name = this.social?.nameOf(d.from) || 'someone';
+    await veil.show(name, d.season === 'auto' ? "today's season" : d.season, '', 'changed the season');
+    if (this.room !== r) { veil.done(0); return; }
+    veil.step('season'); veil.status('changing the season');
+    await new Promise(res => setTimeout(res, 30));
+    r.season.set(d.season, d.date || null);
+    veil.ready();
+    this.liftVeil();
   }
   // The hub's invite with follow: the toast. A newer one replaces an older unanswered one; none while a Join is loading.
   showFollow(d) {
     if (!this.social || !d?.tile || d.from === this.hub?.you?.id || this.veil?.active) return;
     this.closeInvite();
     const name = this.social.nameOf(d.from), place = this.placeName(d.tile) || d.tile;
-    const inv = { id: d.id, from: d.from, group: d.group || null, tile: d.tile, point: d.point || null, name, place };
+    const inv = { id: d.id, from: d.from, group: d.group || null, tile: d.tile, point: d.point || null, season: d.season || null, date: d.date || null, name, place };
     const t = this.toast = new FollowToast({ from: d.from, name, place, ms: this.followMs,
       onJoin: () => { this.toast = null; this.hub?.answer(inv.id, true); this.follow(inv); },
+      season: d.season || null,
       onDecline: () => { this.toast = null; this.hub?.answer(inv.id, false); },
       onExpire: () => { if (this.toast === t) this.toast = null; } });
     t.inv = inv;
@@ -252,15 +305,17 @@ export class Multiplayer {
     const f = this.following = { from: inv.from, tile: inv.tile, point: inv.point, name: inv.name };
     await veil.show(inv.name, inv.place);
     if (this.following !== f) return;
-    if (this.room?.tileId === inv.tile && this.room.place) {   // already in the inviter's tile: no build, only the move
-      this.following = null; veil.ready();
+    if (this.room?.tileId === inv.tile && this.room.place) {   // already in the inviter's tile: no build, only the move (and their season)
+      this.following = null;
+      if (inv.date || inv.season) this.room.season?.set(inv.season, inv.date);
+      veil.ready();
       this.awaitLead(f.from, this.poses.get(f.from));
       return;
     }
     if (!this.followTile) { this.following = null; veil.fail('could not load the place'); return; }
     veil.step('loadTile'); veil.status('loading the place');
     let w = null;
-    try { w = await this.followTile(inv.tile, inv.point, inv.from); } catch (e) { console.error(e); }
+    try { w = await this.followTile(inv.tile, inv.point, inv.from, { season: inv.season, date: inv.date }); } catch (e) { console.error(e); }
     if (this.following === f) { this.following = null; veil.fail(`could not load ${inv.place}`); }   // overtaken or failed: never entered
     return w;
   }
@@ -382,7 +437,7 @@ export class Multiplayer {
     this.closePick();
     if (!this.entered1) { this.entered1 = true; this.social?.setOpen(false); }   // the home screen's open panel closes in the world
     this.room = { tileId, flight: world?.flight || null, arrival: world?.arrival || null, form: world?.form || null, body: world?.body || null, caption: world?.caption || null, lead: world?.lead || null, follow: null, players: world?.players || null,
-      place: world?.place || null, kind: world?.kind || null, waitLead: null, leadT: 0 };
+      place: world?.place || null, kind: world?.kind || null, season: world?.season || null, waitLead: null, leadT: 0 };
     if (this.room.players && this.social) this.room.players.nameOf = id => this.social.nameOf(id);
     this.voice?.setRoom({ players: this.room.players, sound: world?.sound || null });
     if (this.room.flight) this.posTimer = setInterval(() => this.sendPos(), POS_MS);

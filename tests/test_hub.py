@@ -500,6 +500,44 @@ class HubTest(unittest.TestCase):
         for p in (a, b):
             p[2].close()
 
+    def test_group_season(self):
+        """Group season: `season` goes to every online member of the sender's groups wherever they are (with the
+        sender's tile when in one), to no one else, and is checked; a follow invite carries the sender's season and day."""
+        a, b, c, d = (self.player(n) for n in ("Lynx_a", "Lynx_b", "Lynx_c", "Lynx_d"))
+        self.befriend(a, b)
+        self.befriend(a, c)
+        self.befriend(a, d)                                         # d is a friend, not in the group
+        a[2].send({"t": "group", "op": "create", "name": "Lynxes", "users": [b[0], c[0]]})
+        g = b[2].wait("groups")["groups"][0]
+        c[2].wait("groups")
+        a[2].drain()
+        a[2].send({"t": "room", "op": "join", "tile": T2})
+        b[2].send({"t": "room", "op": "join", "tile": T2})          # b in a's tile, c on the main screen
+        for p in (a, b, c, d):
+            p[2].drain()
+        a[2].send({"t": "season", "season": "winter", "date": "01-15"})
+        for p in (b, c):
+            got = p[2].wait("season")
+            self.assertEqual(got, {"t": "season", "from": a[0], "season": "winter", "date": "01-15", "tile": T2})
+        self.assertEqual(a[2].wait("seasoned")["to"], 2)
+        d[2].none("season")
+        a[2].send({"t": "season", "season": "auto"})                # back to the calendar's: no date
+        self.assertEqual(b[2].wait("season")["season"], "auto")
+        self.assertNotIn("date", c[2].wait("season"))
+        for bad, field in (({"season": "monsoon"}, "season"), ({"season": "fall", "date": "13-01"}, "date"),
+                           ({"season": "auto", "date": "01-01"}, "date"), ({"date": "01-01"}, "season")):
+            a[2].send({"t": "season", **bad})
+            self.assertEqual(a[2].wait("err")["field"], field, bad)
+        b[2].none("season")
+        # the follow invite carries the season and day the sender goes into
+        a[2].send({"t": "place", "tile": T2, "group": g["id"], "follow": True, "season": "winter", "date": "01-15"})
+        inv = b[2].wait("invite")
+        self.assertEqual((inv["season"], inv["date"]), ("winter", "01-15"))
+        a[2].send({"t": "place", "tile": T2, "group": g["id"], "follow": True, "season": "auto"})
+        self.assertEqual(a[2].wait("err")["field"], "season")
+        for p in (a, b, c, d):
+            p[2].close()
+
     def hub_invite(self, iid: str) -> dict:
         return hub.get().invites.get(iid, {})
 
