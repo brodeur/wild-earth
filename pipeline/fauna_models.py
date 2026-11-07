@@ -577,6 +577,7 @@ def procedural_snake(code: str, tile_id: str | None = None) -> dict:
         old = fresh.setdefault("species", {}).get(code) or {}
         fresh["species"][code] = {**{k: old[k] for k in ("verdicts", "override", "jobs", "credits", "attempts", "photo") if old.get(k)},
                                   "kind": "snake", "archetype": "snake", "glb": f"client/assets/fauna/{code}.glb", "build": "tools/build_snake_proc.py",
+                                  "served_by": "rule",   # (no one's verdict: appearance.known_verdicts leaves it out of the rule's fit)
                                   "built": rec["at"], "tile": old.get("tile", tile_id), "reference": x.get("reference"),
                                   "colour_check": rec["check"]}
         REGISTRY.write_text(json.dumps(fresh, indent=1) + "\n")
