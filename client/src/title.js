@@ -7,7 +7,7 @@ import { MapGlobe, TileOutline, latLonToXYZ, xyzToLatLon } from './mapGlobe.js';
 import { Relief } from './relief.js';
 import { Geocoder, MIN_CHARS } from './geocode.js';
 import { avatarFor } from './social.js';
-import { BodyRing, ringEllipse } from './bodyRing.js';
+import { BodyRing } from './bodyRing.js';
 export { latLonToXYZ };
 
 // The home screen: the title, the earth as a map, the places, and going there together (docs/multiplayer.md lanes 1
@@ -65,7 +65,7 @@ const ALT0 = 2.5, ALT_MIN = 0.6 / R_KM, ALT_MAX = 3.6;      // the camera's dist
 // down to PACE_MIN, so it eases into a hold a few times the final height above the tile and goes on as the build does).
 const PLACE_SLOW = 1.8, PLACE_MS = [5000, 8000], PACE_FROM = 0.55, PACE_SLACK = 0.12, PACE_MIN = 0.04;
 const FOCUS_MARGIN = [40, 16];                             // px around the stage inside the free centre (desktop, phone)
-const TILE_RX = 0.84, TILE_RY = 1.3;                       // the chosen tile's frame: within the rings' walkers' ellipse, this much of its radii
+const STAGE_TOP = 0.07;                                    // of the stage's height kept clear above the tile: the back animals stand up past its far edge
 const Y_BELOW = -2.7;                                      // where the earth's centre sits before it lands: off screen, below
 const SUN_CRESCENT = [152 * DEG, 26 * DEG], SUN_LIT = [30 * DEG, 14 * DEG];   // [azimuth about Y from the camera's side, elevation]
 const PITCH_MAX = 85 * DEG;
@@ -269,7 +269,8 @@ export class TitleScreen {
     this.query = ''; this.found = null; this.pin = null;
     this.places = index.tiles.map(t => {
       const b = t.bounds_wgs84 || [0, 0, 0, 0], lat = (b[1] + b[3]) / 2, lon = (b[0] + b[2]) / 2;
-      return { id: t.tile_id, lat, lon, bounds: b, p0: latLonToXYZ(lat, lon), name: t.tile_id, region: '', count: 0, el: null, label: null, outline: null, sx: 0, sy: 0, near: false, onScreen: false };
+      const hw = Math.min((b[3] - b[1]) * DEG, (b[2] - b[0]) * DEG * Math.cos(lat * DEG)) / 2 || 7.8e-4;   // the tile's half-width in earth radii (the rings')
+      return { id: t.tile_id, lat, lon, bounds: b, hw, p0: latLonToXYZ(lat, lon), name: t.tile_id, region: '', count: 0, el: null, label: null, outline: null, sx: 0, sy: 0, near: false, onScreen: false };
     });
     this.byId = Object.fromEntries(this.places.map(p => [p.id, p]));
     let face = null;
@@ -786,13 +787,11 @@ export class TitleScreen {
     const top = lb?.offsetHeight ? this.list.offsetTop + lb.offsetTop + lb.offsetHeight + 10 : title + (phone ? 40 : 22);   // under the search and the list's button
     return { l: fl + m, r: fr - m, t: top, b: H - bar - m * 0.5 };
   }
-  // Where a chosen tile is framed: under the rings' walkers' ring (bodyRing.js ringEllipse), so the animals stand
-  // round it and the fliers' ring turns over it.
+  // Where a chosen tile is framed: the stage, a little kept clear above it for the rings' back animals (bodyRing.js: the
+  // rings stand inside the tile's square, pinned to it)
   focusArea(W, H) {
-    const st = this.stageArea(W, H), e = ringEllipse(st);
-    if (!e) return st;
-    const hh = Math.max(20, Math.min(e.ry * TILE_RY, st.b - e.cy));   // never under the place's title
-    return { l: e.cx - e.rx * TILE_RX, r: e.cx + e.rx * TILE_RX, t: e.cy - hh, b: e.cy + hh };
+    const st = this.stageArea(W, H);
+    return { ...st, t: st.t + (st.b - st.t) * STAGE_TOP };
   }
   // The pose that shows a place: the camera looks at the tile's centre from the distance at which the whole tile, as the
   // camera sees it there (tilted toward the north's horizon as it comes down: tiltFor, fovFor), just fits the focus area;
@@ -1142,7 +1141,11 @@ export class TitleScreen {
     const ac = r.autoClear, ca = r.getClearAlpha(); r.getClearColor(this._cc);
     r.setRenderTarget(null); r.setScissorTest(false); r.setViewport(0, 0, size.x, size.y); r.autoClear = true; r.setClearColor(0x000000, 1);
     r.render(this.scene, cam);
-    if (this.ring) { this.ring.layout(this.stage); this.ring.render(dt, W, H); }   // the rings of bodies over the chosen tile (bodyRing.js)
+    if (this.ring) {   // the rings of bodies, pinned to the chosen tile (bodyRing.js): drawn through this camera in the tile's frame
+      const p = this.sel && this.byId[this.sel];
+      this.ring.pin(p ? { cam, earth: this.earth, p0: p.p0, hw: p.hw } : null);
+      this.ring.render(dt, W, H);
+    }
     r.setClearColor(this._cc, ca); r.autoClear = ac;
     if (this.drawnAt == null) this.firstDrawn();
     if (this.phase === 'lit') this.syncPlaces(W, H, dt);
@@ -1175,7 +1178,7 @@ export class TitleScreen {
     this.hover = hover;
     // the labels on the map: the chosen and the busiest first, none over another; none during Start's dive
     // with a place chosen, none in the rings' space or under the stage (the place's title and the buttons are there)
-    const st = this.sel && this.stage, e = st && ringEllipse(st), clear = p => !st || (p.sy < st.b - 6 && (p.sx < e.cx - e.rx * 1.25 || p.sx > e.cx + e.rx * 1.25));
+    const st = this.sel && this.stage, fa = st && this.focusArea(W, H), clear = p => !st || (p.sy < st.b - 6 && !(p.sx > fa.l && p.sx < fa.r && p.sy > fa.t - 20 && p.sy < fa.b));
     const boxes = [], order = this.places.filter(p => p.onScreen && p.id !== this.sel && clear(p)).sort((a, b) => (b.id === this.sel) - (a.id === this.sel) || b.count - a.count || a.name.localeCompare(b.name));
     const shown = new Set();
     if (!this.begun) for (const p of order) {
