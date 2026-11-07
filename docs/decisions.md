@@ -7387,6 +7387,21 @@ glottal stop is itself drawn like a question mark without its dot, so at 12 px i
   real: sunlit big sage is pale silvery grey-green; the silver-white earlier was the doubled sun term. No sheen in the
   photo or the model. The render's lower contrast is left (likely a denser real crown than the judged porosity 0.3, or the
   phone's tone curve). The second photo (Mono Lake, CC BY-SA 4.0) was overcast with old flower stalks; not used.
+- **Teton's maroon was the gap ground's colour match; riparian rows draw their own sedges; the terrain's shrub shade
+  no longer counts the crowns twice** (terrain.js; pipeline/ground_cards.py; five new library records). The patch
+  colour match pulled each patch's mean to the photo by luminance ratio plus the colour difference; where the photo is
+  dark (Teton) that left a saturated soil-minus-litter colour at low light: maroon (the soils are 10YR-7.5YR, no red
+  source). Litter, crust and soil now take the photo's colour at their own relative brightness plus 30 % of their own
+  hue (stated). Ground cards: a LANDFIRE row naming only a genus ("CAREX") takes the tile's most-recorded native species
+  of it (it took PLANTS' alphabetically first, a Quebec hybrid); "C. hoodii" expands to the last genus with that
+  initial; common-name lists resolve by PLANTS' exact match; a community that lost all its grasses to the 11-grass cap
+  takes one back if its area is ≥ 0.25 of the dropped species' score. Lamar's riparian and wet-meadow rows now draw
+  Carex microptera and C. hoodii (green in June); Teton's riparian rows (44-60 cells) stay under the threshold. Sage
+  vs grass blocks from 30 m (8 + 8 blocks of 90 m against Sentinel-2 through the fair transform): the drawn sage and the
+  photo are not the cause; the shrub contact AO counts crowns the photo already holds (median ratio 0.951 with it, 0.989
+  without), and the terrain's own shrub shade term was the same double count (~1 %, removed); the rest is hillshade
+  counted twice (the photo holds its own), a general issue. Top-down ΔE 0.106 (sage areas ~0.1 L brighter, toward the
+  fair L), overview 0.03.
 
 ## 2026-11-06: snakes are playable; the body follows the head's path (branch claude/snake-play)
 

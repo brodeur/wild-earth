@@ -1014,21 +1014,6 @@
    "rank": 41
   },
   {
-   "id": "claytonia_lanceolata",
-   "kind": "forb",
-   "why": [
-    "GBIF: 50 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 50,
-   "scientific": "Claytonia lanceolata",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 42
-  },
-  {
    "id": "lonicera_involucrata",
    "kind": "shrub",
    "why": [
@@ -1041,7 +1026,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 43
+   "rank": 42
   },
   {
    "id": "achillea_millefolium",
@@ -1055,7 +1040,7 @@
    "record": true,
    "card": false,
    "drawn_as": "achillea_millefolium",
-   "rank": 44
+   "rank": 43
   },
   {
    "id": "arnica_cordifolia",
@@ -1069,7 +1054,7 @@
    "record": true,
    "card": true,
    "drawn_as": "arnica_cordifolia",
-   "rank": 45
+   "rank": 44
   },
   {
    "id": "vaccinium_membranaceum",
@@ -1084,7 +1069,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 46
+   "rank": 45
   },
   {
    "id": "vaccinium_scoparium",
@@ -1099,7 +1084,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 47
+   "rank": 46
   },
   {
    "id": "ribes_viscosissimum",
@@ -1114,7 +1099,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 48
+   "rank": 47
   },
   {
    "id": "orthilia_secunda",
@@ -1129,7 +1114,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 49
+   "rank": 48
   },
   {
    "id": "castilleja_miniata",
@@ -1143,7 +1128,7 @@
    "record": true,
    "card": true,
    "drawn_as": "castilleja_miniata",
-   "rank": 50
+   "rank": 49
   },
   {
    "id": "erythronium_grandiflorum",
@@ -1157,7 +1142,7 @@
    "record": true,
    "card": true,
    "drawn_as": "erythronium_grandiflorum",
-   "rank": 51
+   "rank": 50
   },
   {
    "id": "mertensia_ciliata",
@@ -1171,7 +1156,7 @@
    "record": true,
    "card": true,
    "drawn_as": "mertensia_ciliata",
-   "rank": 52
+   "rank": 51
   },
   {
    "id": "carex_hoodii",
@@ -1185,7 +1170,7 @@
    "record": true,
    "card": true,
    "drawn_as": "carex_hoodii",
-   "rank": 53
+   "rank": 52
   },
   {
    "id": "kalmia_microphylla",
@@ -1200,7 +1185,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 54
+   "rank": 53
   },
   {
    "id": "sambucus_racemosa",
@@ -1215,7 +1200,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 55
+   "rank": 54
   },
   {
    "id": "pyrola_asarifolia",
@@ -1230,7 +1215,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 56
+   "rank": 55
   },
   {
    "id": "delphinium_nuttallianum",
@@ -1244,6 +1229,20 @@
    "record": true,
    "card": true,
    "drawn_as": "delphinium_nuttallianum",
+   "rank": 56
+  },
+  {
+   "id": "erigeron_compositus",
+   "kind": "forb",
+   "why": [
+    "GBIF: 10 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 10,
+   "scientific": "Erigeron compositus",
+   "record": true,
+   "card": true,
+   "drawn_as": "erigeron_compositus",
    "rank": 57
   },
   {
@@ -2236,7 +2235,7 @@
    "family": "Asteraceae",
    "kind": "forb",
    "records": 10,
-   "known": false
+   "known": true
   },
   {
    "id": "penstemon_whippleanus",
@@ -2772,14 +2771,6 @@
    ]
   },
   {
-   "id": "claytonia_lanceolata",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 50 records on the tile"
-   ]
-  },
-  {
    "id": "lonicera_involucrata",
    "kind": "shrub",
    "what": "a trait card",
@@ -2982,9 +2973,9 @@
  ],
  "summary": {
   "needed": 64,
-  "with_record": 27,
+  "with_record": 28,
   "generated_now": 0,
-  "queued": 37,
+  "queued": 36,
   "unread_communities": 16,
   "by_layer": {
    "tree": 20,
@@ -2996,6 +2987,6 @@
    "shrub": false,
    "ground": true
   },
-  "hands": 53
+  "hands": 52
  }
 }

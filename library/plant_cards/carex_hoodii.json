@@ -170,13 +170,14 @@
    }
   }
  },
- "description": "Hood's sedge (Carex hoodii, Cyperaceae): a perennial grass 1 m tall at maturity (USDA PLANTS), named by the LANDFIRE descriptions of bps 693, evt 7050, evt 7055, evt 7061 on the tile.",
+ "description": "Hood's sedge (Carex hoodii, Cyperaceae): a perennial grass 1 m tall at maturity (USDA PLANTS), named by the LANDFIRE descriptions of bps 693, bps 713, evt 7050, evt 7055 on the tile.",
  "habitat": {
   "classes": {},
   "named_in_classes": {
    "conifer_forest": 0.5,
+   "riparian": 0.5,
    "mixed_forest": 0.5,
-   "riparian": 0.5
+   "chaparral": 0.5
   },
   "floor": 1.0,
   "mid": 1.0,
@@ -188,7 +189,7 @@
  "notes": "Written by rule from the USDA PLANTS Database's characteristics (pipeline/ground_cards.py). no PLANTS characteristics for the species or its infraspecific taxa: every value is the template's or a default. height: none in PLANTS, the template's. leaf colour: none in PLANTS, a mid green. flowering months: no Bloom Period in PLANTS. tuft: no Growth Form in PLANTS, taken as a bunchgrass (a perennial grass is a bunch clump). PLANTS characteristics used (): . The client's seasons are calendar quarters; PLANTS' bloom periods are the species' over its US range, not corrected for this tile's elevation. Region tag landfire_mz21 (the LANDFIRE map zone whose descriptions named it) is not a natural region in pipeline/regions.py: no regional table draws it.",
  "sources": [
   "USDA PLANTS profile CAHO5: https://plantsservices.sc.egov.usda.gov/api/PlantProfile?symbol=CAHO5, read 2026-11-06",
-  "LANDFIRE BpS descriptions naming it: species/ground.json (bps 693; evt 7050; evt 7055; evt 7061; evt 9022), read 2026-11-06",
+  "LANDFIRE BpS descriptions naming it: species/ground.json (bps 693; bps 713; evt 7050; evt 7055; evt 7061; evt 7125), read 2026-11-06",
   "the tuft rule's constants (TUFT_H, TUFT_W): Zouhar, K. 2000. Festuca idahoensis. Fire Effects Information System, USDA Forest Service: https://www.fs.usda.gov/database/feis/plants/graminoid/fesida/all.html; Howard, J. L. 1997. Poa secunda. FEIS: https://www.fs.usda.gov/database/feis/plants/graminoid/poasec/all.html, read 2026-11-06"
  ],
  "authors": [

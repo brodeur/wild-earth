@@ -796,10 +796,12 @@ const FRAG = /* glsl */`
     // four are patches of 3-15 cm of one noise (round 3; 5-25 cm read as blotches) (near normal, mean 0.5, SD 0.158: gapQ gives each share's threshold), herbs
     // at its lows, bare soil at its highs. Their colours: the photo unmixed, the litter's (gapLitter), the crust's dry
     // grey-green, the dry soil's Munsell colour (gapSoil). The photo sets the mean: the herbs are the photo unmixed of the
-    // tufts U (as before), and the litter, crust and soil patches' expected colour M is brought to U by its luminance ratio
-    // (clamped 0.5-2) and then the difference added, so the whole meets the photo it fades into at 12-45 m while the data
-    // give what lies where and their contrasts (a ratio channel by channel, or the offset laid on the herbs too, drew the
-    // herbs saturated green: the litter-weighted M is browner than the photo). The detail scans' relief (their luminance over the photo's) on the bare soil, half of it
+    // tufts U (as before), and the litter, crust and soil patches are the photo's colour U at their brightness relative to
+    // their expected colour M, with 30 % of their hue relative to M, so the whole meets the photo it fades into at 12-45 m
+    // while the data give what lies where and its brightness. (Round 4: rounds 2-3 brought M to U by its luminance ratio and
+    // added the difference; where the photo is dark, as at Teton, that kept the soil's chroma difference at the herbs' low
+    // luminance and drew the bare soil patches dark maroon; a ratio channel by channel turned every patch brown where the
+    // photo is green. The 30 % is a stated share: enough that 7.5YR soil reads a little warmer than the litter.) The detail scans' relief (their luminance over the photo's) on the bare soil, half of it
     // on the covered ground (all of it read as cracked mud under the litter; a third left it flat). Lit as the ground below.
     if (tuftGround > 0.5 && dist < 45.0) {
       float near = 1.0 - smoothstep(12.0, 45.0, dist);
@@ -818,10 +820,12 @@ const FRAG = /* glsl */`
         vec3 bare3 = gapLitter.rgb * (s1 - s2) + gapCrust.rgb * (s2 - s3) + gapSoil.rgb * s3;   // the uncovered ground's patches
         vec3 M = (l * gapLitter.rgb + cr * gapCrust.rgb + b * gapSoil.rgb) / max(1.0 - h, 1e-3);   // their expected colour
         float dR = clamp(dot(c, G_LUMA) / max(dot(cP, G_LUMA), 1e-4), 0.7, 1.35);
-        float k = clamp(dot(U, G_LUMA) / max(dot(M, G_LUMA), 1e-4), 0.5, 2.0), sh = s1;
+
         // fine blades (gapBlades) on the herbs
         float bl = (1.0 - s1) > 0.01 ? gapBlades(vPosW.xz, foot) : 1.0;   // on the herbs only (the litter too doubled its pixels)
-        vec3 gap = herb * (1.0 - s1) * bl + max(bare3 * k + sh * (U - M * k), 0.25 * bare3 * k);
+        float lM = max(dot(M, G_LUMA), 1e-4), l3 = dot(bare3, G_LUMA);
+        vec3 hue3 = mix(vec3(1.0), (bare3 / max(l3, 1e-4)) / (M / lM), 0.3 * s1);   // 30 % of a patch's hue relative to M
+        vec3 gap = herb * (1.0 - s1) * bl + U * (l3 / lM) * hue3;
         c = mix(c, gap * mix(1.0 + 0.5 * (dR - 1.0), dR, s3), near);
       } else {
         float k = clamp(cov3.b, 0.0, 0.85);
@@ -866,7 +870,10 @@ const FRAG = /* glsl */`
     float bump = max(dot(nL, sunDir), 0.0) / max(dot(nL, nGeo), 0.6);
     float diff = geo > 0.0 ? mix(geo, bump, smoothstep(0.0, 0.12, geo)) : 0.0;
     float sunVis = geo > 0.0 ? csmShadow(vPosW, nGeo, 1.0, 1.0, 1.0) : 1.0;
-    float skyOcc = 1.0 - 0.35 * clamp(cov.r, 0.0, 1.0) - 0.1 * clamp(cov.g, 0.0, 1.0);   // = groundSkyOcclusion(vUv)
+    // the canopy's sky occlusion on the ground: the trees' only (round 4: the shrubs are not erased from the photo, so the
+    // photo's ground under sage already holds their crowns' and shadows' darkness; their 0.1 here counted it again, ~1 % of
+    // a 35 % sage block from above; the plants' own groundSkyOcclusion keeps it)
+    float skyOcc = 1.0 - 0.35 * clamp(cov.r, 0.0, 1.0);
     skyOcc = mix(skyOcc, 1.0, cliffW);
     vec3 light = sunLight * diff * cloudOnly(vPosW) * sunVis
       + mix(ambientGround, ambientSky, 0.5 + 0.5 * nGeo.y) * skyOcc * groundContactAO(vPosW);
