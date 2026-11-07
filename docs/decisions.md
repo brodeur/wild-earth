@@ -7368,6 +7368,19 @@ snake inside the walkers' control. docs/movement.md "The snake" and docs/games.m
   - The home screen's rings (`bodyRing.js`) already draw a modelled snake and skip an unmodelled one, so Corcovado's
     terciopelo stays out of them until it has a model.
 
+- **Snakes are built procedurally first, and the rule decides what is served** (`tools/build_snake_proc.py`,
+  `fauna_models.procedural_snake`; docs/animal-library.md "Snakes built procedurally"). The procedural build takes its
+  size from the mass at 1,000 kg/m³, its shape (taper, head) from the family, and its pattern unrolled from the rule's
+  texture photo, with no credits. It is judged by the acceptance rule's check.
+  - The terciopelo's procedural model passes (1.0) and is served: Corcovado's terciopelo is drawn and playable.
+  - The garter snake's procedural model passes the check (0.976 against Meshy's 0.441) but reads weaker: a pale body
+    with its stripes blurred. A general condition was added rather than a per-species verdict: a procedural model
+    replaces a served one only if it keeps 0.8 of its pattern contrast (lightness spread over the back and flanks;
+    13.5 against 29.2 here). So the Meshy garter snake stays.
+  - The first procedural build wound its triangles inward. three.js culls back faces, so the game showed the inside
+    of the belly from above, and the appearance check read the regions upside down. A test now checks the faces face
+    outward.
+
 ## 2026-11-07: the bodies in rings over the chosen place (branch claude/animal-rings)
 
 Aaron's design for the screen after a place is chosen: the tile centred with room under it for a proper title above

@@ -2430,6 +2430,20 @@
     "served": true,
     "served_by": "override",
     "due": null
+   },
+   "procedural": {
+    "at": "2026-11-06",
+    "build": "tools/build_snake_proc.py",
+    "glb": "library/animals/procedural/thamnophis_elegans.glb",
+    "check": {
+     "ok": true,
+     "score": 0.976,
+     "fails": []
+    },
+    "pattern_contrast": 13.47,
+    "served_pattern_contrast": 29.17,
+    "served": false,
+    "why": "both pass the check (procedural 0.976, served 0.441), but the procedural model keeps 13.47 of lightness spread over its back and flanks against the served model's 29.17 (under 0.8 of it): its pattern reads weaker, the served one stays"
    }
   },
   "canis_lupus": {
@@ -2996,6 +3010,80 @@
     "agrees": true,
     "served": true,
     "served_by": "override",
+    "due": null
+   }
+  },
+  "bothrops_asper": {
+   "kind": "snake",
+   "archetype": "snake",
+   "glb": "client/assets/fauna/bothrops_asper.glb",
+   "build": "tools/build_snake_proc.py",
+   "built": "2026-11-06",
+   "tile": "utm17n_210_932",
+   "reference": {
+    "source": "wikimedia commons",
+    "id": "commons_40774882",
+    "licence": "CC BY-SA 2.0",
+    "author": "Bernard DUPONT from FRANCE",
+    "attribution": "Bernard DUPONT from FRANCE, CC BY-SA 2.0, via Wikimedia Commons (File:Young Terciopelo (Bothrops asper) found on the coach at the hotel (6781403567).jpg)",
+    "page": "https://commons.wikimedia.org/wiki/File:Young_Terciopelo_(Bothrops_asper)_found_on_the_coach_at_the_hotel_(6781403567).jpg",
+    "photo_page": null,
+    "url_large": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/10/Young_Terciopelo_%28Bothrops_asper%29_found_on_the_coach_at_the_hotel_%286781403567%29.jpg/1280px-Young_Terciopelo_%28Bothrops_asper%29_found_on_the_coach_at_the_hotel_%286781403567%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+   },
+   "colour_check": {
+    "ok": true,
+    "score": 1.0,
+    "fails": []
+   },
+   "procedural": {
+    "at": "2026-11-06",
+    "build": "tools/build_snake_proc.py",
+    "glb": "library/animals/procedural/bothrops_asper.glb",
+    "check": {
+     "ok": true,
+     "score": 1.0,
+     "fails": []
+    },
+    "pattern_contrast": 20.59,
+    "served": true,
+    "why": "the procedural model passes the check; it replaces the earlier procedural build"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": null,
+    "glb_sha1": "ab8fe0d2791d72fa85b58a1fca66252d9115c247",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "built: the GLB exists only if the build's gate passed when it was built"
+      },
+      "check": {
+       "ok": true,
+       "score": 1.0,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": null,
+       "mode": null,
+       "why": "no job recorded in the GLB",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
     "due": null
    }
   }
