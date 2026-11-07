@@ -7402,6 +7402,15 @@ glottal stop is itself drawn like a question mark without its dot, so at 12 px i
   without), and the terrain's own shrub shade term was the same double count (~1 %, removed); the rest is hillshade
   counted twice (the photo holds its own), a general issue. Top-down ΔE 0.106 (sage areas ~0.1 L brighter, toward the
   fair L), overview 0.03.
+- **Shrub contact shade no longer darkens the stand's mean; the built-in species copy refreshed** (shadows.js contact
+  AO; treegen.js built-in block via library/embed_builtin.py). The photo-derived ground already holds the crowns'
+  average shading, so each crown now adds only what the photo can't hold: it still darkens the ground under it by up to
+  1 - porosity, and lightens a ring out to twice its radius by the same total (the AO target half float, shrub discs
+  summed; trees keep the max blend). Sage/grass from 30 m nadir (8 + 8 blocks against Sentinel-2 through the fair
+  transform, this lane's method): HEAD 1.041, new 1.055, no shrub AO 1.052, so the AO now costs nothing at block scale
+  (the grass lane's method reads 0.04-0.06 lower on all three; only the difference is compared). Dappled cast shadows
+  kept (without them 1.095). Contact shade under near shrubs survives at eye level, no visible rings. ΔE top-down 0.000,
+  30 m nadir 0.48, 15 m 0.23.
 
 ## 2026-11-06: snakes are playable; the body follows the head's path (branch claude/snake-play)
 
