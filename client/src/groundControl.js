@@ -6,6 +6,7 @@ import { HerdMarks } from './herdMarks.js';
 import { HerdSilhouette } from './herdSilhouette.js';
 import { Locomotion } from './locomotion.js';
 import { LegsBody } from './legs.js';   // the quadrupeds' leg engine (gait.js; docs/movement.md "The legs")
+import * as Snake from './snake.js';   // a tile's own snakes (rig 'snake': the body along the head's path; docs/movement.md "The snake")
 
 // The playable walkers (owner's request 2026-10-26, "make the other animals playable"): one controller for every
 // species that lives on the ground, parameterised per species by GROUND below. Black-tailed deer (doe and buck), gray
@@ -339,13 +340,14 @@ export class GroundControl {
           geo.setAttribute('aClip', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
           geo.setAttribute('aBend', new THREE.InstancedBufferAttribute(new Float32Array(4), 4));
         }
-        const mesh = new THREE.InstancedMesh(geo, animalMaterial(this.atmosphere, model, { map: model.maps?.[0] || null, head: this.flight.headYaw }), 1);   // head: the look (flight.js)
+        const snPath = model.rig?.kind === 'snake' ? { value: new Float32Array(82) } : null;   // a snake: its body along the head's path (snake.js; animalModels.js SN_PATH)
+        const mesh = new THREE.InstancedMesh(geo, animalMaterial(this.atmosphere, model, { map: model.maps?.[0] || null, head: this.flight.headYaw, snakePath: snPath }), 1);   // head: the look (flight.js)
         mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
         mesh.frustumCulled = false; mesh.castShadow = mesh.receiveShadow = true; mesh.name = `player ${name}`;
-        mesh.customDepthMaterial = animalDepthMaterial(model);
+        mesh.customDepthMaterial = animalDepthMaterial(model, { snakePath: snPath });
         mesh.visible = false; this.scene.add(mesh);
         addCaster(mesh, { cascades: [0], simple: false });   // follows the mesh's visibility
-        return { mesh, model, rig, legs };
+        return { mesh, model, rig, legs, snPath };
       }).catch(e => { console.warn(`groundControl: no player model for ${name}`, e); return null; });
       this.meshes.set(name, p);
     }
@@ -380,7 +382,7 @@ export class GroundControl {
     const f = this.flight;
     f.body.visible = !on && f.view === 'chase';
     if (this.body) this.body.mesh.visible = on;
-    if (!on) for (const p of this.meshes.values()) p.then(b => { if (b) b.mesh.visible = false; });
+    if (!on) { for (const p of this.meshes.values()) p.then(b => { if (b) b.mesh.visible = false; }); Snake.hideTongue(this); }
     if (!on && this.herd) { this.animals.pilot(this.herd.g, null); this.herd = null; }   // the group goes on with its own life
     if (!on) this.animals?.setStalk?.(1);
     if (!on) { this.marks.clear(); this.sil.clear(); }
@@ -413,6 +415,8 @@ export class GroundControl {
   }
   helpLine() {
     const S = this.S, k = s => `<kbd>${s}</kbd>`;
+    if (S.rig === 'snake') return `${k('W')} crawl (${k('shift')}${k('W')} dash) · ${k('A')}${k('D')} steer · ${k('S')} stop · ${k('shift')} raise the head · ${k('E')} flick the tongue (a strike at prey in reach) · ${k('X')} coil, again to stretch out and bask · `
+      + `${k('M')} map · ${k('G')} roads · ${k('P')} present day · ${k('T')} tags · ${k('N')} mute · ${k('B')} back to spirit form · click a tree to identify · drag to orbit the camera`;
     const space = S.flush ? `${k('space')} hop; from a run, flush and fly` : `${k('space')} jump`;
     const shift = S.alert.pushups ? 'push-ups' : S.alert.pose ? 'sit up' : 'alert';
     const rest = S.rest === 'bed' ? ` · ${k('X')} lie down` : S.rest === 'hunch' ? ` · ${k('X')} hunch in a form` : S.rest === 'freeze' ? ` · ${k('X')} freeze` : S.rest === 'bask' ? ` · ${k('X')} bask` : '';
@@ -447,6 +451,12 @@ export class GroundControl {
     ps.e0 = a?.e0 ?? 0; ps.e1 = a?.e1 ?? 0; ps.e2 = a?.e2 ?? 0; ps.e3 = a?.e3 ?? 0; ps.pitch = 0; ps.roll = 0; ps.lift = 0;
     f.yaw = o.yaw; f.pitch = 0; f.roll = 0;
     this.place(o.x, o.z);
+    if (S.rig === 'snake') {   // a snake: the trail seeded with the animal's own body once the mesh is in (snake.js enter)
+      this.herd = null; this.idleT = 0; this.auto = false; this.fl = null;
+      const code = o.code; Snake.enter(this, null);
+      this.meshFor(this.modelName).then(b => { if (b && this.code === code) { this.body = b; Snake.enter(this, a); this.camSettled = false; } });
+      this.camSettled = false; this.hud(this.on); return;
+    }
     this.resting = S.rig === 'quad' ? ps.pose > 0.5 * (this.modelPoseMax() || 1) : S.rest === 'hunch' || S.rest === 'freeze' ? ps.pose < -0.3 : false;
     const g = f.pos.y;
     if (o.where === 'air' && S.flush) {   // mid-flush: the rest of the flight, gliding down
@@ -463,12 +473,15 @@ export class GroundControl {
   }
   // Where the player leaves this animal (spirit.js), for the AI to carry on from (animals.js release): as info.
   leaveInfo() {
+    if (this.S?.rig === 'snake') return Snake.leave(this, { x: 0, y: 0, z: 0, yaw: 0, where: 'ground', tree: null, face: 0, h: 0, speed: Math.abs(this.v), pose: 0, resting: this.resting });
     const P = this.flight.pos, air = this.mode === 'fly' || this.mode === 'air';
     if (this.mode === 'tunnel' && this.dig?.leavePoint(this._lp ||= {})) P.set(this._lp.x, this._lp.y, this._lp.z);   // underground: the AI takes it at its system's nearest hole
     return { x: P.x, y: air ? P.y : P.y, z: P.z, yaw: this.flight.yaw, where: air ? 'air' : 'ground', tree: null, face: 0, h: 0,
       speed: Math.abs(this.v), pose: this.pose.pose, resting: this.resting };
   }
   modelPoseMax() { return this.body?.model?.poseMax || 1; }
+  // a snake's body on the AI's channels for the group's members (bodySample.js; snake.js sample)
+  snakeSample(out) { return this.S?.rig === 'snake' && Snake.sample(this, out); }
 
   // ---- the frame -----------------------------------------------------------------------------------
   input() {
@@ -483,11 +496,12 @@ export class GroundControl {
   update(dt) {
     const f = this.flight, P = f.pos, S = this.S;
     f.body.visible = false; f.flap = 0; f.flapping = false; f.hover = false;   // the raven's keys still land in flight; ignore them
-    if (P.distanceToSquared(this.last) > 20 * 20) this.place(P.x, P.z);       // moved from outside (R, Go to): onto the ground there
+    if (P.distanceToSquared(this.last) > 20 * 20) { this.place(P.x, P.z); if (S.rig === 'snake') Snake.enter(this, null); }       // moved from outside (R, Go to): onto the ground there (a snake laid out straight there)
     f.pitch = clamp(f.pitch, -0.6, 0.7);
     const k = this.herdDrive(dt, this.input(), this.jumpQ || this.actQ || this.restQ), jump = this.jumpQ, act = this.actQ, rest = this.restQ;
     this.jumpQ = this.actQ = this.restQ = false;
-    if (this.mode === 'air') this.air(dt);
+    if (S.rig === 'snake') Snake.step(this, dt, k, jump, act, rest);   // a snake (snake.js): its crawl, coil, strike
+    else if (this.mode === 'air') this.air(dt);
     else if (this.mode === 'fly') this.fly(dt, k, jump);
     else if (this.mode === 'leap') this.leapStep(dt);
     else if (this.mode === 'pounce') this.pounceStep(dt);
@@ -697,6 +711,7 @@ export class GroundControl {
   // raked across and down), its hit at hitAt s; the pounce is the leap above (startLeap with a crouch first), the lunge the
   // canids' spring (startPounce). The controls are the strike's until it ends.
   attack(kind, p, o) {
+    if (this.S?.rig === 'snake') return Snake.attack(this, p, o);   // a snake's strike (snake.js)
     const f = this.flight, P = f.pos;
     f.yaw = Math.atan2(-(p.x - P.x), -(p.z - P.z));
     this.sit = 0; this.resting = false; this.actT = 0; this.feeding = null;
@@ -925,6 +940,7 @@ export class GroundControl {
 
   // ---- drawing -------------------------------------------------------------------------------------
   draw(dt) {
+    if (this.S?.rig === 'snake') return Snake.draw(this, dt);   // along the head's path (snake.js)
     const b = this.body; if (!b) return;
     const m = b.mesh, ps = this.pose, P = this.flight.pos, S = this.S;
     m.visible = true;
@@ -980,14 +996,15 @@ export class GroundControl {
   // crowns (squirrelControl.js crownClear, for the taller bodies).
   updateCamera(dt) {
     const f = this.flight, cam = this.camera, C = this.S.cam, off = this._v, aim = this._w;
-    const P = this.mode === 'tunnel' ? (this._pu ||= new THREE.Vector3()).set(f.pos.x, Math.max(f.pos.y, this.heights.atXZ(f.pos.x, f.pos.z)), f.pos.z) : f.pos;   // underground: framed from the ground over the body (dig.js xray)
+    const P = this.mode === 'tunnel' ? (this._pu ||= new THREE.Vector3()).set(f.pos.x, Math.max(f.pos.y, this.heights.atXZ(f.pos.x, f.pos.z)), f.pos.z)   // underground: framed from the ground over the body (dig.js xray)
+      : this.S.rig === 'snake' && this.sn?.n ? (this._pc ||= new THREE.Vector3()).set(this.sn.cx, this.sn.cy, this.sn.cz) : f.pos;   // a snake: round its body's middle (snake.js), not its head
     const kk = f.keys, steerOnly = !!this.digging && !['KeyW', 'KeyS', 'KeyA', 'KeyD', 'ArrowLeft', 'ArrowRight', 'Space'].some(c => kk.has(c));   // digging, ↑ ↓ steer the slope: not a move that brings the orbit back
     f.easeOrbit(dt, f.moving() && !steerOnly, this.mode === 'tunnel' || !!this.digging);   // the drag's orbit round the body (flight.js), back behind once the keys move it; underground and digging its pitch held (the dig's aim, dig.js aimPitch)
     const rate = wrap(f.yaw - (this.camYaw ?? f.yaw)) / Math.max(dt, 1e-3); this.camYaw = f.yaw;
     if (Math.abs(rate) > 0.3) this.camSide = damp(this.camSide, -Math.sign(rate) * C.side, 1.6, dt);
     const low = this.resting ? 0.7 : 1, fly = this.mode === 'fly' ? 1.4 : 1;
     this.camUnder = damp(this.camUnder || 0, this.mode === 'tunnel' ? 1 : 0, 2, dt); const ug = 1 + 0.7 * this.camUnder;   // underground: a little higher, looking down into the ground
-    const z = f.zoom || 1, back = (C.back + CAM_PLUS.back) * (1 - 0.15 * this.sit) * fly * z * (1 + 0.15 * this.camUnder), up = (C.up * CAM_RAISE + CAM_PLUS.up) * low * (1 + 0.3 * this.sit) * fly * z * ug, ly = f.yaw + f.look + f.orbitYaw, a = ly + this.camSide;   // z: the wheel's zoom; ly: the look's yaw (flight.js)
+    const plus = C.plus || CAM_PLUS, z = f.zoom || 1, back = (C.back + plus.back) * (1 - 0.15 * this.sit) * fly * z * (1 + 0.15 * this.camUnder), up = (C.up * CAM_RAISE + plus.up) * low * (1 + 0.3 * this.sit) * fly * z * ug, ly = f.yaw + f.look + f.orbitYaw, a = ly + this.camSide;   // z: the wheel's zoom; ly: the look's yaw (flight.js)
     off.set(Math.sin(a) * back, up, Math.cos(a) * back);
     if (f.orbitPitch) { const r = Math.hypot(back, up), e = clamp(Math.atan2(up, back) + f.orbitPitch, -0.15, 1.4), h = r * Math.cos(e); off.set(Math.sin(a) * h, r * Math.sin(e), Math.cos(a) * h); }   // the orbit up or down round the body
     const ahead = C.look * (1 - 0.85 * Math.min(1, Math.abs(f.orbitPitch) / 0.5)), fx = -Math.sin(ly) * ahead / Math.max(C.look, 1e-6), fz = -Math.cos(ly) * ahead / Math.max(C.look, 1e-6);
@@ -1003,7 +1020,7 @@ export class GroundControl {
     // the aim point: the smoothed aim's x and z (the three-quarter view's yaw), its height from the framing rule above
     aim.copy(P).add(this.aimOff);
     const S = this.S, bodyY = P.y + (f.pos.y - P.y) * this.camUnder + (S.shoulder || C.aimUp) * 0.5, hd = Math.hypot(P.x - cam.position.x, P.z - cam.position.z);
-    const toBody = Math.atan2(bodyY - cam.position.y, Math.max(hd, 1e-3)), above = Math.atan(-FRAME_Y * Math.tan(cam.fov * Math.PI / 360));
+    const toBody = Math.atan2(bodyY - cam.position.y, Math.max(hd, 1e-3)), above = Math.atan(-(C.frameY ?? FRAME_Y) * Math.tan(cam.fov * Math.PI / 360));
     const ha = Math.hypot(aim.x - cam.position.x, aim.z - cam.position.z);
     aim.y = cam.position.y + Math.max(ha, 1e-3) * Math.tan(toBody + above + f.pitch);
     cam.lookAt(aim);
@@ -1056,7 +1073,8 @@ export class GroundControl {
     }
     const S = this.S, P = this.flight.pos, rest = { bed: 'lying down', hunch: 'hunched in a form', bask: 'basking' }[S.rest];
     let text;
-    if (this.mode === 'fly') text = `flying, ${Math.max(0, Math.round(P.y - ground))} m up`;
+    if (S.rig === 'snake') text = Snake.hudText(this);
+    else if (this.mode === 'fly') text = `flying, ${Math.max(0, Math.round(P.y - ground))} m up`;
     else if (this.mode === 'air') text = 'in the air';
     else if (this.mode === 'leap') text = 'leaping';
     else if (this.mode === 'pounce') text = this.pounce?.ph === 'fix' ? 'fixing it' : this.pounce?.ph === 'spring' ? 'pouncing' : this.pounce?.ph === 'toss' ? 'the kill tossed' : 'striking at it';

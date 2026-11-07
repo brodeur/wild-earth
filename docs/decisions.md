@@ -7297,3 +7297,33 @@ glottal stop is itself drawn like a question mark without its dot, so at 12 px i
   rendered in the card's own style in headless Chrome, and CDP `CSS.getPlatformFontsForNode` asked which fonts drew each:
   every name now draws only from DM Sans and Noto Sans (Noto for Ɂ and ʔ in the Washoe name and ȧ in the Cheyenne
   name), with no system fallback; with DM Sans alone the same three came from .SF NS and Helvetica.
+
+## 2026-11-06: snakes are playable; the body follows the head's path (branch claude/snake-play)
+
+Aaron: "Are there any tiles where we can be a snake". The western terrestrial garter snake on Lamar and Teton is now
+playable. The terciopelo (fer-de-lance) is playable on Corcovado as a stand-in slot. `client/src/snake.js` drives the
+snake inside the walkers' control. docs/movement.md "The snake" and docs/games.md "The snakes' prey" have the details.
+
+- **The body is the head's path, not a wave on a rigid body.** The head swings about the steered point by the distance
+  crawled, its trail is kept, and the shader's new `SN_PATH` mode draws the body along it from a uniform of step
+  headings and node heights. A turn trails, the wave stands on the ground, and the body drapes over slopes, rocks and
+  water. Considered: the AI's travelling wave plus the C-bend for a turn (`snUpdate`'s way). Rejected: the brief asked
+  for a centreline that trails behind, and the C-bend swings the whole body round its middle. The AI keeps its own
+  way, so its shader has no new cost; the player's material compiles its own program.
+- **Coiling blends onto the AI's coil, and leaving a coil re-seeds the trail from the body as drawn.** So a snake
+  crawls out of its coil instead of snapping straight. Entering seeds the trail from the AI animal's own centreline
+  (`snakeLine`, the shader's maths on the CPU), so the body taken is the body seen.
+- **The group sees the AI's channels.** `bodySample` sends the body's mean point, mean heading, phase, gait, turn and
+  coil, the way the AI's snakes are mirrored. A member's page draws a wave of the right wavelength rather than the exact
+  path: no new fields in the 5 Hz stream.
+- **One strike for the snakes, venom for the vipers and elapids.** `strikes.js` gives the snake families `strike`
+  (fast: the hit at 0.15 s, since a slower one let a vole step out of reach). Venom is damage over time on the host,
+  no new event type: 'hp' events and a `kill` marked `venom`.
+- **The snakes' prey by rule in the games step.** The rule is gape-limited by family over the tile's amphibians,
+  rodents, shrews and lizards. Lamar's, Teton's and Corcovado's `games.json` were re-run in place, which also gave
+  them the desirability.
+- **Corcovado's terciopelo is a stand-in.** It had been skipped over the 40-slot cap and has no model, and a model
+  needs Meshy credits. Its slot is added by hand, drawn with the garter snake's model at its mass, with family
+  Viperidae. Its rule species (the fence lizard's sites) finds no cells under the rain forest's canopy, so none spawn
+  on their own: the tests summoned one. This sits in its own commit so it can be dropped, or replaced by a pipeline
+  rule that keeps a playable snake above the cap and a model of its own.

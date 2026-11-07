@@ -8,7 +8,7 @@ import { fieldGuide } from './fieldguide.js';
 import { scentCarry } from './wind.js';
 import { LegsPool } from './legs.js';   // the quadrupeds' leg engine (gait.js; docs/movement.md "The legs")
 import { NF, F, FL_AIR, FL_GM, FL_BURIED, FL_HIDDEN, FL_DEAD } from './animalNet.js';
-import { MOVES, bodyOf, maxHp, damage, reachOf, movesFor, REGEN, REGEN_DELAY, FIGHT_K, FIGHT_P } from './strikes.js';   // the hunt's strikes: health and damage from the bodies (hurt)   // the shared animals' stream (the mirror below)
+import { MOVES, bodyOf, maxHp, damage, reachOf, movesFor, venomous, REGEN, REGEN_DELAY, FIGHT_K, FIGHT_P } from './strikes.js';   // the hunt's strikes: health and damage from the bodies (hurt)   // the shared animals' stream (the mirror below)
 import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buildJay, buildHawk, buildVulture, buildStellersJay,
   buildDeerBuck, buildFox, buildCoyote, buildCougar, buildRabbit, buildVole, buildJackrabbit, buildTurkey, buildGroundSquirrel, buildLizard, buildBear, buildMountainQuail,
   animalMaterial, animalDepthMaterial, planarShadowMaterial, loadDeerMesh, loadSquirrelMesh, loadQuailMesh, loadJayMesh, driveClips, makeClipState, DEER_DRIVE, turnFollow, bendOf, PART_TURN,
@@ -770,7 +770,8 @@ const DEER_TURN = { w: 2.2, fast: 6, go: 0.5, stop: 1.4, slow: 1.2, face: 0.7, g
 // at the ground), the gait's amplitude slackening to nothing and the pose going to the species' rest (REST_POSE: the
 // deer's bed clip blended in at a third of its usual time, a lizard flat), instead of snapping onto its side.
 const CARRION = { t: 600, small: 150, reach: { [ML]: 2.4, [CY]: 1.6, [FX]: 1.3, [HK]: 1.4, [RV]: 0.9, [SJ]: 0.6, [BC]: 1.4, [BA]: 1.6, [CR]: 0.7 }, lionCatch: 0.35, canidCatch: 0.4, scavR: 300, ravenStay: [20, 45], feed: 45, fall: 0.4 };
-const KILLABLE = new Set([DR, BK, JR, RB, VO, LZ, SH, DM, TC, EL, EB]);   // (+ the elk, 2026-11-06: on the deer's machine, it dies as the deer does; the Serengeti's zebra, wildebeest and buffalo stand in on it)   // (+ the Hoh batch's hare, deer mouse and chipmunk: the bobcat's and the hawk's prey)
+const VENOM_EMIT = 0.5;   // s between the venom's 'hp' events (venomTick)
+const KILLABLE = new Set([DR, BK, JR, RB, VO, LZ, SH, DM, TC, EL, EB, YC, SR, RS, EN, WT, CF]);   // (+ 2026-11-06, the snakes' prey: the yellow-pine chipmunk, the shrew, the salamanders, the toad and the frog; pipeline/games.py snake_predation)   // (+ the elk, 2026-11-06: on the deer's machine, it dies as the deer does; the Serengeti's zebra, wildebeest and buffalo stand in on it)   // (+ the Hoh batch's hare, deer mouse and chipmunk: the bobcat's and the hawk's prey)
 const REST_POSE = { [LZ]: -0.95 };   // the pose a dead body settles to (1 for the rest: the deer's bed, the small bodies' rest); the lizard flat
 const HUNT = { r: 300, every: 0.3, lionR: 200, near: 60, stalk: 0.5, rush: 25, rushFar: 50, rushT: [4, 5], lose: 260, stalkMax: 180,
   lionCool: [60, 120], canidR: 60, trotMax: 25, pounceD: 2.4, chaseT: [2, 3.5], canidCool: [20, 45], look: [8, 16], hawk: 0.5, quail: 30,
@@ -912,7 +913,7 @@ function installFauna(fauna, owner) {
     const e0 = expectedPerKm2(I), ratio = Number.isFinite(f.density_km2) && f.density_km2 > 0 && e0 > 0 ? f.density_km2 / e0 * (GROUP[I] || 1) / GROUP[d] : 1;
     const e = { code: f.code, one: f.one || f.common || f.code, many: f.many || f.one || f.common || f.code, common: f.common || f.one || f.code,
       salt: 20000 + seedOf(f.code, 0xfa) % 60000, cap: clampN(Math.max(Math.round(sI.cap * clampN(ratio, 0.5, 2)), 2 * (grp?.[1] || 2)), 4, 160), scale: 1,
-      build: () => tintedModel(scaledModel(sK.build(), sc), f.tint), standIn: { kin: sK.code, rules: sI.code, scale: sc } };
+      build: () => tintedModel(scaledModel(sK.build(), sc), f.tint), standIn: { kin: sK.code, rules: sI.code, scale: sc, ...(f.reptile ? { reptile: f.reptile } : {}), ...(f.family ? { family: f.family } : {}), ...(typeof f.swims === 'boolean' ? { swims: f.swims } : {}), ...(Number.isFinite(f.mass_kg) ? { mass_kg: f.mass_kg } : {}) } };   // reptile, family, swims, mass: a snake's body for the player (playable.js snakeEntry)
     if (sK.planar || sI.planar) e.planar = true;
     if (sI.liveR) e.liveR = sI.liveR;
     if (f.bird ?? sK.bird) e.bird = true;
@@ -1453,7 +1454,26 @@ export class Animals {
   // A species' body (mass, length, family), once per slot; an animal's health: full until struck, then what the last hit
   // left, coming back REGEN of the full a second once REGEN_DELAY s have passed with no hit (worked out when read, so a
   // mirror's bar, set by the host's 'hp' event, comes back at the same pace with no stream of its own).
-  bodyK(k) { return (this._bodies ||= [])[k] ||= bodyOf(this.tile, SPECIES[k]); }
+  bodyK(k) {
+    const B = this._bodies ||= [];
+    if (B[k]) return B[k];
+    const b = bodyOf(this.tile, SPECIES[k]);
+    if (REPT[k] === 'snake') {   // a snake: its own model's length (the shader's body; until it loads, not kept), a snake's family unless its tile names one
+      const len = this.drawn[k]?.model?.rig?.piv?.length_m;
+      if (!this.tile?.locomotion?.species?.[SPECIES[k].code]) b.family = SPECIES[k].standIn?.family || 'Colubridae';
+      if (!len) return b;
+      b.len = len;
+    }
+    return B[k] = b;
+  }
+  // A tile's own snake (fauna.json `reptile` 'snake') as the player's body (playable.js snakeEntry): the AI's crawl and
+  // dash (SNK) for its mass, its length, whether it swims; null for any other species.
+  snakeOf(code) {
+    const k = INDEX[code]; if (k === undefined || REPT[k] !== 'snake') return null;
+    const m = SPECIES[k].standIn?.mass_kg ?? SPECIES[k].mass_kg ?? 0.4, fk = clampN((0.4 / Math.max(m, 0.02)) ** 0.1, 0.5, 1.1);
+    return { k, mass: m, crawl: SNK.crawl * fk, dash: SNK.dash * fk, len: this.drawn[k]?.model?.rig?.piv?.length_m || this.rpLen({ sp: k }),
+      swims: SPECIES[k].standIn?.swims ?? true, family: this.bodyK(k).family };
+  }
   massOf(a) { return this.bodyK(a.sp).m * (a.size || 1) ** 3; }
   hpMax(a) { return a.hpMax ??= maxHp(this.massOf(a)); }
   hpNow(a) {
@@ -1480,10 +1500,28 @@ export class Animals {
     a.hp = hp; a.hitAt = this.time;
     this.emit('hp', { animal: a, hp, max: this.hpMax(a), aid: from, move: mv });
     if (hp <= 0) { this.kill(a, from ? { code, aid: from } : 'player'); return 'kill'; }
+    if (move.venom && venomous(this.bodyK(k).family)) {   // a viper's bite: the venom works on over move.venomT s (venomTick), the prey running off with it
+      a.venom = { dps: damage({ dmg: move.venom }, this.bodyK(k).m * (from ? 1 : (this.playerSize || 1)) ** 3) / move.venomT, until: this.time + move.venomT, code, from, emitAt: 0 };
+      (this.venomed ||= new Set()).add(a);
+    }
     const big = M > FIGHT_K * this.bodyK(k).m;
     if (big && Math.random() < FIGHT_P) { this.emit('kick', { animal: a, aid: from }); if (!from) this.onKicked?.(a); }   // the zebra kicks back
     else if ([x, y, z].every(Number.isFinite)) this.startle(a, x, y, z, code, !!from);
     return 'hit';
+  }
+  // The venom in struck prey (hurt: a viper's bite): its health falls by dps a second until the venom is spent (no coming
+  // back while it works), everyone's bar every VENOM_EMIT s; at none left the kill is the striker's, wherever the prey has
+  // run ('kill' with venom: combat.js takes it as the player's catch). On the host (a mirror's bars follow its 'hp').
+  venomTick(dt) {
+    for (const a of this.venomed) {
+      const V = a.venom;
+      if (!V || a.dead || a.gone || !this.alive(a) && !this.held.has(a.id)) { a.venom = null; this.venomed.delete(a); continue; }
+      const hp = Math.max(0, this.hpNow(a) - V.dps * Math.min(dt, Math.max(0, V.until - this.time + dt)));
+      a.hp = hp; a.hitAt = this.time;
+      if (hp <= 0) { a.venom = null; this.venomed.delete(a); this.venomKill = true; this.kill(a, V.from ? { code: V.code, aid: V.from } : 'player'); this.venomKill = false; continue; }
+      if (this.time >= V.emitAt) { V.emitAt = this.time + VENOM_EMIT; this.emit('hp', { animal: a, hp, max: this.hpMax(a), aid: V.from, move: 'venom' }); }
+      if (this.time >= V.until) { a.venom = null; this.venomed.delete(a); }
+    }
   }
   // Whether the catch can take this animal at all (KILLABLE: the ground squirrels, tree squirrels and quail are not yet; dive.js offers no dive at them)
   killable(a) { return !!a && !a.remote && KILLABLE.has(a.sp); }
@@ -1598,7 +1636,7 @@ export class Animals {
     if (this.scav) this.scav.onKill(prey, by === 'player' || by === 'shared' ? by : who, small);   // Scavenge (carrion.js): the carcass record, its day of decay, the shared world's event; it ends the body itself
     this.lastKill = { prey: SPECIES[prey.sp].code, by: who, t: this.time, x: Math.round(prey.x), z: Math.round(prey.z) };
     this.emit('kill', { prey: SPECIES[prey.sp].code, by: who, x: prey.x, y: prey.y, z: prey.z, small,
-      sp: prey.sp, id: prey.id, h: TAG_DY[prey.sp] * (prey.size || 1), animal: prey, aid: by.aid || 0, mine: by === 'player' });   // its species index, id and body height (m): the soul that leaves it (spirit.js SoulPool); the record and the catcher's number (the stream, animalNet.js)
+      sp: prey.sp, id: prey.id, h: TAG_DY[prey.sp] * (prey.size || 1), animal: prey, aid: by.aid || 0, mine: by === 'player', venom: !!this.venomKill });   // its species index, id and body height (m): the soul that leaves it (spirit.js SoulPool); the record and the catcher's number (the stream, animalNet.js)
     return true;
   }
   lieStill(a, dt = 0) {   // the fall over CARRION.fall s, then on its side on the ground, a little up so the body is not under it
@@ -5608,7 +5646,12 @@ export class Animals {
       const L = 1.5 + r() * 2;
       a.sx = o.x; a.sz = o.z; a.tx = o.x + Math.sin(a.yaw) * L; a.tz = o.z + Math.cos(a.yaw) * L; a.u = 0; a.h = 0; a.state = VL_PAUSE; a.t = 1 + r() * 2;
     } else if (ID[s] === GS) { a.state = G_FEED; a.t = 2 + r() * 3; a.pose = 0; }
-    else if (ID[s] === LZ) {   // a new home on the ground here, facing its way
+    else if (REPT[a.sp] === 'snake') {   // a snake lies where it was left (coiled or stretched out), its cover kept unless far
+      if (far(a.cx, a.cz)) { a.cx = o.x; a.cz = o.z; }
+      a.hx = o.x; a.hz = o.z; a.state = SN_BASK; a.t = 10 + r() * 30; a.toCover = false;
+      a.coil = (o.pose || 0) > 0.5 ? 1 : 0; a.pose = clamp01(o.pose || 0); a.phase = o.phase ?? a.phase; a.amp = 0; a.bend = 0; a.sag = 0; a.vis = 1;
+      a.y = g;
+    } else if (ID[s] === LZ) {   // a new home on the ground here, facing its way
       a.site = { kind: 'ground', x: o.x, z: o.z, near: null };
       const h = a.home ||= { x: 0, y: 0, z: 0, nx: 0, ny: 1, nz: 0, fx: 0, fy: 0, fz: 1 };
       h.x = o.x; h.z = o.z; this.groundNormal(h.x, h.z, h); h.y = g;
@@ -5783,7 +5826,7 @@ export class Animals {
         return;
       }
       case 'miss': if (e.to === me) { this.catchPending = 0; this.onMiss?.(a); } return;
-      case 'hp': if (a && !a.dead) { a.hp = +e.hp; a.hpMax = +e.max || a.hpMax; a.hitAt = this.time; if (e.by === me) this.catchPending = 0; this.emit('hp', { animal: a, hp: a.hp, max: a.hpMax, aid: e.by, move: e.mv, mine: e.by === me }); } return;
+      case 'hp': if (a && !a.dead) { a.hp = +e.hp; a.hpMax = +e.max || a.hpMax; a.hitAt = this.time; if (e.by === me && +e.hp > 0) this.catchPending = 0;   /* (a fatal hit leaves the catch pending: the kill, or the carcass's message before it, is still this page's) */ this.emit('hp', { animal: a, hp: a.hp, max: a.hpMax, aid: e.by, move: e.mv, mine: e.by === me }); } return;
       case 'kick': if (a && e.to === me) this.onKicked?.(a); return;
       case 'gone': if (a && a.dead && !a.gone) this.bury(a); return;
       case 'flush': case 'turkeyFlush': case 'gsAlarm': {
@@ -5872,6 +5915,7 @@ export class Animals {
     const t0 = performance.now();
     dt = Math.max(0, dt);   // the page's first frame can arrive with a timestamp before the loop's start
     this.time += dt; this.hour = hour; this.searches = SEARCHES;
+    if (this.venomed?.size && !this.mirror) this.venomTick(dt);   // struck prey with a viper's venom in it (hurt)
     if (season !== this.season) { this.season = season; this.dirty = true; }
     const want = typeof window !== 'undefined' && window.__we?.playerSpecies;   // a species switch elsewhere, when one exists
     if (want && want !== this.observer) this.setObserver(want);

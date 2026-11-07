@@ -210,6 +210,38 @@ hardest gather on the tile. A drink game carries the species' rhythm (daily, oft
 - **Scarcity is per tile, not per animal.** A game's difficulty should also count the competitors' numbers (the
   population the rarity ranking already computes) against the hotspots' capacity.
 
+## The snakes' prey (2026-11-06)
+
+`DIET` and the calendar cover the static cast only, so a tile's own snake (a `fauna.json` slot with `reptile` `snake`)
+hunted nothing: Lamar's and Teton's garter snakes had no `predation` rows. `pipeline/games.py snake_predation` adds them
+by rule (`add_snake_predation`, in the games step and in `python -m pipeline.games tiles/<id>/games.json`). A snake
+swallows its prey whole, so its gape bounds it. It takes the tile's ground-living amphibians, rodents, shrews and
+lizards (the trait cards' class and order, never a bird), from 0.005 of its own mass up to its gape: 0.6 of its mass
+for the vipers, 1.0 for the boas and pythons, 0.25 for the rest (a colubrid such as a garter snake lives mostly on frogs,
+salamanders, voles and mice; Greene 1997, "Snakes: the evolution of mystery in nature"). The insects and worms of its
+diet have no bodies here. `relations.snake_prey_basis` records the rule.
+
+- **Lamar** (`utm12n_557_4964`): the garter snake takes the tiger salamander, the western toad, the Columbia spotted
+  frog, the montane and meadow voles, the western jumping mouse and the yellow-pine chipmunk.
+- **Teton** (`utm12n_514_4838`): the western toad, the spotted frog, the deer mouse and two chipmunks.
+- **Corcovado** (`utm17n_210_932`): the terciopelo takes the red-tailed squirrel. Corcovado's `games.json` gained the
+  desirability with this run; Lamar's and Teton's gained it too, since their `games.json` predates that step.
+
+The client reads these rows as any others (`animals.js buildHunts`: the strike, the sniff's wave, desirability). The
+small ones are now killable: the yellow-pine chipmunk, the shrew, the salamanders, the toad and the frog
+(`animals.js KILLABLE`).
+
+**The strike's damage** follows the hunt's rules (`strikes.js`): a third of the health of prey the snake's own size, which
+kills a frog or a vole outright. **Venom** (Viperidae and Elapidae: `strikes.js venomous`) does another half of the
+bite's share over 8 s after the strike (`animals.js venomTick`, on the host; everyone's bar every 0.5 s). The struck
+prey runs off with it. A kill by the venom, wherever the prey has run, is the striker's catch (`combat.js` takes the
+`kill` event marked `venom`). A garter snake's bite has no venom.
+
+**Open.** The trait cards carry no diet for the snakes, so the rule stands in for one. Corcovado has almost nothing a
+0.5 kg terciopelo can swallow that the client can kill: its only rodent under the gape is a tree squirrel, and tree
+squirrels are not killable. The trait card's 0.5 kg is light for *Bothrops asper*, whose adults weigh 1 to 6 kg. Its
+rodents, frogs and lizards were cut by the 40-slot cap.
+
 ## Next
 
 1. The client's `games.js`: one runtime per archetype, parametrised by `games.json`; the acorn game becomes the cache

@@ -208,6 +208,73 @@ def tile_masses(tile_dir: pathlib.Path) -> dict:
     return out
 
 
+# The snakes' prey (2026-11-06, Aaron: "Are there any tiles where we can be a snake"): a tile's own snake (fauna.json
+# `reptile` 'snake', a slot outside DIET) takes the tile's ground-living small vertebrates it can swallow whole: the
+# amphibians, the rodents and shrews, the lizards (trait cards' class and order), never a bird. A snake swallows its prey
+# whole, so its gape bounds the prey: up to SNAKE_GAPE of its own mass by family (the vipers and the constrictors take
+# heavy prey from ambush; a colubrid such as a garter snake mostly frogs, salamanders, voles and mice; Greene 1997,
+# "Snakes: the evolution of mystery in nature"), and no smaller than SNAKE_MIN of it (not the insects and worms of its
+# diet: no such bodies live here). The pairs go into relations.predation as DIET's do (the client's hunts, strikes and
+# desirability read them alike).
+ANIMAL_TRAITS = pathlib.Path(__file__).resolve().parent.parent / "library" / "animals" / "traits"
+SNAKE_GAPE = {"Viperidae": 0.6, "Boidae": 1.0, "Pythonidae": 1.0}
+SNAKE_GAPE_DEFAULT, SNAKE_MIN = 0.25, 0.005
+SNAKE_PREY_ORDERS = {"Rodentia", "Eulipotyphla", "Soricomorpha", "Anura", "Caudata"}
+
+
+def _traits(code: str) -> dict:
+    p = ANIMAL_TRAITS / f"{code.split(':')[0]}.json"
+    try:
+        return read_json(p) if p.exists() else {}
+    except Exception:
+        return {}
+
+
+def snake_predation(slots: list, present: list, masses: dict) -> list:
+    """[[snake, prey]] by the rule above. slots: fauna.json slots (dicts); present: the tile's other species codes;
+    masses: {code: kg}."""
+    snakes = [f for f in slots if isinstance(f, dict) and f.get("reptile") == "snake" and f.get("code")]
+    codes = sorted({f["code"] for f in slots if isinstance(f, dict) and f.get("code")} | set(present))
+    birds = {f["code"] for f in slots if isinstance(f, dict) and f.get("bird")}
+    out = []
+    for s in snakes:
+        c, ts = s["code"], _traits(s["code"])
+        M = masses.get(c) or s.get("mass_kg") or ts.get("mass_kg")
+        if not M:
+            continue
+        fam = (ts.get("taxonomy") or {}).get("family")
+        gape = SNAKE_GAPE.get(fam, SNAKE_GAPE_DEFAULT)
+        for q in codes:
+            if q == c or q in birds:
+                continue
+            tq = _traits(q); tx = tq.get("taxonomy") or {}
+            m = masses.get(q) or tq.get("mass_kg")
+            if not m or not (SNAKE_MIN * M <= m <= gape * M):
+                continue
+            lizard = tx.get("class") == "Squamata" and tq.get("body_plan") not in ("snake", None)
+            if tx.get("class") == "Aves" or not (tx.get("order") in SNAKE_PREY_ORDERS or tx.get("class") == "Amphibia" or lizard):
+                continue
+            out.append([c, q])
+    return out
+
+
+def add_snake_predation(doc: dict, tile_dir: pathlib.Path) -> dict:
+    """The snakes' pairs (snake_predation) added to relations.predation, and their species rows' prey (idempotent)."""
+    fauna = tile_dir / "client" / "fauna.json"
+    slots = (read_json(fauna).get("slots") or []) if fauna.exists() else []
+    if not any(isinstance(f, dict) and f.get("reptile") == "snake" for f in slots):
+        return doc
+    sp_file = tile_dir / "species" / "species.json"
+    present = [s["code"] for s in read_json(sp_file) if s.get("present", True)] if sp_file.exists() else []
+    rel = doc.setdefault("relations", {}); pred = rel.setdefault("predation", [])
+    for pair in snake_predation(slots, present, tile_masses(tile_dir)):
+        if pair not in pred:
+            pred.append(pair)
+    rel["snake_prey_basis"] = (f"a snake takes ground-living amphibians, rodents, shrews and lizards from {SNAKE_MIN:g} of its mass up to "
+                               f"its gape: {', '.join(f'{k} {v:g}' for k, v in SNAKE_GAPE.items())}, else {SNAKE_GAPE_DEFAULT:g} of its mass (pipeline/games.py)")
+    return doc
+
+
 def add_desirability(doc: dict, tile_dir: pathlib.Path) -> dict:
     rel = doc.setdefault("relations", {})
     rel["desirability"] = desirability(rel.get("predation") or [], rel.get("forage") or [], tile_masses(tile_dir), DIET)
@@ -371,6 +438,7 @@ def derive_games(tile: Tile) -> dict:
            "resources": {r: {s: {"scarcity": v["scarcity"], "mean": v["mean"], "hotspots": len(v["hotspots"])} for s, v in d.items()} for r, d in rasters.items()},
            "species": species}
     add_plays(out)
+    add_snake_predation(out, tile.path("games.json").parent)
     add_desirability(out, tile.path("games.json").parent)
     write_json(tile.path("games.json"), out)
     n = sum(len(s["games"]) for s in species.values())
@@ -381,11 +449,11 @@ def derive_games(tile: Tile) -> dict:
             "plant_relations": sum(1 for e in forage if e[0] in codes)}
 
 
-if __name__ == "__main__":   # the plays and the desirability added to games.json files already derived (no rasters needed): python -m pipeline.games tiles/*/games.json
+if __name__ == "__main__":   # the plays, the snakes' prey and the desirability added to games.json files already derived (no rasters needed): python -m pipeline.games tiles/*/games.json
     import sys
     for path in sys.argv[1:]:
         p = pathlib.Path(path)
-        write_json(p, add_desirability(add_plays(read_json(p)), p.parent))
+        write_json(p, add_desirability(add_snake_predation(add_plays(read_json(p)), p.parent), p.parent))
         d = read_json(p)
         print(path, "plays:", d["plays"], "desirability:", len(d["relations"]["desirability"]), "eaters")
 

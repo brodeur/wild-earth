@@ -255,3 +255,25 @@ class TestDesirability(unittest.TestCase):
         self.assertEqual(max(d["vole"][0], d["quail"][0]), 1.0)          # the best prey is 1 ...
         self.assertEqual(d["berry"][0], 1.0)                            # ... and so is the best plant
         self.assertEqual(steps.STEPS["games"].version, "2")             # the games step's version bumped with it
+
+
+class TestSnakePrey(unittest.TestCase):
+    """pipeline/games.py snake_predation: a tile's own snake takes what it can swallow (2026-11-06)."""
+    def test_gape_and_kinds(self):
+        from pipeline.games import snake_predation
+        slots = [{"code": "thamnophis_elegans", "reptile": "snake", "mass_kg": 0.4},
+                 {"code": "microtus_montanus", "mass_kg": 0.0363}, {"code": "rana_luteiventris", "mass_kg": 0.02},
+                 {"code": "tamias_minimus", "mass_kg": 0.1353},                  # a rodent over a colubrid's gape (0.25 of 0.4 kg)
+                 {"code": "pica_hudsonia", "mass_kg": 0.177, "bird": True},     # a bird: never
+                 {"code": "bison_bison", "mass_kg": 579}]
+        pairs = snake_predation(slots, [], {})
+        self.assertIn(["thamnophis_elegans", "microtus_montanus"], pairs)
+        self.assertIn(["thamnophis_elegans", "rana_luteiventris"], pairs)
+        prey = {q for _, q in pairs}
+        self.assertNotIn("tamias_minimus", prey)
+        self.assertNotIn("pica_hudsonia", prey)
+        self.assertNotIn("bison_bison", prey)
+
+    def test_no_snake_no_pairs(self):
+        from pipeline.games import snake_predation
+        self.assertEqual(snake_predation([{"code": "microtus_montanus", "mass_kg": 0.0363}], [], {}), [])
