@@ -6774,3 +6774,34 @@ changes. The client asks for it first (15 s), and a host without the endpoint (a
 one as before, now 8 s each. Measured on the local server with the cache off: one request, 193 species from the
 library, none built-in, also under a throttled 4 Mbps / 150 ms network (title up at 12.9 s there).
 `tests/test_species_bundle.py` covers the bundle (every listed id, the files unchanged, gzip, plain, 304).
+
+## 2026-11-06: Embody ends in the body (branch claude/embody-enter)
+
+Aaron: "When in spirit form when I click on a target and then press embody, the spirit should travel all the way to the
+body as it does, but then enter the body - switch the avatar to the animal." The autopilot flew to the animal and hung
+there: close in it held the spirit at least 3 m over the ground (the viewing flight's floor) while the become waited for
+it to come within two body radii, which only a big deer's bounding sphere allowed; and it eased its speed to the distance,
+so it could never close on an animal that ran. pilot.js now:
+
+- **Flies into it**: close in the height it wants is the body's own (the spirit's floor, 0.8 m, holds it over the
+  ground), and contact is a touch's (spirit.js: TOUCH_R 2.5 m of the body, TOUCH_AIR 4 m of one in the air, plus half the
+  body's size). Contact ends exactly as a touch does, in `spirit.enter` for that individual: the take (on a mirror page
+  the host's handshake: animals.take asks the host, which takes it out of everyone's world and holds it for that page),
+  the camera's blend, the wisp diving in, then the player is that animal.
+- **Homes until contact**: the animal's speed is measured frame to frame and the spirit flies 6 m/s faster than it (up to
+  65 m/s) and turns twice as hard while chasing.
+- **That one, or none**: the fallback to the nearest of the species is gone (the target is the animal the player chose);
+  if that one cannot be taken, a word says so. Embody is greyed for an animal with no body to play (`animals.playable`,
+  take's own test).
+- **Stops cleanly**: "the deer died" when it dies on the way (a carcass stays in the world, so it was flown to before),
+  "has gone" when it despawns, "lost sight of the deer" when the spirit has had no line to it from its own place (not the
+  chase camera's, which runs through the crowns the spirit dives into) for 2.5 s with the ground between, or 6 s with only
+  leaves between (a deer running under the oaks is seen in glimpses); within 25 m the line is not judged, and an animal
+  never yet seen on this flight (a chip's pick behind a ridge) cannot be lost. Steering cancels ("embody called off") and
+  keeps the target; Escape lets go of the target and ends the flight. Neither embodies anything.
+
+Seen on the home tile (headless Chrome over CDP): a deer 151 m off, contact at 5.4 s, playing as that deer (its id) from
+6.5 s; a deer startled to a gallop (8.5 to 12 m/s) as Embody began, caught at 4.4 s and played; the target killed at 1.5 s
+("the deer died"), Escape at 1.5 s, W at 1.5 s ("embody called off", target kept): no embody; on a mirror page a deer 100 m
+off embodied at 6.1 s while the host held it for that page. Before the line test moved to the spirit's place and split
+ground from leaves, two galloping deer were dropped at 37-39 m as "lost sight" under the oaks.

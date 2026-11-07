@@ -130,7 +130,7 @@ const strikeSlot = (m, i) => on(m.name, String(i + 1), c => c.ground.strike?.kin
     press: (c, down) => { if (down) c.combat.use(m.key); }, title: `${i + 1}: ${m.title} (its own cooldown ${m.cd} s)` });
 // The spirit's one action while it holds a target (owner, 2026-11-06: "there is only one "action" [ Embody ] with the model
 // of the animal as the icon"): the spirit flies itself into that animal and becomes it (pilot.js embody).
-const EMBODY = on('embody', '1', c => !!c.pilot?.embodying, { show: c => !!c.quarry?.target, icon: c => c.quarry.target ? c.quarry.animals.speciesList()[c.quarry.target.sp] : null,
+const EMBODY = on('embody', '1', c => !!c.pilot?.embodying, { show: c => !!c.quarry?.target, oor: c => !c.pilot?.embodying && c.quarry.animals.playable?.(c.quarry.target) === false, icon: c => c.quarry.target ? c.quarry.animals.speciesList()[c.quarry.target.sp] : null,
   press: (c, down) => { if (down) c.pilot?.embody(); }, title: '1 (or E): fly into this animal and become it' });
 // The fliers' moves (flight.js on flierControl's numbers, and the raven's own): aloft, and on its feet.
 const aloft = c => !c.flight.landed, afoot = c => !!c.flight.landed;
