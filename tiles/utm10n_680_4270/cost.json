@@ -18,10 +18,44 @@
    "failed": [
     "water_imagery"
    ]
+  },
+  {
+   "started_at": "2026-11-07T01:41:05Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T01:41:05Z",
+     "steps_run": [],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T01:41:05Z"
+    }
+   ],
+   "ended_at": "2026-11-07T01:41:05Z",
+   "failed": [
+    "ground_albedo"
+   ],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T01:41:31Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T01:41:31Z",
+     "steps_run": [],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T01:41:31Z"
+    }
+   ],
+   "ended_at": "2026-11-07T01:41:31Z",
+   "failed": [
+    "ground_albedo"
+   ],
+   "refused": []
   }
  ],
  "client": {
-  "bytes": 2368114,
+  "bytes": 2368233,
   "files": 13,
   "largest": {
    "client/weather.json": 633557,
@@ -29,7 +63,7 @@
    "games.json": 397983,
    "client/species_prior.json": 228620,
    "client/species_mix.json": 224404,
-   "manifest.json": 139005,
+   "manifest.json": 139124,
    "client/ground_classes.json": 25891,
    "perception.json": 22695,
    "locomotion.json": 20576,
@@ -40,5 +74,5 @@
   "note": "every file under client/ and the tables the viewer fetches; an upper bound (the present-day texture is fetched only on request)"
  },
  "totals": {},
- "updated_at": "2026-11-06T18:49:18Z"
+ "updated_at": "2026-11-07T01:41:31Z"
 }

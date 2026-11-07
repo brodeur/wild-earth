@@ -42,6 +42,9 @@ const GROUND_HUE = GROUND_PARAMS?.get('ground') === 'physical';
 const GROUND_PHYSICAL = GROUND_PARAMS?.get('ground') !== 'display';   // Aaron, 2026-11-06: "Physical, re-tune exposure"
 export const groundLook = {
   physical: GROUND_PHYSICAL, gain: new THREE.Vector3(1, 1, 1), basis: null,
+  // the ground's saturation about its luminance (pipeline/ground_albedo.py `saturation`: Sentinel-2's chroma strength over
+  // the photo's, capped at 1), with the luminance factor only: the per-channel factor takes Sentinel-2's colour whole
+  sat: { value: 1 },
   exposureK: GROUND_PHYSICAL ? (+(GROUND_PARAMS?.get('gexp') || 0) || EXPOSURE_K) : 1,
 };
 // The tile's factor (Atmosphere's constructor, the first thing a world builds); 1 without the layer or in display mode.
@@ -51,6 +54,8 @@ export function setGroundLook(tile) {
   groundLook.gain.set(...(on ? g : [1, 1, 1]));
   // the factor's luminance on every channel (today's hue kept), unless ?ground=physical asks for the per-channel factor
   if (on && !GROUND_HUE) { const y = L.gain_luminance || (0.2126 * g[0] + 0.7152 * g[1] + 0.0722 * g[2]); groundLook.gain.set(y, y, y); }
+  const sOv = +(GROUND_PARAMS?.get('gsat') || NaN);   // ?gsat=<s> tries another saturation
+  groundLook.sat.value = on && !GROUND_HUE ? (Number.isFinite(sOv) ? sOv : (L.saturation > 0.2 && L.saturation <= 1 ? L.saturation : 1)) : 1;
   groundLook.basis = on ? L.basis : null;
   return groundLook;
 }

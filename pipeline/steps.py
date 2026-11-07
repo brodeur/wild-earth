@@ -613,7 +613,7 @@ STEPS: dict[str, Step] = {s.name: s for s in [
          ["client.texture_imagery"], doc="the imagery with the human footprint removed", stage=B),
     Step("substrate", "1", ["substrate"], ["ground", "water", "dem", "lidar", "naip", "landcover", "erase", "terrain", "ice"],
          _substrate, ["client.substrate", "client.substrate_classes"], doc="lithology, cliff morphology, exposed rock", stage=B),
-    Step("ground_albedo", "1", ["ground_albedo"], ["seasons", "erase", "terrain"], _ground_albedo, ["client.ground_albedo"], [],
+    Step("ground_albedo", "2", ["ground_albedo"], ["seasons", "erase", "terrain"], _ground_albedo, ["client.ground_albedo"], [],
          doc="the ground texture's factor to surface reflectance, fitted against the Sentinel-2 composite", stage=B),
     Step("weather", "1", ["fetch_weather"], [], _weather, ["client.weather"], ["open_meteo"],
          doc="last year's hourly weather at the tile centre", stage=B),

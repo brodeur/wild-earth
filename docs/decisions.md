@@ -7006,3 +7006,46 @@ Where the brief met the game:
     head-down grazer). The moose is not due. 797 credits left, 300 in reserve.
   - **Photo choice:** a head-down pose is not separable from the mask's silhouette (two measures, four labelled
     head-down photos inside the head-up range): not adopted.
+- **The due texture jobs, judged by the acceptance rule** (30 credits, approved; balance 797 -> 767; jobs in
+  library/animals/jobs). Each ran the rule's order for a texture fix (the check's correction as a text re-refine,
+  then a photo texture only if that fails; 10 credits a species allowed). *Badger* (Lamar): the new texture has the
+  white stripes; the tail still reads ringed (3 alternations), so the rule still rejects it and the slot keeps its
+  stand-in, as before. *Leopard tortoise*: the re-refine was no better (flanks 8 % in the shell's ground colours), the
+  old model kept and still drawn by its override. *Nile monitor*: the new texture is better (the blackish underside
+  bands now present; the yellowish-green head spots still missing), kept; the recorded override named the old job, so
+  it was carried to the new one with the same reason (otherwise the slot would have fallen to the fence lizard). Next
+  for both reptiles: a free photo search, then a photo texture (10 each).
+- **Twig shrubs up close: big sagebrush as a branching shrub, not a pale dome** (`client/src/shrubfield.js`
+  TwigShrubs; `treegen.js` shrubFrame, read-only). A foothill shrub whose record gives small leaves
+  (`foliage.leaf_size_m` <= 0.025), an open crown (`targets.porosity` >= 0.25) and a low height (`height_m[1]` <=
+  1.6 m) is a twig shrub: big sagebrush, snowberry, Sierra gooseberry (mountain mahogany and red huckleberry are too
+  tall: mahogany as a few tufts on long bare stems read worse than its dome; coyote brush, buckbrush and the chaparral
+  are not open enough). Within a per-plant radius of 9-13 m (the impostor's own hashed hand-over, so each plant is
+  drawn once) it is its treegen skeleton: a short trunk splitting into crooked stems, branches and twigs in the
+  record's bark colours, a leaf tuft at each twig end, enough tufts for the record's porosity; each leaf lit at its
+  own angle, the light inside the crown falling off with depth by Beer's law from the porosity, the sky partly
+  blocked; twigs drawn within 3.5 m, the trunk and stems beyond; seasons, flowers, bare winter crowns, wind and the
+  forager's glow as the impostor's. Past the hand-over the impostor is dimmed to the 3D crowns' measured mean (sun
+  x0.58, sky x0.68), a little smaller. The record's colour (linear 0.24 / 0.26 / 0.19) is already sage's measured
+  0.2-0.3 reflectance: the near-white came from the impostor lighting the whole crown as one sunlit surface. No
+  species data changed. Cost at Lamar's eye pose about +3.8 ms (25.4 -> 29.2 ms, interleaved A/B under heavy load;
+  the shrub field 2 -> 5.2 ms). Notes lamar-sage/ (Lamar, Teton, home before/after; home unchanged but snowberry
+  and gooseberry domes a little darker). Open: sunlit tufts facing the sun still pale silver; crowns a little
+  top-heavy; past 13 m still a dome, the porous-to-smooth hand-over visible from above; the ground keeps the
+  impostor's solid shadow (shadows.js); every twig shrub takes sage's three-toothed leaf (the record's `leaf_shape`
+  says oval, from its coyote-brush template).
+- **The ground's saturation measured: Sentinel-2's chroma strength over the photo's, capped at 1, the photo's hue kept**
+  (`pipeline/ground_albedo.py` `saturation`, step version 2; atmosphere.js `groundLook.sat`, terrain.js
+  `groundRefl`/`groundSat`, grass.js palettes and ground match, forbs.js, litter.js; `?gsat=` tries another). With the
+  luminance factor (Aaron's choice of today's hue) the ground kept NAIP's colour balance and its saturation: Lamar's
+  top-down rendered at chroma 21.3 against a fair 14.6. The fit, over the same open pixels as the gain: sum |d_R| /
+  sum |d_T| (d = colour less its Rec. 601 luminance, after the luminance factor), the client scaling the photo's chroma
+  by it about the luminance, so the hue stays the photo's. The least-squares projection (`saturation_fit`) was tried
+  first and refused: it counts the hue's disagreement too and gave the Hoh 0.26 (its open ground is 1 % river bars)
+  against a strength ratio of 0.98. Capped at 1: every probe renders at or above its fair chroma. Borrowers borrow it.
+  Fits: Lamar 0.76, Grand Canyon 0.86, Corcovado 0.90, Lofoten 0.97, Danum 0.97, Hoh 0.98, Serengeti 1.00, home,
+  Teton and Manu 1 (capped from 1.23, 1.30, 1.26). The judge (L_render vs L_fair, chroma render vs fair,
+  overlap_fair; before -> after, the sage change in the same run): Lamar 46.5/48.3, 21.3/14.6, 0.395 -> 46.1/48.3,
+  16.2/14.6, 0.365; Grand Canyon 53.3/64.3, 15.5/13.3, 0.220 -> 53.4/64.3, 13.4/13.3, 0.261; Lofoten 12.2 -> 11.9
+  (fair 12.2), 0.655 -> 0.666; the rest within 0.01. Lamar's overlap slips a little as its chroma closes: what is left
+  is the hue (the photo greener than the composite's olive), which the luminance factor keeps by choice.

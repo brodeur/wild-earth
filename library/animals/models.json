@@ -1045,7 +1045,7 @@
     "library/animals/jobs/stigmochelys_pardalis/01a1b0c0-4888-7401-88fa-0e7be6ad0154",
     "library/animals/jobs/stigmochelys_pardalis/01a1b0ec-0d1f-718c-b98a-bbc2e6f285cf"
    ],
-   "credits": 50,
+   "credits": 60,
    "attempts": 1,
    "built": "2026-11-06",
    "build": "tools/build_reptile.py",
@@ -1113,6 +1113,34 @@
      "kept": "new",
      "error": null,
      "texture_prompt": "Natural colours and markings of a wild adult Leopard tortoise (Stigmochelys pardalis) as seen in Serengeti, Mara Region, Tanzania: the shell's scutes, the skin of the head and legs, in their true colours. Coloured as the adult is described: shell and body yellow with black blotches; head yellow, tan, brown; legs yellow, tan, brown. Correct this: shell yellow, not cinnamon or orange; belly and underparts yellow, not cinnamon or orange. Realistic, evenly lit albedo with no baked shadows or highlights; eyes, beak and claws in their true colours."
+    },
+    {
+     "at": "2026-11-07T02:15:57+00:00",
+     "job": "library/animals/jobs/stigmochelys_pardalis/01a1b3ca-8c29-740f-9a9b-d6834a81fbe1",
+     "credits": 10,
+     "before": {
+      "ok": false,
+      "score": 0.43,
+      "fails": [
+       "upperparts: only 9% in its ground colours, the rest in its markings' colours"
+      ]
+     },
+     "after": {
+      "ok": false,
+      "score": 0.374,
+      "fails": [
+       "flanks: only 8% in its ground colours, the rest in its markings' colours",
+       "flanks 17% matches",
+       "only 37% of the model in described colours"
+      ],
+      "off": {
+       "flanks": "orange",
+       "underparts": "rufous"
+      }
+     },
+     "kept": "old",
+     "error": null,
+     "texture_prompt": "Natural colours and markings of a wild adult Leopard tortoise (Stigmochelys pardalis) as seen in Serengeti, Mara Region, Tanzania: the shell's scutes, the skin of the head and legs, in their true colours. Coloured as the adult is described: shell and body yellow with black blotches; head yellow, tan, brown; legs yellow, tan, brown. Correct this: belly and underparts yellow, not golden. Realistic, evenly lit albedo with no baked shadows or highlights; eyes, beak and claws in their true colours."
     }
    ],
    "colour_check": {
@@ -1292,9 +1320,10 @@
    "glb": "client/assets/fauna/varanus_niloticus.glb",
    "jobs": [
     "library/animals/jobs/varanus_niloticus/01a1b0b6-31a2-777c-82da-3ae68d038d1a",
-    "library/animals/jobs/varanus_niloticus/01a1b0bf-2b22-7473-8384-e7813b1d714e"
+    "library/animals/jobs/varanus_niloticus/01a1b0bf-2b22-7473-8384-e7813b1d714e",
+    "library/animals/jobs/varanus_niloticus/01a1b3cb-8169-74a0-aca0-3972fd869898"
    ],
-   "credits": 40,
+   "credits": 50,
    "attempts": 1,
    "built": "2026-11-06",
    "build": "tools/build_reptile.py",
@@ -1330,15 +1359,39 @@
      },
      "kept": "old",
      "error": null
+    },
+    {
+     "at": "2026-11-07T02:17:00+00:00",
+     "job": "library/animals/jobs/varanus_niloticus/01a1b3cb-8169-74a0-aca0-3972fd869898",
+     "credits": 10,
+     "before": {
+      "ok": false,
+      "score": 1.0,
+      "fails": [
+       "head: no yellowish-green spots (0.0%)",
+       "underparts: no blackish bands (0.2%)"
+      ]
+     },
+     "after": {
+      "ok": false,
+      "score": 1.0,
+      "fails": [
+       "head: no yellowish-green spots (0.0%)"
+      ],
+      "off": {}
+     },
+     "kept": "new",
+     "error": null,
+     "texture_prompt": "Natural skin and scale colours and markings of a wild adult Nile monitor (Varanus niloticus) as seen in Serengeti, Mara Region, Tanzania. Coloured as the adult is described: body brownish, greenish-gray; back greyish-brown with greenish-yellow, blackish, yellowish spots with yellow lines; belly and underparts ochre-yellow, creamy-yellow, yellowish with blackish bands; head yellowish-green spots; neck ochre-yellow, creamy-yellow; legs yellowish spots; tail greenish-yellow bars with blackish spots. Correct this: head with yellowish-green spots; belly and underparts with blackish bands. Realistic, evenly lit albedo with no baked shadows or highlights; the back, flanks, belly, legs and tail in their true colours, eyes and claws in their true colours."
     }
    ],
    "colour_check": {
     "ok": false,
     "score": 1.0,
     "fails": [
-     "head: no yellowish-green spots (0.0%)",
-     "underparts: no blackish bands (0.2%)"
-    ]
+     "head: no yellowish-green spots (0.0%)"
+    ],
+    "off": {}
    },
    "verdicts": [
     {
@@ -1352,10 +1405,16 @@
    "override": {
     "verdict": "rejected",
     "serve": true,
-    "model": "library/animals/jobs/varanus_niloticus/01a1b0bf-2b22-7473-8384-e7813b1d714e",
+    "model": "library/animals/jobs/varanus_niloticus/01a1b3cb-8169-74a0-aca0-3972fd869898",
     "by": "iteration 5's record (docs/decisions.md 2026-11-06 iteration 5; models.json verdicts), written as an override stage on 2026-11-06 (iteration 10)",
-    "why": "the colours fail (no yellow spots, which the description gives; the re-refine came out grey and was not kept (docs/decisions.md 2026-11-06 iteration 5)); drawn all the same because no better came and the slot's stand-in is the western fence lizard (sceloporus_occidentalis, its kin in tiles/utm36s_698_9724/client/fauna.json): a monitor without its yellow spots is nearer the animal than a fence lizard. Lift it when the due texture job passes the rule.",
-    "date": "2026-11-06"
+    "why": "the colours fail (no yellow spots, which the description gives; the re-refine came out grey and was not kept (docs/decisions.md 2026-11-06 iteration 5)); drawn all the same because no better came and the slot's stand-in is the western fence lizard (sceloporus_occidentalis, its kin in tiles/utm36s_698_9724/client/fauna.json): a monitor without its yellow spots is nearer the animal than a fence lizard. Lift it when the due texture job passes the rule. Carried on 2026-11-06 to the re-textured model 01a1b3cb-8169-74a0-aca0-3972fd869898 (the check's correction refine): it fails one feature where the old failed two (the blackish underside bands now present; the yellowish-green head spots still missing).",
+    "date": "2026-11-06",
+    "history": [
+     {
+      "model": "library/animals/jobs/varanus_niloticus/01a1b0bf-2b22-7473-8384-e7813b1d714e",
+      "date": "2026-11-06"
+     }
+    ]
    },
    "gate": {
     "job": "library/animals/jobs/varanus_niloticus/01a1b0bf-2b22-7473-8384-e7813b1d714e",
@@ -1367,12 +1426,12 @@
    "acceptance": {
     "format": 1,
     "at": "2026-11-06",
-    "model": "library/animals/jobs/varanus_niloticus/01a1b0bf-2b22-7473-8384-e7813b1d714e",
-    "glb_sha1": "9817bedfebaf45be4cc9b0f2247261175a6fbf48",
+    "model": "library/animals/jobs/varanus_niloticus/01a1b3cb-8169-74a0-aca0-3972fd869898",
+    "glb_sha1": "01c24ac0c479d68503df7806ef4256a7fd03b579",
     "rule": {
      "decision": "rejected",
      "why": [
-      "check: head: no yellowish-green spots (0.0%); underparts: no blackish bands (0.2%)"
+      "check: head: no yellowish-green spots (0.0%)"
      ],
      "stages": {
       "model": {
@@ -1380,19 +1439,17 @@
       },
       "gate": {
        "ok": true,
-       "by": "rebuilt with today's tools/build_reptile.py on 2026-11-06"
+       "by": "built: the GLB exists only if the build's gate passed when it was built"
       },
       "check": {
        "ok": false,
        "score": 1.0,
        "fails": [
-        "head: no yellowish-green spots (0.0%)",
-        "underparts: no blackish bands (0.2%)"
+        "head: no yellowish-green spots (0.0%)"
        ],
        "geometry": [],
        "texture": [
-        "head: no yellowish-green spots (0.0%)",
-        "underparts: no blackish bands (0.2%)"
+        "head: no yellowish-green spots (0.0%)"
        ],
        "params": "library/animals/check_fit.json"
       },
@@ -1407,7 +1464,7 @@
      "verdict": "rejected",
      "serve": true,
      "by": "iteration 5's record (docs/decisions.md 2026-11-06 iteration 5; models.json verdicts), written as an override stage on 2026-11-06 (iteration 10)",
-     "why": "the colours fail (no yellow spots, which the description gives; the re-refine came out grey and was not kept (docs/decisions.md 2026-11-06 iteration 5)); drawn all the same because no better came and the slot's stand-in is the western fence lizard (sceloporus_occidentalis, its kin in tiles/utm36s_698_9724/client/fauna.json): a monitor without its yellow spots is nearer the animal than a fence lizard. Lift it when the due texture job passes the rule.",
+     "why": "the colours fail (no yellow spots, which the description gives; the re-refine came out grey and was not kept (docs/decisions.md 2026-11-06 iteration 5)); drawn all the same because no better came and the slot's stand-in is the western fence lizard (sceloporus_occidentalis, its kin in tiles/utm36s_698_9724/client/fauna.json): a monitor without its yellow spots is nearer the animal than a fence lizard. Lift it when the due texture job passes the rule. Carried on 2026-11-06 to the re-textured model 01a1b3cb-8169-74a0-aca0-3972fd869898 (the check's correction refine): it fails one feature where the old failed two (the blackish underside bands now present; the yellowish-green head spots still missing).",
      "date": "2026-11-06",
      "source": "override"
     },
@@ -1417,7 +1474,7 @@
     "due": {
      "job": "refine with the check's correction (or find reference photos first: no credits)",
      "credits": 10,
-     "why": "texture: head: no yellowish-green spots (0.0%); underparts: no blackish bands (0.2%)"
+     "why": "texture: head: no yellowish-green spots (0.0%)"
     }
    }
   },
@@ -1897,9 +1954,10 @@
    "jobs": [
     "library/animals/jobs/taxidea_taxus/01a1b130-f8b7-75c4-87d5-a5a80d06a89b",
     "library/animals/jobs/taxidea_taxus/01a1b132-88e7-7492-a87d-4d50af4d94a5",
-    "library/animals/jobs/taxidea_taxus/01a1b174-5505-73f2-b788-cf2fa3ecdeb2"
+    "library/animals/jobs/taxidea_taxus/01a1b174-5505-73f2-b788-cf2fa3ecdeb2",
+    "library/animals/jobs/taxidea_taxus/01a1b3c9-9ae9-72c1-99a8-cc796eac5e55"
    ],
-   "credits": 120,
+   "credits": 130,
    "attempts": 4,
    "built": "2026-11-06",
    "build": "tools/build_quadruped.py",
@@ -1908,16 +1966,17 @@
     "ok": false,
     "score": 1.0,
     "fails": [
-     "body: no white stripes (0.2%)",
-     "tail ringed (2 alternations), described without rings"
-    ]
+     "tail ringed (3 alternations), described without rings"
+    ],
+    "off": {}
    },
    "judge": {
     "verdict": "rejected",
     "why": "no usable model: three image-to-3D meshes from photos (commons_24504952 and inat_551991998 walking, a forefoot lifted: the leg gate refused both; inat_249961448 lying down: a legless lump the gate then let through, refused now by the floor-gap gate) and the text model's raccoon tail and mask; the slot keeps its stand-in",
     "by": "the judge (Claude, from the model's render against the species' description)",
     "date": "2026-11-06",
-    "model": "library/animals/jobs/taxidea_taxus/01a1b174-5505-73f2-b788-cf2fa3ecdeb2"
+    "model": "library/animals/jobs/taxidea_taxus/01a1b174-5505-73f2-b788-cf2fa3ecdeb2",
+    "stale": "re-textured from library/animals/jobs/taxidea_taxus/01a1b3c9-9ae9-72c1-99a8-cc796eac5e55; the judge has not looked again"
    },
    "photo": [
     {
@@ -2045,12 +2104,12 @@
    "acceptance": {
     "format": 1,
     "at": "2026-11-06",
-    "model": "library/animals/jobs/taxidea_taxus/01a1b132-88e7-7492-a87d-4d50af4d94a5",
-    "glb_sha1": "0f631575a38867f396b1326bd720bf9ef236f2e3",
+    "model": "library/animals/jobs/taxidea_taxus/01a1b3c9-9ae9-72c1-99a8-cc796eac5e55",
+    "glb_sha1": "80c580fce80062491081e43611e3146af1ef9daa",
     "rule": {
      "decision": "rejected",
      "why": [
-      "check: body: no white stripes (0.2%); tail ringed (2 alternations), described without rings"
+      "check: tail ringed (3 alternations), described without rings"
      ],
      "stages": {
       "model": {
@@ -2058,19 +2117,17 @@
       },
       "gate": {
        "ok": true,
-       "by": "rebuilt with today's tools/build_quadruped.py on 2026-11-06"
+       "by": "built: the GLB exists only if the build's gate passed when it was built"
       },
       "check": {
        "ok": false,
        "score": 1.0,
        "fails": [
-        "body: no white stripes (0.2%)",
-        "tail ringed (2 alternations), described without rings"
+        "tail ringed (3 alternations), described without rings"
        ],
        "geometry": [],
        "texture": [
-        "body: no white stripes (0.2%)",
-        "tail ringed (2 alternations), described without rings"
+        "tail ringed (3 alternations), described without rings"
        ],
        "params": "library/animals/check_fit.json"
       },
@@ -2090,9 +2147,35 @@
      "job": "refine with the photo as texture reference",
      "photo": "commons_116358007",
      "credits": 10,
-     "why": "texture: body: no white stripes (0.2%); tail ringed (2 alternations), described without rings"
+     "why": "texture: tail ringed (3 alternations), described without rings"
     }
-   }
+   },
+   "recolour": [
+    {
+     "at": "2026-11-07T02:14:55+00:00",
+     "job": "library/animals/jobs/taxidea_taxus/01a1b3c9-9ae9-72c1-99a8-cc796eac5e55",
+     "credits": 10,
+     "before": {
+      "ok": false,
+      "score": 1.0,
+      "fails": [
+       "body: no white stripes (0.2%)",
+       "tail ringed (2 alternations), described without rings"
+      ]
+     },
+     "after": {
+      "ok": false,
+      "score": 1.0,
+      "fails": [
+       "tail ringed (3 alternations), described without rings"
+      ],
+      "off": {}
+     },
+     "kept": "new",
+     "error": null,
+     "texture_prompt": "Natural coat colours and markings of a wild adult American badger (Taxidea taxus) as seen in Park County, Wyoming, United States. Coloured as the adult is described: body brown, black, white, brown-tan; back grayish, reddish with white stripes; flanks grayish, reddish; head black, white, brown, blackish with white stripes with black patches; neck whitish. Correct this: flanks with white stripes; back with white stripes; the tail plain, no rings or bands. Realistic, evenly lit albedo with no baked shadows or highlights, eyes and nose and hooves or paws in their true colours."
+    }
+   ]
   },
   "thamnophis_elegans": {
    "kind": "snake",

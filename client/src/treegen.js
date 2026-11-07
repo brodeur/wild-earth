@@ -1780,6 +1780,23 @@ export function treeWood(name, seed = 1) {
   return w;
 }
 
+// shrubFrame(speciesId, seed) -> { H, stems, twigs, tips, cluster }: the whole wood of a plant (every stem of every level,
+// and the close tier's twigs) and where its close tier hangs its foliage (the close cards' centres `c` and directions `d`),
+// in buildTree's frame, as plain arrays (pts xyz per point, rad per point). For the shrub field's twig shrubs
+// (shrubfield.js TwigShrubs, 2026-11-06), which draw a small porous shrub up close as its own branching with leaf tufts at
+// the twig ends. Read from the cached skeleton, so it grows nothing and changes nothing drawn. Not cached itself.
+export function shrubFrame(name, seed = 1) {
+  const id = resolveSpecies(name); if (!id) return null;
+  const sk = skeleton(specForSeed(LIBRARY[id], seed), seed);
+  if (sk.fronds) return null;
+  const xf = new THREE.Matrix4().makeRotationY(sk.leanDir).multiply(new THREE.Matrix4().makeRotationZ(sk.lean)), v = new THREE.Vector3();
+  const flat = s => { const pts = new Float32Array(s.pts.length * 3); s.pts.forEach((p, i) => { v.copy(p).applyMatrix4(xf); pts[i * 3] = v.x; pts[i * 3 + 1] = v.y; pts[i * 3 + 2] = v.z; }); return { level: s.level, dead: !!s.dead, pts, rad: Float32Array.from(s.rad) }; };
+  const dirOf = d => { v.copy(d).transformDirection(xf); return [v.x, v.y, v.z]; };
+  return { H: sk.H, stems: sk.stems.filter(s => s.pts.length > 1).map(flat), twigs: (sk.twigs || []).filter(s => s.pts.length > 1).map(flat),
+    tips: (sk.closeCards || []).map(c => { v.copy(c.c).applyMatrix4(xf); return { c: [v.x, v.y, v.z], d: c.d ? dirOf(c.d) : [0, 1, 0] }; }),
+    cluster: sk.cluster, centre: sk.centre.clone().applyMatrix4(xf).toArray(), radii: sk.radii.toArray() };
+}
+
 // ---------------------------------------------------------------------------------------------
 // Materials
 

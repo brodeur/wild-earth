@@ -637,18 +637,35 @@
     "queued_credits_est": 0
    },
    "status": "ok"
+  },
+  "ground_albedo": {
+   "stage": "base",
+   "started_at": "2026-11-07T01:43:17Z",
+   "ended_at": "2026-11-07T01:43:18Z",
+   "wall_s": 0.3,
+   "cpu_self_s": 0.3,
+   "cpu_children_s": 0.0,
+   "downloads": {},
+   "cache": {},
+   "disk_bytes": 904,
+   "meshy": {
+    "spent": 0,
+    "queued": 0,
+    "queued_credits_est": 0
+   },
+   "status": "ok"
   }
  },
  "stages": {
   "base": {
-   "started_at": "2026-11-05T10:37:29Z",
-   "ended_at": "2026-11-05T10:37:30Z",
-   "wall_s": 1328.1,
-   "cpu_s": 292.8,
+   "started_at": "2026-11-07T01:43:17Z",
+   "ended_at": "2026-11-07T01:43:18Z",
+   "wall_s": 1328.4,
+   "cpu_s": 293.1,
    "download_bytes": 70075993,
    "cache_hits": 2,
    "cache_misses": 495,
-   "disk_bytes": 349809963,
+   "disk_bytes": 349810867,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -1014,21 +1031,89 @@
    "failed": [
     "water_imagery"
    ]
+  },
+  {
+   "started_at": "2026-11-07T01:41:03Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T01:41:03Z",
+     "steps_run": [
+      "ground_albedo"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T01:41:04Z"
+    }
+   ],
+   "ended_at": "2026-11-07T01:41:04Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T01:41:30Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T01:41:30Z",
+     "steps_run": [
+      "ground_albedo"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T01:41:30Z"
+    }
+   ],
+   "ended_at": "2026-11-07T01:41:30Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T01:42:34Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T01:42:34Z",
+     "steps_run": [
+      "ground_albedo"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T01:42:34Z"
+    }
+   ],
+   "ended_at": "2026-11-07T01:42:34Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T01:43:17Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T01:43:17Z",
+     "steps_run": [
+      "ground_albedo"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T01:43:18Z"
+    }
+   ],
+   "ended_at": "2026-11-07T01:43:18Z",
+   "failed": [],
+   "refused": []
   }
  ],
  "totals": {
-  "wall_s": 1474.0,
-  "cpu_s": 310.8,
+  "wall_s": 1474.3,
+  "cpu_s": 311.1,
   "download_bytes": 71119382,
   "cache_hits": 457,
   "cache_misses": 610,
-  "disk_bytes": 352175000,
+  "disk_bytes": 352175904,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 0
  },
- "updated_at": "2026-11-06T18:49:17Z",
+ "updated_at": "2026-11-07T01:43:18Z",
  "client": {
-  "bytes": 3289619,
+  "bytes": 3291186,
   "files": 13,
   "largest": {
    "games.json": 937658,
@@ -1037,7 +1122,7 @@
    "client/features.json": 452483,
    "client/species_mix.json": 220035,
    "perception.json": 167869,
-   "manifest.json": 164985,
+   "manifest.json": 166372,
    "locomotion.json": 57462,
    "calendar.json": 45635,
    "species/species.json": 41024,

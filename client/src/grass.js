@@ -347,7 +347,7 @@ const COMMON_VERT = /* glsl */`
     float on = smoothstep(0.05, 0.4, gw.r + 0.5 * gw.g);
     if (on < 0.01) return c;
     vec2 guv = groundUv(root);
-    vec3 gr = groundGain * groundRecolour(textureLod(map, guv, 8.0).rgb, gw, guv, groundPave(guv, 8.0));   // as groundAlbedo's g
+    vec3 gr = groundRefl(groundRecolour(textureLod(map, guv, 8.0).rgb, gw, guv, groundPave(guv, 8.0)));   // as groundAlbedo's g
     vec3 local = c * clamp(g / max(gr, vec3(1e-3)), vec3(0.75), vec3(1.3));
     vec3 mean = type > 0.5 ? mix(bRoot, bTip, 0.6) : mix(aRoot, aTip, 0.6);
     float ml = dot(mean, G_LUMA), gl = dot(g, G_LUMA);
@@ -1604,11 +1604,13 @@ export class Grass {
     }
     // Every palette is drawn at the ground's reflectance (groundUniforms.groundGain, atmosphere.js groundLook): the
     // palettes were made to match the photo's display colour, so they take the same factor as the photo under them.
-    const gg = u.groundGain.value;
+    const gg = u.groundGain.value, gs = u.groundSat?.value ?? 1;
+    // and the ground's saturation about its luminance (terrain.js groundRefl)
+    const sat = c => { const y = 0.299 * c.r + 0.587 * c.g + 0.114 * c.b; c.r = Math.max(0, y + gs * (c.r - y)); c.g = Math.max(0, y + gs * (c.g - y)); c.b = Math.max(0, y + gs * (c.b - y)); };
     const set = kl   // uni: a uniform, or a Color of the species arrays
-      ? (uni, rgb) => { const c = uni.value || uni; c.setRGB(rgb[0], rgb[1], rgb[2], THREE.SRGBColorSpace); c.r *= kl[0] * gg.x; c.g *= kl[1] * gg.y; c.b *= kl[2] * gg.z; }
-      : (uni, rgb) => { const c = (uni.value || uni).setRGB(rgb[0] * k[0], rgb[1] * k[1], rgb[2] * k[2], THREE.SRGBColorSpace); c.r *= gg.x; c.g *= gg.y; c.b *= gg.z; };
-    { const c = u.thatchCol.value.setRGB(...THATCH, THREE.SRGBColorSpace); c.r *= gg.x; c.g *= gg.y; c.b *= gg.z; }
+      ? (uni, rgb) => { const c = uni.value || uni; c.setRGB(rgb[0], rgb[1], rgb[2], THREE.SRGBColorSpace); c.r *= kl[0] * gg.x; c.g *= kl[1] * gg.y; c.b *= kl[2] * gg.z; sat(c); }
+      : (uni, rgb) => { const c = (uni.value || uni).setRGB(rgb[0] * k[0], rgb[1] * k[1], rgb[2] * k[2], THREE.SRGBColorSpace); c.r *= gg.x; c.g *= gg.y; c.b *= gg.z; sat(c); };
+    { const c = u.thatchCol.value.setRGB(...THATCH, THREE.SRGBColorSpace); c.r *= gg.x; c.g *= gg.y; c.b *= gg.z; sat(c); }
     // The type palettes (the sward sheets, the ground's sward paint, the far colour match): California's annual sward and
     // needlegrass, or on a tile that borrows nothing its own grasses' (ownTypes: the Serengeti's red oat grass, the
     // generic tufted grass at Lofoten).
