@@ -6904,3 +6904,44 @@ on a touch tap, no page errors), signed in at both widths (19 and 14 items), red
 signing in while Upper Hoh Road was chosen (Start live, the world at 20% 2.5 s later, the social column's 7 items
 staggered, Start enabled when ready), `?hub=stub`, a static host with no hub (Explore staggered in, then the places),
 and `?skip=1`. Frames were captured every ~100 to 250 ms (headless screenshots are slow); the start times are exact.
+
+## 2026-11-06: place cards name, count and territories; the territories a step of the build (branch claude/place-cards-territories)
+
+Aaron: "As part of the pipeline make sure we are listing the indigenous human territory name. Current PlaceName on its
+own row, below it the indigenous territory. Instead of 'No one here' have a pill with a user icon and a number after
+the placename".
+
+**The cards** (title.js, the places list and the card over a chosen place; arrival.js for `?cards=1`):
+- Row 1: the place's name and a pill, a user icon and how many players are there now. Zero is shown, dimmed: a
+  place with no one there yet reads as a place, and every row keeps the same shape.
+- Row 2: the Indigenous territories over the tile, names joined with " · ", each a link to its Native Land page (a
+  click on a link opens Native Land in a new tab and does not choose the place). No territories: no row.
+- The friends there (their wisps and "Juno and Maya here") stay under them, only when there are any. The card over a
+  chosen place shows its players' wisps only when someone is there.
+- No roads: the road subtitle is gone, and a tile with no OSM locality is named for its main natural feature
+  (arrival.js natureName): its largest named glacier, else its named stream with the largest drainage area, else a
+  named lake (Upper Hoh: Hoh River; Mount Olympus: Blue Glacier; the Tetons: Teton Glacier; Manu; Sungai Segama). A
+  glacier first because a big river runs through more than one tile (the Hoh drains both Olympic tiles).
+- Signed out, the counts come from a new anonymous `GET /api/hub/counts` ({tiles: {tile_id: players}}, the numbers the
+  socket's `watch` already sends every signed-in player; no one named), asked every 20 s; signed in, from the socket.
+- The Native Land disclaimer stays in the credits (config.SOURCES native_land).
+
+**The territories step** (pipeline/steps.py `territories`, version 1, after terrain, base stage; pipeline/fetch_territories.py
+step_output): writes client/territories.json { territories, source } (layer client.territories), fingerprinted on the
+fetcher's code like every step. The client reads it, falling back to features.json `territories` for a tile built before.
+derive no longer writes territories into features.json (one owner), so the terrain step's code changed: the next `--all`
+re-runs terrain on every tile. Without a NATIVE_LAND_KEY the step is `refused` ("no NATIVE_LAND_KEY: ..."): never current,
+listed in `--status` and failed by the build audit (refusals), so a tile cannot pass with its territories silently
+missing; a tile that never ran it shows `territories never missing client.territories`. The key is read from the
+environment, this checkout's .env, or, from a git worktree, the main checkout's .env (env_files); it is never printed.
+`python -m pipeline.fetch_territories <tile> [--force]` now runs that step on a built tile through the graph.
+
+**Not done yet: the names themselves.** The main checkout's .env has no NATIVE_LAND_KEY (a free Native Land account
+Aaron makes himself), so no tile has territories yet. Once the key is in, run for every tile from any checkout:
+`for t in $(ls tiles | grep utm); do arch -arm64 .venv/bin/python -m pipeline.fetch_territories $t --force; done`.
+
+Verified in headless Chrome on the local hub at 1440x900 and 375x812, signed in and signed out: the pill (2 at the Hoh
+River with two test players in its room, 0 dimmed elsewhere), the territory row and its links from a test fixture
+(clearly labelled, never committed, removed), the card over the chosen place, no road names anywhere, no page errors.
+Tests: tests/test_territories_step.py (the step in the graph after terrain, refused without a key, the refusal a build
+audit problem, the key never printed) and the counts endpoint in tests/test_hub.py.

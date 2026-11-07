@@ -9,6 +9,8 @@ POST /api/hub/recover  {name, code, password}      -> {you, left} + cookie (the 
                                                       session of the user ended, the new password set)
 GET  /api/hub/me                                   -> {you} or 401
 GET  /api/hub/config                               -> {hub, providers: ['discord', ...]} (keys present only)
+GET  /api/hub/counts                               -> {tiles: {tile_id: players}}: the same anonymous per-tile counts the
+                                                      socket's `watch` sends, for a signed-out visitor's place cards
 GET  /api/hub/oauth/discord                        -> 302 to Discord (scope identify); Discord sends the
                                                       browser back to this same path with ?code&state
 GET  /api/hub/ws                                   WebSocket, authenticated by the we_session cookie at
@@ -1254,6 +1256,10 @@ def handle(h, method: str, path: str, query: str = "") -> bool:
             raise HubError(403, "cross-origin request")
         if method == "GET" and path == "/api/hub/config":
             return _send(h, {"hub": env_key("HUB_NAME") or "Wild Earth", "providers": hub.providers()}) or True
+        if method == "GET" and path == "/api/hub/counts":   # anonymous: how many players per tile, no one named (2026-11-06)
+            with hub.lock:
+                tiles = hub.counts()
+            return _send(h, {"tiles": tiles}) or True
         if method == "GET" and path == "/api/hub/me":
             uid, slid = hub.session(token)
             if not uid:
