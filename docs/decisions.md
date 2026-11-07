@@ -7900,3 +7900,48 @@ or AVONET row, not a per-species patch.
   - **Folded wings.** Every bird on the walkers' rings stands at pose 1 (wings folded), keyed on its model's rig (`rig.kind === 'bird'`), not a species list. Lamar's heron, mallard, mergansers, goose, goldeneye, coot and sandpiper stood at pose 0, which spreads the heron and merganser templates' wings.
   - **The zoom check's size bound.** `tools/home_zoom_check.mjs` asked for 35-50% of the window's width, tuned at 1440 px with the steeper view; at 1280×800 the tile now fills 32.7% of the window and 76% of the free centre (its near edge fills the focus area). The bound is now 70-100% of the free centre at every width, as it was on a phone. Lamar at 1280×800 passes, centred exactly from every entry point, and held centred through a cold 20 Mbit/s flight.
   - **Still open.** The pelican's own model (`fauna/pelecanus_erythrorhynchos.glb`) keeps its wings out at every pose, so it still stands spread on Lamar and El Dorado; that is the model, not the ring. Several fliers with only a standing model (crow, robin, starling, junco, thrush) still float in the bird ring standing. At a 900 px window the free centre is narrow and a tile frames small and steep (62 km away, about 30°), as on main.
+
+## 2026-11-07: segmented bird wings on one shared wing rig (client/src/birdWing.js; branch claude/segmented-wings)
+
+Aaron: "Right now on basic models for birds, the wings are one card. They should really be two or three cards because
+that is how a wing is structured. Just that basic change + wing rigging that applies to all birds would dramatically
+improve their readability." Most birds on a pipeline tile are stand-ins without a mesh of their own, drawn by the
+procedural kin builders (`buildStellersJay`, `buildQuail`, `buildHawk`, `buildVulture`, `buildRaven`, the woodpeckers,
+`buildTurkey`), whose wings were one rigid slab per side that, perched, swung back and poked out past the tail. The
+drawn standing birds had an arm and a hand card that shrank into the shoulder on the ground.
+
+Chosen: every bird's flight wing is re-made at load from what its old wing measured, with nothing drawn per species:
+- **Shape.** Three cards per side: the arm (secondaries and coverts, shoulder to wrist, two colour rows above), the hand
+  (inner primaries, leading edge swept back) and the tip (TIP_L/R, parts 11/12: the outer primaries). Span, root chord
+  and colours are read from the old cards or slabs, which were drawn to field-guide spans. The shape comes from AVONET's
+  Hand-Wing Index (the fauna slot's `hand_wing_index`, or `birdWing.js` HWI for the hand-built cast, recorded from
+  AVONET1): the hand's share of the span, the sweep, where the tip sits on the chord, and the chord itself (a falcon's
+  long pointed wing, a jay's short round one). A heavy wing with a low index is slotted. Above 0.33 kg and under an
+  index of 47, the tip becomes a fan of 4-6 separate fingers (more with mass). The exceptions are the Anatidae and the
+  Rallidae, whose 46-51 index or short round wings are never fingered. That gives fingers to buteos, eagles, vultures,
+  crows, owls, herons, cranes, pelicans and turkeys, and none to falcons, gulls, ducks, swallows or coots. A stand-in
+  re-makes its kin's wing with its own index and mass, so a kestrel on the hawk's body gets a falcon's wing.
+- **Rig.** One block in every animal program that has `model.wing` (`WING_RIG`; the depth and planar-shadow programs
+  share the body, so shadows follow). The joints are shoulder, wrist and fingertip, each child turning about its own
+  pivot. The beat runs out along the wing: the hand lags the arm, the tip lags the hand. On the upstroke the wrist bends
+  (the hand and tip sweep back in the wing's plane, the primaries close a little); on the downstroke the wing spreads
+  and the tip opens forward. A glide holds a slight dihedral, with the hands bowed by `aAnim2.x` where the template
+  has it. Pose folds the wing: the arm rolls into the vertical plane at the body's side with its upper side out and
+  hangs a little behind the vertical, its secondaries stacking (the arm's span to 0.4), and the hand doubles back at
+  the wrist to lie along the flank toward the tail with its primaries closed. Nothing shrinks into the shoulder. A
+  procedural body has no folded wing of its own, so the folded cards lie against it. A drawn mesh has one, so its cards
+  fold the same way and, over the last 40% of the fold, tuck into the body behind the mesh's own folded wing. The
+  soarers' flight meshes keep their own wings on the same rig, and pose stays their stoop (the arm sweeps back at the
+  shoulder, the hand further). The procedural hawk and vulture (the raptor and gull stand-ins) get the generated wing
+  on that stoop rig. The ground raven's and crow's folded mesh wings (`RIG_GROUND`) are untouched.
+- **Cost.** No new attributes or textures. The part id and the pivots as program constants carry everything. The
+  procedural bodies stay at 6 attributes and the drawn ones at 8-9, plus aAnim, aAnim2 and the instance matrix, under
+  Metal's 16. Each wing is 60-100 triangles a side (the old slabs were 24, the old cards 20-40); the lod2 tier uses one strip per card.
+
+Also: the home screen's walkers' ring drew the herons, egrets and mergansers (and their stand-ins) with their flight
+cards spread, because their `bodyModels.js` entries posed a standing bird at 0. Every standing bird is now posed at 1.
+
+Rejected: rebuilding the ~30 bird GLBs in Blender with new cards. The tools would have needed a second copy of the
+shape rule, and the procedural stand-ins, the bulk of the cast on pipeline tiles, would still have needed the
+client-side version. Also rejected: a per-finger fan attribute (a 17th slot on some paths); the fingers close by
+squeezing toward the tip joint's chord line instead.
