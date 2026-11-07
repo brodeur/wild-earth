@@ -7419,6 +7419,11 @@ glottal stop is itself drawn like a question mark without its dot, so at 12 px i
   (0.65), so leaves vary without the doubled sun returning. The far pictures re-bake from it; no seam at 13 m. ΔE vs
   d2b4cd2: top-down 0.001, 15 m 0.007, 30 m 0.005, eye 0.025. Cost unchanged (eye 24.0 -> 23.7 ms, c_plant 24.2 -> 22.9).
   Open: each shoot reads a little like a regular fern frond.
+- **Sage shoots irregular** (shrubfield.js bakeTuft): a wandering axis of 5-7 nodes at jittered spacing (0.6-1.4x),
+  fascicles of 1-5 leaves each at its own azimuth (foreshortened toward or away from the eye, far-side leaves x 0.82 and
+  drawn first, so they overlap in depth), 2-3 longer tip leaves (1.35x), side shoots at ~30 % of nodes; one hash stream
+  through the four variants. Leaf area normalised to 24 leaves so the covered share holds (0.254); per-leaf tilt divided
+  by this picture's mean (0.63). ΔE vs cf06c99: top-down 0.000, 15/30 m ≤ 0.004, eye 0.097; cost unchanged.
 
 ## 2026-11-06: snakes are playable; the body follows the head's path (branch claude/snake-play)
 

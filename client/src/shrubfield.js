@@ -79,9 +79,9 @@ const fhArr = i => `float[${FH_N}](${FH.map(id => fhLook(id)[i].toFixed(2)).join
 // gooseberry qualify; mountain mahogany and red huckleberry (too tall), coyote brush (porosity 0.2), buckbrush and the
 // chaparral do not. The tuft is TWIG_TUFT_K leaf lengths across (a fascicle of leaves on a short shoot at the twig's end).
 const TWIG_POR = 0.25, TWIG_TUFT_K = 3.5, TWIG_HMAX = 1.6;
-// the tuft picture (bakeTuft): its fascicles (nodes x leaves at each), 18 leaves of 1 / TWIG_TUFT_K of the tuft covering 0.25
-// of its square as the seven longer leaves did (so the crown's porosity holds); the leaves' mean tilt in the picture (b)
-const TUFT_NODES = 6, TUFT_PER = 3, TUFT_TILT_MEAN = 0.65;
+// the tuft picture (bakeTuft): leaf area of TUFT_LEAVES leaves of 1 / TWIG_TUFT_K of the tuft (overlapping in depth), covering 0.25 of its
+// square as the seven longer leaves did (so the crown's porosity holds); the leaves' mean tilt in the picture (b)
+const TUFT_LEAVES = 24, TUFT_TILT_MEAN = 0.63;   // (measured on the picture: 0.25 of the square covered, the tilt's mean)
 // the close tier's skeletons per record class (TwigShrubs), and the pictures of them past the hand-over (TwigShrubs.bake, TB_T below)
 const VIS_W = 1.75;   // a crown's visible width over the card's R (see SHRUB_H below)
 const TW_EL_LO = 8, TW_EL_HI = 12;   // the pictures whole below TW_EL_LO degrees over the plant, the dome above TW_EL_HI (VERT twP)
@@ -1308,26 +1308,45 @@ function bakeTuft() {
   const sm = (a, b, x) => { const t = Math.min(Math.max((x - a) / (b - a), 0), 1); return t * t * (3 - 2 * t); };
   for (let v = 0; v < 4; v++) {
     const ox = (v % 2) * S, oy = Math.floor(v / 2) * S, P = (x, y) => [ox + (x + 0.5) * S, oy + (1 - y) * S];
-    // A short shoot with its leaves in fascicles at TUFT_NODES nodes up its lower three quarters, TUFT_PER at each, each leaf
-    // 1 / TWIG_TUFT_K of the tuft long (the record's leaf_size_m: the tuft is TWIG_TUFT_K of its leaves across), +-25 %,
-    // splayed out and up, narrower toward the shoot's tip (2026-11-06: the seven leaves of 0.36-0.56 tuft, 1.3-2x the
-    // record's leaf, fanned in one plane read as one large flat pale wedge per tuft at 1-2 m)
-    for (let i = 0; i < TUFT_NODES * TUFT_PER; i++) {
-      const node = Math.floor(i / TUFT_PER), k = i % TUFT_PER, r1 = r(), r2 = r(), r3 = r(), side = k % 2 ? -1 : 1;
-      const th = (k === 0 ? (r1 - 0.5) * 0.4 : side * (0.35 + 0.7 * r1)) * (1 - 0.45 * node / (TUFT_NODES - 1));
-      const bx = 0.015 * side * (k ? 1 : 0), by = 0.05 + 0.62 * node / (TUFT_NODES - 1), L = (0.75 + 0.5 * r2) / TWIG_TUFT_K, ax = [Math.sin(th), Math.cos(th)], nx = [ax[1], -ax[0]];
-      const at = (t, s) => P(bx + ax[0] * t * L + nx[0] * s, by + ax[1] * t * L + nx[1] * s);
+    // A short shoot, irregular as big sagebrush's are (2026-11-06; an even herringbone of 18 leaves read as a fern frond):
+    // the axis wanders; its nodes at jittered spacing hold fascicles of 1-5 short leaves (each 1 / TWIG_TUFT_K of the tuft,
+    // the record's leaf_size_m, +-25 %), set at their own azimuths round the shoot (foreshortened across it, the back ones
+    // darker and drawn first, so they overlap in depth); the tip carries a few longer leaves; now and then a side shoot
+    // leaves a node with a fascicle or two of its own. Each of the four variants draws its own hashes (one stream through
+    // them). The leaves' total length is held to TUFT_LEAVES of them, so the picture covers the share it did (the crown's
+    // porosity holds).
+    const leaves = [], unit = 1 / TWIG_TUFT_K;
+    const shoot = (x0, y0, a0, len, nodes, scale) => {
+      let x = x0, y = y0, a = a0;
+      for (let j = 0; j < nodes; j++) {
+        const step = len / nodes * (0.6 + 0.8 * r());
+        a += (r() - 0.5) * 0.35; x += Math.sin(a) * step; y += Math.cos(a) * step;
+        const tip = j === nodes - 1, n = tip ? 2 + Math.floor(r() * 2) : 1 + Math.floor(r() * 5);
+        for (let k = 0; k < n; k++) {
+          const az = r() * 2 * Math.PI, across = Math.sin(az), front = Math.cos(az);   // its azimuth round the shoot
+          const splay = (0.35 + 0.75 * r()) * (tip ? 0.5 : 1);
+          leaves.push({ x, y, th: a + splay * across, L: unit * (0.75 + 0.5 * r()) * (tip ? 1.35 : 1) * scale * (0.55 + 0.45 * Math.abs(across) + 0.3 * (1 - Math.abs(across))),
+            depth: front, shade: (0.85 + 0.25 * r()) * (front < 0 ? 0.82 : 1), tilt: 0.25 + 0.75 * r() });
+        }
+        if (!tip && j > 0 && r() < 0.3) shoot(x, y, a + (r() < 0.5 ? -1 : 1) * (0.5 + 0.4 * r()), len * 0.35, 1 + Math.floor(r() * 2), 0.85);
+      }
+    };
+    shoot((r() - 0.5) * 0.06, 0.02, (r() - 0.5) * 0.3, 0.6, 5 + Math.floor(r() * 3), 1);
+    const sumL = leaves.reduce((a, l) => a + l.L * l.L, 0), kL = Math.sqrt(TUFT_LEAVES * unit * unit / Math.max(sumL, 1e-6));
+    leaves.sort((a, b) => a.depth - b.depth);
+    for (const lf of leaves) {
+      const L = lf.L * kL, ax = [Math.sin(lf.th), Math.cos(lf.th)], nx = [ax[1], -ax[0]];
+      const at = (t, s) => P(lf.x + ax[0] * t * L + nx[0] * s, lf.y + ax[1] * t * L + nx[1] * s);
       const w = t => L * 0.17 * (0.2 + 0.8 * sm(0, 0.8, t));
       const pts = [];
       for (let k = 0; k <= 10; k++) { const t = 0.9 * k / 10; pts.push(at(t, w(t))); }
       const W = w(0.9);
       pts.push(at(1.0, 0.75 * W), at(0.94, 0.38 * W), at(1.0, 0), at(0.94, -0.38 * W), at(1.0, -0.75 * W));   // the three teeth
       for (let k = 10; k >= 0; k--) { const t = 0.9 * k / 10; pts.push(at(t, -w(t))); }
-      const shade = 0.85 + 0.25 * r2, tilt = 0.25 + 0.75 * r3;
       for (let c = 0; c < 3; c++) {
         const g = ch[c]; g.beginPath(); g.moveTo(...pts[0]); for (const q of pts.slice(1)) g.lineTo(...q); g.closePath();
-        if (c === 1) { const [x0, y0] = at(0, 0), [x1, y1] = at(1, 0), gr = g.createLinearGradient(x0, y0, x1, y1); gr.addColorStop(0, grey(shade * 0.8)); gr.addColorStop(1, grey(shade * 1.04)); g.fillStyle = gr; }
-        else g.fillStyle = grey(c === 0 ? 1 : tilt);
+        if (c === 1) { const [x0, y0] = at(0, 0), [x1, y1] = at(1, 0), gr = g.createLinearGradient(x0, y0, x1, y1); gr.addColorStop(0, grey(lf.shade * 0.8)); gr.addColorStop(1, grey(lf.shade * 1.04)); g.fillStyle = gr; }
+        else g.fillStyle = grey(c === 0 ? 1 : lf.tilt);
         g.fill();
       }
     }
