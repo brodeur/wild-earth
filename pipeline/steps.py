@@ -85,7 +85,16 @@ def _dem(tile, m, force):
     # (lidar.build_dem_1m runs the rule); else the rule runs on the drawn 5 m itself, when the fetched product resolves a
     # road at all: a 30 m DEM (Copernicus GLO-30) has no cut or fill to take out, and spanning its corridors smoothed
     # real slopes (Lofoten: 31 m taken off a fjord side)
-    if info.get("source") != "usgs_3dep_1m":
+    if info.get("source") == "usgs_3dep_1m":
+        # drawn from the 1 m ground, which has had the rule, except where the 1 m products leave gaps and the fetched
+        # DEM fills them (US-101 in Marin: the 1 m covers 29 % of utm10n_540_4180, the road's bench and cut slopes stayed
+        # in the drawn DEM and its cut faces drew as rock): the rule on those cells of the drawn 5 m
+        gap = _dem_1m_gaps(tile)
+        if gap is not None and gap.any():
+            from .unroad import apply as unroad
+            info["unroad_gaps"] = {**unroad(tile, "terrain/dem.tif", where=gap), "gap_share": round(float(gap.mean()), 4)}
+            info["roaded"] = "terrain/dem_roaded.tif (the drawn DEM before the rule on the 1 m ground's gaps)"
+    else:
         from .unroad import apply as unroad, MAX_SOURCE_RES_M
         src_res = float(info.get("source_resolution_m") or 0)
         if src_res <= MAX_SOURCE_RES_M:
@@ -483,6 +492,22 @@ def _has_chm(tile, m):
     if not tile.path("vegetation/chm_1m.tif").exists():
         return "no point cloud on this tile (DEM-only lidar or none): no canopy height model, so no crowns to find or inpaint"
     return None
+
+
+def _dem_1m_gaps(tile):
+    """The drawn 5 m DEM's cells where the 1 m ground has no data (the fetched DEM fills them), or None."""
+    p1, p5 = tile.path("terrain/dem_1m.tif"), tile.path("terrain/dem.tif")
+    if not (p1.exists() and p5.exists()):
+        return None
+    import numpy as np
+    import rasterio
+    from rasterio.enums import Resampling
+    with rasterio.open(p5) as s5:
+        n = s5.height
+    with rasterio.open(p1) as s1:
+        nod = s1.nodata if s1.nodata is not None else -9999
+        v = s1.read(1, out_shape=(n, n), resampling=Resampling.nearest)
+    return v == nod
 
 
 def _crowns(tile, m, force):

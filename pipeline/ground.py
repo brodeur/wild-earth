@@ -117,6 +117,10 @@ def outcrop(tile: Tile) -> tuple[dict, dict]:
         if (u.get("muname") or "").strip().lower() == "water":
             water |= soil[..., 0] == int(i)
     o[water] = 0
+    # roads rewilded (2026-11-07): the corridors take their banks' outcrop (pipeline/unroad.py mirror_grid), not the
+    # rock their cut faces put in the slope and the 1 m roughness
+    from .unroad import mirror_grid, road_strip
+    o = np.where(water, 0, mirror_grid(o, road_strip(tile, o.shape[0])))
     img = np.round(o * 255).astype("uint8")
     Image.fromarray(img, "L").save(tile.path("client/outcrop.png"), optimize=True)
 

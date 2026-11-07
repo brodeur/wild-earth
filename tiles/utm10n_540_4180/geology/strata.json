@@ -50,8 +50,8 @@
     "p5": 8.4,
     "p25": 48.7,
     "median": 80.9,
-    "p75": 112.0,
-    "p95": 201.5
+    "p75": 113.5,
+    "p95": 201.4
    },
    "candidate": true
   },
@@ -60,10 +60,10 @@
    "lithology": "surficial",
    "cells": 30372,
    "elevation_m": {
-    "p5": 8.2,
+    "p5": 8.3,
     "p25": 26.6,
     "median": 47.1,
-    "p75": 63.9,
+    "p75": 64.0,
     "p95": 112.5
    },
    "candidate": false,
@@ -75,7 +75,7 @@
    "cells": 94651,
    "elevation_m": {
     "p5": 29.9,
-    "p25": 82.7,
+    "p25": 82.8,
     "median": 127.2,
     "p75": 176.8,
     "p95": 236.4
@@ -87,11 +87,11 @@
    "lithology": "greenstone_metavolcanic",
    "cells": 111874,
    "elevation_m": {
-    "p5": 12.9,
-    "p25": 55.9,
+    "p5": 13.0,
+    "p25": 55.8,
     "median": 80.1,
-    "p75": 115.2,
-    "p95": 203.6
+    "p75": 115.1,
+    "p95": 204.0
    },
    "candidate": true
   },
@@ -184,11 +184,11 @@
    "lithology": "surficial",
    "cells": 1986,
    "elevation_m": {
-    "p5": 2.7,
+    "p5": 2.6,
     "p25": 4.1,
-    "median": 4.3,
-    "p75": 4.5,
-    "p95": 4.9
+    "median": 4.4,
+    "p75": 4.6,
+    "p95": 5.5
    },
    "candidate": false,
    "why_not": "surficial deposit"
@@ -212,20 +212,20 @@
   {
    "upper": "Franciscan Complex",
    "lower": "Franciscan Complex",
-   "contact_cells": 1932,
-   "upper_on_top": 0.7
+   "contact_cells": 1973,
+   "upper_on_top": 0.698
   },
   {
    "upper": "Franciscan Complex",
    "lower": "Franciscan Complex",
-   "contact_cells": 664,
-   "upper_on_top": 0.741
+   "contact_cells": 675,
+   "upper_on_top": 0.739
   },
   {
    "upper": "Franciscan Complex",
    "lower": "Franciscan Complex",
-   "contact_cells": 358,
-   "upper_on_top": 0.218
+   "contact_cells": 361,
+   "upper_on_top": 0.222
   }
  ],
  "consistent_pairs": 0.0,

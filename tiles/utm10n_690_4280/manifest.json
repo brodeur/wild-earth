@@ -15,7 +15,7 @@
   38.73825606650576
  ],
  "size_m": 10000,
- "generated_at": "2026-11-07T19:08:58Z",
+ "generated_at": "2026-11-07T20:17:52Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -512,6 +512,9 @@
    "elevation_range_m": [
     336.5577697753906,
     922.8850708007812
+   ],
+   "derived_from": [
+    "terrain.dem_banked"
    ],
    "sha256": "6d4347d15f9dd8629ddb8af8f0d37dddfd3e1c8accbfc5173595c9f52f79f1c5",
    "bytes": 2926815
@@ -1848,7 +1851,7 @@
       }
      ]
     },
-    "seconds": 13.1
+    "seconds": 13.2
    },
    "imagery_moved": false,
    "water_imagery": {
@@ -2060,9 +2063,9 @@
     "rough_full_m": 0.12,
     "rough_cap": 1.5
    },
-   "mean": 0.1372,
-   "fraction_above_0.5": 0.0387,
-   "fraction_above_0.25": 0.1834,
+   "mean": 0.1353,
+   "fraction_above_0.5": 0.0364,
+   "fraction_above_0.25": 0.1792,
    "slope_deg_mean": 12.25,
    "convex_fraction": 0.5008,
    "lidar_roughness_m": {
@@ -2074,8 +2077,8 @@
     "min": 0.5,
     "max": 2.0
    },
-   "sha256": "e934c8a6aa56b5b2fa8c0e499b3aadb8084c22b03ea4bcfdc1651329569c1107",
-   "bytes": 77003
+   "sha256": "cc5a169857bbbd228c0d5087779e8eff900de88ee7e43f057b4316242d7f1a52",
+   "bytes": 78061
   },
   "client.ground_classes": {
    "path": "client/ground_classes.json",
@@ -2120,7 +2123,7 @@
      "none_or_unknown": 0.0035
     }
    },
-   "sha256": "9bb13974ac654664830b4e57532ddea466c16ce11bb846f6fb4ac12783aea21c",
+   "sha256": "d0d9b5e31c7678a9db60fcf553944bcee2e0a876d5b885a5de26d1d97b0369be",
    "bytes": 45109
   },
   "hydro.human_water": {
@@ -4234,7 +4237,7 @@
      "p95": 8.78
     },
     "confidence_median": 0.897,
-    "seconds": 84.3,
+    "seconds": 92.8,
     "roads_mirrored": {
      "mirrored_m2": 10997446,
      "road_m2": 11665134
@@ -4358,13 +4361,13 @@
     "provider": "pc",
     "scenes": 773,
     "dates": 773,
-    "read_now": 3,
+    "read_now": 0,
     "failed": [],
-    "read_seconds": 8.4,
+    "read_seconds": 0.0,
     "scenes_used": 755,
     "dates_used": 755,
     "bytes_read": 3491845965,
-    "seconds": 82.9
+    "seconds": 74.5
    },
    "naip_reference": {
     "naip_year": 2022,
@@ -7550,8 +7553,8 @@
    "photo": "client/texture_imagery.jpg (NAIP, humans erased)",
    "photo_green_ref": 0.1869,
    "dem": "terrain/dem_banked.tif",
-   "sha256": "1d44cb9d798ae0b03a5d80a5e005789dffec651b6ffcb59ad27dd1b4829d4b34",
-   "bytes": 411608
+   "sha256": "4bcd75f7ee67d6747cb6e0cc8569fa11cf4de8fd29d8aaaa451c4a9d3909d1ec",
+   "bytes": 461237
   },
   "client.substrate_classes": {
    "path": "client/substrate.json",
@@ -10567,6 +10570,79 @@
    "at": "2026-11-07T19:08:58Z",
    "seconds": 125.3,
    "ok": true
+  },
+  {
+   "step": "dem",
+   "at": "2026-11-07T20:11:56Z",
+   "seconds": 6.3,
+   "ok": true
+  },
+  {
+   "step": "lidar",
+   "at": "2026-11-07T20:11:59Z",
+   "seconds": 2.4,
+   "ok": true
+  },
+  {
+   "step": "reroute",
+   "at": "2026-11-07T20:12:12Z",
+   "seconds": 13.4,
+   "ok": true
+  },
+  {
+   "step": "seasons",
+   "at": "2026-11-07T20:13:27Z",
+   "seconds": 74.5,
+   "ok": true
+  },
+  {
+   "step": "water",
+   "at": "2026-11-07T20:13:46Z",
+   "seconds": 18.7,
+   "ok": true
+  },
+  {
+   "step": "ground",
+   "at": "2026-11-07T20:13:48Z",
+   "seconds": 1.9,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-07T20:13:54Z",
+   "seconds": 5.9,
+   "ok": true
+  },
+  {
+   "step": "soil_surface",
+   "at": "2026-11-07T20:13:54Z",
+   "seconds": 0.0,
+   "ok": true
+  },
+  {
+   "step": "seams",
+   "at": "2026-11-07T20:13:54Z",
+   "seconds": 0.2,
+   "ok": false,
+   "error": "seams: west with utm10n_680_4280: unnamed at 4284942 m: no level on the other side; 1 stream(s) of order >= 3 cross on one side only: Martinez Creek (order 3, there) at 4282377 m (re-run --steps reroute,water on utm10n_690_4280)"
+  },
+  {
+   "step": "canopy_top",
+   "at": "2026-11-07T20:13:54Z",
+   "seconds": 0.1,
+   "ok": true
+  },
+  {
+   "step": "crowns",
+   "at": "2026-11-07T20:15:38Z",
+   "seconds": 104.0,
+   "ok": true
+  },
+  {
+   "step": "inpaint",
+   "at": "2026-11-07T20:17:52Z",
+   "seconds": 133.4,
+   "ok": true
   }
  ],
  "steps": {
@@ -10816,15 +10892,15 @@
   },
   "dem": {
    "version": "3",
-   "code": "8c62469a0d11aaec",
+   "code": "1d63164ad4f559f4",
    "params": {
     "tile": "utm10n_690_4280",
     "dem_res_m": 5.0
    },
-   "fingerprint": "c60458f4411454b6",
+   "fingerprint": "a6e01de4cfc86b36",
    "parts": {
     "version": "3",
-    "code": "8c62469a0d11aaec",
+    "code": "1d63164ad4f559f4",
     "params": {
      "tile": "utm10n_690_4280",
      "dem_res_m": 5.0
@@ -10835,7 +10911,7 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T17:46:51Z",
+   "ran_at": "2026-11-07T20:11:50Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -10857,7 +10933,7 @@
     "network": 0,
     "cache": 16
    },
-   "seconds": 100.6
+   "seconds": 6.3
   },
   "channels": {
    "version": "2",
@@ -11050,14 +11126,14 @@
   },
   "lidar": {
    "version": "2",
-   "code": "fa1cf6482fbacf63",
+   "code": "0d1c1ca67dee4d42",
    "params": {
     "tile": "utm10n_690_4280"
    },
-   "fingerprint": "d5d3c82f2306caa8",
+   "fingerprint": "2fa074db8c639869",
    "parts": {
     "version": "2",
-    "code": "fa1cf6482fbacf63",
+    "code": "0d1c1ca67dee4d42",
     "params": {
      "tile": "utm10n_690_4280"
     },
@@ -11069,7 +11145,7 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T17:50:09Z",
+   "ran_at": "2026-11-07T20:11:56Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -11088,8 +11164,8 @@
    "outputs": {
     "client/canopy_height.png": "20f8f1ae1f212a98",
     "client/lidar_micro.png": "b6660a16d8eb2f3b",
-    "client/terrain_detail.png": "6fdac950e114d1f7",
-    "client/trees_lidar.bin": "a4590db39c68748c",
+    "client/terrain_detail.png": "c796d4490141088e",
+    "client/trees_lidar.bin": "d1b9f4b64c14140c",
     "terrain/dem_1m.tif": "50abe85722b27d24",
     "terrain/dsm_1m.tif": "4b444e795352d555",
     "terrain/lidar_dtm_check.tif": "1f49a889397c07e4",
@@ -11098,7 +11174,7 @@
     "vegetation/chm_1m.tif": "e343b3895b840cae",
     "vegetation/multi_1m.tif": "7b27b44fc5b259ac"
    },
-   "out_hash": "6120a1662dea276b",
+   "out_hash": "b82f675c19bded3d",
    "sources": {
     "usgs_3dep_lpc": "2026-11-07",
     "usgs_3dep_1m": "2026-11-07",
@@ -11111,7 +11187,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 2.5
+   "seconds": 2.4
   },
   "reroute": {
    "version": "2",
@@ -11119,7 +11195,7 @@
    "params": {
     "tile": "utm10n_690_4280"
    },
-   "fingerprint": "9a899aa66224dad8",
+   "fingerprint": "12c67a983d3dc120",
    "parts": {
     "version": "2",
     "code": "c23b944a4d03466f",
@@ -11131,12 +11207,12 @@
      "channels": "8cbd209a19190019",
      "rewild_hydro": "041a26e34b0695af",
      "hydro": "84417cfb060b65bf",
-     "lidar": "6120a1662dea276b",
+     "lidar": "b82f675c19bded3d",
      "ice": "22708c14f4d9b03f"
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T18:54:37Z",
+   "ran_at": "2026-11-07T20:11:59Z",
    "owner": "water lane",
    "status": "ok",
    "layers": [
@@ -11165,7 +11241,7 @@
     "network": 0,
     "cache": 1
    },
-   "seconds": 13.9
+   "seconds": 13.4
   },
   "seasons": {
    "version": "1",
@@ -11173,7 +11249,7 @@
    "params": {
     "tile": "utm10n_690_4280"
    },
-   "fingerprint": "5ae06b17259ab5ee",
+   "fingerprint": "a23d3e082089a051",
    "parts": {
     "version": "1",
     "code": "59bd0f94ee57fa37",
@@ -11182,12 +11258,12 @@
     },
     "deps": {
      "landcover": "a265f11fdf8b8b96",
-     "lidar": "6120a1662dea276b",
+     "lidar": "b82f675c19bded3d",
      "naip": "4ab919ff11179bbc"
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T17:50:23Z",
+   "ran_at": "2026-11-07T20:12:12Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -11219,10 +11295,10 @@
    "fallbacks": [],
    "notes": [],
    "fetched": {
-    "network": 3,
-    "cache": 770
+    "network": 0,
+    "cache": 773
    },
-   "seconds": 83.0
+   "seconds": 74.5
   },
   "water_seasons": {
    "version": "1",
@@ -11268,7 +11344,7 @@
    "params": {
     "tile": "utm10n_690_4280"
    },
-   "fingerprint": "45a2184d24ea225d",
+   "fingerprint": "89f6895248bd0741",
    "parts": {
     "version": "3",
     "code": "97a9a83782c17b33",
@@ -11280,13 +11356,13 @@
      "rewild_hydro": "041a26e34b0695af",
      "reroute": "35eba4453e4791b8",
      "hydro": "84417cfb060b65bf",
-     "lidar": "6120a1662dea276b",
+     "lidar": "b82f675c19bded3d",
      "water_seasons": "21f53cadb204a7f4",
      "water_imagery": "037e6d067625189b"
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T19:03:50Z",
+   "ran_at": "2026-11-07T20:13:27Z",
    "owner": "water lane",
    "status": "ok",
    "layers": [
@@ -11318,29 +11394,29 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 17.5
+   "seconds": 18.7
   },
   "ground": {
    "version": "2",
-   "code": "cc47cdfcc955c252",
+   "code": "40742690044fe03e",
    "params": {
     "tile": "utm10n_690_4280"
    },
-   "fingerprint": "0a08708228462914",
+   "fingerprint": "088a46b90c145273",
    "parts": {
     "version": "2",
-    "code": "cc47cdfcc955c252",
+    "code": "40742690044fe03e",
     "params": {
      "tile": "utm10n_690_4280"
     },
     "deps": {
      "dem": "de5ba10fade12034",
      "landcover": "a265f11fdf8b8b96",
-     "lidar": "6120a1662dea276b"
+     "lidar": "b82f675c19bded3d"
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T17:52:13Z",
+   "ran_at": "2026-11-07T20:13:46Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -11356,8 +11432,8 @@
    ],
    "outputs": {
     "client/geology.png": "c0802a9ce3faa095",
-    "client/ground_classes.json": "9bb13974ac654664",
-    "client/outcrop.png": "e934c8a6aa56b5b2",
+    "client/ground_classes.json": "d0d9b5e31c7678a9",
+    "client/outcrop.png": "cc5a169857bbbd22",
     "client/soils.png": "e6047e53194f3765",
     "geology/classes.json": "baecb9cb332c153f",
     "geology/strata.json": "f507b2b2f9475f94",
@@ -11365,7 +11441,7 @@
     "soils/classes.json": "0a2cceecf9787ae9",
     "soils/mapunits.geojson": "9a5b100b9e9971a5"
    },
-   "out_hash": "9b65c87736adf174",
+   "out_hash": "fe517bffcfaaf18c",
    "sources": {
     "macrostrat": "2026-11-07",
     "usgs_sgmc": "2026-11-07",
@@ -11377,7 +11453,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 0.9
+   "seconds": 1.9
   },
   "terrain": {
    "version": "3",
@@ -11510,22 +11586,22 @@
   },
   "substrate": {
    "version": "1",
-   "code": "2e65b327a37a5d98",
+   "code": "19835757c6be854b",
    "params": {
     "tile": "utm10n_690_4280"
    },
-   "fingerprint": "564a61969907dfa2",
+   "fingerprint": "0a61f214cf209693",
    "parts": {
     "version": "1",
-    "code": "2e65b327a37a5d98",
+    "code": "19835757c6be854b",
     "params": {
      "tile": "utm10n_690_4280"
     },
     "deps": {
-     "ground": "9b65c87736adf174",
+     "ground": "fe517bffcfaaf18c",
      "water": "e22e5f8315a3e258",
      "dem": "de5ba10fade12034",
-     "lidar": "6120a1662dea276b",
+     "lidar": "b82f675c19bded3d",
      "naip": "4ab919ff11179bbc",
      "landcover": "a265f11fdf8b8b96",
      "erase": "e48dc09446f33cc5",
@@ -11534,7 +11610,7 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T19:05:11Z",
+   "ran_at": "2026-11-07T20:13:48Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -11542,10 +11618,10 @@
     "client.substrate_classes"
    ],
    "outputs": {
-    "client/substrate.png": "1d44cb9d798ae0b0",
+    "client/substrate.png": "4bcd75f7ee67d674",
     "client/substrate.json": "db09f5917753d3cc"
    },
-   "out_hash": "fcf4813e12703537",
+   "out_hash": "7906c3aca408db09",
    "sources": {},
    "fallbacks": [],
    "notes": [],
@@ -11553,7 +11629,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 4.5
+   "seconds": 5.9
   },
   "soil_surface": {
    "version": "1",
@@ -11561,7 +11637,7 @@
    "params": {
     "tile": "utm10n_690_4280"
    },
-   "fingerprint": "a7e58c532e24575e",
+   "fingerprint": "3f5626e10831aa10",
    "parts": {
     "version": "1",
     "code": "c39f11bf99c3fe1e",
@@ -11569,11 +11645,11 @@
      "tile": "utm10n_690_4280"
     },
     "deps": {
-     "ground": "9b65c87736adf174"
+     "ground": "fe517bffcfaaf18c"
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T17:53:17Z",
+   "ran_at": "2026-11-07T20:13:54Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -11589,10 +11665,10 @@
    "fallbacks": [],
    "notes": [],
    "fetched": {
-    "network": 15,
-    "cache": 25
+    "network": 0,
+    "cache": 40
    },
-   "seconds": 29.1
+   "seconds": 0.0
   },
   "weather": {
    "version": "1",
@@ -11680,7 +11756,7 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T19:05:17Z",
+   "ran_at": "2026-11-07T20:13:54Z",
    "owner": null,
    "status": "failed",
    "error": "seams: west with utm10n_680_4280: unnamed at 4284942 m: no level on the other side; 1 stream(s) of order >= 3 cross on one side only: Martinez Creek (order 3, there) at 4282377 m (re-run --steps reroute,water on utm10n_690_4280)",
@@ -11787,7 +11863,7 @@
    "params": {
     "tile": "utm10n_690_4280"
    },
-   "fingerprint": "2a5a80d41e6ca4f1",
+   "fingerprint": "9be9b639be346b0f",
    "parts": {
     "version": "2",
     "code": "f11e4fea1bf9d384",
@@ -11796,12 +11872,12 @@
     },
     "deps": {
      "landcover": "a265f11fdf8b8b96",
-     "lidar": "6120a1662dea276b",
+     "lidar": "b82f675c19bded3d",
      "terrain": "0a4e4472a7c0cc58"
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T19:05:18Z",
+   "ran_at": "2026-11-07T20:13:54Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -11822,19 +11898,19 @@
   },
   "crowns": {
    "version": "2",
-   "code": "bf66bf68c7d4a768",
+   "code": "775dc516b64ab333",
    "params": {
     "tile": "utm10n_690_4280"
    },
-   "fingerprint": "c44679d00686a736",
+   "fingerprint": "179c4826d0894d48",
    "parts": {
     "version": "2",
-    "code": "bf66bf68c7d4a768",
+    "code": "775dc516b64ab333",
     "params": {
      "tile": "utm10n_690_4280"
     },
     "deps": {
-     "lidar": "6120a1662dea276b",
+     "lidar": "b82f675c19bded3d",
      "osm": "ab5ca94509d2b12b",
      "landcover": "a265f11fdf8b8b96",
      "terrain": "0a4e4472a7c0cc58",
@@ -11842,7 +11918,7 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T19:05:18Z",
+   "ran_at": "2026-11-07T20:13:54Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -11864,7 +11940,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 94.3
+   "seconds": 104.0
   },
   "inpaint": {
    "version": "1",
@@ -11872,7 +11948,7 @@
    "params": {
     "tile": "utm10n_690_4280"
    },
-   "fingerprint": "ea4722418fee2e8e",
+   "fingerprint": "77156de1fef9a815",
    "parts": {
     "version": "1",
     "code": "3f377dea7a1afe73",
@@ -11881,13 +11957,13 @@
     },
     "deps": {
      "erase": "e48dc09446f33cc5",
-     "lidar": "6120a1662dea276b",
+     "lidar": "b82f675c19bded3d",
      "crowns": "273ad900b2aaab3a",
      "terrain": "0a4e4472a7c0cc58"
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T19:06:53Z",
+   "ran_at": "2026-11-07T20:15:38Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -11908,7 +11984,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 125.3
+   "seconds": 133.4
   },
   "species": {
    "version": "1",

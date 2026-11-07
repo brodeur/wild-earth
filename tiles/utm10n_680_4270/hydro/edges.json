@@ -304,16 +304,15 @@
    "area_km2": 0.7989,
    "width": 1.45,
    "bed_width": 3.17,
-   "level": 369.149,
+   "level": 369.147,
    "depth": 0.14,
    "half_width": 0.725,
    "level_own": 369.306,
    "depth_own": 0.22,
-   "level_theirs": 368.992,
+   "level_theirs": 368.987,
    "depth_theirs": 0.06,
    "seen_neighbour": true,
    "source": "neighbour utm10n_680_4280",
-   "order_over_neighbour": true,
    "neighbour": "utm10n_680_4280"
   },
   {
@@ -467,15 +466,15 @@
    "area_km2": 0.1969,
    "width": 1.0,
    "bed_width": 2.5,
-   "level": 481.575,
+   "level": 481.518,
    "depth": 0.05,
    "half_width": 0.5,
    "level_own": 481.575,
    "depth_own": 0.05,
-   "level_theirs": null,
-   "depth_theirs": null,
-   "seen_neighbour": false,
-   "source": "own",
+   "level_theirs": 481.461,
+   "depth_theirs": 0.05,
+   "seen_neighbour": true,
+   "source": "neighbour utm10n_680_4280",
    "neighbour": "utm10n_680_4280"
   },
   {
@@ -1162,10 +1161,10 @@
  ],
  "stats": {
   "crossings": 44,
-  "adopted": 7,
-  "own": 35,
+  "adopted": 8,
+  "own": 34,
   "inflows_started": 2,
-  "order_over_neighbour": 1,
+  "order_over_neighbour": 0,
   "zero_length_dropped": 0,
   "neighbours_with_edges": {
    "north": "utm10n_680_4280"

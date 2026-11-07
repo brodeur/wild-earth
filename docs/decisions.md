@@ -7877,3 +7877,13 @@ or AVONET row, not a per-species patch.
     - It now keeps the crowns found earlier and records a `crowns_kept` fallback instead of failing.
     - Failing had blocked the ground-texture step behind it, so US-101 in Marin still showed from the air on the old `texture_ground.jpg`.
     - The road canopy mirror on those two cells waits for `--force lidar` to re-stream the point cloud, about an hour per cell.
+
+- **The last road scar was the DEM's gaps in the 1 m ground, not the ground classes (2026-11-07).** Marin's US-101 corridor showed at eye level as a band of mottled rock.
+  - **Cause.** The 1 m products cover 29 % of utm10n_540_4180 (22 % of utm10n_540_4170), and the drawn DEM fills the rest from the fetched 3DEP. The height rule had run only on the 1 m ground, because the `dem` step skips it when the DEM is drawn from the 1 m. So the road's bench and cut faces stayed in the drawn DEM, and the steep cut faces drew as rock.
+  - **What was ruled out.** Swapping in a corridor-free substrate or outcrop changed nothing at the pose.
+  - **Fix.** The rule now also runs on the drawn 5 m DEM's cells that have no 1 m data (`unroad.apply(where=gaps)`, `unroad_gaps` in the layer). In Marin that changed 2.1 km² and moved 3.1 M m³, with up to 24 m of fill removed and of cut filled. In the San Francisco cell it changed 16.8 km² and moved 11.9 M m³. Every other US tile has the 1 m everywhere, so nothing changes there.
+- **Road corridors take their banks' rock and outcrop too.** `client/substrate.png` and `client/outcrop.png` mirror each corridor from beside it (`unroad.mirror_grid` over `unroad.road_strip`, the height rule's corridor from the OSM lines), as the imagery and canopy already do.
+  - **Why.** A road puts rock into those layers through its cut faces (slope, and a 1 m roughness that is never recomputed after the rule) and through its pale pavement in the photo.
+- **What is left after the gap rule.**
+  - **San Francisco seam.** The two cells' seam has one crossing that alternating water re-runs don't settle: an unnamed stream at E 546,614, whose levels stay 1.06 m apart. There the north cell has the 1 m ground with the channel cut in, and the south cell has the fetched DEM without it (no road there). It is left for the water lane.
+  - **Paved paths.** Footways and cycleways are still left out of the erase, so wide paved paths still show in San Francisco from the air (the Lake Merced loop).

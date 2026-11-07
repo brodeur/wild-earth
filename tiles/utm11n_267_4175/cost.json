@@ -47,10 +47,10 @@
   },
   "terrain": {
    "stage": "base",
-   "started_at": "2026-11-07T18:14:25Z",
-   "ended_at": "2026-11-07T18:14:44Z",
-   "wall_s": 19.2,
-   "cpu_self_s": 19.0,
+   "started_at": "2026-11-07T20:35:18Z",
+   "ended_at": "2026-11-07T20:35:38Z",
+   "wall_s": 19.5,
+   "cpu_self_s": 19.3,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {
@@ -86,14 +86,14 @@
   },
   "substrate": {
    "stage": "base",
-   "started_at": "2026-11-07T18:14:55Z",
-   "ended_at": "2026-11-07T18:15:00Z",
-   "wall_s": 5.4,
-   "cpu_self_s": 5.4,
+   "started_at": "2026-11-07T20:35:38Z",
+   "ended_at": "2026-11-07T20:35:44Z",
+   "wall_s": 6.0,
+   "cpu_self_s": 5.9,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {},
-   "disk_bytes": 1910527,
+   "disk_bytes": 1911822,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -103,21 +103,21 @@
   },
   "seasons": {
    "stage": "base",
-   "started_at": "2026-11-07T18:12:53Z",
-   "ended_at": "2026-11-07T18:13:33Z",
-   "wall_s": 40.4,
-   "cpu_self_s": 23.6,
-   "cpu_children_s": 3.1,
+   "started_at": "2026-11-07T20:34:07Z",
+   "ended_at": "2026-11-07T20:34:41Z",
+   "wall_s": 34.5,
+   "cpu_self_s": 24.4,
+   "cpu_children_s": 0.0,
    "downloads": {
     "planetary_computer": {
-     "bytes": 14611264,
-     "requests": 11
+     "bytes": 14610864,
+     "requests": 10
     }
    },
    "cache": {
     "sentinel2_l2a": {
-     "hits": 432,
-     "misses": 1
+     "hits": 433,
+     "misses": 0
     }
    },
    "disk_bytes": 46185862,
@@ -130,8 +130,8 @@
   },
   "seams": {
    "stage": "base",
-   "started_at": "2026-11-07T18:16:44Z",
-   "ended_at": "2026-11-07T18:16:44Z",
+   "started_at": "2026-11-07T20:35:44Z",
+   "ended_at": "2026-11-07T20:35:44Z",
    "wall_s": 0.0,
    "cpu_self_s": 0.0,
    "cpu_children_s": 0.0,
@@ -174,9 +174,9 @@
   },
   "species_mix": {
    "stage": "flora",
-   "started_at": "2026-11-07T18:16:47Z",
-   "ended_at": "2026-11-07T18:16:48Z",
-   "wall_s": 0.8,
+   "started_at": "2026-11-07T20:35:44Z",
+   "ended_at": "2026-11-07T20:35:45Z",
+   "wall_s": 0.9,
    "cpu_self_s": 0.8,
    "cpu_children_s": 0.0,
    "downloads": {},
@@ -191,8 +191,8 @@
   },
   "crowns": {
    "stage": "flora",
-   "started_at": "2026-11-07T18:16:48Z",
-   "ended_at": "2026-11-07T18:16:48Z",
+   "started_at": "2026-11-07T20:35:45Z",
+   "ended_at": "2026-11-07T20:35:45Z",
    "wall_s": 0.0,
    "cpu_self_s": 0.0,
    "cpu_children_s": 0.0,
@@ -208,8 +208,8 @@
   },
   "inpaint": {
    "stage": "flora",
-   "started_at": "2026-11-07T18:16:48Z",
-   "ended_at": "2026-11-07T18:16:48Z",
+   "started_at": "2026-11-07T20:35:45Z",
+   "ended_at": "2026-11-07T20:35:45Z",
    "wall_s": 0.0,
    "cpu_self_s": 0.0,
    "cpu_children_s": 0.0,
@@ -427,21 +427,16 @@
   },
   "dem": {
    "stage": "base",
-   "started_at": "2026-11-07T18:10:24Z",
-   "ended_at": "2026-11-07T18:11:53Z",
-   "wall_s": 88.9,
-   "cpu_self_s": 50.5,
+   "started_at": "2026-11-07T20:33:44Z",
+   "ended_at": "2026-11-07T20:33:50Z",
+   "wall_s": 6.2,
+   "cpu_self_s": 7.5,
    "cpu_children_s": 0.0,
-   "downloads": {
-    "usgs_3dep": {
-     "bytes": 9448587,
-     "requests": 9
-    }
-   },
+   "downloads": {},
    "cache": {
     "usgs_3dep": {
-     "hits": 7,
-     "misses": 9
+     "hits": 16,
+     "misses": 0
     }
    },
    "disk_bytes": 22854286,
@@ -515,14 +510,14 @@
   },
   "lidar": {
    "stage": "base",
-   "started_at": "2026-11-07T18:12:38Z",
-   "ended_at": "2026-11-07T18:12:40Z",
-   "wall_s": 2.1,
-   "cpu_self_s": 2.1,
+   "started_at": "2026-11-07T20:33:50Z",
+   "ended_at": "2026-11-07T20:33:52Z",
+   "wall_s": 2.0,
+   "cpu_self_s": 2.0,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {},
-   "disk_bytes": 408222319,
+   "disk_bytes": 411184904,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -532,10 +527,10 @@
   },
   "reroute": {
    "stage": "base",
-   "started_at": "2026-11-07T18:12:40Z",
-   "ended_at": "2026-11-07T18:12:53Z",
-   "wall_s": 12.9,
-   "cpu_self_s": 12.8,
+   "started_at": "2026-11-07T20:33:52Z",
+   "ended_at": "2026-11-07T20:34:06Z",
+   "wall_s": 14.0,
+   "cpu_self_s": 13.3,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {
@@ -544,7 +539,7 @@
      "misses": 0
     }
    },
-   "disk_bytes": 4690531,
+   "disk_bytes": 4690946,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -571,9 +566,9 @@
   },
   "water_imagery": {
    "stage": "base",
-   "started_at": "2026-11-07T18:13:33Z",
-   "ended_at": "2026-11-07T18:13:43Z",
-   "wall_s": 9.6,
+   "started_at": "2026-11-07T20:34:41Z",
+   "ended_at": "2026-11-07T20:34:51Z",
+   "wall_s": 9.7,
    "cpu_self_s": 9.6,
    "cpu_children_s": 0.0,
    "downloads": {},
@@ -588,14 +583,14 @@
   },
   "water": {
    "stage": "base",
-   "started_at": "2026-11-07T18:13:43Z",
-   "ended_at": "2026-11-07T18:13:58Z",
-   "wall_s": 14.9,
-   "cpu_self_s": 14.8,
+   "started_at": "2026-11-07T20:34:51Z",
+   "ended_at": "2026-11-07T20:35:07Z",
+   "wall_s": 16.0,
+   "cpu_self_s": 15.2,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {},
-   "disk_bytes": 25966256,
+   "disk_bytes": 25986872,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -605,19 +600,14 @@
   },
   "ground": {
    "stage": "base",
-   "started_at": "2026-11-07T18:13:58Z",
-   "ended_at": "2026-11-07T18:14:25Z",
-   "wall_s": 26.6,
-   "cpu_self_s": 11.9,
+   "started_at": "2026-11-07T20:35:07Z",
+   "ended_at": "2026-11-07T20:35:18Z",
+   "wall_s": 11.2,
+   "cpu_self_s": 11.0,
    "cpu_children_s": 0.0,
-   "downloads": {
-    "macrostrat": {
-     "bytes": 75673982,
-     "requests": 13
-    }
-   },
+   "downloads": {},
    "cache": {},
-   "disk_bytes": 2283303,
+   "disk_bytes": 2283320,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -627,33 +617,20 @@
   },
   "soil_surface": {
    "stage": "base",
-   "started_at": "2026-11-07T18:15:00Z",
-   "ended_at": "2026-11-07T18:16:41Z",
-   "wall_s": 100.5,
-   "cpu_self_s": 0.8,
+   "started_at": "2026-11-07T20:35:44Z",
+   "ended_at": "2026-11-07T20:35:44Z",
+   "wall_s": 0.0,
+   "cpu_self_s": 0.0,
    "cpu_children_s": 0.0,
-   "downloads": {
-    "usda_sda": {
-     "bytes": 21029,
-     "requests": 1
-    },
-    "soilseries.sc.egov.usda.gov": {
-     "bytes": 146336,
-     "requests": 38
-    },
-    "edit.sc.egov.usda.gov": {
-     "bytes": 12867,
-     "requests": 3
-    }
-   },
+   "downloads": {},
    "cache": {
     "usda_osd": {
-     "hits": 1,
-     "misses": 25
+     "hits": 26,
+     "misses": 0
     },
     "usda_edit": {
-     "hits": 2,
-     "misses": 3
+     "hits": 5,
+     "misses": 0
     }
    },
    "disk_bytes": 20942,
@@ -683,8 +660,8 @@
   },
   "canopy_top": {
    "stage": "flora",
-   "started_at": "2026-11-07T18:16:48Z",
-   "ended_at": "2026-11-07T18:16:48Z",
+   "started_at": "2026-11-07T20:35:45Z",
+   "ended_at": "2026-11-07T20:35:45Z",
    "wall_s": 0.0,
    "cpu_self_s": 0.0,
    "cpu_children_s": 0.0,
@@ -701,21 +678,21 @@
  },
  "stages": {
   "base": {
-   "started_at": "2026-11-07T18:10:16Z",
-   "ended_at": "2026-11-07T18:16:44Z",
-   "wall_s": 387.0,
-   "cpu_s": 213.8,
-   "download_bytes": 100060970,
-   "cache_hits": 452,
-   "cache_misses": 38,
-   "disk_bytes": 634517865,
+   "started_at": "2026-11-07T20:33:44Z",
+   "ended_at": "2026-11-07T20:35:44Z",
+   "wall_s": 185.6,
+   "cpu_s": 168.4,
+   "download_bytes": 14757769,
+   "cache_hits": 490,
+   "cache_misses": 0,
+   "disk_bytes": 637502793,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
   "flora": {
-   "started_at": "2026-11-07T18:16:44Z",
-   "ended_at": "2026-11-07T18:16:48Z",
-   "wall_s": 4.2,
+   "started_at": "2026-11-07T20:35:44Z",
+   "ended_at": "2026-11-07T20:35:45Z",
+   "wall_s": 4.3,
    "cpu_s": 2.3,
    "download_bytes": 254,
    "cache_hits": 154,
@@ -1081,21 +1058,76 @@
    "ended_at": "2026-11-07T19:16:19Z",
    "failed": [],
    "refused": []
+  },
+  {
+   "started_at": "2026-11-07T20:33:44Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T20:33:44Z",
+     "steps_run": [
+      "dem",
+      "lidar",
+      "reroute",
+      "seasons",
+      "water_imagery",
+      "water",
+      "ground",
+      "terrain",
+      "substrate",
+      "soil_surface",
+      "seams"
+     ],
+     "steps_skipped": [
+      "naip",
+      "osm",
+      "hydro",
+      "channels",
+      "rewild_hydro",
+      "landcover",
+      "ice",
+      "water_seasons",
+      "territories",
+      "erase",
+      "ground_albedo",
+      "weather",
+      "unreal"
+     ],
+     "ended_at": "2026-11-07T20:35:44Z"
+    },
+    {
+     "stage": "flora",
+     "started_at": "2026-11-07T20:35:44Z",
+     "steps_run": [
+      "species_mix",
+      "canopy_top",
+      "crowns",
+      "inpaint"
+     ],
+     "steps_skipped": [
+      "plants"
+     ],
+     "ended_at": "2026-11-07T20:35:45Z"
+    }
+   ],
+   "ended_at": "2026-11-07T20:35:45Z",
+   "failed": [],
+   "refused": []
   }
  ],
  "totals": {
-  "wall_s": 406.3,
-  "cpu_s": 231.0,
-  "download_bytes": 100061224,
-  "cache_hits": 1267,
-  "cache_misses": 40,
-  "disk_bytes": 647794629,
+  "wall_s": 205.0,
+  "cpu_s": 185.6,
+  "download_bytes": 14758023,
+  "cache_hits": 1305,
+  "cache_misses": 2,
+  "disk_bytes": 650779557,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 1160
  },
- "updated_at": "2026-11-07T19:16:19Z",
+ "updated_at": "2026-11-07T20:35:45Z",
  "client": {
-  "bytes": 51591681,
+  "bytes": 51594869,
   "files": 49,
   "largest": {
    "client/terrain_detail.png": 12652827,
@@ -1106,7 +1138,7 @@
    "client/heights.png": 3661432,
    "client/imagery.png": 2372473,
    "client/season_ndvi.png": 1979731,
-   "client/substrate.png": 1897636,
+   "client/substrate.png": 1898931,
    "client/masks.png": 1291328,
    "client/features.json": 795718,
    "client/weather.json": 639754

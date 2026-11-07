@@ -197,17 +197,17 @@
    "notes": "massive to blocky, irregular joints; knobby dark faces",
    "index": 4,
    "fraction": 0.028,
-   "exposed_fraction": 0.0303,
+   "exposed_fraction": 0.0296,
    "joints": {
     "strikes_deg": [
-     127.5,
+     117.5,
      62.5
     ],
     "peak_over_mean": [
-     1.5,
-     1.08
+     1.27,
+     1.16
     ],
-    "cells": 1141,
+    "cells": 983,
     "source": "DEM: strikes of the faces steeper than 55 degrees"
    }
   },
@@ -250,7 +250,7 @@
    "notes": "bedded: ledges and overhangs along the beds, vertical joints between",
    "index": 5,
    "fraction": 0.0393,
-   "exposed_fraction": 0.0359,
+   "exposed_fraction": 0.0352,
    "fabric": {
     "strike_deg": 325.0,
     "dip_deg": 12.0,
@@ -265,13 +265,13 @@
    "joints": {
     "strikes_deg": [
      52.5,
-     147.5
+     82.5
     ],
     "peak_over_mean": [
-     1.19,
-     1.15
+     1.25,
+     1.12
     ],
-    "cells": 1107,
+    "cells": 1037,
     "source": "DEM: strikes of the faces steeper than 55 degrees"
    }
   },
@@ -616,9 +616,9 @@
   }
  },
  "stats": {
-  "exposed_fraction": 0.0051,
-  "exposed_mean": 0.0101,
-  "patches": 295,
+  "exposed_fraction": 0.005,
+  "exposed_mean": 0.0097,
+  "patches": 283,
   "patches_over_1000m2": 80,
   "patches_over_1ha": 10,
   "largest_patch_m2": 65025,

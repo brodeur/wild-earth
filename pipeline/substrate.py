@@ -380,6 +380,10 @@ def build_substrate(tile: Tile) -> dict:
     code = np.where(lab > 0, np.minimum(255, np.round(32 * np.log2(1 + area[lab] / 100))), 0).astype("uint8")
 
     img = np.dstack([np.round(e * 255).astype("uint8"), lith, code])
+    # roads rewilded (2026-11-07): the corridors take their banks' ground (pipeline/unroad.py mirror_grid), not the rock
+    # their cut faces and pale pavement read as
+    from .unroad import mirror_grid, road_strip
+    img = mirror_grid(img, road_strip(tile, img.shape[0]))
     Image.fromarray(img, "RGB").save(tile.path("client/substrate.png"), optimize=True)
 
     # orientations from the data

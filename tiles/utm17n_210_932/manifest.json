@@ -15,7 +15,7 @@
   8.513615135330369
  ],
  "size_m": 10000,
- "generated_at": "2026-11-07T17:17:13Z",
+ "generated_at": "2026-11-07T20:54:47Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -5510,20 +5510,52 @@
    "seconds": 0.0,
    "ok": true,
    "not_applicable": "no point cloud on this tile (DEM-only lidar or none): no canopy height model, so no crowns to find or inpaint"
+  },
+  {
+   "step": "dem",
+   "at": "2026-11-07T20:53:17Z",
+   "seconds": 5.3,
+   "ok": true
+  },
+  {
+   "step": "lidar",
+   "at": "2026-11-07T20:53:17Z",
+   "seconds": 0.0,
+   "ok": true,
+   "not_applicable": "outside 3DEP (nasadem): no public lidar; the 5 m base DEM carries the terrain"
+  },
+  {
+   "step": "ground",
+   "at": "2026-11-07T20:54:45Z",
+   "seconds": 88.2,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-07T20:54:47Z",
+   "seconds": 1.7,
+   "ok": true
+  },
+  {
+   "step": "crowns",
+   "at": "2026-11-07T20:54:47Z",
+   "seconds": 0.0,
+   "ok": true,
+   "not_applicable": "no point cloud on this tile (DEM-only lidar or none): no canopy height model, so no crowns to find or inpaint"
   }
  ],
  "steps": {
   "dem": {
    "version": "3",
-   "code": "8c62469a0d11aaec",
+   "code": "1d63164ad4f559f4",
    "params": {
     "tile": "utm17n_210_932",
     "dem_res_m": 5.0
    },
-   "fingerprint": "2d0b892a70e9d973",
+   "fingerprint": "4eb7c6cff903811c",
    "parts": {
     "version": "3",
-    "code": "8c62469a0d11aaec",
+    "code": "1d63164ad4f559f4",
     "params": {
      "tile": "utm17n_210_932",
      "dem_res_m": 5.0
@@ -5534,7 +5566,7 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T17:10:06Z",
+   "ran_at": "2026-11-07T20:53:12Z",
    "owner": null,
    "coverage": {
     "usgs_3dep": {
@@ -5575,7 +5607,7 @@
     "network": 1,
     "cache": 0
    },
-   "seconds": 5.0
+   "seconds": 5.3
   },
   "naip": {
    "version": "1",
@@ -5930,14 +5962,14 @@
   },
   "lidar": {
    "version": "2",
-   "code": "fa1cf6482fbacf63",
+   "code": "0d1c1ca67dee4d42",
    "params": {
     "tile": "utm17n_210_932"
    },
-   "fingerprint": "54f12952c4b3993e",
+   "fingerprint": "497fc3ac4b6c949b",
    "parts": {
     "version": "2",
-    "code": "fa1cf6482fbacf63",
+    "code": "0d1c1ca67dee4d42",
     "params": {
      "tile": "utm17n_210_932"
     },
@@ -5949,7 +5981,7 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T17:10:11Z",
+   "ran_at": "2026-11-07T20:53:17Z",
    "owner": null,
    "coverage": {
     "usgs_3dep_lidar": {
@@ -6051,14 +6083,14 @@
   },
   "ground": {
    "version": "2",
-   "code": "cc47cdfcc955c252",
+   "code": "40742690044fe03e",
    "params": {
     "tile": "utm17n_210_932"
    },
-   "fingerprint": "0fa485b3fb9515b9",
+   "fingerprint": "ec8f5aa036488490",
    "parts": {
     "version": "2",
-    "code": "cc47cdfcc955c252",
+    "code": "40742690044fe03e",
     "params": {
      "tile": "utm17n_210_932"
     },
@@ -6069,7 +6101,7 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T16:32:11Z",
+   "ran_at": "2026-11-07T20:53:17Z",
    "owner": null,
    "coverage": {
     "usda_sda": {
@@ -6119,7 +6151,7 @@
     "network": 1,
     "cache": 0
    },
-   "seconds": 70.9
+   "seconds": 88.2
   },
   "terrain": {
    "version": "3",
@@ -6252,14 +6284,14 @@
   },
   "substrate": {
    "version": "1",
-   "code": "2e65b327a37a5d98",
+   "code": "19835757c6be854b",
    "params": {
     "tile": "utm17n_210_932"
    },
-   "fingerprint": "b7f71771b8d4fce0",
+   "fingerprint": "af4f3f45f4ab8d27",
    "parts": {
     "version": "1",
-    "code": "2e65b327a37a5d98",
+    "code": "19835757c6be854b",
     "params": {
      "tile": "utm17n_210_932"
     },
@@ -6276,7 +6308,7 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T16:33:47Z",
+   "ran_at": "2026-11-07T20:54:45Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -6559,14 +6591,14 @@
   },
   "crowns": {
    "version": "2",
-   "code": "bf66bf68c7d4a768",
+   "code": "775dc516b64ab333",
    "params": {
     "tile": "utm17n_210_932"
    },
-   "fingerprint": "71d8f7998d540125",
+   "fingerprint": "3259d56c8b53523c",
    "parts": {
     "version": "2",
-    "code": "bf66bf68c7d4a768",
+    "code": "775dc516b64ab333",
     "params": {
      "tile": "utm17n_210_932"
     },
@@ -6579,7 +6611,7 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T17:10:33Z",
+   "ran_at": "2026-11-07T20:54:47Z",
    "owner": null,
    "status": "not_applicable",
    "reason": "no point cloud on this tile (DEM-only lidar or none): no canopy height model, so no crowns to find or inpaint",
