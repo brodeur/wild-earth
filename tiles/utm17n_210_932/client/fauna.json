@@ -2415,69 +2415,6 @@
    "behaviour_sources": [
     "eltontraits (activity)"
    ]
-  },
-  {
-   "code": "bothrops_asper",
-   "scientific": "Bothrops asper",
-   "common": "Terciopelo",
-   "one": "terciopelo (fer-de-lance)",
-   "many": "terciopelos",
-   "kin": "sceloporus_occidentalis",
-   "archetype": "snake",
-   "scale": 2.988,
-   "tint": null,
-   "mass_kg": 0.5,
-   "density_km2": 59.6453,
-   "group": [
-    1,
-    1
-   ],
-   "bird": false,
-   "night": false,
-   "water": false,
-   "role": [],
-   "known": [
-    "2026-11-06 snake lane: a stand-in slot for playing a viper here (it was skipped over the 40-slot cap); drawn with the terrestrial garter snake's model (no terciopelo model yet: Meshy credits needed); family Viperidae: its strike carries venom"
-   ],
-   "reptile": "snake",
-   "mass_source": "library/animals/traits/bothrops_asper.json",
-   "model": {
-    "path": "fauna/thamnophis_elegans.glb",
-    "kind": "snake",
-    "archetype": "snake",
-    "skin": false
-   },
-   "active_hours": [
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
-   ],
-   "rest": "lie",
-   "behaviour_sources": [
-    "stand-in: the garter snake's slot, its mass and family from the trait card"
-   ],
-   "family": "Viperidae"
   }
  ],
  "skipped": [
@@ -2619,6 +2556,10 @@
   },
   {
    "id": "ctenosaura_similis",
+   "why": "over the 40-slot cap"
+  },
+  {
+   "id": "bothrops_asper",
    "why": "over the 40-slot cap"
   },
   {

@@ -104,12 +104,7 @@
   }
  ],
  "relations": {
-  "predation": [
-   [
-    "bothrops_asper",
-    "sciurus_granatensis"
-   ]
-  ],
+  "predation": [],
   "competition": {
    "cliff_or_snag": {
     "summer": [
@@ -162,25 +157,7 @@
   ],
   "alarm": [],
   "forage": [],
-  "cover": [],
-  "snake_prey_basis": "a snake takes ground-living amphibians, rodents, shrews and lizards from 0.005 of its mass up to its gape: Viperidae 0.6, Boidae 1, Pythonidae 1, else 0.25 of its mass (pipeline/games.py)",
-  "desirability": {
-   "bothrops_asper": {
-    "sciurus_granatensis": [
-     1.0,
-     1.0,
-     1.0,
-     1.0
-    ]
-   }
-  },
-  "desirability_seasons": [
-   "winter",
-   "spring",
-   "summer",
-   "fall"
-  ],
-  "desirability_basis": "plants: the eaten part's energy (PART_ENERGY), raised for a seasonal pulse; prey: the mass ratio to the predator's optimal prey size (Carbone 1999) blended with the diet's order; each eater's plants and prey scaled 0..1"
+  "cover": []
  },
  "resources": {
   "acorn_mast": {
