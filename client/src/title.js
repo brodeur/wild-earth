@@ -56,8 +56,12 @@ export { latLonToXYZ };
 // words go to the geocoder alone, and the map's tiles are asked of OpenFreeMap as any web map asks; nothing is stored.
 
 const DEG = Math.PI / 180, R_KM = 6371;
-const FOV_FAR = 38, FOV_NEAR = 55, TILT_MAX = 54 * DEG;    // the lens and the tilt from space, and at a few kilometres
-const TILT_ALT = [0.03, 0.0009];                           // the altitudes (earth radii) between which they change
+const FOV_FAR = 38, FOV_NEAR = 55;                         // the lens from space, and at a few kilometres
+const TILT_ALT = [0.03, 0.0009];                           // the altitudes (earth radii) between which the lens changes
+// The tilt from straight down: none from space, steepening back as the view zooms out, and low over a chosen tile (Aaron,
+// 2026-11-07: the tile view was about 52 degrees above the horizon; "lower that angle by half when zoomed in. Zooming out
+// can steepen the angle"): about 26 degrees above the horizon at a tile's framing distance (some 20 km)
+const TILT_MAX = 66 * DEG, TILT_AT = [0.03, 0.0025];
 const ALT0 = 2.5, ALT_MIN = 0.6 / R_KM, ALT_MAX = 3.6;      // the camera's distance from the point it looks at
 // Flying to a chosen place is slow (Aaron, 2026-11-06: "slow enough so that the world has a chance to render ... by the
 // time they arrive at the tile, it's mostly loaded"): PLACE_SLOW times the free flight's time, within PLACE_MS; its last
@@ -127,7 +131,7 @@ const lonOfYaw = yaw => ((((90 - yaw / DEG) - 180) % 360) + 540) % 360 - 180;
 const yawOfLon = lon => (90 - (lon + 180)) * DEG;
 // Up close the camera tilts toward the horizon and the lens widens (0 from space, 1 at a few kilometres).
 const nearness = alt => smooth(Math.log(TILT_ALT[0]), Math.log(TILT_ALT[1]), Math.log(alt));
-const tiltFor = alt => TILT_MAX * nearness(alt);
+const tiltFor = alt => TILT_MAX * smooth(Math.log(TILT_AT[0]), Math.log(TILT_AT[1]), Math.log(alt));
 const fovFor = alt => lerp(FOV_FAR, FOV_NEAR, nearness(alt));
 // How much of the map is over the earth's own picture: some from space (the spirit earth shows through), all of it near.
 const mapMixFor = alt => lerp(0.5, 1, smooth(1.4, 0.06, alt));

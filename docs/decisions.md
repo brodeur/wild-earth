@@ -7843,3 +7843,7 @@ or AVONET row, not a per-species patch.
   - **The `G` overlay stays.** OSM ghost roads remain as a present-day overlay.
 - **A reach's water outline no longer depends on its place in the file (water step 3).** The width wander (0.55–1.4 × width/2, periods 41 and 17 m) was phased by the reach's index in channels.geojson. Removing roads changed two reaches elsewhere on Lamar, and the main stem at the river probe went from index 219 to 217. Its water then spread over the near gravel bar even though that reach's line, ground, levels and profile were unchanged. The phase now comes from the reach's start point.
   - **Still open.** The wander is decoration, not data. At the probe the photo shows water up to the south bank's grass with the bar across on the north side, which neither the old outline nor the new one draws. Fitting big rivers' width to the imagery's water is the follow-up.
+- **A chosen tile is seen from low over the land (2026-11-07).** Aaron: "lower that angle by half when zoomed in. Zooming out can steepen the angle."
+  - **Before.** The title's camera was 38° from straight down at a tile's framing distance, about 52° above the horizon.
+  - **Now.** It is 63° from straight down there, about 27° above the horizon. The relief and the rings read as a model on a table.
+  - **How.** The tilt has its own altitude curve (`TILT_MAX` 66°, eased from 190 km to 16 km) and no longer shares the lens's curve. Zooming out still steepens it to straight down from space.
