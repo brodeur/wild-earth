@@ -1,6 +1,6 @@
 {
  "tile": "utm12n_514_4838",
- "version": "1",
+ "version": "2",
  "map_zone": 21,
  "rule": "pipeline/ground_cards.py choose(): each community's LANDFIRE BpS description (its dominant and indicator species, then the species its vegetation description names), grasses and forbs by the PLANTS growth habit, native, recorded within 0.5 deg; weights 1.0 table, 0.5 text",
  "communities": [

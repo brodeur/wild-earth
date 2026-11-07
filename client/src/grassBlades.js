@@ -199,6 +199,29 @@ export function buildTussockClump(seed = 23) {
   return B.geometry();
 }
 
+// A bunchgrass tuft at unit size (2026-11-06, the tuft rule: grass.js draws a tile's own perennial bunchgrasses as whole
+// tufts of their record's ground.tuft size, scaled x width_m across and y height_m up): the leaf mass 1 tall and 1 across
+// (radius 0.5), a dense fountain of narrow leaves from a crown half its width (Idaho fescue: a 10 cm base under a 20 cm tuft,
+// FEIS), most upright, a ring arching out at the rim, and seven flowering culms 2.2-2.8x the leaves (PLANTS' mature height is
+// the culms', the tuft 0.35 of it) with a narrow head of spikelets close along the top. The leaves are drawn wider than a
+// fescue's real 1-2 mm (about 4 % of the tuft's width: 8 mm on a 0.19 m tuft), so 70 of them carry the mass of hundreds;
+// three segments a leaf (a tuft is 10-40 cm: the needlegrass tussock's four bought nothing visible at 14 tufts per m^2).
+export function buildTuftClump(seed = 29) {
+  const rnd = mulberry32(seed), B = new ClumpBuilder();
+  for (let i = 0; i < 52; i++) leaf(B, rnd, { spread: 0.2, theta: [0.04, 0.34], droop: [0.2, 0.7], len: [0.8, 1.15], width: [0.034, 0.05], segs: 3 });
+  for (let i = 0; i < 18; i++) leaf(B, rnd, { spread: 0.25, theta: [0.4, 0.75], droop: [0.5, 1.1], len: [0.6, 0.85], width: [0.034, 0.05], segs: 3 });
+  for (let i = 0; i < 7; i++) {
+    const c = culm(B, rnd, { spread: 0.16, theta: [0.03, 0.22], droop: [0.04, 0.2], len: [2.2, 2.8], width: 0.009 });
+    for (let s = 0; s < 4; s++) {
+      const az = c.phi + s * 2.1 + rnd() * 0.5, o = v3(Math.cos(az), 0, Math.sin(az));
+      const base = c.top.clone().addScaledVector(c.tan, -0.11 * s - 0.02);
+      const dir = c.tan.clone().multiplyScalar(0.9).addScaledVector(o, 0.25).normalize();
+      B.diamond(base, dir, 0.13 + 0.03 * rnd(), 0.026, c.r, PART.HEAD);
+    }
+  }
+  return B.geometry();
+}
+
 // An annual that carries a wild oat card (grass.js): wild oat itself, taller than the bromes and
 // medusahead around it, its culms topped by open, nodding panicles of large dangling spikelets.
 export function buildOatClump(seed = 31) {
