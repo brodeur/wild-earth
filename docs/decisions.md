@@ -7298,6 +7298,76 @@ glottal stop is itself drawn like a question mark without its dot, so at 12 px i
   every name now draws only from DM Sans and Noto Sans (Noto for Ɂ and ʔ in the Washoe name and ȧ in the Cheyenne
   name), with no system fallback; with DM Sans alone the same three came from .SF NS and Helvetica.
 
+## 2026-11-06: snakes are playable; the body follows the head's path (branch claude/snake-play)
+
+Aaron: "Are there any tiles where we can be a snake". The western terrestrial garter snake on Lamar and Teton is now
+playable. The terciopelo (fer-de-lance) is playable on Corcovado as a stand-in slot. `client/src/snake.js` drives the
+snake inside the walkers' control. docs/movement.md "The snake" and docs/games.md "The snakes' prey" have the details.
+
+- **The body is the head's path, not a wave on a rigid body.** The head swings about the steered point by the distance
+  crawled, its trail is kept, and the shader's new `SN_PATH` mode draws the body along it from a uniform of step
+  headings and node heights. A turn trails, the wave stands on the ground, and the body drapes over slopes, rocks and
+  water. Considered: the AI's travelling wave plus the C-bend for a turn (`snUpdate`'s way). Rejected: the brief asked
+  for a centreline that trails behind, and the C-bend swings the whole body round its middle. The AI keeps its own
+  way, so its shader has no new cost; the player's material compiles its own program.
+- **Coiling blends onto the AI's coil, and leaving a coil re-seeds the trail from the body as drawn.** So a snake
+  crawls out of its coil instead of snapping straight. Entering seeds the trail from the AI animal's own centreline
+  (`snakeLine`, the shader's maths on the CPU), so the body taken is the body seen.
+- **The group sees the AI's channels.** `bodySample` sends the body's mean point, mean heading, phase, gait, turn and
+  coil, the way the AI's snakes are mirrored. A member's page draws a wave of the right wavelength rather than the exact
+  path: no new fields in the 5 Hz stream.
+- **One strike for the snakes, venom for the vipers and elapids.** `strikes.js` gives the snake families `strike`
+  (fast: the hit at 0.15 s, since a slower one let a vole step out of reach). Venom is damage over time on the host,
+  no new event type: 'hp' events and a `kill` marked `venom`.
+- **The snakes' prey by rule in the games step.** The rule is gape-limited by family over the tile's amphibians,
+  rodents, shrews and lizards. Lamar's, Teton's and Corcovado's `games.json` were re-run in place, which also gave
+  them the desirability.
+- **A tile keeps a slot for each class of body the caps would leave out** (`pipeline/fauna_slots.py RESERVE_MAX`, the
+  `animals` step version 6). Corcovado's terciopelo had been skipped over the cap. On the brief's direction the fix is a
+  rule rather than a hand-added slot: above both caps (40 mammals and birds, 6 reptiles and amphibians), each class of
+  body that has a model or a buildable template and no slot yet gets one, the first by the caps' own ranking, up to 2.
+  The classes are a snake, a sprawling lizard or crocodilian, a tortoise, each bird template, a quadruped, or a
+  species' own model's kind (`body_class`). The client's limit, `animals.js STAND_IN_MAX`, is 48 = 40 + 6 + 2.
+  Re-running the step on Corcovado brought the terciopelo in under the existing reptile cap: the tile's file predated
+  that cap. The rule's own test is `tests/test_pipeline.py TestFaunaReserve`, the only snake behind six lizards and
+  frogs. The re-run also gave the reptiles their amniote-database masses: the terciopelo is 1.04 kg, not the 0.5 kg
+  class default. The hand-added stand-in slot was reverted. The scaled garter snake served only for local tests of the
+  strike and the venom.
+- **The terciopelo's model: two text-to-3D tries, both refused by the snake gate, 40 credits, no refine paid.** The first
+  preview was short and thick in tight bends: 9.9 diameters long, under the build's 10. The prompt rule for every snake
+  then became "a long, slender body, at least fifteen times as long as it is thick ... one loose, open S-curve with wide
+  bends, no tight bends, no coils" (`fauna_models._prompts`). The second preview came back a closed ring all the same
+  ("the centreline jumps: the body touches itself"). The brief stopped there. Without a model, Corcovado's terciopelo
+  slot is not drawn. The brief then opened one image-to-3D attempt (30 credits). The photo rung now applies to snakes as a rule
+  (`fauna_models.run`). A snake photo for image-to-3D must also hold the whole body (`reference_photos` `snake_image`:
+  whole 0.8 or more), since image-to-3D copies the photo's pose. Of the terciopelo's 48 openly licensed candidates,
+  none shows a whole snake laid out side-on with nothing over it. The rule's first pick was coiled on a couch, with its
+  tail leaving the frame. Its next was the forebody of one in the leaf litter (iNaturalist 179526228, CC BY 4.0, Trevor
+  Van Loon), the rest under the leaves: the segmenters' mask stops where the litter covers the body, so "whole" reads
+  1.0. A mesh from it would be half a snake, so the attempt was held, no credits spent. A loop measure (background holes
+  inside the body's mask) was tried and dropped: the segmenters fill the background a loop encloses. The credit-free
+  route the brief asked about (a snake built procedurally on the template from its traits and a photo's pattern) is
+  described in the lane's report.
+- **Snakes spawn where they live, not on the fence lizard's open ground** (`animals.js` spawn, `pipeline/fauna_slots.py
+  habitat_affinity`). A snake's habitat weights come from its own records on the tile: CC0 and CC BY only, as the
+  density prior, over `client/habitat.png`, each class by its share of the records against its share of the land, with
+  two records' worth spread by area. Below 5 usable records the kin's table stands. Within a cell, the spot is the
+  better of open ground with rocks or an edge (a garter snake's) and the shaded floor under the canopy (a forest
+  viper's). It is no longer halved under trees. On Corcovado (99% canopy) terciopelos now spawn on their own, 1 to 3
+  within 150 m of each point sampled, where none did. Teton's garter snake has 11 usable records: riparian 1.0,
+  conifer 0.85, chaparral 0.25. Lamar's has 2 and Corcovado's terciopelo 4 (most records there are CC BY-NC), so those
+  keep the kin's table. Every fauna slot now carries its `family`: the re-run slot had lost it, and the terciopelo
+  struck as a colubrid, without venom.
+
+- **Verified after merging main (2839ac2)**, on the garter snake:
+  - Lamar: crawl, coil, slope, swim, strike.
+  - Teton: crawl, coil, slope, and a strike that kills a deer mouse and fills the belly. Its snakes spawn by
+    themselves under the records' habitat weights.
+  - The home screen's chosen body (`takeBody`) enters a garter snake, keeping its coil.
+  - A group member's page draws the player's snake: within 10 cm of its body's middle, the crawl's gait, then the coil.
+  - The home screen's rings (`bodyRing.js`) already draw a modelled snake and skip an unmodelled one, so Corcovado's
+    terciopelo stays out of them until it has a model.
+
 ## 2026-11-07: the bodies in rings over the chosen place (branch claude/animal-rings)
 
 Aaron's design for the screen after a place is chosen: the tile centred with room under it for a proper title above

@@ -5,7 +5,8 @@
 // (animals.js hurt, and a mirror's `hit` request), the player's page uses them to light its buttons (combat.js).
 //
 // Who strikes how, by family (tiles' locomotion.json `family`; a stand-in reads its kin's): the cats bite, swipe and
-// pounce; the dogs, hyenas, mustelids and the rest bite and lunge; the bears bite, swipe and lunge. Every number comes
+// pounce; the dogs, hyenas, mustelids and the rest bite and lunge; the bears bite, swipe and lunge; the snakes strike
+// (once: a bite at the end of a strike, with venom working on afterwards for the vipers and the elapids). Every number comes
 // from the bodies, not from a table per species: a body's mass m (locomotion.json mass_kg, fauna.json mass_kg for a
 // stand-in, times its size cubed) and its length (locomotion.json length_m, else LEN_K m^(1/3), Calder's length-mass
 // scaling). Health is HP_K m^0.75 (Kleiber's scaling, as a body's metabolic reserve goes): a vole about 1, a brush rabbit
@@ -19,9 +20,17 @@ export const MOVES = {
   swipe:  { key: 'swipe',  name: 'swipe',  reach: 1.15, cd: 1.5, dmg: 0.12, hitAt: 0.16, dur: 0.38, title: 'a forepaw raked across it: quick and cheap' },
   pounce: { key: 'pounce', name: 'pounce', reach: 5, cd: 12,  dmg: 0.2,  gap: true, title: 'a crouch, then a leap onto it from a distance: closes the gap' },
   lunge:  { key: 'lunge',  name: 'lunge',  reach: 3.5, cd: 7,   dmg: 0.18, gap: true, title: 'a short rush and a spring onto it' },
+  // the snakes' one strike (2026-11-06): the fore body drawn back into an S, then thrown straight out at the prey and back,
+  // a third of its length (a snake strikes a third to a half of its length; Greene 1997); its reach is measured from the
+  // head, where a snake's position is (groundControl.js). A viper's carries venom: venom more of the struck prey's health
+  // over venomT s after the bite (animals.js venomTick), the prey running off with it.
+  strike: { key: 'strike', name: 'strike', reach: 0.33, cd: 2.5, dmg: 0.34, hitAt: 0.15, dur: 0.5, venom: 0.5, venomT: 8, title: 'drawn back into an S, then the head thrown out at it: a bite (a viper\'s carries venom, working on as the prey runs)' },
 };
 export const GCD = 1.0, HP_K = 10, LEN_K = 0.45, REGEN = 0.02, REGEN_DELAY = 8, FIGHT_K = 0.6, FIGHT_P = 0.18;   // s; health per kg^0.75; m per kg^(1/3); of the full health a second once REGEN_DELAY s past the last hit; prey this heavy against the striker may fight back, this often
-const BY_FAMILY = { Felidae: ['bite', 'swipe', 'pounce'], Ursidae: ['bite', 'swipe', 'lunge'] };
+const SNAKES = ['Colubridae', 'Natricidae', 'Viperidae', 'Elapidae', 'Boidae', 'Pythonidae', 'Lamprophiidae', 'Dipsadidae', 'Serpentes'];
+const BY_FAMILY = { Felidae: ['bite', 'swipe', 'pounce'], Ursidae: ['bite', 'swipe', 'lunge'], ...Object.fromEntries(SNAKES.map(f => [f, ['strike']])) };
+// the families whose bite carries venom that keeps working after the strike (MOVES.strike.venom)
+export const venomous = family => family === 'Viperidae' || family === 'Elapidae';
 export const DEFAULT_MOVES = ['bite', 'lunge'];
 export const movesFor = family => (BY_FAMILY[family] || DEFAULT_MOVES).map(k => MOVES[k]);
 

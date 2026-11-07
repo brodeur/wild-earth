@@ -38,6 +38,7 @@ export class Combat {
     addEventListener('keydown', this.onKey);
     this.unhook = [
       animals.on?.('hp', e => this.onHp(e)),
+      animals.on?.('kill', e => { if (e.venom && e.mine && this.ground.on) { this.ground.caught(e.animal); this.say?.(`the venom takes the ${this.name(e.animal)}`); } }),   // a viper's struck prey dying of the venom (animals.js venomTick): the player's catch
     ].filter(Boolean);
     animals.onKicked = a => this.kicked(a);
   }

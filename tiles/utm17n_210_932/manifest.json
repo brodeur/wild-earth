@@ -15,7 +15,7 @@
   8.513615135330369
  ],
  "size_m": 10000,
- "generated_at": "2026-11-07T02:34:37Z",
+ "generated_at": "2026-11-07T04:52:43Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -3563,9 +3563,9 @@
    "scavengers": 8,
    "generated_traits": 0,
    "queued": 82,
-   "queued_credits": 2360,
-   "sha256": "441b7d791d30e65a9ac922b11d20ab949385c18c8096892c7879a4cd749ac4d2",
-   "bytes": 164548
+   "queued_credits": 2355,
+   "sha256": "79053e4e3070bb8e04d7c14168067110dfbf7bbebdc4529edc691f94d6686adc",
+   "bytes": 164521
   },
   "resources": {
    "path": "resources/resources.json",
@@ -3921,8 +3921,8 @@
     "species.presence"
    ],
    "allow": 6,
-   "slots": 40,
-   "skipped": 42,
+   "slots": 46,
+   "skipped": 36,
    "stand_ins": {
     "tapirella_bairdii": "cervus_canadensis",
     "pecari_tajacu": "odocoileus_hemionus",
@@ -3937,8 +3937,8 @@
     "saimiri_oerstedii": "sciurus_griseus",
     "choloepus_hoffmanni": "urocyon_cinereoargenteus"
    },
-   "sha256": "0d0c651d9242fe08de782c1f2561c9d163da62da94523d321bc04d6db15484d1",
-   "bytes": 40741
+   "sha256": "df9fa97431cca74f46cc0c64fd0eb20b1046abf40dc25b07d453f8403d9b3cb1",
+   "bytes": 46693
   },
   "client.texture_ground": {
    "path": "client/texture_ground.jpg",
@@ -4994,6 +4994,18 @@
    "step": "territories",
    "at": "2026-11-07T02:34:37Z",
    "seconds": 0.2,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-07T04:40:28Z",
+   "seconds": 268.9,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-07T04:52:43Z",
+   "seconds": 1.4,
    "ok": true
   }
  ],
@@ -6162,15 +6174,15 @@
    "seconds": 0.6
   },
   "animals": {
-   "version": "5",
-   "code": "9ede32ed0ac306d7",
+   "version": "6",
+   "code": "e5211934d2990bdb",
    "params": {
     "tile": "utm17n_210_932"
    },
-   "fingerprint": "7bdb8b4eb35faca6",
+   "fingerprint": "b9d66c20c571e58e",
    "parts": {
-    "version": "5",
-    "code": "9ede32ed0ac306d7",
+    "version": "6",
+    "code": "e5211934d2990bdb",
     "params": {
      "tile": "utm17n_210_932"
     },
@@ -6179,11 +6191,11 @@
      "plants": "ea64c84c7c9027fc"
     },
     "library": {
-     "library/animals": "522e5b0ee36723ba",
+     "library/animals": "da8a23e64dd70994",
      "data/eltontraits": "e3b0c44298fc1c14"
     }
    },
-   "ran_at": "2026-11-06T11:29:52Z",
+   "ran_at": "2026-11-07T04:52:41Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -6191,10 +6203,10 @@
     "species.animals"
    ],
    "outputs": {
-    "client/fauna.json": "0d0c651d9242fe08",
-    "species/animals.json": "441b7d791d30e65a"
+    "client/fauna.json": "df9fa97431cca74f",
+    "species/animals.json": "79053e4e3070bb8e"
    },
-   "out_hash": "0dbf1cbbc4f8f067",
+   "out_hash": "bc1557fdc5df7daf",
    "sources": {
     "gbif": "2026-11-06",
     "eltontraits": "2026-11-06"
@@ -6203,9 +6215,9 @@
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 313
+    "cache": 315
    },
-   "seconds": 0.7
+   "seconds": 1.4
   },
   "resources": {
    "version": "1",

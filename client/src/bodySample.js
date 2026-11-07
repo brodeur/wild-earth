@@ -35,6 +35,7 @@ export function bodySample(we, out, cst, now = performance.now()) {
     out[F.yaw] = f.yaw + Math.PI;                       // the control's yaw: the drawing lags it as the AI's does
     out[F.spd] = g.spd || 0; out[F.wr] = g.cs?.wr || 0; out[F.lift] = g.pose.lift || 0;
     out[F.fl] = g.mode === 'fly' || g.mode === 'air' ? FL_AIR : g.mode === 'tunnel' ? FL_BURIED : 0;   // underground (dig.js): a glow in the others' underground view, no one's prey
+    g.snakeSample?.(out);   // a snake: drawn along its own path here, sent on the AI's channels (snake.js sample: its mean point and heading, the wave, the coil)
   } else if (fl?.on && fl.body) {
     fromMesh(fl.body.mesh, out);
     out[F.fl] = f.landed ? 0 : FL_AIR; out[F.spd] = f.speed || 0;

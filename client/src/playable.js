@@ -1,4 +1,5 @@
 import { GROUND } from './groundControl.js';
+import { snakeEntry } from './snake.js';
 import { FLIERS } from './flierControl.js';
 
 // The bodies the spirit can take (spirit.js), by species code: which control drives each. The raven (RavenFlight), the
@@ -22,6 +23,7 @@ export function registerStandIns(list) {
   standIns = [];
   for (const o of Object.values(list || {})) {
     const code = o?.code, kin = o?.kin; if (!code || GROUND[code] || FLIERS[code] || OWN[code]) continue;
+    if (o.reptile === 'snake') { if (!o.drawn) continue; GROUND[code] = snakeEntry(o); SHORT[code] = code; standIns.push(code); continue; }   // a snake: its own walker on its own model (snake.js; none without one)
     const tw = OWN_TWIN[kin], T = GROUND[kin] ? GROUND : FLIERS[kin] ? FLIERS : tw ? (tw[0] === 'ground' ? GROUND : FLIERS) : null;
     const base = T ? T[kin] || T[tw?.[1]] : null; if (!base) continue;
     T[code] = { ...base, short: code, common: o.common || o.one || code, ...(o.drawn ? { model: o.drawn } : {}) };   // drawn: its own model (animals.playerModel)

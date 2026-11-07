@@ -1395,10 +1395,23 @@ vec3 transformed;
 //   flick  the head's turn about the neck (signed).
 // aAnim2 = (turn: a C along the body, signed as the yaw's turn; the coil's hand: below 0 the other way; the ground's sag
 // under the middle of the body, m, signed: the body follows a hollow or a hump; -).
+// The player's snake (SN_PATH, groundControl.js): the centreline is the path the head has crawled, so no wave and no coil
+// are made here: uSnPath[i].x is the heading of step i (radians, in the instance's frame, as snTheta's), uSnPath[i].y the
+// height of node i (the step's start, the snout node 0; m in the model's units, from the instance's origin): the body
+// lies over whatever ground, rock or water the head crossed. The curve is not re-centred: the snout stays on the instance
+// (0, sn_snoutZ - L/2), where the controller puts its head.
 const SNAKE_DECL = `
 const int SN_N = 40;
+#ifdef SN_PATH
+uniform vec2 uSnPath[41];
+#endif
 float snTheta(float s) {
   float L = sn_snoutZ - sn_tailZ, sh = max(s, sn_snoutZ - sn_neckZ);
+#ifdef SN_PATH
+  float pu = clamp(sh / L * float(SN_N) - 0.5, 0.0, float(SN_N - 1));
+  int p0 = int(floor(pu)), p1 = min(p0 + 1, SN_N - 1);
+  return mix(uSnPath[p0].x, uSnPath[p1].x, pu - floor(pu));
+#endif
   float g = clamp(aAnim.y, 0.0, 1.0);
   float A = mix(rig_restA, rig_waveA, g), k = 6.28318 * mix(rig_restN, rig_waveN, g) / L;
   float env = mix(rig_envH, 1.0, smoothstep(0.0, 0.3, sh / L));
@@ -1420,6 +1433,9 @@ void snCurve(float sv, out vec2 Pv, out vec2 Pn, out vec2 Pm, out float thm) {
     Pm += 0.5 * (P + P1); thm += th; P = P1;
   }
   Pm /= float(SN_N); thm /= float(SN_N);
+#ifdef SN_PATH
+  Pm = vec2(0.0); thm = 0.0;
+#endif
 }`;
 const SNAKE_BODY = `
 vec3 animPos = position;
@@ -1441,7 +1457,11 @@ vec3 transformed;
     transformed = snN + snF * (transformed - snN); animR = snF * animR;
   }
   float snU = snSv / snL, snCoil = clamp(aAnim.z, 0.0, 1.0);
+#ifdef SN_PATH
+  { float pq = clamp(snU * float(SN_N), 0.0, float(SN_N)); int q0 = int(floor(pq)), q1 = min(q0 + 1, SN_N); transformed.y += mix(uSnPath[q0].y, uSnPath[q1].y, pq - floor(pq)); }   // the ground the head crossed
+#else
   transformed.y += aAnim2.z * 4.0 * snU * (1.0 - snU) * (1.0 - snCoil);   // the ground's sag or hump under the body
+#endif
   float snUp = max(-aAnim.z, 0.0) * rig_lift * snL * pow(max(0.0, 1.0 - snSv / (0.2 * snL)), 2.0);
   transformed.y += snUp;   // alert: the fore body raised
 }
@@ -1675,6 +1695,38 @@ const animDecl = model => (model.skin ? 'attribute vec4 aAnim;\n' + (model.antle
   : (model.weighted ? '#define ANIM_WEIGHTED\nattribute float aPartW;' : '') + ANIM_DECL_BASE + '\n' + extraDecl(model)) + decayConsts(model).decl;
 const programKey = model => `${model.amp.join(',')}|${model.pose.join(',')}|${model.weighted ? 'w' : ''}|${model.rig ? model.rig.name : ''}|${model.gait ? 'g' : ''}|${model.antler ? 'a' : ''}|${model.skin ? `s${model.skin.ratio.toFixed(4)}:${model.skin.key}${model.live ? ':live' : ''}` : ''}|${decayConsts(model).key}`;
 export { hasAnim2 };
+// The snake template's centreline on the CPU (SNAKE_DECL's snTheta and snCurve, line for line, without SN_PATH): for a
+// snake model (model.rig.kind 'snake') posed by (phase, gait, pose, flick) and (bend, hand), the SN_N + 1 nodes from the
+// snout to the tail tip in the model's ground plane, re-centred as the shader does: out[2i], out[2i + 1] the node's x and
+// z (model units, the snout end first). The player's snake (groundControl.js) seeds its trail with it from the animal it
+// enters, so the body it takes is the one it saw: its wave, its turn, its coil.
+export const SN_N = 40;
+export function snakeLine(model, phase, gait, pose, bend, hand, out = new Float32Array(2 * (SN_N + 1))) {
+  const r = model.rig, piv = r.piv || {}, K = r.k, sz = piv.snout_z ?? 0.5, tz = piv.tail_end_z ?? -0.5, L = sz - tz;
+  const nz = piv.neck_z ?? sz - 0.045 * L, rad = piv.radius_m ?? 0.02 * L, sn = sz - nz;
+  const g = Math.min(1, Math.max(0, gait)), A = K.restA + (K.waveA - K.restA) * g, k = 2 * Math.PI * (K.restN + (K.waveN - K.restN) * g) / L;
+  const d = 2 * rad, b = d * K.coilGap / (2 * Math.PI), r0 = d * K.coilR, c = Math.min(1, Math.max(0, pose));
+  const theta = s => {
+    const sh = Math.max(s, sn), t = Math.min(1, Math.max(0, sh / L / 0.3)), env = K.envH + (1 - K.envH) * t * t * (3 - 2 * t);
+    const wave = A * env * Math.sin(phase - k * sh) - bend * K.bendA * sh / L;
+    const coil = (hand < 0 ? 1 : -1) * (Math.sqrt(r0 * r0 + 2 * b * (L - sh)) - r0) / b;
+    return wave + (coil - wave) * c;
+  };
+  const ds = L / SN_N; let x = 0, z = 0, mx = 0, mz = 0, thm = 0;
+  out[0] = 0; out[1] = 0;
+  for (let i = 0; i < SN_N; i++) {
+    const th = theta((i + 0.5) * ds), x1 = x - Math.sin(th) * ds, z1 = z - Math.cos(th) * ds;
+    mx += 0.5 * (x + x1); mz += 0.5 * (z + z1); thm += th; x = x1; z = z1;
+    out[2 * i + 2] = x; out[2 * i + 3] = z;
+  }
+  mx /= SN_N; mz /= SN_N; thm /= SN_N;
+  const cs = Math.cos(thm), sn2 = Math.sin(thm), z0 = sz - 0.5 * L;   // animRY(-thm) (P - Pm) + (0, z0)
+  for (let i = 0; i <= SN_N; i++) {
+    const vx = out[2 * i] - mx, vz = out[2 * i + 1] - mz;
+    out[2 * i] = cs * vx - sn2 * vz; out[2 * i + 1] = sn2 * vx + cs * vz + z0;
+  }
+  return out;
+}
 
 // Light through the feathers (UNDERWING): a bird's wing and tail seen with the sun beyond them glow with the light
 // coming through, tinted by the feathers (a red-tail's pale lining and translucent primaries, a turkey vulture's
@@ -1725,7 +1777,7 @@ void RE_Direct_Underwing( const in IncidentLight directLight, const in vec3 geom
 // map: a textured tier (the ground raven's lod0): the texture instead of the vertex colours, smooth shaded.
 // head: a { value } uniform (radians) that turns the HEAD part about the vertical through its pivot: the player's own
 // body (groundControl.js and the other controls), whose head follows the camera's look (flight.js look).
-export function animalMaterial(atmosphere, model, { map = null, head = null } = {}) {
+export function animalMaterial(atmosphere, model, { map = null, head = null, snakePath = null } = {}) {   // snakePath: the player's snake's { value: Float32Array(82) } (SN_PATH above)
   const m = map ? new THREE.MeshLambertMaterial({ map, vertexColors: false }) : new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: true });
   atmosphere.patchLambert(m);
   const prev = m.onBeforeCompile;
@@ -1734,13 +1786,14 @@ export function animalMaterial(atmosphere, model, { map = null, head = null } = 
   const v4 = a => `vec4(${a.map(x => x.toFixed(4)).join(', ')})`;
   const consts = `\nconst vec4 uAmp = ${v4(model.amp)};\nconst vec4 uPose = ${v4(model.pose)};`;
   const uw = map ? null : underwingSpec(model);
-  const key = `atmosphere-lambert|animal|${programKey(model)}${map ? "|map" : ""}${uw ? `|uw${uw.lead.toFixed(4)},${uw.inv.toFixed(3)},${uw.perch ? 1 : 0}` : ''}${head ? '|head' : ''}`;
+  const key = `atmosphere-lambert|animal|${programKey(model)}${map ? "|map" : ""}${uw ? `|uw${uw.lead.toFixed(4)},${uw.inv.toFixed(3)},${uw.perch ? 1 : 0}` : ''}${head ? '|head' : ''}${snakePath ? '|snpath' : ''}`;
   m.onBeforeCompile = (shader, renderer) => {
     prev.call(m, shader, renderer);
+    if (snakePath) shader.uniforms.uSnPath = snakePath;
     if (model.skin) Object.assign(shader.uniforms, skinUniforms(model));
     const uwDecl = uw ? `\n#define ANIM_UNDERWING\n${uw.perch ? '#define UNDERWING_PERCH\n' : ''}const float uw_lead = ${uw.lead.toFixed(4)};\nconst float uw_invChord = ${uw.inv.toFixed(4)};\nvarying float vUnderwing;` : '';
     if (head) shader.uniforms.uHeadYaw = head;
-    shader.vertexShader = shader.vertexShader.replace('#include <common>', '#include <common>\n' + animDecl(model) + consts + uwDecl + (head ? '\n#define PLAYER_HEAD\nuniform float uHeadYaw;' : ''));
+    shader.vertexShader = shader.vertexShader.replace('#include <common>', '#include <common>\n' + (snakePath ? '#define SN_PATH\n' : '') + animDecl(model) + consts + uwDecl + (head ? '\n#define PLAYER_HEAD\nuniform float uHeadYaw;' : ''));
     // Smooth shaded (a textured tier): pose first, where the normal begins, so the normals turn with the parts.
     if (map) shader.vertexShader = shader.vertexShader
       .replace('#include <beginnormal_vertex>', animBody(model) + '\nvec3 objectNormal = normal;\n#if defined(ANIM_SKIN)\n  objectNormal = normalize(animR * normal);\n#elif defined(ANIM_WEIGHTED)\n  objectNormal = normalize(mix(normal, animR * normal, aPartW));\n#else\n  objectNormal = animR * normal;\n#endif')
@@ -1773,11 +1826,11 @@ export function animalMaterial(atmosphere, model, { map = null, head = null } = 
 
 // Depth-only twin of animalMaterial for the shadow scene (shadows.js renders it with colorWrite off):
 // same part animation, so a flapping wing's shadow flaps.
-export function animalDepthMaterial(model) {
+export function animalDepthMaterial(model, { snakePath = null } = {}) {
   const v4 = a => `vec4(${a.map(x => x.toFixed(4)).join(', ')})`;
   return new THREE.ShaderMaterial({
-    uniforms: skinUniforms(model),
-    vertexShader: `${animDecl(model)}
+    uniforms: snakePath ? { ...skinUniforms(model), uSnPath: snakePath } : skinUniforms(model),
+    vertexShader: `${snakePath ? '#define SN_PATH\n' : ''}${animDecl(model)}
 const vec4 uAmp = ${v4(model.amp)};
 const vec4 uPose = ${v4(model.pose)};
 void main() {

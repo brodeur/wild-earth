@@ -1,0 +1,456 @@
+{
+ "tile": "utm17n_210_932",
+ "started": "2026-11-07T04:46:54+00:00",
+ "budget": 30,
+ "reserve": 300,
+ "species": [
+  {
+   "code": "bothrops_asper",
+   "why": "snake by records x sqrt(mass)",
+   "attempts": 2,
+   "credits": 20,
+   "jobs": [
+    {
+     "mode": "preview",
+     "dir": "library/animals/jobs/bothrops_asper/01a1b44f-eb62-741d-a03a-b727383836f1",
+     "reused": true
+    },
+    {
+     "mode": "preview",
+     "dir": "library/animals/jobs/bothrops_asper/01a1b454-eb75-733f-b26f-9b7a72c5f525"
+    }
+   ],
+   "ok": false,
+   "archetype": "snake",
+   "prompt": "A wild Terciopelo (Bothrops asper) of Puerto Jim\u00e9nez, Costa Rica, one adult snake, realistic anatomy and proportions. A long, slender body, at least fifteen times as long as it is thick. Lying flat on the ground, the whole body stretched out long in one loose, open S-curve with wide bends, no tight bends, no coils, no loops, no part of the body touching or crossing another, the head resting on the ground at one end looking forward along the body, mouth closed, no tongue, the tail tapering to a thin tip at the other end. No base, no ground plane, no rocks, no branches, no props. Game-ready.",
+   "texture_prompt": "Natural scale colours and markings of a wild adult Terciopelo (Bothrops asper) as seen in Puerto Jim\u00e9nez, Costa Rica. Coloured as the adult male is described: body dark brown, yellowish, gray, yellow; belly and underparts pale yellow, yellow, cream, whitish gray with dark blotches; head dark brown, black; tail yellow tip. Realistic, evenly lit albedo with no baked shadows or highlights; the back, flanks, belly, head and tail in their true colours, the stripes or blotches along the body as they run, eyes in their true colours.",
+   "gate": [
+    {
+     "preview": "library/animals/jobs/bothrops_asper/01a1b44f-eb62-741d-a03a-b727383836f1",
+     "ok": false,
+     "log": [
+      "INFO ends [0.005, 0.995, 0.031] [-0.07, -0.988, 0.05] edge distance 2.496",
+      "INFO length 2.650 units (edge distance 2.496), radius head 0.0734 tail 0.0186 (taper 0.25), max 0.1722, head at the far end",
+      "bothrops_asper: not slender: 9.9 diameters long (a snake is 10 or more)"
+     ]
+    },
+    {
+     "preview": "library/animals/jobs/bothrops_asper/01a1b454-eb75-733f-b26f-9b7a72c5f525",
+     "ok": false,
+     "log": [
+      "INFO voxel 0.0107 remeshed 55438 faces 55438 vertices",
+      "INFO ends [0.79, 0.336, 0.133] [-0.774, 0.006, 0.175] edge distance 2.394",
+      "bothrops_asper: the centreline jumps (19.0 median steps): the body touches itself (a coil?)"
+     ]
+    }
+   ]
+  }
+ ],
+ "stand_ins": [
+  {
+   "code": "tapirella_bairdii",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "pecari_tajacu",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "nasua_narica",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "alouatta_palliata",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "tamandua_mexicana",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "bradypus_variegatus",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "ateles_geoffroyi",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "dasyprocta_punctata",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "mazama_temama",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "cebus_imitator",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "saimiri_oerstedii",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "choloepus_hoffmanni",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "leopardus_pardalis",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "sciurus_granatensis",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "eira_barbara",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "crax_rubra",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "pelecanus_occidentalis",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "tinamus_major",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "coragyps_atratus",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "trogon_rufus",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "penelope_purpurascens",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "buteogallus_anthracinus",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "ramphastos_ambiguus",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "thamnophilus_bridgesi",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "ara_macao",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "myrmeciza_exsul",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "cantorchilus_semibadius",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "tigrisoma_mexicanum",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "fregata_magnificens",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "rupornis_magnirostris",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "actitis_macularius",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "eudocimus_albus",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "egretta_caerulea",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "egretta_thula",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "campephilus_guatemalensis",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "egretta_tricolor",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "caracara_plancus",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "sarcoramphus_papa",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "lipaugus_unirufus",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "patagioenas_nigrirostris",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "anolis_polylepis",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "basiliscus_basiliscus",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "caiman_crocodilus",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "ctenosaura_similis",
+   "why": "not in this run (--kind snakes)"
+  },
+  {
+   "code": "leptodactylus_savagei",
+   "why": "not in this run (--kind snakes)"
+  }
+ ],
+ "spent": 20,
+ "balance_after": 727,
+ "modelled": 0,
+ "earlier": [
+  {
+   "tile": "utm17n_210_932",
+   "started": "2026-11-07T04:41:37+00:00",
+   "budget": 30,
+   "reserve": 300,
+   "species": [
+    {
+     "code": "bothrops_asper",
+     "why": "snake by records x sqrt(mass)",
+     "attempts": 1,
+     "credits": 20,
+     "jobs": [
+      {
+       "mode": "preview",
+       "dir": "library/animals/jobs/bothrops_asper/01a1b44f-eb62-741d-a03a-b727383836f1"
+      }
+     ],
+     "ok": false,
+     "archetype": "snake",
+     "prompt": "A wild Terciopelo (Bothrops asper) of Puerto Jim\u00e9nez, Costa Rica, one adult snake, realistic anatomy and proportions. Lying flat on the ground, the whole body stretched out long in one gentle S-curve, no coils, no loops, no part of the body touching or crossing another, the head resting on the ground at one end looking forward along the body, mouth closed, no tongue, the tail tapering to a thin tip at the other end. No base, no ground plane, no rocks, no branches, no props. Game-ready.",
+     "texture_prompt": "Natural scale colours and markings of a wild adult Terciopelo (Bothrops asper) as seen in Puerto Jim\u00e9nez, Costa Rica. Coloured as the adult male is described: body dark brown, yellowish, gray, yellow; belly and underparts pale yellow, yellow, cream, whitish gray with dark blotches; head dark brown, black; tail yellow tip. Realistic, evenly lit albedo with no baked shadows or highlights; the back, flanks, belly, head and tail in their true colours, the stripes or blotches along the body as they run, eyes in their true colours.",
+     "gate": [
+      {
+       "preview": "library/animals/jobs/bothrops_asper/01a1b44f-eb62-741d-a03a-b727383836f1",
+       "ok": false,
+       "log": [
+        "INFO ends [0.005, 0.995, 0.031] [-0.07, -0.988, 0.05] edge distance 2.496",
+        "INFO length 2.650 units (edge distance 2.496), radius head 0.0734 tail 0.0186 (taper 0.25), max 0.1722, head at the far end",
+        "bothrops_asper: not slender: 9.9 diameters long (a snake is 10 or more)"
+       ]
+      }
+     ]
+    }
+   ],
+   "stand_ins": [
+    {
+     "code": "tapirella_bairdii",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "pecari_tajacu",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "nasua_narica",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "alouatta_palliata",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "tamandua_mexicana",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "bradypus_variegatus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "ateles_geoffroyi",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "dasyprocta_punctata",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "mazama_temama",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "cebus_imitator",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "saimiri_oerstedii",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "choloepus_hoffmanni",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "leopardus_pardalis",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "sciurus_granatensis",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "eira_barbara",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "crax_rubra",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "pelecanus_occidentalis",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "tinamus_major",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "coragyps_atratus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "trogon_rufus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "penelope_purpurascens",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "buteogallus_anthracinus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "ramphastos_ambiguus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "thamnophilus_bridgesi",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "ara_macao",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "myrmeciza_exsul",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "cantorchilus_semibadius",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "tigrisoma_mexicanum",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "fregata_magnificens",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "rupornis_magnirostris",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "actitis_macularius",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "eudocimus_albus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "egretta_caerulea",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "egretta_thula",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "campephilus_guatemalensis",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "egretta_tricolor",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "caracara_plancus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "sarcoramphus_papa",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "lipaugus_unirufus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "patagioenas_nigrirostris",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "anolis_polylepis",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "basiliscus_basiliscus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "caiman_crocodilus",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "ctenosaura_similis",
+     "why": "not in this run (--kind snakes)"
+    },
+    {
+     "code": "leptodactylus_savagei",
+     "why": "not in this run (--kind snakes)"
+    }
+   ],
+   "spent": 20,
+   "balance_after": 747,
+   "modelled": 0
+  }
+ ]
+}

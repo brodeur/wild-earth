@@ -284,11 +284,14 @@ def _prompts(slot: dict, place: str) -> tuple[str, str]:
         # the pose the snake build needs: the whole body on the ground, stretched out in one gentle S (the build traces it
         # as a tube and straightens it; the client bends it), no coil or loop (a body lying on itself fuses in the remesh),
         # the head at one end and the tail tapering at the other. No sizes (the build sizes by mass).
-        mesh = (f"A wild {common} ({sci}) of {place}, one adult snake, realistic anatomy and proportions. Lying flat on the "
-                "ground, the whole body stretched out long in one gentle S-curve, no coils, no loops, no part of the body "
-                "touching or crossing another, the head resting on the ground at one end looking forward along the body, "
-                "mouth closed, no tongue, the tail tapering to a thin tip at the other end. No base, no ground plane, no "
-                "rocks, no branches, no props. Game-ready.")
+        # (2026-11-06: a terciopelo's preview came back short and thick in tight bends, 9.9 diameters long, under the build's
+        # slender gate of 10; every snake is asked for a long slender body, 15 diameters or more, loosely curved)
+        mesh = (f"A wild {common} ({sci}) of {place}, one adult snake, realistic anatomy and proportions. A long, slender "
+                "body, at least fifteen times as long as it is thick. Lying flat on the ground, the whole body stretched "
+                "out long in one loose, open S-curve with wide bends, no tight bends, no coils, no loops, no part of the "
+                "body touching or crossing another, the head resting on the ground at one end looking forward along the "
+                "body, mouth closed, no tongue, the tail tapering to a thin tip at the other end. No base, no ground plane, "
+                "no rocks, no branches, no props. Game-ready.")
         tex = (f"Natural scale colours and markings of a wild adult {common} ({sci}) as seen in {place}; realistic, evenly "
                "lit albedo with no baked shadows or highlights; the back, flanks, belly, head and tail in their true "
                "colours, the stripes or blotches along the body as they run, eyes in their true colours.")
@@ -1263,7 +1266,7 @@ def run(tile_id: str, budget: int, reserve: int, max_n: int, dry: bool, kind: st
                 need = "image"
             elif ((row.get("colour_check") or {}).get("fails") or []) and (colour_check(code).get("features") or {}).get("geometry"):
                 need = "image"
-        if need and not snk:
+        if need:   # (2026-11-06: snakes too: a terciopelo's text previews came back thick, then coiled; the photo of one laid out is the better input)
             bal = balance()
             if bal is not None and bal - COST["image"] >= reserve and spent + COST["image"] <= budget:
                 rec = photo_rung(code, tile_id, need, s)

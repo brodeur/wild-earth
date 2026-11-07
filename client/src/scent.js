@@ -67,7 +67,7 @@ const REACH = {
   corvus_corax: 0, buteo_jamaicensis: 0, cathartes_aura: 0, aphelocoma_californica: 0, cyanocitta_stelleri: 0, melanerpes_formicivorus: 0,
   spirit: 0,
 };
-const RIG_REACH = { quad: 200, rodent: 40, bird: 15, lizard: 5 };      // a walker not in REACH, by groundControl rig; a flier 0
+const RIG_REACH = { quad: 200, rodent: 40, bird: 15, lizard: 5, snake: 30 };   // a walker not in REACH, by groundControl rig; a flier 0 (a snake: its tongue and vomeronasal organ follow prey trails over metres, not the open air's hundreds)
 const CARRION_REACH = { cathartes_aura: 800 };                          // m: carrion only (the vulture's nose)
 const SCAV_K = 1.5, SCAV_S = 1.35;                                      // a scavenger smells carrion SCAV_K times as far, SCAV_S as strong
 // each source's own scent (times the reach); 1 if not named
@@ -161,7 +161,7 @@ export class Scent {
   }
   // The sniff (the header): on while held, and for SNIFF_TAP s from a press.
   sniff(on) { this.sniffHeld = !!on; if (on) { this.sniffUntil = this.t + SNIFF_TAP; this.qT = 0; } }
-  get sniffing() { return this.sniffHeld || this.t < this.sniffUntil || !!(this.ground?.on && this.ground.actT > 0 && /sniff/.test(this.ground.S?.act?.word || '')); }   // or the body's own sniff act (E: the fox, the coyote, the lion)
+  get sniffing() { return this.sniffHeld || this.t < this.sniffUntil || !!(this.ground?.on && this.ground.actT > 0 && (/sniff/.test(this.ground.S?.act?.word || '') || this.ground.S?.act?.sniff)); }   // or the body's own sniff act (E: the fox, the coyote, the lion; a snake's tongue flicks)
   // The strongest scents now (see the header); empty while update is not being called (no body that smells).
   get smelled() { return this.stale() ? NONE : this._smelled; }
   // No body that smells now: the update has not run for STALE_MS, or the body has changed since it last did.
