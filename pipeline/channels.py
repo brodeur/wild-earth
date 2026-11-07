@@ -684,6 +684,41 @@ def rewild_inputs(tile: Tile):
             "breach_max_m": float(fc.get("breach_max_m") or BREACH_MAX_M)}
 
 
+FLOW_MAIN_SHARE = 0.5   # an inflow carrying this share of a reach's area or more is its main stem
+
+
+def _flow_continuity(dem_reaches: list[dict]) -> int:
+    """A river does not dry up by gaining water: an unmatched reach (no NHD flowline within reach of it: a braid, or a
+    channel the 1 m DEM puts away from NHD's line) whose main stem above it runs all year runs all year too. The main
+    stem is an inflow carrying FLOW_MAIN_SHARE or more of the reach's drainage area (a perennial spring creek joining a
+    big dry wash does not make the wash perennial). Walked upstream first (area ascending), so a run of unmatched reaches
+    below a perennial one all take it. Lamar, 2026-11-06: ten reaches of the Lamar River's main stem (1,500 km2) on the
+    1 m ground matched no NHD line and fell to the area rule's intermittent, so the river was drawn dry in summer.
+    Returns the number of reaches changed."""
+    by_head = defaultdict(list)
+    for k, rc in enumerate(dem_reaches):
+        by_head[int(rc["cells"][0])].append(k)
+    inflows = defaultdict(list)
+    for k, rc in enumerate(dem_reaches):
+        for j in by_head.get(int(rc["cells"][-1]), ()):
+            if j != k:
+                inflows[j].append(k)
+    changed = 0
+    for j in sorted(range(len(dem_reaches)), key=lambda k: dem_reaches[k]["area_km2"]):
+        rc = dem_reaches[j]
+        if rc.get("matched") or rc["fcode"] == PERENNIAL:
+            continue
+        main = [dem_reaches[k] for k in inflows.get(j, ())
+                if dem_reaches[k]["fcode"] == PERENNIAL and dem_reaches[k]["area_km2"] >= FLOW_MAIN_SHARE * rc["area_km2"]]
+        if main:
+            up = max(main, key=lambda r: r["area_km2"])
+            rc["fcode"] = PERENNIAL
+            rc["name"] = rc.get("name") or up.get("name")
+            rc["permanence_rule"] = "flow: its main stem above runs all year"
+            changed += 1
+    return changed
+
+
 def perennial_area_km2(tile: Tile) -> tuple[float | None, float | None]:
     """Outside NHD, the drainage area above which a stream runs all year, from the tile's aridity index (annual
     precipitation over potential evapotranspiration, ERA5 normals): humid >= 1: 0.5 km2; sub-humid 0.65-1: 10 km2;
@@ -897,6 +932,8 @@ def build_channels(tile: Tile, threshold_km2: float = THRESHOLD_KM2) -> dict:
             rc["fcode"] = PERENNIAL
             rc["permanence_rule"] = f"climate: aridity index {aridity:.2f}, perennial from {perennial_km2:g} km2"
 
+    _flow_continuity(dem_reaches)
+
     # NHD -> DEM coverage: keep NHD stretches with no DEM channel nearby
     dem_lines = [rc["line"] for rc in dem_reaches]
     dem_area = [None] * len(dem_reaches)   # coverage is by position and direction only
@@ -970,6 +1007,8 @@ def build_channels(tile: Tile, threshold_km2: float = THRESHOLD_KM2) -> dict:
                  "source": "dem", "nhd_matched": rc["matched"]}
         if rc["matched"]:
             props["nhd_offset_m"] = rc["nhd_offset_m"]
+        if rc.get("permanence_rule"):
+            props["permanence_rule"] = rc["permanence_rule"]
         emit(rc["line"], props)
     for k in kept:
         emit(k["line"], {"name": k["name"], "fcode": k["fcode"], "order": k["order"],

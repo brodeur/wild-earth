@@ -61,14 +61,19 @@
   // River pose: on the bank or terrace (water.png zone 3, 4) of the biggest stream near the old pose (the highest order
   // among the channel cells within ORDER_R), on dry ground (its water level DRY_M or more under the ground within DRY_R)
   // and within SEE_R of the edge of its drawn ribbon, looking at its channel cell between
-  // VIEW_R[0] and VIEW_R[1] away whose bearing is nearest the old view's.
-  const RIV = { R_MAX: 300, STEP: 1, ORDER_R: 150, DRY_M: 0.1, DRY_R: 3, SEE_R: 25, VIEW_R: [40, 120] };
+  // VIEW_R[0] and VIEW_R[1] away whose bearing is nearest the old view's. The camera must see water, not a dry bar: the
+  // channel cells counted are perennial ones whose water stands WET_M or more over the ground, and the sight line meets
+  // such a cell within SEE_R of the pose (a gravel bar or a dry side channel between the bank and the water fails).
+  const RIV = { R_MAX: 300, STEP: 1, ORDER_R: 150, DRY_M: 0.1, DRY_R: 3, SEE_R: 25, VIEW_R: [40, 120], WET_M: 0.1 };
   async function river(x0, n0, target) {
     const tile = W().tile, wg = tile.water;
+    // water standing WET_M or more over the ground (water.png B: the level against the cell's ground, 0.02 m steps)
+    const wet = (a, b) => { const o = wg.index(a, b), v = o < 0 ? 0 : wg.d[o * 4 + 2]; return v !== 0 && (v - 128) * 0.02 >= RIV.WET_M; };
+    const wetCell = (a, b) => { const I = wg.info(a, b); return I.zone === 1 && I.perennial && wet(a, b); };
     const cells = [];   // channel cells (zone 1) near the old pose, with their order
     const r5 = wg.res;
     for (let dn = -RIV.R_MAX - RIV.VIEW_R[1]; dn <= RIV.R_MAX + RIV.VIEW_R[1]; dn += r5) for (let dx = -RIV.R_MAX - RIV.VIEW_R[1]; dx <= RIV.R_MAX + RIV.VIEW_R[1]; dx += r5) {
-      const I = wg.info(x0 + dx, n0 + dn); if (I.zone === 1) cells.push([x0 + dx, n0 + dn, I.order, I.perennial]);
+      const I = wg.info(x0 + dx, n0 + dn); if (I.zone === 1 && I.perennial && wet(x0 + dx, n0 + dn)) cells.push([x0 + dx, n0 + dn, I.order, I.perennial]);
     }
     const order0 = Math.max(...cells.filter(c => Math.hypot(c[0] - x0, c[1] - n0) <= RIV.ORDER_R).map(c => c[2]));
     const main = cells.filter(c => c[2] === order0);
@@ -91,7 +96,10 @@
     for (const c of main) {
       const r = Math.hypot(c[0] - best.x, c[1] - best.n); if (r < RIV.VIEW_R[0] || r > RIV.VIEW_R[1]) continue;
       let db = Math.abs(Math.atan2(c[1] - best.n, c[0] - best.x) - b0); db = Math.min(db, 2 * Math.PI - db);
-      if (!tgt || db < tgt.db) tgt = { db, x: c[0], n: c[1] };
+      if (tgt && db >= tgt.db) continue;
+      // the sight line meets water within SEE_R of the pose
+      let seen = false; for (let s = 1; s <= RIV.SEE_R && !seen; s += 1) seen = wetCell(best.x + (c[0] - best.x) * s / r, best.n + (c[1] - best.n) * s / r);
+      if (seen) tgt = { db, x: c[0], n: c[1] };
     }
     if (!tgt) return { error: 'no channel cell in view range', order: order0 };
     const pose = [Math.round(best.x), Math.round(best.n), 1.7, Math.round(tgt.x), Math.round(tgt.n), 0.3];

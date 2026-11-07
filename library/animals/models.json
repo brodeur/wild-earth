@@ -12,7 +12,51 @@
    "attempts": 1,
    "built": "2026-11-05",
    "build": "tools/build_quadruped.py",
-   "tile": "utm36s_698_9724"
+   "tile": "utm36s_698_9724",
+   "gate": {
+    "job": "library/animals/jobs/panthera_leo/01a1afbe-89e1-7348-93fd-d94036e48420",
+    "build": "tools/build_quadruped.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_panthera_leo_0lsfdjtu/panthera_leo.glb 341312 bytes; lod0 4000 tris, lod1 1500 tris, lod2 400 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/panthera_leo/01a1afbe-89e1-7348-93fd-d94036e48420",
+    "glb_sha1": "52c109311fa8cbf48b8e19aaa602c6c83760d02e",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_quadruped.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 1.0,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
+   }
   },
   "crocuta_crocuta": {
    "kind": "quadruped",
@@ -25,7 +69,51 @@
    "attempts": 1,
    "built": "2026-11-05",
    "build": "tools/build_quadruped.py",
-   "tile": "utm36s_698_9724"
+   "tile": "utm36s_698_9724",
+   "gate": {
+    "job": "library/animals/jobs/crocuta_crocuta/01a1afc1-aabb-77ff-a76a-e1ad3680bc8e",
+    "build": "tools/build_quadruped.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_crocuta_crocuta_es0hgkcv/crocuta_crocuta.glb 364600 bytes; lod0 4000 tris, lod1 1500 tris, lod2 400 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/crocuta_crocuta/01a1afc1-aabb-77ff-a76a-e1ad3680bc8e",
+    "glb_sha1": "9700179913e5c26d94abdd5a9fcf2906a25c230c",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_quadruped.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 1.0,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
+   }
   },
   "panthera_pardus": {
    "kind": "quadruped",
@@ -65,6 +153,50 @@
     "ok": true,
     "score": 0.822,
     "fails": []
+   },
+   "gate": {
+    "job": "library/animals/jobs/panthera_pardus/01a1b0e7-c3bb-77b1-b707-7ab10b2bc0e2",
+    "build": "tools/build_quadruped.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_panthera_pardus_5hss65zi/panthera_pardus.glb 1220092 bytes; lod0 12000 tris, lod1 4000 tris, lod2 400 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/panthera_pardus/01a1b0e7-c3bb-77b1-b707-7ab10b2bc0e2",
+    "glb_sha1": "0e3ff307b046c56cfe34e5c2c2a4ef166ed1640c",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_quadruped.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 0.822,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
    }
   },
   "acinonyx_jubatus": {
@@ -78,7 +210,51 @@
    "attempts": 1,
    "built": "2026-11-05",
    "build": "tools/build_quadruped.py",
-   "tile": "utm36s_698_9724"
+   "tile": "utm36s_698_9724",
+   "gate": {
+    "job": "library/animals/jobs/acinonyx_jubatus/01a1afc5-37bb-77f7-b39c-7a0eb62f47f5",
+    "build": "tools/build_quadruped.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_acinonyx_jubatus_hzaq03qm/acinonyx_jubatus.glb 1191064 bytes; lod0 12000 tris, lod1 4000 tris, lod2 400 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/acinonyx_jubatus/01a1afc5-37bb-77f7-b39c-7a0eb62f47f5",
+    "glb_sha1": "8abc94d6dd9d44d2680da42630bff34f35f0d561",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_quadruped.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 1.0,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
+   }
   },
   "lycaon_pictus": {
    "kind": "quadruped",
@@ -93,7 +269,51 @@
    "attempts": 2,
    "built": "2026-11-05",
    "build": "tools/build_quadruped.py",
-   "tile": "utm36s_698_9724"
+   "tile": "utm36s_698_9724",
+   "gate": {
+    "job": "library/animals/jobs/lycaon_pictus/01a1afc8-a68f-7210-bf77-c2d2b6d91d66",
+    "build": "tools/build_quadruped.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_lycaon_pictus_r4mnev6_/lycaon_pictus.glb 518400 bytes; lod0 5556 tris, lod1 1986 tris, lod2 400 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/lycaon_pictus/01a1afc8-a68f-7210-bf77-c2d2b6d91d66",
+    "glb_sha1": "7e6fd5240da52810a111b672f92c2fcbfbc3487a",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_quadruped.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 1.0,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
+   }
   },
   "loxodonta_africana": {
    "kind": "quadruped",
@@ -106,7 +326,51 @@
    "attempts": 1,
    "built": "2026-11-05",
    "build": "tools/build_quadruped.py",
-   "tile": "utm36s_698_9724"
+   "tile": "utm36s_698_9724",
+   "gate": {
+    "job": "library/animals/jobs/loxodonta_africana/01a1afca-37c9-721c-9f0a-9578f56a080c",
+    "build": "tools/build_quadruped.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_loxodonta_africana_tuh6zjpp/loxodonta_africana.glb 389620 bytes; lod0 4000 tris, lod1 1500 tris, lod2 400 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/loxodonta_africana/01a1afca-37c9-721c-9f0a-9578f56a080c",
+    "glb_sha1": "2d08e810bc7908c9c50b22f19924c2b17ce55e22",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_quadruped.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 0.98,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
+   }
   },
   "hippopotamus_amphibius": {
    "kind": "quadruped",
@@ -119,7 +383,51 @@
    "attempts": 1,
    "built": "2026-11-05",
    "build": "tools/build_quadruped.py",
-   "tile": "utm36s_698_9724"
+   "tile": "utm36s_698_9724",
+   "gate": {
+    "job": "library/animals/jobs/hippopotamus_amphibius/01a1afcc-2706-7124-b087-7e773857348d",
+    "build": "tools/build_quadruped.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_hippopotamus_amphibius_2j5jeheg/hippopotamus_amphibius.glb 324716 bytes; lod0 4000 tris, lod1 1500 tris, lod2 400 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/hippopotamus_amphibius/01a1afcc-2706-7124-b087-7e773857348d",
+    "glb_sha1": "45da124a4bdeaabf3b9106a1f8261599b053b923",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_quadruped.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 0.993,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
+   }
   },
   "giraffa_tippelskirchi": {
    "kind": "quadruped",
@@ -132,7 +440,51 @@
    "attempts": 1,
    "built": "2026-11-05",
    "build": "tools/build_quadruped.py",
-   "tile": "utm36s_698_9724"
+   "tile": "utm36s_698_9724",
+   "gate": {
+    "job": "library/animals/jobs/giraffa_tippelskirchi/01a1afcd-b7e5-77a1-bf0a-54951fd8636c",
+    "build": "tools/build_quadruped.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_giraffa_tippelskirchi_v9r6wybo/giraffa_tippelskirchi.glb 1158008 bytes; lod0 12000 tris, lod1 4000 tris, lod2 400 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/giraffa_tippelskirchi/01a1afcd-b7e5-77a1-bf0a-54951fd8636c",
+    "glb_sha1": "7a6846b44b31afca5469f6b60ddd414a82a6087e",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_quadruped.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 1.0,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
+   }
   },
   "syncerus_caffer": {
    "kind": "quadruped",
@@ -147,7 +499,51 @@
    "attempts": 2,
    "built": "2026-11-05",
    "build": "tools/build_quadruped.py",
-   "tile": "utm36s_698_9724"
+   "tile": "utm36s_698_9724",
+   "gate": {
+    "job": "library/animals/jobs/syncerus_caffer/01a1afd1-29ec-7126-bc99-5bd3809bc5cc",
+    "build": "tools/build_quadruped.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_syncerus_caffer_ni53mqgg/syncerus_caffer.glb 413212 bytes; lod0 4000 tris, lod1 1500 tris, lod2 400 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/syncerus_caffer/01a1afd1-29ec-7126-bc99-5bd3809bc5cc",
+    "glb_sha1": "8cc04cffe378425487d1efa6014b434113c2de58",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_quadruped.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 0.962,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
+   }
   },
   "equus_quagga": {
    "kind": "quadruped",
@@ -160,7 +556,51 @@
    "attempts": 1,
    "built": "2026-11-05",
    "build": "tools/build_quadruped.py",
-   "tile": "utm36s_698_9724"
+   "tile": "utm36s_698_9724",
+   "gate": {
+    "job": "library/animals/jobs/equus_quagga/01a1afd3-16e2-7077-973c-e816dfa42f6d",
+    "build": "tools/build_quadruped.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_equus_quagga_p8xydd4a/equus_quagga.glb 1245940 bytes; lod0 11852 tris, lod1 3954 tris, lod2 400 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/equus_quagga/01a1afd3-16e2-7077-973c-e816dfa42f6d",
+    "glb_sha1": "6c29bf7e243c1c36ab68d0c93ce7a8e96dacbc3a",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_quadruped.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 1.0,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
+   }
   },
   "connochaetes_taurinus": {
    "kind": "quadruped",
@@ -175,7 +615,51 @@
    "attempts": 2,
    "built": "2026-11-05",
    "build": "tools/build_quadruped.py",
-   "tile": "utm36s_698_9724"
+   "tile": "utm36s_698_9724",
+   "gate": {
+    "job": "library/animals/jobs/connochaetes_taurinus/01a1afd6-f7cb-7769-a932-5a50e0f7a733",
+    "build": "tools/build_quadruped.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_connochaetes_taurinus_rf6i6pwh/connochaetes_taurinus.glb 351360 bytes; lod0 4000 tris, lod1 1498 tris, lod2 400 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/connochaetes_taurinus/01a1afd6-f7cb-7769-a932-5a50e0f7a733",
+    "glb_sha1": "9284e7ff144739bd219e3462977d1b3bb24f318f",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_quadruped.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 1.0,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
+   }
   },
   "torgos_tracheliotos": {
    "kind": "bird",
@@ -189,7 +673,51 @@
    "built": "2026-11-06",
    "build": "tools/build_bird.py",
    "tile": "utm36s_698_9724",
-   "archetype": "soar"
+   "archetype": "soar",
+   "gate": {
+    "job": "library/animals/jobs/torgos_tracheliotos/01a1b049-1d29-7795-a0d6-4bc059962d66",
+    "build": "tools/build_bird.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_torgos_tracheliotos_56cieq29/torgos_tracheliotos.glb 328524 bytes; lod0 3078 tris, lod1 1108 tris, lod2 306 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/torgos_tracheliotos/01a1b049-1d29-7795-a0d6-4bc059962d66",
+    "glb_sha1": "5672f1f9e73936993a5bae7a69654c9fa79e75ec",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_bird.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 0.817,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
+   }
   },
   "leptoptilos_crumenifer": {
    "kind": "bird",
@@ -203,7 +731,51 @@
    "built": "2026-11-06",
    "build": "tools/build_bird.py",
    "tile": "utm36s_698_9724",
-   "archetype": "wade"
+   "archetype": "wade",
+   "gate": {
+    "job": "library/animals/jobs/leptoptilos_crumenifer/01a1b04a-b2d1-719b-bfb6-6b5229ef55ea",
+    "build": "tools/build_bird.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_leptoptilos_crumenifer__xlcptm_/leptoptilos_crumenifer.glb 235308 bytes; lod0 2746 tris, lod1 1010 tris, lod2 298 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/leptoptilos_crumenifer/01a1b04a-b2d1-719b-bfb6-6b5229ef55ea",
+    "glb_sha1": "0de7fd430f6edda3a17b09f9856d85d45194dde6",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_bird.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 1.0,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
+   }
   },
   "struthio_camelus": {
    "kind": "bird",
@@ -217,7 +789,51 @@
    "built": "2026-11-06",
    "build": "tools/build_bird.py",
    "tile": "utm36s_698_9724",
-   "archetype": "ground"
+   "archetype": "ground",
+   "gate": {
+    "job": "library/animals/jobs/struthio_camelus/01a1b04d-2769-77eb-8bee-f804e419abaf",
+    "build": "tools/build_bird.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_struthio_camelus_wzchm74g/struthio_camelus.glb 380752 bytes; lod0 4804 tris, lod1 1728 tris, lod2 480 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/struthio_camelus/01a1b04d-2769-77eb-8bee-f804e419abaf",
+    "glb_sha1": "9611b3a973d04d5f155771d33318071fd83eaa48",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_bird.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 0.931,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
+   }
   },
   "alopochen_aegyptiaca": {
    "kind": "bird",
@@ -231,7 +847,51 @@
    "built": "2026-11-06",
    "build": "tools/build_bird.py",
    "tile": "utm36s_698_9724",
-   "archetype": "water"
+   "archetype": "water",
+   "gate": {
+    "job": "library/animals/jobs/alopochen_aegyptiaca/01a1b04f-3812-7354-b582-2b3339b6a64c",
+    "build": "tools/build_bird.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_alopochen_aegyptiaca_2jnru29e/alopochen_aegyptiaca.glb 177940 bytes; lod0 2250 tris, lod1 830 tris, lod2 244 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/alopochen_aegyptiaca/01a1b04f-3812-7354-b582-2b3339b6a64c",
+    "glb_sha1": "2c00a9ca114e6c64fb62f9567daf7d03e1cca03f",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_bird.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 0.719,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
+   }
   },
   "vanellus_armatus": {
    "kind": "bird",
@@ -272,6 +932,50 @@
     "ok": true,
     "score": 1.0,
     "fails": []
+   },
+   "gate": {
+    "job": "library/animals/jobs/vanellus_armatus/01a1b0e8-ab2f-76ec-ba8f-71ebde62b0ce",
+    "build": "tools/build_bird.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_vanellus_armatus_fy095okk/vanellus_armatus.glb 123580 bytes; lod0 1390 tris, lod1 522 tris, lod2 162 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/vanellus_armatus/01a1b0e8-ab2f-76ec-ba8f-71ebde62b0ce",
+    "glb_sha1": "fcfab4985f18306ee0f084b5ae3e105e0cbf85c2",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_bird.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 1.0,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
    }
   },
   "crocodylus_niloticus": {
@@ -287,7 +991,51 @@
    "build": "tools/build_reptile.py",
    "tile": "utm36s_698_9724",
    "archetype": "sprawl",
-   "note": "preview and refine run by hand (tools/meshy_generate.py, the prompts of pipeline/fauna_models.py), the build checked on the preview before the refine; then registered by fauna_models from the paid refine"
+   "note": "preview and refine run by hand (tools/meshy_generate.py, the prompts of pipeline/fauna_models.py), the build checked on the preview before the refine; then registered by fauna_models from the paid refine",
+   "gate": {
+    "job": "library/animals/jobs/crocodylus_niloticus/01a1b0be-0d2f-7559-a8d7-4fa1b54d7587",
+    "build": "tools/build_reptile.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_crocodylus_niloticus_hvzhlmjt/crocodylus_niloticus.glb 540912 bytes; lod0 4702 tris, lod1 1692 tris, lod2 470 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/crocodylus_niloticus/01a1b0be-0d2f-7559-a8d7-4fa1b54d7587",
+    "glb_sha1": "82974f58b1f15079d02363ffc7e549e4c2a872b1",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_reptile.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 0.867,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
+   }
   },
   "stigmochelys_pardalis": {
    "kind": "reptile",
@@ -382,7 +1130,76 @@
      "why": "the shell amber and ginger where straw yellow with black blotches is described; kept after the re-refine because no better came (docs/decisions.md 2026-11-06 iteration 5)",
      "note": "a label for fitting the check (pipeline/appearance.py fit_check), not a judge's rejection: the model is still drawn"
     }
-   ]
+   ],
+   "override": {
+    "verdict": "rejected",
+    "serve": true,
+    "model": "library/animals/jobs/stigmochelys_pardalis/01a1b0ec-0d1f-718c-b98a-bbc2e6f285cf",
+    "by": "iteration 5's record (docs/decisions.md 2026-11-06 iteration 5; models.json verdicts), written as an override stage on 2026-11-06 (iteration 10)",
+    "why": "the colours fail (the shell amber and ginger where straw yellow with black blotches is described; kept after the re-refine because no better came (docs/decisions.md 2026-11-06 iteration 5)); drawn all the same because no better came and the slot's stand-in is the western fence lizard (sceloporus_occidentalis, its kin in tiles/utm36s_698_9724/client/fauna.json): a tortoise with the wrong shell colours is nearer the animal than a fence lizard. Lift it when the due texture job passes the rule.",
+    "date": "2026-11-06"
+   },
+   "gate": {
+    "job": "library/animals/jobs/stigmochelys_pardalis/01a1b0ec-0d1f-718c-b98a-bbc2e6f285cf",
+    "build": "tools/build_reptile.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_stigmochelys_pardalis_d7_6x4c8/stigmochelys_pardalis.glb 480964 bytes; lod0 4528 tris, lod1 1630 tris, lod2 452 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/stigmochelys_pardalis/01a1b0ec-0d1f-718c-b98a-bbc2e6f285cf",
+    "glb_sha1": "b009066a3a0ade2ed3179cbf0279a412da7fc215",
+    "rule": {
+     "decision": "rejected",
+     "why": [
+      "check: upperparts: only 9% in its ground colours, the rest in its markings' colours"
+     ],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_reptile.py on 2026-11-06"
+      },
+      "check": {
+       "ok": false,
+       "score": 0.43,
+       "fails": [
+        "upperparts: only 9% in its ground colours, the rest in its markings' colours"
+       ],
+       "geometry": [],
+       "texture": [
+        "upperparts: only 9% in its ground colours, the rest in its markings' colours"
+       ],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": {
+     "verdict": "rejected",
+     "serve": true,
+     "by": "iteration 5's record (docs/decisions.md 2026-11-06 iteration 5; models.json verdicts), written as an override stage on 2026-11-06 (iteration 10)",
+     "why": "the colours fail (the shell amber and ginger where straw yellow with black blotches is described; kept after the re-refine because no better came (docs/decisions.md 2026-11-06 iteration 5)); drawn all the same because no better came and the slot's stand-in is the western fence lizard (sceloporus_occidentalis, its kin in tiles/utm36s_698_9724/client/fauna.json): a tortoise with the wrong shell colours is nearer the animal than a fence lizard. Lift it when the due texture job passes the rule.",
+     "date": "2026-11-06",
+     "source": "override"
+    },
+    "agrees": true,
+    "served": true,
+    "served_by": "override",
+    "due": {
+     "job": "refine with the check's correction (or find reference photos first: no credits)",
+     "credits": 10,
+     "why": "texture: upperparts: only 9% in its ground colours, the rest in its markings' colours"
+    }
+   }
   },
   "agama_mwanzae": {
    "kind": "reptile",
@@ -424,6 +1241,50 @@
     "ok": true,
     "score": 0.943,
     "fails": []
+   },
+   "gate": {
+    "job": "library/animals/jobs/agama_mwanzae/01a1b0ea-0ec6-764d-94fb-19c11f1fab84",
+    "build": "tools/build_reptile.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_agama_mwanzae_8jn3ewnl/agama_mwanzae.glb 107696 bytes; lod0 1200 tris, lod1 432 tris, lod2 120 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/agama_mwanzae/01a1b0ea-0ec6-764d-94fb-19c11f1fab84",
+    "glb_sha1": "e454cd78c60ce88fd6bc6b73213f5eee5f4debe6",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_reptile.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 0.943,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
    }
   },
   "varanus_niloticus": {
@@ -487,7 +1348,78 @@
      "why": "no yellow spots, which the description gives; the re-refine came out grey and was not kept (docs/decisions.md 2026-11-06 iteration 5)",
      "note": "a label for fitting the check (pipeline/appearance.py fit_check), not a judge's rejection: the model is still drawn"
     }
-   ]
+   ],
+   "override": {
+    "verdict": "rejected",
+    "serve": true,
+    "model": "library/animals/jobs/varanus_niloticus/01a1b0bf-2b22-7473-8384-e7813b1d714e",
+    "by": "iteration 5's record (docs/decisions.md 2026-11-06 iteration 5; models.json verdicts), written as an override stage on 2026-11-06 (iteration 10)",
+    "why": "the colours fail (no yellow spots, which the description gives; the re-refine came out grey and was not kept (docs/decisions.md 2026-11-06 iteration 5)); drawn all the same because no better came and the slot's stand-in is the western fence lizard (sceloporus_occidentalis, its kin in tiles/utm36s_698_9724/client/fauna.json): a monitor without its yellow spots is nearer the animal than a fence lizard. Lift it when the due texture job passes the rule.",
+    "date": "2026-11-06"
+   },
+   "gate": {
+    "job": "library/animals/jobs/varanus_niloticus/01a1b0bf-2b22-7473-8384-e7813b1d714e",
+    "build": "tools/build_reptile.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_varanus_niloticus_1gh4e5dt/varanus_niloticus.glb 304752 bytes; lod0 2800 tris, lod1 1008 tris, lod2 280 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/varanus_niloticus/01a1b0bf-2b22-7473-8384-e7813b1d714e",
+    "glb_sha1": "9817bedfebaf45be4cc9b0f2247261175a6fbf48",
+    "rule": {
+     "decision": "rejected",
+     "why": [
+      "check: head: no yellowish-green spots (0.0%); underparts: no blackish bands (0.2%)"
+     ],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_reptile.py on 2026-11-06"
+      },
+      "check": {
+       "ok": false,
+       "score": 1.0,
+       "fails": [
+        "head: no yellowish-green spots (0.0%)",
+        "underparts: no blackish bands (0.2%)"
+       ],
+       "geometry": [],
+       "texture": [
+        "head: no yellowish-green spots (0.0%)",
+        "underparts: no blackish bands (0.2%)"
+       ],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": {
+     "verdict": "rejected",
+     "serve": true,
+     "by": "iteration 5's record (docs/decisions.md 2026-11-06 iteration 5; models.json verdicts), written as an override stage on 2026-11-06 (iteration 10)",
+     "why": "the colours fail (no yellow spots, which the description gives; the re-refine came out grey and was not kept (docs/decisions.md 2026-11-06 iteration 5)); drawn all the same because no better came and the slot's stand-in is the western fence lizard (sceloporus_occidentalis, its kin in tiles/utm36s_698_9724/client/fauna.json): a monitor without its yellow spots is nearer the animal than a fence lizard. Lift it when the due texture job passes the rule.",
+     "date": "2026-11-06",
+     "source": "override"
+    },
+    "agrees": true,
+    "served": true,
+    "served_by": "override",
+    "due": {
+     "job": "refine with the check's correction (or find reference photos first: no credits)",
+     "credits": 10,
+     "why": "texture: head: no yellowish-green spots (0.0%); underparts: no blackish bands (0.2%)"
+    }
+   }
   },
   "oreamnos_americanus": {
    "kind": "quadruped",
@@ -623,7 +1555,62 @@
      "by": "the judge, iteration 6",
      "why": "long curved ibex-like horns and brown patches (models.json judge_history)"
     }
-   ]
+   ],
+   "gate": {
+    "job": "library/animals/jobs/oreamnos_americanus/01a1b16c-a85c-7658-a55b-a6e1ebe96d70",
+    "build": "tools/build_quadruped.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_oreamnos_americanus_ywtu06_d/oreamnos_americanus.glb 319320 bytes; lod0 4000 tris, lod1 1500 tris, lod2 400 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/oreamnos_americanus/01a1b16c-a85c-7658-a55b-a6e1ebe96d70",
+    "glb_sha1": "b6672e339efe9e114b45531ae4731f0d0798b6b2",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_quadruped.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 1.0,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "photo",
+       "mode": "image",
+       "rule_photo": "commons_9825969",
+       "photo": "commons_9825969",
+       "use": "image",
+       "photo_usable": true,
+       "decides": false
+      }
+     }
+    },
+    "override": {
+     "verdict": "accepted",
+     "serve": true,
+     "by": "the judge (Claude, from the model's render against the species' description)",
+     "why": "from the reference photo (commons_9825969): an all-white shaggy coat, short black horns (0.24 m piece, 0.32 of the withers against the described 0.23), black hooves and nose, the goat's deep chest and humped shoulders; the head is turned a little toward the photo's camera",
+     "date": "2026-11-06",
+     "source": "judge"
+    },
+    "agrees": true,
+    "served": true,
+    "served_by": "override",
+    "due": null
+   }
   },
   "bison_bison": {
    "kind": "quadruped",
@@ -641,6 +1628,50 @@
     "ok": true,
     "score": 0.879,
     "fails": []
+   },
+   "gate": {
+    "job": "library/animals/jobs/bison_bison/01a1b129-2b00-77da-9e38-d608103504d8",
+    "build": "tools/build_quadruped.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_bison_bison_m11nyi2v/bison_bison.glb 305108 bytes; lod0 4000 tris, lod1 1500 tris, lod2 400 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/bison_bison/01a1b129-2b00-77da-9e38-d608103504d8",
+    "glb_sha1": "407892f638d5d97293f3c1aa4c54c427fa66d8b0",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_quadruped.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 0.879,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
    }
   },
   "ovis_canadensis": {
@@ -659,6 +1690,50 @@
     "ok": true,
     "score": 1.0,
     "fails": []
+   },
+   "gate": {
+    "job": "library/animals/jobs/ovis_canadensis/01a1b12d-a43d-766f-ac66-c53a2dd60e55",
+    "build": "tools/build_quadruped.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_ovis_canadensis_ljfaayua/ovis_canadensis.glb 336596 bytes; lod0 3998 tris, lod1 1500 tris, lod2 400 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/ovis_canadensis/01a1b12d-a43d-766f-ac66-c53a2dd60e55",
+    "glb_sha1": "6bce96e47fe1d58e47e151ed94f0bf56a8b862b7",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_quadruped.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 1.0,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
    }
   },
   "antilocapra_americana": {
@@ -751,7 +1826,70 @@
      "by": "iteration 7 record (docs/decisions.md)",
      "why": "iteration 6's model: an impala's horns, 0.65 of the withers against the described 0.29"
     }
-   ]
+   ],
+   "gate": {
+    "job": "library/animals/jobs/antilocapra_americana/01a1b18c-1540-70c3-9fd1-f535a7626d97",
+    "build": "tools/build_quadruped.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_antilocapra_americana_qssxrfe2/antilocapra_americana.glb 354908 bytes; lod0 4000 tris, lod1 1500 tris, lod2 400 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/antilocapra_americana/01a1b18c-1540-70c3-9fd1-f535a7626d97",
+    "glb_sha1": "6a2464e7cb57395829d0d6c0b26d7e9daba7bc68",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_quadruped.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 0.669,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "photo",
+       "mode": "image",
+       "rule_photo": "inat_717073114",
+       "photo": "inat_250877072",
+       "use": "image",
+       "photo_usable": false,
+       "photo_why_not": [
+        "legs"
+       ],
+       "decides": false
+      }
+     }
+    },
+    "override": {
+     "verdict": "accepted",
+     "serve": true,
+     "by": "the judge (Claude, from the model's render against the species' description)",
+     "why": "from the reference photo (inat_250877072, a buck near the tile): short black pronged horns (0.12 m, 0.20 of the withers against the described 0.29), the black face mask, tan back, white belly, flanks and rump patch; the impala's long lyre horns of the text model are gone",
+     "date": "2026-11-06",
+     "source": "judge"
+    },
+    "agrees": true,
+    "served": true,
+    "served_by": "override",
+    "due": {
+     "job": "image-to-3D",
+     "photo": "inat_717073114",
+     "credits": 30,
+     "why": "the mesh came from inat_250877072, which today's photo rule refuses (legs); the rule's photo inat_717073114 has no mesh (the model itself passes)"
+    }
+   }
   },
   "taxidea_taxus": {
    "kind": "quadruped",
@@ -896,6 +2034,64 @@
     "page": "https://www.inaturalist.org/observations/145514359",
     "photo_page": "https://www.inaturalist.org/photos/249961448",
     "url_large": "https://inaturalist-open-data.s3.amazonaws.com/photos/249961448/large.jpeg"
+   },
+   "gate": {
+    "job": "library/animals/jobs/taxidea_taxus/01a1b132-88e7-7492-a87d-4d50af4d94a5",
+    "build": "tools/build_quadruped.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_taxidea_taxus_l8dyomli/taxidea_taxus.glb 339880 bytes; lod0 4000 tris, lod1 1500 tris, lod2 400 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/taxidea_taxus/01a1b132-88e7-7492-a87d-4d50af4d94a5",
+    "glb_sha1": "0f631575a38867f396b1326bd720bf9ef236f2e3",
+    "rule": {
+     "decision": "rejected",
+     "why": [
+      "check: body: no white stripes (0.2%); tail ringed (2 alternations), described without rings"
+     ],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_quadruped.py on 2026-11-06"
+      },
+      "check": {
+       "ok": false,
+       "score": 1.0,
+       "fails": [
+        "body: no white stripes (0.2%)",
+        "tail ringed (2 alternations), described without rings"
+       ],
+       "geometry": [],
+       "texture": [
+        "body: no white stripes (0.2%)",
+        "tail ringed (2 alternations), described without rings"
+       ],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "rule_photo": null,
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": false,
+    "served_by": "rule",
+    "due": {
+     "job": "refine with the photo as texture reference",
+     "photo": "commons_116358007",
+     "credits": 10,
+     "why": "texture: body: no white stripes (0.2%); tail ringed (2 alternations), described without rings"
+    }
    }
   },
   "thamnophis_elegans": {
@@ -1096,7 +2292,62 @@
      "by": "the judge, iteration 7",
      "why": "the first photo's coastal red-spotted form (judge.why)"
     }
-   ]
+   ],
+   "gate": {
+    "job": "library/animals/jobs/thamnophis_elegans/01a1b180-979d-7275-ad65-e47f11ac6169",
+    "build": "tools/build_snake.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_thamnophis_elegans_k8v_luxx/thamnophis_elegans.glb 222836 bytes; lod0 2496 tris, lod1 900 tris, lod2 252 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/thamnophis_elegans/01a1b180-979d-7275-ad65-e47f11ac6169",
+    "glb_sha1": "ca8c6e5897800748a3fd323a3363786a4caf7f4e",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_snake.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 0.441,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "photo",
+       "mode": "refine",
+       "rule_photo": "inat_124247019",
+       "photo": "commons_156829804",
+       "use": "texture",
+       "photo_usable": true,
+       "decides": false
+      }
+     }
+    },
+    "override": {
+     "verdict": "accepted",
+     "serve": true,
+     "by": "the judge (Claude, from the model's render against the species' description)",
+     "why": "the refine textured from the reference photo (commons_156829804, a garter snake dark with pale stripes), built as a structured tube so the stripes survive: black-brown with a pale dorsal stripe and pale side stripes, a grey belly. The colour check still fails: the stripes are cream rather than the yellow ADW names, the back black rather than its greyish-green, the belly grey rather than yellow (Wikipedia's dorsal stripe may be white). Rejected: the text re-refine (ochre-brown, faint stripes) and the first photo's coastal red-spotted form",
+     "date": "2026-11-06",
+     "source": "judge"
+    },
+    "agrees": true,
+    "served": true,
+    "served_by": "override",
+    "due": null
+   }
   },
   "canis_lupus": {
    "kind": "quadruped",
@@ -1114,6 +2365,50 @@
     "ok": true,
     "score": 1.0,
     "fails": []
+   },
+   "gate": {
+    "job": "library/animals/jobs/canis_lupus/01a1b134-f172-71eb-8725-1ef02db4b9f9",
+    "build": "tools/build_quadruped.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_canis_lupus_o4bkj_jt/canis_lupus.glb 460684 bytes; lod0 4830 tris, lod1 1758 tris, lod2 400 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/canis_lupus/01a1b134-f172-71eb-8725-1ef02db4b9f9",
+    "glb_sha1": "9e974e4194cafe842a9822ef351c2dfa671f34fe",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_quadruped.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 1.0,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
    }
   },
   "ursus_arctos": {
@@ -1233,7 +2528,59 @@
      "by": "the judge, iteration 7",
      "why": "the photo-textured refine: near black, an American black bear's look (judge.why, note)"
     }
-   ]
+   ],
+   "gate": {
+    "job": "library/animals/jobs/ursus_arctos/01a1b18e-e9c7-7475-ba08-6a1dfede66a2",
+    "build": "tools/build_quadruped.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_ursus_arctos_ip9c90nn/ursus_arctos.glb 372976 bytes; lod0 4000 tris, lod1 1500 tris, lod2 400 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/ursus_arctos/01a1b18e-e9c7-7475-ba08-6a1dfede66a2",
+    "glb_sha1": "e076e1a26f18aa93cb7794a429d0af12f353e117",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_quadruped.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 1.0,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "rule_photo": "inat_469943715",
+       "decides": false
+      }
+     }
+    },
+    "override": {
+     "verdict": "accepted",
+     "serve": true,
+     "by": "the judge (Claude, from the model's render against the species' description)",
+     "why": "the text re-refine with the check's correction (01a1b18e): a brown bear with darker legs and a frosted, paler band over the shoulders and withers, as ADW describes Rocky Mountain grizzlies (long shoulder and back hairs frosted with white); the feature check still flags the pale band (8% of the back and flanks): it cannot tell a frosting from a blotch. Rejected: the photo-textured refine (near black, reads as an American black bear) and the first refine's stark cream blotch",
+     "date": "2026-11-06",
+     "source": "judge"
+    },
+    "agrees": true,
+    "served": true,
+    "served_by": "override",
+    "due": null
+   }
   },
   "aquila_chrysaetos": {
    "kind": "bird",
@@ -1252,6 +2599,50 @@
     "ok": true,
     "score": 0.999,
     "fails": []
+   },
+   "gate": {
+    "job": "library/animals/jobs/aquila_chrysaetos/01a1b13a-17a9-7623-a5c0-5c9d78386a29",
+    "build": "tools/build_bird.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_aquila_chrysaetos_kwotrx4t/aquila_chrysaetos.glb 337444 bytes; lod0 3454 tris, lod1 1242 tris, lod2 344 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/aquila_chrysaetos/01a1b13a-17a9-7623-a5c0-5c9d78386a29",
+    "glb_sha1": "b6aa54dff155aa89ea2e1998c0b22212d2a90c92",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_bird.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 0.999,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
    }
   },
   "pelecanus_erythrorhynchos": {
@@ -1271,6 +2662,50 @@
     "ok": true,
     "score": 1.0,
     "fails": []
+   },
+   "gate": {
+    "job": "library/animals/jobs/pelecanus_erythrorhynchos/01a1b13b-fc92-70ef-9065-539256035ec3",
+    "build": "tools/build_bird.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_pelecanus_erythrorhynchos_nwxfi7hw/pelecanus_erythrorhynchos.glb 237896 bytes; lod0 3278 tris, lod1 1200 tris, lod2 348 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/pelecanus_erythrorhynchos/01a1b13b-fc92-70ef-9065-539256035ec3",
+    "glb_sha1": "5f767458132e2c4431e20d5dbc322a103680a340",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_bird.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 1.0,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
    }
   },
   "grus_canadensis": {
@@ -1290,6 +2725,50 @@
     "ok": true,
     "score": 0.991,
     "fails": []
+   },
+   "gate": {
+    "job": "library/animals/jobs/grus_canadensis/01a1b13e-08de-73a4-87fd-c806668213e5",
+    "build": "tools/build_bird.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_grus_canadensis_acewc30i/grus_canadensis.glb 322428 bytes; lod0 3708 tris, lod1 1356 tris, lod2 394 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/grus_canadensis/01a1b13e-08de-73a4-87fd-c806668213e5",
+    "glb_sha1": "9cc6bc5e6fd02641e25e903713b0f1aef5347b21",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_bird.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 0.991,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "decides": false
+      }
+     }
+    },
+    "override": null,
+    "agrees": null,
+    "served": true,
+    "served_by": "rule",
+    "due": null
    }
   },
   "alces_alces": {
@@ -1383,7 +2862,117 @@
     "by": "the judge (Claude, from the model's render against the species' description)",
     "date": "2026-11-06",
     "model": "library/animals/jobs/alces_alces/01a1b12c-3122-71ab-bae6-1e6250ba60f5"
+   },
+   "gate": {
+    "job": "library/animals/jobs/alces_alces/01a1b12c-3122-71ab-bae6-1e6250ba60f5",
+    "build": "tools/build_quadruped.py",
+    "at": "2026-11-06",
+    "ok": true,
+    "log": "WROTE /var/folders/97/gs9vgyw10kv53k58hm_n6w9h0000gn/T/regate_alces_alces_ec3nw1va/alces_alces.glb 363772 bytes; lod0 4000 tris, lod1 1500 tris, lod2 400 tris"
+   },
+   "acceptance": {
+    "format": 1,
+    "at": "2026-11-06",
+    "model": "library/animals/jobs/alces_alces/01a1b12c-3122-71ab-bae6-1e6250ba60f5",
+    "glb_sha1": "4506462f332e650a3b453a7802a1935123c19de7",
+    "rule": {
+     "decision": "accepted",
+     "why": [],
+     "stages": {
+      "model": {
+       "ok": true
+      },
+      "gate": {
+       "ok": true,
+       "by": "rebuilt with today's tools/build_quadruped.py on 2026-11-06"
+      },
+      "check": {
+       "ok": true,
+       "score": 0.941,
+       "fails": [],
+       "geometry": [],
+       "texture": [],
+       "params": "library/animals/check_fit.json"
+      },
+      "provenance": {
+       "rung": "text",
+       "mode": "refine",
+       "rule_photo": "commons_540185",
+       "decides": false
+      }
+     }
+    },
+    "override": {
+     "verdict": "accepted",
+     "serve": true,
+     "by": "the judge (Claude, from the model's render against the species' description)",
+     "why": "iteration 6's second paid refine, built once the build centred the body on its median vertex (the antlers had shifted the box): a dark brown bull with palmate pale antlers, the dewlap, humped shoulders and long dark legs; the two photo meshes failed the leg gate",
+     "date": "2026-11-06",
+     "source": "judge"
+    },
+    "agrees": true,
+    "served": true,
+    "served_by": "override",
+    "due": null
    }
+  }
+ },
+ "acceptance_rule": {
+  "doc": "pipeline/fauna_models.py, the section 'model acceptance as a rule'",
+  "fit": {
+   "date": "2026-11-06",
+   "by": "pipeline/fauna_models.py fit_acceptance",
+   "models": 39,
+   "rejected": 10,
+   "accepted": 29,
+   "rule": {
+    "rejected_flagged": 8,
+    "rejected_passed": 2,
+    "accepted_passed": 29,
+    "accepted_flagged": 0,
+    "balanced_accuracy": 0.9
+   },
+   "loo": {
+    "rejected_flagged": 8,
+    "rejected_passed": 2,
+    "accepted_passed": 28,
+    "accepted_flagged": 1,
+    "balanced_accuracy": 0.883
+   },
+   "not_adopted": {
+    "provenance by use (image-to-3D photo must pass USABLE, a texture reference whole, size, clear, body)": {
+     "rejected_flagged": 8,
+     "rejected_passed": 2,
+     "accepted_passed": 28,
+     "accepted_flagged": 1,
+     "balanced_accuracy": 0.883
+    },
+    "provenance, every USABLE score whatever the use": {
+     "rejected_flagged": 9,
+     "rejected_passed": 1,
+     "accepted_passed": 28,
+     "accepted_flagged": 1,
+     "balanced_accuracy": 0.933
+    }
+   },
+   "disagreements": [
+    {
+     "code": "ursus_arctos",
+     "model": "library/animals/jobs/ursus_arctos/01a1b137-d7b9-7439-8960-c72ea3293daa",
+     "verdict": "rejected",
+     "by": "the judge, iteration 7",
+     "rule": "accepted",
+     "check_fails": []
+    },
+    {
+     "code": "ursus_arctos",
+     "model": "library/animals/jobs/ursus_arctos/01a1b190-3a85-7581-98c4-955a1db6d7ad",
+     "verdict": "rejected",
+     "by": "the judge, iteration 7",
+     "rule": "accepted",
+     "check_fails": []
+    }
+   ]
   }
  }
 }

@@ -1,6 +1,6 @@
 {
  "tile": "utm12n_514_4838",
- "at": "2026-11-06T19:40:07Z",
+ "at": "2026-11-07T01:22:35Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -24,7 +24,7 @@
    },
    "3": {
     "plants": 33,
-    "animals": 36
+    "animals": 37
    },
    "4": {
     "plants": 1,
@@ -32,9 +32,9 @@
    }
   },
   "plants": 83,
-  "animals_present": 88,
-  "animals_queued": 52,
-  "meshy_credits_queued": 1550,
+  "animals_present": 89,
+  "animals_queued": 53,
+  "meshy_credits_queued": 1580,
   "cards_queued": 37,
   "stand_ins": {
    "sorbus_scopulina": null,
@@ -90,16 +90,16 @@
    },
    "animal": {
     "target": 22,
-    "have": 88,
-    "with_model": 44
+    "have": 89,
+    "with_model": 45
    }
   },
   "hands": {
-   "count": 105,
+   "count": 106,
    "by_what": {
     "a trait card": 37,
     "a lexicon phrase or a species-mix rule": 16,
-    "a mesh": 52
+    "a mesh": 53
    }
   }
  },
@@ -2160,6 +2160,21 @@
    "traits": null
   },
   {
+   "id": "canis_lupus",
+   "scientific": "Canis lupus",
+   "common": "gray wolf",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
    "id": "thamnophis_elegans",
    "scientific": "Thamnophis elegans",
    "common": "terrestrial garter snake",
@@ -3269,6 +3284,21 @@
     "estimate_credits": 30,
     "stand_in": "microtus_californicus",
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "canis_lupus",
+    "scientific": "Canis lupus",
+    "common": "gray wolf",
+    "kind": "mammal",
+    "records": 3,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": "canis_latrans",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    }
   ]
  },
@@ -4115,6 +4145,14 @@
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
     "most recorded: 25 of its class (0% of the class's records)"
+   ]
+  },
+  {
+   "id": "canis_lupus",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
    ]
   }
  ]
