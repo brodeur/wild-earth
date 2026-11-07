@@ -6926,7 +6926,7 @@ the placename".
   socket's `watch` already sends every signed-in player; no one named), asked every 20 s; signed in, from the socket.
 - The Native Land disclaimer stays in the credits (config.SOURCES native_land).
 
-**The territories step** (pipeline/steps.py `territories`, version 1, after terrain, base stage; pipeline/fetch_territories.py
+**The territories step** (pipeline/steps.py `territories`, version 1, no upstream step, base stage; pipeline/fetch_territories.py
 step_output): writes client/territories.json { territories, source } (layer client.territories), fingerprinted on the
 fetcher's code like every step. The client reads it, falling back to features.json `territories` for a tile built before.
 derive no longer writes territories into features.json (one owner), so the terrain step's code changed: the next `--all`
@@ -6936,9 +6936,36 @@ missing; a tile that never ran it shows `territories never missing client.territ
 environment, this checkout's .env, or, from a git worktree, the main checkout's .env (env_files); it is never printed.
 `python -m pipeline.fetch_territories <tile> [--force]` now runs that step on a built tile through the graph.
 
-**Not done yet: the names themselves.** The main checkout's .env has no NATIVE_LAND_KEY (a free Native Land account
-Aaron makes himself), so no tile has territories yet. Once the key is in, run for every tile from any checkout:
-`for t in $(ls tiles | grep utm); do arch -arm64 .venv/bin/python -m pipeline.fetch_territories $t --force; done`.
+**The names** (2026-11-06, after Aaron added his key as NATIVE_LAND_API_KEY: either name is read, NATIVE_LAND_KEY
+first, from the environment or a .env): fetched for all 18 tiles through the step (`python -m pipeline.fetch_territories
+<tile> --force`, the key from the main checkout's .env, never printed; a failed request now says only its HTTP status
+or its kind, since requests' own messages quote the URL with the key). What came back, checked against each place:
+
+| tile | territories |
+|---|---|
+| Hoh River (Upper Hoh) | ChalAt'i'lo t'sikAti (Chalat', the Hoh) · Quileute |
+| Blue Glacier (Mount Olympus) | Chalat' · Quileute · Queets |
+| Daly City | Muwekma · Ohlone · Ramaytush |
+| Richmond District | Muwekma · Ohlone · Graton Rancheria · Me-Wuk (Coast Miwok) · Miwok · Ramaytush |
+| Nashville | Nisenan · Me-Wuk (Northern Sierra Miwok) · Miwok |
+| El Dorado, Placerville | Nisenan |
+| Arnold | Miwok · Me-Wuk (Central Sierra Miwok) · Wašišiw Ɂítdeʔ (Washoe) |
+| Yosemite Village (both tiles) | Miwok · Nüümü (Northern Paiute) · Me-Wuk (Southern Sierra Miwok) · Me-Wuk (Central Sierra Miwok) |
+| Grand Canyon Village | Pueblos · Havasu Baaja (Havasupai) · Hopitutskwa · Hualapai · Nuwuvi (Southern Paiute) |
+| Teton Glacier | Newe Sogobia (Eastern Shoshone) · Shoshone-Bannock · Cheyenne |
+| Fossil Forest (Lamar) | Apsáalooke (Crow) · Cheyenne · Očhéthi Šakówiŋ |
+| Sirena | Buglé and Ngäbé |
+| Manu | Arawak · Matsigenka · Yine |
+| Moskenes | Sápmi (Sámi) |
+| Seronera, Sungai Segama | none: Native Land's map does not cover them |
+
+One entry was left out everywhere: "Cayuse, Umatilla and Walla Walla" came back for the Olympic, foothill, Teton and
+Lamar tiles; the polygon the API returns for it spans 124.8 W to 104.6 W and 38.6 N to 50.1 N, most of the American
+West, far past those nations' homelands on the Columbia Plateau. A drawing error in Native Land's data, not a territory
+of these places: fetch_territories.EXCLUDED leaves it out by slug and each tile's source note says so (`excluded`, with
+the reason). Worth reporting to Native Land. Lamar has no Shoshone entry on their map (the Tetons do).
+The territories step needs no other step (it reads only the tile's bounds), so the two tiles built before the graph
+(Nashville, Placerville) are not blocked by their missing terrain record.
 
 Verified in headless Chrome on the local hub at 1440x900 and 375x812, signed in and signed out: the pill (2 at the Hoh
 River with two test players in its room, 0 dimmed elsewhere), the territory row and its links from a test fixture

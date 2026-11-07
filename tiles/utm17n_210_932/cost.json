@@ -646,18 +646,35 @@
     "queued_credits_est": 0
    },
    "status": "ok"
+  },
+  "territories": {
+   "stage": "base",
+   "started_at": "2026-11-07T02:12:13Z",
+   "ended_at": "2026-11-07T02:12:13Z",
+   "wall_s": 0.4,
+   "cpu_self_s": 0.2,
+   "cpu_children_s": 0.0,
+   "downloads": {},
+   "cache": {},
+   "disk_bytes": 343,
+   "meshy": {
+    "spent": 0,
+    "queued": 0,
+    "queued_credits_est": 0
+   },
+   "status": "ok"
   }
  },
  "stages": {
   "base": {
-   "started_at": "2026-11-06T10:35:39Z",
-   "ended_at": "2026-11-06T10:36:07Z",
-   "wall_s": 530.1,
-   "cpu_s": 99.0,
+   "started_at": "2026-11-07T02:12:13Z",
+   "ended_at": "2026-11-07T02:12:15Z",
+   "wall_s": 530.5,
+   "cpu_s": 99.2,
    "download_bytes": 8041303,
    "cache_hits": 222,
    "cache_misses": 8,
-   "disk_bytes": 104999269,
+   "disk_bytes": 104999612,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -1362,22 +1379,56 @@
    "failed": [
     "water_imagery"
    ]
+  },
+  {
+   "started_at": "2026-11-07T02:09:41Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T02:09:41Z",
+     "steps_run": [
+      "territories"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T02:09:44Z"
+    }
+   ],
+   "ended_at": "2026-11-07T02:09:44Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T02:12:13Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T02:12:13Z",
+     "steps_run": [
+      "territories"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T02:12:15Z"
+    }
+   ],
+   "ended_at": "2026-11-07T02:12:15Z",
+   "failed": [],
+   "refused": []
   }
  ],
  "totals": {
-  "wall_s": 545.4,
-  "cpu_s": 116.9,
+  "wall_s": 545.8,
+  "cpu_s": 117.1,
   "download_bytes": 8041303,
   "cache_hits": 1069,
   "cache_misses": 8,
-  "disk_bytes": 109169626,
+  "disk_bytes": 109169969,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 2230
  },
- "updated_at": "2026-11-06T18:49:43Z",
+ "updated_at": "2026-11-07T02:12:15Z",
  "client": {
-  "bytes": 16217719,
-  "files": 49,
+  "bytes": 16219820,
+  "files": 50,
   "largest": {
    "client/season_rgb.png": 4369035,
    "client/texture.png": 2118608,

@@ -637,18 +637,35 @@
     "queued_credits_est": 0
    },
    "status": "ok"
+  },
+  "territories": {
+   "stage": "base",
+   "started_at": "2026-11-07T02:11:58Z",
+   "ended_at": "2026-11-07T02:12:02Z",
+   "wall_s": 2.9,
+   "cpu_self_s": 0.3,
+   "cpu_children_s": 0.0,
+   "downloads": {},
+   "cache": {},
+   "disk_bytes": 960,
+   "meshy": {
+    "spent": 0,
+    "queued": 0,
+    "queued_credits_est": 0
+   },
+   "status": "ok"
   }
  },
  "stages": {
   "base": {
-   "started_at": "2026-11-05T10:37:29Z",
-   "ended_at": "2026-11-05T10:37:30Z",
-   "wall_s": 1328.1,
-   "cpu_s": 292.8,
+   "started_at": "2026-11-07T02:11:58Z",
+   "ended_at": "2026-11-07T02:12:02Z",
+   "wall_s": 1331.0,
+   "cpu_s": 293.1,
    "download_bytes": 70075993,
    "cache_hits": 2,
    "cache_misses": 495,
-   "disk_bytes": 349809963,
+   "disk_bytes": 349810923,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -1014,35 +1031,69 @@
    "failed": [
     "water_imagery"
    ]
+  },
+  {
+   "started_at": "2026-11-07T02:08:54Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T02:08:54Z",
+     "steps_run": [
+      "territories"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T02:08:58Z"
+    }
+   ],
+   "ended_at": "2026-11-07T02:08:58Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T02:11:58Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T02:11:58Z",
+     "steps_run": [
+      "territories"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T02:12:02Z"
+    }
+   ],
+   "ended_at": "2026-11-07T02:12:02Z",
+   "failed": [],
+   "refused": []
   }
  ],
  "totals": {
-  "wall_s": 1474.0,
-  "cpu_s": 310.8,
+  "wall_s": 1476.9,
+  "cpu_s": 311.1,
   "download_bytes": 71119382,
   "cache_hits": 457,
   "cache_misses": 610,
-  "disk_bytes": 352175000,
+  "disk_bytes": 352175960,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 0
  },
- "updated_at": "2026-11-06T18:49:17Z",
+ "updated_at": "2026-11-07T02:12:02Z",
  "client": {
-  "bytes": 3289619,
-  "files": 13,
+  "bytes": 34955215,
+  "files": 47,
   "largest": {
+   "client/texture_imagery.jpg": 5121791,
+   "client/texture_present.jpg": 5121560,
+   "client/season_rgb.png": 4081938,
+   "client/terrain_detail.png": 4005658,
+   "client/texture.png": 3188057,
+   "client/heights.png": 3150481,
+   "client/imagery.png": 2193381,
+   "client/substrate.png": 2036228,
+   "client/season_ndvi.png": 1344576,
    "games.json": 937658,
    "client/weather.json": 709359,
-   "client/species_prior.json": 469442,
-   "client/features.json": 452483,
-   "client/species_mix.json": 220035,
-   "perception.json": 167869,
-   "manifest.json": 164985,
-   "locomotion.json": 57462,
-   "calendar.json": 45635,
-   "species/species.json": 41024,
-   "client/substrate.json": 11969,
-   "client/ground_classes.json": 10974
+   "client/species_prior.json": 469442
   },
   "note": "every file under client/ and the tables the viewer fetches; an upper bound (the present-day texture is fetched only on request)"
  }

@@ -675,18 +675,35 @@
     "queued_credits_est": 0
    },
    "status": "ok"
+  },
+  "territories": {
+   "stage": "base",
+   "started_at": "2026-11-07T02:12:11Z",
+   "ended_at": "2026-11-07T02:12:11Z",
+   "wall_s": 0.4,
+   "cpu_self_s": 0.2,
+   "cpu_children_s": 0.0,
+   "downloads": {},
+   "cache": {},
+   "disk_bytes": 1061,
+   "meshy": {
+    "spent": 0,
+    "queued": 0,
+    "queued_credits_est": 0
+   },
+   "status": "ok"
   }
  },
  "stages": {
   "base": {
-   "started_at": "2026-11-06T19:36:24Z",
-   "ended_at": "2026-11-06T19:39:53Z",
-   "wall_s": 312.3,
-   "cpu_s": 178.3,
+   "started_at": "2026-11-07T02:12:11Z",
+   "ended_at": "2026-11-07T02:12:11Z",
+   "wall_s": 312.7,
+   "cpu_s": 178.5,
    "download_bytes": 11636655,
    "cache_hits": 570,
    "cache_misses": 3,
-   "disk_bytes": 447764133,
+   "disk_bytes": 447765194,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -1170,22 +1187,56 @@
     "audit"
    ],
    "refused": []
+  },
+  {
+   "started_at": "2026-11-07T02:09:35Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T02:09:35Z",
+     "steps_run": [
+      "territories"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T02:09:37Z"
+    }
+   ],
+   "ended_at": "2026-11-07T02:09:37Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T02:12:11Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T02:12:11Z",
+     "steps_run": [
+      "territories"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T02:12:11Z"
+    }
+   ],
+   "ended_at": "2026-11-07T02:12:11Z",
+   "failed": [],
+   "refused": []
   }
  ],
  "totals": {
-  "wall_s": 330.6,
-  "cpu_s": 197.4,
+  "wall_s": 331.0,
+  "cpu_s": 197.6,
   "download_bytes": 11636655,
   "cache_hits": 3348,
   "cache_misses": 3,
-  "disk_bytes": 454562645,
+  "disk_bytes": 454563706,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 1550
  },
- "updated_at": "2026-11-06T19:40:07Z",
+ "updated_at": "2026-11-07T02:12:11Z",
  "client": {
-  "bytes": 46483984,
-  "files": 47,
+  "bytes": 46486806,
+  "files": 48,
   "largest": {
    "client/terrain_detail.png": 12754405,
    "client/texture.png": 5292788,

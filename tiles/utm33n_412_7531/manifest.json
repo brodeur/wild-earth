@@ -15,7 +15,7 @@
   67.97272862561803
  ],
  "size_m": 10000,
- "generated_at": "2026-11-06T18:50:09Z",
+ "generated_at": "2026-11-07T02:12:18Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -8604,6 +8604,17 @@
    "encoding": "the channels as the DEM routed them (after the reroute step), before the water_imagery step moved the large rivers onto the imagery's water",
    "sha256": "a82230951ad3da88a35b99609608c7b17d0304ed8bc7d155572592e580cdf104",
    "bytes": 428038
+  },
+  "client.territories": {
+   "path": "client/territories.json",
+   "kind": "json",
+   "source": "native_land",
+   "counts": {
+    "territories": 1
+   },
+   "retrieved": "2026-11-07",
+   "sha256": "de85280208637b06786b9105eb9c57df1bf646962013fd95155485133e2fced6",
+   "bytes": 343
   }
  },
  "sources": {
@@ -8800,6 +8811,16 @@
    "attribution_url": "https://doi.org/10.1038/s41559-023-02206-6",
    "attribution_required": true,
    "retrieved": "2026-11-06"
+  },
+  "native_land": {
+   "name": "Native Land Digital territories map",
+   "url": "https://native-land.ca",
+   "license": "Native Land Digital API terms (free account; see their data sovereignty treaty)",
+   "license_url": "https://api-docs.native-land.ca",
+   "attribution": "Indigenous territories: Native Land Digital (native-land.ca). Their map does not represent or intend to represent official or legal boundaries of any Indigenous nation.",
+   "attribution_url": "https://native-land.ca",
+   "attribution_required": true,
+   "retrieved": "2026-11-07"
   }
  },
  "edits": [],
@@ -9522,6 +9543,18 @@
    "step": "water_imagery",
    "at": "2026-11-06T18:50:09Z",
    "seconds": 13.2,
+   "ok": true
+  },
+  {
+   "step": "territories",
+   "at": "2026-11-07T02:09:52Z",
+   "seconds": 2.1,
+   "ok": true
+  },
+  {
+   "step": "territories",
+   "at": "2026-11-07T02:12:18Z",
+   "seconds": 0.3,
    "ok": true
   }
  ],
@@ -11102,6 +11135,43 @@
     "cache": 0
    },
    "seconds": 13.2
+  },
+  "territories": {
+   "version": "1",
+   "code": "924db782b66110af",
+   "params": {
+    "tile": "utm33n_412_7531"
+   },
+   "fingerprint": "adcb5dbaa8edc030",
+   "parts": {
+    "version": "1",
+    "code": "924db782b66110af",
+    "params": {
+     "tile": "utm33n_412_7531"
+    },
+    "deps": {},
+    "library": {}
+   },
+   "ran_at": "2026-11-07T02:12:17Z",
+   "owner": null,
+   "status": "ok",
+   "layers": [
+    "client.territories"
+   ],
+   "outputs": {
+    "client/territories.json": "de85280208637b06"
+   },
+   "out_hash": "2233a88fdbff8588",
+   "sources": {
+    "native_land": "2026-11-07"
+   },
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 0
+   },
+   "seconds": 0.3
   }
  },
  "seams": {

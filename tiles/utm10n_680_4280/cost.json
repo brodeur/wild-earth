@@ -95,18 +95,35 @@
     "queued_credits_est": 0
    },
    "status": "ok"
+  },
+  "territories": {
+   "stage": "base",
+   "started_at": "2026-11-07T02:12:05Z",
+   "ended_at": "2026-11-07T02:12:05Z",
+   "wall_s": 0.3,
+   "cpu_self_s": 0.2,
+   "cpu_children_s": 0.0,
+   "downloads": {},
+   "cache": {},
+   "disk_bytes": 719,
+   "meshy": {
+    "spent": 0,
+    "queued": 0,
+    "queued_credits_est": 0
+   },
+   "status": "ok"
   }
  },
  "stages": {
   "base": {
-   "started_at": "2026-11-06T18:49:18Z",
-   "ended_at": "2026-11-06T18:49:30Z",
-   "wall_s": 120.0,
-   "cpu_s": 63.2,
+   "started_at": "2026-11-07T02:12:05Z",
+   "ended_at": "2026-11-07T02:12:06Z",
+   "wall_s": 120.3,
+   "cpu_s": 63.4,
    "download_bytes": 0,
    "cache_hits": 0,
    "cache_misses": 1,
-   "disk_bytes": 71441060,
+   "disk_bytes": 71441779,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -198,11 +215,45 @@
    ],
    "ended_at": "2026-11-06T18:49:30Z",
    "failed": []
+  },
+  {
+   "started_at": "2026-11-07T02:09:07Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T02:09:07Z",
+     "steps_run": [
+      "territories"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T02:09:10Z"
+    }
+   ],
+   "ended_at": "2026-11-07T02:09:10Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T02:12:05Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T02:12:05Z",
+     "steps_run": [
+      "territories"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T02:12:06Z"
+    }
+   ],
+   "ended_at": "2026-11-07T02:12:06Z",
+   "failed": [],
+   "refused": []
   }
  ],
  "client": {
-  "bytes": 71294526,
-  "files": 50,
+  "bytes": 71297005,
+  "files": 51,
   "largest": {
    "client/lidar_micro.png": 12956377,
    "client/terrain_detail.png": 9292444,
@@ -220,14 +271,14 @@
   "note": "every file under client/ and the tables the viewer fetches; an upper bound (the present-day texture is fetched only on request)"
  },
  "totals": {
-  "wall_s": 144.7,
-  "cpu_s": 79.6,
+  "wall_s": 145.0,
+  "cpu_s": 79.8,
   "download_bytes": 0,
   "cache_hits": 1,
   "cache_misses": 1,
-  "disk_bytes": 71491026,
+  "disk_bytes": 71491745,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 0
  },
- "updated_at": "2026-11-06T18:49:30Z"
+ "updated_at": "2026-11-07T02:12:06Z"
 }

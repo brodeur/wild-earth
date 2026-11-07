@@ -612,7 +612,7 @@ STEPS: dict[str, Step] = {s.name: s for s in [
           "vegetation.habitat_present_png", "terrain.rewilded", "client.habitat", "client.canopy", "footprint.urban",
           "client.roads", "client.texture", "client.masks", "client.imagery", "client.texture_present", "client.features"],
          ["osm"], doc="the base layer's client rasters, textures and place names", stage=B),
-    Step("territories", "1", ["fetch_territories"], ["terrain"], _territories, ["client.territories"], ["native_land"],
+    Step("territories", "1", ["fetch_territories"], [], _territories, ["client.territories"], ["native_land"],   # reads only the tile's bounds
          doc="the Indigenous territories over the tile (Native Land Digital), for the start screen's place cards; "
              "refused, not done, without a NATIVE_LAND_KEY", stage=B),
     Step("erase", "1", ["erase_imagery", "urban"], ["naip", "osm", "landcover", "terrain", "rewild_hydro"], _erase,
