@@ -42,11 +42,15 @@ import { avatarFor } from './social.js';
 
 const DEG = Math.PI / 180, TAU = Math.PI * 2;
 const RING_HW = 0.64;                                 // the walkers' ring's radius, of the tile's half-width (the fliers' 1.1 times that)
-const R_AIR = 0.95, Y_AIR = 0.38;                    // the fliers' ring: its radius and height over the walkers' (the back ones inside the tile's far edge as seen)
+const R_AIR = 0.74, Y_AIR = 1.05;                    // the fliers' ring: its radius and height over the walkers' (Aaron, 2026-11-07: "more elevation between them": a
+                                                     // smaller ring well above, so it reads as a tier of its own and its birds stand inside and over the walkers)
+const SPIRIT_Y = 0.5;                                 // the spirit's height: between the tiers
+const SUN = new THREE.Vector3(-0.5, 1, 0.9);           // the rings' light (as the stills'): the shadows fall away from it
+const SHADOW = [0.62, 0.2];                           // the contact shadows' darkness: walkers, fliers (fainter and wider from their height)
 const D_MAX = 0.44, D_SPIRIT = 0.3, M_REF = 2.2;     // an animal's largest side (ring radii) at most, for M_REF m and over; the spirit's halo
 const D_EXP = 0.3, D_FLOOR = 0.56, A_MIN = 0.16;      // A_MIN: a walker's least visible size (its height or plan), ring radii: about 40% of the deer's                    // the size's compression (m^0.3) and its floor: the smallest at about half the largest
 const ROWS2 = 14;                                     // a ring of more than this many stands in two staggered rows (outer, inner)
-const ROW_R = [[1.16, 0.8], [1.06, 0.8]], ROW_Y = [[0, 0], [-0.06, 0.06]];   // the rows' radii and heights (of each ring's own), walkers and fliers
+const ROW_R = [[1.16, 0.8], [1.12, 0.78]], ROW_Y = [[0, 0], [-0.08, 0.08]];   // the rows' radii and heights (of each ring's own), walkers and fliers
 const SPACING = 0.86;                                // of the ring's spacing an animal may fill
 const SPIN = [0.075, -0.055];                        // rad/s: the walkers' ring and the fliers' (the other way)
 const SPIN_IN_S = 2.5;                               // the turn's ease in, from the first arrival
@@ -99,7 +103,7 @@ export async function bodiesOf(tileId) {
     let spec = km, scale = Number.isFinite(f.scale) && f.scale > 0 ? clamp(f.scale, 0.05, 20) : 1, tint = Array.isArray(f.tint) ? f.tint : null;
     if (f.model?.path) {   // its own model, on its kin's template (animals.js DRAWN, opening_sprites.js jobSpec)
       const tpl = faunaTemplate(km[1], f), bird = kk === 'air';
-      spec = [bird ? 'bird' : G, () => loadFaunaModel(f.model.path, tpl, { skin: f.model.skin !== false }), 0, f.archetype === 'soar' || tpl === 'hawk' ? 'soar' : undefined];
+      spec = [bird ? 'bird' : G, () => loadFaunaModel(f.model.path, tpl, { skin: f.model.skin !== false }), !bird && f.bird ? 1 : 0, f.archetype === 'soar' || tpl === 'hawk' ? 'soar' : undefined];   // a bird on the walkers' ring stands, wings folded (pose 1)
       scale = 1; tint = null;
     }
     seen.add(code); out.push({ code, name, kind: kk, spec, tint, scale, standIn: true });
@@ -155,6 +159,12 @@ void main() {
   float rim = 0.55 + 0.45 * sin(vUv.x * 6.2832 * 3.0 + vUv.y * 9.0);
   gl_FragColor = vec4(mix(uCol, vec3(1.0), 0.35) * up * rim * uA, 1.0);
 }`;
+const SHADOW_FRAG = /* glsl */`
+uniform float uA; varying vec2 vUv;
+void main() {
+  float r = length((vUv - 0.5) * 2.0), a = 1.0 - smoothstep(0.0, 1.0, r);
+  gl_FragColor = vec4(0.0, 0.0, 0.0, a * a * uA);
+}`;
 const HALO_FRAG = /* glsl */`
 uniform vec3 uCol; uniform float uA; varying vec2 vUv;
 void main() {
@@ -171,7 +181,7 @@ export class BodyRing {
     this.cam = new THREE.PerspectiveCamera(30, 1, 0.1, 200);
     this.pinTo = null; this._e = new THREE.Vector3(); this._n = new THREE.Vector3(); this._u = new THREE.Vector3(); this._m4 = new THREE.Matrix4(); this._q = new THREE.Quaternion();
     this.scene.add(new THREE.HemisphereLight(0xe4ecff, 0x40372a, 2.2));
-    const sun = new THREE.DirectionalLight(0xfff1dc, 2.4); sun.position.set(-0.5, 1, 0.9); this.scene.add(sun);
+    const sun = new THREE.DirectionalLight(0xfff1dc, 2.4); sun.position.copy(SUN); this.scene.add(sun);
     this.world = new THREE.Group(); this.world.scale.setScalar(U); this.scene.add(this.world);   // the rings, in ring radii
     this.rings = [0, 1].map(i => {
       const group = new THREE.Group(); group.position.y = i ? Y_AIR : 0; this.world.add(group);
@@ -279,6 +289,14 @@ export class BodyRing {
     const beam = new THREE.Mesh(this.beamGeo, bm); beam.frustumCulled = false; beam.renderOrder = 2; beam.visible = false;
     beam.scale.set(D * 0.26, D * 1.7, D * 0.26); beam.position.y = air ? -D * 0.8 : 0;
     it.holder.add(beam); it.beam = beam; it.bu = bu;
+    // its contact shadow on the ground under it (Aaron, 2026-11-07: "Ground animals should have drop shadows"): a soft
+    // dark ellipse its length and breadth, the walkers' at their feet, a flier's fainter and wider far below it
+    const su = { uA: { value: 0 } };
+    const sm = new THREE.ShaderMaterial({ uniforms: su, vertexShader: BEAM_VERT, fragmentShader: SHADOW_FRAG, transparent: true, depthWrite: false, toneMapped: false });
+    const shadow = new THREE.Mesh(this.discGeo, sm); shadow.frustumCulled = false; shadow.renderOrder = -1;
+    const len = Math.max(ext.z, ext.x * 0.5) * s, wid = Math.max(ext.x * (air ? 0.7 : 1.15) * s, len * (air ? 0.5 : 0.42));
+    shadow.scale.set(wid * (air ? 1.5 : 1.25), 1, len * (air ? 1.3 : 1.25)); shadow.visible = false;
+    this.world.add(shadow); it.shadow = shadow; it.su = su;   // on the rings' ground, placed each frame (step)
     it.u.uFlashCol.value.copy(bu.uCol.value).lerp(this._c.set(1, 1, 1), 0.6);
     // compiled before it is drawn, off the main thread where the browser can (KHR_parallel_shader_compile)
     try { await this.renderer.compileAsync(it.holder, this.cam, this.scene); } catch (e) { /* compiled on first draw instead */ }
@@ -319,7 +337,7 @@ export class BodyRing {
   }
   free(it) {
     it.holder.removeFromParent();
-    it.geo?.dispose(); it.mat?.dispose(); it.beam?.material.dispose(); disposeModel(it.model);
+    it.geo?.dispose(); it.mat?.dispose(); it.beam?.material.dispose(); it.shadow?.removeFromParent(); it.shadow?.material.dispose(); disposeModel(it.model);
     it.geo = it.mat = it.model = null;
   }
 
@@ -407,7 +425,7 @@ export class BodyRing {
     this.wispIn = clamp(this.wispIn + (this.tile && !this.held ? 1 : -1.6) * dt / (this.reduced ? FADE_S : 0.9), 0, 1);
     this.wispT += dt;
     const sw = this.reduced ? 0.7 : 1, wr = WISP_R / U, ww = TAU / WISP_LAP * sw;
-    this.wispP.set(Math.cos(this.wispT * ww) * wr, Y_AIR * 0.42 + Math.sin(this.wispT * 0.9) * 0.02, -Math.sin(this.wispT * ww) * wr);
+    this.wispP.set(Math.cos(this.wispT * ww) * wr, SPIRIT_Y + Math.sin(this.wispT * 0.9) * 0.02, -Math.sin(this.wispT * ww) * wr);
     const k = this.swell = (this.swell ?? 1) + ((this.sel === 'spirit' ? 1 : 0.3) - (this.swell ?? 1)) * (1 - Math.exp(-dt * 4));
     if (this.wispIn > 0.002) {
       const grow = this.reduced ? 1 : easeOutBack(this.wispIn), lum = (W_REST[1] + (1 - W_REST[1]) * k) * (this.reduced ? this.wispIn : 1);
@@ -450,6 +468,13 @@ export class BodyRing {
     it.u.uFlash.value = flash; it.u.uAlpha.value = alpha;
     const tr = alpha < 1; if (it.mat.transparent !== tr) { it.mat.transparent = tr; it.mat.depthWrite = !tr; it.mat.needsUpdate = true; }
     it.beam.visible = beam > 0.002; it.bu.uA.value = beam;
+    it.su.uA.value = SHADOW[it.kind === 'air' ? 1 : 0] * Math.min(1, scale) * alpha;
+    { // the shadow on the ground, cast away from the light by the body's height (a flier's from its tier), turned with it
+      const sh = it.shadow, P = this.world.worldToLocal(it.holder.getWorldPosition(this._sv || (this._sv = new THREE.Vector3())));
+      const up = it.kind === 'air' ? P.y : it.h * 0.45;
+      sh.position.set(P.x - SUN.x / SUN.y * up, 0.004, P.z - SUN.z / SUN.y * up);
+      sh.rotation.y = it.ring.group.rotation.y + it.holder.rotation.y; sh.visible = it.su.uA.value > 0.003;
+    }
     // facing: along the ring's turn; the chosen one partly toward the camera (outward at the front)
     const dir = SPIN[it.ring.i] >= 0 ? 1 : -1, path = it.a + dir * Math.PI / 2;
     it.holder.rotation.y = path + wrapPi(it.a - path) * FACE_TURN * it.pick;
