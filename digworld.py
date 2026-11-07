@@ -18,10 +18,20 @@ N_MAX, S_MAX, P_MAX = 5000, 5000, 120   # as client/src/dig.js (MAX_N, MAX_S, MA
 R_MIN, R_MAX, PIT_R_MAX, PIT_D_MAX = 0.01, 0.12, 1.3, 0.75
 STEP_MAX = 0.6                  # m from the node a dig starts at (the client's steps are 2 cm; a grown segment 35 cm)
 ID_RE = re.compile(r"^[A-Za-z0-9_.:-]{1,40}$")
-TYPES = ("hole", "dig", "grow", "join", "widen", "room", "surface", "pit", "open", "visit", "pull")
+TYPES = ("hole", "dig", "grow", "join", "widen", "room", "surface", "pit", "open", "visit", "pull", "den", "denk")
 PULL_MAX = 3000                  # plants pulled down from below in one tile and season (a pull is never a player's: no id)
 SP_RE = re.compile(r"^[a-z][a-z0-9_]{1,60}$")
 ROOM_REACH = 0.45                # m: the farthest an absorbed node lies from a room's centre
+# A den (client/src/digDen.js, docs/game-dig.md "Dens"): a room node planned off a tunnel node `at`, its plan in "dn"
+# [ax, ay, az, ar, x, y, z, r, k]: it starts where `at` stood (ax.., ar) and, as the den is dug (k, 0..1, only rising:
+# `denk`), its centre moves to (x, y, z) and its radius grows to r. The node's x, y, z, r are always the plan at k.
+DEN_R_MIN, DEN_R_MAX, DEN_REACH, DEN_MAX, DEN_AT = 0.08, 0.4, 0.7, 200, 0.05
+
+
+def den_place(n: dict) -> None:
+    """A den node's x, y, z, r from its plan at its progress (client/src/dig.js denPlace, the same arithmetic)."""
+    ax, ay, az, ar, x, y, z, r, k = n["dn"]
+    n["x"], n["y"], n["z"], n["r"] = ax + (x - ax) * k, ay + (y - ay) * k, az + (z - az) * k, ar + (r - ar) * k
 
 
 def empty() -> dict:
@@ -68,6 +78,12 @@ def clean(e) -> dict:
         out.update(id=_id(e.get("id"), "id"), **xyz(), r=_num(e.get("r"), "r", R_MIN, R_MAX), absorb=[_id(i, "absorb") for i in ab])
     elif t == "surface":
         out.update(id=_id(e.get("id"), "id"), y=_num(e.get("y"), "y", -1000, 9000))
+    elif t == "den":   # a den planned off node `at`: its centre and radius, and where it starts (at's place and bore)
+        out.update(id=_id(e.get("id"), "id"), seg=_id(e.get("seg"), "seg"), at=_id(e.get("at"), "at"), **xyz(),
+                   r=_num(e.get("r"), "r", DEN_R_MIN, DEN_R_MAX), ax=_num(e.get("ax"), "ax", 0, TILE_M), ay=_num(e.get("ay"), "ay", -1000, 9000),
+                   az=_num(e.get("az"), "az", -TILE_M, 0), ar=_num(e.get("ar"), "ar", R_MIN, R_MAX))
+    elif t == "denk":   # a den dug further: its progress, 0..1
+        out.update(id=_id(e.get("id"), "id"), k=_num(e.get("k"), "k", 0, 1))
     elif t == "pit":
         out.update(id=_id(e.get("id"), "id"), x=_num(e.get("x"), "x", 0, TILE_M), z=_num(e.get("z"), "z", -TILE_M, 0),
                    y0=_num(e.get("y0"), "y0", -1000, 9000), r=_num(e.get("r"), "r", 0.02, PIT_R_MAX),
@@ -176,7 +192,7 @@ def dig_reduce(d: dict, e: dict, now: float) -> str | None:
         ok = False
         for i in e["ids"]:
             n = N.get(i)
-            if n:
+            if n and "dn" not in n:   # (a den grows only as it is dug)
                 r = min(R_MAX, max(n["r"], e["r"]))
                 if r != n["r"]:
                     n["r"], ok = r, True
@@ -188,7 +204,7 @@ def dig_reduce(d: dict, e: dict, now: float) -> str | None:
         if taken(e["id"]) or len(N) >= N_MAX:
             return "taken"
         ab = [N.get(i) for i in e["absorb"]]
-        if any(n is None or n["h"] for n in ab):
+        if any(n is None or n["h"] or "dn" in n for n in ab):   # (a den is never absorbed into a chamber)
             return "no such node"
         sys = {n["sys"] for n in ab}
         if len(sys) != 1 or any(math.dist((n["x"], n["y"], n["z"]), (e["x"], e["y"], e["z"])) > ROOM_REACH for n in ab):
@@ -265,6 +281,36 @@ def dig_reduce(d: dict, e: dict, now: float) -> str | None:
         if e["left"] >= u["l"]:
             return "no change"
         u["l"] = e["left"]
+        return None
+    if t == "den":
+        a = N.get(e["at"])
+        if not a:
+            return "no such node"
+        if "dn" in a and a["dn"][8] < 1:
+            return "not dug yet"
+        if taken(e["id"]) or taken(e["seg"]) or e["id"] == e["seg"]:
+            return "taken"
+        if len(N) >= N_MAX or len(S) >= S_MAX or sum(1 for n in N.values() if "dn" in n) >= DEN_MAX:
+            return "full"
+        if math.dist((a["x"], a["y"], a["z"]), (e["ax"], e["ay"], e["az"])) > DEN_AT or math.dist((e["ax"], e["ay"], e["az"]), (e["x"], e["y"], e["z"])) > DEN_REACH:
+            return "too far"
+        n = {"h": 0, "sys": a["sys"], "o": 0, "k": 1, "dn": [e["ax"], e["ay"], e["az"], e["ar"], e["x"], e["y"], e["z"], e["r"], 0.0]}
+        den_place(n)
+        N[e["id"]] = n
+        S[e["seg"]] = [e["at"], e["id"]]
+        A[e["id"]] = [e["seg"]]
+        A.setdefault(e["at"], []).append(e["seg"])
+        _see(d, a["sys"], now)
+        return None
+    if t == "denk":
+        n = N.get(e["id"])
+        if not n or "dn" not in n:
+            return "no such den"
+        if e["k"] <= n["dn"][8]:
+            return "no change"
+        n["dn"][8] = e["k"]
+        den_place(n)
+        _see(d, n["sys"], now)
         return None
     if t == "visit":
         k = e.get("sys") or e.get("pit")

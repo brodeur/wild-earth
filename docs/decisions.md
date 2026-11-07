@@ -6904,3 +6904,53 @@ on a touch tap, no page errors), signed in at both widths (19 and 14 items), red
 signing in while Upper Hoh Road was chosen (Start live, the world at 20% 2.5 s later, the social column's 7 items
 staggered, Start enabled when ready), `?hub=stub`, a static host with no hub (Explore staggered in, then the places),
 and `?skip=1`. Frames were captured every ~100 to 250 ms (headless screenshots are slow); the start times are exact.
+
+## 2026-11-06: while digging, ↑ and ↓ steer the dig's slope; the camera yields to them (docs/game-dig.md "The arrows steer the dig")
+
+Aaron: "While digging, the purpose of the arrow keys changes upArrow begins to dig up, downarrow begins to dig down"
+
+With the dig key held:
+- **The arrows turn the face's slope.** ↑ turns it up and ↓ down, from the slope the face has now, at the rate the face
+  can curve.
+- **Released, it holds.** Let go and the slope stays where it was.
+- **No walking.** The arrows don't walk while Q is held.
+
+The camera's pitch steering stays, but the last input wins. An arrow takes the aim from the camera and keeps it until a
+deliberate vertical drag (0.08 rad of orbit, about 30 px) hands it back.
+
+Considered:
+- **The camera only adds to the arrows.** Rejected: the camera's tilt is held underground, so a view left up over the
+  body would keep pulling the slope down against the keys.
+- **The keys win only while held.** Rejected: releasing would snap the slope back to the camera's, which breaks
+  "releasing holds the current angle".
+- **The arrows set a target that runs ahead of the face.** Rejected: on release the face would keep turning. The arrows
+  instead turn the slope at the face's own curve rate, so what the player sees is what holds.
+
+## 2026-11-06: a den is a room node that grows out of the tunnel as it is dug (docs/game-dig.md "Dens", client/src/digDen.js)
+
+Aaron: "The 1 key "dig den" which makes a large area. Dens that overlap should have empty space ... Digging the den is a
+process that can be interrupted, and returned to/completed."
+
+The tunnels already had the right kind of thing: a chamber is one room node, carved as an ellipsoid into the same soil
+field, with tunnels entering at their bore. A den is a room node planned off the tunnel node it overlaps:
+- **The plan.** The `den` event carries where the den starts (that node's place and bore) and its planned centre and
+  radius.
+- **The progress.** The `denk` event carries its progress k, which only rises. The node always stands at the plan's
+  k, so the cavity grows from the tunnel toward its centre, joined from the start and never breaking the surface.
+
+Overlap needs nothing of its own, because the carved air is a union. The plan persists like any tunnel (in
+`digworld.py`'s state, per tile and season, anonymous), so an interrupted den is resumed from what was stored, by
+anyone. Progress goes out in 2% steps, 50 events a den.
+
+Considered:
+- **A den as its own kind of shape** (a separate list beside the nodes). Rejected: it would need its own carving,
+  walking, joining and decay, all of which rooms already have.
+- **Showing a full-size den at once and filling it in.** Rejected: the cavity has to be the dug space for walking and
+  for the meshes, so growing the room is what "the cavity grows" means.
+- **A den centred where it was placed, growing outward.** Rejected: early on it would float unconnected in the soil.
+- **Walking to a distant plan automatically.** Left out: the player walks there.
+
+Where the brief met the game:
+- **Diggers.** Only the tunnellers (the vole and the brush rabbit) dig dens; the others never go underground.
+- **"Attacked".** Read as a coyote opening the system from above, since nothing else reaches a body underground.
+

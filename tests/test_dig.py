@@ -245,6 +245,79 @@ class DigTest(unittest.TestCase):
         self.assertIsNone(digworld.dig_reduce(d, digworld.clean({"type": "pull", "id": "f:9.9.9", "x": x, "y": y, "z": z, "sp": "stipa_pulchra"}), time.time()))
         self.assertEqual(d["pulls"]["f:9.9.9"]["l"], 1)
 
+    def test_den(self):
+        """A den (client/src/digDen.js): planned off a tunnel node it starts at, dug in rising steps (`denk`) that move
+        its centre to the plan's and grow its radius; a second player sees the plan and every step; a late joiner's
+        welcome has it as far as it was dug, and it is finished from there; the reducer refuses a den off nothing,
+        too far, too big, off a den still being dug, a progress that falls, and a chamber that would absorb it; two
+        finished dens that overlap are joined."""
+        a, b = self.dig("summer"), self.dig("summer")
+        x, y, z = 6200.0, 290.0, -6200.0
+        tun = [{"type": "hole", "id": "dv.1", "x": x, "y": y - 0.03, "z": z, "r": 0.03},
+               {"type": "dig", "from": "dv.1", "id": "dv.2", "seg": "dv.3", "x": x, "y": y - 0.2, "z": z - 0.2},
+               {"type": "dig", "from": "dv.2", "id": "dv.4", "seg": "dv.5", "x": x, "y": y - 0.25, "z": z - 0.5}]
+        for i, e in enumerate(tun):
+            a.send({"t": "dev", "c": i + 1, "e": e})
+            a.wait("dev", where=lambda m, i=i: m.get("c") == i + 1)
+        den = {"type": "den", "id": "dv.6", "seg": "dv.7", "at": "dv.4", "x": x + 0.1, "y": y - 0.28, "z": z - 0.6, "r": 0.16,
+               "ax": x, "ay": y - 0.25, "az": z - 0.5, "ar": 0.03, "by": "p:secret"}
+        a.send({"t": "dev", "c": 10, "e": den})
+        mine = a.wait("dev", where=lambda m: m.get("c") == 10)
+        seen = b.wait("dev", where=lambda m: m["e"]["type"] == "den")
+        self.assertEqual(seen["e"], mine["e"])
+        self.assertNotIn("by", seen["e"])
+        for c, k in ((11, 0.2), (12, 0.5)):
+            a.send({"t": "dev", "c": c, "e": {"type": "denk", "id": "dv.6", "k": k}})
+            a.wait("dev", where=lambda m, c=c: m.get("c") == c)
+            self.assertEqual(b.wait("dev", where=lambda m: m["e"]["type"] == "denk")["e"]["k"], k)
+        a.send({"t": "dev", "c": 13, "e": {"type": "denk", "id": "dv.6", "k": 0.4}})
+        self.assertEqual(a.wait("drej")["why"], "no change")
+        # interrupted halfway: a late joiner sees it half dug, its node halfway from the tunnel to the plan's centre
+        c = self.dig("summer")
+        n = c.welcome["dig"]["nodes"]["dv.6"]
+        self.assertEqual(n["dn"][8], 0.5)
+        self.assertAlmostEqual(n["x"], x + 0.05)
+        self.assertAlmostEqual(n["z"], z - 0.55)
+        self.assertAlmostEqual(n["r"], 0.03 + (0.16 - 0.03) * 0.5)
+        self.assertEqual((n["k"], c.welcome["dig"]["segs"]["dv.7"]), (1, ["dv.4", "dv.6"]))
+        # resumed and finished by that joiner
+        c.send({"t": "dev", "c": 1, "e": {"type": "denk", "id": "dv.6", "k": 1}})
+        c.wait("dev", where=lambda m: m.get("c") == 1)
+        a.wait("dev", where=lambda m: m["e"]["type"] == "denk" and m["e"]["k"] == 1)
+        n = self.dig("summer").welcome["dig"]["nodes"]["dv.6"]
+        self.assertEqual((n["x"], n["y"], n["z"], n["r"]), (x + 0.1, y - 0.28, z - 0.6, 0.16))
+        # the reducer's refusals
+        now = time.time()
+        d = digworld.empty()
+        for e in tun:
+            self.assertIsNone(digworld.dig_reduce(d, digworld.clean(e), now))
+        base = {k: v for k, v in den.items() if k != "by"}
+        R = lambda **kw: digworld.dig_reduce(d, digworld.clean({**base, **kw}), now)
+        self.assertEqual(R(at="dv.99"), "no such node")
+        self.assertEqual(R(ax=x + 0.2), "too far")                   # not where `at` stands
+        self.assertEqual(R(x=x + 1.0), "too far")                    # its centre out of reach
+        with self.assertRaises(ValueError):
+            digworld.clean({**base, "r": 0.9})                        # too big
+        self.assertIsNone(R())
+        self.assertEqual(R(id="dv.8", seg="dv.9", at="dv.6", ax=x, ay=y - 0.25, az=z - 0.5), "not dug yet")
+        self.assertEqual(digworld.dig_reduce(d, digworld.clean({"type": "room", "id": "dv.10", "x": x, "y": y - 0.25, "z": z - 0.5, "r": 0.1, "absorb": ["dv.6"]}), now), "no such node")
+        self.assertEqual(digworld.dig_reduce(d, digworld.clean({"type": "widen", "ids": ["dv.6"], "r": 0.1}), now), "no change")
+        self.assertEqual(digworld.dig_reduce(d, digworld.clean({"type": "denk", "id": "dv.4", "k": 0.5}), now), "no such den")
+        # finished, a second den off the first that overlaps it, finished too, and the two joined: one room
+        self.assertIsNone(digworld.dig_reduce(d, digworld.clean({"type": "denk", "id": "dv.6", "k": 1}), now))
+        self.assertIsNone(R(id="dv.11", seg="dv.12", at="dv.6", ax=x + 0.1, ay=y - 0.28, az=z - 0.6, ar=0.12, x=x + 0.3, z=z - 0.7))
+        self.assertEqual(d["nodes"]["dv.11"]["r"], 0.12)
+        self.assertIsNone(digworld.dig_reduce(d, digworld.clean({"type": "denk", "id": "dv.11", "k": 1}), now))
+        self.assertEqual(digworld.dig_reduce(d, digworld.clean({"type": "join", "a": "dv.11", "b": "dv.6", "seg": "dv.13"}), now), "joined")
+        self.assertEqual(d["nodes"]["dv.11"]["sys"], "dv.1")
+        # a den goes when its system decays
+        self.assertTrue(set(digworld.dig_decay(d, now + 8 * 86400)["nodes"]) >= {"dv.6", "dv.11"})
+        # (and this test's system leaves the shared summer world as it found it: test_pit_opens_and_decays counts its decay)
+        w = self.world("summer")
+        with w.lock:
+            w.prune(time.time() + 8 * 86400)
+        a.wait("dev", where=lambda m: m["e"]["type"] == "decay" and "dv.6" in m["e"].get("nodes", []))
+
     def test_rabbits(self):
         """A brush rabbit's burrow (6.5 cm tubes, a nest room at its end) and a jackrabbit's form (a pit of kind 'form')
         reach a second player as they are dug and are in a late joiner's welcome; a form decays as a pit does."""
