@@ -65,6 +65,7 @@ const ALT0 = 2.5, ALT_MIN = 0.6 / R_KM, ALT_MAX = 3.6;      // the camera's dist
 // down to PACE_MIN, so it eases into a hold a few times the final height above the tile and goes on as the build does).
 const PLACE_SLOW = 1.8, PLACE_MS = [5000, 8000], PACE_FROM = 0.55, PACE_SLACK = 0.12, PACE_MIN = 0.04;
 const FOCUS_MARGIN = [40, 16];                             // px around the stage inside the free centre (desktop, phone)
+const UNCHOOSE_AT = [0.3, 0.14, 350];                       // a chosen tile's width over the free centre's: armed at or over [0], deselected under [1] held [2] ms
 const STAGE_TOP = 0.07;                                    // of the stage's height kept clear above the tile: the back animals stand up past its far edge
 const Y_BELOW = -2.7;                                      // where the earth's centre sits before it lands: off screen, below
 const SUN_CRESCENT = [152 * DEG, 26 * DEG], SUN_LIT = [30 * DEG, 14 * DEG];   // [azimuth about Y from the camera's side, elevation]
@@ -247,8 +248,8 @@ export class TitleScreen {
   // the last tile played, else the first; pending: a { lat, lon } to arrive over (its tile faces, if built); hub:
   // 'stub' for hubStub.js, an object with config/me/watch/on/close for a real one (hub.js), else the server is asked
   // over HTTP; onSelect(tileId) and onBegin(choice) as the card screen's.
-  constructor({ root, renderer, index, tileId = null, pending = null, hub = null, onSelect = null, onBegin }) {
-    this.root = root; this.renderer = renderer; this.index = index; this.onSelect = onSelect; this.onBegin = onBegin;
+  constructor({ root, renderer, index, tileId = null, pending = null, hub = null, onSelect = null, onDeselect = null, onBegin }) {
+    this.root = root; this.renderer = renderer; this.index = index; this.onSelect = onSelect; this.onDeselect = onDeselect; this.onBegin = onBegin;
     this.ids = index.tiles.map(t => t.tile_id);
     this.readyIds = new Set(); this.status = {}; this.progress = {}; this.points = {}; this.counts = {};
     this.sel = null; this.begun = false; this.closed = false; this.phase = 'title';
@@ -832,7 +833,7 @@ export class TitleScreen {
     };
     return this.flyTo(c.lat, c.lon, c.alt, null, pace).then(() => {
       if (this.sel !== id || this.closed) return;
-      this.card.classList.add('on');
+      this.card.classList.add('on'); this.selArmed = true;
       this.ringFor = null; this.ring?.show(id).then(list => { if (list && this.sel === id && !this.closed) this.renderBody(); });   // the bodies teleport in once it has landed (loaded during the flight, or now)
     });
   }
@@ -886,12 +887,48 @@ export class TitleScreen {
     // the paced zoom: once the build is past its animals step (ringLoad, from setProgress), at once when nothing builds
     this.ringFor = id;
     if (this.guest || this.readyIds.has(id)) this.ringLoad(id);
-    this.body = 'spirit'; this.joinWith = null; this.autoStart = null;
+    this.body = 'spirit'; this.joinWith = null; this.autoStart = null; this.selArmed = false; this.smallSince = null;
     this.renderCard(); this.renderBar();
     this.wrap.classList.add('chosen'); this.wrap.classList.remove('listopen'); this.$('.tt-listbtn').setAttribute('aria-expanded', 'false');
     this.flyToPlace(id);
     this.relief?.show(id);
     if (!this.guest) this.onSelect?.(id);   // a visitor's choice builds nothing (they cannot start it)
+  }
+  // Zoomed away from the chosen place (Aaron, 2026-11-07: "If I zoom too far away from the selected tile, the tile becomes
+  // deselected and the button and animals and title fade away"): its tile drawn under UNCHOOSE_AT[1] of the free centre's
+  // width for UNCHOOSE_AT[2] ms, once it has been framed (armed at UNCHOOSE_AT[0]: the flight in from afar never counts).
+  // Checked each frame by syncPlaces; one way: zooming back in does not choose it again.
+  watchZoom(W) {
+    const p = this.byId[this.sel]; if (!p || this.begun || this.flying || this.autoStart) return;
+    const [w, s, e, n] = p.bounds, lat = (s + n) / 2, [fl, fr] = this.freeArea(W);
+    const a = this.screenOf(latLonToXYZ(lat, w)), b = this.screenOf(latLonToXYZ(lat, e));
+    if (!a || !b) return;
+    const share = Math.abs(b[0] - a[0]) / Math.max(1, fr - fl);
+    if (share >= UNCHOOSE_AT[0]) this.selArmed = true;
+    if (!this.selArmed || share >= UNCHOOSE_AT[1]) { this.smallSince = null; return; }
+    const now = performance.now(); this.smallSince ??= now;
+    if (now - this.smallSince >= UNCHOOSE_AT[2]) this.unchoose();
+  }
+  // No place chosen any more: the rings beam out (fade, reduced motion), the title, Invite and Start fade with the bar, the
+  // tile's outline and its row and label go back to a place among others, its world is let go (main.js onDeselect: as a
+  // second choice lets the first go), and the group no longer sees a body chosen there.
+  unchoose() {
+    const id = this.sel; if (!id || this.begun) return;
+    this.byId[id].el.classList.remove('sel'); this.byId[id].label.classList.remove('sel');
+    this.sel = null; this.ringFor = null; this.autoStart = null; this.joinWith = null; this.body = 'spirit'; this.selArmed = false; this.smallSince = null;
+    this.ring?.clear(); this.relief?.hide();
+    this.wrap.classList.remove('chosen', 'listopen');
+    this.renderBar();   // the bar's .on goes: it fades out with the title in it (title.css)
+    if (!this.guest) { this.onBody?.(null, null); this.onDeselect?.(id); }
+    this.listKey = '';
+    this.unchosen = { id, at: Math.round(performance.now()) };   // debugging
+  }
+  // A point of the earth's unit sphere on screen [x, y] (CSS px), or null behind the earth
+  screenOf(p0) {
+    const size = this.renderer.getSize(this._size), W = size.x || innerWidth, H = size.y || innerHeight, c = this.earth.position, v = this._w.copy(p0).applyQuaternion(this.earth.quaternion).add(c);
+    const toCam = this._v.copy(this.cam.position).sub(v); if (toCam.dot(v.clone().sub(c)) <= 0) return null;
+    v.project(this.cam); if (v.z >= 1) return null;
+    return [(v.x + 1) / 2 * W, (1 - v.y) / 2 * H];
   }
   // The card over the place: its name, its region line, the avatars of its players and how many, which opens the list.
   renderCard() {
@@ -1198,6 +1235,7 @@ export class TitleScreen {
     const pin = this.$('.tt-pin');
     if (this.pin && !this.begun) { const [x, y, near] = project(this.pin.p, 1); pin.hidden = !near; pin.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`; }
     else pin.hidden = true;
+    if (this.sel) this.watchZoom(W);
     // the chosen place (its name over the buttons now: renderCard; the label on the map is left out above)
     if (this.sel) {
       // the bar: toward the step's end while it runs (never past it), all of it when ready

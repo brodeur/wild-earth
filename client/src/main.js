@@ -388,7 +388,9 @@ async function main() {
   layoutHud();
 
   window.__weWorld = () => world;   // debugging: the world the page is building, holding or playing
-  window.__weDrop = async () => { gen++; const old = world; world = null; if (old) { if (old.ready) screen?.readyIds?.delete?.(old.tileId); await disposeWorld(old, renderer); } };   // debugging: tear it down, build nothing
+  // tear the world down and build nothing (a place deselected on the home screen: title.js unchoose; and for debugging), as a
+  // second choice abandons the first (replaceWorld)
+  const dropWorld = window.__weDrop = async () => { gen++; const old = world; world = null; if (old) { if (old.ready) screen?.readyIds?.delete?.(old.tileId); await disposeWorld(old, renderer); } };
   if (!direct) {
     const index = await (await fetch('../tiles/index.json', { cache: 'no-cache' })).json();
     const ids = index.tiles.map(t => t.tile_id);
@@ -429,6 +431,7 @@ async function main() {
       choice = null;
       screen = new Screen({ root: $('opening'), renderer, index, tileId: first ? tileId : lastTile(), pending: first ? pending : null, hub: mp ? mp.titleHub : params.get('hub'),
         onSelect: id => { select(id); },
+        onDeselect: () => { choice = null; dropWorld(); },
         onBegin: c => { choice = c; if (world?.ready && world.tileId === c.tileId) world.enter(c, true); } });
       mp?.attach(screen);
       screenOpen = true;

@@ -820,6 +820,9 @@ at)`), `client/src/animals.js` (`summon(..., at)`), `tests/test_hub.py` (`test_b
   in when it lands, in a random order a short gap apart, with the old lineup's arrival in 3D: a beam of the species' soul
   colour, a white flash and a spring to full size; a new place beams the old ones out. The rings then turn slowly, the
   walkers one way and the fliers the other.
+- **Zooming away deselects** (2026-11-07): the chosen tile drawn under 14% of the free centre's width (once framed, held
+  350 ms) unchooses the place: the rings, the spirit, the title, Invite and Start fade together, the tile is an ordinary
+  place again, its world is let go and the group hears `body {tile: null}`. Zooming back in chooses nothing.
 - **Choosing.** A click on an animal (or the spirit) chooses it: its ring swings it to the front on a critically damped
   spring and holds it there, turned partly toward the camera, a halo under it; the other ring keeps turning. Hovering
   names the animal. Signed out the rings show but nothing is chosen: hovering or tapping an animal shows "Log in or sign

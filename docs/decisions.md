@@ -7515,3 +7515,23 @@ spirit's glow covered much of it.
   centre on screen agree to the pixel after landing (680, 381), after a drift and a 1.6x zoom out (786, 440) and after
   a resize to 1100 x 760 (600, 356). The rings' frame cost is unchanged (24 draw calls, 34,000 triangles, 0.6 ms of CPU
   on El Dorado).
+
+## 2026-11-07: zooming away deselects the place (branch claude/rings-on-tile)
+
+Aaron: "If I zoom too far away from the selected tile, the tile becomes deselected and the button and animals and title
+fade away". Before this, nothing but another choice deselected a place: zoomed out to the whole earth, the rings, the
+title and Start stayed up for a tile a few pixels wide.
+
+- **When.** The chosen tile's drawn width (its two side midpoints on screen) under 14% of the free centre's width, held
+  350 ms. It counts only once the tile has been framed (30% or more: armed at landing), so the flight in from far away
+  never deselects, and hovering near the line cannot flicker: the deselect is one way. On El Dorado, framed at 18.7 km,
+  it falls between 125 and 175 km at 1440 x 900 and near 280 km on a phone (framed there at 30 km).
+- **What goes.** `unchoose()`: the rings beam out (fade out under reduced motion) and the spirit with them, the bar fades
+  with the place's title, Invite and Start in it (its `.on` goes, the CSS transition), the tile's outline, row and label go
+  back to ordinary places, the relief model fades, a phone's folded list comes back, the group is told no body is chosen
+  (`body {tile: null}`), and the world built behind the screen is let go (main.js `onDeselect` -> `dropWorld`, the same
+  teardown a second choice does). Zooming back in chooses nothing; the row, label or dot chooses it again, flight and
+  rings and world as before.
+- **Checked** in headless Chrome on El Dorado at 1440 x 900, at 390 x 844 and under reduced motion: deselected on the way
+  out with no errors, the world gone (`__weWorld()` null), nothing chosen after zooming back in to 29 km, chosen again from
+  its row (rings, title and world back). Not checked: a signed-in group member watching the body mark go.
