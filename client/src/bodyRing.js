@@ -25,15 +25,22 @@ import { avatarFor } from './social.js';
 // Pinned to the tile (Aaron, 2026-11-07: "lets have the avatar selector pinned to the tile ... The circle of animals
 // should be "inside" the boundary of the tile"): the rings live in the tile's own frame (its centre on the earth, x east,
 // y up, z south), drawn through the earth camera expressed in that frame (pin), so they stay registered to the tile as
-// the view zooms, drifts or resizes. Units: the walkers' ring has radius 1 = RING_HW of the tile's half-width, the
-// fliers' is a little wider and higher, both inside the tile's square as the camera sees it.
+// the view zooms, drifts or resizes. Units: the walkers' ring has radius 1 = RING_HW of the tile's half-width; the
+// fliers' is wider (out to about the tile's edge) and a tier above it.
+//
+// Three rings, each turning on its own (Aaron, 2026-11-07): many walkers stand in an outer and an inner ring turning in
+// opposite directions, the fliers in a third. Choosing an animal swings only its own ring; the pointer over an animal
+// holds its ring still, and a drag on one turns that ring alone (grab, turn, letGo). Each animal is drawn bigger toward
+// the front of its ring and smaller toward the back, beyond what the perspective does (DEPTH_K), and a bird standing on
+// the walkers' rings folds its wings.
 //
 //   new BodyRing({ renderer, box, onPick, guest })   box: an element over the canvas for the faces and the hover name
 //   pin({ cam, earth, p0, hw })   each frame: the earth camera, the earth group, the tile's centre (unit vector, the
 //                     earth's frame) and its half-width (earth radii); null: nothing drawn
 //   show(tileId)      the tile's animals teleport in (a previous tile's go first); resolves when the list is known
 //   clear()           every animal goes (beamed out)
-//   select(code)      'spirit' or a species code: the ring swings that animal to the front
+//   select(code)      'spirit' or a species code: its ring alone swings that animal to the front
+//   grab(code), turn(ring, px), letGo(ring, px/s)   the pointer's drag on a ring
 //   selected, picked  the code chosen; the entry { code, name, kind } or null for the spirit
 //   setMarks(list)    [{ user, name, code, here }] the group's picks (here: the body they are in there)
 //   hit(x, y)         the code under a screen point, or null
@@ -41,18 +48,22 @@ import { avatarFor } from './social.js';
 //   dispose()         everything off the GPU and out of the DOM
 
 const DEG = Math.PI / 180, TAU = Math.PI * 2;
-const RING_HW = 0.64;                                 // the walkers' ring's radius, of the tile's half-width (the fliers' 1.1 times that)
-const R_AIR = 0.74, Y_AIR = 1.05;                    // the fliers' ring: its radius and height over the walkers' (Aaron, 2026-11-07: "more elevation between them": a
+const RING_HW = 0.64;                                 // the walkers' ring's radius, of the tile's half-width
+const R_AIR = 1.42, Y_AIR = 1.12;                    // the fliers' ring: its radius and height over the walkers' (Aaron, 2026-11-07: "more elevation between them", then "make the radius of the birds circle bigger": wider than the walkers' outer ring, out to about the tile's edge; a
                                                      // smaller ring well above, so it reads as a tier of its own and its birds stand inside and over the walkers)
-const SPIRIT_Y = 0.5;                                 // the spirit's height: between the tiers
+const SPIRIT_Y = 0.28;                                // the spirit's height: in the walkers' middle, under the fliers' front
 const SUN = new THREE.Vector3(-0.5, 1, 0.9);           // the rings' light (as the stills'): the shadows fall away from it
 const SHADOW = [0.62, 0.2];                           // the contact shadows' darkness: walkers, fliers (fainter and wider from their height)
 const D_MAX = 0.44, D_SPIRIT = 0.3, M_REF = 2.2;     // an animal's largest side (ring radii) at most, for M_REF m and over; the spirit's halo
 const D_EXP = 0.3, D_FLOOR = 0.56, A_MIN = 0.16;      // A_MIN: a walker's least visible size (its height or plan), ring radii: about 40% of the deer's                    // the size's compression (m^0.3) and its floor: the smallest at about half the largest
-const ROWS2 = 14;                                     // a ring of more than this many stands in two staggered rows (outer, inner)
-const ROW_R = [[1.16, 0.8], [1.12, 0.78]], ROW_Y = [[0, 0], [-0.08, 0.08]];   // the rows' radii and heights (of each ring's own), walkers and fliers
+const ROWS2 = 14;                                     // more walkers than this stand in two rings, outer and inner; more fliers, two staggered rows
+const WALK_R = [1.16, 0.8];                          // the walkers' outer and inner rings' radii (ring radii)
+const AIR_ROWS = [[1.08, 0.88], [-0.06, 0.06]];      // the fliers' two rows: radii (of their ring's) and heights
 const SPACING = 0.86;                                // of the ring's spacing an animal may fill
-const SPIN = [0.075, -0.055];                        // rad/s: the walkers' ring and the fliers' (the other way)
+// rad/s: the walkers' outer ring, their inner ring (the other way: Aaron, 2026-11-07: "There are inner and outer rings of
+// animals, they should spin in opposite directions and be independently controlled"), the fliers'
+const SPIN = [0.075, -0.06, -0.05];
+const DEPTH_K = 0.3, DEPTH_MIN = 0.6;                // the size by depth (Aaron, 2026-11-07: "decrease the size of the avatars the further away they are from the camera"): 1 + DEPTH_K per ring radius toward the camera, beyond perspective
 const SPIN_IN_S = 2.5;                               // the turn's ease in, from the first arrival
 const SWING_W = 2.6;                                 // the swing to the front: a critically damped spring (rad/s)
 const POP_GAP = [0.07, 0.17], POP_IN = 0.75, POP_OUT = 0.65, FADE_S = 0.6;
@@ -183,10 +194,12 @@ export class BodyRing {
     this.scene.add(new THREE.HemisphereLight(0xe4ecff, 0x40372a, 2.2));
     const sun = new THREE.DirectionalLight(0xfff1dc, 2.4); sun.position.copy(SUN); this.scene.add(sun);
     this.world = new THREE.Group(); this.world.scale.setScalar(U); this.scene.add(this.world);   // the rings, in ring radii
-    this.rings = [0, 1].map(i => {
-      const group = new THREE.Group(); group.position.y = i ? Y_AIR : 0; this.world.add(group);
-      return { i, group, items: [], rot: i ? 0.5 : 0, vel: 0, target: null, R: i ? R_AIR : 1, spinAt: null };
+    // the walkers' outer ring (their only one when few), their inner ring, the fliers'; each turns on its own
+    this.rings = [0, 1, 2].map(i => {
+      const air = i === 2, group = new THREE.Group(); group.position.y = air ? Y_AIR : 0; this.world.add(group);
+      return { i, air, group, items: [], rot: [0, 0.3, 0.5][i], vel: 0, target: null, R: air ? R_AIR : 1, spin: SPIN[i], spinAt: null, drag: false };
     });
+    this._cd = new THREE.Vector2(0, 1);
     this.beamGeo = new THREE.CylinderGeometry(1, 1, 1, 24, 1, true); this.beamGeo.translate(0, 0.5, 0);
     this.discGeo = new THREE.PlaneGeometry(1, 1); this.discGeo.rotateX(-Math.PI / 2);
     this.haloGeo = new THREE.PlaneGeometry(1, 1);
@@ -226,15 +239,24 @@ export class BodyRing {
     const list = await bodiesOf(tileId);
     if (gen !== this.gen) return null;
     this.list = list;
-    const by = [list.filter(b => b.kind === 'ground'), list.filter(b => b.kind === 'air')];
+    // the walkers: one ring, or (many) an outer and an inner ring each holding its share by its length, so both are spaced
+    // alike; the fliers: one ring, in two staggered rows when many
+    const walk = list.filter(b => b.kind === 'ground'), air = list.filter(b => b.kind === 'air');
+    const by = [walk, [], air];
+    if (walk.length > ROWS2) {
+      const nOut = Math.round(walk.length * WALK_R[0] / (WALK_R[0] + WALK_R[1]));
+      by[0] = []; by[1] = [];
+      walk.forEach((b, k) => { const o = by[0].length, i = by[1].length; (o / nOut <= i / (walk.length - nOut) ? by[0] : by[1]).push(b); });
+    }
+    for (const r of this.rings) if (!r.air) r.R = walk.length > ROWS2 ? WALK_R[r.i] : 1;
     by.forEach((arr, ri) => {
       const ring = this.rings[ri], n = arr.length;
-      ring.items = []; ring.target = null; ring.spinAt = null; ring.vel = 0;
-      const two = n > ROWS2, rows = two ? 2 : 1, rMean = two ? ring.R * (ROW_R[ri][0] + ROW_R[ri][1]) / 2 : ring.R;
+      ring.items = []; ring.target = null; ring.spinAt = null; ring.vel = 0; ring.drag = false;
+      const two = ring.air && n > ROWS2, rows = two ? 2 : 1, rMean = two ? ring.R * (AIR_ROWS[0][0] + AIR_ROWS[0][1]) / 2 : ring.R;
       const dmax = Math.min(D_MAX, SPACING * TAU * rMean / Math.max(1, n / rows));   // each row holds half, staggered
       arr.forEach((b, k) => {
-        const row = two ? k % 2 : 0, r = two ? ring.R * ROW_R[ri][row] : ring.R, y = two ? ROW_Y[ri][row] : 0;
-        const it = { ...b, ring, a: n ? (k / n) * TAU : 0, r, y, dmax, state: 'loading', t: 0, scale: 0, flash: 0, alpha: 1,
+        const row = two ? k % 2 : 0, r = two ? ring.R * AIR_ROWS[0][row] : ring.R, y = two ? AIR_ROWS[1][row] : 0;
+        const it = { ...b, ring, a: n ? (k / n) * TAU : 0, r, y, dmax, state: 'loading', t: 0, scale: 0, flash: 0, alpha: 1, depthF: 1,
           holder: new THREE.Group(), mesh: null, model: null, beam: null, phase: Math.random() * TAU, size: 0, h: 0 };
         it.holder.position.set(Math.sin(it.a) * r, y, Math.cos(it.a) * r);
         it.holder.visible = false;
@@ -258,9 +280,12 @@ export class BodyRing {
     if (it.tint) tintGeometry(geo, it.tint);
     const anim = new THREE.InstancedBufferAttribute(new Float32Array(4), 4); geo.setAttribute('aAnim', anim);
     if (hasAnim2(model)) geo.setAttribute('aAnim2', new THREE.InstancedBufferAttribute(new Float32Array([soar ? 0.2 : 0, 0.25, 0, 0]), 4));
-    // walkers standing (the folded-wing birds' pose 1); fliers on the wing, beating (a soarer's flat), as the stills
+    // walkers standing; fliers on the wing, beating (a soarer's flat), as the stills. A bird on the walkers' rings stands
+    // with its wings folded (pose 1: Aaron, 2026-11-07: "Birds on the ground should not have their wings spread"), whatever
+    // its entry's pose: every bird model's rig says so (the heron's, merganser's and mallard's templates spread at 0)
     it.flap = air && !soar; it.soar = air && !!soar;
-    anim.array.set(air ? [it.phase, it.flap ? 1 : 0, 0, 0] : [0, 0, poseKind === G ? pose : 0, 0]);
+    const fold = !air && model.rig?.kind === 'bird';
+    anim.array.set(air ? [it.phase, it.flap ? 1 : 0, 0, 0] : [0, 0, fold ? Math.max(1, pose) : poseKind === G ? pose : 0, 0]);
     it.anim = anim;
     it.u = { uFlash: { value: 0 }, uAlpha: { value: 1 }, uFlashCol: { value: new THREE.Color(1, 1, 1) } };
     const mat = ringPatch(animalMaterial(PLAIN, model), it.u);
@@ -295,7 +320,7 @@ export class BodyRing {
     const sm = new THREE.ShaderMaterial({ uniforms: su, vertexShader: BEAM_VERT, fragmentShader: SHADOW_FRAG, transparent: true, depthWrite: false, toneMapped: false });
     const shadow = new THREE.Mesh(this.discGeo, sm); shadow.frustumCulled = false; shadow.renderOrder = -1;
     const len = Math.max(ext.z, ext.x * 0.5) * s, wid = Math.max(ext.x * (air ? 0.7 : 1.15) * s, len * (air ? 0.5 : 0.42));
-    shadow.scale.set(wid * (air ? 1.5 : 1.25), 1, len * (air ? 1.3 : 1.25)); shadow.visible = false;
+    it.shS = [wid * (air ? 1.5 : 1.25), len * (air ? 1.3 : 1.25)]; shadow.scale.set(it.shS[0], 1, it.shS[1]); shadow.visible = false;
     this.world.add(shadow); it.shadow = shadow; it.su = su;   // on the rings' ground, placed each frame (step)
     it.u.uFlashCol.value.copy(bu.uCol.value).lerp(this._c.set(1, 1, 1), 0.6);
     // compiled before it is drawn, off the main thread where the browser can (KHR_parallel_shader_compile)
@@ -345,19 +370,14 @@ export class BodyRing {
   select(code, { quiet = false } = {}) {
     if (code !== 'spirit' && !this.items.has(code)) return false;
     this.sel = code;
-    for (const r of this.rings) r.target = null;
     const it = this.items.get(code);
+    for (const r of this.rings) r.target = null;   // only the chosen one's ring swings (below); the others turn on, a ring held for an earlier choice too
     if (it) {
       const r = it.ring;
       let goal = -it.a; goal = r.rot + wrapPi(goal - r.rot);   // the nearest way round to the front
       r.target = goal;
+      r.drag = false;
       if (this.reduced) { r.rot = goal; r.vel = 0; }
-      const air = this.rings[1], n = air.items.length;   // a walker chosen: the fliers' ring holds with a gap at the front, so no bird stands over it
-      if (r.i === 0 && n) {
-        const step = TAU / n, k = Math.round(-air.rot / step - 0.5);
-        air.target = air.rot + wrapPi(-(k + 0.5) * step - air.rot);
-        if (this.reduced) { air.rot = air.target; air.vel = 0; }
-      }
     }
     if (!quiet) this.onPick?.(code, this.picked);
     return true;
@@ -396,19 +416,22 @@ export class BodyRing {
     if (this.box) this.box.style.visibility = this.shown ? '' : 'hidden';
     const cam = this.cam;
     // the rings: a slow turn once the first arrive, or the swing to the chosen one
+    const hov = this.items.get(this.hoverCode)?.ring;
     for (const r of this.rings) {
-      if (r.target != null) {
+      if (r.drag) { /* turned by the pointer (turn) */ }
+      else if (r.target != null) {
         const x = r.rot - r.target, w = SWING_W;
         const a = -w * w * x - 2 * w * r.vel; r.vel += a * dt; r.rot += r.vel * dt;
         if (Math.abs(x) < 1e-4 && Math.abs(r.vel) < 1e-4) { r.rot = r.target; r.vel = 0; }
-      } else if (r.spinAt != null && !this.reduced) {
-        const goal = SPIN[r.i] * smooth(0, SPIN_IN_S, this.time - r.spinAt);
-        r.vel += (goal - r.vel) * (1 - Math.exp(-dt * 1.5)); r.rot += r.vel * dt;
+      } else if (r.spinAt != null && !this.reduced) {   // its slow turn, held while the pointer is over one of its animals
+        const goal = r === hov ? 0 : r.spin * smooth(0, SPIN_IN_S, this.time - r.spinAt);
+        r.vel += (goal - r.vel) * (1 - Math.exp(-dt * (r === hov ? 5 : 1.5))); r.rot += r.vel * dt;
       } else r.vel = 0;
       r.group.rotation.y = r.rot;
     }
     // each animal: its arrival or going, its facing along its ring's turn (the chosen one turned toward the camera), the beat
     let halo = null;
+    this._cd.set(cam.position.x, cam.position.z); if (this._cd.lengthSq() > 1e-9) this._cd.normalize(); else this._cd.set(0, 1);   // toward the camera, level
     for (const it of [...this.items.values(), ...this.leaving()]) this.step(it, dt);   // (a leaving one may free itself)
     const it = this.items.get(this.sel);
     if (it && it.state === 'in' && it.t > 0.2) halo = it;
@@ -416,7 +439,7 @@ export class BodyRing {
     const H0 = this.halo; H0.a += ((halo || this.sel === 'spirit' ? 1 : 0) - H0.a) * (1 - Math.exp(-dt * 6));
     if (halo) {
       this.world.worldToLocal(halo.holder.getWorldPosition(this._v));
-      const air = halo.kind === 'air', sz = halo.size * (air ? 0.95 : 1.4);
+      const air = halo.kind === 'air', sz = halo.size * halo.depthF * (air ? 0.95 : 1.4);
       H0.mesh.position.set(this._v.x, this._v.y + (air ? -halo.size * 0.3 : 0.003), this._v.z);
       H0.mesh.scale.set(sz, 1, sz);
     } else if (this.sel === 'spirit') { H0.mesh.position.set(0, 0.003, 0); H0.mesh.scale.set(D_SPIRIT * 1.2, 1, D_SPIRIT * 1.2); }
@@ -464,19 +487,22 @@ export class BodyRing {
     it.holder.visible = true;
     const chosen = it.code === this.sel && it.state === 'in';
     it.pick = (it.pick || 0) + ((chosen ? 1 : 0) - (it.pick || 0)) * (1 - Math.exp(-dt * 5));
-    it.inner.scale.setScalar(Math.max(1e-4, scale * (1 + 0.16 * it.pick)));
+    // nearer the camera bigger, farther smaller, beyond the perspective: by its depth along the level line to the camera
+    const P = this.world.worldToLocal(it.holder.getWorldPosition(this._sv || (this._sv = new THREE.Vector3())));
+    it.depthF = Math.max(DEPTH_MIN, 1 + DEPTH_K * (P.x * this._cd.x + P.z * this._cd.y));
+    it.inner.scale.setScalar(Math.max(1e-4, scale * (1 + 0.16 * it.pick) * it.depthF));
     it.u.uFlash.value = flash; it.u.uAlpha.value = alpha;
     const tr = alpha < 1; if (it.mat.transparent !== tr) { it.mat.transparent = tr; it.mat.depthWrite = !tr; it.mat.needsUpdate = true; }
     it.beam.visible = beam > 0.002; it.bu.uA.value = beam;
     it.su.uA.value = SHADOW[it.kind === 'air' ? 1 : 0] * Math.min(1, scale) * alpha;
     { // the shadow on the ground, cast away from the light by the body's height (a flier's from its tier), turned with it
-      const sh = it.shadow, P = this.world.worldToLocal(it.holder.getWorldPosition(this._sv || (this._sv = new THREE.Vector3())));
-      const up = it.kind === 'air' ? P.y : it.h * 0.45;
+      const sh = it.shadow, up = it.kind === 'air' ? P.y : it.h * 0.45 * it.depthF;
       sh.position.set(P.x - SUN.x / SUN.y * up, 0.004, P.z - SUN.z / SUN.y * up);
       sh.rotation.y = it.ring.group.rotation.y + it.holder.rotation.y; sh.visible = it.su.uA.value > 0.003;
+      sh.scale.set(it.shS[0] * it.depthF, 1, it.shS[1] * it.depthF);
     }
     // facing: along the ring's turn; the chosen one partly toward the camera (outward at the front)
-    const dir = SPIN[it.ring.i] >= 0 ? 1 : -1, path = it.a + dir * Math.PI / 2;
+    const dir = it.ring.spin >= 0 ? 1 : -1, path = it.a + dir * Math.PI / 2;
     it.holder.rotation.y = path + wrapPi(it.a - path) * FACE_TURN * it.pick;
     if (it.kind === 'air') {
       it.holder.position.y = it.y + Math.sin(this.time * 0.8 + it.phase) * 0.02;
@@ -527,7 +553,8 @@ export class BodyRing {
     else {
       const it = this.items.get(code); if (!it || !it.mesh || (live && (it.state !== 'in' || it.t < 0))) return null;
       it.holder.updateWorldMatrix(true, false);
-      P = it.holder.getWorldPosition(this._v); size = it.size * (1 + 0.16 * (it.pick || 0)); h = it.kind === 'air' ? 0 : it.h * (1 + 0.16 * (it.pick || 0));
+      const k = (1 + 0.16 * (it.pick || 0)) * (it.depthF || 1);
+      P = it.holder.getWorldPosition(this._v); size = it.size * k; h = it.kind === 'air' ? 0 : it.h * k;
       P.y += h / 2 * U;
     }
     const z = P.z;
@@ -549,6 +576,19 @@ export class BodyRing {
     return best;
   }
   hover(code) { this.hoverCode = code || null; }
+  // The pointer turns the ring under it (title.js): grab(code) holds that animal's ring (null for the spirit), turn(ring,
+  // px) moves its front by that many pixels across, letGo(ring, px/s) frees it with the fling, easing back to its own turn
+  grab(code) {
+    const r = this.items.get(code)?.ring; if (!r) return null;
+    r.drag = true; r.target = null; r.vel = 0;
+    return r;
+  }
+  turn(r, px) { if (r) r.rot += px / Math.max(1, r.R * this.ppu); }
+  letGo(r, pxs = 0) {
+    if (!r || !r.drag) return;
+    r.drag = false; r.vel = this.reduced ? 0 : clamp(pxs / Math.max(1, r.R * this.ppu), -2.5, 2.5);
+    if (r.spinAt == null) r.spinAt = this.time;
+  }
 
   dispose() {
     this.gen++;
