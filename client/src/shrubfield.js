@@ -79,6 +79,9 @@ const fhArr = i => `float[${FH_N}](${FH.map(id => fhLook(id)[i].toFixed(2)).join
 // gooseberry qualify; mountain mahogany and red huckleberry (too tall), coyote brush (porosity 0.2), buckbrush and the
 // chaparral do not. The tuft is TWIG_TUFT_K leaf lengths across (a fascicle of leaves on a short shoot at the twig's end).
 const TWIG_POR = 0.25, TWIG_TUFT_K = 3.5, TWIG_HMAX = 1.6;
+// the tuft picture (bakeTuft): its fascicles (nodes x leaves at each), 18 leaves of 1 / TWIG_TUFT_K of the tuft covering 0.25
+// of its square as the seven longer leaves did (so the crown's porosity holds); the leaves' mean tilt in the picture (b)
+const TUFT_NODES = 6, TUFT_PER = 3, TUFT_TILT_MEAN = 0.65;
 // the close tier's skeletons per record class (TwigShrubs), and the pictures of them past the hand-over (TwigShrubs.bake, TB_T below)
 const VIS_W = 1.75;   // a crown's visible width over the card's R (see SHRUB_H below)
 const TW_EL_LO = 8, TW_EL_HI = 12;   // the pictures whole below TW_EL_LO degrees over the plant, the dome above TW_EL_HI (VERT twP)
@@ -349,7 +352,7 @@ const FRAG = /* glsl */`
     vec3 Nf = normalize(vRight * n2.x + vUp * n2.y + vView * sqrt(max(1.0 - dot(n2, n2), 0.0)));
     float sf = dot(Nf, sunDir), r = length(qv), hf = 0.5 + 0.5 * qv.y;
     vec3 N = leaf ? normalize(normalize(qv / Rc) + vec3(0.0, 0.35, 0.0)) : Nf;
-    float diff = leaf ? (sf > 0.0 ? sf : -0.2 * sf) : 0.25 + 0.75 * max(sf, 0.0);   // (no second tilt factor: TWIG_FRAG)
+    float diff = leaf ? (sf > 0.0 ? sf : -0.2 * sf) * B.g / ${TUFT_TILT_MEAN.toFixed(2)} : 0.25 + 0.75 * max(sf, 0.0);   // (the leaf's tilt about its mean only: TWIG_FRAG)
     float ao = mix(0.4, 1.0, smoothstep(0.15, 1.0, r)) * mix(0.65, 1.0, clamp(hf * 1.4, 0.0, 1.0));
     vec3 amb = mix(vAmb, vAmbUp, 0.5 + 0.5 * N.y) * (ao / TW_LIGHT_F.y);
     vec3 alb = leaf ? mix(fhCol[fk] * mix(0.86, 1.14, fract(rnd * 5.3)), fhDeco[fk].rgb, deco) : type < 1.5 ? twBark[fk] : type < 2.5 ? fhBark[fk] : twDead[fk];
@@ -1305,9 +1308,14 @@ function bakeTuft() {
   const sm = (a, b, x) => { const t = Math.min(Math.max((x - a) / (b - a), 0), 1); return t * t * (3 - 2 * t); };
   for (let v = 0; v < 4; v++) {
     const ox = (v % 2) * S, oy = Math.floor(v / 2) * S, P = (x, y) => [ox + (x + 0.5) * S, oy + (1 - y) * S];
-    for (let i = 0; i < 7; i++) {
-      const r1 = r(), r2 = r(), r3 = r(), side = i % 2 ? -1 : 1, th = side * (0.25 + 0.6 * r1) * (1 - 0.5 * i / 6);
-      const bx = 0.02 * side, by = 0.06 + 0.42 * i / 6, L = 0.36 + 0.2 * r2, ax = [Math.sin(th), Math.cos(th)], nx = [ax[1], -ax[0]];
+    // A short shoot with its leaves in fascicles at TUFT_NODES nodes up its lower three quarters, TUFT_PER at each, each leaf
+    // 1 / TWIG_TUFT_K of the tuft long (the record's leaf_size_m: the tuft is TWIG_TUFT_K of its leaves across), +-25 %,
+    // splayed out and up, narrower toward the shoot's tip (2026-11-06: the seven leaves of 0.36-0.56 tuft, 1.3-2x the
+    // record's leaf, fanned in one plane read as one large flat pale wedge per tuft at 1-2 m)
+    for (let i = 0; i < TUFT_NODES * TUFT_PER; i++) {
+      const node = Math.floor(i / TUFT_PER), k = i % TUFT_PER, r1 = r(), r2 = r(), r3 = r(), side = k % 2 ? -1 : 1;
+      const th = (k === 0 ? (r1 - 0.5) * 0.4 : side * (0.35 + 0.7 * r1)) * (1 - 0.45 * node / (TUFT_NODES - 1));
+      const bx = 0.015 * side * (k ? 1 : 0), by = 0.05 + 0.62 * node / (TUFT_NODES - 1), L = (0.75 + 0.5 * r2) / TWIG_TUFT_K, ax = [Math.sin(th), Math.cos(th)], nx = [ax[1], -ax[0]];
       const at = (t, s) => P(bx + ax[0] * t * L + nx[0] * s, by + ax[1] * t * L + nx[1] * s);
       const w = t => L * 0.17 * (0.2 + 0.8 * sm(0, 0.8, t));
       const pts = [];
@@ -1344,7 +1352,7 @@ const TUFT_GLSL = /* glsl */`
     float blur = smoothstep(0.06, 0.16, px);
     if (blur <= 0.0) return cov;
     float blob = clamp((0.27 - length((P - vec2(0.0, 0.4)) * vec2(1.25, 0.9))) / px + 0.5, 0.0, 1.0);
-    if (blob > cov) { shade = 0.9; tilt = 0.6; }
+    if (blob > cov) { shade = 0.9; tilt = ${TUFT_TILT_MEAN.toFixed(2)}; }
     return mix(cov, blob, blur);
   }
 `;
@@ -1355,10 +1363,11 @@ const TWIG_FRAG = /* glsl */`
   void main() {
     float a = 1.0, sh = 1.0, tl = 1.0;
     if (vLeaf > 0.5) { a = tuft(vUv, vRnd, sh, tl); if (a < 0.02) discard; }
-    // (the leaf's own tilt, the picture's b, is not taken again: vSunC already holds the sun at the tuft's own face, a
-    // random way across its shoot, which is the leaf's turn; a second factor of 0.25-1 (mean 0.6) put the crown's sunlit
-    // leaves at 0.6 of an isotropic canopy's light. 2026-11-06, calibration step.)
-    vec3 c = (vCol + vSunC) * sh;
+    // (the leaf's own tilt, the picture's b, is taken about its mean only: vSunC already holds the sun at the tuft's own face,
+    // a random way across its shoot, which is the leaves' mean turn; a second factor of 0.25-1 (mean 0.6) put the crown's
+    // sunlit leaves at 0.6 of an isotropic canopy's light (2026-11-06, calibration step). Over its mean it is each leaf's
+    // own turn about the tuft's face, so the leaves of one fascicle part instead of reading as one flat card.)
+    vec3 c = (vCol + vSunC * (tl / ${TUFT_TILT_MEAN.toFixed(2)})) * sh;
     if (vGlow > 0.0) c += glowCol * vGlow * dot(sunLight * 0.5 + ambientSky * 1.5, vec3(0.3333)) * 0.3183099 * 0.25;
     gl_FragColor = vec4(c * vT + vIn, a);
     #include <tonemapping_fragment>

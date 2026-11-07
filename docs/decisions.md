@@ -7411,6 +7411,14 @@ glottal stop is itself drawn like a question mark without its dot, so at 12 px i
   (the grass lane's method reads 0.04-0.06 lower on all three; only the difference is compared). Dappled cast shadows
   kept (without them 1.095). Contact shade under near shrubs survives at eye level, no visible rings. ΔE top-down 0.000,
   30 m nadir 0.48, 15 m 0.23.
+- **Near sage leaves at the record's size: a shoot of 18 small leaves per tuft, not a fan of seven big ones**
+  (shrubfield.js tuft picture). The tuft card was right (0.07 m, 3.5 x the record's 2 cm leaf), but its picture held
+  seven leaves of 2.5-3.9 cm (1.3-2 x the record) fanned from one node in one plane and, since the tilt term went, lit as
+  one: a big pale wedge. Now 3 leaves at each of 6 nodes, 2 cm ±25 %, splayed out and up, the same covered share (0.2535
+  vs 0.2525, so porosity and the look from above hold); each leaf takes its own tilt divided by the picture's mean
+  (0.65), so leaves vary without the doubled sun returning. The far pictures re-bake from it; no seam at 13 m. ΔE vs
+  d2b4cd2: top-down 0.001, 15 m 0.007, 30 m 0.005, eye 0.025. Cost unchanged (eye 24.0 -> 23.7 ms, c_plant 24.2 -> 22.9).
+  Open: each shoot reads a little like a regular fern frond.
 
 ## 2026-11-06: snakes are playable; the body follows the head's path (branch claude/snake-play)
 
