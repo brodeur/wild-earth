@@ -1,11 +1,11 @@
 {
  "tile": "utm12n_514_4838",
- "at": "2026-11-06T11:29:51Z",
+ "at": "2026-11-07T01:22:34Z",
  "target": 22,
- "listed": 88,
+ "listed": 89,
  "by_kind": {
   "bird": 57,
-  "mammal": 28,
+  "mammal": 29,
   "reptile": 1,
   "amphibian": 2
  },
@@ -19,6 +19,7 @@
   "buteo_jamaicensis",
   "buteo_swainsoni",
   "canis_latrans",
+  "canis_lupus",
   "circus_cyaneus",
   "falco_atricapillus",
   "falco_columbarius",
@@ -809,6 +810,21 @@
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
   {
+   "id": "canis_lupus",
+   "scientific": "Canis lupus",
+   "common": "gray wolf",
+   "kind": "mammal",
+   "records": 3,
+   "why": [
+    "predator"
+   ],
+   "body_plan": "quadruped",
+   "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+   "estimate_credits": 30,
+   "stand_in": "canis_latrans",
+   "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+  },
+  {
    "id": "thamnophis_elegans",
    "scientific": "Thamnophis elegans",
    "common": "terrestrial garter snake",
@@ -839,7 +855,7 @@
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   }
  ],
- "queued_credits": 1550,
+ "queued_credits": 1580,
  "animals": [
   {
    "gbif_key": 9510564,
@@ -2940,6 +2956,33 @@
    "mass_kg": 7.0853,
    "why": [
     "most recorded: 25 of its class (0% of the class's records)"
+   ],
+   "listed": true
+  },
+  {
+   "gbif_key": 5219173,
+   "scientific": "Canis lupus",
+   "common": "gray wolf",
+   "records": 3,
+   "taxonomy": {
+    "kingdom": "Animalia",
+    "phylum": "Chordata",
+    "class": "Mammalia",
+    "order": "Carnivora",
+    "family": "Canidae",
+    "genus": "Canis"
+   },
+   "kind": "mammal",
+   "rank_in_class": 28,
+   "share_of_class": 0.0012,
+   "dog_records_removed": 0,
+   "id": "canis_lupus",
+   "role": [
+    "predator"
+   ],
+   "mass_kg": 32.1833,
+   "why": [
+    "predator"
    ],
    "listed": true
   },
@@ -5420,6 +5463,19 @@
     "herbivore"
    ],
    "listed": false
+  },
+  {
+   "id": "canis_lupus",
+   "scientific": "Canis lupus",
+   "common": "gray wolf",
+   "kind": "mammal",
+   "records": 3,
+   "rank_in_class": 28,
+   "share_of_class": 0.0012,
+   "role": [
+    "predator"
+   ],
+   "listed": true
   },
   {
    "id": "lontra_canadensis",

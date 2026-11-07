@@ -67,6 +67,9 @@ class Step:
     owner: str | None = None               # the lane that owns the step's code, when it is not this one
     doc: str = ""
     stage: str = "base"                    # base | flora | fauna | games (STAGES): --stage runs one
+    optional: list[str] = field(default_factory=list)  # layers it writes only where the data allows (--status does not
+                                                         # count them missing: a column only where one exists, a map only
+                                                         # where no lidar measured the canopy)
 
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -598,7 +601,8 @@ STEPS: dict[str, Step] = {s.name: s for s in [
          doc="banks, beds, levels and riparian zones", stage=B),
     Step("ground", "2", ["ground", "fetch_soils", "fetch_geology", "soils_global", "fetch_global", "strata", "substrate"], ["dem", "landcover", "lidar"], _ground,
          ["geology.", "soils.", "client.geology", "client.soils", "client.outcrop", "client.ground_classes", "client.strata"],
-         ["macrostrat", "usda_sda", "soilgrids"], doc="geology and soils, outcrop likelihood, ground classes, the stratigraphic column", stage=B),
+         ["macrostrat", "usda_sda", "soilgrids"], doc="geology and soils, outcrop likelihood, ground classes, the stratigraphic column", stage=B,
+         optional=["client.strata"]),
     Step("terrain", "2", ["derive", "urban", "habitat", "fetch_places", "fetch_territories", "water_seasons"],
          ["dem", "naip", "osm", "hydro", "channels", "rewild_hydro", "water", "water_seasons", "landcover", "ice"], _terrain,
          ["terrain.hillshade", "terrain.terrain_rgb", "footprint.mask_raster", "imagery.naip_png", "vegetation.habitat_png",
@@ -629,7 +633,8 @@ STEPS: dict[str, Step] = {s.name: s for s in [
          ["client.canopy_top", "vegetation.canopy_height_v2_10m", "vegetation.canopy_height_eth_10m"],
          ["meta_canopy_height_v2", "eth_canopy_height"], applies=_has_canopy_map,
          doc="the measured stand height per 30 m cell: the lidar CHM, else Meta's CHM v2 lifted to ETH's GEDI-calibrated "
-             "level where v2 sees tall closed forest", stage=F),
+             "level where v2 sees tall closed forest", stage=F,
+         optional=["vegetation.canopy_height_v2_10m", "vegetation.canopy_height_eth_10m"]),
     Step("crowns", "1", ["lidar", "urban"], ["lidar", "osm", "landcover", "terrain", "species_mix"], _crowns,
          ["client.trees_lidar"], applies=_has_chm, doc="the lidar crowns, with the buildings, the rewilded classes and the urban mask",
          stage=F),
@@ -1092,7 +1097,7 @@ def status(tile: Tile) -> list[dict]:
             expect = ["terrain.dem_1m", "client.terrain_detail", "terrain.roughness"]
         if n == "dem" and not (m["layers"].get("terrain.dem") or {}).get("fetched_source"):
             expect = ["terrain.dem"]    # the fetched DEM is a layer of its own only when the 1 m rule drew terrain.dem
-        missing = [l for l in expect if not l.endswith(".") and l not in m["layers"]]
+        missing = [l for l in expect if not l.endswith(".") and l not in m["layers"] and l not in step.optional]
         mism = []
         for l in have:
             info = m["layers"][l]
