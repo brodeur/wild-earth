@@ -1188,7 +1188,9 @@ export class Rocks {
   slopeAt(x, n) { return [(this.meshH(x + 1, n) - this.meshH(x - 1, n)) / 2, (this.meshH(x, n + 1) - this.meshH(x, n - 1)) / 2]; }
   // Instance matrix of a pebble: on the mesh triangle under it (sheared to its slope), a third of
   // its height buried.
-  placeSmall(x, north, s, sy, sz, yaw, tilt, out) {
+  // sink: the share of its height a stone sits below the ground (0.15; a water-worn bed stone 0.35, round 6: settled into the
+  // bed's gravel and sand rather than resting on it)
+  placeSmall(x, north, s, sy, sz, yaw, tilt, out, sink = 0.15) {
     const h = this.meshH(x, north), g = this.slopeAt(x, north), pd = pebbleDims();
     const q = this._q || (this._q = new THREE.Quaternion()), e = this._e || (this._e = new THREE.Euler());
     e.set(tilt, yaw, 0, 'YXZ'); q.setFromEuler(e);
@@ -1196,7 +1198,7 @@ export class Rocks {
     M.compose(this._zero || (this._zero = new THREE.Vector3()), q, (this._s || (this._s = new THREE.Vector3())).set(s, s * sy, s * sz));
     const el = M.elements, gx = Math.max(-1.2, Math.min(1.2, g[0])), gz = -Math.max(-1.2, Math.min(1.2, g[1]));
     for (const o of [0, 4, 8]) el[o + 1] += gx * el[o] + gz * el[o + 2];
-    el[12] = x; el[13] = h - 0.15 * pd.hgt * s * sy - 0.01; el[14] = -north;
+    el[12] = x; el[13] = h - sink * pd.hgt * s * sy - 0.01; el[14] = -north;
     out.set(el); return out;
   }
   // Streams and pond shores near each cell (tile.features, the same widths water.js draws): stream
@@ -1281,17 +1283,20 @@ export class Rocks {
       const o = (cy * W + cx) * 4, zone = D[o] & 15; if (zone !== 1 && zone !== 2) continue;
       const mat = D[o + 1] & 7, bar = (D[o + 1] & 8) !== 0, half = D[o + 3] * 0.1;
       if (mat < 2) continue;
+      // round 6: a stone in the channel's own cells is wet (x0.6, as terrain.js darkens the bed there), so the bed's pale
+      // dry pebbles no longer float white over it
+      const wcol = zone === 1 ? () => col().map(v => v * 0.6) : col;
       const big = Math.min(1.6, 0.7 + 0.12 * half);   // cobbles grow with the channel
       const wx0 = cx * wres, wn1 = size - cy * wres;
       const at = () => [wx0 + r5() * wres, wn1 - r5() * wres];
       // a bed on bare rock past ~30 degrees is the bare slab (loose()): its cobbles and boulders are drawn, not placed
       const bare = !this.loose(wx0 + wres / 2, wn1 - wres / 2);
       pebble = bare ? noPebble : keep;
-      if (mat === 2) { const n = r5() < 0.5 ? 3 + Math.floor(r5() * 6) : 0; for (let m = 0; m < n; m++) { const [x, n2] = at(); pebble(x, n2, 0.04 + 0.1 * r5(), 1, r5, col()); } continue; }
-      if (mat === 3) { const n = Math.floor((26 + 24 * r5()) * (bar ? 2 : 1)); for (let m = 0; m < n; m++) { const [x, n2] = at(); pebble(x, n2, (0.05 + 0.14 * Math.pow(r5(), 1.2)) * (bar ? 1.3 : 1) * big, 1, r5, col()); } continue; }
+      if (mat === 2) { const n = r5() < 0.5 ? 3 + Math.floor(r5() * 6) : 0; for (let m = 0; m < n; m++) { const [x, n2] = at(); pebble(x, n2, 0.04 + 0.1 * r5(), 1, r5, wcol()); } continue; }
+      if (mat === 3) { const n = Math.floor((26 + 24 * r5()) * (bar ? 2 : 1)); for (let m = 0; m < n; m++) { const [x, n2] = at(); pebble(x, n2, (0.05 + 0.14 * Math.pow(r5(), 1.2)) * (bar ? 1.3 : 1) * big, 1, r5, wcol()); } continue; }
       if (mat === 4) {
         const n = Math.floor((22 + 18 * r5()) * (bar ? 1.6 : 1));
-        for (let m = 0; m < n; m++) { const [x, n2] = at(); pebble(x, n2, Math.min(0.39, (0.1 + 0.32 * Math.pow(r5(), 1.3)) * big), 1, r5, col()); }
+        for (let m = 0; m < n; m++) { const [x, n2] = at(); pebble(x, n2, Math.min(0.39, (0.1 + 0.32 * Math.pow(r5(), 1.3)) * big), 1, r5, wcol()); }
         const nb = r5() < 0.75 ? 1 + Math.floor(r5() * 2) : 0;
         for (let m = 0; m < nb; m++) { const [x, n2] = at(); boulder(x, n2, (0.4 + 0.5 * r5()) * big); }
         continue;
@@ -1461,7 +1466,7 @@ export class Rocks {
           const reach = reachOf(role, r.s) + margin;
           if (!r.m) {   // a pebble not yet placed
             if (dx * dx + dz * dz > reach * reach) continue;
-            r.m = this.placeSmall(r.x, -r.z, r.s, r.a[0], r.a[1], r.a[2], r.a[3], new Float32Array(16)); r.y = r.m[13];
+            r.m = this.placeSmall(r.x, -r.z, r.s, r.a[0], r.a[1], r.a[2], r.a[3], new Float32Array(16), r.r ? 0.35 : 0.15); r.y = r.m[13];
           }
           const dy = r.y - y; if (dx * dx + dy * dy + dz * dz > reach * reach) continue;
           const mk = `${role}|${r.key}`; let l = lists.get(mk); if (!l) lists.set(mk, l = { role, key: r.key, items: [] });
