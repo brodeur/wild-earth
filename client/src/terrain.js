@@ -587,26 +587,56 @@ const FRAG = /* glsl */`
   // wide, 22 cm long, along its wind-wandering direction; two octaves cost about 3 ms at Lamar's eye pose), each blade dark at its root and pale at its tip
   // over a shaded floor, faded out by the pixel's footprint as the strokes go under a pixel: a brightness factor of mean
   // about 1 (the floor 0.6, a blade 0.7-1.5, about 45 % covered), so the patches keep the photo's mean.
-  // ---- a stream's exposed bed near the camera (round 6) -------------------------------------------------------------------
+  // ---- a stream's exposed bed near the camera (rounds 6-7) ----------------------------------------------------------------
   // The water system's cells (waterMap: R the zone, G the bed material, pipeline/water.py) under the photo are the photo's
   // river: its water's dark pixels, drawn as ground they made a smooth near-black slab on the bed between the sedges and the
-  // water. On a channel or wet-margin cell with a bed of sand or coarser, near the camera, the ground is the bed itself:
-  // water-worn stones of the material's size (gravel 2-8 cm, cobble 6-25 cm with gravel between, boulder 15-50 cm; sand a
-  // sparse grit; silt none), a sand and silt matrix in the gaps, in alluvium's colour (rocks.js LOOK.alluvium, its bed
-  // stones' palette), each stone a dome lit from the sun's side and shaded at its foot, darker and wet in the channel's own
-  // cells (wet: x0.55, the margin x0.75; a stated darkening of wet rock and sand).
-  // One octave of stones: the nearest of the 3 x 3 jittered cells; x: inside a stone (0..1 from its edge), y: its tone,
-  // z: the sun-side shade
-  vec3 bedOctave(vec2 p, float sc, float fill) {
-    vec2 q = p / sc, i = floor(q), f = fract(q);
-    vec3 best = vec3(0.0, 0.0, 1.0); float bd = 9.0;
-    vec2 sunH = normalize(vec2(sunDir.x, -sunDir.z) + vec2(1e-4, 0.0));
+  // water. Near the camera the ground there is drawn from the data:
+  // - A channel or wet-margin cell with a bed of sand or coarser (a big river's without one: its neighbours', else gravel):
+  //   the bed itself, water-worn stones over a sand matrix in alluvium's colour (rocks.js LOOK.alluvium, its bed stones'
+  //   palette). A bar is not one size: gravel 1.5-6 cm skewed to the small (radius = min + span x u^2) with sand between,
+  //   and on a gravel bed rocks.js's placed pebbles (5-19 cm) are its few cobbles; a cobble or boulder bed: an octave of
+  //   its own stones over that gravel. Sand: a sparse grit; silt: none.
+  // - A big river's bank (order 4 and up; its cells hold the water's dark pixels too): the bank's own ground, soil and fine
+  //   litter (the gap ground's colours, as under the sedges elsewhere) with a few washed-up gravel stones (5 % of the cells).
+  // Each stone is a flattened dome (height 0.6 x its radius, a little oval, turned at random): its normal bends the sun term
+  // (nL, the same lighting as the ground, so the lit cap faces the sun whatever the hour), its tilted faces see less sky,
+  // it casts a shadow on the sand on its side away from the sun (length height / tan(sun elevation)), and the sand at its
+  // foot sees less sky (a ring out to 1.3 x its radius): the cues that make a stone stand up from the bed, not sink into it.
+  // Wet (a stated darkening of wet rock and sand): x0.68 at the water's edge, drying to x0.9 by 0.4 m over the water, x0.9
+  // on the bank.
+  // One octave of stones: the 3 x 3 jittered cells (skipped: cells past fill), each stone a spheroid that the eye's ray
+  // meets (vk: the ray's horizontal run per unit of height, from the ground toward the eye, capped at 2.5 so a stone's
+  // reach stays within the cells searched; the search is centred half a mean stone's reach toward the eye): drawn on a
+  // flat ground without it, a stone's far slope, which faces away from an eye low over the bar, showed as a dark crescent
+  // on its far rim, a pit's. The nearest hit to the eye wins. Returns x: the ray's depth through it (0 at its rim), y:
+  // its tone, zw: its normal's horizontal part (east, north; the up part in sa.x); sa (no hit): x its cast shadow on the
+  // matrix, y the matrix's sky occlusion at a stone's foot.
+  vec4 bedOctave(vec2 p, float sc, float fill, float rmin, float rspan, vec2 shOff, vec2 vk, out vec2 sa) {
+    const float A = 0.6;   // a stone's height / its radius (water-worn, flattened)
+    vec2 q = p / sc, i = floor(q - vk * (0.5 * A * (rmin + 0.5 * rspan))), f = q - i;
+    vec4 best = vec4(0.0); float bs = -1.0, nUp = 1.0; vec2 sh = vec2(0.0);
     for (int y = -1; y <= 1; y++) for (int x = -1; x <= 1; x++) {
       vec2 o = vec2(float(x), float(y)); vec4 h = hash4(i + o + 4096.0);
       if (h.w > fill) continue;
-      vec2 v = f - (o + 0.15 + 0.7 * h.xy); float r = 0.32 + 0.3 * h.z, d = length(v) / r;
-      if (d < 1.0 && d < bd) { bd = d; best = vec3(1.0 - d, h.z, 0.8 + 0.45 * dot(v / r, sunH) - 0.25 * d * d); }
+      float r = rmin + rspan * h.z * h.z, an = 6.2832 * fract(h.x * 7.31 + h.y * 3.17), el = 0.75 + 0.25 * fract(h.z * 11.3);
+      mat2 R = mat2(cos(an), sin(an), -sin(an), cos(an));
+      vec2 sq = vec2(1.0, 1.0 / el) / r;
+      vec2 v = f - (o + 0.15 + 0.7 * h.xy), u = (R * v) * sq, m = A * (R * vk) * sq * r;
+      // |u - m s|^2 + s^2 = 1 (s: height over the stone's height): the eye-side root
+      float qa = dot(m, m) + 1.0, qb = -2.0 * dot(u, m), qc = dot(u, u) - 1.0, disc = qb * qb - 4.0 * qa * qc;
+      if (disc > 0.0) {
+        float s = (-qb + sqrt(disc)) / (2.0 * qa);
+        if (s > 0.0 && s > bs) {
+          bs = s; vec2 X = u - m * s;
+          vec3 nl = normalize(vec3(X * (A * sq * r), s));   // the spheroid's normal: its gradient, (A x, A y / el, s) in its frame
+          best = vec4(sqrt(disc) / (2.0 * sqrt(qa)), fract(h.z * 13.1 + h.x * 7.7), nl.xy * R); nUp = nl.z;
+        }
+      }
+      vec2 us = (R * (v + shOff * r)) * sq;   // the point toward the sun at the stone's height: under its crown
+      sh.x = max(sh.x, 1.0 - smoothstep(0.85, 1.0, length(us)));
+      sh.y = max(sh.y, 1.0 - smoothstep(1.0, 1.3, length(u)));
     }
+    sa = best.x > 0.0 ? vec2(nUp, 0.0) : sh;
     return best;
   }
   float gapBlades(vec2 pxz, float foot) {
@@ -879,36 +909,73 @@ const FRAG = /* glsl */`
         c = mix(c, soil, near);
       }
     }
-    // A stream's exposed bed (bedOctave's block): within 60 m, faded out by 90 m (from the air the photo, its river, as before)
+    // A stream's exposed bed and a big river's bank (bedOctave's block): within 60 m, faded out by 90 m (from the air the
+    // photo, its river, as before)
+    float bedSh = 0.0, bedSky = 1.0;   // the stones' cast shadow (on the sun term) and sky occlusion (on the sky term), below
     if (waterOn > 0.5 && dist < 90.0) {
-      // the bed's share here: the four nearest 5 m cells' (a bed cell: channel or wet margin with a material) blended
-      // bilinearly and its edge broken by a 1 m noise, so the bank meets the bed along a ragged line, not 5 m squares
+      // each share here: the four nearest 5 m cells' blended bilinearly and its edge broken by a 1 m noise, so the bank meets
+      // the bed and the terrace along a ragged line, not 5 m squares
       vec2 wp = vUv * waterPx - 0.5, wf = fract(wp), w0 = (floor(wp) + 0.5) / waterPx, we = vec2(1.0 / waterPx, 0.0);
       vec4 v00 = texture2D(waterMap, w0), v10 = texture2D(waterMap, w0 + we.xy), v01 = texture2D(waterMap, w0 + we.yx), v11 = texture2D(waterMap, w0 + we.xx);
-      // a bed cell: a channel or wet margin with a bed material, or the bank of a river of order 4 and up (its gravel bank:
-      // the bank cells under the photo hold its water's dark pixels too, and a big river's bank is its bar's gravel)
-      #define BEDF(v) (((mod(floor(v.r * 255.0 + 0.5), 16.0) == 1.0 || mod(floor(v.r * 255.0 + 0.5), 16.0) == 2.0) && mod(floor(v.g * 255.0 + 0.5), 8.0) >= 1.0) || (mod(floor(v.r * 255.0 + 0.5), 16.0) == 3.0 && mod(floor(v.r * 255.0 / 16.0 + 0.01), 8.0) >= 4.0) ? 1.0 : 0.0)
-      float bedW = mix(mix(BEDF(v00), BEDF(v10), wf.x), mix(BEDF(v01), BEDF(v11), wf.x), wf.y);
-      bedW = smoothstep(0.35, 0.65, bedW + 0.3 * (rnoise(vPosW.xz, 1.1, 1.3) - 0.5));
-      vec4 wv = wf.x < 0.5 ? (wf.y < 0.5 ? v00 : v01) : (wf.y < 0.5 ? v10 : v11);   // the nearest cell's material and zone
-      float wz = mod(floor(wv.r * 255.0 + 0.5), 16.0), wm = max(mod(floor(wv.g * 255.0 + 0.5), 8.0), 1.0);
-      if (wz == 3.0) wm = 3.0;   // a river's bank: gravel
-      if (bedW > 0.0) {
-        // a bank is half bed, half its own ground (it carries the riparian plants and their litter and soil)
-        float bn = (1.0 - smoothstep(60.0, 90.0, dist)) * bedW * (wz == 3.0 ? 0.5 : 1.0), wet = wz == 1.0 ? 0.55 : wz == 2.0 ? 0.75 : 0.9;
+      // a bed cell: a channel or wet margin with a bed material, or any of a river of order 4 and up (a big river's channel
+      // cells without a recorded material showed the photo's dark river at the water's edge); a bank cell: the bank of a
+      // river of order 4 and up
+      #define WZ(v) mod(floor(v.r * 255.0 + 0.5), 16.0)
+      #define WM(v) mod(floor(v.g * 255.0 + 0.5), 8.0)
+      #define BIG(v) (mod(floor(v.r * 255.0 / 16.0 + 0.01), 8.0) >= 4.0)
+      #define BEDF(v) ((WZ(v) == 1.0 || WZ(v) == 2.0) && (WM(v) >= 1.0 || BIG(v)) ? 1.0 : 0.0)
+      #define BANKF(v) (WZ(v) == 3.0 && BIG(v) ? 1.0 : 0.0)
+      vec2 xn = vec2(vPosW.x, -vPosW.z);
+      float rag = 0.4 * (rnoise(vPosW.xz, 1.1, 1.3) - 0.5) + 0.2 * (vnoise(xn * 2.7) - 0.5);
+      float bedW = smoothstep(0.35, 0.65, mix(mix(BEDF(v00), BEDF(v10), wf.x), mix(BEDF(v01), BEDF(v11), wf.x), wf.y) + rag);
+      float bankW = smoothstep(0.35, 0.65, mix(mix(BANKF(v00), BANKF(v10), wf.x), mix(BANKF(v01), BANKF(v11), wf.x), wf.y) + rag) * (1.0 - bedW);
+      // the material: the nearest cell's, its edge broken by the same noise (straight 5 m edges showed between materials);
+      // the wetness by the height over the water (B: the reach's level over the cell's ground, 0.02 m steps about 128),
+      // the nearest cell's (its edge broken as the material's; blended across the four it made soft dark stains on the bar):
+      // x0.68 at the water's edge (the ground drawn there is at or over the drawn water: a 5 m cell under the reach's level
+      // can stand over it on the 1 m mesh; x0.55 made dark stains), drying to x0.9 by 0.4 m over it (a gravel and sand
+      // bar's capillary fringe), x0.9 off the water
+      vec2 wr = wf + 1.5 * rag;
+      vec4 wv = wr.x < 0.5 ? (wr.y < 0.5 ? v00 : v01) : (wr.y < 0.5 ? v10 : v11);
+      float wm = WM(wv);   // none recorded: the neighbours' coarsest, else gravel
+      if (wm < 1.0) wm = max(max(WM(v00), WM(v10)), max(WM(v01), WM(v11)));
+      if (wm < 1.0) wm = 3.0;
+      #define WET(v) (v.b > 0.002 && WZ(v) <= 2.0 ? mix(0.68, 0.9, smoothstep(-0.05, 0.4, (128.0 - v.b * 255.0) * 0.02)) : 0.9)
+      float wetB = WET(wv);
+      float fadeB = 1.0 - smoothstep(60.0, 90.0, dist);
+      if ((bedW + bankW) * fadeB > 0.0) {
+        float bn = fadeB * (bedW + bankW), wet = mix(wetB, 0.9, bankW / max(bedW + bankW, 1e-3));
         vec3 rock = vec3(0.218, 0.199, 0.164), sand = vec3(0.20, 0.175, 0.14), silt = vec3(0.16, 0.145, 0.12);   // alluvium (rocks.js LOOK, linear); the fines 10YR 5/2-4/2 (Munsell, soil_surface's conversion)
-        vec2 xn = vec2(vPosW.x, -vPosW.z);
-        vec3 bc = wm < 1.5 ? silt : sand * (0.9 + 0.2 * vnoise(xn * 7.0));   // the matrix: silt, else sand
-        float sc = wm < 2.5 ? 0.02 : wm < 3.5 ? 0.05 : wm < 4.5 ? 0.16 : 0.33, fill = wm < 2.5 ? 0.3 : 0.8;
-        float tf = 1.0 - smoothstep(0.08 * sc, 0.25 * sc, foot);   // the stones while they span more than ~4 pixels
-        // past that, the stones' and the matrix's mean (each stone's cover about 0.45 x its cell's share, darker at its foot)
-        if (wm >= 2.0) bc = mix(bc, rock * 0.85, 0.45 * fill * (1.0 - tf));
-        if (wm >= 2.0 && tf > 0.0) {
-          vec3 st = bedOctave(xn, sc, fill);
-          if (st.x <= 0.0 && wm >= 4.0) st = bedOctave(xn + 7.3, 0.045, 0.75);   // gravel between the cobbles and boulders
-          float stone = smoothstep(0.0, 0.12, st.x) * tf;
-          vec3 sc3 = rock * (0.5 + 0.6 * st.y) * mix(vec3(1.0), vec3(1.05, 1.0, 0.94), fract(st.y * 7.0)) * clamp(st.z, 0.45, 1.3);
+        // the bed's matrix (silt, else sand, a fine grit in it), the bank's soil and litter (patches at ~0.3 m)
+        vec3 bed = wm < 1.5 ? silt : sand * (0.9 + 0.2 * vnoise(xn * 7.0)) * (0.92 + 0.16 * vnoise(xn * 41.0));
+        vec3 bank = mix(gapSoil.rgb, gapLitter.rgb, 0.4 + 0.4 * vnoise(xn * 3.3)) * (0.9 + 0.2 * vnoise(xn * 17.0));
+        vec3 bc = mix(bank, bed, bedW / max(bedW + bankW, 1e-3));
+        // the octaves: coarse (scA: its cell, fill, radius min and span) over fine gravel (scB); the bank only a few of the fine
+        bool isBank = bankW > bedW;
+        float scA = wm < 4.5 ? 0.16 : 0.33, fA = isBank || wm < 3.5 ? 0.0 : 0.7;
+        float rB = wm > 2.5 && wm < 3.5 && !isBank ? 0.15 : 0.18, scB = wm < 2.5 ? 0.02 : 0.05, fB = isBank ? 0.05 : wm < 2.5 ? 0.3 : 0.6;
+        vec2 sunH = normalize(vec2(sunDir.x, -sunDir.z) + vec2(1e-4, 0.0));
+        vec2 shOff = sunH * 0.6 * length(sunDir.xz) / max(sunDir.y, 0.2);   // the shadow's reach per unit radius: height 0.6 r / tan(elevation)
+        float tA = 1.0 - smoothstep(0.08 * scA, 0.25 * scA, foot), tB = 1.0 - smoothstep(0.08 * scB, 0.25 * scB, foot);
+        // a cell more than 0.25 m under its reach's level is under the drawn water: its bed takes the stones' mean (the
+        // stones there cost ~1 ms at Lamar's river pose and were seen only through the water)
+        if (wv.b > 0.002 && (wv.b * 255.0 - 128.0) * 0.02 > 0.25) { tA = 0.0; tB = 0.0; }
+        // past their pixel size, the stones' and the matrix's mean (each stone's cover about 0.45 x its cells' share)
+        if (wm >= 2.0 || isBank) bc = mix(bc, rock * 0.85, 0.45 * (fA * (1.0 - tA) + fB * (1.0 - tB) * (1.0 - 0.45 * fA)));
+        vec4 st = vec4(0.0); vec2 sa = vec2(0.0); float tf = 0.0;
+        vec3 V = normalize(vPosW - cameraPosition); vec2 vk = vec2(V.x, -V.z) / max(-V.y, 1e-3); vk *= min(1.0, 2.5 / max(length(vk), 1e-3));
+        if (fA > 0.0 && tA > 0.0) { st = bedOctave(xn + 3.7, scA, fA, 0.25, 0.37, shOff, vk, sa); tf = tA; }
+        if (st.x <= 0.0 && (wm >= 2.0 || isBank) && tB > 0.0) { vec2 sb; st = bedOctave(xn, scB, fB, rB, 0.6 - rB, shOff, vk, sb); sa = st.x > 0.0 ? sb : max(sa, sb * tB); tf = tB; }
+        if (st.x > 0.0) {
+          float stone = smoothstep(0.0, 0.25, st.x) * tf;
+          vec3 sc3 = rock * (0.55 + 0.6 * st.y) * mix(vec3(1.0), vec3(1.06, 1.0, 0.92), fract(st.y * 7.0));
           bc = mix(bc, sc3, stone);
+          vec3 nS = normalize(nGeo * sa.x + vec3(st.z, 0.0, -st.w));
+          nL = normalize(mix(nL, nS, stone * bn));
+          bedSky = mix(1.0, 0.5 + 0.5 * dot(nS, nGeo), stone * bn);
+        } else {
+          nL = normalize(mix(nL, nGeo, 0.6 * fadeB * bedW));   // the bed's sand: the detail scans' relief calmed (its stones carry the relief; the bank's soil keeps it)
+          bedSh = 0.85 * sa.x * bn; bedSky = 1.0 - 0.35 * sa.y * bn;
         }
         c = mix(c, bc * wet, bn);
       }
@@ -955,8 +1022,8 @@ const FRAG = /* glsl */`
     // a 35 % sage block from above; the plants' own groundSkyOcclusion keeps it)
     float skyOcc = 1.0 - 0.35 * clamp(cov.r, 0.0, 1.0);
     skyOcc = mix(skyOcc, 1.0, cliffW);
-    vec3 light = sunLight * diff * cloudOnly(vPosW) * sunVis
-      + mix(ambientGround, ambientSky, 0.5 + 0.5 * nGeo.y) * skyOcc * groundContactAO(vPosW);
+    vec3 light = sunLight * diff * cloudOnly(vPosW) * sunVis * (1.0 - bedSh)
+      + mix(ambientGround, ambientSky, 0.5 + 0.5 * nGeo.y) * skyOcc * groundContactAO(vPosW) * bedSky;
     gl_FragColor = vec4(atmosphereApply(c * light * 0.3183099, vPosW, cameraPosition), 1.0);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>

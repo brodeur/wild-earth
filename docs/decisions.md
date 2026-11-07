@@ -7451,6 +7451,19 @@ glottal stop is itself drawn like a question mark without its dot, so at 12 px i
   on the light 40 % near the eye. ΔE from the air ≤ 0.003; cost: Lamar eye +0.3 ms (noise), river +0.7 ms. Open: the
   bank's sand uniform between stones at 3-8 m; steppe ground paler than the grass slopes beyond; the far bank's bed is
   the photo past 90 m; lamar_close's ground smooth.
+- **River bed stones read as stones, not pits; the dry bank is soil** (terrain.js bed block, bedOctave; rocks.js).
+  The shading's sign was right; the stones were flat discs on flat ground, so each one's far slope (hidden from a low
+  eye) drew a dark crescent on its far rim, which is how a pit looks, with a dark inner ring, one size and no cast
+  shadow. Now each stone is a flattened dome met by the eye's ray (the far slope stays hidden), lit by the ground's own
+  sun, casting a short shadow on the sand away from the sun, the sand darker at its foot. Gravel 1.5-6 cm, mostly small,
+  with sand between; on gravel beds rocks.js's placed pebbles (5-19 cm) are the bar's cobbles; cobble and boulder beds
+  keep their own layer. A big river's dry bank is soil and fine litter (the gap ground's colours) with washed-up stones
+  on 5 % of cells; gravel only on channel and margin cells. Material edges broken by noise; wetness from height over
+  the water (darkest at the edge, dry by 0.4 m) instead of a per-zone factor; channel cells without recorded bed
+  material take their neighbours' (else gravel); cells > 0.25 m under water take the stones' mean colour (stones there
+  cost ~1 ms, seen only through water). From the air ΔE ≤ 0.005; river pose +0.47 ms median (8 interleaved pairs).
+  Open: the strip of bank beside the bar is plain smooth soil; within ~1 m a stone is now and then clipped by its search
+  cell's edge.
 
 ## 2026-11-06: snakes are playable; the body follows the head's path (branch claude/snake-play)
 
