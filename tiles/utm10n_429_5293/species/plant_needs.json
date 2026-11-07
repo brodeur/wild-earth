@@ -298,15 +298,63 @@
     "cover: rule pnw_montane_riparian on North Pacific Montane Riparian Woodland",
     "cover: rule pnw_sitka_spruce on North Pacific Hypermaritime Sitka Spruce Forest",
     "cover: rule pnw_montane_riparian on North Pacific Montane Riparian Woodland and Shrubland-Wet",
-    "cover: rule pnw_lowland_mixed on North Pacific Lowland Mixed Hardwood-Conifer Forest"
+    "cover: rule pnw_lowland_mixed on North Pacific Lowland Mixed Hardwood-Conifer Forest",
+    "canopy: records (GBIF: 94 records on the tile; height not yet screened)"
    ],
-   "cover": 0.31,
+   "cover": 0.4526,
    "records": 94,
+   "scientific": "Tsuga heterophylla",
    "record": true,
    "card": true,
-   "generated_now": true,
    "drawn_as": "tsuga_heterophylla",
    "rank": 1
+  },
+  {
+   "id": "acer_circinatum",
+   "kind": "shrub",
+   "why": [
+    "cover: rule pnw_silver_fir on North Pacific Mesic Western Hemlock-Silver Fir Forest",
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest",
+    "cover: rule pnw_sitka_spruce on North Pacific Seasonal Sitka Spruce Forest",
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Mesic-Wet Douglas-fir-Western Hemlock Forest",
+    "cover: rule pnw_silver_fir on North Pacific Dry-Mesic Silver Fir-Western Hemlock-Douglas-fir Forest",
+    "cover: rule pnw_montane_riparian on North Pacific Montane Riparian Woodland",
+    "cover: rule pnw_avalanche_shrub on North Pacific Broadleaf Landslide Forest",
+    "cover: rule pnw_sitka_spruce on North Pacific Hypermaritime Sitka Spruce Forest",
+    "cover: rule pnw_avalanche_shrub on North Pacific Montane Shrubland",
+    "cover: rule pnw_montane_riparian on North Pacific Montane Riparian Woodland and Shrubland-Wet",
+    "cover: rule pnw_lowland_mixed on North Pacific Lowland Mixed Hardwood-Conifer Forest",
+    "canopy: records (GBIF: 159 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.3699,
+   "records": 159,
+   "scientific": "Acer circinatum",
+   "record": true,
+   "card": true,
+   "drawn_as": "acer_circinatum",
+   "rank": 2
+  },
+  {
+   "id": "picea_sitchensis",
+   "kind": "tree",
+   "why": [
+    "cover: rule pnw_sitka_spruce on North Pacific Seasonal Sitka Spruce Forest",
+    "named by EVT 7036 North Pacific Seasonal Sitka Spruce Forest (6089 cells)",
+    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Forest",
+    "cover: rule pnw_redcedar_hemlock on North Pacific Hypermaritime Western Red-cedar-Western Hemlock Forest",
+    "cover: rule pnw_lowland_riparian on North Pacific Hardwood-Conifer Swamp",
+    "cover: rule pnw_sitka_spruce on North Pacific Hypermaritime Sitka Spruce Forest",
+    "named by BPS 723 North Pacific Hypermaritime Sitka Spruce Forest (85 cells)",
+    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Shrubland",
+    "canopy: records (GBIF: 181 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.3137,
+   "records": 181,
+   "scientific": "Picea sitchensis",
+   "record": true,
+   "card": true,
+   "drawn_as": "picea_sitchensis",
+   "rank": 3
   },
   {
    "id": "vaccinium_parvifolium",
@@ -328,9 +376,8 @@
    "records": 84,
    "record": true,
    "card": true,
-   "generated_now": true,
    "drawn_as": "vaccinium_parvifolium",
-   "rank": 2
+   "rank": 4
   },
   {
    "id": "abies_amabilis",
@@ -349,9 +396,8 @@
    "records": 0,
    "record": true,
    "card": true,
-   "generated_now": true,
    "drawn_as": "abies_amabilis",
-   "rank": 3
+   "rank": 5
   },
   {
    "id": "mahonia_nervosa",
@@ -370,9 +416,8 @@
    "records": 0,
    "record": true,
    "card": true,
-   "generated_now": true,
    "drawn_as": "mahonia_nervosa",
-   "rank": 4
+   "rank": 6
   },
   {
    "id": "pseudotsuga_menziesii",
@@ -386,37 +431,96 @@
     "cover: rule pnw_silver_fir on North Pacific Dry-Mesic Silver Fir-Western Hemlock-Douglas-fir Forest",
     "named by EVT 7174 North Pacific Dry-Mesic Silver Fir-Western Hemlock-Douglas-fir Forest (1433 cells)",
     "named by EVT 7035 North Pacific Dry Douglas-fir-(Madrone) Forest and Woodland (29 cells)",
-    "cover: rule pnw_lowland_mixed on North Pacific Lowland Mixed Hardwood-Conifer Forest"
+    "cover: rule pnw_lowland_mixed on North Pacific Lowland Mixed Hardwood-Conifer Forest",
+    "canopy: records (GBIF: 35 records on the tile; height not yet screened)"
    ],
-   "cover": 0.1716,
+   "cover": 0.2248,
    "records": 35,
+   "scientific": "Pseudotsuga menziesii",
    "record": true,
    "card": false,
    "drawn_as": "pseudotsuga_menziesii",
-   "rank": 5
+   "rank": 7
   },
   {
-   "id": "acer_circinatum",
-   "kind": "shrub",
+   "id": "acer_macrophyllum",
+   "kind": "tree",
+   "why": [
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest",
+    "cover: rule pnw_sitka_spruce on North Pacific Seasonal Sitka Spruce Forest",
+    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Forest",
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Mesic-Wet Douglas-fir-Western Hemlock Forest",
+    "cover: rule pnw_montane_riparian on North Pacific Montane Riparian Woodland",
+    "cover: rule pnw_lowland_riparian on North Pacific Hardwood-Conifer Swamp",
+    "cover: rule pnw_sitka_spruce on North Pacific Hypermaritime Sitka Spruce Forest",
+    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Shrubland",
+    "cover: rule pnw_montane_riparian on North Pacific Montane Riparian Woodland and Shrubland-Wet",
+    "cover: rule pnw_lowland_mixed on North Pacific Lowland Mixed Hardwood-Conifer Forest",
+    "canopy: records (GBIF: 95 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.169,
+   "records": 95,
+   "scientific": "Acer macrophyllum",
+   "record": true,
+   "card": false,
+   "drawn_as": "acer_macrophyllum",
+   "rank": 8
+  },
+  {
+   "id": "alnus_rubra",
+   "kind": "tree",
+   "why": [
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest",
+    "cover: rule pnw_sitka_spruce on North Pacific Seasonal Sitka Spruce Forest",
+    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Forest",
+    "named by EVT 7156 North Pacific Lowland Riparian Forest (5666 cells)",
+    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Mesic-Wet Douglas-fir-Western Hemlock Forest",
+    "cover: rule pnw_montane_riparian on North Pacific Montane Riparian Woodland",
+    "named by EVT 7158 North Pacific Montane Riparian Woodland (463 cells)",
+    "cover: rule pnw_avalanche_shrub on North Pacific Broadleaf Landslide Forest",
+    "cover: rule pnw_lowland_riparian on North Pacific Hardwood-Conifer Swamp",
+    "cover: rule pnw_sitka_spruce on North Pacific Hypermaritime Sitka Spruce Forest",
+    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Shrubland",
+    "named by EVT 7157 North Pacific Lowland Riparian Shrubland (46 cells)",
+    "cover: rule pnw_avalanche_shrub on North Pacific Montane Shrubland",
+    "cover: rule pnw_montane_riparian on North Pacific Montane Riparian Woodland and Shrubland-Wet",
+    "named by BPS 752 North Pacific Montane Riparian Woodland and Shrubland-Wet (15 cells)",
+    "cover: rule pnw_lowland_mixed on North Pacific Lowland Mixed Hardwood-Conifer Forest",
+    "canopy: records (GBIF: 61 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.1357,
+   "records": 61,
+   "scientific": "Alnus rubra",
+   "record": true,
+   "card": true,
+   "drawn_as": "alnus_rubra",
+   "rank": 9
+  },
+  {
+   "id": "thuja_plicata",
+   "kind": "tree",
    "why": [
     "cover: rule pnw_silver_fir on North Pacific Mesic Western Hemlock-Silver Fir Forest",
     "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest",
     "cover: rule pnw_sitka_spruce on North Pacific Seasonal Sitka Spruce Forest",
+    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Forest",
     "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Mesic-Wet Douglas-fir-Western Hemlock Forest",
+    "cover: rule pnw_redcedar_hemlock on North Pacific Hypermaritime Western Red-cedar-Western Hemlock Forest",
+    "named by EVT 7178 North Pacific Hypermaritime Western Red-cedar-Western Hemlock Forest (3463 cells)",
     "cover: rule pnw_silver_fir on North Pacific Dry-Mesic Silver Fir-Western Hemlock-Douglas-fir Forest",
-    "cover: rule pnw_montane_riparian on North Pacific Montane Riparian Woodland",
-    "cover: rule pnw_avalanche_shrub on North Pacific Broadleaf Landslide Forest",
+    "cover: rule pnw_lowland_riparian on North Pacific Hardwood-Conifer Swamp",
     "cover: rule pnw_sitka_spruce on North Pacific Hypermaritime Sitka Spruce Forest",
-    "cover: rule pnw_avalanche_shrub on North Pacific Montane Shrubland",
-    "cover: rule pnw_montane_riparian on North Pacific Montane Riparian Woodland and Shrubland-Wet",
-    "cover: rule pnw_lowland_mixed on North Pacific Lowland Mixed Hardwood-Conifer Forest"
+    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Shrubland",
+    "cover: rule pnw_lowland_mixed on North Pacific Lowland Mixed Hardwood-Conifer Forest",
+    "canopy: records (GBIF: 16 records on the tile; height not yet screened)"
    ],
-   "cover": 0.1286,
-   "records": 159,
+   "cover": 0.107,
+   "records": 16,
+   "scientific": "Thuja plicata",
    "record": true,
    "card": true,
-   "drawn_as": "acer_circinatum",
-   "rank": 6
+   "drawn_as": "thuja_plicata",
+   "rank": 10
   },
   {
    "id": "gaultheria_shallon",
@@ -434,32 +538,7 @@
    "record": true,
    "card": true,
    "drawn_as": "gaultheria_shallon",
-   "rank": 7
-  },
-  {
-   "id": "thuja_plicata",
-   "kind": "tree",
-   "why": [
-    "cover: rule pnw_silver_fir on North Pacific Mesic Western Hemlock-Silver Fir Forest",
-    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest",
-    "cover: rule pnw_sitka_spruce on North Pacific Seasonal Sitka Spruce Forest",
-    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Forest",
-    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Mesic-Wet Douglas-fir-Western Hemlock Forest",
-    "cover: rule pnw_redcedar_hemlock on North Pacific Hypermaritime Western Red-cedar-Western Hemlock Forest",
-    "named by EVT 7178 North Pacific Hypermaritime Western Red-cedar-Western Hemlock Forest (3463 cells)",
-    "cover: rule pnw_silver_fir on North Pacific Dry-Mesic Silver Fir-Western Hemlock-Douglas-fir Forest",
-    "cover: rule pnw_lowland_riparian on North Pacific Hardwood-Conifer Swamp",
-    "cover: rule pnw_sitka_spruce on North Pacific Hypermaritime Sitka Spruce Forest",
-    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Shrubland",
-    "cover: rule pnw_lowland_mixed on North Pacific Lowland Mixed Hardwood-Conifer Forest"
-   ],
-   "cover": 0.0827,
-   "records": 16,
-   "record": true,
-   "card": true,
-   "generated_now": true,
-   "drawn_as": "thuja_plicata",
-   "rank": 8
+   "rank": 11
   },
   {
    "id": "oplopanax_horridus",
@@ -479,9 +558,8 @@
    "records": 0,
    "record": true,
    "card": true,
-   "generated_now": true,
    "drawn_as": "oplopanax_horridus",
-   "rank": 9
+   "rank": 12
   },
   {
    "id": "rubus_spectabilis",
@@ -508,80 +586,7 @@
    "records": 150,
    "record": true,
    "card": true,
-   "generated_now": true,
    "drawn_as": "rubus_spectabilis",
-   "rank": 10
-  },
-  {
-   "id": "alnus_rubra",
-   "kind": "tree",
-   "why": [
-    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest",
-    "cover: rule pnw_sitka_spruce on North Pacific Seasonal Sitka Spruce Forest",
-    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Forest",
-    "named by EVT 7156 North Pacific Lowland Riparian Forest (5666 cells)",
-    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Mesic-Wet Douglas-fir-Western Hemlock Forest",
-    "cover: rule pnw_montane_riparian on North Pacific Montane Riparian Woodland",
-    "named by EVT 7158 North Pacific Montane Riparian Woodland (463 cells)",
-    "cover: rule pnw_avalanche_shrub on North Pacific Broadleaf Landslide Forest",
-    "cover: rule pnw_lowland_riparian on North Pacific Hardwood-Conifer Swamp",
-    "cover: rule pnw_sitka_spruce on North Pacific Hypermaritime Sitka Spruce Forest",
-    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Shrubland",
-    "named by EVT 7157 North Pacific Lowland Riparian Shrubland (46 cells)",
-    "cover: rule pnw_avalanche_shrub on North Pacific Montane Shrubland",
-    "cover: rule pnw_montane_riparian on North Pacific Montane Riparian Woodland and Shrubland-Wet",
-    "named by BPS 752 North Pacific Montane Riparian Woodland and Shrubland-Wet (15 cells)",
-    "cover: rule pnw_lowland_mixed on North Pacific Lowland Mixed Hardwood-Conifer Forest"
-   ],
-   "cover": 0.0431,
-   "records": 61,
-   "record": true,
-   "card": true,
-   "generated_now": true,
-   "drawn_as": "alnus_rubra",
-   "rank": 11
-  },
-  {
-   "id": "picea_sitchensis",
-   "kind": "tree",
-   "why": [
-    "cover: rule pnw_sitka_spruce on North Pacific Seasonal Sitka Spruce Forest",
-    "named by EVT 7036 North Pacific Seasonal Sitka Spruce Forest (6089 cells)",
-    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Forest",
-    "cover: rule pnw_redcedar_hemlock on North Pacific Hypermaritime Western Red-cedar-Western Hemlock Forest",
-    "cover: rule pnw_lowland_riparian on North Pacific Hardwood-Conifer Swamp",
-    "cover: rule pnw_sitka_spruce on North Pacific Hypermaritime Sitka Spruce Forest",
-    "named by BPS 723 North Pacific Hypermaritime Sitka Spruce Forest (85 cells)",
-    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Shrubland"
-   ],
-   "cover": 0.039,
-   "records": 181,
-   "record": true,
-   "card": true,
-   "generated_now": true,
-   "drawn_as": "picea_sitchensis",
-   "rank": 12
-  },
-  {
-   "id": "acer_macrophyllum",
-   "kind": "tree",
-   "why": [
-    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest",
-    "cover: rule pnw_sitka_spruce on North Pacific Seasonal Sitka Spruce Forest",
-    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Forest",
-    "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Mesic-Wet Douglas-fir-Western Hemlock Forest",
-    "cover: rule pnw_montane_riparian on North Pacific Montane Riparian Woodland",
-    "cover: rule pnw_lowland_riparian on North Pacific Hardwood-Conifer Swamp",
-    "cover: rule pnw_sitka_spruce on North Pacific Hypermaritime Sitka Spruce Forest",
-    "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Shrubland",
-    "cover: rule pnw_montane_riparian on North Pacific Montane Riparian Woodland and Shrubland-Wet",
-    "cover: rule pnw_lowland_mixed on North Pacific Lowland Mixed Hardwood-Conifer Forest"
-   ],
-   "cover": 0.0248,
-   "records": 95,
-   "record": true,
-   "card": false,
-   "drawn_as": "acer_macrophyllum",
    "rank": 13
   },
   {
@@ -640,7 +645,6 @@
    "records": 0,
    "record": true,
    "card": true,
-   "generated_now": true,
    "drawn_as": "phyllodoce_empetriformis",
    "rank": 16
   },
@@ -692,7 +696,6 @@
    "records": 0,
    "record": true,
    "card": true,
-   "generated_now": true,
    "drawn_as": "cassiope_mertensiana",
    "rank": 19
   },
@@ -713,7 +716,6 @@
    "records": 0,
    "record": true,
    "card": true,
-   "generated_now": true,
    "drawn_as": "abies_lasiocarpa",
    "rank": 20
   },
@@ -731,6 +733,21 @@
    "rank": 21
   },
   {
+   "id": "populus_tristis",
+   "kind": "tree",
+   "why": [
+    "canopy: records (GBIF: 4 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0061,
+   "records": 0,
+   "scientific": "Populus tristis",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 22
+  },
+  {
    "id": "symphoricarpos_albus",
    "kind": "shrub",
    "why": [
@@ -743,7 +760,7 @@
    "record": true,
    "card": false,
    "drawn_as": "symphoricarpos_albus",
-   "rank": 22
+   "rank": 23
   },
   {
    "id": "rubus_parviflorus",
@@ -757,7 +774,7 @@
    "record": true,
    "card": true,
    "drawn_as": "rubus_parviflorus",
-   "rank": 23
+   "rank": 24
   },
   {
    "id": "arbutus_menziesii",
@@ -770,7 +787,7 @@
    "record": true,
    "card": false,
    "drawn_as": "arbutus_menziesii",
-   "rank": 24
+   "rank": 25
   },
   {
    "id": "polystichum_munitum",
@@ -784,7 +801,7 @@
    "record": true,
    "card": true,
    "drawn_as": "polystichum_munitum",
-   "rank": 25
+   "rank": 26
   },
   {
    "id": "struthiopteris_spicant",
@@ -799,7 +816,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 26
+   "rank": 27
   },
   {
    "id": "tiarella_trifoliata",
@@ -814,7 +831,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 27
+   "rank": 28
   },
   {
    "id": "selaginella_oregana",
@@ -829,7 +846,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 28
+   "rank": 29
   },
   {
    "id": "pteridium_aquilinum",
@@ -844,7 +861,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 29
+   "rank": 30
   },
   {
    "id": "oxalis_oregana",
@@ -857,9 +874,8 @@
    "scientific": "Oxalis oregana",
    "record": true,
    "card": true,
-   "generated_now": true,
    "drawn_as": "oxalis_oregana",
-   "rank": 30
+   "rank": 31
   },
   {
    "id": "rubus_pedatus",
@@ -874,7 +890,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 31
+   "rank": 32
   },
   {
    "id": "prunella_vulgaris",
@@ -889,7 +905,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 32
+   "rank": 33
   },
   {
    "id": "cornus_unalaschkensis",
@@ -904,7 +920,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 33
+   "rank": 34
   },
   {
    "id": "achlys_triphylla",
@@ -919,7 +935,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 34
+   "rank": 35
   },
   {
    "id": "maianthemum_dilatatum",
@@ -934,7 +950,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 35
+   "rank": 36
   },
   {
    "id": "polypodium_glycyrrhiza",
@@ -949,7 +965,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 36
+   "rank": 37
   },
   {
    "id": "ranunculus_repens",
@@ -964,7 +980,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 37
+   "rank": 38
   },
   {
    "id": "claytonia_sibirica",
@@ -979,7 +995,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 38
+   "rank": 39
   },
   {
    "id": "mycelis_muralis",
@@ -994,7 +1010,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 39
+   "rank": 40
   },
   {
    "id": "erythranthe_dentata",
@@ -1009,7 +1025,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 40
+   "rank": 41
   },
   {
    "id": "equisetum_telmateia",
@@ -1024,7 +1040,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 41
+   "rank": 42
   },
   {
    "id": "rubus_ursinus",
@@ -1038,7 +1054,7 @@
    "record": true,
    "card": false,
    "drawn_as": "rubus_ursinus",
-   "rank": 42
+   "rank": 43
   },
   {
    "id": "moneses_uniflora",
@@ -1053,7 +1069,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 43
+   "rank": 44
   },
   {
    "id": "lysichiton_americanus",
@@ -1068,7 +1084,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 44
+   "rank": 45
   },
   {
    "id": "adenocaulon_bicolor",
@@ -1083,7 +1099,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 45
+   "rank": 46
   },
   {
    "id": "adiantum_aleuticum",
@@ -1098,7 +1114,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 46
+   "rank": 47
   },
   {
    "id": "stachys_chamissonis",
@@ -1113,7 +1129,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 47
+   "rank": 48
   },
   {
    "id": "boykinia_occidentalis",
@@ -1128,7 +1144,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 48
+   "rank": 49
   },
   {
    "id": "trillium_ovatum",
@@ -1143,7 +1159,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 49
+   "rank": 50
   },
   {
    "id": "prosartes_smithii",
@@ -1158,7 +1174,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 50
+   "rank": 51
   },
   {
    "id": "corydalis_scouleri",
@@ -1173,7 +1189,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 51
+   "rank": 52
   },
   {
    "id": "athyrium_filix_femina",
@@ -1188,7 +1204,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 52
+   "rank": 53
   },
   {
    "id": "viola_glabella",
@@ -1203,7 +1219,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 53
+   "rank": 54
   },
   {
    "id": "equisetum_braunii",
@@ -1218,7 +1234,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 54
+   "rank": 55
   },
   {
    "id": "monotropa_uniflora",
@@ -1233,7 +1249,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 55
+   "rank": 56
   },
   {
    "id": "vaccinium_ovalifolium",
@@ -1248,7 +1264,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 56
+   "rank": 57
   },
   {
    "id": "ribes_bracteosum",
@@ -1263,7 +1279,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 57
+   "rank": 58
   },
   {
    "id": "pinus_albicaulis",
@@ -1276,7 +1292,7 @@
    "record": true,
    "card": true,
    "drawn_as": "pinus_albicaulis",
-   "rank": 58
+   "rank": 59
   }
  ],
  "gbif_plants": [
@@ -1862,7 +1878,7 @@
    "family": "Asparagaceae",
    "kind": "forb",
    "records": 6,
-   "known": false
+   "known": true
   },
   {
    "id": "ranunculus_trichophyllus",
@@ -2481,32 +2497,26 @@
    "known": false
   }
  ],
- "generated": [
-  "abies_amabilis",
-  "tsuga_heterophylla",
-  "thuja_plicata",
-  "vaccinium_parvifolium",
-  "mahonia_nervosa",
-  "oplopanax_horridus",
-  "alnus_rubra",
-  "rubus_spectabilis",
-  "picea_sitchensis",
-  "abies_lasiocarpa",
-  "phyllodoce_empetriformis",
-  "cassiope_mertensiana",
-  "oxalis_oregana"
- ],
+ "generated": [],
  "target": {
   "tree": 21,
   "shrub": 23,
   "ground": 26
  },
  "by_layer": {
-  "tree": 12,
+  "tree": 13,
   "shrub": 20,
   "ground": 26
  },
  "hands": [
+  {
+   "id": "populus_tristis",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 4 records on the tile; height not yet screened)"
+   ]
+  },
   {
    "id": "struthiopteris_spicant",
    "kind": "fern",
@@ -2765,13 +2775,13 @@
   }
  ],
  "summary": {
-  "needed": 58,
+  "needed": 59,
   "with_record": 28,
-  "generated_now": 13,
-  "queued": 30,
+  "generated_now": 0,
+  "queued": 31,
   "unread_communities": 2,
   "by_layer": {
-   "tree": 12,
+   "tree": 13,
    "shrub": 20,
    "ground": 26
   },
@@ -2780,6 +2790,6 @@
    "shrub": false,
    "ground": true
   },
-  "hands": 32
+  "hands": 33
  }
 }

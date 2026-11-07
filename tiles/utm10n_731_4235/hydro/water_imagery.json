@@ -1,0 +1,1169 @@
+{
+ "rule": {
+  "water_pixel": "seasons/s2_MM.tif: NDWI (NIR from red and NDVI) > 0 or NIR < 0.04, not bright (water_seasons.py)",
+  "water": "per 20 m pixel max(frequency, fraction): frequency = wet months / observed (>= 3); fraction = its NDWI's 75th percentile over the clear months unmixed between the never-wet land within 300 m and the tile's always-wet water (median NDWI; 0.3 with under 10 such pixels); DEM slope < 0.2, DEM > 0.5 m; bilinear onto the 5 m grid, water at >= 0.5",
+  "naip": "imagery/naip.tif is RGB (no NIR band): not used",
+  "reach": "on: water within max(w/2, 10 m); near: within max(60 m, 2 w); every 10 m; on water >= 0.6, off water: near >= 0.5, else no water seen",
+  "move": "stems of DEM reaches with width >= 10 m not on water: least-cost path on the 5 m grid within 600 m of the drawn stem on ground <= 10 m over its nearest DEM line cell (water 1 + 2 exp(-d_in/6 m), land 12 x (0.4 + 0.6 min(1, d_dem/30 m))), edge ends fixed, interior ends snapped to water within 60 m, a junction on a moved stem taken as moved, smoothed 10 m; kept when on >= 0.5 and >= the old line's + 0.2; the reaches meeting a moved node bent to it over 2 |shift| + 20 m (shift <= 30 m) or extended straight to it (one per node)",
+  "nhd_dropped": "NHD-sourced stretches with width >= 10 m, no water seen, within 600 m of a moved stem's old or new line, off the tile edge: the map's pieces of a river where the imagery shows none",
+  "width": "a moved reach takes the water's median cross-section when >= 40 m and wider than drawn",
+  "side_channels": "the river's water within 250 m, off the moved ribbon (w/2 + 10 m), its skeleton's longest path >= 150 m: a reach at its measured width (source imagery)",
+  "undrawn": "water patches >= 1600 m2 beyond w/2 + 20 m of every reach and 20 m of every kept pond"
+ },
+ "stats": {
+  "months_used": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "water_cells_5m": 10231,
+  "reaches_tested": 406,
+  "verdicts_before": {
+   "no water seen": 395,
+   "off water": 7,
+   "on water": 4
+  },
+  "verdicts_after": {
+   "no water seen": 395,
+   "off water": 7,
+   "on water": 4
+  },
+  "stems": 3,
+  "stems_moved": 0,
+  "reaches_moved": 0,
+  "reaches_bent": 0,
+  "reaches_extended": 0,
+  "nhd_dropped": 0,
+  "side_channels": 0,
+  "undrawn_patches": 8,
+  "undrawn_m2": 105175,
+  "undrawn_by_map": {
+   "a rewilded reservoir or pond (human water, not drawn by the rule)": 99425,
+   "unmapped": 5750
+  },
+  "seconds": 9.4
+ },
+ "stems": [
+  {
+   "reaches": 35,
+   "names": [
+    "North Fork Stanislaus River"
+   ],
+   "length_m": 9699,
+   "area_km2": 403.8,
+   "width": 24.48,
+   "before": {
+    "on": 0.173,
+    "near": 0.193,
+    "samples": 971
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.179,
+    "near": 0.184,
+    "samples": 923
+   }
+  },
+  {
+   "reaches": 1,
+   "names": [
+    "Beaver Creek"
+   ],
+   "length_m": 321,
+   "area_km2": 73.4,
+   "width": 11.06,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 34
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.057,
+    "near": 0.057,
+    "samples": 35
+   }
+  },
+  {
+   "reaches": 7,
+   "names": [
+    "Beaver Creek"
+   ],
+   "length_m": 5304,
+   "area_km2": 66.1,
+   "width": 11.06,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 532
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.002,
+    "near": 0.002,
+    "samples": 502
+   }
+  }
+ ],
+ "reaches": [
+  {
+   "k": 107,
+   "name": "North Fork Stanislaus River",
+   "width": 23.82,
+   "length_m": 252,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 27
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 27
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 111,
+   "name": "North Fork Stanislaus River",
+   "width": 23.82,
+   "length_m": 4,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 2
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 2
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 112,
+   "name": "North Fork Stanislaus River",
+   "width": 23.84,
+   "length_m": 423,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 44
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 44
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 122,
+   "name": "North Fork Stanislaus River",
+   "width": 23.86,
+   "length_m": 409,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 42
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 42
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 132,
+   "name": "North Fork Stanislaus River",
+   "width": 23.87,
+   "length_m": 203,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 22
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 22
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 134,
+   "name": "North Fork Stanislaus River",
+   "width": 23.89,
+   "length_m": 507,
+   "before": {
+    "on": 0.038,
+    "near": 0.038,
+    "samples": 52
+   },
+   "after": {
+    "on": 0.038,
+    "near": 0.038,
+    "samples": 52
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 147,
+   "name": "North Fork Stanislaus River",
+   "width": 23.93,
+   "length_m": 106,
+   "before": {
+    "on": 0.417,
+    "near": 0.5,
+    "samples": 12
+   },
+   "after": {
+    "on": 0.417,
+    "near": 0.5,
+    "samples": 12
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 151,
+   "name": "North Fork Stanislaus River",
+   "width": 23.96,
+   "length_m": 102,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 12
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 12
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 157,
+   "name": "North Fork Stanislaus River",
+   "width": 24.05,
+   "length_m": 351,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 37
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 37
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 168,
+   "name": "North Fork Stanislaus River",
+   "width": 24.08,
+   "length_m": 208,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 22
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 22
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 176,
+   "name": "North Fork Stanislaus River",
+   "width": 24.09,
+   "length_m": 278,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 29
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 29
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 187,
+   "name": "North Fork Stanislaus River",
+   "width": 24.1,
+   "length_m": 427,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 44
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 44
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 201,
+   "name": "North Fork Stanislaus River",
+   "width": 24.12,
+   "length_m": 217,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 23
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 23
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 204,
+   "name": "North Fork Stanislaus River",
+   "width": 24.13,
+   "length_m": 135,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 15
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 15
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 206,
+   "name": "North Fork Stanislaus River",
+   "width": 24.14,
+   "length_m": 28,
+   "before": {
+    "on": 0.25,
+    "near": 0.25,
+    "samples": 4
+   },
+   "after": {
+    "on": 0.25,
+    "near": 0.25,
+    "samples": 4
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 209,
+   "name": "San Antonio Creek",
+   "width": 6.66,
+   "length_m": 234,
+   "before": {
+    "on": 0.52,
+    "near": 0.52,
+    "samples": 25
+   },
+   "after": {
+    "on": 0.52,
+    "near": 0.52,
+    "samples": 25
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 210,
+   "name": "North Fork Stanislaus River",
+   "width": 24.18,
+   "length_m": 654,
+   "before": {
+    "on": 0.179,
+    "near": 0.179,
+    "samples": 67
+   },
+   "after": {
+    "on": 0.179,
+    "near": 0.179,
+    "samples": 67
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 216,
+   "name": null,
+   "width": 1.0,
+   "length_m": 77,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 9
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 9
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 217,
+   "name": "San Antonio Creek",
+   "width": 6.71,
+   "length_m": 418,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 43
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 43
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 227,
+   "name": "San Antonio Creek",
+   "width": 7.23,
+   "length_m": 29,
+   "before": {
+    "on": 0.5,
+    "near": 0.5,
+    "samples": 4
+   },
+   "after": {
+    "on": 0.5,
+    "near": 0.5,
+    "samples": 4
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 229,
+   "name": "North Fork Stanislaus River",
+   "width": 24.19,
+   "length_m": 40,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 6
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 6
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 231,
+   "name": "North Fork Stanislaus River",
+   "width": 24.26,
+   "length_m": 496,
+   "before": {
+    "on": 0.098,
+    "near": 0.098,
+    "samples": 51
+   },
+   "after": {
+    "on": 0.098,
+    "near": 0.098,
+    "samples": 51
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 237,
+   "name": "Beaver Creek",
+   "width": 10.55,
+   "length_m": 576,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 59
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 59
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 239,
+   "name": "North Fork Stanislaus River",
+   "width": 24.27,
+   "length_m": 172,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 19
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 19
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 240,
+   "name": null,
+   "width": 1.8,
+   "length_m": 623,
+   "before": {
+    "on": 0.562,
+    "near": 0.562,
+    "samples": 64
+   },
+   "after": {
+    "on": 0.562,
+    "near": 0.562,
+    "samples": 64
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 252,
+   "name": "North Fork Stanislaus River",
+   "width": 24.28,
+   "length_m": 90,
+   "before": {
+    "on": 0.182,
+    "near": 0.364,
+    "samples": 11
+   },
+   "after": {
+    "on": 0.182,
+    "near": 0.364,
+    "samples": 11
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 254,
+   "name": "Beaver Creek",
+   "width": 10.6,
+   "length_m": 539,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 55
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 55
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 256,
+   "name": "North Fork Stanislaus River",
+   "width": 24.3,
+   "length_m": 551,
+   "before": {
+    "on": 0.175,
+    "near": 0.211,
+    "samples": 57
+   },
+   "after": {
+    "on": 0.175,
+    "near": 0.211,
+    "samples": 57
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 258,
+   "name": "Beaver Creek",
+   "width": 10.63,
+   "length_m": 491,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 51
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 51
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 266,
+   "name": "North Fork Stanislaus River",
+   "width": 24.31,
+   "length_m": 319,
+   "before": {
+    "on": 0.061,
+    "near": 0.061,
+    "samples": 33
+   },
+   "after": {
+    "on": 0.061,
+    "near": 0.061,
+    "samples": 33
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 273,
+   "name": "Beaver Creek",
+   "width": 10.72,
+   "length_m": 1108,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 112
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 112
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 276,
+   "name": "North Fork Stanislaus River",
+   "width": 24.33,
+   "length_m": 304,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 32
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 32
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 291,
+   "name": "North Fork Stanislaus River",
+   "width": 24.33,
+   "length_m": 326,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 34
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 34
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 298,
+   "name": "North Fork Stanislaus River",
+   "width": 24.35,
+   "length_m": 120,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 13
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 13
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 299,
+   "name": "North Fork Stanislaus River",
+   "width": 24.37,
+   "length_m": 221,
+   "before": {
+    "on": 0.333,
+    "near": 0.5,
+    "samples": 24
+   },
+   "after": {
+    "on": 0.333,
+    "near": 0.5,
+    "samples": 24
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 302,
+   "name": "North Fork Stanislaus River",
+   "width": 24.38,
+   "length_m": 66,
+   "before": {
+    "on": 0.125,
+    "near": 0.125,
+    "samples": 8
+   },
+   "after": {
+    "on": 0.125,
+    "near": 0.125,
+    "samples": 8
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 305,
+   "name": "North Fork Stanislaus River",
+   "width": 24.4,
+   "length_m": 495,
+   "before": {
+    "on": 0.039,
+    "near": 0.039,
+    "samples": 51
+   },
+   "after": {
+    "on": 0.039,
+    "near": 0.039,
+    "samples": 51
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 306,
+   "name": "Beaver Creek",
+   "width": 10.77,
+   "length_m": 720,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 73
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 73
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 314,
+   "name": "North Fork Stanislaus River",
+   "width": 24.4,
+   "length_m": 111,
+   "before": {
+    "on": 0.538,
+    "near": 0.462,
+    "samples": 13
+   },
+   "after": {
+    "on": 0.538,
+    "near": 0.462,
+    "samples": 13
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 321,
+   "name": "North Fork Stanislaus River",
+   "width": 24.41,
+   "length_m": 240,
+   "before": {
+    "on": 0.36,
+    "near": 0.52,
+    "samples": 25
+   },
+   "after": {
+    "on": 0.36,
+    "near": 0.52,
+    "samples": 25
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 324,
+   "name": "Beaver Creek",
+   "width": 10.82,
+   "length_m": 760,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 78
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 78
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 326,
+   "name": "Moran Creek",
+   "width": 3.51,
+   "length_m": 454,
+   "before": {
+    "on": 0.468,
+    "near": 0.532,
+    "samples": 47
+   },
+   "after": {
+    "on": 0.468,
+    "near": 0.532,
+    "samples": 47
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 330,
+   "name": "North Fork Stanislaus River",
+   "width": 24.43,
+   "length_m": 498,
+   "before": {
+    "on": 0.392,
+    "near": 0.392,
+    "samples": 51
+   },
+   "after": {
+    "on": 0.392,
+    "near": 0.392,
+    "samples": 51
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 338,
+   "name": "Beaver Creek",
+   "width": 11.06,
+   "length_m": 321,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 34
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 34
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 339,
+   "name": "Beaver Creek",
+   "width": 11.06,
+   "length_m": 1110,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 113
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 113
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 346,
+   "name": "North Fork Stanislaus River",
+   "width": 24.44,
+   "length_m": 172,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 19
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 19
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 353,
+   "name": "North Fork Stanislaus River",
+   "width": 24.46,
+   "length_m": 685,
+   "before": {
+    "on": 0.957,
+    "near": 1.0,
+    "samples": 70
+   },
+   "after": {
+    "on": 0.957,
+    "near": 1.0,
+    "samples": 70
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 370,
+   "name": "North Fork Stanislaus River",
+   "width": 24.48,
+   "length_m": 415,
+   "before": {
+    "on": 0.093,
+    "near": 0.209,
+    "samples": 43
+   },
+   "after": {
+    "on": 0.093,
+    "near": 0.209,
+    "samples": 43
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 375,
+   "name": "North Fork Stanislaus River",
+   "width": 24.48,
+   "length_m": 74,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 9
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 9
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 379,
+   "name": "Beaver Creek",
+   "width": 10.73,
+   "length_m": 40,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 5
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 5
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  }
+ ],
+ "side_channels": [],
+ "nhd_dropped": [],
+ "undrawn": [
+  {
+   "at": [
+    1645,
+    3978
+   ],
+   "area_m2": 30775,
+   "freq_mean": 0.94,
+   "nearest_reach": "San Antonio Creek",
+   "nearest_width": 6.71,
+   "nearest_m": 54,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  },
+  {
+   "at": [
+    6178,
+    451
+   ],
+   "area_m2": 29800,
+   "freq_mean": 0.92,
+   "nearest_reach": "North Fork Stanislaus River",
+   "nearest_width": 24.46,
+   "nearest_m": 43,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  },
+  {
+   "at": [
+    1596,
+    4084
+   ],
+   "area_m2": 9900,
+   "freq_mean": 0.88,
+   "nearest_reach": "San Antonio Creek",
+   "nearest_width": 6.71,
+   "nearest_m": 47,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  },
+  {
+   "at": [
+    6082,
+    439
+   ],
+   "area_m2": 8900,
+   "freq_mean": 0.83,
+   "nearest_reach": "North Fork Stanislaus River",
+   "nearest_width": 24.46,
+   "nearest_m": 53,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  },
+  {
+   "at": [
+    6091,
+    104
+   ],
+   "area_m2": 7875,
+   "freq_mean": 0.9,
+   "nearest_reach": null,
+   "nearest_width": 1.21,
+   "nearest_m": 46,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  },
+  {
+   "at": [
+    1467,
+    3750
+   ],
+   "area_m2": 6200,
+   "freq_mean": 0.86,
+   "nearest_reach": null,
+   "nearest_width": 1.8,
+   "nearest_m": 51,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  },
+  {
+   "at": [
+    2238,
+    1434
+   ],
+   "area_m2": 5975,
+   "freq_mean": 0.82,
+   "nearest_reach": "Moran Creek",
+   "nearest_width": 3.51,
+   "nearest_m": 35,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  },
+  {
+   "at": [
+    3514,
+    137
+   ],
+   "area_m2": 5750,
+   "freq_mean": 0.81,
+   "nearest_reach": "Love Creek",
+   "nearest_width": 3.71,
+   "nearest_m": 59,
+   "map": "unmapped"
+  }
+ ]
+}

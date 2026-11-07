@@ -45,14 +45,14 @@
   "filled_from_landfire_share": 0.4363
  },
  "crowns": {
-  "maxima": 235844,
-  "dropped_on_osm_buildings": 10,
-  "dropped_low_multi_return": 695,
-  "dropped_pole_like": 1199,
-  "dropped_shrub_in_shrub_canopy": 62,
+  "maxima": 236011,
+  "dropped_on_osm_buildings": 9,
+  "dropped_low_multi_return": 693,
+  "dropped_pole_like": 1217,
+  "dropped_shrub_in_shrub_canopy": 64,
   "dropped_on_bridges": 7,
   "dropped_urban": 0,
-  "crowns": 233871,
+  "crowns": 234021,
   "confidence_terms_median": {
    "prominence": 0.907,
    "width": 0.569,
@@ -64,20 +64,20 @@
    0.808,
    0.891
   ],
-  "bytes": 1911004,
+  "bytes": 1912204,
   "crowns_per_ha": 23.4,
   "max_per_index_cell": 97,
   "height_histogram_m": {
    "4-6": 1388,
-   "6-8": 1788,
-   "8-12": 3257,
-   "12-16": 4009,
-   "16-20": 4451,
-   "20-25": 9111,
-   "25-30": 11043,
-   "30-35": 16341,
-   "35-40": 19435,
-   "40-80": 156491
+   "6-8": 1792,
+   "8-12": 3265,
+   "12-16": 4026,
+   "16-20": 4449,
+   "20-25": 9125,
+   "25-30": 11072,
+   "30-35": 16349,
+   "35-40": 19446,
+   "40-80": 156552
   },
   "height_m": {
    "median": 48.7,
@@ -89,7 +89,11 @@
    "p95": 10.57
   },
   "confidence_median": 0.808,
-  "seconds": 60.3
+  "seconds": 65.2,
+  "roads_mirrored": {
+   "mirrored_m2": 80889,
+   "road_m2": 81379
+  }
  },
  "lidar_micro": {
   "intensity": {

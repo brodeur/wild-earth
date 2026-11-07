@@ -1,0 +1,259 @@
+{
+ "units": {
+  "1": {
+   "name": "water",
+   "lithology": "surficial",
+   "cells": 2110746,
+   "elevation_m": {
+    "p5": -65.4,
+    "p25": -35.5,
+    "median": -23.8,
+    "p75": -15.2,
+    "p95": 0.0
+   },
+   "candidate": false,
+   "why_not": "water"
+  },
+  "2": {
+   "name": "Dune sand",
+   "lithology": "surficial",
+   "cells": 720693,
+   "elevation_m": {
+    "p5": 21.5,
+    "p25": 46.4,
+    "median": 61.2,
+    "p75": 75.8,
+    "p95": 98.1
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "3": {
+   "name": "Slope debris and ravine fill",
+   "lithology": "surficial",
+   "cells": 67166,
+   "elevation_m": {
+    "p5": 41.4,
+    "p25": 62.3,
+    "median": 78.7,
+    "p75": 91.7,
+    "p95": 107.9
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "4": {
+   "name": "Franciscan Complex",
+   "lithology": "sandstone_conglomerate",
+   "cells": 62599,
+   "elevation_m": {
+    "p5": 8.4,
+    "p25": 48.7,
+    "median": 80.9,
+    "p75": 112.0,
+    "p95": 201.5
+   },
+   "candidate": true
+  },
+  "5": {
+   "name": "Alluvium",
+   "lithology": "surficial",
+   "cells": 30372,
+   "elevation_m": {
+    "p5": 8.2,
+    "p25": 26.6,
+    "median": 47.1,
+    "p75": 63.9,
+    "p95": 112.5
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "6": {
+   "name": "Franciscan Complex",
+   "lithology": "sandstone_conglomerate",
+   "cells": 94651,
+   "elevation_m": {
+    "p5": 29.9,
+    "p25": 82.7,
+    "median": 127.2,
+    "p75": 176.8,
+    "p95": 236.4
+   },
+   "candidate": true
+  },
+  "7": {
+   "name": "Franciscan Complex",
+   "lithology": "greenstone_metavolcanic",
+   "cells": 111874,
+   "elevation_m": {
+    "p5": 12.9,
+    "p25": 55.9,
+    "median": 80.1,
+    "p75": 115.2,
+    "p95": 203.6
+   },
+   "candidate": true
+  },
+  "8": {
+   "name": "Undifferentiated surficial deposits",
+   "lithology": "surficial",
+   "cells": 74829,
+   "elevation_m": {
+    "p5": 6.5,
+    "p25": 13.6,
+    "median": 21.5,
+    "p75": 37.0,
+    "p95": 76.7
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "9": {
+   "name": "Colma Formation",
+   "lithology": "surficial",
+   "cells": 25003,
+   "elevation_m": {
+    "p5": 10.7,
+    "p25": 23.4,
+    "median": 38.9,
+    "p75": 52.0,
+    "p95": 66.9
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "10": {
+   "name": "Artificial fill",
+   "lithology": "surficial",
+   "cells": 74270,
+   "elevation_m": {
+    "p5": 2.6,
+    "p25": 3.8,
+    "median": 5.4,
+    "p75": 48.2,
+    "p95": 88.8
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "11": {
+   "name": "Beach sand",
+   "lithology": "surficial",
+   "cells": 20621,
+   "elevation_m": {
+    "p5": 1.4,
+    "p25": 3.3,
+    "median": 4.0,
+    "p75": 4.9,
+    "p95": 6.5
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "12": {
+   "name": "Landslide deposits",
+   "lithology": "surficial",
+   "cells": 10380,
+   "elevation_m": {
+    "p5": 1.3,
+    "p25": 12.2,
+    "median": 28.3,
+    "p75": 59.2,
+    "p95": 88.5
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "13": {
+   "name": "Older beach deposits",
+   "lithology": "surficial",
+   "cells": 2944,
+   "elevation_m": {
+    "p5": 31.7,
+    "p25": 36.8,
+    "median": 40.8,
+    "p75": 46.6,
+    "p95": 51.2
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "14": {
+   "name": "Artificial fill over marine and marsh deposits",
+   "lithology": "surficial",
+   "cells": 1986,
+   "elevation_m": {
+    "p5": 2.7,
+    "p25": 4.1,
+    "median": 4.3,
+    "p75": 4.5,
+    "p95": 4.9
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "15": {
+   "name": "",
+   "lithology": "surficial",
+   "cells": 55,
+   "elevation_m": {
+    "p5": -5.9,
+    "p25": -4.8,
+    "median": -3.2,
+    "p75": -0.8,
+    "p95": 1.7
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  }
+ },
+ "superposition": [
+  {
+   "upper": "Franciscan Complex",
+   "lower": "Franciscan Complex",
+   "contact_cells": 1932,
+   "upper_on_top": 0.7
+  },
+  {
+   "upper": "Franciscan Complex",
+   "lower": "Franciscan Complex",
+   "contact_cells": 664,
+   "upper_on_top": 0.741
+  },
+  {
+   "upper": "Franciscan Complex",
+   "lower": "Franciscan Complex",
+   "contact_cells": 358,
+   "upper_on_top": 0.218
+  }
+ ],
+ "consistent_pairs": 0.0,
+ "dropped": [
+  {
+   "unit": "Franciscan Complex",
+   "why": "not superposed: mixed sides along its contacts with Franciscan Complex"
+  },
+  {
+   "unit": "Franciscan Complex",
+   "why": "not superposed: mixed sides along its contacts with Franciscan Complex"
+  }
+ ],
+ "column": false,
+ "reason": "fewer than two units left in the column",
+ "rule": {
+  "min_cells": 2000,
+  "min_fraction": 0.0005,
+  "contact_dz_m": 1.0,
+  "min_contact": 50,
+  "superposed": 0.75,
+  "steep_deg": 25.0,
+  "min_band_fit": 0.5,
+  "min_column_fit": 0.6,
+  "max_dip_deg": 8.0,
+  "tilt_prior": 200,
+  "tilt_scale_m": 3000.0,
+  "map_tol_m": 20.0,
+  "doc": "pipeline/strata.py"
+ }
+}

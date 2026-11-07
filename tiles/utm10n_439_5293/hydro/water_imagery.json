@@ -1,0 +1,1290 @@
+{
+ "rule": {
+  "water_pixel": "seasons/s2_MM.tif: NDWI (NIR from red and NDVI) > 0 or NIR < 0.04, not bright (water_seasons.py)",
+  "water": "per 20 m pixel max(frequency, fraction): frequency = wet months / observed (>= 3); fraction = its NDWI's 75th percentile over the clear months unmixed between the never-wet land within 300 m and the tile's always-wet water (median NDWI; 0.3 with under 10 such pixels); DEM slope < 0.2, DEM > 0.5 m; bilinear onto the 5 m grid, water at >= 0.5",
+  "naip": "imagery/naip.tif is RGB (no NIR band): not used",
+  "reach": "on: water within max(w/2, 10 m); near: within max(60 m, 2 w); every 10 m; on water >= 0.6, off water: near >= 0.5, else no water seen",
+  "move": "stems of DEM reaches with width >= 10 m not on water: least-cost path on the 5 m grid within 600 m of the drawn stem on ground <= 10 m over its nearest DEM line cell (water 1 + 2 exp(-d_in/6 m), land 12 x (0.4 + 0.6 min(1, d_dem/30 m))), edge ends fixed, interior ends snapped to water within 60 m, a junction on a moved stem taken as moved, smoothed 10 m; kept when on >= 0.5 and >= the old line's + 0.2; the reaches meeting a moved node bent to it over 2 |shift| + 20 m (shift <= 30 m) or extended straight to it (one per node)",
+  "nhd_dropped": "NHD-sourced stretches with width >= 10 m, no water seen, within 600 m of a moved stem's old or new line, off the tile edge: the map's pieces of a river where the imagery shows none",
+  "width": "a moved reach takes the water's median cross-section when >= 40 m and wider than drawn",
+  "side_channels": "the river's water within 250 m, off the moved ribbon (w/2 + 10 m), its skeleton's longest path >= 150 m: a reach at its measured width (source imagery)",
+  "undrawn": "water patches >= 1600 m2 beyond w/2 + 20 m of every reach and 20 m of every kept pond"
+ },
+ "stats": {
+  "months_used": [
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "water_cells_5m": 42046,
+  "reaches_tested": 304,
+  "verdicts_before": {
+   "no water seen": 272,
+   "on water": 18,
+   "off water": 14
+  },
+  "verdicts_after": {
+   "no water seen": 272,
+   "on water": 18,
+   "off water": 14
+  },
+  "stems": 3,
+  "stems_moved": 0,
+  "reaches_moved": 0,
+  "reaches_bent": 0,
+  "reaches_extended": 0,
+  "nhd_dropped": 0,
+  "side_channels": 0,
+  "undrawn_patches": 40,
+  "undrawn_m2": 654400,
+  "undrawn_by_map": {
+   "a rewilded reservoir or pond (human water, not drawn by the rule)": 10100,
+   "unmapped": 644300
+  },
+  "seconds": 7.8
+ },
+ "stems": [
+  {
+   "reaches": 11,
+   "names": [
+    "Hoh River"
+   ],
+   "length_m": 4035,
+   "area_km2": 149.5,
+   "width": 16.37,
+   "before": {
+    "on": 0.694,
+    "near": 0.842,
+    "samples": 405
+   },
+   "verdict": "on water"
+  },
+  {
+   "reaches": 8,
+   "names": [
+    "Hoh River"
+   ],
+   "length_m": 3003,
+   "area_km2": 127.3,
+   "width": 15.07,
+   "before": {
+    "on": 0.613,
+    "near": 0.917,
+    "samples": 302
+   },
+   "verdict": "on water"
+  },
+  {
+   "reaches": 5,
+   "names": [
+    "Hoh River"
+   ],
+   "length_m": 1585,
+   "area_km2": 74.9,
+   "width": 13.48,
+   "before": {
+    "on": 0.2,
+    "near": 0.237,
+    "samples": 160
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.192,
+    "near": 0.205,
+    "samples": 156
+   }
+  }
+ ],
+ "reaches": [
+  {
+   "k": 5,
+   "name": "Hoh River",
+   "width": 15.23,
+   "length_m": 420,
+   "before": {
+    "on": 0.698,
+    "near": 1.0,
+    "samples": 43
+   },
+   "after": {
+    "on": 0.698,
+    "near": 1.0,
+    "samples": 43
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 6,
+   "name": "Hoh Creek",
+   "width": 3.76,
+   "length_m": 148,
+   "before": {
+    "on": 0.5,
+    "near": 0.5,
+    "samples": 16
+   },
+   "after": {
+    "on": 0.5,
+    "near": 0.5,
+    "samples": 16
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 9,
+   "name": "Hoh River",
+   "width": 11.16,
+   "length_m": 211,
+   "before": {
+    "on": 0.174,
+    "near": 0.304,
+    "samples": 23
+   },
+   "after": {
+    "on": 0.174,
+    "near": 0.304,
+    "samples": 23
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 10,
+   "name": "Hoh River",
+   "width": 14.17,
+   "length_m": 213,
+   "before": {
+    "on": 0.391,
+    "near": 1.0,
+    "samples": 23
+   },
+   "after": {
+    "on": 0.391,
+    "near": 1.0,
+    "samples": 23
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 12,
+   "name": "Hoh River",
+   "width": 13.48,
+   "length_m": 161,
+   "before": {
+    "on": 0.611,
+    "near": 0.778,
+    "samples": 18
+   },
+   "after": {
+    "on": 0.611,
+    "near": 0.778,
+    "samples": 18
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 13,
+   "name": null,
+   "width": 1.0,
+   "length_m": 142,
+   "before": {
+    "on": 0.625,
+    "near": 1.0,
+    "samples": 16
+   },
+   "after": {
+    "on": 0.625,
+    "near": 1.0,
+    "samples": 16
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 14,
+   "name": "Hoh River",
+   "width": 11.18,
+   "length_m": 384,
+   "before": {
+    "on": 0.075,
+    "near": 0.075,
+    "samples": 40
+   },
+   "after": {
+    "on": 0.075,
+    "near": 0.075,
+    "samples": 40
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 15,
+   "name": "Hoh River",
+   "width": 14.94,
+   "length_m": 536,
+   "before": {
+    "on": 0.545,
+    "near": 1.0,
+    "samples": 55
+   },
+   "after": {
+    "on": 0.545,
+    "near": 1.0,
+    "samples": 55
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 17,
+   "name": "Hoh River",
+   "width": 14.59,
+   "length_m": 69,
+   "before": {
+    "on": 0.875,
+    "near": 1.0,
+    "samples": 8
+   },
+   "after": {
+    "on": 0.875,
+    "near": 1.0,
+    "samples": 8
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 18,
+   "name": "Hoh River",
+   "width": 15.31,
+   "length_m": 570,
+   "before": {
+    "on": 0.621,
+    "near": 0.948,
+    "samples": 58
+   },
+   "after": {
+    "on": 0.621,
+    "near": 0.948,
+    "samples": 58
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 19,
+   "name": "Hoh River",
+   "width": 14.52,
+   "length_m": 388,
+   "before": {
+    "on": 0.625,
+    "near": 0.95,
+    "samples": 40
+   },
+   "after": {
+    "on": 0.625,
+    "near": 0.95,
+    "samples": 40
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 20,
+   "name": "Hoh River",
+   "width": 14.57,
+   "length_m": 350,
+   "before": {
+    "on": 0.472,
+    "near": 1.0,
+    "samples": 36
+   },
+   "after": {
+    "on": 0.472,
+    "near": 1.0,
+    "samples": 36
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 22,
+   "name": "Hoh River",
+   "width": 13.39,
+   "length_m": 467,
+   "before": {
+    "on": 0.188,
+    "near": 0.188,
+    "samples": 48
+   },
+   "after": {
+    "on": 0.188,
+    "near": 0.188,
+    "samples": 48
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 24,
+   "name": "Hoh River",
+   "width": 14.22,
+   "length_m": 594,
+   "before": {
+    "on": 0.246,
+    "near": 0.639,
+    "samples": 61
+   },
+   "after": {
+    "on": 0.246,
+    "near": 0.639,
+    "samples": 61
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 25,
+   "name": "Hoh River",
+   "width": 15.38,
+   "length_m": 779,
+   "before": {
+    "on": 0.684,
+    "near": 0.886,
+    "samples": 79
+   },
+   "after": {
+    "on": 0.684,
+    "near": 0.886,
+    "samples": 79
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 26,
+   "name": "Hoh River",
+   "width": 13.28,
+   "length_m": 363,
+   "before": {
+    "on": 0.211,
+    "near": 0.237,
+    "samples": 38
+   },
+   "after": {
+    "on": 0.211,
+    "near": 0.237,
+    "samples": 38
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 28,
+   "name": "Hoh River",
+   "width": 15.07,
+   "length_m": 324,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 34
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 34
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 29,
+   "name": "Hoh River",
+   "width": 15.34,
+   "length_m": 145,
+   "before": {
+    "on": 0.0,
+    "near": 0.188,
+    "samples": 16
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.188,
+    "samples": 16
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 30,
+   "name": "Hoh River",
+   "width": 15.04,
+   "length_m": 529,
+   "before": {
+    "on": 0.981,
+    "near": 1.0,
+    "samples": 54
+   },
+   "after": {
+    "on": 0.981,
+    "near": 1.0,
+    "samples": 54
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 32,
+   "name": "Hoh River",
+   "width": 15.32,
+   "length_m": 259,
+   "before": {
+    "on": 0.704,
+    "near": 0.926,
+    "samples": 27
+   },
+   "after": {
+    "on": 0.704,
+    "near": 0.926,
+    "samples": 27
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 36,
+   "name": "Hoh River",
+   "width": 15.97,
+   "length_m": 111,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 13
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 13
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 38,
+   "name": "Hoh River",
+   "width": 16.16,
+   "length_m": 84,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 10
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 10
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 39,
+   "name": "Hoh River",
+   "width": 16.01,
+   "length_m": 194,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 21
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 21
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 40,
+   "name": "Hoh River",
+   "width": 16.24,
+   "length_m": 48,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 6
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 6
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 42,
+   "name": null,
+   "width": 1.95,
+   "length_m": 78,
+   "before": {
+    "on": 0.111,
+    "near": 1.0,
+    "samples": 9
+   },
+   "after": {
+    "on": 0.111,
+    "near": 1.0,
+    "samples": 9
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 43,
+   "name": "Hoh River",
+   "width": 16.26,
+   "length_m": 308,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 32
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 32
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 44,
+   "name": "Hoh River",
+   "width": 16.37,
+   "length_m": 1116,
+   "before": {
+    "on": 0.602,
+    "near": 0.664,
+    "samples": 113
+   },
+   "after": {
+    "on": 0.602,
+    "near": 0.664,
+    "samples": 113
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 46,
+   "name": null,
+   "width": 1.0,
+   "length_m": 123,
+   "before": {
+    "on": 0.786,
+    "near": 0.786,
+    "samples": 14
+   },
+   "after": {
+    "on": 0.786,
+    "near": 0.786,
+    "samples": 14
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 75,
+   "name": null,
+   "width": 1.0,
+   "length_m": 26,
+   "before": {
+    "on": 0.25,
+    "near": 1.0,
+    "samples": 4
+   },
+   "after": {
+    "on": 0.25,
+    "near": 1.0,
+    "samples": 4
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 147,
+   "name": null,
+   "width": 3.03,
+   "length_m": 96,
+   "before": {
+    "on": 0.0,
+    "near": 0.545,
+    "samples": 11
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.545,
+    "samples": 11
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 171,
+   "name": null,
+   "width": 1.0,
+   "length_m": 88,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 10
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 10
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 191,
+   "name": null,
+   "width": 2.48,
+   "length_m": 20,
+   "before": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 4
+   },
+   "after": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 4
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 193,
+   "name": null,
+   "width": 2.48,
+   "length_m": 18,
+   "before": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 3
+   },
+   "after": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 3
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 206,
+   "name": null,
+   "width": 1.0,
+   "length_m": 308,
+   "before": {
+    "on": 0.562,
+    "near": 0.969,
+    "samples": 32
+   },
+   "after": {
+    "on": 0.562,
+    "near": 0.969,
+    "samples": 32
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 230,
+   "name": "Mount Tom Creek",
+   "width": 6.15,
+   "length_m": 45,
+   "before": {
+    "on": 0.167,
+    "near": 1.0,
+    "samples": 6
+   },
+   "after": {
+    "on": 0.167,
+    "near": 1.0,
+    "samples": 6
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 403,
+   "name": null,
+   "width": 14.58,
+   "length_m": 78,
+   "before": {
+    "on": 0.222,
+    "near": 0.778,
+    "samples": 9
+   },
+   "after": {
+    "on": 0.222,
+    "near": 0.778,
+    "samples": 9
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 409,
+   "name": null,
+   "width": 1.12,
+   "length_m": 51,
+   "before": {
+    "on": 0.429,
+    "near": 1.0,
+    "samples": 7
+   },
+   "after": {
+    "on": 0.429,
+    "near": 1.0,
+    "samples": 7
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  }
+ ],
+ "side_channels": [],
+ "nhd_dropped": [],
+ "undrawn": [
+  {
+   "at": [
+    9829,
+    3816
+   ],
+   "area_m2": 80050,
+   "freq_mean": 0.89,
+   "nearest_reach": null,
+   "nearest_width": 1.0,
+   "nearest_m": 145,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    3237,
+    9881
+   ],
+   "area_m2": 76300,
+   "freq_mean": 0.81,
+   "nearest_reach": null,
+   "nearest_width": 1.0,
+   "nearest_m": 46,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    2445,
+    9748
+   ],
+   "area_m2": 47125,
+   "freq_mean": 0.83,
+   "nearest_reach": "Hoh River",
+   "nearest_width": 15.31,
+   "nearest_m": 122,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    9293,
+    4137
+   ],
+   "area_m2": 46350,
+   "freq_mean": 0.88,
+   "nearest_reach": null,
+   "nearest_width": 2.48,
+   "nearest_m": 134,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    1795,
+    9591
+   ],
+   "area_m2": 42800,
+   "freq_mean": 0.81,
+   "nearest_reach": "Hoh River",
+   "nearest_width": 15.38,
+   "nearest_m": 108,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    9149,
+    3803
+   ],
+   "area_m2": 42650,
+   "freq_mean": 0.85,
+   "nearest_reach": null,
+   "nearest_width": 1.82,
+   "nearest_m": 188,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    4479,
+    9765
+   ],
+   "area_m2": 40650,
+   "freq_mean": 0.86,
+   "nearest_reach": "Hoh River",
+   "nearest_width": 14.94,
+   "nearest_m": 91,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    4007,
+    9796
+   ],
+   "area_m2": 29050,
+   "freq_mean": 0.85,
+   "nearest_reach": "Hoh River",
+   "nearest_width": 15.04,
+   "nearest_m": 64,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    4882,
+    9788
+   ],
+   "area_m2": 27075,
+   "freq_mean": 0.83,
+   "nearest_reach": "Hoh River",
+   "nearest_width": 14.57,
+   "nearest_m": 87,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    3917,
+    9672
+   ],
+   "area_m2": 18775,
+   "freq_mean": 0.73,
+   "nearest_reach": "Hoh River",
+   "nearest_width": 15.04,
+   "nearest_m": 56,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    5889,
+    9899
+   ],
+   "area_m2": 16750,
+   "freq_mean": 0.7,
+   "nearest_reach": "Hoh River",
+   "nearest_width": 14.17,
+   "nearest_m": 82,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    7318,
+    2818
+   ],
+   "area_m2": 14975,
+   "freq_mean": 0.91,
+   "nearest_reach": null,
+   "nearest_width": 1.33,
+   "nearest_m": 261,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    5704,
+    2270
+   ],
+   "area_m2": 14450,
+   "freq_mean": 0.82,
+   "nearest_reach": null,
+   "nearest_width": 1.7,
+   "nearest_m": 284,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    5193,
+    9865
+   ],
+   "area_m2": 14050,
+   "freq_mean": 0.86,
+   "nearest_reach": "Hoh River",
+   "nearest_width": 14.52,
+   "nearest_m": 67,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    5167,
+    2154
+   ],
+   "area_m2": 12000,
+   "freq_mean": 0.84,
+   "nearest_reach": null,
+   "nearest_width": 1.0,
+   "nearest_m": 399,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    5912,
+    2779
+   ],
+   "area_m2": 10875,
+   "freq_mean": 0.88,
+   "nearest_reach": null,
+   "nearest_width": 1.7,
+   "nearest_m": 64,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    4592,
+    3603
+   ],
+   "area_m2": 10100,
+   "freq_mean": 0.87,
+   "nearest_reach": null,
+   "nearest_width": 1.15,
+   "nearest_m": 44,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  },
+  {
+   "at": [
+    1496,
+    9279
+   ],
+   "area_m2": 10025,
+   "freq_mean": 0.75,
+   "nearest_reach": null,
+   "nearest_width": 5.12,
+   "nearest_m": 50,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    6120,
+    9930
+   ],
+   "area_m2": 8275,
+   "freq_mean": 0.79,
+   "nearest_reach": "Hoh River",
+   "nearest_width": 14.17,
+   "nearest_m": 61,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    985,
+    9178
+   ],
+   "area_m2": 7450,
+   "freq_mean": 0.73,
+   "nearest_reach": "Hoh River",
+   "nearest_width": 16.26,
+   "nearest_m": 59,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    5790,
+    2836
+   ],
+   "area_m2": 7225,
+   "freq_mean": 0.65,
+   "nearest_reach": null,
+   "nearest_width": 1.53,
+   "nearest_m": 157,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    5357,
+    9756
+   ],
+   "area_m2": 7150,
+   "freq_mean": 0.73,
+   "nearest_reach": "Hoh River",
+   "nearest_width": 14.52,
+   "nearest_m": 50,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    1239,
+    9334
+   ],
+   "area_m2": 7000,
+   "freq_mean": 0.76,
+   "nearest_reach": "Hoh River",
+   "nearest_width": 16.01,
+   "nearest_m": 37,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    4786,
+    9909
+   ],
+   "area_m2": 6625,
+   "freq_mean": 0.76,
+   "nearest_reach": "Hoh River",
+   "nearest_width": 14.57,
+   "nearest_m": 50,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    9089,
+    3004
+   ],
+   "area_m2": 6550,
+   "freq_mean": 0.71,
+   "nearest_reach": null,
+   "nearest_width": 1.82,
+   "nearest_m": 237,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    1022,
+    9302
+   ],
+   "area_m2": 6050,
+   "freq_mean": 0.74,
+   "nearest_reach": "Clide Creek",
+   "nearest_width": 2.14,
+   "nearest_m": 56,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    4298,
+    9838
+   ],
+   "area_m2": 5850,
+   "freq_mean": 0.66,
+   "nearest_reach": "Hoh River",
+   "nearest_width": 14.94,
+   "nearest_m": 62,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    5166,
+    2348
+   ],
+   "area_m2": 4250,
+   "freq_mean": 0.81,
+   "nearest_reach": null,
+   "nearest_width": 1.0,
+   "nearest_m": 222,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    3449,
+    4100
+   ],
+   "area_m2": 4125,
+   "freq_mean": 0.59,
+   "nearest_reach": null,
+   "nearest_width": 1.27,
+   "nearest_m": 477,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    7006,
+    36
+   ],
+   "area_m2": 4025,
+   "freq_mean": 0.85,
+   "nearest_reach": null,
+   "nearest_width": 1.19,
+   "nearest_m": 541,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    999,
+    144
+   ],
+   "area_m2": 3750,
+   "freq_mean": 0.65,
+   "nearest_reach": null,
+   "nearest_width": 1.0,
+   "nearest_m": 328,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    5440,
+    2508
+   ],
+   "area_m2": 3675,
+   "freq_mean": 0.78,
+   "nearest_reach": null,
+   "nearest_width": 1.15,
+   "nearest_m": 119,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    5571,
+    9825
+   ],
+   "area_m2": 3025,
+   "freq_mean": 0.62,
+   "nearest_reach": "Hoh River",
+   "nearest_width": 14.22,
+   "nearest_m": 48,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    6501,
+    9987
+   ],
+   "area_m2": 2850,
+   "freq_mean": 0.78,
+   "nearest_reach": null,
+   "nearest_width": 1.0,
+   "nearest_m": 222,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    6997,
+    2903
+   ],
+   "area_m2": 2575,
+   "freq_mean": 0.7,
+   "nearest_reach": null,
+   "nearest_width": 1.0,
+   "nearest_m": 226,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    7283,
+    205
+   ],
+   "area_m2": 2175,
+   "freq_mean": 0.7,
+   "nearest_reach": null,
+   "nearest_width": 1.19,
+   "nearest_m": 309,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    6844,
+    3705
+   ],
+   "area_m2": 2175,
+   "freq_mean": 0.58,
+   "nearest_reach": "Glacier Creek",
+   "nearest_width": 3.59,
+   "nearest_m": 23,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    7087,
+    157
+   ],
+   "area_m2": 1925,
+   "freq_mean": 0.71,
+   "nearest_reach": null,
+   "nearest_width": 1.19,
+   "nearest_m": 396,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    9402,
+    4022
+   ],
+   "area_m2": 1900,
+   "freq_mean": 0.75,
+   "nearest_reach": null,
+   "nearest_width": 1.0,
+   "nearest_m": 186,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    5948,
+    9775
+   ],
+   "area_m2": 1725,
+   "freq_mean": 0.73,
+   "nearest_reach": null,
+   "nearest_width": 1.0,
+   "nearest_m": 52,
+   "map": "unmapped"
+  }
+ ]
+}

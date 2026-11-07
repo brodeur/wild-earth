@@ -1,0 +1,224 @@
+{
+ "tile": "utm11n_270_4180",
+ "version": "1",
+ "context": {
+  "centre": [
+   -119.55508840977352,
+   37.784666282263025
+  ],
+  "elevation_m": null,
+  "koppen": null,
+  "group": null,
+  "wcvp_area": null
+ },
+ "plots": [],
+ "rule": "pipeline/tree_cards.py choose(): plots, then named trees of open place descriptions, then the tile's most-recorded WCVP trees that reach the subcanopy; shares by tier (TIER_SHARE)",
+ "trees": [
+  {
+   "id": "cornus_nuttallii",
+   "scientific": "Cornus nuttallii",
+   "family": "Cornaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 439.0,
+   "evidence": [
+    "GBIF: 439 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.2829,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "calocedrus_decurrens",
+   "scientific": "Calocedrus decurrens",
+   "family": "Cupressaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 305.0,
+   "evidence": [
+    "GBIF: 305 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.1965,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "quercus_kelloggii",
+   "scientific": "Quercus kelloggii",
+   "family": "Fagaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 289.0,
+   "evidence": [
+    "GBIF: 289 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.1862,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "acer_macrophyllum",
+   "scientific": "Acer macrophyllum",
+   "family": "Sapindaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 167.0,
+   "evidence": [
+    "GBIF: 167 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.1076,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "umbellularia_californica",
+   "scientific": "Umbellularia californica",
+   "family": "Lauraceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 124.0,
+   "evidence": [
+    "GBIF: 124 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0799,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "pinus_ponderosa",
+   "scientific": "Pinus ponderosa",
+   "family": "Pinaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 66.0,
+   "evidence": [
+    "GBIF: 66 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0425,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "pseudotsuga_menziesii",
+   "scientific": "Pseudotsuga menziesii",
+   "family": "Pinaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 48.0,
+   "evidence": [
+    "GBIF: 48 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0309,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "abies_concolor",
+   "scientific": "Abies concolor",
+   "family": "Pinaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 40.0,
+   "evidence": [
+    "GBIF: 40 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0258,
+   "research": false,
+   "card": true
+  },
+  {
+   "id": "sequoiadendron_giganteum",
+   "scientific": "Sequoiadendron giganteum",
+   "family": "Cupressaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 38.0,
+   "evidence": [
+    "GBIF: 38 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0245,
+   "research": false,
+   "card": true
+  },
+  {
+   "id": "juniperus_occidentalis",
+   "scientific": "Juniperus occidentalis",
+   "family": "Cupressaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 36.0,
+   "evidence": [
+    "GBIF: 36 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0232,
+   "research": false,
+   "card": false
+  }
+ ],
+ "queued": [
+  {
+   "id": "cornus_nuttallii",
+   "scientific": "Cornus nuttallii",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "calocedrus_decurrens",
+   "scientific": "Calocedrus decurrens",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "quercus_kelloggii",
+   "scientific": "Quercus kelloggii",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "acer_macrophyllum",
+   "scientific": "Acer macrophyllum",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "umbellularia_californica",
+   "scientific": "Umbellularia californica",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "pinus_ponderosa",
+   "scientific": "Pinus ponderosa",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "pseudotsuga_menziesii",
+   "scientific": "Pseudotsuga menziesii",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "abies_concolor",
+   "scientific": "Abies concolor",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "sequoiadendron_giganteum",
+   "scientific": "Sequoiadendron giganteum",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "juniperus_occidentalis",
+   "scientific": "Juniperus occidentalis",
+   "why": "needs a research record (its height decides whether it stays)"
+  }
+ ],
+ "log": [
+  "plot vela_apaza_2024_los_amigos: not used (7606 km, 0 m apart, climate Am)"
+ ],
+ "cards_written": []
+}

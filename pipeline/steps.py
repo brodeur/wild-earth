@@ -489,7 +489,15 @@ def _crowns(tile, m, force):
     # The crown finder again, now that osm (buildings, bridges), veg (the rewilded classes) and derive (the dense-urban
     # mask) exist. Needs vegetation/multi_1m.tif (the lidar step writes it) or the kept point-cloud grids.
     from .lidar import build_crowns, build_dem_1m, layers as lidar_layers
-    build_crowns(tile)
+    try:
+        build_crowns(tile)
+    except RuntimeError as e:
+        # products from before multi_1m (the San Francisco cells) and no kept grids: the crowns found then stay, so the
+        # steps after (the ground texture) still run; the road canopy mirror waits for `--force lidar` (2026-11-07)
+        if "multi_1m" not in str(e) or not tile.path("client/trees_lidar.bin").exists():
+            raise
+        runlog.fallback("the crowns found before multi_1m existed are kept (no road canopy mirror): " + str(e)[:160],
+                        product="crowns_kept")
     stats = read_json(tile.path("terrain/lidar_stats.json"))
     add_layer(m, tile, "client.trees_lidar", lidar_layers(tile, build_dem_1m(tile), stats)["client.trees_lidar"], fetched=False)
 

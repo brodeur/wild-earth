@@ -1,0 +1,273 @@
+{
+ "units": {
+  "1": {
+   "name": "Sentinel Granodiorite",
+   "lithology": "granitic",
+   "cells": 683608,
+   "elevation_m": {
+    "p5": 1619.1,
+    "p25": 2176.6,
+    "median": 2269.6,
+    "p75": 2494.1,
+    "p95": 2600.7
+   },
+   "candidate": true
+  },
+  "2": {
+   "name": "Talus",
+   "lithology": "surficial",
+   "cells": 166166,
+   "elevation_m": {
+    "p5": 1219.9,
+    "p25": 1254.3,
+    "median": 1308.7,
+    "p75": 1439.4,
+    "p95": 1613.7
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "3": {
+   "name": "Half Dome Granodiorite",
+   "lithology": "granitic",
+   "cells": 1466211,
+   "elevation_m": {
+    "p5": 1631.4,
+    "p25": 2072.1,
+    "median": 2285.3,
+    "p75": 2421.7,
+    "p95": 2571.4
+   },
+   "candidate": true
+  },
+  "4": {
+   "name": "Granodiorite of Kuna Crest and similar rocks",
+   "lithology": "granitic",
+   "cells": 525656,
+   "elevation_m": {
+    "p5": 1755.1,
+    "p25": 2192.9,
+    "median": 2441.7,
+    "p75": 2563.4,
+    "p95": 2768.9
+   },
+   "candidate": true
+  },
+  "5": {
+   "name": "El Capitan Granite and similar Rocks",
+   "lithology": "granitic",
+   "cells": 373698,
+   "elevation_m": {
+    "p5": 2095.5,
+    "p25": 2214.6,
+    "median": 2344.6,
+    "p75": 2624.8,
+    "p95": 2902.2
+   },
+   "candidate": true
+  },
+  "6": {
+   "name": "Aplite and pegmatite",
+   "lithology": "granitic",
+   "cells": 58077,
+   "elevation_m": {
+    "p5": 1866.1,
+    "p25": 2458.0,
+    "median": 2528.7,
+    "p75": 2584.5,
+    "p95": 2647.2
+   },
+   "candidate": true
+  },
+  "7": {
+   "name": "Alluvium",
+   "lithology": "surficial",
+   "cells": 191079,
+   "elevation_m": {
+    "p5": 1206.6,
+    "p25": 1209.3,
+    "median": 1212.7,
+    "p75": 1247.3,
+    "p95": 2120.1
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "8": {
+   "name": "Tioga Till",
+   "lithology": "surficial",
+   "cells": 479386,
+   "elevation_m": {
+    "p5": 2097.5,
+    "p25": 2317.5,
+    "median": 2425.2,
+    "p75": 2513.1,
+    "p95": 2644.1
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "9": {
+   "name": "Pre-Tahoe Till",
+   "lithology": "surficial",
+   "cells": 32721,
+   "elevation_m": {
+    "p5": 2213.0,
+    "p25": 2250.2,
+    "median": 2280.2,
+    "p75": 2339.4,
+    "p95": 2410.2
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "10": {
+   "name": "Tahoe Till",
+   "lithology": "surficial",
+   "cells": 10318,
+   "elevation_m": {
+    "p5": 2478.0,
+    "p25": 2496.5,
+    "median": 2514.5,
+    "p75": 2532.9,
+    "p95": 2554.6
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "11": {
+   "name": "Metavolcanic rocks, undivided",
+   "lithology": "greenstone_metavolcanic",
+   "cells": 6883,
+   "elevation_m": {
+    "p5": 2040.0,
+    "p25": 2418.8,
+    "median": 2445.4,
+    "p75": 2463.2,
+    "p95": 2483.3
+   },
+   "candidate": true
+  },
+  "12": {
+   "name": "Diorite and gabbro",
+   "lithology": "granitic",
+   "cells": 3367,
+   "elevation_m": {
+    "p5": 2829.1,
+    "p25": 2883.7,
+    "median": 2926.0,
+    "p75": 2964.7,
+    "p95": 3000.4
+   },
+   "candidate": true
+  },
+  "13": {
+   "name": "water",
+   "lithology": "surficial",
+   "cells": 2830,
+   "elevation_m": {
+    "p5": 1209.0,
+    "p25": 1246.0,
+    "median": 1574.9,
+    "p75": 1608.2,
+    "p95": 2578.4
+   },
+   "candidate": false,
+   "why_not": "water"
+  }
+ },
+ "superposition": [
+  {
+   "upper": "El Capitan Granite and similar Rocks",
+   "lower": "Sentinel Granodiorite",
+   "contact_cells": 6007,
+   "upper_on_top": 0.58
+  },
+  {
+   "upper": "Aplite and pegmatite",
+   "lower": "Half Dome Granodiorite",
+   "contact_cells": 2618,
+   "upper_on_top": 0.67
+  },
+  {
+   "upper": "Granodiorite of Kuna Crest and similar rocks",
+   "lower": "El Capitan Granite and similar Rocks",
+   "contact_cells": 2215,
+   "upper_on_top": 0.335
+  },
+  {
+   "upper": "Granodiorite of Kuna Crest and similar rocks",
+   "lower": "Half Dome Granodiorite",
+   "contact_cells": 1053,
+   "upper_on_top": 0.681
+  },
+  {
+   "upper": "Granodiorite of Kuna Crest and similar rocks",
+   "lower": "Sentinel Granodiorite",
+   "contact_cells": 393,
+   "upper_on_top": 0.132
+  },
+  {
+   "upper": "Metavolcanic rocks, undivided",
+   "lower": "Granodiorite of Kuna Crest and similar rocks",
+   "contact_cells": 298,
+   "upper_on_top": 0.846
+  },
+  {
+   "upper": "Diorite and gabbro",
+   "lower": "El Capitan Granite and similar Rocks",
+   "contact_cells": 155,
+   "upper_on_top": 0.645
+  },
+  {
+   "upper": "Metavolcanic rocks, undivided",
+   "lower": "El Capitan Granite and similar Rocks",
+   "contact_cells": 72,
+   "upper_on_top": 0.917
+  }
+ ],
+ "consistent_pairs": 0.25,
+ "dropped": [
+  {
+   "unit": "Diorite and gabbro",
+   "why": "not superposed: mixed sides along its contacts with El Capitan Granite and similar Rocks"
+  },
+  {
+   "unit": "Aplite and pegmatite",
+   "why": "not superposed: mixed sides along its contacts with Half Dome Granodiorite"
+  },
+  {
+   "unit": "El Capitan Granite and similar Rocks",
+   "why": "not superposed: mixed sides along its contacts with Granodiorite of Kuna Crest and similar rocks, Sentinel Granodiorite"
+  },
+  {
+   "unit": "Granodiorite of Kuna Crest and similar rocks",
+   "why": "not superposed: mixed sides along its contacts with Half Dome Granodiorite, Sentinel Granodiorite"
+  },
+  {
+   "unit": "Half Dome Granodiorite",
+   "why": "no base contact in the tile"
+  },
+  {
+   "unit": "Sentinel Granodiorite",
+   "why": "its base is not seen in the tile: below the column"
+  }
+ ],
+ "column": false,
+ "reason": "fewer than two units left in the column",
+ "rule": {
+  "min_cells": 2000,
+  "min_fraction": 0.0005,
+  "contact_dz_m": 1.0,
+  "min_contact": 50,
+  "superposed": 0.75,
+  "steep_deg": 25.0,
+  "min_band_fit": 0.5,
+  "min_column_fit": 0.6,
+  "max_dip_deg": 8.0,
+  "tilt_prior": 200,
+  "tilt_scale_m": 3000.0,
+  "map_tol_m": 20.0,
+  "doc": "pipeline/strata.py"
+ }
+}

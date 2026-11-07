@@ -34,39 +34,39 @@
   "shrub_cover_pct": 11.6
  },
  "crowns": {
-  "maxima": 403965,
-  "dropped_on_osm_buildings": 33,
-  "dropped_low_multi_return": 1589,
-  "dropped_pole_like": 532,
-  "dropped_shrub_in_shrub_canopy": 3793,
-  "dropped_on_bridges": 0,
+  "maxima": 414828,
+  "dropped_on_osm_buildings": 29,
+  "dropped_low_multi_return": 1680,
+  "dropped_pole_like": 577,
+  "dropped_shrub_in_shrub_canopy": 3856,
+  "dropped_on_bridges": 49,
   "dropped_urban": 0,
-  "crowns": 398018,
+  "crowns": 408637,
   "confidence_terms_median": {
-   "prominence": 0.836,
+   "prominence": 0.833,
    "width": 1.0,
    "multi_return": 1.0,
    "height": 1.0
   },
   "confidence_quantiles_p10_p50_p90": [
-   0.771,
-   0.918,
+   0.77,
+   0.916,
    0.994
   ],
-  "bytes": 3224180,
-  "crowns_per_ha": 39.8,
+  "bytes": 3309132,
+  "crowns_per_ha": 40.9,
   "max_per_index_cell": 102,
   "height_histogram_m": {
-   "4-6": 12537,
-   "6-8": 18794,
-   "8-12": 102391,
-   "12-16": 162081,
-   "16-20": 59013,
-   "20-25": 25417,
-   "25-30": 12097,
-   "30-35": 4323,
-   "35-40": 1126,
-   "40-80": 239
+   "4-6": 12596,
+   "6-8": 19253,
+   "8-12": 105145,
+   "12-16": 166692,
+   "16-20": 60790,
+   "20-25": 26024,
+   "25-30": 12376,
+   "30-35": 4391,
+   "35-40": 1135,
+   "40-80": 235
   },
   "height_m": {
    "median": 13.5,
@@ -74,11 +74,15 @@
    "max": 53.6
   },
   "radius_m": {
-   "median": 5.2,
-   "p95": 8.0
+   "median": 5.17,
+   "p95": 7.96
   },
-  "confidence_median": 0.918,
-  "seconds": 92.8
+  "confidence_median": 0.916,
+  "seconds": 60.2,
+  "roads_mirrored": {
+   "mirrored_m2": 4252615,
+   "road_m2": 4341314
+  }
  },
  "lidar_micro": {
   "intensity": {

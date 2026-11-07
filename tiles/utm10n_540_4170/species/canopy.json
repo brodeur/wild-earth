@@ -1,0 +1,144 @@
+{
+ "tile": "utm10n_540_4170",
+ "version": "1",
+ "context": {
+  "centre": [
+   -122.48935064650215,
+   37.72114152717581
+  ],
+  "elevation_m": null,
+  "koppen": null,
+  "group": null,
+  "wcvp_area": null
+ },
+ "plots": [],
+ "rule": "pipeline/tree_cards.py choose(): plots, then named trees of open place descriptions, then the tile's most-recorded WCVP trees that reach the subcanopy; shares by tier (TIER_SHARE)",
+ "trees": [
+  {
+   "id": "oemleria_cerasiformis",
+   "scientific": "Oemleria cerasiformis",
+   "family": "Rosaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 219.0,
+   "evidence": [
+    "GBIF: 219 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.216,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "quercus_agrifolia",
+   "scientific": "Quercus agrifolia",
+   "family": "Fagaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 172.0,
+   "evidence": [
+    "GBIF: 172 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.1696,
+   "research": false,
+   "card": true
+  },
+  {
+   "id": "aesculus_californica",
+   "scientific": "Aesculus californica",
+   "family": "Sapindaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 165.0,
+   "evidence": [
+    "GBIF: 165 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.1627,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "hesperocyparis_macrocarpa",
+   "scientific": "Hesperocyparis macrocarpa",
+   "family": "Cupressaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 160.0,
+   "evidence": [
+    "GBIF: 160 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.1578,
+   "research": false,
+   "card": true
+  },
+  {
+   "id": "eucalyptus_globulus",
+   "scientific": "Eucalyptus globulus",
+   "family": "Myrtaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 157.0,
+   "evidence": [
+    "GBIF: 157 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.1548,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "heteromeles_arbutifolia",
+   "scientific": "Heteromeles arbutifolia",
+   "family": "Rosaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 141.0,
+   "evidence": [
+    "GBIF: 141 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.1391,
+   "research": false,
+   "card": false
+  }
+ ],
+ "queued": [
+  {
+   "id": "oemleria_cerasiformis",
+   "scientific": "Oemleria cerasiformis",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "quercus_agrifolia",
+   "scientific": "Quercus agrifolia",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "aesculus_californica",
+   "scientific": "Aesculus californica",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "hesperocyparis_macrocarpa",
+   "scientific": "Hesperocyparis macrocarpa",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "eucalyptus_globulus",
+   "scientific": "Eucalyptus globulus",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "heteromeles_arbutifolia",
+   "scientific": "Heteromeles arbutifolia",
+   "why": "needs a research record (its height decides whether it stays)"
+  }
+ ],
+ "log": [
+  "plot vela_apaza_2024_los_amigos: not used (7811 km, 0 m apart, climate Am)"
+ ],
+ "cards_written": []
+}

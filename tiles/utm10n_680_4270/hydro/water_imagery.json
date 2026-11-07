@@ -1,0 +1,932 @@
+{
+ "rule": {
+  "water_pixel": "seasons/s2_MM.tif: NDWI (NIR from red and NDVI) > 0 or NIR < 0.04, not bright (water_seasons.py)",
+  "water": "per 20 m pixel max(frequency, fraction): frequency = wet months / observed (>= 3); fraction = its NDWI's 75th percentile over the clear months unmixed between the never-wet land within 300 m and the tile's always-wet water (median NDWI; 0.3 with under 10 such pixels); DEM slope < 0.2, DEM > 0.5 m; bilinear onto the 5 m grid, water at >= 0.5",
+  "naip": "imagery/naip.tif is RGB (no NIR band): not used",
+  "reach": "on: water within max(w/2, 10 m); near: within max(60 m, 2 w); every 10 m; on water >= 0.6, off water: near >= 0.5, else no water seen",
+  "move": "stems of DEM reaches with width >= 10 m not on water: least-cost path on the 5 m grid within 600 m of the drawn stem on ground <= 10 m over its nearest DEM line cell (water 1 + 2 exp(-d_in/6 m), land 12 x (0.4 + 0.6 min(1, d_dem/30 m))), edge ends fixed, interior ends snapped to water within 60 m, a junction on a moved stem taken as moved, smoothed 10 m; kept when on >= 0.5 and >= the old line's + 0.2; the reaches meeting a moved node bent to it over 2 |shift| + 20 m (shift <= 30 m) or extended straight to it (one per node)",
+  "nhd_dropped": "NHD-sourced stretches with width >= 10 m, no water seen, within 600 m of a moved stem's old or new line, off the tile edge: the map's pieces of a river where the imagery shows none",
+  "width": "a moved reach takes the water's median cross-section when >= 40 m and wider than drawn",
+  "side_channels": "the river's water within 250 m, off the moved ribbon (w/2 + 10 m), its skeleton's longest path >= 150 m: a reach at its measured width (source imagery)",
+  "undrawn": "water patches >= 1600 m2 beyond w/2 + 20 m of every reach and 20 m of every kept pond"
+ },
+ "stats": {
+  "months_used": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "water_cells_5m": 3045,
+  "reaches_tested": 397,
+  "verdicts_before": {
+   "no water seen": 393,
+   "on water": 1,
+   "off water": 3
+  },
+  "verdicts_after": {
+   "no water seen": 393,
+   "on water": 1,
+   "off water": 3
+  },
+  "stems": 5,
+  "stems_moved": 0,
+  "reaches_moved": 0,
+  "reaches_bent": 0,
+  "reaches_extended": 0,
+  "nhd_dropped": 0,
+  "side_channels": 0,
+  "undrawn_patches": 4,
+  "undrawn_m2": 15325,
+  "undrawn_by_map": {
+   "a rewilded reservoir or pond (human water, not drawn by the rule)": 15325
+  },
+  "seconds": 8.4
+ },
+ "stems": [
+  {
+   "reaches": 1,
+   "names": [
+    "North Fork Cosumnes River"
+   ],
+   "length_m": 333,
+   "area_km2": 546.1,
+   "width": 27.28,
+   "before": {
+    "on": 0.029,
+    "near": 0.029,
+    "samples": 35
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.029,
+    "near": 0.029,
+    "samples": 35
+   }
+  },
+  {
+   "reaches": 21,
+   "names": [
+    "North Fork Cosumnes River"
+   ],
+   "length_m": 10032,
+   "area_km2": 509.7,
+   "width": 27.01,
+   "before": {
+    "on": 0.007,
+    "near": 0.007,
+    "samples": 1005
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.007,
+    "near": 0.007,
+    "samples": 982
+   }
+  },
+  {
+   "reaches": 2,
+   "names": [
+    "Middle Fork Cosumnes River"
+   ],
+   "length_m": 651,
+   "area_km2": 345.7,
+   "width": 26.59,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 67
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 63
+   }
+  },
+  {
+   "reaches": 1,
+   "names": [
+    "South Fork Cosumnes River"
+   ],
+   "length_m": 157,
+   "area_km2": 169.8,
+   "width": 16.13,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 17
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 16
+   }
+  },
+  {
+   "reaches": 8,
+   "names": [
+    "Big Canyon Creek"
+   ],
+   "length_m": 3292,
+   "area_km2": 82.3,
+   "width": 11.97,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 331
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 308
+   }
+  }
+ ],
+ "reaches": [
+  {
+   "k": 83,
+   "name": null,
+   "width": 5.25,
+   "length_m": 572,
+   "before": {
+    "on": 0.831,
+    "near": 0.831,
+    "samples": 59
+   },
+   "after": {
+    "on": 0.831,
+    "near": 0.831,
+    "samples": 59
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 108,
+   "name": null,
+   "width": 1.69,
+   "length_m": 6,
+   "before": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 2
+   },
+   "after": {
+    "on": 0.0,
+    "near": 1.0,
+    "samples": 2
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 110,
+   "name": null,
+   "width": 1.0,
+   "length_m": 296,
+   "before": {
+    "on": 0.548,
+    "near": 0.645,
+    "samples": 31
+   },
+   "after": {
+    "on": 0.548,
+    "near": 0.645,
+    "samples": 31
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 142,
+   "name": "North Fork Cosumnes River",
+   "width": 26.51,
+   "length_m": 268,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 28
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 28
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 143,
+   "name": "North Fork Cosumnes River",
+   "width": 26.45,
+   "length_m": 889,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 90
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 90
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 144,
+   "name": "North Fork Cosumnes River",
+   "width": 26.52,
+   "length_m": 689,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 70
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 70
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 159,
+   "name": "North Fork Cosumnes River",
+   "width": 26.53,
+   "length_m": 397,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 41
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 41
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 160,
+   "name": "North Fork Cosumnes River",
+   "width": 26.69,
+   "length_m": 1939,
+   "before": {
+    "on": 0.031,
+    "near": 0.026,
+    "samples": 195
+   },
+   "after": {
+    "on": 0.031,
+    "near": 0.026,
+    "samples": 195
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 168,
+   "name": null,
+   "width": 1.0,
+   "length_m": 461,
+   "before": {
+    "on": 0.312,
+    "near": 0.5,
+    "samples": 48
+   },
+   "after": {
+    "on": 0.312,
+    "near": 0.5,
+    "samples": 48
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 199,
+   "name": "North Fork Cosumnes River",
+   "width": 26.7,
+   "length_m": 610,
+   "before": {
+    "on": 0.016,
+    "near": 0.032,
+    "samples": 62
+   },
+   "after": {
+    "on": 0.016,
+    "near": 0.032,
+    "samples": 62
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 205,
+   "name": "North Fork Cosumnes River",
+   "width": 26.71,
+   "length_m": 154,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 17
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 17
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 211,
+   "name": "North Fork Cosumnes River",
+   "width": 26.77,
+   "length_m": 321,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 34
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 34
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 219,
+   "name": "North Fork Cosumnes River",
+   "width": 26.79,
+   "length_m": 197,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 21
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 21
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 231,
+   "name": "North Fork Cosumnes River",
+   "width": 26.82,
+   "length_m": 374,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 39
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 39
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 244,
+   "name": "North Fork Cosumnes River",
+   "width": 26.83,
+   "length_m": 394,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 41
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 41
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 253,
+   "name": "North Fork Cosumnes River",
+   "width": 26.84,
+   "length_m": 273,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 29
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 29
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 264,
+   "name": "North Fork Cosumnes River",
+   "width": 26.88,
+   "length_m": 43,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 6
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 6
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 265,
+   "name": "North Fork Cosumnes River",
+   "width": 26.9,
+   "length_m": 650,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 67
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 67
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 282,
+   "name": "North Fork Cosumnes River",
+   "width": 26.91,
+   "length_m": 290,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 30
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 30
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 292,
+   "name": "North Fork Cosumnes River",
+   "width": 26.91,
+   "length_m": 37,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 5
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 5
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 294,
+   "name": "North Fork Cosumnes River",
+   "width": 26.92,
+   "length_m": 278,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 29
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 29
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 307,
+   "name": "North Fork Cosumnes River",
+   "width": 26.93,
+   "length_m": 316,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 33
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 33
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 311,
+   "name": "Big Canyon Creek",
+   "width": 11.64,
+   "length_m": 643,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 66
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 66
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 319,
+   "name": "North Fork Cosumnes River",
+   "width": 26.95,
+   "length_m": 933,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 95
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 95
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 333,
+   "name": "Big Canyon Creek",
+   "width": 11.69,
+   "length_m": 262,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 28
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 28
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 338,
+   "name": "Big Canyon Creek",
+   "width": 11.71,
+   "length_m": 273,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 29
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 29
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 345,
+   "name": "Big Canyon Creek",
+   "width": 11.74,
+   "length_m": 161,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 18
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 18
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 346,
+   "name": "North Fork Cosumnes River",
+   "width": 26.99,
+   "length_m": 252,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 27
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 27
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 348,
+   "name": "Big Canyon Creek",
+   "width": 11.76,
+   "length_m": 539,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 55
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 55
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 352,
+   "name": "North Fork Cosumnes River",
+   "width": 27.01,
+   "length_m": 726,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 74
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 74
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 360,
+   "name": "Big Canyon Creek",
+   "width": 11.87,
+   "length_m": 364,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 38
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 38
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 366,
+   "name": "Big Canyon Creek",
+   "width": 11.89,
+   "length_m": 458,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 47
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 47
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 374,
+   "name": "North Fork Cosumnes River",
+   "width": 27.28,
+   "length_m": 333,
+   "before": {
+    "on": 0.029,
+    "near": 0.029,
+    "samples": 35
+   },
+   "after": {
+    "on": 0.029,
+    "near": 0.029,
+    "samples": 35
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 378,
+   "name": "Middle Fork Cosumnes River",
+   "width": 22.21,
+   "length_m": 148,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 16
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 16
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 380,
+   "name": "Big Canyon Creek",
+   "width": 11.97,
+   "length_m": 592,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 61
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 61
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 381,
+   "name": "Middle Fork Cosumnes River",
+   "width": 26.59,
+   "length_m": 504,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 52
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 52
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 386,
+   "name": "South Fork Cosumnes River",
+   "width": 16.13,
+   "length_m": 157,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 17
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 17
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 402,
+   "name": "South Fork Cosumnes River",
+   "width": 16.13,
+   "length_m": 69,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 8
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 8
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  }
+ ],
+ "side_channels": [],
+ "nhd_dropped": [],
+ "undrawn": [
+  {
+   "at": [
+    2859,
+    7598
+   ],
+   "area_m2": 8275,
+   "freq_mean": 0.82,
+   "nearest_reach": null,
+   "nearest_width": 5.25,
+   "nearest_m": 33,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  },
+  {
+   "at": [
+    2801,
+    7632
+   ],
+   "area_m2": 3050,
+   "freq_mean": 0.76,
+   "nearest_reach": null,
+   "nearest_width": 5.25,
+   "nearest_m": 32,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  },
+  {
+   "at": [
+    2692,
+    7408
+   ],
+   "area_m2": 2250,
+   "freq_mean": 0.75,
+   "nearest_reach": null,
+   "nearest_width": 1.0,
+   "nearest_m": 32,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  },
+  {
+   "at": [
+    2716,
+    7303
+   ],
+   "area_m2": 1750,
+   "freq_mean": 0.78,
+   "nearest_reach": null,
+   "nearest_width": 1.0,
+   "nearest_m": 24,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  }
+ ]
+}

@@ -1,0 +1,58 @@
+{
+ "encoding": "bands top to bottom; band i holds the ground at or above its base, base_m + slope_e (x - 5000) + slope_n (n - 5000) with x, n metres east and north of the tile's south-west corner, and below the base of the band over it (the first is open above); below the last base there is no column. colour and alt sRGB 0..1, alt_share the share of beds in the alt colour, bedding the beds' tone contrast; lithology one of client/substrate.json lithologies",
+ "centre": [
+  5000.0,
+  5000.0
+ ],
+ "bands": [
+  {
+   "name": "Mesozoic volcanic rocks, unit 2 (Western Sierra Foothills and Western Klamath Mountains)",
+   "lithology": "greenstone_metavolcanic",
+   "base_m": 382.7,
+   "slope_e": 0.007466,
+   "slope_n": 0.012008,
+   "colour": [
+    0.55,
+    0.53,
+    0.5
+   ],
+   "alt": [
+    0.55,
+    0.53,
+    0.5
+   ],
+   "alt_share": 0.0,
+   "bedding": 0.07
+  },
+  {
+   "name": "Jurassic marine rocks, unit 1 (Western Sierra Nevada and Western Klamath Mountains)",
+   "lithology": "slate_phyllite",
+   "base_m": 271.4,
+   "slope_e": 0.008421,
+   "slope_n": 0.014176,
+   "colour": [
+    0.22,
+    0.22,
+    0.22
+   ],
+   "alt": [
+    0.22,
+    0.22,
+    0.22
+   ],
+   "alt_share": 0.0,
+   "bedding": 0.07
+  }
+ ],
+ "quality": {
+  "overall_fit_steep": 0.628,
+  "overall_fit_steep_strict": 0.57,
+  "map_tol_m": 20.0,
+  "dip_deg": 0.88,
+  "dip_azimuth_deg": 211.2,
+  "steep_cells_in_column": 385711,
+  "bands": 2,
+  "median_contact_sigma_m": 59.2,
+  "superposed_pairs": 0.4
+ }
+}

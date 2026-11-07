@@ -56,9 +56,9 @@
     ],
     "peak_over_mean": [
      1.99,
-     1.31
+     1.32
     ],
-    "cells": 146590,
+    "cells": 146132,
     "source": "DEM: strikes of the faces steeper than 55 degrees"
    }
   },
@@ -205,7 +205,7 @@
    "notes": "massive to blocky, irregular joints; knobby dark faces",
    "index": 4,
    "fraction": 0.0017,
-   "exposed_fraction": 0.0636,
+   "exposed_fraction": 0.0677,
    "joints": {
     "strikes_deg": [],
     "source": "too few steep faces"
@@ -591,15 +591,15 @@
  },
  "stats": {
   "exposed_fraction": 0.1229,
-  "exposed_mean": 0.1391,
-  "patches": 1690,
-  "patches_over_1000m2": 418,
+  "exposed_mean": 0.1387,
+  "patches": 1679,
+  "patches_over_1000m2": 422,
   "patches_over_1ha": 99,
-  "largest_patch_m2": 2572400,
+  "largest_patch_m2": 2575975,
   "slope_source": "max(5 m, 0.85 x 1 m mean)",
   "cover_source": "LANDFIRE EVC tree cover (30 m, smoothed)",
   "photo": "client/texture_imagery.jpg (NAIP, humans erased)",
-  "photo_green_ref": 0.2025,
+  "photo_green_ref": 0.2026,
   "dem": "terrain/dem_banked.tif"
  },
  "formula": "on the 5 m grid from the DEM (and the 1 m lidar DEM where the tile has it), the canopy (lidar tree and\nshrub cover at 10 m, else LANDFIRE EVC tree cover at 30 m), the NAIP photo and the soils:\n    steep    = smoothstep(28, 52, slope)            slope = max(5 m slope, 0.85 x the 1 m slope's 5 m mean)\n    bare     = (1 - tree) (1 - 0.5 shrub)            on a tile without lidar: 1 - 0.6 tree (EVC is coarse)\n    spectral = (1 - smoothstep(0.35 ref, 0.75 ref, exg)) (0.55 + 0.45 smoothstep(0.18, 0.42, luma)) grey\n               on the humans-erased NAIP (client/texture_imagery.jpg: roofs and roads are not rock); exg the photo's excess green (2G - R - B) / (R + G + B) over 5 m: grey or pale, not green; ref the\n               median exg under tree cover over 50% on this tile (the photo's own green, at least 0.06); grey =\n               1 - 0.6 smoothstep(0.04, 0.09, yel), yel = (R - B) / (R + G + B): dry summer grass is pale too, but yellow\n    convex   = 1 + 0.25 clip(TPI / 3 m, -1, 1)       TPI = z - its 40 m gaussian mean (spurs and rims are barer)\n    prior    = the soil map unit's Rock outcrop component % / 100\n    rock     = 0 on surficial deposits (a cut bank past 60 degrees keeps 0.5) and water, else 1\n    exposed  = clip(rock (steep bare^0.7 (0.3 + 0.7 spectral) convex + 0.45 prior smoothstep(15, 35, slope) spectral), 0, 1)\n    and at any slope at least rock bare (1 - smoothstep(0.25 ref, 0.5 ref, exg)) smoothstep(0.40, 0.55, luma) times 0.9 on\n    LANDFIRE's barren class (client/habitat.png 8), else 0.6 (1 - smoothstep(0.02, 0.05, yel)): the pale bare slabs (the\n    backs of the domes), which are rock though no cliff\nthen a 5 m gaussian. A patch is a connected run (8-neighbour) of cells over 0.5."

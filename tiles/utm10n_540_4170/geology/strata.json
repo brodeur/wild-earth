@@ -1,0 +1,121 @@
+{
+ "units": {
+  "1": {
+   "name": "Pliocene marine rocks",
+   "lithology": "sandstone_conglomerate",
+   "cells": 192701,
+   "elevation_m": {
+    "p5": 45.9,
+    "p25": 68.1,
+    "median": 99.0,
+    "p75": 126.1,
+    "p95": 146.2
+   },
+   "candidate": true
+  },
+  "2": {
+   "name": "Quaternary alluvium and marine deposits",
+   "lithology": "surficial",
+   "cells": 994015,
+   "elevation_m": {
+    "p5": 13.6,
+    "p25": 46.5,
+    "median": 66.8,
+    "p75": 93.9,
+    "p95": 145.1
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "3": {
+   "name": "Upper Cretaceous marine rocks, unit 1 (Upper Great Valley Sequence)",
+   "lithology": "sandstone_conglomerate",
+   "cells": 257803,
+   "elevation_m": {
+    "p5": 93.2,
+    "p25": 125.0,
+    "median": 182.2,
+    "p75": 230.2,
+    "p95": 326.7
+   },
+   "candidate": true
+  },
+  "4": {
+   "name": "water",
+   "lithology": "surficial",
+   "cells": 46767,
+   "elevation_m": {
+    "p5": 5.2,
+    "p25": 11.2,
+    "median": 21.1,
+    "p75": 26.6,
+    "p95": 33.3
+   },
+   "candidate": false,
+   "why_not": "water"
+  },
+  "5": {
+   "name": "Quaternary sand deposits, unit 1 (coastal)",
+   "lithology": "surficial",
+   "cells": 566328,
+   "elevation_m": {
+    "p5": 10.5,
+    "p25": 31.6,
+    "median": 61.6,
+    "p75": 94.3,
+    "p95": 145.5
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "6": {
+   "name": "Franciscan Complex, unit 1 (Coast Ranges)",
+   "lithology": "sandstone_conglomerate",
+   "cells": 374184,
+   "elevation_m": {
+    "p5": 71.6,
+    "p25": 112.5,
+    "median": 154.2,
+    "p75": 190.9,
+    "p95": 235.5
+   },
+   "candidate": true
+  }
+ },
+ "superposition": [
+  {
+   "upper": "Upper Cretaceous marine rocks, unit 1 (Upper Great Valley Sequence)",
+   "lower": "Franciscan Complex, unit 1 (Coast Ranges)",
+   "contact_cells": 214,
+   "upper_on_top": 0.785
+  }
+ ],
+ "consistent_pairs": 1.0,
+ "dropped": [
+  {
+   "unit": "Franciscan Complex, unit 1 (Coast Ranges)",
+   "why": "no base contact in the tile"
+  },
+  {
+   "unit": "Pliocene marine rocks",
+   "why": "its base is not seen in the tile: below the column"
+  }
+ ],
+ "column": false,
+ "reason": "fewer than two units left in the column",
+ "rule": {
+  "min_cells": 2000,
+  "min_fraction": 0.0005,
+  "contact_dz_m": 1.0,
+  "min_contact": 50,
+  "superposed": 0.75,
+  "steep_deg": 25.0,
+  "min_band_fit": 0.5,
+  "min_column_fit": 0.6,
+  "max_dip_deg": 8.0,
+  "tilt_prior": 200,
+  "tilt_scale_m": 3000.0,
+  "map_tol_m": 20.0,
+  "doc": "pipeline/strata.py"
+ }
+}

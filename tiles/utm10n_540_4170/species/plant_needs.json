@@ -374,10 +374,12 @@
     "cover: rule redwood on California Coastal Redwood Forest",
     "cover: rule closed_cone on California Coastal Closed-Cone Conifer Forest and Woodland",
     "cover: rule coastal_grassland on California Central Valley and Southern Coastal Grassland",
-    "cover: rule coastal_grassland on California Northern Coastal Grassland"
+    "cover: rule coastal_grassland on California Northern Coastal Grassland",
+    "canopy: records (GBIF: 172 records on the tile; height not yet screened)"
    ],
-   "cover": 0.3033,
+   "cover": 0.3517,
    "records": 172,
+   "scientific": "Quercus agrifolia",
    "record": true,
    "card": true,
    "drawn_as": "quercus_agrifolia",
@@ -415,6 +417,35 @@
    "rank": 2
   },
   {
+   "id": "heteromeles_arbutifolia",
+   "kind": "shrub",
+   "why": [
+    "cover: rule coast_live_oak on California Coastal Live Oak Woodland and Savanna",
+    "cover: rule coastal_scrub on Northern California Coastal Scrub",
+    "cover: rule dry_mesic_chaparral on Northern and Central California Dry-Mesic Chaparral",
+    "cover: rule mesic_chaparral on California Mesic Chaparral",
+    "cover: rule mixed_oak_savanna on California Central Valley Mixed Oak Savanna",
+    "cover: rule mixed_evergreen on Central and Southern California Mixed Evergreen Woodland",
+    "cover: rule coastal_scrub on Southern California Coastal Scrub",
+    "cover: rule redwood on California Coastal Redwood Forest",
+    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
+    "cover: rule mixed_evergreen on Mediterranean California Mixed Evergreen Forest",
+    "cover: rule sparse_rock on Central California Coast Ranges Cliff and Canyon",
+    "cover: rule foothill_pine on California Lower Montane Foothill Pine Woodland and Savanna",
+    "cover: rule ruderal_forest on Californian Ruderal Forest",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule blue_oak_foothill_pine on California Lower Montane Blue Oak-Foothill Pine Woodland and Savanna",
+    "canopy: records (GBIF: 141 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0913,
+   "records": 141,
+   "scientific": "Heteromeles arbutifolia",
+   "record": true,
+   "card": false,
+   "drawn_as": "heteromeles_arbutifolia",
+   "rank": 3
+  },
+  {
    "id": "toxicodendron_diversilobum",
    "kind": "shrub",
    "why": [
@@ -445,7 +476,33 @@
    "record": true,
    "card": false,
    "drawn_as": "toxicodendron_diversilobum",
-   "rank": 3
+   "rank": 4
+  },
+  {
+   "id": "aesculus_californica",
+   "kind": "tree",
+   "why": [
+    "cover: rule coast_live_oak on California Coastal Live Oak Woodland and Savanna",
+    "cover: rule coastal_scrub on Northern California Coastal Scrub",
+    "cover: rule dry_mesic_chaparral on Northern and Central California Dry-Mesic Chaparral",
+    "cover: rule mixed_oak_savanna on California Central Valley Mixed Oak Savanna",
+    "cover: rule coastal_scrub on Southern California Coastal Scrub",
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow",
+    "cover: rule foothill_pine on California Lower Montane Foothill Pine Woodland and Savanna",
+    "cover: rule ruderal_forest on Californian Ruderal Forest",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule blue_oak_foothill_pine on California Lower Montane Blue Oak-Foothill Pine Woodland and Savanna",
+    "cover: rule riparian on California Central Valley Riparian Woodland",
+    "canopy: records (GBIF: 165 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0788,
+   "records": 165,
+   "scientific": "Aesculus californica",
+   "record": true,
+   "card": false,
+   "drawn_as": "aesculus_californica",
+   "rank": 5
   },
   {
    "id": "quercus_wislizeni",
@@ -474,7 +531,7 @@
    "record": true,
    "card": false,
    "drawn_as": "quercus_wislizeni",
-   "rank": 4
+   "rank": 6
   },
   {
    "id": "pinus_sabiniana",
@@ -498,34 +555,22 @@
    "record": true,
    "card": false,
    "drawn_as": "pinus_sabiniana",
-   "rank": 5
+   "rank": 7
   },
   {
-   "id": "heteromeles_arbutifolia",
-   "kind": "shrub",
+   "id": "oemleria_cerasiformis",
+   "kind": "tree",
    "why": [
-    "cover: rule coast_live_oak on California Coastal Live Oak Woodland and Savanna",
-    "cover: rule coastal_scrub on Northern California Coastal Scrub",
-    "cover: rule dry_mesic_chaparral on Northern and Central California Dry-Mesic Chaparral",
-    "cover: rule mesic_chaparral on California Mesic Chaparral",
-    "cover: rule mixed_oak_savanna on California Central Valley Mixed Oak Savanna",
-    "cover: rule mixed_evergreen on Central and Southern California Mixed Evergreen Woodland",
-    "cover: rule coastal_scrub on Southern California Coastal Scrub",
-    "cover: rule redwood on California Coastal Redwood Forest",
-    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
-    "cover: rule mixed_evergreen on Mediterranean California Mixed Evergreen Forest",
-    "cover: rule sparse_rock on Central California Coast Ranges Cliff and Canyon",
-    "cover: rule foothill_pine on California Lower Montane Foothill Pine Woodland and Savanna",
-    "cover: rule ruderal_forest on Californian Ruderal Forest",
-    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
-    "cover: rule blue_oak_foothill_pine on California Lower Montane Blue Oak-Foothill Pine Woodland and Savanna"
+    "canopy: records (GBIF: 219 records on the tile; height not yet screened)"
    ],
-   "cover": 0.0515,
-   "records": 141,
-   "record": true,
+   "cover": 0.0617,
+   "records": 219,
+   "scientific": "Oemleria cerasiformis",
+   "record": false,
    "card": false,
-   "drawn_as": "heteromeles_arbutifolia",
-   "rank": 6
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 8
   },
   {
    "id": "frangula_californica",
@@ -554,7 +599,24 @@
    "record": true,
    "card": false,
    "drawn_as": "frangula_californica",
-   "rank": 7
+   "rank": 9
+  },
+  {
+   "id": "hesperocyparis_macrocarpa",
+   "kind": "tree",
+   "why": [
+    "cover: rule coastal_dune on Mediterranean California Northern Coastal Dune",
+    "cover: rule closed_cone on California Coastal Closed-Cone Conifer Forest and Woodland",
+    "named by EVT 7177 California Coastal Closed-Cone Conifer Forest and Woodland (128 cells)",
+    "canopy: records (GBIF: 160 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.048,
+   "records": 0,
+   "scientific": "Hesperocyparis macrocarpa",
+   "record": true,
+   "card": true,
+   "drawn_as": "hesperocyparis_macrocarpa",
+   "rank": 10
   },
   {
    "id": "umbellularia_californica",
@@ -580,7 +642,22 @@
    "record": true,
    "card": false,
    "drawn_as": "umbellularia_californica",
-   "rank": 8
+   "rank": 11
+  },
+  {
+   "id": "eucalyptus_globulus",
+   "kind": "tree",
+   "why": [
+    "canopy: records (GBIF: 157 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0442,
+   "records": 157,
+   "scientific": "Eucalyptus globulus",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 12
   },
   {
    "id": "adenostoma_fasciculatum",
@@ -605,7 +682,7 @@
    "record": true,
    "card": false,
    "drawn_as": "adenostoma_fasciculatum",
-   "rank": 9
+   "rank": 13
   },
   {
    "id": "diplacus_aurantiacus",
@@ -632,7 +709,7 @@
    "record": true,
    "card": false,
    "drawn_as": "diplacus_aurantiacus",
-   "rank": 10
+   "rank": 14
   },
   {
    "id": "artemisia_californica",
@@ -654,7 +731,7 @@
    "record": true,
    "card": true,
    "drawn_as": "artemisia_californica",
-   "rank": 11
+   "rank": 15
   },
   {
    "id": "arctostaphylos_viscida",
@@ -686,31 +763,7 @@
    "record": true,
    "card": false,
    "drawn_as": "arctostaphylos_viscida",
-   "rank": 12
-  },
-  {
-   "id": "aesculus_californica",
-   "kind": "tree",
-   "why": [
-    "cover: rule coast_live_oak on California Coastal Live Oak Woodland and Savanna",
-    "cover: rule coastal_scrub on Northern California Coastal Scrub",
-    "cover: rule dry_mesic_chaparral on Northern and Central California Dry-Mesic Chaparral",
-    "cover: rule mixed_oak_savanna on California Central Valley Mixed Oak Savanna",
-    "cover: rule coastal_scrub on Southern California Coastal Scrub",
-    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
-    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow",
-    "cover: rule foothill_pine on California Lower Montane Foothill Pine Woodland and Savanna",
-    "cover: rule ruderal_forest on Californian Ruderal Forest",
-    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
-    "cover: rule blue_oak_foothill_pine on California Lower Montane Blue Oak-Foothill Pine Woodland and Savanna",
-    "cover: rule riparian on California Central Valley Riparian Woodland"
-   ],
-   "cover": 0.0323,
-   "records": 165,
-   "record": true,
-   "card": false,
-   "drawn_as": "aesculus_californica",
-   "rank": 13
+   "rank": 16
   },
   {
    "id": "ceanothus_cuneatus",
@@ -737,7 +790,7 @@
    "record": true,
    "card": false,
    "drawn_as": "ceanothus_cuneatus",
-   "rank": 14
+   "rank": 17
   },
   {
    "id": "quercus_douglasii",
@@ -758,7 +811,7 @@
    "record": true,
    "card": false,
    "drawn_as": "quercus_douglasii",
-   "rank": 15
+   "rank": 18
   },
   {
    "id": "symphoricarpos_albus",
@@ -782,7 +835,7 @@
    "record": true,
    "card": false,
    "drawn_as": "symphoricarpos_albus",
-   "rank": 16
+   "rank": 19
   },
   {
    "id": "quercus_lobata",
@@ -805,7 +858,7 @@
    "record": true,
    "card": false,
    "drawn_as": "quercus_lobata",
-   "rank": 17
+   "rank": 20
   },
   {
    "id": "lupinus_arboreus",
@@ -826,7 +879,7 @@
    "record": true,
    "card": true,
    "drawn_as": "lupinus_arboreus",
-   "rank": 18
+   "rank": 21
   },
   {
    "id": "arctostaphylos_manzanita",
@@ -848,7 +901,7 @@
    "record": true,
    "card": false,
    "drawn_as": "arctostaphylos_manzanita",
-   "rank": 19
+   "rank": 22
   },
   {
    "id": "quercus_chrysolepis",
@@ -873,7 +926,7 @@
    "record": true,
    "card": false,
    "drawn_as": "quercus_chrysolepis",
-   "rank": 20
+   "rank": 23
   },
   {
    "id": "sambucus_nigra_caerulea",
@@ -895,7 +948,7 @@
    "record": true,
    "card": false,
    "drawn_as": "sambucus_nigra_caerulea",
-   "rank": 21
+   "rank": 24
   },
   {
    "id": "cercocarpus_betuloides",
@@ -917,7 +970,7 @@
    "record": true,
    "card": false,
    "drawn_as": "cercocarpus_betuloides",
-   "rank": 22
+   "rank": 25
   },
   {
    "id": "vaccinium_ovatum",
@@ -932,7 +985,7 @@
    "record": true,
    "card": true,
    "drawn_as": "vaccinium_ovatum",
-   "rank": 23
+   "rank": 26
   },
   {
    "id": "ceanothus_integerrimus",
@@ -949,7 +1002,7 @@
    "record": true,
    "card": false,
    "drawn_as": "ceanothus_integerrimus",
-   "rank": 24
+   "rank": 27
   },
   {
    "id": "arbutus_menziesii",
@@ -970,7 +1023,7 @@
    "record": true,
    "card": false,
    "drawn_as": "arbutus_menziesii",
-   "rank": 25
+   "rank": 28
   },
   {
    "id": "ribes_roezlii",
@@ -994,7 +1047,7 @@
    "record": true,
    "card": false,
    "drawn_as": "ribes_roezlii",
-   "rank": 26
+   "rank": 29
   },
   {
    "id": "pinus_ponderosa",
@@ -1011,7 +1064,7 @@
    "record": true,
    "card": false,
    "drawn_as": "pinus_ponderosa",
-   "rank": 27
+   "rank": 30
   },
   {
    "id": "ribes_malvaceum",
@@ -1030,7 +1083,7 @@
    "record": true,
    "card": false,
    "drawn_as": "ribes_malvaceum",
-   "rank": 28
+   "rank": 31
   },
   {
    "id": "sequoia_sempervirens",
@@ -1044,7 +1097,7 @@
    "record": true,
    "card": true,
    "drawn_as": "sequoia_sempervirens",
-   "rank": 29
+   "rank": 32
   },
   {
    "id": "rosa_californica",
@@ -1068,7 +1121,7 @@
    "record": true,
    "card": false,
    "drawn_as": "rosa_californica",
-   "rank": 30
+   "rank": 33
   },
   {
    "id": "alnus_rhombifolia",
@@ -1084,7 +1137,7 @@
    "record": true,
    "card": false,
    "drawn_as": "alnus_rhombifolia",
-   "rank": 31
+   "rank": 34
   },
   {
    "id": "pseudotsuga_menziesii",
@@ -1103,7 +1156,7 @@
    "record": true,
    "card": false,
    "drawn_as": "pseudotsuga_menziesii",
-   "rank": 32
+   "rank": 35
   },
   {
    "id": "pinus_radiata",
@@ -1118,22 +1171,7 @@
    "record": true,
    "card": true,
    "drawn_as": "pinus_radiata",
-   "rank": 33
-  },
-  {
-   "id": "hesperocyparis_macrocarpa",
-   "kind": "tree",
-   "why": [
-    "cover: rule coastal_dune on Mediterranean California Northern Coastal Dune",
-    "cover: rule closed_cone on California Coastal Closed-Cone Conifer Forest and Woodland",
-    "named by EVT 7177 California Coastal Closed-Cone Conifer Forest and Woodland (128 cells)"
-   ],
-   "cover": 0.0029,
-   "records": 0,
-   "record": true,
-   "card": true,
-   "drawn_as": "hesperocyparis_macrocarpa",
-   "rank": 34
+   "rank": 36
   },
   {
    "id": "salix_lasiolepis",
@@ -1151,7 +1189,7 @@
    "record": true,
    "card": false,
    "drawn_as": "salix_lasiolepis",
-   "rank": 35
+   "rank": 37
   },
   {
    "id": "quercus_kelloggii",
@@ -1169,7 +1207,7 @@
    "record": true,
    "card": false,
    "drawn_as": "quercus_kelloggii",
-   "rank": 36
+   "rank": 38
   },
   {
    "id": "cercis_occidentalis",
@@ -1188,7 +1226,7 @@
    "record": true,
    "card": false,
    "drawn_as": "cercis_occidentalis",
-   "rank": 37
+   "rank": 39
   },
   {
    "id": "chamaebatia_foliolosa",
@@ -1202,7 +1240,7 @@
    "record": true,
    "card": true,
    "drawn_as": "chamaebatia_foliolosa",
-   "rank": 38
+   "rank": 40
   },
   {
    "id": "rubus_ursinus",
@@ -1218,7 +1256,7 @@
    "record": true,
    "card": false,
    "drawn_as": "rubus_ursinus",
-   "rank": 39
+   "rank": 41
   },
   {
    "id": "gaultheria_shallon",
@@ -1232,7 +1270,7 @@
    "record": true,
    "card": true,
    "drawn_as": "gaultheria_shallon",
-   "rank": 40
+   "rank": 42
   },
   {
    "id": "arctostaphylos_patula",
@@ -1248,7 +1286,7 @@
    "record": true,
    "card": true,
    "drawn_as": "arctostaphylos_patula",
-   "rank": 41
+   "rank": 43
   },
   {
    "id": "ericameria_ericoides",
@@ -1262,7 +1300,7 @@
    "record": true,
    "card": true,
    "drawn_as": "ericameria_ericoides",
-   "rank": 42
+   "rank": 44
   },
   {
    "id": "calocedrus_decurrens",
@@ -1277,7 +1315,7 @@
    "record": true,
    "card": false,
    "drawn_as": "calocedrus_decurrens",
-   "rank": 43
+   "rank": 45
   },
   {
    "id": "ceanothus_cordulatus",
@@ -1293,7 +1331,7 @@
    "record": true,
    "card": true,
    "drawn_as": "ceanothus_cordulatus",
-   "rank": 44
+   "rank": 46
   },
   {
    "id": "acer_macrophyllum",
@@ -1309,7 +1347,7 @@
    "record": true,
    "card": false,
    "drawn_as": "acer_macrophyllum",
-   "rank": 45
+   "rank": 47
   },
   {
    "id": "cornus_sericea",
@@ -1324,7 +1362,7 @@
    "record": true,
    "card": false,
    "drawn_as": "cornus_sericea",
-   "rank": 46
+   "rank": 48
   },
   {
    "id": "chrysolepis_sempervirens",
@@ -1340,7 +1378,7 @@
    "record": true,
    "card": true,
    "drawn_as": "chrysolepis_sempervirens",
-   "rank": 47
+   "rank": 49
   },
   {
    "id": "populus_fremontii",
@@ -1355,7 +1393,7 @@
    "record": true,
    "card": false,
    "drawn_as": "populus_fremontii",
-   "rank": 48
+   "rank": 50
   },
   {
    "id": "calycanthus_occidentalis",
@@ -1370,7 +1408,7 @@
    "record": true,
    "card": false,
    "drawn_as": "calycanthus_occidentalis",
-   "rank": 49
+   "rank": 51
   },
   {
    "id": "fraxinus_latifolia",
@@ -1385,7 +1423,7 @@
    "record": true,
    "card": false,
    "drawn_as": "fraxinus_latifolia",
-   "rank": 50
+   "rank": 52
   },
   {
    "id": "notholithocarpus_densiflorus",
@@ -1401,7 +1439,7 @@
    "record": true,
    "card": true,
    "drawn_as": "notholithocarpus_densiflorus",
-   "rank": 51
+   "rank": 53
   },
   {
    "id": "quercus_vacciniifolia",
@@ -1415,7 +1453,7 @@
    "record": true,
    "card": true,
    "drawn_as": "quercus_vacciniifolia",
-   "rank": 52
+   "rank": 54
   },
   {
    "id": "salix_lasiandra",
@@ -1428,7 +1466,7 @@
    "record": true,
    "card": false,
    "drawn_as": "salix_lasiandra",
-   "rank": 53
+   "rank": 55
   },
   {
    "id": "juglans_hindsii",
@@ -1444,7 +1482,7 @@
    "record": true,
    "card": false,
    "drawn_as": "juglans_hindsii",
-   "rank": 54
+   "rank": 56
   },
   {
    "id": "salix_laevigata",
@@ -1458,7 +1496,7 @@
    "record": true,
    "card": false,
    "drawn_as": "salix_laevigata",
-   "rank": 55
+   "rank": 57
   },
   {
    "id": "vitis_californica",
@@ -1472,7 +1510,7 @@
    "record": true,
    "card": false,
    "drawn_as": "vitis_californica",
-   "rank": 56
+   "rank": 58
   },
   {
    "id": "cephalanthus_occidentalis",
@@ -1486,7 +1524,7 @@
    "record": true,
    "card": false,
    "drawn_as": "cephalanthus_occidentalis",
-   "rank": 57
+   "rank": 59
   },
   {
    "id": "platanus_racemosa",
@@ -1500,7 +1538,7 @@
    "record": true,
    "card": false,
    "drawn_as": "platanus_racemosa",
-   "rank": 58
+   "rank": 60
   },
   {
    "id": "salix_exigua",
@@ -1514,7 +1552,7 @@
    "record": true,
    "card": false,
    "drawn_as": "salix_exigua",
-   "rank": 59
+   "rank": 61
   },
   {
    "id": "eschscholzia_californica",
@@ -1528,7 +1566,7 @@
    "record": true,
    "card": false,
    "drawn_as": "eschscholzia_californica",
-   "rank": 60
+   "rank": 62
   },
   {
    "id": "oxalis_pes_caprae",
@@ -1543,7 +1581,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 61
+   "rank": 63
   },
   {
    "id": "scrophularia_californica",
@@ -1558,7 +1596,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 62
+   "rank": 64
   },
   {
    "id": "tropaeolum_majus",
@@ -1573,7 +1611,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 63
+   "rank": 65
   },
   {
    "id": "achillea_millefolium",
@@ -1587,7 +1625,7 @@
    "record": true,
    "card": false,
    "drawn_as": "achillea_millefolium",
-   "rank": 64
+   "rank": 66
   },
   {
    "id": "claytonia_perfoliata",
@@ -1601,7 +1639,7 @@
    "record": true,
    "card": false,
    "drawn_as": "claytonia_perfoliata",
-   "rank": 65
+   "rank": 67
   },
   {
    "id": "sidalcea_malviflora",
@@ -1616,7 +1654,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 66
+   "rank": 68
   },
   {
    "id": "fumaria_capreolata",
@@ -1631,7 +1669,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 67
+   "rank": 69
   },
   {
    "id": "erigeron_glaucus",
@@ -1646,7 +1684,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 68
+   "rank": 70
   },
   {
    "id": "fragaria_chiloensis",
@@ -1661,7 +1699,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 69
+   "rank": 71
   },
   {
    "id": "heracleum_maximum",
@@ -1676,7 +1714,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 70
+   "rank": 72
   },
   {
    "id": "sanicula_arctopoides",
@@ -1691,7 +1729,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 71
+   "rank": 73
   },
   {
    "id": "erysimum_franciscanum",
@@ -1706,7 +1744,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 72
+   "rank": 74
   },
   {
    "id": "bellis_perennis",
@@ -1721,7 +1759,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 73
+   "rank": 75
   },
   {
    "id": "phacelia_californica",
@@ -1736,7 +1774,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 74
+   "rank": 76
   },
   {
    "id": "salvia_spathacea",
@@ -1751,7 +1789,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 75
+   "rank": 77
   },
   {
    "id": "sedum_spathulifolium",
@@ -1766,7 +1804,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 76
+   "rank": 78
   },
   {
    "id": "dudleya_farinosa",
@@ -1781,7 +1819,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 77
+   "rank": 79
   },
   {
    "id": "lobularia_maritima",
@@ -1796,7 +1834,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 78
+   "rank": 80
   },
   {
    "id": "marah_fabacea",
@@ -1811,7 +1849,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 79
+   "rank": 81
   },
   {
    "id": "chlorogalum_pomeridianum",
@@ -1825,7 +1863,7 @@
    "record": true,
    "card": false,
    "drawn_as": "chlorogalum_pomeridianum",
-   "rank": 80
+   "rank": 82
   },
   {
    "id": "polystichum_munitum",
@@ -1838,9 +1876,8 @@
    "scientific": "Polystichum munitum",
    "record": true,
    "card": true,
-   "generated_now": true,
    "drawn_as": "polystichum_munitum",
-   "rank": 81
+   "rank": 83
   },
   {
    "id": "dipterostemon_capitatus",
@@ -1854,7 +1891,7 @@
    "record": true,
    "card": false,
    "drawn_as": "dipterostemon_capitatus",
-   "rank": 82
+   "rank": 84
   },
   {
    "id": "hordeum_murinum",
@@ -1868,7 +1905,7 @@
    "record": true,
    "card": false,
    "drawn_as": "hordeum_murinum",
-   "rank": 83
+   "rank": 85
   },
   {
    "id": "lupinus_albifrons",
@@ -1882,7 +1919,7 @@
    "record": true,
    "card": false,
    "drawn_as": "lupinus_albifrons",
-   "rank": 84
+   "rank": 86
   },
   {
    "id": "erodium_cicutarium",
@@ -1896,7 +1933,7 @@
    "record": true,
    "card": false,
    "drawn_as": "erodium_cicutarium",
-   "rank": 85
+   "rank": 87
   },
   {
    "id": "pinus_muricata",
@@ -1910,7 +1947,7 @@
    "card": false,
    "drawn_as": "pinus_radiata",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 86
+   "rank": 88
   }
  ],
  "gbif_plants": [
@@ -3115,20 +3152,34 @@
    "known": false
   }
  ],
- "generated": [
-  "polystichum_munitum"
- ],
+ "generated": [],
  "target": {
   "tree": 21,
   "shrub": 23,
   "ground": 26
  },
  "by_layer": {
-  "tree": 27,
+  "tree": 29,
   "shrub": 33,
   "ground": 26
  },
  "hands": [
+  {
+   "id": "oemleria_cerasiformis",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 219 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "eucalyptus_globulus",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 157 records on the tile; height not yet screened)"
+   ]
+  },
   {
    "id": "oxalis_pes_caprae",
    "kind": "forb",
@@ -3283,13 +3334,13 @@
   }
  ],
  "summary": {
-  "needed": 86,
+  "needed": 88,
   "with_record": 68,
-  "generated_now": 1,
-  "queued": 18,
+  "generated_now": 0,
+  "queued": 20,
   "unread_communities": 1,
   "by_layer": {
-   "tree": 27,
+   "tree": 29,
    "shrub": 33,
    "ground": 26
   },
@@ -3298,6 +3349,6 @@
    "shrub": true,
    "ground": true
   },
-  "hands": 19
+  "hands": 21
  }
 }

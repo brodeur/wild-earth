@@ -7860,3 +7860,20 @@ or AVONET row, not a per-species patch.
   - **The `G` overlay stays.** OSM ghost roads remain as a present-day overlay.
 - **A reach's water outline no longer depends on its place in the file (water step 3).** The width wander (0.55–1.4 × width/2, periods 41 and 17 m) was phased by the reach's index in channels.geojson. Removing roads changed two reaches elsewhere on Lamar, and the main stem at the river probe went from index 219 to 217. Its water then spread over the near gravel bar even though that reach's line, ground, levels and profile were unchanged. The phase now comes from the reach's start point.
   - **Still open.** The wander is decoration, not data. At the probe the photo shows water up to the south bank's grass with the bar across on the north side, which neither the old outline nor the new one draws. Fitting big rivers' width to the imagery's water is the follow-up.
+- **The road rules rebuilt onto every tile (2026-11-07).** The base and flora stages were run on every tile the road rules left stale:
+  - Cosumnes, Placerville and Calaveras;
+  - both Yosemite cells and both San Francisco cells;
+  - the Hoh and Mount Olympus;
+  - Manu.
+
+  The fauna steps were not re-run, so the casts committed in cdc65f8 and 4e10494 stand.
+  - **No more writing through into main.** The worktree's copies of these tiles were symlinks into the main checkout, or missing (git-ignored). Each one is now an APFS clone (`cp -c`) of main's files, taken before the build, so a build writes only into the worktree. The clones took no disk space until written. Home's earlier write-through (2026-11-07) is how this was found.
+  - **Seams converge by alternating water re-runs.** Water was re-run on one side and then the other until both matched (`--steps reroute,water` on the tile the seams step names):
+    - home and Cosumnes;
+    - the two San Francisco cells;
+    - the Hoh, then Mount Olympus.
+  - **Home and Placerville's seam does not converge.** Martinez Creek (order 3) crosses 75 m apart on the two sides (N 4,282,377 vs 4,282,452), and an unnamed stream beside US-50 at N 4,284,942 has no level on home's side. These two tiles had never passed seams before. It is left for the water lane.
+  - **The San Francisco cells keep their old crowns.** Their lidar products predate `multi_1m`, and the kept `lidar_grid_v2` there is empty, so the crowns step can't re-find crowns.
+    - It now keeps the crowns found earlier and records a `crowns_kept` fallback instead of failing.
+    - Failing had blocked the ground-texture step behind it, so US-101 in Marin still showed from the air on the old `texture_ground.jpg`.
+    - The road canopy mirror on those two cells waits for `--force lidar` to re-stream the point cloud, about an hour per cell.
