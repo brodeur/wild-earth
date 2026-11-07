@@ -6839,3 +6839,59 @@ Abandoning: choosing Yosemite mid-flight while Upper Hoh Road was 57% built tore
 9 ms) and Yosemite was ready 20 s later. Five choices in a row, 7 s apart, alternating the two, showed the renderer's
 geometry count climbing by about 75 to 100 per abandoned build (textures and programs do not climb), on main as on this
 branch: an older leak in the teardown of an abandoned build, not touched here and noted as a follow-up.
+
+## 2026-11-06: the panels' items fade in up, staggered; visitors browse the places (branch claude/home-tile-framing)
+
+Aaron: "instead of sliding in left and right the elements should fade in up, staggered from top to bottom ... and the
+interval between fadeInUps should decrease." And: "For not logged in users, show all locations and let them navigate to
+them but not start them. Start button should be grayed out - when hovered a tooltip should appear saying 'Log in or sign
+up to start'".
+
+**The entrance** (title.js sideIn, staggerIn): no slides. Once the title and the earth have landed, the panels become
+visible and their items (the search box, the heading, each place's row, Layers and the credits; the account card, the
+social panel's frame, the find box, the tabs, each group card or friend row; the sign-in card and each of its rows; the
+phone's pill and row) each fade in rising 10 px over 520 ms with one easing, ordered by their top on screen across both
+columns, items within 6 px of each other together. The gaps between starts are 120 ms, then 0.8 of the one before, down to
+25 ms. Below the window's bottom an item just shows. Reduced motion: the same order, fades only. The same sequence runs
+after the landing, after a visitor signs in (the social column alone), after Exit to main screen, for the signed-out
+sign-in card and for the no-hub Explore button. A row added later by the list's own re-sort also fades in up (tt-in).
+Start times at 1440x900 signed in (`staggerLog`):
+
+| ms | top px | item |
+|---|---|---|
+| 0 | 24 | `tt-search` × |
+| 0 | 24 | `so-card` aaron@aaron_t · sharin |
+| 120 | 84 | `tt-head` Most activeeverywhere |
+| 216 | 95 | `so-aside` GroupsFriendsRequests1 |
+| 216 | 96 | `so-find`  |
+| 293 | 128 | `tt-row` ArnoldHighway 4, Big T |
+| 354 | 152 | `so-tabs` GroupsFriendsRequests1 |
+| 403 | 221 | `so-gcard` Explorersquiet |
+| 443 | 231 | `tt-row` Daly CityJohn F Foran  |
+| 474 | 313 | `so-gcard` Sunday flightquiet |
+| 499 | 334 | `tt-row` El DoradoRoute 50, Mot |
+| 524 | 405 | `so-new` New group |
+| 549 | 437 | `tt-row` Fossil ForestNortheast |
+| 574 | 540 | `tt-row` Grand Canyon VillageEa |
+| 599 | 643 | `tt-row` MoskenesMoskenesveien, |
+| 624 | 746 | `tt-row` NashvilleSand Ridge Ro |
+| 649 | 823 | `tt-layers` Layers |
+| 674 | 849 | `tt-row` PlacervilleRoute 50, P |
+| 699 | 857 | `tt-attrib` Map OpenFreeMap · © Op |
+**Visitors** (title.js browse): signed out, with a hub, the earth is lit as for a player and the places list, the dots
+and the labels come in with the sign-in card. Any place can be chosen and flown to with the slow centre-framed zoom
+(paced at its own speed: nothing loads) and backed out of; the hub is not asked for anything more. No world is built
+for a visitor (choose skips onSelect), since they cannot enter it. Start is greyed with `aria-disabled="true"` (not
+`disabled`, which takes no hover) and does nothing when pressed; its tooltip, "Log in or sign up to start", is the home
+screen's own (`.tt-tip`, role tooltip, `aria-describedby`), shown on hover and keyboard focus, and for 2.6 s after a
+tap on a touch screen. Invite, the loading line, the friends' faces and the social column are not shown. On a phone the
+sign-in folds behind a "Log in or sign up" pill at the top right so the places can be browsed. Signing in while a place
+is chosen takes Start's greying off, builds that place's world at once and staggers the social column in. A page with
+no hub (Explore) and `?hub=stub` are unchanged; `?skip=1` has no home screen.
+
+Verified in headless Chrome on the local hub (127.0.0.1, test accounts): signed out at 1440x900 and 375x812 (20 and 22
+items staggered; Start `aria-disabled`, not disabled; Invite hidden; no world building; the tooltip shown on hover and
+on a touch tap, no page errors), signed in at both widths (19 and 14 items), reduced motion (the same order, no rise),
+signing in while Upper Hoh Road was chosen (Start live, the world at 20% 2.5 s later, the social column's 7 items
+staggered, Start enabled when ready), `?hub=stub`, a static host with no hub (Explore staggered in, then the places),
+and `?skip=1`. Frames were captured every ~100 to 250 ms (headless screenshots are slow); the start times are exact.

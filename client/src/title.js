@@ -74,6 +74,13 @@ const TITLE_MIN_MS = 2400, LOAD_MAX_MS = 12000;            // the title is seen 
 // at the same time, and when complete, the side panels should slide in from their respective sides simultaneously").
 // The earth is centred in the space the panels will leave free from the start (freeArea), so it never moves for them.
 const STARS_IN_S = 2.6, TITLE_IN_S = 0.7, LAND_MS = 2200, REFADE_MS = 1200, SIDE_AFTER_SIGNIN_MS = 450;
+// The panels' items come in one by one (Aaron, 2026-11-06: "the elements should fade in up, staggered from top to bottom
+// ... and the interval between fadeInUps should decrease"): ordered by their top on screen across both columns, items
+// within STAGGER_SAME_PX of each other together; the gaps STAGGER_FIRST ms, then each STAGGER_DECAY of the one before,
+// down to STAGGER_MIN; each item rises STAGGER_RISE px as it fades in over STAGGER_MS (only fades under reduced motion).
+const STAGGER_FIRST = 120, STAGGER_DECAY = 0.8, STAGGER_MIN = 25, STAGGER_SAME_PX = 6, STAGGER_MS = 520, STAGGER_RISE = 10;
+const STAGGER_EASE = 'cubic-bezier(.2, .8, .25, 1)';
+const GUEST_TIP = 'Log in or sign up to start';
 const reducedMotion = () => !!globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 const DOT_LIFT = 0.004;                                    // the dots stand off the surface from space, on it up close
 const HOVER_PX = 16;
@@ -294,6 +301,7 @@ export class TitleScreen {
       <div class="tt-wrap phase-title">
         <div class="tt-title" aria-live="polite"><h1>Wild Earth</h1><p class="tt-load">loading…</p></div>
         <div class="tt-gate"><button class="tt-explore" type="button" hidden>Explore</button><p class="tt-gate-note" hidden></p></div>
+        <button type="button" class="tt-loginpill" aria-expanded="false" hidden>Log in or sign up</button>
         <div class="tt-labels" aria-hidden="true"></div>
         <div class="tt-dotname" hidden></div>
         <div class="tt-pin" hidden>${PIN_ICON}<span></span></div>
@@ -310,7 +318,7 @@ export class TitleScreen {
           <div class="pc-list" role="list" hidden></div>
         </div>
         <div class="tt-bar" aria-live="polite">
-          <div class="tt-acts"><button type="button" class="tt-invite">Invite</button><button type="button" class="tt-start" disabled>Start</button></div>
+          <div class="tt-acts"><button type="button" class="tt-invite">Invite</button><span class="tt-startwrap"><button type="button" class="tt-start" disabled aria-describedby="ttStartTip">Start</button><span class="tt-tip" id="ttStartTip" role="tooltip" hidden>${GUEST_TIP}</span></span></div>
           <div class="tt-bline"><span class="tt-bstatus"></span><span class="tt-bpct"></span></div>
           <div class="tt-progress" role="progressbar" aria-label="loading the place" aria-valuemin="0" aria-valuemax="100"><i></i></div>
         </div>
@@ -333,7 +341,16 @@ export class TitleScreen {
         box.onchange = () => { this.layers[box.dataset.layer] = box.checked; saveLayers(this.layers); this.map?.restyle(this.layers); };
       }
     }
-    this.$('.tt-start').onclick = () => this.begin();
+    {   // Start; signed out it is greyed (aria-disabled, so it still takes hover and focus for its tooltip) and a tap shows the tip
+      const start = this.$('.tt-start'), tip = this.$('.tt-tip');
+      start.onclick = () => { if (this.guest) this.showTip(); else this.begin(); };
+      start.addEventListener('pointerdown', e => { if (this.guest && e.pointerType === 'touch') this.tipTouch = true; });
+      this.showTip = () => { if (!this.tipTouch) return; this.tipTouch = false; tip.classList.add('tap'); clearTimeout(this.tipT); this.tipT = setTimeout(() => tip.classList.remove('tap'), 2600); };
+    }
+    {   // a phone's signed-out view: the sign-in folds behind a pill at the top right, so the places can be browsed
+      const pill = this.$('.tt-loginpill');
+      pill.onclick = () => { const on = !this.wrap.classList.contains('gate-open'); this.wrap.classList.toggle('gate-open', on); pill.setAttribute('aria-expanded', String(on)); if (on) this.$('.tt-gate input')?.focus({ preventScroll: true }); };
+    }
     this.$('.tt-invite').onclick = e => { if (this.sel && this.onInvite) this.onInvite(this.sel, e.currentTarget); };
     this.$('.tt-modebtn').onclick = () => this.setMode(this.mode === 'global' ? 'visible' : 'global');
     const people = this.$('.pc-people');
@@ -551,13 +568,15 @@ export class TitleScreen {
     this.reserveRight = !!this.config || this.hubParam === 'stub';   // a hub: the sign-in, then the social column, stand on the right
     this.setPhase('crescent');
     if (this.user) this.onSignedIn(this.user, true);   // the stub, or a session the hub already knows: lit while it lands
+    else if (this.config && this.onGate) this.browse();  // signed out with a hub: the places can be browsed, not started
     await this.land();   // the title and the earth to their places together
     if (this.closed) return;
     this.panelsIn();
-    if (this.phase === 'lit') this.sideIn();                                              // the places and the social column, together
+    if (this.guest) { this.onGate(this); this.sideIn(); }                                 // the sign-in, the places, staggered together
+    else if (this.phase === 'lit') this.sideIn();                                         // the places and the social column, staggered together
     else {
       this.setPhase('gate');
-      if (this.onGate) this.onGate(this);                                                 // the modal (account.js; it handles no hub too)
+      if (this.onGate) { this.onGate(this); this.staggerIn([...this.root.querySelectorAll('.tt-gate .ac-modal, .tt-gate .ac-modal > :not(form), .tt-gate .ac-form > *')]); }   // the modal (account.js; it handles no hub too)
       else this.showExplore(this.config ? 'the sign-in is not built yet' : 'no hub here: explore alone');
     }
   }
@@ -597,14 +616,41 @@ export class TitleScreen {
     h1.style.top = h1.style.transform = h1.style.opacity = h1.style.transition = ''; this.earthU.fade.value = 1; this.earth.position.y = 0;
     this.landed = true;
   }
-  // The gate's panels may come in now (the sign-in and Explore, from the right); taken off when the screen closes.
+  // The gate's panels may come in now (the sign-in and Explore); taken off when the screen closes.
   panelsIn() { if (!this.closed) document.documentElement.classList.add('tt-panels'); }
-  // The side panels, all at once (title.css: the places from the left, html.tt-side the social column from the right,
-  // the same duration and easing), once the title and the earth have landed and the player is signed in or exploring.
+  // The side panels' items, staggered in (staggerIn), once the title and the earth have landed: the places, and the
+  // social column when signed in (html.tt-side), or the sign-in when signed out; again for the social column alone when a
+  // visitor signs in. Each part only once.
   sideIn() {
-    if (this.closed || this.sided) return;
-    this.sided = true;
-    document.documentElement.classList.add('tt-side'); this.wrap.classList.add('listed');
+    if (this.closed) return;
+    const html = document.documentElement, items = [];
+    if (!this.wrap.classList.contains('listed')) {
+      this.wrap.classList.add('listed');
+      this.syncPlaces(innerWidth, innerHeight, 0);   // the rows in their order before they are measured
+      items.push(...this.root.querySelectorAll('.tt-search, .tt-head, .tt-rows > .tt-row, .tt-layers, .tt-attrib'));
+    }
+    if (this.guest) items.push(...this.root.querySelectorAll('.tt-loginpill:not([hidden]), .tt-gate .ac-modal, .tt-gate .ac-modal > :not(form), .tt-gate .ac-form > *'));
+    else if (!html.classList.contains('tt-side')) {
+      html.classList.add('tt-side');
+      const soc = document.getElementById('social');
+      if (soc) items.push(...soc.querySelectorAll('.so-bar, .so-panel:not([hidden]) .so-card, .so-panel:not([hidden]) .so-aside, .so-panel:not([hidden]) .so-find, .so-panel:not([hidden]) .so-tabs, .so-panel:not([hidden]) .so-body > *, .so-panel:not([hidden]) .so-chead, .so-panel:not([hidden]) .so-line'));
+    }
+    this.staggerIn(items);
+  }
+  // Fade each item in rising a little, the topmost first, items at the same height together, the gaps between starts
+  // shrinking (STAGGER_*). Below the window's bottom an item just shows. The starts are kept in staggerLog for debugging.
+  staggerIn(els) {
+    const rm = reducedMotion(), H = innerHeight;
+    const items = [...new Set(els)].filter(e => e?.isConnected && e.getClientRects().length).map(e => ({ e, top: e.getBoundingClientRect().top })).filter(i => i.top < H).sort((a, b) => a.top - b.top);
+    const frames = rm ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 0, transform: `translateY(${STAGGER_RISE}px)` }, { opacity: 1, transform: 'translateY(0)' }];
+    let t = 0, k = 0, at = null;
+    this.staggerLog = [];
+    for (const it of items) {
+      if (at !== null && it.top - at > STAGGER_SAME_PX) { t += Math.max(STAGGER_MIN, STAGGER_FIRST * STAGGER_DECAY ** k); k++; }
+      if (at === null || it.top - at > STAGGER_SAME_PX) at = it.top;
+      it.e.animate(frames, { duration: STAGGER_MS, delay: t, easing: STAGGER_EASE, fill: 'backwards' });
+      this.staggerLog.push({ ms: Math.round(t), top: Math.round(it.top), item: (it.e.className && typeof it.e.className === 'string' ? it.e.className.split(' ')[0] : it.e.tagName.toLowerCase()) + (it.e.textContent ? `: ${it.e.textContent.trim().slice(0, 24)}` : '') });
+    }
   }
   setPhase(ph) {
     this.wrap.classList.remove(`phase-${this.phase}`); this.phase = ph; this.wrap.classList.add(`phase-${ph}`);
@@ -612,16 +658,46 @@ export class TitleScreen {
   showExplore(note = '') {
     if (this.closed || this.phase === 'lit') return;
     const b = this.$('.tt-explore'), p = this.$('.tt-gate-note');
-    b.hidden = false; requestAnimationFrame(() => b.classList.add('on'));
+    b.hidden = false; b.classList.add('on');
     if (note) { p.textContent = note; p.hidden = false; }
+    this.staggerIn([b, p]);
     b.focus({ preventScroll: true });
+  }
+  // Signed out, with a hub: the earth is lit as for a player (the sun round, the map, the dots, the places) and every
+  // place can be chosen and flown to, but none started (Aaron, 2026-11-06: "show all locations and let them navigate
+  // to them but not start them"): no world is built for a visitor (choose skips onSelect), Start is greyed with its
+  // tooltip, and Invite, the friends' faces and the social column wait for the sign-in (onSignedIn), which builds the
+  // chosen place's world then.
+  browse() {
+    if (this.closed || this.phase === 'lit') return;
+    this.guest = true; this.wrap.classList.add('guest');
+    this.$('.tt-loginpill').hidden = false;
+    this.setPhase('lit');
+    const s0 = [...this.sun];
+    this.tween(LAND_MS + 400, u => { this.sun[0] = lerp(s0[0], SUN_LIT[0], u); this.sun[1] = lerp(s0[1], SUN_LIT[1], u); }, easeInOut);
+    this.tween(2200, u => { this.mapFade = u; }, easeInOut, LAND_MS * 0.55);
+    this.face(this.faceId, LAND_MS);
+    this.dots.visible = true;
+    this.tween(1400, u => { this.dotU.uFade.value = u; }, easeInOut, LAND_MS);
+    this.renderBar();
   }
   // Signed in (the hub's `you`, or null exploring alone): the sun swings round to the facing side, the earth turns to
   // face the place, the map and the dots come in; the earth's place does not change (it landed there, or is landing:
   // `landing`, a session already known, lit over the landing's time). Then the side panels come in together: at the
   // landing's end (run), or once the sign-in has faded (SIDE_AFTER_SIGNIN_MS).
   onSignedIn(user, landing = false) {
-    if (this.closed || this.phase === 'lit') return;
+    if (this.closed) return;
+    if (this.guest) {   // a visitor signed in while browsing: Start, Invite and the social column; the chosen place's world builds now
+      if (!user) return;
+      this.guest = false; this.user = user; this.wrap.classList.remove('guest', 'gate-open'); this.$('.tt-loginpill').hidden = true;
+      this.hub.watch?.(true);
+      this.onLit?.(this.user);
+      if (this.sel) this.onSelect?.(this.sel);
+      this.renderBar(); if (this.sel) this.renderPeople();
+      setTimeout(() => this.sideIn(), SIDE_AFTER_SIGNIN_MS);
+      return;
+    }
+    if (this.phase === 'lit') return;
     this.user = user || null;
     this.setPhase('lit');
     this.hub.watch?.(true);
@@ -711,7 +787,7 @@ export class TitleScreen {
     // the last stretch keeps behind the loading bar (this.shown, eased and continuous, so the pace never jumps): to pass
     // raw progress u the build must be about smooth(PACE_FROM, 1, u) along; ahead of that the clock slows smoothly
     const pace = u => {
-      const load = this.readyIds.has(id) || this.sel !== id ? 1 : (this.shown || 0);
+      const load = this.readyIds.has(id) || this.sel !== id || this.guest ? 1 : (this.shown || 0);   // a visitor's: nothing loads, the slow pace alone
       return clamp(1 - (smooth(PACE_FROM, 1, u) - load) / PACE_SLACK, PACE_MIN, 1);
     };
     return this.flyTo(c.lat, c.lon, c.alt, null, pace).then(() => { if (this.sel === id && !this.closed) this.card.classList.add('on'); });
@@ -764,7 +840,7 @@ export class TitleScreen {
     this.wrap.classList.add('chosen');
     this.flyToPlace(id);
     this.relief?.show(id);
-    this.onSelect?.(id);
+    if (!this.guest) this.onSelect?.(id);   // a visitor's choice builds nothing (they cannot start it)
   }
   // The card over the place: its name, its region line, the avatars of its players and how many, which opens the list.
   renderCard() {
@@ -819,11 +895,15 @@ export class TitleScreen {
   renderBar() {
     const id = this.sel, ready = !!id && this.readyIds.has(id);
     this.bar.classList.toggle('on', !!id && this.phase === 'lit'); this.bar.classList.toggle('ready', ready);
-    const start = this.$('.tt-start'), inv = this.$('.tt-invite');
-    start.disabled = !ready || this.begun;
+    const start = this.$('.tt-start'), inv = this.$('.tt-invite'), g = !!this.guest;
+    this.bar.classList.toggle('guest', g);
+    start.disabled = !g && (!ready || this.begun);   // greyed, not disabled, for a visitor: it keeps hover and focus for the tooltip
+    start.toggleAttribute('aria-disabled', g); if (g) start.setAttribute('aria-disabled', 'true');
+    this.$('.tt-tip').hidden = !g;
+    inv.hidden = g;
     inv.disabled = !id || this.begun || !this.onInvite;
     inv.title = this.onInvite ? 'invite a group or friends to this place' : 'sign in to invite friends';
-    this.$('.tt-bstatus').textContent = !id ? '' : ready ? `${this.byId[id].name} is ready` : (this.status[id] || 'loading…');
+    this.$('.tt-bstatus').textContent = !id || g ? '' : ready ? `${this.byId[id].name} is ready` : (this.status[id] || 'loading…');
     if (ready && !this.begun && document.activeElement?.closest?.('.tt-places, .tt-search') == null) start.focus({ preventScroll: true });
   }
   // main.js reports "preparing <tileId>: <status>" while a world builds, each step's name (setProgress), and setReady.
@@ -846,7 +926,7 @@ export class TitleScreen {
   // Start: the camera sinks toward the place while the screen fades to black; then onBegin enters the world through
   // main.js's enterWorld, whose own fade (.out) brings the spirit world in from the black.
   begin() {
-    if (this.begun || !this.ready) return;
+    if (this.begun || !this.ready || this.guest) return;
     this.begun = true;
     this.renderBar();
     this.hub.watch?.(false);
