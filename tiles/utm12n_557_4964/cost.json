@@ -687,14 +687,14 @@
   },
   "ground_albedo": {
    "stage": "base",
-   "started_at": "2026-11-07T01:32:12Z",
-   "ended_at": "2026-11-07T01:32:14Z",
-   "wall_s": 1.6,
-   "cpu_self_s": 1.5,
+   "started_at": "2026-11-07T01:43:37Z",
+   "ended_at": "2026-11-07T01:43:39Z",
+   "wall_s": 2.7,
+   "cpu_self_s": 2.0,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {},
-   "disk_bytes": 900,
+   "disk_bytes": 1128,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -705,14 +705,14 @@
  },
  "stages": {
   "base": {
-   "started_at": "2026-11-07T01:29:19Z",
-   "ended_at": "2026-11-07T01:32:14Z",
-   "wall_s": 607.9,
-   "cpu_s": 204.6,
+   "started_at": "2026-11-07T01:43:37Z",
+   "ended_at": "2026-11-07T01:43:39Z",
+   "wall_s": 609.0,
+   "cpu_s": 205.1,
    "download_bytes": 11529777,
    "cache_hits": 494,
    "cache_misses": 6,
-   "disk_bytes": 716389554,
+   "disk_bytes": 716389782,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -1353,21 +1353,89 @@
    "ended_at": "2026-11-07T01:35:21Z",
    "failed": [],
    "refused": []
+  },
+  {
+   "started_at": "2026-11-07T01:41:15Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T01:41:15Z",
+     "steps_run": [
+      "ground_albedo"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T01:41:17Z"
+    }
+   ],
+   "ended_at": "2026-11-07T01:41:17Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T01:41:39Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T01:41:39Z",
+     "steps_run": [
+      "ground_albedo"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T01:41:41Z"
+    }
+   ],
+   "ended_at": "2026-11-07T01:41:41Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T01:42:46Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T01:42:46Z",
+     "steps_run": [
+      "ground_albedo"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T01:42:48Z"
+    }
+   ],
+   "ended_at": "2026-11-07T01:42:48Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T01:43:37Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T01:43:37Z",
+     "steps_run": [
+      "ground_albedo"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T01:43:39Z"
+    }
+   ],
+   "ended_at": "2026-11-07T01:43:39Z",
+   "failed": [],
+   "refused": []
   }
  ],
  "totals": {
-  "wall_s": 801.6,
-  "cpu_s": 400.0,
+  "wall_s": 802.7,
+  "cpu_s": 400.5,
   "download_bytes": 11529777,
   "cache_hits": 3151,
   "cache_misses": 6,
-  "disk_bytes": 727124457,
+  "disk_bytes": 727124685,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 1515
  },
- "updated_at": "2026-11-07T01:35:21Z",
+ "updated_at": "2026-11-07T01:43:39Z",
  "client": {
-  "bytes": 60330550,
+  "bytes": 60331425,
   "files": 55,
   "largest": {
    "client/lidar_micro.png": 12621596,

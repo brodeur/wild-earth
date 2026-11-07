@@ -1,56 +1,45 @@
 {
  "tile": "utm36s_698_9724",
- "kind": "recolour",
- "started": "2026-11-06T12:53:41+00:00",
+ "kind": "redo",
+ "started": "2026-11-07T02:16:58+00:00",
  "budget": 10,
- "reserve": 1450,
+ "reserve": 300,
  "species": [
   {
-   "code": "stigmochelys_pardalis",
-   "check": {
-    "ok": false,
-    "score": 0.427,
-    "fails": [
-     "flanks 38% matches",
-     "upperparts 26% matches",
-     "only 43% of the model in described colours"
-    ]
-   },
-   "texture_prompt": "Natural colours and markings of a wild adult Leopard tortoise (Stigmochelys pardalis) as seen in Serengeti, Mara Region, Tanzania: the shell's scutes, the skin of the head and legs, in their true colours. Coloured as the adult is described: shell and body yellow with black blotches; head yellow, tan, brown; legs yellow, tan, brown. Correct this: shell yellow, not cinnamon or orange; belly and underparts yellow, not cinnamon or orange. Realistic, evenly lit albedo with no baked shadows or highlights; eyes, beak and claws in their true colours.",
-   "recolour": {
-    "at": "2026-11-06T12:53:41+00:00",
-    "before": {
-     "ok": false,
-     "score": 0.427,
-     "fails": [
-      "flanks 38% matches",
-      "upperparts 26% matches",
-      "only 43% of the model in described colours"
-     ]
-    },
-    "texture_prompt": "Natural colours and markings of a wild adult Leopard tortoise (Stigmochelys pardalis) as seen in Serengeti, Mara Region, Tanzania: the shell's scutes, the skin of the head and legs, in their true colours. Coloured as the adult is described: shell and body yellow with black blotches; head yellow, tan, brown; legs yellow, tan, brown. Correct this: shell yellow, not cinnamon or orange; belly and underparts yellow, not cinnamon or orange. Realistic, evenly lit albedo with no baked shadows or highlights; eyes, beak and claws in their true colours.",
-    "credits": 10,
-    "job": "library/animals/jobs/stigmochelys_pardalis/01a1b0ec-0d1f-718c-b98a-bbc2e6f285cf",
-    "after": {
-     "ok": false,
-     "score": 0.43,
-     "fails": [
-      "flanks 35% matches",
-      "upperparts 34% matches",
-      "only 43% of the model in described colours"
-     ],
-     "off": {
-      "flanks": "cinnamon",
-      "underparts": "golden",
-      "upperparts": "ginger"
-     }
-    },
-    "kept": "new"
-   }
+   "code": "varanus_niloticus",
+   "need": "texture",
+   "why": "texture: head: no yellowish-green spots (0.0%); underparts: no blackish bands (0.2%)",
+   "steps": [
+    {
+     "step": "text",
+     "mode": null,
+     "job": "library/animals/jobs/varanus_niloticus/01a1b3cb-8169-74a0-aca0-3972fd869898",
+     "credits": 10,
+     "before": {
+      "ok": false,
+      "score": 1.0,
+      "fails": [
+       "head: no yellowish-green spots (0.0%)",
+       "underparts: no blackish bands (0.2%)"
+      ]
+     },
+     "after": {
+      "ok": false,
+      "score": 1.0,
+      "fails": [
+       "head: no yellowish-green spots (0.0%)"
+      ],
+      "off": {}
+     },
+     "kept": "new",
+     "error": null
+    }
+   ],
+   "stopped": "balance 767, spent 10: the next job (10) would cross the reserve or the budget"
   }
  ],
  "spent": 10,
- "balance_after": 1547,
+ "balance_after": 767,
  "earlier": [
   {
    "tile": "utm36s_698_9724",
@@ -1139,6 +1128,107 @@
    ],
    "spent": 50,
    "balance_after": 1557
+  },
+  {
+   "tile": "utm36s_698_9724",
+   "kind": "recolour",
+   "started": "2026-11-06T12:53:41+00:00",
+   "budget": 10,
+   "reserve": 1450,
+   "species": [
+    {
+     "code": "stigmochelys_pardalis",
+     "check": {
+      "ok": false,
+      "score": 0.427,
+      "fails": [
+       "flanks 38% matches",
+       "upperparts 26% matches",
+       "only 43% of the model in described colours"
+      ]
+     },
+     "texture_prompt": "Natural colours and markings of a wild adult Leopard tortoise (Stigmochelys pardalis) as seen in Serengeti, Mara Region, Tanzania: the shell's scutes, the skin of the head and legs, in their true colours. Coloured as the adult is described: shell and body yellow with black blotches; head yellow, tan, brown; legs yellow, tan, brown. Correct this: shell yellow, not cinnamon or orange; belly and underparts yellow, not cinnamon or orange. Realistic, evenly lit albedo with no baked shadows or highlights; eyes, beak and claws in their true colours.",
+     "recolour": {
+      "at": "2026-11-06T12:53:41+00:00",
+      "before": {
+       "ok": false,
+       "score": 0.427,
+       "fails": [
+        "flanks 38% matches",
+        "upperparts 26% matches",
+        "only 43% of the model in described colours"
+       ]
+      },
+      "texture_prompt": "Natural colours and markings of a wild adult Leopard tortoise (Stigmochelys pardalis) as seen in Serengeti, Mara Region, Tanzania: the shell's scutes, the skin of the head and legs, in their true colours. Coloured as the adult is described: shell and body yellow with black blotches; head yellow, tan, brown; legs yellow, tan, brown. Correct this: shell yellow, not cinnamon or orange; belly and underparts yellow, not cinnamon or orange. Realistic, evenly lit albedo with no baked shadows or highlights; eyes, beak and claws in their true colours.",
+      "credits": 10,
+      "job": "library/animals/jobs/stigmochelys_pardalis/01a1b0ec-0d1f-718c-b98a-bbc2e6f285cf",
+      "after": {
+       "ok": false,
+       "score": 0.43,
+       "fails": [
+        "flanks 35% matches",
+        "upperparts 34% matches",
+        "only 43% of the model in described colours"
+       ],
+       "off": {
+        "flanks": "cinnamon",
+        "underparts": "golden",
+        "upperparts": "ginger"
+       }
+      },
+      "kept": "new"
+     }
+    }
+   ],
+   "spent": 10,
+   "balance_after": 1547
+  },
+  {
+   "tile": "utm36s_698_9724",
+   "kind": "redo",
+   "started": "2026-11-07T02:15:56+00:00",
+   "budget": 10,
+   "reserve": 300,
+   "species": [
+    {
+     "code": "stigmochelys_pardalis",
+     "need": "texture",
+     "why": "texture: upperparts: only 9% in its ground colours, the rest in its markings' colours",
+     "steps": [
+      {
+       "step": "text",
+       "mode": null,
+       "job": "library/animals/jobs/stigmochelys_pardalis/01a1b3ca-8c29-740f-9a9b-d6834a81fbe1",
+       "credits": 10,
+       "before": {
+        "ok": false,
+        "score": 0.43,
+        "fails": [
+         "upperparts: only 9% in its ground colours, the rest in its markings' colours"
+        ]
+       },
+       "after": {
+        "ok": false,
+        "score": 0.374,
+        "fails": [
+         "flanks: only 8% in its ground colours, the rest in its markings' colours",
+         "flanks 17% matches",
+         "only 37% of the model in described colours"
+        ],
+        "off": {
+         "flanks": "orange",
+         "underparts": "rufous"
+        }
+       },
+       "kept": "old",
+       "error": null
+      }
+     ],
+     "stopped": "balance 777, spent 10: the next job (10) would cross the reserve or the budget"
+    }
+   ],
+   "spent": 10,
+   "balance_after": 777
   }
  ]
 }

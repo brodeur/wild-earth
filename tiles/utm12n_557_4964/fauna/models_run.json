@@ -1,66 +1,44 @@
 {
  "tile": "utm12n_557_4964",
  "kind": "redo",
- "started": "2026-11-06T15:55:50+00:00",
- "budget": 60,
- "reserve": 737,
+ "started": "2026-11-07T02:14:54+00:00",
+ "budget": 10,
+ "reserve": 300,
  "species": [
   {
-   "code": "alces_alces",
-   "need": "image",
-   "why": "no model (the build's gate refused the text previews)",
+   "code": "taxidea_taxus",
+   "need": "texture",
+   "why": "texture: body: no white stripes (0.2%); tail ringed (2 alternations), described without rings",
    "steps": [
     {
-     "step": "photo",
-     "mode": "image",
-     "job": "library/animals/jobs/alces_alces/01a1b192-d11a-731b-a1a7-bb9da5131bed",
-     "credits": 30,
+     "step": "text",
+     "mode": null,
+     "job": "library/animals/jobs/taxidea_taxus/01a1b3c9-9ae9-72c1-99a8-cc796eac5e55",
+     "credits": 10,
      "before": {
       "ok": false,
-      "score": null,
+      "score": 1.0,
       "fails": [
-       "no model"
+       "body: no white stripes (0.2%)",
+       "tail ringed (2 alternations), described without rings"
       ]
      },
      "after": {
       "ok": false,
-      "score": null,
+      "score": 1.0,
       "fails": [
-       "build failed: alces_alces: found 3 leg columns below z 0.787, not 4 (not standing on four feet?)"
+       "tail ringed (3 alternations), described without rings"
       ],
-      "features": null
+      "off": {}
      },
-     "kept": "old",
-     "error": null
-    },
-    {
-     "step": "photo",
-     "mode": "image",
-     "job": "library/animals/jobs/alces_alces/01a1b193-fdd5-706d-82ab-cedd3fb0f9eb",
-     "credits": 30,
-     "before": {
-      "ok": false,
-      "score": null,
-      "fails": [
-       "no model"
-      ]
-     },
-     "after": {
-      "ok": false,
-      "score": null,
-      "fails": [
-       "build failed: alces_alces: found 2 leg columns below z 0.602, not 4 (not standing on four feet?)"
-      ],
-      "features": null
-     },
-     "kept": "old",
+     "kept": "new",
      "error": null
     }
    ]
   }
  ],
- "spent": 60,
- "balance_after": 827,
+ "spent": 10,
+ "balance_after": 787,
  "earlier": [
   {
    "tile": "utm12n_557_4964",
@@ -1352,6 +1330,70 @@
    ],
    "spent": 20,
    "balance_after": 887
+  },
+  {
+   "tile": "utm12n_557_4964",
+   "kind": "redo",
+   "started": "2026-11-06T15:55:50+00:00",
+   "budget": 60,
+   "reserve": 737,
+   "species": [
+    {
+     "code": "alces_alces",
+     "need": "image",
+     "why": "no model (the build's gate refused the text previews)",
+     "steps": [
+      {
+       "step": "photo",
+       "mode": "image",
+       "job": "library/animals/jobs/alces_alces/01a1b192-d11a-731b-a1a7-bb9da5131bed",
+       "credits": 30,
+       "before": {
+        "ok": false,
+        "score": null,
+        "fails": [
+         "no model"
+        ]
+       },
+       "after": {
+        "ok": false,
+        "score": null,
+        "fails": [
+         "build failed: alces_alces: found 3 leg columns below z 0.787, not 4 (not standing on four feet?)"
+        ],
+        "features": null
+       },
+       "kept": "old",
+       "error": null
+      },
+      {
+       "step": "photo",
+       "mode": "image",
+       "job": "library/animals/jobs/alces_alces/01a1b193-fdd5-706d-82ab-cedd3fb0f9eb",
+       "credits": 30,
+       "before": {
+        "ok": false,
+        "score": null,
+        "fails": [
+         "no model"
+        ]
+       },
+       "after": {
+        "ok": false,
+        "score": null,
+        "fails": [
+         "build failed: alces_alces: found 2 leg columns below z 0.602, not 4 (not standing on four feet?)"
+        ],
+        "features": null
+       },
+       "kept": "old",
+       "error": null
+      }
+     ]
+    }
+   ],
+   "spent": 60,
+   "balance_after": 827
   }
  ]
 }

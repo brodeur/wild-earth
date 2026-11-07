@@ -365,18 +365,35 @@
     "queued_credits_est": 0
    },
    "status": "ok"
+  },
+  "ground_albedo": {
+   "stage": "base",
+   "started_at": "2026-11-07T01:43:24Z",
+   "ended_at": "2026-11-07T01:43:25Z",
+   "wall_s": 0.3,
+   "cpu_self_s": 0.3,
+   "cpu_children_s": 0.0,
+   "downloads": {},
+   "cache": {},
+   "disk_bytes": 903,
+   "meshy": {
+    "spent": 0,
+    "queued": 0,
+    "queued_credits_est": 0
+   },
+   "status": "ok"
   }
  },
  "stages": {
   "base": {
-   "started_at": "2026-11-05T06:13:03Z",
-   "ended_at": "2026-11-05T06:15:10Z",
-   "wall_s": 125.9,
-   "cpu_s": 64.5,
+   "started_at": "2026-11-07T01:43:24Z",
+   "ended_at": "2026-11-07T01:43:25Z",
+   "wall_s": 126.2,
+   "cpu_s": 64.8,
    "download_bytes": 14596077,
    "cache_hits": 434,
    "cache_misses": 2,
-   "disk_bytes": 94680646,
+   "disk_bytes": 94681549,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -502,21 +519,89 @@
    "failed": [
     "water_imagery"
    ]
+  },
+  {
+   "started_at": "2026-11-07T01:41:09Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T01:41:09Z",
+     "steps_run": [
+      "ground_albedo"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T01:41:09Z"
+    }
+   ],
+   "ended_at": "2026-11-07T01:41:09Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T01:41:34Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T01:41:34Z",
+     "steps_run": [
+      "ground_albedo"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T01:41:34Z"
+    }
+   ],
+   "ended_at": "2026-11-07T01:41:34Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T01:42:39Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T01:42:39Z",
+     "steps_run": [
+      "ground_albedo"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T01:42:39Z"
+    }
+   ],
+   "ended_at": "2026-11-07T01:42:39Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T01:43:24Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T01:43:24Z",
+     "steps_run": [
+      "ground_albedo"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T01:43:25Z"
+    }
+   ],
+   "ended_at": "2026-11-07T01:43:25Z",
+   "failed": [],
+   "refused": []
   }
  ],
  "totals": {
-  "wall_s": 190.1,
-  "cpu_s": 79.6,
+  "wall_s": 190.4,
+  "cpu_s": 79.9,
   "download_bytes": 14666038,
   "cache_hits": 1049,
   "cache_misses": 65,
-  "disk_bytes": 101322693,
+  "disk_bytes": 101323596,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 1160
  },
- "updated_at": "2026-11-06T18:49:31Z",
+ "updated_at": "2026-11-07T01:43:25Z",
  "client": {
-  "bytes": 2148887,
+  "bytes": 2150450,
   "files": 13,
   "largest": {
    "client/weather.json": 639754,
@@ -524,7 +609,7 @@
    "client/species_mix.json": 388602,
    "client/features.json": 233739,
    "client/species_prior.json": 216082,
-   "manifest.json": 151505,
+   "manifest.json": 152890,
    "client/ground_classes.json": 37478,
    "perception.json": 21496,
    "locomotion.json": 20576,

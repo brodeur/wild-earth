@@ -53,6 +53,7 @@ export const groundUniforms = {
   // the terrain FRAG lays it on the photo's colour once its own display-tuned recolouring is done (before the cliffs
   // and the weather, whose rock and snow are their own albedo); the herb layer's palettes take it on the CPU.
   groundGain: { value: groundLook.gain },
+  groundSat: groundLook.sat,   // its saturation about its luminance (groundRefl), the tile's
 };
 // The measured season for the CPU side: grass.js takes its blades' tint from `grass` (the open grass's
 // flat-ground ratio for the date over July, linear) when it is set; `version` bumps on each change.
@@ -410,7 +411,11 @@ export const GROUND_GLSL = /* glsl */`
   uniform sampler2D seasonMap; uniform float seasonOn; uniform vec3 wxGround;
   uniform sampler2D waterMap; uniform float waterOn; uniform float waterPx;
   uniform vec3 groundGain;   // the texture's display colour -> surface reflectance (groundUniforms.groundGain)
+  uniform float groundSat;   // and its saturation about the luminance (groundUniforms.groundSat)
   const vec3 G_LUMA = vec3(0.299, 0.587, 0.114);
+  // a display colour of the photo (or a palette tuned against it) at the ground's reflectance: the factor, then the
+  // saturation the tile's Sentinel-2 composite measures along the photo's own hue (pipeline/ground_albedo.py)
+  vec3 groundRefl(vec3 c) { vec3 g = groundGain * c; return max(mix(vec3(dot(g, G_LUMA)), g, groundSat), vec3(0.0)); }
   // The water system's ground (waterMap R: the zone in the low 4 bits): the wet margin of a channel darker and greener
   // (moist soil under the sedges), a pond's drawdown margin mud, its basin dark silt when the water is gone, a dry
   // channel bed a little darker under its gravel ribbon. The four nearest 5 m cells' tints are blended bilinearly, so the
@@ -488,7 +493,7 @@ export const GROUND_GLSL = /* glsl */`
   vec3 groundAlbedo(vec3 posW, float lod, out vec3 w) {
     vec2 uv = groundUv(posW);
     w = groundWeights(uv, lod);
-    return groundWeather(groundGain * groundRecolour(textureLod(map, uv, lod).rgb, w, uv, groundPave(uv, lod)), 1.0, 0.0, 0.0);
+    return groundWeather(groundRefl(groundRecolour(textureLod(map, uv, lod).rgb, w, uv, groundPave(uv, lod))), 1.0, 0.0, 0.0);
   }
 `;
 
@@ -742,7 +747,7 @@ const FRAG = /* glsl */`
     }
     // The ground at its reflectance (groundGain): everything above is the photo's display colour and the palettes and
     // tints tuned against it; the cliff rock and the snow below are their own albedo.
-    c *= groundGain;
+    c = groundRefl(c);
     // Cliffs at any distance (CLIFF_GLSL cliffShade): past ~40 degrees the photo is a smear stretched down the face,
     // so the face takes the cliff material in its place, at every distance, as its lithology breaks (where: cliff, above).
     float cliffW = 0.0;   // the face's rock: the canopy's 30 m sky occlusion is not laid on it (below)

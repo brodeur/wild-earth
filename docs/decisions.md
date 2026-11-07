@@ -6854,3 +6854,18 @@ library, none built-in, also under a throttled 4 Mbps / 150 ms network (title up
   top-heavy; past 13 m still a dome, the porous-to-smooth hand-over visible from above; the ground keeps the
   impostor's solid shadow (shadows.js); every twig shrub takes sage's three-toothed leaf (the record's `leaf_shape`
   says oval, from its coyote-brush template).
+- **The ground's saturation measured: Sentinel-2's chroma strength over the photo's, capped at 1, the photo's hue kept**
+  (`pipeline/ground_albedo.py` `saturation`, step version 2; atmosphere.js `groundLook.sat`, terrain.js
+  `groundRefl`/`groundSat`, grass.js palettes and ground match, forbs.js, litter.js; `?gsat=` tries another). With the
+  luminance factor (Aaron's choice of today's hue) the ground kept NAIP's colour balance and its saturation: Lamar's
+  top-down rendered at chroma 21.3 against a fair 14.6. The fit, over the same open pixels as the gain: sum |d_R| /
+  sum |d_T| (d = colour less its Rec. 601 luminance, after the luminance factor), the client scaling the photo's chroma
+  by it about the luminance, so the hue stays the photo's. The least-squares projection (`saturation_fit`) was tried
+  first and refused: it counts the hue's disagreement too and gave the Hoh 0.26 (its open ground is 1 % river bars)
+  against a strength ratio of 0.98. Capped at 1: every probe renders at or above its fair chroma. Borrowers borrow it.
+  Fits: Lamar 0.76, Grand Canyon 0.86, Corcovado 0.90, Lofoten 0.97, Danum 0.97, Hoh 0.98, Serengeti 1.00, home,
+  Teton and Manu 1 (capped from 1.23, 1.30, 1.26). The judge (L_render vs L_fair, chroma render vs fair,
+  overlap_fair; before -> after, the sage change in the same run): Lamar 46.5/48.3, 21.3/14.6, 0.395 -> 46.1/48.3,
+  16.2/14.6, 0.365; Grand Canyon 53.3/64.3, 15.5/13.3, 0.220 -> 53.4/64.3, 13.4/13.3, 0.261; Lofoten 12.2 -> 11.9
+  (fair 12.2), 0.655 -> 0.666; the rest within 0.01. Lamar's overlap slips a little as its chroma closes: what is left
+  is the hue (the photo greener than the composite's olive), which the luminance factor keeps by choice.
