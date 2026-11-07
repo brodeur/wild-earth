@@ -7258,3 +7258,20 @@ Considered:
 - **A stranger's body drawn as an ordinary animal.** Recommended, not built here. It belongs on the anonymous
   shared-animals channel: the host keeps the body in its stream, driven by the embodied page's pose. It does not belong
   on the hub. The design is in the doc.
+
+## 2026-11-07: a font for every territory name (branch claude/territory-font)
+
+The place cards' territory row is DM Sans, which lacks the IPA letters some names are written with: the Washoe name
+Wašišiw Ɂítdeʔ uses the glottal stops U+0241 and U+0294, and the Cheyenne name uses ȧ (U+0227). On this Mac, Chrome drew
+those from system fonts (.SF NS, Helvetica); a system without such fonts (Linux, many Android builds) shows boxes. The
+glottal stop is itself drawn like a question mark without its dot, so at 12 px it can read as "?" even when right.
+
+- **Noto Sans backs DM Sans** for the names: `--tt-names: 'DM Sans', 'Noto Sans', system-ui, ...` on the territory row,
+  the chosen place's card and the search results' region line (title.css), and the `?cards=1` screen's territory line
+  (opening.css). Noto Sans is loaded from Google Fonts with the page's other families; Google serves it in subsets by
+  unicode-range, so a browser fetches only the subset holding a character DM Sans lacks (latin-ext, which covers
+  U+0100-02BA: Latin Extended-A and -B and the IPA block), and nothing at all for names DM Sans covers.
+- **Checked**: all 15 non-ASCII characters in the 18 tiles' territory names (á ä é í ó ü č ė ŋ Š š ȧ Ɂ ʔ ’), every name
+  rendered in the card's own style in headless Chrome, and CDP `CSS.getPlatformFontsForNode` asked which fonts drew each:
+  every name now draws only from DM Sans and Noto Sans (Noto for Ɂ and ʔ in the Washoe name and ȧ in the Cheyenne
+  name), with no system fallback; with DM Sans alone the same three came from .SF NS and Helvetica.
