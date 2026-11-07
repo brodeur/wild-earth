@@ -14,7 +14,7 @@ import { bodyKind } from './playable.js';
 const NEED_T = { hunt: 24, food: 7, daily: 4, often: 8, rare: 16 };   // minutes from sated to empty
 const EAT_MIN = 25, EAT_RATE = 0.06, DRINK_RATE = 0.1;      // score floor; fill per second at score 100 (empty to full in about 20 s of grazing); fill per second at water (10 s)
 const NEED_LOW = 0.25, NEED_SLOW = 0.7;
-const TARGET_MIN = 70, TARGET_CELLS = 70;   // the target: the nearest cell scoring at least TARGET_MIN within TARGET_CELLS cells (2.1 km), scanned in rings
+const TARGET_MIN = 70, TARGET_CELLS = 70, TARGET_FOOD = 70;   // (TARGET_FOOD: a targeted food plant in reach feeds as a good cell does)   // the target: the nearest cell scoring at least TARGET_MIN within TARGET_CELLS cells (2.1 km), scanned in rings
 const SEASON_CH = { winter: 0, spring: 1, summer: 2, fall: 3 };
 const DIRS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
 
@@ -53,7 +53,9 @@ export class Needs {
   // every frame in a walker: x, north the body; acting: E held (the act); wet: wading
   // under: the body underground (dig.js underFood): what is at its nose there (a root, a bulb, a pulled plant) in place of
   // the surface's rasters
-  update(dt, { x, north, acting, wet, under = null }) {
+  // target: a plant targeted (quarry.js), or null; reach: whether the body is within its eating reach (quarry.js canEat, the
+  // one rule): with a plant targeted the act feeds only within reach, at least TARGET_FOOD of food, and names that plant
+  update(dt, { x, north, acting, wet, under = null, target = null, reach = true }) {
     if (!this.sp) return;
     const season = this.season(), ch = SEASON_CH[season] ?? 3;
     const foods = this.foods(season);
@@ -66,11 +68,13 @@ export class Needs {
     let here = 0;
     if (under) { here = under.score || 0; this.underLabel = under.label || null; }
     else { this.underLabel = null; for (const r of foods) { const g = this.raster(r); if (g) here = Math.max(here, g.at(x, north, ch)); } }
+    if (target && !under) here = reach ? Math.max(here, TARGET_FOOD) : 0;   // the targeted plant decides: in reach, it is food; out of reach, nothing is
     this.foodHere = here;
     // the plant being eaten (main.js plantHere: the herb, shrub or grass under the body among this season's food plants),
     // looked up a few times a second while there is food here
     this.plantT = (this.plantT || 0) - dt;
     if (under) this.plant = null;
+    else if (target && here >= EAT_MIN) this.plant = target.species;
     else if (here >= EAT_MIN && this.plantHere && this.plantT <= 0) { this.plantT = 0.4; this.plant = this.plantHere(x, north, this.foodPlants(season)); }
     else if (here < EAT_MIN) this.plant = null;
     if (acting && here >= EAT_MIN) this.hunger = Math.min(1, this.hunger + dt * EAT_RATE * here / 100 * (this.plant ? 1.25 : 1));   // a named plant feeds a little faster

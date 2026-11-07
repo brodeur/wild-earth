@@ -222,3 +222,36 @@ class TestReptiles(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestDesirability(unittest.TestCase):
+    """pipeline/games.py desirability: each eater's preference for its foods, 0..1, per season (2026-11-06)."""
+    def test_plants_by_part_energy_and_season(self):
+        from pipeline.games import desirability
+        forage = [["deer", "oak", "acorns", "acorn_mast", ["fall", "winter"]], ["deer", "grass", "leaves", "grass_forbs", []],
+                  ["deer", "shrub", "browse", "browse", []], ["deer", "shrub", "berries", "browse", ["summer"]]]
+        d = desirability([], forage, {}, {})["deer"]
+        self.assertEqual(d["oak"], [1.0, None, None, 1.0])            # acorns: the richest part, only in fall and winter (winter, spring, summer, fall)
+        self.assertEqual(d["shrub"][1], 0.0)                            # woody browse the least in spring (leaves beat it)
+        self.assertEqual(max(r[1] for r in d.values() if r[1] is not None), 1.0)   # each season has its best food at 1
+        self.assertGreater(d["shrub"][2], d["shrub"][1])                # the shrub's berries in summer beat its browse in spring
+        self.assertGreater(d["grass"][1], d["shrub"][1])                # leaves over browse
+        for row in d.values():
+            self.assertTrue(all(v is None or 0 <= v <= 1 for v in row))
+
+    def test_prey_by_size_and_diet_order(self):
+        from pipeline.games import desirability
+        diet = {"lion": {"prey": ["deer", "hare", "rabbit"]}}
+        d = desirability([["lion", "deer"], ["lion", "hare"], ["lion", "rabbit"]], [], {"lion": 55, "deer": 60, "hare": 2.5, "rabbit": 0.7}, diet)["lion"]
+        self.assertEqual(d["deer"], [1.0] * 4)                          # near the large carnivore's optimal size, and first in its diet
+        self.assertEqual(d["rabbit"], [0.0] * 4)                        # far too small, and last
+        self.assertTrue(0 < d["hare"][0] < 1)
+
+    def test_omnivore_scaled_per_class_and_written_by_the_step(self):
+        from pipeline.games import desirability
+        from pipeline import steps
+        d = desirability([["fox", "vole"], ["fox", "quail"]], [["fox", "berry", "berries", "browse", []], ["fox", "grass", "leaves", "grass_forbs", []]],
+                         {"fox": 4, "vole": 0.05, "quail": 0.2}, {"fox": {"prey": ["vole", "quail"]}})["fox"]
+        self.assertEqual(max(d["vole"][0], d["quail"][0]), 1.0)          # the best prey is 1 ...
+        self.assertEqual(d["berry"][0], 1.0)                            # ... and so is the best plant
+        self.assertEqual(steps.STEPS["games"].version, "2")             # the games step's version bumped with it

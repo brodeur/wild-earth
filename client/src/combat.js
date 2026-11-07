@@ -48,7 +48,7 @@ export class Combat {
     const hunts = k >= 0 && !!A.preySlots?.[k]?.size;
     this.code = code; this.k = k; this.moves = hunts ? movesFor(A.bodyK(k).family) : []; this.cd.clear(); this.gcd = 0; this.stun = 0;
   }
-  target() { const a = this.quarry.target; return a && !a.dead && !a.gone ? a : null; }
+  target() { const a = this.quarry.target; return a && !a.plant && !a.dead && !a.gone ? a : null; }   // (a plant target is for eating: quarry.js)
   dist(a) { const P = this.ground.flight.pos; return Math.hypot(a.x - P.x, a.z - P.z); }
   reach(key, a) { return this.animals.strikeReach(MOVES[key], this.code, a); }
   inReach(key, a = this.target()) { return !!a && this.animals.killable?.(a) && this.dist(a) <= this.reach(key, a); }
@@ -61,6 +61,7 @@ export class Combat {
   canUse(key) { const G = this.ground; return this.active && G.on && G.mode === 'ground' && this.ready(key) && this.inReach(key); }
   // E (groundControl): the bite at the selection, or at the prey in reach (which becomes the selection); true when it struck
   useNear(key) {
+    if (this.quarry.target?.plant) return false;   // E with a plant targeted eats (groundControl)
     if (!this.target() || !this.inReach(key)) { const P = this.ground.flight.pos, p = this.animals.preyNear?.(P.x, P.y, P.z, MOVES[key].reach * this.animals.bodyK(this.k).len + 1.5); if (p) this.quarry.select(p); }
     return this.use(key);
   }
@@ -100,6 +101,7 @@ export class Combat {
   }
   update(dt) {
     this.t += dt; this.stun = Math.max(0, this.stun - dt);
+    this.animals.playerSize = this.ground.on ? (this.ground.size || 1) : 1;   // the body's size, for the strikes' and the eating's reach
     this.active = this.ground.on && this.moves.length > 0;
     this.draw(dt);
   }
@@ -107,6 +109,16 @@ export class Combat {
   draw(dt) {
     const a = this.quarry.target, F = this.frame, B = this.bar, A = this.animals;
     if (!a || a.gone) { if (F && !F.hidden) F.hidden = true; if (B && !B.hidden) B.hidden = true; this.floats.length = 0; return; }
+    if (a.plant) {   // a food plant: its name and the part in season; no health (quarry.js plant targets)
+      if (B && !B.hidden) B.hidden = true;
+      if (F) {
+        F.hidden = false; F.classList.add('plant'); F.classList.remove('low'); F.style.setProperty('--soul', '#ffd173');
+        const nm = F.querySelector('.tf-name'), txt = `${a.name} · ${a.part}`; if (nm.textContent !== txt) nm.textContent = txt;
+        F.querySelector('.tf-bar').hidden = true;
+      }
+      return;
+    }
+    if (F) { F.classList.remove('plant'); F.querySelector('.tf-bar').hidden = false; }
     const max = A.hpMax(a), hp = A.hpNow(a), frac = Math.max(0, Math.min(1, hp / max)), col = `#${rarityColor(A.rarity[a.sp], this._c).getHexString()}`;
     if (F) {
       F.hidden = false;

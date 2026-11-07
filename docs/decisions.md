@@ -7049,3 +7049,103 @@ Where the brief met the game:
   16.2/14.6, 0.365; Grand Canyon 53.3/64.3, 15.5/13.3, 0.220 -> 53.4/64.3, 13.4/13.3, 0.261; Lofoten 12.2 -> 11.9
   (fair 12.2), 0.655 -> 0.666; the rest within 0.01. Lamar's overlap slips a little as its chroma closes: what is left
   is the hue (the photo greener than the composite's olive), which the luminance factor keeps by choice.
+
+## 2026-11-06: Embody ends in the body (branch claude/embody-enter)
+
+Aaron: "When in spirit form when I click on a target and then press embody, the spirit should travel all the way to the
+body as it does, but then enter the body - switch the avatar to the animal." The autopilot flew to the animal and hung
+there: close in it held the spirit at least 3 m over the ground (the viewing flight's floor) while the become waited for
+it to come within two body radii, which only a big deer's bounding sphere allowed; and it eased its speed to the distance,
+so it could never close on an animal that ran. pilot.js now:
+
+- **Flies into it**: close in the height it wants is the body's own (the spirit's floor, 0.8 m, holds it over the
+  ground), and contact is a touch's (spirit.js: TOUCH_R 2.5 m of the body, TOUCH_AIR 4 m of one in the air, plus half the
+  body's size). Contact ends exactly as a touch does, in `spirit.enter` for that individual: the take (on a mirror page
+  the host's handshake: animals.take asks the host, which takes it out of everyone's world and holds it for that page),
+  the camera's blend, the wisp diving in, then the player is that animal.
+- **Homes until contact**: the animal's speed is measured frame to frame and the spirit flies 6 m/s faster than it (up to
+  65 m/s) and turns twice as hard while chasing.
+- **That one, or none**: the fallback to the nearest of the species is gone (the target is the animal the player chose);
+  if that one cannot be taken, a word says so. Embody is greyed for an animal with no body to play (`animals.playable`,
+  take's own test).
+- **Stops cleanly**: "the deer died" when it dies on the way (a carcass stays in the world, so it was flown to before),
+  "has gone" when it despawns, "lost sight of the deer" when the spirit has had no line to it from its own place (not the
+  chase camera's, which runs through the crowns the spirit dives into) for 2.5 s with the ground between, or 6 s with only
+  leaves between (a deer running under the oaks is seen in glimpses); within 25 m the line is not judged, and an animal
+  never yet seen on this flight (a chip's pick behind a ridge) cannot be lost. Steering cancels ("embody called off") and
+  keeps the target; Escape lets go of the target and ends the flight. Neither embodies anything.
+
+Seen on the home tile (headless Chrome over CDP): a deer 151 m off, contact at 5.4 s, playing as that deer (its id) from
+6.5 s; a deer startled to a gallop (8.5 to 12 m/s) as Embody began, caught at 4.4 s and played; the target killed at 1.5 s
+("the deer died"), Escape at 1.5 s, W at 1.5 s ("embody called off", target kept): no embody; on a mirror page a deer 100 m
+off embodied at 6.1 s while the host held it for that page. Before the line test moved to the spirit's place and split
+ground from leaves, two galloping deer were dropped at 37-39 m as "lost sight" under the oaks.
+
+## 2026-11-06: plant eaters target their food plants, and eat within reach (branch claude/embody-enter)
+
+Aaron: "Herbivores also can target plants, and must be close enough to the target to eat".
+
+- **Who:** any body that eats plants this season (forage.js on: games.json relations.forage). A predator with no food
+  plants (the puma) keeps animal targets only; an omnivore (the bear, the fox) gets both. Tab cycles the food plants on the
+  screen within 40 m with a line of sight, together with the animals (prey for a hunter, any animal for the rest), out from
+  the centre as prey always cycled; a click on one takes it.
+- **The candidates** are forage.js's own sources, now one target per plant rather than one per species (`candidates`): the
+  staged herbs (forbs.js), the near 3D food shrubs and the impostor field's cached shrubs, and a sward patch at each sample
+  of the scent's rings where the grass there is food.
+- **A plant target** shows its common name and the part this body eats in the target frame ("blue wildrye · leaves",
+  "buckbrush · browse"), no health bar, and a warm ring (gold, not a species' soul colour) at its foot over the general
+  forage glow.
+- **One reach rule** (quarry.js `eatReach`, `canEat`): 0.6 of the body's length (locomotion.json, times its size, as the
+  strikes scale) plus the plant's own reach: a deer 0.9 m plus the plant's (1.85 m at a sward patch, 2.4 m at a buckbrush),
+  a brush rabbit 0.2 m plus the plant's. needs.js feeds only through it (with
+  a plant targeted the act feeds within reach, as a good cell, and names that plant; out of reach it feeds nothing),
+  abilities.js greys the act slot out of reach with the title "get closer to the <plant> (E walks you there)" and lights
+  "ready" in it, and groundControl.js's E out of reach walks the body there (turning on the spot first, a trot far off, a
+  walk in), stops, and eats. Any key takes the body back. With no plant targeted, eating is as before: any food within
+  reach of the body.
+- Seen as a deer on the home tile (headless Chrome): Tab to buckbrush 24.5 m off, the slot greyed "get closer"; E walked it
+  in and it grazed; in the open, Tab to a blue wildrye sward 22 m off, E: in reach at 5.3 s, food from 34% to 57% in
+  4 s of grazing. The first try stopped at the plant without grazing: the walker clears the act while the body still moves
+  faster than 0.5 m/s, so the approach now stops first, then eats.
+
+## 2026-11-06: the sniff's shockwave, and a desirability scale for every eater's foods (branch claude/embody-enter)
+
+Aaron: "When an animal sniffs the air, everything around it that is edible glows briefly in a shockwave out from the
+player. The closest things pulse first, then the more distant things and so on... Plants should also have a
+"desirability" scale - how much does each animal prefer each plant/animal. The most preferable stuff pulses the same way a
+mountain lion would while in spirit mode, the least preferable pulses like a common vole."
+
+- **Desirability is a pipeline output** (pipeline/games.py `desirability`, games step version 2, written as
+  games.json `relations.desirability` = {eater: {food: [winter, spring, summer, fall]}} with `desirability_seasons` and
+  `desirability_basis`; tests/test_pipeline.py TestDesirability). Nothing per species: a plant scores by the energy of the
+  part eaten (PART_ENERGY: acorns and nuts 1.0, seeds 0.9, fruit 0.8, bulbs 0.7, flowers 0.55, leaves 0.4, woody browse
+  0.3), raised up to 20% for a food eaten in fewer seasons (a seasonal pulse); prey by how near its mass is to the
+  predator's optimal prey size (Carbone et al. 1999: over 21.5 kg, prey near 45% of the predator's mass; under, a tenth),
+  a log-normal of the ratio (sigma 1.3) blended 60/40 with its place in the diet table (primary prey first). Each eater's
+  plants and prey are scaled to 0..1 separately and season by season, half by the score's place between the season's
+  best and worst and half by its rank among the distinct scores (min-max alone pressed everything but a deer's acorns to
+  the bottom; a year-wide scale put the deer's spring favourites at 0.66 because acorns, eaten only in fall, set the top).
+  The home tile's games.json carries it (written in place: `python -m pipeline.games tiles/<id>/games.json`); other tiles
+  get it at their next games run (the version bump marks the step stale).
+- **What it says on the home tile** (fall unless noted): deer: valley oak (acorns) 1.0, blue wildrye 0.41, poison oak and
+  snowberry 0.18, buckbrush, coffeeberry and mountain mahogany 0 (spring: mule's ears, clover, blue dicks and buckbrush's
+  blossom 1.0, toyon and coffeeberry 0); mountain lion: deer 1.0, coyote 0.78, turkey 0.54, jackrabbit 0.37, brush rabbit
+  0.14, ground squirrel 0; black bear: valley oak 1.0, wild grape and coffeeberry 0.54, elderberry and the manzanitas
+  0.31, soap plant 0; red-tailed hawk: vole 1.0, California quail 0.83, mountain quail 0.69, ground squirrel 0.54, gray
+  squirrel 0.26, fence lizard 0.16, jackrabbit 0 (twice the hawk's weight); brush rabbit, spring: vetch, clover, barley,
+  filaree 1.0, the woody shrubs 0.
+- **The shockwave** (client/src/sniffWave.js): when the sniff starts (scent.js: L, its slot, the canids' and the lion's E),
+  a faint ring on the ground runs out from the body over 2.2 s to its smell reach (scent.js REACH, at most 160 m), and
+  every edible thing pulses once (0.7 s) as the ring reaches it: the near set's food trees (an oak's acorns under it),
+  forage.js's herbs, shrubs and sward, and for a hunter its prey animals (the pulse follows an animal that moves). The
+  pulses are smelled, not seen: drawn over the scene, so a rabbit under a shrub shows.
+- **The pulse is a soul** (spirit.js exports `soulLook`): the same quad, core and bubble and growth with distance; a food
+  of desirability 0 takes the tile's vole soul (its rarity colour, brightness 0.55 + 0.85 x its rarity, size 1 + 0.6 x its rarity), 1 the mountain lion's (its
+  rarity colour and the beacon's brightness 2.4 and size 5), between them the rarity is mixed for the colour and the
+  brightness and size are mixed. A food the tile gives no desirability takes 0.5.
+- **Tab leans to desire** (quarry.js): when ordering targets out from the screen's centre, the least desirable food counts
+  0.15 (squared screen units) further out, and a target that is no food of this body further still.
+- Seen (headless Chrome, home tile, fall): as a deer, 384 pulses (the cap) out to 160 m at 73 m/s, the valley oaks big and
+  gold, buckbrush and coffeeberry small and purple, wildrye green; as a mountain lion near a herd, 21 prey pulses: 2 deer
+  (1.0), a coyote (0.78), 6 jackrabbits (0.37), 12 brush rabbits (0.14). The rabbits were hidden until the pulses stopped
+  depth-testing. The ground ring is faint by design and hardly reads in a montage.

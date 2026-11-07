@@ -124,6 +124,97 @@ def plant_relations() -> tuple[list[list], list[list]]:
     return forage, cover
 
 
+# ---- desirability (owner, 2026-11-06: "Plants should also have a "desirability" scale - how much does each animal prefer
+# each plant/animal") ------------------------------------------------------------------------------------------------
+# For every eater and food on the tile, per season, a preference from 0 to 1, from the data the relations already carry:
+# - a plant: the energy of the part eaten (PART_ENERGY: the digestible energy density of the part, nuts and seeds rich in
+#   fat and starch at the top, fruit's sugars next, then bulbs' starch, flowers, the leaves of grass and forbs, and woody
+#   browse lowest), raised by PULSE for a food eaten in fewer seasons (a seasonal pulse an animal keys on while it lasts);
+#   the best part eaten that season counts.
+# - prey: how near its mass is to the predator's optimal prey size (Carbone et al. 1999, Nature 402: carnivores over
+#   21.5 kg take prey near 45% of their own mass, smaller ones prey of a few per cent), a log-normal of the mass ratio
+#   (PREY_SIGMA), blended with the prey's place in the diet (species_data.DIET lists the primary prey first: RANK_W).
+# Each eater's plants and its prey are scaled to 0..1 separately, season by season (the most preferred of each that season 1,
+# the least 0; half by the
+# score's place between the two, half by its rank among the eater's distinct scores, so one rich food, a deer's acorns,
+# does not press every other to the bottom), so a deer's
+# best food and a lion's best prey both pulse as the rarest soul does (the client's sniff, sniffWave.js). A season the
+# food is not eaten in is null. relations.desirability = {eater: {food: [winter, spring, summer, fall]}} (SEASON_ORDER, written
+# beside it as relations.desirability_seasons).
+PART_ENERGY = {"acorns": 1.0, "seeds": 0.9, "nuts": 1.0, "berries": 0.8, "fruit": 0.8, "bulbs": 0.7, "roots": 0.6,
+               "flowers": 0.55, "leaves": 0.4, "browse": 0.3, "twigs": 0.2, "bark": 0.15}
+PULSE, PREY_SIGMA, RANK_W, LARGE_KG = 0.2, 1.3, 0.4, 21.5
+SEASON_ORDER = list(SEASONS)   # winter, spring, summer, fall (the resource rasters' band order)
+DESIRE_BASIS = ("plants: the eaten part's energy (PART_ENERGY), raised for a seasonal pulse; prey: the mass ratio to the "
+                "predator's optimal prey size (Carbone 1999) blended with the diet's order; each eater's plants and prey scaled 0..1")
+
+
+def desirability(predation: list, forage: list, masses: dict, diet: dict) -> dict:
+    """{eater: {food: [winter, spring, summer, fall]}} from predation [[eater, prey]], forage [[eater, plant, part,
+    resource, seasons]], masses {code: kg} and DIET (the prey's order). See the block comment above."""
+    import math
+    raw: dict[str, dict[str, dict[str, list]]] = {}   # eater -> class -> food -> per-season score
+    for eater, plant, part, _res, seasons in forage:
+        ss = [x for x in seasons if x in SEASON_ORDER] or list(SEASON_ORDER)
+        e = PART_ENERGY.get(part, 0.4) * (1 + PULSE * (len(SEASON_ORDER) - len(ss)) / (len(SEASON_ORDER) - 1))
+        row = raw.setdefault(eater, {}).setdefault("plant", {}).setdefault(plant, [None] * len(SEASON_ORDER))
+        for s in ss:
+            i = SEASON_ORDER.index(s)
+            row[i] = e if row[i] is None else max(row[i], e)
+    for eater, prey in predation:
+        M, m = masses.get(eater), masses.get(prey)
+        order = (diet.get(eater) or {}).get("prey") or []
+        rank = 1 - 0.5 * (order.index(prey) / max(1, len(order) - 1)) if prey in order else 0.5
+        if M and m:
+            opt = 0.45 if M >= LARGE_KG else 0.1
+            size = math.exp(-((math.log(m / M) - math.log(opt)) ** 2) / (2 * PREY_SIGMA ** 2))
+        else:
+            size = 0.5
+        v = (1 - RANK_W) * size + RANK_W * rank
+        raw.setdefault(eater, {}).setdefault("prey", {})[prey] = [v] * len(SEASON_ORDER)
+    out: dict[str, dict[str, list]] = {}
+    for eater, classes in raw.items():
+        for _cls, foods in classes.items():
+            for food in foods:
+                out.setdefault(eater, {}).setdefault(food, [None] * len(SEASON_ORDER))
+            for i in range(len(SEASON_ORDER)):   # within each season: the best food of the season is 1
+                vals = [row[i] for row in foods.values() if row[i] is not None]
+                if not vals:
+                    continue
+                lo, hi = min(vals), max(vals)
+                levels = sorted(set(round(v, 6) for v in vals))   # half the scale is the rank among the distinct scores, so one rich food does not press the rest to the bottom
+                for food, row in foods.items():
+                    v = row[i]
+                    if v is None:
+                        continue
+                    pct = levels.index(round(v, 6)) / (len(levels) - 1) if len(levels) > 1 else 1.0
+                    out[eater][food][i] = round(0.5 * (v - lo) / (hi - lo) + 0.5 * pct, 2) if hi > lo else 1.0
+    return out
+
+
+def tile_masses(tile_dir: pathlib.Path) -> dict:
+    """{code: kg} from the tile's locomotion layer and its fauna slots (a stand-in's own mass)."""
+    out = {}
+    loc = tile_dir / "locomotion.json"
+    if loc.exists():
+        for c, e in (read_json(loc).get("species") or {}).items():
+            if isinstance(e, dict) and e.get("mass_kg"):
+                out[c] = float(e["mass_kg"])
+    fauna = tile_dir / "client" / "fauna.json"
+    if fauna.exists():
+        for f in read_json(fauna).get("slots") or []:
+            if isinstance(f, dict) and f.get("code") and f.get("mass_kg"):
+                out[f["code"]] = float(f["mass_kg"])
+    return out
+
+
+def add_desirability(doc: dict, tile_dir: pathlib.Path) -> dict:
+    rel = doc.setdefault("relations", {})
+    rel["desirability"] = desirability(rel.get("predation") or [], rel.get("forage") or [], tile_masses(tile_dir), DIET)
+    rel["desirability_seasons"] = SEASON_ORDER; rel["desirability_basis"] = DESIRE_BASIS
+    return doc
+
+
 HOT_FLOOR, HOT_PCT, HOT_N, HOT_SEP_M = 40, 97, 12, 150   # a hotspot cell is in the resource's top (100 - HOT_PCT)% that season and scores at least HOT_FLOOR; at most HOT_N per game, HOT_SEP_M apart
 
 
@@ -280,6 +371,7 @@ def derive_games(tile: Tile) -> dict:
            "resources": {r: {s: {"scarcity": v["scarcity"], "mean": v["mean"], "hotspots": len(v["hotspots"])} for s, v in d.items()} for r, d in rasters.items()},
            "species": species}
     add_plays(out)
+    add_desirability(out, tile.path("games.json").parent)
     write_json(tile.path("games.json"), out)
     n = sum(len(s["games"]) for s in species.values())
     return {"path": "games.json", "kind": "json", "species": len(species), "games": n,
@@ -289,12 +381,13 @@ def derive_games(tile: Tile) -> dict:
             "plant_relations": sum(1 for e in forage if e[0] in codes)}
 
 
-if __name__ == "__main__":   # the plays added to games.json files already derived (no rasters needed): python -m pipeline.games tiles/*/games.json
+if __name__ == "__main__":   # the plays and the desirability added to games.json files already derived (no rasters needed): python -m pipeline.games tiles/*/games.json
     import sys
     for path in sys.argv[1:]:
         p = pathlib.Path(path)
-        write_json(p, add_plays(read_json(p)))
-        print(path, "plays:", read_json(p)["plays"])
+        write_json(p, add_desirability(add_plays(read_json(p)), p.parent))
+        d = read_json(p)
+        print(path, "plays:", d["plays"], "desirability:", len(d["relations"]["desirability"]), "eaters")
 
 
 # The games stage's world seeds (2026-11-04, step `game_seeds`): what a fresh world of each shared game starts from on
