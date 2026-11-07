@@ -6774,3 +6774,26 @@ changes. The client asks for it first (15 s), and a host without the endpoint (a
 one as before, now 8 s each. Measured on the local server with the cache off: one request, 193 species from the
 library, none built-in, also under a throttled 4 Mbps / 150 ms network (title up at 12.9 s there).
 `tests/test_species_bundle.py` covers the bundle (every listed id, the files unchanged, gzip, plain, 304).
+
+## 2026-11-06: phase 1, iteration 9 (world pipeline lane restarted on its queue)
+
+- **Lamar and Teton's flora and fauna re-run after the 1 m ground; `--status` knows optional layers.** plants,
+  species, animals and stills re-ran on both (Teton's stills for the first time: its chips now show its own moose,
+  pronghorn and bison models where kin stood in; Lamar 11 model chips and 32 stand-ins, Teton 9 and 33). A step can name
+  layers it writes only where the data allows (`Step.optional`): the ground step's stratigraphic column (none on Teton)
+  and canopy_top's canopy-map layers (a lidar tile measures its canopy instead). `--status` no longer counts them
+  missing, so both tiles read clean.
+- **A river does not dry up by gaining water: permanence by flow continuity** (`pipeline/channels.py`
+  `_flow_continuity`, channels step version 2). On the 1 m ground, ten reaches of the Lamar River's main stem (1,500 km2,
+  braids and stretches 60 m or more off NHD's line) matched no NHD flowline and fell to the area rule's intermittent, so
+  in June, when only perennial reaches run, the river was drawn as a dry gravel bed (the river probe looked across one).
+  The rule: an unmatched reach whose main stem above it runs all year runs all year too, the main stem being an inflow
+  that carries half the reach's drainage area or more (a perennial spring creek joining a big dry wash does not make the
+  wash perennial). Walked upstream first, so a run of unmatched reaches takes it in turn. NHD's own codes are never
+  overridden. On Lamar it changed 28 reaches (order 5-6 now: 52 perennial, 1 intermittent: a 90 m NHD-kept stretch NHD
+  itself codes intermittent); each carries `permanence_rule` (the climate rule's reaches now record theirs too). The
+  water's geometry is unchanged (water_check identical: bed within 15 cm of the section's low point 94.4 %). 3 tests
+  (tests/test_flow_continuity.py).
+- **The river probe sees water** (tools/probes/pose_rule.js river(): the channel cells it looks at are perennial with
+  water 0.1 m or more over the ground, and the sight line meets such water within 25 m of the pose). Lamar's c_river
+  re-picked by it: [5291, 4897] looking north-west down the Lamar, 9.5 m from the old pose (probes.json `_notes`).

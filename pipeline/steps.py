@@ -568,7 +568,7 @@ STEPS: dict[str, Step] = {s.name: s for s in [
     Step("osm", "1", ["fetch_osm"], [], _osm, ["footprint.mask"], ["osm"], doc="the human footprint: buildings, roads, dams", stage=B),
     Step("hydro", "1", ["fetch_hydro"], [], _hydro, ["hydro.flowlines", "hydro.waterbodies"], ["nhdplus_hr", "osm"],
          owner="water lane", doc="NHD streams and waterbodies (OSM fallback)", stage=B),
-    Step("channels", "1", ["channels", "fetch_global"], ["dem", "hydro"], _channels, ["hydro.channels", "client.channel_depth"],
+    Step("channels", "2", ["channels", "fetch_global"], ["dem", "hydro"], _channels, ["hydro.channels", "client.channel_depth"],
          owner="water lane", doc="every stream routed by gravity on the DEM; NHD gives names and permanence", stage=B),
     Step("rewild_hydro", "1", ["rewild_hydro", "channels"], ["dem", "channels", "hydro", "osm"], _rewild_hydro,
          ["hydro.human_water", "terrain.dem_rewilded", "client.channel_profile"], ["osm", "native_land"],
