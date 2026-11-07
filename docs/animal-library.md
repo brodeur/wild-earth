@@ -677,3 +677,50 @@ forward in the air (the AI's were already pitched by `UPRIGHT`).
 into mottling (the starling, the owls, the sharp-shin); the raptors and gulls keep the red-tail's head; no juvenile gull
 plumages; the hairy woodpecker is primitive shapes with no braced tail; the toad's and frog's far tier is a lump; the
 marmot colonies' burrow mouths are the ground squirrel's size; no voices.
+
+## Snakes built procedurally (2026-11-07)
+
+Meshy kept curling snakes. Asked for a terciopelo stretched out, it returned one short and thick, then one coiled into a
+ring, and `tools/build_snake.py`'s gate refused both (40 credits). A snake is mostly a tube along a centreline, so the
+pipeline now builds every snake procedurally first, with no source mesh and no credits: `tools/build_snake_proc.py`,
+called by `pipeline/fauna_models.py procedural_snake` (in `run` for every snake before any Meshy job, or
+`--procedural --codes ...`). It writes the GLB form `build_snake.py` writes (lod0-2 structured tubes of 16, 10 and 6
+points round, POSITION, COLOR_0, _PART, _PARTW, _PIVOT, `extras.rig`), so the client draws it on the snake template
+unchanged.
+
+- **Size.** Its volume is its mass (the trait card's; the reptiles' from the amniote life-history database) at 1,000 kg/m³,
+  as `build_snake.py` sizes a mesh. Its length comes from the amniote database's snout-vent length plus the family's
+  tail, where there is one; else from the family's slenderness (total length over the largest girth). The girth follows
+  from the volume.
+- **Shape, by family** (`FAMILY`; Greene 1997, Feldman and Meiri 2013):
+  - vipers: stout (18 girths long), a short tail (12%), and a broad flat triangular head, widest at the jaws' hinge,
+    on a thin neck;
+  - boas and pythons: heavy;
+  - colubrids and elapids: slim (30 to 32 girths) and long-tailed, the head a little wider than the neck.
+  The girth profile runs from the snout to the neck, swells to its thickest near the middle, narrows at the vent and
+  tapers along the tail. The cross-section is a flattened ellipse with the belly on the floor.
+- **Pattern.**
+  - The source is the reference photo rule's texture reference (`pipeline/reference_photos.py`: CC0, CC BY or
+    CC BY-SA, attribution kept in the GLB's `extras.reference` and the registry).
+  - The snake is cut out by the rule's segmenters. Its centreline is the longest path through the mask's skeleton,
+    the head the wider end, and each cross-section is re-centred on the mask.
+  - Across the body, the colours from one flank over the back to the other are unrolled into a strip. Only the
+    light's smooth fall-off to the flanks is divided out: a parabola fitted over the columns, so a stripe stays.
+  - The back and upper flanks come from the strip, and the belly from the appearance card's first underparts colour.
+  - A palette of 10 (k-means, as `build_snake.py`) gives one flat colour per face.
+- **Judged and served by the rule** (`procedural_snake`). The procedural model gets the acceptance rule's check, the
+  fitted appearance check as for any model. It is served when it passes and the species has no model that passes. If
+  the species has one, the procedural model must also score at least as well on the check and keep at least
+  `PATTERN_KEEP` (0.8) of the served model's pattern contrast (the area-weighted spread of lightness over the back and
+  flanks). Every decision is recorded in `models.json` under the species' `procedural`, with its numbers.
+  - **The terciopelo** (no model; 1.04 kg, 0.88 m as a viper; its pattern from Bernard Dupont's CC BY-SA 2.0 photo
+    on Wikimedia Commons): check 1.0, served. Corcovado's slot draws it.
+  - **The western terrestrial garter snake** (its pattern from Kathy Lichtendahl's CC BY photo on iNaturalist):
+    check 0.976 against the Meshy model's 0.441, but a pattern contrast of 13.5 against 29.2. Its photo shows a pale
+    snake whose faint stripes the unrolling blurs at the bends, while the Meshy model's dark body and bold pale stripe
+    read as a garter snake. The Meshy model stays. Without the pattern condition the rule would have swapped them.
+- **Open.**
+  - The pattern is coarse at 16 faces round: blotches read as mottling.
+  - A thin body seen obliquely in its photo unrolls with wavy stripes.
+  - No eyes or scale detail are drawn.
+  - The slenderness and head numbers per family are rule constants from the literature, not measured per species.

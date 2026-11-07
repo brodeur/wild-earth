@@ -70,6 +70,7 @@ import argparse
 import datetime as dt
 import json
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -510,6 +511,91 @@ def register(reg: dict, code: str, jobs: list[str], credits: int, attempts: int,
     reg["species"][code] = registry()["species"][code]
 
 
+# The procedural snake (2026-11-07, the snake lane; docs/animal-library.md "Snakes built procedurally"): every snake is
+# first built with no source mesh and no credits (tools/build_snake_proc.py: its size from its mass, its shape from its
+# family, its pattern unrolled from its texture photo) and judged by the acceptance rule's check as any model. It is
+# served when it passes and the species has no model that passes, or one that scores no better; else the model the
+# species has stays and the procedural one is recorded beside it (`procedural`: its check, whether it was served and why).
+PROC_DIR = ROOT / "library" / "animals" / "procedural"
+# a model that replaces a served one must keep its pattern: the spread of lightness over its back and flanks (pattern
+# contrast, below) at least this share of the served model's (2026-11-07: a garter snake unrolled from a pale photo matched
+# the described colours better than the Meshy model and lost the stripes that make it a garter snake)
+PATTERN_KEEP = 0.8
+
+
+def pattern_contrast(glb: Path) -> float:
+    """The area-weighted spread (standard deviation) of CIELAB lightness over a model's upperparts and flanks faces."""
+    import numpy as np
+    from .appearance import model_regions
+    reg = model_regions(glb)
+    L = np.concatenate([reg[r][0][:, 0] for r in ("upperparts", "flanks") if r in reg] or [np.zeros(1)])
+    A = np.concatenate([reg[r][1] for r in ("upperparts", "flanks") if r in reg] or [np.ones(1)])
+    m = float((L * A).sum() / max(A.sum(), 1e-12))
+    return round(float(np.sqrt(((L - m) ** 2 * A).sum() / max(A.sum(), 1e-12))), 2)
+
+
+def procedural_snake(code: str, tile_id: str | None = None) -> dict:
+    from .appearance import check
+    PROC_DIR.mkdir(parents=True, exist_ok=True)
+    out = PROC_DIR / f"{code}.glb"
+    r = subprocess.run(PY + [str(ROOT / "tools" / "build_snake_proc.py"), code, str(out)], cwd=ROOT, capture_output=True, text=True)
+    rec = {"at": dt.date.today().isoformat(), "build": "tools/build_snake_proc.py", "glb": _rel(out) if out.exists() else None}
+    if r.returncode or not out.exists():
+        rec.update({"ok": False, "served": False, "why": "the build failed: " + ((r.stderr or r.stdout).strip().splitlines() or ["?"])[-1][:300]})
+        return _record_procedural(code, rec, tile_id)
+    app = appearance(code) or {}
+    params = fitted_params()
+    c = check(out, app, params) if app.get("regions") else {"ok": True, "score": None, "fails": []}
+    rec["check"] = {k: c.get(k) for k in ("ok", "score", "fails")}
+    rec["pattern_contrast"] = pattern_contrast(out)
+    e = registry().get("species", {}).get(code) or {}
+    cur = ASSETS / f"{code}.glb"
+    cur_proc = e.get("build") == "tools/build_snake_proc.py"
+    cur_ok, cur_score, cur_pat = False, None, None
+    if cur.exists() and e and not cur_proc:
+        a = acceptance(code, e, params)
+        cur_ok = a["rule"]["decision"] == "accepted"
+        cur_score = ((a["rule"]["stages"].get("check") or {}).get("score"))
+        cur_pat = pattern_contrast(cur); rec["served_pattern_contrast"] = cur_pat
+    if not c.get("ok"):
+        rec.update({"served": False, "why": "the procedural model fails the check: " + "; ".join(c.get("fails") or [])
+                    + (f"; the model served (check {cur_score}) stays" if cur_ok else "")})
+    elif cur_ok and cur_score is not None and (c.get("score") or 0) < cur_score:
+        rec.update({"served": False, "why": f"both pass the check; the model served scores {cur_score}, the procedural one {c.get('score')}: the served one stays"})
+    elif cur_ok and cur_pat and rec["pattern_contrast"] < PATTERN_KEEP * cur_pat:
+        rec.update({"served": False, "why": f"both pass the check (procedural {c.get('score')}, served {cur_score}), but the procedural model keeps "
+                    f"{rec['pattern_contrast']} of lightness spread over its back and flanks against the served model's {cur_pat} (under {PATTERN_KEEP:g} of it): "
+                    "its pattern reads weaker, the served one stays"})
+    else:
+        rec.update({"served": True, "why": "the procedural model passes the check" + (f" and scores {c.get('score')} against the served model's {cur_score}, its pattern contrast {rec['pattern_contrast']} against {cur_pat}" if cur_ok
+                    else "; the species had no model that passes" if not cur_proc else "; it replaces the earlier procedural build")})
+        if cur.exists() and not cur_proc:   # the replaced model kept beside its job (rebuildable from it too)
+            shutil.copy2(cur, PROC_DIR / f"{code}.replaced.glb")
+        shutil.copy2(out, cur)
+        x = json.loads(out.read_bytes()[20:20 + int.from_bytes(out.read_bytes()[12:16], "little")]).get("extras", {})
+        fresh = registry()
+        old = fresh.setdefault("species", {}).get(code) or {}
+        fresh["species"][code] = {**{k: old[k] for k in ("verdicts", "override", "jobs", "credits", "attempts", "photo") if old.get(k)},
+                                  "kind": "snake", "archetype": "snake", "glb": f"client/assets/fauna/{code}.glb", "build": "tools/build_snake_proc.py",
+                                  "built": rec["at"], "tile": old.get("tile", tile_id), "reference": x.get("reference"),
+                                  "colour_check": rec["check"]}
+        REGISTRY.write_text(json.dumps(fresh, indent=1) + "\n")
+    return _record_procedural(code, rec, tile_id)
+
+
+def _record_procedural(code: str, rec: dict, tile_id: str | None) -> dict:
+    fresh = registry()
+    e = fresh.setdefault("species", {}).get(code)
+    if e is None:
+        fresh["species"][code] = e = {"kind": "snake", "archetype": "snake", "tile": tile_id}
+    e["procedural"] = rec
+    REGISTRY.write_text(json.dumps(fresh, indent=1) + "\n")
+    if rec.get("served"):
+        record_acceptance(code)
+    print(f"{code}: procedural snake {'served' if rec.get('served') else 'not served'}: {rec.get('why')}", flush=True)
+    return rec
+
+
 def rebuild(tile_id: str, codes: list[str] | None = None) -> dict:
     """Every library model (or those named) rebuilt from the refine job it was built from, with today's build (no credits)."""
     out = {}
@@ -948,6 +1034,12 @@ def regate(code: str) -> dict:
     glb = ROOT / e.get("glb", f"client/assets/fauna/{code}.glb")
     job = job_of(code, glb)
     kind = e.get("kind", "quadruped")
+    if e.get("build") == "tools/build_snake_proc.py":   # a procedural snake: built again from its traits and photo (no job)
+        with tempfile.TemporaryDirectory(prefix=f"regate_{code}_") as d:
+            out = Path(d) / f"{code}.glb"
+            r = subprocess.run(PY + [str(ROOT / "tools" / "build_snake_proc.py"), code, str(out)], cwd=ROOT, capture_output=True, text=True)
+            return {"job": None, "build": "tools/build_snake_proc.py", "at": dt.date.today().isoformat(), "ok": out.exists() and r.returncode == 0,
+                    "log": ((r.stdout + r.stderr).strip().splitlines() or [""])[-1][:300]}
     tool = BUILD_TOOL.get(kind, "build_quadruped.py")
     rec = {"job": _rel(job), "build": f"tools/{tool}", "at": dt.date.today().isoformat()}
     if job is None:
@@ -1197,6 +1289,13 @@ def run(tile_id: str, budget: int, reserve: int, max_n: int, dry: bool, kind: st
         if row["ok"]:
             print(f"{code}: modelled from a paid job, 0 credits", flush=True)
             continue
+        if snk and not dry:   # a snake: the procedural build first, no credits (procedural_snake)
+            pr = procedural_snake(code, tile_id)
+            row["procedural"] = {k: pr.get(k) for k in ("served", "why", "check")}
+            if pr.get("served"):
+                row["ok"] = True
+                print(f"{code}: built procedurally, 0 credits", flush=True)
+                continue
         mesh, tex = prompts(s, place)
         row["prompt"], row["texture_prompt"] = mesh, tex
         if dry:
@@ -1307,6 +1406,7 @@ def main() -> None:
     ap.add_argument("--fit-accept", action="store_true", help="measure the acceptance rule against the recorded verdicts; writes models.json acceptance_rule")
     ap.add_argument("--verdict", choices=("accepted", "rejected"))
     ap.add_argument("--why", default="")
+    ap.add_argument("--procedural", action="store_true", help="build the snakes named with --codes procedurally (tools/build_snake_proc.py, no credits), judge and serve by the rule, then stop")
     ap.add_argument("--codes", default="", help="comma-separated species codes for --rebuild, --check or --recolour (--recolour re-refines these even if they pass)")
     a = ap.parse_args()
     codes = [c.strip() for c in a.codes.split(",") if c.strip()] or None
@@ -1314,6 +1414,10 @@ def main() -> None:
         judge(a.judge, a.verdict, a.why); return
     if a.accept:
         accept_library(codes, a.regate); return
+    if a.procedural:
+        for code in codes or []:
+            procedural_snake(code, a.tile)
+        return
     if a.fit_accept:
         r = fit_acceptance()
         reg = registry()
