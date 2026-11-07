@@ -131,10 +131,14 @@ it (adopted 2026-10-25 for the scrub-jay, quail and squirrel):
 
 - **Bird:** body, legs A/B (procedural legs added by the build script), tail, head (with the neck; pivot at the
   neck's base, nodding with each step on the quail), wing L/R (the arm, pivot at the shoulder) and HAND_L/R (9,
-  10; pivot at the wrist). The generated mesh's folded wings stay body geometry. Flight uses wing cards (arm and
-  hand per side, top and underside colours) that collapse into the shoulder as pose goes to 1, so they cost
-  nothing visible on the ground and open for the flush or the jay's short flight. The hand lags the arm through
-  the stroke.
+  10; pivot at the wrist). The generated mesh's folded wings stay body geometry. Flight uses wing cards; since
+  2026-11-07 every bird's (drawn or procedural) are made at load by `client/src/birdWing.js`: three cards per side
+  (the arm to the wrist, the hand, and the tip, TIP_L/R 11/12: a rounded or pointed tip, or a fan of fingers on a
+  heavy low-index wing), shaped by the old cards' span and chord and AVONET's Hand-Wing Index, and posed by one
+  wing rig (shoulder, wrist, fingertip joint: the wave out along the wing, the wrist bent on the upstroke, a Z-fold
+  against the body on pose, tucked inside a drawn mesh's own folded wing at the end of the fold). The soarers'
+  flight meshes keep their own wings on the same rig (pose their stoop). See decisions.md, 2026-11-07, segmented
+  wings.
 - **Rodent:** body (hindquarters), CHEST (7; pivot at the lumbar: flexes with the bound, rises to sit up),
   head and fore legs (children of the chest), hind legs, tail and TAIL_TIP (8; child of the tail: a lagged wave
   and an extra curl on pose).

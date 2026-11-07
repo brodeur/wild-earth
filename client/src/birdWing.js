@@ -362,7 +362,8 @@ const float wing_squeeze = ${f4(W.squeeze ?? 1)};
 const vec4 wing_hide = vec4(${[...(W.hc || [0, 0, 0]), W.hide ? 1 : 0].map(f4).join(', ')});
 ${W.mode === 'stoop' ? '#define WING_STOOP\n' : ''}
 // the wing's pose: part 4/5 the arm, 9/10 the hand, 11/12 the tip (left the first of each pair); R the rotation applied
-vec3 wingRig(vec3 p, int part, float ampW, float poseW, out mat3 R) {
+vec3 wingRig(vec3 p, int part, float ampW, float poseW, float w, out mat3 R) {
+  vec3 p0 = p;
   float s = (part == 4 || part == 9 || part == 11) ? 1.0 : -1.0;
   vec3 sh = vec3(s * wing_sh.x, wing_sh.yz), wr = vec3(s * wing_wr.x, wing_wr.yz), tp = vec3(s * wing_tp.x, wing_tp.yz);
   float ph = aAnim.x, g = aAnim.y;
@@ -392,11 +393,12 @@ vec3 wingRig(vec3 p, int part, float ampW, float poseW, out mat3 R) {
     p.z = tp.z + (p.z - tp.z) * (1.0 - 0.6 * pz - 0.15 * up * fl);
     p = tp + Rt * (p - tp); R = Ra * Rh * Rt;
   }
-  if (part >= 9) { p = wr + Rh * (p - wr); if (part < 11) R = Ra * Rh; }
+  if (part >= 9) { p = mix(p0, wr + Rh * (p - wr), w); if (part < 11) R = Ra * Rh; }   // a mesh's hand blended into its arm by aPartW
   float sq = mix(1.0, wing_squeeze, pz);   // the folded arm's secondaries stacked (the hand and tip ride in with the wrist)
   if (part >= 9) p.x -= s * (1.0 - sq) * (wing_wr.x - wing_sh.x);
   else p.x = sh.x + (p.x - sh.x) * sq;
   p = sh + Ra * (p - sh);
+  if (part < 9) p = mix(p0, p, w);   // a mesh's arm blended into its body
   p.x += s * wing_out * pz;
   // a drawn mesh's own folded wing: over the fold's last part the cards tuck into the body behind it
   float hk = wing_hide.w * smoothstep(0.6, 1.0, pz);
@@ -409,9 +411,10 @@ vec3 wingRig(vec3 p, int part, float ampW, float poseW, out mat3 R) {
 export const WING_BODY = `
 #ifdef WING_RIG
 if (animPart == 4 || animPart == 5 || (animPart >= 9 && animPart <= 12)) {
-  transformed = wingRig(animPos, animPart, uAmp.w, uPose.w, animR);
   #ifdef ANIM_WEIGHTED
-  transformed = mix(animPos, transformed, aPartW);
+  transformed = wingRig(animPos, animPart, uAmp.w, uPose.w, aPartW, animR);
+  #else
+  transformed = wingRig(animPos, animPart, uAmp.w, uPose.w, 1.0, animR);
   #endif
 }
 #endif`;

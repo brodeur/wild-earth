@@ -12,7 +12,7 @@ import { segmentWings, scaleWing, wingDecl, WING_BODY, HWI, MASS, FAMILY } from 
 //   legs     swing with sin(phase [+ pi for the B pair]) * gait, and squash toward the body with pose
 //   tail     lifts with flick (a flick or a raise) and with pose (sitting squirrel, bedded deer)
 //   head     dips with flick (pecking, grazing) and with pose
-//   wings    flap with sin(phase) * gait and fold back along the body with pose (perched)
+//   wings    every bird's: birdWing.js (the segmented wing and the shared wing rig, WING_RIG), from phase, gait and pose
 // Space: metres, +z forward, +y up, +x the animal's left; the origin is where it stands or perches.
 // No skeleton and no animation clips: one draw call per species, all motion from four floats.
 //
@@ -21,8 +21,9 @@ import { segmentWings, scaleWing, wingDecl, WING_BODY, HWI, MASS, FAMILY } from 
 // and the procedural models:
 //   bird    BODY, LEG_A/B, TAIL, HEAD (head and neck, pivot at the base of the neck; the quails' plumes), WING_L/R (the arm, pivot
 //           at the shoulder) and HAND_L/R (pivot at the wrist; child of the wing). Folded wings stay body geometry;
-//           the flight wings are cards that collapse into the shoulder as pose goes to 1 (perched or on the ground).
-//           The hand lags the arm through the stroke. aAnim2 = (wing bow, tail spread, -, colour variant).
+//           the flight wings are cards, re-made at load as the segmented wing (birdWing.js: arm, hand and tip, TIP_L/R,
+//           on the shared wing rig, which Z-folds them against the body as pose goes to 1 and tucks them inside the
+//           mesh's own folded wing). aAnim2 = (wing bow, tail spread, -, colour variant).
 //           The ground raven (RIG_GROUND; loadRavenGroundMesh) is the template on a standing mesh: its folded wings
 //           are WING/HAND parts that never collapse, and aAnim2 = (wing flick, head yaw, hop, -): the flick lifts and
 //           opens the folded wing at the shoulder with the hand following at the wrist, the head turns about the
