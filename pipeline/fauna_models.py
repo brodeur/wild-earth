@@ -86,8 +86,9 @@ COST = {"preview": 20, "refine": 10, "image": 30}
 PREDATOR_KG = 15.0
 # A bird slot's archetype (pipeline/fauna_slots.py kin_for) -> the build's (tools/build_bird.py --archetype): the client
 # template its kin is drawn with. The corvids' kin (the raven) is drawn by two models, a standing one and a procedural
-# flier (animals.js DRAWN hybrid), which a fauna model does not replace: none.
-BIRD_BUILD = {"soaring scavenger": "soar", "soaring raptor": "soar", "gull": "soar", "wading bird": "wade", "waterbird": "water",
+# flier (animals.js DRAWN hybrid), which a fauna model does not replace: none (the corvid and the walking corvid). A
+# shorebird stands on the heron's template (its kin).
+BIRD_BUILD = {"soaring scavenger": "soar", "soaring raptor": "soar", "gull": "soar", "wading bird": "wade", "shorebird": "wade", "waterbird": "water",
               "ground bird": "ground", "perching bird": "perch", "night perching bird": "perch", "kingfisher": "perch",
               "woodpecker": "perch"}
 SCAVENGER_KG = 1.0

@@ -326,8 +326,13 @@ RANGE = {
     "sceloporus_occidentalis":  {"elev_m": [0, 2700], "habitats": ["oak_woodland", "conifer_forest", "mixed_forest", "chaparral", "grassland", "riparian", "barren"]},
     "ursus_americanus":         {"elev_m": [800, 3000], "habitats": ["conifer_forest", "mixed_forest", "chaparral", "riparian", "oak_woodland"]},
     "oreortyx_pictus":          {"elev_m": [600, 3000], "habitats": ["chaparral", "mixed_forest", "conifer_forest"]},
-    # the Hoh batch: bands for the Olympic west slope (lowland rain forest to the subalpine; the outside-California rule
-    # is records first, so these only matter where a range test runs)
+}
+# The Hoh batch's bands, for the Olympic west slope (lowland rain forest to the subalpine). Kept apart from RANGE
+# (2026-11-07): the range test runs only on California tiles (fetch_species.presence), and while these sat in RANGE it
+# put the banana slug, the red-backed salamander, the gray jay, the snowshoe hare and the Roosevelt elk on the Sierra
+# foothills and San Francisco by an Olympic elevation band. Outside California presence is by records alone; a range
+# test there would need its own bands, and these are the Olympic Peninsula's.
+RANGE_OLYMPIC = {
     "cervus_canadensis":        {"elev_m": [0, 1800], "habitats": ["riparian", "grassland", "mixed_forest", "conifer_forest"]},
     "tamiasciurus_douglasii":   {"elev_m": [0, 2000], "habitats": ["conifer_forest", "mixed_forest", "riparian"]},
     "troglodytes_pacificus":    {"elev_m": [0, 1600], "habitats": ["conifer_forest", "mixed_forest", "riparian"]},

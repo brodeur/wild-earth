@@ -320,24 +320,23 @@
   },
   "species": {
    "stage": "fauna",
-   "started_at": "2026-11-05T06:49:37Z",
-   "ended_at": "2026-11-05T06:52:30Z",
-   "wall_s": 173.5,
+   "started_at": "2026-11-07T16:25:11Z",
+   "ended_at": "2026-11-07T16:25:15Z",
+   "wall_s": 4.0,
    "cpu_self_s": 3.8,
    "cpu_children_s": 0.0,
-   "downloads": {
-    "gbif": {
-     "bytes": 48806775,
-     "requests": 113
-    }
-   },
+   "downloads": {},
    "cache": {
     "gbif": {
-     "hits": 187,
-     "misses": 93
+     "hits": 429,
+     "misses": 0
+    },
+    "eltontraits": {
+     "hits": 1,
+     "misses": 0
     }
    },
-   "disk_bytes": 4312811,
+   "disk_bytes": 16221205,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -347,28 +346,27 @@
   },
   "animals": {
    "stage": "fauna",
-   "started_at": "2026-11-05T06:52:30Z",
-   "ended_at": "2026-11-05T06:53:53Z",
-   "wall_s": 82.9,
-   "cpu_self_s": 1.8,
+   "started_at": "2026-11-07T16:25:15Z",
+   "ended_at": "2026-11-07T16:25:16Z",
+   "wall_s": 0.6,
+   "cpu_self_s": 0.5,
    "cpu_children_s": 0.0,
-   "downloads": {
-    "gbif": {
-     "bytes": 111917,
-     "requests": 105
-    }
-   },
+   "downloads": {},
    "cache": {
     "gbif": {
-     "hits": 164,
-     "misses": 105
+     "hits": 309,
+     "misses": 0
     },
     "eltontraits": {
      "hits": 2,
      "misses": 0
+    },
+    "ndownloader.figshare.com": {
+     "hits": 2,
+     "misses": 0
     }
    },
-   "disk_bytes": 144450,
+   "disk_bytes": 223616,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -493,14 +491,14 @@
    "meshy_queued_credits_est": 0
   },
   "fauna": {
-   "started_at": "2026-11-05T06:49:37Z",
-   "ended_at": "2026-11-05T06:54:20Z",
-   "wall_s": 282.8,
-   "cpu_s": 31.9,
-   "download_bytes": 48918692,
-   "cache_hits": 354,
-   "cache_misses": 198,
-   "disk_bytes": 4474289,
+   "started_at": "2026-11-07T16:25:11Z",
+   "ended_at": "2026-11-07T16:25:16Z",
+   "wall_s": 31.0,
+   "cpu_s": 30.6,
+   "download_bytes": 0,
+   "cache_hits": 744,
+   "cache_misses": 0,
+   "disk_bytes": 16461849,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -720,35 +718,107 @@
    "ended_at": "2026-11-07T01:43:18Z",
    "failed": [],
    "refused": []
+  },
+  {
+   "started_at": "2026-11-07T15:47:29Z",
+   "stages": [
+    {
+     "stage": "fauna",
+     "started_at": "2026-11-07T15:47:29Z",
+     "steps_run": [
+      "species",
+      "animals"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T15:53:59Z"
+    }
+   ],
+   "ended_at": "2026-11-07T15:53:59Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T16:21:43Z",
+   "stages": [
+    {
+     "stage": "fauna",
+     "started_at": "2026-11-07T16:21:43Z",
+     "steps_run": [
+      "species",
+      "animals"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T16:21:49Z"
+    }
+   ],
+   "ended_at": "2026-11-07T16:21:49Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T16:23:55Z",
+   "stages": [
+    {
+     "stage": "fauna",
+     "started_at": "2026-11-07T16:23:55Z",
+     "steps_run": [
+      "species",
+      "animals"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T16:24:00Z"
+    }
+   ],
+   "ended_at": "2026-11-07T16:24:00Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T16:25:11Z",
+   "stages": [
+    {
+     "stage": "fauna",
+     "started_at": "2026-11-07T16:25:11Z",
+     "steps_run": [
+      "species",
+      "animals"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T16:25:16Z"
+    }
+   ],
+   "ended_at": "2026-11-07T16:25:16Z",
+   "failed": [],
+   "refused": []
   }
  ],
  "totals": {
-  "wall_s": 658.9,
-  "cpu_s": 260.8,
-  "download_bytes": 54570107,
-  "cache_hits": 693,
-  "cache_misses": 330,
-  "disk_bytes": 365000024,
+  "wall_s": 407.1,
+  "cpu_s": 259.5,
+  "download_bytes": 5651415,
+  "cache_hits": 1083,
+  "cache_misses": 132,
+  "disk_bytes": 376987584,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 2000
  },
- "updated_at": "2026-11-07T01:43:19Z",
+ "updated_at": "2026-11-07T16:25:16Z",
  "client": {
-  "bytes": 3313505,
-  "files": 13,
+  "bytes": 3990257,
+  "files": 15,
   "largest": {
    "client/features.json": 1427232,
    "client/weather.json": 655897,
+   "client/species_prior.json": 631849,
    "games.json": 391825,
    "client/species_mix.json": 318574,
-   "client/species_prior.json": 243095,
-   "manifest.json": 179083,
-   "perception.json": 21651,
-   "locomotion.json": 20576,
-   "calendar.json": 18259,
-   "species/species.json": 13002,
-   "client/ground_classes.json": 12217,
-   "client/substrate.json": 11191
+   "manifest.json": 183738,
+   "perception.json": 162351,
+   "locomotion.json": 57462,
+   "client/fauna.json": 48170,
+   "calendar.json": 45635,
+   "species/species.json": 42682,
+   "client/ground_classes.json": 12217
   },
   "note": "every file under client/ and the tables the viewer fetches; an upper bound (the present-day texture is fetched only on request)"
  }

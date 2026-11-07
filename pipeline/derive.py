@@ -253,6 +253,42 @@ def _road_weights(tile: Tile, z_shape, res: float, tr, urban: np.ndarray | None 
     return w, majors(mj & kp) | (majors(mj & ~kp) & ~urban)
 
 
+def _road_cells(tile: Tile, z_shape, res: float, tr, shape30) -> np.ndarray | None:
+    """The 30 m cells (shape30) any road's pavement crosses (_road_weights over 140 anywhere in the cell)."""
+    roads = _road_weights(tile, z_shape, res, tr, None)
+    if roads is None:
+        return None
+    rw = roads[0] > 140
+    n, m = rw.shape[0], shape30[0]
+    r = (np.arange(n) * m // n)
+    cells = np.zeros(shape30, bool)
+    ys, xs = np.nonzero(rw)
+    cells[r[ys], r[xs]] = True
+    return cells
+
+
+def _cover_over_roads(fill: np.ndarray, veg: np.ndarray, *layers: np.ndarray):
+    """Each layer on the `fill` cells from the `veg` cells around them: a normalised Gaussian convolution, sigma 2 cells,
+    then 4 and 8 where nothing vegetated is that close. Returns the layers (copies) and the count filled."""
+    from scipy.ndimage import gaussian_filter
+    if not fill.any():
+        return (*layers, 0)
+    out = [l.astype("float32").copy() for l in layers]
+    todo = fill.copy()
+    w = veg.astype("float32")
+    for sg in (2.0, 4.0, 8.0):
+        ws = gaussian_filter(w, sg)
+        ok = todo & (ws > 0.05)
+        for o, l in zip(out, layers):
+            v = gaussian_filter(np.where(veg, l, 0).astype("float32"), sg) / np.maximum(ws, 1e-6)
+            o[ok] = v[ok]
+        todo &= ~ok
+        if not todo.any():
+            break
+    res = [np.round(o).astype(l.dtype) for o, l in zip(out, layers)]
+    return (*res, int((fill & ~todo).sum()))
+
+
 def client_rasters(tile: Tile) -> dict:
     from .habitat import COLORS
     z, res, tr = _dem(tile)
@@ -280,13 +316,20 @@ def client_rasters(tile: Tile) -> dict:
         from .habitat import rewilded_cover
         with rasterio.open(tile.path("vegetation/habitat_present.tif")) as src:
             tree, shrub, herb = rewilded_cover(tile, src.read(1), evc, tree, shrub, herb)
+    # Roads rewilded (2026-11-07): a 30 m cell a road crosses whose LANDFIRE cover is not vegetation (Developed-Roads)
+    # takes the cover of the vegetated cells around it (a normalised convolution over ~60 m, wider where a freeway's
+    # cells run several wide), so a tile drawn from this layer has no treeless band where the road was
+    road_cells, road_filled = _road_cells(tile, z.shape, res, tr, evc.shape), 0
+    if road_cells is not None:
+        tree, shrub, herb, road_filled = _cover_over_roads(road_cells & (evc < 100), evc >= 100, tree, shrub, herb)
     Image.fromarray(hab.astype("uint8"), "L").save(tile.path("client/habitat.png"), optimize=True)
     Image.fromarray(np.dstack([tree, shrub, herb]).astype("uint8"), "RGB").save(tile.path("client/canopy.png"), optimize=True)
     m = hab.shape[0]
     out["client.habitat"] = {"path": "client/habitat.png", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
                              "pixels": m, "resolution_m": hres, "encoding": "R = habitat class code"}
     out["client.canopy"] = {"path": "client/canopy.png", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
-                            "pixels": m, "resolution_m": hres, "encoding": "R tree %, G shrub %, B herb %"}
+                            "pixels": m, "resolution_m": hres, "encoding": "R tree %, G shrub %, B herb %",
+                            "road_cells_from_neighbours": int(road_filled)}
 
     # mast.png: fall acorn_mast score (0..100) in R on the resource's own metric 30 m grid, for the acorn game.
     mast_tif = tile.path("resources/acorn_mast.tif")
@@ -317,33 +360,30 @@ def client_rasters(tile: Tile) -> dict:
     canopy_dark = 1.0 - 0.35 * cover
     tex = color * (0.35 + 0.75 * shade[..., None]) * (canopy_dark * (1 + noise))[..., None]
 
-    # roads.png: decayed-road weight (255 pavement, falling to 0 across the verge), and the
-    # same roads baked into the texture as worn grey pavement with darker seams and grass in the cracks.
-    # The dense-urban mask first (pipeline/urban.py): inside it the street grid goes with the blocks.
-    urban = None
+    # Roads are rewilded, not kept (2026-11-07, Aaron: "Yes, remove road"; pipeline/unroad.py for their cut and fill):
+    # client/roads.png is 0 everywhere (no pavement texture, no gap in the grass and herbs; the client's ground-data texture
+    # takes its R from it), and the texture has no pavement. Where the roads were is the pipeline's own
+    # footprint/roads.png (the old decayed-road weight: 255 pavement, the verge from 136 falling to 0 at 3x the paved
+    # half-width; tracks half weight; every road, the dense-urban mask's streets included), which the imagery erase fills
+    # and the inpaint step treats as ground.
     if tile.path("footprint/mask.geojson").exists():
-        from .urban import build as build_urban, load as load_urban
+        from .urban import build as build_urban
         out["footprint.urban"] = build_urban(tile)
-        urban = load_urban(tile, n)
-    roads = _road_weights(tile, z.shape, res, tr, urban)
+    roads = _road_weights(tile, z.shape, res, tr, None)
     if roads is not None:
-        rw, major = roads
-        Image.fromarray(rw, "L").save(tile.path("client/roads.png"), optimize=True)
+        rw, _major = roads
+        Image.fromarray(rw, "L").save(tile.path("footprint/roads.png"), optimize=True)
+        out["footprint.roads"] = {"path": "footprint/roads.png", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
+                                  "pixels": n, "resolution_m": res, "derived_from": ["footprint.mask"], "for_clients": False,
+                                  "encoding": "where the roads were: weight 0..255 (255 pavement, verge 136 falling to 0; tracks half "
+                                              "weight), every road; pipeline only (the imagery erase), the client's roads are 0",
+                                  "road_fraction": float((rw > 140).mean())}
+        Image.fromarray(np.zeros(z.shape, "uint8"), "L").save(tile.path("client/roads.png"), optimize=True)
         out["client.roads"] = {"path": "client/roads.png", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),
-                               "pixels": n, "resolution_m": res, "derived_from": ["footprint.mask", "footprint.urban"],
-                               "encoding": "road weight 0..255 (255 pavement, verge 136 falling to 0; tracks half weight); "
-                                           "0 inside footprint.urban except motorways and trunk roads",
-                               "road_fraction": float((rw > 140).mean())}
-        wt = rw.astype("float32") / 255
-        lit = (0.35 + 0.75 * shade)[..., None] * (1 + 0.5 * noise)[..., None]
-        pave = np.where(major[..., None], np.float32([170, 164, 154]), np.float32([158, 148, 130])) * lit   # weathered, sun-bleached
-        seam = rng.random((n, n)).astype("float32")
-        on = wt > 0.55
-        pave *= np.where(on & (seam < 0.25), 0.86, 1.0)[..., None]                      # cracks: 25% of pixels a shade darker
-        grassy = (on & (seam > 0.96))[..., None]                                         # 4%: grass up through the seams
-        pave = np.where(grassy, pave * 0.55 + np.float32([128, 138, 84]) * lit * 0.45, pave)
-        t = (wt ** 2)[..., None]   # squared: the verge stays mostly vegetation, the pavement reads crisp
-        tex = tex * (1 - t) + pave * t
+                               "pixels": n, "resolution_m": res, "derived_from": ["footprint.mask"],
+                               "encoding": "road weight, 0 everywhere: roads are rewilded (footprint.roads holds where they were); "
+                                           "kept as a file for the client's ground-data texture (R)",
+                               "road_fraction": 0.0}
     tex = tex.clip(0, 255).astype("uint8")
     Image.fromarray(tex, "RGB").save(tile.path("client/texture.png"), optimize=True)
     out["client.texture"] = {"path": "client/texture.png", "kind": "raster", "crs": tile.crs, "bounds": list(tile.bounds),

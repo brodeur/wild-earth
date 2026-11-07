@@ -1,0 +1,1297 @@
+{
+ "rule": {
+  "water_pixel": "seasons/s2_MM.tif: NDWI (NIR from red and NDVI) > 0 or NIR < 0.04, not bright (water_seasons.py)",
+  "water": "per 20 m pixel max(frequency, fraction): frequency = wet months / observed (>= 3); fraction = its NDWI's 75th percentile over the clear months unmixed between the never-wet land within 300 m and the tile's always-wet water (median NDWI; 0.3 with under 10 such pixels); DEM slope < 0.2, DEM > 0.5 m; bilinear onto the 5 m grid, water at >= 0.5",
+  "naip": "imagery/naip.tif is RGB (no NIR band): not used",
+  "reach": "on: water within max(w/2, 10 m); near: within max(60 m, 2 w); every 10 m; on water >= 0.6, off water: near >= 0.5, else no water seen",
+  "move": "stems of DEM reaches with width >= 10 m not on water: least-cost path on the 5 m grid within 600 m of the drawn stem on ground <= 10 m over its nearest DEM line cell (water 1 + 2 exp(-d_in/6 m), land 12 x (0.4 + 0.6 min(1, d_dem/30 m))), edge ends fixed, interior ends snapped to water within 60 m, a junction on a moved stem taken as moved, smoothed 10 m; kept when on >= 0.5 and >= the old line's + 0.2; the reaches meeting a moved node bent to it over 2 |shift| + 20 m (shift <= 30 m) or extended straight to it (one per node)",
+  "nhd_dropped": "NHD-sourced stretches with width >= 10 m, no water seen, within 600 m of a moved stem's old or new line, off the tile edge: the map's pieces of a river where the imagery shows none",
+  "width": "a moved reach takes the water's median cross-section when >= 40 m and wider than drawn",
+  "side_channels": "the river's water within 250 m, off the moved ribbon (w/2 + 10 m), its skeleton's longest path >= 150 m: a reach at its measured width (source imagery)",
+  "undrawn": "water patches >= 1600 m2 beyond w/2 + 20 m of every reach and 20 m of every kept pond"
+ },
+ "stats": {
+  "months_used": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "water_cells_5m": 18997,
+  "reaches_tested": 312,
+  "verdicts_before": {
+   "no water seen": 275,
+   "on water": 33,
+   "off water": 4
+  },
+  "verdicts_after": {
+   "no water seen": 275,
+   "on water": 33,
+   "off water": 4
+  },
+  "stems": 14,
+  "stems_moved": 0,
+  "reaches_moved": 0,
+  "reaches_bent": 0,
+  "reaches_extended": 0,
+  "nhd_dropped": 0,
+  "side_channels": 0,
+  "undrawn_patches": 12,
+  "undrawn_m2": 60250,
+  "undrawn_by_map": {
+   "unmapped": 60250
+  },
+  "seconds": 8.9
+ },
+ "stems": [
+  {
+   "reaches": 1,
+   "names": [
+    "Colorado River"
+   ],
+   "length_m": 127,
+   "area_km2": 330767.9,
+   "width": 30.0,
+   "before": {
+    "on": 0.929,
+    "near": 0.929,
+    "samples": 14
+   },
+   "verdict": "on water"
+  },
+  {
+   "reaches": 1,
+   "names": [
+    "Colorado River"
+   ],
+   "length_m": 227,
+   "area_km2": 330746.6,
+   "width": 30.0,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 24
+   },
+   "verdict": "on water"
+  },
+  {
+   "reaches": 2,
+   "names": [
+    "Colorado River"
+   ],
+   "length_m": 726,
+   "area_km2": 330739.7,
+   "width": 30.0,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 74
+   },
+   "verdict": "on water"
+  },
+  {
+   "reaches": 4,
+   "names": [
+    "Colorado River"
+   ],
+   "length_m": 1727,
+   "area_km2": 330733.5,
+   "width": 30.0,
+   "before": {
+    "on": 0.839,
+    "near": 0.845,
+    "samples": 174
+   },
+   "verdict": "on water"
+  },
+  {
+   "reaches": 2,
+   "names": [
+    "Colorado River"
+   ],
+   "length_m": 485,
+   "area_km2": 330732.9,
+   "width": 30.0,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 50
+   },
+   "verdict": "on water"
+  },
+  {
+   "reaches": 1,
+   "names": [
+    "Colorado River"
+   ],
+   "length_m": 403,
+   "area_km2": 330732.1,
+   "width": 30.0,
+   "before": {
+    "on": 0.976,
+    "near": 1.0,
+    "samples": 42
+   },
+   "verdict": "on water"
+  },
+  {
+   "reaches": 1,
+   "names": [
+    "Colorado River"
+   ],
+   "length_m": 516,
+   "area_km2": 330731.8,
+   "width": 30.0,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 53
+   },
+   "verdict": "on water"
+  },
+  {
+   "reaches": 1,
+   "names": [
+    "Colorado River"
+   ],
+   "length_m": 807,
+   "area_km2": 330730.4,
+   "width": 30.0,
+   "before": {
+    "on": 0.939,
+    "near": 1.0,
+    "samples": 82
+   },
+   "verdict": "on water"
+  },
+  {
+   "reaches": 5,
+   "names": [
+    "Colorado River"
+   ],
+   "length_m": 1600,
+   "area_km2": 330707.9,
+   "width": 30.0,
+   "before": {
+    "on": 0.981,
+    "near": 0.981,
+    "samples": 161
+   },
+   "verdict": "on water"
+  },
+  {
+   "reaches": 9,
+   "names": [
+    "Bright Angel Creek",
+    "Colorado River",
+    "Phantom Creek"
+   ],
+   "length_m": 5973,
+   "area_km2": 162.2,
+   "width": 30.0,
+   "before": {
+    "on": 0.062,
+    "near": 0.097,
+    "samples": 599
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.081,
+    "near": 0.088,
+    "samples": 544
+   }
+  },
+  {
+   "reaches": 5,
+   "names": [
+    "Colorado River"
+   ],
+   "length_m": 1935,
+   "area_km2": 330533.2,
+   "width": 30.0,
+   "before": {
+    "on": 0.856,
+    "near": 0.923,
+    "samples": 195
+   },
+   "verdict": "on water"
+  },
+  {
+   "reaches": 5,
+   "names": [
+    "Colorado River"
+   ],
+   "length_m": 2445,
+   "area_km2": 330513.4,
+   "width": 30.0,
+   "before": {
+    "on": 0.98,
+    "near": 0.984,
+    "samples": 246
+   },
+   "verdict": "on water"
+  },
+  {
+   "reaches": 1,
+   "names": [
+    "Colorado River"
+   ],
+   "length_m": 122,
+   "area_km2": 330512.8,
+   "width": 30.0,
+   "before": {
+    "on": 0.929,
+    "near": 0.929,
+    "samples": 14
+   },
+   "verdict": "on water"
+  },
+  {
+   "reaches": 2,
+   "names": [
+    "Colorado River"
+   ],
+   "length_m": 1062,
+   "area_km2": 330507.3,
+   "width": 30.0,
+   "before": {
+    "on": 0.889,
+    "near": 0.898,
+    "samples": 108
+   },
+   "verdict": "on water"
+  }
+ ],
+ "reaches": [
+  {
+   "k": 2,
+   "name": "Phantom Creek",
+   "width": 15.8,
+   "length_m": 862,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 88
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 88
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 7,
+   "name": "Phantom Creek",
+   "width": 15.82,
+   "length_m": 972,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 99
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 99
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 9,
+   "name": "Phantom Creek",
+   "width": 16.0,
+   "length_m": 541,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 56
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 56
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 14,
+   "name": "Bright Angel Creek",
+   "width": 16.06,
+   "length_m": 337,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 35
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 35
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 21,
+   "name": "Bright Angel Creek",
+   "width": 16.09,
+   "length_m": 921,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 94
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 94
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 30,
+   "name": "Bright Angel Creek",
+   "width": 16.11,
+   "length_m": 435,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 45
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 45
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 40,
+   "name": "Bright Angel Creek",
+   "width": 16.16,
+   "length_m": 673,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 69
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 69
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 42,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 497,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 51
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 51
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 43,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 127,
+   "before": {
+    "on": 0.929,
+    "near": 0.929,
+    "samples": 14
+   },
+   "after": {
+    "on": 0.929,
+    "near": 0.929,
+    "samples": 14
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 44,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 227,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 24
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 24
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 46,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 228,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 24
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 24
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 58,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 785,
+   "before": {
+    "on": 0.975,
+    "near": 0.988,
+    "samples": 80
+   },
+   "after": {
+    "on": 0.975,
+    "near": 0.988,
+    "samples": 80
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 61,
+   "name": "Bright Angel Creek",
+   "width": 16.17,
+   "length_m": 654,
+   "before": {
+    "on": 0.045,
+    "near": 0.06,
+    "samples": 67
+   },
+   "after": {
+    "on": 0.045,
+    "near": 0.06,
+    "samples": 67
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 64,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 540,
+   "before": {
+    "on": 0.927,
+    "near": 1.0,
+    "samples": 55
+   },
+   "after": {
+    "on": 0.927,
+    "near": 1.0,
+    "samples": 55
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 65,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 739,
+   "before": {
+    "on": 0.96,
+    "near": 0.96,
+    "samples": 75
+   },
+   "after": {
+    "on": 0.96,
+    "near": 0.96,
+    "samples": 75
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 67,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 280,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 29
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 29
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 68,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 171,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 19
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 19
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 69,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 307,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 32
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 32
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 70,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 448,
+   "before": {
+    "on": 0.761,
+    "near": 0.761,
+    "samples": 46
+   },
+   "after": {
+    "on": 0.761,
+    "near": 0.761,
+    "samples": 46
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 71,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 52,
+   "before": {
+    "on": 0.0,
+    "near": 0.143,
+    "samples": 7
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.143,
+    "samples": 7
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 72,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 807,
+   "before": {
+    "on": 0.939,
+    "near": 1.0,
+    "samples": 82
+   },
+   "after": {
+    "on": 0.939,
+    "near": 1.0,
+    "samples": 82
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 73,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 68,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 8
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 8
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 74,
+   "name": null,
+   "width": 1.0,
+   "length_m": 274,
+   "before": {
+    "on": 0.828,
+    "near": 0.897,
+    "samples": 29
+   },
+   "after": {
+    "on": 0.828,
+    "near": 0.897,
+    "samples": 29
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 75,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 365,
+   "before": {
+    "on": 0.421,
+    "near": 0.632,
+    "samples": 38
+   },
+   "after": {
+    "on": 0.421,
+    "near": 0.632,
+    "samples": 38
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 76,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 241,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 26
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 26
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 77,
+   "name": null,
+   "width": 1.0,
+   "length_m": 230,
+   "before": {
+    "on": 0.125,
+    "near": 0.5,
+    "samples": 24
+   },
+   "after": {
+    "on": 0.125,
+    "near": 0.5,
+    "samples": 24
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 79,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 579,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 59
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 59
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 80,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 578,
+   "before": {
+    "on": 0.593,
+    "near": 0.915,
+    "samples": 59
+   },
+   "after": {
+    "on": 0.593,
+    "near": 0.915,
+    "samples": 59
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 81,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 246,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 26
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 26
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 82,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 443,
+   "before": {
+    "on": 0.826,
+    "near": 0.826,
+    "samples": 46
+   },
+   "after": {
+    "on": 0.826,
+    "near": 0.826,
+    "samples": 46
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 84,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 139,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 15
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 15
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 86,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 516,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 53
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 53
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 87,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 346,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 36
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 36
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 88,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 403,
+   "before": {
+    "on": 0.976,
+    "near": 1.0,
+    "samples": 42
+   },
+   "after": {
+    "on": 0.976,
+    "near": 1.0,
+    "samples": 42
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 99,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 1165,
+   "before": {
+    "on": 0.983,
+    "near": 0.983,
+    "samples": 118
+   },
+   "after": {
+    "on": 0.983,
+    "near": 0.983,
+    "samples": 118
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 101,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 94,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 11
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 11
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 104,
+   "name": null,
+   "width": 1.0,
+   "length_m": 338,
+   "before": {
+    "on": 0.714,
+    "near": 0.971,
+    "samples": 35
+   },
+   "after": {
+    "on": 0.714,
+    "near": 0.971,
+    "samples": 35
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 106,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 296,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 31
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 31
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 114,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 443,
+   "before": {
+    "on": 0.891,
+    "near": 0.935,
+    "samples": 46
+   },
+   "after": {
+    "on": 0.891,
+    "near": 0.935,
+    "samples": 46
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 120,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 447,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 46
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 46
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 121,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 122,
+   "before": {
+    "on": 0.929,
+    "near": 0.929,
+    "samples": 14
+   },
+   "after": {
+    "on": 0.929,
+    "near": 0.929,
+    "samples": 14
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 124,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 772,
+   "before": {
+    "on": 0.937,
+    "near": 0.949,
+    "samples": 79
+   },
+   "after": {
+    "on": 0.937,
+    "near": 0.949,
+    "samples": 79
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 126,
+   "name": null,
+   "width": 3.03,
+   "length_m": 293,
+   "before": {
+    "on": 0.419,
+    "near": 0.613,
+    "samples": 31
+   },
+   "after": {
+    "on": 0.419,
+    "near": 0.613,
+    "samples": 31
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 128,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 290,
+   "before": {
+    "on": 0.7,
+    "near": 0.733,
+    "samples": 30
+   },
+   "after": {
+    "on": 0.7,
+    "near": 0.733,
+    "samples": 30
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 310,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 100,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 12
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 12
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 311,
+   "name": "Colorado River",
+   "width": 30.0,
+   "length_m": 70,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 9
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 9
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  }
+ ],
+ "side_channels": [],
+ "nhd_dropped": [],
+ "undrawn": [
+  {
+   "at": [
+    5928,
+    7691
+   ],
+   "area_m2": 14775,
+   "freq_mean": 0.9,
+   "nearest_reach": "Colorado River",
+   "nearest_width": 30.0,
+   "nearest_m": 51,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    4640,
+    7658
+   ],
+   "area_m2": 7450,
+   "freq_mean": 0.71,
+   "nearest_reach": null,
+   "nearest_width": 1.0,
+   "nearest_m": 60,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    4410,
+    7703
+   ],
+   "area_m2": 6625,
+   "freq_mean": 0.79,
+   "nearest_reach": "Colorado River",
+   "nearest_width": 30.0,
+   "nearest_m": 45,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    6325,
+    7683
+   ],
+   "area_m2": 6225,
+   "freq_mean": 0.87,
+   "nearest_reach": "Colorado River",
+   "nearest_width": 30.0,
+   "nearest_m": 37,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    6655,
+    7631
+   ],
+   "area_m2": 5525,
+   "freq_mean": 0.85,
+   "nearest_reach": "Colorado River",
+   "nearest_width": 30.0,
+   "nearest_m": 43,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    5060,
+    7460
+   ],
+   "area_m2": 4625,
+   "freq_mean": 0.8,
+   "nearest_reach": null,
+   "nearest_width": 1.87,
+   "nearest_m": 47,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    5471,
+    7353
+   ],
+   "area_m2": 3700,
+   "freq_mean": 0.71,
+   "nearest_reach": "Colorado River",
+   "nearest_width": 30.0,
+   "nearest_m": 58,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    3824,
+    7546
+   ],
+   "area_m2": 3425,
+   "freq_mean": 0.82,
+   "nearest_reach": "Colorado River",
+   "nearest_width": 30.0,
+   "nearest_m": 57,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    467,
+    8310
+   ],
+   "area_m2": 2175,
+   "freq_mean": 0.83,
+   "nearest_reach": "Colorado River",
+   "nearest_width": 30.0,
+   "nearest_m": 45,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    3636,
+    7513
+   ],
+   "area_m2": 2050,
+   "freq_mean": 0.82,
+   "nearest_reach": "Colorado River",
+   "nearest_width": 30.0,
+   "nearest_m": 47,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    4051,
+    7515
+   ],
+   "area_m2": 1875,
+   "freq_mean": 0.7,
+   "nearest_reach": "Colorado River",
+   "nearest_width": 30.0,
+   "nearest_m": 44,
+   "map": "unmapped"
+  },
+  {
+   "at": [
+    3434,
+    7371
+   ],
+   "area_m2": 1800,
+   "freq_mean": 0.73,
+   "nearest_reach": "Colorado River",
+   "nearest_width": 30.0,
+   "nearest_m": 47,
+   "map": "unmapped"
+  }
+ ]
+}

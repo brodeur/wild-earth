@@ -27,6 +27,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 109953,
+  "buffer_m": 10000,
   "range_share": 0.626,
   "evidence": "109953 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -58,6 +59,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 76713,
+  "buffer_m": 10000,
   "range_share": 0.626,
   "evidence": "76713 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -89,6 +91,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 298,
+  "buffer_m": 10000,
   "range_share": 0.626,
   "evidence": "298 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -120,6 +123,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 53,
+  "buffer_m": 10000,
   "range_share": 0.613,
   "evidence": "53 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -151,6 +155,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 5,
+  "buffer_m": 10000,
   "range_share": 0.2854,
   "evidence": "5 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -182,6 +187,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 5204,
+  "buffer_m": 10000,
   "range_share": 0.2735,
   "evidence": "5204 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -213,6 +219,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 5591,
+  "buffer_m": 10000,
   "range_share": 0.5855,
   "evidence": "5591 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -251,6 +258,7 @@
   "present": false,
   "rule": "absent",
   "records_buffer": 0,
+  "buffer_m": 10000,
   "range_share": 0.0,
   "evidence": "0 records within 10 km in 2011-2026 (< 3); 0% of the tile in its range (600-3000 m on chaparral, mixed forest, conifer forest) (< 5%)"
  },
@@ -282,6 +290,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 67538,
+  "buffer_m": 10000,
   "range_share": 0.601,
   "evidence": "67538 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -313,6 +322,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 44650,
+  "buffer_m": 10000,
   "range_share": 0.001,
   "evidence": "44650 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -344,6 +354,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 26913,
+  "buffer_m": 10000,
   "range_share": 0.626,
   "evidence": "26913 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -375,6 +386,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 340,
+  "buffer_m": 10000,
   "range_share": 0.5795,
   "evidence": "340 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -415,6 +427,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 66,
+  "buffer_m": 10000,
   "range_share": 0.5713,
   "evidence": "66 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -446,6 +459,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 119,
+  "buffer_m": 10000,
   "range_share": 0.2579,
   "evidence": "119 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -477,6 +491,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 3101,
+  "buffer_m": 10000,
   "range_share": 0.626,
   "evidence": "3101 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -507,9 +522,10 @@
   "occurrence_count": 1,
   "present": true,
   "rule": "records",
-  "records_buffer": 8,
+  "records_buffer": 68,
+  "buffer_m": 23000,
   "range_share": 0.6201,
-  "evidence": "8 records within 10 km in 2011-2026 (>= 3)"
+  "evidence": "68 records within 23 km in 2011-2026 (the search widened to hold its home ranges) (>= 3)"
  },
  {
   "code": "ursus_americanus",
@@ -546,6 +562,7 @@
   "present": false,
   "rule": "absent",
   "records_buffer": 0,
+  "buffer_m": 10000,
   "range_share": 0.0,
   "evidence": "0 records within 10 km in 2011-2026 (< 3); 0% of the tile in its range (800-3000 m on conifer forest, mixed forest, chaparral, riparian, oak woodland) (< 5%)"
  },
@@ -586,6 +603,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 957,
+  "buffer_m": 10000,
   "range_share": 0.2794,
   "evidence": "957 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -625,6 +643,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 524,
+  "buffer_m": 10000,
   "range_share": 0.5926,
   "evidence": "524 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -666,7 +685,1543 @@
   "present": true,
   "rule": "records",
   "records_buffer": 1882,
+  "buffer_m": 10000,
   "range_share": 0.626,
   "evidence": "1882 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "cervus_canadensis",
+  "common": "Roosevelt elk",
+  "scientific": "Cervus canadensis",
+  "group": "mammal",
+  "role": "ambient",
+  "scale": "deer",
+  "gbif_key": 2440958,
+  "habitat": {
+   "riparian": 1.0,
+   "grassland": 1.0,
+   "mixed": 0.6,
+   "conifer": 0.35,
+   "oak_woodland": 0.5,
+   "chaparral": 0.3
+  },
+  "senses": {
+   "vision": {
+    "range_m": 500,
+    "color": "dichromat"
+   },
+   "hearing": {
+    "range_m": 800
+   },
+   "smell": {
+    "range_m": 1000
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 3,
+  "present": false,
+  "rule": "absent",
+  "records_buffer": 0,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
+ },
+ {
+  "code": "tamiasciurus_douglasii",
+  "common": "Douglas squirrel",
+  "scientific": "Tamiasciurus douglasii",
+  "group": "mammal",
+  "role": "ambient",
+  "scale": "squirrel",
+  "gbif_key": 2437281,
+  "habitat": {
+   "conifer": 1.0,
+   "mixed": 0.85,
+   "riparian": 0.45
+  },
+  "senses": {
+   "vision": {
+    "range_m": 150,
+    "color": "dichromat"
+   },
+   "hearing": {
+    "range_m": 200
+   },
+   "smell": {
+    "range_m": 80
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 0,
+  "present": false,
+  "rule": "absent",
+  "records_buffer": 0,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
+ },
+ {
+  "code": "troglodytes_pacificus",
+  "common": "Pacific wren",
+  "scientific": "Troglodytes pacificus",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 9533566,
+  "habitat": {
+   "conifer": 1.0,
+   "mixed": 1.0,
+   "riparian": 1.0,
+   "chaparral": 0.3
+  },
+  "senses": {
+   "vision": {
+    "range_m": 60,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 150
+   },
+   "smell": {
+    "range_m": 5
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 1500,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 18247,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "18247 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "perisoreus_canadensis",
+  "common": "Canada jay",
+  "scientific": "Perisoreus canadensis",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 2482436,
+  "habitat": {
+   "conifer": 1.0,
+   "mixed": 0.6,
+   "riparian": 0.3
+  },
+  "senses": {
+   "vision": {
+    "range_m": 300,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 250
+   },
+   "smell": {
+    "range_m": 20
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 0,
+  "present": false,
+  "rule": "absent",
+  "records_buffer": 0,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
+ },
+ {
+  "code": "poecile_rufescens",
+  "common": "chestnut-backed chickadee",
+  "scientific": "Poecile rufescens",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 2487783,
+  "habitat": {
+   "conifer": 1.0,
+   "mixed": 1.0,
+   "riparian": 0.7
+  },
+  "senses": {
+   "vision": {
+    "range_m": 80,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 150
+   },
+   "smell": {
+    "range_m": 5
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 1500,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 81605,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "81605 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "strix_varia",
+  "common": "barred owl",
+  "scientific": "Strix varia",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 2497541,
+  "habitat": {
+   "conifer": 1.0,
+   "mixed": 1.0,
+   "riparian": 0.9
+  },
+  "senses": {
+   "vision": {
+    "range_m": 300,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 400
+   },
+   "smell": {
+    "range_m": 5
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 0,
+  "present": false,
+  "rule": "absent",
+  "records_buffer": 0,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
+ },
+ {
+  "code": "megaceryle_alcyon",
+  "common": "belted kingfisher",
+  "scientific": "Megaceryle alcyon",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 2475472,
+  "habitat": {
+   "riparian": 1.0,
+   "water": 1.0
+  },
+  "senses": {
+   "vision": {
+    "range_m": 200,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 150
+   },
+   "smell": {
+    "range_m": 5
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 1435,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 12621,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "12621 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "haliaeetus_leucocephalus",
+  "common": "bald eagle",
+  "scientific": "Haliaeetus leucocephalus",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 2480446,
+  "habitat": {
+   "riparian": 1.0,
+   "water": 1.0,
+   "conifer": 0.5,
+   "mixed": 0.5
+  },
+  "senses": {
+   "vision": {
+    "range_m": 2500,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 300
+   },
+   "smell": {
+    "range_m": 20
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 211,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 855,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "855 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "corvus_brachyrhynchos",
+  "common": "American crow",
+  "scientific": "Corvus brachyrhynchos",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 2482507,
+  "habitat": {
+   "grassland": 1.0,
+   "riparian": 1.0,
+   "barren": 0.6,
+   "mixed": 0.4,
+   "conifer": 0.15,
+   "human": 1.0
+  },
+  "senses": {
+   "vision": {
+    "range_m": 800,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 400
+   },
+   "smell": {
+    "range_m": 30
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 1500,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 102741,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "102741 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "lynx_rufus",
+  "common": "bobcat",
+  "scientific": "Lynx rufus",
+  "group": "mammal",
+  "role": "ambient",
+  "scale": "fox",
+  "gbif_key": 2435246,
+  "habitat": {
+   "mixed": 0.9,
+   "conifer": 0.6,
+   "riparian": 0.9,
+   "chaparral": 0.9,
+   "grassland": 0.6,
+   "oak_woodland": 0.8
+  },
+  "senses": {
+   "vision": {
+    "range_m": 400,
+    "color": "dichromat"
+   },
+   "hearing": {
+    "range_m": 500
+   },
+   "smell": {
+    "range_m": 300
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 3,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 187,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "187 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "lontra_canadensis",
+  "common": "North American river otter",
+  "scientific": "Lontra canadensis",
+  "group": "mammal",
+  "role": "ambient",
+  "scale": "fox",
+  "gbif_key": 2433727,
+  "habitat": {
+   "riparian": 1.0,
+   "water": 1.0
+  },
+  "senses": {
+   "vision": {
+    "range_m": 150,
+    "color": "dichromat"
+   },
+   "hearing": {
+    "range_m": 300
+   },
+   "smell": {
+    "range_m": 400
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 6,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 87,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "87 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "lepus_americanus",
+  "common": "snowshoe hare",
+  "scientific": "Lepus americanus",
+  "group": "mammal",
+  "role": "ambient",
+  "scale": "squirrel",
+  "gbif_key": 2436794,
+  "habitat": {
+   "mixed": 1.0,
+   "riparian": 1.0,
+   "conifer": 0.7,
+   "chaparral": 0.8
+  },
+  "senses": {
+   "vision": {
+    "range_m": 200,
+    "color": "dichromat"
+   },
+   "hearing": {
+    "range_m": 400
+   },
+   "smell": {
+    "range_m": 150
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 0,
+  "present": false,
+  "rule": "absent",
+  "records_buffer": 0,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
+ },
+ {
+  "code": "tamias_townsendii",
+  "common": "Townsend's chipmunk",
+  "scientific": "Tamias townsendii",
+  "group": "mammal",
+  "role": "ambient",
+  "scale": "vole",
+  "gbif_key": 2437449,
+  "habitat": {
+   "mixed": 1.0,
+   "conifer": 0.8,
+   "riparian": 0.8,
+   "chaparral": 0.6
+  },
+  "senses": {
+   "vision": {
+    "range_m": 80,
+    "color": "dichromat"
+   },
+   "hearing": {
+    "range_m": 100
+   },
+   "smell": {
+    "range_m": 40
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 0,
+  "present": false,
+  "rule": "absent",
+  "records_buffer": 0,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
+ },
+ {
+  "code": "peromyscus_maniculatus",
+  "common": "deer mouse",
+  "scientific": "Peromyscus maniculatus",
+  "group": "mammal",
+  "role": "ambient",
+  "scale": "vole",
+  "gbif_key": 2437967,
+  "habitat": {
+   "conifer": 1.0,
+   "mixed": 1.0,
+   "riparian": 1.0,
+   "chaparral": 0.8,
+   "grassland": 0.6,
+   "barren": 0.3
+  },
+  "senses": {
+   "vision": {
+    "range_m": 20,
+    "color": "dichromat"
+   },
+   "hearing": {
+    "range_m": 80
+   },
+   "smell": {
+    "range_m": 40
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 33,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 6,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "6 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "plethodon_vehiculum",
+  "common": "western red-backed salamander",
+  "scientific": "Plethodon vehiculum",
+  "group": "amphibian",
+  "role": "ambient",
+  "scale": "vole",
+  "gbif_key": 2431514,
+  "habitat": {
+   "conifer": 1.0,
+   "mixed": 1.0,
+   "riparian": 0.8
+  },
+  "senses": {
+   "vision": {
+    "range_m": 2,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 1
+   },
+   "smell": {
+    "range_m": 2
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 0,
+  "present": false,
+  "rule": "absent",
+  "records_buffer": 0,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
+ },
+ {
+  "code": "ensatina_eschscholtzii",
+  "common": "ensatina",
+  "scientific": "Ensatina eschscholtzii",
+  "group": "amphibian",
+  "role": "ambient",
+  "scale": "vole",
+  "gbif_key": 2431643,
+  "habitat": {
+   "conifer": 1.0,
+   "mixed": 1.0,
+   "riparian": 0.6,
+   "chaparral": 0.4
+  },
+  "senses": {
+   "vision": {
+    "range_m": 2,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 1
+   },
+   "smell": {
+    "range_m": 2
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 54,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 152,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "152 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "ariolimax_columbianus",
+  "common": "Pacific banana slug",
+  "scientific": "Ariolimax columbianus",
+  "group": "invertebrate",
+  "role": "ambient",
+  "scale": "vole",
+  "gbif_key": 2294090,
+  "habitat": {
+   "conifer": 1.0,
+   "mixed": 1.0,
+   "riparian": 1.0
+  },
+  "senses": {
+   "vision": {
+    "range_m": 0.5,
+    "color": "monochromat"
+   },
+   "hearing": {
+    "range_m": 0
+   },
+   "smell": {
+    "range_m": 5
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 0,
+  "present": false,
+  "rule": "absent",
+  "records_buffer": 0,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
+ },
+ {
+  "code": "ardea_herodias",
+  "common": "great blue heron",
+  "scientific": "Ardea herodias",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 9630752,
+  "habitat": {
+   "riparian": 1.0,
+   "water": 1.0,
+   "grassland": 0.3
+  },
+  "senses": {
+   "vision": {
+    "range_m": 400,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 200
+   },
+   "smell": {
+    "range_m": 5
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 1500,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 45843,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "45843 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "mergus_merganser",
+  "common": "common merganser",
+  "scientific": "Mergus merganser",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 9537647,
+  "habitat": {
+   "water": 1.0,
+   "riparian": 1.0
+  },
+  "senses": {
+   "vision": {
+    "range_m": 300,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 200
+   },
+   "smell": {
+    "range_m": 5
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 37,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 842,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "842 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "turdus_migratorius",
+  "common": "American robin",
+  "scientific": "Turdus migratorius",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 9510564,
+  "habitat": {
+   "mixed": 1.0,
+   "grassland": 1.0,
+   "riparian": 1.0,
+   "conifer": 0.6
+  },
+  "senses": {
+   "vision": {
+    "range_m": 300,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 250
+   },
+   "smell": {
+    "range_m": 10
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 1500,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 83556,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "83556 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "sturnus_vulgaris",
+  "common": "European starling",
+  "scientific": "Sturnus vulgaris",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 9809229,
+  "habitat": {
+   "grassland": 1.0,
+   "human": 1.0,
+   "riparian": 0.5
+  },
+  "senses": {
+   "vision": {
+    "range_m": 300,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 250
+   },
+   "smell": {
+    "range_m": 10
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 1500,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 55684,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "55684 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "ixoreus_naevius",
+  "common": "varied thrush",
+  "scientific": "Ixoreus naevius",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 2490926,
+  "habitat": {
+   "conifer": 1.0,
+   "mixed": 1.0,
+   "riparian": 0.9
+  },
+  "senses": {
+   "vision": {
+    "range_m": 200,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 300
+   },
+   "smell": {
+    "range_m": 10
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 666,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 3612,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "3612 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "junco_hyemalis",
+  "common": "dark-eyed junco",
+  "scientific": "Junco hyemalis",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 9362842,
+  "habitat": {
+   "mixed": 1.0,
+   "conifer": 0.8,
+   "grassland": 0.8,
+   "riparian": 0.9,
+   "chaparral": 0.8
+  },
+  "senses": {
+   "vision": {
+    "range_m": 150,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 200
+   },
+   "smell": {
+    "range_m": 5
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 1500,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 87275,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "87275 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "regulus_satrapa",
+  "common": "golden-crowned kinglet",
+  "scientific": "Regulus satrapa",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 2484591,
+  "habitat": {
+   "conifer": 1.0,
+   "mixed": 0.8
+  },
+  "senses": {
+   "vision": {
+    "range_m": 60,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 150
+   },
+   "smell": {
+    "range_m": 5
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 538,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 3154,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "3154 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "empidonax_difficilis",
+  "common": "Pacific-slope flycatcher",
+  "scientific": "Empidonax difficilis",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 9568685,
+  "habitat": {
+   "conifer": 1.0,
+   "mixed": 1.0,
+   "riparian": 1.0
+  },
+  "senses": {
+   "vision": {
+    "range_m": 100,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 150
+   },
+   "smell": {
+    "range_m": 5
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 1500,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 12740,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "12740 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "megascops_kennicottii",
+  "common": "western screech-owl",
+  "scientific": "Megascops kennicottii",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 2497341,
+  "habitat": {
+   "mixed": 1.0,
+   "riparian": 1.0,
+   "conifer": 0.6
+  },
+  "senses": {
+   "vision": {
+    "range_m": 200,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 300
+   },
+   "smell": {
+    "range_m": 5
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 2,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 6,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "6 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "aegolius_acadicus",
+  "common": "northern saw-whet owl",
+  "scientific": "Aegolius acadicus",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 5232207,
+  "habitat": {
+   "conifer": 1.0,
+   "mixed": 1.0,
+   "riparian": 0.7
+  },
+  "senses": {
+   "vision": {
+    "range_m": 200,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 300
+   },
+   "smell": {
+    "range_m": 5
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 3,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 100,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "100 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "leuconotopicus_villosus",
+  "common": "hairy woodpecker",
+  "scientific": "Leuconotopicus villosus",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 9192501,
+  "habitat": {
+   "conifer": 1.0,
+   "mixed": 1.0,
+   "riparian": 0.9
+  },
+  "senses": {
+   "vision": {
+    "range_m": 200,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 300
+   },
+   "smell": {
+    "range_m": 5
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 1500,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 13105,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "13105 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "pandion_haliaetus",
+  "common": "osprey",
+  "scientific": "Pandion haliaetus",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 2480726,
+  "habitat": {
+   "riparian": 1.0,
+   "water": 1.0
+  },
+  "senses": {
+   "vision": {
+    "range_m": 1500,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 300
+   },
+   "smell": {
+    "range_m": 5
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 1019,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 6687,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "6687 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "accipiter_striatus",
+  "common": "sharp-shinned hawk",
+  "scientific": "Accipiter striatus",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 9740253,
+  "habitat": {
+   "conifer": 1.0,
+   "mixed": 1.0,
+   "riparian": 0.8
+  },
+  "senses": {
+   "vision": {
+    "range_m": 800,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 300
+   },
+   "smell": {
+    "range_m": 5
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 1246,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 7058,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "7058 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "falco_columbarius",
+  "common": "merlin",
+  "scientific": "Falco columbarius",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 9813242,
+  "habitat": {
+   "grassland": 1.0,
+   "riparian": 1.0,
+   "mixed": 0.6
+  },
+  "senses": {
+   "vision": {
+    "range_m": 1000,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 300
+   },
+   "smell": {
+    "range_m": 5
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 456,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 3556,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "3556 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "larus_glaucescens",
+  "common": "glaucous-winged gull",
+  "scientific": "Larus glaucescens",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 2481196,
+  "habitat": {
+   "water": 1.0,
+   "riparian": 1.0,
+   "barren": 0.5
+  },
+  "senses": {
+   "vision": {
+    "range_m": 800,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 300
+   },
+   "smell": {
+    "range_m": 50
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 1500,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 16900,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "16900 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "larus_californicus",
+  "common": "California gull",
+  "scientific": "Larus californicus",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 2481146,
+  "habitat": {
+   "water": 1.0,
+   "riparian": 1.0,
+   "barren": 0.5
+  },
+  "senses": {
+   "vision": {
+    "range_m": 800,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 300
+   },
+   "smell": {
+    "range_m": 50
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 1500,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 48065,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "48065 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "larus_occidentalis",
+  "common": "western gull",
+  "scientific": "Larus occidentalis",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 9656686,
+  "habitat": {
+   "water": 1.0,
+   "riparian": 1.0,
+   "barren": 0.5
+  },
+  "senses": {
+   "vision": {
+    "range_m": 800,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 300
+   },
+   "smell": {
+    "range_m": 50
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 1500,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 112917,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "112917 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "anas_platyrhynchos",
+  "common": "mallard",
+  "scientific": "Anas platyrhynchos",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 9761484,
+  "habitat": {
+   "water": 1.0,
+   "riparian": 1.0
+  },
+  "senses": {
+   "vision": {
+    "range_m": 300,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 200
+   },
+   "smell": {
+    "range_m": 10
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 1500,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 66467,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "66467 records within 10 km in 2011-2026 (>= 3)"
+ },
+ {
+  "code": "dendragapus_fuliginosus",
+  "common": "sooty grouse",
+  "scientific": "Dendragapus fuliginosus",
+  "group": "bird",
+  "role": "ambient",
+  "scale": "bird",
+  "gbif_key": 7340146,
+  "habitat": {
+   "conifer": 1.0,
+   "mixed": 0.8,
+   "chaparral": 0.6,
+   "grassland": 0.5
+  },
+  "senses": {
+   "vision": {
+    "range_m": 300,
+    "color": "tetrachromat"
+   },
+   "hearing": {
+    "range_m": 300
+   },
+   "smell": {
+    "range_m": 20
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 0,
+  "present": false,
+  "rule": "absent",
+  "records_buffer": 0,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
+ },
+ {
+  "code": "marmota_olympus",
+  "common": "Olympic marmot",
+  "scientific": "Marmota olympus",
+  "group": "mammal",
+  "role": "ambient",
+  "scale": "squirrel",
+  "gbif_key": 2437374,
+  "habitat": {
+   "grassland": 1.0,
+   "barren": 0.8,
+   "chaparral": 0.4
+  },
+  "senses": {
+   "vision": {
+    "range_m": 400,
+    "color": "dichromat"
+   },
+   "hearing": {
+    "range_m": 300
+   },
+   "smell": {
+    "range_m": 150
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 0,
+  "present": false,
+  "rule": "absent",
+  "records_buffer": 0,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
+ },
+ {
+  "code": "tamias_amoenus",
+  "common": "yellow-pine chipmunk",
+  "scientific": "Tamias amoenus",
+  "group": "mammal",
+  "role": "ambient",
+  "scale": "vole",
+  "gbif_key": 2437430,
+  "habitat": {
+   "chaparral": 1.0,
+   "conifer": 0.8,
+   "grassland": 0.6,
+   "barren": 0.6
+  },
+  "senses": {
+   "vision": {
+    "range_m": 80,
+    "color": "dichromat"
+   },
+   "hearing": {
+    "range_m": 100
+   },
+   "smell": {
+    "range_m": 40
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 0,
+  "present": false,
+  "rule": "absent",
+  "records_buffer": 0,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
+ },
+ {
+  "code": "sorex_monticolus",
+  "common": "montane shrew",
+  "scientific": "Sorex monticolus",
+  "group": "mammal",
+  "role": "ambient",
+  "scale": "vole",
+  "gbif_key": 2436019,
+  "habitat": {
+   "conifer": 1.0,
+   "mixed": 1.0,
+   "riparian": 1.0,
+   "grassland": 0.7
+  },
+  "senses": {
+   "vision": {
+    "range_m": 5,
+    "color": "dichromat"
+   },
+   "hearing": {
+    "range_m": 60
+   },
+   "smell": {
+    "range_m": 30
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 0,
+  "present": false,
+  "rule": "absent",
+  "records_buffer": 0,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
+ },
+ {
+  "code": "anaxyrus_boreas",
+  "common": "western toad",
+  "scientific": "Anaxyrus boreas",
+  "group": "amphibian",
+  "role": "ambient",
+  "scale": "vole",
+  "gbif_key": 2422924,
+  "habitat": {
+   "grassland": 1.0,
+   "riparian": 1.0,
+   "mixed": 0.8,
+   "conifer": 0.6
+  },
+  "senses": {
+   "vision": {
+    "range_m": 3,
+    "color": "dichromat"
+   },
+   "hearing": {
+    "range_m": 5
+   },
+   "smell": {
+    "range_m": 2
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 28,
+  "present": false,
+  "rule": "absent",
+  "records_buffer": 0,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
+ },
+ {
+  "code": "rana_cascadae",
+  "common": "Cascades frog",
+  "scientific": "Rana cascadae",
+  "group": "amphibian",
+  "role": "ambient",
+  "scale": "vole",
+  "gbif_key": 2426771,
+  "habitat": {
+   "riparian": 1.0,
+   "grassland": 1.0,
+   "water": 0.6
+  },
+  "senses": {
+   "vision": {
+    "range_m": 3,
+    "color": "dichromat"
+   },
+   "hearing": {
+    "range_m": 5
+   },
+   "smell": {
+    "range_m": 2
+   }
+  },
+  "sources": [
+   "gbif"
+  ],
+  "confidence": "unverified",
+  "occurrence_count": 0,
+  "present": false,
+  "rule": "absent",
+  "records_buffer": 0,
+  "buffer_m": 10000,
+  "range_share": null,
+  "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
  }
 ]

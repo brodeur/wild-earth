@@ -27,6 +27,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 681,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "681 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -58,6 +59,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 36,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "36 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -89,6 +91,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 172,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "172 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -120,6 +123,7 @@
   "present": false,
   "rule": "absent",
   "records_buffer": 0,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
  },
@@ -151,6 +155,7 @@
   "present": false,
   "rule": "absent",
   "records_buffer": 0,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
  },
@@ -182,6 +187,7 @@
   "present": false,
   "rule": "absent",
   "records_buffer": 1,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "1 record within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
  },
@@ -213,6 +219,7 @@
   "present": false,
   "rule": "absent",
   "records_buffer": 0,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
  },
@@ -251,6 +258,7 @@
   "present": false,
   "rule": "absent",
   "records_buffer": 0,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
  },
@@ -282,6 +290,7 @@
   "present": false,
   "rule": "absent",
   "records_buffer": 1,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "1 record within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
  },
@@ -313,6 +322,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 1371,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "1371 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -344,6 +354,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 109,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "109 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -375,6 +386,7 @@
   "present": false,
   "rule": "absent",
   "records_buffer": 0,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
  },
@@ -415,6 +427,7 @@
   "present": false,
   "rule": "absent",
   "records_buffer": 0,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
  },
@@ -446,6 +459,7 @@
   "present": false,
   "rule": "absent",
   "records_buffer": 0,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
  },
@@ -477,6 +491,7 @@
   "present": false,
   "rule": "absent",
   "records_buffer": 2,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "2 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
  },
@@ -505,11 +520,12 @@
   ],
   "confidence": "unverified",
   "occurrence_count": 1,
-  "present": false,
-  "rule": "absent",
-  "records_buffer": 2,
+  "present": true,
+  "rule": "records",
+  "records_buffer": 9,
+  "buffer_m": 23000,
   "range_share": null,
-  "evidence": "2 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
+  "evidence": "9 records within 23 km in 2011-2026 (the search widened to hold its home ranges) (>= 3)"
  },
  {
   "code": "ursus_americanus",
@@ -546,6 +562,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 45,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "45 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -586,6 +603,7 @@
   "present": false,
   "rule": "absent",
   "records_buffer": 0,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
  },
@@ -625,6 +643,7 @@
   "present": false,
   "rule": "absent",
   "records_buffer": 0,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
  },
@@ -666,6 +685,7 @@
   "present": false,
   "rule": "absent",
   "records_buffer": 0,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
  },
@@ -705,6 +725,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 323,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "323 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -741,6 +762,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 283,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "283 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -778,6 +800,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 2181,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "2181 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -814,6 +837,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 1152,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "1152 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -850,6 +874,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 1393,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "1393 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -886,6 +911,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 156,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "156 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -921,6 +947,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 559,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "559 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -958,6 +985,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 191,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "191 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -997,6 +1025,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 1489,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "1489 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1036,6 +1065,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 3,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "3 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1071,6 +1101,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 8,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "8 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1108,6 +1139,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 29,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "29 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1145,6 +1177,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 41,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "41 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1184,6 +1217,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 3,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "3 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1220,6 +1254,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 32,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "32 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1257,6 +1292,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 18,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "18 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1293,6 +1329,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 636,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "636 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1329,6 +1366,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 228,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "228 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1364,6 +1402,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 236,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "236 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1401,6 +1440,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 1688,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "1688 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1437,6 +1477,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 51,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "51 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1473,6 +1514,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 836,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "836 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1511,6 +1553,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 1586,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "1586 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1546,6 +1589,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 1240,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "1240 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1582,6 +1626,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 853,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "853 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1618,6 +1663,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 8,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "8 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1654,6 +1700,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 4,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "4 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1690,6 +1737,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 785,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "785 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1725,6 +1773,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 77,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "77 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1761,6 +1810,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 17,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "17 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1797,6 +1847,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 15,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "15 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1833,6 +1884,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 7,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "7 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1869,6 +1921,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 3,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "3 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1905,6 +1958,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 3,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "3 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1940,6 +1994,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 919,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "919 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -1977,6 +2032,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 305,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "305 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -2013,6 +2069,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 23,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "23 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -2050,6 +2107,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 6,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "6 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -2087,6 +2145,7 @@
   "present": false,
   "rule": "absent",
   "records_buffer": 0,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "0 records within 10 km in 2011-2026 (< 3); no range test (no DEM or habitat raster) (< 5%)"
  },
@@ -2124,6 +2183,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 81,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "81 records within 10 km in 2011-2026 (>= 3)"
  },
@@ -2160,6 +2220,7 @@
   "present": true,
   "rule": "records",
   "records_buffer": 28,
+  "buffer_m": 10000,
   "range_share": null,
   "evidence": "28 records within 10 km in 2011-2026 (>= 3)"
  }

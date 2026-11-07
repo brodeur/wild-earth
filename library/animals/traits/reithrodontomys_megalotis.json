@@ -1,0 +1,122 @@
+{
+ "id": "reithrodontomys_megalotis",
+ "scientific": "Reithrodontomys megalotis",
+ "common": "western harvest mouse",
+ "kind": "mammal",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Mammalia",
+  "order": "Rodentia",
+  "family": "Cricetidae",
+  "genus": "Reithrodontomys"
+ },
+ "body_plan": "rodent",
+ "mass_kg": 0.0094,
+ "size": {
+  "length_m": 0.076,
+  "shoulder_or_wingspan_m": 0.023
+ },
+ "diet": {
+  "role": [
+   "herbivore"
+  ],
+  "diet_tenths": {
+   "inv": 0.0,
+   "vend": 0.0,
+   "vect": 0.0,
+   "vfish": 0.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 5.0,
+   "planto": 5.0
+  },
+  "vertebrate_share": 0.0,
+  "mass_kg": 0.0094,
+  "activity": [
+   "nocturnal"
+  ],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 98.3
+  },
+  "sound": {
+   "range_m": 137.6
+  },
+  "scent": {
+   "range_m": 196.6
+  }
+ },
+ "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
+ "locomotion": {
+  "code": "reithrodontomys_megalotis",
+  "class": "Mammalia",
+  "order": "Rodentia",
+  "family": "Cricetidae",
+  "body_plan": "rodent",
+  "mass_kg": 0.0094,
+  "length_m": 0.076,
+  "hip_m": 0.023,
+  "posture": "parasagittal",
+  "gaits": {
+   "walk": "froude 0.5",
+   "trot": "froude 2.5",
+   "gallop": "beyond",
+   "run": "bound"
+  },
+  "walk_mps": 0.34,
+  "trot_mps": 0.75,
+  "cruise_mps": 0.9,
+  "top_mps": 1.38,
+  "stride_hz": 8.44,
+  "stride_m": 0.09,
+  "sprint_s": 1.2,
+  "recover_s": 5.0,
+  "turn_rad_s": 8.0,
+  "turn": {
+   "on": 0.6,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    2.0,
+    5.0
+   ]
+  },
+  "lag": {
+   "s": 0.024,
+   "max_rad": 0.3,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {
+   "sit_up": true
+  },
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-07T15:53:58Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

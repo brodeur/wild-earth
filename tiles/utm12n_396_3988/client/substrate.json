@@ -48,7 +48,7 @@
    "notes": "massive; exfoliation sheets parallel to the surface, two steep joint sets: big smooth faces, long cracks",
    "index": 1,
    "fraction": 0.0611,
-   "exposed_fraction": 0.4943,
+   "exposed_fraction": 0.4983,
    "joints": {
     "strikes_deg": [
      117.5,
@@ -58,7 +58,7 @@
      1.33,
      1.16
     ],
-    "cells": 70167,
+    "cells": 70154,
     "source": "DEM: strikes of the faces steeper than 55 degrees"
    }
   },
@@ -153,7 +153,7 @@
    "notes": "wavy foliation, silvery; slabby faces",
    "index": 3,
    "fraction": 0.0841,
-   "exposed_fraction": 0.3908,
+   "exposed_fraction": 0.3953,
    "fabric": {
     "strike_deg": 325.0,
     "dip_deg": 70.0,
@@ -174,7 +174,7 @@
      1.16,
      1.08
     ],
-    "cells": 84937,
+    "cells": 84920,
     "source": "DEM: strikes of the faces steeper than 55 degrees"
    }
   },
@@ -262,7 +262,7 @@
    "notes": "bedded: ledges and overhangs along the beds, vertical joints between",
    "index": 5,
    "fraction": 0.4372,
-   "exposed_fraction": 0.1397,
+   "exposed_fraction": 0.1417,
    "fabric": {
     "strike_deg": 325.0,
     "dip_deg": 12.0,
@@ -283,7 +283,7 @@
      1.23,
      1.1
     ],
-    "cells": 116912,
+    "cells": 116907,
     "source": "DEM: strikes of the faces steeper than 55 degrees"
    }
   },
@@ -416,7 +416,7 @@
    "notes": "sheared: scaly, slickensided lenses, waxy green",
    "index": 8,
    "fraction": 0.0007,
-   "exposed_fraction": 0.2522,
+   "exposed_fraction": 0.2579,
    "fabric": {
     "strike_deg": 26.3,
     "dip_deg": 60.0,
@@ -472,7 +472,7 @@
    "notes": "massive; solution flutes down the face",
    "index": 9,
    "fraction": 0.4049,
-   "exposed_fraction": 0.0962,
+   "exposed_fraction": 0.0978,
    "joints": {
     "strikes_deg": [
      2.5,
@@ -482,7 +482,7 @@
      1.26,
      1.25
     ],
-    "cells": 103071,
+    "cells": 102914,
     "source": "DEM: strikes of the faces steeper than 55 degrees"
    }
   },
@@ -717,16 +717,16 @@
   }
  },
  "stats": {
-  "exposed_fraction": 0.1637,
-  "exposed_mean": 0.1884,
-  "patches": 2732,
-  "patches_over_1000m2": 523,
+  "exposed_fraction": 0.1658,
+  "exposed_mean": 0.1899,
+  "patches": 2756,
+  "patches_over_1000m2": 525,
   "patches_over_1ha": 97,
-  "largest_patch_m2": 1521200,
+  "largest_patch_m2": 1525175,
   "slope_source": "max(5 m, 0.85 x 1 m mean)",
   "cover_source": "LANDFIRE EVC tree cover (30 m, smoothed)",
   "photo": "client/texture_imagery.jpg (NAIP, humans erased)",
-  "photo_green_ref": 0.0775,
+  "photo_green_ref": 0.0789,
   "dem": "terrain/dem_banked.tif"
  },
  "formula": "on the 5 m grid from the DEM (and the 1 m lidar DEM where the tile has it), the canopy (lidar tree and\nshrub cover at 10 m, else LANDFIRE EVC tree cover at 30 m), the NAIP photo and the soils:\n    steep    = smoothstep(28, 52, slope)            slope = max(5 m slope, 0.85 x the 1 m slope's 5 m mean)\n    bare     = (1 - tree) (1 - 0.5 shrub)            on a tile without lidar: 1 - 0.6 tree (EVC is coarse)\n    spectral = (1 - smoothstep(0.35 ref, 0.75 ref, exg)) (0.55 + 0.45 smoothstep(0.18, 0.42, luma)) grey\n               on the humans-erased NAIP (client/texture_imagery.jpg: roofs and roads are not rock); exg the photo's excess green (2G - R - B) / (R + G + B) over 5 m: grey or pale, not green; ref the\n               median exg under tree cover over 50% on this tile (the photo's own green, at least 0.06); grey =\n               1 - 0.6 smoothstep(0.04, 0.09, yel), yel = (R - B) / (R + G + B): dry summer grass is pale too, but yellow\n    convex   = 1 + 0.25 clip(TPI / 3 m, -1, 1)       TPI = z - its 40 m gaussian mean (spurs and rims are barer)\n    prior    = the soil map unit's Rock outcrop component % / 100\n    rock     = 0 on surficial deposits (a cut bank past 60 degrees keeps 0.5) and water, else 1\n    exposed  = clip(rock (steep bare^0.7 (0.3 + 0.7 spectral) convex + 0.45 prior smoothstep(15, 35, slope) spectral), 0, 1)\n    and at any slope at least rock bare (1 - smoothstep(0.25 ref, 0.5 ref, exg)) smoothstep(0.40, 0.55, luma) times 0.9 on\n    LANDFIRE's barren class (client/habitat.png 8), else 0.6 (1 - smoothstep(0.02, 0.05, yel)): the pale bare slabs (the\n    backs of the domes), which are rock though no cliff\nthen a 5 m gaussian. A patch is a connected run (8-neighbour) of cells over 0.5."

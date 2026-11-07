@@ -1,0 +1,126 @@
+{
+ "encoding": "mapunits keyed by client/soils.png R (soils/classes.json); rgb: the dry surface soil's linear sRGB reflectance; litter_share: litter / (litter + bare ground) between the plants",
+ "default": {
+  "dry": "10YR 5/3",
+  "rgb": [
+   0.2637,
+   0.1799,
+   0.1105
+  ],
+  "litter_share": 0.7,
+  "ground": {
+   "plant": 0.7,
+   "litter": 0.2,
+   "bare": 0.08,
+   "crust": 0.02
+  }
+ },
+ "crust": {
+  "dry": "5GY 3/1",
+  "rgb": [
+   0.0641,
+   0.0651,
+   0.0517
+  ]
+ },
+ "version": "1",
+ "rules": {
+  "colour": "the first mineral horizon of the largest non-miscellaneous component's Official Series Description (dry), else its soil order's typical surface (DEFAULT_BY_ORDER), else SoilGrids organic carbon (dry value 6.5 - 1.6 log2(1 + SOC %), 10YR, chroma 3)",
+  "munsell": "ASTM D1535 value, chroma x (3.8 + 0.4 value) in CIELAB, hue by the renotation's angles at value 5; Lab D65 to linear sRGB",
+  "litter_share": "litter / (litter + bare ground), the middles of the component's NRCS ecological site reference sheet ranges (EDIT); else the tile's sheet-weighted mean",
+  "ground": "the surface by the sheets (plant canopy, litter, bare ground, crust: range middles, as shares of their sum), weighted by component share; units without a sheet the tile's area-weighted mean",
+  "crust": "biological crust and moss, dry: a stated dark grey-green chip (CRUST_COLOUR)"
+ },
+ "mapunits": {
+  "1": {
+   "dry": "10YR 2.5/3",
+   "colour_from": "soc 8.8 %",
+   "rgb": [
+    0.0667,
+    0.041,
+    0.0205
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.7,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "2": {
+   "dry": "10YR 2.5/3",
+   "colour_from": "soc 9.9 %",
+   "rgb": [
+    0.0667,
+    0.041,
+    0.0205
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.7,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "3": {
+   "dry": "10YR 5/3",
+   "colour_from": "default",
+   "rgb": [
+    0.2637,
+    0.1799,
+    0.1105
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.7,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "4": {
+   "dry": "10YR 2.5/3",
+   "colour_from": "soc 6.8 %",
+   "rgb": [
+    0.0667,
+    0.041,
+    0.0205
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.7,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "5": {
+   "dry": "10YR 5/3",
+   "colour_from": "default",
+   "rgb": [
+    0.2637,
+    0.1799,
+    0.1105
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.7,
+   "litter_from": "the tile's sheet-weighted mean"
+  }
+ }
+}

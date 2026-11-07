@@ -1,0 +1,164 @@
+{
+ "units": {
+  "1": {
+   "name": "pre-Cenozoic metasedimentary and metavolcanic rocks undivided",
+   "lithology": "schist",
+   "cells": 1179278,
+   "elevation_m": {
+    "p5": 356.7,
+    "p25": 406.8,
+    "median": 429.9,
+    "p75": 450.1,
+    "p95": 484.4
+   },
+   "candidate": true
+  },
+  "2": {
+   "name": "Jurassic marine rocks, unit 1 (Western Sierra Nevada and Western Klamath Mountains)",
+   "lithology": "slate_phyllite",
+   "cells": 833716,
+   "elevation_m": {
+    "p5": 400.5,
+    "p25": 454.7,
+    "median": 475.5,
+    "p75": 489.4,
+    "p95": 505.3
+   },
+   "candidate": true
+  },
+  "3": {
+   "name": "Mesozoic volcanic rocks, unit 2 (Western Sierra Foothills and Western Klamath Mountains)",
+   "lithology": "greenstone_metavolcanic",
+   "cells": 677855,
+   "elevation_m": {
+    "p5": 487.2,
+    "p25": 512.6,
+    "median": 532.0,
+    "p75": 552.2,
+    "p95": 590.3
+   },
+   "candidate": true
+  },
+  "4": {
+   "name": "Mesozoic granitic rocks, unit 3 (Sierra Nevada, Death Valley area, Northern Mojave Desert and Transverse Ranges)",
+   "lithology": "granitic",
+   "cells": 916581,
+   "elevation_m": {
+    "p5": 432.7,
+    "p25": 481.7,
+    "median": 508.6,
+    "p75": 529.4,
+    "p95": 551.9
+   },
+   "candidate": true
+  },
+  "5": {
+   "name": "Ultramafic rocks, chiefly Mesozoic, unit 2 (Western Sierra Nevada and Klamath Mountains)",
+   "lithology": "serpentinite",
+   "cells": 382825,
+   "elevation_m": {
+    "p5": 326.8,
+    "p25": 363.2,
+    "median": 394.4,
+    "p75": 425.1,
+    "p95": 462.0
+   },
+   "candidate": true
+  },
+  "6": {
+   "name": "water",
+   "lithology": "surficial",
+   "cells": 9745,
+   "elevation_m": {
+    "p5": 322.5,
+    "p25": 327.2,
+    "median": 336.0,
+    "p75": 348.8,
+    "p95": 372.6
+   },
+   "candidate": false,
+   "why_not": "water"
+  },
+  "7": {
+   "name": "Paleozoic marine rocks, undivided, unit 4 (Western Sierra Nevada)",
+   "lithology": "slate_phyllite",
+   "cells": 0,
+   "candidate": false,
+   "why_not": "too small"
+  }
+ },
+ "superposition": [
+  {
+   "upper": "pre-Cenozoic metasedimentary and metavolcanic rocks undivided",
+   "lower": "Ultramafic rocks, chiefly Mesozoic, unit 2 (Western Sierra Nevada and Klamath Mountains)",
+   "contact_cells": 1254,
+   "upper_on_top": 0.475
+  },
+  {
+   "upper": "Mesozoic granitic rocks, unit 3 (Sierra Nevada, Death Valley area, Northern Mojave Desert and Transverse Ranges)",
+   "lower": "Jurassic marine rocks, unit 1 (Western Sierra Nevada and Western Klamath Mountains)",
+   "contact_cells": 723,
+   "upper_on_top": 0.508
+  },
+  {
+   "upper": "Jurassic marine rocks, unit 1 (Western Sierra Nevada and Western Klamath Mountains)",
+   "lower": "pre-Cenozoic metasedimentary and metavolcanic rocks undivided",
+   "contact_cells": 559,
+   "upper_on_top": 0.803
+  },
+  {
+   "upper": "Mesozoic volcanic rocks, unit 2 (Western Sierra Foothills and Western Klamath Mountains)",
+   "lower": "Jurassic marine rocks, unit 1 (Western Sierra Nevada and Western Klamath Mountains)",
+   "contact_cells": 558,
+   "upper_on_top": 0.887
+  },
+  {
+   "upper": "Mesozoic volcanic rocks, unit 2 (Western Sierra Foothills and Western Klamath Mountains)",
+   "lower": "Ultramafic rocks, chiefly Mesozoic, unit 2 (Western Sierra Nevada and Klamath Mountains)",
+   "contact_cells": 344,
+   "upper_on_top": 0.547
+  },
+  {
+   "upper": "Mesozoic volcanic rocks, unit 2 (Western Sierra Foothills and Western Klamath Mountains)",
+   "lower": "Mesozoic granitic rocks, unit 3 (Sierra Nevada, Death Valley area, Northern Mojave Desert and Transverse Ranges)",
+   "contact_cells": 326,
+   "upper_on_top": 0.663
+  }
+ ],
+ "consistent_pairs": 0.333,
+ "dropped": [
+  {
+   "unit": "Ultramafic rocks, chiefly Mesozoic, unit 2 (Western Sierra Nevada and Klamath Mountains)",
+   "why": "not superposed: mixed sides along its contacts with Mesozoic volcanic rocks, unit 2 (Western Sierra Foothills and Western Klamath Mountains), pre-Cenozoic metasedimentary and metavolcanic rocks undivided"
+  },
+  {
+   "unit": "Mesozoic volcanic rocks, unit 2 (Western Sierra Foothills and Western Klamath Mountains)",
+   "why": "not superposed: mixed sides along its contacts with Mesozoic granitic rocks, unit 3 (Sierra Nevada, Death Valley area, Northern Mojave Desert and Transverse Ranges)"
+  },
+  {
+   "unit": "Jurassic marine rocks, unit 1 (Western Sierra Nevada and Western Klamath Mountains)",
+   "why": "not superposed: mixed sides along its contacts with Mesozoic granitic rocks, unit 3 (Sierra Nevada, Death Valley area, Northern Mojave Desert and Transverse Ranges)"
+  },
+  {
+   "unit": "pre-Cenozoic metasedimentary and metavolcanic rocks undivided",
+   "why": "its band's steep cells are 26% its own unit and hold 58% of the unit's steep cells (under 50%)"
+  }
+ ],
+ "column": false,
+ "reason": "fewer than two units left in the column",
+ "rule": {
+  "min_cells": 2000,
+  "min_fraction": 0.0005,
+  "contact_dz_m": 1.0,
+  "min_contact": 50,
+  "superposed": 0.75,
+  "steep_deg": 25.0,
+  "min_band_fit": 0.5,
+  "min_column_fit": 0.6,
+  "max_dip_deg": 8.0,
+  "tilt_prior": 200,
+  "tilt_scale_m": 3000.0,
+  "map_tol_m": 20.0,
+  "doc": "pipeline/strata.py"
+ }
+}

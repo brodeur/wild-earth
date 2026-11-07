@@ -1,0 +1,225 @@
+{
+ "tile": "utm12n_396_3988",
+ "version": "1",
+ "context": {
+  "centre": [
+   -112.09951695876302,
+   36.07655207311629
+  ],
+  "elevation_m": null,
+  "koppen": null,
+  "group": null,
+  "wcvp_area": null
+ },
+ "plots": [],
+ "rule": "pipeline/tree_cards.py choose(): plots, then named trees of open place descriptions, then the tile's most-recorded WCVP trees that reach the subcanopy; shares by tier (TIER_SHARE)",
+ "trees": [
+  {
+   "id": "pinus_edulis",
+   "scientific": "Pinus edulis",
+   "family": "Pinaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 479.0,
+   "evidence": [
+    "GBIF: 479 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.5464,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "phoenix_dactylifera",
+   "scientific": "Phoenix dactylifera",
+   "family": "Arecaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 87.66666666666667,
+   "evidence": [
+    "GBIF: 3 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "records": 3.0,
+   "share": 0.1,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "pinus_ponderosa",
+   "scientific": "Pinus ponderosa",
+   "family": "Pinaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 71.0,
+   "evidence": [
+    "GBIF: 71 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.081,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "opuntia_basilaris",
+   "scientific": "Opuntia basilaris",
+   "family": "Cactaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 56.0,
+   "evidence": [
+    "GBIF: 56 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0639,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "amelanchier_utahensis",
+   "scientific": "Amelanchier utahensis",
+   "family": "Rosaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 52.0,
+   "evidence": [
+    "GBIF: 52 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0593,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "pseudotsuga_menziesii",
+   "scientific": "Pseudotsuga menziesii",
+   "family": "Pinaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 40.0,
+   "evidence": [
+    "GBIF: 40 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0456,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "cercis_orbiculata",
+   "scientific": "Cercis orbiculata",
+   "family": "Fabaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 31.0,
+   "evidence": [
+    "GBIF: 31 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0354,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "ostrya_knowltonii",
+   "scientific": "Ostrya knowltonii",
+   "family": "Betulaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 23.0,
+   "evidence": [
+    "GBIF: 23 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0262,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "acer_negundo",
+   "scientific": "Acer negundo",
+   "family": "Sapindaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 20.0,
+   "evidence": [
+    "GBIF: 20 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0228,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "populus_fremontii",
+   "scientific": "Populus fremontii",
+   "family": "Salicaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 17.0,
+   "evidence": [
+    "GBIF: 17 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0194,
+   "research": false,
+   "card": false
+  }
+ ],
+ "queued": [
+  {
+   "id": "pinus_edulis",
+   "scientific": "Pinus edulis",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "phoenix_dactylifera",
+   "scientific": "Phoenix dactylifera",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "pinus_ponderosa",
+   "scientific": "Pinus ponderosa",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "opuntia_basilaris",
+   "scientific": "Opuntia basilaris",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "amelanchier_utahensis",
+   "scientific": "Amelanchier utahensis",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "pseudotsuga_menziesii",
+   "scientific": "Pseudotsuga menziesii",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "cercis_orbiculata",
+   "scientific": "Cercis orbiculata",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "ostrya_knowltonii",
+   "scientific": "Ostrya knowltonii",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "acer_negundo",
+   "scientific": "Acer negundo",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "populus_fremontii",
+   "scientific": "Populus fremontii",
+   "why": "needs a research record (its height decides whether it stays)"
+  }
+ ],
+ "log": [
+  "plot vela_apaza_2024_los_amigos: not used (6976 km, 0 m apart, climate Am)"
+ ],
+ "cards_written": []
+}

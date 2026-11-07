@@ -489,7 +489,11 @@ def _rewild_carve(tile: Tile, dem: FineDEM):
 
 def road_zone(tile: Tile) -> np.ndarray | None:
     """The erased roads and their fills on the 5 m grid: client/roads.png at the inner verge or more (ROAD_MIN),
-    grown ROAD_GROW_M."""
+    grown ROAD_GROW_M. None once the roads are out of the ground (pipeline/unroad.py records terrain/dem_1m_unroad.json
+    or terrain/dem_unroad.json): their fills are gone, so there is no culvert to cut, and client/roads.png (written
+    later, by the terrain step) may still hold the previous build's roads when this step runs."""
+    if tile.path("terrain/dem_1m_unroad.json").exists() or tile.path("terrain/dem_unroad.json").exists():
+        return None
     p = tile.path("client/roads.png")
     if not p.exists():
         return None

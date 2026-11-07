@@ -419,14 +419,31 @@
     "named by EVT 7054 Southern Rocky Mountain Ponderosa Pine Woodland (16191 cells)",
     "named by BPS 1190 Southern Rocky Mountain Ponderosa Pine Woodland (3455 cells)",
     "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)",
-    "named by BPS 1207 Southern Rocky Mountain Ponderosa Pine Savanna (17 cells)"
+    "named by BPS 1207 Southern Rocky Mountain Ponderosa Pine Savanna (17 cells)",
+    "canopy: records (GBIF: 71 records on the tile; height not yet screened)"
    ],
-   "cover": 0.1774,
+   "cover": 0.2014,
    "records": 71,
+   "scientific": "Pinus ponderosa",
    "record": true,
    "card": false,
    "drawn_as": "pinus_ponderosa",
    "rank": 1
+  },
+  {
+   "id": "pinus_edulis",
+   "kind": "tree",
+   "why": [
+    "canopy: records (GBIF: 479 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.1621,
+   "records": 479,
+   "scientific": "Pinus edulis",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 2
   },
   {
    "id": "juniperus_grandis",
@@ -442,7 +459,7 @@
    "record": true,
    "card": true,
    "drawn_as": "juniperus_grandis",
-   "rank": 2
+   "rank": 3
   },
   {
    "id": "pinus_monophylla",
@@ -458,7 +475,67 @@
    "card": false,
    "drawn_as": "pinus_sabiniana",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 3
+   "rank": 4
+  },
+  {
+   "id": "phoenix_dactylifera",
+   "kind": "tree",
+   "why": [
+    "canopy: records (GBIF: 3 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0297,
+   "records": 0,
+   "scientific": "Phoenix dactylifera",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 5
+  },
+  {
+   "id": "opuntia_basilaris",
+   "kind": "tree",
+   "why": [
+    "canopy: records (GBIF: 56 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.019,
+   "records": 56,
+   "scientific": "Opuntia basilaris",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 6
+  },
+  {
+   "id": "amelanchier_utahensis",
+   "kind": "tree",
+   "why": [
+    "canopy: records (GBIF: 52 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0176,
+   "records": 52,
+   "scientific": "Amelanchier utahensis",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 7
+  },
+  {
+   "id": "pseudotsuga_menziesii",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)",
+    "canopy: records (GBIF: 40 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0136,
+   "records": 40,
+   "scientific": "Pseudotsuga menziesii",
+   "record": true,
+   "card": false,
+   "drawn_as": "pseudotsuga_menziesii",
+   "rank": 8
   },
   {
    "id": "artemisia_tridentata",
@@ -473,7 +550,66 @@
    "record": true,
    "card": true,
    "drawn_as": "artemisia_tridentata",
-   "rank": 4
+   "rank": 9
+  },
+  {
+   "id": "cercis_orbiculata",
+   "kind": "tree",
+   "why": [
+    "canopy: records (GBIF: 31 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0105,
+   "records": 31,
+   "scientific": "Cercis orbiculata",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 10
+  },
+  {
+   "id": "ostrya_knowltonii",
+   "kind": "tree",
+   "why": [
+    "canopy: records (GBIF: 23 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0078,
+   "records": 23,
+   "scientific": "Ostrya knowltonii",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 11
+  },
+  {
+   "id": "acer_negundo",
+   "kind": "tree",
+   "why": [
+    "canopy: records (GBIF: 20 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0068,
+   "records": 20,
+   "scientific": "Acer negundo",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 12
+  },
+  {
+   "id": "populus_fremontii",
+   "kind": "tree",
+   "why": [
+    "canopy: records (GBIF: 17 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0058,
+   "records": 17,
+   "scientific": "Populus fremontii",
+   "record": true,
+   "card": false,
+   "drawn_as": "populus_fremontii",
+   "rank": 13
   },
   {
    "id": "adenostoma_fasciculatum",
@@ -486,7 +622,7 @@
    "record": true,
    "card": false,
    "drawn_as": "adenostoma_fasciculatum",
-   "rank": 5
+   "rank": 14
   },
   {
    "id": "arctostaphylos_viscida",
@@ -499,7 +635,7 @@
    "record": true,
    "card": false,
    "drawn_as": "arctostaphylos_viscida",
-   "rank": 6
+   "rank": 15
   },
   {
    "id": "ceanothus_cuneatus",
@@ -512,20 +648,7 @@
    "record": true,
    "card": false,
    "drawn_as": "ceanothus_cuneatus",
-   "rank": 7
-  },
-  {
-   "id": "pseudotsuga_menziesii",
-   "kind": "tree",
-   "why": [
-    "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)"
-   ],
-   "cover": 0.0001,
-   "records": 40,
-   "record": true,
-   "card": false,
-   "drawn_as": "pseudotsuga_menziesii",
-   "rank": 8
+   "rank": 16
   },
   {
    "id": "abies_concolor",
@@ -538,7 +661,7 @@
    "record": true,
    "card": true,
    "drawn_as": "abies_concolor",
-   "rank": 9
+   "rank": 17
   },
   {
    "id": "calocedrus_decurrens",
@@ -551,7 +674,7 @@
    "record": true,
    "card": false,
    "drawn_as": "calocedrus_decurrens",
-   "rank": 10
+   "rank": 18
   },
   {
    "id": "pinus_lambertiana",
@@ -564,7 +687,7 @@
    "record": true,
    "card": true,
    "drawn_as": "pinus_lambertiana",
-   "rank": 11
+   "rank": 19
   },
   {
    "id": "quercus_kelloggii",
@@ -577,22 +700,7 @@
    "record": true,
    "card": false,
    "drawn_as": "quercus_kelloggii",
-   "rank": 12
-  },
-  {
-   "id": "pinus_edulis",
-   "kind": "tree",
-   "why": [
-    "GBIF: 479 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 479,
-   "scientific": "Pinus edulis",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 13
+   "rank": 20
   },
   {
    "id": "fallugia_paradoxa",
@@ -607,7 +715,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 14
+   "rank": 21
   },
   {
    "id": "chamaebatiaria_millefolium",
@@ -622,7 +730,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 15
+   "rank": 22
   },
   {
    "id": "quercus_gambelii",
@@ -637,7 +745,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 16
+   "rank": 23
   },
   {
    "id": "juniperus_osteosperma",
@@ -652,7 +760,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 17
+   "rank": 24
   },
   {
    "id": "purshia_stansburiana",
@@ -667,7 +775,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 18
+   "rank": 25
   },
   {
    "id": "opuntia_phaeacantha",
@@ -682,7 +790,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 19
+   "rank": 26
   },
   {
    "id": "yucca_baccata",
@@ -697,7 +805,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 20
+   "rank": 27
   },
   {
    "id": "agave_utahensis",
@@ -712,7 +820,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 21
+   "rank": 28
   },
   {
    "id": "ericameria_nauseosa",
@@ -727,7 +835,7 @@
    "card": false,
    "drawn_as": "baccharis_pilularis",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 22
+   "rank": 29
   },
   {
    "id": "echinocereus_triglochidiatus",
@@ -742,7 +850,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 23
+   "rank": 30
   },
   {
    "id": "cirsium_arizonicum",
@@ -757,7 +865,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 24
+   "rank": 31
   },
   {
    "id": "opuntia_polyacantha",
@@ -772,7 +880,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 25
+   "rank": 32
   },
   {
    "id": "datura_wrightii",
@@ -787,7 +895,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 26
+   "rank": 33
   },
   {
    "id": "phoradendron_juniperinum",
@@ -802,7 +910,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 27
+   "rank": 34
   },
   {
    "id": "penstemon_palmeri",
@@ -817,7 +925,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 28
+   "rank": 35
   },
   {
    "id": "petrophytum_caespitosum",
@@ -832,7 +940,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 29
+   "rank": 36
   },
   {
    "id": "penstemon_pachyphyllus",
@@ -847,7 +955,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 30
+   "rank": 37
   },
   {
    "id": "asclepias_subverticillata",
@@ -862,7 +970,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 31
+   "rank": 38
   },
   {
    "id": "alloberberis_fremontii",
@@ -877,7 +985,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 32
+   "rank": 39
   },
   {
    "id": "phlox_austromontana",
@@ -892,7 +1000,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 33
+   "rank": 40
   },
   {
    "id": "echinocactus_polycephalus",
@@ -907,7 +1015,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 34
+   "rank": 41
   },
   {
    "id": "penstemon_eatonii",
@@ -922,7 +1030,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 35
+   "rank": 42
   },
   {
    "id": "solanum_elaeagnifolium",
@@ -937,7 +1045,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 36
+   "rank": 43
   },
   {
    "id": "castilleja_integra",
@@ -952,7 +1060,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 37
+   "rank": 44
   },
   {
    "id": "packera_multilobata",
@@ -967,7 +1075,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 38
+   "rank": 45
   },
   {
    "id": "astragalus_calycosus",
@@ -982,22 +1090,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 39
-  },
-  {
-   "id": "pelecyphora_vivipara",
-   "kind": "forb",
-   "why": [
-    "GBIF: 66 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 66,
-   "scientific": "Pelecyphora vivipara",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 40
+   "rank": 46
   },
   {
    "id": "ribes_cereum",
@@ -1012,7 +1105,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 41
+   "rank": 47
   },
   {
    "id": "erodium_cicutarium",
@@ -1026,7 +1119,7 @@
    "record": true,
    "card": false,
    "drawn_as": "erodium_cicutarium",
-   "rank": 42
+   "rank": 48
   },
   {
    "id": "mahonia_repens",
@@ -1041,7 +1134,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 43
+   "rank": 49
   },
   {
    "id": "ribes_velutinum",
@@ -1056,7 +1149,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 44
+   "rank": 50
   },
   {
    "id": "fraxinus_anomala",
@@ -1071,7 +1164,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 45
+   "rank": 51
   },
   {
    "id": "fendlera_rupicola",
@@ -1086,37 +1179,21 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 46
+   "rank": 52
   },
   {
-   "id": "ostrya_knowltonii",
-   "kind": "shrub",
-   "why": [
-    "GBIF: 23 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 23,
-   "scientific": "Ostrya knowltonii",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 47
-  },
-  {
-   "id": "acer_negundo",
-   "kind": "shrub",
+   "id": "lupinus_argenteus",
+   "kind": "forb",
    "why": [
     "GBIF: 20 records on the tile"
    ],
    "cover": 0.0,
    "records": 20,
-   "scientific": "Acer negundo",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 48
+   "scientific": "Lupinus argenteus",
+   "record": true,
+   "card": true,
+   "drawn_as": "lupinus_argenteus",
+   "rank": 53
   },
   {
    "id": "cercis_occidentalis",
@@ -1130,21 +1207,7 @@
    "record": true,
    "card": false,
    "drawn_as": "cercis_occidentalis",
-   "rank": 49
-  },
-  {
-   "id": "populus_fremontii",
-   "kind": "tree",
-   "why": [
-    "GBIF: 17 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 17,
-   "scientific": "Populus fremontii",
-   "record": true,
-   "card": false,
-   "drawn_as": "populus_fremontii",
-   "rank": 50
+   "rank": 54
   },
   {
    "id": "hordeum_murinum",
@@ -1158,7 +1221,7 @@
    "record": true,
    "card": false,
    "drawn_as": "hordeum_murinum",
-   "rank": 51
+   "rank": 55
   },
   {
    "id": "rhus_trilobata",
@@ -1173,7 +1236,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 52
+   "rank": 56
   },
   {
    "id": "shepherdia_rotundifolia",
@@ -1188,7 +1251,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 53
+   "rank": 57
   }
  ],
  "gbif_plants": [
@@ -1918,7 +1981,7 @@
    "family": "Fabaceae",
    "kind": "forb",
    "records": 20,
-   "known": false
+   "known": true
   },
   {
    "id": "sphaeralcea_grossulariifolia",
@@ -2400,11 +2463,19 @@
   "ground": 26
  },
  "by_layer": {
-  "tree": 12,
-  "shrub": 15,
+  "tree": 18,
+  "shrub": 13,
   "ground": 26
  },
  "hands": [
+  {
+   "id": "pinus_edulis",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 479 records on the tile; height not yet screened)"
+   ]
+  },
   {
    "id": "pinus_monophylla",
    "kind": "tree",
@@ -2415,11 +2486,51 @@
    ]
   },
   {
-   "id": "pinus_edulis",
+   "id": "phoenix_dactylifera",
    "kind": "tree",
    "what": "a trait card",
    "why": [
-    "GBIF: 479 records on the tile"
+    "canopy: records (GBIF: 3 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "opuntia_basilaris",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 56 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "amelanchier_utahensis",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 52 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "cercis_orbiculata",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 31 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "ostrya_knowltonii",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 23 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "acer_negundo",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 20 records on the tile; height not yet screened)"
    ]
   },
   {
@@ -2631,14 +2742,6 @@
    ]
   },
   {
-   "id": "pelecyphora_vivipara",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 66 records on the tile"
-   ]
-  },
-  {
    "id": "ribes_cereum",
    "kind": "shrub",
    "what": "a trait card",
@@ -2676,22 +2779,6 @@
    "what": "a trait card",
    "why": [
     "GBIF: 25 records on the tile"
-   ]
-  },
-  {
-   "id": "ostrya_knowltonii",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 23 records on the tile"
-   ]
-  },
-  {
-   "id": "acer_negundo",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 20 records on the tile"
    ]
   },
   {
@@ -2864,14 +2951,14 @@
   }
  ],
  "summary": {
-  "needed": 53,
-  "with_record": 15,
+  "needed": 57,
+  "with_record": 16,
   "generated_now": 0,
-  "queued": 38,
+  "queued": 41,
   "unread_communities": 19,
   "by_layer": {
-   "tree": 12,
-   "shrub": 15,
+   "tree": 18,
+   "shrub": 13,
    "ground": 26
   },
   "meets_target": {
@@ -2879,6 +2966,6 @@
    "shrub": false,
    "ground": true
   },
-  "hands": 57
+  "hands": 60
  }
 }

@@ -80,31 +80,31 @@
     "ftype": 390,
     "evidence": {
      "area_m2": 4209.9,
-     "level_m": 461.43,
+     "level_m": 461.92,
      "outlet": [
       3587.1,
       2104.6
      ],
-     "drop_below_m": 6.57,
-     "crest_above_m": 1.42,
+     "drop_below_m": 7.03,
+     "crest_above_m": 0.79,
      "edge_len_m": 43.6,
      "edge_rms": 0.018,
      "dam_evidence": true
     },
     "reasons": [
-     "stock pond: 0.42 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 44 m downstream edge, ground 6.6 m below the water within 45 m of it, crest +1.4 m"
+     "stock pond: 0.42 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 44 m downstream edge, ground 7.0 m below the water within 45 m of it, crest +0.8 m"
     ],
     "kind": "stock_pond",
     "carve": null,
     "breach": {
-     "breaches": 1,
+     "breaches": 0,
      "unbreached": 0,
-     "breach_length_m": 38.3,
-     "breach_max_cut_m": 2.03,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
      "held_on_thalweg_m": null,
      "thalweg_held_fraction": null,
-     "bed_held_fraction": 0.0,
-     "bed_held_max_m": 0.08,
+     "bed_held_fraction": 0.696,
+     "bed_held_max_m": 0.37,
      "cells": 168
     },
     "rewilded": true,
@@ -187,7 +187,7 @@
        "osm_id": "way/165786161"
       }
      ],
-     "level_m": 479.08,
+     "level_m": 480.1,
      "channel_area_km2": 0.442,
      "channel_fcode": 46007,
      "channel_name": null,
@@ -195,28 +195,28 @@
       6416.8,
       7828.1
      ],
-     "drop_below_m": 1.9,
-     "crest_above_m": 2.09,
+     "drop_below_m": 3.06,
+     "crest_above_m": 0.81,
      "edge_len_m": 28.5,
      "edge_rms": 0.035,
      "dam_evidence": true
     },
     "reasons": [
-     "stock pond: 0.18 ha on a routed channel (0.44 km2), straight 29 m downstream edge, ground 1.9 m below the water within 45 m of it, crest +2.1 m"
+     "stock pond: 0.18 ha on a routed channel (0.44 km2), straight 29 m downstream edge, ground 3.1 m below the water within 45 m of it, crest +0.8 m"
     ],
     "kind": "stock_pond",
     "carve": {
      "inflows": 1,
      "length_m": 32.1,
-     "cells": 17,
-     "outlet_tail_m": 27.5,
-     "outlet_tail_max_cut_m": 3.57,
-     "max_cut_m": 1.38,
+     "cells": 12,
+     "outlet_tail_m": 15.0,
+     "outlet_tail_max_cut_m": 2.26,
+     "max_cut_m": 1.2,
      "outlet": [
       6416.8,
       7828.1
      ],
-     "level_m": 479.06
+     "level_m": 480.09
     },
     "breach": {
      "breaches": 0,
@@ -226,11 +226,84 @@
      "held_on_thalweg_m": 0.0,
      "thalweg_held_fraction": 0.0,
      "bed_held_fraction": 0.0,
-     "bed_held_max_m": 0.09,
+     "bed_held_max_m": 0.06,
      "cells": 73
     },
     "rewilded": true,
     "area_m2": 1800.5
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.82124100000001,
+       38.696523
+      ],
+      [
+       -120.821026,
+       38.69638
+      ],
+      [
+       -120.820777,
+       38.696094
+      ],
+      [
+       -120.821026,
+       38.696023
+      ],
+      [
+       -120.821276,
+       38.696094
+      ],
+      [
+       -120.82124100000001,
+       38.696523
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:{1CB221A1-1EA6-467C-B653-01D89696CD87}",
+    "nhd_id": "{1CB221A1-1EA6-467C-B653-01D89696CD87}",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 1329.8,
+     "level_m": 543.05,
+     "outlet": [
+      9491.6,
+      5299.6
+     ],
+     "drop_below_m": 1.93,
+     "crest_above_m": 0.62,
+     "edge_len_m": 28.4,
+     "edge_rms": 0.048,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 0.13 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 28 m downstream edge, ground 1.9 m below the water within 45 m of it, crest +0.6 m"
+    ],
+    "kind": "stock_pond",
+    "carve": null,
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": null,
+     "thalweg_held_fraction": null,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.24,
+     "cells": 52
+    },
+    "rewilded": true,
+    "area_m2": 1329.8
    }
   },
   {
@@ -301,19 +374,19 @@
        "osm_id": "way/165785978"
       }
      ],
-     "level_m": 498.39,
+     "level_m": 498.18,
      "outlet": [
       6442.1,
       5028.7
      ],
-     "drop_below_m": 5.05,
-     "crest_above_m": 0.56,
+     "drop_below_m": 4.84,
+     "crest_above_m": 0.71,
      "edge_len_m": 27.5,
      "edge_rms": 0.113,
      "dam_evidence": true
     },
     "reasons": [
-     "stock pond: 0.26 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 27 m downstream edge, ground 5.1 m below the water within 45 m of it, crest +0.6 m"
+     "stock pond: 0.26 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 27 m downstream edge, ground 4.8 m below the water within 45 m of it, crest +0.7 m"
     ],
     "kind": "stock_pond",
     "carve": null,
@@ -324,8 +397,8 @@
      "breach_max_cut_m": 0.0,
      "held_on_thalweg_m": null,
      "thalweg_held_fraction": null,
-     "bed_held_fraction": 0.75,
-     "bed_held_max_m": 0.42,
+     "bed_held_fraction": 0.657,
+     "bed_held_max_m": 0.46,
      "cells": 108
     },
     "rewilded": true,
@@ -450,7 +523,7 @@
        "name": null
       }
      ],
-     "level_m": 429.73,
+     "level_m": 430.84,
      "channel_area_km2": 0.585,
      "channel_fcode": 46007,
      "channel_name": null,
@@ -458,29 +531,29 @@
       3572.6,
       8287.2
      ],
-     "drop_below_m": 3.37,
-     "crest_above_m": 3.73,
+     "drop_below_m": 4.29,
+     "crest_above_m": 2.55,
      "edge_len_m": 70.0,
      "edge_rms": 0.071,
      "dam_evidence": true
     },
     "reasons": [
      "OSM water=reservoir (way/165785965)",
-     "stock pond: 1.23 ha on a routed channel (0.58 km2), straight 70 m downstream edge, ground 3.4 m below the water within 45 m of it, crest +3.7 m"
+     "stock pond: 1.23 ha on a routed channel (0.58 km2), straight 70 m downstream edge, ground 4.3 m below the water within 45 m of it, crest +2.5 m"
     ],
     "kind": "reservoir",
     "carve": {
      "inflows": 1,
      "length_m": 180.6,
-     "cells": 41,
-     "outlet_tail_m": 35.0,
-     "outlet_tail_max_cut_m": 4.23,
-     "max_cut_m": 5.62,
+     "cells": 32,
+     "outlet_tail_m": 12.5,
+     "outlet_tail_max_cut_m": 2.67,
+     "max_cut_m": 3.8,
      "outlet": [
       3572.6,
       8287.2
      ],
-     "level_m": 429.07
+     "level_m": 430.84
     },
     "breach": {
      "breaches": 0,
@@ -490,7 +563,7 @@
      "held_on_thalweg_m": 0.0,
      "thalweg_held_fraction": 0.0,
      "bed_held_fraction": 0.0,
-     "bed_held_max_m": 0.02,
+     "bed_held_max_m": 0.0,
      "cells": 492
     },
     "rewilded": true,
@@ -579,7 +652,7 @@
        "name": null
       }
      ],
-     "level_m": 417.69,
+     "level_m": 418.45,
      "channel_area_km2": 0.373,
      "channel_fcode": 46007,
      "channel_name": null,
@@ -587,8 +660,8 @@
       2669.4,
       9102.3
      ],
-     "drop_below_m": 2.13,
-     "crest_above_m": 1.2,
+     "drop_below_m": 2.82,
+     "crest_above_m": 0.53,
      "edge_len_m": 88.4,
      "edge_rms": 0.014,
      "dam_evidence": true
@@ -600,15 +673,15 @@
     "carve": {
      "inflows": 1,
      "length_m": 105.7,
-     "cells": 39,
-     "outlet_tail_m": 60.0,
-     "outlet_tail_max_cut_m": 3.8,
-     "max_cut_m": 3.15,
+     "cells": 37,
+     "outlet_tail_m": 55.0,
+     "outlet_tail_max_cut_m": 3.04,
+     "max_cut_m": 2.64,
      "outlet": [
       2669.4,
       9102.3
      ],
-     "level_m": 417.69
+     "level_m": 418.45
     },
     "breach": {
      "breaches": 0,
@@ -618,7 +691,7 @@
      "held_on_thalweg_m": 0.0,
      "thalweg_held_fraction": 0.0,
      "bed_held_fraction": 0.0,
-     "bed_held_max_m": 0.0,
+     "bed_held_max_m": 0.13,
      "cells": 660
     },
     "rewilded": true,
@@ -695,7 +768,7 @@
     "ftype": 390,
     "evidence": {
      "area_m2": 5983.7,
-     "level_m": 410.48,
+     "level_m": 411.85,
      "channel_area_km2": 0.509,
      "channel_fcode": 46007,
      "channel_name": null,
@@ -703,28 +776,28 @@
       768.0,
       3368.2
      ],
-     "drop_below_m": 4.75,
-     "crest_above_m": 2.1,
+     "drop_below_m": 6.15,
+     "crest_above_m": 0.05,
      "edge_len_m": 47.3,
      "edge_rms": 0.09,
      "dam_evidence": true
     },
     "reasons": [
-     "stock pond: 0.60 ha on a routed channel (0.51 km2), straight 47 m downstream edge, ground 4.7 m below the water within 45 m of it, crest +2.1 m"
+     "stock pond: 0.60 ha on a routed channel (0.51 km2), straight 47 m downstream edge, ground 6.2 m below the water within 45 m of it, crest +0.1 m"
     ],
     "kind": "stock_pond",
     "carve": {
      "inflows": 1,
      "length_m": 114.5,
-     "cells": 25,
-     "outlet_tail_m": 12.5,
-     "outlet_tail_max_cut_m": 3.32,
-     "max_cut_m": 2.51,
+     "cells": 23,
+     "outlet_tail_m": 7.5,
+     "outlet_tail_max_cut_m": 0.43,
+     "max_cut_m": 1.12,
      "outlet": [
       768.0,
       3368.2
      ],
-     "level_m": 410.47
+     "level_m": 411.85
     },
     "breach": {
      "breaches": 0,
@@ -734,7 +807,7 @@
      "held_on_thalweg_m": 0.0,
      "thalweg_held_fraction": 0.0,
      "bed_held_fraction": 0.0,
-     "bed_held_max_m": 0.03,
+     "bed_held_max_m": 0.0,
      "cells": 236
     },
     "rewilded": true,
@@ -803,31 +876,31 @@
     "ftype": 390,
     "evidence": {
      "area_m2": 1778.4,
-     "level_m": 509.34,
+     "level_m": 510.19,
      "outlet": [
-      7832.0,
-      4185.7
+      7832.3,
+      4189.6
      ],
-     "drop_below_m": 3.31,
-     "crest_above_m": 2.2,
-     "edge_len_m": 27.7,
-     "edge_rms": 0.045,
+     "drop_below_m": 3.21,
+     "crest_above_m": 0.98,
+     "edge_len_m": 27.5,
+     "edge_rms": 0.041,
      "dam_evidence": true
     },
     "reasons": [
-     "stock pond: 0.18 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 28 m downstream edge, ground 3.3 m below the water within 45 m of it, crest +2.2 m"
+     "stock pond: 0.18 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 28 m downstream edge, ground 3.2 m below the water within 45 m of it, crest +1.0 m"
     ],
     "kind": "stock_pond",
     "carve": null,
     "breach": {
-     "breaches": 1,
+     "breaches": 0,
      "unbreached": 0,
-     "breach_length_m": 41.2,
-     "breach_max_cut_m": 2.11,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
      "held_on_thalweg_m": null,
      "thalweg_held_fraction": null,
      "bed_held_fraction": 0.0,
-     "bed_held_max_m": 0.02,
+     "bed_held_max_m": 0.06,
      "cells": 70
     },
     "rewilded": true,
@@ -958,7 +1031,7 @@
        "osm_id": "way/165786488"
       }
      ],
-     "level_m": 526.76,
+     "level_m": 527.5,
      "channel_area_km2": 0.673,
      "channel_fcode": 46003,
      "channel_name": "Mound Springs Creek",
@@ -966,28 +1039,28 @@
       7511.1,
       6604.0
      ],
-     "drop_below_m": 5.65,
-     "crest_above_m": 2.18,
+     "drop_below_m": 6.45,
+     "crest_above_m": 1.28,
      "edge_len_m": 76.0,
      "edge_rms": 0.093,
      "dam_evidence": true
     },
     "reasons": [
-     "stock pond: 1.26 ha on a routed channel (0.67 km2), straight 76 m downstream edge, ground 5.6 m below the water within 45 m of it, crest +2.2 m"
+     "stock pond: 1.26 ha on a routed channel (0.67 km2), straight 76 m downstream edge, ground 6.5 m below the water within 45 m of it, crest +1.3 m"
     ],
     "kind": "stock_pond",
     "carve": {
      "inflows": 1,
      "length_m": 114.5,
-     "cells": 26,
-     "outlet_tail_m": 15.0,
-     "outlet_tail_max_cut_m": 3.48,
+     "cells": 24,
+     "outlet_tail_m": 10.0,
+     "outlet_tail_max_cut_m": 2.49,
      "max_cut_m": 1.36,
      "outlet": [
       7511.1,
       6604.0
      ],
-     "level_m": 526.74
+     "level_m": 527.5
     },
     "breach": {
      "breaches": 0,
@@ -997,7 +1070,7 @@
      "held_on_thalweg_m": 0.0,
      "thalweg_held_fraction": 0.0,
      "bed_held_fraction": 0.0,
-     "bed_held_max_m": 0.05,
+     "bed_held_max_m": 0.0,
      "cells": 509
     },
     "rewilded": true,
@@ -1084,7 +1157,7 @@
        "osm_id": "way/165786182"
       }
      ],
-     "level_m": 359.56,
+     "level_m": 361.0,
      "channel_area_km2": 1.674,
      "channel_fcode": 46007,
      "channel_name": null,
@@ -1092,14 +1165,14 @@
       595.4,
       6140.5
      ],
-     "drop_below_m": 7.37,
-     "crest_above_m": -1.01,
+     "drop_below_m": 8.77,
+     "crest_above_m": -2.6,
      "edge_len_m": 77.5,
      "edge_rms": 0.017,
      "dam_evidence": true
     },
     "reasons": [
-     "stock pond: 1.26 ha on a routed channel (1.67 km2), straight 77 m downstream edge, ground 7.4 m below the water within 45 m of it, crest -1.0 m"
+     "stock pond: 1.26 ha on a routed channel (1.67 km2), straight 77 m downstream edge, ground 8.8 m below the water within 45 m of it, crest -2.6 m"
     ],
     "kind": "stock_pond",
     "carve": {
@@ -1108,12 +1181,12 @@
      "cells": 37,
      "outlet_tail_m": 0.0,
      "outlet_tail_max_cut_m": 0.0,
-     "max_cut_m": 3.98,
+     "max_cut_m": 2.53,
      "outlet": [
       595.4,
       6140.5
      ],
-     "level_m": 359.56
+     "level_m": 361.0
     },
     "breach": {
      "breaches": 0,
@@ -1186,19 +1259,19 @@
        "osm_id": "way/165786782"
       }
      ],
-     "level_m": 482.46,
+     "level_m": 482.07,
      "outlet": [
-      6184.6,
-      4079.2
+      6186.5,
+      4086.0
      ],
-     "drop_below_m": 2.43,
-     "crest_above_m": 0.3,
-     "edge_len_m": 27.2,
-     "edge_rms": 0.087,
+     "drop_below_m": 2.15,
+     "crest_above_m": 0.68,
+     "edge_len_m": 22.7,
+     "edge_rms": 0.111,
      "dam_evidence": true
     },
     "reasons": [
-     "stock pond: 0.13 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 27 m downstream edge, ground 2.4 m below the water within 45 m of it, crest +0.3 m"
+     "stock pond: 0.13 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 23 m downstream edge, ground 2.1 m below the water within 45 m of it, crest +0.7 m"
     ],
     "kind": "stock_pond",
     "carve": null,
@@ -1210,7 +1283,7 @@
      "held_on_thalweg_m": null,
      "thalweg_held_fraction": null,
      "bed_held_fraction": 0.0,
-     "bed_held_max_m": 0.0,
+     "bed_held_max_m": 0.02,
      "cells": 49
     },
     "rewilded": true,
@@ -1293,13 +1366,13 @@
        "osm_id": "way/165786151"
       }
      ],
-     "level_m": 474.86,
+     "level_m": 474.88,
      "outlet": [
-      4901.8,
-      4151.2
+      4902.7,
+      4151.1
      ],
-     "drop_below_m": 1.87,
-     "crest_above_m": 1.63,
+     "drop_below_m": 1.93,
+     "crest_above_m": 1.55,
      "edge_len_m": 48.9,
      "edge_rms": 0.019,
      "dam_evidence": true
@@ -1312,12 +1385,12 @@
     "breach": {
      "breaches": 1,
      "unbreached": 0,
-     "breach_length_m": 58.3,
-     "breach_max_cut_m": 3.09,
+     "breach_length_m": 45.4,
+     "breach_max_cut_m": 1.89,
      "held_on_thalweg_m": null,
      "thalweg_held_fraction": null,
-     "bed_held_fraction": 0.019,
-     "bed_held_max_m": 0.55,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.17,
      "cells": 207
     },
     "rewilded": true,
@@ -1386,19 +1459,19 @@
     "ftype": 390,
     "evidence": {
      "area_m2": 909.8,
-     "level_m": 516.69,
+     "level_m": 516.88,
      "outlet": [
       6927.2,
       5704.3
      ],
-     "drop_below_m": 5.87,
-     "crest_above_m": 0.34,
+     "drop_below_m": 5.92,
+     "crest_above_m": 0.11,
      "edge_len_m": 26.1,
      "edge_rms": 0.076,
      "dam_evidence": true
     },
     "reasons": [
-     "stock pond: 0.09 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 26 m downstream edge, ground 5.9 m below the water within 45 m of it, crest +0.3 m"
+     "stock pond: 0.09 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 26 m downstream edge, ground 5.9 m below the water within 45 m of it, crest +0.1 m"
     ],
     "kind": "stock_pond",
     "carve": null,
@@ -1409,8 +1482,8 @@
      "breach_max_cut_m": 0.0,
      "held_on_thalweg_m": null,
      "thalweg_held_fraction": null,
-     "bed_held_fraction": 0.0,
-     "bed_held_max_m": 0.0,
+     "bed_held_fraction": 0.179,
+     "bed_held_max_m": 0.93,
      "cells": 39
     },
     "rewilded": true,
@@ -1491,31 +1564,31 @@
     "ftype": 390,
     "evidence": {
      "area_m2": 1069.1,
-     "level_m": 506.06,
+     "level_m": 507.0,
      "outlet": [
       7744.6,
       4176.3
      ],
-     "drop_below_m": 2.46,
-     "crest_above_m": 2.59,
+     "drop_below_m": 3.83,
+     "crest_above_m": 1.3,
      "edge_len_m": 23.8,
      "edge_rms": 0.115,
      "dam_evidence": true
     },
     "reasons": [
-     "stock pond: 0.11 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 24 m downstream edge, ground 2.5 m below the water within 45 m of it, crest +2.6 m"
+     "stock pond: 0.11 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 24 m downstream edge, ground 3.8 m below the water within 45 m of it, crest +1.3 m"
     ],
     "kind": "stock_pond",
     "carve": null,
     "breach": {
      "breaches": 1,
      "unbreached": 0,
-     "breach_length_m": 52.4,
-     "breach_max_cut_m": 4.0,
+     "breach_length_m": 82.8,
+     "breach_max_cut_m": 1.23,
      "held_on_thalweg_m": null,
      "thalweg_held_fraction": null,
      "bed_held_fraction": 0.0,
-     "bed_held_max_m": 0.02,
+     "bed_held_max_m": 0.0,
      "cells": 43
     },
     "rewilded": true,
@@ -1614,31 +1687,31 @@
        "osm_id": "way/165786366"
       }
      ],
-     "level_m": 551.38,
+     "level_m": 551.48,
      "outlet": [
       7722.9,
       6189.8
      ],
-     "drop_below_m": 11.46,
-     "crest_above_m": 0.28,
+     "drop_below_m": 8.7,
+     "crest_above_m": 0.16,
      "edge_len_m": 28.0,
      "edge_rms": 0.117,
      "dam_evidence": true
     },
     "reasons": [
-     "stock pond: 0.28 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 28 m downstream edge, ground 11.5 m below the water within 45 m of it, crest +0.3 m"
+     "stock pond: 0.28 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 28 m downstream edge, ground 8.7 m below the water within 45 m of it, crest +0.2 m"
     ],
     "kind": "stock_pond",
     "carve": null,
     "breach": {
-     "breaches": 1,
+     "breaches": 0,
      "unbreached": 0,
-     "breach_length_m": 66.6,
-     "breach_max_cut_m": 4.64,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
      "held_on_thalweg_m": null,
      "thalweg_held_fraction": null,
      "bed_held_fraction": 0.0,
-     "bed_held_max_m": 0.02,
+     "bed_held_max_m": 0.03,
      "cells": 108
     },
     "rewilded": true,
@@ -1735,13 +1808,13 @@
     "ftype": 390,
     "evidence": {
      "area_m2": 9692.3,
-     "level_m": 531.39,
+     "level_m": 531.34,
      "outlet": [
       8889.6,
       4614.3
      ],
-     "drop_below_m": 2.03,
-     "crest_above_m": 0.53,
+     "drop_below_m": 2.0,
+     "crest_above_m": 0.45,
      "edge_len_m": 67.9,
      "edge_rms": 0.011,
      "dam_evidence": true
@@ -1758,8 +1831,8 @@
      "breach_max_cut_m": 0.0,
      "held_on_thalweg_m": null,
      "thalweg_held_fraction": null,
-     "bed_held_fraction": 0.015,
-     "bed_held_max_m": 0.47,
+     "bed_held_fraction": 0.018,
+     "bed_held_max_m": 0.65,
      "cells": 391
     },
     "rewilded": true,
@@ -1992,7 +2065,7 @@
     "ftype": 390,
     "evidence": {
      "area_m2": 69169.1,
-     "level_m": 407.21,
+     "level_m": 408.17,
      "channel_area_km2": 2.386,
      "channel_fcode": 46003,
      "channel_name": "Sawmill Creek",
@@ -2000,8 +2073,8 @@
       1392.4,
       1266.2
      ],
-     "drop_below_m": 7.89,
-     "crest_above_m": 2.52,
+     "drop_below_m": 8.9,
+     "crest_above_m": 1.47,
      "edge_len_m": 156.8,
      "edge_rms": 0.101,
      "dam_evidence": true
@@ -2013,15 +2086,15 @@
     "carve": {
      "inflows": 3,
      "length_m": 420.9,
-     "cells": 99,
-     "outlet_tail_m": 27.5,
-     "outlet_tail_max_cut_m": 4.37,
-     "max_cut_m": 1.71,
+     "cells": 97,
+     "outlet_tail_m": 22.5,
+     "outlet_tail_max_cut_m": 3.27,
+     "max_cut_m": 1.2,
      "outlet": [
       1392.4,
       1266.2
      ],
-     "level_m": 407.21
+     "level_m": 408.17
     },
     "breach": {
      "breaches": 0,
@@ -2031,7 +2104,7 @@
      "held_on_thalweg_m": 0.0,
      "thalweg_held_fraction": 0.0,
      "bed_held_fraction": 0.0,
-     "bed_held_max_m": 0.22,
+     "bed_held_max_m": 0.04,
      "cells": 2769
     },
     "rewilded": true,
@@ -2098,7 +2171,7 @@
        "osm_id": "way/165786844"
       }
      ],
-     "level_m": 485.98,
+     "level_m": 487.38,
      "channel_area_km2": 0.207,
      "channel_fcode": 46007,
      "channel_name": null,
@@ -2106,28 +2179,28 @@
       7936.4,
       8066.7
      ],
-     "drop_below_m": 9.32,
-     "crest_above_m": 1.88,
+     "drop_below_m": 11.15,
+     "crest_above_m": 0.37,
      "edge_len_m": 24.2,
      "edge_rms": 0.097,
      "dam_evidence": true
     },
     "reasons": [
-     "stock pond: 0.15 ha on a routed channel (0.21 km2), straight 24 m downstream edge, ground 9.3 m below the water within 45 m of it, crest +1.9 m"
+     "stock pond: 0.15 ha on a routed channel (0.21 km2), straight 24 m downstream edge, ground 11.2 m below the water within 45 m of it, crest +0.4 m"
     ],
     "kind": "stock_pond",
     "carve": {
      "inflows": 1,
      "length_m": 57.4,
-     "cells": 10,
+     "cells": 9,
      "outlet_tail_m": 0.0,
      "outlet_tail_max_cut_m": 0.0,
-     "max_cut_m": 4.19,
+     "max_cut_m": 1.84,
      "outlet": [
       7936.4,
       8066.7
      ],
-     "level_m": 485.05
+     "level_m": 487.36
     },
     "breach": {
      "breaches": 0,
@@ -2308,7 +2381,7 @@
        "osm_id": "way/165786635"
       }
      ],
-     "level_m": 446.77,
+     "level_m": 447.94,
      "channel_area_km2": 1.163,
      "channel_fcode": 46007,
      "channel_name": null,
@@ -2316,28 +2389,28 @@
       3062.2,
       2865.8
      ],
-     "drop_below_m": 5.53,
-     "crest_above_m": 1.98,
+     "drop_below_m": 6.71,
+     "crest_above_m": 0.61,
      "edge_len_m": 118.7,
      "edge_rms": 0.037,
      "dam_evidence": true
     },
     "reasons": [
-     "impoundment: 3.1 ha on a routed channel (1.16 km2) behind a straight 119 m edge, ground 5.5 m below the water within 45 m of it"
+     "impoundment: 3.1 ha on a routed channel (1.16 km2) behind a straight 119 m edge, ground 6.7 m below the water within 45 m of it"
     ],
     "kind": "reservoir",
     "carve": {
      "inflows": 1,
      "length_m": 381.9,
-     "cells": 76,
-     "outlet_tail_m": 12.5,
-     "outlet_tail_max_cut_m": 3.3,
-     "max_cut_m": 1.9,
+     "cells": 74,
+     "outlet_tail_m": 7.5,
+     "outlet_tail_max_cut_m": 1.84,
+     "max_cut_m": 1.39,
      "outlet": [
       3062.2,
       2865.8
      ],
-     "level_m": 446.77
+     "level_m": 447.94
     },
     "breach": {
      "breaches": 0,
@@ -2414,27 +2487,27 @@
        "osm_id": "way/165786860"
       }
      ],
-     "level_m": 455.05,
+     "level_m": 454.91,
      "outlet": [
       4016.5,
       8663.8
      ],
-     "drop_below_m": 5.34,
-     "crest_above_m": 2.71,
+     "drop_below_m": 5.38,
+     "crest_above_m": 2.73,
      "edge_len_m": 33.8,
      "edge_rms": 0.048,
      "dam_evidence": true
     },
     "reasons": [
-     "stock pond: 0.26 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 34 m downstream edge, ground 5.3 m below the water within 45 m of it, crest +2.7 m"
+     "stock pond: 0.26 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 34 m downstream edge, ground 5.4 m below the water within 45 m of it, crest +2.7 m"
     ],
     "kind": "stock_pond",
     "carve": null,
     "breach": {
      "breaches": 1,
      "unbreached": 0,
-     "breach_length_m": 40.4,
-     "breach_max_cut_m": 4.49,
+     "breach_length_m": 38.3,
+     "breach_max_cut_m": 4.31,
      "held_on_thalweg_m": null,
      "thalweg_held_fraction": null,
      "bed_held_fraction": 0.0,
@@ -2880,7 +2953,7 @@
        "name": "Patterson Lake"
       }
      ],
-     "level_m": 525.2,
+     "level_m": 525.98,
      "channel_area_km2": 1.459,
      "channel_fcode": 46006,
      "channel_name": "Deadman Creek",
@@ -2888,8 +2961,8 @@
       8764.3,
       3786.4
      ],
-     "drop_below_m": 7.82,
-     "crest_above_m": 2.73,
+     "drop_below_m": 8.59,
+     "crest_above_m": 1.81,
      "edge_len_m": 170.7,
      "edge_rms": 0.141,
      "dam_evidence": false
@@ -2903,13 +2976,13 @@
      "length_m": 679.4,
      "cells": 143,
      "outlet_tail_m": 7.5,
-     "outlet_tail_max_cut_m": 0.69,
-     "max_cut_m": 3.59,
+     "outlet_tail_max_cut_m": 0.4,
+     "max_cut_m": 2.82,
      "outlet": [
       8764.3,
       3786.4
      ],
-     "level_m": 525.2
+     "level_m": 525.98
     },
     "breach": {
      "breaches": 0,
@@ -3158,7 +3231,7 @@
        "osm_id": "way/165786745"
       }
      ],
-     "level_m": 447.86,
+     "level_m": 449.19,
      "channel_area_km2": 4.833,
      "channel_fcode": 46006,
      "channel_name": "Indian Creek",
@@ -3166,8 +3239,8 @@
       4751.4,
       6790.2
      ],
-     "drop_below_m": -1.1,
-     "crest_above_m": 3.65,
+     "drop_below_m": 0.3,
+     "crest_above_m": 2.22,
      "edge_len_m": 95.5,
      "edge_rms": 0.187,
      "dam_evidence": false
@@ -3179,15 +3252,15 @@
     "carve": {
      "inflows": 1,
      "length_m": 448.2,
-     "cells": 100,
-     "outlet_tail_m": 72.5,
-     "outlet_tail_max_cut_m": 2.71,
-     "max_cut_m": 2.9,
+     "cells": 94,
+     "outlet_tail_m": 57.5,
+     "outlet_tail_max_cut_m": 1.36,
+     "max_cut_m": 1.2,
      "outlet": [
       4751.4,
       6790.2
      ],
-     "level_m": 447.86
+     "level_m": 449.19
     },
     "breach": {
      "breaches": 0,
@@ -3260,19 +3333,19 @@
        "osm_id": "way/165786780"
       }
      ],
-     "level_m": 547.79,
+     "level_m": 547.55,
      "outlet": [
       8837.2,
       6106.6
      ],
-     "drop_below_m": 5.6,
-     "crest_above_m": 0.28,
+     "drop_below_m": 5.37,
+     "crest_above_m": 0.45,
      "edge_len_m": 22.8,
      "edge_rms": 0.113,
      "dam_evidence": true
     },
     "reasons": [
-     "stock pond: 0.14 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 23 m downstream edge, ground 5.6 m below the water within 45 m of it, crest +0.3 m"
+     "stock pond: 0.14 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 23 m downstream edge, ground 5.4 m below the water within 45 m of it, crest +0.4 m"
     ],
     "kind": "stock_pond",
     "carve": null,
@@ -3284,7 +3357,7 @@
      "held_on_thalweg_m": null,
      "thalweg_held_fraction": null,
      "bed_held_fraction": 0.0,
-     "bed_held_max_m": 0.0,
+     "bed_held_max_m": 0.03,
      "cells": 59
     },
     "rewilded": true,
@@ -3345,7 +3418,7 @@
     "ftype": 390,
     "evidence": {
      "area_m2": 1367.0,
-     "level_m": 471.93,
+     "level_m": 473.55,
      "channel_area_km2": 0.373,
      "channel_fcode": 46007,
      "channel_name": null,
@@ -3353,28 +3426,28 @@
       4823.9,
       2012.2
      ],
-     "drop_below_m": 4.15,
-     "crest_above_m": 2.31,
+     "drop_below_m": 5.75,
+     "crest_above_m": 0.91,
      "edge_len_m": 24.6,
      "edge_rms": 0.117,
      "dam_evidence": true
     },
     "reasons": [
-     "stock pond: 0.14 ha on a routed channel (0.37 km2), straight 25 m downstream edge, ground 4.1 m below the water within 45 m of it, crest +2.3 m"
+     "stock pond: 0.14 ha on a routed channel (0.37 km2), straight 25 m downstream edge, ground 5.8 m below the water within 45 m of it, crest +0.9 m"
     ],
     "kind": "stock_pond",
     "carve": {
      "inflows": 1,
      "length_m": 52.1,
-     "cells": 27,
-     "outlet_tail_m": 42.5,
-     "outlet_tail_max_cut_m": 7.02,
-     "max_cut_m": 2.51,
+     "cells": 25,
+     "outlet_tail_m": 37.5,
+     "outlet_tail_max_cut_m": 4.26,
+     "max_cut_m": 1.2,
      "outlet": [
       4823.9,
       2012.2
      ],
-     "level_m": 471.39
+     "level_m": 473.54
     },
     "breach": {
      "breaches": 0,
@@ -3384,11 +3457,117 @@
      "held_on_thalweg_m": 0.0,
      "thalweg_held_fraction": 0.0,
      "bed_held_fraction": 0.0,
-     "bed_held_max_m": 0.0,
+     "bed_held_max_m": 0.03,
      "cells": 55
     },
     "rewilded": true,
     "area_m2": 1367.0
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -120.882069,
+       38.68295200000001
+      ],
+      [
+       -120.88211800000002,
+       38.68309
+      ],
+      [
+       -120.88208300000001,
+       38.68318800000001
+      ],
+      [
+       -120.88046499999999,
+       38.683089
+      ],
+      [
+       -120.88052100000002,
+       38.68305
+      ],
+      [
+       -120.881103,
+       38.68300700000001
+      ],
+      [
+       -120.881677,
+       38.682804
+      ],
+      [
+       -120.88188700000002,
+       38.682804000000004
+      ],
+      [
+       -120.882069,
+       38.68295200000001
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "nhd:63430344",
+    "nhd_id": "63430344",
+    "name": null,
+    "source": "nhd",
+    "fcode": 39004,
+    "ftype": 390,
+    "evidence": {
+     "area_m2": 3139.9,
+     "osm": [
+      {
+       "natural": "water",
+       "osm_id": "way/165786865"
+      }
+     ],
+     "level_m": 458.43,
+     "channel_area_km2": 0.592,
+     "channel_fcode": 46007,
+     "channel_name": null,
+     "outlet": [
+      4218.8,
+      3727.8
+     ],
+     "drop_below_m": 2.05,
+     "crest_above_m": -0.42,
+     "edge_len_m": 36.6,
+     "edge_rms": 0.054,
+     "dam_evidence": true
+    },
+    "reasons": [
+     "stock pond: 0.31 ha on a routed channel (0.59 km2), straight 37 m downstream edge, ground 2.1 m below the water within 45 m of it, crest -0.4 m"
+    ],
+    "kind": "stock_pond",
+    "carve": {
+     "inflows": 2,
+     "length_m": 36.2,
+     "cells": 7,
+     "outlet_tail_m": 0.0,
+     "outlet_tail_max_cut_m": 0.0,
+     "max_cut_m": 1.85,
+     "outlet": [
+      4218.8,
+      3727.8
+     ],
+     "level_m": 457.97
+    },
+    "breach": {
+     "breaches": 0,
+     "unbreached": 0,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
+     "held_on_thalweg_m": 0.07,
+     "thalweg_held_fraction": 0.0,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.07,
+     "cells": 128
+    },
+    "rewilded": true,
+    "area_m2": 3139.9
    }
   },
   {
@@ -3758,7 +3937,7 @@
        "name": "Indian Creek Reservoir"
       }
      ],
-     "level_m": 320.51,
+     "level_m": 322.51,
      "channel_area_km2": 18.03,
      "channel_fcode": 46003,
      "channel_name": "Indian Creek",
@@ -3766,8 +3945,8 @@
       687.9,
       8617.3
      ],
-     "drop_below_m": 2.37,
-     "crest_above_m": 3.75,
+     "drop_below_m": 4.6,
+     "crest_above_m": 1.7,
      "edge_len_m": 208.2,
      "edge_rms": 0.106,
      "dam_evidence": false
@@ -3780,15 +3959,15 @@
     "carve": {
      "inflows": 6,
      "length_m": 537.6,
-     "cells": 232,
-     "outlet_tail_m": 42.5,
-     "outlet_tail_max_cut_m": 1.92,
-     "max_cut_m": 2.54,
+     "cells": 216,
+     "outlet_tail_m": 0.0,
+     "outlet_tail_max_cut_m": 0.0,
+     "max_cut_m": 1.19,
      "outlet": [
       687.9,
       8617.3
      ],
-     "level_m": 320.51
+     "level_m": 322.51
     },
     "breach": {
      "breaches": 0,
@@ -3798,7 +3977,7 @@
      "held_on_thalweg_m": 0.0,
      "thalweg_held_fraction": 0.0,
      "bed_held_fraction": 0.0,
-     "bed_held_max_m": 0.25,
+     "bed_held_max_m": 0.01,
      "cells": 5353
     },
     "rewilded": true,
@@ -3940,13 +4119,13 @@
        "name": "Depot Lake"
       }
      ],
-     "level_m": 547.84,
+     "level_m": 547.76,
      "outlet": [
       9412.0,
       6307.5
      ],
-     "drop_below_m": 5.39,
-     "crest_above_m": 3.14,
+     "drop_below_m": 5.21,
+     "crest_above_m": 3.15,
      "edge_len_m": 125.1,
      "edge_rms": 0.008,
      "dam_evidence": true
@@ -3959,12 +4138,12 @@
     "breach": {
      "breaches": 1,
      "unbreached": 0,
-     "breach_length_m": 160.2,
-     "breach_max_cut_m": 5.84,
+     "breach_length_m": 140.2,
+     "breach_max_cut_m": 4.31,
      "held_on_thalweg_m": null,
      "thalweg_held_fraction": null,
-     "bed_held_fraction": 0.19,
-     "bed_held_max_m": 1.16,
+     "bed_held_fraction": 0.167,
+     "bed_held_max_m": 0.96,
      "cells": 1302
     },
     "rewilded": true,
@@ -4029,7 +4208,7 @@
     "ftype": 390,
     "evidence": {
      "area_m2": 1779.9,
-     "level_m": 493.09,
+     "level_m": 493.16,
      "channel_area_km2": 0.285,
      "channel_fcode": 46007,
      "channel_name": null,
@@ -4037,14 +4216,14 @@
       6297.2,
       1612.0
      ],
-     "drop_below_m": 2.81,
-     "crest_above_m": 0.55,
+     "drop_below_m": 2.8,
+     "crest_above_m": 0.4,
      "edge_len_m": 26.2,
      "edge_rms": 0.085,
      "dam_evidence": true
     },
     "reasons": [
-     "stock pond: 0.18 ha on a routed channel (0.29 km2), straight 26 m downstream edge, ground 2.8 m below the water within 45 m of it, crest +0.6 m"
+     "stock pond: 0.18 ha on a routed channel (0.29 km2), straight 26 m downstream edge, ground 2.8 m below the water within 45 m of it, crest +0.4 m"
     ],
     "kind": "stock_pond",
     "carve": {
@@ -4053,22 +4232,22 @@
      "cells": 9,
      "outlet_tail_m": 0.0,
      "outlet_tail_max_cut_m": 0.0,
-     "max_cut_m": 1.15,
+     "max_cut_m": 1.2,
      "outlet": [
       6297.2,
       1612.0
      ],
-     "level_m": 492.77
+     "level_m": 492.92
     },
     "breach": {
      "breaches": 1,
      "unbreached": 0,
      "breach_length_m": 21.2,
-     "breach_max_cut_m": 1.74,
+     "breach_max_cut_m": 1.46,
      "held_on_thalweg_m": 0.0,
      "thalweg_held_fraction": 0.0,
      "bed_held_fraction": 0.0,
-     "bed_held_max_m": 0.0,
+     "bed_held_max_m": 0.06,
      "cells": 72
     },
     "rewilded": true,
@@ -4125,31 +4304,31 @@
     "ftype": 390,
     "evidence": {
      "area_m2": 3183.9,
-     "level_m": 410.59,
+     "level_m": 411.79,
      "outlet": [
       918.7,
       3483.9
      ],
-     "drop_below_m": 6.79,
-     "crest_above_m": 2.64,
+     "drop_below_m": 7.96,
+     "crest_above_m": 0.59,
      "edge_len_m": 36.0,
      "edge_rms": 0.068,
      "dam_evidence": true
     },
     "reasons": [
-     "stock pond: 0.32 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 36 m downstream edge, ground 6.8 m below the water within 45 m of it, crest +2.6 m"
+     "stock pond: 0.32 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 36 m downstream edge, ground 8.0 m below the water within 45 m of it, crest +0.6 m"
     ],
     "kind": "stock_pond",
     "carve": null,
     "breach": {
-     "breaches": 1,
+     "breaches": 0,
      "unbreached": 0,
-     "breach_length_m": 47.4,
-     "breach_max_cut_m": 2.9,
+     "breach_length_m": 0.0,
+     "breach_max_cut_m": 0.0,
      "held_on_thalweg_m": null,
      "thalweg_held_fraction": null,
      "bed_held_fraction": 0.0,
-     "bed_held_max_m": 0.04,
+     "bed_held_max_m": 0.1,
      "cells": 129
     },
     "rewilded": true,
@@ -4224,19 +4403,19 @@
        "osm_id": "way/165785995"
       }
      ],
-     "level_m": 547.71,
+     "level_m": 547.72,
      "outlet": [
       8234.2,
       4544.0
      ],
-     "drop_below_m": 8.04,
-     "crest_above_m": 4.57,
+     "drop_below_m": 7.35,
+     "crest_above_m": 4.25,
      "edge_len_m": 26.1,
      "edge_rms": 0.065,
      "dam_evidence": true
     },
     "reasons": [
-     "stock pond: 0.11 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 26 m downstream edge, ground 8.0 m below the water within 45 m of it, crest +4.6 m"
+     "stock pond: 0.11 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 26 m downstream edge, ground 7.4 m below the water within 45 m of it, crest +4.3 m"
     ],
     "kind": "stock_pond",
     "carve": null,
@@ -4248,7 +4427,7 @@
      "held_on_thalweg_m": null,
      "thalweg_held_fraction": null,
      "bed_held_fraction": 0.0,
-     "bed_held_max_m": 0.02,
+     "bed_held_max_m": 0.0,
      "cells": 44
     },
     "rewilded": true,
@@ -4442,7 +4621,7 @@
        "name": "Hagen Pond"
       }
      ],
-     "level_m": 501.6,
+     "level_m": 502.03,
      "channel_area_km2": 0.422,
      "channel_fcode": 46007,
      "channel_name": null,
@@ -4450,8 +4629,8 @@
       7016.0,
       4711.5
      ],
-     "drop_below_m": 3.62,
-     "crest_above_m": 2.42,
+     "drop_below_m": 4.2,
+     "crest_above_m": 1.73,
      "edge_len_m": 93.3,
      "edge_rms": 0.012,
      "dam_evidence": true
@@ -4463,15 +4642,15 @@
     "carve": {
      "inflows": 1,
      "length_m": 158.6,
-     "cells": 36,
-     "outlet_tail_m": 20.0,
-     "outlet_tail_max_cut_m": 3.59,
-     "max_cut_m": 1.25,
+     "cells": 34,
+     "outlet_tail_m": 15.0,
+     "outlet_tail_max_cut_m": 2.69,
+     "max_cut_m": 1.2,
      "outlet": [
       7016.0,
       4711.5
      ],
-     "level_m": 501.29
+     "level_m": 502.03
     },
     "breach": {
      "breaches": 0,
@@ -4480,8 +4659,8 @@
      "breach_max_cut_m": 0.0,
      "held_on_thalweg_m": 0.0,
      "thalweg_held_fraction": 0.0,
-     "bed_held_fraction": 0.001,
-     "bed_held_max_m": 0.32,
+     "bed_held_fraction": 0.0,
+     "bed_held_max_m": 0.09,
      "cells": 723
     },
     "rewilded": true,
@@ -4542,19 +4721,19 @@
     "ftype": 390,
     "evidence": {
      "area_m2": 1038.6,
-     "level_m": 518.84,
+     "level_m": 518.73,
      "outlet": [
       8684.4,
       3408.3
      ],
-     "drop_below_m": 2.34,
-     "crest_above_m": 0.63,
+     "drop_below_m": 2.15,
+     "crest_above_m": 0.56,
      "edge_len_m": 26.7,
      "edge_rms": 0.072,
      "dam_evidence": true
     },
     "reasons": [
-     "stock pond: 0.10 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 27 m downstream edge, ground 2.3 m below the water within 45 m of it, crest +0.6 m"
+     "stock pond: 0.10 ha off the routed network (a hillside tank fed by a swale under 0.15 km2), straight 27 m downstream edge, ground 2.1 m below the water within 45 m of it, crest +0.6 m"
     ],
     "kind": "stock_pond",
     "carve": null,
@@ -4565,8 +4744,8 @@
      "breach_max_cut_m": 0.0,
      "held_on_thalweg_m": null,
      "thalweg_held_fraction": null,
-     "bed_held_fraction": 0.39,
-     "bed_held_max_m": 0.63,
+     "bed_held_fraction": 0.463,
+     "bed_held_max_m": 0.83,
      "cells": 41
     },
     "rewilded": true,
@@ -4635,13 +4814,13 @@
     "ftype": 390,
     "evidence": {
      "area_m2": 1900.2,
-     "level_m": 488.37,
+     "level_m": 488.39,
      "outlet": [
       5908.6,
       8254.4
      ],
-     "drop_below_m": 6.57,
-     "crest_above_m": 0.3,
+     "drop_below_m": 6.61,
+     "crest_above_m": 0.49,
      "edge_len_m": 22.4,
      "edge_rms": 0.13,
      "dam_evidence": false
@@ -4716,7 +4895,7 @@
     "ftype": 390,
     "evidence": {
      "area_m2": 489.8,
-     "level_m": 479.87,
+     "level_m": 479.81,
      "channel_area_km2": 0.326,
      "channel_fcode": 46007,
      "channel_name": null,
@@ -4724,8 +4903,8 @@
       6357.5,
       5819.0
      ],
-     "drop_below_m": 1.59,
-     "crest_above_m": 2.42,
+     "drop_below_m": 1.58,
+     "crest_above_m": 2.28,
      "edge_len_m": 20.3,
      "edge_rms": 0.192,
      "dam_evidence": false
@@ -4788,13 +4967,13 @@
     "ftype": 390,
     "evidence": {
      "area_m2": 760.0,
-     "level_m": 536.25,
+     "level_m": 536.27,
      "outlet": [
       9535.3,
       4470.6
      ],
-     "drop_below_m": -0.52,
-     "crest_above_m": 2.51,
+     "drop_below_m": -0.64,
+     "crest_above_m": 2.41,
      "edge_len_m": 28.6,
      "edge_rms": 0.024,
      "dam_evidence": false
@@ -4805,67 +4984,6 @@
     ],
     "rewilded": false,
     "area_m2": 760.0
-   }
-  },
-  {
-   "type": "Feature",
-   "geometry": {
-    "type": "Polygon",
-    "coordinates": [
-     [
-      [
-       -120.82124100000001,
-       38.696523
-      ],
-      [
-       -120.821026,
-       38.69638
-      ],
-      [
-       -120.820777,
-       38.696094
-      ],
-      [
-       -120.821026,
-       38.696023
-      ],
-      [
-       -120.821276,
-       38.696094
-      ],
-      [
-       -120.82124100000001,
-       38.696523
-      ]
-     ]
-    ]
-   },
-   "properties": {
-    "id": "nhd:{1CB221A1-1EA6-467C-B653-01D89696CD87}",
-    "nhd_id": "{1CB221A1-1EA6-467C-B653-01D89696CD87}",
-    "name": null,
-    "source": "nhd",
-    "fcode": 39004,
-    "ftype": 390,
-    "evidence": {
-     "area_m2": 1329.8,
-     "level_m": 541.83,
-     "outlet": [
-      9491.6,
-      5299.6
-     ],
-     "drop_below_m": 0.65,
-     "crest_above_m": 1.76,
-     "edge_len_m": 28.4,
-     "edge_rms": 0.048,
-     "dam_evidence": false
-    },
-    "kind": "natural",
-    "reasons": [
-     "no routed channel through it and no human tag: a natural pond or swale"
-    ],
-    "rewilded": false,
-    "area_m2": 1329.8
    }
   },
   {
@@ -4932,15 +5050,15 @@
        "osm_id": "way/165786888"
       }
      ],
-     "level_m": 494.36,
+     "level_m": 494.42,
      "outlet": [
-      7329.0,
-      3438.7
+      7343.1,
+      3441.3
      ],
-     "drop_below_m": 0.45,
-     "crest_above_m": 1.64,
-     "edge_len_m": 20.5,
-     "edge_rms": 0.203,
+     "drop_below_m": 0.61,
+     "crest_above_m": 1.33,
+     "edge_len_m": 27.1,
+     "edge_rms": 0.059,
      "dam_evidence": false
     },
     "kind": "natural",
@@ -5015,7 +5133,7 @@
        "osm_id": "way/165786857"
       }
      ],
-     "level_m": 431.28,
+     "level_m": 431.8,
      "channel_area_km2": 1.451,
      "channel_fcode": 46006,
      "channel_name": null,
@@ -5023,8 +5141,8 @@
       3027.1,
       3421.8
      ],
-     "drop_below_m": 2.37,
-     "crest_above_m": 2.43,
+     "drop_below_m": 2.86,
+     "crest_above_m": 0.74,
      "edge_len_m": 32.3,
      "edge_rms": 0.122,
      "dam_evidence": false
@@ -5185,7 +5303,7 @@
        "osm_id": "way/165786689"
       }
      ],
-     "level_m": 457.47,
+     "level_m": 458.57,
      "channel_area_km2": 4.833,
      "channel_fcode": 46006,
      "channel_name": "Indian Creek",
@@ -5193,8 +5311,8 @@
       5380.3,
       6624.4
      ],
-     "drop_below_m": 1.39,
-     "crest_above_m": 2.48,
+     "drop_below_m": 2.81,
+     "crest_above_m": 1.62,
      "edge_len_m": 98.5,
      "edge_rms": 0.154,
      "dam_evidence": false
@@ -5261,13 +5379,13 @@
     "ftype": 390,
     "evidence": {
      "area_m2": 323.8,
-     "level_m": 567.71,
+     "level_m": 567.97,
      "outlet": [
       7695.6,
       2171.3
      ],
-     "drop_below_m": 9.01,
-     "crest_above_m": 0.87,
+     "drop_below_m": 8.99,
+     "crest_above_m": 0.75,
      "edge_len_m": 14.9,
      "edge_rms": 0.257,
      "dam_evidence": false
@@ -5334,13 +5452,13 @@
     "ftype": 390,
     "evidence": {
      "area_m2": 2034.0,
-     "level_m": 537.42,
+     "level_m": 537.67,
      "outlet": [
       9504.2,
       4425.6
      ],
-     "drop_below_m": 0.98,
-     "crest_above_m": 3.95,
+     "drop_below_m": 1.2,
+     "crest_above_m": 3.82,
      "edge_len_m": 28.3,
      "edge_rms": 0.078,
      "dam_evidence": false
@@ -5399,13 +5517,13 @@
     "ftype": 390,
     "evidence": {
      "area_m2": 440.2,
-     "level_m": 478.44,
+     "level_m": 478.47,
      "outlet": [
       5760.8,
       1045.9
      ],
-     "drop_below_m": 3.63,
-     "crest_above_m": 1.83,
+     "drop_below_m": 3.69,
+     "crest_above_m": 1.78,
      "edge_len_m": 23.1,
      "edge_rms": 0.195,
      "dam_evidence": false
@@ -5494,7 +5612,7 @@
        "osm_id": "way/165786129"
       }
      ],
-     "level_m": 469.45,
+     "level_m": 469.65,
      "channel_area_km2": 0.592,
      "channel_fcode": 46007,
      "channel_name": null,
@@ -5502,8 +5620,8 @@
       4749.5,
       3914.3
      ],
-     "drop_below_m": 1.81,
-     "crest_above_m": 2.51,
+     "drop_below_m": 2.07,
+     "crest_above_m": 1.99,
      "edge_len_m": 35.3,
      "edge_rms": 0.137,
      "dam_evidence": false
@@ -5592,7 +5710,7 @@
        "osm_id": "way/381168791"
       }
      ],
-     "level_m": 467.79,
+     "level_m": 468.65,
      "channel_area_km2": 0.323,
      "channel_fcode": 46007,
      "channel_name": null,
@@ -5600,8 +5718,8 @@
       4948.2,
       2902.9
      ],
-     "drop_below_m": 3.66,
-     "crest_above_m": 2.81,
+     "drop_below_m": 4.47,
+     "crest_above_m": 1.98,
      "edge_len_m": 52.7,
      "edge_rms": 0.127,
      "dam_evidence": false
@@ -5612,88 +5730,6 @@
     ],
     "rewilded": false,
     "area_m2": 10129.6
-   }
-  },
-  {
-   "type": "Feature",
-   "geometry": {
-    "type": "Polygon",
-    "coordinates": [
-     [
-      [
-       -120.882069,
-       38.68295200000001
-      ],
-      [
-       -120.88211800000002,
-       38.68309
-      ],
-      [
-       -120.88208300000001,
-       38.68318800000001
-      ],
-      [
-       -120.88046499999999,
-       38.683089
-      ],
-      [
-       -120.88052100000002,
-       38.68305
-      ],
-      [
-       -120.881103,
-       38.68300700000001
-      ],
-      [
-       -120.881677,
-       38.682804
-      ],
-      [
-       -120.88188700000002,
-       38.682804000000004
-      ],
-      [
-       -120.882069,
-       38.68295200000001
-      ]
-     ]
-    ]
-   },
-   "properties": {
-    "id": "nhd:63430344",
-    "nhd_id": "63430344",
-    "name": null,
-    "source": "nhd",
-    "fcode": 39004,
-    "ftype": 390,
-    "evidence": {
-     "area_m2": 3139.9,
-     "osm": [
-      {
-       "natural": "water",
-       "osm_id": "way/165786865"
-      }
-     ],
-     "level_m": 457.71,
-     "channel_area_km2": 0.592,
-     "channel_fcode": 46007,
-     "channel_name": null,
-     "outlet": [
-      4218.8,
-      3727.8
-     ],
-     "drop_below_m": 1.29,
-     "crest_above_m": 0.44,
-     "edge_len_m": 36.6,
-     "edge_rms": 0.054,
-     "dam_evidence": false
-    },
-    "kind": "natural",
-    "reasons": [
-     "on a routed channel but no dam (no straight downstream edge with a drop or rim)"
-    ],
-    "rewilded": false,
-    "area_m2": 3139.9
    }
   },
   {
@@ -5776,7 +5812,7 @@
        "osm_id": "way/165786200"
       }
      ],
-     "level_m": 422.9,
+     "level_m": 423.68,
      "channel_area_km2": 15.365,
      "channel_fcode": 46003,
      "channel_name": "Slate Creek",
@@ -5784,8 +5820,8 @@
       2889.7,
       3851.1
      ],
-     "drop_below_m": 1.68,
-     "crest_above_m": 3.2,
+     "drop_below_m": 2.25,
+     "crest_above_m": 2.53,
      "edge_len_m": 42.4,
      "edge_rms": 0.113,
      "dam_evidence": false
@@ -5870,7 +5906,7 @@
        "osm_id": "way/165786070"
       }
      ],
-     "level_m": 435.17,
+     "level_m": 435.86,
      "channel_area_km2": 0.499,
      "channel_fcode": 46007,
      "channel_name": null,
@@ -5878,8 +5914,8 @@
       3962.8,
       4557.2
      ],
-     "drop_below_m": -0.4,
-     "crest_above_m": 1.59,
+     "drop_below_m": 0.41,
+     "crest_above_m": 0.73,
      "edge_len_m": 56.8,
      "edge_rms": 0.067,
      "dam_evidence": false
@@ -5952,15 +5988,15 @@
        "osm_id": "way/165786866"
       }
      ],
-     "level_m": 510.01,
+     "level_m": 510.95,
      "outlet": [
-      6713.5,
-      6818.7
+      6743.3,
+      6820.1
      ],
-     "drop_below_m": 0.3,
-     "crest_above_m": 0.53,
-     "edge_len_m": 27.4,
-     "edge_rms": 0.05,
+     "drop_below_m": 1.13,
+     "crest_above_m": 1.13,
+     "edge_len_m": 26.2,
+     "edge_rms": 0.091,
      "dam_evidence": false
     },
     "kind": "natural",
@@ -6031,13 +6067,13 @@
        "osm_id": "way/165786831"
       }
      ],
-     "level_m": 630.05,
+     "level_m": 629.59,
      "outlet": [
       9761.1,
       8613.4
      ],
-     "drop_below_m": 12.41,
-     "crest_above_m": 1.78,
+     "drop_below_m": 11.65,
+     "crest_above_m": 2.25,
      "edge_len_m": 21.1,
      "edge_rms": 0.138,
      "dam_evidence": false
@@ -6136,7 +6172,7 @@
     "ftype": 390,
     "evidence": {
      "area_m2": 6729.5,
-     "level_m": 527.73,
+     "level_m": 527.89,
      "channel_area_km2": 0.399,
      "channel_fcode": 46007,
      "channel_name": null,
@@ -6144,8 +6180,8 @@
       8816.5,
       4473.0
      ],
-     "drop_below_m": -0.17,
-     "crest_above_m": 2.43,
+     "drop_below_m": -0.12,
+     "crest_above_m": 1.96,
      "edge_len_m": 51.9,
      "edge_rms": 0.076,
      "dam_evidence": false

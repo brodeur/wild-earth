@@ -50,7 +50,18 @@ KIN_MASS = {
 WATER_FAMILIES = {"Anatidae", "Ardeidae", "Alcedinidae", "Laridae", "Phalacrocoracidae", "Anhingidae", "Ciconiidae",
                   "Threskiornithidae", "Podicipedidae", "Rallidae", "Jacanidae", "Hippopotamidae", "Crocodylidae",
                   "Alligatoridae", "Gavialidae", "Lutrinae", "Pandionidae"}
-SKIP_ORDERS = {"Chiroptera", "Cetacea", "Sirenia"}   # no rig yet: bats, whales, sea cows
+SKIP_ORDERS = {"Chiroptera"}   # no rig yet: bats
+# The marine mammals (2026-11-07): San Francisco's sea lions, fur seals, elephant and harbor seals and its sea otter were
+# 'small carnivore' slots on the gray fox, walking the hills. No archetype fits a body that lives in the sea, so they take
+# no slot: they stay in fauna.json's `skipped` with the reason "no stand-in: marine", recorded species the field guide
+# knows. The seals and sea lions (Pinnipedia: Otariidae, Phocidae, Odobenidae), the sea otter (Enhydra), the whales and
+# dolphins (order Cetacea, or their families under Artiodactyla, as newer backbones place them) and the sea cows (Sirenia).
+MARINE_ORDERS = {"Cetacea", "Sirenia"}
+MARINE_FAMILIES = {"Otariidae", "Phocidae", "Odobenidae",
+                   "Balaenidae", "Balaenopteridae", "Eschrichtiidae", "Neobalaenidae", "Delphinidae", "Phocoenidae",
+                   "Monodontidae", "Physeteridae", "Kogiidae", "Ziphiidae", "Platanistidae", "Iniidae", "Pontoporiidae",
+                   "Lipotidae", "Trichechidae", "Dugongidae"}
+MARINE_GENERA = {"Enhydra"}
 SNAKE_FAMILIES = {"Colubridae", "Viperidae", "Elapidae", "Boidae", "Pythonidae", "Natricidae", "Lamprophiidae",
                   "Typhlopidae", "Leptotyphlopidae", "Dipsadidae", "Atractaspididae", "Psammophiidae", "Pseudoxyrhophiidae",
                   "Prosymnidae", "Homalopsidae", "Xenodermidae", "Uropeltidae", "Anomalepididae", "Gerrhopilidae", "Aniliidae",
@@ -210,6 +221,57 @@ GROUND_ORDERS = {"Galliformes", "Tinamiformes", "Otidiformes", "Struthioniformes
 GROUND_FAMILIES = {"Numididae", "Phasianidae", "Cracidae", "Tinamidae", "Otididae", "Odontophoridae", "Megapodiidae"}
 SEA_HABITATS = {"Marine"}
 
+# ---- classes by taxon and diet (2026-11-07) ----------------------------------------------------------------------------
+# The behaviour-vocabulary work (activities.js) sampled every slot's identify line and found three rules reading the wrong
+# thing: the Uinta ground squirrel (Urocitellus) in the trees, because a substring of the code ("spermophil") stood in for
+# the taxon; the golden eagle on the vulture's machine, because a scavenger role (one tenth of its diet carrion) outweighed
+# the nine tenths it kills; the magpie and the nutcracker tumbling on the wind as the raven, and the spotted sandpiper
+# scratching for seeds as a quail. The records carry GBIF's family and genus but no tribe or subfamily, so a tribe is a
+# set of its genera here.
+#   ground squirrels  tribe Marmotini's ground-dwelling genera (the ground squirrels after Helgen et al. 2009's split of
+#                     Spermophilus, the prairie dogs, the marmots) and tribe Xerini (the African and Barbary ground
+#                     squirrels): a colony of burrows, 'ground colony' on the California ground squirrel's machine. The
+#                     chipmunks (Marmotini too: Tamias, Neotamias, Eutamias) live alone in burrows and run the vole's
+#                     runways as the client's own chipmunks do (activities.js STATIC_ARCHETYPE): 'small rodent'
+#   soaring scavenger the New World vultures (Cathartidae), the Old World vultures (Accipitridae subfamilies Aegypiinae
+#                     and Gypaetinae, by genus), and an eagle-sized hawk or corvid that lives mainly on carrion (EltonTraits:
+#                     carrion at least half its diet and more than the vertebrates it kills: lives_on_carrion); every other
+#                     hawk, falcon, osprey or secretarybird kills its own prey: 'soaring raptor'
+#   corvids           the raven's aerial play only for a raven-sized corvid (RAVEN_KG and up: the ravens); a jay-sized one
+#                     (under JAY_KG) or one AVONET calls Insessorial (the jays, nutcrackers, treepies) perches as the
+#                     client's own jays do, a 'perching bird' on the Steller's jay's machine; the rest (crows, magpies,
+#                     choughs, jackdaws) walk and pick on the ground: 'walking corvid' on the raven's machine
+#   shorebirds        a Charadriiform that AVONET calls Terrestrial and places in a wetland, on a coast or a river
+#                     (SHORE_HABITATS: the sandpipers, plovers, stilts, oystercatchers) works the water's edge on the
+#                     heron's machine (kept to the shallows): 'shorebird'; one of grassland or forest (a curlew, a
+#                     woodcock, a thick-knee) stays a ground bird
+GROUND_SQUIRREL_GENERA = {
+    "Urocitellus", "Spermophilus", "Ictidomys", "Callospermophilus", "Otospermophilus", "Xerospermophilus",
+    "Poliocitellus", "Notocitellus", "Ammospermophilus", "Cynomys", "Marmota",   # Marmotini, on the ground
+    "Xerus", "Euxerus", "Atlantoxerus", "Spermophilopsis"}                        # Xerini
+CHIPMUNK_GENERA = {"Tamias", "Neotamias", "Eutamias"}                            # Marmotini, alone in burrows
+OLD_WORLD_VULTURE_GENERA = {
+    "Gyps", "Aegypius", "Torgos", "Trigonoceps", "Sarcogyps", "Necrosyrtes",     # Aegypiinae
+    "Gypaetus", "Neophron", "Gypohierax"}                                        # Gypaetinae
+SCAVENGER_KG = 1.0      # a soaring scavenger by diet: an eagle's size or more (a carrion-eating crow does not soar)
+RAVEN_KG = 0.7          # the ravens (Corvus corax 1.2 kg, C. albicollis 0.8) over the crows (C. corone 0.57)
+JAY_KG = 0.15           # the jays and nutcrackers (0.07-0.13 kg) under the magpies (0.18-0.22) and jackdaws
+SHORE_HABITATS = {"Wetland", "Coastal", "Riverine"}
+
+
+def genus_of(a: dict, t: dict) -> str:
+    tax = a.get("taxonomy") or t.get("taxonomy") or {}
+    return tax.get("genus") or (a.get("scientific") or t.get("scientific") or "").split(" ")[0]
+
+
+def lives_on_carrion(t: dict) -> bool:
+    """EltonTraits says carrion is at least half the diet and more than the vertebrates it kills (a vulture's 9-10 tenths;
+    a golden eagle's 1 against 9, a bald eagle's 2 against 8: raptors)."""
+    d = (t.get("diet") or {}).get("diet_tenths") or {}
+    scav = float(d.get("scav") or 0)
+    prey = sum(float(d.get(k) or 0) for k in ("vend", "vect", "vfish", "vunk"))
+    return scav >= 5 and scav > prey
+
 
 def bird_life(a: dict, t: dict) -> dict:
     """AVONET's lifestyle, Hand-Wing Index and habitat for a bird, and whether it flies: {lifestyle, hwi, habitat,
@@ -233,7 +295,6 @@ def kin_for(a: dict, t: dict) -> tuple[str | None, str, list[str]]:
     tax = a.get("taxonomy") or t.get("taxonomy") or {}
     cls, order, fam = tax.get("class"), tax.get("order"), tax.get("family")
     m = float(a.get("mass_kg") or t.get("mass_kg") or 0) or None
-    role = set(a.get("role") or (t.get("diet") or {}).get("role") or [])
     known: list[str] = []
     if cls == "Aves":
         life = bird_life(a, t)
@@ -245,14 +306,22 @@ def kin_for(a: dict, t: dict) -> tuple[str | None, str, list[str]]:
             if (m or 0) > 20:
                 known.append("a giant flightless bird on the turkey's flock machine")
             return ground, "ground bird", known
-        if "scavenger" in role and (m or 0) > 1.0 and fam in ("Accipitridae", "Cathartidae"):
+        genus = genus_of(a, t)
+        if fam == "Cathartidae" or genus in OLD_WORLD_VULTURE_GENERA or \
+                (fam in ("Accipitridae", "Corvidae") and (m or 0) >= SCAVENGER_KG and lives_on_carrion(t)):
             return "cathartes_aura", "soaring scavenger", known
         if order in ("Accipitriformes", "Falconiformes") or fam in ("Accipitridae", "Falconidae", "Pandionidae", "Sagittariidae"):
             return "buteo_jamaicensis", "soaring raptor", known
         if order == "Strigiformes":
             return "strix_varia", "night perching bird", known
         if fam == "Corvidae":
-            return "corvus_corax", "corvid", known
+            if (m or 0) >= RAVEN_KG:
+                return "corvus_corax", "corvid", known
+            if ls == "Insessorial" or (m is not None and m < JAY_KG):
+                return "cyanocitta_stelleri", "perching bird", known
+            return "corvus_corax", "walking corvid", known
+        if order == "Charadriiformes" and ls == "Terrestrial" and life["habitat"] in SHORE_HABITATS and fam != "Laridae":
+            return "ardea_herodias", "shorebird", ["a shorebird on the heron's water-edge machine: the heron's slow walk and wingbeat"]
         if fam in ("Ardeidae", "Ciconiidae", "Threskiornithidae", "Gruidae", "Phoenicopteridae", "Scopidae"):
             return "ardea_herodias", "wading bird", known
         if fam in ("Anatidae", "Podicipedidae", "Rallidae", "Phalacrocoracidae", "Anhingidae", "Jacanidae"):
@@ -275,6 +344,8 @@ def kin_for(a: dict, t: dict) -> tuple[str | None, str, list[str]]:
             known.append("a parrot, toucan or hornbill on a jay's body")
         return "cyanocitta_stelleri", "perching bird", known
     if cls == "Mammalia":
+        if order in MARINE_ORDERS or fam in MARINE_FAMILIES or genus_of(a, t) in MARINE_GENERA:
+            return None, "no stand-in: marine", []
         if order in SKIP_ORDERS:
             return None, f"no rig for {order}", []
         if order == "Primates":
@@ -302,9 +373,13 @@ def kin_for(a: dict, t: dict) -> tuple[str | None, str, list[str]]:
         if order == "Hyracoidea":
             return "otospermophilus_beecheyi", "rock colony", known
         if order == "Rodentia":
-            if fam == "Sciuridae":
-                tree = not any(k in (a.get("id") or "") for k in ("spermophil", "marmota", "xerus", "cynomys"))
-                return ("sciurus_griseus" if tree else "otospermophilus_beecheyi"), ("tree squirrel" if tree else "ground colony"), known
+            if fam == "Sciuridae":   # by genus: the ground squirrels' tribes (GROUND_SQUIRREL_GENERA), the chipmunks
+                genus = genus_of(a, t)
+                if genus in GROUND_SQUIRREL_GENERA:
+                    return "otospermophilus_beecheyi", "ground colony", known
+                if genus in CHIPMUNK_GENERA:
+                    return ("peromyscus_maniculatus" if "nocturnal" in ((t.get("diet") or {}).get("activity") or []) else "microtus_californicus"), "small rodent", known
+                return "sciurus_griseus", "tree squirrel", known
             if (m or 0) > 3:
                 return "otospermophilus_beecheyi", "large rodent", ["a large rodent on a ground squirrel's body"]
             return ("peromyscus_maniculatus" if "nocturnal" in ((t.get("diet") or {}).get("activity") or []) else "microtus_californicus"), "small rodent", known
@@ -381,7 +456,7 @@ def gait(t: dict, kin: str) -> dict | None:
 
 
 GROUP = {"grazing or browsing herd": [5, 30], "arboreal climber": [3, 15], "large ground primate (stand-in walker)": [5, 30],
-         "coursing predator": [1, 6], "ambush predator": [1, 4], "waterbird": [2, 10], "wading bird": [1, 3],
+         "coursing predator": [1, 6], "ambush predator": [1, 4], "waterbird": [2, 10], "wading bird": [1, 3], "shorebird": [1, 8],
          "ground bird": [3, 12], "soaring scavenger": [1, 8], "perching bird": [1, 6], "rock colony": [3, 12],
          "ground colony": [3, 12], "gull": [1, 6], "crocodilian": [1, 5], "tortoise": [1, 2], "turtle": [1, 4],
          "basking lizard": [1, 3], "monitor lizard": [1, 1], "chameleon": [1, 1], "snake": [1, 1]}
@@ -537,8 +612,8 @@ def fauna_slots(tile: Tile) -> dict:
             continue
         t = _traits(a["id"])
         kin, archetype, known = kin_for(a, t)
-        if not kin:
-            skipped.append({"id": a["id"], "why": archetype})
+        if not kin:   # (a recorded species with no stand-in: named, so the field guide knows it)
+            skipped.append({"id": a["id"], "scientific": a.get("scientific"), "common": a.get("common"), "why": archetype})
             continue
         if other:
             n_other += 1

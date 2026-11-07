@@ -1,0 +1,120 @@
+{
+ "id": "eschrichtius_robustus",
+ "scientific": "Eschrichtius robustus",
+ "common": "gray whale",
+ "kind": "mammal",
+ "taxonomy": {
+  "kingdom": "Animalia",
+  "phylum": "Chordata",
+  "class": "Mammalia",
+  "order": "Cetacea",
+  "family": "Eschrichtiidae",
+  "genus": "Eschrichtius"
+ },
+ "body_plan": "quadruped",
+ "mass_kg": 28500.0,
+ "size": {
+  "length_m": 10.996,
+  "shoulder_or_wingspan_m": 6.818
+ },
+ "diet": {
+  "role": [
+   "insectivore"
+  ],
+  "diet_tenths": {
+   "inv": 9.0,
+   "vend": 0.0,
+   "vect": 0.0,
+   "vfish": 1.0,
+   "vunk": 0.0,
+   "scav": 0.0,
+   "fruit": 0.0,
+   "nect": 0.0,
+   "seed": 0.0,
+   "planto": 0.0
+  },
+  "vertebrate_share": 0.1,
+  "mass_kg": 28500.0,
+  "activity": [
+   "crepuscular",
+   "diurnal"
+  ],
+  "source": "eltontraits (species)"
+ },
+ "senses": {
+  "sight": {
+   "range_m": 1945.0
+  },
+  "sound": {
+   "range_m": 2722.9
+  },
+  "scent": {
+   "range_m": 3889.9
+  }
+ },
+ "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+ "locomotion": {
+  "code": "eschrichtius_robustus",
+  "class": "Mammalia",
+  "order": "Cetacea",
+  "family": "Eschrichtiidae",
+  "body_plan": "quadruped",
+  "mass_kg": 28500.0,
+  "length_m": 10.996,
+  "hip_m": 6.818,
+  "posture": "parasagittal",
+  "gaits": {
+   "walk": "froude 0.5",
+   "trot": "froude 2.5",
+   "gallop": "beyond"
+  },
+  "walk_mps": 4.14,
+  "trot_mps": 6.9,
+  "cruise_mps": 4.14,
+  "top_mps": 6.9,
+  "stride_hz": 0.9,
+  "stride_m": 7.68,
+  "sprint_s": 48.9,
+  "recover_s": 171.0,
+  "turn_rad_s": 0.76,
+  "turn": {
+   "on": 0.45,
+   "off": 0.2,
+   "hold": 0.35,
+   "amp": [
+    0.4,
+    0.6
+   ],
+   "hz": [
+    0.7,
+    2.4
+   ]
+  },
+  "lag": {
+   "s": 0.436,
+   "max_rad": 0.44,
+   "v": [
+    0.3,
+    1.2
+   ]
+  },
+  "bend": {
+   "spine": 1.0,
+   "lead": 0.12,
+   "lead_max": 0.25
+  },
+  "flags": {},
+  "flier": false
+ },
+ "generated": {
+  "by": "pipeline/fauna.py",
+  "at": "2026-11-07T15:53:58Z",
+  "from": [
+   "gbif taxonomy",
+   "eltontraits (species)",
+   "pipeline/locomotion.py"
+  ],
+  "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"
+ },
+ "license": "CC BY-SA 4.0 (the entry); diet and mass from EltonTraits 1.0 (CC BY 4.0, credited in the tile's sources)"
+}

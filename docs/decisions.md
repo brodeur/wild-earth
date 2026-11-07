@@ -7464,6 +7464,20 @@ glottal stop is itself drawn like a question mark without its dot, so at 12 px i
   cost ~1 ms, seen only through water). From the air ΔE ≤ 0.005; river pose +0.47 ms median (8 interleaved pairs).
   Open: the strip of bank beside the bar is plain smooth soil; within ~1 m a stone is now and then clipped by its search
   cell's edge.
+- **Lamar's river bar by height over the water; the dark pebbles that read as holes are stones again** (terrain.js bed
+  block; rocks.js bed stones). The holes were rocks.js's placed pebbles, not the drawn bed: the dark third (tone 0.55)
+  darkened x0.7 again for every channel cell came out near black. The bare near bar and its dark blots (taken for sedge
+  shadows; toggling the cascaded shadow, contact AO and cloud shadow left them) were bank and terrace cells 2-30 cm over
+  the water drawn as soil or as the photo's river pixels.
+  - A big river's (order 4+) bank or terrace cell under 0.4 m over its reach's level is bed, fading out by 0.8 m.
+  - The stones' under-water mean only where all four cells around are > 0.5 m under (one 5 m cell 0.25 m under had
+    bared a bar whose 1 m ground stands over the water).
+  - Wetness by height over the water on every zone; a placed stone is wet by its own ground's height over the reach's
+    level (WaterGrid.level): x0.7 at the edge, dry by 0.4 m. The dark third's tone is 0.7-0.95, a dry basalt cobble's.
+  - A water-worn stone's top mirrors the sky at grazing view (Schlick, F0 0.04, x0.35 for roughness).
+  - From the air ΔE ≤ 0.002 (Lamar, Teton); probes it11a 0 shader errors. Cost not settled: under a shared GPU (frames
+    25-32 ms) the river view's paired medians were +1.3 and +2.3 ms; more near pixels carry stones. Open: a few low bank
+    patches among the sedges show pale bed sand.
 
 ## 2026-11-06: snakes are playable; the body follows the head's path (branch claude/snake-play)
 
@@ -7725,3 +7739,107 @@ nothing). Now every animal has one shared vocabulary and every slot on every til
   machine (kin_for's ground-squirrel test looks for "spermophil", not Urocitellus), and the golden eagle the vulture's
   ("soaring scavenger": the scavenger role over 1 kg in Accipitridae). Both read correctly for their machine and wrong for
   the animal; the fix is in the pipeline's rules.
+
+## 2026-11-07: three fauna classes by rule: ground squirrels by tribe, raptors by diet, corvids and shorebirds split (pipeline/fauna_slots.py, client/src/activities.js)
+
+The behaviour vocabulary's sample of every slot's identify line (2026-11-07, "one vocabulary for what an animal is
+doing") showed three of `kin_for`'s rules reading the wrong thing. Each is now a rule over the record's taxonomy, diet
+or AVONET row, not a per-species patch.
+
+- **Ground squirrels by tribe.** The Uinta ground squirrel (*Urocitellus*) ran the tree squirrel's machine because
+  the test looked for "spermophil" in the species code. GBIF's records carry family and genus but no tribe, so the
+  tribes are genus sets (`GROUND_SQUIRREL_GENERA`):
+  - Marmotini's ground-dwelling genera, after Helgen et al. 2009's split of *Spermophilus*: *Urocitellus,
+    Spermophilus, Ictidomys, Callospermophilus, Otospermophilus, Xerospermophilus, Poliocitellus, Notocitellus,
+    Ammospermophilus*, the prairie dogs (*Cynomys*) and the marmots (*Marmota*).
+  - Xerini: *Xerus, Euxerus, Atlantoxerus, Spermophilopsis*.
+  - All of these are a 'ground colony' on the California ground squirrel's machine. The genus is read from the
+    binomial when the record has none.
+  - The chipmunks (*Tamias, Neotamias, Eutamias*, also Marmotini) are a 'small rodent' on the vole's runways, as the
+    client's own chipmunks are. Before, they had been tree squirrels.
+- **Raptors by diet.** The golden eagle was a 'soaring scavenger' on the vulture's machine because its record has a
+  scavenger role (EltonTraits: one tenth carrion against nine tenths vertebrates it kills).
+  - 'Soaring scavenger' is now the New World vultures (Cathartidae), the Old World vultures (Aegypiinae and
+    Gypaetinae, by genus: `OLD_WORLD_VULTURE_GENERA`), and a hawk or corvid of 1 kg or more that lives mainly on
+    carrion (`lives_on_carrion`: carrion at least half the diet and more than the vertebrates it kills).
+  - Every other hawk, eagle, falcon, osprey and secretarybird is a 'soaring raptor'. That includes the golden,
+    tawny and white-tailed eagles. The crested caracara (six tenths carrion, Falconidae) stays a raptor.
+- **Corvids split.** Every corvid ran the raven and read "soaring and tumbling on the wind". Now:
+  - A raven-sized corvid (`RAVEN_KG` 0.7 and up) keeps 'corvid' and the raven's aerial play.
+  - A jay-sized corvid (under `JAY_KG` 0.15), or one AVONET calls Insessorial (jays, nutcrackers, treepies), is a
+    'perching bird' on the Steller's jay, as the client's own jays are.
+  - The rest (crows, magpies, choughs, jackdaws) are a 'walking corvid' on the raven's machine. They get their own
+    phrase family (`crow`: "flying over on steady wingbeats", "walking about on the ground, looking for food").
+  - The client's American crow moves from 'corvid' to 'walking corvid'.
+  - Known miss: the Chihuahuan raven (0.53 kg) walks as a crow.
+- **Shorebirds split.** The spotted sandpiper scratched for seeds as a quail. A Charadriiform that AVONET calls
+  Terrestrial in a Wetland, Coastal or Riverine habitat (sandpipers, plovers, stilts, oystercatchers, the blacksmith
+  lapwing) is now a 'shorebird' on the heron's water-edge machine.
+  - It has its own phrases ("running along the water's edge, picking at food", "flushed, flying off low over the
+    water") and builds on the heron's template (`fauna_models.BIRD_BUILD` 'wade').
+  - Its `known` notes that it keeps the heron's slow walk and wingbeat.
+  - A grassland or forest Charadriiform (a crowned lapwing, a curlew, a woodcock) stays a ground bird.
+- **Marine mammals take no land slot.** San Francisco's sea lions, fur seals, harbor and elephant seals and its sea
+  otter were 'small carnivore' slots walking the gray fox's machine.
+  - Pinnipedia (Otariidae, Phocidae, Odobenidae), *Enhydra*, the cetaceans (order Cetacea, or their families under
+    Artiodactyla) and the sea cows now return no kin.
+  - They stay in fauna.json's `skipped` list, named (scientific and common), with the reason "no stand-in: marine",
+    and no longer use up the cap's slots.
+- **Presence searches scale with the home range.** The cougar was dropped from the Hoh: 2 GBIF records within the
+  10 km search since 2011, though Olympic National Park documents it.
+  - A mammal with a PanTHERIA home range now searches a box that holds `HOME_RANGES` (25) of them, capped at 50 km
+    (`fetch_species.home_range_buffer_m`).
+  - The cougar's 130 km² ranges take 23 km: 9 records on the Hoh and on Mount Olympus, 7 to 71 elsewhere, so it is
+    present on every tile run.
+  - A black bear's 31 km², an elk's 30 and a bobcat's 31 keep the 10 km search.
+  - `species.json` now records each species' `buffer_m`.
+- **The range test is California's.** The Hoh batch's Olympic elevation bands sat in `species_data.RANGE`, so on
+  California tiles the range test put the banana slug, the red-backed salamander, the gray jay, the snowshoe hare and
+  the Roosevelt elk on the foothills and San Francisco.
+  - They now live apart in `RANGE_OLYMPIC`, used by no test. Outside California, presence is still by records alone.
+- **Every built tile's fauna list.** The Hoh had no `client/fauna.json`, so nothing gated its species and summoning
+  put Placerville's cast on it. Nothing in the code skipped it: its animals step had last run at version 1, before
+  `fauna_slots` joined the step, and was never re-run, although `--plan` showed it as changed.
+  - Cosumnes and Placerville had never run on the step graph (species blocked on dem and landcover). They were
+    adopted (`--adopt`).
+  - Species and animals then ran on the Hoh, Mount Olympus, both San Francisco cells, Calaveras, both Yosemite tiles,
+    Cosumnes and Placerville. Each is now gated.
+  - The Hoh keeps 47 of the 61 of the fixed cast, cougar included, and drops the 14 foothill species.
+  - Lamar and home follow after the road lane's rebuild.
+- **Seen on the way (not changed).** The brown pelican is a gull, and the American white pelican a waterbird with no
+  `water` flag (Pelecanidae is not in `WATER_FAMILIES`).
+- **Checked.** `tests/test_pipeline.py` (TestBirdKin: raptors and scavengers, corvids, shorebirds; TestSquirrels;
+  TestMarineMammals; TestPresenceBuffer, the home-range buffer and the California-only bands) and
+  `tests/test_activities.py` (the new families' lines). In a dry run over every tile with a fauna list, only the
+  intended slots changed.
+
+## 2026-11-07: roads removed by rule on every tile (pipeline/unroad.py, erase_imagery.py; branch claude/sweet-feistel-2054bb)
+
+- **Roads removed by rule, every tile (2026-11-07, Aaron: "Yes, remove road").** Roads are part of the present day, not of the rewilded world, so the pipeline takes them out at build time instead of decaying them.
+  - **Ortho.** Pavement and verge, freeways included, join the erase mask, read from `footprint/roads.png` (all OSM roads; paths and footways excluded).
+    - A strip with nothing else erased around it is mirrored from the ground on either side (`erase_imagery._reflect_fill`).
+    - The ridge where the two mirrors meet is softened.
+    - Within a strip half-width of the ridge the broad tone replaces the mid-band, so banks of different tone fade into each other.
+    - On imagery coarser than its grid (Sentinel-2) the mask grows by one native pixel.
+    - No bleached grey. A road OSM doesn't map stays, for example Serengeti's main pale road.
+  - **Trees and cover.**
+    - On a lidar tile the crown finder runs on the CHM with each road's erase strip mirrored from beside it, the same mirror as the imagery (crowns v2, `unroad.mirror_canopy`). Without this, US-50 at home read from 150 m as a treeless band.
+    - In `client/canopy.png`, a cell crossed by pavement whose LANDFIRE cover isn't vegetation takes the cover of the vegetated cells around it. That is 17,625 cells at home and 493 on Lamar.
+  - **Ground.** `client/roads.png` is all zero, so the client draws no pavement and leaves no plant gaps. LANDFIRE's Developed-Roads cells are already backfilled from BpS.
+  - **Height.** `pipeline/unroad.py` runs on the 1 m ground, or on the drawn 5 m DEM when that comes from a product of 10 m or finer. It never runs on GLO-30, which resolves no road at all. It is applied once, so the drawn DEM and the water routing read the same ground.
+    - **Corridor.** Each road's corridor is its paved half-width × 3 + 4 m.
+    - **What is replaced.** The ground is replaced where it departs from the harmonic surface spanned from the corridor's edges:
+      - the road's own prism always;
+      - elsewhere past 0.1 m, fully past 0.4 m.
+    - **Blending.** The replacement eases in over 4 m and carries noise at the surrounding ground's grain.
+    - **What stays.**
+      - Bridges are not corridors.
+      - Within 40 m of a stream line the rule only removes ground and never raises it, so an untagged bridge or a channel beside a road stays open. Before this rule, 23 crossings on Lamar had their beds raised by up to 2.4 m.
+      - Natural benches stay.
+    - **Original kept.** The fetched product is kept as `*_roaded.tif` and keyed in `*_unroad.json`.
+  - **Reroute.** Reroute (v2) cuts no culverts once a tile is unroaded. It used to read `client/roads.png`, which the terrain step writes later, so on a first rebuild it still saw the old roads: 700 crossings cut up to 12.5 m deep on home, 262 up to 11 m on Grand Canyon.
+  - **Step versions.** dem 3 (after osm and hydro), lidar 2, reroute 2, water 3, terrain 3, erase 2, crowns 2.
+  - **Stats.** Lamar: 5 roads, 0.5 % of the tile in corridors, 0.35 km² changed, 0.24 M m³ moved. Home: 3,943 roads, 18 % in corridors, 14.4 km² changed, 9.7 M m³ moved; US-50's 15 m fills are gone.
+  - **The `G` overlay stays.** OSM ghost roads remain as a present-day overlay.
+- **A reach's water outline no longer depends on its place in the file (water step 3).** The width wander (0.55–1.4 × width/2, periods 41 and 17 m) was phased by the reach's index in channels.geojson. Removing roads changed two reaches elsewhere on Lamar, and the main stem at the river probe went from index 219 to 217. Its water then spread over the near gravel bar even though that reach's line, ground, levels and profile were unchanged. The phase now comes from the reach's start point.
+  - **Still open.** The wander is decoration, not data. At the probe the photo shows water up to the south bank's grass with the bar across on the north side, which neither the old outline nor the new one draws. Fitting big rivers' width to the imagery's water is the follow-up.

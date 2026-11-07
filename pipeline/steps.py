@@ -81,6 +81,21 @@ def _dem(tile, m, force):
     # (fetch_dem.drawn_dem, 2026-11-06: Lamar's reroute refused on the 3DEP seamless 10 m the flaky ImageServer left it).
     from .fetch_dem import drawn_dem, fetch_dem
     info = drawn_dem(tile, fetch_dem(tile, force), force)
+    # roads rewilded in the heights (pipeline/unroad.py, 2026-11-07): drawn from the 1 m ground, the DEM has it already
+    # (lidar.build_dem_1m runs the rule); else the rule runs on the drawn 5 m itself, when the fetched product resolves a
+    # road at all: a 30 m DEM (Copernicus GLO-30) has no cut or fill to take out, and spanning its corridors smoothed
+    # real slopes (Lofoten: 31 m taken off a fjord side)
+    if info.get("source") != "usgs_3dep_1m":
+        from .unroad import apply as unroad, MAX_SOURCE_RES_M
+        src_res = float(info.get("source_resolution_m") or 0)
+        if src_res <= MAX_SOURCE_RES_M:
+            info["unroad"] = unroad(tile, "terrain/dem.tif")
+            info["roaded"] = "terrain/dem_roaded.tif (the DEM as fetched, the roads' cut and fill in it)"
+        else:
+            info["unroad"] = {"skipped": f"source {src_res:g} m resolves no road cut or fill (rule runs at <= {MAX_SOURCE_RES_M:g} m)"}
+            for stale in ("terrain/dem_unroad.json", "terrain/dem_roaded.tif"):
+                if tile.path(stale).exists():
+                    tile.path(stale).unlink()
     fetched = info.pop("_fetched", None)
     if fetched:
         add_layer(m, tile, "terrain.dem_5m", fetched)
@@ -574,15 +589,15 @@ B, F, A, G = STAGES
 
 STEPS: dict[str, Step] = {s.name: s for s in [
     # ---------------------------------------------------------------- base
-    Step("dem", "2", ["fetch_dem", "arcgis", "fetch_global", "lidar", "fetch_lidar"], [], _dem, ["terrain.dem", "terrain.dem_5m"],
-         ["usgs_3dep", "pc_3dep_seamless", "nasadem", "copernicus_dem_glo30", "usgs_3dep_lidar"],
-         doc="the drawn 5 m bare-earth DEM: the 1 m ground averaged where its products cover >= 95 % of the tile, "
-             "else the fetched 5 m", stage=B),
     Step("naip", "1", ["fetch_naip", "arcgis", "fetch_global"], [], _naip, ["imagery.naip"], ["pc_naip", "usgs_naip", "sentinel2_l2a"],
          doc="present-day imagery at 2.5 m", stage=B),
     Step("osm", "1", ["fetch_osm"], [], _osm, ["footprint.mask"], ["osm"], doc="the human footprint: buildings, roads, dams", stage=B),
     Step("hydro", "1", ["fetch_hydro"], [], _hydro, ["hydro.flowlines", "hydro.waterbodies"], ["nhdplus_hr", "osm"],
          owner="water lane", doc="NHD streams and waterbodies (OSM fallback)", stage=B),
+    Step("dem", "3", ["fetch_dem", "arcgis", "fetch_global", "lidar", "fetch_lidar", "unroad"], ["osm", "hydro"], _dem, ["terrain.dem", "terrain.dem_5m"],   # 3: roads' cut and fill rewilded (unroad)
+         ["usgs_3dep", "pc_3dep_seamless", "nasadem", "copernicus_dem_glo30", "usgs_3dep_lidar"],
+         doc="the drawn 5 m bare-earth DEM: the 1 m ground averaged where its products cover >= 95 % of the tile, "
+             "else the fetched 5 m", stage=B),
     Step("channels", "2", ["channels", "fetch_global"], ["dem", "hydro"], _channels, ["hydro.channels", "client.channel_depth"],
          owner="water lane", doc="every stream routed by gravity on the DEM; NHD gives names and permanence", stage=B),
     Step("rewild_hydro", "1", ["rewild_hydro", "channels"], ["dem", "channels", "hydro", "osm"], _rewild_hydro,
@@ -594,12 +609,12 @@ STEPS: dict[str, Step] = {s.name: s for s in [
              "which the base layer's erasure, substrate and textures need; the flora stage reads it for its species", stage=B),
     Step("ice", "1", ["ice"], ["dem", "landcover"], _ice, ["terrain.ice"], ["osm"],
          doc="permanent snow and ice: LANDFIRE Snow-Ice and OSM glaciers", stage=B),
-    Step("lidar", "1", ["lidar", "fetch_lidar", "urban"], ["dem", "osm", "landcover"], _lidar,
+    Step("lidar", "2", ["lidar", "fetch_lidar", "urban", "unroad"], ["dem", "osm", "hydro", "landcover"], _lidar,   # 2: the 1 m ground without the roads' cut and fill
          ["terrain.dem_1m", "terrain.dsm_1m", "vegetation.chm_1m", "vegetation.multi_1m", "terrain.lidar_dtm_check",
           "vegetation.canopy_height_10m", "client.canopy_height", "client.terrain_detail",
           "terrain.roughness", "client.lidar_micro", "client.lidar_cover"], ["usgs_3dep_lidar"], applies=_lidar_applies,
          doc="1 m ground, canopy height from the 3DEP point cloud; DEM-only from the 1 m products without one", stage=B),
-    Step("reroute", "1", ["reroute", "rewild_hydro", "water_seams"], ["dem", "channels", "rewild_hydro", "hydro", "lidar", "ice"],
+    Step("reroute", "2", ["reroute", "rewild_hydro", "water_seams"], ["dem", "channels", "rewild_hydro", "hydro", "lidar", "ice"],
          _reroute, ["hydro.channels_5m", "hydro.edges"], applies=_reroute_applies, owner="water lane",
          doc="every stream onto the 1 m lidar thalweg; meltwater from the ice's toes; streams continued across the seams", stage=B),
     Step("seasons", "1", ["fetch_sentinel"], ["landcover", "lidar", "naip"], _seasons,
@@ -611,23 +626,23 @@ STEPS: dict[str, Step] = {s.name: s for s in [
          ["dem", "channels", "rewild_hydro", "reroute", "seasons", "water_seasons", "hydro"], _water_imagery,
          ["hydro.water_imagery", "hydro.channels_dem"], [], owner="water lane",
          doc="the reverse test: drawn reaches against the imagery's water; large rivers moved onto it", stage=B),
-    Step("water", "2", ["water", "water_seams", "water_seasons"], ["dem", "rewild_hydro", "reroute", "hydro", "lidar", "water_seasons", "water_imagery"], _water,
+    Step("water", "3", ["water", "water_seams", "water_seasons"], ["dem", "rewild_hydro", "reroute", "hydro", "lidar", "water_seasons", "water_imagery"], _water,
          ["terrain.dem_banked", "client.heights", "client.water", "hydro.water_reaches"], [], owner="water lane",
          doc="banks, beds, levels and riparian zones", stage=B),
     Step("ground", "2", ["ground", "fetch_soils", "fetch_geology", "soils_global", "fetch_global", "strata", "substrate"], ["dem", "landcover", "lidar"], _ground,
          ["geology.", "soils.", "client.geology", "client.soils", "client.outcrop", "client.ground_classes", "client.strata"],
          ["macrostrat", "usda_sda", "soilgrids"], doc="geology and soils, outcrop likelihood, ground classes, the stratigraphic column", stage=B,
          optional=["client.strata"]),
-    Step("terrain", "2", ["derive", "urban", "habitat", "fetch_places", "water_seasons"],
+    Step("terrain", "3", ["derive", "urban", "habitat", "fetch_places", "water_seasons"],   # 3: roads rewilded (client.roads 0; footprint.roads where they were)
          ["dem", "naip", "osm", "hydro", "channels", "rewild_hydro", "water", "water_seasons", "landcover", "ice"], _terrain,
          ["terrain.hillshade", "terrain.terrain_rgb", "footprint.mask_raster", "imagery.naip_png", "vegetation.habitat_png",
           "vegetation.habitat_present_png", "terrain.rewilded", "client.habitat", "client.canopy", "footprint.urban",
-          "client.roads", "client.texture", "client.masks", "client.imagery", "client.texture_present", "client.features"],
+          "client.roads", "footprint.roads", "client.texture", "client.masks", "client.imagery", "client.texture_present", "client.features"],
          ["osm"], doc="the base layer's client rasters, textures and place names", stage=B),
     Step("territories", "1", ["fetch_territories"], [], _territories, ["client.territories"], ["native_land"],   # reads only the tile's bounds
          doc="the Indigenous territories over the tile (Native Land Digital), for the start screen's place cards; "
              "refused, not done, without a NATIVE_LAND_KEY", stage=B),
-    Step("erase", "1", ["erase_imagery", "urban"], ["naip", "osm", "landcover", "terrain", "rewild_hydro"], _erase,
+    Step("erase", "2", ["erase_imagery", "urban"], ["naip", "osm", "landcover", "terrain", "rewild_hydro"], _erase,   # 2: roads erased with their verge, no bleached pavement
          ["client.texture_imagery"], doc="the imagery with the human footprint removed", stage=B),
     Step("substrate", "1", ["substrate"], ["ground", "water", "dem", "lidar", "naip", "landcover", "erase", "terrain", "ice"],
          _substrate, ["client.substrate", "client.substrate_classes"], doc="lithology, cliff morphology, exposed rock", stage=B),
@@ -655,7 +670,7 @@ STEPS: dict[str, Step] = {s.name: s for s in [
          doc="the measured stand height per 30 m cell: the lidar CHM, else Meta's CHM v2 lifted to ETH's GEDI-calibrated "
              "level where v2 sees tall closed forest", stage=F,
          optional=["vegetation.canopy_height_v2_10m", "vegetation.canopy_height_eth_10m"]),
-    Step("crowns", "1", ["lidar", "urban"], ["lidar", "osm", "landcover", "terrain", "species_mix"], _crowns,
+    Step("crowns", "2", ["lidar", "urban", "unroad"], ["lidar", "osm", "landcover", "terrain", "species_mix"], _crowns,
          ["client.trees_lidar"], applies=_has_chm, doc="the lidar crowns, with the buildings, the rewilded classes and the urban mask",
          stage=F),
     Step("inpaint", "1", ["inpaint_crowns"], ["erase", "lidar", "crowns", "terrain"], _inpaint,

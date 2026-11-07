@@ -42,7 +42,7 @@ export const STATIC_ARCHETYPE = {
   otospermophilus_beecheyi: 'ground colony', sceloporus_occidentalis: 'basking lizard', ursus_americanus: 'large omnivore', oreortyx_pictus: 'ground bird',
   cervus_canadensis: 'grazing or browsing herd', tamiasciurus_douglasii: 'tree squirrel', troglodytes_pacificus: 'perching bird', perisoreus_canadensis: 'perching bird',
   poecile_rufescens: 'perching bird', strix_varia: 'night perching bird', megaceryle_alcyon: 'kingfisher', haliaeetus_leucocephalus: 'soaring raptor',
-  corvus_brachyrhynchos: 'corvid', lynx_rufus: 'ambush predator', lontra_canadensis: 'swimmer (otter)', lepus_americanus: 'hopper',
+  corvus_brachyrhynchos: 'walking corvid', lynx_rufus: 'ambush predator', lontra_canadensis: 'swimmer (otter)', lepus_americanus: 'hopper',
   tamias_townsendii: 'small rodent', peromyscus_maniculatus: 'small rodent', plethodon_vehiculum: 'amphibian', ensatina_eschscholtzii: 'amphibian',
   ariolimax_columbianus: 'slug', ardea_herodias: 'wading bird', mergus_merganser: 'waterbird', turdus_migratorius: 'perching bird',
   sturnus_vulgaris: 'perching bird', ixoreus_naevius: 'perching bird', junco_hyemalis: 'perching bird', regulus_satrapa: 'perching bird',
@@ -57,7 +57,7 @@ export const STATIC_ARCHETYPE = {
 // reads them out of pipeline/fauna_slots.py); an unknown one falls back to its machine's family (MACHINE_FAMILY).
 export const FAMILY = {
   'grazing or browsing herd': 'herd', 'soaring raptor': 'raptor', 'soaring scavenger': 'scavenger', 'night perching bird': 'owl',
-  corvid: 'corvid', 'wading bird': 'wader', waterbird: 'waterbird', gull: 'gull', kingfisher: 'kingfisher', woodpecker: 'woodpecker',
+  corvid: 'corvid', 'walking corvid': 'crow', 'wading bird': 'wader', shorebird: 'shorebird', waterbird: 'waterbird', gull: 'gull', kingfisher: 'kingfisher', woodpecker: 'woodpecker',
   'ground bird': 'groundbird', 'perching bird': 'songbird', 'large ground primate (stand-in walker)': 'primate', 'arboreal climber': 'climber',
   'ambush predator': 'cat', 'coursing predator': 'canid', 'large omnivore': 'bear', 'swimmer (otter)': 'otter', 'small carnivore': 'smallcarn',
   hopper: 'hopper', 'rock colony': 'colony', 'ground colony': 'colony', 'tree squirrel': 'treesquirrel', 'large rodent': 'bigrodent',
@@ -68,13 +68,13 @@ export const FAMILY = {
 // a machine's family when the archetype says nothing (animals.js machineOf names the machines)
 export const MACHINE_FAMILY = { sq: 'treesquirrel', wp: 'woodpecker', rv: 'corvid', dr: 'herd', mm: 'canid', rb: 'hopper', jk: 'hopper', vo: 'smallmammal',
   tk: 'groundbird', gs: 'colony', lz: 'lizard', rp: 'croc', sn: 'snake', sl: 'slug', qu: 'groundbird', sj: 'songbird', hk: 'raptor', tv: 'scavenger' };
-export const BIRD_FAMILIES = new Set(['raptor', 'scavenger', 'owl', 'corvid', 'wader', 'waterbird', 'gull', 'kingfisher', 'woodpecker', 'groundbird', 'songbird']);
+export const BIRD_FAMILIES = new Set(['raptor', 'scavenger', 'owl', 'corvid', 'crow', 'wader', 'shorebird', 'waterbird', 'gull', 'kingfisher', 'woodpecker', 'groundbird', 'songbird']);
 export function familyOf(archetype, machine) { return FAMILY[archetype] || MACHINE_FAMILY[machine] || 'mammal'; }
 
 // What its group is called, by family (a canid of 15 kg or more runs in a pack: the wolf, not the fox; a mother's young
 // are cubs or young)
 const GROUP_WORD = { herd: 'herd', canid: 'family', groundbird: 'flock', songbird: 'flock', waterbird: 'flock', gull: 'flock', colony: 'colony',
-  corvid: 'family', otter: 'family', primate: 'troop', climber: 'troop', scavenger: 'kettle', smallcarn: 'family', cat: 'group', bear: 'group' };
+  corvid: 'family', crow: 'family', shorebird: 'flock', otter: 'family', primate: 'troop', climber: 'troop', scavenger: 'kettle', smallcarn: 'family', cat: 'group', bear: 'group' };
 const YOUNG_WORD = { cat: 'cubs', bear: 'cubs', canid: 'pups' };
 
 // Placeholders, by the habitat class under the animal (pipeline/habitat.py: 1 oak woodland, 2 conifer, 3 mixed, 4 chaparral,
@@ -117,7 +117,10 @@ const GENERIC = {
   'fly': 'flying', 'fly:soar': 'soaring on a thermal', 'fly:glide': 'gliding', 'fly:climb': 'climbing on strong wingbeats', 'fly:flush': 'flushed, flying off',
   'fly:up': 'flying up into a tree', 'fly:down': 'flying down to the ground',
 };
-// Each family's own words over GENERIC.
+// Each family's own words over GENERIC. The corvids are two (2026-11-07): the raven's (corvid) soars and tumbles; the
+// crows' and magpies' (crow: the pipeline's 'walking corvid', on the same machine) flap and walk. A shorebird (the
+// sandpipers and plovers, on the heron's water-edge machine) runs and probes along the edge, apart from the heron's slow
+// stalk (wader) and the quail's scratching (groundbird).
 const FAMILY_PHRASES = {
   herd: { 'travel': 'walking {group}', 'alert': 'head up, watching', 'flee': 'running off {group}', 'young': 'with its young' },
   raptor: { 'fly:soar': 'soaring, watching the ground below', 'fly:glide': 'gliding over the land', 'fly': 'flying', 'perch': 'perched, watching for prey',
@@ -126,8 +129,14 @@ const FAMILY_PHRASES = {
   owl: { 'fly': 'flying silently between the trees', 'hunt:perch': 'watching and listening from its perch', 'rest:roost': 'roosting through the day', 'perch': 'perched quietly' },
   corvid: { 'fly:soar': 'soaring and tumbling on the wind', 'fly:glide': 'gliding over the land', 'fly:climb': 'flapping up off the ground', 'forage:ground': 'on the ground, picking at food',
     'forage:cache': 'hiding food under a shrub', 'forage:walk': 'walking about on the ground, looking for food', 'perch': 'perched, looking about' },
+  crow: { 'fly:soar': 'flying over on steady wingbeats', 'fly:glide': 'gliding down on set wings', 'fly:climb': 'flapping up off the ground', 'fly': 'flying over on steady wingbeats',
+    'forage:ground': 'on the ground, picking at food', 'forage:walk': 'walking about on the ground, looking for food', 'forage:cache': 'hiding food to eat later',
+    'forage:circle': 'flying round over a carcass', 'perch': 'perched, looking about', 'perch:ground': 'standing on the ground, looking about' },
   wader: { 'fly': 'flying off on slow deep wingbeats', 'fly:flush': 'flying off on slow deep wingbeats', 'hunt:stalk': 'stalking slowly through the shallows',
     'hunt:watch': 'standing still in the shallows, watching for fish', 'forage': 'wading in the shallows' },
+  shorebird: { 'hunt:stalk': 'running along the water\'s edge, picking at food', 'hunt:watch': 'standing at the water\'s edge, watching for food', 'hunt': 'picking along the water\'s edge',
+    'forage': 'probing along the water\'s edge {group}', 'travel': 'running along the water\'s edge', 'fly': 'flying off low over the water', 'fly:flush': 'flushed, flying off low over the water',
+    'alert': 'standing still at the water\'s edge, watching', 'alert:crouch': 'crouched at the water\'s edge, about to fly', 'perch': 'standing on a stone at the water\'s edge' },
   waterbird: { 'fly': 'flying off low over the water', 'fly:flush': 'flying off low over the water', 'swim': 'swimming on the water', 'swim:dive': 'diving under the water',
     'forage': 'feeding on the water', 'alert:crouch': 'head up, about to take off' },
   gull: { 'fly:soar': 'circling on the wind', 'fly:glide': 'gliding over the land', 'fly': 'flying' },

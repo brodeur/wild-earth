@@ -82,7 +82,8 @@ tiles/<tile_id>/
   client/texture.png            derived   rewilded texture on the metric tile grid
   client/habitat.png            derived   habitat class code in R, 30 m grid
   client/canopy.png             derived   tree / shrub / herb cover percent in R / G / B, 30 m grid
-  client/roads.png              derived   decayed-road weight, 8-bit on the DEM grid: 255 pavement, verge falls to 0; 0 inside footprint/urban.tif but freeways
+  client/roads.png              derived   road weight, 8-bit on the DEM grid: 0 everywhere since 2026-11-07 (roads are rewilded; the file is kept for the client's ground-data texture R)
+  footprint/roads.png           derived   where the roads were (pipeline only): 255 pavement, verge from 136 falling to 0 at 3x the paved half-width, tracks half weight, every road; the imagery erase fills it
   client/mast.png               derived   fall acorn_mast score 0..100 in R, 30 m grid (from resources/acorn_mast.tif band 4; optional)
   client/geology.png            derived   R geology unit index (geology/classes.json), G rock class index (1-based), 30 m grid
   client/soils.png              derived   R soil map unit index, G surface rock fragments % 0-100, B depth to bedrock dm (255 none/unknown), 30 m grid
@@ -92,7 +93,7 @@ tiles/<tile_id>/
   client/strata.json            derived   where the strata lie flat: elevation bands top to bottom (base plane, unit, lithology, rock colours); absent where they do not sort
   client/substrate.png          derived   5 m RGB: R exposed rock 0-255, G lithology index (1-based into substrate.json), B exposed patch size code (see Substrate and exposed rock)
   client/substrate.json         derived   the lithologies with their cliff morphology and the orientations derived for the tile, unit -> lithology table, exposure formula and stats
-  client/texture_imagery.jpg    derived   NAIP with the human footprint erased and pavement bleached, 4000 px (2.5 m) JPEG
+  client/texture_imagery.jpg    derived   NAIP with the human footprint, roads included, erased, 4000 px (2.5 m) JPEG
   client/texture_present.jpg    derived   present-day NAIP as captured, same 4000 px metric grid as texture_imagery, JPEG q88
   client/texture_ground.jpg     derived   texture_imagery with tree crowns (lidar CHM 3 m+) and their shadows replaced by synthesized ground of the same class, same grid (see Ground-only texture)
   client/texture_ground_mask.png derived  1000 px: share of each 10 m pixel replaced in texture_ground (255 all filled)
@@ -294,9 +295,67 @@ Features carry `class` from this list, so the renderer knows what to backfill wi
 foothills carry hydraulic mining scars, ditches and orchard terraces that bare-earth
 lidar does not remove.
 
-In client products roads are decayed, not erased: `client/roads.png` and the baked
-`client/texture.png` keep them as treeless strips of worn pavement (paths, footways,
-cycleways, bridleways and steps excluded; tracks at half weight), so players keep their landmarks.
+Roads are rewilded, not kept (2026-11-07, Aaron: "Yes, remove road"; until then they were decayed pavement):
+- **Imagery.** Every road's pavement and verge (paths, footways, cycleways, bridleways and steps excluded; tracks at
+  half weight) joins the erase mask. Where nothing else is erased, the strip is mirrored from the ground beside it:
+  each pixel takes the pixel as far beyond its nearest clean edge as it is inside it, and the ridge where the two banks'
+  mirrors meet is softened over ~5 px. Within a strip half-width of that ridge the broad tone replaces the mid-band, so
+  two banks of different tone (a track is often where the grazing or a burn changes) fade into each other. On imagery
+  coarser than its grid (Sentinel-2: 10 m on the 2.5 m grid) the mask grows by a native pixel, because the track is
+  blurred that far and its mirror would copy the edge back in (Serengeti). So the strip carries its banks' own colour,
+  grain and light. A road OSM does not map stays (Serengeti's main pale road south-west of the probe's top-down
+  centre). Quilting from the
+  class's windows elsewhere put riparian shrubs and bare patches into Lamar's sage flat. What cannot be mirrored (its
+  mirror lands on other erased ground or off the tile) is filled like the rest of the footprint (see Imagery
+  erasure). Nothing is bleached.
+- **Ground.** `client/roads.png` is 0 everywhere, so there is no pavement texture and no gap in the grass and herbs.
+- **Trees.** On a lidar tile the crown finder (crowns step v2, `unroad.mirror_canopy`) runs on the CHM and the
+  multi-return share with each road's erase strip mirrored from beside it, the same strip and mirror the imagery
+  takes. So the wood on either side closes over the old road. Before this, US-50 at home read from 150 m as a
+  treeless band once its pavement was gone (the lidar has no crowns on a road); 13.6 km2 of road strip is mirrored
+  there.
+- **Cover.** In `client/canopy.png` a 30 m cell crossed by a road's pavement whose LANDFIRE cover is not vegetation
+  (Developed-Roads) takes the tree, shrub and herb cover of the vegetated cells around it. This is a normalised
+  convolution at sigma 2 cells, widening to 4 and 8 where none is that close; the layer records
+  `road_cells_from_neighbours`. So the trees on a tile without lidar, and the shrubs and herbs on every tile, carry
+  on across the old road.
+  The client's ground-data texture takes its R from it; G, B and A (the substrate's rock, lithology and patch code) are
+  untouched. The baked `client/texture.png` has no pavement. Where the roads were is `footprint/roads.png`
+  (pipeline only, the old decayed-road weight, every road), which the erase fills.
+- **Heights.** See Roads in the ground below.
+- **Habitat.** LANDFIRE's Developed-Roads cells are `human` and backfilled from BpS like every developed cell.
+- **The present day.** The `G` ghost roads (`client/features.json`'s `roads`, drawn from OSM over the world on request)
+  stay: a deliberate present-day overlay, like `P`, not part of the world.
+
+**Roads in the ground** (`pipeline/unroad.py`, 2026-11-07). In each road's corridor, the OSM line buffered by its
+paved half-width (derive's table: 8 m a motorway, 5 m a secondary, 3.5 m a residential street, 2 m a track) x 3 + 4 m,
+the ground is compared with the harmonic surface spanned from the corridor's edges. That surface solves Laplace's
+equation with the edges held, and every NHD stream line through the corridor held at its own ground within 2.5 m.
+- **What is replaced.** The road's own prism (2x the paved half-width) is replaced by that surface wherever it departs.
+  Elsewhere in the corridor only where the ground stands off it by more than 0.1 m, wholly past 0.4 m.
+- **Blending.** The replacement eases in over 4 m from the corridor's edge.
+- **Grain.** The replaced ground takes band-limited noise at the robust amplitude of the surrounding ground's 3 m high
+  pass, so it is not smoother than the slope it rejoins.
+- **Culverts.** A culvert's fill is spanned across from the valley floor beside it and from the stream under it, so the
+  valley comes back where the water runs.
+- **By streams.** Within 40 m of a stream line the rule only takes ground away, never raises it: a channel under a bridge
+  OSM does not tag (Lamar's Northeast Entrance Road has none), or a river beside the road, is not a cut to fill. Before
+  this rule the spanned surface raised Lamar's stream beds by up to 2.4 m at 23 crossings, which moved channels.
+- **Benches.** A road on a natural bench is left: the corridor's edges are on the bench, and so is the surface.
+- **Bridges.** Bridges are not corridors: the bare-earth ground under a deck is the valley already.
+- **Where it runs.** On the 1 m ground (`lidar.build_dem_1m`, terrain/dem_1m.tif), which the drawn 5 m DEM averages on
+  a lidar tile and which the reroute and water steps read. On a tile without the 1 m products it runs on the drawn 5 m
+  (the `dem` step), when the fetched product is 10 m or finer. A 30 m DEM (Copernicus GLO-30, outside the US) resolves
+  no cut or fill, and spanning its corridors smoothed real slopes: Lofoten lost 31 m off a fjord side. Either way the drawn ground and the water's ground are one.
+- **Idempotent.** The product as fetched is kept as `terrain/dem_1m_roaded.tif` / `terrain/dem_roaded.tif`, and its
+  hash and the corridor's key are recorded in `terrain/<dem>_unroad.json`. The layer records the stats
+  (`unroad`: corridor share, area changed, volume moved, the largest fill removed and cut filled).
+- **Water.** With the fills gone the reroute step (v2) cuts no culverts: it skips its road burn wherever a `*_unroad.json` is
+  recorded, since client/roads.png is written later, by the terrain step, and on a tile's first rebuild it still held the
+  old roads (Grand Canyon's reroute cut 262 crossings up to 11 m deep, and home's 700 up to 12.5 m, before this).
+  The water check's `off_roads` is the whole tile.
+- **Lamar.** The Northeast Entrance Road and its spurs: 0.5% of the tile in corridors, 0.42 km^2 changed, 0.31 million
+  m^3 moved, fills up to 4.1 m removed, cuts up to 7.2 m filled.
 
 **Dense-urban mask** (`footprint/urban.tif`, layer `footprint.urban` with `fraction`; pipeline/urban.py,
 built by `derive`): a city's blocks are rewilded whole, which the foothill rules above would not do (they
@@ -305,7 +364,7 @@ the street trees in rows along the vanished grid). Densely built = building cove
 15%, or 7.5% on LANDFIRE Developed-Medium/High cells; kept within 25 m of a building, closed by 40 m (the
 streets between blocks), holes under 3 ha filled, patches under 75 ha dropped (a foothill town centre keeps
 the foothill rules: Placerville's densest patch is 47 ha, Sausalito's 93). Inside it: `client/roads.png`
-is 0 for every road but motorways and trunks (no pavement, no verge); the imagery erase takes every pixel
+is 0 everywhere (as it now is everywhere else); the imagery erase takes every pixel
 (see Imagery erasure); and the crown finder drops crowns whose rewilded class is not a forest or woodland
 (see Lidar). The three foothill tiles score 0; the San Francisco cells 16% and 44%. Bridges: `bridge`,
 `bridge:structure` and `man_made` tags are kept on the features and `man_made=bridge` outlines fetched
@@ -446,7 +505,8 @@ area, width, NHD name and permanence) and replaces its geometry with the path wa
    belongs to its nearest reach (2 m distance transform), and the flood below crosses from one reach's cells to
    another's only where the two share a node, so the water follows the map's topology and never slips over a low
    saddle into an unrelated creek's corridor.
-2. Roads: where a reach crosses an erased road (`client/roads.png` >= 128, grown 10 m: the fill and its ditches), the
+2. Roads (before 2026-11-07, when the roads were kept; their fills are gone from the ground now, see Roads in the
+   ground, and client/roads.png is 0, so this finds none): where a reach crosses an erased road (`client/roads.png` >= 128, grown 10 m: the fill and its ditches), the
    5 m line is cut into the 1 m ground 1.5 m either side, graded from the lowest ground at its way in to the lowest at
    its way out (never rising): the culvert. Without it the trace runs down the ditch at the fill's toe to wherever the
    crest is lowest.
@@ -565,8 +625,9 @@ least-squares non-increasing trend (`reroute.isotonic_down`; a running minimum h
 level down for the rest of the reach), smoothed the same way, kept 5 cm under the lower ground at the edge of the wet
 margin on either side, non-increasing again; then, bigger streams first, a reach whose last level is under the level
 of a bigger reach within 6 m of its end is raised to it, so the water surface never climbs into a confluence. The water half
-width at a sample is wh = width / 2 x (1 + 0.15 t) x a slow wander along the reach (periods 41 and 17 m, 0.55-1.4),
-the local slope the smoothed gradient of L.
+width at a sample is wh = width / 2 x (1 + 0.15 t) x a slow wander along the reach (periods 41 and 17 m, 0.55-1.4;
+its phase from the reach's start point, not its index in channels.geojson, so a reach renumbered by a change elsewhere
+keeps its outline), the local slope the smoothed gradient of L.
 
 The cross-section, per 5 m cell by its distance o to the nearest sample (a Euclidean distance transform; the bigger
 stream owns a shared cell):
@@ -870,14 +931,15 @@ the Biophysical Settings class (BpS `human` or unknown falls back to grassland).
 `client/texture_imagery.jpg` is the NAIP imagery with humans taken out, on the NAIP grid.
 The erase mask is every footprint feature except roads, buffered by its `buffer_m` (plus
 12 m around buildings for yards, driveways and lots), united with the `human` cells of
-`habitat_present.tif` (lawns and lots OSM lacks), minus road pavement (`roads.png` > 140).
+`habitat_present.tif` (lawns and lots OSM lacks) and every road's pavement and verge (`footprint/roads.png` > 16:
+out to ~2.9x the paved half-width; freeways too; until 2026-11-07 the pavement was left out and bleached).
 Human cells whose EVT physiognomy is Developed-Medium or High Intensity, Agricultural or
 Quarries are erased whole. The others (Developed-Low Intensity, Developed-Roads, and
 developed or urban forest, shrubland and herbaceous: a quarter to a third of a foothill tile, and
 mostly real oaks and dry grass) are erased only where the photo looks built: neutral grey or
 white pixels not in shade (roofs, concrete, asphalt, gravel), blue (pools) and irrigated
 green, opened to drop specks and grown by one pixel. Inside the dense-urban mask (see Footprint
-mask) every pixel is erased, streets included (only freeway pavement stays), and synthesised from
+mask) every pixel is erased, streets included, and synthesised from
 clean imagery of the cell's rewilded class whatever the development intensity; there the local colour
 is a 150 m gaussian of clean ground of the same class easing to the class median deep inside, a class
 with under 200 clean windows borrows its fallback's, and water cells take land fallbacks.
@@ -888,8 +950,8 @@ synthesized: image quilting from 32 px windows of clean imagery elsewhere in the
 majority class is the backfilled habitat class there, drawn from the 5% of that class's
 windows closest in brightness to clean ground within 100 m (so savanna is filled from savanna,
 not from dense stands lit up to match), chosen to agree with neighbouring pixels and that
-local colour, and joined along minimum-error seams. Pavement
-is desaturated and blended halfway to sun-bleached grey; the verge is left alone. The
+local colour, and joined along minimum-error seams. (Until 2026-11-07 the pavement was desaturated and blended
+halfway to sun-bleached grey; now there is none.) The
 layer records `mask_fraction`, `inpainted_fraction` and `synthesized_fraction`,
 `human_cells` (`whole_fraction`, `partial_fraction`, `partial_erased_fraction`), plus
 `grass_mean` and `oak_mean` (sRGB 0..1), the imagery's own summer colours, which the
@@ -911,7 +973,9 @@ pixels filled; minor pavement follows 70% of its surroundings' change. On the th
 73-88% of the texture is filled; under closed canopy nothing of the ground shows in the photo, so
 the fill there is the class's open-ground colour and the client tints it toward litter by canopy
 cover. The layer records `mask_fraction`, `naip_date`, the fitted `sun` and the class means
-(docs/texture-notes.md).
+(docs/texture-notes.md). Since 2026-11-07 no road is kept: `client/roads.png` is 0 and the erase step has filled
+every road, so the inpaint step's road rules (pavement never touched, minor pavement following 70% of the change)
+find nothing.
 
 ## Seasonal colour
 

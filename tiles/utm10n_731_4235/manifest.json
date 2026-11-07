@@ -15,7 +15,7 @@
   38.32337819749693
  ],
  "size_m": 10000,
- "generated_at": "2026-11-07T02:34:34Z",
+ "generated_at": "2026-11-07T16:25:24Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -2150,22 +2150,38 @@
    "path": "species/species.json",
    "kind": "table",
    "source": "gbif",
-   "count": 20,
-   "present": 18,
+   "count": 61,
+   "present": 43,
    "absent": [
     "sylvilagus_bachmani",
-    "microtus_californicus"
+    "microtus_californicus",
+    "cervus_canadensis",
+    "perisoreus_canadensis",
+    "strix_varia",
+    "lynx_rufus",
+    "lepus_americanus",
+    "tamias_townsendii",
+    "peromyscus_maniculatus",
+    "plethodon_vehiculum",
+    "ariolimax_columbianus",
+    "larus_glaucescens",
+    "larus_californicus",
+    "larus_occidentalis",
+    "marmota_olympus",
+    "tamias_amoenus",
+    "sorex_monticolus",
+    "rana_cascadae"
    ],
-   "sha256": "db67c489dac1d36ea838b05eaf743e7eaed40f6aa6189f137bd58e9657bbf158",
-   "bytes": 13183
+   "sha256": "364b55bd2d3ce5ddea1b3f6f8c1ba78c4a2a7f7fa3caadaab513410314ba79f2",
+   "bytes": 42718
   },
   "species.occurrences": {
    "path": "species/occurrences.geojson",
    "kind": "vector",
    "source": "gbif",
-   "feature_count": 4144,
-   "sha256": "92a71814bbc2ec955259aa1934615528dad0a5510db8d62dc5b58d86368116e9",
-   "bytes": 1841340,
+   "feature_count": 11562,
+   "sha256": "b0297d0aa3991080f74e6e1c7c508cc869e6b629109e2f16e0bac99cde33ec82",
+   "bytes": 5153066,
    "for_clients": false,
    "for_clients_note": "per-record licences include CC BY-NC; clients read client.species_prior, built from CC0 and CC BY records only"
   },
@@ -2173,8 +2189,8 @@
    "path": "species/seasonal.json",
    "kind": "table",
    "source": "gbif",
-   "sha256": "eb215ec5215dfe03e03fd92450bdf26413a97bdb2b70be5de9162e7cda5d1013",
-   "bytes": 2211,
+   "sha256": "e0c74f3d1e8adfadca601bfcf1914a455e988bd8633b278c6f25a46b7964141a",
+   "bytes": 6521,
    "for_clients": false
   },
   "species.inventory": {
@@ -2187,20 +2203,20 @@
   "perception": {
    "path": "perception.json",
    "kind": "table",
-   "sha256": "6d3264d85dcf82083c919e92fd8650315d7376fe43340bf0bb878d9a9e721b58",
-   "bytes": 21943
+   "sha256": "140ae9ad06e454f4457ef07fa6ca0ec90e219f083b0ab40124c399def17a2f9d",
+   "bytes": 159136
   },
   "calendar": {
    "path": "calendar.json",
    "kind": "table",
-   "sha256": "eb24973810ce537a56fe3241fbac42580271ef64f2de6efd261d4bba4aba5aec",
-   "bytes": 18259
+   "sha256": "ca0a24deb25829d0f519b754ef90eb81383bfb1c8e519358d2ac4aa9f83b870b",
+   "bytes": 45635
   },
   "locomotion": {
    "path": "locomotion.json",
    "kind": "table",
-   "sha256": "045ef83f470c0d0a3e63d4cfce4bd4ed807f526179d66f6bc549a18e43072193",
-   "bytes": 20576
+   "sha256": "4dc58f00c072643154614f1c5099e69e2fee12bcdb5a98822935b4215eb653ab",
+   "bytes": 57462
   },
   "client.species_prior": {
    "path": "client/species_prior.json",
@@ -2222,38 +2238,66 @@
     "CC BY 4.0",
     "CC0 1.0"
    ],
-   "records_used": 3932,
+   "records_used": 10944,
    "records_used_by_license": {
-    "CC0 1.0": 29,
-    "CC BY 4.0": 3903
+    "CC0 1.0": 138,
+    "CC BY 4.0": 10806
    },
    "records_excluded": {
-    "CC BY-NC 4.0": 193
+    "CC BY-NC 4.0": 545
    },
-   "records_outside": 19,
+   "records_outside": 73,
    "species": {
+    "accipiter_striatus": 29,
+    "aegolius_acadicus": 7,
+    "anas_platyrhynchos": 385,
+    "anaxyrus_boreas": 1,
     "aphelocoma_californica": 44,
+    "ardea_herodias": 56,
     "buteo_jamaicensis": 169,
     "callipepla_californica": 29,
     "canis_latrans": 0,
     "cathartes_aura": 464,
+    "corvus_brachyrhynchos": 85,
     "corvus_corax": 1481,
     "cyanocitta_stelleri": 1455,
+    "dendragapus_fuliginosus": 8,
+    "empidonax_difficilis": 319,
+    "ensatina_eschscholtzii": 54,
+    "falco_columbarius": 5,
+    "haliaeetus_leucocephalus": 51,
+    "ixoreus_naevius": 42,
+    "junco_hyemalis": 1461,
+    "larus_californicus": 1,
     "lepus_californicus": 0,
+    "leuconotopicus_villosus": 858,
+    "lontra_canadensis": 0,
+    "lynx_rufus": 0,
+    "megaceryle_alcyon": 78,
+    "megascops_kennicottii": 6,
     "melanerpes_formicivorus": 81,
     "meleagris_gallopavo": 26,
+    "mergus_merganser": 118,
     "microtus_californicus": 2,
     "odocoileus_hemionus": 2,
     "oreortyx_pictus": 153,
     "otospermophilus_beecheyi": 5,
+    "pandion_haliaetus": 65,
+    "peromyscus_maniculatus": 18,
+    "poecile_rufescens": 339,
+    "regulus_satrapa": 774,
     "sceloporus_occidentalis": 11,
     "sciurus_griseus": 5,
+    "sturnus_vulgaris": 32,
+    "tamiasciurus_douglasii": 35,
+    "troglodytes_pacificus": 840,
+    "turdus_migratorius": 1345,
     "urocyon_cinereoargenteus": 1,
     "ursus_americanus": 4
    },
-   "datasets": 9,
-   "sha256": "1108df69f68007025b4c3d9b25b23936f8b88750120fff2c66f3d1293ae245ea",
-   "bytes": 242442
+   "datasets": 13,
+   "sha256": "cd3ae36276a773759e94b14f5f2d319c6709d2aa16fc7a604b879f877d6dc11a",
+   "bytes": 617766
   },
   "species.plant_needs": {
    "path": "species/plant_needs.json",
@@ -6250,14 +6294,14 @@
     "gbif",
     "eltontraits"
    ],
-   "listed": 52,
+   "listed": 80,
    "predators": 19,
    "scavengers": 10,
    "generated_traits": 0,
-   "queued": 34,
-   "queued_credits": 980,
-   "sha256": "82eb55836a6662623599beb80f23180dfee750232b891e116391577f55df188f",
-   "bytes": 91283
+   "queued": 36,
+   "queued_credits": 985,
+   "sha256": "df3e5296e3673a687b60495f269a196d61e5e3f8b60438bc322acc14e49f1b7e",
+   "bytes": 114056
   },
   "games.seeds": {
    "path": "game_seeds.json",
@@ -6318,6 +6362,33 @@
    "retrieved": "2026-11-07",
    "sha256": "f3fdbd4b117f08cc012a1f90bf67e2ee94422b7ea8e60cc6585ea512558d6e0c",
    "bytes": 623
+  },
+  "client.fauna": {
+   "path": "client/fauna.json",
+   "kind": "table",
+   "derived_from": [
+    "species.animals",
+    "species.presence"
+   ],
+   "allow": 44,
+   "slots": 33,
+   "skipped": 3,
+   "stand_ins": {
+    "tamias_quadrimaculatus": "microtus_californicus",
+    "thomomys_bottae": "peromyscus_maniculatus",
+    "thomomys_monticola": "peromyscus_maniculatus",
+    "branta_canadensis": "mergus_merganser",
+    "sitta_canadensis": "cyanocitta_stelleri",
+    "dryocopus_pileatus": "leuconotopicus_villosus",
+    "certhia_americana": "cyanocitta_stelleri",
+    "colaptes_auratus": "leuconotopicus_villosus",
+    "poecile_gambeli": "cyanocitta_stelleri",
+    "leuconotopicus_albolarvatus": "leuconotopicus_villosus",
+    "pheucticus_melanocephalus": "cyanocitta_stelleri",
+    "setophaga_coronata": "cyanocitta_stelleri"
+   },
+   "sha256": "77065a51a8b1f6ce25dcce7ab5fa2caddd05b8954dad31b52434d9eac8bbb6fb",
+   "bytes": 32657
   }
  },
  "sources": {
@@ -6429,7 +6500,7 @@
    "attribution": "Species occurrences: GBIF.org and its contributing datasets, including iNaturalist and eBird (CC0, CC BY 4.0 or CC BY-NC 4.0 per record)",
    "attribution_url": "https://www.gbif.org/",
    "attribution_required": true,
-   "retrieved": "2026-11-05"
+   "retrieved": "2026-11-07"
   },
   "copernicus_sentinel2_l2a": {
    "name": "Copernicus Sentinel-2 Level-2A surface reflectance via Microsoft Planetary Computer",
@@ -6802,6 +6873,54 @@
    "step": "territories",
    "at": "2026-11-07T02:34:34Z",
    "seconds": 0.2,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-11-07T16:04:40Z",
+   "seconds": 215.2,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-07T16:04:46Z",
+   "seconds": 5.9,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-11-07T16:21:59Z",
+   "seconds": 2.7,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-07T16:21:59Z",
+   "seconds": 0.5,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-11-07T16:24:08Z",
+   "seconds": 1.8,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-07T16:24:08Z",
+   "seconds": 0.5,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-11-07T16:25:23Z",
+   "seconds": 1.7,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-07T16:25:24Z",
+   "seconds": 0.5,
    "ok": true
   }
  ],
@@ -7232,14 +7351,14 @@
   },
   "species": {
    "version": "1",
-   "code": "51fbb1afa1361cd1",
+   "code": "348c8d8fad9668bb",
    "params": {
     "tile": "utm10n_731_4235"
    },
-   "fingerprint": "e12cc02abbde97a4",
+   "fingerprint": "c329a9c249b547da",
    "parts": {
     "version": "1",
-    "code": "51fbb1afa1361cd1",
+    "code": "348c8d8fad9668bb",
     "params": {
      "tile": "utm10n_731_4235"
     },
@@ -7248,10 +7367,10 @@
      "landcover": "157c6fa14831539a"
     },
     "library": {
-     "library/animals": "25aa2d5ae1d06008"
+     "library/animals": "997e0be94296d338"
     }
    },
-   "ran_at": "2026-11-05T06:12:20Z",
+   "ran_at": "2026-11-07T16:25:22Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -7265,26 +7384,26 @@
     "species.seasonal"
    ],
    "outputs": {
-    "calendar.json": "eb24973810ce537a",
-    "client/species_prior.json": "1108df69f6800702",
-    "locomotion.json": "045ef83f470c0d0a",
-    "perception.json": "6d3264d85dcf8208",
+    "calendar.json": "ca0a24deb25829d0",
+    "client/species_prior.json": "cd3ae36276a77375",
+    "locomotion.json": "4dc58f00c0726431",
+    "perception.json": "140ae9ad06e454f4",
     "species/inventory.json": "fc659d6f7c0522ad",
-    "species/species.json": "db67c489dac1d36e",
-    "species/occurrences.geojson": "92a71814bbc2ec95",
-    "species/seasonal.json": "eb215ec5215dfe03"
+    "species/species.json": "364b55bd2d3ce5dd",
+    "species/occurrences.geojson": "b0297d0aa3991080",
+    "species/seasonal.json": "e0c74f3d1e8adfad"
    },
-   "out_hash": "3aeb4ca404811207",
+   "out_hash": "bd0f08adf50ea5b2",
    "sources": {
-    "gbif": "2026-11-05"
+    "gbif": "2026-11-07"
    },
    "fallbacks": [],
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 247
+    "cache": 347
    },
-   "seconds": 0.8
+   "seconds": 1.7
   },
   "plants": {
    "version": "1",
@@ -8003,48 +8122,50 @@
    "seconds": 1.1
   },
   "animals": {
-   "version": "1",
-   "code": "52bac1d7ce198821",
+   "version": "6",
+   "code": "44d9ac426df2f7b6",
    "params": {
     "tile": "utm10n_731_4235"
    },
-   "fingerprint": "f6585232d77e0551",
+   "fingerprint": "ba682edb6eb23ddc",
    "parts": {
-    "version": "1",
-    "code": "52bac1d7ce198821",
+    "version": "6",
+    "code": "44d9ac426df2f7b6",
     "params": {
      "tile": "utm10n_731_4235"
     },
     "deps": {
-     "species": "3aeb4ca404811207",
+     "species": "bd0f08adf50ea5b2",
      "plants": "822fa49ecebf11d4"
     },
     "library": {
-     "library/animals": "25aa2d5ae1d06008",
+     "library/animals": "997e0be94296d338",
      "data/eltontraits": "e3b0c44298fc1c14"
     }
    },
-   "ran_at": "2026-11-05T06:12:20Z",
+   "ran_at": "2026-11-07T16:25:24Z",
    "owner": null,
    "status": "ok",
    "layers": [
+    "client.fauna",
     "species.animals"
    ],
    "outputs": {
-    "species/animals.json": "82eb55836a666262"
+    "client/fauna.json": "77065a51a8b1f6ce",
+    "species/animals.json": "df3e5296e3673a68"
    },
-   "out_hash": "2b049652895465d2",
+   "out_hash": "a4b4d8116ab8659d",
    "sources": {
-    "gbif": "2026-11-05",
+    "gbif": "2026-11-07",
     "eltontraits": "2026-11-05"
    },
    "fallbacks": [],
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 195
+    "cache": 218
    },
-   "seconds": 0.3
+   "seconds": 0.5
   },
   "resources": {
    "version": "1",

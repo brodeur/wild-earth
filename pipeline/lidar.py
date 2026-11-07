@@ -233,6 +233,10 @@ def build_dem_1m(tile: Tile, force=False) -> dict:
         with rasterio.open(out, "r+") as dst:
             dst.build_overviews([2, 4, 8, 16], Resampling.average)
         shutil.rmtree(raw_dir, ignore_errors=True)   # the raw product is the same 1 m cell plus an apron
+    # the roads' cut and fill back to the ground beside them (pipeline/unroad.py, 2026-11-07: roads are rewilded, not kept);
+    # idempotent, from the product as fetched (terrain/dem_1m_roaded.tif), so the drawn DEM and the water read one ground
+    from .unroad import apply as unroad
+    unroad_stats = unroad(tile, "terrain/dem_1m.tif")
     z = _read(out)
     v = z != NODATA
     cov = read_json(cov_p) if cov_p.exists() else {"share_1m": 1.0}
@@ -243,6 +247,7 @@ def build_dem_1m(tile: Tile, force=False) -> dict:
             "collection": [chosen["collection_begin"], chosen["collection_end"]], "found_via": meta["found_via"],
             "other_collections": [c["project"] for c in meta["candidates"][1:]],
             "for_clients": False, "for_clients_note": "pipeline only; clients read client.heights (5 m) and client.terrain_detail",
+            "unroad": unroad_stats, "roaded": "terrain/dem_1m_roaded.tif (the product as fetched, the roads' cut and fill in it)",
             "stats": {"min": float(z[v].min()), "max": float(z[v].max()), "valid_fraction": round(float(v.mean()), 6)}}
 
 
@@ -980,7 +985,10 @@ def build_crowns(tile: Tile) -> dict:
         npts = np.asarray(g["npts"]).reshape(N1, N1)
         multi = np.where(npts > 0, np.asarray(g["nmulti"]).reshape(N1, N1) / np.maximum(npts, 1), 0).astype(np.float32)
     chm = _read(tile.path("vegetation/chm_1m.tif")).astype(np.float32) / 100
+    from .unroad import mirror_canopy   # the wood beside each erased road across it (roads rewilded, 2026-11-07)
+    mirrored = mirror_canopy(tile, chm, multi)
     st = crowns(tile, chm, multi)
+    st["roads_mirrored"] = mirrored
     p = tile.path("terrain/lidar_stats.json")
     stats = read_json(p)
     stats["crowns"] = st

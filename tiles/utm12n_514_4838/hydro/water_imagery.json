@@ -20,16 +20,16 @@
    10,
    11
   ],
-  "water_cells_5m": 244116,
-  "reaches_tested": 362,
+  "water_cells_5m": 244128,
+  "reaches_tested": 356,
   "verdicts_before": {
-   "no water seen": 352,
+   "no water seen": 347,
    "off water": 4,
-   "on water": 6
+   "on water": 5
   },
   "verdicts_after": {
-   "no water seen": 352,
-   "on water": 7,
+   "no water seen": 347,
+   "on water": 6,
    "off water": 3
   },
   "stems": 5,
@@ -55,7 +55,7 @@
    ],
    "length_m": 4907,
    "area_km2": 130.4,
-   "width": 15.44,
+   "width": 15.45,
    "before": {
     "on": 0.059,
     "near": 0.061,
@@ -73,12 +73,12 @@
    "names": [
     "Cottonwood Creek"
    ],
-   "length_m": 3550,
-   "area_km2": 120.5,
+   "length_m": 3549,
+   "area_km2": 115.7,
    "width": 13.88,
    "before": {
-    "on": 0.093,
-    "near": 0.107,
+    "on": 0.096,
+    "near": 0.112,
     "samples": 356
    },
    "verdict": "no water seen (kept: the trace is not on the imagery's water)",
@@ -91,13 +91,13 @@
   {
    "reaches": 1,
    "names": [],
-   "length_m": 44,
-   "area_km2": 120.5,
-   "width": 13.82,
+   "length_m": 57,
+   "area_km2": 115.7,
+   "width": 13.57,
    "before": {
     "on": 1.0,
     "near": 1.0,
-    "samples": 6
+    "samples": 7
    },
    "verdict": "on water"
   },
@@ -245,26 +245,7 @@
    "moved": null
   },
   {
-   "k": 95,
-   "name": null,
-   "width": 3.36,
-   "length_m": 16,
-   "before": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 3
-   },
-   "after": {
-    "on": 1.0,
-    "near": 1.0,
-    "samples": 3
-   },
-   "verdict_before": "on water",
-   "verdict_after": "on water",
-   "moved": null
-  },
-  {
-   "k": 112,
+   "k": 107,
    "name": "Cascade Creek",
    "width": 8.36,
    "length_m": 59,
@@ -285,17 +266,17 @@
   {
    "k": 141,
    "name": null,
-   "width": 13.82,
-   "length_m": 44,
+   "width": 13.57,
+   "length_m": 57,
    "before": {
     "on": 1.0,
     "near": 1.0,
-    "samples": 6
+    "samples": 7
    },
    "after": {
     "on": 1.0,
     "near": 1.0,
-    "samples": 6
+    "samples": 7
    },
    "verdict_before": "on water",
    "verdict_after": "on water",
@@ -304,7 +285,7 @@
   {
    "k": 142,
    "name": null,
-   "width": 13.82,
+   "width": 13.57,
    "length_m": 269,
    "before": {
     "on": 0.607,
@@ -324,16 +305,16 @@
    "k": 157,
    "name": "Cottonwood Creek",
    "width": 13.88,
-   "length_m": 3281,
+   "length_m": 3280,
    "before": {
     "on": 0.052,
-    "near": 0.067,
-    "samples": 330
+    "near": 0.061,
+    "samples": 329
    },
    "after": {
     "on": 0.052,
-    "near": 0.067,
-    "samples": 330
+    "near": 0.061,
+    "samples": 329
    },
    "verdict_before": "no water seen",
    "verdict_after": "no water seen",
@@ -378,7 +359,7 @@
    "moved": null
   },
   {
-   "k": 347,
+   "k": 345,
    "name": null,
    "width": 4.39,
    "length_m": 64,
@@ -397,7 +378,7 @@
    "moved": null
   },
   {
-   "k": 348,
+   "k": 346,
    "name": null,
    "width": 4.39,
    "length_m": 125,
@@ -416,7 +397,7 @@
    "moved": null
   },
   {
-   "k": 366,
+   "k": 365,
    "name": "Cottonwood Creek",
    "width": 15.17,
    "length_m": 292,
@@ -435,10 +416,10 @@
    "moved": null
   },
   {
-   "k": 369,
+   "k": 368,
    "name": "Cottonwood Creek",
-   "width": 15.22,
-   "length_m": 1175,
+   "width": 15.42,
+   "length_m": 1174,
    "before": {
     "on": 0.0,
     "near": 0.0,
@@ -454,7 +435,7 @@
    "moved": null
   },
   {
-   "k": 381,
+   "k": 380,
    "name": "Taggart Creek",
    "width": 2.64,
    "length_m": 72,
@@ -473,7 +454,7 @@
    "moved": null
   },
   {
-   "k": 431,
+   "k": 429,
    "name": "Taggart Creek",
    "width": 4.74,
    "length_m": 26,
@@ -492,10 +473,10 @@
    "moved": null
   },
   {
-   "k": 433,
+   "k": 431,
    "name": "Cottonwood Creek",
-   "width": 15.44,
-   "length_m": 777,
+   "width": 15.45,
+   "length_m": 779,
    "before": {
     "on": 0.0,
     "near": 0.0,
@@ -511,7 +492,7 @@
    "moved": null
   },
   {
-   "k": 472,
+   "k": 467,
    "name": null,
    "width": 14.49,
    "length_m": 50,
@@ -530,7 +511,7 @@
    "moved": null
   },
   {
-   "k": 473,
+   "k": 468,
    "name": null,
    "width": 14.49,
    "length_m": 40,

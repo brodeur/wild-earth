@@ -57,7 +57,7 @@ from scipy.spatial import cKDTree
 
 from .config import TILE_SIZE_M, Tile
 from .erase_imagery import (PAVEMENT, _built_pixels, _footprint_mask, _gain, _human_cells, _irrigated,
-                            _kept_pavement, _rewilded_beds, _seam, _upsample_nearest, _urban)
+                            _rewilded_beds, _seam, _upsample_nearest, _urban)
 from .habitat import CLASSES, CODES
 
 Image.MAX_IMAGE_PIXELS = None
@@ -501,8 +501,10 @@ def inpaint_crowns(tile: Tile, sheet_dir: Path | None = None) -> dict:
     out = img.astype("float32") * (1 - alpha[..., None]) + fill * alpha[..., None]
     out[protect] = img[protect]
     # Minor pavement: erase_imagery faded it 70% toward the ground within 40 m, which under a stand was
-    # canopy; the same 70% of the change in that ground moves it onto the new ground. Kept roads stay.
-    kept = _kept_pavement(tile, (n, n), tr)
+    # canopy; the same 70% of the change in that ground moves it onto the new ground. (Since 2026-11-07 no road is kept:
+    # client/roads.png is 0 and the erase step has filled every road, so this finds none; a tile built before keeps its
+    # old rule, every road minor.)
+    kept = np.zeros((n, n), bool)
     minor = aux["pavement"] & ~kept
     if minor.any():
         r = max(3, int(round(40.0 / res)))

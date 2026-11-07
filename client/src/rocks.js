@@ -706,6 +706,12 @@ function rockMaterial(look, role, atmosphere) {
           } }`)
       .replace('#include <lights_phong_fragment>', `#include <lights_phong_fragment>
         material.specularShininess = mix(shininess, 45.0, rockSlick * vRockFace);`)
+      // A water-worn stone's smooth top mirrors the sky at a low eye's grazing view (round 8): Schlick's Fresnel (F0 0.04)
+      // on the sky's radiance, x0.35 for the polish's remaining roughness, on its up-facing faces. Without it a dark cobble's
+      // top, lit by a sun behind the eye, was a flat dark disc that read as a hole in the bar.
+      .replace('#include <lights_fragment_end>', role === 'peb' ? `#include <lights_fragment_end>
+        { float rC = clamp(dot(normal, normalize(vViewPosition)), 0.0, 1.0), rUp = transformNormalByInverseViewMatrix(normal, viewMatrix).y;
+          reflectedLight.indirectSpecular += vRockFace * (0.04 + 0.96 * pow(1.0 - rC, 5.0)) * 0.35 * ambientSky * 0.3183099 * max(rUp, 0.0); }` : '#include <lights_fragment_end>')
       .replace(/reflectedLight\.directDiffuse \*= (cloudOnly\(vAtmoPos\) \* csmShadow\([^;]*\));/,
         'float rockSh = $1; reflectedLight.directDiffuse *= rockSh; reflectedLight.directSpecular *= rockSh;');
   });
@@ -1260,8 +1266,9 @@ export class Rocks {
     const res = this.res, size = this.tile.size, r5 = mulberry32(hash(i, j, SALT + 17)), W = wg.width, wres = wg.res, D = wg.d;
     const base = (d.cls && LOOK[d.cls] ? LOOK[d.cls] : LOOK.alluvium).color, look = d.cls && LOOK[d.cls] ? LOOK[d.cls] : LOOK.alluvium;
     // water-worn: rounded and a little paler than the class's rock, but kept darker than the bank stones so the cobbles
-    // read against the pale sand and gravel of a dry bed (a third of them dark, wet-looking)
-    const col = () => { const dark = r5() < 0.35, t = (dark ? 0.55 : 0.8) + 0.25 * r5(), h = (r5() - 0.5) * 0.08, pale = dark ? 0.1 : 0.25 + 0.3 * r5(); return [0, 1, 2].map(c => srgb((base[c] + ([0.62, 0.6, 0.56][c] - base[c]) * pale) * t * (c === 0 ? 1 + h : c === 2 ? 1 - h : 1))); };
+    // read against the pale sand and gravel of a dry bed (a third of them dark: round 8, tone 0.7-0.95, ~0.1 linear albedo
+    // as a dry basalt or andesite cobble's; 0.55 made them near-black under the drawn bed's lit stones)
+    const col = () => { const dark = r5() < 0.35, t = (dark ? 0.7 : 0.8) + 0.25 * r5(), h = (r5() - 0.5) * 0.08, pale = dark ? 0.1 : 0.25 + 0.3 * r5(); return [0, 1, 2].map(c => srgb((base[c] + ([0.62, 0.6, 0.56][c] - base[c]) * pale) * t * (c === 0 ? 1 + h : c === 2 ? 1 - h : 1))); };
     const x0 = i * res, n1 = size - j * res, k = Math.max(1, Math.round(res / wres));
     const px0 = Math.round(x0 / wres), py0 = Math.round((size - n1) / wres);
     let kb = 0;
@@ -1283,20 +1290,22 @@ export class Rocks {
       const o = (cy * W + cx) * 4, zone = D[o] & 15; if (zone !== 1 && zone !== 2) continue;
       const mat = D[o + 1] & 7, bar = (D[o + 1] & 8) !== 0, half = D[o + 3] * 0.1;
       if (mat < 2) continue;
-      // round 6: a stone in the channel's own cells is damp (x0.7; terrain.js darkens the bed there x0.55), so the bed's pale
-      // dry pebbles no longer float white over it (round 7: x0.6 made the darkest of them read as holes in the drawn bed)
-      const wcol = zone === 1 ? () => col().map(v => v * 0.7) : col;
+      // wet by its ground's height over the water (round 8; terrain.js darkens the bed the same way): x0.7 at the water's
+      // edge and under it (where the water is drawn over a stone it tints it itself), dry by 0.4 m over it. Round 6-7
+      // darkened every stone in the channel's cells (x0.7), and with the dark third's tone the visible ones, mostly over the
+      // water, were near-black discs that read as holes.
+      const wcol = (x, n) => { const L = wg.level(x, n), h = L === null ? 1 : this.meshH(x, n) - L, f = 0.7 + 0.3 * smooth(0, 0.4, h); return col().map(v => v * f); };
       const big = Math.min(1.6, 0.7 + 0.12 * half);   // cobbles grow with the channel
       const wx0 = cx * wres, wn1 = size - cy * wres;
       const at = () => [wx0 + r5() * wres, wn1 - r5() * wres];
       // a bed on bare rock past ~30 degrees is the bare slab (loose()): its cobbles and boulders are drawn, not placed
       const bare = !this.loose(wx0 + wres / 2, wn1 - wres / 2);
       pebble = bare ? noPebble : keep;
-      if (mat === 2) { const n = r5() < 0.5 ? 3 + Math.floor(r5() * 6) : 0; for (let m = 0; m < n; m++) { const [x, n2] = at(); pebble(x, n2, 0.04 + 0.1 * r5(), 1, r5, wcol()); } continue; }
-      if (mat === 3) { const n = Math.floor((26 + 24 * r5()) * (bar ? 2 : 1)); for (let m = 0; m < n; m++) { const [x, n2] = at(); pebble(x, n2, (0.05 + 0.14 * Math.pow(r5(), 1.2)) * (bar ? 1.3 : 1) * big, 1, r5, wcol()); } continue; }
+      if (mat === 2) { const n = r5() < 0.5 ? 3 + Math.floor(r5() * 6) : 0; for (let m = 0; m < n; m++) { const [x, n2] = at(); pebble(x, n2, 0.04 + 0.1 * r5(), 1, r5, wcol(x, n2)); } continue; }
+      if (mat === 3) { const n = Math.floor((26 + 24 * r5()) * (bar ? 2 : 1)); for (let m = 0; m < n; m++) { const [x, n2] = at(); pebble(x, n2, (0.05 + 0.14 * Math.pow(r5(), 1.2)) * (bar ? 1.3 : 1) * big, 1, r5, wcol(x, n2)); } continue; }
       if (mat === 4) {
         const n = Math.floor((22 + 18 * r5()) * (bar ? 1.6 : 1));
-        for (let m = 0; m < n; m++) { const [x, n2] = at(); pebble(x, n2, Math.min(0.39, (0.1 + 0.32 * Math.pow(r5(), 1.3)) * big), 1, r5, wcol()); }
+        for (let m = 0; m < n; m++) { const [x, n2] = at(); pebble(x, n2, Math.min(0.39, (0.1 + 0.32 * Math.pow(r5(), 1.3)) * big), 1, r5, wcol(x, n2)); }
         const nb = r5() < 0.75 ? 1 + Math.floor(r5() * 2) : 0;
         for (let m = 0; m < nb; m++) { const [x, n2] = at(); boulder(x, n2, (0.4 + 0.5 * r5()) * big); }
         continue;

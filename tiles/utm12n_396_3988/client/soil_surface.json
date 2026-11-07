@@ -1,0 +1,606 @@
+{
+ "encoding": "mapunits keyed by client/soils.png R (soils/classes.json); rgb: the dry surface soil's linear sRGB reflectance; litter_share: litter / (litter + bare ground) between the plants",
+ "default": {
+  "dry": "10YR 5/3",
+  "rgb": [
+   0.2637,
+   0.1799,
+   0.1105
+  ],
+  "litter_share": 0.606,
+  "ground": {
+   "plant": 0.7,
+   "litter": 0.2,
+   "bare": 0.08,
+   "crust": 0.02
+  }
+ },
+ "crust": {
+  "dry": "5GY 3/1",
+  "rgb": [
+   0.0641,
+   0.0651,
+   0.0517
+  ]
+ },
+ "version": "1",
+ "rules": {
+  "colour": "the first mineral horizon of the largest non-miscellaneous component's Official Series Description (dry), else its soil order's typical surface (DEFAULT_BY_ORDER), else SoilGrids organic carbon (dry value 6.5 - 1.6 log2(1 + SOC %), 10YR, chroma 3)",
+  "munsell": "ASTM D1535 value, chroma x (3.8 + 0.4 value) in CIELAB, hue by the renotation's angles at value 5; Lab D65 to linear sRGB",
+  "litter_share": "litter / (litter + bare ground), the middles of the component's NRCS ecological site reference sheet ranges (EDIT); else the tile's sheet-weighted mean",
+  "ground": "the surface by the sheets (plant canopy, litter, bare ground, crust: range middles, as shares of their sum), weighted by component share; units without a sheet the tile's area-weighted mean",
+  "crust": "biological crust and moss, dry: a stated dark grey-green chip (CRUST_COLOUR)"
+ },
+ "mapunits": {
+  "1": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Aridisols",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "2": {
+   "dry": "7.5YR 5/4",
+   "moist": "5YR 4/3",
+   "colour_from": "osd TOVAR A",
+   "rgb": [
+    0.3047,
+    0.1694,
+    0.0941
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "3": {
+   "dry": "10YR 3/3",
+   "moist": "7.5YR 3/2",
+   "colour_from": "osd POCOMATE A",
+   "rgb": [
+    0.0927,
+    0.0587,
+    0.0312
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "4": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Entisols",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "5": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Entisols",
+   "crust": "Basal cover ranges 0-3% (shrubs - grasses) for vascular plants and 0-10% for biological crust (cyanobacteria > lichen > moss).",
+   "litter_share": 0.667,
+   "litter_from": "esd R035XF601AZ Lithic Ustic Torriorthents 70 %: litter 10-20, bare 5-10",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean"
+  },
+  "6": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Aridisols",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "7": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Entisols",
+   "crust": "Basal cover ranges 0-3% (shrubs - grasses) for vascular plants and 0-10% for biological crust (cyanobacteria > lichen > moss).",
+   "litter_share": 0.667,
+   "litter_from": "esd R035XF601AZ Skos family 55 %: litter 10-20, bare 5-10",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean"
+  },
+  "8": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Entisols",
+   "crust": "Basal cover ranges 0-2% (shrubs > grasses = forbs > trees) for vascular plants and 0-1% for biological crust (cyanobacteria > lichen > moss).",
+   "litter_share": 0.5,
+   "litter_from": "esd R035XC302AZ Lithic Ustic Torriorthents 35 %: litter 5-10, bare 5-10; R035XC302AZ Ustic Haplocalcids 20 %: litter 5-10, bare 5-10",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean"
+  },
+  "9": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Entisols",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "10": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Aridisols",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "11": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Entisols",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "12": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Entisols",
+   "crust": "Basal cover ranges 0-2% (shrubs > grasses = forbs > trees) for vascular plants and 0-1% for biological crust (cyanobacteria > lichen > moss).",
+   "litter_share": 0.5,
+   "litter_from": "esd R035XC302AZ Skos family 35 %: litter 5-10, bare 5-10; R035XC302AZ Seis family 20 %: litter 5-10, bare 5-10",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean"
+  },
+  "13": {
+   "dry": "10YR 3/3",
+   "moist": "7.5YR 3/2",
+   "colour_from": "osd POCOMATE A",
+   "rgb": [
+    0.0927,
+    0.0587,
+    0.0312
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "14": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Aridisols",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "15": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Aridisols",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "16": {
+   "dry": "10YR 5/3",
+   "moist": "10YR 3/3",
+   "colour_from": "osd YUMTHESKA A",
+   "rgb": [
+    0.2637,
+    0.1799,
+    0.1105
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "17": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Entisols",
+   "crust": "Basal cover ranges 0-3% (shrubs - grasses) for vascular plants and 0-10% for biological crust (cyanobacteria > lichen > moss).",
+   "litter_share": 0.667,
+   "litter_from": "esd R035XF601AZ Skos family 40 %: litter 10-20, bare 5-10",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean"
+  },
+  "18": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Entisols",
+   "crust": "Basal cover ranges 0-3% (shrubs - grasses) for vascular plants and 0-10% for biological crust (cyanobacteria > lichen > moss).",
+   "litter_share": 0.667,
+   "litter_from": "esd R035XF601AZ Lithic Ustic Torriorthents 50 %: litter 10-20, bare 5-10",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean"
+  },
+  "19": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Aridisols",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "20": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Aridisols",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "21": {
+   "dry": "10YR 5/3",
+   "colour_from": "default",
+   "rgb": [
+    0.2637,
+    0.1799,
+    0.1105
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "22": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Aridisols",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "23": {
+   "dry": "10YR 5/3",
+   "moist": "10YR 3/3",
+   "colour_from": "osd YUMTHESKA A",
+   "rgb": [
+    0.2637,
+    0.1799,
+    0.1105
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "24": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Aridisols",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "25": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Entisols",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "26": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Entisols",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "27": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Aridisols",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "28": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Entisols",
+   "crust": "Basal cover ranges 0-2% (shrubs > grasses = forbs > trees) for vascular plants and 0-1% for biological crust (cyanobacteria > lichen > moss).",
+   "litter_share": 0.5,
+   "litter_from": "esd R035XC302AZ Orthents 80 %: litter 5-10, bare 5-10",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean"
+  },
+  "29": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Entisols",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "30": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Entisols",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  },
+  "31": {
+   "dry": "10YR 6/3",
+   "colour_from": "order Aridisols",
+   "rgb": [
+    0.3938,
+    0.2749,
+    0.1756
+   ],
+   "ground": {
+    "plant": 0.7,
+    "litter": 0.2,
+    "bare": 0.08,
+    "crust": 0.02
+   },
+   "ground_from": "the tile's sheet-weighted mean",
+   "litter_share": 0.606,
+   "litter_from": "the tile's sheet-weighted mean"
+  }
+ }
+}
