@@ -259,6 +259,14 @@ def _substrate(tile, m, force):
         add_layer(m, tile, k, v, fetched=False)
 
 
+def _soil_surface(tile, m, force):
+    # the ground between the plants: the surface soil's dry colour (its series' Official Series Description) and the litter's
+    # share of the exposed ground (its ecological site's reference sheet), per soil map unit (pipeline/soil_surface.py)
+    from .soil_surface import build_soil_surface
+    for k, v in build_soil_surface(tile, force).items():
+        add_layer(m, tile, k, v)
+
+
 def _species(tile, m, force):
     from .fetch_species import fetch_species
     for k, v in fetch_species(tile, force).items():
@@ -623,6 +631,8 @@ STEPS: dict[str, Step] = {s.name: s for s in [
          ["client.texture_imagery"], doc="the imagery with the human footprint removed", stage=B),
     Step("substrate", "1", ["substrate"], ["ground", "water", "dem", "lidar", "naip", "landcover", "erase", "terrain", "ice"],
          _substrate, ["client.substrate", "client.substrate_classes"], doc="lithology, cliff morphology, exposed rock", stage=B),
+    Step("soil_surface", "1", ["soil_surface"], ["ground"], _soil_surface, ["client.soil_surface"], ["usda_sda"],
+         doc="the ground between the plants: surface soil colour (OSD) and litter share (ecological site sheets)", stage=B),
     Step("ground_albedo", "2", ["ground_albedo"], ["seasons", "erase", "terrain"], _ground_albedo, ["client.ground_albedo"], [],
          doc="the ground texture's factor to surface reflectance, fitted against the Sentinel-2 composite", stage=B),
     Step("weather", "1", ["fetch_weather"], [], _weather, ["client.weather"], ["open_meteo"],

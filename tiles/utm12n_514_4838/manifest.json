@@ -15,7 +15,7 @@
   43.78492414769734
  ],
  "size_m": 10000,
- "generated_at": "2026-11-07T03:38:57Z",
+ "generated_at": "2026-11-07T05:10:27Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -8184,6 +8184,21 @@
    "retrieved": "2026-11-07",
    "sha256": "04eaad33b41515dfd3d3f7b14bcc805748c174589810959d7efc22d4d009f7fa",
    "bytes": 1061
+  },
+  "client.soil_surface": {
+   "path": "client/soil_surface.json",
+   "kind": "table",
+   "derived_from": "soils.classes",
+   "source": "usda_osd",
+   "sources_used": [
+    "usda_osd",
+    "usda_edit"
+   ],
+   "mapunits": 20,
+   "colour_from_osd": 17,
+   "litter_from_esd": 16,
+   "sha256": "e013acd58e1469f2f86d89edb80234c13336762c7e900cfdd2475ae92d97e5ff",
+   "bytes": 10300
   }
  },
  "sources": {
@@ -8379,6 +8394,26 @@
    "attribution": "Indigenous territories: Native Land Digital (native-land.ca). Their map does not represent or intend to represent official or legal boundaries of any Indigenous nation.",
    "attribution_url": "https://native-land.ca",
    "attribution_required": true,
+   "retrieved": "2026-11-07"
+  },
+  "usda_osd": {
+   "name": "USDA NRCS Official Soil Series Descriptions",
+   "url": "https://soilseries.sc.egov.usda.gov/",
+   "license": "public domain",
+   "license_url": "https://www.usa.gov/government-copyright",
+   "attribution": "Soil Survey Staff, Natural Resources Conservation Service, U.S. Department of Agriculture. Official Soil Series Descriptions",
+   "attribution_url": "https://www.nrcs.usda.gov/resources/data-and-reports/official-soil-series-descriptions-osd",
+   "attribution_required": false,
+   "retrieved": "2026-11-07"
+  },
+  "usda_edit": {
+   "name": "USDA NRCS Ecological Site Descriptions via the Ecosystem Dynamics Interpretive Tool (EDIT)",
+   "url": "https://edit.sc.egov.usda.gov/",
+   "license": "public domain",
+   "license_url": "https://www.usa.gov/government-copyright",
+   "attribution": "Ecological site descriptions: USDA Natural Resources Conservation Service, Ecosystem Dynamics Interpretive Tool (EDIT)",
+   "attribution_url": "https://edit.jornada.nmsu.edu/",
+   "attribution_required": false,
    "retrieved": "2026-11-07"
   }
  },
@@ -9269,6 +9304,36 @@
    "step": "territories",
    "at": "2026-11-07T03:38:57Z",
    "seconds": 1.9,
+   "ok": true
+  },
+  {
+   "step": "soil_surface",
+   "at": "2026-11-07T04:22:02Z",
+   "seconds": 31.3,
+   "ok": true
+  },
+  {
+   "step": "soil_surface",
+   "at": "2026-11-07T05:01:05Z",
+   "seconds": 1.2,
+   "ok": true
+  },
+  {
+   "step": "soil_surface",
+   "at": "2026-11-07T05:10:01Z",
+   "seconds": 0.3,
+   "ok": true
+  },
+  {
+   "step": "soil_surface",
+   "at": "2026-11-07T05:10:12Z",
+   "seconds": 0.3,
+   "ok": true
+  },
+  {
+   "step": "soil_surface",
+   "at": "2026-11-07T05:10:27Z",
+   "seconds": 0.4,
    "ok": true
   }
  ],
@@ -10966,6 +11031,46 @@
     "cache": 0
    },
    "seconds": 1.9
+  },
+  "soil_surface": {
+   "version": "1",
+   "code": "c39f11bf99c3fe1e",
+   "params": {
+    "tile": "utm12n_514_4838"
+   },
+   "fingerprint": "7b1a0430dca27a1e",
+   "parts": {
+    "version": "1",
+    "code": "c39f11bf99c3fe1e",
+    "params": {
+     "tile": "utm12n_514_4838"
+    },
+    "deps": {
+     "ground": "5d4211f9eb307d9b"
+    },
+    "library": {}
+   },
+   "ran_at": "2026-11-07T05:10:26Z",
+   "owner": null,
+   "status": "ok",
+   "layers": [
+    "client.soil_surface"
+   ],
+   "outputs": {
+    "client/soil_surface.json": "e013acd58e1469f2"
+   },
+   "out_hash": "10f4e94288296d08",
+   "sources": {
+    "usda_osd": "2026-11-07",
+    "usda_edit": "2026-11-07"
+   },
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 23
+   },
+   "seconds": 0.4
   }
  },
  "seams": {

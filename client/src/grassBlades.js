@@ -204,12 +204,23 @@ export function buildTussockClump(seed = 23) {
 // (radius 0.5), a dense fountain of narrow leaves from a crown half its width (Idaho fescue: a 10 cm base under a 20 cm tuft,
 // FEIS), most upright, a ring arching out at the rim, and seven flowering culms 2.2-2.8x the leaves (PLANTS' mature height is
 // the culms', the tuft 0.35 of it) with a narrow head of spikelets close along the top. The leaves are drawn wider than a
-// fescue's real 1-2 mm (about 4 % of the tuft's width: 8 mm on a 0.19 m tuft), so 70 of them carry the mass of hundreds;
+// fescue's real 1-2 mm (about 3 % of the tuft's width: 6 mm on a 0.19 m tuft), so 90 of them carry the mass of hundreds;
 // three segments a leaf (a tuft is 10-40 cm: the needlegrass tussock's four bought nothing visible at 14 tufts per m^2).
+// Near tufts (2026-11-06, eye level): 70 leaves 4 % wide, mostly straight, read as a few dark spikes; now 90 narrower
+// ones (the same leaf area) arching more, so the tuft is a rounded fountain of fine leaves. Each leaf's random (aBlade.y)
+// is its age rank: the rim ring's arching leaves are the oldest (0 .. 0.29), the upright inner ones the youngest, so
+// grass.js draws a plant's share of dead leaves (last years', standing in the tuft) as its lowest ranks: at the rim and the
+// base first, where a bunchgrass holds them (tuftEnvelope gives the light model its leaf area and envelope).
+export const TUFT_RIM = 26, TUFT_INNER = 64;
 export function buildTuftClump(seed = 29) {
-  const rnd = mulberry32(seed), B = new ClumpBuilder();
-  for (let i = 0; i < 52; i++) leaf(B, rnd, { spread: 0.2, theta: [0.04, 0.34], droop: [0.2, 0.7], len: [0.8, 1.15], width: [0.034, 0.05], segs: 3 });
-  for (let i = 0; i < 18; i++) leaf(B, rnd, { spread: 0.25, theta: [0.4, 0.75], droop: [0.5, 1.1], len: [0.6, 0.85], width: [0.034, 0.05], segs: 3 });
+  const rnd = mulberry32(seed), B = new ClumpBuilder(), leaves = [];
+  const add = (opts, rim) => { const v0 = B.p.length / 3; leaf(B, rnd, opts); leaves.push([v0, B.p.length / 3, rim]); };
+  for (let i = 0; i < TUFT_INNER; i++) add({ spread: 0.18, theta: [0.05, 0.4], droop: [0.35, 1.0], len: [0.8, 1.15], width: [0.026, 0.038], segs: 3 }, false);
+  for (let i = 0; i < TUFT_RIM; i++) add({ spread: 0.24, theta: [0.45, 0.85], droop: [0.7, 1.4], len: [0.55, 0.85], width: [0.026, 0.038], segs: 3 }, true);
+  // age ranks: a shuffled order within each group, the rim's below the inner leaves'
+  const order = g => { const ix = leaves.map((l, i) => i).filter(i => leaves[i][2] === g); for (let i = ix.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [ix[i], ix[j]] = [ix[j], ix[i]]; } return ix; };
+  const rim = order(true), inner = order(false), n = leaves.length;
+  [...rim, ...inner].forEach((li, rank) => { const [v0, v1] = leaves[li], r = (rank + 0.5) / n; for (let v = v0; v < v1; v++) B.b[v * 4 + 1] = r; });
   for (let i = 0; i < 7; i++) {
     const c = culm(B, rnd, { spread: 0.16, theta: [0.03, 0.22], droop: [0.04, 0.2], len: [2.2, 2.8], width: 0.009 });
     for (let s = 0; s < 4; s++) {
@@ -220,6 +231,28 @@ export function buildTuftClump(seed = 29) {
     }
   }
   return B.geometry();
+}
+
+// The tuft as a porous volume (grass.js's tuft light): the envelope its leaves fill (a cylinder: R the radius holding 90 % of
+// the leaf area, H the height under which 90 % of it lies, unit tuft) and the extinction coefficient of light through it,
+// k = G x leaf area density (one-sided leaf area / the envelope's volume, G = 0.5 for leaves at all angles), so light that
+// travels a distance s through the tuft keeps exp(-k s) (Beer's law, as the shrub lane's crowns). From the drawn clump
+// itself: the same leaves that light passes between are the ones the eye sees between.
+export function tuftEnvelope(geo) {
+  const p = geo.attributes.position.array, b = geo.attributes.aBlade.array, idx = geo.index.array, tri = [];
+  let area = 0;
+  for (let i = 0; i < idx.length; i += 3) {
+    const a = idx[i], c = idx[i + 1], d = idx[i + 2];
+    if (b[a * 4 + 2] > 0.5) continue;   // leaves only
+    const ux = p[c * 3] - p[a * 3], uy = p[c * 3 + 1] - p[a * 3 + 1], uz = p[c * 3 + 2] - p[a * 3 + 2];
+    const vx = p[d * 3] - p[a * 3], vy = p[d * 3 + 1] - p[a * 3 + 1], vz = p[d * 3 + 2] - p[a * 3 + 2];
+    const A = 0.5 * Math.hypot(uy * vz - uz * vy, uz * vx - ux * vz, ux * vy - uy * vx);
+    const cx = (p[a * 3] + p[c * 3] + p[d * 3]) / 3, cy = (p[a * 3 + 1] + p[c * 3 + 1] + p[d * 3 + 1]) / 3, cz = (p[a * 3 + 2] + p[c * 3 + 2] + p[d * 3 + 2]) / 3;
+    tri.push([Math.hypot(cx, cz), cy, A]); area += A;
+  }
+  const q90 = k => { const s = tri.slice().sort((x, y) => x[k] - y[k]); let acc = 0; for (const t of s) { acc += t[2]; if (acc >= 0.9 * area) return t[k]; } return s[s.length - 1][k]; };
+  const R = q90(0), H = q90(1);
+  return { R, H, k: 0.5 * area / (Math.PI * R * R * H), area };
 }
 
 // An annual that carries a wild oat card (grass.js): wild oat itself, taller than the bromes and

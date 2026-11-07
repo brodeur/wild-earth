@@ -7304,3 +7304,27 @@ glottal stop is itself drawn like a question mark without its dot, so at 12 px i
   intent, used when the old pose's row has changed under it). Teton's b_sage_eye [8500, 2000] stood in lodgepole forest
   after the rebuilds; the rule starts from the nearest row naming Sagebrush (row 50, montane sagebrush steppe) and
   applies the same shrub-cover, sward, road and water tests: [8816, 1880], 338 m off, shrub 32 % (row median 28 %).
+- **Near tufts lit as porous volumes, varying plant to plant by data; the ground between them from the soil survey's
+  whole ground cover** (grass.js tuftLight/SP_CURE_GLSL/thatchTuft, grassBlades.js buildTuftClump, terrain.js
+  gapSoil/gapLitter/updateGap, litter.js gapLitterPalette; new step `soil_surface` v1, pipeline/soil_surface.py,
+  client/soil_surface.json).
+  - *Why tufts read dark and spiky*: the palette's root was already a shaded sward base and the sward light darkened the
+    lower half again; 70 wide straight leaves drew as spikes. Now a leaf is its tip colour along its length, lit through
+    the leaves around it by Beer's law (envelope and density from the drawn clump), with a cuticle sheen (0.04 face-on to
+    0.34 edge-on) for the grey cast; 90 narrower arching leaves, same leaf area.
+  - *Dead leaves and plant-to-plant variation*: grey-straw leaves at the rim and base at the plant's dead share (season
+    curve, a stated year's residence; Lamar 15 June 0.22); size lognormal about the record's tuft (sigma 0.255 from FEIS's
+    15-25 cm, cover kept); each plant's phenology up to ±12 days off its species', so its curing spread follows the
+    species' curve (Sandberg bluegrass 0.16-0.40, squirreltail 0.70-1.0).
+  - *The ground between*: SDA has no horizon colour table, so the soil surface step reads each map unit's dry surface
+    Munsell colour from its Official Series Description (preferring a rangeland component; Lamar 23 of 23 units) and the
+    whole cover from the NRCS ecological site reference sheets: plant canopy, litter, bare ground, biological crust
+    (Lamar mean 0.75 / 0.17 / 0.07 / 0.01; units without a sheet take the tile mean). Within 45 m (fading from 12 m) the
+    visible ground splits into litter under drawn shrubs, the herbs the drawn tufts and shrubs don't account for (taking
+    the photo's colour unmixed of the tufts), and litter, crust and bare soil patches at the sheet's proportions, whose
+    mean is tied to the photo: no ring at 12-45 m. The first round (soil and litter only) drew a bare pink desert, Teton
+    salmon (dry 10YR-7.5YR soil drawn as most of the ground; no red source); refused.
+  - Lamar eye-pose band means near/far L 45.7/44.8 (HEAD 43.3/42.7). From the air ΔE 0.001. Home and the Serengeti are
+    unchanged by construction. Cost: under a shared GPU, +0.9 ms paired median (IQR -6.9..+4.7) on ~30 ms frames; no
+    sampler added. Open: near ground reads smooth (bare patches faint at 5-10 %, herbs flat colour); Teton's gap reads as
+    a flat dark slab (the photo's colour, no texture); 6 mm leaves for a fescue's 1-2 mm; the stated values above.
