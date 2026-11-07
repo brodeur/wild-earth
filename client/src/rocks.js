@@ -1283,9 +1283,9 @@ export class Rocks {
       const o = (cy * W + cx) * 4, zone = D[o] & 15; if (zone !== 1 && zone !== 2) continue;
       const mat = D[o + 1] & 7, bar = (D[o + 1] & 8) !== 0, half = D[o + 3] * 0.1;
       if (mat < 2) continue;
-      // round 6: a stone in the channel's own cells is wet (x0.6, as terrain.js darkens the bed there), so the bed's pale
-      // dry pebbles no longer float white over it
-      const wcol = zone === 1 ? () => col().map(v => v * 0.6) : col;
+      // round 6: a stone in the channel's own cells is damp (x0.7; terrain.js darkens the bed there x0.55), so the bed's pale
+      // dry pebbles no longer float white over it (round 7: x0.6 made the darkest of them read as holes in the drawn bed)
+      const wcol = zone === 1 ? () => col().map(v => v * 0.7) : col;
       const big = Math.min(1.6, 0.7 + 0.12 * half);   // cobbles grow with the channel
       const wx0 = cx * wres, wn1 = size - cy * wres;
       const at = () => [wx0 + r5() * wres, wn1 - r5() * wres];
