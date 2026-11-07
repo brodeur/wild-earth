@@ -5,7 +5,7 @@
   "client.canopy",
   "client.habitat"
  ],
- "encoding": "gain: per channel (linear R G B) the factor from the ground texture's linear colour to surface reflectance; the client multiplies the ground and the herb layer's albedo by it",
+ "encoding": "gain: per channel (linear R G B) the factor from the ground texture's linear colour to surface reflectance; the client multiplies the ground and the herb layer's albedo by it (by its luminance, gain_luminance, by default); saturation: the chroma scale about the luminance (Rec. 601) that the client applies with the luminance factor",
  "method": "sum of the reference month's L2A reflectance over the sum of the texture's linear colour, open ground (tree < 10 %, shrub < 15 %, not water or built), 20 m",
  "imagery": {
   "source": "sentinel2_l2a",
@@ -18,6 +18,9 @@
   0.5053
  ],
  "gain_luminance": 0.4724,
+ "saturation": 0.898,
+ "chroma_ratio": 0.898,
+ "saturation_fit": 0.864,
  "reference": "seasons/s2_07.tif",
  "reference_month": 7,
  "open_pixels": 1131,

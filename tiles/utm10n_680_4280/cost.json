@@ -96,16 +96,16 @@
    },
    "status": "ok"
   },
-  "territories": {
+  "ground_albedo": {
    "stage": "base",
-   "started_at": "2026-11-07T02:12:05Z",
-   "ended_at": "2026-11-07T02:12:05Z",
-   "wall_s": 0.3,
-   "cpu_self_s": 0.2,
+   "started_at": "2026-11-07T01:43:20Z",
+   "ended_at": "2026-11-07T01:43:23Z",
+   "wall_s": 2.7,
+   "cpu_self_s": 1.9,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {},
-   "disk_bytes": 719,
+   "disk_bytes": 1128,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -116,14 +116,14 @@
  },
  "stages": {
   "base": {
-   "started_at": "2026-11-07T02:12:05Z",
-   "ended_at": "2026-11-07T02:12:06Z",
-   "wall_s": 120.3,
-   "cpu_s": 63.4,
+   "started_at": "2026-11-07T01:43:20Z",
+   "ended_at": "2026-11-07T01:43:23Z",
+   "wall_s": 122.7,
+   "cpu_s": 65.1,
    "download_bytes": 0,
    "cache_hits": 0,
    "cache_misses": 1,
-   "disk_bytes": 71441779,
+   "disk_bytes": 71442188,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -217,43 +217,77 @@
    "failed": []
   },
   {
-   "started_at": "2026-11-07T02:09:07Z",
+   "started_at": "2026-11-07T01:41:05Z",
    "stages": [
     {
      "stage": "base",
-     "started_at": "2026-11-07T02:09:07Z",
+     "started_at": "2026-11-07T01:41:05Z",
      "steps_run": [
-      "territories"
+      "ground_albedo"
      ],
      "steps_skipped": [],
-     "ended_at": "2026-11-07T02:09:10Z"
+     "ended_at": "2026-11-07T01:41:08Z"
     }
    ],
-   "ended_at": "2026-11-07T02:09:10Z",
+   "ended_at": "2026-11-07T01:41:08Z",
    "failed": [],
    "refused": []
   },
   {
-   "started_at": "2026-11-07T02:12:05Z",
+   "started_at": "2026-11-07T01:41:31Z",
    "stages": [
     {
      "stage": "base",
-     "started_at": "2026-11-07T02:12:05Z",
+     "started_at": "2026-11-07T01:41:31Z",
      "steps_run": [
-      "territories"
+      "ground_albedo"
      ],
      "steps_skipped": [],
-     "ended_at": "2026-11-07T02:12:06Z"
+     "ended_at": "2026-11-07T01:41:33Z"
     }
    ],
-   "ended_at": "2026-11-07T02:12:06Z",
+   "ended_at": "2026-11-07T01:41:33Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T01:42:35Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T01:42:35Z",
+     "steps_run": [
+      "ground_albedo"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T01:42:38Z"
+    }
+   ],
+   "ended_at": "2026-11-07T01:42:38Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T01:43:20Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T01:43:20Z",
+     "steps_run": [
+      "ground_albedo"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T01:43:23Z"
+    }
+   ],
+   "ended_at": "2026-11-07T01:43:23Z",
    "failed": [],
    "refused": []
   }
  ],
  "client": {
-  "bytes": 71297005,
-  "files": 51,
+  "bytes": 71296192,
+  "files": 50,
   "largest": {
    "client/lidar_micro.png": 12956377,
    "client/terrain_detail.png": 9292444,
@@ -271,14 +305,14 @@
   "note": "every file under client/ and the tables the viewer fetches; an upper bound (the present-day texture is fetched only on request)"
  },
  "totals": {
-  "wall_s": 145.0,
-  "cpu_s": 79.8,
+  "wall_s": 147.4,
+  "cpu_s": 81.5,
   "download_bytes": 0,
   "cache_hits": 1,
   "cache_misses": 1,
-  "disk_bytes": 71491745,
+  "disk_bytes": 71492154,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 0
  },
- "updated_at": "2026-11-07T02:12:06Z"
+ "updated_at": "2026-11-07T01:43:23Z"
 }

@@ -44,6 +44,10 @@ in it is per species:
             is always the texture reference (its pose comes from the prompt). The photo and its attribution (licence,
             author, page) go into the job's folder (reference.jpg / reference.json) and into models.json. --redo runs it
             for the species named; the judge records its verdict on the new model with --judge;
+  accept    the acceptance rule (iteration 10; acceptance(), the section "model acceptance as a rule"): built, the build's
+            gate, the appearance check with the thresholds fitted to the recorded verdicts; a recorded verdict (an
+            override, the judge's) overrides it as an explicit stage, the rule's decision kept beside it; model_for
+            serves by it; recorded in models.json `acceptance` on every register, rebuild, re-texture and verdict;
   record    library/animals/models.json: per species the GLB, the jobs, credits spent, attempts; and the run's ledger
             (credits by species, retries, modelled vs stand-in) in the tile's fauna/models_run.json.
 
@@ -55,6 +59,8 @@ Credits are spent only from this command, never from a tile build:
   arch -arm64 .venv/bin/python -m pipeline.fauna_models <tile> --rebuild [--codes a,b]
   arch -arm64 .venv/bin/python -m pipeline.fauna_models <tile> --redo --codes a,b --budget 120 [--reserve 737] [--dry-run]
   arch -arm64 .venv/bin/python -m pipeline.fauna_models <tile> --judge <code> --verdict accepted|rejected --why "..."
+  arch -arm64 .venv/bin/python -m pipeline.fauna_models --accept [--codes a,b] [--regate]   # the rule on every model, no credits
+  arch -arm64 .venv/bin/python -m pipeline.fauna_models --fit-accept                       # the rule against the recorded verdicts
 
 The balance is read before every job; nothing is submitted that would take it under the reserve.
 """
@@ -112,12 +118,13 @@ def model_for(code: str) -> dict | None:
     """The client model of a species if the library has one (registered in library/animals/models.json, its GLB and
     clips in client/assets/fauna/): the fauna slot's `model` field (pipeline/fauna_slots.py)."""
     e = registry().get("species", {}).get(code)
-    # the judge's verdict (library/animals/models.json `judge`): a model that fails a species' defining feature (a
-    # mountain goat with an ibex's horns, a badger with a raccoon's ringed tail) is not drawn; the slot keeps its stand-in
-    # and the paid job stays for a retry from a reference image
-    if e and (e.get("judge") or {}).get("verdict") == "rejected":
-        return None
     if not e or not (ASSETS / f"{code}.glb").exists():
+        return None
+    # the acceptance rule (iteration 10, acceptance below): a model is drawn when the rule accepts it (built, the build's
+    # gate, the fitted appearance check), unless a recorded verdict overrides the rule (an `override`, the judge's verdict
+    # on this model, a `verdicts` entry): a model that fails its species (a mountain goat with an ibex's horns, a badger
+    # with a raccoon's ringed tail) is not drawn; the slot keeps its stand-in and the paid job stays for the next rung
+    if not served_by_rule(code, e):
         return None
     if e.get("kind") == "bird":   # the part rig (tools/build_bird.py): no skin, no clips
         return {"path": f"fauna/{code}.glb", "kind": "bird", "archetype": e.get("archetype"), "skin": False}
@@ -491,9 +498,13 @@ def register(reg: dict, code: str, jobs: list[str], credits: int, attempts: int,
                               "credits": e.get("credits", 0) + credits, "attempts": e.get("attempts", 0) + attempts,
                               "built": dt.date.today().isoformat(),
                               "build": {"snake": "tools/build_snake.py", "reptile": "tools/build_reptile.py", "bird": "tools/build_bird.py"}.get(kind, "tools/build_quadruped.py"),
-                              "tile": e.get("tile", tile_id), **({"archetype": arch} if arch else {})}
+                              "tile": e.get("tile", tile_id), **({"archetype": arch} if arch else {}),
+                              # the recorded verdicts and overrides name their models: they stay with the species
+                              **{k: e[k] for k in ("verdicts", "override") if e.get(k)}}
     REGISTRY.write_text(json.dumps(fresh, indent=1) + "\n")
     reg.setdefault("species", {}).update(fresh["species"])
+    record_acceptance(code)
+    reg["species"][code] = registry()["species"][code]
 
 
 def rebuild(tile_id: str, codes: list[str] | None = None) -> dict:
@@ -506,6 +517,8 @@ def rebuild(tile_id: str, codes: list[str] | None = None) -> dict:
         ok, log = build(code, jobs[-1], tile_id, e.get("archetype") if e.get("kind") == "bird" else None,
                         e.get("archetype") if e.get("kind") == "reptile" else None, e.get("kind") == "snake") if jobs else (False, "no refine job")
         out[code] = ok
+        if ok:
+            record_acceptance(code)
         print(f"{code}: {'rebuilt' if ok else 'FAILED: ' + log.splitlines()[-1] if log else 'FAILED'}", flush=True)
     return out
 
@@ -568,6 +581,7 @@ def recolour_library(tile_id: str, budget: int, reserve: int, codes: list[str] |
                                  **({"built": dt.date.today().isoformat()} if rec.get("kept") == "new" else {}),
                                  "colour_check": rec.get("after") if rec.get("kept") == "new" else rec.get("before")}
         REGISTRY.write_text(json.dumps(reg2, indent=1) + "\n")
+        record_acceptance(code)
         print(f"{code}: re-refined ({rec.get('error') or 'kept the ' + rec['kept'] + ' build'}), "
               f"score {(rec.get('before') or {}).get('score')} -> {(rec.get('after') or {}).get('score')}", flush=True)
     led["spent"] = spent
@@ -619,7 +633,7 @@ def photo_rung(code: str, tile_id: str, mode: str, slot: dict | None = None) -> 
     kind, arch = _kind_arch(code, slot)
     rec = {"at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), "rung": "photo", "mode": mode, "credits": 0}
     used = {(h.get("reference") or {}).get("id") for h in (registry().get("species", {}).get(code) or {}).get("photo", [])}
-    refs = rp.ranked(code, skip=used, n=1)
+    refs = rp.ranked(code, skip=used, n=1, use="image" if mode == "image" else "texture")
     ref = refs[0] if refs else None
     if not ref or not ref.get("file_crop"):
         rec["error"] = "no reference photo left"; return rec
@@ -685,28 +699,26 @@ def photo_rung(code: str, tile_id: str, mode: str, slot: dict | None = None) -> 
             e["judge"] = {**e["judge"], "stale": f"the model was rebuilt from {rec['job']} on {e['built']}; the judge has not looked again"}
     reg["species"][code] = e
     REGISTRY.write_text(json.dumps(reg, indent=1) + "\n")
+    record_acceptance(code)
     return rec
 
 
 def diagnose(code: str) -> tuple[str | None, str]:
-    """What a species' model needs (the --redo rule): ('image', why) for a geometry failure (the judge's rejection of a
-    non-snake, the feature check's horns or tail length, no model after the leg gate), ('texture', why) for colours and
-    coat features (or a snake's rejection), (None, 'passes') otherwise."""
+    """What a species' model needs (the --redo rule): the acceptance rule's `due` (iteration 10): ('image', why) for a
+    geometry failure (the gate, horns, tail length) or a mesh to remake from the rule's photo, ('texture', why) for
+    colours and coat features; a recorded rejection the rule does not see (an override) asks for a new mesh (a snake's,
+    a new texture); (None, 'passes') otherwise."""
     e = registry().get("species", {}).get(code) or {}
     have = (ASSETS / f"{code}.glb").exists() and e
     if not have:
         return "image", "no model (the build's gate refused the text previews)"
-    c = colour_check(code)
-    geo = (c.get("features") or {}).get("geometry") or []
-    rejected = (e.get("judge") or {}).get("verdict") == "rejected" and not (e.get("judge") or {}).get("stale")
-    if e.get("kind") == "snake" and (rejected or not c.get("ok")):
-        return "texture", (e.get("judge") or {}).get("why") if rejected else "; ".join(c.get("fails") or [])
-    if geo:
-        return "image", "; ".join(geo)
-    if rejected:
-        return "image", "the judge: " + (e["judge"].get("why") or "")
-    if not c.get("ok"):
-        return "texture", "; ".join(c.get("fails") or [])
+    a = acceptance(code, e)
+    d = a.get("due")
+    if d:
+        return ("texture" if d["job"].startswith("refine") else "image"), d["why"]
+    ov = a.get("override")
+    if ov and not ov["serve"]:
+        return ("texture" if e.get("kind") == "snake" else "image"), f"the {ov['source']}: " + (ov.get("why") or "")
     return None, "passes"
 
 
@@ -775,6 +787,7 @@ def redo(tile_id: str, codes: list[str], budget: int, reserve: int, dry: bool = 
                 if rec.get("kept") == "new" and reg2["species"][code].get("judge"):
                     reg2["species"][code]["judge"] = {**reg2["species"][code]["judge"], "stale": f"re-textured from {rec['job']}; the judge has not looked again"}
                 REGISTRY.write_text(json.dumps(reg2, indent=1) + "\n")
+                record_acceptance(code)
             else:
                 if arg == "image-retry" and not any("build failed" in str(f) for f in (row["steps"][-1].get("after") or {}).get("fails") or []) \
                         if row["steps"] else False:
@@ -811,7 +824,345 @@ def judge(code: str, verdict: str, why: str) -> None:
     if prev and prev.get("verdict") != verdict:
         e.setdefault("judge_history", []).append(prev)
     REGISTRY.write_text(json.dumps(reg, indent=1) + "\n")
+    record_acceptance(code)
 
+
+# ---- model acceptance as a rule (iteration 10) ----
+# Every model goes through one decision, written down here and recorded in models.json `acceptance` when the model is
+# registered, rebuilt, re-textured or judged, and re-run with --accept:
+#   model       the GLB is in the library (and a skinned quadruped's gait clips), built from a job of the species
+#               (extras.meshy_task);
+#   gate        the build's gate passes on that job: the GLB exists only if the build's gate passed when it was built;
+#               --accept --regate builds the job again with today's build tool to a scratch file (no credits) and records
+#               the result in `gate`, which then decides;
+#   check       the appearance check (pipeline/appearance.py check: the described colours by region, the defining
+#               features: horns, tail, rings, a pale patch) with the thresholds fitted to the recorded verdicts
+#               (library/animals/check_fit.json params);
+#   provenance  recorded, not deciding: the rung the model came from (text, or a photo used as image-to-3D input or as a
+#               refine's texture reference) and whether today's photo rule (reference_photos.usable_for) still takes
+#               that photo for that use. Measured on the 39 recorded verdicts (fit_acceptance) it decides nothing for a
+#               reason: the one rejected model it would catch (the near-black grizzly) was made from a photo refused for
+#               its stance, which cannot bind a texture, and it would refuse the accepted pronghorn, whose image-to-3D
+#               mesh passed the gate and the check from a photo refused because grass hides the legs. The gate and the
+#               check judge the product; the photo rule judges which photo to try next (`due`).
+# The rule's decision is accepted when model, gate and check pass. A recorded verdict stays as an explicit override
+# stage with its reason, the rule's own decision kept beside it (`agrees`): first an `override` entry (a recorded serve
+# decision, e.g. iteration 5's "kept because no better came"), then the judge's verdict when it is not stale and names
+# this model (or none), then a `verdicts` entry naming this model or "current". model_for serves by the override when
+# there is one, else by the rule. `due` names the next job the rule would pay for (none is run from here): a rejected
+# model's geometry from a usable photo (image-to-3D, 30) or text (preview and refine, 30), its texture from a photo
+# (a texture reference, 10) or the text with the check's correction (10); an accepted model whose image-to-3D photo
+# today's rule refuses, when the rule has a usable photo no mesh was made from (30).
+ACCEPT_FORMAT = 1
+CHECK_FIT = ROOT / "library" / "animals" / "check_fit.json"
+BUILD_TOOL = {"snake": "build_snake.py", "reptile": "build_reptile.py", "bird": "build_bird.py", "quadruped": "build_quadruped.py"}
+
+
+def fitted_params() -> dict:
+    """The appearance check's thresholds fitted to the recorded verdicts (check_fit.json), else the module's defaults."""
+    from .appearance import CHECK_PARAMS
+    try:
+        return {**CHECK_PARAMS, **json.loads(CHECK_FIT.read_text())["params"]}
+    except (OSError, ValueError, KeyError):
+        return dict(CHECK_PARAMS)
+
+
+def _sha1(p: Path) -> str | None:
+    import hashlib
+    try:
+        return hashlib.sha1(p.read_bytes()).hexdigest()
+    except OSError:
+        return None
+
+
+def job_of(code: str, glb: Path) -> Path | None:
+    """The Meshy job a built GLB came from (its extras.meshy_task), when that job's folder is in the library."""
+    from .appearance import glb_extras
+    try:
+        task = glb_extras(glb).get("meshy_task")
+    except (OSError, ValueError, IndexError):
+        return None
+    p = ROOT / "library" / "animals" / "jobs" / code / str(task)
+    return p if task and p.is_dir() else None
+
+
+def _rel(p: Path | None) -> str | None:
+    return str(p.relative_to(ROOT)) if p else None
+
+
+def _same_model(named: str | None, job: Path | None) -> bool:
+    return bool(named) and job is not None and Path(named).name == job.name
+
+
+def provenance(code: str, job: Path | None) -> dict:
+    """Where a model came from: the rung (text or photo), the job's mode, the photo and its use, and whether today's photo
+    rule takes that photo for that use (reference_photos.usable_for); the rule's own photo and whether a mesh was made
+    from it."""
+    from . import reference_photos as rp
+    out = {"rung": "text", "mode": None}
+    if job is None:
+        return {**out, "rung": None, "why": "no job recorded in the GLB"}
+    try:
+        out["mode"] = json.loads((job / "job.json").read_text()).get("mode")
+    except (OSError, ValueError):
+        pass
+    try:
+        ref = json.loads((job / "reference.json").read_text())
+    except (OSError, ValueError):
+        ref = None
+    store = None
+    try:
+        store = json.loads((rp.STORE / f"{code}.json").read_text())
+    except (OSError, ValueError):
+        pass
+    if store:
+        out["rule_photo"] = store.get("chosen")
+    if ref:
+        use = "image" if out["mode"] == "image" else "texture"
+        out.update({"rung": "photo", "photo": ref.get("id"), "use": use})
+        cand = next((c for c in (store or {}).get("candidates", []) if c["id"] == ref.get("id")), None)
+        if cand and cand.get("score"):
+            why = rp.usable_for(cand["score"], store.get("plan", "quadruped"), use)
+            out["photo_usable"] = not why
+            if why:
+                out["photo_why_not"] = why
+    return out
+
+
+def _gate_stage(e: dict, job: Path | None, glb: Path) -> dict:
+    g = e.get("gate") or {}
+    if g and job is not None and _same_model(g.get("job"), job):
+        return {"ok": bool(g.get("ok")), "by": f"rebuilt with today's {g.get('build')} on {g.get('at')}",
+                **({"why": g.get("log")} if not g.get("ok") else {})}
+    return {"ok": glb.exists(), "by": "built: the GLB exists only if the build's gate passed when it was built"}
+
+
+def regate(code: str) -> dict:
+    """The build's gate run again on the job the served GLB came from, with today's build tool, to a scratch file (no
+    rig, no clips, no credits): {ok, job, build, at, log}, recorded in the species' `gate`."""
+    import tempfile
+    e = registry().get("species", {}).get(code) or {}
+    glb = ROOT / e.get("glb", f"client/assets/fauna/{code}.glb")
+    job = job_of(code, glb)
+    kind = e.get("kind", "quadruped")
+    tool = BUILD_TOOL.get(kind, "build_quadruped.py")
+    rec = {"job": _rel(job), "build": f"tools/{tool}", "at": dt.date.today().isoformat()}
+    if job is None:
+        return {**rec, "ok": False, "log": "no job recorded in the GLB"}
+    with tempfile.TemporaryDirectory(prefix=f"regate_{code}_") as d:
+        out = Path(d) / f"{code}.glb"
+        cmd = [BLENDER, "-b", "--factory-startup", "-P", str(ROOT / "tools" / tool), "--", str(job), str(out), "--species", code]
+        if kind in ("bird", "reptile") and e.get("archetype"):
+            cmd += ["--archetype", e["archetype"]]
+        r = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+        ok = out.exists() and r.returncode == 0
+        lines = [l for l in (r.stdout + r.stderr).splitlines() if code + ":" in l or "WROTE" in l or "rror" in l]
+    return {**rec, "ok": ok, "log": (lines[-1] if lines else "")[:300]}
+
+
+def override_of(e: dict, job: Path | None) -> dict | None:
+    """The recorded verdict that overrides the rule for this model, if any: {verdict, serve, by, why, date, source}."""
+    o = e.get("override")
+    if o and (not o.get("model") or o.get("model") == "current" or _same_model(o.get("model"), job)):
+        return {"verdict": o.get("verdict"), "serve": bool(o.get("serve")), "by": o.get("by"), "why": o.get("why"),
+                "date": o.get("date"), "source": "override"}
+    j = e.get("judge")
+    if j and not j.get("stale") and (not j.get("model") or _same_model(j.get("model"), job)):
+        return {"verdict": j["verdict"], "serve": j["verdict"] == "accepted", "by": j.get("by"), "why": j.get("why"),
+                "date": j.get("date"), "source": "judge"}
+    for v in e.get("verdicts") or []:
+        if v.get("model") == "current" or _same_model(v.get("model"), job):
+            return {"verdict": v["verdict"], "serve": v["verdict"] == "accepted", "by": v.get("by"), "why": v.get("why"),
+                    "source": "verdicts"}
+    return None
+
+
+def _used_photos(e: dict) -> set:
+    return {(h.get("reference") or {}).get("id") for h in e.get("photo", [])} | {(e.get("reference") or {}).get("id")}
+
+
+def due(code: str, e: dict, rule: dict, prov: dict) -> dict | None:
+    """The next job the rule would pay for (see the section's comment), or None; nothing is run from here."""
+    from . import reference_photos as rp
+    try:
+        store = json.loads((rp.STORE / f"{code}.json").read_text())
+    except (OSError, ValueError):
+        store = None
+    used = _used_photos(e) | {prov.get("photo")}
+    plan = (store or {}).get("plan", "snake" if e.get("kind") == "snake" else "quadruped" if e.get("kind", "quadruped") == "quadruped" else "other")
+    cands = sorted((store or {}).get("candidates", []), key=lambda c: c["id"] != (store or {}).get("chosen"))
+    free = lambda use: [c["id"] for c in cands if c.get("score") and c["id"] not in used and not rp.usable_for(c["score"], plan, use)
+                        and (use == "texture" or c["score"].get("usable"))]
+    st = rule["stages"]
+    if rule["decision"] == "rejected":
+        if not st["model"]["ok"]:
+            return None
+        geo = (not st["gate"]["ok"]) or bool(st["check"].get("geometry"))
+        if geo:
+            img = free("image") if e.get("kind") != "snake" else []
+            if img:
+                return {"job": "image-to-3D", "photo": img[0], "credits": COST["image"], "why": "geometry: " + "; ".join(st["check"].get("geometry") or [st["gate"].get("why") or "the gate"])}
+            return {"job": "text preview + refine", "credits": COST["preview"] + COST["refine"],
+                    "why": "geometry, and no usable photo left: " + "; ".join(st["check"].get("geometry") or [st["gate"].get("why") or "the gate"])}
+        tex = free("texture")
+        fails = "; ".join(st["check"].get("fails") or [])
+        if tex:
+            return {"job": "refine with the photo as texture reference", "photo": tex[0], "credits": COST["refine"], "why": "texture: " + fails}
+        return {"job": "refine with the check's correction" + ("" if store else " (or find reference photos first: no credits)"),
+                "credits": COST["refine"], "why": "texture: " + fails}
+    if prov.get("use") == "image" and prov.get("photo_usable") is False:
+        img = free("image")
+        if img:
+            return {"job": "image-to-3D", "photo": img[0], "credits": COST["image"],
+                    "why": f"the mesh came from {prov.get('photo')}, which today's photo rule refuses ({', '.join(prov.get('photo_why_not') or [])}); "
+                           f"the rule's photo {img[0]} has no mesh (the model itself passes)"}
+    return None
+
+
+def acceptance(code: str, e: dict | None = None, params: dict | None = None) -> dict:
+    """The acceptance rule's decision on a species' current model, the override that applies, what is served and what is
+    due (the section's comment)."""
+    e = e if e is not None else (registry().get("species", {}).get(code) or {})
+    glb = ROOT / e.get("glb", f"client/assets/fauna/{code}.glb")
+    job = job_of(code, glb) if glb.exists() else None
+    stages = {}
+    have = glb.exists() and (e.get("kind", "quadruped") != "quadruped" or (ASSETS / f"{code}_clips.json").exists())
+    stages["model"] = {"ok": bool(e) and have, **({} if have else {"why": "no GLB" if not glb.exists() else "no gait clips"})}
+    stages["gate"] = _gate_stage(e, job, glb) if have else {"ok": False, "why": "no model"}
+    if have:
+        from .appearance import check
+        app = appearance(code) or {}
+        if app.get("regions"):
+            c = check(glb, app, params or fitted_params())
+            f = c.get("features") or {}
+            stages["check"] = {"ok": bool(c.get("ok")), "score": c.get("score"), "fails": c.get("fails") or [],
+                               "geometry": f.get("geometry") or [], "texture": (c.get("colour_fails") or []) + (f.get("texture") or []),
+                               "params": "library/animals/check_fit.json"}
+        else:
+            stages["check"] = {"ok": True, "why": "no described appearance"}
+    else:
+        stages["check"] = {"ok": False, "why": "no model"}
+    prov = provenance(code, job)
+    stages["provenance"] = {**prov, "decides": False}
+    fails = [f"{k}: {'; '.join(v.get('fails') or []) or v.get('why') or 'fails'}" for k, v in stages.items() if k != "provenance" and not v["ok"]]
+    rule = {"decision": "rejected" if fails else "accepted", "why": fails, "stages": stages}
+    ov = override_of(e, job)
+    served = ov["serve"] if ov else rule["decision"] == "accepted"
+    return {"format": ACCEPT_FORMAT, "at": dt.date.today().isoformat(), "model": _rel(job), "glb_sha1": _sha1(glb), "rule": rule,
+            "override": ov, "agrees": None if not ov else ov["verdict"] == rule["decision"], "served": bool(served and have),
+            "served_by": "override" if ov else "rule", "due": due(code, e, rule, prov)}
+
+
+def record_acceptance(code: str, regate_too: bool = False) -> dict | None:
+    """The rule run on the species' current model and recorded in models.json `acceptance` (merged into a fresh read)."""
+    reg = registry()
+    e = reg.get("species", {}).get(code)
+    if not e:
+        return None
+    if regate_too:
+        e["gate"] = regate(code)
+    a = acceptance(code, e)
+    fresh = registry()
+    fresh["species"][code] = {**fresh["species"].get(code, e), **({"gate": e["gate"]} if regate_too else {}), "acceptance": a}
+    REGISTRY.write_text(json.dumps(fresh, indent=1) + "\n")
+    return a
+
+
+def served_by_rule(code: str, e: dict) -> bool:
+    """model_for's decision: the recorded override when one applies (read live), else the rule's recorded decision when it
+    was taken on this very GLB, else the rule run now."""
+    glb = ROOT / e.get("glb", f"client/assets/fauna/{code}.glb")
+    job = job_of(code, glb)
+    ov = override_of(e, job)
+    if ov:
+        return ov["serve"]
+    a = e.get("acceptance") or {}
+    if a.get("format") == ACCEPT_FORMAT and a.get("glb_sha1") and a.get("glb_sha1") == _sha1(glb):
+        return a["rule"]["decision"] == "accepted"
+    return acceptance(code, e)["rule"]["decision"] == "accepted"
+
+
+def fit_acceptance(log=print) -> dict:
+    """The rule measured against the recorded verdicts (appearance.known_verdicts: 39 models): its confusion in sample and
+    leave-one-out (the check's thresholds refitted without the model: check_fit.json flagged_loo; the other stages fit
+    nothing), and the provenance stage's variants that were not adopted."""
+    from . import appearance as ap
+    from . import reference_photos as rp
+    loo_of = {}
+    try:
+        for r in json.loads(CHECK_FIT.read_text())["per_model"]:
+            loo_of[(r["code"], r["model"])] = r["flagged_loo"]
+    except (OSError, ValueError, KeyError):
+        pass
+    p = fitted_params()
+    rows = []
+    for k in ap.known_verdicts():
+        if not ap._build_judged(k, log):
+            continue
+        glb = k["glb"]
+        job = job_of(k["code"], glb) or (k.get("job") if k.get("job") and Path(k["job"]).is_dir() else None)
+        app = appearance(k["code"]) or {}
+        c = ap.check(glb, app, p) if app.get("regions") else {"ok": True}
+        prov = provenance(k["code"], job)
+        refused = prov.get("rung") == "photo" and prov.get("photo_usable") is False
+        try:   # the variant that asks every USABLE score of a photo whatever its use
+            store = json.loads((rp.STORE / f"{k['code']}.json").read_text())
+            cand = next((x for x in store["candidates"] if x["id"] == prov.get("photo")), None)
+            refused_any = bool(cand and rp.usable(cand["score"], store.get("plan", "quadruped")))
+        except (OSError, ValueError, KeyError, TypeError):
+            refused_any = False
+        flag = not c.get("ok")
+        rows.append({"code": k["code"], "model": k["model"], "verdict": k["verdict"], "by": k["by"],
+                     "rule": "rejected" if flag else "accepted", "check_fails": c.get("fails") or [],
+                     "rule_loo": "rejected" if loo_of.get((k["code"], k["model"]), flag) else "accepted",
+                     "provenance": {x: prov.get(x) for x in ("rung", "mode", "photo", "use", "photo_usable", "photo_why_not") if x in prov},
+                     "_v_use": flag or refused, "_v_any": flag or refused_any})
+    import numpy as np
+    y = np.array([r["verdict"] == "rejected" for r in rows])
+    conf = lambda flags: ap._confusion(y, np.array(flags, bool))
+    ba = lambda cf: round(0.5 * (cf["rejected_flagged"] / max(1, y.sum()) + cf["accepted_passed"] / max(1, (~y).sum())), 3)
+    rule, loo = conf([r["rule"] == "rejected" for r in rows]), conf([r["rule_loo"] == "rejected" for r in rows])
+    v_use, v_any = conf([r["_v_use"] for r in rows]), conf([r["_v_any"] for r in rows])
+    for r in rows:
+        r.pop("_v_use"); r.pop("_v_any")
+    return {"date": dt.date.today().isoformat(), "by": "pipeline/fauna_models.py fit_acceptance", "models": len(rows),
+            "rejected": int(y.sum()), "accepted": int((~y).sum()),
+            "rule": {**rule, "balanced_accuracy": ba(rule)}, "loo": {**loo, "balanced_accuracy": ba(loo)},
+            "not_adopted": {"provenance by use (image-to-3D photo must pass USABLE, a texture reference whole, size, clear, body)": {**v_use, "balanced_accuracy": ba(v_use)},
+                            "provenance, every USABLE score whatever the use": {**v_any, "balanced_accuracy": ba(v_any)}},
+            "disagreements": [{k: r[k] for k in ("code", "model", "verdict", "by", "rule", "check_fails")} for r in rows if r["rule"] != r["verdict"]],
+            "per_model": rows}
+
+
+
+def _served_before(code: str, e: dict) -> bool:
+    """What was served before this run: the recorded acceptance, else the rule before iteration 10 (drawn unless the
+    judge rejected it)."""
+    if (e.get("acceptance") or {}).get("format") == ACCEPT_FORMAT:
+        return bool(e["acceptance"].get("served"))
+    have = (ASSETS / f"{code}.glb").exists() and (e.get("kind", "quadruped") != "quadruped" or (ASSETS / f"{code}_clips.json").exists())
+    return have and (e.get("judge") or {}).get("verdict") != "rejected"
+
+
+def accept_library(codes: list[str] | None = None, regate_too: bool = False) -> dict:
+    """The acceptance rule re-run over every library model (or those named) and recorded; prints each change in what is
+    served (before -> after, why) and what is due. Returns {code: {before, after, why, due}}."""
+    out = {}
+    for code, e in registry().get("species", {}).items():
+        if codes and code not in codes:
+            continue
+        before = _served_before(code, e)
+        a = record_acceptance(code, regate_too)
+        after = model_for(code) is not None
+        r = a["rule"]
+        ov = a.get("override")
+        why = (f"override ({ov['source']}: {ov['verdict']}, {'drawn' if ov['serve'] else 'not drawn'})" if ov else "the rule") + \
+              f"; rule {r['decision']}" + (f" ({'; '.join(r['why'])})" if r["why"] else "")
+        out[code] = {"before": before, "after": after, "why": why, "agrees": a.get("agrees"), "due": a.get("due")}
+        flag = "CHANGED " if before != after else ""
+        print(f"{flag}{code}: {'drawn' if before else 'stand-in'} -> {'drawn' if after else 'stand-in'}; {why}"
+              + (f"; due: {a['due']['job']} ({a['due']['credits']})" if a.get("due") else ""), flush=True)
+    return out
 
 
 def run(tile_id: str, budget: int, reserve: int, max_n: int, dry: bool, kind: str = "all", attempts: int = 2) -> dict:
@@ -902,6 +1253,7 @@ def run(tile_id: str, budget: int, reserve: int, max_n: int, dry: bool, kind: st
                 fresh = registry()   # (merged into a fresh read, as register)
                 fresh["species"][code]["colour_check"] = reg["species"][code]["colour_check"] = row["colour_check"]
                 REGISTRY.write_text(json.dumps(fresh, indent=1) + "\n")
+                row["acceptance"] = (record_acceptance(code) or {}).get("rule", {}).get("decision")
                 break
         # the second rung (iteration 7): no model after the gate, or a model whose geometry fails the feature check, is
         # tried once from its reference photo (image-to-3D)
@@ -937,7 +1289,7 @@ def run(tile_id: str, budget: int, reserve: int, max_n: int, dry: bool, kind: st
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("tile"); ap.add_argument("--budget", type=int, default=0)
+    ap.add_argument("tile", nargs="?"); ap.add_argument("--budget", type=int, default=0)
     ap.add_argument("--reserve", type=int, default=300); ap.add_argument("--max", type=int, default=12)
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--attempts", type=int, default=2, help="previews per species before it is left a stand-in")
@@ -947,6 +1299,9 @@ def main() -> None:
     ap.add_argument("--recolour", action="store_true", help="re-refine (10 credits each) the library models whose colours fail the check, then stop")
     ap.add_argument("--redo", action="store_true", help="the second rung (the reference photo) for the species named with --codes, then stop")
     ap.add_argument("--judge", metavar="CODE", help="record the judge's verdict on CODE's current model (--verdict, --why), then stop")
+    ap.add_argument("--accept", action="store_true", help="run the acceptance rule on every library model (or --codes), record it, print what is served and due; no credits")
+    ap.add_argument("--regate", action="store_true", help="with --accept: build each model's job again with today's build tool (the gate)")
+    ap.add_argument("--fit-accept", action="store_true", help="measure the acceptance rule against the recorded verdicts; writes models.json acceptance_rule")
     ap.add_argument("--verdict", choices=("accepted", "rejected"))
     ap.add_argument("--why", default="")
     ap.add_argument("--codes", default="", help="comma-separated species codes for --rebuild, --check or --recolour (--recolour re-refines these even if they pass)")
@@ -954,6 +1309,16 @@ def main() -> None:
     codes = [c.strip() for c in a.codes.split(",") if c.strip()] or None
     if a.judge:
         judge(a.judge, a.verdict, a.why); return
+    if a.accept:
+        accept_library(codes, a.regate); return
+    if a.fit_accept:
+        r = fit_acceptance()
+        reg = registry()
+        reg["acceptance_rule"] = {"doc": "pipeline/fauna_models.py, the section 'model acceptance as a rule'", "fit": {k: v for k, v in r.items() if k != "per_model"}}
+        REGISTRY.write_text(json.dumps(reg, indent=1) + "\n")
+        print(json.dumps({k: r[k] for k in ("models", "rule", "loo", "not_adopted", "disagreements")}, indent=1)); return
+    if not a.tile:
+        ap.error("a tile is needed")
     if a.redo:
         led = redo(a.tile, codes or [], a.budget, a.reserve, a.dry_run)
         print(json.dumps({k: led[k] for k in ("spent", "balance_after")})); return

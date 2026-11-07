@@ -449,16 +449,16 @@
    },
    "status": "ok"
   },
-  "territories": {
+  "ground_albedo": {
    "stage": "base",
-   "started_at": "2026-11-07T02:12:03Z",
-   "ended_at": "2026-11-07T02:12:03Z",
-   "wall_s": 0.5,
-   "cpu_self_s": 0.2,
+   "started_at": "2026-11-07T01:43:18Z",
+   "ended_at": "2026-11-07T01:43:18Z",
+   "wall_s": 0.4,
+   "cpu_self_s": 0.3,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {},
-   "disk_bytes": 531,
+   "disk_bytes": 903,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -469,14 +469,14 @@
  },
  "stages": {
   "base": {
-   "started_at": "2026-11-07T02:12:03Z",
-   "ended_at": "2026-11-07T02:12:03Z",
-   "wall_s": 273.3,
-   "cpu_s": 225.3,
+   "started_at": "2026-11-07T01:43:18Z",
+   "ended_at": "2026-11-07T01:43:18Z",
+   "wall_s": 273.2,
+   "cpu_s": 225.4,
    "download_bytes": 5517624,
    "cache_hits": 317,
    "cache_misses": 1,
-   "disk_bytes": 359538422,
+   "disk_bytes": 359538794,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -654,67 +654,101 @@
    ]
   },
   {
-   "started_at": "2026-11-07T02:08:59Z",
+   "started_at": "2026-11-07T01:41:04Z",
    "stages": [
     {
      "stage": "base",
-     "started_at": "2026-11-07T02:08:59Z",
+     "started_at": "2026-11-07T01:41:04Z",
      "steps_run": [
-      "territories"
+      "ground_albedo"
      ],
      "steps_skipped": [],
-     "ended_at": "2026-11-07T02:09:03Z"
+     "ended_at": "2026-11-07T01:41:04Z"
     }
    ],
-   "ended_at": "2026-11-07T02:09:03Z",
+   "ended_at": "2026-11-07T01:41:04Z",
    "failed": [],
    "refused": []
   },
   {
-   "started_at": "2026-11-07T02:12:03Z",
+   "started_at": "2026-11-07T01:41:30Z",
    "stages": [
     {
      "stage": "base",
-     "started_at": "2026-11-07T02:12:03Z",
+     "started_at": "2026-11-07T01:41:30Z",
      "steps_run": [
-      "territories"
+      "ground_albedo"
      ],
      "steps_skipped": [],
-     "ended_at": "2026-11-07T02:12:03Z"
+     "ended_at": "2026-11-07T01:41:30Z"
     }
    ],
-   "ended_at": "2026-11-07T02:12:03Z",
+   "ended_at": "2026-11-07T01:41:30Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T01:42:34Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T01:42:34Z",
+     "steps_run": [
+      "ground_albedo"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T01:42:35Z"
+    }
+   ],
+   "ended_at": "2026-11-07T01:42:35Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T01:43:18Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T01:43:18Z",
+     "steps_run": [
+      "ground_albedo"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T01:43:18Z"
+    }
+   ],
+   "ended_at": "2026-11-07T01:43:18Z",
    "failed": [],
    "refused": []
   }
  ],
  "totals": {
-  "wall_s": 659.0,
-  "cpu_s": 260.7,
+  "wall_s": 658.9,
+  "cpu_s": 260.8,
   "download_bytes": 54570107,
   "cache_hits": 693,
   "cache_misses": 330,
-  "disk_bytes": 364999652,
+  "disk_bytes": 365000024,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 2000
  },
- "updated_at": "2026-11-07T02:12:03Z",
+ "updated_at": "2026-11-07T01:43:19Z",
  "client": {
-  "bytes": 39547222,
-  "files": 51,
+  "bytes": 3313505,
+  "files": 13,
   "largest": {
-   "client/season_rgb.png": 6463594,
-   "client/terrain_detail.png": 5148489,
-   "client/texture_present.jpg": 4593226,
-   "client/texture.png": 3964574,
-   "client/texture_ground.jpg": 3131663,
-   "client/texture_imagery.jpg": 3105676,
-   "client/imagery.png": 2202794,
-   "client/heights.png": 1984016,
-   "client/season_ndvi.png": 1967664,
    "client/features.json": 1427232,
-   "client/substrate.png": 841504,
-   "client/masks.png": 699627
+   "client/weather.json": 655897,
+   "games.json": 391825,
+   "client/species_mix.json": 318574,
+   "client/species_prior.json": 243095,
+   "manifest.json": 179083,
+   "perception.json": 21651,
+   "locomotion.json": 20576,
+   "calendar.json": 18259,
+   "species/species.json": 13002,
+   "client/ground_classes.json": 12217,
+   "client/substrate.json": 11191
   },
   "note": "every file under client/ and the tables the viewer fetches; an upper bound (the present-day texture is fetched only on request)"
  }

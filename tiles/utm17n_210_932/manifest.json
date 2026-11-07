@@ -15,7 +15,7 @@
   8.513615135330369
  ],
  "size_m": 10000,
- "generated_at": "2026-11-07T02:12:15Z",
+ "generated_at": "2026-11-07T02:34:37Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -4111,7 +4111,7 @@
     "client.canopy",
     "client.habitat"
    ],
-   "encoding": "gain: per channel (linear R G B) the factor from the ground texture's linear colour to surface reflectance; the client multiplies the ground and the herb layer's albedo by it",
+   "encoding": "gain: per channel (linear R G B) the factor from the ground texture's linear colour to surface reflectance; the client multiplies the ground and the herb layer's albedo by it (by its luminance, gain_luminance, by default); saturation: the chroma scale about the luminance (Rec. 601) that the client applies with the luminance factor",
    "method": "sum of the reference month's L2A reflectance over the sum of the texture's linear colour, open ground (tree < 10 %, shrub < 15 %, not water or built), 20 m",
    "imagery": {
     "source": "sentinel2_l2a",
@@ -4124,6 +4124,9 @@
     0.5053
    ],
    "gain_luminance": 0.4724,
+   "saturation": 0.898,
+   "chroma_ratio": 0.898,
+   "saturation_fit": 0.864,
    "reference": "seasons/s2_07.tif",
    "reference_month": 7,
    "open_pixels": 1131,
@@ -4147,8 +4150,8 @@
     "stretch_gain": 0.4,
     "note": "the texture's own encoding (2.5 x the three-year median reflectance); the fit also carries the reference month against that median"
    },
-   "sha256": "d85a5100cf0e3775af40b96dec07ddf071f2645e0d453bd5d6d95fd91d3f079f",
-   "bytes": 1094
+   "sha256": "5916465c41aa2713e9d64494b82a01081bf8f763087780ab210f309d1da5dbf8",
+   "bytes": 1324
   },
   "client.territories": {
    "path": "client/territories.json",
@@ -4964,15 +4967,33 @@
    "ok": true
   },
   {
-   "step": "territories",
-   "at": "2026-11-07T02:09:44Z",
-   "seconds": 3.3,
+   "step": "ground_albedo",
+   "at": "2026-11-07T01:41:19Z",
+   "seconds": 1.7,
+   "ok": true
+  },
+  {
+   "step": "ground_albedo",
+   "at": "2026-11-07T01:41:44Z",
+   "seconds": 2.6,
+   "ok": true
+  },
+  {
+   "step": "ground_albedo",
+   "at": "2026-11-07T01:42:54Z",
+   "seconds": 5.7,
+   "ok": true
+  },
+  {
+   "step": "ground_albedo",
+   "at": "2026-11-07T01:43:42Z",
+   "seconds": 2.2,
    "ok": true
   },
   {
    "step": "territories",
-   "at": "2026-11-07T02:12:14Z",
-   "seconds": 0.4,
+   "at": "2026-11-07T02:34:37Z",
+   "seconds": 0.2,
    "ok": true
   }
  ],
@@ -6463,6 +6484,45 @@
    "status": "blocked",
    "reason": "needs water_seasons (base stage), never run"
   },
+  "ground_albedo": {
+   "version": "2",
+   "code": "888b41d2a893e291",
+   "params": {
+    "tile": "utm17n_210_932"
+   },
+   "fingerprint": "2cf59c6298fd67c0",
+   "parts": {
+    "version": "2",
+    "code": "888b41d2a893e291",
+    "params": {
+     "tile": "utm17n_210_932"
+    },
+    "deps": {
+     "seasons": "da0798b5d7d00956",
+     "erase": "8f25122adabb27bb",
+     "terrain": "5922c464e3695738"
+    },
+    "library": {}
+   },
+   "ran_at": "2026-11-07T01:43:40Z",
+   "owner": null,
+   "status": "ok",
+   "layers": [
+    "client.ground_albedo"
+   ],
+   "outputs": {
+    "client/ground_albedo.json": "5916465c41aa2713"
+   },
+   "out_hash": "24c86916e4365370",
+   "sources": {},
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 0
+   },
+   "seconds": 2.2
+  },
   "territories": {
    "version": "1",
    "code": "924db782b66110af",
@@ -6479,7 +6539,7 @@
     "deps": {},
     "library": {}
    },
-   "ran_at": "2026-11-07T02:12:13Z",
+   "ran_at": "2026-11-07T02:34:37Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -6498,7 +6558,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 0.4
+   "seconds": 0.2
   }
  },
  "seams": {

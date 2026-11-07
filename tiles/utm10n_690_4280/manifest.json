@@ -15,7 +15,7 @@
   38.73825606650576
  ],
  "size_m": 10000,
- "generated_at": "2026-11-07T02:12:06Z",
+ "generated_at": "2026-11-07T02:34:34Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -7522,7 +7522,7 @@
     "client.canopy",
     "client.habitat"
    ],
-   "encoding": "gain: per channel (linear R G B) the factor from the ground texture's linear colour to surface reflectance; the client multiplies the ground and the herb layer's albedo by it",
+   "encoding": "gain: per channel (linear R G B) the factor from the ground texture's linear colour to surface reflectance; the client multiplies the ground and the herb layer's albedo by it (by its luminance, gain_luminance, by default); saturation: the chroma scale about the luminance (Rec. 601) that the client applies with the luminance factor",
    "method": "sum of the reference month's L2A reflectance over the sum of the texture's linear colour, open ground (tree < 10 %, shrub < 15 %, not water or built), 20 m",
    "imagery": [
     "pc_naip",
@@ -7538,8 +7538,9 @@
     0.5985
    ],
    "gain_luminance": 0.5958,
-   "sha256": "5173b1a690e4b092710567f2fcbdcbd5ce5fa90b9f1d6f3a9f8e054ef47e86fa",
-   "bytes": 724
+   "saturation": 1.0,
+   "sha256": "715bff6bac44e9bf0eb236707ea5b77022fd885483f1e27a2a9ea2ea766ba1d1",
+   "bytes": 902
   },
   "client.territories": {
    "path": "client/territories.json",
@@ -8193,14 +8194,8 @@
   },
   {
    "step": "territories",
-   "at": "2026-11-07T02:11:23Z",
-   "seconds": 2.0,
-   "ok": true
-  },
-  {
-   "step": "territories",
-   "at": "2026-11-07T02:12:06Z",
-   "seconds": 0.5,
+   "at": "2026-11-07T02:34:34Z",
+   "seconds": 0.2,
    "ok": true
   }
  ],
@@ -8208,6 +8203,10 @@
   "water_imagery": {
    "status": "blocked",
    "reason": "needs dem, channels, rewild_hydro, reroute, seasons, water_seasons, hydro (base stage), never run"
+  },
+  "ground_albedo": {
+   "status": "blocked",
+   "reason": "needs seasons, erase, terrain (base stage), never run"
   },
   "territories": {
    "version": "1",
@@ -8225,7 +8224,7 @@
     "deps": {},
     "library": {}
    },
-   "ran_at": "2026-11-07T02:12:06Z",
+   "ran_at": "2026-11-07T02:34:33Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -8244,7 +8243,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 0.5
+   "seconds": 0.2
   }
  }
 }

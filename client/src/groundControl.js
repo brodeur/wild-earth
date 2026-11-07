@@ -472,9 +472,9 @@ export class GroundControl {
 
   // ---- the frame -----------------------------------------------------------------------------------
   input() {
-    const k = this.flight.keys;
+    const k = this.flight.keys, digK = (k.has('ArrowUp') || k.has('ArrowDown')) && !!this.dig?.wantDig(this);
     return {
-      fwd: (k.has('KeyW') || k.has('ArrowUp') ? 1 : 0) - (k.has('KeyS') || k.has('ArrowDown') ? 1 : 0),
+      fwd: (k.has('KeyW') || k.has('ArrowUp') && !digK ? 1 : 0) - (k.has('KeyS') || k.has('ArrowDown') && !digK ? 1 : 0),   // with the dig key held the arrows steer the dig's slope (dig.js KEY_DRAG), not the walk
       turn: (k.has('KeyA') || k.has('ArrowLeft') ? 1 : 0) - (k.has('KeyD') || k.has('ArrowRight') ? 1 : 0),
       shift: k.has('ShiftLeft') || k.has('ShiftRight'),
       alt: k.has('AltLeft') || k.has('AltRight'),   // a walk (the lion's stalk) under W
@@ -966,7 +966,8 @@ export class GroundControl {
   updateCamera(dt) {
     const f = this.flight, cam = this.camera, C = this.S.cam, off = this._v, aim = this._w;
     const P = this.mode === 'tunnel' ? (this._pu ||= new THREE.Vector3()).set(f.pos.x, Math.max(f.pos.y, this.heights.atXZ(f.pos.x, f.pos.z)), f.pos.z) : f.pos;   // underground: framed from the ground over the body (dig.js xray)
-    f.easeOrbit(dt, f.moving(), this.mode === 'tunnel' || !!this.digging);   // the drag's orbit round the body (flight.js), back behind once the keys move it; underground and digging its pitch held (the dig's aim, dig.js aimPitch)
+    const kk = f.keys, steerOnly = !!this.digging && !['KeyW', 'KeyS', 'KeyA', 'KeyD', 'ArrowLeft', 'ArrowRight', 'Space'].some(c => kk.has(c));   // digging, ↑ ↓ steer the slope: not a move that brings the orbit back
+    f.easeOrbit(dt, f.moving() && !steerOnly, this.mode === 'tunnel' || !!this.digging);   // the drag's orbit round the body (flight.js), back behind once the keys move it; underground and digging its pitch held (the dig's aim, dig.js aimPitch)
     const rate = wrap(f.yaw - (this.camYaw ?? f.yaw)) / Math.max(dt, 1e-3); this.camYaw = f.yaw;
     if (Math.abs(rate) > 0.3) this.camSide = damp(this.camSide, -Math.sign(rate) * C.side, 1.6, dt);
     const low = this.resting ? 0.7 : 1, fly = this.mode === 'fly' ? 1.4 : 1;

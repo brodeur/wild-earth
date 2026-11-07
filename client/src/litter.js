@@ -457,7 +457,7 @@ function litterMaterial(kind, atmosphere, ring, leafTex) {
       .replace('#include <color_vertex>', `#include <color_vertex>
         // the palettes and GROUND_REF were set against the photo's display colour: at the ground's reflectance both take
         // its factor (terrain.js groundGain), so a pebble keeps its brightness against the ground under it
-        { vec3 c = aLitC * groundGain;
+        { vec3 c = groundRefl(aLitC);
           { vec3 gw; vec3 g = groundAlbedo(litO, 1.0, gw);
             float lg = max(dot(g, G_LUMA), 1e-3);
             c *= clamp(mix(1.0, lg / (${GROUND_REF.toFixed(3)} * dot(groundGain, G_LUMA)), litBright), 0.6, 2.2);

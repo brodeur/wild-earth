@@ -25,6 +25,20 @@ processed and balanced as one), else the median of that source's fits, else the 
 Sentinel-2 texture (0.4). On a Sentinel-2 tile the fit differs from 0.4 by the reference month against the texture's
 three-year median: the fit is the one the season multiplier needs.
 
+The saturation (2026-11-06, iteration 9): the client draws the luminance factor (Aaron chose today's hue: the
+per-channel factor turned the home foothills red-brown), so the ground keeps the photo's colour balance, and NAIP's is
+more saturated than the ground: Lamar's top-down rendered at chroma 21.3 against a fair 14.6. The saturation is the
+ratio of the composite's chroma strength to the photo's (each colour less its luminance, after the luminance factor;
+linear, Rec. 601 weights as the client's), summed over the same open pixels:
+
+    saturation = sum |d_R| / sum |d_T|,   d = colour - luminance
+
+The client scales the photo's chroma by it about the luminance, so the hue stays the photo's and only the strength is
+fitted. (The least-squares projection of d_R on d_T, `saturation_fit`, also counts the hue's disagreement: on the Hoh,
+whose open ground is 1 % river bars, it was 0.26 against a strength ratio of 0.98, and would have greyed a whole rain
+forest tile.) Capped at 1 (SAT_MAX): every probe renders at or above its fair chroma, and a gain would amplify the
+photo's noise. A tile that borrows its gain borrows its saturation.
+
 Output: client/ground_albedo.json and the manifest layer `client.ground_albedo` (gain inline: the client reads it from
 the manifest), with the basis, the reference, the open pixel count, the luminance gain and the spread of the per-pixel
 ratios.
@@ -48,6 +62,8 @@ EXCLUDE_HABITAT = (0, 7, 9)         # nodata, water, built
 S2_STRETCH = 2.5                    # fetch_global.sentinel_true_colour: byte = 255 sRGB(2.5 x reflectance)
 SHEET_STRETCH = 0.35                # fetch_sentinel: season_rgb byte = 255 sRGB(reflectance / 0.35)
 Y = np.array([0.2126, 0.7152, 0.0722])
+Y601 = np.array([0.299, 0.587, 0.114])   # the client's G_LUMA, about which it scales the saturation (terrain.js groundRefl)
+SAT_MIN, SAT_MAX = 0.3, 1.0
 Image.MAX_IMAGE_PIXELS = None
 
 
@@ -109,8 +125,15 @@ def fit(tile: Tile, m: dict) -> dict | None:
     R, T = refl[open_], tl[open_]
     gain = R.sum(0) / T.sum(0)
     ratio_y = (R @ Y) / np.maximum(T @ Y, 1e-4)
+    gy = float((R @ Y).sum() / (T @ Y).sum())
+    Tg = T * gy
+    dR, dT = R - (R @ Y601)[:, None], Tg - (Tg @ Y601)[:, None]
+    s_fit = float((dR * dT).sum() / max((dT * dT).sum(), 1e-12))
+    s_mag = float(np.linalg.norm(dR, axis=1).sum() / max(np.linalg.norm(dT, axis=1).sum(), 1e-12))
     return {"basis": "fit", "gain": [round(float(g), 4) for g in gain],
-            "gain_luminance": round(float((R @ Y).sum() / (T @ Y).sum()), 4),
+            "gain_luminance": round(gy, 4),
+            "saturation": round(min(max(s_mag, SAT_MIN), SAT_MAX), 3), "chroma_ratio": round(s_mag, 3),
+            "saturation_fit": round(s_fit, 3),
             "reference": what, "reference_month": month, "open_pixels": n_open,
             "open_share": round(n_open / (n * n), 3),
             "ratio_luminance_p25_p50_p75": [round(float(v), 3) for v in np.percentile(ratio_y, [25, 50, 75])],
@@ -154,12 +177,14 @@ def borrowed(tile: Tile, m: dict, why: str) -> dict:
             return math.hypot((olon - lon) * math.cos(math.radians(lat)), olat - lat) * 111.0
         t, om, L = min(others, key=lambda x: dist(x[0]))
         return {"basis": "nearest_same_acquisition", "why": why, "from_tile": t, "distance_km": round(dist(t)),
-                "gain": L["gain"], "gain_luminance": L["gain_luminance"], "imagery": [src, yr]}
+                "gain": L["gain"], "gain_luminance": L["gain_luminance"], "saturation": L.get("saturation", 1.0),
+                "imagery": [src, yr]}
     same = [L for t, om, L in _fitted_others(tile) if _imagery(om)[0] == src]
     if same:
         g = np.median(np.array([L["gain"] for L in same]), 0)
         return {"basis": "source_median", "why": why, "tiles": len(same), "gain": [round(float(v), 4) for v in g],
-                "gain_luminance": round(float(g @ Y), 4), "imagery": [src, yr]}
+                "gain_luminance": round(float(g @ Y), 4),
+                "saturation": round(float(np.median([L.get("saturation", 1.0) for L in same])), 3), "imagery": [src, yr]}
     if src == "sentinel2_l2a":
         g = 1 / S2_STRETCH
         return {"basis": "encoding", "why": why, "gain": [g, g, g], "gain_luminance": g, "imagery": [src, yr]}
@@ -181,7 +206,9 @@ def ground_albedo(tile: Tile, m: dict, own_only: bool = False) -> dict | None:
     info = {"path": "client/ground_albedo.json", "kind": "table", "derived_from":
             ["client.texture_imagery", "client.season_rgb", "client.canopy", "client.habitat"],
             "encoding": "gain: per channel (linear R G B) the factor from the ground texture's linear colour to surface "
-                        "reflectance; the client multiplies the ground and the herb layer's albedo by it",
+                        "reflectance; the client multiplies the ground and the herb layer's albedo by it (by its "
+                        "luminance, gain_luminance, by default); saturation: the chroma scale about the luminance "
+                        "(Rec. 601) that the client applies with the luminance factor",
             "method": "sum of the reference month's L2A reflectance over the sum of the texture's linear colour, open "
                       f"ground (tree < {OPEN_TREE} %, shrub < {OPEN_SHRUB} %, not water or built), 20 m",
             "imagery": {"source": src, "year": yr}, **f}

@@ -693,16 +693,16 @@
    },
    "status": "ok"
   },
-  "territories": {
+  "ground_albedo": {
    "stage": "base",
-   "started_at": "2026-11-07T02:12:16Z",
-   "ended_at": "2026-11-07T02:12:16Z",
-   "wall_s": 0.9,
-   "cpu_self_s": 0.3,
+   "started_at": "2026-11-07T01:43:42Z",
+   "ended_at": "2026-11-07T01:43:44Z",
+   "wall_s": 2.0,
+   "cpu_self_s": 1.7,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {},
-   "disk_bytes": 525,
+   "disk_bytes": 1322,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -713,14 +713,14 @@
  },
  "stages": {
   "base": {
-   "started_at": "2026-11-07T02:12:16Z",
-   "ended_at": "2026-11-07T02:12:17Z",
-   "wall_s": 682.4,
-   "cpu_s": 243.7,
+   "started_at": "2026-11-07T01:43:42Z",
+   "ended_at": "2026-11-07T01:43:44Z",
+   "wall_s": 683.5,
+   "cpu_s": 245.1,
    "download_bytes": 5452184,
    "cache_hits": 152,
    "cache_misses": 8,
-   "disk_bytes": 125927323,
+   "disk_bytes": 125928120,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -1325,54 +1325,88 @@
    "failed": []
   },
   {
-   "started_at": "2026-11-07T02:09:45Z",
+   "started_at": "2026-11-07T01:41:19Z",
    "stages": [
     {
      "stage": "base",
-     "started_at": "2026-11-07T02:09:45Z",
+     "started_at": "2026-11-07T01:41:19Z",
      "steps_run": [
-      "territories"
+      "ground_albedo"
      ],
      "steps_skipped": [],
-     "ended_at": "2026-11-07T02:09:49Z"
+     "ended_at": "2026-11-07T01:41:21Z"
     }
    ],
-   "ended_at": "2026-11-07T02:09:49Z",
+   "ended_at": "2026-11-07T01:41:21Z",
    "failed": [],
    "refused": []
   },
   {
-   "started_at": "2026-11-07T02:12:16Z",
+   "started_at": "2026-11-07T01:41:45Z",
    "stages": [
     {
      "stage": "base",
-     "started_at": "2026-11-07T02:12:16Z",
+     "started_at": "2026-11-07T01:41:45Z",
      "steps_run": [
-      "territories"
+      "ground_albedo"
      ],
      "steps_skipped": [],
-     "ended_at": "2026-11-07T02:12:17Z"
+     "ended_at": "2026-11-07T01:41:47Z"
     }
    ],
-   "ended_at": "2026-11-07T02:12:17Z",
+   "ended_at": "2026-11-07T01:41:47Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T01:42:55Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T01:42:55Z",
+     "steps_run": [
+      "ground_albedo"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T01:43:01Z"
+    }
+   ],
+   "ended_at": "2026-11-07T01:43:01Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-07T01:43:42Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-07T01:43:42Z",
+     "steps_run": [
+      "ground_albedo"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-07T01:43:44Z"
+    }
+   ],
+   "ended_at": "2026-11-07T01:43:44Z",
    "failed": [],
    "refused": []
   }
  ],
  "totals": {
-  "wall_s": 708.9,
-  "cpu_s": 266.5,
+  "wall_s": 710.0,
+  "cpu_s": 267.9,
   "download_bytes": 5452184,
   "cache_hits": 946,
   "cache_misses": 8,
-  "disk_bytes": 130558762,
+  "disk_bytes": 130559559,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 1810
  },
- "updated_at": "2026-11-07T02:12:17Z",
+ "updated_at": "2026-11-07T01:43:44Z",
  "client": {
-  "bytes": 17471876,
-  "files": 50,
+  "bytes": 17471258,
+  "files": 49,
   "largest": {
    "client/season_rgb.png": 4326625,
    "client/texture.png": 2396613,

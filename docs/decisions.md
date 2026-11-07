@@ -6972,3 +6972,148 @@ River with two test players in its room, 0 dimmed elsewhere), the territory row 
 (clearly labelled, never committed, removed), the card over the chosen place, no road names anywhere, no page errors.
 Tests: tests/test_territories_step.py (the step in the graph after terrain, refused without a key, the refusal a build
 audit problem, the key never printed) and the counts endpoint in tests/test_hub.py.
+
+## 2026-11-06: while digging, ↑ and ↓ steer the dig's slope; the camera yields to them (docs/game-dig.md "The arrows steer the dig")
+
+Aaron: "While digging, the purpose of the arrow keys changes upArrow begins to dig up, downarrow begins to dig down"
+
+With the dig key held:
+- **The arrows turn the face's slope.** ↑ turns it up and ↓ down, from the slope the face has now, at the rate the face
+  can curve.
+- **Released, it holds.** Let go and the slope stays where it was.
+- **No walking.** The arrows don't walk while Q is held.
+
+The camera's pitch steering stays, but the last input wins. An arrow takes the aim from the camera and keeps it until a
+deliberate vertical drag (0.08 rad of orbit, about 30 px) hands it back.
+
+Considered:
+- **The camera only adds to the arrows.** Rejected: the camera's tilt is held underground, so a view left up over the
+  body would keep pulling the slope down against the keys.
+- **The keys win only while held.** Rejected: releasing would snap the slope back to the camera's, which breaks
+  "releasing holds the current angle".
+- **The arrows set a target that runs ahead of the face.** Rejected: on release the face would keep turning. The arrows
+  instead turn the slope at the face's own curve rate, so what the player sees is what holds.
+
+## 2026-11-06: a den is a room node that grows out of the tunnel as it is dug (docs/game-dig.md "Dens", client/src/digDen.js)
+
+Aaron: "The 1 key "dig den" which makes a large area. Dens that overlap should have empty space ... Digging the den is a
+process that can be interrupted, and returned to/completed."
+
+The tunnels already had the right kind of thing: a chamber is one room node, carved as an ellipsoid into the same soil
+field, with tunnels entering at their bore. A den is a room node planned off the tunnel node it overlaps:
+- **The plan.** The `den` event carries where the den starts (that node's place and bore) and its planned centre and
+  radius.
+- **The progress.** The `denk` event carries its progress k, which only rises. The node always stands at the plan's
+  k, so the cavity grows from the tunnel toward its centre, joined from the start and never breaking the surface.
+
+Overlap needs nothing of its own, because the carved air is a union. The plan persists like any tunnel (in
+`digworld.py`'s state, per tile and season, anonymous), so an interrupted den is resumed from what was stored, by
+anyone. Progress goes out in 2% steps, 50 events a den.
+
+Considered:
+- **A den as its own kind of shape** (a separate list beside the nodes). Rejected: it would need its own carving,
+  walking, joining and decay, all of which rooms already have.
+- **Showing a full-size den at once and filling it in.** Rejected: the cavity has to be the dug space for walking and
+  for the meshes, so growing the room is what "the cavity grows" means.
+- **A den centred where it was placed, growing outward.** Rejected: early on it would float unconnected in the soil.
+- **Walking to a distant plan automatically.** Left out: the player walks there.
+
+Where the brief met the game:
+- **Diggers.** Only the tunnellers (the vole and the brush rabbit) dig dens; the others never go underground.
+- **"Attacked".** Read as a coyote opening the system from above, since nothing else reaches a body underground.
+
+
+## 2026-11-06: phase 1, iteration 9 (world pipeline lane restarted on its queue)
+
+- **Lamar and Teton's flora and fauna re-run after the 1 m ground; `--status` knows optional layers.** plants,
+  species, animals and stills re-ran on both (Teton's stills for the first time: its chips now show its own moose,
+  pronghorn and bison models where kin stood in; Lamar 11 model chips and 32 stand-ins, Teton 9 and 33). A step can name
+  layers it writes only where the data allows (`Step.optional`): the ground step's stratigraphic column (none on Teton)
+  and canopy_top's canopy-map layers (a lidar tile measures its canopy instead). `--status` no longer counts them
+  missing, so both tiles read clean.
+- **A river does not dry up by gaining water: permanence by flow continuity** (`pipeline/channels.py`
+  `_flow_continuity`, channels step version 2). On the 1 m ground, ten reaches of the Lamar River's main stem (1,500 km2,
+  braids and stretches 60 m or more off NHD's line) matched no NHD flowline and fell to the area rule's intermittent, so
+  in June, when only perennial reaches run, the river was drawn as a dry gravel bed (the river probe looked across one).
+  The rule: an unmatched reach whose main stem above it runs all year runs all year too, the main stem being an inflow
+  that carries half the reach's drainage area or more (a perennial spring creek joining a big dry wash does not make the
+  wash perennial). Walked upstream first, so a run of unmatched reaches takes it in turn. NHD's own codes are never
+  overridden. On Lamar it changed 28 reaches (order 5-6 now: 52 perennial, 1 intermittent: a 90 m NHD-kept stretch NHD
+  itself codes intermittent); each carries `permanence_rule` (the climate rule's reaches now record theirs too). The
+  water's geometry is unchanged (water_check identical: bed within 15 cm of the section's low point 94.4 %). 3 tests
+  (tests/test_flow_continuity.py).
+- **The river probe sees water** (tools/probes/pose_rule.js river(): the channel cells it looks at are perennial with
+  water 0.1 m or more over the ground, and the sight line meets such water within 25 m of the pose). Lamar's c_river
+  re-picked by it: [5291, 4897] looking north-west down the Lamar, 9.5 m from the old pose (probes.json `_notes`).
+
+- **Model acceptance is a rule; a recorded verdict is an override stage beside it** (`pipeline/fauna_models.py`
+  acceptance, served_by_rule, fit_acceptance, `--accept [--regate]`, `--fit-accept`; `reference_photos.usable_for`;
+  models.json `acceptance`, `gate`, `override`, `acceptance_rule`; tests/test_model_acceptance.py).
+  - **The rule.** A model is accepted when it is built (the GLB, a quadruped's clips), passes the build's gate on its
+    job (re-run with today's tools by `--regate`, no credits), and passes the appearance check at the thresholds
+    fitted to the verdicts.
+  - **Provenance** is recorded but does not decide: the rung, the photo, its use, and whether today's photo rule
+    takes it for that use (image-to-3D every USABLE score, a texture reference whole/size/clear/body).
+  - **Overrides.** An explicit `override`, the judge's verdict on this model (not stale), or a `verdicts` entry
+    overrides the rule. The rule's decision is kept beside it (`agrees`). `model_for` serves by the override, else by
+    the rule's record for that GLB's sha1, else runs the rule.
+  - **`due`.** Each model gets the next job the rule would pay for: geometry from a usable photo (image-to-3D 30) or
+    text (30), texture from a photo (10) or the check's correction (10), or a fresh mesh where an accepted model's
+    image-to-3D photo is now refused and the rule's photo has none (30).
+  - **The fit on the 39 verdicts:** 8 / 2 / 29 / 0 (rejected flagged / rejected passed / accepted passed / accepted
+    flagged), leave-one-out 8 / 2 / 28 / 1. The misses are the two unserved grizzly refines (stark blotch,
+    near-black). Starkness (ΔE 45 vs the accepted 41) and the coat hue against the typical colours (8.4 vs the wild
+    dog's 8.8) do not separate them.
+  - **Provenance as a decider, not adopted.** By use: 8 / 2 / 28 / 1. Every score: 9 / 1 / 28 / 1. The every-score
+    variant catches the near-black grizzly only through its texture photo's stride and refuses the accepted pronghorn.
+  - **What is served is unchanged** (31 of 32 drawn). The leopard tortoise and Nile monitor, which the rule rejects
+    on colour, keep being drawn by an explicit override: iteration 5's "kept because no better came", recorded with
+    its reason. Their stand-in is the fence lizard.
+  - **Due**, not run: the badger's texture from commons_116358007 (10); the tortoise and monitor, a photo texture
+    after a free photo search (10 + 10); the pronghorn image-to-3D from the rule's photo inat_717073114 (30, held: a
+    head-down grazer). The moose is not due. 797 credits left, 300 in reserve.
+  - **Photo choice:** a head-down pose is not separable from the mask's silhouette (two measures, four labelled
+    head-down photos inside the head-up range): not adopted.
+- **The due texture jobs, judged by the acceptance rule** (30 credits, approved; balance 797 -> 767; jobs in
+  library/animals/jobs). Each ran the rule's order for a texture fix (the check's correction as a text re-refine,
+  then a photo texture only if that fails; 10 credits a species allowed). *Badger* (Lamar): the new texture has the
+  white stripes; the tail still reads ringed (3 alternations), so the rule still rejects it and the slot keeps its
+  stand-in, as before. *Leopard tortoise*: the re-refine was no better (flanks 8 % in the shell's ground colours), the
+  old model kept and still drawn by its override. *Nile monitor*: the new texture is better (the blackish underside
+  bands now present; the yellowish-green head spots still missing), kept; the recorded override named the old job, so
+  it was carried to the new one with the same reason (otherwise the slot would have fallen to the fence lizard). Next
+  for both reptiles: a free photo search, then a photo texture (10 each).
+- **Twig shrubs up close: big sagebrush as a branching shrub, not a pale dome** (`client/src/shrubfield.js`
+  TwigShrubs; `treegen.js` shrubFrame, read-only). A foothill shrub whose record gives small leaves
+  (`foliage.leaf_size_m` <= 0.025), an open crown (`targets.porosity` >= 0.25) and a low height (`height_m[1]` <=
+  1.6 m) is a twig shrub: big sagebrush, snowberry, Sierra gooseberry (mountain mahogany and red huckleberry are too
+  tall: mahogany as a few tufts on long bare stems read worse than its dome; coyote brush, buckbrush and the chaparral
+  are not open enough). Within a per-plant radius of 9-13 m (the impostor's own hashed hand-over, so each plant is
+  drawn once) it is its treegen skeleton: a short trunk splitting into crooked stems, branches and twigs in the
+  record's bark colours, a leaf tuft at each twig end, enough tufts for the record's porosity; each leaf lit at its
+  own angle, the light inside the crown falling off with depth by Beer's law from the porosity, the sky partly
+  blocked; twigs drawn within 3.5 m, the trunk and stems beyond; seasons, flowers, bare winter crowns, wind and the
+  forager's glow as the impostor's. Past the hand-over the impostor is dimmed to the 3D crowns' measured mean (sun
+  x0.58, sky x0.68), a little smaller. The record's colour (linear 0.24 / 0.26 / 0.19) is already sage's measured
+  0.2-0.3 reflectance: the near-white came from the impostor lighting the whole crown as one sunlit surface. No
+  species data changed. Cost at Lamar's eye pose about +3.8 ms (25.4 -> 29.2 ms, interleaved A/B under heavy load;
+  the shrub field 2 -> 5.2 ms). Notes lamar-sage/ (Lamar, Teton, home before/after; home unchanged but snowberry
+  and gooseberry domes a little darker). Open: sunlit tufts facing the sun still pale silver; crowns a little
+  top-heavy; past 13 m still a dome, the porous-to-smooth hand-over visible from above; the ground keeps the
+  impostor's solid shadow (shadows.js); every twig shrub takes sage's three-toothed leaf (the record's `leaf_shape`
+  says oval, from its coyote-brush template).
+- **The ground's saturation measured: Sentinel-2's chroma strength over the photo's, capped at 1, the photo's hue kept**
+  (`pipeline/ground_albedo.py` `saturation`, step version 2; atmosphere.js `groundLook.sat`, terrain.js
+  `groundRefl`/`groundSat`, grass.js palettes and ground match, forbs.js, litter.js; `?gsat=` tries another). With the
+  luminance factor (Aaron's choice of today's hue) the ground kept NAIP's colour balance and its saturation: Lamar's
+  top-down rendered at chroma 21.3 against a fair 14.6. The fit, over the same open pixels as the gain: sum |d_R| /
+  sum |d_T| (d = colour less its Rec. 601 luminance, after the luminance factor), the client scaling the photo's chroma
+  by it about the luminance, so the hue stays the photo's. The least-squares projection (`saturation_fit`) was tried
+  first and refused: it counts the hue's disagreement too and gave the Hoh 0.26 (its open ground is 1 % river bars)
+  against a strength ratio of 0.98. Capped at 1: every probe renders at or above its fair chroma. Borrowers borrow it.
+  Fits: Lamar 0.76, Grand Canyon 0.86, Corcovado 0.90, Lofoten 0.97, Danum 0.97, Hoh 0.98, Serengeti 1.00, home,
+  Teton and Manu 1 (capped from 1.23, 1.30, 1.26). The judge (L_render vs L_fair, chroma render vs fair,
+  overlap_fair; before -> after, the sage change in the same run): Lamar 46.5/48.3, 21.3/14.6, 0.395 -> 46.1/48.3,
+  16.2/14.6, 0.365; Grand Canyon 53.3/64.3, 15.5/13.3, 0.220 -> 53.4/64.3, 13.4/13.3, 0.261; Lofoten 12.2 -> 11.9
+  (fair 12.2), 0.655 -> 0.666; the rest within 0.01. Lamar's overlap slips a little as its chroma closes: what is left
+  is the hue (the photo greener than the composite's olive), which the luminance factor keeps by choice.

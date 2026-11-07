@@ -398,7 +398,7 @@ const VERT = /* glsl */`
     gl_Position = projectionMatrix * viewMatrix * vec4(p, 1.0);
   }`;
 const FRAG = /* glsl */`
-  uniform sampler2D atlas; uniform vec3 wxGround; uniform vec3 glowCol; uniform vec3 groundGain;
+  uniform sampler2D atlas; uniform vec3 wxGround; uniform vec3 glowCol; uniform vec3 groundGain; uniform float groundSat;
   varying vec2 vUv; varying vec3 vSun; varying vec3 vAmb; varying vec3 vT; varying vec3 vIn; varying float vFade; varying float vDiff; varying float vGlow; varying vec3 vTint;
   varying float vSkirt;
   void main() {
@@ -408,7 +408,7 @@ const FRAG = /* glsl */`
     if (t.a < 0.3) discard;
     // the pictures were drawn to match the photo's display colour: at the ground's reflectance they take its factor
     // (terrain.js groundGain, as the grass palettes do)
-    vec3 alb = t.rgb * vTint * groundGain;   // the atlas is an sRGB texture, decoded to linear by the sampler (2026-11-06: a pow 2.2 on top decoded it twice, and a leaf of sRGB 64 came out black)
+    vec3 alb = t.rgb * vTint * groundGain; alb = max(mix(vec3(dot(alb, vec3(0.299, 0.587, 0.114))), alb, groundSat), vec3(0.0));   // terrain.js groundRefl   // the atlas is an sRGB texture, decoded to linear by the sampler (2026-11-06: a pow 2.2 on top decoded it twice, and a leaf of sRGB 64 came out black)
     alb = mix(alb, vec3(0.7, 0.73, 0.78), wxGround.z * 0.6);   // lying snow (weather.js)
     vec3 col = (alb * (vSun * (0.4 + 0.6 * vDiff) + vAmb) + alb * alb * vSun * 0.15) * 0.3183099;
     // the forager's glow (forage.js): the plant lit warm against the light of the hour, by the leaf's own tone and its
