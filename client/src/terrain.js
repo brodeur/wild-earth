@@ -918,12 +918,17 @@ const FRAG = /* glsl */`
       vec2 wp = vUv * waterPx - 0.5, wf = fract(wp), w0 = (floor(wp) + 0.5) / waterPx, we = vec2(1.0 / waterPx, 0.0);
       vec4 v00 = texture2D(waterMap, w0), v10 = texture2D(waterMap, w0 + we.xy), v01 = texture2D(waterMap, w0 + we.yx), v11 = texture2D(waterMap, w0 + we.xx);
       // a bed cell: a channel or wet margin with a bed material, or any of a river of order 4 and up (a big river's channel
-      // cells without a recorded material showed the photo's dark river at the water's edge); a bank cell: the bank of a
-      // river of order 4 and up
+      // cells without a recorded material showed the photo's dark river at the water's edge), and a big river's bank or
+      // terrace cell whose ground stands under 0.4 m over the water, fading out by 0.8 m (round 8: by its height, not its
+      // zone; Lamar's bank and terrace cells by the probe stand 2-30 cm over the water, and drawn as soil or as the photo,
+      // whose river pixels lie there, the near bar was bare sand with dark blots); a bank cell: the rest of a big river's
+      // bank (soil and litter)
       #define WZ(v) mod(floor(v.r * 255.0 + 0.5), 16.0)
       #define WM(v) mod(floor(v.g * 255.0 + 0.5), 8.0)
       #define BIG(v) (mod(floor(v.r * 255.0 / 16.0 + 0.01), 8.0) >= 4.0)
-      #define BEDF(v) ((WZ(v) == 1.0 || WZ(v) == 2.0) && (WM(v) >= 1.0 || BIG(v)) ? 1.0 : 0.0)
+      // HOV: the cell's ground over its reach's level, m (2.56 off the water system)
+      #define HOV(v) ((128.0 - v.b * 255.0) * 0.02)
+      #define BEDF(v) ((WZ(v) == 1.0 || WZ(v) == 2.0) && (WM(v) >= 1.0 || BIG(v)) ? 1.0 : BIG(v) && (WZ(v) == 3.0 || WZ(v) == 4.0) && v.b > 0.002 ? 1.0 - smoothstep(0.4, 0.8, HOV(v)) : 0.0)
       #define BANKF(v) (WZ(v) == 3.0 && BIG(v) ? 1.0 : 0.0)
       vec2 xn = vec2(vPosW.x, -vPosW.z);
       float rag = 0.4 * (rnoise(vPosW.xz, 1.1, 1.3) - 0.5) + 0.2 * (vnoise(xn * 2.7) - 0.5);
@@ -940,7 +945,7 @@ const FRAG = /* glsl */`
       float wm = WM(wv);   // none recorded: the neighbours' coarsest, else gravel
       if (wm < 1.0) wm = max(max(WM(v00), WM(v10)), max(WM(v01), WM(v11)));
       if (wm < 1.0) wm = 3.0;
-      #define WET(v) (v.b > 0.002 && WZ(v) <= 2.0 ? mix(0.68, 0.9, smoothstep(-0.05, 0.4, (128.0 - v.b * 255.0) * 0.02)) : 0.9)
+      #define WET(v) (v.b > 0.002 && WZ(v) <= 4.0 ? mix(0.68, 0.9, smoothstep(-0.05, 0.4, HOV(v))) : 0.9)
       float wetB = WET(wv);
       float fadeB = 1.0 - smoothstep(60.0, 90.0, dist);
       if ((bedW + bankW) * fadeB > 0.0) {
@@ -957,9 +962,11 @@ const FRAG = /* glsl */`
         vec2 sunH = normalize(vec2(sunDir.x, -sunDir.z) + vec2(1e-4, 0.0));
         vec2 shOff = sunH * 0.6 * length(sunDir.xz) / max(sunDir.y, 0.2);   // the shadow's reach per unit radius: height 0.6 r / tan(elevation)
         float tA = 1.0 - smoothstep(0.08 * scA, 0.25 * scA, foot), tB = 1.0 - smoothstep(0.08 * scB, 0.25 * scB, foot);
-        // a cell more than 0.25 m under its reach's level is under the drawn water: its bed takes the stones' mean (the
-        // stones there cost ~1 ms at Lamar's river pose and were seen only through the water)
-        if (wv.b > 0.002 && (wv.b * 255.0 - 128.0) * 0.02 > 0.25) { tA = 0.0; tB = 0.0; }
+        // within a channel, where the four cells around are all more than 0.5 m under the reach's level, the bed is under the
+        // drawn water: the stones' mean (they cost ~1 ms at Lamar's river pose seen only through the water). Round 7 took one
+        // cell 0.25 m under, and the 5 m cells by the bank are that much under while their 1 m ground stands over the water:
+        // the near bar went bare.
+        if (max(max(HOV(v00), HOV(v10)), max(HOV(v01), HOV(v11))) < -0.5) { tA = 0.0; tB = 0.0; }
         // past their pixel size, the stones' and the matrix's mean (each stone's cover about 0.45 x its cells' share)
         if (wm >= 2.0 || isBank) bc = mix(bc, rock * 0.85, 0.45 * (fA * (1.0 - tA) + fB * (1.0 - tB) * (1.0 - 0.45 * fA)));
         vec4 st = vec4(0.0); vec2 sa = vec2(0.0); float tf = 0.0;

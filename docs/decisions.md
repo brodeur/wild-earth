@@ -7464,6 +7464,20 @@ glottal stop is itself drawn like a question mark without its dot, so at 12 px i
   cost ~1 ms, seen only through water). From the air ΔE ≤ 0.005; river pose +0.47 ms median (8 interleaved pairs).
   Open: the strip of bank beside the bar is plain smooth soil; within ~1 m a stone is now and then clipped by its search
   cell's edge.
+- **Lamar's river bar by height over the water; the dark pebbles that read as holes are stones again** (terrain.js bed
+  block; rocks.js bed stones). The holes were rocks.js's placed pebbles, not the drawn bed: the dark third (tone 0.55)
+  darkened x0.7 again for every channel cell came out near black. The bare near bar and its dark blots (taken for sedge
+  shadows; toggling the cascaded shadow, contact AO and cloud shadow left them) were bank and terrace cells 2-30 cm over
+  the water drawn as soil or as the photo's river pixels.
+  - A big river's (order 4+) bank or terrace cell under 0.4 m over its reach's level is bed, fading out by 0.8 m.
+  - The stones' under-water mean only where all four cells around are > 0.5 m under (one 5 m cell 0.25 m under had
+    bared a bar whose 1 m ground stands over the water).
+  - Wetness by height over the water on every zone; a placed stone is wet by its own ground's height over the reach's
+    level (WaterGrid.level): x0.7 at the edge, dry by 0.4 m. The dark third's tone is 0.7-0.95, a dry basalt cobble's.
+  - A water-worn stone's top mirrors the sky at grazing view (Schlick, F0 0.04, x0.35 for roughness).
+  - From the air ΔE ≤ 0.002 (Lamar, Teton); probes it11a 0 shader errors. Cost not settled: under a shared GPU (frames
+    25-32 ms) the river view's paired medians were +1.3 and +2.3 ms; more near pixels carry stones. Open: a few low bank
+    patches among the sedges show pale bed sand.
 
 ## 2026-11-06: snakes are playable; the body follows the head's path (branch claude/snake-play)
 
