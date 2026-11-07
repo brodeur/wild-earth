@@ -5461,11 +5461,11 @@ export class Animals {
   // debugging: a group of a species (code, SPECIES index, or its one/DRAWN name: 'gray fox', 'fox', 'buck', 'lion', 'bear',
   // 'mountain quail' or 'mountain-quail' or 'mquail'; 'quail' is the California quail)
   // d m ahead of the camera, kept through rebuilds until clearSummoned(). Returns the new animals.
-  summon(which, d = 12) {
+  summon(which, d = 12, at = null) {   // at: { x, z } there instead of d m ahead of the camera
     const k = typeof which === 'number' ? which : SPECIES.findIndex((sp, i) => sp.code === which && sp.variantOf === undefined || sp.one === which || DRAWN[i]?.name === which || DRAWN[i]?.param === which || DRAWN[i]?.alias === which);
     if (k < 0) return null;
     const C = this.camera, dir = new THREE.Vector3(); C.getWorldDirection(dir); dir.y = 0; dir.normalize();
-    const x = C.position.x + dir.x * d, z = C.position.z + dir.z * d, keep = new Set(), n = ++this.debugN;
+    const x = at ? at.x : C.position.x + dir.x * d, z = at ? at.z : C.position.z + dir.z * d, keep = new Set(), n = ++this.debugN;
     const rnd = mulberry32(hash(n, 7, 9999 + k)), before = new Set(this.byId.keys());
     if (ID[k] === ML) this.spawnLionGroup(`${k}:dbg${n}`, x, z, rnd, keep, k);
     else if (ID[k] === BE) this.spawnBearGroup(`${k}:dbg${n}`, x, z, rnd, keep, k);

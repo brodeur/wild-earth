@@ -138,7 +138,7 @@ socket, reconnect, and an event emitter the screens subscribe to).
 Client to hub:
 
 ```
-hello     {}                                  -> welcome {you, friends[], requests[], groups[], online[], providers[]}
+hello     {}                                  -> welcome {you, friends[], requests[], groups[], online[], providers[], bodies[]}
 search    {q}                                 -> found {users[]}
 friend    {op: 'request'|'accept'|'remove'|'block'|'unblock', user}
 group     {op: 'create', name, users[]} | {op: 'add'|'remove', group, user} | {op: 'leave'|'name', group, name?}
@@ -152,6 +152,9 @@ season    {season, date?}                     (the sender changed the season: 's
                                               -> season {from, season, date?, tile?} to every online member of their groups,
                                               seasoned {season, to} back; group season)
 answer    {invite, join: true|false}
+body      {tile, code, here?} | {tile: null}  (the body chosen for a tile on the home screen's rings, or worn there (here); code
+                                              a species code or 'spirit'; -> body {user, tile, code, here} to the online members of
+                                              the sender's groups while the sender shares their place; "Bodies")
 room      {op: 'join'|'leave', tile, season?} (the client joins its tile's room when a world is entered, with the season
                                               the world is in, and again when the season changes in place; absent: the
                                               tile's by the calendar. Who sees whom)
@@ -171,6 +174,8 @@ groups    {groups[]}                          (after any change; each with its m
 chat      {scope, from, text, at}
 invite    {id, from, tile, season, date?, group?, point?, follow?}
 season    {from, season, date?, tile?}        (a group member changed the season; tile: theirs, when in a world)
+body      {user, tile, code, here} | {user, tile: null}  (a group member's body chosen or worn there, or none any more;
+                                              welcome's bodies[] holds the members' current ones; "Bodies")
 pos       {user, name, x, y, z, yaw, form, b?, c?}  (name: their display name; from a group member in the same world in any form, or anyone in it while a
                                               spirit; on entering a world, the last one of each player already in it that
                                               may be seen; lane 4, Who sees whom)
@@ -770,6 +775,84 @@ groupSeason, Start into it), `client/src/main.js` (the select's relay, `seasonCt
   a change while a member's follow Join is loading (it enters the invitation's season, which may be the older one).
 - **Open.** The acorn game and the dig keep the season they were built with after any season change, the player's own
   included (as before); a change made while signed out of the hub or with no group stays the player's own.
+
+## Bodies
+
+Aaron, 2026-11-07: "Right now when the tile is selected there is a label in the middle and a tooltip above. Instead,
+center the tile on the screen in its final position so that there is space on the bottom for a proper Title above the
+Invite/start buttons. Remove the label and tooltip. put the information above the buttons. Then the animals pop in just
+like the did before, but this time instead of at the bottom they are in a ring above the tiles. There is a ring of
+terrestrial animals on one plane, and a ring of flight animals in another plane. As they teleport in the rings begin to
+gentle rotate. In the center of the ring is the spirit avatar, bigger. It is selected. If an animal is selected it thje
+ring rotates so that the selected animal is to the "front" /bottom/center/forward towards the camera If any animal is
+selected, any other players in the group will see which animal they selected or are currently inhabiting. Any other
+group member can click on that same animal and join the tile in that body, right next to their friend."
+
+**Built (2026-11-07, branch `claude/animal-rings`).** `client/src/bodyRing.js` (the rings), `client/src/bodyModels.js`
+(each species' drawn model and still pose, shared with `client/tools/opening_sprites.js`), `client/src/title.js` (the
+stage, the place's title, picking, `startWith`), `client/title.css`, `hub.py` (`m_body`, the bodies in memory, welcome's
+`bodies`), `client/src/hub.js` (`body()`, `bodies`), `client/src/multiplayer.js` (`bodiesAt`, the body worn, the follow
+that needs no question, Start beside a member), `client/src/main.js` (`takeBody`), `client/src/spirit.js` (`enter(id,
+at)`), `client/src/animals.js` (`summon(..., at)`), `tests/test_hub.py` (`test_bodies`).
+
+- **The layout.** The chosen place's card over its north edge and its label on the map are gone. The stage is the free
+  centre between the panels, under the risen title and above the bar; the rings fill it and the tile is framed inside
+  the walkers' ring (`focusArea` from `ringEllipse`), so the animals stand round its edges and the fliers turn over it.
+  The bar now opens with the place's title: the name (30 px) and its players' pill, the Indigenous territories, "As the
+  spirit" / "As a black-tailed deer · beside Juno", and the players there and coming (their list opens upward). Map
+  labels are kept out of the rings' space and out from under the stage. At a phone's width a chosen place takes the
+  whole width: the places fold behind an All places button under the search, which opens them over the stage.
+- **The rings.** The tile's bodies are its species present (`species.json`) that the client draws and the spirit can
+  take (`GROUND`, `FLIERS` and the three with their own controls), and its own fauna's stand-ins (`client/fauna.json`
+  slots on a kin with a body, their own model when they have one): the walkers on one ring, the fliers on a wider one
+  above it, the spirit (the live wisp, chasing its tail) in the middle, bigger, chosen at first. Each animal is the
+  client's own model drawn live with the opening stills' pose and light (walkers standing, fliers on the wing, beating),
+  on a compressed true scale (the largest side `0.3 * min(1, m / 2.2)^0.4` ring radii, within the ring's spacing). The
+  models load during the flight to the place, behind the world's heavy steps (four at once; each compiled with `compileAsync` before it is drawn) and pop
+  in when it lands, in a random order a short gap apart, with the old lineup's arrival in 3D: a beam of the species' soul
+  colour, a white flash and a spring to full size; a new place beams the old ones out. The rings then turn slowly, the
+  walkers one way and the fliers the other.
+- **Choosing.** A click on an animal (or the spirit) chooses it: its ring swings it to the front on a critically damped
+  spring and holds it there, turned partly toward the camera, a halo under it; the other ring keeps turning. Hovering
+  names the animal. Signed out the rings show but nothing is chosen: hovering or tapping an animal shows "Log in or sign
+  up to start", as Start does. Reduced motion: no turning, no beams or springs (fades), a choice jumps to the front.
+- **The group sees it.** `body {tile, code}` goes to the hub on each choice ('spirit' included), and `body {tile, form,
+  here: true}` from a world whenever the body worn changes; leaving a world takes it back. The hub relays it to the online
+  members of the sender's groups (not to friends outside them, not across a block), only while the sender shares their
+  place (presence 'tile'), and holds the last one per user in memory for a member who connects later (welcome's
+  `bodies`) until the connection that told it closes. A tile id and a species code: no position, nothing written down,
+  nothing logged. Each member's pick shows over that animal in the rings as their face and name, a gold ring when they
+  are wearing it there.
+- **Going with a friend.** Choosing the animal a member chose or wears at that place means going with them (`joinWith`;
+  the one wearing it first). If they are in the world, Start goes in with no flight, as a follow Join is put: the room's
+  join brings their pose, and the body is taken beside them (`takeBody`: 2.5 m to their right, else left, behind or a
+  little further out, up to 6 m, wherever the near plants' crowns (`veg.nearPlants`) leave 1.2 m clear; facing their way;
+  in the air beside them when both fly). If both are still on the main screen, whichever presses Start first goes in
+  and asks the group to follow as every Start does; the other, having chosen the same animal there, is not asked: their
+  Start is pressed for them (`startWith`, once their world is built), their arrival flies in behind the first, and their
+  body is taken beside the first's. Alone, a walker is taken on the ground 25 m ahead of the arrival's end and a flier
+  where the spirit is, on the wing. The body is a fresh animal of that species summoned there and entered as the spirit
+  enters any body (the camera's blend, the wisp diving in).
+- **Cost.** The rings draw with the page's renderer (no second WebGL context) in their own scene after the earth, the
+  depth cleared: on El Dorado's 20 bodies, 24 draw calls and 14,000 to 34,000 triangles a frame, 0.45 ms of CPU for the
+  rings' frame (headless Chrome on Metal, on this Mac). A new place, or the screen closing, frees every model's
+  geometry, material and clip texture (checked by the renderer's counts: -20 geometries, -7 textures on El Dorado).
+- **The zoom is not slowed.** The models first loaded from the moment of the choice and slowed the paced flight (click to
+  Start, 20 Mbit/s and a cold cache: 50.0 s against main's 47.8 and 48.3); they now wait until the world's build is past
+  its animals step (at once for a visitor, who builds nothing): 46.3 s. The pops then run over the first few seconds after
+  landing instead of at once.
+- **Verified** with two headless Chromes and two local test accounts in one group on the real local hub (El Dorado):
+  aaron_t chose the deer; juno_t's rings showed his face and name on it; juno_t chose it ("As a black-tailed deer ·
+  beside aaron", and aaron_t's rings showed her on it); aaron_t pressed Start and juno_t's Start went with him at once;
+  both arrived as deer, 2.7 m apart. Then with aaron_t still in the world as the deer, juno_t back on the main screen saw
+  him on it with the gold ring ("1 here"), chose it and pressed Start: no flight, a deer 2.7 m beside him, the hub's
+  last pose used (`__weMp.placed`). No errors on either page. The first try put her deer, and its camera, inside a shrub;
+  the spot is now kept clear of the near plants' crowns (`veg.nearPlants`). Also checked: signed out (the rings show, a
+  click keeps the spirit and shows the tip, the cursor not-allowed, Start greyed), reduced motion (the rings still, a
+  choice at the front at once), a phone (390 x 844: the list folded, the rings and the title across the width),
+  `?skip=1&as=deer` (straight into a deer), and `test_bodies` with the hub's tests. Frames: animal-rings-captures/ in
+  the side-session notes. Lamar Valley's rings (its fauna's stand-ins, the moose and bison on their own models) drew
+  with no errors. Not verified: two fliers joining in the air, a member's body changing while the other looks at the rings (the relay is the same message).
 
 ## Who sees whom
 

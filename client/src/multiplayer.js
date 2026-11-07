@@ -125,11 +125,20 @@ export class Multiplayer {
       if (this.joining && id !== this.joining.tile && !this.quiet) this.joining = null;
       this.closePick(); choose(id);
     };
+    title.onBody = (tile, code) => { this.hub?.body(tile, code, false); };
+    title.bodiesAt = tile => this.bodiesAt(tile);
     const onBegin = title.onBegin;
     title.onBegin = c => {
-      const j = this.joining;
-      if (j && c.tileId === j.tile) { c.point = j.point || c.point; c.lead = j.from; }   // the arrival behind the picker (main.js enterWorld)
-      else {   // Start: into the group's season, if one was set, and the group is asked to follow (group follow)
+      const j = this.joining, jb = c.join ? this.hub?.bodies?.get(c.join) : null;
+      if (j && c.tileId === j.tile) {   // the arrival behind the picker (main.js enterWorld)
+        c.point = j.point || c.point; c.lead = j.from;
+        if (j.season && j.season !== 'auto') { c.season = j.season; c.date = j.date || null; c.pick = !!j.date; }   // a body follow's: the starter's season
+      } else if (jb && jb.here && jb.tile === c.tileId && c.body && jb.code === c.body) {
+        // the body a member wears in this world (the rings): no flight, beside them at once (main.js takeBody), as a follow
+        // Join is put (awaitLead: their pose comes with the room's join)
+        c.lead = c.join; c.follow = true;
+        this.following = { from: c.join, tile: c.tileId, point: null, name: this.social?.nameOf(c.join) || '' };
+      } else {   // Start: into the group's season, if one was set, and the group is asked to follow (group follow)
         const gs = this.inGroup() ? this.groupSeason : null;
         if (gs && gs.season !== 'auto') { c.season = gs.season; c.date = gs.date || null; c.pick = true; }
         this.askFollow(c.tileId, c.point || null, gs && gs.season !== 'auto' ? { season: gs.season, date: gs.date || null } : null);
@@ -168,6 +177,7 @@ export class Multiplayer {
     hub.on('pos', d => this.gotPos(d));
     hub.on('gone', d => { this.poses.delete(d.user); this.room?.players?.gone(d.user); this.voice?.gone(d.user); });
     hub.on('season', d => this.gotSeason(d));
+    for (const t of ['body', 'open', 'groups']) hub.on(t, () => this.title?.refreshBodies?.());
     hub.on('presence', d => {   // a member gone offline or to another tile is no longer seen here (players.js)
       if (d.state === 'offline' || (d.state === 'tile' && d.tile && this.room && d.tile !== this.room.tileId)) { this.poses.delete(d.user); this.room?.players?.drop(d.user); this.voice?.gone(d.user); }
     });
@@ -208,6 +218,12 @@ export class Multiplayer {
     for (const id of ids) if (!m.has(id)) m.set(id, 'asked');
     this.title?.refreshPeople?.();
     return { ok: true, text: `Invited ${ids.map(id => this.social.nameOf(id)).join(', ')} to ${this.placeName(tile) || 'this place'}` };
+  }
+  // The group's bodies at a tile (the hub's `body`: the home screen's rings, title.js bodiesAt): [{ user, name, code, here }]
+  bodiesAt(tile) {
+    const me = this.hub?.you?.id, out = [];
+    for (const [user, b] of this.hub?.bodies || []) if (user !== me && b.tile === tile && this.isMate(user)) out.push({ user, name: this.social?.nameOf(user) || 'someone', code: b.code, here: !!b.here });
+    return out;
   }
   // The friends and group members the hub says are in a tile (those sharing their place): the home screen's list and labels.
   friendsAt(tile) {
@@ -326,6 +342,16 @@ export class Multiplayer {
     this.closeInvite();
     const name = this.social.nameOf(d.from), place = this.placeName(d.tile) || d.tile;
     const inv = { id: d.id, from: d.from, group: d.group || null, tile: d.tile, point: d.point || null, season: d.season || null, date: d.date || null, name, place };
+    // the same body as theirs chosen at that place on the home screen (the rings): going together was asked already, so
+    // no question: this player Starts with them (now, or once their world is built) and arrives beside them
+    const ti = this.title, b = this.hub?.bodies?.get(d.from);
+    if (this.onEarth() && ti.phase === 'lit' && !ti.begun && !ti.guest && ti.sel === d.tile && ti.body && ti.body !== 'spirit' && b && b.tile === d.tile && b.code === ti.body) {
+      this.hub.answer(d.id, true);
+      this.joining = { from: d.from, tile: d.tile, point: d.point || null, season: d.season || null, date: d.date || null };
+      this.note(`Going with ${name}`);
+      ti.startWith?.(d.from, name);
+      return;
+    }
     const t = this.toast = new FollowToast({ from: d.from, name, place, ms: this.followMs,
       onJoin: () => { this.toast = null; this.hub?.answer(inv.id, true); this.follow(inv); },
       season: d.season || null,
@@ -489,6 +515,7 @@ export class Multiplayer {
     this.voice?.setRoom(null);
     this.room = null; this.poses.clear();
     if (tell && this.hub?.room) { this.hub.enter(null); this.chat?.setRoom(); }
+    if (tell) this.hub?.body(null);
   }
   // Whether the player shares a group with this user (the group sees them in any form; voice is the group's).
   isMate(id) { return !!this.hub?.groups?.some(g => g.members?.some(m => m.id === id)); }
@@ -502,6 +529,7 @@ export class Multiplayer {
       this.poses.clear(); r.players?.clear(); this.hub.enter(r.tileId, sn);
     }
     const P = r.flight.pos, m = { x: r2(P.x), y: r2(P.y), z: r2(P.z), yaw: r2(r.flight.yaw), form: r.form?.() || 'spirit' };
+    if (m.form !== r.worn) { r.worn = m.form; this.hub.body(r.tileId, m.form, true); }   // the body worn here, for the group's home screens (title.js rings)
     // in a body: its pose as the animal stream has an animal (bodySample.js), so the group draws the animal (players.js)
     const b = this.bodyB ||= new Float32Array(32), c = this.bodyC ||= new Float32Array(8);
     if (m.form !== 'spirit' && r.body && r.body(b, c) >= 0) { m.b = Array.from(b.subarray(0, NF), r3); m.c = Array.from(c, r3); }

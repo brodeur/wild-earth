@@ -7359,3 +7359,39 @@ snake inside the walkers' control. docs/movement.md "The snake" and docs/games.m
   keep the kin's table. Every fauna slot now carries its `family`: the re-run slot had lost it, and the terciopelo
   struck as a colubrid, without venom.
 
+## 2026-11-07: the bodies in rings over the chosen place (branch claude/animal-rings)
+
+Aaron's design for the screen after a place is chosen: the tile centred with room under it for a proper title above
+Invite and Start, the centre label and the card above the tile gone, and the place's animals teleporting in as two rings
+over the tile (walkers on one plane, fliers on another), turning gently, the spirit bigger in the middle and chosen; a
+choice swings its ring until that animal is at the front; the group sees each member's choice or body and can go in
+beside them in it. docs/multiplayer.md "Bodies" has the whole of it.
+
+- **Live models, not the stills.** The old lineup's stills are one 3/4 view each: on a turning ring they would slide
+  round as flat cut-outs. Each animal is the client's own model drawn live with the stills' pose and light
+  (`bodyModels.js` now holds the species-to-model table the sprite tool used, so the two agree), in its own scene over the
+  earth with the page's renderer: no second WebGL context, 24 draw calls and at most 34,000 triangles on El Dorado, 0.45
+  ms of CPU a frame. The models load during the flight, once the world's build is past its animals step (loading them
+  from the choice slowed the paced zoom by about 2 s on a throttled cold load; gated, click to Start was 46.3 s against
+  main's 47.8 and 48.3), and are compiled with `compileAsync` before they are drawn, so the pop-in is the loading.
+- **The rings' camera is not the earth's.** The rings look down 34 degrees (the tile is seen from about 49 at the chosen
+  height): the ring's ellipse is close enough to the tile's shape to stand round it, and the animals are still seen
+  from the side, as they are recognised. The tile is framed inside the walkers' ellipse, not the other way round, so the
+  stage (between the panels, under the title, above the bar) sets the size of both.
+- **A compressed true scale.** An animal's largest side is `0.3 * min(1, m / 2.2)^0.4` ring radii, capped by the ring's
+  spacing: the deer near the most, the fox two thirds, the vole a third, so a vole is still there beside the elk.
+- **The hub relays a body, not a place.** `body {tile, code, here}` goes to online group members only, while the sender
+  shares their place, held in memory for later welcomes until its connection closes. Considered: deriving it from
+  presence and the position relay. Rejected: presence says only the tile, positions go only to those in the same world,
+  and a choice on the main screen is neither.
+- **Choosing a member's animal is the answer to their follow.** When both are on the main screen and one presses Start,
+  the other's matching choice already said "I am going with you", so the group follow's toast is skipped and their Start
+  is pressed for them (once their world is built). With the member already in the world, Start skips the flight and
+  takes the body beside them, as a follow Join is put.
+- **Beside a friend, out of the bushes.** The first try put the joiner's deer, and its camera, inside a shrub. The
+  tile's canopy raster was tried first (the side with the least cover) and could not help: its cells are 30 m on El
+  Dorado, larger than the offsets. The spot is now chosen from the world's near plants (`veg.nearPlants`, each one's
+  position and crown, as forage.js reads them): right of the friend, else left, behind or further out up to 6 m, the
+  first that leaves 1.2 m clear of every crown. Checked: the joiner then stood in the open beside the friend.
+- **Phones.** The places list took half of a phone's width and the stage was a strip beside it: a chosen place now folds
+  the list behind an All places button, and the rings and the title take the width.
