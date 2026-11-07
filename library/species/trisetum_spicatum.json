@@ -37,12 +37,12 @@
   "by": "pipeline/plantgen.py",
   "version": "5",
   "card": "library/plant_cards/trisetum_spicatum.json",
-  "card_sha256": "5cc31179c8c5c700",
+  "card_sha256": "ddb38187d2726b99",
   "template": "stipa_pulchra",
   "template_common": "purple needlegrass",
   "height_scale": 0.621
  },
- "notes": "Written by rule from the USDA PLANTS Database's characteristics (pipeline/ground_cards.py). flowering months: no Bloom Period in PLANTS. PLANTS characteristics used (TRSP2): Height, Mature (feet) = 1.9, Foliage Color = Green, Fruit/Seed Color = Brown, Active Growth Period = Spring and Summer, Bloom Period = Indeterminate, Leaf Retention = No, Growth Form = Bunch. The client's seasons are calendar quarters; PLANTS' bloom periods are the species' over its US range, not corrected for this tile's elevation. Region tag landfire_mz21 (the LANDFIRE map zone whose descriptions named it) is not a natural region in pipeline/regions.py: no regional table draws it.",
+ "notes": "Written by rule from the USDA PLANTS Database's characteristics (pipeline/ground_cards.py). flowering months: no Bloom Period in PLANTS. PLANTS characteristics used (TRSP2): Height, Mature (feet) = 1.9, Foliage Color = Green, Fruit/Seed Color = Brown, Active Growth Period = Spring and Summer, Bloom Period = Indeterminate, Leaf Retention = No, Growth Form = Bunch, Drought Tolerance = Medium, Foliage Texture = Medium. The client's seasons are calendar quarters; PLANTS' bloom periods are the species' over its US range, not corrected for this tile's elevation. Region tag landfire_mz21 (the LANDFIRE map zone whose descriptions named it) is not a natural region in pipeline/regions.py: no regional table draws it.",
  "sources": [
   "USDA PLANTS profile TRSP2: https://plantsservices.sc.egov.usda.gov/api/PlantProfile?symbol=TRSP2, read 2026-11-06",
   "USDA PLANTS characteristics (TRSP2): https://plantsservices.sc.egov.usda.gov/api/PlantCharacteristics/<id>, read 2026-11-06",
@@ -207,6 +207,7 @@
     ]
    },
    "cures": "with_the_season"
-  }
+  },
+  "leaf_width_m": 0.0035
  }
 }

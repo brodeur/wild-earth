@@ -7411,6 +7411,33 @@ glottal stop is itself drawn like a question mark without its dot, so at 12 px i
   (the grass lane's method reads 0.04-0.06 lower on all three; only the difference is compared). Dappled cast shadows
   kept (without them 1.095). Contact shade under near shrubs survives at eye level, no visible rings. ΔE top-down 0.000,
   30 m nadir 0.48, 15 m 0.23.
+- **Near sage leaves at the record's size: a shoot of 18 small leaves per tuft, not a fan of seven big ones**
+  (shrubfield.js tuft picture). The tuft card was right (0.07 m, 3.5 x the record's 2 cm leaf), but its picture held
+  seven leaves of 2.5-3.9 cm (1.3-2 x the record) fanned from one node in one plane and, since the tilt term went, lit as
+  one: a big pale wedge. Now 3 leaves at each of 6 nodes, 2 cm ±25 %, splayed out and up, the same covered share (0.2535
+  vs 0.2525, so porosity and the look from above hold); each leaf takes its own tilt divided by the picture's mean
+  (0.65), so leaves vary without the doubled sun returning. The far pictures re-bake from it; no seam at 13 m. ΔE vs
+  d2b4cd2: top-down 0.001, 15 m 0.007, 30 m 0.005, eye 0.025. Cost unchanged (eye 24.0 -> 23.7 ms, c_plant 24.2 -> 22.9).
+  Open: each shoot reads a little like a regular fern frond.
+- **Sage shoots irregular** (shrubfield.js bakeTuft): a wandering axis of 5-7 nodes at jittered spacing (0.6-1.4x),
+  fascicles of 1-5 leaves each at its own azimuth (foreshortened toward or away from the eye, far-side leaves x 0.82 and
+  drawn first, so they overlap in depth), 2-3 longer tip leaves (1.35x), side shoots at ~30 % of nodes; one hash stream
+  through the four variants. Leaf area normalised to 24 leaves so the covered share holds (0.254); per-leaf tilt divided
+  by this picture's mean (0.63). ΔE vs cf06c99: top-down 0.000, 15/30 m ≤ 0.004, eye 0.097; cost unchanged.
+- **Fescue leaves at their width; bare soil by texture; small riparian rows keep their sedge** (grass.js,
+  grassBlades.js, terrain.js, pipeline/ground_cards.py; ground cards carry `leaf_width_m`). Leaf width from PLANTS'
+  Foliage Texture: fine 1.5 mm (FEIS: Idaho fescue 0.5-1.5 mm, rolled), medium 3.5 mm, coarse 8 mm (one width per class,
+  stated; no texture listed -> medium). Each tuft 120 leaves at 0.75 the old width (leaf area kept); near the eye a
+  leaf narrows toward its width but never below 1.2 px (keeps the clump's cover, no shimmer), so the true width shows
+  within ~1 m. Bare soil: a crumb of 1.5 cm clods and surface stones at the map unit's surface rock fragments, lit from
+  above; litter: lying fibres along the wind; both average ~1 so the mean stays the photo's; patches 2-9 cm with soft
+  edges. Grass slots 11 -> 16 (15 own + the generic): with 11, every rule left the small rows empty or cost the steppe a
+  species. Slots fill community by community first (largest first, each its best grass), then the tile ranking. Lamar
+  keeps its 11 and adds Koeleria macrantha, Calamagrostis canadensis, Deschampsia cespitosa, Festuca brachyphylla; Teton's
+  riparian rows (44-103 cells) carry Carex hoodii. Built-in species copy refreshed. From the air ΔE ≤ 0.003; cost +1.9 ms
+  at the Lamar eye pose (4 interleaved pairs, quiet GPU, 19.2 -> 21.4 ms; 150 leaves cost +5.5 ms and were cut). Open:
+  steppe mottling busy at 1-3 m; the detail relief reads as cobbles up close; lamar_steppe's pale crazy-paving ground
+  (present before this round).
 
 ## 2026-11-06: snakes are playable; the body follows the head's path (branch claude/snake-play)
 

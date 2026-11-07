@@ -38,12 +38,12 @@
   "by": "pipeline/plantgen.py",
   "version": "5",
   "card": "library/plant_cards/elymus_elymoides.json",
-  "card_sha256": "8cd6bf6332eedb3c",
+  "card_sha256": "124750b801dd89bd",
   "template": "stipa_pulchra",
   "template_common": "purple needlegrass",
   "height_scale": 0.493
  },
- "notes": "Written by rule from the USDA PLANTS Database's characteristics (pipeline/ground_cards.py). PLANTS characteristics used (ELEL5): Height, Mature (feet) = 1.5, Foliage Color = Green, Fruit/Seed Color = Brown, Active Growth Period = Spring, Bloom Period = Mid Spring, Leaf Retention = No, Growth Form = Bunch. The client's seasons are calendar quarters; PLANTS' bloom periods are the species' over its US range, not corrected for this tile's elevation. Region tag landfire_mz21 (the LANDFIRE map zone whose descriptions named it) is not a natural region in pipeline/regions.py: no regional table draws it.",
+ "notes": "Written by rule from the USDA PLANTS Database's characteristics (pipeline/ground_cards.py). PLANTS characteristics used (ELEL5): Height, Mature (feet) = 1.5, Foliage Color = Green, Fruit/Seed Color = Brown, Active Growth Period = Spring, Bloom Period = Mid Spring, Leaf Retention = No, Growth Form = Bunch, Drought Tolerance = High, Foliage Texture = Fine. The client's seasons are calendar quarters; PLANTS' bloom periods are the species' over its US range, not corrected for this tile's elevation. Region tag landfire_mz21 (the LANDFIRE map zone whose descriptions named it) is not a natural region in pipeline/regions.py: no regional table draws it.",
  "sources": [
   "USDA PLANTS profile ELEL5: https://plantsservices.sc.egov.usda.gov/api/PlantProfile?symbol=ELEL5, read 2026-11-06",
   "USDA PLANTS characteristics (ELEL5): https://plantsservices.sc.egov.usda.gov/api/PlantCharacteristics/<id>, read 2026-11-06",
@@ -208,6 +208,7 @@
     ]
    },
    "cures": "after_flowering"
-  }
+  },
+  "leaf_width_m": 0.0015
  }
 }

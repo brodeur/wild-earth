@@ -999,21 +999,6 @@
    "rank": 40
   },
   {
-   "id": "hydrophyllum_capitatum",
-   "kind": "forb",
-   "why": [
-    "GBIF: 51 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 51,
-   "scientific": "Hydrophyllum capitatum",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 41
-  },
-  {
    "id": "lonicera_involucrata",
    "kind": "shrub",
    "why": [
@@ -1026,7 +1011,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 42
+   "rank": 41
   },
   {
    "id": "achillea_millefolium",
@@ -1040,7 +1025,7 @@
    "record": true,
    "card": false,
    "drawn_as": "achillea_millefolium",
-   "rank": 43
+   "rank": 42
   },
   {
    "id": "arnica_cordifolia",
@@ -1054,7 +1039,7 @@
    "record": true,
    "card": true,
    "drawn_as": "arnica_cordifolia",
-   "rank": 44
+   "rank": 43
   },
   {
    "id": "vaccinium_membranaceum",
@@ -1069,7 +1054,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 45
+   "rank": 44
   },
   {
    "id": "vaccinium_scoparium",
@@ -1084,7 +1069,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 46
+   "rank": 45
   },
   {
    "id": "ribes_viscosissimum",
@@ -1099,7 +1084,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 47
+   "rank": 46
   },
   {
    "id": "orthilia_secunda",
@@ -1114,7 +1099,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 48
+   "rank": 47
   },
   {
    "id": "castilleja_miniata",
@@ -1128,6 +1113,20 @@
    "record": true,
    "card": true,
    "drawn_as": "castilleja_miniata",
+   "rank": 48
+  },
+  {
+   "id": "equisetum_arvense",
+   "kind": "forb",
+   "why": [
+    "GBIF: 17 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 17,
+   "scientific": "Equisetum arvense",
+   "record": true,
+   "card": true,
+   "drawn_as": "equisetum_arvense",
    "rank": 49
   },
   {
@@ -1985,9 +1984,9 @@
    "id": "equisetum_arvense",
    "scientific": "Equisetum arvense",
    "family": "Equisetaceae",
-   "kind": "fern",
+   "kind": "forb",
    "records": 17,
-   "known": false
+   "known": true
   },
   {
    "id": "selaginella_densa",
@@ -2763,14 +2762,6 @@
    ]
   },
   {
-   "id": "hydrophyllum_capitatum",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 51 records on the tile"
-   ]
-  },
-  {
    "id": "lonicera_involucrata",
    "kind": "shrub",
    "what": "a trait card",
@@ -2973,9 +2964,9 @@
  ],
  "summary": {
   "needed": 64,
-  "with_record": 28,
+  "with_record": 29,
   "generated_now": 0,
-  "queued": 36,
+  "queued": 35,
   "unread_communities": 16,
   "by_layer": {
    "tree": 20,
@@ -2987,6 +2978,6 @@
    "shrub": false,
    "ground": true
   },
-  "hands": 52
+  "hands": 51
  }
 }

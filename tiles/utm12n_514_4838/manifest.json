@@ -15,7 +15,7 @@
   43.78492414769734
  ],
  "size_m": 10000,
- "generated_at": "2026-11-07T06:24:23Z",
+ "generated_at": "2026-11-07T07:23:45Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -6386,23 +6386,23 @@
     "landfire"
    ],
    "needed": 64,
-   "with_record": 28,
+   "with_record": 29,
    "generated_now": 0,
-   "queued": 36,
+   "queued": 35,
    "unread_communities": 16,
    "meets_target": {
     "tree": false,
     "shrub": false,
     "ground": true
    },
-   "hands": 52,
+   "hands": 51,
    "by_layer": {
     "tree": 20,
     "shrub": 18,
     "ground": 26
    },
-   "sha256": "630010f62a9fb186dcfd6fb30742a6ed27bdedb5cbae6f1abaebb87299591179",
-   "bytes": 64286
+   "sha256": "1176299c6ac3d2bcfe01699d98932e51c3635761b9e9432f38f6d4979aa2cb3f",
+   "bytes": 64051
   },
   "client.species_mix": {
    "path": "client/species_mix.json",
@@ -6493,20 +6493,23 @@
     "ground": [
      "actaea_rubra",
      "arnica_cordifolia",
-     "balsamorhiza_sagittata",
      "bromus_carinatus",
      "calamagrostis_canadensis",
      "carex_geyeri",
+     "carex_hoodii",
      "carex_rossii",
      "castilleja_miniata",
      "delphinium_nuttallianum",
+     "deschampsia_cespitosa",
+     "dryas_octopetala",
      "elymus_elymoides",
      "elymus_trachycaulus",
+     "equisetum_arvense",
      "erigeron_compositus",
      "erigeron_engelmannii",
      "eriogonum_umbellatum",
-     "erythronium_grandiflorum",
      "eurybia_conspicua",
+     "festuca_brachyphylla",
      "festuca_idahoensis",
      "geranium_viscosissimum",
      "hesperostipa_comata",
@@ -6515,6 +6518,7 @@
      "mertensia_ciliata",
      "phlox_pulvinata",
      "poa_secunda",
+     "poa_wheeleri",
      "pseudoroegneria_spicata",
      "saxifraga_bronchialis",
      "trisetum_spicatum"
@@ -6604,33 +6608,37 @@
      "artemisia_tridentata": 1.0
     },
     "ground_share": {
-     "actaea_rubra": 0.0256,
-     "arnica_cordifolia": 0.0559,
-     "balsamorhiza_sagittata": 0.0176,
-     "bromus_carinatus": 0.044,
-     "calamagrostis_canadensis": 0.0331,
-     "carex_geyeri": 0.1034,
-     "carex_rossii": 0.0582,
-     "castilleja_miniata": 0.0183,
-     "delphinium_nuttallianum": 0.0268,
-     "elymus_elymoides": 0.0208,
-     "elymus_trachycaulus": 0.0644,
-     "erigeron_compositus": 0.0109,
-     "erigeron_engelmannii": 0.0256,
-     "eriogonum_umbellatum": 0.0181,
-     "erythronium_grandiflorum": 0.0341,
-     "eurybia_conspicua": 0.0262,
-     "festuca_idahoensis": 0.0952,
-     "geranium_viscosissimum": 0.0184,
-     "hesperostipa_comata": 0.0208,
-     "lupinus_argenteus": 0.0862,
-     "maianthemum_stellatum": 0.0256,
-     "mertensia_ciliata": 0.0099,
-     "phlox_pulvinata": 0.0066,
-     "poa_secunda": 0.0431,
-     "pseudoroegneria_spicata": 0.0434,
-     "saxifraga_bronchialis": 0.0256,
-     "trisetum_spicatum": 0.0426
+     "actaea_rubra": 0.0255,
+     "arnica_cordifolia": 0.0533,
+     "bromus_carinatus": 0.0481,
+     "calamagrostis_canadensis": 0.033,
+     "carex_geyeri": 0.099,
+     "carex_hoodii": 0.0117,
+     "carex_rossii": 0.0583,
+     "castilleja_miniata": 0.0188,
+     "delphinium_nuttallianum": 0.0279,
+     "deschampsia_cespitosa": 0.0056,
+     "dryas_octopetala": 0.0019,
+     "elymus_elymoides": 0.023,
+     "elymus_trachycaulus": 0.0695,
+     "equisetum_arvense": 0.0005,
+     "erigeron_compositus": 0.0097,
+     "erigeron_engelmannii": 0.0255,
+     "eriogonum_umbellatum": 0.0191,
+     "eurybia_conspicua": 0.0261,
+     "festuca_brachyphylla": 0.0066,
+     "festuca_idahoensis": 0.0957,
+     "geranium_viscosissimum": 0.0195,
+     "hesperostipa_comata": 0.0219,
+     "lupinus_argenteus": 0.0912,
+     "maianthemum_stellatum": 0.0255,
+     "mertensia_ciliata": 0.0091,
+     "phlox_pulvinata": 0.002,
+     "poa_secunda": 0.0453,
+     "poa_wheeleri": 0.0093,
+     "pseudoroegneria_spicata": 0.0455,
+     "saxifraga_bronchialis": 0.0255,
+     "trisetum_spicatum": 0.0467
     },
     "mean_tree_density": 0.3055,
     "mean_shrub_density": 0.2585,
@@ -6655,8 +6663,8 @@
     "rows_with_herb_cover": 9,
     "evh_synthetic": false
    },
-   "sha256": "dd9ea4a06ceed8472cd2fb3a3aaa0d6bef202a82971cfec87994cdb10c19fbbd",
-   "bytes": 81903
+   "sha256": "905ffde6db53b4a0cf52deb35d44d1e96a92e997a064b8c6eaf34e4fee090c38",
+   "bytes": 82428
   },
   "species.list": {
    "path": "species/species.json",
@@ -6969,12 +6977,12 @@
   "species.registry": {
    "path": "species/registry.json",
    "kind": "table",
-   "plants": 81,
+   "plants": 84,
    "animals_present": 89,
    "animals_queued": 53,
-   "cards_queued": 36,
-   "sha256": "d22b64de765eb9fab8749cd87a03f6e7b30b823e024de97d2610bdc16344cc0a",
-   "bytes": 97165
+   "cards_queued": 35,
+   "sha256": "d7fbd5dac594edbfbc4c8825f632efaf556ab72673954901aa7d88060a1ae675",
+   "bytes": 97721
   },
   "client.fauna": {
    "path": "client/fauna.json",
@@ -7038,11 +7046,11 @@
     "usda_plants",
     "gbif"
    ],
-   "species": 27,
-   "communities": 37,
+   "species": 31,
+   "communities": 39,
    "cards_written": [],
-   "sha256": "ee9b2296f8dc83ffe7100ee56006cc6f1ea1a676f11819b836743eb358eb0fce",
-   "bytes": 117373
+   "sha256": "c4ad31accb1af3ffbf1bfd9eebbc738806cf956285c4d4c765629df18a67857b",
+   "bytes": 122811
   },
   "hydro.waterbody_seasons": {
    "path": "hydro/waterbody_seasons.json",
@@ -9426,6 +9434,49 @@
    "at": "2026-11-07T06:24:23Z",
    "seconds": 0.6,
    "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-07T07:22:01Z",
+   "seconds": 2.5,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-07T07:22:02Z",
+   "seconds": 1.2,
+   "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-07T07:22:05Z",
+   "seconds": 2.3,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-07T07:22:07Z",
+   "seconds": 1.4,
+   "ok": true
+  },
+  {
+   "step": "crowns",
+   "at": "2026-11-07T07:23:34Z",
+   "seconds": 0.1,
+   "ok": true,
+   "not_applicable": "no point cloud on this tile (DEM-only lidar or none): no canopy height model, so no crowns to find or inpaint"
+  },
+  {
+   "step": "resources",
+   "at": "2026-11-07T07:23:44Z",
+   "seconds": 10.6,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-07T07:23:45Z",
+   "seconds": 0.5,
+   "ok": true
   }
  ],
  "steps": {
@@ -10339,14 +10390,14 @@
   },
   "plants": {
    "version": "5",
-   "code": "41ae8509bbba1b43",
+   "code": "7c686d977a62c77e",
    "params": {
     "tile": "utm12n_514_4838"
    },
-   "fingerprint": "01c8cc7eac52d5fe",
+   "fingerprint": "8a39ab7fe9658235",
    "parts": {
     "version": "5",
-    "code": "41ae8509bbba1b43",
+    "code": "7c686d977a62c77e",
     "params": {
      "tile": "utm12n_514_4838"
     },
@@ -10355,11 +10406,11 @@
      "ice": "87359696ce68a81a"
     },
     "library": {
-     "library/plant_cards": "0f01f6b47b231deb",
+     "library/plant_cards": "ae2c66fc7e6e53d9",
      "library/plant_cards/_research": "76160f150981cd69"
     }
    },
-   "ran_at": "2026-11-07T06:23:57Z",
+   "ran_at": "2026-11-07T07:22:03Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -10369,10 +10420,10 @@
    ],
    "outputs": {
     "species/canopy.json": "620c832ba30df19c",
-    "species/ground.json": "ee9b2296f8dc83ff",
-    "species/plant_needs.json": "630010f62a9fb186"
+    "species/ground.json": "c4ad31accb1af3ff",
+    "species/plant_needs.json": "1176299c6ac3d2bc"
    },
-   "out_hash": "8a3cf6718447fafd",
+   "out_hash": "43e93e331c440580",
    "sources": {
     "wcvp": "2026-11-06",
     "canopy_plots": "2026-11-06",
@@ -10385,20 +10436,20 @@
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 2215
+    "cache": 2221
    },
-   "seconds": 2.6
+   "seconds": 2.3
   },
   "species_mix": {
    "version": "5",
-   "code": "666dc3e45ffb64b0",
+   "code": "554d32428bd3bffb",
    "params": {
     "tile": "utm12n_514_4838"
    },
-   "fingerprint": "22efeb0417f5ca10",
+   "fingerprint": "ea9e3d0ad9afec83",
    "parts": {
     "version": "5",
-    "code": "666dc3e45ffb64b0",
+    "code": "554d32428bd3bffb",
     "params": {
      "tile": "utm12n_514_4838"
     },
@@ -10407,24 +10458,24 @@
      "landcover": "4e1125104cbca63d",
      "water": "7ca2d043c94e2bde",
      "ice": "87359696ce68a81a",
-     "plants": "8a3cf6718447fafd"
+     "plants": "43e93e331c440580"
     },
     "library": {
-     "library/species": "f6556f3a2eaa5f34"
+     "library/species": "b535f4af1995d848"
     }
    },
-   "ran_at": "2026-11-07T06:23:59Z",
+   "ran_at": "2026-11-07T07:22:05Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "client.species_mix"
    ],
    "outputs": {
-    "client/species_mix.json": "dd9ea4a06ceed847",
+    "client/species_mix.json": "905ffde6db53b4a0",
     "client/species_mix_index.png": "5326d6b9c16f45de",
     "client/species_mix_density.png": "71fd2b350b84989d"
    },
-   "out_hash": "409f83dafd14dd11",
+   "out_hash": "c3b92d3113451995",
    "sources": {},
    "fallbacks": [
     {
@@ -10490,7 +10541,7 @@
     "network": 0,
     "cache": 58
    },
-   "seconds": 1.3
+   "seconds": 1.4
   },
   "crowns": {
    "version": "1",
@@ -10498,7 +10549,7 @@
    "params": {
     "tile": "utm12n_514_4838"
    },
-   "fingerprint": "254652916c01e9c2",
+   "fingerprint": "8ac295dd2442846b",
    "parts": {
     "version": "1",
     "code": "b8fd056588daa527",
@@ -10510,17 +10561,17 @@
      "osm": "2ae9accd2400ee8b",
      "landcover": "4e1125104cbca63d",
      "terrain": "7795372fbb900603",
-     "species_mix": "409f83dafd14dd11"
+     "species_mix": "c3b92d3113451995"
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T06:24:11Z",
+   "ran_at": "2026-11-07T07:23:34Z",
    "owner": null,
    "status": "not_applicable",
    "reason": "no point cloud on this tile (DEM-only lidar or none): no canopy height model, so no crowns to find or inpaint",
    "outputs": {},
    "out_hash": "70a48eaae80334ef",
-   "seconds": 0.0
+   "seconds": 0.1
   },
   "inpaint": {
    "version": "1",
@@ -10659,7 +10710,7 @@
    "params": {
     "tile": "utm12n_514_4838"
    },
-   "fingerprint": "b8f399bbcbe8e0bb",
+   "fingerprint": "07f3a015d5ead0fc",
    "parts": {
     "version": "2",
     "code": "601d8f86e1d11d7e",
@@ -10672,12 +10723,12 @@
      "water_seasons": "dd383d83d7b4bbfe",
      "landcover": "4e1125104cbca63d",
      "terrain": "7795372fbb900603",
-     "species_mix": "409f83dafd14dd11",
+     "species_mix": "c3b92d3113451995",
      "species": "3d12992398795c67"
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T06:24:11Z",
+   "ran_at": "2026-11-07T07:23:34Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -10696,7 +10747,7 @@
     "network": 0,
     "cache": 1
    },
-   "seconds": 10.9
+   "seconds": 10.6
   },
   "games": {
    "version": "2",
@@ -10782,7 +10833,7 @@
    "params": {
     "tile": "utm12n_514_4838"
    },
-   "fingerprint": "2af4070500392a7b",
+   "fingerprint": "f08e33c3517bdada",
    "parts": {
     "version": "1",
     "code": "2acf81ad92b05142",
@@ -10790,27 +10841,27 @@
      "tile": "utm12n_514_4838"
     },
     "deps": {
-     "plants": "8a3cf6718447fafd",
-     "species_mix": "409f83dafd14dd11",
+     "plants": "43e93e331c440580",
+     "species_mix": "c3b92d3113451995",
      "species": "3d12992398795c67",
      "animals": "241d7241d87e25ff"
     },
     "library": {
-     "library/species": "f6556f3a2eaa5f34",
+     "library/species": "b535f4af1995d848",
      "library/animals": "997e0be94296d338",
-     "library/plant_cards": "0f01f6b47b231deb"
+     "library/plant_cards": "ae2c66fc7e6e53d9"
     }
    },
-   "ran_at": "2026-11-07T06:24:22Z",
+   "ran_at": "2026-11-07T07:23:44Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "species.registry"
    ],
    "outputs": {
-    "species/registry.json": "d22b64de765eb9fa"
+    "species/registry.json": "d7fbd5dac594edbf"
    },
-   "out_hash": "fe29e5ed29a0c5e6",
+   "out_hash": "393d8a6578bdab30",
    "sources": {},
    "fallbacks": [],
    "notes": [],
@@ -10818,7 +10869,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 0.6
+   "seconds": 0.5
   },
   "audit": {
    "version": "1",

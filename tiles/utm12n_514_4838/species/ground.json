@@ -1,6 +1,6 @@
 {
  "tile": "utm12n_514_4838",
- "version": "2",
+ "version": "3",
  "map_zone": 21,
  "rule": "pipeline/ground_cards.py choose(): each community's LANDFIRE BpS description (its dominant and indicator species, then the species its vegetation description names), grasses and forbs by the PLANTS growth habit, native, recorded within 0.5 deg; weights 1.0 table, 0.5 text",
  "communities": [
@@ -176,14 +176,6 @@
      "form": "forb",
      "weight": 0.5,
      "evidence": "10460_21 Vegetation Description: named as Lupinus argenteus; 183 GBIF records within 0.5 deg"
-    },
-    {
-     "id": "erythronium_grandiflorum",
-     "scientific": "Erythronium grandiflorum",
-     "symbol": "ERGR9",
-     "form": "forb",
-     "weight": 0.5,
-     "evidence": "10460_21 Vegetation Description: named as Erythronium grandiflorum; 51 GBIF records within 0.5 deg"
     }
    ],
    "doc": {
@@ -258,12 +250,28 @@
      "evidence": "10550_21_22 Dominant and Indicator Species (CAGE2): named as Carex geyeri; 36 GBIF records within 0.5 deg"
     },
     {
+     "id": "poa_wheeleri",
+     "scientific": "Poa wheeleri",
+     "symbol": "POWH2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10550_21_22 Vegetation Description: named as Poa wheeleri; 29 GBIF records within 0.5 deg"
+    },
+    {
      "id": "carex_rossii",
      "scientific": "Carex rossii",
      "symbol": "CARO5",
      "form": "grass",
      "weight": 0.5,
      "evidence": "10550_21_22 Vegetation Description: named as Carex rossii; 18 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_hoodii",
+     "scientific": "Carex hoodii",
+     "symbol": "CAHO5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10550_21_22 Vegetation Description: named as Carex hoodii; 49 GBIF records within 0.5 deg"
     }
    ],
    "doc": {
@@ -362,6 +370,14 @@
    "how": "its own model (bps.csv BPS_MODEL)",
    "species": [
     {
+     "id": "dryas_octopetala",
+     "scientific": "Dryas octopetala",
+     "symbol": "DROC",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "10700_21 Dominant and Indicator Species (DROC): named as Dryas octopetala; 11 GBIF records within 0.5 deg"
+    },
+    {
      "id": "erigeron_compositus",
      "scientific": "Erigeron compositus",
      "symbol": "ERCO4",
@@ -376,6 +392,22 @@
      "form": "forb",
      "weight": 0.5,
      "evidence": "10700_21 Vegetation Description: 'Castilleja spp.': the tile's most-recorded native congener Castilleja miniata (44 GBIF records); 250 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "deschampsia_cespitosa",
+     "scientific": "Deschampsia cespitosa",
+     "symbol": "DECE",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10700_21 Vegetation Description: named as Deschampsia caespitosa (PLANTS: Deschampsia cespitosa); 35 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_hoodii",
+     "scientific": "Carex hoodii",
+     "symbol": "CAHO5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10700_21 Vegetation Description: 'Carex spp.': the tile's most-recorded native congener Carex hoodii (12 GBIF records); 49 GBIF records within 0.5 deg"
     }
    ],
    "doc": {
@@ -450,14 +482,6 @@
      "evidence": "11260_21 Vegetation Description: named as Eriogonum umbellatum; 468 GBIF records within 0.5 deg"
     },
     {
-     "id": "balsamorhiza_sagittata",
-     "scientific": "Balsamorhiza sagittata",
-     "symbol": "BASA3",
-     "form": "forb",
-     "weight": 0.5,
-     "evidence": "11260_21 Vegetation Description: named as Balsamorhiza sagittata; 810 GBIF records within 0.5 deg"
-    },
-    {
      "id": "lupinus_argenteus",
      "scientific": "Lupinus argenteus",
      "symbol": "LUAR3",
@@ -505,6 +529,22 @@
    "model": "11440_21_22",
    "how": "its own model (bps.csv BPS_MODEL)",
    "species": [
+    {
+     "id": "deschampsia_cespitosa",
+     "scientific": "Deschampsia cespitosa",
+     "symbol": "DECE",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11440_21_22 Dominant and Indicator Species (DECA18): named as Deschampsia caespitosa (PLANTS: Deschampsia cespitosa); 35 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "festuca_brachyphylla",
+     "scientific": "Festuca brachyphylla",
+     "symbol": "FEBR",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11440_21_22 Dominant and Indicator Species (FEBR): named as Festuca brachyphylla; 1 GBIF records within 0.5 deg"
+    },
     {
      "id": "festuca_idahoensis",
      "scientific": "Festuca idahoensis",
@@ -584,7 +624,24 @@
    "cells": 984,
    "model": "11590_21",
    "how": "its own model (bps.csv BPS_MODEL)",
-   "species": [],
+   "species": [
+    {
+     "id": "carex_hoodii",
+     "scientific": "Carex hoodii",
+     "symbol": "CAHO5",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11590_21 Dominant and Indicator Species (CAREX): 'Carex spp.': the tile's most-recorded native congener Carex hoodii (12 GBIF records); 49 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "equisetum_arvense",
+     "scientific": "Equisetum arvense",
+     "symbol": "EQAR",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "11590_21 Dominant and Indicator Species (EQAR): named as Equisetum arvense; 71 GBIF records within 0.5 deg"
+    }
+   ],
    "doc": {
     "model": "11590_21",
     "title": "Rocky Mountain Montane Riparian Systems",
@@ -600,6 +657,14 @@
    "model": "11600_21",
    "how": "its own model (bps.csv BPS_MODEL)",
    "species": [
+    {
+     "id": "carex_hoodii",
+     "scientific": "Carex hoodii",
+     "symbol": "CAHO5",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11600_21 Dominant and Indicator Species (CAREX): 'Carex spp.': the tile's most-recorded native congener Carex hoodii (12 GBIF records); 49 GBIF records within 0.5 deg"
+    },
     {
      "id": "mertensia_ciliata",
      "scientific": "Mertensia ciliata",
@@ -631,6 +696,14 @@
      "form": "forb",
      "weight": 0.5,
      "evidence": "11610_21 Vegetation Description: named as Actaea rubra; 357 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "equisetum_arvense",
+     "scientific": "Equisetum arvense",
+     "symbol": "EQAR",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11610_21 Vegetation Description: named as Equisetum arvense; 71 GBIF records within 0.5 deg"
     },
     {
      "id": "calamagrostis_canadensis",
@@ -846,14 +919,6 @@
      "form": "forb",
      "weight": 0.5,
      "evidence": "10460_21 Vegetation Description: named as Lupinus argenteus; 183 GBIF records within 0.5 deg"
-    },
-    {
-     "id": "erythronium_grandiflorum",
-     "scientific": "Erythronium grandiflorum",
-     "symbol": "ERGR9",
-     "form": "forb",
-     "weight": 0.5,
-     "evidence": "10460_21 Vegetation Description: named as Erythronium grandiflorum; 51 GBIF records within 0.5 deg"
     }
    ],
    "doc": {
@@ -1008,12 +1073,28 @@
      "evidence": "10550_21_22 Dominant and Indicator Species (CAGE2): named as Carex geyeri; 36 GBIF records within 0.5 deg"
     },
     {
+     "id": "poa_wheeleri",
+     "scientific": "Poa wheeleri",
+     "symbol": "POWH2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10550_21_22 Vegetation Description: named as Poa wheeleri; 29 GBIF records within 0.5 deg"
+    },
+    {
      "id": "carex_rossii",
      "scientific": "Carex rossii",
      "symbol": "CARO5",
      "form": "grass",
      "weight": 0.5,
      "evidence": "10550_21_22 Vegetation Description: named as Carex rossii; 18 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_hoodii",
+     "scientific": "Carex hoodii",
+     "symbol": "CAHO5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10550_21_22 Vegetation Description: named as Carex hoodii; 49 GBIF records within 0.5 deg"
     }
    ],
    "doc": {
@@ -1248,14 +1329,6 @@
      "evidence": "11260_21 Vegetation Description: named as Eriogonum umbellatum; 468 GBIF records within 0.5 deg"
     },
     {
-     "id": "balsamorhiza_sagittata",
-     "scientific": "Balsamorhiza sagittata",
-     "symbol": "BASA3",
-     "form": "forb",
-     "weight": 0.5,
-     "evidence": "11260_21 Vegetation Description: named as Balsamorhiza sagittata; 810 GBIF records within 0.5 deg"
-    },
-    {
      "id": "lupinus_argenteus",
      "scientific": "Lupinus argenteus",
      "symbol": "LUAR3",
@@ -1304,6 +1377,14 @@
    "how": "the same system's model in map zone 21",
    "species": [
     {
+     "id": "dryas_octopetala",
+     "scientific": "Dryas octopetala",
+     "symbol": "DROC",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "10700_21 Dominant and Indicator Species (DROC): named as Dryas octopetala; 11 GBIF records within 0.5 deg"
+    },
+    {
      "id": "erigeron_compositus",
      "scientific": "Erigeron compositus",
      "symbol": "ERCO4",
@@ -1318,6 +1399,22 @@
      "form": "forb",
      "weight": 0.5,
      "evidence": "10700_21 Vegetation Description: 'Castilleja spp.': the tile's most-recorded native congener Castilleja miniata (44 GBIF records); 250 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "deschampsia_cespitosa",
+     "scientific": "Deschampsia cespitosa",
+     "symbol": "DECE",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10700_21 Vegetation Description: named as Deschampsia caespitosa (PLANTS: Deschampsia cespitosa); 35 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "carex_hoodii",
+     "scientific": "Carex hoodii",
+     "symbol": "CAHO5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10700_21 Vegetation Description: 'Carex spp.': the tile's most-recorded native congener Carex hoodii (12 GBIF records); 49 GBIF records within 0.5 deg"
     }
    ],
    "doc": {
@@ -1405,14 +1502,6 @@
      "form": "forb",
      "weight": 0.5,
      "evidence": "11260_21 Vegetation Description: named as Eriogonum umbellatum; 468 GBIF records within 0.5 deg"
-    },
-    {
-     "id": "balsamorhiza_sagittata",
-     "scientific": "Balsamorhiza sagittata",
-     "symbol": "BASA3",
-     "form": "forb",
-     "weight": 0.5,
-     "evidence": "11260_21 Vegetation Description: named as Balsamorhiza sagittata; 810 GBIF records within 0.5 deg"
     },
     {
      "id": "lupinus_argenteus",
@@ -1543,6 +1632,14 @@
      "evidence": "11400_21 Vegetation Description: 'Lupinus spp.': the tile's most-recorded native congener Lupinus argenteus (7 GBIF records); 183 GBIF records within 0.5 deg"
     },
     {
+     "id": "carex_hoodii",
+     "scientific": "Carex hoodii",
+     "symbol": "CAHO5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11400_21 Vegetation Description: 'Carex spp.': the tile's most-recorded native congener Carex hoodii (12 GBIF records); 49 GBIF records within 0.5 deg"
+    },
+    {
      "id": "geranium_viscosissimum",
      "scientific": "Geranium viscosissimum",
      "symbol": "GEVI2",
@@ -1557,14 +1654,6 @@
      "form": "grass",
      "weight": 0.5,
      "evidence": "11400_21 Vegetation Description: named as Pseudoroegneria spicata; 55 GBIF records within 0.5 deg"
-    },
-    {
-     "id": "balsamorhiza_sagittata",
-     "scientific": "Balsamorhiza sagittata",
-     "symbol": "BASA3",
-     "form": "forb",
-     "weight": 0.5,
-     "evidence": "11400_21 Vegetation Description: named as Balsamorhiza sagittata; 810 GBIF records within 0.5 deg"
     },
     {
      "id": "poa_secunda",
@@ -1589,7 +1678,24 @@
    "cells": 254,
    "model": "11430_9_19_21_28",
    "how": "the same system's model in map zone 21",
-   "species": [],
+   "species": [
+    {
+     "id": "festuca_brachyphylla",
+     "scientific": "Festuca brachyphylla",
+     "symbol": "FEBR",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11430_9_19_21_28 Dominant and Indicator Species (FEBR): named as Festuca brachyphylla; 1 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "dryas_octopetala",
+     "scientific": "Dryas octopetala",
+     "symbol": "DROC",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "11430_9_19_21_28 Dominant and Indicator Species (DROCH): named as Dryas octopetala; 11 GBIF records within 0.5 deg"
+    }
+   ],
    "doc": {
     "model": "11430_9_19_21_28",
     "title": "Rocky Mountain Alpine Fell-Field",
@@ -1605,6 +1711,22 @@
    "model": "11440_21_22",
    "how": "the same system's model in map zone 21",
    "species": [
+    {
+     "id": "deschampsia_cespitosa",
+     "scientific": "Deschampsia cespitosa",
+     "symbol": "DECE",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11440_21_22 Dominant and Indicator Species (DECA18): named as Deschampsia caespitosa (PLANTS: Deschampsia cespitosa); 35 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "festuca_brachyphylla",
+     "scientific": "Festuca brachyphylla",
+     "symbol": "FEBR",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11440_21_22 Dominant and Indicator Species (FEBR): named as Festuca brachyphylla; 1 GBIF records within 0.5 deg"
+    },
     {
      "id": "festuca_idahoensis",
      "scientific": "Festuca idahoensis",
@@ -1763,14 +1885,6 @@
      "form": "forb",
      "weight": 0.5,
      "evidence": "10460_21 Vegetation Description: named as Lupinus argenteus; 183 GBIF records within 0.5 deg"
-    },
-    {
-     "id": "erythronium_grandiflorum",
-     "scientific": "Erythronium grandiflorum",
-     "symbol": "ERGR9",
-     "form": "forb",
-     "weight": 0.5,
-     "evidence": "10460_21 Vegetation Description: named as Erythronium grandiflorum; 51 GBIF records within 0.5 deg"
     }
    ],
    "doc": {
@@ -1931,14 +2045,6 @@
      "form": "forb",
      "weight": 0.5,
      "evidence": "10460_21 Vegetation Description: named as Lupinus argenteus; 183 GBIF records within 0.5 deg"
-    },
-    {
-     "id": "erythronium_grandiflorum",
-     "scientific": "Erythronium grandiflorum",
-     "symbol": "ERGR9",
-     "form": "forb",
-     "weight": 0.5,
-     "evidence": "10460_21 Vegetation Description: named as Erythronium grandiflorum; 51 GBIF records within 0.5 deg"
     }
    ],
    "doc": {
@@ -2197,6 +2303,14 @@
    "how": "the BpS under most of its cells on the tile (28 of 60: Rocky Mountain Subalpine/Upper Montane Riparian Systems)",
    "species": [
     {
+     "id": "carex_hoodii",
+     "scientific": "Carex hoodii",
+     "symbol": "CAHO5",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11600_21 Dominant and Indicator Species (CAREX): 'Carex spp.': the tile's most-recorded native congener Carex hoodii (12 GBIF records); 49 GBIF records within 0.5 deg"
+    },
+    {
      "id": "mertensia_ciliata",
      "scientific": "Mertensia ciliata",
      "symbol": "MECI3",
@@ -2357,14 +2471,6 @@
      "evidence": "11260_21 Vegetation Description: named as Eriogonum umbellatum; 468 GBIF records within 0.5 deg"
     },
     {
-     "id": "balsamorhiza_sagittata",
-     "scientific": "Balsamorhiza sagittata",
-     "symbol": "BASA3",
-     "form": "forb",
-     "weight": 0.5,
-     "evidence": "11260_21 Vegetation Description: named as Balsamorhiza sagittata; 810 GBIF records within 0.5 deg"
-    },
-    {
      "id": "lupinus_argenteus",
      "scientific": "Lupinus argenteus",
      "symbol": "LUAR3",
@@ -2469,14 +2575,6 @@
      "evidence": "11260_21 Vegetation Description: named as Eriogonum umbellatum; 468 GBIF records within 0.5 deg"
     },
     {
-     "id": "balsamorhiza_sagittata",
-     "scientific": "Balsamorhiza sagittata",
-     "symbol": "BASA3",
-     "form": "forb",
-     "weight": 0.5,
-     "evidence": "11260_21 Vegetation Description: named as Balsamorhiza sagittata; 810 GBIF records within 0.5 deg"
-    },
-    {
      "id": "lupinus_argenteus",
      "scientific": "Lupinus argenteus",
      "symbol": "LUAR3",
@@ -2579,14 +2677,6 @@
      "form": "forb",
      "weight": 0.5,
      "evidence": "11260_21 Vegetation Description: named as Eriogonum umbellatum; 468 GBIF records within 0.5 deg"
-    },
-    {
-     "id": "balsamorhiza_sagittata",
-     "scientific": "Balsamorhiza sagittata",
-     "symbol": "BASA3",
-     "form": "forb",
-     "weight": 0.5,
-     "evidence": "11260_21 Vegetation Description: named as Balsamorhiza sagittata; 810 GBIF records within 0.5 deg"
     },
     {
      "id": "lupinus_argenteus",
@@ -3157,31 +3247,6 @@
    "record": "card"
   },
   {
-   "id": "balsamorhiza_sagittata",
-   "scientific": "Balsamorhiza sagittata",
-   "symbol": "BASA3",
-   "form": "forb",
-   "common": "arrowleaf balsamroot",
-   "family": "Asteraceae",
-   "score": 23485.5,
-   "classes": {
-    "chaparral": 0.5,
-    "mixed_forest": 0.5,
-    "grassland": 0.5,
-    "riparian": 0.5
-   },
-   "communities": [
-    "bps 704",
-    "evt 7061",
-    "evt 7126",
-    "evt 7140",
-    "evt 9519",
-    "evt 9828",
-    "evt 9829"
-   ],
-   "record": "card"
-  },
-  {
    "id": "hesperostipa_comata",
    "scientific": "Hesperostipa comata",
    "symbol": "HECO26",
@@ -3275,23 +3340,45 @@
    "record": "card"
   },
   {
-   "id": "erythronium_grandiflorum",
-   "scientific": "Erythronium grandiflorum",
-   "symbol": "ERGR9",
-   "form": "forb",
-   "common": "yellow avalanche-lily",
-   "family": "Liliaceae",
-   "score": 21372.5,
+   "id": "carex_hoodii",
+   "scientific": "Carex hoodii",
+   "symbol": "CAHO5",
+   "form": "grass",
+   "common": "Hood's sedge",
+   "family": "Cyperaceae",
+   "score": 7918.5,
    "classes": {
     "conifer_forest": 0.5,
     "chaparral": 0.5,
-    "barren": 0.5
+    "riparian": 1.0,
+    "grassland": 0.5
    },
    "communities": [
-    "bps 689",
-    "evt 7046",
-    "evt 7169",
-    "evt 9016"
+    "bps 693",
+    "bps 696",
+    "bps 712",
+    "bps 713",
+    "evt 7055",
+    "evt 7070",
+    "evt 7140",
+    "evt 9021"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "poa_wheeleri",
+   "scientific": "Poa wheeleri",
+   "symbol": "POWH2",
+   "form": "grass",
+   "common": "Wheeler's bluegrass",
+   "family": "Poaceae",
+   "score": 5623.5,
+   "classes": {
+    "conifer_forest": 0.5
+   },
+   "communities": [
+    "bps 693",
+    "evt 7055"
    ],
    "record": "card"
   },
@@ -3332,6 +3419,81 @@
     "bps 713",
     "evt 7145",
     "evt 9021"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "deschampsia_cespitosa",
+   "scientific": "Deschampsia cespitosa",
+   "symbol": "DECE",
+   "form": "grass",
+   "common": "tufted hairgrass",
+   "family": "Poaceae",
+   "score": 2052.0,
+   "classes": {
+    "chaparral": 0.5,
+    "grassland": 1.0
+   },
+   "communities": [
+    "bps 696",
+    "bps 709",
+    "evt 7070",
+    "evt 7144"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "festuca_brachyphylla",
+   "scientific": "Festuca brachyphylla",
+   "symbol": "FEBR",
+   "form": "grass",
+   "common": "alpine fescue",
+   "family": "Poaceae",
+   "score": 1956.0,
+   "classes": {
+    "grassland": 1.0
+   },
+   "communities": [
+    "bps 709",
+    "evt 7143",
+    "evt 7144"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "equisetum_arvense",
+   "scientific": "Equisetum arvense",
+   "symbol": "EQAR",
+   "form": "forb",
+   "common": "field horsetail",
+   "family": "Equisetaceae",
+   "score": 1057.5,
+   "classes": {
+    "riparian": 1.0,
+    "conifer_forest": 0.5
+   },
+   "communities": [
+    "bps 712",
+    "bps 714"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "dryas_octopetala",
+   "scientific": "Dryas octopetala",
+   "symbol": "DROC",
+   "form": "forb",
+   "common": "eightpetal mountain-avens",
+   "family": "Rosaceae",
+   "score": 954.0,
+   "classes": {
+    "chaparral": 1.0,
+    "grassland": 1.0
+   },
+   "communities": [
+    "bps 696",
+    "evt 7070",
+    "evt 7143"
    ],
    "record": "card"
   },
@@ -3506,51 +3668,50 @@
   "'Symphoricarpos spp.' dropped: no native ground congener in the tile's GBIF records",
   "Agropyron spicata dropped: not in the PLANTS Database",
   "Antennaria microphyla dropped: not in the PLANTS Database",
-  "carex_hoodii: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "poa_wheeleri: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "elymus_glaucus: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "deschampsia_cespitosa: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "festuca_brachyphylla: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "carex_elynoides: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "carex_scirpoidea: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "carex_nardina: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "carex_nigricans: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "carex_utriculata: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "carex_canescens: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "carex_aurea: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "carex_illota: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "carex_luzulina: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "juncus_parryi: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "luzula_piperi: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "achnatherum_nelsonii: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "achnatherum_lettermanii: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "phleum_alpinum: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "bromus_marginatus: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "leucopoa_kingii: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "elymus_lanceolatus: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "koeleria_macrantha: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "calamagrostis_rubescens: dropped (the tile's 11 grass slots are taken by better-represented species)",
-  "campanula_rotundifolia: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "potentilla_gracilis: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "taraxacum_officinale: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "achillea_millefolium: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "equisetum_arvense: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "dryas_octopetala: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "phlox_pulvinata: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "geum_macrophyllum: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "saxifraga_odontoloma: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "oreostemma_alpigenum: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "pedicularis_bracteosa: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "caltha_leptosepala: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "silene_acaulis: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "phlox_condensata: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "claytonia_megarhiza: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "antennaria_racemosa: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "phlox_longifolia: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "helianthella_uniflora: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "senecio_triangularis: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "streptopus_amplexifolius: dropped (the tile's 16 forb slots are taken by better-represented species)",
-  "phlox_pulvinata: kept for evt 7144 (Rocky Mountain Alpine Turf), its best forb, in place of penstemon_deustus"
+  "festuca_brachyphylla: kept as the best grass of evt 7143 (Rocky Mountain Alpine Fell-Field, 254 cells)",
+  "elymus_glaucus: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "carex_elynoides: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "carex_scirpoidea: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "carex_nardina: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "carex_nigricans: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "carex_utriculata: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "carex_canescens: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "carex_aurea: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "carex_illota: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "carex_luzulina: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "juncus_parryi: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "luzula_piperi: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "achnatherum_nelsonii: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "achnatherum_lettermanii: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "phleum_alpinum: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "bromus_marginatus: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "leucopoa_kingii: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "elymus_lanceolatus: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "koeleria_macrantha: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "calamagrostis_rubescens: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "phlox_pulvinata: kept as the best forb of evt 7144 (Rocky Mountain Alpine Turf, 1532 cells)",
+  "equisetum_arvense: kept as the best forb of bps 712 (Rocky Mountain Montane Riparian Systems, 984 cells)",
+  "dryas_octopetala: kept as the best forb of evt 7143 (Rocky Mountain Alpine Fell-Field, 254 cells)",
+  "balsamorhiza_sagittata: dropped (the tile's 16 forb slots are taken by communities' best and better-represented species)",
+  "erythronium_grandiflorum: dropped (the tile's 16 forb slots are taken by communities' best and better-represented species)",
+  "penstemon_deustus: dropped (the tile's 16 forb slots are taken by communities' best and better-represented species)",
+  "campanula_rotundifolia: dropped (the tile's 16 forb slots are taken by communities' best and better-represented species)",
+  "potentilla_gracilis: dropped (the tile's 16 forb slots are taken by communities' best and better-represented species)",
+  "taraxacum_officinale: dropped (the tile's 16 forb slots are taken by communities' best and better-represented species)",
+  "achillea_millefolium: dropped (the tile's 16 forb slots are taken by communities' best and better-represented species)",
+  "geum_macrophyllum: dropped (the tile's 16 forb slots are taken by communities' best and better-represented species)",
+  "saxifraga_odontoloma: dropped (the tile's 16 forb slots are taken by communities' best and better-represented species)",
+  "oreostemma_alpigenum: dropped (the tile's 16 forb slots are taken by communities' best and better-represented species)",
+  "pedicularis_bracteosa: dropped (the tile's 16 forb slots are taken by communities' best and better-represented species)",
+  "caltha_leptosepala: dropped (the tile's 16 forb slots are taken by communities' best and better-represented species)",
+  "silene_acaulis: dropped (the tile's 16 forb slots are taken by communities' best and better-represented species)",
+  "phlox_condensata: dropped (the tile's 16 forb slots are taken by communities' best and better-represented species)",
+  "claytonia_megarhiza: dropped (the tile's 16 forb slots are taken by communities' best and better-represented species)",
+  "antennaria_racemosa: dropped (the tile's 16 forb slots are taken by communities' best and better-represented species)",
+  "phlox_longifolia: dropped (the tile's 16 forb slots are taken by communities' best and better-represented species)",
+  "helianthella_uniflora: dropped (the tile's 16 forb slots are taken by communities' best and better-represented species)",
+  "senecio_triangularis: dropped (the tile's 16 forb slots are taken by communities' best and better-represented species)",
+  "streptopus_amplexifolius: dropped (the tile's 16 forb slots are taken by communities' best and better-represented species)"
  ],
  "cards_written": []
 }

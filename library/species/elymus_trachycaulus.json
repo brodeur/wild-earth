@@ -40,12 +40,12 @@
   "by": "pipeline/plantgen.py",
   "version": "5",
   "card": "library/plant_cards/elymus_trachycaulus.json",
-  "card_sha256": "fb6c88b15c817aff",
+  "card_sha256": "83b0858b3d399f53",
   "template": "stipa_pulchra",
   "template_common": "purple needlegrass",
   "height_scale": 1.071
  },
- "notes": "Written by rule from the USDA PLANTS Database's characteristics (pipeline/ground_cards.py). no PLANTS characteristics for the species or its infraspecific taxa: every value is the template's or a default. height: none in PLANTS, the template's. leaf colour: none in PLANTS, a mid green. flowering months: no Bloom Period in PLANTS. tuft: no Growth Form in PLANTS, taken as a bunchgrass (a perennial grass is a bunch clump). PLANTS characteristics used (ELTR7): . The client's seasons are calendar quarters; PLANTS' bloom periods are the species' over its US range, not corrected for this tile's elevation. Region tag landfire_mz21 (the LANDFIRE map zone whose descriptions named it) is not a natural region in pipeline/regions.py: no regional table draws it.",
+ "notes": "Written by rule from the USDA PLANTS Database's characteristics (pipeline/ground_cards.py). no PLANTS characteristics for the species or its infraspecific taxa: every value is the template's or a default. height: none in PLANTS, the template's. leaf colour: none in PLANTS, a mid green. flowering months: no Bloom Period in PLANTS. tuft: no Growth Form in PLANTS, taken as a bunchgrass (a perennial grass is a bunch clump). leaf width: no Foliage Texture in PLANTS, a medium leaf. PLANTS characteristics used (ELTR7): . The client's seasons are calendar quarters; PLANTS' bloom periods are the species' over its US range, not corrected for this tile's elevation. Region tag landfire_mz21 (the LANDFIRE map zone whose descriptions named it) is not a natural region in pipeline/regions.py: no regional table draws it.",
  "sources": [
   "USDA PLANTS profile ELTR7: https://plantsservices.sc.egov.usda.gov/api/PlantProfile?symbol=ELTR7, read 2026-11-06",
   "LANDFIRE BpS descriptions naming it: species/ground.json (bps 686; bps 689; bps 697; bps 704; evt 7011; evt 7046), read 2026-11-06",
@@ -209,6 +209,7 @@
     ]
    },
    "cures": "with_the_season"
-  }
+  },
+  "leaf_width_m": 0.0035
  }
 }

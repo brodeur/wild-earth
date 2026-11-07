@@ -39,6 +39,7 @@ export const groundUniforms = {
   // their dead share of it grey thatch), w the share of a tuft's footprint its leaves hide from above (1 - exp(-k H), the
   // tuft light's own envelope); (0, 0, 0, 1) until set: the palette mean, all hidden, as the unmixing took it before
   gapTuft: { value: new THREE.Vector4(0, 0, 0, 1) },
+  gapFrag: { value: 0.1 },   // the bare soil's surface stones: its map units' surface rock fragments near the camera (soils G), 0..1
   contactAO: { value: null },   // shadows.js: top-down sky occlusion under each near tree (r = 0 open .. 1 at the trunk)
   contactAOMatrix: { value: new THREE.Matrix4().set(0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 1) },   // world -> its uv
   // Measured season (season.js SeasonColour): the ground texture times seasonMap's multiplier (stored as
@@ -538,7 +539,7 @@ const FRAG = /* glsl */`
   // fade out by pixel footprint as the blade tiers fade theirs, over a shade floor; the photo keeps the metre-scale hue
   // and brightness (patches, swales, the season). It thins exactly where the plants thin: gBare is grass.js's bareField
   // (its hash2 and vnoise in uint arithmetic, which matches the JS 32-bit imul), so a bare patch is the same patch.
-  uniform vec3 swardRoot; uniform vec3 swardTip; uniform float swardOn; uniform float tuftGround; uniform vec4 gapSoil; uniform vec4 gapLitter; uniform vec4 gapCrust; uniform vec4 gapTuft;
+  uniform vec3 swardRoot; uniform vec3 swardTip; uniform float swardOn; uniform float tuftGround; uniform vec4 gapSoil; uniform vec4 gapLitter; uniform vec4 gapCrust; uniform vec4 gapTuft; uniform float gapFrag;
   // the normal quantile (Tukey's lambda), for the share thresholds of a near-normal noise (gap ground)
   float gapQ(float p) { p = clamp(p, 0.001, 0.999); return 0.5 + 0.158 * 4.91 * (pow(p, 0.14) - pow(1.0 - p, 0.14)); }
   float gHash2(vec2 ij, uint s) { uint h = uint(int(ij.x)) * 374761393u + uint(int(ij.y)) * 668265263u + s * 982451653u;
@@ -793,7 +794,8 @@ const FRAG = /* glsl */`
     // the ground under the crowns is hidden by them, and counting it as litter hid the bare soil's share) the herbs the tufts do not account for, R = max(P - T - S, 0), are short low cover in the photo's own colour
     // unmixed of the tufts (the grass palette at its curing drew saturated green blobs: the photo's ground is mostly that
     // living cover, seen with its shade and dead leaves); the rest is L, C and B by the sheet's proportions. The
-    // four are patches of 3-15 cm of one noise (round 3; 5-25 cm read as blotches) (near normal, mean 0.5, SD 0.158: gapQ gives each share's threshold), herbs
+    // four are patches of 2-9 cm of one noise (round 5; 3-15 cm still read as blotches on the steppe's soils), the bare soil's
+    // edge soft (near normal, mean 0.5, SD 0.158: gapQ gives each share's threshold), herbs
     // at its lows, bare soil at its highs. Their colours: the photo unmixed, the litter's (gapLitter), the crust's dry
     // grey-green, the dry soil's Munsell colour (gapSoil). The photo sets the mean: the herbs are the photo unmixed of the
     // tufts U (as before), and the litter, crust and soil patches are the photo's colour U at their brightness relative to
@@ -810,8 +812,8 @@ const FRAG = /* glsl */`
         float R = min(max(gapSoil.a - T - S, 0.0), A2), g3 = max(gapLitter.a + gapCrust.a + max(1.0 - gapSoil.a - gapLitter.a - gapCrust.a, 0.0), 1e-3);
         float h = R / A2, rest = 1.0 - h, l = rest * gapLitter.a / g3, cr = rest * gapCrust.a / g3, b = max(1.0 - h - l - cr, 0.0);
         vec2 xn = vec2(vPosW.x, -vPosW.z);
-        float n = 0.65 * rnoise(xn, 0.9, 0.15) + 0.35 * rnoise(xn + 3.1, 2.2, 0.06);
-        float s1 = smoothstep(-0.03, 0.03, n - gapQ(h)), s2 = smoothstep(-0.03, 0.03, n - gapQ(h + l)), s3 = smoothstep(-0.03, 0.03, n - gapQ(h + l + cr));
+        float n = 0.65 * rnoise(xn, 0.9, 0.09) + 0.35 * rnoise(xn + 3.1, 2.2, 0.035);
+        float s1 = smoothstep(-0.03, 0.03, n - gapQ(h)), s2 = smoothstep(-0.03, 0.03, n - gapQ(h + l)), s3 = smoothstep(-0.06, 0.06, n - gapQ(h + l + cr));
         // the photo unmixed of the tufts: their cover from above (T x gapTuft.w) in their colour from above (gapTuft.rgb, else the
         // palette mean); the palette mean alone over the whole footprint over-subtracted (Teton: the ground came out L 3 darker
         // and greyer than the photo, a* -4 against -7.5)
@@ -825,7 +827,22 @@ const FRAG = /* glsl */`
         float bl = (1.0 - s1) > 0.01 ? gapBlades(vPosW.xz, foot) : 1.0;   // on the herbs only (the litter too doubled its pixels)
         float lM = max(dot(M, G_LUMA), 1e-4), l3 = dot(bare3, G_LUMA);
         vec3 hue3 = mix(vec3(1.0), (bare3 / max(l3, 1e-4)) / (M / lM), 0.3 * s1);   // 30 % of a patch's hue relative to M
-        vec3 gap = herb * (1.0 - s1) * bl + U * (l3 / lM) * hue3;
+        // the patches' own texture (round 5), each of mean about 1 so the photo's mean holds, faded out as it goes under a
+        // pixel: the bare soil a crumb of 1.5 cm clods and its surface stones (as many as the soil's surface rock fragments,
+        // gapFrag), lit from above and shaded below, a little lower than the cover round it (its rim shaded); the litter
+        // lying fibres along the wind-wandering direction; contrast of grain and relief, not of hue
+        float tf = 1.0 - smoothstep(0.004, 0.014, foot), tex = 1.0;
+        if (tf > 0.0 && s1 > 0.01) {
+          vec2 q = xn / 0.015, cq = floor(q), fq = fract(q) - 0.5; vec4 hq = hash4(cq);
+          float stone = step(hq.x, gapFrag) * (1.0 - smoothstep(0.28, 0.4, length(fq + (hq.yz - 0.5) * 0.2)));
+          float crumb = 0.82 + 0.36 * hq.w - 0.12 * smoothstep(0.3, 0.5, max(abs(fq.x), abs(fq.y)));   // clods, darker cracks between
+          float soilT = mix(crumb, (0.75 + 0.5 * hq.y) * (1.12 - 0.5 * clamp(fq.y + 0.5, 0.0, 1.0)), stone) / 0.98;
+          float rim = 1.0 - 0.18 * 4.0 * s3 * (1.0 - s3);   // the patch's rim in the cover's shade
+          vec2 fd = normalize(windDir + vec2(0.3, -0.2));
+          float fib = 0.8 + 0.4 * vnoise(vec2(dot(xn, fd) * 8.0, dot(xn, vec2(-fd.y, fd.x)) * 90.0));   // lying stems and leaves
+          tex = mix(1.0, mix(fib, soilT * rim, s3 / max(s1, 1e-3)), tf * s1);
+        }
+        vec3 gap = herb * (1.0 - s1) * bl + U * (l3 / lM) * hue3 * tex;
         c = mix(c, gap * mix(1.0 + 0.5 * (dR - 1.0), dR, s3), near);
       } else {
         float k = clamp(cov3.b, 0.0, 0.85);
@@ -1120,13 +1137,13 @@ export class Terrain {
     this.gapLast = [x, north];
     const J = this.gap, S = this.tile.soils, C = this.tile.canopy?.at ? this.tile.canopy : null, P = gapLitterPalette, M = this.tile.speciesMix, hab = this.tile.habitat;
     if (!this.gapHerb) this.gapHerb = new Map((M?.json?.mixes || []).filter(m => m.herb_cover).map(m => [m.index, (m.herb_cover[0] + m.herb_cover[1]) / 2]));
-    let w = 0, r = 0, g = 0, b = 0, pl = 0, li = 0, cr = 0, shrub = 0, sw = 0;
+    let w = 0, r = 0, g = 0, b = 0, pl = 0, li = 0, cr = 0, fr = 0, shrub = 0, sw = 0;
     for (let dj = -3; dj <= 3; dj++) for (let di = -3; di <= 3; di++) {
       const px = x + 15 * di, pn = north + 15 * dj, k = Math.exp(-(di * di + dj * dj) * 225 / (2 * 25 * 25));
       const e = J.mapunits?.[S.at(px, pn, 0)] || J.default;
       if (!e?.rgb) continue;
       const gr = e.ground || J.default?.ground || { plant: 0.7, litter: 0.2, bare: 0.08, crust: 0.02 };
-      w += k; r += k * e.rgb[0]; g += k * e.rgb[1]; b += k * e.rgb[2]; pl += k * gr.plant; li += k * gr.litter; cr += k * gr.crust;
+      w += k; r += k * e.rgb[0]; g += k * e.rgb[1]; b += k * e.rgb[2]; pl += k * gr.plant; li += k * gr.litter; cr += k * gr.crust; fr += k * S.at(px, pn, 1) / 100;
       if (C) {
         const [ci, cj] = hab.cellOf(px, pn), row = M?.at?.(ci, cj), gs = C.at(px, pn, 1) / 100, hb = this.gapHerb.get(row?.index) ?? C.at(px, pn, 2) / 100;
         if (gs + hb > 0) { shrub += k * gs / (gs + hb); sw += k; }
@@ -1135,6 +1152,7 @@ export class Terrain {
     const G = groundUniforms;
     if (!(w > 0) || !P.stem) { G.gapSoil.value.set(0, 0, 0, -1); return; }
     G.gapSoil.value.set(r / w, g / w, b / w, pl / w);
+    G.gapFrag.value = Math.min(fr / w, 0.8);
     const crust = J.crust?.rgb || [0.064, 0.065, 0.052];
     G.gapCrust.value.set(crust[0], crust[1], crust[2], cr / w);
     const f = sw ? shrub / sw : 0, gg = G.groundGain.value, gs = G.groundSat?.value ?? 1;
