@@ -6601,3 +6601,67 @@ either side panel. Side panels fade and slide in from the sides."
   boot screen), `?skip=1` (no boot screen, straight in). The reduced-motion cross-fade was checked by applying its CSS rule
   directly (the pane cannot emulate the media query); it moves only while invisible. A cold load over the network was not
   measured: the local server answers in milliseconds. Debugging fields: `__weTitle.bornMs` and `drawnMs`.
+
+## 2026-11-06: the home screen's social panel, after Aaron's design (branch claude/home-social)
+
+Aaron: "Lets redesign the home screen to look and work like this", pointing at his Design canvas "Wild Earth — start
+screen social panel" (artboard "Start screen — social panel v1", 1440x900). The design keeps the home screen's places on
+the left and the earth in the middle and redesigns the right: an account card over a social panel. Built to match it:
+
+- **The account card** (social.js renderCard): the player's wisp ringed green while friends can see them, grey while
+  appearing offline; the display name; "@handle · sharing your place" (or "online", "appearing offline"); the `…` menu:
+  "Friends see" as a three-way switch (My place, Just online, Nothing), Change display name, Blocked people, Sign out.
+  The display name and Blocked people open sheets in the panel (no more `prompt()`).
+- **The social panel**: "Find people by name" (three characters or more; results drop down with Add friend, Asked,
+  Friend, Accept or Unblock; "No one named …"), then the tabs Groups, Friends (count online), Requests (count, in the
+  accent colour #c98a4e). Groups: a card per group (up to four wisps, offline ones dim; the name; "2 in Upper Hoh Road",
+  "1 online" or "quiet"; the last line) and a dashed New group. A card opens **the group's chat inside the panel**: back,
+  the name and who is in it, the info button, "Join Maya and Juno in <place>" (accent) when members share a place, the
+  lines and the message box. Friends: online first with a green dot and their place, Join when they share a place,
+  Invite when not; "Offline · N" folds the rest. Requests: Accept and Ignore; the requests sent are listed under Asked
+  with Cancel. New group and Edit group rise from the panel's bottom as sheets (name, Bring along / Members with Remove
+  for the creator, Add friends, Save, Leave group).
+- **The left list and the map labels** name the friends at each place with their wisps ("Juno and Maya here", and
+  "· 3 more" for the strangers counted), from the presence the hub already sends (title.js renderWho, multiplayer.js
+  friendsAt). The heading is "Most active" with the list's mode as a quiet text button ("everywhere" / "in view").
+- **The title** rises to 15 px high at any width (the design's size; rise() computes the scale from the font size).
+- **Layout**: 24 px gutters, the places 300 px wide on the left, the social column 380 px on the right from top to bottom;
+  Invite, Start and the toast centre in the space between them (title.js sets `--we-fl` and `--we-fr` each frame from
+  freeArea). The sign-in modal stands where the column will be. In the world the same panel drops from the friends row
+  beside the menu button, as before; at a phone's width (720 px and under) the home screen shows the row and its toggle
+  at the top right and the panel drops as a sheet over a dimmed screen.
+- **The startup sequence** is kept: the account card and the social panel slide in from the right a beat apart once the
+  title has landed (`html.tt-panels`), the places from the left; under reduced motion they fade, and the sheets, menu and
+  toast fade without moving.
+
+Decisions where the design and the client differ:
+
+- **The hub's two additions.** "Friends see: Nothing" is a new presence value `hidden`: friends and group members hear
+  offline, and a welcome leaves the user out of `online` (hub.py presence, online_for, m_me). Blocked people needs the
+  list: the `friends` message and the welcome carry `blocked` (id, name, display of those this user blocked; never who
+  blocked them). Tests in test_friends_blocks_and_search.
+- **"Messages aren't kept"** in the design is not true of the hub (it keeps a group's lines 7 days, MESSAGE_DAYS), so the
+  chat says "Messages go after 7 days".
+- **Where a line was sent from** (the design's "Maya · Upper Hoh Road"): the hub does not record it, so a line that comes
+  while the page is open shows its sender's shared place at that moment (or the player's own world), and older lines
+  show when they were sent ("8 min ago"). Nothing new is sent or kept.
+- **Not built, needing the hub:** the animal a friend is playing ("as a raven"), "last on 2 days ago", and "friend of
+  Maya" on a request. A friend online without a shared place reads "online".
+- **The design dims the places list** (a design tweak, on by default) to point at the panel; the built list is not
+  dimmed, since it is the way to choose a place.
+- **The toast's Undo** in the design only closes the toast; the built toast has no button.
+- **More on a friend** (Remove friend, Block) is a `…` on the row, shown on hover or focus: the design has no way to
+  remove or block, and blocking must stay reachable.
+- **Leave group** asks once inline ("Leave Explorers? Press again"), since leaving as the last member deletes the group.
+- **On the home screen the chat pane is not shown** (the group's chat is in the panel); the invite answers and the
+  hub's place errors become toasts there. In the world the chat pane is as it was.
+- **Exit to main screen** used to leave the panel kept from the world closed and Invite unhooked (signedIn returned
+  early when the panel existed); it now re-hooks the home screen (multiplayer.js homeHooks).
+
+Verified in the browser pane against a local viewer and hub on 127.0.0.1 with test accounts and a scripted second set of
+players (friends, two groups, lines, a request, two friends in a world): every press above round-trips through the hub
+(rename and add on Save, create opening the new group's chat, two-press leave, accept, add friend, block and unblock,
+presence hidden and back, display name, Join choosing the friend's place, Invite with and without a place chosen), the
+signed-out gate and signing in through it, Start into the world with the panel as a dropdown, Exit to main screen,
+`?cards=1`, `?skip=1`, and 375x812. Side by side with the design rendered from its own source at 1440x900. Not checked:
+the reduced-motion media query itself (the pane cannot emulate it), touch, Safari, two real browsers.

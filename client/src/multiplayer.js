@@ -8,7 +8,8 @@ import { Voice } from './voice.js';
 // The social screen's hookup (docs/multiplayer.md, lanes 3 and 4): one object main.js makes beside the title screen. It
 // owns the page's Hub (hub.js) for the page's life, gives the title screen the hub to ask for config, me and the counts
 // (title.js takes anything with config(), me(), watch(on), on('counts', fn) and close()), puts the sign-in modal
-// (account.js) at the title's gate, and on sign-in connects the socket and mounts the friends row and list (social.js),
+// (account.js) at the title's gate, and on sign-in connects the socket and mounts the account card and social panel (social.js:
+// the home screen's right column, with the group chat in it; the friends row and its dropdown in the world),
 // the chat (chat.js) and voice and video with the group (voice.js: the microphone and camera toggles in the row beside
 // the menu button, index.html #ctlRow, shown while another group member is in the same world). The same elements stand
 // on the earth and in the world's HUD: layout() keeps them clear of the HUD's menu, its panels, the game box and the
@@ -103,16 +104,11 @@ export class Multiplayer {
 
   // Signed in as `user` (null: exploring alone with no hub; nothing social then).
   signedIn(user) {
-    if (!user || !this.hub || this.social) return;
+    if (!user || !this.hub) return;
+    if (this.social) { this.homeHooks(); return; }   // Exit to main screen: the panel kept from the world opens on the right again
     const placeName = id => this.placeName(id);
-    this.social = new Social({ hub: this.hub, placeName, onSignOut: () => this.signOut() });
-    if (this.title && !this.title.closed) {   // the home screen: the social panel open on the right, Invite live, the card's players
-      this.social.setOpen(true);
-      this.title.onInvite = (tile, btn) => this.openPick(tile, btn);
-      this.title.peopleAt = tile => this.peopleAt(tile);
-      this.title.renderBar?.();
-    }
-    const refresh = () => this.title?.refreshPeople?.();
+    this.social = new Social({ hub: this.hub, placeName, onSignOut: () => this.signOut(), onJoin: tile => this.joinPlace(tile), onInvite: ids => this.inviteFriends(ids) });
+    this.homeHooks();
 
     this.chat = new Chat({ hub: this.hub, nameOf: id => this.social.nameOf(id), placeName });
     this.social.onLayout = this.layoutFn;
@@ -120,14 +116,14 @@ export class Multiplayer {
     this.voice = new Voice({ hub: this.hub, row: { mic: $('micBtn'), cam: $('camBtn'), self: $('selfView') }, onRow: this.layoutFn });
     const hub = this.hub;
     hub.on('invite', d => this.showInvite(d));
-    hub.on('placed', d => this.chat?.system(d.to ? `asked ${d.to} ${d.to === 1 ? 'person' : 'people'} to come to ${placeName(d.tile) || d.tile}` : 'no one else to ask along'));
+    hub.on('placed', d => this.note(d.to ? `Asked ${d.to} ${d.to === 1 ? 'person' : 'people'} to come to ${placeName(d.tile) || d.tile}` : 'No one else to ask along'));
     hub.on('answer', d => {
-      this.chat?.system(`${this.social.nameOf(d.from)} ${d.join ? 'joined' : 'declined'}`); this.unseen = true;
+      this.note(`${this.social.nameOf(d.from)} ${d.join ? 'joined' : 'declined'}`); this.unseen = true;
       for (const m of this.asked.values()) if (m.has(d.from)) m.set(d.from, d.join ? 'join' : 'no');
       this.title?.refreshPeople?.();
     });
     for (const t of ['presence', 'groups', 'friends', 'open']) hub.on(t, () => this.title?.refreshPeople?.());
-    hub.on('err', d => { if ((d.re === 'place' || d.re === 'answer') && d.why) this.chat?.system(d.why); });
+    hub.on('err', d => { if ((d.re === 'place' || d.re === 'answer') && d.why) this.note(d.why); });
     hub.on('pos', d => this.gotPos(d));
     hub.on('presence', d => {   // a member gone offline or to another tile is no longer seen here (players.js)
       if (d.state === 'offline' || (d.state === 'tile' && d.tile && this.room && d.tile !== this.room.tileId)) { this.poses.delete(d.user); this.room?.players?.drop(d.user); this.voice?.gone(d.user); }
@@ -140,6 +136,42 @@ export class Multiplayer {
     this.observer.observe(html, { attributes: true, attributeFilter: ['class'] });
     const game = document.getElementById('game'); if (game) this.observer.observe(game, { attributes: true, attributeFilter: ['class', 'style'] });
     this.layout();
+  }
+  // The home screen's hooks: the social panel open on the right (folded behind its toggle at a phone's width), Invite
+  // live, the card's players, the friends at each place for the list and the labels.
+  homeHooks() {
+    const t = this.title; if (!t || t.closed || !this.social) return;
+    this.social.setOpen(!matchMedia('(max-width: 720px)').matches); this.homeOpened = true;
+    t.onInvite = (tile, btn) => this.openPick(tile, btn);
+    t.peopleAt = tile => this.peopleAt(tile);
+    t.friendsAt = tile => this.friendsAt(tile);
+    t.renderBar?.(); t.refreshPeople?.();
+  }
+  onEarth() { const t = this.title; return html.classList.contains('opening') && t && !t.closed; }
+  // A line for the player: the chat's (in the world), and the toast on the home screen, where the chat is not shown.
+  note(text) { this.chat?.system(text); if (this.onEarth()) this.social?.toast(text); }
+  // Join from the panel (a friend's place, or "Join Maya and Juno in ..."): on the earth the place is chosen; in a world
+  // the page switches to it.
+  joinPlace(tile) {
+    if (this.onEarth()) { if (this.title.phase === 'lit' && !this.title.begun) this.title.choose(tile); }
+    else if (this.switchTile && tile !== this.room?.tileId) this.switchTile(tile, null, null);
+  }
+  // Invite from the Friends tab: to the place chosen on the earth, or the world the player is in.
+  inviteFriends(ids) {
+    const tile = this.onEarth() ? this.title.sel : this.room?.tileId;
+    if (!tile) return { ok: false, text: this.onEarth() ? 'Choose a place on the earth, then invite' : 'Enter a world, then invite' };
+    if (!this.hub?.place(tile, null, this.title?.points?.[tile] || null, ids)) return { ok: false, text: 'Not connected: the invite was not sent' };
+    const m = this.asked.get(tile) || new Map(); this.asked.set(tile, m);
+    for (const id of ids) if (!m.has(id)) m.set(id, 'asked');
+    this.title?.refreshPeople?.();
+    return { ok: true, text: `Invited ${ids.map(id => this.social.nameOf(id)).join(', ')} to ${this.placeName(tile) || 'this place'}` };
+  }
+  // The friends and group members the hub says are in a tile (those sharing their place): the home screen's list and labels.
+  friendsAt(tile) {
+    if (!this.hub || !this.social) return [];
+    const me = this.hub.you?.id, out = [];
+    for (const [id, p] of this.hub.online) if (id !== me && p.state === 'tile' && p.tile === tile) out.push({ id, name: this.social.nameOf(id) });
+    return out;
   }
   async signOut() {
     try { await Hub.signout(); } catch (e) { /* the session may be gone already */ }
@@ -250,7 +282,7 @@ export class Multiplayer {
         const m = this.asked.get(tile) || new Map(); this.asked.set(tile, m);
         for (const id of [...covered, ...people]) if (id !== me && !m.has(id)) m.set(id, 'asked');
         this.title?.refreshPeople?.();
-      } else this.chat?.system('not connected to the hub: the invite was not sent');
+      } else this.note('Not connected to the hub: the invite was not sent');
       this.closePick();
     };
     el.addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Escape') this.closePick(); });
@@ -281,7 +313,7 @@ export class Multiplayer {
     this.hub.enter(tileId);
     this.chat?.setRoom();
     this.closePick();
-    if (!this.entered1) { this.entered1 = true; this.social?.setOpen(false); }   // the home screen's open panel closes in the world
+    if (this.homeOpened) { this.homeOpened = false; this.social?.setOpen(false); }   // the home screen's open panel closes in the world
     this.room = { tileId, flight: world?.flight || null, arrival: world?.arrival || null, form: world?.form || null, body: world?.body || null, caption: world?.caption || null, lead: world?.lead || null, follow: null, players: world?.players || null };
     if (this.room.players && this.social) this.room.players.nameOf = id => this.social.nameOf(id);
     this.voice?.setRoom({ players: this.room.players, sound: world?.sound || null });

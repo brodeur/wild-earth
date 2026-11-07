@@ -23,8 +23,9 @@ export { latLonToXYZ };
 // social panel will be. Signed in, the earth rises the rest of the way, the sun swings round, the map comes up over the
 // earth (mapGlobe.js: OpenStreetMap's map from OpenFreeMap's vector tiles, draped on the globe, a globe from space and a
 // map at a few kilometres), a dot marks each built tile, and the places are listed on the left with a search box at the
-// top: first every place, the most active first ("Most Active (global)"); once the player drags or zooms the earth, the
-// places in view, the most active first ("Most Active (visible)"). The search finds a built place by name at once and
+// top: first every place, the most active first ("Most active", "everywhere"); once the player drags or zooms the earth,
+// the places in view, the most active first ("in view"); each row names the friends there with their wisps (friendsAt),
+// as the labels on the map do. The search finds a built place by name at once and
 // anywhere on earth through Photon (geocode.js); a place found outside the built tiles is flown to and pinned.
 //
 // The view: the camera looks at a point on the earth (the earth turned so the point faces it: yaw and pitch, the pitch
@@ -86,6 +87,9 @@ const easeInOut = u => u < 0.5 ? 4 * u * u * u : 1 - (-2 * u + 2) ** 3 / 2;
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const wrapPi = a => Math.atan2(Math.sin(a), Math.cos(a));
 const countText = n => n > 0 ? `${n} here` : 'no one here';
+const andList = names => names.length < 2 ? names.join('') : `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
+const FACES_MAX = 4;                                       // friends' wisps on a row or a label before the names say the rest
+const TITLE_PX = 15;                                       // the risen title's size (Aaron's design, 2026-11-06)
 const sunVec = ([az, el], out) => out.set(Math.sin(az) * Math.cos(el), Math.sin(el), Math.cos(az) * Math.cos(el));
 // The yaw (about Y) and pitch (about X, applied after) that bring a sphere point to face the camera on +Z.
 const facingOf = p => [Math.atan2(-p.x, p.z), Math.asin(clamp(p.y, -1, 1))];
@@ -240,6 +244,7 @@ export class TitleScreen {
     this.onLit = null;           // multiplayer.js: called with the user (null exploring alone) once onSignedIn has lit the earth
     this.onInvite = null;        // multiplayer.js: (tileId, button) opens the invite picker; unset, Invite says to sign in
     this.peopleAt = null;        // multiplayer.js: tileId -> [{ id, name, state }] the players known to be there or coming
+    this.friendsAt = null;       // multiplayer.js: tileId -> [{ id, name }] the friends and group members sharing that they are there
     this.user = null; this.config = null;
     this.hubParam = hub;
     this.layers = loadLayers();   // the Layers menu: which names the map draws (per viewer, localStorage)
@@ -299,7 +304,7 @@ export class TitleScreen {
         <div class="tt-pin" hidden>${PIN_ICON}<span></span></div>
         <aside class="tt-places" aria-label="places">
           <label class="tt-search">${SEARCH_ICON}<input type="search" placeholder="Search any place on earth" autocomplete="off" spellcheck="false" maxlength="120" aria-label="search any place on earth"><button type="button" class="tt-sclear" aria-label="clear the search" hidden>×</button></label>
-          <div class="tt-head"><h2 class="tt-mode"></h2><button type="button" class="tt-modebtn"></button></div>
+          <div class="tt-head"><h2 class="tt-mode">Most active</h2><button type="button" class="tt-modebtn"></button></div>
           <div class="tt-rows" role="list"></div>
           <div class="tt-found" role="list" hidden></div>
           <p class="tt-empty" hidden></p>
@@ -341,14 +346,14 @@ export class TitleScreen {
     for (const p of this.places) {
       const el = document.createElement('div');
       el.className = 'tt-row'; el.dataset.tile = p.id; el.setAttribute('role', 'listitem'); el.tabIndex = 0;
-      el.innerHTML = `<span class="tt-rname">${esc(p.name)}</span><span class="tt-rregion"></span><span class="tt-rcount">${countText(0)}</span>`;
+      el.innerHTML = `<span class="tt-rname">${esc(p.name)}</span><span class="tt-rregion"></span><span class="tt-rcount"><span class="tt-faces"></span><span class="tt-rwho">${countText(0)}</span></span>`;
       el.addEventListener('click', () => this.choose(p.id));
       el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.choose(p.id); } });
       el.addEventListener('pointerenter', () => { this.hotRow = p.id; });
       el.addEventListener('pointerleave', () => { if (this.hotRow === p.id) this.hotRow = null; });
       p.el = el;
       const lb = document.createElement('button');
-      lb.type = 'button'; lb.className = 'tt-label'; lb.tabIndex = -1; lb.textContent = p.name;
+      lb.type = 'button'; lb.className = 'tt-label'; lb.tabIndex = -1; lb.innerHTML = `<span class="tt-lname">${esc(p.name)}</span><span class="tt-faces"></span>`;
       lb.addEventListener('click', () => this.choose(p.id));
       lb.addEventListener('pointerenter', () => { this.hotRow = p.id; });
       lb.addEventListener('pointerleave', () => { if (this.hotRow === p.id) this.hotRow = null; });
@@ -571,7 +576,7 @@ export class TitleScreen {
       p.name = place || roads || p.id; p.roads = place ? roads : ''; p.terr = terr;
       p.region = [place ? roads : '', terr].filter(Boolean).join(' · ');
       p.el.querySelector('.tt-rname').textContent = p.name; p.el.querySelector('.tt-rregion').textContent = p.region;
-      p.el.setAttribute('aria-label', `${p.name} (${p.id})`); p.label.textContent = p.name;
+      p.el.setAttribute('aria-label', `${p.name} (${p.id})`); p.label.querySelector('.tt-lname').textContent = p.name;
       say(`loading the places… ${++n} / ${this.places.length}`);
     }));
   }
@@ -580,6 +585,8 @@ export class TitleScreen {
   async rise() {
     const t = this.$('.tt-title'); if (!t) return;
     t.classList.add('on');   // in already, unless the loading was quicker than its fade
+    const fs = parseFloat(getComputedStyle(t.querySelector('h1')).fontSize) || 60;
+    t.style.setProperty('--tt-s', String(Math.min(1, TITLE_PX / fs)));   // risen, the title is TITLE_PX high at any width
     t.classList.add('risen');
     await wait(reducedMotion() ? REFADE_MS : RISE_MS);
   }
@@ -671,11 +678,11 @@ export class TitleScreen {
   // ---- the list ------------------------------------------------------------------------------------------------------
   // 'global': every place, the most active first; 'visible': the places in view, the most active first.
   setMode(m) {
-    if (this.mode === m && this.$('.tt-mode').textContent) return;
+    if (this.mode === m && this.$('.tt-modebtn').textContent) return;
     this.mode = m; this.listKey = '';
-    this.$('.tt-mode').innerHTML = `Most Active <span>(${m === 'global' ? 'global' : 'visible'})</span>`;
-    this.$('.tt-modebtn').textContent = m === 'global' ? 'in view' : 'show all';
-    this.$('.tt-modebtn').title = m === 'global' ? 'list the places in view' : 'list every place';
+    this.$('.tt-mode').textContent = 'Most active';
+    this.$('.tt-modebtn').textContent = m === 'global' ? 'everywhere' : 'in view';
+    this.$('.tt-modebtn').title = m === 'global' ? 'listing every place: list the places in view' : 'listing the places in view: list every place';
   }
 
   // ---- the hub's counts ---------------------------------------------------------------------------------------------
@@ -685,7 +692,7 @@ export class TitleScreen {
     this.places.forEach((p, i) => {
       p.count = Math.max(0, Math.round(+this.counts[p.id] || 0));
       this.dotSize.setX(i, 9 + 4 * Math.sqrt(p.count)); this.dotGlow.setX(i, Math.min(1, p.count / 6));
-      const c = p.el.querySelector('.tt-rcount'); if (c.textContent !== countText(p.count)) c.textContent = countText(p.count);
+      this.renderWho(p);
     });
     this.dotSize.needsUpdate = true; this.dotGlow.needsUpdate = true;
     this.listKey = '';   // re-sort on the next frame
@@ -721,7 +728,20 @@ export class TitleScreen {
   // Called by multiplayer.js when who is there or coming changes. Known players (friends and group members the hub
   // says are in the tile, and the people invited) are named; the others the hub counts are anonymous wisps: a stranger's
   // name and whereabouts are never sent to anyone outside the tile's room.
-  refreshPeople() { if (this.sel) this.renderPeople(); }
+  refreshPeople() { if (this.closed) return; for (const p of this.places) this.renderWho(p); this.listKey = ''; if (this.sel) this.renderPeople(); }
+  // A place's row and label: the wisps of the friends there (those sharing their place) and their names, else how many
+  // players are there ("3 here", "no one here").
+  renderWho(p) {
+    if (!p.el) return;
+    const fr = (this.friendsAt?.(p.id) || []).filter(f => f && f.id), others = Math.max(0, p.count - fr.length);
+    const text = fr.length ? `${andList(fr.slice(0, 3).map(f => f.name))}${fr.length > 3 ? ` +${fr.length - 3}` : ''} here${others ? ` · ${others} more` : ''}` : countText(p.count);
+    const key = `${fr.map(f => f.id).join(',')}|${text}`; if (p.whoKey === key) return; p.whoKey = key;
+    p.el.querySelector('.tt-rwho').textContent = text;
+    p.el.querySelector('.tt-rcount').classList.toggle('friends', fr.length > 0);
+    for (const box of [p.el.querySelector('.tt-faces'), p.label.querySelector('.tt-faces')]) {
+      box.replaceChildren(...fr.slice(0, FACES_MAX).map(f => { const a = avatarFor(f.id, 16); a.title = f.name; return a; }));
+    }
+  }
   renderPeople() {
     const id = this.sel, p = this.byId[id]; if (!p || this.closed) return;   // the hub's events go on after the screen has closed
     const known = (this.peopleAt?.(id) || []).filter(k => k && k.id);
@@ -837,6 +857,8 @@ export class TitleScreen {
     cam.up.set(0, 1, 0); cam.lookAt(0, 0, 1);
     cam.near = Math.max(2e-5, A * Math.cos(t) * 0.3); cam.far = 70;
     const [fl, fr] = this.freeArea(W), off = (fl + fr) / 2 - W / 2;
+    const flr = `${Math.round(fl)}px|${Math.round(W - fr)}px`;   // the free space's edges for the CSS: the bar's buttons and the toast centre in it
+    if (flr !== this.flr) { this.flr = flr; const [l, rr] = flr.split('|'); document.documentElement.style.setProperty('--we-fl', l); document.documentElement.style.setProperty('--we-fr', rr); }
     this.offX += (off - this.offX) * (1 - Math.exp(-dt * 6));
     if (Math.abs(this.offX) > 0.5) cam.setViewOffset(W, H, -this.offX, 0, W, H); else cam.clearViewOffset();
     cam.updateProjectionMatrix(); cam.updateMatrixWorld();
@@ -975,6 +997,7 @@ export class TitleScreen {
     this.closed = true; this.ownsCanvas = false;
     cancelAnimationFrame(this.raf);
     document.documentElement.classList.remove('tt-panels');
+    document.documentElement.style.removeProperty('--we-fl'); document.documentElement.style.removeProperty('--we-fr');
     this.geo.cancel();
     for (const ev of ['keydown', 'keyup']) removeEventListener(ev, this.guard, true);
     document.activeElement?.blur?.();

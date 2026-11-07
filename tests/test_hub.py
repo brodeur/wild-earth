@@ -283,7 +283,7 @@ class HubTest(unittest.TestCase):
         a[2].send({"t": "search", "q": "coyote"})
         self.assertEqual([u["id"] for u in a[2].wait("found")["users"]], [c[0]])
         c[2].send({"t": "friend", "op": "block", "user": a[0]})
-        c[2].wait("friends")
+        self.assertEqual([u["id"] for u in c[2].wait("friends")["blocked"]], [a[0]])   # the blocker's list (Blocked people)
         a[2].send({"t": "search", "q": "coyote"})
         self.assertEqual(a[2].wait("found")["users"], [])
         a[2].send({"t": "friend", "op": "request", "user": c[0]})
@@ -300,6 +300,20 @@ class HubTest(unittest.TestCase):
         for _ in range(int(hub.SEARCH_BURST) + 1):
             a[2].send({"t": "search", "q": "badger"})
         self.assertEqual(a[2].wait("err", where=lambda m: m["re"] == "search")["why"], "too many searches")
+        # "Friends see: nothing" (presence hidden): friends hear offline, and a new tab's welcome leaves the user out
+        b[2].send({"t": "me", "presence": "hidden"})
+        self.assertEqual(b[2].wait("me")["you"]["presence"], "hidden")
+        a[2].wait("presence", where=lambda m: m["user"] == b[0] and m["state"] == "offline")
+        a3 = self.ws(a[1])
+        self.assertNotIn(b[0], {o["user"] for o in a3.welcome["online"]})
+        a3.close()
+        b[2].send({"t": "me", "presence": "online"})
+        a[2].wait("presence", where=lambda m: m["user"] == b[0] and m["state"] == "online")
+        b[2].send({"t": "me", "presence": "elsewhere"})
+        self.assertEqual(b[2].wait("err")["field"], "presence")
+        # unblock: the list empties
+        c[2].send({"t": "friend", "op": "unblock", "user": a[0]})
+        self.assertEqual(c[2].wait("friends")["blocked"], [])
         # remove
         b[2].send({"t": "friend", "op": "remove", "user": a[0]})
         a[2].wait("friends", where=lambda m: m["friends"] == [])
