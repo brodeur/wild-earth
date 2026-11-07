@@ -122,6 +122,7 @@
   #playerLabels { position:fixed; inset:0; z-index:4; pointer-events:none; }
   .pl { position:absolute; left:0; top:0; transform:translate(-50%, -100%); font-size:11px; font-weight:600; letter-spacing:.05em; color:hsl(var(--hue, 200), 80%, 75%); text-shadow:0 1px 2px #000d, 0 0 6px #0009; white-space:nowrap; }
   .pl[hidden] { display:none; }
+  .pl.stranger { font-size:10px; font-weight:500; color:hsl(var(--hue, 200), 35%, 82%); opacity:.85; }   /* a spirit not of the group (players.js) */
   /* speaking (voice.js, players.js): a dot pulsing before the name, a ring round the edge avatar and the video tile */
   .pl.speaking { text-shadow:0 1px 2px #000d, 0 0 8px hsla(var(--hue, 200), 85%, 65%, .9); }
   .pl.speaking::before { content:''; display:inline-block; width:8px; height:8px; margin:0 5px 1px 0; border-radius:50%; background:currentColor; box-shadow:0 0 6px currentColor; animation:plTalk .45s ease-in-out infinite alternate; vertical-align:middle; }

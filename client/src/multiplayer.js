@@ -28,10 +28,13 @@ import { FollowToast, FollowVeil } from './follow.js';
 // picker's card over the place shows who was asked, who is on the way and who is there (title.peopleAt), and the chat
 // pane says who joined and who declined. The dialog goes after a minute.
 //
-// The hub's tile room is joined when a world is entered (main.js enterWorld, through entered()) and left on a tile
-// switch (left()), and while in a room and in a group the spirit's position goes to the hub at 5 Hz (hub.js pos:
-// x, y, z, yaw, form; rounded to the centimetre as the hub rounds), relayed to the group members in the same room and
-// kept nowhere: not on disk, not in a log, not past the room. The last one relayed from each member is held in
+// The hub's tile room is joined when a world is entered (main.js enterWorld, through entered()), with the season the
+// world is in (a world is a tile and a season; the room is joined again when the season changes in place, sendPos), and
+// left on a tile switch (left()). While in a room the player's position goes to the hub at 5 Hz (hub.js pos: x, y, z,
+// yaw, form; rounded to the centimetre as the hub rounds), relayed under the rule (docs/multiplayer.md "Who sees whom"):
+// to the group members in the same world in any form, to everyone else in it while a spirit, and kept nowhere: not on
+// disk, not in a log, not past the room. `gone {user}` from the hub (they left the world, or a stranger's spirit went
+// into a body) takes them off (players.js gone). The last one relayed from each member is held in
 // `poses` for the arrival (and for debugging) and cleared when the room is left. Each relayed position also goes to the
 // world's RemotePlayers (players.js, `world.players`): the member's wisp in the world, their name, their avatar at the
 // screen's edge when out of view and their dot on the mini-map. A member the hub says is offline or in another tile is
@@ -163,6 +166,7 @@ export class Multiplayer {
     for (const t of ['presence', 'groups', 'friends', 'open']) hub.on(t, () => this.title?.refreshPeople?.());
     hub.on('err', d => { if ((d.re === 'place' || d.re === 'answer') && d.why) this.note(d.why); });
     hub.on('pos', d => this.gotPos(d));
+    hub.on('gone', d => { this.poses.delete(d.user); this.room?.players?.gone(d.user); this.voice?.gone(d.user); });
     hub.on('season', d => this.gotSeason(d));
     hub.on('presence', d => {   // a member gone offline or to another tile is no longer seen here (players.js)
       if (d.state === 'offline' || (d.state === 'tile' && d.tile && this.room && d.tile !== this.room.tileId)) { this.poses.delete(d.user); this.room?.players?.drop(d.user); this.voice?.gone(d.user); }
@@ -464,13 +468,14 @@ export class Multiplayer {
   entered(tileId, world = null) {
     if (!this.hub || !tileId) return;
     this.left(false);
-    this.hub.enter(tileId);
+    this.hub.enter(tileId, world?.season?.now?.()?.season || null);
     this.chat?.setRoom();
     this.closePick();
     if (this.homeOpened) { this.homeOpened = false; this.social?.setOpen(false); }   // the home screen's open panel closes in the world
     this.room = { tileId, flight: world?.flight || null, arrival: world?.arrival || null, form: world?.form || null, body: world?.body || null, caption: world?.caption || null, lead: world?.lead || null, follow: null, players: world?.players || null,
       place: world?.place || null, kind: world?.kind || null, season: world?.season || null, waitLead: null, leadT: 0 };
     if (this.room.players && this.social) this.room.players.nameOf = id => this.social.nameOf(id);
+    if (this.room.players) this.room.players.isMate = id => this.isMate(id);
     this.voice?.setRoom({ players: this.room.players, sound: world?.sound || null });
     if (this.room.flight) this.posTimer = setInterval(() => this.sendPos(), POS_MS);
     const f = this.following;   // a follow Join's world: behind the inviter once their position comes (the room join brings it)
@@ -485,8 +490,17 @@ export class Multiplayer {
     this.room = null; this.poses.clear();
     if (tell && this.hub?.room) { this.hub.enter(null); this.chat?.setRoom(); }
   }
+  // Whether the player shares a group with this user (the group sees them in any form; voice is the group's).
+  isMate(id) { return !!this.hub?.groups?.some(g => g.members?.some(m => m.id === id)); }
   sendPos() {
     const r = this.room; if (!r?.flight || !this.hub) return;
+    // the season changed in place (the season select, or the group's season): into that world's room; those of the old
+    // world are no longer seen (the hub tells them the player went)
+    const sn = r.season?.now?.()?.season;
+    if (sn && this.hub.room === r.tileId && sn !== this.hub.roomSeason) {
+      for (const id of this.poses.keys()) this.voice?.gone(id);
+      this.poses.clear(); r.players?.clear(); this.hub.enter(r.tileId, sn);
+    }
     const P = r.flight.pos, m = { x: r2(P.x), y: r2(P.y), z: r2(P.z), yaw: r2(r.flight.yaw), form: r.form?.() || 'spirit' };
     // in a body: its pose as the animal stream has an animal (bodySample.js), so the group draws the animal (players.js)
     const b = this.bodyB ||= new Float32Array(32), c = this.bodyC ||= new Float32Array(8);
@@ -496,7 +510,7 @@ export class Multiplayer {
   gotPos(d) {
     this.poses.set(d.user, d);
     const r = this.room; if (!r) return;
-    this.voice?.seen(d.user);
+    if (this.isMate(d.user)) this.voice?.seen(d.user);   // voice is the group's: a stranger's spirit is only seen
     r.players?.sample(d);
     if (r.waitLead && d.user === r.waitLead) { this.placeBehind(d); return; }   // group follow: behind the inviter
     if (!r.lead || d.user !== r.lead) return;

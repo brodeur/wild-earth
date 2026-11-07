@@ -7217,3 +7217,44 @@ mountain lion would while in spirit mode, the least preferable pulses like a com
   gold, buckbrush and coffeeberry small and purple, wildrye green; as a mountain lion near a herd, 21 prey pulses: 2 deer
   (1.0), a coyote (0.78), 6 jackrabbits (0.37), 12 brush rabbits (0.14). The rabbits were hidden until the pulses stopped
   depth-testing. The ground ring is faint by design and hardly reads in a montage.
+
+## 2026-11-06: spirits are public within a world; the group sees each other in any form (docs/multiplayer.md "Who sees whom")
+
+Aaron: "Players should be able to see other players in spirit mode. When in a group, users can see eachother regardless of
+form. Each user sees the other in the form that they are currently inhabiting."
+
+Until now the hub relayed a position only to the sender's group members in the same tile's room, so a stranger was never
+seen. The rule is now:
+- **A world is a tile and a season**, for seeing as for the animals. The room join carries the season, and the relay,
+  the positions a joiner is sent and the voice signalling keep to one world. Two players in one tile in two seasons do not
+  see each other, because each stands in a different forest with different animals.
+- **A spirit's position goes to everyone in its world.** The group gets every position, in any form, with the body's pose.
+  Anyone else gets it only while the sender is a spirit, and never a body's pose.
+- **`gone {user}`** tells those who could see a player that they no longer may. It is sent when the player leaves the
+  world (the room left, a tile switch, a season change, the connection closed) and, to strangers only, when a spirit goes
+  into a body. Without it a vanished player would hang for the 4.5 s silence fade.
+- **Privacy is unchanged otherwise.** Positions are live, in memory only and never logged, blocks cut both ways, and
+  only tile ids leave the world. The new exposure is deliberate and small: anyone in the same world sees where a spirit
+  is, as they would see any animal there.
+
+**Strangers' spirits carry their name**, nearer (30 m against the group's 60 m) and paler. The tile chat already shows a
+speaker's name to the whole tile, so the label reveals nothing new, and a name is what lets two strangers greet each
+other there. The relayed `pos` carries the display name, since a stranger's page has no other way to know it. They get no edge avatar, distance or map dot, because those find friends across a tile and for a stranger
+they would track them.
+
+**The forms change in view.** Going into a body, the wisp dives into the animal. Leaving it, the wisp grows out with a
+burst of motes. A spirit that goes or leaves shrinks away where it was.
+
+Considered:
+- **Rooms keyed by tile and season**, renaming the room. Rejected: counts, presence and the tile chat are about the place,
+  so the season is a second key on the connection, used only where seeing is decided.
+- **Sending a stranger's spirit to the whole tile regardless of season.** Rejected: the viewer would see a wisp over a
+  forest that is not the one the stranger is in.
+- **The client deciding who to draw from everything in the room.** Rejected: a body's position would then leave the hub
+  for people who are not meant to have it.
+- **Fixed on the way.** A member's body in a species the viewer does not perceive is now drawn alone in its otherwise
+  hidden pool (a deer did not see a woodpecker member at all). Leaving a woodpecker in flight on a mirror page no longer
+  throws.
+- **A stranger's body drawn as an ordinary animal.** Recommended, not built here. It belongs on the anonymous
+  shared-animals channel: the host keeps the body in its stream, driven by the embodied page's pose. It does not belong
+  on the hub. The design is in the doc.

@@ -390,8 +390,8 @@ class HubTest(unittest.TestCase):
             p[2].drain()
         a[2].send({"t": "pos", **POS, "form": "lontra_canadensis"})
         got = b[2].wait("pos")
-        self.assertEqual(got, {"t": "pos", "user": a[0], **{k: round(v, 2) for k, v in POS.items()},
-                               "form": "lontra_canadensis"})          # to the centimetre
+        self.assertEqual(got, {"t": "pos", "user": a[0], "name": "Otter_a", **{k: round(v, 2) for k, v in POS.items()},
+                               "form": "lontra_canadensis"})          # to the centimetre, with the display name
         c[2].none("pos")
         d[2].none("pos")
         a_tab2.none("pos")                                          # not echoed to one's own tabs
@@ -428,6 +428,96 @@ class HubTest(unittest.TestCase):
         watcher[2].none("counts", wait=2.6)
         self.assertNotIn("pos", json.dumps(hub.get().counts()))
 
+    def test_who_sees_whom(self):
+        """docs/multiplayer.md "Who sees whom" (2026-11-06): a spirit's position goes to everyone in its world (the tile's
+        room in the same season), a body's only to the group; a stranger's spirit going into a body is `gone` for the
+        strangers; leaving the world, or the season changing, is `gone` for those who saw the player; a joiner gets the
+        last positions it may see; nothing crosses seasons, tiles or blocks; rtc keeps to the group in the same world."""
+        a, b, c, d, e = (self.player(n) for n in ("Plover_a", "Plover_b", "Stoat_c", "Marten_d", "Pika_e"))
+        self.befriend(a, b)
+        a[2].send({"t": "group", "op": "create", "users": [b[0]]})
+        for p in (a, b):
+            p[2].wait("groups", where=lambda m: len(m["groups"]) == 1 and len(m["groups"][0]["members"]) == 2)
+        for p in (a, b, c):
+            p[2].send({"t": "room", "op": "join", "tile": T1, "season": "fall"})
+        d[2].send({"t": "room", "op": "join", "tile": T1, "season": "winter"})   # the same tile, another world
+        e[2].send({"t": "room", "op": "join", "tile": T2, "season": "fall"})
+        a[2].send({"t": "room", "op": "join", "tile": T1, "season": "monsoon"})
+        self.assertEqual(a[2].wait("err")["field"], "season")
+        time.sleep(0.2)
+        spirit = {"t": "pos", **POS, "form": "spirit"}
+        deer = {"t": "pos", **POS, "form": "odocoileus_hemionus", "b": [4321.125, 287.5, -1234.75, 2.375], "c": [1.0]}
+        # a stranger's spirit: seen by everyone in its world, in any form, group or not
+        c[2].send(spirit)
+        for p in (a, b):
+            got = p[2].wait("pos", where=lambda m: m["user"] == c[0])
+            self.assertEqual((got["form"], got["name"]), ("spirit", "Stoat_c"))   # a stranger's name for the label
+        d[2].none("pos", where=lambda m: m["user"] == c[0])          # another season
+        e[2].none("pos", where=lambda m: m["user"] == c[0])          # another tile
+        # the stranger goes into a body: hidden from the strangers, told once
+        c[2].send(deer)
+        for p in (a, b):
+            p[2].wait("gone", where=lambda m: m["user"] == c[0])
+            p[2].none("pos", where=lambda m: m["user"] == c[0])
+        c[2].send(deer)
+        a[2].none("gone")
+        # a group member in a body: the group sees it with its pose, the stranger does not
+        a[2].send(deer)
+        got = b[2].wait("pos", where=lambda m: m["user"] == a[0])
+        self.assertEqual((got["form"], got["b"][0]), ("odocoileus_hemionus", 4321.125))
+        c[2].none("pos", where=lambda m: m["user"] == a[0])
+        c[2].none("gone")                                           # never seen as a spirit: nothing to take back
+        # out of the body: a spirit again, seen by the stranger (no pose with it)
+        a[2].send({**spirit, "b": [1, 2, 3]})
+        got = c[2].wait("pos", where=lambda m: m["user"] == a[0])
+        self.assertEqual(got["form"], "spirit")
+        self.assertNotIn("b", got)
+        b[2].wait("pos", where=lambda m: m["user"] == a[0] and m["form"] == "spirit")
+        # a joiner gets the last positions it may see: a's spirit, not c's body
+        f = self.player("Shrew_f")
+        f[2].send({"t": "room", "op": "join", "tile": T1, "season": "fall"})
+        got = f[2].wait("pos")
+        self.assertEqual((got["user"], got["form"]), (a[0], "spirit"))
+        f[2].none("pos", where=lambda m: m["user"] == c[0])
+        # a block, either way: nothing between them
+        f[2].send({"t": "friend", "op": "block", "user": a[0]})
+        f[2].wait("friends")
+        time.sleep(0.1)
+        a[2].send(spirit)
+        c[2].wait("pos", where=lambda m: m["user"] == a[0])
+        f[2].none("pos", where=lambda m: m["user"] == a[0])
+        # the season changed in place: out of the fall world (those who saw a are told), into the winter one
+        d[2].send(spirit)
+        for p in (b, c):
+            p[2].drain()
+        a[2].send({"t": "room", "op": "join", "tile": T1, "season": "winter"})
+        got = a[2].wait("pos", where=lambda m: m["user"] == d[0])   # the winter world's spirit, on entering it
+        for p in (b, c):
+            p[2].wait("gone", where=lambda m: m["user"] == a[0])
+        a[2].send(spirit)
+        d[2].wait("pos", where=lambda m: m["user"] == a[0])
+        b[2].none("pos", where=lambda m: m["user"] == a[0])          # the group, but another world
+        c[2].none("pos", where=lambda m: m["user"] == a[0])
+        a[2].send({"t": "rtc", "to": b[0], "k": "state", "mic": True})
+        b[2].none("rtc")                                            # voice keeps to the world too
+        # leaving the room, or the connection closing: gone for those who saw them
+        d[2].send({"t": "room", "op": "leave"})
+        a[2].wait("gone", where=lambda m: m["user"] == d[0])
+        a[2].send({"t": "room", "op": "join", "tile": T1, "season": "fall"})
+        a[2].send(spirit)
+        for p in (b, c):
+            p[2].wait("pos", where=lambda m: m["user"] == a[0])
+        a[2].close()
+        for p in (b, c):
+            p[2].wait("gone", where=lambda m: m["user"] == a[0])
+        # an older client's join, with no season: the tile's by the calendar
+        e[2].send({"t": "room", "op": "join", "tile": T1})
+        time.sleep(0.2)
+        conn = next(iter(hub.get().conns[e[0]]))
+        self.assertEqual(conn.season, hub.season_now(T1))
+        for p in (b, c, d, e, f):
+            p[2].close()
+
     def test_travel_together(self):
         """Lane 4: place with a group and the picker's point; the invite carries both; the picker's last position
         reaches a member who enters the room after it, and nobody else; it goes with the room."""
@@ -458,7 +548,7 @@ class HubTest(unittest.TestCase):
         b[2].drain()
         b[2].send({"t": "room", "op": "join", "tile": T2})
         got = b[2].wait("pos", timeout=2)
-        self.assertEqual(got, {"t": "pos", "user": a[0], **{k: round(v, 2) for k, v in POS.items()}, "form": "spirit"})
+        self.assertEqual(got, {"t": "pos", "user": a[0], "name": "Fox_a", **{k: round(v, 2) for k, v in POS.items()}, "form": "spirit"})
         b[2].none("pos")                                            # once, not again until the picker moves
         c[2].send({"t": "room", "op": "join", "tile": T2})           # c shares a group with a, so c has it too...
         c[2].wait("pos", timeout=2)

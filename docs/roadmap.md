@@ -469,8 +469,11 @@ browser stays the renderer.
   `docs/multiplayer.md`). The menu under the X (2026-11-04, the same branch): Settings (the old right-hand panel, Perceives
   removed) and Exit to main screen (back to the earth, signed in still); the data panel on the right under the
   mini-map in smaller type. Next: TURN set up on the public hub (some NATs fail without it); MediaPipe cut-out figures in
-  place of the tiles; an SFU (LiveKit) past about six; a push-to-talk key; the players on
-  a tile outside the group (unseen by the privacy rule until Aaron widens it); the stream's rate under many players
+  place of the tiles; an SFU (LiveKit) past about six; a push-to-talk key. Who sees whom (2026-11-06, Aaron widened
+  the rule; `docs/multiplayer.md` "Who sees whom"): a world is a tile and a season; spirits are public within it (a
+  stranger's wisp with their name within 30 m), the group sees each other in any form with the embody and leave seen,
+  strangers in a body stay unseen; `tools/mp/visibility.mjs` checks every case both ways with three headless pages.
+  Next there: a stranger's body drawn as an ordinary animal through the shared-animals stream; the stream's rate under many players
   and the far fliers' detail; Discord needs Aaron's application registered; Google and Apple their keys.
 
 ## Then
