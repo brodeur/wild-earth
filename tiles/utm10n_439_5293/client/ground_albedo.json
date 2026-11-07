@@ -7,19 +7,37 @@
  ],
  "encoding": "gain: per channel (linear R G B) the factor from the ground texture's linear colour to surface reflectance; the client multiplies the ground and the herb layer's albedo by it (by its luminance, gain_luminance, by default); saturation: the chroma scale about the luminance (Rec. 601) that the client applies with the luminance factor",
  "method": "sum of the reference month's L2A reflectance over the sum of the texture's linear colour, open ground (tree < 10 %, shrub < 15 %, not water or built), 20 m",
- "imagery": [
-  "pc_naip",
-  2023
- ],
- "basis": "nearest_same_acquisition",
- "why": "no Sentinel-2 composite on this tile",
- "from_tile": "utm10n_429_5293",
- "distance_km": 10,
+ "imagery": {
+  "source": "pc_naip",
+  "year": 2023
+ },
+ "basis": "fit",
  "gain": [
-  0.2192,
-  0.2062,
-  0.1666
+  0.2468,
+  0.2264,
+  0.1994
  ],
- "gain_luminance": 0.2056,
- "saturation": 0.977
+ "gain_luminance": 0.2286,
+ "saturation": 1.0,
+ "chroma_ratio": 1.659,
+ "saturation_fit": 0.57,
+ "reference": "seasons/s2_08.tif",
+ "reference_month": 8,
+ "open_pixels": 34741,
+ "open_share": 0.139,
+ "ratio_luminance_p25_p50_p75": [
+  0.143,
+  0.205,
+  0.364
+ ],
+ "texture_mean_linear": [
+  0.3778,
+  0.4091,
+  0.383
+ ],
+ "reflectance_mean": [
+  0.0933,
+  0.0926,
+  0.0764
+ ]
 }

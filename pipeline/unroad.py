@@ -220,7 +220,7 @@ def _corridor_key(tile: Tile) -> str:
     return h.hexdigest()[:16]
 
 
-def apply(tile: Tile, rel: str) -> dict:
+def apply(tile: Tile, rel: str, where: np.ndarray | None = None) -> dict:
     """The rule on terrain/<rel> (a DEM GeoTIFF), idempotently: the original kept as <stem>_roaded.tif and recorded in
     <stem>_unroad.json with the output's hash, so a rerun with the same roads changes nothing and a re-fetched product
     becomes the new original. Returns the stats (recorded in the DEM's layer)."""
@@ -229,6 +229,8 @@ def apply(tile: Tile, rel: str) -> dict:
     meta_p = p.with_name(p.stem + "_unroad.json")
     meta = read_json(meta_p) if meta_p.exists() else {}
     key = _corridor_key(tile)
+    if where is not None:   # the rule only on these cells (the drawn DEM's gaps in the 1 m ground, which has had it)
+        key = hashlib.sha256((key + hashlib.sha256(np.packbits(where).tobytes()).hexdigest()).encode()).hexdigest()[:16]
     cur = _sha(p)
     if meta.get("out_sha") == cur and meta.get("key") == key:
         return meta.get("stats", {})
@@ -244,6 +246,8 @@ def apply(tile: Tile, rel: str) -> dict:
         out = z
     else:
         corr, held, core, near = corridor_masks(roads, stream_lines(tile), z.shape, tr)
+        if where is not None:
+            corr, held, core, near = corr & where, held & where, core & where, near & where
         out, stats = flatten(z, corr, held, core, abs(tr.a), near)
         stats["roads"] = len(roads)
     with rasterio.open(p, "w", **prof) as dst:
@@ -256,6 +260,41 @@ def apply(tile: Tile, rel: str) -> dict:
     write_json(meta_p, {"key": key, "out_sha": _sha(p), "stats": stats,
                         "original": orig.name, "rule": "pipeline/unroad.py"})
     return stats
+
+
+def road_strip(tile: Tile, n: int) -> np.ndarray | None:
+    """The roads' corridors (the height rule's: paved half-width x 3 + 4 m; bridges and paths left out) on an n x n
+    grid over the tile, from the OSM lines themselves (so a step before the terrain step's footprint/roads.png can
+    use it), or None without roads."""
+    from rasterio.transform import from_bounds
+    roads = road_lines(tile)
+    if not roads:
+        return None
+    x0, y0, x1, y1 = tile.bounds
+    corr, _, _, _ = corridor_masks(roads, [], (n, n), from_bounds(x0, y0, x1, y1, n, n))
+    return corr
+
+
+def mirror_grid(a: np.ndarray, strip: np.ndarray) -> np.ndarray:
+    """A grid (2-D, or 3-D with channels last) with the `strip` cells mirrored from beyond their nearest edge, as the
+    imagery and the canopy are: the ground classes a road's corridor carries (rock from its cut faces in the slope and
+    roughness, pale pavement in the photo) give way to its banks'. A cell whose mirror falls on the strip or off the grid
+    takes the nearest cell outside instead."""
+    from scipy.ndimage import distance_transform_edt
+    if strip is None or not strip.any():
+        return a
+    _, (iy, ix) = distance_transform_edt(strip, return_indices=True)
+    ys, xs = np.nonzero(strip)
+    ey, ex = iy[ys, xs], ix[ys, xs]
+    sy, sx = 2 * ey - ys, 2 * ex - xs
+    n0, n1 = strip.shape
+    ok = (sy >= 0) & (sy < n0) & (sx >= 0) & (sx < n1)
+    sy, sx = np.where(ok, sy, ey), np.where(ok, sx, ex)
+    bad = strip[sy, sx]
+    sy, sx = np.where(bad, ey, sy), np.where(bad, ex, sx)
+    out = a.copy()
+    out[ys, xs] = a[sy, sx]
+    return out
 
 
 MIRROR_WIN = 1000         # 1 m px per window of the canopy mirror, and its pad (the widest erased verge is ~25 m)

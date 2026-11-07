@@ -1,0 +1,207 @@
+{
+ "units": {
+  "1": {
+   "name": "",
+   "lithology": "sandstone_conglomerate",
+   "cells": 1298951,
+   "elevation_m": {
+    "p5": 522.8,
+    "p25": 806.1,
+    "median": 1050.2,
+    "p75": 1286.8,
+    "p95": 1563.8
+   },
+   "candidate": true
+  },
+  "2": {
+   "name": "ice",
+   "lithology": "surficial",
+   "cells": 540076,
+   "elevation_m": {
+    "p5": 1480.4,
+    "p25": 1673.0,
+    "median": 1835.1,
+    "p75": 2029.5,
+    "p95": 2215.0
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "3": {
+   "name": "rhythmic thin- to medium-bedded sandstone and shale",
+   "lithology": "sandstone_conglomerate",
+   "cells": 174707,
+   "elevation_m": {
+    "p5": 1344.6,
+    "p25": 1500.8,
+    "median": 1596.1,
+    "p75": 1689.7,
+    "p95": 1983.5
+   },
+   "candidate": true
+  },
+  "4": {
+   "name": "Needles-GrayW.orWesternOlympic lith.assem.",
+   "lithology": "sandstone_conglomerate",
+   "cells": 1583843,
+   "elevation_m": {
+    "p5": 460.1,
+    "p25": 830.7,
+    "median": 1130.2,
+    "p75": 1441.0,
+    "p95": 1830.1
+   },
+   "candidate": true
+  },
+  "5": {
+   "name": "alluvium",
+   "lithology": "surficial",
+   "cells": 153806,
+   "elevation_m": {
+    "p5": 262.8,
+    "p25": 274.8,
+    "median": 284.5,
+    "p75": 292.7,
+    "p95": 303.3
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "6": {
+   "name": "",
+   "lithology": "surficial",
+   "cells": 71249,
+   "elevation_m": {
+    "p5": 279.1,
+    "p25": 288.4,
+    "median": 298.1,
+    "p75": 317.7,
+    "p95": 351.3
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "7": {
+   "name": "Snag Peak block, siltstone unit of",
+   "lithology": "sandstone_conglomerate",
+   "cells": 100127,
+   "elevation_m": {
+    "p5": 480.3,
+    "p25": 770.2,
+    "median": 1056.5,
+    "p75": 1441.6,
+    "p95": 1730.2
+   },
+   "candidate": true
+  },
+  "8": {
+   "name": "alpine glacial till, Fraser-age",
+   "lithology": "surficial",
+   "cells": 54477,
+   "elevation_m": {
+    "p5": 1125.1,
+    "p25": 1175.5,
+    "median": 1248.3,
+    "p75": 1334.9,
+    "p95": 1491.8
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "9": {
+   "name": "Western Olympic lithic assemblage",
+   "lithology": "sandstone_conglomerate",
+   "cells": 20078,
+   "elevation_m": {
+    "p5": 1392.0,
+    "p25": 1526.7,
+    "median": 1679.3,
+    "p75": 1752.6,
+    "p95": 1854.5
+   },
+   "candidate": true
+  },
+  "10": {
+   "name": "water",
+   "lithology": "surficial",
+   "cells": 2686,
+   "elevation_m": {
+    "p5": 776.5,
+    "p25": 1581.6,
+    "median": 1581.7,
+    "p75": 1582.3,
+    "p95": 1587.0
+   },
+   "candidate": false,
+   "why_not": "water"
+  }
+ },
+ "superposition": [
+  {
+   "upper": "Needles-GrayW.orWesternOlympic lith.assem.",
+   "lower": "",
+   "contact_cells": 1139,
+   "upper_on_top": 0.382
+  },
+  {
+   "upper": "Needles-GrayW.orWesternOlympic lith.assem.",
+   "lower": "Snag Peak block, siltstone unit of",
+   "contact_cells": 1117,
+   "upper_on_top": 0.068
+  },
+  {
+   "upper": "rhythmic thin- to medium-bedded sandstone and shale",
+   "lower": "Needles-GrayW.orWesternOlympic lith.assem.",
+   "contact_cells": 1021,
+   "upper_on_top": 0.346
+  },
+  {
+   "upper": "rhythmic thin- to medium-bedded sandstone and shale",
+   "lower": "",
+   "contact_cells": 996,
+   "upper_on_top": 0.888
+  },
+  {
+   "upper": "Western Olympic lithic assemblage",
+   "lower": "Needles-GrayW.orWesternOlympic lith.assem.",
+   "contact_cells": 516,
+   "upper_on_top": 0.519
+  }
+ ],
+ "consistent_pairs": 0.2,
+ "dropped": [
+  {
+   "unit": "Western Olympic lithic assemblage",
+   "why": "not superposed: mixed sides along its contacts with Needles-GrayW.orWesternOlympic lith.assem."
+  },
+  {
+   "unit": "Snag Peak block, siltstone unit of",
+   "why": "not superposed: mixed sides along its contacts with Needles-GrayW.orWesternOlympic lith.assem."
+  },
+  {
+   "unit": "rhythmic thin- to medium-bedded sandstone and shale",
+   "why": "not superposed: mixed sides along its contacts with Needles-GrayW.orWesternOlympic lith.assem."
+  },
+  {
+   "unit": "",
+   "why": "not superposed: mixed sides along its contacts with Needles-GrayW.orWesternOlympic lith.assem."
+  }
+ ],
+ "column": false,
+ "reason": "fewer than two units left in the column",
+ "rule": {
+  "min_cells": 2000,
+  "min_fraction": 0.0005,
+  "contact_dz_m": 1.0,
+  "min_contact": 50,
+  "superposed": 0.75,
+  "steep_deg": 25.0,
+  "min_band_fit": 0.5,
+  "min_column_fit": 0.6,
+  "max_dip_deg": 8.0,
+  "tilt_prior": 200,
+  "tilt_scale_m": 3000.0,
+  "map_tol_m": 20.0,
+  "doc": "pipeline/strata.py"
+ }
+}

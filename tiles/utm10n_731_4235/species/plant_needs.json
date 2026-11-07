@@ -278,6 +278,21 @@
  "unread": [],
  "needs": [
   {
+   "id": "sequoiadendron_giganteum",
+   "kind": "tree",
+   "why": [
+    "canopy: records (GBIF: 603 records on the tile; height not yet screened)",
+    "GBIF: 134 CC0 / CC BY records on the tile (placed by them: sequoiadendron_giganteum grows in groves)"
+   ],
+   "cover": 0.3337,
+   "records": 603,
+   "scientific": "Sequoiadendron giganteum",
+   "record": true,
+   "card": true,
+   "drawn_as": "sequoiadendron_giganteum",
+   "rank": 1
+  },
+  {
    "id": "arctostaphylos_viscida",
    "kind": "shrub",
    "why": [
@@ -305,7 +320,7 @@
    "record": true,
    "card": false,
    "drawn_as": "arctostaphylos_viscida",
-   "rank": 1
+   "rank": 2
   },
   {
    "id": "pinus_ponderosa",
@@ -326,14 +341,43 @@
     "cover: rule jeffrey_pine on California Montane Jeffrey Pine-(Ponderosa Pine) Woodland",
     "named by EVT 7031 California Montane Jeffrey Pine-(Ponderosa Pine) Woodland (72 cells)",
     "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
-    "cover: rule black_oak on Mediterranean California Lower Montane Black Oak Forest and Woodland"
+    "cover: rule black_oak on Mediterranean California Lower Montane Black Oak Forest and Woodland",
+    "canopy: records (GBIF: 35 records on the tile; height not yet screened)"
    ],
-   "cover": 0.2515,
+   "cover": 0.2709,
    "records": 35,
+   "scientific": "Pinus ponderosa",
    "record": true,
    "card": false,
    "drawn_as": "pinus_ponderosa",
-   "rank": 2
+   "rank": 3
+  },
+  {
+   "id": "calocedrus_decurrens",
+   "kind": "tree",
+   "why": [
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "named by EVT 7028 Mediterranean California Mesic Mixed Conifer Forest and Woodland (78759 cells)",
+    "named by BPS 585 Mediterranean California Mesic Mixed Conifer Forest and Woodland (9475 cells)",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "named by EVT 7027 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (4703 cells)",
+    "named by BPS 584 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (2322 cells)",
+    "cover: rule jeffrey_pine on California Montane Jeffrey Pine(-Ponderosa Pine) Woodland",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland",
+    "cover: rule montane_riparian on California Montane Riparian Systems",
+    "cover: rule jeffrey_pine on California Montane Jeffrey Pine-(Ponderosa Pine) Woodland",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
+    "cover: rule black_oak on Mediterranean California Lower Montane Black Oak Forest and Woodland",
+    "canopy: records (GBIF: 164 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.2158,
+   "records": 164,
+   "scientific": "Calocedrus decurrens",
+   "record": true,
+   "card": false,
+   "drawn_as": "calocedrus_decurrens",
+   "rank": 4
   },
   {
    "id": "abies_concolor",
@@ -348,14 +392,83 @@
     "cover: rule jeffrey_pine on California Montane Jeffrey Pine(-Ponderosa Pine) Woodland",
     "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
     "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland",
-    "cover: rule jeffrey_pine on California Montane Jeffrey Pine-(Ponderosa Pine) Woodland"
+    "cover: rule jeffrey_pine on California Montane Jeffrey Pine-(Ponderosa Pine) Woodland",
+    "canopy: records (GBIF: 84 records on the tile; height not yet screened)"
    ],
-   "cover": 0.166,
+   "cover": 0.2125,
    "records": 84,
+   "scientific": "Abies concolor",
    "record": true,
    "card": true,
    "drawn_as": "abies_concolor",
-   "rank": 3
+   "rank": 5
+  },
+  {
+   "id": "cornus_nuttallii",
+   "kind": "tree",
+   "why": [
+    "canopy: records (GBIF: 338 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.1871,
+   "records": 338,
+   "scientific": "Cornus nuttallii",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 6
+  },
+  {
+   "id": "pinus_lambertiana",
+   "kind": "tree",
+   "why": [
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "named by EVT 7028 Mediterranean California Mesic Mixed Conifer Forest and Woodland (78759 cells)",
+    "named by BPS 585 Mediterranean California Mesic Mixed Conifer Forest and Woodland (9475 cells)",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "named by EVT 7027 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (4703 cells)",
+    "named by BPS 584 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (2322 cells)",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland",
+    "canopy: records (GBIF: 129 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.1739,
+   "records": 129,
+   "scientific": "Pinus lambertiana",
+   "record": true,
+   "card": true,
+   "drawn_as": "pinus_lambertiana",
+   "rank": 7
+  },
+  {
+   "id": "quercus_kelloggii",
+   "kind": "tree",
+   "why": [
+    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
+    "named by EVT 7028 Mediterranean California Mesic Mixed Conifer Forest and Woodland (78759 cells)",
+    "named by BPS 585 Mediterranean California Mesic Mixed Conifer Forest and Woodland (9475 cells)",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "named by EVT 7027 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (4703 cells)",
+    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
+    "named by BPS 584 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (2322 cells)",
+    "cover: rule jeffrey_pine on California Montane Jeffrey Pine(-Ponderosa Pine) Woodland",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland",
+    "named by BPS 587 Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland (1503 cells)",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule jeffrey_pine on California Montane Jeffrey Pine-(Ponderosa Pine) Woodland",
+    "named by EVT 7261 Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland (17 cells)",
+    "cover: rule black_oak on Mediterranean California Lower Montane Black Oak Forest and Woodland",
+    "named by EVT 7260 Mediterranean California Lower Montane Black Oak Forest and Woodland (14 cells)",
+    "canopy: records (GBIF: 148 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.1663,
+   "records": 148,
+   "scientific": "Quercus kelloggii",
+   "record": true,
+   "card": false,
+   "drawn_as": "quercus_kelloggii",
+   "rank": 8
   },
   {
    "id": "ceanothus_integerrimus",
@@ -375,32 +488,7 @@
    "record": true,
    "card": false,
    "drawn_as": "ceanothus_integerrimus",
-   "rank": 4
-  },
-  {
-   "id": "calocedrus_decurrens",
-   "kind": "tree",
-   "why": [
-    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
-    "named by EVT 7028 Mediterranean California Mesic Mixed Conifer Forest and Woodland (78759 cells)",
-    "named by BPS 585 Mediterranean California Mesic Mixed Conifer Forest and Woodland (9475 cells)",
-    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
-    "named by EVT 7027 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (4703 cells)",
-    "named by BPS 584 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (2322 cells)",
-    "cover: rule jeffrey_pine on California Montane Jeffrey Pine(-Ponderosa Pine) Woodland",
-    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
-    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland",
-    "cover: rule montane_riparian on California Montane Riparian Systems",
-    "cover: rule jeffrey_pine on California Montane Jeffrey Pine-(Ponderosa Pine) Woodland",
-    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
-    "cover: rule black_oak on Mediterranean California Lower Montane Black Oak Forest and Woodland"
-   ],
-   "cover": 0.1251,
-   "records": 164,
-   "record": true,
-   "card": false,
-   "drawn_as": "calocedrus_decurrens",
-   "rank": 5
+   "rank": 9
   },
   {
    "id": "chamaebatia_foliolosa",
@@ -417,27 +505,7 @@
    "record": true,
    "card": true,
    "drawn_as": "chamaebatia_foliolosa",
-   "rank": 6
-  },
-  {
-   "id": "pinus_lambertiana",
-   "kind": "tree",
-   "why": [
-    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
-    "named by EVT 7028 Mediterranean California Mesic Mixed Conifer Forest and Woodland (78759 cells)",
-    "named by BPS 585 Mediterranean California Mesic Mixed Conifer Forest and Woodland (9475 cells)",
-    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
-    "named by EVT 7027 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (4703 cells)",
-    "named by BPS 584 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (2322 cells)",
-    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
-    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland"
-   ],
-   "cover": 0.1026,
-   "records": 129,
-   "record": true,
-   "card": true,
-   "drawn_as": "pinus_lambertiana",
-   "rank": 7
+   "rank": 10
   },
   {
    "id": "pseudotsuga_menziesii",
@@ -459,35 +527,7 @@
    "record": true,
    "card": false,
    "drawn_as": "pseudotsuga_menziesii",
-   "rank": 8
-  },
-  {
-   "id": "quercus_kelloggii",
-   "kind": "tree",
-   "why": [
-    "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
-    "named by EVT 7028 Mediterranean California Mesic Mixed Conifer Forest and Woodland (78759 cells)",
-    "named by BPS 585 Mediterranean California Mesic Mixed Conifer Forest and Woodland (9475 cells)",
-    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
-    "named by EVT 7027 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (4703 cells)",
-    "cover: rule montane_woodland_chaparral on California Montane Woodland and Chaparral",
-    "named by BPS 584 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (2322 cells)",
-    "cover: rule jeffrey_pine on California Montane Jeffrey Pine(-Ponderosa Pine) Woodland",
-    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
-    "cover: rule black_oak_conifer on Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland",
-    "named by BPS 587 Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland (1503 cells)",
-    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
-    "cover: rule jeffrey_pine on California Montane Jeffrey Pine-(Ponderosa Pine) Woodland",
-    "named by EVT 7261 Mediterranean California Lower Montane Black Oak-Conifer Forest and Woodland (17 cells)",
-    "cover: rule black_oak on Mediterranean California Lower Montane Black Oak Forest and Woodland",
-    "named by EVT 7260 Mediterranean California Lower Montane Black Oak Forest and Woodland (14 cells)"
-   ],
-   "cover": 0.0844,
-   "records": 148,
-   "record": true,
-   "card": false,
-   "drawn_as": "quercus_kelloggii",
-   "rank": 9
+   "rank": 11
   },
   {
    "id": "symphoricarpos_albus",
@@ -512,7 +552,22 @@
    "record": true,
    "card": false,
    "drawn_as": "symphoricarpos_albus",
-   "rank": 10
+   "rank": 12
+  },
+  {
+   "id": "taxus_brevifolia",
+   "kind": "tree",
+   "why": [
+    "canopy: records (GBIF: 119 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0658,
+   "records": 119,
+   "scientific": "Taxus brevifolia",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 13
   },
   {
    "id": "arctostaphylos_patula",
@@ -534,7 +589,7 @@
    "record": true,
    "card": true,
    "drawn_as": "arctostaphylos_patula",
-   "rank": 11
+   "rank": 14
   },
   {
    "id": "quercus_wislizeni",
@@ -562,7 +617,7 @@
    "record": true,
    "card": false,
    "drawn_as": "quercus_wislizeni",
-   "rank": 12
+   "rank": 15
   },
   {
    "id": "ceanothus_cordulatus",
@@ -584,7 +639,7 @@
    "record": true,
    "card": true,
    "drawn_as": "ceanothus_cordulatus",
-   "rank": 13
+   "rank": 16
   },
   {
    "id": "ribes_roezlii",
@@ -610,7 +665,7 @@
    "record": true,
    "card": false,
    "drawn_as": "ribes_roezlii",
-   "rank": 14
+   "rank": 17
   },
   {
    "id": "ceanothus_cuneatus",
@@ -639,7 +694,7 @@
    "record": true,
    "card": false,
    "drawn_as": "ceanothus_cuneatus",
-   "rank": 15
+   "rank": 18
   },
   {
    "id": "toxicodendron_diversilobum",
@@ -665,7 +720,7 @@
    "record": true,
    "card": false,
    "drawn_as": "toxicodendron_diversilobum",
-   "rank": 16
+   "rank": 19
   },
   {
    "id": "arctostaphylos_manzanita",
@@ -689,7 +744,7 @@
    "record": true,
    "card": false,
    "drawn_as": "arctostaphylos_manzanita",
-   "rank": 17
+   "rank": 20
   },
   {
    "id": "frangula_californica",
@@ -713,7 +768,7 @@
    "record": true,
    "card": false,
    "drawn_as": "frangula_californica",
-   "rank": 18
+   "rank": 21
   },
   {
    "id": "chrysolepis_sempervirens",
@@ -733,7 +788,7 @@
    "record": true,
    "card": true,
    "drawn_as": "chrysolepis_sempervirens",
-   "rank": 19
+   "rank": 22
   },
   {
    "id": "cercocarpus_betuloides",
@@ -757,7 +812,7 @@
    "record": true,
    "card": false,
    "drawn_as": "cercocarpus_betuloides",
-   "rank": 20
+   "rank": 23
   },
   {
    "id": "arbutus_menziesii",
@@ -776,7 +831,7 @@
    "record": true,
    "card": false,
    "drawn_as": "arbutus_menziesii",
-   "rank": 21
+   "rank": 24
   },
   {
    "id": "pinus_sabiniana",
@@ -799,7 +854,38 @@
    "record": true,
    "card": false,
    "drawn_as": "pinus_sabiniana",
-   "rank": 22
+   "rank": 25
+  },
+  {
+   "id": "acer_macrophyllum",
+   "kind": "tree",
+   "why": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule montane_riparian on California Montane Riparian Systems",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
+    "canopy: records (GBIF: 35 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0205,
+   "records": 35,
+   "scientific": "Acer macrophyllum",
+   "record": true,
+   "card": false,
+   "drawn_as": "acer_macrophyllum",
+   "rank": 26
+  },
+  {
+   "id": "populus_tremuloides",
+   "kind": "tree",
+   "why": [
+    "canopy: records (GBIF: 35 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0194,
+   "records": 35,
+   "scientific": "Populus tremuloides",
+   "record": true,
+   "card": true,
+   "drawn_as": "populus_tremuloides",
+   "rank": 27
   },
   {
    "id": "umbellularia_californica",
@@ -819,7 +905,7 @@
    "record": true,
    "card": false,
    "drawn_as": "umbellularia_californica",
-   "rank": 23
+   "rank": 28
   },
   {
    "id": "pinus_jeffreyi",
@@ -835,7 +921,7 @@
    "record": true,
    "card": true,
    "drawn_as": "pinus_jeffreyi",
-   "rank": 24
+   "rank": 29
   },
   {
    "id": "adenostoma_fasciculatum",
@@ -861,7 +947,7 @@
    "record": true,
    "card": false,
    "drawn_as": "adenostoma_fasciculatum",
-   "rank": 25
+   "rank": 30
   },
   {
    "id": "quercus_chrysolepis",
@@ -886,7 +972,7 @@
    "record": true,
    "card": false,
    "drawn_as": "quercus_chrysolepis",
-   "rank": 26
+   "rank": 31
   },
   {
    "id": "quercus_vacciniifolia",
@@ -903,7 +989,7 @@
    "record": true,
    "card": true,
    "drawn_as": "quercus_vacciniifolia",
-   "rank": 27
+   "rank": 32
   },
   {
    "id": "quercus_douglasii",
@@ -919,7 +1005,7 @@
    "record": true,
    "card": false,
    "drawn_as": "quercus_douglasii",
-   "rank": 28
+   "rank": 33
   },
   {
    "id": "alnus_rhombifolia",
@@ -935,7 +1021,7 @@
    "record": true,
    "card": false,
    "drawn_as": "alnus_rhombifolia",
-   "rank": 29
+   "rank": 34
   },
   {
    "id": "salix_lasiolepis",
@@ -951,7 +1037,7 @@
    "record": true,
    "card": false,
    "drawn_as": "salix_lasiolepis",
-   "rank": 30
+   "rank": 35
   },
   {
    "id": "heteromeles_arbutifolia",
@@ -974,7 +1060,7 @@
    "record": true,
    "card": false,
    "drawn_as": "heteromeles_arbutifolia",
-   "rank": 31
+   "rank": 36
   },
   {
    "id": "rosa_californica",
@@ -993,7 +1079,7 @@
    "record": true,
    "card": false,
    "drawn_as": "rosa_californica",
-   "rank": 32
+   "rank": 37
   },
   {
    "id": "diplacus_aurantiacus",
@@ -1013,7 +1099,7 @@
    "record": true,
    "card": false,
    "drawn_as": "diplacus_aurantiacus",
-   "rank": 33
+   "rank": 38
   },
   {
    "id": "sambucus_nigra_caerulea",
@@ -1029,7 +1115,7 @@
    "record": true,
    "card": false,
    "drawn_as": "sambucus_nigra_caerulea",
-   "rank": 34
+   "rank": 39
   },
   {
    "id": "rubus_ursinus",
@@ -1045,7 +1131,7 @@
    "record": true,
    "card": false,
    "drawn_as": "rubus_ursinus",
-   "rank": 35
+   "rank": 40
   },
   {
    "id": "baccharis_pilularis",
@@ -1059,7 +1145,7 @@
    "record": true,
    "card": false,
    "drawn_as": "baccharis_pilularis",
-   "rank": 36
+   "rank": 41
   },
   {
    "id": "quercus_lobata",
@@ -1074,7 +1160,7 @@
    "record": true,
    "card": false,
    "drawn_as": "quercus_lobata",
-   "rank": 37
+   "rank": 42
   },
   {
    "id": "ribes_malvaceum",
@@ -1091,7 +1177,7 @@
    "record": true,
    "card": false,
    "drawn_as": "ribes_malvaceum",
-   "rank": 38
+   "rank": 43
   },
   {
    "id": "pinus_contorta",
@@ -1104,7 +1190,7 @@
    "record": true,
    "card": true,
    "drawn_as": "pinus_contorta",
-   "rank": 39
+   "rank": 44
   },
   {
    "id": "artemisia_tridentata",
@@ -1118,7 +1204,7 @@
    "record": true,
    "card": true,
    "drawn_as": "artemisia_tridentata",
-   "rank": 40
+   "rank": 45
   },
   {
    "id": "cercis_occidentalis",
@@ -1139,7 +1225,7 @@
    "record": true,
    "card": false,
    "drawn_as": "cercis_occidentalis",
-   "rank": 41
+   "rank": 46
   },
   {
    "id": "populus_fremontii",
@@ -1154,7 +1240,7 @@
    "record": true,
    "card": false,
    "drawn_as": "populus_fremontii",
-   "rank": 42
+   "rank": 47
   },
   {
    "id": "cornus_sericea",
@@ -1169,7 +1255,7 @@
    "record": true,
    "card": false,
    "drawn_as": "cornus_sericea",
-   "rank": 43
+   "rank": 48
   },
   {
    "id": "phyllodoce_breweri",
@@ -1182,22 +1268,7 @@
    "record": true,
    "card": true,
    "drawn_as": "phyllodoce_breweri",
-   "rank": 44
-  },
-  {
-   "id": "acer_macrophyllum",
-   "kind": "tree",
-   "why": [
-    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
-    "cover: rule montane_riparian on California Montane Riparian Systems",
-    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems"
-   ],
-   "cover": 0.0011,
-   "records": 35,
-   "record": true,
-   "card": false,
-   "drawn_as": "acer_macrophyllum",
-   "rank": 45
+   "rank": 49
   },
   {
    "id": "aesculus_californica",
@@ -1214,7 +1285,7 @@
    "record": true,
    "card": false,
    "drawn_as": "aesculus_californica",
-   "rank": 46
+   "rank": 50
   },
   {
    "id": "fraxinus_latifolia",
@@ -1230,7 +1301,7 @@
    "record": true,
    "card": false,
    "drawn_as": "fraxinus_latifolia",
-   "rank": 47
+   "rank": 51
   },
   {
    "id": "juniperus_grandis",
@@ -1244,7 +1315,7 @@
    "record": true,
    "card": true,
    "drawn_as": "juniperus_grandis",
-   "rank": 48
+   "rank": 52
   },
   {
    "id": "vitis_californica",
@@ -1257,7 +1328,7 @@
    "record": true,
    "card": false,
    "drawn_as": "vitis_californica",
-   "rank": 49
+   "rank": 53
   },
   {
    "id": "salix_laevigata",
@@ -1271,7 +1342,7 @@
    "record": true,
    "card": false,
    "drawn_as": "salix_laevigata",
-   "rank": 50
+   "rank": 54
   },
   {
    "id": "calycanthus_occidentalis",
@@ -1286,7 +1357,7 @@
    "record": true,
    "card": false,
    "drawn_as": "calycanthus_occidentalis",
-   "rank": 51
+   "rank": 55
   },
   {
    "id": "juglans_hindsii",
@@ -1301,7 +1372,7 @@
    "record": true,
    "card": false,
    "drawn_as": "juglans_hindsii",
-   "rank": 52
+   "rank": 56
   },
   {
    "id": "salix_exigua",
@@ -1315,7 +1386,7 @@
    "record": true,
    "card": false,
    "drawn_as": "salix_exigua",
-   "rank": 53
+   "rank": 57
   },
   {
    "id": "platanus_racemosa",
@@ -1328,7 +1399,7 @@
    "record": true,
    "card": false,
    "drawn_as": "platanus_racemosa",
-   "rank": 54
+   "rank": 58
   },
   {
    "id": "cephalanthus_occidentalis",
@@ -1342,7 +1413,7 @@
    "record": true,
    "card": false,
    "drawn_as": "cephalanthus_occidentalis",
-   "rank": 55
+   "rank": 59
   },
   {
    "id": "salix_lasiandra",
@@ -1356,22 +1427,7 @@
    "record": true,
    "card": false,
    "drawn_as": "salix_lasiandra",
-   "rank": 56
-  },
-  {
-   "id": "sequoiadendron_giganteum",
-   "kind": "tree",
-   "why": [
-    "GBIF: 603 records on the tile",
-    "GBIF: 134 CC0 / CC BY records on the tile (placed by them: sequoiadendron_giganteum grows in groves)"
-   ],
-   "cover": 0.0,
-   "records": 603,
-   "scientific": "Sequoiadendron giganteum",
-   "record": true,
-   "card": true,
-   "drawn_as": "sequoiadendron_giganteum",
-   "rank": 57
+   "rank": 60
   },
   {
    "id": "actaea_rubra",
@@ -1382,11 +1438,10 @@
    "cover": 0.0,
    "records": 223,
    "scientific": "Actaea rubra",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 58
+   "record": true,
+   "card": true,
+   "drawn_as": "actaea_rubra",
+   "rank": 61
   },
   {
    "id": "viola_lobata",
@@ -1401,7 +1456,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 59
+   "rank": 62
   },
   {
    "id": "asarum_hartwegii",
@@ -1416,7 +1471,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 60
+   "rank": 63
   },
   {
    "id": "rubus_parviflorus",
@@ -1429,9 +1484,8 @@
    "scientific": "Rubus parviflorus",
    "record": true,
    "card": true,
-   "generated_now": true,
    "drawn_as": "rubus_parviflorus",
-   "rank": 61
+   "rank": 64
   },
   {
    "id": "iris_hartwegii",
@@ -1446,7 +1500,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 62
+   "rank": 65
   },
   {
    "id": "maianthemum_racemosum",
@@ -1461,7 +1515,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 63
+   "rank": 66
   },
   {
    "id": "lysimachia_latifolia",
@@ -1476,7 +1530,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 64
+   "rank": 67
   },
   {
    "id": "clintonia_uniflora",
@@ -1491,7 +1545,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 65
+   "rank": 68
   },
   {
    "id": "adenocaulon_bicolor",
@@ -1506,7 +1560,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 66
+   "rank": 69
   },
   {
    "id": "goodyera_oblongifolia",
@@ -1521,7 +1575,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 67
+   "rank": 70
   },
   {
    "id": "pteridium_aquilinum",
@@ -1536,7 +1590,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 68
+   "rank": 71
   },
   {
    "id": "veratrum_californicum",
@@ -1551,7 +1605,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 69
+   "rank": 72
   },
   {
    "id": "aquilegia_formosa",
@@ -1566,7 +1620,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 70
+   "rank": 73
   },
   {
    "id": "lupinus_stiversii",
@@ -1581,7 +1635,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 71
+   "rank": 74
   },
   {
    "id": "fragaria_vesca",
@@ -1596,7 +1650,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 72
+   "rank": 75
   },
   {
    "id": "nemophila_maculata",
@@ -1611,7 +1665,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 73
+   "rank": 76
   },
   {
    "id": "darmera_peltata",
@@ -1626,7 +1680,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 74
+   "rank": 77
   },
   {
    "id": "diplacus_torreyi",
@@ -1641,7 +1695,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 75
+   "rank": 78
   },
   {
    "id": "dicentra_formosa",
@@ -1656,7 +1710,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 76
+   "rank": 79
   },
   {
    "id": "collomia_grandiflora",
@@ -1671,7 +1725,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 77
+   "rank": 80
   },
   {
    "id": "erythranthe_bicolor",
@@ -1686,7 +1740,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 78
+   "rank": 81
   },
   {
    "id": "erythranthe_cardinalis",
@@ -1701,7 +1755,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 79
+   "rank": 82
   },
   {
    "id": "smithiastrum_prenanthoides",
@@ -1716,7 +1770,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 80
+   "rank": 83
   },
   {
    "id": "trifolium_pratense",
@@ -1731,22 +1785,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 81
-  },
-  {
-   "id": "hosackia_oblongifolia",
-   "kind": "forb",
-   "why": [
-    "GBIF: 53 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 53,
-   "scientific": "Hosackia oblongifolia",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 82
+   "rank": 84
   },
   {
    "id": "achillea_millefolium",
@@ -1760,21 +1799,21 @@
    "record": true,
    "card": false,
    "drawn_as": "achillea_millefolium",
-   "rank": 83
+   "rank": 85
   },
   {
-   "id": "populus_tremuloides",
-   "kind": "tree",
+   "id": "maianthemum_stellatum",
+   "kind": "forb",
    "why": [
-    "GBIF: 35 records on the tile"
+    "GBIF: 19 records on the tile"
    ],
    "cover": 0.0,
-   "records": 35,
-   "scientific": "Populus tremuloides",
+   "records": 19,
+   "scientific": "Maianthemum stellatum",
    "record": true,
    "card": true,
-   "drawn_as": "populus_tremuloides",
-   "rank": 84
+   "drawn_as": "maianthemum_stellatum",
+   "rank": 86
   },
   {
    "id": "chlorogalum_pomeridianum",
@@ -1788,7 +1827,7 @@
    "record": true,
    "card": false,
    "drawn_as": "chlorogalum_pomeridianum",
-   "rank": 85
+   "rank": 87
   }
  ],
  "gbif_plants": [
@@ -1814,7 +1853,7 @@
    "family": "Ranunculaceae",
    "kind": "forb",
    "records": 223,
-   "known": false
+   "known": true
   },
   {
    "id": "chamaebatia_foliolosa",
@@ -2390,7 +2429,7 @@
    "family": "Asparagaceae",
    "kind": "forb",
    "records": 19,
-   "known": false
+   "known": true
   },
   {
    "id": "collomia_heterophylla",
@@ -2993,26 +3032,32 @@
    "known": false
   }
  ],
- "generated": [
-  "rubus_parviflorus"
- ],
+ "generated": [],
  "target": {
   "tree": 21,
   "shrub": 23,
   "ground": 26
  },
  "by_layer": {
-  "tree": 28,
+  "tree": 30,
   "shrub": 31,
   "ground": 26
  },
  "hands": [
   {
-   "id": "actaea_rubra",
-   "kind": "forb",
+   "id": "cornus_nuttallii",
+   "kind": "tree",
    "what": "a trait card",
    "why": [
-    "GBIF: 223 records on the tile"
+    "canopy: records (GBIF: 338 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "taxus_brevifolia",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 119 records on the tile; height not yet screened)"
    ]
   },
   {
@@ -3190,24 +3235,16 @@
    "why": [
     "GBIF: 54 records on the tile"
    ]
-  },
-  {
-   "id": "hosackia_oblongifolia",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 53 records on the tile"
-   ]
   }
  ],
  "summary": {
-  "needed": 85,
-  "with_record": 61,
-  "generated_now": 1,
+  "needed": 87,
+  "with_record": 63,
+  "generated_now": 0,
   "queued": 24,
   "unread_communities": 0,
   "by_layer": {
-   "tree": 28,
+   "tree": 30,
    "shrub": 31,
    "ground": 26
   },

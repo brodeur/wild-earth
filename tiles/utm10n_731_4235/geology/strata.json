@@ -1,0 +1,91 @@
+{
+ "units": {
+  "1": {
+   "name": "Paleozoic marine rocks, undivided, unit 4 (Western Sierra Nevada)",
+   "lithology": "slate_phyllite",
+   "cells": 850209,
+   "elevation_m": {
+    "p5": 1135.6,
+    "p25": 1204.3,
+    "median": 1254.2,
+    "p75": 1320.9,
+    "p95": 1470.3
+   },
+   "candidate": true
+  },
+  "2": {
+   "name": "Tertiary pyroclastic and volcanic mudflow deposits, unit 9 (Cascade Range)",
+   "lithology": "volcanic",
+   "cells": 1211521,
+   "elevation_m": {
+    "p5": 1213.5,
+    "p25": 1280.8,
+    "median": 1356.7,
+    "p75": 1481.4,
+    "p95": 1603.7
+   },
+   "candidate": true
+  },
+  "3": {
+   "name": "Mesozoic granitic rocks, unit 3 (Sierra Nevada, Death Valley area, Northern Mojave Desert and Transverse Ranges)",
+   "lithology": "granitic",
+   "cells": 1938270,
+   "elevation_m": {
+    "p5": 1135.9,
+    "p25": 1320.8,
+    "median": 1415.9,
+    "p75": 1479.8,
+    "p95": 1567.3
+   },
+   "candidate": true
+  }
+ },
+ "superposition": [
+  {
+   "upper": "Mesozoic granitic rocks, unit 3 (Sierra Nevada, Death Valley area, Northern Mojave Desert and Transverse Ranges)",
+   "lower": "Tertiary pyroclastic and volcanic mudflow deposits, unit 9 (Cascade Range)",
+   "contact_cells": 2141,
+   "upper_on_top": 0.358
+  },
+  {
+   "upper": "Tertiary pyroclastic and volcanic mudflow deposits, unit 9 (Cascade Range)",
+   "lower": "Paleozoic marine rocks, undivided, unit 4 (Western Sierra Nevada)",
+   "contact_cells": 1639,
+   "upper_on_top": 0.783
+  },
+  {
+   "upper": "Mesozoic granitic rocks, unit 3 (Sierra Nevada, Death Valley area, Northern Mojave Desert and Transverse Ranges)",
+   "lower": "Paleozoic marine rocks, undivided, unit 4 (Western Sierra Nevada)",
+   "contact_cells": 611,
+   "upper_on_top": 0.612
+  }
+ ],
+ "consistent_pairs": 0.333,
+ "dropped": [
+  {
+   "unit": "Paleozoic marine rocks, undivided, unit 4 (Western Sierra Nevada)",
+   "why": "not superposed: mixed sides along its contacts with Mesozoic granitic rocks, unit 3 (Sierra Nevada, Death Valley area, Northern Mojave Desert and Transverse Ranges)"
+  },
+  {
+   "unit": "Tertiary pyroclastic and volcanic mudflow deposits, unit 9 (Cascade Range)",
+   "why": "not superposed: mixed sides along its contacts with Mesozoic granitic rocks, unit 3 (Sierra Nevada, Death Valley area, Northern Mojave Desert and Transverse Ranges)"
+  }
+ ],
+ "column": false,
+ "reason": "fewer than two units left in the column",
+ "rule": {
+  "min_cells": 2000,
+  "min_fraction": 0.0005,
+  "contact_dz_m": 1.0,
+  "min_contact": 50,
+  "superposed": 0.75,
+  "steep_deg": 25.0,
+  "min_band_fit": 0.5,
+  "min_column_fit": 0.6,
+  "max_dip_deg": 8.0,
+  "tilt_prior": 200,
+  "tilt_scale_m": 3000.0,
+  "map_tol_m": 20.0,
+  "doc": "pipeline/strata.py"
+ }
+}

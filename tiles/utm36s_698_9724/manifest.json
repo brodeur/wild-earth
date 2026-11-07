@@ -15,7 +15,7 @@
   -2.4052817272586062
  ],
  "size_m": 10000,
- "generated_at": "2026-11-07T17:17:12Z",
+ "generated_at": "2026-11-07T20:49:42Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -1083,8 +1083,8 @@
    "fraction_above_0.25": 0.0,
    "slope_deg_mean": 1.03,
    "convex_fraction": 0.5079,
-   "sha256": "5fbd0879a13f3de6e363294d5b0a03f91bc46a667dd6919b422e0ca32af287e0",
-   "bytes": 271
+   "sha256": "40b476485b9569039ec0079e967fc0650a1719db9f7ebae9d80a9ea4631d5c38",
+   "bytes": 268
   },
   "client.ground_classes": {
    "path": "client/ground_classes.json",
@@ -1523,8 +1523,8 @@
    "photo": "client/texture_imagery.jpg (NAIP, humans erased)",
    "photo_green_ref": 0.06,
    "dem": "terrain/dem_banked.tif",
-   "sha256": "179abbf6e2368aa0607939bd2eb0c9bbec43a7fcdeccca4de61e7bbe38b36968",
-   "bytes": 18594
+   "sha256": "93c8f3500388a4708630ed6e7ed2faf20b91f0525d0b6112bb19aae1fd0b5abc",
+   "bytes": 18721
   },
   "client.substrate_classes": {
    "path": "client/substrate.json",
@@ -5212,20 +5212,58 @@
    "at": "2026-11-07T17:08:34Z",
    "seconds": 1.1,
    "ok": true
+  },
+  {
+   "step": "dem",
+   "at": "2026-11-07T20:48:04Z",
+   "seconds": 5.5,
+   "ok": true
+  },
+  {
+   "step": "lidar",
+   "at": "2026-11-07T20:48:04Z",
+   "seconds": 0.0,
+   "ok": true,
+   "not_applicable": "outside 3DEP (nasadem): no public lidar; the 5 m base DEM carries the terrain"
+  },
+  {
+   "step": "ground",
+   "at": "2026-11-07T20:49:41Z",
+   "seconds": 96.4,
+   "ok": true
+  },
+  {
+   "step": "substrate",
+   "at": "2026-11-07T20:49:42Z",
+   "seconds": 1.5,
+   "ok": true
+  },
+  {
+   "step": "soil_surface",
+   "at": "2026-11-07T20:49:42Z",
+   "seconds": 0.0,
+   "ok": true
+  },
+  {
+   "step": "crowns",
+   "at": "2026-11-07T20:49:42Z",
+   "seconds": 0.0,
+   "ok": true,
+   "not_applicable": "no point cloud on this tile (DEM-only lidar or none): no canopy height model, so no crowns to find or inpaint"
   }
  ],
  "steps": {
   "dem": {
    "version": "3",
-   "code": "8c62469a0d11aaec",
+   "code": "1d63164ad4f559f4",
    "params": {
     "tile": "utm36s_698_9724",
     "dem_res_m": 5.0
    },
-   "fingerprint": "999fcb50bff1f950",
+   "fingerprint": "d748275b0aa143f3",
    "parts": {
     "version": "3",
-    "code": "8c62469a0d11aaec",
+    "code": "1d63164ad4f559f4",
     "params": {
      "tile": "utm36s_698_9724",
      "dem_res_m": 5.0
@@ -5236,7 +5274,7 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T17:07:44Z",
+   "ran_at": "2026-11-07T20:47:59Z",
    "owner": null,
    "coverage": {
     "usgs_3dep": {
@@ -5277,7 +5315,7 @@
     "network": 1,
     "cache": 0
    },
-   "seconds": 5.8
+   "seconds": 5.5
   },
   "naip": {
    "version": "1",
@@ -5632,14 +5670,14 @@
   },
   "lidar": {
    "version": "2",
-   "code": "fa1cf6482fbacf63",
+   "code": "0d1c1ca67dee4d42",
    "params": {
     "tile": "utm36s_698_9724"
    },
-   "fingerprint": "1f99baefde32b5da",
+   "fingerprint": "435e95952aa2aad9",
    "parts": {
     "version": "2",
-    "code": "fa1cf6482fbacf63",
+    "code": "0d1c1ca67dee4d42",
     "params": {
      "tile": "utm36s_698_9724"
     },
@@ -5651,7 +5689,7 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T17:07:49Z",
+   "ran_at": "2026-11-07T20:48:04Z",
    "owner": null,
    "coverage": {
     "usgs_3dep_lidar": {
@@ -5753,14 +5791,14 @@
   },
   "ground": {
    "version": "2",
-   "code": "cc47cdfcc955c252",
+   "code": "40742690044fe03e",
    "params": {
     "tile": "utm36s_698_9724"
    },
-   "fingerprint": "683fea7428cb5687",
+   "fingerprint": "1ae1732d5abf3f3f",
    "parts": {
     "version": "2",
-    "code": "cc47cdfcc955c252",
+    "code": "40742690044fe03e",
     "params": {
      "tile": "utm36s_698_9724"
     },
@@ -5771,7 +5809,7 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T16:17:56Z",
+   "ran_at": "2026-11-07T20:48:04Z",
    "owner": null,
    "coverage": {
     "usda_sda": {
@@ -5794,14 +5832,14 @@
    "outputs": {
     "client/geology.png": "b13f46bad481f094",
     "client/ground_classes.json": "f21bc0cf99d628de",
-    "client/outcrop.png": "5fbd0879a13f3de6",
+    "client/outcrop.png": "40b476485b956903",
     "client/soils.png": "4118b396495200a1",
     "geology/classes.json": "46d32a09bdce22cf",
     "geology/strata.json": "ee5eeae8397e6932",
     "geology/units.geojson": "c3856960a3bdf530",
     "soils/classes.json": "a09ba94c6ff1520a"
    },
-   "out_hash": "2b429fe9a4fd7d6e",
+   "out_hash": "bca484a353edf2f1",
    "sources": {
     "soilgrids": "2026-11-07",
     "macrostrat": "2026-11-07"
@@ -5817,7 +5855,7 @@
     "network": 1,
     "cache": 0
    },
-   "seconds": 72.9
+   "seconds": 96.4
   },
   "terrain": {
    "version": "3",
@@ -5950,19 +5988,19 @@
   },
   "substrate": {
    "version": "1",
-   "code": "2e65b327a37a5d98",
+   "code": "19835757c6be854b",
    "params": {
     "tile": "utm36s_698_9724"
    },
-   "fingerprint": "9ef822cf8ab2455c",
+   "fingerprint": "5e62eb86cb205cc6",
    "parts": {
     "version": "1",
-    "code": "2e65b327a37a5d98",
+    "code": "19835757c6be854b",
     "params": {
      "tile": "utm36s_698_9724"
     },
     "deps": {
-     "ground": "2b429fe9a4fd7d6e",
+     "ground": "bca484a353edf2f1",
      "water": "61fb8430fde3582b",
      "dem": "9424877d4dd3c647",
      "lidar": "35a6a2ce16d0808d",
@@ -5974,7 +6012,7 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T17:08:30Z",
+   "ran_at": "2026-11-07T20:49:41Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -5982,10 +6020,10 @@
     "client.substrate_classes"
    ],
    "outputs": {
-    "client/substrate.png": "179abbf6e2368aa0",
+    "client/substrate.png": "93c8f3500388a470",
     "client/substrate.json": "049ea097f31e9c48"
    },
-   "out_hash": "626a66bd0e87d984",
+   "out_hash": "997a83e13600213f",
    "sources": {},
    "fallbacks": [],
    "notes": [],
@@ -5993,7 +6031,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 1.2
+   "seconds": 1.5
   },
   "seasons": {
    "version": "1",
@@ -6257,14 +6295,14 @@
   },
   "crowns": {
    "version": "2",
-   "code": "bf66bf68c7d4a768",
+   "code": "775dc516b64ab333",
    "params": {
     "tile": "utm36s_698_9724"
    },
-   "fingerprint": "9036e48e6ded8dbe",
+   "fingerprint": "691a4783f723fceb",
    "parts": {
     "version": "2",
-    "code": "bf66bf68c7d4a768",
+    "code": "775dc516b64ab333",
     "params": {
      "tile": "utm36s_698_9724"
     },
@@ -6277,7 +6315,7 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T17:08:33Z",
+   "ran_at": "2026-11-07T20:49:42Z",
    "owner": null,
    "status": "not_applicable",
    "reason": "no point cloud on this tile (DEM-only lidar or none): no canopy height model, so no crowns to find or inpaint",
@@ -6921,7 +6959,7 @@
    "params": {
     "tile": "utm36s_698_9724"
    },
-   "fingerprint": "099f07d893fe55ba",
+   "fingerprint": "910ffb95f99d0fd9",
    "parts": {
     "version": "1",
     "code": "c39f11bf99c3fe1e",
@@ -6929,11 +6967,11 @@
      "tile": "utm36s_698_9724"
     },
     "deps": {
-     "ground": "2b429fe9a4fd7d6e"
+     "ground": "bca484a353edf2f1"
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T16:19:50Z",
+   "ran_at": "2026-11-07T20:49:42Z",
    "owner": null,
    "coverage": {
     "usda_sda": {

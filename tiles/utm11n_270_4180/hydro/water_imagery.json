@@ -1,0 +1,1510 @@
+{
+ "rule": {
+  "water_pixel": "seasons/s2_MM.tif: NDWI (NIR from red and NDVI) > 0 or NIR < 0.04, not bright (water_seasons.py)",
+  "water": "per 20 m pixel max(frequency, fraction): frequency = wet months / observed (>= 3); fraction = its NDWI's 75th percentile over the clear months unmixed between the never-wet land within 300 m and the tile's always-wet water (median NDWI; 0.3 with under 10 such pixels); DEM slope < 0.2, DEM > 0.5 m; bilinear onto the 5 m grid, water at >= 0.5",
+  "naip": "imagery/naip.tif is RGB (no NIR band): not used",
+  "reach": "on: water within max(w/2, 10 m); near: within max(60 m, 2 w); every 10 m; on water >= 0.6, off water: near >= 0.5, else no water seen",
+  "move": "stems of DEM reaches with width >= 10 m not on water: least-cost path on the 5 m grid within 600 m of the drawn stem on ground <= 10 m over its nearest DEM line cell (water 1 + 2 exp(-d_in/6 m), land 12 x (0.4 + 0.6 min(1, d_dem/30 m))), edge ends fixed, interior ends snapped to water within 60 m, a junction on a moved stem taken as moved, smoothed 10 m; kept when on >= 0.5 and >= the old line's + 0.2; the reaches meeting a moved node bent to it over 2 |shift| + 20 m (shift <= 30 m) or extended straight to it (one per node)",
+  "nhd_dropped": "NHD-sourced stretches with width >= 10 m, no water seen, within 600 m of a moved stem's old or new line, off the tile edge: the map's pieces of a river where the imagery shows none",
+  "width": "a moved reach takes the water's median cross-section when >= 40 m and wider than drawn",
+  "side_channels": "the river's water within 250 m, off the moved ribbon (w/2 + 10 m), its skeleton's longest path >= 150 m: a reach at its measured width (source imagery)",
+  "undrawn": "water patches >= 1600 m2 beyond w/2 + 20 m of every reach and 20 m of every kept pond"
+ },
+ "stats": {
+  "months_used": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "water_cells_5m": 1644,
+  "reaches_tested": 350,
+  "verdicts_before": {
+   "no water seen": 348,
+   "off water": 1,
+   "on water": 1
+  },
+  "verdicts_after": {
+   "no water seen": 348,
+   "off water": 1,
+   "on water": 1
+  },
+  "stems": 10,
+  "stems_moved": 0,
+  "reaches_moved": 0,
+  "reaches_bent": 0,
+  "reaches_extended": 0,
+  "nhd_dropped": 0,
+  "side_channels": 0,
+  "undrawn_patches": 0,
+  "undrawn_m2": 0,
+  "undrawn_by_map": {},
+  "seconds": 9.6
+ },
+ "stems": [
+  {
+   "reaches": 5,
+   "names": [
+    "Merced River"
+   ],
+   "length_m": 2409,
+   "area_km2": 591.3,
+   "width": 30.0,
+   "before": {
+    "on": 0.289,
+    "near": 0.351,
+    "samples": 242
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.317,
+    "near": 0.326,
+    "samples": 224
+   }
+  },
+  {
+   "reaches": 4,
+   "names": [
+    "Merced River"
+   ],
+   "length_m": 2460,
+   "area_km2": 454.8,
+   "width": 28.19,
+   "before": {
+    "on": 0.242,
+    "near": 0.25,
+    "samples": 248
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.242,
+    "near": 0.246,
+    "samples": 236
+   }
+  },
+  {
+   "reaches": 3,
+   "names": [
+    "Tenaya Creek"
+   ],
+   "length_m": 2417,
+   "area_km2": 129.0,
+   "width": 14.32,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 243
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 215
+   }
+  },
+  {
+   "reaches": 1,
+   "names": [
+    "Tenaya Creek"
+   ],
+   "length_m": 40,
+   "area_km2": 128.2,
+   "width": 14.21,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 5
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 5
+   }
+  },
+  {
+   "reaches": 1,
+   "names": [
+    "Tenaya Creek"
+   ],
+   "length_m": 44,
+   "area_km2": 128.2,
+   "width": 14.21,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 6
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 6
+   }
+  },
+  {
+   "reaches": 1,
+   "names": [
+    "Tenaya Creek"
+   ],
+   "length_m": 59,
+   "area_km2": 127.3,
+   "width": 14.17,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 7
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 7
+   }
+  },
+  {
+   "reaches": 21,
+   "names": [
+    "Tenaya Creek"
+   ],
+   "length_m": 8119,
+   "area_km2": 64.4,
+   "width": 14.15,
+   "before": {
+    "on": 0.002,
+    "near": 0.011,
+    "samples": 813
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.003,
+    "near": 0.01,
+    "samples": 695
+   }
+  },
+  {
+   "reaches": 17,
+   "names": [
+    "Yosemite Creek"
+   ],
+   "length_m": 6181,
+   "area_km2": 99.8,
+   "width": 13.38,
+   "before": {
+    "on": 0.003,
+    "near": 0.008,
+    "samples": 620
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.004,
+    "near": 0.012,
+    "samples": 566
+   }
+  },
+  {
+   "reaches": 1,
+   "names": [
+    "Yosemite Creek"
+   ],
+   "length_m": 152,
+   "area_km2": 83.9,
+   "width": 11.75,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 17
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 17
+   }
+  },
+  {
+   "reaches": 9,
+   "names": [
+    "Yosemite Creek"
+   ],
+   "length_m": 4591,
+   "area_km2": 59.1,
+   "width": 11.73,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 461
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 427
+   }
+  }
+ ],
+ "reaches": [
+  {
+   "k": 31,
+   "name": "Yosemite Creek",
+   "width": 10.03,
+   "length_m": 756,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 77
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 77
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 36,
+   "name": "Yosemite Creek",
+   "width": 10.1,
+   "length_m": 540,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 55
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 55
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 52,
+   "name": "Yosemite Creek",
+   "width": 10.13,
+   "length_m": 448,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 46
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 46
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 58,
+   "name": "Yosemite Creek",
+   "width": 11.11,
+   "length_m": 231,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 25
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 25
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 69,
+   "name": "Yosemite Creek",
+   "width": 11.49,
+   "length_m": 103,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 12
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 12
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 73,
+   "name": "Yosemite Creek",
+   "width": 11.51,
+   "length_m": 283,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 30
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 30
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 79,
+   "name": "Yosemite Creek",
+   "width": 11.57,
+   "length_m": 1956,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 197
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 197
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 125,
+   "name": "Yosemite Creek",
+   "width": 11.63,
+   "length_m": 185,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 20
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 20
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 132,
+   "name": "Yosemite Creek",
+   "width": 11.73,
+   "length_m": 90,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 10
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 10
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 151,
+   "name": "Tenaya Creek",
+   "width": 10.42,
+   "length_m": 167,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 18
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 18
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 154,
+   "name": "Tenaya Creek",
+   "width": 10.44,
+   "length_m": 343,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 36
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 36
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 161,
+   "name": "Tenaya Creek",
+   "width": 10.54,
+   "length_m": 1246,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 126
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 126
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 174,
+   "name": "Yosemite Creek",
+   "width": 12.75,
+   "length_m": 301,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 32
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 32
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 183,
+   "name": "Yosemite Creek",
+   "width": 12.83,
+   "length_m": 80,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 10
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 10
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 184,
+   "name": "Yosemite Creek",
+   "width": 12.91,
+   "length_m": 419,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 43
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 43
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 185,
+   "name": "Yosemite Creek",
+   "width": 12.9,
+   "length_m": 375,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 39
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 39
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 194,
+   "name": "Tenaya Creek",
+   "width": 10.55,
+   "length_m": 75,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 9
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 9
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 196,
+   "name": "Tenaya Creek",
+   "width": 10.62,
+   "length_m": 590,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 60
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 60
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 197,
+   "name": "Yosemite Creek",
+   "width": 13.16,
+   "length_m": 702,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 72
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 72
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 199,
+   "name": "Yosemite Creek",
+   "width": 13.08,
+   "length_m": 154,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 17
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 17
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 205,
+   "name": "Tenaya Creek",
+   "width": 10.65,
+   "length_m": 442,
+   "before": {
+    "on": 0.0,
+    "near": 0.087,
+    "samples": 46
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.087,
+    "samples": 46
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 208,
+   "name": "Tenaya Creek",
+   "width": 10.72,
+   "length_m": 675,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 69
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 69
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 211,
+   "name": "Yosemite Creek",
+   "width": 13.2,
+   "length_m": 145,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 16
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 16
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 212,
+   "name": "Yosemite Creek",
+   "width": 13.22,
+   "length_m": 330,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 34
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 34
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 219,
+   "name": "Tenaya Creek",
+   "width": 10.84,
+   "length_m": 582,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 60
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 60
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 224,
+   "name": "Yosemite Creek",
+   "width": 13.23,
+   "length_m": 19,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 3
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 3
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 225,
+   "name": "Yosemite Creek",
+   "width": 13.24,
+   "length_m": 192,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 21
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 21
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 227,
+   "name": "Tenaya Creek",
+   "width": 10.87,
+   "length_m": 201,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 22
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 22
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 231,
+   "name": "Yosemite Creek",
+   "width": 13.27,
+   "length_m": 838,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 85
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 85
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 232,
+   "name": "Tenaya Creek",
+   "width": 10.97,
+   "length_m": 1084,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 110
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 110
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 240,
+   "name": "Tenaya Creek",
+   "width": 13.85,
+   "length_m": 66,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 8
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 8
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 241,
+   "name": "Tenaya Creek",
+   "width": 10.99,
+   "length_m": 174,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 19
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 19
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 242,
+   "name": "Tenaya Creek",
+   "width": 13.9,
+   "length_m": 731,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 75
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 75
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 252,
+   "name": "Tenaya Creek",
+   "width": 13.91,
+   "length_m": 350,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 37
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 37
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 253,
+   "name": "Tenaya Creek",
+   "width": 14.01,
+   "length_m": 140,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 16
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 16
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 254,
+   "name": "Yosemite Creek",
+   "width": 13.29,
+   "length_m": 289,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 30
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 30
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 256,
+   "name": "Tenaya Creek",
+   "width": 14.06,
+   "length_m": 241,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 26
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 26
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 257,
+   "name": "Tenaya Creek",
+   "width": 14.05,
+   "length_m": 31,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 5
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 5
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 262,
+   "name": "Tenaya Creek",
+   "width": 14.07,
+   "length_m": 129,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 14
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 14
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 267,
+   "name": "Tenaya Creek",
+   "width": 14.14,
+   "length_m": 162,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 18
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 18
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 268,
+   "name": "Yosemite Creek",
+   "width": 13.31,
+   "length_m": 852,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 87
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 87
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 269,
+   "name": "Tenaya Creek",
+   "width": 14.09,
+   "length_m": 153,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 17
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 17
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 271,
+   "name": "Tenaya Creek",
+   "width": 14.15,
+   "length_m": 538,
+   "before": {
+    "on": 0.018,
+    "near": 0.091,
+    "samples": 55
+   },
+   "after": {
+    "on": 0.018,
+    "near": 0.091,
+    "samples": 55
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 292,
+   "name": "Tenaya Creek",
+   "width": 14.17,
+   "length_m": 59,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 7
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 7
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 295,
+   "name": "Tenaya Creek",
+   "width": 14.21,
+   "length_m": 40,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 5
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 5
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 296,
+   "name": "Tenaya Creek",
+   "width": 14.21,
+   "length_m": 44,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 6
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 6
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 299,
+   "name": "Yosemite Creek",
+   "width": 13.34,
+   "length_m": 119,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 13
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 13
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 301,
+   "name": "Tenaya Creek",
+   "width": 14.25,
+   "length_m": 708,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 72
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 72
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 306,
+   "name": "Yosemite Creek",
+   "width": 13.36,
+   "length_m": 71,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 9
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 9
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 312,
+   "name": "Yosemite Creek",
+   "width": 13.38,
+   "length_m": 434,
+   "before": {
+    "on": 0.044,
+    "near": 0.111,
+    "samples": 45
+   },
+   "after": {
+    "on": 0.044,
+    "near": 0.111,
+    "samples": 45
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 315,
+   "name": "Merced River",
+   "width": 28.17,
+   "length_m": 780,
+   "before": {
+    "on": 0.316,
+    "near": 0.316,
+    "samples": 79
+   },
+   "after": {
+    "on": 0.316,
+    "near": 0.316,
+    "samples": 79
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 319,
+   "name": "Merced River",
+   "width": 28.28,
+   "length_m": 889,
+   "before": {
+    "on": 0.211,
+    "near": 0.256,
+    "samples": 90
+   },
+   "after": {
+    "on": 0.211,
+    "near": 0.256,
+    "samples": 90
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 320,
+   "name": "Merced River",
+   "width": 28.53,
+   "length_m": 355,
+   "before": {
+    "on": 0.243,
+    "near": 0.405,
+    "samples": 37
+   },
+   "after": {
+    "on": 0.243,
+    "near": 0.405,
+    "samples": 37
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 321,
+   "name": "Merced River",
+   "width": 28.52,
+   "length_m": 258,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 27
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 27
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 322,
+   "name": "Tenaya Creek",
+   "width": 14.32,
+   "length_m": 155,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 17
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 17
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 324,
+   "name": "Merced River",
+   "width": 28.15,
+   "length_m": 423,
+   "before": {
+    "on": 0.068,
+    "near": 0.068,
+    "samples": 44
+   },
+   "after": {
+    "on": 0.068,
+    "near": 0.068,
+    "samples": 44
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 327,
+   "name": "Tenaya Creek",
+   "width": 14.29,
+   "length_m": 1555,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 157
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 157
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 329,
+   "name": "Merced River",
+   "width": 30.0,
+   "length_m": 664,
+   "before": {
+    "on": 0.588,
+    "near": 0.647,
+    "samples": 68
+   },
+   "after": {
+    "on": 0.588,
+    "near": 0.647,
+    "samples": 68
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 335,
+   "name": "Merced River",
+   "width": 30.0,
+   "length_m": 243,
+   "before": {
+    "on": 0.077,
+    "near": 0.192,
+    "samples": 26
+   },
+   "after": {
+    "on": 0.077,
+    "near": 0.192,
+    "samples": 26
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 338,
+   "name": "Merced River",
+   "width": 25.13,
+   "length_m": 450,
+   "before": {
+    "on": 0.109,
+    "near": 0.109,
+    "samples": 46
+   },
+   "after": {
+    "on": 0.109,
+    "near": 0.109,
+    "samples": 46
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 341,
+   "name": "Merced River",
+   "width": 28.19,
+   "length_m": 808,
+   "before": {
+    "on": 0.329,
+    "near": 0.329,
+    "samples": 82
+   },
+   "after": {
+    "on": 0.329,
+    "near": 0.329,
+    "samples": 82
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 345,
+   "name": "Yosemite Creek",
+   "width": 11.75,
+   "length_m": 152,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 17
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 17
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 346,
+   "name": "Yosemite Creek",
+   "width": 12.7,
+   "length_m": 861,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 88
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 88
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 352,
+   "name": "Tenaya Creek",
+   "width": 13.93,
+   "length_m": 40,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 6
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 6
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 354,
+   "name": "Tenaya Creek",
+   "width": 10.88,
+   "length_m": 80,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 10
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 10
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 359,
+   "name": "Merced River",
+   "width": 30.0,
+   "length_m": 40,
+   "before": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 6
+   },
+   "after": {
+    "on": 1.0,
+    "near": 1.0,
+    "samples": 6
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  }
+ ],
+ "side_channels": [],
+ "nhd_dropped": [],
+ "undrawn": []
+}

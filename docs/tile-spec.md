@@ -314,6 +314,9 @@ Roads are rewilded, not kept (2026-11-07, Aaron: "Yes, remove road"; until then 
   takes. So the wood on either side closes over the old road. Before this, US-50 at home read from 150 m as a
   treeless band once its pavement was gone (the lidar has no crowns on a road); 13.6 km2 of road strip is mirrored
   there.
+- **Rock and outcrop.** `client/substrate.png` (exposed rock, lithology, patch size) and `client/outcrop.png` mirror each
+  road's corridor from beside it (`unroad.mirror_grid` over `unroad.road_strip`, the height rule's corridor drawn from
+  the OSM lines). A road's cut faces put rock into the slope and the 1 m roughness, and its pale pavement into the photo.
 - **Cover.** In `client/canopy.png` a 30 m cell crossed by a road's pavement whose LANDFIRE cover is not vegetation
   (Developed-Roads) takes the tree, shrub and herb cover of the vegetated cells around it. This is a normalised
   convolution at sigma 2 cells, widening to 4 and 8 where none is that close; the layer records
@@ -345,7 +348,9 @@ equation with the edges held, and every NHD stream line through the corridor hel
 - **Bridges.** Bridges are not corridors: the bare-earth ground under a deck is the valley already.
 - **Where it runs.** On the 1 m ground (`lidar.build_dem_1m`, terrain/dem_1m.tif), which the drawn 5 m DEM averages on
   a lidar tile and which the reroute and water steps read. On a tile without the 1 m products it runs on the drawn 5 m
-  (the `dem` step), when the fetched product is 10 m or finer. A 30 m DEM (Copernicus GLO-30, outside the US) resolves
+  (the `dem` step), when the fetched product is 10 m or finer. Where the 1 m ground has gaps that the fetched DEM fills,
+  the rule runs on those cells of the drawn 5 m too (`unroad_gaps` in the layer). The 1 m covers 29 % of
+  utm10n_540_4180, and US-101 in Marin kept its bench and cut faces, which drew as rock at eye level. A 30 m DEM (Copernicus GLO-30, outside the US) resolves
   no cut or fill, and spanning its corridors smoothed real slopes: Lofoten lost 31 m off a fjord side. Either way the drawn ground and the water's ground are one.
 - **Idempotent.** The product as fetched is kept as `terrain/dem_1m_roaded.tif` / `terrain/dem_roaded.tif`, and its
   hash and the corridor's key are recorded in `terrain/<dem>_unroad.json`. The layer records the stats

@@ -148,7 +148,7 @@
    "description": "Coarse-grained, white to light-gray biotite granite and biotite granodiorite. Commonly porphyritic and blocky phenocrysts of potassium feldspar and conspicuous quartz grains. Age about 102 Ma (U-Pb)",
    "reference": "Intrusive suite of Yosemite Valley",
    "color": "#8CCD57",
-   "fraction": 0.2183
+   "fraction": 0.2188
   },
   "10": {
    "name": "Tioga Till",
@@ -246,7 +246,7 @@
    "description": "Hornfels and other metamorphic rocks derived chiefly from sandstone, siltstone, shale, limestone, and conglomerate. Known to be of Jurassic age in Strawberry Tungsten Mine area near southeast corner of map area. Other bodies of rock assigned to this map unit are of questionable age",
    "reference": "Eastern metamorphic belt",
    "color": "#34B2C9",
-   "fraction": 0.0005
+   "fraction": 0.0006
   },
   "17": {
    "name": "water",
@@ -260,7 +260,7 @@
    "description": null,
    "reference": null,
    "color": "",
-   "fraction": 0.0002
+   "fraction": 0.0004
   }
  },
  "rules": [
@@ -301,7 +301,7 @@
    "sandstone|conglomerate|gr[ae]ywacke|siltstone|mudstone|shale|breccia|clastic|sedimentary"
   ]
  ],
- "rule_notes": "first match over major lithologies, then name, then description; volcanic with bottom age >= 145.0 Ma -> greenstone_metavolcanic; clastic sedimentary with bottom age <= 2.58 Ma -> alluvium; 'water' -> other",
+ "rule_notes": "first match over major lithologies, then name, then the rule the description names most (ties to the earliest); volcanic with bottom age >= 145.0 Ma -> greenstone_metavolcanic; clastic sedimentary with bottom age <= 2.58 Ma -> alluvium; 'water' -> other",
  "source": {
   "source": "macrostrat",
   "endpoint": "https://macrostrat.org/api/v2/geologic_units/map",
@@ -314,8 +314,9 @@
    "tiny": 25
   },
   "sample_points": 25,
-  "requests": 105,
+  "requests": 118,
   "uncovered_pieces": 0,
+  "uncovered_fraction": 0.0,
   "fallback_errors": []
  }
 }

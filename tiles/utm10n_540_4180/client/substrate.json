@@ -196,18 +196,18 @@
    "dip_deg": null,
    "notes": "massive to blocky, irregular joints; knobby dark faces",
    "index": 4,
-   "fraction": 0.0356,
-   "exposed_fraction": 0.051,
+   "fraction": 0.028,
+   "exposed_fraction": 0.0296,
    "joints": {
     "strikes_deg": [
-     132.5,
+     117.5,
      62.5
     ],
     "peak_over_mean": [
-     1.62,
-     1.04
+     1.27,
+     1.16
     ],
-    "cells": 1354,
+    "cells": 983,
     "source": "DEM: strikes of the faces steeper than 55 degrees"
    }
   },
@@ -249,29 +249,29 @@
    "dip_deg": 12.0,
    "notes": "bedded: ledges and overhangs along the beds, vertical joints between",
    "index": 5,
-   "fraction": 0.023,
-   "exposed_fraction": 0.017,
+   "fraction": 0.0393,
+   "exposed_fraction": 0.0352,
    "fabric": {
-    "strike_deg": 310.9,
+    "strike_deg": 325.0,
     "dip_deg": 12.0,
-    "strike_source": "geologic contacts",
+    "strike_source": "regional default (N35W)",
     "contacts": {
-     "strike_deg": 130.9,
-     "resultant": 0.289,
-     "contact_km": 30.41
+     "strike_deg": 131.5,
+     "resultant": 0.225,
+     "contact_km": 65.26
     },
     "dip_source": "lithology default"
    },
    "joints": {
     "strikes_deg": [
-     7.5,
-     47.5
+     52.5,
+     82.5
     ],
     "peak_over_mean": [
-     2.27,
-     1.92
+     1.25,
+     1.12
     ],
-    "cells": 217,
+    "cells": 1037,
     "source": "DEM: strikes of the faces steeper than 55 degrees"
    }
   },
@@ -500,7 +500,7 @@
    "dip_deg": null,
    "notes": "alluvium, till, talus, dune sand, fill, landslides: no bedrock face (a cut bank at most)",
    "index": 10,
-   "fraction": 0.7722,
+   "fraction": 0.7848,
    "exposed_fraction": 0.0,
    "joints": {
     "strikes_deg": [],
@@ -514,7 +514,7 @@
    "rock_class": "other",
    "lithology": "surficial",
    "why": "water",
-   "fraction": 0.5266
+   "fraction": 0.5279
   },
   "2": {
    "name": "Dune sand",
@@ -528,14 +528,14 @@
    "rock_class": "alluvium",
    "lithology": "surficial",
    "why": "name: surficial deposit",
-   "fraction": 0.0151
+   "fraction": 0.0167
   },
   "4": {
    "name": "Franciscan Complex",
-   "rock_class": "greenstone_metavolcanic",
-   "lithology": "greenstone_metavolcanic",
-   "why": "rock class greenstone_metavolcanic",
-   "fraction": 0.0131
+   "rock_class": "sandstone_conglomerate",
+   "lithology": "sandstone_conglomerate",
+   "why": "rock class sandstone_conglomerate",
+   "fraction": 0.0156
   },
   "5": {
    "name": "Alluvium",
@@ -549,62 +549,83 @@
    "rock_class": "sandstone_conglomerate",
    "lithology": "sandstone_conglomerate",
    "why": "rock class sandstone_conglomerate",
-   "fraction": 0.0229
+   "fraction": 0.0236
   },
   "7": {
    "name": "Franciscan Complex",
    "rock_class": "greenstone_metavolcanic",
    "lithology": "greenstone_metavolcanic",
    "why": "rock class greenstone_metavolcanic",
-   "fraction": 0.0224
+   "fraction": 0.0279
   },
   "8": {
    "name": "Undifferentiated surficial deposits",
    "rock_class": "alluvium",
    "lithology": "surficial",
    "why": "name: surficial deposit",
-   "fraction": 0.0169
+   "fraction": 0.0186
   },
   "9": {
    "name": "Colma Formation",
    "rock_class": "alluvium",
    "lithology": "surficial",
    "why": "rock class alluvium",
-   "fraction": 0.0052
+   "fraction": 0.0062
   },
   "10": {
    "name": "Artificial fill",
    "rock_class": "alluvium",
    "lithology": "surficial",
    "why": "name: surficial deposit",
-   "fraction": 0.0145
+   "fraction": 0.0186
   },
   "11": {
    "name": "Beach sand",
    "rock_class": "alluvium",
    "lithology": "surficial",
    "why": "name: surficial deposit",
-   "fraction": 0.0047
+   "fraction": 0.0051
   },
   "12": {
    "name": "Landslide deposits",
    "rock_class": "alluvium",
    "lithology": "surficial",
    "why": "name: surficial deposit",
-   "fraction": 0.0014
+   "fraction": 0.0026
+  },
+  "13": {
+   "name": "Older beach deposits",
+   "rock_class": "alluvium",
+   "lithology": "surficial",
+   "why": "name: surficial deposit",
+   "fraction": 0.0007
+  },
+  "14": {
+   "name": "Artificial fill over marine and marsh deposits",
+   "rock_class": "other",
+   "lithology": "surficial",
+   "why": "name: surficial deposit",
+   "fraction": 0.0005
+  },
+  "15": {
+   "name": "",
+   "rock_class": "other",
+   "lithology": "surficial",
+   "why": "rock class other, no bedrock named",
+   "fraction": 0.0
   }
  },
  "stats": {
-  "exposed_fraction": 0.0063,
-  "exposed_mean": 0.0122,
-  "patches": 363,
-  "patches_over_1000m2": 86,
-  "patches_over_1ha": 12,
-  "largest_patch_m2": 64950,
+  "exposed_fraction": 0.005,
+  "exposed_mean": 0.0097,
+  "patches": 283,
+  "patches_over_1000m2": 80,
+  "patches_over_1ha": 10,
+  "largest_patch_m2": 65025,
   "slope_source": "max(5 m, 0.85 x 1 m mean)",
   "cover_source": "lidar canopy_height_10m (tree >= 4 m, shrub 0.5-4 m)",
   "photo": "client/texture_imagery.jpg (NAIP, humans erased)",
-  "photo_green_ref": 0.0988,
+  "photo_green_ref": 0.0994,
   "dem": "terrain/dem_banked.tif"
  },
  "formula": "on the 5 m grid from the DEM (and the 1 m lidar DEM where the tile has it), the canopy (lidar tree and\nshrub cover at 10 m, else LANDFIRE EVC tree cover at 30 m), the NAIP photo and the soils:\n    steep    = smoothstep(28, 52, slope)            slope = max(5 m slope, 0.85 x the 1 m slope's 5 m mean)\n    bare     = (1 - tree) (1 - 0.5 shrub)            on a tile without lidar: 1 - 0.6 tree (EVC is coarse)\n    spectral = (1 - smoothstep(0.35 ref, 0.75 ref, exg)) (0.55 + 0.45 smoothstep(0.18, 0.42, luma)) grey\n               on the humans-erased NAIP (client/texture_imagery.jpg: roofs and roads are not rock); exg the photo's excess green (2G - R - B) / (R + G + B) over 5 m: grey or pale, not green; ref the\n               median exg under tree cover over 50% on this tile (the photo's own green, at least 0.06); grey =\n               1 - 0.6 smoothstep(0.04, 0.09, yel), yel = (R - B) / (R + G + B): dry summer grass is pale too, but yellow\n    convex   = 1 + 0.25 clip(TPI / 3 m, -1, 1)       TPI = z - its 40 m gaussian mean (spurs and rims are barer)\n    prior    = the soil map unit's Rock outcrop component % / 100\n    rock     = 0 on surficial deposits (a cut bank past 60 degrees keeps 0.5) and water, else 1\n    exposed  = clip(rock (steep bare^0.7 (0.3 + 0.7 spectral) convex + 0.45 prior smoothstep(15, 35, slope) spectral), 0, 1)\n    and at any slope at least rock bare (1 - smoothstep(0.25 ref, 0.5 ref, exg)) smoothstep(0.40, 0.55, luma) times 0.9 on\n    LANDFIRE's barren class (client/habitat.png 8), else 0.6 (1 - smoothstep(0.02, 0.05, yel)): the pale bare slabs (the\n    backs of the domes), which are rock though no cliff\nthen a 5 m gaussian. A patch is a connected run (8-neighbour) of cells over 0.5."

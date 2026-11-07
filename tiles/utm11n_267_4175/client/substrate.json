@@ -47,18 +47,18 @@
    "dip_deg": null,
    "notes": "massive; exfoliation sheets parallel to the surface, two steep joint sets: big smooth faces, long cracks",
    "index": 1,
-   "fraction": 0.7754,
-   "exposed_fraction": 0.1657,
+   "fraction": 0.7759,
+   "exposed_fraction": 0.1594,
    "joints": {
     "strikes_deg": [
      47.5,
-     77.5
+     17.5
     ],
     "peak_over_mean": [
-     1.5,
-     1.3
+     1.61,
+     1.14
     ],
-    "cells": 240882,
+    "cells": 256894,
     "source": "DEM: strikes of the faces steeper than 55 degrees"
    }
   },
@@ -204,8 +204,8 @@
    "dip_deg": null,
    "notes": "massive to blocky, irregular joints; knobby dark faces",
    "index": 4,
-   "fraction": 0.0005,
-   "exposed_fraction": 0.1116,
+   "fraction": 0.0006,
+   "exposed_fraction": 0.1042,
    "joints": {
     "strikes_deg": [],
     "source": "too few steep faces"
@@ -488,8 +488,8 @@
    "dip_deg": null,
    "notes": "alluvium, till, talus, dune sand, fill, landslides: no bedrock face (a cut bank at most)",
    "index": 10,
-   "fraction": 0.2233,
-   "exposed_fraction": 0.0007,
+   "fraction": 0.2235,
+   "exposed_fraction": 0.0009,
    "joints": {
     "strikes_deg": [],
     "source": "too few steep faces"
@@ -558,7 +558,7 @@
    "rock_class": "granitic",
    "lithology": "granitic",
    "why": "rock class granitic",
-   "fraction": 0.2183
+   "fraction": 0.2188
   },
   "10": {
    "name": "Tioga Till",
@@ -607,27 +607,27 @@
    "rock_class": "greenstone_metavolcanic",
    "lithology": "greenstone_metavolcanic",
    "why": "rock class greenstone_metavolcanic",
-   "fraction": 0.0005
+   "fraction": 0.0006
   },
   "17": {
    "name": "water",
    "rock_class": "other",
    "lithology": "surficial",
    "why": "water",
-   "fraction": 0.0002
+   "fraction": 0.0004
   }
  },
  "stats": {
-  "exposed_fraction": 0.1288,
-  "exposed_mean": 0.1557,
-  "patches": 1869,
-  "patches_over_1000m2": 445,
-  "patches_over_1ha": 107,
-  "largest_patch_m2": 2665775,
+  "exposed_fraction": 0.1239,
+  "exposed_mean": 0.1492,
+  "patches": 2055,
+  "patches_over_1000m2": 474,
+  "patches_over_1ha": 101,
+  "largest_patch_m2": 2518350,
   "slope_source": "max(5 m, 0.85 x 1 m mean)",
   "cover_source": "LANDFIRE EVC tree cover (30 m, smoothed)",
   "photo": "client/texture_imagery.jpg (NAIP, humans erased)",
-  "photo_green_ref": 0.1826,
+  "photo_green_ref": 0.1831,
   "dem": "terrain/dem_banked.tif"
  },
  "formula": "on the 5 m grid from the DEM (and the 1 m lidar DEM where the tile has it), the canopy (lidar tree and\nshrub cover at 10 m, else LANDFIRE EVC tree cover at 30 m), the NAIP photo and the soils:\n    steep    = smoothstep(28, 52, slope)            slope = max(5 m slope, 0.85 x the 1 m slope's 5 m mean)\n    bare     = (1 - tree) (1 - 0.5 shrub)            on a tile without lidar: 1 - 0.6 tree (EVC is coarse)\n    spectral = (1 - smoothstep(0.35 ref, 0.75 ref, exg)) (0.55 + 0.45 smoothstep(0.18, 0.42, luma)) grey\n               on the humans-erased NAIP (client/texture_imagery.jpg: roofs and roads are not rock); exg the photo's excess green (2G - R - B) / (R + G + B) over 5 m: grey or pale, not green; ref the\n               median exg under tree cover over 50% on this tile (the photo's own green, at least 0.06); grey =\n               1 - 0.6 smoothstep(0.04, 0.09, yel), yel = (R - B) / (R + G + B): dry summer grass is pale too, but yellow\n    convex   = 1 + 0.25 clip(TPI / 3 m, -1, 1)       TPI = z - its 40 m gaussian mean (spurs and rims are barer)\n    prior    = the soil map unit's Rock outcrop component % / 100\n    rock     = 0 on surficial deposits (a cut bank past 60 degrees keeps 0.5) and water, else 1\n    exposed  = clip(rock (steep bare^0.7 (0.3 + 0.7 spectral) convex + 0.45 prior smoothstep(15, 35, slope) spectral), 0, 1)\n    and at any slope at least rock bare (1 - smoothstep(0.25 ref, 0.5 ref, exg)) smoothstep(0.40, 0.55, luma) times 0.9 on\n    LANDFIRE's barren class (client/habitat.png 8), else 0.6 (1 - smoothstep(0.02, 0.05, yel)): the pale bare slabs (the\n    backs of the domes), which are rock though no cliff\nthen a 5 m gaussian. A patch is a connected run (8-neighbour) of cells over 0.5."

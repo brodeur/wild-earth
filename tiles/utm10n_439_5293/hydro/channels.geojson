@@ -3043,12 +3043,13 @@
   {
    "type": "Feature",
    "properties": {
-    "name": null,
-    "fcode": 46003,
+    "name": "Hoh River",
+    "fcode": 46006,
     "order": 4,
     "area_km2": 151.1673,
     "source": "dem",
     "nhd_matched": false,
+    "permanence_rule": "flow: its main stem above runs all year",
     "width": 15.31,
     "bed_width": 23.96,
     "in_waterbody": false,
@@ -3838,20 +3839,20 @@
   {
    "type": "Feature",
    "properties": {
-    "name": null,
+    "name": "Hoh River",
     "fcode": 46006,
     "order": 4,
     "area_km2": 152.8249,
     "source": "dem",
     "nhd_matched": false,
+    "permanence_rule": "flow: its main stem above runs all year",
     "width": 15.38,
     "bed_width": 24.07,
     "in_waterbody": false,
     "length_m": 778.6,
     "rerouted": true,
     "snap_shift_m": 2.72,
-    "snap_shift_max_m": 40.1,
-    "fed_by_ice": true
+    "snap_shift_max_m": 40.1
    },
    "geometry": {
     "type": "LineString",
@@ -4756,12 +4757,13 @@
   {
    "type": "Feature",
    "properties": {
-    "name": null,
-    "fcode": 46003,
+    "name": "Hoh River",
+    "fcode": 46006,
     "order": 4,
     "area_km2": 151.4558,
     "source": "dem",
     "nhd_matched": false,
+    "permanence_rule": "flow: its main stem above runs all year",
     "width": 15.32,
     "bed_width": 23.98,
     "in_waterbody": false,

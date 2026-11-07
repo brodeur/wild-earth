@@ -1,0 +1,833 @@
+{
+ "rule": {
+  "water_pixel": "seasons/s2_MM.tif: NDWI (NIR from red and NDVI) > 0 or NIR < 0.04, not bright (water_seasons.py)",
+  "water": "per 20 m pixel max(frequency, fraction): frequency = wet months / observed (>= 3); fraction = its NDWI's 75th percentile over the clear months unmixed between the never-wet land within 300 m and the tile's always-wet water (median NDWI; 0.3 with under 10 such pixels); DEM slope < 0.2, DEM > 0.5 m; bilinear onto the 5 m grid, water at >= 0.5",
+  "naip": "imagery/naip.tif is RGB (no NIR band): not used",
+  "reach": "on: water within max(w/2, 10 m); near: within max(60 m, 2 w); every 10 m; on water >= 0.6, off water: near >= 0.5, else no water seen",
+  "move": "stems of DEM reaches with width >= 10 m not on water: least-cost path on the 5 m grid within 600 m of the drawn stem on ground <= 10 m over its nearest DEM line cell (water 1 + 2 exp(-d_in/6 m), land 12 x (0.4 + 0.6 min(1, d_dem/30 m))), edge ends fixed, interior ends snapped to water within 60 m, a junction on a moved stem taken as moved, smoothed 10 m; kept when on >= 0.5 and >= the old line's + 0.2; the reaches meeting a moved node bent to it over 2 |shift| + 20 m (shift <= 30 m) or extended straight to it (one per node)",
+  "nhd_dropped": "NHD-sourced stretches with width >= 10 m, no water seen, within 600 m of a moved stem's old or new line, off the tile edge: the map's pieces of a river where the imagery shows none",
+  "width": "a moved reach takes the water's median cross-section when >= 40 m and wider than drawn",
+  "side_channels": "the river's water within 250 m, off the moved ribbon (w/2 + 10 m), its skeleton's longest path >= 150 m: a reach at its measured width (source imagery)",
+  "undrawn": "water patches >= 1600 m2 beyond w/2 + 20 m of every reach and 20 m of every kept pond"
+ },
+ "stats": {
+  "months_used": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "water_cells_5m": 3421,
+  "reaches_tested": 371,
+  "verdicts_before": {
+   "no water seen": 368,
+   "off water": 1,
+   "on water": 2
+  },
+  "verdicts_after": {
+   "no water seen": 368,
+   "off water": 1,
+   "on water": 2
+  },
+  "stems": 3,
+  "stems_moved": 0,
+  "reaches_moved": 0,
+  "reaches_bent": 0,
+  "reaches_extended": 0,
+  "nhd_dropped": 0,
+  "side_channels": 0,
+  "undrawn_patches": 7,
+  "undrawn_m2": 36425,
+  "undrawn_by_map": {
+   "a rewilded reservoir or pond (human water, not drawn by the rule)": 36425
+  },
+  "seconds": 8.9
+ },
+ "stems": [
+  {
+   "reaches": 7,
+   "names": [
+    "North Fork Cosumnes River"
+   ],
+   "length_m": 2473,
+   "area_km2": 420.3,
+   "width": 24.6,
+   "before": {
+    "on": 0.012,
+    "near": 0.012,
+    "samples": 249
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.013,
+    "near": 0.013,
+    "samples": 239
+   }
+  },
+  {
+   "reaches": 2,
+   "names": [
+    "North Fork Cosumnes River"
+   ],
+   "length_m": 1452,
+   "area_km2": 416.0,
+   "width": 24.15,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 147
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 144
+   }
+  },
+  {
+   "reaches": 21,
+   "names": [
+    "Weber Creek"
+   ],
+   "length_m": 8083,
+   "area_km2": 60.0,
+   "width": 11.89,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 810
+   },
+   "verdict": "no water seen (kept: the trace is not on the imagery's water)",
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 757
+   }
+  }
+ ],
+ "reaches": [
+  {
+   "k": 19,
+   "name": null,
+   "width": 1.0,
+   "length_m": 253,
+   "before": {
+    "on": 0.444,
+    "near": 0.519,
+    "samples": 27
+   },
+   "after": {
+    "on": 0.444,
+    "near": 0.519,
+    "samples": 27
+   },
+   "verdict_before": "off water",
+   "verdict_after": "off water",
+   "moved": null
+  },
+  {
+   "k": 27,
+   "name": null,
+   "width": 1.24,
+   "length_m": 121,
+   "before": {
+    "on": 0.857,
+    "near": 1.0,
+    "samples": 14
+   },
+   "after": {
+    "on": 0.857,
+    "near": 1.0,
+    "samples": 14
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 88,
+   "name": "Weber Creek",
+   "width": 10.1,
+   "length_m": 451,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 47
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 47
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 89,
+   "name": "Weber Creek",
+   "width": 10.25,
+   "length_m": 400,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 41
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 41
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 92,
+   "name": "Weber Creek",
+   "width": 10.26,
+   "length_m": 203,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 22
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 22
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 96,
+   "name": "Weber Creek",
+   "width": 10.21,
+   "length_m": 226,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 24
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 24
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 101,
+   "name": "Weber Creek",
+   "width": 10.32,
+   "length_m": 653,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 67
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 67
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 108,
+   "name": "Weber Creek",
+   "width": 10.36,
+   "length_m": 395,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 41
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 41
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 114,
+   "name": "Weber Creek",
+   "width": 10.45,
+   "length_m": 152,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 17
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 17
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 116,
+   "name": "Weber Creek",
+   "width": 11.89,
+   "length_m": 245,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 26
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 26
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 117,
+   "name": "Weber Creek",
+   "width": 11.73,
+   "length_m": 357,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 37
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 37
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 118,
+   "name": "Weber Creek",
+   "width": 10.77,
+   "length_m": 1669,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 168
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 168
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 119,
+   "name": "Weber Creek",
+   "width": 10.62,
+   "length_m": 101,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 12
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 12
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 120,
+   "name": "Weber Creek",
+   "width": 10.6,
+   "length_m": 341,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 36
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 36
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 121,
+   "name": "Weber Creek",
+   "width": 11.68,
+   "length_m": 124,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 14
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 14
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 129,
+   "name": "Weber Creek",
+   "width": 10.89,
+   "length_m": 637,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 65
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 65
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 130,
+   "name": "Weber Creek",
+   "width": 11.66,
+   "length_m": 427,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 44
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 44
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 131,
+   "name": "Weber Creek",
+   "width": 11.62,
+   "length_m": 11,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 3
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 3
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 133,
+   "name": "Weber Creek",
+   "width": 10.83,
+   "length_m": 536,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 55
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 55
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 135,
+   "name": "Weber Creek",
+   "width": 11.53,
+   "length_m": 390,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 40
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 40
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 136,
+   "name": "Weber Creek",
+   "width": 10.91,
+   "length_m": 162,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 18
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 18
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 139,
+   "name": "Weber Creek",
+   "width": 11.46,
+   "length_m": 55,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 7
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 7
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 140,
+   "name": "Weber Creek",
+   "width": 11.5,
+   "length_m": 549,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 56
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 56
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 320,
+   "name": "North Fork Cosumnes River",
+   "width": 24.14,
+   "length_m": 1334,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 135
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 135
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 328,
+   "name": "North Fork Cosumnes River",
+   "width": 24.46,
+   "length_m": 545,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 56
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 56
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 331,
+   "name": "North Fork Cosumnes River",
+   "width": 24.28,
+   "length_m": 605,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 62
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 62
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 334,
+   "name": "North Fork Cosumnes River",
+   "width": 24.48,
+   "length_m": 314,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 33
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 33
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 338,
+   "name": null,
+   "width": 1.67,
+   "length_m": 104,
+   "before": {
+    "on": 0.75,
+    "near": 0.917,
+    "samples": 12
+   },
+   "after": {
+    "on": 0.75,
+    "near": 0.917,
+    "samples": 12
+   },
+   "verdict_before": "on water",
+   "verdict_after": "on water",
+   "moved": null
+  },
+  {
+   "k": 344,
+   "name": "North Fork Cosumnes River",
+   "width": 24.59,
+   "length_m": 301,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 32
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 32
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 346,
+   "name": "North Fork Cosumnes River",
+   "width": 24.54,
+   "length_m": 125,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 14
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 14
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 348,
+   "name": "North Fork Cosumnes River",
+   "width": 24.15,
+   "length_m": 118,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 13
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 13
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 350,
+   "name": "North Fork Cosumnes River",
+   "width": 24.6,
+   "length_m": 60,
+   "before": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 7
+   },
+   "after": {
+    "on": 0.0,
+    "near": 0.0,
+    "samples": 7
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  },
+  {
+   "k": 355,
+   "name": "North Fork Cosumnes River",
+   "width": 24.25,
+   "length_m": 524,
+   "before": {
+    "on": 0.037,
+    "near": 0.037,
+    "samples": 54
+   },
+   "after": {
+    "on": 0.037,
+    "near": 0.037,
+    "samples": 54
+   },
+   "verdict_before": "no water seen",
+   "verdict_after": "no water seen",
+   "moved": null
+  }
+ ],
+ "side_channels": [],
+ "nhd_dropped": [],
+ "undrawn": [
+  {
+   "at": [
+    6623,
+    9378
+   ],
+   "area_m2": 10875,
+   "freq_mean": 0.9,
+   "nearest_reach": null,
+   "nearest_width": 1.24,
+   "nearest_m": 43,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  },
+  {
+   "at": [
+    4688,
+    4957
+   ],
+   "area_m2": 6325,
+   "freq_mean": 0.8,
+   "nearest_reach": null,
+   "nearest_width": 1.0,
+   "nearest_m": 163,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  },
+  {
+   "at": [
+    7348,
+    9838
+   ],
+   "area_m2": 6200,
+   "freq_mean": 0.81,
+   "nearest_reach": null,
+   "nearest_width": 1.0,
+   "nearest_m": 438,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  },
+  {
+   "at": [
+    1003,
+    5410
+   ],
+   "area_m2": 4200,
+   "freq_mean": 0.81,
+   "nearest_reach": null,
+   "nearest_width": 1.0,
+   "nearest_m": 236,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  },
+  {
+   "at": [
+    6649,
+    9464
+   ],
+   "area_m2": 3525,
+   "freq_mean": 0.91,
+   "nearest_reach": null,
+   "nearest_width": 1.24,
+   "nearest_m": 44,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  },
+  {
+   "at": [
+    4596,
+    9937
+   ],
+   "area_m2": 2800,
+   "freq_mean": 0.79,
+   "nearest_reach": "Hangtown Creek",
+   "nearest_width": 2.43,
+   "nearest_m": 392,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  },
+  {
+   "at": [
+    3145,
+    3900
+   ],
+   "area_m2": 2500,
+   "freq_mean": 0.8,
+   "nearest_reach": null,
+   "nearest_width": 1.19,
+   "nearest_m": 46,
+   "map": "a rewilded reservoir or pond (human water, not drawn by the rule)"
+  }
+ ]
+}

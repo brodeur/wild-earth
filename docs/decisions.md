@@ -7805,7 +7805,24 @@ or AVONET row, not a per-species patch.
   - Species and animals then ran on the Hoh, Mount Olympus, both San Francisco cells, Calaveras, both Yosemite tiles,
     Cosumnes and Placerville. Each is now gated.
   - The Hoh keeps 47 of the 61 of the fixed cast, cougar included, and drops the 14 foothill species.
-  - Lamar and home follow after the road lane's rebuild.
+  - Lamar and home, after the road lane's rebuild:
+    - Lamar `utm12n_557_4964`: species and animals. Six slots change and the other 37 stay as they were:
+      - the Uinta ground squirrel to a ground colony;
+      - the least chipmunk to a small rodent;
+      - the black-billed magpie to a walking corvid;
+      - the golden eagle to a soaring raptor;
+      - the spotted sandpiper to a shorebird;
+      - Clark's nutcracker to a perching bird on the Steller's jay.
+    - The widened search puts the cougar on Lamar (3 records within 23 km, against 1 within 10 km), so it keeps 32 of
+      the fixed cast.
+    - Home `utm10n_680_4280`: species and animals, its first fauna list. It keeps 46 of the fixed cast: the foothill
+      cast, the cougar (27 records within 23 km) and the black bear.
+    - It drops 15: the Hoh's and the high country's species (elk, Douglas squirrel, gray jay, barred owl, snowshoe
+      hare, the chipmunks, the salamander, the banana slug, the grouse, the marmot, two gulls, the shrew, the Cascades
+      frog).
+    - It gains 40 slots, among them a fox squirrel, a skunk, Heermann's kangaroo rat, five raptors (the golden eagle a
+      raptor), three herons and egrets, the yellow-billed magpie (walking corvid), and three amphibians and three
+      reptiles.
 - **Seen on the way (not changed).** The brown pelican is a gull, and the American white pelican a waterbird with no
   `water` flag (Pelecanidae is not in `WATER_FAMILIES`).
 - **Checked.** `tests/test_pipeline.py` (TestBirdKin: raptors and scavengers, corvids, shorebirds; TestSquirrels;
@@ -7847,3 +7864,30 @@ or AVONET row, not a per-species patch.
   - **Before.** The title's camera was 38° from straight down at a tile's framing distance, about 52° above the horizon.
   - **Now.** It is 63° from straight down there, about 27° above the horizon. The relief and the rings read as a model on a table.
   - **How.** The tilt has its own altitude curve (`TILT_MAX` 66°, eased from 190 km to 16 km) and no longer shares the lens's curve. Zooming out still steepens it to straight down from space.
+- **The road rules rebuilt onto every tile (2026-11-07).** The base and flora stages were run on every tile the road rules left stale:
+  - Cosumnes, Placerville and Calaveras;
+  - both Yosemite cells and both San Francisco cells;
+  - the Hoh and Mount Olympus;
+  - Manu.
+
+  The fauna steps were not re-run, so the casts committed in cdc65f8 and 4e10494 stand.
+  - **No more writing through into main.** The worktree's copies of these tiles were symlinks into the main checkout, or missing (git-ignored). Each one is now an APFS clone (`cp -c`) of main's files, taken before the build, so a build writes only into the worktree. The clones took no disk space until written. Home's earlier write-through (2026-11-07) is how this was found.
+  - **Seams converge by alternating water re-runs.** Water was re-run on one side and then the other until both matched (`--steps reroute,water` on the tile the seams step names):
+    - home and Cosumnes;
+    - the two San Francisco cells;
+    - the Hoh, then Mount Olympus.
+  - **Home and Placerville's seam does not converge.** Martinez Creek (order 3) crosses 75 m apart on the two sides (N 4,282,377 vs 4,282,452), and an unnamed stream beside US-50 at N 4,284,942 has no level on home's side. These two tiles had never passed seams before. It is left for the water lane.
+  - **The San Francisco cells keep their old crowns.** Their lidar products predate `multi_1m`, and the kept `lidar_grid_v2` there is empty, so the crowns step can't re-find crowns.
+    - It now keeps the crowns found earlier and records a `crowns_kept` fallback instead of failing.
+    - Failing had blocked the ground-texture step behind it, so US-101 in Marin still showed from the air on the old `texture_ground.jpg`.
+    - The road canopy mirror on those two cells waits for `--force lidar` to re-stream the point cloud, about an hour per cell.
+
+- **The last road scar was the DEM's gaps in the 1 m ground, not the ground classes (2026-11-07).** Marin's US-101 corridor showed at eye level as a band of mottled rock.
+  - **Cause.** The 1 m products cover 29 % of utm10n_540_4180 (22 % of utm10n_540_4170), and the drawn DEM fills the rest from the fetched 3DEP. The height rule had run only on the 1 m ground, because the `dem` step skips it when the DEM is drawn from the 1 m. So the road's bench and cut faces stayed in the drawn DEM, and the steep cut faces drew as rock.
+  - **What was ruled out.** Swapping in a corridor-free substrate or outcrop changed nothing at the pose.
+  - **Fix.** The rule now also runs on the drawn 5 m DEM's cells that have no 1 m data (`unroad.apply(where=gaps)`, `unroad_gaps` in the layer). In Marin that changed 2.1 km² and moved 3.1 M m³, with up to 24 m of fill removed and of cut filled. In the San Francisco cell it changed 16.8 km² and moved 11.9 M m³. Every other US tile has the 1 m everywhere, so nothing changes there.
+- **Road corridors take their banks' rock and outcrop too.** `client/substrate.png` and `client/outcrop.png` mirror each corridor from beside it (`unroad.mirror_grid` over `unroad.road_strip`, the height rule's corridor from the OSM lines), as the imagery and canopy already do.
+  - **Why.** A road puts rock into those layers through its cut faces (slope, and a 1 m roughness that is never recomputed after the rule) and through its pale pavement in the photo.
+- **What is left after the gap rule.**
+  - **San Francisco seam.** The two cells' seam has one crossing that alternating water re-runs don't settle: an unnamed stream at E 546,614, whose levels stay 1.06 m apart. There the north cell has the 1 m ground with the channel cut in, and the south cell has the fetched DEM without it (no road there). It is left for the water lane.
+  - **Paved paths.** Footways and cycleways are still left out of the erase, so wide paved paths still show in San Francisco from the air (the Lake Merced loop).

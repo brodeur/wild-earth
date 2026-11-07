@@ -1,0 +1,15 @@
+{
+ "key": "0b55789aa6d450c3",
+ "out_sha": "828a65b156e9672a",
+ "stats": {
+  "version": "1",
+  "corridor_share": 0.0123,
+  "changed_m2": 951653,
+  "volume_m3": 541061,
+  "max_fill_removed_m": 6.07,
+  "max_cut_filled_m": 7.94,
+  "roads": 237
+ },
+ "original": "dem_1m_roaded.tif",
+ "rule": "pipeline/unroad.py"
+}

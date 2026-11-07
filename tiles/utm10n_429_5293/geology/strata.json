@@ -1,0 +1,111 @@
+{
+ "units": {
+  "1": {
+   "name": "",
+   "lithology": "sandstone_conglomerate",
+   "cells": 3232124,
+   "elevation_m": {
+    "p5": 329.1,
+    "p25": 529.5,
+    "median": 746.0,
+    "p75": 948.7,
+    "p95": 1188.4
+   },
+   "candidate": true
+  },
+  "2": {
+   "name": "",
+   "lithology": "surficial",
+   "cells": 403815,
+   "elevation_m": {
+    "p5": 177.6,
+    "p25": 193.6,
+    "median": 238.8,
+    "p75": 273.4,
+    "p95": 337.7
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "3": {
+   "name": "alluvium",
+   "lithology": "surficial",
+   "cells": 328094,
+   "elevation_m": {
+    "p5": 174.8,
+    "p25": 201.1,
+    "median": 221.1,
+    "p75": 235.2,
+    "p95": 258.4
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "4": {
+   "name": "alpine glacial till, Fraser-age",
+   "lithology": "surficial",
+   "cells": 31840,
+   "elevation_m": {
+    "p5": 224.8,
+    "p25": 241.9,
+    "median": 261.9,
+    "p75": 290.0,
+    "p95": 328.1
+   },
+   "candidate": false,
+   "why_not": "surficial deposit"
+  },
+  "5": {
+   "name": "Needles-GrayW.orWesternOlympic lith.assem.",
+   "lithology": "sandstone_conglomerate",
+   "cells": 2428,
+   "elevation_m": {
+    "p5": 348.2,
+    "p25": 354.7,
+    "median": 360.2,
+    "p75": 368.4,
+    "p95": 394.9
+   },
+   "candidate": true
+  },
+  "6": {
+   "name": "water",
+   "lithology": "surficial",
+   "cells": 1699,
+   "elevation_m": {
+    "p5": 1015.6,
+    "p25": 1019.3,
+    "median": 1022.1,
+    "p75": 1024.0,
+    "p95": 1032.6
+   },
+   "candidate": false,
+   "why_not": "water"
+  }
+ },
+ "superposition": [],
+ "consistent_pairs": 0.0,
+ "dropped": [
+  {
+   "unit": "",
+   "why": "no base contact in the tile"
+  }
+ ],
+ "column": false,
+ "reason": "fewer than two units left in the column",
+ "rule": {
+  "min_cells": 2000,
+  "min_fraction": 0.0005,
+  "contact_dz_m": 1.0,
+  "min_contact": 50,
+  "superposed": 0.75,
+  "steep_deg": 25.0,
+  "min_band_fit": 0.5,
+  "min_column_fit": 0.6,
+  "max_dip_deg": 8.0,
+  "tilt_prior": 200,
+  "tilt_scale_m": 3000.0,
+  "map_tol_m": 20.0,
+  "doc": "pipeline/strata.py"
+ }
+}

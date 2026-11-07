@@ -1,0 +1,224 @@
+{
+ "tile": "utm10n_439_5293",
+ "version": "1",
+ "context": {
+  "centre": [
+   -123.74836213105075,
+   47.832889355460516
+  ],
+  "elevation_m": null,
+  "koppen": null,
+  "group": null,
+  "wcvp_area": null
+ },
+ "plots": [],
+ "rule": "pipeline/tree_cards.py choose(): plots, then named trees of open place descriptions, then the tile's most-recorded WCVP trees that reach the subcanopy; shares by tier (TIER_SHARE)",
+ "trees": [
+  {
+   "id": "alnus_rubra",
+   "scientific": "Alnus rubra",
+   "family": "Betulaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 7.0,
+   "evidence": [
+    "GBIF: 7 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.1373,
+   "research": false,
+   "card": true
+  },
+  {
+   "id": "tsuga_heterophylla",
+   "scientific": "Tsuga heterophylla",
+   "family": "Pinaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 6.0,
+   "evidence": [
+    "GBIF: 6 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.1176,
+   "research": false,
+   "card": true
+  },
+  {
+   "id": "acer_circinatum",
+   "scientific": "Acer circinatum",
+   "family": "Sapindaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 6.0,
+   "evidence": [
+    "GBIF: 6 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.1176,
+   "research": false,
+   "card": true
+  },
+  {
+   "id": "picea_sitchensis",
+   "scientific": "Picea sitchensis",
+   "family": "Pinaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 6.0,
+   "evidence": [
+    "GBIF: 6 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.1176,
+   "research": false,
+   "card": true
+  },
+  {
+   "id": "callitropsis_nootkatensis",
+   "scientific": "Callitropsis nootkatensis",
+   "family": "Cupressaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 5.0,
+   "evidence": [
+    "GBIF: 5 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.098,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "tsuga_mertensiana",
+   "scientific": "Tsuga mertensiana",
+   "family": "Pinaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 5.0,
+   "evidence": [
+    "GBIF: 5 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.098,
+   "research": false,
+   "card": true
+  },
+  {
+   "id": "malus_fusca",
+   "scientific": "Malus fusca",
+   "family": "Rosaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 5.0,
+   "evidence": [
+    "GBIF: 5 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.098,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "abies_amabilis",
+   "scientific": "Abies amabilis",
+   "family": "Pinaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 4.0,
+   "evidence": [
+    "GBIF: 4 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0784,
+   "research": false,
+   "card": true
+  },
+  {
+   "id": "pseudotsuga_menziesii",
+   "scientific": "Pseudotsuga menziesii",
+   "family": "Pinaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 4.0,
+   "evidence": [
+    "GBIF: 4 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0784,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "acer_macrophyllum",
+   "scientific": "Acer macrophyllum",
+   "family": "Sapindaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 3.0,
+   "evidence": [
+    "GBIF: 3 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0588,
+   "research": false,
+   "card": false
+  }
+ ],
+ "queued": [
+  {
+   "id": "alnus_rubra",
+   "scientific": "Alnus rubra",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "tsuga_heterophylla",
+   "scientific": "Tsuga heterophylla",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "acer_circinatum",
+   "scientific": "Acer circinatum",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "picea_sitchensis",
+   "scientific": "Picea sitchensis",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "callitropsis_nootkatensis",
+   "scientific": "Callitropsis nootkatensis",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "tsuga_mertensiana",
+   "scientific": "Tsuga mertensiana",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "malus_fusca",
+   "scientific": "Malus fusca",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "abies_amabilis",
+   "scientific": "Abies amabilis",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "pseudotsuga_menziesii",
+   "scientific": "Pseudotsuga menziesii",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "acer_macrophyllum",
+   "scientific": "Acer macrophyllum",
+   "why": "needs a research record (its height decides whether it stays)"
+  }
+ ],
+ "log": [
+  "plot vela_apaza_2024_los_amigos: not used (8548 km, 0 m apart, climate Am)"
+ ],
+ "cards_written": []
+}
