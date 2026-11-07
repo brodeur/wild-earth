@@ -216,7 +216,7 @@ class TestReptiles(unittest.TestCase):
         self.assertEqual([s["code"] for s in pick], ["a_croc"])   # a snake is not a reptile build's
         self.assertIsNone(F.reptile_build(fauna["slots"][1]))
         mesh, _ = F._prompts(fauna["slots"][1], "Yellowstone")
-        self.assertIn("gentle S-curve", mesh)
+        self.assertIn("open S-curve", mesh); self.assertIn("fifteen times as long as it is thick", mesh)
         self.assertIn("no coils", mesh)
 
 
@@ -312,3 +312,13 @@ class TestFaunaReserve(unittest.TestCase):
         # a second lizard (a class already in a slot) stays over the cap
         self.assertNotIn("test_gecko", codes)
         self.assertIn({"id": "test_gecko", "why": f"over the {fs.MAX_OTHER}-slot cap"}, out["skipped"])
+
+
+class TestSnakePhotoUse(unittest.TestCase):
+    """pipeline/reference_photos.py usable_for: a snake photo for image-to-3D must hold the whole body (2026-11-06)."""
+    def test_whole_body_for_image(self):
+        from pipeline.reference_photos import usable_for
+        s = {"whole": 0.72, "size": 1.0, "side": 1.0, "clear": 1.0}
+        self.assertEqual(usable_for(s, "snake", "texture"), [])        # a texture reference may lose its tail to the frame
+        self.assertEqual(usable_for(s, "snake", "image"), ["whole"])   # image-to-3D copies the pose: the whole body
+        self.assertEqual(usable_for({**s, "whole": 0.95}, "snake", "image"), [])

@@ -1,0 +1,66 @@
+{
+  "species": "bothrops_asper",
+  "mode": "preview",
+  "kind": "text-to-3d",
+  "task_id": "01a1b454-eb75-733f-b26f-9b7a72c5f525",
+  "endpoint": "https://api.meshy.ai/openapi/v2/text-to-3d",
+  "request": {
+    "mode": "preview",
+    "prompt": "A wild Terciopelo (Bothrops asper) of Puerto Jim\u00e9nez, Costa Rica, one adult snake, realistic anatomy and proportions. A long, slender body, at least fifteen times as long as it is thick. Lying flat on the ground, the whole body stretched out long in one loose, open S-curve with wide bends, no tight bends, no coils, no loops, no part of the body touching or crossing another, the head resting on the ground at one end looking forward along the body, mouth closed, no tongue, the tail tapering to a thin tip at the other end. No base, no ground plane, no rocks, no branches, no props. Game-ready.",
+    "ai_model": "latest",
+    "target_formats": [
+      "glb"
+    ],
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 30000,
+    "moderation": false
+  },
+  "prompt": "A wild Terciopelo (Bothrops asper) of Puerto Jim\u00e9nez, Costa Rica, one adult snake, realistic anatomy and proportions. A long, slender body, at least fifteen times as long as it is thick. Lying flat on the ground, the whole body stretched out long in one loose, open S-curve with wide bends, no tight bends, no coils, no loops, no part of the body touching or crossing another, the head resting on the ground at one end looking forward along the body, mouth closed, no tongue, the tail tapering to a thin tip at the other end. No base, no ground plane, no rocks, no branches, no props. Game-ready.",
+  "image": null,
+  "preview_job": null,
+  "estimated_credits": 20,
+  "balance_before": 747,
+  "status": "SUCCEEDED",
+  "timestamps": {
+    "submitted": "2026-11-07T04:47:06+00:00",
+    "created_at": "2026-11-07T04:47:08+00:00",
+    "started_at": "2026-11-07T04:47:08+00:00",
+    "finished_at": "2026-11-07T04:47:51+00:00",
+    "downloaded": "2026-11-07T04:48:16+00:00"
+  },
+  "tool": "tools/meshy_generate.py",
+  "pricing_source": {
+    "url": "https://docs.meshy.ai/en/api/pricing",
+    "read": "2026-10-24"
+  },
+  "licence_note": "Generated through the Meshy API, which requires a paid plan (402 on a free plan). Meshy Terms of Use (https://www.meshy.ai/terms-of-use, last updated 2026-09-19), section 3.2: customers on a paid plan own their Customer Output to the extent permitted by law (free-plan output is owned by Meshy and offered under CC BY 4.0 with credit to Meshy). As owner, the account holder may license this model under the project's CC BY-SA 4.0 asset licence, to the extent copyright subsists in AI-generated output. Section 2.4: do not remove or alter AI-identifying metadata or watermarks Meshy embeds; carry them into adopted tiers. Section 2.5: API output is deleted by Meshy 3 days after generation, so keep this folder until the model is adopted. Credit: \"generated with Meshy (meshy.ai)\".",
+  "maintainer": "agent (Claude) for Aaron Brodeur, world pipeline",
+  "progress": 100,
+  "task": {
+    "id": "01a1b454-eb75-733f-b26f-9b7a72c5f525",
+    "type": "text-to-3d-preview",
+    "status": "SUCCEEDED",
+    "created_at": 1794026828308,
+    "started_at": 1794026828313,
+    "finished_at": 1794026871093,
+    "consumed_credits": 20,
+    "task_error": null
+  },
+  "credits_charged": 20,
+  "files": [
+    {
+      "file": "model.glb",
+      "bytes": 1285604,
+      "sha256": "3090e3f8b13310e7c8f58ba2aafd76df545ebebcf1be42bf212823aed49322c4",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b454-eb75-733f-b26f-9b7a72c5f525/output/model.glb"
+    },
+    {
+      "file": "thumbnail.png",
+      "bytes": 44978,
+      "sha256": "9702d3f0bc8a526885d10c812f142b74546bdbe04de1a94fda5971a2a6eae8b1",
+      "source": "https://assets.meshy.ai/<account>/tasks/01a1b454-eb75-733f-b26f-9b7a72c5f525/output/preview.png"
+    }
+  ],
+  "balance_after": 727
+}

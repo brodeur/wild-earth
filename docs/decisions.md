@@ -7333,3 +7333,29 @@ snake inside the walkers' control. docs/movement.md "The snake" and docs/games.m
   frogs. The re-run also gave the reptiles their amniote-database masses: the terciopelo is 1.04 kg, not the 0.5 kg
   class default. The hand-added stand-in slot was reverted. The scaled garter snake served only for local tests of the
   strike and the venom.
+- **The terciopelo's model: two text-to-3D tries, both refused by the snake gate, 40 credits, no refine paid.** The first
+  preview was short and thick in tight bends: 9.9 diameters long, under the build's 10. The prompt rule for every snake
+  then became "a long, slender body, at least fifteen times as long as it is thick ... one loose, open S-curve with wide
+  bends, no tight bends, no coils" (`fauna_models._prompts`). The second preview came back a closed ring all the same
+  ("the centreline jumps: the body touches itself"). The brief stopped there. Without a model, Corcovado's terciopelo
+  slot is not drawn. The brief then opened one image-to-3D attempt (30 credits). The photo rung now applies to snakes as a rule
+  (`fauna_models.run`). A snake photo for image-to-3D must also hold the whole body (`reference_photos` `snake_image`:
+  whole 0.8 or more), since image-to-3D copies the photo's pose. Of the terciopelo's 48 openly licensed candidates,
+  none shows a whole snake laid out side-on with nothing over it. The rule's first pick was coiled on a couch, with its
+  tail leaving the frame. Its next was the forebody of one in the leaf litter (iNaturalist 179526228, CC BY 4.0, Trevor
+  Van Loon), the rest under the leaves: the segmenters' mask stops where the litter covers the body, so "whole" reads
+  1.0. A mesh from it would be half a snake, so the attempt was held, no credits spent. A loop measure (background holes
+  inside the body's mask) was tried and dropped: the segmenters fill the background a loop encloses. The credit-free
+  route the brief asked about (a snake built procedurally on the template from its traits and a photo's pattern) is
+  described in the lane's report.
+- **Snakes spawn where they live, not on the fence lizard's open ground** (`animals.js` spawn, `pipeline/fauna_slots.py
+  habitat_affinity`). A snake's habitat weights come from its own records on the tile: CC0 and CC BY only, as the
+  density prior, over `client/habitat.png`, each class by its share of the records against its share of the land, with
+  two records' worth spread by area. Below 5 usable records the kin's table stands. Within a cell, the spot is the
+  better of open ground with rocks or an edge (a garter snake's) and the shaded floor under the canopy (a forest
+  viper's). It is no longer halved under trees. On Corcovado (99% canopy) terciopelos now spawn on their own, 1 to 3
+  within 150 m of each point sampled, where none did. Teton's garter snake has 11 usable records: riparian 1.0,
+  conifer 0.85, chaparral 0.25. Lamar's has 2 and Corcovado's terciopelo 4 (most records there are CC BY-NC), so those
+  keep the kin's table. Every fauna slot now carries its `family`: the re-run slot had lost it, and the terciopelo
+  struck as a colubrid, without venom.
+

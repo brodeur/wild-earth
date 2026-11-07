@@ -125,6 +125,57 @@ def body_class(code: str, archetype: str | None, reptile, bird, t: dict | None =
     return f"model:{mdl.get('kind')}" if mdl else None
 
 
+# Where a snake lives on this tile (2026-11-06, the snake lane: the snakes ran the fence lizard's sites, open ground with
+# rocks, so a forest-floor viper never spawned under Corcovado's canopy): its own records on the tile (GBIF, CC0 and CC BY
+# only, as the density prior: derive.py) over the habitat raster (client/habitat.png), each class weighted by its share
+# of the records against its share of the tile's land (the selection ratio), with HAB_PRIOR records' worth spread by area
+# so a class with none keeps a little, the best class 1. Under HAB_MIN usable records, none: the client keeps its kin's
+# table. The slot's `habitat_affinity` {class: weight}; animals.js reads it for the cells and the cell's spot.
+HAB_MIN, HAB_PRIOR = 5, 2.0
+
+
+def habitat_affinity(tile: Tile, scientific: str) -> dict | None:
+    from PIL import Image
+    from pyproj import Transformer
+    from .fetch_species import match_key, occurrences
+    from .derive import record_license_class, CLIENT_LICENSES
+    png = tile.path("client/habitat.png")
+    if not png.exists():
+        return None
+    try:
+        key = match_key(scientific)
+        recs = occurrences(tile, key) if key else []
+    except Exception:
+        return None
+    im = Image.open(png).convert("L"); W, H = im.size; px = im.load()
+    land = {}
+    for j in range(H):
+        for i in range(W):
+            c = px[i, j]
+            if c and c != 7:   # (7: open water)
+                land[c] = land.get(c, 0) + 1
+    if not land:
+        return None
+    x0, y0, x1, y1 = tile.bounds
+    to = Transformer.from_crs("EPSG:4326", tile.crs, always_xy=True)
+    hits = {}
+    for r in recs:
+        if record_license_class(r.get("license")) not in CLIENT_LICENSES or r.get("decimalLongitude") is None:
+            continue
+        x, y = to.transform(r["decimalLongitude"], r["decimalLatitude"])
+        i, j = int((x - x0) / (x1 - x0) * W), int((y1 - y) / (y1 - y0) * H)
+        if 0 <= i < W and 0 <= j < H and px[i, j] in land:
+            hits[px[i, j]] = hits.get(px[i, j], 0) + 1
+    n = sum(hits.values())
+    if n < HAB_MIN:
+        return None
+    area = sum(land.values())
+    ratio = {c: ((hits.get(c, 0) + HAB_PRIOR * a / area) / (n + HAB_PRIOR)) / (a / area) for c, a in land.items()}
+    top = max(ratio.values())
+    return {"classes": {str(c): round(v / top, 3) for c, v in sorted(ratio.items())}, "records": n,
+            "basis": "the species' CC0 and CC BY records on the tile over client/habitat.png: share of records / share of land"}
+
+
 def static_codes() -> list[str]:
     """The curated client species: the `code:` of each entry in animals.js SPECIES."""
     src = ANIMALS_JS.read_text()
@@ -446,9 +497,13 @@ def fauna_slots(tile: Tile) -> dict:
             "scale": scale, "tint": None, "mass_kg": round(m, 3), "density_km2": density_km2({**a, "mass_kg": m}, kin, archetype),
             "group": GROUP.get(archetype, [1, 3]), "bird": a.get("kind") == "bird",
             "night": "nocturnal" in act and "diurnal" not in act, "water": fam in WATER_FAMILIES or kin == "lontra_canadensis",
-            "role": a.get("role") or [], "known": known})
+            "role": a.get("role") or [], "known": known, **({"family": fam} if fam else {})})   # (family: a snake's strike, venomous or not: strikes.js)
         if (a.get("taxonomy") or {}).get("class") in REPTILE_CLASSES:
             slots[-1]["reptile"] = reptile_way(archetype)   # the lizard machine's way: bask, water or walk (animals.js REPT)
+            if slots[-1]["reptile"] == "snake":   # where on the tile it lives, from its own records (habitat_affinity)
+                aff = habitat_affinity(tile, a["scientific"])
+                if aff:
+                    slots[-1]["habitat_affinity"] = aff
             slots[-1]["records"] = a.get("records") or 0   # (pipeline/fauna_models.py ranks the reptiles by records x sqrt(mass))
             if fam in PUSHUP_FAMILIES:
                 slots[-1]["pushup"] = True

@@ -969,6 +969,8 @@ function installFauna(fauna, owner) {
       e.standIn.model = M.path;
     }
     INDEX[f.code] = d; SUIT[f.code] = SUIT[sI.code]; SEASON[f.code] = FLAT_SEASON;
+    // a snake's own habitats on this tile, from its records (fauna.json habitat_affinity, pipeline/fauna_slots.py) in place of its kin's table
+    if (f.reptile === 'snake' && f.habitat_affinity?.classes && typeof f.habitat_affinity.classes === 'object') SUIT[f.code] = Object.fromEntries(Object.entries(f.habitat_affinity.classes).map(([c, v]) => [+c, +v || 0]));
     FAUNA.codes.push(f.code);
   }
 }
@@ -2012,7 +2014,10 @@ export class Animals {
         else if (ID[s] === LZ) {
           if (REPT[s] === 'water') f *= 1;                                                 // a crocodilian: at its water (WATERY)
           else if (REPT[s] === 'walk') f *= 1 - 0.6 * Math.min(1, tree * 1.5);             // a tortoise: grass and open bush
-          else if (REPT[s] === 'snake') f *= (0.4 + 0.6 * Math.min(1, (t.outcrop ? t.outcrop.at(cx, cn) / 255 : 0) * 2.5 + edge)) * (1 - 0.5 * Math.min(1, tree));   // a snake: open ground with rocks or an edge for cover
+          else if (REPT[s] === 'snake') {   // a snake: in the cell, the better of its two kinds of spot: open ground with rocks or an edge (a garter snake's), or the shaded floor under the canopy, its litter and roots (a forest viper's); the habitat (SUIT: its records, else its kin's) says which cells
+            const open = Math.min(1, (t.outcrop ? t.outcrop.at(cx, cn) / 255 : 0) * 2.5 + edge), floor = Math.min(1, tree * 1.3);
+            f *= 0.45 + 0.55 * Math.max(open, floor);
+          }
           else {   // the basking lizards (the fence lizard's season is the Sierra's: a stand-in's warmth alone, lzUpdate)
             if (s < STATIC_N && !lzOn) continue;
             f *= 0.25 + 0.75 * Math.min(1, (t.outcrop ? t.outcrop.at(cx, cn) / 255 : 0) * 2.5 + tree * 1.2);

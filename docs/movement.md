@@ -392,6 +392,12 @@ sliding up its own path behind it). The hit lands at 0.15 s, the head is held a 
 0.33 of the length plus half the prey's, measured from the head, where a snake's position is. A viper's or an elapid's
 strike carries venom (see games.md "The snakes' prey").
 
+**Where the AI snakes live** (2026-11-06): the habitat by the species' own CC0 and CC BY records on the tile, where it
+has 5 or more (`fauna.json habitat_affinity`; else the fence lizard's table), and within a cell the better of open ground
+with rocks or an edge and the shaded floor under the canopy. A garter snake keeps to its rocks and edges, and a forest
+viper lies in the litter under the trees. The cover it flees to is the same site rule as before (`lzSites`: rocks,
+trunks, the ground beside them).
+
 **Entering.** Touching a snake, or Embody, seeds the trail with that animal's own centreline (`animalModels.js
 snakeLine`: its wave phase, gait, turn and coil, on the CPU, line for line with the shader). The body taken is the one
 seen, coiled if it was coiled, and the snake keeps its size. Leaving, the AI takes it back at the body's mean point
@@ -421,4 +427,4 @@ advances it, the gait, the turn's C, the coil and the raised head (`bodySample.j
 - The catch (above): the hawk's feet, the bear's swat, the AI corvid hunt, the jay's carry, the prey's struggle.
 - The snake (above): no climbing (into a shrub or up a trunk) and no hiding in cover. The coil is a flat spiral, not
   stacked loops, and basking does not flatten the body. Concertina and sidewinding are not done. A swallow after the
-  kill is not drawn (the belly fills at once). The terciopelo has no model of its own (Meshy credits).
+  kill is not drawn (the belly fills at once). The terciopelo has no model of its own: two text-to-3D previews failed the snake gate (decisions, 2026-11-06).
