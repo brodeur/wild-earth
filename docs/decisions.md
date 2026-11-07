@@ -7359,6 +7359,15 @@ snake inside the walkers' control. docs/movement.md "The snake" and docs/games.m
   keep the kin's table. Every fauna slot now carries its `family`: the re-run slot had lost it, and the terciopelo
   struck as a colubrid, without venom.
 
+- **Verified after merging main (2839ac2)**, on the garter snake:
+  - Lamar: crawl, coil, slope, swim, strike.
+  - Teton: crawl, coil, slope, and a strike that kills a deer mouse and fills the belly. Its snakes spawn by
+    themselves under the records' habitat weights.
+  - The home screen's chosen body (`takeBody`) enters a garter snake, keeping its coil.
+  - A group member's page draws the player's snake: within 10 cm of its body's middle, the crawl's gait, then the coil.
+  - The home screen's rings (`bodyRing.js`) already draw a modelled snake and skip an unmodelled one, so Corcovado's
+    terciopelo stays out of them until it has a model.
+
 ## 2026-11-07: the bodies in rings over the chosen place (branch claude/animal-rings)
 
 Aaron's design for the screen after a place is chosen: the tile centred with room under it for a proper title above
