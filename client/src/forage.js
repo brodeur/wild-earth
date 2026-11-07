@@ -231,8 +231,8 @@ export class Forage {
   // species): the staged herbs (forbs.js), the near 3D food shrubs and the impostor field's cached shrubs, and the sward
   // where its grass is food, as a patch at each sample of SWARD_RINGS x SWARD_BEARINGS rings of R. A target is
   // { plant: true, key, species, name, part, x, y, z, r (m: how far its foliage reaches from its centre) }; nearest first,
-  // at most CAND_MAX.
-  candidates(x, z, R) {
+  // at most max (CAND_MAX by default; the sniff's wave, sniffWave.js, asks for more).
+  candidates(x, z, R, max = CAND_MAX) {
     const out = []; if (!this.on || !(R > 0)) return out;
     const r2 = R * R, push = (key, species, px, py, pz, r) => { const dx = px - x, dz = pz - z, d2 = dx * dx + dz * dz; if (d2 <= r2) out.push({ plant: true, key, species, name: SPECIES[species]?.common || species, part: this.partOf(species), x: px, y: py, z: pz, r, d2 }); };
     const F = this.forbs, buf = F.buf.array;
@@ -260,7 +260,7 @@ export class Forage {
         const id = foodOf(this.grass.speciesAt(px, -pz)); if (id) push(`sward:${Math.round(px)},${Math.round(pz)}`, id, px, this.grass.ground(px, -pz), pz, 0.9);
       }
     }
-    out.sort((p, q) => p.d2 - q.d2); if (out.length > CAND_MAX) out.length = CAND_MAX;
+    out.sort((p, q) => p.d2 - q.d2); if (out.length > max) out.length = max;
     return out;
   }
   // the parts of plant `id` this body eats this season, as words ("seeds", "leaves and flowers")

@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { rarityColor } from './animals.js';
+import { desireOf } from './desire.js';
 
 // The quarry (owner, 2026-11-06: "The user can press "tab" or click on a prey species to "select" them. This creates a
 // glowing ring on the ground below the prey if on the ground or just below if flying."). A predator's prey lit in its
@@ -36,7 +37,7 @@ const SPIRIT_R = 450, OWN_T = 0.2, TAB_ROUND = 4;
 // groundControl.js (E out of reach walks the body there, then eats) all read through canEat(). With no plant targeted,
 // eating is as before: any food within reach of the body. A predator with no food plants keeps animal targets only.
 const PLANT_R = 40, EAT_K = 0.6, PLANT_LOSE = 60;   // m: plant targets on the screen this near; the reach's share of the body length; a plant target farther than this is let go
-const PLANT_COL = new THREE.Color(1.0, 0.82, 0.45);
+const PLANT_COL = new THREE.Color(1.0, 0.82, 0.45), DESIRE_TAB = 0.15;   // (DESIRE_TAB: in squared screen units, a sixth of the way to the frame's edge)
 const LOSE_T = 3, PICK_PX = 30, RING_PX = 0.032, RING_W = 1.5, AIR_DROP = 0.6;   // s; px; the ring's radius per m of distance; over the body's radius; m under a flier, per body radius
 const PULSE_HZ = 1.2, DIM = 0.35, SEEN_VIS = 0.3;   // sight.js SEEN_VIS
 
@@ -130,7 +131,11 @@ void main() {
   cycle() {
     const lit = this.mode === 'spirit' ? this.onScreen() : this.mode === 'hunt' ? [...this.sight.litPrey(), ...this.plantsOnScreen()] : [...this.onScreen(), ...this.plantsOnScreen()];
     if (!lit.length) return null;
-    lit.sort((p, q) => (p.sx * p.sx + p.sy * p.sy) - (q.sx * q.sx + q.sy * q.sy));
+    // out from the centre, leaning to the more desirable food (desire.js) when two are about as central: the least wanted
+    // food counts as DESIRE_TAB further out, a target that is no food of this body further still
+    const want = e => { const A = this.animals, food = e.a.plant ? e.a.species : A.speciesList()[e.a.sp]?.code; const d = food ? desireOf(A.tile, A.observer, food, this.forage?.season?.() || 'fall') : null; return d ?? (e.a.plant ? 0.5 : 0); };
+    for (const e of lit) e.key = e.sx * e.sx + e.sy * e.sy + DESIRE_TAB * (1 - want(e));
+    lit.sort((p, q) => p.key - q.key);
     // the most central one not yet visited this round (a round ends after TAB_ROUND s without Tab, or when all were seen),
     // so Tab walks every target even as the list shifts under it (a bird flying out of the line, one stepping behind a tree)
     if (this.t - (this.tabT ?? -1e9) > TAB_ROUND) this.tabbed = new Set();

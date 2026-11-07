@@ -650,8 +650,8 @@ STEPS: dict[str, Step] = {s.name: s for s in [
     Step("resources", "2", ["resources", "derive", "water_seasons"], ["dem", "hydro", "water_seasons", "landcover", "terrain", "species_mix", "species"], _resources,
          ["resources", "client.mast"], doc="food, water and cover per season; the acorn mast", stage=A),
     # ---------------------------------------------------------------- games
-    Step("games", "1", ["games"], ["species", "resources", "animals"], _games, ["games"],
-         doc="every species' games: archetype, hotspots, scarcity, predators, competitors", stage=G),
+    Step("games", "2", ["games"], ["species", "resources", "animals"], _games, ["games"],   # 2: relations.desirability (2026-11-06)
+         doc="every species' games: archetype, hotspots, scarcity, predators, competitors; each eater's desirability of its foods", stage=G),
     Step("game_seeds", "1", ["games"], ["games", "resources", "species"], _game_seeds, ["games.seeds"],
          doc="the acorn, dig and carrion worlds' seeds, players and hotspots", stage=G),
     Step("registry", "1", ["registry", "needs", "fauna"], ["plants", "species_mix", "species", "animals"], _registry,

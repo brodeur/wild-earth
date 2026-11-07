@@ -96,6 +96,13 @@ const GLOW_REACH = [250, 600], GLOW_RARE_SIZE = 1.6, BEACON = new Set(['puma_con
 // (GLOW_CAP), only in spirit form. allColumns (SpiritLook, a debugging handle: window.__we.spirit.view.allColumns)
 // false gives the beacon species' columns alone, the build before this one, for measuring the cost.
 const COL_H = [0.3, 90], COL_W = [2.5, 0.26], COL_LUM = 0.385;
+// A soul's look by rarity (0 the most abundant .. 1 the rarest), or a beacon's: its brightness and its size over the
+// common soul's, the same numbers the glow's shader mixes (GLOW_LUM, GLOW_RARE_SIZE, BEACON_LUM, BEACON_SIZE). The sniff's
+// pulses (sniffWave.js) read it so a most-preferred food pulses as the mountain lion's soul does and the least as a vole's.
+export function soulLook(r, beacon = false) {
+  return beacon ? { lum: BEACON_LUM, size: BEACON_SIZE } : { lum: GLOW_LUM[0] + (GLOW_LUM[1] - GLOW_LUM[0]) * r, size: 1 + (GLOW_RARE_SIZE - 1) * r };
+}
+export const SOUL_BUBBLE = GLOW_BUBBLE, SOUL_BUBBLE_A = GLOW_BUBBLE_A, SOUL_BEACONS = BEACON;
 const COOL = new THREE.Color(0.6, 0.78, 1.0), WARM = new THREE.Color(1.0, 0.84, 0.58), WHITE = new THREE.Color(0.9, 0.95, 1.0);
 const smooth = u => u * u * (3 - 2 * u);
 

@@ -6832,3 +6832,45 @@ Aaron: "Herbivores also can target plants, and must be close enough to the targe
   in and it grazed; in the open, Tab to a blue wildrye sward 22 m off, E: in reach at 5.3 s, food from 34% to 57% in
   4 s of grazing. The first try stopped at the plant without grazing: the walker clears the act while the body still moves
   faster than 0.5 m/s, so the approach now stops first, then eats.
+
+## 2026-11-06: the sniff's shockwave, and a desirability scale for every eater's foods (branch claude/embody-enter)
+
+Aaron: "When an animal sniffs the air, everything around it that is edible glows briefly in a shockwave out from the
+player. The closest things pulse first, then the more distant things and so on... Plants should also have a
+"desirability" scale - how much does each animal prefer each plant/animal. The most preferable stuff pulses the same way a
+mountain lion would while in spirit mode, the least preferable pulses like a common vole."
+
+- **Desirability is a pipeline output** (pipeline/games.py `desirability`, games step version 2, written as
+  games.json `relations.desirability` = {eater: {food: [winter, spring, summer, fall]}} with `desirability_seasons` and
+  `desirability_basis`; tests/test_pipeline.py TestDesirability). Nothing per species: a plant scores by the energy of the
+  part eaten (PART_ENERGY: acorns and nuts 1.0, seeds 0.9, fruit 0.8, bulbs 0.7, flowers 0.55, leaves 0.4, woody browse
+  0.3), raised up to 20% for a food eaten in fewer seasons (a seasonal pulse); prey by how near its mass is to the
+  predator's optimal prey size (Carbone et al. 1999: over 21.5 kg, prey near 45% of the predator's mass; under, a tenth),
+  a log-normal of the ratio (sigma 1.3) blended 60/40 with its place in the diet table (primary prey first). Each eater's
+  plants and prey are scaled to 0..1 separately and season by season, half by the score's place between the season's
+  best and worst and half by its rank among the distinct scores (min-max alone pressed everything but a deer's acorns to
+  the bottom; a year-wide scale put the deer's spring favourites at 0.66 because acorns, eaten only in fall, set the top).
+  The home tile's games.json carries it (written in place: `python -m pipeline.games tiles/<id>/games.json`); other tiles
+  get it at their next games run (the version bump marks the step stale).
+- **What it says on the home tile** (fall unless noted): deer: valley oak (acorns) 1.0, blue wildrye 0.41, poison oak and
+  snowberry 0.18, buckbrush, coffeeberry and mountain mahogany 0 (spring: mule's ears, clover, blue dicks and buckbrush's
+  blossom 1.0, toyon and coffeeberry 0); mountain lion: deer 1.0, coyote 0.78, turkey 0.54, jackrabbit 0.37, brush rabbit
+  0.14, ground squirrel 0; black bear: valley oak 1.0, wild grape and coffeeberry 0.54, elderberry and the manzanitas
+  0.31, soap plant 0; red-tailed hawk: vole 1.0, California quail 0.83, mountain quail 0.69, ground squirrel 0.54, gray
+  squirrel 0.26, fence lizard 0.16, jackrabbit 0 (twice the hawk's weight); brush rabbit, spring: vetch, clover, barley,
+  filaree 1.0, the woody shrubs 0.
+- **The shockwave** (client/src/sniffWave.js): when the sniff starts (scent.js: L, its slot, the canids' and the lion's E),
+  a faint ring on the ground runs out from the body over 2.2 s to its smell reach (scent.js REACH, at most 160 m), and
+  every edible thing pulses once (0.7 s) as the ring reaches it: the near set's food trees (an oak's acorns under it),
+  forage.js's herbs, shrubs and sward, and for a hunter its prey animals (the pulse follows an animal that moves). The
+  pulses are smelled, not seen: drawn over the scene, so a rabbit under a shrub shows.
+- **The pulse is a soul** (spirit.js exports `soulLook`): the same quad, core and bubble and growth with distance; a food
+  of desirability 0 takes the tile's vole soul (its rarity colour, brightness 0.55 + 0.85 x its rarity, size 1 + 0.6 x its rarity), 1 the mountain lion's (its
+  rarity colour and the beacon's brightness 2.4 and size 5), between them the rarity is mixed for the colour and the
+  brightness and size are mixed. A food the tile gives no desirability takes 0.5.
+- **Tab leans to desire** (quarry.js): when ordering targets out from the screen's centre, the least desirable food counts
+  0.15 (squared screen units) further out, and a target that is no food of this body further still.
+- Seen (headless Chrome, home tile, fall): as a deer, 384 pulses (the cap) out to 160 m at 73 m/s, the valley oaks big and
+  gold, buckbrush and coffeeberry small and purple, wildrye green; as a mountain lion near a herd, 21 prey pulses: 2 deer
+  (1.0), a coyote (0.78), 6 jackrabbits (0.37), 12 brush rabbits (0.14). The rabbits were hidden until the pulses stopped
+  depth-testing. The ground ring is faint by design and hardly reads in a montage.
