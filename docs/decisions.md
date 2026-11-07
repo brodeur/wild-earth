@@ -6905,6 +6905,74 @@ signing in while Upper Hoh Road was chosen (Start live, the world at 20% 2.5 s l
 staggered, Start enabled when ready), `?hub=stub`, a static host with no hub (Explore staggered in, then the places),
 and `?skip=1`. Frames were captured every ~100 to 250 ms (headless screenshots are slow); the start times are exact.
 
+## 2026-11-06: place cards name, count and territories; the territories a step of the build (branch claude/place-cards-territories)
+
+Aaron: "As part of the pipeline make sure we are listing the indigenous human territory name. Current PlaceName on its
+own row, below it the indigenous territory. Instead of 'No one here' have a pill with a user icon and a number after
+the placename".
+
+**The cards** (title.js, the places list and the card over a chosen place; arrival.js for `?cards=1`):
+- Row 1: the place's name and a pill, a user icon and how many players are there now. Zero is shown, dimmed: a
+  place with no one there yet reads as a place, and every row keeps the same shape.
+- Row 2: the Indigenous territories over the tile, names joined with " · ", each a link to its Native Land page (a
+  click on a link opens Native Land in a new tab and does not choose the place). No territories: no row.
+- The friends there (their wisps and "Juno and Maya here") stay under them, only when there are any. The card over a
+  chosen place shows its players' wisps only when someone is there.
+- No roads: the road subtitle is gone, and a tile with no OSM locality is named for its main natural feature
+  (arrival.js natureName): its largest named glacier, else its named stream with the largest drainage area, else a
+  named lake (Upper Hoh: Hoh River; Mount Olympus: Blue Glacier; the Tetons: Teton Glacier; Manu; Sungai Segama). A
+  glacier first because a big river runs through more than one tile (the Hoh drains both Olympic tiles).
+- Signed out, the counts come from a new anonymous `GET /api/hub/counts` ({tiles: {tile_id: players}}, the numbers the
+  socket's `watch` already sends every signed-in player; no one named), asked every 20 s; signed in, from the socket.
+- The Native Land disclaimer stays in the credits (config.SOURCES native_land).
+
+**The territories step** (pipeline/steps.py `territories`, version 1, no upstream step, base stage; pipeline/fetch_territories.py
+step_output): writes client/territories.json { territories, source } (layer client.territories), fingerprinted on the
+fetcher's code like every step. The client reads it, falling back to features.json `territories` for a tile built before.
+derive no longer writes territories into features.json (one owner), so the terrain step's code changed: the next `--all`
+re-runs terrain on every tile. Without a NATIVE_LAND_KEY the step is `refused` ("no NATIVE_LAND_KEY: ..."): never current,
+listed in `--status` and failed by the build audit (refusals), so a tile cannot pass with its territories silently
+missing; a tile that never ran it shows `territories never missing client.territories`. The key is read from the
+environment, this checkout's .env, or, from a git worktree, the main checkout's .env (env_files); it is never printed.
+`python -m pipeline.fetch_territories <tile> [--force]` now runs that step on a built tile through the graph.
+
+**The names** (2026-11-06, after Aaron added his key as NATIVE_LAND_API_KEY: either name is read, NATIVE_LAND_KEY
+first, from the environment or a .env): fetched for all 18 tiles through the step (`python -m pipeline.fetch_territories
+<tile> --force`, the key from the main checkout's .env, never printed; a failed request now says only its HTTP status
+or its kind, since requests' own messages quote the URL with the key). What came back, checked against each place:
+
+| tile | territories |
+|---|---|
+| Hoh River (Upper Hoh) | ChalAt'i'lo t'sikAti (Chalat', the Hoh) · Quileute |
+| Blue Glacier (Mount Olympus) | Chalat' · Quileute · Queets |
+| Daly City | Muwekma · Ohlone · Ramaytush |
+| Richmond District | Muwekma · Ohlone · Graton Rancheria · Me-Wuk (Coast Miwok) · Miwok · Ramaytush |
+| Nashville | Nisenan · Me-Wuk (Northern Sierra Miwok) · Miwok |
+| El Dorado, Placerville | Nisenan |
+| Arnold | Miwok · Me-Wuk (Central Sierra Miwok) · Wašišiw Ɂítdeʔ (Washoe) |
+| Yosemite Village (both tiles) | Miwok · Nüümü (Northern Paiute) · Me-Wuk (Southern Sierra Miwok) · Me-Wuk (Central Sierra Miwok) |
+| Grand Canyon Village | Pueblos · Havasu Baaja (Havasupai) · Hopitutskwa · Hualapai · Nuwuvi (Southern Paiute) |
+| Teton Glacier | Newe Sogobia (Eastern Shoshone) · Shoshone-Bannock · Cheyenne |
+| Fossil Forest (Lamar) | Apsáalooke (Crow) · Cheyenne · Očhéthi Šakówiŋ |
+| Sirena | Buglé and Ngäbé |
+| Manu | Arawak · Matsigenka · Yine |
+| Moskenes | Sápmi (Sámi) |
+| Seronera, Sungai Segama | none: Native Land's map does not cover them |
+
+One entry was left out everywhere: "Cayuse, Umatilla and Walla Walla" came back for the Olympic, foothill, Teton and
+Lamar tiles; the polygon the API returns for it spans 124.8 W to 104.6 W and 38.6 N to 50.1 N, most of the American
+West, far past those nations' homelands on the Columbia Plateau. A drawing error in Native Land's data, not a territory
+of these places: fetch_territories.EXCLUDED leaves it out by slug and each tile's source note says so (`excluded`, with
+the reason). Worth reporting to Native Land. Lamar has no Shoshone entry on their map (the Tetons do).
+The territories step needs no other step (it reads only the tile's bounds), so the two tiles built before the graph
+(Nashville, Placerville) are not blocked by their missing terrain record.
+
+Verified in headless Chrome on the local hub at 1440x900 and 375x812, signed in and signed out: the pill (2 at the Hoh
+River with two test players in its room, 0 dimmed elsewhere), the territory row and its links from a test fixture
+(clearly labelled, never committed, removed), the card over the chosen place, no road names anywhere, no page errors.
+Tests: tests/test_territories_step.py (the step in the graph after terrain, refused without a key, the refusal a build
+audit problem, the key never printed) and the counts endpoint in tests/test_hub.py.
+
 ## 2026-11-06: while digging, ↑ and ↓ steer the dig's slope; the camera yields to them (docs/game-dig.md "The arrows steer the dig")
 
 Aaron: "While digging, the purpose of the arrow keys changes upArrow begins to dig up, downarrow begins to dig down"

@@ -24,6 +24,7 @@ POST /api/hub/signout                     the session ended
 POST /api/hub/recover {name, code, password}   a recovery code spent for a new password
 GET  /api/hub/me                          the signed-in user, or 401
 GET  /api/hub/config                      {hub, providers}: the sign-in providers whose keys exist
+GET  /api/hub/counts                      {tiles}: players per tile, anonymous (a signed-out visitor's place cards)
 GET  /api/hub/oauth/discord               Discord sign-in (scope identify); Discord redirects back to it
 GET  /api/hub/ws                          WebSocket: friends, groups, presence, rooms, counts, chat, positions
 

@@ -57,6 +57,27 @@ export function locality(features) {   // shared with the title screen's places 
   return ps[0]?.name || null;
 }
 
+// The tile's name where it has no locality (Aaron, 2026-11-06: roads do not belong in a world without people): its
+// largest named glacier (Blue Glacier on Mount Olympus, Teton Glacier), else its named stream with the largest drainage
+// area (the Hoh River on the Upper Hoh's tile, Manu, Sungai Segama), else a named lake. A glacier first, since a big
+// river runs through more than one tile (the Hoh drains both Olympic tiles).
+const ringArea = r => { let a = 0; for (let i = 0, j = (r?.length || 0) - 1; i < (r?.length || 0); j = i++) a += r[j][0] * r[i][1] - r[i][0] * r[j][1]; return Math.abs(a) / 2; };
+export function natureName(features) {
+  let glacier = null, ga = 0;
+  for (const g of features?.glaciers || []) { const a = g.name ? ringArea(g.ring) : 0; if (a > ga) { ga = a; glacier = g; } }
+  if (glacier) return glacier.name;
+  let best = null;
+  for (const s of features?.streams || []) if (s.name && (s.area_km2 || 0) > (best ? best.area_km2 || 0 : -1)) best = s;
+  return best?.name || (features?.waterbodies || []).find(w => w.name)?.name || null;
+}
+export const placeName = features => locality(features) || natureName(features);   // the place cards' title (title.js)
+// The Indigenous territories over a tile, [{ name, slug, url }]: client/territories.json (the pipeline's territories step,
+// Native Land Digital), else what an older build wrote into features.json.
+export async function territoriesOf(id, features = null) {
+  try { const r = await fetch(`../tiles/${id}/client/territories.json`); if (r.ok) { const j = await r.json(); if (Array.isArray(j?.territories)) return j.territories; } } catch { /* none */ }
+  return Array.isArray(features?.territories) ? features.territories : [];
+}
+
 // A day's weather in words for the slider's label ("light rain, 11 °C"): weather.js summarizeDay; should it fail,
 // the commonest daylight code and the high in a small table of WMO codes.
 function dayWords(day, opts) {
@@ -263,7 +284,7 @@ export class OpeningScreen {
   }
 
   // ---- the dark start: the screen's own assets, then the reveal ---------------------------------------------------
-  // Each card's title (features.json: its locality, its roads under it) and place names, its map image, every tile's
+  // Each card's title (features.json: its locality, else its main natural feature; the territories under it) and place names, its map image, every tile's
   // species list, the animal stills (assets/opening/index.json) and the label tile's weather; at most BOOT_MAX s.
   async loadAssets(pending) {
     const status = t => { const el = this.$('.op-boot-status'); if (el) el.textContent = t; };
@@ -271,11 +292,11 @@ export class OpeningScreen {
     const feats = Promise.all(this.ids.map(async id => {
       const f = await getJSON(`../tiles/${id}/client/features.json`);
       this.feat[id] = f; this.places[id] = f ? new PlaceNames(f, f.size_m || 10000) : null;
-      const card = this.cardOf(id), roads = majorRoads(f).join(', '), place = locality(f);
-      card.querySelector('.op-title').textContent = place || roads || id;
-      card.querySelector('.op-sub').textContent = place ? roads : '';
-      card.querySelector('.op-terr').textContent = (f?.territories || []).map(t => t.name).join(' · ');   // Native Land Digital (pipeline/fetch_territories.py)
-      card.querySelector('.op-pick').setAttribute('aria-label', [place, roads].filter(Boolean).join(': ') + ` (${id})`);
+      const card = this.cardOf(id), place = placeName(f), terr = (await territoriesOf(id, f)).map(t => t.name).join(' · ');
+      card.querySelector('.op-title').textContent = place || id;
+      card.querySelector('.op-sub').textContent = '';   // no roads (2026-11-06)
+      card.querySelector('.op-terr').textContent = terr;   // Native Land Digital (pipeline/fetch_territories.py)
+      card.querySelector('.op-pick').setAttribute('aria-label', [place, terr].filter(Boolean).join(': ') + ` (${id})`);
     }));
     const maps = Promise.all([...this.root.querySelectorAll('.op-map img')].map(im => im.complete ? null : new Promise(r => { im.onload = im.onerror = r; })));
     this.lineupData = Promise.all([getJSON('./assets/opening/index.json'), Promise.all(this.ids.map(id => getJSON(`../tiles/${id}/species/species.json`)))])

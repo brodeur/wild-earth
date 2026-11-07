@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { lastTile, locality, majorRoads, seasonHighlight } from './arrival.js';
+import { lastTile, placeName, territoriesOf, seasonHighlight } from './arrival.js';
 import { seasonOfDate } from './season.js';
 import { pointInTileId } from './goto.js';
 import { HubStub } from './hubStub.js';
@@ -81,6 +81,7 @@ const STARS_IN_S = 2.6, TITLE_IN_S = 0.7, LAND_MS = 2200, REFADE_MS = 1200, SIDE
 const STAGGER_FIRST = 120, STAGGER_DECAY = 0.8, STAGGER_MIN = 25, STAGGER_SAME_PX = 6, STAGGER_MS = 520, STAGGER_RISE = 10;
 const STAGGER_EASE = 'cubic-bezier(.2, .8, .25, 1)';
 const GUEST_TIP = 'Log in or sign up to start';
+const GUEST_COUNTS_MS = 20000;   // a signed-out visitor's place counts, asked of the hub this often
 const reducedMotion = () => !!globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 const DOT_LIFT = 0.004;                                    // the dots stand off the surface from space, on it up close
 const HOVER_PX = 16;
@@ -103,6 +104,12 @@ const easeInOut = u => u < 0.5 ? 4 * u * u * u : 1 - (-2 * u + 2) ** 3 / 2;
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const wrapPi = a => Math.atan2(Math.sin(a), Math.cos(a));
 const countText = n => n > 0 ? `${n} here` : 'no one here';
+// A place's player count (Aaron, 2026-11-06: "a pill with a user icon and a number after the placename"); 0 shown dimmed.
+const USER_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.6"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>';
+const pillHTML = n => `<span class="tt-pill${n ? '' : ' zero'}" title="${n} ${n === 1 ? 'player' : 'players'} here now" aria-label="${n} ${n === 1 ? 'player' : 'players'} here now">${USER_ICON}<b>${n}</b></span>`;
+// The territories as links to Native Land's pages for them, " · " between (their map is not an official or legal boundary:
+// the credits say so, config.SOURCES native_land).
+const terrHTML = ts => (ts || []).map(t => t.url ? `<a href="${esc(t.url)}" target="_blank" rel="noopener">${esc(t.name)}</a>` : esc(t.name)).join(' · ');
 const andList = names => names.length < 2 ? names.join('') : `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
 const FACES_MAX = 4;                                       // friends' wisps on a row or a label before the names say the rest
 const TITLE_PX = 15;                                       // the risen title's size (Aaron's design, 2026-11-06)
@@ -313,7 +320,7 @@ export class TitleScreen {
           <p class="tt-empty" hidden></p>
         </aside>
         <div class="tt-pcard" role="group" aria-label="the place chosen" hidden>
-          <b class="pc-name"></b><span class="pc-region"></span>
+          <span class="pc-top"><b class="pc-name"></b><span class="pc-pill"></span></span><span class="pc-region"></span>
           <button type="button" class="pc-people" aria-expanded="false"><span class="pc-avs"></span><span class="pc-n"></span></button>
           <div class="pc-list" role="list" hidden></div>
         </div>
@@ -358,7 +365,9 @@ export class TitleScreen {
     for (const p of this.places) {
       const el = document.createElement('div');
       el.className = 'tt-row'; el.dataset.tile = p.id; el.setAttribute('role', 'listitem'); el.tabIndex = 0;
-      el.innerHTML = `<span class="tt-rname">${esc(p.name)}</span><span class="tt-rregion"></span><span class="tt-rcount"><span class="tt-faces"></span><span class="tt-rwho">${countText(0)}</span></span>`;
+      el.innerHTML = `<span class="tt-rtop"><span class="tt-rname">${esc(p.name)}</span><span class="tt-rpill">${pillHTML(0)}</span></span><span class="tt-rterr"></span><span class="tt-rcount"><span class="tt-faces"></span><span class="tt-rwho"></span></span>`;
+      el.querySelector('.tt-rterr').addEventListener('click', e => { if (e.target.closest('a')) e.stopPropagation(); });   // a territory's link opens Native Land, not the place
+      el.querySelector('.tt-rterr').addEventListener('keydown', e => { if (e.target.closest('a')) e.stopPropagation(); });
       el.addEventListener('click', () => this.choose(p.id));
       el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.choose(p.id); } });
       el.addEventListener('pointerenter', () => { this.hotRow = p.id; });
@@ -422,7 +431,7 @@ export class TitleScreen {
       };
       box.append(el);
     };
-    if (f.places.length) { head('Wild places'); for (const p of f.places) row(p.name, `${p.region ? `${p.region} · ` : ''}${countText(p.count)}`, () => this.pickFound(null, p.id), 'wild'); }
+    if (f.places.length) { head('Wild places'); for (const p of f.places) row(p.name, [p.region, countText(p.count)].filter(Boolean).join(' · '), () => this.pickFound(null, p.id), 'wild'); }
     head('Anywhere on earth');
     if (f.busy) { const p = document.createElement('p'); p.className = 'tt-fnote'; p.textContent = 'searching…'; box.append(p); }
     else if (f.err) { const p = document.createElement('p'); p.className = 'tt-fnote'; p.textContent = 'the search is not answering; try again'; box.append(p); }
@@ -586,10 +595,11 @@ export class TitleScreen {
     let n = 0;
     return Promise.all(this.places.map(async p => {
       const f = await getJSON(`../tiles/${p.id}/client/features.json`);
-      const place = locality(f), roads = majorRoads(f).join(', '), terr = (f?.territories || []).map(t => t.name).join(' · ');
-      p.name = place || roads || p.id; p.roads = place ? roads : ''; p.terr = terr;
-      p.region = [place ? roads : '', terr].filter(Boolean).join(' · ');
-      p.el.querySelector('.tt-rname').textContent = p.name; p.el.querySelector('.tt-rregion').textContent = p.region;
+      // the name: the locality, else the main natural feature (arrival.js placeName; never a road, 2026-11-06); under it
+      // the Indigenous territories (the pipeline's territories step, Native Land Digital), the row left out when none
+      p.name = placeName(f) || p.id; p.terr = await territoriesOf(p.id, f);
+      p.region = p.terr.map(t => t.name).join(' · ');
+      p.el.querySelector('.tt-rname').textContent = p.name; p.el.querySelector('.tt-rterr').innerHTML = terrHTML(p.terr);
       p.el.setAttribute('aria-label', `${p.name} (${p.id})`); p.label.querySelector('.tt-lname').textContent = p.name;
       say(`loading the places… ${++n} / ${this.places.length}`);
     }));
@@ -679,6 +689,9 @@ export class TitleScreen {
     this.face(this.faceId, LAND_MS);
     this.dots.visible = true;
     this.tween(1400, u => { this.dotU.uFade.value = u; }, easeInOut, LAND_MS);
+    // the places' player counts without a session (the hub's anonymous /api/hub/counts; signed in, the socket's watch)
+    const poll = () => getJSON('/api/hub/counts').then(j => { if (this.guest && !this.closed && j?.tiles) this.setCounts(j.tiles); });
+    poll(); this.countsT = setInterval(poll, GUEST_COUNTS_MS);
     this.renderBar();
   }
   // Signed in (the hub's `you`, or null exploring alone): the sun swings round to the facing side, the earth turns to
@@ -689,7 +702,7 @@ export class TitleScreen {
     if (this.closed) return;
     if (this.guest) {   // a visitor signed in while browsing: Start, Invite and the social column; the chosen place's world builds now
       if (!user) return;
-      this.guest = false; this.user = user; this.wrap.classList.remove('guest', 'gate-open'); this.$('.tt-loginpill').hidden = true;
+      this.guest = false; this.user = user; this.wrap.classList.remove('guest', 'gate-open'); this.$('.tt-loginpill').hidden = true; clearInterval(this.countsT);
       this.hub.watch?.(true);
       this.onLit?.(this.user);
       if (this.sel) this.onSelect?.(this.sel);
@@ -847,7 +860,7 @@ export class TitleScreen {
     const p = this.byId[this.sel]; if (!p) { this.card.hidden = true; return; }
     this.card.hidden = false;
     this.card.querySelector('.pc-name').textContent = p.name;
-    this.card.querySelector('.pc-region').textContent = p.region || '';
+    this.card.querySelector('.pc-region').innerHTML = terrHTML(p.terr);
     this.$('.pc-list').hidden = true; this.$('.pc-people').setAttribute('aria-expanded', 'false');
     this.renderPeople();
   }
@@ -859,10 +872,11 @@ export class TitleScreen {
   // players are there ("3 here", "no one here").
   renderWho(p) {
     if (!p.el) return;
-    const fr = (this.friendsAt?.(p.id) || []).filter(f => f && f.id), others = Math.max(0, p.count - fr.length);
-    const text = fr.length ? `${andList(fr.slice(0, 3).map(f => f.name))}${fr.length > 3 ? ` +${fr.length - 3}` : ''} here${others ? ` · ${others} more` : ''}` : countText(p.count);
-    const key = `${fr.map(f => f.id).join(',')}|${text}`; if (p.whoKey === key) return; p.whoKey = key;
-    p.el.querySelector('.tt-rwho').textContent = text;
+    const fr = (this.friendsAt?.(p.id) || []).filter(f => f && f.id);
+    const text = fr.length ? `${andList(fr.slice(0, 3).map(f => f.name))}${fr.length > 3 ? ` +${fr.length - 3}` : ''} here` : '';
+    const key = `${fr.map(f => f.id).join(',')}|${text}|${p.count}`; if (p.whoKey === key) return; p.whoKey = key;
+    p.el.querySelector('.tt-rpill').innerHTML = pillHTML(p.count);
+    p.el.querySelector('.tt-rwho').textContent = text;   // the friends there, by name (the count is the pill's)
     p.el.querySelector('.tt-rcount').classList.toggle('friends', fr.length > 0);
     for (const box of [p.el.querySelector('.tt-faces'), p.label.querySelector('.tt-faces')]) {
       box.replaceChildren(...fr.slice(0, FACES_MAX).map(f => { const a = avatarFor(f.id, 16); a.title = f.name; return a; }));
@@ -880,6 +894,8 @@ export class TitleScreen {
     const n = p.count + coming;
     this.$('.pc-n').textContent = n ? `${p.count ? countText(p.count) : ''}${p.count && coming ? ' · ' : ''}${coming ? `${coming} on the way` : ''}` : 'no one here yet';
     this.$('.pc-people').disabled = !shown.length && !known.length;
+    this.$('.pc-people').hidden = !shown.length && !known.length;   // no one: the pill's 0 says it
+    this.$('.pc-pill').innerHTML = pillHTML(p.count);
     const list = this.$('.pc-list'); list.innerHTML = '';
     const STATE = { here: 'here', coming: 'on the way', asked: 'asked', declined: 'not now', invited: 'invited you' };
     for (const k of known) {
@@ -1128,7 +1144,7 @@ export class TitleScreen {
   // Fade out and remove; the GPU objects and the map's worker go; keys go back to the world.
   close() {
     if (this.closed) return;
-    this.closed = true; this.ownsCanvas = false;
+    this.closed = true; this.ownsCanvas = false; clearInterval(this.countsT);
     cancelAnimationFrame(this.raf);
     document.documentElement.classList.remove('tt-panels', 'tt-side');
     document.documentElement.style.removeProperty('--we-fl'); document.documentElement.style.removeProperty('--we-fr');

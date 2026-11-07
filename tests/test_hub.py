@@ -421,6 +421,8 @@ class HubTest(unittest.TestCase):
         a_tab2.close()
         d[2].close()
         counts = watcher[2].wait("counts", timeout=5, where=lambda m: m["tiles"] == {T1: 2})
+        st, out, _, _ = self.http("GET", "/api/hub/counts")                   # the same counts with no session at all
+        self.assertEqual((st, out["tiles"]), (200, {T1: 2}))
         watcher[2].send({"t": "watch", "on": False})
         a[2].close()
         watcher[2].none("counts", wait=2.6)

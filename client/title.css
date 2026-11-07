@@ -108,6 +108,20 @@ html.opening:not(.tt-side) #social { opacity:0; visibility:hidden; pointer-event
 .tt-rname { display:block; font-size:17px; font-weight:400; line-height:1.25; color:#f3f6f1; }
 .tt-rregion { display:block; font-size:12.5px; line-height:1.4; color:#8fa094; margin-top:3px; }
 .tt-rregion:empty { display:none; }
+/* a place's card (2026-11-06): the name and the pill of its players, then its Indigenous territories (links to Native
+   Land), the friends there under them when there are any */
+.tt-rtop, .pc-top { display:flex; align-items:center; gap:8px; min-width:0; }
+.tt-rtop .tt-rname { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.tt-pill { flex:none; display:inline-flex; align-items:center; gap:4px; height:20px; padding:0 8px 0 6px; box-sizing:border-box; border-radius:999px;
+  background:#ffffff14; border:1px solid #d3ddd52a; color:#f3f6f1; font:600 11.5px/1 'DM Sans', system-ui, sans-serif; font-variant-numeric:tabular-nums; }
+.tt-pill svg { width:12px; height:12px; }
+.tt-pill.zero { color:#8fa094; background:#ffffff08; border-color:#d3ddd51a; }
+.tt-rterr { display:block; margin-top:4px; font-size:12.5px; line-height:1.4; color:#b7c4ba; }
+.tt-rterr:empty, .pc-region:empty { display:none; }
+.tt-rterr a, .pc-region a { color:inherit; text-decoration:none; border-bottom:1px solid #d3ddd544; }
+.tt-rterr a:hover, .pc-region a:hover, .tt-rterr a:focus-visible, .pc-region a:focus-visible { color:#f3f6f1; border-bottom-color:#f3f6f1aa; outline:none; }
+.pc-people[hidden] { display:none; }
+.tt-rcount:not(.friends) { display:none; }
 .tt-rcount { display:flex; align-items:center; gap:6px; font-size:12.5px; line-height:1.3; color:#8fa094; margin-top:7px; }
 .tt-rcount.friends { color:#f3f6f1; }
 .tt-rcount .tt-faces { margin-right:3px; }
@@ -128,7 +142,7 @@ html.opening:not(.tt-side) #social { opacity:0; visibility:hidden; pointer-event
 .tt-pcard.behind, .tt-wrap.zooming .tt-pcard { opacity:0; pointer-events:none; }
 .tt-pcard[hidden] { display:none; }
 .pc-name { font-size:18px; font-weight:500; color:#f3f6f1; line-height:1.2; }
-.pc-region { font-size:12px; color:#d3ddd5a8; line-height:1.35; }
+.pc-region { margin-top:3px; font-size:12px; color:#b7c4ba; line-height:1.35; }
 .pc-region:empty { display:none; }
 .pc-people { display:flex; align-items:center; gap:10px; margin-top:8px; padding:4px 8px 4px 4px; border:1px solid transparent; border-radius:999px; background:#ffffff0c; color:#e8dcc0;
   font:500 12.5px/1.2 'DM Sans', sans-serif; cursor:pointer; text-align:left; align-self:flex-start; }

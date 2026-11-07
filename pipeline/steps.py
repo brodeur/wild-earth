@@ -327,10 +327,17 @@ def _water_imagery(tile, m, force):
             add_layer(m, tile, k, m["layers"][k], fetched=False)
 
 
+def _territories(tile, m, force):
+    # client/territories.json from Native Land's map (pipeline/fetch_territories.py; a step of its own since 2026-11-06,
+    # Aaron: "As part of the pipeline make sure we are listing the indigenous human territory name"). No key: Refused.
+    from .fetch_territories import step_output
+    add_layer(m, tile, "client.territories", step_output(tile, force))
+
+
 def _terrain(tile, m, force):
     # The base layer's client rasters (was the first half of `derive`): hillshade, terrain RGB, footprint raster, NAIP png,
-    # habitat png, the rewilded texture, heights, habitat, canopy, roads, the textures, masks and features (places,
-    # territories). Reads the banked DEM when the water step made one.
+    # habitat png, the rewilded texture, heights, habitat, canopy, roads, the textures, masks and features (places; the
+    # territories are their own step since 2026-11-06). Reads the banked DEM when the water step made one.
     from . import derive
     need = [k for k in ("terrain.dem", "imagery.naip", "vegetation.habitat", "vegetation.evt", "vegetation.bps",
                         "hydro.flowlines") if k not in m["layers"]]
@@ -603,12 +610,15 @@ STEPS: dict[str, Step] = {s.name: s for s in [
          ["geology.", "soils.", "client.geology", "client.soils", "client.outcrop", "client.ground_classes", "client.strata"],
          ["macrostrat", "usda_sda", "soilgrids"], doc="geology and soils, outcrop likelihood, ground classes, the stratigraphic column", stage=B,
          optional=["client.strata"]),
-    Step("terrain", "2", ["derive", "urban", "habitat", "fetch_places", "fetch_territories", "water_seasons"],
+    Step("terrain", "2", ["derive", "urban", "habitat", "fetch_places", "water_seasons"],
          ["dem", "naip", "osm", "hydro", "channels", "rewild_hydro", "water", "water_seasons", "landcover", "ice"], _terrain,
          ["terrain.hillshade", "terrain.terrain_rgb", "footprint.mask_raster", "imagery.naip_png", "vegetation.habitat_png",
           "vegetation.habitat_present_png", "terrain.rewilded", "client.habitat", "client.canopy", "footprint.urban",
           "client.roads", "client.texture", "client.masks", "client.imagery", "client.texture_present", "client.features"],
-         ["osm", "native_land"], doc="the base layer's client rasters, textures and place names", stage=B),
+         ["osm"], doc="the base layer's client rasters, textures and place names", stage=B),
+    Step("territories", "1", ["fetch_territories"], [], _territories, ["client.territories"], ["native_land"],   # reads only the tile's bounds
+         doc="the Indigenous territories over the tile (Native Land Digital), for the start screen's place cards; "
+             "refused, not done, without a NATIVE_LAND_KEY", stage=B),
     Step("erase", "1", ["erase_imagery", "urban"], ["naip", "osm", "landcover", "terrain", "rewild_hydro"], _erase,
          ["client.texture_imagery"], doc="the imagery with the human footprint removed", stage=B),
     Step("substrate", "1", ["substrate"], ["ground", "water", "dem", "lidar", "naip", "landcover", "erase", "terrain", "ice"],
