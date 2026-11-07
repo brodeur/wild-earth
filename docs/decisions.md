@@ -7619,3 +7619,40 @@ title and Start stayed up for a tile a few pixels wide.
 - **Checked** in headless Chrome on El Dorado at 1440 x 900, at 390 x 844 and under reduced motion: deselected on the way
   out with no errors, the world gone (`__weWorld()` null), nothing chosen after zooming back in to 29 km, chosen again from
   its row (rings, title and world back). Not checked: a signed-in group member watching the body mark go.
+
+## 2026-11-07: the flight lands on the tile; the fliers a tier above; shadows (branch claude/rings-zoom-shadows)
+
+Aaron, from Lamar on the local viewer: "When clicking on the label, the dot or the card, the view should zoom to this zoom
+level. Right now the view zooms to somewhere not the tile, and I have to drag around to find the tile. Animals and birds
+should have more elevation between them. Ground animals should have drop shadows."
+
+- **The cause of the missed zoom.** Not the entry points or the offsets: every entry (row, label, dot) from every starting
+  view (far out, near another place, the tile near the limb, after a deselect), on the stub hub and the real one, signed
+  in and out, ended with the tile's centre exactly at the focus area's centre. What Aaron saw was the wait. The flight to
+  a place is paced by the world's build (flyToPlace): from 55% of its progress its clock slows to a crawl until the
+  loading bar catches up, but its travel over the earth was eased over the whole flight, only 60% done when the crawl
+  began. On a cold load at 20 Mbit/s the camera then hung for some 15 s over a point well short of the place, the tile 2
+  to 7 free-centre widths away and off screen in every one of 59 samples; dragging to find it stopped the flight. Now a
+  paced flight crosses the earth by 48% of its progress (its arc's top in the middle of that) and only the descent waits:
+  the same measure gives the tile centred, offset 0, in every sample while it waits, then the landing as before.
+- **The check stays.** `tools/home_zoom_check.mjs` runs every entry point from every starting view and asserts the
+  tile's centre within 3% of the focus area's and its size (35-50% of the window, or 70-100% of a phone's free centre),
+  then the held flight on a cold throttled load (centred and on screen throughout); exit code 1 on a failure.
+- **A resize re-frames.** The framing's height is the pose's, worked out once per flight, so a window resized (or a phone
+  turned) while a place was chosen left the tile centred but at the old size (the check caught it: an emulated phone
+  that turned into a desktop window mid-flight framed the tile at half its size). A resize now flies to the chosen
+  tile's pose again in 0.7 s, if the tile is still in view (one dragged away is left there).
+- **The framing a little larger.** The stage's margins went from 40 to 22 px (12 on a phone) and the room kept above the
+  tile from 7% to 13% of the stage for the raised fliers: the tile is now about 45% of a 1440 px window, as in Aaron's
+  screenshot.
+- **The fliers a tier above.** At the chosen view (about 49 degrees down) a ring raised a little reads as the same tier
+  with the walkers behind it. The fliers' ring is now smaller and well above (0.74 of the walkers' radius, raised 1.05 of
+  it, two rows 1.12 and 0.78 of that when busy), so its birds stand inside and over the walkers, the back ones above the
+  tile's far edge; the spirit sits between the tiers (0.5 up). Considered: no overlap at all on screen. Rejected: at this
+  angle the fliers would have to stand some two ring radii up, out above the tile altogether.
+- **Shadows.** Each animal casts a soft dark ellipse its length and breadth on the rings' ground, away from the rings'
+  light (the stills' sun) by its height: the walkers' beside their feet (straight under them they were hidden by the
+  body from above), a flier's fainter (20% against 62%) and wider, far from it by its tier's height, which also shows
+  how high the tier is.
+- **Fixed on the way.** A tile's own bird stand-ins on the walkers' ring (Corcovado's storks and ibises) stood with their
+  wings spread: they now fold them, as the client's ground birds do.

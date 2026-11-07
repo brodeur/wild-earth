@@ -64,9 +64,10 @@ const ALT0 = 2.5, ALT_MIN = 0.6 / R_KM, ALT_MAX = 3.6;      // the camera's dist
 // stretch is paced by the world's build (flyToPlace: the flight's clock runs slower as it gets ahead of the loading bar,
 // down to PACE_MIN, so it eases into a hold a few times the final height above the tile and goes on as the build does).
 const PLACE_SLOW = 1.8, PLACE_MS = [5000, 8000], PACE_FROM = 0.55, PACE_SLACK = 0.12, PACE_MIN = 0.04;
-const FOCUS_MARGIN = [40, 16];                             // px around the stage inside the free centre (desktop, phone)
+const LAT_END = 0.48;                                      // a paced flight's travel over the earth is done by this share of its progress (before PACE_FROM)
+const FOCUS_MARGIN = [22, 12];                             // px around the stage inside the free centre (desktop, phone)
 const UNCHOOSE_AT = [0.3, 0.14, 350];                       // a chosen tile's width over the free centre's: armed at or over [0], deselected under [1] held [2] ms
-const STAGE_TOP = 0.07;                                    // of the stage's height kept clear above the tile: the back animals stand up past its far edge
+const STAGE_TOP = 0.13;                                    // of the stage's height kept clear above the tile: the fliers' tier stands up past its far edge
 const Y_BELOW = -2.7;                                      // where the earth's centre sits before it lands: off screen, below
 const SUN_CRESCENT = [152 * DEG, 26 * DEG], SUN_LIT = [30 * DEG, 14 * DEG];   // [azimuth about Y from the camera's side, elevation]
 const PITCH_MAX = 85 * DEG;
@@ -299,6 +300,10 @@ export class TitleScreen {
     // Keys typed on the screen stay on the screen (flight, peek, sound and the rest listen on window).
     this.guard = e => { if (!e.target?.closest?.('#opening, #social, #chat, #invite, #invitePick')) e.stopImmediatePropagation(); };
     for (const ev of ['keydown', 'keyup']) { addEventListener(ev, this.guard, true); root.addEventListener(ev, e => e.stopPropagation()); }
+    // a resize (a phone turned, a window dragged) re-frames the chosen tile, when it is still in view: the framing's height
+    // is the pose's (chosenPose), not kept up each frame as the centring is
+    this.onResize = () => { clearTimeout(this.refitT); this.refitT = setTimeout(() => this.refit(), 250); };
+    addEventListener('resize', this.onResize);
     this.frameFn = now => this.frame(now);
     this.raf = requestAnimationFrame(this.frameFn);
     this.run().catch(e => { console.error('title screen:', e); this.showExplore(`error: ${e.message}`); });
@@ -764,10 +769,15 @@ export class TitleScreen {
     const free = clamp(1400 + 900 * Math.sqrt(ang) + 250 * Math.abs(la1 - la0), 1400, 4200);
     ms ??= pace ? clamp(free * PLACE_SLOW, PLACE_MS[0], PLACE_MS[1]) : free;
     this.altGoal = alt;
+    // a paced flight (flyToPlace) is over the place before its pace can slow (Aaron, 2026-11-07: "the view zooms to
+    // somewhere not the tile, and I have to drag around to find the tile": the travel was 60% done where the hold began,
+    // the tile off screen for as long as the world took to build): it crosses the earth by LAT_END of its progress, its
+    // arc's top in the middle of that, and only the descent waits for the world, the tile centred all the while
+    const latEnd = pace ? LAT_END : 1;
     const t = this.flying = this.tween(ms, u => {
-      const e = easeInOut(u);
+      const v = Math.min(1, u / latEnd), e = easeInOut(v);
       this.yaw = y0 + dy * e; this.pitch = lerp(p0, pT, e);
-      this.alt = this.altGoal = Math.exp(lerp(la0, la1, easeInOut(u)) + Math.max(0, bump) * 4 * u * (1 - u));
+      this.alt = this.altGoal = Math.exp(lerp(la0, la1, easeInOut(u)) + Math.max(0, bump) * 4 * v * (1 - v));
     }, u => u);
     t.view = true; t.rate = pace;
     return t.p;
@@ -836,6 +846,12 @@ export class TitleScreen {
       this.card.classList.add('on'); this.selArmed = true;
       this.ringFor = null; this.ring?.show(id).then(list => { if (list && this.sel === id && !this.closed) this.renderBody(); });   // the bodies teleport in once it has landed (loaded during the flight, or now)
     });
+  }
+  refit() {
+    const id = this.sel; if (!id || this.closed || this.begun || this.flying || !this.landed || this.phase !== 'lit') return;
+    const c = this.screenOf(this.byId[id].p0), size = this.renderer.getSize(this._size);
+    if (!c || c[0] < 0 || c[0] > size.x || c[1] < 0 || c[1] > size.y) return;   // dragged away: left there
+    const pose = this.chosenPose(id); this.flyTo(pose.lat, pose.lon, pose.alt, 700);
   }
   // A tween run by frame(): fn(eased 0..1) over ms after delay; .p resolves when done (or stopped); .view marks one a drag cancels.
   endTween(t) { const i = t ? this.tweens.indexOf(t) : -1; if (i < 0) return; this.tweens.splice(i, 1); if (this.flying === t) this.flying = null; t.done(); }
@@ -1275,6 +1291,7 @@ export class TitleScreen {
     document.documentElement.style.removeProperty('--we-fl'); document.documentElement.style.removeProperty('--we-fr');
     this.geo.cancel();
     for (const ev of ['keydown', 'keyup']) removeEventListener(ev, this.guard, true);
+    removeEventListener('resize', this.onResize); clearTimeout(this.refitT);
     document.activeElement?.blur?.();
     if (this.hubParam && typeof this.hubParam === 'object') this.hub.watch?.(false); else this.hub?.close?.();   // a hub given from outside (multiplayer.js) lives on into the world
     this.map.dispose(); this.relief?.dispose(); this.ring?.dispose(); this.ring = null;

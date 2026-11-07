@@ -812,8 +812,10 @@ at)`), `client/src/animals.js` (`summon(..., at)`), `tests/test_hub.py` (`test_b
   plan at least 0.16, about 40% of the deer's, as far as the ring's spacing lets it grow: a squirrel or a jay about half
   a deer). **Pinned to the tile**: the rings live in the tile's own frame (its centre on the earth, east, up, south) and
   are drawn through the earth camera expressed in that frame, so they stay registered to the tile through the zoom, a
-  drag and a resize, and vanish with it over the horizon. The walkers' ring is 0.64 of the tile's half-width, the
-  fliers' 0.95 of that and raised 0.38, so both stand inside the tile's square as the camera sees it (a ring of more
+  drag and a resize, and vanish with it over the horizon. The walkers' ring is 0.64 of the tile's half-width; the
+  fliers' is a smaller tier well above it (0.74 of that, raised 1.05: "more elevation between them", 2026-11-07), the
+  spirit between the two, and every animal casts a soft shadow on the ground away from the light (the fliers' fainter);
+  the walkers stand inside the tile's square as the camera sees it (a ring of more
   than 14 stands in two staggered rows, so the busy tiles' animals keep their size); the spirit is
   about a fifth of the tile across (half its share before). The
   models load during the flight to the place, behind the world's heavy steps (four at once; each compiled with `compileAsync` before it is drawn) and pop
