@@ -309,6 +309,7 @@ class Hub:
         self.conns: dict[str, set] = {}
         self.told: dict[str, dict] = {}
         self.invites: dict[str, dict] = {}
+        self.bodies: dict[str, dict] = {}   # user -> {"body": {tile, code, here}, "conn"}: the body chosen or in (m_body)
         self.search_tok: dict[str, list] = {}
         self.fail_name = Limiter(FAIL_WINDOW_S, FAIL_PER_NAME)
         self.fail_addr = Limiter(FAIL_WINDOW_S, FAIL_PER_ADDR)
@@ -584,6 +585,30 @@ class Hub:
         for c in list(self.conns.get(uid, ())):
             c.send(msg)
 
+    # -- bodies (m_body)
+    def body_msg(self, uid: str) -> dict:
+        """What the user's group is told of their body: the last chosen or in, while they let their place be seen."""
+        b = self.bodies.get(uid)
+        r = self.user(uid)
+        if not b or not self.conns.get(uid) or not r or r["presence"] != "tile":
+            return {"t": "body", "user": uid, "tile": None}
+        return {"t": "body", "user": uid, **b["body"]}
+
+    def tell_body(self, uid: str) -> None:
+        msg = self.body_msg(uid)
+        for u in self.comembers(uid):
+            if not self.blocked(uid, u) and self.conns.get(u):
+                self.to_user(u, msg)
+
+    def bodies_for(self, uid: str) -> list:
+        out = []
+        for u in sorted(self.comembers(uid)):
+            if u in self.bodies and not self.blocked(uid, u):
+                m = self.body_msg(u)
+                if m["tile"]:
+                    out.append({k: v for k, v in m.items() if k != "t"})
+        return out
+
     # -- lists
     def friends_msg(self, uid: str) -> dict:
         friends, requests = [], []
@@ -644,6 +669,9 @@ class Hub:
             cs.discard(c)
             if not cs:
                 del self.conns[c.uid]
+            if self.bodies.get(c.uid, {}).get("conn") is c:   # the body this connection told goes with it
+                del self.bodies[c.uid]
+                self.tell_body(c.uid)
             c.leave_world()
             c.room, c.watch = None, False
             self.tell_presence(c.uid)
@@ -747,6 +775,7 @@ class HubConn(WsConn):
         f = h.friends_msg(self.uid)
         self.send({"t": "welcome", "you": h.you(self.uid), "friends": f["friends"], "requests": f["requests"],
                    "blocked": f["blocked"], "groups": h.groups_list(self.uid, messages=True), "online": h.online_for(self.uid),
+                   "bodies": h.bodies_for(self.uid),
                    "providers": h.providers(), "ice": ice_servers()})
 
     def m_me(self, m: dict) -> None:
@@ -769,6 +798,8 @@ class HubConn(WsConn):
         you = h.you(self.uid)
         h.to_user(self.uid, {"t": "me", "you": you})
         h.tell_presence(self.uid)
+        if "presence" in m and self.uid in h.bodies:   # the place no longer seen (or seen again): the body with it
+            h.tell_body(self.uid)
         if any(k == "display" for k, _ in sets):
             for u in h.audience(self.uid):
                 h.to_user(u, h.friends_msg(u))
@@ -1017,6 +1048,30 @@ class HubConn(WsConn):
                 h.to_user(u, out)
                 n += 1
         self.send({"t": "seasoned", "season": season, "to": n})
+
+    def m_body(self, m: dict) -> None:
+        """{tile, code, here?} (the home screen's rings, 2026-11-07; docs/multiplayer.md "Bodies"): the body the sender chose
+        for a tile on the home screen, or (here) the one they are in, in that tile's world; code 'spirit' for none. {tile:
+        null} takes it back. Relayed as {t: 'body', user, tile, code, here} to the online members of the sender's groups
+        (friends outside a group are not told), only while the sender lets their place be seen (presence 'tile'), and
+        held in memory, one per user, for a member who connects later (welcome's bodies) until the connection that told it
+        closes. A tile id and a species code: no position, nothing written down."""
+        h, me = self.hub, self.uid
+        tile = m.get("tile")
+        if tile is None:
+            if h.bodies.pop(me, None) is not None:
+                h.tell_body(me)
+            return
+        if not tile_built(tile):
+            raise HubError(404, "no such tile", "tile")
+        code = m.get("code")
+        if not isinstance(code, str) or not FORM_RE.match(code):
+            raise HubError(400, "code must be a species code or spirit", "code")
+        body = {"tile": tile, "code": code, "here": bool(m.get("here"))}
+        prev = h.bodies.get(me)
+        h.bodies[me] = {"body": body, "conn": self}
+        if not prev or prev["body"] != body:
+            h.tell_body(me)
 
     def m_answer(self, m: dict) -> None:
         h, me = self.hub, self.uid

@@ -177,12 +177,15 @@ export class SpiritControl {
 
   // Into the animal at once: it leaves the population and the player is it, where it was. The camera blends over from
   // the spirit's (CameraBlend) and the wisp dives into the body and implodes over the blend's first FLASH_IN s.
-  enter(id) {
+  // at: { x, y, z, yaw, where, speed?, pitch? } puts the body there instead (main.js takeBody: the body chosen on the
+  // home screen, beside a group member or under the arrival's end).
+  enter(id, at = null) {
     const f = this.flight, kind = bodyKind(this.animals.peek(id)?.code);
     const control = kind === 'ground' ? this.ground : kind === 'flier' ? this.flier : true;
     if (!control) { this.coolT = 0.3; return false; }   // a body with no control wired (main.js): still a spirit
     const from = f.pos.clone(), o = this.animals.take(id);
     if (!o) { this.coolT = 0.3; return false; }   // gone meanwhile (out of the live set): still a spirit
+    if (at) Object.assign(o, at);
     this.blend.capture();
     this.body = { id, code: o.code, sex: o.sex };
     f.keys.clear(); f.drag = null;
