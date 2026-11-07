@@ -7354,6 +7354,18 @@ glottal stop is itself drawn like a question mark without its dot, so at 12 px i
     30 m up 18.8 -> 19.2 ms. Open: silver tufts unchanged (no lighting bug; sage's record colour is a judgement value,
     and the tuft's tilt term looks like a second sun-angle factor: calibrate leaf colour and crown light together);
     snowberry and gooseberry use sage's leaf.
+- **River-bank tufts green again; the gap ground unmixes the tufts as seen from above and carries a fine blade
+  texture** (grass.js tuftDead, gapTuft; terrain.js gap cover). Lamar's bank tufts read rust-brown on 15 June: the
+  riparian shrubland row lists no grass, so the bank draws the generic tuft, which has no tuft record (width 0); the
+  dead share's size ratio hit its clamp and nine leaves in ten were dead. A grass without a tuft record now takes ratio 1.
+  (Open: the riparian row should list its own grasses and sedges; a species-mix change.) Teton's gap read as a dark slab
+  because the unmixing over-subtracted the tufts: it now removes them as seen from above (the palette mean with the dead
+  share as thatch, cover 0.76 of the footprint from the tufts' own leaf-density model); near ground L 36.2 -> 36.4,
+  a* -4.2 -> -6.1. The herb cover gets one octave of the sward paint's strokes (3.5 cm, no sampler; two octaves cost
+  ~3 ms and were cut); cover shares count only the ground visible between drawn plants (round 2 counted under-crown
+  ground as litter, hiding the bare share); patches 3-15 cm. From the air ΔE 0.001; cost within noise (paired median
+  -0.8 ms, spread -3.0..+2.6, on ~35 ms frames). Open: Teton's litter and soil patches read reddish-brown against the
+  green-grey herbs; Lamar's wet-meadow bare soil (~4 %) is as dark as its litter.
 
 ## 2026-11-06: snakes are playable; the body follows the head's path (branch claude/snake-play)
 

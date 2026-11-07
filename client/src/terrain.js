@@ -35,6 +35,10 @@ export const groundUniforms = {
   // surface (< 0: no data, the photo unmixed as before); gapLitter rgb the litter's, a its share; gapCrust rgb the
   // biological crust's, a its share (the bare ground the rest)
   gapSoil: { value: new THREE.Vector4(0, 0, 0, -1) }, gapLitter: { value: new THREE.Vector4() }, gapCrust: { value: new THREE.Vector4() },
+  // the tufts as the photo sees them from above (grass.js applyLook, round 3): rgb their colour (the sward palette's mean,
+  // their dead share of it grey thatch), w the share of a tuft's footprint its leaves hide from above (1 - exp(-k H), the
+  // tuft light's own envelope); (0, 0, 0, 1) until set: the palette mean, all hidden, as the unmixing took it before
+  gapTuft: { value: new THREE.Vector4(0, 0, 0, 1) },
   contactAO: { value: null },   // shadows.js: top-down sky occlusion under each near tree (r = 0 open .. 1 at the trunk)
   contactAOMatrix: { value: new THREE.Matrix4().set(0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 1) },   // world -> its uv
   // Measured season (season.js SeasonColour): the ground texture times seasonMap's multiplier (stored as
@@ -534,7 +538,7 @@ const FRAG = /* glsl */`
   // fade out by pixel footprint as the blade tiers fade theirs, over a shade floor; the photo keeps the metre-scale hue
   // and brightness (patches, swales, the season). It thins exactly where the plants thin: gBare is grass.js's bareField
   // (its hash2 and vnoise in uint arithmetic, which matches the JS 32-bit imul), so a bare patch is the same patch.
-  uniform vec3 swardRoot; uniform vec3 swardTip; uniform float swardOn; uniform float tuftGround; uniform vec4 gapSoil; uniform vec4 gapLitter; uniform vec4 gapCrust;
+  uniform vec3 swardRoot; uniform vec3 swardTip; uniform float swardOn; uniform float tuftGround; uniform vec4 gapSoil; uniform vec4 gapLitter; uniform vec4 gapCrust; uniform vec4 gapTuft;
   // the normal quantile (Tukey's lambda), for the share thresholds of a near-normal noise (gap ground)
   float gapQ(float p) { p = clamp(p, 0.001, 0.999); return 0.5 + 0.158 * 4.91 * (pow(p, 0.14) - pow(1.0 - p, 0.14)); }
   float gHash2(vec2 ij, uint s) { uint h = uint(int(ij.x)) * 374761393u + uint(int(ij.y)) * 668265263u + s * 982451653u;
@@ -577,6 +581,20 @@ const FRAG = /* glsl */`
       col = mix(col, blade, cv); cov = max(cov, cv);
     }
     return col;
+  }
+  // Fine blades for the low herb cover between the tufts (the gap ground, round 3): one octave of swardPaint's strokes (3.5 cm
+  // wide, 22 cm long, along its wind-wandering direction; two octaves cost about 3 ms at Lamar's eye pose), each blade dark at its root and pale at its tip
+  // over a shaded floor, faded out by the pixel's footprint as the strokes go under a pixel: a brightness factor of mean
+  // about 1 (the floor 0.6, a blade 0.7-1.5, about 45 % covered), so the patches keep the photo's mean.
+  float gapBlades(vec2 pxz, float foot) {
+    vec2 dir = normalize(windDir + 1.2 * (vec2(wNoise(pxz * 0.09), wNoise(pxz * 0.09 + 9.0)) - 0.5));
+    float v = 0.6, f0 = 0.0;
+    const float W = 0.035, L = 0.22;
+    f0 = 1.0 - smoothstep(0.3 * W, 0.9 * W, foot);
+    if (f0 <= 0.0) return 1.0;
+    vec3 st = gStrokes(pxz, dir, L, W, foot / W);
+    v = mix(v, mix(0.7, 1.5, st.y) * (0.85 + 0.3 * fract(st.z * 13.7)), st.x * f0);
+    return mix(1.0, v / 0.85, f0);
   }
   ${DETAIL_GLSL}
   ${CLIFF_GLSL}
@@ -771,11 +789,11 @@ const FRAG = /* glsl */`
     // The ground's surface (2026-11-06, eye level; the soil surface step, client/soil_surface.json): with its data (gapSoil.a
     // >= 0) the ground between the drawn tufts is the ecological site sheet's whole surface, not the photo unmixed. The
     // sheet gives the surface as plant canopy P, litter L, bare ground B and crust C (shares of one). Of the ground the
-    // terrain shows (1 - T, T the drawn tufts' cover, canopyMap B), the drawn shrubs' cover S lies under their crowns as
-    // litter; the herbs the tufts do not account for, R = max(P - T - S, 0), are short low cover in the photo's own colour
+    // terrain shows between the drawn tufts and shrubs (1 - T - S: T the tufts' cover, canopyMap B, S the shrubs', G; round 3:
+    // the ground under the crowns is hidden by them, and counting it as litter hid the bare soil's share) the herbs the tufts do not account for, R = max(P - T - S, 0), are short low cover in the photo's own colour
     // unmixed of the tufts (the grass palette at its curing drew saturated green blobs: the photo's ground is mostly that
     // living cover, seen with its shade and dead leaves); the rest is L, C and B by the sheet's proportions. The
-    // four are patches of 5-25 cm of one noise (near normal, mean 0.5, SD 0.158: gapQ gives each share's threshold), herbs
+    // four are patches of 3-15 cm of one noise (round 3; 5-25 cm read as blotches) (near normal, mean 0.5, SD 0.158: gapQ gives each share's threshold), herbs
     // at its lows, bare soil at its highs. Their colours: the photo unmixed, the litter's (gapLitter), the crust's dry
     // grey-green, the dry soil's Munsell colour (gapSoil). The photo sets the mean: the herbs are the photo unmixed of the
     // tufts U (as before), and the litter, crust and soil patches' expected colour M is brought to U by its luminance ratio
@@ -786,18 +804,24 @@ const FRAG = /* glsl */`
     if (tuftGround > 0.5 && dist < 45.0) {
       float near = 1.0 - smoothstep(12.0, 45.0, dist);
       if (gapSoil.a >= 0.0) {
-        float T = clamp(cov3.b, 0.0, 0.85), A = 1.0 - T, S = min(clamp(cov3.g, 0.0, 1.0), A);
-        float R = min(max(gapSoil.a - T - S, 0.0), A - S), rest = max(A - S - R, 0.0), g3 = max(gapLitter.a + gapCrust.a + max(1.0 - gapSoil.a - gapLitter.a - gapCrust.a, 0.0), 1e-3);
-        float h = R / A, l = (S + rest * gapLitter.a / g3) / A, cr = rest * gapCrust.a / g3 / A, b = max(1.0 - h - l - cr, 0.0);
+        float T = clamp(cov3.b, 0.0, 0.85), A = 1.0 - T, S = clamp(cov3.g, 0.0, 1.0), A2 = max(A - S, 0.15 * A);
+        float R = min(max(gapSoil.a - T - S, 0.0), A2), g3 = max(gapLitter.a + gapCrust.a + max(1.0 - gapSoil.a - gapLitter.a - gapCrust.a, 0.0), 1e-3);
+        float h = R / A2, rest = 1.0 - h, l = rest * gapLitter.a / g3, cr = rest * gapCrust.a / g3, b = max(1.0 - h - l - cr, 0.0);
         vec2 xn = vec2(vPosW.x, -vPosW.z);
-        float n = 0.65 * rnoise(xn, 0.9, 0.24) + 0.35 * rnoise(xn + 3.1, 2.2, 0.09);
+        float n = 0.65 * rnoise(xn, 0.9, 0.15) + 0.35 * rnoise(xn + 3.1, 2.2, 0.06);
         float s1 = smoothstep(-0.03, 0.03, n - gapQ(h)), s2 = smoothstep(-0.03, 0.03, n - gapQ(h + l)), s3 = smoothstep(-0.03, 0.03, n - gapQ(h + l + cr));
-        vec3 cP = groundRefl(cPre), U = max((cP - T * mix(swardRoot, swardTip, 0.6)) / A, 0.3 * cP), herb = U * (0.8 + 0.4 * n);
+        // the photo unmixed of the tufts: their cover from above (T x gapTuft.w) in their colour from above (gapTuft.rgb, else the
+        // palette mean); the palette mean alone over the whole footprint over-subtracted (Teton: the ground came out L 3 darker
+        // and greyer than the photo, a* -4 against -7.5)
+        float Tt = T * gapTuft.w; vec3 Gt = dot(gapTuft.rgb, vec3(1.0)) > 0.0 ? gapTuft.rgb : mix(swardRoot, swardTip, 0.6);
+        vec3 cP = groundRefl(cPre), U = max((cP - Tt * Gt) / (1.0 - Tt), 0.3 * cP), herb = U * (0.8 + 0.4 * n);
         vec3 bare3 = gapLitter.rgb * (s1 - s2) + gapCrust.rgb * (s2 - s3) + gapSoil.rgb * s3;   // the uncovered ground's patches
         vec3 M = (l * gapLitter.rgb + cr * gapCrust.rgb + b * gapSoil.rgb) / max(1.0 - h, 1e-3);   // their expected colour
         float dR = clamp(dot(c, G_LUMA) / max(dot(cP, G_LUMA), 1e-4), 0.7, 1.35);
         float k = clamp(dot(U, G_LUMA) / max(dot(M, G_LUMA), 1e-4), 0.5, 2.0), sh = s1;
-        vec3 gap = herb * (1.0 - s1) + max(bare3 * k + sh * (U - M * k), 0.25 * bare3 * k);
+        // fine blades (gapBlades) on the herbs
+        float bl = (1.0 - s1) > 0.01 ? gapBlades(vPosW.xz, foot) : 1.0;   // on the herbs only (the litter too doubled its pixels)
+        vec3 gap = herb * (1.0 - s1) * bl + max(bare3 * k + sh * (U - M * k), 0.25 * bare3 * k);
         c = mix(c, gap * mix(1.0 + 0.5 * (dR - 1.0), dR, s3), near);
       } else {
         float k = clamp(cov3.b, 0.0, 0.85);
