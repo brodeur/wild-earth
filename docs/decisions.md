@@ -8259,3 +8259,41 @@ in.
   - Flocks of different species are placed independently, so geese, cranes and blackbirds can share one meadow (often
     true).
   - The morning haze greys skeins more than a person on the ground would see.
+
+## The tile at rest as big as fits, the rings on stacked planes over the relief (2026-11-08)
+
+Aaron, with a screenshot of the framing he wanted: "The tile's final zoom resting point should be more like this. The
+animals are overlapping the side closest to the camera in a weird way ... they are on the base plane rather than on the
+plane above the height map ... The outer ring of the land animals is at the plane at the top of the height map, then above
+that is the inner ring, then above that is the soul, then above that is the inner ring of birds, and above that is the
+outer ring of birds." Then: "Bird rings should also going in opposite directions and be independently controllable".
+
+- **Resting frame.** `title.js` `chosenPose` no longer fits the whole tile into the focus area. It picks the nearest
+  distance at which the tile's middle still fits across the free centre (the list's edge to the right column) and the top
+  of the rings' stack stays under the stage's top. The view's offset puts the tile's centre across at the free centre and
+  down where its near edge lands on the stage's bottom, just over the place's title block (`aim`, kept for `frame`; when
+  the bar settles to another height after landing, the pose is found again, unless the wheel has zoomed since). The
+  back tucks under the fliers. The stack's height comes from `bodyRing.js` (`STACK_Y`, `AIR_R`, `RING_HW`) and the relief's
+  top (`relief.js` `topM`, or `RELIEF_TOP_M` before it is built). At 1726x948, the reference's size: 70.6 degrees from
+  vertical, 22.9 km, the lens 26.9 degrees, close to the reference's look (its perspective puts it near 70 degrees and a
+  25 degree lens). At 1280x800: 67.9 degrees.
+- **No sky, fixed.** `lensFor` added the horizon's dip where it should subtract it, so its 4 degrees of clearance were
+  really about 1 degree above the horizon, which showed as a strip of space once the tile sat lower on the screen. With
+  the sign fixed the clearance is 1.5 degrees under the horizon. `TILT_MAX` went back from 84 to 75 degrees. At 84 the
+  correct lens narrowed to about 10 degrees and flattened the tile (no perspective at all); at 75 the resting tilt is
+  about 70 degrees with a lens of 25-30.
+- **Stacked planes.** Four rings (walkers outer, walkers inner, fliers inner, fliers outer), each on its own plane.
+  The lowest sits at the relief's highest point (pin's `top`). The next planes are 0.13 ring radii up (the inner
+  walkers), 0.2 more (the spirit), 0.38 more (the inner fliers, so their ring's front stands over the walkers' back
+  instead of across it) and 0.22 more (the outer fliers). An empty ring takes no level. Every animal's contact shadow,
+  and the chosen one's halo, lies on its ring's own plane. A flier floats just over its plane. Each plane draws its
+  ring's track as a faint ellipse, so the levels read even where the land falls away under them. The heights ease in
+  when the relief arrives.
+- **Birds in two rings.** With more than 14 fliers they split like the walkers (`splitBySize`, by mass, room per animal
+  alike): the smaller on the inner ring (radius 1.0), the bigger and the soarers on the outer (1.42). Lamar: 14 inside
+  (jays, robins, sparrows, woodpeckers), 18 outside. All four rings alternate direction (0.075, -0.06, 0.05, -0.04 rad/s),
+  and hover, drag, fling and click each act on one ring.
+
+Not done: the pose uses `RELIEF_TOP_M` (1,212 m) when the relief has not been built by the time the flight starts. A tile
+whose relief stands higher (Yosemite's is its own 2,000 m and more) can lift its stack past that estimate. The rings rise
+to the real top; the frame does not refit.
