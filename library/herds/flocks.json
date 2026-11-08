@@ -1,0 +1,50 @@
+{
+  "about": "Flocking birds for the herd aggregation rule (pipeline/herds.py flocks): which birds gather in flocks, where (guild), how big a flock typically is by season, and which fly in V or echelon skeins. Matched by genus first, then family. A recorded per-group fine-tune: the typical flock sizes are modelling values read from the sources named, not counts. Seasons are the northern hemisphere's (swapped on a southern tile).",
+  "guilds": {
+    "grazer": "open grass and wet meadow near water, low ground (geese, cranes)",
+    "water": "on open water (ducks, coots, pelicans)",
+    "field": "open fields and grass, a little drawn to water (blackbirds, starlings)"
+  },
+  "groups": {
+    "geese": {
+      "genus": ["Branta", "Anser", "Chen", "Cygnus"],
+      "guild": "grazer", "flock": {"winter": 120, "fall": 100, "spring": 50, "summer": 14}, "skein": [8, 60], "v": true,
+      "source": "Bellrose, F. C. (1980). Ducks, Geese and Swans of North America. Stackpole (family groups merging into wintering flocks of tens to hundreds); Raveling, D. G. (1969). Social classes of Canada geese in winter. Journal of Wildlife Management 33: 304-318"
+    },
+    "cranes": {
+      "family": ["Gruidae"],
+      "guild": "grazer", "flock": {"winter": 150, "fall": 120, "spring": 40, "summer": 4}, "skein": [10, 80], "v": true,
+      "source": "Tacha, T. C., Nesbitt, S. A. and Vohs, P. A. (1992). Sandhill Crane. The Birds of North America 31 (pairs and family groups in summer; staging and wintering flocks of hundreds to thousands)"
+    },
+    "ducks": {
+      "family": ["Anatidae"],
+      "guild": "water", "flock": {"winter": 40, "fall": 30, "spring": 12, "summer": 5}, "skein": [6, 30], "v": true,
+      "source": "Bellrose, F. C. (1980). Ducks, Geese and Swans of North America. Stackpole (wintering rafts of tens; pairs and broods in summer; echelons and loose V's in flight)"
+    },
+    "coots": {
+      "genus": ["Fulica"],
+      "guild": "water", "flock": {"winter": 80, "fall": 60, "spring": 15, "summer": 6}, "skein": null, "v": false,
+      "source": "Alisauskas, R. T. and Arnold, T. W. (1994). American Coot. In: Migratory Shore and Upland Game Bird Management in North America (wintering rafts of tens to hundreds)"
+    },
+    "pelicans": {
+      "family": ["Pelecanidae"],
+      "guild": "water", "flock": {"winter": 40, "fall": 40, "spring": 25, "summer": 15}, "skein": [8, 40], "v": true,
+      "source": "Knopf, F. L. and Evans, R. M. (2004). American White Pelican. The Birds of North America 57 (cooperative foraging flocks; lines and V's in flight)"
+    },
+    "blackbirds": {
+      "family": ["Icteridae"],
+      "guild": "field", "flock": {"winter": 250, "fall": 180, "spring": 30, "summer": 8}, "skein": null, "v": false,
+      "source": "Orians, G. H. (1985). Blackbirds of the Americas. University of Washington Press (mixed winter flocks of hundreds to thousands on fields)"
+    },
+    "starlings": {
+      "family": ["Sturnidae"],
+      "guild": "field", "flock": {"winter": 300, "fall": 200, "spring": 25, "summer": 10}, "skein": null, "v": false,
+      "source": "Feare, C. (1984). The Starling. Oxford University Press (feeding flocks of hundreds outside the breeding season)"
+    }
+  },
+  "skeins": {
+    "about": "Migration skeins over a tile in spring (north) and fall (south): per V-flying migratory species, skeins per hour = base x migration (AVONET Migration: 3 migratory 1.0, 2 partial 0.4, 1 sedentary none) x the season's passage (its share of the year's open-licence GBIF records over a quarter, 0.3-3). Height and speed are drawn per skein within the ranges. The heading follows the tile's valley axis toward north in spring and south in fall, half pulled to true north-south.",
+    "base_per_hour": 6.0, "agl_m": [180, 450], "speed_mps": [14, 18],
+    "source": "Hummel, D. (1983). Aerodynamic aspects of formation flight in birds. Journal of Theoretical Biology 104: 321-347; Portugal, S. J. et al. (2014). Upwash exploitation and downwash avoidance by flap phasing in ibis formation flight. Nature 505: 399-402 (the lead changes, the phase along the arms); Gauthreaux, S. A. (1991) for migration heights"
+  }
+}

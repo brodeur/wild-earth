@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { latLonToXYZ } from './mapGlobe.js';
 import { seasonOfDate } from './season.js';
+import { activeSkeins, birdIn } from './skeinPlan.js';
 
 // The chosen place as a relief model on the home screen's globe (Aaron, 2026-11-04: "When the user selects a tile in the
 // start screen is it possible to quickly render an exaggerated relief map of the tile instead of the current flattened
@@ -24,11 +25,16 @@ import { seasonOfDate } from './season.js';
 // HERD_SPREAD times as the heights are exaggerated (a herd of 400 on Lamar is some 270 m across, 5 px from the title's
 // camera, its bison a tenth of a pixel; spread, a patch of 15 px reads), each body grown so the herd's dark share of
 // its disc is about HERD_FILL, raised with the relief.
+// In spring and fall the season's migration skeins (herds.json skeins; skeinPlan.js, the same wall-clock schedule the
+// world flies) cross over it as small dark V's at their height above the relief, spread SKEIN_SPREAD times and each bird
+// SKEIN_DOT m (a goose V of forty is some 60 m wide, about a pixel from here; spread, a chevron of 20-30 px reads), moving
+// at their own speed, every frame.
 // It is lit by the title's sun and by a fixed light from the northwest, so its shape reads at any hour. It fades in
 // over FADE s when it is built, and out when another place is chosen or the screen closes.
 // Nothing here is sent anywhere: the files are the game's own.
 
 const N = 192, EX_SPAN = 1200, EX_MAX = 3, LIFT_M = 12, FADE = 0.8, R_M = 6371000, TILE_M = 10000;
+const SKEIN_SPREAD = 40, SKEIN_DOT = 110, SKEIN_CAP = 800;   // the title's skeins: spread, a bird's size (m) and the most drawn
 const HERD_DOTS = 160, HERD_FILL = 0.5, HERD_SPREAD = 3, HERD_COL = [0.035, 0.022, 0.014];   // (linear: a bison's dark brown in the relief's light)
 
 // UTM (WGS84) to latitude and longitude in degrees (Snyder 1987, the series to the sixth order: well under a metre).
@@ -120,7 +126,7 @@ export class Relief {
   }
   update(dt) {
     const step = dt / FADE;
-    if (this.mesh) { const u = this.mesh.material.uniforms.opacity; u.value = Math.min(1, u.value + step); this.mesh.material.transparent = u.value < 1; }
+    if (this.mesh) { const u = this.mesh.material.uniforms.opacity; u.value = Math.min(1, u.value + step); this.mesh.material.transparent = u.value < 1; this.skeins(u.value); }
     for (let i = this.fading.length - 1; i >= 0; i--) {
       const m = this.fading[i], u = m.material.uniforms.opacity; m.material.transparent = true; u.value -= step;
       if (u.value <= 0) { this.group.remove(m); for (const c of m.children) c.geometry.dispose(); m.geometry.dispose(); m.material.dispose(); this.fading.splice(i, 1); }
@@ -195,7 +201,38 @@ export class Relief {
     m.userData = { id: T, ex, lo, hi };
     const dots = this.herdDots(T, h, lo, ex, centre, up, north, east);
     if (dots) { const d = new THREE.Mesh(dots, mat); d.renderOrder = 2; d.frustumCulled = false; m.add(d); }
+    if (this.herds?.skeins && Object.keys(this.herds.skeins).length) {
+      // (the basis east, up, south: right-handed, so it is a rotation)
+      const box = new THREE.BoxGeometry(1, 0.25, 0.5), sk = new THREE.InstancedMesh(box, new THREE.MeshBasicMaterial({ color: 0x1d1712, transparent: true, opacity: 0 }), SKEIN_CAP);
+      sk.count = 0; sk.frustumCulled = false; sk.renderOrder = 3; sk.name = 'relief skeins';
+      sk.userData = { T, lo, hi, ex, centre, basis: new THREE.Matrix4().makeBasis(east, up, north.clone().negate()), q: new THREE.Quaternion(), m: new THREE.Matrix4(), p: new THREE.Vector3(), s: new THREE.Vector3(), o: {} };
+      m.add(sk); m.userData.skeins = sk;
+    }
     return m;
+  }
+  // The season's skeins at this moment over the relief (header): positions on the globe at their height, each bird a
+  // small dark box turned along its heading, the material faded with the relief.
+  skeins(opacity) {
+    const sk = this.mesh?.userData.skeins, plans = this.herds?.skeins; if (!sk || !plans) return;
+    const season = seasonOfDate(new Date()), Tm = Date.now() / 1000, U = sk.userData, T = U.T;
+    const top = U.lo + (U.hi - U.lo) * 0.85;   // (above most of the ground: the world's skein clears the highest under its path)
+    let j = 0; const o = U.o, p = U.p, q = U.q, M = U.m, S = U.s, rot = new THREE.Quaternion().setFromRotationMatrix(U.basis), yq = new THREE.Quaternion(), Y = new THREE.Vector3(0, 1, 0);
+    for (const code of Object.keys(plans)) {
+      const plan = plans[code]?.[season]; if (!plan) continue;
+      for (const s of activeSkeins(this.id, code, plan, Tm, TILE_M)) {
+        // spread about the skein's own lead place: the same V, SKEIN_SPREAD times wider
+        birdIn(s, 0, Tm, 1.6, 2.7, o); const lx = o.x, ln = o.n;
+        for (let i = 0; i < s.n && j < SKEIN_CAP; i++, j++) {
+          birdIn(s, i, Tm, 1.6, 2.7, o);
+          const x = lx + (o.x - lx) * SKEIN_SPREAD, nn = ln + (o.n - ln) * SKEIN_SPREAD;
+          const ll = utmToLatLon(T.x0 + x, T.y0 + nn, T.zone, T.north);
+          latLonToXYZ(ll.lat, ll.lon, p).multiplyScalar(1 + (LIFT_M + (top - U.lo + s.agl) * U.ex) / R_M).sub(U.centre);
+          yq.setFromAxisAngle(Y, Math.PI - o.yaw); q.copy(rot).multiply(yq);   // the body along the heading, the wings across
+          S.setScalar(SKEIN_DOT / R_M); M.compose(p, q, S); sk.setMatrixAt(j, M);
+        }
+      }
+    }
+    sk.count = j; sk.instanceMatrix.needsUpdate = true; sk.material.opacity = 0.9 * opacity; sk.visible = j > 0;
   }
   // The season's herds as small dark boxes on the relief (see the header), one geometry; null without herds.
   herdDots(T, h, lo, ex, centre, up, north, east) {

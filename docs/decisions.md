@@ -8157,3 +8157,72 @@ from a ridge 1-3 km off, or from the title view, the valley was empty.
 - **Also in flight.** A fleeing animal on the heels of the one ahead aimed a gap behind it, which was backwards, so it
   ran back and forth and the herd's centre crept at about 1.3 m/s. It now runs on along the flight and drifts into the
   lane of the one ahead.
+
+## 2026-11-07: herds of hundreds: big flocks grazing and goose skeins migrating (herds.py flocks, library/herds/flocks.json, animals.js flockStep, skeinUpdate, skeinPlan.js, relief.js)
+
+Aaron: "Make sure big herds is also applying to big flocks - it would be amazing to see some large flocks grazing, or many
+goose V's flying north or south." Part of the far view. It gets its own commit, after phases 4 and 5, which were already
+in.
+
+- **The rule for flocks (pipeline/herds.py tile_flocks).**
+  - **Which birds.** library/herds/flocks.json, matched by genus then family: geese and cranes (grazer: open grass and
+    wet meadow near water, low ground), ducks, coots and pelicans (water: on open water), blackbirds and starlings
+    (field: open fields, a little drawn to water). Each group's typical flock is recorded by season, with sources
+    (Bellrose 1980, Raveling 1969, Tacha et al. 1992, Alisauskas and Arnold 1994, Knopf and Evans 2004, Orians 1985,
+    Feare 1984). Seasons swap on a southern tile.
+  - **Seasonal numbers.** Density x land x the season's share of the bird's open-licence GBIF records:
+    fetch_species.monthly_counts_open counts CC0 and CC BY records only, never CC BY-NC (GBIF's licence filter). The
+    share is over a quarter of the year (1 with under 8 records), and there are at most 1,500 birds a species. A migrant
+    that is away has none.
+  - **Group size.** G = the recorded flock for the season x sqrt(share). Placement is as for herds, on the guild's
+    range. A flock is planned only when G reaches 15 (FLOCK_MIN) and exceeds the client's own group; pairs and family
+    parties (cranes and ducks in summer) stay with the cell spawns.
+  - **No eBird.** eBird Status & Trends is not used: it is non-commercial. CC BY-NC records are filtered out at the
+    source, and only the counts reach herds.json.
+- **What it gives.**
+  - **Lamar.** Canada geese in 10 flocks up to 204 in fall and 18 up to 238 in spring; sandhill cranes staging in fall
+    in 5 flocks up to 155; Brewer's blackbirds, meadowlarks and cowbirds in fall flocks of 290-340; goldeneye rafts of
+    165 in winter.
+  - **Home, in winter.** 7 Canada goose flocks up to 344 (the largest grazing in the rewilded bed of Indian Creek
+    Reservoir), and starling flocks up to 400.
+  - **The Hoh.** Hooded merganser and wood duck rafts on the river in fall and winter.
+- **Grazing flocks (animals.js flockStep).**
+  - **The machine.** A planned flock's bird runs its own step, not its kin's machine. On the ground or the water it
+    grazes and steps among its neighbours on the same steering as a herd (herdSteer under the flock's drifting frame),
+    pecking, wings folded. A raft holds its water.
+  - **The flush.** Any bird that sees the danger starts the flight, its point 2.5 times a herd's run (for a raft, the
+    nearest open water there). Each bird takes off as the alarm reaches it from a neighbour, climbs on a beat by its mass
+    (3.2 Hz for a 3 kg bird), glides down to its place round the flight point, and lands and grazes on.
+  - **Seen.** Lamar's 204 geese went up as a wave in about 1.5 s, three or four hops of the alarm across a 17 m flock.
+  - **Sync.** Flocks are herds to everything else: the far tier draws them folded on their feet or on the water,
+    culled where a grown body would be under a pixel, and they sync between pages as aggregates.
+- **Migration skeins (skeinPlan.js; animals.js skeinUpdate).**
+  - **Which birds, how many.** A V-flying group (geese, cranes, ducks, pelicans) whose AVONET Migration is 2 or 3 (the
+    loader now reads that field, CC BY 4.0) crosses the tile in spring and fall. The rate is 6 skeins an hour x
+    migration (3: 1, 2: 0.4) x the season's passage share (0.3-3). Lamar in fall: geese 5.0/h, cranes 4.0/h, mallards
+    2.2/h, goldeneye 0.7/h, pelicans 0.8/h.
+  - **Heading.** The tile's valley axis (the main direction of its lowest fifth) toward north in spring and south in
+    fall, half pulled to true north-south. Lamar: 334 deg in spring, 154 deg in fall.
+  - **The schedule.** Seeded by the wall clock, the tile and the species, so every page sees the same skeins with
+    nothing sent.
+  - **The formation.** 30 % echelons, the rest V's, the arms about 35 deg off the line of flight. The arms flex, the
+    lead changes every 60-150 s (eased over 8 s), and the beat passes back along each arm (Portugal et al. 2014).
+  - **Drawing.** On the species' own body with its wings spread and beating on the segmented wing rig. The whole skein
+    is grown about its lead bird (at least 8 px of wingspan, at most 12x), so a V stays a V on screen. Each skein flies
+    180-450 m over the highest ground at its lead and up to 1.2 km ahead, eased, so it climbs before a ridge.
+  - **Seen.** From the valley floor at Lamar, a goose echelon of 15 crossed 400 m up and read against the sky.
+- **From the title view (relief.js).** The season's skeins cross over the relief model on the same schedule as small dark
+  chevrons, each spread 40 times with its birds 110 m, as the heights are exaggerated. A goose V is about a pixel at
+  that distance, a 20-30 px chevron spread.
+- **Bugs met.**
+  - Flock groups got no roles: layoutSlots took only deer-machine herds.
+  - The skein birds' yaw took the compass heading where the scene's z points south, so they flew backwards.
+  - The relief's east-up-north basis is left-handed, which is no rotation.
+  - A mid-line `//` in a scripted edit swallowed the rest of a line in relief.js; the syntax check caught it.
+- **Still open.**
+  - The goose and duck stand-ins are the procedural merganser body (a pale quail shape), and that body's spread wings
+    are smaller than the 1.6 m span the growth assumes. A Canada goose model would make both the flocks and the skeins
+    read as geese.
+  - Flocks of different species are placed independently, so geese, cranes and blackbirds can share one meadow (often
+    true).
+  - The morning haze greys skeins more than a person on the ground would see.

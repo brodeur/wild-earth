@@ -128,30 +128,44 @@ def herd_sizes(N: int, G: float, rng: np.random.Generator) -> list[int]:
     return sorted(out, reverse=True)
 
 
-def suitability(grids: dict, season: str, steep: bool) -> np.ndarray:
+def suitability(grids: dict, season: str, guild: str = "herd") -> np.ndarray:
+    """The seasonal range's suitability per 30 m cell for a guild: 'herd' (grazing ungulates), 'steep' (escape-terrain
+    sheep and goats), and the flocking birds' 'grazer' (geese, cranes: open grass and wet meadow near water, low),
+    'water' (ducks, coots, pelicans: on open water) and 'field' (blackbirds, starlings: open fields and grass)."""
     si = SEASONS.index(season)
     hab, tree = grids["habitat"], grids["tree"]
     forage = np.maximum(grids["grass"][..., si], grids["browse"][..., si]) / 100.0
     open_ = 1.0 - tree / 100.0
-    water = 0.4 + 0.6 * grids["water"][..., si] / 100.0
+    wscore = grids["water"][..., si] / 100.0
+    water = 0.4 + 0.6 * wscore
     slope = grids["slope"]
-    if steep:
+    gentle = np.clip(1 - slope / 30.0, 0, 1)
+    if guild == "steep":
         terrain = np.clip((slope - 15) / 10, 0, 1) * np.clip((55 - slope) / 10, 0, 1)
         S = (0.3 + forage) * (0.3 + 0.7 * open_) * terrain
+    elif guild == "grazer":
+        S = (grids["grass"][..., si] / 100.0) * open_ ** 2 * (0.15 + 0.85 * wscore ** 1.5) * gentle * grids["low"] ** LOW_W[season]
+    elif guild == "water":
+        wet = (hab == 7) | (wscore >= 0.97)
+        return np.where(wet & (hab != 0), 0.5 + 0.5 * open_, 0.0)
+    elif guild == "field":
+        S = (grids["grass"][..., si] / 100.0) * open_ * gentle * (0.5 + 0.5 * wscore)
     else:
-        gentle = np.clip(1 - slope / 30.0, 0, 1)
         S = forage * open_ ** 2 * water * gentle * grids["low"] ** LOW_W[season]
     S[(hab == 0) | (hab == 7) | (hab == 9)] = 0       # off the tile, open water, the human footprint's leftovers
     return S
 
 
 def plan_species(grids: dict, *, tile_id: str, code: str, season: str, density: float, g0: float, d0: float,
-                 mass_kg: float, client_n: int, steep: bool, res: float, size_m: float) -> dict | None:
+                 mass_kg: float, client_n: int, steep: bool = False, res: float, size_m: float, guild: str | None = None,
+                 G_fixed: float | None = None, N_max: int | None = None) -> dict | None:
     land = float(((grids["habitat"] != 0) & (grids["habitat"] != 7)).sum()) * res * res / 1e6
     N = int(round(density * land))
+    if N_max:
+        N = min(N, N_max)
     if N < 2 or g0 <= 0 or d0 <= 0:
         return None
-    S = suitability(grids, season, steep)
+    S = suitability(grids, season, guild or ("steep" if steep else "herd"))
     tot = float(S.sum())
     if tot <= 0:
         return None
@@ -159,7 +173,8 @@ def plan_species(grids: dict, *, tile_id: str, code: str, season: str, density: 
     cut = flat[np.searchsorted(np.cumsum(flat), 0.8 * tot)]
     range_km2 = max(float((S >= cut).sum()) * res * res / 1e6, 0.5)
     d_r = N / range_km2
-    G = g0 * math.sqrt(max(d_r, d0) / d0)
+    G = G_fixed if G_fixed else g0 * math.sqrt(max(d_r, d0) / d0)
+    G = min(G, HERD_MAX)
     sizes = herd_sizes(N, G, _rng(tile_id, code, season))
     if g0 < SOCIAL_MIN:
         return {"emitted": False, "N": N, "G": round(G, 1), "why": f"PanTHERIA's group {g0:g}: a solitary or paired species does not herd"}
@@ -200,7 +215,141 @@ def load_grids(tile: Tile) -> dict:
         a = _png(tile, f"client/res_{name}.png")
         return a.astype("float64") if a is not None else np.zeros((n, n, 4))
     return {"habitat": hab, "tree": can[..., 0], "grass": res4("grass_forbs"), "browse": res4("browse"),
-            "water": res4("water"), "slope": slope, "low": np.clip(low, 0, 1), "res": res, "n": n}
+            "water": res4("water"), "slope": slope, "low": np.clip(low, 0, 1), "h": h, "res": res, "n": n}
+
+
+# ---- flocks (2026-11-07, Aaron: "Make sure big herds is also applying to big flocks - it would be amazing to see some
+# large flocks grazing, or many goose V's flying north or south") ------------------------------------------------------
+# The same rule for the flocking birds (library/herds/flocks.json: geese, cranes, ducks, coots, pelicans, blackbirds,
+# starlings, matched by genus then family). Per season:
+#   N   density x land x the season's share of the bird's open-licence GBIF records (CC0 and CC BY only:
+#       fetch_species.monthly_counts_open; the share over a quarter of the year, 0-3, 1 with under 8 records), at most
+#       FLOCK_N (the budget's): a migrant away that season has none
+#   G   the group's recorded typical flock for the season x sqrt(the share): more birds, bigger flocks
+#   the range by the group's guild (suitability: grazer, water or field), herd sizes and placement as for herds, and
+#   emitted when G exceeds the client's own group for the slot and is at least FLOCK_MIN (15): pairs and family parties
+#   (cranes and ducks in summer) stay with the cell spawns.
+# Skeins: a V-flying group (`v`) whose AVONET Migration is 2 or 3 crosses the tile in spring and fall, skeins per hour
+# base x migration (3: 1, 2: 0.4) x the season's passage share (0.3-3), each of `skein` birds, heading along the tile's
+# valley axis toward north in spring and south in fall, half pulled to true north-south.
+FLOCK_N = 1500
+FLOCK_MIN = 15          # a typical flock under this is a family party: the cell spawns draw those
+SEASON_MONTHS = {"winter": (12, 1, 2), "spring": (3, 4, 5), "summer": (6, 7, 8), "fall": (9, 10, 11)}
+SOUTH_SEASON = {"winter": "summer", "summer": "winter", "spring": "fall", "fall": "spring"}
+STATIC_BIRDS = {"anas_platyrhynchos": {"scientific": "Anas platyrhynchos", "n": 5, "mass_kg": 1.1},
+                "sturnus_vulgaris": {"scientific": "Sturnus vulgaris", "n": 4, "mass_kg": 0.078}}
+
+
+def flock_group(groups: dict, genus: str | None, family: str | None) -> tuple[str, dict] | tuple[None, None]:
+    for name, g in groups.items():
+        if genus and genus in (g.get("genus") or []):
+            return name, g
+    for name, g in groups.items():
+        if family and family in (g.get("family") or []) and not g.get("genus"):
+            return name, g
+    return None, None
+
+
+def season_shares(months: list[int]) -> dict:
+    """The season's share of the year's records over a quarter (1 = an average season); 1 everywhere with under 8."""
+    tot = sum(months or [])
+    if tot < 8:
+        return {s: 1.0 for s in SEASONS}
+    return {s: round(min(3.0, sum(months[m - 1] for m in SEASON_MONTHS[s]) / (tot / 4)), 3) for s in SEASONS}
+
+
+def valley_axis(grids: dict) -> tuple[float, float]:
+    """The tile's valley axis as a unit (east, north) vector, north-pointing: the main direction of its lowest fifth."""
+    h = grids["h"]; n = h.shape[0]
+    jj, ii = np.nonzero(h <= np.percentile(h, 20))
+    if len(ii) < 10:
+        return (0.0, 1.0)
+    X = np.stack([ii.astype(float), -jj.astype(float)])
+    X -= X.mean(1, keepdims=True)
+    w, v = np.linalg.eigh(X @ X.T)
+    e, nn = v[:, int(np.argmax(w))]
+    if nn < 0:
+        e, nn = -e, -nn
+    return (float(e), float(nn))
+
+
+def skein_plan(axis: tuple[float, float], shares: dict, migration: float, skein: list, cfg: dict) -> dict:
+    mig = 1.0 if migration >= 3 else 0.4 if migration >= 2 else 0.0
+    if not mig:
+        return {}
+    out = {}
+    for season, sign in (("spring", 1), ("fall", -1)):
+        e, n = axis[0] * 0.5, axis[1] * 0.5 + 0.5
+        L = math.hypot(e, n) or 1
+        e, n = sign * e / L, sign * n / L
+        rate = cfg["base_per_hour"] * mig * min(3.0, max(0.3, shares.get(season, 1.0)))
+        out[season] = {"per_hour": round(rate, 2), "size": list(skein), "heading_deg": round(math.degrees(math.atan2(e, n)) % 360, 1),
+                       "agl_m": cfg["agl_m"], "speed_mps": cfg["speed_mps"]}
+    return out
+
+
+def tile_flocks(tile: Tile, grids: dict, fauna: dict) -> tuple[dict, dict, dict, dict]:
+    """(herds by code and season, plan, flock meta by code, skeins by code) for the tile's flocking birds."""
+    from . import avonet
+    from .fauna_slots import density_km2
+    from .fetch_species import match_key, monthly_counts_open
+    lib = json.loads((LIB / "flocks.json").read_text())
+    groups, skcfg = lib["groups"], lib["skeins"]
+    animals = {}
+    ap = tile.path("species/animals.json")
+    if ap.exists():
+        animals = {a["id"]: a for a in json.loads(ap.read_text()).get("animals", [])}
+    cands = []
+    for s in fauna.get("slots", []):
+        if not s.get("bird"):
+            continue
+        sci = s.get("scientific") or s["code"].replace("_", " ").capitalize()
+        name, g = flock_group(groups, sci.split()[0], s.get("family"))
+        if g:
+            cands.append((s["code"], sci, float(s.get("mass_kg") or 1), int(max(s.get("group") or [1])), s.get("density_km2"), name, g))
+    for code, st in STATIC_BIRDS.items():
+        if code in (fauna.get("allow") or []):
+            av = avonet.lookup(st["scientific"])
+            name, g = flock_group(groups, st["scientific"].split()[0], av.get("family"))
+            if g:
+                cands.append((code, st["scientific"], st["mass_kg"], st["n"], None, name, g))
+    res, size_m = grids["res"], tile.bounds[2] - tile.bounds[0]
+    south = not tile.north
+    axis = valley_axis(grids)
+    herds, plan, meta, skeins = {}, {}, {}, {}
+    for code, sci, mass, client_n, dens, gname, g in cands:
+        key = (animals.get(code) or {}).get("gbif_key") or match_key(sci)
+        months = monthly_counts_open(tile, key) if key else []
+        shares = season_shares(months)
+        density = float(dens or density_km2({"mass_kg": mass, "taxonomy": {"class": "Aves"}, "role": []}, "", ""))
+        meta[code] = {"guild": g["guild"], "group": gname, "months_open": months, "shares": shares}
+        plan[code] = {}
+        for season in SEASONS:
+            share = shares[SOUTH_SEASON[season]] if south else shares[season]
+            fl = g["flock"][SOUTH_SEASON[season] if south else season]
+            if share < 0.1:
+                plan[code][season] = {"emitted": False, "why": f"share of the year's records {share}: away this season"}
+                continue
+            G = min(HERD_MAX, fl * math.sqrt(share))
+            if G < FLOCK_MIN:
+                plan[code][season] = {"emitted": False, "G": round(G, 1), "why": f"typical flock {G:.1f} under {FLOCK_MIN}: family parties, the cell spawns stand"}
+                continue
+            p = plan_species(grids, tile_id=tile.tile_id, code=code, season=season, density=density * share, g0=fl, d0=density,
+                             mass_kg=mass, client_n=client_n, res=res, size_m=size_m, guild=g["guild"], G_fixed=G, N_max=FLOCK_N)
+            if p is None:
+                plan[code][season] = {"emitted": False, "why": "too few birds or no range"}
+                continue
+            p["density_km2"] = round(density * share, 3); p["share"] = share
+            if p.pop("emitted"):
+                herds.setdefault(code, {})[season] = p.pop("herds")
+            plan[code][season] = p
+        mig = avonet.lookup(sci).get("migration")
+        if g.get("v") and g.get("skein") and mig:
+            sk = skein_plan(axis, {SOUTH_SEASON[k] if south else k: v for k, v in shares.items()}, mig, g["skein"], skcfg)
+            if sk:
+                skeins[code] = sk
+                meta[code]["migration"] = mig
+    return herds, plan, meta, skeins
 
 
 def tile_herds(tile: Tile) -> dict:
@@ -248,13 +397,21 @@ def tile_herds(tile: Tile) -> dict:
             used[code] = {"tile": tile.tile_id, "source": tt.get("source"), "reduction": tt.get("reduction")}
         if code in sp_tunes:
             used.setdefault(code, {})["species"] = {k: v for k, v in sp_tunes[code].items()}
+    f_herds, f_plan, f_meta, f_skeins = tile_flocks(tile, grids, fauna)
+    for code, d in f_herds.items():
+        out_herds[code] = d
+    plan.update(f_plan)
     doc = {"format": FORMAT, "rule": "pipeline/herds.py", "grid_m": round(res, 3), "herds": out_herds, "plan": plan,
+           "flocks": {c: {"guild": m["guild"], "group": m["group"]} for c, m in f_meta.items() if c in f_herds},
+           "flock_data": f_meta, "skeins": f_skeins, "valley_axis": [round(v, 3) for v in valley_axis(grids)],
            "rut": {c: v["rut"] for c, v in sp_tunes.items() if "rut" in v}, "fine_tunes": used,
-           "sources": ["pantheria", "library/herds/tiles.json", "library/herds/species.json"]}
+           "sources": ["pantheria", "library/herds/tiles.json", "library/herds/species.json", "library/herds/flocks.json",
+                       "avonet", "gbif (CC0 and CC BY records only)"]}
     write_json(tile.path("client/herds.json"), doc)
     return {"path": "client/herds.json", "kind": "table", "derived_from": ["client.fauna", "client.habitat", "client.canopy",
             "client.heights", "resources"], "herds": {c: {s: len(v) for s, v in d.items()} for c, d in out_herds.items()},
-            "largest": {c: {s: max(h["count"] for h in v) for s, v in d.items()} for c, d in out_herds.items()}}
+            "largest": {c: {s: max(h["count"] for h in v) for s, v in d.items()} for c, d in out_herds.items()},
+            "skeins": {c: {s: v["per_hour"] for s, v in d.items()} for c, d in f_skeins.items()}}
 
 
 if __name__ == "__main__":
@@ -262,4 +419,4 @@ if __name__ == "__main__":
     for tid in sys.argv[1:]:
         t = Tile.from_id(tid)
         info = tile_herds(t)
-        print(tid, json.dumps({k: info[k] for k in ("herds", "largest")}))
+        print(tid, json.dumps({k: info[k] for k in ("herds", "largest", "skeins")}))

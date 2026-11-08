@@ -23,7 +23,8 @@ import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buil
   loadGrouseMesh, loadMarmotMesh, loadYellowPineChipmunkMesh, loadShrewMesh, loadToadMesh, loadFrogMesh, buildHairyWoodpecker,
   loadFaunaModel, faunaTemplate } from './animalModels.js';
 import { depthAt as waterDepthAt } from './water.js';
-import { segmentWings } from './birdWing.js';   // the stand-in birds' own wings (ownWings)
+import { segmentWings } from './birdWing.js';
+import { activeSkeins, birdIn } from './skeinPlan.js';   // migration skeins (skeinUpdate)   // the stand-in birds' own wings (ownWings)
 import { ACT as ACTIVITY, parseDoing, say, familyOf, STATIC_ARCHETYPE, BIRD_FAMILIES } from './activities.js';   // what an animal is doing: one vocabulary (doing, activity)
 
 // Ambient animals: the first step toward "many of each species always present" (docs/brief.md,
@@ -1042,9 +1043,13 @@ function installFauna(fauna, owner) {
 const HERD_ARCH = 'grazing or browsing herd', HERD_MAX = 400, HERD_CAP = 900;
 const ELK_BAND = { base: 0.09, winter: 0.36, mid: 0.70, summer: 1.05 };   // the elk's elevation band as fractions of the tile's height span (spawnCell)
 const HERD_MOVE = 0.5;   // m a herd's centre moves before the host sends its row again (herdRows)
+const FLOCK_FLUSH = 45, FLOCK_BEAT = 3.2;   // a flock's flush distance (m, the danger's base) and a 3 kg bird's wingbeats per second (flockStep, skeins)
+const SKEIN_PX = 8, SKEIN_GROW = 12;         // a skein bird's least wingspan on screen (px) and most growth (skeinUpdate)
 const FAR_TPL = 8, FAR_PX = 3, FAR_GROW = 5, FAR_STEP = 0.25;   // the far tier (farHerds): pose rows, a far body's least length in px and most growth, the rewrite interval
 const HERDS = {};                      // slot -> { season: [{ x, n, count, r }] }
 const HERD_RUT = {};                   // slot -> [first, last] month of the rut (herds.json rut: library/herds/species.json)
+const FLOCK = {};                      // slot -> 'grazer' | 'water' | 'field': a bird whose planned herds are flocks (herds.json flocks)
+const SKEINS = {};                     // slot -> { spring, fall: skein plan } (herds.json skeins; skeinPlan.js)
 const STATIC_CAP = SPECIES.map(sp => sp.cap);   // a plan raises a static slot's pool (the elk's); restoreFauna puts it back
 function installHerds(herds) {
   if (!herds || typeof herds.herds !== 'object' || !herds.herds) return;
@@ -1066,6 +1071,13 @@ function installHerds(herds) {
     sp.cap = Math.max(sp.cap, Math.min(HERD_CAP, Math.ceil(need * 1.1)));
     for (let v = 0; v < SPECIES.length; v++) if (SPECIES[v].variantOf === s) SPECIES[v].cap = Math.max(SPECIES[v].cap, Math.ceil(sp.cap * 0.25));   // the static elk's bulls (EB)
     const rut = herds.rut?.[code]; if (Array.isArray(rut) && rut.length === 2 && rut.every(Number.isFinite)) HERD_RUT[s] = rut;
+    const fl = herds.flocks?.[code]?.guild; if (fl === 'grazer' || fl === 'water' || fl === 'field') FLOCK[s] = fl;
+  }
+  for (const [code, bySeason] of Object.entries(herds.skeins || {})) {
+    const s = INDEX[code]; if (s === undefined || !bySeason || typeof bySeason !== 'object') continue;
+    const ok = p => p && Number.isFinite(p.per_hour) && p.per_hour > 0 && Number.isFinite(p.heading_deg);
+    const pl = {}; for (const season of ['spring', 'fall']) if (ok(bySeason[season])) pl[season] = bySeason[season];
+    if (Object.keys(pl).length) SKEINS[s] = pl;
   }
 }
 // Take the tile's fauna out again (owner: only when it is still that Animals' own; null: whatever is in).
@@ -1073,6 +1085,7 @@ function restoreFauna(owner) {
   if (owner && FAUNA.owner !== owner) return;
   for (const k of Object.keys(HERDS)) delete HERDS[k];
   for (const k of Object.keys(HERD_RUT)) delete HERD_RUT[k];
+  for (const T of [FLOCK, SKEINS]) for (const k of Object.keys(T)) delete T[k];
   for (let k = 0; k < STATIC_N; k++) SPECIES[k].cap = STATIC_CAP[k];
   for (let k = STATIC_N; k < SPECIES.length; k++) {
     for (const T of [HOH, CULL, GROUP, MAMMAL, FG_SEEN, REST_POSE, CARRION.reach, GRP, DRAWN]) delete T[k];
@@ -2196,7 +2209,7 @@ export class Animals {
     this.coveys = [...cov];
     // the herds on the deer machine (herdRoles, herdPass, herdSteer): each one's members and their places
     const hg = new Map();
-    for (const a of this.list) { const g = a.group; if (!g || a.remote || a.mirror || (KIN[a.sp] !== DR && KIN[a.sp] !== BK)) continue; let M = hg.get(g); if (!M) hg.set(g, M = []); M.push(a); }
+    for (const a of this.list) { const g = a.group; if (!g || a.remote || a.mirror || (KIN[a.sp] !== DR && KIN[a.sp] !== BK && !g.agg)) continue; let M = hg.get(g); if (!M) hg.set(g, M = []); M.push(a); }   // (and a planned flock, whatever its kin)
     this.herdGroups = [...hg.keys()];
     for (const [g, mem] of hg) this.herdRoles(g, mem);
     const mcov = new Set(); for (const s of slotsOf(MQ)) for (const a of this.bySpecies[s]) if (a.group) mcov.add(a.group);
@@ -2501,7 +2514,7 @@ export class Animals {
       for (let i = 0; i < plan.length; i++) {
         const h = plan[i], key = `${s}:${i}`;
         let A = this.herdAgg.get(key);
-        if (!A) this.herdAgg.set(key, A = { key, s, i, n: h.count, r: h.r, x: h.x, z: -h.n, hx: h.x, hz: -h.n, g: null, live: false, lay: null, wx: undefined, wz: undefined, rng: mulberry32(seedOf(`${SPECIES[s].code}:${season}:${i}`, 0xa66)), wt: 0 });
+        if (!A) this.herdAgg.set(key, A = { key, flock: FLOCK[s] || null, s, i, n: h.count, r: h.r, x: h.x, z: -h.n, hx: h.x, hz: -h.n, g: null, live: false, lay: null, wx: undefined, wz: undefined, rng: mulberry32(seedOf(`${SPECIES[s].code}:${season}:${i}`, 0xa66)), wt: 0 });
         let near = false;
         for (const [qx, qn] of C) if (Math.hypot(A.x - qx, -A.z - qn) < LIVE_R + A.r) { near = true; break; }
         if (!near && A.live) this.herdKeep(A);   // going far: the far tier draws them where they were
@@ -2527,12 +2540,12 @@ export class Animals {
     let cowX = 0, cowZ = 0;
     for (let m = 0; m < A.n; m++) {
       const id = `herd:${code}:${this.season}:${A.i}:${m}`, rnd = mulberry32(seedOf(id, 0x4e7d));
-      const bull = m > 0 && (seedOf(id, 0xb0c) % 1000) < (rut ? 140 : 60);
+      const bull = !FLOCK[s] && m > 0 && (seedOf(id, 0xb0c) % 1000) < (rut ? 140 : 60);   // (a flock: no bulls, no calves)
       rnd(); let size = 0.9 + rnd() * 0.2;
       const ang = rnd() * TAU, d = Math.sqrt(rnd()) * A.r * 0.85, yaw = rnd() * TAU; rnd();
       let ox = Math.cos(ang) * d, oz = Math.sin(ang) * d, calf = 0;
       if (!m) { ox = Math.sin(yaw) * 0.55 * A.r; oz = Math.cos(yaw) * 0.55 * A.r; }
-      if (!bull && m > 0 && mo >= 4 && mo < 10 && (seedOf(id, 0xca1) % 100) < 22) { calf = 1; size *= 0.5 + 0.3 * Math.min(1, (mo - 4) / 6); ox = cowX + (rnd() - 0.5) * 3; oz = cowZ + (rnd() - 0.5) * 3; }
+      if (!FLOCK[s] && !bull && m > 0 && mo >= 4 && mo < 10 && (seedOf(id, 0xca1) % 100) < 22) { calf = 1; size *= 0.5 + 0.3 * Math.min(1, (mo - 4) / 6); ox = cowX + (rnd() - 0.5) * 3; oz = cowZ + (rnd() - 0.5) * 3; }
       else if (!bull) { cowX = ox; cowZ = oz; }
       if (bull) { if ((seedOf(id, 0x7e5) % 100) < 35) size *= 0.94; else if (s >= STATIC_N) size *= 1.08; }
       out.set([ox, oz, yaw, size, bull ? 1 : 0, calf], m * 6);
@@ -2546,6 +2559,7 @@ export class Animals {
   spawnHerd(A, keep) {
     const s = A.s, code = SPECIES[s].code, elk = ID[s] === EL, deer = ID[s] === DR, rut = this.herdRut(s);
     const g = A.g ||= { hx: A.hx, hz: A.hz, leader: null, wx: A.wx ?? A.x, wz: A.wz ?? A.z, gap: elk ? 3.6 : 2.6, spread: A.r, r: A.r, agg: A, n: A.n, rut };
+    A.flock = FLOCK[s] || null;
     const vs = s < STATIC_N ? (elk ? EB : deer ? BK : s) : s, L = A.lay || (A.lay = this.herdLayout(A)), up = this.herdUp(s);
     for (let m = 0; m < A.n; m++) {
       if (A.dead?.has(m) && !this.byId.has(`herd:${code}:${this.season}:${A.i}:${m}`)) continue;   // killed (its carcass gone): not again this season
@@ -2555,6 +2569,7 @@ export class Animals {
         a.ox = L[o]; a.oz = L[o + 1]; a.yaw = L[o + 2]; a.size = L[o + 3];
         if (!m) g.leader = a;
         a.x = A.x + a.ox; a.z = A.z + a.oz; a.y = this.heights.atXZ(a.x, a.z); a.state = up ? D_GRAZE : D_BED; a.pose = up ? 0 : 1; a.t = rnd() * 10;
+        if (FLOCK[s]) { a.state = D_GRAZE; a.pose = 1; a.air = 0; if (FLOCK[s] === 'water') a.y = this.surfAt(a.x, a.z); }   // a flock bird: folded, on its feet or on the water
         if (bull) { const hh = seedOf(id, 0xa47); a.u1 = (hh & 1023) / 1023; a.u2 = ((hh >>> 10) & 1023) / 1023; a.u3 = ((hh >>> 20) & 1023) / 1023; a.young = (seedOf(id, 0x7e5) % 100) < 35 ? 1 : 0; }
       }, keep);
     }
@@ -3612,15 +3627,17 @@ export class Animals {
     a.alarmT = this.time;   // this one saw it
     if ((g.fleeT || 0) > 0) return;
     if (this.mirror && g.agg?.remote) this.relay?.request({ k: 'herdAlarm', key: g.agg.key, x: r2(px), z: r2(pz) });   // the host starts it for everyone
-    const cx = g.cx ?? a.x, cz = g.cz ?? a.z, R = g.r || 0, ang = Math.atan2(cz - pz, cx - px) + (r() - 0.5) * 0.6, d = 80 + r() * 40 + R;
-    g.wx = cx + Math.cos(ang) * d; g.wz = cz + Math.sin(ang) * d; g.fleeT = 8 + R / 8; g.ax = px; g.az = pz; g.hx = g.wx;   // (a big herd's flight outlasts the wave crossing it) g.hz = g.wz;
+    const cx = g.cx ?? a.x, cz = g.cz ?? a.z, R = g.r || 0, ang = Math.atan2(cz - pz, cx - px) + (r() - 0.5) * 0.6, d = (80 + r() * 40 + R) * (g.agg?.flock ? 2.5 : 1);   // (a flock flies off farther than a herd runs)
+    g.fleeSeq = (g.fleeSeq || 0) + 1;
+    g.wx = cx + Math.cos(ang) * d; g.wz = cz + Math.sin(ang) * d; g.fleeT = g.agg?.flock ? 20 : 8 + R / 8; g.ax = px; g.az = pz; g.hx = g.wx;
+    if (g.agg?.flock === 'water') { const w = this.waterSpot(g.wx, g.wz, 0, 400, 0.2, 99, r, 24); g.wx = w ? w.x : cx; g.wz = w ? w.z : cz; g.hx = g.wx; g.hz = g.wz; }   // a raft flies to open water (none found: round and back)   // (a big herd's flight outlasts the wave crossing it) g.hz = g.wz;
   }
   // body length (m) for slot s: twice and a bit its body height
   herdLen(a) { return 2.2 * (BODY_Y[a.sp] || 0.75) * (a.size || 1); }
   // Each herd's members and their places: called with the live set (layoutSlots).
   herdRoles(g, mem) {
     mem.sort((p, q) => p.rank - q.rank);
-    g.r = g.r || (g.spread || 9) * 0.6; g.big = mem.length >= 30; g.mem = mem;
+    g.r = g.r || (g.spread || 9) * 0.6; g.big = mem.length >= 30 || !!g.agg?.flock; g.mem = mem;   // (a flock drifts with its own front, whatever its size)
     const isBull = b => !!b.bull || SPECIES[b.sp].variantOf !== undefined;
     let cows = 0; for (const b of mem) if (!isBull(b) && !b.calf) cows++;
     const K = Math.max(1, Math.round(cows / 25)), n = mem.length;
@@ -3684,7 +3701,8 @@ export class Animals {
         if (g.fleeT > 0 || g.pilot) { g.fcx = g.cx; g.fcz = g.cz; }
         else {
           let ex = g.wx - g.fcx, ez = g.wz - g.fcz, d = Math.hypot(ex, ez);
-          if (!(d > 4) && L?.rng && (g.wt = (g.wt ?? 0) - dt) <= 0) {
+          if (g.agg?.flock === 'water') { g.wx = g.fcx; g.wz = g.fcz; ex = ez = d = 0; }   // a raft holds its water
+          else if (!(d > 4) && L?.rng && (g.wt = (g.wt ?? 0) - dt) <= 0) {
             const rr = L.rng; let best = -2;
             for (let q = 0; q < 6; q++) {
               const an = rr() * TAU, dd = 30 + rr() * 50;
@@ -6437,6 +6455,7 @@ export class Animals {
         a.gm = this.meshOn(sp) && (a.state === R_GROUND || a.state === R_PERCH || a.state === R_WALK) ? 1 : 0;
         if (this.gmOf?.[sp]) this.gmOf[sp][a.slot] = a.gm;
       }
+      else if (a.group?.agg?.flock) this.flockStep(a, dt, px, py, pz);   // a planned flock's bird (flockStep), whatever its kin
       else if (kn === DR || kn === BK) this.drUpdate(a, dt, px, py, pz);
       else if (kn === FX || kn === CY || kn === ML || kn === BE) this.mmUpdate(a, dt, px, py, pz);
       else if (kn === RB) this.rbUpdate(a, dt, px, py, pz);
@@ -6522,10 +6541,125 @@ export class Animals {
     }
     for (const k in DRAWN) if (this.meshOn(k)) this.distribute(k);
     this.farHerds(dt0, mirror);   // the planned herds beyond LIVE_R (the far tier)
+    this.skeinUpdate(dt0);         // the migration skeins overhead (scenery, on the wall clock)
     this.placeTags();
     this.ms = this.ms * 0.95 + (performance.now() - t0) * 0.05;
   }
 
+  // ---- flocks (2026-11-07, Aaron: "Make sure big herds is also applying to big flocks") -------------------------------
+  // A planned flock's bird (herds.json flocks: geese, cranes, ducks, coots, pelicans, blackbirds, starlings) runs this,
+  // not its kin's machine: on the ground or the water it grazes and steps among its neighbours as a herd member does
+  // (herdSteer under the flock's drifting frame, its feeding front), pecking as it goes; any bird that sees the danger
+  // starts the flight (herdAlarm, the flight point 2.5 times a herd's run), and each takes off as the alarm reaches it
+  // from a neighbour (the wave), flies to the flight point (its place in the flock kept, a little closer), climbing and
+  // gliding down on a beat by its mass (FLOCK_BEAT x (mass / 3 kg)^-0.35), lands and grazes on. The water guild rides
+  // the water (surfAt).
+  flockStep(a, dt, px, py, pz) {
+    const g = a.group, r = a.rng, H = this.heights, W = g.agg.flock === 'water';
+    if (!a.fl) {
+      const T = this.threat(BASE[a.sp], a, a.x, a.y, a.z, px, py, pz), dh = Math.hypot(a.x - T.x, a.z - T.z), low = T.y - a.y < 40;
+      if (low && !g.pilot && !(a.alarmT > 0 && this.time >= a.alarmT) && this.danger(BASE[a.sp], a, dh, FLOCK_FLUSH, T.n)) this.herdAlarm(g, a, T.x, T.z, r);
+    }
+    if (g.leader === a && g.fleeT > 0) g.fleeT -= dt;
+    if (!(g.fleeT > 0) && !a.fl) a.alarmT = 0;
+    const go = g.fleeT > 0 && a.alarmT > 0 && this.time >= a.alarmT && a.flSeq !== g.fleeSeq && !a.fl;
+    if (go) {   // up: to its place round the flight point
+      const k = 0.6, tx = g.wx + (a.x - (g.cx ?? a.x)) * k + (r() - 0.5) * 6, tz = g.wz + (a.z - (g.cz ?? a.z)) * k + (r() - 0.5) * 6;
+      const d = Math.hypot(tx - a.x, tz - a.z), v = 11 + r() * 3;
+      a.fl = { sx: a.x, sy: a.y, sz: a.z, tx, tz, ty: W ? this.surfAt(tx, tz) : H.atXZ(tx, tz), u: 0, dur: Math.max(2, d / v), peak: 12 + r() * 14 + d * 0.04 };
+      a.flSeq = g.fleeSeq; a.air = 1; a.turnC = null; a.spd = v;
+    }
+    const mass = SPECIES[a.sp].mass_kg || 3, beat = FLOCK_BEAT * Math.pow(Math.max(0.02, mass) / 3, -0.35);
+    if (a.fl) {
+      const F = a.fl; F.u = Math.min(1, F.u + dt / F.dur);
+      const u = F.u, ox = a.x, oy = a.y, oz = a.z;
+      a.x = F.sx + (F.tx - F.sx) * u; a.z = F.sz + (F.tz - F.sz) * u;
+      const rise = u < 0.2 ? Math.sin(u / 0.2 * Math.PI / 2) : 1 - Math.pow((u - 0.2) / 0.8, 2.4);
+      a.y = Math.max((W ? this.surfAt(a.x, a.z) : H.atXZ(a.x, a.z)) + 0.1, F.sy + (F.ty - F.sy) * u + F.peak * rise);
+      const flap = u < 0.6 || u > 0.94;   // beating up and away, a glide down, a few beats to land
+      a.amp = damp(a.amp, flap ? 1 : 0, 6, dt); a.pose = damp(a.pose, 0, 10, dt);
+      if (flap) a.phase += dt * TAU * beat; else a.phase = damp(a.phase, Math.round(a.phase / TAU) * TAU + 0.6, 6, dt);
+      const vx = a.x - ox, vy = a.y - oy, vz = a.z - oz, vh = Math.hypot(vx, vz);
+      if (vh > 1e-5) a.yaw = Math.atan2(vx, vz);
+      a.pitch = -Math.atan2(vy, vh + 1e-5) * 0.5; a.spd = vh / Math.max(dt, 1e-4);
+      if (u >= 1) { a.fl = null; a.air = 0; a.pitch = 0; a.state = D_GRAZE; a.t = 1 + r() * 3; }
+      return;
+    }
+    a.air = 0;
+    const speed = this.herdSteer(a, g, dt, r, false);
+    if (speed < 0.05 && r() < dt * 0.8) { a.flickV = 1; a.eatK = EAT_PECK; }   // a peck at the grass (a dabble on the water)
+    a.amp = damp(a.amp, speed > 0.1 ? 1 : 0, 10, dt);
+    a.phase += dt * TAU * speed / Math.max(0.12, 0.35 * Math.cbrt(mass));
+    a.pose = damp(a.pose, 1, 8, dt); a.pitch = damp(a.pitch, 0, 8, dt); a.spd = speed;
+    a.y = W ? this.surfAt(a.x, a.z) + 0.01 * Math.sin(this.time * 1.3 + a.rank) : H.atXZ(a.x, a.z);
+  }
+  // ---- migration skeins (2026-11-07; skeinPlan.js) ---------------------------------------------------------------------
+  // Each species with a skein plan for the season (herds.json skeins: the V-flying migrants, spring north and fall south
+  // along the valley axis) crosses the tile in V's and echelons on the wall clock's schedule (skeinPlan.js
+  // activeSkeins), every page seeing the same ones. Drawn on one InstancedMesh per species on the live bird's own body
+  // (the drawn model's middle tier, else the procedural one) with its wings spread and beating (aAnim phase per bird,
+  // amp 1, pose 0) on the segmented wing rig, grown with distance as birds in flight are so a skein stays readable from
+  // the ground kilometres off (SKEIN_PX px of wingspan at least, SKEIN_GROW times at most). Flying height: its
+  // plan's height over the highest ground at its lead and up to 1.2 km ahead, eased (skeinBase). Scenery: not hunted, perceived, counted or streamed.
+  skeinUpdate(dt) {
+    const S = this.skeinT ||= { meshes: new Map(), used: new Set(), clear: new Map(), o: {} };
+    S.used.clear();
+    const season = this.season, T = Date.now() / 1000, id = this.tile.id || 'tile', size = this.tile.size || 10000;
+    if (Object.keys(SKEINS).length) {
+      const C = this.camPos, cam = this.camera, px = cam ? 2 * Math.tan((cam.fov || 50) * Math.PI / 360) / Math.max(200, (typeof window !== 'undefined' && window.innerHeight) || 800) : 0.0012;
+      const e = this._e, q = this._q, p = this._p, sc = this._s, m4 = this._m, o = S.o;
+      for (const k of Object.keys(SKEINS)) {
+        const s = +k, plan = SKEINS[s][season]; if (!plan) continue;
+        const list = activeSkeins(id, SPECIES[s].code, plan, T, size); if (!list.length) continue;
+        let need = 0; for (const sk of list) need += sk.n;
+        const M = this.skeinMesh(s, need), mesh = M.mesh, IM = mesh.instanceMatrix.array, an = mesh.geometry.attributes.aAnim;
+        const sp = SPECIES[s], mass = sp.mass_kg || 3, span = 1.6 * Math.cbrt(mass / 3), beat = FLOCK_BEAT * Math.pow(Math.max(0.02, mass) / 3, -0.35) * 0.85;
+        let j = 0;
+        for (const sk of list) {
+          // the whole skein grown about its lead place by one factor, so its V keeps its shape on screen as its birds grow
+          birdIn(sk, 0, T, span, beat, o); const lx = o.x, ln = o.n;
+          const y0 = this.skeinBase(sk, lx, ln, dt, S) + sk.agl, d0 = Math.hypot(lx - C.x, y0 - C.y, -ln - C.z);
+          const grow = Math.min(SKEIN_GROW, Math.max(1, d0 * px * SKEIN_PX / span));
+          for (let i = 0; i < sk.n; i++, j++) {
+            birdIn(sk, i, T, span, beat, o);
+            const x = lx + (o.x - lx) * grow, z = -(ln + (o.n - ln) * grow), y = y0 + o.up * grow;
+            e.set(0, Math.PI - o.yaw, 0, 'YXZ'); q.setFromEuler(e); p.set(x, y, z); sc.setScalar(sp.scale * grow * (M.unit || 1));   // (a compass heading to the scene's yaw: z points south)
+            m4.compose(p, q, sc); m4.toArray(IM, j * 16);
+            if (an) { an.array[j * 4] = o.phase; an.array[j * 4 + 1] = 1; an.array[j * 4 + 2] = 0; an.array[j * 4 + 3] = 0; }
+          }
+        }
+        mesh.count = j; mesh.visible = j > 0; mesh.instanceMatrix.needsUpdate = true; if (an) an.needsUpdate = true;
+        S.used.add(s);
+      }
+    }
+    for (const [s, M] of S.meshes) if (!S.used.has(s)) { M.mesh.count = 0; M.mesh.visible = false; }
+    if (S.clear.size > 64) S.clear.clear();
+  }
+  // a skein's flying base: the highest ground at its lead and 600 and 1,200 m ahead (inside the tile), eased over ~15 s,
+  // so it climbs over a ridge before it reaches it and comes down over a valley; kept per skein
+  skeinBase(sk, x, n, dt, S) {
+    const H = this.heights, fx = Math.sin(sk.heading), fn = Math.cos(sk.heading), size = this.tile.size || 10000;
+    const at = (d) => { const xx = Math.min(size, Math.max(0, x + fx * d)), nn = Math.min(size, Math.max(0, n + fn * d)); return H.atXZ(xx, -nn); };
+    const want = Math.max(at(0), at(600), at(1200)), was = S.clear.get(sk.id);
+    const y = was === undefined ? want : was + (want - was) * Math.min(1, dt / 15);
+    S.clear.set(sk.id, y); return y;
+  }
+  skeinMesh(k, need) {
+    const S = this.skeinT, st = this.drawn[k], drawn = this.meshOn(k);
+    const tier = drawn ? Math.min(1, st.tiers.length - 1) : -1, src = drawn ? st.tiers[tier] : this.meshes[k];
+    let M = S.meshes.get(k);
+    if (M && M.src === src && M.cap >= need) return M;
+    if (M) { this.group.remove(M.mesh); M.mesh.geometry.dispose(); M.mesh.material.dispose(); }
+    const model = drawn ? st.model : SPECIES[k].model, cap = Math.max(32, Math.ceil(need * 1.5));
+    const geo = src.geometry.clone();
+    for (const name of ['aAnim', 'aAnim2', 'aClip', 'aBend']) if (geo.attributes[name]) geo.setAttribute(name, new THREE.InstancedBufferAttribute(new Float32Array(cap * 4), 4));
+    const mesh = new THREE.InstancedMesh(geo, animalMaterial(this.atmosphere, model, { map: drawn ? model.maps?.[tier] || null : null }), cap);
+    mesh.count = 0; mesh.frustumCulled = false; mesh.name = `${SPECIES[k].one} skeins`;
+    this.group.add(mesh);
+    M = { mesh, src, cap, unit: 1 };
+    S.meshes.set(k, M);
+    return M;
+  }
   // ---- the far tier (2026-11-07) ------------------------------------------------------------------------------------
   // A planned herd whose centre is beyond LIVE_R + its radius (spawnHerds) is one aggregate (herdAgg: its centre, its
   // grazing front's waypoint and its members' places round the centre, A.lay), drifting as a big herd's frame drifts
@@ -6540,7 +6674,7 @@ export class Animals {
   // Not hunted, counted, perceived, streamed or souled: nothing but these meshes knows the far bodies.
   aggDrift(A, dt) {
     if (A.wx === undefined) { A.wx = A.x; A.wz = A.z; }
-    if (!this.herdUp(A.s)) return;
+    if (A.flock === 'water' || (!A.flock && !this.herdUp(A.s))) return;   // (a raft holds its water)
     let ex = A.wx - A.x, ez = A.wz - A.z, d = Math.hypot(ex, ez);
     if (!(d > 4) && (A.wt -= dt) <= 0) {
       const rr = A.rng; let best = -2;
@@ -6583,7 +6717,7 @@ export class Animals {
       const [key, s, i, live, x, z, wx, wz, fcx, fcz, hdx, hdz, fleeT, ax, az, dead] = r, plan = HERDS[s]?.[season]?.[i];
       if (!plan || typeof key !== 'string') continue;
       let A = this.herdAgg.get(key);
-      if (!A) this.herdAgg.set(key, A = { key, s, i, n: plan.count, r: plan.r, x: plan.x, z: -plan.n, hx: plan.x, hz: -plan.n, g: null, live: false, lay: null, wx: undefined, wz: undefined, rng: mulberry32(seedOf(`${SPECIES[s].code}:${season}:${i}`, 0xa66)), wt: 0 });
+      if (!A) this.herdAgg.set(key, A = { key, flock: FLOCK[s] || null, s, i, n: plan.count, r: plan.r, x: plan.x, z: -plan.n, hx: plan.x, hz: -plan.n, g: null, live: false, lay: null, wx: undefined, wz: undefined, rng: mulberry32(seedOf(`${SPECIES[s].code}:${season}:${i}`, 0xa66)), wt: 0 });
       A.remote = true; A.hostLive = !!live;
       if (Number.isFinite(x) && !A.live) { A.x = x; A.z = z; }   // (while its members live here, they carry the centre: herdPass)
       if (Number.isFinite(wx)) { A.wx = wx; A.wz = wz; }
@@ -6644,6 +6778,7 @@ export class Animals {
       }
       T.push({ A4, C4, B4 });
     }
+    { const A4 = new Float32Array(FAR_TPL * 4), r = mulberry32(0xfa9); for (let j = 0; j < FAR_TPL; j++) A4.set([r() * TAU, 0, 1, 0], j * 4); T.push({ A4, C4: new Float32Array(FAR_TPL * 4), B4: new Float32Array(FAR_TPL * 4) }); }   // a flock bird: folded, on its feet
     return T;
   }
   farHerds(dt, mirror) {
@@ -6663,18 +6798,21 @@ export class Animals {
       const e = this._e, q = this._q, p = this._p, sc = this._s, m4 = this._m;
       for (const [k, list] of by) {
         let need = 0; for (const A of list) need += A.n;
+        if (!need) continue;
         const M = this.farMesh(k, need), mesh = M.mesh, IM = mesh.instanceMatrix.array, at = mesh.geometry.attributes;
         M.tpl ||= this.farTemplates(M);
-        const sp = SPECIES[k], bl = 2.2 * (BODY_Y[k] || 0.75), up = this.herdUp(k), Tp = M.tpl[up ? 0 : 1], pose = up ? 0 : 1;
+        const sp = SPECIES[k], bl = 2.2 * (BODY_Y[k] || 0.75), bird = !!FLOCK[k], up = bird || this.herdUp(k), Tp = M.tpl[bird ? 2 : up ? 0 : 1], pose = bird ? 0 : up ? 0 : 1;
+        const dMax = bl * FAR_GROW / Math.max(1e-5, px);   // past this a grown body is under a pixel: not drawn
         let j = 0;
         for (const A of list) {
-          const Lay = A.lay || (A.lay = this.herdLayout(A));
+          if (Math.hypot(A.x - C.x, A.z - C.z) - A.r > dMax) continue;
+          const Lay = A.lay || (A.lay = this.herdLayout(A)), W = A.flock === 'water';
           for (let mi = 0; mi < A.n; mi++, j++) {
             const o = mi * 6, x = A.x + Lay[o], z = A.z + Lay[o + 1], size = Lay[o + 3];
             const d = Math.hypot(x - C.x, z - C.z, this.heights.atXZ(x, z) - C.y);
             const grow = clamp01((d * px * FAR_PX / (bl * size) - 1) / (FAR_GROW - 1)) * (FAR_GROW - 1) + 1;
             e.set(0, Lay[o + 2], 0, 'YXZ'); q.setFromEuler(e);
-            p.set(x, this.heights.atXZ(x, z) - M.drop * pose * size, z); sc.setScalar(size * sp.scale * grow);
+            p.set(x, W ? this.surfAt(x, z) : this.heights.atXZ(x, z) - M.drop * pose * size, z); sc.setScalar(size * sp.scale * grow);
             m4.compose(p, q, sc); m4.toArray(IM, j * 16);
             const t = (mi % FAR_TPL) * 4;
             if (at.aAnim) at.aAnim.array.set(Tp.A4.subarray(t, t + 4), j * 4);

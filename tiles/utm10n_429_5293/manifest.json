@@ -15,7 +15,7 @@
   47.877435895323295
  ],
  "size_m": 10000,
- "generated_at": "2026-11-08T02:00:17Z",
+ "generated_at": "2026-11-08T04:30:40Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -5593,6 +5593,22 @@
      "spring": 5,
      "summer": 4,
      "fall": 6
+    },
+    "aix_sponsa": {
+     "fall": 48
+    },
+    "lophodytes_cucullatus": {
+     "winter": 27,
+     "fall": 57
+    },
+    "anas_platyrhynchos": {
+     "winter": 20,
+     "fall": 50
+    },
+    "sturnus_vulgaris": {
+     "winter": 7,
+     "spring": 53,
+     "fall": 9
     }
    },
    "largest": {
@@ -5601,10 +5617,36 @@
      "spring": 54,
      "summer": 58,
      "fall": 76
+    },
+    "aix_sponsa": {
+     "fall": 63
+    },
+    "lophodytes_cucullatus": {
+     "winter": 87,
+     "fall": 80
+    },
+    "anas_platyrhynchos": {
+     "winter": 35,
+     "fall": 71
+    },
+    "sturnus_vulgaris": {
+     "winter": 131,
+     "spring": 92,
+     "fall": 231
     }
    },
-   "sha256": "8fab1891671880a078dedc0172239ab108414bc423e6f42273b65d5b5f4f0daa",
-   "bytes": 4434
+   "skeins": {
+    "lophodytes_cucullatus": {
+     "spring": 5.65,
+     "fall": 7.04
+    },
+    "anas_platyrhynchos": {
+     "spring": 2.08,
+     "fall": 2.22
+    }
+   },
+   "sha256": "0e2c2f21ad5c92c0e2b44ec4262f3045eaa9e5debfb7a5a48a23b142d6bc7116",
+   "bytes": 36011
   }
  },
  "sources": {
@@ -6459,6 +6501,18 @@
    "step": "herds",
    "at": "2026-11-08T02:00:17Z",
    "seconds": 0.5,
+   "ok": true
+  },
+  {
+   "step": "herds",
+   "at": "2026-11-08T04:29:28Z",
+   "seconds": 1.3,
+   "ok": true
+  },
+  {
+   "step": "herds",
+   "at": "2026-11-08T04:30:40Z",
+   "seconds": 1.3,
    "ok": true
   }
  ],
@@ -8148,15 +8202,15 @@
    "seconds": 0.1
   },
   "herds": {
-   "version": "1",
-   "code": "6e1711139cb41d6e",
+   "version": "2",
+   "code": "4abf4771b1f2b392",
    "params": {
     "tile": "utm10n_429_5293"
    },
-   "fingerprint": "9292c9c54263b437",
+   "fingerprint": "70374c60aa554736",
    "parts": {
-    "version": "1",
-    "code": "6e1711139cb41d6e",
+    "version": "2",
+    "code": "4abf4771b1f2b392",
     "params": {
      "tile": "utm10n_429_5293"
     },
@@ -8166,27 +8220,27 @@
      "terrain": "61e0d4f7949d1857"
     },
     "library": {
-     "library/herds": "3b0c60782743001f"
+     "library/herds": "b06c0c2e727e4e77"
     }
    },
-   "ran_at": "2026-11-08T02:00:17Z",
+   "ran_at": "2026-11-08T04:30:39Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "client.herds"
    ],
    "outputs": {
-    "client/herds.json": "8fab1891671880a0"
+    "client/herds.json": "0e2c2f21ad5c92c0"
    },
-   "out_hash": "9719a0a27f80b5f0",
+   "out_hash": "6ddbcad7ac3cbce3",
    "sources": {},
    "fallbacks": [],
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 1
+    "cache": 6
    },
-   "seconds": 0.5
+   "seconds": 1.3
   }
  },
  "seams": {

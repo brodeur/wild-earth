@@ -18,8 +18,9 @@ def grids(n=100, res=30.0):
     water[...] = np.clip(100 - np.abs(yy - n / 2) * 6, 0, 100)[..., None]
     slope = np.clip(np.abs(yy - n / 2) - 10, 0, 40).astype("float64")
     low = np.clip(1 - np.abs(yy - n / 2) / (n / 2), 0, 1)
+    h = 2000 + np.abs(yy - n / 2) * 20.0 + xx * 0.5            # an east-west valley, falling gently west
     return {"habitat": hab, "tree": tree, "grass": grass, "browse": np.zeros((n, n, 4)), "water": water,
-            "slope": slope, "low": low, "res": res, "n": n}
+            "slope": slope, "low": low, "h": h, "res": res, "n": n}
 
 
 def plan(g, **kw):
@@ -96,6 +97,49 @@ class TestModelTint(unittest.TestCase):
         from pathlib import Path
         from pipeline.appearance import model_tint
         self.assertIsNone(model_tint("no_such_animal", Path("nowhere.glb")))
+
+
+class TestFlocks(unittest.TestCase):
+    """The flocking birds under the same rule (pipeline/herds.py flocks; library/herds/flocks.json)."""
+
+    def test_groups_match_genus_then_family(self):
+        import json
+        from pathlib import Path
+        groups = json.loads((Path(herds.LIB) / "flocks.json").read_text())["groups"]
+        self.assertEqual(herds.flock_group(groups, "Branta", "Anatidae")[0], "geese")
+        self.assertEqual(herds.flock_group(groups, "Anas", "Anatidae")[0], "ducks")
+        self.assertEqual(herds.flock_group(groups, "Fulica", "Rallidae")[0], "coots")
+        self.assertEqual(herds.flock_group(groups, "Grus", "Gruidae")[0], "cranes")
+        self.assertIsNone(herds.flock_group(groups, "Buteo", "Accipitridae")[0])
+
+    def test_season_shares(self):
+        winter = [100, 80, 20, 10, 5, 2, 2, 3, 5, 10, 30, 90]       # a winter visitor
+        sh = herds.season_shares(winter)
+        self.assertGreater(sh["winter"], 2)
+        self.assertLess(sh["summer"], 0.2)
+        self.assertEqual(herds.season_shares([1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0]), {s: 1.0 for s in herds.SEASONS})
+
+    def test_valley_axis_and_skein_headings(self):
+        g = grids()                                             # the valley runs east-west along the middle rows
+        e, n = herds.valley_axis(g)
+        self.assertGreater(abs(e), 0.9)
+        cfg = {"base_per_hour": 6.0, "agl_m": [180, 450], "speed_mps": [14, 18]}
+        sk = herds.skein_plan((e, n), {"spring": 1.5, "fall": 0.8}, 3, [8, 60], cfg)
+        import math
+        north = lambda deg: math.cos(math.radians(deg))
+        self.assertGreater(north(sk["spring"]["heading_deg"]), 0.3)    # north in spring, half pulled to true north
+        self.assertLess(north(sk["fall"]["heading_deg"]), -0.3)        # south in fall
+        self.assertGreater(sk["spring"]["per_hour"], sk["fall"]["per_hour"])
+        self.assertEqual(herds.skein_plan((e, n), {}, 1, [8, 60], cfg), {})   # a sedentary bird: none
+
+    def test_water_guild_only_on_water(self):
+        g = grids()
+        g["habitat"][45:47, :] = 7                               # a river along the valley
+        S = herds.suitability(g, "winter", "water")
+        self.assertTrue((S[45:47] > 0).all())
+        self.assertEqual(float(S[:40].sum()), 0.0)
+        G = herds.suitability(g, "winter", "grazer")
+        self.assertEqual(float(G[45:47].sum()), 0.0)             # a grazing flock off the open water
 
 
 if __name__ == "__main__":

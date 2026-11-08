@@ -730,9 +730,9 @@ STEPS: dict[str, Step] = {s.name: s for s in [
          doc="a still for every animal's species chip: a model rendered, a stand-in's kin's (client/assets/opening)", stage=A),
     Step("resources", "2", ["resources", "derive", "water_seasons"], ["dem", "hydro", "water_seasons", "landcover", "terrain", "species_mix", "species"], _resources,
          ["resources", "client.mast"], doc="food, water and cover per season; the acorn mast", stage=A),
-    Step("herds", "1", ["herds", "pantheria"], ["animals", "resources", "terrain"], _herds, ["client.herds"],
-         library=["library/herds"], doc="the herd species' seasonal ranges and herd sizes: fewer, larger herds where they gather",
-         stage=A),
+    Step("herds", "2", ["herds", "pantheria", "avonet", "fetch_species", "fauna_slots"], ["animals", "resources", "terrain"], _herds,
+         ["client.herds"], ["gbif"], library=["library/herds"],   # 2: flocks and migration skeins (2026-11-07)
+         doc="the herd species' and flocking birds' seasonal ranges and group sizes; the migrants' skeins", stage=A),
     # ---------------------------------------------------------------- games
     Step("games", "2", ["games"], ["species", "resources", "animals"], _games, ["games"],   # 2: relations.desirability (2026-11-06)
          doc="every species' games: archetype, hotspots, scarcity, predators, competitors; each eater's desirability of its foods", stage=G),
