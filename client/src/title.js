@@ -60,9 +60,9 @@ const FOV_FAR = 38, FOV_NEAR = 55;                         // the lens from spac
 const TILT_ALT = [0.03, 0.0009];                           // the altitudes (earth radii) between which the lens changes
 // The tilt from straight down: none from space, steepening back as the view zooms out, and low over a chosen tile (Aaron,
 // 2026-11-07: the tile view was about 52 degrees above the horizon; "lower that angle by half when zoomed in. Zooming out
-// can steepen the angle"; then "make the angle a little bit flatter"): about 20 degrees above the horizon at a tile's
-// framing distance, the lens narrowed there so no sky shows over it (lensFor)
-const TILT_MAX = 78.5 * DEG, TILT_AT = [0.03, 0.0025];
+// can steepen the angle"; then "make the angle a little bit flatter", then "a slightly shallower angle"): about 17
+// degrees above the horizon at a tile's framing distance, the lens narrowed there so no sky shows over it (lensFor)
+const TILT_MAX = 84 * DEG, TILT_AT = [0.03, 0.0025];
 const ALT0 = 2.5, ALT_MIN = 0.6 / R_KM, ALT_MAX = 3.6;      // the camera's distance from the point it looks at
 // Flying to a chosen place is slow (Aaron, 2026-11-06: "slow enough so that the world has a chance to render ... by the
 // time they arrive at the tile, it's mostly loaded"): PLACE_SLOW times the free flight's time, within PLACE_MS; its last
@@ -72,6 +72,11 @@ const PLACE_SLOW = 1.8, PLACE_MS = [5000, 8000], PACE_FROM = 0.55, PACE_SLACK = 
 const LAT_END = 0.48;                                      // a paced flight's travel over the earth is done by this share of its progress (before PACE_FROM)
 const FOCUS_MARGIN = [22, 12];                             // px around the stage inside the free centre (desktop, phone)
 const UNCHOOSE_AT = [0.3, 0.14, 350];                       // a chosen tile's width over the free centre's: armed at or over [0], deselected under [1] held [2] ms
+// a chosen tile framed a little closer than fitting it whole (Aaron, 2026-11-07: "slightly more zoomed in and a slightly
+// shallower angle"): up and down, this share of it about its centre fits the focus area, its far edge a little past
+// (under the fliers' tier); across, its middle fits the focus area and its near corners (the widest, low over the land)
+// the free centre, into the margins but clear of the list
+const TILE_FIT = 0.85;
 const STAGE_TOP = 0.13;                                    // of the stage's height kept clear above the tile: the fliers' tier stands up past its far edge
 const Y_BELOW = -2.7;                                      // where the earth's centre sits before it lands: off screen, below
 const SUN_CRESCENT = [152 * DEG, 26 * DEG], SUN_LIT = [30 * DEG, 14 * DEG];   // [azimuth about Y from the camera's side, elevation]
@@ -848,8 +853,9 @@ export class TitleScreen {
     const p = this.byId[id], [w, s, e, n] = p.bounds, lat = (s + n) / 2, lon = (w + e) / 2;
     const size = this.renderer.getSize(this._size), W = size.x || innerWidth, H = size.y || innerHeight, a = this.focusArea(W, H);
     const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(lat * DEG, yawOfLon(lon), 0, 'XYZ'));
-    const pts = [];
+    const pts = [], mid = [], pc = latLonToXYZ(lat, lon).applyQuaternion(q), [fl, fr] = this.freeArea(W);
     for (let i = 0; i <= 4; i++) { const u = i / 4; for (const [la, lo] of [[s, w + (e - w) * u], [n, w + (e - w) * u], [s + (n - s) * u, w], [s + (n - s) * u, e]]) pts.push(latLonToXYZ(la, lo).applyQuaternion(q)); }
+    for (const lo of [w, e]) mid.push(latLonToXYZ(lat, lo).applyQuaternion(q));
     const cam = new THREE.PerspectiveCamera(FOV_FAR, W / H, 1e-5, 80), v = new THREE.Vector3();
     const offX = (a.l + a.r) / 2 - W / 2, offY = (a.t + a.b) / 2 - H / 2;
     const fits = A => {
@@ -857,10 +863,18 @@ export class TitleScreen {
       cam.fov = lensFor(A, offY / H); cam.near = Math.max(2e-5, A * Math.cos(t) * 0.3);
       cam.position.set(0, -A * Math.sin(t), 1 + A * Math.cos(t)); cam.up.set(0, 1, 0); cam.lookAt(0, 0, 1);
       cam.setViewOffset(W, H, -offX, -offY, W, H); cam.updateProjectionMatrix(); cam.updateMatrixWorld();
+      for (const p0 of mid) {
+        v.copy(p0).project(cam);
+        const x = (v.x + 1) / 2 * W;
+        if (v.z >= 1 || x < a.l || x > a.r) return false;
+      }
       for (const p0 of pts) {
         v.copy(p0).project(cam);
-        const x = (v.x + 1) / 2 * W, y = (1 - v.y) / 2 * H;
-        if (v.z >= 1 || x < a.l || x > a.r || y < a.t || y > a.b) return false;
+        const x = (v.x + 1) / 2 * W;
+        if (v.z >= 1 || x < fl || x > fr) return false;
+        v.copy(p0).lerp(pc, 1 - TILE_FIT).project(cam);
+        const y = (1 - v.y) / 2 * H;
+        if (v.z >= 1 || y < a.t || y > a.b) return false;
       }
       return true;
     };

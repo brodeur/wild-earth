@@ -7945,3 +7945,37 @@ Rejected: rebuilding the ~30 bird GLBs in Blender with new cards. The tools woul
 shape rule, and the procedural stand-ins, the bulk of the cast on pipeline tiles, would still have needed the
 client-side version. Also rejected: a per-finger fan attribute (a 17th slot on some paths); the fingers close by
 squeezing toward the tip joint's chord line instead.
+
+## The rings sorted by size, sized and spaced by depth, the tile framed closer (2026-11-07)
+
+Aaron, on the tile start screen: "The outer rings should be smaller species, the inner ring should be bigger species";
+the size by depth "should be a bit stronger ... As things get closer, their margin should also grow"; and a chosen tile
+"slightly more zoomed in and a slightly shallower angle".
+
+- **Big inside, small outside.** The walkers split by mass (`bodyRing.js` `splitBySize`): the tile's locomotion layer's
+  `mass_kg`, a stand-in's own fauna `mass_kg`, else its kin's scaled by its size cubed, else the controller's half-length
+  cubed at a deer's density (`massOf`). The heaviest go inside, as many as leave both rings the same room per animal over
+  their length, so the inner ring holds fewer. Each ring keeps the list's order, so big and small stay mixed round it
+  rather than graded. Lamar: 13 inside (coyote up to bison), 29 outside (otter down to the salamander). Every walker on all 18
+  tiles has a known mass.
+- **Stronger depth.** `DEPTH_K` 0.3 to 0.5, bounded to 0.45-1.65: the outer ring's front about 1.6x and its back 0.45x
+  (was 1.35 and 0.65).
+- **Gaps by depth.** Each animal's even slot, measured from the front as psi, is drawn at psi + e sin psi (`warp`), so the
+  gaps run 1 + e cos psi of the even gap, wider at the front and tighter at the back in step with the size (e: the size's
+  slope times the ring's radius, at most 0.55). It is a smooth, monotone function of the ring's turn (e < 1), so nothing
+  jitters and nothing overtakes; the front and back points stay put, so a choice still swings to the front. A drag
+  divides by the local stretch so the grabbed animal stays under the pointer. Checked over 60 frames of turning and a
+  fling: no ring changed its order.
+- **Closer and flatter.** `TILT_MAX` 78.5 to 84 degrees, and `chosenPose` fits differently: up and down, 85% of the tile
+  (`TILE_FIT`) fits the focus area, its far edge a little past (under the fliers); across, the tile's middle fits the
+  focus area and its near corners (the widest part) the free centre, into the margins but clear of the list. At
+  1280x800 a tile is 72 degrees from vertical (was 69.5) and about 9% bigger on screen (Lamar 554 px across, was 510). The
+  camera is a little farther, 28.7 km against 26.9, because `lensFor` narrows the lens at the flatter angle to keep the
+  sky out (34 degrees, was 39). Phone 390x844: 67.8 degrees (was about 64). 900 px wide: still small and steep, the list
+  and the right column leaving about 280 px, as on main.
+  `tools/home_zoom_check.mjs` on Lamar passes at 1280x800 (the tile's middle 83% of the free centre) and 390x844; the
+  limb-to-row case was off by 5.6% vertically once and centred on the rerun.
+
+Rejected: grading the sizes round each ring (the biggest at one side reads as a queue); spacing by the measured size of
+each neighbour (it changes as the ring turns and depthF changes, so the slots would breathe); shrinking the whole tile's
+fit including across (the near corners slid under the list).

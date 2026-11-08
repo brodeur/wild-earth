@@ -30,9 +30,10 @@ import { avatarFor } from './social.js';
 //
 // Three rings, each turning on its own (Aaron, 2026-11-07): many walkers stand in an outer and an inner ring turning in
 // opposite directions, the fliers in a third. Choosing an animal swings only its own ring; the pointer over an animal
-// holds its ring still, and a drag on one turns that ring alone (grab, turn, letGo). Each animal is drawn bigger toward
-// the front of its ring and smaller toward the back, beyond what the perspective does (DEPTH_K), and a bird standing on
-// the walkers' rings folds its wings.
+// holds its ring still, and a drag on one turns that ring alone (grab, turn, letGo). The smaller walkers stand on the
+// outer ring and the bigger on the inner (splitBySize, by mass). Each animal is drawn bigger toward the front of its ring
+// and smaller toward the back, beyond what the perspective does (DEPTH_K), the gaps between them widening and narrowing
+// with it (warp), and a bird standing on the walkers' rings folds its wings.
 //
 //   new BodyRing({ renderer, box, onPick, guest })   box: an element over the canvas for the faces and the hover name
 //   pin({ cam, earth, p0, hw })   each frame: the earth camera, the earth group, the tile's centre (unit vector, the
@@ -63,7 +64,11 @@ const SPACING = 0.86;                                // of the ring's spacing an
 // rad/s: the walkers' outer ring, their inner ring (the other way: Aaron, 2026-11-07: "There are inner and outer rings of
 // animals, they should spin in opposite directions and be independently controlled"), the fliers'
 const SPIN = [0.075, -0.06, -0.05];
-const DEPTH_K = 0.3, DEPTH_MIN = 0.6;                // the size by depth (Aaron, 2026-11-07: "decrease the size of the avatars the further away they are from the camera"): 1 + DEPTH_K per ring radius toward the camera, beyond perspective
+// the size by depth (Aaron, 2026-11-07: "decrease the size of the avatars the further away they are from the camera", then
+// "a bit stronger"): 1 + DEPTH_K per ring radius toward the camera, beyond perspective, within [DEPTH_MIN, DEPTH_MAX]: the
+// outer ring's front about 1.6 and its back 0.45. The gaps between them follow it ("their margin should also grow"): each
+// ring's even slots are warped toward the front (warp), the gap there 1 + e and at the back 1 - e of the even one
+const DEPTH_K = 0.5, DEPTH_MIN = 0.45, DEPTH_MAX = 1.65;
 const SPIN_IN_S = 2.5;                               // the turn's ease in, from the first arrival
 const SWING_W = 2.6;                                 // the swing to the front: a critically damped spring (rad/s)
 const POP_GAP = [0.07, 0.17], POP_IN = 0.75, POP_OUT = 0.65, FADE_S = 0.6;
@@ -95,15 +100,16 @@ const commonOf = code => (GROUND[code] || FLIERS[code])?.common || ({ corvus_cor
 
 // The bodies of a tile: its species present (species.json) that the client draws and the spirit can take, and its own
 // fauna's stand-ins (client/fauna.json slots on a kin with a body: playable.js registerStandIns' rule), each { code, name,
-// kind: 'ground' | 'air', spec, tint, scale } (spec as MODELS': [pose kind, load, pose, soar]).
+// kind: 'ground' | 'air', spec, tint, scale, mass } (spec as MODELS': [pose kind, load, pose, soar]; mass: kg, massOf).
 export async function bodiesOf(tileId) {
-  const [sp, fauna] = await Promise.all([getJSON(`../tiles/${tileId}/species/species.json`), getJSON(`../tiles/${tileId}/client/fauna.json`)]);
+  const [sp, fauna, loco] = await Promise.all([getJSON(`../tiles/${tileId}/species/species.json`), getJSON(`../tiles/${tileId}/client/fauna.json`), getJSON(`../tiles/${tileId}/locomotion.json`)]);
+  const L = loco?.species || {};
   const list = Array.isArray(sp) ? sp : sp?.species || [];
   const out = [], seen = new Set();
   for (const s of list) {
     const code = s?.code; if (!code || s.present === false || seen.has(code) || !MODELS[code]) continue;
     const kind = kindOf(code); if (!kind) continue;
-    seen.add(code); out.push({ code, name: commonOf(code), kind, spec: MODELS[code] });
+    seen.add(code); out.push({ code, name: commonOf(code), kind, spec: MODELS[code], mass: massOf(L, code) });
   }
   for (const f of fauna?.slots || []) {
     const code = f?.code; if (!code || seen.has(code)) continue;
@@ -117,9 +123,38 @@ export async function bodiesOf(tileId) {
       spec = [bird ? 'bird' : G, () => loadFaunaModel(f.model.path, tpl, { skin: f.model.skin !== false }), !bird && f.bird ? 1 : 0, f.archetype === 'soar' || tpl === 'hawk' ? 'soar' : undefined];   // a bird on the walkers' ring stands, wings folded (pose 1)
       scale = 1; tint = null;
     }
-    seen.add(code); out.push({ code, name, kind: kk, spec, tint, scale, standIn: true });
+    const mass = Number.isFinite(f.mass_kg) && f.mass_kg > 0 ? f.mass_kg : massOf(L, kin, Number.isFinite(f.scale) && f.scale > 0 ? f.scale : 1);
+    seen.add(code); out.push({ code, name, kind: kk, spec, tint, scale, standIn: true, mass });
   }
   return out;
+}
+
+// A body's mass (kg): the tile's locomotion layer's (strikes.js bodyOf's source), else the model's size (its controller's
+// half-length, cubed at a deer's density: GROUND half 0.6 m for 60 kg); a kin's scaled by the stand-in's size cubed; null
+// when neither is known
+const KG_PER_HALF3 = 280;
+function massOf(L, code, scale = 1) {
+  const m = L[code]?.mass_kg, half = GROUND[code]?.half;
+  return Number.isFinite(m) && m > 0 ? m * scale ** 3 : Number.isFinite(half) ? KG_PER_HALF3 * (half * scale) ** 3 : null;
+}
+
+// The walkers split into [outer, inner]: the heaviest on the inner ring, as many as leave both rings' animals the same
+// room for their length (each wants about its size, SIZE_OF, of its ring's circumference); each ring keeps the list's order
+// so its sizes stay mixed round it. Unknown masses count as the middle one.
+const SIZE_OF = m => Math.max(D_FLOOR, Math.min(1, Math.cbrt(m / 60)) ** D_EXP);
+function splitBySize(walk) {
+  const known = walk.map(b => b.mass).filter(m => m > 0).sort((a, b) => a - b), mid = known.length ? known[known.length >> 1] : 1;
+  const mOf = b => b.mass > 0 ? b.mass : mid;
+  const order = [...walk].sort((a, b) => mOf(b) - mOf(a) || (a.code < b.code ? -1 : 1));
+  const w = order.map(b => SIZE_OF(mOf(b))), all = w.reduce((a, b) => a + b, 0);
+  let best = 1, err = Infinity, sum = 0;
+  for (let k = 1; k < order.length; k++) {
+    sum += w[k - 1];
+    const e = Math.abs(sum / WALK_R[1] - (all - sum) / WALK_R[0]);
+    if (e < err) { err = e; best = k; }
+  }
+  const inner = new Set(order.slice(0, best));
+  return [walk.filter(b => !inner.has(b)), walk.filter(b => inner.has(b))];
 }
 
 function tintGeometry(geo, rgb) {
@@ -239,15 +274,11 @@ export class BodyRing {
     const list = await bodiesOf(tileId);
     if (gen !== this.gen) return null;
     this.list = list;
-    // the walkers: one ring, or (many) an outer and an inner ring each holding its share by its length, so both are spaced
-    // alike; the fliers: one ring, in two staggered rows when many
+    // the walkers: one ring, or (many) an outer ring of the smaller and an inner ring of the bigger (Aaron, 2026-11-07: "The
+    // outer rings should be smaller species, the inner ring should be bigger species"), split by mass where each ring's
+    // animals' room over its length comes out alike (splitBySize); the fliers: one ring, in two staggered rows when many
     const walk = list.filter(b => b.kind === 'ground'), air = list.filter(b => b.kind === 'air');
-    const by = [walk, [], air];
-    if (walk.length > ROWS2) {
-      const nOut = Math.round(walk.length * WALK_R[0] / (WALK_R[0] + WALK_R[1]));
-      by[0] = []; by[1] = [];
-      walk.forEach((b, k) => { const o = by[0].length, i = by[1].length; (o / nOut <= i / (walk.length - nOut) ? by[0] : by[1]).push(b); });
-    }
+    const by = walk.length > ROWS2 ? [...splitBySize(walk), air] : [walk, [], air];
     for (const r of this.rings) if (!r.air) r.R = walk.length > ROWS2 ? WALK_R[r.i] : 1;
     by.forEach((arr, ri) => {
       const ring = this.rings[ri], n = arr.length;
@@ -374,7 +405,7 @@ export class BodyRing {
     for (const r of this.rings) r.target = null;   // only the chosen one's ring swings (below); the others turn on, a ring held for an earlier choice too
     if (it) {
       const r = it.ring;
-      let goal = -it.a; goal = r.rot + wrapPi(goal - r.rot);   // the nearest way round to the front
+      let goal = (this.camA || 0) - it.a; goal = r.rot + wrapPi(goal - r.rot);   // the nearest way round to the front (the warp keeps the front where it is)
       r.target = goal;
       r.drag = false;
       if (this.reduced) { r.rot = goal; r.vel = 0; }
@@ -432,6 +463,7 @@ export class BodyRing {
     // each animal: its arrival or going, its facing along its ring's turn (the chosen one turned toward the camera), the beat
     let halo = null;
     this._cd.set(cam.position.x, cam.position.z); if (this._cd.lengthSq() > 1e-9) this._cd.normalize(); else this._cd.set(0, 1);   // toward the camera, level
+    this.camA = Math.atan2(this._cd.x, this._cd.y);   // its angle round the rings (as an animal's: x sin, z cos)
     for (const it of [...this.items.values(), ...this.leaving()]) this.step(it, dt);   // (a leaving one may free itself)
     const it = this.items.get(this.sel);
     if (it && it.state === 'in' && it.t > 0.2) halo = it;
@@ -463,6 +495,16 @@ export class BodyRing {
     this.syncDom(W, H);
   }
   leaving() { if (!this.gone) this.gone = []; return this.gone; }
+  // The depth spacing: an animal's even slot (its angle a plus its ring's turn) measured from the front, psi, is drawn at
+  // psi + e sin psi, so the slots' gaps are 1 + e cos psi of the even one, following the size by depth (e: the size's slope
+  // over the ring's radius, kept inside its bounds). Smooth and monotone in the turn (e < 1): nothing jitters as a ring
+  // turns or overtakes its neighbour, and the front and the back stay where they are. Returns the ring's local angle.
+  warpE(r) { return Math.min(DEPTH_K * r.R, 1 - DEPTH_MIN, DEPTH_MAX - 1); }
+  warp(it) {
+    const r = it.ring, c = this.camA || 0, psi = wrapPi(it.a + r.rot - c);
+    return c + psi + this.warpE(r) * Math.sin(psi) - r.rot;
+  }
+  stretch(r, it) { return it && it.ring === r ? 1 + this.warpE(r) * Math.cos(it.a + r.rot - (this.camA || 0)) : 1; }
   step(it, dt) {
     if (!it.mesh) return;
     it.t += dt;
@@ -487,9 +529,12 @@ export class BodyRing {
     it.holder.visible = true;
     const chosen = it.code === this.sel && it.state === 'in';
     it.pick = (it.pick || 0) + ((chosen ? 1 : 0) - (it.pick || 0)) * (1 - Math.exp(-dt * 5));
+    // its place on its ring: its even slot warped toward the front, wider gaps there and tighter at the back
+    it.aw = this.warp(it);
+    it.holder.position.x = Math.sin(it.aw) * it.r; it.holder.position.z = Math.cos(it.aw) * it.r;
     // nearer the camera bigger, farther smaller, beyond the perspective: by its depth along the level line to the camera
     const P = this.world.worldToLocal(it.holder.getWorldPosition(this._sv || (this._sv = new THREE.Vector3())));
-    it.depthF = Math.max(DEPTH_MIN, 1 + DEPTH_K * (P.x * this._cd.x + P.z * this._cd.y));
+    it.depthF = clamp(1 + DEPTH_K * (P.x * this._cd.x + P.z * this._cd.y), DEPTH_MIN, DEPTH_MAX);
     it.inner.scale.setScalar(Math.max(1e-4, scale * (1 + 0.16 * it.pick) * it.depthF));
     it.u.uFlash.value = flash; it.u.uAlpha.value = alpha;
     const tr = alpha < 1; if (it.mat.transparent !== tr) { it.mat.transparent = tr; it.mat.depthWrite = !tr; it.mat.needsUpdate = true; }
@@ -502,8 +547,8 @@ export class BodyRing {
       sh.scale.set(it.shS[0] * it.depthF, 1, it.shS[1] * it.depthF);
     }
     // facing: along the ring's turn; the chosen one partly toward the camera (outward at the front)
-    const dir = it.ring.spin >= 0 ? 1 : -1, path = it.a + dir * Math.PI / 2;
-    it.holder.rotation.y = path + wrapPi(it.a - path) * FACE_TURN * it.pick;
+    const dir = it.ring.spin >= 0 ? 1 : -1, path = it.aw + dir * Math.PI / 2;
+    it.holder.rotation.y = path + wrapPi(it.aw - path) * FACE_TURN * it.pick;
     if (it.kind === 'air') {
       it.holder.position.y = it.y + Math.sin(this.time * 0.8 + it.phase) * 0.02;
       it.inner.rotation.z = -dir * 0.16 * (1 - it.pick);   // banked into the turn
@@ -580,10 +625,10 @@ export class BodyRing {
   // px) moves its front by that many pixels across, letGo(ring, px/s) frees it with the fling, easing back to its own turn
   grab(code) {
     const r = this.items.get(code)?.ring; if (!r) return null;
-    r.drag = true; r.target = null; r.vel = 0;
+    r.drag = true; r.target = null; r.vel = 0; r.held = this.items.get(code);
     return r;
   }
-  turn(r, px) { if (r) r.rot += px / Math.max(1, r.R * this.ppu); }
+  turn(r, px) { if (r) r.rot += px / Math.max(1, r.R * this.ppu * this.stretch(r, r.held)); }   // kept under the pointer as the warp moves it there
   letGo(r, pxs = 0) {
     if (!r || !r.drag) return;
     r.drag = false; r.vel = this.reduced ? 0 : clamp(pxs / Math.max(1, r.R * this.ppu), -2.5, 2.5);
