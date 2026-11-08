@@ -8107,3 +8107,29 @@ from a ridge 1-3 km off, or from the title view, the valley was empty.
   - **The rule.** The band is now fractions of the tile's height span above its lowest ground (base 0.09; tops 0.36,
     0.70, 1.05), fitted so the Hoh (165-1,640 m) keeps its numbers (298 m; 696, 1,197 and 1,714 m).
   - **Lamar.** The winter top is 2,317 m, and in summer the whole tile.
+
+## 2026-11-07: herds of hundreds, phase 4: the budget close in and far off
+
+- **How it was measured.** Headless Chrome, ANGLE/Metal on the M1 Pro, 1280 x 800, Lamar on 2026-07-25 at 8:00. Other
+  sessions kept the load average at 11-20 throughout, so whole-frame numbers swing by several ms between identical
+  runs; the bison's own cost was isolated with the fenced timer-query protocol instead (docs memory "GPU timer query").
+  - **Isolation.** The bison meshes (every drawn tier, their planar shadows, the far mesh) and the lights go on camera
+    layer 7, with the shadow maps frozen. Per sample: one untimed render, a fence waited to SIGNALED, then 8 renders
+    inside one TIME_ELAPSED query. On and off alternated for 24 rounds; medians reported.
+- **Close in.** The camera 6 m up, about 90 m from the 400-herd's centre: 302 bison within 150 m, and all 31 of the leg
+  engine's live rows in use. The bison's live range (150 m) holds more bison than the clip texture has rows; the rest
+  draw the engine's baked far cycles, as any animal past its live range does.
+  - **`animals.update`.** 2.1-2.2 ms against main's 0.5 (CPU, median): steering, the hash and the leg engine for 31.
+  - **Isolated GPU.** 158 at lod1, 242 at lod2, their shadows and 189 far bodies of the other herds: 0.17 ms over the
+    empty pass (quartiles overlapping). From inside the herd (6 at lod0, 211 at lod1, 183 at lod2, shadows, 189 far):
+    0.24 ms.
+  - **Whole frame.** Branch 15.0 and 20.8 ms GPU against main's 19.4 and 19.1 at the same pose (main has no herd
+    there). That is within the load's noise.
+- **Far off.** From the 2 km ridge, the 589 far bodies (the season's three bison herds) cost 0.27 ms isolated. The whole
+  frame read 17.7 and 18.1 ms against main's 17.5 and 17.3, with `animals.update` unchanged (0.6-0.7 ms).
+- **Reading.** The herd costs CPU, not GPU: about 1.6 ms of `animals.update` close in and nothing past LIVE_R. The draws
+  are instanced and stay well under a millisecond. Both texture units and vertex attributes are untouched: the far mesh
+  reuses the tier's geometry and material, with the same four instance attributes (aAnim, aAnim2, aClip, aBend) the
+  tier carries, so no program gains a slot (Metal's 16 attributes, 16 texture units).
+- **Not done.** A quiet-machine A/B of the whole frame (the load never dropped below 11 while this ran). The leg
+  engine's 31 rows are a cap of the clip texture, so beyond the nearest 31 bison the gait is the baked cycle.
