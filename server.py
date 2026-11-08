@@ -987,6 +987,8 @@ class GameWorld:
                 out = {"t": "ast", "s": m.get("s"), "u": m.get("u"), "d": m.get("d"), "g": m.get("g"), "at": m.get("at")}
                 if isinstance(m.get("h"), list):   # the planned herds as aggregates (animalNet.js "Herds", 2026-11-07)
                     out["h"] = m["h"]
+                if isinstance(m.get("f"), str) and len(m["f"]) <= 60000:   # the herds' field deltas (herdField.js, 2026-11-08)
+                    out["f"] = m["f"]
                 for k in self.aconns:
                     if k is not conn:
                         k.send(out)

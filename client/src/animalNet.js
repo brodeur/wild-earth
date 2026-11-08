@@ -38,7 +38,8 @@ const SPAWN_MSG = 30000;                   // bytes of spawns in one message at 
                                            // ticks (the server refuses a message over 64 KB, ws.py WS_MAX_IN)
 const NEAR_M = 80, MID_M = 250;            // m from the nearest player: every tick, every other, else every fourth
 const POS_MS = 1000;
-const HERD_EVERY = 8;                      // a herd's row at least every 8 ticks (2 s), else when it moved or changed                       // a mirror's apos: once a second (and at once on a species change)
+const HERD_EVERY = 8;
+const FIELD_EVERY = 8, FIELD_CELLS = 4000;   // the herds' field deltas: every 8 ticks (2 s), 4,000 cells (32 KB, 43 KB base64) a message at most                      // a herd's row at least every 8 ticks (2 s), else when it moved or changed                       // a mirror's apos: once a second (and at once on a species change)
 const RETRY_MAX = 30000;
 export const PG = typeof crypto !== 'undefined' && crypto.getRandomValues ? [...crypto.getRandomValues(new Uint8Array(8))].map(b => b.toString(16).padStart(2, '0')).join('') : Math.random().toString(16).slice(2, 18);
 
@@ -250,8 +251,15 @@ export class AnimalNet {
     }
     // the herds, as aggregates
     const h = A.herdRows ? A.herdRows(full, this.hsent ||= new Map(), HERD_EVERY) : [];
+    // the herds' fields (herdField.js): the cells written since the last, every FIELD_EVERY ticks (every tick while a join's
+    // backlog lasts), at most FIELD_CELLS a message
+    let f = null;
+    if (A.fields) {
+      if (full) { A.fields.all(); this.fieldBacklog = true; }
+      if (this.fieldBacklog || this.stats.ticks % FIELD_EVERY === 0) { f = A.fields.delta(FIELD_CELLS); if (!A.fields.dirty.size) this.fieldBacklog = false; }
+    }
     // the rows, until the tick's share of the cap
-    let bytes = 30 + sBytes + JSON.stringify(d).length + JSON.stringify(g).length + JSON.stringify(h).length, budget = CAP_BPS * TICK_MS / 1000;
+    let bytes = 30 + sBytes + JSON.stringify(d).length + JSON.stringify(g).length + JSON.stringify(h).length + (f ? f.length : 0), budget = CAP_BPS * TICK_MS / 1000;
     let k = 0;
     for (; k < due.length; k++) {
       const a = due[k], row = this.row(a); if (!row) { a.wtick = 0; continue; }
@@ -261,7 +269,7 @@ export class AnimalNet {
     }
     for (; k < due.length; k++) { due[k].wtick = (due[k].wtick || 0) + 1; this.stats.deferred++; }
     for (const a of A.list) if (!a.dead && !a.culled && a.wdue < 1) a.wtick = (a.wtick || 0) + 1;
-    if (s.length || u.length || d.length || g.length || h.length) this.send(h.length ? { t: 'ast', s, u, d, g, h, at: r2(A.time) } : { t: 'ast', s, u, d, g, at: r2(A.time) });
+    if (s.length || u.length || d.length || g.length || h.length || f) { const m = { t: 'ast', s, u, d, g, at: r2(A.time) }; if (h.length) m.h = h; if (f) m.f = f; this.send(m); }
   }
   // one animal's row: [n, mask, ...changed fields], or null when nothing changed
   row(a) {
@@ -287,6 +295,7 @@ export class AnimalNet {
     if (Array.isArray(d.g)) for (const r of d.g) A.mirrorGroup(r);
     if (Array.isArray(d.u)) for (const r of d.u) A.mirrorRow(r, now);
     if (Array.isArray(d.h)) A.mirrorHerds?.(d.h);
+    if (typeof d.f === 'string') A.applyFields?.(d.f);
     if (Array.isArray(d.d)) for (const n of d.d) A.mirrorDrop(n);
     if (now - this.win.t >= 1000) { this.win.lastOut = this.win.out; this.win.lastIn = this.win.in; this.win.out = this.win.in = 0; this.win.t = now; }
   }

@@ -637,6 +637,7 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   // During an acorn game the woodpeckers, squirrels and ravens gather from the game's acorns (game: acorns).
   await w.next('animals');
   const animals = w.m.animals = new Animals({ tile, scene, flight, veg, atmosphere, camera, identify, game: acorns });   // (w.m: disposeWorld takes the tile's stand-in slots out again)
+  animals.renderer = renderer;   // (the game trails painted into the ground data texture: animals.js paintTrails)
   registerStandIns(animals.standIns);   // the tile's stand-ins (client/fauna.json) take their kin's walker or flier body (playable.js)
   // The shared animals (animalNet.js, docs/multiplayer.md "Shared animals"): the game socket's animals channel, joined for
   // the tile and season; one page in the world runs the animals for everyone and the rest mirror it. The three channels

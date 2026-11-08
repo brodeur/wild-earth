@@ -96,6 +96,10 @@ class AnimalsTest(unittest.TestCase):
         a.send({"t": "ast", "s": [], "u": [], "d": [], "g": [], "h": [HROW], "at": 13.0})
         self.assertEqual(b.wait("ast")["h"], [HROW])
         a.none("ast")
+        # the herds' field deltas (herdField.js) are relayed as they are
+        a.send({"t": "ast", "s": [], "u": [], "d": [], "g": [], "f": "AAAAAAAAAAA=", "at": 13.5})
+        self.assertEqual(b.wait("ast")["f"], "AAAAAAAAAAA=")
+        a.none("ast")
         # state from a mirror is dropped
         b.send({"t": "ast", "u": [[1, 1, 0]]})
         a.none("ast")
