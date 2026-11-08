@@ -880,7 +880,7 @@ export class TitleScreen {
     if (fr - fl < 80 || st.b - st.t < 80 || !fits(Math.exp(hi))) { this.aim = null; return { lat, lon, alt: 0.01 }; }   // no room to speak of: a regional view
     for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (fits(Math.exp(m))) hi = m; else lo = m; }
     fits(Math.exp(hi));
-    this.aim = { id, offY, W, H, b: st.b };
+    this.aim = { id, offY, W, H, b: st.b, alt: Math.exp(hi) };
     return { lat, lon, alt: Math.exp(hi) };
   }
   flyToPlace(id) {
@@ -1200,7 +1200,12 @@ export class TitleScreen {
     let offY = 0;
     if (this.sel && this.phase === 'lit') {
       const m = this.aim;
-      if (m && m.id === this.sel && m.W === W && m.H === H) offY = m.offY + this.stage.b - m.b; else { const a = this.focusArea(W, H); offY = (a.t + a.b) / 2 - H / 2; }
+      // the bar settled to another height once landed: the pose found again for it (unless the wheel has zoomed since)
+      if (m && m.id === this.sel && m.W === W && m.H === H && !this.flying && Math.abs(this.stage.b - m.b) > 3 && Math.abs(Math.log(this.altGoal / m.alt)) < 0.01) {
+        this.altGoal = this.chosenPose(this.sel).alt;
+      }
+      const a2 = this.aim;
+      if (a2 && a2.id === this.sel && a2.W === W && a2.H === H) offY = a2.offY + this.stage.b - a2.b; else { const a = this.focusArea(W, H); offY = (a.t + a.b) / 2 - H / 2; }
     }
     this.offY = this.offY == null ? offY : this.offY + (offY - this.offY) * (1 - Math.exp(-dt * 6));
     const flr = `${Math.round(fl)}px|${Math.round(W - fr)}px`;   // the free space's edges for the CSS: the bar's buttons and the toast centre in it

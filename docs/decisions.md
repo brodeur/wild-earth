@@ -8271,7 +8271,8 @@ outer ring of birds." Then: "Bird rings should also going in opposite directions
 - **Resting frame.** `title.js` `chosenPose` no longer fits the whole tile into the focus area. It picks the nearest
   distance at which the tile's middle still fits across the free centre (the list's edge to the right column) and the top
   of the rings' stack stays under the stage's top. The view's offset puts the tile's centre across at the free centre and
-  down where its near edge lands on the stage's bottom, just over the place's title block (`aim`, kept for `frame`). The
+  down where its near edge lands on the stage's bottom, just over the place's title block (`aim`, kept for `frame`; when
+  the bar settles to another height after landing, the pose is found again, unless the wheel has zoomed since). The
   back tucks under the fliers. The stack's height comes from `bodyRing.js` (`STACK_Y`, `AIR_R`, `RING_HW`) and the relief's
   top (`relief.js` `topM`, or `RELIEF_TOP_M` before it is built). At 1726x948, the reference's size: 70.6 degrees from
   vertical, 22.9 km, the lens 26.9 degrees, close to the reference's look (its perspective puts it near 70 degrees and a
