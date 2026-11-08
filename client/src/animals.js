@@ -1060,7 +1060,7 @@ const MOTION = {
   geese: { zor: 1.1, zoo: 3.0, zoa: 9, blind: 0.5, noise: 0.18, walk: 0.35, trot: 0.6, step: 0.35, flee: 0, gallop: 0, stopR: 0, look: 0, reach: [25, 60], wForage: 0.7, wWater: 0, thirst: 0, intake: 3.9e-4 },
   raft: { zor: 1.2, zoo: 4.0, zoa: 12, blind: 0.5, noise: 0.2, walk: 0.3, trot: 0.5, step: 0.3, flee: 0, gallop: 0, stopR: 0, look: 0, reach: [], wForage: 0, wWater: 0, thirst: 0, intake: 0 },
   murmur: { zor: 1.0, zoo: 3.5, zoa: 10, blind: 0.45, noise: 0.12, walk: 0.35, trot: 0.6, step: 0.35, flee: 0, gallop: 0, stopR: 0, look: 0, reach: [20, 50], wForage: 0.6, wWater: 0, thirst: 0, intake: 3.9e-4,
-    air: { speed: 11, zor: 1.6, zoo: 6, zoa: 16, blind: 0.4, noise: 0.06, roostR: 140, lo: 25, hi: 110 } },
+    air: { speed: 11, zor: 1.6, zoo: 6, zoa: 16, blind: 0.4, noise: 0.06, roostR: 80, lo: 25, hi: 110 } },
 };
 function motionOf(s) {
   const fl = FLOCK[s]; if (fl) return fl === 'grazer' ? 'geese' : fl === 'water' ? 'raft' : 'murmur';
@@ -3727,7 +3727,9 @@ export class Animals {
     F.trailDirty.clear();
     gl.bindFramebuffer(gl.FRAMEBUFFER, P.fb);
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, glTex, 0);
-    if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE) {
+    // (the completeness check waits for the GPU, 50-70 ms: once per texture)
+    if (P.okFor !== glTex) P.okFor = gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE ? glTex : null;
+    if (P.okFor === glTex) {
       gl.viewport(0, 0, W, H); gl.disable(gl.DEPTH_TEST); gl.disable(gl.BLEND); gl.disable(gl.SCISSOR_TEST); gl.disable(gl.CULL_FACE); gl.disable(gl.STENCIL_TEST);
       gl.colorMask(true, false, false, false);
       gl.useProgram(P.pr); gl.uniform2f(P.size, W, H); gl.uniform1f(P.ps, Math.max(1, Math.round(per)));
@@ -3779,7 +3781,11 @@ export class Animals {
     for (let k = 0; k < G.length; k++) {
       const g = G[k]; if (!g._n) continue;
       g.cx = g._sx / g._n; g.cz = g._sz / g._n; g.standF = g._st / g._n;
-      if (g.murT > 0) g.murT -= dt;
+      if (g.murT > 0) {
+        g.murT -= dt;
+        let n = 0, sx = 0, sy = 0, sz = 0; for (const b of g.mem) if (b.mur) { n++; sx += b.x; sy += b.y; sz += b.z; }
+        if (n) { g.mcx = sx / n; g.mcy = sy / n; g.mcz = sz / n; } else g.mcx = undefined;
+      }
       else if (g.agg?.flock === 'field' && g._n >= 30 && (this.season === 'fall' || this.season === 'winter') && this.hour > 16.6 && this.hour < 17.4 && g.murDay !== Math.floor(this.time / 86400 + this.hour / 24)) {
         g.murDay = Math.floor(this.time / 86400 + this.hour / 24); g.murT = MUR_S * (0.7 + 0.6 * ((seedOf(g.agg.key, 0x3a7) % 100) / 100)); g.mx = g.cx; g.mz = g.cz;   // dusk: the murmuration over the roost
       }
@@ -3912,7 +3918,6 @@ export class Animals {
       const crowd = nr > 0 && nearest < zor * 0.6, lone = !nr && nearest > zoo * 1.5;
       const follow = nmv >= 3 && mvs / nmv > 0.55;   // most of its neighbours are on the move: it goes with them, a little slower (the motion fades down the chain)
       const wasWalking = a.state === D_WALK && (a.walkHold = (a.walkHold || 0) - dt) > 0;
-      a.why = goal ? 1 : crowd ? 2 : lone ? 3 : follow ? 4 : wasWalking ? 5 : 0;   // (why it walks: debugging)
       if (goal || crowd || lone || follow || wasWalking) {
         if (goal) { vx = sx * 0.6 + a.gx * a.goalW; vz = sz * 0.6 + a.gz * a.goalW; }
         else if (follow) { const ml = Math.hypot(mvx, mvz) || 1; vx = mvx / ml + sx * 0.4; vz = mvz / ml + sz * 0.4; }   // with the way its moving neighbours go
@@ -6771,22 +6776,31 @@ export class Animals {
       }
     }
     const sp0 = Math.hypot(a.vx, a.vy, a.vz) || 1, fx = a.vx / sp0, fy = a.vy / sp0, fz = a.vz / sp0, cb = -Math.cos(P.blind);
-    let rx = 0, ry = 0, rz = 0, nr = 0, ox = 0, oy = 0, oz = 0, ax = 0, ay = 0, az = 0;
+    let rx = 0, ry = 0, rz = 0, nr = 0, ox = 0, oy = 0, oz = 0, no = 0, ax = 0, ay = 0, az = 0, na = 0, lx = 0, ly = 0, lz = 0;
     for (let k = 0; k < nn; k++) {
       const b = NB[k], d = Math.sqrt(ND[k]) || 1e-3, ux = (b.x - a.x) / d, uy = (b.y - a.y) / d, uz = (b.z - a.z) / d;
+      lx += b.x; ly += b.y; lz += b.z;
       if (d < P.zor) { rx -= ux; ry -= uy; rz -= uz; nr++; continue; }
       if (ux * fx + uy * fy + uz * fz < cb) continue;
       const bs = Math.hypot(b.vx, b.vy, b.vz) || 1;
-      if (d < P.zoo) { ox += b.vx / bs; oy += b.vy / bs; oz += b.vz / bs; } else { ax += ux; ay += uy; az += uz; }
+      if (d < P.zoo) { ox += b.vx / bs; oy += b.vy / bs; oz += b.vz / bs; no++; } else { ax += ux; ay += uy; az += uz; na++; }
     }
-    let dx = nr ? rx : ox + ax * 0.8, dy = nr ? ry : oy + ay * 0.8, dz = nr ? rz : oz + az * 0.8;
+    // orientation with its neighbours, a steady pull to their centre (the flock holds together), repulsion inside zor
+    let dx = 0, dy = 0, dz = 0;
+    if (no) { const l = Math.hypot(ox, oy, oz) || 1; dx += ox / l; dy += oy / l; dz += oz / l; }
+    if (na) { const l = Math.hypot(ax, ay, az) || 1; dx += ax / l * 0.6; dy += ay / l * 0.6; dz += az / l * 0.6; }
+    if (nn) { const cx = lx / nn - a.x, cy = ly / nn - a.y, cz = lz / nn - a.z, l = Math.hypot(cx, cy, cz) || 1; dx += cx / l * 0.35; dy += cy / l * 0.35; dz += cz / l * 0.35; }
+    if (nr) { const l = Math.hypot(rx, ry, rz) || 1; dx += rx / l * 1.4; dy += ry / l * 1.4; dz += rz / l * 1.4; }
+    // and a weak pull to the whole flock's centre (the cohesion a roosting murmuration keeps: Hildenbrandt, Carere and
+    // Hemelrijk 2010, Behavioral Ecology 21: 1349-1359, the StarDisplay model's roost attraction)
+    if (g.mcx !== undefined) { const cx = g.mcx - a.x, cy = g.mcy - a.y, cz = g.mcz - a.z, l = Math.hypot(cx, cy, cz) || 1, k = Math.min(0.5, l / 120); dx += cx / l * k; dy += cy / l * k; dz += cz / l * k; }
     const dl = Math.hypot(dx, dy, dz); if (dl > 1e-6) { dx /= dl; dy /= dl; dz /= dl; } else { dx = fx; dy = fy; dz = fz; }
     // the roost holds it, and the band of air over the ground
     const hx = g.mx - a.x, hz = g.mz - a.z, hd = Math.hypot(hx, hz), gy = H.atXZ(a.x, a.z);
     if (hd > P.roostR) { const k = Math.min(1.5, (hd - P.roostR) / P.roostR); dx += hx / hd * k; dz += hz / hd * k; }
     if (a.y < gy + P.lo) dy += Math.min(1.5, (gy + P.lo - a.y) / 10); else if (a.y > gy + P.hi) dy -= Math.min(1.5, (a.y - gy - P.hi) / 10);
     dx += fx * 1.2 + (r() - 0.5) * P.noise * 2; dy += fy * 1.2 + (r() - 0.5) * P.noise; dz += fz * 1.2 + (r() - 0.5) * P.noise * 2;
-    if (r() < dt * 1.2 / Math.max(10, g.mem?.length || 10)) { const t = (r() < 0.5 ? -1 : 1) * 1.3, c2 = Math.cos(t), s2 = Math.sin(t); [dx, dz] = [dx * c2 - dz * s2, dx * s2 + dz * c2]; }   // a sudden turn: the wave starts here
+    if (r() < dt * 0.1 / Math.max(10, g.mem?.length || 10)) { const t = (r() < 0.5 ? -1 : 1) * 1.3, c2 = Math.cos(t), s2 = Math.sin(t); [dx, dz] = [dx * c2 - dz * s2, dx * s2 + dz * c2]; }   // a sudden turn: the wave starts here
     const L = Math.hypot(dx, dy, dz) || 1, tr = Math.min(1, dt * 3.2), v = P.speed * (0.9 + 0.2 * Math.sin(this.time * 0.7 + a.rank));
     const oyaw = a.yaw;
     a.vx += (dx / L * v - a.vx) * tr; a.vy += (dy / L * v * 0.6 - a.vy) * tr; a.vz += (dz / L * v - a.vz) * tr;

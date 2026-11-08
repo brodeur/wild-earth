@@ -688,6 +688,10 @@ one by one: at the stream's 24 KB/s cap they would crowd out everything else. Th
   - A bison killed on the host fell at the same spot on the mirror, by its id, and neither page spawned it again.
   - Over 51 s the herd rows were 26 KB of the host's 966 KB (about 0.5 KB/s); the largest message was the 32.8 KB join
     snapshot.
+- **Fields (2026-11-08).** The herds' stigmergy fields (herdField.js: forage, trail, fear on 10 m cells) belong to the
+  host. It sends the cells written since the last as `ast.f`: base64 of two 32-bit words a cell, up to 4,000 cells a
+  message (43 KB), every 8 ticks, and after a join the whole changed set over several ticks. server.py relays `f` up to
+  60,000 characters. A mirror applies them (queued until its fields are made). No positions are kept.
 - **Open.**
   - The members on two pages are each page's own steering under one frame, so single animals do not stand in the same
     spots, though the herd does.

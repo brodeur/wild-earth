@@ -8259,3 +8259,101 @@ in.
   - Flocks of different species are placed independently, so geese, cranes and blackbirds can share one meadow (often
     true).
   - The morning haze greys skeins more than a person on the ground would see.
+
+## 2026-11-08: herd and flock movement from the rules of collective motion, and stigmergy fields (herdField.js, animals.js herdSteer, herdGoal, herdOptions, aggStep, murStep, paintTrails; branch claude/herd-rules)
+
+Aaron: "Herding and flocking is great as a first pass. Do a bit of research on stygmergy and the rules of movements for
+flocks/herds... the general principles can create more dynamic movement. What are they all running towards right now?"
+
+**What they ran toward.** Every member held a slot in a frame whose centre crept toward one open spot 30-80 m ahead,
+and all herds read the same openness map, so they converged on the same flats. In a flight, every member steered at one
+shared point straight away from the threat, so the herd funnelled into it.
+
+- **No herd waypoint, no slots, no frame.** Each member steers itself.
+  - **Neighbours.** It reads its 7 nearest of its species (topological: Ballerini et al. 2008, PNAS 105: 1232-1237)
+    in Couzin's three zones (Couzin, Krause, James, Ruxton and Franks 2002, J. Theor. Biol. 218: 1-11): any neighbour
+    in the zone of repulsion and it moves away; else it turns with those in the zone of orientation and toward those in
+    the zone of attraction, none in its rear blind angle, with a little heading noise.
+  - **Motion archetypes (MOTION).** The zones, speeds and the rest come per archetype, chosen from the body, not the
+    species (motionOf): a large bovid's tight herd, a cervid's or antelope's looser one, a grazing flock, a raft, a
+    murmuration.
+  - **Following.** A member moves with its neighbours when at least 3 of its 7 are clearly on the move, at 0.85 of
+    their pace, so a move spreads a few animals deep and dies out.
+  - **Calves** stay at their mothers' flanks.
+- **Goals from an informed minority** (Couzin, Krause, Franks and Levin 2005, Nature 433: 513-516).
+  - **Who.** 2.5/sqrt(n) of each herd, 5-50 %: 51 of Lamar's 400.
+  - **What they read.** The land round the herd at its own scale every 20 s (herdOptions: 12 headings at its reach
+    beyond its radius, forage less fear), heading for the best when it beats the herd's own ground by 8 %.
+  - **Splitting.** A quarter of them take a strong second choice when it lies over 70 deg away, which is how a herd
+    can split.
+  - **Bouts.** A forage goal is walked in bouts (6-12 s on, 10-25 s grazing), so a grazing herd drifts.
+  - **Water.** Thirst is a clock per animal (bison 20 h, elk 18 h, staggered), and a thirsty informed member heads down
+    the water distance (the water system's depth and open water) at a trot.
+  - **Fission and fusion.** Neighbours are any of a species, so herds that meet run together and goals far apart pull
+    one apart. Seen on Lamar, with nothing set by hand: 400 at 52 s; 360 + 32 at 85 s; 280 + 65 + 32 + 15 at 117 s;
+    back to 360 + 32 at 149 s.
+- **Rest by quorum** (Conradt and Roper 2003, Nature 421: 155-158). Each member gets up and lies down up to 24 minutes
+  off its herd's hours. The informed set off only once 62 % of the herd is standing.
+- **The selfish-herd flight** (Hamilton 1971, J. Theor. Biol. 31: 295-311).
+  - **Heading.** Each alarmed member runs on its own line away from the threat, as it saw it or as the alarm that
+    reached it placed it, bunching toward its neighbours' centre and aligning with the runners near it.
+  - **Stopping.** It runs until it is stopR from the threat (bison 170 m, elk 260 m) and at least 90 m beyond where the
+    alarm found it. Then it stops, and 80-90 % turn to look back for 3-9 s. The alarm still passes as a wave.
+  - **Seen** (Lamar, the threat at the west edge). 393 of 400 ran, headings aligned 0.87. The spread opened from 80 to
+    114 m instead of closing, and no 20 m patch held more than 25 (the old flight piled them into one point). The herd
+    stopped about 30 s and 170 m on, with 165 looking back.
+- **Stigmergy fields (herdField.js).** 10 m cells over the tile, each holding the value last written and its
+  quarter-hour, with regrowth and decay in closed form, so nothing runs per cell per frame.
+  - **Forage.** Biomass up to the cell's Bmax (from its habitat class and cover: open shrubland under 60 % shrub
+    carries a grass understory, which is what Lamar's sagebrush steppe needed) and a quality.
+    - Grazing takes biomass at 2 % of body mass a day over twelve hours' grazing and raises quality. A lawn grazed young
+      regrows greener and faster and draws the herd back (Geremia et al. 2019, PNAS 116: 25707-25713).
+    - Regrowth over about 9 days, quality relaxing over 20.
+  - **Trail.** Walking lays trail every 10 m, fading over 30 days. Walking takes the cheaper of five headings near its
+    way, slope against and trail for, so walkers keep to trails and trails form where many go (the active walker:
+    Helbing, Schweitzer, Keltsch and Molnar 1997, Phys. Rev. E 56: 2527-2539).
+  - **Fear.** Alarms (60 m) and kills (90 m) write fear, fading over 2.5 days, and the informed avoid it (the landscape
+    of fear: Laundre, Hernandez and Altendorf 2001).
+  - **Determinism.** The fields are deterministic per tile and season. The host owns them, and the mirrors get the
+    changed cells as deltas.
+  - **Not used.** The pipeline's resource rasters carry the fall season in alpha, which a canvas decode premultiplies
+    away, so the forage comes from the habitat grid instead.
+- **Far herds on the fields (aggStep).** A far herd takes the same goals as a whole every 5 minutes, grazes the cells
+  under it, lays trail along its way (more for more animals) and drinks.
+  - **Fast-forward.** `herdFastForward(hours)` runs the far herds and fields on, for captures.
+  - **A week on Lamar** (fast-forwarded in 12 h steps). The 400-herd shuttled between two lawns it kept grazed and paler,
+    with trips to a small water source, and trails wore in between them.
+- **Game trails on the ground.** The trail field's changed cells are drawn into the ground data texture's red channel
+  (the decayed-road weight, all zero since the roads went), in the band below the pavement's.
+  - **How.** One point per cell through a framebuffer that writes red only, since that texture lives on the GPU alone
+    (gpuUpload.js) and its other channels must stay. No new texture unit (the terrain's programs use 15 of 16). The
+    terrain draws the band as worn soil; seen from 70 m as a brown worn path across the steppe.
+  - **The stall.** `checkFramebufferStatus` waited 69 ms for the GPU, so it is checked once per texture; a paint now
+    costs 0.1-0.2 ms.
+- **The murmuration (murStep).** A field flock (starlings, blackbirds; 30 or more) takes to the air for about 4 minutes at
+  dusk in fall and winter.
+  - **Rules.** Couzin's zones in three dimensions with its 7 nearest flying neighbours, a steady pull to its
+    neighbours' centre, a weak pull to the whole flock's centre (the StarDisplay model's roost attraction: Hildenbrandt,
+    Carere and Hemelrijk 2010, Behav. Ecol. 21: 1349-1359), the roost within 80 m, and 25-110 m over the ground.
+  - **Waves.** About once in 10 s one bird turns sharply and the turn runs through the flock (Attanasi et al. 2014,
+    Nature Physics 10: 691-696).
+  - **Seen** (Lamar's 342 meadowlarks). A ball 30-45 m across, nearest neighbours 1.6 m, its alignment swinging between
+    0.1 and 0.7 as it wheels back at the roost's edge.
+  - **What went wrong first.** Without the flock-wide pull it broke into sub-flocks across the roost circle.
+- **Flocks.** A flock's flush is each bird on its own line away from the threat, bending a little toward the flock (no
+  shared flight point); a raft's birds go to open water.
+- **Between pages.** The herd rows carry the informed members' mean goal in place of the frame; a mirror's informed take
+  it. Field deltas go in `ast.f`: up to 4,000 cells a message (43 KB base64), every 2 s, and the whole changed set over
+  ticks after a join; server.py relays it.
+  - **Seen.** After a 12 h fast-forward on the host, the mirror held the same 2,677 trail cells and 682 grazed cells
+    (sums within 1 %). The largest message was 36.5 KB.
+- **The budget** (Lamar, the 400-herd close in with the season's flocks, headless Chrome on the M1 Pro, load about 4).
+  - **Total.** `animals.update` 3.2-3.4 ms (median) against main's 2.7.
+  - **Steering.** 1.34-1.40 ms against 0.86.
+  - **The rest.** The herd pass 0.17 ms against 0.155; trail painting 0.004 ms a frame; far herds 0.03 ms.
+- **Open.**
+  - Bedding and shelter goals (the informed choosing where to lie) are not modelled; a herd beds where it is.
+  - The goose and duck stand-ins still draw pale.
+  - Trails show on level 0 of the ground texture only, so out to about 3 km.
+  - A herd's goal on a mirror is the host's mean, so a split on the host shows on a mirror only as each page's own
+    steering lets it.
