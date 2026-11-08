@@ -662,6 +662,38 @@ copies each message to every mirror (no fan-out cost measured past two pages). A
 animals; there is no choice of host by capability. The host's own frame does the work for every player's
 surroundings (two players 600 m apart: about 330 animals instead of 230).
 
+**Herds (2026-11-07).** A planned herd's members (pipeline/herds.py; a few hundred bison on Lamar) are never streamed
+one by one: at the stream's 24 KB/s cap they would crowd out everything else. The host sends each herd as one row in the
+`ast` message's `h` list (animals.js `herdRows`):
+
+    [key, slot, plan index, live, x, z, wx, wz, fcx, fcz, hdx, hdz, fleeT, ax, az, dead ranks]
+
+- **When a row goes.** When the herd's centre moved 0.5 m, its flight began or ended, a member died or its live state
+  changed, and at least every 8 ticks. A full snapshot sends them all.
+- **What it carries.** The centre, the grazing front's waypoint or flight point, the frame's centre and heading, the
+  flight's time left and origin, and the ranks that died. About 120 bytes a herd.
+- **The relay.** server.py relays `h` as it is (tests/test_animals.py).
+- **On a mirror (`mirrorHerds`).** The rows fill the page's own aggregates, and the far tier draws far herds from them.
+  As the mirror's player comes within LIVE_R plus a herd's radius, the mirror spawns the members itself
+  (`mirrorHerdLive`) from the same seeded ids and places (`herdLayout`) and steers them under the host's frame:
+  waypoint, heading, and a flight started from the member nearest its origin, with the wave as anywhere.
+- **Naming a member.** An event about a herd member (kill, gone, hp, kick, miss) names it by its id, which is the same
+  on every page. A mirror's startle, strike, catch or take of one asks the host by id. A mirror's own herd taking
+  fright asks the host to start the flight (`areq` `herdAlarm`), and the host's next row carries it to everyone.
+- **What was seen.** Two headless Chrome pages on Lamar, the mirror's player beside the 400-herd.
+  - Both pages ran 400 members with centres within 6 m.
+  - A flight started on the host reached the mirror's herd on the next tick; the two waves spread at the same pace and
+    the centres stayed within 3 m through the run.
+  - A flight started on the mirror reached the host the same way.
+  - A bison killed on the host fell at the same spot on the mirror, by its id, and neither page spawned it again.
+  - Over 51 s the herd rows were 26 KB of the host's 966 KB (about 0.5 KB/s); the largest message was the 32.8 KB join
+    snapshot.
+- **Open.**
+  - The members on two pages are each page's own steering under one frame, so single animals do not stand in the same
+    spots, though the herd does.
+  - An AI hunter streamed from the host chases the host's copy of a bison while the mirror draws its own.
+  - A herd's layout recorded when it went far (`herdKeep`) is each page's own.
+
 ## Group follow
 
 Aaron, 2026-11-06: "When a player in a group is in a tile with another player, and one of them leaves to go to the main

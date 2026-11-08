@@ -89,6 +89,12 @@ class AnimalsTest(unittest.TestCase):
         st = b.wait("ast")
         self.assertEqual(st["u"], [ROW])
         self.assertEqual(st["s"][0][1], "3:12,45:0")
+        self.assertNotIn("h", st)                  # no herds sent, none relayed
+        a.none("ast")
+        # the herds' aggregates (animalNet.js "Herds") are relayed as they are
+        HROW = ["64:0", 64, 0, 1, 6141.4, -3048.0, 6180.2, -3020.5, 6141.0, -3047.9, 0.72, 0.69, 0, None, None, [3]]
+        a.send({"t": "ast", "s": [], "u": [], "d": [], "g": [], "h": [HROW], "at": 13.0})
+        self.assertEqual(b.wait("ast")["h"], [HROW])
         a.none("ast")
         # state from a mirror is dropped
         b.send({"t": "ast", "u": [[1, 1, 0]]})

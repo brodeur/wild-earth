@@ -7979,3 +7979,283 @@ the size by depth "should be a bit stronger ... As things get closer, their marg
 Rejected: grading the sizes round each ring (the biggest at one side reads as a queue); spacing by the measured size of
 each neighbour (it changes as the ring turns and depthF changes, so the slots would breathe); shrinking the whole tile's
 fit including across (the near corners slid under the list).
+## 2026-11-07: herds of hundreds, phase 1: the numbers (pipeline/herds.py, library/herds/, animals.js installHerds; branch claude/unruffled-davinci-5a31ae)
+
+Brief: herds of hundreds, bison on Lamar first, the same rule for elk and deer everywhere, rules not species. Before: a
+herd species spawned one group per lucky 30 m habitat cell, sized by PanTHERIA's species-mean group (bison [5, 30], the
+client clamping every stand-in's group to 40 and its pool to 160) and spread by its species-mean density (bison 0.28
+per km2, about 28 on the whole tile). Real grazers do not spread evenly: the same animals gather on the open, low,
+watered ground of their seasonal ranges, and the denser they stand the larger the groups they form.
+
+- **The rule (pipeline/herds.py, step `herds`, fauna stage, after animals and resources; writes client/herds.json).**
+  Per herd species (a fauna slot of the 'grazing or browsing herd' archetype, and the client's static elk and mule deer)
+  and per season:
+  - N = density x land area. Density is the slot's PanTHERIA mean unless library/herds/tiles.json records a count for
+    the tile (a per-tile fine-tune, with its source and how it was reduced).
+  - The seasonal range on the 30 m grid: S = forage x open^2 x water x gentle x low^w (forage: the season's grass-and-forbs
+    or browse score; open: 1 - tree cover; water: 0.4 + 0.6 x the water score; gentle: 1 - slope/30 deg; low: the cell's
+    height within its 1.5 km neighbourhood, weighted 2 in winter, 1.5 spring, 1 fall, 0.7 summer). The range is the cells
+    holding the best 80 % of S. A species library/herds/species.json marks 'steep' (bighorn, mountain goats) takes the
+    25-50 deg slopes instead.
+  - The typical herd G = g0 x sqrt(D_r / D0): PanTHERIA's group g0 at its density D0, grown with the density on the range
+    D_r (group size rising about as the square root of local density, the fission-fusion result in ungulates: Fortin et
+    al. 2009 for bison, Pepin and Gerard 2008 for chamois).
+  - Herd sizes lognormal about G (sigma 0.7) until N is used, each at most 400 (the frame budget's ceiling, not
+    biology's); the largest to the best spot of S blurred over its radius, each next clear of the others by 2 radii +
+    150 m. Radius sqrt(n x a / pi), a = (4 body lengths)^2 x 1.3, length 0.32 x mass^(1/3).
+  - Emitted only when G exceeds the client's own group for the species and PanTHERIA's group is at least 3, so where
+    the cells already draw what the rule would (a foothill mule deer, a moose) nothing changes. Seeded by tile, code and
+    season.
+- **Per-tile fine-tunes (library/herds/tiles.json).** Lamar's bison: 6 per km2 in summer, 3 spring, 2.5 fall, 1.5 winter,
+  from the NPS summer counts of the northern bison (3,667 in 2019, 3,819 in 2023) over a Lamar and Mirror Plateau summer
+  range of about 600 km2, the rut gathering there mid-July to mid-August (NPS bison executive summary). Lamar's elk: 2.5
+  per km2 in winter down to 0.8 in summer, from the April 2025 count (1,102 of the northern herd's 7,226 inside the park).
+  Both are recorded as modelling reductions, not counts on the tile. Per-species (library/herds/species.json): the steep
+  terrain of bighorn and goats, and each species' rut months (bison July-August, elk September-October, mule deer
+  November-December), with sources.
+- **What it gives.** Lamar summer: bison 589 in herds of 400, 163 and 26, all on the valley floor (1,986-2,028 m against
+  the tile's lowest 1,972 m) in grass and sage; winter one herd of 147 by the Lamar's lower reach. Pronghorn 81 in 5
+  herds (34 largest), bighorn 145 in 6 bands on 26-39 deg slopes, elk 246 in 11 herds in winter (35 largest), none planned
+  in summer (G 15.4 is within the elk machine's 16: the cells stand). The Hoh's elk: 180 in 3-6 herds up to 90 on the
+  river flats. Mule deer: PanTHERIA's genus group 2.25 is under 3, so the cells stand on every tile; moose: solitary.
+- **The client (animals.js).** `installHerds` reads client/herds.json (tilepackage.js tile.herds, optional) after
+  installFauna, raises the slot's pool to the two largest herds of any season + 10 % (at most 900; the static elk's bull
+  slot to a quarter of it) and records the rut months; restoreFauna puts the static pools back. A slot with a plan for the
+  season is left out of the cell spawns; `spawnHerds` keeps a herd aggregate per planned herd (its centre kept through
+  the season, so a herd that walked off is met where it went) and spawns its members while the centre is within LIVE_R +
+  its radius of this player or, as the host, another. Members: cows, the year's calves (22 %, April on), bulls (14 % in
+  the rut, 6 % otherwise; the static elk's in their slot, EB). installFauna's group clamp is 400 and pool 900 for the
+  herd archetype (40 and 160 for the rest).
+- **Checked.** tests/test_herds.py (sizes sum and are seeded; a dense grazer gathers on a synthetic valley floor in herds
+  kept apart; small groups and sparse species left to the cells; steep species on slopes). In a headless Chrome on Lamar
+  in late July, the 400-herd's members all spawned (400 bison live) as the eye came within LIVE_R + 137 m, and read from
+  45 m up as a herd on the floor beside the creek.
+- **Not yet (phase 2, below).** The followers held fixed offsets round the leader, so a herd of 400 moved as a rigid
+  disc; the leader alone saw a threat.
+
+## 2026-11-07: herds of hundreds, phase 2: herd motion that scales (animals.js herdPass, herdRoles, herdSteer, herdAlarm)
+
+Every herd on the deer machine (mule deer, elk and their stand-ins: bison, pronghorn, bighorn; cell-spawned and planned
+alike) is now a leader and members steering among their neighbours. Before, each follower walked to a fixed offset round
+the leader (in single file behind it when it walked), and only the leader saw a threat; the whole herd set off on the
+same frame.
+
+- **The hash.** Each frame `herdPass` puts every herd member into the existing 30 m BUCKET cells (a Map of reused arrays)
+  and takes each herd's centre and heading. A member reads only the 3 x 3 cells round it, so the cost grows with the
+  herd, not its square.
+- **Grazing.** A member stands and eats until it is out of its place, then takes a few steps (stand, step, stand):
+  - separation inside 2.5 body lengths (body length 2.2 x its body height), soft enough that only real crowding starts
+    a step;
+  - a pull to its anchor once it is outside its slack: a cow cluster of about 25 (fixed round the herd's frame centre),
+    the bulls' band at the edge outside the rut (the rut mixes them in), 4 % stragglers grazing just off their own side
+    of the herd, each calf within a body length or so of its mother's flank (its mother: the cow placed just before it,
+    and it spawns beside her);
+  - now and then (every 40 s or so) a few steps on to fresh grass;
+  - alignment shapes a step but never starts one (it had set the whole herd walking, each walker keeping its
+    neighbours walking).
+- **The grazing front.** A big herd's frame is the herd itself: its centre drifts toward a waypoint at 0.08 m/s, each
+  next waypoint the most open of six spots 30-80 m on (within twice the radius of home), and the lead cow is a member
+  anchored at the front. A small herd's frame stays behind its leader, which walks between waypoints as before.
+- **Travel.** Walking, piloted or in flight, each member follows the nearest neighbour ahead of it in the direction of
+  travel, a gap behind; one with nobody ahead falls in behind the leader (in a flight it runs on). A small herd walks in
+  file (Lamar's mule deer: 5, 9, 9, 14 and 14 m behind the leader), a big one in parallel files.
+- **The alarm wave.** Any member that sees the danger starts the flight (`herdAlarm`: the herd's flight point away from
+  the threat past its centre, the flight 8 + radius/8 s, so a big herd's outlasts the wave crossing it). Every other
+  member takes it up from any alarmed neighbour within its reach, after a reaction of 0.25-0.6 s, and runs at flight
+  pace. Bedded animals get up at once. The gallop (within 40 m of the threat) is each animal's own. The hunt reads the
+  herd's flight as before (`fled`).
+- **Checked (headless Chrome, Lamar, late July, 7:30).** The 400-herd grazing held its spread (RMS radius about 80 m,
+  nearest neighbour about 6.5 m, about 2.5 bison lengths) with 14-20 % of it stepping at any moment, a mean speed of
+  0.1 m/s, while the centre drifted at the front's pace. An alarm at its west edge reached 19 animals by 1.8 s, 163 by
+  5.3 s, 376 by 8.9 s and 398 of 400 by 11 s (two stragglers out of reach never heard it). The whole herd was then at
+  flight pace, running in files. Before the fixes, three bugs showed in the numbers:
+  - the cow clusters' angle was off by pi, so every cow reached for an anchor across the herd and the herd collapsed
+    to a knot 20 m across;
+  - the frame followed a wandering leader;
+  - every alarmed animal matched the speed of a still-grazing one ahead of it, so nobody ran until the leader did.
+- **Frame time, before and after (headless Chrome, ANGLE/Metal on the M1 Pro, 1280 x 800, load 4-5).**
+  - **Setup.** Lamar on 2026-07-25 at 7:30, the camera held 240 m from the 400-herd's centre and 45 m up, looking at
+    it. 300 frames per run, alternating main (e4bd1f7, port 8781) and this branch, Chrome restarted for every run.
+  - **Main.** 382 animals: `animals.update` 0.4 ms (median), frame 16.7 ms, GPU per frame 12.4 and 12.6 ms (two runs).
+  - **This branch.** 782 animals, 400 of them bison in view: `animals.update` 1.1 ms (p90 1.2-1.3), frame 16.7 ms, GPU
+    12.8 and 12.6 ms.
+  - **Reading.** The herd costs about 0.7 ms of CPU and nothing measurable on the GPU at this distance (the far tier of
+    the drawn bison). The frame stays at the 60 Hz budget.
+  - **Caveat.** The GPU figure is one timer query over each frame's renders, without the fence protocol. It is good for a
+    whole-frame A/B, not for pricing one draw.
+  - **Discarded runs.** Runs after many page loads in one Chrome read 3 draw calls and no animals (a lost context: the
+    16-context limit).
+- **Not yet.**
+  - The far tier (a herd seen beyond LIVE_R from a ridge or the title view).
+  - A close GPU budget with the herd inside the leg engine's live range.
+  - Syncing herds as aggregates to mirrors.
+  - The bison model reads reddish-brown where summer adults are dark brown (the model's colour, not the herd's).
+
+## 2026-11-07: herds of hundreds, phase 3: the far tier (animals.js farHerds, aggDrift, herdLayout, herdKeep; relief.js herdDots)
+
+Aaron saw phases 1-2 and said "Build far view". A planned herd existed only within LIVE_R + its radius of the eye, so
+from a ridge 1-3 km off, or from the title view, the valley was empty.
+
+- **The aggregate.** Each planned herd keeps one aggregate through the season (`herdAgg`): its centre, its grazing
+  front's waypoint and its members' places round the centre (`A.lay`: offset, heading, size, bull, calf per member).
+  - **While far (host only).** `aggDrift` moves the centre as a big herd's frame drifts: 0.08 m/s toward the most open of
+    six spots 30-80 m on, within twice its radius of home, and not at all while the herd is down at its hours.
+  - **The places.** They come from `herdLayout`, the same seeded draws `spawnHerd` makes for each member, in add()'s
+    order. When a herd goes far, `herdKeep` records where each member actually was.
+- **The far bodies.**
+  - **One mesh per species.** The geometry, material and haze are those of the tier the live animals are drawn with at
+    that range: the drawn model's farthest tier (lod2), else the procedural body. Pose rows come from the same far clip
+    drive (the leg engine's `farDrive` or the skinned clips), eight per state, grazing or bedded by the herd's hours.
+  - **Grown to read.** Each body grows so it stays about 3 px long (FAR_PX, at most 5x). At 480 m it is drawn at its own
+    size; at 2 km about twice.
+  - **Rewritten every 0.25 s,** and at once when a herd changes between live and far, so it is never drawn twice or not
+    at all. Far bodies are not hunted, counted, perceived, souled or streamed: nothing but the far meshes knows them.
+- **No pop.** Coming in, the members spawn exactly where their far bodies stood, in the pose they were drawn in (lying
+  down if the herd is down), from the layout the far tier drew. Approaching Lamar's 400-herd from 1.1 km at 35 m up in
+  10 m steps, it resolved at 480 m. Every member stood within 4 cm of its far body (median 0; the drift between
+  rewrites), and the last far frame and the first live frame look the same.
+- **From a ridge.** From an open ridge 2.0 km from the 163-herd and 217 m above it, the herd reads as a dark band of dots
+  on the valley floor beyond the creek; from the Lamar overlook 2.9 km off and 335 m up, the 400-herd reads as a dark
+  cluster. Both are faint in the morning haze: the haze takes the contrast as it takes the land's.
+- **From the title view (relief.js).** The chosen tile's relief model fetches client/herds.json and puts the season's herds
+  on it as small dark boxes (up to 160 a herd), raised with the relief.
+  - **Spread 3x.** The disc is spread HERD_SPREAD times, as the heights are exaggerated. A 270 m herd is 5 px from the
+    title's camera and each bison a tenth of a pixel; spread, the herd is a dark patch of about 15 px.
+  - **Body size.** Each box is sized so the herd's dark share of its disc is about half.
+  - **Still hard to see.** The title's rings of avatars stand over much of the tile, and the patches read only where
+    they are clear of them.
+- **Bison darkened to their summer coat (pipeline/appearance.py model_tint, library/animals/tints.json).**
+  - **Why.** The bison mesh came out a reddish tan (#7a4b29) and a herd read from a ridge as a pale pink patch.
+  - **Why not a rule.** A general rule could not decide this: the description gives "dark-brown, brown", and the mesh
+    already matches "brown" (CIEDE2000 4.6).
+  - **The record.** The target is a recorded per-species choice (#3b2c22, the summer dark brown Aaron asked for; source
+    Meagher 1986, Mammalian Species 266). The multiplier is the rule: the target over the model's measured body colour
+    (upperparts and flanks, area-weighted median), per linear channel.
+  - **Where it lands.** fauna_slots writes it into the slot's `tint` with its `tint_source`. The client now tints a drawn
+    model's tiers as it tinted procedural stand-ins (`tintedTiers`, once per shared geometry). Lamar's bison: tint
+    [0.225, 0.361, 0.726]. The animals step was re-run on Lamar; only the bison slot changed.
+- **The elk's band from the tile's own range (animals.js ELK_BAND).** The static elk's elevation band was the Olympics'
+  (300 m base; tops 700 m in winter, 1,200 m in spring and fall, 1,700 m in summer), so on Lamar (1,970-2,930 m) no elk
+  ever spawned in summer from the cells.
+  - **The rule.** The band is now fractions of the tile's height span above its lowest ground (base 0.09; tops 0.36,
+    0.70, 1.05), fitted so the Hoh (165-1,640 m) keeps its numbers (298 m; 696, 1,197 and 1,714 m).
+  - **Lamar.** The winter top is 2,317 m, and in summer the whole tile.
+
+## 2026-11-07: herds of hundreds, phase 4: the budget close in and far off
+
+- **How it was measured.** Headless Chrome, ANGLE/Metal on the M1 Pro, 1280 x 800, Lamar on 2026-07-25 at 8:00. Other
+  sessions kept the load average at 11-20 throughout, so whole-frame numbers swing by several ms between identical
+  runs; the bison's own cost was isolated with the fenced timer-query protocol instead (docs memory "GPU timer query").
+  - **Isolation.** The bison meshes (every drawn tier, their planar shadows, the far mesh) and the lights go on camera
+    layer 7, with the shadow maps frozen. Per sample: one untimed render, a fence waited to SIGNALED, then 8 renders
+    inside one TIME_ELAPSED query. On and off alternated for 24 rounds; medians reported.
+- **Close in.** The camera 6 m up, about 90 m from the 400-herd's centre: 302 bison within 150 m, and all 31 of the leg
+  engine's live rows in use. The bison's live range (150 m) holds more bison than the clip texture has rows; the rest
+  draw the engine's baked far cycles, as any animal past its live range does.
+  - **`animals.update`.** 2.1-2.2 ms against main's 0.5 (CPU, median): steering, the hash and the leg engine for 31.
+  - **Isolated GPU.** 158 at lod1, 242 at lod2, their shadows and 189 far bodies of the other herds: 0.17 ms over the
+    empty pass (quartiles overlapping). From inside the herd (6 at lod0, 211 at lod1, 183 at lod2, shadows, 189 far):
+    0.24 ms.
+  - **Whole frame.** Branch 15.0 and 20.8 ms GPU against main's 19.4 and 19.1 at the same pose (main has no herd
+    there). That is within the load's noise.
+- **Far off.** From the 2 km ridge, the 589 far bodies (the season's three bison herds) cost 0.27 ms isolated. The whole
+  frame read 17.7 and 18.1 ms against main's 17.5 and 17.3, with `animals.update` unchanged (0.6-0.7 ms).
+- **Reading.** The herd costs CPU, not GPU: about 1.6 ms of `animals.update` close in and nothing past LIVE_R. The draws
+  are instanced and stay well under a millisecond. Both texture units and vertex attributes are untouched: the far mesh
+  reuses the tier's geometry and material, with the same four instance attributes (aAnim, aAnim2, aClip, aBend) the
+  tier carries, so no program gains a slot (Metal's 16 attributes, 16 texture units).
+- **Not done.** A quiet-machine A/B of the whole frame (the load never dropped below 11 while this ran). The leg
+  engine's 31 rows are a cap of the clip texture, so beyond the nearest 31 bison the gait is the baked cycle.
+
+## 2026-11-07: herds of hundreds, phase 5: herds between pages as aggregates (animalNet.js, animals.js herdRows, mirrorHerds, mirrorHerdLive; server.py)
+
+- **Why aggregates.** The shared animals streamed every animal as a row at up to 4 Hz under a 24 KB/s cap, so Lamar's
+  400-herd near a second player would have taken the whole stream. Herds now go as aggregates plus seeds
+  (docs/multiplayer.md "Herds").
+  - The host skips planned herd members in the per-animal stream and sends one `h` row per herd: centre, front's
+    waypoint or flight point, frame, flight and origin, dead ranks. A row goes when the herd changed or every 2 s,
+    about 120 bytes a herd.
+  - Each mirror spawns and steers its own members from the same seeded ids and places, under the host's frame.
+  - Herd members are named by id in events and requests.
+  - A mirror's own herd taking fright starts the flight on the host.
+  - A killed member's rank is recorded in the aggregate, so a buried carcass is not spawned again that season, on any
+    page.
+- **Bug found.** server.py rebuilt the `ast` message from the keys it knew and dropped `h`; it relays it now
+  (tests/test_animals.py).
+- **Checked (two headless Chrome pages, Lamar).**
+  - Herd rows were about 0.5 KB/s of the host's 20.7 KB/s.
+  - The largest message was 32.8 KB, the existing join snapshot, under 64 KB.
+  - Flights started on either page ran on both, the centres within 1-3 m and the waves at the same pace.
+  - A kill by id landed on the same bison on the mirror.
+- **Also in flight.** A fleeing animal on the heels of the one ahead aimed a gap behind it, which was backwards, so it
+  ran back and forth and the herd's centre crept at about 1.3 m/s. It now runs on along the flight and drifts into the
+  lane of the one ahead.
+
+## 2026-11-07: herds of hundreds: big flocks grazing and goose skeins migrating (herds.py flocks, library/herds/flocks.json, animals.js flockStep, skeinUpdate, skeinPlan.js, relief.js)
+
+Aaron: "Make sure big herds is also applying to big flocks - it would be amazing to see some large flocks grazing, or many
+goose V's flying north or south." Part of the far view. It gets its own commit, after phases 4 and 5, which were already
+in.
+
+- **The rule for flocks (pipeline/herds.py tile_flocks).**
+  - **Which birds.** library/herds/flocks.json, matched by genus then family: geese and cranes (grazer: open grass and
+    wet meadow near water, low ground), ducks, coots and pelicans (water: on open water), blackbirds and starlings
+    (field: open fields, a little drawn to water). Each group's typical flock is recorded by season, with sources
+    (Bellrose 1980, Raveling 1969, Tacha et al. 1992, Alisauskas and Arnold 1994, Knopf and Evans 2004, Orians 1985,
+    Feare 1984). Seasons swap on a southern tile.
+  - **Seasonal numbers.** Density x land x the season's share of the bird's open-licence GBIF records:
+    fetch_species.monthly_counts_open counts CC0 and CC BY records only, never CC BY-NC (GBIF's licence filter). The
+    share is over a quarter of the year (1 with under 8 records), and there are at most 1,500 birds a species. A migrant
+    that is away has none.
+  - **Group size.** G = the recorded flock for the season x sqrt(share). Placement is as for herds, on the guild's
+    range. A flock is planned only when G reaches 15 (FLOCK_MIN) and exceeds the client's own group; pairs and family
+    parties (cranes and ducks in summer) stay with the cell spawns.
+  - **No eBird.** eBird Status & Trends is not used: it is non-commercial. CC BY-NC records are filtered out at the
+    source, and only the counts reach herds.json.
+- **What it gives.**
+  - **Lamar.** Canada geese in 10 flocks up to 204 in fall and 18 up to 238 in spring; sandhill cranes staging in fall
+    in 5 flocks up to 155; Brewer's blackbirds, meadowlarks and cowbirds in fall flocks of 290-340; goldeneye rafts of
+    165 in winter.
+  - **Home, in winter.** 7 Canada goose flocks up to 344 (the largest grazing in the rewilded bed of Indian Creek
+    Reservoir), and starling flocks up to 400.
+  - **The Hoh.** Hooded merganser and wood duck rafts on the river in fall and winter.
+- **Grazing flocks (animals.js flockStep).**
+  - **The machine.** A planned flock's bird runs its own step, not its kin's machine. On the ground or the water it
+    grazes and steps among its neighbours on the same steering as a herd (herdSteer under the flock's drifting frame),
+    pecking, wings folded. A raft holds its water.
+  - **The flush.** Any bird that sees the danger starts the flight, its point 2.5 times a herd's run (for a raft, the
+    nearest open water there). Each bird takes off as the alarm reaches it from a neighbour, climbs on a beat by its mass
+    (3.2 Hz for a 3 kg bird), glides down to its place round the flight point, and lands and grazes on.
+  - **Seen.** Lamar's 204 geese went up as a wave in about 1.5 s, three or four hops of the alarm across a 17 m flock.
+  - **Sync.** Flocks are herds to everything else: the far tier draws them folded on their feet or on the water,
+    culled where a grown body would be under a pixel, and they sync between pages as aggregates.
+- **Migration skeins (skeinPlan.js; animals.js skeinUpdate).**
+  - **Which birds, how many.** A V-flying group (geese, cranes, ducks, pelicans) whose AVONET Migration is 2 or 3 (the
+    loader now reads that field, CC BY 4.0) crosses the tile in spring and fall. The rate is 6 skeins an hour x
+    migration (3: 1, 2: 0.4) x the season's passage share (0.3-3). Lamar in fall: geese 5.0/h, cranes 4.0/h, mallards
+    2.2/h, goldeneye 0.7/h, pelicans 0.8/h.
+  - **Heading.** The tile's valley axis (the main direction of its lowest fifth) toward north in spring and south in
+    fall, half pulled to true north-south. Lamar: 334 deg in spring, 154 deg in fall.
+  - **The schedule.** Seeded by the wall clock, the tile and the species, so every page sees the same skeins with
+    nothing sent.
+  - **The formation.** 30 % echelons, the rest V's, the arms about 35 deg off the line of flight. The arms flex, the
+    lead changes every 60-150 s (eased over 8 s), and the beat passes back along each arm (Portugal et al. 2014).
+  - **Drawing.** On the species' own body with its wings spread and beating on the segmented wing rig. The whole skein
+    is grown about its lead bird (at least 8 px of wingspan, at most 12x), so a V stays a V on screen. Each skein flies
+    180-450 m over the highest ground at its lead and up to 1.2 km ahead, eased, so it climbs before a ridge.
+  - **Seen.** From the valley floor at Lamar, a goose echelon of 15 crossed 400 m up and read against the sky.
+- **From the title view (relief.js).** The season's skeins cross over the relief model on the same schedule as small dark
+  chevrons, each spread 40 times with its birds 110 m, as the heights are exaggerated. A goose V is about a pixel at
+  that distance, a 20-30 px chevron spread.
+- **Bugs met.**
+  - Flock groups got no roles: layoutSlots took only deer-machine herds.
+  - The skein birds' yaw took the compass heading where the scene's z points south, so they flew backwards.
+  - The relief's east-up-north basis is left-handed, which is no rotation.
+  - A mid-line `//` in a scripted edit swallowed the rest of a line in relief.js; the syntax check caught it.
+- **Still open.**
+  - The goose and duck stand-ins are the procedural merganser body (a pale quail shape), and that body's spread wings
+    are smaller than the 1.6 m span the growth assumes. A Canada goose model would make both the flocks and the skeins
+    read as geese.
+  - Flocks of different species are placed independently, so geese, cranes and blackbirds can share one meadow (often
+    true).
+  - The morning haze greys skeins more than a person on the ground would see.

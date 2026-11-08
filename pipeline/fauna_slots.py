@@ -599,6 +599,12 @@ def fauna_slots(tile: Tile) -> dict:
         mdl = model_for(a["id"])   # a body of its own from the library (pipeline/fauna_models.py), drawn at its real size
         if mdl:
             slots[-1]["model"] = mdl
+            # a recorded coat colour (library/animals/tints.json): the tint that takes the model's body there
+            from .appearance import model_tint
+            tt = model_tint(a["id"], Path(__file__).resolve().parent.parent / "client" / "assets" / mdl["path"])
+            if tt:
+                slots[-1]["tint"] = tt["tint"]
+                slots[-1]["tint_source"] = {k: tt[k] for k in ("target", "measured", "reason", "source", "rule")}
         slots[-1]["density_km2"] = density_km2({**a, "mass_kg": m}, kin, archetype, efg)
         slots[-1].update(behaviour(a, t, m, archetype))   # its own day, rest, group and (measured) density
         return slots[-1]

@@ -1,0 +1,18 @@
+{
+  "about": "Per-tile fine-tunes for the herd aggregation rule (pipeline/herds.py): a herd species' density on a tile by season, from a count that covers the tile, where the species-mean density (PanTHERIA) is far from what lives there. Each value carries its source and how it was reduced to a density. Read on every build of the herds step.",
+  "tiles": {
+    "utm12n_557_4964": {
+      "name": "Lamar Valley, Yellowstone",
+      "bison_bison": {
+        "density_km2": {"summer": 6.0, "spring": 3.0, "fall": 2.5, "winter": 1.5},
+        "source": "NPS summer aerial counts of the northern Yellowstone bison: 3,667 in 2019 (Geremia et al. 2019, Status Report on the Yellowstone Bison Population), 3,819 in 2023 (2023 Bison Population Status Report); the northern bison congregate in the Lamar Valley and on the adjacent plateaus for the rut, mid-July to mid-August (NPS Yellowstone Bison executive summary)",
+        "reduction": "summer: about 3,700 bison over a Lamar Valley and Mirror Plateau summer range of some 600 km2, about 6 per km2; the other seasons lower as the northern bison move down the Lamar to the Blacktail and Gardiner basins for the winter and come back through spring. A modelling reduction, not a count on this tile"
+      },
+      "cervus_canadensis": {
+        "density_km2": {"winter": 2.5, "spring": 1.5, "summer": 0.8, "fall": 1.2},
+        "source": "Northern Yellowstone Cooperative Wildlife Working Group / Montana FWP helicopter count, April 2025: 7,226 elk in the northern Yellowstone herd, 1,102 of them inside the park (NPS 2025 Wolf, Cougar and Elk Project annual report)",
+        "reduction": "winter: about 1,100 elk on the park's share of the northern winter range, of which the Lamar Valley is a core part, about 2.5 per km2; most move to higher summer ranges, so summer is the lowest. A modelling reduction, not a count on this tile"
+      }
+    }
+  }
+}

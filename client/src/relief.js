@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import { latLonToXYZ } from './mapGlobe.js';
+import { seasonOfDate } from './season.js';
+import { activeSkeins, birdIn } from './skeinPlan.js';
 
 // The chosen place as a relief model on the home screen's globe (Aaron, 2026-11-04: "When the user selects a tile in the
 // start screen is it possible to quickly render an exaggerated relief map of the tile instead of the current flattened
@@ -18,11 +20,22 @@ import { latLonToXYZ } from './mapGlobe.js';
 // - dry grass to tan with height, rock above 2,400 m and snow above 3,000 m;
 // - forest green by tree cover;
 // - blue water in the stream beds and ponds.
+// The season's herds (client/herds.json, pipeline/herds.py: the herd species' herds of hundreds) stand on it as dark
+// speckled patches where they gather: each herd up to HERD_DOTS bodies scattered over its disc, the disc spread
+// HERD_SPREAD times as the heights are exaggerated (a herd of 400 on Lamar is some 270 m across, 5 px from the title's
+// camera, its bison a tenth of a pixel; spread, a patch of 15 px reads), each body grown so the herd's dark share of
+// its disc is about HERD_FILL, raised with the relief.
+// In spring and fall the season's migration skeins (herds.json skeins; skeinPlan.js, the same wall-clock schedule the
+// world flies) cross over it as small dark V's at their height above the relief, spread SKEIN_SPREAD times and each bird
+// SKEIN_DOT m (a goose V of forty is some 60 m wide, about a pixel from here; spread, a chevron of 20-30 px reads), moving
+// at their own speed, every frame.
 // It is lit by the title's sun and by a fixed light from the northwest, so its shape reads at any hour. It fades in
 // over FADE s when it is built, and out when another place is chosen or the screen closes.
 // Nothing here is sent anywhere: the files are the game's own.
 
 const N = 192, EX_SPAN = 1200, EX_MAX = 3, LIFT_M = 12, FADE = 0.8, R_M = 6371000, TILE_M = 10000;
+const SKEIN_SPREAD = 40, SKEIN_DOT = 110, SKEIN_CAP = 800;   // the title's skeins: spread, a bird's size (m) and the most drawn
+const HERD_DOTS = 160, HERD_FILL = 0.5, HERD_SPREAD = 3, HERD_COL = [0.035, 0.022, 0.014];   // (linear: a bison's dark brown in the relief's light)
 
 // UTM (WGS84) to latitude and longitude in degrees (Snyder 1987, the series to the sixth order: well under a metre).
 export function utmToLatLon(E, Nn, zone, north = true) {
@@ -98,7 +111,8 @@ export class Relief {
     try {
       // tree cover: the lidar's (canopy_height.png G, 10 m) where the tile has it, else LANDFIRE's (canopy.png R, 30 m)
       const cover = pixels(dir + 'canopy_height.png', N, 'medium').then(d => ({ d, ch: 1 })).catch(() => pixels(dir + 'canopy.png', N, 'medium').then(d => ({ d, ch: 0 }))).catch(() => null);
-      [H, C, W] = await Promise.all([pixels(dir + 'heights.png', N), cover, waterShare(dir + 'water.png', N).catch(() => null)]);
+      const herds = fetch(dir + 'herds.json').then(r => r.ok ? r.json() : null).catch(() => null);
+      [H, C, W, this.herds] = await Promise.all([pixels(dir + 'heights.png', N), cover, waterShare(dir + 'water.png', N).catch(() => null), herds]);
     } catch (e) { if (this.want === id) this.want = null; console.warn(e.message); return; }
     if (this.want !== id) return;   // another place was chosen meanwhile
     this.want = null; this.id = id;
@@ -112,15 +126,15 @@ export class Relief {
   }
   update(dt) {
     const step = dt / FADE;
-    if (this.mesh) { const u = this.mesh.material.uniforms.opacity; u.value = Math.min(1, u.value + step); this.mesh.material.transparent = u.value < 1; }
+    if (this.mesh) { const u = this.mesh.material.uniforms.opacity; u.value = Math.min(1, u.value + step); this.mesh.material.transparent = u.value < 1; this.skeins(u.value); }
     for (let i = this.fading.length - 1; i >= 0; i--) {
       const m = this.fading[i], u = m.material.uniforms.opacity; m.material.transparent = true; u.value -= step;
-      if (u.value <= 0) { this.group.remove(m); m.geometry.dispose(); m.material.dispose(); this.fading.splice(i, 1); }
+      if (u.value <= 0) { this.group.remove(m); for (const c of m.children) c.geometry.dispose(); m.geometry.dispose(); m.material.dispose(); this.fading.splice(i, 1); }
     }
   }
   dispose() {
     this.hide();
-    for (const m of this.fading) { this.group.remove(m); m.geometry.dispose(); m.material.dispose(); }
+    for (const m of this.fading) { this.group.remove(m); for (const c of m.children) c.geometry.dispose(); m.geometry.dispose(); m.material.dispose(); }
     this.fading = [];
   }
   build(T, H, C, W) {
@@ -185,7 +199,81 @@ export class Relief {
     const m = new THREE.Mesh(g, mat);
     m.position.copy(centre); m.renderOrder = 2; m.frustumCulled = false;
     m.userData = { id: T, ex, lo, hi };
+    const dots = this.herdDots(T, h, lo, ex, centre, up, north, east);
+    if (dots) { const d = new THREE.Mesh(dots, mat); d.renderOrder = 2; d.frustumCulled = false; m.add(d); }
+    if (this.herds?.skeins && Object.keys(this.herds.skeins).length) {
+      // (the basis east, up, south: right-handed, so it is a rotation)
+      const box = new THREE.BoxGeometry(1, 0.25, 0.5), sk = new THREE.InstancedMesh(box, new THREE.MeshBasicMaterial({ color: 0x1d1712, transparent: true, opacity: 0 }), SKEIN_CAP);
+      sk.count = 0; sk.frustumCulled = false; sk.renderOrder = 3; sk.name = 'relief skeins';
+      sk.userData = { T, lo, hi, ex, centre, basis: new THREE.Matrix4().makeBasis(east, up, north.clone().negate()), q: new THREE.Quaternion(), m: new THREE.Matrix4(), p: new THREE.Vector3(), s: new THREE.Vector3(), o: {} };
+      m.add(sk); m.userData.skeins = sk;
+    }
     return m;
+  }
+  // The season's skeins at this moment over the relief (header): positions on the globe at their height, each bird a
+  // small dark box turned along its heading, the material faded with the relief.
+  skeins(opacity) {
+    const sk = this.mesh?.userData.skeins, plans = this.herds?.skeins; if (!sk || !plans) return;
+    const season = seasonOfDate(new Date()), Tm = Date.now() / 1000, U = sk.userData, T = U.T;
+    const top = U.lo + (U.hi - U.lo) * 0.85;   // (above most of the ground: the world's skein clears the highest under its path)
+    let j = 0; const o = U.o, p = U.p, q = U.q, M = U.m, S = U.s, rot = new THREE.Quaternion().setFromRotationMatrix(U.basis), yq = new THREE.Quaternion(), Y = new THREE.Vector3(0, 1, 0);
+    for (const code of Object.keys(plans)) {
+      const plan = plans[code]?.[season]; if (!plan) continue;
+      for (const s of activeSkeins(this.id, code, plan, Tm, TILE_M)) {
+        // spread about the skein's own lead place: the same V, SKEIN_SPREAD times wider
+        birdIn(s, 0, Tm, 1.6, 2.7, o); const lx = o.x, ln = o.n;
+        for (let i = 0; i < s.n && j < SKEIN_CAP; i++, j++) {
+          birdIn(s, i, Tm, 1.6, 2.7, o);
+          const x = lx + (o.x - lx) * SKEIN_SPREAD, nn = ln + (o.n - ln) * SKEIN_SPREAD;
+          const ll = utmToLatLon(T.x0 + x, T.y0 + nn, T.zone, T.north);
+          latLonToXYZ(ll.lat, ll.lon, p).multiplyScalar(1 + (LIFT_M + (top - U.lo + s.agl) * U.ex) / R_M).sub(U.centre);
+          yq.setFromAxisAngle(Y, Math.PI - o.yaw); q.copy(rot).multiply(yq);   // the body along the heading, the wings across
+          S.setScalar(SKEIN_DOT / R_M); M.compose(p, q, S); sk.setMatrixAt(j, M);
+        }
+      }
+    }
+    sk.count = j; sk.instanceMatrix.needsUpdate = true; sk.material.opacity = 0.9 * opacity; sk.visible = j > 0;
+  }
+  // The season's herds as small dark boxes on the relief (see the header), one geometry; null without herds.
+  herdDots(T, h, lo, ex, centre, up, north, east) {
+    const all = this.herds?.herds; if (!all || typeof all !== 'object') return null;
+    const season = seasonOfDate(new Date()), boxes = [];
+    for (const code of Object.keys(all)) for (const hd of all[code]?.[season] || []) if ([hd.x, hd.n, hd.count, hd.r].every(Number.isFinite)) boxes.push(hd);
+    if (!boxes.length) return null;
+    const pos = [], nrm = [], clr = [], idx = [], p = new THREE.Vector3(), cell = TILE_M / N;
+    // a unit box's corners and faces (x east, y up, z north), each face its own four vertices for flat normals
+    const F = [[[1, 0, 0], [[1, -1, -1], [1, 1, -1], [1, 1, 1], [1, -1, 1]]], [[-1, 0, 0], [[-1, -1, 1], [-1, 1, 1], [-1, 1, -1], [-1, -1, -1]]],
+      [[0, 1, 0], [[-1, 1, -1], [-1, 1, 1], [1, 1, 1], [1, 1, -1]]], [[0, 0, 1], [[1, -1, 1], [1, 1, 1], [-1, 1, 1], [-1, -1, 1]]], [[0, 0, -1], [[-1, -1, -1], [-1, 1, -1], [1, 1, -1], [1, -1, -1]]]];
+    let seed = 0x9e3779b9;
+    const rnd = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+    for (const hd of boxes) {
+      const m = Math.min(HERD_DOTS, Math.max(1, Math.round(hd.count))), R = hd.r * HERD_SPREAD, s = THREE.MathUtils.clamp(R * Math.sqrt(HERD_FILL * Math.PI / m), 6, 70);
+      for (let k = 0; k < m; k++) {
+        const a = rnd() * Math.PI * 2, d = Math.sqrt(rnd()) * R * 0.85, yaw = rnd() * Math.PI;
+        const x = hd.x + Math.cos(a) * d, nn = hd.n + Math.sin(a) * d;
+        const i = THREE.MathUtils.clamp(Math.floor(x / cell), 0, N - 1), j = THREE.MathUtils.clamp(Math.floor((TILE_M - nn) / cell), 0, N - 1);
+        const ll = utmToLatLon(T.x0 + x, T.y0 + nn, T.zone, T.north);
+        const base = latLonToXYZ(ll.lat, ll.lon, p).multiplyScalar(1 + (LIFT_M + (h[j * N + i] - lo) * ex) / R_M).sub(centre).clone();
+        const hx = s * 0.8, hy = s * 0.45, hz = s * 0.45, c = Math.cos(yaw), sn = Math.sin(yaw);
+        for (const [fn, corners] of F) {
+          const v0 = pos.length / 3;
+          for (const [cx, cy, cz] of corners) {
+            const lx = cx * hx, lz = cz * hz, ex2 = lx * c - lz * sn, nz = lx * sn + lz * c, ly = (cy + 1) * hy;
+            const q = base.clone().addScaledVector(east, ex2 / R_M).addScaledVector(north, nz / R_M).addScaledVector(up, ly / R_M);
+            pos.push(q.x, q.y, q.z);
+            const fx = fn[0] * c - fn[2] * sn, fz = fn[0] * sn + fn[2] * c, nv = east.clone().multiplyScalar(fx).addScaledVector(north, fz).addScaledVector(up, fn[1]);
+            nrm.push(nv.x, nv.y, nv.z); clr.push(...HERD_COL);
+          }
+          idx.push(v0, v0 + 1, v0 + 2, v0, v0 + 2, v0 + 3);
+        }
+      }
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setAttribute('normal', new THREE.Float32BufferAttribute(nrm, 3));
+    g.setAttribute('color', new THREE.Float32BufferAttribute(clr, 3));
+    g.setIndex(idx);
+    return g;
   }
 }
 const ROCK = new THREE.Color('#9b988e'), SNOW = new THREE.Color('#eef2f4'), FOREST = new THREE.Color('#2c4a2a'), WATER = new THREE.Color('#3f86b0');

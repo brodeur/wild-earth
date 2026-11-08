@@ -45,7 +45,11 @@
    "kin": "cervus_canadensis",
    "archetype": "grazing or browsing herd",
    "scale": 1.245,
-   "tint": null,
+   "tint": [
+    0.225,
+    0.361,
+    0.726
+   ],
    "mass_kg": 579.255,
    "density_km2": 0.28,
    "group": [
@@ -64,6 +68,13 @@
     "path": "fauna/bison_bison.glb",
     "kind": "quadruped",
     "skin": true
+   },
+   "tint_source": {
+    "target": "#3b2c22",
+    "measured": "7a4b29",
+    "reason": "the summer coat is dark brown (the mesh came out a reddish tan, #7a4b29: a herd read from a ridge as a pale pink patch); the description allows dark brown or brown, and Aaron asked for the summer dark brown (2026-11-07)",
+    "source": "Meagher, M. (1986). Bison bison. Mammalian Species 266: 1-8 (pelage dark brown); library/animals/appearance/bison_bison.json (body dark-brown, brown)",
+    "rule": "pipeline/appearance.py model_tint"
    },
    "active_hours": [
     0,
