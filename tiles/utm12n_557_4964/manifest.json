@@ -15,7 +15,7 @@
   44.9171452371748
  ],
  "size_m": 10000,
- "generated_at": "2026-11-07T20:21:48Z",
+ "generated_at": "2026-11-08T02:00:17Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -6483,6 +6483,69 @@
    "road_fraction": 0.0013105,
    "sha256": "c951011c82c6314f8386280d47418328198d22710034695c66d9dd7bb8a10024",
    "bytes": 14213
+  },
+  "client.herds": {
+   "path": "client/herds.json",
+   "kind": "table",
+   "derived_from": [
+    "client.fauna",
+    "client.habitat",
+    "client.canopy",
+    "client.heights",
+    "resources"
+   ],
+   "herds": {
+    "bison_bison": {
+     "winter": 1,
+     "spring": 2,
+     "summer": 3,
+     "fall": 2
+    },
+    "antilocapra_americana": {
+     "winter": 3,
+     "spring": 4,
+     "summer": 5,
+     "fall": 4
+    },
+    "ovis_canadensis": {
+     "winter": 4,
+     "spring": 5,
+     "summer": 6,
+     "fall": 4
+    },
+    "cervus_canadensis": {
+     "winter": 11,
+     "spring": 5,
+     "fall": 6
+    }
+   },
+   "largest": {
+    "bison_bison": {
+     "winter": 147,
+     "spring": 213,
+     "summer": 400,
+     "fall": 152
+    },
+    "antilocapra_americana": {
+     "winter": 54,
+     "spring": 29,
+     "summer": 34,
+     "fall": 48
+    },
+    "ovis_canadensis": {
+     "winter": 91,
+     "spring": 62,
+     "summer": 46,
+     "fall": 66
+    },
+    "cervus_canadensis": {
+     "winter": 35,
+     "spring": 52,
+     "fall": 37
+    }
+   },
+   "sha256": "d0b07d6d2f81e6157c505a8b551754a8f7de948dabd886cbe1b889853ed0188e",
+   "bytes": 15129
   }
  },
  "sources": {
@@ -8309,6 +8372,12 @@
    "at": "2026-11-07T20:21:48Z",
    "seconds": 89.7,
    "ok": true
+  },
+  {
+   "step": "herds",
+   "at": "2026-11-08T02:00:17Z",
+   "seconds": 0.8,
+   "ok": true
   }
  ],
  "steps": {
@@ -10109,6 +10178,47 @@
     "cache": 27
    },
    "seconds": 0.1
+  },
+  "herds": {
+   "version": "1",
+   "code": "6e1711139cb41d6e",
+   "params": {
+    "tile": "utm12n_557_4964"
+   },
+   "fingerprint": "97389116bf49c904",
+   "parts": {
+    "version": "1",
+    "code": "6e1711139cb41d6e",
+    "params": {
+     "tile": "utm12n_557_4964"
+    },
+    "deps": {
+     "animals": "033cec71bbcf9e4f",
+     "resources": "5aabea24b5a5a3b9",
+     "terrain": "bf6238ba2bb24451"
+    },
+    "library": {
+     "library/herds": "3b0c60782743001f"
+    }
+   },
+   "ran_at": "2026-11-08T02:00:16Z",
+   "owner": null,
+   "status": "ok",
+   "layers": [
+    "client.herds"
+   ],
+   "outputs": {
+    "client/herds.json": "d0b07d6d2f81e615"
+   },
+   "out_hash": "a6ecf5add885c0ef",
+   "sources": {},
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 1
+   },
+   "seconds": 0.8
   }
  },
  "seams": {

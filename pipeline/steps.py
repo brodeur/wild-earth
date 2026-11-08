@@ -463,6 +463,14 @@ def _animals(tile, m, force):
     add_layer(m, tile, "client.fauna", fauna_slots(tile), fetched=False)
 
 
+def _herds(tile, m, force):
+    # Where the herd species gather by season and in herds of what size (pipeline/herds.py, 2026-11-07): the same animals
+    # concentrated on the open, low, watered ground of their seasonal ranges, the typical herd growing with the density
+    # there; recorded per-tile counts and per-species corrections in library/herds/
+    from .herds import tile_herds
+    add_layer(m, tile, "client.herds", tile_herds(tile), fetched=False)
+
+
 def _stills(tile, m, force):
     # A still for every slot of client/fauna.json (pipeline/stills.py): a modelled animal's model rendered headless in the
     # stills' framing, a stand-in's its kin's still; shared assets (client/assets/opening/, index.json), the tile's report
@@ -722,6 +730,9 @@ STEPS: dict[str, Step] = {s.name: s for s in [
          doc="a still for every animal's species chip: a model rendered, a stand-in's kin's (client/assets/opening)", stage=A),
     Step("resources", "2", ["resources", "derive", "water_seasons"], ["dem", "hydro", "water_seasons", "landcover", "terrain", "species_mix", "species"], _resources,
          ["resources", "client.mast"], doc="food, water and cover per season; the acorn mast", stage=A),
+    Step("herds", "1", ["herds", "pantheria"], ["animals", "resources", "terrain"], _herds, ["client.herds"],
+         library=["library/herds"], doc="the herd species' seasonal ranges and herd sizes: fewer, larger herds where they gather",
+         stage=A),
     # ---------------------------------------------------------------- games
     Step("games", "2", ["games"], ["species", "resources", "animals"], _games, ["games"],   # 2: relations.desirability (2026-11-06)
          doc="every species' games: archetype, hotspots, scarcity, predators, competitors; each eater's desirability of its foods", stage=G),

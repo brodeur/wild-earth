@@ -704,6 +704,28 @@
     "queued_credits_est": 0
    },
    "status": "ok"
+  },
+  "herds": {
+   "stage": "fauna",
+   "started_at": "2026-11-08T02:00:17Z",
+   "ended_at": "2026-11-08T02:00:17Z",
+   "wall_s": 0.5,
+   "cpu_self_s": 0.5,
+   "cpu_children_s": 0.0,
+   "downloads": {},
+   "cache": {
+    "eltontraits": {
+     "hits": 1,
+     "misses": 0
+    }
+   },
+   "disk_bytes": 4434,
+   "meshy": {
+    "spent": 0,
+    "queued": 0,
+    "queued_credits_est": 0
+   },
+   "status": "ok"
   }
  },
  "stages": {
@@ -732,14 +754,14 @@
    "meshy_queued_credits_est": 0
   },
   "fauna": {
-   "started_at": "2026-11-07T16:17:12Z",
-   "ended_at": "2026-11-07T16:21:40Z",
-   "wall_s": 279.1,
-   "cpu_s": 15.6,
+   "started_at": "2026-11-08T02:00:17Z",
+   "ended_at": "2026-11-08T02:00:17Z",
+   "wall_s": 279.6,
+   "cpu_s": 16.1,
    "download_bytes": 78598438,
-   "cache_hits": 463,
+   "cache_hits": 464,
    "cache_misses": 119,
-   "disk_bytes": 8473110,
+   "disk_bytes": 8477544,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -1376,22 +1398,39 @@
    "ended_at": "2026-11-07T20:55:20Z",
    "failed": [],
    "refused": []
+  },
+  {
+   "started_at": "2026-11-08T02:00:17Z",
+   "stages": [
+    {
+     "stage": "fauna",
+     "started_at": "2026-11-08T02:00:17Z",
+     "steps_run": [
+      "herds"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-08T02:00:17Z"
+    }
+   ],
+   "ended_at": "2026-11-08T02:00:17Z",
+   "failed": [],
+   "refused": []
   }
  ],
  "totals": {
-  "wall_s": 702.2,
-  "cpu_s": 378.6,
+  "wall_s": 702.7,
+  "cpu_s": 379.1,
   "download_bytes": 93618077,
-  "cache_hits": 1115,
+  "cache_hits": 1116,
   "cache_misses": 151,
-  "disk_bytes": 1001789527,
+  "disk_bytes": 1001793961,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 0
  },
- "updated_at": "2026-11-07T20:55:20Z",
+ "updated_at": "2026-11-08T02:00:17Z",
  "client": {
-  "bytes": 60527668,
-  "files": 56,
+  "bytes": 60533569,
+  "files": 57,
   "largest": {
    "client/lidar_micro.png": 7921507,
    "client/terrain_detail.png": 7581919,

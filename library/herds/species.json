@@ -1,0 +1,30 @@
+{
+  "about": "Per-species fine-tunes for the herd aggregation rule (pipeline/herds.py). Each entry is a recorded correction to the general rule, with its reason and source. Read on every build of the herds step; change the data, not the code.",
+  "species": {
+    "ovis_canadensis": {
+      "terrain": "steep",
+      "reason": "bighorn sheep stay within a few hundred metres of escape terrain (cliffs, steep broken slopes) and do not gather on valley floors; the general rule's flat, low ground is inverted for them",
+      "source": "Geist, V. (1971). Mountain Sheep: A Study in Behavior and Evolution. University of Chicago Press; Smith, Flinders and Winn (1991), Great Basin Naturalist 51: 205-225 (escape terrain within 300 m)"
+    },
+    "oreamnos_americanus": {
+      "terrain": "steep",
+      "reason": "mountain goats live on cliffs and the steep slopes beside them",
+      "source": "Festa-Bianchet, M. and Cote, S. D. (2008). Mountain Goats: Ecology, Behavior and Conservation of an Alpine Ungulate. Island Press"
+    },
+    "bison_bison": {
+      "rut": [7, 8],
+      "reason": "the rut is mid-July to mid-August; the bulls join the cow groups then and leave them in bachelor bands for the rest of the year",
+      "source": "NPS Yellowstone Bison executive summary (https://www.nps.gov/yell/learn/nature/upload/YellowstoneBison_ExecutiveSummary.pdf)"
+    },
+    "cervus_canadensis": {
+      "rut": [9, 10],
+      "reason": "the elk rut is September and October: a herd bull holds a harem in the cow herd",
+      "source": "Clutton-Brock, Guinness and Albon (1982). Red Deer: Behavior and Ecology of Two Sexes. University of Chicago Press"
+    },
+    "odocoileus_hemionus": {
+      "rut": [11, 12],
+      "reason": "the mule deer rut is November to December",
+      "source": "Wallmo, O. C. (ed.) (1981). Mule and Black-tailed Deer of North America. University of Nebraska Press"
+    }
+  }
+}

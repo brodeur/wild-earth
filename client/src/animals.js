@@ -944,14 +944,15 @@ function installFauna(fauna, owner) {
     const water = !!f.water && !WATER_IDS.has(ID[K]), I = water && WATER_TWIN[K] !== undefined ? WATER_TWIN[K] : K;   // I: the rules it runs
     const sK = SPECIES[K], sI = SPECIES[I], sc = Number.isFinite(f.scale) && f.scale > 0 ? clampN(f.scale, 0.05, 20) : 1;
     const d = SPECIES.length;
+    const herd = f.archetype === HERD_ARCH, gMax = herd ? HERD_MAX : 40;   // a herd species' groups run to the hundreds (installHerds)
     const grp = Array.isArray(f.group) && f.group.length === 2 && f.group.every(Number.isFinite)
-      ? [clampN(Math.round(Math.min(f.group[0], f.group[1])), 1, 40), clampN(Math.round(Math.max(f.group[0], f.group[1])), 1, 40)] : null;
+      ? [clampN(Math.round(Math.min(f.group[0], f.group[1])), 1, gMax), clampN(Math.round(Math.max(f.group[0], f.group[1])), 1, gMax)] : null;
     GROUP[d] = grp ? (grp[0] + grp[1]) / 2 : GROUP[I] || 1;
     if (grp) GRP[d] = grp;
     // numbers: the kin's spawn parameter times the density over the kin's own (per group: a bigger group, fewer groups)
     const e0 = expectedPerKm2(I), ratio = Number.isFinite(f.density_km2) && f.density_km2 > 0 && e0 > 0 ? f.density_km2 / e0 * (GROUP[I] || 1) / GROUP[d] : 1;
     const e = { code: f.code, one: f.one || f.common || f.code, many: f.many || f.one || f.common || f.code, common: f.common || f.one || f.code,
-      salt: 20000 + seedOf(f.code, 0xfa) % 60000, cap: clampN(Math.max(Math.round(sI.cap * clampN(ratio, 0.5, 2)), 2 * (grp?.[1] || 2)), 4, 160), scale: 1,
+      salt: 20000 + seedOf(f.code, 0xfa) % 60000, cap: clampN(Math.max(Math.round(sI.cap * clampN(ratio, 0.5, 2)), 2 * (grp?.[1] || 2)), 4, herd ? HERD_CAP : 160), scale: 1,
       build: () => tintedModel(ownWings(scaledModel(sK.build(), sc), f), f.tint), standIn: { kin: sK.code, rules: sI.code, scale: sc, ...(f.reptile ? { reptile: f.reptile } : {}), ...(f.family ? { family: f.family } : {}), ...(typeof f.swims === 'boolean' ? { swims: f.swims } : {}), ...(Number.isFinite(f.mass_kg) ? { mass_kg: f.mass_kg } : {}) } };   // reptile, family, swims, mass: a snake's body for the player (playable.js snakeEntry)
     if (sK.planar || sI.planar) e.planar = true;
     if (sI.liveR) e.liveR = sI.liveR;
@@ -1013,9 +1014,44 @@ function installFauna(fauna, owner) {
     FAUNA.codes.push(f.code);
   }
 }
+// ---- herds of hundreds (client/herds.json, pipeline/herds.py; 2026-11-07) ------------------------------------------------
+// A herd species (fauna.json archetype 'grazing or browsing herd', and the static elk and mule deer) gathers where the
+// pipeline's aggregation rule puts it: per season, a few herds with a centre (x east, n north of the tile's south-west
+// corner, metres), a size and a radius, on the open, low, watered ground of the seasonal range. A slot with a plan for the
+// season is spawned from it (spawnHerds) and not from the cells; every other slot and season as before. HERD_MAX: the
+// ceiling on one herd (the frame budget's); HERD_CAP: on one slot's pool (two big herds in view).
+const HERD_ARCH = 'grazing or browsing herd', HERD_MAX = 400, HERD_CAP = 900;
+const HERDS = {};                      // slot -> { season: [{ x, n, count, r }] }
+const HERD_RUT = {};                   // slot -> [first, last] month of the rut (herds.json rut: library/herds/species.json)
+const STATIC_CAP = SPECIES.map(sp => sp.cap);   // a plan raises a static slot's pool (the elk's); restoreFauna puts it back
+function installHerds(herds) {
+  if (!herds || typeof herds.herds !== 'object' || !herds.herds) return;
+  for (const [code, bySeason] of Object.entries(herds.herds)) {
+    const s = INDEX[code]; if (s === undefined || !bySeason || typeof bySeason !== 'object') continue;
+    const plan = {}; let need = 0;
+    for (const [season, list] of Object.entries(bySeason)) {
+      if (!Array.isArray(list)) continue;
+      const hs = list.filter(h => h && [h.x, h.n, h.count, h.r].every(Number.isFinite) && h.count >= 1)
+        .map(h => ({ x: h.x, n: h.n, count: Math.min(HERD_MAX, Math.round(h.count)), r: clampN(h.r, 4, 400) }));
+      if (!hs.length) continue;
+      plan[season] = hs;
+      const top = hs.map(h => h.count).sort((a, b) => b - a);
+      need = Math.max(need, top[0] + (top[1] || 0));
+    }
+    if (!Object.keys(plan).length) continue;
+    HERDS[s] = plan;
+    const sp = SPECIES[s];
+    sp.cap = Math.max(sp.cap, Math.min(HERD_CAP, Math.ceil(need * 1.1)));
+    for (let v = 0; v < SPECIES.length; v++) if (SPECIES[v].variantOf === s) SPECIES[v].cap = Math.max(SPECIES[v].cap, Math.ceil(sp.cap * 0.25));   // the static elk's bulls (EB)
+    const rut = herds.rut?.[code]; if (Array.isArray(rut) && rut.length === 2 && rut.every(Number.isFinite)) HERD_RUT[s] = rut;
+  }
+}
 // Take the tile's fauna out again (owner: only when it is still that Animals' own; null: whatever is in).
 function restoreFauna(owner) {
   if (owner && FAUNA.owner !== owner) return;
+  for (const k of Object.keys(HERDS)) delete HERDS[k];
+  for (const k of Object.keys(HERD_RUT)) delete HERD_RUT[k];
+  for (let k = 0; k < STATIC_N; k++) SPECIES[k].cap = STATIC_CAP[k];
   for (let k = STATIC_N; k < SPECIES.length; k++) {
     for (const T of [HOH, CULL, GROUP, MAMMAL, FG_SEEN, REST_POSE, CARRION.reach, GRP, DRAWN]) delete T[k];
     UPRIGHT.delete(k); KILLABLE.delete(k); ALARM_AT.delete(k);
@@ -1034,6 +1070,7 @@ export class Animals {
   constructor({ tile, scene, flight, veg, atmosphere, camera, identify = null, game = null }) {
     Object.assign(this, { tile, flight, veg, camera, identify, atmosphere, game });   // game: the acorn game (acorns.js), or null
     installFauna(tile.fauna || null, this);   // the tile's own fauna (client/fauna.json): the gate and the stand-in slots, before any per-slot table
+    installHerds(tile.herds || null);         // where its herds gather (client/herds.json): before the pools are sized
     this.searches = SEARCHES;
     // v4: families by granary (rebuilt with the live set), raiders the families may chase
     this.fams = new Map(); this.threats = new Map();
@@ -2029,6 +2066,7 @@ export class Animals {
       }
       for (let s = 0; s < SPECIES.length; s++) {
         if (!live[s] || SPECIES[s].grid || SPECIES[s].territory || SPECIES[s].variantOf !== undefined) continue;   // soarers, lion: territory cells; bucks: in the herds
+        if (HERDS[s]?.[this.season]) continue;   // gathered in the season's planned herds (spawnHerds)
         const sp = SPECIES[s]; if (sp.liveR && dist > Math.max(sp.liveR, eyeLive[s] || 0)) continue;
         const band = s < STATIC_N;   // the elevation bands below are the Sierra's and the Olympics' own: a stand-in (installFauna) keeps its kin's habitat rule, not its range
         const suit = SUIT[sp.code][cls] || 0; if (!suit) continue;
@@ -2099,6 +2137,7 @@ export class Animals {
       }
     }
     }
+    this.spawnHerds(C, keep);
     for (const s of slotsOf(HK, TV, BA, OS, SS, ME, GW, CG, WG)) if (live[s]) this.spawnSoarers(s, px, pz, keep);
     for (const s of slotsOf(ML)) if (live[s]) this.spawnLion(px, pz, keep, s);   // (and the tile's stand-ins on them: slotsOf)
     for (const s of slotsOf(BE)) if (live[s]) this.spawnBear(px, pz, keep, s);
@@ -2416,6 +2455,48 @@ export class Animals {
           if (buck) { const h = seedOf(id, 0xa47); a.u1 = (h & 1023) / 1023; a.u2 = ((h >>> 10) & 1023) / 1023; a.u3 = ((h >>> 20) & 1023) / 1023; a.young = (seedOf(id, 0x7e5) % 100) < 35 ? 1 : 0; if (a.young) a.size *= 0.94; }
         }, keep);
       }
+    }
+  }
+  // The season's planned herds (installHerds): each a herd aggregate (this.herdAgg: its centre, kept while the season
+  // lasts, so a herd that walked off is met where it went), its members live while its centre is within LIVE_R + its
+  // radius of this player or, as the host, another (C: [x, north] pairs).
+  spawnHerds(C, keep) {
+    const season = this.season, live = this.sim;
+    if (this.herdSeason !== season || !this.herdAgg) { this.herdAgg = new Map(); this.herdSeason = season; }
+    for (const k of Object.keys(HERDS)) {
+      const s = +k, plan = HERDS[s][season]; if (!plan || !live[s]) continue;
+      if (GATE && s < STATIC_N && !GATE.has(SPECIES[s].code)) continue;
+      for (let i = 0; i < plan.length; i++) {
+        const h = plan[i], key = `${s}:${i}`;
+        let A = this.herdAgg.get(key);
+        if (!A) this.herdAgg.set(key, A = { s, i, n: h.count, r: h.r, x: h.x, z: -h.n, hx: h.x, hz: -h.n, g: null, live: false });
+        let near = false;
+        for (const [qx, qn] of C) if (Math.hypot(A.x - qx, -A.z - qn) < LIVE_R + A.r) { near = true; break; }
+        A.live = near;
+        if (near) this.spawnHerd(A, keep); else A.g = null;
+      }
+    }
+  }
+  // One planned herd's members round its aggregate's centre: cows, the year's calves (spring and summer), bulls (in the rut
+  // a share of the herd; otherwise a few, at its edge); a static elk's bulls in their own slot (EB), a mule deer's bucks (BK).
+  spawnHerd(A, keep) {
+    const s = A.s, code = SPECIES[s].code, elk = ID[s] === EL, deer = ID[s] === DR;
+    const R = HERD_RUT[s] || (elk ? [9, 10] : deer ? [11, 12] : null), mo = this.month;
+    const rut = !!R && mo >= R[0] && mo < R[1] + 1;
+    const g = A.g ||= { hx: A.hx, hz: A.hz, leader: null, wx: A.x, wz: A.z, gap: elk ? 3.6 : 2.6, spread: A.r, r: A.r, agg: A, n: A.n };
+    const vs = s < STATIC_N ? (elk ? EB : deer ? BK : s) : s;
+    for (let m = 0; m < A.n; m++) {
+      const id = `herd:${code}:${this.season}:${A.i}:${m}`, rnd = mulberry32(seedOf(id, 0x4e7d));
+      const bull = m > 0 && (seedOf(id, 0xb0c) % 1000) < (rut ? 140 : 60);
+      this.add(id, bull ? vs : s, rnd, a => {
+        a.group = g; a.rank = m; a.bull = bull;
+        const ang = rnd() * TAU, d = m ? Math.sqrt(rnd()) * A.r * 0.85 : 0;
+        a.ox = Math.cos(ang) * d; a.oz = Math.sin(ang) * d;
+        if (!m) g.leader = a;
+        a.x = A.x + a.ox; a.z = A.z + a.oz; a.y = this.heights.atXZ(a.x, a.z); a.yaw = rnd() * TAU; a.state = D_GRAZE; a.t = rnd() * 10;
+        if (!bull && m > 0 && mo >= 4 && mo < 10 && (seedOf(id, 0xca1) % 100) < 22) { a.calf = true; a.size *= 0.5 + 0.3 * Math.min(1, (mo - 4) / 6); }   // the year's calves, born from April
+        if (bull) { const hh = seedOf(id, 0xa47); a.u1 = (hh & 1023) / 1023; a.u2 = ((hh >>> 10) & 1023) / 1023; a.u3 = ((hh >>> 20) & 1023) / 1023; a.young = (seedOf(id, 0x7e5) % 100) < 35 ? 1 : 0; if (a.young) a.size *= 0.94; else if (vs === s) a.size *= 1.08; }
+      }, keep);
     }
   }
   add(id, s, rnd, init, keep) {
@@ -3482,7 +3563,7 @@ export class Animals {
             const ang = r() * TAU, d = 40 + r() * 70;
             let x = a.x + Math.cos(ang) * d, z = a.z + Math.sin(ang) * d;
             const hx = x - g.hx, hz = z - g.hz, hd = Math.hypot(hx, hz);
-            if (hd > 160) { x = g.hx + hx / hd * 160; z = g.hz + hz / hd * 160; }
+            const HR = Math.max(160, 2 * (g.r || 0)); if (hd > HR) { x = g.hx + hx / hd * HR; z = g.hz + hz / hd * HR; }
             const sc = this.openness(x, z) + r() * 0.3;
             if (sc > best) { best = sc; g.wx = x; g.wz = z; }
           }
@@ -3496,7 +3577,7 @@ export class Animals {
       } else {   // walking: single file behind the leader; grazing: spread around it
         const L = g.leader || a, walking = L.state === D_WALK;   // a herd can lose its leader; follow yourself
         let tx, tz;
-        if (walking) {
+        if (walking && !g.r) {
           const fx = Math.sin(L.yaw), fz = Math.cos(L.yaw), back = a.rank * (g.gap || 2.6), side = a.ox * 0.18;
           tx = L.x - fx * back + fz * side; tz = L.z - fz * back - fx * side;
         } else { tx = L.x + a.ox; tz = L.z + a.oz; }

@@ -7945,3 +7945,57 @@ Rejected: rebuilding the ~30 bird GLBs in Blender with new cards. The tools woul
 shape rule, and the procedural stand-ins, the bulk of the cast on pipeline tiles, would still have needed the
 client-side version. Also rejected: a per-finger fan attribute (a 17th slot on some paths); the fingers close by
 squeezing toward the tip joint's chord line instead.
+
+## 2026-11-07: herds of hundreds, phase 1: the numbers (pipeline/herds.py, library/herds/, animals.js installHerds; branch claude/unruffled-davinci-5a31ae)
+
+Brief: herds of hundreds, bison on Lamar first, the same rule for elk and deer everywhere, rules not species. Before: a
+herd species spawned one group per lucky 30 m habitat cell, sized by PanTHERIA's species-mean group (bison [5, 30], the
+client clamping every stand-in's group to 40 and its pool to 160) and spread by its species-mean density (bison 0.28
+per km2, about 28 on the whole tile). Real grazers do not spread evenly: the same animals gather on the open, low,
+watered ground of their seasonal ranges, and the denser they stand the larger the groups they form.
+
+- **The rule (pipeline/herds.py, step `herds`, fauna stage, after animals and resources; writes client/herds.json).**
+  Per herd species (a fauna slot of the 'grazing or browsing herd' archetype, and the client's static elk and mule deer)
+  and per season:
+  - N = density x land area. Density is the slot's PanTHERIA mean unless library/herds/tiles.json records a count for
+    the tile (a per-tile fine-tune, with its source and how it was reduced).
+  - The seasonal range on the 30 m grid: S = forage x open^2 x water x gentle x low^w (forage: the season's grass-and-forbs
+    or browse score; open: 1 - tree cover; water: 0.4 + 0.6 x the water score; gentle: 1 - slope/30 deg; low: the cell's
+    height within its 1.5 km neighbourhood, weighted 2 in winter, 1.5 spring, 1 fall, 0.7 summer). The range is the cells
+    holding the best 80 % of S. A species library/herds/species.json marks 'steep' (bighorn, mountain goats) takes the
+    25-50 deg slopes instead.
+  - The typical herd G = g0 x sqrt(D_r / D0): PanTHERIA's group g0 at its density D0, grown with the density on the range
+    D_r (group size rising about as the square root of local density, the fission-fusion result in ungulates: Fortin et
+    al. 2009 for bison, Pepin and Gerard 2008 for chamois).
+  - Herd sizes lognormal about G (sigma 0.7) until N is used, each at most 400 (the frame budget's ceiling, not
+    biology's); the largest to the best spot of S blurred over its radius, each next clear of the others by 2 radii +
+    150 m. Radius sqrt(n x a / pi), a = (4 body lengths)^2 x 1.3, length 0.32 x mass^(1/3).
+  - Emitted only when G exceeds the client's own group for the species and PanTHERIA's group is at least 3, so where
+    the cells already draw what the rule would (a foothill mule deer, a moose) nothing changes. Seeded by tile, code and
+    season.
+- **Per-tile fine-tunes (library/herds/tiles.json).** Lamar's bison: 6 per km2 in summer, 3 spring, 2.5 fall, 1.5 winter,
+  from the NPS summer counts of the northern bison (3,667 in 2019, 3,819 in 2023) over a Lamar and Mirror Plateau summer
+  range of about 600 km2, the rut gathering there mid-July to mid-August (NPS bison executive summary). Lamar's elk: 2.5
+  per km2 in winter down to 0.8 in summer, from the April 2025 count (1,102 of the northern herd's 7,226 inside the park).
+  Both are recorded as modelling reductions, not counts on the tile. Per-species (library/herds/species.json): the steep
+  terrain of bighorn and goats, and each species' rut months (bison July-August, elk September-October, mule deer
+  November-December), with sources.
+- **What it gives.** Lamar summer: bison 589 in herds of 400, 163 and 26, all on the valley floor (1,986-2,028 m against
+  the tile's lowest 1,972 m) in grass and sage; winter one herd of 147 by the Lamar's lower reach. Pronghorn 81 in 5
+  herds (34 largest), bighorn 145 in 6 bands on 26-39 deg slopes, elk 246 in 11 herds in winter (35 largest), none planned
+  in summer (G 15.4 is within the elk machine's 16: the cells stand). The Hoh's elk: 180 in 3-6 herds up to 90 on the
+  river flats. Mule deer: PanTHERIA's genus group 2.25 is under 3, so the cells stand on every tile; moose: solitary.
+- **The client (animals.js).** `installHerds` reads client/herds.json (tilepackage.js tile.herds, optional) after
+  installFauna, raises the slot's pool to the two largest herds of any season + 10 % (at most 900; the static elk's bull
+  slot to a quarter of it) and records the rut months; restoreFauna puts the static pools back. A slot with a plan for the
+  season is left out of the cell spawns; `spawnHerds` keeps a herd aggregate per planned herd (its centre kept through
+  the season, so a herd that walked off is met where it went) and spawns its members while the centre is within LIVE_R +
+  its radius of this player or, as the host, another. Members: cows, the year's calves (22 %, April on), bulls (14 % in
+  the rut, 6 % otherwise; the static elk's in their slot, EB). installFauna's group clamp is 400 and pool 900 for the
+  herd archetype (40 and 160 for the rest).
+- **Checked.** tests/test_herds.py (sizes sum and are seeded; a dense grazer gathers on a synthetic valley floor in herds
+  kept apart; small groups and sparse species left to the cells; steep species on slopes). In a headless Chrome on Lamar
+  in late July, the 400-herd's members all spawned (400 bison live) as the eye came within LIVE_R + 137 m, and read from
+  45 m up as a herd on the floor beside the creek.
+- **Not yet (phase 2).** The followers hold fixed offsets round the leader, so a herd of 400 moves as a rigid disc; the
+  leader alone sees a threat.

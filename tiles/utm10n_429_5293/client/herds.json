@@ -1,0 +1,258 @@
+{
+ "format": 1,
+ "rule": "pipeline/herds.py",
+ "grid_m": 30.03,
+ "herds": {
+  "cervus_canadensis": {
+   "winter": [
+    {
+     "x": 4789.8,
+     "n": 8843.8,
+     "count": 90,
+     "r": 52.3,
+     "s": 0.357
+    },
+    {
+     "x": 4639.6,
+     "n": 8333.3,
+     "count": 68,
+     "r": 45.5,
+     "s": 0.337
+    },
+    {
+     "x": 4789.8,
+     "n": 8063.1,
+     "count": 22,
+     "r": 25.9,
+     "s": 0.317
+    }
+   ],
+   "spring": [
+    {
+     "x": 4789.8,
+     "n": 8843.8,
+     "count": 54,
+     "r": 40.5,
+     "s": 0.602
+    },
+    {
+     "x": 4639.6,
+     "n": 8333.3,
+     "count": 32,
+     "r": 31.2,
+     "s": 0.578
+    },
+    {
+     "x": 4729.7,
+     "n": 8123.1,
+     "count": 32,
+     "r": 31.2,
+     "s": 0.569
+    },
+    {
+     "x": 6321.3,
+     "n": 8423.4,
+     "count": 31,
+     "r": 30.7,
+     "s": 0.529
+    },
+    {
+     "x": 3828.8,
+     "n": 8723.7,
+     "count": 31,
+     "r": 30.7,
+     "s": 0.513
+    }
+   ],
+   "summer": [
+    {
+     "x": 4789.8,
+     "n": 8843.8,
+     "count": 58,
+     "r": 42.0,
+     "s": 0.429
+    },
+    {
+     "x": 4639.6,
+     "n": 8333.3,
+     "count": 56,
+     "r": 41.2,
+     "s": 0.423
+    },
+    {
+     "x": 4789.8,
+     "n": 8063.1,
+     "count": 54,
+     "r": 40.5,
+     "s": 0.394
+    },
+    {
+     "x": 6321.3,
+     "n": 8423.4,
+     "count": 12,
+     "r": 19.1,
+     "s": 0.383
+    }
+   ],
+   "fall": [
+    {
+     "x": 4789.8,
+     "n": 8843.8,
+     "count": 76,
+     "r": 48.1,
+     "s": 0.304
+    },
+    {
+     "x": 4639.6,
+     "n": 8333.3,
+     "count": 45,
+     "r": 37.0,
+     "s": 0.297
+    },
+    {
+     "x": 4729.7,
+     "n": 8123.1,
+     "count": 27,
+     "r": 28.6,
+     "s": 0.292
+    },
+    {
+     "x": 6321.3,
+     "n": 8423.4,
+     "count": 14,
+     "r": 20.6,
+     "s": 0.27
+    },
+    {
+     "x": 2357.4,
+     "n": 8543.5,
+     "count": 13,
+     "r": 19.9,
+     "s": 0.256
+    },
+    {
+     "x": 5930.9,
+     "n": 8303.3,
+     "count": 5,
+     "r": 12.3,
+     "s": 0.246
+    }
+   ]
+  }
+ },
+ "plan": {
+  "cervus_canadensis": {
+   "winter": {
+    "N": 180,
+    "placed": 180,
+    "G": 51.6,
+    "range_km2": 5.8,
+    "density_on_range_km2": 31.06,
+    "largest": 90,
+    "density_km2": 1.825,
+    "density_from": "pantheria"
+   },
+   "spring": {
+    "N": 180,
+    "placed": 180,
+    "G": 50.3,
+    "range_km2": 6.09,
+    "density_on_range_km2": 29.55,
+    "largest": 54,
+    "density_km2": 1.825,
+    "density_from": "pantheria"
+   },
+   "summer": {
+    "N": 180,
+    "placed": 180,
+    "G": 48.9,
+    "range_km2": 6.44,
+    "density_on_range_km2": 27.93,
+    "largest": 58,
+    "density_km2": 1.825,
+    "density_from": "pantheria"
+   },
+   "fall": {
+    "N": 180,
+    "placed": 180,
+    "G": 50.3,
+    "range_km2": 6.1,
+    "density_on_range_km2": 29.52,
+    "largest": 76,
+    "density_km2": 1.825,
+    "density_from": "pantheria"
+   }
+  },
+  "odocoileus_hemionus": {
+   "winter": {
+    "N": 1575,
+    "G": 9.3,
+    "why": "PanTHERIA's group 2.25: a solitary or paired species does not herd",
+    "density_km2": 16.0,
+    "density_from": "pantheria"
+   },
+   "spring": {
+    "N": 1575,
+    "G": 9.0,
+    "why": "PanTHERIA's group 2.25: a solitary or paired species does not herd",
+    "density_km2": 16.0,
+    "density_from": "pantheria"
+   },
+   "summer": {
+    "N": 1575,
+    "G": 8.8,
+    "why": "PanTHERIA's group 2.25: a solitary or paired species does not herd",
+    "density_km2": 16.0,
+    "density_from": "pantheria"
+   },
+   "fall": {
+    "N": 1575,
+    "G": 9.0,
+    "why": "PanTHERIA's group 2.25: a solitary or paired species does not herd",
+    "density_km2": 16.0,
+    "density_from": "pantheria"
+   }
+  }
+ },
+ "rut": {
+  "bison_bison": [
+   7,
+   8
+  ],
+  "cervus_canadensis": [
+   9,
+   10
+  ],
+  "odocoileus_hemionus": [
+   11,
+   12
+  ]
+ },
+ "fine_tunes": {
+  "cervus_canadensis": {
+   "species": {
+    "rut": [
+     9,
+     10
+    ],
+    "reason": "the elk rut is September and October: a herd bull holds a harem in the cow herd",
+    "source": "Clutton-Brock, Guinness and Albon (1982). Red Deer: Behavior and Ecology of Two Sexes. University of Chicago Press"
+   }
+  },
+  "odocoileus_hemionus": {
+   "species": {
+    "rut": [
+     11,
+     12
+    ],
+    "reason": "the mule deer rut is November to December",
+    "source": "Wallmo, O. C. (ed.) (1981). Mule and Black-tailed Deer of North America. University of Nebraska Press"
+   }
+  }
+ },
+ "sources": [
+  "pantheria",
+  "library/herds/tiles.json",
+  "library/herds/species.json"
+ ]
+}

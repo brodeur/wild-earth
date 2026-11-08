@@ -1,0 +1,796 @@
+{
+ "format": 1,
+ "rule": "pipeline/herds.py",
+ "grid_m": 30.03,
+ "herds": {
+  "bison_bison": {
+   "winter": [
+    {
+     "x": 2537.5,
+     "n": 7852.9,
+     "count": 147,
+     "r": 83.2,
+     "s": 0.451
+    }
+   ],
+   "spring": [
+    {
+     "x": 2537.5,
+     "n": 7912.9,
+     "count": 213,
+     "r": 100.2,
+     "s": 0.752
+    },
+    {
+     "x": 6021.0,
+     "n": 3378.4,
+     "count": 82,
+     "r": 62.2,
+     "s": 0.747
+    }
+   ],
+   "summer": [
+    {
+     "x": 6141.1,
+     "n": 3048.0,
+     "count": 400,
+     "r": 137.3,
+     "s": 0.454
+    },
+    {
+     "x": 5810.8,
+     "n": 4579.6,
+     "count": 163,
+     "r": 87.6,
+     "s": 0.491
+    },
+    {
+     "x": 2627.6,
+     "n": 7852.9,
+     "count": 26,
+     "r": 35.0,
+     "s": 0.537
+    }
+   ],
+   "fall": [
+    {
+     "x": 2777.8,
+     "n": 7732.7,
+     "count": 152,
+     "r": 84.6,
+     "s": 0.348
+    },
+    {
+     "x": 5810.8,
+     "n": 4579.6,
+     "count": 94,
+     "r": 66.5,
+     "s": 0.345
+    }
+   ]
+  },
+  "antilocapra_americana": {
+   "winter": [
+    {
+     "x": 2507.5,
+     "n": 7822.8,
+     "count": 54,
+     "r": 21.7,
+     "s": 0.481
+    },
+    {
+     "x": 2507.5,
+     "n": 8033.0,
+     "count": 25,
+     "r": 14.8,
+     "s": 0.46
+    },
+    {
+     "x": 3318.3,
+     "n": 7432.4,
+     "count": 2,
+     "r": 4.2,
+     "s": 0.459
+    }
+   ],
+   "spring": [
+    {
+     "x": 2507.5,
+     "n": 7822.8,
+     "count": 29,
+     "r": 15.9,
+     "s": 0.814
+    },
+    {
+     "x": 6081.1,
+     "n": 3348.3,
+     "count": 28,
+     "r": 15.6,
+     "s": 0.782
+    },
+    {
+     "x": 3318.3,
+     "n": 7432.4,
+     "count": 18,
+     "r": 12.5,
+     "s": 0.782
+    },
+    {
+     "x": 2537.5,
+     "n": 8003.0,
+     "count": 6,
+     "r": 7.2,
+     "s": 0.779
+    }
+   ],
+   "summer": [
+    {
+     "x": 2627.6,
+     "n": 7852.9,
+     "count": 34,
+     "r": 17.2,
+     "s": 0.537
+    },
+    {
+     "x": 3228.2,
+     "n": 7372.4,
+     "count": 19,
+     "r": 12.9,
+     "s": 0.521
+    },
+    {
+     "x": 2417.4,
+     "n": 8063.1,
+     "count": 13,
+     "r": 10.6,
+     "s": 0.515
+    },
+    {
+     "x": 2807.8,
+     "n": 7762.8,
+     "count": 10,
+     "r": 9.3,
+     "s": 0.515
+    },
+    {
+     "x": 5660.7,
+     "n": 5000.0,
+     "count": 5,
+     "r": 6.6,
+     "s": 0.514
+    }
+   ],
+   "fall": [
+    {
+     "x": 2657.7,
+     "n": 7852.9,
+     "count": 48,
+     "r": 20.5,
+     "s": 0.381
+    },
+    {
+     "x": 3228.2,
+     "n": 7372.4,
+     "count": 20,
+     "r": 13.2,
+     "s": 0.368
+    },
+    {
+     "x": 2417.4,
+     "n": 8063.1,
+     "count": 10,
+     "r": 9.3,
+     "s": 0.365
+    },
+    {
+     "x": 5660.7,
+     "n": 5000.0,
+     "count": 3,
+     "r": 5.1,
+     "s": 0.364
+    }
+   ]
+  },
+  "ovis_canadensis": {
+   "winter": [
+    {
+     "x": 5150.2,
+     "n": 9654.7,
+     "count": 91,
+     "r": 33.1,
+     "s": 0.84
+    },
+    {
+     "x": 2657.7,
+     "n": 675.7,
+     "count": 28,
+     "r": 18.3,
+     "s": 0.836
+    },
+    {
+     "x": 7522.5,
+     "n": 5210.2,
+     "count": 18,
+     "r": 14.7,
+     "s": 0.833
+    },
+    {
+     "x": 5420.4,
+     "n": 6171.2,
+     "count": 8,
+     "r": 9.8,
+     "s": 0.833
+    }
+   ],
+   "spring": [
+    {
+     "x": 5150.2,
+     "n": 9654.7,
+     "count": 62,
+     "r": 27.3,
+     "s": 1.2
+    },
+    {
+     "x": 2657.7,
+     "n": 675.7,
+     "count": 31,
+     "r": 19.3,
+     "s": 1.194
+    },
+    {
+     "x": 7402.4,
+     "n": 5630.6,
+     "count": 27,
+     "r": 18.0,
+     "s": 1.189
+    },
+    {
+     "x": 5420.4,
+     "n": 6171.2,
+     "count": 19,
+     "r": 15.1,
+     "s": 1.189
+    },
+    {
+     "x": 7522.5,
+     "n": 5210.2,
+     "count": 6,
+     "r": 8.5,
+     "s": 1.189
+    }
+   ],
+   "summer": [
+    {
+     "x": 9834.8,
+     "n": 2147.1,
+     "count": 46,
+     "r": 23.5,
+     "s": 0.86
+    },
+    {
+     "x": 8603.6,
+     "n": 8693.7,
+     "count": 35,
+     "r": 20.5,
+     "s": 0.86
+    },
+    {
+     "x": 8213.2,
+     "n": 8663.7,
+     "count": 19,
+     "r": 15.1,
+     "s": 0.86
+    },
+    {
+     "x": 8753.8,
+     "n": 8573.6,
+     "count": 17,
+     "r": 14.3,
+     "s": 0.86
+    },
+    {
+     "x": 8393.4,
+     "n": 8543.5,
+     "count": 16,
+     "r": 13.9,
+     "s": 0.86
+    },
+    {
+     "x": 7852.9,
+     "n": 8483.5,
+     "count": 12,
+     "r": 12.0,
+     "s": 0.86
+    }
+   ],
+   "fall": [
+    {
+     "x": 8783.8,
+     "n": 8603.6,
+     "count": 66,
+     "r": 28.2,
+     "s": 0.7
+    },
+    {
+     "x": 7282.3,
+     "n": 5150.2,
+     "count": 54,
+     "r": 25.5,
+     "s": 0.7
+    },
+    {
+     "x": 8513.5,
+     "n": 8543.5,
+     "count": 14,
+     "r": 13.0,
+     "s": 0.7
+    },
+    {
+     "x": 8033.0,
+     "n": 8363.4,
+     "count": 11,
+     "r": 11.5,
+     "s": 0.7
+    }
+   ]
+  },
+  "cervus_canadensis": {
+   "winter": [
+    {
+     "x": 2507.5,
+     "n": 7822.8,
+     "count": 35,
+     "r": 32.6,
+     "s": 0.481
+    },
+    {
+     "x": 3318.3,
+     "n": 7432.4,
+     "count": 34,
+     "r": 32.1,
+     "s": 0.459
+    },
+    {
+     "x": 6081.1,
+     "n": 3348.3,
+     "count": 30,
+     "r": 30.2,
+     "s": 0.457
+    },
+    {
+     "x": 2357.4,
+     "n": 8183.2,
+     "count": 25,
+     "r": 27.6,
+     "s": 0.457
+    },
+    {
+     "x": 5720.7,
+     "n": 4970.0,
+     "count": 24,
+     "r": 27.0,
+     "s": 0.449
+    },
+    {
+     "x": 1967.0,
+     "n": 8453.5,
+     "count": 21,
+     "r": 25.3,
+     "s": 0.449
+    },
+    {
+     "x": 1967.0,
+     "n": 8123.1,
+     "count": 20,
+     "r": 24.7,
+     "s": 0.449
+    },
+    {
+     "x": 2927.9,
+     "n": 7882.9,
+     "count": 19,
+     "r": 24.0,
+     "s": 0.444
+    },
+    {
+     "x": 2717.7,
+     "n": 7762.8,
+     "count": 16,
+     "r": 22.0,
+     "s": 0.439
+    },
+    {
+     "x": 2567.6,
+     "n": 8033.0,
+     "count": 13,
+     "r": 19.9,
+     "s": 0.436
+    },
+    {
+     "x": 2177.2,
+     "n": 8303.3,
+     "count": 9,
+     "r": 16.5,
+     "s": 0.432
+    }
+   ],
+   "spring": [
+    {
+     "x": 2507.5,
+     "n": 7822.8,
+     "count": 52,
+     "r": 39.7,
+     "s": 0.814
+    },
+    {
+     "x": 6081.1,
+     "n": 3348.3,
+     "count": 31,
+     "r": 30.7,
+     "s": 0.782
+    },
+    {
+     "x": 3318.3,
+     "n": 7432.4,
+     "count": 29,
+     "r": 29.7,
+     "s": 0.782
+    },
+    {
+     "x": 2357.4,
+     "n": 8183.2,
+     "count": 25,
+     "r": 27.6,
+     "s": 0.77
+    },
+    {
+     "x": 5720.7,
+     "n": 4970.0,
+     "count": 10,
+     "r": 17.4,
+     "s": 0.759
+    }
+   ],
+   "fall": [
+    {
+     "x": 2657.7,
+     "n": 7852.9,
+     "count": 37,
+     "r": 33.5,
+     "s": 0.381
+    },
+    {
+     "x": 3228.2,
+     "n": 7372.4,
+     "count": 24,
+     "r": 27.0,
+     "s": 0.368
+    },
+    {
+     "x": 2417.4,
+     "n": 8063.1,
+     "count": 21,
+     "r": 25.3,
+     "s": 0.365
+    },
+    {
+     "x": 5660.7,
+     "n": 5000.0,
+     "count": 17,
+     "r": 22.7,
+     "s": 0.364
+    },
+    {
+     "x": 3018.0,
+     "n": 7732.7,
+     "count": 12,
+     "r": 19.1,
+     "s": 0.364
+    },
+    {
+     "x": 5840.8,
+     "n": 4579.6,
+     "count": 7,
+     "r": 14.6,
+     "s": 0.357
+    }
+   ]
+  }
+ },
+ "plan": {
+  "bison_bison": {
+   "winter": {
+    "N": 147,
+    "placed": 147,
+    "G": 133.3,
+    "range_km2": 26.61,
+    "density_on_range_km2": 5.52,
+    "largest": 147,
+    "density_km2": 1.5,
+    "density_from": "library/herds/tiles.json"
+   },
+   "spring": {
+    "N": 295,
+    "placed": 295,
+    "G": 181.5,
+    "range_km2": 28.77,
+    "density_on_range_km2": 10.25,
+    "largest": 213,
+    "density_km2": 3.0,
+    "density_from": "library/herds/tiles.json"
+   },
+   "summer": {
+    "N": 589,
+    "placed": 589,
+    "G": 257.9,
+    "range_km2": 28.46,
+    "density_on_range_km2": 20.7,
+    "largest": 400,
+    "density_km2": 6.0,
+    "density_from": "library/herds/tiles.json"
+   },
+   "fall": {
+    "N": 246,
+    "placed": 246,
+    "G": 163.2,
+    "range_km2": 29.69,
+    "density_on_range_km2": 8.28,
+    "largest": 152,
+    "density_km2": 2.5,
+    "density_from": "library/herds/tiles.json"
+   }
+  },
+  "antilocapra_americana": {
+   "winter": {
+    "N": 81,
+    "placed": 81,
+    "G": 23.1,
+    "range_km2": 26.61,
+    "density_on_range_km2": 3.04,
+    "largest": 54,
+    "density_km2": 0.82,
+    "density_from": "fauna.json density_km2"
+   },
+   "spring": {
+    "N": 81,
+    "placed": 81,
+    "G": 22.2,
+    "range_km2": 28.77,
+    "density_on_range_km2": 2.82,
+    "largest": 29,
+    "density_km2": 0.82,
+    "density_from": "fauna.json density_km2"
+   },
+   "summer": {
+    "N": 81,
+    "placed": 81,
+    "G": 22.4,
+    "range_km2": 28.46,
+    "density_on_range_km2": 2.85,
+    "largest": 34,
+    "density_km2": 0.82,
+    "density_from": "fauna.json density_km2"
+   },
+   "fall": {
+    "N": 81,
+    "placed": 81,
+    "G": 21.9,
+    "range_km2": 29.69,
+    "density_on_range_km2": 2.73,
+    "largest": 48,
+    "density_km2": 0.82,
+    "density_from": "fauna.json density_km2"
+   }
+  },
+  "ovis_canadensis": {
+   "winter": {
+    "N": 145,
+    "placed": 145,
+    "G": 46.6,
+    "range_km2": 22.33,
+    "density_on_range_km2": 6.49,
+    "largest": 91,
+    "density_km2": 1.48,
+    "density_from": "fauna.json density_km2"
+   },
+   "spring": {
+    "N": 145,
+    "placed": 145,
+    "G": 47.2,
+    "range_km2": 21.73,
+    "density_on_range_km2": 6.67,
+    "largest": 62,
+    "density_km2": 1.48,
+    "density_from": "fauna.json density_km2"
+   },
+   "summer": {
+    "N": 145,
+    "placed": 145,
+    "G": 46.8,
+    "range_km2": 22.14,
+    "density_on_range_km2": 6.55,
+    "largest": 46,
+    "density_km2": 1.48,
+    "density_from": "fauna.json density_km2"
+   },
+   "fall": {
+    "N": 145,
+    "placed": 145,
+    "G": 46.6,
+    "range_km2": 22.37,
+    "density_on_range_km2": 6.48,
+    "largest": 66,
+    "density_km2": 1.48,
+    "density_from": "fauna.json density_km2"
+   }
+  },
+  "alces_alces": {
+   "winter": {
+    "N": 39,
+    "G": 1.9,
+    "why": "PanTHERIA's group 1: a solitary or paired species does not herd",
+    "density_km2": 0.4,
+    "density_from": "fauna.json density_km2"
+   },
+   "spring": {
+    "N": 39,
+    "G": 1.8,
+    "why": "PanTHERIA's group 1: a solitary or paired species does not herd",
+    "density_km2": 0.4,
+    "density_from": "fauna.json density_km2"
+   },
+   "summer": {
+    "N": 39,
+    "G": 1.9,
+    "why": "PanTHERIA's group 1: a solitary or paired species does not herd",
+    "density_km2": 0.4,
+    "density_from": "fauna.json density_km2"
+   },
+   "fall": {
+    "N": 39,
+    "G": 1.8,
+    "why": "PanTHERIA's group 1: a solitary or paired species does not herd",
+    "density_km2": 0.4,
+    "density_from": "fauna.json density_km2"
+   }
+  },
+  "oreamnos_americanus": {
+   "emitted": false,
+   "why": "no PanTHERIA social group size and density"
+  },
+  "cervus_canadensis": {
+   "winter": {
+    "N": 246,
+    "placed": 246,
+    "G": 28.1,
+    "range_km2": 26.61,
+    "density_on_range_km2": 9.25,
+    "largest": 35,
+    "density_km2": 2.5,
+    "density_from": "library/herds/tiles.json"
+   },
+   "spring": {
+    "N": 147,
+    "placed": 147,
+    "G": 20.9,
+    "range_km2": 28.77,
+    "density_on_range_km2": 5.11,
+    "largest": 52,
+    "density_km2": 1.5,
+    "density_from": "library/herds/tiles.json"
+   },
+   "summer": {
+    "N": 79,
+    "G": 15.4,
+    "client_n": 16,
+    "why": "typical herd 15.4 within the client's own group (16): the cell spawns stand",
+    "density_km2": 0.8,
+    "density_from": "library/herds/tiles.json"
+   },
+   "fall": {
+    "N": 118,
+    "placed": 118,
+    "G": 18.4,
+    "range_km2": 29.69,
+    "density_on_range_km2": 3.97,
+    "largest": 37,
+    "density_km2": 1.2,
+    "density_from": "library/herds/tiles.json"
+   }
+  },
+  "odocoileus_hemionus": {
+   "winter": {
+    "N": 1571,
+    "G": 4.3,
+    "why": "PanTHERIA's group 2.25: a solitary or paired species does not herd",
+    "density_km2": 16.0,
+    "density_from": "pantheria"
+   },
+   "spring": {
+    "N": 1571,
+    "G": 4.2,
+    "why": "PanTHERIA's group 2.25: a solitary or paired species does not herd",
+    "density_km2": 16.0,
+    "density_from": "pantheria"
+   },
+   "summer": {
+    "N": 1571,
+    "G": 4.2,
+    "why": "PanTHERIA's group 2.25: a solitary or paired species does not herd",
+    "density_km2": 16.0,
+    "density_from": "pantheria"
+   },
+   "fall": {
+    "N": 1571,
+    "G": 4.1,
+    "why": "PanTHERIA's group 2.25: a solitary or paired species does not herd",
+    "density_km2": 16.0,
+    "density_from": "pantheria"
+   }
+  }
+ },
+ "rut": {
+  "bison_bison": [
+   7,
+   8
+  ],
+  "cervus_canadensis": [
+   9,
+   10
+  ],
+  "odocoileus_hemionus": [
+   11,
+   12
+  ]
+ },
+ "fine_tunes": {
+  "bison_bison": {
+   "tile": "utm12n_557_4964",
+   "source": "NPS summer aerial counts of the northern Yellowstone bison: 3,667 in 2019 (Geremia et al. 2019, Status Report on the Yellowstone Bison Population), 3,819 in 2023 (2023 Bison Population Status Report); the northern bison congregate in the Lamar Valley and on the adjacent plateaus for the rut, mid-July to mid-August (NPS Yellowstone Bison executive summary)",
+   "reduction": "summer: about 3,700 bison over a Lamar Valley and Mirror Plateau summer range of some 600 km2, about 6 per km2; the other seasons lower as the northern bison move down the Lamar to the Blacktail and Gardiner basins for the winter and come back through spring. A modelling reduction, not a count on this tile",
+   "species": {
+    "rut": [
+     7,
+     8
+    ],
+    "reason": "the rut is mid-July to mid-August; the bulls join the cow groups then and leave them in bachelor bands for the rest of the year",
+    "source": "NPS Yellowstone Bison executive summary (https://www.nps.gov/yell/learn/nature/upload/YellowstoneBison_ExecutiveSummary.pdf)"
+   }
+  },
+  "ovis_canadensis": {
+   "species": {
+    "terrain": "steep",
+    "reason": "bighorn sheep stay within a few hundred metres of escape terrain (cliffs, steep broken slopes) and do not gather on valley floors; the general rule's flat, low ground is inverted for them",
+    "source": "Geist, V. (1971). Mountain Sheep: A Study in Behavior and Evolution. University of Chicago Press; Smith, Flinders and Winn (1991), Great Basin Naturalist 51: 205-225 (escape terrain within 300 m)"
+   }
+  },
+  "cervus_canadensis": {
+   "tile": "utm12n_557_4964",
+   "source": "Northern Yellowstone Cooperative Wildlife Working Group / Montana FWP helicopter count, April 2025: 7,226 elk in the northern Yellowstone herd, 1,102 of them inside the park (NPS 2025 Wolf, Cougar and Elk Project annual report)",
+   "reduction": "winter: about 1,100 elk on the park's share of the northern winter range, of which the Lamar Valley is a core part, about 2.5 per km2; most move to higher summer ranges, so summer is the lowest. A modelling reduction, not a count on this tile",
+   "species": {
+    "rut": [
+     9,
+     10
+    ],
+    "reason": "the elk rut is September and October: a herd bull holds a harem in the cow herd",
+    "source": "Clutton-Brock, Guinness and Albon (1982). Red Deer: Behavior and Ecology of Two Sexes. University of Chicago Press"
+   }
+  },
+  "odocoileus_hemionus": {
+   "species": {
+    "rut": [
+     11,
+     12
+    ],
+    "reason": "the mule deer rut is November to December",
+    "source": "Wallmo, O. C. (ed.) (1981). Mule and Black-tailed Deer of North America. University of Nebraska Press"
+   }
+  }
+ },
+ "sources": [
+  "pantheria",
+  "library/herds/tiles.json",
+  "library/herds/species.json"
+ ]
+}

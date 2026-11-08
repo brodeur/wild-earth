@@ -15,7 +15,7 @@
   47.877435895323295
  ],
  "size_m": 10000,
- "generated_at": "2026-11-07T20:55:20Z",
+ "generated_at": "2026-11-08T02:00:17Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -5576,6 +5576,35 @@
    },
    "sha256": "fb898ba86d1fe175a7955c75ab998f4ffd4470a0d27270204014b1cf1cd72e79",
    "bytes": 75193
+  },
+  "client.herds": {
+   "path": "client/herds.json",
+   "kind": "table",
+   "derived_from": [
+    "client.fauna",
+    "client.habitat",
+    "client.canopy",
+    "client.heights",
+    "resources"
+   ],
+   "herds": {
+    "cervus_canadensis": {
+     "winter": 3,
+     "spring": 5,
+     "summer": 4,
+     "fall": 6
+    }
+   },
+   "largest": {
+    "cervus_canadensis": {
+     "winter": 90,
+     "spring": 54,
+     "summer": 58,
+     "fall": 76
+    }
+   },
+   "sha256": "8fab1891671880a078dedc0172239ab108414bc423e6f42273b65d5b5f4f0daa",
+   "bytes": 4434
   }
  },
  "sources": {
@@ -6424,6 +6453,12 @@
    "step": "seams",
    "at": "2026-11-07T20:55:20Z",
    "seconds": 0.3,
+   "ok": true
+  },
+  {
+   "step": "herds",
+   "at": "2026-11-08T02:00:17Z",
+   "seconds": 0.5,
    "ok": true
   }
  ],
@@ -8111,6 +8146,47 @@
     "cache": 0
    },
    "seconds": 0.1
+  },
+  "herds": {
+   "version": "1",
+   "code": "6e1711139cb41d6e",
+   "params": {
+    "tile": "utm10n_429_5293"
+   },
+   "fingerprint": "9292c9c54263b437",
+   "parts": {
+    "version": "1",
+    "code": "6e1711139cb41d6e",
+    "params": {
+     "tile": "utm10n_429_5293"
+    },
+    "deps": {
+     "animals": "2f9d7eea8faa1dae",
+     "resources": "feef4731c1900bd7",
+     "terrain": "61e0d4f7949d1857"
+    },
+    "library": {
+     "library/herds": "3b0c60782743001f"
+    }
+   },
+   "ran_at": "2026-11-08T02:00:17Z",
+   "owner": null,
+   "status": "ok",
+   "layers": [
+    "client.herds"
+   ],
+   "outputs": {
+    "client/herds.json": "8fab1891671880a0"
+   },
+   "out_hash": "9719a0a27f80b5f0",
+   "sources": {},
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 1
+   },
+   "seconds": 0.5
   }
  },
  "seams": {
