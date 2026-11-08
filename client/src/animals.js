@@ -1041,6 +1041,7 @@ function installFauna(fauna, owner) {
 // ceiling on one herd (the frame budget's); HERD_CAP: on one slot's pool (two big herds in view).
 const HERD_ARCH = 'grazing or browsing herd', HERD_MAX = 400, HERD_CAP = 900;
 const ELK_BAND = { base: 0.09, winter: 0.36, mid: 0.70, summer: 1.05 };   // the elk's elevation band as fractions of the tile's height span (spawnCell)
+const HERD_MOVE = 0.5;   // m a herd's centre moves before the host sends its row again (herdRows)
 const FAR_TPL = 8, FAR_PX = 3, FAR_GROW = 5, FAR_STEP = 0.25;   // the far tier (farHerds): pose rows, a far body's least length in px and most growth, the rewrite interval
 const HERDS = {};                      // slot -> { season: [{ x, n, count, r }] }
 const HERD_RUT = {};                   // slot -> [first, last] month of the rut (herds.json rut: library/herds/species.json)
@@ -1439,7 +1440,7 @@ export class Animals {
   // a remote diver (remote: the request of another page) is a stand-in hunter record at its point (threat()).
   startle(a, x, y, z, code, remote = false) {
     if (!a || a.dead || a.gone || a.remote || ![x, y, z].every(Number.isFinite)) return false;
-    if (this.mirror) { if (a.n >= 0) this.relay?.request({ k: 'startle', n: a.n, x: r2(x), y: r2(y), z: r2(z), sp: code }); return true; }
+    if (this.mirror) { if (a.n >= 0 || a.group?.agg) this.relay?.request({ k: 'startle', n: a.n, id: a.n >= 0 ? undefined : a.id, x: r2(x), y: r2(y), z: r2(z), sp: code }); return true; }
     const k = INDEX[code]; if (k === undefined) return false;
     const by = remote ? { id: -1, sp: k, x, y, z, diver: true } : null, until = this.time + ALARM_T;
     a.alarmUntil = a.seenUntil = until; a.alarmBy = by; if (a.group) { a.group.alarmUntil = a.group.seenUntil = until; a.group.alarmBy = by; }
@@ -1592,7 +1593,7 @@ export class Animals {
     if (this.mirror) {
       if (a.n < 0) return null;
       this.catchPending = this.time + 1;
-      this.relay?.request({ k: 'hit', n: a.n, mv, sp: code, x: r2(x), y: r2(y), z: r2(z) });
+      this.relay?.request({ k: 'hit', n: a.n, id: a.n >= 0 ? undefined : a.id, mv, sp: code, x: r2(x), y: r2(y), z: r2(z) });
       return 'asked';
     }
     const M = this.massOf(a), hp = Math.max(0, this.hpNow(a) - damage(move, this.bodyK(k).m * (from ? 1 : (this.playerSize || 1)) ** 3));
@@ -1715,6 +1716,7 @@ export class Animals {
   // by: 'player', the hunter's record, or { code, aid } (a remote player's catch the host confirms; the mirror: { code }).
   kill(prey, by) {
     if (!prey || prey.dead || prey.remote || prey.sp === undefined || !KILLABLE.has(prey.sp)) return false;
+    if (prey.group?.agg && prey.rank >= 0) (prey.group.agg.dead ||= new Set()).add(prey.rank);   // a planned herd's member: not spawned again this season
     const pk = KIN[prey.sp], small = pk === VO || pk === RB || pk === LZ;   // (the Hoh batch's hare, chipmunk and deer mouse by their kin)
     prey.dead = true; prey.diedAt = this.time; prey.carrionUntil = this.time + (small ? CARRION.small : CARRION.t);
     prey.hunt = null; prey.air = 0; prey.speed = 0; prey.flickV = 0; prey.lift = 0; prey.fleeT = 0; prey.spd = 0;
@@ -1845,7 +1847,7 @@ export class Animals {
   catchNear(x, y, z) {
     const best = this.preyNear(x, y, z);
     if (best && this.mirror) {   // the host confirms (animalNet.js areq): the kill it orders is the one everyone sees; a miss is a miss
-      if (best.n >= 0 && this.time >= (best.askedAt || 0)) { best.askedAt = this.time + 0.5; this.catchPending = this.time + 1; this.relay?.request({ k: 'catch', n: best.n, x: r2(x), y: r2(y), z: r2(z), sp: this.observer }); }
+      if ((best.n >= 0 || best.group?.agg) && this.time >= (best.askedAt || 0)) { best.askedAt = this.time + 0.5; this.catchPending = this.time + 1; this.relay?.request({ k: 'catch', n: best.n, id: best.n >= 0 ? undefined : best.id, x: r2(x), y: r2(y), z: r2(z), sp: this.observer }); }
       return null;
     }
     if (best) this.kill(best, 'player');
@@ -2194,7 +2196,7 @@ export class Animals {
     this.coveys = [...cov];
     // the herds on the deer machine (herdRoles, herdPass, herdSteer): each one's members and their places
     const hg = new Map();
-    for (const a of this.list) { const g = a.group; if (!g || a.remote || (KIN[a.sp] !== DR && KIN[a.sp] !== BK)) continue; let M = hg.get(g); if (!M) hg.set(g, M = []); M.push(a); }
+    for (const a of this.list) { const g = a.group; if (!g || a.remote || a.mirror || (KIN[a.sp] !== DR && KIN[a.sp] !== BK)) continue; let M = hg.get(g); if (!M) hg.set(g, M = []); M.push(a); }
     this.herdGroups = [...hg.keys()];
     for (const [g, mem] of hg) this.herdRoles(g, mem);
     const mcov = new Set(); for (const s of slotsOf(MQ)) for (const a of this.bySpecies[s]) if (a.group) mcov.add(a.group);
@@ -2499,7 +2501,7 @@ export class Animals {
       for (let i = 0; i < plan.length; i++) {
         const h = plan[i], key = `${s}:${i}`;
         let A = this.herdAgg.get(key);
-        if (!A) this.herdAgg.set(key, A = { s, i, n: h.count, r: h.r, x: h.x, z: -h.n, hx: h.x, hz: -h.n, g: null, live: false, lay: null, wx: undefined, wz: undefined, rng: mulberry32(seedOf(`${SPECIES[s].code}:${season}:${i}`, 0xa66)), wt: 0 });
+        if (!A) this.herdAgg.set(key, A = { key, s, i, n: h.count, r: h.r, x: h.x, z: -h.n, hx: h.x, hz: -h.n, g: null, live: false, lay: null, wx: undefined, wz: undefined, rng: mulberry32(seedOf(`${SPECIES[s].code}:${season}:${i}`, 0xa66)), wt: 0 });
         let near = false;
         for (const [qx, qn] of C) if (Math.hypot(A.x - qx, -A.z - qn) < LIVE_R + A.r) { near = true; break; }
         if (!near && A.live) this.herdKeep(A);   // going far: the far tier draws them where they were
@@ -2546,6 +2548,7 @@ export class Animals {
     const g = A.g ||= { hx: A.hx, hz: A.hz, leader: null, wx: A.wx ?? A.x, wz: A.wz ?? A.z, gap: elk ? 3.6 : 2.6, spread: A.r, r: A.r, agg: A, n: A.n, rut };
     const vs = s < STATIC_N ? (elk ? EB : deer ? BK : s) : s, L = A.lay || (A.lay = this.herdLayout(A)), up = this.herdUp(s);
     for (let m = 0; m < A.n; m++) {
+      if (A.dead?.has(m) && !this.byId.has(`herd:${code}:${this.season}:${A.i}:${m}`)) continue;   // killed (its carcass gone): not again this season
       const id = `herd:${code}:${this.season}:${A.i}:${m}`, rnd = mulberry32(seedOf(id, 0x4e7d)), o = m * 6, bull = L[o + 4] > 0;
       this.add(id, bull ? vs : s, rnd, a => {
         a.group = g; a.rank = m; a.bull = bull; a.calf = L[o + 5] > 0;
@@ -3608,8 +3611,9 @@ export class Animals {
   herdAlarm(g, a, px, pz, r) {
     a.alarmT = this.time;   // this one saw it
     if ((g.fleeT || 0) > 0) return;
+    if (this.mirror && g.agg?.remote) this.relay?.request({ k: 'herdAlarm', key: g.agg.key, x: r2(px), z: r2(pz) });   // the host starts it for everyone
     const cx = g.cx ?? a.x, cz = g.cz ?? a.z, R = g.r || 0, ang = Math.atan2(cz - pz, cx - px) + (r() - 0.5) * 0.6, d = 80 + r() * 40 + R;
-    g.wx = cx + Math.cos(ang) * d; g.wz = cz + Math.sin(ang) * d; g.fleeT = 8 + R / 8; g.hx = g.wx;   // (a big herd's flight outlasts the wave crossing it) g.hz = g.wz;
+    g.wx = cx + Math.cos(ang) * d; g.wz = cz + Math.sin(ang) * d; g.fleeT = 8 + R / 8; g.ax = px; g.az = pz; g.hx = g.wx;   // (a big herd's flight outlasts the wave crossing it) g.hz = g.wz;
   }
   // body length (m) for slot s: twice and a bit its body height
   herdLen(a) { return 2.2 * (BODY_Y[a.sp] || 0.75) * (a.size || 1); }
@@ -3660,6 +3664,19 @@ export class Animals {
       if (wl > 1e-6) { const k2 = Math.min(1, dt * 0.6); g.hdx += (wx / wl - g.hdx) * k2; g.hdz += (wz / wl - g.hdz) * k2; const l = Math.hypot(g.hdx, g.hdz) || 1; g.hdx /= l; g.hdz /= l; }
       const R = g.r || 5;
       if (g.fcx === undefined) { g.fcx = g.cx; g.fcz = g.cz; }
+      const HA = g.agg?.remote ? g.agg : null;
+      if (HA) {   // a mirror's herd: the host's frame, eased (its waypoint, heading and flight); members steer under it here
+        const k2 = Math.min(1, dt * 0.5);
+        if (Number.isFinite(HA.fcx)) { g.fcx += (HA.fcx - g.fcx) * k2; g.fcz += (HA.fcz - g.fcz) * k2; }
+        if (Number.isFinite(HA.hdx)) { g.hdx += (HA.hdx - g.hdx) * k2; g.hdz += (HA.hdz - g.hdz) * k2; const l = Math.hypot(g.hdx, g.hdz) || 1; g.hdx /= l; g.hdz /= l; }
+        if (Number.isFinite(HA.wx)) { g.wx = HA.wx; g.wz = HA.wz; }
+        if (HA.fleeT > 0 && !(g.fleeT > 0) && Number.isFinite(HA.ax) && g.mem?.length) {   // the host's flight: started here from the member nearest its origin, the wave as anywhere
+          let b = g.mem[0], bd = Infinity; for (const m of g.mem) { const d2 = (m.x - HA.ax) ** 2 + (m.z - HA.az) ** 2; if (!m.dead && d2 < bd) { bd = d2; b = m; } }
+          b.alarmT = this.time; g.fleeT = HA.fleeT; g.wx = HA.wx; g.wz = HA.wz; g.hx = HA.wx; g.hz = HA.wz;
+        }
+        HA.x = g.cx; HA.z = g.cz;   // the members here carry its centre while they live (the far tier takes it from there)
+        continue;
+      }
       if (g.big) {
         // a big herd's frame is the herd's own: its centre drifts toward the grazing front's waypoint at a grazing pace
         // (0.08 m/s; the members step after it a few at a time), each next waypoint the most open of a few spots 30-80 m
@@ -3724,14 +3741,19 @@ export class Animals {
       const gap = 1.3 * bl;
       // (nobody ahead: in a flight it runs on; walking or piloted, it falls in behind the leader)
       const lone = !ahead && (fleeing || L === a), tx = ahead ? ahead.x - tfx * gap : lone ? a.x + tfx * 8 : L.x - tfx * gap, tz = ahead ? ahead.z - tfz * gap : lone ? a.z + tfz * 8 : L.z - tfz * gap;
-      const ex = tx - a.x, ez = tz - a.z, d = Math.hypot(ex, ez) || 1;
-      vx += ex / d * 1.5 + (nA ? avx / nA * 0.3 : 0); vz += ez / d * 1.5 + (nA ? avz / nA * 0.3 : 0);
+      const ex = tx - a.x, ez = tz - a.z, d = Math.hypot(ex, ez) || 1, along = ex * tfx + ez * tfz;
+      if (fleeing || along < 0) {   // in flight, or on the heels of the one ahead: on along the way, drifting into its lane (never back toward its gap)
+        const lat = ahead ? (ahead.x - a.x) * tfz - (ahead.z - a.z) * tfx : 0;
+        vx += tfx * 1.5 + tfz * lat * 0.15; vz += tfz * 1.5 - tfx * lat * 0.15;
+      } else { vx += ex / d * 1.5; vz += ez / d * 1.5; }
+      if (nA) { vx += avx / nA * 0.3; vz += avz / nA * 0.3; }
       const cx = g.cx ?? a.x, cz = g.cz ?? a.z, cd = Math.hypot(cx - a.x, cz - a.z);
       if (cd > R * 1.3) { vx += (cx - a.x) / cd * 0.5; vz += (cz - a.z) / cd * 0.5; }   // not left behind or off to the side
       const v = Math.hypot(vx, vz) || 1;
       const top = g.pilot ? 8 : (a.gallopT || 0) > 0 ? 11.5 : fleeing ? 4.5 : 1.6;
       const lead = ahead || L;
-      speed = fleeing ? top * (ahead && d < gap * 0.6 ? 0.7 : 1)   // in flight at its own pace, checked only when on the heels of the one ahead
+      const gapNow = ahead ? (ahead.x - a.x) * tfx + (ahead.z - a.z) * tfz : Infinity;   // how far ahead the one ahead is
+      speed = fleeing ? top * (gapNow < gap * 0.8 ? 0.75 : 1)   // in flight at its own pace, checked only when on the heels of the one ahead
         : Math.min(top, Math.max(0.3, (lead.spd || 1) * 0.9 + Math.max(0, d - gap) * 0.3) * (((tx - a.x) * tfx + (tz - a.z) * tfz) < 0 ? 0.3 : 1));   // (past its place: eases off)
       a.state = D_WALK;
       speed *= this.drSteer(a, Math.atan2(vx, vz), 3, dt, fleeing || speed > 3);
@@ -5973,7 +5995,7 @@ export class Animals {
     if (g && g.leader === a) { g.leader = null; for (const b of this.list) if (b !== a && b.group === g && this.byId.get(b.id) === b) { g.leader = b; break; } }
     this.byId.delete(id); this.freed.delete(id); this.held.set(id, a);
     this.dirty = true;   // rebuilt (and every matrix rewritten) on this frame's update
-    if (this.mirror && a.n >= 0) this.relay?.request({ k: 'take', n: a.n });   // the host takes it out of everyone's world
+    if (this.mirror && (a.n >= 0 || a.group?.agg)) this.relay?.request({ k: 'take', n: a.n, id: a.n >= 0 ? undefined : a.id });   // the host takes it out of everyone's world
     return o;
   }
   // Put a held animal back where the player leaves it: o is { x, y, z, yaw (the flight's frame), where (as info), tree
@@ -6097,6 +6119,7 @@ export class Animals {
   becomeMirror() {
     if (this.mirror) return;
     this.mirror = true;
+    for (const A of this.herdAgg?.values() || []) { if (A.live) this.herdKeep(A); A.live = false; A.g = null; A.remote = true; }   // the members go with the rest; the host's rows bring the herds back
     for (const a of this.byId.values()) if (!a.remote) { this.byId.delete(a.id); if (a.slot >= 0) this.meshes[a.sp].instanceMatrix.array.fill(0, a.slot * 16, a.slot * 16 + 16); }
     this.byN.clear(); this.mgroups.clear(); this.carrion.length = 0; this.freed.clear(); this.threats.clear();
     this.dirty = true;
@@ -6106,6 +6129,7 @@ export class Animals {
   becomeHost() {
     if (!this.mirror) return 0;
     this.mirror = false;
+    for (const A of this.herdAgg?.values() || []) { A.remote = false; if (A.g) { A.g.agg = A; } }   // this page's herds now: they drift and spawn here (spawnHerds)
     const old = [...this.byId.values()].filter(a => a.mirror && !a.remote);
     for (const a of old) this.byId.delete(a.id);
     this.byN.clear(); this.mgroups.clear(); this.carrion = this.carrion.filter(c => !c.mirror);
@@ -6220,9 +6244,11 @@ export class Animals {
   }
   // The animal the stream numbers n: a mirror's byN, the host's own count (animalNet.js byNum).
   numbered(n) { return this.mirror ? this.byN.get(n) : this.relay?.byNum.get(n); }
+  // A mirror's request's animal: by its stream number, else (a herd member, never numbered) by its id.
+  reqAnimal(e) { return (e.n >= 0 ? this.numbered(e.n) : null) || (typeof e.id === 'string' && e.id.startsWith('herd:') ? this.byId.get(e.id) || null : null); }
   // An ordered event from the host (animalNet.js aev); me: this page's number on the channel.
   applyEvent(e, me) {
-    const a = e.n >= 0 ? this.byN.get(e.n) : null;
+    const a = e.n >= 0 ? this.byN.get(e.n) : typeof e.id === 'string' ? this.byId.get(e.id) || null : null;   // (a herd member: by its id, this page's own)
     switch (e.k) {
       case 'kill': {
         if (!a) return;
@@ -6253,25 +6279,31 @@ export class Animals {
   // point it struck at, a little slack for the stream's lag), a body taken (out of everyone's world), a body given back.
   request(e, from) {
     if (e.k === 'catch') {
-      const a = this.numbered(e.n), k = INDEX[e.sp];
+      const a = this.reqAnimal(e), k = INDEX[e.sp];
       if (!this.preySlots) this.buildHunts();
       const P = k === undefined ? null : this.preySlots?.[k], R = k === undefined ? null : this.reach?.[k];
       let ok = !!(a && !a.dead && !a.buried && P && R && P.has(a.sp) && KILLABLE.has(a.sp) && !this.reachedCover(a));
       if (ok) { const dx = a.x - e.x, dz = a.z - e.z, d2 = dx * dx + (a.y - e.y) ** 2 * 0.25 + dz * dz, slack = R + 1 + 0.3 * (a.spd || 0); ok = d2 <= slack * slack; }
       if (ok) this.kill(a, { code: e.sp, aid: from }); else this.relay?.emitted('miss', { aid: from, animal: a });
     } else if (e.k === 'hit') {   // a mirror's strike: its move is one its species has, it is within that move's reach (and the stream's slack), and not sooner than the move's cooldown allows
-      const a = this.numbered(e.n), k = INDEX[e.sp], move = MOVES[e.mv];
+      const a = this.reqAnimal(e), k = INDEX[e.sp], move = MOVES[e.mv];
       if (!this.preySlots) this.buildHunts();
       let ok = !!(a && move && k !== undefined && !a.dead && this.preySlots?.[k]?.has(a.sp) && movesFor(this.bodyK(k).family).includes(move));
       const key = `${from}:${e.mv}`, last = (this._hitAt ||= new Map()).get(key) ?? -1e9;
       if (ok) { const d = Math.hypot(a.x - e.x, a.z - e.z), R = this.strikeReach(move, e.sp, a) + 1 + 0.3 * (a.spd || 0); ok = d <= R && this.time - last >= move.cd * 0.8; }
       if (ok) { this._hitAt.set(key, this.time); this.hurt(a, e.mv, e.sp, from, +e.x, +e.y, +e.z); } else this.relay?.emitted('miss', { aid: from, animal: a });
     } else if (e.k === 'startle') {   // a mirror's dive was seen coming (startle): within the stream's slack of where the diver says it is
-      const a = this.numbered(e.n), x = +e.x, y = +e.y, z = +e.z;
+      const a = this.reqAnimal(e), x = +e.x, y = +e.y, z = +e.z;
       if (a && !a.dead && typeof e.sp === 'string' && INDEX[e.sp] !== undefined && (a.x - x) ** 2 + (a.z - z) ** 2 < 600 * 600) this.startle(a, x, y, z, e.sp, true);
     } else if (e.k === 'take') {
-      const a = this.numbered(e.n); if (!a || a.dead || a.remote || !PLAYABLE.includes(a.sp) || this.held.has(a.id)) return;
+      const a = this.reqAnimal(e); if (!a || a.dead || a.remote || !PLAYABLE.includes(a.sp) || this.held.has(a.id)) return;
       const o = this.take(a.id); if (o) this.relay?.remoteHeld.set(a.id, { from, o });
+    } else if (e.k === 'herdAlarm') {   // a mirror's herd took fright (herdAlarm there): the flight starts here for everyone
+      const A = this.herdAgg?.get(e.key), x = +e.x, z = +e.z;
+      if (A?.g?.mem?.length && Number.isFinite(x) && Number.isFinite(z) && !(A.g.fleeT > 0)) {
+        let b = A.g.mem[0], bd = Infinity; for (const m of A.g.mem) { const d2 = (m.x - x) ** 2 + (m.z - z) ** 2; if (!m.dead && d2 < bd) { bd = d2; b = m; } }
+        if (bd < 400 * 400) this.herdAlarm(A.g, b, x, z, b.rng);
+      }
     } else if (e.k === 'release') {
       const h = this.relay?.remoteHeld.get(e.id); if (!h || h.from !== from) return;
       this.relay.remoteHeld.delete(e.id);
@@ -6358,7 +6390,8 @@ export class Animals {
     if (mirror) { if (this.dirty) { this.dirty = false; this.layoutSlots(); fresh = true; } }   // the live set is the host's (animalNet.js)
     else if (this.dirty || !this.lastCenter || Math.hypot(P.x - this.lastCenter[0], P.z - this.lastCenter[1]) > REBUILD_MOVE || this.centresMoved()) { this.rebuild(P.x, P.z); fresh = true; }
     const odd = (++this.frame) & 1;
-    if (!mirror) this.herdPass(dt);   // the herds' cells and frames (herdSteer)
+    if (mirror) this.mirrorHerdLive(dt);   // a mirror's own herds: spawned from the host's aggregates as its player comes near
+    this.herdPass(dt);   // the herds' cells and frames (herdSteer)
     const ghost = this.observer === 'spirit';   // the spirit: nothing reacts to it (see the header)
     const px = ghost ? 1e7 : P.x, py = ghost ? 1e7 : P.y, pz = ghost ? 1e7 : P.z;
     const list = this.list, e = this._e, q = this._q, p = this._p, s = this._s, m = this._m;
@@ -6520,6 +6553,65 @@ export class Animals {
       A.wt = 20 + rr() * 60; ex = A.wx - A.x; ez = A.wz - A.z; d = Math.hypot(ex, ez);
     }
     if (d > 0.5) { const st = Math.min(d, 0.08 * dt); A.x += ex / d * st; A.z += ez / d * st; }
+  }
+  // ---- herds between pages (phase 5; animalNet.js "Herds") ------------------------------------------------------------
+  // The host's `h` rows: each planned herd's aggregate, when it moved more than HERD_MOVE m, its flight began or ended,
+  // a member died, or HERD_EVERY ticks passed (all of them on a full snapshot). A row:
+  //   [key, slot, plan index, live, x, z, wx, wz, fcx, fcz, hdx, hdz, fleeT, ax, az, dead ranks]
+  // (x, z its centre; wx, wz its front's waypoint or flight point; fc, hd its frame; fleeT the flight left; ax, az the
+  // flight's origin, the threat; NaN-free: a value not known goes as null).
+  herdRows(full, sent, every) {
+    const out = []; if (!this.herdAgg) return out;
+    const q = v => (Number.isFinite(v) ? Math.round(v * 10) / 10 : null), q3 = v => (Number.isFinite(v) ? Math.round(v * 1000) / 1000 : null);
+    for (const [key, A] of this.herdAgg) {
+      const g = A.live ? A.g : null, flee = g ? (g.fleeT > 0 ? q(g.fleeT) : 0) : 0, dead = A.dead ? [...A.dead] : [];
+      const last = sent.get(key);
+      const moved = !last || Math.hypot(A.x - last.x, A.z - last.z) > HERD_MOVE, changed = !last || (flee > 0) !== (last.flee > 0) || dead.length !== last.dead || A.live !== last.live;
+      if (!full && !moved && !changed && ++last.ticks < every) continue;
+      out.push([key, A.s, A.i, A.live ? 1 : 0, q(A.x), q(A.z), q(g ? g.wx : A.wx), q(g ? g.wz : A.wz), q(g ? g.fcx : A.x), q(g ? g.fcz : A.z), q3(g ? g.hdx : null), q3(g ? g.hdz : null), flee, q(g?.ax), q(g?.az), dead]);
+      sent.set(key, { x: A.x, z: A.z, flee, dead: dead.length, live: A.live, ticks: 0 });
+    }
+    return out;
+  }
+  // A mirror's: the host's rows into this page's aggregates (made on first sight, the season's), for the far tier and
+  // for spawning the members here (mirrorHerdLive).
+  mirrorHerds(rows) {
+    const season = this.season; if (!season) return;
+    if (this.herdSeason !== season || !this.herdAgg) { this.herdAgg = new Map(); this.herdSeason = season; }
+    for (const r of rows) {
+      if (!Array.isArray(r) || r.length < 16) continue;
+      const [key, s, i, live, x, z, wx, wz, fcx, fcz, hdx, hdz, fleeT, ax, az, dead] = r, plan = HERDS[s]?.[season]?.[i];
+      if (!plan || typeof key !== 'string') continue;
+      let A = this.herdAgg.get(key);
+      if (!A) this.herdAgg.set(key, A = { key, s, i, n: plan.count, r: plan.r, x: plan.x, z: -plan.n, hx: plan.x, hz: -plan.n, g: null, live: false, lay: null, wx: undefined, wz: undefined, rng: mulberry32(seedOf(`${SPECIES[s].code}:${season}:${i}`, 0xa66)), wt: 0 });
+      A.remote = true; A.hostLive = !!live;
+      if (Number.isFinite(x) && !A.live) { A.x = x; A.z = z; }   // (while its members live here, they carry the centre: herdPass)
+      if (Number.isFinite(wx)) { A.wx = wx; A.wz = wz; }
+      A.fcx = fcx ?? A.x; A.fcz = fcz ?? A.z; A.hdx = hdx; A.hdz = hdz; A.fleeT = +fleeT || 0; A.ax = ax; A.az = az;
+      if (Array.isArray(dead) && dead.length) { A.dead ||= new Set(); for (const m of dead) if (Number.isInteger(m)) A.dead.add(m); }
+    }
+  }
+  // A mirror's own herds: every 0.5 s, each aggregate within LIVE_R + its radius of this player spawns its members here
+  // (spawnHerd, the same ids and places as the host's) and one that falls out of range keeps its members' places
+  // (herdKeep) and goes back to the far tier. Its members run the herd steering here under the host's frame.
+  mirrorHerdLive(dt) {
+    if (!this.herdAgg?.size) return;
+    if ((this._mhT = (this._mhT || 0) - dt) > 0) return;
+    this._mhT = 0.5;
+    const P = this.flight.pos; let changed = false;
+    for (const A of this.herdAgg.values()) {
+      if (!A.remote || !this.sim[A.s]) continue;
+      const near = Math.hypot(A.x - P.x, A.z - P.z) < LIVE_R + A.r;
+      if (near === A.live) continue;
+      changed = true;
+      if (near) { const keep = new Set(); A.live = true; this.spawnHerd(A, keep); if (this.farT) this.farT.acc = FAR_STEP; }
+      else {
+        this.herdKeep(A); A.live = false;
+        for (const a of A.g?.mem || []) if (!this.held.has(a.id) && !a.dead) this.byId.delete(a.id);
+        A.g = null; if (this.farT) this.farT.acc = FAR_STEP;
+      }
+    }
+    if (changed) this.dirty = true;
   }
   // Slot k's far mesh, made (again) when its source tier changed (the drawn model loaded) or it needs more room.
   farMesh(k, need) {

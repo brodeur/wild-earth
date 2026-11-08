@@ -8133,3 +8133,27 @@ from a ridge 1-3 km off, or from the title view, the valley was empty.
   tier carries, so no program gains a slot (Metal's 16 attributes, 16 texture units).
 - **Not done.** A quiet-machine A/B of the whole frame (the load never dropped below 11 while this ran). The leg
   engine's 31 rows are a cap of the clip texture, so beyond the nearest 31 bison the gait is the baked cycle.
+
+## 2026-11-07: herds of hundreds, phase 5: herds between pages as aggregates (animalNet.js, animals.js herdRows, mirrorHerds, mirrorHerdLive; server.py)
+
+- **Why aggregates.** The shared animals streamed every animal as a row at up to 4 Hz under a 24 KB/s cap, so Lamar's
+  400-herd near a second player would have taken the whole stream. Herds now go as aggregates plus seeds
+  (docs/multiplayer.md "Herds").
+  - The host skips planned herd members in the per-animal stream and sends one `h` row per herd: centre, front's
+    waypoint or flight point, frame, flight and origin, dead ranks. A row goes when the herd changed or every 2 s,
+    about 120 bytes a herd.
+  - Each mirror spawns and steers its own members from the same seeded ids and places, under the host's frame.
+  - Herd members are named by id in events and requests.
+  - A mirror's own herd taking fright starts the flight on the host.
+  - A killed member's rank is recorded in the aggregate, so a buried carcass is not spawned again that season, on any
+    page.
+- **Bug found.** server.py rebuilt the `ast` message from the keys it knew and dropped `h`; it relays it now
+  (tests/test_animals.py).
+- **Checked (two headless Chrome pages, Lamar).**
+  - Herd rows were about 0.5 KB/s of the host's 20.7 KB/s.
+  - The largest message was 32.8 KB, the existing join snapshot, under 64 KB.
+  - Flights started on either page ran on both, the centres within 1-3 m and the waves at the same pace.
+  - A kill by id landed on the same bison on the mirror.
+- **Also in flight.** A fleeing animal on the heels of the one ahead aimed a gap behind it, which was backwards, so it
+  ran back and forth and the herd's centre crept at about 1.3 m/s. It now runs on along the flight and drifts into the
+  lane of the one ahead.

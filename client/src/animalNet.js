@@ -18,6 +18,15 @@
 // From a mirror: `areq` (a catch to confirm, a body taken or given back; the host decides and the kill it orders is the
 // one everyone sees) and `apos` (where the mirror is, rounded to 10 m, and its species, once a second: the host
 // simulates round every player and the species every player perceives; to the host only, never kept).
+// Herds (2026-11-07, docs/decisions.md "herds of hundreds, phase 5"): a planned herd's members (animals.js spawnHerds,
+// a few hundred bison) are never streamed one by one. The host sends each herd as its aggregate in `h` rows (animals.js
+// herdRows: its centre, its grazing front's frame and waypoint, its flight's start, point and origin, the ranks that
+// died), when it moved or changed and at least every HERD_EVERY ticks; a mirror draws a far herd from that (the far
+// tier) and, as its own player comes within LIVE_R of it, spawns the members itself from the same seeded ids and places
+// (herdLayout) and steers them under the host's frame (animals.js mirrorHerds, herdPass). An event about a herd member
+// names it by its id (the same on every page) rather than a stream number; a mirror's player startling, striking or
+// catching one asks the host by id; a mirror's own herd taking fright asks the host to start the flight (herdAlarm).
+// A herd row is about 120 bytes: Lamar's fifteen herds are under 2 KB, against the 64 KB message limit.
 // Positions live in memory on the server and here only; nothing is logged or written. With no game endpoint (a static
 // host, ?net=0, the dev paths alone) nothing here runs and the page is its own host as before.
 // Debugging: window.__weAn is the AnimalNet; .stats counts bytes and rows; .bps() the bytes per second sent (host) or
@@ -28,7 +37,8 @@ const CAP_BPS = 24000;                     // bytes per second of state the host
 const SPAWN_MSG = 30000;                   // bytes of spawns in one message at most: a join's full snapshot is spread over
                                            // ticks (the server refuses a message over 64 KB, ws.py WS_MAX_IN)
 const NEAR_M = 80, MID_M = 250;            // m from the nearest player: every tick, every other, else every fourth
-const POS_MS = 1000;                       // a mirror's apos: once a second (and at once on a species change)
+const POS_MS = 1000;
+const HERD_EVERY = 8;                      // a herd's row at least every 8 ticks (2 s), else when it moved or changed                       // a mirror's apos: once a second (and at once on a species change)
 const RETRY_MAX = 30000;
 export const PG = typeof crypto !== 'undefined' && crypto.getRandomValues ? [...crypto.getRandomValues(new Uint8Array(8))].map(b => b.toString(16).padStart(2, '0')).join('') : Math.random().toString(16).slice(2, 18);
 
@@ -107,7 +117,7 @@ export class AnimalNet {
   setHost(host) {
     const A = this.animals, was = this.host; this.host = host;
     if (host !== was) {
-      if (host) { this.known.clear(); this.byNum.clear(); this.groups.clear(); this.nextN = 0; this.full = true; if (A.mirror) { A.becomeHost(); this.stats.handovers++; } }
+      if (host) { this.known.clear(); this.byNum.clear(); this.groups.clear(); this.hsent?.clear(); this.nextN = 0; this.full = true; if (A.mirror) { A.becomeHost(); this.stats.handovers++; } }
       else { A.becomeMirror(); this.known.clear(); this.byNum.clear(); }
     }
     this.timers();
@@ -165,6 +175,7 @@ export class AnimalNet {
   // ---- the host's events ---------------------------------------------------------------------------------------------
   event(e) { if (this.host && this.connected && this.n > 1) { this.stats.events++; this.send({ t: 'aev', c: ++this.c, e }); } }   // alone on the channel: no one to tell
   numberOf(a) { return this.known.get(a.id) ?? -1; }
+  idOf(a) { return a && !this.known.has(a.id) ? a.id : undefined; }   // a herd member: named by its id (the same on every page)
   // animals.js emit(type, e): the ones the mirrors need, as events (the mirror re-emits them for its sounds and souls)
   emitted(type, e) {
     if (!this.host || !this.connected) return;
@@ -178,12 +189,12 @@ export class AnimalNet {
     else if (type === 'hunt') this.event({ k: 'hunt', n: this.numberOf(e.animal), prey: e.prey ? this.numberOf(e.prey) : -1 });
     else if (type === 'kill') {
       const a = e.animal; if (!a) return;
-      this.event({ k: 'kill', n: this.numberOf(a), by: e.aid ? `p:${e.aid}` : e.by, bysp: e.aid ? e.by : null, x: r2(a.x), y: r2(a.y), z: r2(a.z), yaw: r3(a.yaw),
+      this.event({ k: 'kill', n: this.numberOf(a), id: this.idOf(a), by: e.aid ? `p:${e.aid}` : e.by, bysp: e.aid ? e.by : null, x: r2(a.x), y: r2(a.y), z: r2(a.z), yaw: r3(a.yaw),
         pitch: r2(a.pitch0 || 0), roll: r2(a.roll || 0), amp: r2(a.amp0 || 0), pose: r2(a.pose0 || 0), flick: r2(a.flick0 || 0), lr: a.lieRoll || 1 });
-    } else if (type === 'gone') this.event({ k: 'gone', n: this.numberOf(e.animal) });
-    else if (type === 'miss') this.event({ k: 'miss', to: e.aid, n: this.numberOf(e.animal) });
-    else if (type === 'hp') this.event({ k: 'hp', n: this.numberOf(e.animal), hp: r2(e.hp), max: r2(e.max), by: e.aid || 0, mv: e.move || null });   // a strike's hit (animals.js hurt): everyone's bar
-    else if (type === 'kick') this.event({ k: 'kick', to: e.aid || 0, n: this.numberOf(e.animal) });   // big prey fighting back at the striker
+    } else if (type === 'gone') this.event({ k: 'gone', n: this.numberOf(e.animal), id: this.idOf(e.animal) });
+    else if (type === 'miss') this.event({ k: 'miss', to: e.aid, n: this.numberOf(e.animal), id: this.idOf(e.animal) });
+    else if (type === 'hp') this.event({ k: 'hp', n: this.numberOf(e.animal), id: this.idOf(e.animal), hp: r2(e.hp), max: r2(e.max), by: e.aid || 0, mv: e.move || null });   // a strike's hit (animals.js hurt): everyone's bar
+    else if (type === 'kick') this.event({ k: 'kick', to: e.aid || 0, n: this.numberOf(e.animal), id: this.idOf(e.animal) });   // big prey fighting back at the striker
   }
   groupNumber(g) {
     let r = this.groups.get(g);
@@ -207,7 +218,7 @@ export class AnimalNet {
     // spawns, and which are due
     const due = this.due ||= []; due.length = 0;
     for (const a of A.list) {
-      if (a.gone || a.sp === undefined || a.remote) continue;
+      if (a.gone || a.sp === undefined || a.remote || a.group?.agg) continue;   // (a planned herd's members: its `h` row)
       let n = this.known.get(a.id);
       live.add(a.id);
       const fresh = n === undefined;
@@ -237,8 +248,10 @@ export class AnimalNet {
         g.push(x === x ? [r.n, L, st, x, z] : [r.n, L, st]);
       }
     }
+    // the herds, as aggregates
+    const h = A.herdRows ? A.herdRows(full, this.hsent ||= new Map(), HERD_EVERY) : [];
     // the rows, until the tick's share of the cap
-    let bytes = 30 + sBytes + JSON.stringify(d).length + JSON.stringify(g).length, budget = CAP_BPS * TICK_MS / 1000;
+    let bytes = 30 + sBytes + JSON.stringify(d).length + JSON.stringify(g).length + JSON.stringify(h).length, budget = CAP_BPS * TICK_MS / 1000;
     let k = 0;
     for (; k < due.length; k++) {
       const a = due[k], row = this.row(a); if (!row) { a.wtick = 0; continue; }
@@ -248,7 +261,7 @@ export class AnimalNet {
     }
     for (; k < due.length; k++) { due[k].wtick = (due[k].wtick || 0) + 1; this.stats.deferred++; }
     for (const a of A.list) if (!a.dead && !a.culled && a.wdue < 1) a.wtick = (a.wtick || 0) + 1;
-    if (s.length || u.length || d.length || g.length) this.send({ t: 'ast', s, u, d, g, at: r2(A.time) });
+    if (s.length || u.length || d.length || g.length || h.length) this.send(h.length ? { t: 'ast', s, u, d, g, h, at: r2(A.time) } : { t: 'ast', s, u, d, g, at: r2(A.time) });
   }
   // one animal's row: [n, mask, ...changed fields], or null when nothing changed
   row(a) {
@@ -273,6 +286,7 @@ export class AnimalNet {
     if (Array.isArray(d.s)) for (const r of d.s) A.mirrorSpawn(r, now);
     if (Array.isArray(d.g)) for (const r of d.g) A.mirrorGroup(r);
     if (Array.isArray(d.u)) for (const r of d.u) A.mirrorRow(r, now);
+    if (Array.isArray(d.h)) A.mirrorHerds?.(d.h);
     if (Array.isArray(d.d)) for (const n of d.d) A.mirrorDrop(n);
     if (now - this.win.t >= 1000) { this.win.lastOut = this.win.out; this.win.lastIn = this.win.in; this.win.out = this.win.in = 0; this.win.t = now; }
   }
