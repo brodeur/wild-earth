@@ -7997,5 +7997,63 @@ watered ground of their seasonal ranges, and the denser they stand the larger th
   kept apart; small groups and sparse species left to the cells; steep species on slopes). In a headless Chrome on Lamar
   in late July, the 400-herd's members all spawned (400 bison live) as the eye came within LIVE_R + 137 m, and read from
   45 m up as a herd on the floor beside the creek.
-- **Not yet (phase 2).** The followers hold fixed offsets round the leader, so a herd of 400 moves as a rigid disc; the
-  leader alone sees a threat.
+- **Not yet (phase 2, below).** The followers held fixed offsets round the leader, so a herd of 400 moved as a rigid
+  disc; the leader alone saw a threat.
+
+## 2026-11-07: herds of hundreds, phase 2: herd motion that scales (animals.js herdPass, herdRoles, herdSteer, herdAlarm)
+
+Every herd on the deer machine (mule deer, elk and their stand-ins: bison, pronghorn, bighorn; cell-spawned and planned
+alike) is now a leader and members steering among their neighbours. Before, each follower walked to a fixed offset round
+the leader (in single file behind it when it walked), and only the leader saw a threat; the whole herd set off on the
+same frame.
+
+- **The hash.** Each frame `herdPass` puts every herd member into the existing 30 m BUCKET cells (a Map of reused arrays)
+  and takes each herd's centre and heading. A member reads only the 3 x 3 cells round it, so the cost grows with the
+  herd, not its square.
+- **Grazing.** A member stands and eats until it is out of its place, then takes a few steps (stand, step, stand):
+  - separation inside 2.5 body lengths (body length 2.2 x its body height), soft enough that only real crowding starts
+    a step;
+  - a pull to its anchor once it is outside its slack: a cow cluster of about 25 (fixed round the herd's frame centre),
+    the bulls' band at the edge outside the rut (the rut mixes them in), 4 % stragglers grazing just off their own side
+    of the herd, each calf within a body length or so of its mother's flank (its mother: the cow placed just before it,
+    and it spawns beside her);
+  - now and then (every 40 s or so) a few steps on to fresh grass;
+  - alignment shapes a step but never starts one (it had set the whole herd walking, each walker keeping its
+    neighbours walking).
+- **The grazing front.** A big herd's frame is the herd itself: its centre drifts toward a waypoint at 0.08 m/s, each
+  next waypoint the most open of six spots 30-80 m on (within twice the radius of home), and the lead cow is a member
+  anchored at the front. A small herd's frame stays behind its leader, which walks between waypoints as before.
+- **Travel.** Walking, piloted or in flight, each member follows the nearest neighbour ahead of it in the direction of
+  travel, a gap behind; one with nobody ahead falls in behind the leader (in a flight it runs on). A small herd walks in
+  file (Lamar's mule deer: 5, 9, 9, 14 and 14 m behind the leader), a big one in parallel files.
+- **The alarm wave.** Any member that sees the danger starts the flight (`herdAlarm`: the herd's flight point away from
+  the threat past its centre, the flight 8 + radius/8 s, so a big herd's outlasts the wave crossing it). Every other
+  member takes it up from any alarmed neighbour within its reach, after a reaction of 0.25-0.6 s, and runs at flight
+  pace. Bedded animals get up at once. The gallop (within 40 m of the threat) is each animal's own. The hunt reads the
+  herd's flight as before (`fled`).
+- **Checked (headless Chrome, Lamar, late July, 7:30).** The 400-herd grazing held its spread (RMS radius about 80 m,
+  nearest neighbour about 6.5 m, about 2.5 bison lengths) with 14-20 % of it stepping at any moment, a mean speed of
+  0.1 m/s, while the centre drifted at the front's pace. An alarm at its west edge reached 19 animals by 1.8 s, 163 by
+  5.3 s, 376 by 8.9 s and 398 of 400 by 11 s (two stragglers out of reach never heard it). The whole herd was then at
+  flight pace, running in files. Before the fixes, three bugs showed in the numbers:
+  - the cow clusters' angle was off by pi, so every cow reached for an anchor across the herd and the herd collapsed
+    to a knot 20 m across;
+  - the frame followed a wandering leader;
+  - every alarmed animal matched the speed of a still-grazing one ahead of it, so nobody ran until the leader did.
+- **Frame time, before and after (headless Chrome, ANGLE/Metal on the M1 Pro, 1280 x 800, load 4-5).**
+  - **Setup.** Lamar on 2026-07-25 at 7:30, the camera held 240 m from the 400-herd's centre and 45 m up, looking at
+    it. 300 frames per run, alternating main (e4bd1f7, port 8781) and this branch, Chrome restarted for every run.
+  - **Main.** 382 animals: `animals.update` 0.4 ms (median), frame 16.7 ms, GPU per frame 12.4 and 12.6 ms (two runs).
+  - **This branch.** 782 animals, 400 of them bison in view: `animals.update` 1.1 ms (p90 1.2-1.3), frame 16.7 ms, GPU
+    12.8 and 12.6 ms.
+  - **Reading.** The herd costs about 0.7 ms of CPU and nothing measurable on the GPU at this distance (the far tier of
+    the drawn bison). The frame stays at the 60 Hz budget.
+  - **Caveat.** The GPU figure is one timer query over each frame's renders, without the fence protocol. It is good for a
+    whole-frame A/B, not for pricing one draw.
+  - **Discarded runs.** Runs after many page loads in one Chrome read 3 draw calls and no animals (a lost context: the
+    16-context limit).
+- **Not yet.**
+  - The far tier (a herd seen beyond LIVE_R from a ridge or the title view).
+  - A close GPU budget with the herd inside the leg engine's live range.
+  - Syncing herds as aggregates to mirrors.
+  - The bison model reads reddish-brown where summer adults are dark brown (the model's colour, not the herd's).
