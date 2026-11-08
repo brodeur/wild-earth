@@ -15,7 +15,7 @@
   38.74035063713964
  ],
  "size_m": 10000,
- "generated_at": "2026-11-07T20:11:50Z",
+ "generated_at": "2026-11-08T04:30:37Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -8912,6 +8912,87 @@
    },
    "sha256": "117ef4df6a26532732d0a47e3fdd22caac96b3d58a1a7b4009b058bb6b736720",
    "bytes": 39290
+  },
+  "client.herds": {
+   "path": "client/herds.json",
+   "kind": "table",
+   "derived_from": [
+    "client.fauna",
+    "client.habitat",
+    "client.canopy",
+    "client.heights",
+    "resources"
+   ],
+   "herds": {
+    "branta_canadensis": {
+     "winter": 7,
+     "spring": 21,
+     "fall": 11
+    },
+    "pelecanus_erythrorhynchos": {
+     "winter": 1,
+     "spring": 1,
+     "fall": 1
+    },
+    "mergus_serrator": {
+     "winter": 1,
+     "fall": 1
+    },
+    "anas_platyrhynchos": {
+     "winter": 20,
+     "fall": 36
+    },
+    "sturnus_vulgaris": {
+     "winter": 6,
+     "spring": 36,
+     "fall": 12
+    }
+   },
+   "largest": {
+    "branta_canadensis": {
+     "winter": 344,
+     "spring": 175,
+     "fall": 110
+    },
+    "pelecanus_erythrorhynchos": {
+     "winter": 30,
+     "spring": 12,
+     "fall": 6
+    },
+    "mergus_serrator": {
+     "winter": 49,
+     "fall": 49
+    },
+    "anas_platyrhynchos": {
+     "winter": 187,
+     "fall": 39
+    },
+    "sturnus_vulgaris": {
+     "winter": 400,
+     "spring": 194,
+     "fall": 312
+    }
+   },
+   "skeins": {
+    "branta_canadensis": {
+     "spring": 7.0,
+     "fall": 3.35
+    },
+    "pelecanus_erythrorhynchos": {
+     "spring": 2.13,
+     "fall": 1.07
+    },
+    "mergus_serrator": {
+     "spring": 6.0,
+     "fall": 6.0
+    },
+    "anas_platyrhynchos": {
+     "spring": 2.3,
+     "fall": 0.81
+    }
+   },
+   "sha256": "43d0e256ccfd841d4e53f39c82e89f23eb55d7e9c5025bf14669fb0360508ead",
+   "bytes": 24058
   }
  },
  "sources": {
@@ -10569,6 +10650,18 @@
    "step": "inpaint",
    "at": "2026-11-07T20:11:50Z",
    "seconds": 119.1,
+   "ok": true
+  },
+  {
+   "step": "herds",
+   "at": "2026-11-08T04:29:25Z",
+   "seconds": 1.0,
+   "ok": true
+  },
+  {
+   "step": "herds",
+   "at": "2026-11-08T04:30:37Z",
+   "seconds": 1.1,
    "ok": true
   }
  ],
@@ -12252,6 +12345,47 @@
     "cache": 29
    },
    "seconds": 0.0
+  },
+  "herds": {
+   "version": "2",
+   "code": "4abf4771b1f2b392",
+   "params": {
+    "tile": "utm10n_680_4280"
+   },
+   "fingerprint": "05c31c81fec3816c",
+   "parts": {
+    "version": "2",
+    "code": "4abf4771b1f2b392",
+    "params": {
+     "tile": "utm10n_680_4280"
+    },
+    "deps": {
+     "animals": "52ef2f52655d7892",
+     "resources": "4678c58d67948e72",
+     "terrain": "d06ce84effcad567"
+    },
+    "library": {
+     "library/herds": "b06c0c2e727e4e77"
+    }
+   },
+   "ran_at": "2026-11-08T04:30:36Z",
+   "owner": null,
+   "status": "ok",
+   "layers": [
+    "client.herds"
+   ],
+   "outputs": {
+    "client/herds.json": "43d0e256ccfd841d"
+   },
+   "out_hash": "de091ec6065cea2a",
+   "sources": {},
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 0,
+    "cache": 7
+   },
+   "seconds": 1.1
   }
  },
  "seams": {

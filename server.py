@@ -985,6 +985,8 @@ class GameWorld:
                 if conn is not host:
                     return
                 out = {"t": "ast", "s": m.get("s"), "u": m.get("u"), "d": m.get("d"), "g": m.get("g"), "at": m.get("at")}
+                if isinstance(m.get("h"), list):   # the planned herds as aggregates (animalNet.js "Herds", 2026-11-07)
+                    out["h"] = m["h"]
                 for k in self.aconns:
                     if k is not conn:
                         k.send(out)

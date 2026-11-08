@@ -60,7 +60,9 @@ def _load() -> None:
             rec = {"lifestyle": (r.get("Primary.Lifestyle") or "").strip() or None,
                    "hwi": _num(r.get("Hand-Wing.Index")), "habitat": (r.get("Habitat") or "").strip() or None,
                    "habitat_density": _num(r.get("Habitat.Density")), "family": r.get("Family1"), "order": r.get("Order1"),
-                   "mass_g": _num(r.get("Mass"))}
+                   "mass_g": _num(r.get("Mass")),
+                   # 1 sedentary, 2 partially migratory, 3 migratory (the herds step's skeins: pipeline/herds.py)
+                   "migration": _num(r.get("Migration"))}
             rows[name] = rec
             by_genus.setdefault(name.split()[0], []).append(rec)
         try:
@@ -75,12 +77,14 @@ def _load() -> None:
         life = Counter(x["lifestyle"] for x in recs if x["lifestyle"]).most_common(1)
         hw = [x["hwi"] for x in recs if x["hwi"] is not None]
         genus[g] = {"lifestyle": life[0][0] if life else None, "hwi": statistics.median(hw) if hw else None,
-                    "habitat": None, "habitat_density": None, "family": recs[0]["family"], "order": recs[0]["order"]}
+                    "habitat": None, "habitat_density": None, "family": recs[0]["family"], "order": recs[0]["order"],
+                    "migration": statistics.median([x["migration"] for x in recs if x.get("migration") is not None] or [None]) if any(x.get("migration") is not None for x in recs) else None}
     _ROWS, _ALIAS, _GENUS = rows, alias, genus
 
 
 def lookup(scientific: str) -> dict:
-    """{lifestyle, hwi, habitat, habitat_density, family, order, level: 'species' | 'crosswalk' | 'genus'} or {}."""
+    """{lifestyle, hwi, habitat, habitat_density, family, order, mass_g, migration, level: 'species' | 'crosswalk' | 'genus'}
+    or {}."""
     if not scientific:
         return {}
     _load()

@@ -463,6 +463,14 @@ def _animals(tile, m, force):
     add_layer(m, tile, "client.fauna", fauna_slots(tile), fetched=False)
 
 
+def _herds(tile, m, force):
+    # Where the herd species gather by season and in herds of what size (pipeline/herds.py, 2026-11-07): the same animals
+    # concentrated on the open, low, watered ground of their seasonal ranges, the typical herd growing with the density
+    # there; recorded per-tile counts and per-species corrections in library/herds/
+    from .herds import tile_herds
+    add_layer(m, tile, "client.herds", tile_herds(tile), fetched=False)
+
+
 def _stills(tile, m, force):
     # A still for every slot of client/fauna.json (pipeline/stills.py): a modelled animal's model rendered headless in the
     # stills' framing, a stand-in's its kin's still; shared assets (client/assets/opening/, index.json), the tile's report
@@ -714,7 +722,7 @@ STEPS: dict[str, Step] = {s.name: s for s in [
          ["species.list", "species.occurrences", "species.seasonal", "species.inventory", "perception", "calendar",
           "locomotion", "client.species_prior"], ["gbif"], library=["library/animals"],
          doc="GBIF presence, perception, calendar, locomotion, the client's density prior", stage=A),
-    Step("animals", "6", ["fauna", "fauna_slots", "fauna_models", "pantheria", "sociality", "avonet", "amniote", "research", "locomotion"], ["species", "plants"], _animals, ["species.animals", "client.fauna"], ["gbif"],
+    Step("animals", "7", ["fauna", "fauna_slots", "fauna_models", "pantheria", "sociality", "avonet", "amniote", "research", "locomotion", "appearance"], ["species", "plants"], _animals, ["species.animals", "client.fauna"], ["gbif"],
          library=["library/animals", "data/eltontraits"],
          doc="every animal recorded on the tile, ranked; predators and scavengers; traits for those without; the Meshy queue",
          stage=A),
@@ -722,6 +730,9 @@ STEPS: dict[str, Step] = {s.name: s for s in [
          doc="a still for every animal's species chip: a model rendered, a stand-in's kin's (client/assets/opening)", stage=A),
     Step("resources", "2", ["resources", "derive", "water_seasons"], ["dem", "hydro", "water_seasons", "landcover", "terrain", "species_mix", "species"], _resources,
          ["resources", "client.mast"], doc="food, water and cover per season; the acorn mast", stage=A),
+    Step("herds", "2", ["herds", "pantheria", "avonet", "fetch_species", "fauna_slots"], ["animals", "resources", "terrain"], _herds,
+         ["client.herds"], ["gbif"], library=["library/herds"],   # 2: flocks and migration skeins (2026-11-07)
+         doc="the herd species' and flocking birds' seasonal ranges and group sizes; the migrants' skeins", stage=A),
     # ---------------------------------------------------------------- games
     Step("games", "2", ["games"], ["species", "resources", "animals"], _games, ["games"],   # 2: relations.desirability (2026-11-06)
          doc="every species' games: archetype, hotspots, scarcity, predators, competitors; each eater's desirability of its foods", stage=G),
