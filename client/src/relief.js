@@ -23,6 +23,7 @@ import { latLonToXYZ } from './mapGlobe.js';
 // Nothing here is sent anywhere: the files are the game's own.
 
 const N = 192, EX_SPAN = 1200, EX_MAX = 3, LIFT_M = 12, FADE = 0.8, R_M = 6371000, TILE_M = 10000;
+export const RELIEF_TOP_M = EX_SPAN + LIFT_M;   // how high a model usually stands (more only where the land's own relief is more)
 
 // UTM (WGS84) to latitude and longitude in degrees (Snyder 1987, the series to the sixth order: well under a metre).
 export function utmToLatLon(E, Nn, zone, north = true) {
@@ -105,6 +106,8 @@ export class Relief {
     this.mesh = this.build(T, H, C, W); this.mesh.material.uniforms.opacity.value = 0; this.mesh.userData.fade = 1;
     this.group.add(this.mesh);
   }
+  // The model's highest point over the sphere (metres, exaggerated as drawn) for that place, or null before it is built
+  topM(id) { const d = this.mesh?.userData; return d && this.id === id ? LIFT_M + (d.hi - d.lo) * d.ex : null; }
   hide() {
     this.want = null;
     if (this.mesh) { this.mesh.userData.fade = -1; this.fading.push(this.mesh); this.mesh = null; }
