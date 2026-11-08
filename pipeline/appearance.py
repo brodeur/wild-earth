@@ -1438,3 +1438,42 @@ def main(argv=None) -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
+
+# ---- the model's tint (2026-11-07, the herds lane) -------------------------------------------------------------------
+# A served model whose coat should read another colour than it came out is tinted toward it by the client (fauna.json
+# `tint`, per linear channel on the vertex colours: animals.js installFauna, the drawn model's tiers and the procedural
+# stand-in alike) rather than re-textured. Which colour is a recorded per-species choice (library/animals/tints.json:
+# the target, its reason and source), since the descriptions often allow several (the bison's "dark-brown, brown": its
+# mesh matches "brown", a reddish tan, and a herd of four hundred read from a ridge as a pale pink patch); the
+# multiplier is the rule: the target over the model's body colour (upperparts and flanks, the area-weighted median of
+# the faces' linear colour), per channel, each within TINT_RANGE.
+TINT_RANGE = (0.2, 2.0)
+TINTS = Path(__file__).resolve().parent.parent / "library" / "animals" / "tints.json"
+
+
+def body_colour(glb: Path) -> np.ndarray | None:
+    """The model's body colour (linear RGB): its upperparts and flanks, the area-weighted median per channel."""
+    if not Path(glb).exists():
+        return None
+    P, C, R, I = read_glb(glb)
+    tri = P[I]; cr = np.cross(tri[:, 1] - tri[:, 0], tri[:, 2] - tri[:, 0]); area = np.linalg.norm(cr, axis=1) / 2
+    ny = cr[:, 1] / (2 * area + 1e-12); part = np.round(np.median(R[I], axis=1)).astype(int)
+    body = np.array([PARTS.get(int(k), "body") == "body" for k in part]) & (ny > -0.35)
+    if not body.any():
+        return None
+    col = C[I].mean(1)[body]; w = area[body]
+    return np.array([np.interp(0.5, np.cumsum(w[np.argsort(col[:, c])]) / w.sum(), np.sort(col[:, c])) for c in range(3)])
+
+
+def model_tint(code: str, glb: Path) -> dict | None:
+    """fauna.json's tint for a modelled slot: {tint: [r, g, b], target, measured, reason, source}, or None (no recorded
+    target, or no model to measure)."""
+    rec = (json.loads(TINTS.read_text()).get("species") or {}).get(code) if TINTS.exists() else None
+    med = body_colour(glb) if rec else None
+    if not rec or med is None:
+        return None
+    want = _hex_lin(rec["target"].lstrip("#"))
+    tint = np.clip(want / np.maximum(med, 1e-4), *TINT_RANGE)
+    return {"tint": [round(float(v), 3) for v in tint], "target": rec["target"], "measured": lab_to_hex(lab(med)),
+            "reason": rec.get("reason"), "source": rec.get("source"), "rule": "pipeline/appearance.py model_tint"}

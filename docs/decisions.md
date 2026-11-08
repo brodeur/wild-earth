@@ -8057,3 +8057,53 @@ same frame.
   - A close GPU budget with the herd inside the leg engine's live range.
   - Syncing herds as aggregates to mirrors.
   - The bison model reads reddish-brown where summer adults are dark brown (the model's colour, not the herd's).
+
+## 2026-11-07: herds of hundreds, phase 3: the far tier (animals.js farHerds, aggDrift, herdLayout, herdKeep; relief.js herdDots)
+
+Aaron saw phases 1-2 and said "Build far view". A planned herd existed only within LIVE_R + its radius of the eye, so
+from a ridge 1-3 km off, or from the title view, the valley was empty.
+
+- **The aggregate.** Each planned herd keeps one aggregate through the season (`herdAgg`): its centre, its grazing
+  front's waypoint and its members' places round the centre (`A.lay`: offset, heading, size, bull, calf per member).
+  - **While far (host only).** `aggDrift` moves the centre as a big herd's frame drifts: 0.08 m/s toward the most open of
+    six spots 30-80 m on, within twice its radius of home, and not at all while the herd is down at its hours.
+  - **The places.** They come from `herdLayout`, the same seeded draws `spawnHerd` makes for each member, in add()'s
+    order. When a herd goes far, `herdKeep` records where each member actually was.
+- **The far bodies.**
+  - **One mesh per species.** The geometry, material and haze are those of the tier the live animals are drawn with at
+    that range: the drawn model's farthest tier (lod2), else the procedural body. Pose rows come from the same far clip
+    drive (the leg engine's `farDrive` or the skinned clips), eight per state, grazing or bedded by the herd's hours.
+  - **Grown to read.** Each body grows so it stays about 3 px long (FAR_PX, at most 5x). At 480 m it is drawn at its own
+    size; at 2 km about twice.
+  - **Rewritten every 0.25 s,** and at once when a herd changes between live and far, so it is never drawn twice or not
+    at all. Far bodies are not hunted, counted, perceived, souled or streamed: nothing but the far meshes knows them.
+- **No pop.** Coming in, the members spawn exactly where their far bodies stood, in the pose they were drawn in (lying
+  down if the herd is down), from the layout the far tier drew. Approaching Lamar's 400-herd from 1.1 km at 35 m up in
+  10 m steps, it resolved at 480 m. Every member stood within 4 cm of its far body (median 0; the drift between
+  rewrites), and the last far frame and the first live frame look the same.
+- **From a ridge.** From an open ridge 2.0 km from the 163-herd and 217 m above it, the herd reads as a dark band of dots
+  on the valley floor beyond the creek; from the Lamar overlook 2.9 km off and 335 m up, the 400-herd reads as a dark
+  cluster. Both are faint in the morning haze: the haze takes the contrast as it takes the land's.
+- **From the title view (relief.js).** The chosen tile's relief model fetches client/herds.json and puts the season's herds
+  on it as small dark boxes (up to 160 a herd), raised with the relief.
+  - **Spread 3x.** The disc is spread HERD_SPREAD times, as the heights are exaggerated. A 270 m herd is 5 px from the
+    title's camera and each bison a tenth of a pixel; spread, the herd is a dark patch of about 15 px.
+  - **Body size.** Each box is sized so the herd's dark share of its disc is about half.
+  - **Still hard to see.** The title's rings of avatars stand over much of the tile, and the patches read only where
+    they are clear of them.
+- **Bison darkened to their summer coat (pipeline/appearance.py model_tint, library/animals/tints.json).**
+  - **Why.** The bison mesh came out a reddish tan (#7a4b29) and a herd read from a ridge as a pale pink patch.
+  - **Why not a rule.** A general rule could not decide this: the description gives "dark-brown, brown", and the mesh
+    already matches "brown" (CIEDE2000 4.6).
+  - **The record.** The target is a recorded per-species choice (#3b2c22, the summer dark brown Aaron asked for; source
+    Meagher 1986, Mammalian Species 266). The multiplier is the rule: the target over the model's measured body colour
+    (upperparts and flanks, area-weighted median), per linear channel.
+  - **Where it lands.** fauna_slots writes it into the slot's `tint` with its `tint_source`. The client now tints a drawn
+    model's tiers as it tinted procedural stand-ins (`tintedTiers`, once per shared geometry). Lamar's bison: tint
+    [0.225, 0.361, 0.726]. The animals step was re-run on Lamar; only the bison slot changed.
+- **The elk's band from the tile's own range (animals.js ELK_BAND).** The static elk's elevation band was the Olympics'
+  (300 m base; tops 700 m in winter, 1,200 m in spring and fall, 1,700 m in summer), so on Lamar (1,970-2,930 m) no elk
+  ever spawned in summer from the cells.
+  - **The rule.** The band is now fractions of the tile's height span above its lowest ground (base 0.09; tops 0.36,
+    0.70, 1.05), fitted so the Hoh (165-1,640 m) keeps its numbers (298 m; 696, 1,197 and 1,714 m).
+  - **Lamar.** The winter top is 2,317 m, and in summer the whole tile.

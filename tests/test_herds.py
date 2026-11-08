@@ -77,5 +77,26 @@ class TestPlan(unittest.TestCase):
         self.assertGreater(herds.herd_radius_m(100, 580), herds.herd_radius_m(100, 75))
 
 
+
+class TestModelTint(unittest.TestCase):
+    """A recorded coat colour (library/animals/tints.json) becomes a per-channel tint over the model's own body colour."""
+
+    def test_bison_darkened_toward_its_summer_coat(self):
+        from pathlib import Path
+        from pipeline.appearance import model_tint
+        glb = Path(__file__).resolve().parent.parent / "client" / "assets" / "fauna" / "bison_bison.glb"
+        if not glb.exists():
+            self.skipTest("bison model not present")
+        t = model_tint("bison_bison", glb)
+        self.assertIsNotNone(t)
+        self.assertTrue(all(0 < v < 1 for v in t["tint"]))        # darker in every channel
+        self.assertLess(t["tint"][0], t["tint"][2])                 # the red pulled down most: reddish tan to dark brown
+
+    def test_no_record_no_tint(self):
+        from pathlib import Path
+        from pipeline.appearance import model_tint
+        self.assertIsNone(model_tint("no_such_animal", Path("nowhere.glb")))
+
+
 if __name__ == "__main__":
     unittest.main()

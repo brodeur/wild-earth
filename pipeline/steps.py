@@ -722,7 +722,7 @@ STEPS: dict[str, Step] = {s.name: s for s in [
          ["species.list", "species.occurrences", "species.seasonal", "species.inventory", "perception", "calendar",
           "locomotion", "client.species_prior"], ["gbif"], library=["library/animals"],
          doc="GBIF presence, perception, calendar, locomotion, the client's density prior", stage=A),
-    Step("animals", "6", ["fauna", "fauna_slots", "fauna_models", "pantheria", "sociality", "avonet", "amniote", "research", "locomotion"], ["species", "plants"], _animals, ["species.animals", "client.fauna"], ["gbif"],
+    Step("animals", "7", ["fauna", "fauna_slots", "fauna_models", "pantheria", "sociality", "avonet", "amniote", "research", "locomotion", "appearance"], ["species", "plants"], _animals, ["species.animals", "client.fauna"], ["gbif"],
          library=["library/animals", "data/eltontraits"],
          doc="every animal recorded on the tile, ranked; predators and scavengers; traits for those without; the Meshy queue",
          stage=A),
