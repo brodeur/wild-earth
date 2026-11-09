@@ -1,3 +1,5 @@
+import { loadStills, stillOf, stillsReady } from './stills.js';
+
 // Friends, groups and the group chat (docs/multiplayer.md, "What the player sees" 5, 6 and 8; lane 3), over hub.js.
 // Redesigned 2026-11-06 after Aaron's design ("Start screen, social panel v1", docs/decisions.md "the home screen's
 // social panel"): one panel in two parts.
@@ -11,8 +13,8 @@
 // Friend, Accept or Unblock), then three tabs. Groups: a card per group (its members' wisps, the dim ones offline, its
 // name, where its members are: "2 in Upper Hoh Road", "1 online" or "quiet", and its last line), and New group. A card
 // opens the group's chat in the panel: back, the name and who is in it, the info button (the edit sheet: the name, the
-// members with Remove for the group's creator, Add friends, Save, Leave group), "Join Maya and Juno in <place>" when
-// members share a place, the lines (each with its sender and where they were when it came, or when), and the message
+// members with Remove for the group's creator, Add friends, Save, Leave group), a join card for each place its members
+// are in (joinCards: the place, their wisps stacked to +N, Join on the right), the lines (each with its sender and where they were when it came, or when), and the message
 // box. Friends: the online ones (Join when they share a place, Invite when not: to the place chosen on the earth, or
 // the world the player is in), More (Remove friend, Block), and the offline ones folded under "Offline · N". Requests:
 // the requests in (Accept, Ignore) and out (Cancel). New group and the edit sheet rise from the panel's bottom.
@@ -317,6 +319,33 @@ export class Social {
     const best = [...at.entries()].sort((a, b) => b[1].length - a[1].length)[0];
     return { tile: best?.[0] || null, where: best ? this.placeName(best[0]) : null, names: (best?.[1] || []).map(m => m.display || m.name), on: others.filter(m => this.isOn(m.id)).length };
   }
+  // Every tile the group's other members are in but the player's own world, the most first: [{ tile, where, members }].
+  placesOf(g) {
+    const me = this.you?.id, at = new Map();
+    for (const m of g.members) { if (m.id === me) continue; const t = this.stateOf(m.id).tile; if (t && t !== this.hub.room) at.set(t, [...(at.get(t) || []), m]); }
+    return [...at.entries()].sort((a, b) => b[1].length - a[1].length || this.placeName(a[0]).localeCompare(this.placeName(b[0])))
+      .map(([tile, members]) => ({ tile, where: this.placeName(tile), members }));
+  }
+  // The join cards over the group's chat (Aaron, 2026-11-08: "This should be a card instead. Tile name, followed by
+  // stacking user icons that eventually truncate into a number" ... "With a join button on the right"): one per tile the
+  // group's members are in, its name, their wisps overlapping (each with the face of the body they wear or chose there,
+  // the stills' index), the rest as +N once more than fit (4 in a 340 px panel, 3 narrower, 5 wider), and Join.
+  joinCards(g) {
+    const places = this.placesOf(g); if (!places.length) return '';
+    const w = this.$('.so-cta-slot')?.clientWidth || this.el?.clientWidth || 340, fit = w >= 380 ? 5 : w >= 300 ? 4 : 3;
+    if (!stillsReady()) loadStills().then(() => { if (this.openGroup === g.id) this.renderChat(); });
+    return places.map(p => {
+      const shown = p.members.length > fit ? p.members.slice(0, fit - 1) : p.members, more = p.members.length - shown.length;
+      const names = p.members.map(m => m.display || m.name);
+      const face = m => { const b = this.hub.bodies?.get(m.id); if (!b || b.tile !== p.tile || !b.code || b.code === 'spirit' || !stillsReady()) return '';
+        const st = stillOf({ code: b.code }); return st.glyph ? '' : `<img class="so-jface" src="${esc(st.src)}" alt="" decoding="async">`; };
+      return `<div class="so-jcard" role="group" aria-label="${esc(`${p.where}: ${andList(names)}`)}">
+        <span class="so-jmain"><b class="so-jname" title="${esc(p.where)}">${esc(p.where)}</b>
+          <span class="so-jstack">${shown.map(m => `<span class="so-jav" title="${esc(m.display || m.name)}">${av(m.id, 26)}${face(m)}</span>`).join('')}${more ? `<span class="so-jmore" title="${esc(names.slice(shown.length).join(', '))}">+${more}</span>` : ''}</span></span>
+        <button type="button" class="so-jbtn" data-act="together" data-id="${esc(p.tile)}" aria-label="${esc(`Join ${andList(names)} in ${p.where}`)}">${I.go}<span>Join</span></button>
+      </div>`;
+    }).join('');
+  }
   groupLabel(g) {
     const names = g.members.filter(m => m.id !== this.you?.id).map(m => m.display || m.name);
     return names.length ? names.slice(0, 3).join(', ') + (names.length > 3 ? ` +${names.length - 3}` : '') : 'just you';
@@ -402,8 +431,8 @@ export class Social {
         <button type="button" class="so-ghost so-round so-infobtn" data-act="info" aria-label="Group info">${I.info}</button>`;
       this.$('.so-draft').placeholder = `Message ${name}`;
     }
-    const here = pl.tile && pl.tile === this.hub.room;
-    this.$('.so-cta-slot').innerHTML = pl.tile && !here ? `<button type="button" class="so-cta" data-act="together" data-id="${esc(pl.tile)}">${I.go}Join ${esc(andList(pl.names))} in ${esc(pl.where)}</button>` : '';
+    const slot = this.$('.so-cta-slot'), cards = this.joinCards(g);
+    if (slot.dataset.html !== cards) { slot.dataset.html = cards; slot.innerHTML = cards; drawAvatars(slot); }   // kept while unchanged, so a focused Join stays focused
     const box = this.$('.so-lines'), atEnd = box.scrollHeight - box.scrollTop - box.clientHeight < 40;
     const lines = this.msgs.get(g.id) || [];
     box.innerHTML = `<span class="so-kept">Messages go after 7 days</span>${lines.map(m => `<div class="so-line${m.from === me ? ' me' : ''}">${av(m.from, 24)}<div class="so-lbody"><span class="so-lwho"><b>${esc(m.from === me ? (this.you.display || this.you.name) : this.nameOf(m.from))}</b> · ${esc(m.where || ago(m.at))}</span><span class="so-ltext">${esc(m.text)}</span></div></div>`).join('')}

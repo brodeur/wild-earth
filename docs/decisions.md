@@ -8525,3 +8525,13 @@ and fails over 64 KB. The form a joiner arrives in is a separate change (group f
   - Controls answer under the black (A turned the spirit 0.8 rad in 1.2 s).
   - `?skip=1` is unchanged. The console's only error is the signed-out 401 from /api/hub/me. unittest OK.
   - **Not covered:** timings with a visible, full-rate page, and the deer's new clear-spot placement, which was added after the deer capture.
+## 2026-11-08: the join cards (branch claude/join-as-species)
+
+Aaron: "This should be a card instead. Tile name, followed by stacking user icons that eventually truncate into a number"
+and "With a join button on the right". Details in docs/multiplayer.md "The join cards".
+- **One card per place**, not one pill for the busiest place: members split over two tiles can each be joined.
+- **The button joins, the card does not**: a compact orange Join on the right is the one control, as Aaron corrected; the
+  body stays inert so a stray click on the wisps does not travel.
+- **The cutoff follows the panel's width** (3, 4 or 5 slots; the last one becomes +N), not a fixed number.
+- **The body's face from the stills already shipped** for the species chips, so no new images; none for the spirit.
+
