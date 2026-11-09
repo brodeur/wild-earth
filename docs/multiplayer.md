@@ -693,6 +693,28 @@ one by one: at the stream's 24 KB/s cap they would crowd out everything else. Th
   host. It sends the cells written since the last as `ast.f`: base64 of two 32-bit words a cell, up to 4,000 cells a
   message (43 KB), every 8 ticks, and after a join the whole changed set over several ticks. server.py relays `f` up to
   60,000 characters. A mirror applies them (queued until its fields are made). No positions are kept.
+- **No message over the server's limit (2026-11-08).** Aaron: one computer flying as a hawk, the second pressed Join,
+  "i show up as a spirit but see no animals". The join's full resend put the spawns (up to 30 KB), every herd row and a
+  4,000-cell field delta (43 KB) in one message: 70-77 KB once the fields held over about 3,000 changed cells (a few
+  hours of herds on the home tile). ws.py closes a socket that sends over 64 KB (`WS_MAX_IN`), so the host lost its
+  socket, the server moved the host, the joiner was torn down as a fresh mirror and a host again, and the host's
+  reconnect began another full resend. Now (animalNet.js): every message is held to `MSG_MAX` 56,000 characters. The
+  field delta takes only the room the message has left after its spawns, groups and herd rows (the rest of the backlog
+  goes on later ticks), `sendAst` splits any message still over (the field delta alone, each array spread over parts,
+  which a mirror applies row by row as they come), and `raw` never sends anything over the limit (it counts
+  `stats.oversize` and warns once). `stats.maxOut` is the largest message sent and `stats.split` the splits.
+  tests/test_animal_net.py drives `tick()` against a fake socket (1,500 animals, 60 herd rows, 20,000 changed cells; and
+  3,000 herd rows) and fails over 64 KB; the old code sent 85,842 characters there.
+  - **Seen** (local server, two headless Chromes, A on the channel first as a red-tailed hawk (`?as=hawk`), the fields
+    filled by `herdFastForward`, then B opened the same tile): home in fall with 3,649 and 4,381 changed cells (the old
+    code lost the host's socket at 3,366), and Lamar in summer with 57,951. Each time A stayed host with no reconnect,
+    its largest message was 53,996-54,044 characters, the whole backlog drained, the server logged no host move, and B
+    was a mirror of all of A's animals: 967 and 971 on home (61 herds), 656 on Lamar (93 herds).
+  - **Nothing keys on the address.** Two computers on one network or mesh are two pages to the game: the animals
+    channel is a world per tile and season, the host chosen by page (`pg`, server.py `host_of`). hub.py reads the client
+    address only for sign-up, sign-in and recovery limits. The invitation carries the inviter's tile and season, so a
+    joiner opens the same animals channel (read in code; this round's check opened the second page directly rather than
+    through the hub's Join).
 - **Open.**
   - The members on two pages are each page's own steering under one frame, so single animals do not stand in the same
     spots, though the herd does.

@@ -368,7 +368,7 @@ async function main() {
   // underneath the X, and also a 'Settings' page. Move the current admin panel into that area"): Settings opens the old
   // right-hand panel (#panel, every control as it was) in a card; Exit to main screen leaves the world for the earth
   // (exitToTitle, below). The X closes the menu and Settings with it; Esc closes Settings. Closed on load.
-  const setMenu = on => { html.classList.toggle('menu', on); $('menuBtn').setAttribute('aria-expanded', String(on)); if (!on) setSettings(false); };
+  const setMenu = on => { html.classList.toggle('menu', on); $('menuBtn').setAttribute('aria-expanded', String(on)); if (!on) setSettings(false); dispatchEvent(new CustomEvent('we-menu', { detail: on })); };
   const setSettings = on => {
     $('settings').hidden = !on; $('settingsBtn').setAttribute('aria-expanded', String(on));
     if (on) $('settings').querySelector('.st-close').focus({ preventScroll: true }); else if ($('settings').contains(document.activeElement)) renderer.domElement.focus?.();
