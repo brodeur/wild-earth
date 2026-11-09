@@ -250,6 +250,14 @@ def restore_edits(tile_id: str) -> dict | None:
         return m
 
 
+REVALIDATE = (".html", ".js", ".json", ".css", "/")
+
+
+def path_wants_revalidation(path: str) -> bool:
+    """Cache-Control: no-cache for the page, its modules, data and stylesheets (Handler.end_headers)."""
+    return path.endswith(REVALIDATE)
+
+
 def is_built(tile_id: str) -> bool:
     """Built means playable: the manifest exists and has the client rasters."""
     m = manifest(tile_id)
@@ -1463,8 +1471,10 @@ class Handler(SimpleHTTPRequestHandler):
         pass
 
     def end_headers(self):
-        path = urlsplit(self.path).path
-        if path.endswith((".html", ".js", ".json", "/")):
+        # Revalidated on every load (a 304 when unchanged): the page, its modules, its data and its stylesheets. A
+        # stylesheet without it was cached by the browser's heuristic (10% of its age since Last-Modified) and paired an
+        # old title.css with a new title.js after a deploy (2026-11-08: the chosen-place redesign, signed in).
+        if path_wants_revalidation(urlsplit(self.path).path):
             self.send_header("Cache-Control", "no-cache")
         super().end_headers()
 

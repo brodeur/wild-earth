@@ -70,6 +70,18 @@ class StaticOverHttp(unittest.TestCase):
                       "/client/%2e%2e/server.py", "/scratch/"):
                 self.assertEqual(self.status(m, p)[0], 404, f"{m} {p}")
 
+    def test_revalidated(self):
+        # the page, its modules and its stylesheets are revalidated on every load: a stylesheet cached by the browser's
+        # heuristic paired an old title.css with a new title.js after a deploy (2026-11-08)
+        for p in ("/client/", "/client/index.html", "/client/src/title.js", "/client/title.css?v=x", "/client/social.css"):
+            c = http.client.HTTPConnection("127.0.0.1", self.port, timeout=10)
+            c.request("GET", p)
+            r = c.getresponse()
+            r.read()
+            c.close()
+            self.assertEqual(r.status, 200, p)
+            self.assertEqual(r.getheader("Cache-Control"), "no-cache", p)
+
     def test_root_redirects(self):
         self.assertEqual(self.status("GET", "/"), (302, "/client/"))
 
