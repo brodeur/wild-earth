@@ -8472,3 +8472,35 @@ and fails over 64 KB. The form a joiner arrives in is a separate change (group f
   - **How:** `setMenu` in main.js sends a `we-menu` event, and the overlay listens for it. Because the listener is added while the world is being built, it is recorded and removed with the world, like G's.
   - **On close:** if the roads were hidden before the menu opened, they hide again when it closes. If they were already on, they stay on.
   - **G in the meantime:** pressing G while the menu is open makes it the player's choice, and closing the menu leaves the roads as G set them.
+
+## 2026-11-08: no autopilot intro; a world fades in on the player, in control (client/src/arrival.js, main.js enterWorld, spirit.js)
+
+- **Why.** Aaron: "When the game starts currently starts in an autopilot mode. Instead, the player should fade from black into the avatar with controls active. Skip the autopilot intro."
+- **What is gone.**
+  - The scripted 12 s arrival flight. Every start used to fly the spirit in from 400 m up and 1.5 km south.
+  - Its caption ("near … · season · spirit").
+  - Its "any key to skip" handler, so the old test hook "x skips the arrival" is gone too.
+  - Multiplayer's in-flight turn toward the picker.
+  - `Arrival` keeps only `plan(point, follow, behind)` and a new `place()`. `place()` puts the flight's pose where the flight used to end: 120 m over the point heading north at cruise speed; or above and behind a follow pose, hovering; or on the ground behind a ground lead. `active` is always false.
+  - The squirrel's and woodpecker's own arrivals (`?as=` test paths) are untouched.
+- **The entry.** `enterWorld` places the player and makes them the spirit, or takes the chosen body at once. Taking the body uses `spirit.enter(id, at, { instant: true })`, which calls a new `spirit.settle()`: no camera blend, no wisp dive, and the spirit look set at once. It also adds `html.arriving`, which now means "under black", with the HUD hidden.
+- **The black.** A new `#enterFade` in index.html (z 19: under the opening screen and the Join's veil) is opaque while `arriving` is set.
+  - **While it is up,** the frame loop draws only once nothing is compiling (the same gate as behind the title screen), so new body models and rock sets compile under the black rather than popping in.
+  - **It lifts** after 3 frames drawn that way and at least 250 ms, or at 4 s whatever is drawn, plus a timer, since a hidden page draws no frames. It then fades out over 1.2 s and the HUD fades in.
+  - **Controls** are live from the entry, under the black too.
+- **Joins.**
+  - A follow Join (`c.follow`) has its own veil (follow.js), so it gets no `#enterFade`. Its `place` is `plan` + `place` + `settle`.
+  - An invite's joiner (`c.lead`) holds the black up to 1.5 s for the picker's position, then is put behind them, with the chosen body beside them. With no position in that time, they go behind the picker's planned point.
+  - multiplayer.js is unchanged: its `gotPos` already frees `r.lead` when the arrival is not active.
+- **A body started alone.**
+  - A flier is put on the wing where the spirit would be.
+  - A walker goes on the clearest ground within 20 m below it: room for the body (1.5 m) and for its camera 4 m behind (2 m), from `veg.nearPlants`. It used to go 25 m ahead of the flight's end.
+  - A body the summon cannot make falls back to the nearest live one of the species. The red-tail and the vulture summon nothing anywhere, so a hawk chosen on the home screen used to leave the player a spirit.
+- **Seen** (home tile 680_4280, browser pane, hidden, rAF on timers, canvas captured after each spirit render, the black composited from the class times):
+  - Start as the spirit: the black lifted 0.84 s after the entry.
+  - Start as a mule deer, after Exit to main screen: 2.5 s, with the deer's model compiling under the black.
+  - Start as a red-tail: 2.3 s.
+  - A tile switch to 690_4280: 2.4 s.
+  - Controls answer under the black (A turned the spirit 0.8 rad in 1.2 s).
+  - `?skip=1` is unchanged. The console's only error is the signed-out 401 from /api/hub/me. unittest OK.
+  - **Not covered:** timings with a visible, full-rate page, and the deer's new clear-spot placement, which was added after the deer capture.

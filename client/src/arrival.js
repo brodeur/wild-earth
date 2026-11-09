@@ -9,9 +9,9 @@ import { WispLoop } from './wispLoop.js';
 let summarizeDay = null, weatherWords = null, onWeatherWords = null;
 import('./weather.js').then(m => { summarizeDay = m.summarizeDay; weatherWords = m.weatherWords; onWeatherWords?.(); }).catch(() => { /* no weather module: the table below */ });
 
-// The opening screen and the arrival (docs/brief.md, "Worlds: a location plus a season"): joining is
-// two choices, where and when, made before the world appears (the player arrives as a spirit); then a
-// scripted 12 s flight brings the player in over the chosen point, so the first thing they see is their own hills.
+// The opening screen and the spawn (docs/brief.md, "Worlds: a location plus a season"): joining is
+// two choices, where and when, made before the world appears; then the player fades in from black over the chosen
+// point, already in control (no scripted flight since 2026-11-08), so the first thing they see is their own hills.
 //
 // OpeningScreen fills #opening. It starts dark, the spirit's wisp turning alone while the screen's own assets load (no
 // world is built for it); then across the top a season slider from spring to the following winter rises in with, under
@@ -24,7 +24,7 @@ import('./weather.js').then(m => { summarizeDay = m.summarizeDay; weatherWords =
 // from JavaScript while a world builds on the same thread. The selected card, Begin and the slider's marks take the
 // season colour under the slider's thumb.
 // Other places and new tiles are reached in the world (the panel's Location box, goto.js).
-// Arrival drives RavenFlight's pose and chase camera until it hands control to the player.
+// Arrival puts RavenFlight's pose and chase camera where the player starts (below).
 
 const MONTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const ROAD_WEIGHT = { motorway: 6, trunk: 5, primary: 4, secondary: 3, tertiary: 1.5 };
@@ -603,162 +603,55 @@ export class CardLineup {
   }
 }
 
-// ---- the arrival flight ----------------------------------------------------------------------------
-// 12 s from 400 m up and 1.5 km south of the point, heading north, to 120 m over it, the view
-// levelling from a look down at the hills to the raven's own glide. Positions follow a Hermite ease
-// that starts fast and ends at cruise speed, so the hand-over to RavenFlight has no jolt; a gentle
-// weave (zero heading change at the end) and a bank from the turn rate keep it reading as flight.
-// The altitude profile is precomputed and lifted where the straight descent would clip a ridge.
-const T = 12, START_AGL = 400, END_AGL = 120, RUN = 1500, CRUISE = 12, CLEAR = 60;
-const FOLLOW_UP = 6, FOLLOW_BACK = 10, FOLLOW_RUN_MIN = 150, FOLLOW_END = 0.15;   // behind another player (plan's follow): the offset, the least run, the share of the path where the clearance gives way to the end pose
+// ---- the spawn ------------------------------------------------------------------------------------
+// A world starts with the player already there and in control (Aaron, 2026-11-08: "the player should fade from black into
+// the avatar with controls active. Skip the autopilot intro"): the scripted 12 s flight that used to bring the spirit in
+// is gone, and Arrival only puts the flight's pose where that flight ended. main.js enterWorld places it under a black
+// screen that fades once the first frames are drawn (#enterFade).
+const END_AGL = 120, CRUISE = 12, PITCH = -0.06;
+const FOLLOW_UP = 6, FOLLOW_BACK = 10;                // behind another player (plan's follow): above and behind them
 const FOLLOW_GROUND_BACK = 6, FOLLOW_GROUND_UP = 2;   // behind a ground animal (follow.ground, group follow): on the ground behind them, the spirit at its climb-out height
-const PITCH0 = -0.42, PITCH1 = -0.06;
-const smooth = (a, b, u) => { const t = Math.min(1, Math.max(0, (u - a) / (b - a))); return t * t * (3 - 2 * t); };
 
 export class Arrival {
-  constructor({ flight, camera, heights, size, caption }) {
-    Object.assign(this, { flight, camera, heights, size, captionEl: caption });
-    this.active = false; this.t = 0; this.onDone = null;
-    this._e = new THREE.Euler(0, 0, 0, 'YXZ'); this._q = new THREE.Quaternion(); this._v = new THREE.Vector3(); this._aim = new THREE.Vector3();
+  constructor({ flight, heights, size }) {
+    Object.assign(this, { flight, heights, size });
+    this.active = false;   // never flying any more: read by older callers (multiplayer.js) as "arrived"
+    this._e = new THREE.Euler(0, 0, 0, 'YXZ'); this._q = new THREE.Quaternion(); this._v = new THREE.Vector3();
     this.plan(null);
   }
 
-  // point: { x, north } tile-local, or null for the tile centre: from 1.5 km south heading north (from the north when
-  // the point is near the south edge) to 120 m over it. follow: another player's position { x, y, z, yaw } in the
-  // flight's frame (the hub's relayed pos; docs/multiplayer.md lane 4): the flight comes in from behind them along their
-  // heading and ends 6 m above and 10 m behind them, slowing to a hover. The object is read every frame, so a lead who
-  // moves on is followed (the whole path slides with them; the heading stays the plan's). behind: the point is where
-  // someone else is arriving (a joiner's, before the one who asked has a position): the flight ends 6 m above and 10 m
-  // behind the end of that one's arrival, as if following them there. follow.ground: the lead is a ground animal (group
-  // follow): the end is on the ground 6 m behind them (2 m up, the spirit's height off the ground), not in the air.
+  // point: { x, north } tile-local, or null for the tile centre: 120 m over it, heading north. follow: another player's
+  // position { x, y, z, yaw } in the flight's frame (the hub's relayed pos; docs/multiplayer.md lane 4): 6 m above and
+  // 10 m behind them, facing their way, hovering. behind: the point is where someone else is arriving (a joiner's, before
+  // the one who asked has a position): 6 m above and 10 m behind that point, facing north. follow.ground: the lead is a
+  // ground animal (group follow): on the ground 6 m behind them (2 m up, the spirit's height off the ground).
   plan(point, follow = null, behind = false) {
-    if (behind && !follow) {
-      this.plan(point);
-      const yEnd = this.heights.at(this.ex, this.en) + END_AGL;
-      return this.plan(null, { x: this.ex, y: yEnd, z: -this.en, yaw: Math.atan2(-this.hx, this.hn) });
-    }
     const S = this.size, M = 100, clamp = THREE.MathUtils.clamp;
-    this.follow = follow;
-    let hx, hn, ex, en, run, yEnd = null;
+    let ex = clamp(point?.x ?? S / 2, M, S - M), en = clamp(point?.north ?? S / 2, M, S - M), yaw = 0, y = null, still = false;
+    if (behind && !follow) follow = { x: ex, y: this.heights.at(ex, en) + END_AGL, z: -en, yaw: 0 };
     if (follow) {
-      const yaw = follow.yaw || 0;
-      hx = -Math.sin(yaw); hn = Math.cos(yaw);   // the lead's forward, in (x, north)
-      this.at = { x: follow.x, y: follow.y, z: follow.z };   // where the lead was when planned: the end slides with them
-      const back = follow.ground ? FOLLOW_GROUND_BACK : FOLLOW_BACK;
+      yaw = follow.yaw || 0;
+      const hx = -Math.sin(yaw), hn = Math.cos(yaw), back = follow.ground ? FOLLOW_GROUND_BACK : FOLLOW_BACK;   // the lead's forward, in (x, north)
       ex = clamp(follow.x - hx * back, M, S - M); en = clamp(-follow.z - hn * back, M, S - M);
-      yEnd = follow.ground ? this.heights.at(ex, en) + FOLLOW_GROUND_UP : follow.y + FOLLOW_UP;
-      run = RUN;   // the run back from the end, cut where it would leave the tile
-      for (const [e, h] of [[ex, hx], [en, hn]]) if (Math.abs(h) > 1e-6) run = Math.min(run, Math.max(0, h > 0 ? (e - M) / h : (e - (S - M)) / h));
-      run = Math.max(FOLLOW_RUN_MIN, run);
-    } else {
-      ex = clamp(point?.x ?? S / 2, M, S - M); en = clamp(point?.north ?? S / 2, M, S - M);
-      let dir = 1; run = Math.min(RUN, en - M);   // from the south, heading north
-      if (run < 900) { const fromNorth = Math.min(RUN, S - M - en); if (fromNorth > run) { dir = -1; run = fromNorth; } }   // too near the south edge
-      hx = 0; hn = dir;
+      y = follow.ground ? this.heights.at(ex, en) + FOLLOW_GROUND_UP : follow.y + FOLLOW_UP;
+      still = true;
     }
-    this.ex = ex; this.en = en; this.hx = hx; this.hn = hn; this.run = run;
-    const toMid = (S / 2 - ex) * hn - (S / 2 - en) * hx;   // which side of the heading the tile's middle is
-    this.weave = (toMid >= 0 ? 1 : -1) * Math.min(70, run * 0.05);   // bow toward the tile's middle
-    this.v1 = follow ? 0.15 : CRUISE * T / run;                       // end slope of s(u): cruise speed, or nearly still behind the lead
-    const N = 64, g = i => { const p = this.ground2(i / N); return this.heights.at(p.x, p.n); };
-    const y0 = g(0) + START_AGL, y1 = yEnd ?? g(N) + END_AGL, base = [], need = [];
-    const endK = s => (follow ? Math.min(1, (1 - s) / FOLLOW_END) : 1);   // behind a lead the clearance gives way to the end pose over the last stretch
-    for (let i = 0; i <= N; i++) { const s = i / N; base[i] = y0 + (y1 - y0) * smooth(0, 1, s); need[i] = Math.max(0, g(i) + CLEAR * endK(s) - base[i]); }
-    this.prof = base.map((b, i) => {   // lift: the largest deficit under a cos^2 window 0.35 wide
-      let lift = 0;
-      for (let j = 0; j <= N; j++) if (need[j]) { const d = Math.abs(i - j) / N; if (d < 0.35) lift = Math.max(lift, need[j] * Math.cos(Math.PI / 2 * d / 0.35) ** 2); }
-      return b + lift * endK(i / N);
-    });
-    this.prevYaw = null; this.roll = 0;
-  }
-  // The ground track: along the heading from run back to the end, with the weave across it (zero at the end).
-  ground2(s) {
-    const along = -this.run * (1 - s), across = this.weave * Math.sin(Math.PI * s) * (1 - s);
-    return { x: this.ex + this.hx * along + this.hn * across, n: this.en + this.hn * along - this.hx * across };
-  }
-  ease(u) {   // cubic Hermite: s(0)=0, s(1)=1, s'(0)=1.4, s'(1)=v1
-    const u2 = u * u, u3 = u2 * u;
-    return 1.4 * (u3 - 2 * u2 + u) + (-2 * u3 + 3 * u2) + this.v1 * (u3 - u2);
+    this.end = { x: ex, n: en, y: y ?? this.heights.at(ex, en) + END_AGL, yaw, still };
   }
 
-  // Put the bird where it is at time t; returns the HUD numbers flight.update would.
-  pose(t, dt) {
-    const f = this.flight, u = Math.min(1, t / T), s = Math.min(1, Math.max(0, this.ease(u)));
-    const p = this.ground2(s), N = this.prof.length - 1, k = s * N, i = Math.min(N - 1, Math.floor(k));
-    const y = this.prof[i] + (this.prof[i + 1] - this.prof[i]) * (k - i);
-    const dAcross = this.weave * (Math.PI * Math.cos(Math.PI * s) * (1 - s) - Math.sin(Math.PI * s));
-    const dx = this.hx * this.run + this.hn * dAcross, dn = this.hn * this.run - this.hx * dAcross;
-    const yaw = Math.atan2(-dx, dn);
-    let ox = 0, oy = 0, oz = 0;   // a lead who moved on since the plan: the path slides with them
-    if (this.follow) { const F = this.follow, A = this.at; ox = F.x - A.x; oy = F.y - A.y; oz = F.z - A.z; }
-    if (this.prevYaw !== null && dt > 0) {
-      const rate = Math.atan2(Math.sin(yaw - this.prevYaw), Math.cos(yaw - this.prevYaw)) / dt;
-      this.roll += (THREE.MathUtils.clamp(0.43 * rate, -0.5, 0.5) - this.roll) * (1 - Math.exp(-dt * 2));
-    }
-    this.prevYaw = yaw;
-    const prev = f.pos.clone();
-    f.pos.set(p.x + ox, y + oy, -p.n + oz); f.yaw = yaw; f.pitch = PITCH0 + (PITCH1 - PITCH0) * smooth(0, 1, u); f.roll = this.roll * (1 - smooth(0.85, 1, u));
-    const speed = dt > 0 ? prev.distanceTo(f.pos) / dt : 0;
-    f.speed = CRUISE; f.hover = false; f.flap = 0;
-    f.flapping = u > 0.8 && u < 0.93;   // a few wingbeats as it slows to cruise
+  // Put the flight at the planned pose, flying on (or hovering behind a lead), its chase camera settled there; returns
+  // the HUD numbers flight.update would. Behind the opening screen it is held there so the world streams in where the
+  // player will appear.
+  place() {
+    const f = this.flight, e = this.end;
+    f.pos.set(e.x, e.y, -e.n); f.yaw = e.yaw; f.pitch = PITCH; f.roll = 0;
+    f.speed = e.still ? 0 : CRUISE; f.hover = e.still; f.flap = 0; f.flapping = false; f.keys.clear(); f.drag = null;
     this._q.setFromEuler(this._e.set(f.pitch, f.yaw, 0));
-    f.body.quaternion.copy(this._q); f.body.rotateZ(f.roll);
+    f.body.quaternion.copy(this._q);
     const dir = this._v.set(0, 0, -1).applyQuaternion(this._q);
-    f.updateCamera(dt || 1, dir);
-    if (f.view === 'chase') {   // pulled back at first, so the bird is small against its hills
-      const cam = this.camera, pull = 1 + 1.8 * (1 - smooth(0.3, 1, u));
-      cam.position.sub(f.pos).multiplyScalar(pull).add(f.pos);
-      const gy = this.heights.atXZ(cam.position.x, cam.position.z) + 1.5; if (cam.position.y < gy) cam.position.y = gy;
-      const aim = this._aim.copy(f.pos).addScaledVector(dir, 6); aim.y += 0.3; cam.lookAt(aim);
-    }
+    f.camSettled = false; f.updateCamera(1, dir);
     const ground = this.heights.atXZ(f.pos.x, f.pos.z);
-    return { hover: false, agl: f.pos.y - ground, elev: f.pos.y, speed, heading: ((Math.atan2(dir.x, -dir.z) * 180 / Math.PI) + 360) % 360 };
+    return { hover: f.hover, agl: f.pos.y - ground, elev: f.pos.y, speed: f.speed, heading: ((Math.atan2(dir.x, -dir.z) * 180 / Math.PI) + 360) % 360 };
   }
-
-  // Hold at the start pose (behind the opening screen) so the world streams in around it.
-  hold() { this.prevYaw = null; return this.pose(0, 0); }
-
-  start(caption) {
-    this.active = true; this.t = 0; this.prevYaw = null; this.flight.camSettled = false;
-    this.skipKey = e => {
-      if (e.metaKey || e.ctrlKey || e.altKey) return;   // browser shortcuts pass
-      e.stopImmediatePropagation(); e.preventDefault(); this.finish(true);
-    };
-    addEventListener('keydown', this.skipKey, true);
-    const c = this.captionEl;
-    if (c && caption) {
-      c.querySelector('.cap-text').textContent = caption;
-      c.hidden = false; c.getAnimations().forEach(a => a.cancel());
-      // released when done (cancel): a filling animation stays on the element for good, and its handler would hold
-      // this arrival, and through onDone the whole world, after the page has switched tiles
-      const a = this.capAnim = c.animate([{ opacity: 0 }, { opacity: 0, offset: 0.08 }, { opacity: 1, offset: 0.2 }, { opacity: 1, offset: 0.68 }, { opacity: 0, offset: 0.92 }, { opacity: 0 }],
-        { duration: T * 1000, fill: 'forwards' });
-      a.onfinish = () => { c.hidden = true; a.cancel(); };
-    }
-  }
-
-  update(dt) {
-    this.t += dt;
-    const f = this.pose(Math.min(this.t, T), dt);
-    if (this.t >= T) this.finish(false);
-    return f;
-  }
-
-  finish(skipped) {
-    if (!this.active) return;
-    this.active = false;
-    removeEventListener('keydown', this.skipKey, true);
-    if (skipped) { this.pose(T, 0); this.flight.camSettled = false; }
-    const f = this.flight;
-    f.speed = CRUISE; f.pitch = PITCH1; f.roll = 0; f.hover = false; f.flap = 0; f.keys.clear(); f.drag = null;
-    if (this.follow) { f.speed = 0; f.hover = true; }   // behind the lead: still, until the player moves
-    if (skipped && this.capAnim) {   // a skipped caption still fades rather than vanishing
-      const c = this.captionEl, o = +getComputedStyle(c).opacity;
-      this.capAnim.cancel();
-      const a = c.animate([{ opacity: o }, { opacity: 0 }], { duration: 1200, fill: 'forwards' });
-      a.onfinish = () => { c.hidden = true; a.cancel(); };
-    }
-    this.capAnim = null;
-    this.onDone?.(skipped);
-  }
+  hold() { return this.place(); }
 }

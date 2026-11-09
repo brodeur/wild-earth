@@ -400,7 +400,7 @@ together. Lane 3 needs lane 1's screen in main; lane 4 needs 1 to 3. Lane 5 is l
      200 ms timer sends `hub.pos` (x, y, z, yaw rounded to 2 decimals, `form` from `__we.playerSpecies` or `spirit`);
      `hub.js` sends nothing unless in a room and in a group. `mp.poses` holds the last `pos` per member, cleared on
      leaving.
-   - **The arrival.** `Arrival.plan(point, follow)`: with `follow` `{x, y, z, yaw}` the path comes in from 1.5 km
+   - **The arrival** (superseded 2026-11-08: there is no arrival flight now; `Arrival.place()` puts the player at the plan's end pose under black, decisions.md "no autopilot intro"). `Arrival.plan(point, follow)`: with `follow` `{x, y, z, yaw}` the path comes in from 1.5 km
      behind the lead along their heading (cut at the tile's edge, 150 m at least), ends 6 m up and 10 m back, slows
      to a hover (`f.hover = true, speed 0` at finish) and the clearance lift fades out over the last 15 % of the path
      so the end pose is exact; the object is read every frame, so the path slides with a lead who moves (the heading

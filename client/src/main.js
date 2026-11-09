@@ -65,6 +65,10 @@ import { Abilities } from './abilities.js';
 const $ = id => document.getElementById(id);
 const html = document.documentElement;
 let screen = null, screenOpen = false;   // the opening screen (arrival.js) while it is up
+// An entry's black (enterWorld, index.html #enterFade): lifted once ENTER_FRAMES frames have been drawn with nothing
+// compiling and at least ENTER_MIN_MS after the entry, or at ENTER_MAX_MS whatever is drawn; a joiner's waits up to
+// LEAD_WAIT_MS for the picker's position first. The fade out itself is #enterFade's transition (1.2 s).
+const ENTER_FRAMES = 3, ENTER_MIN_MS = 250, ENTER_MAX_MS = 4000, LEAD_WAIT_MS = 1500;
 // HUD layout for the window's size (index.html, html.narrow): under 1200 x 760 px the HUD, game box and mini-map shrink.
 // The game box stays centred when it clears the controls row and the HUD (the data panel, right, under the mini-map),
 // else it moves into the gap between them, else under the controls row; the HUD stops above the body's row (and
@@ -522,9 +526,10 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   const minimap = new MiniMap({ container: $('minimap'), sizeM: tile.size, imagery: tile.imagery, features: tile.features, flight, rewildImage: tile.textureImage });
   await w.next('places');
   const places = new PlaceNames(tile.features, tile.size);   // nearest named road, stream or water, for the HUD
-  // The scripted arrival (arrival.js); behind the screen the bird waits at its start so the forest streams in there.
+  // Where the player starts (arrival.js Arrival: no scripted flight); behind the screen the bird waits there so the forest
+  // streams in where the player will appear.
   await w.next('arrival');
-  const arrival = new Arrival({ flight, camera, heights: tile.heights, size: tile.size, caption: $('caption') });
+  const arrival = new Arrival({ flight, heights: tile.heights, size: tile.size });
   if (screenOpen) { screen.onPoint = w.onPoint = p => { arrival.plan(p); arrival.hold(); }; arrival.plan(screen.point); }
   else if (arrive) arrival.plan(arrivePoint);
   if (!direct) { arrival.hold(); veg.update(flight.pos.x, flight.pos.z, true); }
@@ -798,16 +803,15 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   if (!['raven', 'squirrel', 'woodpecker'].includes(as)) toSpirit();   // a spirit from the start (behind the opening screen too)
   if (!screenOpen) makeSound();
 
-  // Into the world: season, observer, sound, then the arrival flight over the chosen point.
-  const captionFor = (point, season) => {
-    const near = places.nearest(point?.x ?? tile.size / 2, point?.north ?? tile.size / 2);
-    return `${near ? `${near.over ? 'over' : 'near'} ${near.name}` : tile.id} · ${season} · spirit`;
-  };
-  // c: the opening screen's { tileId, season, date ('MM-DD', or null for today), point, caption }, or a tile switch's
-  // arrival { season, date, point }. Older fields (species, sex) are ignored: everyone arrives as the spirit. c.lead is
-  // the picker's user id when the entry answers a group's invite (multiplayer.js): the arrival turns to end behind them.
-  // c.follow: a group follow's Join (multiplayer.js): no arrival flight; the spirit is put at once behind the inviter's
-  // planned arrival, and again behind the inviter when their position comes (place, through mp.entered), under the veil.
+  // Into the world: season, observer, sound, then the player put over the chosen point under black, in control at once,
+  // and the black lifted once the first frames are drawn (Aaron, 2026-11-08: "the player should fade from black into the
+  // avatar with controls active. Skip the autopilot intro").
+  // c: the opening screen's { tileId, season, date ('MM-DD', or null for today), point, body }, or a tile switch's
+  // arrival { season, date, point }. c.lead is the picker's user id when the entry answers a group's invite
+  // (multiplayer.js): the black waits a moment for their position and the player is put behind them (else behind the
+  // picker's planned point). c.follow: a group follow's Join (multiplayer.js): the spirit is put at once behind the
+  // inviter's planned arrival, and again behind the inviter when their position comes (place, through mp.entered), under
+  // the Join's own veil (follow.js), so no black of this one.
   const enterWorld = (c, gesture) => {   // armed as w.enter once the world is ready (below), not while it compiles
     w.commit();   // from here this world is the page's: its listeners and HUD nodes stay
     rememberTile(tile.id);
@@ -822,47 +826,65 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
         addEventListener('pointerdown', kick, true); addEventListener('keydown', kick, true);
       }
     }
-    // c.body: the body chosen on the home screen (title.js, the rings): taken once the spirit has arrived (takeBody), beside
-    // the group member gone with (c.lead: their last relayed pose), else under the arrival's end
+    // c.body: the body chosen on the home screen (title.js, the rings): taken at once under the black (takeBody), beside
+    // the group member gone with (c.lead: their relayed pose, once it comes), else at the spawn
     const wantBody = c.body && bodyKind(c.body) ? c.body : null;
-    arrival.onDone = () => { html.classList.remove('arriving'); if (wantBody && !c.follow) takeBody(wantBody, c.lead ? mp?.poses?.get(c.lead) : null); };
     // follow: { x, y, z, yaw, ground } the inviter's pose (arrival.js plan's follow), or null for behind the planned point;
     // first: the spirit put there before the inviter's pose has come (the body waits for the pose, or the wait's end)
     const place = (follow, first = false) => {
-      arrival.plan(follow ? null : c.point, follow, !follow); arrival.start(null); arrival.finish(true);
+      arrival.plan(follow ? null : c.point, follow, !follow); arrival.place(); spirit.settle();
       if (wantBody && !first) takeBody(wantBody, follow);
     };
     if (c.follow) place(null, true);
     else {
-      arrival.plan(c.point, null, !!c.lead);   // the wisp flies the arrival as the raven did; a joiner's ends behind and above the one who asked (multiplayer.js turns it to follow them)
-      arrival.start(c.caption || captionFor(c.point, seasonNow()));
-      html.classList.add('arriving');
+      arrival.plan(c.point, null, !!c.lead); arrival.place(); spirit.settle();   // a joiner's behind and above the picker's planned point, until the picker's position comes (frame: w.entering)
+      const ent = w.entering = { t0: performance.now(), frames: 0, lead: c.lead || null, body: wantBody };
+      if (wantBody && !ent.lead) { takeBody(wantBody, null); ent.body = null; }
+      html.classList.add('arriving');   // the black (index.html #enterFade) and the HUD hidden until the frames are drawn
+      setTimeout(() => liftEntry(ent), ENTER_MAX_MS + 1000);   // a hidden page draws no frames: lifted all the same
     }
     html.classList.remove('opening'); html.classList.remove('switching');
     closeScreen();
     // the hub's room is this tile from here (the tile chat, the group's positions; multiplayer.js): the spirit's position
     // goes to the group at 5 Hz, and a joiner's arrival follows the picker's
-    mp?.entered(tile.id, { flight, arrival, players, sound: () => w.m.sound, lead: c.lead || null, follow: !!c.follow, place, kind: bodyKind, season: seasonCtl, form: () => w.handle?.playerSpecies || 'spirit', body: (out, cst) => bodySample(w.handle, out, cst),
-      caption: p => { const cap = $('caption'); if (cap && !cap.hidden) cap.querySelector('.cap-text').textContent = captionFor(p, seasonNow()); } });
+    mp?.entered(tile.id, { flight, arrival, players, sound: () => w.m.sound, lead: c.lead || null, follow: !!c.follow, place, kind: bodyKind, season: seasonCtl, form: () => w.handle?.playerSpecies || 'spirit', body: (out, cst) => bodySample(w.handle, out, cst) });
+  };
+  // The black over an entry (w.entering, enterWorld) is lifted: html.arriving off, #enterFade fades out and the HUD in.
+  const liftEntry = ent => { if (!ent || w.entering !== ent) return; w.entering = null; if (!w.dead) html.classList.remove('arriving'); };
+  // Each frame while the black is up: a joiner put behind the picker once the picker's position comes (or the wait's end),
+  // with the body chosen beside them; then the black lifts once a few frames have been drawn with nothing left compiling.
+  const stepEntry = (now, drew) => {
+    const ent = w.entering; if (!ent) return;
+    if (ent.lead) {
+      const p = mp?.poses?.get(ent.lead);
+      if (p || now - ent.t0 > LEAD_WAIT_MS) {
+        if (p) { arrival.plan(null, { x: p.x, y: p.y, z: p.z, yaw: p.yaw || 0, ground: !!p.form && p.form !== 'spirit' && bodyKind(p.form) === 'ground' }); arrival.place(); }
+        if (ent.body) takeBody(ent.body, p || null);
+        ent.lead = null; ent.body = null; ent.frames = 0;
+      }
+    } else if (drew) ent.frames++;
+    if ((!ent.lead && ent.frames >= ENTER_FRAMES && now - ent.t0 > ENTER_MIN_MS) || now - ent.t0 > ENTER_MAX_MS) liftEntry(ent);
   };
   // Into a body the home screen chose (Aaron, 2026-11-07, the rings: "Any other group member can click on that same animal
   // and join the tile in that body, right next to their friend"): an animal of that species summoned there and entered as
   // the spirit enters any body (spirit.enter: the camera's blend, the wisp diving in), put exactly: beside `near` (a
   // group member's relayed pose: 2.5 to 6 m off them on the clearest side, facing their way; in the air beside them when
-  // both fly, else on the ground), or, alone, a flier where the spirit is (on the wing) and a walker on the ground 25 m ahead
-  // of the arrival's end. Resolves to the animal's id, or null (no such species here, or already in a body).
+  // both fly, else on the ground), or, alone, where the player was put (arrival.js place): a flier on the wing there, a
+  // walker on the clearest ground within 20 m under it. Taken at once, with no blend or flash: the world is entered under black (enterWorld).
+  // Resolves to the animal's id, or null (no such species here, or already in a body).
   const takeBody = (code, near = null) => {
     if (!code || spirit.body || !bodyKind(code)) return null;
     const f = flight, air = bodyKind(code) !== 'ground' && bodyKind(code) !== 'squirrel';
     let x, z, yaw, y = null, where = 'ground';
+    // the room at a spot: how far the near plants' crowns (veg.nearPlants, as forage.js reads them) are, up to 4 m
+    const plants = veg.nearPlants || [];
+    const room = (px, pz) => { let m = 4; for (const q of plants) { const d = Math.hypot(px - q.x, pz - q.z) - Math.max(0.4, q.crownR || q.height * 0.35); if (d < m) m = d; } return m; };
     if (near) {
       yaw = near.yaw || 0;
       const fx = -Math.sin(yaw), fz = -Math.cos(yaw), rx = Math.cos(yaw), rz = -Math.sin(yaw);
-      // a clear spot beside them, so the body and its camera do not start inside a bush or a trunk: the near plants' crowns
-      // (veg.nearPlants, as forage.js reads them) kept 1.2 m off where it can be, right of them first, then left, behind,
-      // and a little further out; the nearer and the righter as clear
-      const plants = veg.nearPlants || [];
-      const room = (px, pz) => { let m = 4; for (const q of plants) { const d = Math.hypot(px - q.x, pz - q.z) - Math.max(0.4, q.crownR || q.height * 0.35); if (d < m) m = d; } return m; };
+      // a clear spot beside them, so the body and its camera do not start inside a bush or a trunk: the crowns kept 1.2 m
+      // off where it can be, right of them first, then left, behind, and a little further out; the nearer and the righter
+      // as clear
       let best = -Infinity;
       for (const r of [2.5, 4, 6]) for (const [s, b] of [[1, 0.4], [-1, 0.4], [0.7, -0.7], [-0.7, -0.7], [0, -1], [0.7, 0.7], [-0.7, 0.7]]) {
         const px = near.x + (rx * s - fx * b) * r, pz = near.z + (rz * s - fz * b) * r;
@@ -874,16 +896,27 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     } else {
       yaw = f.yaw;
       if (air) { x = f.pos.x; z = f.pos.z; y = f.pos.y; where = 'air'; }
-      else { x = f.pos.x - Math.sin(yaw) * 25; z = f.pos.z - Math.cos(yaw) * 25; }
+      else {   // the clearest spot within 20 m, for the body (1.5 m) and for its camera 4 m behind it (2 m); the nearer as clear
+        const fx = -Math.sin(yaw), fz = -Math.cos(yaw);
+        let best = -Infinity;
+        for (const r of [0, 5, 10, 15, 20]) for (let k = 0; k < (r ? 8 : 1); k++) {
+          const a = k * Math.PI / 4, px = f.pos.x + Math.cos(a) * r, pz = f.pos.z + Math.sin(a) * r;
+          const sc = Math.min(room(px, pz), 1.5) * 10 + Math.min(room(px - fx * 4, pz - fz * 4), 2) * 5 - r * 0.15;
+          if (sc > best) { best = sc; x = px; z = pz; }
+        }
+      }
     }
     const S = tile.size, M = 30; x = Math.min(S - M, Math.max(M, x)); z = Math.max(-(S - M), Math.min(-M, z));
     const fresh = animals.summon(code, 0, { x, z }) || [];
     let best = null, bd = Infinity;
     for (const a of fresh) { if (animals.codeOf(a) !== code) continue; const dd = (a.x - x) ** 2 + (a.z - z) ** 2; if (dd < bd) { bd = dd; best = a; } }
+    // none summoned (the soaring raptors, red-tail and vulture, spawn none through summon): the nearest live one of the
+    // species, which spirit.enter's `at` puts here
+    if (!best) for (const a of animals.list) { if (animals.codeOf(a) !== code || !animals.alive(a)) continue; const dd = (a.x - x) ** 2 + (a.z - z) ** 2; if (dd < bd) { bd = dd; best = a; } }
     if (!best) { console.warn(`takeBody: no ${code} could be summoned`); return null; }
     const at = { x, z, yaw, where, y: y ?? tile.heights.atXZ(x, z) };
     if (where === 'air') Object.assign(at, { speed: 8, pitch: 0 });
-    return spirit.enter(best.id, at) ? best.id : null;
+    return spirit.enter(best.id, at, { instant: true }) ? best.id : null;
   };
   window.__weTakeBody = takeBody;   // debugging
   const known = new WeakSet(), used = new WeakSet(), drawable = o => o.isMesh || o.isPoints || o.isLine || o.isSprite;   // meshes compiled ahead (below)
@@ -1030,20 +1063,20 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     const dt = Math.min((now - last) / 1000, 0.1); last = now;
     const s = seasonNow(), look = SEASON_LOOK[s], sun = sunDirection(tile.latitude, s, state.hour);
     flight.ridden = squirrel.on || woodpecker.on || ground.on;   // a drag orbits for these, steers a flight (flight.js steering)
-    if (spirit.on && !arrival.active && !screenOpen) pilot.step(dt);   // the spirit's autopilot to a chip's animal or into the Embody target (pilot.js)
-    const f = screenOpen ? arrival.hold() : squirrel.on ? squirrel.update(dt) : woodpecker.on ? woodpecker.update(dt) : ground.on ? ground.update(dt) : flier.on ? flier.update(dt) : arrival.active ? arrival.update(dt) : spirit.on ? spirit.update(dt) : flight.update(dt);
+    if (spirit.on && !screenOpen) pilot.step(dt);   // the spirit's autopilot to a chip's animal or into the Embody target (pilot.js)
+    const f = screenOpen ? arrival.hold() : squirrel.on ? squirrel.update(dt) : woodpecker.on ? woodpecker.update(dt) : ground.on ? ground.update(dt) : flier.on ? flier.update(dt) : spirit.on ? spirit.update(dt) : flight.update(dt);
     if (ground.on || flier.on) { needs.update(dt, { x: flight.pos.x, north: -flight.pos.z, acting: ground.on && ground.actT > 0, wet: ground.on && !!ground.wet, under: ground.on && ground.mode === 'tunnel' ? dig.underFood() : null, target: quarry.target?.plant ? quarry.target : null, reach: quarry.canEat() }); hunt.update(dt); scent.update(dt); }   // the plant target and its reach (quarry.js canEat); the games of life (needs.js, hunt.js); the smell sense (scent.js)
-    else if (squirrel.on && !arrival.active) scent.update(dt);   // the gray squirrel's own control smells too (its game is the acorns, not the needs)
+    else if (squirrel.on) scent.update(dt);   // the gray squirrel's own control smells too (its game is the acorns, not the needs)
     fruit.update(dt); if (peek.shown) fruit.group.visible = false;   // the fruit near the body (fruit.js)
     forage.update(dt);   // the forager's food plants lit and their halos (forage.js; off in any other body)
     sniffWave.update(dt, ground.on || flier.on || squirrel.on);   // the sniff's shockwave (sniffWave.js)
     dig.update(dt);   // the Dig game's world, its openings in the ground, its glow (dig.js)
     if (s !== anet.season) { anet.season = s; anet.join(tile.id, s); }   // the season's animals channel (animalNet.js)
     carrion.update(dt);   // Scavenge: the carcasses' stages, bodies, bones and glow (carrion.js)
-    if ((ground.on && ground.mode !== 'tunnel') || flier.on || (squirrel.on && !arrival.active)) { sight.update(dt); cues.update(dt); } else if (ground.on) { sight.clear(); cues.update(dt); } else { sight.clear(); cues.clear(); }
+    if ((ground.on && ground.mode !== 'tunnel') || flier.on || squirrel.on) { sight.update(dt); cues.update(dt); } else if (ground.on) { sight.clear(); cues.update(dt); } else { sight.clear(); cues.clear(); }
     // the selection and its ring (quarry.js: a hunting body's prey, any body's chip pick, the spirit's any animal), the
     // strikes and the target frame (combat.js)
-    quarry.update(dt, spirit.on ? (arrival.active ? null : 'spirit') : (ground.on && ground.mode !== 'tunnel') || flier.on ? (sight.hunts ? 'hunt' : 'body') : squirrel.on || woodpecker.on ? 'body' : null);
+    quarry.update(dt, spirit.on ? 'spirit' : (ground.on && ground.mode !== 'tunnel') || flier.on ? (sight.hunts ? 'hunt' : 'body') : squirrel.on || woodpecker.on ? 'body' : null);
     combat.update(dt);
     spirit.blendCamera(dt);   // across a switch of body: drawn from a blend of the old view and the new control's (spirit.js)
     raven.update(dt, flight.flapping, flight.speed);
@@ -1068,9 +1101,11 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     acorns.update(dt, camera, s);
     animals.update(dt, s, state.hour);
     if (!peek.shown) terrain.setLook(look);
-    // behind the screen, and for the first 2 s of a direct start (no screen: a few dark frames instead of a long one)
-    const gated = screenOpen || now - readyAt < 2000;
+    // behind the screen, under an entry's black, and for the first 2 s of a direct start (no screen: a few dark frames
+    // instead of a long one)
+    const gated = screenOpen || !!w.entering || now - readyAt < 2000;
     const draw = !gated || (!(compiling ||= compileNew()) && firstUse());
+    stepEntry(now, draw);
     if (draw) shadows.update(camera);
     if (draw && !(screenOpen && screen.ownsCanvas)) spirit.render(renderer, scene, camera);   // renderer.render, plus the spirit's view's passes while it is on; not while the title screen draws the earth on the shared canvas (title.js)
     if (draw && !(screenOpen && screen.ownsCanvas)) dig.xray(renderer);   // the underground view's pass over it, while the body is underground (dig.js)

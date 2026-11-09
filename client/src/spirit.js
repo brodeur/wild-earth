@@ -219,8 +219,8 @@ export class SpiritControl {
   // Into the animal at once: it leaves the population and the player is it, where it was. The camera blends over from
   // the spirit's (CameraBlend) and the wisp dives into the body and implodes over the blend's first FLASH_IN s.
   // at: { x, y, z, yaw, where, speed?, pitch? } puts the body there instead (main.js takeBody: the body chosen on the
-  // home screen, beside a group member or under the arrival's end).
-  enter(id, at = null) {
+  // home screen, beside a group member or at the spawn). instant: no blend or flash (settle), for a body taken under black.
+  enter(id, at = null, { instant = false } = {}) {
     const f = this.flight, kind = bodyKind(this.animals.peek(id)?.code);
     const control = kind === 'ground' ? this.ground : kind === 'flier' ? this.flier : true;
     if (!control) { this.coolT = 0.3; return false; }   // a body with no control wired (main.js): still a spirit
@@ -247,8 +247,12 @@ export class SpiritControl {
     }
     this.fx = { kind: 'in', t: 0, dur: FLASH_IN, from, lift: o.code === 'corvus_corax' ? 0 : 0.12 };
     this.onBody?.(o.code, o.sex);
+    if (instant) this.settle();
     return true;
   }
+  // No transition: the camera's blend, the wisp's flash and the look's fade done at once (main.js enterWorld: a world is
+  // entered under black and fades in on the player as they are, spirit or body; instant: enter's option, the same).
+  settle() { this.blend.on = false; this.blend.dur = 0; this.fx = null; this.view.amt = this.on ? 1 : 0; }
   // Back to spirit form (B, the panel button): the animal carries on where the player leaves it; the wisp rises out of
   // it, forming over the camera's blend from the body's view to the spirit's chase view.
   leave() {
