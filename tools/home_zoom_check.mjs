@@ -1,10 +1,14 @@
 // The home screen's flight to a place frames its tile (Aaron, 2026-11-07: "When clicking on the label, the dot or the
 // card, the view should zoom to this zoom level. Right now the view zooms to somewhere not the tile"). Every entry point
 // (the place's row in the list, its label on the map, its dot) from several starting views (far out, near another place,
-// the tile near the earth's limb, after a deselect): when the flight ends, the tile's centre must be within 3% of the free
-// centre's middle across, its near edge within 3% (of the stage's height) of the stage's bottom (title.js chosenPose:
-// "The tile's final zoom resting point should be more like this", 2026-11-08), and the tile's middle 60-101% of the free
-// centre's width (all of it unless the rings' stack meets the stage's top first).
+// the tile near the earth's limb, after a deselect): when the flight ends, the list must be gone (Aaron, 2026-11-08: "When
+// a tile is selected the search/place menu disappears while the zoom happens and a X appears ... The bottom orange border
+// of the tile can be right at the bottom of the viewport, and the tile can take up the remaining width"), the tile's
+// centre within 3% of the free width's middle across (the width left of the right column), its near edge within 3% (of
+// the stage's height) of the viewport's bottom (title.js stageArea, chosenPose), the tile's middle 60-101% of the free
+// width (all of it unless the rings' stack meets the place's bar first), no sky at the top of the view, and the rings'
+// animals, once in, under the place's bar.
+// The X: the list back, nothing chosen, the bar and its scrim gone.
 // Then, on a cold and throttled load where the flight waits for the world, the tile must stay centred across and its
 // centre on the stage all the while it waits (still far off, so its near edge is not yet down on the stage's bottom).
 // The bug: the wait began with the travel 60% done, the tile off screen for as long as the build took.
@@ -41,9 +45,13 @@ const open = async (tile, cold = false) => {
 const MEASURE = `const t = window.__weTitle, p = t.byId['${TILE}'], W = innerWidth, H = innerHeight, a = t.stageArea(W, H), [fl, fr] = t.freeArea(W);
   const [w, s, e, n] = p.bounds, lat = (s + n) / 2, c = t.screenOf(p.p0), L = t.screenOf(window.__zcLatLon(lat, w)), R = t.screenOf(window.__zcLatLon(lat, e));
   const near = Math.max(...[w, (w + e) / 2, e].map(lo => t.screenOf(window.__zcLatLon(s, lo))?.[1] ?? -1e9));
-  return { sel: t.sel, dx: c ? (c[0] - (fl + fr) / 2) / (fr - fl) : null, dy: c ? (near - a.b) / (a.b - a.t) : null,
+  const bar = t.bar.getBoundingClientRect().bottom, r = t.ring; let top = null;
+  if (r?.tile === t.sel) for (const it of r.items.values()) { const q = it.state === 'in' && r.screenOf(it.code, true); if (q) top = Math.min(top ?? 1e9, q.top); }
+  return { sel: t.sel, listGone: getComputedStyle(t.list).opacity === '0', sky: [0.02, 0.5, 0.98].some(f => !t.pick(W * f, 1)), stackClear: top == null || top >= bar - 2, dx: c ? (c[0] - (fl + fr) / 2) / (fr - fl) : null, dy: c ? (near - a.b) / (a.b - a.t) : null,
     onScreen: !!c && c[0] > 0 && c[0] < W && c[1] > 0 && c[1] < H, inStage: !!c && c[1] > a.t && c[1] < a.b, ofWindow: L && R ? Math.abs(R[0] - L[0]) / W : null, ofFree: L && R ? Math.abs(R[0] - L[0]) / (fr - fl) : null };`;
-const settle = async () => { await until(`const t = window.__weTitle; return !t.flying && Math.abs(Math.log(t.alt / t.altGoal)) < 0.003`); await sleep(800); };
+// settled: landed, and once the place's relief is built (the pose found again for its height: title.js frame) settled again
+const SETTLED = `const t = window.__weTitle; return !t.flying && Math.abs(Math.log(t.alt / t.altGoal)) < 0.003`;
+const settle = async () => { await until(SETTLED); await until(`const t = window.__weTitle; return !t.sel || !t.relief || t.relief.topM(t.sel) != null`, 20000); await sleep(400); await until(SETTLED); await sleep(800); };
 let fails = 0;
 const report = (name, ok, m) => { fails += !ok; console.log(`${ok ? 'ok  ' : 'FAIL'} ${name} ${JSON.stringify(m, (k, v) => typeof v === 'number' ? +v.toFixed(3) : v)}`); };
 
@@ -72,7 +80,16 @@ for (const [view, set] of Object.entries(views)) for (const [how, go] of Object.
   await settle();
   const m = await ev(MEASURE);
   const sized = m.ofFree >= 0.6 && m.ofFree <= 1.01;
-  report(`${view} ${how}`, m.sel === TILE && Math.abs(m.dx) <= 0.03 && Math.abs(m.dy) <= 0.03 && sized, m);
+  report(`${view} ${how}`, m.sel === TILE && m.listGone && !m.sky && m.stackClear && Math.abs(m.dx) <= 0.03 && Math.abs(m.dy) <= 0.03 && sized, m);
+}
+// the X: back to the places
+{
+  await ev(`window.__weTitle.choose('${TILE}'); return 1;`); await settle(); await sleep(1500);
+  const x = await ev(`const r = document.querySelector('.tt-back').getBoundingClientRect(); return [r.x + r.width / 2, r.y + r.height / 2];`);
+  for (const type of ['mouseMoved', 'mousePressed', 'mouseReleased']) await page.send('Input.dispatchMouseEvent', { type, x: x[0], y: x[1], button: 'left', clickCount: 1 });
+  await settle(); await sleep(800);
+  const b = await ev(`const t = window.__weTitle, cs = getComputedStyle(t.list); return { sel: t.sel, list: cs.opacity, listClicks: cs.pointerEvents, bar: getComputedStyle(t.bar).opacity, scrim: getComputedStyle(t.wrap, '::before').opacity, rings: t.ring?.items.size ?? 0 };`);
+  report('X back to the places', b.sel === null && b.list === '1' && b.listClicks === 'auto' && b.bar === '0' && b.scrim === '0' && !b.rings, b);
 }
 // the wait for a cold, throttled world: the tile centred and on screen throughout
 await open(OTHER === TILE ? 'utm17n_210_932' : OTHER, true);

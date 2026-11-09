@@ -84,6 +84,11 @@ html.opening:not(.tt-side) #social { opacity:0; visibility:hidden; pointer-event
   opacity:0; pointer-events:none; cursor:default; }
 .tt-wrap.listed .tt-places { opacity:1; pointer-events:auto; }
 .tt-wrap.leaving .tt-places, .tt-wrap.zooming .tt-places { opacity:0; pointer-events:none; }
+/* a place chosen (Aaron, 2026-11-08: "When a tile is selected the search/place menu disappears while the zoom happens and
+   a X appears"): the list slides out to the left as the flight starts; the X in the place's bar brings it back */
+.tt-places { transition:opacity .35s ease, transform .45s cubic-bezier(.2, .8, .25, 1); }
+.tt-wrap.chosen .tt-places { opacity:0; transform:translateX(-28px); pointer-events:none; }
+.tt-wrap.chosen .tt-title { opacity:0; }   /* the place's bar takes the top */
 .tt-search { position:relative; display:flex; align-items:center; flex:none; }
 .tt-search svg { position:absolute; left:16px; z-index:1; width:16px; height:16px; color:#8fa094; pointer-events:none; }
 .tt-search input { width:100%; height:46px; box-sizing:border-box; padding:0 36px 0 42px; border:1px solid #d3ddd52e; border-radius:999px; background:#0b0f0dcc; color:#f3f6f1;
@@ -95,9 +100,6 @@ html.opening:not(.tt-side) #social { opacity:0; visibility:hidden; pointer-event
 .tt-sclear:hover { background:#ffffff2a; }
 .tt-sclear[hidden] { display:none; }
 .tt-head { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:6px 4px 0; flex:none; }
-.tt-listbtn { display:none; align-self:flex-start; padding:7px 13px; border-radius:999px; border:1px solid #d3ddd53a; background:#0b0f0dcc; color:#e6ede7; font:500 12.5px/1 'DM Sans', system-ui, sans-serif;
-  backdrop-filter:blur(6px); cursor:pointer; }
-.tt-listbtn[aria-expanded=true] { background:#1f2a23f0; border-color:#d3ddd56a; }
 .tt-head[hidden] { display:none; }
 .tt-mode { margin:0; font-size:12px; font-weight:400; letter-spacing:.16em; text-transform:uppercase; color:#b7c4ba; }
 .tt-modebtn { padding:2px 0; border:0; background:transparent; color:#8fa094; font:400 12px/1.4 'DM Sans', sans-serif; cursor:pointer; border-bottom:1px solid transparent; }
@@ -140,22 +142,23 @@ html.opening:not(.tt-side) #social { opacity:0; visibility:hidden; pointer-event
 .tt-fnote, .tt-empty { margin:4px 14px; font-size:12.5px; color:#8fa094; }
 .tt-empty[hidden] { display:none; }
 
-/* the chosen place's title (Aaron, 2026-11-07: "a proper Title above the Invite/start buttons"; title.js renderCard): the
-   name and the pill of its players, its Indigenous territories, the body Start arrives in (the rings, bodyRing.js), the
-   players there and coming, whose list opens upward */
-.tt-pcard { display:flex; flex-direction:column; align-items:center; gap:0; max-width:min(620px, calc(100% - 24px)); min-width:0; text-align:center; pointer-events:auto; cursor:default; }
+/* the chosen place's title (title.js renderCard), in the place's bar at the top beside the X: the name and the pill of
+   its players, its Indigenous territories, the body Start arrives in (the rings, bodyRing.js), the players there and
+   coming, whose list opens downward */
+.tt-pcard { grid-area:card; display:flex; flex-direction:column; align-items:flex-start; gap:0; min-width:0; max-width:100%; text-align:left; pointer-events:auto; cursor:default; }
 .tt-pcard[hidden] { display:none; }
-.tt-pcard .pc-top { justify-content:center; gap:10px; max-width:100%; }
-.pc-name { margin:0; min-width:0; font:500 30px/1.15 'DM Sans', system-ui, sans-serif; letter-spacing:.005em; color:#f3f6f1; text-shadow:0 2px 14px #000d, 0 0 2px #000a;
+.tt-pcard .pc-top { gap:10px; max-width:100%; min-height:46px; }
+.pc-name { margin:0; min-width:0; font:500 28px/1.15 'DM Sans', system-ui, sans-serif; letter-spacing:.005em; color:#f3f6f1; text-shadow:0 2px 14px #000d, 0 0 2px #000a;
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .pc-top .tt-pill { height:22px; }
-.pc-region { margin:5px 0 0; font-family:var(--tt-names); font-size:13px; color:#c3cfc6; line-height:1.4; text-shadow:0 1px 6px #000c; }
+.pc-region { margin:0; font-family:var(--tt-names); font-size:13px; color:#c3cfc6; line-height:1.4; text-shadow:0 1px 6px #000c; }
 .pc-region:empty { display:none; }
-.pc-body { margin:9px 0 0; font-size:13.5px; line-height:1.35; color:#e8dcc0; text-shadow:0 1px 6px #000c; min-height:1.35em; }
+.pc-meta { display:flex; flex-wrap:wrap; align-items:center; column-gap:12px; row-gap:4px; margin-top:6px; }
+.pc-body { margin:0; font-size:13.5px; line-height:1.35; color:#e8dcc0; text-shadow:0 1px 6px #000c; min-height:1.35em; }
 .pc-as b { font-weight:600; color:#ffe2b0; }
 .pc-with { color:#cfe6cb; }
-.pc-peoplewrap { position:relative; display:flex; justify-content:center; }
-.pc-people { display:flex; align-items:center; gap:10px; margin-top:8px; padding:4px 10px 4px 4px; border:1px solid transparent; border-radius:999px; background:#0b0f0daa; color:#e8dcc0;
+.pc-peoplewrap { position:relative; display:flex; }
+.pc-people { display:flex; align-items:center; gap:10px; margin:0; padding:4px 10px 4px 4px; border:1px solid transparent; border-radius:999px; background:#0b0f0daa; color:#e8dcc0;
   font:500 12.5px/1.2 'DM Sans', sans-serif; cursor:pointer; text-align:left; backdrop-filter:blur(6px); }
 .pc-people:hover:not(:disabled), .pc-people[aria-expanded=true] { border-color:#d3ddd54a; background:#16201be6; }
 .pc-people:disabled { cursor:default; }
@@ -168,10 +171,11 @@ html.opening:not(.tt-side) #social { opacity:0; visibility:hidden; pointer-event
 .pc-avs .so-avatar[data-state=coming] { animation:pc-coming 1.6s ease-in-out infinite; }
 @keyframes pc-coming { 50% { box-shadow:0 0 0 2px #0b0f0d, 0 0 0 3px hsl(var(--hue), 80%, 70%), 0 0 12px hsla(var(--hue), 80%, 60%, .8); } }
 .pc-more { margin-left:6px; font-size:11px; color:#b7c4ba; }
-.pc-list { position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); z-index:4; display:flex; flex-direction:column; gap:2px; min-width:220px; padding:8px 10px;
+.pc-list { position:absolute; top:calc(100% + 6px); left:0; z-index:4; display:flex; flex-direction:column; gap:2px; min-width:220px; padding:8px 10px;
   border-radius:12px; background:#0b0f0de6; border:1px solid #d3ddd53a; backdrop-filter:blur(8px); box-shadow:0 8px 28px #000a; max-height:220px; overflow-y:auto; text-align:left; }
 .pc-list[hidden] { display:none; }
 .pc-row { display:flex; align-items:center; gap:8px; padding:3px 2px; }
+.pc-n { white-space:nowrap; }
 .pc-who { display:flex; flex-direction:column; line-height:1.2; min-width:0; }
 .pc-who b { font-weight:500; color:#e6ede7; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .pc-who small { font-size:11px; color:#8fa094; }
@@ -197,14 +201,31 @@ html.opening:not(.tt-side) #social { opacity:0; visibility:hidden; pointer-event
 .br-name.guest { background:#111815; border-color:#d3ddd533; }
 .br-name[hidden] { display:none; }
 
-/* the bar at the bottom: Invite and Start over the loading line, with the build's step and how far */
-.tt-bar { position:absolute; left:0; right:0; bottom:0; display:flex; flex-direction:column; align-items:center; gap:8px; padding:0 var(--we-fr, 0px) 0 var(--we-fl, 0px); pointer-events:none;
-  opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s cubic-bezier(.2, .8, .25, 1); }
+/* the place's bar (Aaron, 2026-11-08: "Name of tile and metadata appear up there near the X. This frees up space for the
+   tile to take up more horizontal space"): across the top of the width the list left, up to the right column (title.js
+   sets --we-fr), the X where the search was, the place's title beside it, Invite and Start at its right end, and the
+   build's step and how far under them; the tile comes down to the viewport's bottom under it (title.js stageArea). A dark
+   scrim behind it (::before, as tall as the bar: --tt-bar) keeps its words on the land. */
+.tt-bar { position:absolute; left:var(--side); right:calc(var(--we-fr, 0px) + 16px); top:24px; z-index:3; display:grid; grid-template-columns:46px minmax(0, 1fr) auto;
+  grid-template-areas:"back card acts" "back card prog" "back card line" "back card ."; grid-template-rows:auto auto auto 1fr; column-gap:16px; row-gap:7px; align-items:start; pointer-events:none;
+  opacity:0; transform:translateY(-12px); transition:opacity .5s ease .15s, transform .5s cubic-bezier(.2, .8, .25, 1) .15s; }
 .tt-bar.on { opacity:1; transform:none; }
-.tt-bar.on .tt-acts { pointer-events:auto; }
+.tt-bar.on .tt-acts, .tt-bar.on .tt-back { pointer-events:auto; }
 .tt-bar:not(.on) .tt-pcard { pointer-events:none; }
-.tt-bar .tt-pcard + .tt-acts { margin-top:6px; }
 .tt-wrap.leaving .tt-bar { opacity:0; }
+.tt-wrap::before { content:''; position:absolute; left:0; right:0; top:0; z-index:1; height:calc(var(--tt-bar, 140px) + 64px); pointer-events:none;
+  background:linear-gradient(#050807d0, #05080790 50%, #05080740 75%, #05080700); opacity:0; transition:opacity .5s ease; }
+.tt-wrap.chosen:not(.leaving)::before { opacity:1; }
+.tt-back { grid-area:back; display:flex; align-items:center; justify-content:center; width:46px; height:46px; padding:0; border:1px solid #d3ddd52e; border-radius:50%; background:#0b0f0dcc;
+  color:#f3f6f1; cursor:pointer; backdrop-filter:blur(6px); transition:background .2s ease, border-color .2s ease; }
+.tt-back svg { width:20px; height:20px; }
+.tt-back:hover, .tt-back:focus-visible { background:#1a241ef0; border-color:#d3ddd5a0; outline:none; }
+.tt-acts { grid-area:acts; align-self:start; padding-top:3px; }
+/* a narrow bar (under BAR_NARROW px: a phone, or a window the right column leaves little of; title.js frame): Invite and
+   Start on a row of their own under the place's title, the loading line under them */
+.tt-bar.narrow { grid-template-areas:"back card" ". acts" ". prog" ". line"; grid-template-columns:46px minmax(0, 1fr); grid-template-rows:none; }
+.tt-bar.narrow .tt-bline { justify-content:flex-start; }
+.tt-bar.narrow .tt-progress { max-width:420px; }
 .tt-acts { display:flex; gap:12px; }
 .tt-acts button { min-width:132px; padding:12px 26px; border-radius:999px; font:600 13px/1 'DM Sans', system-ui, sans-serif; letter-spacing:.14em; text-transform:uppercase; cursor:pointer;
   transition:background .25s ease, transform .25s ease, border-color .25s ease, opacity .25s ease; }
@@ -217,22 +238,22 @@ html.opening:not(.tt-side) #social { opacity:0; visibility:hidden; pointer-event
 .tt-acts button[aria-disabled=true] { opacity:.45; cursor:not-allowed; transform:none !important; }
 .tt-acts button[aria-disabled=true]:focus-visible { outline:2px solid #f3f6f1aa; outline-offset:2px; }
 .tt-startwrap { position:relative; display:inline-flex; }
-.tt-tip { position:absolute; left:50%; bottom:calc(100% + 10px); transform:translate(-50%, 4px); padding:8px 12px; border-radius:10px; background:#111815; border:1px solid #d3ddd533;
+.tt-tip { position:absolute; left:50%; top:calc(100% + 10px); transform:translate(-50%, -4px); padding:8px 12px; border-radius:10px; background:#111815; border:1px solid #d3ddd533;
   box-shadow:0 10px 28px rgba(0, 0, 0, .5); color:#f3f6f1; font:500 13px/1.3 'DM Sans', system-ui, sans-serif; letter-spacing:0; white-space:nowrap; pointer-events:none;
   opacity:0; transition:opacity .18s ease, transform .18s ease; }
-.tt-tip::after { content:''; position:absolute; left:50%; top:100%; width:10px; height:10px; margin:-5px 0 0 -5px; transform:rotate(45deg); background:#111815; border-right:1px solid #d3ddd533; border-bottom:1px solid #d3ddd533; }
+.tt-tip::after { content:''; position:absolute; left:50%; bottom:100%; width:10px; height:10px; margin:0 0 -5px -5px; transform:rotate(45deg); background:#111815; border-left:1px solid #d3ddd533; border-top:1px solid #d3ddd533; }
 .tt-tip[hidden] { display:none; }
 .tt-start[aria-disabled=true]:hover + .tt-tip, .tt-start[aria-disabled=true]:focus-visible + .tt-tip, .tt-tip.tap { opacity:1; transform:translate(-50%, 0); }
-.tt-bar.guest .tt-bline, .tt-bar.guest .tt-progress { visibility:hidden; }
+.tt-bar.guest .tt-bline, .tt-bar.guest .tt-progress { display:none; }
 .tt-bar.ready .tt-start { animation:tt-grow .45s ease both; box-shadow:0 0 22px #ffe2b066; }
 @keyframes tt-grow { from { transform:scale(.88); } }
-.tt-bline { display:flex; gap:10px; align-items:baseline; font-size:12px; color:#b7c4ba; letter-spacing:.03em; min-height:1.3em; text-shadow:0 1px 3px #000c; }
+.tt-bline { grid-area:line; justify-content:flex-end; display:flex; gap:10px; align-items:baseline; font-size:12px; color:#b7c4ba; letter-spacing:.03em; min-height:1.3em; text-shadow:0 1px 3px #000c; }
 .tt-bpct { color:#e8dcc0; font-variant-numeric:tabular-nums; }
-.tt-progress { align-self:stretch; margin:0 calc(-1 * var(--we-fr, 0px)) 0 calc(-1 * var(--we-fl, 0px)); height:4px; background:#ffffff14; overflow:hidden; }
+.tt-progress { grid-area:prog; height:3px; border-radius:2px; background:#ffffff1a; overflow:hidden; }
 .tt-progress i { display:block; height:100%; background:linear-gradient(90deg, #a9d8a4, #ffe2b0); transform-origin:0 50%; transform:scaleX(0); }
 .tt-bar.ready .tt-progress i { background:#ffe2b0; box-shadow:0 0 10px #ffe2b0; }
 
-/* the map's credits, small, bottom left over the bar */
+/* the map's credits, small, bottom left (over the tile's near corner once a place is chosen) */
 .tt-attrib { position:absolute; left:var(--side); bottom:14px; max-width:var(--listw); margin:0; font-size:10.5px; color:#8fa094b0; letter-spacing:.02em; opacity:0; pointer-events:none; }
 .tt-attrib a { color:inherit; text-decoration:none; border-bottom:1px solid #8fa09444; }
 .tt-attrib a:hover { color:#d3ddd5; }
@@ -240,7 +261,7 @@ html.opening:not(.tt-side) #social { opacity:0; visibility:hidden; pointer-event
 /* the Layers menu (title.js): above the attribution, under the places list; its list opens upward */
 .tt-layers { position:absolute; left:var(--side); bottom:48px; z-index:3; opacity:0; pointer-events:none; font-size:12px; }
 .tt-wrap.listed .tt-layers { opacity:1; pointer-events:auto; }
-.tt-wrap.leaving .tt-layers { opacity:0; pointer-events:none; }
+.tt-wrap.leaving .tt-layers, .tt-wrap.chosen .tt-layers { opacity:0; pointer-events:none; }
 .tt-layersbtn { font:inherit; color:#d3ddd5; background:#0f1512cc; border:1px solid #2a352e; border-radius:7px; padding:5px 11px; cursor:pointer; backdrop-filter:blur(4px); }
 .tt-layersbtn:hover, .tt-layersbtn[aria-expanded="true"] { background:#1a241ecc; }
 .tt-layerlist { position:absolute; left:0; bottom:calc(100% + 6px); display:flex; flex-direction:column; gap:6px; padding:9px 12px; min-width:190px; background:#0f1512e6; border:1px solid #2a352e; border-radius:9px; color:#d3ddd5; backdrop-filter:blur(6px); }
@@ -272,21 +293,19 @@ html.opening:not(.tt-side) #social { opacity:0; visibility:hidden; pointer-event
   .tt-wrap.guest .tt-loginpill:not([hidden]) { display:block; }
   .tt-wrap.guest:not(.gate-open) .tt-gate { opacity:0; visibility:hidden; pointer-events:none; }
   .tt-wrap.guest.gate-open .tt-gate { top:88px; transform:none; z-index:5; }
-  .tt-tip { left:auto; right:0; transform:translate(0, 4px); }
-  .tt-tip::after { left:auto; right:24px; }
+  .tt-tip { left:0; transform:translate(0, -4px); }
+  .tt-tip::after { left:24px; }
   .tt-start[aria-disabled=true]:hover + .tt-tip, .tt-start[aria-disabled=true]:focus-visible + .tt-tip, .tt-tip.tap { transform:translate(0, 0); }
   .tt-rname { font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .tt-acts button { min-width:100px; padding:11px 16px; }
-  /* the free centre is a narrow strip beside the places here: Invite and Start centre on the screen instead */
-  .tt-bar { padding:0; }
-  .tt-progress { margin:0; }
-  /* a chosen place takes the whole width (title.js freeArea): the list folds behind All places, which opens it over the
-     stage (the place's title steps aside meanwhile, the buttons stay) */
-  .tt-wrap.chosen .tt-listbtn { display:block; }
-  .tt-wrap.chosen:not(.listopen) .tt-places > :not(.tt-search):not(.tt-listbtn) { display:none; }
-  .tt-wrap.chosen:not(.listopen) .tt-places { bottom:auto; }
-  .tt-wrap.chosen.listopen .tt-pcard { visibility:hidden; }
-  .tt-wrap.chosen.listopen .tt-ring { opacity:0; }
-  .pc-name { font-size:24px; }
-  .pc-body { margin-top:6px; }
+  /* the place's bar on a phone: where the search was, clear of the social toggle (or the sign-in pill) at the top right;
+     Invite and Start on a row of their own under the place's title */
+  .tt-bar { left:12px; right:56px; top:42px; column-gap:10px; }
+  .tt-bar.narrow { grid-template-columns:40px minmax(0, 1fr); }
+  .tt-back { width:40px; height:40px; }
+  .tt-pcard .pc-top { min-height:40px; }
+  .tt-wrap.guest .tt-pcard .pc-top { padding-right:96px; }   /* the name clear of the sign-in pill at the top right */
+  .tt-acts { padding-top:2px; }
+  .pc-name { font-size:22px; }
+  .pc-region { font-size:12.5px; }
 }

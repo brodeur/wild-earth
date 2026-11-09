@@ -256,7 +256,6 @@ html:not(.opening) #social { left:98px; }   /* right of the controls row (index.
   transform:translate(-50%, 12px); opacity:0; transition:opacity .3s ease, transform .3s cubic-bezier(.2, .8, .25, 1); pointer-events:none; }
 #soToast.on { opacity:1; transform:translate(-50%, 0); }
 #soToast[hidden] { display:none; }
-html.opening:has(.tt-wrap.chosen) #soToast { bottom:118px; }   /* above Invite and Start */
 html:not(.opening) #soToast { left:50%; bottom:auto; top:64px; }
 
 /* ---- the chat, bottom left ---- */

@@ -8453,3 +8453,51 @@ current orb can decrease in opacity, and a second brighter smaller orb could be 
 - **Debugging.** `__we.sight.legacyMarks = true` draws the orb as it was, with no spikes, for comparisons.
 - **Open.** In thick woodland at 200 m many spikes stand at once (101 lit prey in one frame from 150 m up). Fading the
   spikes of far, unselected prey once a quarry is selected would quiet that; not done.
+
+## 2026-11-08: a chosen place takes the screen: the list goes, an X and the place's bar at the top, the tile down to the viewport's bottom (title.js, title.css; branch claude/home-chosen)
+
+Aaron: "When a tile is selected the search/place menu disappears while the zoom happens and a X appears. Name of tile and
+metadata appear up there near the X. This frees up space for the tile to take up more horizontal space. The bottom orange
+border of the tile can be right at the bottom of the viewport, and the tile can take up the remaining width." The first of
+two home-screen redesigns.
+
+- **The list goes.** Choosing a place (a row, a label, a dot) slides the places' column out to the left as the flight
+  starts (`.tt-wrap.chosen .tt-places`), at every width; the phone's "All places" fold is gone with it. The risen WILD
+  EARTH title and the Layers menu fade too, so the bar has the top to itself; the map's credits stay, small, bottom left.
+  `freeArea` drops the list's width once a place is chosen, so the free width runs from the left edge to the right column
+  (the social panel or the sign-in, which stay).
+- **The X and the place's bar.** The bar (`.tt-bar`) moved from the bottom to the top. The X sits where the search was. It
+  does what zooming away does (`unchoose`), then flies the earth back out to the distance the place was chosen from
+  (`backAlt`, within `BACK_ALT`), so the list returns over the view it was chosen in, and the focus lands on the place's
+  row (the list's re-sort now gives a moved row its focus back). Escape does the same when nothing is being typed.
+  Beside the X: the name and the players' pill, the Indigenous territories, the body Start arrives in and the people
+  there on one line. A dark scrim behind the bar (`.tt-wrap::before`, as tall as the bar via `--tt-bar`) keeps the words
+  legible on the land.
+- **Start stays in the bar, at its right end, with Invite.** It sits beside the name of the place it starts, everything
+  about the place is in one strip, and nothing floats over the tile, whose near edge is now the viewport's bottom. The
+  build's progress line and its step sit under the two buttons. The loading line used to span the whole width at the
+  bottom; a full-width line would now cover the orange edge. When the bar is narrower than 700 px (`BAR_NARROW`: a
+  phone, or 900 px with the right column), Invite and Start get a row of their own under the title. On a phone the bar
+  keeps clear of the social toggle or the sign-in pill at the top right. Signed out, Start's tip opens downward.
+- **The resting frame.** The stage is now the free width, from under the bar to `NEAR_PAD` (3 px, so the outline shows
+  whole) above the viewport's bottom. `chosenPose` takes the nearest distance at which the tile's middle fits that width
+  and the top of the rings' stack stays under the bar. The near edge lands on the stage's bottom.
+  - At 1726x948 the tile is 78% of the free width (1,035 px; it was 871 px).
+  - At 1280x800 it is 55% of the window (it was 43%).
+  - At 900 px it is 31 km away (it was 45 km).
+  - On the phone it spans the whole width, as before.
+  No sky at any size.
+- **Re-posed for the real relief.** When the relief is built after the pose took the 1,212 m guess, the pose is found
+  again, as when the bar's height settles. A high tile (`utm12n_514_4838`, 2,183 m) put its back birds above the bar
+  before this fix.
+- **`tools/home_zoom_check.mjs`** now checks the new rule:
+  - the list is gone;
+  - the tile is centred in the free width;
+  - its near edge is within 3% of the viewport's bottom, and its middle is 60-101% of the free width;
+  - no sky;
+  - the ring animals, once in, are under the bar.
+  A new case clicks the X and checks that the list is back, nothing is chosen and the bar and scrim are gone. `settle`
+  waits for the relief's re-pose. Results:
+  - All pass at 1280x800, 900x800 and 390x844, including the cold, throttled flight.
+  - At 1726x948 one case failed, a dot click from the limb view. The same far-view dot click fails on main's own check
+    too: the first click after the view jumps sometimes chooses nothing, and a second click chooses it.
