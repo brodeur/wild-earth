@@ -103,6 +103,47 @@ export function soulLook(r, beacon = false) {
   return beacon ? { lum: BEACON_LUM, size: BEACON_SIZE } : { lum: GLOW_LUM[0] + (GLOW_LUM[1] - GLOW_LUM[0]) * r, size: 1 + (GLOW_RARE_SIZE - 1) * r };
 }
 export const SOUL_BUBBLE = GLOW_BUBBLE, SOUL_BUBBLE_A = GLOW_BUBBLE_A, SOUL_BEACONS = BEACON;
+// The soul's column (COL_*), made here for the spirit's sight and for the predator's sight of its prey (sight.js, 2026-11-08:
+// "adding the "spike" from spirit mode"): a camera-facing quad per instance rising aH m from aPos, its width the square
+// root of its height (at most COL_W[0] m), soft-sided and fading upward, additive, hidden by the trees; aColor is its colour
+// (times its strength: sight.js fades its prey's columns in the colour). uAmt scales them all.
+export function soulColumnGeometry(cap) {
+  const bg = new THREE.InstancedBufferGeometry().copy(new THREE.PlaneGeometry(2, 2));
+  bg.setAttribute('aPos', new THREE.InstancedBufferAttribute(new Float32Array(cap * 3), 3).setUsage(THREE.DynamicDrawUsage));
+  bg.setAttribute('aColor', new THREE.InstancedBufferAttribute(new Float32Array(cap * 3), 3).setUsage(THREE.DynamicDrawUsage));
+  bg.setAttribute('aH', new THREE.InstancedBufferAttribute(new Float32Array(cap), 1).setUsage(THREE.DynamicDrawUsage));
+  bg.instanceCount = 0;
+  return bg;
+}
+// each species' column height (m), by the log of its inverse frequency (see COL_H)
+export function soulColumnHeights(animals) {
+  const sl = animals.speciesList(), f = sl.map((s, k) => expectedPerKm2(k)), fmax = Math.max(...f), fmin = Math.min(...f.filter(v => v > 0));
+  return f.map(v => COL_H[0] * Math.pow(COL_H[1] / COL_H[0], Math.log(fmax / Math.max(v, fmin)) / Math.log(fmax / fmin)));
+}
+export function soulColumnMaterial() {
+  return new THREE.ShaderMaterial({
+    uniforms: { uAmt: { value: 0 }, uSize: { value: new THREE.Vector2(COL_W[0], COL_W[1]) }, uLum: { value: COL_LUM } },
+    vertexShader: /* glsl */`
+      attribute vec3 aPos; attribute vec3 aColor; attribute float aH; uniform vec2 uSize;   // aH: the column's height (m); uSize: the widest column, the width per sqrt(m) of height
+      varying vec2 vUv; varying vec3 vColor;
+      void main() {
+        vec3 toCam = cameraPosition - aPos; toCam.y = 0.0;
+        vec3 fwd = normalize(toCam + vec3(1e-4, 0.0, 0.0)), right = normalize(cross(vec3(0.0, 1.0, 0.0), fwd));
+        float w = min(uSize.x, uSize.y * sqrt(aH));
+        vec3 p = aPos + right * (position.x * w) + vec3(0.0, (position.y + 1.0) * 0.5 * aH, 0.0);
+        vUv = position.xy; vColor = aColor;
+        gl_Position = projectionMatrix * viewMatrix * vec4(p, 1.0);
+      }`,
+    fragmentShader: /* glsl */`
+      uniform float uAmt, uLum; varying vec2 vUv; varying vec3 vColor;
+      void main() {
+        float x = abs(vUv.x), t = (vUv.y + 1.0) * 0.5;
+        float a = (1.0 - smoothstep(0.0, 1.0, x)) * (1.0 - t * t) * uAmt * uLum;   // soft sides, fading up
+        if (a < 0.003) discard;
+        gl_FragColor = vec4(vColor * a, 1.0);
+      }`,
+    transparent: true, depthWrite: false, depthTest: true, blending: THREE.AdditiveBlending, toneMapped: false });   // depthTest: the trees hide it (owner, 2026-10-27)
+}
 const COOL = new THREE.Color(0.6, 0.78, 1.0), WARM = new THREE.Color(1.0, 0.84, 0.58), WHITE = new THREE.Color(0.9, 0.95, 1.0);
 const smooth = u => u * u * (3 - 2 * u);
 
@@ -391,36 +432,9 @@ class SpiritLook {
     this.glow.layers.set(1);
     scene.add(this.glow);
     // the columns over the souls (COL_*): one quad each, its height an instance attribute
-    const bg = new THREE.InstancedBufferGeometry().copy(new THREE.PlaneGeometry(2, 2));
-    this.bp = new Float32Array(GLOW_CAP * 3); bg.setAttribute('aPos', new THREE.InstancedBufferAttribute(this.bp, 3).setUsage(THREE.DynamicDrawUsage));
-    this.bc = new Float32Array(GLOW_CAP * 3); bg.setAttribute('aColor', new THREE.InstancedBufferAttribute(this.bc, 3).setUsage(THREE.DynamicDrawUsage));
-    this.bh = new Float32Array(GLOW_CAP); bg.setAttribute('aH', new THREE.InstancedBufferAttribute(this.bh, 1).setUsage(THREE.DynamicDrawUsage));
-    bg.instanceCount = 0;
-    // each species' column height (m), by the log of its inverse frequency (see COL_H)
-    { const sl = animals.speciesList(), f = sl.map((s, k) => expectedPerKm2(k)), fmax = Math.max(...f), fmin = Math.min(...f.filter(v => v > 0));
-      this.colH = f.map(v => COL_H[0] * Math.pow(COL_H[1] / COL_H[0], Math.log(fmax / Math.max(v, fmin)) / Math.log(fmax / fmin))); }
-    this.beamMat = new THREE.ShaderMaterial({
-      uniforms: { uAmt: { value: 0 }, uSize: { value: new THREE.Vector2(COL_W[0], COL_W[1]) }, uLum: { value: COL_LUM } },
-      vertexShader: /* glsl */`
-        attribute vec3 aPos; attribute vec3 aColor; attribute float aH; uniform vec2 uSize;   // aH: the column's height (m); uSize: the widest column, the width per sqrt(m) of height
-        varying vec2 vUv; varying vec3 vColor;
-        void main() {
-          vec3 toCam = cameraPosition - aPos; toCam.y = 0.0;
-          vec3 fwd = normalize(toCam + vec3(1e-4, 0.0, 0.0)), right = normalize(cross(vec3(0.0, 1.0, 0.0), fwd));
-          float w = min(uSize.x, uSize.y * sqrt(aH));
-          vec3 p = aPos + right * (position.x * w) + vec3(0.0, (position.y + 1.0) * 0.5 * aH, 0.0);
-          vUv = position.xy; vColor = aColor;
-          gl_Position = projectionMatrix * viewMatrix * vec4(p, 1.0);
-        }`,
-      fragmentShader: /* glsl */`
-        uniform float uAmt, uLum; varying vec2 vUv; varying vec3 vColor;
-        void main() {
-          float x = abs(vUv.x), t = (vUv.y + 1.0) * 0.5;
-          float a = (1.0 - smoothstep(0.0, 1.0, x)) * (1.0 - t * t) * uAmt * uLum;   // soft sides, fading up
-          if (a < 0.003) discard;
-          gl_FragColor = vec4(vColor * a, 1.0);
-        }`,
-      transparent: true, depthWrite: false, depthTest: true, blending: THREE.AdditiveBlending, toneMapped: false });   // depthTest: the trees hide it (owner, 2026-10-27)
+    const bg = soulColumnGeometry(GLOW_CAP); this.bp = bg.attributes.aPos.array; this.bc = bg.attributes.aColor.array; this.bh = bg.attributes.aH.array;
+    this.colH = soulColumnHeights(animals);   // each species' column height (m), by the log of its inverse frequency (see COL_H)
+    this.beamMat = soulColumnMaterial();
     this.beam = new THREE.Mesh(bg, this.beamMat); this.beam.frustumCulled = false; this.beam.renderOrder = 10; this.beam.name = 'soul columns';
     this.beam.layers.set(1);
     scene.add(this.beam);

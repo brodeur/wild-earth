@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { animalSilhouetteMaterial } from './animalModels.js';
 import { rarityColor } from './animals.js';
+import { soulColumnGeometry, soulColumnHeights, soulColumnMaterial } from './spirit.js';
 
 // Sight (owner, 2026-10-29: "For prey animals, if they are within a certain distance of predators and visible to the
 // camera, there is a chance that their body becomes highlighted in their rarity colors - the opposite of how a herd
@@ -60,7 +61,20 @@ const DEFAULT_RANGE = 200, EYE = 0.6, BODY_UP = 0.6, EYE_UP = 0.4;   // m: a til
 const GROUND_TOL = 0.15;                                // m: the ground may rise this far over the line of sight (the micro-relief under two low bodies) before it hides
 const QUARRY_R = 600, SEEN_VIS = 0.3, PREY_HOLD = 0.5, PREY_FADE = 0.3;   // a predator's prey: its reach (m), the visibility that lights it, held this long after the line closes, faded over the last of it
 const TEST_BUDGET = 24, FOCUS_T = 0.1, GRID = 20;       // visibility tests a frame; the selected quarry's test interval; the near trees' grid cell (m)
-const MARK_PX = 13, MARK_CAP = 96, MARK_NEAR = 18, MARK_FULL = 45;   // the far marks: their size on the screen (CSS px), how many, faded in from MARK_NEAR m to MARK_FULL m from the eye
+const MARK_PX = 16, MARK_CAP = 96, MARK_NEAR = 18, MARK_FULL = 45;   // the far marks: their size on the screen (CSS px), how many, faded in from MARK_NEAR m to MARK_FULL m from the eye
+// How a lit prey animal reads (owner, 2026-11-08: "I like the orb, but I think we can improve how it reads by adding the
+// "spike" from spirit mode. The current orb can decrease in opacity, and a second brighter smaller orb could be at the
+// heart."): the orb's soft halo at HALO_A of what it was round a small bright core (CORE_R of the dot's radius, CORE_A), and
+// the spirit's soul column over it (spirit.js soulColumn*: the same quad, shader and per-species height), its height
+// grown to SPIKE_K of the eye's distance when that is taller (a vole's 0.3 m column would vanish from a dive's 150 m up;
+// at that height a spike stands some 9 m, a few dozen pixels). A group (a herd, a covey, a colony: animals.js a.group)
+// keeps an orb per member but stands one spike at the centre of its lit members, so it reads as one target and the
+// spikes do not merge into a wall. legacyMarks (debugging) draws the orb as it was, with no spikes, for comparisons.
+const HALO_A = 0.22, HALO_IN = 0.3, CORE_R = 0.26, CORE_A = 1.6, SPIKE_K = 0.06;
+// the spike's strength and width in daylight: the soul column's own shader with SPIKE_LUM for its COL_LUM (0.385, made to
+// stand over the spirit's darkened, cooled view) and SPIKE_W for its COL_W (the widest, m, and the width per sqrt(m) of height)
+const SPIKE_LUM = 1.1, SPIKE_W = [4, 0.6];
+const OLD = { haloA: 0.55, haloIn: 0.5, coreR: 0.42, coreA: 0.75, px: 13 };   // the orb before (legacyMarks)
 const TAU = Math.PI * 2;
 
 export class Sight {
@@ -73,6 +87,11 @@ export class Sight {
       x0: 0, z0: 0, nx: 0, nz: 0, start: new Int32Array(1), idx: new Int32Array(0), stamp: new Uint32Array(0), mark: 0, rmax: 0 };
     this.v = new THREE.Vector3(); this.pruneT = 0; this.ms = 0; this.tests = 0; this.budget = 0; this.focus = null; this.hunts = false;
     this.marks = this.makeMarks(); this.group.add(this.marks.points); this._c = new THREE.Color();
+    // the spikes: the spirit's soul columns over the lit prey (see MARK_PX's note)
+    this.spikeGeo = soulColumnGeometry(MARK_CAP); this.spikeMat = soulColumnMaterial(); this.spikeMat.uniforms.uAmt.value = 1;
+    this.spikeMat.uniforms.uLum.value = SPIKE_LUM; this.spikeMat.uniforms.uSize.value.set(SPIKE_W[0], SPIKE_W[1]);   // daylight: brighter and wider than over the spirit's dimmed view
+    this.spikes = new THREE.Mesh(this.spikeGeo, this.spikeMat); this.spikes.frustumCulled = false; this.spikes.renderOrder = 11; this.spikes.name = 'prey in sight, spikes'; this.spikes.visible = false;
+    this.group.add(this.spikes); this.colH = null; this.legacyMarks = false; this._groups = new Map();
   }
   // the far marks: a dot per lit prey animal in its species' colour, a few pixels across at any distance (see the header)
   makeMarks() {
@@ -81,13 +100,14 @@ export class Sight {
     geo.setAttribute('aCol', new THREE.BufferAttribute(col, 4).setUsage(THREE.DynamicDrawUsage));
     geo.setDrawRange(0, 0);
     const mat = new THREE.ShaderMaterial({
-      uniforms: { uPx: { value: MARK_PX * Math.min(2, window.devicePixelRatio || 1) } },
+      uniforms: { uPx: { value: MARK_PX * Math.min(2, window.devicePixelRatio || 1) }, uHaloA: { value: HALO_A }, uHaloIn: { value: HALO_IN }, uCoreR: { value: CORE_R }, uCoreA: { value: CORE_A } },
       vertexShader: `attribute vec4 aCol; uniform float uPx; varying vec4 vCol;
 void main() { vCol = aCol; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); gl_PointSize = uPx; }`,
-      fragmentShader: `varying vec4 vCol;
+      fragmentShader: `uniform float uHaloA, uHaloIn, uCoreR, uCoreA; varying vec4 vCol;
 void main() { vec2 p = gl_PointCoord * 2.0 - 1.0; float r = length(p);
-  float a = smoothstep(1.0, 0.5, r) * 0.55 + smoothstep(0.42, 0.0, r) * 0.75; if (a < 0.01) discard;
-  gl_FragColor = vec4(vCol.rgb * a * vCol.a, 1.0); }`,
+  float halo = smoothstep(1.0, uHaloIn, r) * uHaloA, core = smoothstep(uCoreR, 0.0, r) * uCoreA;   // the dim halo, the bright heart
+  float a = halo + core; if (a < 0.01) discard;
+  gl_FragColor = vec4((vCol.rgb + vec3(0.35) * core) * a * vCol.a, 1.0); }`,
       transparent: true, depthTest: false, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false,
     });
     const points = new THREE.Points(geo, mat); points.frustumCulled = false; points.renderOrder = 12; points.name = 'prey in sight, far';
@@ -286,7 +306,10 @@ void main() { gl_FragColor = vec4(uSoul * (vSpot * ${SPOT_GAIN.toFixed(2)}), 1.0
   }
   // the spotted bodies into the highlight meshes, the intensity in the matrix's element [3]
   draw() {
-    const A = this.animals, t = this.t, counts = new Map(), M = this.marks, E = this.camera.position; let nm = 0;
+    const A = this.animals, t = this.t, counts = new Map(), M = this.marks, E = this.camera.position; let nm = 0, ns = 0;
+    const SG = this.spikeGeo, sp = SG.attributes.aPos.array, sc = SG.attributes.aColor.array, sh = SG.attributes.aH.array, H = A.heights, groups = this._groups; groups.clear();
+    const colH = this.colH ||= soulColumnHeights(A), legacy = this.legacyMarks;
+    const spike = (x, z, k, i, dd) => { if (ns >= MARK_CAP) return; const c = rarityColor(A.rarity[k], this._c); sp[ns * 3] = x; sp[ns * 3 + 1] = H.atXZ(x, z); sp[ns * 3 + 2] = z; sc[ns * 3] = c.r * i; sc[ns * 3 + 1] = c.g * i; sc[ns * 3 + 2] = c.b * i; sh[ns] = Math.max(colH[k] || 1, dd * SPIKE_K); ns++; };
     for (const e of this.track.values()) {
       const a = e.a, held = Math.max(e.spotUntil, e.seesUntil) - t; if (held <= 0 || a.gone || a.culled || a.slot < 0) continue;
       const k = a.sp, quarry = this.prey.has(k);
@@ -296,6 +319,11 @@ void main() { gl_FragColor = vec4(uSoul * (vSpot * ${SPOT_GAIN.toFixed(2)}), 1.0
         if (w > 0) {
           M.pos[nm * 3] = a.x; M.pos[nm * 3 + 1] = e.ty; M.pos[nm * 3 + 2] = a.z;
           const c = rarityColor(A.rarity[k], this._c); M.col[nm * 4] = c.r; M.col[nm * 4 + 1] = c.g; M.col[nm * 4 + 2] = c.b; M.col[nm * 4 + 3] = i * w * (a === this.focus ? 1.4 : 1); nm++;
+          if (!legacy) {   // its spike: alone, or its group's one at the centre of the group's lit members
+            const g = a.group;
+            if (g) { let q = groups.get(g); if (!q) groups.set(g, q = { x: 0, z: 0, n: 0, k, i: 0, dd: 0 }); q.x += a.x; q.z += a.z; q.n++; q.i = Math.max(q.i, i * w); q.dd = Math.max(q.dd, dd); }
+            else spike(a.x, a.z, k, i * w * (a === this.focus ? 1.4 : 1), dd);
+          }
         }
       }
       const m = this.mesh(k); if (!m) continue;
@@ -310,6 +338,10 @@ void main() { gl_FragColor = vec4(uSoul * (vSpot * ${SPOT_GAIN.toFixed(2)}), 1.0
       const bend = m.geometry.attributes.aBend, srcB = A.bend?.[k]; if (bend && srcB) bend.array.set(srcB.subarray(a.slot * 4, a.slot * 4 + 4), n * 4);
       counts.set(k, n + 1);
     }
+    for (const q of groups.values()) spike(q.x / q.n, q.z / q.n, q.k, q.i, q.dd);
+    SG.instanceCount = ns; this.spikes.visible = ns > 0;
+    if (ns) for (const name of ['aPos', 'aColor', 'aH']) SG.attributes[name].needsUpdate = true;
+    { const u = M.points.material.uniforms, o = legacy ? OLD : null; u.uHaloA.value = o ? o.haloA : HALO_A; u.uHaloIn.value = o ? o.haloIn : HALO_IN; u.uCoreR.value = o ? o.coreR : CORE_R; u.uCoreA.value = o ? o.coreA : CORE_A; u.uPx.value = (o ? o.px : MARK_PX) * Math.min(2, window.devicePixelRatio || 1); }
     M.geo.setDrawRange(0, nm); M.points.visible = nm > 0;
     if (nm) { M.geo.attributes.position.needsUpdate = true; M.geo.attributes.aCol.needsUpdate = true; }
     for (const [k, m] of this.meshes) {
@@ -324,11 +356,11 @@ void main() { gl_FragColor = vec4(uSoul * (vSpot * ${SPOT_GAIN.toFixed(2)}), 1.0
   litPrey() { const out = []; for (const e of this.track.values()) if (e.spotUntil > this.t && this.prey.has(e.a.sp) && !e.a.dead && !e.a.gone && e.inView) out.push(e); return out; }
   // debugging: who is held now
   held() { return [...this.track.values()].filter(e => Math.max(e.spotUntil, e.seesUntil) > this.t).map(e => ({ id: e.a.id, sp: this.animals.speciesList()[e.a.sp].one, spotted: e.spotUntil > this.t, seesMe: e.seesUntil > this.t, vis: +e.vis.toFixed(2), visMe: +e.visMe.toFixed(2), v: +e.v.toFixed(2) })); }
-  clear() { if (this.track.size) this.track.clear(); for (const m of this.meshes.values()) if (m.count) { m.count = 0; m.visible = false; } this.marks.points.visible = false; this.marks.geo.setDrawRange(0, 0); }
+  clear() { if (this.track.size) this.track.clear(); for (const m of this.meshes.values()) if (m.count) { m.count = 0; m.visible = false; } this.marks.points.visible = false; this.marks.geo.setDrawRange(0, 0); this.spikes.visible = false; this.spikeGeo.instanceCount = 0; }
   dispose() {
     this.group.removeFromParent();
     for (const m of this.meshes.values()) { m.geometry.dispose(); m.material.dispose(); }
-    this.marks.geo.dispose(); this.marks.points.material.dispose();
+    this.marks.geo.dispose(); this.marks.points.material.dispose(); this.spikeGeo.dispose(); this.spikeMat.dispose();
     this.meshes.clear(); this.track.clear();
   }
 }
