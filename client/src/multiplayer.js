@@ -77,7 +77,6 @@ const html = document.documentElement;
 const POS_MS = 200;             // the position relay: 5 Hz, the doc's rate
 const INVITE_MS = 60000;        // the dialog's life (the hub keeps the invite a little longer, so a late Join lands)
 const LEAD_WAIT_MS = 6000;       // group follow: how long the veil waits for the inviter's position before the planned point
-const FOLLOW_WINDOW_S = 2.5;    // a joiner's arrival turns to follow the picker when the picker's position comes within this long of its start
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 const r2 = v => Math.round(v * 100) / 100, r3 = v => Math.round(v * 1000) / 1000;
 const clampN = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -542,13 +541,7 @@ export class Multiplayer {
     r.players?.sample(d);
     if (r.waitLead && d.user === r.waitLead) { this.placeBehind(d); return; }   // group follow: behind the inviter
     if (!r.lead || d.user !== r.lead) return;
-    const a = r.arrival; if (!a) { r.lead = null; return; }
-    if (!a.active) { r.lead = null; r.follow = null; return; }   // arrived: free
-    if (r.follow) { Object.assign(r.follow, { x: d.x, y: d.y, z: d.z, yaw: d.yaw }); return; }   // the arrival slides with the picker
-    if (a.t > FOLLOW_WINDOW_S) { r.lead = null; return; }   // too late to turn: on to the picker's planned point
-    r.follow = { x: d.x, y: d.y, z: d.z, yaw: d.yaw };
-    a.plan(null, r.follow);
-    r.caption?.({ x: d.x, north: -d.z });
+    r.lead = null;   // an invite's joiner: put behind the picker under the entry's black (main.js stepEntry, from poses); no flight to turn since 2026-11-08
   }
 
   // Debugging: a position as the hub would relay it, from a test user (named by `name` in the social list's found users,
