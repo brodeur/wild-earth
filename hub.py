@@ -1165,6 +1165,9 @@ class HubConn(WsConn):
             out[k] = _coord(m.get(k), k)
         form = m.get("form")
         out["form"] = form if isinstance(form, str) and FORM_RE.match(form) else "spirit"
+        v = m.get("v")   # the speed (m/s): the spirit sends it (a body's is in b), so a Join comes in at it; never kept
+        if _num(v) and 0 <= v <= 500:
+            out["v"] = round(float(v), 2)
         # the body's pose for the members who draw it (docs/multiplayer.md "Players as their animals"): b, the animal
         # stream's fields (client/src/animalNet.js FIELDS), and c, the body's few constants (size, sex, antlers); numbers
         # only, relayed as they come, never kept past the connection

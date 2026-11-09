@@ -47,8 +47,9 @@ import { SpiritControl } from './spirit.js';
 import { RemotePlayers } from './players.js';
 import { AnimalNet, PG } from './animalNet.js';
 import { bodySample } from './bodySample.js';
-import { GroundControl } from './groundControl.js';
-import { FlierControl } from './flierControl.js';
+import { GroundControl, GROUND } from './groundControl.js';
+import { planJoin } from './joinSpawn.js';
+import { FlierControl, FLIERS } from './flierControl.js';
 import { SHORT, playAs, registerStandIns, bodyKind } from './playable.js';
 import { setupCredits } from './credits.js';
 import { Weather } from './weather.js';
@@ -807,7 +808,8 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
   // and the black lifted once the first frames are drawn (Aaron, 2026-11-08: "the player should fade from black into the
   // avatar with controls active. Skip the autopilot intro").
   // c: the opening screen's { tileId, season, date ('MM-DD', or null for today), point, body }, or a tile switch's
-  // arrival { season, date, point }. c.lead is the picker's user id when the entry answers a group's invite
+  // arrival { season, date, point }. Everyone arrives as the spirit or the body chosen, but a Join (c.follow), which
+  // comes in as the friend is (joinAs, below). c.lead is the picker's user id when the entry answers a group's invite
   // (multiplayer.js): the black waits a moment for their position and the player is put behind them (else behind the
   // picker's planned point). c.follow: a group follow's Join (multiplayer.js): the spirit is put at once behind the
   // inviter's planned arrival, and again behind the inviter when their position comes (place, through mp.entered), under
@@ -829,11 +831,19 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     // c.body: the body chosen on the home screen (title.js, the rings): taken at once under the black (takeBody), beside
     // the group member gone with (c.lead: their relayed pose, once it comes), else at the spawn
     const wantBody = c.body && bodyKind(c.body) ? c.body : null;
-    // follow: { x, y, z, yaw, ground } the inviter's pose (arrival.js plan's follow), or null for behind the planned point;
-    // first: the spirit put there before the inviter's pose has come (the body waits for the pose, or the wait's end)
+    // follow: { x, y, z, yaw, ground, lead?, trail? } the inviter's pose (arrival.js plan's follow), or null for behind the
+    // planned point; first: the spirit put there before the inviter's pose has come (the body waits for the pose, or the
+    // wait's end). With lead (their relayed state) the joiner comes in as they are (joinAs): their species, 5 body lengths
+    // behind on their trail, their heading and speed; the spirit above and behind stays only when no spot can hold it.
+    // Returns joinAs's plan, or null.
     const place = (follow, first = false) => {
+      if (follow?.again) return joinAs(follow.lead, follow.trail || [], true);   // the second placement: only the move
+      if (follow?.lead && spirit.body) spirit.leave();   // a Join in the tile while in a body: out of it first
       arrival.plan(follow ? null : c.point, follow, !follow); arrival.place(); spirit.settle();
-      if (wantBody && !first) takeBody(wantBody, follow);
+      if (first) return null;
+      const plan = follow?.lead ? joinAs(follow.lead, follow.trail || [], !!follow.again) : null;
+      if (!plan && wantBody) takeBody(wantBody, follow);
+      return plan;
     };
     if (c.follow) place(null, true);
     else {
@@ -919,6 +929,73 @@ async function buildSteps(w, { params, pending, direct = false, arrive = null })
     return spirit.enter(best.id, at, { instant: true }) ? best.id : null;
   };
   window.__weTakeBody = takeBody;   // debugging
+  // An animal of `code` summoned at `at` and entered there as the spirit enters any body (takeBody's end); a species
+  // summon cannot make (the hawks: none came), the nearest one living on the tile, entered and put at `at`. Its id or null.
+  const takeBodyAt = (code, at) => {
+    const near = list => { let b = null, bd = Infinity; for (const a of list) { if (animals.codeOf(a) !== code || a.remote || a.dead || (animals.alive && !animals.alive(a))) continue; const dd = (a.x - at.x) ** 2 + (a.z - at.z) ** 2; if (dd < bd) { bd = dd; b = a; } } return b; };
+    const best = near(animals.summon(code, 0, { x: at.x, z: at.z }) || []) || near(animals.list);
+    if (!best) { console.warn(`joinAs: no ${code} on this tile`); return null; }
+    return spirit.enter(best.id, at, { instant: true }) ? best.id : null;
+  };
+  // Join as the friend is (Aaron, 2026-11-08; joinSpawn.js, docs/multiplayer.md "Join as the friend is"): can the body
+  // stand at (x, y, z)? where 'air': clear of the ground, the water and the near plants' crowns by a margin; 'ground': on
+  // the tile, not in water deeper than it wades (a swimmer that came from the water: in water), not on a cliff (slope over
+  // 45 degrees) or a rock top taller than it jumps, not in a trunk. Returns { y, wet } or null.
+  const joinTest = (where, x, y, z, o) => {
+    const M = 30, S = tile.size;
+    if (!(x > M && x < S - M && -z > M && -z < S - M)) return null;
+    const sq = squirrel, g = tile.heights.atXZ(x, z), plants = veg.nearPlants || [];
+    if (where === 'air') {
+      const Fa = sq.footing(x, z, y + 0.5), floor = Math.max(g, Fa.y, Fa.surf ?? -Infinity);
+      if (y < floor + 1.5) return null;
+      for (const p of plants) if (y < p.y + (p.height || 0) + 0.5 && Math.hypot(x - p.x, z - p.z) < Math.max(0.5, p.crownR || 0) + 0.5) return null;
+      return { y, wet: false };
+    }
+    const Fg = sq.footing(x, z, g + 60), deep = Fg.surf != null ? Fg.surf - Fg.bed : 0, wet = deep > 0.3, Sg = GROUND[o.code];
+    if (o.probe) return { y: Fg.y, wet };
+    if (o.swimmer) { if (o.water && !wet) return null; } else if (deep > (Sg?.wade ?? 0.1)) return null;
+    const d = 0.75, h = (a, b) => tile.heights.atXZ(a, b);
+    if (Math.hypot(h(x + d, z) - h(x - d, z), h(x, z + d) - h(x, z - d)) / (2 * d) > 1) return null;
+    if (Fg.y - g > Math.max(0.6, Sg?.jumpH ?? 0.5)) return null;
+    const rad = (Sg?.rad ?? 0.15) * (o.size || 1);
+    for (const p of plants) if (Math.hypot(x - p.x, z - p.z) < (p.trunkR || 0.12) * 1.3 + rad + 0.15) return null;
+    return { y: Fg.surf != null ? Fg.bed : Fg.y, wet };
+  };
+  // lead: the friend's relayed pos with `at` (when it came); trail: their recent points (multiplayer.js). The near set
+  // is moved to them first, so the trunks and crowns tested are theirs. A body is entered there at their speed (a walker
+  // holds it a moment, groundControl.js carry), the spirit flies on at it. Returns the plan or null.
+  // again: the second placement, from the latest state just before the veil lifts (multiplayer.js placeBehind): the body
+  // taken the first time is moved, not taken again.
+  const joinAs = (lead, trail, again = false) => {
+    const same = again && (spirit.body ? spirit.body.code === lead.form : (lead.form || 'spirit') === 'spirit');
+    if (spirit.body && !same) return null;
+    if (!same) flight.pos.set(lead.x, Math.max(lead.y, tile.heights.atXZ(lead.x, lead.z) + 2), lead.z);
+    veg.update(lead.x, lead.z, true); veg.refreshNear?.(lead.x, lead.z);
+    const plan = planJoin({ lead, trail, kind: bodyKind, test: joinTest, tables: { ground: GROUND, fliers: FLIERS } });
+    if (!plan) return null;
+    const f = flight, at = { x: plan.x, y: plan.y, z: plan.z, yaw: plan.yaw, where: plan.where, speed: plan.speed, pitch: 0, soaring: plan.soaring };
+    plan.again = !!again;
+    if (same && spirit.body) {   // moved where the latest state puts it, at its speed
+      f.yaw = plan.yaw; f.camSettled = false;
+      if (ground.on) { ground.place(plan.x, plan.z); ground.v = Math.min(ground.S?.run ?? plan.speed, plan.speed); ground.carry = { v: ground.v, t: 2.5 }; }
+      else { f.pos.set(plan.x, plan.y, plan.z); f.pitch = 0; if (plan.where === 'air') { f.speed = plan.speed; f.landed = false; } }
+      return plan;
+    }
+    if (plan.code !== 'spirit' && takeBodyAt(plan.code, at)) {
+      if (ground.on) ground.carry = { v: Math.min(ground.S?.run ?? plan.speed, plan.speed), t: 2.5 };
+      else if (flier.on && plan.where === 'air') {
+        f.speed = plan.soaring ? f.speed : Math.max(f.speed, plan.speed); f.flapping = plan.flapping;
+        if (plan.soaring) { f.soarDir = plan.soarDir; f.roll = 0.3 * plan.soarDir; } else if (f.hover) f.setHover(false);   // round the way they circle, or straight on
+      }
+    } else {   // the spirit (or no body to be had): at the spot, on at their speed
+      if (plan.code !== 'spirit') plan.fellBack = true;
+      f.pos.set(plan.x, plan.where === 'air' ? plan.y : plan.y + 2, plan.z); f.yaw = plan.yaw; f.pitch = 0; f.roll = 0;
+      f.speed = plan.speed; f.hover = plan.speed < 0.5; f.keys.clear(); f.camSettled = false; f.camYaw = f.yaw;
+      spirit.prevP?.copy(f.pos); spirit.wisp?.reset?.(f.pos);
+    }
+    return plan;
+  };
+  window.__weJoinAs = joinAs;   // debugging
   const known = new WeakSet(), used = new WeakSet(), drawable = o => o.isMesh || o.isPoints || o.isLine || o.isSprite;   // meshes compiled ahead (below)
   // The rock plans around the bird (rocks.js warm), made in slices so the first frame's rock fill only places them.
   await w.next('rocks.warm');
