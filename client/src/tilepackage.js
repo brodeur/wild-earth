@@ -285,6 +285,7 @@ export class SpeciesMix {
     // The riparian zone rows (2026-10-29, pipeline species_mix.py riparian_rows): per zone, order class and permanence,
     // the trees, shrubs and ground species of a bank, a margin, a pond shore (ripRow); their species join `species`.
     this.rip = new Map();
+    this.ripBands = json.riparian?.bands_m || null;   // rows per elevation band ('|<band>' keys; species_mix.riparian_rows)
     for (const [key, r] of Object.entries(json.riparian?.rows || {})) {
       const row = { trees: {}, shrubs: {}, ground: {}, density: r.density || [1, 1, 1], key };
       for (const layer of ['trees', 'shrubs', 'ground']) {
@@ -300,7 +301,12 @@ export class SpeciesMix {
   ripRow(info) {
     if (!info || !info.zone || !this.rip.size) return null;
     const zone = RIP_ZONE[info.zone], cls = info.zone >= 5 ? 'pond' : info.order <= 2 ? 'small' : info.order <= 4 ? 'medium' : 'large';
-    return this.rip.get(`${zone}|${cls}|${info.perennial ? 'perennial' : 'seasonal'}`) || null;
+    const key = `${zone}|${cls}|${info.perennial ? 'perennial' : 'seasonal'}`;
+    if (this.ripBands && info.z != null) {   // the row of the ground's elevation band: no valley oak on a 1,200 m bank
+      let b = 0; while (b < this.ripBands.length && info.z >= this.ripBands[b]) b++;
+      const r = this.rip.get(`${key}|${b}`); if (r) return r;
+    }
+    return this.rip.get(key) || null;
   }
   rowIndex(i, j) { const o = (j * this.img.width + i) * 4, d = this.img.data; return this.wide ? d[o] + 256 * d[o + 1] : d[o]; }
   at(i, j) { return this.rows[this.rowIndex(i, j)] || null; }
@@ -378,7 +384,7 @@ export class WaterGrid {
     this.img = img; this.width = img.width; this.size = sizeM; this.res = sizeM / img.width; this.d = img.data;
     this.hw = widthImg && widthImg.width === img.width ? widthImg.data : null;
     this.heights = heights; this.sameGrid = !!heights && heights.w === img.width;
-    this._info = { zone: 0, order: 0, perennial: false, pond: false };
+    this._info = { zone: 0, order: 0, perennial: false, pond: false, z: null };
     this.any = false; const d = img.data; for (let i = 0; i < d.length; i += 4) if (d[i]) { this.any = true; break; }
   }
   index(x, north) {
@@ -386,10 +392,12 @@ export class WaterGrid {
     return Math.floor((this.size - north) / this.res) * this.width + Math.floor(x / this.res);
   }
   zone(x, north) { const o = this.index(x, north); return o < 0 ? 0 : this.d[o * 4] & 15; }
-  // { zone, order (1-7; 0 at a pond), perennial, pond } at a point (one object, reused: copy what you keep)
+  // { zone, order (1-7; 0 at a pond), perennial, pond, z (the ground, in a zone) } at a point (one object, reused: copy what you keep)
   info(x, north) {
     const I = this._info, o = this.index(x, north), r = o < 0 ? 0 : this.d[o * 4];
-    I.zone = r & 15; I.order = (r >> 4) & 7; I.perennial = r >= 128; I.pond = I.zone >= 5; return I;
+    I.zone = r & 15; I.order = (r >> 4) & 7; I.perennial = r >= 128; I.pond = I.zone >= 5;
+    I.z = !I.zone || o < 0 || !this.heights ? null : this.sameGrid ? this.heights.z[o] : this.heights.base(x, north);   // the ground, for ripRow's band
+    return I;
   }
   material(x, north) { const o = this.index(x, north); return o < 0 ? 0 : this.d[o * 4 + 1] & 7; }
   bar(x, north) { const o = this.index(x, north); return o >= 0 && (this.d[o * 4 + 1] & 8) !== 0; }

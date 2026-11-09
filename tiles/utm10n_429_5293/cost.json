@@ -398,14 +398,19 @@
   },
   "species_mix": {
    "stage": "flora",
-   "started_at": "2026-11-07T19:16:17Z",
-   "ended_at": "2026-11-07T19:16:18Z",
-   "wall_s": 0.7,
-   "cpu_self_s": 0.7,
+   "started_at": "2026-11-09T04:17:01Z",
+   "ended_at": "2026-11-09T04:17:03Z",
+   "wall_s": 1.9,
+   "cpu_self_s": 2.0,
    "cpu_children_s": 0.0,
    "downloads": {},
-   "cache": {},
-   "disk_bytes": 274676,
+   "cache": {
+    "gbif": {
+     "hits": 20,
+     "misses": 0
+    }
+   },
+   "disk_bytes": 342087,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -449,21 +454,21 @@
   },
   "species": {
    "stage": "fauna",
-   "started_at": "2026-11-07T16:17:12Z",
-   "ended_at": "2026-11-07T16:21:40Z",
-   "wall_s": 268.0,
-   "cpu_self_s": 5.1,
+   "started_at": "2026-11-09T03:54:28Z",
+   "ended_at": "2026-11-09T03:57:33Z",
+   "wall_s": 184.8,
+   "cpu_self_s": 4.8,
    "cpu_children_s": 0.0,
    "downloads": {
     "gbif": {
-     "bytes": 78598438,
-     "requests": 161
+     "bytes": 2146917,
+     "requests": 208
     }
    },
    "cache": {
     "gbif": {
-     "hits": 249,
-     "misses": 119
+     "hits": 368,
+     "misses": 208
     },
     "eltontraits": {
      "hits": 1,
@@ -480,16 +485,21 @@
   },
   "animals": {
    "stage": "fauna",
-   "started_at": "2026-11-07T16:21:40Z",
-   "ended_at": "2026-11-07T16:21:40Z",
-   "wall_s": 0.5,
-   "cpu_self_s": 0.5,
+   "started_at": "2026-11-09T03:57:33Z",
+   "ended_at": "2026-11-09T03:59:38Z",
+   "wall_s": 125.2,
+   "cpu_self_s": 2.1,
    "cpu_children_s": 0.0,
-   "downloads": {},
+   "downloads": {
+    "gbif": {
+     "bytes": 1868377,
+     "requests": 137
+    }
+   },
    "cache": {
     "gbif": {
-     "hits": 208,
-     "misses": 0
+     "hits": 281,
+     "misses": 137
     },
     "eltontraits": {
      "hits": 2,
@@ -600,10 +610,10 @@
   },
   "ground_albedo": {
    "stage": "base",
-   "started_at": "2026-11-07T18:44:16Z",
-   "ended_at": "2026-11-07T18:44:17Z",
-   "wall_s": 1.4,
-   "cpu_self_s": 1.4,
+   "started_at": "2026-11-09T04:42:28Z",
+   "ended_at": "2026-11-09T04:42:31Z",
+   "wall_s": 3.2,
+   "cpu_self_s": 1.9,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {},
@@ -708,10 +718,10 @@
  },
  "stages": {
   "base": {
-   "started_at": "2026-11-07T20:55:20Z",
-   "ended_at": "2026-11-07T20:55:20Z",
-   "wall_s": 232.8,
-   "cpu_s": 161.5,
+   "started_at": "2026-11-09T04:42:28Z",
+   "ended_at": "2026-11-09T04:42:31Z",
+   "wall_s": 234.6,
+   "cpu_s": 162.0,
    "download_bytes": 15019639,
    "cache_hits": 496,
    "cache_misses": 32,
@@ -720,25 +730,25 @@
    "meshy_queued_credits_est": 0
   },
   "flora": {
-   "started_at": "2026-11-07T20:39:14Z",
-   "ended_at": "2026-11-07T20:42:22Z",
-   "wall_s": 189.5,
-   "cpu_s": 200.9,
+   "started_at": "2026-11-09T04:17:01Z",
+   "ended_at": "2026-11-09T04:17:03Z",
+   "wall_s": 190.7,
+   "cpu_s": 202.2,
    "download_bytes": 0,
-   "cache_hits": 156,
+   "cache_hits": 176,
    "cache_misses": 0,
-   "disk_bytes": 7336337,
+   "disk_bytes": 7403748,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
   "fauna": {
-   "started_at": "2026-11-07T16:17:12Z",
-   "ended_at": "2026-11-07T16:21:40Z",
-   "wall_s": 279.1,
-   "cpu_s": 15.6,
-   "download_bytes": 78598438,
-   "cache_hits": 463,
-   "cache_misses": 119,
+   "started_at": "2026-11-09T03:54:28Z",
+   "ended_at": "2026-11-09T03:59:38Z",
+   "wall_s": 320.6,
+   "cpu_s": 16.9,
+   "download_bytes": 4015294,
+   "cache_hits": 655,
+   "cache_misses": 345,
    "disk_bytes": 8473110,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
@@ -1376,21 +1386,150 @@
    "ended_at": "2026-11-07T20:55:20Z",
    "failed": [],
    "refused": []
+  },
+  {
+   "started_at": "2026-11-09T03:54:28Z",
+   "stages": [
+    {
+     "stage": "fauna",
+     "started_at": "2026-11-09T03:54:28Z",
+     "steps_run": [
+      "species",
+      "animals"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-09T03:59:38Z"
+    }
+   ],
+   "ended_at": "2026-11-09T03:59:38Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-09T04:03:28Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-09T04:03:28Z",
+     "steps_run": [
+      "ground_albedo"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-09T04:03:30Z"
+    },
+    {
+     "stage": "flora",
+     "started_at": "2026-11-09T04:03:30Z",
+     "steps_run": [
+      "species_mix"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-09T04:04:07Z"
+    }
+   ],
+   "ended_at": "2026-11-09T04:04:07Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-09T04:10:20Z",
+   "stages": [
+    {
+     "stage": "flora",
+     "started_at": "2026-11-09T04:10:20Z",
+     "steps_run": [
+      "species_mix"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-09T04:10:23Z"
+    }
+   ],
+   "ended_at": "2026-11-09T04:10:23Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-09T04:17:01Z",
+   "stages": [
+    {
+     "stage": "flora",
+     "started_at": "2026-11-09T04:17:01Z",
+     "steps_run": [
+      "species_mix"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-09T04:17:03Z"
+    }
+   ],
+   "ended_at": "2026-11-09T04:17:03Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-09T04:27:40Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-09T04:27:40Z",
+     "steps_run": [
+      "ground_albedo"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-09T04:27:45Z"
+    }
+   ],
+   "ended_at": "2026-11-09T04:27:45Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-09T04:33:39Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-09T04:33:39Z",
+     "steps_run": [
+      "ground_albedo"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-09T04:33:56Z"
+    }
+   ],
+   "ended_at": "2026-11-09T04:33:56Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-09T04:42:28Z",
+   "stages": [
+    {
+     "stage": "base",
+     "started_at": "2026-11-09T04:42:28Z",
+     "steps_run": [
+      "ground_albedo"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-09T04:42:31Z"
+    }
+   ],
+   "ended_at": "2026-11-09T04:42:31Z",
+   "failed": [],
+   "refused": []
   }
  ],
  "totals": {
-  "wall_s": 702.2,
-  "cpu_s": 378.6,
-  "download_bytes": 93618077,
-  "cache_hits": 1115,
-  "cache_misses": 151,
-  "disk_bytes": 1001789527,
+  "wall_s": 746.7,
+  "cpu_s": 381.7,
+  "download_bytes": 19034933,
+  "cache_hits": 1327,
+  "cache_misses": 377,
+  "disk_bytes": 1001856938,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 0
  },
- "updated_at": "2026-11-07T20:55:20Z",
+ "updated_at": "2026-11-09T04:42:31Z",
  "client": {
-  "bytes": 60527668,
+  "bytes": 60596003,
   "files": 56,
   "largest": {
    "client/lidar_micro.png": 7921507,

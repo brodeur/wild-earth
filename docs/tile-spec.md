@@ -677,7 +677,12 @@ row is built per zone, stream order class (small 1-2, medium 3-4, large 5+; pond
 (perennial, seasonal), each a trees / shrubs / ground mix as [[id, byte]] summing to 255 per layer with density
 multipliers per zone (no trees in a channel or a pond, a gallery on the banks and terraces), halved where the order
 class only half overlaps the record's orders and a tenth for a species that needs perennial water beside a seasonal
-reach. 48 rows on the home tile.
+reach. 48 rows on the home tile. Since 2026-11-08 each row also has a `<key>|<band>` copy per elevation band the tile
+reaches (`bands`, heights `bands_m`: the band is how many of them the ground is at or above), its trees and shrubs
+through the community rows' band rule; the client takes the band of the cell's ground (`WaterGrid.info().z`), else
+the plain row. A riparian tree or shrub, and a ground card with its own `regions` list, enters only with at least 3
+GBIF records within 25 km where the area holds 5,000 plant records (`local_records_skipped`, and for borrowed ground
+cards under 30 records the weight factor `local_records_scaled`, at the document's top level).
 
 Client. `tilepackage.js` loads the grid as `tile.water` (WaterGrid: zone, info, material, level, half, cellShare)
 and the rows into `SpeciesMix.ripRow(info)`. `water.js` draws each stream ribbon at its level across its half width

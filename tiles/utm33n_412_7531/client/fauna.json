@@ -32,6 +32,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Leporidae",
    "active_hours": [
     1,
     1,
@@ -88,6 +89,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Mustelidae",
    "active_hours": [
     0,
     0,
@@ -124,9 +126,9 @@
   {
    "code": "mustela_vison",
    "scientific": "Mustela vison",
-   "common": "Mink",
-   "one": "mink",
-   "many": "minks",
+   "common": "American mink",
+   "one": "american mink",
+   "many": "american minks",
    "kin": "urocyon_cinereoargenteus",
    "archetype": "small carnivore",
    "scale": 0.508,
@@ -144,6 +146,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Mustelidae",
    "active_hours": [
     0,
     0,
@@ -202,6 +205,7 @@
    "known": [
     "an anteater, armadillo or shrew on a fox's or vole's body"
    ],
+   "family": "Soricidae",
    "active_hours": [
     0,
     0,
@@ -259,6 +263,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Cricetidae",
    "active_hours": [
     0,
     0,
@@ -317,6 +322,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Laridae",
    "flightless": false,
    "lifestyle": "Terrestrial",
    "kin_source": "avonet (species)",
@@ -377,6 +383,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Laridae",
    "flightless": false,
    "lifestyle": "Aerial",
    "kin_source": "avonet (species)",
@@ -420,15 +427,15 @@
    "common": "White-tailed eagle",
    "one": "white-tailed eagle",
    "many": "white-tailed eagles",
-   "kin": "cathartes_aura",
-   "archetype": "soaring scavenger",
-   "scale": 1.435,
+   "kin": "buteo_jamaicensis",
+   "archetype": "soaring raptor",
+   "scale": 1.626,
    "tint": null,
    "mass_kg": 4.729,
    "density_km2": 0.1559,
    "group": [
     1,
-    8
+    3
    ],
    "bird": true,
    "night": false,
@@ -438,6 +445,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Accipitridae",
    "flightless": false,
    "lifestyle": "Aerial",
    "kin_source": "avonet (species)",
@@ -499,6 +507,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Laridae",
    "flightless": false,
    "lifestyle": "Generalist",
    "kin_source": "avonet (species)",
@@ -559,6 +568,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Anatidae",
    "flightless": false,
    "lifestyle": "Aquatic",
    "kin_source": "avonet (species)",
@@ -620,6 +630,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Laridae",
    "flightless": false,
    "lifestyle": "Terrestrial",
    "kin_source": "avonet (species)",
@@ -664,7 +675,7 @@
    "one": "hooded crow",
    "many": "hooded crows",
    "kin": "corvus_corax",
-   "archetype": "corvid",
+   "archetype": "walking corvid",
    "scale": 0.737,
    "tint": null,
    "mass_kg": 0.48,
@@ -681,6 +692,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Corvidae",
    "flightless": false,
    "lifestyle": "Terrestrial",
    "kin_source": "avonet (genus)",
@@ -722,15 +734,15 @@
    "common": "Eurasian oystercatcher",
    "one": "eurasian oystercatcher",
    "many": "eurasian oystercatchers",
-   "kin": "callipepla_californica",
-   "archetype": "ground bird",
-   "scale": 1.43,
+   "kin": "ardea_herodias",
+   "archetype": "shorebird",
+   "scale": 0.621,
    "tint": null,
    "mass_kg": 0.526,
    "density_km2": 19.3953,
    "group": [
-    3,
-    12
+    1,
+    8
    ],
    "bird": true,
    "night": false,
@@ -738,23 +750,16 @@
    "role": [
     "insectivore"
    ],
-   "known": [],
+   "known": [
+    "a shorebird on the heron's water-edge machine: the heron's slow walk and wingbeat"
+   ],
+   "family": "Haematopodidae",
    "flightless": false,
    "lifestyle": "Terrestrial",
    "kin_source": "avonet (species)",
    "hand_wing_index": 51.2,
    "habitat": "Coastal",
    "habitat_density": 3,
-   "gait": {
-    "walk_mps": 0.84,
-    "cruise_mps": 2.87,
-    "top_mps": 4.78,
-    "stride_m": 0.41,
-    "sprint_s": 3.2,
-    "speed_k": 1.077,
-    "stride_k": 1.281,
-    "source": "trait card locomotion over callipepla_californica's (pipeline/locomotion.py)"
-   },
    "active_hours": [
     0,
     0,
@@ -809,6 +814,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Alcidae",
    "flightless": false,
    "lifestyle": "Aquatic",
    "kin_source": "avonet (species)",
@@ -869,6 +875,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Phalacrocoracidae",
    "flightless": false,
    "lifestyle": "Aquatic",
    "kin_source": "avonet (species)",
@@ -929,6 +936,7 @@
     "omnivore"
    ],
    "known": [],
+   "family": "Turdidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -989,6 +997,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Ardeidae",
    "flightless": false,
    "lifestyle": "Terrestrial",
    "kin_source": "avonet (species)",
@@ -1049,6 +1058,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Motacillidae",
    "flightless": false,
    "lifestyle": "Terrestrial",
    "kin_source": "avonet (species)",
@@ -1119,6 +1129,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Phalacrocoracidae",
    "flightless": false,
    "lifestyle": "Aquatic",
    "kin_source": "avonet (crosswalk)",
@@ -1179,6 +1190,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Turdidae",
    "flightless": false,
    "lifestyle": "Generalist",
    "kin_source": "avonet (species)",
@@ -1240,6 +1252,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Laridae",
    "flightless": false,
    "lifestyle": "Generalist",
    "kin_source": "avonet (species)",
@@ -1284,7 +1297,7 @@
    "one": "eurasian magpie",
    "many": "eurasian magpies",
    "kin": "corvus_corax",
-   "archetype": "corvid",
+   "archetype": "walking corvid",
    "scale": 0.566,
    "tint": null,
    "mass_kg": 0.217,
@@ -1301,6 +1314,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Corvidae",
    "flightless": false,
    "lifestyle": "Terrestrial",
    "kin_source": "avonet (species)",
@@ -1362,6 +1376,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Paridae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -1425,6 +1440,7 @@
    "known": [
     "a seabird on the gull's machine"
    ],
+   "family": "Sulidae",
    "flightless": false,
    "lifestyle": "Aerial",
    "kin_source": "avonet (species)",
@@ -1485,6 +1501,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Phylloscopidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -1545,6 +1562,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Phasianidae",
    "flightless": false,
    "lifestyle": "Terrestrial",
    "kin_source": "avonet (species)",
@@ -1615,6 +1633,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Phylloscopidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -1675,6 +1694,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Anatidae",
    "flightless": false,
    "lifestyle": "Aquatic",
    "kin_source": "avonet (species)",
@@ -1735,6 +1755,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Fringillidae",
    "flightless": false,
    "lifestyle": "Generalist",
    "kin_source": "avonet (species)",
@@ -1778,15 +1799,15 @@
    "common": "Golden eagle",
    "one": "golden eagle",
    "many": "golden eagles",
-   "kin": "cathartes_aura",
-   "archetype": "soaring scavenger",
-   "scale": 1.385,
+   "kin": "buteo_jamaicensis",
+   "archetype": "soaring raptor",
+   "scale": 1.569,
    "tint": null,
    "mass_kg": 4.248,
    "density_km2": 0.169,
    "group": [
     1,
-    8
+    3
    ],
    "bird": true,
    "night": false,
@@ -1796,12 +1817,19 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Accipitridae",
    "flightless": false,
    "lifestyle": "Aerial",
    "kin_source": "avonet (species)",
    "hand_wing_index": 36.7,
    "habitat": "Grassland",
    "habitat_density": 3,
+   "model": {
+    "path": "fauna/aquila_chrysaetos.glb",
+    "kind": "bird",
+    "archetype": "soar",
+    "skin": false
+   },
    "active_hours": [
     0,
     1,
@@ -1856,6 +1884,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Gaviidae",
    "flightless": false,
    "lifestyle": "Aquatic",
    "kin_source": "avonet (species)",
@@ -1917,6 +1946,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Laridae",
    "flightless": false,
    "lifestyle": "Aerial",
    "kin_source": "avonet (species)",
@@ -1977,6 +2007,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Motacillidae",
    "flightless": false,
    "lifestyle": "Terrestrial",
    "kin_source": "avonet (species)",
@@ -2048,6 +2079,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Laridae",
    "flightless": false,
    "lifestyle": "Generalist",
    "kin_source": "avonet (species)",
@@ -2108,6 +2140,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Fringillidae",
    "flightless": false,
    "lifestyle": "Generalist",
    "kin_source": "avonet (species)",
@@ -2170,6 +2203,7 @@
    "known": [
     "a seabird on the gull's machine"
    ],
+   "family": "Stercorariidae",
    "flightless": false,
    "lifestyle": "Aerial",
    "kin_source": "avonet (species)",
@@ -2230,6 +2264,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Laridae",
    "flightless": false,
    "lifestyle": "Generalist",
    "kin_source": "avonet (species)",
@@ -2291,6 +2326,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Laridae",
    "flightless": false,
    "lifestyle": "Aerial",
    "kin_source": "avonet (species)",
@@ -2351,6 +2387,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Alcidae",
    "flightless": false,
    "lifestyle": "Aquatic",
    "kin_source": "avonet (species)",
@@ -2411,6 +2448,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Alcidae",
    "flightless": false,
    "lifestyle": "Aquatic",
    "kin_source": "avonet (species)",
@@ -2452,19 +2490,39 @@
  "skipped": [
   {
    "id": "orcinus_orca",
-   "why": "no rig for Cetacea"
+   "scientific": "Orcinus orca",
+   "common": "killer whale",
+   "why": "no stand-in: marine"
   },
   {
    "id": "megaptera_novaeangliae",
-   "why": "no rig for Cetacea"
+   "scientific": "Megaptera novaeangliae",
+   "common": "humpback whale",
+   "why": "no stand-in: marine"
   },
   {
    "id": "balaenoptera_acutorostrata",
-   "why": "no rig for Cetacea"
+   "scientific": "Balaenoptera acutorostrata",
+   "common": "minke whale",
+   "why": "no stand-in: marine"
   },
   {
    "id": "phocoena_phocoena",
-   "why": "no rig for Cetacea"
+   "scientific": "Phocoena phocoena",
+   "common": "harbor porpoise",
+   "why": "no stand-in: marine"
+  },
+  {
+   "id": "arion_ater",
+   "scientific": "Arion ater",
+   "common": "black arion",
+   "why": "no archetype for class Gastropoda"
+  },
+  {
+   "id": "patella_vulgata",
+   "scientific": "Patella vulgata",
+   "common": "common limpet",
+   "why": "no archetype for class Gastropoda"
   },
   {
    "id": "falco_tinnunculus",
@@ -2536,14 +2594,6 @@
   },
   {
    "id": "asio_otus",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "arion_ater",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "patella_vulgata",
    "why": "over the 40-slot cap"
   }
  ],

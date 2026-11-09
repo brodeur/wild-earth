@@ -15,7 +15,7 @@
   47.87830820952735
  ],
  "size_m": 10000,
- "generated_at": "2026-11-07T20:55:20Z",
+ "generated_at": "2026-11-09T04:42:36Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -5052,20 +5052,20 @@
      "pacific_willow": 0.0029
     },
     "ground_share": {
-     "elymus_glaucus": 0.0718,
-     "danthonia_californica": 0.0213,
-     "claytonia_perfoliata": 0.0492,
-     "trifolium_willdenovii": 0.0149,
-     "achillea_millefolium": 0.0746,
+     "elymus_glaucus": 0.0731,
+     "danthonia_californica": 0.0215,
+     "claytonia_perfoliata": 0.0501,
+     "trifolium_willdenovii": 0.015,
+     "achillea_millefolium": 0.0756,
      "plagiobothrys_nothofulvus": 0.0201,
-     "artemisia_douglasiana": 0.0064,
-     "urtica_dioica": 0.0039,
-     "erythranthe_guttata": 0.0125,
+     "artemisia_douglasiana": 0.0067,
+     "urtica_dioica": 0.0041,
+     "erythranthe_guttata": 0.0128,
      "nasturtium_officinale": 0.0011,
      "lemna_minor": 0.0011,
-     "polystichum_munitum": 0.2959,
-     "oxalis_oregana": 0.2681,
-     "phyllodoce_empetriformis": 0.0762,
+     "polystichum_munitum": 0.2936,
+     "oxalis_oregana": 0.2659,
+     "phyllodoce_empetriformis": 0.0764,
      "cassiope_mertensiana": 0.0829
     },
     "mean_tree_density": 0.8743,
@@ -5099,8 +5099,8 @@
     "rows_with_herb_cover": 0,
     "evh_synthetic": false
    },
-   "sha256": "ab4e0db637764d59e28d4e0d250512af114cb29ed4dea61c20ace9a8f7c4f7fa",
-   "bytes": 217836
+   "sha256": "6dd4bc2caf299d26a1f70fec0d96c4a1e85e258d167412147c0a618df5279451",
+   "bytes": 306891
   },
   "species.list": {
    "path": "species/species.json",
@@ -5150,8 +5150,8 @@
    "path": "species/inventory.json",
    "kind": "table",
    "source": "gbif",
-   "sha256": "d6978a65d27e6844e2743a52623dfc5187e650dbd86165100978642911b0b842",
-   "bytes": 36426
+   "sha256": "86a4db14ee678a5c4a5d325a3145ef59dd1de90d83dd1584c9e56898befee0dd",
+   "bytes": 36424
   },
   "perception": {
    "path": "perception.json",
@@ -5252,7 +5252,7 @@
    "generated_traits": 0,
    "queued": 16,
    "queued_credits": 435,
-   "sha256": "74c134c4729ffc698b6da9140b9cbb7bc63876bd7e7598e44263f5194195abdc",
+   "sha256": "cb73c14ec36f025667adaa576872115c6a1986c141ec16b25b498c43a84be57a",
    "bytes": 64287
   },
   "resources": {
@@ -6221,7 +6221,7 @@
    "attribution": "Species occurrences: GBIF.org and its contributing datasets, including iNaturalist and eBird (CC0, CC BY 4.0 or CC BY-NC 4.0 per record)",
    "attribution_url": "https://www.gbif.org/",
    "attribution_required": true,
-   "retrieved": "2026-11-07"
+   "retrieved": "2026-11-09"
   },
   "eltontraits": {
    "name": "EltonTraits 1.0: species-level foraging attributes of the world's birds and mammals",
@@ -6934,6 +6934,60 @@
    "step": "seams",
    "at": "2026-11-07T20:55:20Z",
    "seconds": 0.3,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-11-09T04:00:38Z",
+   "seconds": 60.1,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-09T04:00:44Z",
+   "seconds": 5.7,
+   "ok": true
+  },
+  {
+   "step": "ground_albedo",
+   "at": "2026-11-09T04:04:10Z",
+   "seconds": 1.8,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-09T04:04:41Z",
+   "seconds": 31.0,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-09T04:10:20Z",
+   "seconds": 4.2,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-09T04:17:00Z",
+   "seconds": 1.8,
+   "ok": true
+  },
+  {
+   "step": "ground_albedo",
+   "at": "2026-11-09T04:27:51Z",
+   "seconds": 4.7,
+   "ok": true
+  },
+  {
+   "step": "ground_albedo",
+   "at": "2026-11-09T04:34:08Z",
+   "seconds": 10.8,
+   "ok": true
+  },
+  {
+   "step": "ground_albedo",
+   "at": "2026-11-09T04:42:36Z",
+   "seconds": 4.7,
    "ok": true
   }
  ],
@@ -7898,14 +7952,14 @@
   },
   "species_mix": {
    "version": "5",
-   "code": "554d32428bd3bffb",
+   "code": "b6309b97e89defac",
    "params": {
     "tile": "utm10n_439_5293"
    },
-   "fingerprint": "3c5ed15824d706dc",
+   "fingerprint": "de56797bcaa66cc2",
    "parts": {
     "version": "5",
-    "code": "554d32428bd3bffb",
+    "code": "b6309b97e89defac",
     "params": {
      "tile": "utm10n_439_5293"
     },
@@ -7920,26 +7974,26 @@
      "library/species": "b535f4af1995d848"
     }
    },
-   "ran_at": "2026-11-07T20:44:18Z",
+   "ran_at": "2026-11-09T04:16:59Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "client.species_mix"
    ],
    "outputs": {
-    "client/species_mix.json": "ab4e0db637764d59",
+    "client/species_mix.json": "6dd4bc2caf299d26",
     "client/species_mix_index.png": "b9778f15c259d0d9",
     "client/species_mix_density.png": "faec3f190994bafb"
    },
-   "out_hash": "5d64e774c0110851",
+   "out_hash": "18020e2ee4c7d7a6",
    "sources": {},
    "fallbacks": [],
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 0
+    "cache": 20
    },
-   "seconds": 0.7
+   "seconds": 1.8
   },
   "crowns": {
    "version": "2",
@@ -8002,26 +8056,26 @@
   },
   "species": {
    "version": "1",
-   "code": "87c8a7a2edbed963",
+   "code": "dd97a2c525e7d328",
    "params": {
     "tile": "utm10n_439_5293"
    },
-   "fingerprint": "483fa8975e139f5f",
+   "fingerprint": "f1b03a871c1d3f06",
    "parts": {
     "version": "1",
-    "code": "87c8a7a2edbed963",
+    "code": "dd97a2c525e7d328",
     "params": {
      "tile": "utm10n_439_5293"
     },
     "deps": {
-     "dem": "10d291753461ebd9",
+     "dem": "e1576c2f038110be",
      "landcover": "3a859f64420f3723"
     },
     "library": {
      "library/animals": "997e0be94296d338"
     }
    },
-   "ran_at": "2026-11-07T16:21:41Z",
+   "ran_at": "2026-11-09T03:59:38Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -8039,46 +8093,46 @@
     "client/species_prior.json": "6dd6b29c19496fc3",
     "locomotion.json": "4dc58f00c0726431",
     "perception.json": "8d523f8223a31cb9",
-    "species/inventory.json": "d6978a65d27e6844",
+    "species/inventory.json": "86a4db14ee678a5c",
     "species/species.json": "cf43d1b504580619",
     "species/occurrences.geojson": "778d5194e3613c72",
     "species/seasonal.json": "4b900492a72fb6b6"
    },
-   "out_hash": "03b6ef76b1be01b4",
+   "out_hash": "7676165c3d837ace",
    "sources": {
-    "gbif": "2026-11-07"
+    "gbif": "2026-11-09"
    },
    "fallbacks": [],
    "notes": [],
    "fetched": {
-    "network": 0,
-    "cache": 312
+    "network": 69,
+    "cache": 428
    },
-   "seconds": 1.8
+   "seconds": 60.1
   },
   "animals": {
    "version": "6",
-   "code": "44d9ac426df2f7b6",
+   "code": "0e19c56349ccab8c",
    "params": {
     "tile": "utm10n_439_5293"
    },
-   "fingerprint": "f6062fb20b233e2d",
+   "fingerprint": "ed9b5d54fa0150de",
    "parts": {
     "version": "6",
-    "code": "44d9ac426df2f7b6",
+    "code": "0e19c56349ccab8c",
     "params": {
      "tile": "utm10n_439_5293"
     },
     "deps": {
-     "species": "03b6ef76b1be01b4",
-     "plants": "259a96432c5b868d"
+     "species": "7676165c3d837ace",
+     "plants": "04bf9269c4660f5b"
     },
     "library": {
      "library/animals": "997e0be94296d338",
      "data/eltontraits": "e3b0c44298fc1c14"
     }
    },
-   "ran_at": "2026-11-07T16:21:42Z",
+   "ran_at": "2026-11-09T04:00:38Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -8087,20 +8141,20 @@
    ],
    "outputs": {
     "client/fauna.json": "caa07141c2d7de86",
-    "species/animals.json": "74c134c4729ffc69"
+    "species/animals.json": "cb73c14ec36f0256"
    },
-   "out_hash": "932bb57bad8a289d",
+   "out_hash": "4276066acfb510fd",
    "sources": {
-    "gbif": "2026-11-07",
+    "gbif": "2026-11-09",
     "eltontraits": "2026-11-05"
    },
    "fallbacks": [],
    "notes": [],
    "fetched": {
-    "network": 0,
-    "cache": 110
+    "network": 5,
+    "cache": 209
    },
-   "seconds": 0.4
+   "seconds": 5.7
   },
   "resources": {
    "version": "1",
@@ -8402,7 +8456,7 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T18:50:57Z",
+   "ran_at": "2026-11-09T04:42:32Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -8419,7 +8473,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 1.3
+   "seconds": 4.7
   },
   "territories": {
    "version": "1",

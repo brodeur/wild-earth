@@ -15,7 +15,7 @@
   37.830918414113654
  ],
  "size_m": 10000,
- "generated_at": "2026-11-07T20:37:48Z",
+ "generated_at": "2026-11-09T04:44:12Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -773,7 +773,7 @@
     "sorex_monticolus",
     "rana_cascadae"
    ],
-   "sha256": "7d2d41e11c68739d029346ef628e9109be65b4d258a95725eba7b2fcdf107bf8",
+   "sha256": "8ff6128d8351aec99913ea680fa37be9c8f1d42e24b5e466b8143d856c5e258c",
    "bytes": 42801
   },
   "species.occurrences": {
@@ -4376,8 +4376,6 @@
      "erythranthe_guttata",
      "nasturtium_officinale",
      "lemna_minor",
-     "polystichum_munitum",
-     "oxalis_oregana",
      "phyllodoce_breweri"
     ]
    },
@@ -4488,35 +4486,33 @@
      "artemisia_tridentata": 0.0133
     },
     "ground_share": {
-     "stipa_pulchra": 0.0263,
-     "elymus_glaucus": 0.0507,
-     "danthonia_californica": 0.0104,
-     "avena_fatua": 0.0122,
-     "bromus_hordeaceus": 0.0153,
-     "bromus_diandrus": 0.0195,
-     "hordeum_murinum": 0.0054,
-     "eschscholzia_californica": 0.0302,
-     "lupinus_bicolor": 0.0309,
-     "lupinus_albifrons": 0.0462,
-     "claytonia_perfoliata": 0.0353,
-     "trifolium_willdenovii": 0.0076,
-     "chlorogalum_pomeridianum": 0.0284,
-     "achillea_millefolium": 0.0526,
+     "stipa_pulchra": 0.0397,
+     "elymus_glaucus": 0.1252,
+     "danthonia_californica": 0.0199,
+     "avena_fatua": 0.0126,
+     "bromus_hordeaceus": 0.0201,
+     "bromus_diandrus": 0.0309,
+     "hordeum_murinum": 0.0057,
+     "eschscholzia_californica": 0.0304,
+     "lupinus_bicolor": 0.031,
+     "lupinus_albifrons": 0.0561,
+     "claytonia_perfoliata": 0.0897,
+     "trifolium_willdenovii": 0.0081,
+     "chlorogalum_pomeridianum": 0.0362,
+     "achillea_millefolium": 0.1443,
      "wyethia_helenioides": 0.0122,
-     "dipterostemon_capitatus": 0.0395,
-     "amsinckia_menziesii": 0.0112,
-     "erodium_cicutarium": 0.0205,
-     "vicia_villosa": 0.0075,
-     "plagiobothrys_nothofulvus": 0.0102,
-     "madia_elegans": 0.0242,
-     "artemisia_douglasiana": 0.0078,
-     "urtica_dioica": 0.0043,
-     "erythranthe_guttata": 0.0108,
-     "nasturtium_officinale": 0.0029,
-     "lemna_minor": 0.0032,
-     "polystichum_munitum": 0.1626,
-     "oxalis_oregana": 0.1601,
-     "phyllodoce_breweri": 0.1521
+     "dipterostemon_capitatus": 0.0515,
+     "amsinckia_menziesii": 0.0113,
+     "erodium_cicutarium": 0.0208,
+     "vicia_villosa": 0.0079,
+     "plagiobothrys_nothofulvus": 0.0105,
+     "madia_elegans": 0.0293,
+     "artemisia_douglasiana": 0.0136,
+     "urtica_dioica": 0.0073,
+     "erythranthe_guttata": 0.0238,
+     "nasturtium_officinale": 0.0034,
+     "lemna_minor": 0.0037,
+     "phyllodoce_breweri": 0.1549
     },
     "mean_tree_density": 0.7831,
     "mean_shrub_density": 0.4719,
@@ -4556,8 +4552,8 @@
     "rows_with_herb_cover": 0,
     "evh_synthetic": false
    },
-   "sha256": "5f52df9fc596906cca89617b17464cf2be9b619283786fd42b403c53ee947f04",
-   "bytes": 427718
+   "sha256": "ffdfef097e41cde4936030247276c4d3b72db986d562c1e7c5aadcb1407d358d",
+   "bytes": 474573
   },
   "resources": {
    "path": "resources/resources.json",
@@ -5231,8 +5227,8 @@
    "generated_traits": 0,
    "queued": 50,
    "queued_credits": 1465,
-   "sha256": "0f2571b060d15600189037d1105940f394fcfc55dc0da042684c15ff0db0e13d",
-   "bytes": 135226
+   "sha256": "85757140664afdc96c212439de39bdff43a1f65d1cdebb49719239af6467f481",
+   "bytes": 135289
   },
   "games.seeds": {
    "path": "game_seeds.json",
@@ -5346,8 +5342,8 @@
     "thomomys_monticola": "peromyscus_maniculatus",
     "urocitellus_beldingi": "otospermophilus_beecheyi"
    },
-   "sha256": "6767029fd4c5bd5daf983921d111d22868d2d6b0f6963ce307222ff393fb4250",
-   "bytes": 45065
+   "sha256": "fdae386dccd2d303875cbdcaeb40a27405d3a47d086bbf3c0a13fbe051fc51c3",
+   "bytes": 45745
   },
   "terrain.dem_5m": {
    "path": "terrain/dem_5m.tif",
@@ -5902,7 +5898,7 @@
    "attribution": "Species occurrences: GBIF.org and its contributing datasets, including iNaturalist and eBird (CC0, CC BY 4.0 or CC BY-NC 4.0 per record)",
    "attribution_url": "https://www.gbif.org/",
    "attribution_required": true,
-   "retrieved": "2026-11-07"
+   "retrieved": "2026-11-09"
   },
   "copernicus_sentinel2_l2a": {
    "name": "Copernicus Sentinel-2 Level-2A surface reflectance via Microsoft Planetary Computer",
@@ -7157,6 +7153,54 @@
    "seconds": 0.0,
    "ok": true,
    "not_applicable": "no point cloud on this tile (DEM-only lidar or none): no canopy height model, so no crowns to find or inpaint"
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-09T04:08:00Z",
+   "seconds": 40.3,
+   "ok": true
+  },
+  {
+   "step": "ground_albedo",
+   "at": "2026-11-09T04:10:39Z",
+   "seconds": 2.4,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-11-09T04:14:33Z",
+   "seconds": 14.6,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-09T04:14:40Z",
+   "seconds": 7.1,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-09T04:16:47Z",
+   "seconds": 1.9,
+   "ok": true
+  },
+  {
+   "step": "ground_albedo",
+   "at": "2026-11-09T04:28:24Z",
+   "seconds": 2.9,
+   "ok": true
+  },
+  {
+   "step": "ground_albedo",
+   "at": "2026-11-09T04:35:00Z",
+   "seconds": 4.9,
+   "ok": true
+  },
+  {
+   "step": "ground_albedo",
+   "at": "2026-11-09T04:44:12Z",
+   "seconds": 3.9,
+   "ok": true
   }
  ],
  "steps": {
@@ -7676,26 +7720,26 @@
   },
   "species": {
    "version": "1",
-   "code": "348c8d8fad9668bb",
+   "code": "dd97a2c525e7d328",
    "params": {
     "tile": "utm11n_270_4180"
    },
-   "fingerprint": "33064ed0d0ab17af",
+   "fingerprint": "468a31f5a8628229",
    "parts": {
     "version": "1",
-    "code": "348c8d8fad9668bb",
+    "code": "dd97a2c525e7d328",
     "params": {
      "tile": "utm11n_270_4180"
     },
     "deps": {
-     "dem": "81d4f3c375e3448d",
+     "dem": "031bc85009b183ff",
      "landcover": "2d9c60e6657b8e78"
     },
     "library": {
      "library/animals": "997e0be94296d338"
     }
    },
-   "ran_at": "2026-11-07T16:25:28Z",
+   "ran_at": "2026-11-09T04:14:19Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -7714,21 +7758,21 @@
     "locomotion.json": "4dc58f00c0726431",
     "perception.json": "32a4aaf606617d79",
     "species/inventory.json": "e53920576ccf64bd",
-    "species/species.json": "7d2d41e11c68739d",
+    "species/species.json": "8ff6128d8351aec9",
     "species/occurrences.geojson": "cdb3b418cc07a021",
     "species/seasonal.json": "087e9ab29f8fec2d"
    },
-   "out_hash": "87c60f586f411b62",
+   "out_hash": "81cc2a75482f0513",
    "sources": {
-    "gbif": "2026-11-07"
+    "gbif": "2026-11-09"
    },
    "fallbacks": [],
    "notes": [],
    "fetched": {
-    "network": 0,
-    "cache": 379
+    "network": 13,
+    "cache": 581
    },
-   "seconds": 2.2
+   "seconds": 14.6
   },
   "crowns": {
    "version": "2",
@@ -8279,14 +8323,14 @@
   },
   "species_mix": {
    "version": "5",
-   "code": "554d32428bd3bffb",
+   "code": "b6309b97e89defac",
    "params": {
     "tile": "utm11n_270_4180"
    },
-   "fingerprint": "74f3871608a7bbe6",
+   "fingerprint": "f69caf1af6316614",
    "parts": {
     "version": "5",
-    "code": "554d32428bd3bffb",
+    "code": "b6309b97e89defac",
     "params": {
      "tile": "utm11n_270_4180"
     },
@@ -8301,50 +8345,50 @@
      "library/species": "b535f4af1995d848"
     }
    },
-   "ran_at": "2026-11-07T20:37:47Z",
+   "ran_at": "2026-11-09T04:16:45Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "client.species_mix"
    ],
    "outputs": {
-    "client/species_mix.json": "5f52df9fc596906c",
+    "client/species_mix.json": "ffdfef097e41cde4",
     "client/species_mix_index.png": "2fda73e4e6a2fee4",
     "client/species_mix_density.png": "4341720cbc4a179f"
    },
-   "out_hash": "9e986a61ca157fd4",
+   "out_hash": "a42b80cf326e5679",
    "sources": {},
    "fallbacks": [],
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 0
+    "cache": 31
    },
-   "seconds": 0.8
+   "seconds": 1.9
   },
   "animals": {
    "version": "6",
-   "code": "44d9ac426df2f7b6",
+   "code": "0e19c56349ccab8c",
    "params": {
     "tile": "utm11n_270_4180"
    },
-   "fingerprint": "cc20fc974ad9fd2b",
+   "fingerprint": "8c6d07f11792af00",
    "parts": {
     "version": "6",
-    "code": "44d9ac426df2f7b6",
+    "code": "0e19c56349ccab8c",
     "params": {
      "tile": "utm11n_270_4180"
     },
     "deps": {
-     "species": "87c60f586f411b62",
-     "plants": "04474c947b5e3bd0"
+     "species": "81cc2a75482f0513",
+     "plants": "3c7d3a036fb8edf1"
     },
     "library": {
      "library/animals": "997e0be94296d338",
      "data/eltontraits": "e3b0c44298fc1c14"
     }
    },
-   "ran_at": "2026-11-07T16:25:30Z",
+   "ran_at": "2026-11-09T04:14:33Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -8352,21 +8396,21 @@
     "species.animals"
    ],
    "outputs": {
-    "client/fauna.json": "6767029fd4c5bd5d",
-    "species/animals.json": "0f2571b060d15600"
+    "client/fauna.json": "fdae386dccd2d303",
+    "species/animals.json": "85757140664afdc9"
    },
-   "out_hash": "fd4f59d4c5390a76",
+   "out_hash": "ddc5d48a0e893dbf",
    "sources": {
-    "gbif": "2026-11-07",
+    "gbif": "2026-11-09",
     "eltontraits": "2026-11-05"
    },
    "fallbacks": [],
    "notes": [],
    "fetched": {
-    "network": 0,
-    "cache": 242
+    "network": 5,
+    "cache": 483
    },
-   "seconds": 0.5
+   "seconds": 7.1
   },
   "resources": {
    "version": "1",
@@ -8617,7 +8661,7 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T18:21:08Z",
+   "ran_at": "2026-11-09T04:44:08Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -8634,7 +8678,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 1.4
+   "seconds": 3.9
   },
   "territories": {
    "version": "1",

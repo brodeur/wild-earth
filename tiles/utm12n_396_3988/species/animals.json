@@ -1,6 +1,6 @@
 {
  "tile": "utm12n_396_3988",
- "at": "2026-11-06T11:29:50Z",
+ "at": "2026-11-09T04:17:36Z",
  "target": 22,
  "listed": 94,
  "by_kind": {
@@ -53,7 +53,13 @@
   "peromyscus_truei",
   "sturnus_vulgaris"
  ],
- "generated_traits": [],
+ "generated_traits": [
+  "sceloporus_tristichus",
+  "uta_stansburiana",
+  "sceloporus_magister",
+  "urosaurus_ornatus",
+  "aspidoscelis_tigris"
+ ],
  "queue": [
   {
    "id": "poecile_gambeli",
@@ -3062,7 +3068,8 @@
    "why": [
     "most recorded: 1 of its class (25% of the class's records)"
    ],
-   "listed": true
+   "listed": true,
+   "traits": "library/animals/traits/sceloporus_tristichus.json"
   },
   {
    "gbif_key": 2451029,
@@ -3086,7 +3093,8 @@
    "why": [
     "most recorded: 2 of its class (22% of the class's records)"
    ],
-   "listed": true
+   "listed": true,
+   "traits": "library/animals/traits/uta_stansburiana.json"
   },
   {
    "gbif_key": 2451393,
@@ -3110,7 +3118,8 @@
    "why": [
     "most recorded: 3 of its class (15% of the class's records)"
    ],
-   "listed": true
+   "listed": true,
+   "traits": "library/animals/traits/sceloporus_magister.json"
   },
   {
    "gbif_key": 8538855,
@@ -3134,7 +3143,8 @@
    "why": [
     "most recorded: 4 of its class (15% of the class's records)"
    ],
-   "listed": true
+   "listed": true,
+   "traits": "library/animals/traits/urosaurus_ornatus.json"
   },
   {
    "gbif_key": 8913064,
@@ -3158,7 +3168,8 @@
    "why": [
     "most recorded: 5 of its class (7% of the class's records)"
    ],
-   "listed": true
+   "listed": true,
+   "traits": "library/animals/traits/aspidoscelis_tigris.json"
   },
   {
    "gbif_key": 10894420,
@@ -5226,7 +5237,7 @@
   {
    "id": "phainopepla_nitens",
    "scientific": "Phainopepla nitens",
-   "common": "phainopepla",
+   "common": "black silky-flycatcher",
    "kind": "bird",
    "records": 28,
    "rank_in_class": 145,
@@ -5950,7 +5961,7 @@
   {
    "id": "crotalus_oreganus",
    "scientific": "Crotalus oreganus",
-   "common": "abyssus",
+   "common": "northern pacific rattlesnake",
    "kind": "reptile",
    "records": 50,
    "rank_in_class": 6,

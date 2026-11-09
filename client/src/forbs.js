@@ -54,7 +54,11 @@ const MAT_SPREAD = 1.8, MAT_UP = 0.35, MAT_R = 0.36, R2A = 0.7548776662466927, R
 // From the air it reaches farther: to CARPET_R + 1.25 x the camera's height over the ground, at most CARPET_FAR (150 m
 // up: 260 m), its survivors thinned to KMIN_C and grown to 3 x across (not in height), so a heath reads as a heath's
 // mosaic from 10 to 150 m up, not only as the photo.
-const CARPET_R = 78, CARPET_FAR = 260, KMIN_C = 0.1, TOP_LIFT = 0.95;   // the top view's centre at TOP_LIFT of the dome's height
+const CARPET_R = 78, CARPET_FAR = 260, KMIN_C = 0.1, TOP_LIFT = 0.95;
+// A rosette taller than this (m; the sword fern's 0.9-1.5 m fronds arch up) has no lying quad: its top view laid on the
+// ground at the picture box's width (1.7 x its height, 2.5 m for a sword fern) drew a flat green disc in the oak savanna
+// (2026-11-08); a short rosette (filaree, a dandelion's) keeps it. spBox.w < 0 says so to the vertex shader.
+const TALL_ROSETTE = 0.35;   // the top view's centre at TOP_LIFT of the dome's height
 const carpetRange = agl => Math.min(CARPET_FAR, CARPET_R + 1.25 * Math.max(0, agl));
 const keepAt = (d, kmin) => Math.min(1, Math.max(kmin, D0 * D0 / Math.max(d * d, 1)));   // the shader's thinning (kParams), at distance d
 const T = 256, GS_MAX = 24;   // 24 (2026-11-04, was 16): the library's 19 California forbs and the Olympic ferns, sorrel and lupine (the atlas 512 x 6144)
@@ -190,7 +194,7 @@ function drawTile(g, F, st, cx, cy, top) {
   const H = F.boxH * st.h * ppm, W = F.boxW * ppm * Math.min(1, 0.45 + 0.55 * st.h), Lf = Math.max(6, F.leaf.size_m * ppm);
   const leafCol = k => css(st.dead ? F.dead : st.rgb || F.leaf.rgb, k);
   const hb = F.habit, x0 = cx + T / 2, y0 = top ? cy + T / 2 : cy + T - 2;
-  const nLeaves = Math.round(Math.min(60, 6 + 40 * (W * H) / (Lf * Lf) * 0.5));
+  const nLeaves = Math.round(Math.min(F.habit === 'erect' ? 120 : 60, 6 + 40 * (W * H) / (Lf * Lf) * 0.5));   // an erect clump: leafy stems
   if (F.floating) {   // a floating mat (duckweed): a ragged disc of tiny fronds, drawn on the water in the ground quad only
     if (!top) { g.restore(); return; }
     const R = T * 0.46, n = 900;
@@ -209,10 +213,20 @@ function drawTile(g, F, st, cx, cy, top) {
     g.restore(); return;
   }
   // stems (erect, bulb, mound: a few; climbing: a tangle)
-  const stemCol = st.dead ? css(F.dead, 0.9) : css(F.leaf.rgb, 0.8), nStems = hb === 'rosette' ? 0 : hb === 'climbing' ? 6 : hb === 'bulb' ? 1 : hb === 'erect' ? 2 : 4;
+  const stemCol = st.dead ? css(F.dead, 0.9) : css(F.leaf.rgb, 0.8);
+  // an erect forb (2026-11-08): a clump of stems of several heights leaning out from the root (a nettle or mugwort colony
+  // is many stems; two upright ones carrying a column of same-size leaves read as beaded sticks on the Merced's bar)
+  const nStems = hb === 'rosette' ? 0 : hb === 'climbing' ? 6 : hb === 'bulb' ? 1 : hb === 'erect' ? 3 + Math.min(3, Math.floor(F.boxH / 0.6)) : 4;
   g.strokeStyle = stemCol; g.lineCap = 'round';
-  for (let q = 0; q < nStems; q++) { const x1 = x0 + (rnd() - 0.5) * W * 0.6, lean = (rnd() - 0.5) * W * 0.5; g.lineWidth = Math.max(1, H * 0.012);
-    g.beginPath(); g.moveTo(x0 + (rnd() - 0.5) * W * 0.15, y0); g.quadraticCurveTo(x1, y0 - H * 0.55, x1 + lean * 0.4, y0 - H * (0.85 + 0.15 * rnd())); g.stroke(); }
+  const stems = [];
+  for (let q = 0; q < nStems; q++) {
+    const sx = x0 + (rnd() - 0.5) * W * (hb === 'erect' ? 0.3 : 0.15);
+    const x1 = hb === 'erect' ? sx + (sx - x0) * 0.8 + (rnd() - 0.5) * W * 0.15 : x0 + (rnd() - 0.5) * W * 0.6, lean = (rnd() - 0.5) * W * 0.5;
+    const h = hb === 'erect' ? H * (0.55 + 0.45 * rnd()) : H * (0.85 + 0.15 * rnd()), x2 = hb === 'erect' ? x1 + (x1 - x0) * 0.5 + lean * 0.3 : x1 + lean * 0.4;
+    stems.push([sx, x1, x2, h]);
+    g.lineWidth = Math.max(1, H * 0.012);
+    g.beginPath(); g.moveTo(sx, y0); g.quadraticCurveTo(x1, y0 - h * 0.55, x2, y0 - h); g.stroke();
+  }
   // leaves: a rosette lies flat and low, a mound fills its dome, an erect stem carries them along it
   const Wb = Math.max(W * 0.2, Math.min(W, T - 1.7 * Lf));
   for (let q = 0; q < nLeaves; q++) {
@@ -222,6 +236,14 @@ function drawTile(g, F, st, cx, cy, top) {
     // off square at its edge (2026-11-06)
     if (hb === 'rosette') { x = x0 + (u - 0.5) * Wb; y = y0 - v * Math.min(H, Lf * 0.8); a = (u - 0.5) * 2.2; }
     else if (hb === 'sprawling') { x = x0 + (u - 0.5) * Wb; y = y0 - v * H * 0.8; a = (rnd() - 0.5) * 2.6; }
+    else if (hb === 'erect' && stems.length) {   // along a stem's curve, outward and a little down, alternate sides, smaller upward
+      const [sx, x1, x2, h] = stems[q % stems.length], t = 0.08 + 0.9 * Math.pow(v, 1.15), m = 1 - t;
+      x = m * m * sx + 2 * m * t * x1 + t * t * x2; y = y0 - (2 * m * t * 0.55 + t * t) * h;
+      const tx = 2 * m * (x1 - sx) + 2 * t * (x2 - x1), ty = -(2 * m * 0.55 + 2 * t * 0.45) * h, up = Math.atan2(tx, -ty);
+      a = up + (q % 2 ? 1 : -1) * (0.9 + 0.5 * rnd()) * (1 - 0.35 * t);
+      leaf(g, F, x, y, a, L * (1.6 - 0.95 * t), rnd, leafCol(0.72 + 0.45 * rnd() + 0.1 * t));
+      continue;
+    }
     else if (hb === 'erect' || hb === 'bulb') { const t = 0.05 + v * 0.7; x = x0 + (u - 0.5) * W * 0.25; y = y0 - H * t; a = (u - 0.5) * 2.0 * (hb === 'bulb' ? 0.4 : 1); if (hb === 'bulb') { y = y0 - v * H * 0.35; } }
     else if (hb === 'climbing') { x = x0 + (u - 0.5) * W; y = y0 - v * H; a = (rnd() - 0.5) * 3; }
     else { const b = (u - 0.5) * Math.PI, r = Math.sqrt(v); x = x0 + Math.sin(b) * r * Wb * 0.5; y = y0 - Math.cos(b) * r * H * 0.85 - H * 0.05; a = b * 0.8; }   // mound
@@ -360,10 +382,10 @@ const VERT = /* glsl */`
       p = iPos.xyz + vec3(q.x * c, q.y + dot(vec2(q.x * c, -q.x * sn), iSlope), -q.x * sn);   // sheared to the ground's slope
       float t = uv.y;
       p.xz += windDir * windStrength * gust(iPos.xz) * t * t * 0.18 * B.y * scY;
-    } else {   // on the ground, a little above it so it does not z-fight, the size of the top view
-      vec2 q = vec2(position.x, position.y) * B.x * sc, o = vec2(q.x * c - q.y * sn, -(q.x * sn + q.y * c));
+    } else {   // on the ground, a little above it so it does not z-fight, the size of the top view (none for a tall rosette)
+      vec2 q = vec2(position.x, position.y) * B.x * sc * (B.w < 0.0 ? 0.0 : 1.0), o = vec2(q.x * c - q.y * sn, -(q.x * sn + q.y * c));
       float qq = dot(position.xy, position.xy) / ${(MAT_R * MAT_R).toFixed(4)};   // (the radius over the mat's, MAT_R)^2
-      float lift = mat > 0.5 ? mix(0.02, B.w, sqrt(max(1.0 - qq * qq, 0.0))) * scY : B.w;   // a mat's plateau: B.w over most of it, down to the ground at its rim and under its skirt
+      float lift = mat > 0.5 ? mix(0.02, B.w, sqrt(max(1.0 - qq * qq, 0.0))) * scY : max(B.w, 0.0);   // a mat's plateau: B.w over most of it, down to the ground at its rim and under its skirt
       p = iPos.xyz + vec3(o.x, lift + dot(o, iSlope), o.y);   // on the ground's slope
     }
     // species k's pictures are the canvas's k-th row of tiles from the top; the CanvasTexture is flipped (flipY), so
@@ -655,7 +677,7 @@ export class Forbs {
     const c = this.canvas || (this.canvas = document.createElement('canvas')); c.width = 2 * T; c.height = GS_MAX * T;
     const g = c.getContext('2d'); g.clearRect(0, 0, c.width, c.height);
     this.species.forEach(F => { const st = this.states[F.k]; drawTile(g, F, st, 0, F.k * T, false); drawTile(g, F, st, T, F.k * T, true);
-      this.uniforms.spBox.value[F.k].set(F.boxW, F.boxH, st.h, F.woody ? TOP_LIFT * MAT_H * F.boxH * st.h : 0.03);   // a mat's top view: its centre near the top of its dome
+      this.uniforms.spBox.value[F.k].set(F.boxW, F.boxH, st.h, F.woody ? TOP_LIFT * MAT_H * F.boxH * st.h : F.habit === 'rosette' && F.boxH > TALL_ROSETTE ? -1 : 0.03);   // a mat's top view: its centre near the top of its dome
       if (F.woody) { const a = meanAlbedo(g, T, F.k * T); this.uniforms.spMean.value[F.k].copy(a.mean); if (st.h > 0) F.area = F.boxW * F.boxW * Math.max(0.2, a.share); } });
     if (!this.atlas) { this.atlas = new THREE.CanvasTexture(c); this.atlas.colorSpace = THREE.SRGBColorSpace; this.atlas.generateMipmaps = true; this.atlas.minFilter = THREE.LinearMipmapLinearFilter; this.atlas.anisotropy = 4; this.uniforms.atlas.value = this.atlas; }
     this.atlas.needsUpdate = true;

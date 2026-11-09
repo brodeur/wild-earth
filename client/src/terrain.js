@@ -953,7 +953,9 @@ const FRAG = /* glsl */`
         vec3 rock = vec3(0.218, 0.199, 0.164), sand = vec3(0.20, 0.175, 0.14), silt = vec3(0.16, 0.145, 0.12);   // alluvium (rocks.js LOOK, linear); the fines 10YR 5/2-4/2 (Munsell, soil_surface's conversion)
         // the bed's matrix (silt, else sand, a fine grit in it), the bank's soil and litter (patches at ~0.3 m)
         vec3 bed = wm < 1.5 ? silt : sand * (0.9 + 0.2 * vnoise(xn * 7.0)) * (0.92 + 0.16 * vnoise(xn * 41.0));
-        vec3 bank = mix(gapSoil.rgb, gapLitter.rgb, 0.4 + 0.4 * vnoise(xn * 3.3)) * (0.9 + 0.2 * vnoise(xn * 17.0));
+        // (no soil table yet, or none on the tile: the photo's own colour there, never the unset uniforms' black)
+        vec3 bSoil = gapSoil.a >= 0.0 ? gapSoil.rgb : c, bLit = gapSoil.a >= 0.0 ? gapLitter.rgb : c * 0.9;
+        vec3 bank = mix(bSoil, bLit, 0.4 + 0.4 * vnoise(xn * 3.3)) * (0.9 + 0.2 * vnoise(xn * 17.0));
         vec3 bc = mix(bank, bed, bedW / max(bedW + bankW, 1e-3));
         // the octaves: coarse (scA: its cell, fill, radius min and span) over fine gravel (scB); the bank only a few of the fine
         bool isBank = bankW > bedW;
@@ -1149,7 +1151,9 @@ export class Terrain {
     G.masks.value = masks; G.roads.value = roads; G.tileSize.value = tile.size;
     G.canopyMap.value = coverTexture(tile);   // the canopy's cover and the riparian weight, same orientation as the masks
     G.gapSoil.value.set(0, 0, 0, -1); this.gap = null; this.gapLast = null;
-    if (G.tuftGround.value > 0.5) this.loadGap();   // the ground between the tufts: its soil and litter (updateGap)
+    // the soil and litter (updateGap): the ground between the tufts, and every tile's big-river banks (2026-11-08: loaded
+    // only on a tuft tile, the banks of El Dorado's Weber Creek and the Merced read the unset (0, 0, 0) and drew black)
+    this.loadGap();
     // Measured season colour (tile-spec "Seasonal colour", season.js): a 20 m multiplier texture, rebuilt on
     // the CPU when the date changes (setDate). Until then, and on a tile without the layers, it is 1.
     yield 'textures';

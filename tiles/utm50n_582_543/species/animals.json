@@ -1,6 +1,6 @@
 {
  "tile": "utm50n_582_543",
- "at": "2026-11-06T11:29:49Z",
+ "at": "2026-11-09T04:55:29Z",
  "target": 22,
  "listed": 69,
  "by_kind": {
@@ -27,7 +27,13 @@
   "corvus_enca",
   "sus_barbatus"
  ],
- "generated_traits": [],
+ "generated_traits": [
+  "gonocephalus_bornensis",
+  "tropidolaemus_subannulatus",
+  "varanus_salvator",
+  "hemidactylus_platyurus",
+  "gekko_monarchus"
+ ],
  "queue": [
   {
    "id": "hirundo_javanica",
@@ -2607,7 +2613,8 @@
    "why": [
     "most recorded: 1 of its class (17% of the class's records)"
    ],
-   "listed": true
+   "listed": true,
+   "traits": "library/animals/traits/gonocephalus_bornensis.json"
   },
   {
    "gbif_key": 2443729,
@@ -2631,7 +2638,8 @@
    "why": [
     "most recorded: 2 of its class (14% of the class's records)"
    ],
-   "listed": true
+   "listed": true,
+   "traits": "library/animals/traits/tropidolaemus_subannulatus.json"
   },
   {
    "gbif_key": 2470685,
@@ -2655,7 +2663,8 @@
    "why": [
     "most recorded: 3 of its class (12% of the class's records)"
    ],
-   "listed": true
+   "listed": true,
+   "traits": "library/animals/traits/varanus_salvator.json"
   },
   {
    "gbif_key": 5816059,
@@ -2679,7 +2688,8 @@
    "why": [
     "most recorded: 4 of its class (10% of the class's records)"
    ],
-   "listed": true
+   "listed": true,
+   "traits": "library/animals/traits/hemidactylus_platyurus.json"
   },
   {
    "gbif_key": 2447302,
@@ -2703,7 +2713,8 @@
    "why": [
     "most recorded: 5 of its class (6% of the class's records)"
    ],
-   "listed": true
+   "listed": true,
+   "traits": "library/animals/traits/gekko_monarchus.json"
   },
   {
    "gbif_key": 2423777,
@@ -5324,7 +5335,7 @@
   {
    "id": "arctictis_binturong",
    "scientific": "Arctictis binturong",
-   "common": "binturong",
+   "common": "bearcat",
    "kind": "mammal",
    "records": 2,
    "rank_in_class": 41,

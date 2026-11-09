@@ -2677,9 +2677,9 @@
   {
    "code": "crotalus_oreganus",
    "scientific": "Crotalus oreganus",
-   "common": "Abyssus",
-   "one": "abyssus",
-   "many": "abyssus",
+   "common": "Northern pacific rattlesnake",
+   "one": "northern pacific rattlesnake",
+   "many": "northern pacific rattlesnakes",
    "kin": "sceloporus_occidentalis",
    "archetype": "snake",
    "scale": 4.789,
@@ -2699,6 +2699,19 @@
    ],
    "family": "Viperidae",
    "reptile": "snake",
+   "habitat_affinity": {
+    "classes": {
+     "1": 0.534,
+     "2": 0.091,
+     "3": 0.03,
+     "4": 0.088,
+     "5": 1.0,
+     "6": 0.306,
+     "8": 0.03
+    },
+    "records": 7,
+    "basis": "the species' CC0 and CC BY records on the tile over client/habitat.png: share of records / share of land"
+   },
    "records": 45,
    "mass_source": "amniote life-history database (species)",
    "active_hours": [
@@ -2757,6 +2770,19 @@
    ],
    "family": "Colubridae",
    "reptile": "snake",
+   "habitat_affinity": {
+    "classes": {
+     "1": 0.017,
+     "2": 0.054,
+     "3": 0.017,
+     "4": 0.017,
+     "5": 0.017,
+     "6": 1.0,
+     "8": 0.017
+    },
+    "records": 8,
+    "basis": "the species' CC0 and CC BY records on the tile over client/habitat.png: share of records / share of land"
+   },
    "records": 28,
    "mass_source": "amniote life-history database (species)",
    "active_hours": [

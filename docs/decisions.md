@@ -7887,3 +7887,52 @@ or AVONET row, not a per-species patch.
 - **What is left after the gap rule.**
   - **San Francisco seam.** The two cells' seam has one crossing that alternating water re-runs don't settle: an unnamed stream at E 546,614, whose levels stay 1.06 m apart. There the north cell has the 1 m ground with the channel cut in, and the south cell has the fetched DEM without it (no road there). It is left for the water lane.
   - **Paved paths.** Footways and cycleways are still left out of the erase, so wide paved paths still show in San Francisco from the air (the Lake Merced loop).
+
+## 2026-11-08: the previous-vs-new comparison's defects fixed by rule (branch claude/sweet-feistel-2054bb)
+
+Aaron approved fixing what the El Dorado and Yosemite comparison turned up ("Yes, fix them"). Each fix is a rule, checked on both tiles at the comparison's poses (previous | new | fixed, notes `pipeline-compare/`), then on the regression probes.
+
+- **Black smears along big-river banks** (client/src/terrain.js). The near-bed rule draws a big river's bank (order 4 and up) as soil and litter from the soil-surface table's colours (`gapSoil`, `gapLitter`). That table was loaded only on a tile drawing bunchgrass tufts (Lamar, Teton), so on every other tile the bank read the uniforms' unset (0, 0, 0) and drew pitch black: El Dorado's Weber Creek, the Merced. The table now loads on every tile that has one, and the bank falls back to the photo's own colour when there is none. The tuft gap ground keeps its own tuft gate.
+- **Ground plants borrowed from another region need local records** (pipeline/species_mix.py `_local_ok`). A library card with its own `regions` list was written for a named region set. The Olympic grow's western sword fern and redwood sorrel list the Pacific Northwest and California, and a whole region is coarser than a plant's range: redwood sorrel is a coast-redwood plant. Both had entered every woodland and forest mix on El Dorado and Yosemite with the heaviest ground weights (densities 1.5 and 1.6 against California's ≤ 1). They drew as flat bright-green fern domes in the foothill pine savanna.
+  - Such a card is used on a tile only where GBIF has at least 3 records of it within 25 km over the presence years. Its weight is scaled by min(1, records / 30).
+  - An absence counts only where the area is well recorded: at least 5,000 vascular-plant records within 25 km. The Serengeti has 654 and its dominant red oat grass showed 0; Danum has 762 and Manu 193. El Dorado has 53,391 and the Hoh 26,619.
+  - El Dorado: redwood sorrel 0 records, dropped; sword fern 6, weight × 0.2. Yosemite: both 0, dropped.
+  - The same rule applies to every riparian tree and shrub, because a zone row holds the whole region's. Dropped:
+    - El Dorado: vine maple, black cottonwood, aspen, western red cedar, red alder, salmonberry, Sitka spruce.
+    - Yosemite: Fremont cottonwood, black walnut, sycamore, California rose, narrowleaf willow, California blackberry, western red cedar, red alder, salmonberry, Sitka spruce.
+    - The Hoh: arroyo willow, California rose, Pacific willow, narrowleaf willow (all 0 records). Calaveras: sword fern (2 records) and the California willows.
+  - A name GBIF cannot match is kept, since there is no evidence either way: blue elderberry's three-part id.
+  - The skipped and scaled cards are recorded in species_mix.json `local_records_skipped` and `local_records_scaled`.
+- **Deep-shade plants by the canopy's closure** (`species_mix.closure`, `SHADE_OBLIGATE` 0.9). A ground record wanting deep shade (habitat.shade ≥ 0.9) is weighted by its community's closure. The weight is multiplied by the square of the closure, so it falls off fast as the canopy opens. Closure is the mean over the structure words in the LANDFIRE name (savanna 0.2, woodland 0.5, forest 1.0: "Woodland and Savanna" 0.35, "Forest and Woodland" 0.75), else the habitat class. The foothill pine woodland and savanna is classed mixed_forest, and the ferns had carpeted it as if it were a closed forest floor.
+- **Riparian rows by elevation band** (species_mix.riparian_rows, client/src/tilepackage.js `ripRow`).
+  - **Problem.** The zone rows are one per zone × order × permanence for the whole region. So Yosemite Valley's banks at 1,200 m drew valley oak, black walnut, sycamore and Fremont cottonwood, the trees in front of Yosemite Falls at the meadow edge.
+  - **Rule.** With a tile, each row gets a `|<band>` copy for every elevation band the tile reaches. Its trees and shrubs go through the community rows' own band rule (`terrain_weights` on a floor cell of that band: ZONE_SUBST and TERRAIN's band factors).
+  - **Client.** WaterGrid.info now carries the ground's height, and ripRow takes the band row, else the plain one.
+  - **Result.** Yosemite Valley's terrace now draws willows, black cottonwood, bigleaf maple, Oregon ash and California black oak.
+- **No lying quad under a tall rosette** (forbs.js `TALL_ROSETTE` 0.35 m). A rosette's top view is laid on the ground at the picture box's width, 1.7 × its height: 2.5 m for a sword fern. That drew the flat green disc in the oak savanna. A rosette taller than 0.35 m keeps only its upright pictures; a short one (filaree) keeps the lying quad.
+- **Erect forbs drawn as stem clumps** (client/src/forbs.js). An erect forb was two upright stems carrying a column of same-size leaves; stinging nettle and mugwort on the Merced's bar read as beaded sticks. It is now 3-6 stems of several heights leaning out from the root. Leaves sit along each stem's curve, angled outward and alternating sides, largest at the base (up to 120 per picture).
+- **A common name is never a Latin epithet** (pipeline/fetch_species.py `common_name`; research.py and the inventory use it). GBIF's record for *Crotalus oreganus* carries the subspecies epithet "abyssus" as its vernacularName, and the northern Pacific rattlesnake was called "Abyssus" in the cast.
+  - **Rule.** A one-word name that is a Latin word of the species or of any of its subspecies (GBIF children) is refused, and the most cited English vernacular name is taken instead.
+  - **Trait cards.** Generated trait cards keep the research's name (fauna.py).
+  - **Rebuilt.** Every built tile's species and animals steps were re-run (18 tiles). The one-word names left are real ones: raccoon, ringtail, fisher, moose, pronghorn, bushtit, ocelot, serval, impala and the like. Where the English name is itself the epithet (orca, serval, anhinga), the next English name is taken (killer whale, serval cat, American anhinga).
+- **Yosemite's forest reads dark from above: investigated, not fixed.** The fair judge split by tree cover shows the open ground matching (38.6 against 38.9). The cells with 15-50 % trees render at 28.5 against 40.0, and the forest at 26.4 against 31.1.
+  - **Ruled out:**
+    - The drawn trees: hiding every tree layer leaves those cells at 30.0 and 28.1.
+    - Slope: their median is 2-4°, the valley floor.
+    - The riparian floor tint: inactive there (ripMix 0).
+    - The ground factor's shape. A brightness curve fitted on all the ground brought Yosemite to −3.1 L*, but moved Teton +4 and Lamar −2. One fitted on the canopy pixels only changed nothing, because by August's satellite the photo's canopy needs the same factor as the open ground (0.56 against 0.59). Both versions were reverted.
+  - **Data-only check.** The photo times the factor against June's composite is 0.74-0.80 in the canopied cells and about 1 on the open ground, so the photo and season account for about 3 L*.
+  - **Left.** About 7 L* is the render's shading of the photo's canopy on a tile whose crowns are not inpainted. Suspects to test next: the 35 % canopy sky occlusion and the near-tree contact AO.
+  - **El Dorado** stays 12-14 L* bright from above (its crowns), as before phase 1.
+- **Fair judge, top-down**, previous → new → fixed (overlap; render L* against fair L*):
+  - El Dorado: 0.303 (47.9/28.0) → 0.447 (49.8/35.9) → 0.447 (49.8/35.9).
+  - Yosemite: 0.513 (30.6/29.6) → 0.461 (31.9/37.8) → 0.465 (32.0/37.8).
+- **Regression probes** (tools/probes on this session's ports): all eight unchanged from the last baseline (overlap_fair and render L*):
+  - Serengeti 0.621 / 44.7; Lofoten 0.662 / 40.6; Danum 0.047 / 31.8; Manu 0.150 / 30.5.
+  - Teton 0.492 / 34.5; Grand Canyon 0.260 / 53.6; Corcovado 0.113 / 28.3; Lamar 0.360 / 46.4.
+  - 0 shader errors on every capture.
+- **Still open.**
+  - **Yosemite's canopied cells from above** (above).
+  - **Wet meadows as gallery forest.** Yosemite's wet meadows (El Capitan Meadow) draw as gallery forest: the water system's terrace zone gives them the riparian rows' trees at density 1.3. A meadow terrace should be sedges and grass.
+  - **Stray polygon.** A dark-green low-poly blob floats at the top left of the El Dorado town pose, the same in the new and fixed builds.
+  - **Camera inside a tree.** The fixed creek pose now has a riparian willow in front of the lens (the new mix moved the trees), so a second creek pose (c4) is shown too.
