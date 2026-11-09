@@ -8394,3 +8394,31 @@ shared point straight away from the threat, so the herd funnelled into it.
   - Trails show on level 0 of the ground texture only, so out to about 3 km.
   - A herd's goal on a mirror is the host's mean, so a split on the host shows on a mirror only as each page's own
     steering lets it.
+
+## 2026-11-08: the ghost roads as a hologram (roadsOverlay.js)
+
+The `G` overlay drew the present-day roads as 1-pixel lines, hard to see. Aaron asked for "a very simple polygonal
+hologram of the road system".
+
+- **Ribbons.** Each road is a flat ribbon at its paved width (pipeline/unroad.py HALF_WIDTH, copied into the client),
+  draped on `heights.at` and lifted 0.7 m. Samples every 15 m, halved down to 2 m where the ground at the centre or
+  either edge strays more than 0.25 m from the straight line, so a ribbon follows a crown or a gully instead of
+  cutting through it. Mitred joints, capped at twice the half-width so a hairpin throws no spike. Clipped to the tile:
+  ways that run off it no longer stand on the clamped edge heights.
+- **The hologram.** One unlit ShaderMaterial on one mesh, one draw call (`forceSinglePass`: three draws a transparent
+  double-sided material twice). A translucent cyan-teal fill, a hairline at each edge from the across coordinate, a
+  faint pulse running along each road (a per-road phase so they do not march in step), brighter with distance so the
+  network reads from the air and stays faint underfoot. Major roads greener and brighter. Two vertex attributes:
+  position and aRib (across, along, major).
+  - **Normal blending, not additive.** Over the pale sky and haze an additive cyan washed out to white.
+  - **Pulled toward the camera.** Each vertex moves along its own view ray by 1.5 % of its distance (at most 60 m), so
+    from the air a ribbon is not lost under the coarse far terrain or the canopy, with its place on screen unchanged.
+- **Unchanged.** The name sprites, the `G` toggle, `roads.group.visible` (the present-day peek), hidden by default,
+  and the arrays released after upload (gpuRelease.js).
+- **Seen** (headless Chrome, ANGLE Metal, M1 Pro, load 8-12). Home (1,030 roads): 71,712 vertices, about 70k
+  triangles, one draw call plus the labels in view. Lamar: 2,512 vertices. From 1.5 km over home every road can be
+  traced and US-50 stands out; beside a road at 2.5 m the ribbon is a faint teal sheet with bright edges.
+  - **Cost.** The overlay alone under a timer query: p10 0.65 ms from the air, 0.06 ms on the ground. In whole
+    frames on and off the difference was within the noise at that load. Nothing is drawn while it is hidden.
+- **Open.** The pulse was not judged in motion, only in stills. The headless captures drew the trees white and the
+  view from the air very pale, as without the overlay; worth a look on a normal screen.
