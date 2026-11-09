@@ -8493,3 +8493,14 @@ and fails over 64 KB. The form a joiner arrives in is a separate change (group f
   - **How:** `setMenu` in main.js sends a `we-menu` event, and the overlay listens for it. Because the listener is added while the world is being built, it is recorded and removed with the world, like G's.
   - **On close:** if the roads were hidden before the menu opened, they hide again when it closes. If they were already on, they stay on.
   - **G in the meantime:** pressing G while the menu is open makes it the player's choice, and closing the menu leaves the roads as G set them.
+
+## 2026-11-08: the join cards (branch claude/join-as-species)
+
+Aaron: "This should be a card instead. Tile name, followed by stacking user icons that eventually truncate into a number"
+and "With a join button on the right". Details in docs/multiplayer.md "The join cards".
+- **One card per place**, not one pill for the busiest place: members split over two tiles can each be joined.
+- **The button joins, the card does not**: a compact orange Join on the right is the one control, as Aaron corrected; the
+  body stays inert so a stray click on the wisps does not travel.
+- **The cutoff follows the panel's width** (3, 4 or 5 slots; the last one becomes +N), not a fixed number.
+- **The body's face from the stills already shipped** for the species chips, so no new images; none for the spirit.
+

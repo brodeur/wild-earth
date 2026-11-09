@@ -849,6 +849,31 @@ Join, the home screen's rings, already in the tile).
   host keeps running it is the shared animals' question (the Big herds lane is in animalNet.js). The flier model raises a
   slower speed to 0.8 of its cruise.
 
+### The join cards
+
+Aaron, 2026-11-08, of the group chat's full-width orange "Join aaron in Fossil Forest" pill: "This should be a card
+instead. Tile name, followed by stacking user icons that eventually truncate into a number", then "With a join button on
+the right". **Built (same branch)** in `client/src/social.js` (`placesOf`, `joinCards`) and `client/social.css`
+(`.so-jcard` and its parts; the old `.so-cta` rules removed):
+- One card per tile the group's other members are in (the player's own world left out), the most members first, in the
+  group cards' style (a dark rounded panel, the hairline border). Before, the pill named only the tile with the most of
+  them, so members on a second tile could not be joined from the chat.
+- Left: the place's name (cut with an ellipsis when long), under it the members' wisps overlapping, each with the still
+  of the body they wear or chose on that tile in its corner (the hub's bodies and the stills' index; the spirit and a
+  species with no still show none), the rest as "+N" once more than fit: 4 in the 340 px panel (3 under 300 px, 5 from
+  380 px), so 3 wisps and +N when there are more than 4. Names in each wisp's title and the card's label.
+- Right: Join, compact, in the panel's orange with the paper-plane icon, a hover brightening, a press shrink and a focus
+  ring; it is the only control (a native button: Tab and Enter work). It does what the pill did (`together`: the earth
+  chooses the place, a world switches to it). The card body is inert.
+- The slot's HTML is kept while unchanged, so a focused Join stays focused as the chat re-renders.
+- **Checked** in headless Chrome on the local hub (127.0.0.1, test accounts follow_a and follow_c to follow_j in one group,
+  held in tile rooms by a script): one member (one wisp), three (three overlapping), eight on two tiles (El Dorado: 3
+  wisps and +4; Placerville: 2, one wearing a coyote), a 48-character place name (cut, the wisps and Join kept in place),
+  a 390 px phone screen, a real mouse click on Placerville's Join (the earth chose Placerville) and Enter on El Dorado's
+  focused Join (it chose El Dorado). Captures: join-as-species-captures/join_card_*.jpg in the side-session notes, with
+  the old pill beside the new cards. Not checked: the face stills for every species (those with a still in the index
+  show), a touch press.
+
 ## Group season
 
 Aaron, 2026-11-06: "If one player changes the season, it changes for everyone in the group."
