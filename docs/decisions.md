@@ -8464,4 +8464,4 @@ the room left after the spawns and herd rows, so a large backlog goes over more 
 into parts (a mirror applies rows as they come), and nothing over is ever sent. Rejected: raising the server's limit
 (it is a guard against misbehaving clients, and a later, bigger world would cross any new limit) and cutting what a
 joiner is sent (the joiner needs the fields to see the same trails). A test drives the encoder against a fake socket
-and fails over 64 KB. The spirit on Join is the documented behaviour and stays.
+and fails over 64 KB. The form a joiner arrives in is a separate change (group follow), not this one.

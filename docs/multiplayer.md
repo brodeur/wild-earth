@@ -709,8 +709,6 @@ one by one: at the stream's 24 KB/s cap they would crowd out everything else. Th
     code lost the host's socket at 3,366), and Lamar in summer with 57,951. Each time A stayed host with no reconnect,
     its largest message was 53,996-54,044 characters, the whole backlog drained, the server logged no host move, and B
     was a mirror of all of A's animals: 967 and 971 on home (61 herds), 656 on Lamar (93 herds).
-  - **The spirit on Join is as the doc says** (item 9 above, Group follow): a joiner arrives in spirit form behind the
-    one who asked, whatever form that player is in. Not changed.
   - **Nothing keys on the address.** Two computers on one network or mesh are two pages to the game: the animals
     channel is a world per tile and season, the host chosen by page (`pg`, server.py `host_of`). hub.py reads the client
     address only for sign-up, sign-in and recovery limits. The invitation carries the inviter's tile and season, so a
