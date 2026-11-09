@@ -61,6 +61,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Sciuridae",
    "active_hours": [
     0,
     0,
@@ -116,6 +117,12 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Bovidae",
+   "model": {
+    "path": "fauna/ovis_canadensis.glb",
+    "kind": "quadruped",
+    "skin": true
+   },
    "active_hours": [
     0,
     0,
@@ -173,6 +180,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Tayassuidae",
    "active_hours": [
     0,
     1,
@@ -213,9 +221,9 @@
    "common": "Cliff chipmunk",
    "one": "cliff chipmunk",
    "many": "cliff chipmunks",
-   "kin": "sciurus_griseus",
-   "archetype": "tree squirrel",
-   "scale": 0.491,
+   "kin": "microtus_californicus",
+   "archetype": "small rodent",
+   "scale": 1.211,
    "tint": null,
    "mass_kg": 0.071,
    "density_km2": 693.582,
@@ -230,6 +238,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Sciuridae",
    "active_hours": [
     0,
     0,
@@ -286,6 +295,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Leporidae",
    "active_hours": [
     0,
     0,
@@ -343,6 +353,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Sciuridae",
    "active_hours": [
     0,
     0,
@@ -400,6 +411,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Procyonidae",
    "active_hours": [
     1,
     1,
@@ -457,6 +469,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Cricetidae",
    "active_hours": [
     1,
     1,
@@ -514,6 +527,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Heteromyidae",
    "active_hours": [
     1,
     1,
@@ -571,6 +585,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Sciuridae",
    "active_hours": [
     0,
     0,
@@ -626,6 +641,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Cricetidae",
    "active_hours": [
     0,
     0,
@@ -683,6 +699,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Leporidae",
    "active_hours": [
     0,
     0,
@@ -740,6 +757,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Cricetidae",
    "active_hours": [
     1,
     1,
@@ -797,6 +815,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Geomyidae",
    "active_hours": [
     0,
     0,
@@ -837,9 +856,9 @@
    "common": "Uinta chipmunk",
    "one": "uinta chipmunk",
    "many": "uinta chipmunks",
-   "kin": "sciurus_griseus",
-   "archetype": "tree squirrel",
-   "scale": 0.472,
+   "kin": "microtus_californicus",
+   "archetype": "small rodent",
+   "scale": 1.163,
    "tint": null,
    "mass_kg": 0.063,
    "density_km2": 253.71,
@@ -854,6 +873,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Sciuridae",
    "active_hours": [
     0,
     0,
@@ -912,6 +932,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Cricetidae",
    "active_hours": [
     1,
     1,
@@ -970,6 +991,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Cricetidae",
    "active_hours": [
     1,
     1,
@@ -1028,6 +1050,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Cathartidae",
    "flightless": false,
    "lifestyle": "Terrestrial",
    "kin_source": "avonet (species)",
@@ -1088,6 +1111,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Paridae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -1131,15 +1155,15 @@
    "common": "Woodhouse's scrub-jay",
    "one": "woodhouse's scrub-jay",
    "many": "woodhouse's scrub-jays",
-   "kin": "corvus_corax",
-   "archetype": "corvid",
-   "scale": 0.441,
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 0.951,
    "tint": null,
    "mass_kg": 0.103,
    "density_km2": 37.2065,
    "group": [
     1,
-    3
+    6
    ],
    "bird": true,
    "night": false,
@@ -1148,6 +1172,7 @@
     "omnivore"
    ],
    "known": [],
+   "family": "Corvidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (genus)",
@@ -1206,6 +1231,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Accipitridae",
    "flightless": false,
    "lifestyle": "Aerial",
    "kin_source": "avonet (species)",
@@ -1266,6 +1292,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Turdidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -1326,6 +1353,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Falconidae",
    "flightless": false,
    "lifestyle": "Aerial",
    "kin_source": "avonet (species)",
@@ -1386,6 +1414,7 @@
     "omnivore"
    ],
    "known": [],
+   "family": "Sittidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -1446,6 +1475,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Sittidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -1506,6 +1536,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Paridae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -1566,6 +1597,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Picidae",
    "flightless": false,
    "lifestyle": "Generalist",
    "kin_source": "avonet (species)",
@@ -1626,6 +1658,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Hirundinidae",
    "flightless": false,
    "lifestyle": "Aerial",
    "kin_source": "avonet (species)",
@@ -1686,6 +1719,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Apodidae",
    "flightless": false,
    "lifestyle": "Aerial",
    "kin_source": "avonet (species)",
@@ -1746,6 +1780,7 @@
     "omnivore"
    ],
    "known": [],
+   "family": "Passerellidae",
    "flightless": false,
    "lifestyle": "Generalist",
    "kin_source": "avonet (species)",
@@ -1806,6 +1841,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Troglodytidae",
    "flightless": false,
    "lifestyle": "Terrestrial",
    "kin_source": "avonet (species)",
@@ -1859,15 +1895,15 @@
    "common": "Golden eagle",
    "one": "golden eagle",
    "many": "golden eagles",
-   "kin": "cathartes_aura",
-   "archetype": "soaring scavenger",
-   "scale": 1.385,
+   "kin": "buteo_jamaicensis",
+   "archetype": "soaring raptor",
+   "scale": 1.569,
    "tint": null,
    "mass_kg": 4.248,
    "density_km2": 0.169,
    "group": [
     1,
-    8
+    3
    ],
    "bird": true,
    "night": false,
@@ -1877,12 +1913,19 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Accipitridae",
    "flightless": false,
    "lifestyle": "Aerial",
    "kin_source": "avonet (species)",
    "hand_wing_index": 36.7,
    "habitat": "Grassland",
    "habitat_density": 3,
+   "model": {
+    "path": "fauna/aquila_chrysaetos.glb",
+    "kind": "bird",
+    "archetype": "soar",
+    "skin": false
+   },
    "active_hours": [
     0,
     1,
@@ -1937,6 +1980,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Aegithalidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -1997,6 +2041,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Troglodytidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -2057,6 +2102,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Icteridae",
    "flightless": false,
    "lifestyle": "Terrestrial",
    "kin_source": "avonet (species)",
@@ -2127,6 +2173,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Parulidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -2187,6 +2234,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Accipitridae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -2247,6 +2295,7 @@
     "omnivore"
    ],
    "known": [],
+   "family": "Sittidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -2307,6 +2356,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Fringillidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -2350,15 +2400,15 @@
    "common": "Clark's nutcracker",
    "one": "clark's nutcracker",
    "many": "clark's nutcrackers",
-   "kin": "corvus_corax",
-   "archetype": "corvid",
-   "scale": 0.476,
+   "kin": "cyanocitta_stelleri",
+   "archetype": "perching bird",
+   "scale": 1.027,
    "tint": null,
    "mass_kg": 0.13,
    "density_km2": 33.9454,
    "group": [
     1,
-    3
+    6
    ],
    "bird": true,
    "night": false,
@@ -2368,6 +2418,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Corvidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -2404,11 +2455,350 @@
    "behaviour_sources": [
     "eltontraits (activity)"
    ]
+  },
+  {
+   "code": "sceloporus_tristichus",
+   "scientific": "Sceloporus tristichus",
+   "common": "Plateau fence lizard",
+   "one": "plateau fence lizard",
+   "many": "plateau fence lizards",
+   "kin": "sceloporus_occidentalis",
+   "archetype": "basking lizard",
+   "scale": 0.821,
+   "tint": null,
+   "mass_kg": 0.008,
+   "density_km2": 1090.9697,
+   "group": [
+    1,
+    3
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [],
+   "known": [],
+   "family": "Phrynosomatidae",
+   "reptile": "bask",
+   "records": 482,
+   "pushup": true,
+   "mass_source": "amniote life-history database (species)",
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "uta_stansburiana",
+   "scientific": "Uta stansburiana",
+   "common": "Side-blotched lizard",
+   "one": "side-blotched lizard",
+   "many": "side-blotched lizards",
+   "kin": "sceloporus_occidentalis",
+   "archetype": "basking lizard",
+   "scale": 0.621,
+   "tint": null,
+   "mass_kg": 0.004,
+   "density_km2": 2000.0,
+   "group": [
+    1,
+    3
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [],
+   "known": [],
+   "family": "Phrynosomatidae",
+   "reptile": "bask",
+   "records": 418,
+   "pushup": true,
+   "mass_source": "amniote life-history database (species)",
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "sceloporus_magister",
+   "scientific": "Sceloporus magister",
+   "common": "Desert spiny lizard",
+   "one": "desert spiny lizard",
+   "many": "desert spiny lizards",
+   "kin": "sceloporus_occidentalis",
+   "archetype": "basking lizard",
+   "scale": 1.329,
+   "tint": null,
+   "mass_kg": 0.035,
+   "density_km2": 369.1597,
+   "group": [
+    1,
+    3
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [],
+   "known": [],
+   "family": "Phrynosomatidae",
+   "reptile": "bask",
+   "records": 285,
+   "pushup": true,
+   "mass_source": "amniote life-history database (species)",
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "urosaurus_ornatus",
+   "scientific": "Urosaurus ornatus",
+   "common": "Ornate tree lizard",
+   "one": "ornate tree lizard",
+   "many": "ornate tree lizards",
+   "kin": "sceloporus_occidentalis",
+   "archetype": "basking lizard",
+   "scale": 0.633,
+   "tint": null,
+   "mass_kg": 0.004,
+   "density_km2": 1960.124,
+   "group": [
+    1,
+    3
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [],
+   "known": [],
+   "family": "Phrynosomatidae",
+   "reptile": "bask",
+   "records": 282,
+   "pushup": true,
+   "mass_source": "amniote life-history database (species)",
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "aspidoscelis_tigris",
+   "scientific": "Aspidoscelis tigris",
+   "common": "Tiger whiptail",
+   "one": "tiger whiptail",
+   "many": "tiger whiptails",
+   "kin": "sceloporus_occidentalis",
+   "archetype": "basking lizard",
+   "scale": 1.051,
+   "tint": null,
+   "mass_kg": 0.017,
+   "density_km2": 626.1946,
+   "group": [
+    1,
+    3
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [],
+   "known": [],
+   "family": "Teiidae",
+   "reptile": "bask",
+   "records": 134,
+   "mass_source": "amniote life-history database (species)",
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
+  },
+  {
+   "code": "dryophytes_arenicolor",
+   "scientific": "Dryophytes arenicolor",
+   "common": "Canyon treefrog",
+   "one": "canyon treefrog",
+   "many": "canyon treefrogs",
+   "kin": "plethodon_vehiculum",
+   "archetype": "amphibian",
+   "scale": 1.882,
+   "tint": null,
+   "mass_kg": 0.02,
+   "density_km2": 50.0,
+   "group": [
+    1,
+    3
+   ],
+   "bird": false,
+   "night": false,
+   "water": false,
+   "role": [],
+   "known": [],
+   "family": "Hylidae",
+   "active_hours": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "rest": "lie",
+   "behaviour_sources": [
+    "eltontraits (activity)"
+   ]
   }
  ],
  "skipped": [
   {
    "id": "myotis_californicus",
+   "scientific": "Myotis californicus",
+   "common": "california myotis",
    "why": "no rig for Chiroptera"
   },
   {
@@ -2444,48 +2834,24 @@
    "why": "over the 40-slot cap"
   },
   {
-   "id": "sceloporus_tristichus",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "uta_stansburiana",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "sceloporus_magister",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "urosaurus_ornatus",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "aspidoscelis_tigris",
-   "why": "over the 40-slot cap"
-  },
-  {
-   "id": "dryophytes_arenicolor",
-   "why": "over the 40-slot cap"
-  },
-  {
    "id": "anaxyrus_punctatus",
-   "why": "over the 40-slot cap"
+   "why": "over the 6-slot cap"
   },
   {
    "id": "anaxyrus_woodhousii",
-   "why": "over the 40-slot cap"
+   "why": "over the 6-slot cap"
   },
   {
    "id": "oreohelix_yavapai",
-   "why": "over the 40-slot cap"
+   "why": "over the 6-slot cap"
   },
   {
    "id": "sonorella_coloradoensis",
-   "why": "over the 40-slot cap"
+   "why": "over the 6-slot cap"
   },
   {
    "id": "ambystoma_tigrinum",
-   "why": "over the 40-slot cap"
+   "why": "over the 6-slot cap"
   }
  ],
  "rules": "pipeline/fauna_slots.py: kin by taxonomy, diet and mass (a bird's by AVONET's lifestyle and flightlessness); scale = (mass / kin mass)^(1/3), 0.25-4; density Damuth 1981 (herbivores; large ones times HERBIVORE_PRODUCTIVITY of the tile's ecosystem), 30 / mass kg (carnivores), birds 15 m^-0.4 (cap 70) or 0.5 m^-0.75 (raptors), or PanTHERIA's measured density; behaviour() for the hours about, rest posture and group",

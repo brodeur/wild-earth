@@ -66,7 +66,7 @@ def _bbox(tile: Tile) -> dict:
 
 def _facet(tile: Tile, rank: str, key: int, limit: int) -> list[dict]:
     """The species GBIF has most records of on the tile in a taxon: [{gbif_key, scientific, records, taxonomy}]."""
-    from .fetch_species import _q
+    from .fetch_species import _q, common_name
     r = _q(tile, "occurrence/search", {**_bbox(tile), rank: key, "limit": 0, "facet": "speciesKey", "facetLimit": limit})
     out = []
     for fac in r.get("facets", []):
@@ -75,7 +75,7 @@ def _facet(tile: Tile, rank: str, key: int, limit: int) -> list[dict]:
             sci = sp.get("canonicalName") or sp.get("scientificName")
             if not sci:
                 continue
-            out.append({"gbif_key": int(c["name"]), "scientific": sci, "common": (sp.get("vernacularName") or "").lower() or None,
+            out.append({"gbif_key": int(c["name"]), "scientific": sci, "common": common_name(sp),
                         "records": c["count"], "taxonomy": {k: sp.get(k) for k in ("kingdom", "phylum", "class", "order", "family", "genus")}})
     return out
 

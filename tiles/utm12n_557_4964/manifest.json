@@ -15,7 +15,7 @@
   44.9171452371748
  ],
  "size_m": 10000,
- "generated_at": "2026-11-08T04:30:35Z",
+ "generated_at": "2026-11-09T05:18:55Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -5301,8 +5301,8 @@
     "rows_with_herb_cover": 3,
     "evh_synthetic": false
    },
-   "sha256": "0274c3eff1a78681107d7fb74429f759e1358f0bdf752954986845880af9c4b7",
-   "bytes": 75015
+   "sha256": "d76f1196b903cb8b6bc8352042dfa1315d55da81df1fae1e84187422ce27f8c9",
+   "bytes": 80959
   },
   "client.canopy_top": {
    "path": "client/canopy_top.png",
@@ -5519,8 +5519,8 @@
    "path": "species/inventory.json",
    "kind": "table",
    "source": "gbif",
-   "sha256": "9ebd3a24fdf3e14ab36e8f7f732f1ae7154a078e10721992455cbc44afedfdf6",
-   "bytes": 41113
+   "sha256": "0b3b2dfb86559b743d76a5cb6bf13e722a41e5cd1f3f473054610557e9417a0b",
+   "bytes": 41119
   },
   "perception": {
    "path": "perception.json",
@@ -5618,7 +5618,7 @@
    "generated_traits": 0,
    "queued": 51,
    "queued_credits": 1515,
-   "sha256": "23b0e9b9924274be2189662396a8c85448ebc6f1cbf1c2c07fd59836536aa07f",
+   "sha256": "73a7d84b71a6182e68e8978343c82e8263e072ee3ca1d575c9e2340689184aa7",
    "bytes": 117915
   },
   "client.fauna": {
@@ -5807,11 +5807,11 @@
    "path": "species/registry.json",
    "kind": "table",
    "plants": 56,
-   "animals_present": 82,
+   "animals_present": 83,
    "animals_queued": 51,
    "cards_queued": 11,
-   "sha256": "c346670c18a46628ad9a46b8182d196403925ece70d647420fa3278c06773272",
-   "bytes": 81849
+   "sha256": "e5509936f96a4f02020aecee68539765915875bfe8f5a629d68bcf0eb208fecf",
+   "bytes": 82117
   },
   "species.ground": {
    "path": "species/ground.json",
@@ -6823,7 +6823,7 @@
    "attribution": "Species occurrences: GBIF.org and its contributing datasets, including iNaturalist and eBird (CC0, CC BY 4.0 or CC BY-NC 4.0 per record)",
    "attribution_url": "https://www.gbif.org/",
    "attribution_required": true,
-   "retrieved": "2026-11-07"
+   "retrieved": "2026-11-09"
   },
   "eltontraits": {
    "name": "EltonTraits 1.0: species-level foraging attributes of the world's birds and mammals",
@@ -8486,27 +8486,75 @@
    "ok": true
   },
   {
-   "step": "herds",
-   "at": "2026-11-08T02:00:17Z",
-   "seconds": 0.8,
+   "step": "ground_albedo",
+   "at": "2026-11-09T04:05:58Z",
+   "seconds": 1.7,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-09T04:05:59Z",
+   "seconds": 1.6,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-09T04:07:16Z",
+   "seconds": 1.7,
+   "ok": true
+  },
+  {
+   "step": "species",
+   "at": "2026-11-09T04:20:50Z",
+   "seconds": 73.8,
    "ok": true
   },
   {
    "step": "animals",
-   "at": "2026-11-08T03:41:25Z",
-   "seconds": 169.7,
+   "at": "2026-11-09T04:21:03Z",
+   "seconds": 12.1,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-09T04:23:41Z",
+   "seconds": 1.9,
+   "ok": true
+  },
+  {
+   "step": "ground_albedo",
+   "at": "2026-11-09T04:28:29Z",
+   "seconds": 3.9,
+   "ok": true
+  },
+  {
+   "step": "ground_albedo",
+   "at": "2026-11-09T04:35:19Z",
+   "seconds": 2.5,
+   "ok": true
+  },
+  {
+   "step": "ground_albedo",
+   "at": "2026-11-09T04:44:31Z",
+   "seconds": 4.7,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-09T05:18:39Z",
+   "seconds": 1.2,
    "ok": true
   },
   {
    "step": "herds",
-   "at": "2026-11-08T04:29:23Z",
-   "seconds": 2.7,
+   "at": "2026-11-09T05:18:54Z",
+   "seconds": 14.3,
    "ok": true
   },
   {
-   "step": "herds",
-   "at": "2026-11-08T04:30:35Z",
-   "seconds": 2.8,
+   "step": "registry",
+   "at": "2026-11-09T05:18:55Z",
+   "seconds": 0.8,
    "ok": true
   }
  ],
@@ -9497,14 +9545,14 @@
   },
   "species_mix": {
    "version": "5",
-   "code": "554d32428bd3bffb",
+   "code": "b6309b97e89defac",
    "params": {
     "tile": "utm12n_557_4964"
    },
-   "fingerprint": "24a77434af6194cd",
+   "fingerprint": "e9e8ab22b57c0e45",
    "parts": {
     "version": "5",
-    "code": "554d32428bd3bffb",
+    "code": "b6309b97e89defac",
     "params": {
      "tile": "utm12n_557_4964"
     },
@@ -9519,18 +9567,18 @@
      "library/species": "b535f4af1995d848"
     }
    },
-   "ran_at": "2026-11-07T17:03:28Z",
+   "ran_at": "2026-11-09T04:23:39Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "client.species_mix"
    ],
    "outputs": {
-    "client/species_mix.json": "0274c3eff1a78681",
+    "client/species_mix.json": "d76f1196b903cb8b",
     "client/species_mix_index.png": "04ca9d6cb8ba6a21",
     "client/species_mix_density.png": "7ab67ff08808db52"
    },
-   "out_hash": "65f4c273d6df66f4",
+   "out_hash": "5cce145be4cffd82",
    "sources": {},
    "fallbacks": [
     {
@@ -9596,7 +9644,7 @@
     "network": 0,
     "cache": 58
    },
-   "seconds": 1.2
+   "seconds": 1.9
   },
   "canopy_top": {
    "version": "2",
@@ -9729,14 +9777,14 @@
   },
   "species": {
    "version": "1",
-   "code": "348c8d8fad9668bb",
+   "code": "dd97a2c525e7d328",
    "params": {
     "tile": "utm12n_557_4964"
    },
-   "fingerprint": "1c6e08977741305d",
+   "fingerprint": "09e15ba0ee2e73c6",
    "parts": {
     "version": "1",
-    "code": "348c8d8fad9668bb",
+    "code": "dd97a2c525e7d328",
     "params": {
      "tile": "utm12n_557_4964"
     },
@@ -9748,7 +9796,7 @@
      "library/animals": "997e0be94296d338"
     }
    },
-   "ran_at": "2026-11-07T17:38:05Z",
+   "ran_at": "2026-11-09T04:19:37Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -9766,38 +9814,38 @@
     "client/species_prior.json": "c637de5ac9aa9d4d",
     "locomotion.json": "4dc58f00c0726431",
     "perception.json": "046ec09de01dd039",
-    "species/inventory.json": "9ebd3a24fdf3e14a",
+    "species/inventory.json": "0b3b2dfb86559b74",
     "species/species.json": "2eed330855ecd391",
     "species/occurrences.geojson": "11bf55fb4b3a5de3",
     "species/seasonal.json": "126cc75bfd7814fd"
    },
-   "out_hash": "4df349998621b6ac",
+   "out_hash": "627cde3149ebf871",
    "sources": {
-    "gbif": "2026-11-07"
+    "gbif": "2026-11-09"
    },
    "fallbacks": [],
    "notes": [],
    "fetched": {
-    "network": 0,
-    "cache": 347
+    "network": 80,
+    "cache": 473
    },
-   "seconds": 2.3
+   "seconds": 73.8
   },
   "animals": {
    "version": "7",
-   "code": "58419a90eb822306",
+   "code": "b5076af81038421e",
    "params": {
     "tile": "utm12n_557_4964"
    },
-   "fingerprint": "ac8f72e05a81a9dc",
+   "fingerprint": "d05aa2f61580d5ba",
    "parts": {
     "version": "7",
-    "code": "58419a90eb822306",
+    "code": "b5076af81038421e",
     "params": {
      "tile": "utm12n_557_4964"
     },
     "deps": {
-     "species": "4df349998621b6ac",
+     "species": "627cde3149ebf871",
      "plants": "69b6f49c83c118ca"
     },
     "library": {
@@ -9805,7 +9853,7 @@
      "data/eltontraits": "e3b0c44298fc1c14"
     }
    },
-   "ran_at": "2026-11-08T03:38:36Z",
+   "ran_at": "2026-11-09T05:18:38Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -9814,20 +9862,20 @@
    ],
    "outputs": {
     "client/fauna.json": "3a1b8c784064cd63",
-    "species/animals.json": "23b0e9b9924274be"
+    "species/animals.json": "73a7d84b71a6182e"
    },
-   "out_hash": "6f419d1866d8470a",
+   "out_hash": "14b9d028fc45c28a",
    "sources": {
-    "gbif": "2026-11-07",
+    "gbif": "2026-11-09",
     "eltontraits": "2026-11-06"
    },
    "fallbacks": [],
    "notes": [],
    "fetched": {
-    "network": 203,
-    "cache": 1
+    "network": 0,
+    "cache": 406
    },
-   "seconds": 169.7
+   "seconds": 1.2
   },
   "stills": {
    "version": "1",
@@ -9994,39 +10042,39 @@
   },
   "registry": {
    "version": "1",
-   "code": "2acf81ad92b05142",
+   "code": "aaa2eb8ec5223446",
    "params": {
     "tile": "utm12n_557_4964"
    },
-   "fingerprint": "9d6110be7b7d4474",
+   "fingerprint": "0694518a11d71146",
    "parts": {
     "version": "1",
-    "code": "2acf81ad92b05142",
+    "code": "aaa2eb8ec5223446",
     "params": {
      "tile": "utm12n_557_4964"
     },
     "deps": {
      "plants": "69b6f49c83c118ca",
-     "species_mix": "12f2881c1c72b720",
-     "species": "a3d86215f02a443f",
-     "animals": "e085c7a03a236b3e"
+     "species_mix": "5cce145be4cffd82",
+     "species": "627cde3149ebf871",
+     "animals": "14b9d028fc45c28a"
     },
     "library": {
      "library/species": "b535f4af1995d848",
-     "library/animals": "997e0be94296d338",
+     "library/animals": "934e6c71aae6cd14",
      "library/plant_cards": "ae2c66fc7e6e53d9"
     }
    },
-   "ran_at": "2026-11-07T07:23:32Z",
+   "ran_at": "2026-11-09T05:18:54Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "species.registry"
    ],
    "outputs": {
-    "species/registry.json": "c346670c18a46628"
+    "species/registry.json": "e5509936f96a4f02"
    },
-   "out_hash": "16551077c795b91a",
+   "out_hash": "d7cca92938daa329",
    "sources": {},
    "fallbacks": [],
    "notes": [],
@@ -10034,7 +10082,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 0.6
+   "seconds": 0.8
   },
   "audit": {
    "version": "1",
@@ -10213,7 +10261,7 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T17:18:14Z",
+   "ran_at": "2026-11-09T04:44:27Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -10230,7 +10278,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 1.5
+   "seconds": 4.7
   },
   "territories": {
    "version": "1",
@@ -10311,19 +10359,19 @@
   },
   "herds": {
    "version": "2",
-   "code": "4abf4771b1f2b392",
+   "code": "8e916baca5fae832",
    "params": {
     "tile": "utm12n_557_4964"
    },
-   "fingerprint": "c7ab54d528eba4ee",
+   "fingerprint": "e359d3b8d1f166e7",
    "parts": {
     "version": "2",
-    "code": "4abf4771b1f2b392",
+    "code": "8e916baca5fae832",
     "params": {
      "tile": "utm12n_557_4964"
     },
     "deps": {
-     "animals": "6f419d1866d8470a",
+     "animals": "14b9d028fc45c28a",
      "resources": "5aabea24b5a5a3b9",
      "terrain": "bf6238ba2bb24451"
     },
@@ -10331,7 +10379,7 @@
      "library/herds": "b06c0c2e727e4e77"
     }
    },
-   "ran_at": "2026-11-08T04:30:33Z",
+   "ran_at": "2026-11-09T05:18:39Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -10345,10 +10393,10 @@
    "fallbacks": [],
    "notes": [],
    "fetched": {
-    "network": 0,
-    "cache": 13
+    "network": 11,
+    "cache": 0
    },
-   "seconds": 2.8
+   "seconds": 14.3
   }
  },
  "seams": {

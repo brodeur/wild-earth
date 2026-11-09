@@ -239,6 +239,12 @@ def animal_research(tile: Tile) -> dict:
                 write_json(p, make_traits(r))
                 generated.append(r["id"])
             r["traits"] = f"library/animals/traits/{r['id']}.json"
+        tp = TRAITS / f"{r['id']}.json"
+        if r.get("common") and tp.exists() and k.get("traits") and not (k.get("library") or k.get("species_data")):
+            card = json.loads(tp.read_text())   # a generated card keeps the research's name (fetch_species.common_name)
+            if card.get("common") != r["common"]:
+                card["common"] = r["common"]
+                write_json(tp, card)
         if not k.get("mesh"):
             plan = body_plan(r.get("taxonomy") or {}) if r.get("taxonomy") else "quadruped"
             rig, est = PLANS.get(plan, ("?", 30))

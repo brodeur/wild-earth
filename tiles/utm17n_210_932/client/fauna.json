@@ -1840,15 +1840,15 @@
    "common": "Spotted sandpiper",
    "one": "spotted sandpiper",
    "many": "spotted sandpipers",
-   "kin": "callipepla_californica",
-   "archetype": "ground bird",
-   "scale": 0.608,
+   "kin": "ardea_herodias",
+   "archetype": "shorebird",
+   "scale": 0.264,
    "tint": null,
    "mass_kg": 0.04,
    "density_km2": 54.1426,
    "group": [
-    3,
-    12
+    1,
+    8
    ],
    "bird": true,
    "night": false,
@@ -1856,7 +1856,9 @@
    "role": [
     "insectivore"
    ],
-   "known": [],
+   "known": [
+    "a shorebird on the heron's water-edge machine: the heron's slow walk and wingbeat"
+   ],
    "family": "Scolopacidae",
    "flightless": false,
    "lifestyle": "Terrestrial",
@@ -1864,16 +1866,6 @@
    "hand_wing_index": 47.5,
    "habitat": "Wetland",
    "habitat_density": 3,
-   "gait": {
-    "walk_mps": 0.55,
-    "cruise_mps": 1.65,
-    "top_mps": 2.75,
-    "stride_m": 0.18,
-    "sprint_s": 1.7,
-    "speed_k": 0.705,
-    "stride_k": 0.562,
-    "source": "trait card locomotion over callipepla_californica's (pipeline/locomotion.py)"
-   },
    "active_hours": [
     0,
     0,
@@ -2806,58 +2798,86 @@
  "skipped": [
   {
    "id": "tursiops_truncatus",
-   "why": "no rig for Cetacea"
+   "scientific": "Tursiops truncatus",
+   "common": "common bottlenose dolphin",
+   "why": "no stand-in: marine"
   },
   {
    "id": "artibeus_watsoni",
+   "scientific": "Artibeus watsoni",
+   "common": "thomas's fruit-eating bat",
    "why": "no rig for Chiroptera"
   },
   {
    "id": "artibeus_lituratus",
+   "scientific": "Artibeus lituratus",
+   "common": "great fruit-eating bat",
    "why": "no rig for Chiroptera"
   },
   {
    "id": "trachops_cirrhosus",
+   "scientific": "Trachops cirrhosus",
+   "common": "fringe-lipped bat",
    "why": "no rig for Chiroptera"
   },
   {
    "id": "noctilio_leporinus",
+   "scientific": "Noctilio leporinus",
+   "common": "greater bulldog bat",
    "why": "no rig for Chiroptera"
   },
   {
    "id": "carollia_castanea",
+   "scientific": "Carollia castanea",
+   "common": "chestnut short-tailed bat",
    "why": "no rig for Chiroptera"
   },
   {
    "id": "lophostoma_silvicola",
+   "scientific": "Lophostoma silvicola",
+   "common": "white-throated round-eared bat",
    "why": "no rig for Chiroptera"
   },
   {
    "id": "thyroptera_tricolor",
+   "scientific": "Thyroptera tricolor",
+   "common": "spix's disk-winged bat",
    "why": "no rig for Chiroptera"
   },
   {
    "id": "myotis_albescens",
+   "scientific": "Myotis albescens",
+   "common": "silver-tipped myotis",
    "why": "no rig for Chiroptera"
   },
   {
    "id": "centronycteris_centralis",
+   "scientific": "Centronycteris centralis",
+   "common": "thomas's shaggy bat",
    "why": "no rig for Chiroptera"
   },
   {
    "id": "saccopteryx_bilineata",
+   "scientific": "Saccopteryx bilineata",
+   "common": "greater sac-winged bat",
    "why": "no rig for Chiroptera"
   },
   {
    "id": "desmodus_rotundus",
+   "scientific": "Desmodus rotundus",
+   "common": "common vampire bat",
    "why": "no rig for Chiroptera"
   },
   {
    "id": "beckianum_beckianum",
+   "scientific": "Beckianum beckianum",
+   "common": "beck's awlsnail",
    "why": "no archetype for class Gastropoda"
   },
   {
    "id": "nerita_spec",
+   "scientific": "Nerita spec",
+   "common": null,
    "why": "no archetype for class Gastropoda"
   },
   {

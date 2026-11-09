@@ -30,6 +30,7 @@
    "known": [
     "a pachyderm on a deer's body"
    ],
+   "family": "Elephantidae",
    "model": {
     "path": "fauna/loxodonta_africana.glb",
     "kind": "quadruped",
@@ -94,6 +95,7 @@
    "known": [
     "a pachyderm on a deer's body"
    ],
+   "family": "Hippopotamidae",
    "model": {
     "path": "fauna/hippopotamus_amphibius.glb",
     "kind": "quadruped",
@@ -135,9 +137,9 @@
   {
    "code": "damaliscus_korrigum",
    "scientific": "Damaliscus korrigum",
-   "common": "Topi",
-   "one": "topi",
-   "many": "topis",
+   "common": "Damaliscus korrigum",
+   "one": "damaliscus korrigum",
+   "many": "damaliscus korrigums",
    "kin": "odocoileus_hemionus",
    "archetype": "grazing or browsing herd",
    "scale": 1.285,
@@ -155,6 +157,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Bovidae",
    "active_hours": [
     0,
     0,
@@ -214,6 +217,7 @@
    "known": [
     "a giraffe on a deer's proportions"
    ],
+   "family": "Giraffidae",
    "model": {
     "path": "fauna/giraffa_tippelskirchi.glb",
     "kind": "quadruped",
@@ -275,6 +279,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Bovidae",
    "active_hours": [
     0,
     0,
@@ -333,6 +338,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Felidae",
    "model": {
     "path": "fauna/panthera_leo.glb",
     "kind": "quadruped",
@@ -395,6 +401,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Hyaenidae",
    "model": {
     "path": "fauna/crocuta_crocuta.glb",
     "kind": "quadruped",
@@ -457,6 +464,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Bovidae",
    "active_hours": [
     0,
     0,
@@ -514,6 +522,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Bovidae",
    "model": {
     "path": "fauna/syncerus_caffer.glb",
     "kind": "quadruped",
@@ -576,6 +585,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Equidae",
    "model": {
     "path": "fauna/equus_quagga.glb",
     "kind": "quadruped",
@@ -637,6 +647,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Bovidae",
    "model": {
     "path": "fauna/connochaetes_taurinus.glb",
     "kind": "quadruped",
@@ -701,6 +712,7 @@
    "known": [
     "a primate on a bear's body"
    ],
+   "family": "Cercopithecidae",
    "active_hours": [
     0,
     0,
@@ -759,6 +771,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Suidae",
    "active_hours": [
     0,
     1,
@@ -815,6 +828,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Bovidae",
    "active_hours": [
     0,
     0,
@@ -872,6 +886,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Procaviidae",
    "active_hours": [
     0,
     0,
@@ -929,6 +944,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Bovidae",
    "active_hours": [
     0,
     0,
@@ -985,6 +1001,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Felidae",
    "model": {
     "path": "fauna/panthera_pardus.glb",
     "kind": "quadruped",
@@ -1047,6 +1064,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Felidae",
    "model": {
     "path": "fauna/acinonyx_jubatus.glb",
     "kind": "quadruped",
@@ -1109,6 +1127,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Bovidae",
    "active_hours": [
     0,
     0,
@@ -1168,6 +1187,7 @@
    "known": [
     "a monkey on a squirrel's body"
    ],
+   "family": "Cercopithecidae",
    "active_hours": [
     0,
     0,
@@ -1223,6 +1243,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Procaviidae",
    "active_hours": [
     0,
     0,
@@ -1280,6 +1301,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Herpestidae",
    "active_hours": [
     0,
     0,
@@ -1317,9 +1339,9 @@
   {
    "code": "leptailurus_serval",
    "scientific": "Leptailurus serval",
-   "common": "Serval",
-   "one": "serval",
-   "many": "servals",
+   "common": "Serval cat",
+   "one": "serval cat",
+   "many": "serval cats",
    "kin": "lynx_rufus",
    "archetype": "ambush predator",
    "scale": 1.063,
@@ -1337,6 +1359,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Felidae",
    "active_hours": [
     1,
     1,
@@ -1392,6 +1415,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Herpestidae",
    "active_hours": [
     0,
     0,
@@ -1448,6 +1472,7 @@
     "omnivore"
    ],
    "known": [],
+   "family": "Canidae",
    "active_hours": [
     0,
     0,
@@ -1505,6 +1530,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Canidae",
    "active_hours": [
     0,
     0,
@@ -1562,6 +1588,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Canidae",
    "active_hours": [
     0,
     0,
@@ -1618,6 +1645,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Canidae",
    "model": {
     "path": "fauna/lycaon_pictus.glb",
     "kind": "quadruped",
@@ -1680,6 +1708,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Viverridae",
    "active_hours": [
     1,
     1,
@@ -1738,6 +1767,7 @@
    "known": [
     "a giant flightless bird on the turkey's flock machine"
    ],
+   "family": "Struthionidae",
    "flightless": true,
    "lifestyle": "Terrestrial",
    "kin_source": "avonet (species)",
@@ -1814,6 +1844,7 @@
     "predator"
    ],
    "known": [],
+   "family": "Sturnidae",
    "flightless": false,
    "lifestyle": "Terrestrial",
    "kin_source": "avonet (species)",
@@ -1885,6 +1916,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Ciconiidae",
    "flightless": false,
    "lifestyle": "Terrestrial",
    "kin_source": "avonet (species)",
@@ -1951,6 +1983,7 @@
     "herbivore"
    ],
    "known": [],
+   "family": "Anatidae",
    "flightless": false,
    "lifestyle": "Generalist",
    "kin_source": "avonet (species)",
@@ -2018,6 +2051,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Accipitridae",
    "flightless": false,
    "lifestyle": "Terrestrial",
    "kin_source": "avonet (species)",
@@ -2067,15 +2101,15 @@
    "common": "Blacksmith lapwing",
    "one": "blacksmith lapwing",
    "many": "blacksmith lapwings",
-   "kin": "callipepla_californica",
-   "archetype": "ground bird",
-   "scale": 0.953,
+   "kin": "ardea_herodias",
+   "archetype": "shorebird",
+   "scale": 0.414,
    "tint": null,
    "mass_kg": 0.156,
    "density_km2": 31.5385,
    "group": [
-    3,
-    12
+    1,
+    8
    ],
    "bird": true,
    "night": false,
@@ -2083,23 +2117,16 @@
    "role": [
     "insectivore"
    ],
-   "known": [],
+   "known": [
+    "a shorebird on the heron's water-edge machine: the heron's slow walk and wingbeat"
+   ],
+   "family": "Charadriidae",
    "flightless": false,
    "lifestyle": "Terrestrial",
    "kin_source": "avonet (species)",
    "hand_wing_index": 40.4,
    "habitat": "Wetland",
    "habitat_density": 3,
-   "gait": {
-    "walk_mps": 0.69,
-    "cruise_mps": 2.34,
-    "top_mps": 3.9,
-    "stride_m": 0.28,
-    "sprint_s": 2.4,
-    "speed_k": 0.885,
-    "stride_k": 0.875,
-    "source": "trait card locomotion over callipepla_californica's (pipeline/locomotion.py)"
-   },
    "model": {
     "path": "fauna/vanellus_armatus.glb",
     "kind": "bird",
@@ -2160,6 +2187,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Sagittariidae",
    "flightless": false,
    "lifestyle": "Terrestrial",
    "kin_source": "avonet (species)",
@@ -2220,6 +2248,7 @@
     "insectivore"
    ],
    "known": [],
+   "family": "Laniidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -2281,6 +2310,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Accipitridae",
    "flightless": false,
    "lifestyle": "Terrestrial",
    "kin_source": "avonet (species)",
@@ -2343,6 +2373,7 @@
    "known": [
     "a parrot, toucan or hornbill on a jay's body"
    ],
+   "family": "Lybiidae",
    "flightless": false,
    "lifestyle": "Insessorial",
    "kin_source": "avonet (species)",
@@ -2386,15 +2417,15 @@
    "common": "Tawny eagle",
    "one": "tawny eagle",
    "many": "tawny eagles",
-   "kin": "cathartes_aura",
-   "archetype": "soaring scavenger",
-   "scale": 1.118,
+   "kin": "buteo_jamaicensis",
+   "archetype": "soaring raptor",
+   "scale": 1.267,
    "tint": null,
    "mass_kg": 2.236,
    "density_km2": 0.2734,
    "group": [
     1,
-    8
+    3
    ],
    "bird": true,
    "night": false,
@@ -2404,6 +2435,7 @@
     "scavenger"
    ],
    "known": [],
+   "family": "Accipitridae",
    "flightless": false,
    "lifestyle": "Generalist",
    "kin_source": "avonet (species)",
@@ -2464,6 +2496,7 @@
    "known": [
     "a crocodilian on the fence lizard's machine: at the water's edge and in the water (way 'water')"
    ],
+   "family": "Crocodylidae",
    "reptile": "water",
    "records": 151,
    "mass_source": "amniote life-history database (species)",
@@ -2525,6 +2558,7 @@
    "water": false,
    "role": [],
    "known": [],
+   "family": "Agamidae",
    "reptile": "bask",
    "records": 63,
    "pushup": true,
@@ -2589,6 +2623,7 @@
    "known": [
     "a tortoise on the fence lizard's machine: a slow walker on the ground (way 'walk')"
    ],
+   "family": "Testudinidae",
    "reptile": "walk",
    "records": 14,
    "mass_source": "amniote life-history database (species)",
@@ -2650,6 +2685,7 @@
    "water": false,
    "role": [],
    "known": [],
+   "family": "Varanidae",
    "reptile": "bask",
    "records": 10,
    "mass_source": "amniote life-history database (species)",
@@ -2711,6 +2747,7 @@
    "water": false,
    "role": [],
    "known": [],
+   "family": "Scincidae",
    "reptile": "bask",
    "records": 10,
    "mass_source": "amniote life-history database (species)",
@@ -2766,6 +2803,7 @@
    "water": false,
    "role": [],
    "known": [],
+   "family": "Phrynobatrachidae",
    "active_hours": [
     0,
     0,

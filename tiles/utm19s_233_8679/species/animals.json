@@ -1,6 +1,6 @@
 {
  "tile": "utm19s_233_8679",
- "at": "2026-11-06T11:29:53Z",
+ "at": "2026-11-09T04:35:04Z",
  "target": 22,
  "listed": 68,
  "by_kind": {
@@ -37,7 +37,13 @@
   "coragyps_atratus",
   "daptrius_ater"
  ],
- "generated_traits": [],
+ "generated_traits": [
+  "thecadactylus_solimoensis",
+  "ameiva_ameiva",
+  "anolis_fuscoauratus",
+  "melanosuchus_niger",
+  "corallus_hortulana"
+ ],
  "queue": [
   {
    "id": "xiphorhynchus_guttatus",
@@ -447,7 +453,7 @@
   {
    "id": "anhinga_anhinga",
    "scientific": "Anhinga anhinga",
-   "common": "anhinga",
+   "common": "american anhinga",
    "kind": "bird",
    "records": 358,
    "why": [
@@ -950,9 +956,9 @@
    "why": [
     "most recorded: 4 of its class (9% of the class's records)"
    ],
-   "body_plan": "quadruped",
-   "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
-   "estimate_credits": 30,
+   "body_plan": "reptile",
+   "rig": "reptile part rig template",
+   "estimate_credits": 25,
    "stand_in": null,
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   },
@@ -1032,7 +1038,7 @@
    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
   }
  ],
- "queued_credits": 1940,
+ "queued_credits": 1935,
  "animals": [
   {
    "gbif_key": 5230139,
@@ -1739,7 +1745,7 @@
   {
    "gbif_key": 2482082,
    "scientific": "Anhinga anhinga",
-   "common": "anhinga",
+   "common": "american anhinga",
    "records": 358,
    "taxonomy": {
     "kingdom": "Animalia",
@@ -2541,7 +2547,8 @@
    "why": [
     "most recorded: 1 of its class (12% of the class's records)"
    ],
-   "listed": true
+   "listed": true,
+   "traits": "library/animals/traits/thecadactylus_solimoensis.json"
   },
   {
    "gbif_key": 2472164,
@@ -2565,7 +2572,8 @@
    "why": [
     "most recorded: 2 of its class (12% of the class's records)"
    ],
-   "listed": true
+   "listed": true,
+   "traits": "library/animals/traits/ameiva_ameiva.json"
   },
   {
    "gbif_key": 2467558,
@@ -2589,7 +2597,8 @@
    "why": [
     "most recorded: 3 of its class (10% of the class's records)"
    ],
-   "listed": true
+   "listed": true,
+   "traits": "library/animals/traits/anolis_fuscoauratus.json"
   },
   {
    "gbif_key": 2441409,
@@ -2613,7 +2622,8 @@
    "why": [
     "most recorded: 4 of its class (9% of the class's records)"
    ],
-   "listed": true
+   "listed": true,
+   "traits": "library/animals/traits/melanosuchus_niger.json"
   },
   {
    "gbif_key": 2464951,
@@ -2637,7 +2647,8 @@
    "why": [
     "most recorded: 5 of its class (7% of the class's records)"
    ],
-   "listed": true
+   "listed": true,
+   "traits": "library/animals/traits/corallus_hortulana.json"
   },
   {
    "gbif_key": 5216933,
@@ -3375,7 +3386,7 @@
   {
    "id": "anhinga_anhinga",
    "scientific": "Anhinga anhinga",
-   "common": "anhinga",
+   "common": "american anhinga",
    "kind": "bird",
    "records": 358,
    "rank_in_class": 48,

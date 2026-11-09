@@ -644,7 +644,55 @@ def _in_regions(sid: str, d: dict, regions) -> bool:
     return bool(set(regions_of(sid, d)) & set(regions))
 
 
-def riparian_species(regions=None) -> list[dict]:
+# Cards borrowed from another region, and the riparian trees and shrubs (2026-11-08): a record with its own `regions` list was written for a named region
+# set (the Olympic grow's western sword fern and redwood sorrel list the Pacific Northwest and California), and a whole
+# region is coarser than the plant's range: redwood sorrel is a coast-redwood plant, so it carpeted the Sierra foothills'
+# oak savanna (El Dorado) and Yosemite Valley; and the zone rows put black walnut, sycamore and Fremont cottonwood (no
+# record within 25 km) on Yosemite Valley's banks. Such a card, and every riparian tree and shrub, is used on a tile only where GBIF has at
+# least MIN_LOCAL_RECORDS of it within LOCAL_RECORDS_BUFFER_M over the presence years (fetch_species), where the area is
+# recorded well enough for an absence to mean something (LOCAL_EFFORT_MIN plant records around it); the California
+# cards without a `regions` list keep the regional tables' word. Offline: kept, and said so in the mix's notes.
+MIN_LOCAL_RECORDS = 3
+LOCAL_RECORDS_FULL = 30   # a borrowed ground card's weight x min(1, records / this): a handful of records is a rarity there
+LOCAL_RECORDS_BUFFER_M = 25_000
+LOCAL_EFFORT_MIN = 5_000   # vascular plant records within the buffer before an absence means anything (the Serengeti has
+# 654, Danum 762, Manu 193: there red oat grass, the Serengeti's own, showed 0; El Dorado 53,391, the Hoh 26,619)
+TRACHEOPHYTA_KEY = 7707728
+_EFFORT: dict = {}
+LOCAL_RECORDS_SKIPPED: list = []   # this run's {id, records} left out, recorded in the mix document
+LOCAL_RECORDS_SCALED: dict = {}    # this run's borrowed cards kept at less than full weight: {id: factor}
+
+
+def _local_ok(tile, sid: str, d: dict, always: bool = False) -> bool:
+    """always: every record, not only the borrowed ones (the riparian trees and shrubs: a zone row holds the whole
+    region's, unlike a community row, which its LANDFIRE community and the band rules choose)."""
+    if tile is None or not (always or d.get("regions")):
+        return True
+    from datetime import date
+    from .fetch_species import PRESENCE_YEARS, _q, records_near
+    try:
+        r = _q(None, "species/match", {"name": " ".join(sid.split("_")).capitalize(), "strict": "true"})
+        key = r.get("acceptedUsageKey") or r.get("usageKey")
+        if not key or r.get("matchType") == "NONE":   # GBIF does not know the name as written: no evidence either way
+            return True
+        y1 = date.today().year
+        if tile.tile_id not in _EFFORT:
+            _EFFORT[tile.tile_id] = records_near(tile, TRACHEOPHYTA_KEY, (y1 - PRESENCE_YEARS, y1), buf_m=LOCAL_RECORDS_BUFFER_M)
+        if _EFFORT[tile.tile_id] < LOCAL_EFFORT_MIN:   # too few plant records around for an absence to say anything
+            return True
+        n = records_near(tile, key, (y1 - PRESENCE_YEARS, y1), buf_m=LOCAL_RECORDS_BUFFER_M)
+    except Exception:
+        return True
+    if n < MIN_LOCAL_RECORDS:
+        if not any(x["id"] == sid for x in LOCAL_RECORDS_SKIPPED):
+            LOCAL_RECORDS_SKIPPED.append({"id": sid, "records": n, "buffer_km": LOCAL_RECORDS_BUFFER_M // 1000})
+        return False
+    if d.get("regions") and n < LOCAL_RECORDS_FULL:
+        LOCAL_RECORDS_SCALED[sid] = round(n / LOCAL_RECORDS_FULL, 3)
+    return True
+
+
+def riparian_species(regions=None, tile=None) -> list[dict]:
     index = json.loads((LIBRARY / "index.json").read_text())
     out = []
     for sid in index.get("species", []):
@@ -656,19 +704,29 @@ def riparian_species(regions=None) -> list[dict]:
             continue
         rz = (d.get("habitat") or {}).get("riparian")
         layer = "ground" if is_dwarf_shrub(sid) else RIPARIAN_FORMS.get(d.get("form"))
+        if rz and rz.get("zones") and layer and not _local_ok(tile, sid, d, always=layer in ("trees", "shrubs")):
+            continue
         if not rz or not rz.get("zones") or not layer:
             continue
         out.append({"id": sid, "form": d["form"], "layer": layer, "zones": rz["zones"], "orders": rz.get("orders") or [1, 9],
                     "permanence": rz.get("permanence") or "any",
-                    "density": float((d.get("ground") or {}).get("density", 1.0)) if layer == "ground" else 1.0})
+                    "density": (float((d.get("ground") or {}).get("density", 1.0)) if layer == "ground" else 1.0) * LOCAL_RECORDS_SCALED.get(sid, 1.0)})
     return out
 
 
-def riparian_rows(regions=None) -> dict:
+def riparian_rows(regions=None, tile=None) -> dict:
     """{ zones, rows: { "<zone>|<order class>|<perennial|seasonal>": { trees, shrubs, ground: [[id, byte]...], density } },
     species: [ids] }; rows for the pond zones use the order class "pond". regions: only the species growing there."""
-    sp = riparian_species(regions)
+    sp = riparian_species(regions, tile)
     rows = {}
+    # Rows per elevation band (2026-11-08): the zone rows hold one region's riparian species at every height, so Yosemite
+    # Valley's banks at 1,200 m drew valley oak, black walnut, sycamore and Fremont cottonwood (foothill trees). With a
+    # tile, each row also gets a "|<band>" copy per band the tile reaches, its trees and shrubs passed through the
+    # community rows' own band rule (terrain_weights on a floor cell of that band: ZONE_SUBST and TERRAIN's band
+    # factors); the client takes the band of the cell's ground (TilePackage SpeciesMix.ripRow), else the plain row.
+    bands = tile_bands(tile) if tile is not None else []
+    if bands and not CONTEXT.get("regions"):
+        CONTEXT["regions"] = list(regions or [])
     for zone in RIPARIAN_ZONES:
         classes = RIPARIAN_ORDER_CLASSES if not zone.startswith("pond") else (("pond", 1, 9),)
         for cname, lo, hi in classes:
@@ -694,14 +752,36 @@ def riparian_rows(regions=None) -> dict:
                     row[layer] = [[k, b] for k, b in zip(ids, _bytes(weights, ids)) if b]
                 row["density"] = list(RIPARIAN_DENSITY[zone])
                 rows[f"{zone}|{cname}|{perm}"] = row
+                for b in bands:
+                    rb = {"ground": row["ground"], "density": row["density"]}
+                    for layer in ("trees", "shrubs"):
+                        w = terrain_weights(layers[layer], b * 6) if layers[layer] else {}
+                        ids = list(w)
+                        rb[layer] = [[k, x] for k, x in zip(ids, _bytes(w, ids)) if x]
+                    rows[f"{zone}|{cname}|{perm}|{b}"] = rb
+    extra = sorted({k for r in rows.values() for L in ("trees", "shrubs") for k, _ in r.get(L, [])} - {r["id"] for r in sp})
     return {"zones": list(RIPARIAN_ZONES), "order_classes": [list(c) for c in RIPARIAN_ORDER_CLASSES], "rows": rows,
-            "species": [r["id"] for r in sp],
+            "bands_m": list(ELEV_BANDS) if bands else None, "bands": bands,
+            "species": [r["id"] for r in sp] + extra,
             "encoding": ("rows[zone|order class|permanence]: trees / shrubs / ground as [[species id, byte]] summing to 255 per layer "
                          "(absent: none), density [tree, shrub, ground] multipliers; the zone, order (small 1-2, medium 3-4, large 5+) "
-                         "and permanence come from client/water.png R; pond zones use the class 'pond'")}
+                         "and permanence come from client/water.png R; pond zones use the class 'pond'; a key ending '|<band>' is "
+                         "the row for ground in that elevation band (bands_m: band = how many of its heights the ground is at or above)")}
 
 
-def ground_species(regions=None) -> list[dict]:
+def tile_bands(tile) -> list[int]:
+    """The elevation bands (ELEV_BANDS) the tile's ground reaches."""
+    p = tile.path("terrain/dem.tif")
+    if not p.exists():
+        return []
+    with rasterio.open(p) as src:
+        z = src.read(1, out_shape=(200, 200)).astype("float64")
+        nod = src.nodata
+    z = z[np.isfinite(z) & (z != nod)] if nod is not None else z[np.isfinite(z)]
+    return sorted(int(b) for b in np.unique(np.digitize(z, ELEV_BANDS))) if z.size else []
+
+
+def ground_species(regions=None, tile=None) -> list[dict]:
     """The ground-layer records, in index.json order: id, form, habitat, density; regions: only those growing there."""
     index = json.loads((LIBRARY / "index.json").read_text())
     out = []
@@ -710,19 +790,39 @@ def ground_species(regions=None) -> list[dict]:
         if sid.startswith("_") or not f.exists():
             continue
         d = json.loads(f.read_text())
-        if d.get("form") not in GROUND_FORMS or not _in_regions(sid, d, regions):
+        if d.get("form") not in GROUND_FORMS or not _in_regions(sid, d, regions) or not _local_ok(tile, sid, d):
             continue
         out.append({"id": sid, "form": d["form"], "habitat": d.get("habitat") or {},
-                    "density": float((d.get("ground") or {}).get("density", 1.0))})
+                    "density": float((d.get("ground") or {}).get("density", 1.0)) * LOCAL_RECORDS_SCALED.get(sid, 1.0)})
     return out
 
 
-def ground_weights(hab_code: int, rule_id: str, species: list[dict]) -> dict:
-    """A community's ground weights: each species' habitat class weight x its density, plus the rule's own."""
+# Deep-shade plants and an open canopy (2026-11-08): a ground record's habitat.shade says how much shade it wants; one
+# at SHADE_OBLIGATE or more (the sword fern 0.9, redwood sorrel 1.0) grows under a closed canopy, so its weight is
+# scaled by the square of the community's closure: from its LANDFIRE name (a savanna is open, a woodland half open, a forest closed),
+# else its habitat class. The foothill pine savanna is classed mixed_forest, and the ferns had carpeted it as if it
+# were a closed forest floor.
+SHADE_OBLIGATE = 0.9
+CLOSURE_WORDS = (("savanna", 0.2), ("woodland", 0.5), ("forest", 1.0))   # the mean of those in the name ("Forest and
+# Woodland" 0.75, "Woodland and Savanna" 0.35)
+CLOSURE_CLASS = {"conifer_forest": 0.9, "mixed_forest": 0.8, "riparian": 0.8, "oak_woodland": 0.5}
+
+
+def closure(name: str | None, cls: str | None) -> float:
+    n = (name or "").lower()
+    found = [c for word, c in CLOSURE_WORDS if word in n]
+    return sum(found) / len(found) if found else CLOSURE_CLASS.get(cls, 0.0)
+
+
+def ground_weights(hab_code: int, rule_id: str, species: list[dict], name: str | None = None) -> dict:
+    """A community's ground weights: each species' habitat class weight x its density (a deep-shade species x the
+    community's closure), plus the rule's own."""
     cls = CLASSES.get(hab_code)
     out = {}
     for sp in species:
         w = float((sp["habitat"].get("classes") or {}).get(cls, 0.0)) * sp["density"]
+        if float(sp["habitat"].get("shade") or 0.0) >= SHADE_OBLIGATE:
+            w *= closure(name, cls) ** 2   # falls off fast as the canopy opens: a savanna 0.12, a woodland 0.25
         w = GROUND_RULES.get(rule_id, {}).get(sp["id"], w)
         if w > 0:
             out[sp["id"]] = w
@@ -1188,7 +1288,8 @@ def species_mix(tile: Tile) -> dict:
                       if b["source"] != "rewild" and any(w in (b["name"] or "").lower() for w in COAST_WORDS))
     CONTEXT["coast"] = coast_cells / tot >= COAST_MIN and "california" in regions
     SUBSTITUTIONS.clear()
-    gspecies = ground_species(regions)   # a tile outside every table's region: none, recorded below
+    LOCAL_RECORDS_SKIPPED.clear(); LOCAL_RECORDS_SCALED.clear()
+    gspecies = ground_species(regions, tile)   # a tile outside every table's region: none, recorded below
     # A tile outside every table's region (2026-11-06, iteration 7): its own ground layer, each community's grasses and
     # forbs from its LANDFIRE description (pipeline/ground_cards.py, species/ground.json), weight x the record's density
     from .ground_cards import own_ground
@@ -1207,7 +1308,7 @@ def species_mix(tile: Tile) -> dict:
         if own:
             b["ground"] = {k: w * dens_of[k] for k, w in own.get((b["source"], int(b["code"])), {}).items() if k in dens_of}
         else:
-            b["ground"] = ground_weights(b["habitat"], b["rule"], gspecies)
+            b["ground"] = ground_weights(b["habitat"], b["rule"], gspecies, b.get("name"))
     # the dwarf shrubs of each community into its ground layer (split_dwarf_shrubs), as ground species with their own
     # terrain factors (their records' habitat block)
     dwarfs: list[str] = []
@@ -1356,7 +1457,8 @@ def species_mix(tile: Tile) -> dict:
         "communities": communities,
         "unmatched": unmatched,
         "fractions": fractions,
-        "riparian": riparian_rows(regions),   # the zone mixes (pipeline/water.py reads the zones; the water step rewrites this key too)
+        "local_records_skipped": LOCAL_RECORDS_SKIPPED, "local_records_scaled": LOCAL_RECORDS_SCALED,   # borrowed cards without local records (_local_ok; riparian_rows below adds its own)
+        "riparian": riparian_rows(regions, tile),   # the zone mixes (pipeline/water.py reads the zones; the water step rewrites this key too)
         # 2026-11-04: the species a rule names that have no record yet and the record drawn for each; the tile's context
         "substitutions": dict(sorted(SUBSTITUTIONS.items())),
         "context": {"coast": CONTEXT["coast"], "coast_share": round(coast_cells / tot, 4), "bands_m": list(ELEV_BANDS),

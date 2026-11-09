@@ -12,21 +12,21 @@
   "genus": "Corallus"
  },
  "body_plan": "snake",
- "mass_kg": 0.5,
+ "mass_kg": 1.906,
  "size": {
-  "length_m": 0.457,
-  "shoulder_or_wingspan_m": 0.014
+  "length_m": 0.714,
+  "shoulder_or_wingspan_m": 0.021
  },
  "diet": null,
  "senses": {
   "sight": {
-   "range_m": 217.6
+   "range_m": 284.4
   },
   "sound": {
-   "range_m": 304.7
+   "range_m": 398.2
   },
   "scent": {
-   "range_m": 435.3
+   "range_m": 568.8
   }
  },
  "rig": "none yet: a spine-wave rig",
@@ -36,23 +36,23 @@
   "order": null,
   "family": "Boidae",
   "body_plan": "snake",
-  "mass_kg": 0.5,
-  "length_m": 0.457,
-  "hip_m": 0.137,
+  "mass_kg": 1.906,
+  "length_m": 0.714,
+  "hip_m": 0.021,
   "posture": "sprawling",
   "gaits": {
    "walk": "sprawl",
    "run": "sprawl-undulate"
   },
-  "walk_mps": 0.82,
-  "trot_mps": 1.83,
-  "cruise_mps": 2.78,
-  "top_mps": 4.64,
-  "stride_hz": 4.65,
-  "stride_m": 0.39,
-  "sprint_s": 3.2,
-  "recover_s": 11.1,
-  "turn_rad_s": 3.71,
+  "walk_mps": 0.32,
+  "trot_mps": 0.72,
+  "cruise_mps": 1.09,
+  "top_mps": 1.82,
+  "stride_hz": 3.8,
+  "stride_m": 0.19,
+  "sprint_s": 4.4,
+  "recover_s": 15.5,
+  "turn_rad_s": 2.97,
   "turn": {
    "on": 0.45,
    "off": 0.2,
@@ -67,7 +67,7 @@
    ]
   },
   "lag": {
-   "s": 0.03,
+   "s": 0.037,
    "max_rad": 0.2,
    "v": [
     0.3,
@@ -86,10 +86,10 @@
  },
  "generated": {
   "by": "pipeline/fauna.py",
-  "at": "2026-11-06T11:12:49Z",
+  "at": "2026-11-09T04:35:04Z",
   "from": [
    "gbif taxonomy",
-   "class defaults",
+   "amniote life-history database (genus)",
    "pipeline/locomotion.py"
   ],
   "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"

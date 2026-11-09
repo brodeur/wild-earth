@@ -61,6 +61,53 @@ def match_key(scientific: str) -> int | None:
     return r.get("usageKey") if r.get("matchType") != "NONE" else None
 
 
+def _epithets(sp: dict) -> set[str]:
+    """Every Latin word of a GBIF species record's name and of its subspecies' names (lower case)."""
+    words = {w.lower() for w in (sp.get("canonicalName") or sp.get("scientificName") or "").split()}
+    key = sp.get("key") or sp.get("usageKey")
+    if key:
+        try:
+            for c in _q(None, f"species/{key}/children", {"limit": 300}).get("results", []):
+                words |= {w.lower() for w in (c.get("canonicalName") or "").split()}
+        except Exception:   # offline: the record's own words still guard
+            pass
+    return words
+
+
+def _english_names(sp: dict) -> list[str]:
+    """GBIF's English vernacular names for a species record, the most cited first."""
+    from collections import Counter
+    key = sp.get("key") or sp.get("usageKey")
+    if not key:
+        return []
+    try:
+        res = _q(None, f"species/{key}/vernacularNames", {"limit": 300}).get("results", [])
+    except Exception:
+        return []
+    names = Counter(v["vernacularName"].strip() for v in res if v.get("language") in ("eng", "en") and v.get("vernacularName"))
+    return [n for n, _ in names.most_common()]
+
+
+def common_name(sp: dict) -> str | None:
+    """A species record's common name, lower case: GBIF's vernacularName when it is a real name, else its most cited
+    English vernacular name; never a Latin word of the species or of its subspecies (2026-11-08: GBIF's record for
+    Crotalus oreganus carries the subspecies epithet "abyssus" as its vernacularName, and the northern Pacific
+    rattlesnake was called Abyssus in the cast)."""
+    bad = None
+    for cand in [sp.get("vernacularName") or ""] + _english_names(sp):
+        c = " ".join(cand.split()).lower()
+        if not c or not any(ch.isalpha() for ch in c):
+            continue
+        if " " in c or "-" in c:   # an epithet is one word; asking GBIF for the subspecies only for one-word names
+            return c
+        if bad is None:
+            bad = _epithets(sp)
+        if all(w in bad for w in c.replace("-", " ").split()):   # only Latin name words: an epithet, not a name
+            continue
+        return c
+    return None
+
+
 def _bbox_params(tile: Tile) -> dict:
     w, s, e, n = tile.bounds_wgs84
     return {"decimalLatitude": f"{s},{n}", "decimalLongitude": f"{w},{e}",
@@ -120,7 +167,7 @@ def inventory(tile: Tile, limit=40) -> list[dict]:
                 rows.append({"gbif_key": int(c["name"]), "group": group,
                              "scientific": sp.get("canonicalName") or sp.get("scientificName"),
                              "family": sp.get("family"), "genus": sp.get("genus"), "order": sp.get("order"),
-                             "common": (sp.get("vernacularName") or "").lower() or None,
+                             "common": common_name(sp),
                              "occurrences": c["count"]})
     return rows
 

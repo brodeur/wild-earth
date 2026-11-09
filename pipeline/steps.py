@@ -221,7 +221,7 @@ def _water(tile, m, force):
             # the top-level key (a line at the document's one-space indent): the first '"riparian":' in the text can be
             # a community's share inside `context` (the home tile's, 2026-11-06: the splice ate the rest of the file)
             text = p.read_text()
-            rows = riparian_rows(natural_regions(tile))
+            rows = riparian_rows(natural_regions(tile), tile)
             new = _json.dumps(rows, separators=(",", ":"))
             key = '\n "riparian":'
             k = text.rfind(key)

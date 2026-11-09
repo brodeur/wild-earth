@@ -15,7 +15,7 @@
   37.76645207290539
  ],
  "size_m": 10000,
- "generated_at": "2026-11-07T20:57:01Z",
+ "generated_at": "2026-11-09T04:42:44Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -2368,34 +2368,34 @@
      "ericameria_ericoides": 0.0018
     },
     "ground_share": {
-     "stipa_pulchra": 0.0556,
-     "elymus_glaucus": 0.0434,
-     "danthonia_californica": 0.0326,
-     "avena_fatua": 0.0468,
-     "bromus_hordeaceus": 0.0488,
-     "bromus_diandrus": 0.0436,
-     "hordeum_murinum": 0.0297,
-     "eschscholzia_californica": 0.0649,
-     "lupinus_bicolor": 0.0667,
-     "lupinus_albifrons": 0.0503,
-     "claytonia_perfoliata": 0.0254,
-     "trifolium_willdenovii": 0.0324,
-     "chlorogalum_pomeridianum": 0.0474,
-     "achillea_millefolium": 0.0341,
-     "wyethia_helenioides": 0.0267,
-     "dipterostemon_capitatus": 0.0713,
+     "stipa_pulchra": 0.056,
+     "elymus_glaucus": 0.0447,
+     "danthonia_californica": 0.0328,
+     "avena_fatua": 0.047,
+     "bromus_hordeaceus": 0.049,
+     "bromus_diandrus": 0.0439,
+     "hordeum_murinum": 0.0298,
+     "eschscholzia_californica": 0.065,
+     "lupinus_bicolor": 0.0669,
+     "lupinus_albifrons": 0.0506,
+     "claytonia_perfoliata": 0.0264,
+     "trifolium_willdenovii": 0.0325,
+     "chlorogalum_pomeridianum": 0.0477,
+     "achillea_millefolium": 0.035,
+     "wyethia_helenioides": 0.0269,
+     "dipterostemon_capitatus": 0.0716,
      "amsinckia_menziesii": 0.0448,
-     "erodium_cicutarium": 0.0673,
-     "vicia_villosa": 0.0314,
+     "erodium_cicutarium": 0.0674,
+     "vicia_villosa": 0.0316,
      "plagiobothrys_nothofulvus": 0.0489,
-     "madia_elegans": 0.0552,
-     "artemisia_douglasiana": 0.0065,
-     "urtica_dioica": 0.0009,
-     "erythranthe_guttata": 0.0055,
+     "madia_elegans": 0.0554,
+     "artemisia_douglasiana": 0.0067,
+     "urtica_dioica": 0.001,
+     "erythranthe_guttata": 0.0058,
      "nasturtium_officinale": 0.0002,
      "lemna_minor": 0.0002,
-     "polystichum_munitum": 0.01,
-     "oxalis_oregana": 0.0094
+     "polystichum_munitum": 0.0063,
+     "oxalis_oregana": 0.0061
     },
     "mean_tree_density": 0.34,
     "mean_shrub_density": 0.4618,
@@ -2436,8 +2436,8 @@
     "rows_with_herb_cover": 0,
     "evh_synthetic": false
    },
-   "sha256": "953c94c87e1910a569d7360c0915677f22b9219f22d090a289a04582ff8442ce",
-   "bytes": 326007
+   "sha256": "bf7facf4d9d516bbacc32f2d2967139b62bf5685a19704eb02008db1732bc79a",
+   "bytes": 343704
   },
   "resources": {
    "path": "resources/resources.json",
@@ -6274,7 +6274,7 @@
    "generated_traits": 0,
    "queued": 77,
    "queued_credits": 2210,
-   "sha256": "6c8ad6f57d2887065ab1bbbceaf56640ebe4387fc629fd5e05fcec47645cb2cc",
+   "sha256": "88fdda46453897519ac1d8b6d14044b632ee6a70e70075c9823330d1e171d027",
    "bytes": 175446
   },
   "games.seeds": {
@@ -6379,8 +6379,8 @@
     "sorex_vagrans": "microtus_californicus",
     "reithrodontomys_megalotis": "peromyscus_maniculatus"
    },
-   "sha256": "c56c94eebf5cdf331f90a2a0b2ebdc2f20b441706c6857b6eb39a7259eaa0417",
-   "bytes": 48170
+   "sha256": "b5d599ab58541a18b81364fc6e9f99a67d1cc5135e0155308e2e83136a291a08",
+   "bytes": 48481
   },
   "terrain.dem_5m": {
    "path": "terrain/dem_5m.tif",
@@ -7163,7 +7163,7 @@
    "attribution": "Species occurrences: GBIF.org and its contributing datasets, including iNaturalist and eBird (CC0, CC BY 4.0 or CC BY-NC 4.0 per record)",
    "attribution_url": "https://www.gbif.org/",
    "attribution_required": true,
-   "retrieved": "2026-11-07"
+   "retrieved": "2026-11-09"
   },
   "copernicus_sentinel2_l2a": {
    "name": "Copernicus Sentinel-2 Level-2A surface reflectance via Microsoft Planetary Computer",
@@ -8295,6 +8295,54 @@
    "seconds": 0.3,
    "ok": false,
    "error": "seams: north with utm10n_540_4180: unnamed at 546614 m: levels +1.06 m apart (re-run --steps reroute,water on utm10n_540_4170)"
+  },
+  {
+   "step": "species",
+   "at": "2026-11-09T04:03:16Z",
+   "seconds": 151.2,
+   "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-09T04:05:37Z",
+   "seconds": 140.8,
+   "ok": true
+  },
+  {
+   "step": "ground_albedo",
+   "at": "2026-11-09T04:11:00Z",
+   "seconds": 3.0,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-09T04:11:45Z",
+   "seconds": 44.7,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-09T04:16:56Z",
+   "seconds": 1.8,
+   "ok": true
+  },
+  {
+   "step": "ground_albedo",
+   "at": "2026-11-09T04:28:02Z",
+   "seconds": 6.7,
+   "ok": true
+  },
+  {
+   "step": "ground_albedo",
+   "at": "2026-11-09T04:34:18Z",
+   "seconds": 8.0,
+   "ok": true
+  },
+  {
+   "step": "ground_albedo",
+   "at": "2026-11-09T04:42:44Z",
+   "seconds": 6.5,
+   "ok": true
   }
  ],
  "steps": {
@@ -8832,26 +8880,26 @@
   },
   "species": {
    "version": "1",
-   "code": "348c8d8fad9668bb",
+   "code": "dd97a2c525e7d328",
    "params": {
     "tile": "utm10n_540_4170"
    },
-   "fingerprint": "feb8e748b92bbc24",
+   "fingerprint": "14d9103b80f50bb0",
    "parts": {
     "version": "1",
-    "code": "348c8d8fad9668bb",
+    "code": "dd97a2c525e7d328",
     "params": {
      "tile": "utm10n_540_4170"
     },
     "deps": {
-     "dem": "e9bacaa50c1c3e85",
+     "dem": "123e800c21f55c7e",
      "landcover": "fb9713d5ff23520e"
     },
     "library": {
      "library/animals": "997e0be94296d338"
     }
    },
-   "ran_at": "2026-11-07T16:25:11Z",
+   "ran_at": "2026-11-09T04:00:45Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -8876,15 +8924,15 @@
    },
    "out_hash": "a6ec79e61cf7c44f",
    "sources": {
-    "gbif": "2026-11-07"
+    "gbif": "2026-11-09"
    },
    "fallbacks": [],
    "notes": [],
    "fetched": {
-    "network": 0,
-    "cache": 430
+    "network": 166,
+    "cache": 490
    },
-   "seconds": 4.0
+   "seconds": 151.2
   },
   "crowns": {
    "version": "2",
@@ -9453,14 +9501,14 @@
   },
   "species_mix": {
    "version": "5",
-   "code": "554d32428bd3bffb",
+   "code": "b6309b97e89defac",
    "params": {
     "tile": "utm10n_540_4170"
    },
-   "fingerprint": "ca6a69a900f30022",
+   "fingerprint": "200f7cf88890fbc1",
    "parts": {
     "version": "5",
-    "code": "554d32428bd3bffb",
+    "code": "b6309b97e89defac",
     "params": {
      "tile": "utm10n_540_4170"
     },
@@ -9475,50 +9523,50 @@
      "library/species": "b535f4af1995d848"
     }
    },
-   "ran_at": "2026-11-07T20:04:39Z",
+   "ran_at": "2026-11-09T04:16:54Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "client.species_mix"
    ],
    "outputs": {
-    "client/species_mix.json": "953c94c87e1910a5",
+    "client/species_mix.json": "bf7facf4d9d516bb",
     "client/species_mix_index.png": "0422378299e99ff8",
     "client/species_mix_density.png": "d87b661c0ea54a40"
    },
-   "out_hash": "363265e251b353fe",
+   "out_hash": "506f70da3afe0c4d",
    "sources": {},
    "fallbacks": [],
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 0
+    "cache": 31
    },
-   "seconds": 0.8
+   "seconds": 1.8
   },
   "animals": {
    "version": "6",
-   "code": "44d9ac426df2f7b6",
+   "code": "0e19c56349ccab8c",
    "params": {
     "tile": "utm10n_540_4170"
    },
-   "fingerprint": "a51dcbd4e7410fad",
+   "fingerprint": "4cdc92ba2f5d6d66",
    "parts": {
     "version": "6",
-    "code": "44d9ac426df2f7b6",
+    "code": "0e19c56349ccab8c",
     "params": {
      "tile": "utm10n_540_4170"
     },
     "deps": {
      "species": "a6ec79e61cf7c44f",
-     "plants": "3f83dbd6962bc913"
+     "plants": "706556dbc0346348"
     },
     "library": {
      "library/animals": "997e0be94296d338",
      "data/eltontraits": "e3b0c44298fc1c14"
     }
    },
-   "ran_at": "2026-11-07T16:25:15Z",
+   "ran_at": "2026-11-09T04:03:16Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -9526,21 +9574,21 @@
     "species.animals"
    ],
    "outputs": {
-    "client/fauna.json": "c56c94eebf5cdf33",
-    "species/animals.json": "6c8ad6f57d288706"
+    "client/fauna.json": "b5d599ab58541a18",
+    "species/animals.json": "88fdda4645389751"
    },
-   "out_hash": "18823662cd300a45",
+   "out_hash": "b41f4593155fbdc0",
    "sources": {
-    "gbif": "2026-11-07",
+    "gbif": "2026-11-09",
     "eltontraits": "2026-11-05"
    },
    "fallbacks": [],
    "notes": [],
    "fetched": {
-    "network": 0,
-    "cache": 313
+    "network": 161,
+    "cache": 484
    },
-   "seconds": 0.6
+   "seconds": 140.8
   },
   "resources": {
    "version": "1",
@@ -9737,7 +9785,7 @@
     },
     "library": {}
    },
-   "ran_at": "2026-11-07T20:04:37Z",
+   "ran_at": "2026-11-09T04:42:37Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -9754,7 +9802,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 1.5
+   "seconds": 6.5
   },
   "territories": {
    "version": "1",

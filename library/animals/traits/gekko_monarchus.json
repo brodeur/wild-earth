@@ -12,21 +12,21 @@
   "genus": "Gekko"
  },
  "body_plan": "reptile",
- "mass_kg": 0.5,
+ "mass_kg": 0.031,
  "size": {
-  "length_m": 0.286,
-  "shoulder_or_wingspan_m": 0.034
+  "length_m": 0.113,
+  "shoulder_or_wingspan_m": 0.014
  },
  "diet": null,
  "senses": {
   "sight": {
-   "range_m": 217.6
+   "range_m": 124.8
   },
   "sound": {
-   "range_m": 304.7
+   "range_m": 174.8
   },
   "scent": {
-   "range_m": 435.3
+   "range_m": 249.7
   }
  },
  "rig": "reptile part rig template",
@@ -36,8 +36,8 @@
   "order": null,
   "family": "Gekkonidae",
   "body_plan": "reptile",
-  "mass_kg": 0.5,
-  "length_m": 0.286,
+  "mass_kg": 0.031,
+  "length_m": 0.113,
   "hip_m": 0.034,
   "posture": "sprawling",
   "gaits": {
@@ -46,13 +46,13 @@
   },
   "walk_mps": 0.41,
   "trot_mps": 0.91,
-  "cruise_mps": 1.39,
+  "cruise_mps": 1.38,
   "top_mps": 2.31,
-  "stride_hz": 4.65,
-  "stride_m": 0.2,
-  "sprint_s": 3.2,
-  "recover_s": 11.1,
-  "turn_rad_s": 4.69,
+  "stride_hz": 7.06,
+  "stride_m": 0.13,
+  "sprint_s": 1.6,
+  "recover_s": 5.5,
+  "turn_rad_s": 7.46,
   "turn": {
    "on": 0.45,
    "off": 0.2,
@@ -67,7 +67,7 @@
    ]
   },
   "lag": {
-   "s": 0.023,
+   "s": 0.015,
    "max_rad": 0.2,
    "v": [
     0.3,
@@ -86,10 +86,10 @@
  },
  "generated": {
   "by": "pipeline/fauna.py",
-  "at": "2026-11-06T11:11:11Z",
+  "at": "2026-11-09T04:55:29Z",
   "from": [
    "gbif taxonomy",
-   "class defaults",
+   "amniote life-history database (genus)",
    "pipeline/locomotion.py"
   ],
   "note": "behaviour data without a model; review the diet, senses and size before a mesh is made"

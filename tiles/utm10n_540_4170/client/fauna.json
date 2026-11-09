@@ -2609,6 +2609,19 @@
    ],
    "family": "Colubridae",
    "reptile": "snake",
+   "habitat_affinity": {
+    "classes": {
+     "1": 0.016,
+     "2": 0.182,
+     "3": 0.014,
+     "4": 0.023,
+     "5": 0.001,
+     "6": 1.0,
+     "8": 0.001
+    },
+    "records": 101,
+    "basis": "the species' CC0 and CC BY records on the tile over client/habitat.png: share of records / share of land"
+   },
    "records": 239,
    "mass_source": "amniote life-history database (species)",
    "model": {
