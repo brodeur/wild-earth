@@ -8453,3 +8453,15 @@ current orb can decrease in opacity, and a second brighter smaller orb could be 
 - **Debugging.** `__we.sight.legacyMarks = true` draws the orb as it was, with no spikes, for comparisons.
 - **Open.** In thick woodland at 200 m many spikes stand at once (101 lit prey in one frame from 150 m up). Fading the
   spikes of far, unselected prey once a quarry is selected would quiet that; not done.
+
+## 2026-11-08: no message over the server's 64 KB limit; a join's resend is spread, not shortened
+
+Aaron, with one computer flying as a hawk and a second pressing Join: "i show up as a spirit but see no animals". The cause was the host's resend on a join: spawns, every herd row and a 4,000-cell field delta in one
+message, 70-77 KB once the herds' fields held a few hours of changes. The server closes a socket that sends over 64 KB,
+so the host dropped off, the host moved, and the joiner was torn down. It was not the network: nothing in the game keys
+on the address. Chosen: every message from the animals stream is held to 56,000 characters. The field delta takes only
+the room left after the spawns and herd rows, so a large backlog goes over more ticks; a message still over is split
+into parts (a mirror applies rows as they come), and nothing over is ever sent. Rejected: raising the server's limit
+(it is a guard against misbehaving clients, and a later, bigger world would cross any new limit) and cutting what a
+joiner is sent (the joiner needs the fields to see the same trails). A test drives the encoder against a fake socket
+and fails over 64 KB. The spirit on Join is the documented behaviour and stays.
