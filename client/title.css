@@ -176,6 +176,16 @@ html.opening:not(.tt-side) #social { opacity:0; visibility:hidden; pointer-event
 .pc-list[hidden] { display:none; }
 .pc-row { display:flex; align-items:center; gap:8px; padding:3px 2px; }
 .pc-n { white-space:nowrap; }
+/* the group here (title.js renderMates): a chip per group member who chose this place, their face and the body chosen */
+.pc-mates { display:flex; flex-wrap:wrap; gap:6px 8px; margin-top:8px; max-width:100%; }
+.pc-mates[hidden] { display:none; }
+.pc-mate { display:flex; align-items:center; gap:7px; min-width:0; max-width:100%; padding:3px 11px 3px 3px; border:1px solid #d3ddd52a; border-radius:999px; background:#0b0f0daa;
+  color:#e8dcc0; font:500 12.5px/1.2 'DM Sans', system-ui, sans-serif; cursor:pointer; backdrop-filter:blur(6px); transition:background .2s ease, border-color .2s ease; }
+.pc-mate:hover, .pc-mate:focus-visible { background:#16201be6; border-color:#d3ddd56a; outline:none; }
+.pc-mate span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pc-mate b { font-weight:600; color:#f3f6f1; }
+.pc-mate .so-avatar { flex:none; box-shadow:0 0 0 2px #0b0f0d, 0 0 0 3px hsla(var(--hue), 70%, 60%, .7); }
+.pc-mate.here::after { content:''; flex:none; width:6px; height:6px; border-radius:50%; background:#a9d8a4; box-shadow:0 0 6px #a9d8a4; }
 .pc-who { display:flex; flex-direction:column; line-height:1.2; min-width:0; }
 .pc-who b { font-weight:500; color:#e6ede7; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .pc-who small { font-size:11px; color:#8fa094; }
@@ -300,11 +310,11 @@ html.opening:not(.tt-side) #social { opacity:0; visibility:hidden; pointer-event
   .tt-acts button { min-width:100px; padding:11px 16px; }
   /* the place's bar on a phone: where the search was, clear of the social toggle (or the sign-in pill) at the top right;
      Invite and Start on a row of their own under the place's title */
-  .tt-bar { left:12px; right:56px; top:42px; column-gap:10px; }
+  .tt-bar { left:12px; right:12px; top:42px; column-gap:10px; }
   .tt-bar.narrow { grid-template-columns:40px minmax(0, 1fr); }
   .tt-back { width:40px; height:40px; }
   .tt-pcard .pc-top { min-height:40px; }
-  .tt-wrap.guest .tt-pcard .pc-top { padding-right:96px; }   /* the name clear of the sign-in pill at the top right */
+  .tt-pcard .pc-top { padding-right:var(--tt-clear, 0px); box-sizing:border-box; }   /* the name clear of the social row or the sign-in pill (title.js fitBar) */
   .tt-acts { padding-top:2px; }
   .pc-name { font-size:22px; }
   .pc-region { font-size:12.5px; }

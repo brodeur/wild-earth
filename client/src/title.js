@@ -372,6 +372,7 @@ export class TitleScreen {
             <div class="pc-meta"><p class="pc-body"><span class="pc-as"></span><span class="pc-with"></span></p>
             <div class="pc-peoplewrap"><button type="button" class="pc-people" aria-expanded="false"><span class="pc-avs"></span><span class="pc-n"></span></button>
             <div class="pc-list" role="list" hidden></div></div></div>
+            <div class="pc-mates" role="list" aria-label="your group here" hidden></div>
           </div>
           <div class="tt-acts"><button type="button" class="tt-invite">Invite</button><span class="tt-startwrap"><button type="button" class="tt-start" disabled aria-describedby="ttStartTip">Start</button><span class="tt-tip" id="ttStartTip" role="tooltip" hidden>${GUEST_TIP}</span></span></div>
           <div class="tt-bline"><span class="tt-bstatus"></span><span class="tt-bpct"></span></div>
@@ -969,7 +970,8 @@ export class TitleScreen {
     this.wrap.classList.add('chosen');
     this.flyToPlace(id);
     this.relief?.show(id);
-    if (!this.guest) this.onSelect?.(id);   // a visitor's choice builds nothing (they cannot start it)
+    // a visitor's choice builds nothing (they cannot start it); the group sees the place chosen, as the spirit until a body is
+    if (!this.guest) { this.onSelect?.(id); this.onBody?.(id, 'spirit'); }
   }
   // Zoomed away from the chosen place (Aaron, 2026-11-07: "If I zoom too far away from the selected tile, the tile becomes
   // deselected and the button and animals and title fade away"): its tile drawn under UNCHOOSE_AT[1] of the free centre's
@@ -1048,6 +1050,7 @@ export class TitleScreen {
     const el = this.$('.pc-body'); if (!el || !this.sel) return;
     const marks = (this.bodiesAt?.(this.sel) || []).filter(m => m && m.user && m.code);
     this.ring?.setMarks(marks);
+    this.renderMates(marks);
     const b = this.body !== 'spirit' ? this.ring?.picked : null;
     if (this.body !== 'spirit' && !b) this.body = 'spirit';
     const mates = b ? marks.filter(m => m.code === this.body) : [];
@@ -1055,6 +1058,29 @@ export class TitleScreen {
     const name = b ? b.name : '', art = /^[aeiou]/i.test(name) ? 'an' : 'a';
     el.querySelector('.pc-as').innerHTML = b ? `As ${art} <b>${esc(name)}</b>` : 'As <b>the spirit</b>';
     el.querySelector('.pc-with').textContent = mates.length ? ` · beside ${andList(mates.slice(0, 3).map(m => m.name || 'a friend'))}` : '';
+  }
+  // The group here (Aaron, 2026-11-08: "If I'm in a group and my group-mates are on this tile show which avatar they have
+  // selected - in the top left underneath the place name"): a chip per group member who chose this place, their face and
+  // the body they chose ('spirit' until they pick one; the hub's `body`, relayed to the group alone and only while they
+  // let their place be seen: docs/multiplayer.md "Who sees whom", "Bodies"), a dot when they are in its world already.
+  // Hovering one holds their animal in its ring; a click picks the same body (beside them: renderBody's joinWith).
+  // Others in the tile stay a count (renderPeople). Rebuilt only when the list or the rings' names change.
+  renderMates(marks) {
+    const box = this.$('.pc-mates'); if (!box) return;
+    const nameOf = code => code === 'spirit' ? 'the spirit' : this.ring?.items.get(code)?.name || code.replace(/_/g, ' ');
+    const key = marks.map(m => `${m.user}:${m.code}:${m.here ? 1 : 0}:${m.name}`).join('|') + `#${this.ring?.items.size || 0}`;
+    if (key === box.dataset.key) return;
+    box.dataset.key = key; box.innerHTML = ''; box.hidden = !marks.length;
+    for (const m of marks) {
+      const b = document.createElement('button'); b.type = 'button'; b.className = `pc-mate${m.here ? ' here' : ''}`; b.setAttribute('role', 'listitem');
+      const n = nameOf(m.code), as = m.code === 'spirit' ? n : `${/^[aeiou]/i.test(n) ? 'an' : 'a'} ${n}`;
+      b.append(avatarFor(m.user, 22));
+      const t = document.createElement('span'); t.innerHTML = `<b>${esc(m.name || 'someone')}</b> as ${esc(as)}`; b.append(t);
+      b.title = `${m.name || 'someone'} ${m.here ? 'is in this place as' : 'chose'} ${n}${this.guest ? '' : `: go as ${n} beside them`}`;
+      b.onmouseenter = () => this.ring?.hover(m.code); b.onmouseleave = () => this.ring?.hover(null);
+      b.onclick = () => this.chooseBody(m.code);
+      box.append(b);
+    }
   }
   // Called by multiplayer.js when who is there or coming changes. Known players (friends and group members the hub
   // says are in the tile, and the people invited) are named; the others the hub counts are anonymous wisps: a stranger's
@@ -1104,6 +1130,18 @@ export class TitleScreen {
   fitBar() {
     const narrow = this.bar.clientWidth < BAR_NARROW;
     if (narrow !== this.barNarrow) { this.barNarrow = narrow; this.bar.classList.toggle('narrow', narrow); }
+    // a phone's top right holds the social row (the group's faces and the toggle) or the sign-in pill: the name's row
+    // keeps clear of whatever is there (--tt-clear, title.css)
+    let clear = 0;
+    if (matchMedia('(max-width: 720px)').matches) {
+      const r = this.bar.getBoundingClientRect(), top = r.top + 46;
+      for (const el of [this.$('.tt-loginpill'), ...document.querySelectorAll('#social .so-bar > *')]) {
+        const b = el?.offsetParent ? el.getBoundingClientRect() : null;
+        if (b && b.width && b.top < top && b.bottom > r.top && b.left < r.right) clear = Math.max(clear, r.right - b.left + 8);
+      }
+    }
+    clear = Math.round(clear);
+    if (clear !== this.barClear) { this.barClear = clear; this.bar.style.setProperty('--tt-clear', `${clear}px`); }
   }
   // The bar: the build's progress for the chosen place, Invite, and Start once it is built.
   renderBar() {

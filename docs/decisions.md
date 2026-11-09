@@ -8501,3 +8501,28 @@ two home-screen redesigns.
   - All pass at 1280x800, 900x800 and 390x844, including the cold, throttled flight.
   - At 1726x948 one case failed, a dot click from the limb view. The same far-view dot click fails on main's own check
     too: the first click after the view jumps sometimes chooses nothing, and a second click chooses it.
+
+## 2026-11-08: the group's chosen bodies in the place's bar (title.js renderMates; branch claude/home-chosen)
+
+Aaron: "If I'm in a group and my group-mates are on this tile show which avatar they have selected - in the top left
+underneath the place name." The second home-screen redesign, in the same round as the first.
+
+- **What shows.** Under the place's details in the top bar: a chip per group member at the place, with their face (the
+  avatar the rings put over their animal), their name and the body chosen ("as an american bison", "as the spirit"),
+  and a green dot once they are in the place's world. Hovering a chip holds that animal in its ring; a click picks the
+  same body, which goes in beside them (the rings' `joinWith`). Others in the tile stay a count.
+- **The data was already there.** The hub relays a member's `body` (a tile id and a species code) to their groups
+  alone, and only while they let their place be seen. `multiplayer.js` `bodiesAt` filters that to group members at the
+  tile. The one change: choosing a place now sends `body` as the spirit, so a member who has not picked yet is listed.
+  It is the same message the rings send, under the same rule. Leaving the place takes it back, as before. Nothing new
+  goes to the hub, and nothing is logged.
+- **The phone's top right.** The bar now measures the social row (the group's faces and the toggle) or the sign-in pill
+  and keeps the name's row clear of it (`--tt-clear`); the rows under it take the full width.
+- **Tested** on the local hub with four accounts:
+  - A, B and C in one group; E signed in with no group.
+  - B choosing the place showed on A's bar as "as the spirit".
+  - B as the bison and C as the raven showed on A's bar, picked through the rings' own path.
+  - Changes showed live: C to the bison and back to the spirit.
+  - B on another tile dropped off A's list.
+  - E saw no chips, and A never listed E.
+  - The same held on A's phone.
