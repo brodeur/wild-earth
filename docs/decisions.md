@@ -8453,3 +8453,25 @@ current orb can decrease in opacity, and a second brighter smaller orb could be 
 - **Debugging.** `__we.sight.legacyMarks = true` draws the orb as it was, with no spikes, for comparisons.
 - **Open.** In thick woodland at 200 m many spikes stand at once (101 lit prey in one frame from 150 m up). Fading the
   spikes of far, unselected prey once a quarry is selected would quiet that; not done.
+
+## 2026-11-08: join as the friend is (branch claude/join-as-species)
+
+Aaron: "When I click "Join" after a friend starts a tile, I should spawn right next to them, as the species they are,
+going the speed they are in the direction they are, but about 5 body lengths behind". Details in docs/multiplayer.md
+"Join as the friend is".
+- **Their species, not the spirit**: a Join comes in as the friend's relayed form, the spirit only when they are one. The
+  friend's form wins over a body chosen on the home screen's rings.
+- **Body length per species from the controls' own tables**: twice a walker's `half`, 0.45 of a bird's span (a red-tailed
+  hawk 0.56 m: 5 lengths is 2.8 m), times the friend's size; the spirit counts 2 m. Behind is along their trail, not only
+  straight back, so a friend who turned is followed round the turn.
+- **Their state carried to now**: from the time the relayed state came (the receiver's clock: the two clocks are not
+  compared), at their speed along their heading, at most 4 s. The spirit sends its speed (`v` in `pos`) because a trail
+  read off a 5 Hz relay under load gave 0 to 48 m/s for a 12 m/s spirit.
+- **Placed twice, the veil held until the frames are steady**: the first frames at a new place are slow and the loop
+  clamps a frame at 0.1 s, so a joiner placed at once lost ground in the first second; placing again from the latest
+  state just before the veil lifts keeps the gap at 5 lengths when the player first sees it.
+- **A walker holds the friend's speed a moment** (`carry`, 2.5 s or a key) rather than stopping dead with no key down.
+- **Bad spots slide along the trail, then to the nearest good spot**, and with none the old spirit above and behind; never
+  inside a trunk, a crown, the ground, deep water for a walker or off the tile.
+- **A hawk body when summon makes none**: the nearest living one on the tile is taken and moved, rather than failing.
+

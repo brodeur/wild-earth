@@ -172,7 +172,7 @@ export class Hub {
   // any form, to everyone else in the world while a spirit; a body's pose with no group goes nowhere. Never kept.
   pos(p) {
     if (!this.room) return false;
-    return this.send({ t: 'pos', x: p.x, y: p.y, z: p.z, yaw: p.yaw, form: p.form, ...(p.b ? { b: p.b, c: p.c } : {}) });   // b, c: the body's pose (bodySample.js)
+    return this.send({ t: 'pos', x: p.x, y: p.y, z: p.z, yaw: p.yaw, form: p.form, ...(p.b ? { b: p.b, c: p.c } : {}), ...(Number.isFinite(p.v) ? { v: p.v } : {}) });   // b, c: the body's pose (bodySample.js); v: the spirit's speed
   }
   // WebRTC signalling to a group member in the same room (voice.js): {to, tc?, k: 'sdp'|'ice'|'state'|'bye', ...}. Relayed
   // by the hub to that member's connection only, never kept.
