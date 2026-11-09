@@ -8465,3 +8465,10 @@ into parts (a mirror applies rows as they come), and nothing over is ever sent. 
 (it is a guard against misbehaving clients, and a later, bigger world would cross any new limit) and cutting what a
 joiner is sent (the joiner needs the fields to see the same trails). A test drives the encoder against a fake socket
 and fails over 64 KB. The form a joiner arrives in is a separate change (group follow), not this one.
+
+## 2026-11-09: the menu shows the hologram roads (client/src/roadsOverlay.js, main.js setMenu)
+
+- **The roads come on with the menu.** Aaron: "The holographic road map should show when the menu opens."
+  - **How:** `setMenu` in main.js sends a `we-menu` event, and the overlay listens for it. Because the listener is added while the world is being built, it is recorded and removed with the world, like G's.
+  - **On close:** if the roads were hidden before the menu opened, they hide again when it closes. If they were already on, they stay on.
+  - **G in the meantime:** pressing G while the menu is open makes it the player's choice, and closing the menu leaves the roads as G set them.
