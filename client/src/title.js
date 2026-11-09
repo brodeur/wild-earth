@@ -62,8 +62,11 @@ const TILT_ALT = [0.03, 0.0009];                           // the altitudes (ear
 // The tilt from straight down: none from space, steepening back as the view zooms out, and low over a chosen tile (Aaron,
 // 2026-11-07: the tile view was about 52 degrees above the horizon; "lower that angle by half when zoomed in. Zooming out
 // can steepen the angle"; then "make the angle a little bit flatter", then "a slightly shallower angle"): about 17
-// degrees above the horizon at a tile's framing distance, the lens narrowed there so no sky shows over it (lensFor)
-const TILT_MAX = 75 * DEG, TILT_AT = [0.03, 0.0025];
+// degrees above the horizon at a tile's framing distance, the lens narrowed there so no sky shows over it (lensFor); then
+// (2026-11-08) "the tile zoom state should again try to have a flatter angle of view": about 75 degrees from straight down
+// at rest (it was 69): TILT_MAX from TILT_AT[1] (70 km) in, so the resting distance has it whole (the flatter view's
+// narrower lens, 11-12 degrees, rests a tile 45-50 km out on a desktop, farther on a phone's narrow width)
+const TILT_MAX = 75.5 * DEG, TILT_AT = [0.03, 0.011];
 const ALT0 = 2.5, ALT_MIN = 0.6 / R_KM, ALT_MAX = 3.6;      // the camera's distance from the point it looks at
 // Flying to a chosen place is slow (Aaron, 2026-11-06: "slow enough so that the world has a chance to render ... by the
 // time they arrive at the tile, it's mostly loaded"): PLACE_SLOW times the free flight's time, within PLACE_MS; its last
@@ -147,13 +150,13 @@ const tiltFor = alt => TILT_MAX * smooth(Math.log(TILT_AT[0]), Math.log(TILT_AT[
 const fovFor = alt => lerp(FOV_FAR, FOV_NEAR, nearness(alt));
 // The lens low over the land: narrowed so the view's top edge stays HORIZON_CLEAR under the horizon (no sky over a chosen
 // tile however flat the tilt); offFrac: the view's offset down (frame: offY) over the height, which lifts the top edge
-const HORIZON_CLEAR = 1.5 * DEG;
+const HORIZON_CLEAR = 1.5 * DEG, LENS_MIN = 8;   // degrees: under the flattest rest's own (about 11), so the clearance always governs
 const lensFor = (alt, offFrac = 0) => {
   const fov = fovFor(alt) * DEG, t = tiltFor(alt), dip = Math.acos(1 / (1 + alt * Math.cos(t)));
   const room = Math.PI / 2 - t - dip - HORIZON_CLEAR;   // from the view's axis (90 - t under level) up to the line just under the horizon (dip under level)
   if (room >= Math.PI / 2 - 1e-3) return fov / DEG;   // looking down enough that no lens reaches the horizon
   const k = 1 + 2 * Math.max(0, offFrac), half = room > 0 ? Math.atan(Math.tan(room) / k) : 0.05;
-  return Math.max(12 * DEG, Math.min(fov, 2 * half)) / DEG;
+  return Math.max(LENS_MIN * DEG, Math.min(fov, 2 * half)) / DEG;
 };
 // How much of the map is over the earth's own picture: some from space (the spirit earth shows through), all of it near.
 const mapMixFor = alt => lerp(0.5, 1, smooth(1.4, 0.06, alt));

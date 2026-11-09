@@ -58,7 +58,8 @@ export const RING_HW = 0.64;                                 // the walkers' rin
 // relief's highest point (pin's top), each next a gap above it (ring radii): close between the walkers' two, the spirit
 // a little over them, then the fliers well up so their rings' fronts stand over the walkers' backs, not across them; an
 // empty ring takes no level
-const GAP = { land: 0.13, spirit: 0.2, air: 0.38, air2: 0.22 };   // to the walkers' inner, to the spirit, to the fliers' first, to their second
+// (Aaron, 2026-11-08: "extend the rings in elevation so there is a bit more distance between them": 1.4 times the first gaps)
+const GAP = { land: 0.18, spirit: 0.28, air: 0.53, air2: 0.31 };   // to the walkers' inner, to the spirit, to the fliers' first, to their second
 export const STACK_Y = GAP.land + GAP.spirit + GAP.air + GAP.air2;   // the top level over the lowest, all four rings filled
 export const AIR_R = [1.0, 1.42], AIR_ONE = 1.3;             // the fliers' inner (the smaller) and outer (the bigger, the soarers) rings' radii; their one ring's when few
 const WISP_UP = 0.07;                                 // the spirit over its level

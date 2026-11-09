@@ -8656,3 +8656,55 @@ underneath the place name." The second home-screen redesign, in the same round a
   - B on another tile dropped off A's list.
   - E saw no chips, and A never listed E.
   - The same held on A's phone.
+
+## 2026-11-08: stylesheets revalidated on every load, so a deploy never pairs an old title.css with a new title.js (server.py, client/index.html)
+
+Aaron, after the chosen-place redesign went live: "OK the tile zoom looks great for selecting a location when not logged
+in. However, when logged in it doesn't work the same way at all."
+
+- **Cause.** `server.py` sent `Cache-Control: no-cache` only for `.html`, `.js`, `.json` and directories. A stylesheet
+  came with `Last-Modified` alone, so the browser reused it by heuristic freshness without asking again.
+  `index.html` still linked `title.css?v=2026-11-07b` and `social.css?v=2026-11-06`; neither the redesign nor the join
+  cards had bumped them. A browser that had the home screen cached (Aaron's everyday profile, where he is signed in)
+  got the new `title.js` and the old `title.css`. The logged-out test, in a fresh window, got both new.
+  - **What stale CSS does.** The old CSS puts the place's bar at the bottom and keeps the list. `stageArea` reads the
+    bar's box, so the stage's top fell below its bottom (959 against 945 px at 1726x948). `chosenPose` found no room
+    and gave a regional view: 64 km away, the tile 15% of the width, the list still up.
+  - **Reproduced and checked.** Live sent `cache-control: no-cache` for `title.js` and nothing for `title.css`. The
+    symptom came back locally by serving the pre-redesign stylesheets in place of the new ones.
+  - **Not the cause.** The signed-in screen itself was fine with the new CSS: alone, in a group with a join card
+    showing, at 1726x948, 1280x800 and 390x844.
+- **Fix.**
+  - `server.py` `REVALIDATE` adds `.css`: a stylesheet is now revalidated on every load, a 304 when unchanged, as a
+    module is. `tests/test_static.py` `test_revalidated` checks the header.
+  - The three stylesheets' `?v=` moved to `2026-11-08b`. A browser holding a heuristically fresh old copy never asks
+    the server, so only a new URL reaches it. From now on a changed stylesheet needs no bump.
+
+## 2026-11-08: a flatter view at rest and more height between the ring levels; the phone's X clickable signed in (title.js, bodyRing.js, social.css)
+
+Aaron: "Either way, the tile zoom state should again try to have a flatter angle of view and extend the rings in
+elevation so there is a bit more distance between them."
+
+- **Ring levels 1.4 times apart.** `bodyRing.js` `GAP` went from 0.13/0.2/0.38/0.22 to 0.18/0.28/0.53/0.31 ring radii
+  (outer land to inner land, to the spirit, to the inner birds, to the outer birds). `STACK_Y` and title.js `STACK_UP`
+  follow, so the resting distance refits to keep the top bird ring under the place's bar.
+- **Flatter at rest: 75.5 degrees from straight down** on a desktop (it was 69-70). `TILT_MAX` is 75.5 degrees, reached
+  from `TILT_AT[1]` (70 km) in, because the flatter view rests farther out.
+  - **No sky, and why it rests farther.** The no-sky rule stays: `lensFor` narrows the lens so the view's top edge
+    stays 1.5 degrees under the horizon. At 75.5 degrees with the tile's near edge on the viewport's bottom, that lens
+    is about 11 degrees (it was 21), so the tile rests farther out to fill the frame.
+  - **The lens floor.** Its floor went from 12 degrees to `LENS_MIN` 8, below the flattest rest's own lens, so the
+    clearance always governs and the floor never lets the sky in.
+  - **Results:**
+
+    | Size | Tilt | Lens | Distance |
+    |---|---|---|---|
+    | 1726x948 | 75.5 degrees | 11.2 degrees | 48 km |
+    | 1280x800 | 75.5 degrees | 10.9 degrees | 53 km |
+    | 390x844 | 69.6 degrees (it was 56.5) | 14.9 degrees | 83 km |
+
+    The phone's narrow width sets its distance.
+- **The phone's X, signed in.** In `social.css`, `html.opening #social > *` (pointer-events on, through the id)
+  outranked the phone rule that made the social row's empty width click-through. The row spans the top of a phone's
+  screen, so it took the click meant for the X; before the redesign it blocked the search box the same way. The rule
+  now names `#social > .so-bar`.
