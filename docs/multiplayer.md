@@ -662,6 +662,64 @@ copies each message to every mirror (no fan-out cost measured past two pages). A
 animals; there is no choice of host by capability. The host's own frame does the work for every player's
 surroundings (two players 600 m apart: about 330 animals instead of 230).
 
+**Herds (2026-11-07).** A planned herd's members (pipeline/herds.py; a few hundred bison on Lamar) are never streamed
+one by one: at the stream's 24 KB/s cap they would crowd out everything else. The host sends each herd as one row in the
+`ast` message's `h` list (animals.js `herdRows`):
+
+    [key, slot, plan index, live, x, z, wx, wz, fcx, fcz, hdx, hdz, fleeT, ax, az, dead ranks]
+
+- **When a row goes.** When the herd's centre moved 0.5 m, its flight began or ended, a member died or its live state
+  changed, and at least every 8 ticks. A full snapshot sends them all.
+- **What it carries.** The centre, the grazing front's waypoint or flight point, the frame's centre and heading, the
+  flight's time left and origin, and the ranks that died. About 120 bytes a herd.
+- **The relay.** server.py relays `h` as it is (tests/test_animals.py).
+- **On a mirror (`mirrorHerds`).** The rows fill the page's own aggregates, and the far tier draws far herds from them.
+  As the mirror's player comes within LIVE_R plus a herd's radius, the mirror spawns the members itself
+  (`mirrorHerdLive`) from the same seeded ids and places (`herdLayout`) and steers them under the host's frame:
+  waypoint, heading, and a flight started from the member nearest its origin, with the wave as anywhere.
+- **Naming a member.** An event about a herd member (kill, gone, hp, kick, miss) names it by its id, which is the same
+  on every page. A mirror's startle, strike, catch or take of one asks the host by id. A mirror's own herd taking
+  fright asks the host to start the flight (`areq` `herdAlarm`), and the host's next row carries it to everyone.
+- **What was seen.** Two headless Chrome pages on Lamar, the mirror's player beside the 400-herd.
+  - Both pages ran 400 members with centres within 6 m.
+  - A flight started on the host reached the mirror's herd on the next tick; the two waves spread at the same pace and
+    the centres stayed within 3 m through the run.
+  - A flight started on the mirror reached the host the same way.
+  - A bison killed on the host fell at the same spot on the mirror, by its id, and neither page spawned it again.
+  - Over 51 s the herd rows were 26 KB of the host's 966 KB (about 0.5 KB/s); the largest message was the 32.8 KB join
+    snapshot.
+- **Fields (2026-11-08).** The herds' stigmergy fields (herdField.js: forage, trail, fear on 10 m cells) belong to the
+  host. It sends the cells written since the last as `ast.f`: base64 of two 32-bit words a cell, up to 4,000 cells a
+  message (43 KB), every 8 ticks, and after a join the whole changed set over several ticks. server.py relays `f` up to
+  60,000 characters. A mirror applies them (queued until its fields are made). No positions are kept.
+- **No message over the server's limit (2026-11-08).** Aaron: one computer flying as a hawk, the second pressed Join,
+  "i show up as a spirit but see no animals". The join's full resend put the spawns (up to 30 KB), every herd row and a
+  4,000-cell field delta (43 KB) in one message: 70-77 KB once the fields held over about 3,000 changed cells (a few
+  hours of herds on the home tile). ws.py closes a socket that sends over 64 KB (`WS_MAX_IN`), so the host lost its
+  socket, the server moved the host, the joiner was torn down as a fresh mirror and a host again, and the host's
+  reconnect began another full resend. Now (animalNet.js): every message is held to `MSG_MAX` 56,000 characters. The
+  field delta takes only the room the message has left after its spawns, groups and herd rows (the rest of the backlog
+  goes on later ticks), `sendAst` splits any message still over (the field delta alone, each array spread over parts,
+  which a mirror applies row by row as they come), and `raw` never sends anything over the limit (it counts
+  `stats.oversize` and warns once). `stats.maxOut` is the largest message sent and `stats.split` the splits.
+  tests/test_animal_net.py drives `tick()` against a fake socket (1,500 animals, 60 herd rows, 20,000 changed cells; and
+  3,000 herd rows) and fails over 64 KB; the old code sent 85,842 characters there.
+  - **Seen** (local server, two headless Chromes, A on the channel first as a red-tailed hawk (`?as=hawk`), the fields
+    filled by `herdFastForward`, then B opened the same tile): home in fall with 3,649 and 4,381 changed cells (the old
+    code lost the host's socket at 3,366), and Lamar in summer with 57,951. Each time A stayed host with no reconnect,
+    its largest message was 53,996-54,044 characters, the whole backlog drained, the server logged no host move, and B
+    was a mirror of all of A's animals: 967 and 971 on home (61 herds), 656 on Lamar (93 herds).
+  - **Nothing keys on the address.** Two computers on one network or mesh are two pages to the game: the animals
+    channel is a world per tile and season, the host chosen by page (`pg`, server.py `host_of`). hub.py reads the client
+    address only for sign-up, sign-in and recovery limits. The invitation carries the inviter's tile and season, so a
+    joiner opens the same animals channel (read in code; this round's check opened the second page directly rather than
+    through the hub's Join).
+- **Open.**
+  - The members on two pages are each page's own steering under one frame, so single animals do not stand in the same
+    spots, though the herd does.
+  - An AI hunter streamed from the host chases the host's copy of a bison while the mirror draws its own.
+  - A herd's layout recorded when it went far (`herdKeep`) is each page's own.
+
 ## Group follow
 
 Aaron, 2026-11-06: "When a player in a group is in a tile with another player, and one of them leaves to go to the main

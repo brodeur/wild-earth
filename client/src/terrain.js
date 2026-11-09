@@ -659,6 +659,7 @@ const FRAG = /* glsl */`
     vec3 w = texture2D(masks, vUv).rgb;                 // soft weights: grassland, oak woodland, chaparral
     float road = texture2D(roads, vUv).r;
     w *= 1.0 - smoothstep(0.55, 0.75, road);            // decayed pavement keeps its grey
+    float trail = smoothstep(0.03, 0.4, road) * (1.0 - step(0.54, road));   // a game trail (animals.js paintTrails: the band below the pavement's)
     vec3 photo = texture2D(map, vUv).rgb;
     vec3 c = groundRecolour(photo, w, vUv, smoothstep(0.55, 0.75, road));
     // Riparian floor by season: the texture's riparian mean is pulled to the season's hue (the ratio
@@ -669,6 +670,7 @@ const FRAG = /* glsl */`
       vec3 rr = ripTint / max(ripRef, vec3(0.01)); rr /= max(dot(rr, G_LUMA), 0.05);
       c = mix(c, c * rr * ripDark, wRip * ripMix);
     }
+    c = mix(c, c * vec3(0.74, 0.68, 0.6) + vec3(0.04, 0.032, 0.022), trail * 0.8);   // worn to the soil along a game trail
     c = groundWater(c, vUv);   // the water system's wet margins and mud (groundUniforms.waterMap)
     vec3 cPre = c;   // the photo's colour before the grain and the detail scans (the gap ground below keeps only their relief)
     vec3 cov3 = coverTex.rgb * 2.55;                    // tree, shrub, herb cover 0..1 (sky occlusion, litter, the sward)

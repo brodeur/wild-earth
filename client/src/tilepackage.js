@@ -589,7 +589,7 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
   for (const k of ['client.heights', 'client.texture', 'client.habitat', 'client.canopy', 'client.masks'])
     if (!L[k]) throw new Error(`tile ${id} lacks ${k}; run the derive step`);
   const MX = L['client.species_mix'], mixFiles = MX?.files || {};
-  const [heights, texture, habitat, canopy, masks, species, perception, calendar, games, locomotion, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior, detail, canopyHeight, groundTexture, seasonImage, lidarMicro, waterImg, waterWidthImg, substrate, substrateInfo, lidarCover, fauna, strata, canopyTop] = await Promise.all([
+  const [heights, texture, habitat, canopy, masks, species, perception, calendar, games, locomotion, imagery, features, roads, imageryTexture, mast, mixIndex, mixJson, mixDensity, outcrop, geology, soils, groundClasses, profile, speciesPrior, detail, canopyHeight, groundTexture, seasonImage, lidarMicro, waterImg, waterWidthImg, substrate, substrateInfo, lidarCover, fauna, strata, canopyTop, herds] = await Promise.all([
     loadImageData(dir + L['client.heights'].path, signal), loadImageData(dir + L['client.texture'].path, signal),
     loadImageData(dir + L['client.habitat'].path, signal), loadImageData(dir + L['client.canopy'].path, signal),
     loadImageData(dir + L['client.masks'].path, signal),
@@ -654,6 +654,9 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
     // the measured stand height on the habitat grid (pipeline/canopy_top.py: R x 0.5 m, 0 none), which the tree heights
     // follow (stature.js cellStature); optional (absent: the modelled heights)
     L['client.canopy_top'] ? loadImageData(dir + L['client.canopy_top'].path, signal).catch(() => null) : null,
+    // where the herd species gather by season and in herds of what size (pipeline/herds.py; animals.js installHerds);
+    // optional (absent: every herd from the cell spawns, as before)
+    L['client.herds'] ? fetch(dir + L['client.herds'].path, { signal }).then(r => r.ok ? r.json() : null).catch(() => null) : null,
   ]);
   if (signal?.aborted) throw aborted(signal);
   if (features) markRewilded(features, m);
@@ -699,6 +702,7 @@ export async function loadTile(tileId, base = '../tiles/', { signal = null } = {
     groundTextureImage: groundTexture, seasonImage,
     species, perception, calendar, games, locomotion, imagery, features, speciesPrior,
     fauna: fauna && fauna.format === 1 ? fauna : null,   // client/fauna.json (animals.js installFauna), or null
+    herds: herds && herds.format === 1 ? herds : null,   // client/herds.json (animals.js installHerds), or null
     latitude: (m.bounds_wgs84[1] + m.bounds_wgs84[3]) / 2,
   };
 }

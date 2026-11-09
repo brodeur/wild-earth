@@ -14,7 +14,7 @@ import {
 // The drawn model of each species the client draws (animalModels.js), and how it is posed when seen alone: shared by the
 // opening screen's stills (client/tools/opening_sprites.js renders one per species) and the home screen's rings of bodies
 // (bodyRing.js, live). MODELS[code] = [kind, load, pose = 0, soar]: kind G a ground animal standing (pose 1 the folded-wing
-// birds' pose), B a bird on the wing (soar: a soarer's flat wings); load() the model (animalModels.js: tiers or a geometry).
+// birds' pose: every standing bird, whose flight wings fold against the body at 1), B a bird on the wing (soar: a soarer's flat wings); load() the model (animalModels.js: tiers or a geometry).
 export const G = 'ground', B = 'bird';
 export const MODELS = {
   odocoileus_hemionus: [G, loadDeerMesh], ursus_americanus: [G, loadBearMesh], puma_concolor: [G, loadCougarMesh], canis_latrans: [G, loadCoyoteMesh],
@@ -27,15 +27,15 @@ export const MODELS = {
   cervus_canadensis: [G, loadElkCowMesh], lynx_rufus: [G, loadBobcatMesh], lontra_canadensis: [G, loadOtterMesh], lepus_americanus: [G, loadHareMesh],
   tamiasciurus_douglasii: [G, loadDouglasSquirrelMesh], tamias_townsendii: [G, loadChipmunkMesh], peromyscus_maniculatus: [G, loadDeerMouseMesh],
   plethodon_vehiculum: [G, loadSalamanderMesh], ensatina_eschscholtzii: [G, loadEnsatinaMesh], ariolimax_columbianus: [G, async () => buildSlug()],
-  ardea_herodias: [G, loadHeronMesh], mergus_merganser: [G, loadMerganserMesh], corvus_brachyrhynchos: [G, loadCrowGroundMesh],
+  ardea_herodias: [G, loadHeronMesh, 1], mergus_merganser: [G, loadMerganserMesh, 1], corvus_brachyrhynchos: [G, loadCrowGroundMesh],
   troglodytes_pacificus: [B, loadWrenMesh], perisoreus_canadensis: [B, loadGrayJayMesh], poecile_rufescens: [B, loadChickadeeMesh],
   strix_varia: [B, loadOwlMesh], megaceryle_alcyon: [B, loadKingfisherMesh], haliaeetus_leucocephalus: [B, loadEagleMesh, 0, 'soar'],
   // the second batch (2026-11-06)
-  turdus_migratorius: [G, loadRobinMesh], sturnus_vulgaris: [G, loadStarlingMesh], ixoreus_naevius: [G, loadVariedThrushMesh], junco_hyemalis: [G, loadJuncoMesh],
+  turdus_migratorius: [G, loadRobinMesh, 1], sturnus_vulgaris: [G, loadStarlingMesh, 1], ixoreus_naevius: [G, loadVariedThrushMesh, 1], junco_hyemalis: [G, loadJuncoMesh, 1],
   regulus_satrapa: [B, loadKingletMesh], empidonax_difficilis: [B, loadFlycatcherMesh], megascops_kennicottii: [B, loadScreechOwlMesh],
   aegolius_acadicus: [B, loadSawWhetOwlMesh], leuconotopicus_villosus: [B, async () => buildHairyWoodpecker()],
   pandion_haliaetus: [B, loadOspreyMesh, 0, 'soar'], accipiter_striatus: [B, loadSharpShinnedMesh, 0, 'soar'], falco_columbarius: [B, loadMerlinMesh, 0, 'soar'],
   larus_glaucescens: [B, loadGlaucousGullMesh, 0, 'soar'], larus_californicus: [B, loadCaliforniaGullMesh, 0, 'soar'], larus_occidentalis: [B, loadWesternGullMesh, 0, 'soar'],
-  anas_platyrhynchos: [G, loadMallardMesh], dendragapus_fuliginosus: [G, loadGrouseMesh], marmota_olympus: [G, loadMarmotMesh],
+  anas_platyrhynchos: [G, loadMallardMesh, 1], dendragapus_fuliginosus: [G, loadGrouseMesh, 1], marmota_olympus: [G, loadMarmotMesh],
   tamias_amoenus: [G, loadYellowPineChipmunkMesh], sorex_monticolus: [G, loadShrewMesh], anaxyrus_boreas: [G, loadToadMesh], rana_cascadae: [G, loadFrogMesh],
 };

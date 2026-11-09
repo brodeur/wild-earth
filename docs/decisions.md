@@ -7860,6 +7860,10 @@ or AVONET row, not a per-species patch.
   - **The `G` overlay stays.** OSM ghost roads remain as a present-day overlay.
 - **A reach's water outline no longer depends on its place in the file (water step 3).** The width wander (0.55–1.4 × width/2, periods 41 and 17 m) was phased by the reach's index in channels.geojson. Removing roads changed two reaches elsewhere on Lamar, and the main stem at the river probe went from index 219 to 217. Its water then spread over the near gravel bar even though that reach's line, ground, levels and profile were unchanged. The phase now comes from the reach's start point.
   - **Still open.** The wander is decoration, not data. At the probe the photo shows water up to the south bank's grass with the bar across on the north side, which neither the old outline nor the new one draws. Fitting big rivers' width to the imagery's water is the follow-up.
+- **A chosen tile is seen from low over the land (2026-11-07).** Aaron: "lower that angle by half when zoomed in. Zooming out can steepen the angle."
+  - **Before.** The title's camera was 38° from straight down at a tile's framing distance, about 52° above the horizon.
+  - **Now.** It is 63° from straight down there, about 27° above the horizon. The relief and the rings read as a model on a table.
+  - **How.** The tilt has its own altitude curve (`TILT_MAX` 66°, eased from 190 km to 16 km) and no longer shares the lens's curve. Zooming out still steepens it to straight down from space.
 - **The road rules rebuilt onto every tile (2026-11-07).** The base and flora stages were run on every tile the road rules left stale:
   - Cosumnes, Placerville and Calaveras;
   - both Yosemite cells and both San Francisco cells;
@@ -7936,3 +7940,584 @@ Aaron approved fixing what the El Dorado and Yosemite comparison turned up ("Yes
   - **Wet meadows as gallery forest.** Yosemite's wet meadows (El Capitan Meadow) draw as gallery forest: the water system's terrace zone gives them the riparian rows' trees at density 1.3. A meadow terrace should be sedges and grass.
   - **Stray polygon.** A dark-green low-poly blob floats at the top left of the El Dorado town pose, the same in the new and fixed builds.
   - **Camera inside a tree.** The fixed creek pose now has a riparian willow in front of the lens (the new mix moved the trees), so a second creek pose (c4) is shown too.
+- **The tile view flatter, and the rings controlled on their own (2026-11-07).** Aaron: "make the angle a little bit flatter, and then make the radius of the birds circle bigger. Lets also decrease the size of the avatars the further away they are from the camera. There are inner and outer rings of animals, they should spin in opposite directions and be independently controlled. Birds on the ground should not have their wings spread."
+  - **Angle.** A chosen tile is now seen from about 69.5° from straight down (about 20° above the horizon) at 1280×800; it was 63°. `TILT_MAX` is 78.5° on the same altitude curve, so zooming out still steepens to straight down. At a phone's width the framing distance is longer, so the view is about 64°.
+  - **No sky.** At that tilt the old lens (about 49° tall, with the view offset down to the focus area) reached past the horizon. `lensFor` narrows the lens so the view's top edge stays 4° under the horizon (the horizon's dip from the camera's height and the offset counted). At the framing distance the lens is about 39°, which also reads more like a model on a table. When the view looks down far enough that no lens reaches the horizon, the lens is untouched. Checked by picking the earth at the top row of the canvas at 1280×800 and at 390×844.
+  - **The bird ring.** Radius 1.42 walker-ring radii (out to about the tile's edge; two staggered rows of 1.08 and 0.88 of that when there are more than 14) at 1.12 ring radii up. At 20° above the horizon a raised ring's front projects onto the tile's middle; at that height the bird ring's front sits just above the back of the walkers, so on screen the birds are their own ellipse over the tile and clear of the title and buttons. The spirit came down to 0.28, inside the walkers.
+  - **Size by distance.** Each animal is scaled by `1 + 0.3 × depth` (depth in ring radii along the level line toward the camera, at least 0.6), on top of the perspective: on Lamar the front of the outer ring is drawn at 1.35×, the back at 0.65×. The shadow, the halo, the hover hit and the faces follow the same size.
+  - **Three rings.** More than 14 walkers stand in an outer ring (radius 1.16) and an inner ring (0.8), each holding its share by length so both are spaced alike (Lamar: 25 and 17); the fliers have a third ring. They turn at 0.075, -0.06 and -0.05 rad/s, so the walkers' two rings go opposite ways. Choosing an animal swings only its own ring to the front; a ring held for an earlier choice goes back to its turn. The pointer over an animal holds that ring still. A drag starting on an animal turns that ring alone (its front follows the pointer), and the fling eases back into the ring's own turn; a still click chooses as before. The fliers' ring no longer opens a gap in front of a chosen walker: from this angle the birds are above the walkers on screen.
+  - **Folded wings.** Every bird on the walkers' rings stands at pose 1 (wings folded), keyed on its model's rig (`rig.kind === 'bird'`), not a species list. Lamar's heron, mallard, mergansers, goose, goldeneye, coot and sandpiper stood at pose 0, which spreads the heron and merganser templates' wings.
+  - **The zoom check's size bound.** `tools/home_zoom_check.mjs` asked for 35-50% of the window's width, tuned at 1440 px with the steeper view; at 1280×800 the tile now fills 32.7% of the window and 76% of the free centre (its near edge fills the focus area). The bound is now 70-100% of the free centre at every width, as it was on a phone. Lamar at 1280×800 passes, centred exactly from every entry point, and held centred through a cold 20 Mbit/s flight.
+  - **Still open.** The pelican's own model (`fauna/pelecanus_erythrorhynchos.glb`) keeps its wings out at every pose, so it still stands spread on Lamar and El Dorado; that is the model, not the ring. Several fliers with only a standing model (crow, robin, starling, junco, thrush) still float in the bird ring standing. At a 900 px window the free centre is narrow and a tile frames small and steep (62 km away, about 30°), as on main.
+
+## 2026-11-07: segmented bird wings on one shared wing rig (client/src/birdWing.js; branch claude/segmented-wings)
+
+Aaron: "Right now on basic models for birds, the wings are one card. They should really be two or three cards because
+that is how a wing is structured. Just that basic change + wing rigging that applies to all birds would dramatically
+improve their readability." Most birds on a pipeline tile are stand-ins without a mesh of their own, drawn by the
+procedural kin builders (`buildStellersJay`, `buildQuail`, `buildHawk`, `buildVulture`, `buildRaven`, the woodpeckers,
+`buildTurkey`), whose wings were one rigid slab per side that, perched, swung back and poked out past the tail. The
+drawn standing birds had an arm and a hand card that shrank into the shoulder on the ground.
+
+Chosen: every bird's flight wing is re-made at load from what its old wing measured, with nothing drawn per species:
+- **Shape.** Three cards per side: the arm (secondaries and coverts, shoulder to wrist, two colour rows above), the hand
+  (inner primaries, leading edge swept back) and the tip (TIP_L/R, parts 11/12: the outer primaries). Span, root chord
+  and colours are read from the old cards or slabs, which were drawn to field-guide spans. The shape comes from AVONET's
+  Hand-Wing Index (the fauna slot's `hand_wing_index`, or `birdWing.js` HWI for the hand-built cast, recorded from
+  AVONET1): the hand's share of the span, the sweep, where the tip sits on the chord, and the chord itself (a falcon's
+  long pointed wing, a jay's short round one). A heavy wing with a low index is slotted. Above 0.33 kg and under an
+  index of 47, the tip becomes a fan of 4-6 separate fingers (more with mass). The exceptions are the Anatidae and the
+  Rallidae, whose 46-51 index or short round wings are never fingered. That gives fingers to buteos, eagles, vultures,
+  crows, owls, herons, cranes, pelicans and turkeys, and none to falcons, gulls, ducks, swallows or coots. A stand-in
+  re-makes its kin's wing with its own index and mass, so a kestrel on the hawk's body gets a falcon's wing.
+- **Rig.** One block in every animal program that has `model.wing` (`WING_RIG`; the depth and planar-shadow programs
+  share the body, so shadows follow). The joints are shoulder, wrist and fingertip, each child turning about its own
+  pivot. The beat runs out along the wing: the hand lags the arm, the tip lags the hand. On the upstroke the wrist bends
+  (the hand and tip sweep back in the wing's plane, the primaries close a little); on the downstroke the wing spreads
+  and the tip opens forward. A glide holds a slight dihedral, with the hands bowed by `aAnim2.x` where the template
+  has it. Pose folds the wing: the arm rolls into the vertical plane at the body's side with its upper side out and
+  hangs a little behind the vertical, its secondaries stacking (the arm's span to 0.4), and the hand doubles back at
+  the wrist to lie along the flank toward the tail with its primaries closed. Nothing shrinks into the shoulder. A
+  procedural body has no folded wing of its own, so the folded cards lie against it. A drawn mesh has one, so its cards
+  fold the same way and, over the last 40% of the fold, tuck into the body behind the mesh's own folded wing. The
+  soarers' flight meshes keep their own wings on the same rig, and pose stays their stoop (the arm sweeps back at the
+  shoulder, the hand further). The procedural hawk and vulture (the raptor and gull stand-ins) get the generated wing
+  on that stoop rig. The ground raven's and crow's folded mesh wings (`RIG_GROUND`) are untouched.
+- **Cost.** No new attributes or textures. The part id and the pivots as program constants carry everything. The
+  procedural bodies stay at 6 attributes and the drawn ones at 8-9, plus aAnim, aAnim2 and the instance matrix, under
+  Metal's 16. Each wing is 60-100 triangles a side (the old slabs were 24, the old cards 20-40); the lod2 tier uses one strip per card.
+
+Also: the home screen's walkers' ring drew the herons, egrets and mergansers (and their stand-ins) with their flight
+cards spread, because their `bodyModels.js` entries posed a standing bird at 0. Every standing bird is now posed at 1.
+
+Rejected: rebuilding the ~30 bird GLBs in Blender with new cards. The tools would have needed a second copy of the
+shape rule, and the procedural stand-ins, the bulk of the cast on pipeline tiles, would still have needed the
+client-side version. Also rejected: a per-finger fan attribute (a 17th slot on some paths); the fingers close by
+squeezing toward the tip joint's chord line instead.
+
+## The rings sorted by size, sized and spaced by depth, the tile framed closer (2026-11-07)
+
+Aaron, on the tile start screen: "The outer rings should be smaller species, the inner ring should be bigger species";
+the size by depth "should be a bit stronger ... As things get closer, their margin should also grow"; and a chosen tile
+"slightly more zoomed in and a slightly shallower angle".
+
+- **Big inside, small outside.** The walkers split by mass (`bodyRing.js` `splitBySize`): the tile's locomotion layer's
+  `mass_kg`, a stand-in's own fauna `mass_kg`, else its kin's scaled by its size cubed, else the controller's half-length
+  cubed at a deer's density (`massOf`). The heaviest go inside, as many as leave both rings the same room per animal over
+  their length, so the inner ring holds fewer. Each ring keeps the list's order, so big and small stay mixed round it
+  rather than graded. Lamar: 13 inside (coyote up to bison), 29 outside (otter down to the salamander). Every walker on all 18
+  tiles has a known mass.
+- **Stronger depth.** `DEPTH_K` 0.3 to 0.5, bounded to 0.45-1.65: the outer ring's front about 1.6x and its back 0.45x
+  (was 1.35 and 0.65).
+- **Gaps by depth.** Each animal's even slot, measured from the front as psi, is drawn at psi + e sin psi (`warp`), so the
+  gaps run 1 + e cos psi of the even gap, wider at the front and tighter at the back in step with the size (e: the size's
+  slope times the ring's radius, at most 0.55). It is a smooth, monotone function of the ring's turn (e < 1), so nothing
+  jitters and nothing overtakes; the front and back points stay put, so a choice still swings to the front. A drag
+  divides by the local stretch so the grabbed animal stays under the pointer. Checked over 60 frames of turning and a
+  fling: no ring changed its order.
+- **Closer and flatter.** `TILT_MAX` 78.5 to 84 degrees, and `chosenPose` fits differently: up and down, 85% of the tile
+  (`TILE_FIT`) fits the focus area, its far edge a little past (under the fliers); across, the tile's middle fits the
+  focus area and its near corners (the widest part) the free centre, into the margins but clear of the list. At
+  1280x800 a tile is 72 degrees from vertical (was 69.5) and about 9% bigger on screen (Lamar 554 px across, was 510). The
+  camera is a little farther, 28.7 km against 26.9, because `lensFor` narrows the lens at the flatter angle to keep the
+  sky out (34 degrees, was 39). Phone 390x844: 67.8 degrees (was about 64). 900 px wide: still small and steep, the list
+  and the right column leaving about 280 px, as on main.
+  `tools/home_zoom_check.mjs` on Lamar passes at 1280x800 (the tile's middle 83% of the free centre) and 390x844; the
+  limb-to-row case was off by 5.6% vertically once and centred on the rerun.
+
+Rejected: grading the sizes round each ring (the biggest at one side reads as a queue); spacing by the measured size of
+each neighbour (it changes as the ring turns and depthF changes, so the slots would breathe); shrinking the whole tile's
+fit including across (the near corners slid under the list).
+## 2026-11-07: herds of hundreds, phase 1: the numbers (pipeline/herds.py, library/herds/, animals.js installHerds; branch claude/unruffled-davinci-5a31ae)
+
+Brief: herds of hundreds, bison on Lamar first, the same rule for elk and deer everywhere, rules not species. Before: a
+herd species spawned one group per lucky 30 m habitat cell, sized by PanTHERIA's species-mean group (bison [5, 30], the
+client clamping every stand-in's group to 40 and its pool to 160) and spread by its species-mean density (bison 0.28
+per km2, about 28 on the whole tile). Real grazers do not spread evenly: the same animals gather on the open, low,
+watered ground of their seasonal ranges, and the denser they stand the larger the groups they form.
+
+- **The rule (pipeline/herds.py, step `herds`, fauna stage, after animals and resources; writes client/herds.json).**
+  Per herd species (a fauna slot of the 'grazing or browsing herd' archetype, and the client's static elk and mule deer)
+  and per season:
+  - N = density x land area. Density is the slot's PanTHERIA mean unless library/herds/tiles.json records a count for
+    the tile (a per-tile fine-tune, with its source and how it was reduced).
+  - The seasonal range on the 30 m grid: S = forage x open^2 x water x gentle x low^w (forage: the season's grass-and-forbs
+    or browse score; open: 1 - tree cover; water: 0.4 + 0.6 x the water score; gentle: 1 - slope/30 deg; low: the cell's
+    height within its 1.5 km neighbourhood, weighted 2 in winter, 1.5 spring, 1 fall, 0.7 summer). The range is the cells
+    holding the best 80 % of S. A species library/herds/species.json marks 'steep' (bighorn, mountain goats) takes the
+    25-50 deg slopes instead.
+  - The typical herd G = g0 x sqrt(D_r / D0): PanTHERIA's group g0 at its density D0, grown with the density on the range
+    D_r (group size rising about as the square root of local density, the fission-fusion result in ungulates: Fortin et
+    al. 2009 for bison, Pepin and Gerard 2008 for chamois).
+  - Herd sizes lognormal about G (sigma 0.7) until N is used, each at most 400 (the frame budget's ceiling, not
+    biology's); the largest to the best spot of S blurred over its radius, each next clear of the others by 2 radii +
+    150 m. Radius sqrt(n x a / pi), a = (4 body lengths)^2 x 1.3, length 0.32 x mass^(1/3).
+  - Emitted only when G exceeds the client's own group for the species and PanTHERIA's group is at least 3, so where
+    the cells already draw what the rule would (a foothill mule deer, a moose) nothing changes. Seeded by tile, code and
+    season.
+- **Per-tile fine-tunes (library/herds/tiles.json).** Lamar's bison: 6 per km2 in summer, 3 spring, 2.5 fall, 1.5 winter,
+  from the NPS summer counts of the northern bison (3,667 in 2019, 3,819 in 2023) over a Lamar and Mirror Plateau summer
+  range of about 600 km2, the rut gathering there mid-July to mid-August (NPS bison executive summary). Lamar's elk: 2.5
+  per km2 in winter down to 0.8 in summer, from the April 2025 count (1,102 of the northern herd's 7,226 inside the park).
+  Both are recorded as modelling reductions, not counts on the tile. Per-species (library/herds/species.json): the steep
+  terrain of bighorn and goats, and each species' rut months (bison July-August, elk September-October, mule deer
+  November-December), with sources.
+- **What it gives.** Lamar summer: bison 589 in herds of 400, 163 and 26, all on the valley floor (1,986-2,028 m against
+  the tile's lowest 1,972 m) in grass and sage; winter one herd of 147 by the Lamar's lower reach. Pronghorn 81 in 5
+  herds (34 largest), bighorn 145 in 6 bands on 26-39 deg slopes, elk 246 in 11 herds in winter (35 largest), none planned
+  in summer (G 15.4 is within the elk machine's 16: the cells stand). The Hoh's elk: 180 in 3-6 herds up to 90 on the
+  river flats. Mule deer: PanTHERIA's genus group 2.25 is under 3, so the cells stand on every tile; moose: solitary.
+- **The client (animals.js).** `installHerds` reads client/herds.json (tilepackage.js tile.herds, optional) after
+  installFauna, raises the slot's pool to the two largest herds of any season + 10 % (at most 900; the static elk's bull
+  slot to a quarter of it) and records the rut months; restoreFauna puts the static pools back. A slot with a plan for the
+  season is left out of the cell spawns; `spawnHerds` keeps a herd aggregate per planned herd (its centre kept through
+  the season, so a herd that walked off is met where it went) and spawns its members while the centre is within LIVE_R +
+  its radius of this player or, as the host, another. Members: cows, the year's calves (22 %, April on), bulls (14 % in
+  the rut, 6 % otherwise; the static elk's in their slot, EB). installFauna's group clamp is 400 and pool 900 for the
+  herd archetype (40 and 160 for the rest).
+- **Checked.** tests/test_herds.py (sizes sum and are seeded; a dense grazer gathers on a synthetic valley floor in herds
+  kept apart; small groups and sparse species left to the cells; steep species on slopes). In a headless Chrome on Lamar
+  in late July, the 400-herd's members all spawned (400 bison live) as the eye came within LIVE_R + 137 m, and read from
+  45 m up as a herd on the floor beside the creek.
+- **Not yet (phase 2, below).** The followers held fixed offsets round the leader, so a herd of 400 moved as a rigid
+  disc; the leader alone saw a threat.
+
+## 2026-11-07: herds of hundreds, phase 2: herd motion that scales (animals.js herdPass, herdRoles, herdSteer, herdAlarm)
+
+Every herd on the deer machine (mule deer, elk and their stand-ins: bison, pronghorn, bighorn; cell-spawned and planned
+alike) is now a leader and members steering among their neighbours. Before, each follower walked to a fixed offset round
+the leader (in single file behind it when it walked), and only the leader saw a threat; the whole herd set off on the
+same frame.
+
+- **The hash.** Each frame `herdPass` puts every herd member into the existing 30 m BUCKET cells (a Map of reused arrays)
+  and takes each herd's centre and heading. A member reads only the 3 x 3 cells round it, so the cost grows with the
+  herd, not its square.
+- **Grazing.** A member stands and eats until it is out of its place, then takes a few steps (stand, step, stand):
+  - separation inside 2.5 body lengths (body length 2.2 x its body height), soft enough that only real crowding starts
+    a step;
+  - a pull to its anchor once it is outside its slack: a cow cluster of about 25 (fixed round the herd's frame centre),
+    the bulls' band at the edge outside the rut (the rut mixes them in), 4 % stragglers grazing just off their own side
+    of the herd, each calf within a body length or so of its mother's flank (its mother: the cow placed just before it,
+    and it spawns beside her);
+  - now and then (every 40 s or so) a few steps on to fresh grass;
+  - alignment shapes a step but never starts one (it had set the whole herd walking, each walker keeping its
+    neighbours walking).
+- **The grazing front.** A big herd's frame is the herd itself: its centre drifts toward a waypoint at 0.08 m/s, each
+  next waypoint the most open of six spots 30-80 m on (within twice the radius of home), and the lead cow is a member
+  anchored at the front. A small herd's frame stays behind its leader, which walks between waypoints as before.
+- **Travel.** Walking, piloted or in flight, each member follows the nearest neighbour ahead of it in the direction of
+  travel, a gap behind; one with nobody ahead falls in behind the leader (in a flight it runs on). A small herd walks in
+  file (Lamar's mule deer: 5, 9, 9, 14 and 14 m behind the leader), a big one in parallel files.
+- **The alarm wave.** Any member that sees the danger starts the flight (`herdAlarm`: the herd's flight point away from
+  the threat past its centre, the flight 8 + radius/8 s, so a big herd's outlasts the wave crossing it). Every other
+  member takes it up from any alarmed neighbour within its reach, after a reaction of 0.25-0.6 s, and runs at flight
+  pace. Bedded animals get up at once. The gallop (within 40 m of the threat) is each animal's own. The hunt reads the
+  herd's flight as before (`fled`).
+- **Checked (headless Chrome, Lamar, late July, 7:30).** The 400-herd grazing held its spread (RMS radius about 80 m,
+  nearest neighbour about 6.5 m, about 2.5 bison lengths) with 14-20 % of it stepping at any moment, a mean speed of
+  0.1 m/s, while the centre drifted at the front's pace. An alarm at its west edge reached 19 animals by 1.8 s, 163 by
+  5.3 s, 376 by 8.9 s and 398 of 400 by 11 s (two stragglers out of reach never heard it). The whole herd was then at
+  flight pace, running in files. Before the fixes, three bugs showed in the numbers:
+  - the cow clusters' angle was off by pi, so every cow reached for an anchor across the herd and the herd collapsed
+    to a knot 20 m across;
+  - the frame followed a wandering leader;
+  - every alarmed animal matched the speed of a still-grazing one ahead of it, so nobody ran until the leader did.
+- **Frame time, before and after (headless Chrome, ANGLE/Metal on the M1 Pro, 1280 x 800, load 4-5).**
+  - **Setup.** Lamar on 2026-07-25 at 7:30, the camera held 240 m from the 400-herd's centre and 45 m up, looking at
+    it. 300 frames per run, alternating main (e4bd1f7, port 8781) and this branch, Chrome restarted for every run.
+  - **Main.** 382 animals: `animals.update` 0.4 ms (median), frame 16.7 ms, GPU per frame 12.4 and 12.6 ms (two runs).
+  - **This branch.** 782 animals, 400 of them bison in view: `animals.update` 1.1 ms (p90 1.2-1.3), frame 16.7 ms, GPU
+    12.8 and 12.6 ms.
+  - **Reading.** The herd costs about 0.7 ms of CPU and nothing measurable on the GPU at this distance (the far tier of
+    the drawn bison). The frame stays at the 60 Hz budget.
+  - **Caveat.** The GPU figure is one timer query over each frame's renders, without the fence protocol. It is good for a
+    whole-frame A/B, not for pricing one draw.
+  - **Discarded runs.** Runs after many page loads in one Chrome read 3 draw calls and no animals (a lost context: the
+    16-context limit).
+- **Not yet.**
+  - The far tier (a herd seen beyond LIVE_R from a ridge or the title view).
+  - A close GPU budget with the herd inside the leg engine's live range.
+  - Syncing herds as aggregates to mirrors.
+  - The bison model reads reddish-brown where summer adults are dark brown (the model's colour, not the herd's).
+
+## 2026-11-07: herds of hundreds, phase 3: the far tier (animals.js farHerds, aggDrift, herdLayout, herdKeep; relief.js herdDots)
+
+Aaron saw phases 1-2 and said "Build far view". A planned herd existed only within LIVE_R + its radius of the eye, so
+from a ridge 1-3 km off, or from the title view, the valley was empty.
+
+- **The aggregate.** Each planned herd keeps one aggregate through the season (`herdAgg`): its centre, its grazing
+  front's waypoint and its members' places round the centre (`A.lay`: offset, heading, size, bull, calf per member).
+  - **While far (host only).** `aggDrift` moves the centre as a big herd's frame drifts: 0.08 m/s toward the most open of
+    six spots 30-80 m on, within twice its radius of home, and not at all while the herd is down at its hours.
+  - **The places.** They come from `herdLayout`, the same seeded draws `spawnHerd` makes for each member, in add()'s
+    order. When a herd goes far, `herdKeep` records where each member actually was.
+- **The far bodies.**
+  - **One mesh per species.** The geometry, material and haze are those of the tier the live animals are drawn with at
+    that range: the drawn model's farthest tier (lod2), else the procedural body. Pose rows come from the same far clip
+    drive (the leg engine's `farDrive` or the skinned clips), eight per state, grazing or bedded by the herd's hours.
+  - **Grown to read.** Each body grows so it stays about 3 px long (FAR_PX, at most 5x). At 480 m it is drawn at its own
+    size; at 2 km about twice.
+  - **Rewritten every 0.25 s,** and at once when a herd changes between live and far, so it is never drawn twice or not
+    at all. Far bodies are not hunted, counted, perceived, souled or streamed: nothing but the far meshes knows them.
+- **No pop.** Coming in, the members spawn exactly where their far bodies stood, in the pose they were drawn in (lying
+  down if the herd is down), from the layout the far tier drew. Approaching Lamar's 400-herd from 1.1 km at 35 m up in
+  10 m steps, it resolved at 480 m. Every member stood within 4 cm of its far body (median 0; the drift between
+  rewrites), and the last far frame and the first live frame look the same.
+- **From a ridge.** From an open ridge 2.0 km from the 163-herd and 217 m above it, the herd reads as a dark band of dots
+  on the valley floor beyond the creek; from the Lamar overlook 2.9 km off and 335 m up, the 400-herd reads as a dark
+  cluster. Both are faint in the morning haze: the haze takes the contrast as it takes the land's.
+- **From the title view (relief.js).** The chosen tile's relief model fetches client/herds.json and puts the season's herds
+  on it as small dark boxes (up to 160 a herd), raised with the relief.
+  - **Spread 3x.** The disc is spread HERD_SPREAD times, as the heights are exaggerated. A 270 m herd is 5 px from the
+    title's camera and each bison a tenth of a pixel; spread, the herd is a dark patch of about 15 px.
+  - **Body size.** Each box is sized so the herd's dark share of its disc is about half.
+  - **Still hard to see.** The title's rings of avatars stand over much of the tile, and the patches read only where
+    they are clear of them.
+- **Bison darkened to their summer coat (pipeline/appearance.py model_tint, library/animals/tints.json).**
+  - **Why.** The bison mesh came out a reddish tan (#7a4b29) and a herd read from a ridge as a pale pink patch.
+  - **Why not a rule.** A general rule could not decide this: the description gives "dark-brown, brown", and the mesh
+    already matches "brown" (CIEDE2000 4.6).
+  - **The record.** The target is a recorded per-species choice (#3b2c22, the summer dark brown Aaron asked for; source
+    Meagher 1986, Mammalian Species 266). The multiplier is the rule: the target over the model's measured body colour
+    (upperparts and flanks, area-weighted median), per linear channel.
+  - **Where it lands.** fauna_slots writes it into the slot's `tint` with its `tint_source`. The client now tints a drawn
+    model's tiers as it tinted procedural stand-ins (`tintedTiers`, once per shared geometry). Lamar's bison: tint
+    [0.225, 0.361, 0.726]. The animals step was re-run on Lamar; only the bison slot changed.
+- **The elk's band from the tile's own range (animals.js ELK_BAND).** The static elk's elevation band was the Olympics'
+  (300 m base; tops 700 m in winter, 1,200 m in spring and fall, 1,700 m in summer), so on Lamar (1,970-2,930 m) no elk
+  ever spawned in summer from the cells.
+  - **The rule.** The band is now fractions of the tile's height span above its lowest ground (base 0.09; tops 0.36,
+    0.70, 1.05), fitted so the Hoh (165-1,640 m) keeps its numbers (298 m; 696, 1,197 and 1,714 m).
+  - **Lamar.** The winter top is 2,317 m, and in summer the whole tile.
+
+## 2026-11-07: herds of hundreds, phase 4: the budget close in and far off
+
+- **How it was measured.** Headless Chrome, ANGLE/Metal on the M1 Pro, 1280 x 800, Lamar on 2026-07-25 at 8:00. Other
+  sessions kept the load average at 11-20 throughout, so whole-frame numbers swing by several ms between identical
+  runs; the bison's own cost was isolated with the fenced timer-query protocol instead (docs memory "GPU timer query").
+  - **Isolation.** The bison meshes (every drawn tier, their planar shadows, the far mesh) and the lights go on camera
+    layer 7, with the shadow maps frozen. Per sample: one untimed render, a fence waited to SIGNALED, then 8 renders
+    inside one TIME_ELAPSED query. On and off alternated for 24 rounds; medians reported.
+- **Close in.** The camera 6 m up, about 90 m from the 400-herd's centre: 302 bison within 150 m, and all 31 of the leg
+  engine's live rows in use. The bison's live range (150 m) holds more bison than the clip texture has rows; the rest
+  draw the engine's baked far cycles, as any animal past its live range does.
+  - **`animals.update`.** 2.1-2.2 ms against main's 0.5 (CPU, median): steering, the hash and the leg engine for 31.
+  - **Isolated GPU.** 158 at lod1, 242 at lod2, their shadows and 189 far bodies of the other herds: 0.17 ms over the
+    empty pass (quartiles overlapping). From inside the herd (6 at lod0, 211 at lod1, 183 at lod2, shadows, 189 far):
+    0.24 ms.
+  - **Whole frame.** Branch 15.0 and 20.8 ms GPU against main's 19.4 and 19.1 at the same pose (main has no herd
+    there). That is within the load's noise.
+- **Far off.** From the 2 km ridge, the 589 far bodies (the season's three bison herds) cost 0.27 ms isolated. The whole
+  frame read 17.7 and 18.1 ms against main's 17.5 and 17.3, with `animals.update` unchanged (0.6-0.7 ms).
+- **Reading.** The herd costs CPU, not GPU: about 1.6 ms of `animals.update` close in and nothing past LIVE_R. The draws
+  are instanced and stay well under a millisecond. Both texture units and vertex attributes are untouched: the far mesh
+  reuses the tier's geometry and material, with the same four instance attributes (aAnim, aAnim2, aClip, aBend) the
+  tier carries, so no program gains a slot (Metal's 16 attributes, 16 texture units).
+- **Not done.** A quiet-machine A/B of the whole frame (the load never dropped below 11 while this ran). The leg
+  engine's 31 rows are a cap of the clip texture, so beyond the nearest 31 bison the gait is the baked cycle.
+
+## 2026-11-07: herds of hundreds, phase 5: herds between pages as aggregates (animalNet.js, animals.js herdRows, mirrorHerds, mirrorHerdLive; server.py)
+
+- **Why aggregates.** The shared animals streamed every animal as a row at up to 4 Hz under a 24 KB/s cap, so Lamar's
+  400-herd near a second player would have taken the whole stream. Herds now go as aggregates plus seeds
+  (docs/multiplayer.md "Herds").
+  - The host skips planned herd members in the per-animal stream and sends one `h` row per herd: centre, front's
+    waypoint or flight point, frame, flight and origin, dead ranks. A row goes when the herd changed or every 2 s,
+    about 120 bytes a herd.
+  - Each mirror spawns and steers its own members from the same seeded ids and places, under the host's frame.
+  - Herd members are named by id in events and requests.
+  - A mirror's own herd taking fright starts the flight on the host.
+  - A killed member's rank is recorded in the aggregate, so a buried carcass is not spawned again that season, on any
+    page.
+- **Bug found.** server.py rebuilt the `ast` message from the keys it knew and dropped `h`; it relays it now
+  (tests/test_animals.py).
+- **Checked (two headless Chrome pages, Lamar).**
+  - Herd rows were about 0.5 KB/s of the host's 20.7 KB/s.
+  - The largest message was 32.8 KB, the existing join snapshot, under 64 KB.
+  - Flights started on either page ran on both, the centres within 1-3 m and the waves at the same pace.
+  - A kill by id landed on the same bison on the mirror.
+- **Also in flight.** A fleeing animal on the heels of the one ahead aimed a gap behind it, which was backwards, so it
+  ran back and forth and the herd's centre crept at about 1.3 m/s. It now runs on along the flight and drifts into the
+  lane of the one ahead.
+
+## 2026-11-07: herds of hundreds: big flocks grazing and goose skeins migrating (herds.py flocks, library/herds/flocks.json, animals.js flockStep, skeinUpdate, skeinPlan.js, relief.js)
+
+Aaron: "Make sure big herds is also applying to big flocks - it would be amazing to see some large flocks grazing, or many
+goose V's flying north or south." Part of the far view. It gets its own commit, after phases 4 and 5, which were already
+in.
+
+- **The rule for flocks (pipeline/herds.py tile_flocks).**
+  - **Which birds.** library/herds/flocks.json, matched by genus then family: geese and cranes (grazer: open grass and
+    wet meadow near water, low ground), ducks, coots and pelicans (water: on open water), blackbirds and starlings
+    (field: open fields, a little drawn to water). Each group's typical flock is recorded by season, with sources
+    (Bellrose 1980, Raveling 1969, Tacha et al. 1992, Alisauskas and Arnold 1994, Knopf and Evans 2004, Orians 1985,
+    Feare 1984). Seasons swap on a southern tile.
+  - **Seasonal numbers.** Density x land x the season's share of the bird's open-licence GBIF records:
+    fetch_species.monthly_counts_open counts CC0 and CC BY records only, never CC BY-NC (GBIF's licence filter). The
+    share is over a quarter of the year (1 with under 8 records), and there are at most 1,500 birds a species. A migrant
+    that is away has none.
+  - **Group size.** G = the recorded flock for the season x sqrt(share). Placement is as for herds, on the guild's
+    range. A flock is planned only when G reaches 15 (FLOCK_MIN) and exceeds the client's own group; pairs and family
+    parties (cranes and ducks in summer) stay with the cell spawns.
+  - **No eBird.** eBird Status & Trends is not used: it is non-commercial. CC BY-NC records are filtered out at the
+    source, and only the counts reach herds.json.
+- **What it gives.**
+  - **Lamar.** Canada geese in 10 flocks up to 204 in fall and 18 up to 238 in spring; sandhill cranes staging in fall
+    in 5 flocks up to 155; Brewer's blackbirds, meadowlarks and cowbirds in fall flocks of 290-340; goldeneye rafts of
+    165 in winter.
+  - **Home, in winter.** 7 Canada goose flocks up to 344 (the largest grazing in the rewilded bed of Indian Creek
+    Reservoir), and starling flocks up to 400.
+  - **The Hoh.** Hooded merganser and wood duck rafts on the river in fall and winter.
+- **Grazing flocks (animals.js flockStep).**
+  - **The machine.** A planned flock's bird runs its own step, not its kin's machine. On the ground or the water it
+    grazes and steps among its neighbours on the same steering as a herd (herdSteer under the flock's drifting frame),
+    pecking, wings folded. A raft holds its water.
+  - **The flush.** Any bird that sees the danger starts the flight, its point 2.5 times a herd's run (for a raft, the
+    nearest open water there). Each bird takes off as the alarm reaches it from a neighbour, climbs on a beat by its mass
+    (3.2 Hz for a 3 kg bird), glides down to its place round the flight point, and lands and grazes on.
+  - **Seen.** Lamar's 204 geese went up as a wave in about 1.5 s, three or four hops of the alarm across a 17 m flock.
+  - **Sync.** Flocks are herds to everything else: the far tier draws them folded on their feet or on the water,
+    culled where a grown body would be under a pixel, and they sync between pages as aggregates.
+- **Migration skeins (skeinPlan.js; animals.js skeinUpdate).**
+  - **Which birds, how many.** A V-flying group (geese, cranes, ducks, pelicans) whose AVONET Migration is 2 or 3 (the
+    loader now reads that field, CC BY 4.0) crosses the tile in spring and fall. The rate is 6 skeins an hour x
+    migration (3: 1, 2: 0.4) x the season's passage share (0.3-3). Lamar in fall: geese 5.0/h, cranes 4.0/h, mallards
+    2.2/h, goldeneye 0.7/h, pelicans 0.8/h.
+  - **Heading.** The tile's valley axis (the main direction of its lowest fifth) toward north in spring and south in
+    fall, half pulled to true north-south. Lamar: 334 deg in spring, 154 deg in fall.
+  - **The schedule.** Seeded by the wall clock, the tile and the species, so every page sees the same skeins with
+    nothing sent.
+  - **The formation.** 30 % echelons, the rest V's, the arms about 35 deg off the line of flight. The arms flex, the
+    lead changes every 60-150 s (eased over 8 s), and the beat passes back along each arm (Portugal et al. 2014).
+  - **Drawing.** On the species' own body with its wings spread and beating on the segmented wing rig. The whole skein
+    is grown about its lead bird (at least 8 px of wingspan, at most 12x), so a V stays a V on screen. Each skein flies
+    180-450 m over the highest ground at its lead and up to 1.2 km ahead, eased, so it climbs before a ridge.
+  - **Seen.** From the valley floor at Lamar, a goose echelon of 15 crossed 400 m up and read against the sky.
+- **From the title view (relief.js).** The season's skeins cross over the relief model on the same schedule as small dark
+  chevrons, each spread 40 times with its birds 110 m, as the heights are exaggerated. A goose V is about a pixel at
+  that distance, a 20-30 px chevron spread.
+- **Bugs met.**
+  - Flock groups got no roles: layoutSlots took only deer-machine herds.
+  - The skein birds' yaw took the compass heading where the scene's z points south, so they flew backwards.
+  - The relief's east-up-north basis is left-handed, which is no rotation.
+  - A mid-line `//` in a scripted edit swallowed the rest of a line in relief.js; the syntax check caught it.
+- **Still open.**
+  - The goose and duck stand-ins are the procedural merganser body (a pale quail shape), and that body's spread wings
+    are smaller than the 1.6 m span the growth assumes. A Canada goose model would make both the flocks and the skeins
+    read as geese.
+  - Flocks of different species are placed independently, so geese, cranes and blackbirds can share one meadow (often
+    true).
+  - The morning haze greys skeins more than a person on the ground would see.
+
+## The tile at rest as big as fits, the rings on stacked planes over the relief (2026-11-08)
+
+Aaron, with a screenshot of the framing he wanted: "The tile's final zoom resting point should be more like this. The
+animals are overlapping the side closest to the camera in a weird way ... they are on the base plane rather than on the
+plane above the height map ... The outer ring of the land animals is at the plane at the top of the height map, then above
+that is the inner ring, then above that is the soul, then above that is the inner ring of birds, and above that is the
+outer ring of birds." Then: "Bird rings should also going in opposite directions and be independently controllable".
+
+- **Resting frame.** `title.js` `chosenPose` no longer fits the whole tile into the focus area. It picks the nearest
+  distance at which the tile's middle still fits across the free centre (the list's edge to the right column) and the top
+  of the rings' stack stays under the stage's top. The view's offset puts the tile's centre across at the free centre and
+  down where its near edge lands on the stage's bottom, just over the place's title block (`aim`, kept for `frame`; when
+  the bar settles to another height after landing, the pose is found again, unless the wheel has zoomed since). The
+  back tucks under the fliers. The stack's height comes from `bodyRing.js` (`STACK_Y`, `AIR_R`, `RING_HW`) and the relief's
+  top (`relief.js` `topM`, or `RELIEF_TOP_M` before it is built). At 1726x948, the reference's size: 70.6 degrees from
+  vertical, 22.9 km, the lens 26.9 degrees, close to the reference's look (its perspective puts it near 70 degrees and a
+  25 degree lens). At 1280x800: 67.9 degrees.
+- **No sky, fixed.** `lensFor` added the horizon's dip where it should subtract it, so its 4 degrees of clearance were
+  really about 1 degree above the horizon, which showed as a strip of space once the tile sat lower on the screen. With
+  the sign fixed the clearance is 1.5 degrees under the horizon. `TILT_MAX` went back from 84 to 75 degrees. At 84 the
+  correct lens narrowed to about 10 degrees and flattened the tile (no perspective at all); at 75 the resting tilt is
+  about 70 degrees with a lens of 25-30.
+- **Stacked planes.** Four rings (walkers outer, walkers inner, fliers inner, fliers outer), each on its own plane.
+  The lowest sits at the relief's highest point (pin's `top`). The next planes are 0.13 ring radii up (the inner
+  walkers), 0.2 more (the spirit), 0.38 more (the inner fliers, so their ring's front stands over the walkers' back
+  instead of across it) and 0.22 more (the outer fliers). An empty ring takes no level. Every animal's contact shadow,
+  and the chosen one's halo, lies on its ring's own plane. A flier floats just over its plane. Each plane draws its
+  ring's track as a faint ellipse, so the levels read even where the land falls away under them. The heights ease in
+  when the relief arrives.
+- **Birds in two rings.** With more than 14 fliers they split like the walkers (`splitBySize`, by mass, room per animal
+  alike): the smaller on the inner ring (radius 1.0), the bigger and the soarers on the outer (1.42). Lamar: 14 inside
+  (jays, robins, sparrows, woodpeckers), 18 outside. All four rings alternate direction (0.075, -0.06, 0.05, -0.04 rad/s),
+  and hover, drag, fling and click each act on one ring.
+
+Not done: the pose uses `RELIEF_TOP_M` (1,212 m) when the relief has not been built by the time the flight starts. A tile
+whose relief stands higher (Yosemite's is its own 2,000 m and more) can lift its stack past that estimate. The rings rise
+to the real top; the frame does not refit.
+## 2026-11-08: herd and flock movement from the rules of collective motion, and stigmergy fields (herdField.js, animals.js herdSteer, herdGoal, herdOptions, aggStep, murStep, paintTrails; branch claude/herd-rules)
+
+Aaron: "Herding and flocking is great as a first pass. Do a bit of research on stygmergy and the rules of movements for
+flocks/herds... the general principles can create more dynamic movement. What are they all running towards right now?"
+
+**What they ran toward.** Every member held a slot in a frame whose centre crept toward one open spot 30-80 m ahead,
+and all herds read the same openness map, so they converged on the same flats. In a flight, every member steered at one
+shared point straight away from the threat, so the herd funnelled into it.
+
+- **No herd waypoint, no slots, no frame.** Each member steers itself.
+  - **Neighbours.** It reads its 7 nearest of its species (topological: Ballerini et al. 2008, PNAS 105: 1232-1237)
+    in Couzin's three zones (Couzin, Krause, James, Ruxton and Franks 2002, J. Theor. Biol. 218: 1-11): any neighbour
+    in the zone of repulsion and it moves away; else it turns with those in the zone of orientation and toward those in
+    the zone of attraction, none in its rear blind angle, with a little heading noise.
+  - **Motion archetypes (MOTION).** The zones, speeds and the rest come per archetype, chosen from the body, not the
+    species (motionOf): a large bovid's tight herd, a cervid's or antelope's looser one, a grazing flock, a raft, a
+    murmuration.
+  - **Following.** A member moves with its neighbours when at least 3 of its 7 are clearly on the move, at 0.85 of
+    their pace, so a move spreads a few animals deep and dies out.
+  - **Calves** stay at their mothers' flanks.
+- **Goals from an informed minority** (Couzin, Krause, Franks and Levin 2005, Nature 433: 513-516).
+  - **Who.** 2.5/sqrt(n) of each herd, 5-50 %: 51 of Lamar's 400.
+  - **What they read.** The land round the herd at its own scale every 20 s (herdOptions: 12 headings at its reach
+    beyond its radius, forage less fear), heading for the best when it beats the herd's own ground by 8 %.
+  - **Splitting.** A quarter of them take a strong second choice when it lies over 70 deg away, which is how a herd
+    can split.
+  - **Bouts.** A forage goal is walked in bouts (6-12 s on, 10-25 s grazing), so a grazing herd drifts.
+  - **Water.** Thirst is a clock per animal (bison 20 h, elk 18 h, staggered), and a thirsty informed member heads down
+    the water distance (the water system's depth and open water) at a trot.
+  - **Fission and fusion.** Neighbours are any of a species, so herds that meet run together and goals far apart pull
+    one apart. Seen on Lamar, with nothing set by hand: 400 at 52 s; 360 + 32 at 85 s; 280 + 65 + 32 + 15 at 117 s;
+    back to 360 + 32 at 149 s.
+- **Rest by quorum** (Conradt and Roper 2003, Nature 421: 155-158). Each member gets up and lies down up to 24 minutes
+  off its herd's hours. The informed set off only once 62 % of the herd is standing.
+- **The selfish-herd flight** (Hamilton 1971, J. Theor. Biol. 31: 295-311).
+  - **Heading.** Each alarmed member runs on its own line away from the threat, as it saw it or as the alarm that
+    reached it placed it, bunching toward its neighbours' centre and aligning with the runners near it.
+  - **Stopping.** It runs until it is stopR from the threat (bison 170 m, elk 260 m) and at least 90 m beyond where the
+    alarm found it. Then it stops, and 80-90 % turn to look back for 3-9 s. The alarm still passes as a wave.
+  - **Seen** (Lamar, the threat at the west edge). 393 of 400 ran, headings aligned 0.87. The spread opened from 80 to
+    114 m instead of closing, and no 20 m patch held more than 25 (the old flight piled them into one point). The herd
+    stopped about 30 s and 170 m on, with 165 looking back.
+- **Stigmergy fields (herdField.js).** 10 m cells over the tile, each holding the value last written and its
+  quarter-hour, with regrowth and decay in closed form, so nothing runs per cell per frame.
+  - **Forage.** Biomass up to the cell's Bmax (from its habitat class and cover: open shrubland under 60 % shrub
+    carries a grass understory, which is what Lamar's sagebrush steppe needed) and a quality.
+    - Grazing takes biomass at 2 % of body mass a day over twelve hours' grazing and raises quality. A lawn grazed young
+      regrows greener and faster and draws the herd back (Geremia et al. 2019, PNAS 116: 25707-25713).
+    - Regrowth over about 9 days, quality relaxing over 20.
+  - **Trail.** Walking lays trail every 10 m, fading over 30 days. Walking takes the cheaper of five headings near its
+    way, slope against and trail for, so walkers keep to trails and trails form where many go (the active walker:
+    Helbing, Schweitzer, Keltsch and Molnar 1997, Phys. Rev. E 56: 2527-2539).
+  - **Fear.** Alarms (60 m) and kills (90 m) write fear, fading over 2.5 days, and the informed avoid it (the landscape
+    of fear: Laundre, Hernandez and Altendorf 2001).
+  - **Determinism.** The fields are deterministic per tile and season. The host owns them, and the mirrors get the
+    changed cells as deltas.
+  - **Not used.** The pipeline's resource rasters carry the fall season in alpha, which a canvas decode premultiplies
+    away, so the forage comes from the habitat grid instead.
+- **Far herds on the fields (aggStep).** A far herd takes the same goals as a whole every 5 minutes, grazes the cells
+  under it, lays trail along its way (more for more animals) and drinks.
+  - **Fast-forward.** `herdFastForward(hours)` runs the far herds and fields on, for captures.
+  - **A week on Lamar** (fast-forwarded in 12 h steps). The 400-herd shuttled between two lawns it kept grazed and paler,
+    with trips to a small water source, and trails wore in between them.
+- **Game trails on the ground.** The trail field's changed cells are drawn into the ground data texture's red channel
+  (the decayed-road weight, all zero since the roads went), in the band below the pavement's.
+  - **How.** One point per cell through a framebuffer that writes red only, since that texture lives on the GPU alone
+    (gpuUpload.js) and its other channels must stay. No new texture unit (the terrain's programs use 15 of 16). The
+    terrain draws the band as worn soil; seen from 70 m as a brown worn path across the steppe.
+  - **The stall.** `checkFramebufferStatus` waited 69 ms for the GPU, so it is checked once per texture; a paint now
+    costs 0.1-0.2 ms.
+- **The murmuration (murStep).** A field flock (starlings, blackbirds; 30 or more) takes to the air for about 4 minutes at
+  dusk in fall and winter.
+  - **Rules.** Couzin's zones in three dimensions with its 7 nearest flying neighbours, a steady pull to its
+    neighbours' centre, a weak pull to the whole flock's centre (the StarDisplay model's roost attraction: Hildenbrandt,
+    Carere and Hemelrijk 2010, Behav. Ecol. 21: 1349-1359), the roost within 80 m, and 25-110 m over the ground.
+  - **Waves.** About once in 10 s one bird turns sharply and the turn runs through the flock (Attanasi et al. 2014,
+    Nature Physics 10: 691-696).
+  - **Seen** (Lamar's 342 meadowlarks). A ball 30-45 m across, nearest neighbours 1.6 m, its alignment swinging between
+    0.1 and 0.7 as it wheels back at the roost's edge.
+  - **What went wrong first.** Without the flock-wide pull it broke into sub-flocks across the roost circle.
+- **Flocks.** A flock's flush is each bird on its own line away from the threat, bending a little toward the flock (no
+  shared flight point); a raft's birds go to open water.
+- **Between pages.** The herd rows carry the informed members' mean goal in place of the frame; a mirror's informed take
+  it. Field deltas go in `ast.f`: up to 4,000 cells a message (43 KB base64), every 2 s, and the whole changed set over
+  ticks after a join; server.py relays it.
+  - **Seen.** After a 12 h fast-forward on the host, the mirror held the same 2,677 trail cells and 682 grazed cells
+    (sums within 1 %). The largest message was 36.5 KB.
+- **The budget** (Lamar, the 400-herd close in with the season's flocks, headless Chrome on the M1 Pro, load about 4).
+  - **Total.** `animals.update` 3.2-3.4 ms (median) against main's 2.7.
+  - **Steering.** 1.34-1.40 ms against 0.86.
+  - **The rest.** The herd pass 0.17 ms against 0.155; trail painting 0.004 ms a frame; far herds 0.03 ms.
+- **Open.**
+  - Bedding and shelter goals (the informed choosing where to lie) are not modelled; a herd beds where it is.
+  - The goose and duck stand-ins still draw pale.
+  - Trails show on level 0 of the ground texture only, so out to about 3 km.
+  - A herd's goal on a mirror is the host's mean, so a split on the host shows on a mirror only as each page's own
+    steering lets it.
+
+## 2026-11-08: the ghost roads as a hologram (roadsOverlay.js)
+
+The `G` overlay drew the present-day roads as 1-pixel lines, hard to see. Aaron asked for "a very simple polygonal
+hologram of the road system".
+
+- **Ribbons.** Each road is a flat ribbon at its paved width (pipeline/unroad.py HALF_WIDTH, copied into the client),
+  draped on `heights.at` and lifted 0.7 m. Samples every 15 m, halved down to 2 m where the ground at the centre or
+  either edge strays more than 0.25 m from the straight line, so a ribbon follows a crown or a gully instead of
+  cutting through it. Mitred joints, capped at twice the half-width so a hairpin throws no spike. Clipped to the tile:
+  ways that run off it no longer stand on the clamped edge heights.
+- **The hologram.** One unlit ShaderMaterial on one mesh, one draw call (`forceSinglePass`: three draws a transparent
+  double-sided material twice). A translucent cyan-teal fill, a hairline at each edge from the across coordinate, a
+  faint pulse running along each road (a per-road phase so they do not march in step), brighter with distance so the
+  network reads from the air and stays faint underfoot. Major roads greener and brighter. Two vertex attributes:
+  position and aRib (across, along, major).
+  - **Normal blending, not additive.** Over the pale sky and haze an additive cyan washed out to white.
+  - **Pulled toward the camera.** Each vertex moves along its own view ray by 1.5 % of its distance (at most 60 m), so
+    from the air a ribbon is not lost under the coarse far terrain or the canopy, with its place on screen unchanged.
+- **Unchanged.** The name sprites, the `G` toggle, `roads.group.visible` (the present-day peek), hidden by default,
+  and the arrays released after upload (gpuRelease.js).
+- **Seen** (headless Chrome, ANGLE Metal, M1 Pro, load 8-12). Home (1,030 roads): 71,712 vertices, about 70k
+  triangles, one draw call plus the labels in view. Lamar: 2,512 vertices. From 1.5 km over home every road can be
+  traced and US-50 stands out; beside a road at 2.5 m the ribbon is a faint teal sheet with bright edges.
+  - **Cost.** The overlay alone under a timer query: p10 0.65 ms from the air, 0.06 ms on the ground. In whole
+    frames on and off the difference was within the noise at that load. Nothing is drawn while it is hidden.
+- **Open.** The pulse was not judged in motion, only in stills. The headless captures drew the trees white and the
+  view from the air very pale, as without the overlay; worth a look on a normal screen.
+## 2026-11-08: a lit prey animal reads as a dim orb, a bright heart and the spirit's spike (client/src/sight.js, spirit.js; branch claude/prey-spike)
+
+Aaron: "The ability for predators to see prey and swoop in on them is great. Right now the prey read as orbs (individual)
+or blobs (collective). I like the orb, but I think we can improve how it reads by adding the "spike" from spirit mode. The
+current orb can decrease in opacity, and a second brighter smaller orb could be at the heart."
+
+- **The orb.** Still one `THREE.Points` draw, 16 px instead of 13. The soft halo is at 0.22 of its strength instead of
+  0.55, fading in from 0.3 of the radius. The bright heart is 0.26 of the radius, at 1.6 strength, lifted toward white.
+  In a covey the overlapping halos no longer add up to one white blob: each bird's heart shows on its own.
+- **The spike is the spirit's soul column.** spirit.js now exports `soulColumnGeometry`, `soulColumnHeights` and
+  `soulColumnMaterial`, and SpiritLook and Sight both use them. That means the same camera-facing quad, the same shader
+  and the same per-species height by rarity. Daylight needs more than the spirit's dimmed view, so sight.js sets the
+  shader's uniforms to lum 1.1 (the spirit uses 0.385) and width [4 m, 0.6 m per sqrt(m)] (the spirit uses [2.5, 0.26]).
+  The spike stands on the ground under the animal, depth-tested (a crown in front hides it, as it hides the body), on
+  renderOrder 11 under the orbs.
+- **Readable from a dive's height.** A vole's own column is 0.3 m, which would vanish from 150 m up. The spike's height
+  is the larger of the species' column and 0.06 of the eye's distance: about 9 m at a 150 m slant, 12.7 m at 212 m, a
+  few dozen pixels on the screen. A deer's 4.5 m or a rarer animal's taller column still wins when it is taller.
+- **Groups get one spike.** A herd, covey or colony (`a.group`) keeps an orb per lit member, but stands one spike at the
+  centre of its lit members, as bright as the brightest of them. So a group reads as one target, and ten quail don't
+  make a wall of spikes. Solitary prey each get their own; the selected quarry's spike is 1.4 times as bright, like
+  its orb.
+- **Cost.** One instanced draw more, at most MARK_CAP (96) instances, filled in the loop that already fills the orbs.
+- **Seen** (home tile, red-tail held 150 m up and 150 m back, then 50 m up and 90 m back, 9 am, headless Chrome on the
+  same page and pose with `sight.legacyMarks` toggled): from 212 m the spikes pick each lit prey out of the oak
+  woodland where the orbs were specks among the leaves; a covey of 8 quail at 103 m went from one merged blob to 8
+  hearts under one spike; a grouped pair read as one target under one spike. The spirit view's own columns are
+  unchanged (408 drawn, its uniforms as before).
+- **Debugging.** `__we.sight.legacyMarks = true` draws the orb as it was, with no spikes, for comparisons.
+- **Open.** In thick woodland at 200 m many spikes stand at once (101 lit prey in one frame from 150 m up). Fading the
+  spikes of far, unselected prey once a quarry is selected would quiet that; not done.
+
+## 2026-11-08: no message over the server's 64 KB limit; a join's resend is spread, not shortened
+
+Aaron, with one computer flying as a hawk and a second pressing Join: "i show up as a spirit but see no animals". The cause was the host's resend on a join: spawns, every herd row and a 4,000-cell field delta in one
+message, 70-77 KB once the herds' fields held a few hours of changes. The server closes a socket that sends over 64 KB,
+so the host dropped off, the host moved, and the joiner was torn down. It was not the network: nothing in the game keys
+on the address. Chosen: every message from the animals stream is held to 56,000 characters. The field delta takes only
+the room left after the spawns and herd rows, so a large backlog goes over more ticks; a message still over is split
+into parts (a mirror applies rows as they come), and nothing over is ever sent. Rejected: raising the server's limit
+(it is a guard against misbehaving clients, and a later, bigger world would cross any new limit) and cutting what a
+joiner is sent (the joiner needs the fields to see the same trails). A test drives the encoder against a fake socket
+and fails over 64 KB. The form a joiner arrives in is a separate change (group follow), not this one.
+
+## 2026-11-09: the menu shows the hologram roads (client/src/roadsOverlay.js, main.js setMenu)
+
+- **The roads come on with the menu.** Aaron: "The holographic road map should show when the menu opens."
+  - **How:** `setMenu` in main.js sends a `we-menu` event, and the overlay listens for it. Because the listener is added while the world is being built, it is recorded and removed with the world, like G's.
+  - **On close:** if the roads were hidden before the menu opened, they hide again when it closes. If they were already on, they stay on.
+  - **G in the meantime:** pressing G while the menu is open makes it the player's choice, and closing the menu leaves the roads as G set them.

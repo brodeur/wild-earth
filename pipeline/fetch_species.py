@@ -136,6 +136,24 @@ def monthly_counts(tile: Tile, key: int) -> list[int]:
     return counts
 
 
+# The licences a record may carry for a count the client sees (pipeline/herds.py's seasonal abundance): CC0 and CC BY
+# only, never CC BY-NC (GBIF's license filter: the facet counts only those records).
+OPEN_LICENSES = ["CC0_1_0", "CC_BY_4_0"]
+
+
+def monthly_counts_open(tile: Tile, key: int) -> list[int]:
+    """The records per month (January first) of taxon `key` in the tile's box, counting only CC0 and CC BY records."""
+    r = _q(tile, "occurrence/search", {**_bbox_params(tile), "taxonKey": key, "limit": 0, "facet": "month", "facetLimit": 12,
+                                       "license": OPEN_LICENSES})
+    counts = [0] * 12
+    for fac in r.get("facets", []):
+        for c in fac.get("counts", []):
+            m = int(c["name"])
+            if 1 <= m <= 12:
+                counts[m - 1] = c["count"]
+    return counts
+
+
 def inventory(tile: Tile, limit=40) -> list[dict]:
     """Most-recorded species of each class in the tile (birds and mammals, `limit` each) and the most-recorded
     vascular plants (PLANT_LIMIT); seed for the local-knowledge review and for the tile's needs (pipeline/needs.py)."""

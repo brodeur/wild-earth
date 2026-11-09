@@ -4,10 +4,10 @@ import { seasonOfDate } from './season.js';
 import { pointInTileId } from './goto.js';
 import { HubStub } from './hubStub.js';
 import { MapGlobe, TileOutline, latLonToXYZ, xyzToLatLon } from './mapGlobe.js';
-import { Relief } from './relief.js';
+import { Relief, RELIEF_TOP_M } from './relief.js';
 import { Geocoder, MIN_CHARS } from './geocode.js';
 import { avatarFor } from './social.js';
-import { BodyRing } from './bodyRing.js';
+import { BodyRing, RING_HW, STACK_Y, AIR_R } from './bodyRing.js';
 export { latLonToXYZ };
 
 // The home screen: the title, the earth as a map, the places, and going there together (docs/multiplayer.md lanes 1
@@ -56,8 +56,13 @@ export { latLonToXYZ };
 // words go to the geocoder alone, and the map's tiles are asked of OpenFreeMap as any web map asks; nothing is stored.
 
 const DEG = Math.PI / 180, R_KM = 6371;
-const FOV_FAR = 38, FOV_NEAR = 55, TILT_MAX = 54 * DEG;    // the lens and the tilt from space, and at a few kilometres
-const TILT_ALT = [0.03, 0.0009];                           // the altitudes (earth radii) between which they change
+const FOV_FAR = 38, FOV_NEAR = 55;                         // the lens from space, and at a few kilometres
+const TILT_ALT = [0.03, 0.0009];                           // the altitudes (earth radii) between which the lens changes
+// The tilt from straight down: none from space, steepening back as the view zooms out, and low over a chosen tile (Aaron,
+// 2026-11-07: the tile view was about 52 degrees above the horizon; "lower that angle by half when zoomed in. Zooming out
+// can steepen the angle"; then "make the angle a little bit flatter", then "a slightly shallower angle"): about 17
+// degrees above the horizon at a tile's framing distance, the lens narrowed there so no sky shows over it (lensFor)
+const TILT_MAX = 75 * DEG, TILT_AT = [0.03, 0.0025];
 const ALT0 = 2.5, ALT_MIN = 0.6 / R_KM, ALT_MAX = 3.6;      // the camera's distance from the point it looks at
 // Flying to a chosen place is slow (Aaron, 2026-11-06: "slow enough so that the world has a chance to render ... by the
 // time they arrive at the tile, it's mostly loaded"): PLACE_SLOW times the free flight's time, within PLACE_MS; its last
@@ -67,6 +72,11 @@ const PLACE_SLOW = 1.8, PLACE_MS = [5000, 8000], PACE_FROM = 0.55, PACE_SLACK = 
 const LAT_END = 0.48;                                      // a paced flight's travel over the earth is done by this share of its progress (before PACE_FROM)
 const FOCUS_MARGIN = [22, 12];                             // px around the stage inside the free centre (desktop, phone)
 const UNCHOOSE_AT = [0.3, 0.14, 350];                       // a chosen tile's width over the free centre's: armed at or over [0], deselected under [1] held [2] ms
+// A chosen tile's resting frame (Aaron, 2026-11-08, with a screenshot: "The tile's final zoom resting point should be more
+// like this"): as big as fits, its middle across the free centre between the list and the right column, its near edge
+// just over the place's title block, its back tucked under the fliers' rings; the top of the rings' stack (bodyRing.js
+// levels: four planes over the relief, a bird on the top one at the back) kept under the stage's top
+const STACK_UP = STACK_Y + 0.22;   // ring radii from the relief's top to the top of the highest bird
 const STAGE_TOP = 0.13;                                    // of the stage's height kept clear above the tile: the fliers' tier stands up past its far edge
 const Y_BELOW = -2.7;                                      // where the earth's centre sits before it lands: off screen, below
 const SUN_CRESCENT = [152 * DEG, 26 * DEG], SUN_LIT = [30 * DEG, 14 * DEG];   // [azimuth about Y from the camera's side, elevation]
@@ -127,8 +137,18 @@ const lonOfYaw = yaw => ((((90 - yaw / DEG) - 180) % 360) + 540) % 360 - 180;
 const yawOfLon = lon => (90 - (lon + 180)) * DEG;
 // Up close the camera tilts toward the horizon and the lens widens (0 from space, 1 at a few kilometres).
 const nearness = alt => smooth(Math.log(TILT_ALT[0]), Math.log(TILT_ALT[1]), Math.log(alt));
-const tiltFor = alt => TILT_MAX * nearness(alt);
+const tiltFor = alt => TILT_MAX * smooth(Math.log(TILT_AT[0]), Math.log(TILT_AT[1]), Math.log(alt));
 const fovFor = alt => lerp(FOV_FAR, FOV_NEAR, nearness(alt));
+// The lens low over the land: narrowed so the view's top edge stays HORIZON_CLEAR under the horizon (no sky over a chosen
+// tile however flat the tilt); offFrac: the view's offset down (frame: offY) over the height, which lifts the top edge
+const HORIZON_CLEAR = 1.5 * DEG;
+const lensFor = (alt, offFrac = 0) => {
+  const fov = fovFor(alt) * DEG, t = tiltFor(alt), dip = Math.acos(1 / (1 + alt * Math.cos(t)));
+  const room = Math.PI / 2 - t - dip - HORIZON_CLEAR;   // from the view's axis (90 - t under level) up to the line just under the horizon (dip under level)
+  if (room >= Math.PI / 2 - 1e-3) return fov / DEG;   // looking down enough that no lens reaches the horizon
+  const k = 1 + 2 * Math.max(0, offFrac), half = room > 0 ? Math.atan(Math.tan(room) / k) : 0.05;
+  return Math.max(12 * DEG, Math.min(fov, 2 * half)) / DEG;
+};
 // How much of the map is over the earth's own picture: some from space (the spirit earth shows through), all of it near.
 const mapMixFor = alt => lerp(0.5, 1, smooth(1.4, 0.06, alt));
 
@@ -487,8 +507,15 @@ export class TitleScreen {
     w.addEventListener('pointerdown', e => {
       if (e.button || e.target.closest('button, input, a, .tt-places, .tt-gate, .tt-pcard, .tt-bar')) return;
       if (this.phase !== 'lit' || this.begun || !this.landed) return;
-      const body = this.sel && this.ring ? this.ring.hit(e.clientX, e.clientY) : null;   // an animal in the rings (or the spirit): chosen, no drag
-      if (body) { e.preventDefault(); this.chooseBody(body, e.pointerType === 'touch'); return; }
+      // an animal in the rings (or the spirit): a still click chooses it; a drag turns its ring (the inner and outer walkers'
+      // and the fliers' each on its own), the fling easing back into the ring's own turn
+      const body = this.sel && this.ring ? this.ring.hit(e.clientX, e.clientY) : null;
+      if (body) {
+        e.preventDefault();
+        this.bodyDrag = { id: e.pointerId, code: body, ring: this.ring.grab(body), x: e.clientX, y: e.clientY, moved: 0, t: performance.now(), v: 0, touch: e.pointerType === 'touch' };
+        w.setPointerCapture(e.pointerId);
+        return;
+      }
       this.drag = { id: e.pointerId, x: e.clientX, y: e.clientY, moved: 0, t: performance.now() };
       w.setPointerCapture(e.pointerId); this.vyaw = this.vpitch = 0; this.stopFlight(); this.anchor = null;
       e.preventDefault();
@@ -499,6 +526,13 @@ export class TitleScreen {
         const over = this.sel && !this.begun && !e.target.closest('button, input, a, .tt-places, .tt-gate, .tt-bar') ? this.ring.hit(e.clientX, e.clientY) : null;
         this.ring.hover(over); this.wrap.classList.toggle('overbody', !!over);
       }
+      const b = this.bodyDrag;
+      if (b && b.id === e.pointerId) {
+        const dx = e.clientX - b.x, now = performance.now(), dt = Math.max(4, now - b.t) / 1000;
+        b.moved += Math.hypot(dx, e.clientY - b.y); b.x = e.clientX; b.y = e.clientY; b.t = now;
+        if (b.moved > 4 && b.ring) { this.ring.turn(b.ring, dx); b.v = lerp(b.v, dx / dt, 0.4); w.classList.add('dragging'); }
+        return;
+      }
       const d = this.drag; if (!d || d.id !== e.pointerId) return;
       const dx = e.clientX - d.x, dy = e.clientY - d.y, now = performance.now(), dt = Math.max(4, now - d.t) / 1000;
       const [ky, kp] = this.dragRates();
@@ -508,6 +542,14 @@ export class TitleScreen {
       if (d.moved > 4) { w.classList.add('dragging'); this.setMode('visible'); }
     });
     const up = e => {
+      const b = this.bodyDrag;
+      if (b && b.id === e.pointerId) {
+        this.bodyDrag = null; w.classList.remove('dragging');
+        const still = b.moved <= 4;
+        this.ring?.letGo(b.ring, still || performance.now() - b.t > 90 || e.type === 'pointercancel' ? 0 : b.v);   // held still before the release: no fling
+        if (still && e.type === 'pointerup') this.chooseBody(b.code, b.touch);
+        return;
+      }
       const d = this.drag; if (!d || d.id !== e.pointerId) return;
       this.drag = null; w.classList.remove('dragging');
       if (d.moved <= 4) { this.vyaw = this.vpitch = 0; if (this.hover && this.phase === 'lit') this.choose(this.hover); }
@@ -804,32 +846,41 @@ export class TitleScreen {
     const st = this.stageArea(W, H);
     return { ...st, t: st.t + (st.b - st.t) * STAGE_TOP };
   }
-  // The pose that shows a place: the camera looks at the tile's centre from the distance at which the whole tile, as the
-  // camera sees it there (tilted toward the north's horizon as it comes down: tiltFor, fovFor), just fits the focus area;
-  // the view's offset (frame: offX, offY) puts the tile's centre at the area's centre. Found by bisection on the distance.
+  // The pose that shows a place (the comment over STACK_UP): the camera looks at the tile's centre (tilted toward the
+  // north's horizon as it comes down: tiltFor, lensFor) from the nearest distance at which the tile's middle still fits
+  // across the free centre and the rings' stack its top under the stage's top; the view's offset (frame: offX, offY) puts
+  // the tile's centre across at the free centre's and down where its near edge lands on the stage's bottom (aimY, kept
+  // for frame). Found by bisection on the distance.
   chosenPose(id) {
     const p = this.byId[id], [w, s, e, n] = p.bounds, lat = (s + n) / 2, lon = (w + e) / 2;
-    const size = this.renderer.getSize(this._size), W = size.x || innerWidth, H = size.y || innerHeight, a = this.focusArea(W, H);
+    const size = this.renderer.getSize(this._size), W = size.x || innerWidth, H = size.y || innerHeight, st = this.stageArea(W, H);
     const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(lat * DEG, yawOfLon(lon), 0, 'XYZ'));
-    const pts = [];
-    for (let i = 0; i <= 4; i++) { const u = i / 4; for (const [la, lo] of [[s, w + (e - w) * u], [n, w + (e - w) * u], [s + (n - s) * u, w], [s + (n - s) * u, e]]) pts.push(latLonToXYZ(la, lo).applyQuaternion(q)); }
+    const at = (la, lo) => latLonToXYZ(la, lo).applyQuaternion(q);
+    const [fl, fr] = this.freeArea(W), mid = [at(lat, w), at(lat, e)], near = [0, 0.5, 1].map(u => at(s, w + (e - w) * u));
+    // the stack's top: over the far side of the fliers' outer ring, the relief's top (its own once built) and the levels up
+    const pc = at(lat, lon), ring = p.hw * RING_HW, relief = (this.relief?.topM(id) ?? RELIEF_TOP_M) / (R_KM * 1000);
+    const top = pc.clone().multiplyScalar(1 + relief + STACK_UP * ring).add(at(n, lon).sub(pc).normalize().multiplyScalar(AIR_R[1] * ring));
     const cam = new THREE.PerspectiveCamera(FOV_FAR, W / H, 1e-5, 80), v = new THREE.Vector3();
-    const offX = (a.l + a.r) / 2 - W / 2, offY = (a.t + a.b) / 2 - H / 2;
+    const offX = (fl + fr) / 2 - W / 2, Y = p0 => (1 - v.copy(p0).project(cam).y) / 2 * H;
+    let offY = 0;
     const fits = A => {
       const t = tiltFor(A);
-      cam.fov = fovFor(A); cam.near = Math.max(2e-5, A * Math.cos(t) * 0.3);
       cam.position.set(0, -A * Math.sin(t), 1 + A * Math.cos(t)); cam.up.set(0, 1, 0); cam.lookAt(0, 0, 1);
-      cam.setViewOffset(W, H, -offX, -offY, W, H); cam.updateProjectionMatrix(); cam.updateMatrixWorld();
-      for (const p0 of pts) {
-        v.copy(p0).project(cam);
-        const x = (v.x + 1) / 2 * W, y = (1 - v.y) / 2 * H;
-        if (v.z >= 1 || x < a.l || x > a.r || y < a.t || y > a.b) return false;
+      cam.near = Math.max(2e-5, A * Math.cos(t) * 0.3);
+      for (let k = 0; k < 3; k++) {   // the near edge on the stage's bottom (the lens narrows with the offset: lensFor)
+        cam.fov = lensFor(A, offY / H); cam.setViewOffset(W, H, -offX, -offY, W, H); cam.updateProjectionMatrix(); cam.updateMatrixWorld();
+        offY += st.b - Math.max(...near.map(Y));
       }
-      return true;
+      cam.fov = lensFor(A, offY / H); cam.setViewOffset(W, H, -offX, -offY, W, H); cam.updateProjectionMatrix(); cam.updateMatrixWorld();
+      for (const p0 of mid) { v.copy(p0).project(cam); const x = (v.x + 1) / 2 * W; if (v.z >= 1 || x < fl || x > fr) return false; }
+      v.copy(top).project(cam);
+      return v.z < 1 && (1 - v.y) / 2 * H >= st.t;
     };
     let lo = Math.log(ALT_MIN), hi = Math.log(0.2);
-    if (a.r - a.l < 40 || a.b - a.t < 40 || !fits(Math.exp(hi))) return { lat, lon, alt: 0.01 };   // no room to speak of: a regional view
-    for (let i = 0; i < 40; i++) { const mid = (lo + hi) / 2; if (fits(Math.exp(mid))) hi = mid; else lo = mid; }
+    if (fr - fl < 80 || st.b - st.t < 80 || !fits(Math.exp(hi))) { this.aim = null; return { lat, lon, alt: 0.01 }; }   // no room to speak of: a regional view
+    for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (fits(Math.exp(m))) hi = m; else lo = m; }
+    fits(Math.exp(hi));
+    this.aim = { id, offY, W, H, b: st.b, alt: Math.exp(hi) };
     return { lat, lon, alt: Math.exp(hi) };
   }
   flyToPlace(id) {
@@ -1133,7 +1184,7 @@ export class TitleScreen {
     if (!this.flying) this.alt = Math.exp(lerp(Math.log(this.alt), Math.log(this.altGoal), 1 - Math.exp(-dt * 7)));
     const r = this.renderer, size = r.getSize(this._size), W = size.x || innerWidth, H = size.y || innerHeight, cam = this.cam;
     this.tilt = tiltFor(this.alt);
-    const fov = fovFor(this.alt);
+    const fov = lensFor(this.alt, (this.offY || 0) / H);
     if (Math.abs(cam.fov - fov) > 1e-3 || Math.abs(cam.aspect - W / H) > 1e-4) { cam.fov = fov; cam.aspect = W / H; }
     // the camera: alt from the looked-at point (on +Z of the earth's centre), tilted toward the north's horizon
     const e = this.earth.position, A = this.alt, t = this.tilt;
@@ -1142,9 +1193,20 @@ export class TitleScreen {
     cam.up.set(0, 1, 0); cam.lookAt(0, 0, 1);
     cam.near = Math.max(2e-5, A * Math.cos(t) * 0.3); cam.far = 70;
     const [fl, fr] = this.freeArea(W), off = (fl + fr) / 2 - W / 2;
-    // a chosen tile's centre at the focus area's centre (chosenPose), up or down as well as across
+    // a chosen tile's centre across at the free centre's, and down where chosenPose aimed it (its near edge on the stage's
+    // bottom, followed as the bar's height changes: the loading line, the bodies' row), or (a pose for another size, until
+    // the refit) at the focus area's centre
     this.stage = this.stageArea(W, H);
-    let offY = 0; if (this.sel && this.phase === 'lit') { const a = this.focusArea(W, H); offY = (a.t + a.b) / 2 - H / 2; }
+    let offY = 0;
+    if (this.sel && this.phase === 'lit') {
+      const m = this.aim;
+      // the bar settled to another height once landed: the pose found again for it (unless the wheel has zoomed since)
+      if (m && m.id === this.sel && m.W === W && m.H === H && !this.flying && Math.abs(this.stage.b - m.b) > 3 && Math.abs(Math.log(this.altGoal / m.alt)) < 0.01) {
+        this.altGoal = this.chosenPose(this.sel).alt;
+      }
+      const a2 = this.aim;
+      if (a2 && a2.id === this.sel && a2.W === W && a2.H === H) offY = a2.offY + this.stage.b - a2.b; else { const a = this.focusArea(W, H); offY = (a.t + a.b) / 2 - H / 2; }
+    }
     this.offY = this.offY == null ? offY : this.offY + (offY - this.offY) * (1 - Math.exp(-dt * 6));
     const flr = `${Math.round(fl)}px|${Math.round(W - fr)}px`;   // the free space's edges for the CSS: the bar's buttons and the toast centre in it
     if (flr !== this.flr) { this.flr = flr; const [l, rr] = flr.split('|'); document.documentElement.style.setProperty('--we-fl', l); document.documentElement.style.setProperty('--we-fr', rr); }
@@ -1196,7 +1258,7 @@ export class TitleScreen {
     r.render(this.scene, cam);
     if (this.ring) {   // the rings of bodies, pinned to the chosen tile (bodyRing.js): drawn through this camera in the tile's frame
       const p = this.sel && this.byId[this.sel];
-      this.ring.pin(p ? { cam, earth: this.earth, p0: p.p0, hw: p.hw } : null);
+      this.ring.pin(p ? { cam, earth: this.earth, p0: p.p0, hw: p.hw, top: (this.relief?.topM(this.sel) ?? 0) / (R_KM * 1000) } : null);
       this.ring.render(dt, W, H);
     }
     r.setClearColor(this._cc, ca); r.autoClear = ac;
