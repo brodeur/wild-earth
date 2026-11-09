@@ -8679,3 +8679,32 @@ in. However, when logged in it doesn't work the same way at all."
     module is. `tests/test_static.py` `test_revalidated` checks the header.
   - The three stylesheets' `?v=` moved to `2026-11-08b`. A browser holding a heuristically fresh old copy never asks
     the server, so only a new URL reaches it. From now on a changed stylesheet needs no bump.
+
+## 2026-11-08: a flatter view at rest and more height between the ring levels; the phone's X clickable signed in (title.js, bodyRing.js, social.css)
+
+Aaron: "Either way, the tile zoom state should again try to have a flatter angle of view and extend the rings in
+elevation so there is a bit more distance between them."
+
+- **Ring levels 1.4 times apart.** `bodyRing.js` `GAP` went from 0.13/0.2/0.38/0.22 to 0.18/0.28/0.53/0.31 ring radii
+  (outer land to inner land, to the spirit, to the inner birds, to the outer birds). `STACK_Y` and title.js `STACK_UP`
+  follow, so the resting distance refits to keep the top bird ring under the place's bar.
+- **Flatter at rest: 75.5 degrees from straight down** on a desktop (it was 69-70). `TILT_MAX` is 75.5 degrees, reached
+  from `TILT_AT[1]` (70 km) in, because the flatter view rests farther out.
+  - **No sky, and why it rests farther.** The no-sky rule stays: `lensFor` narrows the lens so the view's top edge
+    stays 1.5 degrees under the horizon. At 75.5 degrees with the tile's near edge on the viewport's bottom, that lens
+    is about 11 degrees (it was 21), so the tile rests farther out to fill the frame.
+  - **The lens floor.** Its floor went from 12 degrees to `LENS_MIN` 8, below the flattest rest's own lens, so the
+    clearance always governs and the floor never lets the sky in.
+  - **Results:**
+
+    | Size | Tilt | Lens | Distance |
+    |---|---|---|---|
+    | 1726x948 | 75.5 degrees | 11.2 degrees | 48 km |
+    | 1280x800 | 75.5 degrees | 10.9 degrees | 53 km |
+    | 390x844 | 69.6 degrees (it was 56.5) | 14.9 degrees | 83 km |
+
+    The phone's narrow width sets its distance.
+- **The phone's X, signed in.** In `social.css`, `html.opening #social > *` (pointer-events on, through the id)
+  outranked the phone rule that made the social row's empty width click-through. The row spans the top of a phone's
+  screen, so it took the click meant for the X; before the redesign it blocked the search box the same way. The rule
+  now names `#social > .so-bar`.
