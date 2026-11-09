@@ -38,12 +38,13 @@ export { latLonToXYZ };
 // pointer.
 //
 // Choosing a place (a row, a label on the map or a dot) flies to it: 10,000 ft above the ground south of the tile looking
-// north across it, the tile's square outlined on the ground and framed in the stage (stageArea: the free centre, under the
-// title, above the bar), the place's title over the buttons (its name and players' pill, its territories, the body Start
-// arrives in, its players' avatars, which open the list of them), and once it has landed its animals teleport in over the
+// north across it, the list sliding away and an X in its place (back: the list returns), the tile's square outlined on
+// the ground and framed in the stage (stageArea: the width left of the right column, from under the place's bar at the
+// top to the viewport's bottom), the place's title in that bar beside the X (its name and players' pill, its
+// territories, the body Start arrives in, its players' avatars, which open the list of them), and once it has landed its animals teleport in over the
 // tile as two rings, walkers and fliers, the spirit in the middle and chosen (bodyRing.js; 2026-11-07): a click chooses a
 // body, the group sees each member's choice, and choosing a member's animal goes in beside them (docs/multiplayer.md
-// "Bodies"). The tile starts building at once (main.js, onSelect) and the bar at the bottom shows how far; Invite (above the bar) asks groups or friends along (multiplayer.js, onInvite), and Start, once built,
+// "Bodies"). The tile starts building at once (main.js, onSelect) and the bar shows how far under Invite and Start (at its right end); Invite asks groups or friends along (multiplayer.js, onInvite), and Start, once built,
 // goes in: the camera sinks toward the place while the screen fades to black, then onBegin enters the world through
 // main.js's enterWorld. Each player starts on their own; one who joined an invite arrives behind and above the one who
 // asked (multiplayer.js and arrival.js). choose(id) is the one function group travel wraps.
@@ -72,11 +73,16 @@ const PLACE_SLOW = 1.8, PLACE_MS = [5000, 8000], PACE_FROM = 0.55, PACE_SLACK = 
 const LAT_END = 0.48;                                      // a paced flight's travel over the earth is done by this share of its progress (before PACE_FROM)
 const FOCUS_MARGIN = [22, 12];                             // px around the stage inside the free centre (desktop, phone)
 const UNCHOOSE_AT = [0.3, 0.14, 350];                       // a chosen tile's width over the free centre's: armed at or over [0], deselected under [1] held [2] ms
-// A chosen tile's resting frame (Aaron, 2026-11-08, with a screenshot: "The tile's final zoom resting point should be more
-// like this"): as big as fits, its middle across the free centre between the list and the right column, its near edge
-// just over the place's title block, its back tucked under the fliers' rings; the top of the rings' stack (bodyRing.js
-// levels: four planes over the relief, a bird on the top one at the back) kept under the stage's top
+// A chosen tile's resting frame (Aaron, 2026-11-08: "When a tile is selected the search/place menu disappears while the
+// zoom happens and a X appears. Name of tile and metadata appear up there near the X. This frees up space for the tile to
+// take up more horizontal space. The bottom orange border of the tile can be right at the bottom of the viewport, and the
+// tile can take up the remaining width"): as big as fits, its middle across the width the list leaves (up to the right
+// column), its near edge NEAR_PAD px over the viewport's bottom, the top of the rings' stack (bodyRing.js levels: four
+// planes over the relief, a bird on the top one at the back) kept under the place's bar at the top
 const STACK_UP = STACK_Y + 0.22;   // ring radii from the relief's top to the top of the highest bird
+const NEAR_PAD = 3;                                        // px between the tile's near (orange) edge and the viewport's bottom: the outline's width shows whole
+const BAR_NARROW = 700;                                     // px: the place's bar narrower than this puts Invite and Start under its title (title.css)
+const BACK_ALT = [0.12, 2.5];                               // the X flies back out to the distance the place was chosen from, within these
 const STAGE_TOP = 0.13;                                    // of the stage's height kept clear above the tile: the fliers' tier stands up past its far edge
 const Y_BELOW = -2.7;                                      // where the earth's centre sits before it lands: off screen, below
 const SUN_CRESCENT = [152 * DEG, 26 * DEG], SUN_LIT = [30 * DEG, 14 * DEG];   // [azimuth about Y from the camera's side, elevation]
@@ -253,6 +259,7 @@ const DOT_FRAG = /* glsl */`
   }`;
 
 const PIN_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.4-6-11a6 6 0 0 1 12 0c0 5.6-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/></svg>';
+const X_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
 const SEARCH_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>';
 
 // The Layers menu's choices, kept per viewer: town names off by default (the world has no towns), waters and peaks on.
@@ -318,7 +325,10 @@ export class TitleScreen {
     this.buildScene();
     window.__weScreen = window.__weTitle = this;   // debugging handle
     // Keys typed on the screen stay on the screen (flight, peek, sound and the rest listen on window).
-    this.guard = e => { if (!e.target?.closest?.('#opening, #social, #chat, #invite, #invitePick')) e.stopImmediatePropagation(); };
+    this.guard = e => {
+      if (e.type === 'keydown' && e.key === 'Escape' && this.sel && !e.target?.closest?.('input, textarea, .tt-layers, #social, #chat, #invite, #invitePick')) this.back();   // the X's key
+      if (!e.target?.closest?.('#opening, #social, #chat, #invite, #invitePick')) e.stopImmediatePropagation();
+    };
     for (const ev of ['keydown', 'keyup']) { addEventListener(ev, this.guard, true); root.addEventListener(ev, e => e.stopPropagation()); }
     // a resize (a phone turned, a window dragged) re-frames the chosen tile, when it is still in view: the framing's height
     // is the pose's (chosenPose), not kept up each frame as the centring is
@@ -350,18 +360,19 @@ export class TitleScreen {
         <div class="tt-pin" hidden>${PIN_ICON}<span></span></div>
         <aside class="tt-places" aria-label="places">
           <label class="tt-search">${SEARCH_ICON}<input type="search" placeholder="Search any place on earth" autocomplete="off" spellcheck="false" maxlength="120" aria-label="search any place on earth"><button type="button" class="tt-sclear" aria-label="clear the search" hidden>×</button></label>
-          <button type="button" class="tt-listbtn" aria-expanded="false">All places</button>
           <div class="tt-head"><h2 class="tt-mode">Most active</h2><button type="button" class="tt-modebtn"></button></div>
           <div class="tt-rows" role="list"></div>
           <div class="tt-found" role="list" hidden></div>
           <p class="tt-empty" hidden></p>
         </aside>
         <div class="tt-bar" aria-live="polite">
+          <button type="button" class="tt-back" aria-label="Back to the places" title="Back to the places">${X_ICON}</button>
           <div class="tt-pcard" role="group" aria-label="the place chosen" hidden>
             <div class="pc-top"><h2 class="pc-name"></h2><span class="pc-pill"></span></div><p class="pc-region"></p>
-            <p class="pc-body"><span class="pc-as"></span><span class="pc-with"></span></p>
+            <div class="pc-meta"><p class="pc-body"><span class="pc-as"></span><span class="pc-with"></span></p>
             <div class="pc-peoplewrap"><button type="button" class="pc-people" aria-expanded="false"><span class="pc-avs"></span><span class="pc-n"></span></button>
-            <div class="pc-list" role="list" hidden></div></div>
+            <div class="pc-list" role="list" hidden></div></div></div>
+            <div class="pc-mates" role="list" aria-label="your group here" hidden></div>
           </div>
           <div class="tt-acts"><button type="button" class="tt-invite">Invite</button><span class="tt-startwrap"><button type="button" class="tt-start" disabled aria-describedby="ttStartTip">Start</button><span class="tt-tip" id="ttStartTip" role="tooltip" hidden>${GUEST_TIP}</span></span></div>
           <div class="tt-bline"><span class="tt-bstatus"></span><span class="tt-bpct"></span></div>
@@ -398,8 +409,8 @@ export class TitleScreen {
     }
     this.$('.tt-invite').onclick = e => { if (this.sel && this.onInvite) this.onInvite(this.sel, e.currentTarget); };
     this.$('.tt-modebtn').onclick = () => this.setMode(this.mode === 'global' ? 'visible' : 'global');
-    // a phone's chosen place takes the width: the list folds behind this button (title.css), which opens it over the stage
-    this.$('.tt-listbtn').onclick = e => { const on = !this.wrap.classList.contains('listopen'); this.wrap.classList.toggle('listopen', on); e.currentTarget.setAttribute('aria-expanded', String(on)); };
+    // the X: back to the places (the list returns, the place is let go and the earth flies back out); Escape does it too
+    this.$('.tt-back').onclick = () => this.back();
     const people = this.$('.pc-people');
     people.onclick = () => { const l = this.$('.pc-list'), on = l.hidden; l.hidden = !on; people.setAttribute('aria-expanded', String(on)); };
     for (const p of this.places) {
@@ -829,16 +840,15 @@ export class TitleScreen {
     const t = this.flying; this.flying = null;
     const i = this.tweens.indexOf(t); if (i >= 0) { this.tweens.splice(i, 1); t.done(); }
   }
-  // The stage (Aaron, 2026-11-07: "center the tile on the screen in its final position so that there is space on the
-  // bottom for a proper Title above the Invite/start buttons"): the free centre between the side panels (freeArea, the
-  // layout the earth lands in), under the risen title, above the bar (the place's title block, Invite and Start, the
-  // loading line), less a margin. The rings of bodies fill it (bodyRing.js). In CSS pixels: { l, r, t, b }.
+  // The stage (Aaron, 2026-11-08, the comment over NEAR_PAD): with a place chosen the list goes, so the free centre is
+  // the width left of the right column (freeArea); the place's bar (the X, the name and its details, Invite and Start,
+  // the loading line: title.css .tt-bar) stands over it at the top, and the tile comes down to the viewport's bottom. The
+  // rings of bodies fill it (bodyRing.js). In CSS pixels: { l, r, t, b }.
   stageArea(W, H) {
     const phone = matchMedia('(max-width: 720px)').matches, m = FOCUS_MARGIN[phone ? 1 : 0], [fl, fr] = this.freeArea(W);
     const title = parseFloat(getComputedStyle(this.$('.tt-title')).getPropertyValue('--tt-top')) || 36;
-    const bar = this.bar.offsetHeight || 200, lb = phone && this.sel ? this.$('.tt-listbtn') : null;
-    const top = lb?.offsetHeight ? this.list.offsetTop + lb.offsetTop + lb.offsetHeight + 10 : title + (phone ? 40 : 22);   // under the search and the list's button
-    return { l: fl + m, r: fr - m, t: top, b: H - bar - m * 0.5 };
+    const top = this.sel && this.bar.offsetHeight ? this.bar.offsetTop + this.bar.offsetHeight + m * 0.5 : title + (phone ? 40 : 22);   // under the place's bar
+    return { l: fl + m, r: fr - m, t: top, b: H - NEAR_PAD };
   }
   // Where a chosen tile is framed: the stage, a little kept clear above it for the rings' back animals (bodyRing.js: the
   // rings stand inside the tile's square, pinned to it)
@@ -858,7 +868,7 @@ export class TitleScreen {
     const at = (la, lo) => latLonToXYZ(la, lo).applyQuaternion(q);
     const [fl, fr] = this.freeArea(W), mid = [at(lat, w), at(lat, e)], near = [0, 0.5, 1].map(u => at(s, w + (e - w) * u));
     // the stack's top: over the far side of the fliers' outer ring, the relief's top (its own once built) and the levels up
-    const pc = at(lat, lon), ring = p.hw * RING_HW, relief = (this.relief?.topM(id) ?? RELIEF_TOP_M) / (R_KM * 1000);
+    const reliefM = this.relief?.topM(id) ?? null, pc = at(lat, lon), ring = p.hw * RING_HW, relief = (reliefM ?? RELIEF_TOP_M) / (R_KM * 1000);
     const top = pc.clone().multiplyScalar(1 + relief + STACK_UP * ring).add(at(n, lon).sub(pc).normalize().multiplyScalar(AIR_R[1] * ring));
     const cam = new THREE.PerspectiveCamera(FOV_FAR, W / H, 1e-5, 80), v = new THREE.Vector3();
     const offX = (fl + fr) / 2 - W / 2, Y = p0 => (1 - v.copy(p0).project(cam).y) / 2 * H;
@@ -880,7 +890,7 @@ export class TitleScreen {
     if (fr - fl < 80 || st.b - st.t < 80 || !fits(Math.exp(hi))) { this.aim = null; return { lat, lon, alt: 0.01 }; }   // no room to speak of: a regional view
     for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (fits(Math.exp(m))) hi = m; else lo = m; }
     fits(Math.exp(hi));
-    this.aim = { id, offY, W, H, b: st.b, alt: Math.exp(hi) };
+    this.aim = { id, offY, W, H, b: st.b, t: st.t, relief: reliefM, alt: Math.exp(hi) };
     return { lat, lon, alt: Math.exp(hi) };
   }
   flyToPlace(id) {
@@ -956,10 +966,12 @@ export class TitleScreen {
     if (this.guest || this.readyIds.has(id)) this.ringLoad(id);
     this.body = 'spirit'; this.joinWith = null; this.autoStart = null; this.selArmed = false; this.smallSince = null;
     this.renderCard(); this.renderBar();
-    this.wrap.classList.add('chosen'); this.wrap.classList.remove('listopen'); this.$('.tt-listbtn').setAttribute('aria-expanded', 'false');
+    if (!prev) this.backAlt = this.alt;   // where the X flies back out to
+    this.wrap.classList.add('chosen');
     this.flyToPlace(id);
     this.relief?.show(id);
-    if (!this.guest) this.onSelect?.(id);   // a visitor's choice builds nothing (they cannot start it)
+    // a visitor's choice builds nothing (they cannot start it); the group sees the place chosen, as the spirit until a body is
+    if (!this.guest) { this.onSelect?.(id); this.onBody?.(id, 'spirit'); }
   }
   // Zoomed away from the chosen place (Aaron, 2026-11-07: "If I zoom too far away from the selected tile, the tile becomes
   // deselected and the button and animals and title fade away"): its tile drawn under UNCHOOSE_AT[1] of the free centre's
@@ -984,11 +996,20 @@ export class TitleScreen {
     this.byId[id].el.classList.remove('sel'); this.byId[id].label.classList.remove('sel');
     this.sel = null; this.ringFor = null; this.autoStart = null; this.joinWith = null; this.body = 'spirit'; this.selArmed = false; this.smallSince = null;
     this.ring?.clear(); this.relief?.hide();
-    this.wrap.classList.remove('chosen', 'listopen');
+    this.wrap.classList.remove('chosen');
     this.renderBar();   // the bar's .on goes: it fades out with the title in it (title.css)
     if (!this.guest) { this.onBody?.(null, null); this.onDeselect?.(id); }
     this.listKey = '';
     this.unchosen = { id, at: Math.round(performance.now()) };   // debugging
+  }
+  // The X (or Escape): the place let go as zooming away lets it go (unchoose), and the earth flown back out over it to the
+  // distance it was chosen from, so the list comes back over the view it was chosen in; the place's row takes the focus.
+  back() {
+    const id = this.sel; if (!id || this.begun) return;
+    const p = this.byId[id], alt = clamp(this.backAlt ?? BACK_ALT[0], BACK_ALT[0], BACK_ALT[1]);
+    this.unchoose();
+    this.flyTo(p.lat, p.lon, Math.max(alt, this.alt), 1200);
+    p.el.focus({ preventScroll: true });
   }
   // A point of the earth's unit sphere on screen [x, y] (CSS px), or null behind the earth
   screenOf(p0) {
@@ -1029,6 +1050,7 @@ export class TitleScreen {
     const el = this.$('.pc-body'); if (!el || !this.sel) return;
     const marks = (this.bodiesAt?.(this.sel) || []).filter(m => m && m.user && m.code);
     this.ring?.setMarks(marks);
+    this.renderMates(marks);
     const b = this.body !== 'spirit' ? this.ring?.picked : null;
     if (this.body !== 'spirit' && !b) this.body = 'spirit';
     const mates = b ? marks.filter(m => m.code === this.body) : [];
@@ -1036,6 +1058,29 @@ export class TitleScreen {
     const name = b ? b.name : '', art = /^[aeiou]/i.test(name) ? 'an' : 'a';
     el.querySelector('.pc-as').innerHTML = b ? `As ${art} <b>${esc(name)}</b>` : 'As <b>the spirit</b>';
     el.querySelector('.pc-with').textContent = mates.length ? ` · beside ${andList(mates.slice(0, 3).map(m => m.name || 'a friend'))}` : '';
+  }
+  // The group here (Aaron, 2026-11-08: "If I'm in a group and my group-mates are on this tile show which avatar they have
+  // selected - in the top left underneath the place name"): a chip per group member who chose this place, their face and
+  // the body they chose ('spirit' until they pick one; the hub's `body`, relayed to the group alone and only while they
+  // let their place be seen: docs/multiplayer.md "Who sees whom", "Bodies"), a dot when they are in its world already.
+  // Hovering one holds their animal in its ring; a click picks the same body (beside them: renderBody's joinWith).
+  // Others in the tile stay a count (renderPeople). Rebuilt only when the list or the rings' names change.
+  renderMates(marks) {
+    const box = this.$('.pc-mates'); if (!box) return;
+    const nameOf = code => code === 'spirit' ? 'the spirit' : this.ring?.items.get(code)?.name || code.replace(/_/g, ' ');
+    const key = marks.map(m => `${m.user}:${m.code}:${m.here ? 1 : 0}:${m.name}`).join('|') + `#${this.ring?.items.size || 0}`;
+    if (key === box.dataset.key) return;
+    box.dataset.key = key; box.innerHTML = ''; box.hidden = !marks.length;
+    for (const m of marks) {
+      const b = document.createElement('button'); b.type = 'button'; b.className = `pc-mate${m.here ? ' here' : ''}`; b.setAttribute('role', 'listitem');
+      const n = nameOf(m.code), as = m.code === 'spirit' ? n : `${/^[aeiou]/i.test(n) ? 'an' : 'a'} ${n}`;
+      b.append(avatarFor(m.user, 22));
+      const t = document.createElement('span'); t.innerHTML = `<b>${esc(m.name || 'someone')}</b> as ${esc(as)}`; b.append(t);
+      b.title = `${m.name || 'someone'} ${m.here ? 'is in this place as' : 'chose'} ${n}${this.guest ? '' : `: go as ${n} beside them`}`;
+      b.onmouseenter = () => this.ring?.hover(m.code); b.onmouseleave = () => this.ring?.hover(null);
+      b.onclick = () => this.chooseBody(m.code);
+      box.append(b);
+    }
   }
   // Called by multiplayer.js when who is there or coming changes. Known players (friends and group members the hub
   // says are in the tile, and the people invited) are named; the others the hub counts are anonymous wisps: a stranger's
@@ -1080,8 +1125,27 @@ export class TitleScreen {
     if (others) { const r = document.createElement('p'); r.className = 'pc-others'; r.textContent = `${others} ${others === 1 ? 'other player' : 'other players'} wandering here`; list.append(r); }
     if (!known.length && !others) { const r = document.createElement('p'); r.className = 'pc-others'; r.textContent = 'no one here yet: invite someone along'; list.append(r); }
   }
+  // The place's bar narrower than BAR_NARROW: Invite and Start on a row of their own (title.css .tt-bar.narrow); before
+  // a pose is found (renderBar) and each frame (a resize, the right column coming in)
+  fitBar() {
+    const narrow = this.bar.clientWidth < BAR_NARROW;
+    if (narrow !== this.barNarrow) { this.barNarrow = narrow; this.bar.classList.toggle('narrow', narrow); }
+    // a phone's top right holds the social row (the group's faces and the toggle) or the sign-in pill: the name's row
+    // keeps clear of whatever is there (--tt-clear, title.css)
+    let clear = 0;
+    if (matchMedia('(max-width: 720px)').matches) {
+      const r = this.bar.getBoundingClientRect(), top = r.top + 46;
+      for (const el of [this.$('.tt-loginpill'), ...document.querySelectorAll('#social .so-bar > *')]) {
+        const b = el?.offsetParent ? el.getBoundingClientRect() : null;
+        if (b && b.width && b.top < top && b.bottom > r.top && b.left < r.right) clear = Math.max(clear, r.right - b.left + 8);
+      }
+    }
+    clear = Math.round(clear);
+    if (clear !== this.barClear) { this.barClear = clear; this.bar.style.setProperty('--tt-clear', `${clear}px`); }
+  }
   // The bar: the build's progress for the chosen place, Invite, and Start once it is built.
   renderBar() {
+    this.fitBar();
     const id = this.sel, ready = !!id && this.readyIds.has(id);
     this.bar.classList.toggle('on', !!id && this.phase === 'lit'); this.bar.classList.toggle('ready', ready);
     const start = this.$('.tt-start'), inv = this.$('.tt-invite'), g = !!this.guest;
@@ -1161,7 +1225,7 @@ export class TitleScreen {
   // where the sign-in and then the social column stand (when there is a hub; at a phone's width the column is a
   // toggle at the top and leaves the width free).
   freeArea(W) {
-    const phone = matchMedia('(max-width: 720px)').matches, folded = phone && this.sel && this.phase === 'lit';   // a phone's chosen place: the list folds away
+    const phone = matchMedia('(max-width: 720px)').matches, folded = this.sel && this.phase === 'lit';   // a chosen place: the list goes (title.css)
     const left = this.list.offsetWidth && !folded ? this.list.offsetLeft + this.list.offsetWidth : 0, gate = this.$('.tt-gate');
     const right = this.reserveRight && gate?.offsetWidth && !phone ? Math.min(W, gate.offsetLeft) : W;
     return [left, right];
@@ -1194,14 +1258,20 @@ export class TitleScreen {
     cam.near = Math.max(2e-5, A * Math.cos(t) * 0.3); cam.far = 70;
     const [fl, fr] = this.freeArea(W), off = (fl + fr) / 2 - W / 2;
     // a chosen tile's centre across at the free centre's, and down where chosenPose aimed it (its near edge on the stage's
-    // bottom, followed as the bar's height changes: the loading line, the bodies' row), or (a pose for another size, until
+    // bottom, the viewport's), or (a pose for another size, until
     // the refit) at the focus area's centre
     this.stage = this.stageArea(W, H);
+    const barB = this.sel ? Math.round(this.bar.offsetTop + this.bar.offsetHeight) : 0;   // the scrim behind the place's bar (title.css .tt-wrap::before)
+    if (barB && barB !== this.barB) { this.barB = barB; this.wrap.style.setProperty('--tt-bar', `${barB}px`); }
+    this.fitBar();
     let offY = 0;
     if (this.sel && this.phase === 'lit') {
       const m = this.aim;
-      // the bar settled to another height once landed: the pose found again for it (unless the wheel has zoomed since)
-      if (m && m.id === this.sel && m.W === W && m.H === H && !this.flying && Math.abs(this.stage.b - m.b) > 3 && Math.abs(Math.log(this.altGoal / m.alt)) < 0.01) {
+      // the bar settled to another height once landed (the people's row, the body's line), or the relief was built after
+      // the pose took the guess at its top (a high tile's stack stands taller): the pose found again (unless the wheel has
+      // zoomed since)
+      const reliefM = m && (this.relief?.topM(this.sel) ?? null), moved = m && (Math.abs(this.stage.t - m.t) + Math.abs(this.stage.b - m.b) > 3 || (reliefM != null && reliefM !== m.relief));
+      if (moved && m.id === this.sel && m.W === W && m.H === H && !this.flying && Math.abs(Math.log(this.altGoal / m.alt)) < 0.01) {
         this.altGoal = this.chosenPose(this.sel).alt;
       }
       const a2 = this.aim;
@@ -1335,7 +1405,9 @@ export class TitleScreen {
     empty.hidden = rows.length > 0; empty.textContent = 'No wild places in view. Zoom out, or search.';
     const box = this.$('.tt-rows'), before = new Map([...box.children].map(el => [el, el.getBoundingClientRect().top]));
     for (const el of [...box.children]) if (!rows.some(p => p.el === el)) el.remove();
+    const had = box.contains(document.activeElement) ? document.activeElement : null;   // moving a row blurs it: the focus is given back (the X's return to a place's row)
     for (const p of rows) { if (!before.has(p.el)) p.el.classList.add('in'); box.append(p.el); }
+    if (had?.isConnected && document.activeElement !== had) had.focus({ preventScroll: true });
     for (const [el, top] of before) {   // FLIP: from where it was to where it is
       if (!el.isConnected) continue;
       const dy = top - el.getBoundingClientRect().top; if (!dy) continue;

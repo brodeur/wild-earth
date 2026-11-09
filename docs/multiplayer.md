@@ -943,6 +943,20 @@ stage, the place's title, picking, `startWith`), `client/title.css`, `hub.py` (`
 that needs no question, Start beside a member), `client/src/main.js` (`takeBody`), `client/src/spirit.js` (`enter(id,
 at)`), `client/src/animals.js` (`summon(..., at)`), `tests/test_hub.py` (`test_bodies`).
 
+- **Since 2026-11-08** (docs/decisions.md, "a chosen place takes the screen"): choosing a place slides the list away
+  and puts an X where the search was. The place's title, Invite, Start and the loading line form a bar at the top, and
+  the tile reaches the viewport's bottom. The layout below is the one it replaced.
+- **The group here (2026-11-08).** Aaron: "If I'm in a group and my group-mates are on this tile show which avatar they
+  have selected - in the top left underneath the place name." Under the place's details in that bar, `title.js`
+  `renderMates` shows a chip per group member at the place: their face and the body they chose ("as an american bison",
+  "as the spirit"), and a green dot when they are in its world already. Hovering a chip holds their animal in its ring;
+  a click picks the same body (beside them).
+  - **Data:** the same `body` relay as the rings' faces (`multiplayer.js` `bodiesAt`). Choosing a place now tells the
+    group the place as the spirit (`onBody(id, 'spirit')`), so a member who has not picked yet shows too. Leaving the
+    place (the X, zooming away, another place) takes it back, as before.
+  - **Who sees it:** the group alone, only while the member lets their place be seen, never a stranger (`hub.py`
+    `body_msg`, `tell_body`). It carries a tile id and a species code, nothing written down or logged. Others in the
+    tile stay a count.
 - **The layout.** The chosen place's card over its north edge and its label on the map are gone. The stage is the free
   centre between the panels, under the risen title and above the bar; the tile is framed in it, a little kept clear
   above for the back animals (`focusArea`), and the rings stand inside the tile (below; "pinned to the tile" since

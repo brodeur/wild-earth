@@ -8535,3 +8535,75 @@ and "With a join button on the right". Details in docs/multiplayer.md "The join 
 - **The cutoff follows the panel's width** (3, 4 or 5 slots; the last one becomes +N), not a fixed number.
 - **The body's face from the stills already shipped** for the species chips, so no new images; none for the spirit.
 
+## 2026-11-08: a chosen place takes the screen: the list goes, an X and the place's bar at the top, the tile down to the viewport's bottom (title.js, title.css; branch claude/home-chosen)
+
+Aaron: "When a tile is selected the search/place menu disappears while the zoom happens and a X appears. Name of tile and
+metadata appear up there near the X. This frees up space for the tile to take up more horizontal space. The bottom orange
+border of the tile can be right at the bottom of the viewport, and the tile can take up the remaining width." The first of
+two home-screen redesigns.
+
+- **The list goes.** Choosing a place (a row, a label, a dot) slides the places' column out to the left as the flight
+  starts (`.tt-wrap.chosen .tt-places`), at every width; the phone's "All places" fold is gone with it. The risen WILD
+  EARTH title and the Layers menu fade too, so the bar has the top to itself; the map's credits stay, small, bottom left.
+  `freeArea` drops the list's width once a place is chosen, so the free width runs from the left edge to the right column
+  (the social panel or the sign-in, which stay).
+- **The X and the place's bar.** The bar (`.tt-bar`) moved from the bottom to the top. The X sits where the search was. It
+  does what zooming away does (`unchoose`), then flies the earth back out to the distance the place was chosen from
+  (`backAlt`, within `BACK_ALT`), so the list returns over the view it was chosen in, and the focus lands on the place's
+  row (the list's re-sort now gives a moved row its focus back). Escape does the same when nothing is being typed.
+  Beside the X: the name and the players' pill, the Indigenous territories, the body Start arrives in and the people
+  there on one line. A dark scrim behind the bar (`.tt-wrap::before`, as tall as the bar via `--tt-bar`) keeps the words
+  legible on the land.
+- **Start stays in the bar, at its right end, with Invite.** It sits beside the name of the place it starts, everything
+  about the place is in one strip, and nothing floats over the tile, whose near edge is now the viewport's bottom. The
+  build's progress line and its step sit under the two buttons. The loading line used to span the whole width at the
+  bottom; a full-width line would now cover the orange edge. When the bar is narrower than 700 px (`BAR_NARROW`: a
+  phone, or 900 px with the right column), Invite and Start get a row of their own under the title. On a phone the bar
+  keeps clear of the social toggle or the sign-in pill at the top right. Signed out, Start's tip opens downward.
+- **The resting frame.** The stage is now the free width, from under the bar to `NEAR_PAD` (3 px, so the outline shows
+  whole) above the viewport's bottom. `chosenPose` takes the nearest distance at which the tile's middle fits that width
+  and the top of the rings' stack stays under the bar. The near edge lands on the stage's bottom.
+  - At 1726x948 the tile is 78% of the free width (1,035 px; it was 871 px).
+  - At 1280x800 it is 55% of the window (it was 43%).
+  - At 900 px it is 31 km away (it was 45 km).
+  - On the phone it spans the whole width, as before.
+  No sky at any size.
+- **Re-posed for the real relief.** When the relief is built after the pose took the 1,212 m guess, the pose is found
+  again, as when the bar's height settles. A high tile (`utm12n_514_4838`, 2,183 m) put its back birds above the bar
+  before this fix.
+- **`tools/home_zoom_check.mjs`** now checks the new rule:
+  - the list is gone;
+  - the tile is centred in the free width;
+  - its near edge is within 3% of the viewport's bottom, and its middle is 60-101% of the free width;
+  - no sky;
+  - the ring animals, once in, are under the bar.
+  A new case clicks the X and checks that the list is back, nothing is chosen and the bar and scrim are gone. `settle`
+  waits for the relief's re-pose. Results:
+  - All pass at 1280x800, 900x800 and 390x844, including the cold, throttled flight.
+  - At 1726x948 one case failed, a dot click from the limb view. The same far-view dot click fails on main's own check
+    too: the first click after the view jumps sometimes chooses nothing, and a second click chooses it.
+
+## 2026-11-08: the group's chosen bodies in the place's bar (title.js renderMates; branch claude/home-chosen)
+
+Aaron: "If I'm in a group and my group-mates are on this tile show which avatar they have selected - in the top left
+underneath the place name." The second home-screen redesign, in the same round as the first.
+
+- **What shows.** Under the place's details in the top bar: a chip per group member at the place, with their face (the
+  avatar the rings put over their animal), their name and the body chosen ("as an american bison", "as the spirit"),
+  and a green dot once they are in the place's world. Hovering a chip holds that animal in its ring; a click picks the
+  same body, which goes in beside them (the rings' `joinWith`). Others in the tile stay a count.
+- **The data was already there.** The hub relays a member's `body` (a tile id and a species code) to their groups
+  alone, and only while they let their place be seen. `multiplayer.js` `bodiesAt` filters that to group members at the
+  tile. The one change: choosing a place now sends `body` as the spirit, so a member who has not picked yet is listed.
+  It is the same message the rings send, under the same rule. Leaving the place takes it back, as before. Nothing new
+  goes to the hub, and nothing is logged.
+- **The phone's top right.** The bar now measures the social row (the group's faces and the toggle) or the sign-in pill
+  and keeps the name's row clear of it (`--tt-clear`); the rows under it take the full width.
+- **Tested** on the local hub with four accounts:
+  - A, B and C in one group; E signed in with no group.
+  - B choosing the place showed on A's bar as "as the spirit".
+  - B as the bison and C as the raven showed on A's bar, picked through the rings' own path.
+  - Changes showed live: C to the bison and back to the spirit.
+  - B on another tile dropped off A's list.
+  - E saw no chips, and A never listed E.
+  - The same held on A's phone.
