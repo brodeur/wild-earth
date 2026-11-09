@@ -567,6 +567,10 @@ export class GroundControl {
     const runK = k.alt ? 0 : smooth(Math.min(1, this.holdT / S.ramp));
     let target = k.fwd > 0 ? (k.alt && S.stalk ? S.stalk : S.walk + ((sprinting ? S.run : cruise) - S.walk) * runK) : k.fwd < 0 ? -S.back : 0;
     if (this.resting) target = 0;
+    if (this.carry) {   // a Join comes in at the friend's speed (main.js joinAs): held until a key, or a moment (carry.t s)
+      if (k.fwd || k.turn || jump || (this.carry.t -= dt) <= 0) this.carry = null;
+      else { target = this.carry.v; this.holdT = S.ramp; }
+    }
     if (this.wet) target *= 1 - 0.6 * Math.min(1, this.wet.depth / S.wade);
     target *= this.needs?.slow ?? 1;   // hungry or thirsty: slower (needs.js)
     {   // the legs: a sprint lasts S.sprint s over the cruise, then the body is tired (0.6 of the cruise at most) until the legs come back over S.recover s

@@ -701,6 +701,25 @@ class HubTest(unittest.TestCase):
         for p in (b, c, d):
             p[2].close()
 
+    def test_pos_speed(self):
+        """A Join comes in at the friend's speed: the spirit's `v` (m/s) is relayed with its position, checked, and an
+        absent or bad one is left out."""
+        a, b = (self.player(n) for n in ("Kite_a", "Kite_b"))
+        self.befriend(a, b)
+        a[2].send({"t": "group", "op": "create", "name": "Kites", "users": [b[0]]})
+        b[2].wait("groups")
+        a[2].drain()
+        for p in (a, b):
+            p[2].send({"t": "room", "op": "join", "tile": T2})
+        b[2].drain()
+        a[2].send({"t": "pos", **POS, "form": "spirit", "v": 12.3456})
+        self.assertEqual(b[2].wait("pos", timeout=2)["v"], 12.35)
+        for bad in (-1, 1e9, "fast", None):
+            a[2].send({"t": "pos", **POS, "form": "spirit", "v": bad})
+            self.assertNotIn("v", b[2].wait("pos", timeout=2))
+        for p in (a, b):
+            p[2].close()
+
     def hub_invite(self, iid: str) -> dict:
         return hub.get().invites.get(iid, {})
 

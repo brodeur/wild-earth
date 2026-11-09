@@ -2,9 +2,11 @@ import { Hub } from './hub.js';
 import { AccountModal } from './account.js';
 import { Social, avatarFor } from './social.js';
 import { Chat } from './chat.js';
-import { NF } from './animalNet.js';
+import { NF, F as NFI } from './animalNet.js';
+const NF_SPD = NFI.spd;
 import { Voice } from './voice.js';
 import { FollowToast, FollowVeil } from './follow.js';
+import { pushTrail } from './joinSpawn.js';
 
 // The social screen's hookup (docs/multiplayer.md, lanes 3 and 4): one object main.js makes beside the title screen. It
 // owns the page's Hub (hub.js) for the page's life, gives the title screen the hub to ask for config, me and the counts
@@ -23,8 +25,9 @@ import { FollowToast, FollowVeil } from './follow.js';
 // the HUD alike: "<picker> wants to go to <place>. Join · Not now". Join answers the hub and goes: on the earth the
 // place is chosen as the player would (quietly, so no invite of its own goes out) and its world starts building; the
 // joiner presses Start when they are ready (each player starts on their own); in a world the page switches to the tile.
-// The joiner arrives in spirit form 6 m above and 10 m behind the picker, from the picker's relayed position (arrival.js
-// plan's follow); until it comes, behind and above where the picker arrives (the point carried in the invite). The
+// The joiner arrives as the picker is (Join as the friend is, joinSpawn.js): their species, 5 body lengths behind on
+// their trail at their heading and speed; until their state comes, behind and above where the picker arrives (the point
+// carried in the invite). The
 // picker's card over the place shows who was asked, who is on the way and who is there (title.peopleAt), and the chat
 // pane says who joined and who declined. The dialog goes after a minute.
 //
@@ -76,8 +79,8 @@ import { FollowToast, FollowVeil } from './follow.js';
 const html = document.documentElement;
 const POS_MS = 200;             // the position relay: 5 Hz, the doc's rate
 const INVITE_MS = 60000;        // the dialog's life (the hub keeps the invite a little longer, so a late Join lands)
+const STEADY_N = 4, STEADY_MS = 60, STEADY_MAX_MS = 3000;   // a Join's veil: lifted once this many frames come under this long, or after the last
 const LEAD_WAIT_MS = 6000;       // group follow: how long the veil waits for the inviter's position before the planned point
-const FOLLOW_WINDOW_S = 2.5;    // a joiner's arrival turns to follow the picker when the picker's position comes within this long of its start
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 const r2 = v => Math.round(v * 100) / 100, r3 = v => Math.round(v * 1000) / 1000;
 const clampN = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -96,6 +99,7 @@ export class Multiplayer {
     this.room = null;        // the world entered: { tileId, flight, arrival, form, caption, lead, follow }
     this.posTimer = null;
     this.poses = new Map();  // user id -> the last position relayed from a group member in the room (memory only)
+    this.trails = new Map(); // user id -> a group member's last 20 s of points (joinSpawn.js pushTrail; memory only, gone with the room)
     this.switchTile = null;  // main.js: (tileId, xy, lead) switches the world played, a Join from a world
     this.unseen = false;     // an answer came while the chat was hidden (arriving or switching): the pane is shown again after
     this.asked = new Map();  // tile id -> Map(user id -> 'asked' | 'join' | 'no'): whom this player invited there (this page only)
@@ -397,23 +401,42 @@ export class Multiplayer {
       this.liftVeil();
     }, LEAD_WAIT_MS);
   }
-  placeBehind(d) {
+  // Join as the friend is (main.js place -> joinAs, joinSpawn.js): their species, 5 body lengths behind on their trail,
+  // their heading and speed, from their latest relayed state carried on to now; the spirit above and behind when no spot
+  // holds it (ground: on the ground behind a ground animal).
+  // again: the second placement (liftVeil, once the frames under the veil are steady): from the latest state, the body
+  // moved there, so the first slow frames of the new place do not leave the joiner behind.
+  placeBehind(d, again = false) {
     const r = this.room; if (!r?.place) return;
-    clearTimeout(r.leadT); r.waitLead = null;
+    clearTimeout(r.leadT); clearTimeout(r.leadT2); r.waitLead = null; r.leadN = 0;
     const ground = !!d.form && d.form !== 'spirit' && r.kind?.(d.form) === 'ground';
-    r.place({ x: d.x, y: d.y, z: d.z, yaw: d.yaw || 0, ground });
-    const P = r.flight?.pos;   // debugging: the inviter's pose used and where the joiner was put
-    this.placed = { lead: { x: d.x, y: d.y, z: d.z, yaw: d.yaw || 0, form: d.form || 'spirit' }, ground, me: P ? { x: r2(P.x), y: r2(P.y), z: r2(P.z), yaw: r2(r.flight.yaw) } : null };
-    this.liftVeil();
+    const plan = r.place({ x: d.x, y: d.y, z: d.z, yaw: d.yaw || 0, ground, lead: d, trail: (this.trails.get(d.user) || []).slice(), again });
+    if (again) { if (plan) this.placed.again = { plan, at: Math.round(performance.now()) }; return; }
+    const P = r.flight?.pos;   // debugging: the inviter's state used, the plan and where the joiner was put
+    this.placed = { lead: { x: d.x, y: d.y, z: d.z, yaw: d.yaw || 0, form: d.form || 'spirit', spd: Array.isArray(d.b) ? d.b[NF_SPD] : null }, ground, plan: plan || null,
+      me: P ? { x: r2(P.x), y: r2(P.y), z: r2(P.z), yaw: r2(r.flight.yaw), form: r.form?.() || 'spirit' } : null };
+    this.liftVeil(plan ? d.user : null);
   }
   // a few frames drawn behind the black (the ground around the new place streams in) before the veil fades
-  liftVeil() {
+  // lead: a Join placed from that member's state: once the frames are steady (STEADY_N under STEADY_MS, or STEADY_MAX_MS),
+  // placed again from their latest state, and the veil lifts at once after.
+  liftVeil(lead = null) {
     const veil = this.veil; if (!veil?.active) return;
     veil.status('');
-    let n = 0; const t0 = performance.now();
-    const go = () => { if (++n >= 3 && performance.now() - t0 > 700) { veil.done(); return; } setTimeout(go, 120); };
-    requestAnimationFrame(() => setTimeout(go, 120));
-    setTimeout(() => { if (veil.active && !veil.el?.classList.contains('out')) veil.done(0); }, 4000);   // a hidden page draws no frames
+    const t0 = performance.now(), r = this.room; let last = t0, good = 0, done = false;
+    const finish = () => {
+      if (done) return; done = true;
+      const d = lead && this.room === r ? this.poses.get(lead) : null;
+      if (d) this.placeBehind(d, true);
+      veil.done(lead ? 120 : 500);
+    };
+    const frame = now => {
+      if (done) return;
+      good = now - last < STEADY_MS ? good + 1 : 0; last = now;
+      if ((good >= STEADY_N && now - t0 > 700) || now - t0 > STEADY_MAX_MS) finish(); else requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+    setTimeout(finish, STEADY_MAX_MS + 1000);   // a hidden page draws no frames
   }
 
   // ---- the home screen's Invite ----------------------------------------------------------------------------------------
@@ -513,7 +536,7 @@ export class Multiplayer {
     clearTimeout(this.room?.leadT);
     this.room?.players?.clear();
     this.voice?.setRoom(null);
-    this.room = null; this.poses.clear();
+    this.room = null; this.poses.clear(); this.trails.clear();
     if (tell && this.hub?.room) { this.hub.enter(null); this.chat?.setRoom(); }
     if (tell) this.hub?.body(null);
   }
@@ -529,6 +552,7 @@ export class Multiplayer {
       this.poses.clear(); r.players?.clear(); this.hub.enter(r.tileId, sn);
     }
     const P = r.flight.pos, m = { x: r2(P.x), y: r2(P.y), z: r2(P.z), yaw: r2(r.flight.yaw), form: r.form?.() || 'spirit' };
+    if (m.form === 'spirit') m.v = r2(Math.abs(r.flight.speed || 0));   // the spirit's speed (a body's is in b): a Join comes in at it (joinSpawn.js)
     if (m.form !== r.worn) { r.worn = m.form; this.hub.body(r.tileId, m.form, true); }   // the body worn here, for the group's home screens (title.js rings)
     // in a body: its pose as the animal stream has an animal (bodySample.js), so the group draws the animal (players.js)
     const b = this.bodyB ||= new Float32Array(32), c = this.bodyC ||= new Float32Array(8);
@@ -536,19 +560,19 @@ export class Multiplayer {
     this.hub.pos(m);
   }
   gotPos(d) {
+    d.at = performance.now();   // when it came: a Join carries the state on from here to the moment it places (joinSpawn.js)
     this.poses.set(d.user, d);
     const r = this.room; if (!r) return;
-    if (this.isMate(d.user)) this.voice?.seen(d.user);   // voice is the group's: a stranger's spirit is only seen
+    if (this.isMate(d.user)) { this.voice?.seen(d.user); const t = this.trails.get(d.user) || []; this.trails.set(d.user, pushTrail(t, d, d.at)); }   // voice is the group's: a stranger's spirit is only seen
     r.players?.sample(d);
-    if (r.waitLead && d.user === r.waitLead) { this.placeBehind(d); return; }   // group follow: behind the inviter
+    if (r.waitLead && d.user === r.waitLead) {   // group follow: behind the inviter, once their speed is known (a body's own; the spirit's from two samples)
+      r.leadN = (r.leadN || 0) + 1;
+      if (Array.isArray(d.b) || r.leadN >= 2) { this.placeBehind(d); return; }
+      clearTimeout(r.leadT2); r.leadT2 = setTimeout(() => { if (this.room === r && r.waitLead === d.user) this.placeBehind(this.poses.get(d.user) || d); }, 700);
+      return;
+    }
     if (!r.lead || d.user !== r.lead) return;
-    const a = r.arrival; if (!a) { r.lead = null; return; }
-    if (!a.active) { r.lead = null; r.follow = null; return; }   // arrived: free
-    if (r.follow) { Object.assign(r.follow, { x: d.x, y: d.y, z: d.z, yaw: d.yaw }); return; }   // the arrival slides with the picker
-    if (a.t > FOLLOW_WINDOW_S) { r.lead = null; return; }   // too late to turn: on to the picker's planned point
-    r.follow = { x: d.x, y: d.y, z: d.z, yaw: d.yaw };
-    a.plan(null, r.follow);
-    r.caption?.({ x: d.x, north: -d.z });
+    r.lead = null;   // an invite's joiner: put behind the picker under the entry's black (main.js stepEntry, from poses); no flight to turn since 2026-11-08
   }
 
   // Debugging: a position as the hub would relay it, from a test user (named by `name` in the social list's found users,

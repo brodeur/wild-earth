@@ -1128,7 +1128,7 @@ export class TitleScreen {
     if (this.ready) this.begin(); else this.renderBar();
   }
   // Start: the camera sinks toward the place while the screen fades to black; then onBegin enters the world through
-  // main.js's enterWorld, whose own fade (.out) brings the spirit world in from the black.
+  // main.js's enterWorld, which puts the player in under black (#enterFade) and fades in on them once the world draws.
   begin() {
     if (this.begun || !this.ready || this.guest) return;
     this.begun = true;

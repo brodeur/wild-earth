@@ -8454,6 +8454,27 @@ current orb can decrease in opacity, and a second brighter smaller orb could be 
 - **Open.** In thick woodland at 200 m many spikes stand at once (101 lit prey in one frame from 150 m up). Fading the
   spikes of far, unselected prey once a quarry is selected would quiet that; not done.
 
+## 2026-11-08: join as the friend is (branch claude/join-as-species)
+
+Aaron: "When I click "Join" after a friend starts a tile, I should spawn right next to them, as the species they are,
+going the speed they are in the direction they are, but about 5 body lengths behind". Details in docs/multiplayer.md
+"Join as the friend is".
+- **Their species, not the spirit**: a Join comes in as the friend's relayed form, the spirit only when they are one. The
+  friend's form wins over a body chosen on the home screen's rings.
+- **Body length per species from the controls' own tables**: twice a walker's `half`, 0.45 of a bird's span (a red-tailed
+  hawk 0.56 m: 5 lengths is 2.8 m), times the friend's size; the spirit counts 2 m. Behind is along their trail, not only
+  straight back, so a friend who turned is followed round the turn.
+- **Their state carried to now**: from the time the relayed state came (the receiver's clock: the two clocks are not
+  compared), at their speed along their heading, at most 4 s. The spirit sends its speed (`v` in `pos`) because a trail
+  read off a 5 Hz relay under load gave 0 to 48 m/s for a 12 m/s spirit.
+- **Placed twice, the veil held until the frames are steady**: the first frames at a new place are slow and the loop
+  clamps a frame at 0.1 s, so a joiner placed at once lost ground in the first second; placing again from the latest
+  state just before the veil lifts keeps the gap at 5 lengths when the player first sees it.
+- **A walker holds the friend's speed a moment** (`carry`, 2.5 s or a key) rather than stopping dead with no key down.
+- **Bad spots slide along the trail, then to the nearest good spot**, and with none the old spirit above and behind; never
+  inside a trunk, a crown, the ground, deep water for a walker or off the tile.
+- **A hawk body when summon makes none**: the nearest living one on the tile is taken and moved, rather than failing.
+
 ## 2026-11-08: no message over the server's 64 KB limit; a join's resend is spread, not shortened
 
 Aaron, with one computer flying as a hawk and a second pressing Join: "i show up as a spirit but see no animals". The cause was the host's resend on a join: spawns, every herd row and a 4,000-cell field delta in one
@@ -8472,3 +8493,35 @@ and fails over 64 KB. The form a joiner arrives in is a separate change (group f
   - **How:** `setMenu` in main.js sends a `we-menu` event, and the overlay listens for it. Because the listener is added while the world is being built, it is recorded and removed with the world, like G's.
   - **On close:** if the roads were hidden before the menu opened, they hide again when it closes. If they were already on, they stay on.
   - **G in the meantime:** pressing G while the menu is open makes it the player's choice, and closing the menu leaves the roads as G set them.
+
+## 2026-11-08: no autopilot intro; a world fades in on the player, in control (client/src/arrival.js, main.js enterWorld, spirit.js)
+
+- **Why.** Aaron: "When the game starts currently starts in an autopilot mode. Instead, the player should fade from black into the avatar with controls active. Skip the autopilot intro."
+- **What is gone.**
+  - The scripted 12 s arrival flight. Every start used to fly the spirit in from 400 m up and 1.5 km south.
+  - Its caption ("near … · season · spirit").
+  - Its "any key to skip" handler, so the old test hook "x skips the arrival" is gone too.
+  - Multiplayer's in-flight turn toward the picker.
+  - `Arrival` keeps only `plan(point, follow, behind)` and a new `place()`. `place()` puts the flight's pose where the flight used to end: 120 m over the point heading north at cruise speed; or above and behind a follow pose, hovering; or on the ground behind a ground lead. `active` is always false.
+  - The squirrel's and woodpecker's own arrivals (`?as=` test paths) are untouched.
+- **The entry.** `enterWorld` places the player and makes them the spirit, or takes the chosen body at once. Taking the body uses `spirit.enter(id, at, { instant: true })`, which calls a new `spirit.settle()`: no camera blend, no wisp dive, and the spirit look set at once. It also adds `html.arriving`, which now means "under black", with the HUD hidden.
+- **The black.** A new `#enterFade` in index.html (z 19: under the opening screen and the Join's veil) is opaque while `arriving` is set.
+  - **While it is up,** the frame loop draws only once nothing is compiling (the same gate as behind the title screen), so new body models and rock sets compile under the black rather than popping in.
+  - **It lifts** after 3 frames drawn that way and at least 250 ms, or at 4 s whatever is drawn, plus a timer, since a hidden page draws no frames. It then fades out over 1.2 s and the HUD fades in.
+  - **Controls** are live from the entry, under the black too.
+- **Joins.**
+  - A follow Join (`c.follow`) has its own veil (follow.js), so it gets no `#enterFade`. Its `place` is `plan` + `place` + `settle`.
+  - An invite's joiner (`c.lead`) holds the black up to 1.5 s for the picker's position, then is put behind them, with the chosen body beside them. With no position in that time, they go behind the picker's planned point.
+  - multiplayer.js is unchanged: its `gotPos` already frees `r.lead` when the arrival is not active.
+- **A body started alone.**
+  - A flier is put on the wing where the spirit would be.
+  - A walker goes on the clearest ground within 20 m below it: room for the body (1.5 m) and for its camera 4 m behind (2 m), from `veg.nearPlants`. It used to go 25 m ahead of the flight's end.
+  - A body the summon cannot make falls back to the nearest live one of the species. The red-tail and the vulture summon nothing anywhere, so a hawk chosen on the home screen used to leave the player a spirit.
+- **Seen** (home tile 680_4280, browser pane, hidden, rAF on timers, canvas captured after each spirit render, the black composited from the class times):
+  - Start as the spirit: the black lifted 0.84 s after the entry.
+  - Start as a mule deer, after Exit to main screen: 2.5 s, with the deer's model compiling under the black.
+  - Start as a red-tail: 2.3 s.
+  - A tile switch to 690_4280: 2.4 s.
+  - Controls answer under the black (A turned the spirit 0.8 rad in 1.2 s).
+  - `?skip=1` is unchanged. The console's only error is the signed-out 401 from /api/hub/me. unittest OK.
+  - **Not covered:** timings with a visible, full-rate page, and the deer's new clear-spot placement, which was added after the deer capture.

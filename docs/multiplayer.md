@@ -158,7 +158,8 @@ body      {tile, code, here?} | {tile: null}  (the body chosen for a tile on the
 room      {op: 'join'|'leave', tile, season?} (the client joins its tile's room when a world is entered, with the season
                                               the world is in, and again when the season changes in place; absent: the
                                               tile's by the calendar. Who sees whom)
-pos       {x, y, z, yaw, form, b?, c?}        (5 Hz while in a room; relayed under the rule in "Who sees whom")
+pos       {x, y, z, yaw, form, b?, c?, v?}    (5 Hz while in a room; relayed under the rule in "Who sees whom"; v: the
+                                              spirit's speed in m/s, a body's being in b; "Join as the friend is")
 watch     {on: true|false}                    (on the earth: receive tile counts)
 rtc       {to, tc?, k: 'sdp'|'ice'|'state'|'bye', sdp?: {type, sdp}, ice?: {candidate, sdpMid, sdpMLineIndex}|null,
            mic?, cam?}                        (WebRTC signalling to a group member in the same room; lane 5)
@@ -176,7 +177,7 @@ invite    {id, from, tile, season, date?, group?, point?, follow?}
 season    {from, season, date?, tile?}        (a group member changed the season; tile: theirs, when in a world)
 body      {user, tile, code, here} | {user, tile: null}  (a group member's body chosen or worn there, or none any more;
                                               welcome's bodies[] holds the members' current ones; "Bodies")
-pos       {user, name, x, y, z, yaw, form, b?, c?}  (name: their display name; from a group member in the same world in any form, or anyone in it while a
+pos       {user, name, x, y, z, yaw, form, b?, c?, v?}  (name: their display name; from a group member in the same world in any form, or anyone in it while a
                                               spirit; on entering a world, the last one of each player already in it that
                                               may be seen; lane 4, Who sees whom)
 gone      {user}                              (someone who was seen may no longer be: they left the world, or a stranger's
@@ -400,7 +401,7 @@ together. Lane 3 needs lane 1's screen in main; lane 4 needs 1 to 3. Lane 5 is l
      200 ms timer sends `hub.pos` (x, y, z, yaw rounded to 2 decimals, `form` from `__we.playerSpecies` or `spirit`);
      `hub.js` sends nothing unless in a room and in a group. `mp.poses` holds the last `pos` per member, cleared on
      leaving.
-   - **The arrival.** `Arrival.plan(point, follow)`: with `follow` `{x, y, z, yaw}` the path comes in from 1.5 km
+   - **The arrival** (superseded 2026-11-08: there is no arrival flight now; `Arrival.place()` puts the player at the plan's end pose under black, decisions.md "no autopilot intro"). `Arrival.plan(point, follow)`: with `follow` `{x, y, z, yaw}` the path comes in from 1.5 km
      behind the lead along their heading (cut at the tile's edge, 150 m at least), ends 6 m up and 10 m back, slows
      to a hover (`f.hover = true, speed 0` at finish) and the clearance lift fades out over the last 15 % of the path
      so the end pose is exact; the object is read every frame, so the path slides with a lead who moves (the heading
@@ -783,6 +784,70 @@ enterWorld's follow entry, the page-node opt-out in the world's recorder), `clie
   ahead); a wider first view or a short camera ease toward them may read better. An invite that times out tells the
   inviter nothing. A joiner's Join lands behind the inviter even if the inviter has gone back to the main screen since
   (the planned-point fallback); cancelling the invite when the inviter leaves the tile is not done.
+
+## Join as the friend is
+
+Aaron, 2026-11-08: "When I click "Join" after a friend starts a tile, I should spawn right next to them, as the species
+they are, going the speed they are in the direction they are, but about 5 body lengths behind". Until then a Join came in
+as a spirit 6 m above and 10 m behind (Group follow, above), and only took a body chosen on the home screen's rings.
+
+**Built (2026-11-08, branch `claude/join-as-species`).** `client/src/joinSpawn.js` (new: body lengths, the trail, the
+plan), `client/src/main.js` (`place` -> `joinAs`, `joinTest`, `takeBodyAt`), `client/src/multiplayer.js` (the relayed
+state's time and trail, the wait for the speed, the second placement in `liftVeil`, `v` sent in spirit form),
+`client/src/groundControl.js` (`carry`), `client/src/hub.js` and `hub.py` (`pos` carries `v`), `tests/test_join_spawn.py`
+(new, the plan under node), `tests/test_hub.py` (`test_pos_speed`). Every Join path ends here (the follow invitation's
+Join, the home screen's rings, already in the tile).
+- **Species.** The joiner comes in as the friend's relayed `form`: their body's species, or the spirit when they are a
+  spirit. The body is an animal of that species summoned at the spot and entered as the spirit enters any body
+  (`spirit.enter(id, at)`); a species `animals.summon` cannot make (the hawks: it made none) is the nearest one living on
+  the tile, entered and put at the spot, so the tile has one fewer there. The friend's form wins over a body chosen on
+  the rings.
+- **Where.** About 5 of that species' body lengths behind (BEHIND_LENGTHS): a walker's twice its `half` (a mule deer
+  1.2 m at size 1), a bird's 0.45 of its span (a red-tailed hawk 0.56 m), times the friend's size (`c[0]`); the spirit
+  counts 2 m, so 10 m behind. Behind is along the trail they came by (the last 20 s of their relayed points, kept in
+  memory per group member and dropped with the room), straight back along the heading past its end. The joiner faces
+  their heading.
+- **State, carried to now.** Their latest relayed state, with the time it came: the position carried along the heading at
+  their speed for the time since (at most 4 s; a page busy with its first frames reads old messages), and in the air up
+  or down at the trail's rate. Speed is the body's own (`b`'s `spd`), the spirit's `v` (new in `pos`, rounded to the
+  centimetre, never kept), else the trail over its last second. A Join waits under the veil for one state from a body,
+  two from a spirit (700 ms at most).
+- **Moving at once.** A flier at the friend's height on the wing at their speed (at least 0.8 of its cruise, the flight
+  model's floor), straight on, or soaring round the same way when they circle (a steady turn over 0.08 rad/s with the
+  wings still: `soarDir`); flapping set from their wing beat for the first frame, then the flight model decides. A walker
+  on the ground at their speed, held there by `carry` (groundControl.js) until a key or 2.5 s, so it does not stop dead
+  with no key down. A swimmer that came from the water starts in water. A perched or landed flier: on the ground behind.
+- **Bad spots** (`joinTest`): off the tile (30 m margin), in a trunk (the near plants', the near set moved to the friend
+  first), in a crown or under the ground or the water's surface for a flier or the spirit (1.5 m clear), on a slope over
+  45 degrees, on a rock top taller than the body jumps, in water deeper than a walker wades, dry land for a swimmer that
+  was swimming. The spot slides along the trail, 4.5, 5.5, 4, 6, 3.5 ... 15 lengths, then the nearest good spot on rings
+  of 1 to 20 m round the 5-length point; with none, the spirit above and behind as before.
+- **Placed twice.** The first frames at a new place are slow (the near set, the fine terrain, the plants streaming in),
+  and the frame loop clamps a frame at 0.1 s, so a joiner placed at once fell behind in the first second. The veil now
+  stays until four frames come under 60 ms (3 s at most), then the joiner is placed again from the friend's latest state
+  (the body moved, not taken again) and the veil lifts at once.
+- **Privacy.** Only the group's own relay is used; the trail and the state are memory only and go with the room; `v` is
+  relayed under the positions' rule and never logged or kept.
+- **Debugging.** `__weMp.placed` (the friend's state, the plan: code, spot, speed, d, len, slid, soaring; `again`: the
+  second placement), `__weJoinAs(lead, trail)` (main.js: plan and enter from any state).
+- **Verified** with two local test accounts on 127.0.0.1 (two headless Chromes, the worktree's own hub), A on the home
+  tile, B clicking Join on the follow invitation from the main screen; the gap read on B's page against A's relayed state
+  carried to the same moment (load average 20 to 100 from other lanes, so frames ran at 4 to 20 fps):
+  - A a red-tailed hawk flying straight at 11 m/s: B a red-tailed hawk on the wing, 5.01 lengths (2.60 m) behind,
+    heading +0.0 degrees, speed +0.00 m/s, same height; 3.6 to 5.9 lengths over the first second (A's relay jitter).
+  - A a mule deer trotting at 3 m/s: B a mule deer on the ground, trotting, 5.00 lengths (5.51 m) behind, +0.0 degrees,
+    +0.00 m/s.
+  - A a spirit at 12 m/s: B a spirit 5.00 lengths (10.0 m) behind at the same height, +0.0 degrees, +0.00 m/s.
+  - Bad spots on the real tile through `__weJoinAs`: a 1.23 m oak trunk at 5 lengths slid to 7 lengths, 2.3 m from its
+    centre; a point behind past the edge's margin slid in to 3 lengths; 1.37 m deep water at 5 lengths for a deer went to
+    the nearest wadeable spot (0.49 m) round it. The plan's rules are in tests/test_join_spawn.py.
+  - Frames: join-as-species-captures/ in the side-session notes (B's first frames with A ahead, GIFs of each).
+  Not verified: a coyote (the deer is the walker tested), a swimmer in a real river, a soaring hawk joined in game (the
+  rule is in the node test), a Join over a real network (one round trip of age, carried on), touch screens. Under the
+  load of the test the gap opened by 2 s as B's frames slowed (the loop's 0.1 s clamp); on a steady machine it holds.
+- **Open.** On a page that mirrors the shared animals, the AI animal taken as the body is the mirror's copy; whether the
+  host keeps running it is the shared animals' question (the Big herds lane is in animalNet.js). The flier model raises a
+  slower speed to 0.8 of its cruise.
 
 ## Group season
 
