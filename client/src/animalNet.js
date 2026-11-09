@@ -37,9 +37,14 @@ const CAP_BPS = 24000;                     // bytes per second of state the host
 const SPAWN_MSG = 30000;                   // bytes of spawns in one message at most: a join's full snapshot is spread over
                                            // ticks (the server refuses a message over 64 KB, ws.py WS_MAX_IN)
 const NEAR_M = 80, MID_M = 250;            // m from the nearest player: every tick, every other, else every fourth
-const POS_MS = 1000;
-const HERD_EVERY = 8;
-const FIELD_EVERY = 8, FIELD_CELLS = 4000;   // the herds' field deltas: every 8 ticks (2 s), 4,000 cells (32 KB, 43 KB base64) a message at most                      // a herd's row at least every 8 ticks (2 s), else when it moved or changed                       // a mirror's apos: once a second (and at once on a species change)
+const POS_MS = 1000;                       // a mirror's apos: once a second (and at once on a species change)
+const HERD_EVERY = 8;                      // a herd's row at least every 8 ticks (2 s), else when it moved or changed
+const FIELD_EVERY = 8, FIELD_CELLS = 4000; // the herds' field deltas: every 8 ticks (2 s), at most 4,000 cells (43 KB base64)
+const MSG_MAX = 56000;                     // characters in one message at most (the server closes the socket of a page that
+                                           // sends over 64 KB, ws.py WS_MAX_IN): the field delta takes only the room left,
+                                           // and a message still over is split (sendAst; 2026-11-08, a join's resend
+                                           // reached 77 KB, the server dropped the host and the joiner saw no animals)
+const CELL_CH = 32 / 3;                    // a field cell's characters on the wire: 8 bytes, base64
 const RETRY_MAX = 30000;
 export const PG = typeof crypto !== 'undefined' && crypto.getRandomValues ? [...crypto.getRandomValues(new Uint8Array(8))].map(b => b.toString(16).padStart(2, '0')).join('') : Math.random().toString(16).slice(2, 18);
 
@@ -109,9 +114,36 @@ export class AnimalNet {
     const d = Math.min(RETRY_MAX, 1000 * 2 ** this.retry) * (0.75 + Math.random() * 0.5); this.retry = Math.min(this.retry + 1, 6);
     this.timer = setTimeout(async () => { if (!this.want) return; this.stats.reconnects++; if ((await this.probe()) === 'online') this.open(); else if (this.want) this.later(); }, d);
   }
-  send(obj) {
+  send(obj) { return this.raw(JSON.stringify(obj)); }
+  raw(s) {
     if (!this.ws || !this.connected) return 0;
-    const s = JSON.stringify(obj); this.ws.send(s); this.stats.bytesOut += s.length; this.win.out += s.length; return s.length;
+    if (s.length > MSG_MAX) {   // never sent: the server would close the socket (and with it this page's part in the world)
+      this.stats.oversize = (this.stats.oversize || 0) + 1;
+      if (!this.warned) { this.warned = true; console.warn(`[animals] a ${s.length}-character message not sent (over ${MSG_MAX})`); }
+      return 0;
+    }
+    this.ws.send(s); this.stats.bytesOut += s.length; this.win.out += s.length; this.stats.maxOut = Math.max(this.stats.maxOut || 0, s.length); return s.length;
+  }
+  // the host's state message; one over MSG_MAX goes as several (the field delta alone, then each array spread over
+  // messages of MSG_MAX at most). A mirror applies each row as it comes (decode), so the parts need no reassembly.
+  sendAst(m) {
+    const str = JSON.stringify(m);
+    if (str.length <= MSG_MAX) return this.raw(str);
+    this.stats.split = (this.stats.split || 0) + 1;
+    const part = () => ({ t: 'ast', s: [], u: [], d: [], g: [], at: m.at });
+    let n = 0;
+    for (const key of ['s', 'g', 'u', 'h', 'd']) {
+      const rows = m[key]; if (!rows?.length) continue;
+      let p = part(), len = 80;
+      for (const r of rows) {
+        const l = JSON.stringify(r).length + 1;
+        if (len + l > MSG_MAX && p[key]?.length) { n += this.raw(JSON.stringify(p)); p = part(); len = 80; }
+        (p[key] ||= []).push(r); len += l;
+      }
+      n += this.raw(JSON.stringify(p));
+    }
+    if (m.f) { const p = part(); p.f = m.f; n += this.raw(JSON.stringify(p)); }
+    return n;
   }
 
   // ---- host or mirror ------------------------------------------------------------------------------------------------
@@ -252,14 +284,20 @@ export class AnimalNet {
     // the herds, as aggregates
     const h = A.herdRows ? A.herdRows(full, this.hsent ||= new Map(), HERD_EVERY) : [];
     // the herds' fields (herdField.js): the cells written since the last, every FIELD_EVERY ticks (every tick while a join's
-    // backlog lasts), at most FIELD_CELLS a message
+    // backlog lasts), at most FIELD_CELLS a message and no more than the room the message has left under MSG_MAX (a
+    // join's spawns and herd rows first; the rest of the backlog goes on the next ticks)
+    const fixed = 60 + sBytes + JSON.stringify(d).length + JSON.stringify(g).length + JSON.stringify(h).length;
     let f = null;
     if (A.fields) {
       if (full) { A.fields.all(); this.fieldBacklog = true; }
-      if (this.fieldBacklog || this.stats.ticks % FIELD_EVERY === 0) { f = A.fields.delta(FIELD_CELLS); if (!A.fields.dirty.size) this.fieldBacklog = false; }
+      if (this.fieldBacklog || this.stats.ticks % FIELD_EVERY === 0) {
+        const room = Math.min(FIELD_CELLS, Math.floor((MSG_MAX - fixed - 2000) / CELL_CH));   // (2,000 for the update rows)
+        if (room >= 100) f = A.fields.delta(room);
+        if (!A.fields.dirty.size) this.fieldBacklog = false;
+      }
     }
     // the rows, until the tick's share of the cap
-    let bytes = 30 + sBytes + JSON.stringify(d).length + JSON.stringify(g).length + JSON.stringify(h).length + (f ? f.length : 0), budget = CAP_BPS * TICK_MS / 1000;
+    let bytes = fixed + (f ? f.length + 6 : 0), budget = CAP_BPS * TICK_MS / 1000;
     let k = 0;
     for (; k < due.length; k++) {
       const a = due[k], row = this.row(a); if (!row) { a.wtick = 0; continue; }
@@ -269,7 +307,7 @@ export class AnimalNet {
     }
     for (; k < due.length; k++) { due[k].wtick = (due[k].wtick || 0) + 1; this.stats.deferred++; }
     for (const a of A.list) if (!a.dead && !a.culled && a.wdue < 1) a.wtick = (a.wtick || 0) + 1;
-    if (s.length || u.length || d.length || g.length || h.length || f) { const m = { t: 'ast', s, u, d, g, at: r2(A.time) }; if (h.length) m.h = h; if (f) m.f = f; this.send(m); }
+    if (s.length || u.length || d.length || g.length || h.length || f) { const m = { t: 'ast', s, u, d, g, at: r2(A.time) }; if (h.length) m.h = h; if (f) m.f = f; this.sendAst(m); }
   }
   // one animal's row: [n, mask, ...changed fields], or null when nothing changed
   row(a) {

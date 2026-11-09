@@ -175,7 +175,14 @@ export class RoadsOverlay {
     }
     this.labels = longest.size;
     addEventListener('keydown', e => {
-      if (e.code === 'KeyG' && !e.repeat && !(e.target instanceof HTMLInputElement)) this.group.visible = !this.group.visible;
+      if (e.code === 'KeyG' && !e.repeat && !(e.target instanceof HTMLInputElement)) { this.group.visible = !this.group.visible; this.byMenu = false; }
+    });
+    // The menu open shows the roads (Aaron, 2026-11-09: "The holographic road map should show when the menu opens"):
+    // main.js setMenu sends 'we-menu'; roads it turned on go off again when it closes, unless G was pressed meanwhile.
+    this.byMenu = false;
+    addEventListener('we-menu', e => {
+      if (e.detail) { if (!this.group.visible) { this.group.visible = true; this.byMenu = true; } }
+      else if (this.byMenu) { this.group.visible = false; this.byMenu = false; }
     });
   }
 }

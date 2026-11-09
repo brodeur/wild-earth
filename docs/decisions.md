@@ -8454,6 +8454,24 @@ current orb can decrease in opacity, and a second brighter smaller orb could be 
 - **Open.** In thick woodland at 200 m many spikes stand at once (101 lit prey in one frame from 150 m up). Fading the
   spikes of far, unselected prey once a quarry is selected would quiet that; not done.
 
+## 2026-11-08: no message over the server's 64 KB limit; a join's resend is spread, not shortened
+
+Aaron, with one computer flying as a hawk and a second pressing Join: "i show up as a spirit but see no animals". The cause was the host's resend on a join: spawns, every herd row and a 4,000-cell field delta in one
+message, 70-77 KB once the herds' fields held a few hours of changes. The server closes a socket that sends over 64 KB,
+so the host dropped off, the host moved, and the joiner was torn down. It was not the network: nothing in the game keys
+on the address. Chosen: every message from the animals stream is held to 56,000 characters. The field delta takes only
+the room left after the spawns and herd rows, so a large backlog goes over more ticks; a message still over is split
+into parts (a mirror applies rows as they come), and nothing over is ever sent. Rejected: raising the server's limit
+(it is a guard against misbehaving clients, and a later, bigger world would cross any new limit) and cutting what a
+joiner is sent (the joiner needs the fields to see the same trails). A test drives the encoder against a fake socket
+and fails over 64 KB. The form a joiner arrives in is a separate change (group follow), not this one.
+
+## 2026-11-09: the menu shows the hologram roads (client/src/roadsOverlay.js, main.js setMenu)
+
+- **The roads come on with the menu.** Aaron: "The holographic road map should show when the menu opens."
+  - **How:** `setMenu` in main.js sends a `we-menu` event, and the overlay listens for it. Because the listener is added while the world is being built, it is recorded and removed with the world, like G's.
+  - **On close:** if the roads were hidden before the menu opened, they hide again when it closes. If they were already on, they stay on.
+  - **G in the meantime:** pressing G while the menu is open makes it the player's choice, and closing the menu leaves the roads as G set them.
 ## 2026-11-08: a chosen place takes the screen: the list goes, an X and the place's bar at the top, the tile down to the viewport's bottom (title.js, title.css; branch claude/home-chosen)
 
 Aaron: "When a tile is selected the search/place menu disappears while the zoom happens and a X appears. Name of tile and
