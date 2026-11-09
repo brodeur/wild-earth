@@ -8394,3 +8394,35 @@ shared point straight away from the threat, so the herd funnelled into it.
   - Trails show on level 0 of the ground texture only, so out to about 3 km.
   - A herd's goal on a mirror is the host's mean, so a split on the host shows on a mirror only as each page's own
     steering lets it.
+
+## 2026-11-08: a lit prey animal reads as a dim orb, a bright heart and the spirit's spike (client/src/sight.js, spirit.js; branch claude/prey-spike)
+
+Aaron: "The ability for predators to see prey and swoop in on them is great. Right now the prey read as orbs (individual)
+or blobs (collective). I like the orb, but I think we can improve how it reads by adding the "spike" from spirit mode. The
+current orb can decrease in opacity, and a second brighter smaller orb could be at the heart."
+
+- **The orb.** Still one `THREE.Points` draw, 16 px instead of 13. The soft halo is at 0.22 of its strength instead of
+  0.55, fading in from 0.3 of the radius. The bright heart is 0.26 of the radius, at 1.6 strength, lifted toward white.
+  In a covey the overlapping halos no longer add up to one white blob: each bird's heart shows on its own.
+- **The spike is the spirit's soul column.** spirit.js now exports `soulColumnGeometry`, `soulColumnHeights` and
+  `soulColumnMaterial`, and SpiritLook and Sight both use them. That means the same camera-facing quad, the same shader
+  and the same per-species height by rarity. Daylight needs more than the spirit's dimmed view, so sight.js sets the
+  shader's uniforms to lum 1.1 (the spirit uses 0.385) and width [4 m, 0.6 m per sqrt(m)] (the spirit uses [2.5, 0.26]).
+  The spike stands on the ground under the animal, depth-tested (a crown in front hides it, as it hides the body), on
+  renderOrder 11 under the orbs.
+- **Readable from a dive's height.** A vole's own column is 0.3 m, which would vanish from 150 m up. The spike's height
+  is the larger of the species' column and 0.06 of the eye's distance: about 9 m at a 150 m slant, 12.7 m at 212 m, a
+  few dozen pixels on the screen. A deer's 4.5 m or a rarer animal's taller column still wins when it is taller.
+- **Groups get one spike.** A herd, covey or colony (`a.group`) keeps an orb per lit member, but stands one spike at the
+  centre of its lit members, as bright as the brightest of them. So a group reads as one target, and ten quail don't
+  make a wall of spikes. Solitary prey each get their own; the selected quarry's spike is 1.4 times as bright, like
+  its orb.
+- **Cost.** One instanced draw more, at most MARK_CAP (96) instances, filled in the loop that already fills the orbs.
+- **Seen** (home tile, red-tail held 150 m up and 150 m back, then 50 m up and 90 m back, 9 am, headless Chrome on the
+  same page and pose with `sight.legacyMarks` toggled): from 212 m the spikes pick each lit prey out of the oak
+  woodland where the orbs were specks among the leaves; a covey of 8 quail at 103 m went from one merged blob to 8
+  hearts under one spike; a grouped pair read as one target under one spike. The spirit view's own columns are
+  unchanged (408 drawn, its uniforms as before).
+- **Debugging.** `__we.sight.legacyMarks = true` draws the orb as it was, with no spikes, for comparisons.
+- **Open.** In thick woodland at 200 m many spikes stand at once (101 lit prey in one frame from 150 m up). Fading the
+  spikes of far, unselected prey once a quarry is selected would quiet that; not done.

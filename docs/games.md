@@ -129,7 +129,9 @@ prey that reached cover is not there to take, and losing the line of sight calls
 On the home tile as a red-tail, the last batch on the finished code: 6 dives, the prey saw 4 coming, 5 caught (the voles
 that saw it all the same: their run to hide follows the runway at 1.6 m/s, slower than a stoop), and a brush rabbit that
 saw it bolted out of sight and the dive was called off. Earlier runs had a ground squirrel go down its burrow and a
-jackrabbit run into cover the same way.
+jackrabbit run into cover the same way. Since 2026-11-08 a lit prey animal reads as a dim orb round a bright heart, with the spirit's
+soul column ("spike") over it, grown with distance so it reads from a dive's height; a group stands one spike at its
+centre (decisions, "a lit prey animal reads as a dim orb, a bright heart and the spirit's spike").
 
 The strikes (2026-11-06, `client/src/strikes.js`, `combat.js`; decisions, "the hunt's strikes"): with a prey animal
 selected a walking hunter has its family's strikes (the cats bite, swipe, pounce; the bears add a swipe to bite and lunge;
