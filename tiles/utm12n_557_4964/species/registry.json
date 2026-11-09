@@ -1,6 +1,6 @@
 {
  "tile": "utm12n_557_4964",
- "at": "2026-11-07T07:23:32Z",
+ "at": "2026-11-09T05:18:55Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -28,11 +28,11 @@
    },
    "4": {
     "plants": 1,
-    "animals": 6
+    "animals": 7
    }
   },
   "plants": 56,
-  "animals_present": 82,
+  "animals_present": 83,
   "animals_queued": 51,
   "meshy_credits_queued": 1515,
   "cards_queued": 11,
@@ -64,8 +64,8 @@
    },
    "animal": {
     "target": 22,
-    "have": 82,
-    "with_model": 43
+    "have": 83,
+    "with_model": 44
    }
   },
   "hands": {
@@ -770,6 +770,15 @@
    "fidelity": 4,
    "present": "records",
    "evidence": "421 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "puma_concolor",
+   "scientific": "Puma concolor",
+   "common": "mountain lion",
+   "kind": "mammal",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "3 records within 23 km in 2011-2026 (the search widened to hold its home ranges) (>= 3)"
   },
   {
    "id": "ursus_americanus",

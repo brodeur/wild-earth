@@ -1,6 +1,6 @@
 {
  "tile": "utm10n_429_5293",
- "at": "2026-11-06T02:59:14Z",
+ "at": "2026-11-09T05:19:01Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -11,8 +11,8 @@
  "summary": {
   "by_level": {
    "0": {
-    "plants": 30,
-    "animals": 0
+    "plants": 31,
+    "animals": 17
    },
    "1": {
     "plants": 0,
@@ -28,15 +28,16 @@
    },
    "4": {
     "plants": 17,
-    "animals": 4
+    "animals": 5
    }
   },
-  "plants": 69,
-  "animals_present": 46,
-  "animals_queued": 0,
-  "meshy_credits_queued": 0,
-  "cards_queued": 30,
+  "plants": 70,
+  "animals_present": 64,
+  "animals_queued": 17,
+  "meshy_credits_queued": 460,
+  "cards_queued": 31,
   "stand_ins": {
+   "populus_tristis": null,
    "struthiopteris_spicant": null,
    "tiarella_trifoliata": null,
    "selaginella_oregana": null,
@@ -83,15 +84,16 @@
    },
    "animal": {
     "target": 22,
-    "have": 46,
-    "with_model": 46
+    "have": 64,
+    "with_model": 47
    }
   },
   "hands": {
-   "count": 32,
+   "count": 49,
    "by_what": {
-    "a trait card": 30,
-    "a lexicon phrase or a species-mix rule": 2
+    "a trait card": 31,
+    "a lexicon phrase or a species-mix rule": 2,
+    "a mesh": 16
    }
   }
  },
@@ -102,7 +104,7 @@
    "fidelity": 4,
    "common": "western sword fern",
    "drawn_as": "polystichum_munitum",
-   "share": 0.371,
+   "share": 0.3637,
    "why_needed": [
     "GBIF: 398 records on the tile"
    ]
@@ -113,7 +115,7 @@
    "fidelity": 2,
    "common": "red huckleberry",
    "drawn_as": "vaccinium_parvifolium",
-   "share": 0.3396,
+   "share": 0.339,
    "why_needed": [
     "cover: rule pnw_silver_fir on North Pacific Mesic Western Hemlock-Silver Fir Forest",
     "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest",
@@ -126,7 +128,7 @@
    "fidelity": 4,
    "common": "redwood sorrel",
    "drawn_as": "oxalis_oregana",
-   "share": 0.3369,
+   "share": 0.3303,
    "why_needed": [
     "GBIF: 137 records on the tile"
    ]
@@ -163,7 +165,7 @@
    "fidelity": 2,
    "common": "dwarf Oregon grape",
    "drawn_as": "mahonia_nervosa",
-   "share": 0.26,
+   "share": 0.264,
    "why_needed": [
     "cover: rule pnw_silver_fir on North Pacific Mesic Western Hemlock-Silver Fir Forest",
     "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest",
@@ -189,7 +191,7 @@
    "fidelity": 2,
    "common": "vine maple",
    "drawn_as": "acer_circinatum",
-   "share": 0.1404,
+   "share": 0.1426,
    "why_needed": [
     "cover: rule pnw_silver_fir on North Pacific Mesic Western Hemlock-Silver Fir Forest",
     "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest",
@@ -202,7 +204,7 @@
    "fidelity": 2,
    "common": "salal",
    "drawn_as": "gaultheria_shallon",
-   "share": 0.112,
+   "share": 0.1138,
    "why_needed": [
     "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest",
     "cover: rule pnw_sitka_spruce on North Pacific Seasonal Sitka Spruce Forest",
@@ -215,7 +217,7 @@
    "fidelity": 4,
    "common": "yarrow",
    "drawn_as": "achillea_millefolium",
-   "share": 0.0855,
+   "share": 0.0841,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -226,7 +228,7 @@
    "fidelity": 4,
    "common": "blue wildrye",
    "drawn_as": "elymus_glaucus",
-   "share": 0.0811,
+   "share": 0.0799,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -237,7 +239,7 @@
    "fidelity": 2,
    "common": "salmonberry",
    "drawn_as": "rubus_spectabilis",
-   "share": 0.0716,
+   "share": 0.0728,
    "why_needed": [
     "cover: rule pnw_douglas_fir_hemlock on North Pacific Maritime Dry-Mesic Douglas-fir-Western Hemlock Forest",
     "cover: rule pnw_sitka_spruce on North Pacific Seasonal Sitka Spruce Forest",
@@ -250,7 +252,7 @@
    "fidelity": 4,
    "common": "miner's lettuce",
    "drawn_as": "claytonia_perfoliata",
-   "share": 0.059,
+   "share": 0.0582,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -300,7 +302,7 @@
    "fidelity": 2,
    "common": "devil's club",
    "drawn_as": "oplopanax_horridus",
-   "share": 0.0349,
+   "share": 0.0355,
    "why_needed": [
     "cover: rule pnw_silver_fir on North Pacific Mesic Western Hemlock-Silver Fir Forest",
     "cover: rule pnw_sitka_spruce on North Pacific Seasonal Sitka Spruce Forest",
@@ -363,7 +365,7 @@
    "fidelity": 4,
    "common": "California oatgrass",
    "drawn_as": "danthonia_californica",
-   "share": 0.0149,
+   "share": 0.0147,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -374,7 +376,7 @@
    "fidelity": 4,
    "common": "creek dogwood",
    "drawn_as": "cornus_sericea",
-   "share": 0.0133,
+   "share": 0.0135,
    "why_needed": [
     "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Forest",
     "cover: rule pnw_lowland_riparian on North Pacific Hardwood-Conifer Swamp",
@@ -387,9 +389,22 @@
    "fidelity": 4,
    "common": "California mugwort",
    "drawn_as": "artemisia_douglasiana",
-   "share": 0.0094,
+   "share": 0.0095,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "phyllodoce_empetriformis",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "pink mountain heather",
+   "drawn_as": "phyllodoce_empetriformis",
+   "share": 0.0091,
+   "why_needed": [
+    "cover: rule pnw_mountain_hemlock on North Pacific Mountain Hemlock Forest",
+    "cover: rule pnw_bedrock on North Pacific Montane Massive Bedrock-Cliff and Talus",
+    "cover: rule pnw_alpine on North Pacific Alpine and Subalpine Dry Grassland"
    ]
   },
   {
@@ -398,11 +413,24 @@
    "fidelity": 4,
    "common": "Pacific willow",
    "drawn_as": "salix_lasiandra",
-   "share": 0.0086,
+   "share": 0.0088,
    "why_needed": [
     "cover: rule pnw_lowland_riparian on North Pacific Lowland Riparian Forest",
     "named by EVT 7662 Temperate Pacific Freshwater Emergent Marsh (552 cells)",
     "cover: rule pnw_lowland_riparian on North Pacific Hardwood-Conifer Swamp"
+   ]
+  },
+  {
+   "id": "cassiope_mertensiana",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "white mountain heather",
+   "drawn_as": "cassiope_mertensiana",
+   "share": 0.0086,
+   "why_needed": [
+    "cover: rule pnw_mountain_hemlock on North Pacific Mountain Hemlock Forest",
+    "cover: rule pnw_bedrock on North Pacific Montane Massive Bedrock-Cliff and Talus",
+    "cover: rule pnw_alpine on North Pacific Alpine and Subalpine Dry Grassland"
    ]
   },
   {
@@ -411,7 +439,7 @@
    "fidelity": 4,
    "common": "rusty popcorn flower",
    "drawn_as": "plagiobothrys_nothofulvus",
-   "share": 0.0069,
+   "share": 0.0067,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -422,18 +450,7 @@
    "fidelity": 4,
    "common": "hoary nettle",
    "drawn_as": "urtica_dioica",
-   "share": 0.0068,
-   "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
-   ]
-  },
-  {
-   "id": "trifolium_willdenovii",
-   "kind": "forb",
-   "fidelity": 4,
-   "common": "tomcat clover",
-   "drawn_as": "trifolium_willdenovii",
-   "share": 0.0062,
+   "share": 0.0067,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -444,35 +461,20 @@
    "fidelity": 2,
    "common": "evergreen huckleberry",
    "drawn_as": "vaccinium_ovatum",
-   "share": 0.0062,
+   "share": 0.0063,
    "why_needed": [
     "cover: rule pnw_redcedar_hemlock on North Pacific Hypermaritime Western Red-cedar-Western Hemlock Forest"
    ]
   },
   {
-   "id": "phyllodoce_empetriformis",
-   "kind": "shrub",
-   "fidelity": 2,
-   "common": "pink mountain heather",
-   "drawn_as": "phyllodoce_empetriformis",
-   "share": 0.006,
+   "id": "trifolium_willdenovii",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "tomcat clover",
+   "drawn_as": "trifolium_willdenovii",
+   "share": 0.0061,
    "why_needed": [
-    "cover: rule pnw_mountain_hemlock on North Pacific Mountain Hemlock Forest",
-    "cover: rule pnw_bedrock on North Pacific Montane Massive Bedrock-Cliff and Talus",
-    "cover: rule pnw_alpine on North Pacific Alpine and Subalpine Dry Grassland"
-   ]
-  },
-  {
-   "id": "cassiope_mertensiana",
-   "kind": "shrub",
-   "fidelity": 2,
-   "common": "white mountain heather",
-   "drawn_as": "cassiope_mertensiana",
-   "share": 0.0036,
-   "why_needed": [
-    "cover: rule pnw_mountain_hemlock on North Pacific Mountain Hemlock Forest",
-    "cover: rule pnw_bedrock on North Pacific Montane Massive Bedrock-Cliff and Talus",
-    "cover: rule pnw_alpine on North Pacific Alpine and Subalpine Dry Grassland"
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
@@ -505,7 +507,7 @@
    "fidelity": 3,
    "common": "common duckweed",
    "drawn_as": "lemna_minor",
-   "share": 0.0026,
+   "share": 0.0027,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -529,7 +531,7 @@
    "fidelity": 2,
    "common": "thimbleberry",
    "drawn_as": "rubus_parviflorus",
-   "share": 0.0009,
+   "share": 0.001,
    "why_needed": [
     "cover: rule pnw_avalanche_shrub on North Pacific Broadleaf Landslide Forest",
     "cover: rule pnw_avalanche_shrub on North Pacific Montane Shrubland"
@@ -762,6 +764,18 @@
    "stand_in": null
   },
   {
+   "id": "populus_tristis",
+   "kind": "tree",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "canopy: records (GBIF: 4 records on the tile; height not yet screened)"
+   ],
+   "stand_in": null
+  },
+  {
    "id": "prosartes_smithii",
    "kind": "forb",
    "fidelity": 0,
@@ -974,6 +988,15 @@
    "fidelity": 3,
    "present": "records",
    "evidence": "109 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "puma_concolor",
+   "scientific": "Puma concolor",
+   "common": "mountain lion",
+   "kind": "mammal",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "9 records within 23 km in 2011-2026 (the search widened to hold its home ranges) (>= 3)"
   },
   {
    "id": "ursus_americanus",
@@ -1343,10 +1366,263 @@
    "fidelity": 3,
    "present": "records",
    "evidence": "28 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "melospiza_melodia",
+   "scientific": "Melospiza melodia",
+   "common": "song sparrow",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 11 of its class (3% of the class's records)"
+   ],
+   "role": [
+    "omnivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "certhia_americana",
+   "scientific": "Certhia americana",
+   "common": "brown creeper",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 16 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "cardellina_pusilla",
+   "scientific": "Cardellina pusilla",
+   "common": "wilson's warbler",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 17 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "dryocopus_pileatus",
+   "scientific": "Dryocopus pileatus",
+   "common": "pileated woodpecker",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 18 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "colaptes_auratus",
+   "scientific": "Colaptes auratus",
+   "common": "northern flicker",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 19 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "aix_sponsa",
+   "scientific": "Aix sponsa",
+   "common": "wood duck",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 20 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "cinclus_mexicanus",
+   "scientific": "Cinclus mexicanus",
+   "common": "american dipper",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 21 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "setophaga_nigrescens",
+   "scientific": "Setophaga nigrescens",
+   "common": "black-throated gray warbler",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 22 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "catharus_ustulatus",
+   "scientific": "Catharus ustulatus",
+   "common": "swainson's thrush",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 23 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "zonotrichia_leucophrys",
+   "scientific": "Zonotrichia leucophrys",
+   "common": "white-crowned sparrow",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 24 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "lophodytes_cucullatus",
+   "scientific": "Lophodytes cucullatus",
+   "common": "hooded merganser",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 25 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "omnivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "procyon_lotor",
+   "scientific": "Procyon lotor",
+   "common": "raccoon",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 9 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "omnivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "thamnophis_sirtalis",
+   "scientific": "Thamnophis sirtalis",
+   "common": "common garter snake",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 1 of its class (55% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "thamnophis_ordinoides",
+   "scientific": "Thamnophis ordinoides",
+   "common": "northwestern garter snake",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 2 of its class (45% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "rhyacotriton_olympicus",
+   "scientific": "Rhyacotriton olympicus",
+   "common": "olympic torrent salamander",
+   "kind": "amphibian",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 3 of its class (15% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "rana_aurora",
+   "scientific": "Rana aurora",
+   "common": "northern red-legged frog",
+   "kind": "amphibian",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 4 of its class (13% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "arion_ater",
+   "scientific": "Arion ater",
+   "common": "black arion",
+   "kind": "invertebrate",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 2 of its class (29% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
   }
  ],
  "queue": {
   "cards": [
+   {
+    "id": "populus_tristis",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "canopy: records (GBIF: 4 records on the tile; height not yet screened)"
+    ]
+   },
    {
     "id": "struthiopteris_spicant",
     "kind": "fern",
@@ -1588,9 +1864,273 @@
     ]
    }
   ],
-  "meshy": []
+  "meshy": [
+   {
+    "id": "melospiza_melodia",
+    "scientific": "Melospiza melodia",
+    "common": "song sparrow",
+    "kind": "bird",
+    "records": 688,
+    "why": [
+     "most recorded: 11 of its class (3% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "junco_hyemalis",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "certhia_americana",
+    "scientific": "Certhia americana",
+    "common": "brown creeper",
+    "kind": "bird",
+    "records": 443,
+    "why": [
+     "most recorded: 16 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "cardellina_pusilla",
+    "scientific": "Cardellina pusilla",
+    "common": "wilson's warbler",
+    "kind": "bird",
+    "records": 430,
+    "why": [
+     "most recorded: 17 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "dryocopus_pileatus",
+    "scientific": "Dryocopus pileatus",
+    "common": "pileated woodpecker",
+    "kind": "bird",
+    "records": 413,
+    "why": [
+     "most recorded: 18 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "melanerpes_formicivorus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "colaptes_auratus",
+    "scientific": "Colaptes auratus",
+    "common": "northern flicker",
+    "kind": "bird",
+    "records": 375,
+    "why": [
+     "most recorded: 19 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "melanerpes_formicivorus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "aix_sponsa",
+    "scientific": "Aix sponsa",
+    "common": "wood duck",
+    "kind": "bird",
+    "records": 372,
+    "why": [
+     "most recorded: 20 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "mergus_merganser",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "cinclus_mexicanus",
+    "scientific": "Cinclus mexicanus",
+    "common": "american dipper",
+    "kind": "bird",
+    "records": 347,
+    "why": [
+     "most recorded: 21 of its class (1% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "setophaga_nigrescens",
+    "scientific": "Setophaga nigrescens",
+    "common": "black-throated gray warbler",
+    "kind": "bird",
+    "records": 314,
+    "why": [
+     "most recorded: 22 of its class (1% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "catharus_ustulatus",
+    "scientific": "Catharus ustulatus",
+    "common": "swainson's thrush",
+    "kind": "bird",
+    "records": 306,
+    "why": [
+     "most recorded: 23 of its class (1% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "turdus_migratorius",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "zonotrichia_leucophrys",
+    "scientific": "Zonotrichia leucophrys",
+    "common": "white-crowned sparrow",
+    "kind": "bird",
+    "records": 291,
+    "why": [
+     "most recorded: 24 of its class (1% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "junco_hyemalis",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "lophodytes_cucullatus",
+    "scientific": "Lophodytes cucullatus",
+    "common": "hooded merganser",
+    "kind": "bird",
+    "records": 280,
+    "why": [
+     "most recorded: 25 of its class (1% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "mergus_merganser",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "arion_ater",
+    "scientific": "Arion ater",
+    "common": "black arion",
+    "kind": "invertebrate",
+    "records": 222,
+    "why": [
+     "most recorded: 2 of its class (29% of the class's records)"
+    ],
+    "body_plan": "gastropod",
+    "rig": "none: procedural (a body of rings and a foot wave); no Meshy needed",
+    "estimate_credits": 0,
+    "stand_in": "ariolimax_columbianus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "thamnophis_sirtalis",
+    "scientific": "Thamnophis sirtalis",
+    "common": "common garter snake",
+    "kind": "reptile",
+    "records": 21,
+    "why": [
+     "most recorded: 1 of its class (55% of the class's records)"
+    ],
+    "body_plan": "snake",
+    "rig": "none yet: a spine-wave rig",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "thamnophis_ordinoides",
+    "scientific": "Thamnophis ordinoides",
+    "common": "northwestern garter snake",
+    "kind": "reptile",
+    "records": 17,
+    "why": [
+     "most recorded: 2 of its class (45% of the class's records)"
+    ],
+    "body_plan": "snake",
+    "rig": "none yet: a spine-wave rig",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "rhyacotriton_olympicus",
+    "scientific": "Rhyacotriton olympicus",
+    "common": "olympic torrent salamander",
+    "kind": "amphibian",
+    "records": 15,
+    "why": [
+     "most recorded: 3 of its class (15% of the class's records)"
+    ],
+    "body_plan": "amphibian",
+    "rig": "none yet: the reptile template, hopping",
+    "estimate_credits": 25,
+    "stand_in": "plethodon_vehiculum",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "rana_aurora",
+    "scientific": "Rana aurora",
+    "common": "northern red-legged frog",
+    "kind": "amphibian",
+    "records": 13,
+    "why": [
+     "most recorded: 4 of its class (13% of the class's records)"
+    ],
+    "body_plan": "amphibian",
+    "rig": "none yet: the reptile template, hopping",
+    "estimate_credits": 25,
+    "stand_in": "rana_cascadae",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "procyon_lotor",
+    "scientific": "Procyon lotor",
+    "common": "raccoon",
+    "kind": "mammal",
+    "records": 4,
+    "why": [
+     "most recorded: 9 of its class (1% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": "canis_latrans",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   }
+  ]
  },
  "hands": [
+  {
+   "id": "populus_tristis",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 4 records on the tile; height not yet screened)"
+   ]
+  },
   {
    "id": "struthiopteris_spicant",
    "kind": "fern",
@@ -1845,6 +2385,134 @@
    "what": "a lexicon phrase or a species-mix rule",
    "why": [
     "22 cells"
+   ]
+  },
+  {
+   "id": "melospiza_melodia",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 11 of its class (3% of the class's records)"
+   ]
+  },
+  {
+   "id": "certhia_americana",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 16 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "cardellina_pusilla",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 17 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "dryocopus_pileatus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 18 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "colaptes_auratus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 19 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "aix_sponsa",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 20 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "cinclus_mexicanus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 21 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "setophaga_nigrescens",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 22 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "catharus_ustulatus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 23 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "zonotrichia_leucophrys",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 24 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "lophodytes_cucullatus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 25 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "thamnophis_sirtalis",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 1 of its class (55% of the class's records)"
+   ]
+  },
+  {
+   "id": "thamnophis_ordinoides",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 2 of its class (45% of the class's records)"
+   ]
+  },
+  {
+   "id": "rhyacotriton_olympicus",
+   "kind": "amphibian",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 3 of its class (15% of the class's records)"
+   ]
+  },
+  {
+   "id": "rana_aurora",
+   "kind": "amphibian",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 4 of its class (13% of the class's records)"
+   ]
+  },
+  {
+   "id": "procyon_lotor",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 9 of its class (1% of the class's records)"
    ]
   }
  ]

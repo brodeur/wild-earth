@@ -261,24 +261,19 @@
   },
   "animals": {
    "stage": "fauna",
-   "started_at": "2026-11-09T04:12:49Z",
-   "ended_at": "2026-11-09T04:13:05Z",
-   "wall_s": 16.1,
+   "started_at": "2026-11-09T05:19:10Z",
+   "ended_at": "2026-11-09T05:19:11Z",
+   "wall_s": 0.9,
    "cpu_self_s": 0.9,
    "cpu_children_s": 0.0,
-   "downloads": {
-    "gbif": {
-     "bytes": 147158,
-     "requests": 18
-    }
-   },
+   "downloads": {},
    "cache": {
     "gbif": {
-     "hits": 419,
-     "misses": 18
+     "hits": 437,
+     "misses": 0
     },
     "eltontraits": {
-     "hits": 2,
+     "hits": 3,
      "misses": 0
     },
     "ndownloader.figshare.com": {
@@ -352,18 +347,18 @@
   },
   "registry": {
    "stage": "games",
-   "started_at": "2026-11-05T06:12:35Z",
-   "ended_at": "2026-11-05T06:12:35Z",
-   "wall_s": 0.2,
-   "cpu_self_s": 0.1,
+   "started_at": "2026-11-09T05:19:17Z",
+   "ended_at": "2026-11-09T05:19:18Z",
+   "wall_s": 0.6,
+   "cpu_self_s": 0.6,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {},
-   "disk_bytes": 83126,
+   "disk_bytes": 93704,
    "meshy": {
     "spent": 0,
-    "queued": 34,
-    "queued_credits_est": 980
+    "queued": 36,
+    "queued_credits_est": 985
    },
    "status": "ok"
   },
@@ -689,6 +684,33 @@
     "queued_credits_est": 0
    },
    "status": "ok"
+  },
+  "herds": {
+   "stage": "fauna",
+   "started_at": "2026-11-09T05:19:11Z",
+   "ended_at": "2026-11-09T05:19:17Z",
+   "wall_s": 6.0,
+   "cpu_self_s": 1.0,
+   "cpu_children_s": 0.0,
+   "downloads": {
+    "gbif": {
+     "bytes": 1488,
+     "requests": 4
+    }
+   },
+   "cache": {
+    "gbif": {
+     "hits": 0,
+     "misses": 4
+    }
+   },
+   "disk_bytes": 39417,
+   "meshy": {
+    "spent": 0,
+    "queued": 0,
+    "queued_credits_est": 0
+   },
+   "status": "ok"
   }
  },
  "stages": {
@@ -717,28 +739,28 @@
    "meshy_queued_credits_est": 0
   },
   "fauna": {
-   "started_at": "2026-11-09T04:11:41Z",
-   "ended_at": "2026-11-09T04:13:05Z",
-   "wall_s": 98.2,
-   "cpu_s": 17.5,
-   "download_bytes": 418868,
-   "cache_hits": 888,
-   "cache_misses": 98,
-   "disk_bytes": 6283639,
+   "started_at": "2026-11-09T05:19:10Z",
+   "ended_at": "2026-11-09T05:19:17Z",
+   "wall_s": 89.0,
+   "cpu_s": 18.5,
+   "download_bytes": 273198,
+   "cache_hits": 907,
+   "cache_misses": 84,
+   "disk_bytes": 6323056,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
   "games": {
-   "started_at": "2026-11-05T06:12:34Z",
-   "ended_at": "2026-11-05T06:12:35Z",
-   "wall_s": 0.5,
-   "cpu_s": 0.4,
+   "started_at": "2026-11-09T05:19:17Z",
+   "ended_at": "2026-11-09T05:19:18Z",
+   "wall_s": 0.9,
+   "cpu_s": 0.9,
    "download_bytes": 0,
    "cache_hits": 0,
    "cache_misses": 0,
-   "disk_bytes": 500046,
+   "disk_bytes": 510624,
    "meshy_spent": 0,
-   "meshy_queued_credits_est": 980
+   "meshy_queued_credits_est": 985
   }
  },
  "runs": [
@@ -1286,22 +1308,49 @@
    "ended_at": "2026-11-09T04:43:58Z",
    "failed": [],
    "refused": []
+  },
+  {
+   "started_at": "2026-11-09T05:19:10Z",
+   "stages": [
+    {
+     "stage": "fauna",
+     "started_at": "2026-11-09T05:19:10Z",
+     "steps_run": [
+      "animals",
+      "herds"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-09T05:19:17Z"
+    },
+    {
+     "stage": "games",
+     "started_at": "2026-11-09T05:19:17Z",
+     "steps_run": [
+      "registry"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-09T05:19:18Z"
+    }
+   ],
+   "ended_at": "2026-11-09T05:19:18Z",
+   "failed": [],
+   "refused": []
   }
  ],
  "totals": {
-  "wall_s": 631.5,
-  "cpu_s": 495.3,
-  "download_bytes": 31346969,
-  "cache_hits": 1991,
-  "cache_misses": 100,
-  "disk_bytes": 1125426229,
+  "wall_s": 622.7,
+  "cpu_s": 496.8,
+  "download_bytes": 31201299,
+  "cache_hits": 2010,
+  "cache_misses": 86,
+  "disk_bytes": 1125476224,
   "meshy_spent": 0,
-  "meshy_queued_credits_est": 980
+  "meshy_queued_credits_est": 985
  },
- "updated_at": "2026-11-09T04:43:58Z",
+ "updated_at": "2026-11-09T05:19:18Z",
  "client": {
-  "bytes": 74293200,
-  "files": 55,
+  "bytes": 74334917,
+  "files": 56,
   "largest": {
    "client/lidar_micro.png": 13985065,
    "client/terrain_detail.png": 9885316,

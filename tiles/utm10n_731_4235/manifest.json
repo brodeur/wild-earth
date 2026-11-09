@@ -15,7 +15,7 @@
   38.32337819749693
  ],
  "size_m": 10000,
- "generated_at": "2026-11-09T04:43:58Z",
+ "generated_at": "2026-11-09T05:19:18Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -6375,12 +6375,12 @@
   "species.registry": {
    "path": "species/registry.json",
    "kind": "table",
-   "plants": 109,
-   "animals_present": 52,
-   "animals_queued": 34,
+   "plants": 111,
+   "animals_present": 80,
+   "animals_queued": 36,
    "cards_queued": 24,
-   "sha256": "8df8935cbaa5f140b98a4abea5f28abbcc525f7fc2b99564514c04e4ad55873b",
-   "bytes": 83126
+   "sha256": "f27a3614efbc012b0002dd2a99ca4f41683f4a95428b522eac8a7e62b93f0242",
+   "bytes": 93704
   },
   "terrain.ice": {
    "path": "terrain/ice.tif",
@@ -6425,7 +6425,7 @@
    "generated_traits": 0,
    "queued": 36,
    "queued_credits": 985,
-   "sha256": "cc66ed0897ffbbcbf92301d4a09bde6e7930011ef23fc29fd67e0a557fae9766",
+   "sha256": "9dbd0d519921340a04ab7c97ef8f3402c26d388c81fb6e5fb915bba090c616e0",
    "bytes": 114077
   },
   "games.seeds": {
@@ -7143,6 +7143,71 @@
    },
    "sha256": "bc11a4a7e6b5afca994fe577376a5cdc0ba89a44f42eecc6b95ab3033e40c6e7",
    "bytes": 78351
+  },
+  "client.herds": {
+   "path": "client/herds.json",
+   "kind": "table",
+   "derived_from": [
+    "client.fauna",
+    "client.habitat",
+    "client.canopy",
+    "client.heights",
+    "resources"
+   ],
+   "herds": {
+    "branta_canadensis": {
+     "winter": 10,
+     "spring": 22,
+     "summer": 87,
+     "fall": 12
+    },
+    "euphagus_cyanocephalus": {
+     "spring": 42,
+     "fall": 14
+    },
+    "anas_platyrhynchos": {
+     "winter": 34,
+     "fall": 42
+    },
+    "sturnus_vulgaris": {
+     "winter": 8,
+     "spring": 48,
+     "fall": 12
+    }
+   },
+   "largest": {
+    "branta_canadensis": {
+     "winter": 154,
+     "spring": 152,
+     "summer": 63,
+     "fall": 128
+    },
+    "euphagus_cyanocephalus": {
+     "spring": 144,
+     "fall": 227
+    },
+    "anas_platyrhynchos": {
+     "winter": 80,
+     "fall": 78
+    },
+    "sturnus_vulgaris": {
+     "winter": 400,
+     "spring": 96,
+     "fall": 251
+    }
+   },
+   "skeins": {
+    "branta_canadensis": {
+     "spring": 6.64,
+     "fall": 4.81
+    },
+    "anas_platyrhynchos": {
+     "spring": 2.84,
+     "fall": 1.92
+    }
+   },
+   "sha256": "261c5e144dd2ecd14dfc37c562b3974678ac753b2736ae4df62a7cfe9a3c5d18",
+   "bytes": 39417
   }
  },
  "sources": {
@@ -8012,6 +8077,24 @@
    "at": "2026-11-09T04:43:58Z",
    "seconds": 7.1,
    "ok": true
+  },
+  {
+   "step": "animals",
+   "at": "2026-11-09T05:19:11Z",
+   "seconds": 0.9,
+   "ok": true
+  },
+  {
+   "step": "herds",
+   "at": "2026-11-09T05:19:17Z",
+   "seconds": 6.0,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-09T05:19:18Z",
+   "seconds": 0.6,
+   "ok": true
   }
  ],
  "steps": {
@@ -8872,39 +8955,39 @@
   },
   "registry": {
    "version": "1",
-   "code": "84fd41567bffdab3",
+   "code": "aaa2eb8ec5223446",
    "params": {
     "tile": "utm10n_731_4235"
    },
-   "fingerprint": "8684bcc22af6d11d",
+   "fingerprint": "b162b931051e1e91",
    "parts": {
     "version": "1",
-    "code": "84fd41567bffdab3",
+    "code": "aaa2eb8ec5223446",
     "params": {
      "tile": "utm10n_731_4235"
     },
     "deps": {
-     "plants": "822fa49ecebf11d4",
-     "species_mix": "cc9fc39347906d02",
-     "species": "3aeb4ca404811207",
-     "animals": "2b049652895465d2"
+     "plants": "463f9e26d3425b65",
+     "species_mix": "26ca14e90e4397fd",
+     "species": "bb3b8b32ce57c274",
+     "animals": "621b53809a59e7b1"
     },
     "library": {
-     "library/species": "d1cf9f01562de68e",
-     "library/animals": "25aa2d5ae1d06008",
-     "library/plant_cards": "8155173ae63911a1"
+     "library/species": "b535f4af1995d848",
+     "library/animals": "934e6c71aae6cd14",
+     "library/plant_cards": "ae2c66fc7e6e53d9"
     }
    },
-   "ran_at": "2026-11-05T06:12:35Z",
+   "ran_at": "2026-11-09T05:19:17Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "species.registry"
    ],
    "outputs": {
-    "species/registry.json": "8df8935cbaa5f140"
+    "species/registry.json": "f27a3614efbc012b"
    },
-   "out_hash": "3e8dfbe05fbc5f96",
+   "out_hash": "fd167e9c6bf35eaa",
    "sources": {},
    "fallbacks": [],
    "notes": [],
@@ -8912,7 +8995,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 0.2
+   "seconds": 0.6
   },
   "audit": {
    "version": "1",
@@ -9233,15 +9316,15 @@
    "seconds": 1.8
   },
   "animals": {
-   "version": "6",
-   "code": "0e19c56349ccab8c",
+   "version": "7",
+   "code": "b5076af81038421e",
    "params": {
     "tile": "utm10n_731_4235"
    },
-   "fingerprint": "c699cbf5c0780fec",
+   "fingerprint": "1ed414c6f36e077f",
    "parts": {
-    "version": "6",
-    "code": "0e19c56349ccab8c",
+    "version": "7",
+    "code": "b5076af81038421e",
     "params": {
      "tile": "utm10n_731_4235"
     },
@@ -9250,11 +9333,11 @@
      "plants": "463f9e26d3425b65"
     },
     "library": {
-     "library/animals": "997e0be94296d338",
+     "library/animals": "934e6c71aae6cd14",
      "data/eltontraits": "e3b0c44298fc1c14"
     }
    },
-   "ran_at": "2026-11-09T04:12:49Z",
+   "ran_at": "2026-11-09T05:19:10Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -9263,9 +9346,9 @@
    ],
    "outputs": {
     "client/fauna.json": "77065a51a8b1f6ce",
-    "species/animals.json": "cc66ed0897ffbbcb"
+    "species/animals.json": "9dbd0d519921340a"
    },
-   "out_hash": "71b4487ef7f8a8bc",
+   "out_hash": "621b53809a59e7b1",
    "sources": {
     "gbif": "2026-11-09",
     "eltontraits": "2026-11-05"
@@ -9273,10 +9356,10 @@
    "fallbacks": [],
    "notes": [],
    "fetched": {
-    "network": 18,
-    "cache": 423
+    "network": 0,
+    "cache": 442
    },
-   "seconds": 16.1
+   "seconds": 0.9
   },
   "resources": {
    "version": "1",
@@ -9698,6 +9781,47 @@
     "cache": 0
    },
    "seconds": 0.1
+  },
+  "herds": {
+   "version": "2",
+   "code": "8e916baca5fae832",
+   "params": {
+    "tile": "utm10n_731_4235"
+   },
+   "fingerprint": "bcd6d24fecbb25bd",
+   "parts": {
+    "version": "2",
+    "code": "8e916baca5fae832",
+    "params": {
+     "tile": "utm10n_731_4235"
+    },
+    "deps": {
+     "animals": "621b53809a59e7b1",
+     "resources": "77c23292ae1dcea5",
+     "terrain": "ed381ef3d045e621"
+    },
+    "library": {
+     "library/herds": "b06c0c2e727e4e77"
+    }
+   },
+   "ran_at": "2026-11-09T05:19:11Z",
+   "owner": null,
+   "status": "ok",
+   "layers": [
+    "client.herds"
+   ],
+   "outputs": {
+    "client/herds.json": "261c5e144dd2ecd1"
+   },
+   "out_hash": "453d0f12e5c305a7",
+   "sources": {},
+   "fallbacks": [],
+   "notes": [],
+   "fetched": {
+    "network": 4,
+    "cache": 0
+   },
+   "seconds": 6.0
   }
  },
  "licence_audit": {
