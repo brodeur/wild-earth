@@ -8992,7 +8992,7 @@ Recommendation 1 of the pipeline review. What section 3 of the review computed b
   plan). The committed tiles' manifests were not rewritten, to keep this branch clear of the other lanes' rebuilds;
   the next build of each tile records the step.
 
-### 2026-11-10: the three lanes on main together; two judge matches corrected
+## 2026-11-10: the three lanes on main together; two judge matches corrected (tools/probes/checklist.py, judge_common.py; tiles/*/judge, scorecard.json)
 
 - **Merged and re-measured on the merged mixes.** Stand-ins, the wider judge and the scorecard are on main; the judge
   and every scorecard were re-run on the merge. Grand Canyon: plant species on the park's list 0.33 to 0.92; drawn
