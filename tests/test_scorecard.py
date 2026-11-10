@@ -90,8 +90,16 @@ class Communities(unittest.TestCase):
         d = r["detail"]
         self.assertAlmostEqual(d["by_kind"]["backfill"], 0.05)
         self.assertAlmostEqual(d["by_rule_ignoring_source"]["named"], 0.35)   # the review's columns ignore the source
+        self.assertEqual(d["pre_settlement_share"], 0.05)   # the bps community only
         self.assertEqual(d["unmatched"], 2)
         self.assertTrue(any("40% of cells have no community" in f["text"] for f in r["findings"]))
+
+    def test_pre_settlement_excludes_ice(self):
+        doc = mix_doc()
+        doc["communities"].append({"community": 6, "source": "ice", "rule": "snow_ice", "trees": {}, "shrubs": {},
+                                   "cells": 100})
+        d = sc.score_communities(doc)["detail"]
+        self.assertAlmostEqual(d["pre_settlement_share"], 0.025)
 
     def test_ground_only_pool_is_ruled(self):
         doc = mix_doc()
@@ -123,6 +131,18 @@ class PlantSpecies(unittest.TestCase):
         self.assertIn("no ground species at all", texts)
         self.assertTrue(any("one shrub species only" in t for t in texts))
         self.assertTrue(any("canopy weight is drawn as a stand-in" in t for t in texts))
+
+    def test_status(self):
+        d = sc.score_plant_species(mix_doc(), None)["detail"]["status"]
+        self.assertFalse(d["status_field"])
+        self.assertEqual(d["note"], "no status field in this build")
+        self.assertEqual(d["status_unknown"], 4)   # the drawn species: juniper, gray pine, ponderosa, chamise
+        needs = {"needs": [{"id": "juniperus_grandis", "status": "native"}]}
+        r = sc.score_plant_species(mix_doc(species_status={"pinus_sabiniana": "introduced"}), needs)
+        st = r["detail"]["status"]
+        self.assertTrue(st["status_field"])
+        self.assertEqual((st["introduced"], st["native"], st["status_unknown"]), (1, 1, 2))
+        self.assertTrue(any("drawn plant species are introduced" in f["text"] for f in r["findings"]))
 
     def test_recorded_stand_ins_and_missing(self):
         doc = mix_doc(substitutions={},
@@ -287,23 +307,28 @@ class Animals(unittest.TestCase):
         self.assertIn("invertebrate", d["kinds_with_none"])
         self.assertEqual(d["registry_levels"], {"0": 1, "3": 1, "4": 1, "not known": 1})
         self.assertEqual(d["registry_level_not_known"], ["lynx_rufus"])
-        self.assertEqual(d["introduced"]["value"], "not known")
+        self.assertFalse(d["status"]["status_field"])
+        self.assertEqual(d["status"]["note"], "no status field in this build")
+        self.assertEqual((d["status"]["introduced"], d["status"]["restored"], d["status"]["status_unknown"]), (0, 0, 4))
         texts = [f["text"] for f in r["findings"]]
         self.assertIn("no fish species listed (none in the tile's GBIF records)", texts)
         self.assertIn("no invertebrate species listed (1 in the records, none listed)", texts)
 
     def test_status_field_when_present(self):
         doc = animals_doc()
-        doc["animals"][0]["native_status"] = "native"
-        doc["animals"][1]["establishment"] = "introduced"
-        doc["animals"][3]["restored"] = True
+        doc["animals"][0]["status"] = "native"
+        doc["animals"][1]["status"] = "introduced"
+        doc["animals"][3]["status"] = "restored"
         d = sc.score_animals(doc, None, None)
-        intro = d["detail"]["introduced"]
-        self.assertTrue(intro["scored"])
-        self.assertEqual(intro["introduced"], ["odocoileus_hemionus"])
-        self.assertEqual(intro["restored"], ["lynx_rufus"])
-        self.assertEqual(intro["status_not_known"], 1)
-        self.assertTrue(any("are introduced" in f["text"] for f in d["findings"]))
+        st = d["detail"]["status"]
+        self.assertTrue(st["status_field"])
+        self.assertNotIn("note", st)
+        self.assertEqual((st["introduced"], st["restored"], st["status_unknown"], st["native"]), (1, 1, 1, 1))
+        self.assertEqual(st["introduced_ids"], ["odocoileus_hemionus"])
+        self.assertEqual(st["restored_ids"], ["lynx_rufus"])
+        texts = [f["text"] for f in d["findings"]]
+        self.assertTrue(any("are introduced" in t for t in texts))
+        self.assertTrue(any("have no native status" in t for t in texts))
 
     def test_bodies(self):
         fauna = {"allow": ["corvus_corax"],
@@ -359,6 +384,7 @@ class Card(unittest.TestCase):
             md = sc.summary_markdown([card])
             self.assertIn("| Grand Canyon (`utm12n_396_3988`) |", md)
             self.assertIn("measured / ruled / guessed / blank", md)
+            self.assertIn("| Grand Canyon | 5% | no status field in this build (4 unknown) |", md)
             # deterministic: the same documents give the same card
             self.assertEqual(sc.scorecard(t, library_registry={"species": {}}), card)
 

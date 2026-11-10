@@ -8768,9 +8768,15 @@ Recommendation 1 of the pipeline review. What section 3 of the review computed b
   record on the tile" is a lead, not a finding (kept in the detail only); lexicon borrowings (Sierra juniper in
   Arizona) are not stand-ins in `substitutions`, so the plant species layer cannot see them until the regional
   stand-ins lane's `stand_ins` and `missing` keys exist, which it reads when present.
+- **A place for the baseline decided today.** The animals and plant species layers report `introduced`, `restored`
+  and `status_unknown` counts (with the ids) from a per-species `status` field (native, introduced, restored) on
+  `animals[]`, on `species/plant_needs.json` needs[] or in a `species_status` map on the mix, and "no status field in
+  this build" until one exists, which is every tile today. An introduced species drawn is a finding. The plant
+  communities layer reports `pre_settlement_share`: the cells drawn from LANDFIRE pre-settlement (BpS) classes, 56% of
+  San Francisco south and 36% at home. That is not `fractions.from_bps_backfill`, which counts every cell not from
+  today's map: at Olympus it reads 16%, all permanent ice, where the pre-settlement share is 0.
 - **Not scored, and why:** the understory (only the top surface is kept), stream width and discharge (one area rule
-  everywhere), native or introduced status (no field yet; read from `animals[]` once one exists, per the baseline
-  decided today), sea, weather and sound (no per-cell document).
+  everywhere), native or introduced status (no field yet), sea, weather and sound (no per-cell document).
 - **Not in the manifests yet.** The step was run in the graph on a scratch copy of Lamar (ok, then current on the next
   plan). The committed tiles' manifests were not rewritten, to keep this branch clear of the other lanes' rebuilds;
   the next build of each tile records the step.

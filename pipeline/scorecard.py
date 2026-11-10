@@ -94,6 +94,9 @@ DEFINITIONS = {
                    "it, else `substitutions` (named species -> record drawn), and research_* rows whose note names "
                    "functional stand-ins of the climate group",
         "blank": "asked for but drawn as nothing: the mix's `missing` key when recorded, else a substitution to null",
+        "status": "detail.status: introduced, restored and status_unknown counts over the drawn species (trees, shrubs, "
+                  "ground), from a per-species `status` on species/plant_needs.json needs[] or a species_status map in "
+                  "the mix; 'no status field in this build' until one exists",
     },
     "ground_texture": {
         "unit": "share of the tile's area",
@@ -123,8 +126,8 @@ DEFINITIONS = {
         "ruled": "listed by a range or life-zone rule without records on the tile",
         "guessed": "listed with generated traits (generated_traits)",
         "blank": "none by species; kinds with no species at all (fish, ...) are findings instead",
-        "not_scored": "native, introduced or restored: read from a status field on animals[] (STATUS_FIELDS) once the "
-                      "list carries one; none does yet",
+        "status": "detail.status: introduced, restored and status_unknown counts from a per-species `status` field "
+                  "(native | introduced | restored) on animals[]; 'no status field in this build' until one exists",
     },
     "animal_bodies": {
         "unit": "share of the listed species (client/fauna.json)",
@@ -144,8 +147,9 @@ PIPELINE_WIDE = [
     "measured 0 everywhere)",
     "stream width comes from drainage area (1.6 x A^0.45) on every reach; no discharge, depth or seasonal flow from data",
     "the understory under the canopy is not measured on any tile; only the top surface is kept",
-    "native or introduced status is not recorded for any animal, so introduced species cannot be counted (the baseline "
-    "decided 2026-11-10 removes them; the scorecard counts them once animals[] carries a status field)",
+    "no species has a native status yet, so introduced and restored species cannot be counted (the baseline decided "
+    "2026-11-10 filters introduced species out and restores removed natives; the animals and plant species layers "
+    "report the counts once a `status` field exists)",
 ]
 
 
@@ -355,6 +359,12 @@ def score_communities(mix: dict | None) -> dict:
         "by_kind": {k: round(v / total, 4) for k, v in sorted(by_kind.items(), key=lambda kv: -kv[1])},
         "by_rule_ignoring_source": {k: round(v / total, 4) for k, v in sorted(by_rule_kind.items(), key=lambda kv: -kv[1])},
         "from_bps_backfill": fr.get("from_bps_backfill"),
+        # the baseline's one place for pre-settlement vegetation: where today's land is developed, farmed or ruderal
+        "pre_settlement_share": round(sum(int(c.get("cells") or 0) for c in comms if c.get("source") == "bps") / total, 4),
+        "pre_settlement_note": "cells whose community is a LANDFIRE Biophysical Settings (pre-settlement) class, drawn "
+                               "where today's land is developed, farmed or ruderal (communities[].source bps). "
+                               "fractions.from_bps_backfill is larger where the tile has permanent ice or rewilded "
+                               "reservoir beds: it counts every cell not from today's map",
         "unmatched": len(mix.get("unmatched") or []),
         "unmatched_drawn": _count([u.get("drawn") for u in mix.get("unmatched") or []]),
         "natural_regions": mix.get("natural_regions"),
@@ -444,6 +454,13 @@ def score_plant_species(mix: dict | None, plant_needs: dict | None) -> dict:
                     no_record += x
     drawn = _drawn_species(mix)
     total = sum(w.values())
+    status_of = {}
+    for n in (plant_needs or {}).get("needs") or []:   # a status on the plant research's entries, when one lands
+        if n.get("id"):
+            status_of[n["id"]] = n
+    for sid, v in (mix.get("species_status") or {}).items():   # or a map on the mix
+        status_of[sid] = {**status_of.get(sid, {}), "status": v}
+    drawn_ids = sorted({x for layer in drawn.values() for x in layer})
     detail = {
         "counts": {"canopy": len(drawn["trees"]), "shrub": len(drawn["shrubs"]), "ground": len(drawn["ground"])},
         "drawn": drawn,
@@ -454,8 +471,10 @@ def score_plant_species(mix: dict | None, plant_needs: dict | None) -> dict:
                     **({} if missing_rec else {"note": "not recorded by this build (no `missing` key in species_mix.json)"})},
         "substitutions": subst,
         "local_records_skipped": len(mix.get("local_records_skipped") or []),
+        "status": status_counts([{**{k: v for k, v in status_of.get(sid, {}).items() if k in STATUS_FIELDS}, "id": sid}
+                                 for sid in drawn_ids]),
     }
-    findings = []
+    findings = _status_findings("plant_species", detail["status"], "drawn plant species")
     if total:
         top = sorted(((v["weight"], k, v) for k, v in by_species.items()), reverse=True)
         detail["top"] = [{"species": k, "layer": v["layer"], "share_of_weight": round(wt / total, 4), "share": v["share"],
@@ -569,9 +588,11 @@ def _count(xs) -> dict:
     return dict(sorted(out.items(), key=lambda kv: -kv[1]))
 
 
-# The baseline decided 2026-11-10 (docs/decisions.md): introduced species out, removed natives restored and marked. No
-# list carries a status yet; when one does, any of these fields on an animals[] entry is read.
-STATUS_FIELDS = ("native_status", "establishment", "status", "introduced", "native", "restored")
+# The baseline decided 2026-11-10 (docs/brief.md, docs/decisions.md): today's ecosystems, introduced species filtered
+# out, natives people removed restored and marked as restored. A per-species `status` (native | introduced | restored) is
+# the field a later lane adds; the other names are read too in case it lands under one of them. No document has one yet.
+STATUS_FIELDS = ("status", "native_status", "establishment", "introduced", "native", "restored")
+NO_STATUS = "no status field in this build"
 INTRODUCED_WORDS = {"introduced", "invasive", "naturalised", "naturalized", "alien", "non-native", "nonnative"}
 
 
@@ -590,6 +611,21 @@ def native_status(a: dict) -> str | None:
     if a.get("introduced") is False or a.get("native") is True:
         return "native"
     return None
+
+
+def status_counts(entries: list[dict]) -> dict:
+    """The baseline's counts over species entries ({id, and any STATUS_FIELDS}): introduced, restored, status_unknown
+    (and native), with the ids; status_field false and a note when no entry carries a status field."""
+    has_field = any(any(k in e for k in STATUS_FIELDS) for e in entries)
+    st = [native_status(e) for e in entries]
+    out = {"status_field": has_field, "species": len(entries),
+           "introduced": sum(1 for x in st if x == "introduced"), "restored": sum(1 for x in st if x == "restored"),
+           "native": sum(1 for x in st if x == "native"), "status_unknown": sum(1 for x in st if x is None),
+           "introduced_ids": sorted(e["id"] for e, x in zip(entries, st) if x == "introduced"),
+           "restored_ids": sorted(e["id"] for e, x in zip(entries, st) if x == "restored")}
+    if not has_field:
+        out["note"] = NO_STATUS
+    return out
 
 
 def score_animals(animals: dict | None, library_registry: dict | None, tile_registry: dict | None) -> dict:
@@ -625,21 +661,8 @@ def score_animals(animals: dict | None, library_registry: dict | None, tile_regi
               "registry_levels": dict(sorted(levels.items())),
               "registry_level_not_known": sorted(unknown),
               }
-    st = [native_status(a) for a in listed]
-    if any(x is not None for x in st):
-        detail["introduced"] = {"scored": True, "introduced": sorted(a["id"] for a, x in zip(listed, st) if x == "introduced"),
-                                "restored": sorted(a["id"] for a, x in zip(listed, st) if x == "restored"),
-                                "status_not_known": sum(1 for x in st if x is None)}
-    else:
-        detail["introduced"] = {"scored": False, "value": "not known",
-                                "reason": "no native or introduced field in species/animals.json (" +
-                                          ", ".join(STATUS_FIELDS) + ")"}
-    findings = []
-    intro = (detail["introduced"].get("introduced") or []) if detail["introduced"]["scored"] else []
-    if intro:
-        findings.append(_finding("animals", f"{len(intro)} of {len(listed)} listed animals are introduced "
-                                 f"({', '.join(intro[:3])}{', ...' if len(intro) > 3 else ''})", len(intro) / len(listed),
-                                 "listed species", "guessed"))
+    detail["status"] = status_counts(listed)
+    findings = _status_findings("animals", detail["status"], "listed animals")
     for k in detail["kinds_with_none"]:
         why = "none in the tile's GBIF records" if not in_records.get(k) else f"{in_records[k]} in the records, none listed"
         findings.append(_finding("animals", f"no {k} species listed ({why})", None, f"the {k} kind"))
@@ -650,6 +673,21 @@ def score_animals(animals: dict | None, library_registry: dict | None, tile_regi
         findings.append(_finding("animals", f"{len(unknown)} listed animals are missing from the registry (level not known)",
                                  len(unknown) / len(listed), "listed species"))
     return {"scored": True, "shares": shares(**w), "detail": detail, "findings": findings}
+
+
+def _status_findings(layer: str, st: dict, what: str) -> list[dict]:
+    """Introduced species drawn are errors under the baseline (guessed); unknown status is not a finding until a status
+    field exists (it would be every species on every tile)."""
+    out, n = [], st["species"] or 1
+    if st["introduced"]:
+        ids = st["introduced_ids"]
+        out.append(_finding(layer, f"{st['introduced']} of {st['species']} {what} are introduced "
+                            f"({', '.join(ids[:3])}{', ...' if len(ids) > 3 else ''})", st["introduced"] / n,
+                            f"{what}", "guessed"))
+    if st["status_field"] and st["status_unknown"] / n > 0.05:
+        out.append(_finding(layer, f"{st['status_unknown']} of {st['species']} {what} have no native status",
+                            st["status_unknown"] / n, f"{what}", None))
+    return out
 
 
 def score_animal_bodies(animals: dict | None, fauna: dict | None) -> dict:
@@ -820,8 +858,28 @@ def summary_markdown(cards: list[dict]) -> str:
             lines.append(f"- {s}: {d[s]}")
         if d.get("not_scored"):
             lines.append(f"- not scored: {d['not_scored']}")
+        if d.get("status"):
+            lines.append(f"- baseline status: {d['status']}")
         lines.append("")
-    lines += ["## The same on every tile", "", "Kept out of the per-tile findings because no tile differs:", ""]
+    lines += ["## The rewilding baseline", "",
+              "The baseline decided 2026-11-10: today's ecosystems; introduced species filtered out; natives people "
+              "removed restored and marked; pre-settlement vegetation only where today's land is developed, farmed or "
+              "ruderal. Introduced / restored / status unknown are counts of species; pre-settlement is a share of cells.", "",
+              "| Tile | Pre-settlement cells | Animals: introduced / restored / unknown | Plants: introduced / restored / unknown |",
+              "|---|---|---|---|"]
+
+    def _st(layer):
+        st = ((layer or {}).get("detail") or {}).get("status") or {}
+        if not st:
+            return "not scored"
+        if not st.get("status_field"):
+            return f"{NO_STATUS} ({st.get('species', 0)} unknown)"
+        return f"{st['introduced']} / {st['restored']} / {st['status_unknown']}"
+    for c in cards:
+        pre = ((c["layers"].get("plant_communities") or {}).get("detail") or {}).get("pre_settlement_share")
+        lines.append(f"| {c.get('name') or c['tile']} | {'' if pre is None else _pct(pre)} | "
+                     f"{_st(c['layers'].get('animals'))} | {_st(c['layers'].get('plant_species'))} |")
+    lines += ["", "## The same on every tile", "", "Kept out of the per-tile findings because no tile differs:", ""]
     lines += [f"- {x}" for x in PIPELINE_WIDE]
     lines += ["", "## Worst findings per tile", ""]
     for c in cards:

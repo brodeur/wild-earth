@@ -112,6 +112,8 @@
      "research": 1.0
     },
     "from_bps_backfill": 0.0,
+    "pre_settlement_share": 0.0,
+    "pre_settlement_note": "cells whose community is a LANDFIRE Biophysical Settings (pre-settlement) class, drawn where today's land is developed, farmed or ruderal (communities[].source bps). fractions.from_bps_backfill is larger where the tile has permanent ice or rewilded reservoir beds: it counts every cell not from today's map",
     "unmatched": 0,
     "unmatched_drawn": {},
     "natural_regions": []
@@ -184,6 +186,17 @@
     },
     "substitutions": {},
     "local_records_skipped": 0,
+    "status": {
+     "status_field": false,
+     "species": 11,
+     "introduced": 0,
+     "restored": 0,
+     "native": 0,
+     "status_unknown": 11,
+     "introduced_ids": [],
+     "restored_ids": [],
+     "note": "no status field in this build"
+    },
     "top": [
      {
       "species": "anacardium_excelsum",
@@ -288,7 +301,8 @@
     "measured": "a species share taken from a per-cell composition measurement: none on any tile today",
     "ruled": "drawn as the species the community's rule asked for (it has a library record of its own)",
     "guessed": "drawn as a stand-in for the species the rule asked for: the mix's `stand_ins` key when the build records it, else `substitutions` (named species -> record drawn), and research_* rows whose note names functional stand-ins of the climate group",
-    "blank": "asked for but drawn as nothing: the mix's `missing` key when recorded, else a substitution to null"
+    "blank": "asked for but drawn as nothing: the mix's `missing` key when recorded, else a substitution to null",
+    "status": "detail.status: introduced, restored and status_unknown counts over the drawn species (trees, shrubs, ground), from a per-species `status` on species/plant_needs.json needs[] or a species_status map in the mix; 'no status field in this build' until one exists"
    }
   },
   "ground_texture": {
@@ -413,10 +427,16 @@
      "caiman_crocodilus",
      "ctenosaura_similis"
     ],
-    "introduced": {
-     "scored": false,
-     "value": "not known",
-     "reason": "no native or introduced field in species/animals.json (native_status, establishment, status, introduced, native, restored)"
+    "status": {
+     "status_field": false,
+     "species": 88,
+     "introduced": 0,
+     "restored": 0,
+     "native": 0,
+     "status_unknown": 88,
+     "introduced_ids": [],
+     "restored_ids": [],
+     "note": "no status field in this build"
     }
    },
    "findings": [
@@ -442,7 +462,7 @@
     "ruled": "listed by a range or life-zone rule without records on the tile",
     "guessed": "listed with generated traits (generated_traits)",
     "blank": "none by species; kinds with no species at all (fish, ...) are findings instead",
-    "not_scored": "native, introduced or restored: read from a status field on animals[] (STATUS_FIELDS) once the list carries one; none does yet"
+    "status": "detail.status: introduced, restored and status_unknown counts from a per-species `status` field (native | introduced | restored) on animals[]; 'no status field in this build' until one exists"
    }
   },
   "animal_bodies": {

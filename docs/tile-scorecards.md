@@ -58,6 +58,7 @@ Worst finding: the tile's finding that affects the largest share of its layer, a
 - ruled: drawn as the species the community's rule asked for (it has a library record of its own)
 - guessed: drawn as a stand-in for the species the rule asked for: the mix's `stand_ins` key when the build records it, else `substitutions` (named species -> record drawn), and research_* rows whose note names functional stand-ins of the climate group
 - blank: asked for but drawn as nothing: the mix's `missing` key when recorded, else a substitution to null
+- baseline status: detail.status: introduced, restored and status_unknown counts over the drawn species (trees, shrubs, ground), from a per-species `status` on species/plant_needs.json needs[] or a species_status map in the mix; 'no status field in this build' until one exists
 
 **Ground** (share of the tile's area; resolution: 2.5 m (client/texture_ground.jpg)).
 - measured: the air photo kept where its native resolution is 2.5 m or finer (NAIP 0.6 m)
@@ -77,13 +78,38 @@ Worst finding: the tile's finding that affects the largest share of its layer, a
 - ruled: listed by a range or life-zone rule without records on the tile
 - guessed: listed with generated traits (generated_traits)
 - blank: none by species; kinds with no species at all (fish, ...) are findings instead
-- not scored: native, introduced or restored: read from a status field on animals[] (STATUS_FIELDS) once the list carries one; none does yet
+- baseline status: detail.status: introduced, restored and status_unknown counts from a per-species `status` field (native | introduced | restored) on animals[]; 'no status field in this build' until one exists
 
 **Bodies** (share of the listed species (client/fauna.json); resolution: one animal).
 - measured: drawn with a body of its own: a curated client species (fauna.json allow) or a slot with its own model file
 - ruled: none (no rule makes a body from a measurement)
 - guessed: drawn with a kin's body, scaled and tinted (fauna.json slots[].kin, no model of its own)
 - blank: listed but not drawn (fauna.json skipped[], or absent from allow and slots)
+
+## The rewilding baseline
+
+The baseline decided 2026-11-10: today's ecosystems; introduced species filtered out; natives people removed restored and marked; pre-settlement vegetation only where today's land is developed, farmed or ruderal. Introduced / restored / status unknown are counts of species; pre-settlement is a share of cells.
+
+| Tile | Pre-settlement cells | Animals: introduced / restored / unknown | Plants: introduced / restored / unknown |
+|---|---|---|---|
+| Hoh rain forest | 0% | no status field in this build (64 unknown) | no status field in this build (46 unknown) |
+| Mount Olympus | 0% | no status field in this build (62 unknown) | no status field in this build (47 unknown) |
+| San Francisco (south) | 56% | no status field in this build (122 unknown) | no status field in this build (87 unknown) |
+| San Francisco (north) | 27% | no status field in this build (120 unknown) | no status field in this build (85 unknown) |
+| Cosumnes | 8% | no status field in this build (76 unknown) | no status field in this build (89 unknown) |
+| El Dorado (home) | 36% | no status field in this build (87 unknown) | no status field in this build (90 unknown) |
+| Placerville | 26% | no status field in this build (90 unknown) | no status field in this build (92 unknown) |
+| Calaveras Big Trees | 15% | no status field in this build (80 unknown) | no status field in this build (93 unknown) |
+| Yosemite (re-centred) | 2% | no status field in this build (100 unknown) | no status field in this build (93 unknown) |
+| Yosemite | 1% | no status field in this build (95 unknown) | no status field in this build (93 unknown) |
+| Grand Canyon | 4% | no status field in this build (94 unknown) | no status field in this build (12 unknown) |
+| Teton | 1% | no status field in this build (89 unknown) | no status field in this build (37 unknown) |
+| Lamar Valley | 1% | no status field in this build (83 unknown) | no status field in this build (37 unknown) |
+| Corcovado | 0% | no status field in this build (88 unknown) | no status field in this build (11 unknown) |
+| Manu | 0% | no status field in this build (68 unknown) | no status field in this build (10 unknown) |
+| Lofoten | 0% | no status field in this build (69 unknown) | no status field in this build (5 unknown) |
+| Serengeti | 0% | no status field in this build (86 unknown) | no status field in this build (5 unknown) |
+| Danum Valley | 0% | no status field in this build (69 unknown) | no status field in this build (4 unknown) |
 
 ## The same on every tile
 
@@ -92,7 +118,7 @@ Kept out of the per-tile findings because no tile differs:
 - plant composition is never measured: no tile reads a per-cell species map (plant communities and species: measured 0 everywhere)
 - stream width comes from drainage area (1.6 x A^0.45) on every reach; no discharge, depth or seasonal flow from data
 - the understory under the canopy is not measured on any tile; only the top surface is kept
-- native or introduced status is not recorded for any animal, so introduced species cannot be counted (the baseline decided 2026-11-10 removes them; the scorecard counts them once animals[] carries a status field)
+- no species has a native status yet, so introduced and restored species cannot be counted (the baseline decided 2026-11-10 filters introduced species out and restores removed natives; the animals and plant species layers report the counts once a `status` field exists)
 
 ## Worst findings per tile
 
@@ -268,7 +294,6 @@ Kept out of the per-tile findings because no tile differs:
 - terrain: source_resolution_m 1.0 is recorded for the 3DEP seamless service whatever it serves (pipeline/fetch_dem.py _from_usgs writes a constant); the native resolution of the ground outside the 1 m products is not recorded (2 tiles)
 - canopy_structure: the understory under the canopy: only the top surface is kept on every tile (vegetation.canopy_height_10m band 3 is shrub cover where the top surface is 0.5-4 m) (every tile)
 - water: stream width, depth and discharge: width is the drainage-area rule (params.width) on every reach of every tile, so it is reported, not scored; lakes and ponds are not scored (every tile)
-- animals: native, introduced or restored: read from a status field on animals[] (STATUS_FIELDS) once the list carries one; none does yet (every tile)
 - sea: no layer: the coast has no sea floor, tides or surf on any tile
 - weather_and_seasons: one ERA5 series per tile (client/weather.json); no per-cell share to score
 - sound: synthesised in the client; the build writes no sound document
