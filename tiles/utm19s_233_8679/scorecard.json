@@ -19,9 +19,9 @@
   "tile_registry": "species/registry.json"
  },
  "built_at": {
-  "manifest": "2026-11-09T04:45:32Z",
+  "manifest": "2026-11-10T21:11:57Z",
   "animals": "2026-11-09T04:35:04Z",
-  "tile_registry": "2026-11-06T10:35:39Z"
+  "tile_registry": "2026-11-10T21:11:57Z"
  },
  "layers": {
   "terrain": {
@@ -175,14 +175,12 @@
      "ground": []
     },
     "stand_ins": {
-     "recorded": false,
-     "entries": [],
-     "note": "not recorded by this build (no `stand_ins` key in species_mix.json); `substitutions` read instead"
+     "recorded": true,
+     "entries": []
     },
     "missing": {
-     "recorded": false,
-     "entries": [],
-     "note": "not recorded by this build (no `missing` key in species_mix.json)"
+     "recorded": true,
+     "entries": []
     },
     "substitutions": {},
     "local_records_skipped": 0,
@@ -415,17 +413,10 @@
      "thecadactylus_solimoensis"
     ],
     "registry_levels": {
-     "0": 61,
-     "3": 2,
-     "not known": 5
+     "0": 66,
+     "3": 2
     },
-    "registry_level_not_known": [
-     "ameiva_ameiva",
-     "anolis_fuscoauratus",
-     "corallus_hortulana",
-     "melanosuchus_niger",
-     "thecadactylus_solimoensis"
-    ],
+    "registry_level_not_known": [],
     "status": {
      "status_field": false,
      "species": 68,
@@ -459,13 +450,6 @@
      "share": 0.0735,
      "of": "listed species",
      "kind": "guessed"
-    },
-    {
-     "layer": "animals",
-     "text": "5 listed animals are missing from the registry (level not known)",
-     "share": 0.0735,
-     "of": "listed species",
-     "kind": null
     }
    ],
    "definition": {

@@ -16,11 +16,13 @@
   "plant_needs": "species/plant_needs.json",
   "channels": "hydro/channels.geojson",
   "animals": "species/animals.json",
-  "fauna": "client/fauna.json"
+  "fauna": "client/fauna.json",
+  "tile_registry": "species/registry.json"
  },
  "built_at": {
-  "manifest": "2026-11-09T04:43:50Z",
-  "animals": "2026-11-09T04:11:36Z"
+  "manifest": "2026-11-10T21:11:49Z",
+  "animals": "2026-11-09T04:11:36Z",
+  "tile_registry": "2026-11-10T21:11:49Z"
  },
  "layers": {
   "terrain": {
@@ -239,14 +241,12 @@
      ]
     },
     "stand_ins": {
-     "recorded": false,
-     "entries": [],
-     "note": "not recorded by this build (no `stand_ins` key in species_mix.json); `substitutions` read instead"
+     "recorded": true,
+     "entries": []
     },
     "missing": {
-     "recorded": false,
-     "entries": [],
-     "note": "not recorded by this build (no `missing` key in species_mix.json)"
+     "recorded": true,
+     "entries": []
     },
     "substitutions": {},
     "local_records_skipped": 8,
@@ -440,8 +440,8 @@
   "animals": {
    "scored": true,
    "shares": {
-    "measured": 0.9889,
-    "ruled": 0.0111,
+    "measured": 0.9778,
+    "ruled": 0.0222,
     "guessed": 0.0,
     "blank": 0.0
    },
@@ -466,33 +466,11 @@
     },
     "generated_traits": [],
     "registry_levels": {
-     "0": 24,
+     "0": 44,
      "3": 32,
-     "4": 14,
-     "not known": 20
+     "4": 14
     },
-    "registry_level_not_known": [
-     "accipiter_cooperii",
-     "baeolophus_inornatus",
-     "contia_tenuis",
-     "dryobates_nuttallii",
-     "elgaria_multicarinata",
-     "eptesicus_fuscus",
-     "lasionycteris_noctivagans",
-     "melozone_crissalis",
-     "mephitis_mephitis",
-     "mimus_polyglottos",
-     "patagioenas_fasciata",
-     "pica_nuttalli",
-     "pituophis_catenifer",
-     "plestiodon_gilberti",
-     "rana_draytonii",
-     "scapanus_latimanus",
-     "sciurus_niger",
-     "vespericola_columbianus",
-     "zenaida_macroura",
-     "zonotrichia_atricapilla"
-    ],
+    "registry_level_not_known": [],
     "status": {
      "status_field": false,
      "species": 90,
@@ -511,13 +489,6 @@
      "text": "no fish species listed (none in the tile's GBIF records)",
      "share": null,
      "of": "the fish kind",
-     "kind": null
-    },
-    {
-     "layer": "animals",
-     "text": "20 listed animals are missing from the registry (level not known)",
-     "share": 0.2222,
-     "of": "listed species",
      "kind": null
     }
    ],
@@ -612,11 +583,11 @@
    "kind": "guessed"
   },
   {
-   "layer": "animals",
-   "text": "20 listed animals are missing from the registry (level not known)",
-   "share": 0.2222,
+   "layer": "animal_bodies",
+   "text": "3 of 90 listed animals are not drawn",
+   "share": 0.0333,
    "of": "listed species",
-   "kind": null
+   "kind": "blank"
   }
  ],
  "not_scored": {

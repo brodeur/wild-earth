@@ -2,7 +2,7 @@
  "format": 1,
  "tile": "utm12n_557_4964",
  "name": "Lamar Valley",
- "at": "2026-11-10T21:11:53Z",
+ "at": "2026-11-10T21:27:47Z",
  "doc": "docs/held-out-judge.md",
  "checks": {
   "species_lists": {
@@ -29,9 +29,9 @@
    "scores": {
     "animal_precision": 0.9615,
     "animal_recall_common": 0.4186,
-    "plant_precision": 0.973,
+    "plant_precision": 1.0,
     "plant_precision_by_share": {
-     "canopy": 0.9996,
+     "canopy": 1.0,
      "shrub": 1.0,
      "ground": 1.0
     },
@@ -178,25 +178,25 @@
      "spawned_precision": null
     },
     "plant": {
-     "drawn": 37,
-     "judged": 37,
-     "on_list_present_native": 36,
+     "drawn": 43,
+     "judged": 43,
+     "on_list_present_native": 43,
      "restored_drawn": [],
-     "hits": 36,
-     "precision": 0.973,
+     "hits": 43,
+     "precision": 1.0,
      "classes": {
-      "present_native": 36,
+      "present_native": 43,
       "historic_native": 0,
       "present_unknown_origin": 0,
       "non_native": 0,
       "unreviewed": 0,
       "not_present": 0,
-      "not_on_list": 1
+      "not_on_list": 0
      },
      "list_historic_native": 8,
      "restorable_absent": 8,
      "precision_by_share": {
-      "canopy": 0.9996,
+      "canopy": 1.0,
       "shrub": 1.0,
       "ground": 1.0
      }
@@ -754,15 +754,6 @@
      "group": "fish"
     },
     {
-     "kind": "not_on_list",
-     "species": "Pinus ponderosa",
-     "id": "pinus_ponderosa",
-     "layer": "canopy",
-     "drawn_share": 0.0004,
-     "genus_on_list": true,
-     "group": "plant"
-    },
-    {
      "kind": "restorable_absent",
      "species": "Agrostis oregonensis",
      "common": "Oregon bentgrass",
@@ -863,10 +854,10 @@
    "drawn_from": "client/species_mix.json: plants drawn per species (cells x density x weight), by layer",
    "measure": "per layer, on genus shares: Bray-Curtis dissimilarity (0 same, 1 nothing in common); foreign share = drawn share in genera the reference does not record on this ground; missed share = reference share in genera not drawn in that layer",
    "scores": {
-    "bray_curtis_mean": 0.4082,
+    "bray_curtis_mean": 0.5063,
     "bray_curtis": {
-     "canopy": 0.0726,
-     "shrub": 0.4824,
+     "canopy": 0.369,
+     "shrub": 0.4803,
      "ground": 0.6695
     },
     "foreign_share": {
@@ -876,20 +867,22 @@
     },
     "foreign_share_max": null,
     "missed_share": {
-     "canopy": 0.0042,
-     "shrub": 0.4824,
+     "canopy": 0,
+     "shrub": 0.2209,
      "ground": 0.1118
     }
    },
    "layers": {
     "canopy": {
-     "bray_curtis": 0.0726,
+     "bray_curtis": 0.369,
      "foreign_share": null,
-     "missed_share": 0.0042,
+     "missed_share": 0,
      "drawn": {
-      "pseudotsuga": 0.5441,
-      "pinus": 0.4045,
-      "populus": 0.0515
+      "pseudotsuga": 0.3656,
+      "pinus": 0.2431,
+      "picea": 0.1731,
+      "abies": 0.1666,
+      "populus": 0.0516
      },
      "reference": {
       "pseudotsuga": 0.6125,
@@ -900,11 +893,15 @@
      }
     },
     "shrub": {
-     "bray_curtis": 0.4824,
+     "bray_curtis": 0.4803,
      "foreign_share": null,
-     "missed_share": 0.4824,
+     "missed_share": 0.2209,
      "drawn": {
-      "artemisia": 1.0
+      "artemisia": 0.8639,
+      "salix": 0.074,
+      "rubus": 0.058,
+      "symphoricarpos": 0.0021,
+      "amelanchier": 0.002
      },
      "reference": {
       "artemisia": 0.5176,
@@ -940,12 +937,6 @@
     }
    },
    "errors": [
-    {
-     "kind": "missing_genus",
-     "genus": "symphoricarpos",
-     "reference_share": 0.2615,
-     "layer": "shrub"
-    },
     {
      "kind": "missing_genus",
      "genus": "vaccinium",
@@ -1395,7 +1386,7 @@
  "summary": {
   "animal_precision": 0.9615,
   "animal_recall_common": 0.4186,
-  "plant_precision": 0.973,
+  "plant_precision": 1.0,
   "groups_absent": [
    "fish"
   ],
@@ -1407,13 +1398,13 @@
   },
   "restored_drawn": 0,
   "plant_precision_by_share": {
-   "canopy": 0.9996,
+   "canopy": 1.0,
    "shrub": 1.0,
    "ground": 1.0
   },
   "composition_bray_curtis": {
-   "canopy": 0.0726,
-   "shrub": 0.4824,
+   "canopy": 0.369,
+   "shrub": 0.4803,
    "ground": 0.6695
   },
   "composition_foreign_share": {
@@ -1424,6 +1415,6 @@
   "eye_level_distance": 0.2069,
   "eye_level_pairs": 5,
   "colour_from_above_overlap": 0.36,
-  "named_errors": 88
+  "named_errors": 86
  }
 }

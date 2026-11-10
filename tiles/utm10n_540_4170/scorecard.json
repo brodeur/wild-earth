@@ -20,9 +20,9 @@
   "tile_registry": "species/registry.json"
  },
  "built_at": {
-  "manifest": "2026-11-09T04:42:44Z",
+  "manifest": "2026-11-10T21:11:45Z",
   "animals": "2026-11-09T04:05:34Z",
-  "tile_registry": "2026-11-05T06:54:20Z"
+  "tile_registry": "2026-11-10T21:11:45Z"
  },
  "layers": {
   "terrain": {
@@ -247,14 +247,12 @@
      ]
     },
     "stand_ins": {
-     "recorded": false,
-     "entries": [],
-     "note": "not recorded by this build (no `stand_ins` key in species_mix.json); `substitutions` read instead"
+     "recorded": true,
+     "entries": []
     },
     "missing": {
-     "recorded": false,
-     "entries": [],
-     "note": "not recorded by this build (no `missing` key in species_mix.json)"
+     "recorded": true,
+     "entries": []
     },
     "substitutions": {},
     "local_records_skipped": 5,
@@ -466,33 +464,12 @@
     },
     "generated_traits": [],
     "registry_levels": {
-     "0": 57,
-     "3": 32,
-     "4": 13,
-     "not known": 20
+     "0": 75,
+     "2": 1,
+     "3": 33,
+     "4": 13
     },
-    "registry_level_not_known": [
-     "aneides_lugubris",
-     "ariolimax_brachyphallus",
-     "canis_lupus",
-     "elgaria_coerulea",
-     "elgaria_multicarinata",
-     "eschrichtius_robustus",
-     "fulica_americana",
-     "melozone_crissalis",
-     "mephitis_mephitis",
-     "mirounga_angustirostris",
-     "muntiacus_reevesi",
-     "rana_draytonii",
-     "reithrodontomys_megalotis",
-     "scapanus_latimanus",
-     "sciurus_niger",
-     "setophaga_townsendi",
-     "thamnophis_elegans",
-     "trachemys_scripta",
-     "zenaida_macroura",
-     "zonotrichia_atricapilla"
-    ],
+    "registry_level_not_known": [],
     "status": {
      "status_field": false,
      "species": 122,
@@ -511,13 +488,6 @@
      "text": "no fish species listed (none in the tile's GBIF records)",
      "share": null,
      "of": "the fish kind",
-     "kind": null
-    },
-    {
-     "layer": "animals",
-     "text": "20 listed animals are missing from the registry (level not known)",
-     "share": 0.1639,
-     "of": "listed species",
      "kind": null
     }
    ],
@@ -612,13 +582,6 @@
    "share": 0.2459,
    "of": "listed species",
    "kind": "blank"
-  },
-  {
-   "layer": "animals",
-   "text": "20 listed animals are missing from the registry (level not known)",
-   "share": 0.1639,
-   "of": "listed species",
-   "kind": null
   }
  ],
  "not_scored": {

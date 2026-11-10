@@ -19,9 +19,9 @@
   "tile_registry": "species/registry.json"
  },
  "built_at": {
-  "manifest": "2026-11-09T04:59:09Z",
+  "manifest": "2026-11-10T21:12:00Z",
   "animals": "2026-11-09T04:55:29Z",
-  "tile_registry": "2026-11-06T10:45:00Z"
+  "tile_registry": "2026-11-10T21:12:00Z"
  },
  "layers": {
   "terrain": {
@@ -170,14 +170,12 @@
      "ground": []
     },
     "stand_ins": {
-     "recorded": false,
-     "entries": [],
-     "note": "not recorded by this build (no `stand_ins` key in species_mix.json); `substitutions` read instead"
+     "recorded": true,
+     "entries": []
     },
     "missing": {
-     "recorded": false,
-     "entries": [],
-     "note": "not recorded by this build (no `missing` key in species_mix.json)"
+     "recorded": true,
+     "entries": []
     },
     "substitutions": {},
     "local_records_skipped": 0,
@@ -369,16 +367,9 @@
      "varanus_salvator"
     ],
     "registry_levels": {
-     "0": 64,
-     "not known": 5
+     "0": 69
     },
-    "registry_level_not_known": [
-     "gekko_monarchus",
-     "gonocephalus_bornensis",
-     "hemidactylus_platyurus",
-     "tropidolaemus_subannulatus",
-     "varanus_salvator"
-    ],
+    "registry_level_not_known": [],
     "status": {
      "status_field": false,
      "species": 69,
@@ -405,13 +396,6 @@
      "share": 0.0725,
      "of": "listed species",
      "kind": "guessed"
-    },
-    {
-     "layer": "animals",
-     "text": "5 listed animals are missing from the registry (level not known)",
-     "share": 0.0725,
-     "of": "listed species",
-     "kind": null
     }
    ],
    "definition": {

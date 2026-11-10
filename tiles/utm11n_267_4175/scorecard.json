@@ -20,9 +20,9 @@
   "tile_registry": "species/registry.json"
  },
  "built_at": {
-  "manifest": "2026-11-09T04:44:07Z",
+  "manifest": "2026-11-10T21:11:51Z",
   "animals": "2026-11-09T04:14:17Z",
-  "tile_registry": "2026-11-09T02:58:11Z"
+  "tile_registry": "2026-11-10T21:11:51Z"
  },
  "layers": {
   "terrain": {
@@ -112,8 +112,7 @@
     "unmatched": 0,
     "unmatched_drawn": {},
     "natural_regions": [
-     "california",
-     "great_basin"
+     "california"
     ]
    },
    "findings": [
@@ -253,14 +252,12 @@
      ]
     },
     "stand_ins": {
-     "recorded": false,
-     "entries": [],
-     "note": "not recorded by this build (no `stand_ins` key in species_mix.json); `substitutions` read instead"
+     "recorded": true,
+     "entries": []
     },
     "missing": {
-     "recorded": false,
-     "entries": [],
-     "note": "not recorded by this build (no `missing` key in species_mix.json)"
+     "recorded": true,
+     "entries": []
     },
     "substitutions": {},
     "local_records_skipped": 13,

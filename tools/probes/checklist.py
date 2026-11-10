@@ -112,6 +112,12 @@ def index(records: list) -> dict:
     return out
 
 
+def _spelling(binom: str) -> str:
+    """A binomial with the spellings that vary between lists folded together: a doubled i (vacciniifolia / vaccinifolia,
+    rossii / rossi)."""
+    return re.sub(r"i+", "i", binom)
+
+
 def match(names: list, family: str | None, idx: dict, records: list, synonyms=None):
     """(record, how) for a drawn species known under `names`, or (None, None). The list can hold a species twice
     (an old name left unreviewed beside the current one): of the records reached by name, by a split, or by the
@@ -124,6 +130,10 @@ def match(names: list, family: str | None, idx: dict, records: list, synonyms=No
     for b in bs:
         if SPLITS.get(b) in idx:
             cands.append((idx[SPLITS[b]], "taxonomic split or lump"))
+    for b in bs:                           # a spelling variant in the same genus: vacciniifolia / vaccinifolia
+        for rb in idx:
+            if rb != b and rb.split()[0] == b.split()[0] and _spelling(rb) == _spelling(b):
+                cands.append((idx[rb], "spelling variant"))
     if family and bs:
         stem = jc.epithet_stem(bs[0])
         hits = {}
@@ -308,6 +318,15 @@ def fetch_park(unit: str, refresh=False) -> tuple:
     return out, when
 
 
+def synonym_binomials(b: str, names: list, results: list) -> list:
+    """The binomials that are the same species as `b`: the matched names and GBIF's synonyms of species rank. A synonym
+    with a third epithet is left out: "Festuca ovina arizonica" says Arizona fescue was once filed as a variety of
+    sheep fescue, not that it is sheep fescue, and cut to its binomial it named a native grass as the park's
+    introduced one (Grand Canyon, 2026-11-10)."""
+    names = list(names) + [r.get("canonicalName") for r in results if len((r.get("canonicalName") or "").split()) == 2]
+    return [x for x in dict.fromkeys(jc.binomial(n) for n in names) if x and x != b]
+
+
 def gbif_synonyms(refresh=False):
     """A function binomial -> [binomials GBIF's backbone gives as the same species], cached per name."""
     def f(b: str) -> list:
@@ -322,8 +341,7 @@ def gbif_synonyms(refresh=False):
             names = [m.get("species"), m.get("canonicalName")]
             s = json.loads(jc.fetch(f"https://api.gbif.org/v1/species/{key}/synonyms", base / "synonyms" / "synonyms.json",
                                     {"limit": 200}, refresh=refresh).read_text())
-            names += [r.get("canonicalName") for r in s.get("results", [])]
-            return [x for x in dict.fromkeys(jc.binomial(n) for n in names) if x and x != b]
+            return synonym_binomials(b, names, s.get("results", []))
         except (RuntimeError, ValueError):
             return []
     return f

@@ -30,6 +30,18 @@ class Names(unittest.TestCase):
         self.assertIsNone(jc.binomial("Echinocereus"))
         self.assertIsNone(jc.binomial(None))
 
+    def test_a_spelling_variant_in_the_genus_matches(self):
+        recs = [{"ScientificName": "Quercus vaccinifolia", "Family": "Fagaceae", "Occurrence": "Present", "Nativeness": "Native"},
+                {"ScientificName": "Quercus chrysolepis", "Family": "Fagaceae", "Occurrence": "Present", "Nativeness": "Native"}]
+        rec, how = checklist.match(["Quercus vacciniifolia"], None, checklist.index(recs), recs)
+        self.assertEqual((rec["ScientificName"], how), ("Quercus vaccinifolia", "spelling variant"))
+        self.assertEqual(checklist.match(["Quercus kelloggii"], None, checklist.index(recs), recs), (None, None))
+
+    def test_a_subspecies_synonym_is_not_its_species(self):
+        got = checklist.synonym_binomials("festuca arizonica", ["Festuca arizonica"], [
+            {"canonicalName": "Festuca ovina arizonica"}, {"canonicalName": "Festuca pinetorum"}, {"canonicalName": None}])
+        self.assertEqual(got, ["festuca pinetorum"])
+
     def test_genus_and_id(self):
         self.assertEqual(jc.genus("pinus_sabiniana"), "pinus")
         self.assertEqual(jc.genus("Abies concolor"), "abies")
@@ -37,6 +49,8 @@ class Names(unittest.TestCase):
 
     def test_epithet_stem_survives_a_gender_change(self):
         self.assertEqual(jc.epithet_stem("picoides villosus"), jc.epithet_stem("leuconotopicus villosa"))
+        self.assertEqual(jc.epithet_stem("quercus vacciniifolia"), jc.epithet_stem("quercus vaccinifolia"))
+        self.assertEqual(jc.epithet_stem("carex rossii"), jc.epithet_stem("carex rossi"))
 
 
 class Checklist(unittest.TestCase):

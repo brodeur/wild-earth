@@ -8991,3 +8991,23 @@ Recommendation 1 of the pipeline review. What section 3 of the review computed b
 - **Not in the manifests yet.** The step was run in the graph on a scratch copy of Lamar (ok, then current on the next
   plan). The committed tiles' manifests were not rewritten, to keep this branch clear of the other lanes' rebuilds;
   the next build of each tile records the step.
+
+### 2026-11-10: the three lanes on main together; two judge matches corrected
+
+- **Merged and re-measured on the merged mixes.** Stand-ins, the wider judge and the scorecard are on main; the judge
+  and every scorecard were re-run on the merge. Grand Canyon: plant species on the park's list 0.33 to 0.92; drawn
+  share on the list (canopy/shrub/ground) 0.58/0.35/none to 1.00/1.00/0.89; shrub Bray-Curtis 1.00 to 0.60; share in
+  genera the plots never record 0.52 to 0.01. Yosemite unchanged.
+- **Lamar's canopy got worse against the park's cover-type map, and this is open:** Bray-Curtis 0.07 to 0.37. The
+  spruce-fir system (12,756 cells) now draws Engelmann spruce and subalpine fir at equal weights (0.17 each of the
+  canopy); the map has them at 0.002 each, with Douglas-fir 0.61 and lodgepole 0.37. Before, the two stood in as
+  Douglas-fir, which agreed with the map by accident. The rule to fix is the equal weight a name's species get, not
+  the species: weigh them by the tile's records, and let a seral dominant the tile records stand in the system.
+- **A subspecies synonym is not its species.** GBIF lists "Festuca ovina arizonica" as a synonym of Arizona fescue;
+  cut to its binomial it matched the park's introduced sheep fescue and named a native grass as introduced.
+  `synonym_binomials` keeps only synonyms of species rank.
+- **A spelling variant in the same genus is a match.** The park writes "Quercus vaccinifolia", the library
+  "Quercus vacciniifolia"; huckleberry oak (12% of Yosemite's drawn shrubs) had matched only through the synonym
+  accident above. `match` folds a doubled i within a genus and says "spelling variant".
+- **A drawn native the park lists as Historical stays a hit** (`restored_drawn`), as the rewilding baseline says.
+  Whether it is marked restored for the player belongs with the baseline's implementation.

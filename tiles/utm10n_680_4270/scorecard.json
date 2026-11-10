@@ -16,11 +16,13 @@
   "plant_needs": "species/plant_needs.json",
   "channels": "hydro/channels.geojson",
   "animals": "species/animals.json",
-  "fauna": "client/fauna.json"
+  "fauna": "client/fauna.json",
+  "tile_registry": "species/registry.json"
  },
  "built_at": {
-  "manifest": "2026-11-09T04:43:36Z",
-  "animals": "2026-11-09T04:09:16Z"
+  "manifest": "2026-11-10T21:11:47Z",
+  "animals": "2026-11-09T04:09:16Z",
+  "tile_registry": "2026-11-10T21:11:47Z"
  },
  "layers": {
   "terrain": {
@@ -236,14 +238,12 @@
      ]
     },
     "stand_ins": {
-     "recorded": false,
-     "entries": [],
-     "note": "not recorded by this build (no `stand_ins` key in species_mix.json); `substitutions` read instead"
+     "recorded": true,
+     "entries": []
     },
     "missing": {
-     "recorded": false,
-     "entries": [],
-     "note": "not recorded by this build (no `missing` key in species_mix.json)"
+     "recorded": true,
+     "entries": []
     },
     "substitutions": {},
     "local_records_skipped": 9,
@@ -437,8 +437,8 @@
   "animals": {
    "scored": true,
    "shares": {
-    "measured": 0.9868,
-    "ruled": 0.0132,
+    "measured": 0.9737,
+    "ruled": 0.0263,
     "guessed": 0.0,
     "blank": 0.0
    },
@@ -463,27 +463,11 @@
     },
     "generated_traits": [],
     "registry_levels": {
-     "0": 18,
+     "0": 32,
      "3": 30,
-     "4": 14,
-     "not known": 14
+     "4": 14
     },
-    "registry_level_not_known": [
-     "accipiter_cooperii",
-     "actinemys_marmorata",
-     "aneides_lugubris",
-     "baeolophus_inornatus",
-     "dryobates_nuttallii",
-     "elgaria_multicarinata",
-     "melozone_crissalis",
-     "pica_nuttalli",
-     "rana_boylii",
-     "streptopelia_decaocto",
-     "thamnophis_sirtalis",
-     "thryomanes_bewickii",
-     "tyto_furcata",
-     "zenaida_macroura"
-    ],
+    "registry_level_not_known": [],
     "status": {
      "status_field": false,
      "species": 76,
@@ -509,13 +493,6 @@
      "text": "no invertebrate species listed (2 in the records, none listed)",
      "share": null,
      "of": "the invertebrate kind",
-     "kind": null
-    },
-    {
-     "layer": "animals",
-     "text": "14 listed animals are missing from the registry (level not known)",
-     "share": 0.1842,
-     "of": "listed species",
      "kind": null
     }
    ],
@@ -600,11 +577,11 @@
    "kind": "blank"
   },
   {
-   "layer": "animals",
-   "text": "14 listed animals are missing from the registry (level not known)",
-   "share": 0.1842,
-   "of": "listed species",
-   "kind": null
+   "layer": "plant_communities",
+   "text": "8% of cells are a back-filled class (pre-settlement under developed or farmed land, by the baseline rule), not today's vegetation",
+   "share": 0.078,
+   "of": "30 m cells",
+   "kind": "guessed"
   }
  ],
  "not_scored": {

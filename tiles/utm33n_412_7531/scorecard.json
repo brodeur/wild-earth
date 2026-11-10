@@ -19,9 +19,9 @@
   "tile_registry": "species/registry.json"
  },
  "built_at": {
-  "manifest": "2026-11-09T04:45:40Z",
+  "manifest": "2026-11-10T21:11:58Z",
   "animals": "2026-11-09T04:41:32Z",
-  "tile_registry": "2026-11-06T10:51:20Z"
+  "tile_registry": "2026-11-10T21:11:58Z"
  },
  "layers": {
   "terrain": {
@@ -176,14 +176,12 @@
      ]
     },
     "stand_ins": {
-     "recorded": false,
-     "entries": [],
-     "note": "not recorded by this build (no `stand_ins` key in species_mix.json); `substitutions` read instead"
+     "recorded": true,
+     "entries": []
     },
     "missing": {
-     "recorded": false,
-     "entries": [],
-     "note": "not recorded by this build (no `missing` key in species_mix.json)"
+     "recorded": true,
+     "entries": []
     },
     "substitutions": {},
     "local_records_skipped": 0,

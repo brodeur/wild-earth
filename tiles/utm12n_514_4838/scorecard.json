@@ -20,9 +20,9 @@
   "tile_registry": "species/registry.json"
  },
  "built_at": {
-  "manifest": "2026-11-09T04:44:26Z",
+  "manifest": "2026-11-10T21:11:54Z",
   "animals": "2026-11-09T04:19:34Z",
-  "tile_registry": "2026-11-07T07:23:45Z"
+  "tile_registry": "2026-11-10T21:11:54Z"
  },
  "layers": {
   "terrain": {
@@ -91,57 +91,47 @@
    "scored": true,
    "shares": {
     "measured": 0.0,
-    "ruled": 0.8902,
-    "guessed": 0.1086,
-    "blank": 0.0012
+    "ruled": 0.9896,
+    "guessed": 0.0104,
+    "blank": 0.0
    },
    "detail": {
     "cells": 110889,
     "by_kind": {
-     "named": 0.4062,
-     "ground_only": 0.4005,
-     "pool": 0.0995,
+     "named": 0.8217,
+     "ground_only": 0.0844,
      "water_ice": 0.0835,
-     "backfill": 0.0091,
-     "bare": 0.0012
+     "backfill": 0.0103,
+     "pool": 0.0
     },
     "by_rule_ignoring_source": {
-     "named": 0.4128,
-     "ground_only": 0.4018,
-     "pool": 0.1007,
+     "named": 0.8308,
+     "ground_only": 0.0851,
      "water_ice": 0.0835,
-     "bare": 0.0012
+     "pool": 0.0005
     },
     "from_bps_backfill": 0.0276,
     "pre_settlement_share": 0.0091,
     "pre_settlement_note": "cells whose community is a LANDFIRE Biophysical Settings (pre-settlement) class, drawn where today's land is developed, farmed or ruderal (communities[].source bps). fractions.from_bps_backfill is larger where the tile has permanent ice or rewilded reservoir beds: it counts every cell not from today's map",
     "unmatched": 36,
     "unmatched_drawn": {
-     "bare (nothing known)": 17,
-     "its named species": 11,
-     "the tile's own species of its habitat class": 8
+     "its named species": 29,
+     "the tile's own species of its habitat class": 7
     },
     "natural_regions": []
    },
    "findings": [
     {
      "layer": "plant_communities",
-     "text": "0% of cells have no community (nothing known) (tile pool grassland; tile pool riparian)",
-     "share": 0.0012,
-     "of": "30 m cells",
-     "kind": "blank"
-    },
-    {
-     "layer": "plant_communities",
-     "text": "10% of cells borrow another community's species (tile pool)",
-     "share": 0.0995,
+     "text": "0% of cells borrow another community's species (tile pool)",
+     "share": 0.0,
      "of": "30 m cells",
      "kind": "guessed"
     },
     {
      "layer": "plant_communities",
      "text": "1% of cells are a back-filled class (pre-settlement under developed or farmed land, by the baseline rule), not today's vegetation",
-     "share": 0.0091,
+     "share": 0.0103,
      "of": "30 m cells",
      "kind": "guessed"
     }
@@ -159,26 +149,34 @@
    "scored": true,
    "shares": {
     "measured": 0.0,
-    "ruled": 0.9994,
-    "guessed": 0.0006,
-    "blank": 0.0
+    "ruled": 0.9579,
+    "guessed": 0.0202,
+    "blank": 0.0219
    },
    "detail": {
     "counts": {
-     "canopy": 5,
-     "shrub": 1,
-     "ground": 31
+     "canopy": 9,
+     "shrub": 5,
+     "ground": 32
     },
     "drawn": {
      "trees": [
+      "abies_lasiocarpa",
+      "picea_engelmannii",
       "pinus_albicaulis",
       "pinus_contorta",
-      "pinus_ponderosa",
+      "pinus_flexilis",
+      "populus_angustifolia",
       "populus_tremuloides",
+      "populus_trichocarpa",
       "pseudotsuga_menziesii"
      ],
      "shrubs": [
-      "artemisia_tridentata"
+      "amelanchier_alnifolia",
+      "artemisia_tridentata",
+      "cornus_sericea",
+      "rubus_parviflorus",
+      "symphoricarpos_albus"
      ],
      "ground": [
       "actaea_rubra",
@@ -207,6 +205,7 @@
       "maianthemum_stellatum",
       "mertensia_ciliata",
       "phlox_pulvinata",
+      "phyllodoce_empetriformis",
       "poa_secunda",
       "poa_wheeleri",
       "pseudoroegneria_spicata",
@@ -215,26 +214,77 @@
      ]
     },
     "stand_ins": {
-     "recorded": false,
-     "entries": [],
-     "note": "not recorded by this build (no `stand_ins` key in species_mix.json); `substitutions` read instead"
+     "recorded": true,
+     "entries": [
+      {
+       "species": "rosa_woodsii",
+       "drawn": "rubus_parviflorus",
+       "reason": "no library record: drawn as rubus_parviflorus (the same family, Rosaceae, and growth form; 401 records within 25 km)",
+       "cells": 3887
+      },
+      {
+       "species": "prunus_virginiana",
+       "drawn": "rubus_parviflorus",
+       "reason": "no library record: drawn as rubus_parviflorus (the same family, Rosaceae, and growth form; 401 records within 25 km)",
+       "cells": 1416
+      },
+      {
+       "species": "sorbus_scopulina",
+       "drawn": "rubus_parviflorus",
+       "reason": "no library record: drawn as rubus_parviflorus (the same family, Rosaceae, and growth form; 401 records within 25 km)",
+       "cells": 1416
+      },
+      {
+       "species": "picea_pungens",
+       "drawn": "picea_engelmannii",
+       "reason": "no library record: drawn as picea_engelmannii (the same genus; 59 records within 25 km)",
+       "cells": 10
+      }
+     ]
     },
     "missing": {
-     "recorded": false,
-     "entries": [],
-     "note": "not recorded by this build (no `missing` key in species_mix.json)"
+     "recorded": true,
+     "entries": [
+      {
+       "species": "acer_negundo",
+       "reason": "no library record, and no record of its genus or of its family (Sapindaceae) and growth form belongs to this tile: left out, its share to the community's other species",
+       "cells": 2416
+      },
+      {
+       "species": "acer_glabrum",
+       "reason": "no library record, and no record of its genus or of its family (Sapindaceae) and growth form belongs to this tile: left out, its share to the community's other species",
+       "cells": 1416
+      },
+      {
+       "species": "ceanothus_velutinus",
+       "reason": "no library record, and no record of its genus or of its family (Rhamnaceae) and growth form belongs to this tile: left out, its share to the community's other species",
+       "cells": 1416
+      },
+      {
+       "species": "juniperus_scopulorum",
+       "reason": "no library record, and no record of its genus or of its family (Cupressaceae) and growth form belongs to this tile: left out, its share to the community's other species",
+       "cells": 21
+      }
+     ]
     },
     "substitutions": {
-     "pinus_flexilis": "pinus_ponderosa"
+     "acer_glabrum": null,
+     "acer_negundo": null,
+     "ceanothus_velutinus": null,
+     "juniperus_scopulorum": null,
+     "picea_pungens": "picea_engelmannii",
+     "prunus_virginiana": "rubus_parviflorus",
+     "rosa_woodsii": "rubus_parviflorus",
+     "sorbus_scopulina": "rubus_parviflorus"
     },
     "local_records_skipped": 0,
     "status": {
      "status_field": false,
-     "species": 37,
+     "species": 46,
      "introduced": 0,
      "restored": 0,
      "native": 0,
-     "status_unknown": 37,
+     "status_unknown": 46,
      "introduced_ids": [],
      "restored_ids": [],
      "note": "no status field in this build"
@@ -243,56 +293,105 @@
      {
       "species": "artemisia_tridentata",
       "layer": "shrubs",
-      "share_of_weight": 0.4583,
+      "share_of_weight": 0.4029,
       "share": "ruled",
       "drawn_as": "artemisia_tridentata"
      },
      {
       "species": "pinus_contorta",
       "layer": "trees",
-      "share_of_weight": 0.3054,
+      "share_of_weight": 0.1733,
       "share": "ruled",
       "drawn_as": "pinus_contorta"
      },
      {
       "species": "pseudotsuga_menziesii",
       "layer": "trees",
-      "share_of_weight": 0.1735,
+      "share_of_weight": 0.1121,
       "share": "ruled",
       "drawn_as": "pseudotsuga_menziesii"
      },
      {
-      "species": "pinus_albicaulis",
+      "species": "picea_engelmannii",
       "layer": "trees",
-      "share_of_weight": 0.0536,
+      "share_of_weight": 0.0952,
       "share": "ruled",
-      "drawn_as": "pinus_albicaulis"
+      "drawn_as": "picea_engelmannii"
      },
      {
-      "species": "populus_tremuloides",
+      "species": "abies_lasiocarpa",
       "layer": "trees",
-      "share_of_weight": 0.0087,
+      "share_of_weight": 0.0952,
       "share": "ruled",
-      "drawn_as": "populus_tremuloides"
+      "drawn_as": "abies_lasiocarpa"
+     },
+     {
+      "species": "populus_trichocarpa",
+      "layer": "trees",
+      "share_of_weight": 0.0161,
+      "share": "ruled",
+      "drawn_as": "populus_trichocarpa"
+     },
+     {
+      "species": "populus_angustifolia",
+      "layer": "trees",
+      "share_of_weight": 0.0161,
+      "share": "ruled",
+      "drawn_as": "populus_angustifolia"
+     },
+     {
+      "species": "acer_negundo",
+      "layer": "trees",
+      "share_of_weight": 0.0156,
+      "share": "blank",
+      "drawn_as": null
+     },
+     {
+      "species": "rosa_woodsii",
+      "layer": "shrubs",
+      "share_of_weight": 0.0141,
+      "share": "guessed",
+      "drawn_as": "rubus_parviflorus"
      },
      {
       "species": "pinus_flexilis",
       "layer": "trees",
-      "share_of_weight": 0.0006,
-      "share": "guessed",
-      "drawn_as": "pinus_ponderosa"
+      "share_of_weight": 0.0113,
+      "share": "ruled",
+      "drawn_as": "pinus_flexilis"
+     },
+     {
+      "species": "cornus_sericea",
+      "layer": "shrubs",
+      "share_of_weight": 0.0111,
+      "share": "ruled",
+      "drawn_as": "cornus_sericea"
+     },
+     {
+      "species": "pinus_albicaulis",
+      "layer": "trees",
+      "share_of_weight": 0.0106,
+      "share": "ruled",
+      "drawn_as": "pinus_albicaulis"
      }
     ],
-    "no_local_record_share": 0.0006,
+    "no_local_record_share": 0.0576,
     "no_local_record_note": "share of the drawn woody weight whose drawn species is not among the tile's most-recorded GBIF plants (species/plant_needs.json, research.PLANT_LIMIT): common trees can miss that list, so this is a lead, not a finding"
    },
    "findings": [
     {
      "layer": "plant_species",
-     "text": "one shrub species only (artemisia_tridentata)",
-     "share": null,
-     "of": "shrub layer",
-     "kind": null
+     "text": "3% of the canopy weight is a named species with no record, drawn as nothing",
+     "share": 0.0158,
+     "of": "woody plant weight",
+     "kind": "blank"
+    },
+    {
+     "layer": "plant_species",
+     "text": "5% of the shrub weight is drawn as a stand-in",
+     "share": 0.0201,
+     "of": "woody plant weight",
+     "kind": "guessed"
     }
    ],
    "definition": {
@@ -505,13 +604,6 @@
    "kind": "ruled"
   },
   {
-   "layer": "plant_species",
-   "text": "one shrub species only (artemisia_tridentata)",
-   "share": null,
-   "of": "shrub layer",
-   "kind": null
-  },
-  {
    "layer": "animals",
    "text": "no fish species listed (none in the tile's GBIF records)",
    "share": null,
@@ -538,6 +630,13 @@
    "share": 0.5312,
    "of": "stream length",
    "kind": "ruled"
+  },
+  {
+   "layer": "animal_bodies",
+   "text": "11 of 89 listed animals are not drawn",
+   "share": 0.1236,
+   "of": "listed species",
+   "kind": "blank"
   }
  ],
  "not_scored": {

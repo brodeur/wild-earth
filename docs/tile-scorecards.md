@@ -17,15 +17,15 @@ Worst finding: the tile's finding that affects the largest share of its layer, a
 | Mount Olympus (`utm10n_439_5293`) | 0/100/0/0 | 0/100/0/0 | 0/97/3/0 | 0/100/0/0 | 100/0/0/0 | 56/33/0/10 | 100/0/0/0 | 74/0/24/2 | 100% of the ground has no 1 m measurement (drawn from the 3DEP seamless service (resolution not recorded)) |
 | San Francisco (south) (`utm10n_540_4170`) | 74/26/0/0 | 100/0/0/0 | 0/44/56/0 | 0/100/0/0 | 85/0/15/0 | 0/95/0/4 | 100/0/0/0 | 39/0/37/25 | 56% of cells are a back-filled class (pre-settlement under developed or farmed land, by the baseline rule), not today's vegetation |
 | San Francisco (north) (`utm10n_540_4180`) | 87/13/0/0 | 100/0/0/0 | 0/73/27/0 | 0/100/0/0 | 83/0/17/0 | 9/69/0/22 | 100/0/0/0 | 39/0/38/23 | no fish species listed (none in the tile's GBIF records) |
-| Cosumnes (`utm10n_680_4270`) | 94/6/0/0 | 100/0/0/0 | 0/92/8/0 | 0/100/0/0 | 18/0/82/0 | 57/8/0/35 | 99/1/0/0 | 59/0/41/0 | 82% of the ground texture is painted in, not photographed |
+| Cosumnes (`utm10n_680_4270`) | 94/6/0/0 | 100/0/0/0 | 0/92/8/0 | 0/100/0/0 | 18/0/82/0 | 57/8/0/35 | 97/3/0/0 | 59/0/41/0 | 82% of the ground texture is painted in, not photographed |
 | El Dorado (home) (`utm10n_680_4280`) | 82/18/0/0 | 100/0/0/0 | 0/64/36/0 | 0/100/0/0 | 13/0/87/0 | 61/16/0/23 | 99/1/0/0 | 55/0/44/1 | 87% of the ground texture is painted in, not photographed |
-| Placerville (`utm10n_690_4280`) | 85/15/0/0 | 100/0/0/0 | 0/74/26/0 | 0/100/0/0 | 4/0/96/0 | 59/9/0/32 | 99/1/0/0 | 53/0/43/3 | 96% of the ground texture is painted in, not photographed |
+| Placerville (`utm10n_690_4280`) | 85/15/0/0 | 100/0/0/0 | 0/74/26/0 | 0/100/0/0 | 4/0/96/0 | 59/9/0/32 | 98/2/0/0 | 53/0/43/3 | 96% of the ground texture is painted in, not photographed |
 | Calaveras Big Trees (`utm10n_731_4235`) | 89/11/0/0 | 100/0/0/0 | 0/85/15/0 | 0/100/0/0 | 3/0/97/0 | 39/1/0/60 | 99/1/0/0 | 56/0/40/4 | 97% of the ground texture is painted in, not photographed |
 | Yosemite (re-centred) (`utm11n_267_4175`) | 98/2/0/0 | 0/100/0/0 | 0/98/2/0 | 0/100/0/0 | 98/0/2/0 | 51/43/0/6 | 100/0/0/0 | 47/0/47/6 | 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m)) |
-| Yosemite (`utm11n_270_4180`) | 99/1/0/0 | 0/100/0/0 | 0/99/1/0 | 0/100/0/0 | 99/0/1/0 | 55/41/0/4 | 98/2/0/0 | 48/0/48/3 | 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m)) |
-| Grand Canyon (`utm12n_396_3988`) | 83/17/0/0 | 0/100/0/0 | 0/28/30/41 | 0/87/13/0 | 97/0/3/0 | 57/39/0/4 | 95/0/5/0 | 38/0/47/15 | no ground species at all |
-| Teton (`utm12n_514_4838`) | 99/1/0/0 | 0/100/0/0 | 0/89/11/0 | 0/100/0/0 | 99/0/1/0 | 37/53/0/10 | 100/0/0/0 | 51/0/37/12 | 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m)) |
-| Lamar Valley (`utm12n_557_4964`) | 100/0/0/0 | 100/0/0/0 | 0/85/14/1 | 0/100/0/0 | 52/0/48/0 | 47/43/0/10 | 100/0/0/0 | 52/0/39/10 | one shrub species only (artemisia_tridentata) |
+| Yosemite (`utm11n_270_4180`) | 99/1/0/0 | 0/100/0/0 | 0/99/1/0 | 0/100/0/0 | 99/0/1/0 | 55/41/0/4 | 99/1/0/0 | 48/0/48/3 | 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m)) |
+| Grand Canyon (`utm12n_396_3988`) | 83/17/0/0 | 0/100/0/0 | 0/96/4/0 | 0/98/2/0 | 97/0/3/0 | 57/39/0/4 | 95/0/5/0 | 38/0/47/15 | 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m)) |
+| Teton (`utm12n_514_4838`) | 99/1/0/0 | 0/100/0/0 | 0/99/1/0 | 0/96/2/2 | 99/0/1/0 | 37/53/0/10 | 100/0/0/0 | 51/0/37/12 | 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m)) |
+| Lamar Valley (`utm12n_557_4964`) | 100/0/0/0 | 100/0/0/0 | 0/95/3/1 | 0/96/4/0 | 52/0/48/0 | 47/43/0/10 | 100/0/0/0 | 52/0/39/10 | no fish species listed (none in the tile's GBIF records) |
 | Corcovado (`utm17n_210_932`) | 0/100/0/0 | 0/100/0/0 | 0/0/100/0 | 0/100/0/0 | 0/53/47/0 | 6/92/0/2 | 100/0/0/0 | 8/0/51/41 | no ground species at all |
 | Manu (`utm19s_233_8679`) | 0/100/0/0 | 0/100/0/0 | 0/0/100/0 | 0/100/0/0 | 0/8/92/0 | 14/84/0/2 | 93/0/7/0 | 3/0/69/28 | no ground species at all |
 | Lofoten (`utm33n_412_7531`) | 0/100/0/0 | 0/100/0/0 | 0/0/100/0 | 0/100/0/0 | 0/99/1/0 | 6/81/0/13 | 100/0/0/0 | 9/0/57/35 | 99% of cells draw recorded species weighted by niche, not a community rule |
@@ -93,7 +93,7 @@ The baseline decided 2026-11-10: today's ecosystems; introduced species filtered
 | Tile | Pre-settlement cells | Animals: introduced / restored / unknown | Plants: introduced / restored / unknown |
 |---|---|---|---|
 | Hoh rain forest | 0% | no status field in this build (64 unknown) | no status field in this build (46 unknown) |
-| Mount Olympus | 0% | no status field in this build (62 unknown) | no status field in this build (47 unknown) |
+| Mount Olympus | 0% | no status field in this build (62 unknown) | no status field in this build (46 unknown) |
 | San Francisco (south) | 56% | no status field in this build (122 unknown) | no status field in this build (87 unknown) |
 | San Francisco (north) | 27% | no status field in this build (120 unknown) | no status field in this build (85 unknown) |
 | Cosumnes | 8% | no status field in this build (76 unknown) | no status field in this build (89 unknown) |
@@ -102,9 +102,9 @@ The baseline decided 2026-11-10: today's ecosystems; introduced species filtered
 | Calaveras Big Trees | 15% | no status field in this build (80 unknown) | no status field in this build (93 unknown) |
 | Yosemite (re-centred) | 2% | no status field in this build (100 unknown) | no status field in this build (93 unknown) |
 | Yosemite | 1% | no status field in this build (95 unknown) | no status field in this build (93 unknown) |
-| Grand Canyon | 4% | no status field in this build (94 unknown) | no status field in this build (12 unknown) |
-| Teton | 1% | no status field in this build (89 unknown) | no status field in this build (37 unknown) |
-| Lamar Valley | 1% | no status field in this build (83 unknown) | no status field in this build (37 unknown) |
+| Grand Canyon | 4% | no status field in this build (94 unknown) | no status field in this build (37 unknown) |
+| Teton | 1% | no status field in this build (89 unknown) | no status field in this build (46 unknown) |
+| Lamar Valley | 1% | no status field in this build (83 unknown) | no status field in this build (43 unknown) |
 | Corcovado | 0% | no status field in this build (88 unknown) | no status field in this build (11 unknown) |
 | Manu | 0% | no status field in this build (68 unknown) | no status field in this build (10 unknown) |
 | Lofoten | 0% | no status field in this build (69 unknown) | no status field in this build (5 unknown) |
@@ -136,7 +136,7 @@ Kept out of the per-tile findings because no tile differs:
 - no fish species listed (none in the tile's GBIF records)
 - 15 of 62 listed animals wear a kin's body
 - 33% of stream length is placed by the DEM alone, no mapped stream confirms it
-- 10 listed animals are missing from the registry (level not known)
+- 10% of mapped stream length is not drawn
 
 **San Francisco (south)** (`utm10n_540_4170`)
 - 56% of cells are a back-filled class (pre-settlement under developed or farmed land, by the baseline rule), not today's vegetation
@@ -144,7 +144,6 @@ Kept out of the per-tile findings because no tile differs:
 - 95% of stream length is placed by the DEM alone, no mapped stream confirms it
 - 45 of 122 listed animals wear a kin's body
 - 30 of 122 listed animals are not drawn
-- 20 listed animals are missing from the registry (level not known)
 
 **San Francisco (north)** (`utm10n_540_4180`)
 - no fish species listed (none in the tile's GBIF records)
@@ -160,7 +159,7 @@ Kept out of the per-tile findings because no tile differs:
 - no invertebrate species listed (2 in the records, none listed)
 - 31 of 76 listed animals wear a kin's body
 - 35% of mapped stream length is not drawn
-- 14 listed animals are missing from the registry (level not known)
+- 8% of cells are a back-filled class (pre-settlement under developed or farmed land, by the baseline rule), not today's vegetation
 
 **El Dorado (home)** (`utm10n_680_4280`)
 - 87% of the ground texture is painted in, not photographed
@@ -176,7 +175,7 @@ Kept out of the per-tile findings because no tile differs:
 - 39 of 90 listed animals wear a kin's body
 - 32% of mapped stream length is not drawn
 - 26% of cells are a back-filled class (pre-settlement under developed or farmed land, by the baseline rule), not today's vegetation
-- 20 listed animals are missing from the registry (level not known)
+- 3 of 90 listed animals are not drawn
 
 **Calaveras Big Trees** (`utm10n_731_4235`)
 - 97% of the ground texture is painted in, not photographed
@@ -200,31 +199,31 @@ Kept out of the per-tile findings because no tile differs:
 - no invertebrate species listed (6 in the records, none listed)
 - 46 of 95 listed animals wear a kin's body
 - 41% of stream length is placed by the DEM alone, no mapped stream confirms it
-- 17 listed animals are missing from the registry (level not known)
+- 3 of 95 listed animals are not drawn
 
 **Grand Canyon** (`utm12n_396_3988`)
-- no ground species at all
 - 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m))
 - no fish species listed (none in the tile's GBIF records)
 - 44 of 94 listed animals wear a kin's body
-- 41% of cells have no community (nothing known) (Colorado Plateau Mixed Bedrock Canyon and Tableland; Inter-Mountain Basins Semi-Desert Grassland)
-- 27% of cells borrow another community's species (tile pool)
+- 39% of stream length is placed by the DEM alone, no mapped stream confirms it
+- 14 of 94 listed animals are not drawn
+- 14% of the ground has no 1 m measurement (drawn from the 1 m usgs_3dep)
 
 **Teton** (`utm12n_514_4838`)
 - 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m))
-- one shrub species only (artemisia_tridentata)
 - no fish species listed (none in the tile's GBIF records)
 - no invertebrate species listed (2 in the records, none listed)
 - 33 of 89 listed animals wear a kin's body
 - 53% of stream length is placed by the DEM alone, no mapped stream confirms it
+- 11 of 89 listed animals are not drawn
 
 **Lamar Valley** (`utm12n_557_4964`)
-- one shrub species only (artemisia_tridentata)
 - no fish species listed (none in the tile's GBIF records)
 - no invertebrate species listed (1 in the records, none listed)
 - 48% of the ground texture is painted in, not photographed
 - 32 of 83 listed animals wear a kin's body
 - 43% of stream length is placed by the DEM alone, no mapped stream confirms it
+- 10% of mapped stream length is not drawn
 
 **Corcovado** (`utm17n_210_932`)
 - no ground species at all
@@ -270,24 +269,24 @@ Kept out of the per-tile findings because no tile differs:
 
 | Tile | Canopy | Shrub | Ground | Stand-ins recorded | Missing recorded |
 |---|---|---|---|---|---|
-| Hoh rain forest | 15 | 13 | 20 | not recorded | not recorded |
-| Mount Olympus | 16 | 13 | 20 | not recorded | not recorded |
-| San Francisco (south) | 24 | 29 | 35 | not recorded | not recorded |
-| San Francisco (north) | 22 | 29 | 35 | not recorded | not recorded |
-| Cosumnes | 25 | 30 | 35 | not recorded | not recorded |
-| El Dorado (home) | 25 | 31 | 35 | not recorded | not recorded |
-| Placerville | 27 | 31 | 35 | not recorded | not recorded |
-| Calaveras Big Trees | 30 | 31 | 34 | not recorded | not recorded |
-| Yosemite (re-centred) | 31 | 31 | 34 | not recorded | not recorded |
-| Yosemite | 31 | 31 | 34 | not recorded | not recorded |
-| Grand Canyon | 8 | 4 | 0 | not recorded | not recorded |
-| Teton | 5 | 1 | 31 | not recorded | not recorded |
-| Lamar Valley | 5 | 1 | 31 | not recorded | not recorded |
-| Corcovado | 11 | 0 | 0 | not recorded | not recorded |
-| Manu | 10 | 0 | 0 | not recorded | not recorded |
-| Lofoten | 2 | 1 | 2 | not recorded | not recorded |
-| Serengeti | 3 | 1 | 1 | not recorded | not recorded |
-| Danum Valley | 4 | 0 | 0 | not recorded | not recorded |
+| Hoh rain forest | 15 | 13 | 20 | 0 | 0 |
+| Mount Olympus | 15 | 13 | 20 | 0 | 1 |
+| San Francisco (south) | 24 | 29 | 35 | 0 | 0 |
+| San Francisco (north) | 22 | 29 | 35 | 0 | 0 |
+| Cosumnes | 25 | 30 | 35 | 0 | 0 |
+| El Dorado (home) | 25 | 31 | 35 | 0 | 0 |
+| Placerville | 27 | 31 | 35 | 0 | 0 |
+| Calaveras Big Trees | 30 | 31 | 34 | 0 | 0 |
+| Yosemite (re-centred) | 31 | 31 | 34 | 0 | 0 |
+| Yosemite | 31 | 31 | 34 | 0 | 0 |
+| Grand Canyon | 8 | 10 | 20 | 9 | 4 |
+| Teton | 9 | 5 | 32 | 4 | 4 |
+| Lamar Valley | 7 | 5 | 31 | 3 | 1 |
+| Corcovado | 11 | 0 | 0 | 0 | 0 |
+| Manu | 10 | 0 | 0 | 0 | 0 |
+| Lofoten | 2 | 1 | 2 | 0 | 0 |
+| Serengeti | 3 | 1 | 1 | 0 | 0 |
+| Danum Valley | 4 | 0 | 0 | 0 | 0 |
 
 ## What a layer could not be scored on
 

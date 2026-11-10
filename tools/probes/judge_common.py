@@ -95,5 +95,5 @@ def id_to_name(code: str) -> str:
 def epithet_stem(binom: str) -> str:
     """The species epithet without its gendered ending, so a genus transfer that changed it still matches
     (villosus / villosa, americanus / americana)."""
-    e = binom.split()[1]
-    return re.sub(r"(us|a|um|is|e|i|ii|ae)$", "", e) or e
+    e = binom.split()[1].replace("ii", "i")   # and a spelling variant: vacciniifolia / vaccinifolia
+    return re.sub(r"(us|a|um|is|e|i|ae)$", "", e) or e

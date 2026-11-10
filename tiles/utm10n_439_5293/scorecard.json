@@ -20,9 +20,9 @@
   "tile_registry": "species/registry.json"
  },
  "built_at": {
-  "manifest": "2026-11-09T04:42:36Z",
+  "manifest": "2026-11-10T21:11:44Z",
   "animals": "2026-11-09T04:00:43Z",
-  "tile_registry": "2026-11-06T02:59:15Z"
+  "tile_registry": "2026-11-10T21:11:44Z"
  },
  "layers": {
   "terrain": {
@@ -168,7 +168,7 @@
    },
    "detail": {
     "counts": {
-     "canopy": 16,
+     "canopy": 15,
      "shrub": 13,
      "ground": 20
     },
@@ -184,7 +184,6 @@
       "pinus_albicaulis",
       "populus_trichocarpa",
       "pseudotsuga_menziesii",
-      "quercus_douglasii",
       "salix_lasiandra",
       "sambucus_nigra_caerulea",
       "thuja_plicata",
@@ -230,26 +229,30 @@
      ]
     },
     "stand_ins": {
-     "recorded": false,
-     "entries": [],
-     "note": "not recorded by this build (no `stand_ins` key in species_mix.json); `substitutions` read instead"
+     "recorded": true,
+     "entries": []
     },
     "missing": {
-     "recorded": false,
-     "entries": [],
-     "note": "not recorded by this build (no `missing` key in species_mix.json)"
+     "recorded": true,
+     "entries": [
+      {
+       "species": "quercus_garryana",
+       "reason": "no library record, and no record of its genus or of its family (Fagaceae) and growth form belongs to this tile: left out, its share to the community's other species",
+       "cells": 2
+      }
+     ]
     },
     "substitutions": {
-     "quercus_garryana": "quercus_douglasii"
+     "quercus_garryana": null
     },
     "local_records_skipped": 4,
     "status": {
      "status_field": false,
-     "species": 47,
+     "species": 46,
      "introduced": 0,
      "restored": 0,
      "native": 0,
-     "status_unknown": 47,
+     "status_unknown": 46,
      "introduced_ids": [],
      "restored_ids": [],
      "note": "no status field in this build"
@@ -458,23 +461,11 @@
     },
     "generated_traits": [],
     "registry_levels": {
-     "0": 6,
+     "0": 16,
      "3": 41,
-     "4": 5,
-     "not known": 10
+     "4": 5
     },
-    "registry_level_not_known": [
-     "ambystoma_gracile",
-     "bonasa_umbellus",
-     "cardellina_pusilla",
-     "catharus_guttatus",
-     "chaetura_vauxi",
-     "loxia_curvirostra",
-     "patagioenas_fasciata",
-     "rana_aurora",
-     "selasphorus_rufus",
-     "thamnophis_ordinoides"
-    ],
+    "registry_level_not_known": [],
     "status": {
      "status_field": false,
      "species": 62,
@@ -493,13 +484,6 @@
      "text": "no fish species listed (none in the tile's GBIF records)",
      "share": null,
      "of": "the fish kind",
-     "kind": null
-    },
-    {
-     "layer": "animals",
-     "text": "10 listed animals are missing from the registry (level not known)",
-     "share": 0.1613,
-     "of": "listed species",
      "kind": null
     }
    ],
@@ -586,11 +570,11 @@
    "kind": "ruled"
   },
   {
-   "layer": "animals",
-   "text": "10 listed animals are missing from the registry (level not known)",
-   "share": 0.1613,
-   "of": "listed species",
-   "kind": null
+   "layer": "water",
+   "text": "10% of mapped stream length is not drawn",
+   "share": 0.1028,
+   "of": "stream length",
+   "kind": "blank"
   }
  ],
  "not_scored": {
