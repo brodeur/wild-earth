@@ -8838,3 +8838,107 @@ third of its canopy and manzanita, chamise and buckbrush as two thirds of its sh
     a ground layer. The tropical tiles' missing shrub and ground layers are untouched.
   - `ground_cards.py` rewrites a card shared by two tiles with the last tile's description, so the plants step of
     Lamar, Teton and the Grand Canyon each make the others' fingerprints stale.
+## 2026-11-10: the judge widened with held-out checks; baselines on Grand Canyon, Lamar and Yosemite (tools/probes/held_out.py, checklist.py, composition.py, e00.py, eye_photos.py, eye_capture.mjs, eye_level.py, judge_common.py, parks.json; tiles/*/judge/; docs/held-out-judge.md; tests/test_held_out.py, test_eye_photos.py; branch claude/wider-judge-d74c6c)
+
+Recommendation 3 of `docs/pipeline-review-2026-11-10.md`. The old judge compared colour from above with the imagery
+the ground is made from. The new checks compare a built tile with sources the pipeline never reads. How to run them
+and what each means: `docs/held-out-judge.md`. No pipeline or client code changed.
+
+- **One entry point.** `tools/probes/held_out.py <tile>` writes `tiles/<tile>/judge/held_out.json`: a `summary`,
+  and per check `source`, `licence`, `fetched`, `scores`, `errors`, `limits`. `--baseline` keeps
+  `held_out_baseline.json`; `--table` prints baseline beside now. Checks 1 and 2 need no browser.
+- **Check 1, species lists.** The tile's animals and plants against the park's NPSpecies checklist (public domain,
+  no key): precision, recall against the list's common native species, and named errors.
+- **Check 2, composition.** Drawn genus shares by layer against field plots (NPS Vegetation Mapping Inventory, CC0)
+  at Grand Canyon and Yosemite, and against Yellowstone's cover-type and habitat-type maps at Lamar. Bray-Curtis
+  per layer, the drawn share in genera the plots never record there, and named errors. `e00.py` reads the
+  Yellowstone coverages, since the venv has no vector reader.
+- **Check 3, eye level.** Openly licensed geotagged photos from Wikimedia Commons (chosen by rule, blind to the
+  game), the viewer's frame from the same point, and a side-by-side sheet. The number is weak by design; the sheets
+  are for a person. No iNaturalist photo passed the rules: they are close-ups.
+- **Check 4, structure against GEDI: deferred.** It needs an Earthdata login only Aaron can make. What it takes is
+  in every result and in the doc.
+- **The old judge stays, labelled.** `checks.colour_from_above` carries `held_out: false` and why.
+- **Reserved for the pipeline, not used to judge:** TreeMap, FIA BIGMAP, RCMAP, the National Wetlands Inventory.
+- **Baseline, main at `defcb5f`:**
+
+  | Tile | Animal precision | Animal recall (common) | Plant species on the park list | Drawn plants on the list, by share: canopy / shrub / ground | Bray-Curtis: canopy / shrub / ground | Eye-level distance | Colour from above (not held out) |
+  |---|---|---|---|---|---|---|---|
+  | Grand Canyon | 0.97 | 0.35 | 4 of 12 | 0.58 / 0.35 / none drawn | 0.22 / 1.00 / 1.00 | 0.18 (10 pairs) | 0.26 |
+  | Lamar | 0.96 | 0.42 | 36 of 37 | 1.00 / 1.00 / 1.00 | 0.07 / 0.48 / 0.67 | 0.21 (5 pairs) | 0.36 |
+  | Yosemite Valley | 0.97 | 0.52 | 67 of 85 | 1.00 / 0.91 / 0.85 | 0.30 / 0.55 / 0.84 | 0.29 (10 pairs) | no probe |
+
+- **What the baseline shows.**
+  - The animal lists are right about who is there (96-97%) and thin (35-52% of the parks' common native animals).
+  - Grand Canyon's plants are wrong: 42% of its drawn trees and 65% of its drawn shrubs are species the park does
+    not have.
+  - Lamar's canopy is close to the cover-type map; its forests have no understory shrubs.
+  - No tile has fish.
+  - The colour-from-above score ranks Lamar above Grand Canyon and sees none of this.
+- **The ten worst named errors.**
+  1. Grand Canyon draws no ground plants. The plots record 11% herb cover: galleta, slim tridens, bluegrass.
+  2. Grand Canyon: chamise is 25% of drawn shrubs. Not on the park list; the genus is not in any plot.
+  3. Grand Canyon: whiteleaf manzanita is 26% of drawn shrubs. Not on the park list.
+  4. Grand Canyon: gray pine is 22% of drawn trees. Not on the park list. The plots have Colorado pinyon.
+  5. Grand Canyon: Sierra juniper is 19% of drawn trees. Not on the park list. The plots have Utah juniper.
+  6. Grand Canyon: buckbrush is 13% of drawn shrubs. Not on the park list.
+  7. Grand Canyon: none of the plots' shrubs is drawn: blackbrush (19% of shrub cover), prickly pear (17%), joint
+     fir (11%), brittlebush (9%).
+  8. Fish are absent on all three tiles. The parks list 4, 13 and 3 native fish present, among them Yellowstone
+     cutthroat trout and mountain whitefish (abundant) at Lamar.
+  9. Introduced animals are listed as residents: elk and collared peccary at Grand Canyon, mountain goat at Lamar,
+     beaver at Yosemite (as the park lists it), starling on all three, wild turkey on two. Three of them spawn.
+  10. Lamar draws big sagebrush as its only shrub. The habitat map names snowberry on 26% and grouse whortleberry
+      and huckleberry on 20% of the shrub area.
+- **Also found.** Yosemite draws curl-leaf mountain mahogany (7% of shrubs, not on the park list) and five
+  introduced annual grasses and forbs (9% of the ground), and lacks bracken and sedges. Its eye-level sheets show
+  the valley's meadows drawn as forest: the camera stands in foliage where the photos have open grass and granite.
+- **Fairness.** The rules were fixed before the scores were read, with these corrections to the comparison itself,
+  none of which made a tile pass:
+  - Tree saplings in the plots' shrub strata are left out of the shrub reference.
+  - No foreign share is scored against maps that only name dominants.
+  - A park record with no occurrence yet is undecided, not an error.
+  - Recall counts species, not subspecies records.
+  - A table of published splits and lumps, and a table of genus names that changed.
+- **Limits, stated in each result.**
+  - A park is larger than a tile, so recall is an upper bound and `expected_absent` names candidates. Bison are
+    abundant in Grand Canyon National Park and belong on the North Rim, not this tile.
+  - A tile holds 12 to 14 plots, placed in typical stands, so river-bank types are over-counted.
+  - Genus-level Bray-Curtis is lenient: gray pine for pinyon is the right genus.
+  - The eye-level number moves with season, light, lens and GPS error.
+- **Not done.**
+  - Structure against GEDI (no login).
+  - Area-weighting of the plots: the inventory's accuracy-assessment points do not join to the plots without a
+    crosswalk, and the venv cannot read the mapping geodatabases.
+  - Yellowstone's fire-effects plots: the DataStore did not serve the file to a plain request.
+  - Teton, the Hoh and Olympus have species lists by the same code but no baseline taken.
+- **Tests.** `tests/test_held_out.py` (32) and `tests/test_eye_photos.py` (20), no network. The whole suite passes
+  except `test_model_acceptance`'s pronghorn test, which reads the git-ignored Meshy job folders that a worktree
+  lacks; nothing in this change touches it.
+
+## 2026-11-10: the species-list check scores against the rewilding baseline (tools/probes/checklist.py, held_out.py; tiles/*/judge/; docs/held-out-judge.md; tests/test_held_out.py; branch claude/wider-judge-d74c6c)
+
+Aaron decided the baseline today (the entry above on main, `docs/brief.md`): today's ecosystems, introduced species
+filtered out, natives that people removed restored and marked. The orchestrator asked the judge to score against it.
+
+- **Hits.** A drawn species the park list has as present and native. Also a drawn native the list tags Historical
+  and no longer has as present: it is listed under `restored_drawn`, since the tile should mark it restored and the
+  pipeline has no such field yet.
+- **Errors.** A drawn species the list marks non-native, by name (`non_native`; `summary.introduced_drawn`).
+- **Gaps, apart from ordinary misses.** A Historical native the tile lacks (`restorable_absent`;
+  `summary.restorable_absent` by group). `expected_absent` stays for common natives of today that are missing.
+- **Before this**, a Historical record matched by a drawn species was scored `not_present`, an error. No drawn
+  species on the three tiles met one, so the precision numbers did not move.
+- **Baselines re-taken** (`held_out_baseline.json`, main's tiles at `defcb5f`):
+
+  | Tile | Introduced species drawn | Natives to restore that the tile lacks |
+  |---|---|---|
+  | Grand Canyon | 3: elk, collared peccary, starling | 6: razorback sucker, bonytail, roundtail chub, Colorado pikeminnow, relict leopard frog, occult little brown bat |
+  | Lamar | 3: mountain goat, starling, wild turkey | 10: white-tailed ptarmigan, northern leopard frog, 8 plants |
+  | Yosemite Valley | 8: beaver, starling, wild turkey, 5 annual grasses and forbs | 14: grizzly bear, California condor, foothill yellow-legged frog, California red-legged frog, 10 plants |
+
+  No tile draws a restored native yet.
+- **A lower bound.** The Historical tag does not say why a species is gone, and a park list holds only the losses
+  someone recorded: Grand Canyon's has four fish and no wolf, grizzly or jaguar. The review's present-natural range
+  source (PHYLACINE) stays reserved as the pipeline's input for restoring; it is not used to judge.
+- **Tests.** `tests/test_held_out.py` now has 33.
