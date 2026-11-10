@@ -15,21 +15,31 @@ Matching   by binomial against the list's names and synonyms; then through SPLIT
            list was made, each entry a published taxonomic change); then, for animals, by the species epithet within the
            same family when exactly one record fits (a genus transfer: Picoides villosus / Leuconotopicus villosus);
            then, with the network, by GBIF's synonyms of the drawn name (GBIF's backbone used as a thesaurus only).
-Scores     precision per group = drawn species the list has as present and native / drawn species the list decides
+Baseline   The rewilding baseline (docs/brief.md, 2026-11-10): today's ecosystems; introduced species filtered out;
+           native species that people removed restored and marked as restored. So: a drawn species the list has as
+           present and native is a hit; a drawn species the list marks non-native is an error, named; a drawn native
+           the list tags Historical (gone from the park) is a hit, listed under restored_drawn (the tile should mark
+           it restored; the pipeline has no such field yet); a Historical native the tile lacks is a gap, named
+           restorable_absent, apart from the ordinary misses.
+Scores     precision per group = hits (present and native, or a restored native) / drawn species the list decides
            on (a record with no occurrence yet, or of unknown origin, is counted as `undecided` and left out). For
            plants also by share: the share of each layer's drawn plants whose species is present and native.
            recall per group = the list's present, native, Abundant or Common species (vagrants left out) that the
            tile lists / all of them. Plants have no abundance on the list: their recall is the composition check's job.
 Named      not_on_list (drawn, the park does not list it), non_native (listed as introduced), not_present (listed as
-errors     unconfirmed, historical, a false report or not in the park), expected_absent (a common native the tile
-           lacks), group_absent (a whole group the park has and the tile has none of: fish).
+errors     unconfirmed, a false report, not in the park, or a non-native of the past), expected_absent (a common
+           native the tile lacks), restorable_absent (a native gone from the park that the tile does not restore),
+           group_absent (a whole group the park has and the tile has none of: fish).
 Limits     A park is far larger than a 10 km tile. Precision is sound: a species the whole park lacks is wrong on a
            tile inside it (when the tile lies only partly in the park, `tile_in_park` says how much, and a species of
            the land outside can be right). Recall is an upper bound on what is missing: a species common in the park
            may live in a habitat the tile lacks (a North Rim squirrel on a South Rim tile), so expected_absent names
            candidates to check, and only a whole missing group is certain. The list reflects survey effort: a park's
            list can lack a real species (then not_on_list is the list's gap, rarely), and its abundance classes are
-           judgements. The list is of today's park: it does not restore extirpated species.
+           judgements. The Historical tag does not say why a species is gone (people or not), and a park list holds
+           only the losses someone recorded: Grand Canyon's has four fish and no wolf, grizzly or jaguar. So
+           restorable_absent is a lower bound on what the baseline asks to restore; a range source of the world
+           without people (PHYLACINE, reserved as a pipeline input) would give the rest.
 """
 from __future__ import annotations
 
@@ -45,7 +55,9 @@ BOUNDARY = ("https://services1.arcgis.com/fBc8EJBxQRMcHlei/arcgis/rest/services/
             "NPS_Land_Resources_Division_Boundary_and_Tract_Data_Service/FeatureServer/2/query")
 PRESENT = {"present", "probably present"}
 COMMON = {"abundant", "common"}
-RANK = {"present_native": 0, "present_unknown_origin": 1, "non_native": 2, "unreviewed": 3, "not_present": 4}
+RANK = {"present_native": 0, "historic_native": 1, "present_unknown_origin": 2, "non_native": 3, "unreviewed": 4,
+        "not_present": 5}
+HITS = ("present_native", "historic_native")             # right under the rewilding baseline
 UNDECIDED = ("present_unknown_origin", "unreviewed")     # the list makes no statement: left out of precision
 MAX_NAMED = 40
 # Species split from (or lumped into) another since the park lists were compiled: the drawn name on the left is the
@@ -65,16 +77,21 @@ def _s(v) -> str:
 
 
 def status(rec: dict) -> str:
-    """present_native | present_unknown_origin | non_native | unreviewed | not_present, from a NPSpecies record.
-    unreviewed: the record has no occurrence yet (the list has the name and has not said whether it is in the park)."""
+    """present_native | historic_native | present_unknown_origin | non_native | unreviewed | not_present, from a
+    NPSpecies record. historic_native: a native the list tags Historical and no longer has as present (gone from the
+    park): under the rewilding baseline it is to be restored. unreviewed: the record has no occurrence yet (the list
+    has the name and has not said whether it is in the park)."""
     tags = _s(rec.get("OccurrenceTags")).lower()
-    if "false report" in tags or "historical" in tags:
+    nat = _s(rec.get("Nativeness")).lower()
+    here = _s(rec.get("Occurrence")).lower() in PRESENT
+    if "false report" in tags:
         return "not_present"
+    if ("historical" in tags or "extirpated" in tags) and not here:
+        return "historic_native" if nat == "native" else "not_present"
     if not _s(rec.get("Occurrence")):
         return "unreviewed"
-    if _s(rec.get("Occurrence")).lower() not in PRESENT:
+    if not here:
         return "not_present"
-    nat = _s(rec.get("Nativeness")).lower()
     return "present_native" if nat == "native" else "non_native" if nat == "non-native" else "present_unknown_origin"
 
 
@@ -132,8 +149,9 @@ def score_group(drawn: list, records: list, synonyms=None, recall=True) -> dict:
     records: the park's NPSpecies records of that group."""
     idx = index(records)
     genera = {jc.genus(r.get("ScientificName")) for r in records}
-    classes = {"present_native": 0, "present_unknown_origin": 0, "non_native": 0, "unreviewed": 0, "not_present": 0,
-               "not_on_list": 0}
+    classes = {"present_native": 0, "historic_native": 0, "present_unknown_origin": 0, "non_native": 0,
+               "unreviewed": 0, "not_present": 0, "not_on_list": 0}
+    restored = []
     errors, matched, rows = [], set(), []
     for d in drawn:
         rec, how = match([d["name"]] + list(d.get("alt") or []), d.get("family"), idx, records, synonyms)
@@ -148,7 +166,10 @@ def score_group(drawn: list, records: list, synonyms=None, recall=True) -> dict:
         classes[st] += 1
         matched.add(jc.binomial(rec.get("ScientificName")) or rec["Id"])
         rows.append((d, st))
-        if st == "non_native":
+        if st == "historic_native":
+            restored.append({"species": d["name"], **extra, "listed_as": rec.get("ScientificName"),
+                             "occurrence_tags": rec.get("OccurrenceTags")})
+        elif st == "non_native":
             errors.append({"kind": "non_native", "species": d["name"], **extra, "listed_as": rec.get("ScientificName"),
                            "nativeness_tags": rec.get("NativenessTags") or None})
         elif st == "not_present":
@@ -157,8 +178,23 @@ def score_group(drawn: list, records: list, synonyms=None, recall=True) -> dict:
                            "occurrence_tags": rec.get("OccurrenceTags") or None})
     n = len(drawn)
     judged = n - sum(classes[k] for k in UNDECIDED)
+    hits = sum(classes[k] for k in HITS)
     out = {"drawn": n, "judged": judged, "on_list_present_native": classes["present_native"],
-           "precision": round(classes["present_native"] / judged, 4) if judged else None, "classes": classes}
+           "restored_drawn": restored, "hits": hits,
+           "precision": round(hits / judged, 4) if judged else None, "classes": classes}
+    # the baseline's gaps: natives the list has as gone from the park (Historical) that the tile does not draw.
+    # Reported apart from the ordinary misses: these need restoring, not just listing
+    gone: dict = {}
+    for r in records:
+        if status(r) == "historic_native":
+            gone[jc.binomial(r.get("ScientificName")) or r["Id"]] = r
+    for k, r in sorted(gone.items(), key=lambda kv: _s(kv[1].get("ScientificName"))):
+        if k not in matched:
+            errors.append({"kind": "restorable_absent", "species": r.get("ScientificName"),
+                           "common": _s(r.get("CommonNames")).split(",")[0] or None,
+                           "occurrence": r.get("Occurrence"), "occurrence_tags": r.get("OccurrenceTags")})
+    out["list_historic_native"] = len(gone)
+    out["restorable_absent"] = sum(1 for k in gone if k not in matched)
     if recall:
         # by species: a park's subspecies records (three juncos) are one species to find
         by_species: dict = {}
@@ -202,24 +238,27 @@ def score(drawn: dict, park: dict, synonyms=None) -> dict:
             for d, st in rows:
                 lay = by_layer.setdefault(d.get("layer") or "?", [0.0, 0.0])
                 lay[0] += (d.get("drawn_share") or 0.0) if st not in UNDECIDED else 0.0
-                lay[1] += (d.get("drawn_share") or 0.0) if st == "present_native" else 0.0
+                lay[1] += (d.get("drawn_share") or 0.0) if st in HITS else 0.0
             r["precision_by_share"] = {k: round(v[1] / v[0], 4) if v[0] else None for k, v in by_layer.items()}
         if g != "plant":
             sp = [(d, st) for d, st in rows if d.get("spawned") and st not in UNDECIDED]
             r["spawned"] = len(sp)
-            r["spawned_precision"] = round(sum(st == "present_native" for _, st in sp) / len(sp), 4) if sp else None
+            r["spawned_precision"] = round(sum(st in HITS for _, st in sp) / len(sp), 4) if sp else None
         errors += [dict(e, group=g) for e in r.pop("errors")]
         groups[g] = r
     animals = [g for g in groups if g != "plant" and groups[g]["drawn"]]
     n = sum(groups[g]["judged"] for g in animals)
-    ok = sum(groups[g]["on_list_present_native"] for g in animals)
+    ok = sum(groups[g]["hits"] for g in animals)
     ref = sum(groups[g].get("list_common_native") or 0 for g in groups if g != "plant")
     got = sum(groups[g].get("of_them_drawn") or 0 for g in groups if g != "plant")
     return {"scores": {"animal_precision": round(ok / n, 4) if n else None,
                        "animal_recall_common": round(got / ref, 4) if ref else None,
                        "plant_precision": groups.get("plant", {}).get("precision"),
                        "plant_precision_by_share": groups.get("plant", {}).get("precision_by_share"),
-                       "groups_absent": [e["group"] for e in errors if e["kind"] == "group_absent"]},
+                       "groups_absent": [e["group"] for e in errors if e["kind"] == "group_absent"],
+                       "introduced_drawn": sum(1 for e in errors if e["kind"] == "non_native"),
+                       "restorable_absent": {g: v["restorable_absent"] for g, v in groups.items() if v["restorable_absent"]},
+                       "restored_drawn": sum(len(v["restored_drawn"]) for v in groups.values())},
             "groups": groups, "errors": errors}
 
 
@@ -328,8 +367,11 @@ def run(tile: str, refresh=False, offline=False) -> dict:
             "attribution": "National Park Service, NPSpecies - The National Park Service biodiversity database (IRMA)",
             "fetched": when, "park": unit, "tile_in_park": None if offline else tile_in_park(tile, unit, refresh),
             "list_sizes": {g: len(v) for g, v in park.items()}, "not_judged": not_judged,
-            "measure": "precision = drawn species the list has as present and native / drawn; recall = the list's "
-                       "present, native, Abundant or Common species that the tile lists / all of them",
+            "baseline": "the rewilding baseline (docs/brief.md, 2026-11-10): introduced species are errors; natives "
+                        "the list has as gone from the park are to be restored (drawn: a hit; lacking: a gap)",
+            "measure": "precision = drawn species the list has as present and native, or as a native gone from the "
+                       "park (restored) / drawn species the list decides on; recall = the list's present, native, "
+                       "Abundant or Common species that the tile lists / all of them",
             **res,
             "limits": "A park is larger than a 10 km tile: precision is sound for a tile inside the park; recall is "
                       "an upper bound on what is missing (a species common in the park may live outside the tile's "

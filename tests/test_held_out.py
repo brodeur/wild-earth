@@ -54,7 +54,10 @@ class Checklist(unittest.TestCase):
     def test_status(self):
         self.assertEqual(checklist.status(self.PARK[0]), "present_native")
         self.assertEqual(checklist.status(self.PARK[1]), "non_native")
-        self.assertEqual(checklist.status(self.PARK[3]), "not_present")
+        self.assertEqual(checklist.status(self.PARK[3]), "historic_native")       # a native gone from the park
+        self.assertEqual(checklist.status(rec(9, "X y", occ="Not In Park", nat="Non-native", otags="Historical")), "not_present")
+        self.assertEqual(checklist.status(rec(9, "X y", occ="Probably Present", otags="Historical")), "present_native")
+        self.assertEqual(checklist.status(rec(9, "X y", occ="Not In Park")), "not_present")
         self.assertEqual(checklist.status(rec(9, "X y", occ="Present", otags="False Report")), "not_present")
         self.assertEqual(checklist.status(rec(9, "X y", nat="Unknown")), "present_unknown_origin")
         self.assertEqual(checklist.status(rec(9, "X y", occ=None)), "unreviewed")
@@ -79,14 +82,18 @@ class Checklist(unittest.TestCase):
                  {"name": "Cervus canadensis", "id": "cervus_canadensis", "spawned": True},
                  {"name": "Ursus arctos", "id": "ursus_arctos"},
                  {"name": "Sciurus griseus", "id": "sciurus_griseus"}]
-        r = checklist.score_group(drawn, self.PARK)
-        self.assertEqual(r["drawn"], 4)
-        self.assertEqual(r["precision"], 0.25)
-        self.assertEqual(r["classes"], {"present_native": 1, "present_unknown_origin": 0, "non_native": 1,
-                                        "unreviewed": 0, "not_present": 1, "not_on_list": 1})
+        park = self.PARK + [rec(11, "Lynx canadensis", occ="Unconfirmed", fam="Felidae")]
+        r = checklist.score_group(drawn + [{"name": "Lynx canadensis", "id": "lynx_canadensis"}], park)
+        self.assertEqual(r["drawn"], 5)
+        self.assertEqual(r["precision"], 0.4)                     # the squirrel, and the bear as a restored native
+        self.assertEqual(r["classes"], {"present_native": 1, "historic_native": 1, "present_unknown_origin": 0,
+                                        "non_native": 1, "unreviewed": 0, "not_present": 1, "not_on_list": 1})
+        self.assertEqual([x["species"] for x in r["restored_drawn"]], ["Ursus arctos"])
+        self.assertEqual(r["restorable_absent"], 0)
         kinds = {(e["kind"], e["species"]) for e in r["errors"]}
         self.assertIn(("non_native", "Cervus canadensis"), kinds)
-        self.assertIn(("not_present", "Ursus arctos"), kinds)
+        self.assertIn(("not_present", "Lynx canadensis"), kinds)
+        self.assertNotIn(("not_present", "Ursus arctos"), kinds)
         self.assertIn(("not_on_list", "Sciurus griseus"), kinds)
         self.assertTrue(next(e for e in r["errors"] if e["kind"] == "not_on_list")["genus_on_list"])
         # recall: the list's present, native, Abundant or Common species, vagrants left out: ids 1, 5, 6, 7
@@ -110,6 +117,18 @@ class Checklist(unittest.TestCase):
                                    {"name": "Junco hyemalis", "family": "Passerellidae"}], park)
         self.assertEqual((r["judged"], r["precision"]), (2, 1.0))
         self.assertEqual((r["list_common_native"], r["of_them_drawn"], r["expected_absent"]), (2, 2, 0))
+
+    def test_a_native_gone_from_the_park_and_not_drawn_is_a_gap_of_its_own(self):
+        park = [rec(1, "Gila cypha", fam="Cyprinidae"),
+                rec(2, "Ptychocheilus lucius", occ="Not In Park", ab=None, fam="Cyprinidae", otags="Historical",
+                    common="Colorado Pikeminnow"),
+                rec(3, "Salmo trutta", occ="Not In Park", nat="Non-native", otags="Historical", fam="Salmonidae")]
+        r = checklist.score_group([{"name": "Gila cypha"}], park)
+        gaps = [e for e in r["errors"] if e["kind"] == "restorable_absent"]
+        self.assertEqual([(e["species"], e["common"]) for e in gaps], [("Ptychocheilus lucius", "Colorado Pikeminnow")])
+        self.assertEqual((r["list_historic_native"], r["restorable_absent"], r["expected_absent"]), (1, 1, 0))
+        s = checklist.score({"fish": [{"name": "Gila cypha"}]}, {"fish": park})["scores"]
+        self.assertEqual((s["restorable_absent"], s["introduced_drawn"], s["restored_drawn"]), ({"fish": 1}, 0, 0))
 
     def test_a_group_with_nothing_drawn_is_named(self):
         r = checklist.score_group([], [rec(1, "Gila cypha", fam="Cyprinidae", common="Humpback Chub")])

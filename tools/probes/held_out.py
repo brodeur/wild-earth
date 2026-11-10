@@ -118,6 +118,8 @@ def summary(res: dict) -> dict:
     return {
         "animal_precision": sp.get("animal_precision"), "animal_recall_common": sp.get("animal_recall_common"),
         "plant_precision": sp.get("plant_precision"), "groups_absent": sp.get("groups_absent"),
+        "introduced_drawn": sp.get("introduced_drawn"), "restorable_absent": sp.get("restorable_absent"),
+        "restored_drawn": sp.get("restored_drawn"),
         "plant_precision_by_share": sp.get("plant_precision_by_share"),
         "composition_bray_curtis": co.get("bray_curtis"), "composition_foreign_share": co.get("foreign_share"),
         "eye_level_distance": ey.get("distance_mean"), "eye_level_pairs": ey.get("pairs"),
@@ -128,7 +130,8 @@ def summary(res: dict) -> dict:
 
 def table(tiles: list) -> str:
     rows = []
-    head = ["tile", "when", "animal precision", "animal recall (common)", "plant precision", "plants by share c/s/g",
+    head = ["tile", "when", "animal precision", "animal recall (common)", "introduced drawn", "natives to restore, lacking",
+            "plant precision", "plants by share c/s/g",
             "Bray-Curtis c/s/g", "foreign share c/s/g", "eye-level distance", "colour from above (not held out)"]
 
     def f(v):
@@ -144,7 +147,9 @@ def table(tiles: list) -> str:
             r = json.loads(p.read_text())
             s = r.get("summary") or summary(r)
             rows.append([f"{r.get('name') or t}", f"{label} {r['at'][:10]}", f(s["animal_precision"]),
-                         f(s["animal_recall_common"]), f(s["plant_precision"]), tri(s["plant_precision_by_share"]),
+                         f(s["animal_recall_common"]), f(s.get("introduced_drawn")),
+                         f(sum((s.get("restorable_absent") or {}).values()) if s.get("restorable_absent") is not None else None),
+                         f(s["plant_precision"]), tri(s["plant_precision_by_share"]),
                          tri(s["composition_bray_curtis"]), tri(s["composition_foreign_share"]),
                          f(s["eye_level_distance"]), f(s["colour_from_above_overlap"])])
     out = ["| " + " | ".join(head) + " |", "|" + "---|" * len(head)]

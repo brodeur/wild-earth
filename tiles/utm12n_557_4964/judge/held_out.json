@@ -2,7 +2,7 @@
  "format": 1,
  "tile": "utm12n_557_4964",
  "name": "Lamar Valley",
- "at": "2026-11-10T21:05:41Z",
+ "at": "2026-11-10T21:11:53Z",
  "doc": "docs/held-out-judge.md",
  "checks": {
   "species_lists": {
@@ -24,7 +24,8 @@
     "plant": 1444
    },
    "not_judged": {},
-   "measure": "precision = drawn species the list has as present and native / drawn; recall = the list's present, native, Abundant or Common species that the tile lists / all of them",
+   "baseline": "the rewilding baseline (docs/brief.md, 2026-11-10): introduced species are errors; natives the list has as gone from the park are to be restored (drawn: a hit; lacking: a gap)",
+   "measure": "precision = drawn species the list has as present and native, or as a native gone from the park (restored) / drawn species the list decides on; recall = the list's present, native, Abundant or Common species that the tile lists / all of them",
    "scores": {
     "animal_precision": 0.9615,
     "animal_recall_common": 0.4186,
@@ -36,22 +37,34 @@
     },
     "groups_absent": [
      "fish"
-    ]
+    ],
+    "introduced_drawn": 3,
+    "restorable_absent": {
+     "bird": 1,
+     "amphibian": 1,
+     "plant": 8
+    },
+    "restored_drawn": 0
    },
    "groups": {
     "mammal": {
      "drawn": 25,
      "judged": 24,
      "on_list_present_native": 23,
+     "restored_drawn": [],
+     "hits": 23,
      "precision": 0.9583,
      "classes": {
       "present_native": 23,
+      "historic_native": 0,
       "present_unknown_origin": 1,
       "non_native": 1,
       "unreviewed": 0,
       "not_present": 0,
       "not_on_list": 0
      },
+     "list_historic_native": 0,
+     "restorable_absent": 0,
      "list_common_native": 35,
      "of_them_drawn": 18,
      "recall": 0.5143,
@@ -64,15 +77,20 @@
      "drawn": 50,
      "judged": 50,
      "on_list_present_native": 48,
+     "restored_drawn": [],
+     "hits": 48,
      "precision": 0.96,
      "classes": {
       "present_native": 48,
+      "historic_native": 0,
       "present_unknown_origin": 0,
       "non_native": 2,
       "unreviewed": 0,
       "not_present": 0,
       "not_on_list": 0
      },
+     "list_historic_native": 1,
+     "restorable_absent": 1,
      "list_common_native": 78,
      "of_them_drawn": 33,
      "recall": 0.4231,
@@ -85,15 +103,20 @@
      "drawn": 1,
      "judged": 1,
      "on_list_present_native": 1,
+     "restored_drawn": [],
+     "hits": 1,
      "precision": 1.0,
      "classes": {
       "present_native": 1,
+      "historic_native": 0,
       "present_unknown_origin": 0,
       "non_native": 0,
       "unreviewed": 0,
       "not_present": 0,
       "not_on_list": 0
      },
+     "list_historic_native": 0,
+     "restorable_absent": 0,
      "list_common_native": 3,
      "of_them_drawn": 1,
      "recall": 0.3333,
@@ -106,15 +129,20 @@
      "drawn": 3,
      "judged": 3,
      "on_list_present_native": 3,
+     "restored_drawn": [],
+     "hits": 3,
      "precision": 1.0,
      "classes": {
       "present_native": 3,
+      "historic_native": 0,
       "present_unknown_origin": 0,
       "non_native": 0,
       "unreviewed": 0,
       "not_present": 0,
       "not_on_list": 0
      },
+     "list_historic_native": 1,
+     "restorable_absent": 1,
      "list_common_native": 3,
      "of_them_drawn": 2,
      "recall": 0.6667,
@@ -127,15 +155,20 @@
      "drawn": 0,
      "judged": 0,
      "on_list_present_native": 0,
+     "restored_drawn": [],
+     "hits": 0,
      "precision": null,
      "classes": {
       "present_native": 0,
+      "historic_native": 0,
       "present_unknown_origin": 0,
       "non_native": 0,
       "unreviewed": 0,
       "not_present": 0,
       "not_on_list": 0
      },
+     "list_historic_native": 0,
+     "restorable_absent": 0,
      "list_common_native": 10,
      "of_them_drawn": 0,
      "recall": 0.0,
@@ -148,15 +181,20 @@
      "drawn": 37,
      "judged": 37,
      "on_list_present_native": 36,
+     "restored_drawn": [],
+     "hits": 36,
      "precision": 0.973,
      "classes": {
       "present_native": 36,
+      "historic_native": 0,
       "present_unknown_origin": 0,
       "non_native": 0,
       "unreviewed": 0,
       "not_present": 0,
       "not_on_list": 1
      },
+     "list_historic_native": 8,
+     "restorable_absent": 8,
      "precision_by_share": {
       "canopy": 0.9996,
       "shrub": 1.0,
@@ -312,6 +350,14 @@
      "spawned": false,
      "listed_as": "Meleagris gallopavo",
      "nativeness_tags": null,
+     "group": "bird"
+    },
+    {
+     "kind": "restorable_absent",
+     "species": "Lagopus leucura",
+     "common": "White-tailed Ptarmigan",
+     "occurrence": "Not In Park",
+     "occurrence_tags": "Historical",
      "group": "bird"
     },
     {
@@ -609,6 +655,14 @@
      "group": "reptile"
     },
     {
+     "kind": "restorable_absent",
+     "species": "Lithobates pipiens",
+     "common": "Northern Leopard Frog",
+     "occurrence": "Unconfirmed",
+     "occurrence_tags": "Historical",
+     "group": "amphibian"
+    },
+    {
      "kind": "expected_absent",
      "species": "Pseudacris maculata",
      "common": "Boreal Chorus Frog",
@@ -706,6 +760,70 @@
      "layer": "canopy",
      "drawn_share": 0.0004,
      "genus_on_list": true,
+     "group": "plant"
+    },
+    {
+     "kind": "restorable_absent",
+     "species": "Agrostis oregonensis",
+     "common": "Oregon bentgrass",
+     "occurrence": "Not In Park",
+     "occurrence_tags": "Historical",
+     "group": "plant"
+    },
+    {
+     "kind": "restorable_absent",
+     "species": "Androsace chamaejasme var. carinata",
+     "common": null,
+     "occurrence": "Not In Park",
+     "occurrence_tags": "Historical",
+     "group": "plant"
+    },
+    {
+     "kind": "restorable_absent",
+     "species": "Botrychium virginianum",
+     "common": "common grapefern",
+     "occurrence": "Not In Park",
+     "occurrence_tags": "Historical",
+     "group": "plant"
+    },
+    {
+     "kind": "restorable_absent",
+     "species": "Carex pensylvanica var. digyna",
+     "common": null,
+     "occurrence": "Not In Park",
+     "occurrence_tags": "Historical",
+     "group": "plant"
+    },
+    {
+     "kind": "restorable_absent",
+     "species": "Draba reptans",
+     "common": "Carolina draba",
+     "occurrence": "Not In Park",
+     "occurrence_tags": "Historical",
+     "group": "plant"
+    },
+    {
+     "kind": "restorable_absent",
+     "species": "Lysichiton americanus",
+     "common": "American skunkcabbage",
+     "occurrence": "Not In Park",
+     "occurrence_tags": "Historical",
+     "group": "plant"
+    },
+    {
+     "kind": "restorable_absent",
+     "species": "Mimulus rubellus",
+     "common": "little redstem monkeyflower",
+     "occurrence": "Not In Park",
+     "occurrence_tags": "Historical",
+     "group": "plant"
+    },
+    {
+     "kind": "restorable_absent",
+     "species": "Monroa squarrosa",
+     "common": "false buffalo grass",
+     "occurrence": "Not In Park",
+     "occurrence_tags": "Historical",
      "group": "plant"
     }
    ],
@@ -1281,6 +1399,13 @@
   "groups_absent": [
    "fish"
   ],
+  "introduced_drawn": 3,
+  "restorable_absent": {
+   "bird": 1,
+   "amphibian": 1,
+   "plant": 8
+  },
+  "restored_drawn": 0,
   "plant_precision_by_share": {
    "canopy": 0.9996,
    "shrub": 1.0,
@@ -1299,6 +1424,6 @@
   "eye_level_distance": 0.2069,
   "eye_level_pairs": 5,
   "colour_from_above_overlap": 0.36,
-  "named_errors": 78
+  "named_errors": 88
  }
 }

@@ -2,7 +2,7 @@
  "format": 1,
  "tile": "utm12n_396_3988",
  "name": "Grand Canyon (South Rim to the river)",
- "at": "2026-11-10T21:05:35Z",
+ "at": "2026-11-10T21:11:52Z",
  "doc": "docs/held-out-judge.md",
  "checks": {
   "species_lists": {
@@ -26,7 +26,8 @@
    "not_judged": {
     "invertebrate": 2
    },
-   "measure": "precision = drawn species the list has as present and native / drawn; recall = the list's present, native, Abundant or Common species that the tile lists / all of them",
+   "baseline": "the rewilding baseline (docs/brief.md, 2026-11-10): introduced species are errors; natives the list has as gone from the park are to be restored (drawn: a hit; lacking: a gap)",
+   "measure": "precision = drawn species the list has as present and native, or as a native gone from the park (restored) / drawn species the list decides on; recall = the list's present, native, Abundant or Common species that the tile lists / all of them",
    "scores": {
     "animal_precision": 0.9651,
     "animal_recall_common": 0.3523,
@@ -37,22 +38,34 @@
     },
     "groups_absent": [
      "fish"
-    ]
+    ],
+    "introduced_drawn": 3,
+    "restorable_absent": {
+     "mammal": 1,
+     "amphibian": 1,
+     "fish": 4
+    },
+    "restored_drawn": 0
    },
    "groups": {
     "mammal": {
      "drawn": 25,
      "judged": 25,
      "on_list_present_native": 23,
+     "restored_drawn": [],
+     "hits": 23,
      "precision": 0.92,
      "classes": {
       "present_native": 23,
+      "historic_native": 0,
       "present_unknown_origin": 0,
       "non_native": 2,
       "unreviewed": 0,
       "not_present": 0,
       "not_on_list": 0
      },
+     "list_historic_native": 1,
+     "restorable_absent": 1,
      "list_common_native": 41,
      "of_them_drawn": 18,
      "recall": 0.439,
@@ -65,15 +78,20 @@
      "drawn": 53,
      "judged": 53,
      "on_list_present_native": 52,
+     "restored_drawn": [],
+     "hits": 52,
      "precision": 0.9811,
      "classes": {
       "present_native": 52,
+      "historic_native": 0,
       "present_unknown_origin": 0,
       "non_native": 1,
       "unreviewed": 0,
       "not_present": 0,
       "not_on_list": 0
      },
+     "list_historic_native": 0,
+     "restorable_absent": 0,
      "list_common_native": 114,
      "of_them_drawn": 36,
      "recall": 0.3158,
@@ -86,15 +104,20 @@
      "drawn": 5,
      "judged": 4,
      "on_list_present_native": 4,
+     "restored_drawn": [],
+     "hits": 4,
      "precision": 1.0,
      "classes": {
       "present_native": 4,
+      "historic_native": 0,
       "present_unknown_origin": 1,
       "non_native": 0,
       "unreviewed": 0,
       "not_present": 0,
       "not_on_list": 0
      },
+     "list_historic_native": 0,
+     "restorable_absent": 0,
      "list_common_native": 15,
      "of_them_drawn": 5,
      "recall": 0.3333,
@@ -107,19 +130,24 @@
      "drawn": 4,
      "judged": 4,
      "on_list_present_native": 4,
+     "restored_drawn": [],
+     "hits": 4,
      "precision": 1.0,
      "classes": {
       "present_native": 4,
+      "historic_native": 0,
       "present_unknown_origin": 0,
       "non_native": 0,
       "unreviewed": 0,
       "not_present": 0,
       "not_on_list": 0
      },
+     "list_historic_native": 1,
+     "restorable_absent": 1,
      "list_common_native": 3,
      "of_them_drawn": 3,
      "recall": 1.0,
-     "list_present_native": 10,
+     "list_present_native": 11,
      "expected_absent": 0,
      "spawned": 1,
      "spawned_precision": 1.0
@@ -128,15 +156,20 @@
      "drawn": 0,
      "judged": 0,
      "on_list_present_native": 0,
+     "restored_drawn": [],
+     "hits": 0,
      "precision": null,
      "classes": {
       "present_native": 0,
+      "historic_native": 0,
       "present_unknown_origin": 0,
       "non_native": 0,
       "unreviewed": 0,
       "not_present": 0,
       "not_on_list": 0
      },
+     "list_historic_native": 4,
+     "restorable_absent": 4,
      "list_common_native": 3,
      "of_them_drawn": 0,
      "recall": 0.0,
@@ -149,15 +182,20 @@
      "drawn": 12,
      "judged": 12,
      "on_list_present_native": 4,
+     "restored_drawn": [],
+     "hits": 4,
      "precision": 0.3333,
      "classes": {
       "present_native": 4,
+      "historic_native": 0,
       "present_unknown_origin": 0,
       "non_native": 0,
       "unreviewed": 0,
       "not_present": 0,
       "not_on_list": 8
      },
+     "list_historic_native": 0,
+     "restorable_absent": 0,
      "precision_by_share": {
       "canopy": 0.5831,
       "shrub": 0.3474
@@ -183,6 +221,14 @@
      "spawned": true,
      "listed_as": "Pecari tajacu",
      "nativeness_tags": null,
+     "group": "mammal"
+    },
+    {
+     "kind": "restorable_absent",
+     "species": "Myotis occultus",
+     "common": "occult little brown bat",
+     "occurrence": "Unconfirmed",
+     "occurrence_tags": "Adjacent, Historical",
      "group": "mammal"
     },
     {
@@ -707,6 +753,14 @@
      "group": "reptile"
     },
     {
+     "kind": "restorable_absent",
+     "species": "Lithobates onca",
+     "common": "Relict Leopard Frog",
+     "occurrence": "Unconfirmed",
+     "occurrence_tags": "Historical",
+     "group": "amphibian"
+    },
+    {
      "kind": "group_absent",
      "list_present_native": 4,
      "list_common_native": 3,
@@ -715,6 +769,38 @@
       "Flannelmouth Sucker",
       "Speckled Dace"
      ],
+     "group": "fish"
+    },
+    {
+     "kind": "restorable_absent",
+     "species": "Gila elegans",
+     "common": "Bonytail",
+     "occurrence": "Not In Park",
+     "occurrence_tags": "Historical",
+     "group": "fish"
+    },
+    {
+     "kind": "restorable_absent",
+     "species": "Gila robusta",
+     "common": "Roundtail Chub",
+     "occurrence": "Not In Park",
+     "occurrence_tags": "Historical",
+     "group": "fish"
+    },
+    {
+     "kind": "restorable_absent",
+     "species": "Ptychocheilus lucius",
+     "common": "Colorado Pikeminnow",
+     "occurrence": "Not In Park",
+     "occurrence_tags": "Historical",
+     "group": "fish"
+    },
+    {
+     "kind": "restorable_absent",
+     "species": "Xyrauchen texanus",
+     "common": "Razorback Sucker",
+     "occurrence": "Not In Park",
+     "occurrence_tags": "Historical",
      "group": "fish"
     },
     {
@@ -1840,6 +1926,13 @@
   "groups_absent": [
    "fish"
   ],
+  "introduced_drawn": 3,
+  "restorable_absent": {
+   "mammal": 1,
+   "amphibian": 1,
+   "fish": 4
+  },
+  "restored_drawn": 0,
   "plant_precision_by_share": {
    "canopy": 0.5831,
    "shrub": 0.3474
@@ -1857,6 +1950,6 @@
   "eye_level_distance": 0.177,
   "eye_level_pairs": 10,
   "colour_from_above_overlap": 0.26,
-  "named_errors": 100
+  "named_errors": 106
  }
 }

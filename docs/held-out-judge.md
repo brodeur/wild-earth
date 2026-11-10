@@ -44,19 +44,31 @@ arch -arm64 .venv/bin/python -I tools/probes/held_out.py --table                
   nativeness, abundance. Public domain, open REST service, no key.
 - **Drawn.** Animals with `listed` in `species/animals.json` (marked `spawned` when the client has a slot for them).
   Plants with a share above zero in `client/species_mix.json`.
+- **Scored against the rewilding baseline** (`brief.md`, 2026-11-10: today's ecosystems, introduced species out,
+  natives that people removed restored and marked).
+  - A drawn species the list has as present and native is a hit.
+  - A drawn species the list marks non-native is an error, named (`non_native`; `summary.introduced_drawn` counts
+    them).
+  - A drawn native the list tags Historical, gone from the park, is a hit, listed under `restored_drawn`. The tile
+    should mark it restored; the pipeline has no such field yet.
+  - A Historical native the tile lacks is a gap, named `restorable_absent`, apart from the ordinary misses
+    (`summary.restorable_absent` by group).
 - **Scores.**
-  - Precision per group: drawn species the list has as present and native, over the drawn species the list decides
+  - Precision per group: hits over the drawn species the list decides
     on. A record with no occurrence yet, or of unknown origin, is counted as undecided and left out. For plants also
     by share of the plants drawn in each layer.
   - Recall per group: the list's present, native, Abundant or Common species (vagrants left out) that the tile lists.
     Counted by species, so a park's subspecies records are one species to find. Plants carry no abundance on the
     list, so their recall is the composition check's job.
-- **Named errors.** `not_on_list`, `non_native`, `not_present` (unconfirmed, historical, a false report),
-  `expected_absent`, `group_absent` (fish).
+- **Named errors.** `not_on_list`, `non_native`, `not_present` (unconfirmed, a false report, not in the park),
+  `expected_absent`, `restorable_absent`, `group_absent` (fish).
 - **What it can show.** Precision is sound for a tile inside the park: a species the whole park lacks is wrong there.
 - **What it cannot.** A park is far larger than a 10 km tile, so recall is an upper bound on what is missing. A
   species common in the park may live in a habitat the tile lacks. `expected_absent` names candidates; only a whole
   missing group is certain. Invertebrates are not judged.
+- **The restoration gaps are a lower bound.** The Historical tag does not say why a species is gone, and a park
+  list holds only the losses someone recorded: Grand Canyon's has four fish and no wolf, grizzly or jaguar. A range
+  source of the world without people (PHYLACINE, reserved as a pipeline input) would give the rest.
 - **Names.** Matching is by binomial and the list's synonyms, then a short table of published splits and lumps
   (`SPLITS`), then the epithet within the same family, then GBIF's synonyms. An animal reported `not_on_list` with
   `genus_on_list` true deserves a look for a taxonomic change before it is believed.

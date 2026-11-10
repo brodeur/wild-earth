@@ -8811,3 +8811,30 @@ and what each means: `docs/held-out-judge.md`. No pipeline or client code change
 - **Tests.** `tests/test_held_out.py` (32) and `tests/test_eye_photos.py` (20), no network. The whole suite passes
   except `test_model_acceptance`'s pronghorn test, which reads the git-ignored Meshy job folders that a worktree
   lacks; nothing in this change touches it.
+
+## 2026-11-10: the species-list check scores against the rewilding baseline (tools/probes/checklist.py, held_out.py; tiles/*/judge/; docs/held-out-judge.md; tests/test_held_out.py; branch claude/wider-judge-d74c6c)
+
+Aaron decided the baseline today (the entry above on main, `docs/brief.md`): today's ecosystems, introduced species
+filtered out, natives that people removed restored and marked. The orchestrator asked the judge to score against it.
+
+- **Hits.** A drawn species the park list has as present and native. Also a drawn native the list tags Historical
+  and no longer has as present: it is listed under `restored_drawn`, since the tile should mark it restored and the
+  pipeline has no such field yet.
+- **Errors.** A drawn species the list marks non-native, by name (`non_native`; `summary.introduced_drawn`).
+- **Gaps, apart from ordinary misses.** A Historical native the tile lacks (`restorable_absent`;
+  `summary.restorable_absent` by group). `expected_absent` stays for common natives of today that are missing.
+- **Before this**, a Historical record matched by a drawn species was scored `not_present`, an error. No drawn
+  species on the three tiles met one, so the precision numbers did not move.
+- **Baselines re-taken** (`held_out_baseline.json`, main's tiles at `defcb5f`):
+
+  | Tile | Introduced species drawn | Natives to restore that the tile lacks |
+  |---|---|---|
+  | Grand Canyon | 3: elk, collared peccary, starling | 6: razorback sucker, bonytail, roundtail chub, Colorado pikeminnow, relict leopard frog, occult little brown bat |
+  | Lamar | 3: mountain goat, starling, wild turkey | 10: white-tailed ptarmigan, northern leopard frog, 8 plants |
+  | Yosemite Valley | 8: beaver, starling, wild turkey, 5 annual grasses and forbs | 14: grizzly bear, California condor, foothill yellow-legged frog, California red-legged frog, 10 plants |
+
+  No tile draws a restored native yet.
+- **A lower bound.** The Historical tag does not say why a species is gone, and a park list holds only the losses
+  someone recorded: Grand Canyon's has four fish and no wolf, grizzly or jaguar. The review's present-natural range
+  source (PHYLACINE) stays reserved as the pipeline's input for restoring; it is not used to judge.
+- **Tests.** `tests/test_held_out.py` now has 33.
