@@ -1,6 +1,6 @@
 {
  "tile": "utm36s_698_9724",
- "at": "2026-11-06T10:49:27Z",
+ "at": "2026-11-10T21:11:59Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -12,7 +12,7 @@
   "by_level": {
    "0": {
     "plants": 3,
-    "animals": 64
+    "animals": 65
    },
    "1": {
     "plants": 0,
@@ -20,7 +20,7 @@
    },
    "2": {
     "plants": 4,
-    "animals": 0
+    "animals": 4
    },
    "3": {
     "plants": 0,
@@ -32,14 +32,14 @@
    }
   },
   "plants": 8,
-  "animals_present": 81,
-  "animals_queued": 80,
-  "meshy_credits_queued": 2395,
+  "animals_present": 86,
+  "animals_queued": 85,
+  "meshy_credits_queued": 2520,
   "cards_queued": 3,
   "stand_ins": {
    "euphorbia_ingens": null,
    "phoenix_reclinata": null,
-   "vachellia_xanthophloea": null
+   "vachellia_xanthophloea": "vachellia_tortilis"
   },
   "density": {
    "tree": {
@@ -56,15 +56,15 @@
    },
    "animal": {
     "target": 22,
-    "have": 81,
-    "with_model": 17
+    "have": 86,
+    "with_model": 21
    }
   },
   "hands": {
-   "count": 83,
+   "count": 88,
    "by_what": {
     "a trait card": 3,
-    "a mesh": 80
+    "a mesh": 85
    }
   }
  },
@@ -153,12 +153,12 @@
    "kind": "tree",
    "fidelity": 0,
    "common": null,
-   "drawn_as": null,
+   "drawn_as": "vachellia_tortilis",
    "share": 0,
    "why_needed": [
     "canopy: records (GBIF: 7 records on the tile; height not yet screened)"
    ],
-   "stand_in": null
+   "stand_in": "vachellia_tortilis"
   }
  ],
  "animals": [
@@ -975,7 +975,7 @@
   {
    "id": "damaliscus_korrigum",
    "scientific": "Damaliscus korrigum",
-   "common": "topi",
+   "common": null,
    "kind": "mammal",
    "fidelity": 0,
    "present": "records",
@@ -1297,7 +1297,7 @@
   {
    "id": "leptailurus_serval",
    "scientific": "Leptailurus serval",
-   "common": "serval",
+   "common": "serval cat",
    "kind": "mammal",
    "fidelity": 0,
    "present": "records",
@@ -1387,6 +1387,71 @@
    "traits": null
   },
   {
+   "id": "crocodylus_niloticus",
+   "scientific": "Crocodylus niloticus",
+   "common": "nile crocodile",
+   "kind": "reptile",
+   "fidelity": 2,
+   "present": "records",
+   "why": [
+    "most recorded: 1 of its class (52% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "agama_mwanzae",
+   "scientific": "Agama mwanzae",
+   "common": "mwanza flat-headed agama",
+   "kind": "reptile",
+   "fidelity": 2,
+   "present": "records",
+   "why": [
+    "most recorded: 2 of its class (22% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "stigmochelys_pardalis",
+   "scientific": "Stigmochelys pardalis",
+   "common": "leopard tortoise",
+   "kind": "reptile",
+   "fidelity": 2,
+   "present": "records",
+   "why": [
+    "most recorded: 3 of its class (5% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "varanus_niloticus",
+   "scientific": "Varanus niloticus",
+   "common": "nile monitor",
+   "kind": "reptile",
+   "fidelity": 2,
+   "present": "records",
+   "why": [
+    "most recorded: 4 of its class (3% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "trachylepis_striata",
+   "scientific": "Trachylepis striata",
+   "common": "african striped mabuya",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 5 of its class (3% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
    "id": "phrynobatrachus_mababiensis",
    "scientific": "Phrynobatrachus mababiensis",
    "common": "mababi puddle frog",
@@ -1421,7 +1486,7 @@
    {
     "id": "vachellia_xanthophloea",
     "kind": "tree",
-    "stand_in": null,
+    "stand_in": "vachellia_tortilis",
     "why": [
      "canopy: records (GBIF: 7 records on the tile; height not yet screened)"
     ]
@@ -2051,6 +2116,21 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
+    "id": "crocodylus_niloticus",
+    "scientific": "Crocodylus niloticus",
+    "common": "nile crocodile",
+    "kind": "reptile",
+    "records": 151,
+    "why": [
+     "most recorded: 1 of its class (52% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
     "id": "circaetus_pectoralis",
     "scientific": "Circaetus pectoralis",
     "common": "black-breasted snake-eagle",
@@ -2083,7 +2163,7 @@
    {
     "id": "damaliscus_korrigum",
     "scientific": "Damaliscus korrigum",
-    "common": "topi",
+    "common": null,
     "kind": "mammal",
     "records": 139,
     "why": [
@@ -2338,6 +2418,21 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
+    "id": "agama_mwanzae",
+    "scientific": "Agama mwanzae",
+    "common": "mwanza flat-headed agama",
+    "kind": "reptile",
+    "records": 63,
+    "why": [
+     "most recorded: 2 of its class (22% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
     "id": "alcelaphus_buselaphus",
     "scientific": "Alcelaphus buselaphus",
     "common": "hartebeest",
@@ -2538,7 +2633,7 @@
    {
     "id": "leptailurus_serval",
     "scientific": "Leptailurus serval",
-    "common": "serval",
+    "common": "serval cat",
     "kind": "mammal",
     "records": 25,
     "why": [
@@ -2567,6 +2662,21 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
+    "id": "stigmochelys_pardalis",
+    "scientific": "Stigmochelys pardalis",
+    "common": "leopard tortoise",
+    "kind": "reptile",
+    "records": 14,
+    "why": [
+     "most recorded: 3 of its class (5% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
     "id": "genetta_genetta",
     "scientific": "Genetta genetta",
     "common": "common genet",
@@ -2579,6 +2689,36 @@
     "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
     "estimate_credits": 30,
     "stand_in": "canis_latrans",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "varanus_niloticus",
+    "scientific": "Varanus niloticus",
+    "common": "nile monitor",
+    "kind": "reptile",
+    "records": 10,
+    "why": [
+     "most recorded: 4 of its class (3% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "trachylepis_striata",
+    "scientific": "Trachylepis striata",
+    "common": "african striped mabuya",
+    "kind": "reptile",
+    "records": 10,
+    "why": [
+     "most recorded: 5 of its class (3% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
+    "stand_in": null,
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
@@ -3004,6 +3144,14 @@
    ]
   },
   {
+   "id": "crocodylus_niloticus",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 1 of its class (52% of the class's records)"
+   ]
+  },
+  {
    "id": "circaetus_pectoralis",
    "kind": "bird",
    "what": "a mesh (Meshy ~30 credits) and its review",
@@ -3158,6 +3306,14 @@
    ]
   },
   {
+   "id": "agama_mwanzae",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 2 of its class (22% of the class's records)"
+   ]
+  },
+  {
    "id": "alcelaphus_buselaphus",
    "kind": "mammal",
    "what": "a mesh (Meshy ~30 credits) and its review",
@@ -3282,11 +3438,35 @@
    ]
   },
   {
+   "id": "stigmochelys_pardalis",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 3 of its class (5% of the class's records)"
+   ]
+  },
+  {
    "id": "genetta_genetta",
    "kind": "mammal",
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
     "predator"
+   ]
+  },
+  {
+   "id": "varanus_niloticus",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 4 of its class (3% of the class's records)"
+   ]
+  },
+  {
+   "id": "trachylepis_striata",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 5 of its class (3% of the class's records)"
    ]
   },
   {

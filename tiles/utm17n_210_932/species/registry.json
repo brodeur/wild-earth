@@ -1,6 +1,6 @@
 {
  "tile": "utm17n_210_932",
- "at": "2026-11-06T10:36:19Z",
+ "at": "2026-11-10T21:11:56Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -12,7 +12,7 @@
   "by_level": {
    "0": {
     "plants": 31,
-    "animals": 77
+    "animals": 81
    },
    "1": {
     "plants": 0,
@@ -20,7 +20,7 @@
    },
    "2": {
     "plants": 11,
-    "animals": 0
+    "animals": 1
    },
    "3": {
     "plants": 0,
@@ -32,9 +32,9 @@
    }
   },
   "plants": 42,
-  "animals_present": 83,
-  "animals_queued": 77,
-  "meshy_credits_queued": 2230,
+  "animals_present": 88,
+  "animals_queued": 82,
+  "meshy_credits_queued": 2355,
   "cards_queued": 31,
   "stand_ins": {
    "aechmea_magdalenae": null,
@@ -84,16 +84,16 @@
    },
    "animal": {
     "target": 22,
-    "have": 83,
-    "with_model": 6
+    "have": 88,
+    "with_model": 7
    }
   },
   "hands": {
-   "count": 109,
+   "count": 114,
    "by_what": {
     "a trait card": 31,
     "a lexicon phrase or a species-mix rule": 3,
-    "a mesh": 75
+    "a mesh": 80
    }
   }
  },
@@ -609,7 +609,7 @@
    "kind": "mammal",
    "fidelity": 4,
    "present": "records",
-   "evidence": "32 records within 10 km in 2011-2026 (>= 3)"
+   "evidence": "108 records within 23 km in 2011-2026 (the search widened to hold its home ranges) (>= 3)"
   },
   {
    "id": "megaceryle_alcyon",
@@ -1728,6 +1728,71 @@
    "traits": null
   },
   {
+   "id": "anolis_polylepis",
+   "scientific": "Anolis polylepis",
+   "common": "many-scaled anole",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 1 of its class (21% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "basiliscus_basiliscus",
+   "scientific": "Basiliscus basiliscus",
+   "common": "common basilisk",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 2 of its class (14% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "caiman_crocodilus",
+   "scientific": "Caiman crocodilus",
+   "common": "common caiman",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 3 of its class (10% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "ctenosaura_similis",
+   "scientific": "Ctenosaura similis",
+   "common": "black iguana",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 4 of its class (8% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "bothrops_asper",
+   "scientific": "Bothrops asper",
+   "common": "terciopelo",
+   "kind": "reptile",
+   "fidelity": 2,
+   "present": "records",
+   "why": [
+    "most recorded: 5 of its class (6% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
    "id": "leptodactylus_savagei",
    "scientific": "Leptodactylus savagei",
    "common": "central american bullfrog",
@@ -2650,6 +2715,21 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
+    "id": "anolis_polylepis",
+    "scientific": "Anolis polylepis",
+    "common": "many-scaled anole",
+    "kind": "reptile",
+    "records": 216,
+    "why": [
+     "most recorded: 1 of its class (21% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
     "id": "micrastur_semitorquatus",
     "scientific": "Micrastur semitorquatus",
     "common": "collared forest-falcon",
@@ -2770,6 +2850,21 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
+    "id": "basiliscus_basiliscus",
+    "scientific": "Basiliscus basiliscus",
+    "common": "common basilisk",
+    "kind": "reptile",
+    "records": 148,
+    "why": [
+     "most recorded: 2 of its class (14% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
     "id": "geranospiza_caerulescens",
     "scientific": "Geranospiza caerulescens",
     "common": "crane hawk",
@@ -2830,6 +2925,21 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
+    "id": "caiman_crocodilus",
+    "scientific": "Caiman crocodilus",
+    "common": "common caiman",
+    "kind": "reptile",
+    "records": 101,
+    "why": [
+     "most recorded: 3 of its class (10% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
     "id": "dasyprocta_punctata",
     "scientific": "Dasyprocta punctata",
     "common": "central american agouti",
@@ -2856,6 +2966,36 @@
     "body_plan": "quadruped",
     "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
     "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "ctenosaura_similis",
+    "scientific": "Ctenosaura similis",
+    "common": "black iguana",
+    "kind": "reptile",
+    "records": 83,
+    "why": [
+     "most recorded: 4 of its class (8% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "bothrops_asper",
+    "scientific": "Bothrops asper",
+    "common": "terciopelo",
+    "kind": "reptile",
+    "records": 60,
+    "why": [
+     "most recorded: 5 of its class (6% of the class's records)"
+    ],
+    "body_plan": "snake",
+    "rig": "none yet: a spine-wave rig",
+    "estimate_credits": 25,
     "stand_in": null,
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
@@ -3815,6 +3955,14 @@
    ]
   },
   {
+   "id": "anolis_polylepis",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 1 of its class (21% of the class's records)"
+   ]
+  },
+  {
    "id": "micrastur_semitorquatus",
    "kind": "bird",
    "what": "a mesh (Meshy ~30 credits) and its review",
@@ -3879,6 +4027,14 @@
    ]
   },
   {
+   "id": "basiliscus_basiliscus",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 2 of its class (14% of the class's records)"
+   ]
+  },
+  {
    "id": "geranospiza_caerulescens",
    "kind": "bird",
    "what": "a mesh (Meshy ~30 credits) and its review",
@@ -3911,6 +4067,14 @@
    ]
   },
   {
+   "id": "caiman_crocodilus",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 3 of its class (10% of the class's records)"
+   ]
+  },
+  {
    "id": "dasyprocta_punctata",
    "kind": "mammal",
    "what": "a mesh (Meshy ~30 credits) and its review",
@@ -3924,6 +4088,22 @@
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
     "most recorded: 9 of its class (4% of the class's records)"
+   ]
+  },
+  {
+   "id": "ctenosaura_similis",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 4 of its class (8% of the class's records)"
+   ]
+  },
+  {
+   "id": "bothrops_asper",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 5 of its class (6% of the class's records)"
    ]
   },
   {

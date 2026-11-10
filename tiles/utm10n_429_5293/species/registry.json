@@ -1,6 +1,6 @@
 {
  "tile": "utm10n_429_5293",
- "at": "2026-11-09T05:19:01Z",
+ "at": "2026-11-10T21:11:43Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -37,15 +37,15 @@
   "meshy_credits_queued": 460,
   "cards_queued": 31,
   "stand_ins": {
-   "populus_tristis": null,
+   "populus_tristis": "populus_trichocarpa",
    "struthiopteris_spicant": null,
    "tiarella_trifoliata": null,
    "selaginella_oregana": null,
    "pteridium_aquilinum": null,
    "rubus_pedatus": null,
    "prunella_vulgaris": null,
-   "cornus_unalaschkensis": null,
-   "achlys_triphylla": null,
+   "cornus_unalaschkensis": "cornus_sericea",
+   "achlys_triphylla": "mahonia_nervosa",
    "maianthemum_dilatatum": null,
    "polypodium_glycyrrhiza": null,
    "ranunculus_repens": null,
@@ -53,7 +53,7 @@
    "mycelis_muralis": null,
    "erythranthe_dentata": null,
    "equisetum_telmateia": null,
-   "moneses_uniflora": null,
+   "moneses_uniflora": "gaultheria_shallon",
    "lysichiton_americanus": null,
    "adenocaulon_bicolor": null,
    "adiantum_aleuticum": null,
@@ -65,8 +65,8 @@
    "athyrium_filix_femina": null,
    "viola_glabella": null,
    "equisetum_braunii": null,
-   "monotropa_uniflora": null,
-   "vaccinium_ovalifolium": null,
+   "monotropa_uniflora": "gaultheria_shallon",
+   "vaccinium_ovalifolium": "vaccinium_parvifolium",
    "ribes_bracteosum": null
   },
   "density": {
@@ -553,12 +553,12 @@
    "kind": "shrub",
    "fidelity": 0,
    "common": null,
-   "drawn_as": null,
+   "drawn_as": "mahonia_nervosa",
    "share": 0,
    "why_needed": [
     "GBIF: 83 records on the tile"
    ],
-   "stand_in": null
+   "stand_in": "mahonia_nervosa"
   },
   {
    "id": "adenocaulon_bicolor",
@@ -625,12 +625,12 @@
    "kind": "shrub",
    "fidelity": 0,
    "common": null,
-   "drawn_as": null,
+   "drawn_as": "cornus_sericea",
    "share": 0,
    "why_needed": [
     "GBIF: 84 records on the tile"
    ],
-   "stand_in": null
+   "stand_in": "cornus_sericea"
   },
   {
    "id": "corydalis_scouleri",
@@ -709,24 +709,24 @@
    "kind": "shrub",
    "fidelity": 0,
    "common": null,
-   "drawn_as": null,
+   "drawn_as": "gaultheria_shallon",
    "share": 0,
    "why_needed": [
     "GBIF: 41 records on the tile"
    ],
-   "stand_in": null
+   "stand_in": "gaultheria_shallon"
   },
   {
    "id": "monotropa_uniflora",
    "kind": "shrub",
    "fidelity": 0,
    "common": null,
-   "drawn_as": null,
+   "drawn_as": "gaultheria_shallon",
    "share": 0,
    "why_needed": [
     "GBIF: 18 records on the tile"
    ],
-   "stand_in": null
+   "stand_in": "gaultheria_shallon"
   },
   {
    "id": "mycelis_muralis",
@@ -768,12 +768,12 @@
    "kind": "tree",
    "fidelity": 0,
    "common": null,
-   "drawn_as": null,
+   "drawn_as": "populus_trichocarpa",
    "share": 0,
    "why_needed": [
     "canopy: records (GBIF: 4 records on the tile; height not yet screened)"
    ],
-   "stand_in": null
+   "stand_in": "populus_trichocarpa"
   },
   {
    "id": "prosartes_smithii",
@@ -923,12 +923,12 @@
    "kind": "shrub",
    "fidelity": 0,
    "common": null,
-   "drawn_as": null,
+   "drawn_as": "vaccinium_parvifolium",
    "share": 0,
    "why_needed": [
     "GBIF: 13 records on the tile"
    ],
-   "stand_in": null
+   "stand_in": "vaccinium_parvifolium"
   },
   {
    "id": "viola_glabella",
@@ -1618,7 +1618,7 @@
    {
     "id": "populus_tristis",
     "kind": "tree",
-    "stand_in": null,
+    "stand_in": "populus_trichocarpa",
     "why": [
      "canopy: records (GBIF: 4 records on the tile; height not yet screened)"
     ]
@@ -1674,7 +1674,7 @@
    {
     "id": "cornus_unalaschkensis",
     "kind": "shrub",
-    "stand_in": null,
+    "stand_in": "cornus_sericea",
     "why": [
      "GBIF: 84 records on the tile"
     ]
@@ -1682,7 +1682,7 @@
    {
     "id": "achlys_triphylla",
     "kind": "shrub",
-    "stand_in": null,
+    "stand_in": "mahonia_nervosa",
     "why": [
      "GBIF: 83 records on the tile"
     ]
@@ -1746,7 +1746,7 @@
    {
     "id": "moneses_uniflora",
     "kind": "shrub",
-    "stand_in": null,
+    "stand_in": "gaultheria_shallon",
     "why": [
      "GBIF: 41 records on the tile"
     ]
@@ -1842,7 +1842,7 @@
    {
     "id": "monotropa_uniflora",
     "kind": "shrub",
-    "stand_in": null,
+    "stand_in": "gaultheria_shallon",
     "why": [
      "GBIF: 18 records on the tile"
     ]
@@ -1850,7 +1850,7 @@
    {
     "id": "vaccinium_ovalifolium",
     "kind": "shrub",
-    "stand_in": null,
+    "stand_in": "vaccinium_parvifolium",
     "why": [
      "GBIF: 13 records on the tile"
     ]

@@ -502,24 +502,24 @@
   },
   "plants": {
    "stage": "flora",
-   "started_at": "2026-11-07T17:53:49Z",
-   "ended_at": "2026-11-07T17:54:06Z",
-   "wall_s": 17.2,
-   "cpu_self_s": 1.7,
+   "started_at": "2026-11-10T21:06:47Z",
+   "ended_at": "2026-11-10T21:07:03Z",
+   "wall_s": 16.0,
+   "cpu_self_s": 1.6,
    "cpu_children_s": 0.0,
    "downloads": {
     "gbif": {
-     "bytes": 28153,
-     "requests": 20
+     "bytes": 166573,
+     "requests": 18
     }
    },
    "cache": {
     "gbif": {
-     "hits": 136,
-     "misses": 20
+     "hits": 328,
+     "misses": 18
     }
    },
-   "disk_bytes": 100540,
+   "disk_bytes": 106597,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -529,9 +529,9 @@
   },
   "species_mix": {
    "stage": "flora",
-   "started_at": "2026-11-09T04:16:49Z",
-   "ended_at": "2026-11-09T04:16:51Z",
-   "wall_s": 1.9,
+   "started_at": "2026-11-10T21:07:03Z",
+   "ended_at": "2026-11-10T21:07:04Z",
+   "wall_s": 1.3,
    "cpu_self_s": 2.8,
    "cpu_children_s": 0.0,
    "downloads": {},
@@ -541,7 +541,7 @@
      "misses": 0
     }
    },
-   "disk_bytes": 943950,
+   "disk_bytes": 944770,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -599,6 +599,23 @@
     "queued_credits_est": 0
    },
    "status": "ok"
+  },
+  "registry": {
+   "stage": "games",
+   "started_at": "2026-11-10T21:11:48Z",
+   "ended_at": "2026-11-10T21:11:49Z",
+   "wall_s": 0.8,
+   "cpu_self_s": 0.7,
+   "cpu_children_s": 0.0,
+   "downloads": {},
+   "cache": {},
+   "disk_bytes": 96198,
+   "meshy": {
+    "spent": 0,
+    "queued": 44,
+    "queued_credits_est": 1260
+   },
+   "status": "ok"
   }
  },
  "stages": {
@@ -627,16 +644,28 @@
    "meshy_queued_credits_est": 0
   },
   "flora": {
-   "started_at": "2026-11-09T04:16:49Z",
-   "ended_at": "2026-11-09T04:16:51Z",
-   "wall_s": 256.6,
-   "cpu_s": 253.1,
-   "download_bytes": 28153,
-   "cache_hits": 167,
-   "cache_misses": 20,
-   "disk_bytes": 7877363,
+   "started_at": "2026-11-10T21:06:47Z",
+   "ended_at": "2026-11-10T21:07:04Z",
+   "wall_s": 254.8,
+   "cpu_s": 253.0,
+   "download_bytes": 166573,
+   "cache_hits": 359,
+   "cache_misses": 18,
+   "disk_bytes": 7884240,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
+  },
+  "games": {
+   "started_at": "2026-11-10T21:11:48Z",
+   "ended_at": "2026-11-10T21:11:49Z",
+   "wall_s": 0.8,
+   "cpu_s": 0.7,
+   "download_bytes": 0,
+   "cache_hits": 0,
+   "cache_misses": 0,
+   "disk_bytes": 96198,
+   "meshy_spent": 0,
+   "meshy_queued_credits_est": 1260
   }
  },
  "runs": [
@@ -1107,10 +1136,45 @@
    "ended_at": "2026-11-09T04:43:50Z",
    "failed": [],
    "refused": []
+  },
+  {
+   "started_at": "2026-11-10T21:06:47Z",
+   "stages": [
+    {
+     "stage": "flora",
+     "started_at": "2026-11-10T21:06:47Z",
+     "steps_run": [
+      "plants",
+      "species_mix"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-10T21:07:04Z"
+    }
+   ],
+   "ended_at": "2026-11-10T21:07:04Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-10T21:11:48Z",
+   "stages": [
+    {
+     "stage": "games",
+     "started_at": "2026-11-10T21:11:48Z",
+     "steps_run": [
+      "registry"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-10T21:11:49Z"
+    }
+   ],
+   "ended_at": "2026-11-10T21:11:49Z",
+   "failed": [],
+   "refused": []
   }
  ],
  "client": {
-  "bytes": 69014337,
+  "bytes": 69015869,
   "files": 55,
   "largest": {
    "client/lidar_micro.png": 13050475,
@@ -1129,14 +1193,14 @@
   "note": "every file under client/ and the tables the viewer fetches; an upper bound (the present-day texture is fetched only on request)"
  },
  "totals": {
-  "wall_s": 740.7,
-  "cpu_s": 491.7,
-  "download_bytes": 58604818,
-  "cache_hits": 1952,
-  "cache_misses": 98,
-  "disk_bytes": 1106896847,
+  "wall_s": 739.7,
+  "cpu_s": 492.3,
+  "download_bytes": 58743238,
+  "cache_hits": 2144,
+  "cache_misses": 96,
+  "disk_bytes": 1106999922,
   "meshy_spent": 0,
-  "meshy_queued_credits_est": 0
+  "meshy_queued_credits_est": 1260
  },
- "updated_at": "2026-11-09T04:43:50Z"
+ "updated_at": "2026-11-10T21:11:49Z"
 }

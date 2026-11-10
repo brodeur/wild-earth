@@ -11,7 +11,8 @@ A tile needs every species that
     tile are mostly herbs and garden escapes).
 For each, the library is asked for a record. A species with a trait card (library/plant_cards/) and no record is grown
 now (pipeline/plantgen.py: automatic, free); one with neither is queued as needing a card, and species_mix draws its
-stand-in (communities.stand_in) until it has one. A community whose name the lexicon cannot read and that no rule
+stand-in until it has one where a record that belongs to the tile is its relative (communities.local_stand_in,
+2026-11-10: `drawn_as`; none: the species is missing from the mix and listed there). A community whose name the lexicon cannot read and that no rule
 matches is listed as `unread`: the cue to extend communities.LEXICON for a new region.
 
 Writes species/plant_needs.json; the registry step (pipeline/registry.py) reads it.
@@ -22,7 +23,7 @@ import json
 
 import numpy as np
 
-from .communities import has_record, named_species, stand_in
+from .communities import has_record, local_stand_in, named_species
 from .research import id_of
 from .config import Tile, read_json, write_json
 
@@ -94,6 +95,8 @@ def plant_needs(tile: Tile, generate=False) -> dict:
     from .research import TARGET, plant_records
     from .species_mix import match, named_rule
     regions = natural_regions(tile)
+    from . import species_mix as _sm
+    _sm.CONTEXT["regions"], _sm.CONTEXT["tile"] = regions, tile   # named_rule reads the names by this tile's place
     comms = communities(tile)
     needs: dict[str, dict] = {}
     total_cells = sum(c["cells"] for c in comms) or 1
@@ -111,7 +114,7 @@ def plant_needs(tile: Tile, generate=False) -> dict:
             continue
         synthetic = (c.get("name") or "")[:1] in ("T", "F", "M") and (c.get("name") or "")[1:2].isdigit()   # an ecosystem group
         rule = None if synthetic else match(c["name"], regions)
-        named = [] if synthetic else named_species(c["name"], regions)   # the lexicon is LANDFIRE's names, not the groups'
+        named = [] if synthetic else named_species(c["name"], regions, tile)   # the lexicon is LANDFIRE's names, not the groups'
         if synthetic:
             continue
         c["rule"] = rule["id"] if rule else (named_rule(c["name"], 0) or {}).get("id")
@@ -194,7 +197,8 @@ def plant_needs(tile: Tile, generate=False) -> dict:
                 generated.append(sid)
             r["record"] = has_record(sid)
             r["generated_now"] = True
-        r["drawn_as"] = sid if r["record"] else stand_in(sid)
+        # its own record, else a relative's that belongs to this tile (woody plants only: the ground layer lists records)
+        r["drawn_as"] = sid if r["record"] else (local_stand_in(sid, tile, regions, r["kind"])[0] if r["kind"] in ("tree", "shrub") else None)
         r["cover"] = round(r["cover"], 4)
         if not r["record"]:
             r["queued"] = "needs a trait card (library/plant_cards/): an agent's research, then automatic"

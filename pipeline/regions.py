@@ -28,7 +28,11 @@ US = ("conus", "alaska", "hawaii", "puerto_rico")
 NATURAL = {
     "california": [(-124.5, 32.4, -114.1, 42.0)],
     "pacific_northwest": [(-125.0, 42.0, -116.0, 49.5), (-128.5, 48.2, -122.5, 51.5)],
-    "great_basin": [(-120.0, 35.5, -110.5, 43.0)],
+    # "great_basin" was a box here until 2026-11-10 with no table behind it (no rule, no lexicon, no terrain table, no
+    # record tagged with it): a tile in it, the Grand Canyon, was told it had regional tables, so it got no ground layer
+    # of its own (ground_cards.applies), its community names were read by California's lexicon without the local-records
+    # test, and the client drew California's habitat-class mix on every cell whose row lacked a layer (42 % of its cells
+    # had no trees, 71 % no shrubs). A region is listed here only once it has tables.
     # the world pipeline's probes (2026-11-05): boxes for the regions their trait cards are tagged with
     "east_africa": [(28.0, -12.0, 42.0, 5.0)],
     "scandinavia": [(4.0, 54.5, 32.0, 71.5)],

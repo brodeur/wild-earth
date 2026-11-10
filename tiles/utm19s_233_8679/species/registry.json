@@ -1,6 +1,6 @@
 {
  "tile": "utm19s_233_8679",
- "at": "2026-11-06T10:35:39Z",
+ "at": "2026-11-10T21:11:57Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -12,7 +12,7 @@
   "by_level": {
    "0": {
     "plants": 16,
-    "animals": 61
+    "animals": 66
    },
    "1": {
     "plants": 0,
@@ -32,9 +32,9 @@
    }
   },
   "plants": 26,
-  "animals_present": 63,
-  "animals_queued": 61,
-  "meshy_credits_queued": 1810,
+  "animals_present": 68,
+  "animals_queued": 66,
+  "meshy_credits_queued": 1935,
   "cards_queued": 16,
   "stand_ins": {
    "guarea_macrophylla": null,
@@ -69,15 +69,16 @@
    },
    "animal": {
     "target": 22,
-    "have": 63,
+    "have": 68,
     "with_model": 2
    }
   },
   "hands": {
-   "count": 77,
+   "count": 87,
    "by_what": {
     "a trait card": 16,
-    "a mesh": 61
+    "a mesh": 66,
+    "a review of its generated traits": 5
    }
   }
  },
@@ -812,7 +813,7 @@
   {
    "id": "anhinga_anhinga",
    "scientific": "Anhinga anhinga",
-   "common": "anhinga",
+   "common": "american anhinga",
    "kind": "bird",
    "fidelity": 0,
    "present": "records",
@@ -1261,6 +1262,71 @@
     "herbivore"
    ],
    "traits": null
+  },
+  {
+   "id": "thecadactylus_solimoensis",
+   "scientific": "Thecadactylus solimoensis",
+   "common": "southern turnip-tailed gecko",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 1 of its class (12% of the class's records)"
+   ],
+   "role": [],
+   "traits": "library/animals/traits/thecadactylus_solimoensis.json"
+  },
+  {
+   "id": "ameiva_ameiva",
+   "scientific": "Ameiva ameiva",
+   "common": "giant ameiva",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 2 of its class (12% of the class's records)"
+   ],
+   "role": [],
+   "traits": "library/animals/traits/ameiva_ameiva.json"
+  },
+  {
+   "id": "anolis_fuscoauratus",
+   "scientific": "Anolis fuscoauratus",
+   "common": "brown-eared anole",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 3 of its class (10% of the class's records)"
+   ],
+   "role": [],
+   "traits": "library/animals/traits/anolis_fuscoauratus.json"
+  },
+  {
+   "id": "melanosuchus_niger",
+   "scientific": "Melanosuchus niger",
+   "common": "black caiman",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 4 of its class (9% of the class's records)"
+   ],
+   "role": [],
+   "traits": "library/animals/traits/melanosuchus_niger.json"
+  },
+  {
+   "id": "corallus_hortulana",
+   "scientific": "Corallus hortulana",
+   "common": "amazon tree boa",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 5 of its class (7% of the class's records)"
+   ],
+   "role": [],
+   "traits": "library/animals/traits/corallus_hortulana.json"
   },
   {
    "id": "rhinella_marina",
@@ -1855,7 +1921,7 @@
    {
     "id": "anhinga_anhinga",
     "scientific": "Anhinga anhinga",
-    "common": "anhinga",
+    "common": "american anhinga",
     "kind": "bird",
     "records": 358,
     "why": [
@@ -2183,6 +2249,51 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
+    "id": "thecadactylus_solimoensis",
+    "scientific": "Thecadactylus solimoensis",
+    "common": "southern turnip-tailed gecko",
+    "kind": "reptile",
+    "records": 18,
+    "why": [
+     "most recorded: 1 of its class (12% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "ameiva_ameiva",
+    "scientific": "Ameiva ameiva",
+    "common": "giant ameiva",
+    "kind": "reptile",
+    "records": 18,
+    "why": [
+     "most recorded: 2 of its class (12% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "anolis_fuscoauratus",
+    "scientific": "Anolis fuscoauratus",
+    "common": "brown-eared anole",
+    "kind": "reptile",
+    "records": 15,
+    "why": [
+     "most recorded: 3 of its class (10% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
     "id": "saimiri_boliviensis",
     "scientific": "Saimiri boliviensis",
     "common": "black-capped squirrel monkey",
@@ -2198,6 +2309,21 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
+    "id": "melanosuchus_niger",
+    "scientific": "Melanosuchus niger",
+    "common": "black caiman",
+    "kind": "reptile",
+    "records": 13,
+    "why": [
+     "most recorded: 4 of its class (9% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
     "id": "rhynchonycteris_naso",
     "scientific": "Rhynchonycteris naso",
     "common": "proboscis bat",
@@ -2209,6 +2335,21 @@
     "body_plan": "quadruped",
     "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
     "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "corallus_hortulana",
+    "scientific": "Corallus hortulana",
+    "common": "amazon tree boa",
+    "kind": "reptile",
+    "records": 11,
+    "why": [
+     "most recorded: 5 of its class (7% of the class's records)"
+    ],
+    "body_plan": "snake",
+    "rig": "none yet: a spine-wave rig",
+    "estimate_credits": 25,
     "stand_in": null,
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
@@ -2888,6 +3029,30 @@
    ]
   },
   {
+   "id": "thecadactylus_solimoensis",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 1 of its class (12% of the class's records)"
+   ]
+  },
+  {
+   "id": "ameiva_ameiva",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 2 of its class (12% of the class's records)"
+   ]
+  },
+  {
+   "id": "anolis_fuscoauratus",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 3 of its class (10% of the class's records)"
+   ]
+  },
+  {
    "id": "saimiri_boliviensis",
    "kind": "mammal",
    "what": "a mesh (Meshy ~30 credits) and its review",
@@ -2896,11 +3061,27 @@
    ]
   },
   {
+   "id": "melanosuchus_niger",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 4 of its class (9% of the class's records)"
+   ]
+  },
+  {
    "id": "rhynchonycteris_naso",
    "kind": "mammal",
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
     "most recorded: 2 of its class (8% of the class's records)"
+   ]
+  },
+  {
+   "id": "corallus_hortulana",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 5 of its class (7% of the class's records)"
    ]
   },
   {
@@ -2983,6 +3164,46 @@
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
     "most recorded: 12 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "thecadactylus_solimoensis",
+   "kind": "reptile",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "ameiva_ameiva",
+   "kind": "reptile",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "anolis_fuscoauratus",
+   "kind": "reptile",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "melanosuchus_niger",
+   "kind": "reptile",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "corallus_hortulana",
+   "kind": "reptile",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
    ]
   }
  ]

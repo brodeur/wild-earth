@@ -148,8 +148,10 @@ so a rebuild on another day differs by design).
 ## Anywhere on Earth: no California in the defaults (pipeline/regions.py)
 
 Two kinds of region. **Coverage**: `regions.COVERAGE` names, for every source, where it serves and the global source that
-stands in (the table under Base). **Natural regions**: `regions.NATURAL` (california, pacific_northwest, great_basin;
-boxes) says which tables were written for where. Every rule, table and test that was tuned for California is tagged so,
+stands in (the table under Base). **Natural regions**: `regions.NATURAL` (california, pacific_northwest, and the
+probes' east_africa, scandinavia and borneo; boxes) says which tables were written for where. A box is listed only once
+it has tables: `great_basin` was removed on 2026-11-10, because it had none and told the Grand Canyon tile it was a
+regional-table tile (no ground layer of its own, California's lexicon, the client's California class mix). Every rule, table and test that was tuned for California is tagged so,
 and a tile elsewhere never falls back to it in silence:
 
 - **Species-mix rules** carry a `region`. Every rule written before 2026-11-04 is California's; open water and snow and

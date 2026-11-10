@@ -1,6 +1,6 @@
 {
  "tile": "utm12n_396_3988",
- "at": "2026-11-06T06:48:18Z",
+ "at": "2026-11-10T21:11:53Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -11,43 +11,52 @@
  "summary": {
   "by_level": {
    "0": {
-    "plants": 38,
-    "animals": 55
+    "plants": 35,
+    "animals": 58
    },
    "1": {
     "plants": 0,
     "animals": 0
    },
    "2": {
-    "plants": 4,
+    "plants": 13,
     "animals": 0
    },
    "3": {
-    "plants": 5,
-    "animals": 25
+    "plants": 25,
+    "animals": 27
    },
    "4": {
-    "plants": 7,
+    "plants": 5,
     "animals": 9
    }
   },
-  "plants": 54,
-  "animals_present": 89,
-  "animals_queued": 55,
-  "meshy_credits_queued": 1570,
-  "cards_queued": 38,
+  "plants": 78,
+  "animals_present": 94,
+  "animals_queued": 60,
+  "meshy_credits_queued": 1695,
+  "cards_queued": 35,
   "stand_ins": {
-   "pinus_monophylla": "pinus_sabiniana",
-   "pinus_edulis": null,
+   "phoenix_dactylifera": null,
+   "opuntia_basilaris": null,
+   "amelanchier_utahensis": "purshia_stansburiana",
+   "cercis_orbiculata": null,
+   "ostrya_knowltonii": null,
+   "acer_negundo": null,
+   "ericameria_nauseosa": "encelia_farinosa",
+   "chrysothamnus_viscidiflorus": "encelia_farinosa",
+   "krascheninnikovia_lanata": "atriplex_canescens",
+   "cercocarpus_montanus": "cercocarpus_ledifolius",
+   "rosa_woodsii": "purshia_stansburiana",
+   "arctostaphylos_pungens": "arctostaphylos_patula",
+   "ceanothus_pauciflorus": null,
+   "garrya_flavescens": null,
+   "quercus_turbinella": "quercus_gambelii",
+   "rhus_aromatica": null,
+   "picea_pungens": "pinus_edulis",
    "fallugia_paradoxa": null,
    "chamaebatiaria_millefolium": null,
-   "quercus_gambelii": null,
-   "juniperus_osteosperma": null,
-   "purshia_stansburiana": null,
    "opuntia_phaeacantha": null,
-   "yucca_baccata": null,
-   "agave_utahensis": null,
-   "ericameria_nauseosa": "baccharis_pilularis",
    "echinocereus_triglochidiatus": null,
    "cirsium_arizonicum": null,
    "opuntia_polyacantha": null,
@@ -58,49 +67,38 @@
    "penstemon_pachyphyllus": null,
    "asclepias_subverticillata": null,
    "alloberberis_fremontii": null,
-   "phlox_austromontana": null,
    "echinocactus_polycephalus": null,
    "penstemon_eatonii": null,
-   "solanum_elaeagnifolium": null,
-   "castilleja_integra": null,
-   "packera_multilobata": null,
-   "astragalus_calycosus": null,
-   "pelecyphora_vivipara": null,
    "ribes_cereum": null,
    "mahonia_repens": null,
-   "ribes_velutinum": null,
-   "fraxinus_anomala": null,
-   "fendlera_rupicola": null,
-   "ostrya_knowltonii": null,
-   "acer_negundo": null,
-   "rhus_trilobata": null,
-   "shepherdia_rotundifolia": null
+   "ribes_velutinum": null
   },
   "density": {
    "tree": {
     "target": 21,
-    "have": 9
+    "have": 8
    },
    "shrub": {
     "target": 23,
-    "have": 5
+    "have": 10
    },
    "ground": {
     "target": 26,
-    "have": 2
+    "have": 25
    },
    "animal": {
     "target": 22,
-    "have": 89,
-    "with_model": 34
+    "have": 94,
+    "with_model": 36
    }
   },
   "hands": {
-   "count": 110,
+   "count": 105,
    "by_what": {
-    "a trait card": 38,
-    "a lexicon phrase or a species-mix rule": 19,
-    "a mesh": 53
+    "a trait card": 35,
+    "a lexicon phrase or a species-mix rule": 7,
+    "a mesh": 58,
+    "a review of its generated traits": 5
    }
   }
  },
@@ -111,11 +109,132 @@
    "fidelity": 3,
    "common": "ponderosa pine",
    "drawn_as": "pinus_ponderosa",
-   "share": 0.5825,
+   "share": 0.5949,
    "why_needed": [
     "named by EVT 7054 Southern Rocky Mountain Ponderosa Pine Woodland (16191 cells)",
     "named by BPS 1190 Southern Rocky Mountain Ponderosa Pine Woodland (3455 cells)",
     "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)"
+   ]
+  },
+  {
+   "id": "ephedra_viridis",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "green Mormon tea",
+   "drawn_as": "ephedra_viridis",
+   "share": 0.4451,
+   "why_needed": [
+    "named by EVT 7078 Colorado Plateau Blackbrush-Mormon-tea Shrubland (19780 cells)",
+    "named by EVT 7087 Sonora-Mojave Creosotebush-White Bursage Desert Scrub (5408 cells)",
+    "named by EVT 7082 Mojave Mid-Elevation Mixed Desert Scrub (2453 cells)"
+   ]
+  },
+  {
+   "id": "achnatherum_hymenoides",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "Indian ricegrass",
+   "drawn_as": "achnatherum_hymenoides",
+   "share": 0.3886,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "coleogyne_ramosissima",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "blackbrush",
+   "drawn_as": "coleogyne_ramosissima",
+   "share": 0.3183,
+   "why_needed": [
+    "named by EVT 7078 Colorado Plateau Blackbrush-Mormon-tea Shrubland (19780 cells)",
+    "named by EVT 7087 Sonora-Mojave Creosotebush-White Bursage Desert Scrub (5408 cells)",
+    "named by EVT 7082 Mojave Mid-Elevation Mixed Desert Scrub (2453 cells)"
+   ]
+  },
+  {
+   "id": "gutierrezia_sarothrae",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "broom snakeweed",
+   "drawn_as": "gutierrezia_sarothrae",
+   "share": 0.2909,
+   "why_needed": [
+    "GBIF: 36 records on the tile"
+   ]
+  },
+  {
+   "id": "pinus_edulis",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "Colorado pinyon",
+   "drawn_as": "pinus_edulis",
+   "share": 0.201,
+   "why_needed": [
+    "named by EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (12829 cells)",
+    "named by EVT 7102 Colorado Plateau Pinyon-Juniper Shrubland (401 cells)",
+    "named by BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (117 cells)"
+   ]
+  },
+  {
+   "id": "juniperus_osteosperma",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "Utah juniper",
+   "drawn_as": "juniperus_osteosperma",
+   "share": 0.1952,
+   "why_needed": [
+    "named by EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (12829 cells)",
+    "named by EVT 7102 Colorado Plateau Pinyon-Juniper Shrubland (401 cells)",
+    "named by BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (117 cells)"
+   ]
+  },
+  {
+   "id": "festuca_arizonica",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "Arizona fescue",
+   "drawn_as": "festuca_arizonica",
+   "share": 0.1035,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "muhlenbergia_montana",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "mountain muhly",
+   "drawn_as": "muhlenbergia_montana",
+   "share": 0.1022,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "encelia_farinosa",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "brittlebush",
+   "drawn_as": "encelia_farinosa",
+   "share": 0.0963,
+   "why_needed": [
+    "named by EVT 7087 Sonora-Mojave Creosotebush-White Bursage Desert Scrub (5408 cells)",
+    "named by EVT 7082 Mojave Mid-Elevation Mixed Desert Scrub (2453 cells)"
+   ]
+  },
+  {
+   "id": "atriplex_canescens",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "fourwing saltbush",
+   "drawn_as": "atriplex_canescens",
+   "share": 0.0682,
+   "why_needed": [
+    "named by EVT 7087 Sonora-Mojave Creosotebush-White Bursage Desert Scrub (5408 cells)",
+    "named by EVT 7082 Mojave Mid-Elevation Mixed Desert Scrub (2453 cells)",
+    "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)"
    ]
   },
   {
@@ -124,68 +243,206 @@
    "fidelity": 2,
    "common": "big sagebrush",
    "drawn_as": "artemisia_tridentata",
-   "share": 0.3474,
+   "share": 0.0415,
    "why_needed": [
+    "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)",
     "named by EVT 7080 Inter-Mountain Basins Big Sagebrush Shrubland (1024 cells)",
-    "named by BPS 2705 Inter-Mountain Basins Big Sagebrush Shrubland-Upland (93 cells)",
-    "named by EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (65 cells)"
+    "named by BPS 2705 Inter-Mountain Basins Big Sagebrush Shrubland-Upland (93 cells)"
    ]
   },
   {
-   "id": "arctostaphylos_viscida",
-   "kind": "shrub",
-   "fidelity": 4,
-   "common": "whiteleaf manzanita",
-   "drawn_as": "arctostaphylos_viscida",
-   "share": 0.2641,
-   "why_needed": [
-    "named by EVT 7104 Mogollon Chaparral (199 cells)"
-   ]
-  },
-  {
-   "id": "adenostoma_fasciculatum",
-   "kind": "shrub",
-   "fidelity": 4,
-   "common": "chamise",
-   "drawn_as": "adenostoma_fasciculatum",
-   "share": 0.2536,
-   "why_needed": [
-    "named by EVT 7104 Mogollon Chaparral (199 cells)"
-   ]
-  },
-  {
-   "id": "pinus_sabiniana",
-   "kind": "tree",
+   "id": "achnatherum_speciosum",
+   "kind": "grass",
    "fidelity": 3,
-   "common": "gray pine",
-   "drawn_as": "pinus_sabiniana",
-   "share": 0.2247,
+   "common": "desert needlegrass",
+   "drawn_as": "achnatherum_speciosum",
+   "share": 0.027,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
-   "id": "juniperus_grandis",
-   "kind": "tree",
-   "fidelity": 2,
-   "common": "Sierra juniper",
-   "drawn_as": "juniperus_grandis",
-   "share": 0.1916,
+   "id": "muhlenbergia_porteri",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "bush muhly",
+   "drawn_as": "muhlenbergia_porteri",
+   "share": 0.0205,
    "why_needed": [
-    "named by EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (12829 cells)",
-    "named by EVT 7102 Colorado Plateau Pinyon-Juniper Shrubland (401 cells)",
-    "named by BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (117 cells)"
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
-   "id": "ceanothus_cuneatus",
+   "id": "pleuraphis_rigida",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "big galleta",
+   "drawn_as": "pleuraphis_rigida",
+   "share": 0.0203,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "purshia_stansburiana",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "Stansbury cliffrose",
+   "drawn_as": "purshia_stansburiana",
+   "share": 0.0176,
+   "why_needed": [
+    "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
+    "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)",
+    "named by EVT 7086 Rocky Mountain Lower Montane-Foothill Shrubland (92 cells)"
+   ]
+  },
+  {
+   "id": "bouteloua_eriopoda",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "black grama",
+   "drawn_as": "bouteloua_eriopoda",
+   "share": 0.0127,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "pleuraphis_jamesii",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "James' galleta",
+   "drawn_as": "pleuraphis_jamesii",
+   "share": 0.0094,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "bouteloua_gracilis",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "blue grama",
+   "drawn_as": "bouteloua_gracilis",
+   "share": 0.0082,
+   "why_needed": [
+    "GBIF: 16 records on the tile"
+   ]
+  },
+  {
+   "id": "cercocarpus_ledifolius",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "curl-leaf mountain mahogany",
+   "drawn_as": "cercocarpus_ledifolius",
+   "share": 0.0075,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "hesperostipa_comata",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "needle and thread",
+   "drawn_as": "hesperostipa_comata",
+   "share": 0.0061,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "populus_fremontii",
+   "kind": "tree",
+   "fidelity": 4,
+   "common": "Fremont cottonwood",
+   "drawn_as": "populus_fremontii",
+   "share": 0.0051,
+   "why_needed": [
+    "named by BPS 1214 Rocky Mountain Montane Riparian Systems (72 cells)",
+    "named by EVT 9327 Interior West Ruderal Riparian Forest (36 cells)",
+    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (19 cells)"
+   ]
+  },
+  {
+   "id": "poa_secunda",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "Sandberg bluegrass",
+   "drawn_as": "poa_secunda",
+   "share": 0.0043,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "achnatherum_lettermanii",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "Letterman's needlegrass",
+   "drawn_as": "achnatherum_lettermanii",
+   "share": 0.0039,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "arctostaphylos_patula",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "greenleaf manzanita",
+   "drawn_as": "arctostaphylos_patula",
+   "share": 0.0022,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "distichlis_spicata",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "saltgrass",
+   "drawn_as": "distichlis_spicata",
+   "share": 0.0022,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "quercus_gambelii",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "Gambel oak",
+   "drawn_as": "quercus_gambelii",
+   "share": 0.0022,
+   "why_needed": [
+    "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
+    "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)"
+   ]
+  },
+  {
+   "id": "salix_exigua",
    "kind": "shrub",
    "fidelity": 4,
-   "common": "buckbrush",
-   "drawn_as": "ceanothus_cuneatus",
-   "share": 0.1349,
+   "common": "sandbar willow",
+   "drawn_as": "salix_exigua",
+   "share": 0.0012,
    "why_needed": [
-    "named by EVT 7104 Mogollon Chaparral (199 cells)"
+    "named by BPS 1214 Rocky Mountain Montane Riparian Systems (72 cells)",
+    "named by EVT 9327 Interior West Ruderal Riparian Forest (36 cells)",
+    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (19 cells)"
+   ]
+  },
+  {
+   "id": "pseudotsuga_menziesii",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "Douglas-fir",
+   "drawn_as": "pseudotsuga_menziesii",
+   "share": 0.0004,
+   "why_needed": [
+    "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)",
+    "canopy: records (GBIF: 40 records on the tile; height not yet screened)"
    ]
   },
   {
@@ -200,44 +457,22 @@
    ]
   },
   {
-   "id": "calocedrus_decurrens",
-   "kind": "tree",
+   "id": "elymus_elymoides",
+   "kind": "grass",
    "fidelity": 3,
-   "common": "incense cedar",
-   "drawn_as": "calocedrus_decurrens",
-   "share": 0.0003,
-   "why_needed": [
-    "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)"
-   ]
-  },
-  {
-   "id": "pseudotsuga_menziesii",
-   "kind": "tree",
-   "fidelity": 3,
-   "common": "Douglas-fir",
-   "drawn_as": "pseudotsuga_menziesii",
-   "share": 0.0003,
-   "why_needed": [
-    "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)"
-   ]
-  },
-  {
-   "id": "quercus_kelloggii",
-   "kind": "tree",
-   "fidelity": 3,
-   "common": "California black oak",
-   "drawn_as": "quercus_kelloggii",
+   "common": "squirreltail",
+   "drawn_as": "elymus_elymoides",
    "share": 0.0002,
    "why_needed": [
-    "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)"
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
-   "id": "pinus_lambertiana",
+   "id": "populus_tremuloides",
    "kind": "tree",
    "fidelity": 2,
-   "common": "sugar pine",
-   "drawn_as": "pinus_lambertiana",
+   "common": "quaking aspen",
+   "drawn_as": "populus_tremuloides",
    "share": 0.0001,
    "why_needed": [
     "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)"
@@ -245,27 +480,28 @@
   },
   {
    "id": "acer_negundo",
-   "kind": "shrub",
+   "kind": "tree",
    "fidelity": 0,
    "common": null,
    "drawn_as": null,
    "share": 0,
    "why_needed": [
-    "GBIF: 20 records on the tile"
+    "named by BPS 1214 Rocky Mountain Montane Riparian Systems (72 cells)",
+    "named by EVT 9327 Interior West Ruderal Riparian Forest (36 cells)",
+    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (19 cells)"
    ],
    "stand_in": null
   },
   {
    "id": "agave_utahensis",
    "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
+   "fidelity": 3,
+   "common": "Utah agave",
+   "drawn_as": "agave_utahensis",
    "share": 0,
    "why_needed": [
     "GBIF: 172 records on the tile"
-   ],
-   "stand_in": null
+   ]
   },
   {
    "id": "alloberberis_fremontii",
@@ -280,6 +516,32 @@
    "stand_in": null
   },
   {
+   "id": "amelanchier_utahensis",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": "purshia_stansburiana",
+   "share": 0,
+   "why_needed": [
+    "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
+    "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)",
+    "named by EVT 7086 Rocky Mountain Lower Montane-Foothill Shrubland (92 cells)"
+   ],
+   "stand_in": "purshia_stansburiana"
+  },
+  {
+   "id": "arctostaphylos_pungens",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": "arctostaphylos_patula",
+   "share": 0,
+   "why_needed": [
+    "named by EVT 7104 Mogollon Chaparral (199 cells)"
+   ],
+   "stand_in": "arctostaphylos_patula"
+  },
+  {
    "id": "asclepias_subverticillata",
    "kind": "forb",
    "fidelity": 0,
@@ -292,26 +554,25 @@
    "stand_in": null
   },
   {
-   "id": "astragalus_calycosus",
-   "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "GBIF: 67 records on the tile"
-   ],
-   "stand_in": null
-  },
-  {
    "id": "castilleja_integra",
    "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
+   "fidelity": 3,
+   "common": "wholeleaf Indian paintbrush",
+   "drawn_as": "castilleja_integra",
    "share": 0,
    "why_needed": [
     "GBIF: 71 records on the tile"
+   ]
+  },
+  {
+   "id": "ceanothus_pauciflorus",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "named by EVT 7104 Mogollon Chaparral (199 cells)"
    ],
    "stand_in": null
   },
@@ -327,6 +588,32 @@
    ]
   },
   {
+   "id": "cercis_orbiculata",
+   "kind": "tree",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "canopy: records (GBIF: 31 records on the tile; height not yet screened)"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "cercocarpus_montanus",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": "cercocarpus_ledifolius",
+   "share": 0,
+   "why_needed": [
+    "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
+    "named by EVT 7104 Mogollon Chaparral (199 cells)",
+    "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)"
+   ],
+   "stand_in": "cercocarpus_ledifolius"
+  },
+  {
    "id": "chamaebatiaria_millefolium",
    "kind": "forb",
    "fidelity": 0,
@@ -337,6 +624,18 @@
     "GBIF: 428 records on the tile"
    ],
    "stand_in": null
+  },
+  {
+   "id": "chrysothamnus_viscidiflorus",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": "encelia_farinosa",
+   "share": 0,
+   "why_needed": [
+    "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)"
+   ],
+   "stand_in": "encelia_farinosa"
   },
   {
    "id": "cirsium_arizonicum",
@@ -388,15 +687,37 @@
   },
   {
    "id": "ericameria_nauseosa",
-   "kind": "forb",
+   "kind": "shrub",
    "fidelity": 0,
    "common": null,
-   "drawn_as": "baccharis_pilularis",
+   "drawn_as": "encelia_farinosa",
    "share": 0,
    "why_needed": [
-    "GBIF: 151 records on the tile"
+    "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)"
    ],
-   "stand_in": "baccharis_pilularis"
+   "stand_in": "encelia_farinosa"
+  },
+  {
+   "id": "erigeron_divergens",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "spreading fleabane",
+   "drawn_as": "erigeron_divergens",
+   "share": 0,
+   "why_needed": [
+    "GBIF: 24 records on the tile"
+   ]
+  },
+  {
+   "id": "eriogonum_racemosum",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "redroot buckwheat",
+   "drawn_as": "eriogonum_racemosum",
+   "share": 0,
+   "why_needed": [
+    "GBIF: 15 records on the tile"
+   ]
   },
   {
    "id": "erodium_cicutarium",
@@ -422,26 +743,14 @@
    "stand_in": null
   },
   {
-   "id": "fendlera_rupicola",
+   "id": "garrya_flavescens",
    "kind": "shrub",
    "fidelity": 0,
    "common": null,
    "drawn_as": null,
    "share": 0,
    "why_needed": [
-    "GBIF: 25 records on the tile"
-   ],
-   "stand_in": null
-  },
-  {
-   "id": "fraxinus_anomala",
-   "kind": "shrub",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "GBIF: 26 records on the tile"
+    "named by EVT 7104 Mogollon Chaparral (199 cells)"
    ],
    "stand_in": null
   },
@@ -457,16 +766,27 @@
    ]
   },
   {
-   "id": "juniperus_osteosperma",
-   "kind": "tree",
+   "id": "krascheninnikovia_lanata",
+   "kind": "shrub",
    "fidelity": 0,
    "common": null,
-   "drawn_as": null,
+   "drawn_as": "atriplex_canescens",
    "share": 0,
    "why_needed": [
-    "GBIF: 239 records on the tile"
+    "named by EVT 7081 Inter-Mountain Basins Mixed Salt Desert Scrub (422 cells)"
    ],
-   "stand_in": null
+   "stand_in": "atriplex_canescens"
+  },
+  {
+   "id": "lupinus_argenteus",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "silvery lupine",
+   "drawn_as": "lupinus_argenteus",
+   "share": 0,
+   "why_needed": [
+    "GBIF: 20 records on the tile"
+   ]
   },
   {
    "id": "mahonia_repens",
@@ -477,6 +797,18 @@
    "share": 0,
    "why_needed": [
     "GBIF: 28 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "opuntia_basilaris",
+   "kind": "tree",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "canopy: records (GBIF: 56 records on the tile; height not yet screened)"
    ],
    "stand_in": null
   },
@@ -506,37 +838,13 @@
   },
   {
    "id": "ostrya_knowltonii",
-   "kind": "shrub",
+   "kind": "tree",
    "fidelity": 0,
    "common": null,
    "drawn_as": null,
    "share": 0,
    "why_needed": [
-    "GBIF: 23 records on the tile"
-   ],
-   "stand_in": null
-  },
-  {
-   "id": "packera_multilobata",
-   "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "GBIF: 68 records on the tile"
-   ],
-   "stand_in": null
-  },
-  {
-   "id": "pelecyphora_vivipara",
-   "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "GBIF: 66 records on the tile"
+    "canopy: records (GBIF: 23 records on the tile; height not yet screened)"
    ],
    "stand_in": null
   },
@@ -591,12 +899,23 @@
   {
    "id": "phlox_austromontana",
    "kind": "forb",
+   "fidelity": 3,
+   "common": "mountain phlox",
+   "drawn_as": "phlox_austromontana",
+   "share": 0,
+   "why_needed": [
+    "GBIF: 80 records on the tile"
+   ]
+  },
+  {
+   "id": "phoenix_dactylifera",
+   "kind": "tree",
    "fidelity": 0,
    "common": null,
    "drawn_as": null,
    "share": 0,
    "why_needed": [
-    "GBIF: 80 records on the tile"
+    "canopy: records (GBIF: 3 records on the tile; height not yet screened)"
    ],
    "stand_in": null
   },
@@ -613,75 +932,38 @@
    "stand_in": null
   },
   {
-   "id": "pinus_edulis",
+   "id": "picea_pungens",
    "kind": "tree",
    "fidelity": 0,
    "common": null,
-   "drawn_as": null,
+   "drawn_as": "pinus_edulis",
    "share": 0,
    "why_needed": [
-    "GBIF: 479 records on the tile"
+    "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)"
    ],
-   "stand_in": null
+   "stand_in": "pinus_edulis"
   },
   {
-   "id": "pinus_monophylla",
-   "kind": "tree",
+   "id": "quercus_turbinella",
+   "kind": "shrub",
    "fidelity": 0,
    "common": null,
-   "drawn_as": "pinus_sabiniana",
+   "drawn_as": "quercus_gambelii",
    "share": 0,
    "why_needed": [
-    "named by EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (12829 cells)",
-    "named by EVT 7102 Colorado Plateau Pinyon-Juniper Shrubland (401 cells)",
-    "named by BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (117 cells)"
+    "named by EVT 7104 Mogollon Chaparral (199 cells)"
    ],
-   "stand_in": "pinus_sabiniana"
+   "stand_in": "quercus_gambelii"
   },
   {
-   "id": "populus_fremontii",
-   "kind": "tree",
-   "fidelity": 4,
-   "common": "Fremont cottonwood",
-   "drawn_as": "populus_fremontii",
-   "share": 0,
-   "why_needed": [
-    "GBIF: 17 records on the tile"
-   ]
-  },
-  {
-   "id": "purshia_stansburiana",
-   "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "GBIF: 237 records on the tile"
-   ],
-   "stand_in": null
-  },
-  {
-   "id": "quercus_gambelii",
-   "kind": "tree",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "GBIF: 260 records on the tile"
-   ],
-   "stand_in": null
-  },
-  {
-   "id": "rhus_trilobata",
+   "id": "rhus_aromatica",
    "kind": "shrub",
    "fidelity": 0,
    "common": null,
    "drawn_as": null,
    "share": 0,
    "why_needed": [
-    "GBIF: 13 records on the tile"
+    "named by EVT 7086 Rocky Mountain Lower Montane-Foothill Shrubland (92 cells)"
    ],
    "stand_in": null
   },
@@ -710,40 +992,40 @@
    "stand_in": null
   },
   {
-   "id": "shepherdia_rotundifolia",
+   "id": "rosa_woodsii",
    "kind": "shrub",
    "fidelity": 0,
    "common": null,
-   "drawn_as": null,
+   "drawn_as": "purshia_stansburiana",
    "share": 0,
    "why_needed": [
-    "GBIF: 12 records on the tile"
+    "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
+    "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)",
+    "named by EVT 7086 Rocky Mountain Lower Montane-Foothill Shrubland (92 cells)"
    ],
-   "stand_in": null
+   "stand_in": "purshia_stansburiana"
   },
   {
-   "id": "solanum_elaeagnifolium",
+   "id": "sphaeralcea_parvifolia",
    "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
+   "fidelity": 3,
+   "common": "small-leaf globemallow",
+   "drawn_as": "sphaeralcea_parvifolia",
    "share": 0,
    "why_needed": [
-    "GBIF: 72 records on the tile"
-   ],
-   "stand_in": null
+    "GBIF: 27 records on the tile"
+   ]
   },
   {
    "id": "yucca_baccata",
    "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
+   "fidelity": 3,
+   "common": "banana yucca",
+   "drawn_as": "yucca_baccata",
    "share": 0,
    "why_needed": [
     "GBIF: 193 records on the tile"
-   ],
-   "stand_in": null
+   ]
   }
  ],
  "animals": [
@@ -1398,7 +1680,7 @@
    "scientific": "Aquila chrysaetos",
    "common": "golden eagle",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "predator and scavenger"
@@ -1551,7 +1833,7 @@
    "scientific": "Ovis canadensis",
    "common": "bighorn sheep",
    "kind": "mammal",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "most recorded: 5 of its class (3% of the class's records)"
@@ -1810,6 +2092,71 @@
    "traits": null
   },
   {
+   "id": "sceloporus_tristichus",
+   "scientific": "Sceloporus tristichus",
+   "common": "plateau fence lizard",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 1 of its class (25% of the class's records)"
+   ],
+   "role": [],
+   "traits": "library/animals/traits/sceloporus_tristichus.json"
+  },
+  {
+   "id": "uta_stansburiana",
+   "scientific": "Uta stansburiana",
+   "common": "side-blotched lizard",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 2 of its class (22% of the class's records)"
+   ],
+   "role": [],
+   "traits": "library/animals/traits/uta_stansburiana.json"
+  },
+  {
+   "id": "sceloporus_magister",
+   "scientific": "Sceloporus magister",
+   "common": "desert spiny lizard",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 3 of its class (15% of the class's records)"
+   ],
+   "role": [],
+   "traits": "library/animals/traits/sceloporus_magister.json"
+  },
+  {
+   "id": "urosaurus_ornatus",
+   "scientific": "Urosaurus ornatus",
+   "common": "ornate tree lizard",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 4 of its class (15% of the class's records)"
+   ],
+   "role": [],
+   "traits": "library/animals/traits/urosaurus_ornatus.json"
+  },
+  {
+   "id": "aspidoscelis_tigris",
+   "scientific": "Aspidoscelis tigris",
+   "common": "tiger whiptail",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 5 of its class (7% of the class's records)"
+   ],
+   "role": [],
+   "traits": "library/animals/traits/aspidoscelis_tigris.json"
+  },
+  {
    "id": "dryophytes_arenicolor",
    "scientific": "Dryophytes arenicolor",
    "common": "canyon treefrog",
@@ -1891,20 +2238,143 @@
  "queue": {
   "cards": [
    {
-    "id": "pinus_monophylla",
-    "kind": "tree",
-    "stand_in": "pinus_sabiniana",
-    "why": [
-     "named by EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (12829 cells)",
-     "named by EVT 7102 Colorado Plateau Pinyon-Juniper Shrubland (401 cells)"
-    ]
-   },
-   {
-    "id": "pinus_edulis",
+    "id": "phoenix_dactylifera",
     "kind": "tree",
     "stand_in": null,
     "why": [
-     "GBIF: 479 records on the tile"
+     "canopy: records (GBIF: 3 records on the tile; height not yet screened)"
+    ]
+   },
+   {
+    "id": "opuntia_basilaris",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "canopy: records (GBIF: 56 records on the tile; height not yet screened)"
+    ]
+   },
+   {
+    "id": "amelanchier_utahensis",
+    "kind": "shrub",
+    "stand_in": "purshia_stansburiana",
+    "why": [
+     "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
+     "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)"
+    ]
+   },
+   {
+    "id": "cercis_orbiculata",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "canopy: records (GBIF: 31 records on the tile; height not yet screened)"
+    ]
+   },
+   {
+    "id": "ostrya_knowltonii",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "canopy: records (GBIF: 23 records on the tile; height not yet screened)"
+    ]
+   },
+   {
+    "id": "acer_negundo",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "named by BPS 1214 Rocky Mountain Montane Riparian Systems (72 cells)",
+     "named by EVT 9327 Interior West Ruderal Riparian Forest (36 cells)"
+    ]
+   },
+   {
+    "id": "ericameria_nauseosa",
+    "kind": "shrub",
+    "stand_in": "encelia_farinosa",
+    "why": [
+     "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)"
+    ]
+   },
+   {
+    "id": "chrysothamnus_viscidiflorus",
+    "kind": "shrub",
+    "stand_in": "encelia_farinosa",
+    "why": [
+     "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)"
+    ]
+   },
+   {
+    "id": "krascheninnikovia_lanata",
+    "kind": "shrub",
+    "stand_in": "atriplex_canescens",
+    "why": [
+     "named by EVT 7081 Inter-Mountain Basins Mixed Salt Desert Scrub (422 cells)"
+    ]
+   },
+   {
+    "id": "cercocarpus_montanus",
+    "kind": "shrub",
+    "stand_in": "cercocarpus_ledifolius",
+    "why": [
+     "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
+     "named by EVT 7104 Mogollon Chaparral (199 cells)"
+    ]
+   },
+   {
+    "id": "rosa_woodsii",
+    "kind": "shrub",
+    "stand_in": "purshia_stansburiana",
+    "why": [
+     "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
+     "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)"
+    ]
+   },
+   {
+    "id": "arctostaphylos_pungens",
+    "kind": "shrub",
+    "stand_in": "arctostaphylos_patula",
+    "why": [
+     "named by EVT 7104 Mogollon Chaparral (199 cells)"
+    ]
+   },
+   {
+    "id": "ceanothus_pauciflorus",
+    "kind": "shrub",
+    "stand_in": null,
+    "why": [
+     "named by EVT 7104 Mogollon Chaparral (199 cells)"
+    ]
+   },
+   {
+    "id": "garrya_flavescens",
+    "kind": "shrub",
+    "stand_in": null,
+    "why": [
+     "named by EVT 7104 Mogollon Chaparral (199 cells)"
+    ]
+   },
+   {
+    "id": "quercus_turbinella",
+    "kind": "shrub",
+    "stand_in": "quercus_gambelii",
+    "why": [
+     "named by EVT 7104 Mogollon Chaparral (199 cells)"
+    ]
+   },
+   {
+    "id": "rhus_aromatica",
+    "kind": "shrub",
+    "stand_in": null,
+    "why": [
+     "named by EVT 7086 Rocky Mountain Lower Montane-Foothill Shrubland (92 cells)"
+    ]
+   },
+   {
+    "id": "picea_pungens",
+    "kind": "tree",
+    "stand_in": "pinus_edulis",
+    "why": [
+     "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)"
     ]
    },
    {
@@ -1924,59 +2394,11 @@
     ]
    },
    {
-    "id": "quercus_gambelii",
-    "kind": "tree",
-    "stand_in": null,
-    "why": [
-     "GBIF: 260 records on the tile"
-    ]
-   },
-   {
-    "id": "juniperus_osteosperma",
-    "kind": "tree",
-    "stand_in": null,
-    "why": [
-     "GBIF: 239 records on the tile"
-    ]
-   },
-   {
-    "id": "purshia_stansburiana",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 237 records on the tile"
-    ]
-   },
-   {
     "id": "opuntia_phaeacantha",
     "kind": "forb",
     "stand_in": null,
     "why": [
      "GBIF: 211 records on the tile"
-    ]
-   },
-   {
-    "id": "yucca_baccata",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 193 records on the tile"
-    ]
-   },
-   {
-    "id": "agave_utahensis",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 172 records on the tile"
-    ]
-   },
-   {
-    "id": "ericameria_nauseosa",
-    "kind": "forb",
-    "stand_in": "baccharis_pilularis",
-    "why": [
-     "GBIF: 151 records on the tile"
     ]
    },
    {
@@ -2060,14 +2482,6 @@
     ]
    },
    {
-    "id": "phlox_austromontana",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 80 records on the tile"
-    ]
-   },
-   {
     "id": "echinocactus_polycephalus",
     "kind": "forb",
     "stand_in": null,
@@ -2081,46 +2495,6 @@
     "stand_in": null,
     "why": [
      "GBIF: 77 records on the tile"
-    ]
-   },
-   {
-    "id": "solanum_elaeagnifolium",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 72 records on the tile"
-    ]
-   },
-   {
-    "id": "castilleja_integra",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 71 records on the tile"
-    ]
-   },
-   {
-    "id": "packera_multilobata",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 68 records on the tile"
-    ]
-   },
-   {
-    "id": "astragalus_calycosus",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 67 records on the tile"
-    ]
-   },
-   {
-    "id": "pelecyphora_vivipara",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 66 records on the tile"
     ]
    },
    {
@@ -2145,54 +2519,6 @@
     "stand_in": null,
     "why": [
      "GBIF: 27 records on the tile"
-    ]
-   },
-   {
-    "id": "fraxinus_anomala",
-    "kind": "shrub",
-    "stand_in": null,
-    "why": [
-     "GBIF: 26 records on the tile"
-    ]
-   },
-   {
-    "id": "fendlera_rupicola",
-    "kind": "shrub",
-    "stand_in": null,
-    "why": [
-     "GBIF: 25 records on the tile"
-    ]
-   },
-   {
-    "id": "ostrya_knowltonii",
-    "kind": "shrub",
-    "stand_in": null,
-    "why": [
-     "GBIF: 23 records on the tile"
-    ]
-   },
-   {
-    "id": "acer_negundo",
-    "kind": "shrub",
-    "stand_in": null,
-    "why": [
-     "GBIF: 20 records on the tile"
-    ]
-   },
-   {
-    "id": "rhus_trilobata",
-    "kind": "shrub",
-    "stand_in": null,
-    "why": [
-     "GBIF: 13 records on the tile"
-    ]
-   },
-   {
-    "id": "shepherdia_rotundifolia",
-    "kind": "shrub",
-    "stand_in": null,
-    "why": [
-     "GBIF: 12 records on the tile"
     ]
    }
   ],
@@ -2529,6 +2855,36 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
+    "id": "sceloporus_tristichus",
+    "scientific": "Sceloporus tristichus",
+    "common": "plateau fence lizard",
+    "kind": "reptile",
+    "records": 482,
+    "why": [
+     "most recorded: 1 of its class (25% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
+    "stand_in": "sceloporus_occidentalis",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "uta_stansburiana",
+    "scientific": "Uta stansburiana",
+    "common": "side-blotched lizard",
+    "kind": "reptile",
+    "records": 418,
+    "why": [
+     "most recorded: 2 of its class (22% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
+    "stand_in": "sceloporus_occidentalis",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
     "id": "tamias_dorsalis",
     "scientific": "Tamias dorsalis",
     "common": "cliff chipmunk",
@@ -2541,6 +2897,36 @@
     "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
     "estimate_credits": 30,
     "stand_in": "sciurus_griseus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "sceloporus_magister",
+    "scientific": "Sceloporus magister",
+    "common": "desert spiny lizard",
+    "kind": "reptile",
+    "records": 285,
+    "why": [
+     "most recorded: 3 of its class (15% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
+    "stand_in": "sceloporus_occidentalis",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "urosaurus_ornatus",
+    "scientific": "Urosaurus ornatus",
+    "common": "ornate tree lizard",
+    "kind": "reptile",
+    "records": 282,
+    "why": [
+     "most recorded: 4 of its class (15% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
+    "stand_in": "sceloporus_occidentalis",
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
@@ -2616,6 +3002,21 @@
     "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
     "estimate_credits": 30,
     "stand_in": "falco_columbarius",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "aspidoscelis_tigris",
+    "scientific": "Aspidoscelis tigris",
+    "common": "tiger whiptail",
+    "kind": "reptile",
+    "records": 134,
+    "why": [
+     "most recorded: 5 of its class (7% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
+    "stand_in": null,
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
@@ -3030,20 +3431,143 @@
  },
  "hands": [
   {
-   "id": "pinus_monophylla",
+   "id": "phoenix_dactylifera",
    "kind": "tree",
    "what": "a trait card",
    "why": [
-    "named by EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (12829 cells)",
-    "named by EVT 7102 Colorado Plateau Pinyon-Juniper Shrubland (401 cells)"
+    "canopy: records (GBIF: 3 records on the tile; height not yet screened)"
    ]
   },
   {
-   "id": "pinus_edulis",
+   "id": "opuntia_basilaris",
    "kind": "tree",
    "what": "a trait card",
    "why": [
-    "GBIF: 479 records on the tile"
+    "canopy: records (GBIF: 56 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "amelanchier_utahensis",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
+    "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)"
+   ]
+  },
+  {
+   "id": "cercis_orbiculata",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 31 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "ostrya_knowltonii",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "canopy: records (GBIF: 23 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "acer_negundo",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "named by BPS 1214 Rocky Mountain Montane Riparian Systems (72 cells)",
+    "named by EVT 9327 Interior West Ruderal Riparian Forest (36 cells)"
+   ]
+  },
+  {
+   "id": "ericameria_nauseosa",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)"
+   ]
+  },
+  {
+   "id": "chrysothamnus_viscidiflorus",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)"
+   ]
+  },
+  {
+   "id": "krascheninnikovia_lanata",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "named by EVT 7081 Inter-Mountain Basins Mixed Salt Desert Scrub (422 cells)"
+   ]
+  },
+  {
+   "id": "cercocarpus_montanus",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
+    "named by EVT 7104 Mogollon Chaparral (199 cells)"
+   ]
+  },
+  {
+   "id": "rosa_woodsii",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
+    "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)"
+   ]
+  },
+  {
+   "id": "arctostaphylos_pungens",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "named by EVT 7104 Mogollon Chaparral (199 cells)"
+   ]
+  },
+  {
+   "id": "ceanothus_pauciflorus",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "named by EVT 7104 Mogollon Chaparral (199 cells)"
+   ]
+  },
+  {
+   "id": "garrya_flavescens",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "named by EVT 7104 Mogollon Chaparral (199 cells)"
+   ]
+  },
+  {
+   "id": "quercus_turbinella",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "named by EVT 7104 Mogollon Chaparral (199 cells)"
+   ]
+  },
+  {
+   "id": "rhus_aromatica",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "named by EVT 7086 Rocky Mountain Lower Montane-Foothill Shrubland (92 cells)"
+   ]
+  },
+  {
+   "id": "picea_pungens",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)"
    ]
   },
   {
@@ -3063,59 +3587,11 @@
    ]
   },
   {
-   "id": "quercus_gambelii",
-   "kind": "tree",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 260 records on the tile"
-   ]
-  },
-  {
-   "id": "juniperus_osteosperma",
-   "kind": "tree",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 239 records on the tile"
-   ]
-  },
-  {
-   "id": "purshia_stansburiana",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 237 records on the tile"
-   ]
-  },
-  {
    "id": "opuntia_phaeacantha",
    "kind": "forb",
    "what": "a trait card",
    "why": [
     "GBIF: 211 records on the tile"
-   ]
-  },
-  {
-   "id": "yucca_baccata",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 193 records on the tile"
-   ]
-  },
-  {
-   "id": "agave_utahensis",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 172 records on the tile"
-   ]
-  },
-  {
-   "id": "ericameria_nauseosa",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 151 records on the tile"
    ]
   },
   {
@@ -3199,14 +3675,6 @@
    ]
   },
   {
-   "id": "phlox_austromontana",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 80 records on the tile"
-   ]
-  },
-  {
    "id": "echinocactus_polycephalus",
    "kind": "forb",
    "what": "a trait card",
@@ -3220,46 +3688,6 @@
    "what": "a trait card",
    "why": [
     "GBIF: 77 records on the tile"
-   ]
-  },
-  {
-   "id": "solanum_elaeagnifolium",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 72 records on the tile"
-   ]
-  },
-  {
-   "id": "castilleja_integra",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 71 records on the tile"
-   ]
-  },
-  {
-   "id": "packera_multilobata",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 68 records on the tile"
-   ]
-  },
-  {
-   "id": "astragalus_calycosus",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 67 records on the tile"
-   ]
-  },
-  {
-   "id": "pelecyphora_vivipara",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 66 records on the tile"
    ]
   },
   {
@@ -3287,83 +3715,11 @@
    ]
   },
   {
-   "id": "fraxinus_anomala",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 26 records on the tile"
-   ]
-  },
-  {
-   "id": "fendlera_rupicola",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 25 records on the tile"
-   ]
-  },
-  {
-   "id": "ostrya_knowltonii",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 23 records on the tile"
-   ]
-  },
-  {
-   "id": "acer_negundo",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 20 records on the tile"
-   ]
-  },
-  {
-   "id": "rhus_trilobata",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 13 records on the tile"
-   ]
-  },
-  {
-   "id": "shepherdia_rotundifolia",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 12 records on the tile"
-   ]
-  },
-  {
    "id": "Colorado Plateau Mixed Bedrock Canyon and Tableland",
    "kind": "community",
    "what": "a lexicon phrase or a species-mix rule",
    "why": [
     "42161 cells"
-   ]
-  },
-  {
-   "id": "Colorado Plateau Blackbrush-Mormon-tea Shrubland",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "19780 cells"
-   ]
-  },
-  {
-   "id": "Sonora-Mojave Creosotebush-White Bursage Desert Scrub",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "5408 cells"
-   ]
-  },
-  {
-   "id": "Mojave Mid-Elevation Mixed Desert Scrub",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "2453 cells"
    ]
   },
   {
@@ -3383,59 +3739,11 @@
    ]
   },
   {
-   "id": "Inter-Mountain Basins Semi-Desert Shrub-Steppe",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "1191 cells"
-   ]
-  },
-  {
-   "id": "Rocky Mountain Gambel Oak-Mixed Montane Shrubland",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "460 cells"
-   ]
-  },
-  {
-   "id": "Inter-Mountain Basins Mixed Salt Desert Scrub",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "422 cells"
-   ]
-  },
-  {
    "id": "Great Basin & Intermountain Ruderal Shrubland",
    "kind": "community",
    "what": "a lexicon phrase or a species-mix rule",
    "why": [
     "188 cells"
-   ]
-  },
-  {
-   "id": "Rocky Mountain Gambel Oak-Mixed Montane Shrubland",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "109 cells"
-   ]
-  },
-  {
-   "id": "Rocky Mountain Lower Montane-Foothill Shrubland",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "92 cells"
-   ]
-  },
-  {
-   "id": "Rocky Mountain Montane Riparian Systems",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "72 cells"
    ]
   },
   {
@@ -3447,35 +3755,11 @@
    ]
   },
   {
-   "id": "Interior West Ruderal Riparian Forest",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "36 cells"
-   ]
-  },
-  {
-   "id": "Rocky Mountain Lower Montane-Foothill Riparian Woodland",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "19 cells"
-   ]
-  },
-  {
    "id": "North American Arid West Emergent Marsh",
    "kind": "community",
    "what": "a lexicon phrase or a species-mix rule",
    "why": [
     "13 cells"
-   ]
-  },
-  {
-   "id": "Interior West Ruderal Riparian Scrub",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "11 cells"
    ]
   },
   {
@@ -3664,11 +3948,43 @@
    ]
   },
   {
+   "id": "sceloporus_tristichus",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 1 of its class (25% of the class's records)"
+   ]
+  },
+  {
+   "id": "uta_stansburiana",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 2 of its class (22% of the class's records)"
+   ]
+  },
+  {
    "id": "tamias_dorsalis",
    "kind": "mammal",
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
     "most recorded: 4 of its class (9% of the class's records)"
+   ]
+  },
+  {
+   "id": "sceloporus_magister",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 3 of its class (15% of the class's records)"
+   ]
+  },
+  {
+   "id": "urosaurus_ornatus",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 4 of its class (15% of the class's records)"
    ]
   },
   {
@@ -3709,6 +4025,14 @@
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
     "predator"
+   ]
+  },
+  {
+   "id": "aspidoscelis_tigris",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 5 of its class (7% of the class's records)"
    ]
   },
   {
@@ -3912,6 +4236,46 @@
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
     "most recorded: 27 of its class (0% of the class's records)"
+   ]
+  },
+  {
+   "id": "sceloporus_tristichus",
+   "kind": "reptile",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "uta_stansburiana",
+   "kind": "reptile",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "sceloporus_magister",
+   "kind": "reptile",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "urosaurus_ornatus",
+   "kind": "reptile",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "aspidoscelis_tigris",
+   "kind": "reptile",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
    ]
   }
  ]

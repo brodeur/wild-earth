@@ -15,7 +15,7 @@
   44.9171452371748
  ],
  "size_m": 10000,
- "generated_at": "2026-11-09T05:18:55Z",
+ "generated_at": "2026-11-10T21:11:55Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -5010,11 +5010,11 @@
     "gbif"
    ],
    "trees": 4,
-   "with_card": 2,
+   "with_card": 3,
    "queued": 4,
    "cards_written": [],
-   "sha256": "d38496d435a55895776d63229e219d259e86390f51a90bc47944b461cc72c3b1",
-   "bytes": 2535
+   "sha256": "1fcc86a0c00751ca420e8a951f3fc05515eb2ac9df63dc9429347314a8099dfb",
+   "bytes": 2534
   },
   "species.plant_needs": {
    "path": "species/plant_needs.json",
@@ -5023,24 +5023,24 @@
     "gbif",
     "landfire"
    ],
-   "needed": 28,
-   "with_record": 17,
+   "needed": 26,
+   "with_record": 14,
    "generated_now": 0,
-   "queued": 11,
-   "unread_communities": 18,
+   "queued": 12,
+   "unread_communities": 12,
    "meets_target": {
     "tree": false,
     "shrub": false,
     "ground": false
    },
-   "hands": 29,
+   "hands": 24,
    "by_layer": {
-    "tree": 16,
-    "shrub": 2,
+    "tree": 9,
+    "shrub": 7,
     "ground": 10
    },
-   "sha256": "f9fe242fad8211fae85df7dac97001be44e86580c8e3e816be3e6f2fecbce830",
-   "bytes": 49113
+   "sha256": "fb287579357e0cae2d54c1c40414e2bf044db0687d9775ce54664eb19f2a99e0",
+   "bytes": 50116
   },
   "client.species_mix": {
    "path": "client/species_mix.json",
@@ -5057,12 +5057,12 @@
    "format": 2,
    "files": {
     "client/species_mix_index.png": {
-     "sha256": "04ca9d6cb8ba6a216ef3e543764dd0ea0c8fad876e8a33fa2d7e4ab29511b5b3",
-     "bytes": 48244
+     "sha256": "b1d67f44056d9b7185bfe30b0676e459203fad710e9846ae33eeb5f8c35cddea",
+     "bytes": 48647
     },
     "client/species_mix_density.png": {
-     "sha256": "7ab67ff08808db52fbbf48248f37dbf409534fef02d695ec4a772e4ba704ba3f",
-     "bytes": 22572
+     "sha256": "46f57fc83253c3b38d91f1b70c4fd630010c17d912bdc92e260e526f71d9b24c",
+     "bytes": 26609
     }
    },
    "derived_from": [
@@ -5077,56 +5077,20 @@
    "encoding": "format 2: species_mix_index L = row in mixes; species_mix_density RGB = tree_density, shrub_density (byte/100); per-row weights as mixes[].tree_bytes / shrub_bytes over species.trees / species.shrubs",
    "species": {
     "trees": [
-     "quercus_douglasii",
-     "quercus_wislizeni",
-     "pinus_sabiniana",
-     "pinus_ponderosa",
-     "salix_lasiolepis",
-     "alnus_rhombifolia",
-     "populus_fremontii",
-     "quercus_lobata",
-     "quercus_chrysolepis",
-     "quercus_kelloggii",
-     "aesculus_californica",
-     "arbutus_menziesii",
-     "umbellularia_californica",
-     "juglans_hindsii",
-     "acer_macrophyllum",
-     "fraxinus_latifolia",
-     "calocedrus_decurrens",
      "pseudotsuga_menziesii",
-     "salix_laevigata",
-     "salix_lasiandra",
-     "platanus_racemosa",
      "populus_tremuloides",
      "pinus_albicaulis",
-     "pinus_contorta"
+     "pinus_contorta",
+     "abies_lasiocarpa",
+     "picea_engelmannii",
+     "pinus_flexilis"
     ],
     "shrubs": [
-     "arctostaphylos_viscida",
-     "adenostoma_fasciculatum",
-     "heteromeles_arbutifolia",
-     "cercis_occidentalis",
-     "toxicodendron_diversilobum",
-     "baccharis_pilularis",
-     "sambucus_nigra_caerulea",
-     "frangula_californica",
-     "arctostaphylos_manzanita",
-     "ceanothus_cuneatus",
-     "ceanothus_integerrimus",
-     "cercocarpus_betuloides",
-     "diplacus_aurantiacus",
-     "rosa_californica",
      "symphoricarpos_albus",
-     "ribes_roezlii",
-     "ribes_malvaceum",
-     "salix_exigua",
-     "cephalanthus_occidentalis",
-     "cornus_sericea",
-     "rubus_ursinus",
-     "vitis_californica",
-     "calycanthus_occidentalis",
-     "artemisia_tridentata"
+     "amelanchier_alnifolia",
+     "rubus_parviflorus",
+     "artemisia_tridentata",
+     "salix_boothii"
     ],
     "ground": [
      "actaea_rubra",
@@ -5162,88 +5126,35 @@
      "saxifraga_odontoloma"
     ]
    },
-   "mixes": 80,
+   "mixes": 88,
    "unmatched": 39,
    "fractions": {
     "from_evt": 0.9943,
     "from_bps_backfill": 0.0057,
     "tree_share": {
-     "blue_oak": 0.0,
-     "live_oak": 0.0,
-     "gray_pine": 0.0,
-     "ponderosa": 0.0004,
-     "willow": 0.0,
-     "alder": 0.0,
-     "cottonwood": 0.0,
-     "valley_oak": 0.0,
-     "canyon_live_oak": 0.0,
-     "black_oak": 0.0,
-     "buckeye": 0.0,
-     "madrone": 0.0,
-     "bay": 0.0,
-     "walnut": 0.0,
-     "maple": 0.0,
-     "ash": 0.0,
-     "incense_cedar": 0.0,
-     "douglas_fir": 0.5441,
-     "red_willow": 0.0,
-     "pacific_willow": 0.0,
-     "sycamore": 0.0,
-     "populus_tremuloides": 0.0515,
-     "pinus_albicaulis": 0.0778,
-     "pinus_contorta": 0.3263
+     "douglas_fir": 0.3656,
+     "populus_tremuloides": 0.0516,
+     "pinus_albicaulis": 0.0162,
+     "pinus_contorta": 0.2096,
+     "abies_lasiocarpa": 0.1666,
+     "picea_engelmannii": 0.1731,
+     "pinus_flexilis": 0.0173
     },
     "tree_share_by_canopy": {
-     "blue_oak": 0.0,
-     "live_oak": 0.0,
-     "gray_pine": 0.0,
-     "ponderosa": 0.0002,
-     "willow": 0.0,
-     "alder": 0.0,
-     "cottonwood": 0.0,
-     "valley_oak": 0.0,
-     "canyon_live_oak": 0.0,
-     "black_oak": 0.0,
-     "buckeye": 0.0,
-     "madrone": 0.0,
-     "bay": 0.0,
-     "walnut": 0.0,
-     "maple": 0.0,
-     "ash": 0.0,
-     "incense_cedar": 0.0,
-     "douglas_fir": 0.5498,
-     "red_willow": 0.0,
-     "pacific_willow": 0.0,
-     "sycamore": 0.0,
+     "douglas_fir": 0.3375,
      "populus_tremuloides": 0.0236,
-     "pinus_albicaulis": 0.076,
-     "pinus_contorta": 0.3504
+     "pinus_albicaulis": 0.0141,
+     "pinus_contorta": 0.227,
+     "abies_lasiocarpa": 0.1867,
+     "picea_engelmannii": 0.1964,
+     "pinus_flexilis": 0.0146
     },
     "shrub_share": {
-     "manzanita": 0.0,
-     "chamise": 0.0,
-     "toyon": 0.0,
-     "redbud": 0.0,
-     "poison_oak": 0.0,
-     "coyote_brush": 0.0,
-     "elderberry": 0.0,
-     "coffeeberry": 0.0,
-     "common_manzanita": 0.0,
-     "buckbrush": 0.0,
-     "deerbrush": 0.0,
-     "mountain_mahogany": 0.0,
-     "monkeyflower": 0.0,
-     "wild_rose": 0.0,
-     "snowberry": 0.0,
-     "gooseberry": 0.0,
-     "currant": 0.0,
-     "sandbar_willow": 0.0,
-     "button_willow": 0.0,
-     "creek_dogwood": 0.0,
-     "blackberry": 0.0,
-     "wild_grape": 0.0,
-     "spicebush": 0.0,
-     "artemisia_tridentata": 1.0
+     "snowberry": 0.0021,
+     "amelanchier_alnifolia": 0.002,
+     "rubus_parviflorus": 0.058,
+     "artemisia_tridentata": 0.8639,
+     "salix_boothii": 0.074
     },
     "ground_share": {
      "actaea_rubra": 0.0027,
@@ -5279,30 +5190,33 @@
      "saxifraga_odontoloma": 0.0165
     },
     "mean_tree_density": 0.4915,
-    "mean_shrub_density": 0.3296,
+    "mean_shrub_density": 0.3778,
     "rules": {
      "named_from_artemisia_tridentata": 0.3251,
      "named_from_pseudotsuga_menziesii": 0.1497,
      "tile_pool_grassland": 0.1466,
-     "tile_pool_conifer_forest": 0.1289,
+     "named_from_picea_engelmannii_abies_lasiocarpa": 0.1277,
      "named_from_pinus_contorta": 0.082,
-     "tile_pool_riparian": 0.0803,
-     "named_from_pinus_albicaulis_pinus_contorta": 0.0277,
+     "named_from_salix_boothii_salix_bebbiana_rosa_woodsii": 0.0539,
+     "named_from_pinus_albicaulis_pinus_contorta_abies_lasiocarpa": 0.0277,
+     "tile_pool_riparian": 0.0265,
      "named_from_populus_tremuloides": 0.023,
      "open_water": 0.018,
      "tile_pool_barren": 0.0139,
-     "tile_pool_chaparral": 0.0045,
-     "named_from_pinus_flexilis": 0.0001,
-     "named_from_pinus_ponderosa_pseudotsuga_menziesii_populus_tremuloides": 0.0001
+     "named_from_amelanchier_alnifolia_prunus_virginiana_symphoricarpos_albus": 0.0032,
+     "tile_pool_chaparral": 0.0014,
+     "named_from_pinus_flexilis": 0.0012,
+     "named_from_pinus_flexilis_juniperus_scopulorum": 0.0001,
+     "named_from_pseudotsuga_menziesii_populus_tremuloides": 0.0001
     }
    },
    "structure": {
-    "rows_with_shrub_height": 7,
+    "rows_with_shrub_height": 22,
     "rows_with_herb_cover": 3,
     "evh_synthetic": false
    },
-   "sha256": "d76f1196b903cb8b6bc8352042dfa1315d55da81df1fae1e84187422ce27f8c9",
-   "bytes": 80959
+   "sha256": "b31bcdfd11bced573263cb2e95db77ec84b6e0e0890cd0c02fc5fc6f18a9dbd4",
+   "bytes": 89780
   },
   "client.canopy_top": {
    "path": "client/canopy_top.png",
@@ -5806,12 +5720,12 @@
   "species.registry": {
    "path": "species/registry.json",
    "kind": "table",
-   "plants": 56,
+   "plants": 55,
    "animals_present": 83,
    "animals_queued": 51,
-   "cards_queued": 11,
-   "sha256": "e5509936f96a4f02020aecee68539765915875bfe8f5a629d68bcf0eb208fecf",
-   "bytes": 82117
+   "cards_queued": 12,
+   "sha256": "5f8ac86f61077c1eb46e46dabc1bdca2e42dbf4851253e6e4e1ef8275e53cd30",
+   "bytes": 82961
   },
   "species.ground": {
    "path": "species/ground.json",
@@ -8556,6 +8470,24 @@
    "at": "2026-11-09T05:18:55Z",
    "seconds": 0.8,
    "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-10T21:05:20Z",
+   "seconds": 23.1,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-10T21:05:22Z",
+   "seconds": 1.4,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-10T21:11:55Z",
+   "seconds": 0.7,
+   "ok": true
   }
  ],
  "steps": {
@@ -9493,14 +9425,14 @@
   },
   "plants": {
    "version": "5",
-   "code": "7c686d977a62c77e",
+   "code": "39d18139800e4506",
    "params": {
     "tile": "utm12n_557_4964"
    },
-   "fingerprint": "5a6b1e30d41314d2",
+   "fingerprint": "e5af5ea47e53fc10",
    "parts": {
     "version": "5",
-    "code": "7c686d977a62c77e",
+    "code": "39d18139800e4506",
     "params": {
      "tile": "utm12n_557_4964"
     },
@@ -9509,11 +9441,11 @@
      "ice": "ccb8f1a9a250bc73"
     },
     "library": {
-     "library/plant_cards": "ae2c66fc7e6e53d9",
+     "library/plant_cards": "0d4ef9610277fccf",
      "library/plant_cards/_research": "76160f150981cd69"
     }
    },
-   "ran_at": "2026-11-07T07:23:54Z",
+   "ran_at": "2026-11-10T21:04:57Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -9522,15 +9454,15 @@
     "species.plant_needs"
    ],
    "outputs": {
-    "species/canopy.json": "d38496d435a55895",
+    "species/canopy.json": "1fcc86a0c00751ca",
     "species/ground.json": "94c628a570701d13",
-    "species/plant_needs.json": "f9fe242fad8211fa"
+    "species/plant_needs.json": "fb287579357e0cae"
    },
-   "out_hash": "69b6f49c83c118ca",
+   "out_hash": "33ba435a588b14fe",
    "sources": {
     "wcvp": "2026-11-06",
     "canopy_plots": "2026-11-06",
-    "gbif": "2026-11-07",
+    "gbif": "2026-11-09",
     "landfire_bps": "2026-11-06",
     "usda_plants": "2026-11-06",
     "landfire": "2026-11-07"
@@ -9538,21 +9470,21 @@
    "fallbacks": [],
    "notes": [],
    "fetched": {
-    "network": 0,
-    "cache": 2376
+    "network": 21,
+    "cache": 2644
    },
-   "seconds": 2.6
+   "seconds": 23.1
   },
   "species_mix": {
    "version": "5",
-   "code": "b6309b97e89defac",
+   "code": "9923d4d4cc94680c",
    "params": {
     "tile": "utm12n_557_4964"
    },
-   "fingerprint": "e9e8ab22b57c0e45",
+   "fingerprint": "128263ff26bc0a77",
    "parts": {
     "version": "5",
-    "code": "b6309b97e89defac",
+    "code": "9923d4d4cc94680c",
     "params": {
      "tile": "utm12n_557_4964"
     },
@@ -9561,24 +9493,24 @@
      "landcover": "4ac33fbbad12a935",
      "water": "07c5db287b72aa7b",
      "ice": "ccb8f1a9a250bc73",
-     "plants": "69b6f49c83c118ca"
+     "plants": "33ba435a588b14fe"
     },
     "library": {
-     "library/species": "b535f4af1995d848"
+     "library/species": "63813c168e7cfa76"
     }
    },
-   "ran_at": "2026-11-09T04:23:39Z",
+   "ran_at": "2026-11-10T21:05:20Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "client.species_mix"
    ],
    "outputs": {
-    "client/species_mix.json": "d76f1196b903cb8b",
-    "client/species_mix_index.png": "04ca9d6cb8ba6a21",
-    "client/species_mix_density.png": "7ab67ff08808db52"
+    "client/species_mix.json": "b31bcdfd11bced57",
+    "client/species_mix_index.png": "b1d67f44056d9b71",
+    "client/species_mix_density.png": "46f57fc83253c3b3"
    },
-   "out_hash": "5cce145be4cffd82",
+   "out_hash": "807e24fc229d8ad8",
    "sources": {},
    "fallbacks": [
     {
@@ -9597,54 +9529,24 @@
      "what": "community 'Rocky Mountain Subalpine-Montane Mesic Meadow' (4922 cells): no rule, no species in its name, no other grassland community on the tile: drawn bare"
     },
     {
-     "what": "community 'Rocky Mountain Subalpine/Upper Montane Riparian Systems' (178 cells): no rule, no species in its name, no other riparian community on the tile: drawn bare"
-    },
-    {
      "what": "community 'Rocky Mountain Subalpine-Montane Mesic Meadow' (3 cells): no rule, no species in its name, no other grassland community on the tile: drawn bare"
-    },
-    {
-     "what": "community 'Rocky Mountain Montane Riparian Systems' (6 cells): no rule, no species in its name, no other riparian community on the tile: drawn bare"
-    },
-    {
-     "what": "community 'North American Arid West Emergent Marsh' (20 cells): no rule, no species in its name, no other riparian community on the tile: drawn bare"
     },
     {
      "what": "community 'Rocky Mountain Alpine Bedrock and Scree' (130 cells): no rule, no species in its name, no other barren community on the tile: drawn bare"
     },
     {
-     "what": "community 'Rocky Mountain Alpine-Montane Wet Meadow' (2572 cells): no rule, no species in its name, no other riparian community on the tile: drawn bare"
-    },
-    {
      "what": "community 'Rocky Mountain Cliff Canyon and Massive Bedrock' (1415 cells): no rule, no species in its name, no other barren community on the tile: drawn bare"
     },
     {
-     "what": "community 'Rocky Mountain Lower Montane-Foothill Riparian Woodland' (642 cells): no rule, no species in its name, no other riparian community on the tile: drawn bare"
-    },
-    {
-     "what": "community 'Rocky Mountain Subalpine-Montane Riparian Shrubland' (16 cells): no rule, no species in its name, no other riparian community on the tile: drawn bare"
-    },
-    {
-     "what": "community 'Rocky Mountain Subalpine-Montane Riparian Woodland' (256 cells): no rule, no species in its name, no other riparian community on the tile: drawn bare"
-    },
-    {
-     "what": "community 'Rocky Mountain Lower Montane-Foothill Riparian Shrubland' (4874 cells): no rule, no species in its name, no other riparian community on the tile: drawn bare"
-    },
-    {
      "what": "community 'Interior Western North American Temperate Ruderal Grassland' (1292 cells): no rule, no species in its name, no other grassland community on the tile: drawn bare"
-    },
-    {
-     "what": "community 'Western North American Ruderal Wet Meadow & Marsh' (280 cells): no rule, no species in its name, no other riparian community on the tile: drawn bare"
-    },
-    {
-     "what": "community 'tile pool riparian' (64 cells): no rule, no species in its name, no other riparian community on the tile: drawn bare"
     }
    ],
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 58
+    "cache": 0
    },
-   "seconds": 1.9
+   "seconds": 1.4
   },
   "canopy_top": {
    "version": "2",
@@ -10042,39 +9944,39 @@
   },
   "registry": {
    "version": "1",
-   "code": "aaa2eb8ec5223446",
+   "code": "31838a4caf95324b",
    "params": {
     "tile": "utm12n_557_4964"
    },
-   "fingerprint": "0694518a11d71146",
+   "fingerprint": "e8e84c363778acb3",
    "parts": {
     "version": "1",
-    "code": "aaa2eb8ec5223446",
+    "code": "31838a4caf95324b",
     "params": {
      "tile": "utm12n_557_4964"
     },
     "deps": {
-     "plants": "69b6f49c83c118ca",
-     "species_mix": "5cce145be4cffd82",
+     "plants": "33ba435a588b14fe",
+     "species_mix": "807e24fc229d8ad8",
      "species": "627cde3149ebf871",
      "animals": "14b9d028fc45c28a"
     },
     "library": {
-     "library/species": "b535f4af1995d848",
+     "library/species": "63813c168e7cfa76",
      "library/animals": "934e6c71aae6cd14",
-     "library/plant_cards": "ae2c66fc7e6e53d9"
+     "library/plant_cards": "0d4ef9610277fccf"
     }
    },
-   "ran_at": "2026-11-09T05:18:54Z",
+   "ran_at": "2026-11-10T21:11:54Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "species.registry"
    ],
    "outputs": {
-    "species/registry.json": "e5509936f96a4f02"
+    "species/registry.json": "5f8ac86f61077c1e"
    },
-   "out_hash": "d7cca92938daa329",
+   "out_hash": "27d188d6f3d3a37e",
    "sources": {},
    "fallbacks": [],
    "notes": [],
@@ -10082,7 +9984,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 0.8
+   "seconds": 0.7
   },
   "audit": {
    "version": "1",

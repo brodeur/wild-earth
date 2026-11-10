@@ -1,6 +1,6 @@
 {
  "tile": "utm50n_582_543",
- "at": "2026-11-06T10:45:00Z",
+ "at": "2026-11-10T21:12:00Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -12,7 +12,7 @@
   "by_level": {
    "0": {
     "plants": 26,
-    "animals": 64
+    "animals": 69
    },
    "1": {
     "plants": 0,
@@ -32,9 +32,9 @@
    }
   },
   "plants": 30,
-  "animals_present": 64,
-  "animals_queued": 64,
-  "meshy_credits_queued": 1840,
+  "animals_present": 69,
+  "animals_queued": 69,
+  "meshy_credits_queued": 1965,
   "cards_queued": 26,
   "stand_ins": {
    "dillenia_excelsa": null,
@@ -79,15 +79,16 @@
    },
    "animal": {
     "target": 22,
-    "have": 64,
+    "have": 69,
     "with_model": 0
    }
   },
   "hands": {
-   "count": 88,
+   "count": 98,
    "by_what": {
     "a trait card": 26,
-    "a mesh": 62
+    "a mesh": 67,
+    "a review of its generated traits": 5
    }
   }
  },
@@ -1327,6 +1328,71 @@
    "traits": null
   },
   {
+   "id": "gonocephalus_bornensis",
+   "scientific": "Gonocephalus bornensis",
+   "common": "borneo forest dragon",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 1 of its class (17% of the class's records)"
+   ],
+   "role": [],
+   "traits": "library/animals/traits/gonocephalus_bornensis.json"
+  },
+  {
+   "id": "tropidolaemus_subannulatus",
+   "scientific": "Tropidolaemus subannulatus",
+   "common": "north philippine temple pitviper",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 2 of its class (14% of the class's records)"
+   ],
+   "role": [],
+   "traits": "library/animals/traits/tropidolaemus_subannulatus.json"
+  },
+  {
+   "id": "varanus_salvator",
+   "scientific": "Varanus salvator",
+   "common": "common water monitor",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 3 of its class (12% of the class's records)"
+   ],
+   "role": [],
+   "traits": "library/animals/traits/varanus_salvator.json"
+  },
+  {
+   "id": "hemidactylus_platyurus",
+   "scientific": "Hemidactylus platyurus",
+   "common": "asian flat-tailed house gecko",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 4 of its class (10% of the class's records)"
+   ],
+   "role": [],
+   "traits": "library/animals/traits/hemidactylus_platyurus.json"
+  },
+  {
+   "id": "gekko_monarchus",
+   "scientific": "Gekko monarchus",
+   "common": "double-spotted gecko",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 5 of its class (6% of the class's records)"
+   ],
+   "role": [],
+   "traits": "library/animals/traits/gekko_monarchus.json"
+  },
+  {
    "id": "polypedates_otilophus",
    "scientific": "Polypedates otilophus",
    "common": "file-eared tree frog",
@@ -2129,6 +2195,21 @@
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
+    "id": "gonocephalus_bornensis",
+    "scientific": "Gonocephalus bornensis",
+    "common": "borneo forest dragon",
+    "kind": "reptile",
+    "records": 94,
+    "why": [
+     "most recorded: 1 of its class (17% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
     "id": "pongo_pygmaeus",
     "scientific": "Pongo pygmaeus",
     "common": "bornean orangutan",
@@ -2140,6 +2221,51 @@
     "body_plan": "quadruped",
     "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
     "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "tropidolaemus_subannulatus",
+    "scientific": "Tropidolaemus subannulatus",
+    "common": "north philippine temple pitviper",
+    "kind": "reptile",
+    "records": 79,
+    "why": [
+     "most recorded: 2 of its class (14% of the class's records)"
+    ],
+    "body_plan": "snake",
+    "rig": "none yet: a spine-wave rig",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "varanus_salvator",
+    "scientific": "Varanus salvator",
+    "common": "common water monitor",
+    "kind": "reptile",
+    "records": 71,
+    "why": [
+     "most recorded: 3 of its class (12% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "hemidactylus_platyurus",
+    "scientific": "Hemidactylus platyurus",
+    "common": "asian flat-tailed house gecko",
+    "kind": "reptile",
+    "records": 58,
+    "why": [
+     "most recorded: 4 of its class (10% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
     "stand_in": null,
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
@@ -2277,6 +2403,21 @@
     "rig": "rodent part rig R (animalModels.js), the hop gait for lagomorphs",
     "estimate_credits": 30,
     "stand_in": "sciurus_griseus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "gekko_monarchus",
+    "scientific": "Gekko monarchus",
+    "common": "double-spotted gecko",
+    "kind": "reptile",
+    "records": 34,
+    "why": [
+     "most recorded: 5 of its class (6% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
+    "stand_in": null,
     "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
    },
    {
@@ -3066,11 +3207,43 @@
    ]
   },
   {
+   "id": "gonocephalus_bornensis",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 1 of its class (17% of the class's records)"
+   ]
+  },
+  {
    "id": "pongo_pygmaeus",
    "kind": "mammal",
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
     "most recorded: 2 of its class (9% of the class's records)"
+   ]
+  },
+  {
+   "id": "tropidolaemus_subannulatus",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 2 of its class (14% of the class's records)"
+   ]
+  },
+  {
+   "id": "varanus_salvator",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 3 of its class (12% of the class's records)"
+   ]
+  },
+  {
+   "id": "hemidactylus_platyurus",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 4 of its class (10% of the class's records)"
    ]
   },
   {
@@ -3144,6 +3317,14 @@
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
     "most recorded: 8 of its class (4% of the class's records)"
+   ]
+  },
+  {
+   "id": "gekko_monarchus",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 5 of its class (6% of the class's records)"
    ]
   },
   {
@@ -3290,6 +3471,46 @@
    "what": "a mesh (Meshy ~30 credits) and its review",
    "why": [
     "predator"
+   ]
+  },
+  {
+   "id": "gonocephalus_bornensis",
+   "kind": "reptile",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "tropidolaemus_subannulatus",
+   "kind": "reptile",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "varanus_salvator",
+   "kind": "reptile",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "hemidactylus_platyurus",
+   "kind": "reptile",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
+   ]
+  },
+  {
+   "id": "gekko_monarchus",
+   "kind": "reptile",
+   "what": "a review of its generated traits",
+   "why": [
+    "generated"
    ]
   }
  ]

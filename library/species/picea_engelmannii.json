@@ -1,0 +1,541 @@
+{
+ "id": "picea_engelmannii",
+ "aliases": [
+  "engelmann_spruce"
+ ],
+ "scientific": "Picea engelmannii",
+ "common": "Engelmann spruce",
+ "form": "tree",
+ "regions": [
+  "interior_west"
+ ],
+ "architectural_model": "Massart (provisional)",
+ "deciduous": false,
+ "height_m": [
+  20,
+  35
+ ],
+ "stature": {
+  "typical_m": 28,
+  "tall_m": 40,
+  "record_m": 65,
+  "source": "typical: Wikipedia 25-40 m, FEIS 14-40 m by site; Yellowstone gives up to about 30 m (100 ft, NPS); tall: 40 m, the top of both ranges; record: exceptionally 65 m (Wikipedia); read 2026-11-10"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    2,
+    12
+   ],
+   "trunk_radius": 0.8,
+   "branches": 0.8,
+   "leaf_density": 1.3,
+   "set": {
+    "trunk": {
+     "base_size": 0.06,
+     "bole_ratio": 0.05,
+     "bark_rgb": [
+      118,
+      110,
+      102
+     ],
+     "bark_pattern": "smooth_grey",
+     "stubs": {
+      "count": [
+       0,
+       2
+      ]
+     }
+    },
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.06,
+        0.27
+       ],
+       [
+        0.25,
+        0.26
+       ],
+       [
+        0.45,
+        0.22
+       ],
+       [
+        0.65,
+        0.16
+       ],
+       [
+        0.82,
+        0.1
+       ],
+       [
+        1.0,
+        0.02
+       ]
+      ],
+      "lobe_depth": 0.06
+     }
+    },
+    "levels": [
+     {
+      "droop_deg": 20,
+      "upturn_deg": 30
+     }
+    ]
+   },
+   "note": "a young tree: a narrow, dense blue-green cone with branches to the ground and thin grey-brown bark"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 1,
+   "note": "(from the Douglas-fir template) the file as written"
+  },
+  {
+   "name": "old-growth",
+   "weight": 0.17,
+   "height_m": [
+    30,
+    45
+   ],
+   "trunk_radius": 1.4,
+   "branches": 0.75,
+   "gnarl": 1.2,
+   "deadwood": {
+    "fraction": 0.2,
+    "levels": [
+     1
+    ],
+    "where": "lower",
+    "shorten": 0.5,
+    "rgb": [
+     130,
+     120,
+     108
+    ]
+   },
+   "set": {
+    "trunk": {
+     "base_size": 0.55,
+     "bole_ratio": 0.5,
+     "length_ratio": 0.95,
+     "bark_rgb": [
+      134,
+      102,
+      92
+     ],
+     "stubs": {
+      "count": [
+       12,
+       24
+      ]
+     },
+     "flare": 1.6
+    },
+    "crown": {
+     "shape": "cylindrical",
+     "envelope": {
+      "profile": [
+       [
+        0.3,
+        0.12
+       ],
+       [
+        0.45,
+        0.13
+       ],
+       [
+        0.6,
+        0.13
+       ],
+       [
+        0.75,
+        0.11
+       ],
+       [
+        0.88,
+        0.08
+       ],
+       [
+        1.0,
+        0.03
+       ]
+      ],
+      "lobes": 4,
+      "lobe_depth": 0.18,
+      "asymmetry": 0.14
+     }
+    },
+    "levels": [
+     {
+      "droop_deg": 40,
+      "upturn_deg": 20
+     }
+    ]
+   },
+   "note": "an old tree of four or five centuries: the crown a narrow column (Wikipedia: cylindrical with age) with a rounded top (NPS Great Basin), the lower trunk bare and scaled in loose purplish-brown flakes"
+  }
+ ],
+ "snag": {
+  "fraction": 0.06,
+  "from": "mature",
+  "height_m": [
+   22,
+   40
+  ],
+  "limbs": 0.25,
+  "twigs": 0,
+  "levels": 1,
+  "broken_top": [
+   0.5,
+   0.85
+  ],
+  "shorten": [
+   0.3,
+   0.8
+  ],
+  "rgb": [
+   146,
+   134,
+   120
+  ]
+ },
+ "description": "The spruce of the high Rockies' cold, wet forests, 20-35 m here, a very narrow, dense spire of short, compact branches clothed in blue-green, four-sided needles. Its thin bark flakes in loose, rounded purplish-brown scales, and it stands with subalpine fir along creeks, in cold valley bottoms and on north slopes up to timberline, where it shrinks to a wind-shaped thicket.",
+ "season_notes": {
+  "winter": "Evergreen and deep in snow; elk, moose and deer shelter under the stands, and grouse feed on the needles and buds.",
+  "spring": "Small purple seed cones and red pollen cones open on the upper and lower crown as the snow goes.",
+  "summer": "Light brown cones 4-6 cm hang near the top and reach full size by August.",
+  "fall": "Winged seed falls from late September through the winter; red squirrels cut and cache the cones."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "riparian": 0.7,
+   "mixed_forest": 0.4,
+   "barren": 0.3,
+   "grassland": 0.2
+  },
+  "floor": 1.2,
+  "mid": 0.9,
+  "steep": 0.7,
+  "north": 1.4,
+  "shade": 0.5,
+  "disturbed": 0.2
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "peromyscus_maniculatus",
+    "part": "seeds",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   },
+   {
+    "animal": "tamias_amoenus",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "cervus_canadensis",
+    "part": "browse",
+    "seasons": [
+     "winter"
+    ]
+   }
+  ],
+  "cover_for": [
+   "cervus_canadensis",
+   "odocoileus_hemionus",
+   "ursus_americanus",
+   "lepus_americanus"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 1.0,
+  "radius_ratio": 0.022,
+  "taper": 1.0,
+  "flare": 1.3,
+  "bole_ratio": 0.28,
+  "base_size": 0.3,
+  "curve_deg": 3,
+  "curve_var_deg": 4,
+  "segments": 8,
+  "lean_deg": 3,
+  "stems": [
+   1,
+   1
+  ],
+  "stem_spread_deg": 0,
+  "split_prob": 0.03,
+  "split_count": 2,
+  "split_angle_deg": 10,
+  "split_height": 0.75,
+  "bark_rgb": [
+   122,
+   92,
+   84
+  ],
+  "bark_pattern": "plates",
+  "twig_rgb": [
+   96,
+   82,
+   70
+  ],
+  "stubs": {
+   "count": [
+    6,
+    14
+   ],
+   "length_m": 0.6,
+   "radius_ratio": 0.1
+  },
+  "bark": {
+   "tile_m": [
+    0.7,
+    1.4
+   ],
+   "ridge_m": 0.1,
+   "block_m": 0.3,
+   "fissure": 0.85,
+   "contrast": 1.25,
+   "lichen": 0.15,
+   "relief": 1.7
+  }
+ },
+ "crown": {
+  "shape": "conical",
+  "envelope": {
+   "profile": [
+    [
+     0.05,
+     0.13
+    ],
+    [
+     0.2,
+     0.14
+    ],
+    [
+     0.38,
+     0.13
+    ],
+    [
+     0.55,
+     0.11
+    ],
+    [
+     0.72,
+     0.08
+    ],
+    [
+     0.86,
+     0.05
+    ],
+    [
+     1.0,
+     0.01
+    ]
+   ],
+   "lobes": 3,
+   "lobe_depth": 0.07,
+   "asymmetry": 0.1,
+   "fill": 0.38,
+   "edge": 1.05
+  }
+ },
+ "levels": [
+  {
+   "count": 30,
+   "whorl": 4,
+   "down_angle_deg": 94,
+   "down_angle_tip_deg": 55,
+   "down_angle_var_deg": 12,
+   "rotation_deg": 37,
+   "rotation_var_deg": 25,
+   "length_ratio": 0.32,
+   "length_var": 0.25,
+   "curve_deg": 0,
+   "curve_var_deg": 14,
+   "tropism": 0.0,
+   "droop_deg": 30,
+   "upturn_deg": 25,
+   "taper": 0.95,
+   "radius_ratio": 0.3,
+   "segments": 3
+  },
+  {
+   "count": 10,
+   "start": 0.2,
+   "down_angle_deg": 60,
+   "down_angle_var_deg": 15,
+   "rotation_deg": -80,
+   "rotation_var_deg": 20,
+   "length_ratio": 0.4,
+   "length_var": 0.3,
+   "curve_deg": 0,
+   "curve_var_deg": 12,
+   "tropism": -0.1,
+   "droop_deg": 15,
+   "taper": 1.0,
+   "radius_ratio": 0.5,
+   "segments": 2
+  }
+ ],
+ "foliage": {
+  "type": "needle",
+  "leaf_size_m": 0.025,
+  "leaf_shape": "needle_flat",
+  "cluster_m": 2.6,
+  "density": 18,
+  "leaf_fill": 5.0,
+  "start": 0.15,
+  "parent_start": 0.35,
+  "orientation": "along",
+  "needle_planes": 1,
+  "tuft_spread_deg": 25,
+  "tuft_up": 0.0,
+  "droop": 0.4,
+  "needle_normal": 0.5,
+  "needle_wrap": 0.4,
+  "translucency": 2.2,
+  "needle_scatter": 0.15,
+  "colors": {
+   "winter": [
+    66,
+    84,
+    90
+   ],
+   "spring": [
+    100,
+    124,
+    122
+   ],
+   "summer": [
+    72,
+    92,
+    98
+   ],
+   "fall": [
+    70,
+    90,
+    96
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "twist_deg": 40,
+  "clumps": {
+   "radius_m": 1.2,
+   "cards_per_clump": 4,
+   "shell": 0,
+   "flatten": 0.7,
+   "tip_bias": 1.5
+  },
+  "palette": [
+   [
+    0.88,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.12,
+    [
+     1.18,
+     1.24,
+     0.88
+    ]
+   ]
+  ],
+  "ao_min": 0.68,
+  "color_var": [
+   0.07,
+   0.03
+  ]
+ },
+ "deadwood": {
+  "fraction": 0.18,
+  "where": "lower",
+  "levels": [
+   1
+  ],
+  "shorten": 0.6,
+  "rgb": [
+   128,
+   118,
+   106
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "length": 0.6,
+  "down_deg": 50,
+  "down_var_deg": 12,
+  "tropism": -0.2,
+  "segments": 1,
+  "radius_m": 0.008,
+  "taper": 0.5,
+  "fan_deg": 30,
+  "jitter": 0.08
+ },
+ "lod": {
+  "near_tris_budget": 3000,
+  "near_sides": [
+   6,
+   3,
+   0
+  ],
+  "mid_blobs": 12,
+  "mid_branches": 2,
+  "mid_blob_scale": 0.55,
+  "close_factor": 2,
+  "mid_planes": 1,
+  "mid_cards": 48,
+  "mid_canopy": "blobs"
+ },
+ "targets": {
+  "crown_width_ratio": 0.25,
+  "crown_base_ratio": 0.12,
+  "porosity": 0.22,
+  "foliage_rg": 0.61,
+  "foliage_bg": 1.14,
+  "from": "judgement values from the drafter's reading of the sources (2026-11-10), no photographs measured; to be replaced by photo measurements: a narrow, dense spire of short, compact branches (FEIS), blue-green; FEIS gives the crown as 50-70% of the height in stands, with dead lower limbs left on; an open-grown tree keeps branches lower"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "5",
+  "card": "library/plant_cards/picea_engelmannii.json",
+  "card_sha256": "896341cb083aad6a",
+  "template": "pseudotsuga_menziesii",
+  "template_common": "Douglas-fir",
+  "height_scale": 0.705
+ },
+ "notes": "A spruce grown from Douglas-fir as a much narrower, denser spire, like the subalpine-fir card. Needles 1.5-3 cm, four-sided, flexible, blue-green above and whitish below (Wikipedia; deep bluish-green in FEIS), standing out all round the twig, not in the template's flat ranks; the colours are judgement values. Bark very thin, grey-brown when young, purplish-brown to russet in loose scales when mature (FEIS; reddish-brown in NPS Great Basin, small round plates in Wikipedia); the colours are judgement values. Cones pendant, purple young, light brown ripe (Wikipedia, FEIS), not drawn. Elevation: generally 2743-3354 m in Wyoming, Utah and Colorado and down to 2438 m along cold streams (FEIS); the Yellowstone and Teton band here is the drafter's estimate below that, as Yellowstone's page gives no figure. Krummholz at timberline (FEIS, Wikipedia, NPS Great Basin) is not grown. Seed eaters named by FEIS and missing from the animal library: red squirrel, crossbills, pine siskins, chickadees, nuthatches; spruce and dusky grouse eat needles and buds; moose, porcupine and snowshoe hare live in the stands (only the hare is in the library). The yellow-pine chipmunk (tamias_amoenus) stands for FEIS's 'chipmunks' as the drafter's choice for northwest Wyoming. Very fire sensitive; trees often 350-600 years old (FEIS).",
+ "sources": [
+  "Fire Effects Information System, Picea engelmannii, https://www.fs.usda.gov/database/feis/plants/tree/piceng/all.html, read 2026-11-10",
+  "Wikipedia, Picea engelmannii (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Picea_engelmannii, read 2026-11-10",
+  "Forests - Yellowstone National Park (U.S. National Park Service), https://www.nps.gov/yell/learn/nature/forests.htm, read 2026-11-10",
+  "Trees and Shrubs - Great Basin National Park (U.S. National Park Service), https://www.nps.gov/grba/learn/nature/treesandshrubs.htm, read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

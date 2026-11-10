@@ -1,0 +1,2762 @@
+{
+ "tile": "utm10n_680_4270",
+ "at": "2026-11-10T21:11:47Z",
+ "levels": {
+  "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
+  "1": "stand-in look: another species' model with its own size and colour",
+  "2": "its own model: own crown, branching and foliage (plants) or own mesh (animals), not animated",
+  "3": "rigged and animated (animals); grown: three or more age classes and four seasons' colours (plants)",
+  "4": "full: behaviour, sound and seasonal states (animals); the ecology, habitat and relations (plants)"
+ },
+ "summary": {
+  "by_level": {
+   "0": {
+    "plants": 4,
+    "animals": 31
+   },
+   "1": {
+    "plants": 0,
+    "animals": 0
+   },
+   "2": {
+    "plants": 8,
+    "animals": 0
+   },
+   "3": {
+    "plants": 11,
+    "animals": 31
+   },
+   "4": {
+    "plants": 60,
+    "animals": 14
+   }
+  },
+  "plants": 83,
+  "animals_present": 76,
+  "animals_queued": 32,
+  "meshy_credits_queued": 930,
+  "cards_queued": 4,
+  "stand_ins": {
+   "agnorhiza_reticulata": null,
+   "calystegia_stebbinsii": null,
+   "fremontodendron_decumbens": null,
+   "clarkia_biloba": null
+  },
+  "density": {
+   "tree": {
+    "target": 21,
+    "have": 24
+   },
+   "shrub": {
+    "target": 23,
+    "have": 28
+   },
+   "ground": {
+    "target": 26,
+    "have": 27
+   },
+   "animal": {
+    "target": 22,
+    "have": 76,
+    "with_model": 45
+   }
+  },
+  "hands": {
+   "count": 36,
+   "by_what": {
+    "a trait card": 4,
+    "a mesh": 32
+   }
+  }
+ },
+ "plants": [
+  {
+   "id": "quercus_douglasii",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "blue oak",
+   "drawn_as": "quercus_douglasii",
+   "share": 0.3614,
+   "why_needed": [
+    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow",
+    "cover: rule foothill_pine on California Lower Montane Foothill Pine Woodland and Savanna",
+    "cover: rule ruderal_forest on Californian Ruderal Forest"
+   ]
+  },
+  {
+   "id": "adenostoma_fasciculatum",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "chamise",
+   "drawn_as": "adenostoma_fasciculatum",
+   "share": 0.2233,
+   "why_needed": [
+    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule foothill_pine on California Lower Montane Foothill Pine Woodland and Savanna"
+   ]
+  },
+  {
+   "id": "pinus_sabiniana",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "gray pine",
+   "drawn_as": "pinus_sabiniana",
+   "share": 0.2173,
+   "why_needed": [
+    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule foothill_pine on California Lower Montane Foothill Pine Woodland and Savanna"
+   ]
+  },
+  {
+   "id": "arctostaphylos_viscida",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "whiteleaf manzanita",
+   "drawn_as": "arctostaphylos_viscida",
+   "share": 0.1988,
+   "why_needed": [
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule foothill_pine on California Lower Montane Foothill Pine Woodland and Savanna",
+    "cover: rule ruderal_forest on Californian Ruderal Forest"
+   ]
+  },
+  {
+   "id": "pinus_ponderosa",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "ponderosa pine",
+   "drawn_as": "pinus_ponderosa",
+   "share": 0.146,
+   "why_needed": [
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule ruderal_forest on Californian Ruderal Forest",
+    "cover: rule black_oak on Mediterranean California Lower Montane Black Oak Forest and Woodland"
+   ]
+  },
+  {
+   "id": "quercus_wislizeni",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "interior live oak",
+   "drawn_as": "quercus_wislizeni",
+   "share": 0.1386,
+   "why_needed": [
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule foothill_pine on California Lower Montane Foothill Pine Woodland and Savanna",
+    "cover: rule ruderal_forest on Californian Ruderal Forest"
+   ]
+  },
+  {
+   "id": "ceanothus_cuneatus",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "buckbrush",
+   "drawn_as": "ceanothus_cuneatus",
+   "share": 0.1124,
+   "why_needed": [
+    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule foothill_pine on California Lower Montane Foothill Pine Woodland and Savanna"
+   ]
+  },
+  {
+   "id": "elymus_glaucus",
+   "kind": "grass",
+   "fidelity": 4,
+   "common": "blue wildrye",
+   "drawn_as": "elymus_glaucus",
+   "share": 0.0999,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "achillea_millefolium",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "yarrow",
+   "drawn_as": "achillea_millefolium",
+   "share": 0.0869,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "claytonia_perfoliata",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "miner's lettuce",
+   "drawn_as": "claytonia_perfoliata",
+   "share": 0.0701,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "toxicodendron_diversilobum",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "Pacific poison oak",
+   "drawn_as": "toxicodendron_diversilobum",
+   "share": 0.068,
+   "why_needed": [
+    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule foothill_pine on California Lower Montane Foothill Pine Woodland and Savanna"
+   ]
+  },
+  {
+   "id": "baccharis_pilularis",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "coyote brush",
+   "drawn_as": "baccharis_pilularis",
+   "share": 0.0615,
+   "why_needed": [
+    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow",
+    "cover: rule ruderal_forest on Californian Ruderal Forest",
+    "cover: rule blue_oak_foothill_pine on California Lower Montane Blue Oak-Foothill Pine Woodland and Savanna"
+   ]
+  },
+  {
+   "id": "bromus_diandrus",
+   "kind": "grass",
+   "fidelity": 4,
+   "common": "ripgut brome",
+   "drawn_as": "bromus_diandrus",
+   "share": 0.0614,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "erodium_cicutarium",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "redstem filaree",
+   "drawn_as": "erodium_cicutarium",
+   "share": 0.0599,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "dipterostemon_capitatus",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "blue dicks",
+   "drawn_as": "dipterostemon_capitatus",
+   "share": 0.0566,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "diplacus_aurantiacus",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "sticky monkeyflower",
+   "drawn_as": "diplacus_aurantiacus",
+   "share": 0.0519,
+   "why_needed": [
+    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow",
+    "cover: rule foothill_pine on California Lower Montane Foothill Pine Woodland and Savanna",
+    "cover: rule ruderal_forest on Californian Ruderal Forest"
+   ]
+  },
+  {
+   "id": "stipa_pulchra",
+   "kind": "grass",
+   "fidelity": 4,
+   "common": "purple needlegrass",
+   "drawn_as": "stipa_pulchra",
+   "share": 0.0517,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "cercocarpus_betuloides",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "birch-leaf mountain mahogany",
+   "drawn_as": "cercocarpus_betuloides",
+   "share": 0.0451,
+   "why_needed": [
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule foothill_pine on California Lower Montane Foothill Pine Woodland and Savanna",
+    "cover: rule blue_oak_foothill_pine on California Lower Montane Blue Oak-Foothill Pine Woodland and Savanna"
+   ]
+  },
+  {
+   "id": "symphoricarpos_albus",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "common snowberry",
+   "drawn_as": "symphoricarpos_albus",
+   "share": 0.0441,
+   "why_needed": [
+    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow",
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule foothill_pine on California Lower Montane Foothill Pine Woodland and Savanna"
+   ]
+  },
+  {
+   "id": "lupinus_albifrons",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "silver bush lupine",
+   "drawn_as": "lupinus_albifrons",
+   "share": 0.0435,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "eschscholzia_californica",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "California poppy",
+   "drawn_as": "eschscholzia_californica",
+   "share": 0.0425,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "lupinus_bicolor",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "miniature lupine",
+   "drawn_as": "lupinus_bicolor",
+   "share": 0.0418,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "hordeum_murinum",
+   "kind": "grass",
+   "fidelity": 4,
+   "common": "hare barley",
+   "drawn_as": "hordeum_murinum",
+   "share": 0.0413,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "heteromeles_arbutifolia",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "toyon",
+   "drawn_as": "heteromeles_arbutifolia",
+   "share": 0.041,
+   "why_needed": [
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule foothill_pine on California Lower Montane Foothill Pine Woodland and Savanna",
+    "cover: rule ruderal_forest on Californian Ruderal Forest"
+   ]
+  },
+  {
+   "id": "madia_elegans",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "common madia",
+   "drawn_as": "madia_elegans",
+   "share": 0.0389,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "chlorogalum_pomeridianum",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "soap plant",
+   "drawn_as": "chlorogalum_pomeridianum",
+   "share": 0.0378,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "bromus_hordeaceus",
+   "kind": "grass",
+   "fidelity": 4,
+   "common": "soft chess",
+   "drawn_as": "bromus_hordeaceus",
+   "share": 0.0363,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "arctostaphylos_manzanita",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "common manzanita",
+   "drawn_as": "arctostaphylos_manzanita",
+   "share": 0.0326,
+   "why_needed": [
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule foothill_pine on California Lower Montane Foothill Pine Woodland and Savanna",
+    "cover: rule blue_oak_foothill_pine on California Lower Montane Blue Oak-Foothill Pine Woodland and Savanna"
+   ]
+  },
+  {
+   "id": "quercus_lobata",
+   "kind": "tree",
+   "fidelity": 4,
+   "common": "valley oak",
+   "drawn_as": "quercus_lobata",
+   "share": 0.032,
+   "why_needed": [
+    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow",
+    "cover: rule ruderal_forest on Californian Ruderal Forest",
+    "cover: rule blue_oak_foothill_pine on California Lower Montane Blue Oak-Foothill Pine Woodland and Savanna"
+   ]
+  },
+  {
+   "id": "avena_fatua",
+   "kind": "grass",
+   "fidelity": 4,
+   "common": "wild oat",
+   "drawn_as": "avena_fatua",
+   "share": 0.0316,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "amsinckia_menziesii",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "common fiddleneck",
+   "drawn_as": "amsinckia_menziesii",
+   "share": 0.0293,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "quercus_chrysolepis",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "canyon live oak",
+   "drawn_as": "quercus_chrysolepis",
+   "share": 0.029,
+   "why_needed": [
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule foothill_pine on California Lower Montane Foothill Pine Woodland and Savanna",
+    "cover: rule blue_oak_foothill_pine on California Lower Montane Blue Oak-Foothill Pine Woodland and Savanna"
+   ]
+  },
+  {
+   "id": "danthonia_californica",
+   "kind": "grass",
+   "fidelity": 4,
+   "common": "California oatgrass",
+   "drawn_as": "danthonia_californica",
+   "share": 0.0288,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "plagiobothrys_nothofulvus",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "rusty popcorn flower",
+   "drawn_as": "plagiobothrys_nothofulvus",
+   "share": 0.0288,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "aesculus_californica",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "California buckeye",
+   "drawn_as": "aesculus_californica",
+   "share": 0.0284,
+   "why_needed": [
+    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow",
+    "cover: rule foothill_pine on California Lower Montane Foothill Pine Woodland and Savanna",
+    "cover: rule ruderal_forest on Californian Ruderal Forest"
+   ]
+  },
+  {
+   "id": "frangula_californica",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "California coffeeberry",
+   "drawn_as": "frangula_californica",
+   "share": 0.0272,
+   "why_needed": [
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule foothill_pine on California Lower Montane Foothill Pine Woodland and Savanna",
+    "cover: rule blue_oak_foothill_pine on California Lower Montane Blue Oak-Foothill Pine Woodland and Savanna"
+   ]
+  },
+  {
+   "id": "rosa_californica",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "California wild rose",
+   "drawn_as": "rosa_californica",
+   "share": 0.0263,
+   "why_needed": [
+    "cover: rule grassland_savanna on California Ruderal Grassland and Meadow",
+    "cover: rule foothill_pine on California Lower Montane Foothill Pine Woodland and Savanna",
+    "cover: rule ruderal_forest on Californian Ruderal Forest"
+   ]
+  },
+  {
+   "id": "ribes_roezlii",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "Sierra gooseberry",
+   "drawn_as": "ribes_roezlii",
+   "share": 0.0226,
+   "why_needed": [
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule foothill_pine on California Lower Montane Foothill Pine Woodland and Savanna",
+    "cover: rule blue_oak_foothill_pine on California Lower Montane Blue Oak-Foothill Pine Woodland and Savanna"
+   ]
+  },
+  {
+   "id": "vicia_villosa",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "hairy vetch",
+   "drawn_as": "vicia_villosa",
+   "share": 0.0218,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "wyethia_helenioides",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "gray mule's ears",
+   "drawn_as": "wyethia_helenioides",
+   "share": 0.0216,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "trifolium_willdenovii",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "tomcat clover",
+   "drawn_as": "trifolium_willdenovii",
+   "share": 0.0209,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "cercis_occidentalis",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "western redbud",
+   "drawn_as": "cercis_occidentalis",
+   "share": 0.0195,
+   "why_needed": [
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule foothill_pine on California Lower Montane Foothill Pine Woodland and Savanna",
+    "cover: rule blue_oak_foothill_pine on California Lower Montane Blue Oak-Foothill Pine Woodland and Savanna"
+   ]
+  },
+  {
+   "id": "erythranthe_guttata",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "seep monkeyflower",
+   "drawn_as": "erythranthe_guttata",
+   "share": 0.0164,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "polystichum_munitum",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "western sword fern",
+   "drawn_as": "polystichum_munitum",
+   "share": 0.0128,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "artemisia_douglasiana",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "California mugwort",
+   "drawn_as": "artemisia_douglasiana",
+   "share": 0.0118,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "ribes_malvaceum",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "chaparral currant",
+   "drawn_as": "ribes_malvaceum",
+   "share": 0.0116,
+   "why_needed": [
+    "cover: rule foothill_pine on California Lower Montane Foothill Pine Woodland and Savanna",
+    "cover: rule blue_oak_foothill_pine on California Lower Montane Blue Oak-Foothill Pine Woodland and Savanna",
+    "cover: rule dry_mesic_chaparral on Northern and Central California Dry-Mesic Chaparral"
+   ]
+  },
+  {
+   "id": "quercus_kelloggii",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "California black oak",
+   "drawn_as": "quercus_kelloggii",
+   "share": 0.0107,
+   "why_needed": [
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule ruderal_forest on Californian Ruderal Forest",
+    "cover: rule blue_oak_foothill_pine on California Lower Montane Blue Oak-Foothill Pine Woodland and Savanna"
+   ]
+  },
+  {
+   "id": "salix_lasiolepis",
+   "kind": "tree",
+   "fidelity": 4,
+   "common": "arroyo willow",
+   "drawn_as": "salix_lasiolepis",
+   "share": 0.0075,
+   "why_needed": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule montane_riparian on California Montane Riparian Systems",
+    "cover: rule wet_meadow_marsh on Temperate Pacific Freshwater Emergent Marsh"
+   ]
+  },
+  {
+   "id": "ceanothus_integerrimus",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "deerbrush",
+   "drawn_as": "ceanothus_integerrimus",
+   "share": 0.0067,
+   "why_needed": [
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule dry_mesic_chaparral on Northern and Central California Dry-Mesic Chaparral",
+    "cover: rule black_oak on Mediterranean California Lower Montane Black Oak Forest and Woodland"
+   ]
+  },
+  {
+   "id": "umbellularia_californica",
+   "kind": "tree",
+   "fidelity": 4,
+   "common": "California bay laurel",
+   "drawn_as": "umbellularia_californica",
+   "share": 0.0062,
+   "why_needed": [
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland"
+   ]
+  },
+  {
+   "id": "urtica_dioica",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "hoary nettle",
+   "drawn_as": "urtica_dioica",
+   "share": 0.0053,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "alnus_rhombifolia",
+   "kind": "tree",
+   "fidelity": 4,
+   "common": "white alder",
+   "drawn_as": "alnus_rhombifolia",
+   "share": 0.0048,
+   "why_needed": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule montane_riparian on California Montane Riparian Systems",
+    "cover: rule riparian_shrubland on Mediterranean California Foothill and Lower Montane Riparian Shrubland"
+   ]
+  },
+  {
+   "id": "sambucus_nigra_caerulea",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "blue elderberry",
+   "drawn_as": "sambucus_nigra_caerulea",
+   "share": 0.004,
+   "why_needed": [
+    "cover: rule ruderal_forest on Californian Ruderal Forest",
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule montane_riparian on California Montane Riparian Systems"
+   ]
+  },
+  {
+   "id": "arbutus_menziesii",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "Pacific madrone",
+   "drawn_as": "arbutus_menziesii",
+   "share": 0.0038,
+   "why_needed": [
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland",
+    "cover: rule black_oak on Mediterranean California Lower Montane Black Oak Forest and Woodland"
+   ]
+  },
+  {
+   "id": "salix_laevigata",
+   "kind": "tree",
+   "fidelity": 4,
+   "common": "red willow",
+   "drawn_as": "salix_laevigata",
+   "share": 0.0032,
+   "why_needed": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule riparian_shrubland on Mediterranean California Foothill and Lower Montane Riparian Shrubland"
+   ]
+  },
+  {
+   "id": "acer_macrophyllum",
+   "kind": "tree",
+   "fidelity": 4,
+   "common": "big-leaf maple",
+   "drawn_as": "acer_macrophyllum",
+   "share": 0.0021,
+   "why_needed": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule montane_riparian on California Montane Riparian Systems",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems"
+   ]
+  },
+  {
+   "id": "juglans_hindsii",
+   "kind": "tree",
+   "fidelity": 4,
+   "common": "northern California black walnut",
+   "drawn_as": "juglans_hindsii",
+   "share": 0.0019,
+   "why_needed": [
+    "cover: rule ruderal_forest on Californian Ruderal Forest",
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule montane_riparian on California Montane Riparian Systems"
+   ]
+  },
+  {
+   "id": "calocedrus_decurrens",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "incense cedar",
+   "drawn_as": "calocedrus_decurrens",
+   "share": 0.0018,
+   "why_needed": [
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule black_oak on Mediterranean California Lower Montane Black Oak Forest and Woodland",
+    "cover: rule montane_riparian on California Montane Riparian Systems"
+   ]
+  },
+  {
+   "id": "platanus_racemosa",
+   "kind": "tree",
+   "fidelity": 4,
+   "common": "California sycamore",
+   "drawn_as": "platanus_racemosa",
+   "share": 0.0018,
+   "why_needed": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland"
+   ]
+  },
+  {
+   "id": "fraxinus_latifolia",
+   "kind": "tree",
+   "fidelity": 4,
+   "common": "Oregon ash",
+   "drawn_as": "fraxinus_latifolia",
+   "share": 0.0012,
+   "why_needed": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule montane_riparian on California Montane Riparian Systems",
+    "cover: rule riparian_shrubland on Mediterranean California Foothill and Lower Montane Riparian Shrubland"
+   ]
+  },
+  {
+   "id": "populus_fremontii",
+   "kind": "tree",
+   "fidelity": 4,
+   "common": "Fremont cottonwood",
+   "drawn_as": "populus_fremontii",
+   "share": 0.0012,
+   "why_needed": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule montane_riparian on California Montane Riparian Systems",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems"
+   ]
+  },
+  {
+   "id": "rubus_ursinus",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "California blackberry",
+   "drawn_as": "rubus_ursinus",
+   "share": 0.0012,
+   "why_needed": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule montane_riparian on California Montane Riparian Systems",
+    "cover: rule riparian_shrubland on Mediterranean California Foothill and Lower Montane Riparian Shrubland"
+   ]
+  },
+  {
+   "id": "lemna_minor",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "common duckweed",
+   "drawn_as": "lemna_minor",
+   "share": 0.0011,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "nasturtium_officinale",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "watercress",
+   "drawn_as": "nasturtium_officinale",
+   "share": 0.0011,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "pseudotsuga_menziesii",
+   "kind": "tree",
+   "fidelity": 3,
+   "common": "Douglas-fir",
+   "drawn_as": "pseudotsuga_menziesii",
+   "share": 0.0007,
+   "why_needed": [
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule montane_riparian on California Montane Riparian Systems",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland"
+   ]
+  },
+  {
+   "id": "cornus_sericea",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "creek dogwood",
+   "drawn_as": "cornus_sericea",
+   "share": 0.0006,
+   "why_needed": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule montane_riparian on California Montane Riparian Systems",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems"
+   ]
+  },
+  {
+   "id": "vitis_californica",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "California wild grape",
+   "drawn_as": "vitis_californica",
+   "share": 0.0006,
+   "why_needed": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland"
+   ]
+  },
+  {
+   "id": "salix_exigua",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "sandbar willow",
+   "drawn_as": "salix_exigua",
+   "share": 0.0005,
+   "why_needed": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule riparian_shrubland on Mediterranean California Foothill and Lower Montane Riparian Shrubland"
+   ]
+  },
+  {
+   "id": "salix_lasiandra",
+   "kind": "tree",
+   "fidelity": 4,
+   "common": "Pacific willow",
+   "drawn_as": "salix_lasiandra",
+   "share": 0.0004,
+   "why_needed": [
+    "cover: rule montane_riparian on California Montane Riparian Systems",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems"
+   ]
+  },
+  {
+   "id": "calycanthus_occidentalis",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "western spicebush",
+   "drawn_as": "calycanthus_occidentalis",
+   "share": 0.0002,
+   "why_needed": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule montane_riparian on California Montane Riparian Systems",
+    "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems"
+   ]
+  },
+  {
+   "id": "cephalanthus_occidentalis",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "buttonbush",
+   "drawn_as": "cephalanthus_occidentalis",
+   "share": 0.0002,
+   "why_needed": [
+    "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
+    "cover: rule riparian_shrubland on Mediterranean California Foothill and Lower Montane Riparian Shrubland"
+   ]
+  },
+  {
+   "id": "chamaebatia_foliolosa",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "mountain misery",
+   "drawn_as": "chamaebatia_foliolosa",
+   "share": 0.0001,
+   "why_needed": [
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule black_oak on Mediterranean California Lower Montane Black Oak Forest and Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland"
+   ]
+  },
+  {
+   "id": "phyllodoce_breweri",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "red mountain heather",
+   "drawn_as": "phyllodoce_breweri",
+   "share": 0.0001,
+   "why_needed": [
+    "cover: rule subalpine_meadow on Temperate Pacific Subalpine-Montane Wet Meadow"
+   ]
+  },
+  {
+   "id": "abies_concolor",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "white fir",
+   "drawn_as": "abies_concolor",
+   "share": 0,
+   "why_needed": [
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "named by EVT 7027 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (237 cells)"
+   ]
+  },
+  {
+   "id": "agnorhiza_reticulata",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 15 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "arctostaphylos_patula",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "greenleaf manzanita",
+   "drawn_as": "arctostaphylos_patula",
+   "share": 0,
+   "why_needed": [
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule black_oak on Mediterranean California Lower Montane Black Oak Forest and Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland"
+   ]
+  },
+  {
+   "id": "calystegia_stebbinsii",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 15 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "ceanothus_cordulatus",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "mountain whitethorn",
+   "drawn_as": "ceanothus_cordulatus",
+   "share": 0,
+   "why_needed": [
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule black_oak on Mediterranean California Lower Montane Black Oak Forest and Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland"
+   ]
+  },
+  {
+   "id": "chrysolepis_sempervirens",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "bush chinquapin",
+   "drawn_as": "chrysolepis_sempervirens",
+   "share": 0,
+   "why_needed": [
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule black_oak on Mediterranean California Lower Montane Black Oak Forest and Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland"
+   ]
+  },
+  {
+   "id": "clarkia_biloba",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 12 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "fremontodendron_decumbens",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 13 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
+   "id": "pinus_contorta",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "lodgepole pine",
+   "drawn_as": "pinus_contorta",
+   "share": 0,
+   "why_needed": [
+    "cover: rule subalpine_meadow on Temperate Pacific Subalpine-Montane Wet Meadow"
+   ]
+  },
+  {
+   "id": "pinus_lambertiana",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "sugar pine",
+   "drawn_as": "pinus_lambertiana",
+   "share": 0,
+   "why_needed": [
+    "cover: rule lower_montane_conifer on Mediterranean California Lower Montane Conifer Forest and Woodland",
+    "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
+    "named by EVT 7027 Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland (237 cells)"
+   ]
+  }
+ ],
+ "animals": [
+  {
+   "id": "corvus_corax",
+   "scientific": "Corvus corax",
+   "common": "common raven",
+   "kind": "bird",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "2376 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "buteo_jamaicensis",
+   "scientific": "Buteo jamaicensis",
+   "common": "red-tailed hawk",
+   "kind": "bird",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "3466 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "odocoileus_hemionus",
+   "scientific": "Odocoileus hemionus",
+   "common": "black-tailed deer",
+   "kind": "mammal",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "198 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "urocyon_cinereoargenteus",
+   "scientific": "Urocyon cinereoargenteus",
+   "common": "gray fox",
+   "kind": "mammal",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "53 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "sciurus_griseus",
+   "scientific": "Sciurus griseus",
+   "common": "western gray squirrel",
+   "kind": "mammal",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "26 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "melanerpes_formicivorus",
+   "scientific": "Melanerpes formicivorus",
+   "common": "acorn woodpecker",
+   "kind": "bird",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "5706 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "callipepla_californica",
+   "scientific": "Callipepla californica",
+   "common": "California quail",
+   "kind": "bird",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "2360 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "oreortyx_pictus",
+   "scientific": "Oreortyx pictus",
+   "common": "mountain quail",
+   "kind": "bird",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "6 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "aphelocoma_californica",
+   "scientific": "Aphelocoma californica",
+   "common": "California scrub-jay",
+   "kind": "bird",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "5466 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "cyanocitta_stelleri",
+   "scientific": "Cyanocitta stelleri",
+   "common": "Steller's jay",
+   "kind": "bird",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "460 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "cathartes_aura",
+   "scientific": "Cathartes aura",
+   "common": "turkey vulture",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "4609 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "sylvilagus_bachmani",
+   "scientific": "Sylvilagus bachmani",
+   "common": "brush rabbit",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "range",
+   "evidence": "39% of the tile in its range (0-1220 m on chaparral, oak woodland, riparian) (>= 5%); 0 records within 10 km in 2011-2026 (< 3)"
+  },
+  {
+   "id": "lepus_californicus",
+   "scientific": "Lepus californicus",
+   "common": "black-tailed jackrabbit",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "47 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "microtus_californicus",
+   "scientific": "Microtus californicus",
+   "common": "California vole",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "range",
+   "evidence": "41% of the tile in its range (0-1100 m on grassland, riparian, oak woodland) (>= 5%); 2 records within 10 km in 2011-2026 (< 3)"
+  },
+  {
+   "id": "canis_latrans",
+   "scientific": "Canis latrans",
+   "common": "coyote",
+   "kind": "mammal",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "26 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "puma_concolor",
+   "scientific": "Puma concolor",
+   "common": "mountain lion",
+   "kind": "mammal",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "30 records within 23 km in 2011-2026 (the search widened to hold its home ranges) (>= 3)"
+  },
+  {
+   "id": "ursus_americanus",
+   "scientific": "Ursus americanus",
+   "common": "American black bear",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "15 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "meleagris_gallopavo",
+   "scientific": "Meleagris gallopavo",
+   "common": "wild turkey",
+   "kind": "bird",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "1625 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "otospermophilus_beecheyi",
+   "scientific": "Otospermophilus beecheyi",
+   "common": "California ground squirrel",
+   "kind": "mammal",
+   "fidelity": 4,
+   "present": "records",
+   "evidence": "13 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "sceloporus_occidentalis",
+   "scientific": "Sceloporus occidentalis",
+   "common": "western fence lizard",
+   "kind": "reptile",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "154 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "troglodytes_pacificus",
+   "scientific": "Troglodytes pacificus",
+   "common": "Pacific wren",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "6 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "poecile_rufescens",
+   "scientific": "Poecile rufescens",
+   "common": "chestnut-backed chickadee",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "20 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "megaceryle_alcyon",
+   "scientific": "Megaceryle alcyon",
+   "common": "belted kingfisher",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "806 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "haliaeetus_leucocephalus",
+   "scientific": "Haliaeetus leucocephalus",
+   "common": "bald eagle",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "342 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "corvus_brachyrhynchos",
+   "scientific": "Corvus brachyrhynchos",
+   "common": "American crow",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "1558 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "lynx_rufus",
+   "scientific": "Lynx rufus",
+   "common": "bobcat",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "11 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "lontra_canadensis",
+   "scientific": "Lontra canadensis",
+   "common": "North American river otter",
+   "kind": "mammal",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "4 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "ensatina_eschscholtzii",
+   "scientific": "Ensatina eschscholtzii",
+   "common": "ensatina",
+   "kind": "amphibian",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "8 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "ardea_herodias",
+   "scientific": "Ardea herodias",
+   "common": "great blue heron",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "875 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "mergus_merganser",
+   "scientific": "Mergus merganser",
+   "common": "common merganser",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "465 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "turdus_migratorius",
+   "scientific": "Turdus migratorius",
+   "common": "American robin",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "2553 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "sturnus_vulgaris",
+   "scientific": "Sturnus vulgaris",
+   "common": "European starling",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "3554 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "ixoreus_naevius",
+   "scientific": "Ixoreus naevius",
+   "common": "varied thrush",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "78 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "junco_hyemalis",
+   "scientific": "Junco hyemalis",
+   "common": "dark-eyed junco",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "2255 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "regulus_satrapa",
+   "scientific": "Regulus satrapa",
+   "common": "golden-crowned kinglet",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "24 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "empidonax_difficilis",
+   "scientific": "Empidonax difficilis",
+   "common": "Pacific-slope flycatcher",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "262 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "megascops_kennicottii",
+   "scientific": "Megascops kennicottii",
+   "common": "western screech-owl",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "51 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "leuconotopicus_villosus",
+   "scientific": "Leuconotopicus villosus",
+   "common": "hairy woodpecker",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "148 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "pandion_haliaetus",
+   "scientific": "Pandion haliaetus",
+   "common": "osprey",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "53 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "accipiter_striatus",
+   "scientific": "Accipiter striatus",
+   "common": "sharp-shinned hawk",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "201 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "falco_columbarius",
+   "scientific": "Falco columbarius",
+   "common": "merlin",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "141 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "larus_californicus",
+   "scientific": "Larus californicus",
+   "common": "California gull",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "111 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "anas_platyrhynchos",
+   "scientific": "Anas platyrhynchos",
+   "common": "mallard",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "2351 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "anaxyrus_boreas",
+   "scientific": "Anaxyrus boreas",
+   "common": "western toad",
+   "kind": "amphibian",
+   "fidelity": 3,
+   "present": "records",
+   "evidence": "38 records within 10 km in 2011-2026 (>= 3)"
+  },
+  {
+   "id": "baeolophus_inornatus",
+   "scientific": "Baeolophus inornatus",
+   "common": "oak titmouse",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 2 of its class (4% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "calypte_anna",
+   "scientific": "Calypte anna",
+   "common": "anna's hummingbird",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 4 of its class (4% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "spinus_psaltria",
+   "scientific": "Spinus psaltria",
+   "common": "lesser goldfinch",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 5 of its class (4% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "sitta_carolinensis",
+   "scientific": "Sitta carolinensis",
+   "common": "white-breasted nuthatch",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 6 of its class (4% of the class's records)"
+   ],
+   "role": [
+    "omnivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "haemorhous_mexicanus",
+   "scientific": "Haemorhous mexicanus",
+   "common": "house finch",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 7 of its class (4% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "pipilo_maculatus",
+   "scientific": "Pipilo maculatus",
+   "common": "spotted towhee",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 8 of its class (4% of the class's records)"
+   ],
+   "role": [
+    "omnivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "melozone_crissalis",
+   "scientific": "Melozone crissalis",
+   "common": "california towhee",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 10 of its class (3% of the class's records)"
+   ],
+   "role": [
+    "omnivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "sayornis_nigricans",
+   "scientific": "Sayornis nigricans",
+   "common": "black phoebe",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 11 of its class (3% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "sialia_mexicana",
+   "scientific": "Sialia mexicana",
+   "common": "western bluebird",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 12 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "regulus_calendula",
+   "scientific": "Regulus calendula",
+   "common": "ruby-crowned kinglet",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 14 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "colaptes_auratus",
+   "scientific": "Colaptes auratus",
+   "common": "northern flicker",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 15 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "streptopelia_decaocto",
+   "scientific": "Streptopelia decaocto",
+   "common": "eurasian collared-dove",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 16 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "zenaida_macroura",
+   "scientific": "Zenaida macroura",
+   "common": "mourning dove",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 18 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "dryobates_nuttallii",
+   "scientific": "Dryobates nuttallii",
+   "common": "nuttall's woodpecker",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 20 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "euphagus_cyanocephalus",
+   "scientific": "Euphagus cyanocephalus",
+   "common": "brewer's blackbird",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 22 of its class (2% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "thryomanes_bewickii",
+   "scientific": "Thryomanes bewickii",
+   "common": "bewick's wren",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 23 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "insectivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "buteo_lineatus",
+   "scientific": "Buteo lineatus",
+   "common": "red-shouldered/broad-winged hawk",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator",
+    "most recorded: 24 of its class (1% of the class's records)"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "bubo_virginianus",
+   "scientific": "Bubo virginianus",
+   "common": "great horned owl",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "ardea_alba",
+   "scientific": "Ardea alba",
+   "common": "great egret",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "accipiter_cooperii",
+   "scientific": "Accipiter cooperii",
+   "common": "cooper's hawk",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "falco_peregrinus",
+   "scientific": "Falco peregrinus",
+   "common": "peregrine falcon",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "aquila_chrysaetos",
+   "scientific": "Aquila chrysaetos",
+   "common": "golden eagle",
+   "kind": "bird",
+   "fidelity": 3,
+   "present": "records",
+   "why": [
+    "predator and scavenger"
+   ],
+   "role": [
+    "predator",
+    "scavenger"
+   ],
+   "traits": null
+  },
+  {
+   "id": "tyto_furcata",
+   "scientific": "Tyto furcata",
+   "common": "american barn owl",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "buteo_regalis",
+   "scientific": "Buteo regalis",
+   "common": "ferruginous hawk",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "predator"
+   ],
+   "role": [
+    "predator"
+   ],
+   "traits": null
+  },
+  {
+   "id": "pica_nuttalli",
+   "scientific": "Pica nuttalli",
+   "common": "yellow-billed magpie",
+   "kind": "bird",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "scavenger"
+   ],
+   "role": [
+    "omnivore",
+    "scavenger"
+   ],
+   "traits": null
+  },
+  {
+   "id": "bassariscus_astutus",
+   "scientific": "Bassariscus astutus",
+   "common": "ringtail",
+   "kind": "mammal",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 4 of its class (10% of the class's records)"
+   ],
+   "role": [
+    "herbivore"
+   ],
+   "traits": null
+  },
+  {
+   "id": "elgaria_multicarinata",
+   "scientific": "Elgaria multicarinata",
+   "common": "southern alligator lizard",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 2 of its class (14% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "thamnophis_sirtalis",
+   "scientific": "Thamnophis sirtalis",
+   "common": "common garter snake",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 3 of its class (10% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "actinemys_marmorata",
+   "scientific": "Actinemys marmorata",
+   "common": "western pond turtle",
+   "kind": "reptile",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 4 of its class (10% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "aneides_lugubris",
+   "scientific": "Aneides lugubris",
+   "common": "arboreal salamander",
+   "kind": "amphibian",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 1 of its class (29% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "pseudacris_regilla",
+   "scientific": "Pseudacris regilla",
+   "common": "northern pacific treefrog",
+   "kind": "amphibian",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 2 of its class (19% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  },
+  {
+   "id": "rana_boylii",
+   "scientific": "Rana boylii",
+   "common": "foothill yellow-legged frog",
+   "kind": "amphibian",
+   "fidelity": 0,
+   "present": "records",
+   "why": [
+    "most recorded: 3 of its class (14% of the class's records)"
+   ],
+   "role": [],
+   "traits": null
+  }
+ ],
+ "queue": {
+  "cards": [
+   {
+    "id": "agnorhiza_reticulata",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 15 records on the tile"
+    ]
+   },
+   {
+    "id": "calystegia_stebbinsii",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 15 records on the tile"
+    ]
+   },
+   {
+    "id": "fremontodendron_decumbens",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 13 records on the tile"
+    ]
+   },
+   {
+    "id": "clarkia_biloba",
+    "kind": "forb",
+    "stand_in": null,
+    "why": [
+     "GBIF: 12 records on the tile"
+    ]
+   }
+  ],
+  "meshy": [
+   {
+    "id": "baeolophus_inornatus",
+    "scientific": "Baeolophus inornatus",
+    "common": "oak titmouse",
+    "kind": "bird",
+    "records": 177,
+    "why": [
+     "most recorded: 2 of its class (4% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "poecile_rufescens",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "calypte_anna",
+    "scientific": "Calypte anna",
+    "common": "anna's hummingbird",
+    "kind": "bird",
+    "records": 158,
+    "why": [
+     "most recorded: 4 of its class (4% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "spinus_psaltria",
+    "scientific": "Spinus psaltria",
+    "common": "lesser goldfinch",
+    "kind": "bird",
+    "records": 154,
+    "why": [
+     "most recorded: 5 of its class (4% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "sitta_carolinensis",
+    "scientific": "Sitta carolinensis",
+    "common": "white-breasted nuthatch",
+    "kind": "bird",
+    "records": 149,
+    "why": [
+     "most recorded: 6 of its class (4% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "haemorhous_mexicanus",
+    "scientific": "Haemorhous mexicanus",
+    "common": "house finch",
+    "kind": "bird",
+    "records": 149,
+    "why": [
+     "most recorded: 7 of its class (4% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "pipilo_maculatus",
+    "scientific": "Pipilo maculatus",
+    "common": "spotted towhee",
+    "kind": "bird",
+    "records": 147,
+    "why": [
+     "most recorded: 8 of its class (4% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "junco_hyemalis",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "melozone_crissalis",
+    "scientific": "Melozone crissalis",
+    "common": "california towhee",
+    "kind": "bird",
+    "records": 115,
+    "why": [
+     "most recorded: 10 of its class (3% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "junco_hyemalis",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "sayornis_nigricans",
+    "scientific": "Sayornis nigricans",
+    "common": "black phoebe",
+    "kind": "bird",
+    "records": 109,
+    "why": [
+     "most recorded: 11 of its class (3% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "empidonax_difficilis",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "sialia_mexicana",
+    "scientific": "Sialia mexicana",
+    "common": "western bluebird",
+    "kind": "bird",
+    "records": 91,
+    "why": [
+     "most recorded: 12 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "turdus_migratorius",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "regulus_calendula",
+    "scientific": "Regulus calendula",
+    "common": "ruby-crowned kinglet",
+    "kind": "bird",
+    "records": 87,
+    "why": [
+     "most recorded: 14 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "regulus_satrapa",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "colaptes_auratus",
+    "scientific": "Colaptes auratus",
+    "common": "northern flicker",
+    "kind": "bird",
+    "records": 86,
+    "why": [
+     "most recorded: 15 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "melanerpes_formicivorus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "streptopelia_decaocto",
+    "scientific": "Streptopelia decaocto",
+    "common": "eurasian collared-dove",
+    "kind": "bird",
+    "records": 86,
+    "why": [
+     "most recorded: 16 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "zenaida_macroura",
+    "scientific": "Zenaida macroura",
+    "common": "mourning dove",
+    "kind": "bird",
+    "records": 78,
+    "why": [
+     "most recorded: 18 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "dryobates_nuttallii",
+    "scientific": "Dryobates nuttallii",
+    "common": "nuttall's woodpecker",
+    "kind": "bird",
+    "records": 76,
+    "why": [
+     "most recorded: 20 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "melanerpes_formicivorus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "euphagus_cyanocephalus",
+    "scientific": "Euphagus cyanocephalus",
+    "common": "brewer's blackbird",
+    "kind": "bird",
+    "records": 63,
+    "why": [
+     "most recorded: 22 of its class (2% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "thryomanes_bewickii",
+    "scientific": "Thryomanes bewickii",
+    "common": "bewick's wren",
+    "kind": "bird",
+    "records": 62,
+    "why": [
+     "most recorded: 23 of its class (1% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "troglodytes_pacificus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "buteo_lineatus",
+    "scientific": "Buteo lineatus",
+    "common": "red-shouldered/broad-winged hawk",
+    "kind": "bird",
+    "records": 60,
+    "why": [
+     "predator",
+     "most recorded: 24 of its class (1% of the class's records)"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "buteo_jamaicensis",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "bubo_virginianus",
+    "scientific": "Bubo virginianus",
+    "common": "great horned owl",
+    "kind": "bird",
+    "records": 18,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "strix_varia",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "ardea_alba",
+    "scientific": "Ardea alba",
+    "common": "great egret",
+    "kind": "bird",
+    "records": 7,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "ardea_herodias",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "aneides_lugubris",
+    "scientific": "Aneides lugubris",
+    "common": "arboreal salamander",
+    "kind": "amphibian",
+    "records": 6,
+    "why": [
+     "most recorded: 1 of its class (29% of the class's records)"
+    ],
+    "body_plan": "amphibian",
+    "rig": "none yet: the reptile template, hopping",
+    "estimate_credits": 25,
+    "stand_in": "plethodon_vehiculum",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "accipiter_cooperii",
+    "scientific": "Accipiter cooperii",
+    "common": "cooper's hawk",
+    "kind": "bird",
+    "records": 5,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "accipiter_striatus",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "falco_peregrinus",
+    "scientific": "Falco peregrinus",
+    "common": "peregrine falcon",
+    "kind": "bird",
+    "records": 5,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "falco_columbarius",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "bassariscus_astutus",
+    "scientific": "Bassariscus astutus",
+    "common": "ringtail",
+    "kind": "mammal",
+    "records": 5,
+    "why": [
+     "most recorded: 4 of its class (10% of the class's records)"
+    ],
+    "body_plan": "quadruped",
+    "rig": "tools/rig_quadruped.py skeleton, gait.js / legs.js",
+    "estimate_credits": 30,
+    "stand_in": "canis_latrans",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "aquila_chrysaetos",
+    "scientific": "Aquila chrysaetos",
+    "common": "golden eagle",
+    "kind": "bird",
+    "records": 4,
+    "why": [
+     "predator and scavenger"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "buteo_jamaicensis",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "tyto_furcata",
+    "scientific": "Tyto furcata",
+    "common": "american barn owl",
+    "kind": "bird",
+    "records": 4,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "strix_varia",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "elgaria_multicarinata",
+    "scientific": "Elgaria multicarinata",
+    "common": "southern alligator lizard",
+    "kind": "reptile",
+    "records": 4,
+    "why": [
+     "most recorded: 2 of its class (14% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "pseudacris_regilla",
+    "scientific": "Pseudacris regilla",
+    "common": "northern pacific treefrog",
+    "kind": "amphibian",
+    "records": 4,
+    "why": [
+     "most recorded: 2 of its class (19% of the class's records)"
+    ],
+    "body_plan": "amphibian",
+    "rig": "none yet: the reptile template, hopping",
+    "estimate_credits": 25,
+    "stand_in": "anaxyrus_boreas",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "buteo_regalis",
+    "scientific": "Buteo regalis",
+    "common": "ferruginous hawk",
+    "kind": "bird",
+    "records": 3,
+    "why": [
+     "predator"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "buteo_jamaicensis",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "pica_nuttalli",
+    "scientific": "Pica nuttalli",
+    "common": "yellow-billed magpie",
+    "kind": "bird",
+    "records": 3,
+    "why": [
+     "scavenger"
+    ],
+    "body_plan": "bird",
+    "rig": "bird part rig (animalModels.js RIG.bird), flierControl",
+    "estimate_credits": 30,
+    "stand_in": "aphelocoma_californica",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "thamnophis_sirtalis",
+    "scientific": "Thamnophis sirtalis",
+    "common": "common garter snake",
+    "kind": "reptile",
+    "records": 3,
+    "why": [
+     "most recorded: 3 of its class (10% of the class's records)"
+    ],
+    "body_plan": "snake",
+    "rig": "none yet: a spine-wave rig",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "actinemys_marmorata",
+    "scientific": "Actinemys marmorata",
+    "common": "western pond turtle",
+    "kind": "reptile",
+    "records": 3,
+    "why": [
+     "most recorded: 4 of its class (10% of the class's records)"
+    ],
+    "body_plan": "reptile",
+    "rig": "reptile part rig template",
+    "estimate_credits": 25,
+    "stand_in": null,
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   },
+   {
+    "id": "rana_boylii",
+    "scientific": "Rana boylii",
+    "common": "foothill yellow-legged frog",
+    "kind": "amphibian",
+    "records": 3,
+    "why": [
+     "most recorded: 3 of its class (14% of the class's records)"
+    ],
+    "body_plan": "amphibian",
+    "rig": "none yet: the reptile template, hopping",
+    "estimate_credits": 25,
+    "stand_in": "rana_cascadae",
+    "status": "queued (not run): Meshy needs Aaron's go-ahead past the 1,000-credit budget"
+   }
+  ]
+ },
+ "hands": [
+  {
+   "id": "agnorhiza_reticulata",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 15 records on the tile"
+   ]
+  },
+  {
+   "id": "calystegia_stebbinsii",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 15 records on the tile"
+   ]
+  },
+  {
+   "id": "fremontodendron_decumbens",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 13 records on the tile"
+   ]
+  },
+  {
+   "id": "clarkia_biloba",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 12 records on the tile"
+   ]
+  },
+  {
+   "id": "baeolophus_inornatus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 2 of its class (4% of the class's records)"
+   ]
+  },
+  {
+   "id": "calypte_anna",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 4 of its class (4% of the class's records)"
+   ]
+  },
+  {
+   "id": "spinus_psaltria",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 5 of its class (4% of the class's records)"
+   ]
+  },
+  {
+   "id": "sitta_carolinensis",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 6 of its class (4% of the class's records)"
+   ]
+  },
+  {
+   "id": "haemorhous_mexicanus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 7 of its class (4% of the class's records)"
+   ]
+  },
+  {
+   "id": "pipilo_maculatus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 8 of its class (4% of the class's records)"
+   ]
+  },
+  {
+   "id": "melozone_crissalis",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 10 of its class (3% of the class's records)"
+   ]
+  },
+  {
+   "id": "sayornis_nigricans",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 11 of its class (3% of the class's records)"
+   ]
+  },
+  {
+   "id": "sialia_mexicana",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 12 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "regulus_calendula",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 14 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "colaptes_auratus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 15 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "streptopelia_decaocto",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 16 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "zenaida_macroura",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 18 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "dryobates_nuttallii",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 20 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "euphagus_cyanocephalus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 22 of its class (2% of the class's records)"
+   ]
+  },
+  {
+   "id": "thryomanes_bewickii",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 23 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "buteo_lineatus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator",
+    "most recorded: 24 of its class (1% of the class's records)"
+   ]
+  },
+  {
+   "id": "bubo_virginianus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "ardea_alba",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "aneides_lugubris",
+   "kind": "amphibian",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 1 of its class (29% of the class's records)"
+   ]
+  },
+  {
+   "id": "accipiter_cooperii",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "falco_peregrinus",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "bassariscus_astutus",
+   "kind": "mammal",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "most recorded: 4 of its class (10% of the class's records)"
+   ]
+  },
+  {
+   "id": "aquila_chrysaetos",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator and scavenger"
+   ]
+  },
+  {
+   "id": "tyto_furcata",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "elgaria_multicarinata",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 2 of its class (14% of the class's records)"
+   ]
+  },
+  {
+   "id": "pseudacris_regilla",
+   "kind": "amphibian",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 2 of its class (19% of the class's records)"
+   ]
+  },
+  {
+   "id": "buteo_regalis",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "predator"
+   ]
+  },
+  {
+   "id": "pica_nuttalli",
+   "kind": "bird",
+   "what": "a mesh (Meshy ~30 credits) and its review",
+   "why": [
+    "scavenger"
+   ]
+  },
+  {
+   "id": "thamnophis_sirtalis",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 3 of its class (10% of the class's records)"
+   ]
+  },
+  {
+   "id": "actinemys_marmorata",
+   "kind": "reptile",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 4 of its class (10% of the class's records)"
+   ]
+  },
+  {
+   "id": "rana_boylii",
+   "kind": "amphibian",
+   "what": "a mesh (Meshy ~25 credits) and its review",
+   "why": [
+    "most recorded: 3 of its class (14% of the class's records)"
+   ]
+  }
+ ]
+}

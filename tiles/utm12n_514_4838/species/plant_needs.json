@@ -7,9 +7,9 @@
    "code": 9016,
    "name": "Rocky Mountain Alpine Bedrock and Scree",
    "cells": 31668,
-   "rule": "named_from_phyllodoce_breweri",
+   "rule": "named_from_phyllodoce_empetriformis",
    "named": [
-    "phyllodoce_breweri"
+    "phyllodoce_empetriformis"
    ]
   },
   {
@@ -55,8 +55,11 @@
    "code": 7055,
    "name": "Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland",
    "cells": 5844,
-   "rule": null,
-   "named": []
+   "rule": "named_from_picea_engelmannii_abies_lasiocarpa",
+   "named": [
+    "picea_engelmannii",
+    "abies_lasiocarpa"
+   ]
   },
   {
    "source": "evt",
@@ -71,8 +74,11 @@
    "code": 7056,
    "name": "Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland",
    "cells": 3470,
-   "rule": null,
-   "named": []
+   "rule": "named_from_picea_engelmannii_abies_lasiocarpa",
+   "named": [
+    "picea_engelmannii",
+    "abies_lasiocarpa"
+   ]
   },
   {
    "source": "evt",
@@ -87,13 +93,13 @@
    "code": 7046,
    "name": "Northern Rocky Mountain Subalpine Woodland and Parkland",
    "cells": 2953,
-   "rule": "named_from_pinus_albicaulis_tsuga_mertensiana_pinus_contorta",
+   "rule": "named_from_pinus_albicaulis_pinus_contorta_abies_lasiocarpa",
    "named": [
     "pinus_albicaulis",
-    "tsuga_mertensiana",
     "pinus_contorta",
-    "pinus_monticola",
-    "juniperus_grandis"
+    "abies_lasiocarpa",
+    "picea_engelmannii",
+    "pinus_flexilis"
    ]
   },
   {
@@ -101,9 +107,9 @@
    "code": 7144,
    "name": "Rocky Mountain Alpine Turf",
    "cells": 1532,
-   "rule": "named_from_phyllodoce_breweri",
+   "rule": "named_from_phyllodoce_empetriformis",
    "named": [
-    "phyllodoce_breweri"
+    "phyllodoce_empetriformis"
    ]
   },
   {
@@ -111,16 +117,30 @@
    "code": 9019,
    "name": "Rocky Mountain Lower Montane-Foothill Riparian Woodland",
    "cells": 1315,
-   "rule": null,
-   "named": []
+   "rule": "named_from_populus_trichocarpa_populus_angustifolia_acer_negundo",
+   "named": [
+    "populus_trichocarpa",
+    "populus_angustifolia",
+    "acer_negundo",
+    "cornus_sericea",
+    "rosa_woodsii"
+   ]
   },
   {
    "source": "evt",
    "code": 7106,
    "name": "Northern Rocky Mountain Montane-Foothill Deciduous Shrubland",
    "cells": 1181,
-   "rule": null,
-   "named": []
+   "rule": "named_from_amelanchier_alnifolia_prunus_virginiana_symphoricarpos_albus",
+   "named": [
+    "amelanchier_alnifolia",
+    "prunus_virginiana",
+    "symphoricarpos_albus",
+    "rosa_woodsii",
+    "acer_glabrum",
+    "sorbus_scopulina",
+    "ceanothus_velutinus"
+   ]
   },
   {
    "source": "evt",
@@ -143,8 +163,14 @@
    "code": 9519,
    "name": "Rocky Mountain Lower Montane-Foothill Riparian Shrubland",
    "cells": 489,
-   "rule": null,
-   "named": []
+   "rule": "named_from_populus_trichocarpa_populus_angustifolia_acer_negundo",
+   "named": [
+    "populus_trichocarpa",
+    "populus_angustifolia",
+    "acer_negundo",
+    "cornus_sericea",
+    "rosa_woodsii"
+   ]
   },
   {
    "source": "evt",
@@ -161,17 +187,23 @@
    "code": 9022,
    "name": "Rocky Mountain Subalpine-Montane Riparian Woodland",
    "cells": 416,
-   "rule": null,
-   "named": []
+   "rule": "named_from_populus_trichocarpa_populus_angustifolia_acer_negundo",
+   "named": [
+    "populus_trichocarpa",
+    "populus_angustifolia",
+    "acer_negundo",
+    "cornus_sericea",
+    "rosa_woodsii"
+   ]
   },
   {
    "source": "evt",
    "code": 9017,
    "name": "Rocky Mountain Alpine-Montane Wet Meadow",
    "cells": 404,
-   "rule": "named_from_phyllodoce_breweri",
+   "rule": "named_from_phyllodoce_empetriformis",
    "named": [
-    "phyllodoce_breweri"
+    "phyllodoce_empetriformis"
    ]
   },
   {
@@ -179,9 +211,9 @@
    "code": 7070,
    "name": "Rocky Mountain Alpine Dwarf-Shrubland",
    "cells": 272,
-   "rule": "named_from_phyllodoce_breweri",
+   "rule": "named_from_phyllodoce_empetriformis",
    "named": [
-    "phyllodoce_breweri"
+    "phyllodoce_empetriformis"
    ]
   },
   {
@@ -189,9 +221,9 @@
    "code": 7143,
    "name": "Rocky Mountain Alpine Fell-Field",
    "cells": 254,
-   "rule": "named_from_phyllodoce_breweri",
+   "rule": "named_from_phyllodoce_empetriformis",
    "named": [
-    "phyllodoce_breweri"
+    "phyllodoce_empetriformis"
    ]
   },
   {
@@ -207,8 +239,16 @@
    "code": 7169,
    "name": "Northern Rocky Mountain Subalpine Deciduous Shrubland",
    "cells": 235,
-   "rule": null,
-   "named": []
+   "rule": "named_from_amelanchier_alnifolia_prunus_virginiana_symphoricarpos_albus",
+   "named": [
+    "amelanchier_alnifolia",
+    "prunus_virginiana",
+    "symphoricarpos_albus",
+    "rosa_woodsii",
+    "acer_glabrum",
+    "sorbus_scopulina",
+    "ceanothus_velutinus"
+   ]
   },
   {
    "source": "evt",
@@ -223,16 +263,25 @@
    "code": 694,
    "name": "Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland",
    "cells": 127,
-   "rule": null,
-   "named": []
+   "rule": "named_from_picea_engelmannii_abies_lasiocarpa",
+   "named": [
+    "picea_engelmannii",
+    "abies_lasiocarpa"
+   ]
   },
   {
    "source": "bps",
    "code": 712,
    "name": "Rocky Mountain Montane Riparian Systems",
    "cells": 103,
-   "rule": null,
-   "named": []
+   "rule": "named_from_populus_trichocarpa_populus_angustifolia_acer_negundo",
+   "named": [
+    "populus_trichocarpa",
+    "populus_angustifolia",
+    "acer_negundo",
+    "cornus_sericea",
+    "rosa_woodsii"
+   ]
   },
   {
    "source": "evt",
@@ -247,25 +296,37 @@
    "code": 9021,
    "name": "Rocky Mountain Subalpine-Montane Riparian Shrubland",
    "cells": 60,
-   "rule": null,
-   "named": []
+   "rule": "named_from_populus_trichocarpa_populus_angustifolia_acer_negundo",
+   "named": [
+    "populus_trichocarpa",
+    "populus_angustifolia",
+    "acer_negundo",
+    "cornus_sericea",
+    "rosa_woodsii"
+   ]
   },
   {
    "source": "bps",
    "code": 713,
    "name": "Rocky Mountain Subalpine/Upper Montane Riparian Systems",
    "cells": 44,
-   "rule": null,
-   "named": []
+   "rule": "named_from_populus_trichocarpa_populus_angustifolia_acer_negundo",
+   "named": [
+    "populus_trichocarpa",
+    "populus_angustifolia",
+    "acer_negundo",
+    "cornus_sericea",
+    "rosa_woodsii"
+   ]
   },
   {
    "source": "evt",
    "code": 7057,
    "name": "Rocky Mountain Subalpine-Montane Limber-Bristlecone Pine Woodland",
    "cells": 30,
-   "rule": "named_from_pinus_longaeva",
+   "rule": "named_from_pinus_flexilis",
    "named": [
-    "pinus_longaeva"
+    "pinus_flexilis"
    ]
   },
   {
@@ -283,10 +344,10 @@
    "code": 7049,
    "name": "Rocky Mountain Foothill Limber Pine-Juniper Woodland",
    "cells": 19,
-   "rule": "named_from_pinus_flexilis_juniperus_grandis",
+   "rule": "named_from_pinus_flexilis_juniperus_scopulorum",
    "named": [
     "pinus_flexilis",
-    "juniperus_grandis"
+    "juniperus_scopulorum"
    ]
   },
   {
@@ -294,14 +355,10 @@
    "code": 7061,
    "name": "Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland",
    "cells": 10,
-   "rule": "named_from_pinus_ponderosa_pinus_lambertiana_abies_concolor",
+   "rule": "named_from_pseudotsuga_menziesii_picea_pungens_populus_tremuloides",
    "named": [
-    "pinus_ponderosa",
-    "pinus_lambertiana",
-    "abies_concolor",
-    "calocedrus_decurrens",
     "pseudotsuga_menziesii",
-    "quercus_kelloggii",
+    "picea_pungens",
     "populus_tremuloides"
    ]
   }
@@ -309,21 +366,9 @@
  "unread": [
   {
    "source": "evt",
-   "code": 7055,
-   "name": "Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland",
-   "cells": 5844
-  },
-  {
-   "source": "evt",
    "code": 9018,
    "name": "Rocky Mountain Cliff Canyon and Massive Bedrock",
    "cells": 5611
-  },
-  {
-   "source": "evt",
-   "code": 7056,
-   "name": "Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland",
-   "cells": 3470
   },
   {
    "source": "evt",
@@ -333,39 +378,9 @@
   },
   {
    "source": "evt",
-   "code": 9019,
-   "name": "Rocky Mountain Lower Montane-Foothill Riparian Woodland",
-   "cells": 1315
-  },
-  {
-   "source": "evt",
-   "code": 7106,
-   "name": "Northern Rocky Mountain Montane-Foothill Deciduous Shrubland",
-   "cells": 1181
-  },
-  {
-   "source": "evt",
-   "code": 9519,
-   "name": "Rocky Mountain Lower Montane-Foothill Riparian Shrubland",
-   "cells": 489
-  },
-  {
-   "source": "evt",
-   "code": 9022,
-   "name": "Rocky Mountain Subalpine-Montane Riparian Woodland",
-   "cells": 416
-  },
-  {
-   "source": "evt",
    "code": 7140,
    "name": "Northern Rocky Mountain Subalpine-Upper Montane Grassland",
    "cells": 246
-  },
-  {
-   "source": "evt",
-   "code": 7169,
-   "name": "Northern Rocky Mountain Subalpine Deciduous Shrubland",
-   "cells": 235
   },
   {
    "source": "evt",
@@ -374,39 +389,15 @@
    "cells": 127
   },
   {
-   "source": "bps",
-   "code": 694,
-   "name": "Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland",
-   "cells": 127
-  },
-  {
-   "source": "bps",
-   "code": 712,
-   "name": "Rocky Mountain Montane Riparian Systems",
-   "cells": 103
-  },
-  {
    "source": "evt",
    "code": 9828,
    "name": "Interior Western North American Temperate Ruderal Grassland",
    "cells": 93
-  },
-  {
-   "source": "evt",
-   "code": 9021,
-   "name": "Rocky Mountain Subalpine-Montane Riparian Shrubland",
-   "cells": 60
-  },
-  {
-   "source": "bps",
-   "code": 713,
-   "name": "Rocky Mountain Subalpine/Upper Montane Riparian Systems",
-   "cells": 44
   }
  ],
  "needs": [
   {
-   "id": "phyllodoce_breweri",
+   "id": "phyllodoce_empetriformis",
    "kind": "shrub",
    "why": [
     "named by EVT 9016 Rocky Mountain Alpine Bedrock and Scree (31668 cells)",
@@ -419,7 +410,7 @@
    "records": 0,
    "record": true,
    "card": true,
-   "drawn_as": "phyllodoce_breweri",
+   "drawn_as": "phyllodoce_empetriformis",
    "rank": 1
   },
   {
@@ -455,6 +446,24 @@
    "rank": 3
   },
   {
+   "id": "abies_lasiocarpa",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7055 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (5844 cells)",
+    "named by EVT 7056 Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland (3470 cells)",
+    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (2953 cells)",
+    "named by BPS 694 Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland (127 cells)",
+    "canopy: records (GBIF: 74 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.083,
+   "records": 74,
+   "scientific": "Abies lasiocarpa",
+   "record": true,
+   "card": true,
+   "drawn_as": "abies_lasiocarpa",
+   "rank": 4
+  },
+  {
    "id": "pseudotsuga_menziesii",
    "kind": "tree",
    "why": [
@@ -462,13 +471,48 @@
     "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)",
     "canopy: records (GBIF: 23 records on the tile; height not yet screened)"
    ],
-   "cover": 0.0672,
+   "cover": 0.0673,
    "records": 23,
    "scientific": "Pseudotsuga menziesii",
    "record": true,
    "card": false,
    "drawn_as": "pseudotsuga_menziesii",
-   "rank": 4
+   "rank": 5
+  },
+  {
+   "id": "picea_engelmannii",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7055 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (5844 cells)",
+    "named by EVT 7056 Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland (3470 cells)",
+    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (2953 cells)",
+    "named by BPS 694 Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland (127 cells)",
+    "canopy: records (GBIF: 10 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0526,
+   "records": 10,
+   "scientific": "Picea engelmannii",
+   "record": true,
+   "card": true,
+   "drawn_as": "picea_engelmannii",
+   "rank": 6
+  },
+  {
+   "id": "sorbus_scopulina",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)",
+    "canopy: records (GBIF: 106 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0522,
+   "records": 106,
+   "scientific": "Sorbus scopulina",
+   "record": false,
+   "card": false,
+   "drawn_as": "rubus_parviflorus",
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 7
   },
   {
    "id": "populus_tremuloides",
@@ -485,61 +529,19 @@
    "record": true,
    "card": true,
    "drawn_as": "populus_tremuloides",
-   "rank": 5
-  },
-  {
-   "id": "sorbus_scopulina",
-   "kind": "tree",
-   "why": [
-    "canopy: records (GBIF: 106 records on the tile; height not yet screened)"
-   ],
-   "cover": 0.0503,
-   "records": 106,
-   "scientific": "Sorbus scopulina",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 6
-  },
-  {
-   "id": "abies_lasiocarpa",
-   "kind": "tree",
-   "why": [
-    "canopy: records (GBIF: 74 records on the tile; height not yet screened)"
-   ],
-   "cover": 0.0351,
-   "records": 74,
-   "scientific": "Abies lasiocarpa",
-   "record": true,
-   "card": true,
-   "drawn_as": "abies_lasiocarpa",
-   "rank": 7
-  },
-  {
-   "id": "acer_glabrum",
-   "kind": "tree",
-   "why": [
-    "canopy: records (GBIF: 41 records on the tile; height not yet screened)"
-   ],
-   "cover": 0.0195,
-   "records": 41,
-   "scientific": "Acer glabrum",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
    "rank": 8
   },
   {
-   "id": "amelanchier_alnifolia",
-   "kind": "tree",
+   "id": "acer_glabrum",
+   "kind": "shrub",
    "why": [
-    "canopy: records (GBIF: 40 records on the tile; height not yet screened)"
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)",
+    "canopy: records (GBIF: 41 records on the tile; height not yet screened)"
    ],
-   "cover": 0.019,
-   "records": 40,
-   "scientific": "Amelanchier alnifolia",
+   "cover": 0.0213,
+   "records": 41,
+   "scientific": "Acer glabrum",
    "record": false,
    "card": false,
    "drawn_as": null,
@@ -547,33 +549,73 @@
    "rank": 9
   },
   {
-   "id": "prunus_virginiana",
-   "kind": "tree",
+   "id": "amelanchier_alnifolia",
+   "kind": "shrub",
    "why": [
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)",
+    "canopy: records (GBIF: 40 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0208,
+   "records": 40,
+   "scientific": "Amelanchier alnifolia",
+   "record": true,
+   "card": true,
+   "drawn_as": "amelanchier_alnifolia",
+   "rank": 10
+  },
+  {
+   "id": "prunus_virginiana",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)",
     "canopy: records (GBIF: 19 records on the tile; height not yet screened)"
    ],
-   "cover": 0.009,
+   "cover": 0.0108,
    "records": 19,
    "scientific": "Prunus virginiana",
    "record": false,
    "card": false,
-   "drawn_as": null,
+   "drawn_as": "rubus_parviflorus",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 10
+   "rank": 11
   },
   {
-   "id": "juniperus_grandis",
+   "id": "rosa_woodsii",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (1315 cells)",
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "named by EVT 9519 Rocky Mountain Lower Montane-Foothill Riparian Shrubland (489 cells)",
+    "named by EVT 9022 Rocky Mountain Subalpine-Montane Riparian Woodland (416 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)",
+    "named by BPS 712 Rocky Mountain Montane Riparian Systems (103 cells)",
+    "named by EVT 9021 Rocky Mountain Subalpine-Montane Riparian Shrubland (60 cells)",
+    "named by BPS 713 Rocky Mountain Subalpine/Upper Montane Riparian Systems (44 cells)"
+   ],
+   "cover": 0.0062,
+   "records": 0,
+   "record": false,
+   "card": false,
+   "drawn_as": "rubus_parviflorus",
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 12
+  },
+  {
+   "id": "pinus_flexilis",
    "kind": "tree",
    "why": [
     "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (2953 cells)",
+    "named by EVT 7057 Rocky Mountain Subalpine-Montane Limber-Bristlecone Pine Woodland (30 cells)",
     "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (19 cells)"
    ],
-   "cover": 0.0054,
+   "cover": 0.0057,
    "records": 0,
    "record": true,
    "card": true,
-   "drawn_as": "juniperus_grandis",
-   "rank": 11
+   "drawn_as": "pinus_flexilis",
+   "rank": 13
   },
   {
    "id": "pinus_albicaulis",
@@ -586,43 +628,21 @@
    "record": true,
    "card": true,
    "drawn_as": "pinus_albicaulis",
-   "rank": 12
-  },
-  {
-   "id": "pinus_monticola",
-   "kind": "tree",
-   "why": [
-    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (2953 cells)"
-   ],
-   "cover": 0.0053,
-   "records": 0,
-   "record": true,
-   "card": true,
-   "drawn_as": "pinus_monticola",
-   "rank": 13
-  },
-  {
-   "id": "tsuga_mertensiana",
-   "kind": "tree",
-   "why": [
-    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (2953 cells)"
-   ],
-   "cover": 0.0053,
-   "records": 0,
-   "record": true,
-   "card": true,
-   "drawn_as": "tsuga_mertensiana",
    "rank": 14
   },
   {
-   "id": "picea_engelmannii",
+   "id": "acer_negundo",
    "kind": "tree",
    "why": [
-    "canopy: records (GBIF: 10 records on the tile; height not yet screened)"
+    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (1315 cells)",
+    "named by EVT 9519 Rocky Mountain Lower Montane-Foothill Riparian Shrubland (489 cells)",
+    "named by EVT 9022 Rocky Mountain Subalpine-Montane Riparian Woodland (416 cells)",
+    "named by BPS 712 Rocky Mountain Montane Riparian Systems (103 cells)",
+    "named by EVT 9021 Rocky Mountain Subalpine-Montane Riparian Shrubland (60 cells)",
+    "named by BPS 713 Rocky Mountain Subalpine/Upper Montane Riparian Systems (44 cells)"
    ],
-   "cover": 0.0047,
-   "records": 10,
-   "scientific": "Picea engelmannii",
+   "cover": 0.0044,
+   "records": 0,
    "record": false,
    "card": false,
    "drawn_as": null,
@@ -630,21 +650,90 @@
    "rank": 15
   },
   {
-   "id": "pinus_longaeva",
-   "kind": "tree",
+   "id": "cornus_sericea",
+   "kind": "shrub",
    "why": [
-    "named by EVT 7057 Rocky Mountain Subalpine-Montane Limber-Bristlecone Pine Woodland (30 cells)"
+    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (1315 cells)",
+    "named by EVT 9519 Rocky Mountain Lower Montane-Foothill Riparian Shrubland (489 cells)",
+    "named by EVT 9022 Rocky Mountain Subalpine-Montane Riparian Woodland (416 cells)",
+    "named by BPS 712 Rocky Mountain Montane Riparian Systems (103 cells)",
+    "named by EVT 9021 Rocky Mountain Subalpine-Montane Riparian Shrubland (60 cells)",
+    "named by BPS 713 Rocky Mountain Subalpine/Upper Montane Riparian Systems (44 cells)"
    ],
-   "cover": 0.0003,
+   "cover": 0.0044,
    "records": 0,
-   "record": false,
+   "record": true,
    "card": false,
-   "drawn_as": "pinus_ponderosa",
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "drawn_as": "cornus_sericea",
    "rank": 16
   },
   {
-   "id": "pinus_flexilis",
+   "id": "populus_angustifolia",
+   "kind": "tree",
+   "why": [
+    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (1315 cells)",
+    "named by EVT 9519 Rocky Mountain Lower Montane-Foothill Riparian Shrubland (489 cells)",
+    "named by EVT 9022 Rocky Mountain Subalpine-Montane Riparian Woodland (416 cells)",
+    "named by BPS 712 Rocky Mountain Montane Riparian Systems (103 cells)",
+    "named by EVT 9021 Rocky Mountain Subalpine-Montane Riparian Shrubland (60 cells)",
+    "named by BPS 713 Rocky Mountain Subalpine/Upper Montane Riparian Systems (44 cells)"
+   ],
+   "cover": 0.0044,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "populus_angustifolia",
+   "rank": 17
+  },
+  {
+   "id": "populus_trichocarpa",
+   "kind": "tree",
+   "why": [
+    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (1315 cells)",
+    "named by EVT 9519 Rocky Mountain Lower Montane-Foothill Riparian Shrubland (489 cells)",
+    "named by EVT 9022 Rocky Mountain Subalpine-Montane Riparian Woodland (416 cells)",
+    "named by BPS 712 Rocky Mountain Montane Riparian Systems (103 cells)",
+    "named by EVT 9021 Rocky Mountain Subalpine-Montane Riparian Shrubland (60 cells)",
+    "named by BPS 713 Rocky Mountain Subalpine/Upper Montane Riparian Systems (44 cells)"
+   ],
+   "cover": 0.0044,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "populus_trichocarpa",
+   "rank": 18
+  },
+  {
+   "id": "ceanothus_velutinus",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
+   ],
+   "cover": 0.0018,
+   "records": 183,
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 19
+  },
+  {
+   "id": "symphoricarpos_albus",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
+   ],
+   "cover": 0.0018,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "symphoricarpos_albus",
+   "rank": 20
+  },
+  {
+   "id": "juniperus_scopulorum",
    "kind": "tree",
    "why": [
     "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (19 cells)"
@@ -653,9 +742,9 @@
    "records": 0,
    "record": false,
    "card": false,
-   "drawn_as": "pinus_ponderosa",
+   "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 17
+   "rank": 21
   },
   {
    "id": "rubus_parviflorus",
@@ -669,22 +758,7 @@
    "record": true,
    "card": true,
    "drawn_as": "rubus_parviflorus",
-   "rank": 18
-  },
-  {
-   "id": "ceanothus_velutinus",
-   "kind": "shrub",
-   "why": [
-    "GBIF: 183 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 183,
-   "scientific": "Ceanothus velutinus",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 19
+   "rank": 22
   },
   {
    "id": "lonicera_utahensis",
@@ -697,9 +771,9 @@
    "scientific": "Lonicera utahensis",
    "record": false,
    "card": false,
-   "drawn_as": null,
+   "drawn_as": "symphoricarpos_albus",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 20
+   "rank": 23
   },
   {
    "id": "aconitum_columbianum",
@@ -714,7 +788,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 21
+   "rank": 24
   },
   {
    "id": "mahonia_repens",
@@ -729,7 +803,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 22
+   "rank": 25
   },
   {
    "id": "wyethia_sagittata",
@@ -744,7 +818,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 23
+   "rank": 26
   },
   {
    "id": "chamaenerion_angustifolium",
@@ -759,7 +833,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 24
+   "rank": 27
   },
   {
    "id": "ipomopsis_aggregata",
@@ -774,7 +848,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 25
+   "rank": 28
   },
   {
    "id": "erythranthe_lewisii",
@@ -789,7 +863,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 26
+   "rank": 29
   },
   {
    "id": "campanula_petiolata",
@@ -804,7 +878,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 27
+   "rank": 30
   },
   {
    "id": "actaea_rubra",
@@ -818,7 +892,7 @@
    "record": true,
    "card": true,
    "drawn_as": "actaea_rubra",
-   "rank": 28
+   "rank": 31
   },
   {
    "id": "aquilegia_coerulea",
@@ -833,7 +907,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 29
+   "rank": 32
   },
   {
    "id": "pterospora_andromedea",
@@ -846,9 +920,9 @@
    "scientific": "Pterospora andromedea",
    "record": false,
    "card": false,
-   "drawn_as": null,
+   "drawn_as": "phyllodoce_empetriformis",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 30
+   "rank": 33
   },
   {
    "id": "streptopus_amplexifolius",
@@ -863,7 +937,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 31
+   "rank": 34
   },
   {
    "id": "chimaphila_umbellata",
@@ -876,9 +950,9 @@
    "scientific": "Chimaphila umbellata",
    "record": false,
    "card": false,
-   "drawn_as": null,
+   "drawn_as": "phyllodoce_empetriformis",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 32
+   "rank": 35
   },
   {
    "id": "paxistima_myrsinites",
@@ -893,7 +967,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 33
+   "rank": 36
   },
   {
    "id": "rhododendron_menziesii",
@@ -906,9 +980,9 @@
    "scientific": "Rhododendron menziesii",
    "record": false,
    "card": false,
-   "drawn_as": null,
+   "drawn_as": "phyllodoce_empetriformis",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 34
+   "rank": 37
   },
   {
    "id": "carduus_nutans",
@@ -923,7 +997,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 35
+   "rank": 38
   },
   {
    "id": "eriogonum_umbellatum",
@@ -937,7 +1011,7 @@
    "record": true,
    "card": true,
    "drawn_as": "eriogonum_umbellatum",
-   "rank": 36
+   "rank": 39
   },
   {
    "id": "maianthemum_racemosum",
@@ -952,7 +1026,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 37
+   "rank": 40
   },
   {
    "id": "geranium_viscosissimum",
@@ -966,7 +1040,7 @@
    "record": true,
    "card": true,
    "drawn_as": "geranium_viscosissimum",
-   "rank": 38
+   "rank": 41
   },
   {
    "id": "heracleum_maximum",
@@ -981,7 +1055,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 39
+   "rank": 42
   },
   {
    "id": "clematis_occidentalis",
@@ -996,7 +1070,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 40
+   "rank": 43
   },
   {
    "id": "lonicera_involucrata",
@@ -1009,9 +1083,9 @@
    "scientific": "Lonicera involucrata",
    "record": false,
    "card": false,
-   "drawn_as": null,
+   "drawn_as": "symphoricarpos_albus",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 41
+   "rank": 44
   },
   {
    "id": "achillea_millefolium",
@@ -1025,7 +1099,7 @@
    "record": true,
    "card": false,
    "drawn_as": "achillea_millefolium",
-   "rank": 42
+   "rank": 45
   },
   {
    "id": "arnica_cordifolia",
@@ -1039,7 +1113,7 @@
    "record": true,
    "card": true,
    "drawn_as": "arnica_cordifolia",
-   "rank": 43
+   "rank": 46
   },
   {
    "id": "vaccinium_membranaceum",
@@ -1052,9 +1126,9 @@
    "scientific": "Vaccinium membranaceum",
    "record": false,
    "card": false,
-   "drawn_as": null,
+   "drawn_as": "phyllodoce_empetriformis",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 44
+   "rank": 47
   },
   {
    "id": "vaccinium_scoparium",
@@ -1067,9 +1141,9 @@
    "scientific": "Vaccinium scoparium",
    "record": false,
    "card": false,
-   "drawn_as": null,
+   "drawn_as": "phyllodoce_empetriformis",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 45
+   "rank": 48
   },
   {
    "id": "ribes_viscosissimum",
@@ -1084,7 +1158,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 46
+   "rank": 49
   },
   {
    "id": "orthilia_secunda",
@@ -1097,9 +1171,9 @@
    "scientific": "Orthilia secunda",
    "record": false,
    "card": false,
-   "drawn_as": null,
+   "drawn_as": "phyllodoce_empetriformis",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 47
+   "rank": 50
   },
   {
    "id": "castilleja_miniata",
@@ -1113,7 +1187,7 @@
    "record": true,
    "card": true,
    "drawn_as": "castilleja_miniata",
-   "rank": 48
+   "rank": 51
   },
   {
    "id": "equisetum_arvense",
@@ -1127,7 +1201,7 @@
    "record": true,
    "card": true,
    "drawn_as": "equisetum_arvense",
-   "rank": 49
+   "rank": 52
   },
   {
    "id": "erythronium_grandiflorum",
@@ -1141,7 +1215,7 @@
    "record": true,
    "card": true,
    "drawn_as": "erythronium_grandiflorum",
-   "rank": 50
+   "rank": 53
   },
   {
    "id": "mertensia_ciliata",
@@ -1155,7 +1229,7 @@
    "record": true,
    "card": true,
    "drawn_as": "mertensia_ciliata",
-   "rank": 51
+   "rank": 54
   },
   {
    "id": "carex_hoodii",
@@ -1169,7 +1243,7 @@
    "record": true,
    "card": true,
    "drawn_as": "carex_hoodii",
-   "rank": 52
+   "rank": 55
   },
   {
    "id": "kalmia_microphylla",
@@ -1182,9 +1256,9 @@
    "scientific": "Kalmia microphylla",
    "record": false,
    "card": false,
-   "drawn_as": null,
+   "drawn_as": "phyllodoce_empetriformis",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 53
+   "rank": 56
   },
   {
    "id": "sambucus_racemosa",
@@ -1199,22 +1273,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 54
-  },
-  {
-   "id": "pyrola_asarifolia",
-   "kind": "shrub",
-   "why": [
-    "GBIF: 11 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 11,
-   "scientific": "Pyrola asarifolia",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 55
+   "rank": 57
   },
   {
    "id": "delphinium_nuttallianum",
@@ -1228,7 +1287,7 @@
    "record": true,
    "card": true,
    "drawn_as": "delphinium_nuttallianum",
-   "rank": 56
+   "rank": 58
   },
   {
    "id": "erigeron_compositus",
@@ -1242,7 +1301,7 @@
    "record": true,
    "card": true,
    "drawn_as": "erigeron_compositus",
-   "rank": 57
+   "rank": 59
   },
   {
    "id": "maianthemum_stellatum",
@@ -1256,87 +1315,21 @@
    "record": true,
    "card": true,
    "drawn_as": "maianthemum_stellatum",
-   "rank": 58
-  },
-  {
-   "id": "ribes_lacustre",
-   "kind": "shrub",
-   "why": [
-    "GBIF: 10 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 10,
-   "scientific": "Ribes lacustre",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 59
-  },
-  {
-   "id": "abies_concolor",
-   "kind": "tree",
-   "why": [
-    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)"
-   ],
-   "cover": 0.0,
-   "records": 0,
-   "record": true,
-   "card": true,
-   "drawn_as": "abies_concolor",
    "rank": 60
   },
   {
-   "id": "calocedrus_decurrens",
+   "id": "picea_pungens",
    "kind": "tree",
    "why": [
     "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)"
    ],
    "cover": 0.0,
    "records": 0,
-   "record": true,
+   "record": false,
    "card": false,
-   "drawn_as": "calocedrus_decurrens",
+   "drawn_as": "picea_engelmannii",
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
    "rank": 61
-  },
-  {
-   "id": "pinus_lambertiana",
-   "kind": "tree",
-   "why": [
-    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)"
-   ],
-   "cover": 0.0,
-   "records": 0,
-   "record": true,
-   "card": true,
-   "drawn_as": "pinus_lambertiana",
-   "rank": 62
-  },
-  {
-   "id": "pinus_ponderosa",
-   "kind": "tree",
-   "why": [
-    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)"
-   ],
-   "cover": 0.0,
-   "records": 0,
-   "record": true,
-   "card": false,
-   "drawn_as": "pinus_ponderosa",
-   "rank": 63
-  },
-  {
-   "id": "quercus_kelloggii",
-   "kind": "tree",
-   "why": [
-    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)"
-   ],
-   "cover": 0.0,
-   "records": 0,
-   "record": true,
-   "card": false,
-   "drawn_as": "quercus_kelloggii",
-   "rank": 64
   }
  ],
  "gbif_plants": [
@@ -1640,9 +1633,9 @@
    "id": "amelanchier_alnifolia",
    "scientific": "Amelanchier alnifolia",
    "family": "Rosaceae",
-   "kind": "forb",
+   "kind": "shrub",
    "records": 40,
-   "known": false
+   "known": true
   },
   {
    "id": "platanthera_dilatata",
@@ -2258,7 +2251,7 @@
    "family": "Pinaceae",
    "kind": "tree",
    "records": 10,
-   "known": false
+   "known": true
   },
   {
    "id": "antennaria_rosea",
@@ -2548,65 +2541,54 @@
   "ground": 26
  },
  "by_layer": {
-  "tree": 20,
-  "shrub": 18,
+  "tree": 12,
+  "shrub": 23,
   "ground": 26
  },
  "hands": [
   {
    "id": "sorbus_scopulina",
-   "kind": "tree",
+   "kind": "shrub",
    "what": "a trait card",
    "why": [
-    "canopy: records (GBIF: 106 records on the tile; height not yet screened)"
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
    ]
   },
   {
    "id": "acer_glabrum",
-   "kind": "tree",
+   "kind": "shrub",
    "what": "a trait card",
    "why": [
-    "canopy: records (GBIF: 41 records on the tile; height not yet screened)"
-   ]
-  },
-  {
-   "id": "amelanchier_alnifolia",
-   "kind": "tree",
-   "what": "a trait card",
-   "why": [
-    "canopy: records (GBIF: 40 records on the tile; height not yet screened)"
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
    ]
   },
   {
    "id": "prunus_virginiana",
-   "kind": "tree",
+   "kind": "shrub",
    "what": "a trait card",
    "why": [
-    "canopy: records (GBIF: 19 records on the tile; height not yet screened)"
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
    ]
   },
   {
-   "id": "picea_engelmannii",
-   "kind": "tree",
+   "id": "rosa_woodsii",
+   "kind": "shrub",
    "what": "a trait card",
    "why": [
-    "canopy: records (GBIF: 10 records on the tile; height not yet screened)"
+    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (1315 cells)",
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)"
    ]
   },
   {
-   "id": "pinus_longaeva",
+   "id": "acer_negundo",
    "kind": "tree",
    "what": "a trait card",
    "why": [
-    "named by EVT 7057 Rocky Mountain Subalpine-Montane Limber-Bristlecone Pine Woodland (30 cells)"
-   ]
-  },
-  {
-   "id": "pinus_flexilis",
-   "kind": "tree",
-   "what": "a trait card",
-   "why": [
-    "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (19 cells)"
+    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (1315 cells)",
+    "named by EVT 9519 Rocky Mountain Lower Montane-Foothill Riparian Shrubland (489 cells)"
    ]
   },
   {
@@ -2614,7 +2596,16 @@
    "kind": "shrub",
    "what": "a trait card",
    "why": [
-    "GBIF: 183 records on the tile"
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
+   ]
+  },
+  {
+   "id": "juniperus_scopulorum",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (19 cells)"
    ]
   },
   {
@@ -2818,27 +2809,11 @@
    ]
   },
   {
-   "id": "pyrola_asarifolia",
-   "kind": "shrub",
+   "id": "picea_pungens",
+   "kind": "tree",
    "what": "a trait card",
    "why": [
-    "GBIF: 11 records on the tile"
-   ]
-  },
-  {
-   "id": "ribes_lacustre",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 10 records on the tile"
-   ]
-  },
-  {
-   "id": "Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "5844 cells"
+    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)"
    ]
   },
   {
@@ -2850,51 +2825,11 @@
    ]
   },
   {
-   "id": "Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "3470 cells"
-   ]
-  },
-  {
    "id": "Rocky Mountain Subalpine-Montane Mesic Meadow",
    "kind": "community",
    "what": "a lexicon phrase or a species-mix rule",
    "why": [
     "3345 cells"
-   ]
-  },
-  {
-   "id": "Rocky Mountain Lower Montane-Foothill Riparian Woodland",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "1315 cells"
-   ]
-  },
-  {
-   "id": "Northern Rocky Mountain Montane-Foothill Deciduous Shrubland",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "1181 cells"
-   ]
-  },
-  {
-   "id": "Rocky Mountain Lower Montane-Foothill Riparian Shrubland",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "489 cells"
-   ]
-  },
-  {
-   "id": "Rocky Mountain Subalpine-Montane Riparian Woodland",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "416 cells"
    ]
   },
   {
@@ -2906,35 +2841,11 @@
    ]
   },
   {
-   "id": "Northern Rocky Mountain Subalpine Deciduous Shrubland",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "235 cells"
-   ]
-  },
-  {
    "id": "Northern Rocky Mountain Lower Montane-Foothill-Valley Grassland",
    "kind": "community",
    "what": "a lexicon phrase or a species-mix rule",
    "why": [
     "127 cells"
-   ]
-  },
-  {
-   "id": "Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "127 cells"
-   ]
-  },
-  {
-   "id": "Rocky Mountain Montane Riparian Systems",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "103 cells"
    ]
   },
   {
@@ -2944,40 +2855,24 @@
    "why": [
     "93 cells"
    ]
-  },
-  {
-   "id": "Rocky Mountain Subalpine-Montane Riparian Shrubland",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "60 cells"
-   ]
-  },
-  {
-   "id": "Rocky Mountain Subalpine/Upper Montane Riparian Systems",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "44 cells"
-   ]
   }
  ],
  "summary": {
-  "needed": 64,
-  "with_record": 29,
+  "needed": 61,
+  "with_record": 28,
   "generated_now": 0,
-  "queued": 35,
-  "unread_communities": 16,
+  "queued": 33,
+  "unread_communities": 5,
   "by_layer": {
-   "tree": 20,
-   "shrub": 18,
+   "tree": 12,
+   "shrub": 23,
    "ground": 26
   },
   "meets_target": {
    "tree": false,
-   "shrub": false,
+   "shrub": true,
    "ground": true
   },
-  "hands": 51
+  "hands": 38
  }
 }

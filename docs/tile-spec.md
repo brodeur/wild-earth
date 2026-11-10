@@ -1323,6 +1323,26 @@ stand-in is drawn and listed in `substitutions` (`{species: drawn}`). `context` 
 band edges and the number of grove cells. The columns of `species` now follow the species drawn (still TREES / SHRUBS
 first), so a tile's column list grows only with what it uses.
 
+**2026-11-10: stand-ins and names by place.** A species without a library record is drawn by a stand-in only where the
+stand-in belongs to the tile (GBIF has 3 or more records of it within 25 km over the presence years; where the records
+cannot say, it is a record of the tile's natural region) and is its relative: the same genus, else the same family and
+growth form (`communities.local_stand_in`). Otherwise it is left out and the row's other species take its share.
+Three keys say what happened:
+
+- `stand_ins`: `[{species, drawn, reason, cells}]`, the species asked for, the record drawn, why, and the 30 m cells
+  whose row would have drawn the species.
+- `missing`: `[{species, reason, cells}]`, a species with no such record. This list is the tile's to-do list for
+  trait cards.
+- `communities[].generic`: the layers (`trees`, `shrubs`) of a community whose every species was missing. Its cells
+  draw the tile's other communities of the habitat class (`generic_drawn`); its `trees` / `shrubs` keep the weights as
+  written.
+
+`substitutions` stays (`{species: drawn or null}`). A tile in no table's region (`natural_regions` empty: the Grand
+Canyon, Lamar, Teton) reads its community names by its own records (`communities.named_species`): of the species a
+word can mean, the best recorded near the tile; of a community phrase's members, every one recorded there. Outside
+California `species.trees` and `species.shrubs` list only the species a row draws (California's TREES / SHRUBS no
+longer lead them); the order of every row's bytes is unchanged. The client reads none of the new keys.
+
 ## Species library
 
 Plants are not in the package. A tile references plant species by id only (the same

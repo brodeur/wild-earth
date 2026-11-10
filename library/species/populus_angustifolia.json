@@ -1,0 +1,466 @@
+{
+ "id": "populus_angustifolia",
+ "aliases": [
+  "narrowleaf_cottonwood",
+  "narrow_leaf_cottonwood",
+  "willow_leaved_cottonwood",
+  "mountain_cottonwood"
+ ],
+ "scientific": "Populus angustifolia",
+ "common": "narrowleaf cottonwood",
+ "form": "tree",
+ "regions": [
+  "interior_west"
+ ],
+ "architectural_model": "Rauh",
+ "deciduous": true,
+ "height_m": [
+  10,
+  20
+ ],
+ "stature": {
+  "typical_m": 14,
+  "tall_m": 20,
+  "record_m": null,
+  "source": "typical: the drafter's figure for the Snake River bottoms, below FEIS's maximum; tall: FEIS, to about 20 m with trunks over 76 cm across; no record height was read; read 2026-11-10"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    3,
+    9
+   ],
+   "trunk_radius": 0.65,
+   "crown_scale": 0.8,
+   "branches": 0.8,
+   "set": {
+    "trunk": {
+     "length_ratio": 0.55,
+     "split_prob": 0.3
+    },
+    "foliage": {
+     "clumps": {
+      "radius_m": 0.8
+     }
+    }
+   },
+   "note": "(from the Fremont cottonwood template) a fast-growing young tree, taller than wide, still with a leader"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 2,
+   "note": "(from the Fremont cottonwood template) the file as written"
+  },
+  {
+   "name": "veteran",
+   "weight": 0.17,
+   "height_m": [
+    17,
+    23
+   ],
+   "trunk_radius": 1.3,
+   "crown_scale": 1.15,
+   "gnarl": 1.3,
+   "deadwood": {
+    "fraction": 0.22,
+    "levels": [
+     1,
+     2
+    ],
+    "where": "inner"
+   },
+   "set": {
+    "trunk": {
+     "split_prob": 0.8,
+     "split_count": 3,
+     "lean_deg": 14
+    }
+   },
+   "note": "(from the Fremont cottonwood template) the floodplain giant: a massive leaning trunk forking into three, dead limbs standing out of the crown"
+  }
+ ],
+ "snag": {
+  "fraction": 0.08,
+  "from": "veteran",
+  "height_m": [
+   14,
+   24
+  ],
+  "limbs": 0.5,
+  "twigs": 0.2,
+  "levels": 1,
+  "shorten": [
+   0.4,
+   0.9
+  ],
+  "rgb": [
+   172,
+   166,
+   156
+  ]
+ },
+ "description": "A slender deciduous cottonwood 10-20 m tall with a narrow crown, smooth pale bark on young stems that becomes grey and furrowed on old trunks, and narrow, lance-shaped, finely scalloped leaves that look more like a willow's than a poplar's, yellow-green in summer and golden yellow in fall. It grows in bands along the Snake River and its tributaries in Jackson Hole, on gravel bars and banks with willows, and its stands spread by root suckers as well as seed.",
+ "season_notes": {
+  "winter": "Bare, upright grey crowns along the river; bald eagles perch and nest in the tall trees.",
+  "spring": "Catkins hang from last year's twigs in May before the leaves, males a week or two ahead of females, during the spring high water.",
+  "summer": "Fluffy white seed drifts as the river drops in early summer; narrow yellow-green leaves keep forming through the season.",
+  "fall": "Leaves turn golden yellow and fall from mid-September through October, the river corridors a gold ribbon across the valley."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "riparian": 1.0,
+   "conifer_forest": 0.05,
+   "grassland": 0.04
+  },
+  "floor": 2.4,
+  "mid": 0.1,
+  "steep": 0.05,
+  "north": 1.0,
+  "shade": 0.05,
+  "disturbed": 1.0,
+  "riparian": {
+   "zones": {
+    "bank": 1.0,
+    "terrace": 1.0,
+    "margin": 0.5,
+    "pond_terrace": 0.3,
+    "pond_shore": 0.3
+   },
+   "orders": [
+    2,
+    7
+   ],
+   "permanence": "perennial",
+   "water": "Wants a summer water table within reach of its roots: the banks, gravel bars and alluvial benches of rivers and streams, where floods lay down the bare, moist, sunny alluvium its seedlings need; it tolerates long flooding but not drought or a sudden drop in the water table."
+  }
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "cervus_canadensis",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "cervus_canadensis",
+   "odocoileus_hemionus",
+   "haliaeetus_leucocephalus",
+   "accipiter_striatus",
+   "buteo_jamaicensis"
+  ],
+  "shades_water": 0.7
+ },
+ "trunk": {
+  "length_ratio": 0.36,
+  "radius_ratio": 0.05,
+  "taper": 0.6,
+  "flare": 1.4,
+  "bole_ratio": 0.5,
+  "base_size": 0.38,
+  "curve_deg": 10,
+  "curve_var_deg": 14,
+  "segments": 5,
+  "lean_deg": 5,
+  "stems": [
+   1,
+   3
+  ],
+  "stem_spread_deg": 18,
+  "split_prob": 0.2,
+  "split_count": 2,
+  "split_angle_deg": 30,
+  "bark_rgb": [
+   136,
+   130,
+   116
+  ],
+  "bark_pattern": "furrowed",
+  "twig_rgb": [
+   150,
+   142,
+   120
+  ],
+  "bark": {
+   "tile_m": [
+    0.4,
+    0.8
+   ],
+   "ridge_m": 0.05,
+   "block_m": 0.14,
+   "fissure": 0.55,
+   "contrast": 1.1,
+   "lichen": 0.2,
+   "relief": 1.4
+  },
+  "roots": {
+   "length": 1.3,
+   "note": "a shallow mat of roots along the bank"
+  }
+ },
+ "crown": {
+  "shape": "cylindrical",
+  "envelope": {
+   "profile": [
+    [
+     0.25,
+     0.12
+    ],
+    [
+     0.38,
+     0.18
+    ],
+    [
+     0.52,
+     0.21
+    ],
+    [
+     0.66,
+     0.21
+    ],
+    [
+     0.8,
+     0.17
+    ],
+    [
+     0.92,
+     0.1
+    ],
+    [
+     1.0,
+     0.03
+    ]
+   ],
+   "lobes": 5,
+   "lobe_depth": 0.2,
+   "asymmetry": 0.2,
+   "fill": 0.42,
+   "edge": 1.1
+  }
+ },
+ "levels": [
+  {
+   "count": 9,
+   "down_angle_deg": 58,
+   "down_angle_tip_deg": 32,
+   "down_angle_var_deg": 14,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 2.2,
+   "length_var": 0.25,
+   "curve_deg": 8,
+   "curve_var_deg": 20,
+   "zigzag_deg": 6,
+   "tropism": 0.03,
+   "droop_deg": 12,
+   "taper": 0.9,
+   "radius_ratio": 0.6,
+   "segments": 3,
+   "sinuous_deg": 5
+  },
+  {
+   "count": 11,
+   "start": 0.1,
+   "down_angle_deg": 45,
+   "down_angle_var_deg": 15,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.5,
+   "length_var": 0.3,
+   "curve_deg": 0,
+   "curve_var_deg": 20,
+   "zigzag_deg": 8,
+   "tropism": 0.04,
+   "taper": 1.0,
+   "radius_ratio": 0.45,
+   "segments": 2
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.07,
+  "leaf_shape": "lanceolate",
+  "cluster_m": 1.9,
+  "density": 14,
+  "leaf_fill": 3.6,
+  "start": 0.05,
+  "parent_start": 0.35,
+  "orientation": "outward",
+  "roll_deg": 70,
+  "colors": {
+   "winter": [
+    148,
+    142,
+    124
+   ],
+   "spring": [
+    146,
+    166,
+    84
+   ],
+   "summer": [
+    104,
+    128,
+    68
+   ],
+   "fall": [
+    212,
+    178,
+    58
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.6,
+   "summer": 1.0,
+   "fall": 0.5
+  },
+  "clumps": {
+   "radius_m": 1.5,
+   "cards_per_clump": 10,
+   "shell": 0.1,
+   "flatten": 0.7,
+   "tip_bias": 1.4
+  },
+  "palette": [
+   [
+    0.7,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.2,
+    [
+     1.18,
+     1.2,
+     1.08
+    ]
+   ],
+   [
+    0.1,
+    [
+     0.8,
+     0.84,
+     0.8
+    ]
+   ]
+  ],
+  "winter_twigs": 0.45,
+  "ao_min": 0.66,
+  "color_var": [
+   0.07,
+   0.05
+  ],
+  "leaf_on_var": 0.5,
+  "leaf_on_by_month": [
+   0.0,
+   0.0,
+   0.0,
+   0.05,
+   0.6,
+   1.0,
+   1.0,
+   1.0,
+   0.9,
+   0.45,
+   0.05,
+   0.0
+  ],
+  "flowers": null
+ },
+ "deadwood": {
+  "fraction": 0.08,
+  "where": "inner",
+  "levels": [
+   1,
+   2
+  ],
+  "shorten": 0.6,
+  "rgb": [
+   160,
+   154,
+   144
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "length": 0.6,
+  "down_deg": 45,
+  "down_var_deg": 18,
+  "curve_var_deg": 22,
+  "segments": 2,
+  "radius_m": 0.011,
+  "taper": 0.6,
+  "zigzag_deg": 14,
+  "fan_deg": 50,
+  "jitter": 0.2
+ },
+ "lod": {
+  "near_tris_budget": 2200,
+  "near_sides": [
+   7,
+   3,
+   0
+  ],
+  "mid_blobs": 5,
+  "mid_branches": 4,
+  "mid_segments": [
+   3,
+   2
+  ],
+  "mid_blob_scale": 0.9,
+  "close_factor": 2
+ },
+ "targets": {
+  "crown_width_ratio": 0.42,
+  "crown_base_ratio": 0.3,
+  "porosity": 0.35,
+  "foliage_rg": 0.64,
+  "foliage_bg": 0.27,
+  "fall_rg": 1.41,
+  "fall_bg": 0.43,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: a slender, upright cottonwood with a narrow, open crown of upswept branches, often in close clusters of stems along the banks; yellow-green narrow leaves in summer, golden yellow in fall, pale grey-green smooth bark on young stems and grey furrowed bark on old trunks"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "5",
+  "card": "library/plant_cards/populus_angustifolia.json",
+  "card_sha256": "85f283370db5e3a7",
+  "template": "populus_fremontii",
+  "template_common": "Fremont cottonwood",
+  "height_scale": 0.769
+ },
+ "notes": "Fremont cottonwood (the template) is the library's cottonwood, but it is a broad, spreading tree of 15-24 m with triangular leaves, a wide crown (crown_width_ratio 1.05) and a veteran age class that forks heavily. The card makes narrowleaf cottonwood a slender tree (FEIS: a slender crown, to about 20 m) with a narrow crown (crown_width_ratio 0.42) and lance-shaped, scalloped, yellow-green leaves (Wikipedia; leaf_shape lanceolate). Leaf length was not given by any source read: 0.07 m is the drafter's judgement. Bark smooth when young, furrowed with age (FEIS); the card keeps to the common card keys, so the template's age classes stand: its young class is not set smooth and paler and its veteran forks more (split_prob 0.8) than this slender tree should; a variant_patches block (young smooth pale bark, veteran split_prob about 0.4) is the next refinement. Catkins before the leaves, on last year's twigs, May-June; leaf fall mid-September to October (FEIS); catkins and seed fluff are not drawn. It sprouts from roots, root crowns and buried branch fragments (FEIS, the main spread on coarse foothill rivers) and grows in tight clusters (Wikipedia), so the species mix should place it in bands and clumps along the channel, not as lone trees. Lives 100-200 years (FEIS). Elevation: 1200-2400 m (Wikipedia); western Wyoming below about 2000 m (FEIS), so in the 1,900-2,700 m Lamar and Teton tiles it belongs to the lowest river bottoms only; GBIF records should decide. Jackson Hole: the NPS Grand Teton plants and trees pages (along the Snake River, its tributaries and wetlands, golden yellow in fall). It hybridises readily with balsam poplar, black cottonwood, plains cottonwood and Fremont cottonwood (Wikipedia), so local stands may be mixed. Eaters: FEIS calls it a major beaver food and relatively unpalatable to game and livestock in Wyoming streamside woodland (elk rated good in Wyoming, fair in Utah); cover fair to good for elk, mule deer and small songbirds; nesting for sharp-shinned hawks, bald eagles (in the Greater Yellowstone) and the greater pewee. Beaver, moose and the pewee are not in the animal library; the red-tailed hawk is added as a generic large-tree nester (the drafter's judgement). Colours, crown profile, porosity, split probability, leaf-on months, the mule deer seasons and shades_water are the drafter's judgement, not from a source.",
+ "sources": [
+  "Fire Effects Information System, Populus angustifolia, https://www.fs.usda.gov/database/feis/plants/tree/popang/all.html, read 2026-11-10",
+  "Wikipedia, Populus angustifolia (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Populus_angustifolia, read 2026-11-10",
+  "National Park Service, Grand Teton National Park: Plants, https://www.nps.gov/grte/learn/nature/plants.htm, read 2026-11-10",
+  "National Park Service, Grand Teton National Park: Trees and Shrubs, https://www.nps.gov/grte/learn/nature/trees.htm, read 2026-11-10",
+  "National Park Service, Yellowstone National Park: Beaver, https://www.nps.gov/yell/learn/nature/beaver.htm, read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

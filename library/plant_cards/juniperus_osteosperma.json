@@ -1,0 +1,285 @@
+{
+ "id": "juniperus_osteosperma",
+ "scientific": "Juniperus osteosperma",
+ "common": "Utah juniper",
+ "aliases": [
+  "utah_juniper"
+ ],
+ "family": "Cupressaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "calocedrus_decurrens",
+ "regions": [
+  "interior_west"
+ ],
+ "height_m": [
+  3,
+  7
+ ],
+ "stature": {
+  "typical_m": 4.5,
+  "tall_m": 8,
+  "record_m": 9,
+  "source": "typical: FEIS often 3-4.5 m, Colorado National Monument averages 3-6 m (NPS), Wikipedia 3-6 m; tall: FEIS usually under 8 m; record: about 9 m, rarely (Wikipedia, NPS Colorado National Monument); Grand Canyon gives up to 6 m (NPS); read 2026-11-10"
+ },
+ "variants_height_m": {
+  "young": [
+   0.8,
+   2.5
+  ],
+  "old-growth": [
+   4,
+   8
+  ]
+ },
+ "crown": {
+  "shape": "spherical",
+  "profile": [
+   [
+    0.12,
+    0.34
+   ],
+   [
+    0.3,
+    0.42
+   ],
+   [
+    0.5,
+    0.44
+   ],
+   [
+    0.68,
+    0.38
+   ],
+   [
+    0.84,
+    0.27
+   ],
+   [
+    1.0,
+    0.1
+   ]
+  ],
+  "lobes": 5,
+  "lobe_depth": 0.3,
+  "asymmetry": 0.32,
+  "fill": 0.28,
+  "edge": 1.15
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    92,
+    102,
+    70
+   ],
+   "spring": [
+    110,
+    120,
+    78
+   ],
+   "summer": [
+    102,
+    114,
+    74
+   ],
+   "fall": [
+    98,
+    108,
+    72
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   146,
+   138,
+   124
+  ],
+  "bark_pattern": "shreddy",
+  "stems": [
+   1,
+   4
+  ],
+  "stem_spread_deg": 25,
+  "radius_ratio": 0.07,
+  "flare": 1.6,
+  "lean_deg": 8,
+  "taper": 1.3
+ },
+ "targets": {
+  "crown_width_ratio": 0.85,
+  "crown_base_ratio": 0.08,
+  "porosity": 0.3,
+  "from": "judgement values from the drafter's reading of the sources (2026-11-10), no photographs measured; to be replaced by photo measurements: a squat tree or big shrub, often forked into several twisted, gnarled trunks low down (FEIS, NPS Grand Canyon), a rounded, irregular crown nearly to the ground and nearly as wide as tall"
+ },
+ "variant_patches": {
+  "young": {
+   "set": {
+    "trunk": {
+     "stems": [
+      1,
+      2
+     ]
+    },
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.03,
+        0.3
+       ],
+       [
+        0.25,
+        0.33
+       ],
+       [
+        0.45,
+        0.3
+       ],
+       [
+        0.65,
+        0.23
+       ],
+       [
+        0.85,
+        0.12
+       ],
+       [
+        1.0,
+        0.03
+       ]
+      ],
+      "lobe_depth": 0.12
+     }
+    }
+   },
+   "note": "a young tree: a dense, pointed bush of stiff foliage"
+  },
+  "old-growth": {
+   "set": {
+    "trunk": {
+     "stems": [
+      2,
+      5
+     ],
+     "stem_spread_deg": 35,
+     "radius_ratio": 0.09,
+     "flare": 2.0,
+     "lean_deg": 14
+    },
+    "crown": {
+     "shape": "spherical",
+     "envelope": {
+      "profile": [
+       [
+        0.18,
+        0.4
+       ],
+       [
+        0.38,
+        0.5
+       ],
+       [
+        0.56,
+        0.5
+       ],
+       [
+        0.72,
+        0.42
+       ],
+       [
+        0.86,
+        0.3
+       ],
+       [
+        1.0,
+        0.1
+       ]
+      ],
+      "asymmetry": 0.45,
+      "lobe_depth": 0.4
+     }
+    }
+   },
+   "note": "a tree of many centuries: several thick, twisted trunks of grey shredded bark from one base, some limbs dead and silver, the crown broken into lobes"
+  }
+ },
+ "description": "The juniper of the Grand Canyon rims, a squat, many-forked tree or big shrub, usually 3-7 m, its twisted, gnarled trunks wrapped in grey bark that hangs in long fibrous shreds. Its stiff foliage of tiny scale leaves forms a rounded, irregular crown, and its waxy, blue-brown berry-like cones feed coyotes, jackrabbits and birds through the winter.",
+ "season_notes": {
+  "winter": "Evergreen; the frosted blue-brown 'berries' are a winter food for birds, coyotes and jackrabbits, and deer browse it in deep snow.",
+  "spring": "Tiny pollen cones shed yellow dust; the shade under it is where young pinyons get their start.",
+  "summer": "The berries ripen slowly, over about a year and a half.",
+  "fall": "A heavy crop of berries hangs in the crowns; birds that winter in the woodland depend on them."
+ },
+ "habitat": {
+  "classes": {
+   "chaparral": 0.9,
+   "grassland": 0.7,
+   "barren": 0.8,
+   "conifer_forest": 0.4
+  },
+  "floor": 1.0,
+  "mid": 1.0,
+  "steep": 1.0,
+  "north": 0.6,
+  "shade": 0.05,
+  "disturbed": 0.3
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "canis_latrans",
+    "part": "berries",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   },
+   {
+    "animal": "lepus_californicus",
+    "part": "berries",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "winter"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "cervus_canadensis",
+   "puma_concolor"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1300,
+   2300
+  ],
+  "where": "the pinyon-juniper woodland on the Grand Canyon's rims and on dry, rocky slopes, alluvial fans and mesas of the Colorado Plateau and Great Basin; Arizona and Utah to Nevada, eastern California, Wyoming and southern Montana"
+ },
+ "notes": "A juniper grown from incense cedar as a short, fat, forking tree: thick trunk, several stems (FEIS: sometimes multi-stemmed, very stunted on hard sites), twisted trunks (NPS Grand Canyon, NPS Colorado National Monument), a rounded crown nearly as wide as tall, set here through stems, radius, flare and taper. Bark of fibrous, elongated shreds (NPS Great Basin), twisted (NPS Colorado National Monument); its grey colour is the drafter's judgement, as no source read gives a colour. The yellow-green of the scale foliage (from the brief) is also a judgement: no source read names a foliage colour. Cones 8-13 mm, blue-brown with a white waxy bloom (Wikipedia, NPS), not drawn. Height in Arizona to 2273 m and commonest above 1515 m (FEIS); the Grand Canyon rim is about 1900-2300 m per the brief. Eaters: FEIS names jackrabbits and coyotes and many birds; the black-tailed jackrabbit (lepus_californicus) is the drafter's choice of jackrabbit for the Grand Canyon. Townsend's solitaire (Wikipedia), Woodhouse's scrub jay, gray flycatcher, juniper titmouse (the 'plain titmouse' of FEIS) and gray vireo use it and are not in the animal library; ferruginous hawks nest in it (FEIS); pronghorn, bighorn and bison take cover in it (FEIS). Lives to about 650 years (FEIS), 900 years at Colorado National Monument (NPS).",
+ "sources": [
+  "Fire Effects Information System, Juniperus osteosperma, https://www.fs.usda.gov/database/feis/plants/tree/junost/all.html, read 2026-11-10",
+  "Wikipedia, Juniperus osteosperma (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Juniperus_osteosperma, read 2026-11-10",
+  "Trees - Grand Canyon National Park (U.S. National Park Service), https://www.nps.gov/grca/learn/nature/trees.htm, read 2026-11-10",
+  "Utah Juniper - Colorado National Monument (U.S. National Park Service), https://www.nps.gov/colm/learn/nature/utah-juniper.htm, read 2026-11-10",
+  "Trees and Shrubs - Great Basin National Park (U.S. National Park Service), https://www.nps.gov/grba/learn/nature/treesandshrubs.htm, read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ]
+}

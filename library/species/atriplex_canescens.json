@@ -1,0 +1,386 @@
+{
+ "id": "atriplex_canescens",
+ "aliases": [
+  "fourwing_saltbush",
+  "four_wing_saltbush",
+  "chamiso",
+  "chamiza",
+  "saltbush"
+ ],
+ "scientific": "Atriplex canescens",
+ "common": "fourwing saltbush",
+ "form": "shrub",
+ "regions": [
+  "interior_west"
+ ],
+ "architectural_model": "Leeuwenberg (provisional: much-branched, flowers at the shoot ends)",
+ "deciduous": false,
+ "height_m": [
+  0.6,
+  1.8
+ ],
+ "stature": {
+  "typical_m": 1.0,
+  "tall_m": 2.0,
+  "record_m": 3.0,
+  "source": "typical: Wikipedia, most often 2-4 ft (0.6-1.2 m); tall: the drafter's estimate; record: FEIS, over 3 m on good sites in Utah and Colorado, Wikipedia to 10 ft; read 2026-11-10"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    0.2,
+    0.5
+   ],
+   "deadwood": 0.03,
+   "set": {
+    "trunk": {
+     "stems": [
+      5,
+      9
+     ]
+    }
+   },
+   "note": "(from the coyote brush template) a low, bright green mound on a road edge or in grassland"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 1,
+   "note": "(from the coyote brush template) the file as written: a dense, rounded, many-stemmed mound"
+  },
+  {
+   "name": "decadent",
+   "weight": 0.25,
+   "height_m": [
+    1.2,
+    2.0
+   ],
+   "crown_scale": 1.1,
+   "gnarl": 1.15,
+   "leaf_density": 0.8,
+   "deadwood": {
+    "fraction": 0.35,
+    "levels": [
+     0,
+     1
+    ],
+    "shorten": 0.8
+   },
+   "set": {
+    "trunk": {
+     "stems": [
+      10,
+      18
+     ]
+    }
+   },
+   "note": "(from the coyote brush template) an old, sprawling shrub with a grey, dead middle"
+  }
+ ],
+ "description": "An erect, rounded, densely branched shrub, usually waist- to chest-high, of rigid, brittle grey stems and narrow leaves a few centimetres long, made pale grey-green by fine scales and a salty scurf. Female plants carry dense spikes of papery fruits, each with four wings at right angles, that turn straw-tan and hang on through the winter. In the Grand Canyon it grows in the desert scrub above the river corridor, on the benches, valley floors and sandy to rocky washes.",
+ "season_notes": {
+  "winter": "Evergreen browse when little else is green; last year's tan four-winged fruits still hang on the female bushes.",
+  "spring": "New pale leaves; the old fruits drop and blow away whole; tiny flowers open on separate male and female plants.",
+  "summer": "Flowering runs on through the summer; the leaves look palest and most scurfy in the heat and drought.",
+  "fall": "The new four-winged fruits ripen, green turning to straw, crowded along the outer branches."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "barren": 0.9,
+   "grassland": 0.8,
+   "chaparral": 0.5,
+   "riparian": 0.3
+  },
+  "floor": 1.4,
+  "mid": 1.0,
+  "steep": 0.4,
+  "north": 0.9,
+  "shade": 0.05,
+  "disturbed": 1.1
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   },
+   {
+    "animal": "lepus_californicus",
+    "part": "browse",
+    "seasons": [
+     "spring",
+     "summer",
+     "fall",
+     "winter"
+    ]
+   },
+   {
+    "animal": "peromyscus_maniculatus",
+    "part": "seeds",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   }
+  ],
+  "cover_for": [
+   "peromyscus_maniculatus",
+   "lepus_californicus"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 0.9,
+  "radius_ratio": 0.015,
+  "taper": 0.85,
+  "flare": 1.4,
+  "bole_ratio": 0.05,
+  "base_size": 0.04,
+  "curve_deg": 10,
+  "curve_var_deg": 16,
+  "segments": 3,
+  "lean_deg": 0,
+  "stems": [
+   6,
+   14
+  ],
+  "stem_spread_deg": 54,
+  "split_prob": 0.0,
+  "split_count": 2,
+  "split_angle_deg": 20,
+  "sinuous_deg": 8,
+  "bark_rgb": [
+   150,
+   142,
+   128
+  ],
+  "bark_pattern": "smooth_grey",
+  "twig_rgb": [
+   116,
+   114,
+   84
+  ],
+  "bark": {
+   "tile_m": [
+    0.1,
+    0.35
+   ]
+  }
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "envelope": {
+   "profile": [
+    [
+     0.0,
+     0.45
+    ],
+    [
+     0.2,
+     0.62
+    ],
+    [
+     0.45,
+     0.72
+    ],
+    [
+     0.7,
+     0.7
+    ],
+    [
+     0.88,
+     0.56
+    ],
+    [
+     1.0,
+     0.3
+    ]
+   ],
+   "lobes": 6,
+   "lobe_depth": 0.14,
+   "asymmetry": 0.12,
+   "fill": 0.6,
+   "edge": 1.1
+  }
+ },
+ "levels": [
+  {
+   "count": 4,
+   "start": 0.05,
+   "down_angle_deg": 51,
+   "down_angle_var_deg": 8,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.55,
+   "length_var": 0.3,
+   "curve_deg": 14,
+   "curve_var_deg": 16,
+   "tropism": 0.05,
+   "taper": 0.9,
+   "radius_ratio": 0.6,
+   "segments": 1,
+   "droop_deg": 3
+  },
+  {
+   "count": 5,
+   "start": 0.25,
+   "down_angle_deg": 32,
+   "down_angle_var_deg": 12,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.4,
+   "length_var": 0.3,
+   "curve_deg": 10,
+   "curve_var_deg": 18,
+   "tropism": 0.1,
+   "taper": 1.0,
+   "radius_ratio": 0.5,
+   "segments": 1
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.03,
+  "leaf_shape": "oval",
+  "cluster_m": 0.34,
+  "density": 24,
+  "cards_per_m2": 13.5,
+  "start": 0.01,
+  "parent_start": 0.01,
+  "orientation": "outward",
+  "colors": {
+   "winter": [
+    134,
+    142,
+    124
+   ],
+   "spring": [
+    140,
+    152,
+    126
+   ],
+   "summer": [
+    152,
+    156,
+    138
+   ],
+   "fall": [
+    144,
+    148,
+    128
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "clumps": {
+   "radius_m": 0.25,
+   "cards_per_clump": 6,
+   "shell": 0.02,
+   "flatten": 0.85,
+   "tip_bias": 0.7
+  },
+  "ao_min": 0.74,
+  "color_var": [
+   0.08,
+   0.05
+  ],
+  "flowers": null,
+  "berries": {
+   "season": "fall",
+   "months": [
+    9,
+    12
+   ],
+   "form": "cluster",
+   "rgb": [
+    200,
+    184,
+    132
+   ],
+   "size_m": 0.01,
+   "density": 0.45
+  }
+ },
+ "deadwood": {
+  "fraction": 0.12,
+  "levels": [
+   0,
+   1
+  ],
+  "shorten": 0.75,
+  "rgb": [
+   138,
+   132,
+   124
+  ]
+ },
+ "twigs": {
+  "count": [
+   2,
+   3
+  ],
+  "length": 0.7,
+  "down_deg": 30,
+  "down_var_deg": 14,
+  "curve_var_deg": 22,
+  "segments": 1,
+  "radius_m": 0.004,
+  "tropism": 0.1,
+  "taper": 0.6,
+  "fan_deg": 50,
+  "jitter": 0.25
+ },
+ "lod": {
+  "near_tris_budget": 1000,
+  "near_sides": [
+   3,
+   3,
+   0
+  ],
+  "mid_blobs": 3,
+  "mid_branches": 0,
+  "mid_sides": [
+   0,
+   0
+  ],
+  "mid_cards": 24
+ },
+ "targets": {
+  "crown_width_ratio": 1.2,
+  "crown_base_ratio": 0.05,
+  "porosity": 0.3,
+  "foliage_rg": 0.94,
+  "foliage_bg": 0.76,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: an erect, rounded, densely and stiffly branched bush, a little wider than tall, pale grey-green and scurfy, its outer branches carrying dense spikes of papery straw-coloured four-winged fruits on the female plants from late summer through winter"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "5",
+  "card": "library/plant_cards/atriplex_canescens.json",
+  "card_sha256": "84755b74dee8ce5a",
+  "template": "baccharis_pilularis",
+  "template_common": "coyote brush",
+  "height_scale": 0.686
+ },
+ "notes": "Coyote brush (the template) is the library's nearest rounded, densely branched evergreen shrub; the library has no Amaranthaceae (goosefoot family) shrub. It is green, with shreddy bark, toothed leaves and white fall flowers. The card makes saltbush pale grey-green (FEIS: young leaves covered with scales, mature leaves exuding salt into a scurf; the colour values themselves are the drafter's), with stiff, brittle stems and tight, thin bark (FEIS), drawn as smooth_grey, and leaves of 2-5 cm (FEIS; Wikipedia 1.3-5 cm; leaf_size_m 0.03). The template's oval leaves are broader than saltbush's narrow ones. The tiny wind-pollinated flowers are not drawn (flowers null); the four-winged fruits are, through the berries block (FEIS: utricles about 0.8-1 cm, maturing 3-4 months after flowering, in fall and winter in the south, often staying on through the winter and dispersing whole in spring). The plants are mostly male or female (FEIS), so only some bushes should carry fruit; the fruit colour, density and the September-December months are the drafter's (the block cannot wrap into the new year). FEIS: evergreen in warm climates (winter-deciduous only in cold ones); Wikipedia: evergreen; the card is evergreen and the summer colour is paler instead of drawing any leaf drop. Height: FEIS 0.3 m to over 3 m, Wikipedia 1-10 ft, most 2-4 ft. Elevation: FEIS below sea level to about 2600 m, below about 1980 m (6500 ft) in Arizona, most common at 1370-1830 m; the card's 0 m lower bound is rounded. Sites: FEIS: dry plains, hills, bluffs, valleys and stream corridors, well-drained sandy to rocky soils, tolerant of salty and gypsum soils but not of high water tables or late flooding, so riparian is low and floor high. The NPS ecosystems page lists four-wing saltbush in the Grand Canyon desert scrub; the NPS scrublands page calls it a Chihuahuan species of the western canyon; FEIS reports Grand Canyon repeat photographs of single plants living over 100 years. Fire: many populations sprout from the root crown after top-kill and recover within a few years, others do not; it re-establishes from seed (FEIS), so disturbed is a little above neutral. Eaters (FEIS): all its parts are eaten by hoofed animals, rodents and rabbits; good forage for deer, elk, pronghorn and bighorn, most used in fall and winter; black-tailed jackrabbits get water from it; quail, grouse and partridge eat the fruits; kangaroo rats and pocket mice hoard the seeds; desert tortoises browse it. Pronghorn, desert bighorn, kangaroo rats, pocket mice, scaled quail and the desert tortoise are not in the library; the deer mouse stands in for the seed-hoarding rodents. Elk are left out of eaten_by because the Grand Canyon saltbush grows below their range here (drafter's judgement). Colours, crown profile, porosity, stems, habitat weights and the fruit block are the drafter's judgement, not from a source.",
+ "sources": [
+  "Fire Effects Information System, Atriplex canescens, https://www.fs.usda.gov/database/feis/plants/shrub/atrcan/all.html, read 2026-11-10",
+  "Wikipedia, Atriplex canescens (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Atriplex_canescens, read 2026-11-10",
+  "National Park Service, Grand Canyon National Park: Scrublands, https://www.nps.gov/grca/learn/nature/scrublands.htm, read 2026-11-10",
+  "National Park Service, Grand Canyon National Park: Natural Features & Ecosystems, https://home.nps.gov/grca/learn/nature/naturalfeaturesandecosystems.htm, read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

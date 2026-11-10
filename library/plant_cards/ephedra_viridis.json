@@ -1,0 +1,199 @@
+{
+ "id": "ephedra_viridis",
+ "scientific": "Ephedra viridis",
+ "common": "green Mormon tea",
+ "aliases": [
+  "green_mormon_tea",
+  "mormon_tea",
+  "green_ephedra",
+  "brigham_tea",
+  "indian_tea"
+ ],
+ "family": "Ephedraceae",
+ "form": "shrub",
+ "deciduous": false,
+ "template": "baccharis_pilularis",
+ "regions": [
+  "interior_west"
+ ],
+ "height_m": [
+  0.5,
+  1.3
+ ],
+ "stature": {
+  "typical_m": 0.9,
+  "tall_m": 1.5,
+  "record_m": 2,
+  "source": "typical: the drafter's estimate; tall: FEIS gives 0.25-1.5 m; record: FEIS, to about 2 m tall and 3 m wide; read 2026-11-10"
+ },
+ "variants_height_m": {
+  "young": [
+   0.2,
+   0.5
+  ],
+  "decadent": [
+   1.0,
+   1.8
+  ]
+ },
+ "crown": {
+  "shape": "cylindrical",
+  "profile": [
+   [
+    0.0,
+    0.3
+   ],
+   [
+    0.2,
+    0.42
+   ],
+   [
+    0.45,
+    0.52
+   ],
+   [
+    0.7,
+    0.56
+   ],
+   [
+    0.88,
+    0.5
+   ],
+   [
+    1.0,
+    0.32
+   ]
+  ],
+  "lobes": 7,
+  "lobe_depth": 0.15,
+  "asymmetry": 0.15,
+  "fill": 0.6,
+  "edge": 1.12
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    108,
+    128,
+    72
+   ],
+   "spring": [
+    126,
+    158,
+    72
+   ],
+   "summer": [
+    118,
+    146,
+    70
+   ],
+   "fall": [
+    124,
+    138,
+    72
+   ]
+  },
+  "leaf_size_m": 0.005,
+  "flowers": {
+   "season": "spring",
+   "months": [
+    3,
+    5
+   ],
+   "form": "cluster",
+   "rgb": [
+    210,
+    196,
+    104
+   ],
+   "size_m": 0.008,
+   "density": 0.2,
+   "before_leaves": false
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   120,
+   114,
+   104
+  ],
+  "bark_pattern": "shreddy",
+  "stems": [
+   10,
+   20
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 1.0,
+  "crown_base_ratio": 0.05,
+  "porosity": 0.4,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: an upright broom of many parallel, jointed, bright green to yellow-green stems from a short woody base, about as wide as tall, widening a little upward, seen through; no visible leaves"
+ },
+ "description": "A leafless-looking shrub, about knee- to waist-high, that is an upright broom of many slender, jointed, bright green stems rising in parallel from a short woody base with grey, shreddy bark; its leaves are tiny scales in pairs at the joints, and the green stems do the work of leaves. At the Grand Canyon it grows on dry, rocky, open ground of the rims' pinyon-juniper woodland and down through the cool desertscrub of the benches, where it stays bright green all year among the grey shrubs.",
+ "season_notes": {
+  "winter": "Bright green stems stand above the snow, a winter browse for deer and elk.",
+  "spring": "Male plants carry small yellowish pollen cones at the joints; female plants small cones of bracts.",
+  "summer": "The seeds ripen in their bracts from mid-July to the start of September; older stems go yellowish.",
+  "fall": "Fallen seeds are gathered and cached by rodents; the stems stay green."
+ },
+ "habitat": {
+  "classes": {
+   "barren": 0.8,
+   "grassland": 0.6,
+   "chaparral": 0.5,
+   "conifer_forest": 0.35
+  },
+  "floor": 1.0,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 0.9,
+  "shade": 0.1,
+  "disturbed": 1.0
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "winter"
+    ]
+   },
+   {
+    "animal": "cervus_canadensis",
+    "part": "browse",
+    "seasons": [
+     "winter"
+    ]
+   },
+   {
+    "animal": "peromyscus_maniculatus",
+    "part": "seeds",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "peromyscus_maniculatus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   900,
+   2300
+  ],
+  "where": "dry, rocky, open ground of the pinyon-juniper woodland below the South Rim and the cool desertscrub of the benches and the Tonto Platform"
+ },
+ "notes": "Coyote brush (the template) is the library's nearest rounded, many-stemmed evergreen shrub, but it is a leafy bush with oval leaves and white fall flowers. The card turns it into a broom: bright to yellow-green colours (Wikipedia: bright green twigs that may yellow with age; FEIS: young stems bright green, old growth grey and shreddy), a leaf size of 5 mm so the foliage reads as a haze of green twigs rather than leaves (the true leaves are paired scales at the nodes: Wikipedia, FEIS), more stems from the base (FEIS: many erect, parallel stems, mostly under 3 mm thick) and an upright outline. The template's oval leaf cards will still be leaves, not jointed stems; a stem-like leaf shape (as chamise's fascicle_wand) would be truer and is left for the lineup review. The flowers block draws the male pollen cones (Wikipedia: under 1 cm, yellowish); the plants are dioecious (FEIS) so only some would carry them, and the months (March-May) are the drafter's judgement from FEIS's seed development beginning in spring and seeds ripe mid-July to September. FEIS gives 914-2286 m (to about 3048 m in California and Utah), Wikipedia 900-2300 m; the Grand Canyon placing is from the NPS pages (Mormon tea in the pinyon-juniper woodland and in the desert scrub; the pages name Ephedra to genus). Sprouts vigorously after fire (FEIS), so disturbed is neutral. Eaters: FEIS names mule deer, elk and pronghorn (an important winter browse), small mammals for the stems and seeds, and mountain quail for the seeds; it calls it highly toxic to pregnant cattle and sheep. Pronghorn and desert bighorn are not in the library; the deer mouse stands in for the small mammals (FEIS: good cover for small mammals and small birds in Utah). Colours, crown profile, porosity, stem count and the cone colour and size are the drafter's judgement, not from a source.",
+ "sources": [
+  "Fire Effects Information System, Ephedra viridis, https://www.fs.usda.gov/database/feis/plants/shrub/ephvir/all.html, read 2026-11-10",
+  "Wikipedia, Ephedra viridis (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Ephedra_viridis, read 2026-11-10",
+  "National Park Service, Grand Canyon National Park: Natural Features & Ecosystems, https://home.nps.gov/grca/learn/nature/naturalfeaturesandecosystems.htm, read 2026-11-10",
+  "National Park Service, Grand Canyon National Park: Ecology for Students, https://www.nps.gov/grca/learn/education/ecology.htm, read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ]
+}

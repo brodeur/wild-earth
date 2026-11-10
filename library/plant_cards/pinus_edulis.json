@@ -1,0 +1,296 @@
+{
+ "id": "pinus_edulis",
+ "scientific": "Pinus edulis",
+ "common": "Colorado pinyon",
+ "aliases": [
+  "colorado_pinyon",
+  "two_needle_pinyon",
+  "pinyon_pine",
+  "pinon"
+ ],
+ "family": "Pinaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "pinus_ponderosa",
+ "regions": [
+  "interior_west"
+ ],
+ "height_m": [
+  4,
+  10
+ ],
+ "stature": {
+  "typical_m": 7,
+  "tall_m": 15,
+  "record_m": 21,
+  "source": "typical: the drafter's figure for the dry Grand Canyon rim, inside Wikipedia's usual 5-15 m and below FEIS's 8-17 m for better sites; tall: 15 m, the Grand Canyon park's own upper figure (NPS); record: about 21 m, Wikipedia's maximum; read 2026-11-10"
+ },
+ "variants_height_m": {
+  "pole": [
+   1,
+   4
+  ],
+  "old-growth": [
+   7,
+   12
+  ]
+ },
+ "crown": {
+  "shape": "spherical",
+  "profile": [
+   [
+    0.08,
+    0.36
+   ],
+   [
+    0.25,
+    0.45
+   ],
+   [
+    0.45,
+    0.48
+   ],
+   [
+    0.62,
+    0.44
+   ],
+   [
+    0.78,
+    0.35
+   ],
+   [
+    0.9,
+    0.23
+   ],
+   [
+    1.0,
+    0.08
+   ]
+  ],
+  "lobes": 5,
+  "lobe_depth": 0.22,
+  "asymmetry": 0.3,
+  "fill": 0.32,
+  "edge": 1.15
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    66,
+    80,
+    66
+   ],
+   "spring": [
+    84,
+    100,
+    78
+   ],
+   "summer": [
+    72,
+    88,
+    72
+   ],
+   "fall": [
+    70,
+    86,
+    70
+   ]
+  },
+  "leaf_size_m": 0.035,
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   124,
+   116,
+   106
+  ],
+  "bark_pattern": "furrowed",
+  "stems": [
+   1,
+   3
+  ],
+  "stem_spread_deg": 20,
+  "lean_deg": 8,
+  "radius_ratio": 0.05,
+  "bole_ratio": 0.08,
+  "base_size": 0.08
+ },
+ "targets": {
+  "crown_width_ratio": 0.95,
+  "crown_base_ratio": 0.06,
+  "porosity": 0.25,
+  "from": "judgement values from the drafter's reading of the sources (2026-11-10), no photographs measured; to be replaced by photo measurements: a short, bushy pine about as wide as it is tall (Wikipedia), a dense, rounded crown nearly to the ground on a short crooked trunk with a few big crooked limbs (FEIS)"
+ },
+ "variant_patches": {
+  "pole": {
+   "set": {
+    "trunk": {
+     "bark_rgb": [
+      122,
+      94,
+      74
+     ],
+     "bark_pattern": "plates",
+     "stems": [
+      1,
+      1
+     ],
+     "radius_ratio": 0.035
+    },
+    "crown": {
+     "shape": "conical",
+     "envelope": {
+      "profile": [
+       [
+        0.04,
+        0.34
+       ],
+       [
+        0.25,
+        0.36
+       ],
+       [
+        0.45,
+        0.31
+       ],
+       [
+        0.65,
+        0.23
+       ],
+       [
+        0.85,
+        0.12
+       ],
+       [
+        1.0,
+        0.03
+       ]
+      ],
+      "asymmetry": 0.12,
+      "lobe_depth": 0.1
+     }
+    }
+   },
+   "note": "a young tree under a juniper's shade: a dense, broadly conical bush with thin, scaly, sepia-brown bark"
+  },
+  "old-growth": {
+   "set": {
+    "trunk": {
+     "bark_rgb": [
+      134,
+      128,
+      120
+     ],
+     "stems": [
+      1,
+      3
+     ],
+     "radius_ratio": 0.065,
+     "lean_deg": 12
+    },
+    "crown": {
+     "shape": "hemispherical",
+     "envelope": {
+      "profile": [
+       [
+        0.15,
+        0.4
+       ],
+       [
+        0.35,
+        0.52
+       ],
+       [
+        0.55,
+        0.54
+       ],
+       [
+        0.72,
+        0.48
+       ],
+       [
+        0.86,
+        0.36
+       ],
+       [
+        1.0,
+        0.14
+       ]
+      ],
+      "asymmetry": 0.42,
+      "lobe_depth": 0.32
+     }
+    }
+   },
+   "note": "a tree of several centuries: a thick, crooked trunk of grey, unevenly furrowed bark, a spreading, open, gnarled crown, flattened on top"
+  }
+ },
+ "description": "The pine of the pinyon-juniper woodland that rims the Grand Canyon: a short, bushy tree, here usually 4-10 m and about as wide as it is tall, with a rounded, dense crown of short, stiff, upturned needles in pairs on a short, crooked trunk. Its small cones hold big, wingless, edible seeds, the pinyon nuts, which pinyon jays carry off and bury.",
+ "season_notes": {
+  "winter": "Evergreen and dark against the snow on the rim; mule deer nibble it a little when other food is short.",
+  "spring": "Small yellowish to red-brown pollen cones shed in late spring.",
+  "summer": "Cones swell through their third summer; resin gives the woodland its sweet pine smell on hot days.",
+  "fall": "In a good year (every few years) the cones open in late September and October and jays, nutcrackers, squirrels and people gather the nuts."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 0.6,
+   "chaparral": 0.8,
+   "grassland": 0.5,
+   "barren": 0.6,
+   "oak_woodland": 0.4
+  },
+  "floor": 0.9,
+  "mid": 1.0,
+  "steep": 1.0,
+  "north": 0.7,
+  "shade": 0.15,
+  "disturbed": 0.2
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "seeds",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "winter"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "cervus_canadensis",
+   "canis_latrans"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1400,
+   2300
+  ],
+  "where": "the pinyon-juniper woodland along both rims of the Grand Canyon and in parts of the inner canyon, below the ponderosa forest; the Colorado Plateau and southern Rockies (Colorado, New Mexico, Utah, Arizona), with outliers to southern Wyoming, Oklahoma and west Texas"
+ },
+ "notes": "A pine grown from ponderosa as a short, wide, round-crowned bush of a tree: a crown about as wide as tall (Wikipedia), a low crown base, a short crooked trunk with a few big crooked limbs and sometimes several stems (FEIS), set here through stems, lean and a thick radius. Needles 2-4 cm (Wikipedia; 1.5-5 cm in FEIS), mostly in pairs, curving upward; Wikipedia calls them blue-green with pale stomatal bands, where the brief described dark yellow-green: the colours here are a dark, slightly grey green between the two and are a judgement, not a measurement. Bark: thin and scaly, sepia-brown when young, grey and unevenly furrowed with age (Wikipedia); the colours are judgement. Cones about 4 cm, nearly round, ripening over three years (FEIS) and not drawn. Elevations: 1220-2280 m in Arizona, lower on north slopes (FEIS); the Grand Canyon rim belt is about 1900-2300 m per the brief. Seed eaters named by FEIS and Wikipedia that are not in the animal library: pinyon jay (the tree's partner and main disperser; NPS Grand Canyon), Clark's nutcracker, Woodhouse's scrub jay (the 'scrub jay' of FEIS; aphelocoma_californica in the library is the coastal species, so it is not used), squirrels and chipmunks; other cover users per FEIS: pronghorn, white-tailed deer, upland game birds. Very sensitive to fire (FEIS). Lives 300-1000 years (Wikipedia, FEIS).",
+ "sources": [
+  "Fire Effects Information System, Pinus edulis, https://www.fs.usda.gov/database/feis/plants/tree/pinedu/all.html, read 2026-11-10",
+  "Wikipedia, Pinus edulis (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Pinus_edulis, read 2026-11-10",
+  "Trees - Grand Canyon National Park (U.S. National Park Service), https://www.nps.gov/grca/learn/nature/trees.htm, read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ]
+}

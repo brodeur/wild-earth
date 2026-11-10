@@ -13,8 +13,170 @@
  },
  "plots": [],
  "rule": "pipeline/tree_cards.py choose(): plots, then named trees of open place descriptions, then the tile's most-recorded WCVP trees that reach the subcanopy; shares by tier (TIER_SHARE)",
- "trees": [],
- "queued": [],
+ "trees": [
+  {
+   "id": "juglans_hindsii",
+   "scientific": "Juglans hindsii",
+   "family": "Juglandaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 6.0,
+   "evidence": [
+    "GBIF: 6 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.25,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "quercus_douglasii",
+   "scientific": "Quercus douglasii",
+   "family": "Fagaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 4.0,
+   "evidence": [
+    "GBIF: 4 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.1667,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "quercus_kelloggii",
+   "scientific": "Quercus kelloggii",
+   "family": "Fagaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 3.0,
+   "evidence": [
+    "GBIF: 3 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.125,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "aesculus_californica",
+   "scientific": "Aesculus californica",
+   "family": "Sapindaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 3.0,
+   "evidence": [
+    "GBIF: 3 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.125,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "quercus_wislizeni",
+   "scientific": "Quercus wislizeni",
+   "family": "Fagaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 2.0,
+   "evidence": [
+    "GBIF: 2 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0833,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "acer_macrophyllum",
+   "scientific": "Acer macrophyllum",
+   "family": "Sapindaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 2.0,
+   "evidence": [
+    "GBIF: 2 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0833,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "pinus_ponderosa",
+   "scientific": "Pinus ponderosa",
+   "family": "Pinaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 2.0,
+   "evidence": [
+    "GBIF: 2 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0833,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "heteromeles_arbutifolia",
+   "scientific": "Heteromeles arbutifolia",
+   "family": "Rosaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 2.0,
+   "evidence": [
+    "GBIF: 2 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0833,
+   "research": false,
+   "card": false
+  }
+ ],
+ "queued": [
+  {
+   "id": "juglans_hindsii",
+   "scientific": "Juglans hindsii",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "quercus_douglasii",
+   "scientific": "Quercus douglasii",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "quercus_kelloggii",
+   "scientific": "Quercus kelloggii",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "aesculus_californica",
+   "scientific": "Aesculus californica",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "quercus_wislizeni",
+   "scientific": "Quercus wislizeni",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "acer_macrophyllum",
+   "scientific": "Acer macrophyllum",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "pinus_ponderosa",
+   "scientific": "Pinus ponderosa",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "heteromeles_arbutifolia",
+   "scientific": "Heteromeles arbutifolia",
+   "why": "needs a research record (its height decides whether it stays)"
+  }
+ ],
  "log": [
   "plot vela_apaza_2024_los_amigos: not used (7753 km, 0 m apart, climate Am)"
  ],

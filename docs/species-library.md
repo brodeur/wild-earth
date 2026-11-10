@@ -1507,6 +1507,22 @@ pine, Monterey cypress; California sagebrush, yellow bush lupine, evergreen huck
 eFlora could not be read (a verification page); heights and forms rest on the Gymnosperm Database, FEIS, Silvics and
 Calscape, colours and crown proportions are judgement values with no photographs measured.
 
+**Stand-ins by place, and thirteen cards for the interior West (2026-11-10).** A card's `stand_in` (and
+`communities.STAND_IN`) is no longer followed wherever the tile is: it is only the preferred record among those that
+belong to the tile and are the species' relatives (`communities.local_stand_in`; `docs/tile-spec.md`, the species mix,
+2026-11-10). New cards carry no `stand_in`. A card for a species of no regional table carries a `regions` label that
+is not a box in `pipeline/regions.py` (`interior_west`): a record without `regions` is read as California's
+(`communities.regions_of`), and a label keeps the species out of every regional table, so it is placed only where a
+community's name and the tile's GBIF records put it.
+
+Thirteen agent drafts (sources in each card: the Fire Effects Information System and National Park Service pages,
+both US government works, and Wikipedia, CC BY-SA 4.0; colours and crown proportions are judgement values, no
+photographs measured): Colorado pinyon, Utah juniper, Gambel oak, blackbrush, green Mormon tea, brittlebush, fourwing
+saltbush and Stansbury cliffrose for the Grand Canyon; Engelmann spruce, limber pine, Booth's willow, narrowleaf
+cottonwood and Saskatoon serviceberry for Yellowstone and the Tetons. Known limits, in the cards' notes: Mormon tea is
+drawn with leaf cards on the coyote brush template, not jointed stems; narrowleaf cottonwood's young class keeps
+Fremont cottonwood's bark; blackbrush's summer leaf drop is not drawn (an evergreen card keeps its leaves).
+
 ## Palms (2026-11-06)
 
 A palm is not a branching tree: Corner's model (Hallé & Oldeman 1970), one unbranched stem that ends in a crown of
