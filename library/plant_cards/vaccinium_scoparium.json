@@ -1,0 +1,251 @@
+{
+ "id": "vaccinium_scoparium",
+ "scientific": "Vaccinium scoparium",
+ "common": "grouse whortleberry",
+ "aliases": [
+  "grouse_whortleberry",
+  "grouseberry",
+  "whortleberry",
+  "littleleaf_huckleberry",
+  "red_alpine_blueberry"
+ ],
+ "family": "Ericaceae",
+ "form": "shrub",
+ "deciduous": true,
+ "template": "vaccinium_parvifolium",
+ "regions": [
+  "interior_west"
+ ],
+ "height_m": [
+  0.1,
+  0.3
+ ],
+ "stature": {
+  "typical_m": 0.2,
+  "tall_m": 0.5,
+  "record_m": null,
+  "source": "typical: the drafter's middle for the carpets under lodgepole pine and spruce-fir, inside FEIS's 10-51 cm; tall: FEIS (to 51 cm) and Wikipedia (no more than 0.5 m); no record height was read; read 2026-11-10"
+ },
+ "variants_height_m": {
+  "young": [
+   0.04,
+   0.1
+  ],
+  "old": [
+   0.2,
+   0.35
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.9
+   ],
+   [
+    0.25,
+    1.1
+   ],
+   [
+    0.5,
+    1.15
+   ],
+   [
+    0.75,
+    1.0
+   ],
+   [
+    0.9,
+    0.7
+   ],
+   [
+    1.0,
+    0.3
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.12,
+  "asymmetry": 0.15,
+  "fill": 0.5,
+  "edge": 1.05
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    96,
+    112,
+    66
+   ],
+   "spring": [
+    132,
+    160,
+    88
+   ],
+   "summer": [
+    96,
+    128,
+    72
+   ],
+   "fall": [
+    186,
+    96,
+    62
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.5,
+   "summer": 1.0,
+   "fall": 0.4
+  },
+  "leaf_on_by_month": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.3,
+   0.9,
+   1.0,
+   1.0,
+   0.8,
+   0.3,
+   0.0,
+   0.0
+  ],
+  "leaf_shape": "oval",
+  "leaf_size_m": 0.01,
+  "flowers": {
+   "season": "summer",
+   "months": [
+    6,
+    6
+   ],
+   "form": "bud",
+   "rgb": [
+    232,
+    170,
+    176
+   ],
+   "size_m": 0.004,
+   "density": 0.3,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": [
+    "summer"
+   ],
+   "months": [
+    8,
+    8
+   ],
+   "form": "bud",
+   "rgb": [
+    214,
+    40,
+    44
+   ],
+   "size_m": 0.005,
+   "density": 0.35
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   96,
+   112,
+   66
+  ],
+  "bark_pattern": "smooth",
+  "stems": [
+   10,
+   30
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 2.5,
+  "crown_base_ratio": 0.02,
+  "porosity": 0.3,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: a low, open, broom-like carpet of many thin, green, sharply angled twigs from shallow rhizomes, much wider than tall and running together across the forest floor; tiny light-green leaves, a scatter of small bright-red berries in late summer, red-orange in fall, bare green twigs in winter"
+ },
+ "description": "A deciduous dwarf shrub 10-30 cm tall that spreads from shallow rhizomes into a broom-like carpet of thin, green, sharply angled twigs. Its leaves are tiny, oval and finely toothed, about 1 cm long; small pink urn-shaped flowers hang singly in the leaf axils in early summer, and soft, bright-red berries a few millimetres across ripen in August. It carpets the floor of the lodgepole pine and spruce-fir forests of the Rocky Mountains, often the commonest shrub under the trees of Yellowstone's plateaus and the Teton canyons.",
+ "season_notes": {
+  "winter": "Under the snow; where it melts out, the bare green broom twigs show on the forest floor.",
+  "spring": "New leaves open as the snow goes in May and June, light green on green twigs.",
+  "summer": "Tiny pink bells in June, then a scatter of bright-red berries in August, eaten by grouse, thrushes, chipmunks and bears.",
+  "fall": "Leaves turn red and orange and drop; elk and mule deer browse the twigs."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "mixed_forest": 0.3,
+   "barren": 0.2,
+   "grassland": 0.15
+  },
+  "floor": 0.9,
+  "mid": 1.1,
+  "steep": 0.8,
+  "north": 1.2,
+  "shade": 0.9,
+  "disturbed": 0.5
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "cervus_canadensis",
+    "part": "browse",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "ursus_americanus",
+    "part": "berries",
+    "seasons": [
+     "summer"
+    ]
+   },
+   {
+    "animal": "tamias_amoenus",
+    "part": "berries",
+    "seasons": [
+     "summer"
+    ]
+   },
+   {
+    "animal": "turdus_migratorius",
+    "part": "berries",
+    "seasons": [
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": [
+   "peromyscus_maniculatus",
+   "tamias_amoenus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1460,
+   3810
+  ],
+  "where": "the floor of the lodgepole pine, subalpine fir and Engelmann spruce forests of Yellowstone's plateaus and the Teton canyons, and talus and subalpine meadow edges above; the Rocky Mountains, Cascades and Black Hills from British Columbia and Alberta to northern California, Colorado and New Mexico"
+ },
+ "notes": "Red huckleberry (the template) is the library's deciduous Vaccinium, the same genus, but it is an upright Pacific shrub 1.5-4 m; the card makes grouse whortleberry a dwarf shrub, 10-30 cm (FEIS: 4-20 in, 10-51 cm, a low, rhizomatous, usually matted, slow-growing shrub, multibranched from the base and broomlike; Wikipedia: no more than 0.5 m, squat and bushy, forming mats and clumps, stems rooting where they touch moist ground). Its card height tops out at 0.3 m, under plantgen's DWARF_SHRUB_MAX_M (0.5 m), so with form shrub the generator writes the record's ground block itself (habit mat, woody true, the card's leaf, flower and berry, bare-twig colour in winter from bark_rgb) and the species mix moves it to the ground layer; the card carries no ground block of its own, as no dwarf-shrub card does. height_m stops at 0.3 m rather than FEIS's 51 cm so that it stays a carpet. Leaves deciduous, alternate, oval with toothed margins, to about 1.4 cm (Wikipedia; FEIS: small, thin), so leaf_size_m 0.01. Twigs green and sharply angled (Wikipedia), so the bark and winter colour are green; the shade of green is the drafter's judgement. Flowers pink, urn-shaped, about 4 mm, solitary in the leaf axils (Wikipedia); in Montana and Yellowstone they open in early June and end in late June (FEIS). Berries soft and bright red, up to 6 mm (Wikipedia; FEIS: 3-5 mm), ripening on average about August 7 in Montana and Yellowstone (FEIS). Habitat: a prominent understory shrub of the Rocky Mountain subalpine, often dominating the shrub layer, under subalpine fir, lodgepole pine, Engelmann spruce, whitebark pine and Douglas-fir, on well-drained, acid, dry to moist soils, frequent and abundant in late-seral and old-growth forest, also ravines, open slopes and mountain meadows (FEIS); forests, meadows and talus slopes (Wikipedia); hence shade 0.9 and the low disturbed weight. Shallow rhizomes survive low and moderate fire and sprout vigorously; severe duff-consuming fire kills it, and seedlings are rare (FEIS). Elevation: Wyoming 2400-2550 m, Montana 1460-2740 m, Colorado 2590-3810 m (FEIS); 700-3000 m overall (Wikipedia). The Yellowstone and Grand Teton placing is from the brief. Eaters: FEIS names elk (intermediate browse in northwestern Wyoming), mule deer (important in Utah and Colorado), moose (an important fall food), mountain goats, bears (for Vaccinium generally), and for the berries spruce, ruffed and blue grouse, ptarmigans, bluebirds and thrushes, chipmunks, red squirrels, foxes and skunks; Wikipedia lists elk, mule deer, bears, squirrels, foxes, skunks and birds. The black bear stands in for bears, the yellow-pine chipmunk for chipmunks and the American robin for the thrushes; moose, mountain goat, the Rocky Mountain grouse (dusky, ruffed, spruce), ptarmigan, red squirrel and red fox are not in the library (the library's sooty grouse and Douglas squirrel are Pacific species, so they are not used). Its cover_for list (deer mouse, chipmunk) is the drafter's judgement. Colours, crown profile, porosity, stems, leaf-on months, the flower and berry density and the berries' drawn size are the drafter's judgement, not from a source.",
+ "sources": [
+  "Fire Effects Information System, Vaccinium scoparium, https://www.fs.usda.gov/database/feis/plants/shrub/vacsco/all.html (US government work, public domain), read 2026-11-10",
+  "Wikipedia, Vaccinium scoparium (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Vaccinium_scoparium, read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ]
+}

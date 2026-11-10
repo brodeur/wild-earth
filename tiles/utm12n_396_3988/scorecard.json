@@ -21,9 +21,9 @@
   "judge": "judge/held_out.json"
  },
  "built_at": {
-  "manifest": "2026-11-10T21:11:53Z",
+  "manifest": "2026-11-10T23:18:57Z",
   "animals": "2026-11-09T04:17:36Z",
-  "tile_registry": "2026-11-10T21:11:53Z"
+  "tile_registry": "2026-11-10T23:18:57Z"
  },
  "layers": {
   "terrain": {
@@ -168,14 +168,14 @@
    "scored": true,
    "shares": {
     "measured": 0.0,
-    "ruled": 0.9782,
-    "guessed": 0.0191,
-    "blank": 0.0027
+    "ruled": 0.9801,
+    "guessed": 0.0188,
+    "blank": 0.0011
    },
    "detail": {
     "counts": {
      "canopy": 8,
-     "shrub": 10,
+     "shrub": 11,
      "ground": 20
     },
     "drawn": {
@@ -199,6 +199,7 @@
       "ephedra_viridis",
       "purshia_stansburiana",
       "quercus_gambelii",
+      "rosa_woodsii",
       "salix_exigua"
      ],
      "ground": [
@@ -228,10 +229,16 @@
      "recorded": true,
      "entries": [
       {
+       "species": "juniperus_scopulorum",
+       "drawn": "juniperus_osteosperma",
+       "reason": "no library record: drawn as juniperus_osteosperma (the same genus; 419 records within 25 km)",
+       "cells": 12946
+      },
+      {
        "species": "chrysothamnus_viscidiflorus",
        "drawn": "encelia_farinosa",
        "reason": "no library record: drawn as encelia_farinosa (the same family, Asteraceae, and growth form; 93 records within 25 km)",
-       "cells": 1386
+       "cells": 1880
       },
       {
        "species": "ericameria_nauseosa",
@@ -244,12 +251,6 @@
        "drawn": "cercocarpus_ledifolius",
        "reason": "no library record: drawn as cercocarpus_ledifolius (the same genus; 47 records within 25 km)",
        "cells": 1054
-      },
-      {
-       "species": "rosa_woodsii",
-       "drawn": "purshia_stansburiana",
-       "reason": "no library record: drawn as purshia_stansburiana (the same family, Rosaceae, and growth form; 546 records within 25 km)",
-       "cells": 1007
       },
       {
        "species": "amelanchier_utahensis",
@@ -287,6 +288,11 @@
      "recorded": true,
      "entries": [
       {
+       "species": "ceanothus_greggii",
+       "reason": "no library record, and no record of its genus or of its family (Rhamnaceae) and growth form belongs to this tile: left out, its share to the community's other species",
+       "cells": 202
+      },
+      {
        "species": "ceanothus_pauciflorus",
        "reason": "no library record, and no record of its genus or of its family (Rhamnaceae) and growth form belongs to this tile: left out, its share to the community's other species",
        "cells": 202
@@ -312,25 +318,26 @@
      "acer_negundo": null,
      "amelanchier_utahensis": "purshia_stansburiana",
      "arctostaphylos_pungens": "arctostaphylos_patula",
+     "ceanothus_greggii": null,
      "ceanothus_pauciflorus": null,
      "cercocarpus_montanus": "cercocarpus_ledifolius",
      "chrysothamnus_viscidiflorus": "encelia_farinosa",
      "ericameria_nauseosa": "encelia_farinosa",
      "garrya_flavescens": null,
+     "juniperus_scopulorum": "juniperus_osteosperma",
      "krascheninnikovia_lanata": "atriplex_canescens",
      "picea_pungens": "pinus_edulis",
      "quercus_turbinella": "quercus_gambelii",
-     "rhus_aromatica": null,
-     "rosa_woodsii": "purshia_stansburiana"
+     "rhus_aromatica": null
     },
     "local_records_skipped": 0,
     "status": {
      "status_field": false,
-     "species": 37,
+     "species": 38,
      "introduced": 0,
      "restored": 0,
      "native": 0,
-     "status_unknown": 37,
+     "status_unknown": 38,
      "introduced_ids": [],
      "restored_ids": [],
      "note": "no status field in this build"
@@ -339,96 +346,96 @@
      {
       "species": "pinus_ponderosa",
       "layer": "trees",
-      "share_of_weight": 0.3312,
+      "share_of_weight": 0.2896,
       "share": "ruled",
       "drawn_as": "pinus_ponderosa"
      },
      {
-      "species": "ephedra_viridis",
-      "layer": "shrubs",
-      "share_of_weight": 0.1707,
-      "share": "ruled",
-      "drawn_as": "ephedra_viridis"
-     },
-     {
       "species": "coleogyne_ramosissima",
       "layer": "shrubs",
-      "share_of_weight": 0.1673,
+      "share_of_weight": 0.167,
       "share": "ruled",
       "drawn_as": "coleogyne_ramosissima"
      },
      {
-      "species": "juniperus_osteosperma",
-      "layer": "trees",
-      "share_of_weight": 0.1109,
+      "species": "ephedra_viridis",
+      "layer": "shrubs",
+      "share_of_weight": 0.1417,
       "share": "ruled",
-      "drawn_as": "juniperus_osteosperma"
+      "drawn_as": "ephedra_viridis"
+     },
+     {
+      "species": "quercus_gambelii",
+      "layer": "trees",
+      "share_of_weight": 0.1218,
+      "share": "ruled",
+      "drawn_as": "quercus_gambelii"
      },
      {
       "species": "pinus_edulis",
       "layer": "trees",
-      "share_of_weight": 0.1095,
+      "share_of_weight": 0.1154,
       "share": "ruled",
       "drawn_as": "pinus_edulis"
      },
      {
+      "species": "juniperus_osteosperma",
+      "layer": "trees",
+      "share_of_weight": 0.0634,
+      "share": "ruled",
+      "drawn_as": "juniperus_osteosperma"
+     },
+     {
+      "species": "artemisia_tridentata",
+      "layer": "shrubs",
+      "share_of_weight": 0.0336,
+      "share": "ruled",
+      "drawn_as": "artemisia_tridentata"
+     },
+     {
       "species": "atriplex_canescens",
       "layer": "shrubs",
-      "share_of_weight": 0.0342,
+      "share_of_weight": 0.0265,
       "share": "ruled",
       "drawn_as": "atriplex_canescens"
      },
      {
       "species": "encelia_farinosa",
       "layer": "shrubs",
-      "share_of_weight": 0.0278,
+      "share_of_weight": 0.0166,
       "share": "ruled",
       "drawn_as": "encelia_farinosa"
      },
      {
-      "species": "artemisia_tridentata",
-      "layer": "shrubs",
-      "share_of_weight": 0.02,
-      "share": "ruled",
-      "drawn_as": "artemisia_tridentata"
+      "species": "juniperus_scopulorum",
+      "layer": "trees",
+      "share_of_weight": 0.014,
+      "share": "guessed",
+      "drawn_as": "juniperus_osteosperma"
      },
      {
-      "species": "ericameria_nauseosa",
+      "species": "quercus_turbinella",
       "layer": "shrubs",
-      "share_of_weight": 0.0034,
+      "share_of_weight": 0.0019,
       "share": "guessed",
-      "drawn_as": "encelia_farinosa"
-     },
-     {
-      "species": "chrysothamnus_viscidiflorus",
-      "layer": "shrubs",
-      "share_of_weight": 0.0034,
-      "share": "guessed",
-      "drawn_as": "encelia_farinosa"
-     },
-     {
-      "species": "krascheninnikovia_lanata",
-      "layer": "shrubs",
-      "share_of_weight": 0.003,
-      "share": "guessed",
-      "drawn_as": "atriplex_canescens"
+      "drawn_as": "quercus_gambelii"
      },
      {
       "species": "rosa_woodsii",
       "layer": "shrubs",
-      "share_of_weight": 0.0029,
-      "share": "guessed",
-      "drawn_as": "purshia_stansburiana"
+      "share_of_weight": 0.0012,
+      "share": "ruled",
+      "drawn_as": "rosa_woodsii"
      }
     ],
-    "no_local_record_share": 0.0616,
+    "no_local_record_share": 0.0638,
     "no_local_record_note": "share of the drawn woody weight whose drawn species is not among the tile's most-recorded GBIF plants (species/plant_needs.json, research.PLANT_LIMIT): common trees can miss that list, so this is a lead, not a finding"
    },
    "findings": [
     {
      "layer": "plant_species",
-     "text": "4% of the shrub weight is drawn as a stand-in",
-     "share": 0.019,
+     "text": "3% of the canopy weight is drawn as a stand-in",
+     "share": 0.014,
      "of": "woody plant weight",
      "kind": "guessed"
     }
@@ -688,7 +695,7 @@
    "format": 1,
    "tile": "utm12n_396_3988",
    "name": "Grand Canyon (South Rim to the river)",
-   "at": "2026-11-10T21:27:46Z",
+   "at": "2026-11-10T23:19:08Z",
    "doc": "docs/held-out-judge.md",
    "checks": {
     "species_lists": {
@@ -717,7 +724,7 @@
      "scores": {
       "animal_precision": 0.9651,
       "animal_recall_common": 0.3523,
-      "plant_precision": 0.9211,
+      "plant_precision": 0.9231,
       "plant_precision_by_share": {
        "canopy": 1.0,
        "shrub": 1.0,
@@ -866,14 +873,14 @@
        "spawned_precision": null
       },
       "plant": {
-       "drawn": 38,
-       "judged": 38,
-       "on_list_present_native": 35,
+       "drawn": 39,
+       "judged": 39,
+       "on_list_present_native": 36,
        "restored_drawn": [],
-       "hits": 35,
-       "precision": 0.9211,
+       "hits": 36,
+       "precision": 0.9231,
        "classes": {
-        "present_native": 35,
+        "present_native": 36,
         "historic_native": 0,
         "present_unknown_origin": 0,
         "non_native": 0,
@@ -1584,18 +1591,18 @@
      "drawn_from": "client/species_mix.json: plants drawn per species (cells x density x weight), by layer",
      "measure": "per layer, on genus shares: Bray-Curtis dissimilarity (0 same, 1 nothing in common); foreign share = drawn share in genera the reference does not record on this ground; missed share = reference share in genera not drawn in that layer",
      "scores": {
-      "bray_curtis_mean": 0.5874,
+      "bray_curtis_mean": 0.6136,
       "bray_curtis": {
-       "canopy": 0.2199,
-       "shrub": 0.6036,
+       "canopy": 0.257,
+       "shrub": 0.6451,
        "ground": 0.9387
       },
       "foreign_share": {
-       "canopy": 0.0003,
-       "shrub": 0.0097,
+       "canopy": 0.0001,
+       "shrub": 0.004,
        "ground": 0.0022
       },
-      "foreign_share_max": 0.0097,
+      "foreign_share_max": 0.004,
       "missed_share": {
        "canopy": 0,
        "shrub": 0.5987,
@@ -1604,16 +1611,16 @@
      },
      "layers": {
       "canopy": {
-       "bray_curtis": 0.2199,
-       "foreign_share": 0.0003,
+       "bray_curtis": 0.257,
+       "foreign_share": 0.0001,
        "missed_share": 0,
        "drawn": {
-        "pinus": 0.796,
-        "juniperus": 0.1952,
-        "populus": 0.0052,
+        "pinus": 0.8331,
+        "juniperus": 0.1581,
+        "populus": 0.005,
         "quercus": 0.0029,
-        "pseudotsuga": 0.0004,
-        "abies": 0.0003
+        "pseudotsuga": 0.0009,
+        "abies": 0.0001
        },
        "reference": {
         "pinus": 0.5849,
@@ -1621,18 +1628,18 @@
        }
       },
       "shrub": {
-       "bray_curtis": 0.6036,
-       "foreign_share": 0.0097,
+       "bray_curtis": 0.6451,
+       "foreign_share": 0.004,
        "missed_share": 0.5987,
        "drawn": {
-        "ephedra": 0.4451,
-        "coleogyne": 0.3183,
-        "encelia": 0.0963,
-        "atriplex": 0.0682,
-        "artemisia": 0.0415,
-        "purshia": 0.0176,
-        "cercocarpus": 0.0075,
-        "quercus": 0.0022
+        "ephedra": 0.3237,
+        "coleogyne": 0.2783,
+        "quercus": 0.2389,
+        "artemisia": 0.065,
+        "atriplex": 0.0435,
+        "encelia": 0.0432,
+        "purshia": 0.0028,
+        "rosa": 0.0026
        },
        "reference": {
         "baccharis": 0.1969,
@@ -1672,15 +1679,6 @@
       }
      },
      "errors": [
-      {
-       "kind": "foreign_genus",
-       "genus": "cercocarpus",
-       "species": [
-        "cercocarpus_ledifolius"
-       ],
-       "drawn_share": 0.0075,
-       "layer": "shrub"
-      },
       {
        "kind": "missing_genus",
        "genus": "baccharis",
@@ -2563,7 +2561,7 @@
    "summary": {
     "animal_precision": 0.9651,
     "animal_recall_common": 0.3523,
-    "plant_precision": 0.9211,
+    "plant_precision": 0.9231,
     "groups_absent": [
      "fish"
     ],
@@ -2580,19 +2578,19 @@
      "ground": 0.8922
     },
     "composition_bray_curtis": {
-     "canopy": 0.2199,
-     "shrub": 0.6036,
+     "canopy": 0.257,
+     "shrub": 0.6451,
      "ground": 0.9387
     },
     "composition_foreign_share": {
-     "canopy": 0.0003,
-     "shrub": 0.0097,
+     "canopy": 0.0001,
+     "shrub": 0.004,
      "ground": 0.0022
     },
     "eye_level_distance": 0.177,
     "eye_level_pairs": 10,
     "colour_from_above_overlap": 0.26,
-    "named_errors": 100
+    "named_errors": 99
    }
   },
   "source": "judge/held_out.json"

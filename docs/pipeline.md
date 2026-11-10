@@ -164,8 +164,16 @@ and a tile elsewhere never falls back to it in silence:
   "alpine dwarf-shrubland" is red mountain heather in the Sierra, pink and white heather in the Olympics); failing that it
   takes the tile's own species of the same habitat class (the tile pool); the foothill default is used in California
   only. Outside, a community nothing can read is drawn bare and recorded as a fallback and a hand edit.
-- **The elevation zones** (gray pine to ponderosa to Jeffrey ...) and **the coast's oaks** are California's tables; the
-  Pacific Northwest has its own terrain factors (`TERRAIN_BY_REGION`: Sitka spruce and western hemlock in the valleys,
+- **How much of each named species** (2026-11-10). On a tile that reads names by its own records, a community's
+  own LANDFIRE description gives the weights and the species its name leaves out (`pipeline/succession.py`: each
+  succession class's share of the landscape, divided among the class's species of the layer by their order of
+  dominance; lodgepole pine under "Spruce-Fir Forest"). Where no description of its own speaks, the name's species
+  are equal, a rarity weighing less (records / 30). `python -m pipeline.succession --tile <id>` prints the reading.
+  Tiles inside a regional table keep equal weights for the few names their rules do not match.
+- **The elevation zones** (gray pine to ponderosa to Jeffrey ...), **the coast's oaks** and the per-species terrain
+  table (`species_mix.TERRAIN`: Douglas-fir on north slopes, whitebark pine above 2,400 m) are California's; a tile
+  in no table's region takes none of them (2026-11-10): its communities carry the zones and a species' terrain is its
+  own record's niche. The Pacific Northwest has its own terrain factors (`TERRAIN_BY_REGION`: Sitka spruce and western hemlock in the valleys,
   silver fir 600-1,200 m, mountain hemlock and subalpine fir to treeline, heath above), so one Olympic tile carries the
   whole zonation from the Hoh's floor to Mount Olympus.
 - **The riparian zone rows and the ground layer** draw only species that grow in the tile's region (a record's

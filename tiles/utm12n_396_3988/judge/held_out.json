@@ -2,7 +2,7 @@
  "format": 1,
  "tile": "utm12n_396_3988",
  "name": "Grand Canyon (South Rim to the river)",
- "at": "2026-11-10T21:27:46Z",
+ "at": "2026-11-10T23:19:08Z",
  "doc": "docs/held-out-judge.md",
  "checks": {
   "species_lists": {
@@ -31,7 +31,7 @@
    "scores": {
     "animal_precision": 0.9651,
     "animal_recall_common": 0.3523,
-    "plant_precision": 0.9211,
+    "plant_precision": 0.9231,
     "plant_precision_by_share": {
      "canopy": 1.0,
      "shrub": 1.0,
@@ -180,14 +180,14 @@
      "spawned_precision": null
     },
     "plant": {
-     "drawn": 38,
-     "judged": 38,
-     "on_list_present_native": 35,
+     "drawn": 39,
+     "judged": 39,
+     "on_list_present_native": 36,
      "restored_drawn": [],
-     "hits": 35,
-     "precision": 0.9211,
+     "hits": 36,
+     "precision": 0.9231,
      "classes": {
-      "present_native": 35,
+      "present_native": 36,
       "historic_native": 0,
       "present_unknown_origin": 0,
       "non_native": 0,
@@ -898,18 +898,18 @@
    "drawn_from": "client/species_mix.json: plants drawn per species (cells x density x weight), by layer",
    "measure": "per layer, on genus shares: Bray-Curtis dissimilarity (0 same, 1 nothing in common); foreign share = drawn share in genera the reference does not record on this ground; missed share = reference share in genera not drawn in that layer",
    "scores": {
-    "bray_curtis_mean": 0.5874,
+    "bray_curtis_mean": 0.6136,
     "bray_curtis": {
-     "canopy": 0.2199,
-     "shrub": 0.6036,
+     "canopy": 0.257,
+     "shrub": 0.6451,
      "ground": 0.9387
     },
     "foreign_share": {
-     "canopy": 0.0003,
-     "shrub": 0.0097,
+     "canopy": 0.0001,
+     "shrub": 0.004,
      "ground": 0.0022
     },
-    "foreign_share_max": 0.0097,
+    "foreign_share_max": 0.004,
     "missed_share": {
      "canopy": 0,
      "shrub": 0.5987,
@@ -918,16 +918,16 @@
    },
    "layers": {
     "canopy": {
-     "bray_curtis": 0.2199,
-     "foreign_share": 0.0003,
+     "bray_curtis": 0.257,
+     "foreign_share": 0.0001,
      "missed_share": 0,
      "drawn": {
-      "pinus": 0.796,
-      "juniperus": 0.1952,
-      "populus": 0.0052,
+      "pinus": 0.8331,
+      "juniperus": 0.1581,
+      "populus": 0.005,
       "quercus": 0.0029,
-      "pseudotsuga": 0.0004,
-      "abies": 0.0003
+      "pseudotsuga": 0.0009,
+      "abies": 0.0001
      },
      "reference": {
       "pinus": 0.5849,
@@ -935,18 +935,18 @@
      }
     },
     "shrub": {
-     "bray_curtis": 0.6036,
-     "foreign_share": 0.0097,
+     "bray_curtis": 0.6451,
+     "foreign_share": 0.004,
      "missed_share": 0.5987,
      "drawn": {
-      "ephedra": 0.4451,
-      "coleogyne": 0.3183,
-      "encelia": 0.0963,
-      "atriplex": 0.0682,
-      "artemisia": 0.0415,
-      "purshia": 0.0176,
-      "cercocarpus": 0.0075,
-      "quercus": 0.0022
+      "ephedra": 0.3237,
+      "coleogyne": 0.2783,
+      "quercus": 0.2389,
+      "artemisia": 0.065,
+      "atriplex": 0.0435,
+      "encelia": 0.0432,
+      "purshia": 0.0028,
+      "rosa": 0.0026
      },
      "reference": {
       "baccharis": 0.1969,
@@ -986,15 +986,6 @@
     }
    },
    "errors": [
-    {
-     "kind": "foreign_genus",
-     "genus": "cercocarpus",
-     "species": [
-      "cercocarpus_ledifolius"
-     ],
-     "drawn_share": 0.0075,
-     "layer": "shrub"
-    },
     {
      "kind": "missing_genus",
      "genus": "baccharis",
@@ -1877,7 +1868,7 @@
  "summary": {
   "animal_precision": 0.9651,
   "animal_recall_common": 0.3523,
-  "plant_precision": 0.9211,
+  "plant_precision": 0.9231,
   "groups_absent": [
    "fish"
   ],
@@ -1894,18 +1885,18 @@
    "ground": 0.8922
   },
   "composition_bray_curtis": {
-   "canopy": 0.2199,
-   "shrub": 0.6036,
+   "canopy": 0.257,
+   "shrub": 0.6451,
    "ground": 0.9387
   },
   "composition_foreign_share": {
-   "canopy": 0.0003,
-   "shrub": 0.0097,
+   "canopy": 0.0001,
+   "shrub": 0.004,
    "ground": 0.0022
   },
   "eye_level_distance": 0.177,
   "eye_level_pairs": 10,
   "colour_from_above_overlap": 0.26,
-  "named_errors": 100
+  "named_errors": 99
  }
 }

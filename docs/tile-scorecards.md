@@ -24,8 +24,8 @@ Worst finding: the tile's finding that affects the largest share of its layer, a
 | Yosemite (re-centred) (`utm11n_267_4175`) | 98/2/0/0 | 0/100/0/0 | 0/98/2/0 | 0/100/0/0 | 98/0/2/0 | 51/43/0/6 | 100/0/0/0 | 47/0/47/6 | 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m)) |
 | Yosemite (`utm11n_270_4180`) | 99/1/0/0 | 0/100/0/0 | 0/99/1/0 | 0/100/0/0 | 99/0/1/0 | 55/41/0/4 | 99/1/0/0 | 48/0/48/3 | 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m)) |
 | Grand Canyon (`utm12n_396_3988`) | 83/17/0/0 | 0/100/0/0 | 0/96/4/0 | 0/98/2/0 | 97/0/3/0 | 57/39/0/4 | 95/0/5/0 | 38/0/47/15 | 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m)) |
-| Teton (`utm12n_514_4838`) | 99/1/0/0 | 0/100/0/0 | 0/99/1/0 | 0/96/2/2 | 99/0/1/0 | 37/53/0/10 | 100/0/0/0 | 51/0/37/12 | 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m)) |
-| Lamar Valley (`utm12n_557_4964`) | 100/0/0/0 | 100/0/0/0 | 0/95/3/1 | 0/96/4/0 | 52/0/48/0 | 47/43/0/10 | 100/0/0/0 | 52/0/39/10 | no fish species listed (none in the tile's GBIF records) |
+| Teton (`utm12n_514_4838`) | 99/1/0/0 | 0/100/0/0 | 0/99/1/0 | 0/95/5/1 | 99/0/1/0 | 37/53/0/10 | 100/0/0/0 | 51/0/37/12 | 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m)) |
+| Lamar Valley (`utm12n_557_4964`) | 100/0/0/0 | 100/0/0/0 | 0/95/3/1 | 0/98/2/0 | 52/0/48/0 | 47/43/0/10 | 100/0/0/0 | 52/0/39/10 | no fish species listed (none in the tile's GBIF records) |
 | Corcovado (`utm17n_210_932`) | 0/100/0/0 | 0/100/0/0 | 0/0/100/0 | 0/100/0/0 | 0/53/47/0 | 6/92/0/2 | 100/0/0/0 | 8/0/51/41 | no ground species at all |
 | Manu (`utm19s_233_8679`) | 0/100/0/0 | 0/100/0/0 | 0/0/100/0 | 0/100/0/0 | 0/8/92/0 | 14/84/0/2 | 93/0/7/0 | 3/0/69/28 | no ground species at all |
 | Lofoten (`utm33n_412_7531`) | 0/100/0/0 | 0/100/0/0 | 0/0/100/0 | 0/100/0/0 | 0/99/1/0 | 6/81/0/13 | 100/0/0/0 | 9/0/57/35 | 99% of cells draw recorded species weighted by niche, not a community rule |
@@ -102,9 +102,9 @@ The baseline decided 2026-11-10: today's ecosystems; introduced species filtered
 | Calaveras Big Trees | 15% | no status field in this build (80 unknown) | no status field in this build (93 unknown) |
 | Yosemite (re-centred) | 2% | no status field in this build (100 unknown) | no status field in this build (93 unknown) |
 | Yosemite | 1% | no status field in this build (95 unknown) | no status field in this build (93 unknown) |
-| Grand Canyon | 4% | no status field in this build (94 unknown) | no status field in this build (37 unknown) |
-| Teton | 1% | no status field in this build (89 unknown) | no status field in this build (46 unknown) |
-| Lamar Valley | 1% | no status field in this build (83 unknown) | no status field in this build (43 unknown) |
+| Grand Canyon | 4% | no status field in this build (94 unknown) | no status field in this build (38 unknown) |
+| Teton | 1% | no status field in this build (89 unknown) | no status field in this build (48 unknown) |
+| Lamar Valley | 1% | no status field in this build (83 unknown) | no status field in this build (45 unknown) |
 | Corcovado | 0% | no status field in this build (88 unknown) | no status field in this build (11 unknown) |
 | Manu | 0% | no status field in this build (68 unknown) | no status field in this build (10 unknown) |
 | Lofoten | 0% | no status field in this build (69 unknown) | no status field in this build (5 unknown) |
@@ -279,9 +279,9 @@ Kept out of the per-tile findings because no tile differs:
 | Calaveras Big Trees | 30 | 31 | 34 | 0 | 0 |
 | Yosemite (re-centred) | 31 | 31 | 34 | 0 | 0 |
 | Yosemite | 31 | 31 | 34 | 0 | 0 |
-| Grand Canyon | 8 | 10 | 20 | 9 | 4 |
-| Teton | 9 | 5 | 32 | 4 | 4 |
-| Lamar Valley | 7 | 5 | 31 | 3 | 1 |
+| Grand Canyon | 8 | 11 | 20 | 9 | 5 |
+| Teton | 9 | 7 | 33 | 5 | 4 |
+| Lamar Valley | 7 | 7 | 32 | 3 | 1 |
 | Corcovado | 11 | 0 | 0 | 0 | 0 |
 | Manu | 10 | 0 | 0 | 0 | 0 |
 | Lofoten | 2 | 1 | 2 | 0 | 0 |

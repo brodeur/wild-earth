@@ -15,7 +15,7 @@
   37.76645207290539
  ],
  "size_m": 10000,
- "generated_at": "2026-11-10T21:11:45Z",
+ "generated_at": "2026-11-10T23:18:19Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -5887,7 +5887,7 @@
    "animals_present": 122,
    "animals_queued": 77,
    "cards_queued": 20,
-   "sha256": "6ff41376dc4f6036fd9527bc9fc04c730ee2c4eed39dc3fd6f51f255da8947a1",
+   "sha256": "96c5124624560b2cdd07350e6f91b604d3fd86b44abc9cf433aef33fe4b46218",
    "bytes": 128084
   },
   "terrain.ice": {
@@ -8361,19 +8361,49 @@
    "at": "2026-11-10T21:11:45Z",
    "seconds": 0.7,
    "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-10T23:16:19Z",
+   "seconds": 1.6,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-10T23:16:21Z",
+   "seconds": 1.1,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-10T23:16:21Z",
+   "seconds": 0.6,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-10T23:18:19Z",
+   "seconds": 1.3,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-10T23:18:19Z",
+   "seconds": 0.6,
+   "ok": true
   }
  ],
  "steps": {
   "plants": {
    "version": "5",
-   "code": "39d18139800e4506",
+   "code": "1c2805b4eec7c448",
    "params": {
     "tile": "utm10n_540_4170"
    },
-   "fingerprint": "b441d040d14c48c7",
+   "fingerprint": "12768cde46db9d6a",
    "parts": {
     "version": "5",
-    "code": "39d18139800e4506",
+    "code": "1c2805b4eec7c448",
     "params": {
      "tile": "utm10n_540_4170"
     },
@@ -8382,11 +8412,11 @@
      "ice": "5d410ff9c0e963d4"
     },
     "library": {
-     "library/plant_cards": "0d4ef9610277fccf",
+     "library/plant_cards": "8c46bdf1f3fc274c",
      "library/plant_cards/_research": "76160f150981cd69"
     }
    },
-   "ran_at": "2026-11-10T21:05:32Z",
+   "ran_at": "2026-11-10T23:16:18Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -8407,21 +8437,21 @@
    "fallbacks": [],
    "notes": [],
    "fetched": {
-    "network": 17,
-    "cache": 353
+    "network": 0,
+    "cache": 370
    },
-   "seconds": 29.1
+   "seconds": 1.6
   },
   "registry": {
    "version": "1",
-   "code": "31838a4caf95324b",
+   "code": "9e93858920690702",
    "params": {
     "tile": "utm10n_540_4170"
    },
-   "fingerprint": "68909b3a24931405",
+   "fingerprint": "7b0c0519f2797ef5",
    "parts": {
     "version": "1",
-    "code": "31838a4caf95324b",
+    "code": "9e93858920690702",
     "params": {
      "tile": "utm10n_540_4170"
     },
@@ -8432,21 +8462,21 @@
      "animals": "b41f4593155fbdc0"
     },
     "library": {
-     "library/species": "63813c168e7cfa76",
+     "library/species": "da43373440132e57",
      "library/animals": "934e6c71aae6cd14",
-     "library/plant_cards": "0d4ef9610277fccf"
+     "library/plant_cards": "8c46bdf1f3fc274c"
     }
    },
-   "ran_at": "2026-11-10T21:11:45Z",
+   "ran_at": "2026-11-10T23:18:19Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "species.registry"
    ],
    "outputs": {
-    "species/registry.json": "6ff41376dc4f6036"
+    "species/registry.json": "96c5124624560b2c"
    },
-   "out_hash": "29fb6421538d72f4",
+   "out_hash": "6b8625556ac48fec",
    "sources": {},
    "fallbacks": [],
    "notes": [],
@@ -8454,7 +8484,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 0.7
+   "seconds": 0.6
   },
   "dem": {
    "version": "3",
@@ -9519,14 +9549,14 @@
   },
   "species_mix": {
    "version": "5",
-   "code": "9923d4d4cc94680c",
+   "code": "63ef851b83ef7311",
    "params": {
     "tile": "utm10n_540_4170"
    },
-   "fingerprint": "daed9fbc5e6d6117",
+   "fingerprint": "5780e82f2cdc35b3",
    "parts": {
     "version": "5",
-    "code": "9923d4d4cc94680c",
+    "code": "63ef851b83ef7311",
     "params": {
      "tile": "utm10n_540_4170"
     },
@@ -9538,10 +9568,10 @@
      "plants": "f9ef0991a0b0bc6b"
     },
     "library": {
-     "library/species": "63813c168e7cfa76"
+     "library/species": "da43373440132e57"
     }
    },
-   "ran_at": "2026-11-10T21:06:01Z",
+   "ran_at": "2026-11-10T23:18:17Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -9560,7 +9590,7 @@
     "network": 0,
     "cache": 31
    },
-   "seconds": 1.1
+   "seconds": 1.3
   },
   "animals": {
    "version": "6",

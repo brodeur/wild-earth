@@ -1345,6 +1345,13 @@ Three keys say what happened:
   draw the tile's other communities of the habitat class (`generic_drawn`); its `trees` / `shrubs` keep the weights as
   written.
 
+- `communities[].weights` (2026-11-10, the weights of a community's species): how a community read from its name
+  got the weights of its `trees` and `shrubs`: `{trees, shrubs, model}`, each layer one of `description` (its own
+  LANDFIRE description's succession classes, `pipeline/succession.py`; `model` names the document),
+  `description+name` (the description as far as its species are recorded near the tile, the rest to the name's
+  species), `records` (the name's species, a rarity weighing less), `equal` (a tile inside a regional table) or null
+  (an empty layer). Hand rules and pooled communities have no such key. The client does not read it.
+
 `substitutions` stays (`{species: drawn or null}`). A tile in no table's region (`natural_regions` empty: the Grand
 Canyon, Lamar, Teton) reads its community names by its own records (`communities.named_species`): of the species a
 word can mean, the best recorded near the tile; of a community phrase's members, every one recorded there. Outside

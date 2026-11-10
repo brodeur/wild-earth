@@ -9011,3 +9011,85 @@ Recommendation 1 of the pipeline review. What section 3 of the review computed b
   accident above. `match` folds a doubled i within a genus and says "spelling variant".
 - **A drawn native the park lists as Historical stays a hit** (`restored_drawn`), as the rewilding baseline says.
   Whether it is marked restored for the player belongs with the baseline's implementation.
+
+## 2026-11-10: the weights of a community's species: LANDFIRE's succession classes, a rarity by the records (pipeline/succession.py, species_mix.py, needs.py, steps.py; 2 trait cards; tests/test_succession.py; branch claude/regional-stand-ins-dee7cc)
+
+The stand-ins lane left every species a community's name names with the same weight. At Lamar that drew the
+"Spruce-Fir Forest" (12,756 cells) as half Engelmann spruce and half subalpine fir, and the canopy's Bray-Curtis
+against the park's cover-type map went from 0.07 to 0.37 (the merge entry above).
+
+- **The weight comes from LANDFIRE's own description of the system** (`pipeline/succession.py`). Each Biophysical
+  Settings description (the documents the ground layer already reads) divides its system into succession classes,
+  gives each its share of the landscape under the reference condition, and lists each class's indicator species with
+  their canopy position in order of dominance. A species' weight in a layer is the sum over the classes of
+  class share x (position / rank) / (the same over the class's species of that layer). Rank is its place in the
+  class's list, so first, second and third weigh 1, 1/2, 1/3. Position counts for trees only: upper canopy 1,
+  mid-upper 1/2, middle 1/4, below 0. For the Yellowstone zone's dry spruce-fir (classes of 7, 33, 48 and 12%) that
+  is lodgepole pine 0.74, subalpine fir 0.21, Engelmann spruce 0.05.
+- **The seral dominant is the same rule.** The description lists what stands in each class, so a name that gives
+  only the climax gains the species that holds the ground meanwhile: lodgepole pine under "Spruce-Fir", and under
+  "Douglas-fir Forest" as its second species (0.67 / 0.33). No per-tile list. A description speaks only for the
+  community whose own system it describes; a community that borrowed the model under most of its cells keeps its name.
+- **Only what grows here.** A listed species needs 3 or more GBIF records within 25 km. A species the zone lists but
+  the tile lacks leaves its share unassigned, and the name's own species take it: the creosotebush scrub's
+  description at the Grand Canyon (creosotebush and white bursage, neither recorded there) is trusted for 15% of the
+  layer, the name's species get the rest. Where the name has a species of the same genus as an absent one, it takes
+  that place in the order (green Mormon tea for the zone's Nevada Mormon tea).
+- **The records weigh a rarity, not a share.** Tried first, as asked: weights in proportion to the record counts.
+  Rejected, because a count is taken over 25 km and every community, so it says how widespread a species is around
+  the tile and not what it holds of one community. By counts green Mormon tea (98) leads blackbrush (35) in the
+  blackbrush shrubland, and lodgepole pine (390) leads Douglas-fir (79) in the Douglas-fir forest. What a count can
+  say is that a species is rare: each species' weight is multiplied by min(1, records / 30), the factor the ground
+  layer already uses (`LOCAL_RECORDS_FULL`). So a name with no description of its own keeps **equal weights among
+  its well-recorded species**, and those are the names equal weights are right for; a member with 4 records weighs
+  4/30 of one with 30 (black cottonwood beside narrowleaf cottonwood at Teton).
+- **The floor** (`MEMBER_FLOOR`): a species the name names and the records have never holds less than 5% of its
+  layer before the terrain factors. Engelmann spruce in the dry spruce-fir would be 4% by its class alone.
+- **A layer above the system's own life form is the name's to give** (`LAYERS_OF_TYPE`, by the description's
+  Vegetation Type). The blackbrush shrubland's late class lists Utah juniper and the mesic meadow's lists Woods'
+  rose; read as layers they put junipers across the Tonto Platform and, through the tile pool, a shrub in every
+  grassland of Lamar. A shrubland's description gives shrubs, a forest's trees and shrubs, a grassland's neither.
+- **California's terrain table stays in California.** `TERRAIN` gives Douglas-fir 0.12 off north slopes and
+  whitebark pine a tenth below 2,400 m, by species id on every tile. With a second species in the Douglas-fir forest
+  it would have handed every other slope to lodgepole. A tile in no table's region now takes a species' terrain from
+  its own record. This was listed as left alone on the stand-ins entry.
+- **Two cards** by the existing route (an agent's drafts from FEIS and Wikipedia): grouse whortleberry, a dwarf
+  shrub, so the carpet under lodgepole and spruce-fir, and Woods' rose. Without the first, the spruce-fir's shrub
+  layer was all missing and drawn generically as snowberry.
+- **Results, the held-out judge** (`held_out.py --checks species,composition`; baseline, before this change, now):
+
+  | Tile | Canopy Bray-Curtis | Shrub | Ground | Plant precision | Shares on the list |
+  |---|---|---|---|---|---|
+  | Lamar | 0.07, 0.37, **0.33** | 0.48, 0.48, **0.32** | 0.67 unchanged | 0.97, 1.00, 1.00 | 1.00/1.00/1.00 |
+  | Grand Canyon | 0.22, 0.22, **0.26** | 1.00, 0.60, **0.65** | 1.00, 0.94, 0.94 | 0.33, 0.92, 0.92 | 1.00/1.00/0.89 unchanged |
+  | Yosemite | 0.30 unchanged | 0.55 unchanged | 0.84 unchanged | 0.79 unchanged | unchanged |
+  | Teton (no baseline) | none | none | none | 0.98 before and now | 1.00/1.00/0.98 before and now |
+
+- **Lamar's canopy is not back at 0.07, and weights cannot bring it there.** Drawn now: pine 0.54, Douglas-fir
+  0.28, fir 0.09, spruce 0.04, poplar 0.04, against the map's Douglas-fir 0.61 and pine 0.37. LANDFIRE maps 36% of
+  the tile's forest as Douglas-fir forest; the park's map calls 61% Douglas-fir. The baseline's 0.07 was the
+  spruce-fir (28% of the forest) drawn as Douglas-fir by a California stand-in. With today's communities, drawing
+  the Douglas-fir forest as pure Douglas-fir would give 0.24; going lower needs Douglas-fir on cells LANDFIRE maps
+  as lodgepole or spruce-fir forest, which is a question of the community map (the review's recommendation 5), not
+  of weights. The second species in the Douglas-fir forest costs 0.09 of the 0.33.
+- **What it made worse, by the judge.** Grand Canyon canopy 0.22 to 0.26: the zone's pinyon-juniper description puts
+  pinyon first, so the woodland went from 50/50 to 61/39, and the plots are heavier in juniper (0.42 of the canopy).
+  Grand Canyon shrubs 0.60 to 0.65: the ponderosa woodland's description lists Gambel oak second, now drawn under
+  the pines on 19,645 cells (24% of the drawn shrubs); one of the 14 plots is ponderosa and it has no oak. Teton's
+  scorecard: shrub weight drawn as a stand-in 5% to 10% (threetip sagebrush, which the steppe's description lists,
+  as big sagebrush), named species drawn as nothing 2.2% to 0.9%. Lamar's scorecard: stand-ins 9% to 3% of the shrubs.
+- **Unchanged tiles.** The eight California tiles and the five tiles abroad: no row, community or raster byte
+  changed. The Hoh and Olympus: no row or raster changed; their unmatched communities gained the `weights` key
+  (`equal`) and a reworded note.
+- **Left alone.**
+  - Shrub density under a forest is the default 0.5 whatever the description lists; nothing in a description gives
+    an amount of understory.
+  - Tiles inside a regional table keep equal weights for names their rules do not match, and California's terrain
+    table still reaches the Pacific Northwest for species its own table lacks.
+  - A missing shrub whose only local relative is a dwarf shrub is drawn as that dwarf in the shrub layer (thinleaf
+    huckleberry as grouse whortleberry).
+  - Lamar's snowberry is still under the map's share (0.16 against 0.26) and huckleberry is in the ground layer, where
+    the judge's shrub layer does not look. The Grand Canyon's baccharis, prickly pear, hedgehog cactus, bebbia and
+    yucca are in no description of its communities (banana yucca and plains prickly pear are well recorded there):
+    they need a rule that reads the tile's records for a community's shrubs, and cards.
+  - `species/canopy.json` at Lamar lists big sagebrush as the leading canopy tree (records, height not screened).

@@ -1515,6 +1515,11 @@ is not a box in `pipeline/regions.py` (`interior_west`): a record without `regio
 (`communities.regions_of`), and a label keeps the species out of every regional table, so it is placed only where a
 community's name and the tile's GBIF records put it.
 
+Two more by the same route (2026-11-10, the weights of a community's species), asked for by the LANDFIRE
+descriptions once they were read for the shrub layer: grouse whortleberry (*Vaccinium scoparium*, a dwarf shrub by
+its height, so the carpet under Yellowstone's and the Tetons' lodgepole and spruce-fir) and Woods' rose (*Rosa
+woodsii*, until then drawn as thimbleberry or cliffrose). Sources in the cards: FEIS and Wikipedia.
+
 Thirteen agent drafts (sources in each card: the Fire Effects Information System and National Park Service pages,
 both US government works, and Wikipedia, CC BY-SA 4.0; colours and crown proportions are judgement values, no
 photographs measured): Colorado pinyon, Utah juniper, Gambel oak, blackbrush, green Mormon tea, brittlebush, fourwing

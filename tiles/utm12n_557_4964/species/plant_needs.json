@@ -433,11 +433,12 @@
    "kind": "shrub",
    "why": [
     "named by EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (35709 cells)",
+    "in the description of EVT 7011 Rocky Mountain Aspen Forest and Woodland (2547 cells)",
     "named by BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (263 cells)",
     "named by EVT 7125 Inter-Mountain Basins Big Sagebrush Steppe (82 cells)",
     "canopy: records (GBIF: 32 records on the tile; height not yet screened)"
    ],
-   "cover": 0.7286,
+   "cover": 0.7516,
    "records": 32,
    "scientific": "Artemisia tridentata",
    "record": true,
@@ -446,33 +447,87 @@
    "rank": 1
   },
   {
-   "id": "pseudotsuga_menziesii",
-   "kind": "tree",
-   "why": [
-    "named by EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (16593 cells)",
-    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)",
-    "named by BPS 715 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (10 cells)"
-   ],
-   "cover": 0.1498,
-   "records": 0,
-   "record": true,
-   "card": false,
-   "drawn_as": "pseudotsuga_menziesii",
-   "rank": 2
-  },
-  {
    "id": "pinus_contorta",
    "kind": "tree",
    "why": [
+    "in the description of EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (16593 cells)",
+    "in the description of EVT 7055 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (12756 cells)",
     "named by EVT 7050 Rocky Mountain Lodgepole Pine Forest (9086 cells)",
-    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)"
+    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)",
+    "in the description of EVT 7011 Rocky Mountain Aspen Forest and Woodland (2547 cells)",
+    "in the description of EVT 7056 Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland (1306 cells)",
+    "in the description of BPS 693 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (79 cells)",
+    "in the description of BPS 694 Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland (23 cells)",
+    "in the description of BPS 715 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (10 cells)"
    ],
-   "cover": 0.0875,
+   "cover": 0.225,
    "records": 0,
    "record": true,
    "card": true,
    "drawn_as": "pinus_contorta",
+   "rank": 2
+  },
+  {
+   "id": "symphoricarpos_albus",
+   "kind": "shrub",
+   "why": [
+    "in the description of EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (16593 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (272 cells)",
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (80 cells)",
+    "in the description of BPS 715 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (10 cells)"
+   ],
+   "cover": 0.1504,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "symphoricarpos_albus",
    "rank": 3
+  },
+  {
+   "id": "vaccinium_scoparium",
+   "kind": "shrub",
+   "why": [
+    "in the description of EVT 7055 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (12756 cells)",
+    "in the description of BPS 693 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (79 cells)"
+   ],
+   "cover": 0.1147,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "vaccinium_scoparium",
+   "rank": 4
+  },
+  {
+   "id": "pseudotsuga_menziesii",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (16593 cells)",
+    "in the description of EVT 7011 Rocky Mountain Aspen Forest and Woodland (2547 cells)",
+    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)",
+    "named by BPS 715 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (10 cells)"
+   ],
+   "cover": 0.1017,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "pseudotsuga_menziesii",
+   "rank": 5
+  },
+  {
+   "id": "populus_tremuloides",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7011 Rocky Mountain Aspen Forest and Woodland (2547 cells)",
+    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)",
+    "canopy: records (GBIF: 3 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0574,
+   "records": 0,
+   "scientific": "Populus tremuloides",
+   "record": true,
+   "card": true,
+   "drawn_as": "populus_tremuloides",
+   "rank": 6
   },
   {
    "id": "abies_lasiocarpa",
@@ -484,45 +539,12 @@
     "named by BPS 693 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (79 cells)",
     "named by BPS 694 Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland (23 cells)"
    ],
-   "cover": 0.0694,
+   "cover": 0.0319,
    "records": 0,
    "record": true,
    "card": true,
    "drawn_as": "abies_lasiocarpa",
-   "rank": 4
-  },
-  {
-   "id": "picea_engelmannii",
-   "kind": "tree",
-   "why": [
-    "named by EVT 7055 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (12756 cells)",
-    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)",
-    "named by EVT 7056 Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland (1306 cells)",
-    "named by BPS 693 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (79 cells)",
-    "named by BPS 694 Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland (23 cells)"
-   ],
-   "cover": 0.0694,
-   "records": 0,
-   "record": true,
-   "card": true,
-   "drawn_as": "picea_engelmannii",
-   "rank": 5
-  },
-  {
-   "id": "populus_tremuloides",
-   "kind": "tree",
-   "why": [
-    "named by EVT 7011 Rocky Mountain Aspen Forest and Woodland (2547 cells)",
-    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)",
-    "canopy: records (GBIF: 3 records on the tile; height not yet screened)"
-   ],
-   "cover": 0.0608,
-   "records": 0,
-   "scientific": "Populus tremuloides",
-   "record": true,
-   "card": true,
-   "drawn_as": "populus_tremuloides",
-   "rank": 6
+   "rank": 7
   },
   {
    "id": "amelanchier_alnifolia",
@@ -532,13 +554,13 @@
     "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (80 cells)",
     "canopy: records (GBIF: 2 records on the tile; height not yet screened)"
    ],
-   "cover": 0.026,
+   "cover": 0.0259,
    "records": 0,
    "scientific": "Amelanchier alnifolia",
    "record": true,
    "card": true,
    "drawn_as": "amelanchier_alnifolia",
-   "rank": 7
+   "rank": 8
   },
   {
    "id": "ficus_densifolia",
@@ -553,7 +575,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 8
+   "rank": 9
   },
   {
    "id": "rosa_woodsii",
@@ -567,31 +589,30 @@
     "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (80 cells)",
     "named by EVT 9021 Rocky Mountain Subalpine-Montane Riparian Shrubland (16 cells)"
    ],
-   "cover": 0.0188,
+   "cover": 0.0245,
    "records": 0,
-   "record": false,
-   "card": false,
-   "drawn_as": "rubus_parviflorus",
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 9
+   "record": true,
+   "card": true,
+   "drawn_as": "rosa_woodsii",
+   "rank": 10
   },
   {
-   "id": "salix_bebbiana",
-   "kind": "shrub",
+   "id": "picea_engelmannii",
+   "kind": "tree",
    "why": [
-    "named by EVT 9519 Rocky Mountain Lower Montane-Foothill Riparian Shrubland (4901 cells)",
-    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (646 cells)",
-    "named by EVT 9022 Rocky Mountain Subalpine-Montane Riparian Woodland (256 cells)",
-    "named by BPS 713 Rocky Mountain Subalpine/Upper Montane Riparian Systems (178 cells)",
-    "named by EVT 9021 Rocky Mountain Subalpine-Montane Riparian Shrubland (16 cells)"
+    "named by EVT 7055 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (12756 cells)",
+    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)",
+    "in the description of EVT 7011 Rocky Mountain Aspen Forest and Woodland (2547 cells)",
+    "named by EVT 7056 Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland (1306 cells)",
+    "named by BPS 693 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (79 cells)",
+    "named by BPS 694 Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland (23 cells)"
    ],
-   "cover": 0.018,
+   "cover": 0.0163,
    "records": 0,
-   "record": false,
-   "card": false,
-   "drawn_as": "salix_boothii",
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 10
+   "record": true,
+   "card": true,
+   "drawn_as": "picea_engelmannii",
+   "rank": 11
   },
   {
    "id": "salix_boothii",
@@ -603,12 +624,43 @@
     "named by BPS 713 Rocky Mountain Subalpine/Upper Montane Riparian Systems (178 cells)",
     "named by EVT 9021 Rocky Mountain Subalpine-Montane Riparian Shrubland (16 cells)"
    ],
-   "cover": 0.018,
+   "cover": 0.0153,
    "records": 0,
    "record": true,
    "card": true,
    "drawn_as": "salix_boothii",
-   "rank": 11
+   "rank": 12
+  },
+  {
+   "id": "salix_bebbiana",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 9519 Rocky Mountain Lower Montane-Foothill Riparian Shrubland (4901 cells)",
+    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (646 cells)",
+    "named by EVT 9022 Rocky Mountain Subalpine-Montane Riparian Woodland (256 cells)",
+    "named by BPS 713 Rocky Mountain Subalpine/Upper Montane Riparian Systems (178 cells)",
+    "named by EVT 9021 Rocky Mountain Subalpine-Montane Riparian Shrubland (16 cells)"
+   ],
+   "cover": 0.0145,
+   "records": 0,
+   "record": false,
+   "card": false,
+   "drawn_as": "salix_boothii",
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 13
+  },
+  {
+   "id": "pinus_albicaulis",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)"
+   ],
+   "cover": 0.0142,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "pinus_albicaulis",
+   "rank": 14
   },
   {
    "id": "pinus_flexilis",
@@ -618,25 +670,12 @@
     "named by EVT 7057 Rocky Mountain Subalpine-Montane Limber-Bristlecone Pine Woodland (132 cells)",
     "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (11 cells)"
    ],
-   "cover": 0.0068,
+   "cover": 0.0026,
    "records": 0,
    "record": true,
    "card": true,
    "drawn_as": "pinus_flexilis",
-   "rank": 12
-  },
-  {
-   "id": "pinus_albicaulis",
-   "kind": "tree",
-   "why": [
-    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)"
-   ],
-   "cover": 0.0055,
-   "records": 0,
-   "record": true,
-   "card": true,
-   "drawn_as": "pinus_albicaulis",
-   "rank": 13
+   "rank": 15
   },
   {
    "id": "prunus_virginiana",
@@ -645,27 +684,42 @@
     "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (272 cells)",
     "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (80 cells)"
    ],
-   "cover": 0.0008,
+   "cover": 0.0015,
    "records": 0,
    "record": false,
    "card": false,
    "drawn_as": "rubus_parviflorus",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 14
+   "rank": 16
   },
   {
-   "id": "symphoricarpos_albus",
+   "id": "vaccinium_membranaceum",
    "kind": "shrub",
    "why": [
-    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (272 cells)",
-    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (80 cells)"
+    "in the description of EVT 7055 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (12756 cells)",
+    "in the description of BPS 693 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (79 cells)"
    ],
-   "cover": 0.0008,
+   "cover": 0.001,
    "records": 0,
-   "record": true,
+   "record": false,
    "card": false,
-   "drawn_as": "symphoricarpos_albus",
-   "rank": 15
+   "drawn_as": "vaccinium_scoparium",
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 17
+  },
+  {
+   "id": "juniperus_scopulorum",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (11 cells)"
+   ],
+   "cover": 0.0001,
+   "records": 0,
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 18
   },
   {
    "id": "geranium_viscosissimum",
@@ -679,7 +733,7 @@
    "record": true,
    "card": true,
    "drawn_as": "geranium_viscosissimum",
-   "rank": 16
+   "rank": 19
   },
   {
    "id": "chamaenerion_angustifolium",
@@ -694,7 +748,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 17
+   "rank": 20
   },
   {
    "id": "achillea_millefolium",
@@ -708,7 +762,7 @@
    "record": true,
    "card": false,
    "drawn_as": "achillea_millefolium",
-   "rank": 18
+   "rank": 21
   },
   {
    "id": "clematis_hirsutissima",
@@ -723,7 +777,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 19
+   "rank": 22
   },
   {
    "id": "geum_triflorum",
@@ -738,7 +792,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 20
+   "rank": 23
   },
   {
    "id": "sedum_lanceolatum",
@@ -753,7 +807,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 21
+   "rank": 24
   },
   {
    "id": "cirsium_scariosum",
@@ -768,7 +822,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 22
+   "rank": 25
   },
   {
    "id": "eriogonum_umbellatum",
@@ -782,7 +836,7 @@
    "record": true,
    "card": true,
    "drawn_as": "eriogonum_umbellatum",
-   "rank": 23
+   "rank": 26
   },
   {
    "id": "cirsium_arvense",
@@ -797,7 +851,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 24
+   "rank": 27
   },
   {
    "id": "linum_lewisii",
@@ -812,21 +866,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 25
-  },
-  {
-   "id": "juniperus_scopulorum",
-   "kind": "tree",
-   "why": [
-    "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (11 cells)"
-   ],
-   "cover": 0.0,
-   "records": 0,
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 26
+   "rank": 28
   }
  ],
  "gbif_plants": [
@@ -2039,7 +2079,7 @@
  },
  "by_layer": {
   "tree": 9,
-  "shrub": 7,
+  "shrub": 9,
   "ground": 10
  },
  "hands": [
@@ -2049,15 +2089,6 @@
    "what": "a trait card",
    "why": [
     "canopy: records (GBIF: 2 records on the tile; height not yet screened)"
-   ]
-  },
-  {
-   "id": "rosa_woodsii",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "named by EVT 9519 Rocky Mountain Lower Montane-Foothill Riparian Shrubland (4901 cells)",
-    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (646 cells)"
    ]
   },
   {
@@ -2076,6 +2107,23 @@
    "why": [
     "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (272 cells)",
     "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (80 cells)"
+   ]
+  },
+  {
+   "id": "vaccinium_membranaceum",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "in the description of EVT 7055 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (12756 cells)",
+    "in the description of BPS 693 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (79 cells)"
+   ]
+  },
+  {
+   "id": "juniperus_scopulorum",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (11 cells)"
    ]
   },
   {
@@ -2132,14 +2180,6 @@
    "what": "a trait card",
    "why": [
     "GBIF: 10 records on the tile"
-   ]
-  },
-  {
-   "id": "juniperus_scopulorum",
-   "kind": "tree",
-   "what": "a trait card",
-   "why": [
-    "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (11 cells)"
    ]
   },
   {
@@ -2240,14 +2280,14 @@
   }
  ],
  "summary": {
-  "needed": 26,
-  "with_record": 14,
+  "needed": 28,
+  "with_record": 16,
   "generated_now": 0,
   "queued": 12,
   "unread_communities": 12,
   "by_layer": {
    "tree": 9,
-   "shrub": 7,
+   "shrub": 9,
    "ground": 10
   },
   "meets_target": {

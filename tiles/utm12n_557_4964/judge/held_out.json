@@ -2,7 +2,7 @@
  "format": 1,
  "tile": "utm12n_557_4964",
  "name": "Lamar Valley",
- "at": "2026-11-10T21:27:47Z",
+ "at": "2026-11-10T23:19:05Z",
  "doc": "docs/held-out-judge.md",
  "checks": {
   "species_lists": {
@@ -178,14 +178,14 @@
      "spawned_precision": null
     },
     "plant": {
-     "drawn": 43,
-     "judged": 43,
-     "on_list_present_native": 43,
+     "drawn": 45,
+     "judged": 45,
+     "on_list_present_native": 45,
      "restored_drawn": [],
-     "hits": 43,
+     "hits": 45,
      "precision": 1.0,
      "classes": {
-      "present_native": 43,
+      "present_native": 45,
       "historic_native": 0,
       "present_unknown_origin": 0,
       "non_native": 0,
@@ -854,10 +854,10 @@
    "drawn_from": "client/species_mix.json: plants drawn per species (cells x density x weight), by layer",
    "measure": "per layer, on genus shares: Bray-Curtis dissimilarity (0 same, 1 nothing in common); foreign share = drawn share in genera the reference does not record on this ground; missed share = reference share in genera not drawn in that layer",
    "scores": {
-    "bray_curtis_mean": 0.5063,
+    "bray_curtis_mean": 0.441,
     "bray_curtis": {
-     "canopy": 0.369,
-     "shrub": 0.4803,
+     "canopy": 0.3344,
+     "shrub": 0.3192,
      "ground": 0.6695
     },
     "foreign_share": {
@@ -874,15 +874,15 @@
    },
    "layers": {
     "canopy": {
-     "bray_curtis": 0.369,
+     "bray_curtis": 0.3344,
      "foreign_share": null,
      "missed_share": 0,
      "drawn": {
-      "pseudotsuga": 0.3656,
-      "pinus": 0.2431,
-      "picea": 0.1731,
-      "abies": 0.1666,
-      "populus": 0.0516
+      "pinus": 0.5435,
+      "pseudotsuga": 0.278,
+      "abies": 0.0917,
+      "picea": 0.0447,
+      "populus": 0.042
      },
      "reference": {
       "pseudotsuga": 0.6125,
@@ -893,15 +893,16 @@
      }
     },
     "shrub": {
-     "bray_curtis": 0.4803,
+     "bray_curtis": 0.3192,
      "foreign_share": null,
      "missed_share": 0.2209,
      "drawn": {
-      "artemisia": 0.8639,
-      "salix": 0.074,
-      "rubus": 0.058,
-      "symphoricarpos": 0.0021,
-      "amelanchier": 0.002
+      "artemisia": 0.728,
+      "symphoricarpos": 0.1631,
+      "rosa": 0.0556,
+      "salix": 0.0486,
+      "rubus": 0.0033,
+      "amelanchier": 0.0014
      },
      "reference": {
       "artemisia": 0.5176,
@@ -915,14 +916,14 @@
      "foreign_share": null,
      "missed_share": 0.1118,
      "drawn": {
-      "carex": 0.2414,
+      "carex": 0.1983,
       "elymus": 0.1593,
-      "poa": 0.0962,
       "festuca": 0.0931,
-      "arnica": 0.065,
+      "poa": 0.0859,
+      "vaccinium": 0.071,
       "lupinus": 0.0488,
-      "eriogonum": 0.0425,
-      "geranium": 0.0416
+      "arnica": 0.0474,
+      "eriogonum": 0.0425
      },
      "reference": {
       "festuca": 0.3632,
@@ -1403,8 +1404,8 @@
    "ground": 1.0
   },
   "composition_bray_curtis": {
-   "canopy": 0.369,
-   "shrub": 0.4803,
+   "canopy": 0.3344,
+   "shrub": 0.3192,
    "ground": 0.6695
   },
   "composition_foreign_share": {

@@ -15,7 +15,7 @@
   38.74035063713964
  ],
  "size_m": 10000,
- "generated_at": "2026-11-10T21:11:48Z",
+ "generated_at": "2026-11-10T23:18:26Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -8927,7 +8927,7 @@
    "animals_present": 87,
    "animals_queued": 41,
    "cards_queued": 23,
-   "sha256": "5c37d6cbfa49a6b4860eb26e79913e4c2d596db8146d3b0c707b8163d3d54dab",
+   "sha256": "d927b1c7ecaeb11508504e88802d1a84a7ee182eb68971cf0e30f2a75a8c534b",
    "bytes": 96315
   },
   "client.herds": {
@@ -11016,6 +11016,36 @@
    "at": "2026-11-10T21:11:48Z",
    "seconds": 0.7,
    "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-10T23:16:32Z",
+   "seconds": 1.5,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-10T23:16:33Z",
+   "seconds": 1.2,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-10T23:16:34Z",
+   "seconds": 0.5,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-10T23:18:26Z",
+   "seconds": 1.5,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-10T23:18:26Z",
+   "seconds": 0.5,
+   "ok": true
   }
  ],
  "steps": {
@@ -11987,14 +12017,14 @@
   },
   "plants": {
    "version": "5",
-   "code": "39d18139800e4506",
+   "code": "1c2805b4eec7c448",
    "params": {
     "tile": "utm10n_680_4280"
    },
-   "fingerprint": "1c6ca1ea8996333f",
+   "fingerprint": "161bf14d63ca2f06",
    "parts": {
     "version": "5",
-    "code": "39d18139800e4506",
+    "code": "1c2805b4eec7c448",
     "params": {
      "tile": "utm10n_680_4280"
     },
@@ -12003,11 +12033,11 @@
      "ice": "6b6c68b3017c2781"
     },
     "library": {
-     "library/plant_cards": "0d4ef9610277fccf",
+     "library/plant_cards": "8c46bdf1f3fc274c",
      "library/plant_cards/_research": "76160f150981cd69"
     }
    },
-   "ran_at": "2026-11-10T21:06:43Z",
+   "ran_at": "2026-11-10T23:16:30Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -12035,14 +12065,14 @@
   },
   "species_mix": {
    "version": "5",
-   "code": "9923d4d4cc94680c",
+   "code": "63ef851b83ef7311",
    "params": {
     "tile": "utm10n_680_4280"
    },
-   "fingerprint": "7b9ac96472d2dcc3",
+   "fingerprint": "b2465def3265b59a",
    "parts": {
     "version": "5",
-    "code": "9923d4d4cc94680c",
+    "code": "63ef851b83ef7311",
     "params": {
      "tile": "utm10n_680_4280"
     },
@@ -12054,10 +12084,10 @@
      "plants": "72d6bad5fc1bc0ab"
     },
     "library": {
-     "library/species": "63813c168e7cfa76"
+     "library/species": "da43373440132e57"
     }
    },
-   "ran_at": "2026-11-10T21:06:45Z",
+   "ran_at": "2026-11-10T23:18:24Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -12076,7 +12106,7 @@
     "network": 0,
     "cache": 31
    },
-   "seconds": 1.2
+   "seconds": 1.5
   },
   "canopy_top": {
    "version": "2",
@@ -12474,14 +12504,14 @@
   },
   "registry": {
    "version": "1",
-   "code": "31838a4caf95324b",
+   "code": "9e93858920690702",
    "params": {
     "tile": "utm10n_680_4280"
    },
-   "fingerprint": "13d99d1a5b2768ae",
+   "fingerprint": "01cac36cf18ae474",
    "parts": {
     "version": "1",
-    "code": "31838a4caf95324b",
+    "code": "9e93858920690702",
     "params": {
      "tile": "utm10n_680_4280"
     },
@@ -12492,21 +12522,21 @@
      "animals": "a8d7902a18195426"
     },
     "library": {
-     "library/species": "63813c168e7cfa76",
+     "library/species": "da43373440132e57",
      "library/animals": "934e6c71aae6cd14",
-     "library/plant_cards": "0d4ef9610277fccf"
+     "library/plant_cards": "8c46bdf1f3fc274c"
     }
    },
-   "ran_at": "2026-11-10T21:11:48Z",
+   "ran_at": "2026-11-10T23:18:26Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "species.registry"
    ],
    "outputs": {
-    "species/registry.json": "5c37d6cbfa49a6b4"
+    "species/registry.json": "d927b1c7ecaeb115"
    },
-   "out_hash": "b6152bcfd78d885e",
+   "out_hash": "c954814097e17de8",
    "sources": {},
    "fallbacks": [],
    "notes": [],
@@ -12514,7 +12544,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 0.7
+   "seconds": 0.5
   },
   "audit": {
    "version": "1",
