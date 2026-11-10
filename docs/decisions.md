@@ -8708,3 +8708,28 @@ elevation so there is a bit more distance between them."
   outranked the phone rule that made the social row's empty width click-through. The row spans the top of a phone's
   screen, so it took the click meant for the X; before the redesign it blocked the search box the same way. The rule
   now names `#social > .so-bar`.
+
+## 2026-11-10: the pipeline reviewed from basic assumptions; three fixes started (docs/pipeline-review-2026-11-10.md)
+
+Aaron: "I'd love for you to review the pipeline - how good is it really, how comprehensive - and what can be
+improved. Start from basic assumptions." The review is `docs/pipeline-review-2026-11-10.md`. Read-only: no pipeline
+code changed.
+
+- **Verdict.** Good from the air, and very good on the 8 tiles with point-cloud lidar. At eye level and in what lives
+  in a place, most of the world is inferred, and outside California a share of it is wrong with nothing to catch it.
+- **Evidence from the built tiles.**
+  - Plant communities are decided by hand rules on 99-100% of the California and Hoh cells, on 27-50% at Grand
+    Canyon, Teton and Lamar, and nowhere on the five tiles abroad.
+  - Grand Canyon draws gray pine and Sierra juniper on about a third of its canopy, and manzanita, chamise and
+    buckbrush as most of its shrubs: California species, through `communities.stand_in`.
+  - No tile has fish. Introduced animals are listed; extirpated ones are not.
+  - 469 of 678 registry species are at level 0.
+  - The judge is colour from straight above against the imagery the ground is made from.
+- **Assumptions to change.** Community names as the source of composition; sighting records as the species list; the
+  air photo as the ground's colour; colour from above as the judge. The rewilding baseline is undefined and is
+  Aaron's to decide.
+- **Datasets.** Four signals are downloaded and unused (NAIP near-infrared, Sentinel-2 snow class, lidar returns under
+  the canopy, lidar channel width). Open sources not yet used, with licences, are tabled in the review. A subagent
+  checked the licences on the web; four were re-read on the providers' pages.
+- **Started on Aaron's "Yes, start them":** a tile scorecard from every build; no stand-ins across regions; a wider
+  judge (composition and eye-level photos). Each is its own lane.
