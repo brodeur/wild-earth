@@ -8777,6 +8777,9 @@ Recommendation 1 of the pipeline review. What section 3 of the review computed b
   today's map: at Olympus it reads 16%, all permanent ice, where the pre-settlement share is 0.
 - **Not scored, and why:** the understory (only the top surface is kept), stream width and discharge (one area rule
   everywhere), native or introduced status (no field yet), sea, weather and sound (no per-cell document).
+- **Read with the stand-ins lane's keys.** `stand_ins` and `missing` split the woody weight (stand-in guessed, missing
+  blank); a community layer the lane marks `generic` (every species missing, the habitat class's other species drawn)
+  counts as guessed, not blank. Checked on that lane's working Grand Canyon mix (10 stand-ins, 7 missing, 1 generic).
 - **Not in the manifests yet.** The step was run in the graph on a scratch copy of Lamar (ok, then current on the next
   plan). The committed tiles' manifests were not rewritten, to keep this branch clear of the other lanes' rebuilds;
   the next build of each tile records the step.

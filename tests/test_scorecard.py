@@ -158,6 +158,18 @@ class PlantSpecies(unittest.TestCase):
         self.assertEqual(d["stand_ins"]["entries"][0]["cells"], 30)   # the lane's entries verbatim
         self.assertTrue(d["missing"]["recorded"])
 
+    def test_generic_layer_is_guessed_not_blank(self):
+        # the stand-ins lane: every shrub of community 2 missing, the habitat class's other shrubs drawn instead
+        doc = mix_doc(substitutions={},
+                      missing=[{"species": "adenostoma_fasciculatum", "reason": "no record", "cells": 20},
+                               {"species": "fallugia_paradoxa", "reason": "no record", "cells": 20}],
+                      stand_ins=[])
+        doc["communities"][1]["generic"] = ["shrubs"]
+        doc["communities"][1]["generic_drawn"] = {"shrubs": {"artemisia_tridentata": 1.0}}
+        sh = sc.score_plant_species(doc, None)["shares"]
+        self.assertAlmostEqual(sh["guessed"], round(20 / 55, 4))
+        self.assertAlmostEqual(sh["blank"], 0.0)
+
     def test_functional_stand_ins_from_note(self):
         doc = {"communities": [{"community": 1, "source": "evt", "rule": "research_M1", "cells": 10,
                                 "trees": {"betula_pubescens": 1.0, "pinus_sylvestris": 1.0}, "shrubs": {},

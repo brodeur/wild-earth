@@ -91,9 +91,11 @@ DEFINITIONS = {
         "measured": "a species share taken from a per-cell composition measurement: none on any tile today",
         "ruled": "drawn as the species the community's rule asked for (it has a library record of its own)",
         "guessed": "drawn as a stand-in for the species the rule asked for: the mix's `stand_ins` key when the build records "
-                   "it, else `substitutions` (named species -> record drawn), and research_* rows whose note names "
-                   "functional stand-ins of the climate group",
-        "blank": "asked for but drawn as nothing: the mix's `missing` key when recorded, else a substitution to null",
+                   "it, else `substitutions` (named species -> record drawn); research_* rows whose note names "
+                   "functional stand-ins of the climate group; and a community layer whose every species is missing, "
+                   "drawn from the tile's other communities of its habitat class (communities[].generic, generic_drawn)",
+        "blank": "asked for but drawn as nothing: the mix's `missing` key when recorded, else a substitution to null "
+                 "(unless the community's layer is drawn generic: then guessed)",
         "status": "detail.status: introduced, restored and status_unknown counts over the drawn species (trees, shrubs, "
                   "ground), from a per-species `status` on species/plant_needs.json needs[] or a species_status map in "
                   "the mix; 'no status field in this build' until one exists",
@@ -432,6 +434,7 @@ def score_plant_species(mix: dict | None, plant_needs: dict | None) -> dict:
         mt = _STAND_IN_NOTE.search(c.get("note") or "")
         if mt:
             functional = {s.strip() for s in mt.group(1).split(",") if s.strip()}
+        generic = set(c.get("generic") or [])
         for layer, dens_key in (("trees", "tree_density"), ("shrubs", "shrub_density")):
             weights = {k: float(v) for k, v in (c.get(layer) or {}).items() if v}
             tot = sum(weights.values())
@@ -440,7 +443,9 @@ def score_plant_species(mix: dict | None, plant_needs: dict | None) -> dict:
                 continue
             for sid, ws in weights.items():
                 x = n * dens * ws / tot
-                if sid in miss:
+                if layer in generic:   # every species of the layer missing: the habitat class's other species drawn
+                    cat, drawn = "guessed", "generic"
+                elif sid in miss:
                     cat, drawn = "blank", None
                 elif sid in stand or sid in functional:
                     cat, drawn = "guessed", stand.get(sid, sid)
