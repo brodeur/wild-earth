@@ -20,8 +20,10 @@ people who live in them with help from agents, not by a studio. (Stated 2026-10-
   place: satellite imagery, terrain, local species data.
 - No humans: no buildings, roads or dams. The world is the present day with human
   infrastructure removed.
-- Species baseline: today's species, with ranges and densities as predicted 10 years
-  after humans disappear.
+- Baseline (2026-11-10, replacing "today's species, with ranges and densities as predicted
+  10 years after humans disappear"): today's ecosystems; introduced species filtered out;
+  native species that people removed from a place restored and marked as restored;
+  pre-settlement vegetation only where today's land is developed, farmed or ruderal.
 - Players pick an animal. Each species perceives only a slice of the world. A bird sees
   all birds, squirrels, rabbits, deer, foxes and some large insects; a vole sees much less.
 - Agent-built regions: when someone signs up in an unbuilt region, agents research

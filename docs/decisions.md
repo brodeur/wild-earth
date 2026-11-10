@@ -8733,3 +8733,20 @@ code changed.
   checked the licences on the web; four were re-read on the providers' pages.
 - **Started on Aaron's "Yes, start them":** a tile scorecard from every build; no stand-ins across regions; a wider
   judge (composition and eye-level photos). Each is its own lane.
+
+## 2026-11-10: the rewilding baseline decided (docs/brief.md, docs/pipeline-review-2026-11-10.md)
+
+Aaron: "Yes, adopt it", to the baseline the pipeline review recommends.
+
+- **The rule.** Today's ecosystems. Introduced species are filtered out. Native species that people removed from a
+  place are restored and marked as restored. Pre-settlement vegetation is used only where today's land is developed,
+  farmed or ruderal.
+- **What it replaces.** The brief's "today's species, with ranges and densities as predicted 10 years after humans
+  disappear". The review called the baseline undefined; the brief did state one, but no pipeline step implemented
+  it. The brief now carries the new rule.
+- **What already follows it.** Vegetation under cities and farms is drawn from LANDFIRE's pre-settlement classes.
+- **What does not yet.** The animal and plant lists have no native-status field, so starling, collared dove and
+  bullfrog are listed as residents, and nothing restores grizzly or salmon at El Dorado. Not implemented by this
+  commit.
+- **Told to the running lanes.** The judge counts an introduced species drawn as an error and an extirpated native
+  absent as a gap; the scorecard reports introduced and restored shares once a status field exists.

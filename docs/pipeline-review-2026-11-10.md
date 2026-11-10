@@ -146,6 +146,10 @@ what was hunted out. The pipeline already makes one such choice, drawing LANDFIR
 cities (56% of one San Francisco tile). It needs a stated rule for the rest. This is a design decision for Aaron, not
 a data question; my recommendation is in section 7.
 
+**Decided 2026-11-10.** Aaron adopted the recommendation in section 7 ("Yes, adopt it"). One correction to the
+paragraph above: `docs/brief.md` did state a species baseline ("today's species, with ranges and densities as
+predicted 10 years after humans disappear"); nothing in the pipeline implemented it. The adopted rule replaces it.
+
 ### 4.6 "One snapshot, one weather series"
 
 One climate series per 10 km tile, though Yosemite's tile spans 2 km of relief. Snow comes from coarse reanalysis
