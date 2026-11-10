@@ -1,0 +1,192 @@
+{
+ "id": "encelia_farinosa",
+ "scientific": "Encelia farinosa",
+ "common": "brittlebush",
+ "aliases": [
+  "brittlebush",
+  "brittle_brush",
+  "white_brittlebush",
+  "incienso"
+ ],
+ "family": "Asteraceae",
+ "form": "shrub",
+ "deciduous": true,
+ "template": "baccharis_pilularis",
+ "regions": [
+  "interior_west"
+ ],
+ "height_m": [
+  0.4,
+  1.2
+ ],
+ "stature": {
+  "typical_m": 0.8,
+  "tall_m": 1.2,
+  "record_m": 1.5,
+  "source": "typical and tall: the drafter's estimate for the inner canyon; record: Wikipedia gives 30-150 cm; read 2026-11-10"
+ },
+ "variants_height_m": {
+  "young": [
+   0.15,
+   0.4
+  ],
+  "decadent": [
+   0.8,
+   1.4
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.5
+   ],
+   [
+    0.2,
+    0.7
+   ],
+   [
+    0.45,
+    0.8
+   ],
+   [
+    0.7,
+    0.76
+   ],
+   [
+    0.88,
+    0.6
+   ],
+   [
+    1.0,
+    0.32
+   ]
+  ],
+  "lobes": 5,
+  "lobe_depth": 0.1,
+  "asymmetry": 0.1,
+  "fill": 0.65,
+  "edge": 1.05
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    176,
+    182,
+    166
+   ],
+   "spring": [
+    168,
+    178,
+    148
+   ],
+   "summer": [
+    150,
+    146,
+    134
+   ],
+   "fall": [
+    170,
+    174,
+    156
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 0.3,
+   "fall": 0.8
+  },
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   0.8,
+   0.3,
+   0.2,
+   0.4,
+   0.7,
+   0.8,
+   0.9,
+   1.0
+  ],
+  "leaf_size_m": 0.06,
+  "flowers": {
+   "season": "spring",
+   "months": [
+    2,
+    5
+   ],
+   "form": "cluster",
+   "rgb": [
+    236,
+    192,
+    40
+   ],
+   "size_m": 0.032,
+   "density": 0.7,
+   "before_leaves": false
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   128,
+   120,
+   108
+  ],
+  "bark_pattern": "smooth_grey",
+  "stems": [
+   6,
+   14
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 1.4,
+  "crown_base_ratio": 0.0,
+  "porosity": 0.3,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: a low, tidy, rounded dome of silvery-white felted leaves, wider than tall, from many brittle stems at the ground; in spring a haze of bare flower stalks above the dome carries masses of golden-yellow daisies; in the dry early summer a grey tangle of stems with few leaves"
+ },
+ "description": "A low, rounded, silver-white shrub, knee- to waist-high, of many brittle stems from the ground and broad, felted leaves a few centimetres long. In spring, branched stalks rise well above the leaves and carry a crowd of golden-yellow daisies, so a slope of them turns yellow. In the Grand Canyon it is a plant of the warm, frost-free bottom of the western canyon along the river, on dry, rocky slopes and gravelly washes among creosote bush and white bursage.",
+ "season_notes": {
+  "winter": "After the winter rains the bushes leaf out fully, the leaves greener and less felted while water lasts.",
+  "spring": "Flowering, February to May in the inner canyon: yellow daisies on stalks held high above silver leaves.",
+  "summer": "In the dry early summer most leaves fall and the bush is a grey tangle of stems; the summer rains bring a few new leaves back.",
+  "fall": "Small, white-felted leaves return through the fall; old flower stalks stand dry above the bush."
+ },
+ "habitat": {
+  "classes": {
+   "barren": 1.0,
+   "chaparral": 0.4,
+   "grassland": 0.3
+  },
+  "floor": 0.9,
+  "mid": 1.0,
+  "steep": 1.1,
+  "north": 0.4,
+  "shade": 0.05,
+  "disturbed": 0.8
+ },
+ "relations": {
+  "eaten_by": [],
+  "cover_for": []
+ },
+ "range": {
+  "elev_m": [
+   0,
+   1000
+  ],
+  "where": "the frost-free bottom of the western Grand Canyon along the Colorado River, with the Mohavean desert scrub of creosote bush and white bursage; dry, gravelly slopes and sandy washes"
+ },
+ "notes": "Coyote brush (the template) is the library's nearest rounded Asteraceae shrub, but it is green, taller (1-2.5 m), evergreen, with small toothed leaves, shreddy bark and white fall flowers. The card makes brittlebush lower (Wikipedia: 30-150 cm), silver-white (Wikipedia: silvery, densely hairy leaves), with larger leaves (Wikipedia: 3-10 cm, ovate to triangular; leaf_size_m 0.06), smooth grey stems rather than shreddy bark, and golden-yellow flower heads 3-3.5 cm across in loose branched clusters above the leaves (Wikipedia: 8-18 orange-yellow rays, yellow or purple-brown discs). Wikipedia calls it drought-deciduous, losing all its leaves in the dry season and living on water held in its thick stems, so the card is deciduous; the leaf-on by month is the drafter's judgement for the inner canyon: full leaf after the winter rains, the leaves dropping through the dry foresummer (May-July) and partly back after the summer rains, never bare in winter. The template's flowers are drawn in its own season; the card gives spring flowers (NPS Joshua Tree lists bloom January-June and August-September; the February-May span here is the drafter's choice for the main show). The flower stalks standing well above the dome are not drawn by the template's cluster flowers; a stalked flower form would be truer and is left for the lineup review. Elevation: Wikipedia and NPS Joshua Tree give up to about 1000 m; the lower bound 0 m is the drafter's. Grand Canyon placing: the NPS scrublands page lists brittle brush among the frost-sensitive Sonoran species of the western canyon along the river, and the NPS ecosystems page lists it in the desert scrub above the river corridor. North is low because the species is frost-sensitive (NPS scrublands), the aspect weight itself is the drafter's. Eaters: none of the sources read names an animal that eats it or shelters under it, so relations are left empty (the FEIS account for this species is a PDF only and was not downloaded); desert bighorn, burros and the canyon's rodents may use it, unconfirmed. Colours, crown profile, porosity, stems, the habitat weights and the flower density are the drafter's judgement, not from a source.",
+ "sources": [
+  "Wikipedia, Encelia farinosa (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Encelia_farinosa, read 2026-11-10",
+  "National Park Service, Joshua Tree National Park: Encelia farinosa, https://www.nps.gov/jotr/learn/nature/encelia_farinosa.htm, read 2026-11-10",
+  "National Park Service, Grand Canyon National Park: Scrublands, https://www.nps.gov/grca/learn/nature/scrublands.htm, read 2026-11-10",
+  "National Park Service, Grand Canyon National Park: Natural Features & Ecosystems, https://home.nps.gov/grca/learn/nature/naturalfeaturesandecosystems.htm, read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ]
+}

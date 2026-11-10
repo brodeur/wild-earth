@@ -381,23 +381,28 @@
   },
   "plants": {
    "stage": "flora",
-   "started_at": "2026-11-07T07:22:03Z",
-   "ended_at": "2026-11-07T07:22:05Z",
-   "wall_s": 2.3,
-   "cpu_self_s": 2.3,
+   "started_at": "2026-11-10T21:04:12Z",
+   "ended_at": "2026-11-10T21:04:55Z",
+   "wall_s": 43.0,
+   "cpu_self_s": 3.4,
    "cpu_children_s": 0.0,
-   "downloads": {},
+   "downloads": {
+    "gbif": {
+     "bytes": 107557,
+     "requests": 47
+    }
+   },
    "cache": {
     "gbif": {
-     "hits": 320,
-     "misses": 0
+     "hits": 611,
+     "misses": 34
     },
     "usda_plants": {
      "hits": 1901,
      "misses": 0
     }
    },
-   "disk_bytes": 192314,
+   "disk_bytes": 194549,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -407,19 +412,14 @@
   },
   "species_mix": {
    "stage": "flora",
-   "started_at": "2026-11-09T04:23:37Z",
-   "ended_at": "2026-11-09T04:23:39Z",
-   "wall_s": 1.9,
-   "cpu_self_s": 2.8,
+   "started_at": "2026-11-10T21:04:55Z",
+   "ended_at": "2026-11-10T21:04:56Z",
+   "wall_s": 1.7,
+   "cpu_self_s": 2.4,
    "cpu_children_s": 0.0,
    "downloads": {},
-   "cache": {
-    "gbif": {
-     "hits": 58,
-     "misses": 0
-    }
-   },
-   "disk_bytes": 143807,
+   "cache": {},
+   "disk_bytes": 184218,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -585,14 +585,14 @@
   },
   "registry": {
    "stage": "games",
-   "started_at": "2026-11-07T07:23:44Z",
-   "ended_at": "2026-11-07T07:23:45Z",
-   "wall_s": 0.5,
-   "cpu_self_s": 0.5,
+   "started_at": "2026-11-10T21:11:53Z",
+   "ended_at": "2026-11-10T21:11:54Z",
+   "wall_s": 0.7,
+   "cpu_self_s": 0.7,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {},
-   "disk_bytes": 97721,
+   "disk_bytes": 99228,
    "meshy": {
     "spent": 0,
     "queued": 53,
@@ -770,14 +770,14 @@
    "meshy_queued_credits_est": 0
   },
   "flora": {
-   "started_at": "2026-11-09T04:23:37Z",
-   "ended_at": "2026-11-09T04:23:39Z",
-   "wall_s": 4.2,
-   "cpu_s": 5.1,
-   "download_bytes": 0,
-   "cache_hits": 2279,
-   "cache_misses": 0,
-   "disk_bytes": 336121,
+   "started_at": "2026-11-10T21:04:12Z",
+   "ended_at": "2026-11-10T21:04:56Z",
+   "wall_s": 44.7,
+   "cpu_s": 5.8,
+   "download_bytes": 107557,
+   "cache_hits": 2512,
+   "cache_misses": 34,
+   "disk_bytes": 378767,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -794,105 +794,19 @@
    "meshy_queued_credits_est": 0
   },
   "games": {
-   "started_at": "2026-11-07T07:23:44Z",
-   "ended_at": "2026-11-07T07:23:45Z",
-   "wall_s": 0.7,
-   "cpu_s": 0.6,
+   "started_at": "2026-11-10T21:11:53Z",
+   "ended_at": "2026-11-10T21:11:54Z",
+   "wall_s": 0.9,
+   "cpu_s": 0.8,
    "download_bytes": 0,
    "cache_hits": 0,
    "cache_misses": 0,
-   "disk_bytes": 823025,
+   "disk_bytes": 824532,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 1580
   }
  },
  "runs": [
-  {
-   "started_at": "2026-11-06T06:45:07Z",
-   "stages": [
-    {
-     "stage": "base",
-     "started_at": "2026-11-06T06:45:07Z",
-     "steps_run": [
-      "dem",
-      "naip",
-      "channels",
-      "rewild_hydro",
-      "landcover",
-      "ice",
-      "lidar",
-      "reroute",
-      "water",
-      "ground",
-      "terrain",
-      "erase",
-      "substrate",
-      "seasons",
-      "unreal",
-      "seams"
-     ],
-     "steps_skipped": [
-      "osm",
-      "hydro",
-      "weather"
-     ],
-     "ended_at": "2026-11-06T06:48:36Z"
-    },
-    {
-     "stage": "flora",
-     "started_at": "2026-11-06T06:48:36Z",
-     "steps_run": [
-      "plants",
-      "species_mix",
-      "crowns",
-      "inpaint"
-     ],
-     "steps_skipped": [],
-     "ended_at": "2026-11-06T06:48:37Z"
-    },
-    {
-     "stage": "fauna",
-     "started_at": "2026-11-06T06:48:37Z",
-     "steps_run": [
-      "species",
-      "animals",
-      "resources"
-     ],
-     "steps_skipped": [],
-     "ended_at": "2026-11-06T06:48:49Z"
-    },
-    {
-     "stage": "games",
-     "started_at": "2026-11-06T06:48:49Z",
-     "steps_run": [
-      "games",
-      "game_seeds",
-      "registry",
-      "audit"
-     ],
-     "steps_skipped": [],
-     "ended_at": "2026-11-06T06:48:50Z"
-    }
-   ],
-   "ended_at": "2026-11-06T06:48:50Z",
-   "failed": []
-  },
-  {
-   "started_at": "2026-11-06T08:46:33Z",
-   "stages": [
-    {
-     "stage": "fauna",
-     "started_at": "2026-11-06T08:46:33Z",
-     "steps_run": [
-      "animals"
-     ],
-     "steps_skipped": [],
-     "ended_at": "2026-11-06T08:46:34Z"
-    }
-   ],
-   "ended_at": "2026-11-06T08:46:34Z",
-   "failed": []
-  },
   {
    "started_at": "2026-11-06T09:32:31Z",
    "stages": [
@@ -2220,21 +2134,56 @@
    "ended_at": "2026-11-09T04:44:26Z",
    "failed": [],
    "refused": []
+  },
+  {
+   "started_at": "2026-11-10T21:04:12Z",
+   "stages": [
+    {
+     "stage": "flora",
+     "started_at": "2026-11-10T21:04:12Z",
+     "steps_run": [
+      "plants",
+      "species_mix"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-10T21:04:56Z"
+    }
+   ],
+   "ended_at": "2026-11-10T21:04:56Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-10T21:11:53Z",
+   "stages": [
+    {
+     "stage": "games",
+     "started_at": "2026-11-10T21:11:53Z",
+     "steps_run": [
+      "registry"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-10T21:11:54Z"
+    }
+   ],
+   "ended_at": "2026-11-10T21:11:54Z",
+   "failed": [],
+   "refused": []
   }
  ],
  "totals": {
-  "wall_s": 422.8,
-  "cpu_s": 190.8,
-  "download_bytes": 12418047,
-  "cache_hits": 3779,
-  "cache_misses": 107,
-  "disk_bytes": 585153944,
+  "wall_s": 463.5,
+  "cpu_s": 191.7,
+  "download_bytes": 12525604,
+  "cache_hits": 4012,
+  "cache_misses": 141,
+  "disk_bytes": 585198097,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 1580
  },
- "updated_at": "2026-11-09T04:44:26Z",
+ "updated_at": "2026-11-10T21:11:54Z",
  "client": {
-  "bytes": 46458829,
+  "bytes": 46494499,
   "files": 49,
   "largest": {
    "client/terrain_detail.png": 12742695,

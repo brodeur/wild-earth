@@ -1,0 +1,2861 @@
+{
+ "tile": "utm12n_396_3988",
+ "version": "3",
+ "map_zone": 15,
+ "rule": "pipeline/ground_cards.py choose(): each community's LANDFIRE BpS description (its dominant and indicator species, then the species its vegetation description names), grasses and forbs by the PLANTS growth habit, native, recorded within 0.5 deg; weights 1.0 table, 0.5 text",
+ "communities": [
+  {
+   "source": "bps",
+   "code": 384,
+   "name": "Rocky Mountain Alpine/Montane Sparsely Vegetated Systems",
+   "habitat": "barren",
+   "cells": 3,
+   "model": "10060",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": []
+  },
+  {
+   "source": "bps",
+   "code": 403,
+   "name": "Colorado Plateau Mixed Low Sagebrush Shrubland",
+   "habitat": "chaparral",
+   "cells": 33,
+   "model": "10640_15_16_17_23_24_27_28",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "achnatherum_hymenoides",
+     "scientific": "Achnatherum hymenoides",
+     "symbol": "ACHY",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10640_15_16_17_23_24_27_28 Dominant and Indicator Species (ACHY): named as Achnatherum hymenoides; 36 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "bouteloua_gracilis",
+     "scientific": "Bouteloua gracilis",
+     "symbol": "BOGR2",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10640_15_16_17_23_24_27_28 Dominant and Indicator Species (BOGR2): named as Bouteloua gracilis; 90 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "hesperostipa_comata",
+     "scientific": "Hesperostipa comata",
+     "symbol": "HECO26",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10640_15_16_17_23_24_27_28 Dominant and Indicator Species (HECO26): named as Hesperostipa comata; 56 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "pleuraphis_jamesii",
+     "scientific": "Pleuraphis jamesii",
+     "symbol": "PLJA",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10640_15_16_17_23_24_27_28 Dominant and Indicator Species (PLJA): named as Pleuraphis jamesii; 19 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "eriogonum_racemosum",
+     "scientific": "Eriogonum racemosum",
+     "symbol": "ERRA3",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "10640_15_16_17_23_24_27_28 Dominant and Indicator Species (ERIOG): 'Eriogonum spp.': the tile's most-recorded native congener Eriogonum racemosum (15 GBIF records); 171 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "erigeron_divergens",
+     "scientific": "Erigeron divergens",
+     "symbol": "ERDI4",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10640_15_16_17_23_24_27_28 Vegetation Description: 'Erigeron spp.': the tile's most-recorded native congener Erigeron divergens (24 GBIF records); 137 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "phlox_austromontana",
+     "scientific": "Phlox austromontana",
+     "symbol": "PHAU3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10640_15_16_17_23_24_27_28 Vegetation Description: 'Phlox spp.': the tile's most-recorded native congener Phlox austromontana (80 GBIF records); 211 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "castilleja_integra",
+     "scientific": "Castilleja integra",
+     "symbol": "CAIN14",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10640_15_16_17_23_24_27_28 Vegetation Description: 'Castilleja spp.': the tile's most-recorded native congener Castilleja integra (71 GBIF records); 168 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "sphaeralcea_parvifolia",
+     "scientific": "Sphaeralcea parvifolia",
+     "symbol": "SPPA2",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10640_15_16_17_23_24_27_28 Vegetation Description: 'Sphaeralcea spp.': the tile's most-recorded native congener Sphaeralcea parvifolia (27 GBIF records); 82 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "lupinus_argenteus",
+     "scientific": "Lupinus argenteus",
+     "symbol": "LUAR3",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10640_15_16_17_23_24_27_28 Vegetation Description: 'Lupinus spp.': the tile's most-recorded native congener Lupinus argenteus (20 GBIF records); 78 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10640_15_16_17_23_24_27_28",
+    "title": "Colorado Plateau Mixed Low Sagebrush Shrubland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10640_15_16_17_23_24_27_28.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 404,
+   "name": "Colorado Plateau Blackbrush-Mormon-tea Shrubland",
+   "habitat": "chaparral",
+   "cells": 19414,
+   "model": "10780_15",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "gutierrezia_sarothrae",
+     "scientific": "Gutierrezia sarothrae",
+     "symbol": "GUSA2",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "10780_15 Dominant and Indicator Species (GUSA2): named as Gutierrezia sarothrae; 112 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "achnatherum_hymenoides",
+     "scientific": "Achnatherum hymenoides",
+     "symbol": "ACHY",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10780_15 Dominant and Indicator Species (ACHY): named as Achnatherum hymenoides; 36 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10780_15",
+    "title": "Colorado Plateau Blackbrush-Mormon-tea Shrubland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10780_15.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 405,
+   "name": "Sonora-Mojave Semi-Desert Chaparral",
+   "habitat": "chaparral",
+   "cells": 14,
+   "model": "11080_4_5_13_14_15_24_25",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [],
+   "doc": {
+    "model": "11080_4_5_13_14_15_24_25",
+    "title": "Sonora-Mojave Semi-Desert Chaparral",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11080_4_5_13_14_15_24_25.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 406,
+   "name": "Southern Colorado Plateau Sand Shrubland",
+   "habitat": "chaparral",
+   "cells": 267,
+   "model": "10930_13_15_16_23_24_28",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "achnatherum_hymenoides",
+     "scientific": "Achnatherum hymenoides",
+     "symbol": "ACHY",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10930_13_15_16_23_24_28 Dominant and Indicator Species (ACHY): named as Achnatherum hymenoides; 36 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "bouteloua_gracilis",
+     "scientific": "Bouteloua gracilis",
+     "symbol": "BOGR2",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10930_13_15_16_23_24_28 Dominant and Indicator Species (BOGR2): named as Bouteloua gracilis; 90 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "hesperostipa_comata",
+     "scientific": "Hesperostipa comata",
+     "symbol": "HECO26",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10930_13_15_16_23_24_28 Dominant and Indicator Species (HECO26): named as Hesperostipa comata; 56 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10930_13_15_16_23_24_28",
+    "title": "Southern Colorado Plateau Sand Shrubland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10930_13_15_16_23_24_28.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 1180,
+   "name": "North American Warm Desert Sparsely Vegetated Systems",
+   "habitat": "barren",
+   "cells": 714,
+   "model": "10040",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": []
+  },
+  {
+   "source": "bps",
+   "code": 1182,
+   "name": "Colorado Plateau Pinyon-Juniper Woodland",
+   "habitat": "conifer_forest",
+   "cells": 11718,
+   "model": "10160_15_28",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [],
+   "doc": {
+    "model": "10160_15_28",
+    "title": "Colorado Plateau Pinyon-Juniper Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10160_15_28.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 1183,
+   "name": "Great Basin Pinyon-Juniper Woodland",
+   "habitat": "conifer_forest",
+   "cells": 397,
+   "model": "10190_15",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "yucca_baccata",
+     "scientific": "Yucca baccata",
+     "symbol": "YUBA",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10190_15 Vegetation Description: named as Yucca baccata; 424 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "achnatherum_hymenoides",
+     "scientific": "Achnatherum hymenoides",
+     "symbol": "ACHY",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10190_15 Vegetation Description: named as Achnatherum hymenoides; 36 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "elymus_elymoides",
+     "scientific": "Elymus elymoides",
+     "symbol": "ELEL5",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10190_15 Vegetation Description: named as Elymus elymoides; 70 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10190_15",
+    "title": "Great Basin Pinyon-Juniper Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10190_15.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 1184,
+   "name": "Madrean Encinal",
+   "habitat": "conifer_forest",
+   "cells": 4,
+   "model": "10230_14_15_24_25",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "agave_utahensis",
+     "scientific": "Agave utahensis",
+     "symbol": "AGUT",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10230_14_15_24_25 Vegetation Description: 'Agave spp.': the tile's most-recorded native congener Agave utahensis (172 GBIF records); 1118 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "bouteloua_gracilis",
+     "scientific": "Bouteloua gracilis",
+     "symbol": "BOGR2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10230_14_15_24_25 Vegetation Description: named as Bouteloua gracilis; 90 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10230_14_15_24_25",
+    "title": "Madrean Encinal",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10230_14_15_24_25.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 1185,
+   "name": "Madrean Lower Montane Pine-Oak Forest and Woodland",
+   "habitat": "mixed_forest",
+   "cells": 169,
+   "model": "10240_14_15_24",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "agave_utahensis",
+     "scientific": "Agave utahensis",
+     "symbol": "AGUT",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10240_14_15_24 Vegetation Description: 'Agave spp.': the tile's most-recorded native congener Agave utahensis (172 GBIF records); 1118 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "bouteloua_gracilis",
+     "scientific": "Bouteloua gracilis",
+     "symbol": "BOGR2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10240_14_15_24 Vegetation Description: named as Bouteloua gracilis; 90 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10240_14_15_24",
+    "title": "Madrean Lower Montane Pine-Oak Forest and Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10240_14_15_24.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 1186,
+   "name": "Madrean Pinyon-Juniper Woodland",
+   "habitat": "conifer_forest",
+   "cells": 237,
+   "model": "10250_14_15_24_25_26",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "muhlenbergia_porteri",
+     "scientific": "Muhlenbergia porteri",
+     "symbol": "MUPO2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10250_14_15_24_25_26 Vegetation Description: named as Muhlenbergia porteri; 3 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10250_14_15_24_25_26",
+    "title": "Madrean Pinyon-Juniper Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10250_14_15_24_25_26.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 1188,
+   "name": "Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland",
+   "habitat": "conifer_forest",
+   "cells": 153,
+   "model": "10510_15_16_17_22_23_24_25",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "festuca_arizonica",
+     "scientific": "Festuca arizonica",
+     "symbol": "FEAR2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10510_15_16_17_22_23_24_25 Vegetation Description: named as Festuca arizonica; 2 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10510_15_16_17_22_23_24_25",
+    "title": "Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10510_15_16_17_22_23_24_25.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 1189,
+   "name": "Southern Rocky Mountain Mesic Montane Mixed Conifer Forest and Woodland",
+   "habitat": "conifer_forest",
+   "cells": 1,
+   "model": "10520_15",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "bromus_ciliatus",
+     "scientific": "Bromus ciliatus",
+     "symbol": "BRCI2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10520_15 Vegetation Description: named as Bromus ciliatus; 12 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "erigeron_eximius",
+     "scientific": "Erigeron eximius",
+     "symbol": "EREX4",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10520_15 Vegetation Description: named as Erigeron eximius; 6 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "fragaria_virginiana",
+     "scientific": "Fragaria virginiana",
+     "symbol": "FRVI",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10520_15 Vegetation Description: named as Fragaria virginiana; 32 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "osmorhiza_berteroi",
+     "scientific": "Osmorhiza berteroi",
+     "symbol": "OSBE",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10520_15 Vegetation Description: named as Osmorhiza berteroi; 2 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "thalictrum_fendleri",
+     "scientific": "Thalictrum fendleri",
+     "symbol": "THFE",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10520_15 Vegetation Description: named as Thalictrum fendleri; 27 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10520_15",
+    "title": "Southern Rocky Mountain Mesic Montane Mixed Conifer Forest and Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10520_15.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 1190,
+   "name": "Southern Rocky Mountain Ponderosa Pine Woodland",
+   "habitat": "conifer_forest",
+   "cells": 25016,
+   "model": "10540_15_25",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "muhlenbergia_montana",
+     "scientific": "Muhlenbergia montana",
+     "symbol": "MUMO",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10540_15_25 Dominant and Indicator Species (MUMO): named as Muhlenbergia montana; 55 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "festuca_arizonica",
+     "scientific": "Festuca arizonica",
+     "symbol": "FEAR2",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10540_15_25 Dominant and Indicator Species (FEAR2): named as Festuca arizonica; 2 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10540_15_25",
+    "title": "Southern Rocky Mountain Ponderosa Pine Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10540_15_25.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 1196,
+   "name": "Inter-Mountain Basins Mixed Salt Desert Scrub",
+   "habitat": "chaparral",
+   "cells": 1859,
+   "model": "10810_15_16_23_24_28",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "gutierrezia_sarothrae",
+     "scientific": "Gutierrezia sarothrae",
+     "symbol": "GUSA2",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "10810_15_16_23_24_28 Dominant and Indicator Species (GUSA2): named as Gutierrezia sarothrae; 112 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10810_15_16_23_24_28",
+    "title": "Inter-Mountain Basins Mixed Salt Desert Scrub",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10810_15_16_23_24_28.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 1197,
+   "name": "Mojave Mid-Elevation Mixed Desert Scrub",
+   "habitat": "chaparral",
+   "cells": 18779,
+   "model": "10820_12_15_16_17_23_24",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "achnatherum_speciosum",
+     "scientific": "Achnatherum speciosum",
+     "symbol": "ACSP12",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10820_12_15_16_17_23_24 Dominant and Indicator Species (ACSP12): named as Achnatherum speciosum; 18 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "bouteloua_eriopoda",
+     "scientific": "Bouteloua eriopoda",
+     "symbol": "BOER4",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10820_12_15_16_17_23_24 Dominant and Indicator Species (BOER4): named as Bouteloua eriopoda; 30 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "pleuraphis_rigida",
+     "scientific": "Pleuraphis rigida",
+     "symbol": "PLRI3",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Pleuraphis rigida; 3 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "achnatherum_hymenoides",
+     "scientific": "Achnatherum hymenoides",
+     "symbol": "ACHY",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Achnatherum hymenoides; 36 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "muhlenbergia_porteri",
+     "scientific": "Muhlenbergia porteri",
+     "symbol": "MUPO2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Muhlenbergia porteri; 3 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "pleuraphis_jamesii",
+     "scientific": "Pleuraphis jamesii",
+     "symbol": "PLJA",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Pleuraphis jamesii; 19 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10820_12_15_16_17_23_24",
+    "title": "Mojave Mid-Elevation Mixed Desert Scrub",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10820_12_15_16_17_23_24.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 1198,
+   "name": "Sonora-Mojave Creosotebush-White Bursage Desert Scrub",
+   "habitat": "chaparral",
+   "cells": 9854,
+   "model": "10870_4_6_12_13_14_15_17_24_25",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "pleuraphis_rigida",
+     "scientific": "Pleuraphis rigida",
+     "symbol": "PLRI3",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10870_4_6_12_13_14_15_17_24_25 Vegetation Description: named as Pleuraphis rigida; 3 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "muhlenbergia_porteri",
+     "scientific": "Muhlenbergia porteri",
+     "symbol": "MUPO2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10870_4_6_12_13_14_15_17_24_25 Vegetation Description: named as Muhlenbergia porteri; 3 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "achnatherum_speciosum",
+     "scientific": "Achnatherum speciosum",
+     "symbol": "ACSP12",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10870_4_6_12_13_14_15_17_24_25 Vegetation Description: named as Achnatherum speciosum; 18 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "achnatherum_hymenoides",
+     "scientific": "Achnatherum hymenoides",
+     "symbol": "ACHY",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10870_4_6_12_13_14_15_17_24_25 Vegetation Description: named as Achnatherum hymenoides; 36 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10870_4_6_12_13_14_15_17_24_25",
+    "title": "Sonora-Mojave Creosotebush-White Bursage Desert Scrub",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10870_4_6_12_13_14_15_17_24_25.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 1202,
+   "name": "Mogollon Chaparral",
+   "habitat": "chaparral",
+   "cells": 4315,
+   "model": "11040_15",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [],
+   "doc": {
+    "model": "11040_15",
+    "title": "Mogollon Chaparral",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11040_15.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 1203,
+   "name": "Rocky Mountain Gambel Oak-Mixed Montane Shrubland",
+   "habitat": "chaparral",
+   "cells": 300,
+   "model": "11070_15",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "achnatherum_lettermanii",
+     "scientific": "Achnatherum lettermanii",
+     "symbol": "ACLE9",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11070_15 Dominant and Indicator Species (ACLE9): named as Achnatherum lettermanii; 39 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "poa_secunda",
+     "scientific": "Poa secunda",
+     "symbol": "POSE",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11070_15 Vegetation Description: named as Poa ampla (PLANTS: Poa secunda); 1 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11070_15",
+    "title": "Rocky Mountain Gambel Oak-Mixed Montane Shrubland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11070_15.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 1204,
+   "name": "Sonoran Paloverde-Mixed Cacti Desert Scrub",
+   "habitat": "chaparral",
+   "cells": 46,
+   "model": "11090_15_25",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [],
+   "doc": {
+    "model": "11090_15_25",
+    "title": "Sonoran Paloverde-Mixed Cacti Desert Scrub",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11090_15_25.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 1206,
+   "name": "Madrean Juniper Savanna",
+   "habitat": "conifer_forest",
+   "cells": 99,
+   "model": "11160_15_25",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "muhlenbergia_porteri",
+     "scientific": "Muhlenbergia porteri",
+     "symbol": "MUPO2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11160_15_25 Vegetation Description: named as Muhlenbergia porteri; 3 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11160_15_25",
+    "title": "Madrean Juniper Savanna",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11160_15_25.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 1207,
+   "name": "Southern Rocky Mountain Ponderosa Pine Savanna",
+   "habitat": "conifer_forest",
+   "cells": 77,
+   "model": "11170_13_15_28",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "festuca_arizonica",
+     "scientific": "Festuca arizonica",
+     "symbol": "FEAR2",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11170_13_15_28 Dominant and Indicator Species (FEAR2): named as Festuca arizonica; 2 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "muhlenbergia_montana",
+     "scientific": "Muhlenbergia montana",
+     "symbol": "MUMO",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11170_13_15_28 Dominant and Indicator Species (MUMO): named as Muhlenbergia montana; 55 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11170_13_15_28",
+    "title": "Southern Rocky Mountain Ponderosa Pine Savanna",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11170_13_15_28.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 1209,
+   "name": "Inter-Mountain Basins Semi-Desert Shrub-Steppe",
+   "habitat": "chaparral",
+   "cells": 1863,
+   "model": "11270_15",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "achnatherum_hymenoides",
+     "scientific": "Achnatherum hymenoides",
+     "symbol": "ACHY",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11270_15 Dominant and Indicator Species (ACHY): named as Achnatherum hymenoides; 36 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "gutierrezia_sarothrae",
+     "scientific": "Gutierrezia sarothrae",
+     "symbol": "GUSA2",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11270_15 Vegetation Description: named as Gutierrezia sarothrae; 112 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "bouteloua_gracilis",
+     "scientific": "Bouteloua gracilis",
+     "symbol": "BOGR2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11270_15 Vegetation Description: named as Bouteloua gracilis; 90 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "distichlis_spicata",
+     "scientific": "Distichlis spicata",
+     "symbol": "DISP",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11270_15 Vegetation Description: named as Distichlis spicata; 6 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "poa_secunda",
+     "scientific": "Poa secunda",
+     "symbol": "POSE",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11270_15 Vegetation Description: named as Poa secunda; 1 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11270_15",
+    "title": "Inter-Mountain Basins Semi-Desert Shrub-Steppe",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11270_15.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 1210,
+   "name": "Inter-Mountain Basins Semi-Desert Grassland",
+   "habitat": "grassland",
+   "cells": 6,
+   "model": "11350_15_28",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "bouteloua_gracilis",
+     "scientific": "Bouteloua gracilis",
+     "symbol": "BOGR2",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11350_15_28 Dominant and Indicator Species (BOGR2): named as Bouteloua gracilis; 90 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "achnatherum_hymenoides",
+     "scientific": "Achnatherum hymenoides",
+     "symbol": "ACHY",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11350_15_28 Dominant and Indicator Species (ACHY): named as Achnatherum hymenoides; 36 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "hesperostipa_comata",
+     "scientific": "Hesperostipa comata",
+     "symbol": "HECO26",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11350_15_28 Dominant and Indicator Species (HECO26): named as Hesperostipa comata; 56 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "pleuraphis_jamesii",
+     "scientific": "Pleuraphis jamesii",
+     "symbol": "PLJA",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11350_15_28 Vegetation Description: named as Pleuraphis jamesii; 19 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11350_15_28",
+    "title": "Inter-Mountain Basins Semi-Desert Grassland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11350_15_28.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 1211,
+   "name": "Southern Rocky Mountain Montane-Subalpine Grassland",
+   "habitat": "grassland",
+   "cells": 90,
+   "model": "11460_15_16_23_24_25_28",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "festuca_arizonica",
+     "scientific": "Festuca arizonica",
+     "symbol": "FEAR2",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11460_15_16_23_24_25_28 Dominant and Indicator Species (FEAR2): named as Festuca arizonica; 2 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "muhlenbergia_montana",
+     "scientific": "Muhlenbergia montana",
+     "symbol": "MUMO",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11460_15_16_23_24_25_28 Dominant and Indicator Species (MUMO): named as Muhlenbergia montana; 55 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11460_15_16_23_24_25_28",
+    "title": "Southern Rocky Mountain Montane-Subalpine Grassland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11460_15_16_23_24_25_28.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 1213,
+   "name": "North American Warm Desert Riparian Systems-Stringers",
+   "habitat": "riparian",
+   "cells": 33,
+   "model": "11552_13_14_15",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "distichlis_spicata",
+     "scientific": "Distichlis spicata",
+     "symbol": "DISP",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11552_13_14_15 Dominant and Indicator Species (DISP): named as Distichlis spicata; 6 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11552_13_14_15",
+    "title": "North American Warm Desert Riparian Systems -- Stringers",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11552_13_14_15.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 1214,
+   "name": "Rocky Mountain Montane Riparian Systems",
+   "habitat": "riparian",
+   "cells": 1295,
+   "model": "11590_15",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [],
+   "doc": {
+    "model": "11590_15",
+    "title": "Rocky Mountain Montane Riparian Systems",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11590_15.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 2704,
+   "name": "Inter-Mountain Basins Big Sagebrush Shrubland-Semi-Desert",
+   "habitat": "chaparral",
+   "cells": 68,
+   "model": "10803_6_12_15_16_17_18_23_24_25",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "achnatherum_hymenoides",
+     "scientific": "Achnatherum hymenoides",
+     "symbol": "ACHY",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10803_6_12_15_16_17_18_23_24_25 Dominant and Indicator Species (ACHY): named as Achnatherum hymenoides; 36 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "elymus_elymoides",
+     "scientific": "Elymus elymoides",
+     "symbol": "ELEL5",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10803_6_12_15_16_17_18_23_24_25 Dominant and Indicator Species (ELELE): named as Elymus elymoides; 70 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "poa_secunda",
+     "scientific": "Poa secunda",
+     "symbol": "POSE",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10803_6_12_15_16_17_18_23_24_25 Vegetation Description: named as Poa secunda; 1 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10803_6_12_15_16_17_18_23_24_25",
+    "title": "Inter-Mountain Basins Big Sagebrush Shrubland \u2013 Semi-Desert",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10803_6_12_15_16_17_18_23_24_25.docx"
+   }
+  },
+  {
+   "source": "bps",
+   "code": 2705,
+   "name": "Inter-Mountain Basins Big Sagebrush Shrubland-Upland",
+   "habitat": "chaparral",
+   "cells": 3633,
+   "model": "10804_6_12_15_16_17_18_23_24_25",
+   "how": "its own model (bps.csv BPS_MODEL)",
+   "species": [
+    {
+     "id": "achnatherum_hymenoides",
+     "scientific": "Achnatherum hymenoides",
+     "symbol": "ACHY",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10804_6_12_15_16_17_18_23_24_25 Dominant and Indicator Species (ACHY): named as Achnatherum hymenoides; 36 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "hesperostipa_comata",
+     "scientific": "Hesperostipa comata",
+     "symbol": "HECO26",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10804_6_12_15_16_17_18_23_24_25 Dominant and Indicator Species (HECO26): named as Hesperostipa comata; 56 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "elymus_elymoides",
+     "scientific": "Elymus elymoides",
+     "symbol": "ELEL5",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10804_6_12_15_16_17_18_23_24_25 Dominant and Indicator Species (ELELE): named as Elymus elymoides; 70 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "poa_secunda",
+     "scientific": "Poa secunda",
+     "symbol": "POSE",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10804_6_12_15_16_17_18_23_24_25 Dominant and Indicator Species (POSE): named as Poa secunda; 1 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10804_6_12_15_16_17_18_23_24_25",
+    "title": "Inter-Mountain Basins Big Sagebrush Shrubland \u2013 Upland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10804_6_12_15_16_17_18_23_24_25.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7016,
+   "name": "Colorado Plateau Pinyon-Juniper Woodland",
+   "habitat": "conifer_forest",
+   "cells": 12829,
+   "model": "10160_15_28",
+   "how": "the same system's model in map zone 15",
+   "species": [],
+   "doc": {
+    "model": "10160_15_28",
+    "title": "Colorado Plateau Pinyon-Juniper Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10160_15_28.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7026,
+   "name": "Madrean Upper Montane Conifer-Oak Forest and Woodland",
+   "habitat": "mixed_forest",
+   "cells": 1,
+   "model": "10260_15",
+   "how": "the same system's model in map zone 15",
+   "species": [],
+   "doc": {
+    "model": "10260_15",
+    "title": "Madrean Upper Montane Conifer-Oak Forest and Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10260_15.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7051,
+   "name": "Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland",
+   "habitat": "conifer_forest",
+   "cells": 46,
+   "model": "10510_15_16_17_22_23_24_25",
+   "how": "the same system's model in map zone 15",
+   "species": [
+    {
+     "id": "festuca_arizonica",
+     "scientific": "Festuca arizonica",
+     "symbol": "FEAR2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10510_15_16_17_22_23_24_25 Vegetation Description: named as Festuca arizonica; 2 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10510_15_16_17_22_23_24_25",
+    "title": "Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10510_15_16_17_22_23_24_25.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7052,
+   "name": "Southern Rocky Mountain Mesic Montane Mixed Conifer Forest and Woodland",
+   "habitat": "conifer_forest",
+   "cells": 1,
+   "model": "10520_15",
+   "how": "the same system's model in map zone 15",
+   "species": [
+    {
+     "id": "bromus_ciliatus",
+     "scientific": "Bromus ciliatus",
+     "symbol": "BRCI2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10520_15 Vegetation Description: named as Bromus ciliatus; 12 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "erigeron_eximius",
+     "scientific": "Erigeron eximius",
+     "symbol": "EREX4",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10520_15 Vegetation Description: named as Erigeron eximius; 6 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "fragaria_virginiana",
+     "scientific": "Fragaria virginiana",
+     "symbol": "FRVI",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10520_15 Vegetation Description: named as Fragaria virginiana; 32 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "osmorhiza_berteroi",
+     "scientific": "Osmorhiza berteroi",
+     "symbol": "OSBE",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10520_15 Vegetation Description: named as Osmorhiza berteroi; 2 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "thalictrum_fendleri",
+     "scientific": "Thalictrum fendleri",
+     "symbol": "THFE",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "10520_15 Vegetation Description: named as Thalictrum fendleri; 27 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10520_15",
+    "title": "Southern Rocky Mountain Mesic Montane Mixed Conifer Forest and Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10520_15.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7054,
+   "name": "Southern Rocky Mountain Ponderosa Pine Woodland",
+   "habitat": "conifer_forest",
+   "cells": 16191,
+   "model": "10540_15_25",
+   "how": "the same system's model in map zone 15",
+   "species": [
+    {
+     "id": "muhlenbergia_montana",
+     "scientific": "Muhlenbergia montana",
+     "symbol": "MUMO",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10540_15_25 Dominant and Indicator Species (MUMO): named as Muhlenbergia montana; 55 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "festuca_arizonica",
+     "scientific": "Festuca arizonica",
+     "symbol": "FEAR2",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10540_15_25 Dominant and Indicator Species (FEAR2): named as Festuca arizonica; 2 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10540_15_25",
+    "title": "Southern Rocky Mountain Ponderosa Pine Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10540_15_25.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7078,
+   "name": "Colorado Plateau Blackbrush-Mormon-tea Shrubland",
+   "habitat": "chaparral",
+   "cells": 19780,
+   "model": "10780_15",
+   "how": "the same system's model in map zone 15",
+   "species": [
+    {
+     "id": "gutierrezia_sarothrae",
+     "scientific": "Gutierrezia sarothrae",
+     "symbol": "GUSA2",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "10780_15 Dominant and Indicator Species (GUSA2): named as Gutierrezia sarothrae; 112 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "achnatherum_hymenoides",
+     "scientific": "Achnatherum hymenoides",
+     "symbol": "ACHY",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10780_15 Dominant and Indicator Species (ACHY): named as Achnatherum hymenoides; 36 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10780_15",
+    "title": "Colorado Plateau Blackbrush-Mormon-tea Shrubland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10780_15.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7080,
+   "name": "Inter-Mountain Basins Big Sagebrush Shrubland",
+   "habitat": "chaparral",
+   "cells": 1024,
+   "model": "10820_12_15_16_17_23_24",
+   "how": "the BpS under most of its cells on the tile (251 of 1024: Mojave Mid-Elevation Mixed Desert Scrub)",
+   "species": [
+    {
+     "id": "achnatherum_speciosum",
+     "scientific": "Achnatherum speciosum",
+     "symbol": "ACSP12",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10820_12_15_16_17_23_24 Dominant and Indicator Species (ACSP12): named as Achnatherum speciosum; 18 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "bouteloua_eriopoda",
+     "scientific": "Bouteloua eriopoda",
+     "symbol": "BOER4",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10820_12_15_16_17_23_24 Dominant and Indicator Species (BOER4): named as Bouteloua eriopoda; 30 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "pleuraphis_rigida",
+     "scientific": "Pleuraphis rigida",
+     "symbol": "PLRI3",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Pleuraphis rigida; 3 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "achnatherum_hymenoides",
+     "scientific": "Achnatherum hymenoides",
+     "symbol": "ACHY",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Achnatherum hymenoides; 36 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "muhlenbergia_porteri",
+     "scientific": "Muhlenbergia porteri",
+     "symbol": "MUPO2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Muhlenbergia porteri; 3 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "pleuraphis_jamesii",
+     "scientific": "Pleuraphis jamesii",
+     "symbol": "PLJA",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Pleuraphis jamesii; 19 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10820_12_15_16_17_23_24",
+    "title": "Mojave Mid-Elevation Mixed Desert Scrub",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10820_12_15_16_17_23_24.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7081,
+   "name": "Inter-Mountain Basins Mixed Salt Desert Scrub",
+   "habitat": "chaparral",
+   "cells": 422,
+   "model": "10810_15_16_23_24_28",
+   "how": "the same system's model in map zone 15",
+   "species": [
+    {
+     "id": "gutierrezia_sarothrae",
+     "scientific": "Gutierrezia sarothrae",
+     "symbol": "GUSA2",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "10810_15_16_23_24_28 Dominant and Indicator Species (GUSA2): named as Gutierrezia sarothrae; 112 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10810_15_16_23_24_28",
+    "title": "Inter-Mountain Basins Mixed Salt Desert Scrub",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10810_15_16_23_24_28.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7082,
+   "name": "Mojave Mid-Elevation Mixed Desert Scrub",
+   "habitat": "chaparral",
+   "cells": 2453,
+   "model": "10820_12_15_16_17_23_24",
+   "how": "the same system's model in map zone 15",
+   "species": [
+    {
+     "id": "achnatherum_speciosum",
+     "scientific": "Achnatherum speciosum",
+     "symbol": "ACSP12",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10820_12_15_16_17_23_24 Dominant and Indicator Species (ACSP12): named as Achnatherum speciosum; 18 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "bouteloua_eriopoda",
+     "scientific": "Bouteloua eriopoda",
+     "symbol": "BOER4",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10820_12_15_16_17_23_24 Dominant and Indicator Species (BOER4): named as Bouteloua eriopoda; 30 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "pleuraphis_rigida",
+     "scientific": "Pleuraphis rigida",
+     "symbol": "PLRI3",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Pleuraphis rigida; 3 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "achnatherum_hymenoides",
+     "scientific": "Achnatherum hymenoides",
+     "symbol": "ACHY",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Achnatherum hymenoides; 36 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "muhlenbergia_porteri",
+     "scientific": "Muhlenbergia porteri",
+     "symbol": "MUPO2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Muhlenbergia porteri; 3 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "pleuraphis_jamesii",
+     "scientific": "Pleuraphis jamesii",
+     "symbol": "PLJA",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Pleuraphis jamesii; 19 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10820_12_15_16_17_23_24",
+    "title": "Mojave Mid-Elevation Mixed Desert Scrub",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10820_12_15_16_17_23_24.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7086,
+   "name": "Rocky Mountain Lower Montane-Foothill Shrubland",
+   "habitat": "chaparral",
+   "cells": 92,
+   "model": "10160_15_28",
+   "how": "the BpS under most of its cells on the tile (74 of 92: Colorado Plateau Pinyon-Juniper Woodland)",
+   "species": [],
+   "doc": {
+    "model": "10160_15_28",
+    "title": "Colorado Plateau Pinyon-Juniper Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10160_15_28.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7087,
+   "name": "Sonora-Mojave Creosotebush-White Bursage Desert Scrub",
+   "habitat": "chaparral",
+   "cells": 5408,
+   "model": "10870_4_6_12_13_14_15_17_24_25",
+   "how": "the same system's model in map zone 15",
+   "species": [
+    {
+     "id": "pleuraphis_rigida",
+     "scientific": "Pleuraphis rigida",
+     "symbol": "PLRI3",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10870_4_6_12_13_14_15_17_24_25 Vegetation Description: named as Pleuraphis rigida; 3 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "muhlenbergia_porteri",
+     "scientific": "Muhlenbergia porteri",
+     "symbol": "MUPO2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10870_4_6_12_13_14_15_17_24_25 Vegetation Description: named as Muhlenbergia porteri; 3 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "achnatherum_speciosum",
+     "scientific": "Achnatherum speciosum",
+     "symbol": "ACSP12",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10870_4_6_12_13_14_15_17_24_25 Vegetation Description: named as Achnatherum speciosum; 18 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "achnatherum_hymenoides",
+     "scientific": "Achnatherum hymenoides",
+     "symbol": "ACHY",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10870_4_6_12_13_14_15_17_24_25 Vegetation Description: named as Achnatherum hymenoides; 36 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10870_4_6_12_13_14_15_17_24_25",
+    "title": "Sonora-Mojave Creosotebush-White Bursage Desert Scrub",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10870_4_6_12_13_14_15_17_24_25.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7102,
+   "name": "Colorado Plateau Pinyon-Juniper Shrubland",
+   "habitat": "chaparral",
+   "cells": 401,
+   "model": "11020_13_15_16_23_24",
+   "how": "the same system's model in map zone 15",
+   "species": [],
+   "doc": {
+    "model": "11020_13_15_16_23_24",
+    "title": "Colorado Plateau Pinyon-Juniper Shrubland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11020_13_15_16_23_24.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7104,
+   "name": "Mogollon Chaparral",
+   "habitat": "chaparral",
+   "cells": 199,
+   "model": "11040_15",
+   "how": "the same system's model in map zone 15",
+   "species": [],
+   "doc": {
+    "model": "11040_15",
+    "title": "Mogollon Chaparral",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11040_15.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7107,
+   "name": "Rocky Mountain Gambel Oak-Mixed Montane Shrubland",
+   "habitat": "chaparral",
+   "cells": 460,
+   "model": "11070_15",
+   "how": "the same system's model in map zone 15",
+   "species": [
+    {
+     "id": "achnatherum_lettermanii",
+     "scientific": "Achnatherum lettermanii",
+     "symbol": "ACLE9",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11070_15 Dominant and Indicator Species (ACLE9): named as Achnatherum lettermanii; 39 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "poa_secunda",
+     "scientific": "Poa secunda",
+     "symbol": "POSE",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11070_15 Vegetation Description: named as Poa ampla (PLANTS: Poa secunda); 1 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11070_15",
+    "title": "Rocky Mountain Gambel Oak-Mixed Montane Shrubland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11070_15.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7115,
+   "name": "Inter-Mountain Basins Juniper Savanna",
+   "habitat": "conifer_forest",
+   "cells": 81,
+   "model": "11150_15_16_23_24",
+   "how": "the same system's model in map zone 15",
+   "species": [
+    {
+     "id": "bouteloua_gracilis",
+     "scientific": "Bouteloua gracilis",
+     "symbol": "BOGR2",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11150_15_16_23_24 Dominant and Indicator Species (BOGR2): named as Bouteloua gracilis; 90 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "hesperostipa_comata",
+     "scientific": "Hesperostipa comata",
+     "symbol": "HECO26",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11150_15_16_23_24 Vegetation Description: named as Hesperostipa comata; 56 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "pleuraphis_jamesii",
+     "scientific": "Pleuraphis jamesii",
+     "symbol": "PLJA",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11150_15_16_23_24 Vegetation Description: named as Pleuraphis jamesii; 19 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11150_15_16_23_24",
+    "title": "Inter-Mountain Basins Juniper Savanna",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11150_15_16_23_24.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7117,
+   "name": "Southern Rocky Mountain Ponderosa Pine Savanna",
+   "habitat": "conifer_forest",
+   "cells": 4,
+   "model": "11170_13_15_28",
+   "how": "the same system's model in map zone 15",
+   "species": [
+    {
+     "id": "festuca_arizonica",
+     "scientific": "Festuca arizonica",
+     "symbol": "FEAR2",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11170_13_15_28 Dominant and Indicator Species (FEAR2): named as Festuca arizonica; 2 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "muhlenbergia_montana",
+     "scientific": "Muhlenbergia montana",
+     "symbol": "MUMO",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11170_13_15_28 Dominant and Indicator Species (MUMO): named as Muhlenbergia montana; 55 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11170_13_15_28",
+    "title": "Southern Rocky Mountain Ponderosa Pine Savanna",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11170_13_15_28.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7126,
+   "name": "Inter-Mountain Basins Montane Sagebrush Steppe",
+   "habitat": "chaparral",
+   "cells": 65,
+   "model": "10540_15_25",
+   "how": "the BpS under most of its cells on the tile (63 of 65: Southern Rocky Mountain Ponderosa Pine Woodland)",
+   "species": [
+    {
+     "id": "muhlenbergia_montana",
+     "scientific": "Muhlenbergia montana",
+     "symbol": "MUMO",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10540_15_25 Dominant and Indicator Species (MUMO): named as Muhlenbergia montana; 55 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "festuca_arizonica",
+     "scientific": "Festuca arizonica",
+     "symbol": "FEAR2",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10540_15_25 Dominant and Indicator Species (FEAR2): named as Festuca arizonica; 2 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10540_15_25",
+    "title": "Southern Rocky Mountain Ponderosa Pine Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10540_15_25.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7127,
+   "name": "Inter-Mountain Basins Semi-Desert Shrub-Steppe",
+   "habitat": "chaparral",
+   "cells": 1191,
+   "model": "11270_15",
+   "how": "the same system's model in map zone 15",
+   "species": [
+    {
+     "id": "achnatherum_hymenoides",
+     "scientific": "Achnatherum hymenoides",
+     "symbol": "ACHY",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11270_15 Dominant and Indicator Species (ACHY): named as Achnatherum hymenoides; 36 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "gutierrezia_sarothrae",
+     "scientific": "Gutierrezia sarothrae",
+     "symbol": "GUSA2",
+     "form": "forb",
+     "weight": 0.5,
+     "evidence": "11270_15 Vegetation Description: named as Gutierrezia sarothrae; 112 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "bouteloua_gracilis",
+     "scientific": "Bouteloua gracilis",
+     "symbol": "BOGR2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11270_15 Vegetation Description: named as Bouteloua gracilis; 90 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "distichlis_spicata",
+     "scientific": "Distichlis spicata",
+     "symbol": "DISP",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11270_15 Vegetation Description: named as Distichlis spicata; 6 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "poa_secunda",
+     "scientific": "Poa secunda",
+     "symbol": "POSE",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11270_15 Vegetation Description: named as Poa secunda; 1 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11270_15",
+    "title": "Inter-Mountain Basins Semi-Desert Shrub-Steppe",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11270_15.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7135,
+   "name": "Inter-Mountain Basins Semi-Desert Grassland",
+   "habitat": "grassland",
+   "cells": 1890,
+   "model": "11350_15_28",
+   "how": "the same system's model in map zone 15",
+   "species": [
+    {
+     "id": "bouteloua_gracilis",
+     "scientific": "Bouteloua gracilis",
+     "symbol": "BOGR2",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11350_15_28 Dominant and Indicator Species (BOGR2): named as Bouteloua gracilis; 90 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "achnatherum_hymenoides",
+     "scientific": "Achnatherum hymenoides",
+     "symbol": "ACHY",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11350_15_28 Dominant and Indicator Species (ACHY): named as Achnatherum hymenoides; 36 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "hesperostipa_comata",
+     "scientific": "Hesperostipa comata",
+     "symbol": "HECO26",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11350_15_28 Dominant and Indicator Species (HECO26): named as Hesperostipa comata; 56 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "pleuraphis_jamesii",
+     "scientific": "Pleuraphis jamesii",
+     "symbol": "PLJA",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "11350_15_28 Vegetation Description: named as Pleuraphis jamesii; 19 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11350_15_28",
+    "title": "Inter-Mountain Basins Semi-Desert Grassland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11350_15_28.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 7146,
+   "name": "Southern Rocky Mountain Montane-Subalpine Grassland",
+   "habitat": "grassland",
+   "cells": 10,
+   "model": "11460_15_16_23_24_25_28",
+   "how": "the same system's model in map zone 15",
+   "species": [
+    {
+     "id": "festuca_arizonica",
+     "scientific": "Festuca arizonica",
+     "symbol": "FEAR2",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11460_15_16_23_24_25_28 Dominant and Indicator Species (FEAR2): named as Festuca arizonica; 2 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "muhlenbergia_montana",
+     "scientific": "Muhlenbergia montana",
+     "symbol": "MUMO",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "11460_15_16_23_24_25_28 Dominant and Indicator Species (MUMO): named as Muhlenbergia montana; 55 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "11460_15_16_23_24_25_28",
+    "title": "Southern Rocky Mountain Montane-Subalpine Grassland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11460_15_16_23_24_25_28.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 9001,
+   "name": "Colorado Plateau Mixed Bedrock Canyon and Tableland",
+   "habitat": "barren",
+   "cells": 42161,
+   "model": "10780_15",
+   "how": "the BpS under most of its cells on the tile (10391 of 42161: Colorado Plateau Blackbrush-Mormon-tea Shrubland)",
+   "species": [
+    {
+     "id": "gutierrezia_sarothrae",
+     "scientific": "Gutierrezia sarothrae",
+     "symbol": "GUSA2",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "10780_15 Dominant and Indicator Species (GUSA2): named as Gutierrezia sarothrae; 112 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "achnatherum_hymenoides",
+     "scientific": "Achnatherum hymenoides",
+     "symbol": "ACHY",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10780_15 Dominant and Indicator Species (ACHY): named as Achnatherum hymenoides; 36 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10780_15",
+    "title": "Colorado Plateau Blackbrush-Mormon-tea Shrubland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10780_15.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 9009,
+   "name": "Inter-Mountain Basins Shale Badland",
+   "habitat": "barren",
+   "cells": 1268,
+   "model": "10820_12_15_16_17_23_24",
+   "how": "the BpS under most of its cells on the tile (316 of 1268: Mojave Mid-Elevation Mixed Desert Scrub)",
+   "species": [
+    {
+     "id": "achnatherum_speciosum",
+     "scientific": "Achnatherum speciosum",
+     "symbol": "ACSP12",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10820_12_15_16_17_23_24 Dominant and Indicator Species (ACSP12): named as Achnatherum speciosum; 18 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "bouteloua_eriopoda",
+     "scientific": "Bouteloua eriopoda",
+     "symbol": "BOER4",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10820_12_15_16_17_23_24 Dominant and Indicator Species (BOER4): named as Bouteloua eriopoda; 30 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "pleuraphis_rigida",
+     "scientific": "Pleuraphis rigida",
+     "symbol": "PLRI3",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Pleuraphis rigida; 3 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "achnatherum_hymenoides",
+     "scientific": "Achnatherum hymenoides",
+     "symbol": "ACHY",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Achnatherum hymenoides; 36 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "muhlenbergia_porteri",
+     "scientific": "Muhlenbergia porteri",
+     "symbol": "MUPO2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Muhlenbergia porteri; 3 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "pleuraphis_jamesii",
+     "scientific": "Pleuraphis jamesii",
+     "symbol": "PLJA",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Pleuraphis jamesii; 19 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10820_12_15_16_17_23_24",
+    "title": "Mojave Mid-Elevation Mixed Desert Scrub",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10820_12_15_16_17_23_24.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 9011,
+   "name": "North American Arid West Emergent Marsh",
+   "habitat": "riparian",
+   "cells": 13,
+   "model": "10820_12_15_16_17_23_24",
+   "how": "the BpS under most of its cells on the tile (5 of 13: Mojave Mid-Elevation Mixed Desert Scrub)",
+   "species": [
+    {
+     "id": "achnatherum_speciosum",
+     "scientific": "Achnatherum speciosum",
+     "symbol": "ACSP12",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10820_12_15_16_17_23_24 Dominant and Indicator Species (ACSP12): named as Achnatherum speciosum; 18 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "bouteloua_eriopoda",
+     "scientific": "Bouteloua eriopoda",
+     "symbol": "BOER4",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10820_12_15_16_17_23_24 Dominant and Indicator Species (BOER4): named as Bouteloua eriopoda; 30 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "pleuraphis_rigida",
+     "scientific": "Pleuraphis rigida",
+     "symbol": "PLRI3",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Pleuraphis rigida; 3 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "achnatherum_hymenoides",
+     "scientific": "Achnatherum hymenoides",
+     "symbol": "ACHY",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Achnatherum hymenoides; 36 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "muhlenbergia_porteri",
+     "scientific": "Muhlenbergia porteri",
+     "symbol": "MUPO2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Muhlenbergia porteri; 3 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "pleuraphis_jamesii",
+     "scientific": "Pleuraphis jamesii",
+     "symbol": "PLJA",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Pleuraphis jamesii; 19 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10820_12_15_16_17_23_24",
+    "title": "Mojave Mid-Elevation Mixed Desert Scrub",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10820_12_15_16_17_23_24.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 9018,
+   "name": "Rocky Mountain Cliff Canyon and Massive Bedrock",
+   "habitat": "barren",
+   "cells": 1,
+   "model": "10540_15_25",
+   "how": "the BpS under most of its cells on the tile (1 of 1: Southern Rocky Mountain Ponderosa Pine Woodland)",
+   "species": [
+    {
+     "id": "muhlenbergia_montana",
+     "scientific": "Muhlenbergia montana",
+     "symbol": "MUMO",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10540_15_25 Dominant and Indicator Species (MUMO): named as Muhlenbergia montana; 55 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "festuca_arizonica",
+     "scientific": "Festuca arizonica",
+     "symbol": "FEAR2",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10540_15_25 Dominant and Indicator Species (FEAR2): named as Festuca arizonica; 2 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10540_15_25",
+    "title": "Southern Rocky Mountain Ponderosa Pine Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10540_15_25.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 9019,
+   "name": "Rocky Mountain Lower Montane-Foothill Riparian Woodland",
+   "habitat": "riparian",
+   "cells": 19,
+   "model": "11590_15",
+   "how": "the BpS under most of its cells on the tile (16 of 19: Rocky Mountain Montane Riparian Systems)",
+   "species": [],
+   "doc": {
+    "model": "11590_15",
+    "title": "Rocky Mountain Montane Riparian Systems",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=11590_15.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 9327,
+   "name": "Interior West Ruderal Riparian Forest",
+   "habitat": "riparian",
+   "cells": 36,
+   "model": "10780_15",
+   "how": "the BpS under most of its cells on the tile (16 of 36: Colorado Plateau Blackbrush-Mormon-tea Shrubland)",
+   "species": [
+    {
+     "id": "gutierrezia_sarothrae",
+     "scientific": "Gutierrezia sarothrae",
+     "symbol": "GUSA2",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "10780_15 Dominant and Indicator Species (GUSA2): named as Gutierrezia sarothrae; 112 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "achnatherum_hymenoides",
+     "scientific": "Achnatherum hymenoides",
+     "symbol": "ACHY",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10780_15 Dominant and Indicator Species (ACHY): named as Achnatherum hymenoides; 36 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10780_15",
+    "title": "Colorado Plateau Blackbrush-Mormon-tea Shrubland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10780_15.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 9328,
+   "name": "Interior Western North American Temperate Ruderal Shrubland",
+   "habitat": "chaparral",
+   "cells": 3,
+   "model": "10540_15_25",
+   "how": "the BpS under most of its cells on the tile (3 of 3: Southern Rocky Mountain Ponderosa Pine Woodland)",
+   "species": [
+    {
+     "id": "muhlenbergia_montana",
+     "scientific": "Muhlenbergia montana",
+     "symbol": "MUMO",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10540_15_25 Dominant and Indicator Species (MUMO): named as Muhlenbergia montana; 55 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "festuca_arizonica",
+     "scientific": "Festuca arizonica",
+     "symbol": "FEAR2",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10540_15_25 Dominant and Indicator Species (FEAR2): named as Festuca arizonica; 2 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10540_15_25",
+    "title": "Southern Rocky Mountain Ponderosa Pine Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10540_15_25.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 9336,
+   "name": "Great Basin & Intermountain Ruderal Shrubland",
+   "habitat": "chaparral",
+   "cells": 188,
+   "model": "10820_12_15_16_17_23_24",
+   "how": "the BpS under most of its cells on the tile (128 of 188: Mojave Mid-Elevation Mixed Desert Scrub)",
+   "species": [
+    {
+     "id": "achnatherum_speciosum",
+     "scientific": "Achnatherum speciosum",
+     "symbol": "ACSP12",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10820_12_15_16_17_23_24 Dominant and Indicator Species (ACSP12): named as Achnatherum speciosum; 18 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "bouteloua_eriopoda",
+     "scientific": "Bouteloua eriopoda",
+     "symbol": "BOER4",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10820_12_15_16_17_23_24 Dominant and Indicator Species (BOER4): named as Bouteloua eriopoda; 30 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "pleuraphis_rigida",
+     "scientific": "Pleuraphis rigida",
+     "symbol": "PLRI3",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Pleuraphis rigida; 3 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "achnatherum_hymenoides",
+     "scientific": "Achnatherum hymenoides",
+     "symbol": "ACHY",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Achnatherum hymenoides; 36 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "muhlenbergia_porteri",
+     "scientific": "Muhlenbergia porteri",
+     "symbol": "MUPO2",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Muhlenbergia porteri; 3 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "pleuraphis_jamesii",
+     "scientific": "Pleuraphis jamesii",
+     "symbol": "PLJA",
+     "form": "grass",
+     "weight": 0.5,
+     "evidence": "10820_12_15_16_17_23_24 Vegetation Description: named as Pleuraphis jamesii; 19 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10820_12_15_16_17_23_24",
+    "title": "Mojave Mid-Elevation Mixed Desert Scrub",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10820_12_15_16_17_23_24.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 9827,
+   "name": "Interior West Ruderal Riparian Scrub",
+   "habitat": "riparian",
+   "cells": 11,
+   "model": "10780_15",
+   "how": "the BpS under most of its cells on the tile (4 of 11: Colorado Plateau Blackbrush-Mormon-tea Shrubland)",
+   "species": [
+    {
+     "id": "gutierrezia_sarothrae",
+     "scientific": "Gutierrezia sarothrae",
+     "symbol": "GUSA2",
+     "form": "forb",
+     "weight": 1.0,
+     "evidence": "10780_15 Dominant and Indicator Species (GUSA2): named as Gutierrezia sarothrae; 112 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "achnatherum_hymenoides",
+     "scientific": "Achnatherum hymenoides",
+     "symbol": "ACHY",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10780_15 Dominant and Indicator Species (ACHY): named as Achnatherum hymenoides; 36 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10780_15",
+    "title": "Colorado Plateau Blackbrush-Mormon-tea Shrubland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10780_15.docx"
+   }
+  },
+  {
+   "source": "evt",
+   "code": 9828,
+   "name": "Interior Western North American Temperate Ruderal Grassland",
+   "habitat": "grassland",
+   "cells": 1,
+   "model": "10540_15_25",
+   "how": "the BpS under most of its cells on the tile (1 of 1: Southern Rocky Mountain Ponderosa Pine Woodland)",
+   "species": [
+    {
+     "id": "muhlenbergia_montana",
+     "scientific": "Muhlenbergia montana",
+     "symbol": "MUMO",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10540_15_25 Dominant and Indicator Species (MUMO): named as Muhlenbergia montana; 55 GBIF records within 0.5 deg"
+    },
+    {
+     "id": "festuca_arizonica",
+     "scientific": "Festuca arizonica",
+     "symbol": "FEAR2",
+     "form": "grass",
+     "weight": 1.0,
+     "evidence": "10540_15_25 Dominant and Indicator Species (FEAR2): named as Festuca arizonica; 2 GBIF records within 0.5 deg"
+    }
+   ],
+   "doc": {
+    "model": "10540_15_25",
+    "title": "Southern Rocky Mountain Ponderosa Pine Woodland",
+    "url": "https://landfirereview.org/zipper.php?include_sim=false&docs=10540_15_25.docx"
+   }
+  }
+ ],
+ "species": [
+  {
+   "id": "achnatherum_hymenoides",
+   "scientific": "Achnatherum hymenoides",
+   "symbol": "ACHY",
+   "form": "grass",
+   "common": "Indian ricegrass",
+   "family": "Poaceae",
+   "score": 110045.0,
+   "classes": {
+    "chaparral": 1.0,
+    "conifer_forest": 0.5,
+    "grassland": 1.0,
+    "barren": 1.0,
+    "riparian": 1.0
+   },
+   "communities": [
+    "bps 403",
+    "bps 404",
+    "bps 406",
+    "bps 1183",
+    "bps 1197",
+    "bps 1198",
+    "bps 1209",
+    "bps 1210",
+    "bps 2704",
+    "bps 2705",
+    "evt 7078",
+    "evt 7080",
+    "evt 7082",
+    "evt 7087",
+    "evt 7127",
+    "evt 7135",
+    "evt 9001",
+    "evt 9009",
+    "evt 9011",
+    "evt 9327",
+    "evt 9336",
+    "evt 9827"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "gutierrezia_sarothrae",
+   "scientific": "Gutierrezia sarothrae",
+   "symbol": "GUSA2",
+   "form": "forb",
+   "common": "broom snakeweed",
+   "family": "Asteraceae",
+   "score": 85210.0,
+   "classes": {
+    "chaparral": 1.0,
+    "barren": 1.0,
+    "riparian": 1.0
+   },
+   "communities": [
+    "bps 404",
+    "bps 1196",
+    "bps 1209",
+    "evt 7078",
+    "evt 7081",
+    "evt 7127",
+    "evt 9001",
+    "evt 9327",
+    "evt 9827"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "festuca_arizonica",
+   "scientific": "Festuca arizonica",
+   "symbol": "FEAR2",
+   "form": "grass",
+   "common": "Arizona fescue",
+   "family": "Poaceae",
+   "score": 41557.5,
+   "classes": {
+    "conifer_forest": 1.0,
+    "grassland": 1.0,
+    "chaparral": 1.0,
+    "barren": 1.0
+   },
+   "communities": [
+    "bps 1188",
+    "bps 1190",
+    "bps 1207",
+    "bps 1211",
+    "evt 7051",
+    "evt 7054",
+    "evt 7117",
+    "evt 7126",
+    "evt 7146",
+    "evt 9018",
+    "evt 9328",
+    "evt 9828"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "muhlenbergia_montana",
+   "scientific": "Muhlenbergia montana",
+   "symbol": "MUMO",
+   "form": "grass",
+   "common": "mountain muhly",
+   "family": "Poaceae",
+   "score": 41458.0,
+   "classes": {
+    "conifer_forest": 1.0,
+    "grassland": 1.0,
+    "chaparral": 1.0,
+    "barren": 1.0
+   },
+   "communities": [
+    "bps 1190",
+    "bps 1207",
+    "bps 1211",
+    "evt 7054",
+    "evt 7117",
+    "evt 7126",
+    "evt 7146",
+    "evt 9018",
+    "evt 9328",
+    "evt 9828"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "achnatherum_speciosum",
+   "scientific": "Achnatherum speciosum",
+   "symbol": "ACSP12",
+   "form": "grass",
+   "common": "desert needlegrass",
+   "family": "Poaceae",
+   "score": 31356.0,
+   "classes": {
+    "chaparral": 1.0,
+    "barren": 1.0,
+    "riparian": 1.0
+   },
+   "communities": [
+    "bps 1197",
+    "bps 1198",
+    "evt 7080",
+    "evt 7082",
+    "evt 7087",
+    "evt 9009",
+    "evt 9011",
+    "evt 9336"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "bouteloua_eriopoda",
+   "scientific": "Bouteloua eriopoda",
+   "symbol": "BOER4",
+   "form": "grass",
+   "common": "black grama",
+   "family": "Poaceae",
+   "score": 23725.0,
+   "classes": {
+    "chaparral": 1.0,
+    "barren": 1.0,
+    "riparian": 1.0
+   },
+   "communities": [
+    "bps 1197",
+    "evt 7080",
+    "evt 7082",
+    "evt 9009",
+    "evt 9011",
+    "evt 9336"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "muhlenbergia_porteri",
+   "scientific": "Muhlenbergia porteri",
+   "symbol": "MUPO2",
+   "form": "grass",
+   "common": "bush muhly",
+   "family": "Poaceae",
+   "score": 19661.5,
+   "classes": {
+    "conifer_forest": 0.5,
+    "chaparral": 0.5,
+    "barren": 0.5,
+    "riparian": 0.5
+   },
+   "communities": [
+    "bps 1186",
+    "bps 1197",
+    "bps 1198",
+    "bps 1206",
+    "evt 7080",
+    "evt 7082",
+    "evt 7087",
+    "evt 9009",
+    "evt 9011",
+    "evt 9336"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "pleuraphis_rigida",
+   "scientific": "Pleuraphis rigida",
+   "symbol": "PLRI3",
+   "form": "grass",
+   "common": "big galleta",
+   "family": "Poaceae",
+   "score": 19493.5,
+   "classes": {
+    "chaparral": 0.5,
+    "barren": 0.5,
+    "riparian": 0.5
+   },
+   "communities": [
+    "bps 1197",
+    "bps 1198",
+    "evt 7080",
+    "evt 7082",
+    "evt 7087",
+    "evt 9009",
+    "evt 9011",
+    "evt 9336"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "pleuraphis_jamesii",
+   "scientific": "Pleuraphis jamesii",
+   "symbol": "PLJA",
+   "form": "grass",
+   "common": "James' galleta",
+   "family": "Poaceae",
+   "score": 12884.0,
+   "classes": {
+    "chaparral": 1.0,
+    "grassland": 0.5,
+    "conifer_forest": 0.5,
+    "barren": 0.5,
+    "riparian": 0.5
+   },
+   "communities": [
+    "bps 403",
+    "bps 1197",
+    "bps 1210",
+    "evt 7080",
+    "evt 7082",
+    "evt 7115",
+    "evt 7135",
+    "evt 9009",
+    "evt 9011",
+    "evt 9336"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "hesperostipa_comata",
+   "scientific": "Hesperostipa comata",
+   "symbol": "HECO26",
+   "form": "grass",
+   "common": "needle and thread",
+   "family": "Poaceae",
+   "score": 5869.5,
+   "classes": {
+    "chaparral": 1.0,
+    "grassland": 1.0,
+    "conifer_forest": 0.5
+   },
+   "communities": [
+    "bps 403",
+    "bps 406",
+    "bps 1210",
+    "bps 2705",
+    "evt 7115",
+    "evt 7135"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "poa_secunda",
+   "scientific": "Poa secunda",
+   "symbol": "POSE",
+   "form": "grass",
+   "common": "Sandberg bluegrass",
+   "family": "Poaceae",
+   "score": 5574.0,
+   "classes": {
+    "chaparral": 1.0
+   },
+   "communities": [
+    "bps 1203",
+    "bps 1209",
+    "bps 2704",
+    "bps 2705",
+    "evt 7107",
+    "evt 7127"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "elymus_elymoides",
+   "scientific": "Elymus elymoides",
+   "symbol": "ELEL5",
+   "form": "grass",
+   "common": "squirreltail",
+   "family": "Poaceae",
+   "score": 3899.5,
+   "classes": {
+    "conifer_forest": 0.5,
+    "chaparral": 1.0
+   },
+   "communities": [
+    "bps 1183",
+    "bps 2704",
+    "bps 2705"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "bouteloua_gracilis",
+   "scientific": "Bouteloua gracilis",
+   "symbol": "BOGR2",
+   "form": "grass",
+   "common": "blue grama",
+   "family": "Poaceae",
+   "score": 3890.5,
+   "classes": {
+    "chaparral": 1.0,
+    "conifer_forest": 1.0,
+    "mixed_forest": 0.5,
+    "grassland": 1.0
+   },
+   "communities": [
+    "bps 403",
+    "bps 406",
+    "bps 1184",
+    "bps 1185",
+    "bps 1209",
+    "bps 1210",
+    "evt 7115",
+    "evt 7127",
+    "evt 7135"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "distichlis_spicata",
+   "scientific": "Distichlis spicata",
+   "symbol": "DISP",
+   "form": "grass",
+   "common": "saltgrass",
+   "family": "Poaceae",
+   "score": 1560.0,
+   "classes": {
+    "chaparral": 0.5,
+    "riparian": 1.0
+   },
+   "communities": [
+    "bps 1209",
+    "bps 1213",
+    "evt 7127"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "achnatherum_lettermanii",
+   "scientific": "Achnatherum lettermanii",
+   "symbol": "ACLE9",
+   "form": "grass",
+   "common": "Letterman's needlegrass",
+   "family": "Poaceae",
+   "score": 760.0,
+   "classes": {
+    "chaparral": 1.0
+   },
+   "communities": [
+    "bps 1203",
+    "evt 7107"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "yucca_baccata",
+   "scientific": "Yucca baccata",
+   "symbol": "YUBA",
+   "form": "forb",
+   "common": "banana yucca",
+   "family": "Agavaceae",
+   "score": 198.5,
+   "classes": {
+    "conifer_forest": 0.5
+   },
+   "communities": [
+    "bps 1183"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "agave_utahensis",
+   "scientific": "Agave utahensis",
+   "symbol": "AGUT",
+   "form": "forb",
+   "common": "Utah agave",
+   "family": "Agavaceae",
+   "score": 86.5,
+   "classes": {
+    "conifer_forest": 0.5,
+    "mixed_forest": 0.5
+   },
+   "communities": [
+    "bps 1184",
+    "bps 1185"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "eriogonum_racemosum",
+   "scientific": "Eriogonum racemosum",
+   "symbol": "ERRA3",
+   "form": "forb",
+   "common": "redroot buckwheat",
+   "family": "Polygonaceae",
+   "score": 33.0,
+   "classes": {
+    "chaparral": 1.0
+   },
+   "communities": [
+    "bps 403"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "erigeron_divergens",
+   "scientific": "Erigeron divergens",
+   "symbol": "ERDI4",
+   "form": "forb",
+   "common": "spreading fleabane",
+   "family": "Asteraceae",
+   "score": 16.5,
+   "classes": {
+    "chaparral": 0.5
+   },
+   "communities": [
+    "bps 403"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "phlox_austromontana",
+   "scientific": "Phlox austromontana",
+   "symbol": "PHAU3",
+   "form": "forb",
+   "common": "mountain phlox",
+   "family": "Polemoniaceae",
+   "score": 16.5,
+   "classes": {
+    "chaparral": 0.5
+   },
+   "communities": [
+    "bps 403"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "castilleja_integra",
+   "scientific": "Castilleja integra",
+   "symbol": "CAIN14",
+   "form": "forb",
+   "common": "wholeleaf Indian paintbrush",
+   "family": "Scrophulariaceae",
+   "score": 16.5,
+   "classes": {
+    "chaparral": 0.5
+   },
+   "communities": [
+    "bps 403"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "sphaeralcea_parvifolia",
+   "scientific": "Sphaeralcea parvifolia",
+   "symbol": "SPPA2",
+   "form": "forb",
+   "common": "small-leaf globemallow",
+   "family": "Malvaceae",
+   "score": 16.5,
+   "classes": {
+    "chaparral": 0.5
+   },
+   "communities": [
+    "bps 403"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "lupinus_argenteus",
+   "scientific": "Lupinus argenteus",
+   "symbol": "LUAR3",
+   "form": "forb",
+   "common": "silvery lupine",
+   "family": "Fabaceae",
+   "score": 16.5,
+   "classes": {
+    "chaparral": 0.5
+   },
+   "communities": [
+    "bps 403"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "bromus_ciliatus",
+   "scientific": "Bromus ciliatus",
+   "symbol": "BRCI2",
+   "form": "grass",
+   "common": "fringed brome",
+   "family": "Poaceae",
+   "score": 1.0,
+   "classes": {
+    "conifer_forest": 0.5
+   },
+   "communities": [
+    "bps 1189",
+    "evt 7052"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "erigeron_eximius",
+   "scientific": "Erigeron eximius",
+   "symbol": "EREX4",
+   "form": "forb",
+   "common": "sprucefir fleabane",
+   "family": "Asteraceae",
+   "score": 1.0,
+   "classes": {
+    "conifer_forest": 0.5
+   },
+   "communities": [
+    "bps 1189",
+    "evt 7052"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "fragaria_virginiana",
+   "scientific": "Fragaria virginiana",
+   "symbol": "FRVI",
+   "form": "forb",
+   "common": "Virginia strawberry",
+   "family": "Rosaceae",
+   "score": 1.0,
+   "classes": {
+    "conifer_forest": 0.5
+   },
+   "communities": [
+    "bps 1189",
+    "evt 7052"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "osmorhiza_berteroi",
+   "scientific": "Osmorhiza berteroi",
+   "symbol": "OSBE",
+   "form": "forb",
+   "common": "sweetcicely",
+   "family": "Apiaceae",
+   "score": 1.0,
+   "classes": {
+    "conifer_forest": 0.5
+   },
+   "communities": [
+    "bps 1189",
+    "evt 7052"
+   ],
+   "record": "card"
+  },
+  {
+   "id": "thalictrum_fendleri",
+   "scientific": "Thalictrum fendleri",
+   "symbol": "THFE",
+   "form": "forb",
+   "common": "Fendler's meadow-rue",
+   "family": "Ranunculaceae",
+   "score": 1.0,
+   "classes": {
+    "conifer_forest": 0.5
+   },
+   "communities": [
+    "bps 1189",
+    "evt 7052"
+   ],
+   "record": "card"
+  }
+ ],
+ "log": [
+  "BpS model 10060: no description document",
+  "'Juniperus spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Achnatherum spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Pleuraphis spp.' dropped: no native ground congener in the tile's GBIF records",
+  "bps 404: bromus_rubens skipped (PLANTS: introduced)",
+  "bps 404: bromus_tectorum skipped (PLANTS: introduced)",
+  "bps 404: erodium_cicutarium skipped (PLANTS: introduced)",
+  "BpS model 10040: no description document",
+  "bps 1183: Arabis parishii skipped (no GBIF record within 0.5 deg)",
+  "Garrya falvescens dropped: not in the PLANTS Database",
+  "bps 1183: Pseudoroegneria spicata skipped (no GBIF record within 0.5 deg)",
+  "bps 1184: Juncus debilis skipped (no GBIF record within 0.5 deg)",
+  "'Muhlenbergia spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Nolina spp.' dropped: no native ground congener in the tile's GBIF records",
+  "bps 1184: Muhlenbergia emersleyi skipped (no GBIF record within 0.5 deg)",
+  "bps 1184: Muhlenbergia longiligula skipped (no GBIF record within 0.5 deg)",
+  "bps 1184: Muhlenbergia straminea skipped (no GBIF record within 0.5 deg)",
+  "bps 1184: Schizachyrium cirratum skipped (no GBIF record within 0.5 deg)",
+  "bps 1185: Juncus debilis skipped (no GBIF record within 0.5 deg)",
+  "'Muhlenbergia spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Nolina spp.' dropped: no native ground congener in the tile's GBIF records",
+  "bps 1185: Muhlenbergia emersleyi skipped (no GBIF record within 0.5 deg)",
+  "bps 1185: Muhlenbergia longiligula skipped (no GBIF record within 0.5 deg)",
+  "bps 1185: Muhlenbergia straminea skipped (no GBIF record within 0.5 deg)",
+  "bps 1185: Schizachyrium cirratum skipped (no GBIF record within 0.5 deg)",
+  "bps 1186: Juncus debilis skipped (no GBIF record within 0.5 deg)",
+  "Juniperus depeanna dropped: not in the PLANTS Database",
+  "Quercus grisia dropped: not in the PLANTS Database",
+  "Berberis spp dropped: not in the PLANTS Database",
+  "Muhlenbergia emerslyei dropped: not in the PLANTS Database",
+  "'Pseudotsuga spp.' dropped: no native ground congener in the tile's GBIF records",
+  "bps 1188: Calamagrostis rubescens skipped (no GBIF record within 0.5 deg)",
+  "bps 1188: Carex garberi skipped (no GBIF record within 0.5 deg)",
+  "Abies concolor-dominated dropped: not in the PLANTS Database",
+  "bps 1189: Carex geyeri skipped (no GBIF record within 0.5 deg)",
+  "bps 1189: Muhlenbergia straminea skipped (no GBIF record within 0.5 deg)",
+  "bps 1189: Pseudoroegneria spicata skipped (no GBIF record within 0.5 deg)",
+  "bps 1189: Luzula parviflora skipped (no GBIF record within 0.5 deg)",
+  "bps 1189: Packera cardamine skipped (no GBIF record within 0.5 deg)",
+  "bps 1189: Thalictrum occidentale skipped (no GBIF record within 0.5 deg)",
+  "bps 1190: Boerhavia gracillima skipped (no GBIF record within 0.5 deg)",
+  "'Juniperus spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Tetradymia spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Nevada ephedra dropped: not in the PLANTS Database",
+  "bps 1197: Yucca schidigera skipped (no GBIF record within 0.5 deg)",
+  "'Atriplex spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Lycium spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Ephedra spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Larrea tridentate dropped: not in the PLANTS Database",
+  "'Atriplex spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Ephedra spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Lycium spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Salazaria mexican dropped: not in the PLANTS Database",
+  "'Aristida spp.' dropped: no native ground congener in the tile's GBIF records",
+  "bps 1203: Carex geyeri skipped (no GBIF record within 0.5 deg)",
+  "'Parkinsonia spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Ferocactus spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Plantago spp.' dropped: no native ground congener in the tile's GBIF records",
+  "bps 1206: Juncus debilis skipped (no GBIF record within 0.5 deg)",
+  "Juniperus depeanna dropped: not in the PLANTS Database",
+  "Quercus grisia dropped: not in the PLANTS Database",
+  "'Berberis spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Muhlenbergia emerslyei dropped: not in the PLANTS Database",
+  "bps 1209: Pseudoroegneria spicata skipped (no GBIF record within 0.5 deg)",
+  "'Ephedra spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Hesperostipa comate dropped: not in the PLANTS Database",
+  "'Pleuraphis spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Aristida spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Muhlenbergia spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Aristida spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Muhlenbergia spp.' dropped: no native ground congener in the tile's GBIF records",
+  "bps 1211: Festuca thurberi skipped (no GBIF record within 0.5 deg)",
+  "bps 1211: Danthonia parryi skipped (no GBIF record within 0.5 deg)",
+  "bps 1211: Muhlenbergia filiculmis skipped (no GBIF record within 0.5 deg)",
+  "bps 1211: Pseudoroegneria spicata skipped (no GBIF record within 0.5 deg)",
+  "'Acacia spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Prosopis spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Carex spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Acacia spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Prosopis spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Populus spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Salix spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Carex spp.' dropped: no native ground congener in the tile's GBIF records",
+  "bps 1214: Benitoa occidentalis skipped (no GBIF record within 0.5 deg)",
+  "'Quercus spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Pinus leiophyla dropped: not in the PLANTS Database",
+  "Salix goodingii dropped: not in the PLANTS Database",
+  "Salix luicida dropped: not in the PLANTS Database",
+  "'Symphoricarpos spp.' dropped: no native ground congener in the tile's GBIF records",
+  "bps 2704: Achnatherum thurberianum skipped (no GBIF record within 0.5 deg)",
+  "'Atriplex spp.' dropped: no native ground congener in the tile's GBIF records",
+  "bps 2705: Pseudoroegneria spicata skipped (no GBIF record within 0.5 deg)",
+  "Abies coahuilensis dropped: not in the PLANTS Database",
+  "'Pseudotsuga spp.' dropped: no native ground congener in the tile's GBIF records",
+  "evt 7051: Calamagrostis rubescens skipped (no GBIF record within 0.5 deg)",
+  "evt 7051: Carex garberi skipped (no GBIF record within 0.5 deg)",
+  "Abies concolor-dominated dropped: not in the PLANTS Database",
+  "evt 7052: Carex geyeri skipped (no GBIF record within 0.5 deg)",
+  "evt 7052: Muhlenbergia straminea skipped (no GBIF record within 0.5 deg)",
+  "evt 7052: Pseudoroegneria spicata skipped (no GBIF record within 0.5 deg)",
+  "evt 7052: Luzula parviflora skipped (no GBIF record within 0.5 deg)",
+  "evt 7052: Packera cardamine skipped (no GBIF record within 0.5 deg)",
+  "evt 7052: Thalictrum occidentale skipped (no GBIF record within 0.5 deg)",
+  "evt 7054: Boerhavia gracillima skipped (no GBIF record within 0.5 deg)",
+  "'Juniperus spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Juniperus spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Achnatherum spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Pleuraphis spp.' dropped: no native ground congener in the tile's GBIF records",
+  "evt 7078: bromus_rubens skipped (PLANTS: introduced)",
+  "evt 7078: bromus_tectorum skipped (PLANTS: introduced)",
+  "evt 7078: erodium_cicutarium skipped (PLANTS: introduced)",
+  "evt 7080: Yucca schidigera skipped (no GBIF record within 0.5 deg)",
+  "'Tetradymia spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Nevada ephedra dropped: not in the PLANTS Database",
+  "evt 7082: Yucca schidigera skipped (no GBIF record within 0.5 deg)",
+  "'Atriplex spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Lycium spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Ephedra spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Larrea tridentate dropped: not in the PLANTS Database",
+  "'Atriplex spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Ephedra spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Lycium spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Salazaria mexican dropped: not in the PLANTS Database",
+  "'Aristida spp.' dropped: no native ground congener in the tile's GBIF records",
+  "evt 7107: Carex geyeri skipped (no GBIF record within 0.5 deg)",
+  "evt 7126: Boerhavia gracillima skipped (no GBIF record within 0.5 deg)",
+  "'Juniperus spp.' dropped: no native ground congener in the tile's GBIF records",
+  "evt 7127: Pseudoroegneria spicata skipped (no GBIF record within 0.5 deg)",
+  "'Ephedra spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Hesperostipa comate dropped: not in the PLANTS Database",
+  "'Pleuraphis spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Aristida spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Muhlenbergia spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Aristida spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Muhlenbergia spp.' dropped: no native ground congener in the tile's GBIF records",
+  "evt 7146: Festuca thurberi skipped (no GBIF record within 0.5 deg)",
+  "evt 7146: Danthonia parryi skipped (no GBIF record within 0.5 deg)",
+  "evt 7146: Muhlenbergia filiculmis skipped (no GBIF record within 0.5 deg)",
+  "evt 7146: Pseudoroegneria spicata skipped (no GBIF record within 0.5 deg)",
+  "'Juniperus spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Achnatherum spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Pleuraphis spp.' dropped: no native ground congener in the tile's GBIF records",
+  "evt 9001: bromus_rubens skipped (PLANTS: introduced)",
+  "evt 9001: bromus_tectorum skipped (PLANTS: introduced)",
+  "evt 9001: erodium_cicutarium skipped (PLANTS: introduced)",
+  "evt 9009: Yucca schidigera skipped (no GBIF record within 0.5 deg)",
+  "evt 9011: Yucca schidigera skipped (no GBIF record within 0.5 deg)",
+  "evt 9018: Boerhavia gracillima skipped (no GBIF record within 0.5 deg)",
+  "'Juniperus spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Populus spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Salix spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Carex spp.' dropped: no native ground congener in the tile's GBIF records",
+  "evt 9019: Benitoa occidentalis skipped (no GBIF record within 0.5 deg)",
+  "'Quercus spp.' dropped: no native ground congener in the tile's GBIF records",
+  "Pinus leiophyla dropped: not in the PLANTS Database",
+  "Salix goodingii dropped: not in the PLANTS Database",
+  "Salix luicida dropped: not in the PLANTS Database",
+  "'Symphoricarpos spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Juniperus spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Achnatherum spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Pleuraphis spp.' dropped: no native ground congener in the tile's GBIF records",
+  "evt 9327: bromus_rubens skipped (PLANTS: introduced)",
+  "evt 9327: bromus_tectorum skipped (PLANTS: introduced)",
+  "evt 9327: erodium_cicutarium skipped (PLANTS: introduced)",
+  "evt 9328: Boerhavia gracillima skipped (no GBIF record within 0.5 deg)",
+  "'Juniperus spp.' dropped: no native ground congener in the tile's GBIF records",
+  "evt 9336: Yucca schidigera skipped (no GBIF record within 0.5 deg)",
+  "'Juniperus spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Achnatherum spp.' dropped: no native ground congener in the tile's GBIF records",
+  "'Pleuraphis spp.' dropped: no native ground congener in the tile's GBIF records",
+  "evt 9827: bromus_rubens skipped (PLANTS: introduced)",
+  "evt 9827: bromus_tectorum skipped (PLANTS: introduced)",
+  "evt 9827: erodium_cicutarium skipped (PLANTS: introduced)",
+  "evt 9828: Boerhavia gracillima skipped (no GBIF record within 0.5 deg)",
+  "'Juniperus spp.' dropped: no native ground congener in the tile's GBIF records",
+  "bromus_ciliatus: kept as the best grass of bps 1189 (Southern Rocky Mountain Mesic Montane Mixed Conifer Forest and Woodland, 1 cells)",
+  "sporobolus_airoides: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "bouteloua_curtipendula: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "poa_fendleriana: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "bothriochloa_barbinodis: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "muhlenbergia_torreyi: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "danthonia_intermedia: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "festuca_idahoensis: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "leymus_cinereus: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "aristida_purpurea: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "carex_rossii: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)",
+  "carex_siccata: dropped (the tile's 15 grass slots are taken by communities' best and better-represented species)"
+ ],
+ "cards_written": []
+}

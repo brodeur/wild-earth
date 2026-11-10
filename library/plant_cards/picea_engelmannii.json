@@ -1,0 +1,245 @@
+{
+ "id": "picea_engelmannii",
+ "scientific": "Picea engelmannii",
+ "common": "Engelmann spruce",
+ "aliases": [
+  "engelmann_spruce"
+ ],
+ "family": "Pinaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "pseudotsuga_menziesii",
+ "regions": [
+  "interior_west"
+ ],
+ "height_m": [
+  20,
+  35
+ ],
+ "stature": {
+  "typical_m": 28,
+  "tall_m": 40,
+  "record_m": 65,
+  "source": "typical: Wikipedia 25-40 m, FEIS 14-40 m by site; Yellowstone gives up to about 30 m (100 ft, NPS); tall: 40 m, the top of both ranges; record: exceptionally 65 m (Wikipedia); read 2026-11-10"
+ },
+ "variants_height_m": {
+  "young": [
+   2,
+   12
+  ],
+  "old-growth": [
+   30,
+   45
+  ]
+ },
+ "crown": {
+  "shape": "conical",
+  "profile": [
+   [
+    0.05,
+    0.13
+   ],
+   [
+    0.2,
+    0.14
+   ],
+   [
+    0.38,
+    0.13
+   ],
+   [
+    0.55,
+    0.11
+   ],
+   [
+    0.72,
+    0.08
+   ],
+   [
+    0.86,
+    0.05
+   ],
+   [
+    1.0,
+    0.01
+   ]
+  ],
+  "lobes": 3,
+  "lobe_depth": 0.07,
+  "asymmetry": 0.1,
+  "fill": 0.38,
+  "edge": 1.05
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    66,
+    84,
+    90
+   ],
+   "spring": [
+    100,
+    124,
+    122
+   ],
+   "summer": [
+    72,
+    92,
+    98
+   ],
+   "fall": [
+    70,
+    90,
+    96
+   ]
+  },
+  "leaf_size_m": 0.025,
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   122,
+   92,
+   84
+  ],
+  "bark_pattern": "plates",
+  "flare": 1.3
+ },
+ "targets": {
+  "crown_width_ratio": 0.25,
+  "crown_base_ratio": 0.12,
+  "porosity": 0.22,
+  "from": "judgement values from the drafter's reading of the sources (2026-11-10), no photographs measured; to be replaced by photo measurements: a narrow, dense spire of short, compact branches (FEIS), blue-green; FEIS gives the crown as 50-70% of the height in stands, with dead lower limbs left on; an open-grown tree keeps branches lower"
+ },
+ "variant_patches": {
+  "young": {
+   "set": {
+    "trunk": {
+     "bark_rgb": [
+      118,
+      110,
+      102
+     ],
+     "bark_pattern": "smooth_grey"
+    }
+   },
+   "note": "a young tree: a narrow, dense blue-green cone with branches to the ground and thin grey-brown bark"
+  },
+  "old-growth": {
+   "set": {
+    "trunk": {
+     "flare": 1.6
+    },
+    "crown": {
+     "shape": "cylindrical",
+     "envelope": {
+      "profile": [
+       [
+        0.3,
+        0.12
+       ],
+       [
+        0.45,
+        0.13
+       ],
+       [
+        0.6,
+        0.13
+       ],
+       [
+        0.75,
+        0.11
+       ],
+       [
+        0.88,
+        0.08
+       ],
+       [
+        1.0,
+        0.03
+       ]
+      ],
+      "asymmetry": 0.14
+     }
+    }
+   },
+   "note": "an old tree of four or five centuries: the crown a narrow column (Wikipedia: cylindrical with age) with a rounded top (NPS Great Basin), the lower trunk bare and scaled in loose purplish-brown flakes"
+  }
+ },
+ "description": "The spruce of the high Rockies' cold, wet forests, 20-35 m here, a very narrow, dense spire of short, compact branches clothed in blue-green, four-sided needles. Its thin bark flakes in loose, rounded purplish-brown scales, and it stands with subalpine fir along creeks, in cold valley bottoms and on north slopes up to timberline, where it shrinks to a wind-shaped thicket.",
+ "season_notes": {
+  "winter": "Evergreen and deep in snow; elk, moose and deer shelter under the stands, and grouse feed on the needles and buds.",
+  "spring": "Small purple seed cones and red pollen cones open on the upper and lower crown as the snow goes.",
+  "summer": "Light brown cones 4-6 cm hang near the top and reach full size by August.",
+  "fall": "Winged seed falls from late September through the winter; red squirrels cut and cache the cones."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "riparian": 0.7,
+   "mixed_forest": 0.4,
+   "barren": 0.3,
+   "grassland": 0.2
+  },
+  "floor": 1.2,
+  "mid": 0.9,
+  "steep": 0.7,
+  "north": 1.4,
+  "shade": 0.5,
+  "disturbed": 0.2
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "peromyscus_maniculatus",
+    "part": "seeds",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   },
+   {
+    "animal": "tamias_amoenus",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "cervus_canadensis",
+    "part": "browse",
+    "seasons": [
+     "winter"
+    ]
+   }
+  ],
+  "cover_for": [
+   "cervus_canadensis",
+   "odocoileus_hemionus",
+   "ursus_americanus",
+   "lepus_americanus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   2100,
+   3200
+  ],
+  "where": "creeks, wet ground and older high forests of Yellowstone (with subalpine fir, under lodgepole, and in island stands with whitebark pine above), the Lamar Valley's side drainages and the Teton canyons; the Rockies and east Cascades from British Columbia to Arizona and New Mexico"
+ },
+ "notes": "A spruce grown from Douglas-fir as a much narrower, denser spire, like the subalpine-fir card. Needles 1.5-3 cm, four-sided, flexible, blue-green above and whitish below (Wikipedia; deep bluish-green in FEIS), standing out all round the twig, not in the template's flat ranks; the colours are judgement values. Bark very thin, grey-brown when young, purplish-brown to russet in loose scales when mature (FEIS; reddish-brown in NPS Great Basin, small round plates in Wikipedia); the colours are judgement values. Cones pendant, purple young, light brown ripe (Wikipedia, FEIS), not drawn. Elevation: generally 2743-3354 m in Wyoming, Utah and Colorado and down to 2438 m along cold streams (FEIS); the Yellowstone and Teton band here is the drafter's estimate below that, as Yellowstone's page gives no figure. Krummholz at timberline (FEIS, Wikipedia, NPS Great Basin) is not grown. Seed eaters named by FEIS and missing from the animal library: red squirrel, crossbills, pine siskins, chickadees, nuthatches; spruce and dusky grouse eat needles and buds; moose, porcupine and snowshoe hare live in the stands (only the hare is in the library). The yellow-pine chipmunk (tamias_amoenus) stands for FEIS's 'chipmunks' as the drafter's choice for northwest Wyoming. Very fire sensitive; trees often 350-600 years old (FEIS).",
+ "sources": [
+  "Fire Effects Information System, Picea engelmannii, https://www.fs.usda.gov/database/feis/plants/tree/piceng/all.html, read 2026-11-10",
+  "Wikipedia, Picea engelmannii (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Picea_engelmannii, read 2026-11-10",
+  "Forests - Yellowstone National Park (U.S. National Park Service), https://www.nps.gov/yell/learn/nature/forests.htm, read 2026-11-10",
+  "Trees and Shrubs - Great Basin National Park (U.S. National Park Service), https://www.nps.gov/grba/learn/nature/treesandshrubs.htm, read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ]
+}

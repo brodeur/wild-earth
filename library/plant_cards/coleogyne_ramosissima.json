@@ -1,0 +1,190 @@
+{
+ "id": "coleogyne_ramosissima",
+ "scientific": "Coleogyne ramosissima",
+ "common": "blackbrush",
+ "aliases": [
+  "blackbrush",
+  "black_brush"
+ ],
+ "family": "Rosaceae",
+ "form": "shrub",
+ "deciduous": false,
+ "template": "adenostoma_fasciculatum",
+ "regions": [
+  "interior_west"
+ ],
+ "height_m": [
+  0.4,
+  1.2
+ ],
+ "stature": {
+  "typical_m": 0.8,
+  "tall_m": 1.5,
+  "record_m": 2,
+  "source": "typical: the drafter's estimate for the Grand Canyon benches (Wikipedia: to about 1.2 m in the Canyonlands region); tall and record: FEIS gives 0.3-2 m, Wikipedia up to about 1.8 m in the Mojave; read 2026-11-10"
+ },
+ "variants_height_m": {
+  "young": [
+   0.15,
+   0.4
+  ],
+  "decadent": [
+   0.9,
+   1.6
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.55
+   ],
+   [
+    0.2,
+    0.72
+   ],
+   [
+    0.45,
+    0.78
+   ],
+   [
+    0.7,
+    0.72
+   ],
+   [
+    0.88,
+    0.55
+   ],
+   [
+    1.0,
+    0.28
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.12,
+  "asymmetry": 0.1,
+  "fill": 0.55,
+  "edge": 1.08
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    92,
+    98,
+    84
+   ],
+   "spring": [
+    98,
+    110,
+    82
+   ],
+   "summer": [
+    106,
+    106,
+    96
+   ],
+   "fall": [
+    98,
+    100,
+    88
+   ]
+  },
+  "leaf_size_m": 0.008,
+  "flowers": {
+   "season": "spring",
+   "months": [
+    4,
+    6
+   ],
+   "form": "cluster",
+   "rgb": [
+    214,
+    190,
+    92
+   ],
+   "size_m": 0.02,
+   "density": 0.3,
+   "before_leaves": false
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   100,
+   98,
+   94
+  ],
+  "bark_pattern": "smooth_grey",
+  "stems": [
+   4,
+   10
+  ]
+ },
+ "targets": {
+  "crown_width_ratio": 1.3,
+  "crown_base_ratio": 0.05,
+  "porosity": 0.3,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: a low, compact, rounded and nearly symmetrical bush of dense, tangled grey twigs, a little wider than tall, dark grey-green, set apart from its neighbours in a fairly even spacing across the benches"
+ },
+ "description": "A low, compact, rounded shrub of dense, tangled, spine-tipped grey twigs that turn black when wet, with tiny pointed leaves in opposite pairs, dark grey-green in spring and sparser and greyer in the dry summer. It covers the Tonto Platform and the benches of the eastern canyon in nearly pure, evenly spaced stands, the cool desertscrub between the river and the pinyon-juniper, where it gives whole slopes a uniform dark grey cast.",
+ "season_notes": {
+  "winter": "Leafy at the branch tips; a winter browse for bighorn and mule deer. After rain the whole stand goes black.",
+  "spring": "In a wet spring, small yellow flowers with four yellowish sepals and no petals open at the twig tips, April-June.",
+  "summer": "Drought-dormant: most older leaves fall in July and August and the bushes turn grey and twiggy.",
+  "fall": "Small leathery seeds with twisted tails lie under the bushes, gathered by rodents and birds."
+ },
+ "habitat": {
+  "classes": {
+   "barren": 0.9,
+   "chaparral": 0.6,
+   "grassland": 0.5,
+   "conifer_forest": 0.15
+  },
+  "floor": 1.3,
+  "mid": 1.0,
+  "steep": 0.5,
+  "north": 0.8,
+  "shade": 0.05,
+  "disturbed": 0.2
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "peromyscus_maniculatus",
+    "part": "seeds",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "peromyscus_maniculatus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   760,
+   2440
+  ],
+  "where": "the Tonto Platform and the benches and slopes of Marble Canyon and the eastern Grand Canyon, the cool desertscrub between the river corridor and the pinyon-juniper woodland"
+ },
+ "notes": "Chamise (the template) is the library's nearest Rosaceae shrub with tiny clustered leaves and stiff twigs, but it is taller (1.2-2.4 m), green, with many more wand-like stems and white flower sprays. The card makes blackbrush lower and rounder (FEIS: compact, erect, roughly round and symmetrical, 0.3-2 m), grey (Wikipedia: dark greyish green; grey branches that go dark when wet, hence the name), with fewer main stems that split into several (FEIS), and gives it small yellow spring flowers (Wikipedia: four yellowish sepals, many yellow stamens, usually no petals, April-July after heavy spring rain). Its leaves are up to about 1 cm with a small point, in opposite pairs (Wikipedia). It is drought-deciduous (FEIS: keeps leaves at the branch ends, sheds older ones and goes dormant, most in July-August), drawn here as the leaf-on months, which are the drafter's judgement. A nonsprouter killed by fire and slow to return, 25-60 years or more (FEIS), so disturbed is low. The twigs' dying tips make the spiny tangle (FEIS); the template's wand-like twigs will look too straight. FEIS gives 760-2440 m across the range; the Grand Canyon placing (Tonto Platform and Marble Canyon, cool desertscrub) is from the NPS scrublands and ecosystems pages. Eaters: FEIS names desert bighorn (a heavy winter browser, not in the library), mule deer in winter, and small mammals and birds for the seeds and cover; the deer mouse stands in for the rodents (woodrats and the canyon's other rodents are not in the library). Livestock find it poor forage. Colours, crown profile, porosity, stems and the flower size and colour are the drafter's judgement, not from a source. The drought leaf drop FEIS describes (leaves shed in the dry summer, the shrub near-dormant) is not drawn as leaf-off: the generator's leaf-on by month follows `deciduous`, and an evergreen card keeps its leaves; the summer colours are greyer instead.",
+ "sources": [
+  "Fire Effects Information System, Coleogyne ramosissima, https://www.fs.usda.gov/database/feis/plants/shrub/colram/all.html, read 2026-11-10",
+  "Wikipedia, Coleogyne (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Coleogyne, read 2026-11-10",
+  "National Park Service, Grand Canyon National Park: Scrublands, https://www.nps.gov/grca/learn/nature/scrublands.htm, read 2026-11-10",
+  "National Park Service, Grand Canyon National Park: Natural Features & Ecosystems, https://home.nps.gov/grca/learn/nature/naturalfeaturesandecosystems.htm, read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ]
+}

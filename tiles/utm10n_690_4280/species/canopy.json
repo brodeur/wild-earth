@@ -13,8 +13,210 @@
  },
  "plots": [],
  "rule": "pipeline/tree_cards.py choose(): plots, then named trees of open place descriptions, then the tile's most-recorded WCVP trees that reach the subcanopy; shares by tier (TIER_SHARE)",
- "trees": [],
- "queued": [],
+ "trees": [
+  {
+   "id": "aesculus_californica",
+   "scientific": "Aesculus californica",
+   "family": "Sapindaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 34.0,
+   "evidence": [
+    "GBIF: 34 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.1753,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "quercus_kelloggii",
+   "scientific": "Quercus kelloggii",
+   "family": "Fagaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 33.0,
+   "evidence": [
+    "GBIF: 33 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.1701,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "heteromeles_arbutifolia",
+   "scientific": "Heteromeles arbutifolia",
+   "family": "Rosaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 29.0,
+   "evidence": [
+    "GBIF: 29 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.1495,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "quercus_wislizeni",
+   "scientific": "Quercus wislizeni",
+   "family": "Fagaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 25.0,
+   "evidence": [
+    "GBIF: 25 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.1289,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "pinus_sabiniana",
+   "scientific": "Pinus sabiniana",
+   "family": "Pinaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 19.0,
+   "evidence": [
+    "GBIF: 19 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0979,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "calocedrus_decurrens",
+   "scientific": "Calocedrus decurrens",
+   "family": "Cupressaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 18.0,
+   "evidence": [
+    "GBIF: 18 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0928,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "quercus_douglasii",
+   "scientific": "Quercus douglasii",
+   "family": "Fagaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 11.0,
+   "evidence": [
+    "GBIF: 11 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0567,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "quercus_lobata",
+   "scientific": "Quercus lobata",
+   "family": "Fagaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 11.0,
+   "evidence": [
+    "GBIF: 11 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0567,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "arbutus_menziesii",
+   "scientific": "Arbutus menziesii",
+   "family": "Ericaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 7.0,
+   "evidence": [
+    "GBIF: 7 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0361,
+   "research": false,
+   "card": false
+  },
+  {
+   "id": "juglans_hindsii",
+   "scientific": "Juglans hindsii",
+   "family": "Juglandaceae",
+   "wcvp_lifeform": "tree",
+   "tier": "records",
+   "value": 7.0,
+   "evidence": [
+    "GBIF: 7 records on the tile; height not yet screened"
+   ],
+   "provisional": true,
+   "share": 0.0361,
+   "research": false,
+   "card": false
+  }
+ ],
+ "queued": [
+  {
+   "id": "aesculus_californica",
+   "scientific": "Aesculus californica",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "quercus_kelloggii",
+   "scientific": "Quercus kelloggii",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "heteromeles_arbutifolia",
+   "scientific": "Heteromeles arbutifolia",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "quercus_wislizeni",
+   "scientific": "Quercus wislizeni",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "pinus_sabiniana",
+   "scientific": "Pinus sabiniana",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "calocedrus_decurrens",
+   "scientific": "Calocedrus decurrens",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "quercus_douglasii",
+   "scientific": "Quercus douglasii",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "quercus_lobata",
+   "scientific": "Quercus lobata",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "arbutus_menziesii",
+   "scientific": "Arbutus menziesii",
+   "why": "needs a research record (its height decides whether it stays)"
+  },
+  {
+   "id": "juglans_hindsii",
+   "scientific": "Juglans hindsii",
+   "why": "needs a research record (its height decides whether it stays)"
+  }
+ ],
  "log": [
   "plot vela_apaza_2024_los_amigos: not used (7751 km, 0 m apart, climate Am)"
  ],

@@ -10,6 +10,7 @@
  "deciduous": false,
  "template": "stipa_pulchra",
  "regions": [
+  "landfire_mz15",
   "landfire_mz21"
  ],
  "height_m": [
@@ -175,11 +176,12 @@
    "leaf_width_m": 0.0015
   }
  },
- "description": "Squirreltail (Elymus elymoides, Poaceae): a perennial grass 0.46 m tall at maturity (USDA PLANTS), named by the LANDFIRE descriptions of bps 697, bps 704, evt 7126, evt 9828 on the tile.",
+ "description": "Squirreltail (Elymus elymoides, Poaceae): a perennial grass 0.46 m tall at maturity (USDA PLANTS), named by the LANDFIRE descriptions of bps 1183, bps 2704, bps 2705 on the tile.",
  "habitat": {
   "classes": {},
   "named_in_classes": {
-   "chaparral": 0.5,
+   "conifer_forest": 0.5,
+   "chaparral": 1.0,
    "grassland": 0.5,
    "mixed_forest": 0.5,
    "riparian": 0.5
@@ -191,11 +193,11 @@
   "shade": 0.3,
   "disturbed": 1.0
  },
- "notes": "Written by rule from the USDA PLANTS Database's characteristics (pipeline/ground_cards.py). PLANTS characteristics used (ELEL5): Height, Mature (feet) = 1.5, Foliage Color = Green, Fruit/Seed Color = Brown, Active Growth Period = Spring, Bloom Period = Mid Spring, Leaf Retention = No, Growth Form = Bunch, Drought Tolerance = High, Foliage Texture = Fine. The client's seasons are calendar quarters; PLANTS' bloom periods are the species' over its US range, not corrected for this tile's elevation. Region tag landfire_mz21 (the LANDFIRE map zone whose descriptions named it) is not a natural region in pipeline/regions.py: no regional table draws it.",
+ "notes": "Written by rule from the USDA PLANTS Database's characteristics (pipeline/ground_cards.py). PLANTS characteristics used (ELEL5): Height, Mature (feet) = 1.5, Foliage Color = Green, Fruit/Seed Color = Brown, Active Growth Period = Spring, Bloom Period = Mid Spring, Leaf Retention = No, Growth Form = Bunch, Drought Tolerance = High, Foliage Texture = Fine. The client's seasons are calendar quarters; PLANTS' bloom periods are the species' over its US range, not corrected for this tile's elevation. Region tag landfire_mz15 (the LANDFIRE map zone whose descriptions named it) is not a natural region in pipeline/regions.py: no regional table draws it.",
  "sources": [
-  "USDA PLANTS profile ELEL5: https://plantsservices.sc.egov.usda.gov/api/PlantProfile?symbol=ELEL5, read 2026-11-06",
-  "USDA PLANTS characteristics (ELEL5): https://plantsservices.sc.egov.usda.gov/api/PlantCharacteristics/<id>, read 2026-11-06",
-  "LANDFIRE BpS descriptions naming it: species/ground.json (bps 697; bps 704; evt 7126; evt 9828), read 2026-11-06",
+  "USDA PLANTS profile ELEL5: https://plantsservices.sc.egov.usda.gov/api/PlantProfile?symbol=ELEL5, read 2026-11-10",
+  "USDA PLANTS characteristics (ELEL5): https://plantsservices.sc.egov.usda.gov/api/PlantCharacteristics/<id>, read 2026-11-10",
+  "LANDFIRE BpS descriptions naming it: species/ground.json (bps 1183; bps 2704; bps 2705), read 2026-11-10",
   "the tuft rule's constants (TUFT_H, TUFT_W): Zouhar, K. 2000. Festuca idahoensis. Fire Effects Information System, USDA Forest Service: https://www.fs.usda.gov/database/feis/plants/graminoid/fesida/all.html; Howard, J. L. 1997. Poa secunda. FEIS: https://www.fs.usda.gov/database/feis/plants/graminoid/poasec/all.html, read 2026-11-06"
  ],
  "authors": [

@@ -1,0 +1,527 @@
+{
+ "id": "juniperus_osteosperma",
+ "aliases": [
+  "utah_juniper"
+ ],
+ "scientific": "Juniperus osteosperma",
+ "common": "Utah juniper",
+ "form": "tree",
+ "regions": [
+  "interior_west"
+ ],
+ "architectural_model": "Rauh (provisional)",
+ "deciduous": false,
+ "height_m": [
+  3,
+  7
+ ],
+ "stature": {
+  "typical_m": 4.5,
+  "tall_m": 8,
+  "record_m": 9,
+  "source": "typical: FEIS often 3-4.5 m, Colorado National Monument averages 3-6 m (NPS), Wikipedia 3-6 m; tall: FEIS usually under 8 m; record: about 9 m, rarely (Wikipedia, NPS Colorado National Monument); Grand Canyon gives up to 6 m (NPS); read 2026-11-10"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.3,
+   "height_m": [
+    0.8,
+    2.5
+   ],
+   "trunk_radius": 0.85,
+   "branches": 0.8,
+   "set": {
+    "trunk": {
+     "base_size": 0.04,
+     "bole_ratio": 0.04,
+     "flare": 1.25,
+     "bark_rgb": [
+      132,
+      132,
+      122
+     ],
+     "stems": [
+      1,
+      2
+     ]
+    },
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.03,
+        0.3
+       ],
+       [
+        0.25,
+        0.33
+       ],
+       [
+        0.45,
+        0.3
+       ],
+       [
+        0.65,
+        0.23
+       ],
+       [
+        0.85,
+        0.12
+       ],
+       [
+        1.0,
+        0.03
+       ]
+      ],
+      "lobe_depth": 0.12,
+      "asymmetry": 0.05
+     }
+    },
+    "levels": [
+     {
+      "droop_deg": 18,
+      "upturn_deg": 30
+     }
+    ]
+   },
+   "note": "a young tree: a dense, pointed bush of stiff foliage"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 1,
+   "note": "(from the incense cedar template) the file as written"
+  },
+  {
+   "name": "old-growth",
+   "weight": 0.15,
+   "height_m": [
+    4,
+    8
+   ],
+   "trunk_radius": 1.4,
+   "branches": 0.75,
+   "gnarl": 1.3,
+   "deadwood": {
+    "fraction": 0.25,
+    "levels": [
+     1
+    ],
+    "where": "lower",
+    "shorten": 0.5,
+    "rgb": [
+     128,
+     112,
+     100
+    ]
+   },
+   "set": {
+    "trunk": {
+     "base_size": 0.36,
+     "bole_ratio": 0.34,
+     "flare": 2.0,
+     "stubs": {
+      "count": [
+       8,
+       16
+      ]
+     },
+     "stems": [
+      2,
+      5
+     ],
+     "stem_spread_deg": 35,
+     "radius_ratio": 0.09,
+     "lean_deg": 14
+    },
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.18,
+        0.4
+       ],
+       [
+        0.38,
+        0.5
+       ],
+       [
+        0.56,
+        0.5
+       ],
+       [
+        0.72,
+        0.42
+       ],
+       [
+        0.86,
+        0.3
+       ],
+       [
+        1.0,
+        0.1
+       ]
+      ],
+      "lobes": 4,
+      "lobe_depth": 0.4,
+      "asymmetry": 0.45
+     },
+     "shape": "spherical"
+    }
+   },
+   "note": "a tree of many centuries: several thick, twisted trunks of grey shredded bark from one base, some limbs dead and silver, the crown broken into lobes"
+  }
+ ],
+ "snag": {
+  "fraction": 0.05,
+  "from": "mature",
+  "height_m": [
+   16,
+   30
+  ],
+  "limbs": 0.35,
+  "twigs": 0,
+  "levels": 1,
+  "broken_top": [
+   0.6,
+   0.9
+  ],
+  "shorten": [
+   0.3,
+   0.8
+  ],
+  "rgb": [
+   150,
+   128,
+   112
+  ]
+ },
+ "description": "The juniper of the Grand Canyon rims, a squat, many-forked tree or big shrub, usually 3-7 m, its twisted, gnarled trunks wrapped in grey bark that hangs in long fibrous shreds. Its stiff foliage of tiny scale leaves forms a rounded, irregular crown, and its waxy, blue-brown berry-like cones feed coyotes, jackrabbits and birds through the winter.",
+ "season_notes": {
+  "winter": "Evergreen; the frosted blue-brown 'berries' are a winter food for birds, coyotes and jackrabbits, and deer browse it in deep snow.",
+  "spring": "Tiny pollen cones shed yellow dust; the shade under it is where young pinyons get their start.",
+  "summer": "The berries ripen slowly, over about a year and a half.",
+  "fall": "A heavy crop of berries hangs in the crowns; birds that winter in the woodland depend on them."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "chaparral": 0.9,
+   "grassland": 0.7,
+   "barren": 0.8,
+   "conifer_forest": 0.4
+  },
+  "floor": 1.0,
+  "mid": 1.0,
+  "steep": 1.0,
+  "north": 0.6,
+  "shade": 0.05,
+  "disturbed": 0.3
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "canis_latrans",
+    "part": "berries",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   },
+   {
+    "animal": "lepus_californicus",
+    "part": "berries",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "winter"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "cervus_canadensis",
+   "puma_concolor"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 1.0,
+  "radius_ratio": 0.07,
+  "taper": 1.3,
+  "flare": 1.6,
+  "bole_ratio": 0.08,
+  "base_size": 0.09,
+  "curve_deg": 4,
+  "curve_var_deg": 5,
+  "segments": 7,
+  "lean_deg": 8,
+  "stems": [
+   1,
+   4
+  ],
+  "stem_spread_deg": 25,
+  "split_prob": 0.06,
+  "split_count": 2,
+  "split_angle_deg": 10,
+  "split_height": 0.7,
+  "bark_rgb": [
+   146,
+   138,
+   124
+  ],
+  "bark_pattern": "shreddy",
+  "twig_rgb": [
+   112,
+   84,
+   66
+  ],
+  "stubs": {
+   "count": [
+    2,
+    6
+   ],
+   "length_m": 0.4,
+   "radius_ratio": 0.1
+  },
+  "bark": {
+   "tile_m": [
+    0.5,
+    1.2
+   ],
+   "ridge_m": 0.07,
+   "block_m": 0.6,
+   "fissure": 0.7,
+   "contrast": 1.0,
+   "relief": 1.4
+  }
+ },
+ "crown": {
+  "shape": "spherical",
+  "envelope": {
+   "profile": [
+    [
+     0.12,
+     0.34
+    ],
+    [
+     0.3,
+     0.42
+    ],
+    [
+     0.5,
+     0.44
+    ],
+    [
+     0.68,
+     0.38
+    ],
+    [
+     0.84,
+     0.27
+    ],
+    [
+     1.0,
+     0.1
+    ]
+   ],
+   "lobes": 5,
+   "lobe_depth": 0.3,
+   "asymmetry": 0.32,
+   "fill": 0.28,
+   "edge": 1.15
+  }
+ },
+ "levels": [
+  {
+   "count": 36,
+   "whorl": 0,
+   "down_angle_deg": 84,
+   "down_angle_tip_deg": 50,
+   "down_angle_var_deg": 12,
+   "rotation_deg": 140,
+   "rotation_var_deg": 25,
+   "length_ratio": 0.27,
+   "length_var": 0.25,
+   "curve_deg": 0,
+   "curve_var_deg": 14,
+   "tropism": 0.02,
+   "droop_deg": 26,
+   "upturn_deg": 34,
+   "taper": 0.95,
+   "radius_ratio": 0.3,
+   "segments": 3
+  },
+  {
+   "count": 9,
+   "start": 0.2,
+   "down_angle_deg": 50,
+   "down_angle_var_deg": 14,
+   "rotation_deg": -70,
+   "rotation_var_deg": 20,
+   "length_ratio": 0.35,
+   "length_var": 0.3,
+   "curve_deg": 6,
+   "curve_var_deg": 10,
+   "tropism": 0.05,
+   "taper": 1.0,
+   "radius_ratio": 0.5,
+   "segments": 1
+  }
+ ],
+ "foliage": {
+  "type": "scale",
+  "leaf_size_m": 0.012,
+  "leaf_shape": "needle_scale",
+  "cluster_m": 1.95,
+  "density": 12,
+  "leaf_fill": 5.0,
+  "start": 0.2,
+  "parent_start": 0.45,
+  "orientation": "along",
+  "needle_planes": 1,
+  "tuft_spread_deg": 30,
+  "tuft_up": 0.25,
+  "droop": 0.2,
+  "needle_normal": 0.45,
+  "needle_wrap": 0.4,
+  "translucency": 2.0,
+  "needle_scatter": 0.12,
+  "colors": {
+   "winter": [
+    92,
+    102,
+    70
+   ],
+   "spring": [
+    110,
+    120,
+    78
+   ],
+   "summer": [
+    102,
+    114,
+    74
+   ],
+   "fall": [
+    98,
+    108,
+    72
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "twist_deg": 20,
+  "clumps": {
+   "radius_m": 0.8,
+   "cards_per_clump": 4,
+   "shell": 0.1,
+   "flatten": 0.6,
+   "tip_bias": 1.4
+  },
+  "palette": [
+   [
+    0.85,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.15,
+    [
+     1.15,
+     1.12,
+     0.8
+    ]
+   ]
+  ],
+  "ao_min": 0.7,
+  "color_var": [
+   0.07,
+   0.03
+  ]
+ },
+ "deadwood": {
+  "fraction": 0.12,
+  "where": "lower",
+  "levels": [
+   1
+  ],
+  "shorten": 0.6,
+  "rgb": [
+   128,
+   112,
+   100
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "length": 0.5,
+  "down_deg": 40,
+  "down_var_deg": 12,
+  "tropism": 0.05,
+  "segments": 1,
+  "radius_m": 0.008,
+  "taper": 0.5,
+  "fan_deg": 30,
+  "jitter": 0.08
+ },
+ "lod": {
+  "near_tris_budget": 2200,
+  "near_sides": [
+   7,
+   3,
+   0
+  ],
+  "mid_blobs": 5,
+  "mid_branches": 2,
+  "mid_blob_scale": 0.8,
+  "close_factor": 2,
+  "mid_planes": 1,
+  "mid_cards": 32
+ },
+ "targets": {
+  "crown_width_ratio": 0.85,
+  "crown_base_ratio": 0.08,
+  "porosity": 0.3,
+  "foliage_rg": 0.79,
+  "foliage_bg": 0.41,
+  "from": "judgement values from the drafter's reading of the sources (2026-11-10), no photographs measured; to be replaced by photo measurements: a squat tree or big shrub, often forked into several twisted, gnarled trunks low down (FEIS, NPS Grand Canyon), a rounded, irregular crown nearly to the ground and nearly as wide as tall"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "5",
+  "card": "library/plant_cards/juniperus_osteosperma.json",
+  "card_sha256": "421b55a6e458e212",
+  "template": "calocedrus_decurrens",
+  "template_common": "incense cedar",
+  "height_scale": 0.179
+ },
+ "notes": "A juniper grown from incense cedar as a short, fat, forking tree: thick trunk, several stems (FEIS: sometimes multi-stemmed, very stunted on hard sites), twisted trunks (NPS Grand Canyon, NPS Colorado National Monument), a rounded crown nearly as wide as tall, set here through stems, radius, flare and taper. Bark of fibrous, elongated shreds (NPS Great Basin), twisted (NPS Colorado National Monument); its grey colour is the drafter's judgement, as no source read gives a colour. The yellow-green of the scale foliage (from the brief) is also a judgement: no source read names a foliage colour. Cones 8-13 mm, blue-brown with a white waxy bloom (Wikipedia, NPS), not drawn. Height in Arizona to 2273 m and commonest above 1515 m (FEIS); the Grand Canyon rim is about 1900-2300 m per the brief. Eaters: FEIS names jackrabbits and coyotes and many birds; the black-tailed jackrabbit (lepus_californicus) is the drafter's choice of jackrabbit for the Grand Canyon. Townsend's solitaire (Wikipedia), Woodhouse's scrub jay, gray flycatcher, juniper titmouse (the 'plain titmouse' of FEIS) and gray vireo use it and are not in the animal library; ferruginous hawks nest in it (FEIS); pronghorn, bighorn and bison take cover in it (FEIS). Lives to about 650 years (FEIS), 900 years at Colorado National Monument (NPS).",
+ "sources": [
+  "Fire Effects Information System, Juniperus osteosperma, https://www.fs.usda.gov/database/feis/plants/tree/junost/all.html, read 2026-11-10",
+  "Wikipedia, Juniperus osteosperma (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Juniperus_osteosperma, read 2026-11-10",
+  "Trees - Grand Canyon National Park (U.S. National Park Service), https://www.nps.gov/grca/learn/nature/trees.htm, read 2026-11-10",
+  "Utah Juniper - Colorado National Monument (U.S. National Park Service), https://www.nps.gov/colm/learn/nature/utah-juniper.htm, read 2026-11-10",
+  "Trees and Shrubs - Great Basin National Park (U.S. National Park Service), https://www.nps.gov/grba/learn/nature/treesandshrubs.htm, read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

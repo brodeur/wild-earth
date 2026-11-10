@@ -1,0 +1,539 @@
+{
+ "id": "quercus_gambelii",
+ "aliases": [
+  "gambel_oak",
+  "gambels_oak",
+  "scrub_oak",
+  "rocky_mountain_white_oak"
+ ],
+ "scientific": "Quercus gambelii",
+ "common": "Gambel oak",
+ "form": "multi_stem_shrub_tree",
+ "regions": [
+  "interior_west"
+ ],
+ "architectural_model": "Rauh",
+ "deciduous": true,
+ "height_m": [
+  2,
+  9
+ ],
+ "stature": {
+  "typical_m": 5,
+  "tall_m": 12,
+  "record_m": 35,
+  "source": "typical: Wikipedia gives mature trees mostly 3-9 m, the drafter's middle for South Rim stands; tall: the NPS Grand Canyon trees page, a short tree to about 12 m; record: Wikipedia, the champion tree in Arizona, 35 m (FEIS: scattered trees to about 23 m); read 2026-11-10"
+ },
+ "variants": [
+  {
+   "name": "sprout clump",
+   "weight": 0.12,
+   "height_m": [
+    0.5,
+    2
+   ],
+   "trunk_radius": 0.5,
+   "crown_scale": 0.9,
+   "branches": 0.6,
+   "leaf_density": 0.9,
+   "set": {
+    "trunk": {
+     "stems": [
+      2,
+      4
+     ],
+     "stem_spread_deg": 18,
+     "split_prob": 0.1,
+     "length_ratio": 0.6
+    },
+    "epiphytes": {
+     "mistletoe": {
+      "prob": 0
+     }
+    }
+   },
+   "note": "(from the California black oak template) a clump of slim stems sprouting from the root crown of a tree killed by fire, as black oak does"
+  },
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    2,
+    4
+   ],
+   "trunk_radius": 0.7,
+   "crown_scale": 0.8,
+   "branches": 0.85,
+   "set": {
+    "trunk": {
+     "length_ratio": 0.6,
+     "split_prob": 0.25
+    },
+    "crown": {
+     "envelope": {
+      "profile": [
+       [
+        0.25,
+        0.18
+       ],
+       [
+        0.4,
+        0.28
+       ],
+       [
+        0.55,
+        0.32
+       ],
+       [
+        0.7,
+        0.3
+       ],
+       [
+        0.84,
+        0.22
+       ],
+       [
+        1.0,
+        0.06
+       ]
+      ]
+     }
+    },
+    "epiphytes": {
+     "mistletoe": {
+      "prob": 0.1
+     }
+    }
+   },
+   "note": "(from the California black oak template) a narrow, upright crown on a straight stem, as young trees grow among the pines"
+  },
+  {
+   "name": "mature",
+   "weight": 0.48,
+   "seeds": 1,
+   "note": "(from the California black oak template) the file as written"
+  },
+  {
+   "name": "veteran",
+   "weight": 0.15,
+   "height_m": [
+    8,
+    13
+   ],
+   "trunk_radius": 1.3,
+   "crown_scale": 1.15,
+   "gnarl": 1.3,
+   "deadwood": {
+    "fraction": 0.2,
+    "levels": [
+     1,
+     2
+    ],
+    "where": "inner"
+   },
+   "set": {
+    "trunk": {
+     "split_prob": 0.8,
+     "split_angle_deg": 34,
+     "lean_deg": 12
+    },
+    "epiphytes": {
+     "mistletoe": {
+      "prob": 0.5,
+      "count": [
+       2,
+       5
+      ]
+     }
+    }
+   },
+   "note": "(from the California black oak template) an old forked tree, a broad irregular crown of heavy crooked limbs, dead limbs and a hollow trunk"
+  }
+ ],
+ "description": "A deciduous oak that grows as a small crooked tree or as a dense clonal thicket of stems a few metres high, with rough brownish-grey bark in broad flat ridges and deeply lobed leaves, glossy dark green above and paler and velvety below. On the Grand Canyon's rims it grows under and among the ponderosa pines, about 2000-2500 m, and down into the pinyon-juniper woodland, the one broadleaf tree that colours the rim forest in fall.",
+ "season_notes": {
+  "winter": "Bare grey twigs and brown fallen leaves under the pines; the thickets show as grey patches in the snow.",
+  "spring": "Leaves open late, in May, with small hanging catkins as they unfold.",
+  "summer": "Full, glossy dark green crowns; acorns swell, often two or three together.",
+  "fall": "Leaves turn orange, yellow and russet; acorns ripen golden brown in September and drop, gathered by squirrels, jays, turkeys and bears."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "conifer_forest": 0.9,
+   "oak_woodland": 0.8,
+   "mixed_forest": 0.6,
+   "chaparral": 0.5,
+   "riparian": 0.3,
+   "grassland": 0.15
+  },
+  "floor": 0.9,
+  "mid": 1.1,
+  "steep": 0.8,
+  "north": 0.6,
+  "shade": 0.3,
+  "disturbed": 1.2
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "cervus_canadensis",
+    "part": "browse",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "ursus_americanus",
+    "part": "acorns",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "meleagris_gallopavo",
+    "part": "acorns",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   },
+   {
+    "animal": "sciurus_griseus",
+    "part": "acorns",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "acorns",
+    "seasons": [
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "cervus_canadensis",
+   "meleagris_gallopavo",
+   "peromyscus_maniculatus",
+   "sylvilagus_bachmani"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 0.48,
+  "radius_ratio": 0.042,
+  "taper": 0.65,
+  "flare": 1.3,
+  "bole_ratio": 0.28,
+  "base_size": 0.17,
+  "curve_deg": 12,
+  "curve_var_deg": 16,
+  "segments": 5,
+  "lean_deg": 8,
+  "stems": [
+   1,
+   7
+  ],
+  "stem_spread_deg": 14,
+  "split_prob": 0.45,
+  "split_count": 2,
+  "split_angle_deg": 28,
+  "bark_rgb": [
+   112,
+   104,
+   96
+  ],
+  "bark_pattern": "furrowed",
+  "twig_rgb": [
+   108,
+   100,
+   92
+  ],
+  "bark": {
+   "tile_m": [
+    0.4,
+    0.8
+   ],
+   "plate_m": [
+    0.06,
+    0.12
+   ],
+   "fissure": 0.7,
+   "contrast": 1.0,
+   "lichen": 0.4,
+   "relief": 1.3
+  }
+ },
+ "crown": {
+  "shape": "spherical",
+  "envelope": {
+   "profile": [
+    [
+     0.2,
+     0.32
+    ],
+    [
+     0.35,
+     0.44
+    ],
+    [
+     0.5,
+     0.5
+    ],
+    [
+     0.65,
+     0.48
+    ],
+    [
+     0.8,
+     0.4
+    ],
+    [
+     0.92,
+     0.26
+    ],
+    [
+     1.0,
+     0.1
+    ]
+   ],
+   "lobes": 5,
+   "lobe_depth": 0.22,
+   "asymmetry": 0.3,
+   "fill": 0.5,
+   "edge": 1.1
+  }
+ },
+ "levels": [
+  {
+   "count": 9,
+   "down_angle_deg": 56,
+   "down_angle_tip_deg": 30,
+   "down_angle_var_deg": 14,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 1.9,
+   "length_var": 0.25,
+   "curve_deg": 6,
+   "curve_var_deg": 22,
+   "zigzag_deg": 9,
+   "tropism": 0.03,
+   "droop_deg": 6,
+   "taper": 0.9,
+   "radius_ratio": 0.55,
+   "segments": 4,
+   "count_of": "plant"
+  },
+  {
+   "count": 7,
+   "start": 0.15,
+   "down_angle_deg": 45,
+   "down_angle_var_deg": 15,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.5,
+   "length_var": 0.3,
+   "curve_deg": 0,
+   "curve_var_deg": 22,
+   "zigzag_deg": 14,
+   "tropism": 0.04,
+   "taper": 1.0,
+   "radius_ratio": 0.45,
+   "segments": 2
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.1,
+  "leaf_shape": "lobed_large",
+  "lobes": 7,
+  "cluster_m": 1.5,
+  "density": 10,
+  "cards_per_m2": 0.55,
+  "leaf_fill": 2.2,
+  "roll_deg": 60,
+  "start": 0.25,
+  "parent_start": 0.5,
+  "orientation": "outward",
+  "colors": {
+   "winter": [
+    108,
+    100,
+    90
+   ],
+   "spring": [
+    122,
+    142,
+    74
+   ],
+   "summer": [
+    70,
+    92,
+    54
+   ],
+   "fall": [
+    186,
+    128,
+    58
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.7,
+   "summer": 1.0,
+   "fall": 0.6
+  },
+  "clumps": {
+   "radius_m": 1.1,
+   "cards_per_clump": 7,
+   "shell": 0.3,
+   "flatten": 0.7,
+   "tip_bias": 1.4
+  },
+  "palette": [
+   [
+    0.75,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.15,
+    [
+     1.12,
+     1.15,
+     0.9
+    ]
+   ],
+   [
+    0.1,
+    [
+     0.86,
+     0.9,
+     0.86
+    ]
+   ]
+  ],
+  "winter_twigs": 0.45,
+  "ao_min": 0.68,
+  "color_var": [
+   0.1,
+   0.06
+  ],
+  "leaf_on_var": 0.6,
+  "leaf_on_by_month": [
+   0.0,
+   0.0,
+   0.0,
+   0.2,
+   0.7,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   0.8,
+   0.3,
+   0.0
+  ],
+  "flowers": null
+ },
+ "deadwood": {
+  "fraction": 0.08,
+  "where": "inner",
+  "levels": [
+   1,
+   2
+  ],
+  "shorten": 0.6,
+  "rgb": [
+   140,
+   134,
+   126
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "length": 0.6,
+  "down_deg": 48,
+  "down_var_deg": 18,
+  "curve_var_deg": 22,
+  "segments": 2,
+  "radius_m": 0.011,
+  "taper": 0.55,
+  "fan_deg": 50,
+  "jitter": 0.2,
+  "zigzag_deg": 18
+ },
+ "lod": {
+  "near_tris_budget": 2000,
+  "near_sides": [
+   7,
+   3,
+   0
+  ],
+  "mid_blobs": 5,
+  "mid_branches": 4,
+  "mid_segments": [
+   3,
+   2
+  ],
+  "mid_blob_scale": 0.85,
+  "close_factor": 2
+ },
+ "targets": {
+  "crown_width_ratio": 0.9,
+  "crown_base_ratio": 0.25,
+  "porosity": 0.3,
+  "foliage_rg": 0.57,
+  "foliage_bg": 0.34,
+  "fall_rg": 1.5,
+  "fall_bg": 0.42,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: a small, crooked, rounded oak a few metres high, one to several stems rising from a clonal thicket, the tallest stems in the middle; glossy dark green in summer, orange and yellow in fall, grey bare twigs in winter"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "5",
+  "card": "library/plant_cards/quercus_gambelii.json",
+  "card_sha256": "75f130cf4dd220d8",
+  "template": "quercus_kelloggii",
+  "template_common": "California black oak",
+  "height_scale": 0.344
+ },
+ "notes": "California black oak (the template) is the library's deciduous lobed-leaf oak, but it is a single-trunked tree of 10-22 m; the card makes Gambel oak a small tree or thicket shrub of 2-9 m with up to seven stems (FEIS: southern clones usually 1-7 stems, northern ones hundreds), a rounder, more irregular crown and furrowed rather than platy bark (FEIS: bark in broad, irregular flat ridges). The template's leaves (lobed_large) are larger and bristle-tipped; Gambel oak's are rounded-lobed, 7-12 cm (Wikipedia), so leaf_size_m 0.1. The clones spread by rhizomes and lignotubers and resprout fast after fire (FEIS), which the species mix should show as patches of many stems, not single trees; dwarf stands under 1 m where browsing is heavy (Wikipedia). Elevation 990-3110 m across the range (FEIS); the Grand Canyon placing (ponderosa forest about 1980-2500 m, often with the pines) is from the NPS pages. Catkins and acorns are not drawn (the template has neither); the flower months (April-June) are from the NPS trees page. Eaters: FEIS lists mule deer and elk browse in summer and fall, acorns for squirrels including Abert's squirrel, band-tailed pigeons, wild turkeys, jays, woodpeckers, black bears and collared peccaries; bighorn sheep eat a little, porcupines in winter; Mexican spotted owls roost in oak stands. The western grey squirrel stands in for Abert's squirrel, Steller's jay (a jay of the rim forest) for the jays, the brush rabbit for cottontails and the deer mouse for rodents in general; Abert's squirrel, band-tailed pigeon, collared peccary, porcupine and Mexican spotted owl are not in the library. Colours, crown profile, porosity and leaf-on months are the drafter's judgement, not from a source.",
+ "sources": [
+  "Fire Effects Information System, Quercus gambelii, https://www.fs.usda.gov/database/feis/plants/tree/quegam/all.html, read 2026-11-10",
+  "Wikipedia, Quercus gambelii (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Quercus_gambelii, read 2026-11-10",
+  "National Park Service, Grand Canyon National Park: Trees, https://www.nps.gov/grca/learn/nature/trees.htm, read 2026-11-10",
+  "National Park Service, Grand Canyon National Park: Natural Features & Ecosystems, https://home.nps.gov/grca/learn/nature/naturalfeaturesandecosystems.htm, read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0",
+ "epiphytes": {
+  "mistletoe": {
+   "prob": 0.25,
+   "count": [
+    1,
+    3
+   ],
+   "radius_m": 0.4
+  }
+ }
+}

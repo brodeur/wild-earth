@@ -1,0 +1,241 @@
+{
+ "id": "quercus_gambelii",
+ "scientific": "Quercus gambelii",
+ "common": "Gambel oak",
+ "aliases": [
+  "gambel_oak",
+  "gambels_oak",
+  "scrub_oak",
+  "rocky_mountain_white_oak"
+ ],
+ "family": "Fagaceae",
+ "form": "multi_stem_shrub_tree",
+ "deciduous": true,
+ "template": "quercus_kelloggii",
+ "regions": [
+  "interior_west"
+ ],
+ "height_m": [
+  2,
+  9
+ ],
+ "stature": {
+  "typical_m": 5,
+  "tall_m": 12,
+  "record_m": 35,
+  "source": "typical: Wikipedia gives mature trees mostly 3-9 m, the drafter's middle for South Rim stands; tall: the NPS Grand Canyon trees page, a short tree to about 12 m; record: Wikipedia, the champion tree in Arizona, 35 m (FEIS: scattered trees to about 23 m); read 2026-11-10"
+ },
+ "variants_height_m": {
+  "sprout clump": [
+   0.5,
+   2
+  ],
+  "young": [
+   2,
+   4
+  ],
+  "veteran": [
+   8,
+   13
+  ]
+ },
+ "crown": {
+  "shape": "spherical",
+  "profile": [
+   [
+    0.2,
+    0.32
+   ],
+   [
+    0.35,
+    0.44
+   ],
+   [
+    0.5,
+    0.5
+   ],
+   [
+    0.65,
+    0.48
+   ],
+   [
+    0.8,
+    0.4
+   ],
+   [
+    0.92,
+    0.26
+   ],
+   [
+    1.0,
+    0.1
+   ]
+  ],
+  "lobes": 5,
+  "lobe_depth": 0.22,
+  "asymmetry": 0.3,
+  "fill": 0.5,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    108,
+    100,
+    90
+   ],
+   "spring": [
+    122,
+    142,
+    74
+   ],
+   "summer": [
+    70,
+    92,
+    54
+   ],
+   "fall": [
+    186,
+    128,
+    58
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.7,
+   "summer": 1.0,
+   "fall": 0.6
+  },
+  "leaf_on_by_month": [
+   0.0,
+   0.0,
+   0.0,
+   0.2,
+   0.7,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   0.8,
+   0.3,
+   0.0
+  ],
+  "leaf_size_m": 0.1,
+  "flowers": null
+ },
+ "trunk": {
+  "bark_rgb": [
+   112,
+   104,
+   96
+  ],
+  "bark_pattern": "furrowed",
+  "stems": [
+   1,
+   7
+  ],
+  "lean_deg": 8
+ },
+ "targets": {
+  "crown_width_ratio": 0.9,
+  "crown_base_ratio": 0.25,
+  "porosity": 0.3,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: a small, crooked, rounded oak a few metres high, one to several stems rising from a clonal thicket, the tallest stems in the middle; glossy dark green in summer, orange and yellow in fall, grey bare twigs in winter"
+ },
+ "description": "A deciduous oak that grows as a small crooked tree or as a dense clonal thicket of stems a few metres high, with rough brownish-grey bark in broad flat ridges and deeply lobed leaves, glossy dark green above and paler and velvety below. On the Grand Canyon's rims it grows under and among the ponderosa pines, about 2000-2500 m, and down into the pinyon-juniper woodland, the one broadleaf tree that colours the rim forest in fall.",
+ "season_notes": {
+  "winter": "Bare grey twigs and brown fallen leaves under the pines; the thickets show as grey patches in the snow.",
+  "spring": "Leaves open late, in May, with small hanging catkins as they unfold.",
+  "summer": "Full, glossy dark green crowns; acorns swell, often two or three together.",
+  "fall": "Leaves turn orange, yellow and russet; acorns ripen golden brown in September and drop, gathered by squirrels, jays, turkeys and bears."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 0.9,
+   "oak_woodland": 0.8,
+   "mixed_forest": 0.6,
+   "chaparral": 0.5,
+   "riparian": 0.3,
+   "grassland": 0.15
+  },
+  "floor": 0.9,
+  "mid": 1.1,
+  "steep": 0.8,
+  "north": 0.6,
+  "shade": 0.3,
+  "disturbed": 1.2
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "cervus_canadensis",
+    "part": "browse",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "ursus_americanus",
+    "part": "acorns",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "meleagris_gallopavo",
+    "part": "acorns",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   },
+   {
+    "animal": "sciurus_griseus",
+    "part": "acorns",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "cyanocitta_stelleri",
+    "part": "acorns",
+    "seasons": [
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "cervus_canadensis",
+   "meleagris_gallopavo",
+   "peromyscus_maniculatus",
+   "sylvilagus_bachmani"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1000,
+   3100
+  ],
+  "where": "the ponderosa pine forest of the South and North Rims and the upper pinyon-juniper woodland: Grandview Point, Desert View, the rim forest along the South Rim drives"
+ },
+ "notes": "California black oak (the template) is the library's deciduous lobed-leaf oak, but it is a single-trunked tree of 10-22 m; the card makes Gambel oak a small tree or thicket shrub of 2-9 m with up to seven stems (FEIS: southern clones usually 1-7 stems, northern ones hundreds), a rounder, more irregular crown and furrowed rather than platy bark (FEIS: bark in broad, irregular flat ridges). The template's leaves (lobed_large) are larger and bristle-tipped; Gambel oak's are rounded-lobed, 7-12 cm (Wikipedia), so leaf_size_m 0.1. The clones spread by rhizomes and lignotubers and resprout fast after fire (FEIS), which the species mix should show as patches of many stems, not single trees; dwarf stands under 1 m where browsing is heavy (Wikipedia). Elevation 990-3110 m across the range (FEIS); the Grand Canyon placing (ponderosa forest about 1980-2500 m, often with the pines) is from the NPS pages. Catkins and acorns are not drawn (the template has neither); the flower months (April-June) are from the NPS trees page. Eaters: FEIS lists mule deer and elk browse in summer and fall, acorns for squirrels including Abert's squirrel, band-tailed pigeons, wild turkeys, jays, woodpeckers, black bears and collared peccaries; bighorn sheep eat a little, porcupines in winter; Mexican spotted owls roost in oak stands. The western grey squirrel stands in for Abert's squirrel, Steller's jay (a jay of the rim forest) for the jays, the brush rabbit for cottontails and the deer mouse for rodents in general; Abert's squirrel, band-tailed pigeon, collared peccary, porcupine and Mexican spotted owl are not in the library. Colours, crown profile, porosity and leaf-on months are the drafter's judgement, not from a source.",
+ "sources": [
+  "Fire Effects Information System, Quercus gambelii, https://www.fs.usda.gov/database/feis/plants/tree/quegam/all.html, read 2026-11-10",
+  "Wikipedia, Quercus gambelii (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Quercus_gambelii, read 2026-11-10",
+  "National Park Service, Grand Canyon National Park: Trees, https://www.nps.gov/grca/learn/nature/trees.htm, read 2026-11-10",
+  "National Park Service, Grand Canyon National Park: Natural Features & Ecosystems, https://home.nps.gov/grca/learn/nature/naturalfeaturesandecosystems.htm, read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ]
+}

@@ -1,0 +1,424 @@
+{
+ "id": "purshia_stansburiana",
+ "aliases": [
+  "stansbury_cliffrose",
+  "cliffrose",
+  "cliff_rose",
+  "purshia_mexicana",
+  "cowania_mexicana",
+  "cowania_stansburiana"
+ ],
+ "scientific": "Purshia stansburiana",
+ "common": "Stansbury cliffrose",
+ "form": "shrub",
+ "regions": [
+  "interior_west"
+ ],
+ "architectural_model": "Rauh (provisional)",
+ "deciduous": false,
+ "height_m": [
+  1.0,
+  3.5
+ ],
+ "stature": {
+  "typical_m": 2.0,
+  "tall_m": 4.0,
+  "record_m": 8.0,
+  "source": "typical: Wikipedia, usually 1-3 m; tall: Wikipedia, occasionally 4 m; record: Wikipedia to 8 m, FEIS to about 7.5 m on good sites; read 2026-11-10"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    0.3,
+    0.9
+   ],
+   "trunk_radius": 0.8,
+   "deadwood": 0.03,
+   "set": {
+    "trunk": {
+     "stems": [
+      2,
+      4
+     ]
+    }
+   },
+   "note": "(from the birch-leaf mountain mahogany template) a narrow, upright young shrub"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 2,
+   "note": "(from the birch-leaf mountain mahogany template) the file as written: an erect, open shrub of grey stems with dark leaves on short spurs"
+  },
+  {
+   "name": "old",
+   "weight": 0.25,
+   "height_m": [
+    2.6,
+    4.2
+   ],
+   "trunk_radius": 1.25,
+   "crown_scale": 1.1,
+   "gnarl": 1.2,
+   "deadwood": {
+    "fraction": 0.2,
+    "levels": [
+     0,
+     1
+    ],
+    "shorten": 0.8
+   },
+   "set": {
+    "trunk": {
+     "stems": [
+      2,
+      4
+     ],
+     "base_size": 0.25
+    }
+   },
+   "note": "(from the birch-leaf mountain mahogany template) a small tree: two to four grey trunks, an open, irregular crown, a few dead limbs"
+  }
+ ],
+ "description": "An evergreen shrub or small gnarled tree, usually one to three metres, of one to a few crooked stems and branches with grey-brown, shreddy bark, and small, thick, dark green leaves cut into a few narrow lobes and dotted with glands. In late spring it is covered with sweet-scented cream-white flowers a couple of centimetres across, then with seeds that each carry a long feathery plume. At the Grand Canyon it grows in the pinyon-juniper woodland below and along the rims, on dry, exposed ledges and cliffs, often of limestone, and is the main winter browse of mule deer on the Kaibab Plateau.",
+ "season_notes": {
+  "winter": "Dark green and leafy: the mule deer's main winter browse on the Kaibab Plateau; the old plumes are gone.",
+  "spring": "Flowering from April: a mass of fragrant cream-white, five-petalled flowers over the dark leaves.",
+  "summer": "Flowers keep coming after rain until frost; the feathery plumes of the seeds catch the light from July.",
+  "fall": "Plumed seeds blow away or are carried off and cached by rodents; the leaves stay dark green."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "conifer_forest": 0.8,
+   "chaparral": 0.8,
+   "barren": 0.6,
+   "grassland": 0.3
+  },
+  "floor": 0.6,
+  "mid": 1.0,
+  "steep": 1.3,
+  "north": 0.5,
+  "shade": 0.1,
+  "disturbed": 0.3
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "cervus_canadensis",
+    "part": "browse",
+    "seasons": [
+     "winter"
+    ]
+   },
+   {
+    "animal": "peromyscus_maniculatus",
+    "part": "seeds",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "cervus_canadensis",
+   "peromyscus_maniculatus"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 0.9,
+  "radius_ratio": 0.022,
+  "taper": 0.85,
+  "flare": 1.4,
+  "bole_ratio": 0.1,
+  "base_size": 0.15,
+  "curve_deg": 10,
+  "curve_var_deg": 12,
+  "segments": 3,
+  "lean_deg": 12,
+  "stems": [
+   1,
+   5
+  ],
+  "stem_spread_deg": 22,
+  "split_prob": 0.15,
+  "split_count": 2,
+  "split_angle_deg": 20,
+  "sinuous_deg": 6,
+  "bark_rgb": [
+   116,
+   104,
+   92
+  ],
+  "bark_pattern": "shreddy",
+  "twig_rgb": [
+   112,
+   96,
+   84
+  ],
+  "bark": {
+   "tile_m": [
+    0.15,
+    0.35
+   ],
+   "contrast": 0.5,
+   "lichen": 0.35,
+   "relief": 0.3
+  }
+ },
+ "crown": {
+  "shape": "inverse_conical",
+  "envelope": {
+   "profile": [
+    [
+     0.0,
+     0.2
+    ],
+    [
+     0.2,
+     0.35
+    ],
+    [
+     0.45,
+     0.5
+    ],
+    [
+     0.7,
+     0.58
+    ],
+    [
+     0.88,
+     0.52
+    ],
+    [
+     1.0,
+     0.3
+    ]
+   ],
+   "lobes": 5,
+   "lobe_depth": 0.22,
+   "asymmetry": 0.3,
+   "fill": 0.45,
+   "edge": 1.15
+  }
+ },
+ "levels": [
+  {
+   "count": 4,
+   "start": 0.12,
+   "down_angle_deg": 32,
+   "down_angle_var_deg": 12,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.55,
+   "length_var": 0.3,
+   "curve_deg": 14,
+   "curve_var_deg": 14,
+   "tropism": 0.08,
+   "taper": 0.9,
+   "radius_ratio": 0.55,
+   "segments": 2
+  },
+  {
+   "count": 5,
+   "start": 0.2,
+   "down_angle_deg": 50,
+   "down_angle_var_deg": 15,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.3,
+   "length_var": 0.3,
+   "curve_deg": 8,
+   "curve_var_deg": 12,
+   "tropism": 0.06,
+   "taper": 1.0,
+   "radius_ratio": 0.45,
+   "segments": 1
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.012,
+  "leaf_shape": "oval",
+  "cluster_m": 0.32,
+  "density": 18,
+  "start": 0.05,
+  "parent_start": 0.15,
+  "orientation": "outward",
+  "roll_deg": 50,
+  "colors": {
+   "winter": [
+    76,
+    88,
+    62
+   ],
+   "spring": [
+    86,
+    102,
+    64
+   ],
+   "summer": [
+    90,
+    98,
+    70
+   ],
+   "fall": [
+    84,
+    94,
+    66
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "winter_twigs": 0.3,
+  "clumps": {
+   "radius_m": 0.22,
+   "cards_per_clump": 5,
+   "shell": 0.1,
+   "flatten": 0.75,
+   "tip_bias": 0.8
+  },
+  "palette": [
+   [
+    0.8,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.2,
+    [
+     1.15,
+     1.15,
+     1.12
+    ]
+   ]
+  ],
+  "ao_min": 0.72,
+  "color_var": [
+   0.08,
+   0.04
+  ],
+  "berries": {
+   "season": "summer",
+   "months": [
+    7,
+    10
+   ],
+   "form": "cluster",
+   "rgb": [
+    222,
+    212,
+    196
+   ],
+   "size_m": 0.04,
+   "density": 0.4
+  },
+  "cards_per_m2": 9,
+  "flowers": {
+   "season": "spring",
+   "months": [
+    4,
+    6
+   ],
+   "form": "cluster",
+   "rgb": [
+    242,
+    234,
+    204
+   ],
+   "size_m": 0.018,
+   "density": 0.6,
+   "before_leaves": false
+  }
+ },
+ "deadwood": {
+  "fraction": 0.1,
+  "where": "inner",
+  "levels": [
+   1,
+   2
+  ],
+  "shorten": 0.7,
+  "rgb": [
+   140,
+   136,
+   130
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "length": 0.5,
+  "down_deg": 50,
+  "down_var_deg": 15,
+  "curve_var_deg": 20,
+  "segments": 1,
+  "radius_m": 0.004,
+  "taper": 0.6,
+  "fan_deg": 50,
+  "jitter": 0.2
+ },
+ "lod": {
+  "near_tris_budget": 1300,
+  "near_sides": [
+   3,
+   3,
+   0
+  ],
+  "mid_blobs": 3,
+  "mid_branches": 0,
+  "mid_sides": [
+   0,
+   0
+  ],
+  "mid_cards": 24
+ },
+ "targets": {
+  "crown_width_ratio": 0.9,
+  "crown_base_ratio": 0.2,
+  "porosity": 0.45,
+  "foliage_rg": 0.84,
+  "foliage_bg": 0.5,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: an open, irregular, gnarled shrub or small tree, one to a few crooked stems with grey-brown shreddy bark, wider at the top, dark green and seen through; in late spring covered in cream-white flowers, in summer and fall hung with feathery silvery plumes"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "5",
+  "card": "library/plant_cards/purshia_stansburiana.json",
+  "card_sha256": "cecd8b21dcf3fcd6",
+  "template": "cercocarpus_betuloides",
+  "template_common": "birch-leaf mountain mahogany",
+  "height_scale": 0.643
+ },
+ "notes": "Birchleaf mountain mahogany (the template) is the library's nearest hand-written Rosaceae shrub with small evergreen leaves and plumed seeds (curl-leaf mountain mahogany is a generated record and cannot be a template), but its leaves are toothed ovals, its bark smooth grey, its outline a clean upright vase, and it has no showy flowers. The card makes cliffrose a crooked, open shrub or small tree (Wikipedia: shrub 1-3 m, sometimes 4 m and somewhat treelike, rarely to 8 m; FEIS: 0.3-1.8 m usually, to 7.5 m on good sites, single- or many-stemmed), with shreddy bark (FEIS, Wikipedia), small thick lobed glandular leaves (Wikipedia; FEIS: small, evergreen, alternate to clustered, glandular), cream-white flowers (Wikipedia: white or cream, clawed petals, strongly sweet-scented, abundant, spring to first frost; FEIS: April-September in Arizona), and feathery seed plumes drawn through the berries block (FEIS: the plumed style 1-3.5 cm; Wikipedia: up to 6 cm; seeds ripening mid-July to August and shed into October in Utah). The template's oval leaf cards will look too broad and plain for the lobed leaves; the gnarled habit relies on the stems, lean and asymmetry here. Leaf size, flower size (and the five petals of a rose-family flower), the April-June main flowering span and the plume colour are the drafter's (no source read gives the sizes). Form: shrub, as the library's mountain mahoganies (the nearest relatives) are; multi_stem_shrub_tree is the other choice if the lineup wants the treelike old plants. Elevation: FEIS gives 914-2438 m in Arizona and 975-2745 m in Utah. Sites (FEIS): pinyon-juniper woodland, dry open ponderosa pine, mountain brush and desert shrubland edges, cliffs and dry exposed sites, mostly south- or west-facing and often on limestone; Wikipedia: often on cliffs, rocky soils, especially limestone. The Grand Canyon NPS pages read do not name cliffrose; FEIS reports it in Grand Canyon pinyon-juniper (a crown-fire study) and as the principal winter browse on the Kaibab Plateau. Fire: usually killed by severe fire, a weak sprouter, slow to return (FEIS: 13-15 years after a Grand Canyon crown fire far fewer plants on burned than unburned ground), so disturbed is low. Eaters (FEIS, Wikipedia): mule deer (important, heavy winter use), elk (browse and bedding cover), desert bighorn, pronghorn and livestock; rodents eat and cache the seeds; game birds and songbirds use it. Desert bighorn and pronghorn are not in the library; the deer mouse stands in for the seed-caching rodents. Colours, crown profile, porosity, stems, lean, habitat weights and the flower and plume blocks are the drafter's judgement, not from a source.",
+ "sources": [
+  "Fire Effects Information System, Purshia stansburiana, https://www.fs.usda.gov/database/feis/plants/shrub/pursta/all.html, read 2026-11-10",
+  "Wikipedia, Purshia stansburiana (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Purshia_stansburiana, read 2026-11-10",
+  "National Park Service, Grand Canyon National Park: Natural Features & Ecosystems, https://home.nps.gov/grca/learn/nature/naturalfeaturesandecosystems.htm, read 2026-11-10",
+  "National Park Service, Grand Canyon National Park: Ecology for Students, https://www.nps.gov/grca/learn/education/ecology.htm, read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

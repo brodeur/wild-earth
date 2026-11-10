@@ -15,7 +15,7 @@
   38.74035063713964
  ],
  "size_m": 10000,
- "generated_at": "2026-11-09T05:19:10Z",
+ "generated_at": "2026-11-10T21:11:48Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -1078,8 +1078,8 @@
     "rows_with_herb_cover": 0,
     "evh_synthetic": false
    },
-   "sha256": "cabf02259223014afc651f25003b04d1ce50a76f4878c7bcd831eadcede3cee2",
-   "bytes": 742179
+   "sha256": "abad9f86ad8de507c80ea75b67324eb8fb56b8ea6949af4ccba65afcd7f581b1",
+   "bytes": 742999
   },
   "hydro.channels": {
    "path": "hydro/channels.geojson",
@@ -8810,8 +8810,8 @@
     "shrub": 32,
     "ground": 26
    },
-   "sha256": "2cc8bd6eb520858bc66d362e76a298b56df8a873b82709c90d0c9ea954365114",
-   "bytes": 100782
+   "sha256": "e1fae73b335073c6ad88fc55deb62682ab3a3fff9043900052e0ce8b0e73fc4b",
+   "bytes": 100765
   },
   "client.canopy_top": {
    "path": "client/canopy_top.png",
@@ -8927,8 +8927,8 @@
    "animals_present": 87,
    "animals_queued": 41,
    "cards_queued": 23,
-   "sha256": "e399858b75ed88274813a724aacdfe7d9477c76dbb8ab619d4d0e45f99778061",
-   "bytes": 96383
+   "sha256": "5c37d6cbfa49a6b4860eb26e79913e4c2d596db8146d3b0c707b8163d3d54dab",
+   "bytes": 96315
   },
   "client.herds": {
    "path": "client/herds.json",
@@ -10986,6 +10986,36 @@
    "at": "2026-11-09T05:19:10Z",
    "seconds": 0.6,
    "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-10T20:59:51Z",
+   "seconds": 17.8,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-10T20:59:52Z",
+   "seconds": 1.4,
+   "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-10T21:06:45Z",
+   "seconds": 1.5,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-10T21:06:46Z",
+   "seconds": 1.2,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-10T21:11:48Z",
+   "seconds": 0.7,
+   "ok": true
   }
  ],
  "steps": {
@@ -11957,14 +11987,14 @@
   },
   "plants": {
    "version": "5",
-   "code": "7c686d977a62c77e",
+   "code": "39d18139800e4506",
    "params": {
     "tile": "utm10n_680_4280"
    },
-   "fingerprint": "065c4f5893ed4555",
+   "fingerprint": "1c6ca1ea8996333f",
    "parts": {
     "version": "5",
-    "code": "7c686d977a62c77e",
+    "code": "39d18139800e4506",
     "params": {
      "tile": "utm10n_680_4280"
     },
@@ -11973,11 +12003,11 @@
      "ice": "6b6c68b3017c2781"
     },
     "library": {
-     "library/plant_cards": "ae2c66fc7e6e53d9",
+     "library/plant_cards": "0d4ef9610277fccf",
      "library/plant_cards/_research": "76160f150981cd69"
     }
    },
-   "ran_at": "2026-11-09T02:50:08Z",
+   "ran_at": "2026-11-10T21:06:43Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -11986,33 +12016,33 @@
    ],
    "outputs": {
     "species/canopy.json": "262ff66f33bd0fc8",
-    "species/plant_needs.json": "2cc8bd6eb520858b"
+    "species/plant_needs.json": "e1fae73b335073c6"
    },
-   "out_hash": "b3d216d969016216",
+   "out_hash": "72d6bad5fc1bc0ab",
    "sources": {
     "wcvp": "2026-11-07",
     "canopy_plots": "2026-11-07",
-    "gbif": "2026-11-07",
+    "gbif": "2026-11-09",
     "landfire": "2026-11-09"
    },
    "fallbacks": [],
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 156
+    "cache": 366
    },
-   "seconds": 1.8
+   "seconds": 1.5
   },
   "species_mix": {
    "version": "5",
-   "code": "b6309b97e89defac",
+   "code": "9923d4d4cc94680c",
    "params": {
     "tile": "utm10n_680_4280"
    },
-   "fingerprint": "dab24f3967272276",
+   "fingerprint": "7b9ac96472d2dcc3",
    "parts": {
     "version": "5",
-    "code": "b6309b97e89defac",
+    "code": "9923d4d4cc94680c",
     "params": {
      "tile": "utm10n_680_4280"
     },
@@ -12021,24 +12051,24 @@
      "landcover": "c0443c6fd1f820e2",
      "water": "4e5575436ed022ed",
      "ice": "6b6c68b3017c2781",
-     "plants": "b3d216d969016216"
+     "plants": "72d6bad5fc1bc0ab"
     },
     "library": {
-     "library/species": "b535f4af1995d848"
+     "library/species": "63813c168e7cfa76"
     }
    },
-   "ran_at": "2026-11-09T04:16:40Z",
+   "ran_at": "2026-11-10T21:06:45Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "client.species_mix"
    ],
    "outputs": {
-    "client/species_mix.json": "cabf02259223014a",
+    "client/species_mix.json": "abad9f86ad8de507",
     "client/species_mix_index.png": "4376576bc09cfac6",
     "client/species_mix_density.png": "9d426d9711c1210e"
    },
-   "out_hash": "3112a7a0e3019abf",
+   "out_hash": "f2beab1dcc8f68e1",
    "sources": {},
    "fallbacks": [],
    "notes": [],
@@ -12046,7 +12076,7 @@
     "network": 0,
     "cache": 31
    },
-   "seconds": 2.3
+   "seconds": 1.2
   },
   "canopy_top": {
    "version": "2",
@@ -12444,39 +12474,39 @@
   },
   "registry": {
    "version": "1",
-   "code": "aaa2eb8ec5223446",
+   "code": "31838a4caf95324b",
    "params": {
     "tile": "utm10n_680_4280"
    },
-   "fingerprint": "5592fc87ebc2e354",
+   "fingerprint": "13d99d1a5b2768ae",
    "parts": {
     "version": "1",
-    "code": "aaa2eb8ec5223446",
+    "code": "31838a4caf95324b",
     "params": {
      "tile": "utm10n_680_4280"
     },
     "deps": {
-     "plants": "b3d216d969016216",
-     "species_mix": "3112a7a0e3019abf",
+     "plants": "72d6bad5fc1bc0ab",
+     "species_mix": "f2beab1dcc8f68e1",
      "species": "ba5982085ff46f59",
      "animals": "a8d7902a18195426"
     },
     "library": {
-     "library/species": "b535f4af1995d848",
+     "library/species": "63813c168e7cfa76",
      "library/animals": "934e6c71aae6cd14",
-     "library/plant_cards": "ae2c66fc7e6e53d9"
+     "library/plant_cards": "0d4ef9610277fccf"
     }
    },
-   "ran_at": "2026-11-09T05:19:09Z",
+   "ran_at": "2026-11-10T21:11:48Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "species.registry"
    ],
    "outputs": {
-    "species/registry.json": "e399858b75ed8827"
+    "species/registry.json": "5c37d6cbfa49a6b4"
    },
-   "out_hash": "d1faf0ace1a42165",
+   "out_hash": "b6152bcfd78d885e",
    "sources": {},
    "fallbacks": [],
    "notes": [],
@@ -12484,7 +12514,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 0.6
+   "seconds": 0.7
   },
   "audit": {
    "version": "1",

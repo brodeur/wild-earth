@@ -1,6 +1,6 @@
 {
  "tile": "utm33n_412_7531",
- "at": "2026-11-06T10:51:20Z",
+ "at": "2026-11-10T21:11:58Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -11,8 +11,8 @@
  "summary": {
   "by_level": {
    "0": {
-    "plants": 37,
-    "animals": 64
+    "plants": 33,
+    "animals": 63
    },
    "1": {
     "plants": 0,
@@ -23,8 +23,8 @@
     "animals": 0
    },
    "3": {
-    "plants": 0,
-    "animals": 4
+    "plants": 4,
+    "animals": 5
    },
    "4": {
     "plants": 3,
@@ -35,7 +35,7 @@
   "animals_present": 69,
   "animals_queued": 64,
   "meshy_credits_queued": 1860,
-  "cards_queued": 37,
+  "cards_queued": 33,
   "stand_ins": {
    "salix_caprea": null,
    "cornus_suecica": null,
@@ -49,14 +49,12 @@
    "reynoutria_japonica": null,
    "dactylorhiza_maculata": null,
    "lysimachia_europaea": null,
-   "deschampsia_cespitosa": null,
    "carex_nigra": null,
    "trichophorum_cespitosum": null,
-   "vaccinium_uliginosum": null,
-   "campanula_rotundifolia": null,
+   "vaccinium_uliginosum": "empetrum_nigrum",
    "cicerbita_alpina": null,
    "narthecium_ossifragum": null,
-   "vaccinium_myrtillus": null,
+   "vaccinium_myrtillus": "empetrum_nigrum",
    "equisetum_sylvaticum": null,
    "rumex_acetosa": null,
    "caltha_palustris": null,
@@ -64,14 +62,12 @@
    "luzula_sylvatica": null,
    "vaccinium_vitis_idaea": null,
    "anthoxanthum_odoratum": null,
-   "solidago_virgaurea": null,
-   "alchemilla_alpina": null,
-   "andromeda_polifolia": null,
-   "arctostaphylos_alpinus": null,
+   "andromeda_polifolia": "empetrum_nigrum",
+   "arctostaphylos_alpinus": "empetrum_nigrum",
    "acer_pseudoplatanus": null,
    "valeriana_excelsa": null,
-   "empetrum_hermaphroditum": null,
-   "kalmia_procumbens": null,
+   "empetrum_hermaphroditum": "empetrum_nigrum",
+   "kalmia_procumbens": "empetrum_nigrum",
    "salix_glauca": null,
    "salix_herbacea": null
   },
@@ -86,18 +82,18 @@
    },
    "ground": {
     "target": 26,
-    "have": 3
+    "have": 7
    },
    "animal": {
     "target": 22,
     "have": 69,
-    "with_model": 5
+    "with_model": 6
    }
   },
   "hands": {
-   "count": 102,
+   "count": 98,
    "by_what": {
-    "a trait card": 37,
+    "a trait card": 33,
     "a lexicon phrase or a species-mix rule": 3,
     "a mesh": 62
    }
@@ -183,28 +179,16 @@
    ]
   },
   {
-   "id": "alchemilla_alpina",
-   "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "GBIF: 26 records on the tile"
-   ],
-   "stand_in": null
-  },
-  {
    "id": "andromeda_polifolia",
    "kind": "shrub",
    "fidelity": 0,
    "common": null,
-   "drawn_as": null,
+   "drawn_as": "empetrum_nigrum",
    "share": 0,
    "why_needed": [
     "GBIF: 25 records on the tile"
    ],
-   "stand_in": null
+   "stand_in": "empetrum_nigrum"
   },
   {
    "id": "anthoxanthum_odoratum",
@@ -223,12 +207,12 @@
    "kind": "shrub",
    "fidelity": 0,
    "common": null,
-   "drawn_as": null,
+   "drawn_as": "empetrum_nigrum",
    "share": 0,
    "why_needed": [
     "GBIF: 19 records on the tile"
    ],
-   "stand_in": null
+   "stand_in": "empetrum_nigrum"
   },
   {
    "id": "avenella_flexuosa",
@@ -257,14 +241,13 @@
   {
    "id": "campanula_rotundifolia",
    "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
+   "fidelity": 3,
+   "common": "bluebell bellflower",
+   "drawn_as": "campanula_rotundifolia",
    "share": 0,
    "why_needed": [
     "GBIF: 36 records on the tile"
-   ],
-   "stand_in": null
+   ]
   },
   {
    "id": "carex_nigra",
@@ -329,26 +312,47 @@
   {
    "id": "deschampsia_cespitosa",
    "kind": "grass",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
+   "fidelity": 3,
+   "common": "tufted hairgrass",
+   "drawn_as": "deschampsia_cespitosa",
    "share": 0,
    "why_needed": [
     "GBIF: 41 records on the tile"
-   ],
-   "stand_in": null
+   ]
+  },
+  {
+   "id": "dryas_octopetala",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "eightpetal mountain-avens",
+   "drawn_as": "dryas_octopetala",
+   "share": 0,
+   "why_needed": [
+    "GBIF: 10 records on the tile"
+   ]
   },
   {
    "id": "empetrum_hermaphroditum",
    "kind": "shrub",
    "fidelity": 0,
    "common": null,
-   "drawn_as": null,
+   "drawn_as": "empetrum_nigrum",
    "share": 0,
    "why_needed": [
     "GBIF: 12 records on the tile"
    ],
-   "stand_in": null
+   "stand_in": "empetrum_nigrum"
+  },
+  {
+   "id": "equisetum_arvense",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "field horsetail",
+   "drawn_as": "equisetum_arvense",
+   "share": 0,
+   "why_needed": [
+    "GBIF: 10 records on the tile"
+   ]
   },
   {
    "id": "equisetum_sylvaticum",
@@ -402,12 +406,12 @@
    "kind": "shrub",
    "fidelity": 0,
    "common": null,
-   "drawn_as": null,
+   "drawn_as": "empetrum_nigrum",
    "share": 0,
    "why_needed": [
     "GBIF: 12 records on the tile"
    ],
-   "stand_in": null
+   "stand_in": "empetrum_nigrum"
   },
   {
    "id": "luzula_sylvatica",
@@ -542,18 +546,6 @@
    "stand_in": null
   },
   {
-   "id": "solidago_virgaurea",
-   "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "GBIF: 27 records on the tile"
-   ],
-   "stand_in": null
-  },
-  {
    "id": "succisa_pratensis",
    "kind": "shrub",
    "fidelity": 0,
@@ -593,24 +585,24 @@
    "kind": "shrub",
    "fidelity": 0,
    "common": null,
-   "drawn_as": null,
+   "drawn_as": "empetrum_nigrum",
    "share": 0,
    "why_needed": [
     "GBIF: 36 records on the tile"
    ],
-   "stand_in": null
+   "stand_in": "empetrum_nigrum"
   },
   {
    "id": "vaccinium_uliginosum",
    "kind": "shrub",
    "fidelity": 0,
    "common": null,
-   "drawn_as": null,
+   "drawn_as": "empetrum_nigrum",
    "share": 0,
    "why_needed": [
     "GBIF: 37 records on the tile"
    ],
-   "stand_in": null
+   "stand_in": "empetrum_nigrum"
   },
   {
    "id": "vaccinium_vitis_idaea",
@@ -1223,7 +1215,7 @@
    "scientific": "Aquila chrysaetos",
    "common": "golden eagle",
    "kind": "bird",
-   "fidelity": 0,
+   "fidelity": 3,
    "present": "records",
    "why": [
     "predator and scavenger"
@@ -1511,7 +1503,7 @@
   {
    "id": "orcinus_orca",
    "scientific": "Orcinus orca",
-   "common": "orca",
+   "common": "killer whale",
    "kind": "mammal",
    "fidelity": 0,
    "present": "records",
@@ -1575,7 +1567,7 @@
   {
    "id": "mustela_vison",
    "scientific": "Mustela vison",
-   "common": "mink",
+   "common": "american mink",
    "kind": "mammal",
    "fidelity": 0,
    "present": "records",
@@ -1775,14 +1767,6 @@
     ]
    },
    {
-    "id": "deschampsia_cespitosa",
-    "kind": "grass",
-    "stand_in": null,
-    "why": [
-     "GBIF: 41 records on the tile"
-    ]
-   },
-   {
     "id": "carex_nigra",
     "kind": "emergent",
     "stand_in": null,
@@ -1801,17 +1785,9 @@
    {
     "id": "vaccinium_uliginosum",
     "kind": "shrub",
-    "stand_in": null,
+    "stand_in": "empetrum_nigrum",
     "why": [
      "GBIF: 37 records on the tile"
-    ]
-   },
-   {
-    "id": "campanula_rotundifolia",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 36 records on the tile"
     ]
    },
    {
@@ -1833,7 +1809,7 @@
    {
     "id": "vaccinium_myrtillus",
     "kind": "shrub",
-    "stand_in": null,
+    "stand_in": "empetrum_nigrum",
     "why": [
      "GBIF: 36 records on the tile"
     ]
@@ -1895,25 +1871,9 @@
     ]
    },
    {
-    "id": "solidago_virgaurea",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 27 records on the tile"
-    ]
-   },
-   {
-    "id": "alchemilla_alpina",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 26 records on the tile"
-    ]
-   },
-   {
     "id": "andromeda_polifolia",
     "kind": "shrub",
-    "stand_in": null,
+    "stand_in": "empetrum_nigrum",
     "why": [
      "GBIF: 25 records on the tile"
     ]
@@ -1921,7 +1881,7 @@
    {
     "id": "arctostaphylos_alpinus",
     "kind": "shrub",
-    "stand_in": null,
+    "stand_in": "empetrum_nigrum",
     "why": [
      "GBIF: 19 records on the tile"
     ]
@@ -1945,7 +1905,7 @@
    {
     "id": "empetrum_hermaphroditum",
     "kind": "shrub",
-    "stand_in": null,
+    "stand_in": "empetrum_nigrum",
     "why": [
      "GBIF: 12 records on the tile"
     ]
@@ -1953,7 +1913,7 @@
    {
     "id": "kalmia_procumbens",
     "kind": "shrub",
-    "stand_in": null,
+    "stand_in": "empetrum_nigrum",
     "why": [
      "GBIF: 12 records on the tile"
     ]
@@ -2382,7 +2342,7 @@
    {
     "id": "orcinus_orca",
     "scientific": "Orcinus orca",
-    "common": "orca",
+    "common": "killer whale",
     "kind": "mammal",
     "records": 66,
     "why": [
@@ -2820,7 +2780,7 @@
    {
     "id": "mustela_vison",
     "scientific": "Mustela vison",
-    "common": "mink",
+    "common": "american mink",
     "kind": "mammal",
     "records": 6,
     "why": [
@@ -3054,14 +3014,6 @@
    ]
   },
   {
-   "id": "deschampsia_cespitosa",
-   "kind": "grass",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 41 records on the tile"
-   ]
-  },
-  {
    "id": "carex_nigra",
    "kind": "emergent",
    "what": "a trait card",
@@ -3083,14 +3035,6 @@
    "what": "a trait card",
    "why": [
     "GBIF: 37 records on the tile"
-   ]
-  },
-  {
-   "id": "campanula_rotundifolia",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 36 records on the tile"
    ]
   },
   {
@@ -3171,22 +3115,6 @@
    "what": "a trait card",
    "why": [
     "GBIF: 27 records on the tile"
-   ]
-  },
-  {
-   "id": "solidago_virgaurea",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 27 records on the tile"
-   ]
-  },
-  {
-   "id": "alchemilla_alpina",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 26 records on the tile"
    ]
   },
   {

@@ -1,0 +1,300 @@
+{
+ "id": "pinus_flexilis",
+ "scientific": "Pinus flexilis",
+ "common": "limber pine",
+ "aliases": [
+  "limber_pine",
+  "rocky_mountain_white_pine"
+ ],
+ "family": "Pinaceae",
+ "form": "tree",
+ "deciduous": false,
+ "template": "pinus_ponderosa",
+ "regions": [
+  "interior_west"
+ ],
+ "height_m": [
+  6,
+  14
+ ],
+ "stature": {
+  "typical_m": 10,
+  "tall_m": 15,
+  "record_m": 25,
+  "source": "typical: the drafter's figure for dry Yellowstone and Teton ridges, between Wikipedia's 5-10 m on exposed treeline sites and its usual 20 m, and inside Bryce Canyon's 8-9 m (25-30 ft, NPS); tall: FEIS, rarely over 15 m; record: rarely 25 m (Wikipedia), Yellowstone gives up to about 23 m (75 ft, NPS); read 2026-11-10"
+ },
+ "variants_height_m": {
+  "pole": [
+   1.5,
+   5
+  ],
+  "old-growth": [
+   9,
+   16
+  ]
+ },
+ "crown": {
+  "shape": "spherical",
+  "profile": [
+   [
+    0.1,
+    0.28
+   ],
+   [
+    0.28,
+    0.35
+   ],
+   [
+    0.48,
+    0.37
+   ],
+   [
+    0.66,
+    0.34
+   ],
+   [
+    0.82,
+    0.27
+   ],
+   [
+    0.93,
+    0.17
+   ],
+   [
+    1.0,
+    0.07
+   ]
+  ],
+  "lobes": 4,
+  "lobe_depth": 0.26,
+  "asymmetry": 0.38,
+  "fill": 0.24,
+  "edge": 1.15
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    64,
+    80,
+    74
+   ],
+   "spring": [
+    82,
+    100,
+    88
+   ],
+   "summer": [
+    70,
+    88,
+    80
+   ],
+   "fall": [
+    68,
+    86,
+    78
+   ]
+  },
+  "leaf_size_m": 0.06,
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   118,
+   116,
+   112
+  ],
+  "bark_pattern": "plates",
+  "stems": [
+   1,
+   4
+  ],
+  "stem_spread_deg": 22,
+  "lean_deg": 10,
+  "radius_ratio": 0.045,
+  "bole_ratio": 0.08,
+  "base_size": 0.08
+ },
+ "targets": {
+  "crown_width_ratio": 0.75,
+  "crown_base_ratio": 0.08,
+  "porosity": 0.32,
+  "from": "judgement values from the drafter's reading of the sources (2026-11-10), no photographs measured; to be replaced by photo measurements: a short, thick trunk under an irregular, wide crown (NPS Bryce Canyon), often several stems from one nutcracker cache (FEIS), long flexible limbs upswept at the tips with the needles in tufts at their ends (NPS Great Basin)"
+ },
+ "variant_patches": {
+  "pole": {
+   "set": {
+    "trunk": {
+     "bark_rgb": [
+      176,
+      174,
+      166
+     ],
+     "bark_pattern": "smooth_grey",
+     "stems": [
+      1,
+      3
+     ],
+     "radius_ratio": 0.03
+    },
+    "crown": {
+     "shape": "conical",
+     "envelope": {
+      "profile": [
+       [
+        0.05,
+        0.28
+       ],
+       [
+        0.25,
+        0.3
+       ],
+       [
+        0.45,
+        0.27
+       ],
+       [
+        0.65,
+        0.2
+       ],
+       [
+        0.85,
+        0.11
+       ],
+       [
+        1.0,
+        0.03
+       ]
+      ],
+      "asymmetry": 0.15,
+      "lobe_depth": 0.12
+     }
+    }
+   },
+   "note": "a young tree on a ridge: a small, rather open cone of flexible limbs, its bark smooth and pale silver-grey (NPS Great Basin: smooth and white)"
+  },
+  "old-growth": {
+   "set": {
+    "trunk": {
+     "bark_rgb": [
+      78,
+      76,
+      74
+     ],
+     "bark_pattern": "furrowed",
+     "stems": [
+      1,
+      4
+     ],
+     "radius_ratio": 0.065,
+     "lean_deg": 15
+    },
+    "crown": {
+     "shape": "hemispherical",
+     "envelope": {
+      "profile": [
+       [
+        0.2,
+        0.36
+       ],
+       [
+        0.4,
+        0.46
+       ],
+       [
+        0.58,
+        0.46
+       ],
+       [
+        0.74,
+        0.4
+       ],
+       [
+        0.88,
+        0.28
+       ],
+       [
+        1.0,
+        0.1
+       ]
+      ],
+      "asymmetry": 0.48,
+      "lobe_depth": 0.34
+     }
+    }
+   },
+   "note": "a ridge tree many centuries old: a stout, twisted trunk of dark, heavily creased, nearly black bark, a broad, broken, wind-shaped crown with dead silver limbs"
+  }
+ },
+ "description": "The pine of the dry, windswept ridges and rocky slopes, a stout, often many-stemmed tree 6-14 m here with a short thick trunk and a wide, irregular crown of long, limber branches that bend without breaking. Its dark blue-green needles come in fives, tufted at the branch tips; its bark is smooth and pale silver-grey on young trees and dark and deeply creased on old ones, and its big wingless seeds are planted by Clark's nutcrackers.",
+ "season_notes": {
+  "winter": "Evergreen on the wind-scoured ridges where elk and deer winter; the limber branches shed snow by bending.",
+  "spring": "Red pollen cones shed in June on the lower branches.",
+  "summer": "Green cones grow at the branch ends and ripen light brown in August and September.",
+  "fall": "Cones open in September and October; nutcrackers and squirrels harvest the large seeds, and bears dig into the squirrels' caches."
+ },
+ "habitat": {
+  "classes": {
+   "barren": 1.0,
+   "grassland": 0.6,
+   "conifer_forest": 0.5
+  },
+  "floor": 0.4,
+  "mid": 1.0,
+  "steep": 1.3,
+  "north": 0.5,
+  "shade": 0.05,
+  "disturbed": 0.3
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "ursus_americanus",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "tamias_amoenus",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "cervus_canadensis",
+    "part": "browse",
+    "seasons": [
+     "winter"
+    ]
+   }
+  ],
+  "cover_for": [
+   "cervus_canadensis",
+   "odocoileus_hemionus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1900,
+   3000
+  ],
+  "where": "dry, rocky, windswept ridges, cliff tops and talus pockets, often on limestone, of Yellowstone (the Lamar's dry slopes) and the Tetons, from the sagebrush edge to treeline; the Rockies from Alberta to New Mexico, the Great Basin and the eastern Sierra"
+ },
+ "notes": "A pine grown from ponderosa as a short, stout, wide-crowned tree, often several stems from one base (FEIS: from nutcracker caches or a damaged leader), set here through stems, lean and radius; the long flexible limbs that curve up at their ends and bend double without breaking (NPS Bryce Canyon) are approximated only by the crown's lobes and asymmetry. Krummholz at treeline (FEIS, NPS Great Basin) is not grown. Needles in fives, 4-8 cm, dark blue-green (Wikipedia; 3.8-7.6 cm per NPS Great Basin); colours are judgement values. Bark: smooth and white on young trees, scaly and nearly black on old (NPS Great Basin), heavily creased dark grey on mature trees (Wikipedia); the colours here, a pale silver-grey for the pole class and a near-black for the old, are judgement values. Cones 8-15 cm, light brown, thick-scaled, no prickles (FEIS, NPS Bryce Canyon), not drawn. Elevations: no Wyoming figure in FEIS (850-3810 m over the range per Wikipedia); the Yellowstone and Teton band is the drafter's estimate. Clark's nutcracker (main disperser), pinyon jay and red squirrel use the seed (FEIS, Wikipedia) and are not in the animal library; grizzly bears raid squirrel caches too (Wikipedia); bighorn sheep use open ridge stands (FEIS); northern flickers and mountain bluebirds nest in it (Wikipedia). The yellow-pine chipmunk stands for the chipmunks that cache the seed (NPS Great Basin), the drafter's choice for northwest Wyoming. Mature trees can pass 1000 years (FEIS). Hit by white pine blister rust and mountain pine beetle (NPS Yellowstone).",
+ "sources": [
+  "Fire Effects Information System, Pinus flexilis, https://www.fs.usda.gov/database/feis/plants/tree/pinfle/all.html, read 2026-11-10",
+  "Wikipedia, Pinus flexilis (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Pinus_flexilis, read 2026-11-10",
+  "Forests - Yellowstone National Park (U.S. National Park Service), https://www.nps.gov/yell/learn/nature/forests.htm, read 2026-11-10",
+  "Trees and Shrubs - Great Basin National Park (U.S. National Park Service), https://www.nps.gov/grba/learn/nature/treesandshrubs.htm, read 2026-11-10",
+  "Limber Pine - Bryce Canyon National Park (U.S. National Park Service), https://www.nps.gov/brca/learn/nature/limberpine.htm, read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ]
+}

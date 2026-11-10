@@ -1,6 +1,6 @@
 {
  "tile": "utm10n_680_4280",
- "at": "2026-11-09T05:19:10Z",
+ "at": "2026-11-10T21:11:48Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -59,7 +59,7 @@
    "sisyrinchium_bellum": null,
    "andropogon_virginicus": null,
    "dichelostemma_volubile": null,
-   "sarcobatus_vermiculatus": "baccharis_pilularis"
+   "sarcobatus_vermiculatus": null
   },
   "density": {
    "tree": {
@@ -1316,12 +1316,12 @@
    "kind": "shrub",
    "fidelity": 0,
    "common": null,
-   "drawn_as": "baccharis_pilularis",
+   "drawn_as": null,
    "share": 0,
    "why_needed": [
     "named by BPS 618 Inter-Mountain Basins Greasewood Flat (20 cells)"
    ],
-   "stand_in": "baccharis_pilularis"
+   "stand_in": null
   },
   {
    "id": "sisyrinchium_bellum",
@@ -2581,7 +2581,7 @@
    {
     "id": "sarcobatus_vermiculatus",
     "kind": "shrub",
-    "stand_in": "baccharis_pilularis",
+    "stand_in": null,
     "why": [
      "named by BPS 618 Inter-Mountain Basins Greasewood Flat (20 cells)"
     ]

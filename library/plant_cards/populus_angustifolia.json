@@ -1,0 +1,224 @@
+{
+ "id": "populus_angustifolia",
+ "scientific": "Populus angustifolia",
+ "common": "narrowleaf cottonwood",
+ "aliases": [
+  "narrowleaf_cottonwood",
+  "narrow_leaf_cottonwood",
+  "willow_leaved_cottonwood",
+  "mountain_cottonwood"
+ ],
+ "family": "Salicaceae",
+ "form": "tree",
+ "deciduous": true,
+ "template": "populus_fremontii",
+ "regions": [
+  "interior_west"
+ ],
+ "height_m": [
+  10,
+  20
+ ],
+ "stature": {
+  "typical_m": 14,
+  "tall_m": 20,
+  "record_m": null,
+  "source": "typical: the drafter's figure for the Snake River bottoms, below FEIS's maximum; tall: FEIS, to about 20 m with trunks over 76 cm across; no record height was read; read 2026-11-10"
+ },
+ "variants_height_m": {
+  "young": [
+   3,
+   9
+  ],
+  "veteran": [
+   17,
+   23
+  ]
+ },
+ "crown": {
+  "shape": "cylindrical",
+  "profile": [
+   [
+    0.25,
+    0.12
+   ],
+   [
+    0.38,
+    0.18
+   ],
+   [
+    0.52,
+    0.21
+   ],
+   [
+    0.66,
+    0.21
+   ],
+   [
+    0.8,
+    0.17
+   ],
+   [
+    0.92,
+    0.1
+   ],
+   [
+    1.0,
+    0.03
+   ]
+  ],
+  "lobes": 5,
+  "lobe_depth": 0.2,
+  "asymmetry": 0.2,
+  "fill": 0.42,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    148,
+    142,
+    124
+   ],
+   "spring": [
+    146,
+    166,
+    84
+   ],
+   "summer": [
+    104,
+    128,
+    68
+   ],
+   "fall": [
+    212,
+    178,
+    58
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.6,
+   "summer": 1.0,
+   "fall": 0.5
+  },
+  "leaf_on_by_month": [
+   0.0,
+   0.0,
+   0.0,
+   0.05,
+   0.6,
+   1.0,
+   1.0,
+   1.0,
+   0.9,
+   0.45,
+   0.05,
+   0.0
+  ],
+  "leaf_size_m": 0.07,
+  "leaf_shape": "lanceolate",
+  "flowers": null
+ },
+ "trunk": {
+  "bark_rgb": [
+   136,
+   130,
+   116
+  ],
+  "bark_pattern": "furrowed",
+  "stems": [
+   1,
+   3
+  ],
+  "lean_deg": 5,
+  "split_prob": 0.2
+ },
+ "targets": {
+  "crown_width_ratio": 0.42,
+  "crown_base_ratio": 0.3,
+  "porosity": 0.35,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: a slender, upright cottonwood with a narrow, open crown of upswept branches, often in close clusters of stems along the banks; yellow-green narrow leaves in summer, golden yellow in fall, pale grey-green smooth bark on young stems and grey furrowed bark on old trunks"
+ },
+ "description": "A slender deciduous cottonwood 10-20 m tall with a narrow crown, smooth pale bark on young stems that becomes grey and furrowed on old trunks, and narrow, lance-shaped, finely scalloped leaves that look more like a willow's than a poplar's, yellow-green in summer and golden yellow in fall. It grows in bands along the Snake River and its tributaries in Jackson Hole, on gravel bars and banks with willows, and its stands spread by root suckers as well as seed.",
+ "season_notes": {
+  "winter": "Bare, upright grey crowns along the river; bald eagles perch and nest in the tall trees.",
+  "spring": "Catkins hang from last year's twigs in May before the leaves, males a week or two ahead of females, during the spring high water.",
+  "summer": "Fluffy white seed drifts as the river drops in early summer; narrow yellow-green leaves keep forming through the season.",
+  "fall": "Leaves turn golden yellow and fall from mid-September through October, the river corridors a gold ribbon across the valley."
+ },
+ "habitat": {
+  "classes": {
+   "riparian": 1.0,
+   "conifer_forest": 0.05,
+   "grassland": 0.04
+  },
+  "floor": 2.4,
+  "mid": 0.1,
+  "steep": 0.05,
+  "north": 1.0,
+  "shade": 0.05,
+  "disturbed": 1.0,
+  "riparian": {
+   "zones": {
+    "bank": 1.0,
+    "terrace": 1.0,
+    "margin": 0.5,
+    "pond_terrace": 0.3,
+    "pond_shore": 0.3
+   },
+   "orders": [
+    2,
+    7
+   ],
+   "permanence": "perennial",
+   "water": "Wants a summer water table within reach of its roots: the banks, gravel bars and alluvial benches of rivers and streams, where floods lay down the bare, moist, sunny alluvium its seedlings need; it tolerates long flooding but not drought or a sudden drop in the water table."
+  }
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "cervus_canadensis",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "cervus_canadensis",
+   "odocoileus_hemionus",
+   "haliaeetus_leucocephalus",
+   "accipiter_striatus",
+   "buteo_jamaicensis"
+  ],
+  "shades_water": 0.7
+ },
+ "range": {
+  "elev_m": [
+   1200,
+   2440
+  ],
+  "where": "the Snake River and its tributaries in Jackson Hole and the river corridors and wetlands of Grand Teton; streamsides of the Rocky Mountains and nearby plains from southern Alberta and Saskatchewan to Arizona, New Mexico and northern Mexico"
+ },
+ "notes": "Fremont cottonwood (the template) is the library's cottonwood, but it is a broad, spreading tree of 15-24 m with triangular leaves, a wide crown (crown_width_ratio 1.05) and a veteran age class that forks heavily. The card makes narrowleaf cottonwood a slender tree (FEIS: a slender crown, to about 20 m) with a narrow crown (crown_width_ratio 0.42) and lance-shaped, scalloped, yellow-green leaves (Wikipedia; leaf_shape lanceolate). Leaf length was not given by any source read: 0.07 m is the drafter's judgement. Bark smooth when young, furrowed with age (FEIS); the card keeps to the common card keys, so the template's age classes stand: its young class is not set smooth and paler and its veteran forks more (split_prob 0.8) than this slender tree should; a variant_patches block (young smooth pale bark, veteran split_prob about 0.4) is the next refinement. Catkins before the leaves, on last year's twigs, May-June; leaf fall mid-September to October (FEIS); catkins and seed fluff are not drawn. It sprouts from roots, root crowns and buried branch fragments (FEIS, the main spread on coarse foothill rivers) and grows in tight clusters (Wikipedia), so the species mix should place it in bands and clumps along the channel, not as lone trees. Lives 100-200 years (FEIS). Elevation: 1200-2400 m (Wikipedia); western Wyoming below about 2000 m (FEIS), so in the 1,900-2,700 m Lamar and Teton tiles it belongs to the lowest river bottoms only; GBIF records should decide. Jackson Hole: the NPS Grand Teton plants and trees pages (along the Snake River, its tributaries and wetlands, golden yellow in fall). It hybridises readily with balsam poplar, black cottonwood, plains cottonwood and Fremont cottonwood (Wikipedia), so local stands may be mixed. Eaters: FEIS calls it a major beaver food and relatively unpalatable to game and livestock in Wyoming streamside woodland (elk rated good in Wyoming, fair in Utah); cover fair to good for elk, mule deer and small songbirds; nesting for sharp-shinned hawks, bald eagles (in the Greater Yellowstone) and the greater pewee. Beaver, moose and the pewee are not in the animal library; the red-tailed hawk is added as a generic large-tree nester (the drafter's judgement). Colours, crown profile, porosity, split probability, leaf-on months, the mule deer seasons and shades_water are the drafter's judgement, not from a source.",
+ "sources": [
+  "Fire Effects Information System, Populus angustifolia, https://www.fs.usda.gov/database/feis/plants/tree/popang/all.html, read 2026-11-10",
+  "Wikipedia, Populus angustifolia (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Populus_angustifolia, read 2026-11-10",
+  "National Park Service, Grand Teton National Park: Plants, https://www.nps.gov/grte/learn/nature/plants.htm, read 2026-11-10",
+  "National Park Service, Grand Teton National Park: Trees and Shrubs, https://www.nps.gov/grte/learn/nature/trees.htm, read 2026-11-10",
+  "National Park Service, Yellowstone National Park: Beaver, https://www.nps.gov/yell/learn/nature/beaver.htm, read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ]
+}

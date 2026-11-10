@@ -376,19 +376,24 @@
   },
   "plants": {
    "stage": "flora",
-   "started_at": "2026-11-07T18:44:19Z",
-   "ended_at": "2026-11-07T18:44:20Z",
-   "wall_s": 1.5,
-   "cpu_self_s": 1.4,
+   "started_at": "2026-11-10T21:05:23Z",
+   "ended_at": "2026-11-10T21:05:25Z",
+   "wall_s": 2.8,
+   "cpu_self_s": 1.6,
    "cpu_children_s": 0.0,
-   "downloads": {},
+   "downloads": {
+    "gbif": {
+     "bytes": 77,
+     "requests": 1
+    }
+   },
    "cache": {
     "gbif": {
-     "hits": 156,
+     "hits": 368,
      "misses": 0
     }
    },
-   "disk_bytes": 74848,
+   "disk_bytes": 74965,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -398,10 +403,10 @@
   },
   "species_mix": {
    "stage": "flora",
-   "started_at": "2026-11-09T04:17:01Z",
-   "ended_at": "2026-11-09T04:17:03Z",
-   "wall_s": 1.9,
-   "cpu_self_s": 2.0,
+   "started_at": "2026-11-10T21:05:26Z",
+   "ended_at": "2026-11-10T21:05:27Z",
+   "wall_s": 1.1,
+   "cpu_self_s": 2.5,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {
@@ -410,7 +415,7 @@
      "misses": 0
     }
    },
-   "disk_bytes": 342087,
+   "disk_bytes": 341058,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -571,14 +576,14 @@
   },
   "registry": {
    "stage": "games",
-   "started_at": "2026-11-09T05:19:01Z",
-   "ended_at": "2026-11-09T05:19:01Z",
-   "wall_s": 0.6,
-   "cpu_self_s": 0.6,
+   "started_at": "2026-11-10T21:11:43Z",
+   "ended_at": "2026-11-10T21:11:43Z",
+   "wall_s": 0.7,
+   "cpu_self_s": 0.7,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {},
-   "disk_bytes": 60625,
+   "disk_bytes": 60997,
    "meshy": {
     "spent": 0,
     "queued": 17,
@@ -752,14 +757,14 @@
    "meshy_queued_credits_est": 0
   },
   "flora": {
-   "started_at": "2026-11-09T04:17:01Z",
-   "ended_at": "2026-11-09T04:17:03Z",
-   "wall_s": 190.7,
-   "cpu_s": 202.2,
-   "download_bytes": 0,
-   "cache_hits": 176,
+   "started_at": "2026-11-10T21:05:23Z",
+   "ended_at": "2026-11-10T21:05:27Z",
+   "wall_s": 191.2,
+   "cpu_s": 202.9,
+   "download_bytes": 77,
+   "cache_hits": 388,
    "cache_misses": 0,
-   "disk_bytes": 7403748,
+   "disk_bytes": 7402836,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -776,14 +781,14 @@
    "meshy_queued_credits_est": 0
   },
   "games": {
-   "started_at": "2026-11-09T05:19:01Z",
-   "ended_at": "2026-11-09T05:19:01Z",
-   "wall_s": 0.9,
-   "cpu_s": 0.8,
+   "started_at": "2026-11-10T21:11:43Z",
+   "ended_at": "2026-11-10T21:11:43Z",
+   "wall_s": 1.0,
+   "cpu_s": 0.9,
    "download_bytes": 0,
    "cache_hits": 0,
    "cache_misses": 0,
-   "disk_bytes": 1019675,
+   "disk_bytes": 1020047,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 460
   }
@@ -1564,21 +1569,74 @@
    "ended_at": "2026-11-09T05:19:01Z",
    "failed": [],
    "refused": []
+  },
+  {
+   "started_at": "2026-11-10T21:02:19Z",
+   "stages": [
+    {
+     "stage": "flora",
+     "started_at": "2026-11-10T21:02:19Z",
+     "steps_run": [
+      "plants",
+      "species_mix"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-10T21:03:01Z"
+    }
+   ],
+   "ended_at": "2026-11-10T21:03:01Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-10T21:05:23Z",
+   "stages": [
+    {
+     "stage": "flora",
+     "started_at": "2026-11-10T21:05:23Z",
+     "steps_run": [
+      "plants",
+      "species_mix"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-10T21:05:27Z"
+    }
+   ],
+   "ended_at": "2026-11-10T21:05:27Z",
+   "failed": [],
+   "refused": []
+  },
+  {
+   "started_at": "2026-11-10T21:11:43Z",
+   "stages": [
+    {
+     "stage": "games",
+     "started_at": "2026-11-10T21:11:43Z",
+     "steps_run": [
+      "registry"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-10T21:11:43Z"
+    }
+   ],
+   "ended_at": "2026-11-10T21:11:43Z",
+   "failed": [],
+   "refused": []
   }
  ],
  "totals": {
-  "wall_s": 627.3,
-  "cpu_s": 381.6,
-  "download_bytes": 17168043,
-  "cache_hits": 1465,
+  "wall_s": 627.9,
+  "cpu_s": 382.4,
+  "download_bytes": 17168120,
+  "cache_hits": 1677,
   "cache_misses": 244,
-  "disk_bytes": 1001910578,
+  "disk_bytes": 1001910038,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 460
  },
- "updated_at": "2026-11-09T05:19:01Z",
+ "updated_at": "2026-11-10T21:11:43Z",
  "client": {
-  "bytes": 60634391,
+  "bytes": 60631541,
   "files": 57,
   "largest": {
    "client/lidar_micro.png": 7921507,

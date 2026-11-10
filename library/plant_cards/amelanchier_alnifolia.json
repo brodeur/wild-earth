@@ -1,0 +1,266 @@
+{
+ "id": "amelanchier_alnifolia",
+ "scientific": "Amelanchier alnifolia",
+ "common": "Saskatoon serviceberry",
+ "aliases": [
+  "saskatoon_serviceberry",
+  "serviceberry",
+  "saskatoon",
+  "western_serviceberry",
+  "pacific_serviceberry"
+ ],
+ "family": "Rosaceae",
+ "form": "multi_stem_shrub_tree",
+ "deciduous": true,
+ "template": "heteromeles_arbutifolia",
+ "regions": [
+  "interior_west"
+ ],
+ "height_m": [
+  1,
+  5
+ ],
+ "stature": {
+  "typical_m": 2.5,
+  "tall_m": 8,
+  "record_m": 10,
+  "source": "typical: the drafter's figure for montane shrubland and aspen edges; tall: FEIS and Wikipedia, 1-8 m; record: Wikipedia, rarely to 10 m; read 2026-11-10"
+ },
+ "variants_height_m": {
+  "young": [
+   0.4,
+   1.2
+  ],
+  "old": [
+   4,
+   6
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.3
+   ],
+   [
+    0.12,
+    0.4
+   ],
+   [
+    0.3,
+    0.46
+   ],
+   [
+    0.5,
+    0.48
+   ],
+   [
+    0.68,
+    0.44
+   ],
+   [
+    0.84,
+    0.34
+   ],
+   [
+    0.95,
+    0.2
+   ],
+   [
+    1.0,
+    0.07
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.2,
+  "asymmetry": 0.25,
+  "fill": 0.45,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    124,
+    98,
+    86
+   ],
+   "spring": [
+    128,
+    150,
+    92
+   ],
+   "summer": [
+    88,
+    112,
+    78
+   ],
+   "fall": [
+    194,
+    120,
+    62
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.6,
+   "summer": 1.0,
+   "fall": 0.35
+  },
+  "leaf_on_by_month": [
+   0.0,
+   0.0,
+   0.0,
+   0.05,
+   0.6,
+   1.0,
+   1.0,
+   1.0,
+   0.75,
+   0.3,
+   0.0,
+   0.0
+  ],
+  "leaf_size_m": 0.04,
+  "leaf_shape": "oval",
+  "flowers": {
+   "season": "spring",
+   "months": [
+    5,
+    6
+   ],
+   "form": "cluster",
+   "rgb": [
+    242,
+    240,
+    230
+   ],
+   "size_m": 0.06,
+   "density": 0.5,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": [
+    "summer"
+   ],
+   "months": [
+    7,
+    8
+   ],
+   "form": "cluster",
+   "rgb": [
+    74,
+    46,
+    80
+   ],
+   "size_m": 0.04,
+   "density": 0.35
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   122,
+   112,
+   104
+  ],
+  "bark_pattern": "smooth_grey",
+  "stems": [
+   3,
+   12
+  ],
+  "lean_deg": 10
+ },
+ "targets": {
+  "crown_width_ratio": 0.95,
+  "crown_base_ratio": 0.08,
+  "porosity": 0.35,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: a clump or thicket of thin, smooth grey stems with a rounded crown of spreading to erect branches, about as wide as tall; white flower clusters in late spring, small purple berries in midsummer, orange to red-brown leaves in early fall"
+ },
+ "description": "A deciduous shrub or small tree, usually 1-5 m, of slender smooth grey stems that sprout from the root crown and rhizomes into clumps and thickets, with small oval to nearly round leaves toothed toward the tip. It is among the first shrubs to bloom in spring, in loose clusters of white five-petalled flowers, and bears small purple, bloom-dusted berries in midsummer. It grows on the montane slopes, aspen edges and mountain shrublands above the valley floors, and colours early in the fall.",
+ "season_notes": {
+  "winter": "Bare grey and reddish twigs above the snow; elk and mule deer browse it hardest in deep snow.",
+  "spring": "White flower clusters in late May and June, as or just before the leaves open, among the first shrubs in bloom.",
+  "summer": "Purple berries ripen in July and August, eaten by bears, birds and squirrels.",
+  "fall": "Leaves turn orange, yellow and red-brown from late summer and fall early; a second peak of browsing comes in spring."
+ },
+ "habitat": {
+  "classes": {
+   "chaparral": 0.8,
+   "mixed_forest": 0.7,
+   "conifer_forest": 0.6,
+   "oak_woodland": 0.5,
+   "riparian": 0.4,
+   "grassland": 0.3
+  },
+  "floor": 0.8,
+  "mid": 1.1,
+  "steep": 0.9,
+  "north": 0.9,
+  "shade": 0.3,
+  "disturbed": 1.2
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "cervus_canadensis",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "ursus_americanus",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "lepus_americanus",
+    "part": "browse",
+    "seasons": [
+     "winter"
+    ]
+   },
+   {
+    "animal": "turdus_migratorius",
+    "part": "berries",
+    "seasons": [
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "cervus_canadensis",
+   "lepus_americanus",
+   "peromyscus_maniculatus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1200,
+   3400
+  ],
+  "where": "the montane shrublands, aspen edges and lower conifer forest of the Yellowstone and Grand Teton slopes above the valley floors; from Alaska across western Canada and the western and north-central United States, sea level in the north to about 3400 m in the Rockies"
+ },
+ "notes": "Toyon (the template) is the library's nearest Rosaceae (tribe Maleae, the pome fruits, with Amelanchier) multi-stemmed shrub-tree with white flower clusters and berry clusters, but it is an evergreen of California chaparral with larger, glossy, leathery leaves, summer flowers and red winter berries. The card makes serviceberry deciduous with small oval to nearly round leaves, 2-5 cm, toothed mostly above the middle (Wikipedia; leaf_size_m 0.04, leaf_shape oval), white five-petalled flowers in clusters of 3-20 (Wikipedia) in spring as or just before the leaves open (FEIS: usually the first shrub to bloom; NPS Grand Teton trees page: among the earliest bloomers, white clusters in early summer), and small purple pomes, 5-15 mm with a waxy bloom (Wikipedia), ripening July-September, one to two months after flowering (FEIS). The flower and berry months for the Teton and Lamar tiles (May-June, July-August) and the clusters' drawn size are the drafter's reading of these. Leaves colour from late July to late September in Montana and Wyoming and begin to fall in August (FEIS), hence the early leaf-off months. Height 1-8 m, rarely 10 m; suckering colonies or clumps (Wikipedia; FEIS: thickets and clumps from root-crown and rhizome sprouts, over 90% of new stems sprouts in western Montana; short-lived, few stems past 20 years). Habitat: mountain slopes, mountain shrub, lower conifer forest, aspen types (aspen/serviceberry habitat types), wooded draws and riparian edges, on well-drained mesic soils (FEIS); a fire sprouter that declines as conifer canopies close (FEIS), so disturbed 1.2 and shade 0.3. No Wyoming elevation was read; the range spans 1220-2900 m in Utah and 1500-3000 m in Colorado (FEIS), to 3400 m in the Rockies (Wikipedia); the Yellowstone and Grand Teton placing is from the brief and the Grand Teton trees page, which names it but not where it grows. Eaters: FEIS names elk (heavy winter use), mule deer (a key winter browse; its cyanogenic glycosides make a winter diet heavy in it dangerous), white-tailed deer, moose is not named, mountain goat, bighorn, bison, black bear, beaver and hares (twigs, leaves, fruit, bark), upland game birds (fruit and buds), rodents and songbirds (fruit); Wikipedia adds squirrels and rabbits. The snowshoe hare stands in for hares and the American robin for the fruit-eating songbirds; bighorn, bison, mountain goat, beaver, white-tailed deer, dusky and ruffed grouse and red squirrels are not in the library (the library's sooty grouse and Douglas squirrel are Pacific species, so they are not used). Colours, crown profile, porosity, stems, leaf-on months and the flower and berry sizes and colours are the drafter's judgement, not from a source.",
+ "sources": [
+  "Fire Effects Information System, Amelanchier alnifolia, https://www.fs.usda.gov/database/feis/plants/shrub/amealn/all.html, read 2026-11-10",
+  "Wikipedia, Amelanchier alnifolia (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Amelanchier_alnifolia, read 2026-11-10",
+  "National Park Service, Grand Teton National Park: Trees and Shrubs, https://www.nps.gov/grte/learn/nature/trees.htm, read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ]
+}

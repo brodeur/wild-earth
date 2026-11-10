@@ -1,0 +1,219 @@
+{
+ "id": "purshia_stansburiana",
+ "scientific": "Purshia stansburiana",
+ "common": "Stansbury cliffrose",
+ "aliases": [
+  "stansbury_cliffrose",
+  "cliffrose",
+  "cliff_rose",
+  "purshia_mexicana",
+  "cowania_mexicana",
+  "cowania_stansburiana"
+ ],
+ "family": "Rosaceae",
+ "form": "shrub",
+ "deciduous": false,
+ "template": "cercocarpus_betuloides",
+ "regions": [
+  "interior_west"
+ ],
+ "height_m": [
+  1.0,
+  3.5
+ ],
+ "stature": {
+  "typical_m": 2.0,
+  "tall_m": 4.0,
+  "record_m": 8.0,
+  "source": "typical: Wikipedia, usually 1-3 m; tall: Wikipedia, occasionally 4 m; record: Wikipedia to 8 m, FEIS to about 7.5 m on good sites; read 2026-11-10"
+ },
+ "variants_height_m": {
+  "young": [
+   0.3,
+   0.9
+  ],
+  "decadent": [
+   2.5,
+   4.5
+  ]
+ },
+ "crown": {
+  "shape": "inverse_conical",
+  "profile": [
+   [
+    0.0,
+    0.2
+   ],
+   [
+    0.2,
+    0.35
+   ],
+   [
+    0.45,
+    0.5
+   ],
+   [
+    0.7,
+    0.58
+   ],
+   [
+    0.88,
+    0.52
+   ],
+   [
+    1.0,
+    0.3
+   ]
+  ],
+  "lobes": 5,
+  "lobe_depth": 0.22,
+  "asymmetry": 0.3,
+  "fill": 0.45,
+  "edge": 1.15
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    76,
+    88,
+    62
+   ],
+   "spring": [
+    86,
+    102,
+    64
+   ],
+   "summer": [
+    90,
+    98,
+    70
+   ],
+   "fall": [
+    84,
+    94,
+    66
+   ]
+  },
+  "leaf_size_m": 0.012,
+  "flowers": {
+   "season": "spring",
+   "months": [
+    4,
+    6
+   ],
+   "form": "cluster",
+   "rgb": [
+    242,
+    234,
+    204
+   ],
+   "size_m": 0.018,
+   "density": 0.6,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": "summer",
+   "months": [
+    7,
+    10
+   ],
+   "form": "cluster",
+   "rgb": [
+    222,
+    212,
+    196
+   ],
+   "size_m": 0.04,
+   "density": 0.4
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   116,
+   104,
+   92
+  ],
+  "bark_pattern": "shreddy",
+  "stems": [
+   1,
+   5
+  ],
+  "lean_deg": 12
+ },
+ "targets": {
+  "crown_width_ratio": 0.9,
+  "crown_base_ratio": 0.2,
+  "porosity": 0.45,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: an open, irregular, gnarled shrub or small tree, one to a few crooked stems with grey-brown shreddy bark, wider at the top, dark green and seen through; in late spring covered in cream-white flowers, in summer and fall hung with feathery silvery plumes"
+ },
+ "description": "An evergreen shrub or small gnarled tree, usually one to three metres, of one to a few crooked stems and branches with grey-brown, shreddy bark, and small, thick, dark green leaves cut into a few narrow lobes and dotted with glands. In late spring it is covered with sweet-scented cream-white flowers a couple of centimetres across, then with seeds that each carry a long feathery plume. At the Grand Canyon it grows in the pinyon-juniper woodland below and along the rims, on dry, exposed ledges and cliffs, often of limestone, and is the main winter browse of mule deer on the Kaibab Plateau.",
+ "season_notes": {
+  "winter": "Dark green and leafy: the mule deer's main winter browse on the Kaibab Plateau; the old plumes are gone.",
+  "spring": "Flowering from April: a mass of fragrant cream-white, five-petalled flowers over the dark leaves.",
+  "summer": "Flowers keep coming after rain until frost; the feathery plumes of the seeds catch the light from July.",
+  "fall": "Plumed seeds blow away or are carried off and cached by rodents; the leaves stay dark green."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 0.8,
+   "chaparral": 0.8,
+   "barren": 0.6,
+   "grassland": 0.3
+  },
+  "floor": 0.6,
+  "mid": 1.0,
+  "steep": 1.3,
+  "north": 0.5,
+  "shade": 0.1,
+  "disturbed": 0.3
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "cervus_canadensis",
+    "part": "browse",
+    "seasons": [
+     "winter"
+    ]
+   },
+   {
+    "animal": "peromyscus_maniculatus",
+    "part": "seeds",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "cervus_canadensis",
+   "peromyscus_maniculatus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   900,
+   2750
+  ],
+  "where": "the pinyon-juniper woodland below and along the South and North Rims and dry, open ponderosa pine; exposed south- and west-facing ledges and cliffs, often limestone"
+ },
+ "notes": "Birchleaf mountain mahogany (the template) is the library's nearest hand-written Rosaceae shrub with small evergreen leaves and plumed seeds (curl-leaf mountain mahogany is a generated record and cannot be a template), but its leaves are toothed ovals, its bark smooth grey, its outline a clean upright vase, and it has no showy flowers. The card makes cliffrose a crooked, open shrub or small tree (Wikipedia: shrub 1-3 m, sometimes 4 m and somewhat treelike, rarely to 8 m; FEIS: 0.3-1.8 m usually, to 7.5 m on good sites, single- or many-stemmed), with shreddy bark (FEIS, Wikipedia), small thick lobed glandular leaves (Wikipedia; FEIS: small, evergreen, alternate to clustered, glandular), cream-white flowers (Wikipedia: white or cream, clawed petals, strongly sweet-scented, abundant, spring to first frost; FEIS: April-September in Arizona), and feathery seed plumes drawn through the berries block (FEIS: the plumed style 1-3.5 cm; Wikipedia: up to 6 cm; seeds ripening mid-July to August and shed into October in Utah). The template's oval leaf cards will look too broad and plain for the lobed leaves; the gnarled habit relies on the stems, lean and asymmetry here. Leaf size, flower size (and the five petals of a rose-family flower), the April-June main flowering span and the plume colour are the drafter's (no source read gives the sizes). Form: shrub, as the library's mountain mahoganies (the nearest relatives) are; multi_stem_shrub_tree is the other choice if the lineup wants the treelike old plants. Elevation: FEIS gives 914-2438 m in Arizona and 975-2745 m in Utah. Sites (FEIS): pinyon-juniper woodland, dry open ponderosa pine, mountain brush and desert shrubland edges, cliffs and dry exposed sites, mostly south- or west-facing and often on limestone; Wikipedia: often on cliffs, rocky soils, especially limestone. The Grand Canyon NPS pages read do not name cliffrose; FEIS reports it in Grand Canyon pinyon-juniper (a crown-fire study) and as the principal winter browse on the Kaibab Plateau. Fire: usually killed by severe fire, a weak sprouter, slow to return (FEIS: 13-15 years after a Grand Canyon crown fire far fewer plants on burned than unburned ground), so disturbed is low. Eaters (FEIS, Wikipedia): mule deer (important, heavy winter use), elk (browse and bedding cover), desert bighorn, pronghorn and livestock; rodents eat and cache the seeds; game birds and songbirds use it. Desert bighorn and pronghorn are not in the library; the deer mouse stands in for the seed-caching rodents. Colours, crown profile, porosity, stems, lean, habitat weights and the flower and plume blocks are the drafter's judgement, not from a source.",
+ "sources": [
+  "Fire Effects Information System, Purshia stansburiana, https://www.fs.usda.gov/database/feis/plants/shrub/pursta/all.html, read 2026-11-10",
+  "Wikipedia, Purshia stansburiana (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Purshia_stansburiana, read 2026-11-10",
+  "National Park Service, Grand Canyon National Park: Natural Features & Ecosystems, https://home.nps.gov/grca/learn/nature/naturalfeaturesandecosystems.htm, read 2026-11-10",
+  "National Park Service, Grand Canyon National Park: Ecology for Students, https://www.nps.gov/grca/learn/education/ecology.htm, read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ]
+}

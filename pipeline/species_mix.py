@@ -481,17 +481,34 @@ def _subst(weights: dict, table: dict, fixed=()) -> dict:
     return out
 
 
-SUBSTITUTIONS: dict = {}   # species -> the record drawn for it (no record yet: communities.stand_in), this run
+SUBSTITUTIONS: dict = {}   # species -> the record drawn for it (no record of its own: resolution), or None; this run
+RESOLUTION: dict = {}      # this run's (species, layer) -> (the record drawn | None, why): communities.local_stand_in
 
 
-def resolve(weights: dict) -> dict:
-    """Every species without a library record replaced by its stand-in (communities.stand_in); dropped if none."""
-    from .communities import stand_in
+def resolution(sid: str, form: str | None = None) -> tuple[str | None, str]:
+    """The record drawn on this run's tile (CONTEXT) for a species without one of its own, and why: a record that belongs
+    to the tile and is its relative (communities.local_stand_in), or None: missing. `form`: the layer it is named in."""
+    k = (getattr(CONTEXT.get("tile"), "tile_id", None), sid, form)
+    if k not in RESOLUTION:
+        from .communities import local_stand_in
+        RESOLUTION[k] = local_stand_in(sid, CONTEXT.get("tile"), CONTEXT.get("regions") or [], form)
+    return RESOLUTION[k]
+
+
+def resolve(weights: dict, form: str | None = None, events: list | None = None) -> dict:
+    """Every species without a library record replaced by its stand-in on this tile (resolution), or left out where it
+    has none, so that the others take its share when the row is normalised. events: (species, drawn | None, why) is
+    appended for each one replaced or left out that had a weight (species_mix counts their cells for the document's
+    stand_ins and missing). Until 2026-11-10 the stand-in was communities.STAND_IN's wherever the tile was."""
     out: dict = {}
     for k, w in weights.items():
-        r = k if (LIBRARY / f"{k}.json").exists() else stand_in(k)
-        if r != k:
+        if (LIBRARY / f"{k}.json").exists():
+            r = k
+        else:
+            r, why = resolution(k, form)
             SUBSTITUTIONS[k] = r
+            if events is not None and w > 0:
+                events.append((k, r, why))
         if r and w > 0:
             out[r] = out.get(r, 0.0) + w
     return out
@@ -536,7 +553,9 @@ def _record_habitat(sid: str) -> dict | None:
     return _HAB_CACHE[sid]
 
 
-def terrain_weights(weights: dict, t: int, fixed=(), rule: str | None = None) -> dict:
+def terrain_weights(weights: dict, t: int, fixed=(), rule: str | None = None, form: str | None = None,
+                    events: list | None = None) -> dict:
+    """form (tree | shrub) and events: passed to resolve, for the species without a record."""
     grove, t = divmod(t, NTC)
     band, pos, nf = t // 6, (t // 2) % 3, t % 2
     w0 = dict(weights)
@@ -560,7 +579,7 @@ def terrain_weights(weights: dict, t: int, fixed=(), rule: str | None = None) ->
                 out[k] = w * pf * (h.get("north", 1.0) if nf else 1.0)
                 continue
         out[k] = w if (f is None or k in fixed) else w * _pad(f[0])[band] * f[1][pos] * f[2][nf]
-    return resolve(out)
+    return resolve(out, form, events)
 
 
 # The ground layer (2026-10-29): the grasses and forbs (library/species records with form "grass" or "forb",
@@ -727,6 +746,8 @@ def riparian_rows(regions=None, tile=None) -> dict:
     bands = tile_bands(tile) if tile is not None else []
     if bands and not CONTEXT.get("regions"):
         CONTEXT["regions"] = list(regions or [])
+    if tile is not None:
+        CONTEXT["tile"] = tile   # (the water step calls this without species_mix: the stand-ins are asked of this tile)
     for zone in RIPARIAN_ZONES:
         classes = RIPARIAN_ORDER_CLASSES if not zone.startswith("pond") else (("pond", 1, 9),)
         for cname, lo, hi in classes:
@@ -755,7 +776,7 @@ def riparian_rows(regions=None, tile=None) -> dict:
                 for b in bands:
                     rb = {"ground": row["ground"], "density": row["density"]}
                     for layer in ("trees", "shrubs"):
-                        w = terrain_weights(layers[layer], b * 6) if layers[layer] else {}
+                        w = terrain_weights(layers[layer], b * 6, form=layer[:-1]) if layers[layer] else {}
                         ids = list(w)
                         rb[layer] = [[k, x] for k, x in zip(ids, _bytes(w, ids)) if x]
                     rows[f"{zone}|{cname}|{perm}|{b}"] = rb
@@ -867,19 +888,16 @@ NAMED_NEAR_DEG = 0.5
 def named_rule(name: str, hab_code: int) -> dict | None:
     """A rule read from the community's name (communities.named_species): its named species, equal weights, densities
     by habitat class. None when the name names no species."""
+    # A tile in no table's region reads the name by its own records (communities.named_species, 2026-11-10: every species
+    # the phrase can mean, chosen by the GBIF records near the tile). Before, California's lexicon read it there and a
+    # named species was kept where GBIF had it within 0.5 degrees (2026-11-06: "alpine" had named Brewer's mountain
+    # heather, a California endemic, in Yellowstone), which left the Grand Canyon's "pinyon" as singleleaf pinyon.
     from .communities import named_species
-    named = named_species(name)
-    # A tile outside every natural-region table reads community names with California's lexicon (communities.LEXICON),
-    # so "alpine" named Brewer's mountain heather, a California endemic, in Yellowstone (2026-11-06). There a named
-    # species is kept only where GBIF has it within NEAR_DEG of the tile (tree_cards._near): big sagebrush stays.
-    if named and CONTEXT.get("regions") == [] and CONTEXT.get("tile") is not None:
-        from .tree_cards import _near
-        def sci(sid):
-            try:
-                return json.loads((LIBRARY / f"{sid}.json").read_text()).get("scientific") or sid.replace("_", " ")
-            except (OSError, ValueError):
-                return sid.replace("_", " ")
-        named = [(sid, kind) for sid, kind in named if _near(CONTEXT["tile"], " ".join(sci(sid).split()[:2]), NAMED_NEAR_DEG) > 0]
+    named = named_species(name, CONTEXT.get("regions") or [], CONTEXT.get("tile")) if CONTEXT.get("tile") is not None else named_species(name)
+    # a named species whose record is a grass or a forb is the ground layer's (a tile's own ground cards, ground_cards.py),
+    # not a tree or a shrub to grow: broom snakeweed, a subshrub the lexicon may list and USDA PLANTS calls a forb
+    from .communities import fits_layer
+    named = [(sid, kind) for sid, kind in named if fits_layer(sid, kind)]
     if not named:
         return None
     trees = {sid: 1.0 for sid, kind in named if kind == "tree"}
@@ -887,7 +905,8 @@ def named_rule(name: str, hab_code: int) -> dict | None:
     td, sd = NAMED_DENSITY.get(CLASSES.get(hab_code), (0.8, 0.6))
     return {"id": "named_from_" + "_".join(sid for sid, _ in named[:3]), "trees": trees, "shrubs": shrubs,
             "tree_density": td if trees else 0.0, "shrub_density": sd if shrubs else 0.0,
-            "note": "no rule: the species its name names (communities.LEXICON)", "fixed": [], "region": None}
+            "note": "no rule: the species its name names (communities.named_species: the region's lexicon, or, in no table's "
+                    "region, the candidates recorded near the tile)", "fixed": [], "region": None}
 
 
 # Stems to fill the cover (world pipeline phase 1, iteration 4): the client places a cell's trees by its canopy cover
@@ -970,7 +989,8 @@ def research_rule(tile: Tile, name: str, hab_code: int) -> dict:
     research. The trees and shrubs of species/plant_needs.json that have a library record, each weighted by its GBIF
     records on the tile (or its community cover) times its own niche for this habitat class (habitat.classes on its
     card: the riparian sausage tree off the open plains). With no tree of its own on record, a FUNCTIONAL STAND-IN: the
-    library's trees of the tile's climate group (REGION_CLIMATE) that suit the class, marked so; never another climate's."""
+    library's trees of the tile's climate group (REGION_CLIMATE) that suit the class and belong to the tile's place
+    (communities.belongs), marked so; never another climate's, and since 2026-11-10 never another region's."""
     pn = tile.path("species/plant_needs.json")
     trees, shrubs, stand_in = {}, {}, []
     if pn.exists():
@@ -998,6 +1018,13 @@ def research_rule(tile: Tile, name: str, hab_code: int) -> dict:
                 if d.get("form") not in ("tree", "multi_stem_shrub_tree"):
                     continue
                 if not any(REGION_CLIMATE.get(r) == group for r in (d.get("regions") or [])):
+                    continue
+                # ... and only one that belongs to the tile's place (2026-11-10: recorded near it, or, where the records
+                # cannot say, a record of its own natural region): a climate group spans continents (Borneo's
+                # dipterocarps and the Neotropics' trees are both tropical_wet)
+                from .communities import belongs
+                from .regions import natural_regions
+                if not belongs(tile, f.stem, natural_regions(tile))[0]:
                     continue
                 w = _niche_weight(d, hab_code)
                 if w >= 0.3:
@@ -1043,6 +1070,13 @@ def columns(rules: list[dict], tree_rows=(), shrub_rows=()) -> tuple[list[str], 
     stand-ins; in the order the rows first name them). A rule's species without a record is not a column: its stand-in
     is (resolve)."""
     trees, shrubs = list(TREES), list(SHRUBS)
+    if CONTEXT.get("tile") is not None and "california" not in (CONTEXT.get("regions") or []):
+        # TREES and SHRUBS are California's lists (2026-11-10): a tile elsewhere has a column only for a species a row
+        # draws. Those of the lists it does draw keep the lists' order, ahead of the others, so the order of every
+        # row's bytes (the order the client draws in) is what it was.
+        drawn_t = {k for w in (list(tree_rows) or [r["trees"] for r in rules]) for k, v in w.items() if v > 0}
+        drawn_s = {k for w in (list(shrub_rows) or [r["shrubs"] for r in rules]) for k, v in w.items() if v > 0}
+        trees, shrubs = [k for k in TREES if k in drawn_t], [k for k in SHRUBS if k in drawn_s]
     for rows_, cols in ((list(tree_rows) or [r["trees"] for r in rules], trees), (list(shrub_rows) or [r["shrubs"] for r in rules], shrubs)):
         for w in rows_:
             for k, v in w.items():
@@ -1199,6 +1233,7 @@ def species_mix(tile: Tile) -> dict:
     regions = natural_regions(tile)
     CONTEXT["regions"] = regions
     CONTEXT["tile"] = tile
+    SUBSTITUTIONS.clear(); RESOLUTION.clear()
 
     def row_for(source: str, code: int, name: str | None, hab_code: int, rule: dict | None = None) -> int:
         key = (source, code)
@@ -1259,16 +1294,53 @@ def species_mix(tile: Tile) -> dict:
     # The tile pool (outside California, 2026-11-04): a community no rule matched and whose name names no species takes
     # the species of the tile's other communities of the same habitat class, weighted by their cells; none: bare, recorded.
     cells_n = {b["index"]: int((index == b["index"]).sum()) for b in base_rows}
+    # Species without a record (2026-11-10): each is drawn by a stand-in that belongs to this tile and is its relative,
+    # or is missing (resolve, communities.local_stand_in). A community whose every species of a layer is missing has
+    # nothing of its own left to take their share: that layer is drawn generically, from the pool below, and the
+    # community is marked (`generic`). tally: (species, drawn | None) -> why, the 30 m cells it concerns, and how many of
+    # them are drawn generically.
+    LAYERS = (("trees", "tree"), ("shrubs", "shrub"))
+    tally: dict = {}
     for b in base_rows:
-        if not b["rule"].startswith("tile_pool_"):
+        if b["rule"].startswith("tile_pool_"):
             continue
-        pool_t, pool_s = {}, {}
+        for layer, form in LAYERS:
+            if any(w > 0 for w in b[layer].values()) and not resolve(b[layer], form):
+                b.setdefault("generic", []).append(layer)
+                for k, w in b[layer].items():
+                    if w > 0:
+                        e = tally.setdefault((k, None), {"why": resolution(k, form)[1], "cells": 0, "generic": 0})
+                        e["cells"] += cells_n[b["index"]]
+                        e["generic"] += cells_n[b["index"]]
+    for b in base_rows:
+        pooled = [L for L in LAYERS if b["rule"].startswith("tile_pool_") or L[0] in b.get("generic", ())]
+        if not pooled:
+            continue
+        pool = {"trees": {}, "shrubs": {}}
         donors = [d for d in base_rows if d["habitat"] == b["habitat"] and not d["rule"].startswith(("tile_pool_", "open_water", "snow_ice"))]
         for d in donors:
-            for k, w in d["trees"].items():
-                pool_t[k] = pool_t.get(k, 0.0) + w * cells_n[d["index"]]
-            for k, w in d["shrubs"].items():
-                pool_s[k] = pool_s.get(k, 0.0) + w * cells_n[d["index"]]
+            for layer, form in LAYERS:
+                if layer in d.get("generic", ()):
+                    continue
+                for k, w in d[layer].items():
+                    if resolve({k: w}, form):   # only what the donor draws: itself or its stand-in here
+                        pool[layer][k] = pool[layer].get(k, 0.0) + w * cells_n[d["index"]]
+        if not b["rule"].startswith("tile_pool_"):
+            # a community with rules of its own: only its emptied layer is the pool's, at the community's own density
+            from . import runlog
+            for layer, _ in pooled:
+                b.setdefault("as_written", {})[layer] = b[layer]   # communities[] keeps the weights as the name gave them
+                b[layer] = pool[layer]
+                if not pool[layer]:
+                    runlog.fallback(f"community '{b['name'] or b['source']}' ({cells_n[b['index']]} cells): its {layer} have no record "
+                                    f"and no local stand-in, and no other {CLASSES.get(b['habitat'])} community on the tile has any: "
+                                    f"drawn without {layer}")
+            for u in unmatched:
+                if (u["source"], u["code"]) == (b["source"], b["code"]):
+                    u["drawn"] = ("the tile's own species of its habitat class (its named species have no record and no local stand-in)"
+                                  if any(pool[layer] for layer, _ in pooled) else "bare (its named species have no record and no local stand-in)")
+            continue
+        pool_t, pool_s = pool["trees"], pool["shrubs"]
         if pool_t or pool_s:
             b["trees"], b["shrubs"] = pool_t, pool_s
             nd = sum(cells_n[d["index"]] for d in donors) or 1
@@ -1287,7 +1359,6 @@ def species_mix(tile: Tile) -> dict:
     coast_cells = sum(cells_by[b["index"]] for b in base_rows
                       if b["source"] != "rewild" and any(w in (b["name"] or "").lower() for w in COAST_WORDS))
     CONTEXT["coast"] = coast_cells / tot >= COAST_MIN and "california" in regions
-    SUBSTITUTIONS.clear()
     LOCAL_RECORDS_SKIPPED.clear(); LOCAL_RECORDS_SCALED.clear()
     gspecies = ground_species(regions, tile)   # a tile outside every table's region: none, recorded below
     # A tile outside every table's region (2026-11-06, iteration 7): its own ground layer, each community's grasses and
@@ -1323,12 +1394,24 @@ def species_mix(tile: Tile) -> dict:
     pair = index * (2 * NTC) + tcls
     # weights first (after the zones, the coast, the groves and the stand-ins), so the columns hold every species drawn
     weights = {}
-    for code in np.unique(pair).tolist():
+    for code, n_cells in zip(*(a.tolist() for a in np.unique(pair, return_counts=True))):
         b = base_rows[code // (2 * NTC) - 1] if code >= 2 * NTC else None
         if b is None:
             continue
         t = code % (2 * NTC)
-        weights[code] = (b, t, terrain_weights(b["trees"], t, b["fixed"], b["rule"]), terrain_weights(b["shrubs"], t, b["fixed"], b["rule"]))
+        events: list = []
+        weights[code] = (b, t, terrain_weights(b["trees"], t, b["fixed"], b["rule"], "tree", events),
+                         terrain_weights(b["shrubs"], t, b["fixed"], b["rule"], "shrub", events))
+        for k, r, why in set(events):   # the cells where the species would have been drawn
+            tally.setdefault((k, r), {"why": why, "cells": 0, "generic": 0})["cells"] += n_cells
+
+    def _why(e):
+        return e["why"] + (f"; in {e['generic']} of its cells nothing else is named in the community, so they are drawn generically "
+                           "(the tile's other communities of the habitat class)" if e["generic"] else "")
+    stand_ins = sorted(({"species": k, "drawn": r, "reason": _why(e), "cells": int(e["cells"])} for (k, r), e in tally.items() if r),
+                       key=lambda e: (-e["cells"], e["species"]))
+    missing = sorted(({"species": k, "reason": _why(e), "cells": int(e["cells"])} for (k, r), e in tally.items() if not r),
+                     key=lambda e: (-e["cells"], e["species"]))
     trees_cols, shrub_cols = columns(base_rows, [w[2] for w in weights.values()], [w[3] for w in weights.values()])
     nt, ns, ng = len(trees_cols), len(shrub_cols), len(ground_cols)
     final: dict[tuple, dict] = {}
@@ -1369,10 +1452,12 @@ def species_mix(tile: Tile) -> dict:
         del r["tree_density"], r["shrub_density"], r["carpet_density"]
     structure = stand_structure(tile, index, table, classes)
     # The communities as written (one per source and code, before the terrain factors), for people.
+    # (a layer drawn generically: its weights as written, all of them missing species, and under generic_drawn the pool drawn)
     communities = [{"community": b["index"], "source": b["source"], "code": b["code"], "name": b["name"], "rule": b["rule"],
-                    "trees": b["trees"], "shrubs": b["shrubs"], "ground": {k: round(v, 3) for k, v in b["ground"].items()}, "tree_density": b["tree_density"],
+                    "trees": b.get("as_written", {}).get("trees", b["trees"]), "shrubs": b.get("as_written", {}).get("shrubs", b["shrubs"]),
+                    "ground": {k: round(v, 3) for k, v in b["ground"].items()}, "tree_density": b["tree_density"],
                     "shrub_density": b["shrub_density"], **({"carpet_density": round(b["carpet_density"], 4)} if b.get("carpet_density") else {}),
-                    "note": b["note"], "fixed": b["fixed"],
+                    "note": b["note"], "fixed": b["fixed"], **({"generic": b["generic"], "generic_drawn": {L: b[L] for L in b["generic"]}} if b.get("generic") else {}),
                     "cells": int(sum(r["cells"] for r in table if r["community"] == b["index"]))} for b in base_rows]
     px = lut[index]
     TD, SD, CD = nt + ns + ng, nt + ns + ng + 1, nt + ns + ng + 2
@@ -1452,6 +1537,14 @@ def species_mix(tile: Tile) -> dict:
                        "(pipeline species_mix.py TERRAIN), and mixes[].community names it. The bytes are after the "
                        "terrain factors",
             "structure": STRUCTURE_ENCODING,
+            "stand_ins": "stand_ins[]: {species, drawn, reason, cells}: a species a rule or a community's name gives that has no "
+                         "library record, and the record drawn for it: one that belongs to this tile (recorded near it, or of "
+                         "its region where the records cannot say) and is the same genus, else the same family and growth form "
+                         "(pipeline communities.local_stand_in). missing[]: {species, reason, cells}: one with no such record, "
+                         "left out of its rows (the other species take its share); where a community has nothing else in "
+                         "that layer its cells draw the tile's other communities of the habitat class: communities[]."
+                         "generic names the layers and generic_drawn the weights drawn, while its trees / shrubs keep the "
+                         "weights as written. cells: the 30 m cells whose row would have drawn the species",
         },
         "mixes": table,
         "communities": communities,
@@ -1459,8 +1552,12 @@ def species_mix(tile: Tile) -> dict:
         "fractions": fractions,
         "local_records_skipped": LOCAL_RECORDS_SKIPPED, "local_records_scaled": LOCAL_RECORDS_SCALED,   # borrowed cards without local records (_local_ok; riparian_rows below adds its own)
         "riparian": riparian_rows(regions, tile),   # the zone mixes (pipeline/water.py reads the zones; the water step rewrites this key too)
-        # 2026-11-04: the species a rule names that have no record yet and the record drawn for each; the tile's context
+        # 2026-11-04: the species a rule names that have no record yet and the record drawn for each (null: none; kept for
+        # the registry step); the tile's context
         "substitutions": dict(sorted(SUBSTITUTIONS.items())),
+        # 2026-11-10: the same, said in full. stand_ins: a species without a record drawn by a relative that belongs to
+        # this tile; missing: one with no such relative, left out. cells: the 30 m cells whose row would have drawn it
+        "stand_ins": stand_ins, "missing": missing,
         "context": {"coast": CONTEXT["coast"], "coast_share": round(coast_cells / tot, 4), "bands_m": list(ELEV_BANDS),
                     "groves": int((tcls >= NTC).sum())},
     }

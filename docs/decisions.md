@@ -8750,3 +8750,91 @@ Aaron: "Yes, adopt it", to the baseline the pipeline review recommends.
   commit.
 - **Told to the running lanes.** The judge counts an introduced species drawn as an error and an extirpated native
   absent as a gap; the scorecard reports introduced and restored shares once a status field exists.
+## 2026-11-10: no stand-ins across regions; community names read by the tile's own records (pipeline/communities.py, species_mix.py, needs.py, registry.py, regions.py; 13 trait cards; branch claude/regional-stand-ins-dee7cc)
+
+Recommendation 2 of `docs/pipeline-review-2026-11-10.md`. The Grand Canyon drew gray pine and Sierra juniper on a
+third of its canopy and manzanita, chamise and buckbrush as two thirds of its shrubs, and nothing said so.
+
+- **Cause, three parts.**
+  - `communities.STAND_IN`, a table written for California, was followed on every tile: singleleaf pinyon had no
+    record, so gray pine was drawn.
+  - `communities.LEXICON` is California's reading of LANDFIRE's names ("pinyon" singleleaf pinyon, "juniper" Sierra
+    juniper, "chaparral" chamise, manzanita and buckbrush) and was used wherever no other table existed.
+  - `regions.NATURAL` listed a `great_basin` box with no table behind it. The Grand Canyon tile fell in it, so it
+    counted as a regional-table tile: no test of names against its records, no ground layer of its own, and the
+    client drew California's habitat-class mix on every cell whose row lacked a layer (42% of its cells had no trees,
+    71% no shrubs).
+- **The stand-in rule** (`communities.local_stand_in`). A species without a library record is drawn by a record that
+  belongs to the tile and is its relative: the same genus, else the same family and growth form; among several, the
+  preferred one (`STAND_IN`, now only a preference) and then the best recorded. A record belongs where GBIF has 3 or
+  more records of it within 25 km over the presence years (the test `_local_ok` already made); where the records
+  cannot say (offline, or under 5,000 plant records around), where it is a record of the tile's natural region. No
+  such record: the species is missing, left out of its rows, and the other species take its share. A community with
+  nothing else in that layer draws the tile's other communities of its habitat class and is marked `generic`.
+- **Names by place** (`communities.named_species`, `WORDS`, `MEMBERS`). A tile in a region with a table reads names
+  by that table, as before. A tile in no table's region reads them by its records: every species a phrase can mean
+  is a candidate; a word for one kind of plant takes the best-recorded candidate, a community phrase keeps every
+  member recorded there; with no candidate recorded the phrase names nothing. Rejected: a per-region lexicon for each
+  new place (the Pacific Northwest's way), since the records already say which juniper grows where.
+- **`great_basin` removed** from `regions.NATURAL`. A box is a region only once it has tables. The Grand Canyon is
+  now built like Lamar and Teton: by its own records, with its own ground layer (`ground_cards.py`: 28 grasses and
+  forbs from the LANDFIRE descriptions and USDA PLANTS, 24 of them new cards written by that step), and the client
+  borrows nothing.
+- **California's column lists.** `TREES` and `SHRUBS` lead `species.trees` / `species.shrubs` only in California;
+  elsewhere a tile lists what it draws. The order of every row's bytes is unchanged.
+- **Functional stand-ins** of a climate group (`research_rule`) must also belong to the tile's place. No built tile
+  used one.
+- **The document.** `species_mix.json` gains `stand_ins: [{species, drawn, reason, cells}]`, `missing: [{species,
+  reason, cells}]` and `communities[].generic` / `generic_drawn`; `substitutions` stays. The client reads none of them.
+- **Cards.** 13 trait cards by the existing route (agent drafts from FEIS and National Park Service pages, US
+  government works, and Wikipedia, CC BY-SA 4.0): Colorado pinyon, Utah juniper, Gambel oak, blackbrush, green Mormon
+  tea, brittlebush, fourwing saltbush, Stansbury cliffrose, Engelmann spruce, limber pine, Booth's willow, narrowleaf
+  cottonwood, Saskatoon serviceberry. No Meshy credits.
+- **Results** (`plants`, `species_mix` and `registry` re-run on all 18 tiles; canopy is the tree share by canopy cover).
+
+  | Tile | Layer | Before | After |
+  |---|---|---|---|
+  | Grand Canyon | canopy | ponderosa 68%, gray pine 16%, Sierra juniper 16% | ponderosa 68%, Colorado pinyon 16%, Utah juniper 16% |
+  | | shrubs | big sagebrush 35%, whiteleaf manzanita 26%, chamise 25%, buckbrush 13% | green Mormon tea 45%, blackbrush 32%, brittlebush 10%, fourwing saltbush 7%, big sagebrush 4%, cliffrose 2%, curl-leaf mountain mahogany 1% |
+  | | ground | none | 28 species on 87% of cells: Indian ricegrass 39%, broom snakeweed 29%, Arizona fescue 10%, mountain muhly 10% |
+  | Lamar | canopy | Douglas-fir 55%, lodgepole 35%, whitebark 8%, aspen 2% | Douglas-fir 34%, lodgepole 23%, Engelmann spruce 20%, subalpine fir 19%, aspen 2%, limber pine 1%, whitebark 1% |
+  | | shrubs | big sagebrush 100% | big sagebrush 86%, Booth's willow 7%, thimbleberry 6% |
+  | | ground | unchanged | unchanged |
+  | Teton | canopy | lodgepole 56%, Douglas-fir 34%, whitebark 9%, aspen 1% | lodgepole 35%, Douglas-fir 22%, Engelmann spruce 17%, subalpine fir 17%, black cottonwood 4%, whitebark 2%, limber pine 2%, narrowleaf cottonwood 2% |
+  | | shrubs | big sagebrush 100% | big sagebrush 90%, thimbleberry 5%, creek dogwood 3%, serviceberry 1%, snowberry 1% |
+  | | ground | Geyer's sedge 10%, Idaho fescue 10%, silvery lupine 9% | pink mountain heather 21% (the alpine cells' carpet, drawn by shrub cover), Geyer's sedge 7%, Idaho fescue 7%, silvery lupine 7% |
+
+  - Grand Canyon's cells with trees fell from 57% to 31%: the blackbrush and desert scrub no longer borrow pinyon
+    and juniper from the tile pool.
+  - Corcovado, Manu, Lofoten, the Serengeti and Danum: no row changed and the rasters are byte-identical. They had no
+    stand-ins. Their column lists lost California's 21 trees and 23 shrubs.
+  - The eight California tiles: no row, no community and no raster byte changed. The documents gain the new keys;
+    the two Yosemite tiles' `natural_regions` reads `["california"]`.
+  - The Hoh: no row changed; columns and zero shares of California's lists dropped. Olympus: 3 rows changed, blue
+    oak (the stand-in for Oregon white oak) gone from 2 cells and the grassland pool; rasters byte-identical.
+  - Running `plants` on Cosumnes and Placerville, where it had not run since the canopy step was added, also wrote
+    their canopy lists and re-ranked their needs. Their mixes did not change.
+- **Still missing** (the to-do list for cards; cells in brackets). Grand Canyon: desert ceanothus (202), ashy silktassel
+  (202), boxelder (142), skunkbush sumac (92); drawn by a stand-in: rubber and yellow rabbitbrush as brittlebush
+  (1,386 each), true mountain mahogany as curl-leaf (1,054), Woods' rose and Utah serviceberry as cliffrose (1,007,
+  852), winterfat as saltbush (613), pointleaf manzanita as greenleaf (393), Sonoran scrub oak as Gambel oak (393),
+  blue spruce as pinyon (47). Teton: boxelder (2,416), Rocky Mountain maple (1,416), snowbrush ceanothus (1,416),
+  Rocky Mountain juniper (21); Woods' rose, chokecherry and mountain-ash as thimbleberry (3,887, 1,416, 1,416).
+  Lamar: Rocky Mountain juniper (11); Woods' rose and chokecherry as thimbleberry (9,412, 504), Bebb's willow as
+  Booth's (8,908). Olympus: Oregon white oak (2).
+- **Tests.** `tests/test_stand_ins.py`, 18 tests with the records given by `communities.RECORDS` (no network). The
+  first fails on the code before: `resolve({"pinus_monophylla": 1.0})` gave gray pine.
+- **Left alone, and why.**
+  - Family-level stand-ins are loose in large families: at the Grand Canyon rubber rabbitbrush is drawn as
+    brittlebush and Woods' rose as cliffrose; at Lamar and Teton rose, chokecherry and mountain-ash as thimbleberry.
+    The rule is the one asked for; each is listed in `stand_ins`, and a card removes it.
+  - `TERRAIN`'s elevation bands are the Sierra's and still apply by species id on every tile: at Lamar whitebark
+    pine is cut to a tenth between 1,800 and 2,400 m, as in the Sierra, while the new species have no band.
+  - A name's species get equal weights: blackbrush and Mormon tea share the blackbrush shrubland evenly.
+  - The Hoh and Olympus keep `class_fallback` true, so the client may still draw California's class mix on their
+    cells whose row lacks a layer (Olympus: 14% of cells have no shrubs). Flipping it changes their grass and forb
+    sets, so it needs its own look.
+  - The Grand Canyon's bedrock canyon (38% of cells) names no species and stays without trees or shrubs; it now has
+    a ground layer. The tropical tiles' missing shrub and ground layers are untouched.
+  - `ground_cards.py` rewrites a card shared by two tiles with the last tile's description, so the plants step of
+    Lamar, Teton and the Grand Canyon each make the others' fingerprints stale.

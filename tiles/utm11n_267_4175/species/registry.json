@@ -1,6 +1,6 @@
 {
  "tile": "utm11n_267_4175",
- "at": "2026-11-09T02:58:11Z",
+ "at": "2026-11-10T21:11:51Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -27,11 +27,11 @@
     "animals": 33
    },
    "4": {
-    "plants": 61,
+    "plants": 59,
     "animals": 14
    }
   },
-  "plants": 118,
+  "plants": 116,
   "animals_present": 100,
   "animals_queued": 54,
   "meshy_credits_queued": 1530,
@@ -70,7 +70,7 @@
    },
    "ground": {
     "target": 26,
-    "have": 31
+    "have": 29
    },
    "animal": {
     "target": 22,
@@ -114,23 +114,23 @@
    ]
   },
   {
-   "id": "polystichum_munitum",
+   "id": "achillea_millefolium",
    "kind": "forb",
    "fidelity": 4,
-   "common": "western sword fern",
-   "drawn_as": "polystichum_munitum",
-   "share": 0.199,
+   "common": "yarrow",
+   "drawn_as": "achillea_millefolium",
+   "share": 0.1708,
    "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+    "GBIF: 82 records on the tile"
    ]
   },
   {
-   "id": "oxalis_oregana",
-   "kind": "forb",
+   "id": "elymus_glaucus",
+   "kind": "grass",
    "fidelity": 4,
-   "common": "redwood sorrel",
-   "drawn_as": "oxalis_oregana",
-   "share": 0.1934,
+   "common": "blue wildrye",
+   "drawn_as": "elymus_glaucus",
+   "share": 0.1554,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -172,6 +172,17 @@
     "cover: rule red_fir on Mediterranean California Red Fir Forest",
     "named by EVT 7032 Mediterranean California Red Fir Forest (10583 cells)",
     "cover: rule subalpine_lodgepole on Sierra Nevada Subalpine Lodgepole Pine Forest and Woodland"
+   ]
+  },
+  {
+   "id": "claytonia_perfoliata",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "miner's lettuce",
+   "drawn_as": "claytonia_perfoliata",
+   "share": 0.113,
+   "why_needed": [
+    "GBIF: 23 records on the tile"
    ]
   },
   {
@@ -252,28 +263,6 @@
    ]
   },
   {
-   "id": "elymus_glaucus",
-   "kind": "grass",
-   "fidelity": 4,
-   "common": "blue wildrye",
-   "drawn_as": "elymus_glaucus",
-   "share": 0.0614,
-   "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
-   ]
-  },
-  {
-   "id": "achillea_millefolium",
-   "kind": "forb",
-   "fidelity": 4,
-   "common": "yarrow",
-   "drawn_as": "achillea_millefolium",
-   "share": 0.0605,
-   "why_needed": [
-    "GBIF: 82 records on the tile"
-   ]
-  },
-  {
    "id": "pinus_contorta",
    "kind": "tree",
    "fidelity": 2,
@@ -284,6 +273,28 @@
     "cover: rule red_fir on Mediterranean California Red Fir Forest",
     "cover: rule subalpine_lodgepole on Sierra Nevada Subalpine Lodgepole Pine Forest and Woodland",
     "named by EVT 7058 Sierra Nevada Subalpine Lodgepole Pine Forest and Woodland (3355 cells)"
+   ]
+  },
+  {
+   "id": "lupinus_albifrons",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "silver bush lupine",
+   "drawn_as": "lupinus_albifrons",
+   "share": 0.0558,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "dipterostemon_capitatus",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "blue dicks",
+   "drawn_as": "dipterostemon_capitatus",
+   "share": 0.0538,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
@@ -313,25 +324,14 @@
    ]
   },
   {
-   "id": "lupinus_albifrons",
-   "kind": "forb",
+   "id": "stipa_pulchra",
+   "kind": "grass",
    "fidelity": 4,
-   "common": "silver bush lupine",
-   "drawn_as": "lupinus_albifrons",
+   "common": "purple needlegrass",
+   "drawn_as": "stipa_pulchra",
    "share": 0.0446,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
-   ]
-  },
-  {
-   "id": "claytonia_perfoliata",
-   "kind": "forb",
-   "fidelity": 4,
-   "common": "miner's lettuce",
-   "drawn_as": "claytonia_perfoliata",
-   "share": 0.0433,
-   "why_needed": [
-    "GBIF: 23 records on the tile"
    ]
   },
   {
@@ -340,7 +340,7 @@
    "fidelity": 2,
    "common": "red mountain heather",
    "drawn_as": "phyllodoce_breweri",
-   "share": 0.042,
+   "share": 0.0429,
    "why_needed": [
     "cover: rule subalpine_lodgepole on Sierra Nevada Subalpine Lodgepole Pine Forest and Woodland",
     "cover: rule subalpine_meadow on Mediterranean California Subalpine Meadow",
@@ -361,12 +361,23 @@
    ]
   },
   {
-   "id": "dipterostemon_capitatus",
+   "id": "chlorogalum_pomeridianum",
    "kind": "forb",
    "fidelity": 4,
-   "common": "blue dicks",
-   "drawn_as": "dipterostemon_capitatus",
-   "share": 0.0395,
+   "common": "soap plant",
+   "drawn_as": "chlorogalum_pomeridianum",
+   "share": 0.0378,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "bromus_diandrus",
+   "kind": "grass",
+   "fidelity": 4,
+   "common": "ripgut brome",
+   "drawn_as": "bromus_diandrus",
+   "share": 0.0349,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -403,6 +414,17 @@
    "fidelity": 4,
    "common": "miniature lupine",
    "drawn_as": "lupinus_bicolor",
+   "share": 0.0296,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "madia_elegans",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "common madia",
+   "drawn_as": "madia_elegans",
    "share": 0.0294,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
@@ -414,29 +436,18 @@
    "fidelity": 4,
    "common": "California poppy",
    "drawn_as": "eschscholzia_californica",
-   "share": 0.0289,
+   "share": 0.0291,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
-   "id": "chlorogalum_pomeridianum",
+   "id": "erythranthe_guttata",
    "kind": "forb",
    "fidelity": 4,
-   "common": "soap plant",
-   "drawn_as": "chlorogalum_pomeridianum",
-   "share": 0.0284,
-   "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
-   ]
-  },
-  {
-   "id": "stipa_pulchra",
-   "kind": "grass",
-   "fidelity": 4,
-   "common": "purple needlegrass",
-   "drawn_as": "stipa_pulchra",
-   "share": 0.0283,
+   "common": "seep monkeyflower",
+   "drawn_as": "erythranthe_guttata",
+   "share": 0.0287,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -468,23 +479,23 @@
    ]
   },
   {
-   "id": "madia_elegans",
-   "kind": "forb",
+   "id": "danthonia_californica",
+   "kind": "grass",
    "fidelity": 4,
-   "common": "common madia",
-   "drawn_as": "madia_elegans",
-   "share": 0.0239,
+   "common": "California oatgrass",
+   "drawn_as": "danthonia_californica",
+   "share": 0.0238,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
-   "id": "bromus_diandrus",
+   "id": "bromus_hordeaceus",
    "kind": "grass",
    "fidelity": 4,
-   "common": "ripgut brome",
-   "drawn_as": "bromus_diandrus",
-   "share": 0.0217,
+   "common": "soft chess",
+   "drawn_as": "bromus_hordeaceus",
+   "share": 0.0228,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -508,7 +519,7 @@
    "fidelity": 4,
    "common": "redstem filaree",
    "drawn_as": "erodium_cicutarium",
-   "share": 0.021,
+   "share": 0.0213,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -540,14 +551,14 @@
    ]
   },
   {
-   "id": "bromus_hordeaceus",
-   "kind": "grass",
+   "id": "artemisia_douglasiana",
+   "kind": "forb",
    "fidelity": 4,
-   "common": "soft chess",
-   "drawn_as": "bromus_hordeaceus",
-   "share": 0.017,
+   "common": "California mugwort",
+   "drawn_as": "artemisia_douglasiana",
+   "share": 0.0157,
    "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+    "GBIF: 21 records on the tile"
    ]
   },
   {
@@ -561,6 +572,17 @@
     "cover: rule mesic_mixed_conifer on Mediterranean California Mesic Mixed Conifer Forest and Woodland",
     "cover: rule dry_mesic_mixed_conifer on Mediterranean California Dry-Mesic Mixed Conifer Forest and Woodland",
     "cover: rule mixed_oak on Mediterranean California Mixed Oak Woodland"
+   ]
+  },
+  {
+   "id": "avena_fatua",
+   "kind": "grass",
+   "fidelity": 4,
+   "common": "wild oat",
+   "drawn_as": "avena_fatua",
+   "share": 0.0138,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
@@ -588,17 +610,6 @@
    ]
   },
   {
-   "id": "avena_fatua",
-   "kind": "grass",
-   "fidelity": 4,
-   "common": "wild oat",
-   "drawn_as": "avena_fatua",
-   "share": 0.0133,
-   "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
-   ]
-  },
-  {
    "id": "pinus_albicaulis",
    "kind": "tree",
    "fidelity": 2,
@@ -609,28 +620,6 @@
     "cover: rule subalpine_lodgepole on Sierra Nevada Subalpine Lodgepole Pine Forest and Woodland",
     "cover: rule subalpine_woodland on Mediterranean California Subalpine Woodland",
     "named by EVT 7033 Mediterranean California Subalpine Woodland (1165 cells)"
-   ]
-  },
-  {
-   "id": "erythranthe_guttata",
-   "kind": "forb",
-   "fidelity": 4,
-   "common": "seep monkeyflower",
-   "drawn_as": "erythranthe_guttata",
-   "share": 0.0128,
-   "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
-   ]
-  },
-  {
-   "id": "danthonia_californica",
-   "kind": "grass",
-   "fidelity": 4,
-   "common": "California oatgrass",
-   "drawn_as": "danthonia_californica",
-   "share": 0.0126,
-   "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
@@ -647,6 +636,28 @@
    ]
   },
   {
+   "id": "amsinckia_menziesii",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "common fiddleneck",
+   "drawn_as": "amsinckia_menziesii",
+   "share": 0.0114,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "plagiobothrys_nothofulvus",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "rusty popcorn flower",
+   "drawn_as": "plagiobothrys_nothofulvus",
+   "share": 0.0114,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
    "id": "salix_laevigata",
    "kind": "tree",
    "fidelity": 4,
@@ -656,17 +667,6 @@
    "why_needed": [
     "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
     "cover: rule riparian_shrubland on Mediterranean California Foothill and Lower Montane Riparian Shrubland"
-   ]
-  },
-  {
-   "id": "amsinckia_menziesii",
-   "kind": "forb",
-   "fidelity": 4,
-   "common": "common fiddleneck",
-   "drawn_as": "amsinckia_menziesii",
-   "share": 0.0112,
-   "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
@@ -692,17 +692,6 @@
    "why_needed": [
     "cover: rule aspen on Rocky Mountain Aspen Forest and Woodland",
     "named by EVT 7011 Rocky Mountain Aspen Forest and Woodland (83 cells)"
-   ]
-  },
-  {
-   "id": "plagiobothrys_nothofulvus",
-   "kind": "forb",
-   "fidelity": 4,
-   "common": "rusty popcorn flower",
-   "drawn_as": "plagiobothrys_nothofulvus",
-   "share": 0.0109,
-   "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
@@ -758,23 +747,12 @@
    ]
   },
   {
-   "id": "artemisia_douglasiana",
-   "kind": "forb",
-   "fidelity": 4,
-   "common": "California mugwort",
-   "drawn_as": "artemisia_douglasiana",
-   "share": 0.0087,
-   "why_needed": [
-    "GBIF: 21 records on the tile"
-   ]
-  },
-  {
    "id": "trifolium_willdenovii",
    "kind": "forb",
    "fidelity": 4,
    "common": "tomcat clover",
    "drawn_as": "trifolium_willdenovii",
-   "share": 0.0085,
+   "share": 0.0092,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -785,7 +763,18 @@
    "fidelity": 4,
    "common": "hairy vetch",
    "drawn_as": "vicia_villosa",
-   "share": 0.0084,
+   "share": 0.009,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "urtica_dioica",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "hoary nettle",
+   "drawn_as": "urtica_dioica",
+   "share": 0.0085,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -861,18 +850,7 @@
    "fidelity": 4,
    "common": "hare barley",
    "drawn_as": "hordeum_murinum",
-   "share": 0.0064,
-   "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
-   ]
-  },
-  {
-   "id": "urtica_dioica",
-   "kind": "forb",
-   "fidelity": 4,
-   "common": "hoary nettle",
-   "drawn_as": "urtica_dioica",
-   "share": 0.0054,
+   "share": 0.0068,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -956,6 +934,28 @@
    ]
   },
   {
+   "id": "lemna_minor",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "common duckweed",
+   "drawn_as": "lemna_minor",
+   "share": 0.0036,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "nasturtium_officinale",
+   "kind": "forb",
+   "fidelity": 4,
+   "common": "watercress",
+   "drawn_as": "nasturtium_officinale",
+   "share": 0.0035,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
    "id": "umbellularia_californica",
    "kind": "tree",
    "fidelity": 4,
@@ -982,17 +982,6 @@
    ]
   },
   {
-   "id": "lemna_minor",
-   "kind": "forb",
-   "fidelity": 3,
-   "common": "common duckweed",
-   "drawn_as": "lemna_minor",
-   "share": 0.0031,
-   "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
-   ]
-  },
-  {
    "id": "populus_fremontii",
    "kind": "tree",
    "fidelity": 4,
@@ -1016,17 +1005,6 @@
     "cover: rule riparian on Mediterranean California Foothill and Lower Montane Riparian Woodland",
     "cover: rule montane_riparian on Inter-Mountain Basins Montane Riparian Systems",
     "cover: rule montane_riparian on California Montane Riparian Systems"
-   ]
-  },
-  {
-   "id": "nasturtium_officinale",
-   "kind": "forb",
-   "fidelity": 4,
-   "common": "watercress",
-   "drawn_as": "nasturtium_officinale",
-   "share": 0.003,
-   "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
@@ -2667,7 +2645,7 @@
   {
    "id": "crotalus_oreganus",
    "scientific": "Crotalus oreganus",
-   "common": "abyssus",
+   "common": "northern pacific rattlesnake",
    "kind": "reptile",
    "fidelity": 0,
    "present": "records",
@@ -3337,7 +3315,7 @@
    {
     "id": "crotalus_oreganus",
     "scientific": "Crotalus oreganus",
-    "common": "abyssus",
+    "common": "northern pacific rattlesnake",
     "kind": "reptile",
     "records": 98,
     "why": [

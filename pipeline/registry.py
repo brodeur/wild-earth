@@ -394,7 +394,6 @@ def tile_report(tile: Tile) -> dict:
     """species/registry.json: the tile's species at their fidelity, and what is queued for it."""
     reg = scan()
     by_id = {e["id"]: e for e in reg["species"].values()}
-    from .communities import stand_in
     plants, animals, cards = [], [], []
     mix = read_json(tile.path("client/species_mix.json")) if tile.path("client/species_mix.json").exists() else {}
     fr = mix.get("fractions") or {}
@@ -413,7 +412,7 @@ def tile_report(tile: Tile) -> dict:
         lvl = e["fidelity"] if e and n.get("record") else 0
         sub = (mix.get("substitutions") or {}).get(n["id"])
         row = {"id": n["id"], "kind": n["kind"], "fidelity": lvl, "common": (e or {}).get("common"),
-               "drawn_as": n["id"] if n.get("record") else (sub or stand_in(n["id"])),
+               "drawn_as": n["id"] if n.get("record") else (sub or n.get("drawn_as")),   # (plant_needs: a relative that belongs to the tile)
                "share": drawn.get(n["id"], (None, 0))[1], "why_needed": n["why"][:3]}
         if lvl == 0:
             row["stand_in"] = row["drawn_as"]
