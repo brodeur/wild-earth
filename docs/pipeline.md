@@ -37,7 +37,7 @@ map to `landcover` and `terrain`).
 | **base** | naip, osm, hydro*, dem, channels*, rewild_hydro*, landcover, ice, lidar, water*, ground, terrain, erase, substrate, seasons, weather, unreal, seams | the ground: elevation (5 m, 1 m where flown), imagery and its erasure, the built footprint, the hydrology rewilded and banked, permanent snow and ice, soils, geology and exposed rock, the client's terrain rasters, place names, Sentinel-2 seasons, weather; the seams with built neighbours |
 | **flora** | plants, species_mix, crowns, inpaint | the plant research (cover, records, the density target), missing species grown from their trait cards, the mix per 30 m cell (trees, shrubs, ground layer, riparian zones), the lidar crowns and the ground texture under them |
 | **fauna** | species, animals, resources | GBIF presence, perception, calendar, locomotion and the density prior for the curated animals; the animal research (every animal recorded, ranked, every predator and scavenger, traits for those without, the Meshy queue); food, water and cover by season |
-| **games** | games, game_seeds, registry, audit | each species' games; each shared game's world seed (acorn, dig, carrion); the species registry report and the licence audit that close every build |
+| **games** | games, game_seeds, registry, scorecard, audit | each species' games; each shared game's world seed (acorn, dig, carrion); the species registry report, the tile's scorecard and the licence audit that close every build |
 
 \* the water lane's steps, folded in unchanged (`owner: water lane`).
 
@@ -91,6 +91,7 @@ flora's, as are the crowns and their inpainting.
 | games | species, resources, animals | games.json |
 | game_seeds | games, resources, species | game_seeds.json: per game (acorn, dig, carrion) the seed (FNV-1a of tile and game, as server.py seed_of), the players on this tile, the hotspots, the client module and the world |
 | registry | plants, species_mix, species, animals | species/registry.json |
+| scorecard | every step but audit | scorecard.json: per layer the shares measured, ruled, guessed and blank, their definitions, and the tile's worst findings (`pipeline/scorecard.py`; `python -m pipeline.scorecard --all` writes `docs/tile-scorecards.md`) |
 | audit | every step | the manifest's licence_audit; fails on a missing credit or CC BY-NC data in a client layer |
 
 ## Repeatable: fingerprints, versions, sources, fallbacks

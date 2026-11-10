@@ -593,6 +593,22 @@ def _registry(tile, m, force):
     add_layer(m, tile, "species.registry", tile_report(tile), fetched=False)
 
 
+def _scorecard(tile, m, force):
+    # How good the tile is (pipeline/scorecard.py, 2026-11-10; recommendation 1 of docs/pipeline-review-2026-11-10.md):
+    # per layer the shares measured / ruled / guessed / blank, read from the documents the other steps wrote, and the
+    # tile's worst findings in plain words. Reads the in-memory manifest, so it sees this build's records.
+    from .scorecard import SHARES, write
+    card = write(tile.dir, manifest=m)
+    add_layer(m, tile, "scorecard", {
+        "path": "scorecard.json", "kind": "document", "derived_from": ["manifest", "client.species_mix", "species.animals",
+                                                                      "client.fauna", "hydro.channels", "species.registry"],
+        "encoding": "per layer: shares {" + ", ".join(SHARES) + "} summing to 1, their definitions, detail and findings; "
+                    "findings: the tile's worst, ranked by the share of their layer affected; judge: judge/held_out.json "
+                    "verbatim when present",
+        "shares": {k: v.get("shares") for k, v in card["layers"].items()},
+        "worst": [f["text"] for f in card["findings"][:3]]}, fetched=False)
+
+
 def _audit(tile, m, force):
     # The licence audit (pipeline/audit_licenses.py), part of the build since 2026-11-04: every source carries its
     # credit, every layer's source is listed, and the client-facing layers carry no CC BY-NC data.
@@ -741,10 +757,14 @@ STEPS: dict[str, Step] = {s.name: s for s in [
     Step("registry", "1", ["registry", "needs", "fauna"], ["plants", "species_mix", "species", "animals"], _registry,
          ["species.registry"], library=["library/species", "library/animals", "library/plant_cards"],
          doc="every species the tile needs at its fidelity, the stand-ins, the queues and the hand edits left", stage=G),
+    Step("scorecard", "1", ["scorecard"], [], _scorecard, ["scorecard"], library=["library"],
+         doc="how good the tile is: per layer the shares measured, ruled, guessed and blank, and the worst findings",
+         stage=G),
     Step("audit", "1", ["audit_licenses"], [], _audit, [], doc="the licence audit: every source credited, no CC BY-NC data in "
                                                             "a client layer", stage=G),
 ]}
 STEPS["audit"].after = [n for n in STEPS if n != "audit"]
+STEPS["scorecard"].after = [n for n in STEPS if n not in ("scorecard", "audit")]   # it reads every stage's documents
 ALIASES = {"veg": "landcover", "derive": "terrain"}   # old step names (--steps veg / derive keep working)
 ORDER = list(STEPS)
 # Run on request only (not part of --all): the species prior alone, as the old --steps species_prior did.
@@ -838,6 +858,9 @@ def params(tile: Tile, step: Step) -> dict:
         p["dem_res_m"] = tile.dem_res_m
     if step.name in ("naip", "derive", "erase"):
         p["imagery_res_m"] = tile.imagery_res_m
+    if step.name == "scorecard":   # the held-out judge's numbers (written outside the graph) are one of its inputs
+        jp = tile.path("judge/held_out.json")
+        p["judge"] = sha256(jp)[:16] if jp.exists() else None
     return p
 
 

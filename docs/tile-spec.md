@@ -1217,6 +1217,14 @@ the ladder), `drawn_as` and `stand_in` for those without their own record, the a
 wanted and Meshy jobs (`scientific`, `records` on the tile, `estimate_credits`; never run by the build). The library-wide
 registry is `library/registry.json`.
 
+**Scorecard** (2026-11-10; `pipeline/scorecard.py`, step `scorecard`, layer `scorecard`). `scorecard.json` at the tile's
+root says how good the tile is. `layers`: terrain, canopy_structure, plant_communities, plant_species, ground_texture,
+water, animals, animal_bodies, each `{scored, shares: {measured, ruled, guessed, blank} summing to 1, definition, detail,
+findings, not_scored?}` or `{scored: false, reason}`; `definition` states per layer what each share means, its unit and
+resolution. `findings`: the tile's worst, `{layer, text, share, of, kind}`, ranked by the share of their layer affected
+(a ruled share counting half). `judge`: `judge/held_out.json` verbatim when present. `built_from`: the documents read.
+No timestamp: the card changes only when what it reads changes. `docs/tile-scorecards.md` is the table across tiles.
+
 ## Species mix
 
 `client/species_mix*` (pipeline `species_mix.py`, client `tilepackage.js` `SpeciesMix`) say which species grow
