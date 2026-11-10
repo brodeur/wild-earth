@@ -406,9 +406,10 @@
     "named by EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (12829 cells)",
     "named by EVT 7102 Colorado Plateau Pinyon-Juniper Shrubland (401 cells)",
     "named by BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (117 cells)",
+    "in the description of BPS 1214 Rocky Mountain Montane Riparian Systems (72 cells)",
     "canopy: records (GBIF: 479 records on the tile; height not yet screened)"
    ],
-   "cover": 0.2223,
+   "cover": 0.2338,
    "records": 479,
    "scientific": "Pinus edulis",
    "record": true,
@@ -426,7 +427,7 @@
     "named by BPS 1207 Southern Rocky Mountain Ponderosa Pine Savanna (17 cells)",
     "canopy: records (GBIF: 71 records on the tile; height not yet screened)"
    ],
-   "cover": 0.2014,
+   "cover": 0.2015,
    "records": 71,
    "scientific": "Pinus ponderosa",
    "record": true,
@@ -435,19 +436,19 @@
    "rank": 2
   },
   {
-   "id": "ephedra_viridis",
+   "id": "quercus_gambelii",
    "kind": "shrub",
    "why": [
-    "named by EVT 7078 Colorado Plateau Blackbrush-Mormon-tea Shrubland (19780 cells)",
-    "named by EVT 7087 Sonora-Mojave Creosotebush-White Bursage Desert Scrub (5408 cells)",
-    "named by EVT 7082 Mojave Mid-Elevation Mixed Desert Scrub (2453 cells)",
-    "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)"
+    "in the description of EVT 7054 Southern Rocky Mountain Ponderosa Pine Woodland (16191 cells)",
+    "in the description of BPS 1190 Southern Rocky Mountain Ponderosa Pine Woodland (3455 cells)",
+    "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
+    "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)"
    ],
-   "cover": 0.1091,
-   "records": 44,
+   "cover": 0.1823,
+   "records": 260,
    "record": true,
    "card": true,
-   "drawn_as": "ephedra_viridis",
+   "drawn_as": "quercus_gambelii",
    "rank": 3
   },
   {
@@ -458,12 +459,28 @@
     "named by EVT 7087 Sonora-Mojave Creosotebush-White Bursage Desert Scrub (5408 cells)",
     "named by EVT 7082 Mojave Mid-Elevation Mixed Desert Scrub (2453 cells)"
    ],
-   "cover": 0.1069,
+   "cover": 0.122,
    "records": 26,
    "record": true,
    "card": true,
    "drawn_as": "coleogyne_ramosissima",
    "rank": 4
+  },
+  {
+   "id": "ephedra_viridis",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 7078 Colorado Plateau Blackbrush-Mormon-tea Shrubland (19780 cells)",
+    "named by EVT 7087 Sonora-Mojave Creosotebush-White Bursage Desert Scrub (5408 cells)",
+    "named by EVT 7082 Mojave Mid-Elevation Mixed Desert Scrub (2453 cells)",
+    "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)"
+   ],
+   "cover": 0.1035,
+   "records": 44,
+   "record": true,
+   "card": true,
+   "drawn_as": "ephedra_viridis",
+   "rank": 5
   },
   {
    "id": "juniperus_osteosperma",
@@ -474,12 +491,12 @@
     "named by BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (117 cells)",
     "named by EVT 7115 Inter-Mountain Basins Juniper Savanna (81 cells)"
    ],
-   "cover": 0.0609,
+   "cover": 0.0408,
    "records": 239,
    "record": true,
    "card": true,
    "drawn_as": "juniperus_osteosperma",
-   "rank": 5
+   "rank": 6
   },
   {
    "id": "phoenix_dactylifera",
@@ -494,7 +511,27 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 6
+   "rank": 7
+  },
+  {
+   "id": "artemisia_tridentata",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)",
+    "named by EVT 7080 Inter-Mountain Basins Big Sagebrush Shrubland (1024 cells)",
+    "in the description of EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
+    "in the description of EVT 7102 Colorado Plateau Pinyon-Juniper Shrubland (401 cells)",
+    "in the description of BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)",
+    "named by BPS 2705 Inter-Mountain Basins Big Sagebrush Shrubland-Upland (93 cells)",
+    "in the description of EVT 7115 Inter-Mountain Basins Juniper Savanna (81 cells)",
+    "named by EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (65 cells)"
+   ],
+   "cover": 0.0249,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "artemisia_tridentata",
+   "rank": 8
   },
   {
    "id": "atriplex_canescens",
@@ -505,12 +542,12 @@
     "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)",
     "named by EVT 7081 Inter-Mountain Basins Mixed Salt Desert Scrub (422 cells)"
    ],
-   "cover": 0.0218,
+   "cover": 0.0194,
    "records": 0,
    "record": true,
    "card": true,
    "drawn_as": "atriplex_canescens",
-   "rank": 7
+   "rank": 9
   },
   {
    "id": "opuntia_basilaris",
@@ -525,7 +562,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 8
+   "rank": 10
   },
   {
    "id": "amelanchier_utahensis",
@@ -536,28 +573,14 @@
     "named by EVT 7086 Rocky Mountain Lower Montane-Foothill Shrubland (92 cells)",
     "canopy: records (GBIF: 52 records on the tile; height not yet screened)"
    ],
-   "cover": 0.0188,
+   "cover": 0.018,
    "records": 52,
    "scientific": "Amelanchier utahensis",
    "record": false,
    "card": false,
    "drawn_as": "purshia_stansburiana",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 9
-  },
-  {
-   "id": "encelia_farinosa",
-   "kind": "shrub",
-   "why": [
-    "named by EVT 7087 Sonora-Mojave Creosotebush-White Bursage Desert Scrub (5408 cells)",
-    "named by EVT 7082 Mojave Mid-Elevation Mixed Desert Scrub (2453 cells)"
-   ],
-   "cover": 0.0177,
-   "records": 42,
-   "record": true,
-   "card": true,
-   "drawn_as": "encelia_farinosa",
-   "rank": 10
+   "rank": 11
   },
   {
    "id": "pseudotsuga_menziesii",
@@ -566,29 +589,27 @@
     "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)",
     "canopy: records (GBIF: 40 records on the tile; height not yet screened)"
    ],
-   "cover": 0.0136,
+   "cover": 0.0138,
    "records": 40,
    "scientific": "Pseudotsuga menziesii",
    "record": true,
    "card": false,
    "drawn_as": "pseudotsuga_menziesii",
-   "rank": 11
+   "rank": 12
   },
   {
-   "id": "artemisia_tridentata",
+   "id": "encelia_farinosa",
    "kind": "shrub",
    "why": [
-    "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)",
-    "named by EVT 7080 Inter-Mountain Basins Big Sagebrush Shrubland (1024 cells)",
-    "named by BPS 2705 Inter-Mountain Basins Big Sagebrush Shrubland-Upland (93 cells)",
-    "named by EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (65 cells)"
+    "named by EVT 7087 Sonora-Mojave Creosotebush-White Bursage Desert Scrub (5408 cells)",
+    "named by EVT 7082 Mojave Mid-Elevation Mixed Desert Scrub (2453 cells)"
    ],
-   "cover": 0.0128,
-   "records": 0,
+   "cover": 0.0121,
+   "records": 42,
    "record": true,
    "card": true,
-   "drawn_as": "artemisia_tridentata",
-   "rank": 12
+   "drawn_as": "encelia_farinosa",
+   "rank": 13
   },
   {
    "id": "cercis_orbiculata",
@@ -603,7 +624,22 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 13
+   "rank": 14
+  },
+  {
+   "id": "juniperus_scopulorum",
+   "kind": "tree",
+   "why": [
+    "in the description of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (12829 cells)",
+    "in the description of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (117 cells)"
+   ],
+   "cover": 0.0086,
+   "records": 0,
+   "record": false,
+   "card": false,
+   "drawn_as": "juniperus_osteosperma",
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 15
   },
   {
    "id": "ostrya_knowltonii",
@@ -618,7 +654,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 14
+   "rank": 16
   },
   {
    "id": "acer_negundo",
@@ -637,7 +673,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 15
+   "rank": 17
   },
   {
    "id": "populus_fremontii",
@@ -649,72 +685,27 @@
     "named by EVT 9827 Interior West Ruderal Riparian Scrub (11 cells)",
     "canopy: records (GBIF: 17 records on the tile; height not yet screened)"
    ],
-   "cover": 0.0061,
+   "cover": 0.006,
    "records": 17,
    "scientific": "Populus fremontii",
    "record": true,
    "card": false,
    "drawn_as": "populus_fremontii",
-   "rank": 16
-  },
-  {
-   "id": "ericameria_nauseosa",
-   "kind": "shrub",
-   "why": [
-    "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)"
-   ],
-   "cover": 0.0021,
-   "records": 151,
-   "record": false,
-   "card": false,
-   "drawn_as": "encelia_farinosa",
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 17
-  },
-  {
-   "id": "chrysothamnus_viscidiflorus",
-   "kind": "shrub",
-   "why": [
-    "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)"
-   ],
-   "cover": 0.0021,
-   "records": 0,
-   "record": false,
-   "card": false,
-   "drawn_as": "encelia_farinosa",
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
    "rank": 18
   },
   {
-   "id": "krascheninnikovia_lanata",
+   "id": "quercus_turbinella",
    "kind": "shrub",
    "why": [
-    "named by EVT 7081 Inter-Mountain Basins Mixed Salt Desert Scrub (422 cells)"
+    "named by EVT 7104 Mogollon Chaparral (199 cells)"
    ],
-   "cover": 0.0019,
+   "cover": 0.0014,
    "records": 0,
    "record": false,
    "card": false,
-   "drawn_as": "atriplex_canescens",
+   "drawn_as": "quercus_gambelii",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
    "rank": 19
-  },
-  {
-   "id": "cercocarpus_montanus",
-   "kind": "shrub",
-   "why": [
-    "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
-    "named by EVT 7104 Mogollon Chaparral (199 cells)",
-    "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)",
-    "named by EVT 7086 Rocky Mountain Lower Montane-Foothill Shrubland (92 cells)"
-   ],
-   "cover": 0.0016,
-   "records": 0,
-   "record": false,
-   "card": false,
-   "drawn_as": "cercocarpus_ledifolius",
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 20
   },
   {
    "id": "rosa_woodsii",
@@ -728,98 +719,42 @@
     "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (19 cells)",
     "named by EVT 9827 Interior West Ruderal Riparian Scrub (11 cells)"
    ],
-   "cover": 0.0015,
+   "cover": 0.0011,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "rosa_woodsii",
+   "rank": 20
+  },
+  {
+   "id": "chrysothamnus_viscidiflorus",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)",
+    "in the description of EVT 7102 Colorado Plateau Pinyon-Juniper Shrubland (401 cells)",
+    "in the description of BPS 2705 Inter-Mountain Basins Big Sagebrush Shrubland-Upland (93 cells)"
+   ],
+   "cover": 0.0006,
    "records": 0,
    "record": false,
    "card": false,
-   "drawn_as": "purshia_stansburiana",
+   "drawn_as": "encelia_farinosa",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
    "rank": 21
   },
   {
-   "id": "purshia_stansburiana",
-   "kind": "shrub",
-   "why": [
-    "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
-    "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)",
-    "named by EVT 7086 Rocky Mountain Lower Montane-Foothill Shrubland (92 cells)"
-   ],
-   "cover": 0.0012,
-   "records": 237,
-   "record": true,
-   "card": true,
-   "drawn_as": "purshia_stansburiana",
-   "rank": 22
-  },
-  {
-   "id": "quercus_gambelii",
+   "id": "populus_tremuloides",
    "kind": "tree",
    "why": [
-    "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
-    "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)"
+    "in the description of BPS 1214 Rocky Mountain Montane Riparian Systems (72 cells)",
+    "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)"
    ],
-   "cover": 0.001,
-   "records": 260,
+   "cover": 0.0006,
+   "records": 0,
    "record": true,
    "card": true,
-   "drawn_as": "quercus_gambelii",
-   "rank": 23
-  },
-  {
-   "id": "arctostaphylos_pungens",
-   "kind": "shrub",
-   "why": [
-    "named by EVT 7104 Mogollon Chaparral (199 cells)"
-   ],
-   "cover": 0.0004,
-   "records": 0,
-   "record": false,
-   "card": false,
-   "drawn_as": "arctostaphylos_patula",
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 24
-  },
-  {
-   "id": "ceanothus_pauciflorus",
-   "kind": "shrub",
-   "why": [
-    "named by EVT 7104 Mogollon Chaparral (199 cells)"
-   ],
-   "cover": 0.0004,
-   "records": 0,
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 25
-  },
-  {
-   "id": "garrya_flavescens",
-   "kind": "shrub",
-   "why": [
-    "named by EVT 7104 Mogollon Chaparral (199 cells)"
-   ],
-   "cover": 0.0004,
-   "records": 0,
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 26
-  },
-  {
-   "id": "quercus_turbinella",
-   "kind": "shrub",
-   "why": [
-    "named by EVT 7104 Mogollon Chaparral (199 cells)"
-   ],
-   "cover": 0.0004,
-   "records": 0,
-   "record": false,
-   "card": false,
-   "drawn_as": "quercus_gambelii",
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 27
+   "drawn_as": "populus_tremuloides",
+   "rank": 22
   },
   {
    "id": "salix_exigua",
@@ -830,20 +765,94 @@
     "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (19 cells)",
     "named by EVT 9827 Interior West Ruderal Riparian Scrub (11 cells)"
    ],
-   "cover": 0.0003,
+   "cover": 0.0006,
    "records": 0,
    "record": true,
    "card": false,
    "drawn_as": "salix_exigua",
+   "rank": 23
+  },
+  {
+   "id": "purshia_stansburiana",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
+    "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)",
+    "named by EVT 7086 Rocky Mountain Lower Montane-Foothill Shrubland (92 cells)"
+   ],
+   "cover": 0.0005,
+   "records": 237,
+   "record": true,
+   "card": true,
+   "drawn_as": "purshia_stansburiana",
+   "rank": 24
+  },
+  {
+   "id": "ericameria_nauseosa",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)"
+   ],
+   "cover": 0.0005,
+   "records": 151,
+   "record": false,
+   "card": false,
+   "drawn_as": "encelia_farinosa",
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 25
+  },
+  {
+   "id": "cercocarpus_montanus",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
+    "named by EVT 7104 Mogollon Chaparral (199 cells)",
+    "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)",
+    "named by EVT 7086 Rocky Mountain Lower Montane-Foothill Shrubland (92 cells)"
+   ],
+   "cover": 0.0003,
+   "records": 0,
+   "record": false,
+   "card": false,
+   "drawn_as": "cercocarpus_ledifolius",
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 26
+  },
+  {
+   "id": "krascheninnikovia_lanata",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 7081 Inter-Mountain Basins Mixed Salt Desert Scrub (422 cells)"
+   ],
+   "cover": 0.0002,
+   "records": 0,
+   "record": false,
+   "card": false,
+   "drawn_as": "atriplex_canescens",
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 27
+  },
+  {
+   "id": "arctostaphylos_pungens",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 7104 Mogollon Chaparral (199 cells)"
+   ],
+   "cover": 0.0001,
+   "records": 0,
+   "record": false,
+   "card": false,
+   "drawn_as": "arctostaphylos_patula",
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
    "rank": 28
   },
   {
-   "id": "rhus_aromatica",
+   "id": "ceanothus_greggii",
    "kind": "shrub",
    "why": [
-    "named by EVT 7086 Rocky Mountain Lower Montane-Foothill Shrubland (92 cells)"
+    "in the description of EVT 7104 Mogollon Chaparral (199 cells)"
    ],
-   "cover": 0.0002,
+   "cover": 0.0001,
    "records": 0,
    "record": false,
    "card": false,
@@ -852,43 +861,45 @@
    "rank": 29
   },
   {
-   "id": "abies_concolor",
-   "kind": "tree",
+   "id": "ceanothus_pauciflorus",
+   "kind": "shrub",
    "why": [
-    "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)"
-   ],
-   "cover": 0.0001,
-   "records": 0,
-   "record": true,
-   "card": true,
-   "drawn_as": "abies_concolor",
-   "rank": 30
-  },
-  {
-   "id": "picea_pungens",
-   "kind": "tree",
-   "why": [
-    "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)"
+    "named by EVT 7104 Mogollon Chaparral (199 cells)"
    ],
    "cover": 0.0001,
    "records": 0,
    "record": false,
    "card": false,
-   "drawn_as": "pinus_edulis",
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 30
+  },
+  {
+   "id": "garrya_flavescens",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 7104 Mogollon Chaparral (199 cells)"
+   ],
+   "cover": 0.0001,
+   "records": 0,
+   "record": false,
+   "card": false,
+   "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
    "rank": 31
   },
   {
-   "id": "populus_tremuloides",
-   "kind": "tree",
+   "id": "rhus_aromatica",
+   "kind": "shrub",
    "why": [
-    "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)"
+    "named by EVT 7086 Rocky Mountain Lower Montane-Foothill Shrubland (92 cells)"
    ],
    "cover": 0.0001,
    "records": 0,
-   "record": true,
-   "card": true,
-   "drawn_as": "populus_tremuloides",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
    "rank": 32
   },
   {
@@ -1216,36 +1227,6 @@
    "rank": 54
   },
   {
-   "id": "mahonia_repens",
-   "kind": "shrub",
-   "why": [
-    "GBIF: 28 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 28,
-   "scientific": "Mahonia repens",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 55
-  },
-  {
-   "id": "ribes_velutinum",
-   "kind": "shrub",
-   "why": [
-    "GBIF: 27 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 27,
-   "scientific": "Ribes velutinum",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 56
-  },
-  {
    "id": "sphaeralcea_parvifolia",
    "kind": "forb",
    "why": [
@@ -1257,7 +1238,7 @@
    "record": true,
    "card": true,
    "drawn_as": "sphaeralcea_parvifolia",
-   "rank": 57
+   "rank": 55
   },
   {
    "id": "erigeron_divergens",
@@ -1271,7 +1252,7 @@
    "record": true,
    "card": true,
    "drawn_as": "erigeron_divergens",
-   "rank": 58
+   "rank": 56
   },
   {
    "id": "lupinus_argenteus",
@@ -1285,7 +1266,7 @@
    "record": true,
    "card": true,
    "drawn_as": "lupinus_argenteus",
-   "rank": 59
+   "rank": 57
   },
   {
    "id": "cercis_occidentalis",
@@ -1299,7 +1280,7 @@
    "record": true,
    "card": false,
    "drawn_as": "cercis_occidentalis",
-   "rank": 60
+   "rank": 58
   },
   {
    "id": "bouteloua_gracilis",
@@ -1313,7 +1294,7 @@
    "record": true,
    "card": true,
    "drawn_as": "bouteloua_gracilis",
-   "rank": 61
+   "rank": 59
   },
   {
    "id": "eriogonum_racemosum",
@@ -1327,7 +1308,7 @@
    "record": true,
    "card": true,
    "drawn_as": "eriogonum_racemosum",
-   "rank": 62
+   "rank": 60
   },
   {
    "id": "hordeum_murinum",
@@ -1341,6 +1322,33 @@
    "record": true,
    "card": false,
    "drawn_as": "hordeum_murinum",
+   "rank": 61
+  },
+  {
+   "id": "abies_concolor",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)"
+   ],
+   "cover": 0.0,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "abies_concolor",
+   "rank": 62
+  },
+  {
+   "id": "picea_pungens",
+   "kind": "tree",
+   "why": [
+    "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)"
+   ],
+   "cover": 0.0,
+   "records": 0,
+   "record": false,
+   "card": false,
+   "drawn_as": "pinus_edulis",
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
    "rank": 63
   }
  ],
@@ -2592,6 +2600,15 @@
    ]
   },
   {
+   "id": "juniperus_scopulorum",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "in the description of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (12829 cells)",
+    "in the description of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (117 cells)"
+   ]
+  },
+  {
    "id": "ostrya_knowltonii",
    "kind": "tree",
    "what": "a trait card",
@@ -2609,11 +2626,11 @@
    ]
   },
   {
-   "id": "ericameria_nauseosa",
+   "id": "quercus_turbinella",
    "kind": "shrub",
    "what": "a trait card",
    "why": [
-    "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)"
+    "named by EVT 7104 Mogollon Chaparral (199 cells)"
    ]
   },
   {
@@ -2621,15 +2638,16 @@
    "kind": "shrub",
    "what": "a trait card",
    "why": [
-    "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)"
+    "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)",
+    "in the description of EVT 7102 Colorado Plateau Pinyon-Juniper Shrubland (401 cells)"
    ]
   },
   {
-   "id": "krascheninnikovia_lanata",
+   "id": "ericameria_nauseosa",
    "kind": "shrub",
    "what": "a trait card",
    "why": [
-    "named by EVT 7081 Inter-Mountain Basins Mixed Salt Desert Scrub (422 cells)"
+    "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)"
    ]
   },
   {
@@ -2642,12 +2660,11 @@
    ]
   },
   {
-   "id": "rosa_woodsii",
+   "id": "krascheninnikovia_lanata",
    "kind": "shrub",
    "what": "a trait card",
    "why": [
-    "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
-    "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)"
+    "named by EVT 7081 Inter-Mountain Basins Mixed Salt Desert Scrub (422 cells)"
    ]
   },
   {
@@ -2656,6 +2673,14 @@
    "what": "a trait card",
    "why": [
     "named by EVT 7104 Mogollon Chaparral (199 cells)"
+   ]
+  },
+  {
+   "id": "ceanothus_greggii",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "in the description of EVT 7104 Mogollon Chaparral (199 cells)"
    ]
   },
   {
@@ -2675,27 +2700,11 @@
    ]
   },
   {
-   "id": "quercus_turbinella",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "named by EVT 7104 Mogollon Chaparral (199 cells)"
-   ]
-  },
-  {
    "id": "rhus_aromatica",
    "kind": "shrub",
    "what": "a trait card",
    "why": [
     "named by EVT 7086 Rocky Mountain Lower Montane-Foothill Shrubland (92 cells)"
-   ]
-  },
-  {
-   "id": "picea_pungens",
-   "kind": "tree",
-   "what": "a trait card",
-   "why": [
-    "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)"
    ]
   },
   {
@@ -2827,19 +2836,11 @@
    ]
   },
   {
-   "id": "mahonia_repens",
-   "kind": "shrub",
+   "id": "picea_pungens",
+   "kind": "tree",
    "what": "a trait card",
    "why": [
-    "GBIF: 28 records on the tile"
-   ]
-  },
-  {
-   "id": "ribes_velutinum",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 27 records on the tile"
+    "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)"
    ]
   },
   {
@@ -2901,9 +2902,9 @@
  ],
  "summary": {
   "needed": 63,
-  "with_record": 28,
+  "with_record": 29,
   "generated_now": 0,
-  "queued": 35,
+  "queued": 34,
   "unread_communities": 7,
   "by_layer": {
    "tree": 14,
@@ -2915,6 +2916,6 @@
    "shrub": true,
    "ground": true
   },
-  "hands": 42
+  "hands": 41
  }
 }

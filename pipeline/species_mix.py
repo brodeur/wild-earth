@@ -569,9 +569,16 @@ def terrain_weights(weights: dict, t: int, fixed=(), rule: str | None = None, fo
     if ca and band in ZONE_SUBST:
         w0 = _subst(w0, ZONE_SUBST[band], fixed)
     reg = next((TERRAIN_BY_REGION[r] for r in CONTEXT.get("regions", []) if r in TERRAIN_BY_REGION), {})
+    # TERRAIN is California's reading of where a species stands (Douglas-fir: north slopes, x0.12 elsewhere; whitebark
+    # pine: a tenth below 2,400 m), kept by the Pacific Northwest for the species its own table lacks. A tile in no
+    # table's region (2026-11-10) does not take it: there LANDFIRE's communities carry the elevation zones, and a
+    # species' terrain is its own record's niche. Before, Lamar's Douglas-fir forest would have lost its Douglas-fir
+    # to any companion on every slope that does not face north.
+    from .communities import has_table
+    sierra = TERRAIN if CONTEXT.get("tile") is None or has_table(CONTEXT.get("regions") or []) else {}
     out = {}
     for k, w in w0.items():
-        f = reg.get(k) or TERRAIN.get(k)
+        f = reg.get(k) or sierra.get(k)
         if f is None and k not in fixed:   # no table row: the record's own niche on its card (floor / mid / steep / north)
             h = _record_habitat(k)
             if h:
@@ -882,31 +889,96 @@ NAMED_DENSITY = {"conifer_forest": (1.2, 0.5), "mixed_forest": (1.1, 0.5), "oak_
                  "chaparral": (0.2, 1.0), "grassland": (0.05, 0.2), "barren": (0.05, 0.1), "water": (0.0, 0.0)}
 
 
-NAMED_NEAR_DEG = 0.5
+# The weights of the species a community's name names (2026-11-10, docs/decisions.md "weights of a community's species").
+# Until then each got 1.0: Engelmann spruce and subalpine fir shared Lamar's "Spruce-Fir Forest" evenly, where the
+# stands are mostly lodgepole pine. On a tile that reads names by its own records:
+#   1. the community's own LANDFIRE description gives the weights (pipeline/succession.py: the share of the landscape
+#      in each succession class, divided among the class's species of the layer by their order of dominance) and adds
+#      the species the name leaves out (the seral dominant under a name that lists the climax);
+#   2. the name's own species weigh min(1, records / LOCAL_RECORDS_FULL) each: equal among the well recorded, less for
+#      a rarity (the GBIF records near the tile, communities.local_records). Not the counts themselves: they are taken
+#      over 25 km and every community, so they say how widespread a species is around the tile, not its share of one
+#      community (by counts green Mormon tea, 98, would lead blackbrush, 35, in the blackbrush shrubland, and lodgepole
+#      pine, 390, Douglas-fir, 79, in the Douglas-fir forest);
+#   3. the two are mixed by how much of the description is found near the tile (its coverage): a description whose
+#      species all grow here speaks alone; one whose leading species do not (the creosotebush scrub's, at the Grand
+#      Canyon) leaves the rest of the layer to the name's species;
+#   4. MEMBER_FLOOR: a species the name names, recorded near the tile, never holds less than this share of its layer
+#      (before the terrain factors), however few its records or wherever the description puts it.
+# A tile in a region with a table (California, the Pacific Northwest) keeps equal weights: its unmatched names are few
+# and read by a lexicon written for the region, with no records asked.
+MEMBER_FLOOR = 0.05
 
 
-def named_rule(name: str, hab_code: int) -> dict | None:
-    """A rule read from the community's name (communities.named_species): its named species, equal weights, densities
-    by habitat class. None when the name names no species."""
+def _layer_weights(named: list, described: dict | None, coverage: float, tile, by_records: bool) -> tuple[dict, str | None]:
+    """({species: weight}, how) of one layer: `named`, the ids the name names in it; `described` and `coverage`, the
+    description's weights for it and how much of it is found here. how: description | description+name | records |
+    equal | None (an empty layer). Weights sum to 1 except the equal ones (1.0 each, as before 2026-11-10)."""
+    from .communities import local_records
+    from .succession import rarity
+    if not named and not described:
+        return {}, None
+    if not by_records:
+        return {sid: 1.0 for sid in named}, "equal"
+    r = {sid: rarity(local_records(tile, sid)) for sid in named}
+    if described:
+        c = min(1.0, max(0.0, coverage))
+        w = dict(described)                        # sums to the coverage
+        for sid, v in r.items():                   # the rest to the name's species, a rarity less
+            w[sid] = w.get(sid, 0.0) + (1.0 - c) * v / len(named)
+        how = "description" if c >= 0.995 or not named else "description+name"
+    else:
+        w, how = r, "records"
+    if sum(w.values()) <= 0:
+        w = {sid: 1.0 for sid in named}
+    tot = sum(w.values())
+    w = {sid: max(v, MEMBER_FLOOR * tot) if sid in named else v for sid, v in w.items()}
+    tot = sum(w.values())
+    return {sid: round(v / tot, 4) for sid, v in w.items() if v > 0}, how
+
+
+def named_rule(name: str, hab_code: int, key: tuple | None = None) -> dict | None:
+    """A rule read from the community's name (communities.named_species) and, on a tile that reads names by its own
+    records, from its own LANDFIRE description (succession.described; key: the community's (source, code)): the species,
+    their weights (_layer_weights), densities by habitat class. None when neither names a species."""
     # A tile in no table's region reads the name by its own records (communities.named_species, 2026-11-10: every species
     # the phrase can mean, chosen by the GBIF records near the tile). Before, California's lexicon read it there and a
     # named species was kept where GBIF had it within 0.5 degrees (2026-11-06: "alpine" had named Brewer's mountain
     # heather, a California endemic, in Yellowstone), which left the Grand Canyon's "pinyon" as singleleaf pinyon.
-    from .communities import named_species
-    named = named_species(name, CONTEXT.get("regions") or [], CONTEXT.get("tile")) if CONTEXT.get("tile") is not None else named_species(name)
+    from .communities import fits_layer, has_table, named_species
+    tile, regions = CONTEXT.get("tile"), CONTEXT.get("regions") or []
+    named = named_species(name, regions, tile) if tile is not None else named_species(name)
     # a named species whose record is a grass or a forb is the ground layer's (a tile's own ground cards, ground_cards.py),
     # not a tree or a shrub to grow: broom snakeweed, a subshrub the lexicon may list and USDA PLANTS calls a forb
-    from .communities import fits_layer
     named = [(sid, kind) for sid, kind in named if fits_layer(sid, kind)]
-    if not named:
+    by_records = tile is not None and not has_table(regions)
+    desc = None
+    if by_records and key is not None:
+        from . import succession
+        desc = succession.described(tile, key[0], key[1], dict(named))
+    layers, how = {}, {}
+    for kind in ("tree", "shrub"):
+        d = {sid: w for sid, w in ((desc or {}).get(kind) or {}).items() if fits_layer(sid, kind)}
+        layers[kind], how[kind] = _layer_weights([sid for sid, k in named if k == kind], d,
+                                                 ((desc or {}).get("coverage") or {}).get(kind, 0.0), tile, by_records)
+    trees, shrubs = layers["tree"], layers["shrub"]
+    if not trees and not shrubs:
         return None
-    trees = {sid: 1.0 for sid, kind in named if kind == "tree"}
-    shrubs = {sid: 1.0 for sid, kind in named if kind == "shrub"}
     td, sd = NAMED_DENSITY.get(CLASSES.get(hab_code), (0.8, 0.6))
-    return {"id": "named_from_" + "_".join(sid for sid, _ in named[:3]), "trees": trees, "shrubs": shrubs,
+    lead = [sid for sid, _ in named] or [sid for w in (trees, shrubs) for sid in sorted(w, key=lambda k: -w[k])]
+    model = (desc or {}).get("model")
+    said = {"description": f"by its LANDFIRE description's succession classes ({model}, pipeline/succession.py)",
+            "description+name": f"by its LANDFIRE description's succession classes ({model}, pipeline/succession.py) as far as their "
+                                "species are recorded near the tile, the rest to the name's species",
+            "records": "equally among the name's species well recorded near the tile, a rarity less",
+            "equal": "equally"}
+    return {"id": "named_from_" + "_".join(lead[:3]), "trees": trees, "shrubs": shrubs,
             "tree_density": td if trees else 0.0, "shrub_density": sd if shrubs else 0.0,
+            "weights": {"trees": how["tree"], "shrubs": how["shrub"], **({"model": desc["model"]} if desc and any((h or "").startswith("description") for h in how.values()) else {})},
             "note": "no rule: the species its name names (communities.named_species: the region's lexicon, or, in no table's "
-                    "region, the candidates recorded near the tile)", "fixed": [], "region": None}
+                    "region, the candidates recorded near the tile)"
+                    + "".join(f"; {layer} weighted {said[how[kind]]}" for layer, kind in (("trees", "tree"), ("shrubs", "shrub")) if how[kind]),
+            "fixed": [], "region": None}
 
 
 # Stems to fill the cover (world pipeline phase 1, iteration 4): the client places a cell's trees by its canopy cover
@@ -1240,7 +1312,7 @@ def species_mix(tile: Tile) -> dict:
         if key not in rows:
             rule = rule or (match(name, regions) if name else None)
             if rule is None:
-                rule = (named_rule(name, hab_code) if name else None) or _fallback(hab_code, regions)
+                rule = (named_rule(name, hab_code, (source, code)) if name else None) or _fallback(hab_code, regions)
                 unmatched.append({"source": source, "code": code, "name": name, "habitat": CLASSES.get(hab_code),
                                   "drawn": "its named species" if rule["id"].startswith("named_from") else
                                            ("the tile's own species of its habitat class" if rule.get("pool") else
@@ -1249,7 +1321,8 @@ def species_mix(tile: Tile) -> dict:
                          "trees": {k: v for k, v in rule["trees"].items() if v},
                          "shrubs": {k: v for k, v in rule["shrubs"].items() if v},
                          "tree_density": rule["tree_density"], "shrub_density": rule["shrub_density"],
-                         "note": rule.get("note"), "fixed": list(rule.get("fixed") or []), "cells": 0, "habitat": hab_code}
+                         "note": rule.get("note"), "fixed": list(rule.get("fixed") or []), "cells": 0, "habitat": hab_code,
+                         **({"weights": rule["weights"]} if rule.get("weights") else {})}
             if rows[key]["index"] > 65535:
                 raise ValueError("more than 65535 distinct mixes; species_mix_index.png holds 16 bits")
         return rows[key]["index"]
@@ -1457,7 +1530,7 @@ def species_mix(tile: Tile) -> dict:
                     "trees": b.get("as_written", {}).get("trees", b["trees"]), "shrubs": b.get("as_written", {}).get("shrubs", b["shrubs"]),
                     "ground": {k: round(v, 3) for k, v in b["ground"].items()}, "tree_density": b["tree_density"],
                     "shrub_density": b["shrub_density"], **({"carpet_density": round(b["carpet_density"], 4)} if b.get("carpet_density") else {}),
-                    "note": b["note"], "fixed": b["fixed"], **({"generic": b["generic"], "generic_drawn": {L: b[L] for L in b["generic"]}} if b.get("generic") else {}),
+                    "note": b["note"], "fixed": b["fixed"], **({"weights": b["weights"]} if b.get("weights") else {}), **({"generic": b["generic"], "generic_drawn": {L: b[L] for L in b["generic"]}} if b.get("generic") else {}),
                     "cells": int(sum(r["cells"] for r in table if r["community"] == b["index"]))} for b in base_rows]
     px = lut[index]
     TD, SD, CD = nt + ns + ng, nt + ns + ng + 1, nt + ns + ng + 2

@@ -117,9 +117,23 @@ def plant_needs(tile: Tile, generate=False) -> dict:
         named = [] if synthetic else named_species(c["name"], regions, tile)   # the lexicon is LANDFIRE's names, not the groups'
         if synthetic:
             continue
-        c["rule"] = rule["id"] if rule else (named_rule(c["name"], 0) or {}).get("id")
+        # the name's species and, where the community's own description speaks, the description's, with their weights
+        # (species_mix.named_rule, 2026-11-10: before, the named species alone, each an equal share of the cover)
+        read = None if rule else named_rule(c["name"], 0, (c["source"], c["code"]))
+        c["rule"] = rule["id"] if rule else (read or {}).get("id")
         c["named"] = [sid for sid, _ in named]
         share = c["cells"] / total_cells
+        if read:
+            for layer, kind in (("trees", "tree"), ("shrubs", "shrub")):
+                how = (read.get("weights") or {}).get(layer)
+                for sid, w in read[layer].items():
+                    if sid not in c["named"] and w > 0:
+                        need(sid, kind, f"in the description of {c['source'].upper()} {c['code']} {c['name']} ({c['cells']} cells)",
+                             cover=share * w)
+                    elif how != "equal" and w > 0:
+                        need(sid, kind, f"named by {c['source'].upper()} {c['code']} {c['name']} ({c['cells']} cells)", cover=share * w)
+            named = [(sid, kind) for sid, kind in named
+                     if (read.get("weights") or {}).get("trees" if kind == "tree" else "shrubs") in (None, "equal")]
         if rule:
             for layer, kind in (("trees", "tree"), ("shrubs", "shrub")):
                 tot = sum(rule[layer].values()) or 1
@@ -129,7 +143,7 @@ def plant_needs(tile: Tile, generate=False) -> dict:
         for sid, kind in named:
             need(sid, kind, f"named by {c['source'].upper()} {c['code']} {c['name']} ({c['cells']} cells)",
                  cover=0.0 if rule else share / max(1, len(named)))
-        if not rule and not named:
+        if not rule and not named and not read:
             unread.append({"source": c["source"], "code": c["code"], "name": c["name"], "cells": c["cells"]})
 
     # the tile's canopy (pipeline/tree_cards.py, species/canopy.json, 2026-11-06): its dominant trees chosen from open

@@ -1,6 +1,6 @@
 {
  "tile": "utm12n_557_4964",
- "at": "2026-11-10T21:11:55Z",
+ "at": "2026-11-10T23:18:49Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -19,7 +19,7 @@
     "animals": 0
    },
    "2": {
-    "plants": 10,
+    "plants": 12,
     "animals": 1
    },
    "3": {
@@ -31,24 +31,24 @@
     "animals": 7
    }
   },
-  "plants": 55,
+  "plants": 57,
   "animals_present": 83,
   "animals_queued": 51,
   "meshy_credits_queued": 1515,
   "cards_queued": 12,
   "stand_ins": {
    "ficus_densifolia": null,
-   "rosa_woodsii": "rubus_parviflorus",
    "salix_bebbiana": "salix_boothii",
    "prunus_virginiana": "rubus_parviflorus",
+   "vaccinium_membranaceum": "vaccinium_scoparium",
+   "juniperus_scopulorum": null,
    "chamaenerion_angustifolium": null,
    "clematis_hirsutissima": null,
    "geum_triflorum": null,
    "sedum_lanceolatum": null,
    "cirsium_scariosum": null,
    "cirsium_arvense": null,
-   "linum_lewisii": null,
-   "juniperus_scopulorum": null
+   "linum_lewisii": null
   },
   "density": {
    "tree": {
@@ -57,7 +57,7 @@
    },
    "shrub": {
     "target": 23,
-    "have": 5
+    "have": 7
    },
    "ground": {
     "target": 26,
@@ -85,24 +85,11 @@
    "fidelity": 2,
    "common": "big sagebrush",
    "drawn_as": "artemisia_tridentata",
-   "share": 0.8639,
+   "share": 0.728,
    "why_needed": [
     "named by EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (35709 cells)",
-    "named by BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (263 cells)",
-    "named by EVT 7125 Inter-Mountain Basins Big Sagebrush Steppe (82 cells)"
-   ]
-  },
-  {
-   "id": "pseudotsuga_menziesii",
-   "kind": "tree",
-   "fidelity": 3,
-   "common": "Douglas-fir",
-   "drawn_as": "pseudotsuga_menziesii",
-   "share": 0.3656,
-   "why_needed": [
-    "named by EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (16593 cells)",
-    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)",
-    "named by BPS 715 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (10 cells)"
+    "in the description of EVT 7011 Rocky Mountain Aspen Forest and Woodland (2547 cells)",
+    "named by BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (263 cells)"
    ]
   },
   {
@@ -111,36 +98,37 @@
    "fidelity": 2,
    "common": "lodgepole pine",
    "drawn_as": "pinus_contorta",
-   "share": 0.2096,
+   "share": 0.4982,
    "why_needed": [
-    "named by EVT 7050 Rocky Mountain Lodgepole Pine Forest (9086 cells)",
-    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)"
+    "in the description of EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (16593 cells)",
+    "in the description of EVT 7055 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (12756 cells)",
+    "named by EVT 7050 Rocky Mountain Lodgepole Pine Forest (9086 cells)"
    ]
   },
   {
-   "id": "picea_engelmannii",
+   "id": "pseudotsuga_menziesii",
    "kind": "tree",
-   "fidelity": 2,
-   "common": "Engelmann spruce",
-   "drawn_as": "picea_engelmannii",
-   "share": 0.1731,
+   "fidelity": 3,
+   "common": "Douglas-fir",
+   "drawn_as": "pseudotsuga_menziesii",
+   "share": 0.278,
    "why_needed": [
-    "named by EVT 7055 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (12756 cells)",
-    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)",
-    "named by EVT 7056 Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland (1306 cells)"
+    "named by EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (16593 cells)",
+    "in the description of EVT 7011 Rocky Mountain Aspen Forest and Woodland (2547 cells)",
+    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)"
    ]
   },
   {
-   "id": "abies_lasiocarpa",
-   "kind": "tree",
-   "fidelity": 2,
-   "common": "subalpine fir",
-   "drawn_as": "abies_lasiocarpa",
-   "share": 0.1666,
+   "id": "symphoricarpos_albus",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "common snowberry",
+   "drawn_as": "symphoricarpos_albus",
+   "share": 0.1631,
    "why_needed": [
-    "named by EVT 7055 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (12756 cells)",
-    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)",
-    "named by EVT 7056 Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland (1306 cells)"
+    "in the description of EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (16593 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (272 cells)",
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (80 cells)"
    ]
   },
   {
@@ -155,14 +143,16 @@
    ]
   },
   {
-   "id": "carex_geyeri",
-   "kind": "grass",
-   "fidelity": 3,
-   "common": "Geyer's sedge",
-   "drawn_as": "carex_geyeri",
-   "share": 0.088,
+   "id": "abies_lasiocarpa",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "subalpine fir",
+   "drawn_as": "abies_lasiocarpa",
+   "share": 0.0917,
    "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+    "named by EVT 7055 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (12756 cells)",
+    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)",
+    "named by EVT 7056 Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland (1306 cells)"
    ]
   },
   {
@@ -177,25 +167,24 @@
    ]
   },
   {
-   "id": "salix_boothii",
+   "id": "vaccinium_scoparium",
    "kind": "shrub",
    "fidelity": 2,
-   "common": "Booth's willow",
-   "drawn_as": "salix_boothii",
-   "share": 0.074,
+   "common": "grouse whortleberry",
+   "drawn_as": "vaccinium_scoparium",
+   "share": 0.071,
    "why_needed": [
-    "named by EVT 9519 Rocky Mountain Lower Montane-Foothill Riparian Shrubland (4901 cells)",
-    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (646 cells)",
-    "named by EVT 9022 Rocky Mountain Subalpine-Montane Riparian Woodland (256 cells)"
+    "in the description of EVT 7055 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (12756 cells)",
+    "in the description of BPS 693 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (79 cells)"
    ]
   },
   {
-   "id": "arnica_cordifolia",
-   "kind": "forb",
+   "id": "carex_geyeri",
+   "kind": "grass",
    "fidelity": 3,
-   "common": "heartleaf arnica",
-   "drawn_as": "arnica_cordifolia",
-   "share": 0.065,
+   "common": "Geyer's sedge",
+   "drawn_as": "carex_geyeri",
+   "share": 0.0665,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -212,25 +201,16 @@
    ]
   },
   {
-   "id": "carex_hoodii",
-   "kind": "grass",
-   "fidelity": 3,
-   "common": "Hood's sedge",
-   "drawn_as": "carex_hoodii",
-   "share": 0.0585,
-   "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
-   ]
-  },
-  {
-   "id": "rubus_parviflorus",
+   "id": "rosa_woodsii",
    "kind": "shrub",
    "fidelity": 2,
-   "common": "thimbleberry",
-   "drawn_as": "rubus_parviflorus",
-   "share": 0.058,
+   "common": "Woods' rose",
+   "drawn_as": "rosa_woodsii",
+   "share": 0.0556,
    "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+    "named by EVT 9519 Rocky Mountain Lower Montane-Foothill Riparian Shrubland (4901 cells)",
+    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (646 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (272 cells)"
    ]
   },
   {
@@ -245,19 +225,6 @@
    ]
   },
   {
-   "id": "populus_tremuloides",
-   "kind": "tree",
-   "fidelity": 2,
-   "common": "quaking aspen",
-   "drawn_as": "populus_tremuloides",
-   "share": 0.0516,
-   "why_needed": [
-    "named by EVT 7011 Rocky Mountain Aspen Forest and Woodland (2547 cells)",
-    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)",
-    "canopy: records (GBIF: 3 records on the tile; height not yet screened)"
-   ]
-  },
-  {
    "id": "lupinus_argenteus",
    "kind": "forb",
    "fidelity": 3,
@@ -269,12 +236,36 @@
    ]
   },
   {
-   "id": "carex_rossii",
+   "id": "salix_boothii",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "Booth's willow",
+   "drawn_as": "salix_boothii",
+   "share": 0.0486,
+   "why_needed": [
+    "named by EVT 9519 Rocky Mountain Lower Montane-Foothill Riparian Shrubland (4901 cells)",
+    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (646 cells)",
+    "named by EVT 9022 Rocky Mountain Subalpine-Montane Riparian Woodland (256 cells)"
+   ]
+  },
+  {
+   "id": "carex_hoodii",
    "kind": "grass",
    "fidelity": 3,
-   "common": "Ross' sedge",
-   "drawn_as": "carex_rossii",
-   "share": 0.0482,
+   "common": "Hood's sedge",
+   "drawn_as": "carex_hoodii",
+   "share": 0.0477,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "arnica_cordifolia",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "heartleaf arnica",
+   "drawn_as": "arnica_cordifolia",
+   "share": 0.0474,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -291,6 +282,19 @@
    ]
   },
   {
+   "id": "picea_engelmannii",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "Engelmann spruce",
+   "drawn_as": "picea_engelmannii",
+   "share": 0.0447,
+   "why_needed": [
+    "named by EVT 7055 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (12756 cells)",
+    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)",
+    "in the description of EVT 7011 Rocky Mountain Aspen Forest and Woodland (2547 cells)"
+   ]
+  },
+  {
    "id": "eriogonum_umbellatum",
    "kind": "forb",
    "fidelity": 3,
@@ -299,6 +303,19 @@
    "share": 0.0425,
    "why_needed": [
     "GBIF: 11 records on the tile"
+   ]
+  },
+  {
+   "id": "populus_tremuloides",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "quaking aspen",
+   "drawn_as": "populus_tremuloides",
+   "share": 0.042,
+   "why_needed": [
+    "named by EVT 7011 Rocky Mountain Aspen Forest and Woodland (2547 cells)",
+    "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)",
+    "canopy: records (GBIF: 3 records on the tile; height not yet screened)"
    ]
   },
   {
@@ -324,12 +341,23 @@
    ]
   },
   {
-   "id": "poa_wheeleri",
+   "id": "pinus_albicaulis",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "whitebark pine",
+   "drawn_as": "pinus_albicaulis",
+   "share": 0.039,
+   "why_needed": [
+    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)"
+   ]
+  },
+  {
+   "id": "carex_rossii",
    "kind": "grass",
    "fidelity": 3,
-   "common": "Wheeler's bluegrass",
-   "drawn_as": "poa_wheeleri",
-   "share": 0.0365,
+   "common": "Ross' sedge",
+   "drawn_as": "carex_rossii",
+   "share": 0.0373,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -368,6 +396,17 @@
    ]
   },
   {
+   "id": "poa_wheeleri",
+   "kind": "grass",
+   "fidelity": 3,
+   "common": "Wheeler's bluegrass",
+   "drawn_as": "poa_wheeleri",
+   "share": 0.0261,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
    "id": "castilleja_cusickii",
    "kind": "forb",
    "fidelity": 3,
@@ -376,19 +415,6 @@
    "share": 0.0244,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
-   ]
-  },
-  {
-   "id": "pinus_flexilis",
-   "kind": "tree",
-   "fidelity": 2,
-   "common": "limber pine",
-   "drawn_as": "pinus_flexilis",
-   "share": 0.0173,
-   "why_needed": [
-    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)",
-    "named by EVT 7057 Rocky Mountain Subalpine-Montane Limber-Bristlecone Pine Woodland (132 cells)",
-    "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (11 cells)"
    ]
   },
   {
@@ -411,17 +437,6 @@
    "share": 0.0165,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
-   ]
-  },
-  {
-   "id": "pinus_albicaulis",
-   "kind": "tree",
-   "fidelity": 2,
-   "common": "whitebark pine",
-   "drawn_as": "pinus_albicaulis",
-   "share": 0.0162,
-   "why_needed": [
-    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)"
    ]
   },
   {
@@ -469,12 +484,36 @@
    ]
   },
   {
+   "id": "pinus_flexilis",
+   "kind": "tree",
+   "fidelity": 2,
+   "common": "limber pine",
+   "drawn_as": "pinus_flexilis",
+   "share": 0.0063,
+   "why_needed": [
+    "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (3069 cells)",
+    "named by EVT 7057 Rocky Mountain Subalpine-Montane Limber-Bristlecone Pine Woodland (132 cells)",
+    "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (11 cells)"
+   ]
+  },
+  {
    "id": "eurybia_conspicua",
    "kind": "forb",
    "fidelity": 3,
    "common": "western showy aster",
    "drawn_as": "eurybia_conspicua",
    "share": 0.0057,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "rubus_parviflorus",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "thimbleberry",
+   "drawn_as": "rubus_parviflorus",
+   "share": 0.0033,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -491,24 +530,12 @@
    ]
   },
   {
-   "id": "symphoricarpos_albus",
-   "kind": "shrub",
-   "fidelity": 4,
-   "common": "common snowberry",
-   "drawn_as": "symphoricarpos_albus",
-   "share": 0.0021,
-   "why_needed": [
-    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (272 cells)",
-    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (80 cells)"
-   ]
-  },
-  {
    "id": "amelanchier_alnifolia",
    "kind": "shrub",
    "fidelity": 2,
    "common": "Saskatoon serviceberry",
    "drawn_as": "amelanchier_alnifolia",
-   "share": 0.002,
+   "share": 0.0014,
    "why_needed": [
     "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (272 cells)",
     "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (80 cells)",
@@ -680,20 +707,6 @@
    "stand_in": "rubus_parviflorus"
   },
   {
-   "id": "rosa_woodsii",
-   "kind": "shrub",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": "rubus_parviflorus",
-   "share": 0,
-   "why_needed": [
-    "named by EVT 9519 Rocky Mountain Lower Montane-Foothill Riparian Shrubland (4901 cells)",
-    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (646 cells)",
-    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (272 cells)"
-   ],
-   "stand_in": "rubus_parviflorus"
-  },
-  {
    "id": "salix_bebbiana",
    "kind": "shrub",
    "fidelity": 0,
@@ -718,6 +731,19 @@
     "GBIF: 16 records on the tile"
    ],
    "stand_in": null
+  },
+  {
+   "id": "vaccinium_membranaceum",
+   "kind": "shrub",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": "vaccinium_scoparium",
+   "share": 0,
+   "why_needed": [
+    "in the description of EVT 7055 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (12756 cells)",
+    "in the description of BPS 693 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (79 cells)"
+   ],
+   "stand_in": "vaccinium_scoparium"
   }
  ],
  "animals": [
@@ -1798,15 +1824,6 @@
     ]
    },
    {
-    "id": "rosa_woodsii",
-    "kind": "shrub",
-    "stand_in": "rubus_parviflorus",
-    "why": [
-     "named by EVT 9519 Rocky Mountain Lower Montane-Foothill Riparian Shrubland (4901 cells)",
-     "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (646 cells)"
-    ]
-   },
-   {
     "id": "salix_bebbiana",
     "kind": "shrub",
     "stand_in": "salix_boothii",
@@ -1822,6 +1839,23 @@
     "why": [
      "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (272 cells)",
      "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (80 cells)"
+    ]
+   },
+   {
+    "id": "vaccinium_membranaceum",
+    "kind": "shrub",
+    "stand_in": "vaccinium_scoparium",
+    "why": [
+     "in the description of EVT 7055 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (12756 cells)",
+     "in the description of BPS 693 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (79 cells)"
+    ]
+   },
+   {
+    "id": "juniperus_scopulorum",
+    "kind": "tree",
+    "stand_in": null,
+    "why": [
+     "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (11 cells)"
     ]
    },
    {
@@ -1878,14 +1912,6 @@
     "stand_in": null,
     "why": [
      "GBIF: 10 records on the tile"
-    ]
-   },
-   {
-    "id": "juniperus_scopulorum",
-    "kind": "tree",
-    "stand_in": null,
-    "why": [
-     "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (11 cells)"
     ]
    }
   ],
@@ -2673,15 +2699,6 @@
    ]
   },
   {
-   "id": "rosa_woodsii",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "named by EVT 9519 Rocky Mountain Lower Montane-Foothill Riparian Shrubland (4901 cells)",
-    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (646 cells)"
-   ]
-  },
-  {
    "id": "salix_bebbiana",
    "kind": "shrub",
    "what": "a trait card",
@@ -2697,6 +2714,23 @@
    "why": [
     "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (272 cells)",
     "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (80 cells)"
+   ]
+  },
+  {
+   "id": "vaccinium_membranaceum",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "in the description of EVT 7055 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (12756 cells)",
+    "in the description of BPS 693 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (79 cells)"
+   ]
+  },
+  {
+   "id": "juniperus_scopulorum",
+   "kind": "tree",
+   "what": "a trait card",
+   "why": [
+    "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (11 cells)"
    ]
   },
   {
@@ -2753,14 +2787,6 @@
    "what": "a trait card",
    "why": [
     "GBIF: 10 records on the tile"
-   ]
-  },
-  {
-   "id": "juniperus_scopulorum",
-   "kind": "tree",
-   "what": "a trait card",
-   "why": [
-    "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (11 cells)"
    ]
   },
   {
