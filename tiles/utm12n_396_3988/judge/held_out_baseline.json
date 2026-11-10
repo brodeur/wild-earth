@@ -1,0 +1,1862 @@
+{
+ "format": 1,
+ "tile": "utm12n_396_3988",
+ "name": "Grand Canyon (South Rim to the river)",
+ "at": "2026-11-10T21:05:35Z",
+ "doc": "docs/held-out-judge.md",
+ "checks": {
+  "species_lists": {
+   "held_out": true,
+   "status": "scored",
+   "source": "NPSpecies, the National Park Service's species list for Grand Canyon National Park (GRCA), IRMA",
+   "url": "https://irmaservices.nps.gov/v3/rest/npspecies/detaillist/GRCA/<category>?format=json",
+   "licence": "public domain (a work of the US National Park Service)",
+   "attribution": "National Park Service, NPSpecies - The National Park Service biodiversity database (IRMA)",
+   "fetched": "2026-11-10",
+   "park": "GRCA",
+   "tile_in_park": 1.0,
+   "list_sizes": {
+    "mammal": 107,
+    "bird": 456,
+    "reptile": 76,
+    "amphibian": 15,
+    "fish": 29,
+    "plant": 1753
+   },
+   "not_judged": {
+    "invertebrate": 2
+   },
+   "measure": "precision = drawn species the list has as present and native / drawn; recall = the list's present, native, Abundant or Common species that the tile lists / all of them",
+   "scores": {
+    "animal_precision": 0.9651,
+    "animal_recall_common": 0.3523,
+    "plant_precision": 0.3333,
+    "plant_precision_by_share": {
+     "canopy": 0.5831,
+     "shrub": 0.3474
+    },
+    "groups_absent": [
+     "fish"
+    ]
+   },
+   "groups": {
+    "mammal": {
+     "drawn": 25,
+     "judged": 25,
+     "on_list_present_native": 23,
+     "precision": 0.92,
+     "classes": {
+      "present_native": 23,
+      "present_unknown_origin": 0,
+      "non_native": 2,
+      "unreviewed": 0,
+      "not_present": 0,
+      "not_on_list": 0
+     },
+     "list_common_native": 41,
+     "of_them_drawn": 18,
+     "recall": 0.439,
+     "list_present_native": 88,
+     "expected_absent": 23,
+     "spawned": 17,
+     "spawned_precision": 0.9412
+    },
+    "bird": {
+     "drawn": 53,
+     "judged": 53,
+     "on_list_present_native": 52,
+     "precision": 0.9811,
+     "classes": {
+      "present_native": 52,
+      "present_unknown_origin": 0,
+      "non_native": 1,
+      "unreviewed": 0,
+      "not_present": 0,
+      "not_on_list": 0
+     },
+     "list_common_native": 114,
+     "of_them_drawn": 36,
+     "recall": 0.3158,
+     "list_present_native": 438,
+     "expected_absent": 78,
+     "spawned": 23,
+     "spawned_precision": 1.0
+    },
+    "reptile": {
+     "drawn": 5,
+     "judged": 4,
+     "on_list_present_native": 4,
+     "precision": 1.0,
+     "classes": {
+      "present_native": 4,
+      "present_unknown_origin": 1,
+      "non_native": 0,
+      "unreviewed": 0,
+      "not_present": 0,
+      "not_on_list": 0
+     },
+     "list_common_native": 15,
+     "of_them_drawn": 5,
+     "recall": 0.3333,
+     "list_present_native": 53,
+     "expected_absent": 10,
+     "spawned": 4,
+     "spawned_precision": 1.0
+    },
+    "amphibian": {
+     "drawn": 4,
+     "judged": 4,
+     "on_list_present_native": 4,
+     "precision": 1.0,
+     "classes": {
+      "present_native": 4,
+      "present_unknown_origin": 0,
+      "non_native": 0,
+      "unreviewed": 0,
+      "not_present": 0,
+      "not_on_list": 0
+     },
+     "list_common_native": 3,
+     "of_them_drawn": 3,
+     "recall": 1.0,
+     "list_present_native": 10,
+     "expected_absent": 0,
+     "spawned": 1,
+     "spawned_precision": 1.0
+    },
+    "fish": {
+     "drawn": 0,
+     "judged": 0,
+     "on_list_present_native": 0,
+     "precision": null,
+     "classes": {
+      "present_native": 0,
+      "present_unknown_origin": 0,
+      "non_native": 0,
+      "unreviewed": 0,
+      "not_present": 0,
+      "not_on_list": 0
+     },
+     "list_common_native": 3,
+     "of_them_drawn": 0,
+     "recall": 0.0,
+     "list_present_native": 4,
+     "expected_absent": 3,
+     "spawned": 0,
+     "spawned_precision": null
+    },
+    "plant": {
+     "drawn": 12,
+     "judged": 12,
+     "on_list_present_native": 4,
+     "precision": 0.3333,
+     "classes": {
+      "present_native": 4,
+      "present_unknown_origin": 0,
+      "non_native": 0,
+      "unreviewed": 0,
+      "not_present": 0,
+      "not_on_list": 8
+     },
+     "precision_by_share": {
+      "canopy": 0.5831,
+      "shrub": 0.3474
+     }
+    }
+   },
+   "errors": [
+    {
+     "kind": "non_native",
+     "species": "Cervus canadensis",
+     "id": "cervus_canadensis",
+     "common": "Roosevelt elk",
+     "spawned": false,
+     "listed_as": "Cervus elaphus",
+     "nativeness_tags": null,
+     "group": "mammal"
+    },
+    {
+     "kind": "non_native",
+     "species": "Pecari tajacu",
+     "id": "pecari_tajacu",
+     "common": "collared peccary",
+     "spawned": true,
+     "listed_as": "Pecari tajacu",
+     "nativeness_tags": null,
+     "group": "mammal"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Bison bison",
+     "common": "American Bison",
+     "abundance": "Abundant",
+     "group": "mammal"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Ammospermophilus leucurus",
+     "common": "White-tailed Antelope Squirrel",
+     "abundance": "Common",
+     "group": "mammal"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Antilocapra americana",
+     "common": "Pronghorn",
+     "abundance": "Common",
+     "group": "mammal"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Antrozous pallidus",
+     "common": "Pallid Bat",
+     "abundance": "Common",
+     "group": "mammal"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Eptesicus fuscus",
+     "common": "Big Brown Bat",
+     "abundance": "Common",
+     "group": "mammal"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Erethizon dorsatum",
+     "common": "common porcupine",
+     "abundance": "Common",
+     "group": "mammal"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Mephitis mephitis",
+     "common": "Striped Skunk",
+     "abundance": "Common",
+     "group": "mammal"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Microtus longicaudus",
+     "common": "Coronation Island vole",
+     "abundance": "Common",
+     "group": "mammal"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Myotis thysanodes",
+     "common": "Fringed Myotis",
+     "abundance": "Common",
+     "group": "mammal"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Myotis volans",
+     "common": "Long-legged Myotis",
+     "abundance": "Common",
+     "group": "mammal"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Myotis yumanensis",
+     "common": "Yuma Myotis",
+     "abundance": "Common",
+     "group": "mammal"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Neotoma albigula",
+     "common": "White-throated Woodrat",
+     "abundance": "Common",
+     "group": "mammal"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Neotoma cinerea",
+     "common": "Bushy-tailed Woodrat",
+     "abundance": "Common",
+     "group": "mammal"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Neotoma mexicana",
+     "common": "Mexican Woodrat",
+     "abundance": "Common",
+     "group": "mammal"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Neotoma stephensi",
+     "common": "Stephen's Woodrat",
+     "abundance": "Common",
+     "group": "mammal"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Nyctinomops macrotis",
+     "common": "Big Free-tailed Bat",
+     "abundance": "Common",
+     "group": "mammal"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Perognathus parvus",
+     "common": "Columbia Plateau Pocket Mouse",
+     "abundance": "Common",
+     "group": "mammal"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Peromyscus crinitus",
+     "common": "Canyon Deermouse",
+     "abundance": "Common",
+     "group": "mammal"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Pipistrellus hesperus",
+     "common": "Western Pipistrelle",
+     "abundance": "Common",
+     "group": "mammal"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Reithrodontomys megalotis",
+     "common": "Western Harvest Mouse",
+     "abundance": "Common",
+     "group": "mammal"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Tadarida brasiliensis",
+     "common": "Brazilian Free-tailed Bat",
+     "abundance": "Common",
+     "group": "mammal"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Tamias minimus",
+     "common": "Least Chipmunk",
+     "abundance": "Common",
+     "group": "mammal"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Thomomys talpoides",
+     "common": "Northern Pocket Gopher",
+     "abundance": "Common",
+     "group": "mammal"
+    },
+    {
+     "kind": "non_native",
+     "species": "Sturnus vulgaris",
+     "id": "sturnus_vulgaris",
+     "common": "European starling",
+     "spawned": false,
+     "listed_as": "Sturnus vulgaris",
+     "nativeness_tags": null,
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Anas americana",
+     "common": "American Wigeon",
+     "abundance": "Abundant",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Anas strepera",
+     "common": "Gadwall",
+     "abundance": "Abundant",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Aythya affinis",
+     "common": "Lesser Scaup",
+     "abundance": "Abundant",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Bucephala albeola",
+     "common": "Bufflehead",
+     "abundance": "Abundant",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Bucephala clangula",
+     "common": "Common Goldeneye",
+     "abundance": "Abundant",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Gymnorhinus cyanocephalus",
+     "common": "Pinyon Jay",
+     "abundance": "Abundant",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Accipiter cooperii",
+     "common": "Cooper's Hawk",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Actitis macularius",
+     "common": "Spotted Sandpiper",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Aechmophorus clarkii",
+     "common": "Clark's Grebe",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Aechmophorus occidentalis",
+     "common": "Western Grebe",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Amphispiza bilineata",
+     "common": "Black-throated Sparrow",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Anas crecca",
+     "common": "Common Teal",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Archilochus alexandri",
+     "common": "Black-chinned Hummingbird",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Aythya americana",
+     "common": "Redhead",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Aythya collaris",
+     "common": "Ring-necked Duck",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Branta canadensis",
+     "common": "Canada Goose",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Bucephala islandica",
+     "common": "Barrow’s Goldeneye",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Callipepla gambelii",
+     "common": "Gambel's Quail",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Calypte costae",
+     "common": "Costa’s Hummingbird",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Cardellina pusilla",
+     "common": "Wilson's Warbler",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Catharus guttatus",
+     "common": "Hermit Thrush",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Certhia americana",
+     "common": "Brown Creeper",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Chondestes grammacus",
+     "common": "Lark Sparrow",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Chordeiles minor",
+     "common": "Common Nighthawk",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Cinclus mexicanus",
+     "common": "American Dipper",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Cistothorus palustris",
+     "common": "Marsh Wren",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Contopus sordidulus",
+     "common": "Western Wood-Pewee",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Empidonax wrightii",
+     "common": "Gray Flycatcher",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Eremophila alpestris",
+     "common": "Horned Lark",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Falco sparverius",
+     "common": "American Kestrel",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Fulica americana",
+     "common": "American Coot",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Geothlypis trichas",
+     "common": "Common Yellowthroat",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Haemorhous cassinii",
+     "common": "Cassin's Finch",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Haemorhous mexicanus",
+     "common": "House Finch",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Icteria virens",
+     "common": "Yellow-breasted Chat",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Icterus cucullatus",
+     "common": "Hooded Oriole",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Icterus parisorum",
+     "common": "Scott's Oriole",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Leiothlypis luciae",
+     "common": "Lucy’s Warbler",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Leiothlypis ruficapilla",
+     "common": "Nashville Warbler",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Melospiza melodia",
+     "common": "Song Sparrow",
+     "abundance": "Common",
+     "group": "bird"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Sceloporus graciosus",
+     "common": "Sagebrush Lizard",
+     "abundance": "Abundant",
+     "group": "reptile"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Cnemidophorus velox",
+     "common": "Plateau Striped Whiptail",
+     "abundance": "Common",
+     "group": "reptile"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Crotalus mitchellii",
+     "common": "Speckled Rattlesnake",
+     "abundance": "Common",
+     "group": "reptile"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Crotalus viridis",
+     "common": "Prairie Rattlesnake",
+     "abundance": "Common",
+     "group": "reptile"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Crotaphytus bicinctores",
+     "common": "Desert Collared Lizard",
+     "abundance": "Common",
+     "group": "reptile"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Crotaphytus collaris",
+     "common": "Collared Lizard",
+     "abundance": "Common",
+     "group": "reptile"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Eumeces skiltonianus",
+     "common": "Western Skink",
+     "abundance": "Common",
+     "group": "reptile"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Masticophis taeniatus",
+     "common": "Striped Whipsnake",
+     "abundance": "Common",
+     "group": "reptile"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Phrynosoma hernandesi",
+     "common": "Greater Short-horned Lizard",
+     "abundance": "Common",
+     "group": "reptile"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Pituophis catenifer",
+     "common": "Bullsnake",
+     "abundance": "Common",
+     "group": "reptile"
+    },
+    {
+     "kind": "group_absent",
+     "list_present_native": 4,
+     "list_common_native": 3,
+     "examples": [
+      "bluehead sucker",
+      "Flannelmouth Sucker",
+      "Speckled Dace"
+     ],
+     "group": "fish"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Catostomus discobolus",
+     "common": "bluehead sucker",
+     "abundance": "Common",
+     "group": "fish"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Catostomus latipinnis",
+     "common": "Flannelmouth Sucker",
+     "abundance": "Common",
+     "group": "fish"
+    },
+    {
+     "kind": "expected_absent",
+     "species": "Rhinichthys osculus",
+     "common": "Speckled Dace",
+     "abundance": "Common",
+     "group": "fish"
+    },
+    {
+     "kind": "not_on_list",
+     "species": "Pinus sabiniana",
+     "id": "pinus_sabiniana",
+     "layer": "canopy",
+     "drawn_share": 0.2247,
+     "genus_on_list": true,
+     "group": "plant"
+    },
+    {
+     "kind": "not_on_list",
+     "species": "Juniperus grandis",
+     "id": "juniperus_grandis",
+     "layer": "canopy",
+     "drawn_share": 0.1916,
+     "genus_on_list": true,
+     "group": "plant"
+    },
+    {
+     "kind": "not_on_list",
+     "species": "Calocedrus decurrens",
+     "id": "calocedrus_decurrens",
+     "layer": "canopy",
+     "drawn_share": 0.0003,
+     "genus_on_list": false,
+     "group": "plant"
+    },
+    {
+     "kind": "not_on_list",
+     "species": "Quercus kelloggii",
+     "id": "quercus_kelloggii",
+     "layer": "canopy",
+     "drawn_share": 0.0002,
+     "genus_on_list": true,
+     "group": "plant"
+    },
+    {
+     "kind": "not_on_list",
+     "species": "Pinus lambertiana",
+     "id": "pinus_lambertiana",
+     "layer": "canopy",
+     "drawn_share": 0.0001,
+     "genus_on_list": true,
+     "group": "plant"
+    },
+    {
+     "kind": "not_on_list",
+     "species": "Arctostaphylos viscida",
+     "id": "arctostaphylos_viscida",
+     "layer": "shrub",
+     "drawn_share": 0.2641,
+     "genus_on_list": true,
+     "group": "plant"
+    },
+    {
+     "kind": "not_on_list",
+     "species": "Adenostoma fasciculatum",
+     "id": "adenostoma_fasciculatum",
+     "layer": "shrub",
+     "drawn_share": 0.2537,
+     "genus_on_list": false,
+     "group": "plant"
+    },
+    {
+     "kind": "not_on_list",
+     "species": "Ceanothus cuneatus",
+     "id": "ceanothus_cuneatus",
+     "layer": "shrub",
+     "drawn_share": 0.1349,
+     "genus_on_list": true,
+     "group": "plant"
+    }
+   ],
+   "limits": "A park is larger than a 10 km tile: precision is sound for a tile inside the park; recall is an upper bound on what is missing (a species common in the park may live outside the tile's habitats), so expected_absent names candidates and only a whole missing group is certain. Invertebrates are not judged (the lists are incomplete)."
+  },
+  "composition": {
+   "held_out": true,
+   "status": "scored",
+   "source": "Inventory and Monitoring Division. 2022. Field data for the Vegetation Mapping Inventory Project of Grand Canyon National Park, Parashant National Monument - Open Format Data Package. National Park Service. https://doi.org/10.57830/2314567",
+   "url": "https://irma.nps.gov/DataStore/Reference/Profile/2314567",
+   "licence": "CC0 1.0",
+   "fetched": "2026-11-10",
+   "reference_kind": "plots",
+   "reference": {
+    "kind": "plots",
+    "plots": 14,
+    "buffer_m": 0,
+    "presence_records": 71,
+    "layer_cover_pct": {
+     "canopy": 3.79,
+     "shrub": 15.24,
+     "ground": 10.62
+    },
+    "tree_regeneration_cover_pct": {
+     "shrub": 0.0,
+     "ground": 0.18
+    },
+    "communities": {
+     "Coleogyne ramosissima Shrubland": 2,
+     "Coleogyne ramosissima-Opuntia polycantha Shrubland": 1,
+     "Echinocerus sp-Pleuraphis jamesii Dwarf Shrub Herbaceous": 1,
+     "Pinus ponderosa / Poa fendleriana Woodland": 1,
+     "Pinus edulis - Juniperus osteosperma / Gutierrezia sarothrae Woodland": 1,
+     "Pinus edulis - Juniperus osteosperma / Sparse Understory Woodland": 1,
+     "Encelia farinosa-Ephedra torreyana  Shrubland": 1,
+     "Acacia greggii-mixed shrub Shrubland [Placeholder]": 1,
+     "Bebbia juncea shrubland": 1,
+     "Coleogyne ramosissima/Opuntia polyacantha Shrubland": 1,
+     "Encelia farinosa-(Ephedra fasciculata)-(Opuntia engelmannii) Shrubland": 1,
+     "Baccharis emoryii shrubland": 1,
+     "Tridens muticus/mixed shrub spp. Shrub Herbaceous": 1
+    },
+    "genera_known": 176
+   },
+   "drawn_from": "client/species_mix.json: plants drawn per species (cells x density x weight), by layer",
+   "measure": "per layer, on genus shares: Bray-Curtis dissimilarity (0 same, 1 nothing in common); foreign share = drawn share in genera the reference does not record on this ground; missed share = reference share in genera not drawn in that layer",
+   "scores": {
+    "bray_curtis_mean": 0.7412,
+    "bray_curtis": {
+     "canopy": 0.2235,
+     "shrub": 1.0,
+     "ground": 1.0
+    },
+    "foreign_share": {
+     "canopy": 0.0005,
+     "shrub": 0.5177,
+     "ground": null
+    },
+    "foreign_share_max": 0.5177,
+    "missed_share": {
+     "canopy": 0,
+     "shrub": 1.0,
+     "ground": 1.0
+    }
+   },
+   "layers": {
+    "canopy": {
+     "bray_curtis": 0.2235,
+     "foreign_share": 0.0005,
+     "missed_share": 0,
+     "drawn": {
+      "pinus": 0.8074,
+      "juniperus": 0.1916,
+      "pseudotsuga": 0.0003,
+      "abies": 0.0003,
+      "calocedrus": 0.0003,
+      "quercus": 0.0002
+     },
+     "reference": {
+      "pinus": 0.5849,
+      "juniperus": 0.4151
+     }
+    },
+    "shrub": {
+     "bray_curtis": 1.0,
+     "foreign_share": 0.5177,
+     "missed_share": 1.0,
+     "drawn": {
+      "artemisia": 0.3474,
+      "arctostaphylos": 0.2641,
+      "adenostoma": 0.2537,
+      "ceanothus": 0.1349
+     },
+     "reference": {
+      "baccharis": 0.1969,
+      "coleogyne": 0.1922,
+      "opuntia": 0.1673,
+      "ephedra": 0.1125,
+      "encelia": 0.0895,
+      "echinocereus": 0.0572,
+      "bebbia": 0.0473,
+      "yucca": 0.0375
+     }
+    },
+    "ground": {
+     "bray_curtis": 1.0,
+     "foreign_share": null,
+     "missed_share": 1.0,
+     "drawn": {},
+     "reference": {
+      "imperata": 0.3699,
+      "hilaria": 0.1749,
+      "tridens": 0.1016,
+      "allionia": 0.0639,
+      "equisetum": 0.0336,
+      "poa": 0.0289,
+      "bromus": 0.0222,
+      "sphaeralcea": 0.0169
+     }
+    }
+   },
+   "errors": [
+    {
+     "kind": "foreign_genus",
+     "genus": "arctostaphylos",
+     "species": [
+      "arctostaphylos_viscida"
+     ],
+     "drawn_share": 0.2641,
+     "layer": "shrub"
+    },
+    {
+     "kind": "foreign_genus",
+     "genus": "adenostoma",
+     "species": [
+      "adenostoma_fasciculatum"
+     ],
+     "drawn_share": 0.2537,
+     "layer": "shrub"
+    },
+    {
+     "kind": "missing_genus",
+     "genus": "baccharis",
+     "reference_share": 0.1969,
+     "layer": "shrub"
+    },
+    {
+     "kind": "missing_genus",
+     "genus": "coleogyne",
+     "reference_share": 0.1922,
+     "layer": "shrub"
+    },
+    {
+     "kind": "missing_genus",
+     "genus": "opuntia",
+     "reference_share": 0.1673,
+     "layer": "shrub"
+    },
+    {
+     "kind": "missing_genus",
+     "genus": "ephedra",
+     "reference_share": 0.1125,
+     "layer": "shrub"
+    },
+    {
+     "kind": "missing_genus",
+     "genus": "encelia",
+     "reference_share": 0.0895,
+     "layer": "shrub"
+    },
+    {
+     "kind": "missing_genus",
+     "genus": "echinocereus",
+     "reference_share": 0.0572,
+     "layer": "shrub"
+    },
+    {
+     "kind": "missing_genus",
+     "genus": "bebbia",
+     "reference_share": 0.0473,
+     "layer": "shrub"
+    },
+    {
+     "kind": "missing_genus",
+     "genus": "yucca",
+     "reference_share": 0.0375,
+     "layer": "shrub"
+    },
+    {
+     "kind": "missing_genus",
+     "genus": "gutierrezia",
+     "reference_share": 0.0216,
+     "layer": "shrub"
+    },
+    {
+     "kind": "empty_layer",
+     "what": "nothing drawn where the reference has plants",
+     "reference_top": [
+      "imperata",
+      "hilaria",
+      "tridens",
+      "allionia",
+      "equisetum"
+     ],
+     "layer": "ground"
+    }
+   ],
+   "limits": "Classification plots were placed in stands chosen as typical of a vegetation type, not at random, and a 10 km tile holds few of them (rare types such as river banks are over-counted). The reference is percent cover; the drawn shares are counts of plants. The pipeline moves dwarf shrubs to its ground layer; the plots record them as short shrubs. Read the scores as a ranking of what is most wrong."
+  },
+  "structure": {
+   "held_out": true,
+   "status": "deferred",
+   "why": "GEDI needs a NASA Earthdata login, which only the owner can create",
+   "needs": [
+    "a free Earthdata account (urs.earthdata.nasa.gov) made by Aaron, and its token in the git-ignored .env as EARTHDATA_TOKEN (never printed or logged)",
+    "GEDI L2A (footprint canopy height, rh98) and L2B (canopy cover, plant area index, vertical profile) version 2 granules over the tile, found through NASA's CMR search by bounding box and subset to the tile through Harmony or read from the cloud-optimised HDF5 with h5py (h5py is not in the venv yet); NASA data are open (no licence restriction), attribution to the GEDI mission (Dubayah et al.)",
+    "per 25 m footprint with quality_flag 1 and sensitivity >= 0.95, leaf-on shots only: the tile's own canopy height (the height the client draws: client/canopy.png and the canopy_top step) sampled at the footprint, then bias, RMSE and rank correlation of height, and the same for cover",
+    "held out only where the tile's canopy does not come from GEDI: the ETH and Meta canopy-height maps used on the six tiles without lidar were trained on GEDI, so on those tiles GEDI is not independent; on the eight lidar tiles it is. GEDI covers 51.6 N to 51.6 S: not Lofoten",
+    "the alternative with no account: hold out part of the 3DEP lidar point cloud on US tiles (build from the DEM-only path, judge against the point cloud's canopy height model)"
+   ]
+  },
+  "colour_from_above": {
+   "held_out": false,
+   "status": "scored",
+   "what": "colour from straight above (the d_topdown probe pose) against the Sentinel-2 composite of the capture's month, through the viewer's light (tools/probes/run.sh, sheet.py overlap_fair)",
+   "why_not_held_out": "the ground texture is made from the same family of imagery, so this score is satisfied by construction where the ground shows; it cannot see a wrong species, a missing understory or an empty river",
+   "source": "Copernicus Sentinel-2 L2A (the seasons step's monthly composite)",
+   "licence": "Copernicus open",
+   "probe": "gcanyon",
+   "fetched": "2026-11-07",
+   "scores": {
+    "overlap": 0.26,
+    "overlap_plain": 0.268,
+    "L_render": 53.6,
+    "L_reference": 64.3
+   }
+  },
+  "eye_level": {
+   "held_out": true,
+   "source": "geotagged ground photos from Wikimedia Commons and iNaturalist (tools/probes/eye_photos.py)",
+   "licence": "per photo, one of CC0, public domain, CC BY, CC BY-SA; author, licence and page of each in tiles/utm12n_396_3988/judge/eye_photos.json",
+   "status": "scored",
+   "fetched": "2026-11-10",
+   "captured": "2026-11-10",
+   "capture": {
+    "hour": 10,
+    "eye_m": 1.6,
+    "render_fov_deg": 75,
+    "shader_errors": 0,
+    "compared_fov_deg": 45.0
+   },
+   "licences": [
+    "CC BY 3.0",
+    "CC BY-SA 2.0",
+    "CC BY-SA 2.5",
+    "CC BY-SA 3.0",
+    "CC BY-SA 4.0",
+    "CC0"
+   ],
+   "measure": "per pair, on three bands of each image: the difference of sky shares, of the green share of the land, and CIE76 delta E of the land's mean colour; distance = mean(sky_diff, green_diff, min(delta_e / 50, 1)), 0 = the same by these statistics",
+   "scores": {
+    "pairs": 10,
+    "shown_unplaced": 0,
+    "distance_mean": 0.177,
+    "sky_diff_mean": 0.0455,
+    "green_diff_mean": 0.1323,
+    "delta_e_mean": 17.655,
+    "lightness_bias_mean": 6.398,
+    "headings_known": 7
+   },
+   "pairs": [
+    {
+     "photo": "commons_62109625",
+     "render": "commons_62109625_b074.jpg",
+     "bearing": 74,
+     "heading_known": true,
+     "placed": true,
+     "shift": 0.25,
+     "tilt_deg": 5.0,
+     "render_fov": 75,
+     "date": "08-15",
+     "photo_month": 8,
+     "skyline_distance": 0.103,
+     "sky_diff": 0.0319,
+     "green_diff": 0.0388,
+     "delta_e": 33.57,
+     "lightness_bias": 26.92,
+     "distance": 0.2474,
+     "bands_compared": 2,
+     "photo_stats": {
+      "sky": [
+       0.9961,
+       0.3719,
+       0.0
+      ],
+      "green": [
+       null,
+       0.0186,
+       0.0218
+      ],
+      "lab": [
+       null,
+       [
+        42.77,
+        3.37,
+        -5.88
+       ],
+       [
+        40.96,
+        2.4,
+        6.28
+       ]
+      ]
+     },
+     "render_stats": {
+      "sky": [
+       0.9051,
+       0.3765,
+       0.0
+      ],
+      "green": [
+       0.3503,
+       0.0745,
+       0.0
+      ],
+      "lab": [
+       [
+        74.52,
+        -3.44,
+        1.98
+       ],
+       [
+        62.73,
+        -2.01,
+        18.03
+       ],
+       [
+        74.85,
+        -1.32,
+        16.32
+       ]
+      ]
+     }
+    },
+    {
+     "photo": "commons_62822109",
+     "render": "commons_62822109_b340.jpg",
+     "bearing": 340,
+     "heading_known": true,
+     "placed": true,
+     "shift": 1.0,
+     "tilt_deg": 19.4,
+     "render_fov": 75,
+     "date": "09-15",
+     "photo_month": 9,
+     "skyline_distance": 0.1546,
+     "sky_diff": 0.1275,
+     "green_diff": 0.1391,
+     "delta_e": 19.58,
+     "lightness_bias": 13.95,
+     "distance": 0.2194,
+     "bands_compared": 2,
+     "photo_stats": {
+      "sky": [
+       1.0,
+       0.6946,
+       0.0001
+      ],
+      "green": [
+       null,
+       0.0835,
+       0.2365
+      ],
+      "lab": [
+       null,
+       [
+        45.83,
+        6.02,
+        -7.91
+       ],
+       [
+        38.39,
+        4.85,
+        6.42
+       ]
+      ]
+     },
+     "render_stats": {
+      "sky": [
+       0.8759,
+       0.5187,
+       0.0827
+      ],
+      "green": [
+       0.0152,
+       0.0151,
+       0.0267
+      ],
+      "lab": [
+       [
+        64.93,
+        -0.98,
+        12.79
+       ],
+       [
+        60.51,
+        -0.67,
+        9.38
+       ],
+       [
+        51.62,
+        -0.73,
+        12.29
+       ]
+      ]
+     }
+    },
+    {
+     "photo": "commons_23200881",
+     "render": "commons_23200881_b047.jpg",
+     "bearing": 47,
+     "heading_known": true,
+     "placed": true,
+     "shift": 1.0,
+     "tilt_deg": 19.4,
+     "render_fov": 75,
+     "date": "09-15",
+     "photo_month": 9,
+     "skyline_distance": 0.0983,
+     "sky_diff": 0.0338,
+     "green_diff": 0.1946,
+     "delta_e": 18.13,
+     "lightness_bias": 16.12,
+     "distance": 0.197,
+     "bands_compared": 3,
+     "photo_stats": {
+      "sky": [
+       0.7399,
+       0.0146,
+       0.0
+      ],
+      "green": [
+       0.0218,
+       0.25,
+       0.3174
+      ],
+      "lab": [
+       [
+        50.27,
+        6.78,
+        -3.03
+       ],
+       [
+        41.02,
+        -0.47,
+        9.47
+       ],
+       [
+        29.52,
+        -2.42,
+        12.24
+       ]
+      ]
+     },
+     "render_stats": {
+      "sky": [
+       0.6891,
+       0.0651,
+       0.0
+      ],
+      "green": [
+       0.0034,
+       0.0001,
+       0.0018
+      ],
+      "lab": [
+       [
+        62.82,
+        0.38,
+        1.03
+       ],
+       [
+        55.3,
+        0.56,
+        -0.77
+       ],
+       [
+        51.06,
+        -0.59,
+        17.01
+       ]
+      ]
+     }
+    },
+    {
+     "photo": "commons_23079739",
+     "render": "commons_23079739_b104.jpg",
+     "bearing": 104,
+     "heading_known": true,
+     "placed": true,
+     "shift": 0.75,
+     "tilt_deg": 14.8,
+     "render_fov": 75,
+     "date": "09-15",
+     "photo_month": 9,
+     "skyline_distance": 0.0366,
+     "sky_diff": 0.0101,
+     "green_diff": 0.3265,
+     "delta_e": 11.74,
+     "lightness_bias": -3.6,
+     "distance": 0.1904,
+     "bands_compared": 3,
+     "photo_stats": {
+      "sky": [
+       0.3554,
+       0.0,
+       0.0
+      ],
+      "green": [
+       0.5945,
+       0.3333,
+       0.2448
+      ],
+      "lab": [
+       [
+        30.6,
+        -3.97,
+        10.54
+       ],
+       [
+        36.9,
+        -1.83,
+        13.38
+       ],
+       [
+        39.26,
+        -1.12,
+        14.06
+       ]
+      ]
+     },
+     "render_stats": {
+      "sky": [
+       0.325,
+       0.0,
+       0.0
+      ],
+      "green": [
+       0.1526,
+       0.03,
+       0.0106
+      ],
+      "lab": [
+       [
+        33.46,
+        -1.3,
+        1.7
+       ],
+       [
+        28.56,
+        -0.57,
+        1.71
+       ],
+       [
+        33.95,
+        -0.71,
+        4.27
+       ]
+      ]
+     }
+    },
+    {
+     "photo": "commons_53725329",
+     "render": "commons_53725329_b135.jpg",
+     "bearing": 135,
+     "heading_known": false,
+     "placed": true,
+     "shift": 0.75,
+     "tilt_deg": 14.8,
+     "render_fov": 75,
+     "date": "today",
+     "photo_month": null,
+     "skyline_distance": 0.0579,
+     "sky_diff": 0.054,
+     "green_diff": 0.2097,
+     "delta_e": 14.54,
+     "lightness_bias": -7.27,
+     "distance": 0.1848,
+     "bands_compared": 3,
+     "photo_stats": {
+      "sky": [
+       0.5414,
+       0.0435,
+       0.0
+      ],
+      "green": [
+       0.1801,
+       0.2402,
+       0.2427
+      ],
+      "lab": [
+       [
+        55.66,
+        0.72,
+        20.52
+       ],
+       [
+        47.81,
+        1.75,
+        20.32
+       ],
+       [
+        45.94,
+        0.43,
+        22.46
+       ]
+      ]
+     },
+     "render_stats": {
+      "sky": [
+       0.4134,
+       0.0774,
+       0.0
+      ],
+      "green": [
+       0.0086,
+       0.0131,
+       0.0123
+      ],
+      "lab": [
+       [
+        33.88,
+        2.63,
+        9.78
+       ],
+       [
+        41.0,
+        3.32,
+        14.34
+       ],
+       [
+        52.72,
+        3.01,
+        15.49
+       ]
+      ]
+     }
+    },
+    {
+     "photo": "commons_156136627",
+     "render": "commons_156136627_b009.jpg",
+     "bearing": 9,
+     "heading_known": true,
+     "placed": true,
+     "shift": 1.0,
+     "tilt_deg": 19.4,
+     "render_fov": 75,
+     "date": "07-15",
+     "photo_month": 7,
+     "skyline_distance": 0.0897,
+     "sky_diff": 0.0718,
+     "green_diff": 0.0695,
+     "delta_e": 18.35,
+     "lightness_bias": 16.66,
+     "distance": 0.1694,
+     "bands_compared": 2,
+     "photo_stats": {
+      "sky": [
+       1.0,
+       0.1349,
+       0.0
+      ],
+      "green": [
+       null,
+       0.0,
+       0.0
+      ],
+      "lab": [
+       null,
+       [
+        44.88,
+        9.14,
+        3.02
+       ],
+       [
+        44.02,
+        7.48,
+        12.6
+       ]
+      ]
+     },
+     "render_stats": {
+      "sky": [
+       0.9676,
+       0.292,
+       0.0259
+      ],
+      "green": [
+       null,
+       0.0344,
+       0.1046
+      ],
+      "lab": [
+       null,
+       [
+        62.28,
+        2.74,
+        6.07
+       ],
+       [
+        59.95,
+        0.03,
+        9.2
+       ]
+      ]
+     }
+    },
+    {
+     "photo": "commons_115631235",
+     "render": "commons_115631235_b106.jpg",
+     "bearing": 106,
+     "heading_known": true,
+     "placed": true,
+     "shift": 0.75,
+     "tilt_deg": 14.8,
+     "render_fov": 75,
+     "date": "10-15",
+     "photo_month": 10,
+     "skyline_distance": 0.1272,
+     "sky_diff": 0.0856,
+     "green_diff": 0.1647,
+     "delta_e": 11.57,
+     "lightness_bias": -10.85,
+     "distance": 0.1606,
+     "bands_compared": 3,
+     "photo_stats": {
+      "sky": [
+       0.734,
+       0.0246,
+       0.0
+      ],
+      "green": [
+       0.1114,
+       0.1694,
+       0.2209
+      ],
+      "lab": [
+       [
+        50.43,
+        2.24,
+        1.71
+       ],
+       [
+        50.33,
+        1.67,
+        1.44
+       ],
+       [
+        40.22,
+        1.46,
+        3.82
+       ]
+      ]
+     },
+     "render_stats": {
+      "sky": [
+       0.6984,
+       0.2459,
+       0.0
+      ],
+      "green": [
+       0.0073,
+       0.0002,
+       0.0001
+      ],
+      "lab": [
+       [
+        35.19,
+        -0.0,
+        4.0
+       ],
+       [
+        36.37,
+        0.99,
+        -0.54
+       ],
+       [
+        36.86,
+        1.9,
+        0.13
+       ]
+      ]
+     }
+    },
+    {
+     "photo": "commons_71441524",
+     "render": "commons_71441524_b000.jpg",
+     "bearing": 0,
+     "heading_known": false,
+     "placed": true,
+     "shift": -0.25,
+     "tilt_deg": -5.0,
+     "render_fov": 75,
+     "date": "today",
+     "photo_month": null,
+     "skyline_distance": 0.0145,
+     "sky_diff": 0.0145,
+     "green_diff": 0.1146,
+     "delta_e": 15.59,
+     "lightness_bias": 1.03,
+     "distance": 0.147,
+     "bands_compared": 3,
+     "photo_stats": {
+      "sky": [
+       0.0877,
+       0.0,
+       0.0
+      ],
+      "green": [
+       0.0494,
+       0.0785,
+       0.0019
+      ],
+      "lab": [
+       [
+        43.06,
+        -1.25,
+        -1.72
+       ],
+       [
+        38.77,
+        0.34,
+        3.69
+       ],
+       [
+        38.33,
+        7.19,
+        6.9
+       ]
+      ]
+     },
+     "render_stats": {
+      "sky": [
+       0.0442,
+       0.0,
+       0.0
+      ],
+      "green": [
+       0.1826,
+       0.2112,
+       0.0798
+      ],
+      "lab": [
+       [
+        40.24,
+        1.94,
+        16.51
+       ],
+       [
+        45.97,
+        1.62,
+        19.83
+       ],
+       [
+        37.03,
+        1.58,
+        15.47
+       ]
+      ]
+     }
+    },
+    {
+     "photo": "commons_1090719",
+     "render": "commons_1090719_b016.jpg",
+     "bearing": 16,
+     "heading_known": true,
+     "placed": true,
+     "shift": 1.0,
+     "tilt_deg": 19.4,
+     "render_fov": 75,
+     "date": "today",
+     "photo_month": null,
+     "skyline_distance": 0.0991,
+     "sky_diff": 0.0035,
+     "green_diff": 0.0068,
+     "delta_e": 18.8,
+     "lightness_bias": 10.05,
+     "distance": 0.1288,
+     "bands_compared": 3,
+     "photo_stats": {
+      "sky": [
+       0.4494,
+       0.0,
+       0.0
+      ],
+      "green": [
+       0.0,
+       0.0001,
+       0.0012
+      ],
+      "lab": [
+       [
+        32.36,
+        9.4,
+        -18.58
+       ],
+       [
+        33.2,
+        7.88,
+        -7.48
+       ],
+       [
+        19.19,
+        3.9,
+        -1.95
+       ]
+      ]
+     },
+     "render_stats": {
+      "sky": [
+       0.4513,
+       0.0087,
+       0.0
+      ],
+      "green": [
+       0.0186,
+       0.0019,
+       0.0011
+      ],
+      "lab": [
+       [
+        48.27,
+        0.42,
+        4.15
+       ],
+       [
+        39.86,
+        1.0,
+        5.82
+       ],
+       [
+        26.78,
+        0.16,
+        4.86
+       ]
+      ]
+     }
+    },
+    {
+     "photo": "commons_52847223",
+     "render": "commons_52847223_b180.jpg",
+     "bearing": 180,
+     "heading_known": false,
+     "placed": true,
+     "shift": 0.25,
+     "tilt_deg": 5.0,
+     "render_fov": 75,
+     "date": "05-15",
+     "photo_month": 5,
+     "skyline_distance": 0.0293,
+     "sky_diff": 0.0228,
+     "green_diff": 0.0585,
+     "delta_e": 14.68,
+     "lightness_bias": 0.97,
+     "distance": 0.125,
+     "bands_compared": 2,
+     "photo_stats": {
+      "sky": [
+       0.9566,
+       0.1147,
+       0.0
+      ],
+      "green": [
+       null,
+       0.0036,
+       0.0813
+      ],
+      "lab": [
+       null,
+       [
+        48.31,
+        5.14,
+        -0.54
+       ],
+       [
+        46.08,
+        1.7,
+        9.85
+       ]
+      ]
+     },
+     "render_stats": {
+      "sky": [
+       0.9785,
+       0.0681,
+       0.0
+      ],
+      "green": [
+       null,
+       0.0658,
+       0.1362
+      ],
+      "lab": [
+       null,
+       [
+        36.04,
+        1.09,
+        6.05
+       ],
+       [
+        60.3,
+        -0.56,
+        13.5
+       ]
+      ]
+     }
+    }
+   ],
+   "sheets": [
+    "tiles/utm12n_396_3988/judge/eye_level_sheet_1.jpg",
+    "tiles/utm12n_396_3988/judge/eye_level_sheet_2.jpg"
+   ],
+   "limits": "Colour and cover statistics by image band only: no species, shape or texture. Season, weather, hour, exposure, the photo's unknown lens and tilt, and GPS error all move the number. The sheets are for a person to judge; the number ranks gross mismatches."
+  }
+ },
+ "summary": {
+  "animal_precision": 0.9651,
+  "animal_recall_common": 0.3523,
+  "plant_precision": 0.3333,
+  "groups_absent": [
+   "fish"
+  ],
+  "plant_precision_by_share": {
+   "canopy": 0.5831,
+   "shrub": 0.3474
+  },
+  "composition_bray_curtis": {
+   "canopy": 0.2235,
+   "shrub": 1.0,
+   "ground": 1.0
+  },
+  "composition_foreign_share": {
+   "canopy": 0.0005,
+   "shrub": 0.5177,
+   "ground": null
+  },
+  "eye_level_distance": 0.177,
+  "eye_level_pairs": 10,
+  "colour_from_above_overlap": 0.26,
+  "named_errors": 100
+ }
+}

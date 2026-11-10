@@ -1,0 +1,50 @@
+{
+ "_doc": "The held-out judge's reference sources per tile (tools/probes/held_out.py; docs/held-out-judge.md). park: the NPS unit whose NPSpecies checklist judges the tile's species lists. composition: the independent vegetation measure for the same ground (kind vmi_plots: the NPS Vegetation Mapping Inventory's classification plots, an open-format data package in the NPS DataStore; kind yell_maps: Yellowstone's cover-type and habitat-type maps). A tile outside a park with an open checklist has no entry and its checks report 'no reference'. None of these sources is a pipeline input.",
+ "utm12n_396_3988": {
+  "name": "Grand Canyon (South Rim to the river)",
+  "park": "GRCA",
+  "park_name": "Grand Canyon National Park",
+  "composition": {"kind": "vmi_plots", "reference": 2314567, "prefix": "GRCA_PARA_", "zone": "12N",
+   "citation": "Inventory and Monitoring Division. 2022. Field data for the Vegetation Mapping Inventory Project of Grand Canyon National Park, Parashant National Monument - Open Format Data Package. National Park Service. https://doi.org/10.57830/2314567",
+   "licence": "CC0 1.0"}
+ },
+ "utm12n_557_4964": {
+  "name": "Lamar Valley",
+  "park": "YELL",
+  "park_name": "Yellowstone National Park",
+  "composition": {"kind": "yell_maps", "cover_reference": 1045508, "cover_file": 372514, "habitat_reference": 1045618, "habitat_file": 372574,
+   "citation": "Spatial Analysis Center, Yellowstone National Park. Post 1988 Cover Types of Yellowstone National Park (1999 vector version), NPS DataStore 1045508; Yellowstone Vegetation: Consequences of Environment and History in a Natural Setting (habitat types, vector version), NPS DataStore 1045618, after Despain 1990.",
+   "licence": "public domain (US National Park Service work; no licence field on the DataStore record, access and use constraints 'None')"}
+ },
+ "utm12n_514_4838": {
+  "name": "Grand Teton",
+  "park": "GRTE",
+  "park_name": "Grand Teton National Park"
+ },
+ "utm11n_270_4180": {
+  "name": "Yosemite Valley",
+  "park": "YOSE",
+  "park_name": "Yosemite National Park",
+  "composition": {"kind": "vmi_plots", "reference": 2312926, "prefix": "YOSE_DEPO_", "zone": "11N",
+   "citation": "Inventory and Monitoring Division. 2022. Field data for the Vegetation Mapping Inventory Project of Yosemite National Park, Devils Postpile National Monument - Open Format Data Package. National Park Service. https://doi.org/10.57830/2312926",
+   "licence": "CC0 1.0"}
+ },
+ "utm11n_267_4175": {
+  "name": "Yosemite Valley (re-centred)",
+  "park": "YOSE",
+  "park_name": "Yosemite National Park",
+  "composition": {"kind": "vmi_plots", "reference": 2312926, "prefix": "YOSE_DEPO_", "zone": "11N",
+   "citation": "Inventory and Monitoring Division. 2022. Field data for the Vegetation Mapping Inventory Project of Yosemite National Park, Devils Postpile National Monument - Open Format Data Package. National Park Service. https://doi.org/10.57830/2312926",
+   "licence": "CC0 1.0"}
+ },
+ "utm10n_429_5293": {
+  "name": "Hoh rain forest",
+  "park": "OLYM",
+  "park_name": "Olympic National Park"
+ },
+ "utm10n_439_5293": {
+  "name": "Mount Olympus",
+  "park": "OLYM",
+  "park_name": "Olympic National Park"
+ }
+}
