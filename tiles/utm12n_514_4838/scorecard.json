@@ -1,0 +1,532 @@
+{
+ "tile": "utm12n_514_4838",
+ "name": "Teton",
+ "scorecard_version": "1",
+ "about": "How much of what this tile shows is measured, ruled, guessed or blank, per layer (pipeline/scorecard.py; docs/tile-scorecards.md). Each layer states its definitions.",
+ "shares_meaning": {
+  "measured": "from data of this place at the layer's resolution",
+  "ruled": "a hand or named rule applied to a measured class, or a coarser measurement resampled",
+  "guessed": "stand-ins, back-fills, records x niche, generated traits, painted fills",
+  "blank": "nothing known or nothing drawn"
+ },
+ "built_from": {
+  "manifest": "manifest.json",
+  "lidar_dem_only": "terrain/lidar_dem_only.json",
+  "species_mix": "client/species_mix.json",
+  "plant_needs": "species/plant_needs.json",
+  "channels": "hydro/channels.geojson",
+  "animals": "species/animals.json",
+  "fauna": "client/fauna.json",
+  "tile_registry": "species/registry.json"
+ },
+ "built_at": {
+  "manifest": "2026-11-09T04:44:26Z",
+  "animals": "2026-11-09T04:19:34Z",
+  "tile_registry": "2026-11-07T07:23:45Z"
+ },
+ "layers": {
+  "terrain": {
+   "scored": true,
+   "shares": {
+    "measured": 0.9909,
+    "ruled": 0.0091,
+    "guessed": 0.0,
+    "blank": 0.0
+   },
+   "detail": {
+    "source": "usgs_3dep_1m",
+    "source_resolution_m": 1.0,
+    "drawn_resolution_m": 5.0,
+    "share_1m_product": 1.0,
+    "share_ground_from_points": 0.0,
+    "lidar": "1 m DEM only",
+    "point_cloud_share": 0.0,
+    "dem_only_record": true,
+    "road_corridor_share": 0.00908,
+    "surface_model": false
+   },
+   "findings": [],
+   "definition": {
+    "unit": "share of the tile's area",
+    "resolution": "1 m (the ground detail the client draws and the 1 m channels are routed on)",
+    "measured": "ground from a 1 m bare-earth lidar DEM product (terrain.dem_1m coverage.share_1m) or from a lidar point cloud's ground returns where no product exists (terrain/lidar_stats.json ground_from_points.share), less the road corridors re-graded by rule",
+    "ruled": "a coarser measurement of this place resampled to the drawn grid (3DEP seamless 5-10 m, Copernicus 30 m), plus the road corridors whose cut and fill were removed by rule (unroad corridor_share)",
+    "guessed": "none on any tile today (no ground is invented)",
+    "blank": "no ground value (1 - terrain.dem stats.valid_fraction)"
+   }
+  },
+  "canopy_structure": {
+   "scored": true,
+   "shares": {
+    "measured": 0.0,
+    "ruled": 1.0,
+    "guessed": 0.0,
+    "blank": 0.0
+   },
+   "detail": {
+    "point_cloud_share": 0.0,
+    "elsewhere": "LANDFIRE cover and height classes (30 m)",
+    "lidar_status": "dem_only"
+   },
+   "findings": [
+    {
+     "layer": "canopy_structure",
+     "text": "100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m))",
+     "share": 1.0,
+     "of": "tile area",
+     "kind": "ruled"
+    }
+   ],
+   "definition": {
+    "unit": "share of the tile's area",
+    "resolution": "one tree (crown position and height)",
+    "measured": "covered by a lidar point cloud: crowns and heights found in the returns (manifest status.lidar_coverage.point_cloud)",
+    "ruled": "crowns placed by rule to match a canopy map: a satellite canopy-height model (Meta, ETH, 10 m) or LANDFIRE cover and height classes (30 m)",
+    "guessed": "none recorded",
+    "blank": "none recorded",
+    "not_scored": "the understory under the canopy: only the top surface is kept on every tile (vegetation.canopy_height_10m band 3 is shrub cover where the top surface is 0.5-4 m)"
+   }
+  },
+  "plant_communities": {
+   "scored": true,
+   "shares": {
+    "measured": 0.0,
+    "ruled": 0.8902,
+    "guessed": 0.1086,
+    "blank": 0.0012
+   },
+   "detail": {
+    "cells": 110889,
+    "by_kind": {
+     "named": 0.4062,
+     "ground_only": 0.4005,
+     "pool": 0.0995,
+     "water_ice": 0.0835,
+     "backfill": 0.0091,
+     "bare": 0.0012
+    },
+    "by_rule_ignoring_source": {
+     "named": 0.4128,
+     "ground_only": 0.4018,
+     "pool": 0.1007,
+     "water_ice": 0.0835,
+     "bare": 0.0012
+    },
+    "from_bps_backfill": 0.0276,
+    "unmatched": 36,
+    "unmatched_drawn": {
+     "bare (nothing known)": 17,
+     "its named species": 11,
+     "the tile's own species of its habitat class": 8
+    },
+    "natural_regions": []
+   },
+   "findings": [
+    {
+     "layer": "plant_communities",
+     "text": "0% of cells have no community (nothing known) (tile pool grassland; tile pool riparian)",
+     "share": 0.0012,
+     "of": "30 m cells",
+     "kind": "blank"
+    },
+    {
+     "layer": "plant_communities",
+     "text": "10% of cells borrow another community's species (tile pool)",
+     "share": 0.0995,
+     "of": "30 m cells",
+     "kind": "guessed"
+    },
+    {
+     "layer": "plant_communities",
+     "text": "1% of cells are a back-filled class (pre-settlement under developed or farmed land, by the baseline rule), not today's vegetation",
+     "share": 0.0091,
+     "of": "30 m cells",
+     "kind": "guessed"
+    }
+   ],
+   "definition": {
+    "unit": "share of the tile's 30 m cells (species_mix.json communities[].cells)",
+    "resolution": "30 m cell",
+    "measured": "a cell whose species composition is mapped (plot-based maps such as TreeMap): no tile uses one today",
+    "ruled": "a hand rule (pipeline/species_mix.py RULES) or a named_from_* rule (the species the community's name names) applied to a measured existing-vegetation class (source evt); open water and permanent ice (rules that draw no plants); a tile_pool_* community with no woody donor that draws only the grasses and forbs of its own description or the region's ground table (ground_only)",
+    "guessed": "the tile pool (tile_pool_*: another community's species of the same habitat class), research_* (the tile's recorded species weighted by records x niche), habitat_default_* (California's foothill default), and every cell whose class is a back-fill rather than today's vegetation (source bps: pre-settlement LANDFIRE BpS under human land; rewild: former reservoir beds; habitat: no class)",
+    "blank": "a tile_pool_* community with no donor and no ground plants: drawn bare, nothing known"
+   }
+  },
+  "plant_species": {
+   "scored": true,
+   "shares": {
+    "measured": 0.0,
+    "ruled": 0.9994,
+    "guessed": 0.0006,
+    "blank": 0.0
+   },
+   "detail": {
+    "counts": {
+     "canopy": 5,
+     "shrub": 1,
+     "ground": 31
+    },
+    "drawn": {
+     "trees": [
+      "pinus_albicaulis",
+      "pinus_contorta",
+      "pinus_ponderosa",
+      "populus_tremuloides",
+      "pseudotsuga_menziesii"
+     ],
+     "shrubs": [
+      "artemisia_tridentata"
+     ],
+     "ground": [
+      "actaea_rubra",
+      "arnica_cordifolia",
+      "bromus_carinatus",
+      "calamagrostis_canadensis",
+      "carex_geyeri",
+      "carex_hoodii",
+      "carex_rossii",
+      "castilleja_miniata",
+      "delphinium_nuttallianum",
+      "deschampsia_cespitosa",
+      "dryas_octopetala",
+      "elymus_elymoides",
+      "elymus_trachycaulus",
+      "equisetum_arvense",
+      "erigeron_compositus",
+      "erigeron_engelmannii",
+      "eriogonum_umbellatum",
+      "eurybia_conspicua",
+      "festuca_brachyphylla",
+      "festuca_idahoensis",
+      "geranium_viscosissimum",
+      "hesperostipa_comata",
+      "lupinus_argenteus",
+      "maianthemum_stellatum",
+      "mertensia_ciliata",
+      "phlox_pulvinata",
+      "poa_secunda",
+      "poa_wheeleri",
+      "pseudoroegneria_spicata",
+      "saxifraga_bronchialis",
+      "trisetum_spicatum"
+     ]
+    },
+    "stand_ins": {
+     "recorded": false,
+     "entries": [],
+     "note": "not recorded by this build (no `stand_ins` key in species_mix.json); `substitutions` read instead"
+    },
+    "missing": {
+     "recorded": false,
+     "entries": [],
+     "note": "not recorded by this build (no `missing` key in species_mix.json)"
+    },
+    "substitutions": {
+     "pinus_flexilis": "pinus_ponderosa"
+    },
+    "local_records_skipped": 0,
+    "top": [
+     {
+      "species": "artemisia_tridentata",
+      "layer": "shrubs",
+      "share_of_weight": 0.4583,
+      "share": "ruled",
+      "drawn_as": "artemisia_tridentata"
+     },
+     {
+      "species": "pinus_contorta",
+      "layer": "trees",
+      "share_of_weight": 0.3054,
+      "share": "ruled",
+      "drawn_as": "pinus_contorta"
+     },
+     {
+      "species": "pseudotsuga_menziesii",
+      "layer": "trees",
+      "share_of_weight": 0.1735,
+      "share": "ruled",
+      "drawn_as": "pseudotsuga_menziesii"
+     },
+     {
+      "species": "pinus_albicaulis",
+      "layer": "trees",
+      "share_of_weight": 0.0536,
+      "share": "ruled",
+      "drawn_as": "pinus_albicaulis"
+     },
+     {
+      "species": "populus_tremuloides",
+      "layer": "trees",
+      "share_of_weight": 0.0087,
+      "share": "ruled",
+      "drawn_as": "populus_tremuloides"
+     },
+     {
+      "species": "pinus_flexilis",
+      "layer": "trees",
+      "share_of_weight": 0.0006,
+      "share": "guessed",
+      "drawn_as": "pinus_ponderosa"
+     }
+    ],
+    "no_local_record_share": 0.0006,
+    "no_local_record_note": "share of the drawn woody weight whose drawn species is not among the tile's most-recorded GBIF plants (species/plant_needs.json, research.PLANT_LIMIT): common trees can miss that list, so this is a lead, not a finding"
+   },
+   "findings": [
+    {
+     "layer": "plant_species",
+     "text": "one shrub species only (artemisia_tridentata)",
+     "share": null,
+     "of": "shrub layer",
+     "kind": null
+    }
+   ],
+   "definition": {
+    "unit": "share of the tile's drawn woody plant weight (trees and shrubs): each community's cells x its tree or shrub density x a species' share of the weights its rule wrote (species_mix.json communities[])",
+    "resolution": "the species drawn in each 30 m cell",
+    "measured": "a species share taken from a per-cell composition measurement: none on any tile today",
+    "ruled": "drawn as the species the community's rule asked for (it has a library record of its own)",
+    "guessed": "drawn as a stand-in for the species the rule asked for: the mix's `stand_ins` key when the build records it, else `substitutions` (named species -> record drawn), and research_* rows whose note names functional stand-ins of the climate group",
+    "blank": "asked for but drawn as nothing: the mix's `missing` key when recorded, else a substitution to null"
+   }
+  },
+  "ground_texture": {
+   "scored": true,
+   "shares": {
+    "measured": 0.9918,
+    "ruled": 0.0,
+    "guessed": 0.0082,
+    "blank": 0.0
+   },
+   "detail": {
+    "source": "pc_naip",
+    "native_resolution_m": 0.6,
+    "drawn_resolution_m": 2.5,
+    "filled_fraction": 0.0082,
+    "filled_from": "client.texture_imagery mask",
+    "roads_erased_fraction": 0.0071,
+    "urban_erased_fraction": 0.0
+   },
+   "findings": [],
+   "definition": {
+    "unit": "share of the tile's area",
+    "resolution": "2.5 m (client/texture_ground.jpg)",
+    "measured": "the air photo kept where its native resolution is 2.5 m or finer (NAIP 0.6 m)",
+    "ruled": "the photo kept where it is coarser than the texture (Sentinel-2 10 m, resampled)",
+    "guessed": "ground painted in where the photo was replaced: under the 3D crowns, erased roads and buildings (client.texture_ground filled_fraction; on a tile without it, client.texture_imagery mask_fraction)",
+    "blank": "none recorded"
+   }
+  },
+  "water": {
+   "scored": true,
+   "shares": {
+    "measured": 0.368,
+    "ruled": 0.5313,
+    "guessed": 0.0,
+    "blank": 0.1007
+   },
+   "detail": {
+    "drawn_km": 225.03,
+    "confirmed_km": 92.09,
+    "dem_only_km": 132.94,
+    "mapped_undrawn_km": 25.21,
+    "mapped_km": 111.19,
+    "median_offset_m": 6.3,
+    "width_rule": "1.6*A^0.45 clamp 1-30",
+    "imagery_check": {
+     "no water seen": 347,
+     "on water": 6,
+     "off water": 3
+    }
+   },
+   "findings": [
+    {
+     "layer": "water",
+     "text": "53% of stream length is placed by the DEM alone, no mapped stream confirms it",
+     "share": 0.5312,
+     "of": "stream length",
+     "kind": "ruled"
+    },
+    {
+     "layer": "water",
+     "text": "10% of mapped stream length is not drawn",
+     "share": 0.1007,
+     "of": "stream length",
+     "kind": "blank"
+    }
+   ],
+   "definition": {
+    "unit": "share of stream length (km): the drawn channels plus the mapped flowlines left undrawn",
+    "resolution": "the 1 m thalweg (channel position)",
+    "measured": "a drawn channel a mapped flowline confirms (NHDPlus HR in the US, OSM abroad): nhd_matched, or a mapped reach kept where the DEM found none (source nhd)",
+    "ruled": "a channel placed by the flow-accumulation threshold on the DEM with no mapped line to confirm it",
+    "guessed": "none recorded",
+    "blank": "mapped flowline length no drawn channel covers (hydro.channels stats nhd_length_km - nhd_covered_length_km - nhd_kept_length_km; includes the tips dropped by rule)",
+    "not_scored": "stream width, depth and discharge: width is the drainage-area rule (params.width) on every reach of every tile, so it is reported, not scored; lakes and ponds are not scored"
+   }
+  },
+  "animals": {
+   "scored": true,
+   "shares": {
+    "measured": 1.0,
+    "ruled": 0.0,
+    "guessed": 0.0,
+    "blank": 0.0
+   },
+   "detail": {
+    "listed": 89,
+    "by_kind": {
+     "bird": 57,
+     "mammal": 29,
+     "amphibian": 2,
+     "reptile": 1
+    },
+    "kinds_with_none": [
+     "fish",
+     "invertebrate"
+    ],
+    "records_by_kind": {
+     "bird": 149,
+     "mammal": 39,
+     "amphibian": 6,
+     "reptile": 2,
+     "invertebrate": 2
+    },
+    "generated_traits": [],
+    "registry_levels": {
+     "0": 51,
+     "2": 1,
+     "3": 30,
+     "4": 7
+    },
+    "registry_level_not_known": [],
+    "introduced": {
+     "scored": false,
+     "value": "not known",
+     "reason": "no native or introduced field in species/animals.json (native_status, establishment, status, introduced, native, restored)"
+    }
+   },
+   "findings": [
+    {
+     "layer": "animals",
+     "text": "no fish species listed (none in the tile's GBIF records)",
+     "share": null,
+     "of": "the fish kind",
+     "kind": null
+    },
+    {
+     "layer": "animals",
+     "text": "no invertebrate species listed (2 in the records, none listed)",
+     "share": null,
+     "of": "the invertebrate kind",
+     "kind": null
+    }
+   ],
+   "definition": {
+    "unit": "share of the listed species (species/animals.json animals[])",
+    "resolution": "the tile (10 km): is the species here",
+    "measured": "listed with GBIF records on the tile and traits from a published table or a curated card",
+    "ruled": "listed by a range or life-zone rule without records on the tile",
+    "guessed": "listed with generated traits (generated_traits)",
+    "blank": "none by species; kinds with no species at all (fish, ...) are findings instead",
+    "not_scored": "native, introduced or restored: read from a status field on animals[] (STATUS_FIELDS) once the list carries one; none does yet"
+   }
+  },
+  "animal_bodies": {
+   "scored": true,
+   "shares": {
+    "measured": 0.5056,
+    "ruled": 0.0,
+    "guessed": 0.3708,
+    "blank": 0.1236
+   },
+   "detail": {
+    "listed": 89,
+    "own_body": 45,
+    "kin_body": 33,
+    "not_drawn": 11,
+    "not_drawn_why": {
+     "over the 40-slot cap": 11
+    }
+   },
+   "findings": [
+    {
+     "layer": "animal_bodies",
+     "text": "33 of 89 listed animals wear a kin's body",
+     "share": 0.3708,
+     "of": "listed species",
+     "kind": "guessed"
+    },
+    {
+     "layer": "animal_bodies",
+     "text": "11 of 89 listed animals are not drawn",
+     "share": 0.1236,
+     "of": "listed species",
+     "kind": "blank"
+    }
+   ],
+   "definition": {
+    "unit": "share of the listed species (client/fauna.json)",
+    "resolution": "one animal",
+    "measured": "drawn with a body of its own: a curated client species (fauna.json allow) or a slot with its own model file",
+    "ruled": "none (no rule makes a body from a measurement)",
+    "guessed": "drawn with a kin's body, scaled and tinted (fauna.json slots[].kin, no model of its own)",
+    "blank": "listed but not drawn (fauna.json skipped[], or absent from allow and slots)"
+   }
+  }
+ },
+ "findings": [
+  {
+   "layer": "canopy_structure",
+   "text": "100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m))",
+   "share": 1.0,
+   "of": "tile area",
+   "kind": "ruled"
+  },
+  {
+   "layer": "plant_species",
+   "text": "one shrub species only (artemisia_tridentata)",
+   "share": null,
+   "of": "shrub layer",
+   "kind": null
+  },
+  {
+   "layer": "animals",
+   "text": "no fish species listed (none in the tile's GBIF records)",
+   "share": null,
+   "of": "the fish kind",
+   "kind": null
+  },
+  {
+   "layer": "animals",
+   "text": "no invertebrate species listed (2 in the records, none listed)",
+   "share": null,
+   "of": "the invertebrate kind",
+   "kind": null
+  },
+  {
+   "layer": "animal_bodies",
+   "text": "33 of 89 listed animals wear a kin's body",
+   "share": 0.3708,
+   "of": "listed species",
+   "kind": "guessed"
+  },
+  {
+   "layer": "water",
+   "text": "53% of stream length is placed by the DEM alone, no mapped stream confirms it",
+   "share": 0.5312,
+   "of": "stream length",
+   "kind": "ruled"
+  }
+ ],
+ "not_scored": {
+  "sea": "no layer: the coast has no sea floor, tides or surf on any tile",
+  "weather_and_seasons": "one ERA5 series per tile (client/weather.json); no per-cell share to score",
+  "sound": "synthesised in the client; the build writes no sound document"
+ },
+ "judge": {
+  "held_out": null,
+  "note": "no judge/held_out.json on this tile (the held-out judge writes it)"
+ }
+}

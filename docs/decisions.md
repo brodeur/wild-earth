@@ -8733,3 +8733,44 @@ code changed.
   checked the licences on the web; four were re-read on the providers' pages.
 - **Started on Aaron's "Yes, start them":** a tile scorecard from every build; no stand-ins across regions; a wider
   judge (composition and eye-level photos). Each is its own lane.
+
+## 2026-11-10: every build says how good its tile is: the scorecard (pipeline/scorecard.py, pipeline/steps.py, tests/test_scorecard.py, docs/tile-scorecards.md, tiles/*/scorecard.json; claude/tile-scorecard-b8ad23)
+
+Recommendation 1 of the pipeline review. What section 3 of the review computed by hand is now an output of the build.
+
+- **What it writes.** `tiles/<tile>/scorecard.json`, by a new `scorecard` step that runs after every step but the
+  licence audit (games stage, fingerprinted on every upstream output, `library/*.json` and the held-out judge file),
+  and `python -m pipeline.scorecard --tile <id> | --all`. `--all` prints a table and writes `docs/tile-scorecards.md`.
+  It reads only the documents the build already writes; it fetches nothing and opens no raster.
+- **Four shares per layer**, summing to 1: measured (data of this place at the layer's resolution), ruled (a rule on a
+  measured class, or a coarser measurement resampled), guessed (stand-ins, back-fills, pools, records x niche,
+  generated traits, painted fills), blank (nothing known or drawn). Eight layers: terrain, canopy structure, plant
+  communities, plant species, ground texture, streams, animals, animal bodies. Each states its own definitions in the
+  module and the JSON. Where a build does not record what a layer needs, it says "not scored" with the reason.
+- **Worst findings** per tile in plain words, ranked by the share of their layer affected; a ruled share counts half
+  (a 30 m DEM is less unknown than a guessed species list) and a whole missing kind counts as half a layer.
+- **Checked against the review, section 3.** The named-rule shares agree (Grand Canyon 31%, Lamar 61%, Teton 41%,
+  Hoh 1%, the five global tiles records x niche on 99-100%). The review's "hand rule" column is wrong outside
+  California: no hand rule matches on Grand Canyon, Lamar or Teton. What it counted as hand rules is the tile pool
+  (another community's species: Grand Canyon 27%, Lamar 13%, Teton 10%) and communities with no woody donor that draw
+  only the grasses and forbs of their own description (Lamar 23%, Teton 40%). Its "nothing known" includes open water
+  and ice: Teton's 8% is water 6.6% and ice 1.7%, with 0.1% truly bare; Grand Canyon 41% bare plus 0.6% water; Lamar
+  1.3% plus 1.8%. On the California tiles "hand rule 99-100%" holds by rule, but up to 56% of their cells (San
+  Francisco south; 36% at home) are back-filled pre-settlement classes under developed or farmed land, which the
+  scorecard counts as guessed. Also: the Hoh has no 1 m DEM product (55% of its ground is the point cloud's ground
+  returns, the rest the 3DEP seamless service), so "3DEP 1 m on 12 US tiles" is 11; satellite canopy height is on 5
+  tiles, not 6; Manu as well as Corcovado has no shrub and no ground species; Lamar and Teton draw one shrub species
+  (big sagebrush).
+- **Found while scoring** (for the pipeline): no tile has a fish in its GBIF records although class 204 is fetched,
+  which points at the fetch, not the rivers; `fetch_dem._from_usgs` records `source_resolution_m: 1.0` for the 3DEP
+  seamless service whatever it serves, so Olympus's native resolution is unrecorded; `library/registry.json` (dated
+  2026-11-06) and the tile's own registry together lack 5-20 listed animals on 11 tiles; the plant fetch keeps the 150 most-recorded species, so "no GBIF
+  record on the tile" is a lead, not a finding (kept in the detail only); lexicon borrowings (Sierra juniper in
+  Arizona) are not stand-ins in `substitutions`, so the plant species layer cannot see them until the regional
+  stand-ins lane's `stand_ins` and `missing` keys exist, which it reads when present.
+- **Not scored, and why:** the understory (only the top surface is kept), stream width and discharge (one area rule
+  everywhere), native or introduced status (no field yet; read from `animals[]` once one exists, per the baseline
+  decided today), sea, weather and sound (no per-cell document).
+- **Not in the manifests yet.** The step was run in the graph on a scratch copy of Lamar (ok, then current on the next
+  plan). The committed tiles' manifests were not rewritten, to keep this branch clear of the other lanes' rebuilds;
+  the next build of each tile records the step.
