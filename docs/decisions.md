@@ -9312,3 +9312,23 @@ understory of thimbleberry on three records.
   member on three records stood at 0.5, its carpet at its whole share. The whole suite: 407 tests, one failure in
   the run (`test_hub` `test_travel_together`, the known flaky one; it passes alone).
 - **Not looked at.** No eye-level capture of the thinner layers was taken.
+
+## 2026-11-11: the records-only shrub density merged; what the check on main found (merge of claude/elated-jackson-91da74)
+
+- **Checked before the merge.** The whole suite in the lane's worktree: 407 tests, all pass. The 15 tiles outside
+  the rule have both mix rasters byte-identical to main's; the three density rasters that changed match the
+  hashes their manifests record. The other tiles' documents gain one encoding line and new dates, nothing else.
+- **On main after it.** The three density rasters were carried over (the old ones are in
+  `scratch/pre-recorded-support/`). The held-out judge re-run gives the lane's numbers: shrub Bray-Curtis Grand
+  Canyon 0.6445, Lamar 0.3201, Yosemite 0.5541.
+- **At eye level.** Lamar's lodgepole and Teton's lodgepole and spruce-fir were captured at the poses of the
+  entry before last, with no shader errors. The views are the same as before to the eye: these poses are under
+  closed canopy, where the canopy raster maps no shrub cover and so few shrubs were drawn either way. The change
+  shows only where LANDFIRE maps shrub cover inside these communities; no such view was taken.
+- **The call that stays weak.** Lamar's grouse whortleberry carpet under lodgepole is now 0.17 of the shrub cover
+  on five open records, though it is the common understory there. The rule measures how much evidence there is,
+  not how common the plant is; a community few people photograph is drawn thin. More evidence is the remedy
+  (the CC BY-NC count, still Aaron's call).
+- **Not changed, and waiting on Aaron's word:** the same own-cell weighting for an associate added after listed
+  species. The lane's what-if is in the entry above (the associates' share under Grand Canyon ponderosa 0.50 to
+  0.22, on the Teton steppe 0.29 to 0.06).
