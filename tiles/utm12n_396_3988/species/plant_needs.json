@@ -435,7 +435,7 @@
    "why": [
     "recorded on the cells of EVT 9001 Colorado Plateau Mixed Bedrock Canyon and Tableland (12 of its 22 open records near the tile, 1.63 times the rate of plants in general; 42161 cells)"
    ],
-   "cover": 0.1399,
+   "cover": 0.1578,
    "records": 144,
    "record": false,
    "card": false,
@@ -443,6 +443,23 @@
    "queued": "needs a growth form first: a cactus (Cactaceae), and the client's generator (client/src/treegen.js) draws leafy crowns on woody stems; then a trait card",
    "no_growth_form": "a cactus (Cactaceae)",
    "rank": 3
+  },
+  {
+   "id": "opuntia_polyacantha",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 9001 Colorado Plateau Mixed Bedrock Canyon and Tableland (12 of its 23 open records near the tile, 1.56 times the rate of plants in general; 42161 cells)",
+    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (8 of its 23 open records near the tile, 1.67 times the rate of plants in general; 12829 cells)",
+    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (8 of its 23 open records near the tile, 1.67 times the rate of plants in general; 117 cells)"
+   ],
+   "cover": 0.1188,
+   "records": 135,
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a growth form first: a cactus (Cactaceae), and the client's generator (client/src/treegen.js) draws leafy crowns on woody stems; then a trait card",
+   "no_growth_form": "a cactus (Cactaceae)",
+   "rank": 4
   },
   {
    "id": "coleogyne_ramosissima",
@@ -457,7 +474,7 @@
    "record": true,
    "card": true,
    "drawn_as": "coleogyne_ramosissima",
-   "rank": 4
+   "rank": 5
   },
   {
    "id": "quercus_gambelii",
@@ -473,23 +490,6 @@
    "record": true,
    "card": true,
    "drawn_as": "quercus_gambelii",
-   "rank": 5
-  },
-  {
-   "id": "opuntia_polyacantha",
-   "kind": "shrub",
-   "why": [
-    "recorded on the cells of EVT 9001 Colorado Plateau Mixed Bedrock Canyon and Tableland (12 of its 23 open records near the tile, 1.56 times the rate of plants in general; 42161 cells)",
-    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (8 of its 23 open records near the tile, 1.67 times the rate of plants in general; 12829 cells)",
-    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (8 of its 23 open records near the tile, 1.67 times the rate of plants in general; 117 cells)"
-   ],
-   "cover": 0.0916,
-   "records": 135,
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a growth form first: a cactus (Cactaceae), and the client's generator (client/src/treegen.js) draws leafy crowns on woody stems; then a trait card",
-   "no_growth_form": "a cactus (Cactaceae)",
    "rank": 6
   },
   {
@@ -517,7 +517,7 @@
     "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)",
     "named by EVT 7086 Rocky Mountain Lower Montane-Foothill Shrubland (92 cells)"
    ],
-   "cover": 0.0704,
+   "cover": 0.0793,
    "records": 237,
    "record": true,
    "card": true,
@@ -531,7 +531,7 @@
     "recorded on the cells of EVT 9001 Colorado Plateau Mixed Bedrock Canyon and Tableland (10 of its 20 open records near the tile, 1.49 times the rate of plants in general; 42161 cells)",
     "recorded on the cells of EVT 7078 Colorado Plateau Blackbrush-Mormon-tea Shrubland (9 of its 20 open records near the tile, 16.98 times the rate of plants in general; 19780 cells)"
    ],
-   "cover": 0.0674,
+   "cover": 0.0653,
    "records": 77,
    "record": false,
    "card": false,
@@ -548,7 +548,7 @@
     "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (5 of its 14 open records near the tile, 1.71 times the rate of plants in general; 12829 cells)",
     "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (5 of its 14 open records near the tile, 1.71 times the rate of plants in general; 117 cells)"
    ],
-   "cover": 0.0505,
+   "cover": 0.0417,
    "records": 211,
    "record": false,
    "card": false,
@@ -603,39 +603,6 @@
    "rank": 13
   },
   {
-   "id": "atriplex_canescens",
-   "kind": "shrub",
-   "why": [
-    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 12829 cells)",
-    "named by EVT 7087 Sonora-Mojave Creosotebush-White Bursage Desert Scrub (5408 cells)",
-    "named by EVT 7082 Mojave Mid-Elevation Mixed Desert Scrub (2453 cells)",
-    "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)",
-    "named by EVT 7081 Inter-Mountain Basins Mixed Salt Desert Scrub (422 cells)",
-    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 117 cells)"
-   ],
-   "cover": 0.0296,
-   "records": 0,
-   "record": true,
-   "card": true,
-   "drawn_as": "atriplex_canescens",
-   "rank": 14
-  },
-  {
-   "id": "ostrya_knowltonii",
-   "kind": "shrub",
-   "why": [
-    "recorded on the cells of EVT 9001 Colorado Plateau Mixed Bedrock Canyon and Tableland (6 of its 6 open records near the tile, 2.99 times the rate of plants in general; 42161 cells)",
-    "canopy: records (GBIF: 23 records on the tile; height not yet screened)"
-   ],
-   "cover": 0.0278,
-   "records": 23,
-   "scientific": "Ostrya knowltonii",
-   "record": true,
-   "card": true,
-   "drawn_as": "ostrya_knowltonii",
-   "rank": 15
-  },
-  {
    "id": "artemisia_tridentata",
    "kind": "shrub",
    "why": [
@@ -653,7 +620,25 @@
    "record": true,
    "card": true,
    "drawn_as": "artemisia_tridentata",
-   "rank": 16
+   "rank": 14
+  },
+  {
+   "id": "atriplex_canescens",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 12829 cells)",
+    "named by EVT 7087 Sonora-Mojave Creosotebush-White Bursage Desert Scrub (5408 cells)",
+    "named by EVT 7082 Mojave Mid-Elevation Mixed Desert Scrub (2453 cells)",
+    "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)",
+    "named by EVT 7081 Inter-Mountain Basins Mixed Salt Desert Scrub (422 cells)",
+    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 117 cells)"
+   ],
+   "cover": 0.0246,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "atriplex_canescens",
+   "rank": 15
   },
   {
    "id": "mahonia_repens",
@@ -667,20 +652,7 @@
    "record": true,
    "card": true,
    "drawn_as": "mahonia_repens",
-   "rank": 17
-  },
-  {
-   "id": "chamaebatiaria_millefolium",
-   "kind": "shrub",
-   "why": [
-    "recorded on the cells of EVT 9001 Colorado Plateau Mixed Bedrock Canyon and Tableland (8 of its 17 open records near the tile, 1.41 times the rate of plants in general; 42161 cells)"
-   ],
-   "cover": 0.0233,
-   "records": 428,
-   "record": true,
-   "card": true,
-   "drawn_as": "chamaebatiaria_millefolium",
-   "rank": 18
+   "rank": 16
   },
   {
    "id": "opuntia_basilaris",
@@ -696,7 +668,22 @@
    "drawn_as": null,
    "queued": "needs a growth form first: a cactus (Cactaceae), and the client's generator (client/src/treegen.js) draws leafy crowns on woody stems; then a trait card",
    "no_growth_form": "a cactus (Cactaceae)",
-   "rank": 19
+   "rank": 17
+  },
+  {
+   "id": "ostrya_knowltonii",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 9001 Colorado Plateau Mixed Bedrock Canyon and Tableland (6 of its 6 open records near the tile, 2.99 times the rate of plants in general; 42161 cells)",
+    "canopy: records (GBIF: 23 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.019,
+   "records": 23,
+   "scientific": "Ostrya knowltonii",
+   "record": true,
+   "card": true,
+   "drawn_as": "ostrya_knowltonii",
+   "rank": 18
   },
   {
    "id": "rosa_woodsii",
@@ -717,7 +704,7 @@
    "record": true,
    "card": true,
    "drawn_as": "rosa_woodsii",
-   "rank": 20
+   "rank": 19
   },
   {
    "id": "amelanchier_utahensis",
@@ -734,34 +721,20 @@
    "record": true,
    "card": true,
    "drawn_as": "amelanchier_utahensis",
-   "rank": 21
+   "rank": 20
   },
   {
-   "id": "ptelea_trifoliata",
+   "id": "chamaebatiaria_millefolium",
    "kind": "shrub",
    "why": [
-    "recorded on the cells of EVT 9001 Colorado Plateau Mixed Bedrock Canyon and Tableland (5 of its 7 open records near the tile, 2.13 times the rate of plants in general; 42161 cells)"
+    "recorded on the cells of EVT 9001 Colorado Plateau Mixed Bedrock Canyon and Tableland (8 of its 17 open records near the tile, 1.41 times the rate of plants in general; 42161 cells)"
    ],
    "cover": 0.0175,
-   "records": 64,
+   "records": 428,
    "record": true,
    "card": true,
-   "drawn_as": "ptelea_trifoliata",
-   "rank": 22
-  },
-  {
-   "id": "shepherdia_rotundifolia",
-   "kind": "shrub",
-   "why": [
-    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (4 of its 12 open records near the tile, 1.6 times the rate of plants in general; 12829 cells)",
-    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (4 of its 12 open records near the tile, 1.6 times the rate of plants in general; 117 cells)"
-   ],
-   "cover": 0.015,
-   "records": 12,
-   "record": true,
-   "card": true,
-   "drawn_as": "shepherdia_rotundifolia",
-   "rank": 23
+   "drawn_as": "chamaebatiaria_millefolium",
+   "rank": 21
   },
   {
    "id": "pseudotsuga_menziesii",
@@ -776,7 +749,7 @@
    "record": true,
    "card": false,
    "drawn_as": "pseudotsuga_menziesii",
-   "rank": 24
+   "rank": 22
   },
   {
    "id": "robinia_neomexicana",
@@ -790,7 +763,7 @@
    "record": true,
    "card": true,
    "drawn_as": "robinia_neomexicana",
-   "rank": 25
+   "rank": 23
   },
   {
    "id": "encelia_farinosa",
@@ -804,7 +777,21 @@
    "record": true,
    "card": true,
    "drawn_as": "encelia_farinosa",
-   "rank": 26
+   "rank": 24
+  },
+  {
+   "id": "shepherdia_rotundifolia",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (4 of its 12 open records near the tile, 1.6 times the rate of plants in general; 12829 cells)",
+    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (4 of its 12 open records near the tile, 1.6 times the rate of plants in general; 117 cells)"
+   ],
+   "cover": 0.011,
+   "records": 12,
+   "record": true,
+   "card": true,
+   "drawn_as": "shepherdia_rotundifolia",
+   "rank": 25
   },
   {
    "id": "cercis_orbiculata",
@@ -819,23 +806,7 @@
    "card": false,
    "drawn_as": "robinia_neomexicana",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 27
-  },
-  {
-   "id": "cylindropuntia_whipplei",
-   "kind": "shrub",
-   "why": [
-    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 12829 cells)",
-    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 117 cells)"
-   ],
-   "cover": 0.009,
-   "records": 32,
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a growth form first: a cactus (Cactaceae), and the client's generator (client/src/treegen.js) draws leafy crowns on woody stems; then a trait card",
-   "no_growth_form": "a cactus (Cactaceae)",
-   "rank": 28
+   "rank": 26
   },
   {
    "id": "juniperus_scopulorum",
@@ -850,23 +821,20 @@
    "card": false,
    "drawn_as": "juniperus_osteosperma",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 29
+   "rank": 27
   },
   {
-   "id": "opuntia_engelmannii",
+   "id": "ptelea_trifoliata",
    "kind": "shrub",
    "why": [
-    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 12829 cells)",
-    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 117 cells)"
+    "recorded on the cells of EVT 9001 Colorado Plateau Mixed Bedrock Canyon and Tableland (5 of its 7 open records near the tile, 2.13 times the rate of plants in general; 42161 cells)"
    ],
-   "cover": 0.0075,
-   "records": 53,
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a growth form first: a cactus (Cactaceae), and the client's generator (client/src/treegen.js) draws leafy crowns on woody stems; then a trait card",
-   "no_growth_form": "a cactus (Cactaceae)",
-   "rank": 30
+   "cover": 0.0082,
+   "records": 64,
+   "record": true,
+   "card": true,
+   "drawn_as": "ptelea_trifoliata",
+   "rank": 28
   },
   {
    "id": "acer_negundo",
@@ -885,21 +853,7 @@
    "card": false,
    "drawn_as": "acer_grandidentatum",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 31
-  },
-  {
-   "id": "ribes_cereum",
-   "kind": "shrub",
-   "why": [
-    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (3 of its 8 open records near the tile, 1.8 times the rate of plants in general; 12829 cells)",
-    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (3 of its 8 open records near the tile, 1.8 times the rate of plants in general; 117 cells)"
-   ],
-   "cover": 0.0064,
-   "records": 56,
-   "record": true,
-   "card": true,
-   "drawn_as": "ribes_cereum",
-   "rank": 32
+   "rank": 29
   },
   {
    "id": "populus_fremontii",
@@ -917,7 +871,23 @@
    "record": true,
    "card": false,
    "drawn_as": "populus_fremontii",
-   "rank": 33
+   "rank": 30
+  },
+  {
+   "id": "cylindropuntia_whipplei",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 12829 cells)",
+    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 117 cells)"
+   ],
+   "cover": 0.005,
+   "records": 32,
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a growth form first: a cactus (Cactaceae), and the client's generator (client/src/treegen.js) draws leafy crowns on woody stems; then a trait card",
+   "no_growth_form": "a cactus (Cactaceae)",
+   "rank": 31
   },
   {
    "id": "echinocereus_engelmannii",
@@ -932,7 +902,7 @@
    "drawn_as": null,
    "queued": "needs a growth form first: a cactus (Cactaceae), and the client's generator (client/src/treegen.js) draws leafy crowns on woody stems; then a trait card",
    "no_growth_form": "a cactus (Cactaceae)",
-   "rank": 34
+   "rank": 32
   },
   {
    "id": "symphoricarpos_longiflorus",
@@ -946,6 +916,36 @@
    "record": true,
    "card": true,
    "drawn_as": "symphoricarpos_longiflorus",
+   "rank": 33
+  },
+  {
+   "id": "opuntia_engelmannii",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 12829 cells)",
+    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 117 cells)"
+   ],
+   "cover": 0.0041,
+   "records": 53,
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a growth form first: a cactus (Cactaceae), and the client's generator (client/src/treegen.js) draws leafy crowns on woody stems; then a trait card",
+   "no_growth_form": "a cactus (Cactaceae)",
+   "rank": 34
+  },
+  {
+   "id": "ribes_cereum",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (3 of its 8 open records near the tile, 1.8 times the rate of plants in general; 12829 cells)",
+    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (3 of its 8 open records near the tile, 1.8 times the rate of plants in general; 117 cells)"
+   ],
+   "cover": 0.0035,
+   "records": 56,
+   "record": true,
+   "card": true,
+   "drawn_as": "ribes_cereum",
    "rank": 35
   },
   {
@@ -2845,30 +2845,12 @@
    ]
   },
   {
-   "id": "cylindropuntia_whipplei",
-   "kind": "shrub",
-   "what": "a succulent growth form in the client, then a trait card",
-   "why": [
-    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 12829 cells)",
-    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 117 cells)"
-   ]
-  },
-  {
    "id": "juniperus_scopulorum",
    "kind": "tree",
    "what": "a trait card",
    "why": [
     "in the description of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (12829 cells)",
     "in the description of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (117 cells)"
-   ]
-  },
-  {
-   "id": "opuntia_engelmannii",
-   "kind": "shrub",
-   "what": "a succulent growth form in the client, then a trait card",
-   "why": [
-    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 12829 cells)",
-    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 117 cells)"
    ]
   },
   {
@@ -2881,11 +2863,29 @@
    ]
   },
   {
+   "id": "cylindropuntia_whipplei",
+   "kind": "shrub",
+   "what": "a succulent growth form in the client, then a trait card",
+   "why": [
+    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 12829 cells)",
+    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 117 cells)"
+   ]
+  },
+  {
    "id": "echinocereus_engelmannii",
    "kind": "shrub",
    "what": "a succulent growth form in the client, then a trait card",
    "why": [
     "recorded on the cells of EVT 7087 Sonora-Mojave Creosotebush-White Bursage Desert Scrub (4 of its 11 open records near the tile, 17.9 times the rate of plants in general; 5408 cells)"
+   ]
+  },
+  {
+   "id": "opuntia_engelmannii",
+   "kind": "shrub",
+   "what": "a succulent growth form in the client, then a trait card",
+   "why": [
+    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 12829 cells)",
+    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 117 cells)"
    ]
   },
   {

@@ -21,9 +21,9 @@
   "judge": "judge/held_out.json"
  },
  "built_at": {
-  "manifest": "2026-11-11T00:48:08Z",
+  "manifest": "2026-11-11T17:47:15Z",
   "animals": "2026-11-09T05:18:39Z",
-  "tile_registry": "2026-11-11T00:48:08Z"
+  "tile_registry": "2026-11-11T17:47:15Z"
  },
  "layers": {
   "terrain": {
@@ -153,8 +153,8 @@
    "scored": true,
    "shares": {
     "measured": 0.0,
-    "ruled": 0.986,
-    "guessed": 0.0139,
+    "ruled": 0.9859,
+    "guessed": 0.014,
     "blank": 0.0001
    },
    "detail": {
@@ -266,96 +266,96 @@
      {
       "species": "artemisia_tridentata",
       "layer": "shrubs",
-      "share_of_weight": 0.3484,
+      "share_of_weight": 0.3526,
       "share": "ruled",
       "drawn_as": "artemisia_tridentata"
      },
      {
       "species": "pinus_contorta",
       "layer": "trees",
-      "share_of_weight": 0.2783,
+      "share_of_weight": 0.2817,
       "share": "ruled",
       "drawn_as": "pinus_contorta"
      },
      {
       "species": "pseudotsuga_menziesii",
       "layer": "trees",
-      "share_of_weight": 0.1257,
+      "share_of_weight": 0.1272,
       "share": "ruled",
       "drawn_as": "pseudotsuga_menziesii"
      },
      {
       "species": "symphoricarpos_albus",
       "layer": "shrubs",
-      "share_of_weight": 0.0779,
+      "share_of_weight": 0.0789,
       "share": "ruled",
       "drawn_as": "symphoricarpos_albus"
      },
      {
       "species": "abies_lasiocarpa",
       "layer": "trees",
-      "share_of_weight": 0.0395,
+      "share_of_weight": 0.04,
       "share": "ruled",
       "drawn_as": "abies_lasiocarpa"
      },
      {
       "species": "rosa_woodsii",
       "layer": "shrubs",
-      "share_of_weight": 0.0225,
+      "share_of_weight": 0.0228,
       "share": "ruled",
       "drawn_as": "rosa_woodsii"
      },
      {
       "species": "populus_tremuloides",
       "layer": "trees",
-      "share_of_weight": 0.0223,
+      "share_of_weight": 0.0226,
       "share": "ruled",
       "drawn_as": "populus_tremuloides"
      },
      {
       "species": "picea_engelmannii",
       "layer": "trees",
-      "share_of_weight": 0.0201,
+      "share_of_weight": 0.0204,
       "share": "ruled",
       "drawn_as": "picea_engelmannii"
      },
      {
       "species": "pinus_albicaulis",
       "layer": "trees",
-      "share_of_weight": 0.0176,
+      "share_of_weight": 0.0178,
       "share": "ruled",
       "drawn_as": "pinus_albicaulis"
      },
      {
       "species": "salix_boothii",
       "layer": "shrubs",
-      "share_of_weight": 0.0141,
+      "share_of_weight": 0.0143,
       "share": "ruled",
       "drawn_as": "salix_boothii"
-     },
-     {
-      "species": "shepherdia_canadensis",
-      "layer": "shrubs",
-      "share_of_weight": 0.0141,
-      "share": "ruled",
-      "drawn_as": "shepherdia_canadensis"
      },
      {
       "species": "salix_bebbiana",
       "layer": "shrubs",
-      "share_of_weight": 0.0134,
+      "share_of_weight": 0.0135,
       "share": "guessed",
       "drawn_as": "salix_boothii"
+     },
+     {
+      "species": "pinus_flexilis",
+      "layer": "trees",
+      "share_of_weight": 0.0032,
+      "share": "ruled",
+      "drawn_as": "pinus_flexilis"
      }
     ],
-    "no_local_record_share": 0.3974,
+    "no_local_record_share": 0.3901,
     "no_local_record_note": "share of the drawn woody weight whose drawn species is not among the tile's most-recorded GBIF plants (species/plant_needs.json, research.PLANT_LIMIT): common trees can miss that list, so this is a lead, not a finding"
    },
    "findings": [
     {
      "layer": "plant_species",
      "text": "3% of the shrub weight is drawn as a stand-in",
-     "share": 0.0139,
+     "share": 0.014,
      "of": "woody plant weight",
      "kind": "guessed"
     }
@@ -624,7 +624,7 @@
    "format": 1,
    "tile": "utm12n_557_4964",
    "name": "Lamar Valley",
-   "at": "2026-11-11T00:49:44Z",
+   "at": "2026-11-11T17:47:48Z",
    "doc": "docs/held-out-judge.md",
    "checks": {
     "species_lists": {
@@ -1476,10 +1476,10 @@
      "drawn_from": "client/species_mix.json: plants drawn per species (cells x density x weight), by layer",
      "measure": "per layer, on genus shares: Bray-Curtis dissimilarity (0 same, 1 nothing in common); foreign share = drawn share in genera the reference does not record on this ground; missed share = reference share in genera not drawn in that layer",
      "scores": {
-      "bray_curtis_mean": 0.4426,
+      "bray_curtis_mean": 0.4413,
       "bray_curtis": {
        "canopy": 0.3344,
-       "shrub": 0.324,
+       "shrub": 0.3201,
        "ground": 0.6695
       },
       "foreign_share": {
@@ -1515,15 +1515,15 @@
        }
       },
       "shrub": {
-       "bray_curtis": 0.324,
+       "bray_curtis": 0.3201,
        "foreign_share": null,
        "missed_share": 0.2209,
        "drawn": {
-        "artemisia": 0.7068,
-        "symphoricarpos": 0.1584,
-        "rosa": 0.054,
-        "salix": 0.0472,
-        "shepherdia": 0.0291,
+        "artemisia": 0.7242,
+        "symphoricarpos": 0.1623,
+        "rosa": 0.0553,
+        "salix": 0.0483,
+        "shepherdia": 0.0053,
         "prunus": 0.0032,
         "amelanchier": 0.0014
        },
@@ -2028,7 +2028,7 @@
     },
     "composition_bray_curtis": {
      "canopy": 0.3344,
-     "shrub": 0.324,
+     "shrub": 0.3201,
      "ground": 0.6695
     },
     "composition_foreign_share": {

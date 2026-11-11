@@ -15,7 +15,7 @@
   43.78492414769734
  ],
  "size_m": 10000,
- "generated_at": "2026-11-11T00:48:17Z",
+ "generated_at": "2026-11-11T17:47:07Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -6414,7 +6414,7 @@
     "shrub": 23,
     "ground": 26
    },
-   "sha256": "e7bf0ef0a0c98ffedd7bc7fee45b3bf64f93a021f68a378f5391267ff587e631",
+   "sha256": "5def84fb5a6fa1d075b2e435226388126acfecda8b4843bb1b67485bb4b0ca93",
    "bytes": 67958
   },
   "client.species_mix": {
@@ -6436,8 +6436,8 @@
      "bytes": 46424
     },
     "client/species_mix_density.png": {
-     "sha256": "d00a3c09dea672d16a1a7cff349adf51d4a50eceaeda5175c479296772cbd4b9",
-     "bytes": 33570
+     "sha256": "90d8bc3220cba3d65f1722417952d34906f146de78a1cdeda4d872c283206610",
+     "bytes": 37323
     }
    },
    "derived_from": [
@@ -6542,19 +6542,19 @@
      "populus_angustifolia": 0.036
     },
     "shrub_share": {
-     "snowberry": 0.0522,
-     "creek_dogwood": 0.0139,
-     "artemisia_tridentata": 0.4867,
-     "ceanothus_velutinus": 0.0576,
-     "lonicera_utahensis": 0.0413,
-     "rubus_parviflorus": 0.0608,
-     "vaccinium_scoparium": 0.0061,
-     "amelanchier_alnifolia": 0.0173,
-     "prunus_virginiana": 0.0742,
-     "purshia_tridentata": 0.1218,
-     "rosa_woodsii": 0.0256,
-     "sorbus_scopulina": 0.0186,
-     "tetradymia_canescens": 0.0239
+     "snowberry": 0.0562,
+     "creek_dogwood": 0.0149,
+     "artemisia_tridentata": 0.5234,
+     "ceanothus_velutinus": 0.0529,
+     "lonicera_utahensis": 0.0318,
+     "rubus_parviflorus": 0.0116,
+     "vaccinium_scoparium": 0.0065,
+     "amelanchier_alnifolia": 0.0186,
+     "prunus_virginiana": 0.0798,
+     "purshia_tridentata": 0.131,
+     "rosa_woodsii": 0.0276,
+     "sorbus_scopulina": 0.02,
+     "tetradymia_canescens": 0.0257
     },
     "ground_share": {
      "actaea_rubra": 0.0163,
@@ -6593,7 +6593,7 @@
      "phyllodoce_empetriformis": 0.2117
     },
     "mean_tree_density": 0.3344,
-    "mean_shrub_density": 0.3484,
+    "mean_shrub_density": 0.324,
     "rules": {
      "named_from_phyllodoce_empetriformis": 0.2981,
      "named_from_artemisia_tridentata": 0.2432,
@@ -6618,8 +6618,8 @@
     "rows_with_herb_cover": 19,
     "evh_synthetic": false
    },
-   "sha256": "117d62e47830f49d952eb8a8015ce4aed501e5f707bc3bce8c0ec76b33cc8329",
-   "bytes": 145980
+   "sha256": "a06dd03f589a266fdc43ea2cc8c5607c02f2d197c5201f0a7fdce08e43450a20",
+   "bytes": 146779
   },
   "species.list": {
    "path": "species/species.json",
@@ -6936,8 +6936,8 @@
    "animals_present": 89,
    "animals_queued": 53,
    "cards_queued": 23,
-   "sha256": "3ea00669da4628bcc2a8772ec678fa9ea2bdfca752d8ca5be4f7ecb488a766bb",
-   "bytes": 98124
+   "sha256": "fc2b94d071c2b5169d572a385c782d5f3fdb739a53f17612fb1e5f6d087dddc4",
+   "bytes": 98121
   },
   "client.fauna": {
    "path": "client/fauna.json",
@@ -10139,6 +10139,36 @@
    "at": "2026-11-11T00:48:16Z",
    "seconds": 0.8,
    "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-11T17:42:02Z",
+   "seconds": 3.4,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-11T17:42:03Z",
+   "seconds": 0.5,
+   "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-11T17:47:04Z",
+   "seconds": 4.3,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-11T17:47:06Z",
+   "seconds": 2.2,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-11T17:47:07Z",
+   "seconds": 0.8,
+   "ok": true
   }
  ],
  "steps": {
@@ -11058,14 +11088,14 @@
   },
   "plants": {
    "version": "5",
-   "code": "7af4b8a37dfac1e1",
+   "code": "8239b2dcd1387e0b",
    "params": {
     "tile": "utm12n_514_4838"
    },
-   "fingerprint": "4437a75592dcb5c6",
+   "fingerprint": "b505b06bb5d372f4",
    "parts": {
     "version": "5",
-    "code": "7af4b8a37dfac1e1",
+    "code": "8239b2dcd1387e0b",
     "params": {
      "tile": "utm12n_514_4838"
     },
@@ -11078,7 +11108,7 @@
      "library/plant_cards/_research": "76160f150981cd69"
     }
    },
-   "ran_at": "2026-11-11T00:48:09Z",
+   "ran_at": "2026-11-11T17:47:00Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -11089,9 +11119,9 @@
    "outputs": {
     "species/canopy.json": "68a2587de6bf6d6b",
     "species/ground.json": "c4ad31accb1af3ff",
-    "species/plant_needs.json": "e7bf0ef0a0c98ffe"
+    "species/plant_needs.json": "5def84fb5a6fa1d0"
    },
-   "out_hash": "8da1139178cdbc26",
+   "out_hash": "2e1942274efd3cfe",
    "sources": {
     "wcvp": "2026-11-06",
     "canopy_plots": "2026-11-06",
@@ -11104,20 +11134,20 @@
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 2728
+    "cache": 2727
    },
-   "seconds": 4.6
+   "seconds": 4.3
   },
   "species_mix": {
    "version": "5",
-   "code": "701f3591539d3f91",
+   "code": "7e0bbd6e89c7abfe",
    "params": {
     "tile": "utm12n_514_4838"
    },
-   "fingerprint": "d57d5064f5674cd8",
+   "fingerprint": "c369ef5b1d83b59e",
    "parts": {
     "version": "5",
-    "code": "701f3591539d3f91",
+    "code": "7e0bbd6e89c7abfe",
     "params": {
      "tile": "utm12n_514_4838"
     },
@@ -11126,24 +11156,24 @@
      "landcover": "4e1125104cbca63d",
      "water": "c2378d820757e8a1",
      "ice": "87359696ce68a81a",
-     "plants": "8da1139178cdbc26"
+     "plants": "2e1942274efd3cfe"
     },
     "library": {
      "library/species": "12e2ad24a7d48918"
     }
    },
-   "ran_at": "2026-11-11T00:48:13Z",
+   "ran_at": "2026-11-11T17:47:04Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "client.species_mix"
    ],
    "outputs": {
-    "client/species_mix.json": "117d62e47830f49d",
+    "client/species_mix.json": "a06dd03f589a266f",
     "client/species_mix_index.png": "6d304244b72f95f6",
-    "client/species_mix_density.png": "d00a3c09dea672d1"
+    "client/species_mix_density.png": "90d8bc3220cba3d6"
    },
-   "out_hash": "e10fdef493a98669",
+   "out_hash": "1b3a6903e068ef77",
    "sources": {},
    "fallbacks": [],
    "notes": [],
@@ -11151,7 +11181,7 @@
     "network": 0,
     "cache": 3
    },
-   "seconds": 2.3
+   "seconds": 2.2
   },
   "crowns": {
    "version": "2",
@@ -11443,7 +11473,7 @@
    "params": {
     "tile": "utm12n_514_4838"
    },
-   "fingerprint": "fa5b832acbe4304b",
+   "fingerprint": "e292b19eaa7eac09",
    "parts": {
     "version": "1",
     "code": "ad4aaa443261dc54",
@@ -11451,8 +11481,8 @@
      "tile": "utm12n_514_4838"
     },
     "deps": {
-     "plants": "8da1139178cdbc26",
-     "species_mix": "e10fdef493a98669",
+     "plants": "2e1942274efd3cfe",
+     "species_mix": "1b3a6903e068ef77",
      "species": "3e54bd9c52042624",
      "animals": "8c1a2d1ec98bf9de"
     },
@@ -11462,16 +11492,16 @@
      "library/plant_cards": "21babd208f4a11bd"
     }
    },
-   "ran_at": "2026-11-11T00:48:16Z",
+   "ran_at": "2026-11-11T17:47:06Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "species.registry"
    ],
    "outputs": {
-    "species/registry.json": "3ea00669da4628bc"
+    "species/registry.json": "fc2b94d071c2b516"
    },
-   "out_hash": "db5e977696faf013",
+   "out_hash": "67d507949c42f5e8",
    "sources": {},
    "fallbacks": [],
    "notes": [],

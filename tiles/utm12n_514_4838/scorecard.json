@@ -20,9 +20,9 @@
   "tile_registry": "species/registry.json"
  },
  "built_at": {
-  "manifest": "2026-11-11T00:48:17Z",
+  "manifest": "2026-11-11T17:47:07Z",
   "animals": "2026-11-09T04:19:34Z",
-  "tile_registry": "2026-11-11T00:48:16Z"
+  "tile_registry": "2026-11-11T17:47:07Z"
  },
  "layers": {
   "terrain": {
@@ -149,9 +149,9 @@
    "scored": true,
    "shares": {
     "measured": 0.0,
-    "ruled": 0.9635,
-    "guessed": 0.029,
-    "blank": 0.0075
+    "ruled": 0.9622,
+    "guessed": 0.0301,
+    "blank": 0.0077
    },
    "detail": {
     "counts": {
@@ -290,96 +290,96 @@
      {
       "species": "pinus_contorta",
       "layer": "trees",
-      "share_of_weight": 0.2647,
+      "share_of_weight": 0.2745,
       "share": "ruled",
       "drawn_as": "pinus_contorta"
      },
      {
       "species": "artemisia_tridentata",
       "layer": "shrubs",
-      "share_of_weight": 0.2296,
+      "share_of_weight": 0.2382,
       "share": "ruled",
       "drawn_as": "artemisia_tridentata"
      },
      {
       "species": "pseudotsuga_menziesii",
       "layer": "trees",
-      "share_of_weight": 0.0667,
+      "share_of_weight": 0.0692,
       "share": "ruled",
       "drawn_as": "pseudotsuga_menziesii"
      },
      {
       "species": "purshia_tridentata",
       "layer": "shrubs",
-      "share_of_weight": 0.057,
+      "share_of_weight": 0.0591,
       "share": "ruled",
       "drawn_as": "purshia_tridentata"
      },
      {
       "species": "picea_engelmannii",
       "layer": "trees",
-      "share_of_weight": 0.0414,
+      "share_of_weight": 0.043,
       "share": "ruled",
       "drawn_as": "picea_engelmannii"
      },
      {
       "species": "abies_lasiocarpa",
       "layer": "trees",
-      "share_of_weight": 0.0405,
+      "share_of_weight": 0.042,
       "share": "ruled",
       "drawn_as": "abies_lasiocarpa"
      },
      {
       "species": "prunus_virginiana",
       "layer": "shrubs",
-      "share_of_weight": 0.0353,
+      "share_of_weight": 0.0366,
       "share": "ruled",
       "drawn_as": "prunus_virginiana"
      },
      {
-      "species": "rubus_parviflorus",
-      "layer": "shrubs",
-      "share_of_weight": 0.0309,
-      "share": "ruled",
-      "drawn_as": "rubus_parviflorus"
-     },
-     {
       "species": "populus_angustifolia",
       "layer": "trees",
-      "share_of_weight": 0.0305,
+      "share_of_weight": 0.0317,
       "share": "ruled",
       "drawn_as": "populus_angustifolia"
      },
      {
-      "species": "ceanothus_velutinus",
-      "layer": "shrubs",
-      "share_of_weight": 0.0299,
-      "share": "ruled",
-      "drawn_as": "ceanothus_velutinus"
-     },
-     {
       "species": "symphoricarpos_albus",
       "layer": "shrubs",
-      "share_of_weight": 0.0261,
+      "share_of_weight": 0.0271,
       "share": "ruled",
       "drawn_as": "symphoricarpos_albus"
      },
      {
       "species": "artemisia_tripartita",
       "layer": "shrubs",
-      "share_of_weight": 0.026,
+      "share_of_weight": 0.027,
       "share": "guessed",
       "drawn_as": "artemisia_tridentata"
+     },
+     {
+      "species": "ceanothus_velutinus",
+      "layer": "shrubs",
+      "share_of_weight": 0.0261,
+      "share": "ruled",
+      "drawn_as": "ceanothus_velutinus"
+     },
+     {
+      "species": "pinus_albicaulis",
+      "layer": "trees",
+      "share_of_weight": 0.0244,
+      "share": "ruled",
+      "drawn_as": "pinus_albicaulis"
      }
     ],
-    "no_local_record_share": 0.1556,
+    "no_local_record_share": 0.1614,
     "no_local_record_note": "share of the drawn woody weight whose drawn species is not among the tile's most-recorded GBIF plants (species/plant_needs.json, research.PLANT_LIMIT): common trees can miss that list, so this is a lead, not a finding"
    },
    "findings": [
     {
      "layer": "plant_species",
      "text": "6% of the shrub weight is drawn as a stand-in",
-     "share": 0.029,
+     "share": 0.0301,
      "of": "woody plant weight",
      "kind": "guessed"
     }

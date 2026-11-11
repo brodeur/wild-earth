@@ -1,6 +1,6 @@
 {
  "tile": "utm12n_557_4964",
- "at": "2026-11-11T00:48:08Z",
+ "at": "2026-11-11T17:47:15Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -84,7 +84,7 @@
    "fidelity": 2,
    "common": "big sagebrush",
    "drawn_as": "artemisia_tridentata",
-   "share": 0.7068,
+   "share": 0.7242,
    "why_needed": [
     "named by EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (35709 cells)",
     "in the description of EVT 7011 Rocky Mountain Aspen Forest and Woodland (2547 cells)",
@@ -123,7 +123,7 @@
    "fidelity": 4,
    "common": "common snowberry",
    "drawn_as": "symphoricarpos_albus",
-   "share": 0.1584,
+   "share": 0.1623,
    "why_needed": [
     "in the description of EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (16593 cells)",
     "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (272 cells)",
@@ -195,7 +195,7 @@
    "fidelity": 2,
    "common": "Woods' rose",
    "drawn_as": "rosa_woodsii",
-   "share": 0.054,
+   "share": 0.0553,
    "why_needed": [
     "named by EVT 9519 Rocky Mountain Lower Montane-Foothill Riparian Shrubland (4901 cells)",
     "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (646 cells)",
@@ -241,7 +241,7 @@
    "fidelity": 2,
    "common": "Booth's willow",
    "drawn_as": "salix_boothii",
-   "share": 0.0472,
+   "share": 0.0483,
    "why_needed": [
     "named by EVT 9519 Rocky Mountain Lower Montane-Foothill Riparian Shrubland (4901 cells)",
     "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (646 cells)",
@@ -371,17 +371,6 @@
    "share": 0.0291,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
-   ]
-  },
-  {
-   "id": "shepherdia_canadensis",
-   "kind": "shrub",
-   "fidelity": 2,
-   "common": "russet buffaloberry",
-   "drawn_as": "shepherdia_canadensis",
-   "share": 0.0291,
-   "why_needed": [
-    "recorded on the cells of EVT 7050 Rocky Mountain Lodgepole Pine Forest (3 of its 4 open records near the tile, 6.81 times the rate of plants in general; 9086 cells)"
    ]
   },
   {
@@ -516,6 +505,17 @@
    "share": 0.0057,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "shepherdia_canadensis",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "russet buffaloberry",
+   "drawn_as": "shepherdia_canadensis",
+   "share": 0.0053,
+   "why_needed": [
+    "recorded on the cells of EVT 7050 Rocky Mountain Lodgepole Pine Forest (3 of its 4 open records near the tile, 6.81 times the rate of plants in general; 9086 cells)"
    ]
   },
   {

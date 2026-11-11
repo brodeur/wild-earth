@@ -33,8 +33,11 @@ A species is a recorded associate of a community when
 How much (species_mix._layer_weights): the associates follow the species LANDFIRE lists, in order of their records on
 the community, by reciprocal rank (the reading succession.py gives an order without magnitudes), and all of them
 together never weigh more than the listed species: what a description lists are its dominants. The counts give an
-order only: people photograph a cactus in flower far more often than a blackbrush. A community that lists nothing
-(the bedrock canyon) takes the whole layer from its records.
+order only: people photograph a cactus in flower far more often than a blackbrush. A community that lists no shrub
+(the bedrock canyon, a spruce-fir forest) takes the whole layer from its records, and the layer is then only as dense
+as the records on its own cells support (species_mix.recorded_support, 2026-11-11): each member weighs min(1, its
+records there / 30) over its rank, the class's density is multiplied by their sum (at most 1), and the rest is left
+empty. Three records are a thin scatter, not an understory.
 
 Only communities whose LANDFIRE life form carries shrubs (SHRUB_PHYS: not a grassland, not open water); only a tile
 that reads its names by its own records (no regional table); only the shrub layer. Nothing here reads a park's maps,

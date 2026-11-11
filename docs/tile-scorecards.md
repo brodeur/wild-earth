@@ -23,7 +23,7 @@ Worst finding: the tile's finding that affects the largest share of its layer, a
 | Calaveras Big Trees (`utm10n_731_4235`) | 89/11/0/0 | 100/0/0/0 | 0/85/15/0 | 0/100/0/0 | 3/0/97/0 | 39/1/0/60 | 99/1/0/0 | 56/0/40/4 | 97% of the ground texture is painted in, not photographed |
 | Yosemite (re-centred) (`utm11n_267_4175`) | 98/2/0/0 | 0/100/0/0 | 0/98/2/0 | 0/100/0/0 | 98/0/2/0 | 51/43/0/6 | 100/0/0/0 | 47/0/47/6 | 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m)) |
 | Yosemite (`utm11n_270_4180`) | 99/1/0/0 | 0/100/0/0 | 0/99/1/0 | 0/100/0/0 | 99/0/1/0 | 55/41/0/4 | 99/1/0/0 | 48/0/48/3 | 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m)) |
-| Grand Canyon (`utm12n_396_3988`) | 83/17/0/0 | 0/100/0/0 | 0/57/43/0 | 0/91/2/7 | 97/0/3/0 | 57/39/0/4 | 95/0/5/0 | 38/0/47/15 | 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m)) |
+| Grand Canyon (`utm12n_396_3988`) | 83/17/0/0 | 0/100/0/0 | 0/57/43/0 | 0/92/2/6 | 97/0/3/0 | 57/39/0/4 | 95/0/5/0 | 38/0/47/15 | 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m)) |
 | Teton (`utm12n_514_4838`) | 99/1/0/0 | 0/100/0/0 | 0/99/1/0 | 0/96/3/1 | 99/0/1/0 | 37/53/0/10 | 100/0/0/0 | 51/0/37/12 | 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m)) |
 | Lamar Valley (`utm12n_557_4964`) | 100/0/0/0 | 100/0/0/0 | 0/95/3/1 | 0/99/1/0 | 52/0/48/0 | 47/43/0/10 | 100/0/0/0 | 52/0/39/10 | no fish species listed (none in the tile's GBIF records) |
 | Corcovado (`utm17n_210_932`) | 0/100/0/0 | 0/100/0/0 | 0/0/100/0 | 0/100/0/0 | 0/53/47/0 | 6/92/0/2 | 100/0/0/0 | 8/0/51/41 | no ground species at all |
@@ -207,7 +207,7 @@ Kept out of the per-tile findings because no tile differs:
 - 44 of 94 listed animals wear a kin's body
 - 39% of stream length is placed by the DEM alone, no mapped stream confirms it
 - 14 of 94 listed animals are not drawn
-- 14% of the shrub weight is a named species with no record, drawn as nothing
+- 14% of the ground has no 1 m measurement (drawn from the 1 m usgs_3dep)
 
 **Teton** (`utm12n_514_4838`)
 - 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m))

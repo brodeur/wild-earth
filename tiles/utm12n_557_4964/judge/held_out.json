@@ -2,7 +2,7 @@
  "format": 1,
  "tile": "utm12n_557_4964",
  "name": "Lamar Valley",
- "at": "2026-11-11T00:49:44Z",
+ "at": "2026-11-11T17:47:48Z",
  "doc": "docs/held-out-judge.md",
  "checks": {
   "species_lists": {
@@ -854,10 +854,10 @@
    "drawn_from": "client/species_mix.json: plants drawn per species (cells x density x weight), by layer",
    "measure": "per layer, on genus shares: Bray-Curtis dissimilarity (0 same, 1 nothing in common); foreign share = drawn share in genera the reference does not record on this ground; missed share = reference share in genera not drawn in that layer",
    "scores": {
-    "bray_curtis_mean": 0.4426,
+    "bray_curtis_mean": 0.4413,
     "bray_curtis": {
      "canopy": 0.3344,
-     "shrub": 0.324,
+     "shrub": 0.3201,
      "ground": 0.6695
     },
     "foreign_share": {
@@ -893,15 +893,15 @@
      }
     },
     "shrub": {
-     "bray_curtis": 0.324,
+     "bray_curtis": 0.3201,
      "foreign_share": null,
      "missed_share": 0.2209,
      "drawn": {
-      "artemisia": 0.7068,
-      "symphoricarpos": 0.1584,
-      "rosa": 0.054,
-      "salix": 0.0472,
-      "shepherdia": 0.0291,
+      "artemisia": 0.7242,
+      "symphoricarpos": 0.1623,
+      "rosa": 0.0553,
+      "salix": 0.0483,
+      "shepherdia": 0.0053,
       "prunus": 0.0032,
       "amelanchier": 0.0014
      },
@@ -1406,7 +1406,7 @@
   },
   "composition_bray_curtis": {
    "canopy": 0.3344,
-   "shrub": 0.324,
+   "shrub": 0.3201,
    "ground": 0.6695
   },
   "composition_foreign_share": {
