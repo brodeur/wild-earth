@@ -15,7 +15,7 @@
   -11.848733996771625
  ],
  "size_m": 10000,
- "generated_at": "2026-11-11T00:49:14Z",
+ "generated_at": "2026-11-11T17:47:24Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -3331,8 +3331,8 @@
     "rows_with_herb_cover": 0,
     "evh_synthetic": true
    },
-   "sha256": "b2086603fcfa53b6a1f572ffa0f081909802db4dfd6065e6cff9d4583297fc0e",
-   "bytes": 29390
+   "sha256": "27e631c4990bebf28996465f671592ef954f01b039e2e5fd4c1faa5aac79a487",
+   "bytes": 29811
   },
   "species.list": {
    "path": "species/species.json",
@@ -3652,7 +3652,7 @@
    "animals_present": 68,
    "animals_queued": 66,
    "cards_queued": 16,
-   "sha256": "2915f57032adacc04fe99e70092324352cfec53116e8ff45bc4edb1fa2027c1d",
+   "sha256": "ac9d2c14192f5787485fd45680c00e0f7be28107e88e1b656db595d4ede47075",
    "bytes": 77059
   },
   "client.fauna": {
@@ -5303,6 +5303,36 @@
    "at": "2026-11-11T00:49:14Z",
    "seconds": 0.7,
    "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-11T17:42:11Z",
+   "seconds": 1.2,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-11T17:42:11Z",
+   "seconds": 0.6,
+   "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-11T17:47:22Z",
+   "seconds": 1.6,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-11T17:47:23Z",
+   "seconds": 1.0,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-11T17:47:24Z",
+   "seconds": 0.7,
+   "ok": true
   }
  ],
  "steps": {
@@ -6255,14 +6285,14 @@
   },
   "plants": {
    "version": "5",
-   "code": "7af4b8a37dfac1e1",
+   "code": "8239b2dcd1387e0b",
    "params": {
     "tile": "utm19s_233_8679"
    },
-   "fingerprint": "0b04cf41e9de7649",
+   "fingerprint": "3072d087ad067eba",
    "parts": {
     "version": "5",
-    "code": "7af4b8a37dfac1e1",
+    "code": "8239b2dcd1387e0b",
     "params": {
      "tile": "utm19s_233_8679"
     },
@@ -6275,7 +6305,7 @@
      "library/plant_cards/_research": "76160f150981cd69"
     }
    },
-   "ran_at": "2026-11-11T00:49:10Z",
+   "ran_at": "2026-11-11T17:47:20Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -6299,18 +6329,18 @@
     "network": 0,
     "cache": 313
    },
-   "seconds": 1.7
+   "seconds": 1.6
   },
   "species_mix": {
    "version": "5",
-   "code": "701f3591539d3f91",
+   "code": "7e0bbd6e89c7abfe",
    "params": {
     "tile": "utm19s_233_8679"
    },
-   "fingerprint": "642affef4b3de356",
+   "fingerprint": "01e9cc8cfb4d32cf",
    "parts": {
     "version": "5",
-    "code": "701f3591539d3f91",
+    "code": "7e0bbd6e89c7abfe",
     "params": {
      "tile": "utm19s_233_8679"
     },
@@ -6325,18 +6355,18 @@
      "library/species": "12e2ad24a7d48918"
     }
    },
-   "ran_at": "2026-11-11T00:49:12Z",
+   "ran_at": "2026-11-11T17:47:22Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "client.species_mix"
    ],
    "outputs": {
-    "client/species_mix.json": "b2086603fcfa53b6",
+    "client/species_mix.json": "27e631c4990bebf2",
     "client/species_mix_index.png": "e64d6eee0a78844c",
     "client/species_mix_density.png": "8296eb9bd5951341"
    },
-   "out_hash": "6027d66d1afefaea",
+   "out_hash": "53a547a07d756b36",
    "sources": {},
    "fallbacks": [],
    "notes": [],
@@ -6654,7 +6684,7 @@
    "params": {
     "tile": "utm19s_233_8679"
    },
-   "fingerprint": "cfc118f0708115f6",
+   "fingerprint": "2229968f7337afe5",
    "parts": {
     "version": "1",
     "code": "ad4aaa443261dc54",
@@ -6663,7 +6693,7 @@
     },
     "deps": {
      "plants": "afa334f118ad82d1",
-     "species_mix": "6027d66d1afefaea",
+     "species_mix": "53a547a07d756b36",
      "species": "5eaf9a9ea6b30635",
      "animals": "0f9021281338671c"
     },
@@ -6673,16 +6703,16 @@
      "library/plant_cards": "21babd208f4a11bd"
     }
    },
-   "ran_at": "2026-11-11T00:49:13Z",
+   "ran_at": "2026-11-11T17:47:23Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "species.registry"
    ],
    "outputs": {
-    "species/registry.json": "2915f57032adacc0"
+    "species/registry.json": "ac9d2c14192f5787"
    },
-   "out_hash": "4db089d5188ac796",
+   "out_hash": "28ed7eb055e32b5d",
    "sources": {},
    "fallbacks": [],
    "notes": [],

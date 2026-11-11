@@ -1356,7 +1356,12 @@ Three keys say what happened:
   GBIF observations (CC0 and CC BY) within 25 km of the tile, laid on LANDFIRE's vegetation map of the same square.
   `records`: on cells of this community; `of`: on any natural cell; `affinity`: its share of records here over all
   plants' share here (for people; the membership test is `associates.excess`). A layer that gained them has `weights.shrubs` ending in `+recorded`; a community that lists
-  nothing has `weights.shrubs: "recorded"` and a rule id `recorded_*`. `recorded_associates` (top level) holds the
+  nothing has `weights.shrubs: "recorded"` and a rule id `recorded_*`. Where `weights.shrubs` is `recorded` (no shrub
+  listed: the records alone give the layer), `communities[].recorded_support` (2026-11-11) is how much of the habitat
+  class's shrub density the records support: the sum over the members of min(1, `records` / 30) / rank, at most 1. The
+  listed `shrub_density` and `carpet_density` are already multiplied by it, and the rest of the layer is left empty;
+  the members' weights there come from `records`, not from the records near the whole tile. The client does not read
+  it. `recorded_associates` (top level) holds the
   records' count, licences and GBIF datasets: the attribution. A cactus, a yucca or an agave without a library record
   is always in `missing` (the client has no growth form for it, `communities.NO_GROWTH_FORM`).
 

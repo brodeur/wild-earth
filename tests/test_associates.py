@@ -123,17 +123,57 @@ class TestACommunityThatNamesNothing(Place):
         self.assertEqual(r["trees"], {})
 
     def test_the_order_is_the_records_and_the_weights_reciprocal_ranks(self):
-        s = self.rule(CANYON, ("evt", 9001), hab=8)["shrubs"]
-        tot = 1 + 1 / 2 + 1 / 3
-        self.assertAlmostEqual(s["purshia_stansburiana"], 1 / tot, places=3)        # not 12 : 6 : 4, the counts
+        # well recorded on the canyon's own cells (30 or more each): the ranks alone, and the class's whole density
+        A.EVIDENCE = lambda tile: evidence({"Purshia stansburiana": {CANYON: 60}, "Fallugia paradoxa": {CANYON: 45},
+                                            "Chamaebatiaria millefolium": {CANYON: 30}}, self.effort)
+        r = self.rule(CANYON, ("evt", 9001), hab=8)
+        s, tot = r["shrubs"], 1 + 1 / 2 + 1 / 3
+        self.assertAlmostEqual(s["purshia_stansburiana"], 1 / tot, places=3)        # not 60 : 45 : 30, the counts
         self.assertAlmostEqual(s["fallugia_paradoxa"], 0.5 / tot, places=3)
         self.assertAlmostEqual(s["chamaebatiaria_millefolium"], (1 / 3) / tot, places=3)
+        self.assertEqual(r["recorded_support"], 1.0)
+        self.assertEqual(r["shrub_density"], sm.NAMED_DENSITY["barren"][1])
 
-    def test_it_says_so_and_is_drawn_at_its_class_density(self):
+    def test_a_lone_member_on_three_records_is_a_thin_scatter(self):
+        # fails on the code of 2026-11-10: the layer stood at its class's whole density (0.5 under a forest) and its
+        # weight came from the records near the whole tile (546 here): Teton's spruce-fir, all thimbleberry on three
+        A.EVIDENCE = lambda tile: evidence({"Purshia stansburiana": {CANYON: 3}}, self.effort)
+        r = self.rule(CANYON, ("evt", 9001), hab=2)
+        self.assertEqual(r["shrubs"], {"purshia_stansburiana": 1.0})
+        self.assertLess(r["shrub_density"], 0.1)
+        self.assertAlmostEqual(r["shrub_density"], sm.NAMED_DENSITY["conifer_forest"][1] * 0.1)   # 3 / 30 of 0.5
+        self.assertAlmostEqual(r["recorded_support"], 0.1)
+
+    def test_the_layer_is_as_dense_as_the_records_on_its_own_cells(self):
+        # 12, 6 and 4 records on the canyon: 12/30, 6/30 over 2, 4/30 over 3, whatever the records near the tile (546, 300, 400)
+        r = self.rule(CANYON, ("evt", 9001), hab=8)
+        a = [12 / 30, 6 / 30 / 2, 4 / 30 / 3]
+        self.assertAlmostEqual(r["recorded_support"], sum(a), places=3)             # 0.54
+        self.assertAlmostEqual(r["shrub_density"], sm.NAMED_DENSITY["barren"][1] * sum(a), places=4)
+        self.assertAlmostEqual(r["shrubs"]["purshia_stansburiana"], a[0] / sum(a), places=3)
+        self.assertAlmostEqual(r["shrubs"]["chamaebatiaria_millefolium"], a[2] / sum(a), places=3)
+        self.assertEqual(sm.recorded_support([{"records": 40}, {"records": 40}]), 1.0)   # never more than the class's density
+
+    def test_its_carpet_is_as_thin(self):
+        # a dwarf shrub is the ground layer's carpet (split_dwarf_shrubs): on three records it is not a whole carpet
+        saved = dict(sm._DWARF_CACHE)
+        sm._DWARF_CACHE.update({"dwarfus_recordus": True, "purshia_stansburiana": False})
+        try:
+            row = {"shrubs": {"dwarfus_recordus": 0.75, "purshia_stansburiana": 0.25}, "shrub_density": 0.1, "ground": {},
+                   "recorded_support": 0.2}
+            sm.split_dwarf_shrubs(row)
+            self.assertAlmostEqual(row["carpet_density"], 0.75 * 0.2)
+            self.assertAlmostEqual(row["shrub_density"], 0.025)
+            listed = {"shrubs": {"dwarfus_recordus": 0.75, "purshia_stansburiana": 0.25}, "shrub_density": 0.5, "ground": {}}
+            sm.split_dwarf_shrubs(listed)
+            self.assertAlmostEqual(listed["carpet_density"], 0.75)                  # a listed layer: as before
+        finally:
+            sm._DWARF_CACHE.clear(); sm._DWARF_CACHE.update(saved)
+
+    def test_it_says_so(self):
         r = self.rule(CANYON, ("evt", 9001), hab=8)
         self.assertTrue(r["id"].startswith("recorded_"))
         self.assertEqual(r["weights"]["shrubs"], "recorded")
-        self.assertEqual(r["shrub_density"], sm.NAMED_DENSITY["barren"][1])
         self.assertEqual(r["tree_density"], 0.0)
         self.assertEqual(r["recorded"]["purshia_stansburiana"], {"records": 12, "of": 15, "affinity": 2.67})
         self.assertEqual(scorecard.KIND_SHARE[scorecard.rule_kind(r["id"], "evt", True)], "guessed")
@@ -244,6 +284,8 @@ class TestAfterTheListedSpecies(Place):
         self.assertAlmostEqual(s["coleogyne_ramosissima"] + s["ephedra_viridis"], 1.5 / (1.5 + 1 / 3 + 1 / 4), places=3)
         self.assertEqual(r["weights"]["shrubs"], "description+recorded")
         self.assertTrue(r["id"].startswith("named_from_"))
+        self.assertNotIn("recorded_support", r)                                    # listed species lead: the class's density
+        self.assertEqual(r["shrub_density"], sm.NAMED_DENSITY["chaparral"][1])
         self.assertEqual(set(r["recorded"]), {"purshia_stansburiana", "fallugia_paradoxa"})   # Mormon tea is listed, not added
 
     def test_the_associates_never_weigh_more_than_the_listed(self):

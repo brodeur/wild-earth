@@ -176,7 +176,10 @@ and a tile elsewhere never falls back to it in silence:
   more of them there than the visits explain, by one standard error (`associates.excess`: a species spread as all
   plant records are is a member nowhere). Members rank after the species
   LANDFIRE lists, by reciprocal rank in order of their records, and together never weigh more than the listed ones. A
-  community that names nothing (bedrock canyon) takes its whole shrub layer from them. Grasslands and water gain
+  community that lists no shrub (bedrock canyon, spruce-fir) takes its whole shrub layer from them, and that layer is
+  only as dense as the records on its own cells support (2026-11-11, `species_mix.recorded_support`): each member
+  weighs min(1, its records there / 30) over its rank, the density is the class's times their sum (at most 1), and
+  the rest stays empty. Three records give a tenth of an understory. Grasslands and water gain
   none; trees are not added. `python -m pipeline.associates --tile <id> [--all]` prints the evidence. A cactus or a
   yucca without a record is reported `missing`: the client has no succulent growth form.
 - **The elevation zones** (gray pine to ponderosa to Jeffrey ...), **the coast's oaks** and the per-species terrain

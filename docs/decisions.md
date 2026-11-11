@@ -9235,3 +9235,80 @@ cells) names nothing and drew nothing.
   - Oregon boxleaf and chokecherry are over their wood triangle budgets on the lineup page (as Woods' rose is).
 - Shrubs are placed by the canopy raster's shrub cover times the mix density, so a forest community's new shrubs show
   only where LANDFIRE maps shrub cover; the eye-level views under closed ponderosa and spruce-fir show none.
+
+## 2026-11-11: a shrub layer the records alone give is as dense as the records on its own cells (pipeline/species_mix.py; tests/test_associates.py; branch claude/elated-jackson-91da74)
+
+The first weak call of the entry above. Where a community lists no shrub, the recorded associates are its whole
+shrub layer. That layer stood at its habitat class's whole density on whatever records it had, and its weights
+came from each species' records near the whole tile. Teton's subalpine spruce-fir (3,470 cells) drew a full
+understory of thimbleberry on three records.
+
+- **The rule** (`species_mix.recorded_support`, `_layer_weights`). In a layer the records alone give
+  (`weights.shrubs: "recorded"`):
+  - a member weighs min(1, its records on the community's own cells / 30) over its rank. The rank is the order of
+    those records, as before. The records near the whole tile no longer count here.
+  - the layer's density is its class's density times the sum of those weights, at most 1
+    (`communities[].recorded_support`). One member with 30 records on the community fills the layer; a lone member
+    with three gives a tenth of it.
+  - what the records do not support stays empty, as a succulent's share does. Nothing else is drawn in its place.
+  - a dwarf shrub's carpet is thinned by the same factor (`split_dwarf_shrubs`). Otherwise a creeping barberry on
+    three records would still lay a whole carpet.
+  - the two then compound: the density falls by the support, and then by the share held empty for succulents.
+- **Left as it was: a layer with listed species.** There the associates still take their rarity from the records
+  near the tile. The same reasoning does apply to it, and it is said here rather than changed, as the brief asked.
+  - What differs: the listed species lead and keep at least half, and there is no empty remainder. An associate's
+    lost share would go to the listed species, and the density would stay the class's.
+  - What it would do (a what-if with each associate's rarity from its own cells' records, nothing built):
+
+    | Community | Associates' share of the shrubs, now | With own-cell records |
+    |---|---|---|
+    | Grand Canyon ponderosa (19,645 cells) | 0.50 (bigtooth maple 0.18, creeping barberry 0.13, Woods' rose 0.10, New Mexico locust 0.07) | 0.22 (0.10, 0.05, 0.03, 0.01) |
+    | Grand Canyon blackbrush shrubland | 0.18 (cottontop cactus, 9 of 20 records) | 0.06 |
+    | Grand Canyon creosotebush scrub | 0.10 | 0.02 |
+    | Teton sagebrush steppe (26,972 cells) | 0.29 (bitterbrush 0.16, chokecherry 0.09, horsebrush 0.04) | 0.06 (0.04, 0.01, 0.02) |
+    | Teton Douglas-fir | 0.45 (Utah honeysuckle 0.27, mountain-ash 0.18) | 0.12 |
+    | Teton aspen | 0.33 (creeping barberry, a carpet, 3 of 26 records) | 0.05 |
+
+    It would also thin two of the other weak calls (the North Rim's maple and locust, the steppe's chokecherry),
+    which were set aside.
+- **Each layer the records alone give, before and after.**
+
+  | Community | Records on its cells | Support | Shrub density | Carpet | Held empty |
+  |---|---|---|---|---|---|
+  | Teton spruce-fir (EVT 7056, 3,470 cells; BpS 694, 127) | thimbleberry 3 | 0.10 | 0.50 to 0.05 | none | none |
+  | Teton lodgepole (EVT 7050, 9,076 cells) | snowbrush 12, creeping barberry 8, Utah honeysuckle 6, thimbleberry 6 | 0.65 | 0.38 to 0.26 | 0.24 to 0.13 | none |
+  | Lamar lodgepole (EVT 7050, 9,086 cells) | grouse whortleberry 5, russet buffaloberry 3 | 0.22 | 0.17 to 0.025 | 0.67 to 0.17 | none |
+  | Grand Canyon pinyon-juniper (EVT 7016, 12,829 cells; BpS 1182, 117) | plains prickly pear 8, tulip prickly pear 5, roundleaf buffaloberry 4, saltbush 3, Whipple cholla 3, Engelmann's prickly pear 3, wax currant 3 | 0.47 | 0.14 to 0.042 | none | 0.72 to 0.82 |
+  | Grand Canyon bedrock canyon (EVT 9001, 42,161 cells) | claret-cup 12, cliffrose 12, plains prickly pear 12, cottontop 10, tulip prickly pear 8, fernbush 8, hophornbeam 6, hoptree 5 | 0.96 | 0.034 to 0.029 | none | 0.66 to 0.70 |
+
+  - The shares within a layer move too, since a member now weighs by its own cells' records. Teton lodgepole:
+    snowbrush 0.48 to 0.62 of the layer, barberry 0.24 to 0.21, honeysuckle 0.16 to 0.10, thimbleberry 0.12 to
+    0.08. Lamar lodgepole: whortleberry 0.67 to 0.77, buffaloberry 0.33 to 0.23. Pinyon-juniper: plains prickly
+    pear 0.39 to 0.57; the three leafy shrubs together 0.28 to 0.18.
+  - The Grand Canyon's shale badland (1,268 cells) and one cell of cliff borrow the bedrock canyon's shrubs (the
+    tile pool) and follow it: 0.034 to 0.029.
+  - Mean shrub density over the tile: Grand Canyon 0.356 to 0.344, Teton 0.348 to 0.324, Lamar 0.478 to 0.467.
+- **The held-out judge** (`held_out.py --checks species,composition`; before, after):
+
+  | Tile | Shrub Bray-Curtis | Shrubs in genera no plot records | Everything else |
+  |---|---|---|---|
+  | Grand Canyon | 0.6459 to 0.6445 | 0.0451 to 0.0466 | unchanged (canopy 0.26, ground 0.94, plant precision 0.94) |
+  | Lamar | 0.3240 to 0.3201 | not scored | unchanged (canopy 0.33, ground 0.67, plant precision 1.00) |
+  | Yosemite | 0.5541 unchanged | 0.1311 unchanged | unchanged |
+
+- **What it made worse.**
+  - Grand Canyon: the share of drawn shrubs in genera no plot records rises by 0.0015. The pinyon-juniper's
+    saltbush (a genus the plots do record) fell from 5.7% to 4.9% of the drawn shrubs, so the rim's maple and rose
+    weigh a little more of the whole.
+  - Lamar: grouse whortleberry's carpet under lodgepole falls from 0.67 to 0.17 of the shrub cover. Whortleberry
+    is the common understory of Yellowstone's lodgepole; five open records with a position within 100 m are thin
+    evidence for a common plant. The judge's ground score does not see it (0.67 before and after). The rule is
+    kept whole: the remedy is more evidence (the CC BY-NC question), not an exception.
+- **Unchanged.** Every tile's `species_mix_index.png`, and both mix rasters of the 15 tiles outside this rule
+  (cmp against main's). Only `species_mix_density.png` of the Grand Canyon, Teton and Lamar changed. Their
+  documents gain one encoding line (`recorded_support`).
+- **Scorecards.** Grand Canyon: woody weight asked for and drawn as nothing 7% to 6%. The others only their dates.
+- **Tests.** `tests/test_associates.py`, 26 tests (3 new, 2 rewritten). Four fail on the code before: a lone
+  member on three records stood at 0.5, its carpet at its whole share. The whole suite: 407 tests, one failure in
+  the run (`test_hub` `test_travel_together`, the known flaky one; it passes alone).
+- **Not looked at.** No eye-level capture of the thinner layers was taken.
