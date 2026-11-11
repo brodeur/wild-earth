@@ -9214,3 +9214,24 @@ cells) names nothing and drew nothing.
     The same accounting is why Lamar's sagebrush reads 71% against a mapped 52%.
   - Gambel oak under ponderosa is half the understory, not all of it; it is still the description's.
   - A succulent's share is held empty by weight, which says nothing of how much ground a cactus covers.
+
+## 2026-11-10: the recorded shrubs merged; what the check on main found (merge of claude/elated-jackson-91da74)
+
+- Merged after a check on main: 404 tests pass; the judge re-run on main gives the lane's numbers (Grand Canyon
+  shrub Bray-Curtis 0.65 unchanged, plant precision 0.92 to 0.94; Lamar shrub 0.319 to 0.324; Yosemite unchanged);
+  the three tiles load with no shader errors; the 19 new records were looked at on the lineup page
+  (`client/lineup.html?only=<ids>&ui=0&close=1`) and in the tiles at eye level.
+- The lane's goal (Grand Canyon shrub clearly under 0.65) was not met, and the entry above says why: the missing
+  cover is cacti and yuccas (no growth form in the client; 0.51 with them drawn) and river shrubs (no riparian
+  species for a tile outside the regional tables). Merged all the same: communities that drew no shrubs now draw
+  recorded natives, and nothing is drawn in a succulent's place.
+- Weak calls kept on record, not yet changed:
+  - A layer the records alone give takes its weights from the species' records near the whole tile, not from those
+    on the community's own cells. Teton's spruce-fir draws all of its shrubs as thimbleberry on three records
+    there. The candidate rule: such a layer is as dense as its own cells' records are many, the rest left empty.
+  - The 25 km square takes in the North Rim, so bigtooth maple and New Mexico locust under the South Rim's
+    ponderosa (18% and 7% of its shrubs) rest on records across the canyon.
+  - Chokecherry at 9% of Teton's open sagebrush steppe rests on three of six records.
+  - Oregon boxleaf and chokecherry are over their wood triangle budgets on the lineup page (as Woods' rose is).
+- Shrubs are placed by the canopy raster's shrub cover times the mix density, so a forest community's new shrubs show
+  only where LANDFIRE maps shrub cover; the eye-level views under closed ponderosa and spruce-fir show none.
