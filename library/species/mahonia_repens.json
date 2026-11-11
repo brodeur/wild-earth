@@ -1,0 +1,536 @@
+{
+ "id": "mahonia_repens",
+ "aliases": [
+  "berberis_repens",
+  "creeping_barberry",
+  "creeping_oregon_grape",
+  "creeping_mahonia",
+  "creeping_grape_holly",
+  "creeping_grapeholly"
+ ],
+ "scientific": "Mahonia repens",
+ "common": "creeping barberry",
+ "form": "shrub",
+ "regions": [
+  "interior_west"
+ ],
+ "architectural_model": "Rauh (provisional: a shrub of upright shoots; it is also a climbing vine on tree trunks, which the generator does not draw)",
+ "deciduous": false,
+ "height_m": [
+  0.1,
+  0.3
+ ],
+ "stature": {
+  "typical_m": 0.15,
+  "tall_m": 0.6,
+  "record_m": null,
+  "source": "typical: the drafter's middle inside FEIS's 10-30 cm and Wikipedia's 2-20 cm; tall: Wikipedia (very occasionally 60 cm); no record height was read; read 2026-11-10"
+ },
+ "variants": [
+  {
+   "name": "low",
+   "weight": 0.3,
+   "height_m": [
+    0.03,
+    0.1
+   ],
+   "branches": 0.7,
+   "set": {
+    "trunk": {
+     "stems": [
+      1,
+      3
+     ],
+     "stem_spread_deg": 30
+    }
+   },
+   "note": "(from the dwarf Oregon grape template) a single tuft of a few leaves in deep shade"
+  },
+  {
+   "name": "mature",
+   "weight": 0.45,
+   "seeds": 1,
+   "note": "(from the dwarf Oregon grape template) (from the Pacific poison oak template) the file as written: an open shrub of upright, leaning stems"
+  },
+  {
+   "name": "thicket",
+   "weight": 0.25,
+   "height_m": [
+    0.2,
+    0.35
+   ],
+   "crown_scale": 1.2,
+   "gnarl": 1.2,
+   "deadwood": {
+    "fraction": 0.2,
+    "levels": [
+     0,
+     1
+    ],
+    "shorten": 0.7
+   },
+   "set": {
+    "trunk": {
+     "stems": [
+      6,
+      12
+     ],
+     "stem_spread_deg": 34
+    }
+   },
+   "note": "(from the dwarf Oregon grape template) a dense colony on a sunnier bench or old burn"
+  }
+ ],
+ "description": "A low evergreen plant, usually a hand high, that spreads by underground stems into a loose carpet across the forest floor. Each short stem carries a few leaves of three to seven stiff, holly-like leaflets edged with spiny teeth, dark green above and paler below, which turn bronze or wine-red where the sun reaches them in fall and winter. Fragrant spikes of bright yellow flowers open in spring, and clusters of small, tart, dark purple berries with a blue bloom ripen in late summer. It grows under the ponderosa pines of the Grand Canyon's rims, and in the Tetons under lodgepole pine and Douglas-fir and among the sagebrush, across the forests and foothills of the West.",
+ "season_notes": {
+  "winter": "Its evergreen leaves, bronze and wine-red in the sun, show where the snow melts off; elk, mule deer and snowshoe hares browse it when other food is buried.",
+  "spring": "Short spikes of fragrant yellow flowers in April to June, as the snow goes.",
+  "summer": "Dark green, holly-like leaves under the pines; the first dark purple berries ripen.",
+  "fall": "Clusters of blue-dusted purple berries, eaten by birds, mice and bears; the leaves start to colour bronze and red."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "mixed_forest": 0.6,
+   "oak_woodland": 0.5,
+   "grassland": 0.4,
+   "chaparral": 0.4,
+   "riparian": 0.2
+  },
+  "floor": 1.0,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 1.4,
+  "shade": 0.8,
+  "disturbed": 1.0
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "cervus_canadensis",
+    "part": "browse",
+    "seasons": [
+     "winter"
+    ]
+   },
+   {
+    "animal": "lepus_americanus",
+    "part": "browse",
+    "seasons": [
+     "winter"
+    ]
+   },
+   {
+    "animal": "ursus_americanus",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "peromyscus_maniculatus",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "turdus_migratorius",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "peromyscus_maniculatus",
+   "tamias_amoenus"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 0.9,
+  "radius_ratio": 0.012,
+  "taper": 0.85,
+  "flare": 1.2,
+  "bole_ratio": 0.08,
+  "base_size": 0.15,
+  "curve_deg": 10,
+  "curve_var_deg": 16,
+  "segments": 3,
+  "lean_deg": 10,
+  "stems": [
+   3,
+   10
+  ],
+  "stem_spread_deg": 40,
+  "split_prob": 0.0,
+  "split_count": 2,
+  "split_angle_deg": 20,
+  "sinuous_deg": 6,
+  "bark_rgb": [
+   116,
+   104,
+   112
+  ],
+  "bark_pattern": "smooth",
+  "twig_rgb": [
+   130,
+   100,
+   82
+  ],
+  "bark": {
+   "tile_m": [
+    0.1,
+    0.3
+   ],
+   "contrast": 0.45,
+   "lichen": 0.15,
+   "relief": 0.3
+  }
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "envelope": {
+   "profile": [
+    [
+     0.0,
+     0.9
+    ],
+    [
+     0.25,
+     1.1
+    ],
+    [
+     0.5,
+     1.15
+    ],
+    [
+     0.75,
+     1.0
+    ],
+    [
+     0.9,
+     0.7
+    ],
+    [
+     1.0,
+     0.3
+    ]
+   ],
+   "lobes": 6,
+   "lobe_depth": 0.15,
+   "asymmetry": 0.2,
+   "fill": 0.55,
+   "edge": 1.05
+  }
+ },
+ "levels": [
+  {
+   "count": 7,
+   "start": 0.12,
+   "down_angle_deg": 40,
+   "down_angle_var_deg": 14,
+   "rotation_deg": 140,
+   "rotation_var_deg": 35,
+   "length_ratio": 0.32,
+   "length_var": 0.35,
+   "curve_deg": 10,
+   "curve_var_deg": 18,
+   "tropism": 0.05,
+   "taper": 0.95,
+   "radius_ratio": 0.55,
+   "segments": 1
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.15,
+  "leaf_shape": "pinnate_compound",
+  "cluster_m": 0.45,
+  "density": 16,
+  "cards_per_m2": 3,
+  "start": 0.0,
+  "parent_start": 0.2,
+  "orientation": "outward",
+  "roll_deg": 50,
+  "colors": {
+   "winter": [
+    128,
+    72,
+    58
+   ],
+   "spring": [
+    92,
+    122,
+    70
+   ],
+   "summer": [
+    58,
+    88,
+    60
+   ],
+   "fall": [
+    118,
+    92,
+    62
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "clumps": {
+   "radius_m": 0.3,
+   "cards_per_clump": 5,
+   "shell": 0.4,
+   "flatten": 0.8,
+   "tip_bias": 1.3
+  },
+  "palette": [
+   [
+    0.85,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.15,
+    [
+     1.12,
+     1.1,
+     0.88
+    ]
+   ]
+  ],
+  "winter_twigs": 0.4,
+  "ao_min": 0.72,
+  "color_var": [
+   0.1,
+   0.06
+  ],
+  "leaf_on_var": 0.6,
+  "flowers": {
+   "season": "spring",
+   "months": [
+    4,
+    6
+   ],
+   "form": "candle",
+   "rgb": [
+    240,
+    206,
+    60
+   ],
+   "size_m": 0.06,
+   "density": 0.35,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": [
+    "summer",
+    "fall"
+   ],
+   "months": [
+    7,
+    10
+   ],
+   "form": "cluster",
+   "rgb": [
+    74,
+    66,
+    108
+   ],
+   "size_m": 0.008,
+   "density": 0.35
+  },
+  "leaflets": [
+   11,
+   17
+  ],
+  "leaflet_ratio": 0.18
+ },
+ "deadwood": {
+  "fraction": 0.06,
+  "levels": [
+   0
+  ],
+  "shorten": 0.75,
+  "rgb": [
+   138,
+   130,
+   120
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "length": 0.7,
+  "down_deg": 38,
+  "down_var_deg": 14,
+  "curve_var_deg": 20,
+  "segments": 1,
+  "radius_m": 0.005,
+  "taper": 0.6,
+  "fan_deg": 50,
+  "jitter": 0.22
+ },
+ "lod": {
+  "near_tris_budget": 1000,
+  "near_sides": [
+   3,
+   3
+  ],
+  "mid_blobs": 3,
+  "mid_branches": 0,
+  "mid_sides": [
+   0,
+   0
+  ],
+  "mid_cards": 20
+ },
+ "targets": {
+  "crown_width_ratio": 3.0,
+  "crown_base_ratio": 0.02,
+  "porosity": 0.3,
+  "foliage_rg": 0.43,
+  "foliage_bg": 0.46,
+  "fall_rg": 1.6,
+  "fall_bg": 0.55,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: a low, open carpet of short upright stems a hand high, each with a few holly-like compound leaves, spreading from underground stems across the forest floor; dark green and dull in summer, bronze to wine-red in sun in fall and winter; short spikes of bright yellow flowers in spring, small clusters of blue-dusted dark purple berries in late summer"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "5",
+  "card": "library/plant_cards/mahonia_repens.json",
+  "card_sha256": "d06b4e22823ba2c1",
+  "template": "mahonia_nervosa",
+  "template_common": "dwarf Oregon grape",
+  "height_scale": 0.5
+ },
+ "notes": "Cascade Oregon grape (the template) is the library's Mahonia, the same genus: a low evergreen with pinnate, spiny-toothed leaves, yellow flower spikes and blue berries. Height: a creeping subshrub, stems 10-30 cm (FEIS); 2-20 cm, very occasionally 60 cm (Wikipedia), so height_m 0.1-0.3. Its card height tops out at 0.3 m, under plantgen's DWARF_SHRUB_MAX_M (0.5 m), so with form shrub the generator writes the record's ground block (habit mat, woody, evergreen, the card's leaf colours by season, flowers and berries) and the species mix moves it to the ground layer, a carpet; the thicket age class (0.2-0.35 m) is kept under 0.5 m too. Each aerial stem rises from a rhizome 1.5-5 cm below the mineral soil (FEIS; Wikipedia). Leaves evergreen, pinnately compound with 3-7 spine-toothed leaflets (FEIS), usually five or seven, the whole leaf 10-30 cm, dark green above, paler and downy below (Wikipedia); leaf_size_m 0.15 is the drafter's figure for the leaf as drawn. In fall and winter the leaves turn partly or wholly bronze or red where exposed to sun (Wikipedia), hence the winter and fall colours; the shades are the drafter's judgement. Stem bark grey-purple to grey (Wikipedia). Flowers yellow, fragrant, in dense racemes 4-10 cm of 10-50 flowers (Wikipedia), early spring to midsummer: Arizona April-June, Uinta Basin May-June; east of the Continental Divide in Montana and Yellowstone flowers start about May 28 and end about June 22 (FEIS), hence months 4-6 as a compromise between the two tiles. Berries dark purple-black with a blue bloom, 6-10 mm, juicy and tart (Wikipedia; FEIS: about 1 cm in grape-like clusters), ripe June-September in Utah and about August 11 in Montana and Yellowstone (FEIS), hence months 7-10; that they hang into October is the drafter's judgement. Habitat: abundant on north-facing slopes; dry to moist foothill shrublands and montane forest; tolerates full sun to deep shade; present in every successional stage and increases after fire and logging; intolerant of poor drainage (FEIS); ponderosa pine, lodgepole pine, Douglas-fir, aspen, pinyon-juniper, sagebrush and Gambel oak communities (FEIS; Wikipedia); a Douglas-fir/creeping barberry habitat type is recognised in Arizona and Idaho (FEIS). Hence north 1.4, shade 0.8, the low riparian weight. Elevation: Arizona 1500-2600 m, Utah 1100-3000 m, Colorado 1700-3100 m (FEIS); 150-3000 m (Wikipedia). The Grand Canyon and Grand Teton placing (ponderosa pine; lodgepole pine, Douglas-fir and sagebrush steppe) is from the brief; FEIS reports it in Grand Teton National Park after the 1974 Waterfalls Canyon fire. Eaters: FEIS rates it good for elk and mule deer in Colorado, Utah and Wyoming, used mostly in fall and winter; black bears used it in spring to fall in central Idaho; small mammals and upland and nongame birds; Wikipedia names elk and white-tailed deer (winter), mule deer (winter and early spring, at times the largest part of the winter diet), mountain cottontail, snowshoe hare (heavily in winter), and birds and small mammals for the berries, with sharp-tailed grouse the only named bird. The black bear's part (berries) is the drafter's reading of FEIS's seasonal use; the deer mouse and the American robin stand in for the small mammals and birds that eat the berries; the yellow-pine chipmunk (Tetons only) for small mammals under its cover. White-tailed deer, mountain cottontail, sharp-tailed grouse, boreal owl and northern goshawk (FEIS: they use stands with it in the understory) are not in the library. Colours, crown profile, porosity, stems, leaf-on, flower and berry density and drawn sizes are the drafter's judgement, not from a source.",
+ "sources": [
+  "Fire Effects Information System, Mahonia repens, https://www.fs.usda.gov/database/feis/plants/shrub/mahrep/all.html (US government work, public domain), read 2026-11-10",
+  "Wikipedia, Berberis repens (the title Mahonia repens redirects there) (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Mahonia_repens, read 2026-11-10",
+  "USDA PLANTS Database, Mahonia repens (MARE11), https://plants.usda.gov/plant-profile/MARE11 (US government work, public domain; read through its profile service https://plantsservices.sc.egov.usda.gov/api/PlantProfile?symbol=MARE11), read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0",
+ "ground": {
+  "habit": "mat",
+  "woody": true,
+  "width_m": 0.9,
+  "leaf": {
+   "shape": "ovate",
+   "size_m": 0.15,
+   "rgb": [
+    58,
+    88,
+    60
+   ],
+   "rgb_by_season": {
+    "winter": [
+     128,
+     72,
+     58
+    ],
+    "spring": [
+     92,
+     122,
+     70
+    ],
+    "summer": [
+     58,
+     88,
+     60
+    ],
+    "fall": [
+     118,
+     92,
+     62
+    ]
+   }
+  },
+  "height_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "dead_rgb": [
+   116,
+   104,
+   112
+  ],
+  "density": 1.0,
+  "from": "pipeline/plantgen.py ground_block: a dwarf shrub (card height to 0.3 m <= 0.5 m)",
+  "flower": {
+   "shape": "spike",
+   "rgb": [
+    240,
+    206,
+    60
+   ],
+   "size_m": 0.06,
+   "months": [
+    4,
+    6
+   ],
+   "per_plant": 16
+  },
+  "fruit": {
+   "rgb": [
+    74,
+    66,
+    108
+   ],
+   "size_m": 0.008,
+   "months": [
+    7,
+    10
+   ],
+   "per_plant": 24
+  }
+ }
+}

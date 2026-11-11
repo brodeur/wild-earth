@@ -1,0 +1,428 @@
+{
+ "id": "symphoricarpos_longiflorus",
+ "aliases": [
+  "desert_snowberry",
+  "longflower_snowberry",
+  "fragrant_snowberry",
+  "longleaf_snowberry"
+ ],
+ "scientific": "Symphoricarpos longiflorus",
+ "common": "desert snowberry",
+ "form": "shrub",
+ "regions": [
+  "interior_west"
+ ],
+ "architectural_model": "Champagnat (provisional: thin erect shoots from the base and from runners that arch over and branch along the arch)",
+ "deciduous": true,
+ "height_m": [
+  0.5,
+  1.0
+ ],
+ "stature": {
+  "typical_m": 0.7,
+  "tall_m": 1.0,
+  "record_m": null,
+  "source": "typical: the drafter's middle inside FEIS's 50-100 cm; tall: FEIS (mostly 50-100 cm) and Wikipedia (up to about a metre); no record height was read; read 2026-11-10"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    0.15,
+    0.35
+   ],
+   "crown_scale": 0.9,
+   "branches": 0.7,
+   "set": {
+    "trunk": {
+     "stems": [
+      4,
+      8
+     ],
+     "stem_spread_deg": 40
+    }
+   },
+   "note": "(from the common snowberry template) a low patch of a few thin shoots, the creeping snowberry's habit under the oaks"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 1,
+   "note": "(from the common snowberry template) the file as written: a soft, see-through clump of many thin arching stems"
+  },
+  {
+   "name": "old",
+   "weight": 0.25,
+   "height_m": [
+    0.8,
+    1.2
+   ],
+   "crown_scale": 1.12,
+   "gnarl": 1.15,
+   "deadwood": {
+    "fraction": 0.2,
+    "levels": [
+     0,
+     1
+    ],
+    "shorten": 0.75
+   },
+   "set": {
+    "trunk": {
+     "stems": [
+      14,
+      22
+     ]
+    }
+   },
+   "note": "(from the common snowberry template) a dense old colony of many stems, some dead and grey"
+  }
+ ],
+ "description": "A low, stiff, spreading shrub, half a metre to a metre tall, whose many branches reach out almost level from the base. Young twigs are reddish, and older stems turn white and shreddy; the small, thick, fuzzy leaves, under 2 cm long, are grey-green to blue-green. In late spring and summer it bears fragrant pink trumpet-shaped flowers with long slender tubes, singly or in pairs along the twigs, followed by small dry berries. It grows on dry, rocky ground in the pinyon-juniper woodland and ponderosa pine of the Grand Canyon's rims, and in sagebrush and desert mountains from Oregon to Texas.",
+ "season_notes": {
+  "winter": "Bare, stiff, grey-white shreddy twigs among the junipers.",
+  "spring": "One of the first shrubs to leaf out; mule deer browse the fresh leaves.",
+  "summer": "Slender pink trumpet flowers, sweetly scented, from May into summer; small birds and mice shelter under its spreading branches.",
+  "fall": "Small dry berries ripen, eaten by birds and ground squirrels; the leaves fade and drop."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "chaparral": 0.7,
+   "conifer_forest": 0.6,
+   "barren": 0.5,
+   "grassland": 0.4,
+   "oak_woodland": 0.4
+  },
+  "floor": 0.8,
+  "mid": 1.0,
+  "steep": 1.0,
+  "north": 0.6,
+  "shade": 0.2,
+  "disturbed": 0.9
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": [
+   "peromyscus_maniculatus",
+   "junco_hyemalis"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 0.85,
+  "radius_ratio": 0.008,
+  "taper": 0.8,
+  "flare": 1.1,
+  "bole_ratio": 0.05,
+  "base_size": 0.05,
+  "curve_deg": 20,
+  "curve_var_deg": 16,
+  "segments": 2,
+  "lean_deg": 20,
+  "stems": [
+   5,
+   15
+  ],
+  "stem_spread_deg": 52,
+  "split_prob": 0.0,
+  "split_count": 2,
+  "split_angle_deg": 20,
+  "sinuous_deg": 4,
+  "bark_rgb": [
+   176,
+   162,
+   150
+  ],
+  "bark_pattern": "shreddy",
+  "twig_rgb": [
+   142,
+   120,
+   102
+  ],
+  "bark": {
+   "tile_m": [
+    0.06,
+    0.2
+   ],
+   "contrast": 0.4,
+   "lichen": 0.05,
+   "relief": 0.25
+  }
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "envelope": {
+   "profile": [
+    [
+     0.0,
+     0.36
+    ],
+    [
+     0.18,
+     0.46
+    ],
+    [
+     0.4,
+     0.54
+    ],
+    [
+     0.6,
+     0.54
+    ],
+    [
+     0.78,
+     0.46
+    ],
+    [
+     0.92,
+     0.3
+    ],
+    [
+     1.0,
+     0.12
+    ]
+   ],
+   "lobes": 7,
+   "lobe_depth": 0.25,
+   "asymmetry": 0.3,
+   "fill": 0.4,
+   "edge": 1.2
+  }
+ },
+ "levels": [
+  {
+   "count": 3,
+   "start": 0.1,
+   "down_angle_deg": 48,
+   "down_angle_var_deg": 12,
+   "rotation_deg": -80,
+   "rotation_var_deg": 20,
+   "length_ratio": 0.5,
+   "length_var": 0.3,
+   "curve_deg": 10,
+   "curve_var_deg": 16,
+   "tropism": 0.0,
+   "taper": 0.9,
+   "radius_ratio": 0.6,
+   "segments": 2,
+   "droop_deg": 10
+  },
+  {
+   "count": 4,
+   "start": 0.25,
+   "down_angle_deg": 45,
+   "down_angle_var_deg": 12,
+   "rotation_deg": -90,
+   "rotation_var_deg": 20,
+   "length_ratio": 0.4,
+   "length_var": 0.3,
+   "curve_deg": 6,
+   "curve_var_deg": 14,
+   "tropism": 0.0,
+   "taper": 1.0,
+   "radius_ratio": 0.5,
+   "segments": 1
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.015,
+  "leaf_shape": "lanceolate",
+  "cluster_m": 0.26,
+  "density": 16,
+  "cards_per_m2": 5.5,
+  "start": 0.05,
+  "parent_start": 0.2,
+  "orientation": "outward",
+  "roll_deg": 50,
+  "colors": {
+   "winter": [
+    176,
+    162,
+    150
+   ],
+   "spring": [
+    130,
+    152,
+    112
+   ],
+   "summer": [
+    114,
+    136,
+    112
+   ],
+   "fall": [
+    168,
+    150,
+    92
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.7,
+   "summer": 1.0,
+   "fall": 0.35
+  },
+  "leaf_on_by_month": [
+   0.0,
+   0.0,
+   0.1,
+   0.5,
+   0.9,
+   1.0,
+   1.0,
+   0.95,
+   0.8,
+   0.4,
+   0.05,
+   0.0
+  ],
+  "clumps": {
+   "radius_m": 0.18,
+   "cards_per_clump": 4,
+   "shell": 0.1,
+   "flatten": 0.85,
+   "tip_bias": 0.9
+  },
+  "palette": [
+   [
+    0.8,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.2,
+    [
+     1.1,
+     1.1,
+     1.14
+    ]
+   ]
+  ],
+  "winter_twigs": 0.55,
+  "ao_min": 0.76,
+  "color_var": [
+   0.08,
+   0.05
+  ],
+  "leaf_on_var": 0.5,
+  "flowers": {
+   "season": "summer",
+   "months": [
+    5,
+    7
+   ],
+   "form": "bud",
+   "rgb": [
+    236,
+    178,
+    196
+   ],
+   "size_m": 0.015,
+   "density": 0.35,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": [
+    "fall"
+   ],
+   "months": [
+    8,
+    10
+   ],
+   "form": "cluster",
+   "rgb": [
+    230,
+    228,
+    214
+   ],
+   "size_m": 0.008,
+   "density": 0.3
+  }
+ },
+ "deadwood": {
+  "fraction": 0.06,
+  "where": "inner",
+  "levels": [
+   0,
+   1
+  ],
+  "shorten": 0.75,
+  "rgb": [
+   146,
+   138,
+   128
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "length": 0.7,
+  "down_deg": 42,
+  "down_var_deg": 16,
+  "curve_var_deg": 20,
+  "segments": 1,
+  "radius_m": 0.003,
+  "taper": 0.6,
+  "droop_deg": 6,
+  "fan_deg": 50,
+  "jitter": 0.22
+ },
+ "lod": {
+  "near_tris_budget": 1300,
+  "near_sides": [
+   3,
+   3,
+   0
+  ],
+  "mid_blobs": 3,
+  "mid_branches": 0,
+  "mid_sides": [
+   0,
+   0
+  ],
+  "mid_cards": 20
+ },
+ "targets": {
+  "crown_width_ratio": 1.5,
+  "crown_base_ratio": 0.04,
+  "porosity": 0.5,
+  "foliage_rg": 0.68,
+  "foliage_bg": 0.66,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: a low, open, stiff-twigged shrub whose branches spread out nearly level, wider than tall and seen through; small grey to blue-green leaves; shreddy pale grey-white older stems and reddish twigs; slender pink trumpet flowers scattered along the twigs in early summer"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "5",
+  "card": "library/plant_cards/symphoricarpos_longiflorus.json",
+  "card_sha256": "1518638a5f3633d3",
+  "template": "symphoricarpos_albus",
+  "template_common": "common snowberry",
+  "height_scale": 0.75
+ },
+ "notes": "Common snowberry (the template) is the library's Symphoricarpos, the same genus: a deciduous, rhizomatous shrub of opposite simple leaves, small pink flowers and white berries. The card makes desert snowberry a drier, stiffer, smaller-leaved and more open plant. Height: mostly 50-100 cm, low spreading branches 50-100 cm long, commonly at right angles to the stem; older branches fibrous and shreddy; persistent twigs make it somewhat thorny (FEIS); erect, spreading, many stiff branches up to about a metre; bark reddish, ageing white and shreddy (Wikipedia). Leaves deciduous, simple, opposite (FEIS), thick, fuzzy, green or blue-tinged, lance-shaped, usually under 2 cm (Wikipedia), hence lanceolate and leaf_size_m 0.015; it leafs out early in spring (FEIS). Flowers fragrant, single or paired in the leaf axils or in small racemes, a slender tube up to 1.5 cm with five spreading lobes, bright to pale pink or cream (Wikipedia); flowering April-August in Arizona, May-June in Nevada (FEIS), hence months 5-7. Fruit: a dry drupe under 1 cm with two seeds (Wikipedia); no source read gives its colour or ripening months, so the white of the genus and months 8-10 are the drafter's judgement. Habitat: narrow ecological limits on xeric sites, dry rocky soils (FEIS); rocky desert, sagebrush, chaparral, forests and woodlands, mostly dry (Wikipedia); ponderosa pine, sagebrush, desert shrub, chaparral-mountain shrub and pinyon-juniper ecosystems, an understory shrub of late-successional juniper woodland (FEIS). Elevation: Arizona 1219-2438 m, Utah 915-2900 m, California to 3048 m (FEIS). Sprouts from the root crown and rhizomes after fire (FEIS). The Grand Canyon placing is from the brief. Eaters: browsed lightly by mule deer in every season but winter, spring palatability very good (FEIS); seeds eaten by gallinaceous birds (pheasants, grouse, quail), sage-grouse in Nevada, American pika and ground squirrels (FEIS); pronghorn in summer in Utah (FEIS). Cover fair for upland game birds and small nongame birds and good for small mammals in Utah (FEIS); the deer mouse and the dark-eyed junco stand in for those (the drafter's choice). Quail, grouse, sage-grouse, pika, the rim's rock squirrel and pronghorn are not in the library (the library's California ground squirrel, sooty grouse and quails are Pacific species and are not used). Colours, crown profile, porosity, stems, leaf-on months, flower and berry density and drawn sizes are the drafter's judgement, not from a source.",
+ "sources": [
+  "Fire Effects Information System, Symphoricarpos longiflorus, https://www.fs.usda.gov/database/feis/plants/shrub/symlon/all.html (US government work, public domain), read 2026-11-10",
+  "Wikipedia, Symphoricarpos longiflorus (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Symphoricarpos_longiflorus, read 2026-11-10",
+  "USDA PLANTS Database, Symphoricarpos longiflorus (SYLO), https://plants.usda.gov/plant-profile/SYLO (US government work, public domain; read through its profile service https://plantsservices.sc.egov.usda.gov/api/PlantProfile?symbol=SYLO), read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

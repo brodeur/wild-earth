@@ -21,9 +21,9 @@
   "judge": "judge/held_out.json"
  },
  "built_at": {
-  "manifest": "2026-11-10T23:18:57Z",
+  "manifest": "2026-11-11T00:47:59Z",
   "animals": "2026-11-09T04:17:36Z",
-  "tile_registry": "2026-11-10T23:18:57Z"
+  "tile_registry": "2026-11-11T00:47:59Z"
  },
  "layers": {
   "terrain": {
@@ -100,25 +100,27 @@
    "scored": true,
    "shares": {
     "measured": 0.0,
-    "ruled": 0.9627,
-    "guessed": 0.0373,
+    "ruled": 0.5711,
+    "guessed": 0.4289,
     "blank": 0.0
    },
    "detail": {
     "cells": 110889,
     "by_kind": {
      "named": 0.5475,
-     "ground_only": 0.4088,
+     "recorded": 0.3802,
      "backfill": 0.0354,
+     "ground_only": 0.0171,
+     "pool": 0.0133,
      "water_ice": 0.0064,
-     "pool": 0.0018,
      "bare": 0.0
     },
     "by_rule_ignoring_source": {
      "named": 0.5826,
-     "ground_only": 0.4091,
+     "recorded": 0.3802,
+     "ground_only": 0.0175,
+     "pool": 0.0133,
      "water_ice": 0.0064,
-     "pool": 0.0018,
      "bare": 0.0
     },
     "from_bps_backfill": 0.0354,
@@ -127,8 +129,9 @@
     "unmatched": 43,
     "unmatched_drawn": {
      "its named species": 33,
-     "bare (nothing known)": 7,
-     "the tile's own species of its habitat class": 3
+     "the tile's own species of its habitat class": 5,
+     "bare (nothing known)": 4,
+     "the shrubs recorded on its own cells": 1
     },
     "natural_regions": []
    },
@@ -142,8 +145,8 @@
     },
     {
      "layer": "plant_communities",
-     "text": "0% of cells borrow another community's species (tile pool)",
-     "share": 0.0018,
+     "text": "1% of cells borrow another community's species (tile pool)",
+     "share": 0.0133,
      "of": "30 m cells",
      "kind": "guessed"
     },
@@ -160,7 +163,7 @@
     "resolution": "30 m cell",
     "measured": "a cell whose species composition is mapped (plot-based maps such as TreeMap): no tile uses one today",
     "ruled": "a hand rule (pipeline/species_mix.py RULES) or a named_from_* rule (the species the community's name names) applied to a measured existing-vegetation class (source evt); open water and permanent ice (rules that draw no plants); a tile_pool_* community with no woody donor that draws only the grasses and forbs of its own description or the region's ground table (ground_only)",
-    "guessed": "the tile pool (tile_pool_*: another community's species of the same habitat class), research_* (the tile's recorded species weighted by records x niche), habitat_default_* (California's foothill default), and every cell whose class is a back-fill rather than today's vegetation (source bps: pre-settlement LANDFIRE BpS under human land; rewild: former reservoir beds; habitat: no class)",
+    "guessed": "the tile pool (tile_pool_*: another community's species of the same habitat class), research_* (the tile's recorded species weighted by records x niche), recorded_* (a community whose name names nothing: the shrubs recorded on its own cells, pipeline/associates.py), habitat_default_* (California's foothill default), and every cell whose class is a back-fill rather than today's vegetation (source bps: pre-settlement LANDFIRE BpS under human land; rewild: former reservoir beds; habitat: no class)",
     "blank": "a tile_pool_* community with no donor and no ground plants: drawn bare, nothing known"
    }
   },
@@ -168,19 +171,20 @@
    "scored": true,
    "shares": {
     "measured": 0.0,
-    "ruled": 0.9801,
-    "guessed": 0.0188,
-    "blank": 0.0011
+    "ruled": 0.9087,
+    "guessed": 0.0197,
+    "blank": 0.0716
    },
    "detail": {
     "counts": {
-     "canopy": 8,
-     "shrub": 11,
-     "ground": 20
+     "canopy": 9,
+     "shrub": 22,
+     "ground": 21
     },
     "drawn": {
      "trees": [
       "abies_concolor",
+      "acer_grandidentatum",
       "juniperus_osteosperma",
       "pinus_edulis",
       "pinus_ponderosa",
@@ -190,17 +194,28 @@
       "quercus_gambelii"
      ],
      "shrubs": [
+      "acer_grandidentatum",
+      "amelanchier_utahensis",
       "arctostaphylos_patula",
       "artemisia_tridentata",
       "atriplex_canescens",
+      "ceanothus_fendleri",
       "cercocarpus_ledifolius",
+      "chamaebatiaria_millefolium",
       "coleogyne_ramosissima",
       "encelia_farinosa",
       "ephedra_viridis",
+      "ostrya_knowltonii",
+      "ptelea_trifoliata",
       "purshia_stansburiana",
       "quercus_gambelii",
+      "ribes_cereum",
+      "robinia_neomexicana",
       "rosa_woodsii",
-      "salix_exigua"
+      "salix_exigua",
+      "shepherdia_rotundifolia",
+      "symphoricarpos_longiflorus",
+      "tetradymia_canescens"
      ],
      "ground": [
       "achnatherum_hymenoides",
@@ -216,6 +231,7 @@
       "fragaria_virginiana",
       "gutierrezia_sarothrae",
       "hesperostipa_comata",
+      "mahonia_repens",
       "muhlenbergia_montana",
       "muhlenbergia_porteri",
       "osmorhiza_berteroi",
@@ -253,12 +269,6 @@
        "cells": 1054
       },
       {
-       "species": "amelanchier_utahensis",
-       "drawn": "purshia_stansburiana",
-       "reason": "no library record: drawn as purshia_stansburiana (the same family, Rosaceae, and growth form; 546 records within 25 km)",
-       "cells": 852
-      },
-      {
        "species": "krascheninnikovia_lanata",
        "drawn": "atriplex_canescens",
        "reason": "no library record: drawn as atriplex_canescens (the same family, Amaranthaceae, and growth form; 40 records within 25 km)",
@@ -271,10 +281,28 @@
        "cells": 393
       },
       {
+       "species": "ceanothus_greggii",
+       "drawn": "ceanothus_fendleri",
+       "reason": "no library record: drawn as ceanothus_fendleri (the same genus; 20 records within 25 km)",
+       "cells": 393
+      },
+      {
+       "species": "ceanothus_pauciflorus",
+       "drawn": "ceanothus_fendleri",
+       "reason": "no library record: drawn as ceanothus_fendleri (the same genus; 20 records within 25 km)",
+       "cells": 393
+      },
+      {
        "species": "quercus_turbinella",
        "drawn": "quercus_gambelii",
        "reason": "no library record: drawn as quercus_gambelii (the same genus; 515 records within 25 km)",
        "cells": 393
+      },
+      {
+       "species": "acer_negundo",
+       "drawn": "acer_grandidentatum",
+       "reason": "no library record: drawn as acer_grandidentatum (the same genus; 27 records within 25 km)",
+       "cells": 155
       },
       {
        "species": "picea_pungens",
@@ -288,24 +316,49 @@
      "recorded": true,
      "entries": [
       {
-       "species": "ceanothus_greggii",
-       "reason": "no library record, and no record of its genus or of its family (Rhamnaceae) and growth form belongs to this tile: left out, its share to the community's other species",
-       "cells": 202
+       "species": "echinocactus_polycephalus",
+       "reason": "no library record, and a cactus (Cactaceae) has no growth form in the client yet (treegen.js draws leafy crowns on woody stems): never drawn as a leafy shrub; left out, and its place left empty (species_mix.hold_empty)",
+       "cells": 61950
       },
       {
-       "species": "ceanothus_pauciflorus",
-       "reason": "no library record, and no record of its genus or of its family (Rhamnaceae) and growth form belongs to this tile: left out, its share to the community's other species",
-       "cells": 202
+       "species": "opuntia_phaeacantha",
+       "reason": "no library record, and a cactus (Cactaceae) has no growth form in the client yet (treegen.js draws leafy crowns on woody stems): never drawn as a leafy shrub; left out, and its place left empty (species_mix.hold_empty)",
+       "cells": 55107
+      },
+      {
+       "species": "opuntia_polyacantha",
+       "reason": "no library record, and a cactus (Cactaceae) has no growth form in the client yet (treegen.js draws leafy crowns on woody stems): never drawn as a leafy shrub; left out, and its place left empty (species_mix.hold_empty)",
+       "cells": 55107
+      },
+      {
+       "species": "echinocereus_triglochidiatus",
+       "reason": "no library record, and a cactus (Cactaceae) has no growth form in the client yet (treegen.js draws leafy crowns on woody stems): never drawn as a leafy shrub; left out, and its place left empty (species_mix.hold_empty)",
+       "cells": 42161
+      },
+      {
+       "species": "cylindropuntia_whipplei",
+       "reason": "no library record, and a cactus (Cactaceae) has no growth form in the client yet (treegen.js draws leafy crowns on woody stems): never drawn as a leafy shrub; left out, and its place left empty (species_mix.hold_empty)",
+       "cells": 12946
+      },
+      {
+       "species": "opuntia_engelmannii",
+       "reason": "no library record, and a cactus (Cactaceae) has no growth form in the client yet (treegen.js draws leafy crowns on woody stems): never drawn as a leafy shrub; left out, and its place left empty (species_mix.hold_empty)",
+       "cells": 12946
+      },
+      {
+       "species": "echinocereus_engelmannii",
+       "reason": "no library record, and a cactus (Cactaceae) has no growth form in the client yet (treegen.js draws leafy crowns on woody stems): never drawn as a leafy shrub; left out, and its place left empty (species_mix.hold_empty)",
+       "cells": 5409
+      },
+      {
+       "species": "yucca_elata",
+       "reason": "no library record, and a rosette succulent (a yucca, an agave, a beargrass) (Asparagaceae) has no growth form in the client yet (treegen.js draws leafy crowns on woody stems): never drawn as a leafy shrub; left out, and its place left empty (species_mix.hold_empty)",
+       "cells": 5409
       },
       {
        "species": "garrya_flavescens",
        "reason": "no library record, and no record of its genus or of its family (Garryaceae) and growth form belongs to this tile: left out, its share to the community's other species",
        "cells": 202
-      },
-      {
-       "species": "acer_negundo",
-       "reason": "no library record, and no record of its genus or of its family (Sapindaceae) and growth form belongs to this tile: left out, its share to the community's other species",
-       "cells": 142
       },
       {
        "species": "rhus_aromatica",
@@ -315,29 +368,36 @@
      ]
     },
     "substitutions": {
-     "acer_negundo": null,
-     "amelanchier_utahensis": "purshia_stansburiana",
+     "acer_negundo": "acer_grandidentatum",
      "arctostaphylos_pungens": "arctostaphylos_patula",
-     "ceanothus_greggii": null,
-     "ceanothus_pauciflorus": null,
+     "ceanothus_greggii": "ceanothus_fendleri",
+     "ceanothus_pauciflorus": "ceanothus_fendleri",
      "cercocarpus_montanus": "cercocarpus_ledifolius",
      "chrysothamnus_viscidiflorus": "encelia_farinosa",
+     "cylindropuntia_whipplei": null,
+     "echinocactus_polycephalus": null,
+     "echinocereus_engelmannii": null,
+     "echinocereus_triglochidiatus": null,
      "ericameria_nauseosa": "encelia_farinosa",
      "garrya_flavescens": null,
      "juniperus_scopulorum": "juniperus_osteosperma",
      "krascheninnikovia_lanata": "atriplex_canescens",
+     "opuntia_engelmannii": null,
+     "opuntia_phaeacantha": null,
+     "opuntia_polyacantha": null,
      "picea_pungens": "pinus_edulis",
      "quercus_turbinella": "quercus_gambelii",
-     "rhus_aromatica": null
+     "rhus_aromatica": null,
+     "yucca_elata": null
     },
     "local_records_skipped": 0,
     "status": {
      "status_field": false,
-     "species": 38,
+     "species": 50,
      "introduced": 0,
      "restored": 0,
      "native": 0,
-     "status_unknown": 38,
+     "status_unknown": 50,
      "introduced_ids": [],
      "restored_ids": [],
      "note": "no status field in this build"
@@ -346,98 +406,105 @@
      {
       "species": "pinus_ponderosa",
       "layer": "trees",
-      "share_of_weight": 0.2896,
+      "share_of_weight": 0.2974,
       "share": "ruled",
       "drawn_as": "pinus_ponderosa"
      },
      {
       "species": "coleogyne_ramosissima",
       "layer": "shrubs",
-      "share_of_weight": 0.167,
+      "share_of_weight": 0.1223,
       "share": "ruled",
       "drawn_as": "coleogyne_ramosissima"
      },
      {
-      "species": "ephedra_viridis",
-      "layer": "shrubs",
-      "share_of_weight": 0.1417,
-      "share": "ruled",
-      "drawn_as": "ephedra_viridis"
-     },
-     {
-      "species": "quercus_gambelii",
-      "layer": "trees",
-      "share_of_weight": 0.1218,
-      "share": "ruled",
-      "drawn_as": "quercus_gambelii"
-     },
-     {
       "species": "pinus_edulis",
       "layer": "trees",
-      "share_of_weight": 0.1154,
+      "share_of_weight": 0.1185,
       "share": "ruled",
       "drawn_as": "pinus_edulis"
      },
      {
+      "species": "ephedra_viridis",
+      "layer": "shrubs",
+      "share_of_weight": 0.1046,
+      "share": "ruled",
+      "drawn_as": "ephedra_viridis"
+     },
+     {
       "species": "juniperus_osteosperma",
       "layer": "trees",
-      "share_of_weight": 0.0634,
+      "share_of_weight": 0.0651,
       "share": "ruled",
       "drawn_as": "juniperus_osteosperma"
      },
      {
+      "species": "quercus_gambelii",
+      "layer": "trees",
+      "share_of_weight": 0.0633,
+      "share": "ruled",
+      "drawn_as": "quercus_gambelii"
+     },
+     {
+      "species": "echinocactus_polycephalus",
+      "layer": "shrubs",
+      "share_of_weight": 0.0387,
+      "share": "blank",
+      "drawn_as": null
+     },
+     {
       "species": "artemisia_tridentata",
       "layer": "shrubs",
-      "share_of_weight": 0.0336,
+      "share_of_weight": 0.0345,
       "share": "ruled",
       "drawn_as": "artemisia_tridentata"
      },
      {
       "species": "atriplex_canescens",
       "layer": "shrubs",
-      "share_of_weight": 0.0265,
+      "share_of_weight": 0.0268,
       "share": "ruled",
       "drawn_as": "atriplex_canescens"
      },
      {
+      "species": "acer_grandidentatum",
+      "layer": "shrubs",
+      "share_of_weight": 0.0221,
+      "share": "ruled",
+      "drawn_as": "acer_grandidentatum"
+     },
+     {
       "species": "encelia_farinosa",
       "layer": "shrubs",
-      "share_of_weight": 0.0166,
+      "share_of_weight": 0.0144,
       "share": "ruled",
       "drawn_as": "encelia_farinosa"
      },
      {
       "species": "juniperus_scopulorum",
       "layer": "trees",
-      "share_of_weight": 0.014,
+      "share_of_weight": 0.0144,
       "share": "guessed",
       "drawn_as": "juniperus_osteosperma"
-     },
-     {
-      "species": "quercus_turbinella",
-      "layer": "shrubs",
-      "share_of_weight": 0.0019,
-      "share": "guessed",
-      "drawn_as": "quercus_gambelii"
-     },
-     {
-      "species": "rosa_woodsii",
-      "layer": "shrubs",
-      "share_of_weight": 0.0012,
-      "share": "ruled",
-      "drawn_as": "rosa_woodsii"
      }
     ],
-    "no_local_record_share": 0.0638,
+    "no_local_record_share": 0.1117,
     "no_local_record_note": "share of the drawn woody weight whose drawn species is not among the tile's most-recorded GBIF plants (species/plant_needs.json, research.PLANT_LIMIT): common trees can miss that list, so this is a lead, not a finding"
    },
    "findings": [
     {
      "layer": "plant_species",
      "text": "3% of the canopy weight is drawn as a stand-in",
-     "share": 0.014,
+     "share": 0.0152,
      "of": "woody plant weight",
      "kind": "guessed"
+    },
+    {
+     "layer": "plant_species",
+     "text": "14% of the shrub weight is a named species with no record, drawn as nothing",
+     "share": 0.0716,
+     "of": "woody plant weight",
+     "kind": "blank"
     }
    ],
    "definition": {
@@ -678,11 +745,11 @@
    "kind": "blank"
   },
   {
-   "layer": "terrain",
-   "text": "14% of the ground has no 1 m measurement (drawn from the 1 m usgs_3dep)",
-   "share": 0.139,
-   "of": "tile area",
-   "kind": "ruled"
+   "layer": "plant_species",
+   "text": "14% of the shrub weight is a named species with no record, drawn as nothing",
+   "share": 0.0716,
+   "of": "woody plant weight",
+   "kind": "blank"
   }
  ],
  "not_scored": {
@@ -695,7 +762,7 @@
    "format": 1,
    "tile": "utm12n_396_3988",
    "name": "Grand Canyon (South Rim to the river)",
-   "at": "2026-11-10T23:19:08Z",
+   "at": "2026-11-11T00:49:43Z",
    "doc": "docs/held-out-judge.md",
    "checks": {
     "species_lists": {
@@ -724,11 +791,11 @@
      "scores": {
       "animal_precision": 0.9651,
       "animal_recall_common": 0.3523,
-      "plant_precision": 0.9231,
+      "plant_precision": 0.9423,
       "plant_precision_by_share": {
        "canopy": 1.0,
        "shrub": 1.0,
-       "ground": 0.8922
+       "ground": 0.9441
       },
       "groups_absent": [
        "fish"
@@ -873,14 +940,14 @@
        "spawned_precision": null
       },
       "plant": {
-       "drawn": 39,
-       "judged": 39,
-       "on_list_present_native": 36,
+       "drawn": 52,
+       "judged": 52,
+       "on_list_present_native": 49,
        "restored_drawn": [],
-       "hits": 36,
-       "precision": 0.9231,
+       "hits": 49,
+       "precision": 0.9423,
        "classes": {
-        "present_native": 36,
+        "present_native": 49,
         "historic_native": 0,
         "present_unknown_origin": 0,
         "non_native": 0,
@@ -893,7 +960,7 @@
        "precision_by_share": {
         "canopy": 1.0,
         "shrub": 1.0,
-        "ground": 0.8922
+        "ground": 0.9441
        }
       }
      },
@@ -1524,7 +1591,7 @@
        "species": "Festuca arizonica",
        "id": "festuca_arizonica",
        "layer": "ground",
-       "drawn_share": 0.1035,
+       "drawn_share": 0.0516,
        "genus_on_list": true,
        "group": "plant"
       },
@@ -1591,18 +1658,18 @@
      "drawn_from": "client/species_mix.json: plants drawn per species (cells x density x weight), by layer",
      "measure": "per layer, on genus shares: Bray-Curtis dissimilarity (0 same, 1 nothing in common); foreign share = drawn share in genera the reference does not record on this ground; missed share = reference share in genera not drawn in that layer",
      "scores": {
-      "bray_curtis_mean": 0.6136,
+      "bray_curtis_mean": 0.6139,
       "bray_curtis": {
        "canopy": 0.257,
-       "shrub": 0.6451,
+       "shrub": 0.6459,
        "ground": 0.9387
       },
       "foreign_share": {
        "canopy": 0.0001,
-       "shrub": 0.004,
+       "shrub": 0.0451,
        "ground": 0.0022
       },
-      "foreign_share_max": 0.004,
+      "foreign_share_max": 0.0451,
       "missed_share": {
        "canopy": 0,
        "shrub": 0.5987,
@@ -1617,8 +1684,9 @@
        "drawn": {
         "pinus": 0.8331,
         "juniperus": 0.1581,
-        "populus": 0.005,
+        "populus": 0.003,
         "quercus": 0.0029,
+        "acer": 0.002,
         "pseudotsuga": 0.0009,
         "abies": 0.0001
        },
@@ -1628,18 +1696,18 @@
        }
       },
       "shrub": {
-       "bray_curtis": 0.6451,
-       "foreign_share": 0.004,
+       "bray_curtis": 0.6459,
+       "foreign_share": 0.0451,
        "missed_share": 0.5987,
        "drawn": {
-        "ephedra": 0.3237,
-        "coleogyne": 0.2783,
-        "quercus": 0.2389,
-        "artemisia": 0.065,
-        "atriplex": 0.0435,
-        "encelia": 0.0432,
-        "purshia": 0.0028,
-        "rosa": 0.0026
+        "ephedra": 0.2904,
+        "coleogyne": 0.249,
+        "quercus": 0.1309,
+        "artemisia": 0.0689,
+        "atriplex": 0.0567,
+        "encelia": 0.0423,
+        "acer": 0.0423,
+        "rosa": 0.0254
        },
        "reference": {
         "baccharis": 0.1969,
@@ -1659,12 +1727,12 @@
        "drawn": {
         "achnatherum": 0.4256,
         "gutierrezia": 0.2909,
-        "muhlenbergia": 0.1227,
-        "festuca": 0.1035,
+        "berberis": 0.1029,
+        "muhlenbergia": 0.0716,
+        "festuca": 0.0516,
         "hilaria": 0.0297,
         "bouteloua": 0.0209,
-        "poa": 0.0043,
-        "distichlis": 0.0022
+        "poa": 0.0043
        },
        "reference": {
         "imperata": 0.3699,
@@ -1679,6 +1747,24 @@
       }
      },
      "errors": [
+      {
+       "kind": "foreign_genus",
+       "genus": "rosa",
+       "species": [
+        "rosa_woodsii"
+       ],
+       "drawn_share": 0.0254,
+       "layer": "shrub"
+      },
+      {
+       "kind": "foreign_genus",
+       "genus": "robinia",
+       "species": [
+        "robinia_neomexicana"
+       ],
+       "drawn_share": 0.0167,
+       "layer": "shrub"
+      },
       {
        "kind": "missing_genus",
        "genus": "baccharis",
@@ -2561,7 +2647,7 @@
    "summary": {
     "animal_precision": 0.9651,
     "animal_recall_common": 0.3523,
-    "plant_precision": 0.9231,
+    "plant_precision": 0.9423,
     "groups_absent": [
      "fish"
     ],
@@ -2575,22 +2661,22 @@
     "plant_precision_by_share": {
      "canopy": 1.0,
      "shrub": 1.0,
-     "ground": 0.8922
+     "ground": 0.9441
     },
     "composition_bray_curtis": {
      "canopy": 0.257,
-     "shrub": 0.6451,
+     "shrub": 0.6459,
      "ground": 0.9387
     },
     "composition_foreign_share": {
      "canopy": 0.0001,
-     "shrub": 0.004,
+     "shrub": 0.0451,
      "ground": 0.0022
     },
     "eye_level_distance": 0.177,
     "eye_level_pairs": 10,
     "colour_from_above_overlap": 0.26,
-    "named_errors": 99
+    "named_errors": 101
    }
   },
   "source": "judge/held_out.json"

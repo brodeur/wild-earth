@@ -170,6 +170,15 @@ and a tile elsewhere never falls back to it in silence:
   dominance; lodgepole pine under "Spruce-Fir Forest"). Where no description of its own speaks, the name's species
   are equal, a rarity weighing less (records / 30). `python -m pipeline.succession --tile <id>` prints the reading.
   Tiles inside a regional table keep equal weights for the few names their rules do not match.
+- **The shrubs a name leaves out** (2026-11-10, `pipeline/associates.py`). On the same tiles, the native shrubs
+  recorded on a community's own cells join it: open GBIF observations (CC0, CC BY; position within 100 m) in the tile
+  and 25 km around it, laid on LANDFIRE's vegetation map of that square. A member needs 3 records on the community and
+  more of them there than the visits explain, by one standard error (`associates.excess`: a species spread as all
+  plant records are is a member nowhere). Members rank after the species
+  LANDFIRE lists, by reciprocal rank in order of their records, and together never weigh more than the listed ones. A
+  community that names nothing (bedrock canyon) takes its whole shrub layer from them. Grasslands and water gain
+  none; trees are not added. `python -m pipeline.associates --tile <id> [--all]` prints the evidence. A cactus or a
+  yucca without a record is reported `missing`: the client has no succulent growth form.
 - **The elevation zones** (gray pine to ponderosa to Jeffrey ...), **the coast's oaks** and the per-species terrain
   table (`species_mix.TERRAIN`: Douglas-fir on north slopes, whitebark pine above 2,400 m) are California's; a tile
   in no table's region takes none of them (2026-11-10): its communities carry the zones and a species' terrain is its

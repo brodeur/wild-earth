@@ -1,0 +1,417 @@
+{
+ "id": "paxistima_myrsinites",
+ "aliases": [
+  "oregon_boxleaf",
+  "mountain_lover",
+  "myrtle_boxleaf",
+  "oregon_boxwood",
+  "mountain_boxwood",
+  "pachistima"
+ ],
+ "scientific": "Paxistima myrsinites",
+ "common": "Oregon boxleaf",
+ "form": "shrub",
+ "regions": [
+  "interior_west"
+ ],
+ "architectural_model": "Rauh (provisional)",
+ "deciduous": false,
+ "height_m": [
+  0.3,
+  1.0
+ ],
+ "stature": {
+  "typical_m": 0.5,
+  "tall_m": 1.0,
+  "record_m": null,
+  "source": "typical: the drafter's middle for the low shrub layer under lodgepole and spruce-fir; tall: FEIS (1-3 ft, 0.3-1 m) and Wikipedia (up to about 1 m); no record height was read; read 2026-11-10"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    0.08,
+    0.25
+   ],
+   "deadwood": 0.03,
+   "set": {
+    "trunk": {
+     "stems": [
+      3,
+      6
+     ]
+    }
+   },
+   "note": "(from the evergreen huckleberry template) a small dense bush on a sunny ridge or a seedling on a stump in the redwoods"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 1,
+   "note": "(from the evergreen huckleberry template) (from the California coffeeberry template) the file as written: a dense rounded shrub, wider than tall"
+  },
+  {
+   "name": "old",
+   "weight": 0.25,
+   "height_m": [
+    0.6,
+    1.0
+   ],
+   "crown_scale": 1.08,
+   "gnarl": 1.15,
+   "deadwood": {
+    "fraction": 0.18,
+    "levels": [
+     0,
+     1
+    ],
+    "shorten": 0.8
+   },
+   "set": {
+    "trunk": {
+     "stems": [
+      6,
+      11
+     ]
+    }
+   },
+   "note": "(from the evergreen huckleberry template) a tall, rangy old shrub in redwood shade, spindly and open below"
+  }
+ ],
+ "description": "A low evergreen shrub, usually knee-high and never much over 1 m, that spreads into a dense mound of many four-angled stems, some sprawling and rooting where they touch the ground. Its small leaves, 1-3 cm long, grow in pairs and are thick, leathery and finely toothed, shiny dark green all year with light green new growth; tiny dark red four-petalled flowers sit in the leaf angles in early summer. In the Tetons it is a common low green cover under lodgepole pine, Douglas-fir and spruce-fir, one of the few plants still green on the forest floor when the snow melts, and elk browse it in winter.",
+ "season_notes": {
+  "winter": "Glossy dark green leaves under the snow, browsed by elk where the snow is shallow.",
+  "spring": "Light green new shoots as the snow melts off the forest floor.",
+  "summer": "Tiny maroon flowers in June and July, easy to miss in the leaf angles.",
+  "fall": "Still dark green when the shrubs around it have turned and dropped their leaves."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "mixed_forest": 0.5,
+   "barren": 0.15
+  },
+  "floor": 0.8,
+  "mid": 1.1,
+  "steep": 1.0,
+  "north": 1.2,
+  "shade": 0.8,
+  "disturbed": 0.5
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "cervus_canadensis",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   }
+  ],
+  "cover_for": [
+   "peromyscus_maniculatus"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 0.8,
+  "radius_ratio": 0.022,
+  "taper": 0.8,
+  "flare": 1.4,
+  "bole_ratio": 0.08,
+  "base_size": 0.02,
+  "curve_deg": 12,
+  "curve_var_deg": 14,
+  "segments": 3,
+  "lean_deg": 25,
+  "stems": [
+   8,
+   24
+  ],
+  "stem_spread_deg": 35,
+  "split_prob": 0.0,
+  "split_count": 2,
+  "split_angle_deg": 20,
+  "sinuous_deg": 8,
+  "bark_rgb": [
+   104,
+   92,
+   78
+  ],
+  "bark_pattern": "smooth",
+  "twig_rgb": [
+   130,
+   86,
+   72
+  ],
+  "bark": {
+   "tile_m": [
+    0.15,
+    0.35
+   ],
+   "contrast": 0.5,
+   "lichen": 0.3,
+   "relief": 0.35
+  }
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "envelope": {
+   "profile": [
+    [
+     0.0,
+     0.7
+    ],
+    [
+     0.2,
+     0.85
+    ],
+    [
+     0.45,
+     0.9
+    ],
+    [
+     0.7,
+     0.8
+    ],
+    [
+     0.88,
+     0.6
+    ],
+    [
+     1.0,
+     0.25
+    ]
+   ],
+   "lobes": 6,
+   "lobe_depth": 0.15,
+   "asymmetry": 0.25,
+   "fill": 0.6,
+   "edge": 1.05
+  }
+ },
+ "levels": [
+  {
+   "count": 4,
+   "start": 0.05,
+   "down_angle_deg": 39,
+   "down_angle_var_deg": 8,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.65,
+   "length_var": 0.25,
+   "curve_deg": 20,
+   "curve_var_deg": 14,
+   "tropism": 0.08,
+   "taper": 0.9,
+   "radius_ratio": 0.6,
+   "segments": 2,
+   "droop_deg": 3
+  },
+  {
+   "count": 4,
+   "start": 0.3,
+   "down_angle_deg": 40,
+   "down_angle_var_deg": 15,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.45,
+   "length_var": 0.25,
+   "curve_deg": 15,
+   "curve_var_deg": 18,
+   "tropism": 0.05,
+   "taper": 1.0,
+   "radius_ratio": 0.5,
+   "segments": 1
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.02,
+  "leaf_shape": "elliptic_glossy",
+  "cluster_m": 0.47,
+  "density": 22,
+  "cards_per_m2": 6.2,
+  "start": 0.0,
+  "parent_start": 0.03,
+  "orientation": "outward",
+  "roll_deg": 50,
+  "colors": {
+   "winter": [
+    50,
+    72,
+    48
+   ],
+   "spring": [
+    112,
+    150,
+    82
+   ],
+   "summer": [
+    52,
+    84,
+    52
+   ],
+   "fall": [
+    54,
+    82,
+    50
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "clumps": {
+   "radius_m": 0.32,
+   "cards_per_clump": 6,
+   "shell": 0.02,
+   "flatten": 0.74,
+   "tip_bias": 0.6
+  },
+  "palette": [
+   [
+    0.8,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.15,
+    [
+     1.35,
+     1.0,
+     0.85
+    ]
+   ],
+   [
+    0.05,
+    [
+     1.15,
+     1.15,
+     1.2
+    ]
+   ]
+  ],
+  "ao_min": 0.76,
+  "color_var": [
+   0.08,
+   0.05
+  ],
+  "berries": null,
+  "flowers": {
+   "season": "summer",
+   "months": [
+    6,
+    7
+   ],
+   "form": "bud",
+   "rgb": [
+    110,
+    32,
+    42
+   ],
+   "size_m": 0.004,
+   "density": 0.3,
+   "before_leaves": false
+  },
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ]
+ },
+ "deadwood": {
+  "fraction": 0.08,
+  "where": "inner",
+  "levels": [
+   0,
+   1
+  ],
+  "shorten": 0.7,
+  "rgb": [
+   140,
+   136,
+   128
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "length": 0.75,
+  "down_deg": 40,
+  "down_var_deg": 18,
+  "curve_var_deg": 25,
+  "segments": 1,
+  "radius_m": 0.006,
+  "taper": 0.6,
+  "fan_deg": 55,
+  "jitter": 0.22
+ },
+ "lod": {
+  "near_tris_budget": 1200,
+  "near_sides": [
+   3,
+   3,
+   0
+  ],
+  "mid_blobs": 3,
+  "mid_branches": 0,
+  "mid_sides": [
+   0,
+   0
+  ],
+  "mid_cards": 32
+ },
+ "targets": {
+  "crown_width_ratio": 1.8,
+  "crown_base_ratio": 0.0,
+  "porosity": 0.25,
+  "foliage_rg": 0.39,
+  "foliage_bg": 0.39,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: a low, dense, spreading mound of many angled stems, often sprawling and rooting, wider than tall, leafy to the ground; small, paired, leathery, glossy dark green leaves all year, light green new growth in spring, tiny maroon flowers hidden in the leaf axils in early summer"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "5",
+  "card": "library/plant_cards/paxistima_myrsinites.json",
+  "card_sha256": "a6bbe7ce86f63161",
+  "template": "vaccinium_ovatum",
+  "template_common": "evergreen huckleberry",
+  "height_scale": 0.325
+ },
+ "notes": "No Celastraceae is in the library; evergreen huckleberry (the template) is the nearest shape and leaf type, a dense evergreen shrub with small, leathery, glossy leaves, the card making Oregon boxleaf far lower, with smaller paired leaves and no berries. Height 1-3 ft (0.3-1 m), low growing, sometimes spreading, densely branched, stems layering and rooting (FEIS); a low prostrate or spreading evergreen shrub to about 1 m with many four-angled branches (Wikipedia). height_m 0.3-1.0 is that range, so its top (1.0 m) is above plantgen's DWARF_SHRUB_MAX_M (0.5 m) and the generator draws it as a shrub, not a ground carpet; many Teton plants are lower than 0.5 m, and if the lineup shows it reads better as a carpet, a reviewer could lower the top to 0.5 m. Leaves evergreen, oblong, leathery, glabrous (FEIS); oval, opposite, 1-3 cm, thick, toothed, light green when new and shiny dark green when mature (Wikipedia), so leaf_size_m 0.02 and the elliptic_glossy leaf. Flowers maroon (FEIS), four dark red petals about 1 mm, single or up to three in the leaf axils, June-August (Wikipedia; FEIS: June-August in Wyoming), so months 6-7 for the Tetons is the drafter's reading. Fruit a small capsule with an arillate seed (Wikipedia; FEIS), not drawn, hence berries null. Habitat: dry to moist, shaded mountain sites to the subalpine; Douglas-fir, lodgepole pine and fir-spruce ecosystems, a dominant or indicator shrub in many; tolerates sun and shade, a climax shrub usually indicating cool, moist sites; survives low to moderate fire and resprouts from the root crown, killed by severe fire, fire-neutral (FEIS); hence shade 0.8, north 1.2 and disturbed 0.5. Elevation: Wyoming 2042-2896 m, Montana 1067-2317 m, Colorado 2012-3353 m, Utah 1524-3200 m (FEIS); range elev_m spans those. The lodgepole, Douglas-fir and spruce-fir placing on the Teton tile is from the brief. Eaters: FEIS names deer, elk and moose (important forage), mountain sheep and grouse; Wikipedia: elk and moose browse the evergreen leaves in winter, and grouse feed on it. Moose, bighorn sheep and the Rocky Mountain grouse are not in the library (the sooty grouse is Pacific and is not used). Cover (FEIS): poor to fair for elk, mule deer and pronghorn; poor to fair for small mammals and birds; the deer mouse is listed as the drafter's choice. USDA PLANTS gave no characteristics for this species (its PAMY profile has none), so it is not cited. Colours, crown profile, porosity, stems, bark, the flower density and drawn size are the drafter's judgement, not from a source.",
+ "sources": [
+  "Fire Effects Information System, Paxistima myrsinites, https://www.fs.usda.gov/database/feis/plants/shrub/paxmyr/all.html (US government work, public domain), read 2026-11-10",
+  "Wikipedia, Paxistima myrsinites (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Paxistima_myrsinites, read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

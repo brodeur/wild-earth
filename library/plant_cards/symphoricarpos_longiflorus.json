@@ -1,0 +1,228 @@
+{
+ "id": "symphoricarpos_longiflorus",
+ "scientific": "Symphoricarpos longiflorus",
+ "common": "desert snowberry",
+ "aliases": [
+  "desert_snowberry",
+  "longflower_snowberry",
+  "fragrant_snowberry",
+  "longleaf_snowberry"
+ ],
+ "family": "Caprifoliaceae",
+ "form": "shrub",
+ "deciduous": true,
+ "template": "symphoricarpos_albus",
+ "regions": [
+  "interior_west"
+ ],
+ "height_m": [
+  0.5,
+  1.0
+ ],
+ "stature": {
+  "typical_m": 0.7,
+  "tall_m": 1.0,
+  "record_m": null,
+  "source": "typical: the drafter's middle inside FEIS's 50-100 cm; tall: FEIS (mostly 50-100 cm) and Wikipedia (up to about a metre); no record height was read; read 2026-11-10"
+ },
+ "variants_height_m": {
+  "young": [
+   0.15,
+   0.35
+  ],
+  "old": [
+   0.8,
+   1.2
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.36
+   ],
+   [
+    0.18,
+    0.46
+   ],
+   [
+    0.4,
+    0.54
+   ],
+   [
+    0.6,
+    0.54
+   ],
+   [
+    0.78,
+    0.46
+   ],
+   [
+    0.92,
+    0.3
+   ],
+   [
+    1.0,
+    0.12
+   ]
+  ],
+  "lobes": 7,
+  "lobe_depth": 0.25,
+  "asymmetry": 0.3,
+  "fill": 0.4,
+  "edge": 1.2
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    176,
+    162,
+    150
+   ],
+   "spring": [
+    130,
+    152,
+    112
+   ],
+   "summer": [
+    114,
+    136,
+    112
+   ],
+   "fall": [
+    168,
+    150,
+    92
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.7,
+   "summer": 1.0,
+   "fall": 0.35
+  },
+  "leaf_on_by_month": [
+   0.0,
+   0.0,
+   0.1,
+   0.5,
+   0.9,
+   1.0,
+   1.0,
+   0.95,
+   0.8,
+   0.4,
+   0.05,
+   0.0
+  ],
+  "leaf_shape": "lanceolate",
+  "leaf_size_m": 0.015,
+  "flowers": {
+   "season": "summer",
+   "months": [
+    5,
+    7
+   ],
+   "form": "bud",
+   "rgb": [
+    236,
+    178,
+    196
+   ],
+   "size_m": 0.015,
+   "density": 0.35,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": [
+    "fall"
+   ],
+   "months": [
+    8,
+    10
+   ],
+   "form": "cluster",
+   "rgb": [
+    230,
+    228,
+    214
+   ],
+   "size_m": 0.008,
+   "density": 0.3
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   176,
+   162,
+   150
+  ],
+  "bark_pattern": "shreddy",
+  "stems": [
+   5,
+   15
+  ],
+  "lean_deg": 20
+ },
+ "targets": {
+  "crown_width_ratio": 1.5,
+  "crown_base_ratio": 0.04,
+  "porosity": 0.5,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: a low, open, stiff-twigged shrub whose branches spread out nearly level, wider than tall and seen through; small grey to blue-green leaves; shreddy pale grey-white older stems and reddish twigs; slender pink trumpet flowers scattered along the twigs in early summer"
+ },
+ "description": "A low, stiff, spreading shrub, half a metre to a metre tall, whose many branches reach out almost level from the base. Young twigs are reddish, and older stems turn white and shreddy; the small, thick, fuzzy leaves, under 2 cm long, are grey-green to blue-green. In late spring and summer it bears fragrant pink trumpet-shaped flowers with long slender tubes, singly or in pairs along the twigs, followed by small dry berries. It grows on dry, rocky ground in the pinyon-juniper woodland and ponderosa pine of the Grand Canyon's rims, and in sagebrush and desert mountains from Oregon to Texas.",
+ "season_notes": {
+  "winter": "Bare, stiff, grey-white shreddy twigs among the junipers.",
+  "spring": "One of the first shrubs to leaf out; mule deer browse the fresh leaves.",
+  "summer": "Slender pink trumpet flowers, sweetly scented, from May into summer; small birds and mice shelter under its spreading branches.",
+  "fall": "Small dry berries ripen, eaten by birds and ground squirrels; the leaves fade and drop."
+ },
+ "habitat": {
+  "classes": {
+   "chaparral": 0.7,
+   "conifer_forest": 0.6,
+   "barren": 0.5,
+   "grassland": 0.4,
+   "oak_woodland": 0.4
+  },
+  "floor": 0.8,
+  "mid": 1.0,
+  "steep": 1.0,
+  "north": 0.6,
+  "shade": 0.2,
+  "disturbed": 0.9
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": [
+   "peromyscus_maniculatus",
+   "junco_hyemalis"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   915,
+   3048
+  ],
+  "where": "dry, rocky ground in the pinyon-juniper woodland and ponderosa pine of the Grand Canyon's rims; sagebrush, desert shrub, pinyon-juniper and ponderosa pine from southeastern Oregon to Colorado, Utah, Texas, southeastern California and northwestern Mexico"
+ },
+ "notes": "Common snowberry (the template) is the library's Symphoricarpos, the same genus: a deciduous, rhizomatous shrub of opposite simple leaves, small pink flowers and white berries. The card makes desert snowberry a drier, stiffer, smaller-leaved and more open plant. Height: mostly 50-100 cm, low spreading branches 50-100 cm long, commonly at right angles to the stem; older branches fibrous and shreddy; persistent twigs make it somewhat thorny (FEIS); erect, spreading, many stiff branches up to about a metre; bark reddish, ageing white and shreddy (Wikipedia). Leaves deciduous, simple, opposite (FEIS), thick, fuzzy, green or blue-tinged, lance-shaped, usually under 2 cm (Wikipedia), hence lanceolate and leaf_size_m 0.015; it leafs out early in spring (FEIS). Flowers fragrant, single or paired in the leaf axils or in small racemes, a slender tube up to 1.5 cm with five spreading lobes, bright to pale pink or cream (Wikipedia); flowering April-August in Arizona, May-June in Nevada (FEIS), hence months 5-7. Fruit: a dry drupe under 1 cm with two seeds (Wikipedia); no source read gives its colour or ripening months, so the white of the genus and months 8-10 are the drafter's judgement. Habitat: narrow ecological limits on xeric sites, dry rocky soils (FEIS); rocky desert, sagebrush, chaparral, forests and woodlands, mostly dry (Wikipedia); ponderosa pine, sagebrush, desert shrub, chaparral-mountain shrub and pinyon-juniper ecosystems, an understory shrub of late-successional juniper woodland (FEIS). Elevation: Arizona 1219-2438 m, Utah 915-2900 m, California to 3048 m (FEIS). Sprouts from the root crown and rhizomes after fire (FEIS). The Grand Canyon placing is from the brief. Eaters: browsed lightly by mule deer in every season but winter, spring palatability very good (FEIS); seeds eaten by gallinaceous birds (pheasants, grouse, quail), sage-grouse in Nevada, American pika and ground squirrels (FEIS); pronghorn in summer in Utah (FEIS). Cover fair for upland game birds and small nongame birds and good for small mammals in Utah (FEIS); the deer mouse and the dark-eyed junco stand in for those (the drafter's choice). Quail, grouse, sage-grouse, pika, the rim's rock squirrel and pronghorn are not in the library (the library's California ground squirrel, sooty grouse and quails are Pacific species and are not used). Colours, crown profile, porosity, stems, leaf-on months, flower and berry density and drawn sizes are the drafter's judgement, not from a source.",
+ "sources": [
+  "Fire Effects Information System, Symphoricarpos longiflorus, https://www.fs.usda.gov/database/feis/plants/shrub/symlon/all.html (US government work, public domain), read 2026-11-10",
+  "Wikipedia, Symphoricarpos longiflorus (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Symphoricarpos_longiflorus, read 2026-11-10",
+  "USDA PLANTS Database, Symphoricarpos longiflorus (SYLO), https://plants.usda.gov/plant-profile/SYLO (US government work, public domain; read through its profile service https://plantsservices.sc.egov.usda.gov/api/PlantProfile?symbol=SYLO), read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ]
+}

@@ -15,7 +15,7 @@
   36.12213224148818
  ],
  "size_m": 10000,
- "generated_at": "2026-11-10T23:18:57Z",
+ "generated_at": "2026-11-11T00:47:59Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -3704,24 +3704,24 @@
     "gbif",
     "landfire"
    ],
-   "needed": 63,
-   "with_record": 29,
+   "needed": 78,
+   "with_record": 40,
    "generated_now": 0,
-   "queued": 34,
-   "unread_communities": 7,
+   "queued": 38,
+   "unread_communities": 6,
    "meets_target": {
     "tree": false,
     "shrub": true,
     "ground": true
    },
-   "hands": 41,
+   "hands": 44,
    "by_layer": {
-    "tree": 14,
-    "shrub": 23,
+    "tree": 13,
+    "shrub": 39,
     "ground": 26
    },
-   "sha256": "248d0e533ce4e905d51ec80504e5a927d358930a2bc58377a855b0e0a0aca2c7",
-   "bytes": 67005
+   "sha256": "f4a3c9f3243dadb289b95166ab920bec82a5b5c0ae866024e14073db7a021a97",
+   "bytes": 80538
   },
   "client.species_mix": {
    "path": "client/species_mix.json",
@@ -3738,12 +3738,12 @@
    "format": 2,
    "files": {
     "client/species_mix_index.png": {
-     "sha256": "0cffc0eaca06382f22d066ff712747a47a247c590803356c0ed02e90b76963aa",
-     "bytes": 41408
+     "sha256": "61fac68b2f1a464fd77339b7cf984ff9f32c614ad0fbec84e904f596312b053a",
+     "bytes": 47698
     },
     "client/species_mix_density.png": {
-     "sha256": "190be208791c6d15a7f60018d4b1dbc2ac9f9614f805c08847d96d6aea3424a6",
-     "bytes": 24710
+     "sha256": "d72de80363beba46b58c5f1f78bc3d19af4c851a4b521d91aca32ee3ca055161",
+     "bytes": 37690
     }
    },
    "derived_from": [
@@ -3765,20 +3765,32 @@
      "pinus_edulis",
      "abies_concolor",
      "quercus_gambelii",
-     "populus_tremuloides"
+     "populus_tremuloides",
+     "acer_grandidentatum"
     ],
     "shrubs": [
      "salix_exigua",
+     "shepherdia_rotundifolia",
+     "atriplex_canescens",
+     "ribes_cereum",
      "quercus_gambelii",
+     "acer_grandidentatum",
+     "rosa_woodsii",
+     "symphoricarpos_longiflorus",
+     "robinia_neomexicana",
      "ephedra_viridis",
      "coleogyne_ramosissima",
      "artemisia_tridentata",
-     "atriplex_canescens",
+     "tetradymia_canescens",
      "encelia_farinosa",
-     "purshia_stansburiana",
+     "amelanchier_utahensis",
      "cercocarpus_ledifolius",
-     "rosa_woodsii",
-     "arctostaphylos_patula"
+     "purshia_stansburiana",
+     "ceanothus_fendleri",
+     "arctostaphylos_patula",
+     "chamaebatiaria_millefolium",
+     "ostrya_knowltonii",
+     "ptelea_trifoliata"
     ],
     "ground": [
      "achnatherum_hymenoides",
@@ -3808,46 +3820,60 @@
      "poa_secunda",
      "sphaeralcea_parvifolia",
      "thalictrum_fendleri",
-     "yucca_baccata"
+     "yucca_baccata",
+     "mahonia_repens"
     ]
    },
-   "mixes": 100,
+   "mixes": 122,
    "unmatched": 43,
    "fractions": {
     "from_evt": 0.9646,
     "from_bps_backfill": 0.0354,
     "tree_share": {
      "ponderosa": 0.595,
-     "cottonwood": 0.0024,
+     "cottonwood": 0.0007,
      "douglas_fir": 0.0009,
      "juniperus_osteosperma": 0.1581,
      "pinus_edulis": 0.2381,
      "abies_concolor": 0.0001,
      "quercus_gambelii": 0.0029,
-     "populus_tremuloides": 0.0025
+     "populus_tremuloides": 0.0023,
+     "acer_grandidentatum": 0.002
     },
     "tree_share_by_canopy": {
      "ponderosa": 0.6761,
-     "cottonwood": 0.0017,
+     "cottonwood": 0.0004,
      "douglas_fir": 0.0015,
      "juniperus_osteosperma": 0.1274,
      "pinus_edulis": 0.1932,
      "abies_concolor": 0.0001,
      "quercus_gambelii": 0.0,
-     "populus_tremuloides": 0.0001
+     "populus_tremuloides": 0.0001,
+     "acer_grandidentatum": 0.0013
     },
     "shrub_share": {
      "sandbar_willow": 0.0006,
-     "quercus_gambelii": 0.2389,
-     "ephedra_viridis": 0.3237,
-     "coleogyne_ramosissima": 0.2783,
-     "artemisia_tridentata": 0.065,
-     "atriplex_canescens": 0.0435,
-     "encelia_farinosa": 0.0432,
-     "purshia_stansburiana": 0.0028,
+     "shepherdia_rotundifolia": 0.023,
+     "atriplex_canescens": 0.0567,
+     "ribes_cereum": 0.01,
+     "quercus_gambelii": 0.1309,
+     "acer_grandidentatum": 0.0423,
+     "rosa_woodsii": 0.0254,
+     "symphoricarpos_longiflorus": 0.0056,
+     "robinia_neomexicana": 0.0167,
+     "ephedra_viridis": 0.2904,
+     "coleogyne_ramosissima": 0.249,
+     "artemisia_tridentata": 0.0689,
+     "tetradymia_canescens": 0.0002,
+     "encelia_farinosa": 0.0423,
+     "amelanchier_utahensis": 0.0016,
      "cercocarpus_ledifolius": 0.0011,
-     "rosa_woodsii": 0.0026,
-     "arctostaphylos_patula": 0.0003
+     "purshia_stansburiana": 0.0165,
+     "ceanothus_fendleri": 0.0005,
+     "arctostaphylos_patula": 0.0003,
+     "chamaebatiaria_millefolium": 0.0053,
+     "ostrya_knowltonii": 0.0069,
+     "ptelea_trifoliata": 0.0057
     },
     "ground_share": {
      "achnatherum_hymenoides": 0.3886,
@@ -3863,12 +3889,12 @@
      "erigeron_divergens": 0.0,
      "erigeron_eximius": 0.0,
      "eriogonum_racemosum": 0.0,
-     "festuca_arizonica": 0.1035,
+     "festuca_arizonica": 0.0516,
      "fragaria_virginiana": 0.0,
      "gutierrezia_sarothrae": 0.2909,
      "hesperostipa_comata": 0.0061,
      "lupinus_argenteus": 0.0,
-     "muhlenbergia_montana": 0.1022,
+     "muhlenbergia_montana": 0.0511,
      "muhlenbergia_porteri": 0.0205,
      "osmorhiza_berteroi": 0.0,
      "phlox_austromontana": 0.0,
@@ -3877,17 +3903,19 @@
      "poa_secunda": 0.0043,
      "sphaeralcea_parvifolia": 0.0,
      "thalictrum_fendleri": 0.0,
-     "yucca_baccata": 0.0
+     "yucca_baccata": 0.0,
+     "mahonia_repens": 0.1029
     },
     "mean_tree_density": 0.3579,
-    "mean_shrub_density": 0.3776,
+    "mean_shrub_density": 0.356,
     "rules": {
-     "tile_pool_barren": 0.3917,
+     "recorded_echinocereus_triglochidiatus_purshia_stansburiana_opuntia_polyacantha": 0.3802,
      "named_from_coleogyne_ramosissima_ephedra_viridis": 0.1785,
      "named_from_pinus_ponderosa": 0.1773,
      "named_from_juniperus_osteosperma_pinus_edulis": 0.1204,
      "named_from_coleogyne_ramosissima_ephedra_viridis_encelia_farinosa": 0.071,
      "tile_pool_grassland": 0.0175,
+     "tile_pool_barren": 0.0114,
      "named_from_artemisia_tridentata_ericameria_nauseosa_chrysothamnus_viscidiflorus": 0.0108,
      "named_from_artemisia_tridentata": 0.0107,
      "open_water": 0.0064,
@@ -3907,8 +3935,8 @@
     "rows_with_herb_cover": 0,
     "evh_synthetic": false
    },
-   "sha256": "ce4b55e60be4fc4e42935f60587bf13745c6331b0eea5d4c34890e29a0733965",
-   "bytes": 113731
+   "sha256": "a0ca8f4b7205ba39b2c4e904abd42f019faec0e7088f67d90b94221d5d50db63",
+   "bytes": 138023
   },
   "species.list": {
    "path": "species/species.json",
@@ -4225,12 +4253,12 @@
   "species.registry": {
    "path": "species/registry.json",
    "kind": "table",
-   "plants": 78,
+   "plants": 94,
    "animals_present": 94,
    "animals_queued": 60,
-   "cards_queued": 34,
-   "sha256": "c8923b727d76ff7a5c0008e73b0f995177841d02d28e855679da3b06d3283dd7",
-   "bytes": 106510
+   "cards_queued": 38,
+   "sha256": "f8be940dacf1d5cd47e173e6df094530e73a79f06dfed46cd1c4f3cffb15de0c",
+   "bytes": 121087
   },
   "client.fauna": {
    "path": "client/fauna.json",
@@ -4534,11 +4562,11 @@
     "gbif"
    ],
    "trees": 10,
-   "with_card": 1,
+   "with_card": 3,
    "queued": 10,
    "cards_written": [],
-   "sha256": "42609db82ddf9682d5bac9b6a5433d944a722a9a4a8996612ccc3907a38b7088",
-   "bytes": 5459
+   "sha256": "07bfb6ccb87f20781fd756c6db17cb3b9e171445b15e31494210134e5689776d",
+   "bytes": 5457
   },
   "species.ground": {
    "path": "species/ground.json",
@@ -5790,6 +5818,120 @@
    "at": "2026-11-10T23:18:57Z",
    "seconds": 0.5,
    "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-11T00:22:12Z",
+   "seconds": 29.3,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-11T00:22:15Z",
+   "seconds": 2.9,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-11T00:22:16Z",
+   "seconds": 0.8,
+   "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-11T00:25:22Z",
+   "seconds": 7.3,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-11T00:25:26Z",
+   "seconds": 3.2,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-11T00:25:27Z",
+   "seconds": 1.0,
+   "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-11T00:36:04Z",
+   "seconds": 6.4,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-11T00:36:07Z",
+   "seconds": 3.5,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-11T00:36:08Z",
+   "seconds": 0.9,
+   "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-11T00:38:21Z",
+   "seconds": 5.1,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-11T00:38:24Z",
+   "seconds": 3.1,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-11T00:38:25Z",
+   "seconds": 0.9,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-11T00:42:37Z",
+   "seconds": 12.0,
+   "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-11T00:45:54Z",
+   "seconds": 5.4,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-11T00:45:57Z",
+   "seconds": 3.0,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-11T00:45:58Z",
+   "seconds": 0.9,
+   "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-11T00:47:54Z",
+   "seconds": 5.0,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-11T00:47:58Z",
+   "seconds": 3.1,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-11T00:47:59Z",
+   "seconds": 0.9,
+   "ok": true
   }
  ],
  "steps": {
@@ -6707,14 +6849,14 @@
   },
   "plants": {
    "version": "5",
-   "code": "1c2805b4eec7c448",
+   "code": "7af4b8a37dfac1e1",
    "params": {
     "tile": "utm12n_396_3988"
    },
-   "fingerprint": "f6ceca31e631a6f9",
+   "fingerprint": "6e3bc11bb20a4e01",
    "parts": {
     "version": "5",
-    "code": "1c2805b4eec7c448",
+    "code": "7af4b8a37dfac1e1",
     "params": {
      "tile": "utm12n_396_3988"
     },
@@ -6723,11 +6865,11 @@
      "ice": "cabd33f38d3be846"
     },
     "library": {
-     "library/plant_cards": "8c46bdf1f3fc274c",
+     "library/plant_cards": "21babd208f4a11bd",
      "library/plant_cards/_research": "76160f150981cd69"
     }
    },
-   "ran_at": "2026-11-10T23:17:28Z",
+   "ran_at": "2026-11-11T00:47:50Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -6736,11 +6878,11 @@
     "species.plant_needs"
    ],
    "outputs": {
-    "species/canopy.json": "42609db82ddf9682",
+    "species/canopy.json": "07bfb6ccb87f2078",
     "species/ground.json": "f1b19a5ad91c2762",
-    "species/plant_needs.json": "248d0e533ce4e905"
+    "species/plant_needs.json": "f4a3c9f3243dadb2"
    },
-   "out_hash": "89c9d5642d491c4c",
+   "out_hash": "d99e9a3705e892a4",
    "sources": {
     "wcvp": "2026-11-07",
     "canopy_plots": "2026-11-07",
@@ -6753,20 +6895,20 @@
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 2577
+    "cache": 2761
    },
-   "seconds": 3.9
+   "seconds": 5.0
   },
   "species_mix": {
    "version": "5",
-   "code": "63ef851b83ef7311",
+   "code": "701f3591539d3f91",
    "params": {
     "tile": "utm12n_396_3988"
    },
-   "fingerprint": "eaadd11ff9f53e3f",
+   "fingerprint": "2b84288e9f2f1a49",
    "parts": {
     "version": "5",
-    "code": "63ef851b83ef7311",
+    "code": "701f3591539d3f91",
     "params": {
      "tile": "utm12n_396_3988"
     },
@@ -6775,24 +6917,24 @@
      "landcover": "0c3a55f7b559d8ff",
      "water": "d5c5b10cae4fb965",
      "ice": "cabd33f38d3be846",
-     "plants": "89c9d5642d491c4c"
+     "plants": "d99e9a3705e892a4"
     },
     "library": {
-     "library/species": "da43373440132e57"
+     "library/species": "12e2ad24a7d48918"
     }
    },
-   "ran_at": "2026-11-10T23:18:53Z",
+   "ran_at": "2026-11-11T00:47:55Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "client.species_mix"
    ],
    "outputs": {
-    "client/species_mix.json": "ce4b55e60be4fc4e",
-    "client/species_mix_index.png": "0cffc0eaca06382f",
-    "client/species_mix_density.png": "190be208791c6d15"
+    "client/species_mix.json": "a0ca8f4b7205ba39",
+    "client/species_mix_index.png": "61fac68b2f1a464f",
+    "client/species_mix_density.png": "d72de80363beba46"
    },
-   "out_hash": "3933b872eaeb5620",
+   "out_hash": "e8ebbd44813ef1fc",
    "sources": {},
    "fallbacks": [
     {
@@ -6805,15 +6947,6 @@
      "what": "community 'Southern Rocky Mountain Montane-Subalpine Grassland' (39 cells): no rule, no species in its name, no other grassland community on the tile: drawn bare"
     },
     {
-     "what": "community 'Colorado Plateau Mixed Bedrock Canyon and Tableland' (42161 cells): no rule, no species in its name, no other barren community on the tile: drawn bare"
-    },
-    {
-     "what": "community 'Inter-Mountain Basins Shale Badland' (1268 cells): no rule, no species in its name, no other barren community on the tile: drawn bare"
-    },
-    {
-     "what": "community 'Rocky Mountain Cliff Canyon and Massive Bedrock' (1 cells): no rule, no species in its name, no other barren community on the tile: drawn bare"
-    },
-    {
      "what": "community 'Interior Western North American Temperate Ruderal Grassland' (1 cells): no rule, no species in its name, no other grassland community on the tile: drawn bare"
     },
     {
@@ -6823,9 +6956,9 @@
    "notes": [],
    "fetched": {
     "network": 0,
-    "cache": 257
+    "cache": 31
    },
-   "seconds": 3.3
+   "seconds": 3.1
   },
   "crowns": {
    "version": "2",
@@ -7112,39 +7245,39 @@
   },
   "registry": {
    "version": "1",
-   "code": "9e93858920690702",
+   "code": "ad4aaa443261dc54",
    "params": {
     "tile": "utm12n_396_3988"
    },
-   "fingerprint": "95f2284412e2295b",
+   "fingerprint": "ca35dd57f604cb7c",
    "parts": {
     "version": "1",
-    "code": "9e93858920690702",
+    "code": "ad4aaa443261dc54",
     "params": {
      "tile": "utm12n_396_3988"
     },
     "deps": {
-     "plants": "89c9d5642d491c4c",
-     "species_mix": "3933b872eaeb5620",
+     "plants": "d99e9a3705e892a4",
+     "species_mix": "e8ebbd44813ef1fc",
      "species": "a84ca0a98f8ab952",
      "animals": "83b8f4a9a31a3f0d"
     },
     "library": {
-     "library/species": "da43373440132e57",
+     "library/species": "12e2ad24a7d48918",
      "library/animals": "934e6c71aae6cd14",
-     "library/plant_cards": "8c46bdf1f3fc274c"
+     "library/plant_cards": "21babd208f4a11bd"
     }
    },
-   "ran_at": "2026-11-10T23:18:57Z",
+   "ran_at": "2026-11-11T00:47:58Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "species.registry"
    ],
    "outputs": {
-    "species/registry.json": "c8923b727d76ff7a"
+    "species/registry.json": "f8be940dacf1d5cd"
    },
-   "out_hash": "634291dddc3a5572",
+   "out_hash": "ee831b269f1ba3e9",
    "sources": {},
    "fallbacks": [],
    "notes": [],
@@ -7152,7 +7285,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 0.5
+   "seconds": 0.9
   },
   "audit": {
    "version": "1",

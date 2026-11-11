@@ -910,13 +910,16 @@ NAMED_DENSITY = {"conifer_forest": (1.2, 0.5), "mixed_forest": (1.1, 0.5), "oak_
 MEMBER_FLOOR = 0.05
 
 
-def _layer_weights(named: list, described: dict | None, coverage: float, tile, by_records: bool) -> tuple[dict, str | None]:
+def _layer_weights(named: list, described: dict | None, coverage: float, tile, by_records: bool,
+                   recorded: list | tuple = ()) -> tuple[dict, str | None]:
     """({species: weight}, how) of one layer: `named`, the ids the name names in it; `described` and `coverage`, the
-    description's weights for it and how much of it is found here. how: description | description+name | records |
-    equal | None (an empty layer). Weights sum to 1 except the equal ones (1.0 each, as before 2026-11-10)."""
+    description's weights for it and how much of it is found here; `recorded`, the community's recorded associates
+    (associates.members: [{"id", "records", "of"}], most recorded first). how: description | description+name | records |
+    equal, with "+recorded" where associates were added; recorded (nothing listed: the records give the whole layer);
+    None (an empty layer). Weights sum to 1 except the equal ones (1.0 each, as before 2026-11-10)."""
     from .communities import local_records
     from .succession import rarity
-    if not named and not described:
+    if not named and not described and not recorded:
         return {}, None
     if not by_records:
         return {sid: 1.0 for sid in named}, "equal"
@@ -928,9 +931,31 @@ def _layer_weights(named: list, described: dict | None, coverage: float, tile, b
             w[sid] = w.get(sid, 0.0) + (1.0 - c) * v / len(named)
         how = "description" if c >= 0.995 or not named else "description+name"
     else:
-        w, how = r, "records"
-    if sum(w.values()) <= 0:
+        w, how = r, ("records" if named else None)
+    if named and sum(w.values()) <= 0:
         w = {sid: 1.0 for sid in named}
+    # The recorded associates (pipeline/associates.py, 2026-11-10): the shrubs recorded on the community's own cells
+    # that neither its name nor its description lists. They follow the listed species by reciprocal rank, in order of
+    # their records there: with k species listed the first associate weighs as a (k + 1)th species would, 1 / (k + 1)
+    # of the leading one, the next 1 / (k + 2), each x its rarity; and together they never weigh more than the listed
+    # species do (what LANDFIRE lists are the dominants). With nothing listed the associates are the layer.
+    extra = [m for m in recorded if w.get(m["id"], 0.0) <= 0]
+    if extra:
+        k = sum(1 for v in w.values() if v > 0)
+        listed = sum(1.0 / i for i in range(1, k + 1))            # the listed species hold ranks 1 .. k
+        tot = sum(w.values())
+        w = {sid: v / tot * listed for sid, v in w.items() if v > 0}
+        a = {m["id"]: rarity(max(local_records(tile, m["id"]) or 0, m.get("of") or m.get("records") or 0)) / (k + j)
+             for j, m in enumerate(extra, 1)}
+        a = {sid: v for sid, v in a.items() if v > 0}
+        if k and sum(a.values()) > listed:
+            f = listed / sum(a.values())
+            a = {sid: v * f for sid, v in a.items()}
+        if a:
+            w.update(a)
+            how = f"{how}+recorded" if k else "recorded"
+    if not w:
+        return {}, (how if named or described else None)
     tot = sum(w.values())
     w = {sid: max(v, MEMBER_FLOOR * tot) if sid in named else v for sid, v in w.items()}
     tot = sum(w.values())
@@ -956,11 +981,21 @@ def named_rule(name: str, hab_code: int, key: tuple | None = None) -> dict | Non
     if by_records and key is not None:
         from . import succession
         desc = succession.described(tile, key[0], key[1], dict(named))
+    # the shrubs recorded on the community's own cells that the name and the description leave out
+    # (pipeline/associates.py): only where the community has a shrub layer to add to (a described grassland's shrubs
+    # are the name's to give, succession.LAYERS_OF_TYPE)
+    recorded = []
+    if by_records and key is not None:
+        from . import associates
+        from .succession import LAYERS_OF_TYPE
+        if desc is None or "shrub" in LAYERS_OF_TYPE.get(desc.get("type"), ("tree", "shrub")):
+            recorded = [m for m in associates.members(tile, name) if fits_layer(m["id"], "shrub")]
     layers, how = {}, {}
     for kind in ("tree", "shrub"):
         d = {sid: w for sid, w in ((desc or {}).get(kind) or {}).items() if fits_layer(sid, kind)}
         layers[kind], how[kind] = _layer_weights([sid for sid, k in named if k == kind], d,
-                                                 ((desc or {}).get("coverage") or {}).get(kind, 0.0), tile, by_records)
+                                                 ((desc or {}).get("coverage") or {}).get(kind, 0.0), tile, by_records,
+                                                 recorded if kind == "shrub" else ())
     trees, shrubs = layers["tree"], layers["shrub"]
     if not trees and not shrubs:
         return None
@@ -971,13 +1006,22 @@ def named_rule(name: str, hab_code: int, key: tuple | None = None) -> dict | Non
             "description+name": f"by its LANDFIRE description's succession classes ({model}, pipeline/succession.py) as far as their "
                                 "species are recorded near the tile, the rest to the name's species",
             "records": "equally among the name's species well recorded near the tile, a rarity less",
-            "equal": "equally"}
-    return {"id": "named_from_" + "_".join(lead[:3]), "trees": trees, "shrubs": shrubs,
+            "equal": "equally",
+            "recorded": "from the shrubs recorded on its own cells (pipeline/associates.py), by reciprocal rank in order of their records there"}
+    plus = ", then the shrubs recorded on its own cells that neither lists (pipeline/associates.py), ranked after them and never more than them"
+    added = {m["id"]: {"records": m["records"], "of": m["of"], "affinity": m["affinity"]} for m in recorded
+             if (how["shrub"] or "").endswith("recorded") and shrubs.get(m["id"], 0) > 0 and m["id"] not in [sid for sid, _ in named]
+             and m["id"] not in ((desc or {}).get("shrub") or {})}
+    only_recorded = not trees and how["shrub"] == "recorded"   # nothing named, nothing described: the records alone
+    return {"id": ("recorded_" if only_recorded else "named_from_") + "_".join(lead[:3]), "trees": trees, "shrubs": shrubs,
             "tree_density": td if trees else 0.0, "shrub_density": sd if shrubs else 0.0,
             "weights": {"trees": how["tree"], "shrubs": how["shrub"], **({"model": desc["model"]} if desc and any((h or "").startswith("description") for h in how.values()) else {})},
-            "note": "no rule: the species its name names (communities.named_species: the region's lexicon, or, in no table's "
-                    "region, the candidates recorded near the tile)"
-                    + "".join(f"; {layer} weighted {said[how[kind]]}" for layer, kind in (("trees", "tree"), ("shrubs", "shrub")) if how[kind]),
+            **({"recorded": added} if added else {}),
+            "note": ("no rule and no species in its name: the shrubs recorded on its own cells (pipeline/associates.py)" if only_recorded else
+                     "no rule: the species its name names (communities.named_species: the region's lexicon, or, in no table's "
+                     "region, the candidates recorded near the tile)"
+                     + "".join(f"; {layer} weighted {said[(how[kind] or '').replace('+recorded', '')]}{plus if (how[kind] or '').endswith('+recorded') else ''}"
+                               for layer, kind in (("trees", "tree"), ("shrubs", "shrub")) if how[kind])),
             "fixed": [], "region": None}
 
 
@@ -1281,6 +1325,32 @@ def _write_doc(p, doc: dict) -> None:
     p.write_text(text)
 
 
+def hold_empty(row: dict) -> dict:
+    """A species the client has no growth form for (communities.no_growth_form: a cactus, a yucca, an agave without a
+    record) leaves its place empty: the layer's density falls by its share of the weights (in place), so that the
+    community's other species are not drawn in its stead when resolve leaves it out. Returns {layer: share held empty};
+    a layer of nothing else is held empty whole (density 0) rather than drawn generically."""
+    from .communities import no_growth_form
+    out = {}
+    for layer, dens in (("trees", "tree_density"), ("shrubs", "shrub_density")):
+        tot = sum(w for w in row[layer].values() if w > 0)
+        gone = sum(w for k, w in row[layer].items() if w > 0 and no_growth_form(k))
+        if tot > 0 and gone > 0:
+            share = min(1.0, gone / tot)
+            row[dens] = row[dens] * (1.0 - share)
+            out[layer] = round(share, 4)
+    return out
+
+
+def _recorded_sources(tile) -> dict:
+    """Where the recorded associates' evidence came from (associates.evidence's sources): the attribution."""
+    from . import associates
+    ev = associates.evidence(tile) or {}
+    return {**(ev.get("sources") or {}), "on_natural_cells": ev.get("total"), "skipped": ev.get("skipped"),
+            "source": "GBIF occurrence search (api.gbif.org): human observations of vascular plants, CC0 and CC BY only; "
+                      "LANDFIRE existing vegetation type over the same square"}
+
+
 def species_mix(tile: Tile) -> dict:
     classes = json.loads(tile.path("vegetation/classes.json").read_text())
     evt_tab, bps_tab = classes.get("evt", {}), classes.get("bps", {})
@@ -1315,14 +1385,16 @@ def species_mix(tile: Tile) -> dict:
                 rule = (named_rule(name, hab_code, (source, code)) if name else None) or _fallback(hab_code, regions)
                 unmatched.append({"source": source, "code": code, "name": name, "habitat": CLASSES.get(hab_code),
                                   "drawn": "its named species" if rule["id"].startswith("named_from") else
-                                           ("the tile's own species of its habitat class" if rule.get("pool") else
+                                           ("the shrubs recorded on its own cells" if rule["id"].startswith("recorded_") else
+                                            "the tile's own species of its habitat class" if rule.get("pool") else
                                             "California's foothill default")})
             rows[key] = {"index": len(rows) + 1, "source": source, "code": code, "name": name, "rule": rule["id"],
                          "trees": {k: v for k, v in rule["trees"].items() if v},
                          "shrubs": {k: v for k, v in rule["shrubs"].items() if v},
                          "tree_density": rule["tree_density"], "shrub_density": rule["shrub_density"],
                          "note": rule.get("note"), "fixed": list(rule.get("fixed") or []), "cells": 0, "habitat": hab_code,
-                         **({"weights": rule["weights"]} if rule.get("weights") else {})}
+                         **({"weights": rule["weights"]} if rule.get("weights") else {}),
+                         **({"recorded": rule["recorded"]} if rule.get("recorded") else {})}
             if rows[key]["index"] > 65535:
                 raise ValueError("more than 65535 distinct mixes; species_mix_index.png holds 16 bits")
         return rows[key]["index"]
@@ -1374,10 +1446,17 @@ def species_mix(tile: Tile) -> dict:
     # them are drawn generically.
     LAYERS = (("trees", "tree"), ("shrubs", "shrub"))
     tally: dict = {}
+    # ... except a species the client has no growth form for (a cactus, a yucca): its place is left empty (hold_empty)
+    for b in base_rows:
+        held = hold_empty(b)
+        if held:
+            b["held_empty"] = held
     for b in base_rows:
         if b["rule"].startswith("tile_pool_"):
             continue
         for layer, form in LAYERS:
+            if b.get("held_empty", {}).get(layer, 0) >= 1.0:   # nothing but such species: empty, not generic
+                continue
             if any(w > 0 for w in b[layer].values()) and not resolve(b[layer], form):
                 b.setdefault("generic", []).append(layer)
                 for k, w in b[layer].items():
@@ -1530,7 +1609,7 @@ def species_mix(tile: Tile) -> dict:
                     "trees": b.get("as_written", {}).get("trees", b["trees"]), "shrubs": b.get("as_written", {}).get("shrubs", b["shrubs"]),
                     "ground": {k: round(v, 3) for k, v in b["ground"].items()}, "tree_density": b["tree_density"],
                     "shrub_density": b["shrub_density"], **({"carpet_density": round(b["carpet_density"], 4)} if b.get("carpet_density") else {}),
-                    "note": b["note"], "fixed": b["fixed"], **({"weights": b["weights"]} if b.get("weights") else {}), **({"generic": b["generic"], "generic_drawn": {L: b[L] for L in b["generic"]}} if b.get("generic") else {}),
+                    "note": b["note"], "fixed": b["fixed"], **({"weights": b["weights"]} if b.get("weights") else {}), **({"recorded": b["recorded"]} if b.get("recorded") else {}), **({"held_empty": b["held_empty"]} if b.get("held_empty") else {}), **({"generic": b["generic"], "generic_drawn": {L: b[L] for L in b["generic"]}} if b.get("generic") else {}),
                     "cells": int(sum(r["cells"] for r in table if r["community"] == b["index"]))} for b in base_rows]
     px = lut[index]
     TD, SD, CD = nt + ns + ng, nt + ns + ng + 1, nt + ns + ng + 2
@@ -1618,6 +1697,18 @@ def species_mix(tile: Tile) -> dict:
                          "that layer its cells draw the tile's other communities of the habitat class: communities[]."
                          "generic names the layers and generic_drawn the weights drawn, while its trees / shrubs keep the "
                          "weights as written. cells: the 30 m cells whose row would have drawn the species",
+            "recorded": "communities[].recorded: {species: {records, of, affinity}}: the shrubs added to the community from "
+                        "the records on its own cells (pipeline/associates.py): open-licence GBIF observations within "
+                        "recorded_associates.buffer_km of the tile laid on LANDFIRE's vegetation map. records: on cells "
+                        "of this community; of: on any natural cell; affinity: its share of records here over all "
+                        "plants' share here (1 = as visits alone would put it; a member has a standard error more "
+                        "than that, associates.excess). They rank after the species LANDFIRE "
+                        "lists and together weigh no more than those. recorded_associates: the records' count, licences "
+                        "and GBIF datasets (the attribution)",
+            "held_empty": "communities[].held_empty: {layer: share}: the share of the layer's weights on species the client has "
+                          "no growth form for (a cactus, a yucca, an agave without a record: communities.NO_GROWTH_FORM). "
+                          "They are in `missing`; unlike other missing species their share is not given to the "
+                          "community's other species: the layer's density (as listed) is already lower by that share",
         },
         "mixes": table,
         "communities": communities,
@@ -1631,6 +1722,7 @@ def species_mix(tile: Tile) -> dict:
         # 2026-11-10: the same, said in full. stand_ins: a species without a record drawn by a relative that belongs to
         # this tile; missing: one with no such relative, left out. cells: the 30 m cells whose row would have drawn it
         "stand_ins": stand_ins, "missing": missing,
+        **({"recorded_associates": _recorded_sources(tile)} if any(b.get("recorded") for b in base_rows) else {}),
         "context": {"coast": CONTEXT["coast"], "coast_share": round(coast_cells / tot, 4), "bands_m": list(ELEV_BANDS),
                     "groves": int((tcls >= NTC).sum())},
     }

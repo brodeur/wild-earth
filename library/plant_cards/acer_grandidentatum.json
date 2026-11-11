@@ -1,0 +1,246 @@
+{
+ "id": "acer_grandidentatum",
+ "scientific": "Acer grandidentatum",
+ "common": "bigtooth maple",
+ "aliases": [
+  "bigtooth_maple",
+  "big_tooth_maple",
+  "canyon_maple",
+  "western_sugar_maple",
+  "acer_saccharum_grandidentatum"
+ ],
+ "family": "Sapindaceae",
+ "form": "multi_stem_shrub_tree",
+ "deciduous": true,
+ "template": "acer_circinatum",
+ "regions": [
+  "interior_west"
+ ],
+ "height_m": [
+  3.0,
+  8.0
+ ],
+ "stature": {
+  "typical_m": 5.0,
+  "tall_m": 12.0,
+  "record_m": 15.0,
+  "source": "typical: the drafter's figure for a shrub-tree under the rim's ponderosa pines; tall: Wikipedia, 10-15 m; record: FEIS, to about 15 m as a tree in canyon bottoms (a shrub to about 8 m on dry slopes); read 2026-11-10"
+ },
+ "variants_height_m": {
+  "young": [
+   1.0,
+   3.0
+  ],
+  "veteran": [
+   8.0,
+   12.0
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.15,
+    0.3
+   ],
+   [
+    0.3,
+    0.44
+   ],
+   [
+    0.48,
+    0.52
+   ],
+   [
+    0.65,
+    0.52
+   ],
+   [
+    0.8,
+    0.45
+   ],
+   [
+    0.92,
+    0.3
+   ],
+   [
+    1.0,
+    0.12
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.2,
+  "asymmetry": 0.3,
+  "fill": 0.55,
+  "edge": 1.05
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    112,
+    100,
+    92
+   ],
+   "spring": [
+    126,
+    150,
+    82
+   ],
+   "summer": [
+    78,
+    108,
+    58
+   ],
+   "fall": [
+    200,
+    82,
+    46
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.7,
+   "summer": 1.0,
+   "fall": 0.5
+  },
+  "leaf_on_by_month": [
+   0.0,
+   0.0,
+   0.0,
+   0.3,
+   0.85,
+   1.0,
+   1.0,
+   1.0,
+   0.95,
+   0.55,
+   0.1,
+   0.0
+  ],
+  "leaf_size_m": 0.08,
+  "lobes": 5,
+  "lobe_depth": 0.4,
+  "flowers": {
+   "season": "spring",
+   "months": [
+    4,
+    5
+   ],
+   "form": "cluster",
+   "rgb": [
+    196,
+    200,
+    112
+   ],
+   "size_m": 0.03,
+   "density": 0.25,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": "summer",
+   "months": [
+    6,
+    9
+   ],
+   "form": "cluster",
+   "rgb": [
+    184,
+    112,
+    96
+   ],
+   "size_m": 0.05,
+   "density": 0.25
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   104,
+   96,
+   88
+  ],
+  "bark_pattern": "furrowed",
+  "stems": [
+   2,
+   6
+  ],
+  "lean_deg": 12
+ },
+ "targets": {
+  "crown_width_ratio": 0.85,
+  "crown_base_ratio": 0.2,
+  "porosity": 0.3,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: a small maple of two to several grey-brown stems with a dense, rounded crown of mid-green, deeply lobed leaves; reddish winged seeds in summer, scarlet, orange and gold leaves in early fall"
+ },
+ "description": "A small maple, here a large shrub or small tree of two to several grey-brown stems a few metres high, with deeply lobed leaves 6-12 cm across, each lobe bluntly toothed. Small yellow-green flowers open with the leaves in spring, and pairs of winged seeds ripen from pink to brown over the summer. At the Grand Canyon it grows in sheltered draws and shady spots in the ponderosa pine forest of the rim, where in early fall it turns scarlet, orange and gold.",
+ "season_notes": {
+  "winter": "Bare grey-brown stems with smooth to finely scaly bark; mule deer browse the twigs a little.",
+  "spring": "Clusters of small yellow-green flowers in April as the leaves unfold.",
+  "summer": "Dense green crowns; paired winged seeds turn from green to reddish pink, and squirrels and chipmunks gather them.",
+  "fall": "Leaves turn red, orange and gold in late September and fall early, before the oaks'; the seeds spin down."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 0.8,
+   "riparian": 0.7,
+   "mixed_forest": 0.7,
+   "oak_woodland": 0.5,
+   "chaparral": 0.3
+  },
+  "floor": 1.1,
+  "mid": 0.9,
+  "steep": 0.9,
+  "north": 1.3,
+  "shade": 0.6,
+  "disturbed": 1.0
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "summer",
+     "winter"
+    ]
+   },
+   {
+    "animal": "sciurus_griseus",
+    "part": "seeds",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "tamias_amoenus",
+    "part": "seeds",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "ursus_americanus",
+   "peromyscus_maniculatus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1280,
+   2870
+  ],
+  "where": "cool, shaded draws, drainages and north-facing pockets in the ponderosa pine forest of the South Rim; from western Montana and Idaho through Utah, Arizona and New Mexico to central Texas and Coahuila"
+ },
+ "notes": "Vine maple (the template, a card on bigleaf maple) is the same genus, a small multi-stemmed maple with palmately lobed leaves; the card gives bigtooth maple fewer, deeper lobes (5, lobe_depth 0.4: Wikipedia, three to five deep, bluntly pointed lobes, each main lobe with small lobules), leaves 6-12 cm (Wikipedia; FEIS 2.5-10 cm wide), so leaf_size_m 0.08, and replaces the template's red flowers and samaras. Height: a tree to about 15 m in canyon bottoms and along streams, a shrub to about 8 m on dry slopes, with single or multiple trunks, 2 or more stems on dry slopes, sprouting from the root crown and layering (FEIS); 10-15 m (Wikipedia); USDA PLANTS lists shrub and tree; drawn 3-8 m in the shrub layer as the brief asks. Bark thin, smooth or flaky (FEIS); dark brown to grey, narrowly fissured with flat ridges and plate-like scales (Wikipedia), hence furrowed. Flowers yellow-green, 4-5 mm, no petals, with the leaves in mid-spring (Wikipedia), April in Arizona (FEIS); samaras green to reddish pink, ripening brown in early fall, wings 2-3 cm (Wikipedia), forming in May, mature August-September, dropping mid-August to early October (FEIS): drawn as reddish clusters June-September. Fall colour golden yellow to red (Wikipedia); leaves senesce by late September in Utah and fall earlier than Gambel oak's (FEIS). Habitat: cool, moist canyons, ravines, streams and lower slopes; in Arizona cool shaded draws and intermittent drainages, more at the bottom of snowmelt drainages on the Mogollon Rim, in ponderosa pine/bigtooth maple and white fir/bigtooth maple types; shade-tolerant seedlings, a seral understory tree (FEIS); hence north 1.3, shade 0.6, riparian 0.7. Its placing in the South Rim's ponderosa woodland is from the brief; neither FEIS nor Wikipedia names the Grand Canyon. Elevation 1280-2870 m, in Arizona 1370-2130 m (FEIS). Fire: sprouts vigorously after low and moderate fires, a severe burn kills it (FEIS). Eaters and cover: light winter and moderate summer browse by mule deer, poor to fair palatability; moose in Idaho; seeds important to many animals, eaten and cached by squirrels and chipmunks; cover and bedding for mule deer; white fir/bigtooth maple forest is excellent black bear habitat; Mexican spotted owls roost in its canyon woodlands (FEIS). The western grey squirrel stands in for Abert's and red squirrels and the yellow-pine chipmunk for the Grand Canyon's chipmunks; moose, Abert's squirrel and Mexican spotted owl are not in the library. NPS Grand Canyon pages (trees, shrubs, natural features) were read and do not name this species. Colours, crown profile, porosity, stems, leaf-on months and the flower and samara colours and sizes are the drafter's judgement, not from a source.",
+ "sources": [
+  "Fire Effects Information System, Acer grandidentatum, https://www.fs.usda.gov/database/feis/plants/tree/acegra/all.html, read 2026-11-10",
+  "Wikipedia, Acer grandidentatum (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Acer_grandidentatum, read 2026-11-10",
+  "USDA PLANTS, Acer grandidentatum (ACGR3), https://plants.usda.gov/home/plantProfile?symbol=ACGR3, read 2026-11-10",
+  "National Park Service, Grand Canyon National Park: Natural Features & Ecosystems, https://home.nps.gov/grca/learn/nature/naturalfeaturesandecosystems.htm, read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ]
+}

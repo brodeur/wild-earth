@@ -468,6 +468,21 @@
    "rank": 2
   },
   {
+   "id": "vaccinium_scoparium",
+   "kind": "shrub",
+   "why": [
+    "in the description of EVT 7055 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (12756 cells)",
+    "recorded on the cells of EVT 7050 Rocky Mountain Lodgepole Pine Forest (5 of its 6 open records near the tile, 7.57 times the rate of plants in general; 9086 cells)",
+    "in the description of BPS 693 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (79 cells)"
+   ],
+   "cover": 0.1694,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "vaccinium_scoparium",
+   "rank": 3
+  },
+  {
    "id": "symphoricarpos_albus",
    "kind": "shrub",
    "why": [
@@ -481,20 +496,6 @@
    "record": true,
    "card": false,
    "drawn_as": "symphoricarpos_albus",
-   "rank": 3
-  },
-  {
-   "id": "vaccinium_scoparium",
-   "kind": "shrub",
-   "why": [
-    "in the description of EVT 7055 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (12756 cells)",
-    "in the description of BPS 693 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (79 cells)"
-   ],
-   "cover": 0.1147,
-   "records": 0,
-   "record": true,
-   "card": true,
-   "drawn_as": "vaccinium_scoparium",
    "rank": 4
   },
   {
@@ -547,6 +548,19 @@
    "rank": 7
   },
   {
+   "id": "shepherdia_canadensis",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7050 Rocky Mountain Lodgepole Pine Forest (3 of its 4 open records near the tile, 6.81 times the rate of plants in general; 9086 cells)"
+   ],
+   "cover": 0.0273,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "shepherdia_canadensis",
+   "rank": 8
+  },
+  {
    "id": "amelanchier_alnifolia",
    "kind": "shrub",
    "why": [
@@ -560,7 +574,7 @@
    "record": true,
    "card": true,
    "drawn_as": "amelanchier_alnifolia",
-   "rank": 8
+   "rank": 9
   },
   {
    "id": "ficus_densifolia",
@@ -575,7 +589,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 9
+   "rank": 10
   },
   {
    "id": "rosa_woodsii",
@@ -594,7 +608,7 @@
    "record": true,
    "card": true,
    "drawn_as": "rosa_woodsii",
-   "rank": 10
+   "rank": 11
   },
   {
    "id": "picea_engelmannii",
@@ -612,7 +626,7 @@
    "record": true,
    "card": true,
    "drawn_as": "picea_engelmannii",
-   "rank": 11
+   "rank": 12
   },
   {
    "id": "salix_boothii",
@@ -629,7 +643,7 @@
    "record": true,
    "card": true,
    "drawn_as": "salix_boothii",
-   "rank": 12
+   "rank": 13
   },
   {
    "id": "salix_bebbiana",
@@ -647,7 +661,7 @@
    "card": false,
    "drawn_as": "salix_boothii",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 13
+   "rank": 14
   },
   {
    "id": "pinus_albicaulis",
@@ -660,7 +674,7 @@
    "record": true,
    "card": true,
    "drawn_as": "pinus_albicaulis",
-   "rank": 14
+   "rank": 15
   },
   {
    "id": "pinus_flexilis",
@@ -675,7 +689,7 @@
    "record": true,
    "card": true,
    "drawn_as": "pinus_flexilis",
-   "rank": 15
+   "rank": 16
   },
   {
    "id": "prunus_virginiana",
@@ -686,11 +700,10 @@
    ],
    "cover": 0.0015,
    "records": 0,
-   "record": false,
-   "card": false,
-   "drawn_as": "rubus_parviflorus",
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 16
+   "record": true,
+   "card": true,
+   "drawn_as": "prunus_virginiana",
+   "rank": 17
   },
   {
    "id": "vaccinium_membranaceum",
@@ -705,7 +718,7 @@
    "card": false,
    "drawn_as": "vaccinium_scoparium",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 17
+   "rank": 18
   },
   {
    "id": "juniperus_scopulorum",
@@ -719,7 +732,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 18
+   "rank": 19
   },
   {
    "id": "geranium_viscosissimum",
@@ -733,7 +746,7 @@
    "record": true,
    "card": true,
    "drawn_as": "geranium_viscosissimum",
-   "rank": 19
+   "rank": 20
   },
   {
    "id": "chamaenerion_angustifolium",
@@ -748,7 +761,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 20
+   "rank": 21
   },
   {
    "id": "achillea_millefolium",
@@ -762,7 +775,7 @@
    "record": true,
    "card": false,
    "drawn_as": "achillea_millefolium",
-   "rank": 21
+   "rank": 22
   },
   {
    "id": "clematis_hirsutissima",
@@ -777,7 +790,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 22
+   "rank": 23
   },
   {
    "id": "geum_triflorum",
@@ -792,7 +805,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 23
+   "rank": 24
   },
   {
    "id": "sedum_lanceolatum",
@@ -807,7 +820,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 24
+   "rank": 25
   },
   {
    "id": "cirsium_scariosum",
@@ -822,7 +835,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 25
+   "rank": 26
   },
   {
    "id": "eriogonum_umbellatum",
@@ -836,7 +849,7 @@
    "record": true,
    "card": true,
    "drawn_as": "eriogonum_umbellatum",
-   "rank": 26
+   "rank": 27
   },
   {
    "id": "cirsium_arvense",
@@ -851,7 +864,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 27
+   "rank": 28
   },
   {
    "id": "linum_lewisii",
@@ -866,7 +879,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 28
+   "rank": 29
   }
  ],
  "gbif_plants": [
@@ -972,7 +985,7 @@
    "family": "Berberidaceae",
    "kind": "shrub",
    "records": 9,
-   "known": false
+   "known": true
   },
   {
    "id": "phlox_multiflora",
@@ -2012,7 +2025,7 @@
    "family": "Grossulariaceae",
    "kind": "shrub",
    "records": 1,
-   "known": false
+   "known": true
   },
   {
    "id": "rubus_idaeus",
@@ -2026,9 +2039,9 @@
    "id": "amelanchier_utahensis",
    "scientific": "Amelanchier utahensis",
    "family": "Rosaceae",
-   "kind": "forb",
+   "kind": "shrub",
    "records": 1,
-   "known": false
+   "known": true
   },
   {
    "id": "fragaria_vesca",
@@ -2079,7 +2092,7 @@
  },
  "by_layer": {
   "tree": 9,
-  "shrub": 9,
+  "shrub": 10,
   "ground": 10
  },
  "hands": [
@@ -2098,15 +2111,6 @@
    "why": [
     "named by EVT 9519 Rocky Mountain Lower Montane-Foothill Riparian Shrubland (4901 cells)",
     "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (646 cells)"
-   ]
-  },
-  {
-   "id": "prunus_virginiana",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (272 cells)",
-    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (80 cells)"
    ]
   },
   {
@@ -2280,14 +2284,14 @@
   }
  ],
  "summary": {
-  "needed": 28,
-  "with_record": 16,
+  "needed": 29,
+  "with_record": 18,
   "generated_now": 0,
-  "queued": 12,
+  "queued": 11,
   "unread_communities": 12,
   "by_layer": {
    "tree": 9,
-   "shrub": 9,
+   "shrub": 10,
    "ground": 10
   },
   "meets_target": {
@@ -2295,6 +2299,6 @@
    "shrub": false,
    "ground": false
   },
-  "hands": 24
+  "hands": 23
  }
 }

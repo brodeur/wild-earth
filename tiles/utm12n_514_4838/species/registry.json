@@ -1,6 +1,6 @@
 {
  "tile": "utm12n_514_4838",
- "at": "2026-11-10T23:18:53Z",
+ "at": "2026-11-11T00:48:16Z",
  "levels": {
   "0": "none: a stand-in species is drawn in its place (plants) or nothing is (animals)",
   "1": "stand-in look: another species' model with its own size and colour",
@@ -11,7 +11,7 @@
  "summary": {
   "by_level": {
    "0": {
-    "plants": 31,
+    "plants": 23,
     "animals": 44
    },
    "1": {
@@ -19,7 +19,7 @@
     "animals": 0
    },
    "2": {
-    "plants": 14,
+    "plants": 22,
     "animals": 1
    },
    "3": {
@@ -35,19 +35,14 @@
   "animals_present": 89,
   "animals_queued": 53,
   "meshy_credits_queued": 1580,
-  "cards_queued": 31,
+  "cards_queued": 23,
   "stand_ins": {
-   "sorbus_scopulina": "rubus_parviflorus",
-   "artemisia_tripartita": "artemisia_tridentata",
    "acer_glabrum": null,
-   "prunus_virginiana": "rubus_parviflorus",
+   "artemisia_tripartita": "artemisia_tridentata",
    "vaccinium_membranaceum": "vaccinium_scoparium",
    "acer_negundo": null,
-   "ceanothus_velutinus": null,
    "juniperus_scopulorum": null,
-   "lonicera_utahensis": "symphoricarpos_albus",
    "aconitum_columbianum": null,
-   "mahonia_repens": null,
    "wyethia_sagittata": null,
    "chamaenerion_angustifolium": null,
    "ipomopsis_aggregata": null,
@@ -57,16 +52,13 @@
    "pterospora_andromedea": "vaccinium_scoparium",
    "streptopus_amplexifolius": null,
    "chimaphila_umbellata": "vaccinium_scoparium",
-   "paxistima_myrsinites": null,
    "rhododendron_menziesii": "vaccinium_scoparium",
    "carduus_nutans": null,
    "maianthemum_racemosum": null,
    "heracleum_maximum": null,
    "clematis_occidentalis": null,
-   "lonicera_involucrata": "symphoricarpos_albus",
-   "ribes_viscosissimum": null,
-   "orthilia_secunda": "vaccinium_scoparium",
-   "kalmia_microphylla": "vaccinium_scoparium",
+   "hydrophyllum_capitatum": null,
+   "lonicera_involucrata": "lonicera_utahensis",
    "picea_pungens": "picea_engelmannii"
   },
   "density": {
@@ -76,7 +68,7 @@
    },
    "shrub": {
     "target": 23,
-    "have": 8
+    "have": 16
    },
    "ground": {
     "target": 26,
@@ -89,28 +81,15 @@
    }
   },
   "hands": {
-   "count": 89,
+   "count": 81,
    "by_what": {
-    "a trait card": 31,
+    "a trait card": 23,
     "a lexicon phrase or a species-mix rule": 5,
     "a mesh": 53
    }
   }
  },
  "plants": [
-  {
-   "id": "artemisia_tridentata",
-   "kind": "shrub",
-   "fidelity": 2,
-   "common": "big sagebrush",
-   "drawn_as": "artemisia_tridentata",
-   "share": 0.8132,
-   "why_needed": [
-    "named by EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (26281 cells)",
-    "named by BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (691 cells)",
-    "in the description of EVT 7011 Rocky Mountain Aspen Forest and Woodland (461 cells)"
-   ]
-  },
   {
    "id": "pinus_contorta",
    "kind": "tree",
@@ -122,6 +101,19 @@
     "named by EVT 7050 Rocky Mountain Lodgepole Pine Forest (9076 cells)",
     "in the description of EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (6244 cells)",
     "in the description of EVT 7055 Rocky Mountain Subalpine Dry-Mesic Spruce-Fir Forest and Woodland (5844 cells)"
+   ]
+  },
+  {
+   "id": "artemisia_tridentata",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "big sagebrush",
+   "drawn_as": "artemisia_tridentata",
+   "share": 0.4867,
+   "why_needed": [
+    "named by EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (26281 cells)",
+    "named by BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (691 cells)",
+    "in the description of EVT 7011 Rocky Mountain Aspen Forest and Woodland (461 cells)"
    ]
   },
   {
@@ -151,16 +143,16 @@
    ]
   },
   {
-   "id": "symphoricarpos_albus",
+   "id": "purshia_tridentata",
    "kind": "shrub",
-   "fidelity": 4,
-   "common": "common snowberry",
-   "drawn_as": "symphoricarpos_albus",
-   "share": 0.1036,
+   "fidelity": 2,
+   "common": "antelope bitterbrush",
+   "drawn_as": "purshia_tridentata",
+   "share": 0.1218,
    "why_needed": [
-    "in the description of EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (6244 cells)",
-    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
+    "recorded on the cells of EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (5 of its 7 open records near the tile, 2.33 times the rate of plants in general; 26281 cells)",
+    "in the description of EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "recorded on the cells of BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (5 of its 7 open records near the tile, 2.33 times the rate of plants in general; 691 cells)"
    ]
   },
   {
@@ -190,12 +182,25 @@
    ]
   },
   {
+   "id": "prunus_virginiana",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "chokecherry",
+   "drawn_as": "prunus_virginiana",
+   "share": 0.0742,
+   "why_needed": [
+    "recorded on the cells of EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (3 of its 6 open records near the tile, 1.63 times the rate of plants in general; 26281 cells)",
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "recorded on the cells of BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (3 of its 6 open records near the tile, 1.63 times the rate of plants in general; 691 cells)"
+   ]
+  },
+  {
    "id": "festuca_idahoensis",
    "kind": "grass",
    "fidelity": 3,
    "common": "Idaho fescue",
    "drawn_as": "festuca_idahoensis",
-   "share": 0.0737,
+   "share": 0.0734,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -206,9 +211,22 @@
    "fidelity": 3,
    "common": "silvery lupine",
    "drawn_as": "lupinus_argenteus",
-   "share": 0.0671,
+   "share": 0.0614,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "rubus_parviflorus",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "thimbleberry",
+   "drawn_as": "rubus_parviflorus",
+   "share": 0.0608,
+   "why_needed": [
+    "recorded on the cells of EVT 7050 Rocky Mountain Lodgepole Pine Forest (6 of its 18 open records near the tile, 2.31 times the rate of plants in general; 9076 cells)",
+    "recorded on the cells of EVT 7056 Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland (3 of its 18 open records near the tile, 13.87 times the rate of plants in general; 3470 cells)",
+    "recorded on the cells of BPS 694 Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland (3 of its 18 open records near the tile, 13.87 times the rate of plants in general; 127 cells)"
    ]
   },
   {
@@ -217,9 +235,22 @@
    "fidelity": 3,
    "common": "Geyer's sedge",
    "drawn_as": "carex_geyeri",
-   "share": 0.0654,
+   "share": 0.0582,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "ceanothus_velutinus",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "snowbrush ceanothus",
+   "drawn_as": "ceanothus_velutinus",
+   "share": 0.0576,
+   "why_needed": [
+    "recorded on the cells of EVT 7050 Rocky Mountain Lodgepole Pine Forest (12 of its 25 open records near the tile, 3.33 times the rate of plants in general; 9076 cells)",
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
    ]
   },
   {
@@ -247,12 +278,38 @@
    ]
   },
   {
+   "id": "symphoricarpos_albus",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "common snowberry",
+   "drawn_as": "symphoricarpos_albus",
+   "share": 0.0522,
+   "why_needed": [
+    "in the description of EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (6244 cells)",
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
+   ]
+  },
+  {
+   "id": "mahonia_repens",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "creeping barberry",
+   "drawn_as": "mahonia_repens",
+   "share": 0.0509,
+   "why_needed": [
+    "recorded on the cells of EVT 7050 Rocky Mountain Lodgepole Pine Forest (8 of its 26 open records near the tile, 2.13 times the rate of plants in general; 9076 cells)",
+    "recorded on the cells of EVT 7011 Rocky Mountain Aspen Forest and Woodland (3 of its 26 open records near the tile, 2.57 times the rate of plants in general; 461 cells)",
+    "recorded on the cells of BPS 686 Rocky Mountain Aspen Forest and Woodland (3 of its 26 open records near the tile, 2.57 times the rate of plants in general; 29 cells)"
+   ]
+  },
+  {
    "id": "elymus_trachycaulus",
    "kind": "grass",
    "fidelity": 3,
    "common": "slender wheatgrass",
    "drawn_as": "elymus_trachycaulus",
-   "share": 0.05,
+   "share": 0.0497,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -280,12 +337,24 @@
    ]
   },
   {
+   "id": "lonicera_utahensis",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "Utah honeysuckle",
+   "drawn_as": "lonicera_utahensis",
+   "share": 0.0413,
+   "why_needed": [
+    "recorded on the cells of EVT 7050 Rocky Mountain Lodgepole Pine Forest (6 of its 16 open records near the tile, 2.6 times the rate of plants in general; 9076 cells)",
+    "recorded on the cells of EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (6 of its 16 open records near the tile, 2.94 times the rate of plants in general; 6244 cells)"
+   ]
+  },
+  {
    "id": "carex_rossii",
    "kind": "grass",
    "fidelity": 3,
    "common": "Ross' sedge",
    "drawn_as": "carex_rossii",
-   "share": 0.0335,
+   "share": 0.0332,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -302,19 +371,6 @@
    ]
   },
   {
-   "id": "rosa_woodsii",
-   "kind": "shrub",
-   "fidelity": 2,
-   "common": "Woods' rose",
-   "drawn_as": "rosa_woodsii",
-   "share": 0.0298,
-   "why_needed": [
-    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (1315 cells)",
-    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-    "named by EVT 9519 Rocky Mountain Lower Montane-Foothill Riparian Shrubland (489 cells)"
-   ]
-  },
-  {
    "id": "arnica_cordifolia",
    "kind": "forb",
    "fidelity": 3,
@@ -323,17 +379,6 @@
    "share": 0.0295,
    "why_needed": [
     "GBIF: 27 records on the tile"
-   ]
-  },
-  {
-   "id": "calamagrostis_canadensis",
-   "kind": "grass",
-   "fidelity": 3,
-   "common": "bluejoint",
-   "drawn_as": "calamagrostis_canadensis",
-   "share": 0.0284,
-   "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
@@ -372,12 +417,37 @@
    ]
   },
   {
+   "id": "rosa_woodsii",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "Woods' rose",
+   "drawn_as": "rosa_woodsii",
+   "share": 0.0256,
+   "why_needed": [
+    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (1315 cells)",
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "named by EVT 9519 Rocky Mountain Lower Montane-Foothill Riparian Shrubland (489 cells)"
+   ]
+  },
+  {
+   "id": "tetradymia_canescens",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "gray horsebrush",
+   "drawn_as": "tetradymia_canescens",
+   "share": 0.0239,
+   "why_needed": [
+    "recorded on the cells of EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (3 of its 3 open records near the tile, 3.27 times the rate of plants in general; 26281 cells)",
+    "recorded on the cells of BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (3 of its 3 open records near the tile, 3.27 times the rate of plants in general; 691 cells)"
+   ]
+  },
+  {
    "id": "delphinium_nuttallianum",
    "kind": "forb",
    "fidelity": 3,
    "common": "twolobe larkspur",
    "drawn_as": "delphinium_nuttallianum",
-   "share": 0.0238,
+   "share": 0.0235,
    "why_needed": [
     "GBIF: 10 records on the tile"
    ]
@@ -394,63 +464,6 @@
    ]
   },
   {
-   "id": "eurybia_conspicua",
-   "kind": "forb",
-   "fidelity": 3,
-   "common": "western showy aster",
-   "drawn_as": "eurybia_conspicua",
-   "share": 0.0226,
-   "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
-   ]
-  },
-  {
-   "id": "amelanchier_alnifolia",
-   "kind": "shrub",
-   "fidelity": 2,
-   "common": "Saskatoon serviceberry",
-   "drawn_as": "amelanchier_alnifolia",
-   "share": 0.0222,
-   "why_needed": [
-    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)",
-    "canopy: records (GBIF: 40 records on the tile; height not yet screened)"
-   ]
-  },
-  {
-   "id": "actaea_rubra",
-   "kind": "forb",
-   "fidelity": 3,
-   "common": "red baneberry",
-   "drawn_as": "actaea_rubra",
-   "share": 0.022,
-   "why_needed": [
-    "GBIF: 86 records on the tile"
-   ]
-  },
-  {
-   "id": "erigeron_engelmannii",
-   "kind": "forb",
-   "fidelity": 3,
-   "common": "Engelmann's fleabane",
-   "drawn_as": "erigeron_engelmannii",
-   "share": 0.022,
-   "why_needed": [
-    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
-   ]
-  },
-  {
-   "id": "maianthemum_stellatum",
-   "kind": "forb",
-   "fidelity": 3,
-   "common": "starry false lily of the valley",
-   "drawn_as": "maianthemum_stellatum",
-   "share": 0.0219,
-   "why_needed": [
-    "GBIF: 10 records on the tile"
-   ]
-  },
-  {
    "id": "hesperostipa_comata",
    "kind": "grass",
    "fidelity": 3,
@@ -462,12 +475,12 @@
    ]
   },
   {
-   "id": "saxifraga_bronchialis",
-   "kind": "forb",
+   "id": "calamagrostis_canadensis",
+   "kind": "grass",
    "fidelity": 3,
-   "common": "yellowdot saxifrage",
-   "drawn_as": "saxifraga_bronchialis",
-   "share": 0.0218,
+   "common": "bluejoint",
+   "drawn_as": "calamagrostis_canadensis",
+   "share": 0.0209,
    "why_needed": [
     "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
@@ -478,7 +491,7 @@
    "fidelity": 3,
    "common": "sticky purple geranium",
    "drawn_as": "geranium_viscosissimum",
-   "share": 0.0192,
+   "share": 0.0189,
    "why_needed": [
     "GBIF: 61 records on the tile"
    ]
@@ -495,6 +508,19 @@
    ]
   },
   {
+   "id": "sorbus_scopulina",
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "Greene's mountain-ash",
+   "drawn_as": "sorbus_scopulina",
+   "share": 0.0186,
+   "why_needed": [
+    "recorded on the cells of EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (3 of its 6 open records near the tile, 3.92 times the rate of plants in general; 6244 cells)",
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
+   ]
+  },
+  {
    "id": "castilleja_miniata",
    "kind": "forb",
    "fidelity": 3,
@@ -506,16 +532,71 @@
    ]
   },
   {
-   "id": "cornus_sericea",
+   "id": "amelanchier_alnifolia",
    "kind": "shrub",
-   "fidelity": 4,
-   "common": "creek dogwood",
-   "drawn_as": "cornus_sericea",
+   "fidelity": 2,
+   "common": "Saskatoon serviceberry",
+   "drawn_as": "amelanchier_alnifolia",
+   "share": 0.0173,
+   "why_needed": [
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)",
+    "canopy: records (GBIF: 40 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "eurybia_conspicua",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "western showy aster",
+   "drawn_as": "eurybia_conspicua",
+   "share": 0.0166,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "actaea_rubra",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "red baneberry",
+   "drawn_as": "actaea_rubra",
+   "share": 0.0163,
+   "why_needed": [
+    "GBIF: 86 records on the tile"
+   ]
+  },
+  {
+   "id": "erigeron_engelmannii",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "Engelmann's fleabane",
+   "drawn_as": "erigeron_engelmannii",
+   "share": 0.0163,
+   "why_needed": [
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
+   ]
+  },
+  {
+   "id": "maianthemum_stellatum",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "starry false lily of the valley",
+   "drawn_as": "maianthemum_stellatum",
+   "share": 0.0161,
+   "why_needed": [
+    "GBIF: 10 records on the tile"
+   ]
+  },
+  {
+   "id": "saxifraga_bronchialis",
+   "kind": "forb",
+   "fidelity": 3,
+   "common": "yellowdot saxifrage",
+   "drawn_as": "saxifraga_bronchialis",
    "share": 0.016,
    "why_needed": [
-    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (1315 cells)",
-    "named by EVT 9519 Rocky Mountain Lower Montane-Foothill Riparian Shrubland (489 cells)",
-    "named by EVT 9022 Rocky Mountain Subalpine-Montane Riparian Woodland (416 cells)"
+    "drawn by the species mix (a habitat-class or rule default, not named by the tile's communities)"
    ]
   },
   {
@@ -532,6 +613,19 @@
    ]
   },
   {
+   "id": "cornus_sericea",
+   "kind": "shrub",
+   "fidelity": 4,
+   "common": "creek dogwood",
+   "drawn_as": "cornus_sericea",
+   "share": 0.0139,
+   "why_needed": [
+    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (1315 cells)",
+    "named by EVT 9519 Rocky Mountain Lower Montane-Foothill Riparian Shrubland (489 cells)",
+    "named by EVT 9022 Rocky Mountain Subalpine-Montane Riparian Woodland (416 cells)"
+   ]
+  },
+  {
    "id": "pinus_flexilis",
    "kind": "tree",
    "fidelity": 2,
@@ -542,17 +636,6 @@
     "named by EVT 7046 Northern Rocky Mountain Subalpine Woodland and Parkland (2953 cells)",
     "named by EVT 7057 Rocky Mountain Subalpine-Montane Limber-Bristlecone Pine Woodland (30 cells)",
     "named by EVT 7049 Rocky Mountain Foothill Limber Pine-Juniper Woodland (19 cells)"
-   ]
-  },
-  {
-   "id": "rubus_parviflorus",
-   "kind": "shrub",
-   "fidelity": 2,
-   "common": "thimbleberry",
-   "drawn_as": "rubus_parviflorus",
-   "share": 0.0082,
-   "why_needed": [
-    "GBIF: 273 records on the tile"
    ]
   },
   {
@@ -755,19 +838,6 @@
    "stand_in": null
   },
   {
-   "id": "ceanothus_velutinus",
-   "kind": "shrub",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
-   ],
-   "stand_in": null
-  },
-  {
    "id": "chamaenerion_angustifolium",
    "kind": "forb",
    "fidelity": 0,
@@ -839,6 +909,18 @@
    "stand_in": null
   },
   {
+   "id": "hydrophyllum_capitatum",
+   "kind": "forb",
+   "fidelity": 0,
+   "common": null,
+   "drawn_as": null,
+   "share": 0,
+   "why_needed": [
+    "GBIF: 51 records on the tile"
+   ],
+   "stand_in": null
+  },
+  {
    "id": "ipomopsis_aggregata",
    "kind": "forb",
    "fidelity": 0,
@@ -863,52 +945,16 @@
    "stand_in": null
   },
   {
-   "id": "kalmia_microphylla",
-   "kind": "shrub",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": "vaccinium_scoparium",
-   "share": 0,
-   "why_needed": [
-    "GBIF: 12 records on the tile"
-   ],
-   "stand_in": "vaccinium_scoparium"
-  },
-  {
    "id": "lonicera_involucrata",
    "kind": "shrub",
    "fidelity": 0,
    "common": null,
-   "drawn_as": "symphoricarpos_albus",
+   "drawn_as": "lonicera_utahensis",
    "share": 0,
    "why_needed": [
     "GBIF: 44 records on the tile"
    ],
-   "stand_in": "symphoricarpos_albus"
-  },
-  {
-   "id": "lonicera_utahensis",
-   "kind": "shrub",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": "symphoricarpos_albus",
-   "share": 0,
-   "why_needed": [
-    "GBIF: 175 records on the tile"
-   ],
-   "stand_in": "symphoricarpos_albus"
-  },
-  {
-   "id": "mahonia_repens",
-   "kind": "shrub",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "GBIF: 134 records on the tile"
-   ],
-   "stand_in": null
+   "stand_in": "lonicera_utahensis"
   },
   {
    "id": "maianthemum_racemosum",
@@ -923,28 +969,15 @@
    "stand_in": null
   },
   {
-   "id": "orthilia_secunda",
-   "kind": "shrub",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": "vaccinium_scoparium",
-   "share": 0,
-   "why_needed": [
-    "GBIF: 18 records on the tile"
-   ],
-   "stand_in": "vaccinium_scoparium"
-  },
-  {
    "id": "paxistima_myrsinites",
-   "kind": "forb",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
+   "kind": "shrub",
+   "fidelity": 2,
+   "common": "Oregon boxleaf",
+   "drawn_as": "paxistima_myrsinites",
    "share": 0,
    "why_needed": [
     "GBIF: 77 records on the tile"
-   ],
-   "stand_in": null
+   ]
   },
   {
    "id": "picea_pungens",
@@ -957,20 +990,6 @@
     "named by EVT 7061 Inter-Mountain Basins Aspen-Mixed Conifer Forest and Woodland (10 cells)"
    ],
    "stand_in": "picea_engelmannii"
-  },
-  {
-   "id": "prunus_virginiana",
-   "kind": "shrub",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": "rubus_parviflorus",
-   "share": 0,
-   "why_needed": [
-    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)",
-    "canopy: records (GBIF: 19 records on the tile; height not yet screened)"
-   ],
-   "stand_in": "rubus_parviflorus"
   },
   {
    "id": "pterospora_andromedea",
@@ -995,32 +1014,6 @@
     "GBIF: 71 records on the tile"
    ],
    "stand_in": "vaccinium_scoparium"
-  },
-  {
-   "id": "ribes_viscosissimum",
-   "kind": "shrub",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": null,
-   "share": 0,
-   "why_needed": [
-    "GBIF: 20 records on the tile"
-   ],
-   "stand_in": null
-  },
-  {
-   "id": "sorbus_scopulina",
-   "kind": "shrub",
-   "fidelity": 0,
-   "common": null,
-   "drawn_as": "rubus_parviflorus",
-   "share": 0,
-   "why_needed": [
-    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)",
-    "canopy: records (GBIF: 106 records on the tile; height not yet screened)"
-   ],
-   "stand_in": "rubus_parviflorus"
   },
   {
    "id": "streptopus_amplexifolius",
@@ -2197,9 +2190,9 @@
  "queue": {
   "cards": [
    {
-    "id": "sorbus_scopulina",
+    "id": "acer_glabrum",
     "kind": "shrub",
-    "stand_in": "rubus_parviflorus",
+    "stand_in": null,
     "why": [
      "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
      "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
@@ -2212,24 +2205,6 @@
     "why": [
      "in the description of EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (26281 cells)",
      "in the description of BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (691 cells)"
-    ]
-   },
-   {
-    "id": "acer_glabrum",
-    "kind": "shrub",
-    "stand_in": null,
-    "why": [
-     "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-     "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
-    ]
-   },
-   {
-    "id": "prunus_virginiana",
-    "kind": "shrub",
-    "stand_in": "rubus_parviflorus",
-    "why": [
-     "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-     "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
     ]
    },
    {
@@ -2250,15 +2225,6 @@
     ]
    },
    {
-    "id": "ceanothus_velutinus",
-    "kind": "shrub",
-    "stand_in": null,
-    "why": [
-     "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-     "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
-    ]
-   },
-   {
     "id": "juniperus_scopulorum",
     "kind": "tree",
     "stand_in": null,
@@ -2267,27 +2233,11 @@
     ]
    },
    {
-    "id": "lonicera_utahensis",
-    "kind": "shrub",
-    "stand_in": "symphoricarpos_albus",
-    "why": [
-     "GBIF: 175 records on the tile"
-    ]
-   },
-   {
     "id": "aconitum_columbianum",
     "kind": "forb",
     "stand_in": null,
     "why": [
      "GBIF: 146 records on the tile"
-    ]
-   },
-   {
-    "id": "mahonia_repens",
-    "kind": "shrub",
-    "stand_in": null,
-    "why": [
-     "GBIF: 134 records on the tile"
     ]
    },
    {
@@ -2363,14 +2313,6 @@
     ]
    },
    {
-    "id": "paxistima_myrsinites",
-    "kind": "forb",
-    "stand_in": null,
-    "why": [
-     "GBIF: 77 records on the tile"
-    ]
-   },
-   {
     "id": "rhododendron_menziesii",
     "kind": "shrub",
     "stand_in": "vaccinium_scoparium",
@@ -2411,35 +2353,19 @@
     ]
    },
    {
-    "id": "lonicera_involucrata",
-    "kind": "shrub",
-    "stand_in": "symphoricarpos_albus",
-    "why": [
-     "GBIF: 44 records on the tile"
-    ]
-   },
-   {
-    "id": "ribes_viscosissimum",
-    "kind": "shrub",
+    "id": "hydrophyllum_capitatum",
+    "kind": "forb",
     "stand_in": null,
     "why": [
-     "GBIF: 20 records on the tile"
+     "GBIF: 51 records on the tile"
     ]
    },
    {
-    "id": "orthilia_secunda",
+    "id": "lonicera_involucrata",
     "kind": "shrub",
-    "stand_in": "vaccinium_scoparium",
+    "stand_in": "lonicera_utahensis",
     "why": [
-     "GBIF: 18 records on the tile"
-    ]
-   },
-   {
-    "id": "kalmia_microphylla",
-    "kind": "shrub",
-    "stand_in": "vaccinium_scoparium",
-    "why": [
-     "GBIF: 12 records on the tile"
+     "GBIF: 44 records on the tile"
     ]
    },
    {
@@ -3255,7 +3181,7 @@
  },
  "hands": [
   {
-   "id": "sorbus_scopulina",
+   "id": "acer_glabrum",
    "kind": "shrub",
    "what": "a trait card",
    "why": [
@@ -3270,24 +3196,6 @@
    "why": [
     "in the description of EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (26281 cells)",
     "in the description of BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (691 cells)"
-   ]
-  },
-  {
-   "id": "acer_glabrum",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
-   ]
-  },
-  {
-   "id": "prunus_virginiana",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
    ]
   },
   {
@@ -3308,15 +3216,6 @@
    ]
   },
   {
-   "id": "ceanothus_velutinus",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
-   ]
-  },
-  {
    "id": "juniperus_scopulorum",
    "kind": "tree",
    "what": "a trait card",
@@ -3325,27 +3224,11 @@
    ]
   },
   {
-   "id": "lonicera_utahensis",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 175 records on the tile"
-   ]
-  },
-  {
    "id": "aconitum_columbianum",
    "kind": "forb",
    "what": "a trait card",
    "why": [
     "GBIF: 146 records on the tile"
-   ]
-  },
-  {
-   "id": "mahonia_repens",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 134 records on the tile"
    ]
   },
   {
@@ -3421,14 +3304,6 @@
    ]
   },
   {
-   "id": "paxistima_myrsinites",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 77 records on the tile"
-   ]
-  },
-  {
    "id": "rhododendron_menziesii",
    "kind": "shrub",
    "what": "a trait card",
@@ -3469,35 +3344,19 @@
    ]
   },
   {
+   "id": "hydrophyllum_capitatum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 51 records on the tile"
+   ]
+  },
+  {
    "id": "lonicera_involucrata",
    "kind": "shrub",
    "what": "a trait card",
    "why": [
     "GBIF: 44 records on the tile"
-   ]
-  },
-  {
-   "id": "ribes_viscosissimum",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 20 records on the tile"
-   ]
-  },
-  {
-   "id": "orthilia_secunda",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 18 records on the tile"
-   ]
-  },
-  {
-   "id": "kalmia_microphylla",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 12 records on the tile"
    ]
   },
   {

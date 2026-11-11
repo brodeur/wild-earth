@@ -414,24 +414,6 @@
    "rank": 1
   },
   {
-   "id": "artemisia_tridentata",
-   "kind": "shrub",
-   "why": [
-    "named by EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (26281 cells)",
-    "named by BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (691 cells)",
-    "in the description of EVT 7011 Rocky Mountain Aspen Forest and Woodland (461 cells)",
-    "in the description of BPS 686 Rocky Mountain Aspen Forest and Woodland (29 cells)",
-    "canopy: records (GBIF: 23 records on the tile; height not yet screened)"
-   ],
-   "cover": 0.2336,
-   "records": 23,
-   "scientific": "Artemisia tridentata",
-   "record": true,
-   "card": true,
-   "drawn_as": "artemisia_tridentata",
-   "rank": 2
-  },
-  {
    "id": "pinus_contorta",
    "kind": "tree",
    "why": [
@@ -452,21 +434,41 @@
    "record": true,
    "card": true,
    "drawn_as": "pinus_contorta",
+   "rank": 2
+  },
+  {
+   "id": "artemisia_tridentata",
+   "kind": "shrub",
+   "why": [
+    "named by EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (26281 cells)",
+    "named by BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (691 cells)",
+    "in the description of EVT 7011 Rocky Mountain Aspen Forest and Woodland (461 cells)",
+    "in the description of BPS 686 Rocky Mountain Aspen Forest and Woodland (29 cells)",
+    "canopy: records (GBIF: 23 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.1691,
+   "records": 23,
+   "scientific": "Artemisia tridentata",
+   "record": true,
+   "card": true,
+   "drawn_as": "artemisia_tridentata",
    "rank": 3
   },
   {
-   "id": "symphoricarpos_albus",
+   "id": "sorbus_scopulina",
    "kind": "shrub",
    "why": [
-    "in the description of EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (6244 cells)",
+    "recorded on the cells of EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (3 of its 6 open records near the tile, 3.92 times the rate of plants in general; 6244 cells)",
     "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)",
+    "canopy: records (GBIF: 106 records on the tile; height not yet screened)"
    ],
-   "cover": 0.0589,
-   "records": 0,
+   "cover": 0.0614,
+   "records": 106,
+   "scientific": "Sorbus scopulina",
    "record": true,
-   "card": false,
-   "drawn_as": "symphoricarpos_albus",
+   "card": true,
+   "drawn_as": "sorbus_scopulina",
    "rank": 4
   },
   {
@@ -506,23 +508,6 @@
    "rank": 6
   },
   {
-   "id": "sorbus_scopulina",
-   "kind": "shrub",
-   "why": [
-    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)",
-    "canopy: records (GBIF: 106 records on the tile; height not yet screened)"
-   ],
-   "cover": 0.0511,
-   "records": 106,
-   "scientific": "Sorbus scopulina",
-   "record": false,
-   "card": false,
-   "drawn_as": "rubus_parviflorus",
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 7
-  },
-  {
    "id": "pseudotsuga_menziesii",
    "kind": "tree",
    "why": [
@@ -538,7 +523,7 @@
    "record": true,
    "card": false,
    "drawn_as": "pseudotsuga_menziesii",
-   "rank": 8
+   "rank": 7
   },
   {
    "id": "vaccinium_scoparium",
@@ -551,7 +536,99 @@
    "record": true,
    "card": true,
    "drawn_as": "vaccinium_scoparium",
+   "rank": 8
+  },
+  {
+   "id": "rubus_parviflorus",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7050 Rocky Mountain Lodgepole Pine Forest (6 of its 18 open records near the tile, 2.31 times the rate of plants in general; 9076 cells)",
+    "recorded on the cells of EVT 7056 Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland (3 of its 18 open records near the tile, 13.87 times the rate of plants in general; 3470 cells)",
+    "recorded on the cells of BPS 694 Rocky Mountain Subalpine Mesic-Wet Spruce-Fir Forest and Woodland (3 of its 18 open records near the tile, 13.87 times the rate of plants in general; 127 cells)"
+   ],
+   "cover": 0.0423,
+   "records": 273,
+   "record": true,
+   "card": true,
+   "drawn_as": "rubus_parviflorus",
    "rank": 9
+  },
+  {
+   "id": "ceanothus_velutinus",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7050 Rocky Mountain Lodgepole Pine Forest (12 of its 25 open records near the tile, 3.33 times the rate of plants in general; 9076 cells)",
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
+   ],
+   "cover": 0.0401,
+   "records": 183,
+   "record": true,
+   "card": true,
+   "drawn_as": "ceanothus_velutinus",
+   "rank": 10
+  },
+  {
+   "id": "purshia_tridentata",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (5 of its 7 open records near the tile, 2.33 times the rate of plants in general; 26281 cells)",
+    "in the description of EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "recorded on the cells of BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (5 of its 7 open records near the tile, 2.33 times the rate of plants in general; 691 cells)"
+   ],
+   "cover": 0.0389,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "purshia_tridentata",
+   "rank": 11
+  },
+  {
+   "id": "symphoricarpos_albus",
+   "kind": "shrub",
+   "why": [
+    "in the description of EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (6244 cells)",
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
+   ],
+   "cover": 0.0332,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "symphoricarpos_albus",
+   "rank": 12
+  },
+  {
+   "id": "prunus_virginiana",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (3 of its 6 open records near the tile, 1.63 times the rate of plants in general; 26281 cells)",
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "recorded on the cells of BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (3 of its 6 open records near the tile, 1.63 times the rate of plants in general; 691 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)",
+    "canopy: records (GBIF: 19 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0331,
+   "records": 19,
+   "scientific": "Prunus virginiana",
+   "record": true,
+   "card": true,
+   "drawn_as": "prunus_virginiana",
+   "rank": 13
+  },
+  {
+   "id": "lonicera_utahensis",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7050 Rocky Mountain Lodgepole Pine Forest (6 of its 16 open records near the tile, 2.6 times the rate of plants in general; 9076 cells)",
+    "recorded on the cells of EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (6 of its 16 open records near the tile, 2.94 times the rate of plants in general; 6244 cells)"
+   ],
+   "cover": 0.0285,
+   "records": 175,
+   "record": true,
+   "card": true,
+   "drawn_as": "lonicera_utahensis",
+   "rank": 14
   },
   {
    "id": "picea_engelmannii",
@@ -571,7 +648,7 @@
    "record": true,
    "card": true,
    "drawn_as": "picea_engelmannii",
-   "rank": 10
+   "rank": 15
   },
   {
    "id": "amelanchier_alnifolia",
@@ -581,28 +658,28 @@
     "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)",
     "canopy: records (GBIF: 40 records on the tile; height not yet screened)"
    ],
-   "cover": 0.025,
+   "cover": 0.0248,
    "records": 40,
    "scientific": "Amelanchier alnifolia",
    "record": true,
    "card": true,
    "drawn_as": "amelanchier_alnifolia",
-   "rank": 11
+   "rank": 16
   },
   {
-   "id": "artemisia_tripartita",
+   "id": "mahonia_repens",
    "kind": "shrub",
    "why": [
-    "in the description of EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (26281 cells)",
-    "in the description of BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (691 cells)"
+    "recorded on the cells of EVT 7050 Rocky Mountain Lodgepole Pine Forest (8 of its 26 open records near the tile, 2.13 times the rate of plants in general; 9076 cells)",
+    "recorded on the cells of EVT 7011 Rocky Mountain Aspen Forest and Woodland (3 of its 26 open records near the tile, 2.57 times the rate of plants in general; 461 cells)",
+    "recorded on the cells of BPS 686 Rocky Mountain Aspen Forest and Woodland (3 of its 26 open records near the tile, 2.57 times the rate of plants in general; 29 cells)"
    ],
-   "cover": 0.025,
-   "records": 0,
-   "record": false,
-   "card": false,
-   "drawn_as": "artemisia_tridentata",
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 12
+   "cover": 0.0211,
+   "records": 134,
+   "record": true,
+   "card": true,
+   "drawn_as": "mahonia_repens",
+   "rank": 17
   },
   {
    "id": "acer_glabrum",
@@ -619,7 +696,22 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 13
+   "rank": 18
+  },
+  {
+   "id": "artemisia_tripartita",
+   "kind": "shrub",
+   "why": [
+    "in the description of EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (26281 cells)",
+    "in the description of BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (691 cells)"
+   ],
+   "cover": 0.0178,
+   "records": 0,
+   "record": false,
+   "card": false,
+   "drawn_as": "artemisia_tridentata",
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 19
   },
   {
    "id": "populus_angustifolia",
@@ -637,7 +729,7 @@
    "record": true,
    "card": true,
    "drawn_as": "populus_angustifolia",
-   "rank": 14
+   "rank": 20
   },
   {
    "id": "pinus_albicaulis",
@@ -650,7 +742,7 @@
    "record": true,
    "card": true,
    "drawn_as": "pinus_albicaulis",
-   "rank": 15
+   "rank": 21
   },
   {
    "id": "cornus_sericea",
@@ -668,24 +760,7 @@
    "record": true,
    "card": false,
    "drawn_as": "cornus_sericea",
-   "rank": 16
-  },
-  {
-   "id": "prunus_virginiana",
-   "kind": "shrub",
-   "why": [
-    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)",
-    "canopy: records (GBIF: 19 records on the tile; height not yet screened)"
-   ],
-   "cover": 0.0101,
-   "records": 19,
-   "scientific": "Prunus virginiana",
-   "record": false,
-   "card": false,
-   "drawn_as": "rubus_parviflorus",
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 17
+   "rank": 22
   },
   {
    "id": "rosa_woodsii",
@@ -705,7 +780,21 @@
    "record": true,
    "card": true,
    "drawn_as": "rosa_woodsii",
-   "rank": 18
+   "rank": 23
+  },
+  {
+   "id": "tetradymia_canescens",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (3 of its 3 open records near the tile, 3.27 times the rate of plants in general; 26281 cells)",
+    "recorded on the cells of BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (3 of its 3 open records near the tile, 3.27 times the rate of plants in general; 691 cells)"
+   ],
+   "cover": 0.0087,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "tetradymia_canescens",
+   "rank": 24
   },
   {
    "id": "vaccinium_membranaceum",
@@ -719,7 +808,7 @@
    "card": false,
    "drawn_as": "vaccinium_scoparium",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 19
+   "rank": 25
   },
   {
    "id": "acer_negundo",
@@ -738,7 +827,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 20
+   "rank": 26
   },
   {
    "id": "pinus_flexilis",
@@ -753,7 +842,7 @@
    "record": true,
    "card": true,
    "drawn_as": "pinus_flexilis",
-   "rank": 21
+   "rank": 27
   },
   {
    "id": "populus_trichocarpa",
@@ -771,22 +860,7 @@
    "record": true,
    "card": true,
    "drawn_as": "populus_trichocarpa",
-   "rank": 22
-  },
-  {
-   "id": "ceanothus_velutinus",
-   "kind": "shrub",
-   "why": [
-    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
-   ],
-   "cover": 0.0008,
-   "records": 183,
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 23
+   "rank": 28
   },
   {
    "id": "juniperus_scopulorum",
@@ -800,36 +874,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 24
-  },
-  {
-   "id": "rubus_parviflorus",
-   "kind": "shrub",
-   "why": [
-    "GBIF: 273 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 273,
-   "scientific": "Rubus parviflorus",
-   "record": true,
-   "card": true,
-   "drawn_as": "rubus_parviflorus",
-   "rank": 25
-  },
-  {
-   "id": "lonicera_utahensis",
-   "kind": "shrub",
-   "why": [
-    "GBIF: 175 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 175,
-   "scientific": "Lonicera utahensis",
-   "record": false,
-   "card": false,
-   "drawn_as": "symphoricarpos_albus",
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 26
+   "rank": 29
   },
   {
    "id": "aconitum_columbianum",
@@ -844,22 +889,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 27
-  },
-  {
-   "id": "mahonia_repens",
-   "kind": "shrub",
-   "why": [
-    "GBIF: 134 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 134,
-   "scientific": "Mahonia repens",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 28
+   "rank": 30
   },
   {
    "id": "wyethia_sagittata",
@@ -874,7 +904,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 29
+   "rank": 31
   },
   {
    "id": "chamaenerion_angustifolium",
@@ -889,7 +919,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 30
+   "rank": 32
   },
   {
    "id": "ipomopsis_aggregata",
@@ -904,7 +934,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 31
+   "rank": 33
   },
   {
    "id": "erythranthe_lewisii",
@@ -919,7 +949,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 32
+   "rank": 34
   },
   {
    "id": "campanula_petiolata",
@@ -934,7 +964,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 33
+   "rank": 35
   },
   {
    "id": "actaea_rubra",
@@ -948,7 +978,7 @@
    "record": true,
    "card": true,
    "drawn_as": "actaea_rubra",
-   "rank": 34
+   "rank": 36
   },
   {
    "id": "aquilegia_coerulea",
@@ -963,7 +993,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 35
+   "rank": 37
   },
   {
    "id": "pterospora_andromedea",
@@ -978,7 +1008,7 @@
    "card": false,
    "drawn_as": "vaccinium_scoparium",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 36
+   "rank": 38
   },
   {
    "id": "streptopus_amplexifolius",
@@ -993,7 +1023,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 37
+   "rank": 39
   },
   {
    "id": "chimaphila_umbellata",
@@ -1008,22 +1038,21 @@
    "card": false,
    "drawn_as": "vaccinium_scoparium",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 38
+   "rank": 40
   },
   {
    "id": "paxistima_myrsinites",
-   "kind": "forb",
+   "kind": "shrub",
    "why": [
     "GBIF: 77 records on the tile"
    ],
    "cover": 0.0,
    "records": 77,
    "scientific": "Paxistima myrsinites",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 39
+   "record": true,
+   "card": true,
+   "drawn_as": "paxistima_myrsinites",
+   "rank": 41
   },
   {
    "id": "rhododendron_menziesii",
@@ -1038,7 +1067,7 @@
    "card": false,
    "drawn_as": "vaccinium_scoparium",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 40
+   "rank": 42
   },
   {
    "id": "carduus_nutans",
@@ -1053,7 +1082,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 41
+   "rank": 43
   },
   {
    "id": "eriogonum_umbellatum",
@@ -1067,7 +1096,7 @@
    "record": true,
    "card": true,
    "drawn_as": "eriogonum_umbellatum",
-   "rank": 42
+   "rank": 44
   },
   {
    "id": "maianthemum_racemosum",
@@ -1082,7 +1111,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 43
+   "rank": 45
   },
   {
    "id": "geranium_viscosissimum",
@@ -1096,7 +1125,7 @@
    "record": true,
    "card": true,
    "drawn_as": "geranium_viscosissimum",
-   "rank": 44
+   "rank": 46
   },
   {
    "id": "heracleum_maximum",
@@ -1111,7 +1140,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 45
+   "rank": 47
   },
   {
    "id": "clematis_occidentalis",
@@ -1126,7 +1155,22 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 46
+   "rank": 48
+  },
+  {
+   "id": "hydrophyllum_capitatum",
+   "kind": "forb",
+   "why": [
+    "GBIF: 51 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 51,
+   "scientific": "Hydrophyllum capitatum",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 49
   },
   {
    "id": "lonicera_involucrata",
@@ -1139,9 +1183,9 @@
    "scientific": "Lonicera involucrata",
    "record": false,
    "card": false,
-   "drawn_as": "symphoricarpos_albus",
+   "drawn_as": "lonicera_utahensis",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 47
+   "rank": 50
   },
   {
    "id": "achillea_millefolium",
@@ -1155,7 +1199,7 @@
    "record": true,
    "card": false,
    "drawn_as": "achillea_millefolium",
-   "rank": 48
+   "rank": 51
   },
   {
    "id": "arnica_cordifolia",
@@ -1169,37 +1213,7 @@
    "record": true,
    "card": true,
    "drawn_as": "arnica_cordifolia",
-   "rank": 49
-  },
-  {
-   "id": "ribes_viscosissimum",
-   "kind": "shrub",
-   "why": [
-    "GBIF: 20 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 20,
-   "scientific": "Ribes viscosissimum",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 50
-  },
-  {
-   "id": "orthilia_secunda",
-   "kind": "shrub",
-   "why": [
-    "GBIF: 18 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 18,
-   "scientific": "Orthilia secunda",
-   "record": false,
-   "card": false,
-   "drawn_as": "vaccinium_scoparium",
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 51
+   "rank": 52
   },
   {
    "id": "castilleja_miniata",
@@ -1213,7 +1227,7 @@
    "record": true,
    "card": true,
    "drawn_as": "castilleja_miniata",
-   "rank": 52
+   "rank": 53
   },
   {
    "id": "equisetum_arvense",
@@ -1227,7 +1241,7 @@
    "record": true,
    "card": true,
    "drawn_as": "equisetum_arvense",
-   "rank": 53
+   "rank": 54
   },
   {
    "id": "erythronium_grandiflorum",
@@ -1241,7 +1255,7 @@
    "record": true,
    "card": true,
    "drawn_as": "erythronium_grandiflorum",
-   "rank": 54
+   "rank": 55
   },
   {
    "id": "mertensia_ciliata",
@@ -1255,7 +1269,7 @@
    "record": true,
    "card": true,
    "drawn_as": "mertensia_ciliata",
-   "rank": 55
+   "rank": 56
   },
   {
    "id": "carex_hoodii",
@@ -1269,21 +1283,6 @@
    "record": true,
    "card": true,
    "drawn_as": "carex_hoodii",
-   "rank": 56
-  },
-  {
-   "id": "kalmia_microphylla",
-   "kind": "shrub",
-   "why": [
-    "GBIF: 12 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 12,
-   "scientific": "Kalmia microphylla",
-   "record": false,
-   "card": false,
-   "drawn_as": "vaccinium_scoparium",
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
    "rank": 57
   },
   {
@@ -1358,7 +1357,7 @@
    "family": "Rhamnaceae",
    "kind": "shrub",
    "records": 183,
-   "known": false
+   "known": true
   },
   {
    "id": "lonicera_utahensis",
@@ -1366,7 +1365,7 @@
    "family": "Caprifoliaceae",
    "kind": "shrub",
    "records": 175,
-   "known": false
+   "known": true
   },
   {
    "id": "pinus_contorta",
@@ -1390,7 +1389,7 @@
    "family": "Berberidaceae",
    "kind": "shrub",
    "records": 134,
-   "known": false
+   "known": true
   },
   {
    "id": "wyethia_sagittata",
@@ -1420,9 +1419,9 @@
    "id": "sorbus_scopulina",
    "scientific": "Sorbus scopulina",
    "family": "Rosaceae",
-   "kind": "forb",
+   "kind": "shrub",
    "records": 106,
-   "known": false
+   "known": true
   },
   {
    "id": "erythranthe_lewisii",
@@ -1492,9 +1491,9 @@
    "id": "paxistima_myrsinites",
    "scientific": "Paxistima myrsinites",
    "family": "Celastraceae",
-   "kind": "forb",
+   "kind": "shrub",
    "records": 77,
-   "known": false
+   "known": true
   },
   {
    "id": "abies_lasiocarpa",
@@ -1908,9 +1907,9 @@
    "id": "prunus_virginiana",
    "scientific": "Prunus virginiana",
    "family": "Rosaceae",
-   "kind": "forb",
+   "kind": "shrub",
    "records": 19,
-   "known": false
+   "known": true
   },
   {
    "id": "calypso_bulbosa",
@@ -2414,7 +2413,7 @@
    "family": "Elaeagnaceae",
    "kind": "shrub",
    "records": 7,
-   "known": false
+   "known": true
   },
   {
    "id": "castilleja_rhexifolia",
@@ -2558,7 +2557,7 @@
  },
  "hands": [
   {
-   "id": "sorbus_scopulina",
+   "id": "acer_glabrum",
    "kind": "shrub",
    "what": "a trait card",
    "why": [
@@ -2573,24 +2572,6 @@
    "why": [
     "in the description of EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (26281 cells)",
     "in the description of BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (691 cells)"
-   ]
-  },
-  {
-   "id": "acer_glabrum",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
-   ]
-  },
-  {
-   "id": "prunus_virginiana",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
    ]
   },
   {
@@ -2611,15 +2592,6 @@
    ]
   },
   {
-   "id": "ceanothus_velutinus",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
-   ]
-  },
-  {
    "id": "juniperus_scopulorum",
    "kind": "tree",
    "what": "a trait card",
@@ -2628,27 +2600,11 @@
    ]
   },
   {
-   "id": "lonicera_utahensis",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 175 records on the tile"
-   ]
-  },
-  {
    "id": "aconitum_columbianum",
    "kind": "forb",
    "what": "a trait card",
    "why": [
     "GBIF: 146 records on the tile"
-   ]
-  },
-  {
-   "id": "mahonia_repens",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 134 records on the tile"
    ]
   },
   {
@@ -2724,14 +2680,6 @@
    ]
   },
   {
-   "id": "paxistima_myrsinites",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 77 records on the tile"
-   ]
-  },
-  {
    "id": "rhododendron_menziesii",
    "kind": "shrub",
    "what": "a trait card",
@@ -2772,35 +2720,19 @@
    ]
   },
   {
+   "id": "hydrophyllum_capitatum",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 51 records on the tile"
+   ]
+  },
+  {
    "id": "lonicera_involucrata",
    "kind": "shrub",
    "what": "a trait card",
    "why": [
     "GBIF: 44 records on the tile"
-   ]
-  },
-  {
-   "id": "ribes_viscosissimum",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 20 records on the tile"
-   ]
-  },
-  {
-   "id": "orthilia_secunda",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 18 records on the tile"
-   ]
-  },
-  {
-   "id": "kalmia_microphylla",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 12 records on the tile"
    ]
   },
   {
@@ -2854,9 +2786,9 @@
  ],
  "summary": {
   "needed": 61,
-  "with_record": 30,
+  "with_record": 38,
   "generated_now": 0,
-  "queued": 31,
+  "queued": 23,
   "unread_communities": 5,
   "by_layer": {
    "tree": 12,
@@ -2868,6 +2800,6 @@
    "shrub": true,
    "ground": true
   },
-  "hands": 36
+  "hands": 28
  }
 }

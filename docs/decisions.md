@@ -9093,3 +9093,124 @@ against the park's cover-type map went from 0.07 to 0.37 (the merge entry above)
     yucca are in no description of its communities (banana yucca and plains prickly pear are well recorded there):
     they need a rule that reads the tile's records for a community's shrubs, and cards.
   - `species/canopy.json` at Lamar lists big sagebrush as the leading canopy tree (records, height not screened).
+
+## 2026-11-10: the shrubs a community's name leaves out, from the records on its own cells; succulents asked for, not drawn (pipeline/associates.py, species_mix.py, communities.py, needs.py, scorecard.py, steps.py; 19 trait cards; tests/test_associates.py; branch claude/elated-jackson-91da74)
+
+The weights entry above left this open: the Grand Canyon's vegetation plots record prickly pear, hedgehog cactus,
+yucca, seepwillow and sweetbush, and no LANDFIRE name or description of the tile's communities lists one. The
+pinyon-juniper woodland's description lists no shrub the tile has, so it drew none; the bedrock canyon (38% of the
+cells) names nothing and drew nothing.
+
+- **The evidence: where people recorded each plant, laid on LANDFIRE's map** (`pipeline/associates.py`).
+  - GBIF human observations of vascular plants in the tile and 25 km around it (the distance at which a species
+    already counts as local), with an open licence (CC0, CC BY) and a stated position within 100 m.
+  - LANDFIRE's existing vegetation type over the same 60 km square (one export of the service the tile's own
+    vegetation came from).
+  - A record counts for the community LANDFIRE maps under it, by the community's name, where that community holds
+    most of the 3 x 3 cells around the record. Records on developed and farmed cells count for nothing.
+  - Herbarium specimens are left out: on the Grand Canyon tile their positions put low-desert plants in the village
+    (place names georeferenced afterwards).
+- **What makes a species a member.** It is a native shrub; 3 or more of its records lie on the community's cells;
+  and that is more than the visits explain, by one standard error (`associates.excess`). With p the community's
+  share of all plant records, a species with n records spread as the visits are would have n p there, give or take
+  sqrt(n p (1 - p)).
+  - Native shrub: USDA PLANTS calls it a shrub and native to the lower 48 states. A plant PLANTS calls only a
+    subshrub, or also a forb, is the ground layer's. A mistletoe is not a layer. A species the library has is what
+    its record's form says (banana yucca is a forb card of the ground layer).
+  - Only communities whose LANDFIRE life form has a shrub layer: not grasslands, not water. Only tiles that read
+    names by their own records. Only shrubs: no tree is added.
+- **Its weight.** The members follow the species LANDFIRE lists by reciprocal rank, in order of their records on the
+  community: with k species listed, the first member weighs 1/(k+1) of the leading one, the next 1/(k+2), each
+  times its rarity (records / 30, as everywhere). All members together never weigh more than the listed species,
+  and at most 8 are taken. A community that lists nothing takes the whole layer from them, at its habitat class's
+  density (bedrock canyon 0.1, a forest's understory 0.5).
+- **What keeps a widespread species from flooding every community.** Three things.
+  - Counts give an order, never a share. The lane before rejected counts as shares; people photograph a cactus in
+    flower far more than a blackbrush.
+  - The listed species always lead and keep at least half the layer.
+  - No species can pass the membership test everywhere: what it has over and under the visits' share sums to
+    nothing. A species spread as the visits are is a member nowhere; one found everywhere is a member only where it
+    is found most (prickly pear: the bedrock canyon and the pinyon-juniper, not the ponderosa).
+- **Rejected.**
+  - All GBIF records (82% are CC BY-NC at the Grand Canyon): the mix ships to clients, as with the grove points
+    (`needs.write_localized`). Counting them in small boxes by facet would use them without downloading them;
+    not done, and worth Aaron's call, since it would give five times the evidence.
+  - The plain ratio (its share of records on the community over all plants' share, 1 or more), tried first: it
+    lets chance through. Near the Teton tile 9 of 25 snowbrush records lie on sagebrush steppe where 7.7 were to be
+    expected, and snowbrush became 18% of the tile's shrubs, creeping barberry a carpet over Jackson Hole.
+  - A stricter test (two standard errors): it drops the generalists the plots say are missing (plains prickly pear
+    on the pinyon-juniper is 1.6 over).
+  - Counting every record on its own cell: a maple at a forest's edge became a shrub of the Tetons' sagebrush
+    steppe. The 3 x 3 rule costs 37 to 48% of the records, most in the canyon's narrow benches (the blackbrush
+    shrubland keeps 30 of 55).
+  - On-tile records only: too few. The blackbrush shrubland has 30 usable records even in the 25 km square.
+- **Cacti and yuccas are asked for and not drawn.** The rule asks for eight succulents at the Grand Canyon: plains,
+  tulip and Engelmann's prickly pear, Whipple cholla, claret-cup and Engelmann's hedgehog cactus, cottontop cactus
+  and soaptree yucca. `treegen.js` grows leafy crowns on woody stems (tree, shrub, multi-stemmed, palm); it has no
+  pads, ribbed stems or leaf rosettes. So `communities.NO_GROWTH_FORM` (Cactaceae, Asparagaceae) keeps such a
+  species out of every stand-in: it is in `missing`, and its place in the layer is left empty
+  (`species_mix.hold_empty`: the layer's density falls by its share, `communities[].held_empty`) instead of being
+  given to the leafy shrubs beside it. The needs file says it waits for a growth form, not a card.
+- **Nineteen cards** by the existing route (agent drafts from FEIS, USDA PLANTS, National Park Service pages and
+  Wikipedia): the 16 leafy shrubs the rule asks for that the library lacked, and 3 drafted while the test was still
+  the plain ratio and kept (Utah serviceberry, Fendler's ceanothus, Oregon boxleaf). See
+  `docs/species-library.md`. No Meshy credits. Only the new records were written: `plantgen --all` would also
+  rewrite about 80 committed records that are stale by generator version, which is not this lane's change.
+- **Results, the held-out judge** (`held_out.py --checks species,composition`; baseline, before this change, now):
+
+  | Tile | Canopy Bray-Curtis | Shrub | Ground | Plant precision | Shares on the list | Shrubs in genera no plot records |
+  |---|---|---|---|---|---|---|
+  | Grand Canyon | 0.22, 0.26, 0.26 | 1.00, 0.65, **0.65** (0.645 to 0.646) | 1.00, 0.94, 0.94 | 0.33, 0.92, **0.94** | 0.58/0.35/none, 1.00/1.00/0.89, 1.00/1.00/**0.94** | 0.52, 0.00, **0.05** |
+  | Lamar | 0.07, 0.33, 0.33 | 0.48, 0.32, **0.32** (0.319 to 0.324) | 0.67 unchanged | 0.97, 1.00, 1.00 | 1.00/1.00/1.00 | not scored |
+  | Yosemite | 0.30 unchanged | 0.55 unchanged | 0.84 unchanged | 0.79 unchanged | unchanged | unchanged |
+
+  Introduced species drawn: 3, 3 and 8, unchanged. Teton has no baseline; its plant precision is 0.98 before and now.
+- **The Grand Canyon's shrub score did not move, and this rule cannot move it.** The brief's mark was clearly below
+  0.65; it is 0.65.
+  - Of the plots' shrub cover, 26% is prickly pear, hedgehog cactus and yucca. The rule now asks for them and the
+    client cannot draw them.
+  - 24% is seepwillow and sweetbush, plants of the riverbank and the washes (below, left alone).
+  - The leafy shrubs the rule adds are the rim's (maple, rose, buffaloberry, locust, currant), and the plots'
+    shrub cover is the inner canyon's (blackbrush, Mormon tea, brittlebush, the cacti): 4.5% of the drawn shrubs
+    are now in genera no plot records.
+  - What the succulents are worth: recomputed with the judge's own functions per community, the shrub layer scores
+    0.65 as drawn and **0.51** with the eight succulents drawn in the places now held empty.
+- **What is drawn now.**
+  - Grand Canyon. Cells with a shrub layer: 47% to 97%. The bedrock canyon (42,161 cells, bare before) has
+    cliffrose, fernbush, hophornbeam and hoptree at a density of 0.034: the class's 0.1, less the 66% held empty
+    for four cacti. The pinyon-juniper woodland (12,946 cells, no shrubs before) has roundleaf buffaloberry,
+    saltbush and wax currant at 0.14: 0.5 less 72% for three prickly pears and the cholla. Under ponderosa Gambel
+    oak is half the understory (was all of it), with bigtooth maple, Woods' rose, New Mexico locust, desert
+    snowberry and a carpet of creeping barberry. The blackbrush shrubland holds 18% empty for cottontop cactus.
+    Drawn shrubs: Mormon tea 29%, blackbrush 25%, Gambel oak 13% (was 24%), sagebrush 7%, saltbush 6%, maple 4%.
+  - Lamar. The lodgepole forest (9,086 cells, no shrubs before: LANDFIRE maps it as a type of its own and it
+    borrowed a description) has a carpet of grouse whortleberry (5 of 6 records) and russet buffaloberry (3 of 4).
+    Nothing else passed: the tile has 345 usable records.
+  - Teton. Sagebrush falls from 81% to 49% of the drawn shrubs: antelope bitterbrush 12%, chokecherry 7%,
+    thimbleberry 6%, snowbrush 6% (under lodgepole, with Utah honeysuckle and a carpet of creeping barberry),
+    Greene's mountain-ash under Douglas-fir. Chokecherry in the steppe is the weakest call (3 of 6 records, 1.0
+    standard errors).
+- **What it made worse, by the judge.** Lamar's shrubs 0.319 to 0.324: buffaloberry is 3% of the drawn shrubs, and
+  the reference there is the habitat-type map, which can name only the species in a type's name. Grand Canyon:
+  the 4.5% in unrecorded genera above. Scorecards: the Grand Canyon's communities read 57% ruled and 43% guessed
+  (were 96 and 4: the bedrock canyon's shrubs are from records, counted as guessed), and 7% of its woody weight is
+  asked for and drawn as nothing (the succulents).
+- **Unchanged tiles.** The eight California tiles, the Hoh, Olympus and the five tiles abroad: both mix rasters
+  byte-identical to main's (cmp). Their documents gain two encoding lines; the two Yosemite tiles' needs list
+  chokecherry, now a known species.
+- **Tests.** `tests/test_associates.py`, 23 tests, records given by `associates.EVIDENCE`, PLANTS by
+  `associates.PROFILE` (no network). 21 fail on the code before: the bedrock canyon's rule was None, the blackbrush
+  shrubland drew two species, a leafy record of a cactus's family stood in for it.
+- **Left alone.**
+  - Shrub density under a forest is still the class default 0.5; nothing read here measures an amount of understory.
+  - Trees are not added from records. Colorado pinyon has 19 of its 43 records on the bedrock canyon's cells; the
+    canyon's walls still draw no tree.
+  - Seepwillow and sweetbush, a fifth of the plots' shrub cover, are riverbank and wash plants. Their records fall
+    on open water and on scraps of salt desert scrub, under 3 on any community, and the tile's riparian zone rows
+    are empty: a tile in no table's region has no riparian species at all (`species_mix.riparian_species` filters
+    by region).
+  - Thinleaf huckleberry is still drawn as grouse whortleberry's carpet. A card would move 1% of the spruce-fir's
+    layer; the judge's missing Vaccinium is the whortleberry itself, which the pipeline draws in the ground layer.
+    The same accounting is why Lamar's sagebrush reads 71% against a mapped 52%.
+  - Gambel oak under ponderosa is half the understory, not all of it; it is still the description's.
+  - A succulent's share is held empty by weight, which says nothing of how much ground a cactus covers.

@@ -23,9 +23,9 @@ Worst finding: the tile's finding that affects the largest share of its layer, a
 | Calaveras Big Trees (`utm10n_731_4235`) | 89/11/0/0 | 100/0/0/0 | 0/85/15/0 | 0/100/0/0 | 3/0/97/0 | 39/1/0/60 | 99/1/0/0 | 56/0/40/4 | 97% of the ground texture is painted in, not photographed |
 | Yosemite (re-centred) (`utm11n_267_4175`) | 98/2/0/0 | 0/100/0/0 | 0/98/2/0 | 0/100/0/0 | 98/0/2/0 | 51/43/0/6 | 100/0/0/0 | 47/0/47/6 | 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m)) |
 | Yosemite (`utm11n_270_4180`) | 99/1/0/0 | 0/100/0/0 | 0/99/1/0 | 0/100/0/0 | 99/0/1/0 | 55/41/0/4 | 99/1/0/0 | 48/0/48/3 | 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m)) |
-| Grand Canyon (`utm12n_396_3988`) | 83/17/0/0 | 0/100/0/0 | 0/96/4/0 | 0/98/2/0 | 97/0/3/0 | 57/39/0/4 | 95/0/5/0 | 38/0/47/15 | 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m)) |
-| Teton (`utm12n_514_4838`) | 99/1/0/0 | 0/100/0/0 | 0/99/1/0 | 0/95/5/1 | 99/0/1/0 | 37/53/0/10 | 100/0/0/0 | 51/0/37/12 | 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m)) |
-| Lamar Valley (`utm12n_557_4964`) | 100/0/0/0 | 100/0/0/0 | 0/95/3/1 | 0/98/2/0 | 52/0/48/0 | 47/43/0/10 | 100/0/0/0 | 52/0/39/10 | no fish species listed (none in the tile's GBIF records) |
+| Grand Canyon (`utm12n_396_3988`) | 83/17/0/0 | 0/100/0/0 | 0/57/43/0 | 0/91/2/7 | 97/0/3/0 | 57/39/0/4 | 95/0/5/0 | 38/0/47/15 | 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m)) |
+| Teton (`utm12n_514_4838`) | 99/1/0/0 | 0/100/0/0 | 0/99/1/0 | 0/96/3/1 | 99/0/1/0 | 37/53/0/10 | 100/0/0/0 | 51/0/37/12 | 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m)) |
+| Lamar Valley (`utm12n_557_4964`) | 100/0/0/0 | 100/0/0/0 | 0/95/3/1 | 0/99/1/0 | 52/0/48/0 | 47/43/0/10 | 100/0/0/0 | 52/0/39/10 | no fish species listed (none in the tile's GBIF records) |
 | Corcovado (`utm17n_210_932`) | 0/100/0/0 | 0/100/0/0 | 0/0/100/0 | 0/100/0/0 | 0/53/47/0 | 6/92/0/2 | 100/0/0/0 | 8/0/51/41 | no ground species at all |
 | Manu (`utm19s_233_8679`) | 0/100/0/0 | 0/100/0/0 | 0/0/100/0 | 0/100/0/0 | 0/8/92/0 | 14/84/0/2 | 93/0/7/0 | 3/0/69/28 | no ground species at all |
 | Lofoten (`utm33n_412_7531`) | 0/100/0/0 | 0/100/0/0 | 0/0/100/0 | 0/100/0/0 | 0/99/1/0 | 6/81/0/13 | 100/0/0/0 | 9/0/57/35 | 99% of cells draw recorded species weighted by niche, not a community rule |
@@ -50,7 +50,7 @@ Worst finding: the tile's finding that affects the largest share of its layer, a
 **Communities** (share of the tile's 30 m cells (species_mix.json communities[].cells); resolution: 30 m cell).
 - measured: a cell whose species composition is mapped (plot-based maps such as TreeMap): no tile uses one today
 - ruled: a hand rule (pipeline/species_mix.py RULES) or a named_from_* rule (the species the community's name names) applied to a measured existing-vegetation class (source evt); open water and permanent ice (rules that draw no plants); a tile_pool_* community with no woody donor that draws only the grasses and forbs of its own description or the region's ground table (ground_only)
-- guessed: the tile pool (tile_pool_*: another community's species of the same habitat class), research_* (the tile's recorded species weighted by records x niche), habitat_default_* (California's foothill default), and every cell whose class is a back-fill rather than today's vegetation (source bps: pre-settlement LANDFIRE BpS under human land; rewild: former reservoir beds; habitat: no class)
+- guessed: the tile pool (tile_pool_*: another community's species of the same habitat class), research_* (the tile's recorded species weighted by records x niche), recorded_* (a community whose name names nothing: the shrubs recorded on its own cells, pipeline/associates.py), habitat_default_* (California's foothill default), and every cell whose class is a back-fill rather than today's vegetation (source bps: pre-settlement LANDFIRE BpS under human land; rewild: former reservoir beds; habitat: no class)
 - blank: a tile_pool_* community with no donor and no ground plants: drawn bare, nothing known
 
 **Plant species** (share of the tile's drawn woody plant weight (trees and shrubs): each community's cells x its tree or shrub density x a species' share of the weights its rule wrote (species_mix.json communities[]); resolution: the species drawn in each 30 m cell).
@@ -102,9 +102,9 @@ The baseline decided 2026-11-10: today's ecosystems; introduced species filtered
 | Calaveras Big Trees | 15% | no status field in this build (80 unknown) | no status field in this build (93 unknown) |
 | Yosemite (re-centred) | 2% | no status field in this build (100 unknown) | no status field in this build (93 unknown) |
 | Yosemite | 1% | no status field in this build (95 unknown) | no status field in this build (93 unknown) |
-| Grand Canyon | 4% | no status field in this build (94 unknown) | no status field in this build (38 unknown) |
-| Teton | 1% | no status field in this build (89 unknown) | no status field in this build (48 unknown) |
-| Lamar Valley | 1% | no status field in this build (83 unknown) | no status field in this build (45 unknown) |
+| Grand Canyon | 4% | no status field in this build (94 unknown) | no status field in this build (50 unknown) |
+| Teton | 1% | no status field in this build (89 unknown) | no status field in this build (55 unknown) |
+| Lamar Valley | 1% | no status field in this build (83 unknown) | no status field in this build (46 unknown) |
 | Corcovado | 0% | no status field in this build (88 unknown) | no status field in this build (11 unknown) |
 | Manu | 0% | no status field in this build (68 unknown) | no status field in this build (10 unknown) |
 | Lofoten | 0% | no status field in this build (69 unknown) | no status field in this build (5 unknown) |
@@ -207,7 +207,7 @@ Kept out of the per-tile findings because no tile differs:
 - 44 of 94 listed animals wear a kin's body
 - 39% of stream length is placed by the DEM alone, no mapped stream confirms it
 - 14 of 94 listed animals are not drawn
-- 14% of the ground has no 1 m measurement (drawn from the 1 m usgs_3dep)
+- 14% of the shrub weight is a named species with no record, drawn as nothing
 
 **Teton** (`utm12n_514_4838`)
 - 100% of the tile has no measured crowns (placed by rule from LANDFIRE cover and height classes (30 m))
@@ -279,9 +279,9 @@ Kept out of the per-tile findings because no tile differs:
 | Calaveras Big Trees | 30 | 31 | 34 | 0 | 0 |
 | Yosemite (re-centred) | 31 | 31 | 34 | 0 | 0 |
 | Yosemite | 31 | 31 | 34 | 0 | 0 |
-| Grand Canyon | 8 | 11 | 20 | 9 | 5 |
-| Teton | 9 | 7 | 33 | 5 | 4 |
-| Lamar Valley | 7 | 7 | 32 | 3 | 1 |
+| Grand Canyon | 9 | 22 | 21 | 11 | 10 |
+| Teton | 9 | 13 | 34 | 3 | 3 |
+| Lamar Valley | 7 | 8 | 32 | 2 | 1 |
 | Corcovado | 11 | 0 | 0 | 0 | 0 |
 | Manu | 10 | 0 | 0 | 0 | 0 |
 | Lofoten | 2 | 1 | 2 | 0 | 0 |

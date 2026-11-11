@@ -2029,6 +2029,20 @@
    "card": true,
    "drawn_as": "populus_trichocarpa",
    "rank": 94
+  },
+  {
+   "id": "prunus_virginiana",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 11 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 11,
+   "scientific": "Prunus virginiana",
+   "record": true,
+   "card": true,
+   "drawn_as": "prunus_virginiana",
+   "rank": 95
   }
  ],
  "gbif_plants": [
@@ -3044,9 +3058,9 @@
    "id": "prunus_virginiana",
    "scientific": "Prunus virginiana",
    "family": "Rosaceae",
-   "kind": "forb",
+   "kind": "shrub",
    "records": 11,
-   "known": false
+   "known": true
   },
   {
    "id": "adenocaulon_bicolor",
@@ -3241,7 +3255,7 @@
  },
  "by_layer": {
   "tree": 37,
-  "shrub": 31,
+  "shrub": 32,
   "ground": 26
  },
  "hands": [
@@ -3439,14 +3453,14 @@
   }
  ],
  "summary": {
-  "needed": 94,
-  "with_record": 70,
+  "needed": 95,
+  "with_record": 71,
   "generated_now": 0,
   "queued": 24,
   "unread_communities": 0,
   "by_layer": {
    "tree": 37,
-   "shrub": 31,
+   "shrub": 32,
    "ground": 26
   },
   "meets_target": {

@@ -15,7 +15,7 @@
   37.785168321421274
  ],
  "size_m": 10000,
- "generated_at": "2026-11-10T23:18:33Z",
+ "generated_at": "2026-11-11T00:49:00Z",
  "generator": {
   "name": "wild-earth-pipeline",
   "version": "0.2.0"
@@ -1763,8 +1763,8 @@
     "rows_with_herb_cover": 0,
     "evh_synthetic": false
    },
-   "sha256": "6e130d7bf497fabbbbf26d71318e5e9bfe30383147792eb916b02af63d5d66d3",
-   "bytes": 439371
+   "sha256": "175a94ac631271c9b98a4d2018e415d7f3e7a9ddc89d24413d6ded28fe5055c8",
+   "bytes": 440441
   },
   "resources": {
    "path": "resources/resources.json",
@@ -5176,8 +5176,8 @@
     "gbif",
     "landfire"
    ],
-   "needed": 93,
-   "with_record": 72,
+   "needed": 94,
+   "with_record": 73,
    "generated_now": 0,
    "queued": 21,
    "unread_communities": 0,
@@ -5189,11 +5189,11 @@
    "hands": 21,
    "by_layer": {
     "tree": 36,
-    "shrub": 31,
+    "shrub": 32,
     "ground": 26
    },
-   "sha256": "1d34f4868a01a4f305fc939c5c2e960244aff6c98d9c3b2adcc23c91400606dd",
-   "bytes": 99613
+   "sha256": "5d8d437c7e1d35b0431e59f86909a3f63865b1bc88cc6abb6df3fc5375773016",
+   "bytes": 99884
   },
   "client.mast": {
    "path": "client/mast.png",
@@ -5215,12 +5215,12 @@
   "species.registry": {
    "path": "species/registry.json",
    "kind": "table",
-   "plants": 116,
+   "plants": 117,
    "animals_present": 100,
    "animals_queued": 54,
    "cards_queued": 21,
-   "sha256": "218524b39663180d342c7f24ac8d964f1b6a94c5a571f66c59bc8aab9e3d5f53",
-   "bytes": 112894
+   "sha256": "96e3b0bf53ec7e01d3af811be9d051f278ebb3093ea63b798917067783315457",
+   "bytes": 113109
   },
   "terrain.ice": {
    "path": "terrain/ice.tif",
@@ -7180,19 +7180,79 @@
    "at": "2026-11-10T23:18:33Z",
    "seconds": 0.5,
    "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-11T00:31:39Z",
+   "seconds": 1.5,
+   "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-11T00:37:29Z",
+   "seconds": 1.7,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-11T00:37:31Z",
+   "seconds": 1.4,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-11T00:37:32Z",
+   "seconds": 0.7,
+   "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-11T00:47:04Z",
+   "seconds": 1.8,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-11T00:47:05Z",
+   "seconds": 1.4,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-11T00:47:06Z",
+   "seconds": 0.7,
+   "ok": true
+  },
+  {
+   "step": "plants",
+   "at": "2026-11-11T00:48:58Z",
+   "seconds": 1.8,
+   "ok": true
+  },
+  {
+   "step": "species_mix",
+   "at": "2026-11-11T00:48:59Z",
+   "seconds": 1.4,
+   "ok": true
+  },
+  {
+   "step": "registry",
+   "at": "2026-11-11T00:49:00Z",
+   "seconds": 0.8,
+   "ok": true
   }
  ],
  "steps": {
   "plants": {
    "version": "5",
-   "code": "1c2805b4eec7c448",
+   "code": "7af4b8a37dfac1e1",
    "params": {
     "tile": "utm11n_267_4175"
    },
-   "fingerprint": "c88a695dda28c7e0",
+   "fingerprint": "bb00b5a0da9e8d21",
    "parts": {
     "version": "5",
-    "code": "1c2805b4eec7c448",
+    "code": "7af4b8a37dfac1e1",
     "params": {
      "tile": "utm11n_267_4175"
     },
@@ -7201,11 +7261,11 @@
      "ice": "66a67b3e61ecbcd4"
     },
     "library": {
-     "library/plant_cards": "8c46bdf1f3fc274c",
+     "library/plant_cards": "21babd208f4a11bd",
      "library/plant_cards/_research": "76160f150981cd69"
     }
    },
-   "ran_at": "2026-11-10T23:16:43Z",
+   "ran_at": "2026-11-11T00:48:56Z",
    "owner": null,
    "status": "ok",
    "layers": [
@@ -7214,9 +7274,9 @@
    ],
    "outputs": {
     "species/canopy.json": "d9fa723bfa7c73df",
-    "species/plant_needs.json": "1d34f4868a01a4f3"
+    "species/plant_needs.json": "5d8d437c7e1d35b0"
    },
-   "out_hash": "381e3ae224e45cb5",
+   "out_hash": "a88c7c6f9ad70f3d",
    "sources": {
     "wcvp": "2026-11-07",
     "canopy_plots": "2026-11-07",
@@ -7229,43 +7289,43 @@
     "network": 0,
     "cache": 343
    },
-   "seconds": 1.5
+   "seconds": 1.8
   },
   "registry": {
    "version": "1",
-   "code": "9e93858920690702",
+   "code": "ad4aaa443261dc54",
    "params": {
     "tile": "utm11n_267_4175"
    },
-   "fingerprint": "72b2f76838f54ca7",
+   "fingerprint": "c75518699bdb5157",
    "parts": {
     "version": "1",
-    "code": "9e93858920690702",
+    "code": "ad4aaa443261dc54",
     "params": {
      "tile": "utm11n_267_4175"
     },
     "deps": {
-     "plants": "381e3ae224e45cb5",
-     "species_mix": "c5c4b51e298b6d63",
+     "plants": "a88c7c6f9ad70f3d",
+     "species_mix": "9bd48e73eb26c008",
      "species": "2fe84e88e2a1ce9f",
      "animals": "e1af4f66b2a14e56"
     },
     "library": {
-     "library/species": "da43373440132e57",
+     "library/species": "12e2ad24a7d48918",
      "library/animals": "934e6c71aae6cd14",
-     "library/plant_cards": "8c46bdf1f3fc274c"
+     "library/plant_cards": "21babd208f4a11bd"
     }
    },
-   "ran_at": "2026-11-10T23:18:33Z",
+   "ran_at": "2026-11-11T00:48:59Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "species.registry"
    ],
    "outputs": {
-    "species/registry.json": "218524b39663180d"
+    "species/registry.json": "96e3b0bf53ec7e01"
    },
-   "out_hash": "f88eb1ecac028d94",
+   "out_hash": "4463879b9f12c831",
    "sources": {},
    "fallbacks": [],
    "notes": [],
@@ -7273,7 +7333,7 @@
     "network": 0,
     "cache": 0
    },
-   "seconds": 0.5
+   "seconds": 0.8
   },
   "dem": {
    "version": "3",
@@ -8319,14 +8379,14 @@
   },
   "species_mix": {
    "version": "5",
-   "code": "63ef851b83ef7311",
+   "code": "701f3591539d3f91",
    "params": {
     "tile": "utm11n_267_4175"
    },
-   "fingerprint": "7d506f9a24b38112",
+   "fingerprint": "fd579feeb9b591bc",
    "parts": {
     "version": "5",
-    "code": "63ef851b83ef7311",
+    "code": "701f3591539d3f91",
     "params": {
      "tile": "utm11n_267_4175"
     },
@@ -8335,24 +8395,24 @@
      "landcover": "69430d8affdca646",
      "water": "03bd23810faea54e",
      "ice": "66a67b3e61ecbcd4",
-     "plants": "381e3ae224e45cb5"
+     "plants": "a88c7c6f9ad70f3d"
     },
     "library": {
-     "library/species": "da43373440132e57"
+     "library/species": "12e2ad24a7d48918"
     }
    },
-   "ran_at": "2026-11-10T23:18:31Z",
+   "ran_at": "2026-11-11T00:48:58Z",
    "owner": null,
    "status": "ok",
    "layers": [
     "client.species_mix"
    ],
    "outputs": {
-    "client/species_mix.json": "6e130d7bf497fabb",
+    "client/species_mix.json": "175a94ac631271c9",
     "client/species_mix_index.png": "304578b4a8d4d066",
     "client/species_mix_density.png": "c846575567bd4696"
    },
-   "out_hash": "c5c4b51e298b6d63",
+   "out_hash": "9bd48e73eb26c008",
    "sources": {},
    "fallbacks": [],
    "notes": [],
@@ -8360,7 +8420,7 @@
     "network": 0,
     "cache": 31
    },
-   "seconds": 1.5
+   "seconds": 1.4
   },
   "animals": {
    "version": "6",

@@ -428,6 +428,14 @@ def family_of(sid: str) -> str | None:
     return _FAMILY[sid]
 
 
+# Families the client has no growth form for (2026-11-10): treegen.js grows trees, shrubs, multi-stemmed shrub-trees
+# and palms (leafy crowns on woody stems), and the ground layer grasses and forbs. A cactus is pads or ribbed stems and
+# a yucca or an agave a rosette of sword leaves; drawn from a leafy shrub's record they would be a bush. Until a
+# succulent generator exists a species of these families without a record is missing, whatever relatives the tile has.
+NO_GROWTH_FORM = {"Cactaceae": "a cactus", "Asparagaceae": "a rosette succulent (a yucca, an agave, a beargrass)",
+                  "Agavaceae": "a rosette succulent (a yucca, an agave)", "Nolinaceae": "a rosette succulent (a beargrass)"}
+
+
 FORMS_OF_LAYER = {"tree": ("tree", "multi_stem_shrub_tree", "palm"), "shrub": ("shrub", "multi_stem_shrub_tree")}   # the
 # growth forms a stand-in in a layer may have (a multi-stemmed shrub-tree, a buckeye or a redbud, stands in either)
 
@@ -450,6 +458,15 @@ def _woody_records() -> dict:
         if form in FORMS_OF_LAYER["tree"] or form in FORMS_OF_LAYER["shrub"]:
             out[sid] = form
     return out
+
+
+def no_growth_form(sid: str) -> str | None:
+    """What a species is ("a cactus (Cactaceae)") when the client has no growth form for it and the library no record
+    of it (NO_GROWTH_FORM); None for every other species."""
+    if has_record(sid):
+        return None
+    fam = family_of(sid)
+    return f"{NO_GROWTH_FORM[fam]} ({fam})" if fam in NO_GROWTH_FORM else None
 
 
 def fits_layer(sid: str, layer: str) -> bool:
@@ -504,6 +521,10 @@ def local_stand_in(sid: str, tile, regions, form: str | None = None) -> tuple[st
     if r:
         return r
     fam = family_of(sid)
+    if fam in NO_GROWTH_FORM:
+        return None, (f"no library record, and {NO_GROWTH_FORM[fam]} ({fam}) has no growth form in the client yet (treegen.js "
+                      "draws leafy crowns on woody stems): never drawn as a leafy shrub; left out, and its place left empty "
+                      "(species_mix.hold_empty)")
     if fam and fits:
         r = best([c for c, f in lib.items() if f in fits and c not in same_genus and family_of(c) == fam], f"the same family, {fam}, and growth form")
         if r:

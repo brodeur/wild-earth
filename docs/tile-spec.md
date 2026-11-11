@@ -1351,6 +1351,14 @@ Three keys say what happened:
   `description+name` (the description as far as its species are recorded near the tile, the rest to the name's
   species), `records` (the name's species, a rarity weighing less), `equal` (a tile inside a regional table) or null
   (an empty layer). Hand rules and pooled communities have no such key. The client does not read it.
+- `communities[].recorded` (2026-11-10, the shrubs a community's name leaves out): `{species: {records, of,
+  affinity}}`, the shrubs added to the community from the records on its own cells (`pipeline/associates.py`): open
+  GBIF observations (CC0 and CC BY) within 25 km of the tile, laid on LANDFIRE's vegetation map of the same square.
+  `records`: on cells of this community; `of`: on any natural cell; `affinity`: its share of records here over all
+  plants' share here (for people; the membership test is `associates.excess`). A layer that gained them has `weights.shrubs` ending in `+recorded`; a community that lists
+  nothing has `weights.shrubs: "recorded"` and a rule id `recorded_*`. `recorded_associates` (top level) holds the
+  records' count, licences and GBIF datasets: the attribution. A cactus, a yucca or an agave without a library record
+  is always in `missing` (the client has no growth form for it, `communities.NO_GROWTH_FORM`).
 
 `substitutions` stays (`{species: drawn or null}`). A tile in no table's region (`natural_regions` empty: the Grand
 Canyon, Lamar, Teton) reads its community names by its own records (`communities.named_species`): of the species a

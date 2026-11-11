@@ -127,7 +127,12 @@ def plant_needs(tile: Tile, generate=False) -> dict:
             for layer, kind in (("trees", "tree"), ("shrubs", "shrub")):
                 how = (read.get("weights") or {}).get(layer)
                 for sid, w in read[layer].items():
-                    if sid not in c["named"] and w > 0:
+                    rec = (read.get("recorded") or {}).get(sid) if layer == "shrubs" else None
+                    if rec and w > 0:   # a recorded associate (pipeline/associates.py)
+                        need(sid, kind, f"recorded on the cells of {c['source'].upper()} {c['code']} {c['name']} ({rec['records']} of its "
+                                        f"{rec['of']} open records near the tile, {rec['affinity']} times the rate of plants in general; "
+                                        f"{c['cells']} cells)", cover=share * w)
+                    elif sid not in c["named"] and w > 0:
                         need(sid, kind, f"in the description of {c['source'].upper()} {c['code']} {c['name']} ({c['cells']} cells)",
                              cover=share * w)
                     elif how != "equal" and w > 0:
@@ -216,13 +221,21 @@ def plant_needs(tile: Tile, generate=False) -> dict:
         r["cover"] = round(r["cover"], 4)
         if not r["record"]:
             r["queued"] = "needs a trait card (library/plant_cards/): an agent's research, then automatic"
+            if r["kind"] in ("tree", "shrub") and not r["drawn_as"]:
+                from .communities import no_growth_form
+                what = no_growth_form(sid)
+                if what:   # a cactus, a yucca: no card can grow it yet
+                    r["no_growth_form"] = what
+                    r["queued"] = (f"needs a growth form first: {what}, and the client's generator (client/src/treegen.js) "
+                                   "draws leafy crowns on woody stems; then a trait card")
     if generated:
         plantgen.embed()
     by_layer = {k: sum(1 for r in needs.values() if LAYER.get(r["kind"]) == k) for k in ("tree", "shrub", "ground")}
     ranked = sorted(needs.values(), key=lambda r: (-r["cover"], -r["records"], r["id"]))
     for i, r in enumerate(ranked):
         r["rank"] = i + 1
-    hands = [{"id": r["id"], "kind": r["kind"], "what": "a trait card", "why": r["why"][:2]} for r in ranked if not r["record"]]
+    hands = [{"id": r["id"], "kind": r["kind"], "what": "a succulent growth form in the client, then a trait card" if r.get("no_growth_form") else "a trait card",
+              "why": r["why"][:2]} for r in ranked if not r["record"]]
     hands += [{"id": u["name"], "kind": "community", "what": "a lexicon phrase or a species-mix rule", "why": [f"{u['cells']} cells"]}
               for u in unread]
     doc = {"tile": tile.tile_id, "regions": regions, "communities": [c for c in comms if c["cells"] >= MIN_CELLS], "unread": unread,

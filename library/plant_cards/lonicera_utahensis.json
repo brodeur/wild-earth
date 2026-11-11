@@ -1,0 +1,249 @@
+{
+ "id": "lonicera_utahensis",
+ "scientific": "Lonicera utahensis",
+ "common": "Utah honeysuckle",
+ "aliases": [
+  "utah_honeysuckle",
+  "red_twinberry",
+  "fly_honeysuckle",
+  "honeysuckle"
+ ],
+ "family": "Caprifoliaceae",
+ "form": "shrub",
+ "deciduous": true,
+ "template": "symphoricarpos_albus",
+ "regions": [
+  "interior_west"
+ ],
+ "height_m": [
+  1.0,
+  2.0
+ ],
+ "stature": {
+  "typical_m": 1.3,
+  "tall_m": 2.0,
+  "record_m": null,
+  "source": "typical: the drafter's middle for forest understory plants, near USDA PLANTS' mature height (5 ft, 1.5 m); tall: FEIS and Wikipedia (1-2 m); no record height was read; read 2026-11-10"
+ },
+ "variants_height_m": {
+  "young": [
+   0.25,
+   0.6
+  ],
+  "old": [
+   1.4,
+   2.0
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.25
+   ],
+   [
+    0.15,
+    0.38
+   ],
+   [
+    0.35,
+    0.48
+   ],
+   [
+    0.55,
+    0.52
+   ],
+   [
+    0.72,
+    0.5
+   ],
+   [
+    0.86,
+    0.42
+   ],
+   [
+    0.95,
+    0.28
+   ],
+   [
+    1.0,
+    0.12
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.22,
+  "asymmetry": 0.3,
+  "fill": 0.42,
+  "edge": 1.2
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    120,
+    104,
+    90
+   ],
+   "spring": [
+    130,
+    162,
+    94
+   ],
+   "summer": [
+    86,
+    120,
+    72
+   ],
+   "fall": [
+    194,
+    172,
+    86
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.6,
+   "summer": 1.0,
+   "fall": 0.4
+  },
+  "leaf_on_by_month": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.4,
+   0.95,
+   1.0,
+   1.0,
+   0.8,
+   0.3,
+   0.0,
+   0.0
+  ],
+  "leaf_shape": "oval",
+  "leaf_size_m": 0.05,
+  "flowers": {
+   "season": [
+    "spring",
+    "summer"
+   ],
+   "months": [
+    5,
+    6
+   ],
+   "form": "bud",
+   "rgb": [
+    240,
+    228,
+    160
+   ],
+   "size_m": 0.012,
+   "density": 0.3,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": [
+    "summer"
+   ],
+   "months": [
+    7,
+    8
+   ],
+   "form": "bud",
+   "rgb": [
+    204,
+    38,
+    40
+   ],
+   "size_m": 0.01,
+   "density": 0.35
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   120,
+   104,
+   90
+  ],
+  "bark_pattern": "shreddy",
+  "stems": [
+   4,
+   12
+  ],
+  "lean_deg": 15
+ },
+ "targets": {
+  "crown_width_ratio": 1.1,
+  "crown_base_ratio": 0.08,
+  "porosity": 0.5,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: an open, loose clump of slender, spreading grey-brown stems under the conifers, its paired oval leaves held in flat sprays; pale yellow paired tubular flowers as the leaves open, then pairs of shiny red berries in mid-summer, the leaves pale yellow in fall"
+ },
+ "description": "A deciduous shrub 1-2 m tall with slender, spreading stems that grow in loose clumps. Its oval leaves, up to 8 cm long, sit in pairs along the twigs; pale yellow tubular flowers hang in pairs as the leaves open in late spring, and they ripen into pairs of shiny red berries almost a centimetre across in mid-summer. In the Tetons it grows in the shade of lodgepole pine, Douglas-fir and spruce-fir forest on the moist canyon slopes, where bears and birds eat the berries.",
+ "season_notes": {
+  "winter": "Bare, slender grey-brown stems under the snow-loaded conifers.",
+  "spring": "Leaves open as the snow goes, with pale yellow flowers hanging in pairs beneath them.",
+  "summer": "Pairs of red berries in July and August, eaten by black bears and birds; elk browse the leaves.",
+  "fall": "The leaves turn pale yellow and drop; elk still browse the twigs."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "mixed_forest": 0.5,
+   "riparian": 0.3
+  },
+  "floor": 0.8,
+  "mid": 1.1,
+  "steep": 0.9,
+  "north": 1.2,
+  "shade": 0.8,
+  "disturbed": 0.4
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "cervus_canadensis",
+    "part": "browse",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "ursus_americanus",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "turdus_migratorius",
+    "part": "berries",
+    "seasons": [
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": [
+   "peromyscus_maniculatus",
+   "tamias_amoenus",
+   "turdus_migratorius"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   683,
+   3353
+  ],
+  "where": "the understory of the lodgepole pine, Douglas-fir and spruce-fir forests of the Teton canyons and Jackson Hole's forested slopes; western North America from British Columbia and Alberta through the Rocky Mountains to Arizona and New Mexico"
+ },
+ "notes": "No Lonicera is in the library; snowberry (the template) is its family's (Caprifoliaceae) deciduous shrub, with the same opposite, simple, oval leaves and a clumped multi-stemmed habit; the card makes Utah honeysuckle taller and looser, with paired yellow flowers and red berries in place of pink bells and white berries. Height 1-2 m, slender spreading branches, clump-forming (FEIS; Wikipedia, the same); USDA PLANTS: mature height 5 ft, multiple stem, erect, rapid growth, summer foliage porous. Leaves oval to oblong, up to 8 cm by 4 cm (Wikipedia), so leaf_size_m 0.05; leaves expand late March to early May and drop in the fall (FEIS). Flowers in pairs, yellow to yellowish-white, up to 1 cm (Wikipedia; PLANTS: yellow, early summer), April-June (FEIS); May-June for the Tetons is the drafter's reading. Berry red, almost 1 cm (Wikipedia; PLANTS: red, summer to fall, persistent); fruits mature June-September (FEIS); July-August for the Tetons is the drafter's reading. Habitat: understory of mature forest on moist open or wooded slopes and canyons; cool lodgepole pine and Douglas-fir habitat types low, dry to moist Engelmann spruce and subalpine fir types higher; tolerates moderate to dense shade and is common under closed canopies (FEIS), hence shade 0.8; often a climax species (Wikipedia). Fire top-kills it and it resprouts slowly from the root crown, a decreaser after fire; in Grand Teton National Park it was more frequent on unburned than burned spruce-fir sites (FEIS), hence disturbed 0.4. Elevation 683-3353 m overall (FEIS; Wikipedia: 300-3400 m, mostly 1200-2400 m); no Wyoming figure was given. The lodgepole, Douglas-fir and spruce-fir placing on the Teton tile is from the brief. Eaters: FEIS names elk (valuable summer and fall browse), white-tailed deer (minor), moose (trace summer and winter forage in Wyoming), grizzly bears (fruit, summer and fall), black bears (summer) and ruffed grouse (summer); Wikipedia says birds and bears eat the fruit. The American robin stands in for the fruit-eating birds; moose, white-tailed deer, grizzly bear and ruffed grouse are not in the library (the library's sooty grouse is a Pacific species, so it is not used). Cover: FEIS rates it fair to good for small mammals and nongame and upland game birds in Utah and Wyoming, poor for elk and pronghorn; the deer mouse, yellow-pine chipmunk and robin stand for those. Colours (the fall yellow included), crown profile, porosity, stems, the shreddy bark, leaf-on months, the flower and berry densities and drawn sizes are the drafter's judgement, not from a source.",
+ "sources": [
+  "Fire Effects Information System, Lonicera utahensis, https://www.fs.usda.gov/database/feis/plants/shrub/lonuta/all.html (US government work, public domain), read 2026-11-10",
+  "USDA PLANTS, Lonicera utahensis (LOUT2), https://plants.usda.gov/plant-profile/LOUT2 (characteristics read through plantsservices.sc.egov.usda.gov; US government work), read 2026-11-10",
+  "Wikipedia, Lonicera utahensis (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Lonicera_utahensis, read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ]
+}

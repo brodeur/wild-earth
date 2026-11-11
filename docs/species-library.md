@@ -1528,6 +1528,28 @@ cottonwood and Saskatoon serviceberry for Yellowstone and the Tetons. Known limi
 drawn with leaf cards on the coyote brush template, not jointed stems; narrowleaf cottonwood's young class keeps
 Fremont cottonwood's bark; blackbrush's summer leaf drop is not drawn (an evergreen card keeps its leaves).
 
+**Nineteen cards for the recorded associates, and no succulents (2026-11-10).** The rule that adds the shrubs
+recorded on a community's own cells (`pipeline/associates.py`) asks, on the Grand Canyon, Lamar and Teton tiles, for
+leafy shrubs the library lacked and for cacti. The leafy shrubs have agent drafts by the same route (sources in each
+card: FEIS, USDA PLANTS, National Park Service pages and Wikipedia; colours, crown proportions and stem counts are
+judgement values, no photographs measured): fernbush, Knowlton hophornbeam, bigtooth maple, creeping barberry (a
+dwarf shrub: a carpet), New Mexico locust, desert snowberry, roundleaf buffaloberry, common hoptree and wax currant
+for the Grand Canyon; russet buffaloberry for Lamar; chokecherry, antelope bitterbrush, gray horsebrush, Utah
+honeysuckle, Greene's mountain-ash and snowbrush ceanothus for the Tetons. Three more were drafted while the rule
+was still the plain ratio and are kept: Utah serviceberry (named by the montane shrublands, until now drawn as
+cliffrose), Fendler's ceanothus (now the stand-in of the chaparral's two ceanothus) and Oregon boxleaf (asked for by
+nothing today). Known limits, in the cards' notes: New Mexico locust grows on whistling thorn (the library's only
+thorny pinnate legume), hophornbeam on downy birch with pale catkins standing for its hop-like fruit, roundleaf
+buffaloberry on fourwing saltbush.
+
+**The cacti and the yucca have no card, and no card can grow them**: plains, tulip and Engelmann's prickly pear,
+Whipple cholla, claret-cup and Engelmann's hedgehog cactus, cottontop cactus and soaptree yucca. `treegen.js` grows
+trees, shrubs, multi-stemmed shrub-trees and palms: leafy crowns on woody stems. A cactus is pads or ribbed stems
+and a yucca a rosette of sword leaves, so `communities.NO_GROWTH_FORM` (Cactaceae, Asparagaceae) keeps a species of
+those families without a record out of every stand-in: it is listed in the mix's `missing`, its place in the layer
+is left empty (`species_mix.hold_empty`, `communities[].held_empty`), and the needs file says it waits for a growth
+form. A succulent generator (pads, ribbed stem clumps, leaf rosettes) is the missing piece.
+
 ## Palms (2026-11-06)
 
 A palm is not a branching tree: Corner's model (Hallé & Oldeman 1970), one unbranched stem that ends in a crown of
