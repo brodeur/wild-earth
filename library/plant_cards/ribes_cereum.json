@@ -1,0 +1,255 @@
+{
+ "id": "ribes_cereum",
+ "scientific": "Ribes cereum",
+ "common": "wax currant",
+ "aliases": [
+  "wax_currant",
+  "whisky_currant"
+ ],
+ "family": "Grossulariaceae",
+ "form": "shrub",
+ "deciduous": true,
+ "template": "ribes_roezlii",
+ "regions": [
+  "interior_west"
+ ],
+ "height_m": [
+  0.5,
+  1.5
+ ],
+ "stature": {
+  "typical_m": 1.0,
+  "tall_m": 2.0,
+  "record_m": null,
+  "source": "typical: the drafter's middle of FEIS's 0.5-1.5 m; tall: Wikipedia (20 cm to 2 m) and the NPS Grand Canyon shrubs page (up to 6 feet); no record height was read; read 2026-11-10"
+ },
+ "variants_height_m": {
+  "young": [
+   0.2,
+   0.5
+  ],
+  "old": [
+   1.3,
+   2.0
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.3
+   ],
+   [
+    0.15,
+    0.42
+   ],
+   [
+    0.35,
+    0.5
+   ],
+   [
+    0.55,
+    0.52
+   ],
+   [
+    0.72,
+    0.48
+   ],
+   [
+    0.86,
+    0.38
+   ],
+   [
+    0.95,
+    0.24
+   ],
+   [
+    1.0,
+    0.1
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.18,
+  "asymmetry": 0.22,
+  "fill": 0.55,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    128,
+    104,
+    90
+   ],
+   "spring": [
+    130,
+    152,
+    104
+   ],
+   "summer": [
+    104,
+    126,
+    96
+   ],
+   "fall": [
+    190,
+    140,
+    72
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.6,
+   "summer": 1.0,
+   "fall": 0.45
+  },
+  "leaf_on_by_month": [
+   0.0,
+   0.0,
+   0.05,
+   0.45,
+   0.9,
+   1.0,
+   1.0,
+   1.0,
+   0.85,
+   0.5,
+   0.1,
+   0.0
+  ],
+  "leaf_size_m": 0.02,
+  "leaf_shape": "lobed",
+  "flowers": {
+   "season": "spring",
+   "months": [
+    4,
+    6
+   ],
+   "form": "bud",
+   "rgb": [
+    238,
+    206,
+    210
+   ],
+   "size_m": 0.012,
+   "density": 0.4,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": "summer",
+   "months": [
+    7,
+    9
+   ],
+   "form": "bud",
+   "rgb": [
+    214,
+    86,
+    48
+   ],
+   "size_m": 0.01,
+   "density": 0.3
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   126,
+   102,
+   88
+  ],
+  "bark_pattern": "smooth",
+  "stems": [
+   5,
+   10
+  ],
+  "lean_deg": 10
+ },
+ "targets": {
+  "crown_width_ratio": 1.3,
+  "crown_base_ratio": 0.05,
+  "porosity": 0.35,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: a rounded, many-branched, unarmed shrub wider than tall, leafy nearly to the ground, of small grey-green, round, shallowly lobed leaves; drooping clusters of white to pink tubular flowers in spring, small orange-red berries in summer, yellow to orange leaves in fall"
+ },
+ "description": "A rounded, many-branched shrub about knee to chest high, with smooth stems and no spines. Its small, round, grey-green leaves have three to five shallow, toothed lobes and are sticky with resin glands, and the bush gives off a spicy scent that carries on a warm day. In spring short drooping clusters of white to pink tube-shaped flowers hang under the leaves, and by late summer they become shiny orange-red berries about a centimetre across, each tipped with a dried flower. At the Grand Canyon it grows among the pinyons and junipers on the dry, rocky ground of the rim.",
+ "season_notes": {
+  "winter": "A low tangle of bare, smooth, grey-brown stems; mule deer nibble the twigs where little else is left.",
+  "spring": "Small round leaves unfold in April, and pale pink tubular flowers hang in clusters from April to June.",
+  "summer": "Orange-red berries ripen by August; robins and other birds, deer mice and mule deer eat them.",
+  "fall": "The last berries drop and the leaves turn yellow and orange before they fall."
+ },
+ "habitat": {
+  "classes": {
+   "chaparral": 0.8,
+   "conifer_forest": 0.7,
+   "oak_woodland": 0.5,
+   "barren": 0.5,
+   "grassland": 0.4,
+   "mixed_forest": 0.3
+  },
+  "floor": 0.9,
+  "mid": 1.0,
+  "steep": 1.1,
+  "north": 0.8,
+  "shade": 0.15,
+  "disturbed": 1.2
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "spring",
+     "summer",
+     "winter"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "berries",
+    "seasons": [
+     "summer"
+    ]
+   },
+   {
+    "animal": "turdus_migratorius",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "peromyscus_maniculatus",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "peromyscus_maniculatus",
+   "junco_hyemalis",
+   "meleagris_gallopavo"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1500,
+   4000
+  ],
+  "where": "dry, open, rocky ground in the pinyon-juniper woodland and open ponderosa pine of the South Rim; dry slopes, ridges and rock outcrops of the mountains and plateaus of western North America from British Columbia and Alberta to California, northern Arizona and northern New Mexico"
+ },
+ "notes": "Sierra gooseberry (the template) is the library's Ribes of the same height (0.5-1.5 m) and leaf (round, three- to five-lobed, 1-3 cm), a shrub of dry rocky slopes; its spines are not drawn by the generator, so it serves the unarmed wax currant. The other library Ribes, chaparral currant, is taller and erect with leaves twice the size and a summer-deciduous, winter-leafy schedule. The card gives its own leaf_on_by_month (the template drops its leaves in the dry summer) and its own flowers and berries. Height: 0.5-1.5 m (FEIS), 20 cm-2 m, spreading or erect (Wikipedia), up to 6 feet (NPS Grand Canyon shrubs page). Many smooth-barked branches (FEIS); stems fuzzy, often glandular, without spines or prickles (Wikipedia): bark_pattern smooth, stems 5-10 is judgement. Leaves orbicular, three- to five-lobed, 0.5-2.5 cm long and 0.7-5 cm wide (FEIS), grey-green, 1.5-2.5 cm, shallowly lobed and toothed, resin-dotted (Wikipedia), roughly oval with shallow lobes and a sticky surface (NPS), so leaf_size_m 0.02 and the template's lobed shape; the spicy scent is from Wikipedia and NPS. Flowers tubular in short drooping racemes of 2-9, white to pink (FEIS, Wikipedia, NPS), April to June (FEIS); fruit globose, about 1.2 cm (FEIS), orange-red, up to 1 cm, with a long dried flower remnant (Wikipedia), red or orange (NPS), ripe by August (FEIS): berries July-September is the drafter's reading. Habitat: dry, open slopes, ridges and rock outcrops at 1500-4000 m (FEIS, elev_m); listed under pinyon-juniper, ponderosa pine and mountain shrub types (FEIS); shade intolerant, most vigorous without a forest canopy, early seral, thrives after ground scarification and low-severity fire germinates its stored seed (FEIS), hence shade 0.15 and disturbed 1.2. Range British Columbia to the Sierra Nevada, northern Arizona and northern New Mexico (FEIS). The NPS Grand Canyon shrubs page lists wax currant; its placing in the rim's pinyon-juniper is from the brief and FEIS. Eaters and cover: fair to poor deer browse but important where little else is available (FEIS); berries a significant food for deer (Wikipedia); chickadees and other birds eat the fruit, pocket gophers feed on it in winter, birds and mammals spread the seeds (FEIS); cover good for small mammals and small nongame birds, fair for upland game birds, poor to fair for mule deer (FEIS). The American robin stands in for the fruit-eating birds, the deer mouse for small mammals, the dark-eyed junco for small nongame birds and the wild turkey for upland game birds (the robin and the berries' part for the deer mouse are the drafter's choice); chickadees of the interior West, pocket gophers and pronghorn are not in the library. Colours, crown profile, porosity, stems, leaf-on months and the flower and berry colours, sizes and densities are the drafter's judgement, not from a source.",
+ "sources": [
+  "Fire Effects Information System, Ribes cereum, https://www.fs.usda.gov/database/feis/plants/shrub/ribcer/all.html (US government work, public domain), read 2026-11-10",
+  "Wikipedia, Ribes cereum (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Ribes_cereum, read 2026-11-10",
+  "National Park Service, Grand Canyon National Park: Shrubs, https://www.nps.gov/grca/learn/nature/shrubs.htm, read 2026-11-10",
+  "USDA PLANTS, Ribes cereum (RICE), https://plants.usda.gov/home/plantProfile?symbol=RICE, read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ]
+}

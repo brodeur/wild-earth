@@ -19,9 +19,9 @@
   "tile_registry": "species/registry.json"
  },
  "built_at": {
-  "manifest": "2026-11-10T23:18:43Z",
+  "manifest": "2026-11-11T00:49:23Z",
   "animals": "2026-11-09T04:48:13Z",
-  "tile_registry": "2026-11-10T23:18:43Z"
+  "tile_registry": "2026-11-11T00:49:23Z"
  },
  "layers": {
   "terrain": {
@@ -141,7 +141,7 @@
     "resolution": "30 m cell",
     "measured": "a cell whose species composition is mapped (plot-based maps such as TreeMap): no tile uses one today",
     "ruled": "a hand rule (pipeline/species_mix.py RULES) or a named_from_* rule (the species the community's name names) applied to a measured existing-vegetation class (source evt); open water and permanent ice (rules that draw no plants); a tile_pool_* community with no woody donor that draws only the grasses and forbs of its own description or the region's ground table (ground_only)",
-    "guessed": "the tile pool (tile_pool_*: another community's species of the same habitat class), research_* (the tile's recorded species weighted by records x niche), habitat_default_* (California's foothill default), and every cell whose class is a back-fill rather than today's vegetation (source bps: pre-settlement LANDFIRE BpS under human land; rewild: former reservoir beds; habitat: no class)",
+    "guessed": "the tile pool (tile_pool_*: another community's species of the same habitat class), research_* (the tile's recorded species weighted by records x niche), recorded_* (a community whose name names nothing: the shrubs recorded on its own cells, pipeline/associates.py), habitat_default_* (California's foothill default), and every cell whose class is a back-fill rather than today's vegetation (source bps: pre-settlement LANDFIRE BpS under human land; rewild: former reservoir beds; habitat: no class)",
     "blank": "a tile_pool_* community with no donor and no ground plants: drawn bare, nothing known"
    }
   },

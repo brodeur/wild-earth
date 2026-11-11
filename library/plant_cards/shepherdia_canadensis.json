@@ -1,0 +1,273 @@
+{
+ "id": "shepherdia_canadensis",
+ "scientific": "Shepherdia canadensis",
+ "common": "russet buffaloberry",
+ "aliases": [
+  "russet_buffaloberry",
+  "canada_buffaloberry",
+  "buffaloberry",
+  "soapberry",
+  "soopolallie",
+  "bitter_buffaloberry"
+ ],
+ "family": "Elaeagnaceae",
+ "form": "shrub",
+ "deciduous": true,
+ "template": "symphoricarpos_albus",
+ "regions": [
+  "interior_west"
+ ],
+ "height_m": [
+  1.0,
+  2.5
+ ],
+ "stature": {
+  "typical_m": 1.5,
+  "tall_m": 3.0,
+  "record_m": 4.0,
+  "source": "typical: the drafter's figure for plants under lodgepole pine; tall and record: FEIS 0.9-3.9 m, Wikipedia 1-4 m; read 2026-11-10"
+ },
+ "variants_height_m": {
+  "young": [
+   0.3,
+   0.8
+  ],
+  "old": [
+   2.0,
+   3.2
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.3
+   ],
+   [
+    0.15,
+    0.42
+   ],
+   [
+    0.35,
+    0.5
+   ],
+   [
+    0.55,
+    0.5
+   ],
+   [
+    0.72,
+    0.45
+   ],
+   [
+    0.86,
+    0.34
+   ],
+   [
+    0.96,
+    0.18
+   ],
+   [
+    1.0,
+    0.06
+   ]
+  ],
+  "lobes": 5,
+  "lobe_depth": 0.2,
+  "asymmetry": 0.25,
+  "fill": 0.45,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    118,
+    90,
+    70
+   ],
+   "spring": [
+    118,
+    132,
+    88
+   ],
+   "summer": [
+    98,
+    110,
+    80
+   ],
+   "fall": [
+    170,
+    148,
+    82
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.6,
+   "summer": 1.0,
+   "fall": 0.4
+  },
+  "leaf_on_by_month": [
+   0.0,
+   0.0,
+   0.0,
+   0.05,
+   0.6,
+   1.0,
+   1.0,
+   1.0,
+   0.8,
+   0.35,
+   0.05,
+   0.0
+  ],
+  "leaf_size_m": 0.05,
+  "leaf_shape": "oval",
+  "flowers": {
+   "season": "spring",
+   "months": [
+    5,
+    6
+   ],
+   "form": "cluster",
+   "rgb": [
+    168,
+    128,
+    64
+   ],
+   "size_m": 0.01,
+   "density": 0.3,
+   "before_leaves": true
+  },
+  "berries": {
+   "season": [
+    "summer"
+   ],
+   "months": [
+    7,
+    8
+   ],
+   "form": "cluster",
+   "rgb": [
+    200,
+    48,
+    34
+   ],
+   "size_m": 0.02,
+   "density": 0.4
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   116,
+   92,
+   72
+  ],
+  "bark_pattern": "smooth",
+  "stems": [
+   3,
+   8
+  ],
+  "lean_deg": 12
+ },
+ "targets": {
+  "crown_width_ratio": 1.0,
+  "crown_base_ratio": 0.1,
+  "porosity": 0.4,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: a loose, rounded, spreading shrub of several brown, rusty-scurfy stems, about as wide as tall, its leaves dull green above and silvery with rusty dots beneath, so the bush looks grey-green when the wind turns them; small bright red berries along the twigs in midsummer"
+ },
+ "description": "A loose, spreading shrub, usually one to two metres, of several brown stems whose young twigs are coated in tiny rusty scales. Its small oval leaves grow in pairs, dull green above and silvery with rust-coloured dots beneath, so the bush flashes grey when the wind turns them. Tiny yellow-brown flowers open in May as the leaves come out, male and female on different plants, and by July the female bushes carry small, glossy, bright red berries that taste bitter and soapy. In Yellowstone and the Tetons it grows in the shade of lodgepole pine and Douglas-fir, on dry, rocky and gravelly ground and in burned forest, and its berries are a favourite late-summer food of grizzly and black bears.",
+ "season_notes": {
+  "winter": "Bare brown, scurfy twigs with the buds already formed; elk and deer browse it a little.",
+  "spring": "Tiny yellow-brown flowers crowd the twigs in May as the silvery new leaves open.",
+  "summer": "Red berries ripen in July and August; bears strip the bushes, and grouse and songbirds take them too.",
+  "fall": "Leaves turn yellowish and drop early; the last berries go to bears fattening for winter."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "mixed_forest": 0.6,
+   "riparian": 0.4,
+   "barren": 0.3,
+   "chaparral": 0.2,
+   "grassland": 0.1
+  },
+  "floor": 0.9,
+  "mid": 1.0,
+  "steep": 0.9,
+  "north": 1.1,
+  "shade": 0.6,
+  "disturbed": 1.1
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "ursus_americanus",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "turdus_migratorius",
+    "part": "berries",
+    "seasons": [
+     "summer"
+    ]
+   },
+   {
+    "animal": "peromyscus_maniculatus",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "summer"
+    ]
+   },
+   {
+    "animal": "cervus_canadensis",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "lepus_americanus",
+    "part": "browse",
+    "seasons": [
+     "winter"
+    ]
+   }
+  ],
+  "cover_for": [
+   "lepus_americanus",
+   "peromyscus_maniculatus",
+   "odocoileus_hemionus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1500,
+   3000
+  ],
+  "where": "the understory of lodgepole pine, Douglas-fir and spruce-fir forest on the slopes around the Lamar Valley and in the Tetons, on dry, rocky, gravelly or sandy soils and in burned forest, and on river shores and open rocky woods; across boreal Canada and Alaska and south in the Rockies to New Mexico"
+ },
+ "notes": "The library has no Elaeagnaceae; common snowberry (the template) is the nearest hand-written deciduous shrub of the same leaf type (small, simple, entire, oval leaves in opposite pairs) and a similar loose, multi-stemmed habit, but it is lower and has white berries. Height 0.9-3.9 m (FEIS), 1-4 m (Wikipedia); height_m 1.0-2.5 m for plants under lodgepole pine is the drafter's choice. Deciduous, nitrogen-fixing, usually dioecious (FEIS). Leaves about 6.5 cm, opposite, green above, whitish and brownish beneath (Wikipedia), hence leaf_size_m 0.05 and the grey-green summer colour; the rusty scales on twigs and leaf undersides are the drafter's knowledge of the species and fit Wikipedia's 'whitish and brownish' underside, not quoted from a source read. Flowers small (3-4 mm), petal-less, yellow or brown, in axillary clusters (Wikipedia); flowering April-June, mid-May to early June in the Rockies (FEIS); before_leaves true is the drafter's judgement. Fruit drupelike, yellowish red to bright red (FEIS), about 6 mm, bitter and soapy (Wikipedia), ripe June-August, about July 9-28 in Montana (FEIS). Habitat (FEIS): understory of spruce-fir to ponderosa pine and aspen, sandy, gravelly or rocky and nutrient-poor soils, shores, dry slopes, moist north slopes, open rocky woods; a dominant in Wyoming forest habitat types of the Bighorn and Wind River Mountains; cover declines as forests mature and rises after fire, which it survives by sprouting from the root crown (FEIS), hence disturbed 1.1 and shade 0.6. No Wyoming elevation was read (FEIS: 1500-1600 m in Alberta, 2012-2499 m in Idaho); elev_m 1500-3000 m is the drafter's range for the Greater Yellowstone. The lodgepole placing at Lamar is from the brief (the pipeline's LANDFIRE community). Eaters (FEIS): black bear (a major summer-fall food), grizzly bear (berries rated good in Montana and Wyoming; substantial fall use), grouse and upland birds, small nongame birds and small mammals (berries rated good), mule and white-tailed deer (poor to good browse; 1-10% of a Colorado summer diet), elk (poor to fair), moose (poor), snowshoe hare (browsed, not preferred), bighorn. The grizzly bear, moose, bighorn, white-tailed deer and the Rocky Mountain grouse (dusky, ruffed, spruce) are not in the library; the American robin stands in for the fruit-eating birds and the deer mouse for the small mammals. The National Park Service Yellowstone pages read (plants overview) do not name buffaloberry; no NPS page naming it could be fetched (several Yellowstone bear-food URLs returned 404), and the USDA PLANTS plant guide PDF downloaded but could not be read (no PDF text tool). Colours, crown profile, porosity, stems, lean, leaf-on months, habitat weights and the flower and berry sizes are the drafter's judgement, not from a source.",
+ "sources": [
+  "Fire Effects Information System, Shepherdia canadensis, https://www.fs.usda.gov/database/feis/plants/shrub/shecan/all.html, read 2026-11-10",
+  "Wikipedia, Shepherdia canadensis (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Shepherdia_canadensis, read 2026-11-10",
+  "National Park Service, Yellowstone National Park: Plants, https://www.nps.gov/yell/learn/nature/plants.htm, read 2026-11-10 (does not name it)"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ]
+}

@@ -1,0 +1,214 @@
+{
+ "id": "ceanothus_fendleri",
+ "scientific": "Ceanothus fendleri",
+ "common": "Fendler's ceanothus",
+ "aliases": [
+  "fendler_ceanothus",
+  "fendlers_ceanothus",
+  "fendlers_buckbrush",
+  "deer_brier"
+ ],
+ "family": "Rhamnaceae",
+ "form": "shrub",
+ "deciduous": false,
+ "template": "ceanothus_cordulatus",
+ "regions": [
+  "interior_west"
+ ],
+ "height_m": [
+  0.4,
+  1.0
+ ],
+ "stature": {
+  "typical_m": 0.6,
+  "tall_m": 1.2,
+  "record_m": null,
+  "source": "typical: the drafter's middle for the ponderosa pine understory of the South Rim; tall: Wikipedia (seldom exceeds 1 m), a little over it as a judgement; no record height was read; read 2026-11-10"
+ },
+ "variants_height_m": {
+  "young": [
+   0.1,
+   0.3
+  ],
+  "decadent": [
+   0.7,
+   1.1
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.42
+   ],
+   [
+    0.2,
+    0.5
+   ],
+   [
+    0.45,
+    0.54
+   ],
+   [
+    0.65,
+    0.5
+   ],
+   [
+    0.82,
+    0.4
+   ],
+   [
+    0.93,
+    0.26
+   ],
+   [
+    1.0,
+    0.1
+   ]
+  ],
+  "lobes": 7,
+  "lobe_depth": 0.2,
+  "asymmetry": 0.25,
+  "fill": 0.5,
+  "edge": 1.15
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    92,
+    108,
+    74
+   ],
+   "spring": [
+    118,
+    146,
+    90
+   ],
+   "summer": [
+    96,
+    124,
+    78
+   ],
+   "fall": [
+    100,
+    116,
+    76
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "leaf_shape": "oval",
+  "leaf_size_m": 0.02,
+  "flowers": {
+   "season": "summer",
+   "months": [
+    6,
+    7
+   ],
+   "form": "cluster",
+   "rgb": [
+    244,
+    242,
+    232
+   ],
+   "size_m": 0.02,
+   "density": 0.6,
+   "before_leaves": false
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   128,
+   84,
+   66
+  ],
+  "bark_pattern": "smooth",
+  "stems": [
+   6,
+   16
+  ],
+  "lean_deg": 14
+ },
+ "targets": {
+  "crown_width_ratio": 1.5,
+  "crown_base_ratio": 0.03,
+  "porosity": 0.4,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: a low, spreading, intricately branched mound of spine-tipped twigs, grey-green when young and red-brown when older, wider than tall and leafy to the ground; small thick three-veined leaves; covered all at once in creamy-white flower clusters in early summer"
+ },
+ "description": "A low, spiny shrub, rarely more than a metre tall, that spreads into a mound of stiff, branching twigs, grey-green when young and red-brown when older, each tipped with a thorn up to 2.5 cm long. Its leaves are small, thick and green with three veins from the base. In early summer the whole bush is covered at once in fluffy clusters of tiny white flowers, followed by glossy pink, three-lobed seed capsules that snap open in late summer and throw their seeds. It grows under the ponderosa pines of the Grand Canyon's rims and in the Gambel oak and mountain shrub thickets, across the pine forests of the Southwest and the southern Rockies.",
+ "season_notes": {
+  "winter": "Low, thorny mounds under the pines, the leaves still on; mule deer browse it through the winter.",
+  "spring": "New growth on the twigs; deer and elk browse the tender shoots.",
+  "summer": "The whole bush turns white with tiny flowers in June and July, humming with insects; buckthorn duskywing caterpillars feed on the leaves.",
+  "fall": "Glossy pink seed capsules ripen and burst in August and September, flinging their seeds."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 1.0,
+   "oak_woodland": 0.7,
+   "chaparral": 0.6,
+   "mixed_forest": 0.4,
+   "grassland": 0.2
+  },
+  "floor": 1.0,
+  "mid": 1.0,
+  "steep": 0.6,
+  "north": 0.8,
+  "shade": 0.4,
+  "disturbed": 1.2
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring",
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "cervus_canadensis",
+    "part": "browse",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   },
+   {
+    "animal": "lepus_californicus",
+    "part": "browse",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": [
+   "peromyscus_maniculatus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1500,
+   3000
+  ],
+  "where": "the ponderosa pine woodland of the Grand Canyon's South and North Rims and the Gambel oak and montane shrub thickets with it; pine forests of Arizona, New Mexico, west Texas, Utah, Colorado, eastern Wyoming, western South Dakota and northern Mexico"
+ },
+ "notes": "The Fire Effects Information System has no review of Fendler's ceanothus (https://www.fs.usda.gov/database/feis/plants/shrub/ceafen/all.html returned 404), and no National Park Service page describing it was found (the NPSpecies records only list it as present in parks, Grand Canyon among them), so the card rests on Wikipedia, with USDA PLANTS for its habit (a perennial shrub) only. Mountain whitethorn (the template) is the library's Ceanothus of the same build: a low, spiny, many-stemmed mound with three-veined leaves and white flower clusters. Height: seldom exceeds 1 m (Wikipedia), so height_m 0.4-1.0, which keeps it a whole shrub above plantgen's 0.5 m dwarf-shrub limit. Twigs grey-green when young, red-brown when mature, with spines up to 2.5 cm; leaves green, thick, three-veined (Wikipedia). Flowers white, about 2 mm, in thick clusters from the leaf axils, all opening at once, usually June or July (April to October with altitude) (Wikipedia), hence months 6-7; the drawn size_m is a cluster, not a flower. Fruit: a glossy pink three-celled capsule ripening August-September that bursts and throws its seeds (Wikipedia); it is not drawn, as the berries block would make it food for fruit eaters, which a dry capsule is not. Habitat: pine forests at 1500-3000 m (Wikipedia); the Gambel oak / montane shrubland and South Rim placing is from the brief. Leaf persistence: no source read says whether it is evergreen or deciduous (Wikipedia is silent); the card keeps the template's evergreen, the drafter's judgement for a thick-leaved Ceanothus of the pine belt, to be checked. Eaters: Wikipedia names deer (particularly fond of it; important to mule deer all year at Beaver Creek, Arizona, up to 6.9 % of the summer diet), elk, North American porcupines, jackrabbits and livestock, and buckthorn duskywing caterpillars. The black-tailed jackrabbit stands in for jackrabbits; the porcupine and the butterfly are not in the library. The cover_for entry (deer mouse), the habitat weights and disturbed 1.2 (a sprouting Ceanothus of burned and thinned pine forest) are the drafter's judgement. Colours, crown profile, porosity, stems, leaf size and the flower density are the drafter's judgement, not from a source.",
+ "sources": [
+  "Wikipedia, Ceanothus fendleri (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Ceanothus_fendleri, read 2026-11-10",
+  "USDA PLANTS Database, Ceanothus fendleri (CEFE), https://plants.usda.gov/plant-profile/CEFE (US government work, public domain; read through its profile service https://plantsservices.sc.egov.usda.gov/api/PlantProfile?symbol=CEFE), read 2026-11-10",
+  "Fire Effects Information System: no review of Ceanothus fendleri (https://www.fs.usda.gov/database/feis/plants/shrub/ceafen/all.html, 404), tried 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ]
+}

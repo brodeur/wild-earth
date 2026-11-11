@@ -1,0 +1,377 @@
+{
+ "id": "shepherdia_rotundifolia",
+ "aliases": [
+  "roundleaf_buffaloberry",
+  "round_leaf_buffaloberry",
+  "silverleaf"
+ ],
+ "scientific": "Shepherdia rotundifolia",
+ "common": "roundleaf buffaloberry",
+ "form": "shrub",
+ "regions": [
+  "interior_west"
+ ],
+ "architectural_model": "Leeuwenberg (provisional: much-branched, flowers at the shoot ends)",
+ "deciduous": false,
+ "height_m": [
+  0.9,
+  1.8
+ ],
+ "stature": {
+  "typical_m": 1.2,
+  "tall_m": 2.0,
+  "record_m": null,
+  "source": "typical: the drafter's middle; tall: Wikipedia (1-2 m, 3-6 ft) and the NPS Capitol Reef shrubs page (0.9-1.8 m tall, 0.9-3.7 m wide); no record height was read; read 2026-11-10"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    0.2,
+    0.5
+   ],
+   "deadwood": 0.03,
+   "set": {
+    "trunk": {
+     "stems": [
+      5,
+      9
+     ]
+    }
+   },
+   "note": "(from the fourwing saltbush template) (from the coyote brush template) a low, bright green mound on a road edge or in grassland"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 1,
+   "note": "(from the fourwing saltbush template) (from the coyote brush template) the file as written: a dense, rounded, many-stemmed mound"
+  },
+  {
+   "name": "decadent",
+   "weight": 0.25,
+   "height_m": [
+    1.2,
+    2.0
+   ],
+   "crown_scale": 1.1,
+   "gnarl": 1.15,
+   "leaf_density": 0.8,
+   "deadwood": {
+    "fraction": 0.35,
+    "levels": [
+     0,
+     1
+    ],
+    "shorten": 0.8
+   },
+   "set": {
+    "trunk": {
+     "stems": [
+      10,
+      18
+     ]
+    }
+   },
+   "note": "(from the fourwing saltbush template) (from the coyote brush template) an old, sprawling shrub with a grey, dead middle"
+  }
+ ],
+ "description": "A dense, rounded evergreen shrub one to two metres tall and often wider than it is tall, easy to spot from a distance by its silvery-green colour. Its leathery leaves are round to egg-shaped, up to about 4 cm long, silvery green on top and white and hairy underneath. Small yellowish flowers open in clusters along the stems in late spring, followed by small, hairy, oval berries. It grows only on the Colorado Plateau, on rocky hillsides, slickrock and canyon bottoms in the pinyon-juniper woodland and desert shrub below the Grand Canyon's rims.",
+ "season_notes": {
+  "winter": "A silvery mound that keeps its leaves among the junipers and red rock.",
+  "spring": "Small clusters of yellowish flowers along the stems in May and June.",
+  "summer": "Small hairy berries ripen among the silvery leaves.",
+  "fall": "Unchanged, silvery green, a pale spot on the canyon slopes."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "barren": 0.8,
+   "chaparral": 0.8,
+   "conifer_forest": 0.6,
+   "grassland": 0.3
+  },
+  "floor": 0.8,
+  "mid": 1.0,
+  "steep": 1.3,
+  "north": 0.6,
+  "shade": 0.1,
+  "disturbed": 0.4
+ },
+ "relations": {
+  "eaten_by": [],
+  "cover_for": [
+   "peromyscus_maniculatus"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 0.9,
+  "radius_ratio": 0.015,
+  "taper": 0.85,
+  "flare": 1.4,
+  "bole_ratio": 0.05,
+  "base_size": 0.04,
+  "curve_deg": 10,
+  "curve_var_deg": 16,
+  "segments": 3,
+  "lean_deg": 10,
+  "stems": [
+   6,
+   14
+  ],
+  "stem_spread_deg": 54,
+  "split_prob": 0.0,
+  "split_count": 2,
+  "split_angle_deg": 20,
+  "sinuous_deg": 8,
+  "bark_rgb": [
+   150,
+   144,
+   128
+  ],
+  "bark_pattern": "smooth_grey",
+  "twig_rgb": [
+   116,
+   114,
+   84
+  ],
+  "bark": {
+   "tile_m": [
+    0.1,
+    0.35
+   ]
+  }
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "envelope": {
+   "profile": [
+    [
+     0.0,
+     0.4
+    ],
+    [
+     0.2,
+     0.5
+    ],
+    [
+     0.42,
+     0.56
+    ],
+    [
+     0.62,
+     0.54
+    ],
+    [
+     0.8,
+     0.46
+    ],
+    [
+     0.93,
+     0.3
+    ],
+    [
+     1.0,
+     0.12
+    ]
+   ],
+   "lobes": 6,
+   "lobe_depth": 0.15,
+   "asymmetry": 0.2,
+   "fill": 0.65,
+   "edge": 1.05
+  }
+ },
+ "levels": [
+  {
+   "count": 4,
+   "start": 0.05,
+   "down_angle_deg": 51,
+   "down_angle_var_deg": 8,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.55,
+   "length_var": 0.3,
+   "curve_deg": 14,
+   "curve_var_deg": 16,
+   "tropism": 0.05,
+   "taper": 0.9,
+   "radius_ratio": 0.6,
+   "segments": 1,
+   "droop_deg": 3
+  },
+  {
+   "count": 5,
+   "start": 0.25,
+   "down_angle_deg": 32,
+   "down_angle_var_deg": 12,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.4,
+   "length_var": 0.3,
+   "curve_deg": 10,
+   "curve_var_deg": 18,
+   "tropism": 0.1,
+   "taper": 1.0,
+   "radius_ratio": 0.5,
+   "segments": 1
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.02,
+  "leaf_shape": "oval",
+  "cluster_m": 0.34,
+  "density": 24,
+  "cards_per_m2": 13.5,
+  "start": 0.01,
+  "parent_start": 0.01,
+  "orientation": "outward",
+  "colors": {
+   "winter": [
+    150,
+    160,
+    140
+   ],
+   "spring": [
+    160,
+    172,
+    148
+   ],
+   "summer": [
+    156,
+    168,
+    146
+   ],
+   "fall": [
+    152,
+    162,
+    142
+   ]
+  },
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "clumps": {
+   "radius_m": 0.25,
+   "cards_per_clump": 6,
+   "shell": 0.02,
+   "flatten": 0.85,
+   "tip_bias": 0.7
+  },
+  "ao_min": 0.74,
+  "color_var": [
+   0.08,
+   0.05
+  ],
+  "flowers": {
+   "season": "spring",
+   "months": [
+    5,
+    6
+   ],
+   "form": "cluster",
+   "rgb": [
+    214,
+    196,
+    104
+   ],
+   "size_m": 0.01,
+   "density": 0.3,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": [
+    "summer"
+   ],
+   "months": [
+    7,
+    9
+   ],
+   "form": "cluster",
+   "rgb": [
+    196,
+    190,
+    162
+   ],
+   "size_m": 0.006,
+   "density": 0.25
+  }
+ },
+ "deadwood": {
+  "fraction": 0.12,
+  "levels": [
+   0,
+   1
+  ],
+  "shorten": 0.75,
+  "rgb": [
+   138,
+   132,
+   124
+  ]
+ },
+ "twigs": {
+  "count": [
+   2,
+   3
+  ],
+  "length": 0.7,
+  "down_deg": 30,
+  "down_var_deg": 14,
+  "curve_var_deg": 22,
+  "segments": 1,
+  "radius_m": 0.004,
+  "tropism": 0.1,
+  "taper": 0.6,
+  "fan_deg": 50,
+  "jitter": 0.25
+ },
+ "lod": {
+  "near_tris_budget": 1000,
+  "near_sides": [
+   3,
+   3,
+   0
+  ],
+  "mid_blobs": 3,
+  "mid_branches": 0,
+  "mid_sides": [
+   0,
+   0
+  ],
+  "mid_cards": 24
+ },
+ "targets": {
+  "crown_width_ratio": 1.6,
+  "crown_base_ratio": 0.03,
+  "porosity": 0.25,
+  "foliage_rg": 0.85,
+  "foliage_bg": 0.73,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: a dense, rounded, silvery-green mound much wider than tall, leafy to the ground, standing out pale against the dark junipers and red rock; small clusters of yellowish flowers in spring"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "5",
+  "card": "library/plant_cards/shepherdia_rotundifolia.json",
+  "card_sha256": "a7e2aae96223258b",
+  "template": "atriplex_canescens",
+  "template_common": "fourwing saltbush",
+  "height_scale": 1.125
+ },
+ "notes": "The library has no Elaeagnaceae (oleaster family) species; fourwing saltbush (the template) is its nearest shape: a rounded, densely branched, evergreen, pale grey-green shrub of about the same height with small oval leaves. The Fire Effects Information System has no review of it (https://www.fs.usda.gov/database/feis/plants/shrub/sherot/all.html returned 404), so the card rests on Wikipedia and the National Park Service's Capitol Reef shrubs page, with USDA PLANTS for its habit (a perennial shrub) only. Height: 1-2 m (3-6 ft), evergreen (Wikipedia); 0.9-1.8 m tall and 0.9-3.7 m wide (NPS), hence height_m 0.9-1.8 and crown_width_ratio 1.6. Leaves oval to egg-shaped, sometimes lance-shaped, 6-38 mm, silvery green above, hairy and pale below (Wikipedia); round, leathery, silvery green above and whitish below from dense short hairs; easy to identify from a distance by its silvery-green hue (NPS); hence leaf_size_m 0.02 and the pale silvery colours, whose shades are the drafter's judgement. Flowers yellowish, single or clustered in the leaf axils, May-June (Wikipedia); small yellow flowers in clusters, May-July (NPS); months 5-6. Fruit elliptical with star-shaped hairs (Wikipedia), used for pemmican and by settlers for a sauce for bison meat (NPS; Wikipedia); no source read gives the fruit's colour or ripening months, so the silvery-tan colour and months 7-9 are the drafter's judgement. Habitat: mixed desert shrub, pinyon-juniper woodland and ponderosa pine forest up to 2400 m (Wikipedia); hillsides, slickrock and canyon bottoms in mixed desert shrub and pinyon-juniper woodland, endemic to the Colorado Plateau of Utah, Arizona and Colorado (NPS). The lower elevation limit (1200 m) is the drafter's judgement, no source giving one. The Grand Canyon placing (pinyon-juniper and the canyon slopes below the rim) is from the brief. Eaters: no source read names an animal that eats it, so eaten_by is empty; its cover_for entry (deer mouse), the habitat weights (steep, barren, sun-loving) and disturbed 0.4 are the drafter's judgement. Colours, crown profile, porosity, stems, flower and berry density and drawn sizes are the drafter's judgement, not from a source.",
+ "sources": [
+  "Wikipedia, Shepherdia rotundifolia (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Shepherdia_rotundifolia, read 2026-11-10",
+  "National Park Service, Capitol Reef National Park, Shrubs (roundleaf buffaloberry), https://www.nps.gov/care/learn/nature/shrubs.htm (US government work, public domain), read 2026-11-10",
+  "USDA PLANTS Database, Shepherdia rotundifolia (SHRO), https://plants.usda.gov/plant-profile/SHRO (US government work, public domain; read through its profile service https://plantsservices.sc.egov.usda.gov/api/PlantProfile?symbol=SHRO), read 2026-11-10",
+  "Fire Effects Information System: no review of Shepherdia rotundifolia (https://www.fs.usda.gov/database/feis/plants/shrub/sherot/all.html, 404), tried 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

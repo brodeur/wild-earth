@@ -2,7 +2,7 @@
  "format": 1,
  "tile": "utm12n_396_3988",
  "name": "Grand Canyon (South Rim to the river)",
- "at": "2026-11-10T23:19:08Z",
+ "at": "2026-11-11T00:49:43Z",
  "doc": "docs/held-out-judge.md",
  "checks": {
   "species_lists": {
@@ -31,11 +31,11 @@
    "scores": {
     "animal_precision": 0.9651,
     "animal_recall_common": 0.3523,
-    "plant_precision": 0.9231,
+    "plant_precision": 0.9423,
     "plant_precision_by_share": {
      "canopy": 1.0,
      "shrub": 1.0,
-     "ground": 0.8922
+     "ground": 0.9441
     },
     "groups_absent": [
      "fish"
@@ -180,14 +180,14 @@
      "spawned_precision": null
     },
     "plant": {
-     "drawn": 39,
-     "judged": 39,
-     "on_list_present_native": 36,
+     "drawn": 52,
+     "judged": 52,
+     "on_list_present_native": 49,
      "restored_drawn": [],
-     "hits": 36,
-     "precision": 0.9231,
+     "hits": 49,
+     "precision": 0.9423,
      "classes": {
-      "present_native": 36,
+      "present_native": 49,
       "historic_native": 0,
       "present_unknown_origin": 0,
       "non_native": 0,
@@ -200,7 +200,7 @@
      "precision_by_share": {
       "canopy": 1.0,
       "shrub": 1.0,
-      "ground": 0.8922
+      "ground": 0.9441
      }
     }
    },
@@ -831,7 +831,7 @@
      "species": "Festuca arizonica",
      "id": "festuca_arizonica",
      "layer": "ground",
-     "drawn_share": 0.1035,
+     "drawn_share": 0.0516,
      "genus_on_list": true,
      "group": "plant"
     },
@@ -898,18 +898,18 @@
    "drawn_from": "client/species_mix.json: plants drawn per species (cells x density x weight), by layer",
    "measure": "per layer, on genus shares: Bray-Curtis dissimilarity (0 same, 1 nothing in common); foreign share = drawn share in genera the reference does not record on this ground; missed share = reference share in genera not drawn in that layer",
    "scores": {
-    "bray_curtis_mean": 0.6136,
+    "bray_curtis_mean": 0.6139,
     "bray_curtis": {
      "canopy": 0.257,
-     "shrub": 0.6451,
+     "shrub": 0.6459,
      "ground": 0.9387
     },
     "foreign_share": {
      "canopy": 0.0001,
-     "shrub": 0.004,
+     "shrub": 0.0451,
      "ground": 0.0022
     },
-    "foreign_share_max": 0.004,
+    "foreign_share_max": 0.0451,
     "missed_share": {
      "canopy": 0,
      "shrub": 0.5987,
@@ -924,8 +924,9 @@
      "drawn": {
       "pinus": 0.8331,
       "juniperus": 0.1581,
-      "populus": 0.005,
+      "populus": 0.003,
       "quercus": 0.0029,
+      "acer": 0.002,
       "pseudotsuga": 0.0009,
       "abies": 0.0001
      },
@@ -935,18 +936,18 @@
      }
     },
     "shrub": {
-     "bray_curtis": 0.6451,
-     "foreign_share": 0.004,
+     "bray_curtis": 0.6459,
+     "foreign_share": 0.0451,
      "missed_share": 0.5987,
      "drawn": {
-      "ephedra": 0.3237,
-      "coleogyne": 0.2783,
-      "quercus": 0.2389,
-      "artemisia": 0.065,
-      "atriplex": 0.0435,
-      "encelia": 0.0432,
-      "purshia": 0.0028,
-      "rosa": 0.0026
+      "ephedra": 0.2904,
+      "coleogyne": 0.249,
+      "quercus": 0.1309,
+      "artemisia": 0.0689,
+      "atriplex": 0.0567,
+      "encelia": 0.0423,
+      "acer": 0.0423,
+      "rosa": 0.0254
      },
      "reference": {
       "baccharis": 0.1969,
@@ -966,12 +967,12 @@
      "drawn": {
       "achnatherum": 0.4256,
       "gutierrezia": 0.2909,
-      "muhlenbergia": 0.1227,
-      "festuca": 0.1035,
+      "berberis": 0.1029,
+      "muhlenbergia": 0.0716,
+      "festuca": 0.0516,
       "hilaria": 0.0297,
       "bouteloua": 0.0209,
-      "poa": 0.0043,
-      "distichlis": 0.0022
+      "poa": 0.0043
      },
      "reference": {
       "imperata": 0.3699,
@@ -986,6 +987,24 @@
     }
    },
    "errors": [
+    {
+     "kind": "foreign_genus",
+     "genus": "rosa",
+     "species": [
+      "rosa_woodsii"
+     ],
+     "drawn_share": 0.0254,
+     "layer": "shrub"
+    },
+    {
+     "kind": "foreign_genus",
+     "genus": "robinia",
+     "species": [
+      "robinia_neomexicana"
+     ],
+     "drawn_share": 0.0167,
+     "layer": "shrub"
+    },
     {
      "kind": "missing_genus",
      "genus": "baccharis",
@@ -1868,7 +1887,7 @@
  "summary": {
   "animal_precision": 0.9651,
   "animal_recall_common": 0.3523,
-  "plant_precision": 0.9231,
+  "plant_precision": 0.9423,
   "groups_absent": [
    "fish"
   ],
@@ -1882,21 +1901,21 @@
   "plant_precision_by_share": {
    "canopy": 1.0,
    "shrub": 1.0,
-   "ground": 0.8922
+   "ground": 0.9441
   },
   "composition_bray_curtis": {
    "canopy": 0.257,
-   "shrub": 0.6451,
+   "shrub": 0.6459,
    "ground": 0.9387
   },
   "composition_foreign_share": {
    "canopy": 0.0001,
-   "shrub": 0.004,
+   "shrub": 0.0451,
    "ground": 0.0022
   },
   "eye_level_distance": 0.177,
   "eye_level_pairs": 10,
   "colour_from_above_overlap": 0.26,
-  "named_errors": 99
+  "named_errors": 101
  }
 }

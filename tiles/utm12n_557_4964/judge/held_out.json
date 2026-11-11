@@ -2,7 +2,7 @@
  "format": 1,
  "tile": "utm12n_557_4964",
  "name": "Lamar Valley",
- "at": "2026-11-10T23:19:05Z",
+ "at": "2026-11-11T00:49:44Z",
  "doc": "docs/held-out-judge.md",
  "checks": {
   "species_lists": {
@@ -178,14 +178,14 @@
      "spawned_precision": null
     },
     "plant": {
-     "drawn": 45,
-     "judged": 45,
-     "on_list_present_native": 45,
+     "drawn": 46,
+     "judged": 46,
+     "on_list_present_native": 46,
      "restored_drawn": [],
-     "hits": 45,
+     "hits": 46,
      "precision": 1.0,
      "classes": {
-      "present_native": 45,
+      "present_native": 46,
       "historic_native": 0,
       "present_unknown_origin": 0,
       "non_native": 0,
@@ -854,10 +854,10 @@
    "drawn_from": "client/species_mix.json: plants drawn per species (cells x density x weight), by layer",
    "measure": "per layer, on genus shares: Bray-Curtis dissimilarity (0 same, 1 nothing in common); foreign share = drawn share in genera the reference does not record on this ground; missed share = reference share in genera not drawn in that layer",
    "scores": {
-    "bray_curtis_mean": 0.441,
+    "bray_curtis_mean": 0.4426,
     "bray_curtis": {
      "canopy": 0.3344,
-     "shrub": 0.3192,
+     "shrub": 0.324,
      "ground": 0.6695
     },
     "foreign_share": {
@@ -893,15 +893,16 @@
      }
     },
     "shrub": {
-     "bray_curtis": 0.3192,
+     "bray_curtis": 0.324,
      "foreign_share": null,
      "missed_share": 0.2209,
      "drawn": {
-      "artemisia": 0.728,
-      "symphoricarpos": 0.1631,
-      "rosa": 0.0556,
-      "salix": 0.0486,
-      "rubus": 0.0033,
+      "artemisia": 0.7068,
+      "symphoricarpos": 0.1584,
+      "rosa": 0.054,
+      "salix": 0.0472,
+      "shepherdia": 0.0291,
+      "prunus": 0.0032,
       "amelanchier": 0.0014
      },
      "reference": {
@@ -916,14 +917,14 @@
      "foreign_share": null,
      "missed_share": 0.1118,
      "drawn": {
-      "carex": 0.1983,
+      "carex": 0.167,
       "elymus": 0.1593,
+      "vaccinium": 0.1225,
       "festuca": 0.0931,
-      "poa": 0.0859,
-      "vaccinium": 0.071,
+      "poa": 0.0783,
       "lupinus": 0.0488,
-      "arnica": 0.0474,
-      "eriogonum": 0.0425
+      "eriogonum": 0.0425,
+      "geranium": 0.0416
      },
      "reference": {
       "festuca": 0.3632,
@@ -1405,7 +1406,7 @@
   },
   "composition_bray_curtis": {
    "canopy": 0.3344,
-   "shrub": 0.3192,
+   "shrub": 0.324,
    "ground": 0.6695
   },
   "composition_foreign_share": {

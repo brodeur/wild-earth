@@ -1,0 +1,228 @@
+{
+ "id": "ptelea_trifoliata",
+ "scientific": "Ptelea trifoliata",
+ "common": "common hoptree",
+ "aliases": [
+  "hoptree",
+  "common_hoptree",
+  "pallid_hoptree",
+  "western_hoptree",
+  "wafer_ash",
+  "ptelea_trifoliata_pallida",
+  "ptelea_pallida"
+ ],
+ "family": "Rutaceae",
+ "form": "multi_stem_shrub_tree",
+ "deciduous": true,
+ "template": "toxicodendron_diversilobum",
+ "regions": [
+  "interior_west"
+ ],
+ "height_m": [
+  1.5,
+  4.5
+ ],
+ "stature": {
+  "typical_m": 3.0,
+  "tall_m": 6.0,
+  "record_m": 8.0,
+  "source": "typical: the drafter's figure for a shrub on the dry ledges below the rim; tall and record: Wikipedia, a small tree or a shrub of a few spreading stems to around 6-8 m; read 2026-11-10"
+ },
+ "variants_height_m": {
+  "low": [
+   0.5,
+   1.5
+  ],
+  "thicket": [
+   3.5,
+   6.0
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.1,
+    0.26
+   ],
+   [
+    0.25,
+    0.4
+   ],
+   [
+    0.45,
+    0.5
+   ],
+   [
+    0.62,
+    0.52
+   ],
+   [
+    0.78,
+    0.46
+   ],
+   [
+    0.9,
+    0.32
+   ],
+   [
+    1.0,
+    0.12
+   ]
+  ],
+  "lobes": 5,
+  "lobe_depth": 0.22,
+  "asymmetry": 0.3,
+  "fill": 0.45,
+  "edge": 1.1
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    118,
+    96,
+    80
+   ],
+   "spring": [
+    128,
+    152,
+    90
+   ],
+   "summer": [
+    82,
+    112,
+    66
+   ],
+   "fall": [
+    186,
+    160,
+    70
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.6,
+   "summer": 1.0,
+   "fall": 0.5
+  },
+  "leaf_on_by_month": [
+   0.0,
+   0.0,
+   0.05,
+   0.4,
+   0.9,
+   1.0,
+   1.0,
+   1.0,
+   0.95,
+   0.6,
+   0.15,
+   0.0
+  ],
+  "leaf_size_m": 0.09,
+  "leaf_shape": "trifoliate",
+  "flowers": {
+   "season": [
+    "spring",
+    "summer"
+   ],
+   "months": [
+    5,
+    6
+   ],
+   "form": "cluster",
+   "rgb": [
+    220,
+    224,
+    190
+   ],
+   "size_m": 0.05,
+   "density": 0.3,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": [
+    "summer",
+    "fall",
+    "winter"
+   ],
+   "months": [
+    7,
+    12
+   ],
+   "form": "cluster",
+   "rgb": [
+    196,
+    180,
+    128
+   ],
+   "size_m": 0.06,
+   "density": 0.35
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   120,
+   98,
+   86
+  ],
+  "bark_pattern": "smooth",
+  "stems": [
+   2,
+   5
+  ],
+  "lean_deg": 12
+ },
+ "targets": {
+  "crown_width_ratio": 1.0,
+  "crown_base_ratio": 0.15,
+  "porosity": 0.4,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: a large shrub of a few spreading reddish to grey-brown stems with a broad, open crown of three-part leaves, dark green above; flat clusters of small greenish-white flowers in late spring, then bunches of round, papery, straw-coloured winged fruits that hang on into winter; the leaves turn a dull yellow in fall"
+ },
+ "description": "A large shrub or small tree of a few spreading stems, usually two to four metres high on the canyon walls, with reddish to grey-brown bark marked by small corky bumps. Each leaf is made of three pointed leaflets, dark green and shiny above, dotted with oil glands and strong smelling when crushed. Flat clusters of small greenish-white flowers open in May and June, and round, papery, wafer-like fruits about two centimetres across ripen pale brown and rattle on the bare stems into winter. At the Grand Canyon it grows in rocky draws and on the ledges and talus of the canyon walls just below the rim.",
+ "season_notes": {
+  "winter": "Bare, slender reddish-brown stems still hung with bunches of pale, papery, round fruits until the winds shake them loose.",
+  "spring": "Downy three-part leaves unfold in April and May; flat clusters of greenish-white, scented flowers open at the shoot tips in May.",
+  "summer": "Dense, dark green, glossy leaves; green wafer-like fruits swell and turn pale brown.",
+  "fall": "Leaves turn a rusty yellow and drop; the papery fruits ripen in October and stay on the branches."
+ },
+ "habitat": {
+  "classes": {
+   "barren": 0.7,
+   "chaparral": 0.7,
+   "oak_woodland": 0.5,
+   "riparian": 0.5,
+   "conifer_forest": 0.3,
+   "grassland": 0.1
+  },
+  "floor": 0.7,
+  "mid": 1.0,
+  "steep": 1.4,
+  "north": 1.1,
+  "shade": 0.4,
+  "disturbed": 0.8
+ },
+ "relations": {
+  "eaten_by": [],
+  "cover_for": [
+   "peromyscus_maniculatus"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1200,
+   2200
+  ],
+  "where": "rocky draws, ledges and talus of the canyon walls just below the South Rim (the bedrock canyon), with pinyon, juniper and Gambel oak; across much of eastern and southwestern North America from Ontario and Quebec to Mexico, the pallid hoptree (subsp. pallida) in the Southwest"
+ },
+ "notes": "No Rutaceae record is in the library, so the template is western poison oak (Anacardiaceae, the same order Sapindales): the library's deciduous shrub of upright, leaning stems with a trifoliate leaf, sized 1-2.5 m, which the card scales up to 1.5-4.5 m; its age classes are named low, mature and thicket, hence variants_height_m low and thicket. Other trifoliate records (thimbleberry's relatives salmonberry and California blackberry) are arching cane shrubs, a worse shape. FEIS has no review of Ptelea trifoliata: https://www.fs.usda.gov/database/feis/plants/tree/ptetri/all.html and .../shrub/ptetri/all.html both returned 404 on 2026-11-10. The NPS Grand Canyon pages read (shrubs, trees, natural features and ecosystems) do not name the hoptree. So most values rest on Wikipedia: a small tree or often a shrub of a few spreading stems, around 6-8 m tall with a broad crown (stature tall and record); bark reddish brown to grey-brown with short horizontal lenticels, becoming slightly scaly (bark_rgb, bark_pattern smooth); leaves alternate, of three sessile ovate leaflets with oil glands, dark green and shiny above, paler beneath, rusty yellow in autumn; the western and southwestern forms have smaller leaves, 5-11 cm, than the eastern (leaf_size_m 0.09 for the whole leaf, the template's trifoliate shape); flowers 1-2 cm, 4-5 narrow greenish-white petals, in terminal compound cymes, May and June; fruit a round papery wafer-like samara 2-2.5 cm, light brown, ripening in October and held until winds shake it loose in early winter (berries months 7-12, drawn 0.06 m for a bunch); in Arizona it is common in canyons. USDA PLANTS: Ptelea trifoliata (PTTR), common hoptree, growth habit shrub and tree, native; subsp. pallida (PTTRP) and var. pallida (PTTRP4) are called pallid hoptree. The drawn height 1.5-4.5 m (a shrub on dry ledges, smaller than the 6-8 m of Wikipedia's garden and eastern trees) is the drafter's judgement, as the brief asks it in the shrub layer; elevation 1200-2200 m is the drafter's figure for the Grand Canyon's walls below the South Rim, not from a source. Habitat weights (barren and steep high for canyon walls and talus, north 1.1 and shade 0.4 for draws) are judgement from Wikipedia's rocky forests and canyons and the brief's bedrock-canyon placing. Eaters: no source read names a vertebrate that eats it (Wikipedia names giant swallowtail caterpillars, treehoppers and bees, none in the library; the bitter, strong-smelling leaves suggest little browse), so eaten_by is empty; cover for deer mice is the drafter's judgement. Colours, crown profile, porosity, stems, leaf-on months and the flower and fruit colours, sizes and densities are the drafter's judgement, not from a source.",
+ "sources": [
+  "Wikipedia, Ptelea trifoliata (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Ptelea_trifoliata, read 2026-11-10",
+  "USDA PLANTS, Ptelea trifoliata (PTTR), https://plants.usda.gov/home/plantProfile?symbol=PTTR, and subsp. pallida (PTTRP), https://plants.usda.gov/home/plantProfile?symbol=PTTRP, read 2026-11-10",
+  "National Park Service, Grand Canyon National Park: Shrubs, https://www.nps.gov/grca/learn/nature/shrubs.htm, and Trees, https://www.nps.gov/grca/learn/nature/trees.htm (neither names the hoptree), read 2026-11-10",
+  "Fire Effects Information System: no Ptelea trifoliata review (https://www.fs.usda.gov/database/feis/plants/tree/ptetri/all.html returned 404), tried 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ]
+}

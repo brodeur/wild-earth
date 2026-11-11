@@ -1,0 +1,444 @@
+{
+ "id": "purshia_tridentata",
+ "aliases": [
+  "antelope_bitterbrush",
+  "bitterbrush",
+  "antelope_brush",
+  "antelopebrush",
+  "buckbrush_purshia"
+ ],
+ "scientific": "Purshia tridentata",
+ "common": "antelope bitterbrush",
+ "form": "shrub",
+ "regions": [
+  "interior_west"
+ ],
+ "architectural_model": "Rauh (provisional)",
+ "deciduous": true,
+ "height_m": [
+  0.5,
+  1.8
+ ],
+ "stature": {
+  "typical_m": 1.0,
+  "tall_m": 3.0,
+  "record_m": 4.5,
+  "source": "typical: FEIS, usually 0.9-1.2 m; tall: Wikipedia, 1-5 m, and the drafter for the mountain sagebrush; record: FEIS, 3.6-4.5 m; read 2026-11-10"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    0.15,
+    0.5
+   ],
+   "trunk_radius": 0.8,
+   "deadwood": 0.03,
+   "set": {
+    "trunk": {
+     "stems": [
+      2,
+      4
+     ]
+    }
+   },
+   "note": "(from the Stansbury cliffrose template) (from the birch-leaf mountain mahogany template) a narrow, upright young shrub"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 2,
+   "note": "(from the Stansbury cliffrose template) (from the birch-leaf mountain mahogany template) the file as written: an erect, open shrub of grey stems with dark leaves on short spurs"
+  },
+  {
+   "name": "old",
+   "weight": 0.25,
+   "height_m": [
+    1.4,
+    2.5
+   ],
+   "trunk_radius": 1.25,
+   "crown_scale": 1.1,
+   "gnarl": 1.2,
+   "deadwood": {
+    "fraction": 0.2,
+    "levels": [
+     0,
+     1
+    ],
+    "shorten": 0.8
+   },
+   "set": {
+    "trunk": {
+     "stems": [
+      2,
+      4
+     ],
+     "base_size": 0.25
+    }
+   },
+   "note": "(from the Stansbury cliffrose template) (from the birch-leaf mountain mahogany template) a small tree: two to four grey trunks, an open, irregular crown, a few dead limbs"
+  }
+ ],
+ "description": "A low, much-branched shrub, usually about knee to waist high, of several crooked grey-brown stems that spread wider than tall in the mountains. Its tiny wedge-shaped leaves end in three blunt teeth, green above and grey-woolly beneath, and many hang on through winter. In late spring it is dotted with small, pale yellow, five-petalled flowers, and in late summer with dry, spindle-shaped seeds that deer mice gather and bury. In Jackson Hole it grows among the mountain big sagebrush on dry, stony, well-drained benches and slopes, and is one of the best winter foods of mule deer, elk and pronghorn.",
+ "season_notes": {
+  "winter": "Grey-brown and twiggy, a few leaves still on; mule deer, elk and pronghorn browse the twig tips above the snow.",
+  "spring": "Small pale yellow flowers in late May and June, busy with bees; new leaves green the twigs.",
+  "summer": "Dry seeds ripen from July into September and fall beneath the shrub, where rodents cache them.",
+  "fall": "Leaves drab and many dropping late; deer move onto the bitterbrush benches as the snow comes."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "chaparral": 1.0,
+   "grassland": 0.6,
+   "conifer_forest": 0.4,
+   "barren": 0.4
+  },
+  "floor": 1.0,
+  "mid": 1.1,
+  "steep": 0.8,
+  "north": 0.5,
+  "shade": 0.1,
+  "disturbed": 0.3
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "fall",
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "cervus_canadensis",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "peromyscus_maniculatus",
+    "part": "seeds",
+    "seasons": [
+     "spring",
+     "summer",
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "peromyscus_maniculatus"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 0.9,
+  "radius_ratio": 0.022,
+  "taper": 0.85,
+  "flare": 1.4,
+  "bole_ratio": 0.1,
+  "base_size": 0.15,
+  "curve_deg": 10,
+  "curve_var_deg": 12,
+  "segments": 3,
+  "lean_deg": 18,
+  "stems": [
+   2,
+   8
+  ],
+  "stem_spread_deg": 22,
+  "split_prob": 0.15,
+  "split_count": 2,
+  "split_angle_deg": 20,
+  "sinuous_deg": 6,
+  "bark_rgb": [
+   112,
+   102,
+   92
+  ],
+  "bark_pattern": "shreddy",
+  "twig_rgb": [
+   112,
+   96,
+   84
+  ],
+  "bark": {
+   "tile_m": [
+    0.15,
+    0.35
+   ],
+   "contrast": 0.5,
+   "lichen": 0.35,
+   "relief": 0.3
+  }
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "envelope": {
+   "profile": [
+    [
+     0.0,
+     0.35
+    ],
+    [
+     0.15,
+     0.5
+    ],
+    [
+     0.35,
+     0.6
+    ],
+    [
+     0.55,
+     0.62
+    ],
+    [
+     0.75,
+     0.56
+    ],
+    [
+     0.9,
+     0.4
+    ],
+    [
+     1.0,
+     0.18
+    ]
+   ],
+   "lobes": 6,
+   "lobe_depth": 0.24,
+   "asymmetry": 0.35,
+   "fill": 0.45,
+   "edge": 1.15
+  }
+ },
+ "levels": [
+  {
+   "count": 4,
+   "start": 0.12,
+   "down_angle_deg": 32,
+   "down_angle_var_deg": 12,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.55,
+   "length_var": 0.3,
+   "curve_deg": 14,
+   "curve_var_deg": 14,
+   "tropism": 0.08,
+   "taper": 0.9,
+   "radius_ratio": 0.55,
+   "segments": 2
+  },
+  {
+   "count": 5,
+   "start": 0.2,
+   "down_angle_deg": 50,
+   "down_angle_var_deg": 15,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.3,
+   "length_var": 0.3,
+   "curve_deg": 8,
+   "curve_var_deg": 12,
+   "tropism": 0.06,
+   "taper": 1.0,
+   "radius_ratio": 0.45,
+   "segments": 1
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.012,
+  "leaf_shape": "lobed",
+  "cluster_m": 0.32,
+  "density": 18,
+  "start": 0.05,
+  "parent_start": 0.15,
+  "orientation": "outward",
+  "roll_deg": 50,
+  "colors": {
+   "winter": [
+    112,
+    100,
+    84
+   ],
+   "spring": [
+    104,
+    122,
+    72
+   ],
+   "summer": [
+    96,
+    108,
+    72
+   ],
+   "fall": [
+    118,
+    112,
+    74
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.1,
+   "spring": 0.7,
+   "summer": 1.0,
+   "fall": 0.6
+  },
+  "winter_twigs": 0.3,
+  "clumps": {
+   "radius_m": 0.22,
+   "cards_per_clump": 5,
+   "shell": 0.1,
+   "flatten": 0.75,
+   "tip_bias": 0.8
+  },
+  "palette": [
+   [
+    0.8,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.2,
+    [
+     1.15,
+     1.15,
+     1.12
+    ]
+   ]
+  ],
+  "ao_min": 0.72,
+  "color_var": [
+   0.08,
+   0.04
+  ],
+  "berries": {
+   "season": [
+    "summer"
+   ],
+   "months": [
+    7,
+    9
+   ],
+   "form": "cluster",
+   "rgb": [
+    118,
+    104,
+    82
+   ],
+   "size_m": 0.01,
+   "density": 0.3
+  },
+  "cards_per_m2": 9,
+  "flowers": {
+   "season": "spring",
+   "months": [
+    5,
+    6
+   ],
+   "form": "cluster",
+   "rgb": [
+    236,
+    216,
+    120
+   ],
+   "size_m": 0.015,
+   "density": 0.6,
+   "before_leaves": false
+  },
+  "leaf_on_by_month": [
+   0.1,
+   0.1,
+   0.1,
+   0.3,
+   0.8,
+   1.0,
+   1.0,
+   1.0,
+   0.9,
+   0.7,
+   0.35,
+   0.15
+  ]
+ },
+ "deadwood": {
+  "fraction": 0.1,
+  "where": "inner",
+  "levels": [
+   1,
+   2
+  ],
+  "shorten": 0.7,
+  "rgb": [
+   140,
+   136,
+   130
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "length": 0.5,
+  "down_deg": 50,
+  "down_var_deg": 15,
+  "curve_var_deg": 20,
+  "segments": 1,
+  "radius_m": 0.004,
+  "taper": 0.6,
+  "fan_deg": 50,
+  "jitter": 0.2
+ },
+ "lod": {
+  "near_tris_budget": 1300,
+  "near_sides": [
+   3,
+   3,
+   0
+  ],
+  "mid_blobs": 3,
+  "mid_branches": 0,
+  "mid_sides": [
+   0,
+   0
+  ],
+  "mid_cards": 24
+ },
+ "targets": {
+  "crown_width_ratio": 1.4,
+  "crown_base_ratio": 0.05,
+  "porosity": 0.45,
+  "foliage_rg": 0.78,
+  "foliage_bg": 0.43,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: a low, spreading, intricately branched shrub of several crooked grey-brown stems, wider than tall at the high elevations where plants are decumbent, its tiny three-toothed leaves dull green above and grey beneath; pale yellow flowers in late spring"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "5",
+  "card": "library/plant_cards/purshia_tridentata.json",
+  "card_sha256": "6a4b1990d3a07b1e",
+  "template": "purshia_stansburiana",
+  "template_common": "Stansbury cliffrose",
+  "height_scale": 0.511
+ },
+ "notes": "Stansbury cliffrose (the template) is the library's only other Purshia (itself a generated record, from birchleaf mountain mahogany); bitterbrush is lower, more spreading and deciduous. Height usually 0.9-1.2 m, to 3.6-4.5 m (FEIS); 1-5 m (Wikipedia); height_m 0.5-1.8 m is the drafter's for the Jackson Hole steppe, about 1950-2100 m, where FEIS says the decumbent, multi-stemmed, layering ecotype is commoner (crown_width_ratio 1.4, stems 2-8 and the flat-topped profile follow from that, the drafter's judgement). Deciduous (FEIS, Wikipedia; FEIS: leaves fall in mid-November in Washington); that some leaves persist over winter (winter leaf_on 0.1) is the drafter's knowledge, not from a source read. Leaves 5-20 mm, three- to five-lobed (Wikipedia), so leaf_size_m 0.012 and the 'lobed' leaf shape; the grey-woolly undersides are the drafter's knowledge. Flowers pale yellow, petals 6-8 mm (Wikipedia), early spring to July (FEIS); May-June for Jackson Hole is the drafter's. Fruit an achene 3-13 mm with a papery cover, ripe July-September (FEIS); slender, leathery, up to 1 cm (Wikipedia). Habitat (FEIS): sagebrush-grass, mountain shrub, ponderosa pine and juniper communities on well-drained, coarse, stony soils, all aspects but in Montana mostly south and east slopes; 900-3000 m generally (FEIS), about 2400 m in a south-central Wyoming study; Wikipedia: arid mountainsides on soils somewhat moister than the sagebrush steppe, often with balsamroot and mule's ears. Fire (FEIS): very susceptible, a weak sprouter (decumbent plants sprout better), hence disturbed 0.3. The Jackson Hole placing is from the brief; the National Park Service Grand Teton trees and shrubs and Yellowstone sagebrush steppe pages read do not name bitterbrush. Eaters (FEIS): mule deer (critical winter browse; up to 91% of a September diet), elk, moose and pronghorn (rated very good in Wyoming), bighorn, cattle; deer mice and kangaroo rats eat and cache the seeds; sage grouse use it for cover. Wikipedia: an important winter forage for deer. Moose, pronghorn, bighorn and sage grouse are not in the library. Chipmunks also cache bitterbrush seed in the drafter's knowledge, but no source read says so, so the yellow-pine chipmunk is left out. Colours, crown profile, porosity, stems, lean, leaf-on months, habitat weights and the flower and seed sizes and colours are the drafter's judgement, not from a source. The USDA PLANTS plant guide PDF downloaded but could not be read (no PDF text tool); the last 23,000 characters of the FEIS review were not read.",
+ "sources": [
+  "Fire Effects Information System, Purshia tridentata, https://www.fs.usda.gov/database/feis/plants/shrub/purtri/all.html, read 2026-11-10",
+  "Wikipedia, Purshia tridentata (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Purshia_tridentata, read 2026-11-10",
+  "National Park Service, Yellowstone National Park: Sagebrush Steppe, https://www.nps.gov/yell/learn/nature/sagebrush-steppe.htm, read 2026-11-10 (does not name it)"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

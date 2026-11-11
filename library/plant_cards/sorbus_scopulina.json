@@ -1,0 +1,240 @@
+{
+ "id": "sorbus_scopulina",
+ "scientific": "Sorbus scopulina",
+ "common": "Greene's mountain-ash",
+ "aliases": [
+  "greenes_mountain_ash",
+  "greene_mountain_ash",
+  "cascade_mountain_ash",
+  "western_mountain_ash"
+ ],
+ "family": "Rosaceae",
+ "form": "multi_stem_shrub_tree",
+ "deciduous": true,
+ "template": "sorbus_aucuparia",
+ "regions": [
+  "interior_west"
+ ],
+ "height_m": [
+  1.0,
+  4.0
+ ],
+ "stature": {
+  "typical_m": 2.5,
+  "tall_m": 3.7,
+  "record_m": 5.0,
+  "source": "typical: the drafter's middle for forest-edge and canyon plants; tall: USDA PLANTS mature height 12 ft (3.7 m); record: Wikipedia, up to 5 m; read 2026-11-10"
+ },
+ "variants_height_m": {
+  "young": [
+   0.3,
+   1.0
+  ],
+  "old": [
+   3.0,
+   4.5
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.12
+   ],
+   [
+    0.15,
+    0.22
+   ],
+   [
+    0.35,
+    0.36
+   ],
+   [
+    0.55,
+    0.46
+   ],
+   [
+    0.72,
+    0.5
+   ],
+   [
+    0.86,
+    0.44
+   ],
+   [
+    0.95,
+    0.3
+   ],
+   [
+    1.0,
+    0.12
+   ]
+  ],
+  "lobes": 5,
+  "lobe_depth": 0.25,
+  "asymmetry": 0.3,
+  "fill": 0.45,
+  "edge": 1.15
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    112,
+    92,
+    84
+   ],
+   "spring": [
+    132,
+    162,
+    92
+   ],
+   "summer": [
+    80,
+    112,
+    66
+   ],
+   "fall": [
+    204,
+    108,
+    50
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.6,
+   "summer": 1.0,
+   "fall": 0.45
+  },
+  "leaf_on_by_month": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.4,
+   0.95,
+   1.0,
+   1.0,
+   0.8,
+   0.3,
+   0.0,
+   0.0
+  ],
+  "leaf_shape": "pinnate_compound",
+  "leaf_size_m": 0.15,
+  "flowers": {
+   "season": "summer",
+   "months": [
+    6,
+    7
+   ],
+   "form": "cluster",
+   "rgb": [
+    244,
+    240,
+    226
+   ],
+   "size_m": 0.08,
+   "density": 0.45,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": [
+    "summer",
+    "fall",
+    "winter"
+   ],
+   "months": [
+    8,
+    1
+   ],
+   "form": "cluster",
+   "rgb": [
+    222,
+    72,
+    32
+   ],
+   "size_m": 0.08,
+   "density": 0.45
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   112,
+   92,
+   84
+  ],
+  "bark_pattern": "smooth_grey",
+  "stems": [
+   2,
+   8
+  ],
+  "lean_deg": 10
+ },
+ "targets": {
+  "crown_width_ratio": 0.9,
+  "crown_base_ratio": 0.2,
+  "porosity": 0.45,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: an erect clump of a few smooth, grey to reddish-brown stems branching into an open, rounded crown; feathery pinnate leaves, flat-topped heads of white flowers in early summer, heavy clusters of glossy orange-red fruit from late summer into winter, the leaves orange and red in fall"
+ },
+ "description": "A deciduous shrub or small tree 1-4 m tall, growing as an upright clump of a few smooth grey stems. Each leaf is a feather of nine to thirteen toothed leaflets; flat-topped heads of small white flowers open in early summer, and by late summer they become heavy clusters of shiny orange-red berries about a centimetre across that hang on after the leaves have turned orange and fallen. In the Tetons it grows in the Douglas-fir forest and along the moist edges of the canyons, where bears and birds eat the berries in fall.",
+ "season_notes": {
+  "winter": "Bare grey stems, some still hung with shrivelled red berries above the snow.",
+  "spring": "Feathery leaves open late in spring.",
+  "summer": "Flat white flower heads in June and July, then green berries turning orange.",
+  "fall": "Orange-red berry clusters and orange to red leaves; black bears and robins strip the fruit."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 0.9,
+   "mixed_forest": 0.6,
+   "riparian": 0.4
+  },
+  "floor": 0.7,
+  "mid": 1.1,
+  "steep": 1.1,
+  "north": 1.1,
+  "shade": 0.5,
+  "disturbed": 0.6
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "ursus_americanus",
+    "part": "berries",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "turdus_migratorius",
+    "part": "berries",
+    "seasons": [
+     "fall",
+     "winter"
+    ]
+   }
+  ],
+  "cover_for": [
+   "peromyscus_maniculatus",
+   "turdus_migratorius"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1500,
+   3000
+  ],
+  "where": "the Douglas-fir forest of the Teton front and the moist canyon edges of Jackson Hole; western North America, mainly the Rocky Mountains, from Alaska and Canada south (USDA PLANTS: native in Alaska, Canada and the lower 48)"
+ },
+ "notes": "Rowan (the template) is the library's Sorbus, the same genus with the same pinnate leaves, white flower heads and red fruit clusters; it is a tree 3-7 m, so the card makes Greene's mountain-ash a multi-stemmed shrub or small tree 1-4 m (USDA PLANTS: growth habit shrub and tree, growth form multiple stem, erect, mature height 12 ft; Wikipedia: shrub or small tree up to 5 m). FEIS has no species review of Sorbus scopulina (its Sorbus sitchensis review, read, names it only as a species that hybridizes with Sitka mountain-ash; the guessed review URLs returned 404), so no FEIS value is used for it. Leaves pinnate, 9-13 leaflets (Wikipedia); leaf_size_m 0.15 for the whole leaf is the drafter's judgement; PLANTS: foliage green, fine texture, summer porosity moderate, fall conspicuous (hence a strong orange-red fall colour, its shade the drafter's). Flowers white to cream, five-petalled (Wikipedia; PLANTS: white, summer); the National Park Service's Grand Teton trees and shrubs page names the white clusters of mountain ash flowers in early summer, hence months 6-7. Fruit an orange to red pome about 1.5 cm (Wikipedia; PLANTS: red, summer to fall, persistent, abundant), so berries from August hanging on to January; the drawn cluster size is the drafter's. Habitat: the Douglas-fir placing on the Teton tile is from the brief; no allowed source read gives its habitat in detail, so the classes, shade 0.5 (PLANTS: shade tolerance medium) and the terrain weights are the drafter's judgement. PLANTS: resprouts, fire tolerance none. Elevation: no allowed source gave one; 1500-3000 m is the drafter's judgement for the Greater Yellowstone. Eaters: Wikipedia says birds and mammals including bears eat the fruit; the Grand Teton page says mountain ash berries appeal to bears, birds and other animals. The black bear and the American robin stand for them; no source read names a browser of this species (browsing by deer, elk and moose is reported by FEIS only for Sitka mountain-ash), so none is listed. cover_for is the drafter's judgement. Colours, crown profile, porosity, stems, bark, leaf-on months and densities are the drafter's judgement. A US Forest Service seed-manual chapter on Sorbus came up in a search but is not among the allowed sources and was not used.",
+ "sources": [
+  "USDA PLANTS, Sorbus scopulina (SOSC2), https://plants.usda.gov/plant-profile/SOSC2 (profile and characteristics read through plantsservices.sc.egov.usda.gov; US government work), read 2026-11-10",
+  "Wikipedia, Sorbus scopulina (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Sorbus_scopulina, read 2026-11-10",
+  "National Park Service, Grand Teton National Park, Trees and Shrubs, https://www.nps.gov/grte/learn/nature/trees.htm (US government work), read 2026-11-10",
+  "Fire Effects Information System, Sorbus sitchensis (mentions S. scopulina only as a hybridizing relative), https://www.fs.usda.gov/database/feis/plants/shrub/sorsit/all.html (US government work, public domain), read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ]
+}

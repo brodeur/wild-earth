@@ -1,0 +1,242 @@
+{
+ "id": "ceanothus_velutinus",
+ "scientific": "Ceanothus velutinus",
+ "common": "snowbrush ceanothus",
+ "aliases": [
+  "snowbrush",
+  "snowbrush_ceanothus",
+  "tobacco_brush",
+  "sticky_laurel",
+  "red_root"
+ ],
+ "family": "Rhamnaceae",
+ "form": "shrub",
+ "deciduous": false,
+ "template": "ceanothus_cordulatus",
+ "regions": [
+  "interior_west"
+ ],
+ "height_m": [
+  0.6,
+  2.0
+ ],
+ "stature": {
+  "typical_m": 1.2,
+  "tall_m": 2.7,
+  "record_m": 4.0,
+  "source": "typical: the drafter's middle for burn shrubfields and open slopes; tall: FEIS, usually 0.5-2.7 m (Wikipedia: generally under 3 m; USDA PLANTS: mature 10 ft); record: FEIS and Wikipedia, occasionally about 4 m; read 2026-11-10"
+ },
+ "variants_height_m": {
+  "young": [
+   0.15,
+   0.5
+  ],
+  "old": [
+   1.4,
+   2.5
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.4
+   ],
+   [
+    0.15,
+    0.5
+   ],
+   [
+    0.35,
+    0.56
+   ],
+   [
+    0.55,
+    0.56
+   ],
+   [
+    0.72,
+    0.52
+   ],
+   [
+    0.86,
+    0.42
+   ],
+   [
+    0.95,
+    0.28
+   ],
+   [
+    1.0,
+    0.12
+   ]
+  ],
+  "lobes": 7,
+  "lobe_depth": 0.15,
+  "asymmetry": 0.2,
+  "fill": 0.65,
+  "edge": 1.05
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    62,
+    88,
+    58
+   ],
+   "spring": [
+    100,
+    134,
+    76
+   ],
+   "summer": [
+    70,
+    104,
+    62
+   ],
+   "fall": [
+    70,
+    100,
+    60
+   ]
+  },
+  "leaf_shape": "elliptic_glossy",
+  "leaf_size_m": 0.06,
+  "flowers": {
+   "season": "summer",
+   "months": [
+    6,
+    7
+   ],
+   "form": "cluster",
+   "rgb": [
+    246,
+    246,
+    240
+   ],
+   "size_m": 0.08,
+   "density": 0.6,
+   "before_leaves": false
+  },
+  "berries": null,
+  "leaf_on": {
+   "winter": 1.0,
+   "spring": 1.0,
+   "summer": 1.0,
+   "fall": 1.0
+  },
+  "leaf_on_by_month": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ]
+ },
+ "trunk": {
+  "bark_rgb": [
+   110,
+   96,
+   80
+  ],
+  "bark_pattern": "smooth",
+  "stems": [
+   6,
+   16
+  ],
+  "lean_deg": 15
+ },
+ "targets": {
+  "crown_width_ratio": 1.6,
+  "crown_base_ratio": 0.03,
+  "porosity": 0.15,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: a dense, round-topped evergreen bush of many ascending stems, wider than tall and running together into thickets; broad, shiny, dark green leaves that look varnished, foamy white flower plumes all over it in early summer"
+ },
+ "description": "An evergreen shrub usually under 2 m tall, a dense, round-topped bush of many stems that grows together into thickets. Its broad oval leaves, up to 8 cm long, are shiny and dark green on top as if varnished, finely toothed and strongly scented on a warm day; in early summer it is covered in foamy plumes of small white flowers, which give it its name. In the Tetons it grows on the open, sunny slopes among the sagebrush, under lodgepole pine and above all in old burns, where its seeds, buried for a century or more, sprout after the heat of a fire.",
+ "season_notes": {
+  "winter": "Shiny dark green leaves under and above the snow; elk and mule deer browse it.",
+  "spring": "New leaves glossy and light green; elk browse the shoots.",
+  "summer": "Foamy white flower plumes in June and July scent the slopes; sticky seed capsules follow.",
+  "fall": "The capsules split and fling their seeds; mice and chipmunks gather them."
+ },
+ "habitat": {
+  "classes": {
+   "chaparral": 0.9,
+   "conifer_forest": 0.8,
+   "mixed_forest": 0.4,
+   "barren": 0.3,
+   "grassland": 0.2
+  },
+  "floor": 0.6,
+  "mid": 1.1,
+  "steep": 1.2,
+  "north": 0.6,
+  "shade": 0.2,
+  "disturbed": 1.6
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "cervus_canadensis",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "winter"
+    ]
+   },
+   {
+    "animal": "peromyscus_maniculatus",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "tamias_amoenus",
+    "part": "seeds",
+    "seasons": [
+     "fall"
+    ]
+   }
+  ],
+  "cover_for": [
+   "cervus_canadensis",
+   "odocoileus_hemionus",
+   "peromyscus_maniculatus",
+   "tamias_amoenus",
+   "junco_hyemalis"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   1150,
+   3000
+  ],
+  "where": "open slopes in the sagebrush of the Teton front, under lodgepole pine, and in the burns of Jackson Hole and the Teton canyons; western North America from British Columbia to California, Colorado and the Black Hills"
+ },
+ "notes": "Mountain whitethorn (the template) is the library's evergreen montane Ceanothus, the same genus and the same dense, mounded post-fire shrubfield habit; the card makes snowbrush a little taller with far larger, glossy leaves and no thorns. Height usually 0.5-2.7 m, occasionally about 4 m; ascending-erect, several stems from the base, a dense, round-topped bush, spreading into thickets up to 10 m wide (FEIS); up to 4 m, generally under 3 m, nearly impenetrable thickets (Wikipedia); USDA PLANTS: mature 10 ft, thicket forming, semi-erect, summer foliage dense (hence porosity 0.15). Leaves evergreen, alternate, 2.5-7.5 cm by 1.5-5 cm (FEIS), up to 8 cm, oval with tiny glandular teeth, shiny green and hairless above, aromatic (Wikipedia), so leaf_size_m 0.06 and the elliptic_glossy leaf; the foliage holds volatile oils (FEIS). Flowers white (Wikipedia; PLANTS: white, early summer) in branched clusters under 12 cm (FEIS); flowering May or June into September, mainly May-June at lower sites (FEIS); June-July for the Tetons is the drafter's reading, and the National Park Service's Grand Teton page names the fragrant snowbrush flowers of early summer. Fruit a sticky three-lobed capsule 3-4 mm that snaps open, ripe late June to early August (FEIS; Wikipedia), brown and inconspicuous (PLANTS), so the card draws no berries. Habitat: open rocky hillsides, partly shaded forest, dry to moist mountain and canyon slopes, favouring south-facing slopes; lodgepole pine, Douglas-fir and mixed conifer; mountain brush with big sagebrush; seral shrubfields after fire that may dominate for decades, in Wyoming abundant more than 40 years after the Waterfalls Canyon Fire (FEIS); hence chaparral (the pipeline's sagebrush steppe class) 0.9, north 0.6 and disturbed 1.6. Shade tolerance: moderately tolerant to very intolerant, shaded out as the canopy closes (FEIS), hence shade 0.2 (PLANTS rates it high, which the drafter did not follow). Fire: top-killed, sprouts from the root crown and germinates from a soil seed bank viable up to about 200 years once heat (80-95 C) cracks the seed coat (FEIS; Wikipedia: over 200 years). Nitrogen-fixing root nodules (FEIS; Wikipedia). Elevation: Wyoming, Montana and Idaho 1150-3000 m (FEIS). The lodgepole, burn and montane sagebrush steppe placing on the Teton tile is from the brief. Eaters: FEIS names elk and deer (valuable year-round browse), mule deer (winter), white-tailed deer (late fall and winter), mountain goat, bighorn sheep, moose (winter browse), and small mammals and birds (seeds); Wikipedia: deer and elk browse it in winter. The deer mouse and yellow-pine chipmunk stand for the seed-eating small mammals; moose, mountain goat, bighorn sheep, white-tailed deer and the upland game birds are not in the library. Cover (FEIS): fair for elk and mule deer in Utah and Wyoming, good for upland game birds, nongame birds and small mammals; the dark-eyed junco stands for the nesting small birds (the drafter's choice). Colours, crown profile, stems, bark (FEIS and Wikipedia do not describe it), the flower density and drawn size are the drafter's judgement. FEIS's page is longer than one fetch (171,000 characters); its first 100,000 characters were read.",
+ "sources": [
+  "Fire Effects Information System, Ceanothus velutinus, https://www.fs.usda.gov/database/feis/plants/shrub/ceavel/all.html (US government work, public domain), read 2026-11-10",
+  "USDA PLANTS, Ceanothus velutinus (CEVE), https://plants.usda.gov/plant-profile/CEVE (characteristics read through plantsservices.sc.egov.usda.gov; US government work), read 2026-11-10",
+  "Wikipedia, Ceanothus velutinus (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Ceanothus_velutinus, read 2026-11-10",
+  "National Park Service, Grand Teton National Park, Trees and Shrubs, https://www.nps.gov/grte/learn/nature/trees.htm (US government work), read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ]
+}

@@ -1985,6 +1985,20 @@
    "card": true,
    "drawn_as": "eriogonum_umbellatum",
    "rank": 93
+  },
+  {
+   "id": "prunus_virginiana",
+   "kind": "shrub",
+   "why": [
+    "GBIF: 17 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 17,
+   "scientific": "Prunus virginiana",
+   "record": true,
+   "card": true,
+   "drawn_as": "prunus_virginiana",
+   "rank": 94
   }
  ],
  "gbif_plants": [
@@ -3128,9 +3142,9 @@
    "id": "prunus_virginiana",
    "scientific": "Prunus virginiana",
    "family": "Rosaceae",
-   "kind": "forb",
+   "kind": "shrub",
    "records": 17,
-   "known": false
+   "known": true
   },
   {
    "id": "equisetum_praealtum",
@@ -3197,7 +3211,7 @@
  },
  "by_layer": {
   "tree": 36,
-  "shrub": 31,
+  "shrub": 32,
   "ground": 26
  },
  "hands": [
@@ -3371,14 +3385,14 @@
   }
  ],
  "summary": {
-  "needed": 93,
-  "with_record": 72,
+  "needed": 94,
+  "with_record": 73,
   "generated_now": 0,
   "queued": 21,
   "unread_communities": 0,
   "by_layer": {
    "tree": 36,
-   "shrub": 31,
+   "shrub": 32,
    "ground": 26
   },
   "meets_target": {

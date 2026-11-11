@@ -1,0 +1,268 @@
+{
+ "id": "amelanchier_utahensis",
+ "scientific": "Amelanchier utahensis",
+ "common": "Utah serviceberry",
+ "aliases": [
+  "utah_serviceberry",
+  "utah_service_berry",
+  "utah_juneberry"
+ ],
+ "family": "Rosaceae",
+ "form": "shrub",
+ "deciduous": true,
+ "template": "amelanchier_alnifolia",
+ "regions": [
+  "interior_west"
+ ],
+ "height_m": [
+  1.0,
+  3.0
+ ],
+ "stature": {
+  "typical_m": 2.0,
+  "tall_m": 3.2,
+  "record_m": 4.0,
+  "source": "typical: the drafter's middle for dry rocky rim slopes; tall: Wikipedia, a maximum of 3.2 m; record: FEIS, 1-4 m with a spread to about 4.5 m; read 2026-11-10"
+ },
+ "variants_height_m": {
+  "young": [
+   0.3,
+   0.9
+  ],
+  "old": [
+   2.5,
+   4.0
+  ]
+ },
+ "crown": {
+  "shape": "hemispherical",
+  "profile": [
+   [
+    0.0,
+    0.32
+   ],
+   [
+    0.12,
+    0.44
+   ],
+   [
+    0.3,
+    0.5
+   ],
+   [
+    0.5,
+    0.52
+   ],
+   [
+    0.7,
+    0.46
+   ],
+   [
+    0.85,
+    0.36
+   ],
+   [
+    0.95,
+    0.22
+   ],
+   [
+    1.0,
+    0.08
+   ]
+  ],
+  "lobes": 6,
+  "lobe_depth": 0.24,
+  "asymmetry": 0.3,
+  "fill": 0.45,
+  "edge": 1.15
+ },
+ "foliage": {
+  "colors": {
+   "winter": [
+    118,
+    100,
+    90
+   ],
+   "spring": [
+    124,
+    142,
+    94
+   ],
+   "summer": [
+    100,
+    116,
+    86
+   ],
+   "fall": [
+    192,
+    136,
+    66
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.6,
+   "summer": 1.0,
+   "fall": 0.4
+  },
+  "leaf_on_by_month": [
+   0.0,
+   0.0,
+   0.0,
+   0.25,
+   0.75,
+   1.0,
+   1.0,
+   1.0,
+   0.9,
+   0.5,
+   0.1,
+   0.0
+  ],
+  "leaf_size_m": 0.02,
+  "leaf_shape": "oval",
+  "flowers": {
+   "season": "spring",
+   "months": [
+    4,
+    5
+   ],
+   "form": "cluster",
+   "rgb": [
+    244,
+    236,
+    232
+   ],
+   "size_m": 0.04,
+   "density": 0.5,
+   "before_leaves": false
+  },
+  "berries": {
+   "season": [
+    "summer",
+    "fall"
+   ],
+   "months": [
+    8,
+    10
+   ],
+   "form": "cluster",
+   "rgb": [
+    88,
+    52,
+    78
+   ],
+   "size_m": 0.03,
+   "density": 0.3
+  }
+ },
+ "trunk": {
+  "bark_rgb": [
+   126,
+   116,
+   108
+  ],
+  "bark_pattern": "smooth_grey",
+  "stems": [
+   3,
+   10
+  ],
+  "lean_deg": 12
+ },
+ "targets": {
+  "crown_width_ratio": 1.1,
+  "crown_base_ratio": 0.08,
+  "porosity": 0.4,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: a spreading, many-branched shrub a little wider than tall, of thin grey stems and stiff twigs, with small rounded grey-green leaves; white flower clusters in April and May, a few purplish berries in late summer, yellow to orange leaves in fall"
+ },
+ "description": "A spreading, many-branched deciduous shrub, usually one to three metres tall and often wider than high, with smooth grey stems and small rounded leaves toothed near the tip. In mid-spring it is covered in short clusters of white or pinkish five-petalled flowers, and by late summer it carries small purplish berries that birds, squirrels and deer seek out. At the Grand Canyon it grows on dry, rocky slopes in the ponderosa pine forest of the rim and among the Gambel oak and mountain shrubs.",
+ "season_notes": {
+  "winter": "Bare grey twigs; any berries the birds have left may still hang on. Mule deer browse the twigs.",
+  "spring": "White, starry flower clusters open in April and May as the small leaves unfold.",
+  "summer": "Leaves dull green; berries swell and turn purplish from August.",
+  "fall": "Leaves turn yellow and orange; berries are taken by birds, chipmunks and squirrels or hang into winter."
+ },
+ "habitat": {
+  "classes": {
+   "conifer_forest": 0.8,
+   "chaparral": 0.8,
+   "oak_woodland": 0.7,
+   "mixed_forest": 0.5,
+   "grassland": 0.3,
+   "barren": 0.3
+  },
+  "floor": 0.8,
+  "mid": 1.1,
+  "steep": 1.1,
+  "north": 0.8,
+  "shade": 0.25,
+  "disturbed": 1.2
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring",
+     "summer"
+    ]
+   },
+   {
+    "animal": "cervus_canadensis",
+    "part": "browse",
+    "seasons": [
+     "winter",
+     "spring"
+    ]
+   },
+   {
+    "animal": "peromyscus_maniculatus",
+    "part": "berries",
+    "seasons": [
+     "fall"
+    ]
+   },
+   {
+    "animal": "tamias_amoenus",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall"
+    ]
+   },
+   {
+    "animal": "turdus_migratorius",
+    "part": "berries",
+    "seasons": [
+     "summer",
+     "fall",
+     "winter"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "peromyscus_maniculatus",
+   "sylvilagus_bachmani"
+  ]
+ },
+ "range": {
+  "elev_m": [
+   600,
+   2900
+  ],
+  "where": "dry, open, rocky slopes in the ponderosa pine forest of the South Rim and in the Gambel oak and mountain shrubland; from the Rockies of Colorado, New Mexico and Wyoming and the Mogollon Rim of Arizona across the Great Basin to California, Oregon, Idaho and Montana"
+ },
+ "notes": "Saskatoon serviceberry (the template, itself a card on toyon) is the same genus; the card keeps its multi-stemmed shape but draws Utah serviceberry as a shrub (the brief and FEIS: a many-branched shrub; USDA PLANTS lists shrub and tree) that is lower and more spreading: 1-4 m with a spread to 4.5 m (FEIS), at most 3.2 m (Wikipedia). Leaves rounded or spade-shaped, often toothed, 1-2.5 cm (Wikipedia), so leaf_size_m 0.02. Flowers white or pink (FEIS), white, five widely spaced petals about 1 cm, in short clusters in mid-spring (Wikipedia), April-June (FEIS), drawn April-May. Fruit purplish pomes about 1 cm (Wikipedia), produced in fall and persisting through winter unless taken (FEIS); seeds mature after late August in Utah (FEIS); berries drawn August-October. Habitat: dry, open, rocky slopes, coarse well-drained soils, with sagebrush, pinyon, ponderosa pine, aspen, juniper and Gambel oak (FEIS), in Arizona's ponderosa pine habitat types with Gambel oak and mountain mahogany (FEIS); its South Rim placing in the ponderosa woodland and the Gambel oak / montane shrubland is from the brief, not a source. Elevation: Arizona 2000-7000 ft, Utah 3000-9000 ft, Colorado 5000-9500 ft (FEIS); the range's 600-2900 m spans those. Fire: resprouts from the root crown, generally fire tolerant (FEIS), hence disturbed 1.2. Eaters: FEIS names mule deer (very important in the Great Basin), elk, desert bighorn, porcupine, domestic livestock, many fruit-eating birds, sage grouse and small mammals (highly palatable); Wikipedia names bighorn, elk, mule deer and birds. The deer mouse and the yellow-pine chipmunk (a western chipmunk; the Grand Canyon's own cliff and Uinta chipmunks are not in the library) stand in for small mammals and the American robin for fruit-eating birds; bighorn, porcupine, sage grouse and Abert's squirrel are not in the library. Cover values are not given in FEIS: the cover list is the drafter's. NPS Grand Canyon pages (trees, shrubs, natural features) were read and do not name this species. Colours, crown profile, porosity, stems, leaf-on months and flower and berry sizes and colours are the drafter's judgement, not from a source.",
+ "sources": [
+  "Fire Effects Information System, Amelanchier utahensis, https://www.fs.usda.gov/database/feis/plants/shrub/ameuta/all.html, read 2026-11-10",
+  "Wikipedia, Amelanchier utahensis (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Amelanchier_utahensis, read 2026-11-10",
+  "USDA PLANTS, Amelanchier utahensis (AMUT), https://plants.usda.gov/home/plantProfile?symbol=AMUT, read 2026-11-10",
+  "National Park Service, Grand Canyon National Park: Natural Features & Ecosystems, https://home.nps.gov/grca/learn/nature/naturalfeaturesandecosystems.htm, read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ]
+}

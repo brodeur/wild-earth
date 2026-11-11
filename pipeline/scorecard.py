@@ -79,7 +79,8 @@ DEFINITIONS = {
                  "(rules that draw no plants); a tile_pool_* community with no woody donor that draws only the grasses "
                  "and forbs of its own description or the region's ground table (ground_only)",
         "guessed": "the tile pool (tile_pool_*: another community's species of the same habitat class), research_* (the "
-                   "tile's recorded species weighted by records x niche), habitat_default_* (California's foothill "
+                   "tile's recorded species weighted by records x niche), recorded_* (a community whose name names nothing: "
+                   "the shrubs recorded on its own cells, pipeline/associates.py), habitat_default_* (California's foothill "
                    "default), and every cell whose class is a back-fill rather than today's vegetation (source bps: "
                    "pre-settlement LANDFIRE BpS under human land; rewild: former reservoir beds; habitat: no class)",
         "blank": "a tile_pool_* community with no donor and no ground plants: drawn bare, nothing known",
@@ -286,6 +287,8 @@ def rule_kind(rule: str, source: str | None, has_species: bool, has_ground: bool
         kind = "pool" if has_species else ("ground_only" if has_ground else "bare")
     elif rule.startswith("named_from_"):
         kind = "named"
+    elif rule.startswith("recorded_"):
+        kind = "recorded"
     elif rule.startswith("research_"):
         kind = "research"
     elif rule.startswith("habitat_default_"):
@@ -298,12 +301,13 @@ def rule_kind(rule: str, source: str | None, has_species: bool, has_ground: bool
 
 
 KIND_SHARE = {"hand": "ruled", "named": "ruled", "water_ice": "ruled", "ground_only": "ruled", "pool": "guessed",
-              "research": "guessed",
+              "research": "guessed", "recorded": "guessed",
               "class_default": "guessed", "backfill": "guessed", "bare": "blank"}
 KIND_WORDS = {"hand": "a hand rule", "named": "species read from the community's name", "water_ice": "open water or ice",
               "ground_only": "no rule for its woody plants and no donor: only the grasses and forbs its own "
                              "description (or the region's ground table) names",
               "pool": "another community's species (tile pool)", "research": "recorded species x niche",
+              "recorded": "no species in its name: the shrubs recorded on its own cells",
               "class_default": "California's foothill default", "backfill": "a back-filled class (not today's vegetation)",
               "bare": "no community: nothing known"}
 

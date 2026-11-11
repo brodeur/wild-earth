@@ -1,0 +1,433 @@
+{
+ "id": "robinia_neomexicana",
+ "aliases": [
+  "new_mexico_locust",
+  "new_mexican_locust",
+  "southwest_locust",
+  "desert_locust",
+  "pink_locust",
+  "rose_locust"
+ ],
+ "scientific": "Robinia neomexicana",
+ "common": "New Mexico locust",
+ "form": "multi_stem_shrub_tree",
+ "regions": [
+  "interior_west"
+ ],
+ "architectural_model": "Troll (provisional: plagiotropic shoots that turn up at their base; redbud flowers on old wood)",
+ "deciduous": true,
+ "height_m": [
+  2,
+  6
+ ],
+ "stature": {
+  "typical_m": 4,
+  "tall_m": 8,
+  "record_m": 15,
+  "source": "typical: the drafter's middle for the thickets in the South Rim's ponderosa pine; tall: FEIS (4-8 m; 3-26 ft); record: Wikipedia (5-10 m, rarely to 15 m); read 2026-11-10"
+ },
+ "variants": [
+  {
+   "name": "young",
+   "weight": 0.25,
+   "height_m": [
+    0.3,
+    1.5
+   ],
+   "crown_scale": 0.85,
+   "branches": 0.8,
+   "set": {
+    "trunk": {
+     "stems": [
+      1,
+      3
+     ],
+     "stem_spread_deg": 22
+    }
+   },
+   "note": "(from the whistling thorn template) a knee-high resprout after fire, a few black wands"
+  },
+  {
+   "name": "mature",
+   "weight": 0.5,
+   "seeds": 1,
+   "note": "(from the whistling thorn template) (from the western redbud template) the file as written: a many-stemmed vase spreading into a broad top"
+  },
+  {
+   "name": "old",
+   "weight": 0.25,
+   "height_m": [
+    5,
+    8
+   ],
+   "trunk_radius": 1.2,
+   "crown_scale": 1.12,
+   "gnarl": 1.15,
+   "deadwood": {
+    "fraction": 0.15,
+    "levels": [
+     0,
+     1
+    ],
+    "shorten": 0.8
+   },
+   "set": {
+    "trunk": {
+     "stems": [
+      2,
+      4
+     ]
+    }
+   },
+   "note": "(from the whistling thorn template) an old tree of a few black stems with a ragged open crown"
+  }
+ ],
+ "description": "A thorny shrub or small tree, usually 2 to 6 metres tall, that spreads by its roots into dense thickets of slender, grey-brown stems. Its leaves are feathery, 10 to 20 cm long, of seven to fifteen small oval leaflets, with a pair of sharp red-brown thorns where each leaf meets the twig. In late spring it hangs with clusters of fragrant pink to white pea flowers, and in fall with bristly brown bean pods. It grows in thickets under the ponderosa pines of the Grand Canyon's rims, with Gambel oak in the mountain forests, and along canyon streams, terraces and talus slopes of the Southwest.",
+ "season_notes": {
+  "winter": "Bare, thorny grey-brown stems in thickets; the empty bristly pods hang on into early winter.",
+  "spring": "Leaves open in April and May; clusters of pink pea flowers in May and June, browsed by deer with the new leaves.",
+  "summer": "A dense green thicket under the pines, shade for mule deer and elk and cover for mice and small birds.",
+  "fall": "Bristly brown pods ripen in September and October and the leaves go yellow and drop."
+ },
+ "status": "generated from a trait card, needs review in the lineup and local sign-off",
+ "habitat": {
+  "classes": {
+   "conifer_forest": 0.9,
+   "riparian": 0.7,
+   "oak_woodland": 0.7,
+   "mixed_forest": 0.6,
+   "chaparral": 0.5,
+   "barren": 0.3
+  },
+  "floor": 1.2,
+  "mid": 1.0,
+  "steep": 0.8,
+  "north": 1.0,
+  "shade": 0.3,
+  "disturbed": 1.6
+ },
+ "relations": {
+  "eaten_by": [
+   {
+    "animal": "odocoileus_hemionus",
+    "part": "browse",
+    "seasons": [
+     "spring",
+     "summer"
+    ]
+   }
+  ],
+  "cover_for": [
+   "odocoileus_hemionus",
+   "cervus_canadensis",
+   "peromyscus_maniculatus"
+  ]
+ },
+ "trunk": {
+  "length_ratio": 0.88,
+  "radius_ratio": 0.018,
+  "taper": 0.8,
+  "flare": 1.35,
+  "bole_ratio": 0.08,
+  "base_size": 0.15,
+  "curve_deg": 8,
+  "curve_var_deg": 10,
+  "segments": 3,
+  "lean_deg": 10,
+  "stems": [
+   2,
+   8
+  ],
+  "stem_spread_deg": 20,
+  "split_prob": 0.0,
+  "split_count": 2,
+  "split_angle_deg": 20,
+  "sinuous_deg": 4,
+  "bark_rgb": [
+   104,
+   92,
+   80
+  ],
+  "bark_pattern": "smooth",
+  "twig_rgb": [
+   70,
+   60,
+   56
+  ],
+  "bark": {
+   "tile_m": [
+    0.15,
+    0.4
+   ],
+   "contrast": 0.55,
+   "lichen": 0.2,
+   "relief": 0.4
+  }
+ },
+ "crown": {
+  "shape": "spherical",
+  "envelope": {
+   "profile": [
+    [
+     0.15,
+     0.3
+    ],
+    [
+     0.3,
+     0.42
+    ],
+    [
+     0.5,
+     0.5
+    ],
+    [
+     0.68,
+     0.5
+    ],
+    [
+     0.82,
+     0.42
+    ],
+    [
+     0.93,
+     0.28
+    ],
+    [
+     1.0,
+     0.1
+    ]
+   ],
+   "lobes": 6,
+   "lobe_depth": 0.22,
+   "asymmetry": 0.3,
+   "fill": 0.6,
+   "edge": 1.1
+  }
+ },
+ "levels": [
+  {
+   "count": 4,
+   "start": 0.12,
+   "down_angle_deg": 38,
+   "down_angle_var_deg": 12,
+   "rotation_deg": 140,
+   "rotation_var_deg": 30,
+   "length_ratio": 0.5,
+   "length_var": 0.3,
+   "curve_deg": 10,
+   "curve_var_deg": 14,
+   "tropism": 0.04,
+   "taper": 0.9,
+   "radius_ratio": 0.55,
+   "segments": 2,
+   "zigzag_deg": 8
+  },
+  {
+   "count": 4,
+   "start": 0.3,
+   "down_angle_deg": 45,
+   "down_angle_var_deg": 15,
+   "rotation_deg": -70,
+   "rotation_var_deg": 25,
+   "length_ratio": 0.45,
+   "length_var": 0.25,
+   "curve_deg": 8,
+   "curve_var_deg": 16,
+   "tropism": 0.0,
+   "taper": 1.0,
+   "radius_ratio": 0.5,
+   "segments": 1,
+   "zigzag_deg": 12
+  }
+ ],
+ "foliage": {
+  "type": "broadleaf",
+  "leaf_size_m": 0.15,
+  "leaf_shape": "pinnate_compound",
+  "cluster_m": 0.55,
+  "density": 18,
+  "cards_per_m2": 3.2,
+  "start": 0.15,
+  "parent_start": 0.35,
+  "orientation": "outward",
+  "roll_deg": 60,
+  "colors": {
+   "winter": [
+    104,
+    92,
+    80
+   ],
+   "spring": [
+    134,
+    162,
+    96
+   ],
+   "summer": [
+    92,
+    124,
+    76
+   ],
+   "fall": [
+    178,
+    160,
+    74
+   ]
+  },
+  "leaf_on": {
+   "winter": 0.0,
+   "spring": 0.6,
+   "summer": 1.0,
+   "fall": 0.45
+  },
+  "leaf_on_by_month": [
+   0.0,
+   0.0,
+   0.0,
+   0.1,
+   0.6,
+   1.0,
+   1.0,
+   1.0,
+   0.9,
+   0.5,
+   0.05,
+   0.0
+  ],
+  "clumps": {
+   "radius_m": 0.4,
+   "cards_per_clump": 6,
+   "shell": 0.35,
+   "flatten": 0.75,
+   "tip_bias": 1.2
+  },
+  "palette": [
+   [
+    0.85,
+    [
+     1,
+     1,
+     1
+    ]
+   ],
+   [
+    0.15,
+    [
+     1.08,
+     1.05,
+     1.12
+    ]
+   ]
+  ],
+  "winter_twigs": 0.4,
+  "ao_min": 0.72,
+  "color_var": [
+   0.08,
+   0.04
+  ],
+  "leaf_on_var": 0.4,
+  "flowers": {
+   "season": "spring",
+   "months": [
+    5,
+    6
+   ],
+   "form": "cluster",
+   "rgb": [
+    232,
+    160,
+    196
+   ],
+   "size_m": 0.07,
+   "density": 0.45,
+   "before_leaves": false
+  },
+  "catkins": {
+   "rgb": [
+    128,
+    92,
+    72
+   ],
+   "len_m": 0.07,
+   "width": 0.35,
+   "hang": true,
+   "prob": 0.3
+  },
+  "leaflets": [
+   9,
+   13
+  ],
+  "berries": null
+ },
+ "deadwood": {
+  "fraction": 0.08,
+  "levels": [
+   0
+  ],
+  "shorten": 0.8,
+  "rgb": [
+   136,
+   130,
+   122
+  ]
+ },
+ "twigs": {
+  "count": [
+   1,
+   2
+  ],
+  "length": 0.7,
+  "down_deg": 40,
+  "down_var_deg": 15,
+  "zigzag_deg": 22,
+  "curve_var_deg": 20,
+  "segments": 2,
+  "radius_m": 0.006,
+  "taper": 0.6,
+  "fan_deg": 50,
+  "jitter": 0.2
+ },
+ "lod": {
+  "near_tris_budget": 1100,
+  "near_sides": [
+   4,
+   3,
+   0
+  ],
+  "mid_blobs": 3,
+  "mid_branches": 0,
+  "mid_sides": [
+   3,
+   0
+  ],
+  "mid_cards": 36
+ },
+ "targets": {
+  "crown_width_ratio": 0.9,
+  "crown_base_ratio": 0.2,
+  "porosity": 0.35,
+  "foliage_rg": 0.53,
+  "foliage_bg": 0.36,
+  "fall_rg": 1.5,
+  "fall_bg": 0.56,
+  "from": "judgement values from the drafter's reading of the sources and knowledge of the species (2026-11-10), no photographs measured; to be replaced by photo measurements: a clump of several slender, thorny grey-brown stems or a thicket of them from spreading roots, with a dense, rounded crown of feathery bright-green compound leaves; hung with clusters of pink pea flowers in late spring, bristly brown pods in fall, the leaves yellow before they drop"
+ },
+ "generated": {
+  "by": "pipeline/plantgen.py",
+  "version": "5",
+  "card": "library/plant_cards/robinia_neomexicana.json",
+  "card_sha256": "e835779beb7efe03",
+  "template": "vachellia_drepanolobium",
+  "template_common": "whistling thorn",
+  "height_scale": 1.455
+ },
+ "notes": "The library has no Robinia; whistling thorn (the template) is its multi-stemmed, thorny, deciduous small tree of the same family (Fabaceae) with pinnate leaves, as plantgen's rule asks (same family and leaf type). The card makes New Mexico locust taller and denser with larger leaves. Its look is the further from the template's sparse, flat savanna crown: the crown profile, fill and porosity give it the dense crown FEIS describes; whether a non-legume template (blue elderberry, a multi-stemmed pinnate shrub-tree) would read better is for the lineup. Height: a rhizomatous small tree or shrub, 4-8 m (3-26 ft), diameter 10-20 cm, dense crown, thin bark (FEIS); 5-10 m, rarely 15 m, with bristly shoots (Wikipedia); height_m 2-6 m for a thicket-forming plant of the pine understory is the drafter's reading. Young class 0.3-1.5 m from FEIS's sprouts averaging 38 cm two years after a fire. Leaves pinnate, 15-20 cm (FEIS), 10-15 cm with 7-15 leaflets and a pair of sharp reddish-brown thorns at the base (Wikipedia), hence leaf_size_m 0.15. Flowers showy, white or pink, fragrant, in dense hanging racemes 5-10 cm (Wikipedia), April to July in the new leaf axils (FEIS); months 5-6 for the rim is the drafter's reading. Fruit: a hairy legume about 7.6 cm (FEIS), brown and bristly (Wikipedia), ripening September-October, seeds dispersed September-December (FEIS); it is not drawn (the berries block would make it fruit for fruit eaters). Leaves fall in autumn (FEIS); the fall colour and the leaf-on months are the drafter's judgement. Spreads by rhizomes into dense thickets, sprouts from stumps and root crowns (FEIS). Habitat: canyons, along streams or arroyos, terraces, talus slopes and conifer forest understories, gentle to steep slopes on all aspects, 1219-2789 m (FEIS); pure stands or understory, a dominant or codominant with Gambel oak under spruce-fir, white fir and mixed conifer, a minor part of riparian forest and scrub (FEIS); 1200-2600 m along streams, valley bottoms and canyon sides (Wikipedia). Seral after overstory removal or fire, dominant 1-3 years after disturbance, shaded out when conifers overtop it in 15-20 years (FEIS), hence disturbed 1.6 and shade 0.3. The South Rim ponderosa pine placing is from the brief. Eaters: FEIS names mule deer, bighorn sheep, Gambel's quail, chipmunks and porcupine, flowers and foliage preferred by deer; Wikipedia names mule deer, and squirrels and quail for the seeds. Cover: noticeably part of elk summer thermal cover with Gambel oak in Arizona; in Utah fair for mule deer and upland game birds, good for small mammals and small nongame birds (FEIS). Bighorn sheep, Gambel's quail, the rim's chipmunks (cliff and grey-collared), Abert's squirrel and the porcupine are not in the library and are left out (the yellow-pine chipmunk and western grey squirrel do not live at the Grand Canyon, so they are not used as stand-ins). Colours, crown profile, porosity, stems, the flower density and drawn size are the drafter's judgement, not from a source.",
+ "sources": [
+  "Fire Effects Information System, Robinia neomexicana, https://www.fs.usda.gov/database/feis/plants/tree/robneo/all.html (US government work, public domain), read 2026-11-10",
+  "Wikipedia, Robinia neomexicana (CC BY-SA 4.0), https://en.wikipedia.org/wiki/Robinia_neomexicana, read 2026-11-10",
+  "USDA PLANTS Database, Robinia neomexicana (RONE), https://plants.usda.gov/plant-profile/RONE (US government work, public domain; read through its profile service https://plantsservices.sc.egov.usda.gov/api/PlantProfile?symbol=RONE), read 2026-11-10"
+ ],
+ "authors": [
+  "Wild Earth (agent draft, 2026-11-10); needs local sign-off"
+ ],
+ "license": "CC BY-SA 4.0"
+}

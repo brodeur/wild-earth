@@ -7,7 +7,7 @@
    "code": 9001,
    "name": "Colorado Plateau Mixed Bedrock Canyon and Tableland",
    "cells": 42161,
-   "rule": null,
+   "rule": "recorded_echinocereus_triglochidiatus_purshia_stansburiana_opuntia_polyacantha",
    "named": []
   },
   {
@@ -357,12 +357,6 @@
  "unread": [
   {
    "source": "evt",
-   "code": 9001,
-   "name": "Colorado Plateau Mixed Bedrock Canyon and Tableland",
-   "cells": 42161
-  },
-  {
-   "source": "evt",
    "code": 7135,
    "name": "Inter-Mountain Basins Semi-Desert Grassland",
    "cells": 1890
@@ -436,19 +430,18 @@
    "rank": 2
   },
   {
-   "id": "quercus_gambelii",
+   "id": "echinocereus_triglochidiatus",
    "kind": "shrub",
    "why": [
-    "in the description of EVT 7054 Southern Rocky Mountain Ponderosa Pine Woodland (16191 cells)",
-    "in the description of BPS 1190 Southern Rocky Mountain Ponderosa Pine Woodland (3455 cells)",
-    "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
-    "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)"
+    "recorded on the cells of EVT 9001 Colorado Plateau Mixed Bedrock Canyon and Tableland (12 of its 22 open records near the tile, 1.63 times the rate of plants in general; 42161 cells)"
    ],
-   "cover": 0.1823,
-   "records": 260,
-   "record": true,
-   "card": true,
-   "drawn_as": "quercus_gambelii",
+   "cover": 0.1399,
+   "records": 144,
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a growth form first: a cactus (Cactaceae), and the client's generator (client/src/treegen.js) draws leafy crowns on woody stems; then a trait card",
+   "no_growth_form": "a cactus (Cactaceae)",
    "rank": 3
   },
   {
@@ -459,12 +452,45 @@
     "named by EVT 7087 Sonora-Mojave Creosotebush-White Bursage Desert Scrub (5408 cells)",
     "named by EVT 7082 Mojave Mid-Elevation Mixed Desert Scrub (2453 cells)"
    ],
-   "cover": 0.122,
+   "cover": 0.1027,
    "records": 26,
    "record": true,
    "card": true,
    "drawn_as": "coleogyne_ramosissima",
    "rank": 4
+  },
+  {
+   "id": "quercus_gambelii",
+   "kind": "shrub",
+   "why": [
+    "in the description of EVT 7054 Southern Rocky Mountain Ponderosa Pine Woodland (16191 cells)",
+    "in the description of BPS 1190 Southern Rocky Mountain Ponderosa Pine Woodland (3455 cells)",
+    "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
+    "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)"
+   ],
+   "cover": 0.0937,
+   "records": 260,
+   "record": true,
+   "card": true,
+   "drawn_as": "quercus_gambelii",
+   "rank": 5
+  },
+  {
+   "id": "opuntia_polyacantha",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 9001 Colorado Plateau Mixed Bedrock Canyon and Tableland (12 of its 23 open records near the tile, 1.56 times the rate of plants in general; 42161 cells)",
+    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (8 of its 23 open records near the tile, 1.67 times the rate of plants in general; 12829 cells)",
+    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (8 of its 23 open records near the tile, 1.67 times the rate of plants in general; 117 cells)"
+   ],
+   "cover": 0.0916,
+   "records": 135,
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a growth form first: a cactus (Cactaceae), and the client's generator (client/src/treegen.js) draws leafy crowns on woody stems; then a trait card",
+   "no_growth_form": "a cactus (Cactaceae)",
+   "rank": 6
   },
   {
    "id": "ephedra_viridis",
@@ -475,12 +501,61 @@
     "named by EVT 7082 Mojave Mid-Elevation Mixed Desert Scrub (2453 cells)",
     "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)"
    ],
-   "cover": 0.1035,
+   "cover": 0.0875,
    "records": 44,
    "record": true,
    "card": true,
    "drawn_as": "ephedra_viridis",
-   "rank": 5
+   "rank": 7
+  },
+  {
+   "id": "purshia_stansburiana",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 9001 Colorado Plateau Mixed Bedrock Canyon and Tableland (12 of its 22 open records near the tile, 1.63 times the rate of plants in general; 42161 cells)",
+    "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
+    "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)",
+    "named by EVT 7086 Rocky Mountain Lower Montane-Foothill Shrubland (92 cells)"
+   ],
+   "cover": 0.0704,
+   "records": 237,
+   "record": true,
+   "card": true,
+   "drawn_as": "purshia_stansburiana",
+   "rank": 8
+  },
+  {
+   "id": "echinocactus_polycephalus",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 9001 Colorado Plateau Mixed Bedrock Canyon and Tableland (10 of its 20 open records near the tile, 1.49 times the rate of plants in general; 42161 cells)",
+    "recorded on the cells of EVT 7078 Colorado Plateau Blackbrush-Mormon-tea Shrubland (9 of its 20 open records near the tile, 16.98 times the rate of plants in general; 19780 cells)"
+   ],
+   "cover": 0.0674,
+   "records": 77,
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a growth form first: a cactus (Cactaceae), and the client's generator (client/src/treegen.js) draws leafy crowns on woody stems; then a trait card",
+   "no_growth_form": "a cactus (Cactaceae)",
+   "rank": 9
+  },
+  {
+   "id": "opuntia_phaeacantha",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 9001 Colorado Plateau Mixed Bedrock Canyon and Tableland (8 of its 14 open records near the tile, 1.71 times the rate of plants in general; 42161 cells)",
+    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (5 of its 14 open records near the tile, 1.71 times the rate of plants in general; 12829 cells)",
+    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (5 of its 14 open records near the tile, 1.71 times the rate of plants in general; 117 cells)"
+   ],
+   "cover": 0.0505,
+   "records": 211,
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a growth form first: a cactus (Cactaceae), and the client's generator (client/src/treegen.js) draws leafy crowns on woody stems; then a trait card",
+   "no_growth_form": "a cactus (Cactaceae)",
+   "rank": 10
   },
   {
    "id": "juniperus_osteosperma",
@@ -496,7 +571,21 @@
    "record": true,
    "card": true,
    "drawn_as": "juniperus_osteosperma",
-   "rank": 6
+   "rank": 11
+  },
+  {
+   "id": "acer_grandidentatum",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7054 Southern Rocky Mountain Ponderosa Pine Woodland (8 of its 8 open records near the tile, 3.07 times the rate of plants in general; 16191 cells)",
+    "recorded on the cells of BPS 1190 Southern Rocky Mountain Ponderosa Pine Woodland (8 of its 8 open records near the tile, 3.07 times the rate of plants in general; 3455 cells)"
+   ],
+   "cover": 0.0316,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "acer_grandidentatum",
+   "rank": 12
   },
   {
    "id": "phoenix_dactylifera",
@@ -511,7 +600,40 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 7
+   "rank": 13
+  },
+  {
+   "id": "atriplex_canescens",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 12829 cells)",
+    "named by EVT 7087 Sonora-Mojave Creosotebush-White Bursage Desert Scrub (5408 cells)",
+    "named by EVT 7082 Mojave Mid-Elevation Mixed Desert Scrub (2453 cells)",
+    "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)",
+    "named by EVT 7081 Inter-Mountain Basins Mixed Salt Desert Scrub (422 cells)",
+    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 117 cells)"
+   ],
+   "cover": 0.0296,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "atriplex_canescens",
+   "rank": 14
+  },
+  {
+   "id": "ostrya_knowltonii",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 9001 Colorado Plateau Mixed Bedrock Canyon and Tableland (6 of its 6 open records near the tile, 2.99 times the rate of plants in general; 42161 cells)",
+    "canopy: records (GBIF: 23 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0278,
+   "records": 23,
+   "scientific": "Ostrya knowltonii",
+   "record": true,
+   "card": true,
+   "drawn_as": "ostrya_knowltonii",
+   "rank": 15
   },
   {
    "id": "artemisia_tridentata",
@@ -531,23 +653,34 @@
    "record": true,
    "card": true,
    "drawn_as": "artemisia_tridentata",
-   "rank": 8
+   "rank": 16
   },
   {
-   "id": "atriplex_canescens",
+   "id": "mahonia_repens",
    "kind": "shrub",
    "why": [
-    "named by EVT 7087 Sonora-Mojave Creosotebush-White Bursage Desert Scrub (5408 cells)",
-    "named by EVT 7082 Mojave Mid-Elevation Mixed Desert Scrub (2453 cells)",
-    "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)",
-    "named by EVT 7081 Inter-Mountain Basins Mixed Salt Desert Scrub (422 cells)"
+    "recorded on the cells of EVT 7054 Southern Rocky Mountain Ponderosa Pine Woodland (6 of its 8 open records near the tile, 2.3 times the rate of plants in general; 16191 cells)",
+    "recorded on the cells of BPS 1190 Southern Rocky Mountain Ponderosa Pine Woodland (6 of its 8 open records near the tile, 2.3 times the rate of plants in general; 3455 cells)"
    ],
-   "cover": 0.0194,
-   "records": 0,
+   "cover": 0.0234,
+   "records": 28,
    "record": true,
    "card": true,
-   "drawn_as": "atriplex_canescens",
-   "rank": 9
+   "drawn_as": "mahonia_repens",
+   "rank": 17
+  },
+  {
+   "id": "chamaebatiaria_millefolium",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 9001 Colorado Plateau Mixed Bedrock Canyon and Tableland (8 of its 17 open records near the tile, 1.41 times the rate of plants in general; 42161 cells)"
+   ],
+   "cover": 0.0233,
+   "records": 428,
+   "record": true,
+   "card": true,
+   "drawn_as": "chamaebatiaria_millefolium",
+   "rank": 18
   },
   {
    "id": "opuntia_basilaris",
@@ -561,8 +694,30 @@
    "record": false,
    "card": false,
    "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 10
+   "queued": "needs a growth form first: a cactus (Cactaceae), and the client's generator (client/src/treegen.js) draws leafy crowns on woody stems; then a trait card",
+   "no_growth_form": "a cactus (Cactaceae)",
+   "rank": 19
+  },
+  {
+   "id": "rosa_woodsii",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7054 Southern Rocky Mountain Ponderosa Pine Woodland (5 of its 6 open records near the tile, 2.56 times the rate of plants in general; 16191 cells)",
+    "recorded on the cells of BPS 1190 Southern Rocky Mountain Ponderosa Pine Woodland (5 of its 6 open records near the tile, 2.56 times the rate of plants in general; 3455 cells)",
+    "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
+    "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)",
+    "named by EVT 7086 Rocky Mountain Lower Montane-Foothill Shrubland (92 cells)",
+    "named by BPS 1214 Rocky Mountain Montane Riparian Systems (72 cells)",
+    "named by EVT 9327 Interior West Ruderal Riparian Forest (36 cells)",
+    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (19 cells)",
+    "named by EVT 9827 Interior West Ruderal Riparian Scrub (11 cells)"
+   ],
+   "cover": 0.0187,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "rosa_woodsii",
+   "rank": 20
   },
   {
    "id": "amelanchier_utahensis",
@@ -576,11 +731,37 @@
    "cover": 0.018,
    "records": 52,
    "scientific": "Amelanchier utahensis",
-   "record": false,
-   "card": false,
-   "drawn_as": "purshia_stansburiana",
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 11
+   "record": true,
+   "card": true,
+   "drawn_as": "amelanchier_utahensis",
+   "rank": 21
+  },
+  {
+   "id": "ptelea_trifoliata",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 9001 Colorado Plateau Mixed Bedrock Canyon and Tableland (5 of its 7 open records near the tile, 2.13 times the rate of plants in general; 42161 cells)"
+   ],
+   "cover": 0.0175,
+   "records": 64,
+   "record": true,
+   "card": true,
+   "drawn_as": "ptelea_trifoliata",
+   "rank": 22
+  },
+  {
+   "id": "shepherdia_rotundifolia",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (4 of its 12 open records near the tile, 1.6 times the rate of plants in general; 12829 cells)",
+    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (4 of its 12 open records near the tile, 1.6 times the rate of plants in general; 117 cells)"
+   ],
+   "cover": 0.015,
+   "records": 12,
+   "record": true,
+   "card": true,
+   "drawn_as": "shepherdia_rotundifolia",
+   "rank": 23
   },
   {
    "id": "pseudotsuga_menziesii",
@@ -595,7 +776,21 @@
    "record": true,
    "card": false,
    "drawn_as": "pseudotsuga_menziesii",
-   "rank": 12
+   "rank": 24
+  },
+  {
+   "id": "robinia_neomexicana",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7054 Southern Rocky Mountain Ponderosa Pine Woodland (3 of its 3 open records near the tile, 3.07 times the rate of plants in general; 16191 cells)",
+    "recorded on the cells of BPS 1190 Southern Rocky Mountain Ponderosa Pine Woodland (3 of its 3 open records near the tile, 3.07 times the rate of plants in general; 3455 cells)"
+   ],
+   "cover": 0.0117,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "robinia_neomexicana",
+   "rank": 25
   },
   {
    "id": "encelia_farinosa",
@@ -604,12 +799,12 @@
     "named by EVT 7087 Sonora-Mojave Creosotebush-White Bursage Desert Scrub (5408 cells)",
     "named by EVT 7082 Mojave Mid-Elevation Mixed Desert Scrub (2453 cells)"
    ],
-   "cover": 0.0121,
+   "cover": 0.0111,
    "records": 42,
    "record": true,
    "card": true,
    "drawn_as": "encelia_farinosa",
-   "rank": 13
+   "rank": 26
   },
   {
    "id": "cercis_orbiculata",
@@ -622,9 +817,25 @@
    "scientific": "Cercis orbiculata",
    "record": false,
    "card": false,
-   "drawn_as": null,
+   "drawn_as": "robinia_neomexicana",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 14
+   "rank": 27
+  },
+  {
+   "id": "cylindropuntia_whipplei",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 12829 cells)",
+    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 117 cells)"
+   ],
+   "cover": 0.009,
+   "records": 32,
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a growth form first: a cactus (Cactaceae), and the client's generator (client/src/treegen.js) draws leafy crowns on woody stems; then a trait card",
+   "no_growth_form": "a cactus (Cactaceae)",
+   "rank": 28
   },
   {
    "id": "juniperus_scopulorum",
@@ -639,22 +850,23 @@
    "card": false,
    "drawn_as": "juniperus_osteosperma",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 15
+   "rank": 29
   },
   {
-   "id": "ostrya_knowltonii",
-   "kind": "tree",
+   "id": "opuntia_engelmannii",
+   "kind": "shrub",
    "why": [
-    "canopy: records (GBIF: 23 records on the tile; height not yet screened)"
+    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 12829 cells)",
+    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 117 cells)"
    ],
-   "cover": 0.0078,
-   "records": 23,
-   "scientific": "Ostrya knowltonii",
+   "cover": 0.0075,
+   "records": 53,
    "record": false,
    "card": false,
    "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 16
+   "queued": "needs a growth form first: a cactus (Cactaceae), and the client's generator (client/src/treegen.js) draws leafy crowns on woody stems; then a trait card",
+   "no_growth_form": "a cactus (Cactaceae)",
+   "rank": 30
   },
   {
    "id": "acer_negundo",
@@ -671,9 +883,23 @@
    "scientific": "Acer negundo",
    "record": false,
    "card": false,
-   "drawn_as": null,
+   "drawn_as": "acer_grandidentatum",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 17
+   "rank": 31
+  },
+  {
+   "id": "ribes_cereum",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (3 of its 8 open records near the tile, 1.8 times the rate of plants in general; 12829 cells)",
+    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (3 of its 8 open records near the tile, 1.8 times the rate of plants in general; 117 cells)"
+   ],
+   "cover": 0.0064,
+   "records": 56,
+   "record": true,
+   "card": true,
+   "drawn_as": "ribes_cereum",
+   "rank": 32
   },
   {
    "id": "populus_fremontii",
@@ -691,7 +917,36 @@
    "record": true,
    "card": false,
    "drawn_as": "populus_fremontii",
-   "rank": 18
+   "rank": 33
+  },
+  {
+   "id": "echinocereus_engelmannii",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7087 Sonora-Mojave Creosotebush-White Bursage Desert Scrub (4 of its 11 open records near the tile, 17.9 times the rate of plants in general; 5408 cells)"
+   ],
+   "cover": 0.0042,
+   "records": 64,
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a growth form first: a cactus (Cactaceae), and the client's generator (client/src/treegen.js) draws leafy crowns on woody stems; then a trait card",
+   "no_growth_form": "a cactus (Cactaceae)",
+   "rank": 34
+  },
+  {
+   "id": "symphoricarpos_longiflorus",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7054 Southern Rocky Mountain Ponderosa Pine Woodland (4 of its 4 open records near the tile, 3.07 times the rate of plants in general; 16191 cells)",
+    "recorded on the cells of BPS 1190 Southern Rocky Mountain Ponderosa Pine Woodland (4 of its 4 open records near the tile, 3.07 times the rate of plants in general; 3455 cells)"
+   ],
+   "cover": 0.0042,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "symphoricarpos_longiflorus",
+   "rank": 35
   },
   {
    "id": "quercus_turbinella",
@@ -705,26 +960,7 @@
    "card": false,
    "drawn_as": "quercus_gambelii",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 19
-  },
-  {
-   "id": "rosa_woodsii",
-   "kind": "shrub",
-   "why": [
-    "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
-    "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)",
-    "named by EVT 7086 Rocky Mountain Lower Montane-Foothill Shrubland (92 cells)",
-    "named by BPS 1214 Rocky Mountain Montane Riparian Systems (72 cells)",
-    "named by EVT 9327 Interior West Ruderal Riparian Forest (36 cells)",
-    "named by EVT 9019 Rocky Mountain Lower Montane-Foothill Riparian Woodland (19 cells)",
-    "named by EVT 9827 Interior West Ruderal Riparian Scrub (11 cells)"
-   ],
-   "cover": 0.0011,
-   "records": 0,
-   "record": true,
-   "card": true,
-   "drawn_as": "rosa_woodsii",
-   "rank": 20
+   "rank": 36
   },
   {
    "id": "chrysothamnus_viscidiflorus",
@@ -740,7 +976,7 @@
    "card": false,
    "drawn_as": "encelia_farinosa",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 21
+   "rank": 37
   },
   {
    "id": "populus_tremuloides",
@@ -754,7 +990,7 @@
    "record": true,
    "card": true,
    "drawn_as": "populus_tremuloides",
-   "rank": 22
+   "rank": 38
   },
   {
    "id": "salix_exigua",
@@ -770,22 +1006,7 @@
    "record": true,
    "card": false,
    "drawn_as": "salix_exigua",
-   "rank": 23
-  },
-  {
-   "id": "purshia_stansburiana",
-   "kind": "shrub",
-   "why": [
-    "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
-    "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)",
-    "named by EVT 7086 Rocky Mountain Lower Montane-Foothill Shrubland (92 cells)"
-   ],
-   "cover": 0.0005,
-   "records": 237,
-   "record": true,
-   "card": true,
-   "drawn_as": "purshia_stansburiana",
-   "rank": 24
+   "rank": 39
   },
   {
    "id": "ericameria_nauseosa",
@@ -799,7 +1020,22 @@
    "card": false,
    "drawn_as": "encelia_farinosa",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 25
+   "rank": 40
+  },
+  {
+   "id": "yucca_elata",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7087 Sonora-Mojave Creosotebush-White Bursage Desert Scrub (3 of its 4 open records near the tile, 36.91 times the rate of plants in general; 5408 cells)"
+   ],
+   "cover": 0.0005,
+   "records": 0,
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a growth form first: a rosette succulent (a yucca, an agave, a beargrass) (Asparagaceae), and the client's generator (client/src/treegen.js) draws leafy crowns on woody stems; then a trait card",
+   "no_growth_form": "a rosette succulent (a yucca, an agave, a beargrass) (Asparagaceae)",
+   "rank": 41
   },
   {
    "id": "cercocarpus_montanus",
@@ -816,7 +1052,7 @@
    "card": false,
    "drawn_as": "cercocarpus_ledifolius",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 26
+   "rank": 42
   },
   {
    "id": "krascheninnikovia_lanata",
@@ -830,7 +1066,7 @@
    "card": false,
    "drawn_as": "atriplex_canescens",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 27
+   "rank": 43
   },
   {
    "id": "arctostaphylos_pungens",
@@ -844,7 +1080,7 @@
    "card": false,
    "drawn_as": "arctostaphylos_patula",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 28
+   "rank": 44
   },
   {
    "id": "ceanothus_greggii",
@@ -856,9 +1092,9 @@
    "records": 0,
    "record": false,
    "card": false,
-   "drawn_as": null,
+   "drawn_as": "ceanothus_fendleri",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 29
+   "rank": 45
   },
   {
    "id": "ceanothus_pauciflorus",
@@ -870,9 +1106,9 @@
    "records": 0,
    "record": false,
    "card": false,
-   "drawn_as": null,
+   "drawn_as": "ceanothus_fendleri",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 30
+   "rank": 46
   },
   {
    "id": "garrya_flavescens",
@@ -886,7 +1122,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 31
+   "rank": 47
   },
   {
    "id": "rhus_aromatica",
@@ -900,7 +1136,20 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 32
+   "rank": 48
+  },
+  {
+   "id": "tetradymia_canescens",
+   "kind": "shrub",
+   "why": [
+    "in the description of EVT 7082 Mojave Mid-Elevation Mixed Desert Scrub (2453 cells)"
+   ],
+   "cover": 0.0001,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "tetradymia_canescens",
+   "rank": 49
   },
   {
    "id": "fallugia_paradoxa",
@@ -915,37 +1164,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 33
-  },
-  {
-   "id": "chamaebatiaria_millefolium",
-   "kind": "forb",
-   "why": [
-    "GBIF: 428 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 428,
-   "scientific": "Chamaebatiaria millefolium",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 34
-  },
-  {
-   "id": "opuntia_phaeacantha",
-   "kind": "forb",
-   "why": [
-    "GBIF: 211 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 211,
-   "scientific": "Opuntia phaeacantha",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 35
+   "rank": 50
   },
   {
    "id": "yucca_baccata",
@@ -959,7 +1178,7 @@
    "record": true,
    "card": true,
    "drawn_as": "yucca_baccata",
-   "rank": 36
+   "rank": 51
   },
   {
    "id": "agave_utahensis",
@@ -973,22 +1192,7 @@
    "record": true,
    "card": true,
    "drawn_as": "agave_utahensis",
-   "rank": 37
-  },
-  {
-   "id": "echinocereus_triglochidiatus",
-   "kind": "forb",
-   "why": [
-    "GBIF: 144 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 144,
-   "scientific": "Echinocereus triglochidiatus",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 38
+   "rank": 52
   },
   {
    "id": "cirsium_arizonicum",
@@ -1003,22 +1207,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 39
-  },
-  {
-   "id": "opuntia_polyacantha",
-   "kind": "forb",
-   "why": [
-    "GBIF: 135 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 135,
-   "scientific": "Opuntia polyacantha",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 40
+   "rank": 53
   },
   {
    "id": "datura_wrightii",
@@ -1033,7 +1222,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 41
+   "rank": 54
   },
   {
    "id": "phoradendron_juniperinum",
@@ -1048,7 +1237,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 42
+   "rank": 55
   },
   {
    "id": "penstemon_palmeri",
@@ -1063,7 +1252,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 43
+   "rank": 56
   },
   {
    "id": "petrophytum_caespitosum",
@@ -1078,7 +1267,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 44
+   "rank": 57
   },
   {
    "id": "penstemon_pachyphyllus",
@@ -1093,7 +1282,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 45
+   "rank": 58
   },
   {
    "id": "asclepias_subverticillata",
@@ -1108,22 +1297,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 46
-  },
-  {
-   "id": "alloberberis_fremontii",
-   "kind": "shrub",
-   "why": [
-    "GBIF: 88 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 88,
-   "scientific": "Alloberberis fremontii",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 47
+   "rank": 59
   },
   {
    "id": "phlox_austromontana",
@@ -1137,22 +1311,7 @@
    "record": true,
    "card": true,
    "drawn_as": "phlox_austromontana",
-   "rank": 48
-  },
-  {
-   "id": "echinocactus_polycephalus",
-   "kind": "forb",
-   "why": [
-    "GBIF: 77 records on the tile"
-   ],
-   "cover": 0.0,
-   "records": 77,
-   "scientific": "Echinocactus polycephalus",
-   "record": false,
-   "card": false,
-   "drawn_as": null,
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 49
+   "rank": 60
   },
   {
    "id": "penstemon_eatonii",
@@ -1167,7 +1326,22 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 50
+   "rank": 61
+  },
+  {
+   "id": "solanum_elaeagnifolium",
+   "kind": "forb",
+   "why": [
+    "GBIF: 72 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 72,
+   "scientific": "Solanum elaeagnifolium",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 62
   },
   {
    "id": "castilleja_integra",
@@ -1181,22 +1355,67 @@
    "record": true,
    "card": true,
    "drawn_as": "castilleja_integra",
-   "rank": 51
+   "rank": 63
   },
   {
-   "id": "ribes_cereum",
-   "kind": "shrub",
+   "id": "packera_multilobata",
+   "kind": "forb",
    "why": [
-    "GBIF: 56 records on the tile"
+    "GBIF: 68 records on the tile"
    ],
    "cover": 0.0,
-   "records": 56,
-   "scientific": "Ribes cereum",
+   "records": 68,
+   "scientific": "Packera multilobata",
    "record": false,
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 52
+   "rank": 64
+  },
+  {
+   "id": "astragalus_calycosus",
+   "kind": "forb",
+   "why": [
+    "GBIF: 67 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 67,
+   "scientific": "Astragalus calycosus",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 65
+  },
+  {
+   "id": "laphamia_congesta",
+   "kind": "forb",
+   "why": [
+    "GBIF: 66 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 66,
+   "scientific": "Laphamia congesta",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 66
+  },
+  {
+   "id": "pelecyphora_vivipara",
+   "kind": "forb",
+   "why": [
+    "GBIF: 66 records on the tile"
+   ],
+   "cover": 0.0,
+   "records": 66,
+   "scientific": "Pelecyphora vivipara",
+   "record": false,
+   "card": false,
+   "drawn_as": null,
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 67
   },
   {
    "id": "erodium_cicutarium",
@@ -1210,7 +1429,7 @@
    "record": true,
    "card": false,
    "drawn_as": "erodium_cicutarium",
-   "rank": 53
+   "rank": 68
   },
   {
    "id": "gutierrezia_sarothrae",
@@ -1224,7 +1443,7 @@
    "record": true,
    "card": true,
    "drawn_as": "gutierrezia_sarothrae",
-   "rank": 54
+   "rank": 69
   },
   {
    "id": "sphaeralcea_parvifolia",
@@ -1238,7 +1457,7 @@
    "record": true,
    "card": true,
    "drawn_as": "sphaeralcea_parvifolia",
-   "rank": 55
+   "rank": 70
   },
   {
    "id": "erigeron_divergens",
@@ -1252,7 +1471,7 @@
    "record": true,
    "card": true,
    "drawn_as": "erigeron_divergens",
-   "rank": 56
+   "rank": 71
   },
   {
    "id": "lupinus_argenteus",
@@ -1266,7 +1485,7 @@
    "record": true,
    "card": true,
    "drawn_as": "lupinus_argenteus",
-   "rank": 57
+   "rank": 72
   },
   {
    "id": "cercis_occidentalis",
@@ -1280,7 +1499,7 @@
    "record": true,
    "card": false,
    "drawn_as": "cercis_occidentalis",
-   "rank": 58
+   "rank": 73
   },
   {
    "id": "bouteloua_gracilis",
@@ -1294,7 +1513,7 @@
    "record": true,
    "card": true,
    "drawn_as": "bouteloua_gracilis",
-   "rank": 59
+   "rank": 74
   },
   {
    "id": "eriogonum_racemosum",
@@ -1308,7 +1527,7 @@
    "record": true,
    "card": true,
    "drawn_as": "eriogonum_racemosum",
-   "rank": 60
+   "rank": 75
   },
   {
    "id": "hordeum_murinum",
@@ -1322,7 +1541,7 @@
    "record": true,
    "card": false,
    "drawn_as": "hordeum_murinum",
-   "rank": 61
+   "rank": 76
   },
   {
    "id": "abies_concolor",
@@ -1335,7 +1554,7 @@
    "record": true,
    "card": true,
    "drawn_as": "abies_concolor",
-   "rank": 62
+   "rank": 77
   },
   {
    "id": "picea_pungens",
@@ -1349,7 +1568,7 @@
    "card": false,
    "drawn_as": "pinus_edulis",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 63
+   "rank": 78
   }
  ],
  "gbif_plants": [
@@ -1373,9 +1592,9 @@
    "id": "chamaebatiaria_millefolium",
    "scientific": "Chamaebatiaria millefolium",
    "family": "Rosaceae",
-   "kind": "forb",
+   "kind": "shrub",
    "records": 428,
-   "known": false
+   "known": true
   },
   {
    "id": "quercus_gambelii",
@@ -1605,9 +1824,9 @@
    "id": "ptelea_trifoliata",
    "scientific": "Ptelea trifoliata",
    "family": "Rutaceae",
-   "kind": "forb",
+   "kind": "shrub",
    "records": 64,
-   "known": false
+   "known": true
   },
   {
    "id": "cochemiea_grahamii",
@@ -1639,7 +1858,7 @@
    "family": "Grossulariaceae",
    "kind": "shrub",
    "records": 56,
-   "known": false
+   "known": true
   },
   {
    "id": "opuntia_basilaris",
@@ -1661,9 +1880,9 @@
    "id": "amelanchier_utahensis",
    "scientific": "Amelanchier utahensis",
    "family": "Rosaceae",
-   "kind": "forb",
+   "kind": "shrub",
    "records": 52,
-   "known": false
+   "known": true
   },
   {
    "id": "arceuthobium_divaricatum",
@@ -1879,7 +2098,7 @@
    "family": "Berberidaceae",
    "kind": "shrub",
    "records": 28,
-   "known": false
+   "known": true
   },
   {
    "id": "petradoria_pumila",
@@ -2031,7 +2250,7 @@
    "family": "Betulaceae",
    "kind": "shrub",
    "records": 23,
-   "known": false
+   "known": true
   },
   {
    "id": "boechera_perennans",
@@ -2519,7 +2738,7 @@
    "family": "Elaeagnaceae",
    "kind": "shrub",
    "records": 12,
-   "known": false
+   "known": true
   },
   {
    "id": "trixis_californica",
@@ -2561,11 +2780,46 @@
   "ground": 26
  },
  "by_layer": {
-  "tree": 14,
-  "shrub": 23,
+  "tree": 13,
+  "shrub": 39,
   "ground": 26
  },
  "hands": [
+  {
+   "id": "echinocereus_triglochidiatus",
+   "kind": "shrub",
+   "what": "a succulent growth form in the client, then a trait card",
+   "why": [
+    "recorded on the cells of EVT 9001 Colorado Plateau Mixed Bedrock Canyon and Tableland (12 of its 22 open records near the tile, 1.63 times the rate of plants in general; 42161 cells)"
+   ]
+  },
+  {
+   "id": "opuntia_polyacantha",
+   "kind": "shrub",
+   "what": "a succulent growth form in the client, then a trait card",
+   "why": [
+    "recorded on the cells of EVT 9001 Colorado Plateau Mixed Bedrock Canyon and Tableland (12 of its 23 open records near the tile, 1.56 times the rate of plants in general; 42161 cells)",
+    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (8 of its 23 open records near the tile, 1.67 times the rate of plants in general; 12829 cells)"
+   ]
+  },
+  {
+   "id": "echinocactus_polycephalus",
+   "kind": "shrub",
+   "what": "a succulent growth form in the client, then a trait card",
+   "why": [
+    "recorded on the cells of EVT 9001 Colorado Plateau Mixed Bedrock Canyon and Tableland (10 of its 20 open records near the tile, 1.49 times the rate of plants in general; 42161 cells)",
+    "recorded on the cells of EVT 7078 Colorado Plateau Blackbrush-Mormon-tea Shrubland (9 of its 20 open records near the tile, 16.98 times the rate of plants in general; 19780 cells)"
+   ]
+  },
+  {
+   "id": "opuntia_phaeacantha",
+   "kind": "shrub",
+   "what": "a succulent growth form in the client, then a trait card",
+   "why": [
+    "recorded on the cells of EVT 9001 Colorado Plateau Mixed Bedrock Canyon and Tableland (8 of its 14 open records near the tile, 1.71 times the rate of plants in general; 42161 cells)",
+    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (5 of its 14 open records near the tile, 1.71 times the rate of plants in general; 12829 cells)"
+   ]
+  },
   {
    "id": "phoenix_dactylifera",
    "kind": "tree",
@@ -2577,18 +2831,9 @@
   {
    "id": "opuntia_basilaris",
    "kind": "tree",
-   "what": "a trait card",
+   "what": "a succulent growth form in the client, then a trait card",
    "why": [
     "canopy: records (GBIF: 56 records on the tile; height not yet screened)"
-   ]
-  },
-  {
-   "id": "amelanchier_utahensis",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "named by EVT 7107 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (460 cells)",
-    "named by BPS 1203 Rocky Mountain Gambel Oak-Mixed Montane Shrubland (109 cells)"
    ]
   },
   {
@@ -2597,6 +2842,15 @@
    "what": "a trait card",
    "why": [
     "canopy: records (GBIF: 31 records on the tile; height not yet screened)"
+   ]
+  },
+  {
+   "id": "cylindropuntia_whipplei",
+   "kind": "shrub",
+   "what": "a succulent growth form in the client, then a trait card",
+   "why": [
+    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 12829 cells)",
+    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 117 cells)"
    ]
   },
   {
@@ -2609,11 +2863,12 @@
    ]
   },
   {
-   "id": "ostrya_knowltonii",
-   "kind": "tree",
-   "what": "a trait card",
+   "id": "opuntia_engelmannii",
+   "kind": "shrub",
+   "what": "a succulent growth form in the client, then a trait card",
    "why": [
-    "canopy: records (GBIF: 23 records on the tile; height not yet screened)"
+    "recorded on the cells of EVT 7016 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 12829 cells)",
+    "recorded on the cells of BPS 1182 Colorado Plateau Pinyon-Juniper Woodland (3 of its 5 open records near the tile, 2.88 times the rate of plants in general; 117 cells)"
    ]
   },
   {
@@ -2623,6 +2878,14 @@
    "why": [
     "named by BPS 1214 Rocky Mountain Montane Riparian Systems (72 cells)",
     "named by EVT 9327 Interior West Ruderal Riparian Forest (36 cells)"
+   ]
+  },
+  {
+   "id": "echinocereus_engelmannii",
+   "kind": "shrub",
+   "what": "a succulent growth form in the client, then a trait card",
+   "why": [
+    "recorded on the cells of EVT 7087 Sonora-Mojave Creosotebush-White Bursage Desert Scrub (4 of its 11 open records near the tile, 17.9 times the rate of plants in general; 5408 cells)"
    ]
   },
   {
@@ -2648,6 +2911,14 @@
    "what": "a trait card",
    "why": [
     "named by EVT 7127 Inter-Mountain Basins Semi-Desert Shrub-Steppe (1191 cells)"
+   ]
+  },
+  {
+   "id": "yucca_elata",
+   "kind": "shrub",
+   "what": "a succulent growth form in the client, then a trait card",
+   "why": [
+    "recorded on the cells of EVT 7087 Sonora-Mojave Creosotebush-White Bursage Desert Scrub (3 of its 4 open records near the tile, 36.91 times the rate of plants in general; 5408 cells)"
    ]
   },
   {
@@ -2716,43 +2987,11 @@
    ]
   },
   {
-   "id": "chamaebatiaria_millefolium",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 428 records on the tile"
-   ]
-  },
-  {
-   "id": "opuntia_phaeacantha",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 211 records on the tile"
-   ]
-  },
-  {
-   "id": "echinocereus_triglochidiatus",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 144 records on the tile"
-   ]
-  },
-  {
    "id": "cirsium_arizonicum",
    "kind": "forb",
    "what": "a trait card",
    "why": [
     "GBIF: 143 records on the tile"
-   ]
-  },
-  {
-   "id": "opuntia_polyacantha",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 135 records on the tile"
    ]
   },
   {
@@ -2804,22 +3043,6 @@
    ]
   },
   {
-   "id": "alloberberis_fremontii",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 88 records on the tile"
-   ]
-  },
-  {
-   "id": "echinocactus_polycephalus",
-   "kind": "forb",
-   "what": "a trait card",
-   "why": [
-    "GBIF: 77 records on the tile"
-   ]
-  },
-  {
    "id": "penstemon_eatonii",
    "kind": "forb",
    "what": "a trait card",
@@ -2828,11 +3051,43 @@
    ]
   },
   {
-   "id": "ribes_cereum",
-   "kind": "shrub",
+   "id": "solanum_elaeagnifolium",
+   "kind": "forb",
    "what": "a trait card",
    "why": [
-    "GBIF: 56 records on the tile"
+    "GBIF: 72 records on the tile"
+   ]
+  },
+  {
+   "id": "packera_multilobata",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 68 records on the tile"
+   ]
+  },
+  {
+   "id": "astragalus_calycosus",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 67 records on the tile"
+   ]
+  },
+  {
+   "id": "laphamia_congesta",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 66 records on the tile"
+   ]
+  },
+  {
+   "id": "pelecyphora_vivipara",
+   "kind": "forb",
+   "what": "a trait card",
+   "why": [
+    "GBIF: 66 records on the tile"
    ]
   },
   {
@@ -2841,14 +3096,6 @@
    "what": "a trait card",
    "why": [
     "named by EVT 7051 Southern Rocky Mountain Dry-Mesic Montane Mixed Conifer Forest and Woodland (46 cells)"
-   ]
-  },
-  {
-   "id": "Colorado Plateau Mixed Bedrock Canyon and Tableland",
-   "kind": "community",
-   "what": "a lexicon phrase or a species-mix rule",
-   "why": [
-    "42161 cells"
    ]
   },
   {
@@ -2901,14 +3148,14 @@
   }
  ],
  "summary": {
-  "needed": 63,
-  "with_record": 29,
+  "needed": 78,
+  "with_record": 40,
   "generated_now": 0,
-  "queued": 34,
-  "unread_communities": 7,
+  "queued": 38,
+  "unread_communities": 6,
   "by_layer": {
-   "tree": 14,
-   "shrub": 23,
+   "tree": 13,
+   "shrub": 39,
    "ground": 26
   },
   "meets_target": {
@@ -2916,6 +3163,6 @@
    "shrub": true,
    "ground": true
   },
-  "hands": 41
+  "hands": 44
  }
 }
