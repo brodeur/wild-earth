@@ -33,7 +33,8 @@ keeps what it had.
 | 4. On screen | hero LODs in the species' shared pool, the full hero with fur shells for the player's body, one draw a tier, lazy, with a switch | `client/src/hero.js`, `animalMaterial({hero})` | sampler and attribute counts read from the GL programs; frame cost by shell count; texture bytes |
 | 5. Motion | strides that vary (yesterday's lane), then the idle layer: breathing, weight, gaze, ears, tail, and acts chosen by a director, all read from the taxonomy tree | `client/src/gait.js`, `client/src/idle.js`, the tree's `vary` and `idle` blocks | `tools/gait_measure.mjs`, `tools/idle_measure.mjs`: rates against the tree, feet never slide, same seed same behaviour, an act a skeleton cannot do is left out by a reach test |
 
-Nothing in stages 3 to 5 is written per species. The tool ran unchanged on the wolf, the bison and the grizzly.
+Nothing in stages 3 to 5 is written per species. The tool ran unchanged on the wolf, the bison and the grizzly, and then
+the whole pipeline was run from nothing for two home species, the mountain lion and the coyote (below, "From nothing").
 
 ### Stage 3 in detail: the hero model (`tools/hero_model.py <species>`)
 
@@ -127,6 +128,24 @@ falls as mass^-0.22). Not found, and so by eye and marked so: scan rates and dur
 scratch lasts, every act's shape. Most of the ethology asked for was not found in the time; the tree's notes are the
 honest list.
 
+## From nothing: the mountain lion and the coyote
+
+The three species above had a source on disk. The home tile's animals did not, so two were taken through every stage
+in one go, for 80 credits (the lion 30; the coyote 50, its first preview rejected for a turned head and a bent spine):
+a new source by the fauna step's own prompt and judge, the game tiers and rig as a fauna-step model, the hero tier, the
+22-joint clips. A hand-built species opts in through one loader wrapper (`pipelineOr` in `client/src/animalModels.js`):
+the pipeline's model when the hero index lists the species, the hand-built one otherwise or under `?hero=0`.
+
+What the run taught, each fixed as a rule: the described colours were misread ("tip of the tail black" as a black
+tail); a furry mesh sized by mass came out a third too small, so a curated shoulder height now wins; the ear finder
+took a tip near the nose. And what it could not fix: a generator that will not always give a level, forward head (the
+coyote's is turned about 25 degrees in the source and it shows), and a painted coat more saturated than the animal.
+The pose is the gate to tighten: reject at the 20-credit preview, never at the refine.
+
+On the home tile the hand-built lion and coyote are faceted shapes; the pipeline's are a cougar and a coyote
+(`home_lion_before_after.jpg`, `home_coyote_before_after.jpg`, `lineup_lion_gaits.jpg`). Not exercised on the new
+bodies: the pounce, the leap and the kill, climbing a tree, the tail-tip twitch.
+
 ## What it looks like
 
 In the session notes' `avatar-realism-captures`:
@@ -154,10 +173,12 @@ standing in the scene's light.
 
 ## What is weak, and the order I would take it in
 
-1. **The ten home species have no source to build from.** The coyote, elk, mule deer, cougar, bobcat, black bear, fox,
-   otter and the rabbits were hand-built or reduced from previews Meshy has since deleted (it keeps output three days).
-   Each needs a new generation (about 300 credits for all ten) and then to enter as a pipeline model, with its
-   hand-built model kept as the fallback. This is the step that puts the result in front of a player on the home tile.
+1. **Eight home species still have no source to build from** (the lion and the coyote now do). The elk, mule deer,
+   bobcat, black bear, fox, otter and the rabbits were hand-built or reduced from previews Meshy has since deleted (it
+   keeps output three days). Each needs a new generation (30 to 50 credits, so about 300 for the eight) and the loader
+   wrapper. The deer is the hard one: it plays hero clips on its own skeleton, not the engine's. The rabbits need the
+   hero tool to handle the lagomorph rig. Before spending: a pose gate at the preview that measures the head's turn and
+   the legs' spread instead of trusting the eye.
 2. **The neck and the jaw.** One neck joint is why the cats cannot groom and the deer cannot scratch, and why a head
    turned far looks like a roll. No jaw is why there is no yawn, no real chewing and no carrying
    ([behaviour-rig.md](behaviour-rig.md) item 3). A neck chain of three and a jaw, added the way the ears were.
