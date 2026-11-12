@@ -9404,3 +9404,19 @@ aspen understory on 3 of its 26 records.
 - **Tests.** `tests/test_associates.py`, 30 tests (4 new, 3 rewritten). Five fail on the code before: nine records
   on a shrubland weighed a whole third rank, and a dwarf associate on three records laid 0.18 of the cover as
   carpet. The whole suite: 411 tests, all pass.
+
+## 2026-11-11: own-cell weighting for associates after listed species merged; what the check on main found (merge of claude/elated-jackson-91da74)
+
+- **Checked before the merge.** The whole suite in the lane's worktree passes (411 tests). The code change is one
+  line of `_layer_weights`. Only the Grand Canyon's and Teton's density rasters differ from main's, and both match
+  the hashes their manifests record; the old ones are in `scratch/pre-own-cells/`.
+- **On main after it.** The judge re-run gives the lane's numbers: Grand Canyon shrub Bray-Curtis 0.6456 (from
+  0.6445, worse by a thousandth), shrubs in genera no plot records 0.0152 (from 0.0466); Lamar and Yosemite
+  unchanged.
+- **At eye level.** The lane's pairs were looked at, not retaken (main's rasters are byte-identical to the ones it
+  captured). On the Teton steppe the near chokecherry is gone and a pale, near-white shrub about as tall stands in
+  its place; which species that is was not asked of the client. The Grand Canyon blackbrush pose looks the same.
+- **The calls that stay weak.** Antelope bitterbrush, common in Jackson Hole's steppe, is 3.5% of it on five
+  records, and Lamar's whortleberry carpet is thin for the same reason: the rule measures the evidence, not the
+  plant. At the blackbrush pose no blackbrush or Mormon tea stands near the camera though the mix asks for them
+  at density 0.94; the canopy raster's shrub cover there is 24 of 255. Not looked into.
