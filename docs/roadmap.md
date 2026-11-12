@@ -281,6 +281,24 @@ The earlier gestalt order, now phase 2:
    cavities, cone caches).
 5. The first new place: Lamar Valley, Yellowstone (`utm12n_558_4964`), then Saguaro West, then the Smokies.
 
+## Next: the behaviour rig (designed 2026-11-11; `docs/behaviour-rig.md`; nothing built)
+
+Aaron, 2026-11-11: animals that build a nest, feed their young and carry prey, generated per species reliably, and
+gaits with organic variation ("not every stride or movement is the same"). The design: behaviours are contact tasks
+(an effector brought to a world point, as the gait engine brings feet), built from ten primitives on one skeleton per
+body plan with named sockets, the variant read from the taxonomy tree (`care` and `carry` blocks beside `catch`), and
+gated by reach tests and a behaviour lineup, with a symbolic tier for a species that fails a gate. In order:
+
+1. Stride variation on the gait engine (the ground, the individual, the stride, the gait, attention, soft parts).
+2. The reading: `care`, `carry` and the load shares in the tree, with sources.
+3. Sockets, a jaw and carrying on the quadruped skeleton.
+4. One fitter with reach tests; the rodents onto the skeleton.
+5. The bird skeleton.
+6. The nest object and the young; feeding.
+7. Building.
+
+No lane has started; the order (variation first or carrying first) is Aaron's call.
+
 ## Next: the visual pass, in order of effect per hour
 
 1. ~~Horizon~~ done 2026-10-23: two crossed-quad impostors with a canopy cap per

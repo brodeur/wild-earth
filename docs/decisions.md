@@ -9420,3 +9420,33 @@ aspen understory on 3 of its 26 records.
   records, and Lamar's whortleberry carpet is thin for the same reason: the rule measures the evidence, not the
   plant. At the blackbrush pose no blackbrush or Mormon tea stands near the camera though the mix asks for them
   at density 0.94; the canopy raster's shrub cover there is 24 of 255. Not looked into.
+
+## 2026-11-11: The behaviour rig, a design note (docs/behaviour-rig.md; main; nothing built)
+
+Aaron, 2026-11-11: "I really want to rig things like - building a nest, feeding young, carrying prey - how do we
+automate the generation of these per species in a reliable way", and "I also want the gaits to have organic variation
+- so the rigging has to be based on nature. Meaning, not every stride or movement is the same."
+
+- **What was read.** 61 animal records: 9 on the 20-joint skeleton and the gait engine, 52 on the part rig or
+  procedural; 48 build scripts, each finding joints from its own mesh; no jaw, no bill that opens, no toes that
+  close, one neck joint; carrying is a counter (`acorns.js`), never an item in a mouth; on flat ground the engine
+  repeats one stride exactly.
+- **The design.** Behaviours are contact tasks: an effector brought to a world point and held, which the gait
+  engine already does for feet. One skeleton per body plan with named sockets (mouth, feet, gape, teat, scruff,
+  back, cheek, crop); one fitter bounded by the taxon's anatomy and AVONET's measured lengths; ten primitives
+  (reach, grasp, carry, place, press, pin and tear, gape, pass, nurse, brood); `care` and `carry` blocks in the
+  taxonomy tree beside `catch`; the logic in world state so it runs at every tier; reach tests and a behaviour
+  lineup as gates, and a symbolic tier for a species that fails one.
+- **Variation from causes, not noise.** The ground, the individual (seeded limb lengths, mass, a preferred lead,
+  asymmetry, age, condition), the stride (a correlated drift inside the footfall pattern), the gait continuum,
+  attention (bouts, the head on its own clock) and soft parts that follow late. Deterministic from the instance's
+  seed so a host and its mirrors agree; the feet still plant. The size of stride-to-stride variation per gait is to
+  be read from the literature before a number is written.
+- **Not decided.** Whether variation or carrying goes first; whether young unlike the adult get their own meshes;
+  whether nests keep strictly to the calendar. Load shares and every `care` row need reading and sources.
+- **Licences, as checked.** AVONET CC BY 4.0. The Amniote database is reported CC0 (confirm at the archive page).
+  The nest-traits data (Sheard et al. 2024) and COMBINE (Soria et al. 2021) are not confirmed and are not used
+  until they are.
+- **Asked the same day, its own lane.** "Every bird should have a "dive" ability - when used, they angle downwards
+  and tuck their wings and "speed blurs" ripple across the edges of the viewport". Today only a hunter with a prey
+  animal selected dives (`dive.js`).
