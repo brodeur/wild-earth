@@ -62,6 +62,7 @@ export class WoodpeckerControl {
     this.heights = animals.heights;   // the drawn terrain mesh, as the animals stand on it
     this.on = false; this.mode = 'fly'; this.female = false;
     this.v = V_CRUISE; this.baseY = 0; this.burst = true; this.uc = 0; this.undA = 0; this.boost = 0; this.prevY = 0; this.vy = 0;
+    this.vmax = V_MAX; this.vcruise = V_CRUISE; this.dive = null;   // the dive (dive.js; main.js sets it): its speed and pitch while it is on
     this.stamina = 1; this.tired = false;   // the wings' sprint meter (Shift: V_MAX for SPRINT_T s, else W tops at V_FAST)
     this.tree = null; this.h = 0; this.face = 0; this.hitch = null; this.hitchGap = 0; this.perch = 'ground';
     this.path = null; this.work = null; this.auto = null; this.granary = null; this.granaryRec = null;
@@ -143,7 +144,7 @@ export class WoodpeckerControl {
     const W = this.hudWas;
     if (h1?.firstChild) h1.firstChild.nodeValue = on ? 'acorn woodpecker ' : W.h1;
     if (help) help.innerHTML = on ? 'on a trunk: <kbd>W</kbd><kbd>S</kbd> hitch up, down · <kbd>A</kbd><kbd>D</kbd> round · <kbd>space</kbd> fly · '
-      + 'flying: <kbd>W</kbd><kbd>S</kbd> speed · <kbd>A</kbd><kbd>D</kbd> turn · <kbd>↑</kbd><kbd>↓</kbd> climb, dive · drag to orbit the camera · <kbd>space</kbd> burst · fly into a trunk to cling · <kbd>S</kbd> low to land · '
+      + 'flying: <kbd>W</kbd><kbd>S</kbd> speed · <kbd>A</kbd><kbd>D</kbd> turn · <kbd>↑</kbd><kbd>↓</kbd> climb, descend · <kbd>1</kbd> dive · drag to orbit the camera · <kbd>space</kbd> burst · fly into a trunk to cling · <kbd>S</kbd> low to land · '
       + '<kbd>E</kbd> take an acorn; at your granary, hammer it in · <kbd>M</kbd> map · <kbd>P</kbd> present day · <kbd>T</kbd> tags · <kbd>N</kbd> mute · <kbd>B</kbd> back to spirit form · click a tree to identify' : W.help;
     const agl = $('agl')?.previousElementSibling, sp = $('speed')?.previousElementSibling;
     if (agl) agl.textContent = on ? 'height above ground' : W.agl;
@@ -426,19 +427,26 @@ export class WoodpeckerControl {
 
   fly(dt, k, jump, act) {
     const f = this.flight, P = f.pos, ps = this.pose;
-    const sprinting = k.sprint && k.fwd > 0 && !this.tired, cap = sprinting ? V_MAX : this.tired ? V_CRUISE : V_FAST;   // W holds V_FAST; Shift W the true top while the wings last
+    // The dive (dive.js, 2026-11-11: the free dive every bird has): while it is on the speed is the fall's and the nose is
+    // the dive's, the wings shut and the undulation still; through its pull-out the pitch is still the dive's.
+    this.dive?.steer(dt);
+    const dv = !!this.dive?.active, held = dv || this.dive?.pull > 0;
+    const sprinting = !dv && k.sprint && k.fwd > 0 && !this.tired, cap = sprinting ? V_MAX : this.tired ? V_CRUISE : V_FAST;   // W holds V_FAST; Shift W the true top while the wings last
     this.stamina = Math.max(0, Math.min(1, this.stamina + (sprinting && this.v > V_FAST * 0.95 ? -dt / SPRINT_T : dt / RECOVER)));
     if (this.stamina <= 0) this.tired = true; else if (this.stamina > 0.5) this.tired = false;
-    if (k.fwd > 0) this.v = this.v > cap ? damp(this.v, cap, 2, dt) : Math.min(cap, this.v + ACCEL * dt);
+    if (dv) { /* the fall's speed (dive.js steerFree) */ }
+    else if (k.fwd > 0) this.v = this.v > cap ? damp(this.v, cap, 2, dt) : Math.min(cap, this.v + ACCEL * dt);
     else if (k.fwd < 0) this.v = Math.max(V_MIN, this.v - DECEL * dt);
     else this.v = damp(this.v, V_CRUISE, 0.25, dt);   // left alone, back to an easy cruise
     f.yaw += k.turn * TURN * dt;
-    f.pitch = clamp(f.pitch + k.pitch * PITCH_RATE * dt, -PITCH_MAX, PITCH_MAX);
-    if (!k.pitch && !f.drag) f.pitch = damp(f.pitch, 0, 0.5, dt);   // settles to level flight
+    if (!held) {
+      f.pitch = clamp(f.pitch + k.pitch * PITCH_RATE * dt, -PITCH_MAX, PITCH_MAX);
+      if (!k.pitch && !f.drag) f.pitch = damp(f.pitch, 0, 0.5, dt);   // settles to level flight
+    }
     if (jump) this.boost = 0.5;
     const fx = -Math.sin(f.yaw), fz = -Math.cos(f.yaw), ch = Math.cos(f.pitch), sh = Math.sin(f.pitch);
     // the undulation: bursts of beats rising, a closed-wing dip falling; slow, braking or climbing hard it beats on
-    const steady = this.v < 4.5 || k.fwd < 0 || f.pitch > 0.3 || this.boost > 0;
+    const steady = this.v < 4.5 || k.fwd < 0 || f.pitch > 0.3 || this.boost > 0 || held;
     this.uc += dt;
     if (this.burst) { if (this.uc >= BURST && !steady) { this.burst = false; this.uc = 0; } }
     else if (this.uc >= DIP || steady) { this.burst = true; this.uc = 0; }
@@ -453,11 +461,11 @@ export class WoodpeckerControl {
     if (this.baseY > g + CEIL) this.baseY = damp(this.baseY, g + CEIL, 2, dt);
     P.y = Math.max(g + 0.2, this.baseY + this.undA * o);
     // pose: wings beating in the burst, shut in the dip; the body follows the climb and the dip
-    const beating = this.burst || this.undA < 0.03;
-    ps.amp = damp(ps.amp, beating ? 1 : 0, 20, dt); ps.fold = damp(ps.fold, beating ? 0 : 0.8, 20, dt);
+    const beating = !dv && (this.burst || this.undA < 0.03);
+    ps.amp = damp(ps.amp, beating ? 1 : 0, dv ? 8 : 20, dt); ps.fold = damp(ps.fold, dv ? 1 : beating ? 0 : 0.8, dv ? 7 : 20, dt);   // a dive: the wings shut against the body
     if (beating) ps.phase += dt * TAU * BEAT * (this.v < 4.5 ? 1.15 : 1);
     ps.flick = damp(ps.flick, 0, 10, dt);
-    ps.pitch = damp(ps.pitch, -Math.atan2(this.vy, Math.max(1, this.v)) * 0.7 + (beating ? -0.06 : 0.12), 10, dt);
+    ps.pitch = damp(ps.pitch, dv ? -f.pitch : -Math.atan2(this.vy, Math.max(1, this.v)) * 0.7 + (beating ? -0.06 : 0.12), 10, dt);   // a dive: the body along the fall
     ps.yaw = f.yaw + Math.PI; ps.roll = damp(ps.roll, -k.turn * 0.45, 6, dt);
     // E: to the nearest acorn within reach
     if (act) { this.flyAction(); if (this.mode !== 'fly') return; }

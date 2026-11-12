@@ -27,6 +27,12 @@ for what no rank above says. resolve(code) merges the chain kingdom -> phylum ->
   catch                  the family's catch move, passed through as the tree gives it (a cat's leap and neck bite, a
                          canid's mousing pounce, a hawk's talon strike and mantle, a corvid's bill stab; a species block
                          may override its reach): the client's hunters catch by it (docs/movement.md "The catch")
+  dive                   a bird's fall with the wings closed (the tree's `dive` block: the body's drag coefficient and the
+                         steepest angle, set at the class and overridden where a group's own is measured): the frontal
+                         area S_b = 0.00813 M^0.666 m^2 (Pennycuick 1989, the allometry the measured drag coefficients
+                         were worked out with), the terminal speed sqrt(2 M g / (rho cd S_b)) in sea-level air (rho
+                         1.23), so it rises with M^(1/6); the top at the steepest angle is terminal x sqrt(sin angle).
+                         The client's dive gains speed as that falling body does (client/src/dive.js)
 Everything a species' record or the species block gives wins over the derivation. The output is a plain table per
 species the client reads (client/src/locomotion.js) to fill the fields its hand-tuned tables (groundControl.js GROUND,
 flierControl.js FLIERS) do not give, and for a species that has no hand-tuned entry at all: a new species on a new
@@ -41,6 +47,8 @@ from pathlib import Path
 
 LIB = Path(__file__).resolve().parent.parent / "library" / "animals"
 G = 9.81
+RHO = 1.23                      # kg/m^3: sea-level air (the dive's drag)
+FRONTAL = (0.00813, 0.666)      # a bird's body frontal area, m^2 = a M^b (Pennycuick 1989)
 RANKS = ["kingdom", "phylum", "class", "order", "family", "genus"]
 
 
@@ -71,6 +79,18 @@ def vmax_garland(mass_kg: float) -> float:
     """Garland 1983: the maximal running speed of mammals by mass, in m/s (fitted on 106 species)."""
     lm = math.log10(max(mass_kg, 0.005))
     return 10 ** (1.478 + 0.259 * lm - 0.0623 * lm * lm) / 3.6
+
+
+def dive_of(d: dict, mass_kg: float) -> dict:
+    """A bird's dive from the tree's block (cd, angle_deg, pull_g_at_half_top) and its mass: the terminal speed of the
+    tucked body in a vertical fall, the steepest angle, the top speed at that angle (m/s, degrees)."""
+    sb = FRONTAL[0] * mass_kg ** FRONTAL[1]
+    vt = math.sqrt(2 * mass_kg * G / (RHO * d["cd"] * sb))
+    ang = float(d.get("angle_deg", 64))
+    out = {"terminal_mps": round(vt, 1), "angle_deg": ang, "top_mps": round(vt * math.sqrt(math.sin(math.radians(ang))), 1), "cd": d["cd"]}
+    if d.get("pull_g_at_half_top"):
+        out["pull_g_at_half_top"] = d["pull_g_at_half_top"]
+    return out
 
 
 def resolve(code: str, tree: dict | None = None, rec: dict | None = None) -> dict | None:
@@ -119,6 +139,8 @@ def resolve(code: str, tree: dict | None = None, rec: dict | None = None) -> dic
         out["stalk_mps"] = merged["stalk_mps"]
     if merged.get("hop"):   # the lagomorphs' gait set (client/src/gait.js hopStep: the shuffle, the half-bound, the hares' observation hop)
         out["hop"] = {k: v for k, v in merged["hop"].items() if k != "note"}
+    if cls == "Aves" and (merged.get("dive") or {}).get("cd"):   # a bird's fall with the wings closed (the class's rule, a group's own drag and angle)
+        out["dive"] = dive_of(merged["dive"], mass)
     if merged.get("catch"):   # the family's catch move (docs/movement.md "The catch"): the client picks a hunter's catch by it
         out["catch"] = merged["catch"]
     return out

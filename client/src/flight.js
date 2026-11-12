@@ -225,13 +225,14 @@ export class RavenFlight {
     // W speeds up to sp.fast (a pace the bird holds; the true top sp.vmax is the sprint's, or a dive's); S slows to a stop
     // and, if held on past zero for half a second, backs up. Shift is the sprint: full speed for sp.sprint s, then the
     // wings are tired until they come back over sp.recover s (owner, 2026-10-29: every animal's top is not its top).
-    const boost = (k.has('ShiftLeft') || k.has('ShiftRight')) && !this.tired, fast = sp.fast ?? sp.cruise * 1.5;
-    if (k.has('KeyW')) { this.hover = false; if (this.speed < fast) this.speed = Math.min(fast, this.speed + 8 * dt); }
+    // fall: a free dive (dive.js) has the speed, a falling body's: W, S and Shift wait, the wings are shut
+    const fall = !!this.fall, boost = (k.has('ShiftLeft') || k.has('ShiftRight')) && !this.tired && !fall, fast = sp.fast ?? sp.cruise * 1.5;
+    if (k.has('KeyW') && !fall) { this.hover = false; if (this.speed < fast) this.speed = Math.min(fast, this.speed + 8 * dt); }
     if (boost) { this.hover = false; this.speed += 20 * dt; }
     { const sprinting = boost && this.speed > sp.cruise * 1.2;
       this.stamina = Math.max(0, Math.min(1, this.stamina + (sprinting ? -dt / (sp.sprint || 8) : dt / (sp.recover || 30))));
       if (this.stamina <= 0) this.tired = true; else if (this.stamina > 0.5) this.tired = false; }
-    if (k.has('KeyS')) {
+    if (k.has('KeyS') && !fall) {
       if (this.speed > 0.4) { this.speed = Math.max(0, this.speed - 8 * dt); this.sDwell = 0; }
       else if (this.speed >= -0.01 && (this.sDwell += dt) < 0.5) this.speed = 0;    // pause at zero: hover
       else this.speed = Math.max(-6, this.speed - 5 * dt);                           // then reverse
@@ -246,11 +247,11 @@ export class RavenFlight {
       this.speed = THREE.MathUtils.lerp(this.speed, S.v, 1 - Math.exp(-dt * 0.8));
     } else if (this.hover) this.speed = THREE.MathUtils.lerp(this.speed, 0, 1 - Math.exp(-dt * 2.5));
     const gliding = this.speed > 4 && !this.hover;
-    if (gliding) {
+    if (gliding && !fall) {
       // Diving speeds up, climbing slows down; a glide settles toward cruise.
       this.speed += -Math.sin(this.pitch) * 6 * dt - (this.speed - sp.cruise) * 0.15 * dt;
     }
-    this.speed = THREE.MathUtils.clamp(this.speed, -6, sp.vmax);
+    this.speed = THREE.MathUtils.clamp(this.speed, -6, this.vcap ?? sp.vmax);   // vcap: a dive's speed over the flight's top, and its shedding after (dive.js)
     const holding = this.hover || Math.abs(this.speed) < 1.0;   // near zero: hold altitude like hover
     // Attitude first, then fly along the direction the bird actually points, so view and motion never disagree.
     this._q.setFromEuler(this._e.set(this.pitch, this.yaw, 0));
@@ -263,7 +264,7 @@ export class RavenFlight {
     this.pos.y += vert * sp.climb * dt;
     this.flap = Math.max(0, this.flap - dt * 2.5);
     // Wings work when the bird is climbing, driving, hovering or too slow to glide; otherwise it glides.
-    this.flapping = this.flap > 0 || vert > 0 || boost || k.has('KeyW') || (this.pitch > 0.12 && !soar) || (!gliding && !soar);
+    this.flapping = !fall && (this.flap > 0 || vert > 0 || boost || k.has('KeyW') || (this.pitch > 0.12 && !soar) || (!gliding && !soar));
     this.noLand = Math.max(0, this.noLand - dt); this.bounceT = Math.max(0, this.bounceT - dt);
     if ((this.leftT -= dt) <= 0) this.leftRec = null;
     this.pos.x = THREE.MathUtils.clamp(this.pos.x, 50, this.heights.size - 50);

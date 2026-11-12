@@ -131,7 +131,9 @@ that saw it all the same: their run to hide follows the runway at 1.6 m/s, slowe
 saw it bolted out of sight and the dive was called off. Earlier runs had a ground squirrel go down its burrow and a
 jackrabbit run into cover the same way. Since 2026-11-08 a lit prey animal reads as a dim orb round a bright heart, with the spirit's
 soul column ("spike") over it, grown with distance so it reads from a dive's height; a group stands one spike at its
-centre (decisions, "a lit prey animal reads as a dim orb, a bright heart and the spirit's spike").
+centre (decisions, "a lit prey animal reads as a dim orb, a bright heart and the spirit's spike"). Since 2026-11-11 the same key with no prey selected (or one the stoop cannot be made at) is the free dive every
+bird has: nose down, wings tucked, the speed of a fall, streaks at the edges of the view, pulling out by itself over the
+ground (docs/movement.md "The dive").
 
 The strikes (2026-11-06, `client/src/strikes.js`, `combat.js`; decisions, "the hunt's strikes"): with a prey animal
 selected a walking hunter has its family's strikes (the cats bite, swipe, pounce; the bears add a swipe to bite and lunge;

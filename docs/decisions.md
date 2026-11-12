@@ -9450,3 +9450,64 @@ automate the generation of these per species in a reliable way", and "I also wan
 - **Asked the same day, its own lane.** "Every bird should have a "dive" ability - when used, they angle downwards
   and tuck their wings and "speed blurs" ripple across the edges of the viewport". Today only a hunter with a prey
   animal selected dives (`dive.js`).
+
+## 2026-11-11: Every bird dives; the fall's speed from the tree; streaks at the edges of the view (branch claude/free-dive)
+
+Aaron, 2026-11-11: "Every bird should have a "dive" ability - when used, they angle downwards and tuck their wings and
+"speed blurs" ripple across the edges of the viewport".
+
+- **What it is.** 1 (or Q, or the bar's slot) in the air as any bird: the nose goes down to the species' steepest
+  angle, the wings tuck, no wingbeat, and the bird gains speed as a falling body does; A and D still turn it. Until now
+  only a hunting flier with a prey animal selected dived (2026-11-06). That stoop is kept: with a prey selected, in
+  sight, below and killable, the same key is the stoop at it; otherwise it is the free dive. The fliers, the raven and
+  the acorn woodpecker have it; the birds that fly only in a flush (the turkey, the quails, the grouse, the heron, the
+  ducks) drop to the ground with the wings shut, as a quail drops into cover.
+- **Stated once, at the class.** A bird with its wings closed is a falling body, so the tree says it at Aves and
+  nothing per species: the speed gains g sin(angle) less g (v / terminal)^2 a second; the terminal speed is
+  sqrt(2 M g / (rho cd S_b)) with Pennycuick's frontal area, so it rises with mass^(1/6) and comes from the record's
+  mass (`pipeline/locomotion.py` `dive_of`, into each tile's `locomotion.json`). The tree gives two numbers: the tucked
+  body's drag coefficient and the steepest angle. Aves: cd 0.37 (the mean from small passerines' dives on radar,
+  Hedenström and Liechti 2001) and 64° (the steepest tracked dive with a source: a peregrine and a goshawk, Alerstam
+  1987; a gyrfalcon to 62°, Tucker, Cade and Tucker 1998). Falconidae: cd 0.18 (a peregrine's body, Tucker 1998) and
+  87°. The client holds no dive table: `dive.js` reads the row; a stand-in reads its kin's at its own mass; with no
+  row at all the dive is the flight's own steepest pitch and top speed.
+- **What has no source, said so.** 87° for the falcons is the limit the stoop at prey already had, not a measurement
+  (the tracked dives stop at 64°). The passerines' drag stands for the hawks, the vultures, the owls, the gulls and the
+  rest, whose own was not found. A red-tail's "120 mph" and a golden eagle's "150 to 200 mph" are repeated without a
+  measurement and are not used. An owl's open-winged drop, a gull's or a vulture's reluctance to stoop and the plunge
+  divers are not told apart: no number was invented for them. Of Hedenström and Liechti only the abstract was read, of
+  the gyrfalcon paper its angles (its fastest speed is second hand and is quoted as such in the tree's note).
+- **The speeds are ceilings.** A red-tail's 70 m/s at 64° takes about a kilometre of fall; the radar's real stoops ran
+  at 30 to 39 m/s. A jay's drop is short because its height is: 17 m/s from 27 m. That is the falling body doing the
+  work, not a cap per species, which is why none is written.
+- **The stoop at prey now tops out by the same fall.** It keeps its own push and its turn at the prey; its cap was the
+  flight's `vmax` and is now that or the fall's speed for its slope where that is higher, so a long steep stoop can
+  pass 45 m/s. A shallow one is as it was.
+- **How it ends** (asked to decide): the key again; Escape (which then does not also leave the body); a key that asks
+  for the wings (the up arrow, Space, S, X, H); a bump against wood; and the ground. A press toggles, as the stoop's
+  key does: a held key would take a hand from the steering. The guard steps the pull-out ahead each frame at the
+  present speed and pulls out by itself where that path would come within 2 m plus a tenth of a second of the fall of
+  the ground, a rock or the water; over a wood the crowns are the floor, because a first cut that guarded only the
+  ground pulled a 70 m/s hawk out 8 m up among the oaks and it hit one. A bird already under the crowns is guarded by
+  the ground alone, so a jay can still drop off a limb. The pull-out is the stoop's; the open wings' drag (Tucker's
+  1.5 g at half the top speed, as the square of the speed) sheds the dive's speed back to the flight's top. After a
+  free dive a soarer flies on; it circles again only after a stoop.
+- **The tuck is the wing rig's own.** The soarers' sweep and the perchers' fold were already there (`winged`'s modes);
+  the raven's flying model sweeps the joints of its landing fold 0.8 of the way with the wing full size; the
+  woodpecker shuts its wings as in its undulation's dip. No rig was added. A group member's diving bird shows it: the
+  pose rides in the body's sample as before, and the raven's tuck now goes out as its pose.
+- **The streaks are a 2D canvas, not a pass.** `speedBlur.js`: soft pale lines pointing away from the heading's point
+  on the screen, through a band at the frame's edges, in gusts that run round the frame, over a faint vignette;
+  stronger with the speed between the species' cruise and its dive top; in at the start, out through the pull-out. The
+  middle of the frame is always clear. A canvas over the world costs the shaders nothing (they are at 16 texture units
+  and 16 attributes on ANGLE/Metal) and needs no render target; the canvas is made at the first dive and is not
+  displayed otherwise. `prefers-reduced-motion`: the vignette only, still. A first cut drew hard wedges, which read as
+  spears; a second, softer, was invisible at low speed because count, size and opacity all fell with the strength at
+  once; the opacity now goes as its square root.
+- **Checked** (docs/movement.md "The dive" has the numbers): free dives as the hawk, the jay, the raven, the woodpecker
+  and a stand-in; every key that ends it; the stoop at prey still catches and mantles; all 48 flier entries of the home
+  tile, the raven, the woodpecker and the 15 flushing birds have the slot; a mirror's copy of the hawk and the raven
+  tucks; the streaks' draw is 0.19 ms a frame and the frame interval with and without them was the same within the
+  noise of a loaded machine; reduced motion draws no streak. Tests: 4 new in `tests/test_locomotion.py`.
+- **Open.** No wind sound; the camera does not pull back or widen; the AI's birds other than the hawk do not dive; a
+  real screen's frame rate and two pages through the hub were not run; the groups with no source (above) want reading.

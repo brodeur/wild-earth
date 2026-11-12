@@ -789,25 +789,39 @@ export class GroundControl {
     this.fl = { u: 0, T: S.flush.T, y0: P.y, peak: S.flush.peak, v: S.flush.v, more: 0 };
     this.mode = 'fly'; this.resting = false; this.sit = 0;
   }
+  // The dive of a bird that flies only in a flush (dive.js, 2026-11-11: every bird has one): 1 or Q in the flush and it
+  // shuts its wings and drops to the ground under it, as a quail drops into cover: the fall's own speed (the tree's
+  // terminal speed for its mass), no steeper than the tree's angle; it lands where it comes down (over deep water it
+  // opens its wings and glides on instead).
+  dropFlush() {
+    const L = this.fl; if (this.mode !== 'fly' || !L || L.drop) return false;
+    L.drop = true; L.vy = 0; return true;
+  }
   fly(dt, k, again) {
     const f = this.flight, P = f.pos, S = this.S, ps = this.pose, L = this.fl;
-    if (again && L.more < 3 && L.u > 0.3) { L.more++; L.u = Math.max(0.3, L.u - 0.3); L.y0 = P.y; L.peak = 1; }   // a few more beats
-    L.u = Math.min(1, L.u + dt / L.T);
+    if (again && L.more < 3 && L.u > 0.3 && !L.drop) { L.more++; L.u = Math.max(0.3, L.u - 0.3); L.y0 = P.y; L.peak = 1; }   // a few more beats
+    if (!L.drop) L.u = Math.min(1, L.u + dt / L.T);
     f.yaw += k.turn * S.turn * 0.5 * dt;
     const u = L.u, oy = P.y, fx = -Math.sin(f.yaw), fz = -Math.cos(f.yaw);
     P.x = clamp(P.x + fx * L.v * dt, 5, this.tile.size - 5); P.z = clamp(P.z + fz * L.v * dt, -this.tile.size + 5, -5);
     const F = this.sq.footing(P.x, P.z, P.y + 1), g = F.surf !== null ? Math.max(F.bed, F.surf) : F.y;
     const rise = u < 0.25 ? Math.sin(u / 0.25 * Math.PI / 2) : 1 - Math.pow((u - 0.25) / 0.75, 2.2);
-    P.y = Math.max(g + 0.15 * (1 - u), L.y0 + (g - L.y0) * u + L.peak * rise);
-    if (u >= 1) {
+    let down = u >= 1;
+    if (L.drop) {   // the dive: a fall with the wings shut (dropFlush)
+      const D = this.dive?.spec('flush') || null, vt = D?.vt || 40, steep = Math.tan(D?.angle || 1.1);
+      L.vy = Math.max(-L.v * steep, L.vy - 9.81 * (1 - (Math.hypot(L.v, L.vy) / vt) ** 2) * dt);
+      P.y = oy + L.vy * dt; down = P.y <= g + 0.02;
+      if (down && F.depth > S.wade) { L.drop = false; P.y = g + 0.3; }
+    } else P.y = Math.max(g + 0.15 * (1 - u), L.y0 + (g - L.y0) * u + L.peak * rise);
+    if (down) {
       if (F.depth > S.wade) { L.u = 0.85; L.y0 = P.y; L.peak = 0.3; }   // over water: glide on
       else { P.y = F.surf !== null ? F.bed : F.y; this.setWet(F); this.mode = 'ground'; this.v = Math.min(S.run, L.v * 0.3); this.fl = null; }
     }
-    const whirr = u < S.flush.up || u > 0.93, glide = !whirr;
-    ps.amp = damp(ps.amp, whirr ? 1 : 0, 25, dt); ps.pose = damp(ps.pose, this.mode === 'fly' ? 0 : 1, 20, dt);
+    const drop = !!L.drop, whirr = !drop && (u < S.flush.up || u > 0.93), glide = !whirr && !drop;
+    ps.amp = damp(ps.amp, whirr ? 1 : 0, 25, dt); ps.pose = damp(ps.pose, this.mode === 'fly' && !drop ? 0 : 1, drop ? 12 : 20, dt);   // (a dive: the wings shut)
     if (whirr) ps.phase += dt * TAU * S.flush.beat; else ps.phase = damp(ps.phase, Math.round(ps.phase / TAU) * TAU + 0.6, 8, dt);
     ps.e0 = damp(ps.e0, glide ? 1 : 0, 6, dt); ps.e1 = damp(ps.e1, u > 0.85 ? 1 : 0.4, 8, dt);
-    ps.pitch = -Math.atan2((P.y - oy) / Math.max(dt, 1e-3), L.v) * 0.6; ps.roll = damp(ps.roll, -k.turn * 0.4, 4, dt); ps.lift = 0; ps.flick = damp(ps.flick, 0, 6, dt);
+    ps.pitch = -Math.atan2((P.y - oy) / Math.max(dt, 1e-3), L.v) * (drop ? 1 : 0.6); ps.roll = damp(ps.roll, -k.turn * 0.4, 4, dt); ps.lift = 0; ps.flick = damp(ps.flick, 0, 6, dt);   // (a dive: the body along the fall)
     ps.e2 = damp(ps.e2, 0, 8, dt);   // the head's lead into a turn (animate): straight in the air
   }
 
