@@ -81,8 +81,31 @@ window.__ct = (() => {
     await record({ dur, every, cols: 4, w: 480, at, label: 'AI fox+lizard' });
     return { started, kills: C.kills.map(k => ({ prey: k.prey, by: k.by, at: ((k.t - t0) / 1000).toFixed(2) })), log, fox: st(fox), liz: st(liz), site: liz.site?.kind, yGround: A.heights.atXZ(liz.x, liz.z).toFixed(2) };
   };
+  // the player as the lion with strikes (combat.js, 2026-11-06: a hunter with strikes no longer kills by the rush alone, so
+  // lionPlayer below ends in no leap): set d m behind a deer, the deer selected and one hit from dead, the pounce used:
+  // the crouch, the leap, the kill at the landing, the feeding crouch; a side camera on the player's body (fov deg, side m).
+  C.lionStrike = async ({ d = 3, dur = 4.5, every = 0.3, cols = 4, w = 560, fov = 34, side = 3.4, hour = 10 } = {}) => {
+    we.setHour(hour); const P = we.flight.pos, g = we.ground, cb = we.combat;
+    const lion = pick('puma_concolor', P.x, P.z, a => !a.group || a.group.leader === a); if (!lion && !g.on) throw new Error('no lion');
+    C.notice0 ||= A.noticeAt; A.noticeAt = () => 0;
+    if (!g.on) { we.spirit.enter(lion.id); await wait(2500); }
+    const deer = pick('odocoileus_hemionus', P.x, P.z, a => a.group && !a.dead); if (!deer) throw new Error('no deer');
+    deer.group.fleeT = 0; const fx = Math.sin(deer.yaw), fz = Math.cos(deer.yaw);
+    P.set(deer.x - fx * d, A.heights.atXZ(deer.x - fx * d, deer.z - fz * d), deer.z - fz * d); we.flight.yaw = Math.atan2(-fx, -fz); g.place(P.x, P.z); g.v = 0;
+    await wait(400); we.quarry.select(deer); C.kills.length = 0; const used = [], modes = new Set();
+    const low = () => { deer.hp = 0.5; deer.hitAt = A.time; };   // (health comes back REGEN_DELAY s after hitAt: hold it down)
+    const at = c => { c.fov = fov; c.updateProjectionMatrix(); const y = we.flight.yaw, rx = Math.cos(y), rz = -Math.sin(y); c.position.set(P.x + rx * side, P.y + 0.9, P.z + rz * side); c.lookAt(P.x, P.y + 0.35, P.z); };
+    const pre = t => {
+      if (!deer.dead) low();
+      if (g.mode === 'ground' && !deer.dead) for (const k of ['pounce', 'bite', 'swipe']) if (cb.canUse(k)) { if (cb.use(k)) used.push(`${k}@${t.toFixed(2)}`); break; }
+      const s = g.mode + (g.strike ? ':' + g.strike.kind + (g.strike.crouch ? '-crouch' : '') : '') + (g.feeding ? ' feed' : ''); modes.add(s); return s;
+    };
+    await record({ dur, every, cols, w, at, label: 'player lion', pre });
+    return { used, kills: C.kills.length, dead: !!deer.dead, modes: [...modes], feeding: !!g.feeding, pose: +g.pose.pose.toFixed(2) };
+  };
   // the player as the lion (the spirit into the nearest lion), set d m behind a deer herd's leader facing it, Shift+W held:
   // the rush, the leap, the kill at the landing, the feeding crouch; the live chase camera. The deer blind to the player.
+  // (Since combat.js the rush alone does not leap: see lionStrike above.)
   C.lionPlayer = async ({ d = 9, dur = 4, every = 0.25 } = {}) => {
     we.setHour(6.5); const P = we.flight.pos;
     const lion = pick('puma_concolor', P.x, P.z, a => !a.group || a.group.leader === a); if (!lion) throw new Error('no lion');

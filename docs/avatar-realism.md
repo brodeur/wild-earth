@@ -143,8 +143,20 @@ coyote's is turned about 25 degrees in the source and it shows), and a painted c
 The pose is the gate to tighten: reject at the 20-credit preview, never at the refine.
 
 On the home tile the hand-built lion is a faceted shape and the pipeline's is a cougar (`home_lion_before_after.jpg`,
-`home_lion_light_matched.jpg`, `lineup_lion_gaits.jpg`). Not exercised on the new body: the pounce, the leap and the
-kill, climbing a tree, the tail-tip twitch.
+`home_lion_light_matched.jpg`, `lineup_lion_gaits.jpg`).
+
+The hunt on the new body, filmed on the home tile before the merge (2026-11-12, `scratch/catch_harness.js`): the AI
+lion's stalk behind its leader (pose 0.45), the rush, the leap (state 93, lift to 0.55 m), the kill at the landing and
+the crouch over it, three hunts, three kills (`home_lion_ai_hunt.jpg`, `home_lion_ai_leap_feed.jpg`); the player's
+pounce (the crouch, the leap, the landing), the kill and the feeding crouch, the stalk on Alt+W, and the tail's last
+joint swinging with the twitch as the lion lies (`home_lion_player_pounce.jpg`, `home_lion_player_feed_stalk.jpg`,
+`home_lion_tail_twitch.jpg`). The body holds in each: no torn skin, no folded joint, the tail with the body. The
+poses are the leg engine's, as before; only the surface is new. What the film cannot say: the twitch is a small
+movement seen from above in dim light, and the feed was seen through grass from the side and clear only from above.
+The lion does not climb in this game (`climb: 0` in its row; the player's lion has no climb), so there is nothing
+to check there. Frame times on the page were 80 to 100 ms on a machine at load 10 to 13, the same on main at the
+same place (84 ms), with the animals' update at 1.6 ms against main's 1.5 ms: the branch adds no measurable cost
+there, and the film's uneven time stamps are the machine's.
 
 **The coyote is built but held back.** Its generated coat is not a coyote's: a grey back with a black saddle and
 rufous legs, nearer a jackal, on a head turned in the source. The pipeline's colour check passed it; anyone who knows

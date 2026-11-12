@@ -9656,3 +9656,26 @@ nothing to the screen by the pipeline, unchanged except for rules it turned out 
   The coyote is held: its generated coat is nearer a jackal's (grey back, black saddle, rufous legs) and its head is
   turned in the source. The fauna step's colour check passed it, so that gate is not enough: a likeness check against
   reference photographs is the next rule to write, before more credits go to the other home species.
+
+## 2026-11-12: The lion's hunt checked on its new body; avatar realism merged (scratch/catch_harness.js lionStrike; docs/avatar-realism.md)
+
+Aaron chose "check, then merge". The check, on the home tile at 10:00 with the catch harness:
+
+- **The AI lion**: three hunts set 6.5 to 9.5 m behind a deer, three kills. The rush, the leap (lift to 0.55 m), the
+  kill at the landing and the crouch over it all hold on the hero pool tiers; a follower's stalk (pose 0.45) holds.
+- **The player's lion**: the pounce (crouch, leap, landing), the kill, the feeding crouch (pose 1), the stalk on Alt+W
+  and the tail's twitch lying down (e1 from -0.69 to 0.68) hold on the hero body with its fur shells.
+- **No climb to check**: the lion's row has `climb: 0` and the player's lion has no climb.
+- **Cost**: frames on the page were 80 to 100 ms with the machine at load 10 to 13; main at the same place gave 84 ms,
+  and the animals' update took 1.6 ms against main's 1.5 ms. Turning the fur shells off changed nothing measurable.
+- **The harness**: since combat.js a hunter with strikes does not kill by the rush alone, so `lionPlayer` ends with no
+  leap on main as well. `lionStrike` is the test now: the deer selected and one hit from dead, the pounce used.
+- **A harness trap, not a fault of the game**: wrapping `ground.update` without returning its value threw in the frame
+  at `minimap.update(flight.pos, f.heading)` and stopped rendering; the page then showed stale frames with pool animals
+  bright against a dark scene. Captures from that stretch were thrown away.
+- **Also seen and left**: the harness's own render (no post pass) draws every pool animal brighter than the scene at
+  dawn, on main too. It is the harness, not the hero material.
+
+Not checked still: two browsers as host and mirror, a phone-class GPU, the fur at speed, the gaits in the world after
+the swing bound (lineup only). The weak list in docs/avatar-realism.md stands: the big ungulates' short stride and the
+giraffe's walk come from rig legs that are short for the body, and merge with this.
