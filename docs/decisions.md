@@ -9564,3 +9564,14 @@ whole account; the decisions:
   and both row rules in `pipeline/locomotion.py`; the 18 tiles' `locomotion.json` written again from the merged tree
   equal the merged files. Not checked by anyone: two real browsers as host and mirror, a far herd on film, a real
   screen's frame rate, the lead change's transient.
+
+## 2026-11-11: The free dive merged; what the check on main found
+
+- **Checked on main** (Lamar, a red-tailed hawk from 800 m): the dive noses down to -1.11 rad, 21 to 42 to 63 m/s, a
+  peak of 68.5 of the tree's 70.1 m/s, and ends by itself at 33 m above the ground; the streaks' strength goes 0.32
+  to 0.91 and they stay at the frame's edges; no console errors. After the stride lane merged, the keys were run
+  again (1 and Q start, 1 again or Esc calls off, up, space, S, X and H pull up, a turn holds the dive).
+- **The minimap sits above the streaks.** The streak canvas (z-index 3) drew over the minimap; `#minimap` now has
+  z-index 5 (`client/index.html`).
+- **Not checked**: the jay's and raven's speeds, the stoop's catch and the streaks' cost are the lane's own figures;
+  a real screen's frame rate and the mirror's tuck through two pages were not run.
