@@ -56,6 +56,7 @@ export const FIELDS = [
   ['spd', 2, 'lerp'], ['wr', 2, 'lerp'], ['pose', 2, 'lerp'], ['amp', 2, 'lerp'], ['flick', 2, 'lerp'], ['vis', 2, 'lerp'], ['lift', 2, 'lerp'],
   ['e0', 2, 'lerp'], ['e1', 2, 'lerp'], ['e2', 2, 'lerp'], ['e3', 2, 'step'], ['state', 0, 'step'], ['phase', 2, 'phase'], ['phz', 1, 'step'],
   ['fl', 0, 'step'], ['speed', 2, 'step'],
+  ['sc', 3, 'step'],   // a legged animal's stride clock (gait.js: strides counted, the fraction the phase; legs.js sets a.sc and a mirror's engine locks to it, so both pages draw the same strides); 0 for the rest, never sent
 ];
 export const NF = FIELDS.length;
 export const F = Object.fromEntries(FIELDS.map((f, i) => [f[0], i]));   // field name -> index
