@@ -253,23 +253,28 @@ def find_tail(Pw, G, Wg, names, rest, H):
     at = lambda f: np.array([np.interp(f * length, arc, cl[:, k]) for k in range(3)])
     return {'mask': mask, 's': s, 'centre': cl, 'arc': arc, 'length': length, 'joints': [at(0), at(1 / 3), at(2 / 3)], 'tip': cl[-1]}, info
 
-def protrusion(Gh, Ph, tip, step):
+def protrusion(Gh, Ph, tip, step, flap=False):
     """From a tip vertex over a sub-mesh: bands of surface distance, each band's centre and mean radius; the root where a
-    band's radius passes 1.4 times the median of those before it. Returns (D the root's distance, centres tip->root)."""
+    band's radius passes 1.4 times the median of those before it. Returns (D the root's distance, centres tip->root).
+    flap: a flap that widens steadily from its tip (a cougar's ear, 2026-11-12: by the median it ended at its third band,
+    a cone's radius being twice its median all along): the root where the radius passes 2.2 times the median, or 1.6
+    times the band's before it (the skull's step)."""
     dt = geodesic(Gh, tip); mx = float(np.max(dt[np.isfinite(dt)])); cents, radii = [], []
     for b in range(int(mx / step) + 1):
         sel = (dt >= b * step) & (dt < (b + 1) * step)
         if sel.sum() < 3: continue
         c = Ph[sel].mean(0); r = float(np.linalg.norm(Ph[sel] - c, axis=1).mean())
-        if len(radii) >= 3 and r > 1.4 * np.median(radii): return b * step, np.array(cents), dt
+        if len(radii) >= 3 and (r > 2.2 * np.median(radii) or r > 1.6 * radii[-1] if flap else r > 1.4 * np.median(radii)):
+            return b * step, np.array(cents), dt
         cents.append(c); radii.append(r)
     return len(radii) * step, np.array(cents) if cents else Ph[[tip]], dt
 
-def find_ears(Pw, G, rough, stand, lum, Wg, names, rest, nose, H):
+def find_ears(Pw, G, rough, stand, lum, Wg, names, rest, nose, H, flap=False):
     """Ears: the head's protrusions (tips taken in turn as the farthest point from the head joint, each grown
-    back from its tip until its cross-section widens into the skull), kept when longer than 5% of the withers, tipped
+    back from its tip until its cross-section widens into the skull; none tried near the nose), kept when longer than 5% of the withers, tipped
     above the head joint, far from the nose, furred (its normals scatter) and not bare keratin (a horn: its outer part over 6 times as
-    light as the head's coat in the baked colour); the highest a side.
+    light as the head's coat in the baked colour); the highest a side, the sides by the head's median x. flap: grown by
+    protrusion's flap rule (the caller's second pass for a side the first did not find).
     Returns {side: {base, tip, k (the ear's weight per vertex: 1 on the ear, falling to 0 into the Head over the root's
     band), n}}."""
     J = {n: i for i, n in enumerate(names)}; hd = rest[J['Head']]; hl = float(np.linalg.norm(nose - rest[J['Neck']]))
@@ -277,18 +282,22 @@ def find_ears(Pw, G, rough, stand, lum, Wg, names, rest, nose, H):
     if len(head) < 30: return {}, {'why': 'no head region'}
     Gh = G[head][:, head]; Ph = Pw[head]
     dg = np.linalg.norm(Ph - hd, axis=1)   # the tips in turn: the farthest from the skull's centre
-    used = np.zeros(len(head), bool); out, cands = {}, []
+    # an ear's tip is far from the nose, so no tip is tried there (2026-11-12: a cougar's modelled whiskers, the farthest
+    # points from the skull, took all sixteen turns); and an ear's side is by the head's own midline, not the head joint's
+    # (a coyote whose head is turned a little in its source had both ears on one side of the joint)
+    used = np.linalg.norm(Ph - nose, axis=1) < 0.5 * hl; out, cands = {}, []
+    mid_x = float(np.median(Ph[:, 0]))
     for it in range(16):
         c_ = np.where(~used)[0]
         if not len(c_): break
         tip = int(c_[np.argmax(dg[c_])])
-        D, C, dt = protrusion(Gh, Ph, tip, 0.01 * H)
+        D, C, dt = protrusion(Gh, Ph, tip, 0.01 * H, flap)
         m = dt < D; used |= dt < max(D * 1.3, 0.02 * H)
         if m.sum() < 8: continue
         base = C[-1]; tipv = Ph[tip]; rgh = float(np.median(rough[head][m])); stn = float(np.median(stand[head][m]))
         mt = dt < 0.4 * D; stn_tip = float(np.median(stand[head][mt]))
         lum_ratio = float(np.median(lum[head][mt]) / max(np.median(lum[head]), 1e-4))   # a horn's bare keratin against the head's coat
-        side = 'L' if tipv[0] > hd[0] else 'R'
+        side = 'L' if tipv[0] > mid_x else 'R'
         ok = D > 0.05 * H and tipv[1] > hd[1] and np.linalg.norm(tipv - nose) > 0.5 * hl and rgh > 0.08 and lum_ratio < 6
         cands.append({'side': side, 'n': int(m.sum()), 'length_over_withers': round(D / H, 3), 'rough': round(rgh, 3), 'stand': round(stn, 4), 'stand_tip': round(stn_tip, 4), 'lum_ratio': round(lum_ratio, 2), 'tip': [round(float(x), 3) for x in tipv], 'ear': bool(ok)})
         if ok and (side not in out or out[side]['tip'][1] < tipv[1]):   # the highest furred protrusion a side
@@ -577,11 +586,15 @@ def main(argv):
     col_lin = np.where(col_lin <= 0.04045, col_lin / 12.92, ((col_lin + 0.055) / 1.055) ** 2.4) @ np.array([0.2126, 0.7152, 0.0722])
     lum_w = welded_mean(sample_map(col_lin, t0['TEXCOORD_0']), inv, n)
     ears, einfo = find_ears(Pw, G, rough_w, stand_w, lum_w, Wdw, names, rest0, nose, H)
+    if len(ears) == 1:   # one side only: the other may be a short, broad flap (a cat's); a second pass by the flap rule for it
+        e2, i2 = find_ears(Pw, G, rough_w, stand_w, lum_w, Wdw, names, rest0, nose, H, flap=True)
+        miss = 'L' if 'R' in ears else 'R'
+        if miss in e2: ears[miss] = e2[miss]; einfo['flap'] = {'side': miss, 'candidates': i2.get('candidates')}
     has_ears = 'L' in ears and 'R' in ears
     einfo['found'] = sorted(ears); einfo['used'] = has_ears
     if has_ears:
         for e in 'LR': einfo[e] = {'base': [round(float(x), 4) for x in ears[e]['base']], 'tip': [round(float(x), 4) for x in ears[e]['tip']], 'vertices': ears[e]['n']}
-    stats['ears'] = einfo; print('EARS', json.dumps({k: v for k, v in einfo.items() if k != 'candidates'}), 'candidates', einfo.get('candidates'))
+    stats['ears'] = einfo; print('EARS', json.dumps({k: v for k, v in einfo.items() if k not in ('candidates', 'flap')}), 'candidates', einfo.get('candidates'))
     hnames = names + (['Ear.L', 'Ear.R'] if has_ears else [])
     if has_ears: rest_h = np.vstack([rest_h, ears['L']['base'], ears['R']['base']])
     hj = len(hnames); HJ = {nm: i for i, nm in enumerate(hnames)}

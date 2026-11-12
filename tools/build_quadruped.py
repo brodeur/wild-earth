@@ -27,8 +27,9 @@
 #   - the head part: ahead of the fore feet and on the head's side of a plane at the neck base, pointing from it to the
 #     centre of the front 10% of the body (a giraffe's neck, an elephant's trunk and a lion's mane all go with it);
 #   - scales by the body mass: the remeshed (closed) surface's volume at 1,000 kg/m3 holds the trait card's mass_kg
-#     (--withers sets the shoulder height instead; the card's shoulder height, an allometric estimate, is the last
-#     resort), the origin between the feet;
+#     (--withers sets the shoulder height instead, as does a curated library record's measured shoulder height when the
+#     species has no generated card; the card's shoulder height, an allometric estimate, is the last resort), the origin
+#     between the feet;
 #   - colour: each source face reads the texture (four samples at its UV centroid and toward its corners, the PNG's sRGB
 #     decoded to linear); the source colours are clustered into the coat's own palette (k-means, 10 colours), and each face
 #     of each tier takes the commonest palette colour under it (a vote, nearer source faces counting more), so the coat,
@@ -57,9 +58,9 @@ try: job = json.load(open(os.path.join(JOB, 'job.json')))
 except (OSError, ValueError): pass
 TASK = opt('--meshy-task') or job.get('task_id') or job.get('id') or os.path.basename(JOB.rstrip('/'))
 ALIGN = '--align' in argv or job.get('kind') == 'image-to-3d'
-traits = {}
+traits, CURATED = {}, False
 for d in (('traits',), ()):   # the generated trait card, else the library record
-    try: traits = json.load(open(os.path.join(ROOT, 'library', 'animals', *d, f'{SPECIES}.json'))); break
+    try: traits = json.load(open(os.path.join(ROOT, 'library', 'animals', *d, f'{SPECIES}.json'))); CURATED = not d; break
     except (OSError, ValueError, TypeError): pass
 def find(o, key):
     if isinstance(o, dict):
@@ -74,6 +75,11 @@ def find(o, key):
 WITHERS = float(opt('--withers') or 0) or None
 MASS = float(opt('--mass') or find(traits, 'mass_kg') or 0) or None
 SHOULDER = float(find(traits, 'shoulder_or_wingspan_m') or 0) or None
+# a curated library record's shoulder height (no generated card: a hand-built species, its size read from its sources and
+# the one its hand-built model is drawn at) is a measurement, not an allometric estimate: it sets the withers, so the model
+# that replaces the hand-built one is the same animal's size (2026-11-12: a coyote's fluffy mesh at 13 kg by volume stood
+# 0.45 m, its record and hand-built model 0.58 m)
+if not WITHERS and CURATED and SHOULDER and not opt('--mass'): WITHERS = SHOULDER
 if not (WITHERS or MASS or SHOULDER): raise SystemExit(f'{SPECIES}: no size (trait card mass_kg or shoulder_or_wingspan_m, or --withers)')
 TIERS = [('lod0', int(opt('--lod0') or 4000)), ('lod1', 1500), ('lod2', 400)]   # lod0 a little finer than the hand builds' 3,000: a coat's pattern
 
@@ -242,7 +248,7 @@ yw = (pivots[(True, True)].y + pivots[(True, False)].y) / 2
 top = max(v.co.z for v in V if abs(v.co.y - yw) < 0.05 and abs(v.co.x) < 0.06 and (v.co - NB).dot(NDIR) < 0.15)
 import bmesh
 _bm = bmesh.new(); _bm.from_mesh(me); VOL = abs(_bm.calc_volume()); _bm.free()
-SIZE_BY = 'withers' if WITHERS else 'mass' if MASS else 'shoulder (trait card)'
+SIZE_BY = ('withers (curated record)' if CURATED and WITHERS == SHOULDER and not opt('--withers') else 'withers') if WITHERS else 'mass' if MASS else 'shoulder (trait card)'
 S = WITHERS / top if WITHERS else (MASS / 1000.0 / VOL) ** (1 / 3) if MASS else SHOULDER / top
 WITHERS = round(top * S, 3)
 print('INFO size by', SIZE_BY, 'mass', MASS, 'volume %.4f units' % VOL, '-> withers', WITHERS, 'm; card shoulder', SHOULDER)

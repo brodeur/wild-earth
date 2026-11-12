@@ -68,6 +68,52 @@
     "normal": "ursus_arctos_normal.png",
     "ao": "ursus_arctos_ao.jpg"
    }
+  },
+  "puma_concolor": {
+   "glb": "puma_concolor.glb",
+   "triangles": [
+    20000,
+    6666,
+    2000
+   ],
+   "joints": 22,
+   "ears": true,
+   "tail": true,
+   "weights": "heat",
+   "bytes": {
+    "puma_concolor.glb": 1175520,
+    "puma_concolor_color.jpg": 531009,
+    "puma_concolor_normal.png": 328771,
+    "puma_concolor_ao.jpg": 108033
+   },
+   "maps": {
+    "color": "puma_concolor_color.jpg",
+    "normal": "puma_concolor_normal.png",
+    "ao": "puma_concolor_ao.jpg"
+   }
+  },
+  "canis_latrans": {
+   "glb": "canis_latrans.glb",
+   "triangles": [
+    20000,
+    6666,
+    2000
+   ],
+   "joints": 22,
+   "ears": true,
+   "tail": true,
+   "weights": "heat",
+   "bytes": {
+    "canis_latrans.glb": 1161240,
+    "canis_latrans_color.jpg": 703910,
+    "canis_latrans_normal.png": 631097,
+    "canis_latrans_ao.jpg": 96178
+   },
+   "maps": {
+    "color": "canis_latrans_color.jpg",
+    "normal": "canis_latrans_normal.png",
+    "ao": "canis_latrans_ao.jpg"
+   }
   }
  }
 }

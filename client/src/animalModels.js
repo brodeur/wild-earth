@@ -3,7 +3,7 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { uniforms as atmo } from './atmosphere.js';
 import { skeletonOf } from './gait.js';
-import { heroSkinFor } from './hero.js';
+import { heroSkinFor, heroEntry } from './hero.js';
 import { segmentWings, scaleWing, wingDecl, WING_BODY, HWI, MASS, FAMILY } from './birdWing.js';
 
 // Procedural low-poly animals for the ambient population (animals.js). Each species is one merged,
@@ -439,8 +439,9 @@ export function antlerState(month, u1 = 0.5, u2 = 0.5, u3 = 0.5) {
 // Skinned since 2026-10-30 (tools/rig_quadruped.py; the leg engine, gait.js): the part rig's constants stay for the fallback.
 export const loadFoxMesh = () => loadTiers(new URL('../assets/fox.glb', import.meta.url),
   { amp: [0.5, 0.35, 1.0, 0], pose: [0.3, -0.25, 0.2, 0], drop: 0.17, gait: true }, { skin: true });
-export const loadCoyoteMesh = () => loadTiers(new URL('../assets/coyote.glb', import.meta.url),
-  { amp: [0.45, 0.3, 1.1, 0], pose: [0.3, -0.35, 0.2, 0], drop: 0.26, gait: true }, { skin: true });
+const COYOTE = { amp: [0.45, 0.3, 1.1, 0], pose: [0.3, -0.35, 0.2, 0], drop: 0.26, gait: true };
+export const loadCoyoteMesh = pipelineOr('canis_latrans', () => loadTiers(new URL('../assets/coyote.glb', import.meta.url), { ...COYOTE }, { skin: true }),
+  () => loadTiers(new URL('../assets/fauna/canis_latrans.glb', import.meta.url), { ...COYOTE }, { skin: true }));
 
 // A built GLB (tools/build_*.py): meshes lod0-lod2 with COLOR_0 and the custom attributes _PART, _PARTW, _PIVOT
 // (and _COLORB, a second colour set for a variant), the rig's parent pivots in the file's extras.rig.
@@ -836,6 +837,17 @@ export function faunaTemplate(kinLoad, { role, archetype, mass_kg, model } = {})
 // built ones' (the cougar's 0.29 m x (1 - 0.35)); a skinned model drops nothing (the clips and the engine bed it).
 const FAUNA_PATH = /^[A-Za-z0-9_\-/]+\.glb$/;
 export const REPTILE_REF_M = 0.18;   // the reptile templates' body length (the fence lizard's, snout to tail tip)
+// A hand-built species that has since come through the pipeline (2026-11-12: the home tile's lion and coyote): its fauna
+// model (fauna/<code>.glb, tools/build_quadruped.py from a Meshy source, on the same constants) when client/assets/hero
+// lists the species, so hero.js puts the hero tiers on it; the hand-built file otherwise, under ?hero=0, and if the
+// fauna model fails to load. The hand loader's tags (rig, skin: faunaTemplate reads them) are kept.
+function pipelineOr(code, hand, pipe) {
+  const load = async () => {
+    if (!(await heroEntry(code))) return hand();
+    try { return await pipe(); } catch (e) { console.warn(`${code}: pipeline model failed to load; the hand-built one draws`, e); return hand(); }
+  };
+  return Object.assign(load, { rig: hand.rig, skin: hand.skin });
+}
 export function loadFaunaModel(path, template = 'lion', { skin = true, hwi = null, family = null } = {}) {
   if (typeof path !== 'string' || !FAUNA_PATH.test(path) || path.split('/').some(p => !p || p === '.' || p === '..'))
     return Promise.reject(new Error(`fauna model: bad path '${path}'`));
@@ -911,7 +923,7 @@ export const loadSquirrelMesh = rigLoader('squirrel');
 export const loadStellersJayMesh = rigLoader('stjay');
 export const loadRedtailMesh = rigLoader('hawk');
 export const loadVultureMesh = rigLoader('vulture');
-export const loadCougarMesh = rigLoader('lion', { skin: true });   // skinned, the leg engine (gait.js); the rig path's constants for the fallback
+export const loadCougarMesh = pipelineOr('puma_concolor', rigLoader('lion', { skin: true }), () => loadFaunaModel('fauna/puma_concolor.glb', 'lion'));   // skinned, the leg engine (gait.js); the rig path's constants for the fallback
 export const loadBearMesh = rigLoader('bear', { skin: true });
 export const loadRabbitMesh = rigLoader('rabbit', { skin: true });   // skinned, the leg engine's hop (gait.js hopStep); the rig path's constants for the fallback
 export const loadJackrabbitMesh = rigLoader('jackrabbit', { skin: true });

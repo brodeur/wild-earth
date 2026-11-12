@@ -9617,3 +9617,29 @@ figure it out." docs/avatar-realism.md is the answer and the account; the decisi
   so their old previews cannot be refined), a neck chain and a jaw, volume in the sit, compressed textures, the tail
   and ear finders, limb proportions from measured bone lengths, eyes, the idle clock across pages, attention.
   Quaternius no longer offers its models as CC0: the coyote's record should show what applied when it was downloaded.
+
+## 2026-11-12: Two home species through the whole pipeline: the mountain lion and the coyote from a new source to a hero on the home tile (pipeline/fauna_models.py's route, tools/hero_model.py, client/src/animalModels.js pipelineOr; branch claude/avatar-realism; not merged)
+
+The step docs/avatar-realism.md lists first: the home species had no source to build a hero from. Two were taken from
+nothing to the screen by the pipeline, unchanged except for rules it turned out to need.
+
+- **Spent: 80 Meshy credits** (balance 727 -> 647): the lion one preview and one 2K refine (30); the coyote two
+  previews and one refine (50). The coyote's first preview was rejected for a turned head and a bent spine; the second
+  still turns its head about 25 degrees and was refined anyway, the attempts being used up. The fauna step's own prompt
+  and judge were used; both pass its colour check.
+- **Rules fixed, not species**: `pipeline/appearance.py` read "tip of the tail black" as a black tail and a nose's or a
+  name's colour ("gray wolf") as the body's; `tools/build_quadruped.py` sizes a species without a generated trait card
+  from its curated record's shoulder height (the coyote's furry mesh came out 0.45 m by mass; now 0.584 against the
+  hand-built 0.580); `tools/hero_model.py`'s ear finder no longer takes a tip near the nose and looks again for a broad
+  ear when it finds one. The wolf, bison and grizzly come out as before.
+- **How a hand-built species opts in**: its loader goes through `pipelineOr(code, hand, pipe)` in
+  `client/src/animalModels.js`: the pipeline's model and hero tiers when client/assets/hero/index.json lists the
+  species, the hand-built model otherwise, under `?hero=0`, or if the pipeline's fails to load. `animals.js` and
+  `groundControl.js` were not changed. Both species have ears and a tail chain (22 joints).
+- **Seen** (home tile, the player's body, old against new; lineup gaits, idle, sit): both read as the animal where the
+  hand-built ones were faceted shapes. Weak: the lion's coat is too orange and the coyote's legs too saturated (the
+  generated texture, and perhaps the hero material's response to the scene's light, which is being checked); the
+  coyote's turned head shows. Not exercised on the new bodies: the pounce, the leap and the kill, climbing a tree, the
+  tail-tip twitch.
+- The ignored job files (model.glb, textures, thumbnails) were copied to the main checkout's library/animals/jobs so
+  they outlive the worktree; the job.json records are in this commit.

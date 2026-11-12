@@ -1,0 +1,105 @@
+{
+ "format": 2,
+ "code": "canis_latrans",
+ "scientific": "Canis latrans",
+ "common": "coyote",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "light gray",
+    "red",
+    "black",
+    "white",
+    "grayish brown",
+    "yellowish gray"
+   ],
+   "markings": []
+  },
+  "upperparts": {
+   "colours": [
+    "black tip"
+   ],
+   "markings": [
+    {
+     "pattern": "stripes",
+     "colours": [
+      "black"
+     ]
+    }
+   ]
+  },
+  "underparts": {
+   "colours": [
+    "whitish"
+   ],
+   "markings": []
+  },
+  "head": {
+   "colours": [
+    "reddish brown"
+   ],
+   "markings": []
+  },
+  "neck": {
+   "colours": [
+    "whitish"
+   ],
+   "markings": []
+  },
+  "legs": {
+   "colours": [
+    "reddish brown"
+   ],
+   "markings": []
+  },
+  "tail": {
+   "colours": [
+    "black tip"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 17,
+ "dropped": {
+  "no body word": 4,
+  "morph": 2,
+  "not the body": 2,
+  "regional": 1
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Coyote",
+   "title": "Coyote",
+   "revision": 1384922910,
+   "facts": 8
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Canis_latrans/",
+   "title": "ADW: Canis latrans",
+   "facts": 9
+  }
+ ],
+ "retrieved": "2026-11-12",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body light gray, red, black, white; back black tip with black stripes; belly and underparts whitish; head reddish brown; neck whitish; legs reddish brown; tail black tip",
+ "features": {
+  "horns": {
+   "described": false,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [],
+   "length_m": null
+  },
+  "shoulder_m": null,
+  "head_body_m": null,
+  "total_m": [
+   1.5,
+   1.5
+  ]
+ }
+}

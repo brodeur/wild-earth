@@ -1,0 +1,107 @@
+{
+ "format": 2,
+ "code": "puma_concolor",
+ "scientific": "Puma concolor",
+ "common": "mountain lion",
+ "sex": "either",
+ "regions": {
+  "body": {
+   "colours": [
+    "tawny",
+    "silvery-grey",
+    "reddish",
+    "yellowish brown",
+    "grayish brown"
+   ],
+   "markings": []
+  },
+  "underparts": {
+   "colours": [
+    "almost buffy",
+    "whitish"
+   ],
+   "markings": []
+  },
+  "head": {
+   "colours": [],
+   "markings": [
+    {
+     "pattern": "marks",
+     "colours": [
+      "black"
+     ]
+    },
+    {
+     "pattern": "stripes",
+     "colours": [
+      "black"
+     ]
+    }
+   ]
+  },
+  "neck": {
+   "colours": [
+    "whitish"
+   ],
+   "markings": []
+  },
+  "tail": {
+   "colours": [
+    "black tip"
+   ],
+   "markings": []
+  }
+ },
+ "facts": 11,
+ "dropped": {
+  "young": 1,
+  "morph": 1,
+  "no body word": 1
+ },
+ "sources": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Cougar",
+   "title": "Cougar",
+   "revision": 1381812438,
+   "facts": 3
+  },
+  {
+   "url": "https://animaldiversity.org/accounts/Puma_concolor/",
+   "title": "ADW: Puma concolor",
+   "facts": 8
+  }
+ ],
+ "retrieved": "2026-11-12",
+ "by": "pipeline/appearance.py",
+ "licence": "facts (colours by body region) read from the sources listed; no text copied",
+ "summary": "body tawny, silvery-grey, reddish, yellowish brown; belly and underparts almost buffy, whitish; head black marks with black stripes; neck whitish; tail black tip",
+ "features": {
+  "horns": {
+   "described": false,
+   "words": [],
+   "colours": [],
+   "length_m": null
+  },
+  "tail": {
+   "words": [
+    "long"
+   ],
+   "length_m": [
+    0.68,
+    0.96
+   ]
+  },
+  "shoulder_m": [
+   0.6,
+   0.9
+  ],
+  "head_body_m": [
+   1.02,
+   1.54
+  ],
+  "total_m": [
+   1.95,
+   2.575
+  ]
+ }
+}

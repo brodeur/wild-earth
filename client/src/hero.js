@@ -108,6 +108,10 @@ export function loadHero(code) {
 // same ones. Returns false when the hero cannot be drawn on this model's skin.
 function fitSkin(model, asset) {
   const n = model.skin?.joints?.length || model.skin?.index?.joints?.length;
+  // only on the model built from the hero's own source (a hand-built fallback of the same species has another frame)
+  if (asset.extras?.meshy_task && model.extras?.meshy_task !== asset.extras.meshy_task) {
+    console.warn(`hero ${asset.code}: the model is not built from the hero's source; the old tiers stay`); return false;
+  }
   if (!n || !asset.skin?.joints) return !!n;
   const hs = asset.skin, names = hs.joints;
   if (model.skin.joints && names.slice(0, Math.min(n, names.length)).some((nm, i) => nm !== model.skin.joints[i])) {

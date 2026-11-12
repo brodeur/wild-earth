@@ -101,7 +101,8 @@ PATTERN = {"spot": "spots", "spots": "spots", "spotted": "spots", "spotting": "s
            "patches": "patches", "streak": "streaks", "streaks": "streaks", "ring": "rings", "rings": "rings",
            "ringed": "rings", "line": "lines", "lines": "lines", "dash": "dashes", "dashes": "dashes", "mottled": "mottling",
            "mottling": "mottling", "speckled": "speckles", "speckles": "speckles", "chevrons": "chevrons", "marks": "marks",
-           "markings": "marks", "tuft": "tuft", "tip": "tip", "tipped": "tip", "mask": "mask", "dappling": "dappling",
+           "markings": "marks", "border": "marks", "borders": "marks",
+           "tuft": "tuft", "tip": "tip", "tipped": "tip", "mask": "mask", "dappling": "dappling",
            "crossbands": "bands", "cross-bands": "bands"}
 REGION = {
     "head": "head", "face": "head", "facial": "head", "muzzle": "head", "snout": "head", "ear": "head", "ears": "head",
@@ -134,6 +135,9 @@ REGIONAL = re.compile(r"\b(subspecies|populations?|climates?|peninsula|arabian|i
 OTHER_TAXA = re.compile(r"\b(unlike|confused with|other species|related species|similar species|distinguish\w* from|"
                         r"compared|than (?:those|that) of|relationship|genus|family|also called|also known|known as|"
                         r"literally means|species of)\b", re.I)
+# a colour that names another animal ("the gray wolf", "golden jackals", "red foxes"; 2026-11-12: the coyote's comparisons
+# with wolves gave its body gray): not a body colour
+ANIMAL_NOUN = re.compile(r"\s*(?:wol(?:f|ves)|jackals?|fox(?:es)?|bears?|deer|squirrels?|kangaroos?|lynx|bobcats?|eagles?|hawks?)\b")
 PAST = re.compile(r"\b(had|were)\b", re.I)
 NONBODY = re.compile(r"\b(secret\w*|eggs?|eggshells?|glands?|sweat|milk|dung|faeces|feces|tongue|teeth|blood|sunscreen|"
                      r"urine|nests?|horns?|tusks?|ivory|poaching|meat)\b", re.I)
@@ -310,7 +314,7 @@ def _tokens(clause: str) -> list[tuple[int, str]]:
 
 def _region_hits(clause: str) -> list[tuple[int, str]]:
     """(position, region) of the body words in a clause; "the underside of the wings" is the wings'."""
-    clause = re.sub(r"\b(underside|undersides|underparts|surfaces?|insides?|parts?|portions?|tips?|base|edges?)\s+of\s+(?:the\s+|its\s+|their\s+)?",
+    clause = re.sub(r"\b(underside|undersides|underparts|surfaces?|insides?|parts?|portions?|tips?|base|edges?|sides)\s+of\s+(?:the\s+|its\s+|their\s+)?",
                     lambda m: " " * len(m.group(0)), clause, flags=re.I)
     out = []
     for pos, w in _tokens(clause):
@@ -381,10 +385,20 @@ def facts_from(text: str, sci: str, names: list[str], male_text: bool, trace: li
             low = cl.lower()
             regs = _region_hits(cl)
             pats = [(p, _pattern(w)) for p, w in _tokens(cl) if _pattern(w)]
+            # the subject's own shape (2026-11-12: a cougar's "the muzzle stripes, the area behind ears, and the tip of tail
+            # are black" was read as a black head and a black tail): "the tip of the tail" is the tail's tip, and a body
+            # word followed by a pattern word ("muzzle stripes", "tail tip") is that region's marking, not its ground
+            tipped = {REGION[m.group(1).lower()] for m in re.finditer(r"\btips?\s+of\s+(?:the\s+|its\s+|their\s+)?([A-Za-z]+)", cl)
+                      if REGION.get(m.group(1).lower())}
+            toks = _tokens(cl)
+            marked = [(p1, REGION[w1], _pattern(w2)) for (p1, w1), (_, w2) in zip(toks, toks[1:])
+                      if REGION.get(w1) and REGION[w1] != "body" and _pattern(w2)]
             phrases = [(m.start(), m.end(), m.group(0)) for m in PHRASE.finditer(low)]
             # a colour word capitalised mid-sentence is a name (Orange River, Red List); "green eyes" is no body colour
+            # (nor is "a pinkish nose": 2026-11-12, the cougar's nose read as its body's colour)
             phrases = [p for p in phrases if not (p[0] > 0 and cl[p[0]].isupper()) and colour_lab(p[2]) is not None
-                       and not re.match(r"\s*(?:eyes?|iris|irises|pupils?)\b", low[p[1]:])]
+                       and not re.match(r"\s*(?:eyes?|iris|irises|pupils?|noses?|nostrils?)\b", low[p[1]:])
+                       and not ANIMAL_NOUN.match(low[p[1]:])]
             if not phrases:
                 if regs:
                     prev = _specific(r for _, r in regs)
@@ -426,7 +440,11 @@ def facts_from(text: str, sci: str, names: list[str], male_text: bool, trace: li
                 else:
                     rr = subj or _specific(win_a) or last or prev or ["body"]
                 for r in rr:
-                    out.append({"region": r, "colours": [ph], "pattern": None, "male": male})
+                    pat = None
+                    if rr is subj:   # the subject's tip or marking (tipped, marked above)
+                        pat = "tip" if r in tipped else next((pt for p, rg, pt in marked if rg == r and lo <= p < a), None)
+                    out.append({"region": r, "colours": [ph], "pattern": pat, "male": male,
+                                **({"alt": f"{sid}.{ci}"} if pat and pat not in ("tip", "tuft") else {})})
                 last = rr
             if regs:
                 prev = _specific(r for _, r in regs)
@@ -520,6 +538,9 @@ def research(code: str, sci: str, common: str | None = None, refresh: bool = Fal
                 return old
         except ValueError:
             pass
+    # the species, not a subspecies (2026-11-12: the coyote's card names Canis latrans ochropus, whose article is one valley's
+    # form with no colours, and the genus's then gave it a gray wolf's coat): genus and species only
+    sci = " ".join(sci.split()[:2])
     names = [n for n in {common, (common or "").lower(), sci} if n]
     srcs = [s for s in (_cached(f"wp_{sci}", lambda: wikipedia(sci), refetch), _cached(f"adw_{sci}", lambda: adw(sci), refetch)) if s]
     if common and srcs and srcs[0].get("title"):
