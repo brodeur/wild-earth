@@ -9450,3 +9450,44 @@ automate the generation of these per species in a reliable way", and "I also wan
 - **Asked the same day, its own lane.** "Every bird should have a "dive" ability - when used, they angle downwards
   and tuck their wings and "speed blurs" ripple across the edges of the viewport". Today only a hunter with a prey
   animal selected dives (`dive.js`).
+
+## 2026-11-11: Strides that vary: the behaviour rig's first lane (client/src/gait.js, legs.js, animalNet.js, gaitMeasure.js; tools/gait_measure.mjs; library/animals/locomotion.json `vary`; branch claude/stride-variation-b27a6a; not merged)
+
+Aaron: "I also want the gaits to have organic variation - so the rigging has to be based on nature. Meaning, not every
+stride or movement is the same." He chose it as the first lane of docs/behaviour-rig.md. Built on the gait engine for
+every legged animal on it (30 models; the mule deer stays on its clips). docs/movement.md "Strides that vary" has the
+whole account; the decisions:
+
+- **Variation is a function of a seed and a stride clock, not of time or of chance.** Each legged animal counts its
+  strides (`a.sc`); the tempo's drift and each foot's lateness, reach and width are read from the seed at the clock.
+  The host streams the clock (a 23rd field of the animals' stream, appended, so an older page ignores it) and a
+  mirror's engine locks to it. In a node simulation of the stream the mirror's footfalls land a median 37 to 102 mm
+  from the host's; unlocked, 98 to 831 mm. Two real browsers were not run.
+- **The individual is the drawn body.** Its size is its drawn size times the model's height over the species' row, so
+  an elk cow has her own Froude bands and a quicker cadence than the bull the row describes. Its tempo, condition,
+  lead and asymmetry are drawn from its id. A limp is an input; age is not (a young animal is its size).
+- **The numbers are in the tree, each with where it was read or "by eye".** Read: Drevemo et al. 1980 (the trot's
+  stride varies 2 % within a horse, 2 to 3 times that between horses), Hausdorff et al. 1997 (the memory of stride
+  intervals, from people: no quadruped series was found), Way 2007 (a coyote's mass spread), Cully et al. 2018 and
+  Hackert et al. 2008 (the lead), Parsons et al. 2008 and Hoyt et al. 2006 (slope), Rhodin et al. 2022 (a horse's nod),
+  Serra Braganca et al. 2021 (lameness), Amende et al. 2005 (stance width, mice), Hildebrand 1968 (a bound on the
+  feet's timing), Grossi & Canals 2010 (foals, not built). By eye: the walk's and gallop's spread, the feet's
+  lateness, the lags' slide with speed, the lead's hold and the inside lead on a turn, the springs, the standing step,
+  the foothold. A search agent gathered the sources; the three the numbers lean on most (Drevemo, Hausdorff, Cully)
+  were checked again by search, the rest stand on its reading of abstracts.
+- **A rule the measure forced: the leg's reach bounds the step.** Measuring foot slide before changing anything showed
+  main's toes leaving their plant points wherever the stride outran the legs: 64 mm a stance for a walking elk, 290 mm
+  galloping, 513 mm for a galloping giraffe. A foot now lands no further ahead than its leg will reach, lifts when the
+  body has passed its reach, the body rides as low as its planted legs need, and the swing is timed to the landing.
+  Slide is 0.0 mm for all 30 models. This changes how the big animals look more than the variation does (the elk and
+  the lion no longer splay), so the far tier's cycles were baked again (30 clip sets). Its three numbers are by eye.
+- **The measures** (tools/gait_measure.mjs; the lineup's `__animalLineup.strides`): the stride interval's spread
+  within 0.6 to 1.5 of the tree's, DFA alpha in 0.6 to 1.1, slide no worse than main's, two in step a quarter stride
+  apart within two minutes. All pass; two started in step drift apart in 2 to 7 s. A frame costs 1 to 2 us more an
+  animal (about 10 to 12 us against 9 to 10; node, a loaded machine).
+- **The far tier**: each body its own place in the cycle, its own cadence and drift. Forty elk set walking from one
+  phase stayed exactly in step on main; now they are spread round the cycle in 5 s. No baked variants.
+- **Left**: the preferred speed (the AI's speeds; Heglund & Taylor 1988 give the preferred trot), the first step from a
+  stand, fatigue and the lead, baked variants, a film of a far herd (none loaded at Lamar in the worktree), the
+  player's body across pages, herd members across pages, attention and bouts, a juvenile's lower trot-gallop change,
+  the deer. `tiles/*/locomotion.json` were rebuilt (the two artiodactyls' rows gain the nod).

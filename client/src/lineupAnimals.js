@@ -3,7 +3,9 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as AM from './animalModels.js';
 import { Atmosphere, uniforms as atmo } from './atmosphere.js';
 import { SEASON_LOOK, sunDirection, seasonOfDate } from './season.js';
-import { gaitParams, makeGait, gaitStep, writeRow, liveClip, footPoints, farTable, makeFar, farDrive } from './gait.js';
+import * as GAIT from './gait.js';
+import { gaitParams, makeGait, gaitStep, writeRow, liveClip, footPoints, farTable, makeFar, farDrive, individualParams, seedOf } from './gait.js';
+import { strideStats, frameCost, driftApart, hostMirror } from './gaitMeasure.js';   // the stride measures (__animalLineup.strides)
 
 // Animal lineup (client/lineup_animals.html): the counterpart of the tree lineup (lineup.js) for signing off the
 // animal meshes (docs/animal-library.md, "Lineup page"). One row per species in library/animals/index.json plus
@@ -17,11 +19,16 @@ import { gaitParams, makeGait, gaitStep, writeRow, liveClip, footPoints, farTabl
 //      &feet=1 (the leg engine's plant points as markers) &slope=<deg> (the ground tilted, rising toward the nose)
 //      &speed=<m/s> (the engine's walk / trot / run speed instead of the species' bands) &far=1 (the far tier's baked
 //      cycles, tools/bake_gait.mjs, instead of the live engine) &joints=1 (the engine's skeleton drawn over the mesh)
+//      &vary=0 (the engine's even stride: no stride-to-stride variation; the species' body, not an individual)
+//      &seed=<text> (which individual the row is: its tempo, its lead, its asymmetry and its strides' drift)
 //      &weights=1 (the skinned mesh coloured by its joints' weights) &close=1 (the camera on the drawn animal alone)
 // The skinned quadrupeds with legs (animalModels.js model.legs: fox, coyote, lion, bear, and the two rabbits on its hop) move on the leg engine
 // (gait.js) at walk, trot, run and a standing turn: the body travels along the row and the camera follows it, so the
 // planted feet can be seen staying put on the ground (markers with &feet=1) while the body passes over them.
-// Scripting: window.__animalLineup (metrics(), table(), loadAll(), set({...}), rows, timing, film(species, {n, step, every})).
+// Scripting: window.__animalLineup (metrics(), table(), loadAll(), set({...}), rows, timing, film(species, {n, step, every}),
+// strides(species, {strides}): the stride measures of gaitMeasure.js on the row's skeleton, per gait: the spread of stride
+// interval and length and their memory, the feet's lags, foot slide, the cost of a frame, how fast two in step drift apart,
+// and a host against its mirror; tools/gait_measure.mjs prints the same in node).
 
 const T0 = performance.now();
 const $ = id => document.getElementById(id);
@@ -718,13 +725,16 @@ const antlersFor = season => AM.antlerState(AM.SEASON_MONTH[season] ?? 10.5);
 // texture row; the mesh follows the body; the feet's plant points go to the markers.
 const SLOPE = (+params.get('slope') || 0) * Math.PI / 180, FEET = params.get('feet') === '1', SPEED = +params.get('speed') || 0, FAR = params.get('far') === '1';
 const JOINTS = params.get('joints') === '1', WEIGHTS = params.get('weights') === '1', CLOSE = params.get('close') === '1';
+const VARY = params.get('vary') !== '0', SEED = params.get('seed') || 'lineup';
+// the row's individual (gait.js individualParams): the model's own height against the species' row, the page's seed
+const individualOf = (row, P, legs) => individualParams(P, seedOf(`${SEED}:${row.species}`), legs.h / P.h, { k: VARY ? 1 : 0 });
 const groundY = (x, rowX) => Math.tan(SLOPE) * (x - rowX);
 if (SLOPE) ground.rotation.set(-Math.PI / 2, 0, SLOPE);   // rising toward +x (the noses)
 const LOCO = getJSON(new URL('../../tiles/utm10n_680_4280/locomotion.json', import.meta.url)).then(j => j?.species || {});
 function legsPose(row, model, meshes, t, dt) {
   const G = row.gaitRow ||= { st: makeGait(), P: null, travel: 0, yaw: Math.PI / 2, marks: null };
-  if (!G.P) { G.P = gaitParams(null, model.legs); LOCO.then(L => { if (L[row.species]) { G.row = L[row.species]; G.P = gaitParams(L[row.species], model.legs); G.F = null; } }); }
-  const P = G.P, want = state.motion, hop = !!P.hop;
+  if (!G.P) { G.P = gaitParams(null, model.legs); G.Q = individualOf(row, G.P, model.legs); LOCO.then(L => { if (L[row.species]) { G.row = L[row.species]; G.P = gaitParams(L[row.species], model.legs); G.Q = individualOf(row, G.P, model.legs); G.F = null; G.far = null; } }); }
+  const P = G.Q, want = state.motion, hop = !!P.hop;
   if (WEIGHTS && !G.painted) { for (const m of meshes) paintWeights(m.geometry); G.painted = true; }
   // a lagomorph (gait.js hopStep): walk is the shuffle, trot the half-bound, run its fast form (three quarters of the cruise:
   // the jackrabbit's lope); sit, freeze and rest (the form) from the pose's sign
@@ -732,12 +742,16 @@ function legsPose(row, model, meshes, t, dt) {
     : want === 'walk' ? 0.6 * P.vw : want === 'trot' ? 0.75 * P.vt : want === 'run' ? 1.6 * P.vt : 0);
   const wr = want === 'turn' ? 1.2 : 0;
   G.travel += v * dt; G.yaw += wr * dt;
-  if (G.travel > 1.6) { G.travel = -1.6; for (const F of G.st.feet) F.has = false; }
+  if (G.travel > 1.6) {   // the wrap: the body and its feet carried back together, so the stride goes on unbroken (a fast gait wraps within a stride)
+    G.travel -= 3.2; const dy = Math.tan(SLOPE) * 3.2;
+    for (const F of G.st.feet) { F.x -= 3.2; F.lx -= 3.2; F.y -= dy; F.ly -= dy; }
+    G.st.lastX -= 3.2;
+  }
   const x0 = row.x + row.posD, x = x0 + G.travel, terrain = (wx, wz) => groundY(wx, row.x);
   const inp = { x, y: terrain(x, 0), z: 0, yaw: G.yaw, size: 1, v, wr, pose: hop ? (want === 'sit' ? 1 : want === 'freeze' ? -0.6 : want === 'rest' ? -1 : 0) : want === 'rest' ? 1 : 0,
     flick: want === 'graze' ? 1 : 0, bend: 0, twitch: row.species === 'puma_concolor' ? 0.7 * Math.sin(t * 3.3) : row.species === 'sylvilagus_bachmani' && want === 'run' ? 1 : 0, terrain, air: false };
   if (FAR) {   // the far tier: the baked cycles driven by distance (farDrive), the body sliding along at v
-    G.far ||= makeFar(); G.F ||= farTable(model.skin, P);
+    G.far ||= makeFar(P); G.F ||= farTable(model.skin, P);
     row.travel = G.travel;
     for (const m of meshes) {
       m.position.set(x - row.x, inp.y, 0); m.rotation.y = G.yaw;
@@ -1100,6 +1114,17 @@ function table() {
   }
   return out;
 }
-window.__animalLineup = { rows, state, timing, metrics, table, loadAll, set, scene, renderer, camera, film };
+// The stride measures on a row's skeleton (gaitMeasure.js), per gait, offline (not the drawn row's state)
+function strides(species, { strides: n = 300, mirror = true } = {}) {
+  const row = rows.find(r => r.species === species), legs = row?.drawn?.model?.legs; if (!legs) return null;
+  const P = row.gaitRow?.P || gaitParams(null, legs), Q = individualParams(P, seedOf(`measure:${species}`), legs.h / P.h);
+  if (P.hop) Q.observe = null;
+  const gaits = P.hop ? [['shuffle', 0.75 * Q.vS], ['bound', 1.5 * Q.vS], ['run', Math.max(0.75 * (row.gaitRow?.row?.cruise_mps || 2 * Q.vt), 2.2 * Q.vt)]] : [['walk', 0.6 * Q.vw], ['trot', 0.75 * Q.vt], ['gallop', 1.6 * Q.vt]];
+  const out = { species, vary: P.vary, gaits: {} };
+  for (const [g, v] of gaits) out.gaits[g] = { stats: strideStats(GAIT, legs, Q, { v, strides: n }), frame_us: frameCost(GAIT, legs, Q, { v, n: 5000 }), drift: driftApart(GAIT, legs, P, { v }) };
+  if (mirror) { const path = t => { const u = t % 30; return { v: u < 6 ? 0.6 * P.vw : u < 12 ? (P.hop ? 1.5 * P.vS : 0.75 * P.vt) : u < 20 ? 1.6 * P.vt : u < 26 ? 0.8 * P.vw : 0, wr: u > 14 && u < 17 ? 0.5 : u > 21 && u < 24 ? -0.6 : 0 }; }; out.mirror = { locked: hostMirror(GAIT, legs, P, { path }), free: hostMirror(GAIT, legs, P, { path, lock: false }) }; }
+  return out;
+}
+window.__animalLineup = { rows, state, timing, metrics, table, loadAll, set, scene, renderer, camera, film, strides };
 document.body.dataset.ready = '1';
 summary();

@@ -1,6 +1,7 @@
 # The behaviour rig: bodies that hold, carry, build and feed, and strides that are never the same
 
-A design note, 2026-11-11. Nothing here is built. It follows [movement.md](movement.md) (how every animal moves, said
+A design note, 2026-11-11. Its first lane is built (section 5, stride variation: [movement.md](movement.md) "Strides
+that vary"); nothing else here is. It follows [movement.md](movement.md) (how every animal moves, said
 once) and [animal-library.md](animal-library.md) (the meshes and the rig templates), and proposes the next layer.
 
 Aaron, 2026-11-11: "I really want to think through the rigging for the animals - I feel like it is going to be a core
@@ -219,6 +220,12 @@ A source whose licence is not confirmed is not used. CC BY-NC data are never shi
 
 1. **Stride variation on the gait engine** (section 5). Smallest step, touches every legged animal on the engine,
    needs no new rig. Done when the lineup's stride measures pass and a side-by-side film shows it.
+   **Built 2026-11-11** (branch `claude/stride-variation-b27a6a`; [movement.md](movement.md) "Strides that vary" has
+   what was built, what was read and from where, the measures and what was left): the individual, the stride's drift
+   on a stride clock a host streams and a mirror locks to, the gait's lags as a continuum with a lead, the far tier's
+   own cadence and phase, the slope and a foothold, the head and tail following late, and a reach rule that took foot
+   slide to zero. Left: the preferred speed (the AI's), the first step from a stand, baked variants, a far herd's
+   film, attention and bouts, the deer.
 2. **The reading**: `care` and `carry` in the tree for the orders and families the library holds, with sources, and
    the load shares. Pipeline only.
 3. **Sockets, the jaw and carrying on the quadruped skeleton.** A fox carries a vole; a lion drags a deer; a player

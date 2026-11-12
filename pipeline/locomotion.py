@@ -24,6 +24,11 @@ for what no rank above says. resolve(code) merges the chain kingdom -> phylum ->
   turn            w      the on-the-spot turn rate: 2.2 rad/s x (1.3 m / body length)^0.5, capped at 8;
                          the step rate and amplitude from the taxon's turn block; the lag from the taxon's lag block
                          scaled by sqrt(body length / 1.3 m)
+  vary                   the taxon's variation block (the spread of stride intervals by gait and its memory, an
+                         individual's tempo and lead, the walk's and the gallop's lags, the slope's answer, the
+                         soft parts), as what differs from Mammalia's (the client's default): the client's gait
+                         engine makes every stride and every individual its own from it (docs/movement.md
+                         "Strides that vary")
   catch                  the family's catch move, passed through as the tree gives it (a cat's leap and neck bite, a
                          canid's mousing pounce, a hawk's talon strike and mantle, a corvid's bill stab; a species block
                          may override its reach): the client's hunters catch by it (docs/movement.md "The catch")
@@ -50,6 +55,23 @@ def _merge(a: dict, b: dict) -> dict:
         if k == "note":
             continue
         out[k] = _merge(out[k], v) if isinstance(v, dict) and isinstance(out.get(k), dict) else v
+    return out
+
+
+def _no_notes(d: dict) -> dict:
+    return {k: (_no_notes(v) if isinstance(v, dict) else v) for k, v in d.items() if k != "note"}
+
+
+def _differs(a: dict, base: dict) -> dict:
+    """What a says that base does not (dicts compared key by key)."""
+    out = {}
+    for k, v in a.items():
+        if isinstance(v, dict) and isinstance(base.get(k), dict):
+            d = _differs(v, base[k])
+            if d:
+                out[k] = d
+        elif base.get(k) != v:
+            out[k] = v
     return out
 
 
@@ -119,6 +141,12 @@ def resolve(code: str, tree: dict | None = None, rec: dict | None = None) -> dic
         out["stalk_mps"] = merged["stalk_mps"]
     if merged.get("hop"):   # the lagomorphs' gait set (client/src/gait.js hopStep: the shuffle, the half-bound, the hares' observation hop)
         out["hop"] = {k: v for k, v in merged["hop"].items() if k != "note"}
+    if merged.get("vary"):   # strides that are never the same (client/src/gait.js: the individual, the stride's drift, the gait's continuum, the soft parts)
+        # a row carries only what differs from the class's block (Mammalia's is the client's own default, gait.js VARY,
+        # held equal to the tree by tests/test_locomotion_vary.py), so thirty rows do not repeat it; the notes stay in the tree
+        d = _differs(_no_notes(merged["vary"]), _no_notes(tree["taxa"].get("Mammalia", {}).get("vary", {})))
+        if d:
+            out["vary"] = d
     if merged.get("catch"):   # the family's catch move (docs/movement.md "The catch"): the client picks a hunter's catch by it
         out["catch"] = merged["catch"]
     return out

@@ -33,7 +33,9 @@ naturalist's sign-off adjusts numbers, not code.
 | species | its size and mass (the record), its own measured speeds where known (`top_mps`, `cruise_mps`, `stalk_mps`), its displays (the lizard's push-up, the turkey's strut, the quail's assembly call), its colours, its calls | the `species` block, the record |
 
 Below the species: the individual (its seed: a per-animal phase, a herd rank, a size variance) and the moment (its
-state: fleeing, grazing, bedded; its needs: hungry is slower). Those are the AI's, not the library's.
+state: fleeing, grazing, bedded; its needs: hungry is slower). Those are the AI's, not the library's. On the leg engine
+the individual's body is the engine's too (2026-11-11, "Strides that vary" below): its size's own Froude bands and
+cadence, its tempo, its lead, its asymmetry, and strides that drift; the size of each is the tree's `vary`.
 
 ## The principles as the client draws them today
 
@@ -216,6 +218,134 @@ the same as main's 0.5 ms at the same spot and hour (load average 15-28 from oth
 Weak: at full stretch the pale belly and inner thigh show where the skin stretches as the hind legs extend; the
 crouch-to-run lean, the lurch, the flight and the ears' angles are first guesses; the far tier has no observation hop
 and no ears' swivel; the player's freeze is X (the AI's freeze is its own).
+
+## Strides that vary (2026-11-11): the individual, the stride, the gait, the ground, the soft parts
+
+Aaron: "I also want the gaits to have organic variation - so the rigging has to be based on nature. Meaning, not every
+stride or movement is the same." The first lane of [behaviour-rig.md](behaviour-rig.md) (its section 5). Variation comes
+from causes, each a rule in the tree's `vary` block (Mammalia; the hoofed walkers' nod at Artiodactyla), never from noise
+laid on the joints. The code: `client/src/gait.js` (the engine), `client/src/legs.js` (each instance's individual and
+stride clock), `client/src/animalNet.js` (the stream's `sc`), `client/src/gaitMeasure.js` and `tools/gait_measure.mjs`
+(the measures), `pipeline/locomotion.py` (a row carries what its taxon says differently from Mammalia's block, which is
+the client's default `VARY`; `tests/test_locomotion_vary.py` holds the two equal).
+
+**The stride clock.** Every legged animal counts its strides: `a.sc`, whose fraction is the phase and at whose zero the
+left hind foot lands. Everything that varies is a function of the instance's seed (`seedOf(a.id)`) and this clock, so
+it is the same on every page. The host streams the clock (one more field of the animals' stream, 3 decimals, only for
+legged animals) and a mirror's engine locks to it, carried to the frame it is drawing between two samples
+(`mirrorClock`): softly on the move, at once when standing. The far tier advances the same clock without an engine, so
+a row newly taken goes on from it.
+
+**The individual** (`individualParams`), from the seed and the drawn size:
+- its size is its drawn size times the model's height over the species' row (an elk cow's model stands 0.87 of the
+  row's hip height), so by dynamic similarity its Froude bands are sqrt(size) of the species' and its stride rate
+  follows its own mass (Heglund & Taylor's mass^-0.15): a small body steps quicker with nothing set by age;
+- its condition (mass at its size), its own tempo (some bodies take quicker, shorter strides at a speed), its lead in
+  the gallop, a slight left-right asymmetry of its footfalls;
+- a limp as an input (`{ leg, k }`: the stride a little quicker, the head nodding down onto the sound fore foot).
+  Nothing sets it yet. Age is not an input: a young animal is its size and mass.
+
+**The stride.** The tempo drifts with the stride clock (`drift`: a white part and octaves 1 to 256 strides long), so
+consecutive strides are alike and distant ones are not; at each touchdown a foot draws its next landing's lateness,
+reach and width from the same drift at its stride's index. A planted foot is never moved.
+
+**The gait as a continuum.** Each foot's lag behind the left hind chases the gait's diagram the short way round at a
+bounded rate, and only while the foot is in the air, so a change of gait or of lead takes about a stride and no stance
+is stretched by it. The walk's fore lag slides with speed; the gallop's lag within a pair closes with speed. The lead is
+the individual's own for most runs of strides and the other for the rest; through a turn it is the inside fore, kept
+for some strides after. Standing, a foot left far from under its shoulder steps in after a moment, the worst first, one
+at a time, and never quite square.
+
+**The reach rule** (found by the slide measure, and the larger change to how the animals look). A stride longer than
+the legs could cover left the drawn toe short of its plant point: main's elk skated 64 mm a stance at a walk and
+290 mm at a gallop, its giraffe 513 mm. Now a foot is not planted further ahead than its leg will reach, a planted
+foot lifts when the body has gone on past its leg's reach, the hips and the chest ride as low as the planted legs need
+(at most 6 % of the leg, 12 % in the gallop: a straight-legged walker vaults over each leg), the joint gives the last
+few hundredths, and the swing runs evenly over the time left to the foot's landing and leaves the ground at once. On
+the move a pair of feet works about the middle of its two rest places (a mesh drawn in a walking pose keeps its stagger
+only standing). So the duty factor at speed is what the legs allow, not only what the table says.
+
+**The ground.** The stride rate answers the slope under the body (quicker, shorter steps on a climb). Past the middle of
+a swing a foot looks once at where it will land and reaches a little further or shorter for flatter ground. The tile's
+heights are smooth at that scale, so this shows on the player's footing (rocks, logs) more than on open ground.
+
+**The soft parts.** The head follows the chest late and overshoots (a damped spring); the tail likewise behind the
+turn and the hips' height, its far half later than its near; a hare's ears give to the bound late. The hoofed walkers'
+nod at the walk is the measured range of a horse's.
+
+**The far tier.** Each body starts at its own place in the baked cycle and plays it at its own cadence with the same
+drift (`makeFar(P)`). The cycles were baked again from the new engine (30 clip sets). No baked variants.
+
+**What each number is and where it was read** is in the tree's note (`library/animals/locomotion.json`, Mammalia
+`vary`). Measured: the trot's stride interval spread (2 % within a horse, 2 to 3 times that between horses: Drevemo et
+al. 1980), a coyote's mass spread (Way 2007), the share of right leads (Cully et al. 2018) and the strength of an
+individual's preference (Hackert et al. 2008), the stride rate's answer to slope (Parsons et al. 2008; Hoyt et al.
+2006), a horse's nod at the walk (Rhodin et al. 2022), a lame horse's stride (Serra Braganca et al. 2021), a mouse's
+stance width spread (Amende et al. 2005, the only one found). Taken from people because no quadruped series was found:
+the memory of stride intervals (DFA alpha 0.87 +- 0.15: Hausdorff et al. 1997). By eye, and said so in the note: the
+walk's and the gallop's spread, the feet's lateness and the asymmetry (inside Hildebrand 1968's range for one dog), the
+lags' slide with speed, how long a lead is kept and the inside lead on a turn, the springs, the standing step, the
+foothold, the reach rule's three numbers.
+
+**Measured** (`tools/gait_measure.mjs`, the same code as the lineup's `__animalLineup.strides(species)`; 400 strides a
+gait at 480 steps a second; "before" is main's engine by the same code):
+
+| | stride interval cv (tree) | lag-1 r | DFA alpha | stride length cv | foot slide a stance, before -> after | a frame, before -> after |
+|---|---|---|---|---|---|---|
+| elk cow walk | 3.0 % (3.0) | 0.57 | 0.88 | 2.9 % | 64.4 mm -> 0.0 | 9.2 -> 10.2 us |
+| elk cow trot | 2.0 % (2.0) | 0.56 | 0.86 | 2.0 % | 124.2 -> 0.0 | 8.5 -> 10.9 |
+| elk cow gallop | 2.0 % (2.0) | 0.56 | 0.88 | 2.0 % | 289.6 -> 0.0 | 9.1 -> 17.3 |
+| coyote walk | 3.1 % (3.0) | 0.61 | 1.00 | 3.6 % | 0.4 -> 0.0 | 8.6 -> 11.4 |
+| coyote trot | 2.1 % (2.0) | 0.58 | 0.99 | 2.7 % | 0.9 -> 0.0 | 9.6 -> 10.1 |
+| coyote gallop | 2.1 % (2.0) | 0.60 | 0.98 | 2.6 % | 34.5 -> 0.0 | 12.9 -> 12.1 |
+| mountain lion walk | 3.0 % (3.0) | 0.59 | 0.91 | 3.0 % | 27.3 -> 0.0 | 9.1 -> 9.9 |
+| mountain lion trot | 2.0 % (2.0) | 0.59 | 0.92 | 2.0 % | 52.3 -> 0.0 | 8.5 -> 12.8 |
+| mountain lion gallop | 2.0 % (2.0) | 0.58 | 0.91 | 2.0 % | 126.5 -> 0.0 | 9.7 -> 10.7 |
+| snowshoe hare shuffle | 2.8 % (3.0) | 0.60 | 0.95 | 3.2 % | 0.0 -> 0.0 | 11.0 -> 12.1 |
+| snowshoe hare bound | 1.8 % (2.0) | 0.59 | 0.96 | 2.2 % | 1.3 -> 0.0 | 10.9 -> 12.4 |
+| snowshoe hare run | 1.9 % (2.0) | 0.57 | 0.93 | 1.9 % | 14.6 -> 0.0 | 10.6 -> 11.4 |
+
+The bands: the interval's cv within 0.6 to 1.5 of the tree's, alpha in 0.6 to 1.1, slide no worse than before. All 30
+legged models pass (the fauna step's too: moose, bison, wolf, zebra, giraffe, elephant and the rest). The frame costs
+are single runs in node on a loaded machine (load 13): read them as about a tenth to a quarter more, 1 to 2 us an
+animal; the pool holds at most 31 live animals a species. The hare is measured without its observation hop (now placed
+by the stride count, so it too is the same on every page).
+- *Two side by side, started in step* are a quarter stride apart after 2 to 7 s (the median of 40 pairs: 7 strides;
+  the slowest pair a minute), of one size nearly the same: the individual's tempo does most of it.
+- *A host and its mirror* (a minute of walk, trot, gallop with a turn, walk with a turn and a halt; the stream as
+  animalNet.js sends it, 4 Hz, 80 ms late; the mirror at 50 frames a second, started elsewhere in the cycle): the
+  mirror's footfalls land a median 37 mm (hare), 66 mm (lion), 71 mm (coyote), 102 mm (elk) from the host's, 90 %
+  within 108 to 239 mm; with the clock unlocked 98, 432, 243 and 831 mm. The worst are at a change of gait, which the
+  two pages make a few frames apart. A simulation in node, not two browsers.
+- *The far tier*: forty elk on the baked cycles set walking together from one phase stayed exactly in step on main
+  for as long as they walked (the in-step measure 1.00 at 60 s); now 0.92 at 1 s, 0.17 at 5 s, 0.09 at 60 s, and they
+  spawn spread round the cycle (0.14).
+
+**Seen** (the lineup's filmstrips, main on 8781 against this branch, side camera; the sheets are in the session notes'
+`stride-variation-captures`): the elk's walk, trot and gallop, the coyote's three, the lion's walk and gallop, the
+hare's bound. The elk and the lion changed most: main's legs splayed and stretched to cover the stride; now they stay
+under the body and the gallop gathers and extends. The coyote and the hare read as before. In the world (Lamar): the
+page loads, 17 leg pools build, a coyote body enters on the engine, no errors.
+
+**Left, plainly:**
+- A preferred travel speed per individual: the engine does not set speed, the AI does (`MAMMAL` walk, trot, run). The
+  measured rule for that lane: the preferred trot is 1.09 x mass^0.222 m/s, the middle of the trotting range (Heglund
+  & Taylor 1988); no spread between individuals was found.
+- The first step from a stand as its own pattern; fatigue changing the lead.
+- Baked variants for the far tier; a film of a far herd (no herd plan loaded at Lamar in this worktree; the far tier
+  is shown by the measure above only).
+- The mule deer plays its hero clips (`driveClips`): it already has its own place in the cycle per animal, and gets
+  nothing else from this lane. A rate of its own would slide its feet at close range, because the clip's stride is
+  fixed; the engine's variation needs it on the skeleton.
+- The player's own body: an individual with every layer above, but its seed is not the one other pages draw it with,
+  and its clock is not streamed (as before, a player's legs are each page's own).
+- A herd's members are never streamed one by one (a mirror steers its own), so their strides agree only as individuals.
+  The hares' ear swivels keep a clock of their own on each page (seeded by the individual, not by the stride clock).
+- Attention and bouts (walk, pause, look), ears on a quadruped (no joints), the belly, breathing: the AI's, or a
+  later rig's.
+- Not checked: two real browsers as host and mirror; the cost in the world under a known load; the slope and the
+  foothold by eye; a juvenile (foals change from trot to gallop at a lower Froude number than adults: Grossi & Canals
+  2010; the engine keeps the adult's).
 
 ## The pipeline
 
@@ -417,8 +547,10 @@ advances it, the gait, the turn's C, the coil and the raised head (`bodySample.j
   the quadrupeds on the leg engine (2026-10-30); open on the rodent, bird and reptile templates.
 - The AI's gaits from the Froude bands of the table: the leg engine picks its gait so (2026-10-30); the AI's own
   speeds (`MAMMAL` walk / trot / run) are still hand-set, not the row's.
+- An individual's variance: done on the leg engine (2026-11-11, "Strides that vary"); open: a limp and a young animal
+  are inputs nothing sets, the preferred speed is the AI's, the deer is on its clips.
 - The leg engine's numbers to tune by eye against footage: the duty factors, the cadence exponent (0.45), the swing
-  clearance, the walk's reach; the rotary gallop for Carnivora in the tree (`gaits.gallop`); a fore-aft asymmetry in
+  clearance, the walk's reach, the reach rule's drop (6 % of the leg, 12 % in the gallop); the rotary gallop for Carnivora in the tree (`gaits.gallop`); a fore-aft asymmetry in
   the Meshy lion's forelegs that the rig follows.
 - The rabbits on the engine (2026-11-02, "The rabbits" above): the numbers by eye against footage (the lean, the
   lurch, the flight, the duty at speed, the ears); the belly's stretch at full extension; the vole and the ground
