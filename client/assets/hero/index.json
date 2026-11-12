@@ -21,6 +21,21 @@
     "color": "canis_lupus_color.jpg",
     "normal": "canis_lupus_normal.png",
     "ao": "canis_lupus_ao.jpg"
+   },
+   "grade": {
+    "saturation": 0.993,
+    "value": 0.984,
+    "rule": "one rule for every hero colour map: saturation (toward the linear luminance) only ever scaled down to the old palette body saturation; value scaled 0.8-1.25 so the body luminance is the old palette body luminance (body: texels under 0.45 linear luminance, area-weighted over lod0)",
+    "body": {
+     "old": {
+      "saturation": 0.188,
+      "luminance": 0.247
+     },
+     "map": {
+      "saturation": 0.19,
+      "luminance": 0.251
+     }
+    }
    }
   },
   "bison_bison": {
@@ -44,6 +59,21 @@
     "color": "bison_bison_color.jpg",
     "normal": "bison_bison_normal.png",
     "ao": "bison_bison_ao.jpg"
+   },
+   "grade": {
+    "saturation": 1.0,
+    "value": 1.029,
+    "rule": "one rule for every hero colour map: saturation (toward the linear luminance) only ever scaled down to the old palette body saturation; value scaled 0.8-1.25 so the body luminance is the old palette body luminance (body: texels under 0.45 linear luminance, area-weighted over lod0)",
+    "body": {
+     "old": {
+      "saturation": 0.522,
+      "luminance": 0.07
+     },
+     "map": {
+      "saturation": 0.506,
+      "luminance": 0.068
+     }
+    }
    }
   },
   "ursus_arctos": {
@@ -67,6 +97,21 @@
     "color": "ursus_arctos_color.jpg",
     "normal": "ursus_arctos_normal.png",
     "ao": "ursus_arctos_ao.jpg"
+   },
+   "grade": {
+    "saturation": 1.0,
+    "value": 0.968,
+    "rule": "one rule for every hero colour map: saturation (toward the linear luminance) only ever scaled down to the old palette body saturation; value scaled 0.8-1.25 so the body luminance is the old palette body luminance (body: texels under 0.45 linear luminance, area-weighted over lod0)",
+    "body": {
+     "old": {
+      "saturation": 0.586,
+      "luminance": 0.09
+     },
+     "map": {
+      "saturation": 0.561,
+      "luminance": 0.093
+     }
+    }
    }
   },
   "puma_concolor": {
@@ -90,6 +135,21 @@
     "color": "puma_concolor_color.jpg",
     "normal": "puma_concolor_normal.png",
     "ao": "puma_concolor_ao.jpg"
+   },
+   "grade": {
+    "saturation": 0.895,
+    "value": 1.176,
+    "rule": "one rule for every hero colour map: saturation (toward the linear luminance) only ever scaled down to the old palette body saturation; value scaled 0.8-1.25 so the body luminance is the old palette body luminance (body: texels under 0.45 linear luminance, area-weighted over lod0)",
+    "body": {
+     "old": {
+      "saturation": 0.45,
+      "luminance": 0.221
+     },
+     "map": {
+      "saturation": 0.504,
+      "luminance": 0.188
+     }
+    }
    }
   },
   "canis_latrans": {
@@ -113,7 +173,23 @@
     "color": "canis_latrans_color.jpg",
     "normal": "canis_latrans_normal.png",
     "ao": "canis_latrans_ao.jpg"
-   }
+   },
+   "grade": {
+    "saturation": 1.0,
+    "value": 0.898,
+    "rule": "one rule for every hero colour map: saturation (toward the linear luminance) only ever scaled down to the old palette body saturation; value scaled 0.8-1.25 so the body luminance is the old palette body luminance (body: texels under 0.45 linear luminance, area-weighted over lod0)",
+    "body": {
+     "old": {
+      "saturation": 0.415,
+      "luminance": 0.211
+     },
+     "map": {
+      "saturation": 0.298,
+      "luminance": 0.235
+     }
+    }
+   },
+   "hold": "the generated coat is not a coyote's (a grey back with a black saddle and rufous legs, nearer a jackal) and the head is turned about 25 degrees in the source; the colour check passed it, a naturalist would not: generate again (2026-11-12)"
   }
  }
 }

@@ -40,7 +40,8 @@ export function heroIndex() {
 export async function heroEntry(code) {
   if (!HERO_ON || !code) return null;
   const idx = await heroIndex();
-  return idx?.species?.[code] || null;
+  const e = idx?.species?.[code] || null;
+  return e && !e.hold ? e : null;   // hold: a reason the species' hero is built but not shown (a source that is not the animal); the hand-built model draws
 }
 
 // The hero GLB's own skin (extras.skin) when it has exactly n joints (loadTiers: a clip set baked wider than the fauna
@@ -97,7 +98,12 @@ export function loadHero(code) {
       if (t === color1k || t === normal1k || t === ao1k) bytes.pool += b;
     }
     heroSettings.bytes[code] = bytes;
-    return { code, url, extras, skin: extras.skin || null, geos, hairM,
+    // the colour rule (one for every hero map; round three, 2026-11-12; index.json grade, which the asset tool may own):
+    // the map's saturation only ever scaled down, to the body saturation of the species' old palette (fitted to its record),
+    // and its value scaled (0.8-1.25) so the body's luminance is the old palette's
+    const num = (v, lo, hi) => Math.min(hi, Math.max(lo, Number.isFinite(+v) ? +v : 1));
+    const sat = num(e.grade?.saturation, 0, 1), val = num(e.grade?.value, 0.8, 1.25);
+    return { code, url, extras, skin: extras.skin || null, geos, hairM, grade: { value: sat }, gradeV: { value: val },
       player: { map: color, normalMap: normal, aoMap: ao }, pool: { map: color1k, normalMap: normal1k, aoMap: ao1k } };
   })().catch(err => { console.warn(`hero ${code}: failed to load; the old tiers stay`, err); return null; }));
   return assets.get(code);
@@ -163,7 +169,7 @@ export async function heroPool(code, st, model, { atmosphere, decorate = null } 
   const asset = await loadHero(code); if (!asset || !fitSkin(model, asset)) return false;
   const P = asset.pool, mats = [], geos = [asset.geos[1], asset.geos[2]];
   for (let t = 0; t < 2; t++) {
-    const m = animalMaterial(atmosphere, model, { map: P.map, hero: { normalMap: P.normalMap, aoMap: P.aoMap, rim: heroSettings.rim } });
+    const m = animalMaterial(atmosphere, model, { map: P.map, hero: { normalMap: P.normalMap, aoMap: P.aoMap, rim: heroSettings.rim, grade: asset.grade, gradeV: asset.gradeV } });
     mats.push(decorate ? decorate(m) : m);
   }
   // warm on stand-ins carrying the live instance attributes (nothing is drawn from them)
@@ -183,9 +189,9 @@ export async function heroPlayer(code, mesh, model, { atmosphere, head = null, w
   if (!HERO_ON || !model.skin) return null;
   const asset = await loadHero(code); if (!asset || !fitSkin(model, asset)) return null;
   const P = asset.player, geo = asset.geos[0].clone();
-  const mat = animalMaterial(atmosphere, model, { map: P.map, head, hero: { normalMap: P.normalMap, aoMap: P.aoMap, rim: heroSettings.rim } });
+  const mat = animalMaterial(atmosphere, model, { map: P.map, head, hero: { normalMap: P.normalMap, aoMap: P.aoMap, rim: heroSettings.rim, grade: asset.grade, gradeV: asset.gradeV } });
   const fur = { shells: { value: Math.max(1, heroSettings.shells) }, len: { value: asset.hairM }, density: heroSettings.density };
-  const shellMat = animalMaterial(atmosphere, model, { map: P.map, head, hero: { normalMap: P.normalMap, aoMap: P.aoMap, rim: heroSettings.rim, shells: fur } });
+  const shellMat = animalMaterial(atmosphere, model, { map: P.map, head, hero: { normalMap: P.normalMap, aoMap: P.aoMap, rim: heroSettings.rim, grade: asset.grade, gradeV: asset.gradeV, shells: fur } });
   const probe = new THREE.InstancedMesh(pending(geo, mesh.geometry), mat, 1); probe.frustumCulled = false;
   const shellProbe = new THREE.InstancedMesh(geo, shellMat, 1); shellProbe.frustumCulled = false;
   await warm([probe, shellProbe], [P.map, P.normalMap, P.aoMap], warmCtx || ctx());

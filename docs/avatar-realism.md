@@ -142,9 +142,22 @@ took a tip near the nose. And what it could not fix: a generator that will not a
 coyote's is turned about 25 degrees in the source and it shows), and a painted coat more saturated than the animal.
 The pose is the gate to tighten: reject at the 20-credit preview, never at the refine.
 
-On the home tile the hand-built lion and coyote are faceted shapes; the pipeline's are a cougar and a coyote
-(`home_lion_before_after.jpg`, `home_coyote_before_after.jpg`, `lineup_lion_gaits.jpg`). Not exercised on the new
-bodies: the pounce, the leap and the kill, climbing a tree, the tail-tip twitch.
+On the home tile the hand-built lion is a faceted shape and the pipeline's is a cougar (`home_lion_before_after.jpg`,
+`home_lion_light_matched.jpg`, `lineup_lion_gaits.jpg`). Not exercised on the new body: the pounce, the leap and the
+kill, climbing a tree, the tail-tip twitch.
+
+**The coyote is built but held back.** Its generated coat is not a coyote's: a grey back with a black saddle and
+rufous legs, nearer a jackal, on a head turned in the source. The pipeline's colour check passed it; anyone who knows
+the animal would not. So the hero index can hold a species (`hold`, with the reason; the hand-built model draws), and
+the gate that let it through is the thing to fix: a likeness check against reference photographs of the species, not
+only against a description's colour words.
+
+**The hero answers the light as the old models do.** The first home captures looked too bright, so both paths were
+given the same flat grey and the pixels read, in sun, under trees, at 9 and at 17 and in the misty arrival: they agree
+within 1.2 %. What differed was the painted coat. One rule now applies to every hero map (`grade` in the index):
+saturation is only ever scaled down to the old palette's, and value scaled to its luminance (the lion: saturation
+x 0.895, value x 1.176; the wolf, bison and grizzly near 1). The lion is still about 15 % more saturated than the
+hand-built one.
 
 ## What it looks like
 

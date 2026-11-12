@@ -1910,12 +1910,14 @@ export function animalMaterial(atmosphere, model, { map = null, head = null, sna
       .replace('#include <begin_vertex>', '');
     if (map && hero) {
       shader.uniforms.uHeroRim = hero.rim || { value: 1 };
+      shader.uniforms.uHeroSat = hero.grade || { value: 1 };
+      shader.uniforms.uHeroVal = hero.gradeV || { value: 1 };
       if (hero.shells) Object.assign(shader.uniforms, { uShells: hero.shells.shells, uFurLen: hero.shells.len, uFurDensity: hero.shells.density });
       const sh = hero.shells ? '#define HERO_SHELLS\nuniform float uShells; uniform float uFurLen; varying float vLayer;\n' : '';
       shader.vertexShader = shader.vertexShader.replace('#include <common>', '#include <common>\n#define HERO\n' + sh + '#ifndef USE_UV1\nattribute vec2 uv1;\n#endif\nvarying float vHair;');
       shader.fragmentShader = shader.fragmentShader
-        .replace('#include <common>', '#include <common>\n#define HERO\n' + (hero.shells ? '#define HERO_SHELLS\nuniform float uShells; uniform float uFurDensity; varying float vLayer;\n' : '') + 'varying float vHair; uniform float uHeroRim;')
-        .replace('#include <map_fragment>', '#include <map_fragment>' + HERO_FUR_FRAG)
+        .replace('#include <common>', '#include <common>\n#define HERO\n' + (hero.shells ? '#define HERO_SHELLS\nuniform float uShells; uniform float uFurDensity; varying float vLayer;\n' : '') + 'varying float vHair; uniform float uHeroRim; uniform float uHeroSat; uniform float uHeroVal;')
+        .replace('#include <map_fragment>', '#include <map_fragment>\ndiffuseColor.rgb = mix(vec3(dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722))), diffuseColor.rgb, uHeroSat) * uHeroVal;   // the colour rule (hero.js grade)' + HERO_FUR_FRAG)
         .replace('vec3 outgoingLight = reflectedLight.directDiffuse', HERO_LIGHT + '\nvec3 outgoingLight = reflectedLight.directDiffuse');
     }
     shader.vertexShader = shader.vertexShader

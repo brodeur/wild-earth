@@ -9643,3 +9643,16 @@ nothing to the screen by the pipeline, unchanged except for rules it turned out 
   tail-tip twitch.
 - The ignored job files (model.glb, textures, thumbnails) were copied to the main checkout's library/animals/jobs so
   they outlive the worktree; the job.json records are in this commit.
+
+## 2026-11-12: The hero answers the light as the old models do; one colour rule for every hero map; the coyote's hero is held back (client/src/hero.js, animalModels.js, client/assets/hero/index.json; branch claude/avatar-realism)
+
+- **Measured, not assumed.** The new lion and coyote looked too bright on the home tile. Both paths were given the same
+  flat grey and the body's pixels read in sun, under trees, at 9:00, at 17:00 and in the misty arrival: hero over old
+  is 1.000 to 1.012 in every channel. The light, shadow, haze and tone paths are the same; the painted coats differ.
+- **One rule for every hero colour map** (`grade` in the index, so the asset tool can own it): saturation only ever
+  scaled down to the old palette's body saturation, value scaled within 0.8 to 1.25 to its luminance. Lion x 0.895 and
+  x 1.176; the others near 1.
+- **A species can be held** (`hold` in the index, with the reason): its hero is built but the hand-built model draws.
+  The coyote is held: its generated coat is nearer a jackal's (grey back, black saddle, rufous legs) and its head is
+  turned in the source. The fauna step's colour check passed it, so that gate is not enough: a likeness check against
+  reference photographs is the next rule to write, before more credits go to the other home species.
