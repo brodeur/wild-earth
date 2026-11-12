@@ -54,6 +54,13 @@
     "head_lead": true
    },
    "flier": true,
+   "dive": {
+    "terminal_mps": 75.1,
+    "angle_deg": 64.0,
+    "top_mps": 71.2,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   },
    "catch": {
     "move": "stab",
     "name": "the bill stab",
@@ -119,6 +126,13 @@
     "head_lead": true
    },
    "flier": true,
+   "dive": {
+    "terminal_mps": 74.0,
+    "angle_deg": 64.0,
+    "top_mps": 70.1,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   },
    "catch": {
     "move": "talon",
     "name": "the talon strike and the mantle",
@@ -373,7 +387,14 @@
     "head_lead": true,
     "cling": true
    },
-   "flier": true
+   "flier": true,
+   "dive": {
+    "terminal_mps": 47.8,
+    "angle_deg": 64.0,
+    "top_mps": 45.3,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "callipepla_californica": {
    "code": "callipepla_californica",
@@ -427,7 +448,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": false
+   "flier": false,
+   "dive": {
+    "terminal_mps": 54.7,
+    "angle_deg": 64.0,
+    "top_mps": 51.8,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "oreortyx_pictus": {
    "code": "oreortyx_pictus",
@@ -481,7 +509,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": false
+   "flier": false,
+   "dive": {
+    "terminal_mps": 57.0,
+    "angle_deg": 64.0,
+    "top_mps": 54.0,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "aphelocoma_californica": {
    "code": "aphelocoma_californica",
@@ -536,6 +571,13 @@
     "head_lead": true
    },
    "flier": true,
+   "dive": {
+    "terminal_mps": 47.8,
+    "angle_deg": 64.0,
+    "top_mps": 45.3,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   },
    "catch": {
     "move": "stab",
     "name": "the bill stab",
@@ -602,6 +644,13 @@
     "head_lead": true
    },
    "flier": true,
+   "dive": {
+    "terminal_mps": 49.6,
+    "angle_deg": 64.0,
+    "top_mps": 47.0,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   },
    "catch": {
     "move": "stab",
     "name": "the bill stab",
@@ -666,7 +715,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": true
+   "flier": true,
+   "dive": {
+    "terminal_mps": 77.9,
+    "angle_deg": 64.0,
+    "top_mps": 73.9,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "sylvilagus_bachmani": {
    "code": "sylvilagus_bachmani",
@@ -1112,7 +1168,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": false
+   "flier": false,
+   "dive": {
+    "terminal_mps": 98.2,
+    "angle_deg": 64.0,
+    "top_mps": 93.1,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "otospermophilus_beecheyi": {
    "code": "otospermophilus_beecheyi",
@@ -1389,7 +1452,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": true
+   "flier": true,
+   "dive": {
+    "terminal_mps": 33.2,
+    "angle_deg": 64.0,
+    "top_mps": 31.4,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "perisoreus_canadensis": {
    "code": "perisoreus_canadensis",
@@ -1444,6 +1514,13 @@
     "head_lead": true
    },
    "flier": true,
+   "dive": {
+    "terminal_mps": 46.7,
+    "angle_deg": 64.0,
+    "top_mps": 44.3,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   },
    "catch": {
     "move": "stab",
     "name": "the bill stab",
@@ -1509,7 +1586,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": true
+   "flier": true,
+   "dive": {
+    "terminal_mps": 33.7,
+    "angle_deg": 64.0,
+    "top_mps": 32.0,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "strix_varia": {
    "code": "strix_varia",
@@ -1560,7 +1644,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": false
+   "flier": false,
+   "dive": {
+    "terminal_mps": 68.6,
+    "angle_deg": 64.0,
+    "top_mps": 65.0,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "megaceryle_alcyon": {
    "code": "megaceryle_alcyon",
@@ -1611,7 +1702,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": false
+   "flier": false,
+   "dive": {
+    "terminal_mps": 53.0,
+    "angle_deg": 64.0,
+    "top_mps": 50.3,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "haliaeetus_leucocephalus": {
    "code": "haliaeetus_leucocephalus",
@@ -1665,6 +1763,13 @@
     "head_lead": true
    },
    "flier": true,
+   "dive": {
+    "terminal_mps": 93.6,
+    "angle_deg": 64.0,
+    "top_mps": 88.7,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   },
    "catch": {
     "move": "talon",
     "name": "the talon strike and the mantle",
@@ -1733,6 +1838,13 @@
     "head_lead": true
    },
    "flier": true,
+   "dive": {
+    "terminal_mps": 63.7,
+    "angle_deg": 64.0,
+    "top_mps": 60.4,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   },
    "catch": {
     "move": "stab",
     "name": "the bill stab",
@@ -2243,7 +2355,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": false
+   "flier": false,
+   "dive": {
+    "terminal_mps": 83.7,
+    "angle_deg": 64.0,
+    "top_mps": 79.3,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "mergus_merganser": {
    "code": "mergus_merganser",
@@ -2294,7 +2413,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": false
+   "flier": false,
+   "dive": {
+    "terminal_mps": 77.0,
+    "angle_deg": 64.0,
+    "top_mps": 73.0,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "turdus_migratorius": {
    "code": "turdus_migratorius",
@@ -2348,7 +2474,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": true
+   "flier": true,
+   "dive": {
+    "terminal_mps": 47.5,
+    "angle_deg": 64.0,
+    "top_mps": 45.0,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "sturnus_vulgaris": {
    "code": "sturnus_vulgaris",
@@ -2402,7 +2535,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": true
+   "flier": true,
+   "dive": {
+    "terminal_mps": 47.6,
+    "angle_deg": 64.0,
+    "top_mps": 45.1,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "ixoreus_naevius": {
    "code": "ixoreus_naevius",
@@ -2456,7 +2596,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": true
+   "flier": true,
+   "dive": {
+    "terminal_mps": 47.6,
+    "angle_deg": 64.0,
+    "top_mps": 45.1,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "junco_hyemalis": {
    "code": "junco_hyemalis",
@@ -2510,7 +2657,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": true
+   "flier": true,
+   "dive": {
+    "terminal_mps": 37.9,
+    "angle_deg": 64.0,
+    "top_mps": 35.9,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "regulus_satrapa": {
    "code": "regulus_satrapa",
@@ -2564,7 +2718,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": true
+   "flier": true,
+   "dive": {
+    "terminal_mps": 31.0,
+    "angle_deg": 64.0,
+    "top_mps": 29.4,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "empidonax_difficilis": {
    "code": "empidonax_difficilis",
@@ -2618,7 +2779,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": true
+   "flier": true,
+   "dive": {
+    "terminal_mps": 34.3,
+    "angle_deg": 64.0,
+    "top_mps": 32.5,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "megascops_kennicottii": {
    "code": "megascops_kennicottii",
@@ -2669,7 +2837,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": false
+   "flier": false,
+   "dive": {
+    "terminal_mps": 53.0,
+    "angle_deg": 64.0,
+    "top_mps": 50.3,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "aegolius_acadicus": {
    "code": "aegolius_acadicus",
@@ -2720,7 +2895,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": false
+   "flier": false,
+   "dive": {
+    "terminal_mps": 47.8,
+    "angle_deg": 64.0,
+    "top_mps": 45.3,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "leuconotopicus_villosus": {
    "code": "leuconotopicus_villosus",
@@ -2775,7 +2957,14 @@
     "head_lead": true,
     "cling": true
    },
-   "flier": true
+   "flier": true,
+   "dive": {
+    "terminal_mps": 46.7,
+    "angle_deg": 64.0,
+    "top_mps": 44.3,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "pandion_haliaetus": {
    "code": "pandion_haliaetus",
@@ -2828,7 +3017,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": true
+   "flier": true,
+   "dive": {
+    "terminal_mps": 78.8,
+    "angle_deg": 64.0,
+    "top_mps": 74.7,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "accipiter_striatus": {
    "code": "accipiter_striatus",
@@ -2882,6 +3078,13 @@
     "head_lead": true
    },
    "flier": true,
+   "dive": {
+    "terminal_mps": 52.4,
+    "angle_deg": 64.0,
+    "top_mps": 49.7,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   },
    "catch": {
     "move": "talon",
     "name": "the talon strike and the mantle",
@@ -2946,7 +3149,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": false
+   "flier": false,
+   "dive": {
+    "terminal_mps": 79.1,
+    "angle_deg": 87.0,
+    "top_mps": 79.1,
+    "cd": 0.18,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "larus_glaucescens": {
    "code": "larus_glaucescens",
@@ -2997,7 +3207,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": false
+   "flier": false,
+   "dive": {
+    "terminal_mps": 72.8,
+    "angle_deg": 64.0,
+    "top_mps": 69.0,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "larus_californicus": {
    "code": "larus_californicus",
@@ -3048,7 +3265,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": false
+   "flier": false,
+   "dive": {
+    "terminal_mps": 66.9,
+    "angle_deg": 64.0,
+    "top_mps": 63.4,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "larus_occidentalis": {
    "code": "larus_occidentalis",
@@ -3099,7 +3323,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": false
+   "flier": false,
+   "dive": {
+    "terminal_mps": 72.8,
+    "angle_deg": 64.0,
+    "top_mps": 69.0,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "anas_platyrhynchos": {
    "code": "anas_platyrhynchos",
@@ -3150,7 +3381,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": false
+   "flier": false,
+   "dive": {
+    "terminal_mps": 74.0,
+    "angle_deg": 64.0,
+    "top_mps": 70.1,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "dendragapus_fuliginosus": {
    "code": "dendragapus_fuliginosus",
@@ -3204,7 +3442,14 @@
    "flags": {
     "head_lead": true
    },
-   "flier": false
+   "flier": false,
+   "dive": {
+    "terminal_mps": 72.8,
+    "angle_deg": 64.0,
+    "top_mps": 69.0,
+    "cd": 0.37,
+    "pull_g_at_half_top": 1.5
+   }
   },
   "marmota_olympus": {
    "code": "marmota_olympus",

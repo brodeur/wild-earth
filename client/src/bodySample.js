@@ -13,7 +13,7 @@ import { NF, F, FL_AIR, FL_GM, FL_BURIED } from './animalNet.js';
 const TAU = Math.PI * 2;
 const _m = new THREE.Matrix4(), _p = new THREE.Vector3(), _q = new THREE.Quaternion(), _s = new THREE.Vector3(), _e = new THREE.Euler(0, 0, 0, 'YXZ');
 const _qy = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI);
-const R_PERCH = 22, R_WALK = 25, RAVEN_BEAT = 2.6;   // animals.js: the raven's states on the ground, its wing beat (Hz)
+const R_PERCH = 22, R_WALK = 25, RAVEN_BEAT = 2.6, RAVEN_TUCK = 0.8;   // animals.js: the raven's states on the ground, its wing beat (Hz)
 const last = { phase: 0, t: 0, wing: 0 };
 
 function fromMesh(mesh, out) {
@@ -58,6 +58,7 @@ export function bodySample(we, out, cst, now = performance.now()) {
       if (f.flapping) last.phase += dt * TAU * RAVEN_BEAT; else last.phase += (Math.round(last.phase / Math.PI) * Math.PI - last.phase) * Math.min(1, dt * 3);
       out[F.y] = f.pos.y; out[F.yaw] = _e.y; out[F.pitch] = _e.x; out[F.roll] = _e.z;
       out[F.phase] = last.phase % TAU; out[F.amp] = last.wing; out[F.phz] = f.flapping ? TAU * RAVEN_BEAT : 0;
+      out[F.pose] = RAVEN_TUCK * (we.raven?.tuck || 0);   // a dive's tuck (dive.js): the mirror's raven folds its wings by its pose
       out[F.fl] = FL_AIR; out[F.spd] = f.speed || 0;
     }
     last.t = now;

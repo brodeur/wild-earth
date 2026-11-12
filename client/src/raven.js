@@ -49,6 +49,9 @@ const HEAD_MAX = 1.1, UNFOLD_T = 0.3;
 // tilt: the body pitched nose up as the wings fold (rad at fold 1), toward the standing raven's carriage; lift: the
 // ground model's wing flick (aAnim2.x) its folded wings reach before take-off
 const FOLD = { armBack: 1.45, armDown: -0.12, foreBack: 0.25, handBack: 0.5, scale: 0.5, tilt: 0.3, lift: 1.6 };
+// A dive's tuck (dive.js, 2026-11-11): the same joints swept back TUCK of the way to the fold, the wing its full size and
+// the body left along its fall (no tilt): `tuck` 0..1 is set each frame by main.js from the dive.
+const TUCK = 0.8;
 const smooth = u => u * u * (3 - 2 * u), clamp01 = u => Math.min(1, Math.max(0, u));
 const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
 
@@ -63,7 +66,7 @@ export class Raven {
     this.flight = parent.userData.flight || null; this.parent = parent;
     this.ground = null; this.onGround = false;
     this.g = { e0: 0, wfV: 0, look: 0, flick: 0, hop: 0 };
-    this.swapT = 0; this.fold = 0; this.fade = 0; this.foldFrom = 0; this.opFly = 1; this.FOLD = FOLD; this.hidden = false;
+    this.swapT = 0; this.fold = 0; this.fade = 0; this.foldFrom = 0; this.opFly = 1; this.FOLD = FOLD; this.hidden = false; this.tuck = 0;
     this._m = new THREE.Matrix4(); this._q = new THREE.Quaternion(); this._p = new THREE.Vector3(); this._s = new THREE.Vector3(1, 1, 1); this._up = new THREE.Vector3(0, 1, 0);
     if (GROUND && this.flight) loadRavenGroundMesh().then(m => this.buildGround(m), e => console.warn('ground raven failed to load; the flying model stays on the ground', e));
     addEventListener('keydown', e => { if (e.code === 'KeyC' && this.onGround && !(e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT'))) this.g.wfV = 1; });
@@ -149,11 +152,12 @@ export class Raven {
     this.group.rotation.x = F.tilt * u;
     const B = this.bones; if (!B) return;
     if (u > 0) this.neck.rotateX(F.tilt * u);   // the head stays level as the body tilts up
+    const w = Math.max(u, TUCK * (this.tuck || 0));   // the joints' sweep: the fold's, or a dive's tuck
     for (const [s, ua, fa, h] of B) {
       ua.scale.setScalar(1 - (1 - F.scale) * u);
-      if (u <= 0) continue;
-      ua.rotateZ(s * F.armBack * u); ua.rotateX(F.armDown * u);
-      fa.rotateZ(s * F.foreBack * u); h.rotateZ(s * F.handBack * u);
+      if (w <= 0) continue;
+      ua.rotateZ(s * F.armBack * w); ua.rotateX(F.armDown * w);
+      fa.rotateZ(s * F.foreBack * w); h.rotateZ(s * F.handBack * w);
     }
   }
   // Load (once) and show one of MODELS; a failed 'meshy' load falls back to 'cc0'.

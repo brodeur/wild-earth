@@ -26,9 +26,9 @@ naturalist's sign-off adjusts numbers, not code.
 |---|---|---|
 | kingdom (Animalia) | muscle pulls, so motion is a pull toward a point; mass sets the tempo (small is quick, large is slow); the body is drawn a beat behind the thing that moved it (the lag); nothing moves by itself: a limb pushes against the world and the body follows (the stepping turn) | `lag`, `turn` defaults |
 | phylum (Chordata) | an axial skeleton: the head leads, the spine bends toward the turn, the tail trails; bilateral, faces where it goes | `bend` (the spine's share of the lag, the head's lead) |
-| class | the limb plan and the gait family. Mammalia: limbs under the body, walk / trot / gallop by the Froude number of the hip height, a flexing spine in the gallop, a level head, an aerobic sprint of seconds to a minute by size. Aves: a biped on the ground that walks or hops with the head bobbing to hold the eyes still, wings that flap, glide and stoop, the head leading a turn on the neck. Reptilia (Squamata): sprawling limbs, the body undulating with the stride, a turn as a C-bend, a sprint of a second or two then rest (ectotherm) | `posture`, `gaits`, `sprint` scaling |
+| class | the limb plan and the gait family. Mammalia: limbs under the body, walk / trot / gallop by the Froude number of the hip height, a flexing spine in the gallop, a level head, an aerobic sprint of seconds to a minute by size. Aves: a biped on the ground that walks or hops with the head bobbing to hold the eyes still, wings that flap, glide and stoop, the head leading a turn on the neck, and the dive: any bird that closes its wings falls as a body of its mass does ("The dive" below). Reptilia (Squamata): sprawling limbs, the body undulating with the stride, a turn as a C-bend, a sprint of a second or two then rest (ectotherm) | `posture`, `gaits`, `sprint` scaling, `dive` (the drag of the tucked body, the steepest angle) |
 | order | the foot and the travelling gait. Artiodactyla: unguligrade on hooves, a stiff walk, a long trot, a bounding gallop, the frozen head-high alert. Carnivora: digitigrade or plantigrade, the flexible spine, the stalk, the rush, the pounce. Rodentia: the bound, the sit-up, the freeze. Lagomorpha: the half-bound hop, the pivot on the hind feet, the freeze then the zigzag burst. Galliformes: runners first, a burst flush. Passeriformes: the hop, flap-and-glide. Accipitriformes and Cathartiformes: the soar. Piciformes: undulating flight, the cling | `gaits`, `cruise_of_top`, `turn` (rate and step), `lag` for the small orders |
-| family | the character of the gait and the signature moves. Cervidae: the stot, the rump flag, the file. Canidae: the trot as the travelling gait, the tail's mood. Felidae: the crouched stalk and the explosive short rush, a cat does not run far. Ursidae: the amble (a pace), the bounding burst. Sciuridae: the tail flag, head-first down a trunk. Cricetidae: the scurry in runways. Corvidae: walk as well as hop. Odontophoridae: the covey's file, the topknot | `stot`, `stalk`, `tail_flag`, the sprint's length, the turn's amplitude |
+| family | the character of the gait and the signature moves. Cervidae: the stot, the rump flag, the file. Canidae: the trot as the travelling gait, the tail's mood. Felidae: the crouched stalk and the explosive short rush, a cat does not run far. Ursidae: the amble (a pace), the bounding burst. Sciuridae: the tail flag, head-first down a trunk. Cricetidae: the scurry in runways. Corvidae: walk as well as hop. Odontophoridae: the covey's file, the topknot. Falconidae: the stoop, with the falcon's own measured body drag and a near-vertical angle | `stot`, `stalk`, `tail_flag`, the sprint's length, the turn's amplitude, the falcons' `dive` |
 | genus | rarely anything: a genus differs from its family in size more than in motion | (empty in the tree today) |
 | species | its size and mass (the record), its own measured speeds where known (`top_mps`, `cruise_mps`, `stalk_mps`), its displays (the lizard's push-up, the turkey's strut, the quail's assembly call), its colours, its calls | the `species` block, the record |
 
@@ -225,13 +225,15 @@ and no ears' swivel; the player's freeze is X (the AI's freeze is its own).
 2. **The tree** (`library/animals/locomotion.json`): one node per taxon with a note (the principle in words) and the
    numbers that hold for every member: the turn's thresholds and step, the lag, the spine's share, the gaits, the
    cruise's share of the top, the sprint's length at 50 kg and its mass exponent, the posture, the flags (stot, stalk,
-   sit_up, tail_flag, turn_bend, head_lead, cling).
+   sit_up, tail_flag, turn_bend, head_lead, cling), a bird's `dive` (the tucked body's drag coefficient, the steepest
+   angle, the spread wings' drag in the pull-out).
 3. **The resolver** (`pipeline/locomotion.py`): merges the chain kingdom -> phylum -> class -> order -> family ->
    genus -> species, deeper winning key by key, then derives the numbers nobody wrote from the body: the walk and
    trot tops from the Froude bands of the hip height (Alexander & Jayes 1983), the top speed from mass (Garland 1983,
    capped for the small and the birds), the cruise as the taxon's share, the stride rate at the trot-gallop change
    from mass (Heglund & Taylor 1988) and the stride length from it, the sprint and recovery from mass and the taxon's
-   exponent, the on-the-spot turn rate and the lag from the body length. `python -m pipeline.locomotion` prints the
+   exponent, the on-the-spot turn rate and the lag from the body length, a bird's terminal speed in a dive from its
+   mass and the tree's drag coefficient. `python -m pipeline.locomotion` prints the
    table for the library; the `species` step of a tile build writes `tiles/<id>/locomotion.json` for the species
    present (step 4 below).
 4. **The tile** carries `locomotion.json` (a table layer like `perception.json`), fetched by `tilepackage.js` as
@@ -411,6 +413,121 @@ middle of the view, looking down on it between the grass.
 body's mean point and mean heading (where the AI's draw centres a snake), the wave's phase advanced as `snUpdate`
 advances it, the gait, the turn's C, the coil and the raised head (`bodySample.js`).
 
+## The dive (2026-11-11): a fall with the wings closed
+
+Aaron, 2026-11-11: "Every bird should have a "dive" ability - when used, they angle downwards and tuck their wings and
+"speed blurs" ripple across the edges of the viewport".
+
+**What the player does.** In the air as any bird, 1 (or Q, or the dive slot on the bar): the nose goes down to the
+species' steepest angle, the wings tuck, there is no wingbeat, and the bird gains speed as a falling body does. A and D
+still turn it. With a prey animal selected and the stoop's conditions met (a hunting flier, the prey killable, in sight
+and below: decisions, 2026-11-06) the same key is the stoop at that prey, as before; otherwise it is this free dive.
+The birds that have it: every flier on the shared flight (`flierControl.js` `FLIERS`, and a tile's stand-ins on their
+kin's entry, which read the kin's row at their own mass), the raven (`flight.js` alone), the acorn woodpecker on its
+own flight (`woodpeckerControl.js`), and the
+ground birds that fly only in a flush (the turkey, the quails, the grouse, the heron, the ducks: `groundControl.js`),
+whose dive is a drop to the ground with the wings shut, as a quail drops into cover.
+
+**The principle, at the class.** A bird that closes its wings is a falling body: its weight along the slope against the
+drag of the tucked body. So the speed gains `g sin(angle) - g (v / terminal)^2` each second and tends to
+`terminal x sqrt(sin(angle))`, where `terminal = sqrt(2 M g / (rho cd S_b))` is the speed of a vertical fall. `S_b` is
+the body's frontal area, 0.00813 M^0.666 m^2 (Pennycuick 1989, the allometry the measured drag coefficients were worked
+out with), `rho` sea-level air (1.23 kg/m^3), `cd` the tree's. The terminal speed rises with mass^(1/6), so nothing
+per species is written: the tree gives `cd` and the steepest angle at the class (Aves) and overrides them only where a
+group's own are measured (the falcons), and `pipeline/locomotion.py` (`dive_of`) derives each species' row from its
+mass:
+
+| species | mass | cd | terminal | steepest | top at that angle |
+|---|---|---|---|---|---|
+| golden-crowned kinglet | 6 g | 0.37 | 31 m/s | 64° | 29 m/s |
+| California scrub-jay, acorn woodpecker | 80 g | 0.37 | 48 | 64° | 45 |
+| California quail | 180 g | 0.37 | 55 | 64° | 52 |
+| merlin | 190 g | 0.18 | 79 | 87° | 79 |
+| American crow | 450 g | 0.37 | 64 | 64° | 60 |
+| red-tailed hawk | 1.1 kg | 0.37 | 74 | 64° | 70 |
+| common raven | 1.2 kg | 0.37 | 75 | 64° | 71 |
+| turkey vulture | 1.5 kg | 0.37 | 78 | 64° | 74 |
+| bald eagle | 4.5 kg | 0.37 | 94 | 64° | 89 |
+
+These are ceilings, not what a bird does in a day: a 1 kg model falcon needs about 1200 m to come within 5% of its top
+(Tucker 1998), and the radar tracks of real stoops are well under terminal (below). What keeps a jay's or a quail's
+drop short is the height it has: from 27 m up a scrub-jay reached 17 m/s before the ground guard pulled it out, from
+12 m 10 m/s; from the 2.3 m of its flush a quail fell for 0.65 s.
+
+**The sources, and what has none.**
+- `cd` 0.37 (Aves): the mean body drag coefficient worked out from the dives of small migrant passerines tracked by
+  radar, range 0.17 to 0.77 (Hedenström and Liechti 2001, J Exp Biol 204:1167; the abstract was read, not the full
+  text, so their dive speeds and angles are not quoted). It stands for every bird whose own is not measured, which is
+  every group here but the falcons: a hawk's, a vulture's, an owl's or a gull's tucked drag was not found.
+- `cd` 0.18 (Falconidae): the body drag measured on a peregrine at low speed, with which model falcons of 0.5 to 2 kg
+  top out at 89 to 112 m/s in a vertical dive; the same paper gives the pull-out's drag (the spread wings at full lift
+  slow a 1 kg falcon at 1.5 g at half its top speed), used here as `pull_g_at_half_top` for every bird (Tucker 1998,
+  J Exp Biol 201:403).
+- The steepest angle, 64° (Aves): the steepest dive track with a source here. A peregrine and a goshawk on tracking
+  radar dived at 13 to 64°, their fastest 10 s at 31 to 39 m/s and about 30 m/s over height losses of 450 to 1080 m
+  (Alerstam 1987, Ibis 129:267); a trained 1.02 kg gyrfalcon tracked optically dived at 17 to 62° from up to 500 m
+  (Tucker, Cade and Tucker 1998, J Exp Biol 201:2061; its fastest is quoted second hand as about 58 m/s, the paper's
+  own figure was not read). No group's own steepest angle was found measured, so the class's stands for all.
+- 87° (Falconidae) has no tracked measurement behind it: the vertical stoop is Tucker's model's and the field
+  descriptions'. It is the limit the stoop at prey has had here since 2026-11-06, kept for the falcons' free dive.
+- Not used: a red-tail's "120 mph" (54 m/s) and a golden eagle's "150 to 200 mph" are repeated widely with no
+  measurement behind them (the eagle's is a 1968 estimate, never verified).
+- Not stated, for want of a source: an owl's drop with the wings held open, a vulture's or a gull's reluctance to
+  stoop, a kingfisher's or an osprey's plunge. They take the class's rule until someone reads for them.
+
+**How it ends** (decided here): the key again (a press starts it and a press ends it, as the stoop's; a held key
+would take a hand from the steering); Escape, which then does not also leave the body; any key that asks for the wings
+(the up arrow, Space, S, X, or H for the soar or the hover); a bump against wood; and the ground. Each frame the
+pull-out is stepped ahead from where the bird is at its present speed, and where that path would come within 2 m plus
+a tenth of a second of the fall of the ground, a rock's top or the water, the bird pulls out by itself. Over a wood the
+crowns are the floor (the tile's canopy height), so a dive from above the trees ends over them; a bird already down
+among the trunks is stopped by the ground alone. While it dives a contact skims the bird instead of landing it. The
+pull-out is the stoop's (1.1 s, the nose up to 0.25 rad); the wings open, their drag sheds the speed back to the
+flight's own top, and the bird flies on (a soarer circles again only after a stoop at prey).
+
+**The tuck** is the wing rig's own, nothing new: a soarer's wings sweep back at the shoulder and the wrist (mode
+`stoop`, pose 0.75), a percher's close against the body (mode `fold`, pose 1), the hawk's hands droop and its tail
+closes (`flierControl.js draw`); the raven's flying model sweeps the same joints its landing fold uses 0.8 of the way,
+the wing its full size and the body left along its fall (`raven.js` `tuck`); the woodpecker's wings shut as in the dip
+of its undulation. A group member's diving bird shows it: the body's sample carries the pose (`bodySample.js`; the
+raven's tuck goes out as its pose, which the mirror's raven folds its wings by).
+
+**The streaks** (`client/src/speedBlur.js`): a 2D canvas over the world and under the panels, made at the first dive.
+Soft pale lines point away from where the bird is heading on the screen, travel outward through a band at the frame's
+edges, and come in gusts that run round the frame (the ripple); more, longer, wider and faster with speed (from the
+species' cruise to its dive top), faded in at the dive's start and out through the pull-out, over a faint dark vignette.
+The middle of the frame (an ellipse of the viewport's shape, 0.5 to 0.74 of the way out) is always clear, so the ground
+ahead and the prey stay readable. It is not a pass of the renderer and adds no sampler, attribute or render target to
+the world's shaders. With no dive on, its update returns on its first line and the canvas is not displayed. Under
+`prefers-reduced-motion` there are no streaks and no ripple: only the vignette, which does not move.
+
+![the view at a quarter, at 0.6 and at 0.9 of a red-tail's dive top](dive-streaks-strip.jpg)
+
+![level flight and the tuck: red-tailed hawk, scrub-jay, raven, acorn woodpecker](dive-tuck-strip.jpg)
+
+**Checked** (2026-11-11, the home tile, a headless Chrome 157 at 1280x713 on the branch's own server; the machine's
+load average was 11, so the page ran at about 20 frames a second):
+- Free dives from 1100 m (the hawk, the raven) and 600 m (the jay): the nose at 64°, the speed 69.7, 70.7 and 45.2 m/s
+  at the pull-out against tops of 70.1, 71.2 and 45.3; the guard pulled each out 26 to 30 m over the ground of an oak
+  wood (its crowns counted), and each flew on. The woodpecker from 72 m: 28.7 m/s, pulled out at 22 m, back to its
+  undulation. A stand-in (the yellow-billed magpie, 158 g on the raven's row): terminal 53.6 m/s.
+- The keys as the hawk: Q starts it and 1 ends it; Escape ends it and the body is kept; the up arrow, Space, S and X
+  each end it; H ends it into the soar; A turns it while it dives; from a soar it starts, and after it the bird flies
+  on; on the ground nothing starts and the slot is hidden.
+- The stoop at prey: a brush rabbit 75 m off caught in 2.55 s, the hawk down on it and mantling, the wings tucked and
+  the streaks on through it.
+- The bar: all 48 flier entries of the tile (26 of the library, 22 stand-ins), the raven and the woodpecker have the
+  dive first; the 15 ground birds that flush have it in the flush; no walker has it.
+- A mirror's draw, without the hub: the diving bird's own sample (`bodySample`) fed to `animals.remoteSample` beside
+  it; the copy's pose followed (the hawk 0.75, the raven 0.8) and its wings were tucked.
+- The streaks' cost: the draw took 0.19 ms a frame on the main thread; the frame interval with them on and off,
+  switched every 1.2 s through one dive, was 53.0 against 54.5 ms and 48.8 against 50.3 ms in two runs (medians 50 and
+  50): no difference to be seen on a machine that loaded. With no dive on, the update returns in under 10 ns. With
+  `prefers-reduced-motion` emulated the canvas held no pale pixel, only the vignette; the centre of the frame was
+  clear in both.
+- Not checked: a real screen's frame rate (the runs above were headless and under load); a touch device; two pages
+  through the hub.
+
 ## Open
 
 - The part rig's spine bend and head lead (the chest and head parts turning about the vertical by the lag): done for
@@ -425,6 +542,11 @@ advances it, the gait, the turn's C, the coil and the raised head (`bodySample.j
   squirrel (Rodentia's bound) on the same hop set or their own.
 - The tree's numbers for the birds' ground speeds (Garland's fit is for mammals; capped at 4 sqrt(g h) for now).
 - The catch (above): the hawk's feet, the bear's swat, the AI corvid hunt, the jay's carry, the prey's struggle.
+- The dive (above): no sound of the wind in it; the chase camera stays where it was (no pull back, no widening of the
+  view); an owl's open-winged drop, a vulture's or a gull's shallow descent, the plunge of a kingfisher or an osprey
+  into water and a merlin's level chase are not told apart from the class's fall (no source read for them); a stand-in
+  falcon on a hawk's row dives as a hawk; the AI's birds do not dive but for the hawk's stoop; the drag of a hawk's or
+  a raven's tucked body is the passerines' figure until one is measured.
 - The snake (above): no climbing (into a shrub or up a trunk) and no hiding in cover. The coil is a flat spiral, not
   stacked loops, and basking does not flatten the body. Concertina and sidewinding are not done. A swallow after the
   kill is not drawn (the belly fills at once). The terciopelo has no model of its own: two text-to-3D previews failed the snake gate (decisions, 2026-11-06).

@@ -133,10 +133,12 @@ const RIG = {
 
 // The hunt's actions (owner, 2026-11-06: "For all hunters When a prey is targeted, the controls for the hunt appear"): shown
 // only while a prey animal is selected (quarry.js), greyed while out of reach (`oor`), a radial sweep while cooling (`cd`).
-// The dive (dive.js) for a hunting bird, key 1 (or Q); the walkers' strikes (combat.js: bite, swipe, pounce or lunge by
+// The dive (dive.js), key 1 (or Q): a hunting bird's stoop at the selected prey; with none, any bird's free dive; the walkers' strikes (combat.js: bite, swipe, pounce or lunge by
 // family) on 1-3. A press of the slot plays it too.
-const DIVE = on('dive', '1', c => !!c.dive?.active, { show: c => !!c.dive && !!c.quarry?.target && (c.dive.active || c.dive.me().hunts), oor: c => !c.dive.active && !c.dive.can(),
-  press: (c, down) => { if (down) c.dive.toggle(); }, title: '1 (or Q) with a prey animal selected (Tab, or click it) below you: tuck the wings and stoop straight at it; it may see you coming; losing sight of it calls the dive off' });
+// Every bird has it in the air (owner, 2026-11-11: the free dive): the fliers, the raven, the woodpecker flying, and a
+// ground bird in its flush (the turkey, the quail: a drop to the ground with the wings shut, groundControl.js dropFlush).
+const DIVE = on('dive', '1', c => !!c.dive?.active || !!c.ground?.fl?.drop, { show: c => !!c.dive && (c.dive.active || c.dive.aloft()),
+  press: (c, down) => { if (down) c.dive.toggle(); }, title: '1 (or Q) in the air: nose down, wings tucked, falling faster and faster; 1 again, Esc, ↑, space, S or X pulls out, and over the ground the bird pulls out by itself. With a prey animal selected (Tab, or click it) below you and in sight: a stoop straight at it; it may see you coming; losing sight of it calls the stoop off' });
 const strikeSlot = (m, i) => on(m.name, String(i + 1), c => c.ground.strike?.kind === m.key || (m.key === 'pounce' && c.ground.mode === 'leap') || (m.key === 'lunge' && c.ground.mode === 'pounce'),
   { show: c => !!c.quarry?.target && !!c.combat?.active, oor: c => !c.combat.inReach(m.key), cd: c => c.combat.cooling(m.key), left: c => Math.max((c.combat.cd.get(m.key) || 0), c.combat.gcd) - c.combat.t,
     press: (c, down) => { if (down) c.combat.use(m.key); }, title: `${i + 1}: ${m.title} (its own cooldown ${m.cd} s)` });
@@ -160,6 +162,7 @@ const SQUIRREL = [
 // The woodpecker's (woodpeckerControl.js): on a trunk (cling, and its work and paths), or flying.
 const wpFly = c => c.woodpecker.mode === 'fly', wpOn = c => !wpFly(c);
 const WOODPECKER = [
+  DIVE,
   on('take acorn', 'E', c => c.woodpecker.work?.kind === 'pick'),
   on('hammer', 'E', c => c.woodpecker.work?.kind === 'hammer', { title: 'E on your family\'s granary' }),
   on('call', 'C', c => c.k('KeyC')),
@@ -177,7 +180,7 @@ const MOVE_KEYS = {
   flier: [['↑ ↓', 'pitch'], ['A D', 'turn'], ['W S', 'speed'], ['shift', 'sprint'], ['space', 'flap'], ['X Z', 'climb · descend'], ['H', 'soar or hover']],
   raven: [['↑ ↓', 'pitch'], ['A D', 'turn'], ['W S', 'speed'], ['shift', 'sprint'], ['space', 'flap'], ['X Z', 'climb · descend'], ['H', 'hover']],
   squirrel: [['W S', 'run'], ['A D', 'turn'], ['shift W', 'sprint'], ['space', 'jump · leap']],
-  woodpecker: [['W S', 'hitch · speed'], ['A D', 'round · turn'], ['↑ ↓', 'climb · dive'], ['space', 'fly · burst']],
+  woodpecker: [['W S', 'hitch · speed'], ['A D', 'round · turn'], ['↑ ↓', 'climb · descend'], ['space', 'fly · burst']],
   spirit: [['W S', 'fly'], ['A D', 'turn'], ['↑ ↓', 'pitch'], ['shift', 'rush'], ['X Z', 'rise · sink'], ['H', 'hover'], ['tab', 'target']],
 };
 const HUNT_KEYS = [['tab', 'target prey'], ['esc', 'clear']];
@@ -199,10 +202,10 @@ export function abilitiesFor(kind, code, S = null, strikes = null) {
   const sp = SPECIES[code];
   if (kind === 'ground' && S) {
     const t = sp || RIG[S.rig] || { verbs: [] }, word = t.act || S.act?.word || 'act';
-    return [...(strikes || []).map(strikeSlot), ...groundMoves(S), actOf(word), restOf(S), ...t.verbs].filter(Boolean);
+    return [...(strikes || []).map(strikeSlot), ...(S.flush ? [DIVE] : []), ...groundMoves(S), actOf(word), restOf(S), ...t.verbs].filter(Boolean);   // (a bird that flushes: its dive, shown in the flush)
   }
   if (kind === 'flier') return [DIVE, ...flierMoves(), ...(sp?.verbs || [DRINK_NO, CALL])];
-  if (kind === 'raven') return [...flierMoves(), ...(sp?.verbs || [DRINK_NO, CALL])];
+  if (kind === 'raven') return [DIVE, ...flierMoves(), ...(sp?.verbs || [DRINK_NO, CALL])];
   if (kind === 'squirrel') return SQUIRREL;
   if (kind === 'woodpecker') return WOODPECKER;
   return SPIRIT;

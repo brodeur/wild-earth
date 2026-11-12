@@ -184,7 +184,7 @@ export class FlierControl {
     const W = this.hudWas, k = s => `<kbd>${s}</kbd>`;
     if (h1?.firstChild) h1.firstChild.nodeValue = on ? `${S.common} ` : W.h1;
     if (help) help.innerHTML = on ? `${k('↑')}${k('↓')} pitch · ${k('←')}${k('→')} turn · ${k('W')}${k('S')} speed (${k('shift')} boost) · ${k('space')} flap · `
-      + `${k('X')}${k('Z')} climb / descend · ${k('H')} ${S.flight.soar ? 'soar in a circle' : 'hover'} · fly slowly into a limb${S.flight.perch ? ' (a snag or a pine, high up)' : ''} or the ground to land · `
+      + `${k('X')}${k('Z')} climb / descend · ${k('H')} ${S.flight.soar ? 'soar in a circle' : 'hover'} · ${k('1')} dive · fly slowly into a limb${S.flight.perch ? ' (a snag or a pine, high up)' : ''} or the ground to land · `
       + `on foot: ${k('W')}${k('S')} hop · ${k('A')}${k('D')} turn · ${k('space')} take off · ${k('E')} peck · `
       + `${k('V')} view · ${k('M')} map · ${k('P')} present day · ${k('T')} tags · ${k('N')} mute · ${k('B')} back to spirit form · click a tree to identify · drag to steer in flight, to orbit the camera when still` : W.help;
   }
@@ -223,7 +223,8 @@ export class FlierControl {
   // body pitches up and the wings and tail flare (the brake: draw) as the feet come forward; the strike within reach
   // kills (animals.js catchNear) and the hawk comes down on the kill at once, mantling over it (wings half spread and
   // drooped round it, the tail fanned, the head down) until it hops or takes off.
-  // The dive (dive.js, 2026-11-06): its steering runs before the flight moves, and the wings are drawn tucked while it is on.
+  // The dive (dive.js, 2026-11-06; the free dive every bird has, 2026-11-11): its steering runs before the flight moves, and
+  // the wings are drawn tucked while it is on.
   update(dt) {
     if (this.on) this.dive?.steer(dt);
     const f = this.flight, r = f.update(dt), hawk = this.S?.short === 'hawk';

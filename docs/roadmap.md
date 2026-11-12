@@ -532,7 +532,9 @@ browser stays the renderer.
   the quarry and the dive (2026-11-06, docs/decisions.md "a predator's eyes, the selected quarry and the dive"): the
   player's prey seen to 600 m by the line of sight alone and lit in its colour (a dot far off), Tab or a click selects
   one (a ring under it), and a hunting bird above it dives (Q) at it; the prey may see it coming and run its own escape;
-  works from a mirror page. Open: the raven and the ground predators have no dive (a lion's rush at a selection would
+  works from a mirror page. Since 2026-11-11 every bird has a free dive on the same key with no prey needed (the
+  fall's speed from the taxonomy tree, the wings tucked, streaks at the edges of the view: docs/movement.md "The
+  dive", decisions "Every bird dives"). Open: the raven and the ground predators have no stoop at prey (a lion's rush at a selection would
   be the next); the ground squirrels, tree squirrels and quail are not killable yet, so no dive is offered at them (nor
   at the Serengeti's hyraxes and lapwings, on those kin); the Serengeti has no predation pairs (pipeline DIET is North
   American), and its stand-in raptors on the vulture's flight (the tawny eagle) have no catch reach; the chase camera

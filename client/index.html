@@ -101,6 +101,8 @@
   #herdMarks { position:fixed; inset:0; z-index:4; pointer-events:none; }
   /* heard predators and prey (soundCues.js): ring waves pulsing out at the sound's origin on the screen, or at the
      screen's edge nearest it; --soul the species' rarity colour, --d the rings' size for the sound's level */
+  /* a dive's speed streaks at the edges of the view (speedBlur.js): a canvas made at the first dive, over the world and under every panel */
+  #speedBlur { position:fixed; left:0; top:0; width:100vw; height:100vh; z-index:3; pointer-events:none; }
   #soundCues { position:fixed; inset:0; z-index:6; pointer-events:none; }   /* over the row and the panels: an edge ring is never hidden by them */
   .scp { position:absolute; left:0; top:0; width:0; height:0; }
   .scp i { position:absolute; left:calc(var(--d, 30px) / -2); top:calc(var(--d, 30px) / -2); width:var(--d, 30px); height:var(--d, 30px); box-sizing:border-box; border:2px solid var(--soul, #e6ede7); border-radius:50%; opacity:0; animation:scRing 1s ease-out forwards; filter:drop-shadow(0 0 1.5px #000c); }
