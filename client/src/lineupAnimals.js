@@ -5,7 +5,8 @@ import { Atmosphere, uniforms as atmo } from './atmosphere.js';
 import { SEASON_LOOK, sunDirection, seasonOfDate } from './season.js';
 import * as GAIT from './gait.js';
 import { gaitParams, makeGait, gaitStep, writeRow, liveClip, footPoints, farTable, makeFar, farDrive, individualParams, seedOf } from './gait.js';
-import { strideStats, frameCost, driftApart, hostMirror } from './gaitMeasure.js';   // the stride measures (__animalLineup.strides)
+import { strideStats, frameCost, driftApart, hostMirror } from './gaitMeasure.js';
+import { heroPool, heroPlayer, heroIndex } from './hero.js';   // &hero=1|2 (heroRow)   // the stride measures (__animalLineup.strides)
 
 // Animal lineup (client/lineup_animals.html): the counterpart of the tree lineup (lineup.js) for signing off the
 // animal meshes (docs/animal-library.md, "Lineup page"). One row per species in library/animals/index.json plus
@@ -22,6 +23,11 @@ import { strideStats, frameCost, driftApart, hostMirror } from './gaitMeasure.js
 //      &vary=0 (the engine's even stride: no stride-to-stride variation; the species' body, not an individual)
 //      &seed=<text> (which individual the row is: its tempo, its lead, its asymmetry and its strides' drift)
 //      &weights=1 (the skinned mesh coloured by its joints' weights) &close=1 (the camera on the drawn animal alone)
+//      &hero=1|2 (the hero tier: 1 the pool's, 2 the player's body with the fur's shells, &fur=<shells>; heroRow)
+//      motion=idle (the body standing in place, the idle layer running with time passing: idle.js; graze: feeding with the
+//      head coming up; rest: bedded, a ruminant chewing; sit: on the haunches, or a rabbit's sit-up) &act=<shake|scratch|
+//      stretch|sit|sniff|stamp|groom|wash> (that act played again and again instead of the director's choice) &t0=<s> (the
+//      idle clock starts there: the director's own day from that second)
 // The skinned quadrupeds with legs (animalModels.js model.legs: fox, coyote, lion, bear, and the two rabbits on its hop) move on the leg engine
 // (gait.js) at walk, trot, run and a standing turn: the body travels along the row and the camera follows it, so the
 // planted feet can be seen staying put on the ground (markers with &feet=1) while the body passes over them.
@@ -167,7 +173,7 @@ const GENERIC = {
 const MOTIONS = [
   ['idle', 'idle'], ['walk', 'walk / bound / hop'], ['trot', 'trot / pace (the leg engine)'], ['run', 'run: gallop / bolt / dash / sprint'], ['turn', 'standing turn: steps round (the leg engine)'], ['graze', 'graze / tail flick / peck / head flick'], ['rest', 'bedded / sit up / perched / bask'],
   ['flap', 'flap'], ['glide', 'glide / soar'], ['climb', 'climb (legs splayed)'], ['display', 'display: push-up'],
-  ['sit', 'sit up (the rabbits on the leg engine)'], ['freeze', 'freeze: crouched flat (the rabbits)'],
+  ['sit', 'sit: on the haunches (the leg engine) / sit up (the rabbits)'], ['freeze', 'freeze: crouched flat (the rabbits)'],
 ];
 const DRAFT_FALLBACK = { odocoileus_hemionus: 'odocoileus_hemionus_buck' };   // the doe has no brief of its own
 
@@ -480,6 +486,8 @@ if (assetList) {
     else { DRAWN[`file:${f}`] = { file: f, label: f }; keys.push(`file:${f}`); }
   }));
 }
+// the hero tier's species (client/assets/hero/index.json, hero.js): their tile model (fauna/<code>.glb) as a drawn row
+for (const code of Object.keys((await heroIndex())?.species || {})) if (!DRAWN[code]) { DRAWN[code] = { file: `fauna/${code}.glb`, fauna: true }; if (!keys.includes(code)) keys.push(code); }
 const only = params.get('only') ? new Set(params.get('only').split(',')) : null;
 
 const draftCache = {};
@@ -631,16 +639,16 @@ async function headSize(file) {
 function loadDrawn(row) {
   const D = row.drawn, cfg = row.cfg;
   if (D.state !== 'pending') return D.promise || Promise.resolve();
-  if (cfg.file && assetList && !assetList.has(cfg.file)) {
+  if (cfg.file && !cfg.fauna && assetList && !assetList.has(cfg.file)) {
     D.state = 'missing'; D.msg = `${cfg.file} is missing from client/assets: showing the procedural model only`; refresh(row); return Promise.resolve();
   }
   D.state = 'loading'; refresh(row);
   const t0 = performance.now();
-  const loader = cfg.loader && typeof AM[cfg.loader] === 'function' ? AM[cfg.loader] : null;
+  const loader = cfg.fauna ? () => AM.loadFaunaModel(cfg.file, AM.faunaTemplate(null, {})) : cfg.loader && typeof AM[cfg.loader] === 'function' ? AM[cfg.loader] : null;
   const job = cfg.skinned ? loadSkinned(row)
     : loader ? Promise.all([loader(), cfg.file ? headSize(cfg.file) : null]).then(([model, bytes]) => ({ model, bytes }))
     : cfg.file ? loadGeneric(row) : Promise.reject(new Error('no file and no loader'));
-  D.promise = job.then(({ model, bytes }) => {
+  D.promise = job.then(async ({ model, bytes }) => {
     D.model = model; D.bytes = bytes; D.ms = performance.now() - t0; D.via = cfg.skinned ? 'skinned GLB (raven.js style)' : loader ? `animalModels.js ${cfg.loader}` : 'read here with generic rig constants (no loader in animalModels.js yet)';
     if (model.skinned) {
       row.group.add(model.holder);
@@ -648,6 +656,7 @@ function loadDrawn(row) {
     } else {
       D.meshes = model.tiers.map(g => instance(g, model));
       for (const m of D.meshes) row.group.add(m);
+      if (HERO_Q) await heroRow(row, model);
       D.metrics = measureGeo(model.tiers[0], { foreZ: model.extras?.rig?.fore?.[2] ?? null });
     }
     D.state = 'ok';
@@ -656,6 +665,17 @@ function loadDrawn(row) {
     console.warn('lineup:', D.msg, e);
   }).finally(() => { layout(row); refresh(row); });
   return D.promise;
+}
+
+// &hero=1|2: the hero tier (hero.js) on a species client/assets/hero lists: 1 the shared pool's (hero lod1 in tier 0, lod2 in
+// tier 1, maps at 1024, the coat's rim), 2 the player's body (hero lod0 in tier 0, the full maps and the fur's shells:
+// &fur=<shells>); 0 or absent the old tiers. Filmed at the same pose as the old for a side-by-side.
+const HERO_Q = +(params.get('hero') || 0);
+async function heroRow(row, model) {
+  const meshes = row.drawn.meshes;
+  if (!meshes?.[0] || !model.skin) return;
+  if (HERO_Q === 1) await heroPool(row.species, { tiers: meshes, planar: null }, model, { atmosphere });
+  else await heroPlayer(row.species, meshes[0], model, { atmosphere, warmCtx: { renderer, scene, camera } });
 }
 
 // Place the pole, the drawn model and the procedural one left to right; each animal faces +x (nose right).
@@ -726,6 +746,7 @@ const antlersFor = season => AM.antlerState(AM.SEASON_MONTH[season] ?? 10.5);
 const SLOPE = (+params.get('slope') || 0) * Math.PI / 180, FEET = params.get('feet') === '1', SPEED = +params.get('speed') || 0, FAR = params.get('far') === '1';
 const JOINTS = params.get('joints') === '1', WEIGHTS = params.get('weights') === '1', CLOSE = params.get('close') === '1';
 const VARY = params.get('vary') !== '0', SEED = params.get('seed') || 'lineup';
+const ACT = params.get('act') || '', T0_IDLE = +params.get('t0') || 0;   // the idle layer: an act to repeat, the idle clock's start (idle.js)
 // the row's individual (gait.js individualParams): the model's own height against the species' row, the page's seed
 const individualOf = (row, P, legs) => individualParams(P, seedOf(`${SEED}:${row.species}`), legs.h / P.h, { k: VARY ? 1 : 0 });
 const groundY = (x, rowX) => Math.tan(SLOPE) * (x - rowX);
@@ -749,7 +770,8 @@ function legsPose(row, model, meshes, t, dt) {
   }
   const x0 = row.x + row.posD, x = x0 + G.travel, terrain = (wx, wz) => groundY(wx, row.x);
   const inp = { x, y: terrain(x, 0), z: 0, yaw: G.yaw, size: 1, v, wr, pose: hop ? (want === 'sit' ? 1 : want === 'freeze' ? -0.6 : want === 'rest' ? -1 : 0) : want === 'rest' ? 1 : 0,
-    flick: want === 'graze' ? 1 : 0, bend: 0, twitch: row.species === 'puma_concolor' ? 0.7 * Math.sin(t * 3.3) : row.species === 'sylvilagus_bachmani' && want === 'run' ? 1 : 0, terrain, air: false };
+    flick: want === 'graze' ? 1 : 0, bend: 0, twitch: row.species === 'sylvilagus_bachmani' && want === 'run' ? 1 : 0, terrain, air: false,   // (the lion's tip twitch is the idle layer's now)
+    t: T0_IDLE + t, sit: !hop && want === 'sit' ? 1 : 0, act: ACT, look: null };
   if (FAR) {   // the far tier: the baked cycles driven by distance (farDrive), the body sliding along at v
     G.far ||= makeFar(P); G.F ||= farTable(model.skin, P);
     row.travel = G.travel;
@@ -885,7 +907,7 @@ function refresh(row) {
   if (D.state === 'none' && !P.mesh) msgs.push('nothing to draw: no mesh and no procedural model (sound only)');
   else if (D.state === 'none') msgs.push('no drawn mesh: procedural model only');
   if (!P.mesh && D.state !== 'none') msgs.push('no procedural model for this species');
-  const engine = D.state === 'ok' && D.model?.legs && ['walk', 'trot', 'run', 'turn', 'rest', 'graze', 'idle', ...(D.model.legs.kind === 'lagomorph' ? ['sit', 'freeze'] : [])].includes(state.motion);
+  const engine = D.state === 'ok' && D.model?.legs && ['walk', 'trot', 'run', 'turn', 'rest', 'graze', 'idle', 'sit', ...(D.model.legs.kind === 'lagomorph' ? ['freeze'] : [])].includes(state.motion);
   if (!engine && !animFor(row, state.motion, 0).ok) msgs.push(`${state.motion}: not a motion of this body plan, idle shown`);
   if (D.model?.skinned && !['flap', 'glide', 'idle'].includes(state.motion)) msgs.push(`drawn raven: skinned player model has only fly and glide clips, glide shown`);
   if (D.model?.generic && state.motion !== 'idle') msgs.push('drawn: generic rig constants (no loader in animalModels.js yet)');

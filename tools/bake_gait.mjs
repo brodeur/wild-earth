@@ -10,16 +10,36 @@
 // none), Bed (one frame, pose 1), Eat (one frame standing, the nose at the ground: flick 1, gait.js reachDip). A lagomorph (the row's hop, gait.js hopStep): Idle, Shuffle (0.7 x the shuffle's top),
 // Bound (the half-bound), Run (its fast form at three quarters of the cruise: the jackrabbit's lope), Sit, Freeze, Form, Eat. A gait clip records stride_m (the engine's stride at that speed: the client advances the
 // phase by distance over it), touchdown (the left fore foot's landing phase) and speed_mps.
-import { readFileSync, writeFileSync } from 'node:fs';
-import { basename, dirname, join } from 'node:path';
+//
+//   ~/.nvm/versions/node/v24.13.0/bin/node tools/bake_gait.mjs --hero canis_lupus [--tile ...]   (or --hero all)
+//
+// --hero <code>: bake from the hero model's skeleton (client/assets/hero/<code>.glb; 22 joints when it has ears: Ear.L, Ear.R
+// after the usual 20, so the clip texture is 66 texels wide) and write to the path its extras.skin.clips names, relative
+// to the hero folder (../fauna/<code>_clips). The ears' matrices are written in every frame (their rest orientation carried
+// by the head). --hero all: every species in client/assets/hero/index.json whose GLB has 22 joints, skipping any the index
+// says has no ears and any whose GLB changed in the last two minutes (still being written).
+import { readFileSync, writeFileSync, statSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { skeletonOf, gaitParams, makeGait, gaitStep, writeRow, cadence } from '../client/src/gait.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const argv = process.argv.slice(2);
 if (!argv.length || argv.includes('-h')) { console.log(readFileSync(fileURLToPath(import.meta.url), 'utf8').split('import {')[0]); process.exit(0); }
-const SRC = argv[0], opt = (k, d) => argv.includes(k) ? argv[argv.indexOf(k) + 1] : d;
-const RATE = +opt('--rate', 30), TILE = opt('--tile', 'utm10n_680_4280');
+const opt = (k, d) => argv.includes(k) ? argv[argv.indexOf(k) + 1] : d;
+const RATE = +opt('--rate', 30), TILE = opt('--tile', 'utm10n_680_4280'), HERO = opt('--hero', null), HERO_DIR = join(ROOT, 'client/assets/hero');
+if (HERO === 'all') {   // each hero species with 22 joints and ears, settled for two minutes, in a process of its own
+  const idx = JSON.parse(readFileSync(join(HERO_DIR, 'index.json'), 'utf8')).species;
+  for (const [code, e] of Object.entries(idx)) {
+    const glb = join(HERO_DIR, e.glb || `${code}.glb`), age = (Date.now() - statSync(glb).mtimeMs) / 1000;
+    if (e.ears === false || e.joints !== 22) { console.log(`SKIP ${code}: ${e.joints} joints${e.ears === false ? ', no ears' : ''} (stays 20 wide)`); continue; }
+    if (age < 120) { console.log(`SKIP ${code}: ${glb} changed ${age.toFixed(0)} s ago (still being written)`); continue; }
+    console.log(execFileSync(process.execPath, [fileURLToPath(import.meta.url), '--hero', code, ...argv.filter((a, i) => a !== '--hero' && argv[i - 1] !== '--hero')], { encoding: 'utf8' }).trim());
+  }
+  process.exit(0);
+}
+const SRC = HERO ? join(HERO_DIR, `${HERO}.glb`) : argv[0];
 
 const buf = readFileSync(SRC);
 if (buf.toString('latin1', 0, 4) !== 'glTF') throw new Error(`${SRC}: not a GLB`);
@@ -89,12 +109,18 @@ function toHalf(x) {
 const H = frames.length, data = new Uint16Array(W * H * 4);
 let worst = 0;
 for (let r = 0; r < H; r++) for (let i = 0; i < W * 4; i++) { const x = frames[r][i]; worst = Math.max(worst, Math.abs(x)); data[r * W * 4 + i] = toHalf(x); }
-const stem = basename(SRC).replace('.glb', ''), outBase = join(dirname(SRC), `${stem}_clips`);
+const stem = basename(SRC).replace('.glb', ''), outBase = HERO ? resolve(dirname(SRC), sk.clips || `../fauna/${stem}_clips`) : join(dirname(SRC), `${stem}_clips`);
+if (skel.ears) {   // the ears' rows in every frame: a rotation (rows of unit length) and a finite translation
+  const bad = [];
+  for (let r = 0; r < H; r++) for (const E of skel.ears) { const o = E.j * 12, f = frames[r]; const n = Math.hypot(f[o], f[o + 4], f[o + 8]); if (!(Math.abs(n - 1) < 1e-3) || ![3, 7, 11].every(k => Number.isFinite(f[o + k]))) bad.push(`${r}:${E.j}`); }
+  if (bad.length) throw new Error(`ear rows not written in frames ${bad.slice(0, 8).join(' ')}`);
+  console.log(`EARS joints ${skel.ears.map(E => E.j).join(', ')} written in all ${H} frames`);
+}
 writeFileSync(`${outBase}.bin`, Buffer.from(data.buffer));
 const index = {
   rate: RATE, width: W, height: H, format: 'rgba16f', texels: "row f = frame f; texels j*3..j*3+2 = rows 0..2 of joint j's 3x4 matrix (adopted frame)",
   joints: skel.names, joint_rest: skel.rest.map(p => p.map(x => +x.toFixed(4))), scale: 1.0, offset: [0, 0, 0],
-  source: { file: basename(SRC), engine: 'client/src/gait.js (tools/bake_gait.mjs)', species, tile: row ? TILE : null, params: { vw: P.vw, vt: P.vt, ft: P.ft, Lt: P.Lt, posture: P.posture, pace: P.pace, gallop: P.gallop } },
+  source: { file: HERO ? `hero/${basename(SRC)}` : basename(SRC), engine: 'client/src/gait.js (tools/bake_gait.mjs)', species, tile: row ? TILE : null, params: { vw: P.vw, vt: P.vt, ft: P.ft, Lt: P.Lt, posture: P.posture, pace: P.pace, gallop: P.gallop } },
   clips,
 };
 writeFileSync(`${outBase}.json`, JSON.stringify(index, null, 1));

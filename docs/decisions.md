@@ -9575,3 +9575,45 @@ whole account; the decisions:
   z-index 5 (`client/index.html`).
 - **Not checked**: the jay's and raven's speeds, the stoop's catch and the streaks' cost are the lane's own figures;
   a real screen's frame rate and the mirror's tuck through two pages were not run.
+
+## 2026-11-12: Avatar realism: a hero model tier that keeps the generated source, and an idle layer read from the tree (docs/avatar-realism.md; tools/hero_model.py; client/src/hero.js, idle.js, gait.js; branch claude/avatar-realism; not merged)
+
+Aaron, 2026-11-11: "How do we achieve a deeper level of realism with the animal avatars - how do we design a pipeline
+that produces a beautiful model, and species-appropriate idle behaviors", then "Feel free to go until morning trying to
+figure it out." docs/avatar-realism.md is the answer and the account; the decisions:
+
+- **The realism was being lost in our own reduction, so the pipeline keeps the source.** The Meshy refine of the wolf
+  is a 31,000-triangle mesh with a 2K painted coat; the build cut it to 5,000 triangles with one flat colour a face
+  from a ten-colour palette. `tools/hero_model.py` (Blender, headless) now makes a hero tier from the same source: a
+  clean 20,000-triangle mesh, new UVs, colour, normal and occlusion maps baked from the dense source, two more LODs,
+  2.2 to 2.6 MB a species. It ran unchanged on the wolf, the bison and the grizzly. No credits were spent.
+- **The hero's weights are computed on the hero mesh, not copied.** Copying the game's low-poly weights dragged a sheet
+  of skin between the fore legs; bone heat from the game's skeleton wins on every species over eight pose tests (wolf:
+  942 inverted faces against 1,339; grizzly 1,041 against 4,265). It loses more trunk volume in a sit (15 to 21 %
+  against 9 to 12 %). The tool also places a tail chain where the game rig has a stub (4 of 19 fauna models: the
+  build's tail finder) and adds two ear joints after the usual twenty where it can find the ears (not the bison's).
+- **On screen without a new sampler budget.** An animal draw used 5 to 7 texture units, not sixteen: the hero tiers
+  take 8 units and 14 attribute slots. The shared pool draws hero lod1 and lod2 with the old mesh as the far tier; the
+  player's body draws hero lod0 with 8 fur shells in one instanced draw (about 2 ms of GPU with the body filling a
+  third of the screen; 16 shells looked no better). 35 MB of texture memory a hero species, which will not hold for a
+  tile of twenty: compressed textures are next. `?hero=0` turns the tier off.
+- **Idle behaviour is a layer of the gait engine, read from the tree.** `idle` blocks by rank; breathing by Stahl's
+  rule; gaze, ears, tail and weight always on; acts by a director drawn from the seed and a clock. Most of the rates a
+  naturalist would want were not found in the literature in the time and are marked by eye in the tree's notes; read:
+  Stahl 1967 (through Calder and Worthington et al.), Li 2013, Eckstein & Hart 2000, Hudson & Kuzyk 2007, Tolkamp &
+  Kyriazakis 1999, Dickerson et al. 2012. The sources were gathered by a search agent and not checked again by me.
+- **An act a skeleton cannot do is left out, by a reach test, not faked and not listed by species.** Groom is off for
+  every species (it needs a neck of two joints); the scratch stays for the coyote, the wolf, the hare and the grizzly.
+- **The leg's swing is bounded by an angle** (Mammalia `vary`; by eye), which gives realistic duty factors at speed and
+  ends the long, low gallop that the reach rule of 2026-11-11 allowed; the far tier's 30 clip sets were baked again.
+  It makes the big ungulates walk with shorter, quicker strides than the allometry gives, and the giraffe's walk fails
+  the new check that a walk keeps a foot down more than half the time: the rig's legs are too short for those bodies.
+- **Checked:** `tools/gait_measure.mjs` (coyote, elk, cougar, hare: all in band, slide 0.0 mm) and
+  `tools/idle_measure.mjs` (all in band; its cost band failed once under load); the hero wolf and grizzly in the world
+  on Lamar before the last round, and in the lineup after it (walk, trot, gallop, idle, sit). Tests: 422 of 423; the
+  one error (tests.test_model_acceptance, the pronghorn) needs the git-ignored
+  library/animals/jobs/antilocapra_americana/01a1b18c-1540-70c3-9fd1-f535a7626d97/reference.json and passes with it.
+- **Left, in order:** new sources for the ten home species (about 300 credits; Meshy deletes output after three days,
+  so their old previews cannot be refined), a neck chain and a jaw, volume in the sit, compressed textures, the tail
+  and ear finders, limb proportions from measured bone lengths, eyes, the idle clock across pages, attention.
+  Quaternius no longer offers its models as CC0: the coyote's record should show what applied when it was downloaded.

@@ -22,6 +22,7 @@ import { buildSquirrel, buildWoodpecker, buildRaven, buildDeer, buildQuail, buil
   loadOspreyMesh, loadSharpShinnedMesh, loadMerlinMesh, loadGlaucousGullMesh, loadCaliforniaGullMesh, loadWesternGullMesh, loadMallardMesh,
   loadGrouseMesh, loadMarmotMesh, loadYellowPineChipmunkMesh, loadShrewMesh, loadToadMesh, loadFrogMesh, buildHairyWoodpecker,
   loadFaunaModel, faunaTemplate } from './animalModels.js';
+import { heroPool } from './hero.js';   // the hero tier: a species' textured near tiers when client/assets/hero lists it
 import { depthAt as waterDepthAt } from './water.js';
 import { segmentWings } from './birdWing.js';
 import { activeSkeins, birdIn } from './skeinPlan.js';   // migration skeins (skeinUpdate)
@@ -1324,6 +1325,7 @@ export class Animals {
       (this.gmOf ||= {})[k] ||= new Uint8Array(cap); if (ID[k] === RV) this.rvGM = this.gmOf[k];   // per slot: on the ground (the ground model) or in the air
     }
     sp.meshTris = model.tris;
+    if (!D.hybrid) heroPool(sp.code, st, model, { atmosphere: this.atmosphere, decorate: PLAYABLE.includes(k) ? selfLit : null });   // swaps lod0 and lod1 in when loaded
   }
   // The ravens (DRAWN[RV].hybrid): those on the ground (rvGM, set per animal in update) into the ground model's tiers
   // by distance, those in the air into tier 3, the flying model, lifted RAVEN_LIFT along their own up axis.

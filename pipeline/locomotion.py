@@ -29,6 +29,10 @@ for what no rank above says. resolve(code) merges the chain kingdom -> phylum ->
                          soft parts), as what differs from Mammalia's (the client's default): the client's gait
                          engine makes every stride and every individual its own from it (docs/movement.md
                          "Strides that vary")
+  idle                   the taxon's idle block (the breathing rate from mass, the weight's drift, the gaze's holds and
+                         turns, the tail's carriage, the repertoire of acts with their shares and bouts, rumination),
+                         as what differs from Mammalia's (the client's default): the client's gait engine keeps a
+                         standing, feeding or bedded body alive from it (client/src/idle.js)
   catch                  the family's catch move, passed through as the tree gives it (a cat's leap and neck bite, a
                          canid's mousing pounce, a hawk's talon strike and mantle, a corvid's bill stab; a species block
                          may override its reach): the client's hunters catch by it (docs/movement.md "The catch")
@@ -169,6 +173,12 @@ def resolve(code: str, tree: dict | None = None, rec: dict | None = None) -> dic
         d = _differs(_no_notes(merged["vary"]), _no_notes(tree["taxa"].get("Mammalia", {}).get("vary", {})))
         if d:
             out["vary"] = d
+    if merged.get("idle"):   # what a standing, feeding or bedded body keeps doing (client/src/idle.js: the breath, the weight, the gaze, the tail, the acts)
+        # as `vary`: only what differs from Mammalia's block, which is the client's default (idle.js IDLE, held equal to
+        # the tree by tests/test_locomotion_idle.py)
+        d = _differs(_no_notes(merged["idle"]), _no_notes(tree["taxa"].get("Mammalia", {}).get("idle", {})))
+        if d:
+            out["idle"] = d
     if merged.get("catch"):   # the family's catch move (docs/movement.md "The catch"): the client picks a hunter's catch by it
         out["catch"] = merged["catch"]
     return out

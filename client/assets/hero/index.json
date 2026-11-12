@@ -1,0 +1,73 @@
+{
+ "species": {
+  "canis_lupus": {
+   "glb": "canis_lupus.glb",
+   "triangles": [
+    20000,
+    6666,
+    2000
+   ],
+   "joints": 22,
+   "ears": true,
+   "bytes": {
+    "canis_lupus.glb": 1189360,
+    "canis_lupus_color.jpg": 673910,
+    "canis_lupus_normal.png": 601767,
+    "canis_lupus_ao.jpg": 104874
+   },
+   "tail": true,
+   "weights": "heat",
+   "maps": {
+    "color": "canis_lupus_color.jpg",
+    "normal": "canis_lupus_normal.png",
+    "ao": "canis_lupus_ao.jpg"
+   }
+  },
+  "bison_bison": {
+   "glb": "bison_bison.glb",
+   "triangles": [
+    20000,
+    6666,
+    2000
+   ],
+   "joints": 20,
+   "ears": false,
+   "bytes": {
+    "bison_bison.glb": 1174728,
+    "bison_bison_color.jpg": 340826,
+    "bison_bison_normal.png": 607710,
+    "bison_bison_ao.jpg": 98559
+   },
+   "tail": true,
+   "weights": "heat",
+   "maps": {
+    "color": "bison_bison_color.jpg",
+    "normal": "bison_bison_normal.png",
+    "ao": "bison_bison_ao.jpg"
+   }
+  },
+  "ursus_arctos": {
+   "glb": "ursus_arctos.glb",
+   "triangles": [
+    20000,
+    6666,
+    2000
+   ],
+   "joints": 22,
+   "ears": true,
+   "tail": false,
+   "weights": "heat",
+   "bytes": {
+    "ursus_arctos.glb": 1180616,
+    "ursus_arctos_color.jpg": 470938,
+    "ursus_arctos_normal.png": 784678,
+    "ursus_arctos_ao.jpg": 96819
+   },
+   "maps": {
+    "color": "ursus_arctos_color.jpg",
+    "normal": "ursus_arctos_normal.png",
+    "ao": "ursus_arctos_ao.jpg"
+   }
+  }
+ }
+}

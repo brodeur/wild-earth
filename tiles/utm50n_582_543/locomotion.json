@@ -206,6 +206,75 @@
     "soft": {
      "nod": 0.07
     }
+   },
+   "idle": {
+    "tail": {
+     "style": "switch",
+     "every_s": [
+      20,
+      0.8
+     ],
+     "flicks": [
+      1,
+      3
+     ],
+     "flick_s": 0.4,
+     "yaw": 0.6
+    },
+    "ears": {
+     "swivel": 1.0,
+     "hold_s": [
+      1.6,
+      0.6
+     ],
+     "flick": {
+      "per_min": 6
+     }
+    },
+    "acts": {
+     "scratch": {
+      "per_h": 3,
+      "bout_s": [
+       4,
+       0.4
+      ],
+      "hz": 4,
+      "needs": {
+       "reach_neck": 0.12
+      },
+      "share": 0.01
+     },
+     "stamp": {
+      "per_h": 2,
+      "bout_s": [
+       1.4,
+       0.3
+      ]
+     },
+     "groom": {
+      "share": 0.015,
+      "bout_s": [
+       6,
+       0.4
+      ],
+      "hz": 2.5,
+      "needs": {
+       "neck_joints": 2
+      }
+     }
+    },
+    "ruminate": {
+     "chew_hz": 1.0,
+     "chews": [
+      34,
+      46
+     ],
+     "pause_s": [
+      2,
+      4
+     ],
+     "nod": 0.035
+    }
    }
   },
   "urocyon_cinereoargenteus": {
@@ -260,6 +329,52 @@
    },
    "flags": {},
    "flier": false,
+   "idle": {
+    "tail": {
+     "style": "low",
+     "droop": 0.35
+    },
+    "sit": {
+     "trunk_deg": 47
+    },
+    "ears": {
+     "swivel": 0.85,
+     "hold_s": [
+      1.8,
+      0.6
+     ]
+    },
+    "acts": {
+     "sniff": {
+      "up": 0.35
+     },
+     "scratch": {
+      "per_h": 4,
+      "bout_s": [
+       3.5,
+       0.4
+      ],
+      "hz": 5,
+      "needs": {
+       "reach_neck": 0.12
+      }
+     },
+     "sit": {
+      "share": 0.25,
+      "bout_s": [
+       80,
+       0.5
+      ]
+     },
+     "stretch": {
+      "per_h": 1.5,
+      "bout_s": [
+       4,
+       0.2
+      ]
+     }
+    }
+   },
    "catch": {
     "move": "pounce",
     "name": "the mousing pounce",
@@ -786,6 +901,35 @@
     "set": "half-bound",
     "shuffle_froude": 1.0,
     "flex_rad": 0.28
+   },
+   "idle": {
+    "ears": {
+     "swivel": 0.9
+    },
+    "acts": {
+     "sniff": {
+      "per_h": 0
+     },
+     "wash": {
+      "per_h": 4,
+      "bout_s": [
+       5,
+       0.4
+      ],
+      "hz": 3
+     },
+     "scratch": {
+      "per_h": 2,
+      "bout_s": [
+       2.5,
+       0.4
+      ],
+      "hz": 6,
+      "needs": {
+       "reach_neck": 0.12
+      }
+     }
+    }
    }
   },
   "lepus_californicus": {
@@ -852,6 +996,35 @@
      ],
      "longer": 1.4,
      "higher_hip": 0.6
+    }
+   },
+   "idle": {
+    "ears": {
+     "swivel": 0.9
+    },
+    "acts": {
+     "sniff": {
+      "per_h": 0
+     },
+     "wash": {
+      "per_h": 4,
+      "bout_s": [
+       5,
+       0.4
+      ],
+      "hz": 3
+     },
+     "scratch": {
+      "per_h": 2,
+      "bout_s": [
+       2.5,
+       0.4
+      ],
+      "hz": 6,
+      "needs": {
+       "reach_neck": 0.12
+      }
+     }
     }
    }
   },
@@ -963,6 +1136,52 @@
    },
    "flags": {},
    "flier": false,
+   "idle": {
+    "tail": {
+     "style": "low",
+     "droop": 0.35
+    },
+    "sit": {
+     "trunk_deg": 47
+    },
+    "ears": {
+     "swivel": 0.85,
+     "hold_s": [
+      1.8,
+      0.6
+     ]
+    },
+    "acts": {
+     "sniff": {
+      "up": 0.35
+     },
+     "scratch": {
+      "per_h": 4,
+      "bout_s": [
+       3.5,
+       0.4
+      ],
+      "hz": 5,
+      "needs": {
+       "reach_neck": 0.12
+      }
+     },
+     "sit": {
+      "share": 0.25,
+      "bout_s": [
+       80,
+       0.5
+      ]
+     },
+     "stretch": {
+      "per_h": 1.5,
+      "bout_s": [
+       4,
+       0.2
+      ]
+     }
+    }
+   },
    "catch": {
     "move": "pounce",
     "name": "the mousing pounce",
@@ -1040,6 +1259,66 @@
    },
    "flier": false,
    "stalk_mps": 0.45,
+   "idle": {
+    "tail": {
+     "style": "twitch",
+     "every_s": [
+      6,
+      0.7
+     ],
+     "twitch_s": 0.5,
+     "amp": 0.8
+    },
+    "sit": {
+     "trunk_deg": 57
+    },
+    "ears": {
+     "swivel": 0.5,
+     "rest": [
+      -0.1,
+      0.15
+     ]
+    },
+    "acts": {
+     "scratch": {
+      "per_h": 4,
+      "bout_s": [
+       3.5,
+       0.4
+      ],
+      "hz": 5,
+      "needs": {
+       "reach_neck": 0.12
+      }
+     },
+     "sit": {
+      "share": 0.25,
+      "bout_s": [
+       80,
+       0.5
+      ]
+     },
+     "stretch": {
+      "per_h": 1.2,
+      "bout_s": [
+       4,
+       0.2
+      ]
+     },
+     "groom": {
+      "share": 0.08,
+      "bout_s": [
+       25,
+       0.6
+      ],
+      "hz": 2.5,
+      "sit": true,
+      "needs": {
+       "neck_joints": 2
+      }
+     }
+    }
+   },
    "catch": {
     "move": "leap",
     "name": "the leap and the neck bite",
@@ -1111,6 +1390,41 @@
    },
    "flags": {},
    "flier": false,
+   "idle": {
+    "sit": {
+     "trunk_deg": 65
+    },
+    "ears": {
+     "swivel": 0.15,
+     "lead_k": 0.3,
+     "flick": {
+      "per_min": 0.5
+     }
+    },
+    "acts": {
+     "sniff": {
+      "up": 0.4
+     },
+     "scratch": {
+      "per_h": 4,
+      "bout_s": [
+       3.5,
+       0.4
+      ],
+      "hz": 5,
+      "needs": {
+       "reach_neck": 0.12
+      }
+     },
+     "sit": {
+      "share": 0.25,
+      "bout_s": [
+       80,
+       0.5
+      ]
+     }
+    }
+   },
    "catch": {
     "move": "swat",
     "name": "the swat",
@@ -1350,6 +1664,75 @@
    "vary": {
     "soft": {
      "nod": 0.07
+    }
+   },
+   "idle": {
+    "tail": {
+     "style": "switch",
+     "every_s": [
+      20,
+      0.8
+     ],
+     "flicks": [
+      1,
+      3
+     ],
+     "flick_s": 0.4,
+     "yaw": 0.6
+    },
+    "ears": {
+     "swivel": 1.0,
+     "hold_s": [
+      1.6,
+      0.6
+     ],
+     "flick": {
+      "per_min": 6
+     }
+    },
+    "acts": {
+     "scratch": {
+      "per_h": 3,
+      "bout_s": [
+       4,
+       0.4
+      ],
+      "hz": 4,
+      "needs": {
+       "reach_neck": 0.12
+      },
+      "share": 0.01
+     },
+     "stamp": {
+      "per_h": 2,
+      "bout_s": [
+       1.4,
+       0.3
+      ]
+     },
+     "groom": {
+      "share": 0.015,
+      "bout_s": [
+       6,
+       0.4
+      ],
+      "hz": 2.5,
+      "needs": {
+       "neck_joints": 2
+      }
+     }
+    },
+    "ruminate": {
+     "chew_hz": 1.0,
+     "chews": [
+      34,
+      46
+     ],
+     "pause_s": [
+      2,
+      4
+     ],
+     "nod": 0.035
     }
    }
   },
@@ -1922,6 +2305,66 @@
     "stalk": true
    },
    "flier": false,
+   "idle": {
+    "tail": {
+     "style": "twitch",
+     "every_s": [
+      6,
+      0.7
+     ],
+     "twitch_s": 0.5,
+     "amp": 0.8
+    },
+    "sit": {
+     "trunk_deg": 57
+    },
+    "ears": {
+     "swivel": 0.5,
+     "rest": [
+      -0.1,
+      0.15
+     ]
+    },
+    "acts": {
+     "scratch": {
+      "per_h": 4,
+      "bout_s": [
+       3.5,
+       0.4
+      ],
+      "hz": 5,
+      "needs": {
+       "reach_neck": 0.12
+      }
+     },
+     "sit": {
+      "share": 0.25,
+      "bout_s": [
+       80,
+       0.5
+      ]
+     },
+     "stretch": {
+      "per_h": 1.2,
+      "bout_s": [
+       4,
+       0.2
+      ]
+     },
+     "groom": {
+      "share": 0.08,
+      "bout_s": [
+       25,
+       0.6
+      ],
+      "hz": 2.5,
+      "sit": true,
+      "needs": {
+       "neck_joints": 2
+      }
+     }
+    }
+   },
    "catch": {
     "move": "leap",
     "name": "the leap and the neck bite",
@@ -1991,7 +2434,32 @@
     "lead_max": 0.25
    },
    "flags": {},
-   "flier": false
+   "flier": false,
+   "idle": {
+    "sit": {
+     "trunk_deg": 47
+    },
+    "acts": {
+     "scratch": {
+      "per_h": 4,
+      "bout_s": [
+       3.5,
+       0.4
+      ],
+      "hz": 5,
+      "needs": {
+       "reach_neck": 0.12
+      }
+     },
+     "sit": {
+      "share": 0.25,
+      "bout_s": [
+       80,
+       0.5
+      ]
+     }
+    }
+   }
   },
   "lepus_americanus": {
    "code": "lepus_americanus",
@@ -2057,6 +2525,35 @@
      ],
      "longer": 1.4,
      "higher_hip": 0.6
+    }
+   },
+   "idle": {
+    "ears": {
+     "swivel": 0.9
+    },
+    "acts": {
+     "sniff": {
+      "per_h": 0
+     },
+     "wash": {
+      "per_h": 4,
+      "bout_s": [
+       5,
+       0.4
+      ],
+      "hz": 3
+     },
+     "scratch": {
+      "per_h": 2,
+      "bout_s": [
+       2.5,
+       0.4
+      ],
+      "hz": 6,
+      "needs": {
+       "reach_neck": 0.12
+      }
+     }
     }
    }
   },

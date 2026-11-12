@@ -1,6 +1,6 @@
 {
  "rate": 30,
- "width": 60,
+ "width": 66,
  "height": 45,
  "format": "rgba16f",
  "texels": "row f = frame f; texels j*3..j*3+2 = rows 0..2 of joint j's 3x4 matrix (adopted frame)",
@@ -24,7 +24,9 @@
   "Foot.HL",
   "UpperLeg.HR",
   "LowerLeg.HR",
-  "Foot.HR"
+  "Foot.HR",
+  "Ear.L",
+  "Ear.R"
  ],
  "joint_rest": [
   [
@@ -53,19 +55,19 @@
    0.3294
   ],
   [
-   0,
-   0.2529,
-   -0.3767
+   0.1137,
+   0.3666,
+   -0.3017
   ],
   [
-   0,
-   0.2385,
-   -0.3982
+   0.0864,
+   0.3266,
+   -0.3195
   ],
   [
-   0,
-   0.2242,
-   -0.4197
+   0.1062,
+   0.2471,
+   -0.3493
   ],
   [
    0.0194,
@@ -126,6 +128,16 @@
    -0.038,
    0.1357,
    -0.2559
+  ],
+  [
+   0.0097,
+   0.573,
+   0.3586
+  ],
+  [
+   -0.0386,
+   0.5533,
+   0.3683
   ]
  ],
  "scale": 1,
@@ -135,7 +147,7 @@
   0
  ],
  "source": {
-  "file": "canis_lupus.glb",
+  "file": "hero/canis_lupus.glb",
   "engine": "client/src/gait.js (tools/bake_gait.mjs)",
   "species": "canis_lupus",
   "tile": null,

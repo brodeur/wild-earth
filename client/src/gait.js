@@ -46,9 +46,17 @@
 // engine locks to it (inp.sc), so both pages draw the same strides. A stance foot is never moved: variation changes where
 // and when a foot lands, not whether it slides.
 //
+// The idle layer (client/src/idle.js; the tree's `idle` block): a body that stands, feeds or lies breathes (a scale on the
+// chest's and the spine's rotation about their own heads), shifts its weight, looks about in holds and quick turns, carries
+// its tail by its family, and now and then shakes, scratches, stretches, sits on its haunches, sniffs, stamps or grooms;
+// the engine draws it with its own means (a lifted foot by IK while the other three stay planted, the crouch, the neck and
+// the head, a twist of the skin about the bones). Off for the species' even body (P.ind null: the bake's Idle stays still).
+//
 // Output: the 3x4 matrix of every joint, [R | p - R q] for the posed head p, rest head q and rotation R (the frame
 // tools/bake_clips.py writes), into a row of a pose texture (animalModels.js SKIN_LIVE reads the instance's row when
 // aClip.x is negative). Far instances take baked cycles of the same engine (farDrive below, tools/bake_gait.mjs).
+
+import { idleOf, idleStep } from './idle.js';   // the idle layer: what a standing, feeding or bedded body keeps doing
 
 export const LEG_NAMES = ['FL', 'FR', 'HL', 'HR'];
 const G = 9.81, TAU = Math.PI * 2;
@@ -143,8 +151,10 @@ function between(a, b) {
 // it). Without it a long stride left the drawn toe short of its plant point: foot slide. (The three numbers are by eye.)
 const REACH_FOOT = 0.85, REACH_DROP = 0.06, REACH_RUN = 0.06;
 // how far ahead (dir 1) or behind (-1) of its rest place a foot's leg reaches, the joint dropped by `drop`; local units
-function reachOf(Lg, dir, drop) {
-  const hb = Math.sqrt(Math.max(0, Lg.reach * Lg.reach - (Lg.sy - drop) * (Lg.sy - drop) - Lg.dx0 * Lg.dx0));
+// tanA (the excursion bound, 2026-11-12): the leg's line from its joint to the toe swings no further from the vertical than
+// that angle's tangent (the tree's vary.excursion by gait), the smaller of the two limits
+function reachOf(Lg, dir, drop, tanA = Infinity) {
+  const hb = Math.min(Math.sqrt(Math.max(0, Lg.reach * Lg.reach - (Lg.sy - drop) * (Lg.sy - drop) - Lg.dx0 * Lg.dx0)), (Lg.sy - drop) * tanA);
   return Math.max(0, hb - dir * Lg.dz0) / (1 - Lg.slide);
 }
 // how far the joint must come down for a planted foot at `here` (local) to stay within the leg's reach; jy: the joint's height now
@@ -157,10 +167,10 @@ function reachDrop(Lg, here, jy) {
 // the last frame's, with the spine's flex and the body's height in it), carried on by the share of the foot's travel the
 // joint goes with (here: the foot now). tl is in the body's frame now, `on` further along than it will be in the body's
 // frame at the landing (the body's travel in the time left). Returns tl's z, changed only when it is out of reach.
-function reachClamp(Lg, Sj, here, tl, on, drop = 0) {   // drop: how far the joint may still come down for it
+function reachClamp(Lg, Sj, here, tl, on, drop = 0, tanA = null) {   // drop: how far the joint may still come down for it; tanA: [ahead, behind] the excursion bound's tangents (body frame)
   if (!Sj) return tl[2];
   const k = Lg.slide, z = tl[2] - on, jz = Sj[2] + k * (z - here[2] + on), dy = Sj[1] - drop - tl[1], dx = Sj[0] - tl[0], r = 0.97 * Lg.reach;
-  const dz = z - jz, hz = Math.sqrt(Math.max(0, r * r - dy * dy - dx * dx));
+  const dz = z - jz, hz = Math.min(Math.sqrt(Math.max(0, r * r - dy * dy - dx * dx)), tanA ? Math.abs(dy) * tanA[dz > 0 ? 0 : 1] : Infinity);
   return Math.abs(dz) <= hz ? tl[2] : (Sj[2] + k * (on - here[2]) + Math.sign(dz) * hz) / (1 - k) + on;
 }
 
@@ -201,6 +211,7 @@ export const VARY = {
   lead: { right: 0.49, keep: 0.66, block: 16, turn_rad_s: 0.35, hold_strides: 8 }, slope: { hz: 0.3, max: 0.5 },
   soft: { nod: 0.015, head_hz: 0.9, head_z: 0.55, head_k: 0.6, tail_hz: 0.7, tail_z: 0.3, tail_k: 0.8, ear_k: 0.6 },
   square: { after_s: [0.5, 2.5], off: 0.2 }, limp: { stride: -0.02, duty: 0.004, nod: 0.08 }, foothold: { rough: 0.04, reach: 0.12 },
+  excursion: { walk: [28, 28], trot: [28, 30], gallop: [32, 36] },
 };
 function varyOf(v) {
   const o = { ...VARY };
@@ -217,18 +228,27 @@ export function gaitParams(row, skel) {
   const T = row?.turn || {}, B = row?.bend || {};
   // the lagomorphs' gait set (the tree's Lagomorpha `hop`; hopStep): the shuffle below shuffle_froude of the hip height
   const hop = row?.hop || (skel.kind === 'lagomorph' ? { set: 'half-bound' } : null);
-  return { h, vw, vt, ft, Lt, mass, vary: varyOf(row?.vary), ind: null, body: skel.nose[2] - skel.tip[2], track: Math.abs(skel.legs[0].toe[0] - skel.legs[1].toe[0]) || 0.1, pace: gaits.walk === 'amble', gallop: /rotary/.test(gaits.gallop || '') ? 'rotary' : 'transverse',
+  const vary = varyOf(row?.vary), ex = vary.excursion, tw = ex ? [Math.tan(ex.walk[0] * Math.PI / 180), Math.tan(ex.walk[1] * Math.PI / 180)] : null;
+  // the walk's usable sweep: the least over the legs of how far ahead of its place a foot may land and behind it stay (the reach with the body down as far as a walk lets it, and the excursion bound), of the hip height
+  const sweepK = tw && skel.kind !== 'lagomorph' ? Math.min(...skel.legs.map(Lg => 0.93 * reachOf(Lg, 1, 0.85 * REACH_DROP * Lg.reach, tw[0]) + 0.97 * reachOf(Lg, -1, REACH_DROP * Lg.reach, tw[1]))) / skel.h : 0;   // (as the walking engine reckons it: gaitStep's far and late)
+  return { h, vw, vt, ft, Lt, mass, vary, ind: null, sweepK, body: skel.nose[2] - skel.tip[2], track: Math.abs(skel.legs[0].toe[0] - skel.legs[1].toe[0]) || 0.1, pace: gaits.walk === 'amble', gallop: /rotary/.test(gaits.gallop || '') ? 'rotary' : 'transverse',
     hop, vS: hop ? Math.sqrt((hop.shuffle_froude ?? 1) * G * h) : 0, observe: hop?.observe || null, flexMax: hop?.flex_rad ?? 0.28,
-    posture: row?.posture || skel.posture,
+    posture: row?.posture || skel.posture, idle: idleOf(row?.idle),
     turn: { on: T.on ?? 0.45, off: T.off ?? 0.2, hold: T.hold ?? 0.35, hz: T.hz || [0.7, 2.4] }, lead: B.lead ?? 0.12, leadMax: B.lead_max ?? 0.25 };
 }
 // cadence (Hz) and stride (m) at speed v: toward stride_hz at the trot-gallop change (f ~ v^0.45 below it, nearly flat
 // above, where the stride stretches instead)
+// The walk's stride is no longer than the legs' usable sweep covers at the walk's duty (P.sweepK, of the hip height: the
+// excursion bound and the reach), so a walk keeps feet on the ground more than half the time; the cap lets go by 1.3 x
+// the walk's top (the trot and the gallop spend the rest of a long stride in the air)
 export function cadence(P, v) {
-  const u = Math.max(v, 0.12 * P.vt) / P.vt;
+  const u = Math.max(v, 0.12 * P.vt) / P.vt, vv = Math.max(v, 0.12 * P.vt);
   const f = u < 1 ? P.ft * Math.pow(u, 0.45) : P.ft * Math.min(1.25, 1 + 0.12 * (u - 1));
-  return { f, L: Math.max(v, 0.12 * P.vt) / f };
+  let L = vv / f;
+  if (P.sweepK && v < 1.3 * P.vw) { const cap = P.sweepK * P.h / WALK_DUTY * (1 + 3 * Math.max(0, v - P.vw) / (0.3 * P.vw)); if (L > cap) return { f: vv / cap, L: cap }; }
+  return { f, L };
 }
+const WALK_DUTY = 0.66;   // the walk's duty the cap is set for (the engine's walk: 0.72 slow to 0.55 at its top)
 // The individual: the species' numbers as this body has them. seed: the instance's (seedOf(id)); size: its drawn scale
 // against the species' (0: drawn from the seed within size_cv); o.mass: its mass against its size's (a thin animal under
 // 1; else drawn within mass_cv), o.limp: { leg (0..3: FL FR HL HR), k (0..1) }, o.k: a scale on the stride's variation
@@ -294,7 +314,9 @@ function foothold(V, L, h, s, cy, sy, terrain, at, pz0) {
 // inp: { x, y, z (the body's origin: on the ground between the feet, world), yaw (the drawn yaw), size, v (m/s, negative
 // backing), wr (rad/s), pose (0..1: crouch to half, bedded at 1), flick (the head dip: 1 to the ground, negative alert),
 // bend (rad: the spine's yaw bend toward the control yaw), twitch (the tail tip, -1..1), terrain(xw, zw) -> yw, air (true
-// in a jump or a fall: the legs tuck) }
+// in a jump or a fall: the legs tuck), and for the idle layer (idle.js): t (s: its clock; legs.js keeps one), look (a
+// world point to look at, or null), sit (0..1: on the haunches), act (an act's name to play now; 'none': no acts) }
+// State a caller can read: st.id.D (the idle layer's channels: act, busy, sit, yaw, pitch, br), st.id.debt (the breath's)
 export function gaitStep(skel, P, st, inp, dt) {
   if (P.hop) return hopStep(skel, P, st, inp, dt);
   dt = Math.min(Math.max(dt, 0), 0.1);
@@ -333,6 +355,12 @@ export function gaitStep(skel, P, st, inp, dt) {
   const duty = st.gait === 2 ? 0.42 - 0.07 * clamp((v - P.vt) / P.vt, 0, 1) : st.gait === 1 ? 0.5 : 0.72 - 0.17 * clamp(v / P.vw, 0, 1);
   st.duty = damp(st.duty, duty, 8, dt); st.L = (v > 0.05 ? L : 0.3 * P.Lt) / s;   // the stride in the body's own units (the feet's are)
   st.moving = moving; st.rate = rate;
+  // the idle layer (idle.js): the breath, the weight, the gaze, the tail and the acts; none for the species' even body (the bake)
+  if (I && P.idle && !P._noGate && !P._caps) P._caps = capsOf(skel, P);
+  const D = I && P.idle ? idleStep(skel, P, st, inp, dt, idleCtx(st, moving, false, inp.look ? toLocal(inp.look) : null)) : null;
+  // the sit's weight on the body: the hips come down only so far (SEAT_WAIT) until the hind feet have stepped in to their
+  // sitting places, and on rising stay that low until they have stepped out again (st.seatK: the share of them seated)
+  const seatK = st.seatK || 0, uS = !D ? 0 : D.sitGoal > 0.5 ? Math.min(D.sit, SEAT_WAIT + (1 - SEAT_WAIT) * seatK) : Math.max(D.sit, SEAT_WAIT * seatK);
   // the stride clock: its whole part counts strides, its fraction is the phase. A mirror's is locked to the host's
   // (inp.sc: the host's clock as of now): softly on the move, at once when standing, far off or newly placed
   if (inp.sc >= 1) {
@@ -370,7 +398,7 @@ export function gaitStep(skel, P, st, inp, dt) {
   const shoulderY = [R[J['UpperLeg.FL']][1], R[J['UpperLeg.FR']][1], R[J['UpperLeg.HL']][1], R[J['UpperLeg.HR']][1]];
   // standing: after a while a foot left far from under its shoulder steps in, the worst first and one at a time
   let sq = -1;
-  if (moving || inp.air || st.bed > 0.02 || (inp.pose || 0) > 0.25) st.stillT = 0; else st.stillT += dt;
+  if (moving || inp.air || st.bed > 0.02 || (inp.pose || 0) > 0.25 || (D && (D.busy > 0.01 || uS > 0.01))) st.stillT = 0; else st.stillT += dt;
   const settle = V.square.after_s[0] + (V.square.after_s[1] - V.square.after_s[0]) * (I ? h32(I.seed, 0x5d, Math.floor(st.sc)) : 0);
   if (st.stillT > settle && feet[0].has && feet.every(F => F.stance)) {
     let worst = V.square.off * skel.h;
@@ -381,7 +409,25 @@ export function gaitStep(skel, P, st, inp, dt) {
     }
     if (sq >= 0) st.stillT = settle - 0.4;
   }
+  // the seat: sitting, the hind feet step forward under the body to their sitting places, the left then the right, and
+  // step back out on rising (sitGeom); the swing's target is the place (F.seatT)
+  let seatStep = -1;
+  if (D && P.idle.sit && feet[0].has) {
+    const SG = sitGeom(skel, P), goal = D.sitGoal > 0.5; let n = 0;
+    for (let i = 2; i < 4; i++) {
+      const F = feet[i], here = toLocal([F.x, F.y, F.z]), hp = SG.hind[i - 2];
+      if (F.stance && F.seated) n++;   // (where it landed: the swing's reach may have set it a little short of its place)
+      if (seatStep >= 0 || moving || inp.air || !feet[2].stance || !feet[3].stance) continue;
+      if (goal && !F.seated) { seatStep = i; F.seatT = hp; F.seatIn = true; }
+      else if (!goal && F.seated && D.sit < 0.8) { seatStep = i; F.seatT = [skel.legs[i].toe[0], skel.legs[i].toe[2]]; F.seatIn = false; }
+    }
+    st.seatK = damp(st.seatK || 0, n / 2, 8, dt);
+  } else st.seatK = 0;
+  if (moving) { feet[2].seatT = feet[3].seatT = null; }   // (a seated foot lifts as the body goes: late)
   const dropMax = REACH_DROP + REACH_RUN * st.gk;   // how far the body may come down for its legs' reach, of the leg
+  // the excursion bound by gait (the tree's vary.excursion, degrees ahead at landing and behind at lift), blended as the gait changes
+  const EX = V.excursion, exA = EX ? (EX.walk[0] + (EX.trot[0] - EX.walk[0]) * st.tk + (EX.gallop[0] - EX.trot[0]) * st.gk) * Math.PI / 180 : 0, exB = EX ? (EX.walk[1] + (EX.trot[1] - EX.walk[1]) * st.tk + (EX.gallop[1] - EX.trot[1]) * st.gk) * Math.PI / 180 : 0;
+  const tAhead = EX ? Math.tan(fwd > 0 ? exA : exB) : Infinity, tBehind = EX ? Math.tan(fwd > 0 ? exB : exA) : Infinity, tCl = EX ? [Math.tan(exA), Math.tan(exB)] : null;
   const goes = v > 0.05;
   for (let i = 0; i < 4; i++) {
     const F = feet[i], Lg = skel.legs[i], toe = goes ? [Lg.toe[0], Lg.toe[1], Lg.pz] : Lg.toe, off = toe[2] - Lg.toe[2];   // (the pair's middle on the move)
@@ -395,8 +441,8 @@ export function gaitStep(skel, P, st, inp, dt) {
     if (F.stance) {
       // dragged well behind its rest, or past where its leg reaches (the joint at its lowest): lift whatever the phase says
       const back = (toe[2] - here[2]) * fwd;   // how far behind its rest place the foot stands
-      const late = back > 0.75 * st.L || (back > 0 && (F.over || back > 0.97 * reachOf(Lg, -fwd, dropMax * Lg.reach) + fwd * off));
-      if ((moving && pf >= dI && pf < dI + (1 - dI) * 0.6) || late || i === sq) { F.stance = false; F.s = 0; F.lx = F.x; F.ly = F.y; F.lz = F.z; F.look = true; F.fz = 0; F.over = false; F.pl = pf; }
+      const late = back > 0.75 * st.L || (back > 0 && (F.over || back > 0.97 * reachOf(Lg, -fwd, dropMax * Lg.reach, tBehind) + fwd * off)) || (uS > 0.05 && moving && !Lg.fore && back > 0.1 * st.L) || (moving && F.seated && feet[i ^ 1].stance);   // (up off the haunches, the hind feet step under at once)
+      if ((moving && pf >= dI && pf < dI + (1 - dI) * 0.6) || late || i === sq || i === seatStep) { F.stance = false; if (moving) F.seated = false; F.s = 0; F.lx = F.x; F.ly = F.y; F.lz = F.z; F.look = true; F.fz = 0; F.over = false; F.pl = pf; }
     }
     if (!F.stance) {
       // the swing ends at the foot's landing phase: it goes evenly over the time left to it, from wherever it lifted (on
@@ -406,15 +452,15 @@ export function gaitStep(skel, P, st, inp, dt) {
       // the plant point: the rest offset, half a stance ahead, in the body frame at touchdown (turned and moved on), with
       // this stride's own reach and width (drawn at the foot's last touchdown) and the foothold's shift
       const going = v > 0.05 ? 1 : 0, rem = (1 - F.s) * swingT, rot = (inp.wr || 0) * rem, dz = fwd * v * rem / s;
-      const far = Math.max(0, 0.93 * reachOf(Lg, fwd, 0.85 * dropMax * Lg.reach) - fwd * off);   // no further ahead than the leg reaches
+      const far = Math.max(0, 0.93 * reachOf(Lg, fwd, 0.85 * dropMax * Lg.reach, tAhead) - fwd * off);   // no further ahead than the leg reaches
       const ahead = fwd * Math.min(dI * st.L * 0.5 + (going ? vk * fwd * F.nz * V.step_sd * st.L : 0), far) * going;
-      const px = toe[0] + vk * F.nx * V.width_sd[i >> 1] * P.track, pz0 = toe[2] + ahead + (going ? 0 : vk * F.nz * V.stand_sd * skel.h);
+      const px = F.seatT ? F.seatT[0] : toe[0] + vk * F.nx * V.width_sd[i >> 1] * P.track, pz0 = F.seatT ? F.seatT[1] : toe[2] + ahead + (going ? 0 : vk * F.nz * V.stand_sd * skel.h);   // (seatT: a step to or from the seat)
       const c = Math.cos(rot), sn = Math.sin(rot);
       const at = pz => { const w = toWorld([c * px + sn * pz, 0, -sn * px + c * pz + dz]); w[1] = terrain(w[0], w[2]); return w; };
       if (F.look && F.s > 0.5) { F.look = false; F.fz = going ? foothold(V, st.L, skel.h, s, cy, sy, terrain, at, pz0) : 0; if (F.fz * fwd > 0 && Math.abs(ahead) + Math.abs(F.fz) > far) F.fz = 0; }
       let tw = at(pz0 + F.fz); F.tl = toLocal(tw);
       if (F.s > 0.5 && st.P) {   // near its landing: no further than the leg, as the body is posed, will reach
-        const z1 = reachClamp(Lg, st.P[Lg.u], here, F.tl, dz, Math.max(0, 0.85 * dropMax * Lg.reach - ((Lg.fore ? st.dC : st.dH) || 0)));
+        const z1 = reachClamp(Lg, st.P[Lg.u], here, F.tl, dz, Math.max(0, 0.85 * dropMax * Lg.reach - ((Lg.fore ? st.dC : st.dH) || 0)), tCl);
         if (z1 !== F.tl[2]) { F.tl[2] = z1; tw = toWorld(F.tl); tw[1] = terrain(tw[0], tw[2]); F.tl[1] = (tw[1] - O[1]) / s; }
       }
       // the swing: off the ground and forward at once (a foot that dwelt behind after lifting trailed the body like a dragged
@@ -422,7 +468,11 @@ export function gaitStep(skel, P, st, inp, dt) {
       const q = 1 - F.s, e = 1 - q * q * q * (1 + 3 * F.s), lift = (0.35 * R[Lg.f][1] + 0.03 * st.L * (1 + 0.5 * st.gk)) * s * Math.sin(Math.PI * F.s);
       F.x = F.lx + (tw[0] - F.lx) * e; F.z = F.lz + (tw[2] - F.lz) * e;
       F.y = Math.max(F.ly + (tw[1] - F.ly) * e, terrain(F.x, F.z)) + lift;
-      if (F.s >= 1) { F.stance = true; F.x = tw[0]; F.y = tw[1]; F.z = tw[2]; if (vk) landed(I, V, st, F, i); }
+      if (EX && st.P && st.P[Lg.u] && F.s < 1) {   // the leg in the air swings no further from the vertical than the bound allows a little past it (a foot lingering behind after it lifts trailed the leg out straight)
+        const Jp = st.P[Lg.u], l = toLocal([F.x, F.y, F.z]), hgt = Math.max(0.05 * skel.h, Jp[1] - l[1]), lo = Jp[2] - 1.1 * hgt * (fwd > 0 ? tBehind : tAhead), hi = Jp[2] + 1.15 * hgt * (fwd > 0 ? tAhead : tBehind);
+        if (l[2] < lo || l[2] > hi) { l[2] = clamp(l[2], lo, hi); const w = toWorld(l); F.x = w[0]; F.z = w[2]; }
+      }
+      if (F.s >= 1) { F.stance = true; F.x = tw[0]; F.y = tw[1]; F.z = tw[2]; if (vk) landed(I, V, st, F, i); if (F.seatT) { F.seated = !!F.seatIn; F.seatT = null; } }
     }
     lf[i] = toLocal([F.x, F.y, F.z]); F.l = lf[i];
     F.gy = groundL([lf[i][0], 0, lf[i][2]]);
@@ -444,7 +494,8 @@ export function gaitStep(skel, P, st, inp, dt) {
   const hipsRest = R[J.Hips], chestRest = R[J.Chest], spineRest = R[J.Spine];
   st.eatDrop = damp(st.eatDrop || 0, st.eatWant || 0, 3, dt);   // the eat's reach: the forequarters lowered (reachDip)
   // the hips and the chest as low as their planted legs need to reach their feet (the vault), quickly down and slowly up
-  const yH0 = hipsRest[1] + st.gH * share - drop + st.bob, yC0 = chestRest[1] + st.gF * share - drop + st.bob - st.eatDrop;
+  let yH0 = hipsRest[1] + st.gH * share - drop + st.bob, yC0 = chestRest[1] + st.gF * share - drop + st.bob - st.eatDrop;
+  if (D) { yH0 -= D.hD; yC0 -= D.cD; if (uS > 0) { const SG = sitGeom(skel, P); yH0 += (SG.yH + st.gH * share - yH0) * uS; yC0 += (SG.yC + st.gF * share - yC0) * uS; } }   // an act's crouch; the sit: the hips down on the ground, the trunk at its angle
   let nH = 0, nC = 0;
   if (!inp.air) for (let i = 0; i < 4; i++) {   // (a foot about to land counts in, more as it nears the ground, so the body is already down for it)
     const Lg = skel.legs[i], F = feet[i], w = F.stance ? 1 : ease(clamp((F.s - 0.5) / 0.5, 0, 1)); if (!w) continue;
@@ -454,19 +505,19 @@ export function gaitStep(skel, P, st, inp, dt) {
   st.dH = nH > (st.dH || 0) ? nH : damp(st.dH || 0, nH, 10, dt); st.dC = nC > (st.dC || 0) ? nC : damp(st.dC || 0, nC, 10, dt);
   const yH = yH0 - st.dH, yC = yC0 - st.dC;
   const pitch = Math.asin(clamp((yC - yH - (chestRest[1] - hipsRest[1])) / (chestRest[2] - hipsRest[2]), -0.9, 0.9));   // nose-up positive
-  st.pitch = damp(st.pitch, pitch, 10, dt);
+  st.pitch = damp(st.pitch, pitch, 10 + 30 * uS, dt);   // (sitting down and up, the trunk keeps up with the hips: a lagging pitch lifted the shoulders off the fore feet)
   const track = Math.abs(skel.legs[0].toe[0] - skel.legs[1].toe[0]) || 0.1;
   const supportL = (feet[0].stance ? 1 : 0) + (feet[2].stance ? 1 : 0), supportR = (feet[1].stance ? 1 : 0) + (feet[3].stance ? 1 : 0);
   const roll = Math.atan((st.gL - st.gR) / track) * 0.5 + (moving ? 0.03 * (supportL - supportR) * (1 - st.gk) : 0);   // onto the supporting side
   st.roll = damp(st.roll, roll, 6, dt);
   // the gallop's flexion: the back arched as the hind feet come under (gathered), extended as the fore feet reach
-  st.flex = 0.14 * st.gk * Math.cos(phG) * (moving ? 1 : 0);
+  st.flex = 0.14 * st.gk * Math.cos(phG) * (moving ? 1 : 0) - (uS > 0 ? sitGeom(skel, P).flex * uS : 0);   // (sitting, the back rounded: sitGeom)
   // the spine in two segments joined at the Spine joint: the hind segment with the hips, the fore segment bent toward the
   // control yaw (the deer's bendOf) and arched by the flex
-  const bend = clamp(inp.bend || 0, -0.5, 0.5);
-  const RA = mul3(rotZ(st.roll), rotX(-(st.pitch - st.flex)));
-  const RB = mul3(rotY(bend), mul3(rotZ(st.roll), rotX(-(st.pitch + st.flex))));
-  const Ph = [0, yH, hipsRest[2]];
+  const bend = clamp((inp.bend || 0) + (D ? D.bend : 0), -0.5, 0.5);
+  const tr = D ? D.troll || 0 : 0, RA = mul3(rotZ(st.roll + (D ? D.rollH + tr : 0)), rotX(-(st.pitch - st.flex)));   // (rollH: the weight's, the hips over one hind foot; troll: the shake's sway)
+  const RB = mul3(rotY(bend), mul3(rotZ(st.roll + tr), rotX(-(st.pitch + st.flex))));
+  const Ph = D ? [D.wx, yH, hipsRest[2] + D.hz + (uS > 0 ? (chestZ(skel, 0, 0) - chestZ(skel, st.pitch, st.flex)) * Math.min(1, 4 * uS) : 0)] : [0, yH, hipsRest[2]];   // (sitting: the hips come forward as the trunk pitches up, so the shoulders stay over the fore feet all the way down and up)
   const Psp = add(Ph, apply3(RA, sub(spineRest, hipsRest)));
   const at = (rest, Rm, base, baseRest) => add(base, apply3(Rm, sub(rest, baseRest)));
   const Pc = at(chestRest, RB, Psp, spineRest);
@@ -478,6 +529,7 @@ export function gaitStep(skel, P, st, inp, dt) {
     const slide = (lf[i][2] - Lg.toe[2]) * (Lg.fore ? 0.35 : 0.15);
     return [p[0], p[1] - 0.12 * Math.abs(slide), p[2] + slide];
   });
+  if (D && D.eased >= 0) S[D.eased][1] -= D.ew * legLen;   // the unloaded hind leg eases: its hip a little lower, the leg bent
   // ---- the legs: two-bone IK from the shoulder or hip to the ankle, the foot bone from the ankle to the toe ----
   const Pj = st.P || (st.P = new Array(skel.n)), E = st.E || (st.E = {});
   Pj[J.Hips] = Ph; Pj[J.Spine] = Psp; Pj[J.Chest] = Pc;
@@ -487,7 +539,17 @@ export function gaitStep(skel, P, st, inp, dt) {
     let fv = Lg.foot;
     const swing = F.stance ? 0 : Math.sin(Math.PI * F.s);
     if (swing > 0) fv = apply3(rotX(-(P.posture === 'plantigrade' ? 0.6 : 0.35) * swing * (Lg.fore ? 1 : 0.6)), fv);
-    legIK(Lg, F.stance ? give(Lg, S[i], lf[i], F) : S[i], lf[i], fv, Pj, E);
+    if (D) {
+      if (uS > 0.001 && !Lg.fore) fv = sitFoot(Lg, fv, uS);
+      if (i === D.eased) fv = apply3(rotX(-4 * D.ew), fv);
+      if (i === D.lift && D.lw > 0.001) {
+        if (D.lneck) neckTarget(skel, D, Pn0, RB);
+        const T = liftTo(Lg, S[i], lf[i], D, (Lg.fore ? st.gF : st.gH) * share); legIK(Lg, S[i], T, liftFoot(Lg, S[i], T, fv, D), Pj, E, kneeHint(Lg, Pj, D.lw, D));
+        if (D.lneck && D.lw > 0.95) st.scratchMiss = Math.min(st.scratchMiss >= 0 ? st.scratchMiss : Infinity, len(sub(E[Lg.f], D.ltN)));   // (the reach test's measure: capsOf)
+        continue;
+      }
+    }
+    legIK(Lg, F.stance ? give(Lg, S[i], lf[i], F) : S[i], lf[i], fv, Pj, E, null, !F.stance);   // (free: a foot in the air, whose toe may give way to keep its foot)
   }
   // ---- the head: level over the stride, dipped by the flick (1: the nose at the ground, reachDip), leading a turn ----
   const lead = clamp((inp.wr || 0) * P.lead, -P.leadMax, P.leadMax);
@@ -500,15 +562,19 @@ export function gaitStep(skel, P, st, inp, dt) {
   const soft = clamp(SF.head_k * lagH / len(sub(skel.nose, R[J.Neck])), -0.25, 0.25);
   const lame = I && I.limp && I.limp.leg < 2 ? I.limp : null;
   st.nod = damp(st.nod, lame && moving ? V.limp.nod * lame.k * ((feet[lame.leg].stance ? -1 : 0) + (feet[lame.leg ^ 1].stance ? 1 : 0)) : 0, 10, dt);
-  const fl = inp.flick || 0, cN = 0.4 * (st.pitch + st.flex) + 0.5 * (soft + st.nod + headBob), cH = 0.5 * (st.pitch + st.flex) + 0.5 * (soft + st.nod + headBob);
+  const fl = D ? Math.max((inp.flick || 0) * D.feedMul, D.sniff) : inp.flick || 0;   // (the idle's vigilance lifts the feeding head; its sniff lowers it)
+  let cN = 0.4 * (st.pitch + st.flex) + 0.5 * (soft + st.nod + headBob), cH = 0.5 * (st.pitch + st.flex) + 0.5 * (soft + st.nod + headBob);
+  if (uS) { cN += 0.45 * uS * st.pitch; cH += 0.5 * uS * st.pitch; }   // sitting, the head carried level against the trunk's pitch
   let dip = fl * 0.9;   // to a half (a stalk's low head, a sniff on the move) the old dip; past it toward the ground
   if (fl > 0.5 && !inp.air && st.bed < 0.5) {
     const r = reachDip(skel, RB, Pn0, 0.6, cN, 0.5, cH, st.lead, groundL), u = Math.min(1, (fl - 0.5) * 2);
     dip = 0.45 + (r.q - 0.45) * u;
     st.eatWant = clamp(st.eatDrop + r.short, 0, EAT_DROP * legLen) * u;
   } else st.eatWant = 0;
-  const Rn = mul3(RB, rotX(dip * 0.6 + cN));                       // the neck: down with the dip, countering the chest
-  const Rh = mul3(mul3(RB, rotY(st.lead)), rotX(dip * 0.5 + cH));
+  // the idle's gaze: the yaw and the pitch shared by the neck and the head
+  const kN = D ? P.idle.look.neck : 0, yN = D ? D.yaw * kN : 0, yHd = D ? D.yaw - yN : 0, pN = D ? D.pitch * kN : 0, pHd = D ? D.pitch - pN : 0;
+  const Rn = D ? mul3(RB, mul3(rotY(yN), rotX(dip * 0.6 + cN - pN))) : mul3(RB, rotX(dip * 0.6 + cN));   // the neck: down with the dip, countering the chest
+  const Rh = mul3(mul3(RB, rotY(st.lead + yN + yHd)), rotX(dip * 0.5 + cH - pHd));
   const Phd = add(Pn0, apply3(Rn, sub(R[J.Head], R[J.Neck])));
   const nose = add(Phd, apply3(Rh, sub(skel.nose, R[J.Head])));
   Pj[J.Neck] = Pn0; Pj[J.Head] = Phd; E[J.Head] = nose;
@@ -519,22 +585,145 @@ export function gaitStep(skel, P, st, inp, dt) {
   st.tailYaw = follow(st.ty, -(inp.wr || 0) * 0.25, wT, SF.tail_z, dt);
   const sag1 = clamp(SF.tail_k * (yH - follow(st.tp, yH, wT, SF.tail_z, dt)) / tailL, -0.4, 0.4), sag2 = clamp(SF.tail_k * (st.tp.y - follow(st.tp2, st.tp.y, wT, SF.tail_z, dt)) / tailL, -0.4, 0.4);
   const swingT_ = 0.25 * st.gk * Math.sin(phG + 1.0), liftT = Math.max(0, inp.flick || 0) * 0.35;
+  // the idle's tail (the family's carriage, switch or twitch; the shake's whip; sitting, laid back along the ground)
+  const tY = D ? D.tYaw + (D.tw ? 0.9 * D.tw * Math.sin(TAU * D.twF * (D.twT - 0.15)) : 0) : 0, tP = D ? D.tPitch + uS * (st.pitch + 0.9 * tailDroop(skel)) : 0;   // (sitting, the tail turned up against the trunk's pitch and its own droop: laid back along the ground behind)
   const Pt1 = at(R[J.Tail1], RA, Ph, hipsRest);
-  let Rt = mul3(RA, mul3(rotY(st.tailYaw), rotX(-(liftT + swingT_ - sag1))));
-  const Pt2 = add(Pt1, apply3(Rt, sub(R[J.Tail2], R[J.Tail1])));
-  Rt = mul3(Rt, mul3(rotY(st.tailYaw), rotX(-(swingT_ * 0.6 - sag2))));
-  const Pt3 = add(Pt2, apply3(Rt, sub(R[J.Tail3], R[J.Tail2])));
-  Rt = mul3(Rt, rotY(st.tailYaw + (inp.twitch || 0) * 0.5));
-  const tip = add(Pt3, apply3(Rt, sub(skel.tip, R[J.Tail3])));
+  let Rt = mul3(RA, mul3(rotY(st.tailYaw + tY), rotX(-(liftT + tP + swingT_ - sag1))));
+  let Pt2 = add(Pt1, apply3(Rt, sub(R[J.Tail2], R[J.Tail1])));
+  Rt = mul3(Rt, mul3(rotY(st.tailYaw + 0.8 * tY), rotX(-(swingT_ * 0.6 - sag2))));
+  let Pt3 = add(Pt2, apply3(Rt, sub(R[J.Tail3], R[J.Tail2])));
+  Rt = mul3(Rt, rotY(st.tailYaw + 0.6 * tY + ((inp.twitch || 0) + (D ? D.twitch : 0)) * 0.5));
+  let tip = add(Pt3, apply3(Rt, sub(skel.tip, R[J.Tail3])));
   Pj[J.Tail1] = Pt1; Pj[J.Tail2] = Pt2; Pj[J.Tail3] = Pt3; E[J.Tail3] = tip;
   // ---- the bed: the body on the ground, the legs folded (blended by position) ----
   if (st.bed > 0.001) {
     const B = bedPose(skel), u = ease(st.bed);
-    for (let j = 0; j < skel.n; j++) Pj[j] = lerp3(Pj[j], B.P[j], u);
+    for (let j = 0; j < skel.n; j++) if (B.P[j]) Pj[j] = lerp3(Pj[j], B.P[j], u);   // (an ear is placed by writeRow, carried by the head)
     for (const k in B.E) E[k] = lerp3(E[k], B.E[k], u);
+    if (D && (D.bedYaw || D.nod)) { const Hp = Pj[J.Head]; E[J.Head] = add(Hp, apply3(mul3(rotY(D.bedYaw * u), rotX(D.nod)), sub(E[J.Head], Hp))); }   // bedded: a share of the gaze's turn, the rumination's nod
   }
-  st.roll3 = st.roll; st.bendYaw = bend;
+  st.roll3 = st.roll + (D ? D.troll || 0 : 0); st.bendYaw = bend;
+  if (skel.ears && I && P.idle) earsPose(skel, P, st, D);
+  idleWrite(skel, P, st, D);
   return st;
+}
+
+// ---- the idle layer's means (idle.js) -------------------------------------------------------------------------------
+// The sit on the haunches (the tree's idle.sit: trunk_deg by rank, seat): the fore feet stay planted with the fore legs
+// vertical under the shoulders, the trunk pitched up at its angle, the hips on the ground (the hip joint `seat` of its
+// standing height above it) just behind the hind feet, which have stepped forward to lie flat beside the belly, the hock
+// down. The angle is held below what the fore legs can stand to (they stay within their reach). Once an individual.
+const SEAT_WAIT = 0.45, SIT_ROUND = 0.3;   // SIT_ROUND: the most the back rounds at its one middle joint each way (rad; by eye: more reads as a kink)   // how far the hips come down before the hind feet have stepped in (by eye: the hind feet reach their places from there)
+// how far ahead of the hips the chest is with the trunk pitched p and flexed f, as the frame poses it (RA, RB)
+// the rest tail's droop below level from its root to its tip (rad)
+const tailDroop = skel => skel._droop ?? (skel._droop = Math.max(0, Math.atan2(skel.rest[skel.idx.Tail1][1] - skel.tip[1], skel.rest[skel.idx.Tail1][2] - skel.tip[2])));
+function chestZ(skel, p, f) { const R = skel.rest, J = skel.idx, a = apply3(rotX(-(p - f)), sub(R[J.Spine], R[J.Hips])), b = apply3(rotX(-(p + f)), sub(R[J.Chest], R[J.Spine])); return a[2] + b[2]; }
+function sitGeom(skel, P) {
+  if (Object.prototype.hasOwnProperty.call(P, '_sitG')) return P._sitG;
+  const R = skel.rest, J = skel.idx, Sd = P.idle.sit || { trunk_deg: 45, seat: 0.22 }, hR = R[J.Hips], sR = R[J.Spine], cR = R[J.Chest];
+  const legH = R[J['UpperLeg.HL']][1], yH = hR[1] - legH + Sd.seat * legH;   // the hips joint, its hip joints `seat` of their height above the ground
+  const F = skel.legs[0], Hmax = cR[1] + 0.96 * F.reach - (R[F.u][1] - F.toe[1]) - yH;   // the chest no higher than the fore legs stand straight
+  const th = Sd.trunk_deg * Math.PI / 180;
+  // the trunk's chord from the hips to the chest with the back rounded by f (the hind segment turned up by f, the fore down
+  // by f: the engine's flex, negative): rounding shortens it, so a long trunk on short fore legs still sits at its angle
+  const chord = f => { const a = apply3(rotX(-f), sub(sR, hR)), b = apply3(rotX(f), sub(cR, sR)); return add(a, b); };
+  let f = 0, C = chord(0);
+  while (f < SIT_ROUND && Math.hypot(C[1], C[2]) * Math.sin(th) > Hmax) { f += 0.01; C = chord(f); }
+  const L = Math.hypot(C[1], C[2]), thE = Math.min(th, Math.asin(clamp(Hmax / L, -1, 1))), p = thE - Math.atan2(C[1], C[2]), dy0F = cR[1] - hR[1], Lz = cR[2] - hR[2];
+  const foreZ = (skel.legs[0].toe[2] + skel.legs[1].toe[2]) / 2, shZ = (R[skel.legs[0].u][2] + R[skel.legs[1].u][2]) / 2 - cR[2];
+  // yC: the chest's height as the frame's pitch reads it (asin of the rise over the rest trunk), so the seat's pitch comes from
+  // the hips' and the chest's heights as every other pitch does, and the rounded trunk's real chest is never higher
+  const z = foreZ - shZ - L * Math.cos(thE), yC = yH + dy0F + Lz * Math.sin(p);
+  const H = skel.legs[2], hz = z + (R[H.u][2] - hR[2]) + 0.75 * H.a + 0.95 * len(H.foot);   // (the hock on the ground ahead of the hip by most of a thigh: the leg folded, not crushed)
+
+  return (P._sitG = { yH, yC, z, p, flex: f, deg: thE * 180 / Math.PI, hind: [2, 3].map(i => [skel.legs[i].toe[0] * 1.15, hz]) });
+}
+// a lifted leg's knee keeps the side it had last frame (a leg raised forward of its joint has no side of its own: a fixed
+// hint flips the knee where the leg passes it)
+// (and goes back to the leg's own as the lift ends)
+function kneeHint(Lg, Pj, w, D) {
+  const K = Pj[Lg.l], A = Pj[Lg.u], W = Pj[Lg.f];
+  if (D && D.lneck && D.lneck !== 2) {   // (to the neck: turned out beside the belly, a little up from the seat's fold, down when standing; never up over the back. 2: a hare's crouched hind leg keeps its own side)
+    const k = ease(clamp(2.5 * w, 0, 1)), sx = Lg.left ? 1 : -1;   // (the leg's own side at either end, so the knee goes back to it as the foot comes down)
+    return [sx * 0.9 * k, (-0.4 + 0.7 * clamp(D.sit / 0.6, 0, 1)) * k, Lg.bend * (1 - k)];
+  }
+  if (!K || !A || !W) return null;
+  const h = unit([K[0] - (A[0] + W[0]) / 2, K[1] - (A[1] + W[1]) / 2, K[2] - (A[2] + W[2]) / 2]), k = clamp(w * 4, 0, 1);
+  return [h[0] * k, h[1] * k, h[2] * k + Lg.bend * (1 - k)];
+}
+// the ears (a skeleton with them: Ear.L, Ear.R carried by the head, writeRow's attach): the idle layer's swivel, pitch and
+// roll (idle.js earsOf; nothing when it is idle-less), laid flat back as the gallop comes in (the tree's ears.flat)
+const EAR0 = [0, 0, 0];
+function earsPose(skel, P, st, D) {
+  const E = P.idle.ears; if (!E) return;
+  const loc = st.loc || (st.loc = {}), run = clamp(st.gk + 0.25 * st.tk * (1 - st.gk), 0, 1);
+  for (let e = 0; e < 2; e++) {
+    const a = D && D.ear ? D.ear[e] : EAR0, sx = skel.ears[e].sx, p = a[1] + (-E.flat - a[1]) * run;
+    const y = a[0] * (1 - run), z = sx * a[2] * (1 - run), cy = Math.cos(y), sy = Math.sin(y), cx = Math.cos(p), sx_ = Math.sin(p), cz = Math.cos(z), sz = Math.sin(z);
+    const M = loc[skel.ears[e].j] || (loc[skel.ears[e].j] = new Array(9));   // rotY(y) rotX(p) rotZ(z), written out
+    M[0] = cy * cz + sy * sx_ * sz; M[1] = -cy * sz + sy * sx_ * cz; M[2] = sy * cx;
+    M[3] = cx * sz; M[4] = cx * cz; M[5] = -sx_;
+    M[6] = -sy * cz + cy * sx_ * sz; M[7] = sy * sz + cy * sx_ * cz; M[8] = cy * cx;
+  }
+}
+function idleCtx(st, moving, hop, lookL) { const c = st.idc || (st.idc = {}); c.moving = moving; c.v = st.v; c.bed = st.bed || 0; c.hop = hop; c.lookL = lookL; return c; }
+// a hind foot laid flat: the bone from the toe to the hock lying back along the ground
+function sitFoot(Lg, fv, u) { const c = len(Lg.foot), f = [fv[0] * 0.5, 0.12 * c, -0.99 * c], m = lerp3(fv, f, u), l = len(m) || 1; return scale(m, c / l); }
+// a lifted foot's toe (an act's: idle.js D.lt in the body's frame at rest, raised with the ground under the body; the
+// scratch's: its mark beside the neck as posed, neckTarget), within the leg's reach of its joint, blended from its plant
+// point by the act's weight (the plant point itself is not moved)
+function liftTo(Lg, S, here, D, gy) {
+  let T = D.lneck ? D.lt.slice() : [D.lt[0], D.lt[1] + gy, D.lt[2]];
+  const d = sub(T, S), l = len(d), r = D.lneck ? 0.97 * (Lg.a + Lg.b) + 0.95 * len(Lg.foot) : 0.95 * Lg.reach;   // (the scratch: the leg out straight, the foot in line with it)
+  if (l > r) T = add(S, scale(d, r / l));
+  const P = lerp3(here, T, D.lw);
+  if (D.lneck) { const k = Math.sin(Math.PI * D.lw) * (Lg.a + Lg.b); P[2] += 0.3 * k; P[1] = here[1] + (T[1] - here[1]) * D.lw * D.lw; }   // (forward low first, then up to the neck: the hock kept clear of the hip)
+  return P;
+}
+// a lifted foot's bone: flexed (D.lflex, rad: a stamp, a trailed leg) or, raised to the neck, turned in line with the leg
+// (its hock toward the hip), about the leg's axis across and the way through pointing back (a lerp would pass through nothing)
+function liftFoot(Lg, S, T, fv, D) {
+  if (D.lneck) {
+    const q = sub(S, T); let d = Math.atan2(q[1], q[2]) - Math.atan2(fv[1], fv[2]); d = ((d % TAU) + TAU) % TAU; if (d > 1.5 * Math.PI) d -= TAU;
+    return apply3(rotX(-d * ease(clamp((D.lw - 0.25) / 0.5, 0, 1))), fv);   // (in line only once well up: low down the foot stays as it stands)
+  }
+  return D.lflex ? apply3(rotX(-D.lflex * D.lw), fv) : fv;
+}
+// the scratch's mark: beside the neck behind the ear, out from the body on the foot's side, the neck as posed now; and the rake
+function neckTarget(skel, D, Pn0, RB) {
+  const R = skel.rest, J = skel.idx, Lg = skel.legs[D.lift], wx = Math.max(Math.abs(Lg.toe[0]) * 1.3, 0.12 * skel.h);
+  const T = add(Pn0, apply3(RB, add(scale(sub(R[J.Head], R[J.Neck]), 0.3), [(Lg.left ? 1 : -1) * wx, -0.05 * skel.h, -0.03 * skel.h])));
+  D.ltN[0] = T[0]; D.ltN[1] = T[1]; D.ltN[2] = T[2];
+  const r = 0.06 * skel.h * D.rake, a = apply3(RB, [0, -0.5 * r, -r]);   // the rake: down and back along the neck and up again
+  D.lt[0] = T[0] + a[0]; D.lt[1] = T[1] + a[1]; D.lt[2] = T[2] + a[2];
+}
+// What a skeleton can do (idle.js canDo, the tree's `needs`), once a skeleton: its neck's joints, and how near the engine's
+// IK brings a hind toe to its mark beside the neck in the scratch played with the gate off (a share of the withers' height)
+const CAPS = new WeakMap();
+export function capsOf(skel, P) {
+  let c = CAPS.get(skel); if (c) return c;
+  c = { neck_joints: skel.names.filter(n => /^Neck/.test(n)).length, reach_neck: Infinity }; CAPS.set(skel, c);
+  if (P.ind && P.idle && P.idle.acts?.scratch) {
+    const Q = Object.create(P); Q._noGate = true; Q._idleK = null; Q._caps = c;
+    const st = makeGait(), inp = { x: 0, y: 0, z: 0, yaw: 0, size: 1, v: 0, wr: 0, pose: 0, flick: 0, bend: 0, twitch: 0, terrain: () => 0, air: false, t: 0, act: 'scratch' };
+    let best = Infinity;
+    for (let f = 0; f < 330; f++) { inp.t += 1 / 60; gaitStep(skel, Q, st, inp, 1 / 60); if (st.scratchMiss >= 0) best = Math.min(best, st.scratchMiss); st.scratchMiss = -1; }
+    c.reach_neck = best / skel.h;
+  }
+  return c;
+}
+// what the pose row needs from the idle layer: the breath's scale on the chest and the spine, the shake's twist of the skin
+// along the spine (each joint later than the one ahead of it) and the head's tilt, the hips' roll; none without it
+const TW_J = [['Head', 0, 0.6], ['Neck', 0.025, 0.6], ['Chest', 0.05, 0.55], ['Spine', 0.08, 0.5], ['Hips', 0.11, 0.4]];   // joint, delay (s), amplitude (rad): by eye
+function idleWrite(skel, P, st, D) {
+  st.rollH = D ? D.rollH : 0;
+  if (D && D.br > 1e-4) { const B = P.idle.breath, b = st.brA || (st.brA = [1, 1, 1, 1, 1, 1]); b[0] = 1 + B.chest[0] * D.br; b[1] = 1 + B.chest[1] * D.br; b[3] = 1 + B.spine * B.chest[0] * D.br; b[4] = 1 + B.spine * B.chest[1] * D.br; st.br = b; }
+  else st.br = null;
+  if (D && (D.tw > 1e-3 || Math.abs(D.roll) > 1e-4)) {
+    const T = st.twA || (st.twA = new Float32Array(skel.n)); T.fill(0);
+    if (D.tw > 1e-3) for (const [n, d, a] of TW_J) T[skel.idx[n]] = a * D.tw * Math.sin(TAU * D.twF * (D.twT - d));
+    T[skel.idx.Head] -= D.roll; st.tw = T;
+  } else st.tw = null;
 }
 
 // ---- the eat's reach (Aaron, 2026-11-03: "a more dramatic eating/gathering animation") ----------------------------------
@@ -591,6 +780,9 @@ export function hopStep(skel, P, st, inp, dt) {
   st.lastX = inp.x; st.lastZ = inp.z;
   const v = Math.abs(inp.v || 0), fwd = (inp.v || 0) < 0 ? -1 : 1;
   st.v = damp(st.v, v, 12, dt);
+  // the idle layer (idle.js; gaitStep's): the breath, the acts (the face wash, the scratch, the shake); the ears keep their own
+  if (I && P.idle && !P._noGate && !P._caps) P._caps = capsOf(skel, P);
+  const D = I && P.idle ? idleStep(skel, P, st, inp, dt, idleCtx(st, v > 0.05 || st.tq > 0, true, null)) : null;
   // the gait: the shuffle below P.vS, the half-bound above (hysteresis); sp: how far into the bound (the duty falls, the
   // flex and the flight grow)
   st.crawl = damp(st.crawl || 0, clamp(inp.crawl || 0, 0, 1), 8, dt); const uK = st.crawl < 0.002 ? 0 : st.crawl;
@@ -598,7 +790,8 @@ export function hopStep(skel, P, st, inp, dt) {
   st.gk = damp(st.gk, st.gait ? 1 : 0, 5, dt);
   const gk = st.gk, sp = clamp((v - P.vS) / (4 * P.vt), 0, 1);
   // the pose: the sit-up above 0, the crouch below (the form at -1)
-  const pose = uK ? Math.min(clamp(inp.pose || 0, -1, 1), -0.7 * uK) : clamp(inp.pose || 0, -1, 1);   // the crawl: no sit-up, the freeze's crouch at least
+  let pose = uK ? Math.min(clamp(inp.pose || 0, -1, 1), -0.7 * uK) : clamp(inp.pose || 0, -1, 1);   // the crawl: no sit-up, the freeze's crouch at least
+  if (D && pose > -0.3 && !uK) pose = Math.max(pose, D.paws, D.sit);   // the face wash sits up for it; a caller's sit is the sit-up
   st.sit = damp(st.sit || 0, Math.max(0, pose), 5, dt); st.crouch = damp(st.crouch, Math.max(0, -pose), 6, dt);
   const uS = ease(clamp((st.sit - 0.05) / 0.6, 0, 1)), uC = ease(clamp(st.crouch, 0, 1));
   st.dig = damp(st.dig || 0, clamp(inp.dig || 0, 0, 1), 8, dt); const uD = st.dig < 0.002 ? 0 : st.dig;
@@ -754,6 +947,12 @@ export function hopStep(skel, P, st, inp, dt) {
       if (uS > 0.001) {
         const reach = Lg.a + Lg.b, hang = [S[i][0] * 0.9, S[i][1] - 0.62 * reach, S[i][2] + 0.3 * reach];
         toe = lerp3(toe, hang, uS); fv = apply3(rotX(0.9 * uS), fv);
+        if (D && D.paws > 0.001) {   // the face wash: both fore paws drawn down over the face from the ears to the mouth, again and again
+          const Hd = add(Pn0, apply3(RB, sub(R[J.Head], R[J.Neck]))), Ns = add(Hd, scale(apply3(RB, sub(skel.nose, R[J.Head])), 0.6)), k = 0.5 - 0.5 * Math.cos(TAU * D.pawPh);
+          let T = lerp3([Hd[0] + 0.35 * S[i][0], Hd[1] + 0.03 * h, Hd[2]], [Ns[0] + 0.3 * S[i][0], Ns[1] - 0.04 * h, Ns[2]], k);
+          const d = sub(T, S[i]), l = len(d), r = 0.95 * Lg.reach; if (l > r) T = add(S[i], scale(d, r / l));
+          toe = lerp3(toe, T, D.paws * uS); fv = apply3(rotX(0.6 * D.paws * uS), fv);
+        }
       }
       if (uD) {   // the dig: forward to the ground, raked back under the chest, the foot curled up on the way forward
         const ph = ((st.digPh || 0) + (i === 1 ? 0.5 : 0)) % 1, reach = Lg.a + Lg.b, back = ph < 0.55 ? ph / 0.55 : 1 - (ph - 0.55) / 0.45;
@@ -765,8 +964,10 @@ export function hopStep(skel, P, st, inp, dt) {
       const heel = F.stance ? (0.95 * gk + 0.2) * ease(clamp((prog - 0.45) / 0.55, 0, 1)) * hop
         : (0.95 * gk + 0.2) * (1 - F.s) * (1 - F.s) + (0.25 + 0.3 * gk) * Math.sin(Math.PI * F.s);
       if (heel > 0.001) fv = apply3(rotX(heel), fv);
+      if (D && i === D.lift && D.lw > 0.001) { if (D.lneck) neckTarget(skel, D, Pn0, RB); toe = liftTo(Lg, S[i], toe, D, st.gH * share); fv = liftFoot(Lg, S[i], toe, fv, D); }   // the scratch: the long hind foot up to the neck
     }
-    legIK(Lg, F.stance && toe === lf[i] ? give(Lg, S[i], toe, F) : S[i], toe, fv, Pj, E);
+    legIK(Lg, F.stance && toe === lf[i] ? give(Lg, S[i], toe, F) : S[i], toe, fv, Pj, E, D && i === D.lift && D.lw > 0.001 ? kneeHint(Lg, Pj, D.lw, D) : null);
+    if (D && D.lneck && i === D.lift && D.lw > 0.95) st.scratchMiss = Math.min(st.scratchMiss >= 0 ? st.scratchMiss : Infinity, len(sub(E[Lg.f], D.ltN)));
   }
   // ---- the head: level over the bound, dipped by the flick (nibbling), drawn in by the crouch, leading a turn ----
   const lead = clamp((inp.wr || 0) * P.lead, -P.leadMax, P.leadMax);
@@ -779,21 +980,23 @@ export function hopStep(skel, P, st, inp, dt) {
     dip = 0.45 + (r.q - 0.45) * u;
     st.eatWant = clamp(st.eatDrop + r.short, 0, EAT_DROP * belly) * u;
   } else st.eatWant = 0;
-  const Rn = mul3(RB, rotX(dip * 0.6 + cN));
-  const Rh = mul3(mul3(RB, rotY(st.lead)), rotX(dip * 0.5 + cH));
+  const kN = D ? P.idle.look.neck : 0, yN = D ? D.yaw * kN : 0, yHd = D ? D.yaw - yN : 0, pN = D ? D.pitch * kN : 0, pHd = D ? D.pitch - pN : 0;   // an act's head (gaitStep's)
+  const Rn = D ? mul3(RB, mul3(rotY(yN), rotX(dip * 0.6 + cN - pN))) : mul3(RB, rotX(dip * 0.6 + cN));
+  const Rh = mul3(mul3(RB, rotY(st.lead + yN + yHd)), rotX(dip * 0.5 + cH - pHd));
   const Phd = add(Pn0, apply3(Rn, sub(R[J.Head], R[J.Neck])));
   const nose = add(Phd, apply3(Rh, sub(skel.nose, R[J.Head])));
   Pj[J.Neck] = Pn0; Pj[J.Head] = Phd; E[J.Head] = nose;
   // ---- the ears: up and swivelling each on its own when alert, laid back along the neck in flight or frozen ----
   const loc = st.loc || (st.loc = {});
-  let ears = uK > 0.5 ? -1 : inp.ears;
+  let ears = uK > 0.5 || (D && D.tw > 0.3) ? -1 : inp.ears;   // (the shake lays them back)
   if (!(ears === ears) || ears === undefined) ears = uS > 0.3 ? 1 : uC > 0.3 ? -1 : v > 0.9 * P.vt ? -1 : v > P.vS ? -0.3 : 0.4;
   st.ears = damp(st.ears ?? 0, ears, ears < (st.ears ?? 0) ? 7 : 4, dt);
   const back = clamp(-st.ears, 0, 1), alert = clamp(st.ears, 0, 1);
   if (skel.ears) {
     st.earSw ||= [0, 0]; st.earAim ||= [0, 0]; st.earT ||= [0, 0];
     for (let e = 0; e < 2; e++) {
-      if ((st.earT[e] -= dt) <= 0) { st.earAim[e] = (rnd(st) - 0.3) * (0.25 + 0.9 * alert) * skel.ears[e].sx; st.earT[e] = (alert > 0.5 ? 0.5 : 1.2) + rnd(st) * 1.5; }
+      if (D && D.ear && P.idle.ears) st.earAim[e] = D.ear[e][0] * (0.4 + 0.6 * alert);   // (the idle layer's swivel, by seed and clock: the same on every page)
+      else if ((st.earT[e] -= dt) <= 0) { st.earAim[e] = (rnd(st) - 0.3) * (0.25 + 0.9 * alert) * skel.ears[e].sx; st.earT[e] = (alert > 0.5 ? 0.5 : 1.2) + rnd(st) * 1.5; }
       st.earSw[e] = damp(st.earSw[e], st.earAim[e] * (1 - back), alert > 0.5 ? 9 : 4, dt);
       const flop = (0.25 * st.bob + V.soft.ear_k * (st.bob - follow(st.hd, st.bob, TAU * P.ft * V.soft.head_hz, V.soft.head_z, e ? 0 : dt))) / h * (1 - back);   // the ears give a little to the bound, and late
       loc[skel.ears[e].j] = mul3(rotY(st.earSw[e]), mul3(rotX(-1.25 * back + 0.12 * alert - flop), rotZ(skel.ears[e].sx * 0.3 * back)));   // laid back, the pair drawn together
@@ -803,6 +1006,7 @@ export function hopStep(skel, P, st, inp, dt) {
   if (skel.scut) { st.scutUp = damp(st.scutUp || 0, clamp(inp.twitch || 0, 0, 1), 8, dt); loc[skel.scut.j] = rotX(0.9 * st.scutUp + 0.15 * hop * gk * Math.sin(tp)); }
   if (scrape > 0.0005) { for (let j = 0; j < skel.n; j++) if (Pj[j]) Pj[j] = [Pj[j][0], Pj[j][1] - scrape, Pj[j][2]]; for (const q in E) E[q] = [E[q][0], E[q][1] - scrape, E[q][2]]; }
   st.roll3 = st.roll; st.bendYaw = bend;
+  idleWrite(skel, P, st, D);
   return st;
 }
 
@@ -817,12 +1021,16 @@ function give(Lg, S, toe, F) {
 // Two-bone IK from the shoulder or hip S to the ankle over the toe (the foot bone fv from the toe up to the ankle), the knee
 // to the leg's bend side; out of reach the leg straightens toward its toe, the foot bone continuing the line (an extended
 // reach). Writes the leg's joints into Pj and the toe into E.
-function legIK(Lg, S, toe, fv, Pj, E) {
-  const W = add(toe, fv);
+function legIK(Lg, S, toe, fv, Pj, E, bendV = null, free = false) {   // bendV: the knee's side when not the leg's own (a foot lifted high by the idle layer: forward of its joint the leg's own side is no side at all)
+  let W = add(toe, fv);
   const d0 = sub(W, S); let d = len(d0);
   const a = Lg.a, b = Lg.b, c = len(fv), dmax = (a + b) * 0.995, dmin = Math.abs(a - b) + 0.01;
   let u = scale(d0, 1 / (d || 1));
   let Ek, Wk, toeK;
+  let tl0 = 0;
+  if (free && d > dmax && (tl0 = len(sub(toe, S))) < a + b + 0.3 * c) {   // the ankle out of reach but the toe within it (a foot flexed up in its swing, a sole flat under the joint): the ankle drawn in along its own line and the foot kept, rather than the foot laid along the leg's line past the toe (it turned the foot over)
+    W = add(S, scale(u, dmax)); d = dmax; toe = sub(W, fv);
+  }
   if (d > dmax) {
     const dt0 = sub(toe, S), dl = len(dt0); u = scale(dt0, 1 / (dl || 1));
     const reach = Math.min(dl, a + b + 0.85 * c);
@@ -830,7 +1038,7 @@ function legIK(Lg, S, toe, fv, Pj, E) {
   } else {
     if (d < dmin) { S = sub(W, scale(u, dmin)); d = dmin; }   // folded as far as it goes: the joint gives the rest, the toe stays on its point
     const ca = clamp((a * a + d * d - b * b) / (2 * a * d), -1, 1), al = Math.acos(ca);
-    let bd = [0, 0, Lg.bend]; bd = sub(bd, scale(u, dot(bd, u))); const bl = len(bd); bd = bl > 1e-4 ? scale(bd, 1 / bl) : [0, 0, Lg.bend];
+    let bd = bendV || [0, 0, Lg.bend]; bd = sub(bd, scale(u, dot(bd, u))); const bl = len(bd); bd = bl > 1e-4 ? scale(bd, 1 / bl) : [0, 0, Lg.bend];
     Ek = add(S, add(scale(u, a * Math.cos(al)), scale(bd, a * Math.sin(al))));
     Wk = add(S, scale(u, d)); toeK = add(Wk, scale(fv, -1));
   }
@@ -869,12 +1077,25 @@ export function bedPose(skel) {
 
 // ---- the rotations and the pose row -----------------------------------------------------------------------------------
 // Each bone's rotation is the smallest carrying its rest direction (to its child, or its end point for a leaf) onto its
-// posed direction, the trunk's with the roll about its axis and the head's with its yaw lead. Writes skel.n x 3 texels of
+// posed direction, the trunk's with the roll about its axis and the head's with its yaw lead; the idle layer's twist about
+// a bone (st.tw) and the breath's scale across and in depth on the chest and the spine (st.br: M = R S, so the skin shader
+// gets a general 3x4, which it takes as it is: animalModels.js skinBone builds a mat4 from the three rows; its normals use
+// mat3(skinM), off by the scale's few hundredths). Writes skel.n x 3 texels of
 // four floats at row `row` of `out` (row-major, width skel.n * 3): texel k of joint j = row k of [R | p - R q].
 const CHILD = { Hips: 'Spine', Spine: 'Chest', Chest: 'Neck', Neck: 'Head', Tail1: 'Tail2', Tail2: 'Tail3' };
+const LEGBONE = /^(UpperLeg|LowerLeg|Foot)\./;
+// the rotation carrying the unit direction a onto b that keeps the body's across axis (x) as near across as each allows: the
+// same as the smallest rotation while a leg swings fore and aft, and still defined when it turns past its own joint
+function acrossRot(a, b) {
+  const xa = sub([1, 0, 0], scale(a, a[0])), xb = sub([1, 0, 0], scale(b, b[0])), la = len(xa), lb = len(xb);
+  if (la < 0.05 || lb < 0.05) return between(a, b);
+  const x0 = scale(xa, 1 / la), x1 = scale(xb, 1 / lb), y0 = cross(a, x0), y1 = cross(b, x1), o = new Array(9);
+  for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) o[r * 3 + c] = b[r] * a[c] + x1[r] * x0[c] + y1[r] * y0[c];
+  return o;
+}
 export function writeRow(skel, st, out, row) {
   const R = skel.rest, J = skel.idx, P = st.P, E = st.E, w = skel.n * 3 * 4, o = row * w;
-  const Ms = st.M || (st.M = new Array(skel.n));
+  const Ms = st.M || (st.M = new Array(skel.n)), TW = st.tw, BR = st.br;
   for (let j = 0; j < skel.n; j++) {
     const name = skel.names[j], at = skel.attach?.[j];
     if (at) {   // an ear or the scut: its own turn in the parent's frame, carried with the parent
@@ -895,10 +1116,14 @@ export function writeRow(skel, st, out, row) {
     else { const Lg = skel.legs.find(L => L.f === j); childRest = Lg.toe; childPose = E[j]; }   // a foot: to its toe
     let d0 = sub(childRest, R[j]), d1 = sub(childPose, P[j]);
     if (len(d0) < 1e-4) { d0 = [0, 0, 1]; d1 = [0, 0, 1]; }
-    let M = between(unit(d0), unit(d1));
-    if (name === 'Hips' || name === 'Spine' || name === 'Chest') M = mul3(M, axisAngle(unit(d0), st.roll3 || 0));
+    let M = LEGBONE.test(name) ? acrossRot(unit(d0), unit(d1)) : between(unit(d0), unit(d1));   // (a leg's bones keep the body's across as their own: the smallest rotation turned a thigh drawn up past its joint over at random)
+    if (name === 'Hips' || name === 'Spine' || name === 'Chest') M = mul3(M, axisAngle(unit(d0), (st.roll3 || 0) + (name === 'Hips' ? st.rollH || 0 : 0)));
     else if (name === 'Head') M = mul3(rotY((st.lead || 0) + (st.bendYaw || 0)), M);
     else if (name === 'Neck') M = mul3(rotY(st.bendYaw || 0), M);
+    if (TW && TW[j]) M = mul3(M, axisAngle(unit(d0), TW[j]));   // the idle's twist about the bone (the shake, the head's tilt)
+    if (BR && (j === J.Chest || j === J.Spine)) {   // the breath: the rotation times a scale across (x) and in depth (y) about the joint's own head, so the ribs widen and deepen and no joint moves
+      const o3 = j === J.Chest ? 0 : 3; M = M.slice(); for (let r = 0; r < 3; r++) { M[r * 3] *= BR[o3]; M[r * 3 + 1] *= BR[o3 + 1]; }
+    }
     const q = R[j], p = P[j]; Ms[j] = M;
     const tx = p[0] - (M[0] * q[0] + M[1] * q[1] + M[2] * q[2]), ty = p[1] - (M[3] * q[0] + M[4] * q[1] + M[5] * q[2]), tz = p[2] - (M[6] * q[0] + M[7] * q[1] + M[8] * q[2]);
     const b = o + j * 12;

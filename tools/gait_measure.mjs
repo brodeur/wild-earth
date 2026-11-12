@@ -32,6 +32,22 @@ function load(name) {
   return { name, species: ex.species, skel: G.skeletonOf(ex.skin), row };
 }
 const pct = x => (100 * x).toFixed(1), mm = x => (1000 * x).toFixed(1);
+// the duty factor (the share of a stride a foot stands, fore and hind) and the largest angle of a standing leg's line from
+// its shoulder or hip joint to the drawn toe, ahead of the vertical (protraction, at landing) and behind it (retraction,
+// at lift), in degrees, fore and hind: 20 s at speed v after 4 s to settle, 240 steps a second
+function legStats(E, skel, P, v) {
+  const st = E.makeGait(), inp = { x: 0, y: 0, z: 0, yaw: 0, size: 1, v, wr: 0, pose: 0, flick: 0, bend: 0, twitch: 0, terrain: () => 0, air: false, t: 0, act: 'none' }, dt = 1 / 240;
+  const n = [0, 0], on = [0, 0], pro = [0, 0], ret = [0, 0];
+  for (let f = 0; f < 24 / dt; f++) {
+    inp.z += v * dt; inp.t += dt; E.gaitStep(skel, P, st, inp, dt); if (f < 4 / dt) continue;
+    for (let i = 0; i < 4; i++) {
+      const k = i < 2 ? 0 : 1, F = st.feet[i], Lg = skel.legs[i]; n[k]++; if (!F.stance) continue; on[k]++;
+      const J = st.P[Lg.u], T = st.E[Lg.f], a = Math.atan2(T[2] - J[2], J[1] - T[1]) * 180 / Math.PI;
+      pro[k] = Math.max(pro[k], a); ret[k] = Math.max(ret[k], -a);
+    }
+  }
+  return { duty: [on[0] / n[0], on[1] / n[1]], pro, ret };
+}
 let bad = 0; const all = {};
 for (const name of MODELS) {
   const M = load(name), P = G.gaitParams(M.row, M.skel), Q = G.individualParams(P, G.seedOf(`measure:${name}`), M.skel.h / P.h), V = P.vary;   // (the model's own height against the species': an elk cow)
@@ -53,6 +69,9 @@ for (const name of MODELS) {
     console.log(`  ${g.padEnd(8)} ${v.toFixed(2)} m/s, ${S.strides} strides of ${S.interval.mean.toFixed(3)} s and ${S.length.mean.toFixed(2)} m`);
     console.log(`    interval cv ${pct(S.interval.cv)} % (the tree: ${pct(want)} %) ${okCv ? 'ok' : 'OUT'}; lag-1 r ${S.interval.r1.toFixed(2)}; DFA alpha ${S.interval.alpha.toFixed(2)} (band ${ALPHA[0]} to ${ALPHA[1]}) ${okA ? 'ok' : 'OUT'}; length cv ${pct(S.length.cv)} %, lag-1 r ${S.length.r1.toFixed(2)}`);
     console.log(`    lags behind the left hind: FL ${S.lag[0].mean.toFixed(3)} +- ${S.lag[0].sd.toFixed(3)}, FR ${S.lag[1].mean.toFixed(3)} +- ${S.lag[1].sd.toFixed(3)}, HR ${S.lag[2].mean.toFixed(3)} +- ${S.lag[2].sd.toFixed(3)}; width sd fore ${pct(S.width[0])} %, hind ${pct(S.width[1])} % of the track`);
+    const LS = legStats(G, M.skel, Q, v); all[name][g].legs = LS;
+    if (g === 'walk' && !P.hop && !(Math.min(...LS.duty) > 0.5)) bad++;
+    console.log(`    duty factor fore ${LS.duty[0].toFixed(2)}, hind ${LS.duty[1].toFixed(2)}${g === 'walk' && !P.hop ? (Math.min(...LS.duty) > 0.5 ? ' (a walk: over 0.5) ok' : ' (a walk: over 0.5) OUT') : ''}; a standing leg's line from the vertical: fore ${LS.pro[0].toFixed(0)} ahead to ${LS.ret[0].toFixed(0)} behind, hind ${LS.pro[1].toFixed(0)} ahead to ${LS.ret[1].toFixed(0)} behind (degrees)`);
     console.log(`    foot slide a stance: mean ${mm(S.slide.mean)} mm, worst ${mm(S.slide.max)} mm${So ? ` (before: mean ${mm(So.slide.mean)}, worst ${mm(So.slide.max)} mm)` : ''} ${okSlide ? 'ok' : 'WORSE'}; a frame ${cost.toFixed(1)} us${OLD ? ` (before ${costO.toFixed(1)} us)` : ''}`);
     console.log(`    two in step are a quarter stride apart after ${D.seconds.toFixed(0)} s (${D.strides.toFixed(0)} strides; ${D.fastest.toFixed(0)} to ${D.slowest.toFixed(0)} s over ${D.pairs} pairs); of one size ${Ds.seconds.toFixed(0)} s ${okDrift ? 'ok' : 'SLOW'}`);
   }

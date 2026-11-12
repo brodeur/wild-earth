@@ -42,6 +42,7 @@ export class LegsPool {
     this.liveR2 = liveR * liveR;
     this.owner = new Array(rows).fill(null); this.free = []; for (let r = rows - 1; r >= 0; r--) this.free.push(r);
     this.dirty = false; this.used = 0;
+    this.t = 0; this.dt = 0;   // the idle layer's clock (gait.js inp.t, idle.js): one for the pool, advanced once a frame in end(). A mirror's is its own page's, not yet the host's
     this.marks = marks ? new FootMarks(marks, rows, 0.02 * Math.max(0.6, this.skel.h)) : null;
   }
   // the instance's live row this frame (-1: the far tier)
@@ -61,8 +62,10 @@ export class LegsPool {
   write(a, o, dt, row, inp, clipOut, bendOut) {
     const P = a.gp || (a.gp = individualParams(this.P, seedOf(a.id ?? 'body'), (a.size > 0 ? a.size : 1) * this.rel));
     const host = a.mirror && a.m1 ? mirrorClock(a.m1[NET.sc], a.mt, a.mdur, a.scRate || 0) : 0;   // the host's stride clock now (a mirror)
+    this.dt = dt;
     if (row >= 0) {
       const st = a.gs ||= makeGait();
+      inp.t = this.t;
       if (!st.feet[0].has && a.sc >= 1) st.sc = a.sc;   // a row newly taken: the clock goes on from the far tier's
       inp.sc = host;
       gaitStep(this.skel, P, st, inp, dt);
@@ -78,18 +81,19 @@ export class LegsPool {
     }
     if (bendOut) { bendOut[o * 4] = 0; bendOut[o * 4 + 1] = 0; bendOut[o * 4 + 2] = 0; bendOut[o * 4 + 3] = 0; }
   }
-  end() { if (this.dirty) { this.live.tex.needsUpdate = true; this.dirty = false; } }
+  end() { if (this.dirty) { this.live.tex.needsUpdate = true; this.dirty = false; } this.t += this.dt; this.dt = 0; }
 }
 
 // A single body on the engine (the player): the last live row of the species' clip texture.
 export class LegsBody {
   constructor(model, locoRow, marks = null, seed = seedOf('body')) {   // seed: the body's individual (gait.js individualParams)
     this.model = model; this.skel = model.legs; const P0 = gaitParams(locoRow, this.skel); this.P = individualParams(P0, seed, this.skel.h / P0.h);
-    this.live = model.live; this.row = playerLiveRow(model); this.st = makeGait();
+    this.live = model.live; this.row = playerLiveRow(model); this.st = makeGait(); this.t = 0;   // t: the idle layer's clock (idle.js)
     this.marks = marks ? new FootMarks(marks, 1, 0.02 * Math.max(0.6, this.skel.h)) : null;
   }
   reset() { this.st = makeGait(); }
   write(inp, dt, clipOut, bendOut) {
+    this.t += dt; inp.t = this.t;
     gaitStep(this.skel, this.P, this.st, inp, dt);
     writeRow(this.skel, this.st, this.live.data, this.row); this.live.tex.needsUpdate = true;
     liveClip(this.row, clipOut, 0);
