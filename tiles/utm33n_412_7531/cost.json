@@ -412,10 +412,10 @@
   },
   "plants": {
    "stage": "flora",
-   "started_at": "2026-11-11T17:47:24Z",
-   "ended_at": "2026-11-11T17:47:26Z",
-   "wall_s": 1.9,
-   "cpu_self_s": 1.8,
+   "started_at": "2026-11-12T00:21:26Z",
+   "ended_at": "2026-11-12T00:21:28Z",
+   "wall_s": 1.8,
+   "cpu_self_s": 1.7,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {
@@ -434,10 +434,10 @@
   },
   "species_mix": {
    "stage": "flora",
-   "started_at": "2026-11-11T17:47:26Z",
-   "ended_at": "2026-11-11T17:47:27Z",
-   "wall_s": 0.9,
-   "cpu_self_s": 2.2,
+   "started_at": "2026-11-12T00:21:28Z",
+   "ended_at": "2026-11-12T00:21:29Z",
+   "wall_s": 1.0,
+   "cpu_self_s": 2.0,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {
@@ -446,7 +446,7 @@
      "misses": 0
     }
    },
-   "disk_bytes": 107205,
+   "disk_bytes": 107303,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -612,8 +612,8 @@
   },
   "registry": {
    "stage": "games",
-   "started_at": "2026-11-11T17:47:27Z",
-   "ended_at": "2026-11-11T17:47:28Z",
+   "started_at": "2026-11-12T00:21:29Z",
+   "ended_at": "2026-11-12T00:21:30Z",
    "wall_s": 0.7,
    "cpu_self_s": 0.7,
    "cpu_children_s": 0.0,
@@ -744,14 +744,14 @@
    "meshy_queued_credits_est": 0
   },
   "flora": {
-   "started_at": "2026-11-11T17:47:24Z",
-   "ended_at": "2026-11-11T17:47:27Z",
+   "started_at": "2026-11-12T00:21:26Z",
+   "ended_at": "2026-11-12T00:21:29Z",
    "wall_s": 4.1,
-   "cpu_s": 5.3,
+   "cpu_s": 5.0,
    "download_bytes": 0,
    "cache_hits": 405,
    "cache_misses": 0,
-   "disk_bytes": 2953577,
+   "disk_bytes": 2953675,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -768,8 +768,8 @@
    "meshy_queued_credits_est": 0
   },
   "games": {
-   "started_at": "2026-11-11T17:47:27Z",
-   "ended_at": "2026-11-11T17:47:28Z",
+   "started_at": "2026-11-12T00:21:29Z",
+   "ended_at": "2026-11-12T00:21:30Z",
    "wall_s": 0.8,
    "cpu_s": 0.8,
    "download_bytes": 0,
@@ -781,50 +781,6 @@
   }
  },
  "runs": [
-  {
-   "started_at": "2026-11-06T03:59:31Z",
-   "stages": [
-    {
-     "stage": "flora",
-     "started_at": "2026-11-06T03:59:31Z",
-     "steps_run": [
-      "plants",
-      "species_mix",
-      "crowns",
-      "inpaint"
-     ],
-     "steps_skipped": [],
-     "ended_at": "2026-11-06T03:59:33Z"
-    },
-    {
-     "stage": "fauna",
-     "started_at": "2026-11-06T03:59:33Z",
-     "steps_run": [
-      "species",
-      "animals",
-      "resources"
-     ],
-     "steps_skipped": [],
-     "ended_at": "2026-11-06T04:05:17Z"
-    },
-    {
-     "stage": "games",
-     "started_at": "2026-11-06T04:05:17Z",
-     "steps_run": [
-      "games",
-      "game_seeds",
-      "registry",
-      "audit"
-     ],
-     "steps_skipped": [],
-     "ended_at": "2026-11-06T04:05:18Z"
-    }
-   ],
-   "ended_at": "2026-11-06T04:05:18Z",
-   "failed": [
-    "audit"
-   ]
-  },
   {
    "started_at": "2026-11-06T04:11:40Z",
    "stages": [
@@ -2210,21 +2166,48 @@
    "ended_at": "2026-11-11T17:47:28Z",
    "failed": [],
    "refused": []
+  },
+  {
+   "started_at": "2026-11-12T00:21:26Z",
+   "stages": [
+    {
+     "stage": "flora",
+     "started_at": "2026-11-12T00:21:26Z",
+     "steps_run": [
+      "plants",
+      "species_mix"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-12T00:21:29Z"
+    },
+    {
+     "stage": "games",
+     "started_at": "2026-11-12T00:21:29Z",
+     "steps_run": [
+      "registry"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-12T00:21:30Z"
+    }
+   ],
+   "ended_at": "2026-11-12T00:21:30Z",
+   "failed": [],
+   "refused": []
   }
  ],
  "totals": {
   "wall_s": 844.0,
-  "cpu_s": 161.7,
+  "cpu_s": 161.4,
   "download_bytes": 18912952,
   "cache_hits": 1404,
   "cache_misses": 294,
-  "disk_bytes": 133706868,
+  "disk_bytes": 133706966,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 1860
  },
- "updated_at": "2026-11-11T17:47:28Z",
+ "updated_at": "2026-11-12T00:21:30Z",
  "client": {
-  "bytes": 21619082,
+  "bytes": 21619475,
   "files": 51,
   "largest": {
    "client/season_rgb.png": 4025567,

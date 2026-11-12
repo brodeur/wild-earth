@@ -9332,3 +9332,75 @@ understory of thimbleberry on three records.
 - **Not changed, and waiting on Aaron's word:** the same own-cell weighting for an associate added after listed
   species. The lane's what-if is in the entry above (the associates' share under Grand Canyon ponderosa 0.50 to
   0.22, on the Teton steppe 0.29 to 0.06).
+
+## 2026-11-11: an associate added after listed species weighs by its records on the community's own cells (pipeline/species_mix.py; tests/test_associates.py; branch claude/elated-jackson-91da74)
+
+The call left waiting in the two entries above; Aaron approved it. A recorded associate that follows a community's
+listed species took its rarity from the records near the whole tile. Creeping barberry was a third of Teton's
+aspen understory on 3 of its 26 records.
+
+- **The rule** (`species_mix._layer_weights`). An associate's rarity is min(1, its records on the community's own
+  cells / 30), whether or not the community lists a species. Where species are listed, the rest is as before:
+  - associates rank after the listed species by reciprocal rank, in order of their records there;
+  - together they never weigh more than the listed species;
+  - the layer keeps its class's density. A thin associate's share goes to the listed species. Nothing is held
+    empty for it: LANDFIRE's description supports the layer.
+  - A succulent associate's own share is still held empty (`hold_empty`), so that share shrinks with its weight
+    and the leafy shrubs drawn beside it stand denser.
+- **The carpet needed no change.** A dwarf associate's carpet under listed species is its share of the layer
+  (`split_dwarf_shrubs`), so it thins with the share. Creeping barberry under Teton's aspen: 0.33 to 0.05 of the
+  shrub cover. A test holds this.
+- **Each layer it reaches, before and after** (shares of the community's whole shrub layer; the built numbers
+  match the what-if of the entry before last).
+
+  | Community | Associates (records on its cells): share before to after | Together | Listed species | Drawn shrub density |
+  |---|---|---|---|---|
+  | Grand Canyon ponderosa (EVT 7054, 16,191 cells; BpS 1190, 3,454) | bigtooth maple (8) 0.18 to 0.10; creeping barberry, a carpet (6) 0.13 to 0.05; Woods' rose (5) 0.10 to 0.03; desert snowberry (4) 0.02 to 0.02; New Mexico locust (3) 0.07 to 0.01 | 0.50 to 0.22 | Gambel oak 0.50 to 0.78 | 0.43 to 0.47 (carpet 0.13 to 0.05) |
+  | Grand Canyon blackbrush shrubland (EVT 7078, 19,780; BpS 404, 9) | cottontop cactus (9) 0.18 to 0.06, held empty | 0.18 to 0.06 | blackbrush 0.46 to 0.53, Mormon tea 0.36 to 0.41 | 0.82 to 0.94 |
+  | Grand Canyon creosotebush scrub (EVT 7087, 5,408; BpS 1198, 1) | Engelmann's hedgehog cactus (4) 0.087 to 0.013; soaptree yucca (3) 0.010 to 0.008; both held empty | 0.10 to 0.02 | Mormon tea 0.33 to 0.36; blackbrush, brittlebush, saltbush 0.19 to 0.21 each | 0.90 to 0.98 |
+  | Teton sagebrush steppe (EVT 7126, 26,281; BpS 704, 691) | antelope bitterbrush (5) 0.16 to 0.035; chokecherry (3) 0.095 to 0.013; gray horsebrush (3) 0.036 to 0.016 | 0.29 to 0.06 | big sagebrush 0.64 to 0.84, threetip sagebrush 0.07 to 0.10 | 1.0 |
+  | Teton Douglas-fir (EVT 7166, 6,243; BpS 715, 6) | Utah honeysuckle (6) 0.27 to 0.09; Greene's mountain-ash (3) 0.18 to 0.03 | 0.45 to 0.12 | common snowberry 0.55 to 0.88 | 0.5 |
+  | Teton aspen (EVT 7011, 461; BpS 686, 29) | creeping barberry, a carpet (3) 0.33 to 0.05 | 0.33 to 0.05 | big sagebrush 0.67 to 0.95 | 0.33 to 0.48 (carpet 0.33 to 0.05) |
+
+  - The Grand Canyon's two ruderal shrublands (EVT 9328 and 9336, 191 cells) borrow the tile's shrubs of their
+    class (the tile pool) and follow: density 0.87 to 0.96.
+  - The order now follows the records on the community. New Mexico locust (3 records) had outweighed desert
+    snowberry (4) under ponderosa, by its records near the tile.
+  - Lamar has no such layer; nothing of it changed.
+- **The held-out judge** (`held_out.py --checks species,composition`; before, after):
+
+  | Tile | Shrub Bray-Curtis | Shrubs in genera no plot records | Everything else |
+  |---|---|---|---|
+  | Grand Canyon | 0.6445 to 0.6456 | 0.0466 to 0.0152 | unchanged (canopy 0.26, ground 0.94, plant precision 0.94) |
+  | Lamar | 0.3201 unchanged | not scored | unchanged |
+  | Yosemite | 0.5541 unchanged | 0.1311 unchanged | unchanged |
+
+- **What it made worse.**
+  - Grand Canyon's shrub Bray-Curtis rises by 0.0011. Gambel oak takes most of what the rim's associates lose
+    (13.5% to 18.7% of the drawn shrubs; maple 4.4% to 2.4%), and the plots' shrub cover is the inner canyon's,
+    where oak is not among the eight most recorded genera. The share in genera no plot records falls by two
+    thirds, the larger move.
+  - Teton's scorecard reads 3% to 4% of its plant species as guessed: threetip sagebrush, drawn as big sagebrush,
+    takes a larger share of the steppe with the listed species.
+  - Bitterbrush is common in Jackson Hole's steppe and falls to 3.5% of it on five records. As with Lamar's
+    whortleberry, the rule measures the evidence, not the plant.
+- **The weak calls it thins.** Bigtooth maple and New Mexico locust under the South Rim's ponderosa (records
+  across the canyon): 0.24 to 0.12 together. Chokecherry on Teton's steppe: 9.5% to 1.3%. The 25 km square
+  itself is not changed.
+- **Scorecards.** Grand Canyon: woody weight asked for and drawn as nothing 6% to 3% (the cacti's thinner shares);
+  plant species ruled 92% to 95%. Teton as above. The others only their dates.
+- **Unchanged.** Every tile's `species_mix_index.png`; both mix rasters of the 16 tiles outside this rule (cmp
+  against main's), Lamar among them. Only `species_mix_density.png` of the Grand Canyon and Teton changed. Every
+  document's `recorded` encoding line states the weighting.
+- **At eye level** (headless Chrome on the worktree's viewer, 15 July, 11:00, eye height 1.6 m, four bearings each,
+  before and after; no shader errors; pairs in the side-session notes, recorded-own-cells-captures/).
+  - Teton steppe, tile-local (9684.7, 1756.8). Before: sagebrush with a leafy green chokecherry beside the camera
+    and two more on the skyline looking east. After: the near chokecherry's place holds a pale shrub (big
+    sagebrush by its look; the client was not asked for its species) and one green shrub is left on the skyline.
+    The steppe reads as sagebrush with a rare leafy shrub. The two runs' cameras differ by a few degrees.
+  - Grand Canyon blackbrush, tile-local (9444.4, 7582.6). The same to the eye before and after: bunchgrass tufts
+    over bare ground, and one leafy shrub in the middle distance looking west. No shrub stands near the camera
+    either way, so the denser layer (0.82 to 0.94) does not show at this pose.
+- **Tests.** `tests/test_associates.py`, 30 tests (4 new, 3 rewritten). Five fail on the code before: nine records
+  on a shrubland weighed a whole third rank, and a dwarf associate on three records laid 0.18 of the cover as
+  carpet. The whole suite: 411 tests, all pass.

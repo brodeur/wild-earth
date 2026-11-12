@@ -446,30 +446,13 @@
     "in the description of BPS 686 Rocky Mountain Aspen Forest and Woodland (29 cells)",
     "canopy: records (GBIF: 23 records on the tile; height not yet screened)"
    ],
-   "cover": 0.1691,
+   "cover": 0.2197,
    "records": 23,
    "scientific": "Artemisia tridentata",
    "record": true,
    "card": true,
    "drawn_as": "artemisia_tridentata",
    "rank": 3
-  },
-  {
-   "id": "sorbus_scopulina",
-   "kind": "shrub",
-   "why": [
-    "recorded on the cells of EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (3 of its 6 open records near the tile, 3.92 times the rate of plants in general; 6244 cells)",
-    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)",
-    "canopy: records (GBIF: 106 records on the tile; height not yet screened)"
-   ],
-   "cover": 0.0614,
-   "records": 106,
-   "scientific": "Sorbus scopulina",
-   "record": true,
-   "card": true,
-   "drawn_as": "sorbus_scopulina",
-   "rank": 4
   },
   {
    "id": "abies_lasiocarpa",
@@ -487,7 +470,39 @@
    "record": true,
    "card": true,
    "drawn_as": "abies_lasiocarpa",
+   "rank": 4
+  },
+  {
+   "id": "sorbus_scopulina",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (3 of its 6 open records near the tile, 3.92 times the rate of plants in general; 6244 cells)",
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)",
+    "canopy: records (GBIF: 106 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0528,
+   "records": 106,
+   "scientific": "Sorbus scopulina",
+   "record": true,
+   "card": true,
+   "drawn_as": "sorbus_scopulina",
    "rank": 5
+  },
+  {
+   "id": "symphoricarpos_albus",
+   "kind": "shrub",
+   "why": [
+    "in the description of EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (6244 cells)",
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
+   ],
+   "cover": 0.0522,
+   "records": 0,
+   "record": true,
+   "card": false,
+   "drawn_as": "symphoricarpos_albus",
+   "rank": 6
   },
   {
    "id": "populus_tremuloides",
@@ -505,7 +520,7 @@
    "record": true,
    "card": true,
    "drawn_as": "populus_tremuloides",
-   "rank": 6
+   "rank": 7
   },
   {
    "id": "ceanothus_velutinus",
@@ -520,7 +535,7 @@
    "record": true,
    "card": true,
    "drawn_as": "ceanothus_velutinus",
-   "rank": 7
+   "rank": 8
   },
   {
    "id": "pseudotsuga_menziesii",
@@ -538,7 +553,7 @@
    "record": true,
    "card": false,
    "drawn_as": "pseudotsuga_menziesii",
-   "rank": 8
+   "rank": 9
   },
   {
    "id": "vaccinium_scoparium",
@@ -551,21 +566,6 @@
    "record": true,
    "card": true,
    "drawn_as": "vaccinium_scoparium",
-   "rank": 9
-  },
-  {
-   "id": "purshia_tridentata",
-   "kind": "shrub",
-   "why": [
-    "recorded on the cells of EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (5 of its 7 open records near the tile, 2.33 times the rate of plants in general; 26281 cells)",
-    "in the description of EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-    "recorded on the cells of BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (5 of its 7 open records near the tile, 2.33 times the rate of plants in general; 691 cells)"
-   ],
-   "cover": 0.0389,
-   "records": 0,
-   "record": true,
-   "card": true,
-   "drawn_as": "purshia_tridentata",
    "rank": 10
   },
   {
@@ -582,39 +582,6 @@
    "card": true,
    "drawn_as": "rubus_parviflorus",
    "rank": 11
-  },
-  {
-   "id": "symphoricarpos_albus",
-   "kind": "shrub",
-   "why": [
-    "in the description of EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (6244 cells)",
-    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
-   ],
-   "cover": 0.0332,
-   "records": 0,
-   "record": true,
-   "card": false,
-   "drawn_as": "symphoricarpos_albus",
-   "rank": 12
-  },
-  {
-   "id": "prunus_virginiana",
-   "kind": "shrub",
-   "why": [
-    "recorded on the cells of EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (3 of its 6 open records near the tile, 1.63 times the rate of plants in general; 26281 cells)",
-    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-    "recorded on the cells of BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (3 of its 6 open records near the tile, 1.63 times the rate of plants in general; 691 cells)",
-    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)",
-    "canopy: records (GBIF: 19 records on the tile; height not yet screened)"
-   ],
-   "cover": 0.0331,
-   "records": 19,
-   "scientific": "Prunus virginiana",
-   "record": true,
-   "card": true,
-   "drawn_as": "prunus_virginiana",
-   "rank": 13
   },
   {
    "id": "picea_engelmannii",
@@ -634,7 +601,7 @@
    "record": true,
    "card": true,
    "drawn_as": "picea_engelmannii",
-   "rank": 14
+   "rank": 12
   },
   {
    "id": "amelanchier_alnifolia",
@@ -650,21 +617,22 @@
    "record": true,
    "card": true,
    "drawn_as": "amelanchier_alnifolia",
-   "rank": 15
+   "rank": 13
   },
   {
-   "id": "lonicera_utahensis",
+   "id": "artemisia_tripartita",
    "kind": "shrub",
    "why": [
-    "recorded on the cells of EVT 7050 Rocky Mountain Lodgepole Pine Forest (6 of its 16 open records near the tile, 2.6 times the rate of plants in general; 9076 cells)",
-    "recorded on the cells of EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (6 of its 16 open records near the tile, 2.94 times the rate of plants in general; 6244 cells)"
+    "in the description of EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (26281 cells)",
+    "in the description of BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (691 cells)"
    ],
-   "cover": 0.0238,
-   "records": 175,
-   "record": true,
-   "card": true,
-   "drawn_as": "lonicera_utahensis",
-   "rank": 16
+   "cover": 0.0234,
+   "records": 0,
+   "record": false,
+   "card": false,
+   "drawn_as": "artemisia_tridentata",
+   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 14
   },
   {
    "id": "acer_glabrum",
@@ -681,7 +649,7 @@
    "card": false,
    "drawn_as": null,
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 17
+   "rank": 15
   },
   {
    "id": "mahonia_repens",
@@ -691,27 +659,12 @@
     "recorded on the cells of EVT 7011 Rocky Mountain Aspen Forest and Woodland (3 of its 26 open records near the tile, 2.57 times the rate of plants in general; 461 cells)",
     "recorded on the cells of BPS 686 Rocky Mountain Aspen Forest and Woodland (3 of its 26 open records near the tile, 2.57 times the rate of plants in general; 29 cells)"
    ],
-   "cover": 0.0183,
+   "cover": 0.017,
    "records": 134,
    "record": true,
    "card": true,
    "drawn_as": "mahonia_repens",
-   "rank": 18
-  },
-  {
-   "id": "artemisia_tripartita",
-   "kind": "shrub",
-   "why": [
-    "in the description of EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (26281 cells)",
-    "in the description of BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (691 cells)"
-   ],
-   "cover": 0.0178,
-   "records": 0,
-   "record": false,
-   "card": false,
-   "drawn_as": "artemisia_tridentata",
-   "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
-   "rank": 19
+   "rank": 16
   },
   {
    "id": "populus_angustifolia",
@@ -729,7 +682,21 @@
    "record": true,
    "card": true,
    "drawn_as": "populus_angustifolia",
-   "rank": 20
+   "rank": 17
+  },
+  {
+   "id": "lonicera_utahensis",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7050 Rocky Mountain Lodgepole Pine Forest (6 of its 16 open records near the tile, 2.6 times the rate of plants in general; 9076 cells)",
+    "recorded on the cells of EVT 7166 Middle Rocky Mountain Montane Douglas-fir Forest and Woodland (6 of its 16 open records near the tile, 2.94 times the rate of plants in general; 6244 cells)"
+   ],
+   "cover": 0.0134,
+   "records": 175,
+   "record": true,
+   "card": true,
+   "drawn_as": "lonicera_utahensis",
+   "rank": 18
   },
   {
    "id": "pinus_albicaulis",
@@ -742,7 +709,25 @@
    "record": true,
    "card": true,
    "drawn_as": "pinus_albicaulis",
-   "rank": 21
+   "rank": 19
+  },
+  {
+   "id": "prunus_virginiana",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (3 of its 6 open records near the tile, 1.63 times the rate of plants in general; 26281 cells)",
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "recorded on the cells of BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (3 of its 6 open records near the tile, 1.63 times the rate of plants in general; 691 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)",
+    "canopy: records (GBIF: 19 records on the tile; height not yet screened)"
+   ],
+   "cover": 0.0131,
+   "records": 19,
+   "scientific": "Prunus virginiana",
+   "record": true,
+   "card": true,
+   "drawn_as": "prunus_virginiana",
+   "rank": 20
   },
   {
    "id": "cornus_sericea",
@@ -760,7 +745,7 @@
    "record": true,
    "card": false,
    "drawn_as": "cornus_sericea",
-   "rank": 22
+   "rank": 21
   },
   {
    "id": "rosa_woodsii",
@@ -780,21 +765,22 @@
    "record": true,
    "card": true,
    "drawn_as": "rosa_woodsii",
-   "rank": 23
+   "rank": 22
   },
   {
-   "id": "tetradymia_canescens",
+   "id": "purshia_tridentata",
    "kind": "shrub",
    "why": [
-    "recorded on the cells of EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (3 of its 3 open records near the tile, 3.27 times the rate of plants in general; 26281 cells)",
-    "recorded on the cells of BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (3 of its 3 open records near the tile, 3.27 times the rate of plants in general; 691 cells)"
+    "recorded on the cells of EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (5 of its 7 open records near the tile, 2.33 times the rate of plants in general; 26281 cells)",
+    "in the description of EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "recorded on the cells of BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (5 of its 7 open records near the tile, 2.33 times the rate of plants in general; 691 cells)"
    ],
-   "cover": 0.0087,
+   "cover": 0.0089,
    "records": 0,
    "record": true,
    "card": true,
-   "drawn_as": "tetradymia_canescens",
-   "rank": 24
+   "drawn_as": "purshia_tridentata",
+   "rank": 23
   },
   {
    "id": "vaccinium_membranaceum",
@@ -808,6 +794,20 @@
    "card": false,
    "drawn_as": "vaccinium_scoparium",
    "queued": "needs a trait card (library/plant_cards/): an agent's research, then automatic",
+   "rank": 24
+  },
+  {
+   "id": "tetradymia_canescens",
+   "kind": "shrub",
+   "why": [
+    "recorded on the cells of EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (3 of its 3 open records near the tile, 3.27 times the rate of plants in general; 26281 cells)",
+    "recorded on the cells of BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (3 of its 3 open records near the tile, 3.27 times the rate of plants in general; 691 cells)"
+   ],
+   "cover": 0.0038,
+   "records": 0,
+   "record": true,
+   "card": true,
+   "drawn_as": "tetradymia_canescens",
    "rank": 25
   },
   {
@@ -2557,21 +2557,21 @@
  },
  "hands": [
   {
-   "id": "acer_glabrum",
-   "kind": "shrub",
-   "what": "a trait card",
-   "why": [
-    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
-    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
-   ]
-  },
-  {
    "id": "artemisia_tripartita",
    "kind": "shrub",
    "what": "a trait card",
    "why": [
     "in the description of EVT 7126 Inter-Mountain Basins Montane Sagebrush Steppe (26281 cells)",
     "in the description of BPS 704 Inter-Mountain Basins Montane Sagebrush Steppe (691 cells)"
+   ]
+  },
+  {
+   "id": "acer_glabrum",
+   "kind": "shrub",
+   "what": "a trait card",
+   "why": [
+    "named by EVT 7106 Northern Rocky Mountain Montane-Foothill Deciduous Shrubland (1181 cells)",
+    "named by EVT 7169 Northern Rocky Mountain Subalpine Deciduous Shrubland (235 cells)"
    ]
   },
   {

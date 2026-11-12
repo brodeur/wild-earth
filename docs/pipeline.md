@@ -175,7 +175,9 @@ and a tile elsewhere never falls back to it in silence:
   and 25 km around it, laid on LANDFIRE's vegetation map of that square. A member needs 3 records on the community and
   more of them there than the visits explain, by one standard error (`associates.excess`: a species spread as all
   plant records are is a member nowhere). Members rank after the species
-  LANDFIRE lists, by reciprocal rank in order of their records, and together never weigh more than the listed ones. A
+  LANDFIRE lists, by reciprocal rank in order of their records, each times min(1, its records on the community's own
+  cells / 30) (2026-11-11: no longer its records near the whole tile), and together never weigh more than the listed
+  ones. A thin member's share goes to the listed species; the layer keeps its class's density. A
   community that lists no shrub (bedrock canyon, spruce-fir) takes its whole shrub layer from them, and that layer is
   only as dense as the records on its own cells support (2026-11-11, `species_mix.recorded_support`): each member
   weighs min(1, its records there / 30) over its rank, the density is the class's times their sum (at most 1), and
