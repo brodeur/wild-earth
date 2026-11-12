@@ -1355,7 +1355,9 @@ Three keys say what happened:
   affinity}}`, the shrubs added to the community from the records on its own cells (`pipeline/associates.py`): open
   GBIF observations (CC0 and CC BY) within 25 km of the tile, laid on LANDFIRE's vegetation map of the same square.
   `records`: on cells of this community; `of`: on any natural cell; `affinity`: its share of records here over all
-  plants' share here (for people; the membership test is `associates.excess`). A layer that gained them has `weights.shrubs` ending in `+recorded`; a community that lists
+  plants' share here (for people; the membership test is `associates.excess`). A layer that gained them has `weights.shrubs` ending in `+recorded`:
+  each added species weighs min(1, `records` / 30) over its rank after the listed ones (2026-11-11; before, its records
+  near the whole tile), a thin one's share goes to the listed species, and the density is the class's. A community that lists
   nothing has `weights.shrubs: "recorded"` and a rule id `recorded_*`. Where `weights.shrubs` is `recorded` (no shrub
   listed: the records alone give the layer), `communities[].recorded_support` (2026-11-11) is how much of the habitat
   class's shrub density the records support: the sum over the members of min(1, `records` / 30) / rank, at most 1. The

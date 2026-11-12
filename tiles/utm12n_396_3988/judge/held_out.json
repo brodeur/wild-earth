@@ -2,7 +2,7 @@
  "format": 1,
  "tile": "utm12n_396_3988",
  "name": "Grand Canyon (South Rim to the river)",
- "at": "2026-11-11T17:47:46Z",
+ "at": "2026-11-12T00:22:45Z",
  "doc": "docs/held-out-judge.md",
  "checks": {
   "species_lists": {
@@ -898,18 +898,18 @@
    "drawn_from": "client/species_mix.json: plants drawn per species (cells x density x weight), by layer",
    "measure": "per layer, on genus shares: Bray-Curtis dissimilarity (0 same, 1 nothing in common); foreign share = drawn share in genera the reference does not record on this ground; missed share = reference share in genera not drawn in that layer",
    "scores": {
-    "bray_curtis_mean": 0.6134,
+    "bray_curtis_mean": 0.6138,
     "bray_curtis": {
      "canopy": 0.257,
-     "shrub": 0.6445,
+     "shrub": 0.6456,
      "ground": 0.9387
     },
     "foreign_share": {
      "canopy": 0.0001,
-     "shrub": 0.0466,
+     "shrub": 0.0152,
      "ground": 0.0022
     },
-    "foreign_share_max": 0.0466,
+    "foreign_share_max": 0.0152,
     "missed_share": {
      "canopy": 0,
      "shrub": 0.5987,
@@ -936,18 +936,18 @@
      }
     },
     "shrub": {
-     "bray_curtis": 0.6445,
-     "foreign_share": 0.0466,
+     "bray_curtis": 0.6456,
+     "foreign_share": 0.0152,
      "missed_share": 0.5987,
      "drawn": {
-      "ephedra": 0.3002,
-      "coleogyne": 0.2574,
-      "quercus": 0.1353,
-      "artemisia": 0.0712,
-      "atriplex": 0.0486,
-      "encelia": 0.0438,
-      "acer": 0.0437,
-      "rosa": 0.0263
+      "ephedra": 0.308,
+      "coleogyne": 0.2647,
+      "quercus": 0.1871,
+      "artemisia": 0.0651,
+      "atriplex": 0.0462,
+      "encelia": 0.0426,
+      "acer": 0.0237,
+      "purshia": 0.0205
      },
      "reference": {
       "baccharis": 0.1969,
@@ -993,16 +993,7 @@
      "species": [
       "rosa_woodsii"
      ],
-     "drawn_share": 0.0263,
-     "layer": "shrub"
-    },
-    {
-     "kind": "foreign_genus",
-     "genus": "robinia",
-     "species": [
-      "robinia_neomexicana"
-     ],
-     "drawn_share": 0.0172,
+     "drawn_share": 0.0095,
      "layer": "shrub"
     },
     {
@@ -1905,17 +1896,17 @@
   },
   "composition_bray_curtis": {
    "canopy": 0.257,
-   "shrub": 0.6445,
+   "shrub": 0.6456,
    "ground": 0.9387
   },
   "composition_foreign_share": {
    "canopy": 0.0001,
-   "shrub": 0.0466,
+   "shrub": 0.0152,
    "ground": 0.0022
   },
   "eye_level_distance": 0.177,
   "eye_level_pairs": 10,
   "colour_from_above_overlap": 0.26,
-  "named_errors": 101
+  "named_errors": 100
  }
 }

@@ -20,9 +20,9 @@
   "tile_registry": "species/registry.json"
  },
  "built_at": {
-  "manifest": "2026-11-11T17:47:07Z",
+  "manifest": "2026-11-12T00:22:34Z",
   "animals": "2026-11-09T04:19:34Z",
-  "tile_registry": "2026-11-11T17:47:07Z"
+  "tile_registry": "2026-11-12T00:22:34Z"
  },
  "layers": {
   "terrain": {
@@ -149,8 +149,8 @@
    "scored": true,
    "shares": {
     "measured": 0.0,
-    "ruled": 0.9622,
-    "guessed": 0.0301,
+    "ruled": 0.9537,
+    "guessed": 0.0386,
     "blank": 0.0077
    },
    "detail": {
@@ -288,37 +288,30 @@
     },
     "top": [
      {
-      "species": "pinus_contorta",
-      "layer": "trees",
-      "share_of_weight": 0.2745,
-      "share": "ruled",
-      "drawn_as": "pinus_contorta"
-     },
-     {
       "species": "artemisia_tridentata",
       "layer": "shrubs",
-      "share_of_weight": 0.2382,
+      "share_of_weight": 0.3137,
       "share": "ruled",
       "drawn_as": "artemisia_tridentata"
      },
      {
+      "species": "pinus_contorta",
+      "layer": "trees",
+      "share_of_weight": 0.2743,
+      "share": "ruled",
+      "drawn_as": "pinus_contorta"
+     },
+     {
       "species": "pseudotsuga_menziesii",
       "layer": "trees",
-      "share_of_weight": 0.0692,
+      "share_of_weight": 0.0691,
       "share": "ruled",
       "drawn_as": "pseudotsuga_menziesii"
      },
      {
-      "species": "purshia_tridentata",
-      "layer": "shrubs",
-      "share_of_weight": 0.0591,
-      "share": "ruled",
-      "drawn_as": "purshia_tridentata"
-     },
-     {
       "species": "picea_engelmannii",
       "layer": "trees",
-      "share_of_weight": 0.043,
+      "share_of_weight": 0.0429,
       "share": "ruled",
       "drawn_as": "picea_engelmannii"
      },
@@ -330,11 +323,18 @@
       "drawn_as": "abies_lasiocarpa"
      },
      {
-      "species": "prunus_virginiana",
+      "species": "symphoricarpos_albus",
       "layer": "shrubs",
-      "share_of_weight": 0.0366,
+      "share_of_weight": 0.0415,
       "share": "ruled",
-      "drawn_as": "prunus_virginiana"
+      "drawn_as": "symphoricarpos_albus"
+     },
+     {
+      "species": "artemisia_tripartita",
+      "layer": "shrubs",
+      "share_of_weight": 0.0355,
+      "share": "guessed",
+      "drawn_as": "artemisia_tridentata"
      },
      {
       "species": "populus_angustifolia",
@@ -344,23 +344,9 @@
       "drawn_as": "populus_angustifolia"
      },
      {
-      "species": "symphoricarpos_albus",
-      "layer": "shrubs",
-      "share_of_weight": 0.0271,
-      "share": "ruled",
-      "drawn_as": "symphoricarpos_albus"
-     },
-     {
-      "species": "artemisia_tripartita",
-      "layer": "shrubs",
-      "share_of_weight": 0.027,
-      "share": "guessed",
-      "drawn_as": "artemisia_tridentata"
-     },
-     {
       "species": "ceanothus_velutinus",
       "layer": "shrubs",
-      "share_of_weight": 0.0261,
+      "share_of_weight": 0.026,
       "share": "ruled",
       "drawn_as": "ceanothus_velutinus"
      },
@@ -370,16 +356,30 @@
       "share_of_weight": 0.0244,
       "share": "ruled",
       "drawn_as": "pinus_albicaulis"
+     },
+     {
+      "species": "purshia_tridentata",
+      "layer": "shrubs",
+      "share_of_weight": 0.0135,
+      "share": "ruled",
+      "drawn_as": "purshia_tridentata"
+     },
+     {
+      "species": "cornus_sericea",
+      "layer": "shrubs",
+      "share_of_weight": 0.0119,
+      "share": "ruled",
+      "drawn_as": "cornus_sericea"
      }
     ],
-    "no_local_record_share": 0.1614,
+    "no_local_record_share": 0.1227,
     "no_local_record_note": "share of the drawn woody weight whose drawn species is not among the tile's most-recorded GBIF plants (species/plant_needs.json, research.PLANT_LIMIT): common trees can miss that list, so this is a lead, not a finding"
    },
    "findings": [
     {
      "layer": "plant_species",
-     "text": "6% of the shrub weight is drawn as a stand-in",
-     "share": 0.0301,
+     "text": "8% of the shrub weight is drawn as a stand-in",
+     "share": 0.0386,
      "of": "woody plant weight",
      "kind": "guessed"
     }

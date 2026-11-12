@@ -279,9 +279,12 @@ class TestAfterTheListedSpecies(Place):
         self.assertGreater(s["coleogyne_ramosissima"], s["ephedra_viridis"])              # the description's order
         self.assertGreater(s["ephedra_viridis"], s["purshia_stansburiana"])               # a third species at most
         self.assertGreater(s["purshia_stansburiana"], s["fallugia_paradoxa"])             # by their records there
-        # two listed (ranks 1 and 2, 1.5 together), then 1/3 and 1/4
-        self.assertAlmostEqual(s["purshia_stansburiana"], (1 / 3) / (1.5 + 1 / 3 + 1 / 4), places=3)
-        self.assertAlmostEqual(s["coleogyne_ramosissima"] + s["ephedra_viridis"], 1.5 / (1.5 + 1 / 3 + 1 / 4), places=3)
+        # two listed (ranks 1 and 2, 1.5 together), then ranks 3 and 4, each as far as its records on the shrubland's
+        # own cells go: 9 / 30 over 3 and 5 / 30 over 4
+        a = [9 / 30 / 3, 5 / 30 / 4]
+        self.assertAlmostEqual(s["purshia_stansburiana"], a[0] / (1.5 + sum(a)), places=3)
+        self.assertAlmostEqual(s["fallugia_paradoxa"], a[1] / (1.5 + sum(a)), places=3)
+        self.assertAlmostEqual(s["coleogyne_ramosissima"] + s["ephedra_viridis"], 1.5 / (1.5 + sum(a)), places=3)
         self.assertEqual(r["weights"]["shrubs"], "description+recorded")
         self.assertTrue(r["id"].startswith("named_from_"))
         self.assertNotIn("recorded_support", r)                                    # listed species lead: the class's density
@@ -289,7 +292,11 @@ class TestAfterTheListedSpecies(Place):
         self.assertEqual(set(r["recorded"]), {"purshia_stansburiana", "fallugia_paradoxa"})   # Mormon tea is listed, not added
 
     def test_the_associates_never_weigh_more_than_the_listed(self):
-        # one shrub listed (Gambel oak) and four recorded: 1/2 + 1/3 + 1/4 + 1/5 > 1, held to the oak's weight
+        # one shrub listed (Gambel oak) and four well recorded on the woodland's own cells (30 or more each):
+        # 1/2 + 1/3 + 1/4 + 1/5 > 1, held to the oak's weight
+        A.EVIDENCE = lambda tile: evidence({"Purshia stansburiana": {PONDEROSA: 60}, "Fallugia paradoxa": {PONDEROSA: 50},
+                                            "Chamaebatiaria millefolium": {PONDEROSA: 40}, "Shepherdia rotundifolia": {PONDEROSA: 30}},
+                                           self.effort)
         s = self.rule(PONDEROSA, ("evt", 7054), hab=2)["shrubs"]
         self.assertAlmostEqual(s["quercus_gambelii"], 0.5, places=3)
         rest = {k: v for k, v in s.items() if k != "quercus_gambelii"}
@@ -305,13 +312,54 @@ class TestAfterTheListedSpecies(Place):
         A.EVIDENCE = lambda tile: evidence({"Purshia stansburiana": {GRASSLAND: 9}}, self.effort) | {"phys": {**PHYS, GRASSLAND: "Shrubland"}}
         self.assertIsNone(self.rule(GRASSLAND, ("evt", 7135), hab=5))    # its description's type is herbaceous
 
-    def test_a_rare_associate_weighs_less(self):
-        self.records = {**self.records, "purshia_stansburiana": 6}       # 6 records within 25 km, 39 open ones on natural cells
+    def test_an_associate_weighs_by_its_records_on_the_communitys_own_cells(self):
+        # fails on the code of 2026-11-10: its rarity came from the records near the whole tile (546 here) and on any
+        # natural cell (39), so nine records on the shrubland weighed a whole 1/3: creeping barberry was a third of
+        # Teton's aspen understory on 3 of its 26 records
         s = self.rule(BLACKBRUSH, ("evt", 7078))["shrubs"]
-        self.assertAlmostEqual(s["purshia_stansburiana"], (1 / 3) / (1.5 + 1 / 3 + 1 / 4), places=3)   # the open records count
-        A.EVIDENCE = lambda tile: evidence({"Purshia stansburiana": {BLACKBRUSH: 6}, "Fallugia paradoxa": {BLACKBRUSH: 5, PONDEROSA: 24}}, self.effort)
+        a = [9 / 30 / 3, 5 / 30 / 4]
+        self.assertAlmostEqual(s["purshia_stansburiana"], a[0] / (1.5 + sum(a)), places=3)
+        self.assertLess(s["purshia_stansburiana"], 0.07)                           # was 0.16
+        self.records = {**self.records, "purshia_stansburiana": 6}                 # the records near the tile no longer count
+        self.assertAlmostEqual(self.rule(BLACKBRUSH, ("evt", 7078))["shrubs"]["purshia_stansburiana"], a[0] / (1.5 + sum(a)), places=3)
+
+    def test_a_thin_associates_share_goes_to_the_listed_species(self):
+        # three records: a tenth of a third species. The listed species take the rest and the layer keeps its class's
+        # density: LANDFIRE's description supports the layer, so nothing is held empty here
+        A.EVIDENCE = lambda tile: evidence({"Purshia stansburiana": {BLACKBRUSH: 3}}, self.effort)
+        r = self.rule(BLACKBRUSH, ("evt", 7078))
+        s = r["shrubs"]
+        self.assertAlmostEqual(s["purshia_stansburiana"], (0.1 / 3) / (1.5 + 0.1 / 3), places=4)   # 0.022
+        self.assertAlmostEqual(s["coleogyne_ramosissima"] + s["ephedra_viridis"], 1.5 / (1.5 + 0.1 / 3), places=4)
+        self.assertAlmostEqual(sum(s.values()), 1.0, places=6)
+        self.assertEqual(r["shrub_density"], sm.NAMED_DENSITY["chaparral"][1])
+        self.assertNotIn("recorded_support", r)
+        self.assertNotIn("held_empty", r)
+        self.assertEqual(r["recorded"]["purshia_stansburiana"]["records"], 3)
+
+    def test_a_well_recorded_associate_weighs_a_whole_rank(self):
+        A.EVIDENCE = lambda tile: evidence({"Purshia stansburiana": {BLACKBRUSH: 45}}, self.effort)
         s = self.rule(BLACKBRUSH, ("evt", 7078))["shrubs"]
-        self.assertAlmostEqual(s["purshia_stansburiana"], (0.2 / 3) / (1.5 + 0.2 / 3 + 1 / 4), places=3)   # 6 / 30: a rarity
+        self.assertAlmostEqual(s["purshia_stansburiana"], (1 / 3) / (1.5 + 1 / 3), places=3)       # never more than its rank
+
+    def test_a_dwarf_associates_carpet_is_its_share(self):
+        # the carpet under listed species is the dwarf's share of the layer (split_dwarf_shrubs), so it thins with the
+        # share and needs no factor of its own: on three records a fiftieth of the shrub cover, not a sixth
+        A.EVIDENCE = lambda tile: evidence({"Purshia stansburiana": {BLACKBRUSH: 3}}, self.effort)
+        r = self.rule(BLACKBRUSH, ("evt", 7078))
+        saved = dict(sm._DWARF_CACHE)
+        sm._DWARF_CACHE.update({k: k == "purshia_stansburiana" for k in r["shrubs"]})
+        try:
+            row = {"shrubs": dict(r["shrubs"]), "shrub_density": r["shrub_density"], "ground": {}}
+            sm.split_dwarf_shrubs(row)
+            self.assertAlmostEqual(row["carpet_density"], (0.1 / 3) / (1.5 + 0.1 / 3), places=4)
+            self.assertLess(row["carpet_density"], 0.03)                           # was 0.18
+            self.assertAlmostEqual(row["shrub_density"], r["shrub_density"] * 1.5 / (1.5 + 0.1 / 3), places=4)
+        finally:
+            sm._DWARF_CACHE.clear(); sm._DWARF_CACHE.update(saved)
+
+    def test_it_says_so(self):
+        self.assertIn("each as far as its records there go", self.rule(BLACKBRUSH, ("evt", 7078))["note"])
 
 
 class TestNoGrowthForm(Place):

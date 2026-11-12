@@ -917,9 +917,9 @@ def _layer_weights(named: list, described: dict | None, coverage: float, tile, b
     """({species: weight}, how) of one layer: `named`, the ids the name names in it; `described` and `coverage`, the
     description's weights for it and how much of it is found here; `recorded`, the community's recorded associates
     (associates.members: [{"id", "records", "of"}], most recorded first). how: description | description+name | records |
-    equal, with "+recorded" where associates were added; recorded (nothing listed: the records give the whole layer,
-    each member weighed by its records on the community's own cells; how dense the layer is, recorded_support);
-    None (an empty layer). Weights sum to 1 except the equal ones (1.0 each, as before 2026-11-10)."""
+    equal, with "+recorded" where associates were added (each weighed by its records on the community's own cells,
+    after the listed species); recorded (nothing listed: the records give the whole layer, weighed the same way; how
+    dense the layer is, recorded_support); None (an empty layer). Weights sum to 1 except the equal ones (1.0 each, as before 2026-11-10)."""
     from .communities import local_records
     from .succession import rarity
     if not named and not described and not recorded:
@@ -941,19 +941,19 @@ def _layer_weights(named: list, described: dict | None, coverage: float, tile, b
     # that neither its name nor its description lists. They follow the listed species by reciprocal rank, in order of
     # their records there: with k species listed the first associate weighs as a (k + 1)th species would, 1 / (k + 1)
     # of the leading one, the next 1 / (k + 2), each x its rarity; and together they never weigh more than the listed
-    # species do (what LANDFIRE lists are the dominants). With nothing listed the associates are the layer, and each
-    # weighs by its records on the community's own cells, not near the whole tile (2026-11-11, recorded_support).
+    # species do (what LANDFIRE lists are the dominants). With nothing listed the associates are the layer
+    # (recorded_support says how dense). An associate's rarity is its records on the community's own cells over 30, in
+    # both cases (2026-11-11). Until then one added after listed species took it from the records near the whole
+    # tile: creeping barberry was a third of Teton's aspen understory on 3 of its 26 records. Where species are
+    # listed a thin associate's share goes to them and the layer keeps its class's density: LANDFIRE's description
+    # supports the layer, so nothing is held empty there.
     extra = [m for m in recorded if w.get(m["id"], 0.0) <= 0]
     if extra:
         k = sum(1 for v in w.values() if v > 0)
         listed = sum(1.0 / i for i in range(1, k + 1))            # the listed species hold ranks 1 .. k
         tot = sum(w.values())
         w = {sid: v / tot * listed for sid, v in w.items() if v > 0}
-        if k:
-            a = {m["id"]: rarity(max(local_records(tile, m["id"]) or 0, m.get("of") or m.get("records") or 0)) / (k + j)
-                 for j, m in enumerate(extra, 1)}
-        else:
-            a = {m["id"]: rarity(m.get("records") or 0) / j for j, m in enumerate(extra, 1)}
+        a = {m["id"]: rarity(m.get("records") or 0) / (k + j) for j, m in enumerate(extra, 1)}
         a = {sid: v for sid, v in a.items() if v > 0}
         if k and sum(a.values()) > listed:
             f = listed / sum(a.values())
@@ -1029,7 +1029,8 @@ def named_rule(name: str, hab_code: int, key: tuple | None = None) -> dict | Non
             "recorded": "from the shrubs recorded on its own cells (pipeline/associates.py), by reciprocal rank in order of their "
                         "records there, each as far as those records go (records / 30), the layer as dense as they sum to "
                         "(recorded_support)"}
-    plus = ", then the shrubs recorded on its own cells that neither lists (pipeline/associates.py), ranked after them and never more than them"
+    plus = (", then the shrubs recorded on its own cells that neither lists (pipeline/associates.py), ranked after them, each as far "
+            "as its records there go (records / 30), and never more than them")
     added = {m["id"]: {"records": m["records"], "of": m["of"], "affinity": m["affinity"]} for m in recorded
              if (how["shrub"] or "").endswith("recorded") and shrubs.get(m["id"], 0) > 0 and m["id"] not in [sid for sid, _ in named]
              and m["id"] not in ((desc or {}).get("shrub") or {})}
@@ -1728,7 +1729,8 @@ def species_mix(tile: Tile) -> dict:
                         "of this community; of: on any natural cell; affinity: its share of records here over all "
                         "plants' share here (1 = as visits alone would put it; a member has a standard error more "
                         "than that, associates.excess). They rank after the species LANDFIRE "
-                        "lists and together weigh no more than those. recorded_associates: the records' count, licences "
+                        "lists, each weighing min(1, records / 30) over its rank, and together weigh no more than "
+                        "those; a thin one's share goes to the listed species. recorded_associates: the records' count, licences "
                         "and GBIF datasets (the attribution)",
             "recorded_support": "communities[].recorded_support: where no shrub is listed and the records alone give the layer "
                                 "(weights.shrubs = recorded), how much of the habitat class's shrub density they support: the sum "

@@ -147,10 +147,10 @@
   },
   "plants": {
    "stage": "flora",
-   "started_at": "2026-11-11T17:46:37Z",
-   "ended_at": "2026-11-11T17:46:39Z",
-   "wall_s": 1.8,
-   "cpu_self_s": 1.6,
+   "started_at": "2026-11-12T00:20:42Z",
+   "ended_at": "2026-11-12T00:20:44Z",
+   "wall_s": 1.6,
+   "cpu_self_s": 1.5,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {
@@ -169,10 +169,10 @@
   },
   "species_mix": {
    "stage": "flora",
-   "started_at": "2026-11-11T17:46:39Z",
-   "ended_at": "2026-11-11T17:46:40Z",
-   "wall_s": 1.3,
-   "cpu_self_s": 2.4,
+   "started_at": "2026-11-12T00:20:44Z",
+   "ended_at": "2026-11-12T00:20:45Z",
+   "wall_s": 1.2,
+   "cpu_self_s": 2.6,
    "cpu_children_s": 0.0,
    "downloads": {},
    "cache": {
@@ -181,7 +181,7 @@
      "misses": 0
     }
    },
-   "disk_bytes": 458294,
+   "disk_bytes": 458392,
    "meshy": {
     "spent": 0,
     "queued": 0,
@@ -342,8 +342,8 @@
   },
   "registry": {
    "stage": "games",
-   "started_at": "2026-11-11T17:46:41Z",
-   "ended_at": "2026-11-11T17:46:41Z",
+   "started_at": "2026-11-12T00:20:45Z",
+   "ended_at": "2026-11-12T00:20:46Z",
    "wall_s": 0.5,
    "cpu_self_s": 0.5,
    "cpu_children_s": 0.0,
@@ -722,14 +722,14 @@
    "meshy_queued_credits_est": 0
   },
   "flora": {
-   "started_at": "2026-11-11T17:46:37Z",
-   "ended_at": "2026-11-11T17:46:41Z",
-   "wall_s": 197.6,
-   "cpu_s": 209.6,
+   "started_at": "2026-11-12T00:20:42Z",
+   "ended_at": "2026-11-12T00:20:45Z",
+   "wall_s": 197.3,
+   "cpu_s": 209.7,
    "download_bytes": 0,
    "cache_hits": 379,
    "cache_misses": 0,
-   "disk_bytes": 12876220,
+   "disk_bytes": 12876318,
    "meshy_spent": 0,
    "meshy_queued_credits_est": 0
   },
@@ -746,8 +746,8 @@
    "meshy_queued_credits_est": 0
   },
   "games": {
-   "started_at": "2026-11-11T17:46:41Z",
-   "ended_at": "2026-11-11T17:46:41Z",
+   "started_at": "2026-11-12T00:20:45Z",
+   "ended_at": "2026-11-12T00:20:46Z",
    "wall_s": 0.8,
    "cpu_s": 0.8,
    "download_bytes": 0,
@@ -1569,21 +1569,48 @@
    "ended_at": "2026-11-11T17:46:41Z",
    "failed": [],
    "refused": []
+  },
+  {
+   "started_at": "2026-11-12T00:20:42Z",
+   "stages": [
+    {
+     "stage": "flora",
+     "started_at": "2026-11-12T00:20:42Z",
+     "steps_run": [
+      "plants",
+      "species_mix"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-12T00:20:45Z"
+    },
+    {
+     "stage": "games",
+     "started_at": "2026-11-12T00:20:45Z",
+     "steps_run": [
+      "registry"
+     ],
+     "steps_skipped": [],
+     "ended_at": "2026-11-12T00:20:46Z"
+    }
+   ],
+   "ended_at": "2026-11-12T00:20:46Z",
+   "failed": [],
+   "refused": []
   }
  ],
  "totals": {
-  "wall_s": 620.6,
-  "cpu_s": 496.9,
+  "wall_s": 620.3,
+  "cpu_s": 497.0,
   "download_bytes": 31201047,
   "cache_hits": 2202,
   "cache_misses": 84,
-  "disk_bytes": 1125478535,
+  "disk_bytes": 1125478633,
   "meshy_spent": 0,
   "meshy_queued_credits_est": 985
  },
- "updated_at": "2026-11-11T17:46:41Z",
+ "updated_at": "2026-11-12T00:20:46Z",
  "client": {
-  "bytes": 74339498,
+  "bytes": 74339891,
   "files": 56,
   "largest": {
    "client/lidar_micro.png": 13985065,
